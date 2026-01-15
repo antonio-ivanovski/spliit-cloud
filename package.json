@@ -17,6 +17,7 @@
     "generate-currency-data": "ts-node -T ./src/scripts/generateCurrencyData.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@formatjs/intl-localematcher": "^0.5.4",
     "@hookform/resolvers": "^3.3.2",
     "@json2csv/plainjs": "^7.0.6",
@@ -50,6 +51,7 @@
     "nanoid": "^5.0.4",
     "negotiator": "^0.6.3",
     "next": "^16.0.7",
+    "next-auth": "^5.0.0-beta.30",
     "next-intl": "^4.5.8",
     "next-s3-upload": "^0.3.4",
     "next-themes": "^0.2.1",
