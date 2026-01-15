@@ -154,7 +154,7 @@ export function UnifiedGroupList({ isAuthenticated }: UnifiedGroupListProps) {
             </span>
           </h2>
           <Button asChild size="sm" variant="outline">
-            <Link href="/groups/create" className="flex items-center gap-2">
+            <Link href="/groups/create?type=device" className="flex items-center gap-2">
               <Plus className="w-4 h-4" />
               Create
             </Link>
