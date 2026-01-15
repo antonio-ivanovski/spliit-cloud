@@ -2,12 +2,15 @@
 
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
 import { ShareButton } from '@/app/groups/[groupId]/share-button'
+import { InviteDialog } from '@/components/groups/invite-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useCurrentGroup } from './current-group-context'
 
 export const GroupHeader = () => {
   const { isLoading, groupId, group } = useCurrentGroup()
+  const { data: session } = useSession()
 
   return (
     <div className="flex flex-col justify-between gap-3">
@@ -23,7 +26,10 @@ export const GroupHeader = () => {
 
       <div className="flex gap-2 justify-between">
         <GroupTabs groupId={groupId} />
-        {group && <ShareButton group={group} />}
+        <div className="flex gap-2">
+          {group && session?.user && <InviteDialog groupId={groupId} />}
+          {group && <ShareButton group={group} />}
+        </div>
       </div>
     </div>
   )
