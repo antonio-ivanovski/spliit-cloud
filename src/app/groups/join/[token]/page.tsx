@@ -53,7 +53,7 @@ export default async function JoinGroupPage({
   const existingMembership = await prisma.userGroup.findUnique({
     where: {
       userId_groupId: {
-        userId: session.user.id,
+        userId: session.user.id as string,
         groupId: group.id,
       },
     },

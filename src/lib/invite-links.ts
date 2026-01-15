@@ -26,7 +26,7 @@ export function verifyInviteToken(token: string): InvitePayload {
   try {
     const encoded = token.substring(4)
     const decoded = Buffer.from(encoded, 'base64url').toString('utf-8')
-    const payload: InvitePayload = JSON.parse(decoded)
+    const payload = JSON.parse(decoded) as InvitePayload
 
     if (payload.expiresAt < Date.now()) {
       throw new Error('Invite token has expired')
