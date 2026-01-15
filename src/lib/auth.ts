@@ -9,7 +9,7 @@ const adapter = PrismaAdapter(prisma)
 
 // Build providers array based on available environment variables
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const providers: any[] = []
+const providers: NextAuthConfig['providers'] = []
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   providers.push(
