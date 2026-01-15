@@ -1,4 +1,6 @@
 import { ApplePwaSplash } from '@/app/apple-pwa-splash'
+import { SessionProvider } from '@/components/auth/session-provider'
+import { UserMenu } from '@/components/auth/user-menu'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { ProgressBar } from '@/components/progress-bar'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -100,6 +102,9 @@ function Content({ children }: { children: React.ReactNode }) {
             <li>
               <ThemeToggle />
             </li>
+            <li>
+              <UserMenu />
+            </li>
           </ul>
         </div>
       </header>
@@ -165,10 +170,12 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Suspense>
-              <ProgressBar />
-            </Suspense>
-            <Content>{children}</Content>
+            <SessionProvider>
+              <Suspense>
+                <ProgressBar />
+              </Suspense>
+              <Content>{children}</Content>
+            </SessionProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
