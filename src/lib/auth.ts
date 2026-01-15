@@ -1,5 +1,5 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import NextAuth, { NextAuthConfig } from 'next-auth'
+import NextAuth, { type NextAuthConfig } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import Google from 'next-auth/providers/google'
 import Resend from 'next-auth/providers/resend'
@@ -7,22 +7,40 @@ import { prisma } from '@/lib/prisma'
 
 const adapter = PrismaAdapter(prisma)
 
-export const authConfig: NextAuthConfig = {
-  adapter,
-  providers: [
+// Build providers array based on available environment variables
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const providers: any[] = []
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+  )
+}
+
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  providers.push(
     GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
+  )
+}
+
+if (process.env.RESEND_API_KEY) {
+  providers.push(
     Resend({
-      apiKey: process.env.RESEND_API_KEY!,
+      apiKey: process.env.RESEND_API_KEY,
       from: process.env.EMAIL_FROM || 'noreply@spliit.app',
     }),
-  ],
+  )
+}
+
+export const authConfig: NextAuthConfig = {
+  adapter,
+  providers,
   pages: {
     signIn: '/auth/signin',
     error: '/auth/error',
