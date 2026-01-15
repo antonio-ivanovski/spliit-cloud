@@ -19,6 +19,11 @@ export const CreateGroup = () => {
           isAuthenticated: !!session?.user,
         })
         await utils.groups.invalidate()
+        // If user is authenticated, also invalidate userGroups so SaveGroupLocally
+        // knows this is an authenticated group and doesn't save it to localStorage
+        if (session?.user) {
+          await utils.userGroups.invalidate()
+        }
         router.push(`/groups/${groupId}`)
       }}
     />
