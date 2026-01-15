@@ -126,23 +126,6 @@ Email sign-in works locally without additional setup. When testing email authent
 2. Check your Resend account dashboard or email logs
 3. Click the magic link in the email to sign in
 
-## Deployment
-
-### Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Deploy to Vercel:
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fspliit-app%2Fspliit)
-3. Add environment variables in Vercel dashboard
-4. Update OAuth provider redirect URLs to your Vercel domain
-
-### Other Hosting
-
-1. Ensure `NEXTAUTH_URL` matches your deployment domain
-2. Add authentication provider credentials
-3. Update OAuth redirect URLs in each provider's settings
-4. Use HTTPS in production (required by OAuth providers)
-
 ## Security Best Practices
 
 1. **Keep secrets secure**:
