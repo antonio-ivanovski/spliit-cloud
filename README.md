@@ -25,6 +25,49 @@ Spliit is a free and open source alternative to Splitwise. You can either use th
 - [ ] Ability to create recurring expenses [(#5)](https://github.com/spliit-app/spliit/issues/5)
 - [ ] Import expenses from Splitwise [(#22)](https://github.com/spliit-app/spliit/issues/22)
 
+## Authentication
+
+Spliit supports both anonymous device-local groups and authenticated groups with cross-device sync:
+
+- **Anonymous mode**: Create groups without signing in (stored in browser localStorage)
+- **Authenticated mode**: Sign in with Google, GitHub, or email to sync groups across devices
+
+### Setting up authentication
+
+To enable authentication features, configure at least one authentication provider:
+
+1. **Google OAuth** (optional):
+   - Set up OAuth credentials in [Google Cloud Console](https://console.cloud.google.com/)
+   - Add the following to `.env`:
+     ```
+     GOOGLE_CLIENT_ID=your-client-id
+     GOOGLE_CLIENT_SECRET=your-client-secret
+     ```
+
+2. **GitHub OAuth** (optional):
+   - Create OAuth App in [GitHub Developer Settings](https://github.com/settings/developers)
+   - Add the following to `.env`:
+     ```
+     GITHUB_CLIENT_ID=your-client-id
+     GITHUB_CLIENT_SECRET=your-client-secret
+     ```
+
+3. **Email sign-in** (optional):
+   - Sign up for [Resend](https://resend.com/)
+   - Add the following to `.env`:
+     ```
+     RESEND_API_KEY=your-api-key
+     EMAIL_FROM=noreply@yourdomain.com
+     ```
+
+4. **Required for all providers**:
+   ```
+   NEXTAUTH_SECRET=<32-character-random-string>
+   NEXTAUTH_URL=https://yourdomain.com  # or http://localhost:3000 for local development
+   ```
+
+See [docs/authentication.md](docs/authentication.md) for detailed setup instructions.
+
 ## Stack
 
 - [Next.js](https://nextjs.org/) for the web application
