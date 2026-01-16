@@ -1,51 +1,106 @@
 import { expect, test } from '@playwright/test'
 
+import type { Page } from '@playwright/test'
+
+async function createGroup({
+  page,
+  groupName,
+  participants,
+}: {
+  page: Page
+  groupName: string
+  participants: [string, string, string]
+}) {
+  await page.goto('/groups')
+  await page.getByRole('link', { name: 'Create' }).click()
+
+  await page.getByLabel('Group name').fill(groupName)
+
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill(participants[0])
+  await participantInputs.nth(1).fill(participants[1])
+  await participantInputs.nth(2).fill(participants[2])
+
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+}
+
 test('create group - happy path', async ({ page }) => {
   const groupName = `PW E2E group ${Date.now()}`
   const participantA = 'Alice'
   const participantB = 'Bob'
 
-  // Step 1: Navigate to groups page
-  await page.goto('/groups')
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, 'Charlie'],
+  })
 
-  // Step 2: Click create group button/link
-  await page.getByRole('link', { name: 'Create' }).click()
-
-  // Step 3: Fill in group name
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Step 4: Fill in participants
-  // Default participants are localized (John/Jane/Jack). Overwrite all 3.
-  // Accessible name is the placeholder: `GroupForm.Participants.new`.
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill('Charlie')
-
-  // Step 5: Currency selection
-  // Currency is handled by CurrencySelector component with role="combobox"
-  // It defaults to NEXT_PUBLIC_DEFAULT_CURRENCY_CODE
-  // The currency button is present but does not require manual selection for the happy path
-
-  // Step 6: Submit the form
-  await page.getByRole('button', { name: 'Create' }).click()
-
-  // Step 7: Verify group was created
-  // Check URL changed to group detail page (/groups/[groupId])
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
-
-  // Verify group page is visible by checking for the Balances tab
   const balancesTab = page.getByRole('tab', { name: 'Balances' })
   await expect(balancesTab).toBeVisible()
-
-  // Click on Balances tab to stabilize the page
   await balancesTab.click()
 
-  // Verify participants are visible on the page
   await expect(page.getByText(participantA, { exact: true })).toBeVisible()
   await expect(page.getByText(participantB, { exact: true })).toBeVisible()
-
-  // Verify group name is displayed (use exact match to avoid strict mode violation)
   await expect(page.getByText(groupName, { exact: true })).toBeVisible()
+})
+
+test('create group - with custom currency', async ({ page }) => {
+  const groupName = `PW E2E group custom currency ${Date.now()}`
+
+  await page.goto('/groups')
+  await page.getByRole('link', { name: 'Create' }).click()
+
+  await page.getByLabel('Group name').fill(groupName)
+
+  // Select “Custom” currency (empty code)
+  // The currency selector is a button with role=combobox (label sits outside).
+  await page.locator('[role="combobox"]').first().click()
+  await page.getByRole('option', { name: 'Custom' }).click()
+
+  // Now the currency symbol input should be visible
+  await page.getByLabel('Currency symbol').fill('¤')
+
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill('Alice')
+  await participantInputs.nth(1).fill('Bob')
+  await participantInputs.nth(2).fill('Charlie')
+
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+
+  // Spot-check UI renders and doesn’t crash with custom currency
+  await expect(page.getByRole('tab', { name: 'Expenses' })).toBeVisible()
+})
+
+test('edit group - update name and info', async ({ page }) => {
+  const groupName = `PW E2E group edit ${Date.now()}`
+
+  await createGroup({
+    page,
+    groupName,
+    participants: ['Alice', 'Bob', 'Charlie'],
+  })
+
+  // Go to Settings (edit) tab
+  await page.getByRole('tab', { name: 'Settings' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/edit$/)
+
+  const newName = `Renamed ${Date.now()}`
+  const newInfo = `Info ${Date.now()}`
+
+  await page.getByLabel('Group name').fill(newName)
+  await page.getByLabel('Group information').fill(newInfo)
+
+  await page.getByRole('button', { name: 'Save' }).click()
+
+  // Verify Information tab reflects the new info
+  await page.getByRole('tab', { name: 'Information' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/information$/)
+  await expect(page.getByText(newInfo, { exact: true })).toBeVisible()
+
+  // Verify header shows new group name
+  await expect(page.getByText(newName, { exact: true })).toBeVisible()
 })
