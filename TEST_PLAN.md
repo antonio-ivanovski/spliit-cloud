@@ -62,9 +62,9 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `getTotalGroupSpending()` - sums all expenses                | 🔴 P0    | 🟢 Low     | ✅ Done | Core metric calculation                   |
 | `getTotalGroupSpending()` - excludes reimbursements          | 🔴 P0    | 🟢 Low     | ✅ Done | Critical - reimbursements shouldn't count |
 | `getTotalGroupSpending()` - handles empty array              | 🟢 P2    | 🟢 Low     | ✅ Done | Edge case                                 |
-| `getTotalActiveUserPaidFor()` - sums user's payments         | 🔴 P0    | 🟢 Low     | 🍏 Low  | Personalization feature                   |
-| `getTotalActiveUserPaidFor()` - excludes reimbursements      | 🔴 P0    | 🟢 Low     | 🍏 Low  | Consistency with group total              |
-| `getTotalActiveUserPaidFor()` - returns 0 for null user      | 🟡 P1    | 🟢 Low     | 🍏 Low  | Handle no active user case                |
+| `getTotalActiveUserPaidFor()` - sums user's payments         | 🔴 P0    | 🟢 Low     | ✅ Done | Personalization feature                   |
+| `getTotalActiveUserPaidFor()` - excludes reimbursements      | 🔴 P0    | 🟢 Low     | ✅ Done | Consistency with group total              |
+| `getTotalActiveUserPaidFor()` - returns 0 for null user      | 🟡 P1    | 🟢 Low     | ✅ Done | Handle no active user case                |
 | `calculateShare()` - EVENLY mode correct calculation         | 🔴 P0    | 🟢 Low     | ✅ Done | Core splitting logic                      |
 | `calculateShare()` - BY_AMOUNT mode uses exact shares        | 🔴 P0    | 🟢 Low     | ✅ Done | Direct amount passthrough                 |
 | `calculateShare()` - BY_PERCENTAGE mode (shares/10000)       | 🔴 P0    | 🟡 Medium  | ✅ Done | Percentage calculation with basis points  |
@@ -184,7 +184,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 | Test Case                           | Priority | Complexity | Effort    | Notes                     |
 | ----------------------------------- | -------- | ---------- | --------- | ------------------------- |
-| Create group - happy path           | 🔴 P0    | 🟢 Low     | 🍏 Low    | Core user flow            |
+| Create group - happy path           | 🔴 P0    | 🟢 Low     | ✅ Done   | Core user flow            |
 | Create group - with custom currency | 🟡 P1    | 🟢 Low     | 🍏 Low    | Custom currency selection |
 | Create group - validation errors    | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Form validation           |
 | Edit group - update name and info   | 🟡 P1    | 🟢 Low     | 🍏 Low    | Edit flow                 |
@@ -216,11 +216,11 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Create expense - validation errors        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Form validation      |
 | Edit expense - update all fields          | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Edit flow            |
 | Edit expense - change split mode          | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Mode switching       |
-| Delete expense - confirmation flow        | 🔴 P0    | 🟢 Low     | 🍏 Low    | Deletion             |
+| Delete expense - confirmation flow        | 🔴 P0    | 🟢 Low     | ✅ Done   | Deletion             |
 | List expenses - pagination                | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Large lists          |
 | List expenses - filter by text            | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Search functionality |
 | Expense displays correct date             | 🟡 P1    | 🟢 Low     | 🍏 Low    | Date rendering       |
-| Expense displays correct amount           | 🔴 P0    | 🟢 Low     | 🍏 Low    | Amount display       |
+| Expense displays correct amount           | 🔴 P0    | 🟢 Low     | ✅ Done   | Amount display       |
 | Expense shows category                    | 🟢 P2    | 🟢 Low     | 🍏 Low    | Category display     |
 
 **Total: 18 tests | P0: 4, P1: 11, P2: 3 | Low effort: 10, Medium: 8**
@@ -249,7 +249,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | ----------------------------------------- | -------- | ---------- | --------- | ---------------------- |
 | View balances page - calculates correctly | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Core feature           |
 | Balances match expected from expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Verification test      |
-| Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | 🍏 Low    | Suggestions shown      |
+| Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | ⚠️ Flaky  | Suggestions shown (12/15 browsers pass) |
 | Suggested reimbursements minimized        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Algorithm verification |
 | Active user balance highlighted           | 🟡 P1    | 🟢 Low     | 🍏 Low    | Personalization        |
 | Create reimbursement expense              | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Settle debt flow       |

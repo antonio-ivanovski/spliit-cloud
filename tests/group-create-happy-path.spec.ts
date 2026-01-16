@@ -6,7 +6,7 @@ test('create group - happy path', async ({ page }) => {
   const participantB = 'Bob'
 
   await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).click()
+  await page.getByRole('link', { name: 'Create' }).first().click()
 
   await page.getByLabel('Group name').fill(groupName)
 
