@@ -33,7 +33,7 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 
 | Test Case                                                   | Priority | Complexity | Effort    | Notes                                           |
 | ----------------------------------------------------------- | -------- | ---------- | --------- | ----------------------------------------------- |
-| `getBalances()` - evenly split expenses                     | 🔴 P0    | 🟢 Low     | 🍏 Low    | Critical - verify equal splits work correctly   |
+| `getBalances()` - evenly split expenses                     | 🔴 P0    | 🟢 Low     | ✅ Done   | Critical - verify equal splits work correctly   |
 | `getBalances()` - BY_SHARES split mode                      | 🔴 P0    | 🟡 Medium  | 🍏 Low    | Test weighted splits (1:2:3 ratios)             |
 | `getBalances()` - BY_PERCENTAGE split mode                  | 🔴 P0    | 🟡 Medium  | 🍏 Low    | Test percentage splits summing to 100%          |
 | `getBalances()` - BY_AMOUNT split mode                      | 🔴 P0    | 🟡 Medium  | 🍏 Low    | Test specific amounts per person                |
@@ -57,22 +57,22 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 
 ### 1.2 Totals & Statistics (`src/lib/totals.ts`)
 
-| Test Case                                                    | Priority | Complexity | Effort | Notes                                     |
-| ------------------------------------------------------------ | -------- | ---------- | ------ | ----------------------------------------- |
-| `getTotalGroupSpending()` - sums all expenses                | 🔴 P0    | 🟢 Low     | 🍏 Low | Core metric calculation                   |
-| `getTotalGroupSpending()` - excludes reimbursements          | 🔴 P0    | 🟢 Low     | 🍏 Low | Critical - reimbursements shouldn't count |
-| `getTotalGroupSpending()` - handles empty array              | 🟢 P2    | 🟢 Low     | 🍏 Low | Edge case                                 |
-| `getTotalActiveUserPaidFor()` - sums user's payments         | 🔴 P0    | 🟢 Low     | 🍏 Low | Personalization feature                   |
-| `getTotalActiveUserPaidFor()` - excludes reimbursements      | 🔴 P0    | 🟢 Low     | 🍏 Low | Consistency with group total              |
-| `getTotalActiveUserPaidFor()` - returns 0 for null user      | 🟡 P1    | 🟢 Low     | 🍏 Low | Handle no active user case                |
-| `calculateShare()` - EVENLY mode correct calculation         | 🔴 P0    | 🟢 Low     | 🍏 Low | Core splitting logic                      |
-| `calculateShare()` - BY_AMOUNT mode uses exact shares        | 🔴 P0    | 🟢 Low     | 🍏 Low | Direct amount passthrough                 |
-| `calculateShare()` - BY_PERCENTAGE mode (shares/10000)       | 🔴 P0    | 🟡 Medium  | 🍏 Low | Percentage calculation with basis points  |
-| `calculateShare()` - BY_SHARES weighted correctly            | 🔴 P0    | 🟡 Medium  | 🍏 Low | Ratio-based splitting                     |
-| `calculateShare()` - returns 0 for reimbursements            | 🔴 P0    | 🟢 Low     | 🍏 Low | Reimbursement exclusion                   |
-| `calculateShare()` - returns 0 if participant not in paidFor | 🟡 P1    | 🟢 Low     | 🍏 Low | Participant not involved in expense       |
-| `getTotalActiveUserShare()` - sums across expenses           | 🔴 P0    | 🟡 Medium  | 🍏 Low | Total owed calculation                    |
-| `getTotalActiveUserShare()` - rounds to 2 decimals           | 🟡 P1    | 🟢 Low     | 🍏 Low | Currency precision handling               |
+| Test Case                                                    | Priority | Complexity | Effort  | Notes                                     |
+| ------------------------------------------------------------ | -------- | ---------- | ------- | ----------------------------------------- |
+| `getTotalGroupSpending()` - sums all expenses                | 🔴 P0    | 🟢 Low     | 🍏 Low  | Core metric calculation                   |
+| `getTotalGroupSpending()` - excludes reimbursements          | 🔴 P0    | 🟢 Low     | 🍏 Low  | Critical - reimbursements shouldn't count |
+| `getTotalGroupSpending()` - handles empty array              | 🟢 P2    | 🟢 Low     | 🍏 Low  | Edge case                                 |
+| `getTotalActiveUserPaidFor()` - sums user's payments         | 🔴 P0    | 🟢 Low     | 🍏 Low  | Personalization feature                   |
+| `getTotalActiveUserPaidFor()` - excludes reimbursements      | 🔴 P0    | 🟢 Low     | 🍏 Low  | Consistency with group total              |
+| `getTotalActiveUserPaidFor()` - returns 0 for null user      | 🟡 P1    | 🟢 Low     | 🍏 Low  | Handle no active user case                |
+| `calculateShare()` - EVENLY mode correct calculation         | 🔴 P0    | 🟢 Low     | ✅ Done | Core splitting logic                      |
+| `calculateShare()` - BY_AMOUNT mode uses exact shares        | 🔴 P0    | 🟢 Low     | ✅ Done | Direct amount passthrough                 |
+| `calculateShare()` - BY_PERCENTAGE mode (shares/10000)       | 🔴 P0    | 🟡 Medium  | 🍏 Low  | Percentage calculation with basis points  |
+| `calculateShare()` - BY_SHARES weighted correctly            | 🔴 P0    | 🟡 Medium  | 🍏 Low  | Ratio-based splitting                     |
+| `calculateShare()` - returns 0 for reimbursements            | 🔴 P0    | 🟢 Low     | ✅ Done | Reimbursement exclusion                   |
+| `calculateShare()` - returns 0 if participant not in paidFor | 🟡 P1    | 🟢 Low     | 🍏 Low  | Participant not involved in expense       |
+| `getTotalActiveUserShare()` - sums across expenses           | 🔴 P0    | 🟡 Medium  | 🍏 Low  | Total owed calculation                    |
+| `getTotalActiveUserShare()` - rounds to 2 decimals           | 🟡 P1    | 🟢 Low     | 🍏 Low  | Currency precision handling               |
 
 **Total: 14 tests | P0: 10, P1: 3, P2: 1 | Low effort: 14**
 
@@ -91,7 +91,7 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `amountAsMinorUnits()` - converts decimal to cents        | 🔴 P0    | 🟢 Low     | 🍏 Low  | Inverse of above                |
 | `amountAsMinorUnits()` - rounds correctly                 | 🟡 P1    | 🟢 Low     | 🍏 Low  | No floating point issues        |
 | `formatAmountAsDecimal()` - formats with correct decimals | 🟡 P1    | 🟢 Low     | 🍏 Low  | String formatting               |
-| `getCurrency()` - returns currency by code                | 🔴 P0    | 🟢 Low     | 🍏 Low  | Lookup function                 |
+| `getCurrency()` - returns currency by code                | 🔴 P0    | 🟢 Low     | ✅ Done | Lookup function                 |
 | `getCurrency()` - returns custom for empty code           | 🟡 P1    | 🟢 Low     | 🍏 Low  | Fallback behavior               |
 | `getCurrency()` - handles locale variations               | 🟢 P2    | 🟢 Low     | 🍏 Low  | i18n currency names             |
 | `getCurrencyFromGroup()` - extracts from group object     | 🟡 P1    | 🟢 Low     | 🍏 Low  | Helper function                 |
@@ -124,7 +124,7 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 
 | Test Case                                               | Priority | Complexity | Effort    | Notes                |
 | ------------------------------------------------------- | -------- | ---------- | --------- | -------------------- |
-| `expenseFormSchema` - validates required fields         | 🔴 P0    | 🟢 Low     | 🍏 Low    | Form validation      |
+| `expenseFormSchema` - validates required fields         | 🔴 P0    | 🟢 Low     | ✅ Done   | Form validation      |
 | `expenseFormSchema` - rejects invalid split mode        | 🔴 P0    | 🟢 Low     | 🍏 Low    | Enum validation      |
 | `expenseFormSchema` - validates percentage sums to 100% | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Business rule        |
 | `expenseFormSchema` - validates amount sum equals total | 🔴 P0    | 🟡 Medium  | 🍊 Medium | BY_AMOUNT validation |
