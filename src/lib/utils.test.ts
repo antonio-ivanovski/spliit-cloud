@@ -1,7 +1,47 @@
 import { Currency } from './currency'
-import { formatCurrency } from './utils'
+import {
+  formatCurrency,
+  formatDate,
+  formatDateOnly,
+  formatFileSize,
+  normalizeString,
+} from './utils'
 
 describe('formatCurrency', () => {
+  it('supports custom currency symbol when currency code is empty', () => {
+    const currency: Currency = {
+      name: 'Test',
+      symbol_native: '',
+      symbol: 'CUR',
+      code: '',
+      name_plural: '',
+      rounding: 0,
+      decimal_digits: 2,
+    }
+
+    const formatted = formatCurrency(currency, 123, 'en-US')
+    expect(formatted).toContain(currency.symbol)
+
+    const fractional = formatted.match(/\d+(?:[.,](\d+))?/)?.[1] ?? ''
+    expect(fractional.length).toBe(currency.decimal_digits)
+  })
+
+  it('supports zero-decimal currencies (JPY)', () => {
+    const jpy: Currency = {
+      name: 'Japanese Yen',
+      symbol_native: '￥',
+      symbol: '¥',
+      code: 'JPY',
+      name_plural: 'Japanese yen',
+      rounding: 0,
+      decimal_digits: 0,
+    }
+
+    const formatted = formatCurrency(jpy, 1000, 'en-US')
+    expect(formatted).toContain('¥')
+    expect(formatted).not.toMatch(/[.,]\d{2}\s*$/)
+  })
+
   const currency: Currency = {
     name: 'Test',
     symbol_native: '',
@@ -77,4 +117,73 @@ describe('formatCurrency', () => {
       ).toBe(variation.result)
     })
   }
+})
+
+describe('formatDate', () => {
+  it('formats using requested locale', () => {
+    const date = new Date(Date.UTC(2025, 0, 2, 3, 4, 5))
+
+    const en = formatDate(date, 'en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    })
+    expect(en).toContain('2025')
+
+    const fr = formatDate(date, 'fr-FR', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    })
+    expect(fr).toContain('2025')
+  })
+})
+
+describe('formatDateOnly', () => {
+  it('avoids timezone shifts for DATE fields', () => {
+    const dateFromDb = new Date('2025-10-17T00:00:00.000Z')
+
+    const formatted = formatDateOnly(dateFromDb, 'en-US', {
+      dateStyle: 'medium',
+    })
+    expect(formatted).toContain('2025')
+    expect(formatted).toContain('17')
+  })
+
+  it('handles month boundaries without off-by-one', () => {
+    const endOfMonthDb = new Date('2025-03-31T00:00:00.000Z')
+    const nextDayDb = new Date('2025-04-01T00:00:00.000Z')
+
+    const formattedEnd = formatDateOnly(endOfMonthDb, 'en-US', {
+      dateStyle: 'medium',
+    })
+    const formattedNext = formatDateOnly(nextDayDb, 'en-US', {
+      dateStyle: 'medium',
+    })
+
+    expect(formattedEnd).toContain('31')
+    expect(formattedNext).toContain('1')
+  })
+})
+
+describe('normalizeString', () => {
+  it('removes accents/diacritics', () => {
+    expect(normalizeString('áäåèéę')).toBe('aaaeee')
+    expect(normalizeString('Crème brûlée')).toBe('creme brulee')
+  })
+
+  it('lowercases', () => {
+    expect(normalizeString('HELLO World')).toBe('hello world')
+  })
+})
+
+describe('formatFileSize', () => {
+  it('formats bytes correctly', () => {
+    expect(formatFileSize(0, 'en-US')).toBe('0 B')
+    expect(formatFileSize(1, 'en-US')).toBe('1 B')
+  })
+
+  it('handles GB/MB/KB/B units', () => {
+    expect(formatFileSize(1024 + 1, 'en-US')).toContain('kB')
+    expect(formatFileSize(1024 ** 2 + 1, 'en-US')).toContain('MB')
+    expect(formatFileSize(1024 ** 3 + 1, 'en-US')).toContain('GB')
+  })
 })

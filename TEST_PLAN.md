@@ -38,15 +38,15 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `getBalances()` - BY_PERCENTAGE split mode                  | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test percentage splits summing to 100%          |
 | `getBalances()` - BY_AMOUNT split mode                      | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test specific amounts per person                |
 | `getBalances()` - handles rounding correctly                | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Verify no floating point errors, totals balance |
-| `getBalances()` - avoids negative zeros                     | 🟡 P1    | 🟢 Low     | 🍏 Low    | Check for `-0` values being normalized to `0`   |
+| `getBalances()` - avoids negative zeros                     | 🟡 P1    | 🟢 Low     | ✅ Done   | Check for `-0` values being normalized to `0`   |
 | `getBalances()` - multiple participants, mixed expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Integration test with realistic scenario        |
 | `getBalances()` - last participant gets remaining amount    | 🔴 P0    | 🟡 Medium  | ✅ Done   | Verify remainder distribution logic             |
-| `getBalances()` - handles empty expense list                | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case - empty array                         |
-| `getBalances()` - single expense, single participant        | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case - simplest scenario                   |
+| `getBalances()` - handles empty expense list                | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case - empty array                         |
+| `getBalances()` - single expense, single participant        | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case - simplest scenario                   |
 | `getSuggestedReimbursements()` - minimizes transactions     | 🔴 P0    | 🟡 Medium  | ✅ Done   | Core feature - verify greedy algorithm works    |
 | `getSuggestedReimbursements()` - stable sorting             | 🟡 P1    | 🟡 Medium  | ✅ Done   | Verify same balances yield same suggestions     |
 | `getSuggestedReimbursements()` - filters zero amounts       | 🟡 P1    | 🟢 Low     | ✅ Done   | Ensure zero-value reimbursements excluded       |
-| `getSuggestedReimbursements()` - handles balanced group     | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case - all balances zero                   |
+| `getSuggestedReimbursements()` - handles balanced group     | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case - all balances zero                   |
 | `getSuggestedReimbursements()` - complex 5+ person scenario | 🟡 P1    | 🔴 High    | 🍎 High   | Realistic multi-person settlement               |
 | `getPublicBalances()` - converts reimbursements to balances | 🟡 P1    | 🟢 Low     | ✅ Done   | Test reimbursement → balance conversion         |
 | `compareBalancesForReimbursements()` - sorts correctly      | 🟡 P1    | 🟢 Low     | 🍏 Low    | Verify sorting logic (positive before negative) |
@@ -84,18 +84,18 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | --------------------------------------------------------- | -------- | ---------- | ------- | ------------------------------- |
 | `formatCurrency()` - USD formatting (existing)            | 🔴 P0    | 🟢 Low     | ✅ Done | Already tested in utils.test.ts |
 | `formatCurrency()` - EUR formatting (existing)            | 🔴 P0    | 🟢 Low     | ✅ Done | Already tested                  |
-| `formatCurrency()` - custom currency symbols              | 🟡 P1    | 🟢 Low     | 🍏 Low  | Test non-ISO currency           |
-| `formatCurrency()` - zero decimal currencies (JPY)        | 🟡 P1    | 🟢 Low     | 🍏 Low  | Test decimal_digits = 0         |
-| `amountAsDecimal()` - converts cents to decimal           | 🔴 P0    | 🟢 Low     | 🍏 Low  | Core conversion                 |
-| `amountAsDecimal()` - handles rounding when requested     | 🟡 P1    | 🟢 Low     | 🍏 Low  | Optional rounding param         |
-| `amountAsMinorUnits()` - converts decimal to cents        | 🔴 P0    | 🟢 Low     | 🍏 Low  | Inverse of above                |
-| `amountAsMinorUnits()` - rounds correctly                 | 🟡 P1    | 🟢 Low     | 🍏 Low  | No floating point issues        |
+| `formatCurrency()` - custom currency symbols              | 🟡 P1    | 🟢 Low     | ✅ Done | Test non-ISO currency           |
+| `formatCurrency()` - zero decimal currencies (JPY)        | 🟡 P1    | 🟢 Low     | ✅ Done | Test decimal_digits = 0         |
+| `amountAsDecimal()` - converts cents to decimal           | 🔴 P0    | 🟢 Low     | ✅ Done | Core conversion                 |
+| `amountAsDecimal()` - handles rounding when requested     | 🟡 P1    | 🟢 Low     | ✅ Done | Optional rounding param         |
+| `amountAsMinorUnits()` - converts decimal to cents        | 🔴 P0    | 🟢 Low     | ✅ Done | Inverse of above                |
+| `amountAsMinorUnits()` - rounds correctly                 | 🟡 P1    | 🟢 Low     | ✅ Done | No floating point issues        |
 | `formatAmountAsDecimal()` - formats with correct decimals | 🟡 P1    | 🟢 Low     | 🍏 Low  | String formatting               |
 | `getCurrency()` - returns currency by code                | 🔴 P0    | 🟢 Low     | ✅ Done | Lookup function                 |
-| `getCurrency()` - returns custom for empty code           | 🟡 P1    | 🟢 Low     | 🍏 Low  | Fallback behavior               |
-| `getCurrency()` - handles locale variations               | 🟢 P2    | 🟢 Low     | 🍏 Low  | i18n currency names             |
-| `getCurrencyFromGroup()` - extracts from group object     | 🟡 P1    | 🟢 Low     | 🍏 Low  | Helper function                 |
-| `defaultCurrencyList()` - includes custom currency        | 🟢 P2    | 🟢 Low     | 🍏 Low  | Custom currency in list         |
+| `getCurrency()` - returns custom for empty code           | 🟡 P1    | 🟢 Low     | ✅ Done | Fallback behavior               |
+| `getCurrency()` - handles locale variations               | 🟢 P2    | 🟢 Low     | ✅ Done | i18n currency names             |
+| `getCurrencyFromGroup()` - extracts from group object     | 🟡 P1    | 🟢 Low     | ✅ Done | Helper function                 |
+| `defaultCurrencyList()` - includes custom currency        | 🟢 P2    | 🟢 Low     | ✅ Done | Custom currency in list         |
 
 **Total: 14 tests | P0: 5, P1: 7, P2: 2 | Low effort: 12, Done: 2**
 
@@ -103,18 +103,18 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 
 ### 1.4 Utility Functions (`src/lib/utils.ts`)
 
-| Test Case                                         | Priority | Complexity | Effort    | Notes                                  |
-| ------------------------------------------------- | -------- | ---------- | --------- | -------------------------------------- |
-| `formatDate()` - formats with locale              | 🟡 P1    | 🟢 Low     | 🍏 Low    | Date display                           |
-| `formatDateOnly()` - avoids timezone shifts       | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Critical for DATE fields, UTC handling |
-| `formatDateOnly()` - handles month boundaries     | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Edge case - dates near midnight        |
-| `formatFileSize()` - formats bytes correctly      | 🟢 P2    | 🟢 Low     | 🍏 Low    | Utility function                       |
-| `formatFileSize()` - handles GB, MB, KB, B units  | 🟢 P2    | 🟢 Low     | 🍏 Low    | Unit conversion                        |
-| `normalizeString()` - removes accents             | 🟡 P1    | 🟢 Low     | 🍏 Low    | Search functionality                   |
-| `normalizeString()` - lowercases                  | 🟡 P1    | 🟢 Low     | 🍏 Low    | Case-insensitive search                |
-| `formatCategoryForAIPrompt()` - formats correctly | 🟢 P2    | 🟢 Low     | 🍏 Low    | AI feature helper                      |
-| `delay()` - resolves after ms                     | 🔵 P3    | 🟢 Low     | 🍏 Low    | Simple utility                         |
-| `cn()` - merges class names                       | 🔵 P3    | 🟢 Low     | 🍏 Low    | TailwindCSS helper                     |
+| Test Case                                         | Priority | Complexity | Effort  | Notes                                  |
+| ------------------------------------------------- | -------- | ---------- | ------- | -------------------------------------- |
+| `formatDate()` - formats with locale              | 🟡 P1    | 🟢 Low     | ✅ Done | Date display                           |
+| `formatDateOnly()` - avoids timezone shifts       | 🔴 P0    | 🟡 Medium  | ✅ Done | Critical for DATE fields, UTC handling |
+| `formatDateOnly()` - handles month boundaries     | 🟡 P1    | 🟡 Medium  | ✅ Done | Edge case - dates near midnight        |
+| `formatFileSize()` - formats bytes correctly      | 🟢 P2    | 🟢 Low     | ✅ Done | Utility function                       |
+| `formatFileSize()` - handles GB, MB, KB, B units  | 🟢 P2    | 🟢 Low     | ✅ Done | Unit conversion                        |
+| `normalizeString()` - removes accents             | 🟡 P1    | 🟢 Low     | ✅ Done | Search functionality                   |
+| `normalizeString()` - lowercases                  | 🟡 P1    | 🟢 Low     | ✅ Done | Case-insensitive search                |
+| `formatCategoryForAIPrompt()` - formats correctly | 🟢 P2    | 🟢 Low     | 🍏 Low  | AI feature helper                      |
+| `delay()` - resolves after ms                     | 🔵 P3    | 🟢 Low     | 🍏 Low  | Simple utility                         |
+| `cn()` - merges class names                       | 🔵 P3    | 🟢 Low     | 🍏 Low  | TailwindCSS helper                     |
 
 **Total: 10 tests | P0: 1, P1: 4, P2: 3, P3: 2 | Low effort: 9, Medium: 1**
 
@@ -128,10 +128,10 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `expenseFormSchema` - rejects invalid split mode        | 🔴 P0    | 🟢 Low     | 🍏 Low    | Enum validation      |
 | `expenseFormSchema` - validates percentage sums to 100% | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Business rule        |
 | `expenseFormSchema` - validates amount sum equals total | 🔴 P0    | 🟡 Medium  | 🍊 Medium | BY_AMOUNT validation |
-| `expenseFormSchema` - allows valid recurring rules      | 🟡 P1    | 🟢 Low     | 🍏 Low    | Enum validation      |
+| `expenseFormSchema` - allows valid recurring rules      | 🟡 P1    | 🟢 Low     | ✅ Done   | Enum validation      |
 | `groupFormSchema` - validates group creation            | 🔴 P0    | 🟢 Low     | 🍏 Low    | Group validation     |
 | `groupFormSchema` - requires at least 2 participants    | 🔴 P0    | 🟢 Low     | 🍏 Low    | Business rule        |
-| `groupFormSchema` - validates currency format           | 🟡 P1    | 🟢 Low     | 🍏 Low    | Currency validation  |
+| `groupFormSchema` - validates currency format           | 🟡 P1    | 🟢 Low     | ✅ Done   | Currency validation  |
 
 **Total: 8 tests | P0: 6, P1: 2 | Low effort: 6, Medium: 2**
 

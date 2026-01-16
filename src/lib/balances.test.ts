@@ -25,6 +25,42 @@ const makeExpense = (overrides: Partial<BalancesExpense>): BalancesExpense =>
   }) as BalancesExpense
 
 describe('getBalances', () => {
+  it('avoids negative zeros', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 0,
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [{ participant: { id: 'p0', name: 'P0' }, shares: 1 }],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    expect(Object.is(balances.p0.paid, -0)).toBe(false)
+    expect(Object.is(balances.p0.paidFor, -0)).toBe(false)
+    expect(Object.is(balances.p0.total, -0)).toBe(false)
+  })
+
+  it('handles empty expense list', () => {
+    expect(getBalances([])).toEqual({})
+  })
+
+  it('single expense, single participant', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 123,
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [{ participant: { id: 'p0', name: 'P0' }, shares: 1 }],
+      }),
+    ]
+
+    expect(getBalances(expenses)).toEqual({
+      p0: { paid: 123, paidFor: 123, total: 0 },
+    })
+  })
+
   it('evenly splits expenses', () => {
     const expenses: BalancesExpense[] = [
       makeExpense({
