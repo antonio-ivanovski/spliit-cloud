@@ -144,6 +144,13 @@ Optional features controlled via environment variables:
 - Jest is configured for unit tests
 - Write tests in `*.test.ts` or `*.test.tsx` files
 - React Testing Library is available for component testing
+- Mocking with `jest-mock-extended` for type-safe mocks
+
+### Testing E2e
+
+- Playwright is set up for end-to-end tests
+- Tests are in the `tests/` directory
+- Run with `npm test-e2e` 
 
 ## Key Implementation Details
 
