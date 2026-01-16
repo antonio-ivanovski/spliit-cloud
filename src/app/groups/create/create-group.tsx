@@ -17,6 +17,8 @@ export const CreateGroup = () => {
 
   return (
     <GroupForm
+      isAuthenticated={!!session?.user && !isDeviceOnly}
+      currentUserName={session?.user?.name || ''}
       onSubmit={async (groupFormValues) => {
         // Create authenticated group only if:
         // - User is signed in AND

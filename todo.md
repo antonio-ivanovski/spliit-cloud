@@ -1,0 +1,11 @@
+- 🔄 When creating an "authenticated group" there should not be manually adding list of name participants. Make sure that auhtneticated groups consist of authenticated users only. This means that one must invite others to such groups in order to add participant. For names, each user has name, use that.
+- Authenticated groups are loaded but their 'loading' state is not handled properly, the participant count and date are shimmering forever.
+- For "authenticated group" there should not be "Local settings" especially for "Active user". By default the active logged in user is the active user in the group entries
+- ✅ I am triggering to create "authenticated group", but instead device group is created.
+- Authenticated groups instead of having "Remove from recent groups" in the group dropdown, should have "Leave group" option. Leaving group means that user is removed from the group participants and will no longer have access to the group unless re-invited.
+- When adding expense for authenticated group, the "Paid by" should default to the logged in user.
+- User management feature, for now will be limited to changing the user name. This name will need to be reflected in the group participants names as well.
+- The "user" icon in the top right corner har weird styling, it is circle but a very narrow one. Replace with with the user name with with a dropdown to user settings and  sign out.
+- The UI should reflect the available authentication providers. If there is no registered auth provider for Google, the "Sign in with Google" button should not be shown. Same goes for others, e.g. GitHub, magic-link.
+- Refactor magic-link with 'resend' to be replaced with other standard HTTP or SMTP email services. 
+- Replace icons in login page with proper ones from 'simple-icons' package.

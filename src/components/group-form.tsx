@@ -50,12 +50,16 @@ export type Props = {
     participantId?: string,
   ) => Promise<void>
   protectedParticipantIds?: string[]
+  isAuthenticated?: boolean
+  currentUserName?: string
 }
 
 export function GroupForm({
   group,
   onSubmit,
   protectedParticipantIds = [],
+  isAuthenticated = false,
+  currentUserName = '',
 }: Props) {
   const locale = useLocale()
   const t = useTranslations('GroupForm')
@@ -74,11 +78,13 @@ export function GroupForm({
           information: '',
           currency: '',
           currencyCode: process.env.NEXT_PUBLIC_DEFAULT_CURRENCY_CODE || 'USD', // TODO: If NEXT_PUBLIC_DEFAULT_CURRENCY_CODE, is not set, determine the default currency code based on locale
-          participants: [
-            { name: t('Participants.John') },
-            { name: t('Participants.Jane') },
-            { name: t('Participants.Jack') },
-          ],
+          participants: isAuthenticated
+            ? [{ name: currentUserName }]
+            : [
+                { name: t('Participants.John') },
+                { name: t('Participants.Jane') },
+                { name: t('Participants.Jack') },
+              ],
         },
   })
   const { fields, append, remove } = useFieldArray({
@@ -256,9 +262,12 @@ export function GroupForm({
                               className="text-base"
                               {...field}
                               placeholder={t('Participants.new')}
+                              disabled={isAuthenticated}
                             />
-                            {item.id &&
-                            protectedParticipantIds.includes(item.id) ? (
+                            {isAuthenticated ? (
+                              <div className="w-10" />
+                            ) : item.id &&
+                              protectedParticipantIds.includes(item.id) ? (
                               <HoverCard>
                                 <HoverCardTrigger>
                                   <Button
@@ -299,17 +308,19 @@ export function GroupForm({
               ))}
             </ul>
           </CardContent>
-          <CardFooter>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                append({ name: '' })
-              }}
-              type="button"
-            >
-              {t('Participants.add')}
-            </Button>
-          </CardFooter>
+          {!isAuthenticated && (
+            <CardFooter>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  append({ name: '' })
+                }}
+                type="button"
+              >
+                {t('Participants.add')}
+              </Button>
+            </CardFooter>
+          )}
         </Card>
 
         <Card className="mb-4">
