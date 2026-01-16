@@ -1,5 +1,9 @@
 import { Currency } from './currency'
 import {
+  cn,
+  delay,
+  formatAmountAsDecimal,
+  formatCategoryForAIPrompt,
   formatCurrency,
   formatDate,
   formatDateOnly,
@@ -185,5 +189,75 @@ describe('formatFileSize', () => {
     expect(formatFileSize(1024 + 1, 'en-US')).toContain('kB')
     expect(formatFileSize(1024 ** 2 + 1, 'en-US')).toContain('MB')
     expect(formatFileSize(1024 ** 3 + 1, 'en-US')).toContain('GB')
+  })
+})
+
+describe('formatCategoryForAIPrompt', () => {
+  it('formats correctly', () => {
+    const category = {
+      id: 5,
+      grouping: 'Food',
+      name: 'Groceries',
+    }
+
+    expect(formatCategoryForAIPrompt(category as any)).toBe(
+      '"Food/Groceries" (ID: 5)',
+    )
+  })
+})
+
+describe('delay', () => {
+  it('resolves after ms', async () => {
+    const start = Date.now()
+    await delay(50)
+    const elapsed = Date.now() - start
+
+    expect(elapsed).toBeGreaterThanOrEqual(45) // Allow small variance
+    expect(elapsed).toBeLessThan(100)
+  })
+})
+
+describe('formatAmountAsDecimal', () => {
+  it('formats with correct decimals', () => {
+    const usd: Currency = {
+      name: 'US Dollar',
+      symbol_native: '$',
+      symbol: '$',
+      code: 'USD',
+      name_plural: 'US dollars',
+      rounding: 0,
+      decimal_digits: 2,
+    }
+
+    expect(formatAmountAsDecimal(1234, usd)).toBe('12.34')
+    expect(formatAmountAsDecimal(100, usd)).toBe('1.00')
+    expect(formatAmountAsDecimal(5, usd)).toBe('0.05')
+
+    const jpy: Currency = {
+      name: 'Japanese Yen',
+      symbol_native: '￥',
+      symbol: '¥',
+      code: 'JPY',
+      name_plural: 'Japanese yen',
+      rounding: 0,
+      decimal_digits: 0,
+    }
+
+    expect(formatAmountAsDecimal(1000, jpy)).toBe('1000')
+  })
+})
+
+describe('cn', () => {
+  it('merges class names', () => {
+    expect(cn('px-2', 'py-1')).toBe('px-2 py-1')
+  })
+
+  it('handles conditional classes', () => {
+    expect(cn('base', false && 'hidden', 'active')).toBe('base active')
+  })
+
+  it('deduplicates conflicting Tailwind classes', () => {
+    // tailwind-merge keeps the last conflicting class
+    expect(cn('px-2', 'px-4')).toBe('px-4')
   })
 })

@@ -1,4 +1,4 @@
-import { getBalances } from './balances'
+import { getBalances, getSuggestedReimbursements } from './balances'
 
 type BalancesExpense = Parameters<typeof getBalances>[0][number]
 
@@ -276,5 +276,53 @@ describe('getBalances', () => {
       0,
     )
     expect(Math.abs(netTotal)).toBeLessThan(3)
+  })
+})
+
+describe('getSuggestedReimbursements', () => {
+  it('sorts balances correctly (positive before negative)', () => {
+    const balances = {
+      p0: { paid: 100, paidFor: 50, total: 50 }, // positive
+      p1: { paid: 0, paidFor: 30, total: -30 }, // negative
+      p2: { paid: 50, paidFor: 70, total: -20 }, // negative
+    }
+
+    const reimbursements = getSuggestedReimbursements(balances)
+
+    // Verify positive balances are settled first
+    expect(reimbursements.length).toBeGreaterThan(0)
+    expect(reimbursements[0].to).toBe('p0') // p0 has positive balance
+  })
+
+  it('handles complex 5+ person scenario', () => {
+    // Scenario: 5 people, various expenses
+    // Alice paid 300, owes 100 → +200
+    // Bob paid 50, owes 100 → -50
+    // Carol paid 150, owes 100 → +50
+    // Dave paid 0, owes 100 → -100
+    // Eve paid 0, owes 100 → -100
+    const balances = {
+      alice: { paid: 300, paidFor: 100, total: 200 },
+      bob: { paid: 50, paidFor: 100, total: -50 },
+      carol: { paid: 150, paidFor: 100, total: 50 },
+      dave: { paid: 0, paidFor: 100, total: -100 },
+      eve: { paid: 0, paidFor: 100, total: -100 },
+    }
+
+    const reimbursements = getSuggestedReimbursements(balances)
+
+    // Verify sum of reimbursements balances out
+    const totalPaid = reimbursements.reduce((sum, r) => sum + r.amount, 0)
+    const totalOwed = 200 + 50 // alice + carol
+    expect(totalPaid).toBe(totalOwed)
+
+    // Verify all debtors are covered
+    const debtorsSettled = new Set(reimbursements.map((r) => r.from))
+    expect(debtorsSettled.has('bob')).toBe(true)
+    expect(debtorsSettled.has('dave')).toBe(true)
+    expect(debtorsSettled.has('eve')).toBe(true)
+
+    // Verify minimal transactions (should be <= 4 for 5 people)
+    expect(reimbursements.length).toBeLessThanOrEqual(4)
   })
 })

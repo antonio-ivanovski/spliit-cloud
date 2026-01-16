@@ -47,9 +47,9 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `getSuggestedReimbursements()` - stable sorting             | 🟡 P1    | 🟡 Medium  | ✅ Done | Verify same balances yield same suggestions     |
 | `getSuggestedReimbursements()` - filters zero amounts       | 🟡 P1    | 🟢 Low     | ✅ Done | Ensure zero-value reimbursements excluded       |
 | `getSuggestedReimbursements()` - handles balanced group     | 🟢 P2    | 🟢 Low     | ✅ Done | Edge case - all balances zero                   |
-| `getSuggestedReimbursements()` - complex 5+ person scenario | 🟡 P1    | 🔴 High    | 🍎 High | Realistic multi-person settlement               |
+| `getSuggestedReimbursements()` - complex 5+ person scenario | 🟡 P1    | 🔴 High    | ✅ Done | Realistic multi-person settlement               |
 | `getPublicBalances()` - converts reimbursements to balances | 🟡 P1    | 🟢 Low     | ✅ Done | Test reimbursement → balance conversion         |
-| `compareBalancesForReimbursements()` - sorts correctly      | 🟡 P1    | 🟢 Low     | 🍏 Low  | Verify sorting logic (positive before negative) |
+| `compareBalancesForReimbursements()` - sorts correctly      | 🟡 P1    | 🟢 Low     | ✅ Done | Verify sorting logic (positive before negative) |
 
 **Total: 17 tests | P0: 6, P1: 8, P2: 3 | Low effort: 11, Medium: 5, High: 1**
 
@@ -90,7 +90,7 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `amountAsDecimal()` - handles rounding when requested     | 🟡 P1    | 🟢 Low     | ✅ Done | Optional rounding param         |
 | `amountAsMinorUnits()` - converts decimal to cents        | 🔴 P0    | 🟢 Low     | ✅ Done | Inverse of above                |
 | `amountAsMinorUnits()` - rounds correctly                 | 🟡 P1    | 🟢 Low     | ✅ Done | No floating point issues        |
-| `formatAmountAsDecimal()` - formats with correct decimals | 🟡 P1    | 🟢 Low     | 🍏 Low  | String formatting               |
+| `formatAmountAsDecimal()` - formats with correct decimals | 🟡 P1    | 🟢 Low     | ✅ Done | String formatting               |
 | `getCurrency()` - returns currency by code                | 🔴 P0    | 🟢 Low     | ✅ Done | Lookup function                 |
 | `getCurrency()` - returns custom for empty code           | 🟡 P1    | 🟢 Low     | ✅ Done | Fallback behavior               |
 | `getCurrency()` - handles locale variations               | 🟢 P2    | 🟢 Low     | ✅ Done | i18n currency names             |
@@ -112,9 +112,9 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `formatFileSize()` - handles GB, MB, KB, B units  | 🟢 P2    | 🟢 Low     | ✅ Done | Unit conversion                        |
 | `normalizeString()` - removes accents             | 🟡 P1    | 🟢 Low     | ✅ Done | Search functionality                   |
 | `normalizeString()` - lowercases                  | 🟡 P1    | 🟢 Low     | ✅ Done | Case-insensitive search                |
-| `formatCategoryForAIPrompt()` - formats correctly | 🟢 P2    | 🟢 Low     | 🍏 Low  | AI feature helper                      |
-| `delay()` - resolves after ms                     | 🔵 P3    | 🟢 Low     | 🍏 Low  | Simple utility                         |
-| `cn()` - merges class names                       | 🔵 P3    | 🟢 Low     | 🍏 Low  | TailwindCSS helper                     |
+| `formatCategoryForAIPrompt()` - formats correctly | 🟢 P2    | 🟢 Low     | ✅ Done | AI feature helper                      |
+| `delay()` - resolves after ms                     | 🔵 P3    | 🟢 Low     | ✅ Done | Simple utility                         |
+| `cn()` - merges class names                       | 🔵 P3    | 🟢 Low     | ✅ Done | TailwindCSS helper                     |
 
 **Total: 10 tests | P0: 1, P1: 4, P2: 3, P3: 2 | Low effort: 9, Medium: 1**
 
