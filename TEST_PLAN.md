@@ -34,21 +34,21 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | Test Case                                                   | Priority | Complexity | Effort    | Notes                                           |
 | ----------------------------------------------------------- | -------- | ---------- | --------- | ----------------------------------------------- |
 | `getBalances()` - evenly split expenses                     | 🔴 P0    | 🟢 Low     | ✅ Done   | Critical - verify equal splits work correctly   |
-| `getBalances()` - BY_SHARES split mode                      | 🔴 P0    | 🟡 Medium  | 🍏 Low    | Test weighted splits (1:2:3 ratios)             |
-| `getBalances()` - BY_PERCENTAGE split mode                  | 🔴 P0    | 🟡 Medium  | 🍏 Low    | Test percentage splits summing to 100%          |
-| `getBalances()` - BY_AMOUNT split mode                      | 🔴 P0    | 🟡 Medium  | 🍏 Low    | Test specific amounts per person                |
+| `getBalances()` - BY_SHARES split mode                      | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test weighted splits (1:2:3 ratios)             |
+| `getBalances()` - BY_PERCENTAGE split mode                  | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test percentage splits summing to 100%          |
+| `getBalances()` - BY_AMOUNT split mode                      | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test specific amounts per person                |
 | `getBalances()` - handles rounding correctly                | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Verify no floating point errors, totals balance |
 | `getBalances()` - avoids negative zeros                     | 🟡 P1    | 🟢 Low     | 🍏 Low    | Check for `-0` values being normalized to `0`   |
 | `getBalances()` - multiple participants, mixed expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Integration test with realistic scenario        |
-| `getBalances()` - last participant gets remaining amount    | 🔴 P0    | 🟡 Medium  | 🍏 Low    | Verify remainder distribution logic             |
+| `getBalances()` - last participant gets remaining amount    | 🔴 P0    | 🟡 Medium  | ✅ Done   | Verify remainder distribution logic             |
 | `getBalances()` - handles empty expense list                | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case - empty array                         |
 | `getBalances()` - single expense, single participant        | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case - simplest scenario                   |
-| `getSuggestedReimbursements()` - minimizes transactions     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Core feature - verify greedy algorithm works    |
-| `getSuggestedReimbursements()` - stable sorting             | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Verify same balances yield same suggestions     |
-| `getSuggestedReimbursements()` - filters zero amounts       | 🟡 P1    | 🟢 Low     | 🍏 Low    | Ensure zero-value reimbursements excluded       |
+| `getSuggestedReimbursements()` - minimizes transactions     | 🔴 P0    | 🟡 Medium  | ✅ Done   | Core feature - verify greedy algorithm works    |
+| `getSuggestedReimbursements()` - stable sorting             | 🟡 P1    | 🟡 Medium  | ✅ Done   | Verify same balances yield same suggestions     |
+| `getSuggestedReimbursements()` - filters zero amounts       | 🟡 P1    | 🟢 Low     | ✅ Done   | Ensure zero-value reimbursements excluded       |
 | `getSuggestedReimbursements()` - handles balanced group     | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case - all balances zero                   |
 | `getSuggestedReimbursements()` - complex 5+ person scenario | 🟡 P1    | 🔴 High    | 🍎 High   | Realistic multi-person settlement               |
-| `getPublicBalances()` - converts reimbursements to balances | 🟡 P1    | 🟢 Low     | 🍏 Low    | Test reimbursement → balance conversion         |
+| `getPublicBalances()` - converts reimbursements to balances | 🟡 P1    | 🟢 Low     | ✅ Done   | Test reimbursement → balance conversion         |
 | `compareBalancesForReimbursements()` - sorts correctly      | 🟡 P1    | 🟢 Low     | 🍏 Low    | Verify sorting logic (positive before negative) |
 
 **Total: 17 tests | P0: 6, P1: 8, P2: 3 | Low effort: 11, Medium: 5, High: 1**
@@ -67,12 +67,12 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 | `getTotalActiveUserPaidFor()` - returns 0 for null user      | 🟡 P1    | 🟢 Low     | 🍏 Low  | Handle no active user case                |
 | `calculateShare()` - EVENLY mode correct calculation         | 🔴 P0    | 🟢 Low     | ✅ Done | Core splitting logic                      |
 | `calculateShare()` - BY_AMOUNT mode uses exact shares        | 🔴 P0    | 🟢 Low     | ✅ Done | Direct amount passthrough                 |
-| `calculateShare()` - BY_PERCENTAGE mode (shares/10000)       | 🔴 P0    | 🟡 Medium  | 🍏 Low  | Percentage calculation with basis points  |
-| `calculateShare()` - BY_SHARES weighted correctly            | 🔴 P0    | 🟡 Medium  | 🍏 Low  | Ratio-based splitting                     |
+| `calculateShare()` - BY_PERCENTAGE mode (shares/10000)       | 🔴 P0    | 🟡 Medium  | ✅ Done | Percentage calculation with basis points  |
+| `calculateShare()` - BY_SHARES weighted correctly            | 🔴 P0    | 🟡 Medium  | ✅ Done | Ratio-based splitting                     |
 | `calculateShare()` - returns 0 for reimbursements            | 🔴 P0    | 🟢 Low     | ✅ Done | Reimbursement exclusion                   |
-| `calculateShare()` - returns 0 if participant not in paidFor | 🟡 P1    | 🟢 Low     | 🍏 Low  | Participant not involved in expense       |
-| `getTotalActiveUserShare()` - sums across expenses           | 🔴 P0    | 🟡 Medium  | 🍏 Low  | Total owed calculation                    |
-| `getTotalActiveUserShare()` - rounds to 2 decimals           | 🟡 P1    | 🟢 Low     | 🍏 Low  | Currency precision handling               |
+| `calculateShare()` - returns 0 if participant not in paidFor | 🟡 P1    | 🟢 Low     | ✅ Done | Participant not involved in expense       |
+| `getTotalActiveUserShare()` - sums across expenses           | 🔴 P0    | 🟡 Medium  | ✅ Done | Total owed calculation                    |
+| `getTotalActiveUserShare()` - rounds to 2 decimals           | 🟡 P1    | 🟢 Low     | ✅ Done | Currency precision handling               |
 
 **Total: 14 tests | P0: 10, P1: 3, P2: 1 | Low effort: 14**
 

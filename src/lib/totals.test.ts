@@ -1,6 +1,7 @@
 import {
   calculateShare,
   getTotalActiveUserPaidFor,
+  getTotalActiveUserShare,
   getTotalGroupSpending,
 } from './totals'
 
@@ -109,6 +110,73 @@ describe('getTotalActiveUserPaidFor', () => {
   })
 })
 
+describe('getTotalActiveUserShare', () => {
+  it('sums active user shares across expenses', () => {
+    const expenses: TotalsExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100,
+        isReimbursement: false,
+        splitMode: 'EVENLY',
+        paidFor: [
+          makePaidFor('u1', 1),
+          makePaidFor('u2', 1),
+          makePaidFor('u3', 1),
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 90,
+        isReimbursement: false,
+        splitMode: 'BY_AMOUNT',
+        paidFor: [makePaidFor('u1', 30), makePaidFor('u2', 60)],
+      }),
+      makeExpense({
+        id: 'e3',
+        amount: 50,
+        isReimbursement: false,
+        splitMode: 'EVENLY',
+        paidFor: [makePaidFor('u1', 1), makePaidFor('u2', 1)],
+      }),
+    ]
+
+    expect(getTotalActiveUserShare('u1', expenses)).toBeCloseTo(
+      100 / 3 + 30 + 25,
+      2,
+    )
+  })
+
+  it('rounds total share to 2 decimals', () => {
+    const expenses: TotalsExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100,
+        splitMode: 'EVENLY',
+        paidFor: [
+          makePaidFor('u1', 1),
+          makePaidFor('u2', 1),
+          makePaidFor('u3', 1),
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 1,
+        splitMode: 'EVENLY',
+        paidFor: [
+          makePaidFor('u1', 1),
+          makePaidFor('u2', 1),
+          makePaidFor('u3', 1),
+        ],
+      }),
+    ]
+
+    const total = getTotalActiveUserShare('u1', expenses)
+
+    expect(total).toBe(33.67)
+    expect(total.toFixed(2)).toBe('33.67')
+  })
+})
+
 describe('calculateShare', () => {
   it('returns 0 for reimbursements', () => {
     const expense: ShareExpense = {
@@ -120,6 +188,17 @@ describe('calculateShare', () => {
 
     expect(calculateShare('u1', expense)).toBe(0)
     expect(calculateShare('u2', expense)).toBe(0)
+  })
+
+  it('returns 0 if participant not in paidFor', () => {
+    const expense: ShareExpense = {
+      amount: 100,
+      isReimbursement: false,
+      splitMode: 'EVENLY',
+      paidFor: [makePaidFor('u1', 1), makePaidFor('u2', 1)],
+    }
+
+    expect(calculateShare('u3', expense)).toBe(0)
   })
 
   it('EVENLY divides expense amount by participants', () => {
@@ -149,5 +228,34 @@ describe('calculateShare', () => {
 
     expect(calculateShare('u1', expense)).toBe(123)
     expect(calculateShare('u2', expense)).toBe(456)
+  })
+
+  it('BY_PERCENTAGE calculates share using shares/10000', () => {
+    const expense: ShareExpense = {
+      amount: 1000,
+      isReimbursement: false,
+      splitMode: 'BY_PERCENTAGE',
+      paidFor: [makePaidFor('u1', 2500), makePaidFor('u2', 7500)],
+    }
+
+    expect(calculateShare('u1', expense)).toBe(250)
+    expect(calculateShare('u2', expense)).toBe(750)
+  })
+
+  it('BY_SHARES weights shares by ratio', () => {
+    const expense: ShareExpense = {
+      amount: 600,
+      isReimbursement: false,
+      splitMode: 'BY_SHARES',
+      paidFor: [
+        makePaidFor('u1', 1),
+        makePaidFor('u2', 2),
+        makePaidFor('u3', 3),
+      ],
+    }
+
+    expect(calculateShare('u1', expense)).toBe(100)
+    expect(calculateShare('u2', expense)).toBe(200)
+    expect(calculateShare('u3', expense)).toBe(300)
   })
 })
