@@ -84,7 +84,6 @@ test('edit group - update name and info', async ({ page }) => {
     participants: ['Alice', 'Bob', 'Charlie'],
   })
 
-  // Go to Settings (edit) tab
   await page.getByRole('tab', { name: 'Settings' }).click()
   await expect(page).toHaveURL(/\/groups\/[^/]+\/edit$/)
 
@@ -96,11 +95,64 @@ test('edit group - update name and info', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Save' }).click()
 
-  // Verify Information tab reflects the new info
   await page.getByRole('tab', { name: 'Information' }).click()
   await expect(page).toHaveURL(/\/groups\/[^/]+\/information$/)
   await expect(page.getByText(newInfo, { exact: true })).toBeVisible()
-
-  // Verify header shows new group name
   await expect(page.getByText(newName, { exact: true })).toBeVisible()
+})
+
+test('create group - validation errors', async ({ page }) => {
+  await page.goto('/groups')
+  await page.getByRole('link', { name: 'Create' }).click()
+
+  // Submit empty form
+  await page.getByRole('button', { name: 'Create' }).click()
+
+  // name requires min 2
+  await expect(
+    page.getByText('Enter at least two characters.').first(),
+  ).toBeVisible()
+
+  // participant name requires min 2 (at least one will be invalid by default: "New" is placeholder but value is John/Jane/Jack, so clear one)
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill('A')
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(
+    page.getByText('Enter at least two characters.').first(),
+  ).toBeVisible()
+
+  // duplicate participant names
+  await participantInputs.nth(0).fill('Alice')
+  await participantInputs.nth(1).fill('Alice')
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(
+    page.getByText('Another participant already has this name.').first(),
+  ).toBeVisible()
+})
+
+test('edit group - add participant', async ({ page }) => {
+  const groupName = `PW E2E group add participant ${Date.now()}`
+
+  await createGroup({
+    page,
+    groupName,
+    participants: ['Alice', 'Bob', 'Charlie'],
+  })
+
+  await page.getByRole('tab', { name: 'Settings' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/edit$/)
+
+  await page.getByRole('button', { name: 'Add participant' }).click()
+
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(4)
+  await participantInputs.nth(3).fill('Dave')
+
+  await page.getByRole('button', { name: 'Save' }).click()
+
+  // Verify new participant appears on balances
+  await page.getByRole('tab', { name: 'Balances' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/balances$/)
+  await expect(page.getByText('Dave', { exact: true })).toBeVisible()
 })
