@@ -152,4 +152,129 @@ describe('getBalances', () => {
     expect(balances.p1).toEqual({ paid: 0, paidFor: 34, total: -34 })
     expect(balances.p2).toEqual({ paid: 0, paidFor: 34, total: -34 })
   })
+
+  it('handles rounding correctly', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100, // 100 / 3 = 33.333...
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 77, // 77 / 3 = 25.666...
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p1', name: 'P1' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+      makeExpense({
+        id: 'e3',
+        amount: 99, // 99 / 7 = 14.142857...
+        splitMode: 'BY_SHARES',
+        paidBy: { id: 'p2', name: 'P2' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 2 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 3 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 2 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // Verify all values are integers (rounded)
+    expect(Number.isInteger(balances.p0.paid)).toBe(true)
+    expect(Number.isInteger(balances.p0.paidFor)).toBe(true)
+    expect(Number.isInteger(balances.p0.total)).toBe(true)
+    expect(Number.isInteger(balances.p1.paid)).toBe(true)
+    expect(Number.isInteger(balances.p1.paidFor)).toBe(true)
+    expect(Number.isInteger(balances.p1.total)).toBe(true)
+    expect(Number.isInteger(balances.p2.paid)).toBe(true)
+    expect(Number.isInteger(balances.p2.paidFor)).toBe(true)
+    expect(Number.isInteger(balances.p2.total)).toBe(true)
+
+    // Verify totals balance (sum ~= 0, within rounding tolerance)
+    const netTotal = Object.values(balances).reduce(
+      (sum, b) => sum + b.total,
+      0,
+    )
+    expect(Math.abs(netTotal)).toBeLessThan(3) // Tolerance for rounding remainder
+
+    // Verify no negative zeros
+    expect(Object.is(balances.p0.paid, -0)).toBe(false)
+    expect(Object.is(balances.p0.paidFor, -0)).toBe(false)
+    expect(Object.is(balances.p0.total, -0)).toBe(false)
+  })
+
+  it('handles multiple participants with mixed expenses', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 120,
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p0', name: 'Alice' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'Alice' }, shares: 1 },
+          { participant: { id: 'p1', name: 'Bob' }, shares: 1 },
+          { participant: { id: 'p2', name: 'Carol' }, shares: 1 },
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 600,
+        splitMode: 'BY_SHARES',
+        paidBy: { id: 'p1', name: 'Bob' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'Alice' }, shares: 1 },
+          { participant: { id: 'p1', name: 'Bob' }, shares: 2 },
+          { participant: { id: 'p2', name: 'Carol' }, shares: 3 },
+        ],
+      }),
+      makeExpense({
+        id: 'e3',
+        amount: 200,
+        splitMode: 'BY_PERCENTAGE',
+        paidBy: { id: 'p2', name: 'Carol' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'Alice' }, shares: 5000 }, // 50%
+          { participant: { id: 'p1', name: 'Bob' }, shares: 3000 }, // 30%
+          { participant: { id: 'p2', name: 'Carol' }, shares: 2000 }, // 20%
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // Alice: paid 120, owes (40 + 100 + 100) = 240, total = 120 - 240 = -120
+    expect(balances.p0.paid).toBe(120)
+    expect(balances.p0.paidFor).toBe(240)
+    expect(balances.p0.total).toBe(-120)
+
+    // Bob: paid 600, owes (40 + 200 + 60) = 300, total = 600 - 300 = 300
+    expect(balances.p1.paid).toBe(600)
+    expect(balances.p1.paidFor).toBe(300)
+    expect(balances.p1.total).toBe(300)
+
+    // Carol: paid 200, owes (40 + 300 + 40) = 380, total = 200 - 380 = -180
+    expect(balances.p2.paid).toBe(200)
+    expect(balances.p2.paidFor).toBe(380)
+    expect(balances.p2.total).toBe(-180)
+
+    // Verify sum of totals = 0 (within rounding tolerance)
+    const netTotal = Object.values(balances).reduce(
+      (sum, b) => sum + b.total,
+      0,
+    )
+    expect(Math.abs(netTotal)).toBeLessThan(3)
+  })
 })

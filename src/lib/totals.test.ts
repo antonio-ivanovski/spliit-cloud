@@ -59,6 +59,12 @@ describe('getTotalGroupSpending', () => {
 
     expect(getTotalGroupSpending(expenses)).toBe(350)
   })
+
+  it('handles empty array', () => {
+    const expenses: TotalsExpense[] = []
+
+    expect(getTotalGroupSpending(expenses)).toBe(0)
+  })
 })
 
 describe('getTotalActiveUserPaidFor', () => {

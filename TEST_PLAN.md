@@ -31,25 +31,25 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 
 ### 1.1 Balance Calculations (`src/lib/balances.ts`)
 
-| Test Case                                                   | Priority | Complexity | Effort    | Notes                                           |
-| ----------------------------------------------------------- | -------- | ---------- | --------- | ----------------------------------------------- |
-| `getBalances()` - evenly split expenses                     | 🔴 P0    | 🟢 Low     | ✅ Done   | Critical - verify equal splits work correctly   |
-| `getBalances()` - BY_SHARES split mode                      | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test weighted splits (1:2:3 ratios)             |
-| `getBalances()` - BY_PERCENTAGE split mode                  | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test percentage splits summing to 100%          |
-| `getBalances()` - BY_AMOUNT split mode                      | 🔴 P0    | 🟡 Medium  | ✅ Done   | Test specific amounts per person                |
-| `getBalances()` - handles rounding correctly                | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Verify no floating point errors, totals balance |
-| `getBalances()` - avoids negative zeros                     | 🟡 P1    | 🟢 Low     | ✅ Done   | Check for `-0` values being normalized to `0`   |
-| `getBalances()` - multiple participants, mixed expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Integration test with realistic scenario        |
-| `getBalances()` - last participant gets remaining amount    | 🔴 P0    | 🟡 Medium  | ✅ Done   | Verify remainder distribution logic             |
-| `getBalances()` - handles empty expense list                | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case - empty array                         |
-| `getBalances()` - single expense, single participant        | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case - simplest scenario                   |
-| `getSuggestedReimbursements()` - minimizes transactions     | 🔴 P0    | 🟡 Medium  | ✅ Done   | Core feature - verify greedy algorithm works    |
-| `getSuggestedReimbursements()` - stable sorting             | 🟡 P1    | 🟡 Medium  | ✅ Done   | Verify same balances yield same suggestions     |
-| `getSuggestedReimbursements()` - filters zero amounts       | 🟡 P1    | 🟢 Low     | ✅ Done   | Ensure zero-value reimbursements excluded       |
-| `getSuggestedReimbursements()` - handles balanced group     | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case - all balances zero                   |
-| `getSuggestedReimbursements()` - complex 5+ person scenario | 🟡 P1    | 🔴 High    | 🍎 High   | Realistic multi-person settlement               |
-| `getPublicBalances()` - converts reimbursements to balances | 🟡 P1    | 🟢 Low     | ✅ Done   | Test reimbursement → balance conversion         |
-| `compareBalancesForReimbursements()` - sorts correctly      | 🟡 P1    | 🟢 Low     | 🍏 Low    | Verify sorting logic (positive before negative) |
+| Test Case                                                   | Priority | Complexity | Effort  | Notes                                           |
+| ----------------------------------------------------------- | -------- | ---------- | ------- | ----------------------------------------------- |
+| `getBalances()` - evenly split expenses                     | 🔴 P0    | 🟢 Low     | ✅ Done | Critical - verify equal splits work correctly   |
+| `getBalances()` - BY_SHARES split mode                      | 🔴 P0    | 🟡 Medium  | ✅ Done | Test weighted splits (1:2:3 ratios)             |
+| `getBalances()` - BY_PERCENTAGE split mode                  | 🔴 P0    | 🟡 Medium  | ✅ Done | Test percentage splits summing to 100%          |
+| `getBalances()` - BY_AMOUNT split mode                      | 🔴 P0    | 🟡 Medium  | ✅ Done | Test specific amounts per person                |
+| `getBalances()` - handles rounding correctly                | 🟡 P1    | 🟡 Medium  | ✅ Done | Verify no floating point errors, totals balance |
+| `getBalances()` - avoids negative zeros                     | 🟡 P1    | 🟢 Low     | ✅ Done | Check for `-0` values being normalized to `0`   |
+| `getBalances()` - multiple participants, mixed expenses     | 🔴 P0    | 🟡 Medium  | ✅ Done | Integration test with realistic scenario        |
+| `getBalances()` - last participant gets remaining amount    | 🔴 P0    | 🟡 Medium  | ✅ Done | Verify remainder distribution logic             |
+| `getBalances()` - handles empty expense list                | 🟢 P2    | 🟢 Low     | ✅ Done | Edge case - empty array                         |
+| `getBalances()` - single expense, single participant        | 🟢 P2    | 🟢 Low     | ✅ Done | Edge case - simplest scenario                   |
+| `getSuggestedReimbursements()` - minimizes transactions     | 🔴 P0    | 🟡 Medium  | ✅ Done | Core feature - verify greedy algorithm works    |
+| `getSuggestedReimbursements()` - stable sorting             | 🟡 P1    | 🟡 Medium  | ✅ Done | Verify same balances yield same suggestions     |
+| `getSuggestedReimbursements()` - filters zero amounts       | 🟡 P1    | 🟢 Low     | ✅ Done | Ensure zero-value reimbursements excluded       |
+| `getSuggestedReimbursements()` - handles balanced group     | 🟢 P2    | 🟢 Low     | ✅ Done | Edge case - all balances zero                   |
+| `getSuggestedReimbursements()` - complex 5+ person scenario | 🟡 P1    | 🔴 High    | 🍎 High | Realistic multi-person settlement               |
+| `getPublicBalances()` - converts reimbursements to balances | 🟡 P1    | 🟢 Low     | ✅ Done | Test reimbursement → balance conversion         |
+| `compareBalancesForReimbursements()` - sorts correctly      | 🟡 P1    | 🟢 Low     | 🍏 Low  | Verify sorting logic (positive before negative) |
 
 **Total: 17 tests | P0: 6, P1: 8, P2: 3 | Low effort: 11, Medium: 5, High: 1**
 
@@ -59,9 +59,9 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 
 | Test Case                                                    | Priority | Complexity | Effort  | Notes                                     |
 | ------------------------------------------------------------ | -------- | ---------- | ------- | ----------------------------------------- |
-| `getTotalGroupSpending()` - sums all expenses                | 🔴 P0    | 🟢 Low     | 🍏 Low  | Core metric calculation                   |
-| `getTotalGroupSpending()` - excludes reimbursements          | 🔴 P0    | 🟢 Low     | 🍏 Low  | Critical - reimbursements shouldn't count |
-| `getTotalGroupSpending()` - handles empty array              | 🟢 P2    | 🟢 Low     | 🍏 Low  | Edge case                                 |
+| `getTotalGroupSpending()` - sums all expenses                | 🔴 P0    | 🟢 Low     | ✅ Done | Core metric calculation                   |
+| `getTotalGroupSpending()` - excludes reimbursements          | 🔴 P0    | 🟢 Low     | ✅ Done | Critical - reimbursements shouldn't count |
+| `getTotalGroupSpending()` - handles empty array              | 🟢 P2    | 🟢 Low     | ✅ Done | Edge case                                 |
 | `getTotalActiveUserPaidFor()` - sums user's payments         | 🔴 P0    | 🟢 Low     | 🍏 Low  | Personalization feature                   |
 | `getTotalActiveUserPaidFor()` - excludes reimbursements      | 🔴 P0    | 🟢 Low     | 🍏 Low  | Consistency with group total              |
 | `getTotalActiveUserPaidFor()` - returns 0 for null user      | 🟡 P1    | 🟢 Low     | 🍏 Low  | Handle no active user case                |
@@ -122,16 +122,16 @@ These tests focus on pure business logic functions in `src/lib/` that are critic
 
 ### 1.5 Schemas & Validation (`src/lib/schemas.ts`)
 
-| Test Case                                               | Priority | Complexity | Effort    | Notes                |
-| ------------------------------------------------------- | -------- | ---------- | --------- | -------------------- |
-| `expenseFormSchema` - validates required fields         | 🔴 P0    | 🟢 Low     | ✅ Done   | Form validation      |
-| `expenseFormSchema` - rejects invalid split mode        | 🔴 P0    | 🟢 Low     | 🍏 Low    | Enum validation      |
-| `expenseFormSchema` - validates percentage sums to 100% | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Business rule        |
-| `expenseFormSchema` - validates amount sum equals total | 🔴 P0    | 🟡 Medium  | 🍊 Medium | BY_AMOUNT validation |
-| `expenseFormSchema` - allows valid recurring rules      | 🟡 P1    | 🟢 Low     | ✅ Done   | Enum validation      |
-| `groupFormSchema` - validates group creation            | 🔴 P0    | 🟢 Low     | 🍏 Low    | Group validation     |
-| `groupFormSchema` - requires at least 2 participants    | 🔴 P0    | 🟢 Low     | 🍏 Low    | Business rule        |
-| `groupFormSchema` - validates currency format           | 🟡 P1    | 🟢 Low     | ✅ Done   | Currency validation  |
+| Test Case                                               | Priority | Complexity | Effort  | Notes                |
+| ------------------------------------------------------- | -------- | ---------- | ------- | -------------------- |
+| `expenseFormSchema` - validates required fields         | 🔴 P0    | 🟢 Low     | ✅ Done | Form validation      |
+| `expenseFormSchema` - rejects invalid split mode        | 🔴 P0    | 🟢 Low     | ✅ Done | Enum validation      |
+| `expenseFormSchema` - validates percentage sums to 100% | 🔴 P0    | 🟡 Medium  | ✅ Done | Business rule        |
+| `expenseFormSchema` - validates amount sum equals total | 🔴 P0    | 🟡 Medium  | ✅ Done | BY_AMOUNT validation |
+| `expenseFormSchema` - allows valid recurring rules      | 🟡 P1    | 🟢 Low     | ✅ Done | Enum validation      |
+| `groupFormSchema` - validates group creation            | 🔴 P0    | 🟢 Low     | ✅ Done | Group validation     |
+| `groupFormSchema` - requires at least 2 participants    | 🔴 P0    | 🟢 Low     | ✅ Done | Business rule        |
+| `groupFormSchema` - validates currency format           | 🟡 P1    | 🟢 Low     | ✅ Done | Currency validation  |
 
 **Total: 8 tests | P0: 6, P1: 2 | Low effort: 6, Medium: 2**
 
