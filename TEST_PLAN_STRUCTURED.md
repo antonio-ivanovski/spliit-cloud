@@ -8,7 +8,7 @@ _Location: `src/lib/api.test.ts`_
 
 | Status  | Priority  | Task                                 | Implementation Guide                                                                                  |
 | :------ | :-------- | :----------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| ⬜ Todo | 🔴 **P0** | **Create daily recurring expense**   | Verify `createRecurringExpenses` creates correct number of instances for daily interval. Mock DB.     |
+| ✅ Done | 🔴 **P0** | **Create daily recurring expense**   | Verify `createRecurringExpenses` creates correct number of instances for daily interval. Mock DB.     |
 | ⬜ Todo | 🔴 **P0** | **Create weekly recurring expense**  | Verify correct dates are generated for weekly interval (e.g., every Monday).                          |
 | ⬜ Todo | 🔴 **P0** | **Create monthly recurring expense** | Verify correct dates for monthly interval.                                                            |
 | ✅ Done | 🟡 **P1** | **Handle month boundaries**          | Test edge cases like Jan 31st → Feb 28/29, Mar 31st. Ensure dates don't skip or error.                |

@@ -438,7 +438,7 @@ export async function logActivity(
   })
 }
 
-async function createRecurringExpenses() {
+export async function createRecurringExpenses() {
   const localDate = new Date() // Current local date
   const utcDateFromLocal = new Date(
     Date.UTC(
