@@ -237,7 +237,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Verify recurring instances created      | 🔴 P0    | 🔴 High    | 🍎 High   | Time-based, complex  |
 | Edit recurring expense - stops future   | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Modification logic   |
 | Delete recurring expense - only current | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Independent deletion |
-| Recurring expense shows indicator       | 🟢 P2    | 🟢 Low     | 🍏 Low    | UI element           |
+| Recurring expense shows indicator       | 🟢 P2    | 🟢 Low     | ✅ Done   | UI element           |
 
 **Total: 7 tests | P0: 4, P1: 2, P2: 1 | Low effort: 1, Medium: 4, High: 2**
 
@@ -284,7 +284,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Select active user - persists    | 🟡 P1    | 🟡 Medium  | 🍊 Medium | LocalStorage test |
 | Active user changes balance view | 🔴 P0    | 🟡 Medium  | ✅ Done   | Personalization   |
 | Active user changes stats        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Personalization   |
-| Clear active user - neutral view | 🟢 P2    | 🟢 Low     | 🍏 Low    | Reset feature     |
+| Clear active user - neutral view | 🟢 P2    | 🟢 Low     | ✅ Done   | Reset feature     |
 
 **Total: 4 tests | P0: 2, P1: 1, P2: 1 | Low effort: 1, Medium: 3**
 
@@ -332,7 +332,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 | Test Case                         | Priority | Complexity | Effort    | Notes           |
 | --------------------------------- | -------- | ---------- | --------- | --------------- |
-| Toggle dark mode - persists       | 🟢 P2    | 🟢 Low     | 🍏 Low    | Theme switching |
+| Toggle dark mode - persists       | 🟢 P2    | 🟢 Low     | ✅ Done   | Theme switching |
 | Mobile responsive - drawer opens  | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Mobile testing  |
 | Desktop responsive - dialog opens | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Desktop testing |
 
