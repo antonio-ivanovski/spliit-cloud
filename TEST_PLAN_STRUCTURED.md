@@ -95,8 +95,8 @@ _Location: `tests/e2e/ui.spec.ts`_
 | ⬜ Todo | 🟢 **P2** | **i18n UI updates**      | Switch lang to Spanish. Assert static text (headers/buttons) changes.  |
 | ⬜ Todo | 🟡 **P1** | **i18n Currency format** | Switch lang/locale. Assert currency symbol position (€10 vs 10€).      |
 | ⬜ Todo | 🟡 **P1** | **i18n Date format**     | Switch lang. Assert date format changes (MM/DD vs DD/MM).              |
-| ⬜ Todo | 🟡 **P1** | **Mobile responsive**    | Set viewport to mobile. Assert drawer menu works instead of sidebar.   |
-| ⬜ Todo | 🟡 **P1** | **Desktop responsive**   | Set viewport to desktop. Assert dialogs/sidebar appear correctly.      |
+| ✅ Done | 🟡 **P1** | **Mobile responsive**    | Set viewport to mobile. Assert drawer menu works instead of sidebar.   |
+| ✅ Done | 🟡 **P1** | **Desktop responsive**   | Set viewport to desktop. Assert dialogs/sidebar appear correctly.      |
 | ✅ Done | 🟡 **P1** | **Health Readiness**     | Fetch `/api/health/readiness`. Assert status 200 (database connected). |
 
 ### Document Upload (If Enabled)
@@ -105,6 +105,6 @@ _Location: `tests/e2e/documents.spec.ts`_
 
 | Status  | Priority  | Task                 | Implementation Guide                                              |
 | :------ | :-------- | :------------------- | :---------------------------------------------------------------- |
-| ⬜ Todo | 🟡 **P1** | **Upload document**  | Mock S3. Upload file in expense form. Verify UI shows attachment. |
+| ⬜ Todo | 🟡 **P1** | **Upload document**  | Mock S3. Modify to inject dependancy to make mocking easier. Upload file in expense form. Verify UI shows attachment. |
 | ⬜ Todo | 🟢 **P2** | **Multiple docs**    | Upload multiple files. Verify all are listed.                     |
 | ⬜ Todo | 🟡 **P1** | **Display document** | Click attached image. Verify lightbox/preview opens.              |
