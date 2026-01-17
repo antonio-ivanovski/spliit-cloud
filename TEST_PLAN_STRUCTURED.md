@@ -51,9 +51,9 @@ _Location: `tests/e2e/recurring-expenses.spec.ts`_
 
 | Status  | Priority  | Task                         | Implementation Guide                                                                                      |
 | :------ | :-------- | :--------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| ⬜ Todo | 🔴 **P0** | **Create daily recurring**   | Fill expense form, select "Daily". Submit. Verify generic recurring indicator UI.                         |
-| ⬜ Todo | 🔴 **P0** | **Create weekly recurring**  | Fill form, select "Weekly". Submit. Verify UI.                                                            |
-| ⬜ Todo | 🔴 **P0** | **Create monthly recurring** | Fill form, select "Monthly". Submit. Verify UI.                                                           |
+| ✅ Done | 🔴 **P0** | **Create daily recurring**   | Fill expense form, select "Daily". Submit. Verify generic recurring indicator UI.                         |
+| ✅ Done | 🔴 **P0** | **Create weekly recurring**  | Fill form, select "Weekly". Submit. Verify UI.                                                            |
+| ✅ Done | 🔴 **P0** | **Create monthly recurring** | Fill form, select "Monthly". Submit. Verify UI.                                                           |
 | ⬜ Todo | 🔴 **P0** | **Verify instances created** | (Complex) Create recurring expense. Trigger backend job or mock time. Verify new expense appears in list. |
 | ⬜ Todo | 🟡 **P1** | **Edit stops future**        | Edit a recurring instance. Assert future instances are unlinked or modified according to logic.           |
 | ⬜ Todo | 🟡 **P1** | **Delete current only**      | Delete a recurring instance. Assert other instances in the chain remain.                                  |
