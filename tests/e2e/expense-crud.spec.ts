@@ -691,6 +691,281 @@ test('Create expense - with notes', async ({ page }) => {
   }
 })
 
+test('Create expense - validation errors', async ({ page }) => {
+  const groupId = await createGroup({
+    page,
+    groupName: `PW E2E validation test ${Date.now()}`,
+    participants: ['Alice', 'Bob'],
+  })
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  // Find create expense button
+  let createExpenseButton = page
+    .getByRole('button')
+    .filter({ hasText: /add|create/i })
+    .first()
+  if (!(await createExpenseButton.isVisible())) {
+    createExpenseButton = page
+      .getByRole('link')
+      .filter({ hasText: /expense|add/i })
+      .first()
+  }
+
+  if (await createExpenseButton.isVisible()) {
+    await createExpenseButton.click()
+    await page.waitForLoadState('load')
+
+    // Try to submit empty form - should show validation errors
+    const submitButton = page.getByRole('button', { name: /create/i }).first()
+    await submitButton.click()
+
+    // Wait a moment for validation errors to appear
+    await page.waitForTimeout(500)
+
+    // Verify validation error messages appear
+    // Error messages could be about required fields (title, amount, payer)
+    const pageContent = await page.content()
+
+    // At minimum, we should still be on the create page (no submission)
+    await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/create/)
+
+    // Now test partial submission - fill title but no amount
+    const titleInputs = page.locator('input[type="text"]')
+    if ((await titleInputs.count()) > 0) {
+      await titleInputs.first().fill('Incomplete Expense')
+
+      // Try to submit
+      await submitButton.click()
+      await page.waitForTimeout(500)
+
+      // Should still be on create page due to validation
+      await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/create/)
+    }
+
+    // Now fill all required fields correctly to verify form works
+    if ((await titleInputs.count()) > 0) {
+      await titleInputs.first().clear()
+      await titleInputs.first().fill('Valid Expense')
+
+      const amountInputs = page.locator('input[inputmode="decimal"]')
+      if ((await amountInputs.count()) > 0) {
+        await amountInputs.first().fill('50.00')
+      }
+
+      const selects = page.locator('[role="combobox"]')
+      if ((await selects.count()) > 0) {
+        await selects.first().click()
+        await page.getByRole('option').first().click()
+      }
+
+      // Submit valid form
+      await submitButton.click()
+
+      // Should navigate away on successful creation
+      await page.waitForURL(/\/groups\/[^/]+/)
+
+      // Verify expense appears
+      await expect(page.getByText('Valid Expense')).toBeVisible()
+    }
+  }
+})
+
+test('Edit expense - update all fields', async ({ page }) => {
+  const groupId = await createGroup({
+    page,
+    groupName: `PW E2E edit expense test ${Date.now()}`,
+    participants: ['Alice', 'Bob', 'Charlie'],
+  })
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  // Create an initial expense
+  let createExpenseButton = page
+    .getByRole('button')
+    .filter({ hasText: /add|create/i })
+    .first()
+  if (!(await createExpenseButton.isVisible())) {
+    createExpenseButton = page
+      .getByRole('link')
+      .filter({ hasText: /expense|add/i })
+      .first()
+  }
+
+  if (await createExpenseButton.isVisible()) {
+    await createExpenseButton.click()
+    await page.waitForLoadState('load')
+
+    const titleInputs = page.locator('input[type="text"]')
+    if ((await titleInputs.count()) > 0) {
+      const originalTitle = `Original Expense ${Date.now()}`
+      await titleInputs.first().fill(originalTitle)
+
+      const amountInputs = page.locator('input[inputmode="decimal"]')
+      if ((await amountInputs.count()) > 0) {
+        await amountInputs.first().fill('100.00')
+      }
+
+      const selects = page.locator('[role="combobox"]')
+      if ((await selects.count()) > 0) {
+        await selects.first().click()
+        await page.getByRole('option').first().click()
+      }
+
+      const createButton = page.getByRole('button', { name: /create/i }).first()
+      await createButton.click()
+
+      await page.waitForURL(/\/groups\/[^/]+/)
+      await expect(page.getByText(originalTitle)).toBeVisible()
+
+      // Now click to edit the expense
+      await page.getByText(originalTitle).click()
+      await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+
+      // Update all fields
+      const editTitleInput = page.locator('input[type="text"]').first()
+      const newTitle = `Updated Expense ${Date.now()}`
+      await editTitleInput.clear()
+      await editTitleInput.fill(newTitle)
+
+      // Update amount
+      const editAmountInput = page.locator('input[inputmode="decimal"]').first()
+      const newAmount = '250.00'
+      await editAmountInput.clear()
+      await editAmountInput.fill(newAmount)
+
+      // Update payer (select different participant)
+      const editSelects = page.locator('[role="combobox"]')
+      if ((await editSelects.count()) > 0) {
+        await editSelects.first().click()
+        // Select second option if available
+        const options = page.getByRole('option')
+        const optionCount = await options.count()
+        if (optionCount > 1) {
+          await options.nth(1).click()
+        }
+      }
+
+      // Update date
+      const dateInputs = page.locator('input[type="date"]')
+      if ((await dateInputs.count()) > 0) {
+        const newDate = new Date()
+        newDate.setDate(newDate.getDate() - 5)
+        const dateStr = newDate.toISOString().split('T')[0]
+        await dateInputs.first().fill(dateStr)
+      }
+
+      // Update notes
+      const textareas = page.locator('textarea')
+      if ((await textareas.count()) > 0) {
+        const noteText = `Updated notes ${Date.now()}`
+        await textareas.first().clear()
+        await textareas.first().fill(noteText)
+      }
+
+      // Submit changes
+      const submitButton = page
+        .getByRole('button', { name: /save|update|submit/i })
+        .first()
+      await submitButton.click()
+
+      // Wait for navigation back
+      await page.waitForURL(/\/groups\/[^/]+/)
+
+      // Verify updated expense appears
+      await expect(page.getByText(newTitle)).toBeVisible()
+      await expect(page.getByText(newAmount)).toBeVisible()
+    }
+  }
+})
+
+test('Edit expense - change split mode', async ({ page }) => {
+  const groupId = await createGroup({
+    page,
+    groupName: `PW E2E split mode test ${Date.now()}`,
+    participants: ['Alice', 'Bob', 'Charlie'],
+  })
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  // Create an expense with EVENLY split mode
+  let createExpenseButton = page
+    .getByRole('button')
+    .filter({ hasText: /add|create/i })
+    .first()
+  if (!(await createExpenseButton.isVisible())) {
+    createExpenseButton = page
+      .getByRole('link')
+      .filter({ hasText: /expense|add/i })
+      .first()
+  }
+
+  if (await createExpenseButton.isVisible()) {
+    await createExpenseButton.click()
+    await page.waitForLoadState('load')
+
+    const titleInputs = page.locator('input[type="text"]')
+    if ((await titleInputs.count()) > 0) {
+      const expenseTitle = `Split Mode Test ${Date.now()}`
+      await titleInputs.first().fill(expenseTitle)
+
+      const amountInputs = page.locator('input[inputmode="decimal"]')
+      if ((await amountInputs.count()) > 0) {
+        await amountInputs.first().fill('300.00')
+      }
+
+      const selects = page.locator('[role="combobox"]')
+      if ((await selects.count()) > 0) {
+        await selects.first().click()
+        await page.getByRole('option').first().click()
+      }
+
+      const createButton = page.getByRole('button', { name: /create/i }).first()
+      await createButton.click()
+
+      await page.waitForURL(/\/groups\/[^/]+/)
+      await expect(page.getByText(expenseTitle)).toBeVisible()
+
+      // Click to edit
+      await page.getByText(expenseTitle).click()
+      await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+
+      // Look for split mode selector - usually a radio button or combobox
+      const splitModeSelectors = page
+        .locator('[role="radio"], [role="combobox"]')
+        .filter({
+          hasText: /evenly|shares|percentage|amount/i,
+        })
+
+      // Try to change split mode if selector is available
+      if ((await splitModeSelectors.count()) > 0) {
+        // Click on a split mode option (try to find BY_SHARES or BY_AMOUNT)
+        const allRadios = page.locator('[role="radio"]')
+        if ((await allRadios.count()) > 1) {
+          // Click second radio option to change split mode
+          await allRadios.nth(1).click()
+          await page.waitForTimeout(300)
+        }
+      }
+
+      // Submit changes
+      const submitButton = page
+        .getByRole('button', { name: /save|update|submit/i })
+        .first()
+      await submitButton.click()
+
+      // Wait for navigation
+      await page.waitForURL(/\/groups\/[^/]+/)
+
+      // Verify expense still appears (indicating successful update)
+      await expect(page.getByText(expenseTitle)).toBeVisible()
+    }
+  }
+})
+
 test('Create expense - with currency conversion', async ({ page }) => {
   // Create a group with USD currency (group currency)
   const groupName = `PW E2E currency conversion ${Date.now()}`

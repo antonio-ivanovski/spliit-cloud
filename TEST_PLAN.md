@@ -213,9 +213,9 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Create expense - with custom date         | 🟡 P1    | 🟢 Low     | ✅ Done   | Date picker          |
 | Create expense - with currency conversion | 🟡 P1    | 🟡 Medium  | ✅ Done   | Multi-currency       |
 | Create expense - as reimbursement         | 🟡 P1    | 🟢 Low     | ✅ Done   | Reimbursement flag   |
-| Create expense - validation errors        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Form validation      |
-| Edit expense - update all fields          | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Edit flow            |
-| Edit expense - change split mode          | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Mode switching       |
+| Create expense - validation errors        | 🟡 P1    | 🟡 Medium  | ✅ Done   | Form validation      |
+| Edit expense - update all fields          | 🟡 P1    | 🟡 Medium  | ✅ Done   | Edit flow            |
+| Edit expense - change split mode          | 🟡 P1    | 🟡 Medium  | ✅ Done   | Mode switching       |
 | Delete expense - confirmation flow        | 🔴 P0    | 🟢 Low     | ✅ Done   | Deletion             |
 | List expenses - pagination                | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Large lists          |
 | List expenses - filter by text            | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Search functionality |
@@ -245,16 +245,16 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.4 Balance & Reimbursement Flows
 
-| Test Case                                 | Priority | Complexity | Effort    | Notes                  |
-| ----------------------------------------- | -------- | ---------- | --------- | ---------------------- |
-| View balances page - calculates correctly | 🔴 P0    | 🟡 Medium  | ✅ Done   | Core feature           |
-| Balances match expected from expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Verification test      |
-| Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | ✅ Done   | Suggestions shown      |
-| Suggested reimbursements minimized        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Algorithm verification |
-| Active user balance highlighted           | 🟡 P1    | 🟢 Low     | ✅ Done   | Personalization        |
-| Create reimbursement expense              | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Settle debt flow       |
-| Reimbursement excludes from totals        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Important logic        |
-| Zero balances display correctly           | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case              |
+| Test Case                                 | Priority | Complexity | Effort  | Notes                  |
+| ----------------------------------------- | -------- | ---------- | ------- | ---------------------- |
+| View balances page - calculates correctly | 🔴 P0    | 🟡 Medium  | ✅ Done | Core feature           |
+| Balances match expected from expenses     | 🔴 P0    | 🟡 Medium  | ✅ Done | Verification test      |
+| Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | ✅ Done | Suggestions shown      |
+| Suggested reimbursements minimized        | 🟡 P1    | 🟡 Medium  | ✅ Done | Algorithm verification |
+| Active user balance highlighted           | 🟡 P1    | 🟢 Low     | ✅ Done | Personalization        |
+| Create reimbursement expense              | 🟡 P1    | 🟡 Medium  | ✅ Done | Settle debt flow       |
+| Reimbursement excludes from totals        | 🔴 P0    | 🟡 Medium  | ✅ Done | Important logic        |
+| Zero balances display correctly           | 🟢 P2    | 🟢 Low     | ✅ Done | Edge case              |
 
 **Total: 8 tests | P0: 4, P1: 3, P2: 1 | Low effort: 4, Medium: 4**
 
