@@ -570,7 +570,7 @@ export async function createRecurringExpenses() {
   }
 }
 
-function createPayloadForNewRecurringExpenseLink(
+export function createPayloadForNewRecurringExpenseLink(
   recurrenceRule: RecurrenceRule,
   priorDateToNextRecurrence: Date,
   groupId: String,

@@ -1,4 +1,5 @@
 import { PrismaClient, RecurrenceRule, ActivityType } from '@prisma/client'
+import { createPayloadForNewRecurringExpenseLink } from './api'
 
 jest.mock('nanoid', () => ({
   nanoid: () => Math.random().toString(36).substring(2, 15),
@@ -451,6 +452,161 @@ async function cleanupTestData(groupId: string, participantIds: string[]) {
   await prisma.participant.deleteMany({ where: { id: { in: participantIds } } })
   await prisma.group.delete({ where: { id: groupId } })
 }
+
+describe('createPayloadForNewRecurringExpenseLink', () => {
+  describe('Daily recurrence', () => {
+    it('returns correct next date for daily interval', () => {
+      const priorDate = new Date(Date.UTC(2025, 0, 15, 10, 30, 0))
+      const groupId = 'test-group-1'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.DAILY,
+        priorDate,
+        groupId,
+      )
+
+      expect(payload).toBeDefined()
+      expect(payload.id).toBeDefined()
+      expect(payload.id).toBeTruthy()
+      expect(payload.groupId).toBe(groupId)
+      expect(payload.nextExpenseDate).toBeDefined()
+
+      // Verify the next date is exactly 1 day later
+      const expectedDate = new Date(Date.UTC(2025, 0, 16, 10, 30, 0))
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(expectedDate.getUTCFullYear())
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(expectedDate.getUTCMonth())
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(expectedDate.getUTCDate())
+    })
+
+    it('handles year boundary for daily interval', () => {
+      const priorDate = new Date(Date.UTC(2024, 11, 31, 0, 0, 0))
+      const groupId = 'test-group-1'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.DAILY,
+        priorDate,
+        groupId,
+      )
+
+      // Should roll over to next year
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(2025)
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(0) // January
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(1)
+    })
+  })
+
+  describe('Weekly recurrence', () => {
+    it('returns correct next date for weekly interval', () => {
+      const priorDate = new Date(Date.UTC(2025, 0, 13, 14, 45, 0)) // Monday
+      const groupId = 'test-group-2'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.WEEKLY,
+        priorDate,
+        groupId,
+      )
+
+      expect(payload).toBeDefined()
+      expect(payload.id).toBeDefined()
+      expect(payload.id).toBeTruthy()
+      expect(payload.groupId).toBe(groupId)
+      expect(payload.nextExpenseDate).toBeDefined()
+
+      // Verify the next date is exactly 7 days later
+      const expectedDate = new Date(Date.UTC(2025, 0, 20, 14, 45, 0))
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(expectedDate.getUTCFullYear())
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(expectedDate.getUTCMonth())
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(expectedDate.getUTCDate())
+    })
+
+    it('handles month boundary for weekly interval', () => {
+      const priorDate = new Date(Date.UTC(2025, 0, 28, 0, 0, 0))
+      const groupId = 'test-group-2'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.WEEKLY,
+        priorDate,
+        groupId,
+      )
+
+      // Should roll over to next month
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(1) // February
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(4)
+    })
+  })
+
+  describe('Monthly recurrence', () => {
+    it('returns correct next date for monthly interval', () => {
+      const priorDate = new Date(Date.UTC(2025, 0, 15, 9, 0, 0))
+      const groupId = 'test-group-3'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.MONTHLY,
+        priorDate,
+        groupId,
+      )
+
+      expect(payload).toBeDefined()
+      expect(payload.id).toBeDefined()
+      expect(payload.id).toBeTruthy()
+      expect(payload.groupId).toBe(groupId)
+      expect(payload.nextExpenseDate).toBeDefined()
+
+      // Verify the next date is in the next month on the same day
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(2025)
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(1) // February
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(15)
+    })
+
+    it('handles month boundary for Jan 31 to Feb', () => {
+      const priorDate = new Date(Date.UTC(2025, 0, 31, 0, 0, 0))
+      const groupId = 'test-group-3'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.MONTHLY,
+        priorDate,
+        groupId,
+      )
+
+      // Should adjust to Feb 28 (non-leap year)
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(2025)
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(1) // February
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(28)
+    })
+
+    it('handles leap year Feb 29', () => {
+      const priorDate = new Date(Date.UTC(2024, 0, 31, 0, 0, 0))
+      const groupId = 'test-group-3'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.MONTHLY,
+        priorDate,
+        groupId,
+      )
+
+      // Should adjust to Feb 29 (leap year)
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(2024)
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(1) // February
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(29)
+    })
+
+    it('handles year boundary for monthly interval', () => {
+      const priorDate = new Date(Date.UTC(2024, 11, 15, 0, 0, 0)) // December
+      const groupId = 'test-group-3'
+
+      const payload = createPayloadForNewRecurringExpenseLink(
+        RecurrenceRule.MONTHLY,
+        priorDate,
+        groupId,
+      )
+
+      // Should roll over to next year
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(2025)
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(0) // January
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(15)
+    })
+  })
+})
 
 describe('createRecurringExpenses', () => {
   let groupId: string
