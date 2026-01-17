@@ -43,7 +43,7 @@ _Location: `tests/e2e/group-management.spec.ts` / `expense-crud.spec.ts`_
 | :------ | :-------- | :---------------------------- | :----------------------------------------------------------------------------------------- |
 | ⬜ Todo | 🟢 **P2** | **Recent groups persistence** | Visit a group, go home, reload page. Assert group appears in "Recent" list (LocalStorage). |
 | ⬜ Todo | 🟡 **P1** | **List pagination**           | Seed 20+ expenses. Verify "Load More" or infinite scroll loads subsequent items.           |
-| ⬜ Todo | 🟡 **P1** | **List text filter**          | Type unique string in search bar. Assert only matching expenses are visible.               |
+| ✅ Done | 🟡 **P1** | **List text filter**          | Type unique string in search bar. Assert only matching expenses are visible.               |
 
 ### Recurring Expenses Flow
 

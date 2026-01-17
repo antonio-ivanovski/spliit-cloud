@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createGroup } from '../helpers'
+import { createExpense, createGroup } from '../helpers'
 
 test('Delete expense - confirmation flow', async ({ page }) => {
   // Create a test group first
@@ -889,6 +889,67 @@ test('Edit expense - change split mode', async ({ page }) => {
       await expect(page.getByText(expenseTitle)).toBeVisible()
     }
   }
+})
+
+test('Expense list - text filter', async ({ page }) => {
+  const groupId = await createGroup({
+    page,
+    groupName: `PW E2E filter test ${Date.now()}`,
+    participants: ['Alice', 'Bob'],
+  })
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  const uniqueFilter = `UNIQUE_${Date.now()}`
+
+  await createExpense(page, {
+    title: `Pizza ${uniqueFilter}`,
+    amount: '50.00',
+    payer: 'Alice',
+  })
+
+  await createExpense(page, {
+    title: `Dinner ${uniqueFilter}`,
+    amount: '75.00',
+    payer: 'Bob',
+  })
+
+  await createExpense(page, {
+    title: 'Groceries without filter',
+    amount: '30.00',
+    payer: 'Alice',
+  })
+
+  await page.waitForURL(/\/groups\/[^/]+/)
+  await expect(page.getByText(`Pizza ${uniqueFilter}`)).toBeVisible()
+  await expect(page.getByText(`Dinner ${uniqueFilter}`)).toBeVisible()
+  await expect(page.getByText('Groceries without filter')).toBeVisible()
+
+  const searchInput = page.locator('input[placeholder*="Search"]')
+  await searchInput.fill(uniqueFilter)
+  await searchInput.dispatchEvent('input')
+
+  await expect(page.getByText(`Pizza ${uniqueFilter}`)).toBeVisible()
+  await expect(page.getByText(`Dinner ${uniqueFilter}`)).toBeVisible()
+  await expect(page.getByText('Groceries without filter')).not.toBeVisible()
+
+  await searchInput.fill('Pizza')
+  await expect(page.getByText(`Pizza ${uniqueFilter}`)).toBeVisible()
+  await expect(page.getByText(`Dinner ${uniqueFilter}`)).not.toBeVisible()
+  await expect(page.getByText('Groceries without filter')).not.toBeVisible()
+
+  const clearButton = page.locator('svg.lucide-x-circle')
+  if (await clearButton.isVisible()) {
+    await clearButton.click()
+  } else {
+    await searchInput.fill('')
+    await searchInput.dispatchEvent('input')
+  }
+
+  await expect(page.getByText(`Pizza ${uniqueFilter}`)).toBeVisible()
+  await expect(page.getByText(`Dinner ${uniqueFilter}`)).toBeVisible()
+  await expect(page.getByText('Groceries without filter')).toBeVisible()
 })
 
 test('Create expense - with currency conversion', async ({ page }) => {
