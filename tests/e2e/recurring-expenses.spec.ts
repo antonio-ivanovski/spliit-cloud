@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { expect, test } from '@playwright/test'
-import { createGroup } from '../helpers'
+import { createExpense, createGroup } from '../helpers'
 
 test('Verify instances created for recurring expense', async ({ page }) => {
   const groupId = await createGroup({
@@ -495,4 +495,54 @@ test('Recurring expense shows indicator', async ({ page }) => {
       }
     }
   }
+})
+
+test('Delete current only - other instances remain', async ({ page }) => {
+  const groupId = await createGroup({
+    page,
+    groupName: `PW E2E delete recurring ${Date.now()}`,
+    participants: ['Alice', 'Bob'],
+  })
+
+  const expenseTitle1 = `Delete Test 1 ${Date.now()}`
+  const expenseTitle2 = `Delete Test 2 ${Date.now()}`
+
+  await createExpense(page, {
+    title: expenseTitle1,
+    amount: '25.00',
+    payer: 'Alice',
+  })
+
+  await createExpense(page, {
+    title: expenseTitle2,
+    amount: '25.00',
+    payer: 'Alice',
+  })
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  await expect(page.getByText(expenseTitle1)).toBeVisible()
+  await expect(page.getByText(expenseTitle2)).toBeVisible()
+
+  await page.getByText(expenseTitle1).first().click()
+  await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+  await page.waitForLoadState('networkidle')
+
+  const deleteButton = page.getByRole('button', { name: /delete/i })
+  await expect(deleteButton).toBeVisible()
+  await deleteButton.click()
+
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toBeVisible()
+
+  const confirmDeleteButton = dialog.getByRole('button', { name: /yes/i })
+  await expect(confirmDeleteButton).toBeVisible()
+  await confirmDeleteButton.click()
+
+  await page.waitForURL(/\/groups\/[^/]+/)
+  await page.waitForLoadState('networkidle')
+
+  await expect(page.getByText(expenseTitle1)).not.toBeVisible()
+  await expect(page.getByText(expenseTitle2)).toBeVisible()
 })

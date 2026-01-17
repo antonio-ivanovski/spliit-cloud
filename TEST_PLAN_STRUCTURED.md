@@ -56,7 +56,7 @@ _Location: `tests/e2e/recurring-expenses.spec.ts`_
 | ✅ Done                                                                         | 🔴 **P0** | **Create monthly recurring** | Fill form, select "Monthly". Submit. Verify UI.                                                           |
 | ✅ Done                                                                         | 🔴 **P0** | **Verify instances created** | (Complex) Create recurring expense. Trigger backend job or mock time. Verify new expense appears in list. |
 | ⬜ Missing feature https://github.com/spliit-app/spliit/issues/492, do not test | 🟡 **P1** | **Edit stops future**        | Edit a recurring instance. Assert future instances are unlinked or modified according to logic.           |
-| ⬜ Todo                                                                         | 🟡 **P1** | **Delete current only**      | Delete a recurring instance. Assert other instances in the chain remain.                                  |
+| ✅ Done                                                                         | 🟡 **P1** | **Delete current only**      | Delete a recurring instance. Assert other instances in the chain remain.                                  |
 
 ### Statistics & Export
 
