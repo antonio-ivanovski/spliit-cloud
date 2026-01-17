@@ -306,11 +306,11 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.8 Category Management
 
-| Test Case                             | Priority | Complexity | Effort | Notes              |
-| ------------------------------------- | -------- | ---------- | ------ | ------------------ |
-| Select category when creating expense | 🟡 P1    | 🟢 Low     | 🍏 Low | Dropdown selection |
-| Category displays on expense          | 🟡 P1    | 🟢 Low     | 🍏 Low | Display test       |
-| Default category (General) selected   | 🟢 P2    | 🟢 Low     | 🍏 Low | Default behavior   |
+| Test Case                             | Priority | Complexity | Effort  | Notes              |
+| ------------------------------------- | -------- | ---------- | ------- | ------------------ |
+| Select category when creating expense | 🟡 P1    | 🟢 Low     | ✅ Done | Dropdown selection |
+| Category displays on expense          | 🟡 P1    | 🟢 Low     | ✅ Done | Display test       |
+| Default category (General) selected   | 🟢 P2    | 🟢 Low     | ✅ Done | Default behavior   |
 
 **Total: 3 tests | P1: 2, P2: 1 | Low effort: 3**
 
