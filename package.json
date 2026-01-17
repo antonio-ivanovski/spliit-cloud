@@ -14,7 +14,7 @@
     "build-image": "./scripts/build-image.sh",
     "start-container": "docker compose --env-file container.env up",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testEnvironment=node ./src",
-    "test-e2e": "playwright test --project=chromium",
+    "test-e2e": "playwright test --project=webkit",
     "generate-currency-data": "ts-node -T ./src/scripts/generateCurrencyData.ts"
   },
   "dependencies": {

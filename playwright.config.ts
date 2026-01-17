@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 
 /**
  * Read environment variables from file.
@@ -16,9 +16,8 @@ export default defineConfig({
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? 'dot' : 'html',
-  timeout: 10_000,
+  workers: process.env.CI ? 1 : 2,
+  reporter: process.env.CI ? 'dot' : 'json',
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -56,4 +55,4 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },
-});
+})
