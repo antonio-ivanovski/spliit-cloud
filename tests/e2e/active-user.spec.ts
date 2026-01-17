@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { createExpense, createGroup, navigateToTab } from '../helpers'
 
 test('Active user changes balance view', async ({ page }) => {
   const groupName = `PW E2E active user balances ${Date.now()}`
@@ -6,55 +7,25 @@ test('Active user changes balance view', async ({ page }) => {
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Seed a couple expenses so balances are non-trivial.
-  const createExpense = async (
-    title: string,
-    amount: string,
-    payer: string,
-  ) => {
-    await page
-      .getByRole('link', { name: /create expense|create the first/i })
-      .first()
-      .click()
+  await createExpense(page, {
+    title: 'Dinner',
+    amount: '30.00',
+    payer: participantA,
+  })
+  await createExpense(page, {
+    title: 'Taxi',
+    amount: '15.00',
+    payer: participantB,
+  })
 
-    await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
-
-    await page.locator('input[name="title"]').fill(title)
-    await page.locator('input[name="amount"]').fill(amount)
-
-    const paidBySelect = page
-      .getByRole('combobox')
-      .filter({ hasText: 'Select a participant' })
-    await paidBySelect.click()
-    await page.getByRole('option', { name: payer }).click()
-
-    await page.locator('button[type="submit"]').first().click()
-    await page.waitForURL(/\/groups\/[^/]+/)
-    await expect(page.getByText(title)).toBeVisible()
-  }
-
-  await createExpense('Dinner', '30.00', participantA)
-  await createExpense('Taxi', '15.00', participantB)
-
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Active-user UX: "Mark as paid" deep-links to reimbursement creation with query params.
   // Verify those params change when a different participant is selected.
@@ -89,23 +60,14 @@ test('Clear active user - neutral view', async ({ page }) => {
   const participantA = 'Alice'
   const participantB = 'Bob'
 
-  await page.goto('/groups')
-  await page.getByRole('link', { name: /^Create$/ }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill('Charlie')
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, 'Charlie'],
+  })
 
   // Navigate to balances
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Click on a participant to select them as active
   await page.getByText(participantA, { exact: true }).click()

@@ -1,44 +1,5 @@
 import { expect, test } from '@playwright/test'
-
-import type { Page } from '@playwright/test'
-
-async function createGroup({
-  page,
-  groupName,
-  participants,
-}: {
-  page: Page
-  groupName: string
-  participants: string[]
-}) {
-  await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-
-  for (let i = 0; i < participants.length; i++) {
-    if (i >= 3) {
-      await page.getByRole('button', { name: 'Add participant' }).click()
-      await expect(participantInputs).toHaveCount(i + 1)
-    }
-
-    await participantInputs.nth(i).fill(participants[i]!)
-  }
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).not.toHaveURL(/\/groups\/create$/)
-  await expect(page).toHaveURL(/\/groups\/[^/]+(\/expenses)?$/)
-
-  const url = page.url()
-  const groupId = url.match(/\/groups\/([^/]+)(?:\/expenses)?$/)?.[1]
-  if (!groupId || groupId === 'create') {
-    throw new Error(`Failed to extract groupId from URL: ${url}`)
-  }
-
-  return groupId
-}
+import { createGroup, fillParticipants, navigateToTab } from '../helpers'
 
 test('create group - with custom currency', async ({ page }) => {
   const groupName = `PW E2E group custom currency ${Date.now()}`
@@ -48,18 +9,14 @@ test('create group - with custom currency', async ({ page }) => {
 
   await page.getByLabel('Group name').fill(groupName)
 
-  // Select “Custom” currency (empty code)
+  // Select "Custom" currency (empty code)
   await page.locator('[role="combobox"]').first().click()
   await page.getByRole('option', { name: 'Custom' }).click()
 
   // Now the currency symbol input should be visible
   await page.getByLabel('Currency symbol').fill('$')
 
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill('Alice')
-  await participantInputs.nth(1).fill('Bob')
-  await participantInputs.nth(2).fill('Charlie')
+  await fillParticipants(page, ['Alice', 'Bob', 'Charlie'])
 
   await page.getByRole('button', { name: 'Create' }).click()
   await expect(page).toHaveURL(/\/groups\/[^/]+$/)
@@ -76,8 +33,7 @@ test('view group information page', async ({ page }) => {
     participants: ['Alice', 'Bob', 'Charlie'],
   })
 
-  await page.getByRole('tab', { name: 'Information' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/information$/)
+  await navigateToTab(page, 'Information')
 
   await expect(page.getByRole('heading', { name: groupName })).toBeVisible()
 
@@ -95,8 +51,7 @@ test('edit group - update name and info', async ({ page }) => {
     participants: ['Alice', 'Bob', 'Charlie'],
   })
 
-  await page.getByRole('tab', { name: 'Settings' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/edit$/)
+  await navigateToTab(page, 'Settings')
 
   const newName = `Renamed ${Date.now()}`
   const newInfo = `Info ${Date.now()}`
@@ -106,8 +61,7 @@ test('edit group - update name and info', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Save' }).click()
 
-  await page.getByRole('tab', { name: 'Information' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/information$/)
+  await navigateToTab(page, 'Information')
   await expect(page.getByText(newInfo, { exact: true })).toBeVisible()
   await expect(page.getByText(newName, { exact: true })).toBeVisible()
 })
@@ -151,8 +105,7 @@ test('edit group - add participant', async ({ page }) => {
     participants: ['Alice', 'Bob', 'Charlie'],
   })
 
-  await page.getByRole('tab', { name: 'Settings' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/edit$/)
+  await navigateToTab(page, 'Settings')
 
   await page.getByRole('button', { name: 'Add participant' }).click()
 
@@ -162,8 +115,7 @@ test('edit group - add participant', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Save' }).click()
 
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
   await expect(page.getByText('Dave', { exact: true })).toBeVisible()
 })
 
@@ -200,8 +152,7 @@ test('edit group - remove participant', async ({ page }) => {
   await page.locator('button[type="submit"]').first().click()
   await expect(page).toHaveURL(/\/groups\/[^/]+(\/expenses)?$/)
 
-  await page.getByRole('tab', { name: 'Settings' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/edit$/)
+  await navigateToTab(page, 'Settings')
 
   // Expect 4 participants still present
   const participantInputs = page.getByRole('textbox', { name: 'New' })
@@ -226,8 +177,7 @@ test('edit group - remove participant', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Save' }).click()
 
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
   await expect(page.getByText('Dave', { exact: true })).not.toBeVisible()
 })
 
@@ -291,7 +241,7 @@ test('share group - copy URL', async ({ page, context }) => {
     // Not all browsers support clipboard permissions; skip explicit granting.
   }
 
-  await page.getByRole('tab', { name: 'Expenses' }).click()
+  await navigateToTab(page, 'Expenses')
   await page.locator('button[title="Share"]').click()
 
   const groupId = page.url().match(/\/groups\/([^/]+)(?:\/expenses)?$/)?.[1]

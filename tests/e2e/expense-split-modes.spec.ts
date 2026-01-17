@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { createGroup, navigateToTab } from '../helpers'
 
 test('Create expense - evenly split (most common flow)', async ({ page }) => {
   const groupName = `PW E2E split modes ${Date.now()}`
@@ -7,23 +8,11 @@ test('Create expense - evenly split (most common flow)', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants (Alice, Bob, Charlie)
-  await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Fill in the 3 participants
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  // Create the group
-  await page.getByRole('button', { name: 'Create' }).click()
-
-  // Verify we're on the group detail page
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Step 2: Navigate to expense creation by clicking the link
   const createLink = page
@@ -73,15 +62,14 @@ test('Create expense - evenly split (most common flow)', async ({ page }) => {
   await page.waitForURL(/\/groups\/[^/]+/, {})
 
   // Step 9: Navigate to Expenses tab
-  await page.getByRole('tab', { name: 'Expenses' }).click()
+  await navigateToTab(page, 'Expenses')
 
   // Step 10: Verify expense appears with correct title and amount
   await expect(page.getByText('Team Dinner')).toBeVisible({})
   await expect(page.locator(`text=300.00`)).toBeVisible({})
 
   // Step 11: Verify balances
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Wait for the Balances heading to appear
   await expect(
@@ -104,23 +92,11 @@ test('Create expense - by shares split mode', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Fill in the 3 participants
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  // Create the group
-  await page.getByRole('button', { name: 'Create' }).click()
-
-  // Verify we're on the group detail page
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Step 2: Navigate to expense creation
   const createLink = page
@@ -191,15 +167,14 @@ test('Create expense - by shares split mode', async ({ page }) => {
   await page.waitForURL(/\/groups\/[^/]+/, {})
 
   // Step 8: Navigate to Expenses tab
-  await page.getByRole('tab', { name: 'Expenses' }).click()
+  await navigateToTab(page, 'Expenses')
 
   // Step 9: Verify expense appears
   await expect(page.getByText('Team Dinner Shares')).toBeVisible()
   await expect(page.locator('text=300.00')).toBeVisible()
 
   // Step 10: Verify balances (Alice paid 300, shares 1:2:3 so she is owed 250, Bob owes 100, Charlie owes 150)
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Wait for balances to load
   await expect(
@@ -222,23 +197,11 @@ test('Create expense - by percentage split mode', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Fill in the 3 participants
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  // Create the group
-  await page.getByRole('button', { name: 'Create' }).click()
-
-  // Verify we're on the group detail page
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Step 2: Navigate to expense creation
   const createLink = page
@@ -308,15 +271,14 @@ test('Create expense - by percentage split mode', async ({ page }) => {
   await page.waitForURL(/\/groups\/[^/]+/)
 
   // Step 8: Navigate to Expenses tab
-  await page.getByRole('tab', { name: 'Expenses' }).click()
+  await navigateToTab(page, 'Expenses')
 
   // Step 9: Verify expense appears
   await expect(page.getByText('Team Dinner Percentage')).toBeVisible()
   await expect(page.locator('text=300.00')).toBeVisible()
 
   // Step 10: Verify balances
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Wait for balances to load
   await expect(
@@ -339,19 +301,11 @@ test('Create expense - by amount split mode', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Step 2: Navigate to expense creation
   const createLink = page
@@ -413,13 +367,12 @@ test('Create expense - by amount split mode', async ({ page }) => {
   await page.waitForURL(/\/groups\/[^/]+/)
 
   // Step 9: Verify expense appears
-  await page.getByRole('tab', { name: 'Expenses' }).click()
+  await navigateToTab(page, 'Expenses')
   await expect(page.getByText('Team Dinner Amounts')).toBeVisible()
   await expect(page.locator('text=300.00')).toBeVisible()
 
   // Step 10: Verify balances page loads and shows participants
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   await expect(
     page

@@ -1,44 +1,5 @@
 import { expect, test } from '@playwright/test'
-
-import type { Page } from '@playwright/test'
-
-async function createGroup({
-  page,
-  groupName,
-  participants,
-}: {
-  page: Page
-  groupName: string
-  participants: string[]
-}) {
-  await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-
-  for (let i = 0; i < participants.length; i++) {
-    if (i >= 3) {
-      await page.getByRole('button', { name: 'Add participant' }).click()
-      await expect(participantInputs).toHaveCount(i + 1)
-    }
-
-    await participantInputs.nth(i).fill(participants[i]!)
-  }
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).not.toHaveURL(/\/groups\/create$/)
-  await expect(page).toHaveURL(/\/groups\/[^/]+(\/expenses)?$/)
-
-  const url = page.url()
-  const groupId = url.match(/\/groups\/([^/]+)(?:\/expenses)?$/)?.[1]
-  if (!groupId || groupId === 'create') {
-    throw new Error(`Failed to extract groupId from URL: ${url}`)
-  }
-
-  return groupId
-}
+import { createGroup } from '../helpers'
 
 test('View activity page', async ({ page }) => {
   const groupId = await createGroup({

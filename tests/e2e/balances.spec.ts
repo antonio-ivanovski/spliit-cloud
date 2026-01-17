@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { createExpense, createGroup, navigateToTab } from '../helpers'
 
 test('suggested reimbursements displayed', async ({ page }) => {
   const groupName = `PW E2E balances ${Date.now()}`
@@ -7,81 +8,31 @@ test('suggested reimbursements displayed', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create a group with 3 participants
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Overwrite default participants with our test names
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  await page.getByRole('button', { name: 'Create' }).click()
-
-  // Wait for redirect to group page
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
-
-  // Helper function to create an expense - reduces duplication and makes tests more maintainable
-  const createExpense = async (
-    title: string,
-    amount: string,
-    payer: string,
-  ) => {
-    // Click "Create expense" link on the group page
-    const createLink = page
-      .getByRole('link', { name: /create expense|create the first/i })
-      .first()
-    await createLink.waitFor({ state: 'visible' })
-    await createLink.click()
-
-    // Wait for navigation to expense creation page
-    await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
-
-    // Wait for the form to load and the title input to be ready
-    const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible' })
-
-    // Fill in expense details
-    await expenseTitle.fill(title)
-
-    // Fill amount
-    const amountInput = page.locator('input[name="amount"]')
-    await amountInput.fill(amount)
-
-    // Select payer - click the "Paid by" combobox
-    const paidBySelect = page
-      .getByRole('combobox')
-      .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible' })
-    await paidBySelect.click()
-
-    // Wait for dropdown and click option
-    const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible' })
-    await payerOption.click()
-
-    // Submit the expense
-    await page.locator('button[type="submit"]').first().click()
-
-    // Wait for redirect and verify expense appears
-    await page.waitForURL(/\/groups\/[^/]+/, {})
-    await expect(page.getByText(title)).toBeVisible({})
-  }
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Step 2-4: Create three expenses
-  await createExpense('Dinner', '300', participantA)
-  await createExpense('Breakfast', '150', participantB)
-  await createExpense('Lunch', '120', participantC)
+  await createExpense(page, {
+    title: 'Dinner',
+    amount: '300',
+    payer: participantA,
+  })
+  await createExpense(page, {
+    title: 'Breakfast',
+    amount: '150',
+    payer: participantB,
+  })
+  await createExpense(page, {
+    title: 'Lunch',
+    amount: '120',
+    payer: participantC,
+  })
 
   // Step 5: Navigate to Balances tab
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Step 6: Verify Suggested reimbursements section is visible
   const reimbursementsHeading = page
@@ -124,71 +75,26 @@ test('view balances page - calculates correctly', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create a group with 3 participants
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  await page.getByRole('button', { name: 'Create' }).click()
-
-  // Wait for redirect to group page
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
-
-  // Helper function to create an expense
-  const createExpense = async (
-    title: string,
-    amount: string,
-    payer: string,
-  ) => {
-    // Click "Create expense" link on the group page
-    const createLink = page
-      .getByRole('link', { name: /create expense|create the first/i })
-      .first()
-    await createLink.waitFor({ state: 'visible' })
-    await createLink.click()
-
-    // Wait for navigation to expense creation page
-    await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
-
-    // Wait for the form to load and the title input to be ready
-    const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible' })
-    await expenseTitle.fill(title)
-
-    const amountInput = page.locator('input[name="amount"]')
-    await amountInput.fill(amount)
-
-    const paidBySelect = page
-      .getByRole('combobox')
-      .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible' })
-    await paidBySelect.click()
-
-    const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible' })
-    await payerOption.click()
-
-    await page.locator('button[type="submit"]').first().click()
-    await page.waitForURL(/\/groups\/[^/]+/, {})
-    await expect(page.getByText(title)).toBeVisible({})
-  }
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Step 2-3: Create two expenses
-  await createExpense('Dinner', '300', participantA)
-  await createExpense('Breakfast', '150', participantB)
+  await createExpense(page, {
+    title: 'Dinner',
+    amount: '300',
+    payer: participantA,
+  })
+  await createExpense(page, {
+    title: 'Breakfast',
+    amount: '150',
+    payer: participantB,
+  })
 
   // Step 4: Navigate to Balances tab
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Step 5: Verify Balances section header is visible
   const balancesCard = page
@@ -228,26 +134,14 @@ test('Active user balance highlighted', async ({ page }) => {
   const participantB = 'Bob'
 
   // Create group
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill('Charlie')
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, 'Charlie'],
+  })
 
   // Navigate to balances
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Verify balances page loads with participant names
   await expect(page.getByText(participantA).first()).toBeVisible()
@@ -260,26 +154,14 @@ test('Zero balances display correctly', async ({ page }) => {
   const participantB = 'Bob'
 
   // Create group
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill('Charlie')
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, 'Charlie'],
+  })
 
   // Navigate to balances tab
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Verify all participants show zero balance (no expenses)
   const bodyText = await page.locator('body').textContent()
@@ -295,69 +177,29 @@ test('Balances match expected from expenses', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Create group
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
-
-  // Helper to create expenses
-  const createExpense = async (
-    title: string,
-    amount: string,
-    payer: string,
-  ) => {
-    const createLink = page
-      .getByRole('link', { name: /create expense|create the first/i })
-      .first()
-    await createLink.waitFor({ state: 'visible' })
-    await createLink.click()
-
-    await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
-
-    const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible' })
-    await expenseTitle.fill(title)
-
-    const amountInput = page.locator('input[name="amount"]')
-    await amountInput.fill(amount)
-
-    const paidBySelect = page
-      .getByRole('combobox')
-      .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible' })
-    await paidBySelect.click()
-
-    const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible' })
-    await payerOption.click()
-
-    await page.locator('button[type="submit"]').first().click()
-    await page.waitForURL(/\/groups\/[^/]+/)
-    await expect(page.getByText(title)).toBeVisible()
-  }
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
 
   // Create specific expenses to calculate expected balances
   // Alice pays 300 for 3 people → Alice: +100, Bob: -100, Charlie: -100
   // Bob pays 150 for 3 people → Alice: -50, Bob: +100, Charlie: -50
   // Net: Alice: +50, Bob: 0, Charlie: -50
-  await createExpense('Dinner', '300', participantA)
-  await createExpense('Breakfast', '150', participantB)
+  await createExpense(page, {
+    title: 'Dinner',
+    amount: '300',
+    payer: participantA,
+  })
+  await createExpense(page, {
+    title: 'Breakfast',
+    amount: '150',
+    payer: participantB,
+  })
 
   // Navigate to balances
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Wait for calculations to render
   await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible()
@@ -385,74 +227,31 @@ test('Suggested reimbursements minimized', async ({ page }) => {
   const participantD = 'David'
 
   // Create group with 4 participants
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Need to add 4th participant
-  let participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill(participantC)
-
-  // Add 4th participant
-  await page.getByRole('button', { name: 'Add participant' }).click()
-  participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(4)
-  await participantInputs.nth(3).fill(participantD)
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
-
-  // Helper to create expenses
-  const createExpense = async (
-    title: string,
-    amount: string,
-    payer: string,
-  ) => {
-    const createLink = page
-      .getByRole('link', { name: /create expense|create the first/i })
-      .first()
-    await createLink.waitFor({ state: 'visible' })
-    await createLink.click()
-
-    await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
-
-    const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible' })
-    await expenseTitle.fill(title)
-
-    const amountInput = page.locator('input[name="amount"]')
-    await amountInput.fill(amount)
-
-    const paidBySelect = page
-      .getByRole('combobox')
-      .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible' })
-    await paidBySelect.click()
-
-    const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible' })
-    await payerOption.click()
-
-    await page.locator('button[type="submit"]').first().click()
-    await page.waitForURL(/\/groups\/[^/]+/)
-    await expect(page.getByText(title)).toBeVisible()
-  }
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC, participantD],
+  })
 
   // Create multiple expenses that would benefit from optimization
-  await createExpense('Event A', '400', participantA)
-  await createExpense('Event B', '300', participantB)
-  await createExpense('Event C', '200', participantC)
+  await createExpense(page, {
+    title: 'Event A',
+    amount: '400',
+    payer: participantA,
+  })
+  await createExpense(page, {
+    title: 'Event B',
+    amount: '300',
+    payer: participantB,
+  })
+  await createExpense(page, {
+    title: 'Event C',
+    amount: '200',
+    payer: participantC,
+  })
 
   // Navigate to balances
-  await page.getByRole('tab', { name: 'Balances' }).click()
-  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+  await navigateToTab(page, 'Balances')
 
   // Wait for calculations
   await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible()
@@ -481,51 +280,18 @@ test('Create reimbursement expense', async ({ page }) => {
   const participantB = 'Bob'
 
   // Create group
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill('Charlie')
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, 'Charlie'],
+  })
 
   // Create a regular expense first
-  const createLink = page
-    .getByRole('link', { name: /create expense|create the first/i })
-    .first()
-  await createLink.waitFor({ state: 'visible' })
-  await createLink.click()
-
-  await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
-
-  const expenseTitle = page.locator('input[name="title"]')
-  await expenseTitle.waitFor({ state: 'visible' })
-  await expenseTitle.fill('Initial Expense')
-
-  const amountInput = page.locator('input[name="amount"]')
-  await amountInput.fill('300')
-
-  const paidBySelect = page
-    .getByRole('combobox')
-    .filter({ hasText: 'Select a participant' })
-  await paidBySelect.waitFor({ state: 'visible' })
-  await paidBySelect.click()
-
-  const payerOption = page.getByRole('option', { name: participantA })
-  await payerOption.waitFor({ state: 'visible' })
-  await payerOption.click()
-
-  await page.locator('button[type="submit"]').first().click()
-  await page.waitForURL(/\/groups\/[^/]+/)
+  await createExpense(page, {
+    title: 'Initial Expense',
+    amount: '300',
+    payer: participantA,
+  })
 
   // Now create a reimbursement expense directly
   const createReimbLink = page
@@ -552,20 +318,8 @@ test('Create reimbursement expense', async ({ page }) => {
     await reimbPayerOption.click()
 
     // Check reimbursement checkbox
-    const checkboxes = page.locator('input[type="checkbox"]')
-    if ((await checkboxes.count()) > 0) {
-      // Find and check the reimbursement checkbox
-      for (let i = 0; i < (await checkboxes.count()); i++) {
-        const checkbox = checkboxes.nth(i)
-        const label = await checkbox.evaluate((el) => {
-          return el.parentElement?.textContent?.toLowerCase() || ''
-        })
-        if (label.includes('reimburs')) {
-          await checkbox.check()
-          break
-        }
-      }
-    }
+    const reimbursementLabel = page.getByText(/this is a reimbursement/i)
+    await reimbursementLabel.click()
 
     // Submit
     await page.locator('button[type="submit"]').first().click()
@@ -582,48 +336,18 @@ test('Reimbursement excludes from totals', async ({ page }) => {
   const participantB = 'Bob'
 
   // Create group
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /^Create$/ })
-    .first()
-    .click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill('Charlie')
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, 'Charlie'],
+  })
 
   // Create a regular expense
-  const createLink = page
-    .getByRole('link', { name: /create expense|create the first/i })
-    .first()
-  await createLink.waitFor({ state: 'visible' })
-  await createLink.click()
-
-  await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
-
-  const expenseTitle = page.locator('input[name="title"]')
-  await expenseTitle.fill('Regular Expense')
-
-  const amountInput = page.locator('input[name="amount"]')
-  await amountInput.fill('300')
-
-  const paidBySelect = page
-    .getByRole('combobox')
-    .filter({ hasText: 'Select a participant' })
-  await paidBySelect.click()
-
-  const payerOption = page.getByRole('option', { name: participantA })
-  await payerOption.click()
-
-  await page.locator('button[type="submit"]').first().click()
-  await page.waitForURL(/\/groups\/[^/]+/)
+  await createExpense(page, {
+    title: 'Regular Expense',
+    amount: '300',
+    payer: participantA,
+  })
 
   // Verify expense appears
   await expect(page.getByText('Regular Expense')).toBeVisible()

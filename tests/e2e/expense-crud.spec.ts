@@ -1,44 +1,5 @@
 import { expect, test } from '@playwright/test'
-
-import type { Page } from '@playwright/test'
-
-async function createGroup({
-  page,
-  groupName,
-  participants,
-}: {
-  page: Page
-  groupName: string
-  participants: string[]
-}) {
-  await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).first().click()
-
-  await page.getByLabel('Group name').fill(groupName)
-
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-
-  for (let i = 0; i < participants.length; i++) {
-    if (i >= 3) {
-      await page.getByRole('button', { name: 'Add participant' }).click()
-      await expect(participantInputs).toHaveCount(i + 1)
-    }
-
-    await participantInputs.nth(i).fill(participants[i]!)
-  }
-
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).not.toHaveURL(/\/groups\/create$/)
-  await expect(page).toHaveURL(/\/groups\/[^/]+(\/expenses)?$/)
-
-  const url = page.url()
-  const groupId = url.match(/\/groups\/([^/]+)(?:\/expenses)?$/)?.[1]
-  if (!groupId || groupId === 'create') {
-    throw new Error(`Failed to extract groupId from URL: ${url}`)
-  }
-
-  return groupId
-}
+import { createGroup } from '../helpers'
 
 test('Delete expense - confirmation flow', async ({ page }) => {
   // Create a test group first
@@ -46,29 +7,11 @@ test('Delete expense - confirmation flow', async ({ page }) => {
   const participantA = 'Alice'
   const participantB = 'Bob'
 
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /create/i })
-    .first()
-    .click()
-  await page.waitForLoadState('networkidle')
-
-  // Fill group name
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Fill participants
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill(participantB)
-  await participantInputs.nth(2).fill('Charlie')
-
-  // Create group
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+/)
-
-  // Extract group ID from URL
-  const groupId = page.url().split('/').filter(Boolean).pop()
+  const groupId = await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, 'Charlie'],
+  })
 
   // Navigate directly to the group balances page to see the expense create button
   await page.goto(`/groups/${groupId}`)
@@ -169,29 +112,11 @@ test('Expense displays correct amount', async ({ page }) => {
   const groupName = `PW E2E group ${Date.now()}`
   const participantA = 'Alice'
 
-  await page.goto('/groups')
-  await page
-    .getByRole('link', { name: /create/i })
-    .first()
-    .click()
-  await page.waitForLoadState('networkidle')
-
-  // Fill group name
-  await page.getByLabel('Group name').fill(groupName)
-
-  // Fill participants
-  const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participantA)
-  await participantInputs.nth(1).fill('Bob')
-  await participantInputs.nth(2).fill('Charlie')
-
-  // Create group
-  await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+/)
-
-  // Extract group ID
-  const groupId = page.url().split('/').filter(Boolean).pop()
+  const groupId = await createGroup({
+    page,
+    groupName,
+    participants: [participantA, 'Bob', 'Charlie'],
+  })
 
   // Navigate to group page
   await page.goto(`/groups/${groupId}`)
