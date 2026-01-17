@@ -247,7 +247,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 | Test Case                                 | Priority | Complexity | Effort    | Notes                  |
 | ----------------------------------------- | -------- | ---------- | --------- | ---------------------- |
-| View balances page - calculates correctly | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Core feature           |
+| View balances page - calculates correctly | 🔴 P0    | 🟡 Medium  | ✅ Done   | Core feature           |
 | Balances match expected from expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Verification test      |
 | Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | ✅ Done   | Suggestions shown      |
 | Suggested reimbursements minimized        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Algorithm verification |

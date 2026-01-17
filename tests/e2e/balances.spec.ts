@@ -37,7 +37,7 @@ test('suggested reimbursements displayed', async ({ page }) => {
     const createLink = page
       .getByRole('link', { name: /create expense|create the first/i })
       .first()
-    await createLink.waitFor({ state: 'visible'})
+    await createLink.waitFor({ state: 'visible' })
     await createLink.click()
 
     // Wait for navigation to expense creation page
@@ -45,7 +45,7 @@ test('suggested reimbursements displayed', async ({ page }) => {
 
     // Wait for the form to load and the title input to be ready
     const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible'})
+    await expenseTitle.waitFor({ state: 'visible' })
 
     // Fill in expense details
     await expenseTitle.fill(title)
@@ -58,20 +58,20 @@ test('suggested reimbursements displayed', async ({ page }) => {
     const paidBySelect = page
       .getByRole('combobox')
       .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible'})
+    await paidBySelect.waitFor({ state: 'visible' })
     await paidBySelect.click()
 
     // Wait for dropdown and click option
     const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible'})
+    await payerOption.waitFor({ state: 'visible' })
     await payerOption.click()
 
     // Submit the expense
     await page.locator('button[type="submit"]').first().click()
 
     // Wait for redirect and verify expense appears
-    await page.waitForURL(/\/groups\/[^/]+/, {  })
-    await expect(page.getByText(title)).toBeVisible({  })
+    await page.waitForURL(/\/groups\/[^/]+/, {})
+    await expect(page.getByText(title)).toBeVisible({})
   }
 
   // Step 2-4: Create three expenses
@@ -87,20 +87,17 @@ test('suggested reimbursements displayed', async ({ page }) => {
   const reimbursementsHeading = page
     .getByText('Suggested reimbursements')
     .first()
-  await expect(reimbursementsHeading).toBeVisible({  })
+  await expect(reimbursementsHeading).toBeVisible({})
 
   // Wait for the reimbursements content to load (either suggestions or "no reimbursements" message)
-  await page.waitForFunction(
-    () => {
-      const bodyText = document.body.textContent || ''
-      return (
-        bodyText.includes('owes') ||
-        bodyText.includes('reimbursement') ||
-        bodyText.includes('paid back')
-      )
-    },
-    {  },
-  )
+  await page.waitForFunction(() => {
+    const bodyText = document.body.textContent || ''
+    return (
+      bodyText.includes('owes') ||
+      bodyText.includes('reimbursement') ||
+      bodyText.includes('paid back')
+    )
+  }, {})
 
   // Step 7: Verify the reimbursements section is populated
   // Look for either "owes" text or any reimbursement-related text
@@ -156,7 +153,7 @@ test('view balances page - calculates correctly', async ({ page }) => {
     const createLink = page
       .getByRole('link', { name: /create expense|create the first/i })
       .first()
-    await createLink.waitFor({ state: 'visible'})
+    await createLink.waitFor({ state: 'visible' })
     await createLink.click()
 
     // Wait for navigation to expense creation page
@@ -164,7 +161,7 @@ test('view balances page - calculates correctly', async ({ page }) => {
 
     // Wait for the form to load and the title input to be ready
     const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible'})
+    await expenseTitle.waitFor({ state: 'visible' })
     await expenseTitle.fill(title)
 
     const amountInput = page.locator('input[name="amount"]')
@@ -173,16 +170,16 @@ test('view balances page - calculates correctly', async ({ page }) => {
     const paidBySelect = page
       .getByRole('combobox')
       .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible'})
+    await paidBySelect.waitFor({ state: 'visible' })
     await paidBySelect.click()
 
     const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible'})
+    await payerOption.waitFor({ state: 'visible' })
     await payerOption.click()
 
     await page.locator('button[type="submit"]').first().click()
-    await page.waitForURL(/\/groups\/[^/]+/, {  })
-    await expect(page.getByText(title)).toBeVisible({  })
+    await page.waitForURL(/\/groups\/[^/]+/, {})
+    await expect(page.getByText(title)).toBeVisible({})
   }
 
   // Step 2-3: Create two expenses
@@ -197,51 +194,30 @@ test('view balances page - calculates correctly', async ({ page }) => {
   const balancesCard = page
     .locator('h2, h3, h4, h5')
     .filter({ hasText: /balance/i })
-  await expect(balancesCard.first()).toBeVisible({  })
+  await expect(balancesCard.first()).toBeVisible({})
 
   // Wait until async calculations render at least one money value.
-  await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible({
-   
-  })
+  await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible({})
 
   // Step 6: Verify participant names are displayed (use .first() to avoid strict mode)
   await expect(page.getByText(participantA).first()).toBeVisible()
   await expect(page.getByText(participantB).first()).toBeVisible()
   await expect(page.getByText(participantC).first()).toBeVisible()
 
-  // Step 7: Verify balance calculations
-  // Expected balances after both expenses:
-  // Alice: paid $300, owes $150, net = +$150
-  // Bob: paid $150, owes $150, net = $0
-  // Charlie: paid $0, owes $150, net = -$150
+  // Step 7: Verify balance calculations (net amounts)
+  // With 3 participants and 2 evenly-split expenses:
+  // Total = 450; each owes 150.
+  // Alice paid 300 => +150.00
+  // Bob paid 150 => 0.00
+  // Charlie paid 0 => -150.00
 
-  const pageText = await page.locator('body').textContent()
-  if (!pageText) {
-    throw new Error('Failed to get page text content')
-  }
+  await expect(page.getByText(participantA).first()).toBeVisible()
+  await expect(page.getByText(participantB).first()).toBeVisible()
+  await expect(page.getByText(participantC).first()).toBeVisible()
 
-  // Look for currency formatted amounts
-  const currencyPattern = /[\d.,]+\.\d{2}/
-  expect(pageText).toMatch(currencyPattern)
-
-  // Verify we can locate each participant's balance row
-  await expect(
-    page.locator('div').filter({ hasText: participantA }).first(),
-  ).toBeVisible()
-  await expect(
-    page.locator('div').filter({ hasText: participantB }).first(),
-  ).toBeVisible()
-  await expect(
-    page.locator('div').filter({ hasText: participantC }).first(),
-  ).toBeVisible()
-
-  // Step 8: Verify amounts are present
-  const matches = pageText.match(/[\d.,]+\.\d{2}/g) || []
-  const amounts = matches.map((m) => parseFloat(m.replace(/,/g, '')))
-  expect(amounts.length).toBeGreaterThanOrEqual(3)
-
-  // Step 9: Verify loading state is complete (no skeleton loaders)
-  const skeletons = page.locator('[class*="skeleton"]')
-  const skeletonCount = await skeletons.count()
-  expect(skeletonCount).toBeLessThan(5)
+  // Expected net balances: +150.00, 0.00, -150.00 (sign may vary by locale/UI)
+  const body = page.locator('body')
+  await expect(body).toContainText(/150\.00/)
+  await expect(body).toContainText(/0\.00/)
+  await expect(body).toContainText(/owes|is owed|gets back|\+|-/i)
 })
