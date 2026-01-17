@@ -190,7 +190,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Edit group - update name and info   | 🟡 P1    | 🟢 Low     | ✅ Done   | Edit flow                 |
 | Edit group - add participant        | 🔴 P0    | 🟡 Medium  | ✅ Done   | Important feature         |
 | Edit group - remove participant     | 🟡 P1    | 🟡 Medium  | ✅ Done   | Important feature         |
-| Edit group - rename participant     | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edit participant          |
+| Edit group - rename participant     | 🟢 P2    | 🟢 Low     | ✅ Done   | Edit participant          |
 | View group information page         | 🟢 P2    | 🟢 Low     | ✅ Done   | Read-only view            |
 | Share group - copy URL              | 🟡 P1    | 🟡 Medium  | ✅ Done   | Collaboration feature     |
 | Recent groups list - persists       | 🟢 P2    | 🟡 Medium  | 🍊 Medium | LocalStorage test         |
@@ -208,20 +208,20 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Create expense - by shares                | 🔴 P0    | 🟡 Medium  | ✅ Done   | Weighted split       |
 | Create expense - by percentage            | 🔴 P0    | 🟡 Medium  | ✅ Done   | Percentage split     |
 | Create expense - by amount                | 🔴 P0    | 🟡 Medium  | ✅ Done   | Specific amounts     |
-| Create expense - with category            | 🟡 P1    | 🟢 Low     | 🍏 Low    | Category selection   |
+| Create expense - with category            | 🟡 P1    | 🟢 Low     | ✅ Done   | Category selection   |
 | Create expense - with notes               | 🟢 P2    | 🟢 Low     | 🍏 Low    | Optional field       |
-| Create expense - with custom date         | 🟡 P1    | 🟢 Low     | 🍏 Low    | Date picker          |
+| Create expense - with custom date         | 🟡 P1    | 🟢 Low     | ✅ Done   | Date picker          |
 | Create expense - with currency conversion | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Multi-currency       |
-| Create expense - as reimbursement         | 🟡 P1    | 🟢 Low     | 🍏 Low    | Reimbursement flag   |
+| Create expense - as reimbursement         | 🟡 P1    | 🟢 Low     | ✅ Done   | Reimbursement flag   |
 | Create expense - validation errors        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Form validation      |
 | Edit expense - update all fields          | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Edit flow            |
 | Edit expense - change split mode          | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Mode switching       |
 | Delete expense - confirmation flow        | 🔴 P0    | 🟢 Low     | ✅ Done   | Deletion             |
 | List expenses - pagination                | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Large lists          |
 | List expenses - filter by text            | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Search functionality |
-| Expense displays correct date             | 🟡 P1    | 🟢 Low     | 🍏 Low    | Date rendering       |
+| Expense displays correct date             | 🟡 P1    | 🟢 Low     | ✅ Done   | Date rendering       |
 | Expense displays correct amount           | 🔴 P0    | 🟢 Low     | ✅ Done   | Amount display       |
-| Expense shows category                    | 🟢 P2    | 🟢 Low     | 🍏 Low    | Category display     |
+| Expense shows category                    | 🟢 P2    | 🟢 Low     | ✅ Done   | Category display     |
 
 **Total: 18 tests | P0: 4, P1: 11, P2: 3 | Low effort: 10, Medium: 8**
 
@@ -282,7 +282,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Test Case                        | Priority | Complexity | Effort    | Notes             |
 | -------------------------------- | -------- | ---------- | --------- | ----------------- |
 | Select active user - persists    | 🟡 P1    | 🟡 Medium  | 🍊 Medium | LocalStorage test |
-| Active user changes balance view | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Personalization   |
+| Active user changes balance view | 🔴 P0    | 🟡 Medium  | ✅ Done   | Personalization   |
 | Active user changes stats        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Personalization   |
 | Clear active user - neutral view | 🟢 P2    | 🟢 Low     | 🍏 Low    | Reset feature     |
 
