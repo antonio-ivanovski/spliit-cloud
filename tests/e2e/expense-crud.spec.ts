@@ -617,3 +617,70 @@ test('Expense shows category', async ({ page }) => {
     }
   }
 })
+
+test('Create expense - with notes', async ({ page }) => {
+  const groupId = await createGroup({
+    page,
+    groupName: `PW E2E notes test ${Date.now()}`,
+    participants: ['Alice', 'Bob'],
+  })
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  // Find create expense button
+  let createExpenseButton = page.getByRole('button').filter({ hasText: /add|create/i }).first()
+  if (!(await createExpenseButton.isVisible())) {
+    createExpenseButton = page.getByRole('link').filter({ hasText: /expense|add/i }).first()
+  }
+
+  if (await createExpenseButton.isVisible()) {
+    await createExpenseButton.click()
+    await page.waitForLoadState('load')
+
+    // Fill expense title
+    const titleInputs = page.locator('input[type="text"]')
+    if (await titleInputs.count() > 0) {
+      const expenseTitle = `Notes Test ${Date.now()}`
+      const notes = 'This is a test expense with notes'
+      await titleInputs.first().fill(expenseTitle)
+
+      // Fill amount
+      const amountInputs = page.locator('input[inputmode="decimal"]')
+      if (await amountInputs.count() > 0) {
+        await amountInputs.first().fill('55.50')
+      }
+
+      // Select payer
+      const selects = page.locator('[role="combobox"]')
+      if (await selects.count() > 0) {
+        await selects.first().click()
+        await page.getByRole('option').first().click()
+      }
+
+      // Fill notes field (textarea)
+      const textareas = page.locator('textarea')
+      if (await textareas.count() > 0) {
+        await textareas.first().fill(notes)
+      }
+
+      // Create expense
+      const createButton = page.getByRole('button', { name: /create/i }).first()
+      await createButton.click()
+
+      // Wait for navigation
+      await page.waitForURL(/\/groups\/[^/]+/)
+
+      // Verify expense appears
+      await expect(page.getByText(expenseTitle)).toBeVisible()
+
+      // Open expense to verify notes were saved
+      await page.getByText(expenseTitle).click()
+      await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+
+      // Verify notes appear in edit form
+      const noteTextarea = page.locator('textarea').first()
+      await expect(noteTextarea).toContainText(notes)
+    }
+  }
+})

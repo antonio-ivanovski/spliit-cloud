@@ -209,7 +209,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Create expense - by percentage            | 🔴 P0    | 🟡 Medium  | ✅ Done   | Percentage split     |
 | Create expense - by amount                | 🔴 P0    | 🟡 Medium  | ✅ Done   | Specific amounts     |
 | Create expense - with category            | 🟡 P1    | 🟢 Low     | ✅ Done   | Category selection   |
-| Create expense - with notes               | 🟢 P2    | 🟢 Low     | 🍏 Low    | Optional field       |
+| Create expense - with notes               | 🟢 P2    | 🟢 Low     | ✅ Done   | Optional field       |
 | Create expense - with custom date         | 🟡 P1    | 🟢 Low     | ✅ Done   | Date picker          |
 | Create expense - with currency conversion | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Multi-currency       |
 | Create expense - as reimbursement         | 🟡 P1    | 🟢 Low     | ✅ Done   | Reimbursement flag   |
