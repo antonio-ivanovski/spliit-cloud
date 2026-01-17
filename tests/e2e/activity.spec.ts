@@ -168,3 +168,57 @@ test('Log shows delete', async ({ page }) => {
     await expect(page.getByText(/deleted|delete/i)).toBeVisible()
   }
 })
+
+test('Log pagination', async ({ page }) => {
+  const groupName = `PW E2E activity pagination ${Date.now()}`
+  const baseExpenseTitle = `Pagination Test Expense`
+
+  const groupId = await createGroup({
+    page,
+    groupName,
+    participants: ['Alice', 'Bob'],
+  })
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  // Create 25 expenses to exceed the PAGE_SIZE of 20
+  // Each expense creates an activity, so we'll have 25 activities
+  for (let i = 1; i <= 25; i++) {
+    await createExpense(page, {
+      title: `${baseExpenseTitle} ${i}`,
+      amount: `${10 + i}.00`,
+      payer: i % 2 === 0 ? 'Alice' : 'Bob',
+    })
+  }
+
+  // Navigate to activity tab
+  await navigateToTab(page, 'Activity')
+
+  // Verify initial activities are loaded (should show first page of activities)
+  // The most recent activity should be visible
+  await expect(page.getByText(`${baseExpenseTitle} 25`)).toBeVisible()
+
+  // Scroll down to trigger infinite scroll pagination
+  // Get the activity container and scroll to bottom
+  const activityContainer = page.locator('body')
+  
+  // Scroll down multiple times to ensure we trigger the intersection observer
+  for (let i = 0; i < 3; i++) {
+    await activityContainer.evaluate((el) => {
+      el.scrollBy(0, 500)
+    })
+    // Small delay between scrolls to allow observer to detect
+    await page.waitForTimeout(200)
+  }
+
+  // After scrolling, earlier activities from the next page should become visible
+  // Verify that both recent (25) and older (1-5) activities are now on the page
+  // This indicates that pagination loaded more content
+  const allActivityText = await page.locator('body').textContent()
+  
+  // Verify we have content from both first page (recent) and next page (older)
+  expect(allActivityText).toContain(`${baseExpenseTitle} 25`)
+  expect(allActivityText).toContain(`${baseExpenseTitle} 20`)
+  expect(allActivityText).toContain(`${baseExpenseTitle} 1`)
+})

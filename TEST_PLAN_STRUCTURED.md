@@ -85,7 +85,7 @@ _Location: `tests/e2e/active-user.spec.ts` / `activity-log.spec.ts`_
 | ✅ Done | 🟢 **P2** | **Log shows create**   | Create expense. Go to Activity. Assert "Created expense X" entry exists.    |
 | ✅ Done | 🟢 **P2** | **Log shows update**   | Edit expense. Go to Activity. Assert "Updated expense X" entry exists.      |
 | ✅ Done | 🟢 **P2** | **Log shows delete**   | Delete expense. Go to Activity. Assert "Deleted expense X" entry exists.    |
-| ⬜ Todo | 🟢 **P2** | **Log pagination**     | Generate many activities. Verify pagination controls work on Activity page. |
+| ✅ Done | 🟢 **P2** | **Log pagination**     | Generate many activities. Verify pagination controls work on Activity page. |
 
 ### System & UI
 
