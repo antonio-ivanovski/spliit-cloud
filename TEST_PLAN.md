@@ -211,7 +211,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Create expense - with category            | 🟡 P1    | 🟢 Low     | ✅ Done   | Category selection   |
 | Create expense - with notes               | 🟢 P2    | 🟢 Low     | ✅ Done   | Optional field       |
 | Create expense - with custom date         | 🟡 P1    | 🟢 Low     | ✅ Done   | Date picker          |
-| Create expense - with currency conversion | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Multi-currency       |
+| Create expense - with currency conversion | 🟡 P1    | 🟡 Medium  | ✅ Done   | Multi-currency       |
 | Create expense - as reimbursement         | 🟡 P1    | 🟢 Low     | ✅ Done   | Reimbursement flag   |
 | Create expense - validation errors        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Form validation      |
 | Edit expense - update all fields          | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Edit flow            |

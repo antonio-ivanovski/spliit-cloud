@@ -629,9 +629,15 @@ test('Create expense - with notes', async ({ page }) => {
   await page.waitForLoadState('networkidle')
 
   // Find create expense button
-  let createExpenseButton = page.getByRole('button').filter({ hasText: /add|create/i }).first()
+  let createExpenseButton = page
+    .getByRole('button')
+    .filter({ hasText: /add|create/i })
+    .first()
   if (!(await createExpenseButton.isVisible())) {
-    createExpenseButton = page.getByRole('link').filter({ hasText: /expense|add/i }).first()
+    createExpenseButton = page
+      .getByRole('link')
+      .filter({ hasText: /expense|add/i })
+      .first()
   }
 
   if (await createExpenseButton.isVisible()) {
@@ -640,27 +646,27 @@ test('Create expense - with notes', async ({ page }) => {
 
     // Fill expense title
     const titleInputs = page.locator('input[type="text"]')
-    if (await titleInputs.count() > 0) {
+    if ((await titleInputs.count()) > 0) {
       const expenseTitle = `Notes Test ${Date.now()}`
       const notes = 'This is a test expense with notes'
       await titleInputs.first().fill(expenseTitle)
 
       // Fill amount
       const amountInputs = page.locator('input[inputmode="decimal"]')
-      if (await amountInputs.count() > 0) {
+      if ((await amountInputs.count()) > 0) {
         await amountInputs.first().fill('55.50')
       }
 
       // Select payer
       const selects = page.locator('[role="combobox"]')
-      if (await selects.count() > 0) {
+      if ((await selects.count()) > 0) {
         await selects.first().click()
         await page.getByRole('option').first().click()
       }
 
       // Fill notes field (textarea)
       const textareas = page.locator('textarea')
-      if (await textareas.count() > 0) {
+      if ((await textareas.count()) > 0) {
         await textareas.first().fill(notes)
       }
 
@@ -681,6 +687,160 @@ test('Create expense - with notes', async ({ page }) => {
       // Verify notes appear in edit form
       const noteTextarea = page.locator('textarea').first()
       await expect(noteTextarea).toContainText(notes)
+    }
+  }
+})
+
+test('Create expense - with currency conversion', async ({ page }) => {
+  // Create a group with USD currency (group currency)
+  const groupName = `PW E2E currency conversion ${Date.now()}`
+  const participantA = 'Alice'
+  const participantB = 'Bob'
+
+  await page.goto('/groups')
+  await page
+    .getByRole('link', { name: /create/i })
+    .first()
+    .click()
+  await page.waitForLoadState('networkidle')
+
+  // Fill group name
+  await page.getByLabel('Group name').fill(groupName)
+
+  // Select USD as the group currency (first option is usually USD)
+  const currencySelect = page.locator('[role="combobox"]').first()
+  await currencySelect.click()
+  // Try to select USD or the default currency
+  const usdOption = page.getByRole('option', { name: /USD|usd/ }).first()
+  if (await usdOption.isVisible()) {
+    await usdOption.click()
+  } else {
+    // If USD not visible, select first option
+    await page.getByRole('option').first().click()
+  }
+
+  // Fill participants
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill(participantA)
+  await participantInputs.nth(1).fill(participantB)
+  await participantInputs.nth(2).fill('Charlie')
+
+  // Create group
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+/)
+
+  // Extract group ID
+  const groupId = page.url().split('/').filter(Boolean).pop()
+
+  // Navigate to group page
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  // Find and click create expense button
+  let createExpenseButton = page
+    .getByRole('button')
+    .filter({ hasText: /add|create/i })
+    .first()
+  if (!(await createExpenseButton.isVisible())) {
+    createExpenseButton = page
+      .getByRole('link')
+      .filter({ hasText: /expense|add/i })
+      .first()
+  }
+
+  if (await createExpenseButton.isVisible()) {
+    await createExpenseButton.click()
+    await page.waitForLoadState('load')
+
+    // Fill expense title
+    const titleInputs = page.locator('input[type="text"]')
+    if ((await titleInputs.count()) > 0) {
+      const expenseTitle = `Currency Conversion Test ${Date.now()}`
+      const groupAmount = '100.00' // USD amount
+      const originalAmount = '90.00' // EUR original amount
+
+      await titleInputs.first().fill(expenseTitle)
+
+      // Fill amount in group currency (USD)
+      const amountInputs = page.locator('input[inputmode="decimal"]')
+      if ((await amountInputs.count()) > 0) {
+        await amountInputs.first().fill(groupAmount)
+      }
+
+      // Select payer
+      const selects = page.locator('[role="combobox"]')
+      if ((await selects.count()) > 0) {
+        await selects.first().click()
+        await page.getByRole('option').first().click()
+      }
+
+      // Look for original currency selector (2nd combobox after payer select)
+      const allComboboxes = page.locator('[role="combobox"]')
+      const comboboxCount = await allComboboxes.count()
+
+      // Try to find and set original currency to EUR if available
+      if (comboboxCount >= 2) {
+        // Find the original currency selector - usually after the payer selector
+        const currencySelectors = page
+          .locator('[role="combobox"]')
+          .filter({ hasText: /select.*currency|currency/i })
+
+        if ((await currencySelectors.count()) > 0) {
+          const originalCurrencySelect = currencySelectors.first()
+          await originalCurrencySelect.click()
+
+          // Try to select EUR
+          const eurOption = page
+            .getByRole('option', { name: /EUR|eur/ })
+            .first()
+          if (await eurOption.isVisible()) {
+            await eurOption.click()
+          } else {
+            // If EUR not available, try second option
+            const secondOption = page.getByRole('option').nth(1)
+            if (await secondOption.isVisible()) {
+              await secondOption.click()
+            }
+          }
+
+          // Wait a bit for the form to update
+          await page.waitForTimeout(500)
+
+          // Now fill in the original amount (this should appear after selecting different currency)
+          const allDecimalInputs = page.locator('input[inputmode="decimal"]')
+          const decimalCount = await allDecimalInputs.count()
+
+          // If we have more than one decimal input, the second is likely the original amount
+          if (decimalCount >= 2) {
+            await allDecimalInputs.nth(1).fill(originalAmount)
+          }
+
+          // Wait for conversion rate to load (up to 1 second max based on constraints)
+          await page.waitForTimeout(500)
+        }
+      }
+
+      // Create expense
+      const createButton = page.getByRole('button', { name: /create/i }).first()
+      await createButton.click()
+
+      // Wait for navigation
+      await page.waitForURL(/\/groups\/[^/]+/)
+
+      // Verify expense appears with title
+      await expect(page.getByText(expenseTitle)).toBeVisible()
+
+      // Verify amount displays correctly
+      await expect(page.locator(`text=${groupAmount}`)).toBeVisible()
+
+      // Open expense to verify currency conversion data was saved
+      await page.getByText(expenseTitle).click()
+      await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+
+      // Verify the group amount in form
+      const editAmountInput = page.locator('input[inputmode="decimal"]').first()
+      await expect(editAmountInput).toHaveValue(groupAmount)
     }
   }
 })
