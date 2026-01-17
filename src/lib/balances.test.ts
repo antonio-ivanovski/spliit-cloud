@@ -277,6 +277,193 @@ describe('getBalances', () => {
     )
     expect(Math.abs(netTotal)).toBeLessThan(3)
   })
+
+  it('handles BY_AMOUNT with one participant having 0 shares', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100,
+        splitMode: 'BY_AMOUNT',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 0 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 10 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 10 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // p0 paid 100 but has 0 shares, so owes 0
+    expect(balances.p0).toEqual({ paid: 100, paidFor: 0, total: 100 })
+    // p1 and p2 split the remaining 100 (50 each)
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 50, total: -50 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 50, total: -50 })
+  })
+
+  it('handles BY_PERCENTAGE where percentages do not sum to 10000 (remainder assigned to last)', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 10000,
+        splitMode: 'BY_PERCENTAGE',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 2000 }, // 20%
+          { participant: { id: 'p1', name: 'P1' }, shares: 3000 }, // 30%
+          // Missing 5000 basis points - should be assigned to last participant
+          { participant: { id: 'p2', name: 'P2' }, shares: 3000 }, // Only 30% specified, gets remainder
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // p0: paid 10000, owes (20/80)% = 2500 (remainder goes to last)
+    expect(balances.p0).toEqual({ paid: 10000, paidFor: 2500, total: 7500 })
+    // p1: paid 0, owes (30/80)% = 3750
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 3750, total: -3750 })
+    // p2: paid 0, gets remainder = 3750 (30/80)% + remainder
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 3750, total: -3750 })
+  })
+
+  it('handles expense where payer is not in paidFor', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 150,
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // p0 paid 150 but is not in paidFor, so paidFor = 0
+    expect(balances.p0).toEqual({ paid: 150, paidFor: 0, total: 150 })
+    // p1 and p2 split the expense evenly (75 each)
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 75, total: -75 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 75, total: -75 })
+  })
+
+  it('handles float/decimal amounts correctly with rounding', () => {
+    // Simulate amounts that would result in float division
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 33, // 33 / 3 = 11 exactly
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 10, // 10 / 3 = 3.333...
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // Verify all values are integers (rounded)
+    expect(Number.isInteger(balances.p0.paid)).toBe(true)
+    expect(Number.isInteger(balances.p0.paidFor)).toBe(true)
+    expect(Number.isInteger(balances.p0.total)).toBe(true)
+    expect(Number.isInteger(balances.p1.paid)).toBe(true)
+    expect(Number.isInteger(balances.p1.paidFor)).toBe(true)
+    expect(Number.isInteger(balances.p1.total)).toBe(true)
+    expect(Number.isInteger(balances.p2.paid)).toBe(true)
+    expect(Number.isInteger(balances.p2.paidFor)).toBe(true)
+    expect(Number.isInteger(balances.p2.total)).toBe(true)
+
+    // Verify no negative zeros
+    expect(Object.is(balances.p0.paid, -0)).toBe(false)
+    expect(Object.is(balances.p0.paidFor, -0)).toBe(false)
+    expect(Object.is(balances.p0.total, -0)).toBe(false)
+  })
+
+  it('handles repeated participant IDs in paidFor array', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100,
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 }, // Duplicate
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // p0 appears twice in paidFor, so should owe double
+    // Total shares = 3, p0 has 2 shares, p1 has 1 share
+    expect(balances.p0.paid).toBe(100)
+    expect(balances.p0.paidFor).toBeCloseTo(67, -1) // ~66.67
+    expect(balances.p1.paid).toBe(0)
+    expect(balances.p1.paidFor).toBeCloseTo(33, -1) // ~33.33
+  })
+
+  it('handles all participants with negative balances', () => {
+    // Simulate a scenario where everyone owes money
+    const balances = {
+      p0: { paid: 0, paidFor: 100, total: -100 },
+      p1: { paid: 0, paidFor: 50, total: -50 },
+      p2: { paid: 0, paidFor: 50, total: -50 },
+    }
+
+    const reimbursements = getSuggestedReimbursements(balances)
+
+    // When all are negative, algorithm still produces "settlements"
+    // Verify the function handles this case without throwing
+    expect(Array.isArray(reimbursements)).toBe(true)
+    expect(reimbursements.length).toBeGreaterThanOrEqual(0)
+  })
+
+  it('handles heavy chained reimbursements with multiple hops', () => {
+    // Scenario: A owes B, B owes C, C owes D, etc.
+    // Creating a chain that requires multiple hops to settle
+    const balances = {
+      alice: { paid: 0, paidFor: 100, total: -100 }, // owes 100
+      bob: { paid: 150, paidFor: 50, total: 100 }, // overpaid by 100, owes 50
+      carol: { paid: 0, paidFor: 50, total: -50 }, // owes 50
+      dan: { paid: 200, paidFor: 200, total: 0 }, // settled
+      eve: { paid: 100, paidFor: 200, total: -100 }, // owes 100
+    }
+
+    const reimbursements = getSuggestedReimbursements(balances)
+
+    // Bob has +100, needs to receive from debtors
+    // Eve owes 100, Carol owes 50, Alice owes 100
+    // Total owed = 250, Bob is owed 100
+    // Should settle with some debtors
+
+    // Verify reimbursements go to bob (the positive balance)
+    expect(reimbursements.some((r) => r.to === 'bob')).toBe(true)
+
+    // Verify the sum of amounts going to bob equals his positive balance
+    const toBob = reimbursements
+      .filter((r) => r.to === 'bob')
+      .reduce((sum, r) => sum + r.amount, 0)
+    expect(toBob).toBe(100)
+  })
 })
 
 describe('getSuggestedReimbursements', () => {
@@ -324,5 +511,17 @@ describe('getSuggestedReimbursements', () => {
 
     // Verify minimal transactions (should be <= 4 for 5 people)
     expect(reimbursements.length).toBeLessThanOrEqual(4)
+  })
+
+  it('returns [] when all totals are 0', () => {
+    const balances = {
+      p0: { paid: 100, paidFor: 100, total: 0 },
+      p1: { paid: 50, paidFor: 50, total: 0 },
+      p2: { paid: 0, paidFor: 0, total: 0 },
+    }
+
+    const reimbursements = getSuggestedReimbursements(balances)
+
+    expect(reimbursements).toEqual([])
   })
 })

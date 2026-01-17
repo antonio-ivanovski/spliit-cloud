@@ -1,4 +1,4 @@
-import { PrismaClient, RecurrenceRule, ActivityType } from '@prisma/client'
+import { ActivityType, PrismaClient, RecurrenceRule } from '@prisma/client'
 import { createPayloadForNewRecurringExpenseLink } from './api'
 
 jest.mock('nanoid', () => ({
@@ -169,7 +169,6 @@ async function createRecurringExpenses() {
   }
 }
 
-
 describe('Activity Logging', () => {
   let groupId: string
   let participantIds: string[]
@@ -207,11 +206,15 @@ describe('Activity Logging', () => {
       const expenseTitle = 'Test Expense'
       const participantId = participantIds[0]
 
-      const activity = await createActivity(groupId, ActivityType.CREATE_EXPENSE, {
-        participantId,
-        expenseId,
-        data: expenseTitle,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.CREATE_EXPENSE,
+        {
+          participantId,
+          expenseId,
+          data: expenseTitle,
+        },
+      )
 
       expect(activity).toBeDefined()
       expect(activity.groupId).toBe(groupId)
@@ -230,11 +233,15 @@ describe('Activity Logging', () => {
 
     it('stores participant ID correctly in activity', async () => {
       const participantId = participantIds[0]
-      const activity = await createActivity(groupId, ActivityType.CREATE_EXPENSE, {
-        participantId,
-        expenseId,
-        data: 'Pizza',
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.CREATE_EXPENSE,
+        {
+          participantId,
+          expenseId,
+          data: 'Pizza',
+        },
+      )
 
       const stored = await prisma.activity.findUnique({
         where: { id: activity.id },
@@ -244,11 +251,15 @@ describe('Activity Logging', () => {
 
     it('stores expense data (title) correctly in activity', async () => {
       const expenseTitle = 'Restaurant Bill'
-      const activity = await createActivity(groupId, ActivityType.CREATE_EXPENSE, {
-        participantId: participantIds[0],
-        expenseId,
-        data: expenseTitle,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.CREATE_EXPENSE,
+        {
+          participantId: participantIds[0],
+          expenseId,
+          data: expenseTitle,
+        },
+      )
 
       const stored = await prisma.activity.findUnique({
         where: { id: activity.id },
@@ -262,11 +273,15 @@ describe('Activity Logging', () => {
       const newExpenseTitle = 'Updated Expense'
       const participantId = participantIds[0]
 
-      const activity = await createActivity(groupId, ActivityType.UPDATE_EXPENSE, {
-        participantId,
-        expenseId,
-        data: newExpenseTitle,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.UPDATE_EXPENSE,
+        {
+          participantId,
+          expenseId,
+          data: newExpenseTitle,
+        },
+      )
 
       expect(activity).toBeDefined()
       expect(activity.groupId).toBe(groupId)
@@ -285,11 +300,15 @@ describe('Activity Logging', () => {
 
     it('stores updated expense title in activity data', async () => {
       const updatedTitle = 'Modified Dinner'
-      const activity = await createActivity(groupId, ActivityType.UPDATE_EXPENSE, {
-        participantId: participantIds[1],
-        expenseId,
-        data: updatedTitle,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.UPDATE_EXPENSE,
+        {
+          participantId: participantIds[1],
+          expenseId,
+          data: updatedTitle,
+        },
+      )
 
       const stored = await prisma.activity.findUnique({
         where: { id: activity.id },
@@ -303,11 +322,15 @@ describe('Activity Logging', () => {
       const deletedExpenseTitle = 'Deleted Expense'
       const participantId = participantIds[0]
 
-      const activity = await createActivity(groupId, ActivityType.DELETE_EXPENSE, {
-        participantId,
-        expenseId,
-        data: deletedExpenseTitle,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.DELETE_EXPENSE,
+        {
+          participantId,
+          expenseId,
+          data: deletedExpenseTitle,
+        },
+      )
 
       expect(activity).toBeDefined()
       expect(activity.groupId).toBe(groupId)
@@ -326,11 +349,15 @@ describe('Activity Logging', () => {
 
     it('stores deleted expense title in activity data', async () => {
       const originalTitle = 'Groceries'
-      const activity = await createActivity(groupId, ActivityType.DELETE_EXPENSE, {
-        participantId: participantIds[0],
-        expenseId,
-        data: originalTitle,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.DELETE_EXPENSE,
+        {
+          participantId: participantIds[0],
+          expenseId,
+          data: originalTitle,
+        },
+      )
 
       const stored = await prisma.activity.findUnique({
         where: { id: activity.id },
@@ -343,9 +370,13 @@ describe('Activity Logging', () => {
     it('logs UPDATE_GROUP activity with correct data', async () => {
       const participantId = participantIds[0]
 
-      const activity = await createActivity(groupId, ActivityType.UPDATE_GROUP, {
-        participantId,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.UPDATE_GROUP,
+        {
+          participantId,
+        },
+      )
 
       expect(activity).toBeDefined()
       expect(activity.groupId).toBe(groupId)
@@ -364,9 +395,13 @@ describe('Activity Logging', () => {
 
     it('stores participant ID for group update activity', async () => {
       const participantId = participantIds[1]
-      const activity = await createActivity(groupId, ActivityType.UPDATE_GROUP, {
-        participantId,
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.UPDATE_GROUP,
+        {
+          participantId,
+        },
+      )
 
       const stored = await prisma.activity.findUnique({
         where: { id: activity.id },
@@ -378,23 +413,35 @@ describe('Activity Logging', () => {
   describe('Activity retrieval', () => {
     it('retrieves multiple activities for a group', async () => {
       // Create multiple activities
-      const activity1 = await createActivity(groupId, ActivityType.CREATE_EXPENSE, {
-        participantId: participantIds[0],
-        expenseId: randomId(),
-        data: 'Expense 1',
-      })
+      const activity1 = await createActivity(
+        groupId,
+        ActivityType.CREATE_EXPENSE,
+        {
+          participantId: participantIds[0],
+          expenseId: randomId(),
+          data: 'Expense 1',
+        },
+      )
 
-      const activity2 = await createActivity(groupId, ActivityType.UPDATE_EXPENSE, {
-        participantId: participantIds[1],
-        expenseId: randomId(),
-        data: 'Expense 2',
-      })
+      const activity2 = await createActivity(
+        groupId,
+        ActivityType.UPDATE_EXPENSE,
+        {
+          participantId: participantIds[1],
+          expenseId: randomId(),
+          data: 'Expense 2',
+        },
+      )
 
-      const activity3 = await createActivity(groupId, ActivityType.DELETE_EXPENSE, {
-        participantId: participantIds[0],
-        expenseId: randomId(),
-        data: 'Expense 3',
-      })
+      const activity3 = await createActivity(
+        groupId,
+        ActivityType.DELETE_EXPENSE,
+        {
+          participantId: participantIds[0],
+          expenseId: randomId(),
+          data: 'Expense 3',
+        },
+      )
 
       // Retrieve all activities for the group
       const activities = await prisma.activity.findMany({
@@ -409,11 +456,15 @@ describe('Activity Logging', () => {
     })
 
     it('activity records contain timestamp', async () => {
-      const activity = await createActivity(groupId, ActivityType.CREATE_EXPENSE, {
-        participantId: participantIds[0],
-        expenseId,
-        data: 'Timestamped Expense',
-      })
+      const activity = await createActivity(
+        groupId,
+        ActivityType.CREATE_EXPENSE,
+        {
+          participantId: participantIds[0],
+          expenseId,
+          data: 'Timestamped Expense',
+        },
+      )
 
       expect(activity.time).toBeDefined()
       expect(activity.time).toBeInstanceOf(Date)
@@ -473,9 +524,15 @@ describe('createPayloadForNewRecurringExpenseLink', () => {
 
       // Verify the next date is exactly 1 day later
       const expectedDate = new Date(Date.UTC(2025, 0, 16, 10, 30, 0))
-      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(expectedDate.getUTCFullYear())
-      expect(payload.nextExpenseDate.getUTCMonth()).toBe(expectedDate.getUTCMonth())
-      expect(payload.nextExpenseDate.getUTCDate()).toBe(expectedDate.getUTCDate())
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(
+        expectedDate.getUTCFullYear(),
+      )
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(
+        expectedDate.getUTCMonth(),
+      )
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(
+        expectedDate.getUTCDate(),
+      )
     })
 
     it('handles year boundary for daily interval', () => {
@@ -514,9 +571,15 @@ describe('createPayloadForNewRecurringExpenseLink', () => {
 
       // Verify the next date is exactly 7 days later
       const expectedDate = new Date(Date.UTC(2025, 0, 20, 14, 45, 0))
-      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(expectedDate.getUTCFullYear())
-      expect(payload.nextExpenseDate.getUTCMonth()).toBe(expectedDate.getUTCMonth())
-      expect(payload.nextExpenseDate.getUTCDate()).toBe(expectedDate.getUTCDate())
+      expect(payload.nextExpenseDate.getUTCFullYear()).toBe(
+        expectedDate.getUTCFullYear(),
+      )
+      expect(payload.nextExpenseDate.getUTCMonth()).toBe(
+        expectedDate.getUTCMonth(),
+      )
+      expect(payload.nextExpenseDate.getUTCDate()).toBe(
+        expectedDate.getUTCDate(),
+      )
     })
 
     it('handles month boundary for weekly interval', () => {
