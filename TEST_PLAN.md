@@ -358,7 +358,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 | Test Case                          | Priority | Complexity | Effort    | Notes        |
 | ---------------------------------- | -------- | ---------- | --------- | ------------ |
-| `/api/health/liveness` returns 200 | 🟡 P1    | 🟢 Low     | 🍏 Low    | Health check |
+| `/api/health/liveness` returns 200 | 🟡 P1    | 🟢 Low     | ✅ Done   | Health check |
 | `/api/health/readiness` checks DB  | 🟡 P1    | 🟡 Medium  | 🍊 Medium | DB health    |
 
 **Total: 2 tests | P1: 2 | Low effort: 1, Medium: 1**
