@@ -67,10 +67,10 @@ _Location: `tests/e2e/statistics.spec.ts` / `export.spec.ts`_
 | ✅ Done | 🔴 **P0** | **Verify Group Total**   | Sum expenses in list. Assert Stats page "Total Group Spending" matches.  |
 | ✅ Done | 🔴 **P0** | **Verify User Paid**     | Assert "You Paid" matches sum of active user's payments.                 |
 | ✅ Done | 🔴 **P0** | **Verify User Share**    | Assert "Your Share" matches sum of active user's splits.                 |
-| ⬜ Todo | 🟡 **P1** | **Export JSON download** | Click JSON export. Wait for download event. Assert filename/extension.   |
-| ⬜ Todo | 🟡 **P1** | **Export JSON content**  | Read downloaded JSON. Assert it contains valid array of expense objects. |
-| ⬜ Todo | 🟡 **P1** | **Export CSV download**  | Click CSV export. Wait for download event.                               |
-| ⬜ Todo | 🟡 **P1** | **Export CSV format**    | Read downloaded CSV. Assert headers and row data match expenses.         |
+| ✅ Done | 🟡 **P1** | **Export JSON download** | Click JSON export. Wait for download event. Assert filename/extension.   |
+| ✅ Done | 🟡 **P1** | **Export JSON content**  | Read downloaded JSON. Assert it contains valid array of expense objects. |
+| ✅ Done | 🟡 **P1** | **Export CSV download**  | Click CSV export. Wait for download event.                               |
+| ✅ Done | 🟡 **P1** | **Export CSV format**    | Read downloaded CSV. Assert headers and row data match expenses.         |
 
 ### Active User & Activity
 
