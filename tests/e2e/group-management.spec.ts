@@ -67,6 +67,25 @@ test('create group - with custom currency', async ({ page }) => {
   await expect(page.getByRole('tab', { name: 'Expenses' })).toBeVisible()
 })
 
+test('view group information page', async ({ page }) => {
+  const groupName = `PW E2E group info ${Date.now()}`
+
+  await createGroup({
+    page,
+    groupName,
+    participants: ['Alice', 'Bob', 'Charlie'],
+  })
+
+  await page.getByRole('tab', { name: 'Information' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/information$/)
+
+  await expect(page.getByRole('heading', { name: groupName })).toBeVisible()
+
+  await expect(page.getByRole('tab', { name: 'Balances' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Expenses' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Settings' })).toBeVisible()
+})
+
 test('edit group - update name and info', async ({ page }) => {
   const groupName = `PW E2E group edit ${Date.now()}`
 

@@ -191,7 +191,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Edit group - add participant        | 🔴 P0    | 🟡 Medium  | ✅ Done   | Important feature         |
 | Edit group - remove participant     | 🟡 P1    | 🟡 Medium  | ✅ Done   | Important feature         |
 | Edit group - rename participant     | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edit participant          |
-| View group information page         | 🟢 P2    | 🟢 Low     | 🍏 Low    | Read-only view            |
+| View group information page         | 🟢 P2    | 🟢 Low     | ✅ Done   | Read-only view            |
 | Share group - copy URL              | 🟡 P1    | 🟡 Medium  | ✅ Done   | Collaboration feature     |
 | Recent groups list - persists       | 🟢 P2    | 🟡 Medium  | 🍊 Medium | LocalStorage test         |
 | Navigate between groups             | 🟢 P2    | 🟢 Low     | 🍏 Low    | Navigation                |
