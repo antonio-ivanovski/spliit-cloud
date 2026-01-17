@@ -97,7 +97,7 @@ _Location: `tests/e2e/ui.spec.ts`_
 | ⬜ Todo | 🟡 **P1** | **i18n Date format**     | Switch lang. Assert date format changes (MM/DD vs DD/MM).              |
 | ⬜ Todo | 🟡 **P1** | **Mobile responsive**    | Set viewport to mobile. Assert drawer menu works instead of sidebar.   |
 | ⬜ Todo | 🟡 **P1** | **Desktop responsive**   | Set viewport to desktop. Assert dialogs/sidebar appear correctly.      |
-| ⬜ Todo | 🟡 **P1** | **Health Readiness**     | Fetch `/api/health/readiness`. Assert status 200 (database connected). |
+| ✅ Done | 🟡 **P1** | **Health Readiness**     | Fetch `/api/health/readiness`. Assert status 200 (database connected). |
 
 ### Document Upload (If Enabled)
 
