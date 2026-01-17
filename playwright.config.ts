@@ -1,13 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
+function isCodeAgent(): boolean {
+  return !!process.env.CLAUDE_CODE || !!process.env.OPENCODE
+}
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -17,7 +12,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : 2,
-  reporter: process.env.CI ? 'dot' : 'json',
+  reporter: process.env.CI ? 'dot' : isCodeAgent() ? 'json' : 'html',
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
