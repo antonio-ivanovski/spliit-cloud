@@ -35,37 +35,41 @@ test('suggested reimbursements displayed', async ({ page }) => {
   await navigateToTab(page, 'Balances')
 
   // Step 6: Verify Suggested reimbursements section is visible
-  const reimbursementsHeading = page
-    .getByText('Suggested reimbursements')
-    .first()
-  await expect(reimbursementsHeading).toBeVisible({})
+  const reimbursementsHeading = page.getByRole('heading', {
+    name: 'Suggested reimbursements',
+  })
+  await expect(reimbursementsHeading).toBeVisible()
 
-  // Wait for the reimbursements content to load (either suggestions or "no reimbursements" message)
-  await page.waitForFunction(() => {
-    const bodyText = document.body.textContent || ''
-    return (
-      bodyText.includes('owes') ||
-      bodyText.includes('reimbursement') ||
-      bodyText.includes('paid back')
-    )
-  }, {})
+  // Step 7: Verify reimbursements list is displayed
+  const reimbursementsList = page.getByTestId('reimbursements-list')
+  await expect(reimbursementsList).toBeVisible()
 
-  // Step 7: Verify the reimbursements section is populated
-  // Look for either "owes" text or any reimbursement-related text
-  const hasOwesText = (await page.locator('text=/owes|owe/i').count()) > 0
-  const hasReimbursementText =
-    (await page.locator('text=/reimbursement|paid back|settle/i').count()) > 0
+  // Step 8: Verify specific reimbursement rows with expected visible content
+  const bobOwesAlice = page.getByTestId(
+    `reimbursement-row-${participantB}-${participantA}`,
+  )
+  await expect(bobOwesAlice).toBeVisible()
+  await expect(bobOwesAlice).toContainText(
+    `${participantB} owes ${participantA}`,
+  )
+  await expect(bobOwesAlice).toContainText('$40.00')
 
-  expect(hasOwesText || hasReimbursementText).toBeTruthy()
+  const charlieOwesAlice = page.getByTestId(
+    `reimbursement-row-${participantC}-${participantA}`,
+  )
+  await expect(charlieOwesAlice).toBeVisible()
+  await expect(charlieOwesAlice).toContainText(
+    `${participantC} owes ${participantA}`,
+  )
+  await expect(charlieOwesAlice).toContainText('$70.00')
 
-  // Step 8: If reimbursements exist, verify they contain amounts
-  if (hasOwesText || hasReimbursementText) {
-    // Verify amounts are displayed with currency format
-    const pageText = await page.locator('body').textContent()
-    if (pageText) {
-      expect(pageText).toMatch(/[\d,]+\.\d{2}/)
-    }
-  }
+  // Verify Mark as paid links exist and are clickable
+  await expect(
+    bobOwesAlice.getByRole('link', { name: /mark as paid/i }),
+  ).toBeVisible()
+  await expect(
+    charlieOwesAlice.getByRole('link', { name: /mark as paid/i }),
+  ).toBeVisible()
 })
 
 test('view balances page - calculates correctly', async ({ page }) => {
@@ -97,18 +101,12 @@ test('view balances page - calculates correctly', async ({ page }) => {
   await navigateToTab(page, 'Balances')
 
   // Step 5: Verify Balances section header is visible
-  const balancesCard = page
-    .locator('h2, h3, h4, h5')
-    .filter({ hasText: /balance/i })
-  await expect(balancesCard.first()).toBeVisible({})
+  const balancesHeading = page.getByRole('heading', { name: 'Balances' })
+  await expect(balancesHeading).toBeVisible()
 
-  // Wait until async calculations render at least one money value.
-  await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible({})
-
-  // Step 6: Verify participant names are displayed (use .first() to avoid strict mode)
-  await expect(page.getByText(participantA).first()).toBeVisible()
-  await expect(page.getByText(participantB).first()).toBeVisible()
-  await expect(page.getByText(participantC).first()).toBeVisible()
+  // Step 6: Verify balances list is rendered
+  const balancesList = page.getByTestId('balances-list')
+  await expect(balancesList).toBeVisible()
 
   // Step 7: Verify balance calculations (net amounts)
   // With 3 participants and 2 evenly-split expenses:
@@ -117,57 +115,80 @@ test('view balances page - calculates correctly', async ({ page }) => {
   // Bob paid 150 => 0.00
   // Charlie paid 0 => -150.00
 
-  await expect(page.getByText(participantA).first()).toBeVisible()
-  await expect(page.getByText(participantB).first()).toBeVisible()
-  await expect(page.getByText(participantC).first()).toBeVisible()
+  const aliceRow = page.getByTestId(`balance-row-${participantA}`)
+  await expect(aliceRow).toBeVisible()
+  await expect(aliceRow).toContainText(participantA)
+  await expect(aliceRow).toContainText('$150.00')
 
-  // Expected net balances: +150.00, 0.00, -150.00 (sign may vary by locale/UI)
-  const body = page.locator('body')
-  await expect(body).toContainText(/150\.00/)
-  await expect(body).toContainText(/0\.00/)
-  await expect(body).toContainText(/owes|is owed|gets back|\+|-/i)
+  const bobRow = page.getByTestId(`balance-row-${participantB}`)
+  await expect(bobRow).toBeVisible()
+  await expect(bobRow).toContainText(participantB)
+  await expect(bobRow).toContainText('$0.00')
+
+  const charlieRow = page.getByTestId(`balance-row-${participantC}`)
+  await expect(charlieRow).toBeVisible()
+  await expect(charlieRow).toContainText(participantC)
+  await expect(charlieRow).toContainText('-$150.00')
 })
 
 test('Active user balance highlighted', async ({ page }) => {
   const groupName = `PW E2E active user balance ${Date.now()}`
   const participantA = 'Alice'
   const participantB = 'Bob'
+  const participantC = 'Charlie'
 
   // Create group
   await createGroup({
     page,
     groupName,
-    participants: [participantA, participantB, 'Charlie'],
+    participants: [participantA, participantB, participantC],
   })
 
   // Navigate to balances
   await navigateToTab(page, 'Balances')
 
-  // Verify balances page loads with participant names
-  await expect(page.getByText(participantA).first()).toBeVisible()
-  await expect(page.getByText(participantB).first()).toBeVisible()
+  // Verify balances list loads with all participants
+  const balancesList = page.getByTestId('balances-list')
+  await expect(balancesList).toBeVisible()
+
+  await expect(page.getByTestId(`balance-row-${participantA}`)).toBeVisible()
+  await expect(page.getByTestId(`balance-row-${participantB}`)).toBeVisible()
+  await expect(page.getByTestId(`balance-row-${participantC}`)).toBeVisible()
 })
 
 test('Zero balances display correctly', async ({ page }) => {
   const groupName = `PW E2E zero balances ${Date.now()}`
   const participantA = 'Alice'
   const participantB = 'Bob'
+  const participantC = 'Charlie'
 
   // Create group
   await createGroup({
     page,
     groupName,
-    participants: [participantA, participantB, 'Charlie'],
+    participants: [participantA, participantB, participantC],
   })
 
   // Navigate to balances tab
   await navigateToTab(page, 'Balances')
 
-  // Verify all participants show zero balance (no expenses)
-  const bodyText = await page.locator('body').textContent()
-  expect(bodyText).toBeTruthy()
-  // With no expenses, balances should be zero
-  await expect(page.getByText(/0\.00|0,00/).first()).toBeVisible()
+  // Verify balances list is displayed
+  const balancesList = page.getByTestId('balances-list')
+  await expect(balancesList).toBeVisible()
+
+  // With no expenses, all balances should be zero
+  await expect(page.getByTestId(`balance-row-${participantA}`)).toContainText(
+    '$0.00',
+  )
+  await expect(page.getByTestId(`balance-row-${participantB}`)).toContainText(
+    '$0.00',
+  )
+  await expect(page.getByTestId(`balance-row-${participantC}`)).toContainText(
+    '$0.00',
+  )
+
+  // Verify no reimbursements are needed
+  await expect(page.getByTestId('no-reimbursements')).toBeVisible()
 })
 
 test('Balances match expected from expenses', async ({ page }) => {
@@ -201,22 +222,45 @@ test('Balances match expected from expenses', async ({ page }) => {
   // Navigate to balances
   await navigateToTab(page, 'Balances')
 
-  // Wait for calculations to render
-  await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible()
+  // Wait for balances list to be visible
+  const balancesList = page.getByTestId('balances-list')
+  await expect(balancesList).toBeVisible()
 
-  // Verify participant names are displayed
-  await expect(page.getByText(participantA).first()).toBeVisible()
-  await expect(page.getByText(participantB).first()).toBeVisible()
-  await expect(page.getByText(participantC).first()).toBeVisible()
+  // Verify exact balance values by checking visible text content
+  await expect(page.getByTestId(`balance-row-${participantA}`)).toContainText(
+    participantA,
+  )
+  await expect(page.getByTestId(`balance-row-${participantA}`)).toContainText(
+    '$150.00',
+  )
 
-  // Verify balances include currency formatting
-  const bodyText = await page.locator('body').textContent()
-  expect(bodyText).toMatch(/[\d.,]+\.\d{2}/)
+  await expect(page.getByTestId(`balance-row-${participantB}`)).toContainText(
+    participantB,
+  )
+  await expect(page.getByTestId(`balance-row-${participantB}`)).toContainText(
+    '$0.00',
+  )
 
-  // Verify reimbursement section mentions amounts
-  const reimbursementSection = await page.locator('text=/owes|owe/i').count()
-  // Should have some reimbursement suggestions since balances are unequal
-  expect(reimbursementSection > 0).toBeTruthy()
+  await expect(page.getByTestId(`balance-row-${participantC}`)).toContainText(
+    participantC,
+  )
+  await expect(page.getByTestId(`balance-row-${participantC}`)).toContainText(
+    '-$150.00',
+  )
+
+  // Verify reimbursement suggestion exists
+  const reimbursementsList = page.getByTestId('reimbursements-list')
+  await expect(reimbursementsList).toBeVisible()
+
+  // Charlie should owe Alice $150
+  const charlieOwesAlice = page.getByTestId(
+    `reimbursement-row-${participantC}-${participantA}`,
+  )
+  await expect(charlieOwesAlice).toBeVisible()
+  await expect(charlieOwesAlice).toContainText(
+    `${participantC} owes ${participantA}`,
+  )
+  await expect(charlieOwesAlice).toContainText('$150.00')
 })
 
 test('Suggested reimbursements minimized', async ({ page }) => {
@@ -253,25 +297,22 @@ test('Suggested reimbursements minimized', async ({ page }) => {
   // Navigate to balances
   await navigateToTab(page, 'Balances')
 
-  // Wait for calculations
-  await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible()
-
   // Verify suggested reimbursements section exists
-  const reimbursementsHeading = page
-    .getByText('Suggested reimbursements')
-    .first()
+  const reimbursementsHeading = page.getByRole('heading', {
+    name: 'Suggested reimbursements',
+  })
   await expect(reimbursementsHeading).toBeVisible()
 
-  // Verify reimbursements are displayed (should be minimized)
-  const pageText = await page.locator('body').textContent()
-  // Should have reimbursement suggestions
-  expect(pageText).toMatch(/owes|owe/i)
+  // Verify reimbursements list is displayed
+  const reimbursementsList = page.getByTestId('reimbursements-list')
+  await expect(reimbursementsList).toBeVisible()
 
-  // Count number of reimbursement lines shown
-  const reimbursementCount = await page.locator('text=/owes|owe/i').count()
-  // With 4 participants and optimization, should have fewer than 3 reimbursements
-  // (since minimum is 3 for 4 people, but algorithm minimizes)
-  expect(reimbursementCount).toBeGreaterThan(0)
+  // Count reimbursement rows - with optimization should be minimal
+  // With 4 participants, maximum needed is 3 reimbursements (n-1)
+  const reimbursementRows = page.locator('[data-testid^="reimbursement-row-"]')
+  const count = await reimbursementRows.count()
+  expect(count).toBeGreaterThan(0)
+  expect(count).toBeLessThanOrEqual(3)
 })
 
 test('Create reimbursement expense', async ({ page }) => {
@@ -302,11 +343,10 @@ test('Create reimbursement expense', async ({ page }) => {
     await createReimbLink.click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
 
-    const reimbTitle = page.locator('input[name="title"]')
-    await reimbTitle.fill(`Reimbursement from ${participantB}`)
+    await page.getByLabel(/title/i).fill(`Reimbursement from ${participantB}`)
 
-    const reimbAmount = page.locator('input[name="amount"]')
-    await reimbAmount.fill('100')
+    // Use the amount field with name="amount" specifically
+    await page.locator('input[name="amount"]').fill('100')
 
     // Select payer
     const payBySelect = page
@@ -318,11 +358,13 @@ test('Create reimbursement expense', async ({ page }) => {
     await reimbPayerOption.click()
 
     // Check reimbursement checkbox
-    const reimbursementLabel = page.getByText(/this is a reimbursement/i)
-    await reimbursementLabel.click()
+    const reimbursementCheckbox = page.getByRole('checkbox', {
+      name: /reimbursement/i,
+    })
+    await reimbursementCheckbox.check()
 
     // Submit
-    await page.locator('button[type="submit"]').first().click()
+    await page.getByRole('button', { name: /create/i }).click()
     await page.waitForURL(/\/groups\/[^/]+/)
 
     // Verify reimbursement appears
@@ -352,12 +394,7 @@ test('Reimbursement excludes from totals', async ({ page }) => {
   // Verify expense appears
   await expect(page.getByText('Regular Expense')).toBeVisible()
 
-  // Create a reimbursement expense by navigating directly
-  await page.evaluate(() => {
-    // Scroll to top to avoid header interception
-    window.scrollTo(0, 0)
-  })
-
+  // Create a reimbursement expense
   const createReimbLink = page
     .getByRole('link', { name: /create expense|add/i })
     .first()
@@ -366,42 +403,29 @@ test('Reimbursement excludes from totals', async ({ page }) => {
     await createReimbLink.click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
 
-    const reimbTitle = page.locator('input[name="title"]')
-    await reimbTitle.fill('Reimbursement')
+    await page.getByLabel(/title/i).fill('Reimbursement')
 
-    const reimbAmount = page.locator('input[name="amount"]')
-    await reimbAmount.fill('150')
+    // Use the amount field with name="amount" specifically
+    await page.locator('input[name="amount"]').fill('150')
 
     const payBySelect = page
       .getByRole('combobox')
       .filter({ hasText: 'Select a participant' })
     await payBySelect.click()
 
-    const reimbPayerOption = page.getByRole('option', { name: participantB })
-    await reimbPayerOption.click()
+    await page.getByRole('option', { name: participantB }).click()
 
-    // Look for and check reimbursement checkbox using force click if needed
-    const checkboxes = page.locator('input[type="checkbox"]')
-    const count = await checkboxes.count()
-    if (count > 0) {
-      // Try clicking the first checkbox with force
-      try {
-        await checkboxes.first().check({ force: true })
-      } catch {
-        // If that fails, try scrolling and retrying
-        await page.evaluate(() => {
-          window.scrollTo(0, 0)
-        })
-        await checkboxes.first().click({ force: true })
-      }
-    }
+    // Check reimbursement checkbox
+    const reimbursementCheckbox = page.getByRole('checkbox', {
+      name: /reimbursement/i,
+    })
+    await reimbursementCheckbox.check()
 
-    await page.locator('button[type="submit"]').first().click()
+    await page.getByRole('button', { name: /create/i }).click()
     await page.waitForURL(/\/groups\/[^/]+/)
 
     // Verify both expenses appear
     await expect(page.getByText('Regular Expense')).toBeVisible()
-    // Use first() to avoid strict mode violation
     await expect(page.getByText('Reimbursement').first()).toBeVisible()
   }
 })
