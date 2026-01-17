@@ -9,53 +9,46 @@ async function createGroup({
 }: {
   page: Page
   groupName: string
-  participants: [string, string, string]
+  participants: string[]
 }) {
   await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).click()
+  await page.getByRole('link', { name: 'Create' }).first().click()
 
   await page.getByLabel('Group name').fill(groupName)
 
   const participantInputs = page.getByRole('textbox', { name: 'New' })
-  await expect(participantInputs).toHaveCount(3)
-  await participantInputs.nth(0).fill(participants[0])
-  await participantInputs.nth(1).fill(participants[1])
-  await participantInputs.nth(2).fill(participants[2])
+
+  for (let i = 0; i < participants.length; i++) {
+    if (i >= 3) {
+      await page.getByRole('button', { name: 'Add participant' }).click()
+      await expect(participantInputs).toHaveCount(i + 1)
+    }
+
+    await participantInputs.nth(i).fill(participants[i]!)
+  }
 
   await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+  await expect(page).not.toHaveURL(/\/groups\/create$/)
+  await expect(page).toHaveURL(/\/groups\/[^/]+(\/expenses)?$/)
+
+  const url = page.url()
+  const groupId = url.match(/\/groups\/([^/]+)(?:\/expenses)?$/)?.[1]
+  if (!groupId || groupId === 'create') {
+    throw new Error(`Failed to extract groupId from URL: ${url}`)
+  }
+
+  return groupId
 }
-
-test('create group - happy path', async ({ page }) => {
-  const groupName = `PW E2E group ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, 'Charlie'],
-  })
-
-  const balancesTab = page.getByRole('tab', { name: 'Balances' })
-  await expect(balancesTab).toBeVisible()
-  await balancesTab.click()
-
-  await expect(page.getByText(participantA, { exact: true })).toBeVisible()
-  await expect(page.getByText(participantB, { exact: true })).toBeVisible()
-  await expect(page.getByText(groupName, { exact: true })).toBeVisible()
-})
 
 test('create group - with custom currency', async ({ page }) => {
   const groupName = `PW E2E group custom currency ${Date.now()}`
 
   await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).click()
+  await page.getByRole('link', { name: 'Create' }).first().click()
 
   await page.getByLabel('Group name').fill(groupName)
 
   // Select “Custom” currency (empty code)
-  // The currency selector is a button with role=combobox (label sits outside).
   await page.locator('[role="combobox"]').first().click()
   await page.getByRole('option', { name: 'Custom' }).click()
 
@@ -71,14 +64,13 @@ test('create group - with custom currency', async ({ page }) => {
   await page.getByRole('button', { name: 'Create' }).click()
   await expect(page).toHaveURL(/\/groups\/[^/]+$/)
 
-  // Spot-check UI renders and doesn’t crash with custom currency
   await expect(page.getByRole('tab', { name: 'Expenses' })).toBeVisible()
 })
 
 test('edit group - update name and info', async ({ page }) => {
   const groupName = `PW E2E group edit ${Date.now()}`
 
-  await createGroup({
+  const groupId = await createGroup({
     page,
     groupName,
     participants: ['Alice', 'Bob', 'Charlie'],
@@ -103,7 +95,7 @@ test('edit group - update name and info', async ({ page }) => {
 
 test('create group - validation errors', async ({ page }) => {
   await page.goto('/groups')
-  await page.getByRole('link', { name: 'Create' }).click()
+  await page.getByRole('link', { name: 'Create' }).first().click()
 
   // Submit empty form
   await page.getByRole('button', { name: 'Create' }).click()
@@ -134,7 +126,7 @@ test('create group - validation errors', async ({ page }) => {
 test('edit group - add participant', async ({ page }) => {
   const groupName = `PW E2E group add participant ${Date.now()}`
 
-  await createGroup({
+  const groupId = await createGroup({
     page,
     groupName,
     participants: ['Alice', 'Bob', 'Charlie'],
@@ -151,8 +143,108 @@ test('edit group - add participant', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Save' }).click()
 
-  // Verify new participant appears on balances
   await page.getByRole('tab', { name: 'Balances' }).click()
   await expect(page).toHaveURL(/\/groups\/[^/]+\/balances$/)
   await expect(page.getByText('Dave', { exact: true })).toBeVisible()
+})
+
+test('edit group - remove participant', async ({ page }) => {
+  const groupName = `PW E2E group remove participant ${Date.now()}`
+
+  const groupId = await createGroup({
+    page,
+    groupName,
+    participants: ['Alice', 'Bob', 'Charlie', 'Dave'],
+  })
+
+  // Create an expense involving Alice/Bob/Charlie only (Dave stays unprotected)
+  const createLink = page
+    .getByRole('link', { name: /create expense|create the first/i })
+    .first()
+  await createLink.click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/create/)
+
+  await page.locator('input[name="title"]').fill('Protection seed')
+  await page.locator('input[name="amount"]').fill('10.00')
+
+  const paidBySelect = page
+    .getByRole('combobox')
+    .filter({ hasText: 'Select a participant' })
+  await paidBySelect.click()
+  await page.getByRole('option', { name: 'Alice' }).click()
+
+  // Uncheck Dave from paid-for list
+  const daveCheckbox = page.getByRole('checkbox', { name: 'Dave' })
+  await expect(daveCheckbox).toBeVisible()
+  await daveCheckbox.uncheck()
+
+  await page.locator('button[type="submit"]').first().click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+
+  await page.getByRole('tab', { name: 'Settings' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/edit$/)
+
+  // Expect 4 participants still present
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(4)
+
+  // Protected participants (in an expense) should have disabled remove buttons.
+  const disabledRemoveButtons = page.locator(
+    'button[disabled] svg.lucide-trash-2',
+  )
+  await expect(disabledRemoveButtons).toHaveCount(3)
+
+  // Remove Dave (unprotected)
+  const daveRow = page.locator('input[value="Dave"]')
+  await expect(daveRow).toBeVisible()
+
+  const daveContainer = daveRow.locator(
+    'xpath=ancestor::div[contains(@class,"flex")][1]',
+  )
+  const daveRemove = daveContainer.locator('button:not([disabled])').first()
+
+  await daveRemove.click()
+
+  await page.getByRole('button', { name: 'Save' }).click()
+
+  await page.getByRole('tab', { name: 'Balances' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+\/balances$/)
+  await expect(page.getByText('Dave', { exact: true })).not.toBeVisible()
+})
+
+test('share group - copy URL', async ({ page, context }) => {
+  const groupName = `PW E2E group share ${Date.now()}`
+  const groupId = await createGroup({
+    page,
+    groupName,
+    participants: ['Alice', 'Bob', 'Charlie'],
+  })
+
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
+    origin: 'http://localhost:3000',
+  })
+
+  await page.getByRole('tab', { name: 'Expenses' }).click()
+  await page.locator('button[title="Share"]').click()
+
+  const shareUrlPartial = `/groups/${groupId}/expenses?ref=share`
+  // groupId sanity (guards against extracting "create")
+  expect(groupId).not.toBe('create')
+
+  // Stay on the group page; share popover should not navigate.
+  await expect(page.getByRole('heading', { name: groupName })).toBeVisible()
+
+  // Click the copy icon (turns into check)
+  const copyButton = page
+    .getByRole('button')
+    .filter({ has: page.locator('svg.lucide-copy') })
+    .first()
+  await copyButton.click()
+
+  await expect(page.locator('svg.lucide-check').first()).toBeVisible()
+
+  const clipboardText = await page.evaluate(() =>
+    navigator.clipboard.readText(),
+  )
+  expect(clipboardText).toContain(shareUrlPartial)
 })

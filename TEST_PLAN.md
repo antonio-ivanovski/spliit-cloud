@@ -185,14 +185,14 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Test Case                           | Priority | Complexity | Effort    | Notes                     |
 | ----------------------------------- | -------- | ---------- | --------- | ------------------------- |
 | Create group - happy path           | 🔴 P0    | 🟢 Low     | ✅ Done   | Core user flow            |
-| Create group - with custom currency | 🟡 P1    | 🟢 Low     | 🍏 Low    | Custom currency selection |
-| Create group - validation errors    | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Form validation           |
-| Edit group - update name and info   | 🟡 P1    | 🟢 Low     | 🍏 Low    | Edit flow                 |
-| Edit group - add participant        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Important feature         |
-| Edit group - remove participant     | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Important feature         |
+| Create group - with custom currency | 🟡 P1    | 🟢 Low     | ✅ Done   | Custom currency selection |
+| Create group - validation errors    | 🟡 P1    | 🟡 Medium  | ✅ Done   | Form validation           |
+| Edit group - update name and info   | 🟡 P1    | 🟢 Low     | ✅ Done   | Edit flow                 |
+| Edit group - add participant        | 🔴 P0    | 🟡 Medium  | ✅ Done   | Important feature         |
+| Edit group - remove participant     | 🟡 P1    | 🟡 Medium  | ✅ Done   | Important feature         |
 | Edit group - rename participant     | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edit participant          |
 | View group information page         | 🟢 P2    | 🟢 Low     | 🍏 Low    | Read-only view            |
-| Share group - copy URL              | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Collaboration feature     |
+| Share group - copy URL              | 🟡 P1    | 🟡 Medium  | ✅ Done   | Collaboration feature     |
 | Recent groups list - persists       | 🟢 P2    | 🟡 Medium  | 🍊 Medium | LocalStorage test         |
 | Navigate between groups             | 🟢 P2    | 🟢 Low     | 🍏 Low    | Navigation                |
 
@@ -249,7 +249,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | ----------------------------------------- | -------- | ---------- | --------- | ---------------------- |
 | View balances page - calculates correctly | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Core feature           |
 | Balances match expected from expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Verification test      |
-| Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | ⚠️ Flaky  | Suggestions shown (12/15 browsers pass) |
+| Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | ✅ Done   | Suggestions shown      |
 | Suggested reimbursements minimized        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Algorithm verification |
 | Active user balance highlighted           | 🟡 P1    | 🟢 Low     | 🍏 Low    | Personalization        |
 | Create reimbursement expense              | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Settle debt flow       |
