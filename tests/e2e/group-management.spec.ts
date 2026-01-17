@@ -53,7 +53,7 @@ test('create group - with custom currency', async ({ page }) => {
   await page.getByRole('option', { name: 'Custom' }).click()
 
   // Now the currency symbol input should be visible
-  await page.getByLabel('Currency symbol').fill('¤')
+  await page.getByLabel('Currency symbol').fill('$')
 
   const participantInputs = page.getByRole('textbox', { name: 'New' })
   await expect(participantInputs).toHaveCount(3)
@@ -229,6 +229,50 @@ test('edit group - remove participant', async ({ page }) => {
   await page.getByRole('tab', { name: 'Balances' }).click()
   await expect(page).toHaveURL(/\/groups\/[^/]+\/balances$/)
   await expect(page.getByText('Dave', { exact: true })).not.toBeVisible()
+})
+
+test('navigate between groups', async ({ page }) => {
+  const groupName1 = `PW E2E navigate group 1 ${Date.now()}`
+  const groupName2 = `PW E2E navigate group 2 ${Date.now()}`
+
+  // Create first group
+  const groupId1 = await createGroup({
+    page,
+    groupName: groupName1,
+    participants: ['Alice', 'Bob'],
+  })
+
+  // Create second group
+  const groupId2 = await createGroup({
+    page,
+    groupName: groupName2,
+    participants: ['Charlie', 'Dave'],
+  })
+
+  // Verify we're on group 2
+  await expect(page.getByRole('heading', { name: groupName2 })).toBeVisible()
+
+  // Navigate to my groups page
+  await page.goto('/groups')
+  await expect(page).toHaveURL('/groups')
+
+  // Wait for both groups to appear in the list
+  await expect(page.getByText(groupName1)).toBeVisible()
+  await expect(page.getByText(groupName2)).toBeVisible()
+
+  // Click on first group by clicking its name
+  await page.getByText(groupName1).click()
+  await expect(page).toHaveURL(new RegExp(`/groups/${groupId1}`))
+  await expect(page.getByRole('heading', { name: groupName1 })).toBeVisible()
+
+  // Navigate back to groups list
+  await page.goto('/groups')
+  await expect(page).toHaveURL('/groups')
+
+  // Click on second group by clicking its name
+  await page.getByText(groupName2).click()
+  await expect(page).toHaveURL(new RegExp(`/groups/${groupId2}`))
+  await expect(page.getByRole('heading', { name: groupName2 })).toBeVisible()
 })
 
 test('share group - copy URL', async ({ page, context }) => {

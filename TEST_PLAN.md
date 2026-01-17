@@ -194,7 +194,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | View group information page         | 🟢 P2    | 🟢 Low     | ✅ Done   | Read-only view            |
 | Share group - copy URL              | 🟡 P1    | 🟡 Medium  | ✅ Done   | Collaboration feature     |
 | Recent groups list - persists       | 🟢 P2    | 🟡 Medium  | 🍊 Medium | LocalStorage test         |
-| Navigate between groups             | 🟢 P2    | 🟢 Low     | 🍏 Low    | Navigation                |
+| Navigate between groups             | 🟢 P2    | 🟢 Low     | ✅ Done   | Navigation                |
 
 **Total: 11 tests | P0: 2, P1: 5, P2: 4 | Low effort: 6, Medium: 5**
 
