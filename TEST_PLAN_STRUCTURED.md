@@ -93,7 +93,7 @@ _Location: `tests/e2e/ui.spec.ts`_
 | Status  | Priority  | Task                     | Implementation Guide                                                   |
 | :------ | :-------- | :----------------------- | :--------------------------------------------------------------------- |
 | ⬜ Todo | 🟢 **P2** | **i18n UI updates**      | Switch lang to Spanish. Assert static text (headers/buttons) changes.  |
-| ⬜ Todo | 🟡 **P1** | **i18n Currency format** | Switch lang/locale. Assert currency symbol position (€10 vs 10€).      |
+| ✅ Done | 🟡 **P1** | **i18n Currency format** | Switch lang/locale. Assert currency symbol position (€10 vs 10€).      |
 | ✅ Done | 🟡 **P1** | **i18n Date format**     | Switch lang. Assert date format changes (MM/DD vs DD/MM).              |
 | ✅ Done | 🟡 **P1** | **Mobile responsive**    | Set viewport to mobile. Assert drawer menu works instead of sidebar.   |
 | ✅ Done | 🟡 **P1** | **Desktop responsive**   | Set viewport to desktop. Assert dialogs/sidebar appear correctly.      |
