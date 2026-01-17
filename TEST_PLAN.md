@@ -207,7 +207,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Create expense - evenly split             | 🔴 P0    | 🟡 Medium  | ✅ Done   | Most common flow     |
 | Create expense - by shares                | 🔴 P0    | 🟡 Medium  | ✅ Done   | Weighted split       |
 | Create expense - by percentage            | 🔴 P0    | 🟡 Medium  | ✅ Done   | Percentage split     |
-| Create expense - by amount                | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Specific amounts     |
+| Create expense - by amount                | 🔴 P0    | 🟡 Medium  | ✅ Done   | Specific amounts     |
 | Create expense - with category            | 🟡 P1    | 🟢 Low     | 🍏 Low    | Category selection   |
 | Create expense - with notes               | 🟢 P2    | 🟢 Low     | 🍏 Low    | Optional field       |
 | Create expense - with custom date         | 🟡 P1    | 🟢 Low     | 🍏 Low    | Date picker          |

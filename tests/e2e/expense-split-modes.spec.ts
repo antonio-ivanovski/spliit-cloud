@@ -314,7 +314,7 @@ test('Create expense - by percentage split mode', async ({ page }) => {
   await expect(page.getByText('Team Dinner Percentage')).toBeVisible()
   await expect(page.locator('text=300.00')).toBeVisible()
 
-  // Step 10: Verify balances (Alice paid 300, percentages 25:25:50 so she is owed 75, Bob owes 75, Charlie owes 0)
+  // Step 10: Verify balances
   await page.getByRole('tab', { name: 'Balances' }).click()
   await page.waitForURL(/\/groups\/[^/]+\/balances$/)
 
@@ -327,6 +327,107 @@ test('Create expense - by percentage split mode', async ({ page }) => {
   ).toBeVisible()
 
   // Verify participants are shown
+  await expect(page.getByText(participantA).first()).toBeVisible()
+  await expect(page.getByText(participantB).first()).toBeVisible()
+  await expect(page.getByText(participantC).first()).toBeVisible()
+})
+
+test('Create expense - by amount split mode', async ({ page }) => {
+  const groupName = `PW E2E by amount ${Date.now()}`
+  const participantA = 'Alice'
+  const participantB = 'Bob'
+  const participantC = 'Charlie'
+
+  // Step 1: Create group with 3 participants
+  await page.goto('/groups')
+  await page.getByRole('link', { name: 'Create' }).first().click()
+
+  await page.getByLabel('Group name').fill(groupName)
+
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill(participantA)
+  await participantInputs.nth(1).fill(participantB)
+  await participantInputs.nth(2).fill(participantC)
+
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+
+  // Step 2: Navigate to expense creation
+  const createLink = page
+    .getByRole('link', { name: /create expense|create the first/i })
+    .first()
+  await createLink.waitFor({ state: 'visible' })
+  await createLink.click()
+
+  await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
+
+  const expenseTitle = page.locator('input[name="title"]')
+  await expenseTitle.waitFor({ state: 'visible' })
+
+  // Step 3: Fill title and total amount
+  await expenseTitle.fill('Team Dinner Amounts')
+  const amountInput = page.locator('input[name="amount"]')
+  await amountInput.fill('300.00')
+
+  // Step 4: Select payer: Alice
+  const paidBySelect = page
+    .getByRole('combobox')
+    .filter({ hasText: 'Select a participant' })
+  await paidBySelect.waitFor({ state: 'visible' })
+  await paidBySelect.click()
+  await page.getByRole('option', { name: participantA }).click()
+
+  // Step 5: Expand advanced options
+  await page
+    .getByRole('button', { name: 'Advanced splitting options…' })
+    .click()
+
+  // Step 6: Select split mode: By amount
+  const splitModeSelect = page
+    .getByRole('combobox')
+    .filter({ hasText: 'Evenly' })
+  await splitModeSelect.click()
+  await page.getByRole('option', { name: 'Unevenly – By amount' }).click()
+
+  // Step 7: Fill amounts - Alice: 50, Bob: 100, Charlie: 150 (sum to 300)
+  // In BY_AMOUNT mode the per-participant amount inputs live in the "Paid for" rows.
+  const paidForSection = page
+    .locator('h1,h2,h3,h4,h5', { hasText: /^Paid for/i })
+    .first()
+    .locator('..')
+    .locator('..')
+
+  const amountSplitInputs = paidForSection
+    .locator('div', { hasText: '$' })
+    .getByRole('textbox')
+
+  await expect(amountSplitInputs).toHaveCount(3)
+
+  await amountSplitInputs.nth(0).fill('50.00')
+  await amountSplitInputs.nth(1).fill('100.00')
+  await amountSplitInputs.nth(2).fill('150.00')
+
+  // Step 8: Submit expense
+  await page.locator('button[type="submit"]').first().click()
+  await page.waitForURL(/\/groups\/[^/]+/)
+
+  // Step 9: Verify expense appears
+  await page.getByRole('tab', { name: 'Expenses' }).click()
+  await expect(page.getByText('Team Dinner Amounts')).toBeVisible()
+  await expect(page.locator('text=300.00')).toBeVisible()
+
+  // Step 10: Verify balances page loads and shows participants
+  await page.getByRole('tab', { name: 'Balances' }).click()
+  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+
+  await expect(
+    page
+      .locator('h2, h3, h4, h5')
+      .filter({ hasText: /balance/i })
+      .first(),
+  ).toBeVisible()
+
   await expect(page.getByText(participantA).first()).toBeVisible()
   await expect(page.getByText(participantB).first()).toBeVisible()
   await expect(page.getByText(participantC).first()).toBeVisible()
