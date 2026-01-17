@@ -49,14 +49,14 @@ _Location: `tests/e2e/group-management.spec.ts` / `expense-crud.spec.ts`_
 
 _Location: `tests/e2e/recurring-expenses.spec.ts`_
 
-| Status  | Priority  | Task                         | Implementation Guide                                                                                      |
-| :------ | :-------- | :--------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| ✅ Done | 🔴 **P0** | **Create daily recurring**   | Fill expense form, select "Daily". Submit. Verify generic recurring indicator UI.                         |
-| ✅ Done | 🔴 **P0** | **Create weekly recurring**  | Fill form, select "Weekly". Submit. Verify UI.                                                            |
-| ✅ Done | 🔴 **P0** | **Create monthly recurring** | Fill form, select "Monthly". Submit. Verify UI.                                                           |
-| ✅ Done | 🔴 **P0** | **Verify instances created** | (Complex) Create recurring expense. Trigger backend job or mock time. Verify new expense appears in list. |
+| Status                                                                          | Priority  | Task                         | Implementation Guide                                                                                      |
+| :------------------------------------------------------------------------------ | :-------- | :--------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| ✅ Done                                                                         | 🔴 **P0** | **Create daily recurring**   | Fill expense form, select "Daily". Submit. Verify generic recurring indicator UI.                         |
+| ✅ Done                                                                         | 🔴 **P0** | **Create weekly recurring**  | Fill form, select "Weekly". Submit. Verify UI.                                                            |
+| ✅ Done                                                                         | 🔴 **P0** | **Create monthly recurring** | Fill form, select "Monthly". Submit. Verify UI.                                                           |
+| ✅ Done                                                                         | 🔴 **P0** | **Verify instances created** | (Complex) Create recurring expense. Trigger backend job or mock time. Verify new expense appears in list. |
 | ⬜ Missing feature https://github.com/spliit-app/spliit/issues/492, do not test | 🟡 **P1** | **Edit stops future**        | Edit a recurring instance. Assert future instances are unlinked or modified according to logic.           |
-| ⬜ Todo | 🟡 **P1** | **Delete current only**      | Delete a recurring instance. Assert other instances in the chain remain.                                  |
+| ⬜ Todo                                                                         | 🟡 **P1** | **Delete current only**      | Delete a recurring instance. Assert other instances in the chain remain.                                  |
 
 ### Statistics & Export
 
@@ -78,7 +78,7 @@ _Location: `tests/e2e/active-user.spec.ts` / `activity-log.spec.ts`_
 
 | Status  | Priority  | Task                   | Implementation Guide                                                        |
 | :------ | :-------- | :--------------------- | :-------------------------------------------------------------------------- |
-| ⬜ Todo | 🟡 **P1** | **Selection persists** | Select user. Reload page. Assert user is still selected (LocalStorage).     |
+| ✅ Done | 🟡 **P1** | **Selection persists** | Select user. Reload page. Assert user is still selected (LocalStorage).     |
 | ✅ Done | 🔴 **P0** | **Updates stats**      | Change active user. Assert Stats page numbers update to reflect new user.   |
 | ⬜ Todo | 🟢 **P2** | **Log shows create**   | Create expense. Go to Activity. Assert "Created expense X" entry exists.    |
 | ⬜ Todo | 🟢 **P2** | **Log shows update**   | Edit expense. Go to Activity. Assert "Updated expense X" entry exists.      |

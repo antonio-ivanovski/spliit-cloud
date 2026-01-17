@@ -143,3 +143,47 @@ test('Updates stats when active user changes', async ({ page }) => {
     page.locator('text=/Your total share/i').locator('..'),
   ).toContainText(/15\.00/)
 })
+
+test('Active user selection persists after page reload', async ({ page }) => {
+  const groupName = `PW E2E active user persistence ${Date.now()}`
+  const participantA = 'Alice'
+  const participantB = 'Bob'
+  const participantC = 'Charlie'
+
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
+
+  // Select Alice as active user via Settings
+  await navigateToTab(page, 'Settings')
+  await page.getByRole('combobox').last().click()
+  await page.getByRole('option', { name: participantA }).click()
+  await page.getByRole('button', { name: /save/i }).click()
+
+  // Verify selection is applied by navigating to Stats
+  await navigateToTab(page, 'Stats')
+
+  // Verify Alice's stats are showing
+  await expect(
+    page.locator('text=/Your total spendings/i').locator('..'),
+  ).toContainText(/0\.00/)
+
+  // Reload the page
+  await page.reload()
+  await page.waitForLoadState('networkidle')
+
+  // Navigate to Settings and verify Alice is still selected
+  await navigateToTab(page, 'Settings')
+
+  // The combobox should show Alice as the selected active user
+  const activeUserCombobox = page.getByRole('combobox').last()
+  await expect(activeUserCombobox).toHaveText(/Alice/)
+
+  // Alternatively, verify via Stats that Alice's stats are still showing
+  await navigateToTab(page, 'Stats')
+  await expect(
+    page.locator('text=/Your total spendings/i').locator('..'),
+  ).toContainText(/0\.00/)
+})
