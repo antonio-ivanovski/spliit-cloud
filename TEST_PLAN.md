@@ -254,7 +254,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Active user balance highlighted           | 🟡 P1    | 🟢 Low     | ✅ Done   | Personalization        |
 | Create reimbursement expense              | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Settle debt flow       |
 | Reimbursement excludes from totals        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Important logic        |
-| Zero balances display correctly           | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case              |
+| Zero balances display correctly           | 🟢 P2    | 🟢 Low     | ✅ Done   | Edge case              |
 
 **Total: 8 tests | P0: 4, P1: 3, P2: 1 | Low effort: 4, Medium: 4**
 
