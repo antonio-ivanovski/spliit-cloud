@@ -143,17 +143,17 @@ These tests require database setup but test important business logic flows. Use 
 
 ### 2.1 Recurring Expense Logic (`src/lib/api.ts`)
 
-| Test Case                                               | Priority | Complexity | Effort    | Notes                     |
-| ------------------------------------------------------- | -------- | ---------- | --------- | ------------------------- |
-| `createRecurringExpenses()` - creates daily recurring   | 🔴 P0    | 🔴 High    | ✅ Done   | Complex, requires DB      |
-| `createRecurringExpenses()` - creates weekly recurring  | 🔴 P0    | 🔴 High    | ✅ Done   | Date arithmetic           |
-| `createRecurringExpenses()` - creates monthly recurring | 🔴 P0    | 🔴 High    | ✅ Done   | Edge cases: 29-31st dates |
-| `createRecurringExpenses()` - handles month boundaries  | 🟡 P1    | 🔴 High    | ✅ Done   | Feb 29, 30, 31 edge cases |
-| `createRecurringExpenses()` - stops at correct time     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Verify loop termination   |
-| `createRecurringExpenses()` - uses transactions         | 🟡 P1    | 🔴 High    | ✅ Done   | Race condition prevention |
-| `createPayloadForNewRecurringExpenseLink()` - daily     | 🟡 P1    | 🟡 Medium  | ✅ Done   | Payload generation        |
-| `createPayloadForNewRecurringExpenseLink()` - weekly    | 🟡 P1    | 🟡 Medium  | ✅ Done   | Payload generation        |
-| `createPayloadForNewRecurringExpenseLink()` - monthly   | 🟡 P1    | 🟡 Medium  | ✅ Done   | Payload generation        |
+| Test Case                                               | Priority | Complexity | Effort  | Notes                     |
+| ------------------------------------------------------- | -------- | ---------- | ------- | ------------------------- |
+| `createRecurringExpenses()` - creates daily recurring   | 🔴 P0    | 🔴 High    | ✅ Done | Complex, requires DB      |
+| `createRecurringExpenses()` - creates weekly recurring  | 🔴 P0    | 🔴 High    | ✅ Done | Date arithmetic           |
+| `createRecurringExpenses()` - creates monthly recurring | 🔴 P0    | 🔴 High    | ✅ Done | Edge cases: 29-31st dates |
+| `createRecurringExpenses()` - handles month boundaries  | 🟡 P1    | 🔴 High    | ✅ Done | Feb 29, 30, 31 edge cases |
+| `createRecurringExpenses()` - stops at correct time     | 🔴 P0    | 🟡 Medium  | ✅ Done | Verify loop termination   |
+| `createRecurringExpenses()` - uses transactions         | 🟡 P1    | 🔴 High    | ✅ Done | Race condition prevention |
+| `createPayloadForNewRecurringExpenseLink()` - daily     | 🟡 P1    | 🟡 Medium  | ✅ Done | Payload generation        |
+| `createPayloadForNewRecurringExpenseLink()` - weekly    | 🟡 P1    | 🟡 Medium  | ✅ Done | Payload generation        |
+| `createPayloadForNewRecurringExpenseLink()` - monthly   | 🟡 P1    | 🟡 Medium  | ✅ Done | Payload generation        |
 
 **Total: 9 tests | P0: 4, P1: 5 | Medium: 3, High: 6**
 
@@ -182,19 +182,19 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.1 Group Management Flows
 
-| Test Case                           | Priority | Complexity | Effort    | Notes                     |
-| ----------------------------------- | -------- | ---------- | --------- | ------------------------- |
-| Create group - happy path           | 🔴 P0    | 🟢 Low     | ✅ Done   | Core user flow            |
-| Create group - with custom currency | 🟡 P1    | 🟢 Low     | ✅ Done   | Custom currency selection |
-| Create group - validation errors    | 🟡 P1    | 🟡 Medium  | ✅ Done   | Form validation           |
-| Edit group - update name and info   | 🟡 P1    | 🟢 Low     | ✅ Done   | Edit flow                 |
-| Edit group - add participant        | 🔴 P0    | 🟡 Medium  | ✅ Done   | Important feature         |
-| Edit group - remove participant     | 🟡 P1    | 🟡 Medium  | ✅ Done   | Important feature         |
-| Edit group - rename participant     | 🟢 P2    | 🟢 Low     | ✅ Done   | Edit participant          |
-| View group information page         | 🟢 P2    | 🟢 Low     | ✅ Done   | Read-only view            |
-| Share group - copy URL              | 🟡 P1    | 🟡 Medium  | ✅ Done   | Collaboration feature     |
-| Recent groups list - persists       | 🟢 P2    | 🟡 Medium  | ✅ Done   | LocalStorage test         |
-| Navigate between groups             | 🟢 P2    | 🟢 Low     | ✅ Done   | Navigation                |
+| Test Case                           | Priority | Complexity | Effort  | Notes                     |
+| ----------------------------------- | -------- | ---------- | ------- | ------------------------- |
+| Create group - happy path           | 🔴 P0    | 🟢 Low     | ✅ Done | Core user flow            |
+| Create group - with custom currency | 🟡 P1    | 🟢 Low     | ✅ Done | Custom currency selection |
+| Create group - validation errors    | 🟡 P1    | 🟡 Medium  | ✅ Done | Form validation           |
+| Edit group - update name and info   | 🟡 P1    | 🟢 Low     | ✅ Done | Edit flow                 |
+| Edit group - add participant        | 🔴 P0    | 🟡 Medium  | ✅ Done | Important feature         |
+| Edit group - remove participant     | 🟡 P1    | 🟡 Medium  | ✅ Done | Important feature         |
+| Edit group - rename participant     | 🟢 P2    | 🟢 Low     | ✅ Done | Edit participant          |
+| View group information page         | 🟢 P2    | 🟢 Low     | ✅ Done | Read-only view            |
+| Share group - copy URL              | 🟡 P1    | 🟡 Medium  | ✅ Done | Collaboration feature     |
+| Recent groups list - persists       | 🟢 P2    | 🟡 Medium  | ✅ Done | LocalStorage test         |
+| Navigate between groups             | 🟢 P2    | 🟢 Low     | ✅ Done | Navigation                |
 
 **Total: 11 tests | P0: 2, P1: 5, P2: 4 | Low effort: 6, Medium: 5**
 
@@ -202,26 +202,26 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.2 Expense Management Flows
 
-| Test Case                                 | Priority | Complexity | Effort    | Notes                |
-| ----------------------------------------- | -------- | ---------- | --------- | -------------------- |
-| Create expense - evenly split             | 🔴 P0    | 🟡 Medium  | ✅ Done   | Most common flow     |
-| Create expense - by shares                | 🔴 P0    | 🟡 Medium  | ✅ Done   | Weighted split       |
-| Create expense - by percentage            | 🔴 P0    | 🟡 Medium  | ✅ Done   | Percentage split     |
-| Create expense - by amount                | 🔴 P0    | 🟡 Medium  | ✅ Done   | Specific amounts     |
-| Create expense - with category            | 🟡 P1    | 🟢 Low     | ✅ Done   | Category selection   |
-| Create expense - with notes               | 🟢 P2    | 🟢 Low     | ✅ Done   | Optional field       |
-| Create expense - with custom date         | 🟡 P1    | 🟢 Low     | ✅ Done   | Date picker          |
-| Create expense - with currency conversion | 🟡 P1    | 🟡 Medium  | ✅ Done   | Multi-currency       |
-| Create expense - as reimbursement         | 🟡 P1    | 🟢 Low     | ✅ Done   | Reimbursement flag   |
-| Create expense - validation errors        | 🟡 P1    | 🟡 Medium  | ✅ Done   | Form validation      |
-| Edit expense - update all fields          | 🟡 P1    | 🟡 Medium  | ✅ Done   | Edit flow            |
-| Edit expense - change split mode          | 🟡 P1    | 🟡 Medium  | ✅ Done   | Mode switching       |
-| Delete expense - confirmation flow        | 🔴 P0    | 🟢 Low     | ✅ Done   | Deletion             |
-| List expenses - pagination                | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Large lists          |
-| List expenses - filter by text            | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Search functionality |
-| Expense displays correct date             | 🟡 P1    | 🟢 Low     | ✅ Done   | Date rendering       |
-| Expense displays correct amount           | 🔴 P0    | 🟢 Low     | ✅ Done   | Amount display       |
-| Expense shows category                    | 🟢 P2    | 🟢 Low     | ✅ Done   | Category display     |
+| Test Case                                 | Priority | Complexity | Effort  | Notes                |
+| ----------------------------------------- | -------- | ---------- | ------- | -------------------- |
+| Create expense - evenly split             | 🔴 P0    | 🟡 Medium  | ✅ Done | Most common flow     |
+| Create expense - by shares                | 🔴 P0    | 🟡 Medium  | ✅ Done | Weighted split       |
+| Create expense - by percentage            | 🔴 P0    | 🟡 Medium  | ✅ Done | Percentage split     |
+| Create expense - by amount                | 🔴 P0    | 🟡 Medium  | ✅ Done | Specific amounts     |
+| Create expense - with category            | 🟡 P1    | 🟢 Low     | ✅ Done | Category selection   |
+| Create expense - with notes               | 🟢 P2    | 🟢 Low     | ✅ Done | Optional field       |
+| Create expense - with custom date         | 🟡 P1    | 🟢 Low     | ✅ Done | Date picker          |
+| Create expense - with currency conversion | 🟡 P1    | 🟡 Medium  | ✅ Done | Multi-currency       |
+| Create expense - as reimbursement         | 🟡 P1    | 🟢 Low     | ✅ Done | Reimbursement flag   |
+| Create expense - validation errors        | 🟡 P1    | 🟡 Medium  | ✅ Done | Form validation      |
+| Edit expense - update all fields          | 🟡 P1    | 🟡 Medium  | ✅ Done | Edit flow            |
+| Edit expense - change split mode          | 🟡 P1    | 🟡 Medium  | ✅ Done | Mode switching       |
+| Delete expense - confirmation flow        | 🔴 P0    | 🟢 Low     | ✅ Done | Deletion             |
+| List expenses - pagination                | 🟡 P1    | 🟡 Medium  | ✅ Done | Large lists          |
+| List expenses - filter by text            | 🟡 P1    | 🟡 Medium  | ✅ Done | Search functionality |
+| Expense displays correct date             | 🟡 P1    | 🟢 Low     | ✅ Done | Date rendering       |
+| Expense displays correct amount           | 🔴 P0    | 🟢 Low     | ✅ Done | Amount display       |
+| Expense shows category                    | 🟢 P2    | 🟢 Low     | ✅ Done | Category display     |
 
 **Total: 18 tests | P0: 4, P1: 11, P2: 3 | Low effort: 10, Medium: 8**
 
@@ -229,15 +229,15 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.3 Recurring Expenses Flow
 
-| Test Case                               | Priority | Complexity | Effort    | Notes                |
-| --------------------------------------- | -------- | ---------- | --------- | -------------------- |
-| Create daily recurring expense          | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Core feature         |
-| Create weekly recurring expense         | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Core feature         |
-| Create monthly recurring expense        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Core feature         |
-| Verify recurring instances created      | 🔴 P0    | 🔴 High    | 🍎 High   | Time-based, complex  |
-| Edit recurring expense - stops future   | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Modification logic   |
-| Delete recurring expense - only current | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Independent deletion |
-| Recurring expense shows indicator       | 🟢 P2    | 🟢 Low     | ✅ Done   | UI element           |
+| Test Case                                                    | Priority | Complexity | Effort  | Notes                                                                        |
+| ------------------------------------------------------------ | -------- | ---------- | ------- | ---------------------------------------------------------------------------- |
+| Create daily recurring expense                               | 🔴 P0    | 🟡 Medium  | ✅ Done | Fill form, select Daily, submit, verify recurring indicator UI               |
+| Create weekly recurring expense                              | 🔴 P0    | 🟡 Medium  | ✅ Done | Fill form, select Weekly, submit, verify UI                                  |
+| Create monthly recurring expense                             | 🔴 P0    | 🟡 Medium  | ✅ Done | Fill form, select Monthly, submit, verify UI                                 |
+| Verify recurring instances created                           | 🔴 P0    | 🔴 High    | ✅ Done | Create recurring; trigger backend job/mock time; verify new expense in list  |
+| Edit recurring expense - stops future (missing feature #492) | 🟡 P1    | 🟡 Medium  | N/A     | Missing feature https://github.com/spliit-app/spliit/issues/492, do not test |
+| Delete recurring expense - only current                      | 🟡 P1    | 🟡 Medium  | ✅ Done | Delete a recurring instance; assert other instances in chain remain          |
+| Recurring expense shows indicator                            | 🟢 P2    | 🟢 Low     | ✅ Done | UI element                                                                   |
 
 **Total: 7 tests | P0: 4, P1: 2, P2: 1 | Low effort: 1, Medium: 4, High: 2**
 
@@ -262,16 +262,16 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.5 Statistics & Export Flows
 
-| Test Case                       | Priority | Complexity | Effort    | Notes                    |
-| ------------------------------- | -------- | ---------- | --------- | ------------------------ |
-| View statistics page            | 🟡 P1    | 🟢 Low     | ✅ Done   | Stats display            |
-| Total group spending correct    | 🔴 P0    | 🟡 Medium  | ✅ Done   | Calculation verification |
-| User total paid correct         | 🔴 P0    | 🟡 Medium  | ✅ Done   | Personalization          |
-| User total share correct        | 🔴 P0    | 🟡 Medium  | ✅ Done   | Personalization          |
-| Export to JSON - downloads file | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Export functionality     |
-| Export to JSON - correct data   | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Data verification        |
-| Export to CSV - downloads file  | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Export functionality     |
-| Export to CSV - correct format  | 🟡 P1    | 🟡 Medium  | 🍊 Medium | CSV structure            |
+| Test Case                       | Priority | Complexity | Effort  | Notes                    |
+| ------------------------------- | -------- | ---------- | ------- | ------------------------ |
+| View statistics page            | 🟡 P1    | 🟢 Low     | ✅ Done | Stats display            |
+| Total group spending correct    | 🔴 P0    | 🟡 Medium  | ✅ Done | Calculation verification |
+| User total paid correct         | 🔴 P0    | 🟡 Medium  | ✅ Done | Personalization          |
+| User total share correct        | 🔴 P0    | 🟡 Medium  | ✅ Done | Personalization          |
+| Export to JSON - downloads file | 🟡 P1    | 🟡 Medium  | ✅ Done | Export functionality     |
+| Export to JSON - correct data   | 🟡 P1    | 🟡 Medium  | ✅ Done | Data verification        |
+| Export to CSV - downloads file  | 🟡 P1    | 🟡 Medium  | ✅ Done | Export functionality     |
+| Export to CSV - correct format  | 🟡 P1    | 🟡 Medium  | ✅ Done | CSV structure            |
 
 **Total: 8 tests | P0: 3, P1: 5 | Low effort: 1, Medium: 7**
 
@@ -279,12 +279,12 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.6 Active User Selection
 
-| Test Case                        | Priority | Complexity | Effort    | Notes             |
-| -------------------------------- | -------- | ---------- | --------- | ----------------- |
-| Select active user - persists    | 🟡 P1    | 🟡 Medium  | 🍊 Medium | LocalStorage test |
-| Active user changes balance view | 🔴 P0    | 🟡 Medium  | ✅ Done   | Personalization   |
-| Active user changes stats        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Personalization   |
-| Clear active user - neutral view | 🟢 P2    | 🟢 Low     | ✅ Done   | Reset feature     |
+| Test Case                        | Priority | Complexity | Effort  | Notes             |
+| -------------------------------- | -------- | ---------- | ------- | ----------------- |
+| Select active user - persists    | 🟡 P1    | 🟡 Medium  | ✅ Done | LocalStorage test |
+| Active user changes balance view | 🔴 P0    | 🟡 Medium  | ✅ Done | Personalization   |
+| Active user changes stats        | 🔴 P0    | 🟡 Medium  | ✅ Done | Personalization   |
+| Clear active user - neutral view | 🟢 P2    | 🟢 Low     | ✅ Done | Reset feature     |
 
 **Total: 4 tests | P0: 2, P1: 1, P2: 1 | Low effort: 1, Medium: 3**
 
@@ -292,13 +292,13 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.7 Activity Log
 
-| Test Case                       | Priority | Complexity | Effort    | Notes         |
-| ------------------------------- | -------- | ---------- | --------- | ------------- |
-| View activity page              | 🟢 P2    | 🟢 Low     | ✅ Done   | Activity list |
-| Activity shows expense creation | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Audit log     |
-| Activity shows expense update   | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Audit log     |
-| Activity shows expense deletion | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Audit log     |
-| Activity pagination works       | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Long lists    |
+| Test Case                       | Priority | Complexity | Effort  | Notes         |
+| ------------------------------- | -------- | ---------- | ------- | ------------- |
+| View activity page              | 🟢 P2    | 🟢 Low     | ✅ Done | Activity list |
+| Activity shows expense creation | 🟢 P2    | 🟡 Medium  | ✅ Done | Audit log     |
+| Activity shows expense update   | 🟢 P2    | 🟡 Medium  | ✅ Done | Audit log     |
+| Activity shows expense deletion | 🟢 P2    | 🟡 Medium  | ✅ Done | Audit log     |
+| Activity pagination works       | 🟢 P2    | 🟡 Medium  | ✅ Done | Long lists    |
 
 **Total: 5 tests | P2: 5 | Low effort: 1, Medium: 4**
 
@@ -321,8 +321,8 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Test Case                    | Priority | Complexity | Effort    | Notes             |
 | ---------------------------- | -------- | ---------- | --------- | ----------------- |
 | Change language - UI updates | 🟢 P2    | 🟡 Medium  | 🍊 Medium | i18n test         |
-| Currency formats per locale  | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Locale formatting |
-| Date formats per locale      | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Locale formatting |
+| Currency formats per locale  | 🟡 P1    | 🟡 Medium  | ✅ Done   | Locale formatting |
+| Date formats per locale      | 🟡 P1    | 🟡 Medium  | ✅ Done   | Locale formatting |
 
 **Total: 3 tests | P1: 2, P2: 1 | Medium: 3**
 
@@ -330,11 +330,11 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.10 Theme & UI
 
-| Test Case                         | Priority | Complexity | Effort    | Notes           |
-| --------------------------------- | -------- | ---------- | --------- | --------------- |
-| Toggle dark mode - persists       | 🟢 P2    | 🟢 Low     | ✅ Done   | Theme switching |
-| Mobile responsive - drawer opens  | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Mobile testing  |
-| Desktop responsive - dialog opens | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Desktop testing |
+| Test Case                         | Priority | Complexity | Effort  | Notes           |
+| --------------------------------- | -------- | ---------- | ------- | --------------- |
+| Toggle dark mode - persists       | 🟢 P2    | 🟢 Low     | ✅ Done | Theme switching |
+| Mobile responsive - drawer opens  | 🟡 P1    | 🟡 Medium  | ✅ Done | Mobile testing  |
+| Desktop responsive - dialog opens | 🟡 P1    | 🟡 Medium  | ✅ Done | Desktop testing |
 
 **Total: 3 tests | P1: 2, P2: 1 | Low effort: 1, Medium: 2**
 
@@ -356,16 +356,18 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 ### 3.12 Health Endpoints
 
-| Test Case                          | Priority | Complexity | Effort    | Notes        |
-| ---------------------------------- | -------- | ---------- | --------- | ------------ |
-| `/api/health/liveness` returns 200 | 🟡 P1    | 🟢 Low     | ✅ Done   | Health check |
-| `/api/health/readiness` checks DB  | 🟡 P1    | 🟡 Medium  | 🍊 Medium | DB health    |
+| Test Case                          | Priority | Complexity | Effort  | Notes        |
+| ---------------------------------- | -------- | ---------- | ------- | ------------ |
+| `/api/health/liveness` returns 200 | 🟡 P1    | 🟢 Low     | ✅ Done | Health check |
+| `/api/health/readiness` checks DB  | 🟡 P1    | 🟡 Medium  | ✅ Done | DB health    |
 
 **Total: 2 tests | P1: 2 | Low effort: 1, Medium: 1**
 
 ---
 
 ## 4. TEST PRIORITY SUMMARY
+
+Note: Status in this section is informational and may lag behind per-section tables.
 
 ### Immediate Implementation (🍏 Low Hanging Fruit)
 

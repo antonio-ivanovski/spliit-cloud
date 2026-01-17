@@ -99,12 +99,3 @@ _Location: `tests/e2e/ui.spec.ts`_
 | ✅ Done | 🟡 **P1** | **Desktop responsive**   | Set viewport to desktop. Assert dialogs/sidebar appear correctly.      |
 | ✅ Done | 🟡 **P1** | **Health Readiness**     | Fetch `/api/health/readiness`. Assert status 200 (database connected). |
 
-### Document Upload (If Enabled)
-
-_Location: `tests/e2e/documents.spec.ts`_
-
-| Status  | Priority  | Task                 | Implementation Guide                                              |
-| :------ | :-------- | :------------------- | :---------------------------------------------------------------- |
-| ⬜ Todo | 🟡 **P1** | **Upload document**  | Mock S3. Modify to inject dependancy to make mocking easier. Upload file in expense form. Verify UI shows attachment. |
-| ⬜ Todo | 🟢 **P2** | **Multiple docs**    | Upload multiple files. Verify all are listed.                     |
-| ⬜ Todo | 🟡 **P1** | **Display document** | Click attached image. Verify lightbox/preview opens.              |
