@@ -11,7 +11,7 @@ _Location: `src/lib/api.test.ts`_
 | ⬜ Todo | 🔴 **P0** | **Create daily recurring expense**   | Verify `createRecurringExpenses` creates correct number of instances for daily interval. Mock DB.     |
 | ⬜ Todo | 🔴 **P0** | **Create weekly recurring expense**  | Verify correct dates are generated for weekly interval (e.g., every Monday).                          |
 | ⬜ Todo | 🔴 **P0** | **Create monthly recurring expense** | Verify correct dates for monthly interval.                                                            |
-| ⬜ Todo | 🟡 **P1** | **Handle month boundaries**          | Test edge cases like Jan 31st → Feb 28/29, Mar 31st. Ensure dates don't skip or error.                |
+| ✅ Done | 🟡 **P1** | **Handle month boundaries**          | Test edge cases like Jan 31st → Feb 28/29, Mar 31st. Ensure dates don't skip or error.                |
 | ⬜ Todo | 🔴 **P0** | **Stop recurrence correctly**        | Verify logic respects `endDate` or occurrence count limits.                                           |
 | ⬜ Todo | 🟡 **P1** | **Use transactions**                 | Verify DB operations are wrapped in a transaction (mock `$transaction` and ensure rollback on error). |
 | ⬜ Todo | 🟡 **P1** | **Payload: Daily**                   | Unit test `createPayloadForNewRecurringExpenseLink` returns correct next date for daily.              |
@@ -55,7 +55,7 @@ _Location: `tests/e2e/recurring-expenses.spec.ts`_
 | ✅ Done | 🔴 **P0** | **Create weekly recurring**  | Fill form, select "Weekly". Submit. Verify UI.                                                            |
 | ✅ Done | 🔴 **P0** | **Create monthly recurring** | Fill form, select "Monthly". Submit. Verify UI.                                                           |
 | ✅ Done | 🔴 **P0** | **Verify instances created** | (Complex) Create recurring expense. Trigger backend job or mock time. Verify new expense appears in list. |
-| ⬜ Todo | 🟡 **P1** | **Edit stops future**        | Edit a recurring instance. Assert future instances are unlinked or modified according to logic.           |
+| ⬜ Missing feature https://github.com/spliit-app/spliit/issues/492, do not test | 🟡 **P1** | **Edit stops future**        | Edit a recurring instance. Assert future instances are unlinked or modified according to logic.           |
 | ⬜ Todo | 🟡 **P1** | **Delete current only**      | Delete a recurring instance. Assert other instances in the chain remain.                                  |
 
 ### Statistics & Export
