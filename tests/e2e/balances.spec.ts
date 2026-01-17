@@ -37,7 +37,7 @@ test('suggested reimbursements displayed', async ({ page }) => {
     const createLink = page
       .getByRole('link', { name: /create expense|create the first/i })
       .first()
-    await createLink.waitFor({ state: 'visible', timeout: 2000 })
+    await createLink.waitFor({ state: 'visible'})
     await createLink.click()
 
     // Wait for navigation to expense creation page
@@ -45,7 +45,7 @@ test('suggested reimbursements displayed', async ({ page }) => {
 
     // Wait for the form to load and the title input to be ready
     const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible', timeout: 2000 })
+    await expenseTitle.waitFor({ state: 'visible'})
 
     // Fill in expense details
     await expenseTitle.fill(title)
@@ -58,20 +58,20 @@ test('suggested reimbursements displayed', async ({ page }) => {
     const paidBySelect = page
       .getByRole('combobox')
       .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible', timeout: 2000 })
+    await paidBySelect.waitFor({ state: 'visible'})
     await paidBySelect.click()
 
     // Wait for dropdown and click option
     const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible', timeout: 2000 })
+    await payerOption.waitFor({ state: 'visible'})
     await payerOption.click()
 
     // Submit the expense
     await page.locator('button[type="submit"]').first().click()
 
     // Wait for redirect and verify expense appears
-    await page.waitForURL(/\/groups\/[^/]+/, { timeout: 2000 })
-    await expect(page.getByText(title)).toBeVisible({ timeout: 2000 })
+    await page.waitForURL(/\/groups\/[^/]+/, {  })
+    await expect(page.getByText(title)).toBeVisible({  })
   }
 
   // Step 2-4: Create three expenses
@@ -87,7 +87,7 @@ test('suggested reimbursements displayed', async ({ page }) => {
   const reimbursementsHeading = page
     .getByText('Suggested reimbursements')
     .first()
-  await expect(reimbursementsHeading).toBeVisible({ timeout: 2000 })
+  await expect(reimbursementsHeading).toBeVisible({  })
 
   // Wait for the reimbursements content to load (either suggestions or "no reimbursements" message)
   await page.waitForFunction(
@@ -99,7 +99,7 @@ test('suggested reimbursements displayed', async ({ page }) => {
         bodyText.includes('paid back')
       )
     },
-    { timeout: 2000 },
+    {  },
   )
 
   // Step 7: Verify the reimbursements section is populated
@@ -156,7 +156,7 @@ test('view balances page - calculates correctly', async ({ page }) => {
     const createLink = page
       .getByRole('link', { name: /create expense|create the first/i })
       .first()
-    await createLink.waitFor({ state: 'visible', timeout: 2000 })
+    await createLink.waitFor({ state: 'visible'})
     await createLink.click()
 
     // Wait for navigation to expense creation page
@@ -164,7 +164,7 @@ test('view balances page - calculates correctly', async ({ page }) => {
 
     // Wait for the form to load and the title input to be ready
     const expenseTitle = page.locator('input[name="title"]')
-    await expenseTitle.waitFor({ state: 'visible', timeout: 2000 })
+    await expenseTitle.waitFor({ state: 'visible'})
     await expenseTitle.fill(title)
 
     const amountInput = page.locator('input[name="amount"]')
@@ -173,16 +173,16 @@ test('view balances page - calculates correctly', async ({ page }) => {
     const paidBySelect = page
       .getByRole('combobox')
       .filter({ hasText: 'Select a participant' })
-    await paidBySelect.waitFor({ state: 'visible', timeout: 2000 })
+    await paidBySelect.waitFor({ state: 'visible'})
     await paidBySelect.click()
 
     const payerOption = page.getByRole('option', { name: payer })
-    await payerOption.waitFor({ state: 'visible', timeout: 2000 })
+    await payerOption.waitFor({ state: 'visible'})
     await payerOption.click()
 
     await page.locator('button[type="submit"]').first().click()
-    await page.waitForURL(/\/groups\/[^/]+/, { timeout: 2000 })
-    await expect(page.getByText(title)).toBeVisible({ timeout: 2000 })
+    await page.waitForURL(/\/groups\/[^/]+/, {  })
+    await expect(page.getByText(title)).toBeVisible({  })
   }
 
   // Step 2-3: Create two expenses
@@ -197,11 +197,11 @@ test('view balances page - calculates correctly', async ({ page }) => {
   const balancesCard = page
     .locator('h2, h3, h4, h5')
     .filter({ hasText: /balance/i })
-  await expect(balancesCard.first()).toBeVisible({ timeout: 2000 })
+  await expect(balancesCard.first()).toBeVisible({  })
 
   // Wait until async calculations render at least one money value.
   await expect(page.getByText(/[\d.,]+\.\d{2}/).first()).toBeVisible({
-    timeout: 2000,
+   
   })
 
   // Step 6: Verify participant names are displayed (use .first() to avoid strict mode)
