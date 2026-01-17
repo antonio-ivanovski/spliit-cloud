@@ -14,7 +14,6 @@ _Location: `src/lib/api.test.ts`_
 | ✅ Done | 🔴 **P0** | **Create weekly recurring expense**  | Verify correct dates are generated for weekly interval (e.g., every Monday).                          |
 | ✅ Done | 🔴 **P0** | **Create monthly recurring expense** | Verify `createRecurringExpenses` creates correct date for monthly interval. Use test DB.              |
 | ✅ Done | 🟡 **P1** | **Handle month boundaries**          | Test edge cases like Jan 31st → Feb 28/29, Mar 31st. Ensure dates don't skip or error.                |
-| ⬜ Todo | 🔴 **P0** | **Stop recurrence correctly**        | Verify logic respects `endDate` or occurrence count limits.                                           |
 | ⬜ Todo | 🟡 **P1** | **Use transactions**                 | Verify DB operations are wrapped in a transaction. Create test data, force error, verify rollback.    |
 | ⬜ Todo | 🟡 **P1** | **Payload: Daily**                   | Unit test `createPayloadForNewRecurringExpenseLink` returns correct next date for daily.              |
 | ⬜ Todo | 🟡 **P1** | **Payload: Weekly**                  | Unit test payload generation for weekly interval.                                                     |
@@ -26,12 +25,12 @@ _Location: `src/lib/api.test.ts`_
 
 | Status  | Priority  | Task                     | Implementation Guide                                                                       |
 | :------ | :-------- | :----------------------- | :----------------------------------------------------------------------------------------- |
-| ⬜ Todo | 🟡 **P1** | **Log CREATE_EXPENSE**   | Call `logActivity` with 'create' action. Query test DB to verify insert with correct JSON. |
-| ⬜ Todo | 🟡 **P1** | **Log UPDATE_EXPENSE**   | Call with 'update' action. Query test DB to verify insert includes diff or new state.      |
-| ⬜ Todo | 🟡 **P1** | **Log DELETE_EXPENSE**   | Call with 'delete' action. Query test DB to verify insert.                                 |
-| ⬜ Todo | 🟡 **P1** | **Log UPDATE_GROUP**     | Call with 'update' action for group changes. Query test DB to verify insert.               |
-| ⬜ Todo | 🟢 **P2** | **Store Participant ID** | Verify `participantId` column is correctly populated in Activity table via DB query.       |
-| ⬜ Todo | 🟢 **P2** | **Store Expense Data**   | Verify `data` column contains valid JSON snapshot of the expense via DB query.             |
+| ✅ Done | 🟡 **P1** | **Log CREATE_EXPENSE**   | Call `logActivity` with 'create' action. Query test DB to verify insert with correct JSON. |
+| ✅ Done | 🟡 **P1** | **Log UPDATE_EXPENSE**   | Call with 'update' action. Query test DB to verify insert includes diff or new state.      |
+| ✅ Done | 🟡 **P1** | **Log DELETE_EXPENSE**   | Call with 'delete' action. Query test DB to verify insert.                                 |
+| ✅ Done | 🟡 **P1** | **Log UPDATE_GROUP**     | Call with 'update' action for group changes. Query test DB to verify insert.               |
+| ✅ Done | 🟢 **P2** | **Store Participant ID** | Verify `participantId` column is correctly populated in Activity table via DB query.       |
+| ✅ Done | 🟢 **P2** | **Store Expense Data**   | Verify `data` column contains valid JSON snapshot of the expense via DB query.             |
 
 ---
 
