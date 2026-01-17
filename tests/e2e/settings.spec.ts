@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createGroup } from '../helpers'
+import { createGroup, navigateToGroup } from '../helpers'
 
 test('Toggle dark mode - persists', async ({ page }) => {
   await page.goto('/groups')
@@ -46,8 +46,7 @@ test('Category displays on expense', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -110,8 +109,7 @@ test('Default category (General) selected', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page

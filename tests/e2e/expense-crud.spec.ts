@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test'
 import {
   createExpense,
-  createGroup,
   createExpensesViaAPI,
+  createGroup,
   createGroupViaAPI,
+  navigateToGroup,
 } from '../helpers'
 
 test('Delete expense - confirmation flow', async ({ page }) => {
@@ -19,8 +20,7 @@ test('Delete expense - confirmation flow', async ({ page }) => {
   })
 
   // Navigate directly to the group balances page to see the expense create button
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Click on the participant name to see if there are reimbursement options
   // Or use the action button if available
@@ -124,8 +124,7 @@ test('Expense displays correct amount', async ({ page }) => {
   })
 
   // Navigate to group page
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Look for button to add expense
   const actionButtons = page.getByRole('button')
@@ -201,8 +200,7 @@ test('Create expense - with category', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -270,8 +268,7 @@ test('Create expense - with custom date', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -338,8 +335,7 @@ test('Create expense - as reimbursement', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -412,8 +408,7 @@ test('Expense displays correct date', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -486,8 +481,7 @@ test('Expense shows category', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -555,8 +549,7 @@ test('Create expense - with notes', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -628,8 +621,7 @@ test('Create expense - validation errors', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find create expense button
   let createExpenseButton = page
@@ -709,8 +701,7 @@ test('Edit expense - update all fields', async ({ page }) => {
     participants: ['Alice', 'Bob', 'Charlie'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Create an initial expense
   let createExpenseButton = page
@@ -818,8 +809,7 @@ test('Edit expense - change split mode', async ({ page }) => {
     participants: ['Alice', 'Bob', 'Charlie'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Create an expense with EVENLY split mode
   let createExpenseButton = page
@@ -903,8 +893,7 @@ test('Expense list - text filter', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   const uniqueFilter = `UNIQUE_${Date.now()}`
 
@@ -1000,8 +989,7 @@ test('Create expense - with currency conversion', async ({ page }) => {
   const groupId = page.url().split('/').filter(Boolean).pop()
 
   // Navigate to group page
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Find and click create expense button
   let createExpenseButton = page
@@ -1111,7 +1099,6 @@ test('Create expense - with currency conversion', async ({ page }) => {
   }
 })
 
-
 test('Expense list - pagination with infinite scroll', async ({ page }) => {
   const groupName = `PW E2E pagination test ${Date.now()}`
   const groupId = await createGroupViaAPI(page, groupName, [
@@ -1129,11 +1116,10 @@ test('Expense list - pagination with infinite scroll', async ({ page }) => {
   // Verify all expenses were created
   expect(expenseIds).toHaveLength(21)
 
-  // Navigate to group page  
+  // Navigate to group page
   // Note: createExpensesViaAPI already navigated us to the group page,
   // but we navigate again to ensure we're seeing the full list
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Verify expenses are visible (they should be sorted by most recent first, so check the last few created)
   // Since expenses are likely sorted in reverse chronological order, check the higher-numbered ones first
@@ -1169,8 +1155,8 @@ test('Expense list - pagination with infinite scroll', async ({ page }) => {
   } else {
     // Test infinite scroll pattern - scroll to bottom
     await page.evaluate(() => {
-      const scrollableElement = document.querySelector('[role="region"]') ||
-        window
+      const scrollableElement =
+        document.querySelector('[role="region"]') || window
       if (scrollableElement === window) {
         window.scrollTo(0, document.documentElement.scrollHeight)
       } else {

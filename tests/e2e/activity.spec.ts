@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup, navigateToTab } from '../helpers'
+import { createExpense, createGroup, navigateToTab, navigateToGroup } from '../helpers'
 
 test('View activity page', async ({ page }) => {
   const groupId = await createGroup({
@@ -8,8 +8,7 @@ test('View activity page', async ({ page }) => {
     participants: ['Alice', 'Bob', 'Charlie'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Look for the activity tab or link
   const activityTab = page.getByRole('tab', { name: /activity|activities/i })
@@ -70,8 +69,7 @@ test('Log shows update', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   await createExpense(page, {
     title: expenseTitle,
@@ -124,8 +122,7 @@ test('Log shows delete', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   await createExpense(page, {
     title: expenseTitle,
@@ -179,8 +176,7 @@ test('Log pagination', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   // Create 25 expenses to exceed the PAGE_SIZE of 20
   // Each expense creates an activity, so we'll have 25 activities

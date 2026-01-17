@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup } from '../helpers'
+import { createExpense, createGroup, navigateToGroup } from '../helpers'
 
 test('Verify instances created for recurring expense', async ({ page }) => {
   const groupId = await createGroup({
@@ -55,8 +55,7 @@ test('Verify instances created for recurring expense', async ({ page }) => {
   })
   expect(initialExpenseCount).toBe(1)
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   await expect(page.getByText(recurringExpense.title).first()).toBeVisible()
 
@@ -89,8 +88,7 @@ test('Create daily recurring expense', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   let createExpenseButton = page
     .getByRole('button')
@@ -194,8 +192,7 @@ test('Create weekly recurring expense', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   let createExpenseButton = page
     .getByRole('button')
@@ -304,8 +301,7 @@ test('Create monthly recurring expense', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   let createExpenseButton = page
     .getByRole('button')
@@ -417,8 +413,7 @@ test('Recurring expense shows indicator', async ({ page }) => {
     participants: ['Alice', 'Bob'],
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   let createExpenseButton = page
     .getByRole('button')
@@ -519,8 +514,7 @@ test('Delete current only - other instances remain', async ({ page }) => {
     payer: 'Alice',
   })
 
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  await navigateToGroup(page, groupId)
 
   await expect(page.getByText(expenseTitle1)).toBeVisible()
   await expect(page.getByText(expenseTitle2)).toBeVisible()
