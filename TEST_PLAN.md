@@ -294,7 +294,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 | Test Case                       | Priority | Complexity | Effort    | Notes         |
 | ------------------------------- | -------- | ---------- | --------- | ------------- |
-| View activity page              | 🟢 P2    | 🟢 Low     | 🍏 Low    | Activity list |
+| View activity page              | 🟢 P2    | 🟢 Low     | ✅ Done   | Activity list |
 | Activity shows expense creation | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Audit log     |
 | Activity shows expense update   | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Audit log     |
 | Activity shows expense deletion | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Audit log     |
