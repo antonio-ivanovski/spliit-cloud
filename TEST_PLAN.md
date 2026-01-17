@@ -145,15 +145,15 @@ These tests require database setup but test important business logic flows. Use 
 
 | Test Case                                               | Priority | Complexity | Effort    | Notes                     |
 | ------------------------------------------------------- | -------- | ---------- | --------- | ------------------------- |
-| `createRecurringExpenses()` - creates daily recurring   | 🔴 P0    | 🔴 High    | 🍎 High   | Complex, requires DB      |
-| `createRecurringExpenses()` - creates weekly recurring  | 🔴 P0    | 🔴 High    | 🍎 High   | Date arithmetic           |
-| `createRecurringExpenses()` - creates monthly recurring | 🔴 P0    | 🔴 High    | 🍎 High   | Edge cases: 29-31st dates |
-| `createRecurringExpenses()` - handles month boundaries  | 🟡 P1    | 🔴 High    | 🍎 High   | Feb 29, 30, 31 edge cases |
+| `createRecurringExpenses()` - creates daily recurring   | 🔴 P0    | 🔴 High    | ✅ Done   | Complex, requires DB      |
+| `createRecurringExpenses()` - creates weekly recurring  | 🔴 P0    | 🔴 High    | ✅ Done   | Date arithmetic           |
+| `createRecurringExpenses()` - creates monthly recurring | 🔴 P0    | 🔴 High    | ✅ Done   | Edge cases: 29-31st dates |
+| `createRecurringExpenses()` - handles month boundaries  | 🟡 P1    | 🔴 High    | ✅ Done   | Feb 29, 30, 31 edge cases |
 | `createRecurringExpenses()` - stops at correct time     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Verify loop termination   |
-| `createRecurringExpenses()` - uses transactions         | 🟡 P1    | 🔴 High    | 🍎 High   | Race condition prevention |
-| `createPayloadForNewRecurringExpenseLink()` - daily     | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Payload generation        |
-| `createPayloadForNewRecurringExpenseLink()` - weekly    | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Payload generation        |
-| `createPayloadForNewRecurringExpenseLink()` - monthly   | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Payload generation        |
+| `createRecurringExpenses()` - uses transactions         | 🟡 P1    | 🔴 High    | ✅ Done   | Race condition prevention |
+| `createPayloadForNewRecurringExpenseLink()` - daily     | 🟡 P1    | 🟡 Medium  | ✅ Done   | Payload generation        |
+| `createPayloadForNewRecurringExpenseLink()` - weekly    | 🟡 P1    | 🟡 Medium  | ✅ Done   | Payload generation        |
+| `createPayloadForNewRecurringExpenseLink()` - monthly   | 🟡 P1    | 🟡 Medium  | ✅ Done   | Payload generation        |
 
 **Total: 9 tests | P0: 4, P1: 5 | Medium: 3, High: 6**
 
@@ -163,14 +163,14 @@ These tests require database setup but test important business logic flows. Use 
 
 ### 2.2 Activity Logging (`src/lib/api.ts`)
 
-| Test Case                               | Priority | Complexity | Effort    | Notes            |
-| --------------------------------------- | -------- | ---------- | --------- | ---------------- |
-| `logActivity()` - logs CREATE_EXPENSE   | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Audit trail      |
-| `logActivity()` - logs UPDATE_EXPENSE   | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Audit trail      |
-| `logActivity()` - logs DELETE_EXPENSE   | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Audit trail      |
-| `logActivity()` - logs UPDATE_GROUP     | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Audit trail      |
-| `logActivity()` - stores participant ID | 🟢 P2    | 🟡 Medium  | 🍊 Medium | User tracking    |
-| `logActivity()` - stores expense data   | 🟢 P2    | 🟡 Medium  | 🍊 Medium | Metadata storage |
+| Test Case                               | Priority | Complexity | Effort  | Notes            |
+| --------------------------------------- | -------- | ---------- | ------- | ---------------- |
+| `logActivity()` - logs CREATE_EXPENSE   | 🟡 P1    | 🟡 Medium  | ✅ Done | Audit trail      |
+| `logActivity()` - logs UPDATE_EXPENSE   | 🟡 P1    | 🟡 Medium  | ✅ Done | Audit trail      |
+| `logActivity()` - logs DELETE_EXPENSE   | 🟡 P1    | 🟡 Medium  | ✅ Done | Audit trail      |
+| `logActivity()` - logs UPDATE_GROUP     | 🟡 P1    | 🟡 Medium  | ✅ Done | Audit trail      |
+| `logActivity()` - stores participant ID | 🟢 P2    | 🟡 Medium  | ✅ Done | User tracking    |
+| `logActivity()` - stores expense data   | 🟢 P2    | 🟡 Medium  | ✅ Done | Metadata storage |
 
 **Total: 6 tests | P1: 4, P2: 2 | Medium: 6**
 

@@ -880,4 +880,87 @@ describe('createRecurringExpenses', () => {
       expect(newExpense!.paidFor).toHaveLength(2)
     })
   })
+
+  describe('Transaction behavior', () => {
+    it('rolls back transaction on error and does not persist partial data', async () => {
+      const initialDate = new Date(Date.UTC(2025, 0, 15, 0, 0, 0))
+      const nextMonthDate = new Date(Date.UTC(2025, 1, 15, 0, 0, 0))
+
+      const expenseId = randomId()
+      const recurringLinkId = randomId()
+
+      // Create a recurring expense
+      await prisma.expense.create({
+        data: {
+          id: expenseId,
+          groupId,
+          expenseDate: initialDate,
+          title: 'Monthly Service',
+          amount: 500,
+          paidById: participantIds[0],
+          splitMode: 'EVENLY',
+          recurrenceRule: RecurrenceRule.MONTHLY,
+          recurringExpenseLink: {
+            create: {
+              id: recurringLinkId,
+              groupId,
+              nextExpenseDate: nextMonthDate,
+            },
+          },
+          paidFor: {
+            createMany: {
+              data: participantIds.map((pid) => ({
+                participantId: pid,
+                shares: 1,
+              })),
+            },
+          },
+        },
+        include: { recurringExpenseLink: true },
+      })
+
+      const initialExpenseCount = await prisma.expense.count({
+        where: { groupId },
+      })
+      expect(initialExpenseCount).toBe(1)
+
+      // Verify initial state of recurring link
+      const linkBefore = await prisma.recurringExpenseLink.findUnique({
+        where: { id: recurringLinkId },
+      })
+      expect(linkBefore).toBeDefined()
+      expect(linkBefore!.nextExpenseCreatedAt).toBeNull()
+
+      // Update the recurringExpenseLink to make the WHERE clause in the update fail
+      // The transaction expects nextExpenseCreatedAt to be null, but we set it to a date
+      // This will cause the update in the transaction to fail (record not found)
+      await prisma.recurringExpenseLink.update({
+        where: { id: recurringLinkId },
+        data: { nextExpenseCreatedAt: new Date() },
+      })
+
+      // Attempt to create recurring expenses (should fail and rollback)
+      await createRecurringExpenses()
+
+      // Verify no new expense was created (transaction rolled back)
+      const expenseCountAfter = await prisma.expense.count({
+        where: { groupId },
+      })
+      expect(expenseCountAfter).toBe(initialExpenseCount)
+
+      // Verify recurring link was NOT updated to null again (remains with the date we set)
+      const linkAfter = await prisma.recurringExpenseLink.findUnique({
+        where: { id: recurringLinkId },
+      })
+      expect(linkAfter).toBeDefined()
+      expect(linkAfter!.nextExpenseCreatedAt).not.toBeNull()
+
+      // Verify only the original expense exists
+      const expenses = await prisma.expense.findMany({
+        where: { groupId },
+      })
+      expect(expenses).toHaveLength(1)
+      expect(expenses[0].id).toBe(expenseId)
+    })
+  })
 })
