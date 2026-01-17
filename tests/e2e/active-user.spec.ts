@@ -80,3 +80,66 @@ test('Clear active user - neutral view', async ({ page }) => {
   // Verify the page is still visible (neutral state)
   await expect(page.getByText(participantA)).toBeVisible()
 })
+
+test('Updates stats when active user changes', async ({ page }) => {
+  const groupName = `PW E2E active user stats update ${Date.now()}`
+  const participantA = 'Alice'
+  const participantB = 'Bob'
+  const participantC = 'Charlie'
+
+  await createGroup({
+    page,
+    groupName,
+    participants: [participantA, participantB, participantC],
+  })
+
+  // Add expenses
+  await createExpense(page, {
+    title: 'Dinner',
+    amount: '30.00',
+    payer: participantA,
+  })
+  await createExpense(page, {
+    title: 'Taxi',
+    amount: '15.00',
+    payer: participantB,
+  })
+
+  // Set Alice as active user
+  await navigateToTab(page, 'Settings')
+  await page.getByRole('combobox').last().click()
+  await page.getByRole('option', { name: participantA }).click()
+  await page.getByRole('button', { name: /save/i }).click()
+
+  // Navigate to Stats and verify Alice's stats
+  await navigateToTab(page, 'Stats')
+
+  // Alice paid 30.00 - find container with both label and value
+  await expect(
+    page.locator('text=/Your total spendings/i').locator('..'),
+  ).toContainText(/30\.00/)
+
+  // Alice's share is 15.00 (total 45.00 / 3 participants)
+  await expect(
+    page.locator('text=/Your total share/i').locator('..'),
+  ).toContainText(/15\.00/)
+
+  // Change active user to Bob
+  await navigateToTab(page, 'Settings')
+  await page.getByRole('combobox').last().click()
+  await page.getByRole('option', { name: participantB }).click()
+  await page.getByRole('button', { name: /save/i }).click()
+
+  // Navigate back to Stats and verify Bob's stats
+  await navigateToTab(page, 'Stats')
+
+  // Bob paid 15.00 - should be different from Alice's 30.00
+  await expect(
+    page.locator('text=/Your total spendings/i').locator('..'),
+  ).toContainText(/15\.00/)
+
+  // Bob's share is still 15.00 (total 45.00 / 3 participants)
+  await expect(
+    page.locator('text=/Your total share/i').locator('..'),
+  ).toContainText(/15\.00/)
+})

@@ -79,7 +79,7 @@ _Location: `tests/e2e/active-user.spec.ts` / `activity-log.spec.ts`_
 | Status  | Priority  | Task                   | Implementation Guide                                                        |
 | :------ | :-------- | :--------------------- | :-------------------------------------------------------------------------- |
 | ⬜ Todo | 🟡 **P1** | **Selection persists** | Select user. Reload page. Assert user is still selected (LocalStorage).     |
-| ⬜ Todo | 🔴 **P0** | **Updates stats**      | Change active user. Assert Stats page numbers update to reflect new user.   |
+| ✅ Done | 🔴 **P0** | **Updates stats**      | Change active user. Assert Stats page numbers update to reflect new user.   |
 | ⬜ Todo | 🟢 **P2** | **Log shows create**   | Create expense. Go to Activity. Assert "Created expense X" entry exists.    |
 | ⬜ Todo | 🟢 **P2** | **Log shows update**   | Edit expense. Go to Activity. Assert "Updated expense X" entry exists.      |
 | ⬜ Todo | 🟢 **P2** | **Log shows delete**   | Delete expense. Go to Activity. Assert "Deleted expense X" entry exists.    |
