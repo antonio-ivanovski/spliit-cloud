@@ -42,7 +42,7 @@ _Location: `tests/e2e/group-management.spec.ts` / `expense-crud.spec.ts`_
 
 | Status  | Priority  | Task                          | Implementation Guide                                                                       |
 | :------ | :-------- | :---------------------------- | :----------------------------------------------------------------------------------------- |
-| ⬜ Todo | 🟢 **P2** | **Recent groups persistence** | Visit a group, go home, reload page. Assert group appears in "Recent" list (LocalStorage). |
+| ✅ Done | 🟢 **P2** | **Recent groups persistence** | Visit a group, go home, reload page. Assert group appears in "Recent" list (LocalStorage). |
 | ✅ Done | 🟡 **P1** | **List pagination**           | Seed 20+ expenses. Verify "Load More" or infinite scroll loads subsequent items. Create helper utility to create such amount of expenses via API and not via UI. Creating via UI will lead to timeout and long test duration.           |
 | ✅ Done | 🟡 **P1** | **List text filter**          | Type unique string in search bar. Assert only matching expenses are visible.               |
 

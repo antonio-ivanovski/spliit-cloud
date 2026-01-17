@@ -225,6 +225,30 @@ test('navigate between groups', async ({ page }) => {
   await expect(page.getByRole('heading', { name: groupName2 })).toBeVisible()
 })
 
+test('recent groups persistence', async ({ page }) => {
+  const groupName = `PW E2E recent groups ${Date.now()}`
+
+  // Create a group (automatically navigates to it)
+  await createGroup({
+    page,
+    groupName,
+    participants: ['Alice', 'Bob'],
+  })
+
+  // Navigate to groups list
+  await page.goto('/groups')
+  await expect(page).toHaveURL('/groups')
+
+  // Verify group appears in recent list
+  await expect(page.getByText(groupName)).toBeVisible()
+
+  // Reload the page to verify persistence
+  await page.reload()
+
+  // Assert group still appears in the recent list after reload
+  await expect(page.getByText(groupName)).toBeVisible()
+})
+
 test('share group - copy URL', async ({ page, context }) => {
   const groupName = `PW E2E group share ${Date.now()}`
   await createGroup({
