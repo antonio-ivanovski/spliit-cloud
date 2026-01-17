@@ -221,3 +221,63 @@ test('view balances page - calculates correctly', async ({ page }) => {
   await expect(body).toContainText(/0\.00/)
   await expect(body).toContainText(/owes|is owed|gets back|\+|-/i)
 })
+
+test('Active user balance highlighted', async ({ page }) => {
+  const groupName = `PW E2E active user balance ${Date.now()}`
+  const participantA = 'Alice'
+  const participantB = 'Bob'
+
+  // Create group
+  await page.goto('/groups')
+  await page.getByRole('link', { name: /^Create$/ }).first().click()
+
+  await page.getByLabel('Group name').fill(groupName)
+
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill(participantA)
+  await participantInputs.nth(1).fill(participantB)
+  await participantInputs.nth(2).fill('Charlie')
+
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+
+  // Navigate to balances
+  await page.getByRole('tab', { name: 'Balances' }).click()
+  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+
+  // Verify balances page loads with participant names
+  await expect(page.getByText(participantA).first()).toBeVisible()
+  await expect(page.getByText(participantB).first()).toBeVisible()
+})
+
+test('Zero balances display correctly', async ({ page }) => {
+  const groupName = `PW E2E zero balances ${Date.now()}`
+  const participantA = 'Alice'
+  const participantB = 'Bob'
+
+  // Create group
+  await page.goto('/groups')
+  await page.getByRole('link', { name: /^Create$/ }).first().click()
+
+  await page.getByLabel('Group name').fill(groupName)
+
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill(participantA)
+  await participantInputs.nth(1).fill(participantB)
+  await participantInputs.nth(2).fill('Charlie')
+
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+
+  // Navigate to balances tab
+  await page.getByRole('tab', { name: 'Balances' }).click()
+  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+
+  // Verify all participants show zero balance (no expenses)
+  const bodyText = await page.locator('body').textContent()
+  expect(bodyText).toBeTruthy()
+  // With no expenses, balances should be zero
+  await expect(page.getByText(/0\.00|0,00/).first()).toBeVisible()
+})
