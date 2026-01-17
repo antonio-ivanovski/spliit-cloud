@@ -202,6 +202,9 @@ test('navigate between groups', async ({ page }) => {
   // Verify we're on group 2
   await expect(page.getByRole('heading', { name: groupName2 })).toBeVisible()
 
+  // Wait for page to be fully loaded before navigating
+  await page.waitForLoadState('networkidle')
+
   // Navigate to my groups page
   await page.goto('/groups')
   await expect(page).toHaveURL('/groups')

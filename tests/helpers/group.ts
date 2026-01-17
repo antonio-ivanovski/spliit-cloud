@@ -21,9 +21,8 @@ export async function createGroup({
   await fillParticipants(page, participants)
 
   await page.getByRole('button', { name: 'Create' }).click()
-  await expect(page).not.toHaveURL(/\/groups\/create$/)
   // Wait for the redirect to complete - webkit needs explicit URL match
-  await page.waitForURL(/\/groups\/[^/]+\/expenses$/, { timeout: 10000 })
+  await page.waitForURL(/.*\/groups\/\S+\/expenses$/)
 
   const groupId = extractGroupId(page.url())
   return groupId

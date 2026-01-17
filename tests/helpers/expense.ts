@@ -16,13 +16,16 @@ export interface CreateExpenseOptions {
  * Navigates to the expense creation page
  */
 export async function navigateToExpenseCreate(page: Page): Promise<void> {
+  // Wait for page to be loaded
+  await page.waitForLoadState('networkidle')
+
   // The button is an icon button with title "Create expense"
   const createExpenseButton = page.getByRole('link', {
     name: /create expense/i,
   })
 
+  await createExpenseButton.waitFor({ state: 'visible' })
   await createExpenseButton.click()
-  await page.waitForLoadState('load')
   await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
 }
 
@@ -62,9 +65,11 @@ export async function fillExpenseForm(
     .filter({ hasText: 'Select a participant' })
   await paidBySelect.waitFor({ state: 'visible' })
   await paidBySelect.click()
+  // Add a small delay for webkit to render the dropdown options
+  await page.waitForTimeout(100)
 
   const payerOption = page.getByRole('option', { name: options.payer })
-  await payerOption.waitFor({ state: 'visible' })
+  await payerOption.waitFor({ state: 'visible', timeout: 5000 })
   await payerOption.click()
 
   // Optional: Select category
@@ -109,4 +114,118 @@ export async function submitExpenseAndVerify(
   await page.locator('button[type="submit"]').first().click()
   await page.waitForURL(/\/groups\/[^/]+/)
   await expect(page.getByText(expenseTitle)).toBeVisible()
+}
+
+/**
+ * Deletes an expense by clicking on it and confirming deletion
+ */
+export async function deleteExpense(
+  page: Page,
+  expenseTitle: string,
+): Promise<void> {
+  // Click expense to edit
+  await page.getByText(expenseTitle).click()
+  await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+
+  // Click delete button
+  const deleteButton = page.getByRole('button', { name: /delete/i })
+  await deleteButton.click()
+
+  // Confirm deletion
+  const confirmButton = page.getByRole('button', { name: /yes/i })
+  await confirmButton.click()
+
+  // Wait for navigation back to expenses list
+  await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
+
+  // Verify expense is deleted
+  await expect(page.getByText(expenseTitle)).not.toBeVisible()
+}
+
+/**
+ * Opens an expense for editing
+ */
+export async function openExpenseForEdit(
+  page: Page,
+  expenseTitle: string,
+): Promise<void> {
+  await page.getByText(expenseTitle).click()
+  await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+  await expect(page.locator('input[name="title"]')).toHaveValue(expenseTitle)
+}
+
+/**
+ * Updates an expense's fields and saves
+ */
+export async function updateExpense(
+  page: Page,
+  updates: Partial<CreateExpenseOptions>,
+): Promise<void> {
+  // Update title if provided
+  if (updates.title) {
+    const titleInput = page.locator('input[name="title"]')
+    await titleInput.clear()
+    await titleInput.fill(updates.title)
+  }
+
+  // Update amount if provided
+  if (updates.amount) {
+    const amountInput = page.locator('input[name="amount"]')
+    await amountInput.clear()
+    await amountInput.fill(updates.amount)
+  }
+
+  // Update date if provided
+  if (updates.date) {
+    await page.locator('input[type="date"]').fill(updates.date)
+  }
+
+  // Update notes if provided
+  if (updates.notes !== undefined) {
+    const notesTextarea = page.locator('textarea')
+    await notesTextarea.clear()
+    await notesTextarea.fill(updates.notes)
+  }
+
+  // Save
+  const saveButton = page.getByRole('button', { name: /save/i })
+  await saveButton.click()
+  await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
+}
+
+/**
+ * Verifies expense values in edit form
+ */
+export async function verifyExpenseValues(
+  page: Page,
+  expected: {
+    title?: string
+    amount?: string
+    date?: string
+    notes?: string
+    payer?: string
+  },
+): Promise<void> {
+  if (expected.title) {
+    await expect(page.locator('input[name="title"]')).toHaveValue(
+      expected.title,
+    )
+  }
+  if (expected.amount) {
+    await expect(page.locator('input[name="amount"]')).toHaveValue(
+      expected.amount,
+    )
+  }
+  if (expected.date) {
+    await expect(page.locator('input[type="date"]')).toHaveValue(expected.date)
+  }
+  if (expected.notes) {
+    await expect(page.locator('textarea')).toHaveValue(expected.notes)
+  }
+  if (expected.payer) {
+    // The payer combobox shows the participant name when selected
+    await expect(
+      page.getByRole('combobox').filter({ hasText: expected.payer }),
+    ).toBeVisible()
+  }
 }

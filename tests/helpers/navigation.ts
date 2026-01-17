@@ -34,6 +34,8 @@ export async function navigateToGroup(
  * Navigates to a specific tab in the group view
  */
 export async function navigateToTab(page: Page, tab: GroupTab): Promise<void> {
-  await page.getByRole('tab', { name: tab }).click()
+  const tabButton = page.getByRole('tab', { name: tab })
+  await tabButton.waitFor({ state: 'visible' })
+  await tabButton.click()
   await page.waitForURL(TAB_URL_PATTERNS[tab])
 }
