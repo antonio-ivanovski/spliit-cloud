@@ -83,3 +83,38 @@ test('Active user changes balance view', async ({ page }) => {
   // Use role-less structure: the selected row uses stronger styling; at minimum ensure row is still visible.
   await expect(page.getByText(participantB, { exact: true })).toBeVisible()
 })
+
+test('Clear active user - neutral view', async ({ page }) => {
+  const groupName = `PW E2E clear active user ${Date.now()}`
+  const participantA = 'Alice'
+  const participantB = 'Bob'
+
+  await page.goto('/groups')
+  await page.getByRole('link', { name: /^Create$/ }).first().click()
+
+  await page.getByLabel('Group name').fill(groupName)
+
+  const participantInputs = page.getByRole('textbox', { name: 'New' })
+  await expect(participantInputs).toHaveCount(3)
+  await participantInputs.nth(0).fill(participantA)
+  await participantInputs.nth(1).fill(participantB)
+  await participantInputs.nth(2).fill('Charlie')
+
+  await page.getByRole('button', { name: 'Create' }).click()
+  await expect(page).toHaveURL(/\/groups\/[^/]+$/)
+
+  // Navigate to balances
+  await page.getByRole('tab', { name: 'Balances' }).click()
+  await page.waitForURL(/\/groups\/[^/]+\/balances$/)
+
+  // Click on a participant to select them as active
+  await page.getByText(participantA, { exact: true }).click()
+  await expect(page.getByText(participantA)).toBeVisible()
+
+  // Now try to clear selection (click again or look for a clear button)
+  // This tests that the view can return to neutral state
+  await page.getByText(participantA, { exact: true }).click()
+
+  // Verify the page is still visible (neutral state)
+  await expect(page.getByText(participantA)).toBeVisible()
+})

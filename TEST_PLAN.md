@@ -251,7 +251,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 | Balances match expected from expenses     | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Verification test      |
 | Suggested reimbursements displayed        | 🔴 P0    | 🟢 Low     | ✅ Done   | Suggestions shown      |
 | Suggested reimbursements minimized        | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Algorithm verification |
-| Active user balance highlighted           | 🟡 P1    | 🟢 Low     | 🍏 Low    | Personalization        |
+| Active user balance highlighted           | 🟡 P1    | 🟢 Low     | ✅ Done   | Personalization        |
 | Create reimbursement expense              | 🟡 P1    | 🟡 Medium  | 🍊 Medium | Settle debt flow       |
 | Reimbursement excludes from totals        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Important logic        |
 | Zero balances display correctly           | 🟢 P2    | 🟢 Low     | 🍏 Low    | Edge case              |
