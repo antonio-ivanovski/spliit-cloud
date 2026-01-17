@@ -264,7 +264,7 @@ These tests verify user-facing functionality through the browser. Focus on criti
 
 | Test Case                       | Priority | Complexity | Effort    | Notes                    |
 | ------------------------------- | -------- | ---------- | --------- | ------------------------ |
-| View statistics page            | 🟡 P1    | 🟢 Low     | 🍏 Low    | Stats display            |
+| View statistics page            | 🟡 P1    | 🟢 Low     | ✅ Done   | Stats display            |
 | Total group spending correct    | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Calculation verification |
 | User total paid correct         | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Personalization          |
 | User total share correct        | 🔴 P0    | 🟡 Medium  | 🍊 Medium | Personalization          |
