@@ -13,7 +13,9 @@
     "postinstall": "prisma migrate deploy && prisma generate",
     "build-image": "./scripts/build-image.sh",
     "start-container": "docker compose --env-file container.env up",
-    "test": "jest ./src",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testEnvironment=node ./src",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testEnvironment=jsdom ./src --testPathIgnorePatterns=api.test",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testEnvironment=node ./src/lib/api.test.ts",
     "test-e2e": "playwright test --project=chromium",
     "generate-currency-data": "ts-node -T ./src/scripts/generateCurrencyData.ts"
   },

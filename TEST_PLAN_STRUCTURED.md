@@ -12,7 +12,7 @@ _Location: `src/lib/api.test.ts`_
 | :------ | :-------- | :----------------------------------- | :---------------------------------------------------------------------------------------------------- |
 | ✅ Done | 🔴 **P0** | **Create daily recurring expense**   | Verify `createRecurringExpenses` creates correct number of instances for daily interval. Use test DB. |
 | ✅ Done | 🔴 **P0** | **Create weekly recurring expense**  | Verify correct dates are generated for weekly interval (e.g., every Monday).                          |
-| ⬜ Todo | 🔴 **P0** | **Create monthly recurring expense** | Verify correct dates for monthly interval.                                                            |
+| ✅ Done | 🔴 **P0** | **Create monthly recurring expense** | Verify `createRecurringExpenses` creates correct date for monthly interval. Use test DB.              |
 | ✅ Done | 🟡 **P1** | **Handle month boundaries**          | Test edge cases like Jan 31st → Feb 28/29, Mar 31st. Ensure dates don't skip or error.                |
 | ⬜ Todo | 🔴 **P0** | **Stop recurrence correctly**        | Verify logic respects `endDate` or occurrence count limits.                                           |
 | ⬜ Todo | 🟡 **P1** | **Use transactions**                 | Verify DB operations are wrapped in a transaction. Create test data, force error, verify rollback.    |

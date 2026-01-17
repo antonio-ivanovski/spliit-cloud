@@ -7,7 +7,7 @@ const createJestConfig = nextJest({
 
 const config: Config = {
   coverageProvider: 'v8',
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
 }
 
 export default createJestConfig(config)
