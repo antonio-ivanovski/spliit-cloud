@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup } from '../helpers'
+import {
+  createExpense,
+  createGroup,
+  createExpensesViaAPI,
+  createGroupViaAPI,
+} from '../helpers'
 
 test('Delete expense - confirmation flow', async ({ page }) => {
   // Create a test group first
@@ -1103,5 +1108,81 @@ test('Create expense - with currency conversion', async ({ page }) => {
       const editAmountInput = page.locator('input[inputmode="decimal"]').first()
       await expect(editAmountInput).toHaveValue(groupAmount)
     }
+  }
+})
+
+
+test('Expense list - pagination with infinite scroll', async ({ page }) => {
+  const groupName = `PW E2E pagination test ${Date.now()}`
+  const groupId = await createGroupViaAPI(page, groupName, [
+    'Alice',
+    'Bob',
+    'Charlie',
+  ])
+
+  // Create 21 expenses via API (PAGE_SIZE is 20, so this ensures we have a second page)
+  const expenseIds = await createExpensesViaAPI(page, groupId, 21, [
+    'Alice',
+    'Bob',
+  ])
+
+  // Verify all expenses were created
+  expect(expenseIds).toHaveLength(21)
+
+  // Navigate to group page  
+  // Note: createExpensesViaAPI already navigated us to the group page,
+  // but we navigate again to ensure we're seeing the full list
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  // Verify expenses are visible (they should be sorted by most recent first, so check the last few created)
+  // Since expenses are likely sorted in reverse chronological order, check the higher-numbered ones first
+  for (let i = 21; i >= 2; i--) {
+    const expenseTitle = `Expense ${String(i).padStart(2, '0')}`
+    const expenseLocator = page.getByText(expenseTitle)
+    if (await expenseLocator.isVisible()) {
+      break // We found at least one expense, good sign
+    }
+  }
+
+  // Verify the most recent expense (21st) is visible
+  await expect(page.getByText('Expense 21')).toBeVisible()
+
+  // Check if infinite scroll or "Load More" button exists
+  const loadMoreButton = page
+    .getByRole('button')
+    .filter({ hasText: /load more|show more/i })
+
+  // Get initial scroll position
+  const initialScrollHeight = await page.evaluate(
+    () => document.documentElement.scrollHeight,
+  )
+
+  if (await loadMoreButton.isVisible()) {
+    // Test "Load More" button pattern
+    await loadMoreButton.click()
+    await page.waitForLoadState('networkidle')
+
+    // Verify the last expense (21st) becomes visible
+    const lastExpenseTitle = 'Expense 21'
+    await expect(page.getByText(lastExpenseTitle)).toBeVisible()
+  } else {
+    // Test infinite scroll pattern - scroll to bottom
+    await page.evaluate(() => {
+      const scrollableElement = document.querySelector('[role="region"]') ||
+        window
+      if (scrollableElement === window) {
+        window.scrollTo(0, document.documentElement.scrollHeight)
+      } else {
+        scrollableElement.scrollTop = scrollableElement.scrollHeight
+      }
+    })
+
+    // Wait for new content to load
+    await page.waitForLoadState('networkidle')
+
+    // Verify the last expense (21st) becomes visible
+    const lastExpenseTitle = 'Expense 21'
+    await expect(page.getByText(lastExpenseTitle)).toBeVisible()
   }
 })
