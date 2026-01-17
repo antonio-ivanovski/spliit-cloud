@@ -1,5 +1,86 @@
+import { prisma } from '@/lib/prisma'
 import { expect, test } from '@playwright/test'
 import { createGroup } from '../helpers'
+
+test('Verify instances created for recurring expense', async ({ page }) => {
+  const groupId = await createGroup({
+    page,
+    groupName: `PW E2E recurring verify ${Date.now()}`,
+    participants: ['Alice', 'Bob'],
+  })
+
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    include: { participants: true },
+  })
+
+  const payer = group?.participants[0]
+  expect(payer).toBeDefined()
+
+  const yesterday = new Date()
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1)
+  yesterday.setUTCHours(0, 0, 0, 0)
+
+  const recurringExpense = await prisma.expense.create({
+    data: {
+      id: `recurring-${Date.now()}`,
+      groupId,
+      expenseDate: yesterday,
+      title: `Recurring Verify ${Date.now()}`,
+      amount: 2500,
+      paidById: payer!.id,
+      splitMode: 'EVENLY',
+      recurrenceRule: 'DAILY',
+      recurringExpenseLink: {
+        create: {
+          id: `link-${Date.now()}`,
+          groupId,
+          nextExpenseDate: yesterday,
+        },
+      },
+      paidFor: {
+        createMany: {
+          data: group!.participants.map((p) => ({
+            participantId: p.id,
+            shares: 1,
+          })),
+        },
+      },
+    },
+    include: { recurringExpenseLink: true },
+  })
+
+  const initialExpenseCount = await prisma.expense.count({
+    where: { groupId, title: recurringExpense.title },
+  })
+  expect(initialExpenseCount).toBe(1)
+
+  await page.goto(`/groups/${groupId}`)
+  await page.waitForLoadState('networkidle')
+
+  await expect(page.getByText(recurringExpense.title).first()).toBeVisible()
+
+  await page.reload()
+  await page.waitForLoadState('networkidle')
+
+  const updatedExpenseCount = await prisma.expense.count({
+    where: { groupId, title: recurringExpense.title },
+  })
+  expect(updatedExpenseCount).toBeGreaterThan(1)
+
+  const newExpense = await prisma.expense.findFirst({
+    where: {
+      groupId,
+      title: recurringExpense.title,
+      id: { not: recurringExpense.id },
+    },
+    orderBy: { createdAt: 'desc' },
+  })
+  expect(newExpense).toBeDefined()
+  expect(newExpense!.expenseDate.getTime()).toBeGreaterThanOrEqual(
+    recurringExpense.recurringExpenseLink!.nextExpenseDate.getTime(),
+  )
+})
 
 test('Create daily recurring expense', async ({ page }) => {
   const groupId = await createGroup({
@@ -11,7 +92,6 @@ test('Create daily recurring expense', async ({ page }) => {
   await page.goto(`/groups/${groupId}`)
   await page.waitForLoadState('networkidle')
 
-  // Find create expense button
   let createExpenseButton = page
     .getByRole('button')
     .filter({ hasText: /add|create/i })
@@ -27,26 +107,22 @@ test('Create daily recurring expense', async ({ page }) => {
     await createExpenseButton.click()
     await page.waitForLoadState('load')
 
-    // Fill expense title
     const titleInputs = page.locator('input[type="text"]')
     if ((await titleInputs.count()) > 0) {
       const expenseTitle = `Daily Recurring Test ${Date.now()}`
       await titleInputs.first().fill(expenseTitle)
 
-      // Fill amount
       const amountInputs = page.locator('input[inputmode="decimal"]')
       if ((await amountInputs.count()) > 0) {
         await amountInputs.first().fill('25.00')
       }
 
-      // Select payer
       const selects = page.locator('[role="combobox"]')
       if ((await selects.count()) > 0) {
         await selects.first().click()
         await page.getByRole('option').first().click()
       }
 
-      // Check recurring checkbox
       const checkboxes = page.locator('input[type="checkbox"]')
       let foundRecurring = false
       if ((await checkboxes.count()) > 0) {
@@ -63,45 +139,34 @@ test('Create daily recurring expense', async ({ page }) => {
         }
       }
 
-      // If recurring was enabled, select "Daily" frequency
       if (foundRecurring) {
-        // Wait for frequency selector to appear
         await page.waitForSelector('[role="combobox"]', { timeout: 1000 })
 
-        // Find frequency selector (should be a combobox with options like Daily/Weekly/Monthly)
         const frequencySelects = page.locator('[role="combobox"]')
         if ((await frequencySelects.count()) > 1) {
-          // Usually the second combobox is frequency after payer
           const frequencySelect = frequencySelects.nth(1)
           if (await frequencySelect.isVisible()) {
             await frequencySelect.click()
-            // Select "Daily" option
             const dailyOption = page
               .getByRole('option', { name: /daily/i })
               .first()
             if (await dailyOption.isVisible()) {
               await dailyOption.click()
             } else {
-              // Fallback: select first option if "Daily" not found
               await page.getByRole('option').first().click()
             }
           }
         }
       }
 
-      // Create expense
       const createButton = page.getByRole('button', { name: /create/i }).first()
       await createButton.click()
 
-      // Wait for navigation
       await page.waitForURL(/\/groups\/[^/]+/)
 
-      // Verify expense appears
       await expect(page.getByText(expenseTitle)).toBeVisible()
 
-      // Verify recurring indicator is shown (badge, icon, or text)
       if (foundRecurring) {
-        // Look for common recurring indicators
         const recurringIndicators = [
           page.getByText(/recurring|↻|repeat/i),
           page.locator('[data-recurring="true"]'),
@@ -116,8 +181,7 @@ test('Create daily recurring expense', async ({ page }) => {
           }
         }
 
-        // At minimum, verify the expense was created successfully
-        expect(indicatorFound || true).toBe(true) // Allow for UI variations
+        expect(indicatorFound || true).toBe(true)
       }
     }
   }
@@ -133,7 +197,6 @@ test('Create weekly recurring expense', async ({ page }) => {
   await page.goto(`/groups/${groupId}`)
   await page.waitForLoadState('networkidle')
 
-  // Find create expense button
   let createExpenseButton = page
     .getByRole('button')
     .filter({ hasText: /add|create/i })
@@ -149,26 +212,22 @@ test('Create weekly recurring expense', async ({ page }) => {
     await createExpenseButton.click()
     await page.waitForLoadState('load')
 
-    // Fill expense title
     const titleInputs = page.locator('input[type="text"]')
     if ((await titleInputs.count()) > 0) {
       const expenseTitle = `Weekly Recurring Test ${Date.now()}`
       await titleInputs.first().fill(expenseTitle)
 
-      // Fill amount
       const amountInputs = page.locator('input[inputmode="decimal"]')
       if ((await amountInputs.count()) > 0) {
         await amountInputs.first().fill('50.00')
       }
 
-      // Select payer
       const selects = page.locator('[role="combobox"]')
       if ((await selects.count()) > 0) {
         await selects.first().click()
         await page.getByRole('option').first().click()
       }
 
-      // Check recurring checkbox
       const checkboxes = page.locator('input[type="checkbox"]')
       let foundRecurring = false
       if ((await checkboxes.count()) > 0) {
@@ -185,25 +244,20 @@ test('Create weekly recurring expense', async ({ page }) => {
         }
       }
 
-      // If recurring was enabled, select "Weekly" frequency
       if (foundRecurring) {
-        // Wait for frequency selector to appear
         await page.waitForSelector('[role="combobox"]', { timeout: 1000 })
 
-        // Find frequency selector
         const frequencySelects = page.locator('[role="combobox"]')
         if ((await frequencySelects.count()) > 1) {
           const frequencySelect = frequencySelects.nth(1)
           if (await frequencySelect.isVisible()) {
             await frequencySelect.click()
-            // Select "Weekly" option
             const weeklyOption = page
               .getByRole('option', { name: /weekly/i })
               .first()
             if (await weeklyOption.isVisible()) {
               await weeklyOption.click()
             } else {
-              // Fallback: select second option if "Weekly" not found
               const options = page.getByRole('option')
               if ((await options.count()) > 1) {
                 await options.nth(1).click()
@@ -215,17 +269,13 @@ test('Create weekly recurring expense', async ({ page }) => {
         }
       }
 
-      // Create expense
       const createButton = page.getByRole('button', { name: /create/i }).first()
       await createButton.click()
 
-      // Wait for navigation
       await page.waitForURL(/\/groups\/[^/]+/)
 
-      // Verify expense appears
       await expect(page.getByText(expenseTitle)).toBeVisible()
 
-      // Verify recurring indicator is shown
       if (foundRecurring) {
         const recurringIndicators = [
           page.getByText(/recurring|↻|repeat/i),
@@ -257,7 +307,6 @@ test('Create monthly recurring expense', async ({ page }) => {
   await page.goto(`/groups/${groupId}`)
   await page.waitForLoadState('networkidle')
 
-  // Find create expense button
   let createExpenseButton = page
     .getByRole('button')
     .filter({ hasText: /add|create/i })
@@ -273,26 +322,22 @@ test('Create monthly recurring expense', async ({ page }) => {
     await createExpenseButton.click()
     await page.waitForLoadState('load')
 
-    // Fill expense title
     const titleInputs = page.locator('input[type="text"]')
     if ((await titleInputs.count()) > 0) {
       const expenseTitle = `Monthly Recurring Test ${Date.now()}`
       await titleInputs.first().fill(expenseTitle)
 
-      // Fill amount
       const amountInputs = page.locator('input[inputmode="decimal"]')
       if ((await amountInputs.count()) > 0) {
         await amountInputs.first().fill('75.00')
       }
 
-      // Select payer
       const selects = page.locator('[role="combobox"]')
       if ((await selects.count()) > 0) {
         await selects.first().click()
         await page.getByRole('option').first().click()
       }
 
-      // Check recurring checkbox
       const checkboxes = page.locator('input[type="checkbox"]')
       let foundRecurring = false
       if ((await checkboxes.count()) > 0) {
@@ -309,25 +354,20 @@ test('Create monthly recurring expense', async ({ page }) => {
         }
       }
 
-      // If recurring was enabled, select "Monthly" frequency
       if (foundRecurring) {
-        // Wait for frequency selector to appear
         await page.waitForSelector('[role="combobox"]', { timeout: 1000 })
 
-        // Find frequency selector
         const frequencySelects = page.locator('[role="combobox"]')
         if ((await frequencySelects.count()) > 1) {
           const frequencySelect = frequencySelects.nth(1)
           if (await frequencySelect.isVisible()) {
             await frequencySelect.click()
-            // Select "Monthly" option
             const monthlyOption = page
               .getByRole('option', { name: /monthly/i })
               .first()
             if (await monthlyOption.isVisible()) {
               await monthlyOption.click()
             } else {
-              // Fallback: select third option if "Monthly" not found (assuming Daily, Weekly, Monthly order)
               const options = page.getByRole('option')
               const optionCount = await options.count()
               if (optionCount > 2) {
@@ -342,17 +382,13 @@ test('Create monthly recurring expense', async ({ page }) => {
         }
       }
 
-      // Create expense
       const createButton = page.getByRole('button', { name: /create/i }).first()
       await createButton.click()
 
-      // Wait for navigation
       await page.waitForURL(/\/groups\/[^/]+/)
 
-      // Verify expense appears
       await expect(page.getByText(expenseTitle)).toBeVisible()
 
-      // Verify recurring indicator is shown
       if (foundRecurring) {
         const recurringIndicators = [
           page.getByText(/recurring|↻|repeat/i),
@@ -384,7 +420,6 @@ test('Recurring expense shows indicator', async ({ page }) => {
   await page.goto(`/groups/${groupId}`)
   await page.waitForLoadState('networkidle')
 
-  // Find create expense button
   let createExpenseButton = page
     .getByRole('button')
     .filter({ hasText: /add|create/i })
@@ -400,26 +435,22 @@ test('Recurring expense shows indicator', async ({ page }) => {
     await createExpenseButton.click()
     await page.waitForLoadState('load')
 
-    // Fill expense title
     const titleInputs = page.locator('input[type="text"]')
     if ((await titleInputs.count()) > 0) {
       const expenseTitle = `Recurring Test ${Date.now()}`
       await titleInputs.first().fill(expenseTitle)
 
-      // Fill amount
       const amountInputs = page.locator('input[inputmode="decimal"]')
       if ((await amountInputs.count()) > 0) {
         await amountInputs.first().fill('25.00')
       }
 
-      // Select payer
       const selects = page.locator('[role="combobox"]')
       if ((await selects.count()) > 0) {
         await selects.first().click()
         await page.getByRole('option').first().click()
       }
 
-      // Look for recurring checkbox
       const checkboxes = page.locator('input[type="checkbox"]')
       let foundRecurring = false
       if ((await checkboxes.count()) > 0) {
@@ -436,15 +467,11 @@ test('Recurring expense shows indicator', async ({ page }) => {
         }
       }
 
-      // If we found and checked recurring, look for frequency selector
       if (foundRecurring) {
-        // Wait for recurring frequency options to appear
         await page.waitForTimeout(500)
 
-        // Look for a frequency selector (should be a combobox or select for daily/weekly/monthly)
         const frequencySelects = page.locator('[role="combobox"]')
         if ((await frequencySelects.count()) > 1) {
-          // Usually the second combobox would be frequency if the first is payer
           const frequencySelect = frequencySelects.nth(1)
           if (await frequencySelect.isVisible()) {
             await frequencySelect.click()
@@ -456,20 +483,14 @@ test('Recurring expense shows indicator', async ({ page }) => {
         }
       }
 
-      // Create expense
       const createButton = page.getByRole('button', { name: /create/i }).first()
       await createButton.click()
 
-      // Wait for navigation
       await page.waitForURL(/\/groups\/[^/]+/)
 
-      // Verify expense appears
       await expect(page.getByText(expenseTitle)).toBeVisible()
 
-      // If recurring was set, look for any recurring indicator (badge, icon, text, etc.)
       if (foundRecurring) {
-        // The indicator could be a badge, icon, or text showing "recurring", "↻", etc.
-        // We'll just verify the expense is displayed - the UI will have the indicator
         await expect(page.getByText(expenseTitle)).toBeVisible()
       }
     }
