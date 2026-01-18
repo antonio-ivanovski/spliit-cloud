@@ -1,30 +1,29 @@
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup, navigateToGroup } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test.describe('Expense Deletion', () => {
   test('deletes expense with confirmation dialog', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `Delete Test ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, `Delete Test ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Expense to Delete',
+      amount: 5000, // $50.00 in cents
+      payerName: 'Alice',
     })
 
-    await navigateToGroup(page, groupId)
-
-    const expenseTitle = 'Expense to Delete'
-    const expenseAmount = '50.00'
-
-    await createExpense(page, {
-      title: expenseTitle,
-      amount: expenseAmount,
-      payer: 'Alice',
-    })
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Verify expense exists
-    await expect(page.getByText(expenseTitle)).toBeVisible()
+    await expect(page.getByText('Expense to Delete')).toBeVisible()
 
     // Click expense to edit
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Expense to Delete').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Click delete button
@@ -48,29 +47,27 @@ test.describe('Expense Deletion', () => {
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
     // Verify expense is deleted
-    await expect(page.getByText(expenseTitle)).not.toBeVisible()
+    await expect(page.getByText('Expense to Delete')).not.toBeVisible()
   })
 
   test('cancels deletion when clicking cancel', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Cancel Delete ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
+      `Cancel Delete ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Expense to Keep',
+      amount: 7500, // $75.00 in cents
+      payerName: 'Alice',
     })
 
-    await navigateToGroup(page, groupId)
-
-    const expenseTitle = 'Expense to Keep'
-    const expenseAmount = '75.00'
-
-    await createExpense(page, {
-      title: expenseTitle,
-      amount: expenseAmount,
-      payer: 'Alice',
-    })
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Click expense to edit
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Expense to Keep').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Click delete button
@@ -93,49 +90,48 @@ test.describe('Expense Deletion', () => {
     await page.goto(`/groups/${groupId}/expenses`)
 
     // Verify expense still exists
-    await expect(page.getByText(expenseTitle)).toBeVisible()
+    await expect(page.getByText('Expense to Keep')).toBeVisible()
     await expect(page.getByText('$75.00')).toBeVisible()
   })
 
   test('deletes one of multiple expenses', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Multi Delete ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
-
-    await navigateToGroup(page, groupId)
+      `Multi Delete ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
 
     // Create multiple expenses
-    const expense1 = 'First Expense'
-    const expense2 = 'Second Expense'
-    const expense3 = 'Third Expense'
-
-    await createExpense(page, {
-      title: expense1,
-      amount: '100.00',
-      payer: 'Alice',
+    await createExpenseViaAPI(page, groupId, {
+      title: 'First Expense',
+      amount: 10000, // $100.00 in cents
+      payerName: 'Alice',
     })
 
-    await createExpense(page, {
-      title: expense2,
-      amount: '200.00',
-      payer: 'Bob',
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Second Expense',
+      amount: 20000, // $200.00 in cents
+      payerName: 'Bob',
     })
 
-    await createExpense(page, {
-      title: expense3,
-      amount: '300.00',
-      payer: 'Charlie',
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Third Expense',
+      amount: 30000, // $300.00 in cents
+      payerName: 'Charlie',
     })
+
+    await page.goto(`/groups/${groupId}/expenses`)
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Verify all expenses exist
-    await expect(page.getByText(expense1)).toBeVisible()
-    await expect(page.getByText(expense2)).toBeVisible()
-    await expect(page.getByText(expense3)).toBeVisible()
+    await expect(page.getByText('First Expense')).toBeVisible()
+    await expect(page.getByText('Second Expense')).toBeVisible()
+    await expect(page.getByText('Third Expense')).toBeVisible()
 
     // Delete the second expense
-    await page.getByText(expense2).click()
+    await page.getByText('Second Expense').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     const deleteButton = page.getByRole('button', { name: /delete/i })
@@ -147,9 +143,9 @@ test.describe('Expense Deletion', () => {
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
     // Verify only the deleted expense is gone
-    await expect(page.getByText(expense1)).toBeVisible()
-    await expect(page.getByText(expense2)).not.toBeVisible()
-    await expect(page.getByText(expense3)).toBeVisible()
+    await expect(page.getByText('First Expense')).toBeVisible()
+    await expect(page.getByText('Second Expense')).not.toBeVisible()
+    await expect(page.getByText('Third Expense')).toBeVisible()
 
     // Verify amounts of remaining expenses
     await expect(page.getByText('$100.00')).toBeVisible()
@@ -158,28 +154,29 @@ test.describe('Expense Deletion', () => {
   })
 
   test('deletes reimbursement expense', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Delete Reimbursement ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
-
-    await navigateToGroup(page, groupId)
+      `Delete Reimbursement ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
 
     // First create a regular expense
-    await createExpense(page, {
+    await createExpenseViaAPI(page, groupId, {
       title: 'Regular Expense',
-      amount: '200.00',
-      payer: 'Alice',
+      amount: 20000, // $200.00 in cents
+      payerName: 'Alice',
     })
 
     // Create reimbursement
-    await createExpense(page, {
+    await createExpenseViaAPI(page, groupId, {
       title: 'Reimbursement to Delete',
-      amount: '100.00',
-      payer: 'Bob',
+      amount: 10000, // $100.00 in cents
+      payerName: 'Bob',
       isReimbursement: true,
     })
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     const reimbursementTitle = 'Reimbursement to Delete'
     await expect(page.getByText(reimbursementTitle)).toBeVisible()
@@ -202,24 +199,25 @@ test.describe('Expense Deletion', () => {
   })
 
   test('delete button is visible in edit form', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Delete Button ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
+      `Delete Button ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Check Delete Button',
+      amount: 2500, // $25.00 in cents
+      payerName: 'Alice',
     })
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
 
-    const expenseTitle = 'Check Delete Button'
-
-    await createExpense(page, {
-      title: expenseTitle,
-      amount: '25.00',
-      payer: 'Alice',
-    })
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Click expense to edit
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Check Delete Button').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Verify delete button is visible and properly styled

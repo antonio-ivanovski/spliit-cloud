@@ -5,16 +5,17 @@ import {
   verifyExpenseRecurrence,
 } from '../helpers/expense'
 import { createGroup, navigateToGroup } from '../helpers'
+import { randomId } from '@/lib/api'
 
 test.describe('Recurring Expense Creation', () => {
   test('Create daily recurring expense', async ({ page }) => {
     const groupId = await createGroup({
       page,
-      groupName: `PW E2E daily recurring ${Date.now()}`,
+      groupName: `daily recurring ${randomId(4)}`,
       participants: ['Alice', 'Bob'],
     })
 
-    const expenseTitle = `Daily Recurring ${Date.now()}`
+    const expenseTitle = `Daily Recurring ${randomId(4)}`
 
     await createExpense(page, {
       title: expenseTitle,
@@ -35,11 +36,11 @@ test.describe('Recurring Expense Creation', () => {
   test('Create weekly recurring expense', async ({ page }) => {
     const groupId = await createGroup({
       page,
-      groupName: `PW E2E weekly recurring ${Date.now()}`,
+      groupName: `weekly recurring ${randomId(4)}`,
       participants: ['Alice', 'Bob'],
     })
 
-    const expenseTitle = `Weekly Recurring ${Date.now()}`
+    const expenseTitle = `Weekly Recurring ${randomId(4)}`
 
     await createExpense(page, {
       title: expenseTitle,
@@ -60,11 +61,11 @@ test.describe('Recurring Expense Creation', () => {
   test('Create monthly recurring expense', async ({ page }) => {
     const groupId = await createGroup({
       page,
-      groupName: `PW E2E monthly recurring ${Date.now()}`,
+      groupName: `monthly recurring ${randomId(4)}`,
       participants: ['Alice', 'Bob', 'Charlie'],
     })
 
-    const expenseTitle = `Monthly Recurring ${Date.now()}`
+    const expenseTitle = `Monthly Recurring ${randomId(4)}`
 
     await createExpense(page, {
       title: expenseTitle,

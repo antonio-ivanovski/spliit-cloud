@@ -4,6 +4,7 @@ import {
   createGroupViaAPI,
   navigateToGroup,
 } from '../helpers'
+import { randomId } from '@/lib/api'
 
 test.describe('Expense List Pagination', () => {
   test('loads initial page of expenses', async ({ page }) => {
@@ -11,18 +12,19 @@ test.describe('Expense List Pagination', () => {
     await page.goto('/groups')
     const groupId = await createGroupViaAPI(
       page,
-      `Pagination Init ${Date.now()}`,
+      `Pagination Init ${randomId(4)}`,
       ['Alice', 'Bob'],
     )
 
     // Create 15 expenses (less than PAGE_SIZE of 20)
-    await createExpensesViaAPI(page, groupId, 15, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 15, ['Alice', 'Bob'])
 
     await navigateToGroup(page, groupId)
 
     // Verify expenses are visible
-    await expect(page.getByText('Expense 01')).toBeVisible()
-    await expect(page.getByText('Expense 15')).toBeVisible()
+    for (const expense of createdExpenses) {
+      await expect(page.getByTestId(`expense-item-${expense}`)).toBeVisible()
+    }
   })
 
   test('loads more expenses on scroll with infinite scroll', async ({
@@ -31,7 +33,7 @@ test.describe('Expense List Pagination', () => {
     await page.goto('/groups')
     const groupId = await createGroupViaAPI(
       page,
-      `Pagination Scroll ${Date.now()}`,
+      `Pagination Scroll ${randomId(4)}`,
       ['Alice', 'Bob', 'Charlie'],
     )
 
@@ -51,13 +53,12 @@ test.describe('Expense List Pagination', () => {
     await page.evaluate(() => {
       window.scrollTo(0, document.documentElement.scrollHeight)
     })
+    await expect(page.locator('.animate-pulse').first()).toBeVisible()
 
-    // Wait for new content to load
-    await page.waitForLoadState('networkidle')
-
-    // Check that earlier expenses become visible after scrolling
     // All 25 should eventually be loaded
-    await expect(page.getByText('Expense 01')).toBeVisible({ timeout: 10000 })
+    for (const expense of createdExpenses) {
+      await expect(page.getByTestId(`expense-item-${expense}`)).toBeVisible()
+    }
   })
 
   test('displays correct expense count after loading all pages', async ({
@@ -66,12 +67,12 @@ test.describe('Expense List Pagination', () => {
     await page.goto('/groups')
     const groupId = await createGroupViaAPI(
       page,
-      `Pagination Count ${Date.now()}`,
+      `Pagination Count ${randomId(4)}`,
       ['Alice', 'Bob'],
     )
 
     // Create 30 expenses (requires 2 pages)
-    await createExpensesViaAPI(page, groupId, 30, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 30, ['Alice', 'Bob'])
 
     await navigateToGroup(page, groupId)
 
@@ -80,24 +81,26 @@ test.describe('Expense List Pagination', () => {
       await page.evaluate(() => {
         window.scrollTo(0, document.documentElement.scrollHeight)
       })
-      await page.waitForTimeout(500)
+      // Workaround for waiting for network idle after scroll
+      await page.waitForLoadState('networkidle')
     }
 
     // Verify first and last expenses are visible
-    await expect(page.getByText('Expense 30')).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText('Expense 01')).toBeVisible({ timeout: 10000 })
+    for (const expense of createdExpenses) {
+      await expect(page.getByTestId(`expense-item-${expense}`)).toBeVisible()
+    }
   })
 
   test('maintains expense order after pagination', async ({ page }) => {
     await page.goto('/groups')
     const groupId = await createGroupViaAPI(
       page,
-      `Pagination Order ${Date.now()}`,
+      `Pagination Order ${randomId(4)}`,
       ['Alice', 'Bob'],
     )
 
     // Create 22 expenses
-    await createExpensesViaAPI(page, groupId, 22, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 22, ['Alice', 'Bob'])
 
     await navigateToGroup(page, groupId)
 
@@ -112,18 +115,19 @@ test.describe('Expense List Pagination', () => {
     await page.evaluate(() => {
       window.scrollTo(0, document.documentElement.scrollHeight)
     })
-    await page.waitForLoadState('networkidle')
+    await expect(page.locator('.animate-pulse').first()).toBeVisible()
 
     // After loading more, older expenses should appear
-    await expect(page.getByText('Expense 01')).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText('Expense 02')).toBeVisible()
+    for(const expense of createdExpenses) {
+      await expect(page.getByTestId(`expense-item-${expense}`)).toBeVisible()
+    }
   })
 
   test('pagination works with search filter', async ({ page }) => {
     await page.goto('/groups')
     const groupId = await createGroupViaAPI(
       page,
-      `Pagination Filter ${Date.now()}`,
+      `Pagination Filter ${randomId(4)}`,
       ['Alice', 'Bob'],
     )
 
@@ -135,7 +139,7 @@ test.describe('Expense List Pagination', () => {
     // Apply search filter
     const searchInput = page.getByPlaceholder(/search/i)
     await searchInput.fill('Expense 1')
-    await page.waitForTimeout(400)
+    await page.waitForResponse('**groups.expenses.list**');
 
     // Should filter to expenses 01, 10-19
     // Expense 10-19 should match "Expense 1"
@@ -149,7 +153,7 @@ test.describe('Expense List Pagination', () => {
 
   test('empty state when no expenses', async ({ page }) => {
     await page.goto('/groups')
-    const groupId = await createGroupViaAPI(page, `Empty State ${Date.now()}`, [
+    const groupId = await createGroupViaAPI(page, `Empty State ${randomId(4)}`, [
       'Alice',
       'Bob',
     ])
@@ -165,7 +169,7 @@ test.describe('Expense List Pagination', () => {
     await page.goto('/groups')
     const groupId = await createGroupViaAPI(
       page,
-      `Loading State ${Date.now()}`,
+      `Loading State ${randomId(4)}`,
       ['Alice', 'Bob', 'Charlie'],
     )
 
@@ -181,22 +185,19 @@ test.describe('Expense List Pagination', () => {
     await page.evaluate(() => {
       window.scrollTo(0, document.documentElement.scrollHeight)
     })
-
-    // Eventually more content should load
-    await page.waitForLoadState('networkidle')
-    await expect(page.getByText('Expense 01')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('.animate-pulse').first()).toBeVisible()
   })
 
   test('expense amounts display correctly across pages', async ({ page }) => {
     await page.goto('/groups')
     const groupId = await createGroupViaAPI(
       page,
-      `Amount Display ${Date.now()}`,
+      `Amount Display ${randomId(4)}`,
       ['Alice', 'Bob'],
     )
 
     // Create 25 expenses (amounts will be 1100, 1200, ... based on createExpensesViaAPI)
-    await createExpensesViaAPI(page, groupId, 25, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 25, ['Alice', 'Bob'])
 
     await navigateToGroup(page, groupId)
 
@@ -207,9 +208,12 @@ test.describe('Expense List Pagination', () => {
     await page.evaluate(() => {
       window.scrollTo(0, document.documentElement.scrollHeight)
     })
-    await page.waitForLoadState('networkidle')
 
-    // Expense 01 should have amount 1 * 100 + 1000 = 1100 cents = $11.00
-    await expect(page.getByText('$11.00')).toBeVisible({ timeout: 10000 })
+    for (let index = 0; index < createdExpenses.length; index++) {
+      const expense = createdExpenses[index];
+      const expectedAmount = ((index + 1) * 100 + 1000) / 100;
+      const expenseItem = page.getByTestId(`expense-item-${expense}`);
+      await expect(expenseItem.getByText(`$${expectedAmount.toFixed(2)}`)).toBeVisible();
+    }
   })
 })

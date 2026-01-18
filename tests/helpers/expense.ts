@@ -17,15 +17,12 @@ export interface CreateExpenseOptions {
  * Navigates to the expense creation page
  */
 export async function navigateToExpenseCreate(page: Page): Promise<void> {
-  // Wait for page to be loaded
-  await page.waitForLoadState('networkidle')
-
   // The button is an icon button with title "Create expense"
   const createExpenseButton = page.getByRole('link', {
     name: /create expense/i,
   })
-
   await createExpenseButton.waitFor({ state: 'visible' })
+
   await createExpenseButton.click()
   await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
 }
@@ -70,12 +67,9 @@ export async function setExpenseRecurrence(
   await recurrenceCombobox.waitFor({ state: 'visible' })
   await recurrenceCombobox.click()
 
-  // Wait for dropdown to appear
-  await page.waitForTimeout(100)
-
   // Select the recurrence option
   const recurrenceOption = page.getByRole('option', { name: recurrence })
-  await recurrenceOption.waitFor({ state: 'visible', timeout: 5000 })
+  await recurrenceOption.waitFor({ state: 'visible'})
   await recurrenceOption.click()
 }
 
@@ -103,8 +97,6 @@ export async function fillExpenseForm(
     .filter({ hasText: 'Select a participant' })
   await paidBySelect.waitFor({ state: 'visible' })
   await paidBySelect.click()
-  // Add a small delay for webkit to render the dropdown options
-  await page.waitForTimeout(100)
 
   const payerOption = page.getByRole('option', { name: options.payer })
   await payerOption.waitFor({ state: 'visible', timeout: 5000 })

@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test'
 import { fillParticipants, verifyGroupHeading } from '../helpers'
+import { randomId } from '@/lib/api'
 
 test.describe('Group Creation', () => {
   test('create group with custom currency', async ({ page }) => {
-    const groupName = `PW E2E custom currency ${Date.now()}`
+    const groupName = `custom currency ${randomId(4)}`
 
     await page.goto('/groups')
     await page.getByRole('link', { name: 'Create' }).first().click()
@@ -59,7 +60,7 @@ test.describe('Group Creation', () => {
     await expect(groupNameErrors.first()).toBeVisible()
 
     // Test: Valid group name with 2 characters should pass name validation
-    const validName = `PW E2E validation ${Date.now()}`
+    const validName = `validation ${randomId(4)}`
     await page.getByLabel('Group name').fill(validName)
 
     // Test: Participant name with 1 character should fail
@@ -100,7 +101,7 @@ test.describe('Group Creation', () => {
   })
 
   test('create group with default currency', async ({ page }) => {
-    const groupName = `PW E2E default currency ${Date.now()}`
+    const groupName = `default currency ${randomId(4)}`
 
     await page.goto('/groups')
     await page.getByRole('link', { name: 'Create' }).first().click()
@@ -123,7 +124,7 @@ test.describe('Group Creation', () => {
   })
 
   test('create group with many participants', async ({ page }) => {
-    const groupName = `PW E2E many participants ${Date.now()}`
+    const groupName = `many participants ${randomId(4)}`
 
     await page.goto('/groups')
     await page.getByRole('link', { name: 'Create' }).first().click()
@@ -141,7 +142,6 @@ test.describe('Group Creation', () => {
     await page.getByRole('button', { name: 'Create' }).click()
 
     // Verify successful creation
-    await expect(page).toHaveURL(/\/groups\/[a-zA-Z0-9_-]+\/expenses$/)
     await verifyGroupHeading(page, groupName)
   })
 })

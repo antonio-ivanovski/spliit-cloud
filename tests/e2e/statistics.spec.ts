@@ -1,19 +1,14 @@
 import { expect, test } from '@playwright/test'
-import {
-  createExpense,
-  createGroup,
-  navigateToTab,
-  setActiveUser,
-} from '../helpers'
+import { navigateToTab, setActiveUser } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test('View statistics page', async ({ page }) => {
-  const groupName = `PW E2E stats ${Date.now()}`
-
-  await createGroup({
-    page,
-    groupName,
-    participants: ['Alice', 'Bob', 'Charlie'],
-  })
+  await page.goto('/groups')
+  
+  const groupName = `stats ${randomId(4)}`
+  const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob', 'Charlie'])
+  await page.goto(`/groups/${groupId}/expenses`)
 
   await navigateToTab(page, 'Stats')
 
@@ -25,30 +20,34 @@ test('View statistics page', async ({ page }) => {
 })
 
 test('Verify Group Total', async ({ page }) => {
-  const groupName = `PW E2E group total ${Date.now()}`
+  const groupName = `group total ${randomId(4)}`
 
-  await createGroup({
-    page,
-    groupName,
-    participants: ['Alice', 'Bob', 'Charlie'],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    'Alice',
+    'Bob',
+    'Charlie',
+  ])
 
   // Add expenses
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
-    amount: '10.00',
-    payer: 'Alice',
+    amount: 1000,
+    payerName: 'Alice',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Drinks',
-    amount: '20.50',
-    payer: 'Bob',
+    amount: 2050,
+    payerName: 'Bob',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Snacks',
-    amount: '5.00',
-    payer: 'Charlie',
+    amount: 500,
+    payerName: 'Charlie',
   })
+
+  // Navigate to group page
+  await page.goto(`/groups/${groupId}/expenses`)
 
   await navigateToTab(page, 'Stats')
 
@@ -61,30 +60,34 @@ test('Verify Group Total', async ({ page }) => {
 })
 
 test('User statistics calculate paid and share correctly', async ({ page }) => {
-  const groupName = `PW E2E user stats ${Date.now()}`
+  const groupName = `user stats ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  const groupId = await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
 
   // Add expenses
   // Alice pays $30 for all 3 people (split evenly: $10 each)
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
-    amount: '30.00',
-    payer: participantA,
+    amount: 3000,
+    payerName: participantA,
   })
   // Bob pays $15 for all 3 people (split evenly: $5 each)
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Taxi',
-    amount: '15.00',
-    payer: participantB,
+    amount: 1500,
+    payerName: participantB,
   })
+
+  // Navigate to group page
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Select Alice as active user via Settings
   await setActiveUser(page, participantA)

@@ -1,27 +1,30 @@
 import { expect, test } from '@playwright/test'
 import {
   countProtectedParticipants,
-  createExpense,
-  createGroup,
   getParticipantNames,
   navigateToTab,
   removeParticipant,
   verifyGroupHeading,
   verifyParticipantsOnBalancesTab,
 } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test.describe('Group Editing', () => {
   test('update group name and information', async ({ page }) => {
-    const initialGroupName = `PW E2E edit ${Date.now()}`
-    const newGroupName = `Renamed ${Date.now()}`
-    const newGroupInfo = `Updated info ${Date.now()}`
+    const initialGroupName = `edit ${randomId(4)}`
+    const newGroupName = `Renamed ${randomId(4)}`
+    const newGroupInfo = `Updated info ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName: initialGroupName,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, initialGroupName, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
 
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToTab(page, 'Settings')
 
     // Verify initial values in the form
@@ -40,9 +43,6 @@ test.describe('Group Editing', () => {
 
     await page.getByRole('button', { name: 'Save' }).click()
 
-    // Verify save completed (URL should stay on settings or redirect)
-    await page.waitForLoadState('networkidle')
-
     // Navigate to Information tab to verify changes persisted
     await navigateToTab(page, 'Information')
 
@@ -50,27 +50,26 @@ test.describe('Group Editing', () => {
     await verifyGroupHeading(page, newGroupName)
 
     // Verify updated information text is visible
-    await expect(
-      page.getByText(newGroupInfo, { exact: true }),
-    ).toBeVisible()
+    await expect(page.getByText(newGroupInfo, { exact: true })).toBeVisible()
 
     // Verify group name is also updated in the Information section
-    await expect(
-      page.getByText(newGroupName, { exact: true }),
-    ).toBeVisible()
+    await expect(page.getByText(newGroupName, { exact: true })).toBeVisible()
   })
 
   test('add participant to existing group', async ({ page }) => {
-    const groupName = `PW E2E add participant ${Date.now()}`
+    const groupName = `add participant ${randomId(4)}`
     const initialParticipants = ['Alice', 'Bob', 'Charlie']
     const newParticipant = 'Dave'
 
-    await createGroup({
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
       groupName,
-      participants: initialParticipants,
-    })
+      initialParticipants,
+    )
 
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToTab(page, 'Settings')
 
     // Verify initial participant count
@@ -86,12 +85,13 @@ test.describe('Group Editing', () => {
     await expect(participantInputs).toHaveCount(initialParticipants.length + 1)
 
     // Fill new participant name
-    const newParticipantInput = participantInputs.nth(initialParticipants.length)
+    const newParticipantInput = participantInputs.nth(
+      initialParticipants.length,
+    )
     await newParticipantInput.fill(newParticipant)
     await expect(newParticipantInput).toHaveValue(newParticipant)
 
     await page.getByRole('button', { name: 'Save' }).click()
-    await page.waitForLoadState('networkidle')
 
     // Verify new participant appears in Balances tab
     await navigateToTab(page, 'Balances')
@@ -107,29 +107,25 @@ test.describe('Group Editing', () => {
   })
 
   test('remove unprotected participant', async ({ page }) => {
-    const groupName = `PW E2E remove participant ${Date.now()}`
+    const groupName = `remove participant ${randomId(4)}`
     const participants = ['Alice', 'Bob', 'Charlie', 'Dave']
     const participantToRemove = 'Dave'
 
-    await createGroup({
-      page,
-      groupName,
-      participants,
-    })
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, participants)
 
     // Create an expense with Alice as payer, excluding Dave from the split
     // This protects Alice, Bob, and Charlie (they're involved in the expense)
     // but leaves Dave unprotected (not involved in the expense)
-    await createExpense(
-      page,
-      {
-        title: 'Protection seed',
-        amount: '10.00',
-        payer: 'Alice',
-      },
-      ['Dave'], // Exclude Dave from the expense split
-    )
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Protection seed',
+      amount: 1000, // 10.00 in cents
+      payerName: 'Alice',
+      excludeParticipants: ['Dave'], // Exclude Dave from the expense split
+    })
 
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToTab(page, 'Settings')
 
     // Verify all 4 participants are present
@@ -144,13 +140,13 @@ test.describe('Group Editing', () => {
     expect(removed).toBe(true)
 
     await page.getByRole('button', { name: 'Save' }).click()
-    await page.waitForLoadState('networkidle')
+    await expect(page.getByRole('main').locator('div').filter({ hasText: 'Saving…' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled()
+
 
     // Verify Dave is removed from Balances tab
     await navigateToTab(page, 'Balances')
-    await expect(
-      page.getByText('Dave', { exact: true }),
-    ).not.toBeVisible()
+    await expect(page.getByText('Dave', { exact: true })).not.toBeVisible()
 
     // Verify only 3 participants remain
     await verifyParticipantsOnBalancesTab(page, ['Alice', 'Bob', 'Charlie'])
@@ -162,26 +158,22 @@ test.describe('Group Editing', () => {
   })
 
   test('cannot remove protected participant', async ({ page }) => {
-    const groupName = `PW E2E protected participant ${Date.now()}`
+    const groupName = `protected participant ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     // Create an expense with Alice as payer, excluding Bob from the split
     // This makes only Alice protected (she's the payer and sole participant in the expense)
-    await createExpense(
-      page,
-      {
-        title: 'Protection expense',
-        amount: '25.00',
-        payer: 'Alice',
-      },
-      ['Bob'], // Exclude Bob from the expense split
-    )
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Protection expense',
+      amount: 2500, // 25.00 in cents
+      payerName: 'Alice',
+      excludeParticipants: ['Bob'], // Exclude Bob from the expense split
+    })
 
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToTab(page, 'Settings')
 
     // Verify Alice's remove button is disabled (she's protected)
@@ -211,19 +203,20 @@ test.describe('Group Editing', () => {
     const bobContainer = bobInput.locator(
       'xpath=ancestor::div[contains(@class,"flex")][1]',
     )
-    const bobRemoveButton = bobContainer.locator('button:not([disabled])').first()
+    const bobRemoveButton = bobContainer
+      .locator('button:not([disabled])')
+      .first()
     await expect(bobRemoveButton).toBeVisible()
   })
 
   test('edit group with empty information field', async ({ page }) => {
-    const groupName = `PW E2E empty info ${Date.now()}`
+    const groupName = `empty info ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToTab(page, 'Settings')
 
     // Verify information field is initially empty
@@ -234,7 +227,6 @@ test.describe('Group Editing', () => {
     const testInfo = 'Test information'
     await groupInfoInput.fill(testInfo)
     await page.getByRole('button', { name: 'Save' }).click()
-    await page.waitForLoadState('networkidle')
 
     // Verify information appears
     await navigateToTab(page, 'Information')
@@ -245,7 +237,6 @@ test.describe('Group Editing', () => {
     await groupInfoInput.clear()
     await expect(groupInfoInput).toHaveValue('')
     await page.getByRole('button', { name: 'Save' }).click()
-    await page.waitForLoadState('networkidle')
 
     // Verify information is cleared
     await navigateToTab(page, 'Information')
@@ -255,14 +246,17 @@ test.describe('Group Editing', () => {
   test('cannot create duplicate participant names when editing', async ({
     page,
   }) => {
-    const groupName = `PW E2E duplicate edit ${Date.now()}`
+    const groupName = `duplicate edit ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
 
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToTab(page, 'Settings')
 
     // Try to rename Bob to Alice (duplicate)

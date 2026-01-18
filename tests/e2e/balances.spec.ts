@@ -1,66 +1,54 @@
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup, navigateToTab } from '../helpers'
+import { navigateToTab } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test('suggested reimbursements displayed', async ({ page }) => {
-  const groupName = `PW E2E balances ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-  const participantC = 'Charlie'
-
-  // Step 1: Create a group with 3 participants
-  await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+    `balances ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
 
-  // Step 2-4: Create three expenses
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
-    amount: '300',
-    payer: participantA,
+    amount: 30000,
+    payerName: 'Alice',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Breakfast',
-    amount: '150',
-    payer: participantB,
+    amount: 15000,
+    payerName: 'Bob',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Lunch',
-    amount: '120',
-    payer: participantC,
+    amount: 12000,
+    payerName: 'Charlie',
   })
 
-  // Step 5: Navigate to Balances tab
+  await page.goto(`/groups/${groupId}/expenses`)
   await navigateToTab(page, 'Balances')
 
-  // Step 6: Verify Suggested reimbursements section is visible
+  // Verify Suggested reimbursements section is visible
   const reimbursementsHeading = page.getByRole('heading', {
     name: 'Suggested reimbursements',
   })
   await expect(reimbursementsHeading).toBeVisible()
 
-  // Step 7: Verify reimbursements list is displayed
+  // Verify reimbursements list is displayed
   const reimbursementsList = page.getByTestId('reimbursements-list')
   await expect(reimbursementsList).toBeVisible()
 
-  // Step 8: Verify specific reimbursement rows with expected visible content
-  const bobOwesAlice = page.getByTestId(
-    `reimbursement-row-${participantB}-${participantA}`,
-  )
+  // Verify specific reimbursement rows with expected visible content
+  const bobOwesAlice = page.getByTestId('reimbursement-row-Bob-Alice')
   await expect(bobOwesAlice).toBeVisible()
-  await expect(bobOwesAlice).toContainText(
-    `${participantB} owes ${participantA}`,
-  )
+  await expect(bobOwesAlice).toContainText('Bob owes Alice')
   await expect(bobOwesAlice).toContainText('$40.00')
 
-  const charlieOwesAlice = page.getByTestId(
-    `reimbursement-row-${participantC}-${participantA}`,
-  )
+  const charlieOwesAlice = page.getByTestId('reimbursement-row-Charlie-Alice')
   await expect(charlieOwesAlice).toBeVisible()
-  await expect(charlieOwesAlice).toContainText(
-    `${participantC} owes ${participantA}`,
-  )
+  await expect(charlieOwesAlice).toContainText('Charlie owes Alice')
   await expect(charlieOwesAlice).toContainText('$70.00')
 
   // Verify Mark as paid links exist and are clickable
@@ -73,103 +61,81 @@ test('suggested reimbursements displayed', async ({ page }) => {
 })
 
 test('view balances page - calculates correctly', async ({ page }) => {
-  const groupName = `PW E2E balance calculation ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-  const participantC = 'Charlie'
-
-  // Step 1: Create a group with 3 participants
-  await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+    `balance calculation ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
 
-  // Step 2-3: Create two expenses
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
-    amount: '300',
-    payer: participantA,
+    amount: 30000,
+    payerName: 'Alice',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Breakfast',
-    amount: '150',
-    payer: participantB,
+    amount: 15000,
+    payerName: 'Bob',
   })
 
-  // Step 4: Navigate to Balances tab
+  await page.goto(`/groups/${groupId}/expenses`)
   await navigateToTab(page, 'Balances')
 
-  // Step 5: Verify Balances section header is visible
+  // Verify Balances section header is visible
   const balancesHeading = page.getByRole('heading', { name: 'Balances' })
   await expect(balancesHeading).toBeVisible()
 
-  // Step 6: Verify balances list is rendered
+  // Verify balances list is rendered
   const balancesList = page.getByTestId('balances-list')
   await expect(balancesList).toBeVisible()
 
-  // Step 7: Verify balance calculations (net amounts)
-  // With 3 participants and 2 evenly-split expenses:
-  // Total = 450; each owes 150.
-  // Alice paid 300 => +150.00
-  // Bob paid 150 => 0.00
-  // Charlie paid 0 => -150.00
-
-  const aliceRow = page.getByTestId(`balance-row-${participantA}`)
+  // Verify balance calculations (net amounts)
+  const aliceRow = page.getByTestId('balance-row-Alice')
   await expect(aliceRow).toBeVisible()
-  await expect(aliceRow).toContainText(participantA)
+  await expect(aliceRow).toContainText('Alice')
   await expect(aliceRow).toContainText('$150.00')
 
-  const bobRow = page.getByTestId(`balance-row-${participantB}`)
+  const bobRow = page.getByTestId('balance-row-Bob')
   await expect(bobRow).toBeVisible()
-  await expect(bobRow).toContainText(participantB)
+  await expect(bobRow).toContainText('Bob')
   await expect(bobRow).toContainText('$0.00')
 
-  const charlieRow = page.getByTestId(`balance-row-${participantC}`)
+  const charlieRow = page.getByTestId('balance-row-Charlie')
   await expect(charlieRow).toBeVisible()
-  await expect(charlieRow).toContainText(participantC)
+  await expect(charlieRow).toContainText('Charlie')
   await expect(charlieRow).toContainText('-$150.00')
 })
 
 test('Active user balance highlighted', async ({ page }) => {
-  const groupName = `PW E2E active user balance ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-  const participantC = 'Charlie'
-
-  // Create group
-  await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+    `active user balance ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
 
-  // Navigate to balances
+  await page.goto(`/groups/${groupId}/expenses`)
   await navigateToTab(page, 'Balances')
 
   // Verify balances list loads with all participants
   const balancesList = page.getByTestId('balances-list')
   await expect(balancesList).toBeVisible()
 
-  await expect(page.getByTestId(`balance-row-${participantA}`)).toBeVisible()
-  await expect(page.getByTestId(`balance-row-${participantB}`)).toBeVisible()
-  await expect(page.getByTestId(`balance-row-${participantC}`)).toBeVisible()
+  await expect(page.getByTestId('balance-row-Alice')).toBeVisible()
+  await expect(page.getByTestId('balance-row-Bob')).toBeVisible()
+  await expect(page.getByTestId('balance-row-Charlie')).toBeVisible()
 })
 
 test('Zero balances display correctly', async ({ page }) => {
-  const groupName = `PW E2E zero balances ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-  const participantC = 'Charlie'
-
-  // Create group
-  await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+    `zero balances ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
 
-  // Navigate to balances tab
+  await page.goto(`/groups/${groupId}/expenses`)
   await navigateToTab(page, 'Balances')
 
   // Verify balances list is displayed
@@ -177,49 +143,34 @@ test('Zero balances display correctly', async ({ page }) => {
   await expect(balancesList).toBeVisible()
 
   // With no expenses, all balances should be zero
-  await expect(page.getByTestId(`balance-row-${participantA}`)).toContainText(
-    '$0.00',
-  )
-  await expect(page.getByTestId(`balance-row-${participantB}`)).toContainText(
-    '$0.00',
-  )
-  await expect(page.getByTestId(`balance-row-${participantC}`)).toContainText(
-    '$0.00',
-  )
+  await expect(page.getByTestId('balance-row-Alice')).toContainText('$0.00')
+  await expect(page.getByTestId('balance-row-Bob')).toContainText('$0.00')
+  await expect(page.getByTestId('balance-row-Charlie')).toContainText('$0.00')
 
   // Verify no reimbursements are needed
   await expect(page.getByTestId('no-reimbursements')).toBeVisible()
 })
 
 test('Balances match expected from expenses', async ({ page }) => {
-  const groupName = `PW E2E balance verification ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-  const participantC = 'Charlie'
-
-  // Create group
-  await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+    `balance verification ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
 
-  // Create specific expenses to calculate expected balances
-  // Alice pays 300 for 3 people → Alice: +100, Bob: -100, Charlie: -100
-  // Bob pays 150 for 3 people → Alice: -50, Bob: +100, Charlie: -50
-  // Net: Alice: +50, Bob: 0, Charlie: -50
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
-    amount: '300',
-    payer: participantA,
+    amount: 30000,
+    payerName: 'Alice',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Breakfast',
-    amount: '150',
-    payer: participantB,
+    amount: 15000,
+    payerName: 'Bob',
   })
 
-  // Navigate to balances
+  await page.goto(`/groups/${groupId}/expenses`)
   await navigateToTab(page, 'Balances')
 
   // Wait for balances list to be visible
@@ -227,24 +178,14 @@ test('Balances match expected from expenses', async ({ page }) => {
   await expect(balancesList).toBeVisible()
 
   // Verify exact balance values by checking visible text content
-  await expect(page.getByTestId(`balance-row-${participantA}`)).toContainText(
-    participantA,
-  )
-  await expect(page.getByTestId(`balance-row-${participantA}`)).toContainText(
-    '$150.00',
-  )
+  await expect(page.getByTestId('balance-row-Alice')).toContainText('Alice')
+  await expect(page.getByTestId('balance-row-Alice')).toContainText('$150.00')
 
-  await expect(page.getByTestId(`balance-row-${participantB}`)).toContainText(
-    participantB,
-  )
-  await expect(page.getByTestId(`balance-row-${participantB}`)).toContainText(
-    '$0.00',
-  )
+  await expect(page.getByTestId('balance-row-Bob')).toContainText('Bob')
+  await expect(page.getByTestId('balance-row-Bob')).toContainText('$0.00')
 
-  await expect(page.getByTestId(`balance-row-${participantC}`)).toContainText(
-    participantC,
-  )
-  await expect(page.getByTestId(`balance-row-${participantC}`)).toContainText(
+  await expect(page.getByTestId('balance-row-Charlie')).toContainText('Charlie')
+  await expect(page.getByTestId('balance-row-Charlie')).toContainText(
     '-$150.00',
   )
 
@@ -253,48 +194,37 @@ test('Balances match expected from expenses', async ({ page }) => {
   await expect(reimbursementsList).toBeVisible()
 
   // Charlie should owe Alice $150
-  const charlieOwesAlice = page.getByTestId(
-    `reimbursement-row-${participantC}-${participantA}`,
-  )
+  const charlieOwesAlice = page.getByTestId('reimbursement-row-Charlie-Alice')
   await expect(charlieOwesAlice).toBeVisible()
-  await expect(charlieOwesAlice).toContainText(
-    `${participantC} owes ${participantA}`,
-  )
+  await expect(charlieOwesAlice).toContainText('Charlie owes Alice')
   await expect(charlieOwesAlice).toContainText('$150.00')
 })
 
 test('Suggested reimbursements minimized', async ({ page }) => {
-  const groupName = `PW E2E reimbursement optimization ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-  const participantC = 'Charlie'
-  const participantD = 'David'
-
-  // Create group with 4 participants
-  await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, participantC, participantD],
-  })
+    `reimbursement optimization ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie', 'David'],
+  )
 
-  // Create multiple expenses that would benefit from optimization
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Event A',
-    amount: '400',
-    payer: participantA,
+    amount: 40000,
+    payerName: 'Alice',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Event B',
-    amount: '300',
-    payer: participantB,
+    amount: 30000,
+    payerName: 'Bob',
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Event C',
-    amount: '200',
-    payer: participantC,
+    amount: 20000,
+    payerName: 'Charlie',
   })
 
-  // Navigate to balances
+  await page.goto(`/groups/${groupId}/expenses`)
   await navigateToTab(page, 'Balances')
 
   // Verify suggested reimbursements section exists
@@ -316,116 +246,89 @@ test('Suggested reimbursements minimized', async ({ page }) => {
 })
 
 test('Create reimbursement expense', async ({ page }) => {
-  const groupName = `PW E2E create reimburse ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
+  await page.goto('/groups')
 
-  // Create group
-  await createGroup({
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, 'Charlie'],
+    `create reimburse ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
+
+  await createExpenseViaAPI(page, groupId, {
+    title: 'Initial Expense',
+    amount: 30000,
+    payerName: 'Alice',
   })
 
-  // Create a regular expense first
-  await createExpense(page, {
-    title: 'Initial Expense',
-    amount: '300',
-    payer: participantA,
-  })
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Now create a reimbursement expense directly
-  const createReimbLink = page
-    .getByRole('link', { name: /create expense|add/i })
-    .first()
+  const createExpenseLink = page.getByRole('link', { name: 'Create expense' })
+  await createExpenseLink.waitFor({ state: 'visible' })
 
-  if (await createReimbLink.isVisible()) {
-    await createReimbLink.click()
-    await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
+  await createExpenseLink.click()
+  await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
 
-    await page.getByLabel(/title/i).fill(`Reimbursement from ${participantB}`)
+  await page.getByLabel(/title/i).fill('Reimbursement from Bob')
 
-    // Use the amount field with name="amount" specifically
-    await page.locator('input[name="amount"]').fill('100')
+  // Use the amount field with name="amount" specifically
+  await page.locator('input[name="amount"]').fill('100')
 
-    // Select payer
-    const payBySelect = page
-      .getByRole('combobox')
-      .filter({ hasText: 'Select a participant' })
-    await payBySelect.click()
+  // Select payer
+  const payBySelect = page
+    .getByRole('combobox')
+    .filter({ hasText: 'Select a participant' })
+  await payBySelect.click()
 
-    const reimbPayerOption = page.getByRole('option', { name: participantB })
-    await reimbPayerOption.click()
+  const reimbPayerOption = page.getByRole('option', { name: 'Bob' })
+  await reimbPayerOption.click()
 
-    // Check reimbursement checkbox
-    const reimbursementCheckbox = page.getByRole('checkbox', {
-      name: /reimbursement/i,
-    })
-    await reimbursementCheckbox.check()
+  // Check reimbursement checkbox
+  const reimbursementCheckbox = page.getByRole('checkbox', {
+    name: /reimbursement/i,
+  })
+  await reimbursementCheckbox.check()
 
-    // Submit
-    await page.getByRole('button', { name: /create/i }).click()
-    await page.waitForURL(/\/groups\/[^/]+/)
+  // Submit
+  await page.getByRole('button', { name: /create/i }).click()
+  await page.waitForURL(/\/groups\/[^/]+/)
 
-    // Verify reimbursement appears
-    await expect(page.getByText(/Reimbursement from/i)).toBeVisible()
-  }
+  // Verify reimbursement appears
+  await expect(page.getByText(/Reimbursement from/i)).toBeVisible()
 })
 
-test('Reimbursement excludes from totals', async ({ page }) => {
-  const groupName = `PW E2E reimbursement totals ${Date.now()}`
-  const participantA = 'Alice'
-  const participantB = 'Bob'
-
-  // Create group
-  await createGroup({
+test('Reimbursement in expenses', async ({ page }) => {
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName,
-    participants: [participantA, participantB, 'Charlie'],
+    `reimbursement totals ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
+
+  const regularExpense = await createExpenseViaAPI(page, groupId, {
+    title: 'Regular Expense',
+    amount: 30000,
+    payerName: 'Alice',
   })
 
-  // Create a regular expense
-  await createExpense(page, {
-    title: 'Regular Expense',
-    amount: '300',
-    payer: participantA,
-  })
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Verify expense appears
-  await expect(page.getByText('Regular Expense')).toBeVisible()
+  await expect(page.getByTestId(`expense-item-${regularExpense}`)).toBeVisible()
 
   // Create a reimbursement expense
-  const createReimbLink = page
-    .getByRole('link', { name: /create expense|add/i })
-    .first()
+  const reimbursementExpense = await createExpenseViaAPI(page, groupId, {
+    title: 'Reimbursement Expense',
+    amount: 15000,
+    payerName: 'Bob',
+    isReimbursement: true,
+  })
 
-  if (await createReimbLink.isVisible()) {
-    await createReimbLink.click()
-    await page.waitForURL(/\/groups\/[^/]+\/expenses\/create/)
 
-    await page.getByLabel(/title/i).fill('Reimbursement')
+  await page.reload()
+  await page.goto(`/groups/${groupId}/expenses`)
 
-    // Use the amount field with name="amount" specifically
-    await page.locator('input[name="amount"]').fill('150')
-
-    const payBySelect = page
-      .getByRole('combobox')
-      .filter({ hasText: 'Select a participant' })
-    await payBySelect.click()
-
-    await page.getByRole('option', { name: participantB }).click()
-
-    // Check reimbursement checkbox
-    const reimbursementCheckbox = page.getByRole('checkbox', {
-      name: /reimbursement/i,
-    })
-    await reimbursementCheckbox.check()
-
-    await page.getByRole('button', { name: /create/i }).click()
-    await page.waitForURL(/\/groups\/[^/]+/)
-
-    // Verify both expenses appear
-    await expect(page.getByText('Regular Expense')).toBeVisible()
-    await expect(page.getByText('Reimbursement').first()).toBeVisible()
-  }
+  // Verify both expenses appear
+  await expect(page.getByTestId(`expense-item-${regularExpense}`)).toBeVisible()
+  await expect(page.getByTestId(`expense-item-${reimbursementExpense}`)).toBeVisible()
 })

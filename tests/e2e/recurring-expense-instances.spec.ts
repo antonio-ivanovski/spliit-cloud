@@ -1,12 +1,13 @@
 import { prisma } from '@/lib/prisma'
 import { expect, test } from '@playwright/test'
 import { createGroup, navigateToGroup } from '../helpers'
+import { randomId } from '@/lib/api'
 
 test.describe('Recurring Expense Instances', () => {
   test('Verify instances created for recurring expense', async ({ page }) => {
     const groupId = await createGroup({
       page,
-      groupName: `PW E2E recurring verify ${Date.now()}`,
+      groupName: `recurring verify ${randomId(4)}`,
       participants: ['Alice', 'Bob'],
     })
 
@@ -24,11 +25,11 @@ test.describe('Recurring Expense Instances', () => {
     yesterday.setUTCDate(yesterday.getUTCDate() - 1)
     yesterday.setUTCHours(0, 0, 0, 0)
 
-    const expenseTitle = `Recurring Verify ${Date.now()}`
+    const expenseTitle = `Recurring Verify ${randomId(4)}`
 
     const recurringExpense = await prisma.expense.create({
       data: {
-        id: `recurring-${Date.now()}`,
+        id: `recurring-${randomId()}`,
         groupId,
         expenseDate: yesterday,
         title: expenseTitle,
@@ -38,7 +39,7 @@ test.describe('Recurring Expense Instances', () => {
         recurrenceRule: 'DAILY',
         recurringExpenseLink: {
           create: {
-            id: `link-${Date.now()}`,
+            id: `link-${randomId()}`,
             groupId,
             nextExpenseDate: yesterday,
           },
@@ -69,7 +70,6 @@ test.describe('Recurring Expense Instances', () => {
 
     // Reload to trigger instance creation
     await page.reload()
-    await page.waitForLoadState('networkidle')
 
     // Verify a new instance was created
     const updatedExpenseCount = await prisma.expense.count({
@@ -98,7 +98,7 @@ test.describe('Recurring Expense Instances', () => {
   }) => {
     const groupId = await createGroup({
       page,
-      groupName: `PW E2E multiple recurring ${Date.now()}`,
+      groupName: `multiple recurring ${randomId(4)}`,
       participants: ['Alice', 'Bob'],
     })
 
@@ -114,13 +114,13 @@ test.describe('Recurring Expense Instances', () => {
     yesterday.setUTCDate(yesterday.getUTCDate() - 1)
     yesterday.setUTCHours(0, 0, 0, 0)
 
-    const expense1Title = `Recurring 1 ${Date.now()}`
-    const expense2Title = `Recurring 2 ${Date.now() + 1}`
+    const expense1Title = `Recurring 1 ${randomId(4)}-1`
+    const expense2Title = `Recurring 2 ${randomId(4)}-2`
 
     // Create two separate recurring expenses
     await prisma.expense.create({
       data: {
-        id: `recurring-1-${Date.now()}`,
+        id: `recurring-1-${randomId()}`,
         groupId,
         expenseDate: yesterday,
         title: expense1Title,
@@ -130,7 +130,7 @@ test.describe('Recurring Expense Instances', () => {
         recurrenceRule: 'DAILY',
         recurringExpenseLink: {
           create: {
-            id: `link-1-${Date.now()}`,
+            id: `link-1-${randomId()}`,
             groupId,
             nextExpenseDate: yesterday,
           },
@@ -148,7 +148,7 @@ test.describe('Recurring Expense Instances', () => {
 
     await prisma.expense.create({
       data: {
-        id: `recurring-2-${Date.now()}`,
+        id: `recurring-2-${randomId()}`,
         groupId,
         expenseDate: yesterday,
         title: expense2Title,
@@ -158,7 +158,7 @@ test.describe('Recurring Expense Instances', () => {
         recurrenceRule: 'WEEKLY',
         recurringExpenseLink: {
           create: {
-            id: `link-2-${Date.now()}`,
+            id: `link-2-${randomId()}`,
             groupId,
             nextExpenseDate: yesterday,
           },
@@ -187,7 +187,6 @@ test.describe('Recurring Expense Instances', () => {
     // Navigate to group and reload to trigger instance creation
     await navigateToGroup(page, groupId)
     await page.reload()
-    await page.waitForLoadState('networkidle')
 
     // Verify both expenses created new instances
     const updatedCount1 = await prisma.expense.count({

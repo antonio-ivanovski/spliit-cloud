@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import * as fs from 'fs'
-import { createExpense, createGroup } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 interface ExpenseData {
   title?: string
@@ -15,17 +16,21 @@ interface ExpenseData {
 
 test.describe('Export functionality', () => {
   test('Export JSON download', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E export JSON ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
+      `export JSON ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Dinner',
+      amount: 5000,
+      payerName: 'Alice',
     })
 
-    await createExpense(page, {
-      title: 'Dinner',
-      amount: '50.00',
-      payer: 'Alice',
-    })
+    // Navigate to group page
+    await page.goto(`/groups/${groupId}/expenses`)
 
     await page
       .getByRole('button', { name: /export/i })
@@ -62,22 +67,26 @@ test.describe('Export functionality', () => {
   })
 
   test('Export JSON content', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E export content ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
+      `export content ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Lunch',
+      amount: 2550,
+      payerName: 'Alice',
+    })
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Coffee',
+      amount: 500,
+      payerName: 'Bob',
     })
 
-    await createExpense(page, {
-      title: 'Lunch',
-      amount: '25.50',
-      payer: 'Alice',
-    })
-    await createExpense(page, {
-      title: 'Coffee',
-      amount: '5.00',
-      payer: 'Bob',
-    })
+    // Navigate to group page
+    await page.goto(`/groups/${groupId}/expenses`)
 
     await page
       .getByRole('button', { name: /export/i })
@@ -108,17 +117,21 @@ test.describe('Export functionality', () => {
   })
 
   test('Export CSV download', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E export CSV ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
+      `export CSV ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Groceries',
+      amount: 10000,
+      payerName: 'Bob',
     })
 
-    await createExpense(page, {
-      title: 'Groceries',
-      amount: '100.00',
-      payer: 'Bob',
-    })
+    // Navigate to group page
+    await page.goto(`/groups/${groupId}/expenses`)
 
     await page
       .getByRole('button', { name: /export/i })
@@ -148,18 +161,22 @@ test.describe('Export functionality', () => {
   })
 
   test('Export CSV format', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E CSV format ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+      `CSV format ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
 
     const expenseTitle = 'Weekend Trip'
-    await createExpense(page, {
+    await createExpenseViaAPI(page, groupId, {
       title: expenseTitle,
-      amount: '300.00',
-      payer: 'Alice',
+      amount: 30000,
+      payerName: 'Alice',
     })
+
+    // Navigate to group page
+    await page.goto(`/groups/${groupId}/expenses`)
 
     await page
       .getByRole('button', { name: /export/i })

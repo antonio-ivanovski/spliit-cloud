@@ -1,18 +1,22 @@
 import { expect, test } from '@playwright/test'
-import { createGroup, navigateToTab } from '../helpers'
+import { navigateToTab } from '../helpers'
+import { createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test('Create expense - evenly split (most common flow)', async ({ page }) => {
-  const groupName = `PW E2E split modes ${Date.now()}`
+  const groupName = `split modes ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants (Alice, Bob, Charlie)
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Step 2: Navigate to expense creation by clicking the link
   const createLink = page
@@ -86,17 +90,19 @@ test('Create expense - evenly split (most common flow)', async ({ page }) => {
 })
 
 test('Create expense - by shares split mode', async ({ page }) => {
-  const groupName = `PW E2E by shares ${Date.now()}`
+  const groupName = `by shares ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Step 2: Navigate to expense creation
   const createLink = page
@@ -191,17 +197,19 @@ test('Create expense - by shares split mode', async ({ page }) => {
 })
 
 test('Create expense - by percentage split mode', async ({ page }) => {
-  const groupName = `PW E2E by percentage ${Date.now()}`
+  const groupName = `by percentage ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Step 2: Navigate to expense creation
   const createLink = page
@@ -295,17 +303,19 @@ test('Create expense - by percentage split mode', async ({ page }) => {
 })
 
 test('Create expense - by amount split mode', async ({ page }) => {
-  const groupName = `PW E2E by amount ${Date.now()}`
+  const groupName = `by amount ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Step 2: Navigate to expense creation
   const createLink = page

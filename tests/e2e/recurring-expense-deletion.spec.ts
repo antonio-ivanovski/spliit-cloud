@@ -1,29 +1,28 @@
 import { expect, test } from '@playwright/test'
-import { createExpense } from '../helpers/expense'
-import { createGroup, navigateToGroup } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { navigateToGroup } from '../helpers'
+import { randomId } from '@/lib/api'
 
 test.describe('Recurring Expense Deletion', () => {
   test('Delete single expense - other expenses remain', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `PW E2E delete expense ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+    const expenseTitle1 = `Expense 1 ${randomId(4)}-1`
+    const expenseTitle2 = `Expense 2 ${randomId(4)}-2`
 
-    const expenseTitle1 = `Expense 1 ${Date.now()}`
-    const expenseTitle2 = `Expense 2 ${Date.now() + 1}`
-
-    // Create two separate expenses
-    await createExpense(page, {
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, 'Test Group', [
+      'Alice',
+      'Bob',
+    ])
+    await createExpenseViaAPI(page, groupId, {
       title: expenseTitle1,
-      amount: '25.00',
-      payer: 'Alice',
+      amount: 2500, // 25.00 in cents
+      payerName: 'Alice',
     })
-
-    await createExpense(page, {
+    await createExpenseViaAPI(page, groupId, {
       title: expenseTitle2,
-      amount: '30.00',
-      payer: 'Bob',
+      amount: 3000, // 30.00 in cents
+      payerName: 'Bob',
     })
 
     // Navigate to group and verify both expenses are visible
@@ -34,7 +33,6 @@ test.describe('Recurring Expense Deletion', () => {
     // Click on first expense to edit
     await page.getByText(expenseTitle1).first().click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
-    await page.waitForLoadState('networkidle')
 
     // Delete the first expense
     const deleteButton = page.getByRole('button', { name: /delete/i })
@@ -51,7 +49,6 @@ test.describe('Recurring Expense Deletion', () => {
 
     // Wait for navigation back to expense list
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
-    await page.waitForLoadState('networkidle')
 
     // Verify first expense is deleted and second remains
     await expect(page.getByText(expenseTitle1)).not.toBeVisible()
@@ -61,39 +58,39 @@ test.describe('Recurring Expense Deletion', () => {
   test('Delete recurring expense instance - others remain', async ({
     page,
   }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `PW E2E delete recurring instance ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+    const recurringTitle = `Recurring Expense ${randomId(4)}`
+    const regularTitle = `Regular Expense ${randomId(4)}`
 
-    const recurringTitle = `Recurring Expense ${Date.now()}`
-    const regularTitle = `Regular Expense ${Date.now()}`
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, 'Test Group', [
+      'Alice',
+      'Bob',
+    ])
 
-    // Create a recurring expense
-    await createExpense(page, {
+    // Create a recurring expense via API with recurrence support
+    await createExpenseViaAPI(page, groupId, {
       title: recurringTitle,
-      amount: '50.00',
-      payer: 'Alice',
-      recurrence: 'Daily',
+      amount: 5000, // 50.00 in cents
+      payerName: 'Alice',
+      recurrenceRule: 'DAILY',
     })
 
-    // Create a regular expense
-    await createExpense(page, {
+    // Create regular expense via API
+    await createExpenseViaAPI(page, groupId, {
       title: regularTitle,
-      amount: '25.00',
-      payer: 'Bob',
+      amount: 2500, // 25.00 in cents
+      payerName: 'Bob',
     })
 
     // Verify both expenses exist
-    await navigateToGroup(page, groupId)
+    navigateToGroup(page, groupId)
     await expect(page.getByText(recurringTitle)).toBeVisible()
     await expect(page.getByText(regularTitle)).toBeVisible()
 
     // Delete the recurring expense
     await page.getByText(recurringTitle).first().click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
-    await page.waitForLoadState('networkidle')
 
     const deleteButton = page.getByRole('button', { name: /delete/i })
     await deleteButton.click()
@@ -105,7 +102,6 @@ test.describe('Recurring Expense Deletion', () => {
     await confirmDeleteButton.click()
 
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
-    await page.waitForLoadState('networkidle')
 
     // Verify recurring expense is deleted but regular expense remains
     await expect(page.getByText(recurringTitle)).not.toBeVisible()
@@ -113,21 +109,21 @@ test.describe('Recurring Expense Deletion', () => {
   })
 
   test('Cancel deletion dialog - expense remains', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `PW E2E cancel delete ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+    const expenseTitle = `Expense ${randomId(4)}`
 
-    const expenseTitle = `Expense ${Date.now()}`
-
-    await createExpense(page, {
+    // Setup via API
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, 'Test Group', [
+      'Alice',
+      'Bob',
+    ])
+    await createExpenseViaAPI(page, groupId, {
       title: expenseTitle,
-      amount: '40.00',
-      payer: 'Alice',
+      amount: 4000, // 40.00 in cents
+      payerName: 'Alice',
     })
 
-    await navigateToGroup(page, groupId)
+    navigateToGroup(page, groupId)
     await expect(page.getByText(expenseTitle)).toBeVisible()
 
     // Open expense for editing
@@ -152,7 +148,6 @@ test.describe('Recurring Expense Deletion', () => {
 
     // Navigate back and verify expense still exists
     await page.goBack()
-    await page.waitForLoadState('networkidle')
     await expect(page.getByText(expenseTitle)).toBeVisible()
   })
 })

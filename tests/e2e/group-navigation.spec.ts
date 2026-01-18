@@ -1,44 +1,36 @@
 import { expect, test } from '@playwright/test'
-import {
-  createGroup,
-  extractGroupId,
-  navigateToTab,
-  verifyGroupHeading,
-} from '../helpers'
+import { navigateToTab, verifyGroupHeading } from '../helpers'
+import { createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test.describe('Group Navigation', () => {
   test('navigate between multiple groups', async ({ page }) => {
-    const groupName1 = `PW E2E navigate 1 ${Date.now()}`
-    const groupName2 = `PW E2E navigate 2 ${Date.now()}`
+    const groupName1 = `navigate 1 ${randomId(4)}`
+    const groupName2 = `navigate 2 ${randomId(4)}`
 
     // Create first group
-    const groupId1 = await createGroup({
-      page,
-      groupName: groupName1,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId1 = await createGroupViaAPI(page, groupName1, ['Alice', 'Bob'])
+    await page.goto(`/groups/${groupId1}/expenses`)
 
     // Verify we're on group 1
     await expect(page).toHaveURL(new RegExp(`/groups/${groupId1}/expenses$`))
     await verifyGroupHeading(page, groupName1)
 
     // Create second group
-    const groupId2 = await createGroup({
-      page,
-      groupName: groupName2,
-      participants: ['Charlie', 'Dave'],
-    })
+    await page.goto('/groups')
+    const groupId2 = await createGroupViaAPI(page, groupName2, [
+      'Charlie',
+      'Dave',
+    ])
+    await page.goto(`/groups/${groupId2}/expenses`)
 
     // Verify we're on group 2
     await expect(page).toHaveURL(new RegExp(`/groups/${groupId2}/expenses$`))
     await verifyGroupHeading(page, groupName2)
 
-    // Wait for page to be fully loaded
-    await page.waitForLoadState('networkidle')
-
     // Navigate to groups list
     await page.goto('/groups')
-    await expect(page).toHaveURL('/groups')
 
     // Verify both groups appear in the list
     const group1Link = page.getByText(groupName1)
@@ -72,14 +64,12 @@ test.describe('Group Navigation', () => {
   })
 
   test('recent groups persistence across page reloads', async ({ page }) => {
-    const groupName = `PW E2E recent ${Date.now()}`
+    const groupName = `recent ${randomId(4)}`
 
     // Create a group
-    const groupId = await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Verify group was created
     await expect(page).toHaveURL(new RegExp(`/groups/${groupId}/expenses$`))
@@ -106,13 +96,15 @@ test.describe('Group Navigation', () => {
   })
 
   test('navigate to group information tab', async ({ page }) => {
-    const groupName = `PW E2E info tab ${Date.now()}`
+    const groupName = `info tab ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Navigate to Information tab
     await navigateToTab(page, 'Information')
@@ -131,13 +123,11 @@ test.describe('Group Navigation', () => {
   })
 
   test('navigate between all group tabs', async ({ page }) => {
-    const groupName = `PW E2E all tabs ${Date.now()}`
+    const groupName = `all tabs ${randomId(4)}`
 
-    const groupId = await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
+    await page.goto(`/groups/${groupId}/expenses`)
 
     const tabs: Array<{
       name: 'Expenses' | 'Balances' | 'Stats' | 'Settings' | 'Information'
@@ -169,13 +159,10 @@ test.describe('Group Navigation', () => {
   })
 
   test('direct URL navigation to group tabs', async ({ page }) => {
-    const groupName = `PW E2E direct URL ${Date.now()}`
+    const groupName = `direct URL ${randomId(4)}`
 
-    const groupId = await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     // Test direct navigation to each tab
     const tabUrls = [
@@ -198,13 +185,11 @@ test.describe('Group Navigation', () => {
   })
 
   test('browser back button navigation', async ({ page }) => {
-    const groupName = `PW E2E back button ${Date.now()}`
+    const groupName = `back button ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Navigate through tabs: Expenses -> Balances -> Settings
     await navigateToTab(page, 'Balances')
@@ -230,35 +215,28 @@ test.describe('Group Navigation', () => {
   })
 
   test('group list shows multiple recent groups in order', async ({ page }) => {
+    await page.goto('/groups')
+
     const groupNames = [
-      `PW E2E recent 1 ${Date.now()}`,
-      `PW E2E recent 2 ${Date.now() + 1}`,
-      `PW E2E recent 3 ${Date.now() + 2}`,
+      `recent 1 ${randomId(4)}-1`,
+      `recent 2 ${randomId(4)}-2`,
+      `recent 3 ${randomId(4)}-3`,
     ]
 
     const groupIds: string[] = []
 
     // Create multiple groups
     for (const groupName of groupNames) {
-      const groupId = await createGroup({
-        page,
-        groupName,
-        participants: ['Alice', 'Bob'],
-      })
+      const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
       groupIds.push(groupId)
     }
 
-    // Navigate to groups list
-    await page.goto('/groups')
-    await expect(page).toHaveURL('/groups')
+    // Reload the groups list page
+    await page.reload();
 
     // Verify all groups are visible
     for (const groupName of groupNames) {
-      await expect(page.getByText(groupName)).toBeVisible()
+      await expect(page.getByRole('link', { name: groupName })).toBeVisible()
     }
-
-    // Most recently created group should be listed
-    const lastGroupName = groupNames[groupNames.length - 1]
-    await expect(page.getByText(lastGroupName!)).toBeVisible()
   })
 })

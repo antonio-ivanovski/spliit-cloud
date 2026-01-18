@@ -1,31 +1,29 @@
 import { expect, test } from '@playwright/test'
-import {
-  createExpense,
-  createGroup,
-  navigateToGroup,
-  switchLocale,
-} from '../helpers'
+import { navigateToGroup, switchLocale } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test('Mobile navigation uses hamburger menu', async ({ page }) => {
   // Set viewport to mobile size (iPhone SE)
   await page.setViewportSize({ width: 375, height: 667 })
 
   // Create a test group
-  const groupId = await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName: `PW E2E mobile test ${Date.now()}`,
-    participants: ['Alice', 'Bob'],
+    `mobile test ${randomId(4)}`,
+    ['Alice', 'Bob'],
+  )
+
+  // Create an expense so we have content to verify
+  await createExpenseViaAPI(page, groupId, {
+    title: 'Mobile Test Expense',
+    amount: 5000,
+    payerName: 'Alice',
   })
 
   // Navigate to group page
-  await navigateToGroup(page, groupId)
-
-  // Create an expense so we have content to verify
-  await createExpense(page, {
-    title: 'Mobile Test Expense',
-    amount: '50.00',
-    payer: 'Alice',
-  })
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Verify the expense is visible in mobile view
   const mobileExpenseTitle = page
@@ -54,21 +52,22 @@ test('Desktop view displays full layout', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 1024 })
 
   // Create a test group
-  const groupId = await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName: `PW E2E desktop test ${Date.now()}`,
-    participants: ['Alice', 'Bob'],
+    `desktop test ${randomId(4)}`,
+    ['Alice', 'Bob'],
+  )
+
+  // Create an expense
+  await createExpenseViaAPI(page, groupId, {
+    title: 'Desktop Test Expense',
+    amount: 10000,
+    payerName: 'Alice',
   })
 
   // Navigate to group page
-  await navigateToGroup(page, groupId)
-
-  // Create an expense
-  await createExpense(page, {
-    title: 'Desktop Test Expense',
-    amount: '100.00',
-    payer: 'Alice',
-  })
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Verify main content is visible
   await expect(page.getByRole('main')).toBeVisible()
@@ -97,77 +96,58 @@ test('Desktop view displays full layout', async ({ page }) => {
 })
 
 test('Date format changes with locale selection', async ({ page }) => {
-  // Set up desktop viewport
-  await page.setViewportSize({ width: 1280, height: 1024 })
-
   // Create a test group
-  const groupId = await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName: `PW E2E i18n date test ${Date.now()}`,
-    participants: ['Alice', 'Bob'],
-  })
+    `i18n date test ${randomId(4)}`,
+    ['Alice', 'Bob'],
+  )
 
   // Create an expense with a known date
-  await createExpense(page, {
+  const expense = await createExpenseViaAPI(page, groupId, {
     title: 'i18n Date Test',
-    amount: '50.00',
-    payer: 'Alice',
+    amount: 5000,
+    payerName: 'Alice',
+    expenseDate: new Date('2026-01-17'), // January 17, 2026
   })
 
   // Navigate to group page
   await navigateToGroup(page, groupId)
 
   // Verify expense is visible
-  const expenseTitle = page.getByTestId('expense-title').filter({ hasText: 'i18n Date Test' })
-  await expect(expenseTitle).toBeVisible()
+  const expenseItem = page
+    .getByTestId(`expense-item-${expense}`)
+  await expect(expenseItem).toBeVisible()
 
   // Get the date text in English format (e.g., "Jan 17, 2026")
   const expenseDateElement = page.getByTestId('expense-date').first()
-  const englishDateText = await expenseDateElement.textContent()
-
-  // Verify English date format pattern (Month abbreviation followed by day and year)
-  // Pattern: Jan 1, 2026 or Dec 31, 2026
-  expect(englishDateText).toMatch(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/)
+  await expect(expenseDateElement).toHaveText('Jan 17, 2026')
 
   // Switch to Spanish locale
   await switchLocale(page, 'Español')
 
-  // Verify expense is still visible after locale change
-  await expect(expenseTitle).toBeVisible()
-
-  // Get the date text in Spanish format (e.g., "17 ene 2026")
-  const spanishDateText = await expenseDateElement.textContent()
-
-  // Verify Spanish date format pattern (lowercase month abbreviations)
-  // Pattern: 1 ene 2026 or 31 dic 2026
-  expect(spanishDateText).toMatch(
-    /ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic/,
-  )
-
-  // Verify the formats are actually different
-  expect(englishDateText).not.toBe(spanishDateText)
+  await expect(expenseDateElement).toHaveText('17 ene 2026')
 })
 
 test('Currency displays with correct format for locale', async ({ page }) => {
-  // Set up desktop viewport
-  await page.setViewportSize({ width: 1280, height: 1024 })
-
   // Create a test group with USD currency
-  const groupId = await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName: `PW E2E currency format test ${Date.now()}`,
-    participants: ['Alice', 'Bob'],
-  })
+    `currency format test ${randomId(4)}`,
+    ['Alice', 'Bob'],
+  )
 
   // Create an expense with a specific amount
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Currency Format Test',
-    amount: '1234.56',
-    payer: 'Alice',
+    amount: 123456,
+    payerName: 'Alice',
   })
 
   // Navigate to group page
-  await navigateToGroup(page, groupId)
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Verify expense is visible
   const currencyExpenseTitle = page

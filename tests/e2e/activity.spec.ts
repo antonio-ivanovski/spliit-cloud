@@ -1,28 +1,31 @@
 import { expect, test } from '@playwright/test'
+import { navigateToGroup, navigateToTab } from '../helpers'
 import {
-  createExpense,
+  createExpenseViaAPI,
   createExpensesViaAPI,
-  createGroup,
-  navigateToGroup,
-  navigateToTab,
-} from '../helpers'
+  createGroupViaAPI,
+} from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test('View activity page', async ({ page }) => {
   // Setup: Create group with 3 participants and immediately create an expense
   // (if group has no activity, the page shows empty state which doesn't have activity-list testid)
-  const groupId = await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName: `PW E2E activity test ${Date.now()}`,
-    participants: ['Alice', 'Bob', 'Charlie'],
-  })
-  await navigateToGroup(page, groupId)
+    `activity test ${randomId(4)}`,
+    ['Alice', 'Bob', 'Charlie'],
+  )
 
   // Create an expense so activity list will be populated
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Activity Test Expense',
-    amount: '10.00',
-    payer: 'Alice',
+    amount: 1000,
+    payerName: 'Alice',
   })
+
+  // Navigate to group page
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Navigate to Activity tab
   await navigateToTab(page, 'Activity')
@@ -44,21 +47,20 @@ test('View activity page', async ({ page }) => {
 
 test('Log shows create', async ({ page }) => {
   // Setup: Create group with 2 participants and expense
-  const groupName = `PW E2E activity create ${Date.now()}`
-  const expenseTitle = `Test Expense ${Date.now()}`
-  const expenseAmount = '25.00'
+  const groupName = `activity create ${randomId(4)}`
+  const expenseTitle = `Test Expense ${randomId(4)}`
 
-  const groupId = await createGroup({
-    page,
-    groupName,
-    participants: ['Alice', 'Bob'],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: expenseTitle,
-    amount: expenseAmount,
-    payer: 'Alice',
+    amount: 2500,
+    payerName: 'Alice',
   })
+
+  // Navigate to group page
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Navigate to Activity tab
   await navigateToTab(page, 'Activity')
@@ -76,30 +78,26 @@ test('Log shows create', async ({ page }) => {
 
 test('Log shows update', async ({ page }) => {
   // Setup: Create group and expense
-  const groupName = `PW E2E activity update ${Date.now()}`
-  const expenseTitle = `Update Test Expense ${Date.now()}`
-  const updatedTitle = `Updated Expense ${Date.now()}`
-  const originalAmount = '30.00'
+  const groupName = `activity update ${randomId(4)}`
+  const expenseTitle = `Update Test Expense ${randomId(4)}`
+  const updatedTitle = `Updated Expense ${randomId(4)}`
   const updatedAmount = '50.00'
 
-  const groupId = await createGroup({
-    page,
-    groupName,
-    participants: ['Alice', 'Bob'],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
-  await navigateToGroup(page, groupId)
-
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: expenseTitle,
-    amount: originalAmount,
-    payer: 'Alice',
+    amount: 3000,
+    payerName: 'Alice',
   })
+
+  // Navigate to group page
+  await navigateToGroup(page, groupId);
 
   // Wait for the expense to be visible and clickable
   const expenseRow = page.getByText(expenseTitle)
   await expect(expenseRow).toBeVisible()
-  await page.waitForTimeout(500) // Brief pause to ensure DOM is stable
 
   // Click on the expense to open edit page
   await expenseRow.click()
@@ -121,13 +119,10 @@ test('Log shows update', async ({ page }) => {
   const submitButton = page.getByRole('button', { name: /save|update/i })
   await expect(submitButton).toBeVisible()
   await submitButton.click()
-
-  // Wait for navigation back to group page
-  await page.waitForURL(/\/groups\/[^/]+/)
+  await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
   // Navigate to Activity tab to verify update was logged
   // Note: After editing and saving, ensure we're on the expenses page first
-  await page.waitForURL(/\/groups\/[^/]+\/expenses$/, { timeout: 10000 })
   await navigateToTab(page, 'Activity')
 
   // Wait for updated expense title to appear in activity
@@ -139,22 +134,20 @@ test('Log shows update', async ({ page }) => {
 
 test('Log shows delete', async ({ page }) => {
   // Setup: Create group and expense
-  const groupName = `PW E2E activity delete ${Date.now()}`
-  const expenseTitle = `Delete Test Expense ${Date.now()}`
+  const groupName = `activity delete ${randomId(4)}`
+  const expenseTitle = `Delete Test Expense ${randomId(4)}`
 
-  const groupId = await createGroup({
-    page,
-    groupName,
-    participants: ['Alice', 'Bob'],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
-  await navigateToGroup(page, groupId)
-
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: expenseTitle,
-    amount: '40.00',
-    payer: 'Bob',
+    amount: 4000,
+    payerName: 'Bob',
   })
+
+  // Navigate to group page
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Click on the expense to open edit page
   await page.getByText(expenseTitle).click()
@@ -193,20 +186,18 @@ test('Log shows delete', async ({ page }) => {
 
 test('Log pagination', async ({ page }) => {
   // Setup: Create group and many expenses to trigger pagination
-  const groupName = `PW E2E activity pagination ${Date.now()}`
+  const groupName = `activity pagination ${randomId(4)}`
   const numExpenses = 25
 
-  const groupId = await createGroup({
-    page,
-    groupName,
-    participants: ['Alice', 'Bob'],
-  })
-
-  await navigateToGroup(page, groupId)
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
   // Create 25 expenses via API to populate activity log
   const createdExpenses = await createExpensesViaAPI(page, groupId, numExpenses)
   expect(createdExpenses).toHaveLength(numExpenses)
+
+  // Navigate to group page
+  await navigateToGroup(page, groupId);
 
   // Navigate to Activity tab
   await navigateToTab(page, 'Activity')
@@ -216,15 +207,14 @@ test('Log pagination', async ({ page }) => {
   await expect(activityListWrapper).toBeVisible()
 
   // Verify the most recent expense appears (last in array)
-  const mostRecentExpense = createdExpenses[createdExpenses.length - 1]
-  await expect(page.getByText(mostRecentExpense)).toBeVisible()
+  await expect(page.getByText(`Expense “Expense ${numExpenses}” created`)).toBeVisible()
 
   // Scroll down to trigger infinite scroll pagination
   await page.mouse.wheel(0, 1000)
-  await page.waitForLoadState('networkidle')
+  await expect(page.locator('.animate-pulse').first()).toBeVisible()
 
   // Verify all created expenses are loaded after scrolling
-  for (const expenseTitle of createdExpenses) {
-    await expect(page.getByText(expenseTitle)).toBeVisible()
+  for (let i = 1; i <= numExpenses; i++) {
+    await expect(page.getByText(`Expense “Expense ${i}” created`)).toBeVisible()
   }
 })

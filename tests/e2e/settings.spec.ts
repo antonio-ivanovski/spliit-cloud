@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test'
-import { createGroup, navigateToGroup } from '../helpers'
+import { createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test('Theme selection persists after reload', async ({ page }) => {
   await page.goto('/groups')
-  await page.waitForLoadState('networkidle')
 
   // Open theme toggle menu
   const themeToggle = page.getByRole('button', { name: 'Toggle theme' })
@@ -21,21 +21,22 @@ test('Theme selection persists after reload', async ({ page }) => {
 
   // Reload page
   await page.reload()
-  await page.waitForLoadState('networkidle')
 
   // Verify dark theme persisted after reload
   await expect(html).toHaveAttribute('class', /dark/)
 })
 
 test('Expense displays with selected category', async ({ page }) => {
-  const expenseTitle = `Test Expense ${Date.now()}`
-  const groupId = await createGroup({
-    page,
-    groupName: `PW E2E category test ${Date.now()}`,
-    participants: ['Alice', 'Bob'],
-  })
+  const expenseTitle = `Test Expense ${randomId(4)}`
 
-  await navigateToGroup(page, groupId)
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
+    page,
+    `category test ${randomId(4)}`,
+    ['Alice', 'Bob'],
+  )
+
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Navigate to create expense page
   const createExpenseLink = page.getByRole('link', { name: 'Create expense' })
@@ -90,13 +91,14 @@ test('Expense displays with selected category', async ({ page }) => {
 })
 
 test('Default category is General', async ({ page }) => {
-  const groupId = await createGroup({
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(
     page,
-    groupName: `PW E2E default category ${Date.now()}`,
-    participants: ['Alice', 'Bob'],
-  })
+    `default category ${randomId(4)}`,
+    ['Alice', 'Bob'],
+  )
 
-  await navigateToGroup(page, groupId)
+  await page.goto(`/groups/${groupId}/expenses`)
 
   // Navigate to create expense page
   const createExpenseLink = page.getByRole('link', { name: 'Create expense' })

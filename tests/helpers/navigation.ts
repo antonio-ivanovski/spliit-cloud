@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 export type GroupTab =
   | 'Expenses'
@@ -63,7 +63,7 @@ export async function switchLocale(
   // Select the desired locale
   const localeOption = page.getByRole('menuitem', { name: localeName })
   await localeOption.click()
-  await page.waitForLoadState('networkidle')
+  await expect(localeButton).toHaveText(localeName)
 }
 
 /**

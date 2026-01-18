@@ -1,17 +1,27 @@
 import { expect, test } from '@playwright/test'
-import { createGroup, navigateToGroup } from '../helpers'
+import { navigateToGroup } from '../helpers'
+import { createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test.describe('Active User Modal', () => {
   test('suppressActiveUserModal flag suppresses modal in createGroup', async ({
     page,
   }) => {
     // Create a group WITH modal suppression (default behavior)
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E modal suppressed test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-      suppressActiveUserModal: true,
-    })
+      `modal suppressed test ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await page.goto(`/groups/${groupId}/expenses`)
+    // Suppress modal by setting localStorage
+    await page.evaluate((gId) => {
+      localStorage.setItem(`${gId}-activeUser`, 'None')
+    }, groupId)
+
+    await page.reload()
 
     // Modal should NOT be visible
     const dialog = page.getByRole('dialog', { name: 'Who are you?' })
@@ -29,12 +39,14 @@ test.describe('Active User Modal', () => {
     page,
   }) => {
     // Create group with suppression to test modal appearance separately
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E modal test ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-      suppressActiveUserModal: true,
-    })
+      `modal test ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Clear the activeUser localStorage to simulate first visit
     await page.evaluate((gId) => {
@@ -52,17 +64,21 @@ test.describe('Active User Modal', () => {
     await expect(dialog).toBeVisible()
 
     // Verify modal content
-    await expect(page.getByText('Tell us which participant you are')).toBeVisible()
+    await expect(
+      page.getByText('Tell us which participant you are'),
+    ).toBeVisible()
   })
 
   test('Can select a participant in the modal', async ({ page }) => {
     // Create and reload to show modal
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E modal participant test ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-      suppressActiveUserModal: true,
-    })
+      `modal participant test ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     await page.evaluate((gId) => {
       localStorage.removeItem(`${gId}-activeUser`)
@@ -98,12 +114,14 @@ test.describe('Active User Modal', () => {
   test('Can save modal with default "I don\'t want to select anyone" selection', async ({
     page,
   }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E modal default test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-      suppressActiveUserModal: true,
-    })
+      `modal default test ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     await page.evaluate((gId) => {
       localStorage.removeItem(`${gId}-activeUser`)
@@ -132,12 +150,14 @@ test.describe('Active User Modal', () => {
   })
 
   test('Modal does not reappear after being dismissed', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E modal reappear test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-      suppressActiveUserModal: true,
-    })
+      `modal reappear test ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     await page.evaluate((gId) => {
       localStorage.removeItem(`${gId}-activeUser`)
@@ -169,12 +189,14 @@ test.describe('Active User Modal', () => {
   test('navigateToGroup with suppressActiveUserModal: false sets localStorage', async ({
     page,
   }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E nav test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-      suppressActiveUserModal: true,
-    })
+      `nav test ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Clear localStorage
     await page.evaluate((gId) => {
@@ -200,12 +222,14 @@ test.describe('Active User Modal', () => {
   test('navigateToGroup with suppressActiveUserModal: true sets localStorage', async ({
     page,
   }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `PW E2E nav suppress test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-      suppressActiveUserModal: true,
-    })
+      `nav suppress test ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Clear localStorage
     await page.evaluate((gId) => {

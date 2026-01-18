@@ -1,30 +1,34 @@
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup, navigateToTab } from '../helpers'
+import { navigateToTab } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test('Active user changes balance view', async ({ page }) => {
-  const groupName = `PW E2E active user balances ${Date.now()}`
+  const groupName = `active user balances ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
 
   // Seed a couple expenses so balances are non-trivial.
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
-    amount: '30.00',
-    payer: participantA,
+    amount: 3000,
+    payerName: participantA,
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Taxi',
-    amount: '15.00',
-    payer: participantB,
+    amount: 1500,
+    payerName: participantB,
   })
 
+  await page.goto(`/groups/${groupId}/expenses`)
   await navigateToTab(page, 'Balances')
 
   // Verify the reimbursements list is displayed with Mark as paid link
@@ -59,16 +63,18 @@ test('Active user changes balance view', async ({ page }) => {
 })
 
 test('Clear active user - neutral view', async ({ page }) => {
-  const groupName = `PW E2E clear active user ${Date.now()}`
+  const groupName = `clear active user ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
 
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, 'Charlie'],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    'Charlie',
+  ])
 
+  await page.goto(`/groups/${groupId}/expenses`)
   // Navigate to balances
   await navigateToTab(page, 'Balances')
 
@@ -93,29 +99,31 @@ test('Clear active user - neutral view', async ({ page }) => {
 })
 
 test('Updates stats when active user changes', async ({ page }) => {
-  const groupName = `PW E2E active user stats update ${Date.now()}`
+  const groupName = `active user stats update ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
 
   // Add expenses
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
-    amount: '30.00',
-    payer: participantA,
+    amount: 3000,
+    payerName: participantA,
   })
-  await createExpense(page, {
+  await createExpenseViaAPI(page, groupId, {
     title: 'Taxi',
-    amount: '15.00',
-    payer: participantB,
+    amount: 1500,
+    payerName: participantB,
   })
 
+  await page.goto(`/groups/${groupId}/expenses`)
   // Set Alice as active user via Settings
   await navigateToTab(page, 'Settings')
   const activeUserSelector = page.getByTestId('active-user-selector')
@@ -158,17 +166,19 @@ test('Updates stats when active user changes', async ({ page }) => {
 })
 
 test('Active user selection persists after page reload', async ({ page }) => {
-  const groupName = `PW E2E active user persistence ${Date.now()}`
+  const groupName = `active user persistence ${randomId(4)}`
   const participantA = 'Alice'
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await createGroup({
-    page,
-    groupName,
-    participants: [participantA, participantB, participantC],
-  })
+  await page.goto('/groups')
+  const groupId = await createGroupViaAPI(page, groupName, [
+    participantA,
+    participantB,
+    participantC,
+  ])
 
+  await page.goto(`/groups/${groupId}/expenses`)
   // Select Alice as active user via Settings
   await navigateToTab(page, 'Settings')
   const activeUserSelector = page.getByTestId('active-user-selector')
@@ -186,7 +196,6 @@ test('Active user selection persists after page reload', async ({ page }) => {
 
   // Reload the page
   await page.reload()
-  await page.waitForLoadState('networkidle')
 
   // Navigate to Settings and verify Alice is still selected
   await navigateToTab(page, 'Settings')

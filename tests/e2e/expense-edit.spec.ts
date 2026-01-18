@@ -1,27 +1,26 @@
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup, navigateToGroup } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test.describe('Expense Editing', () => {
   test('updates expense title and amount', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `Edit Test ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, `Edit Test ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Original Expense',
+      amount: 10000, // $100.00 in cents
+      payerName: 'Alice',
     })
 
-    await navigateToGroup(page, groupId)
-
-    const originalTitle = 'Original Expense'
-    const originalAmount = '100.00'
-
-    await createExpense(page, {
-      title: originalTitle,
-      amount: originalAmount,
-      payer: 'Alice',
-    })
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Click expense to edit
-    await page.getByText(originalTitle).click()
+    await page.getByText('Original Expense').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Update title
@@ -44,28 +43,29 @@ test.describe('Expense Editing', () => {
     // Verify updated values in list
     await expect(page.getByText(newTitle)).toBeVisible()
     await expect(page.getByText('$250.00')).toBeVisible()
-    await expect(page.getByText(originalTitle)).not.toBeVisible()
+    await expect(page.getByText('Original Expense')).not.toBeVisible()
   })
 
   test('updates expense payer', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Payer Update ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
+      `Payer Update ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Payer Change Test',
+      amount: 6000, // $60.00 in cents
+      payerName: 'Alice',
     })
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
 
-    const expenseTitle = 'Payer Change Test'
-
-    await createExpense(page, {
-      title: expenseTitle,
-      amount: '60.00',
-      payer: 'Alice',
-    })
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Click expense to edit
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Payer Change Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Change payer from Alice to Bob
@@ -79,38 +79,39 @@ test.describe('Expense Editing', () => {
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
     // Verify payer updated in list
-    const expenseCard = page.getByText(expenseTitle).locator('..')
+    const expenseCard = page.getByText('Payer Change Test').locator('..')
     await expect(page.getByText(/Bob/)).toBeVisible()
   })
 
   test('updates expense date', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `Date Update ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, `Date Update ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+    ])
 
-    await navigateToGroup(page, groupId)
-
-    const expenseTitle = 'Date Change Test'
     const originalDate = '2024-05-15'
-    const newDate = '2024-06-20'
 
-    await createExpense(page, {
-      title: expenseTitle,
-      amount: '45.00',
-      payer: 'Alice',
-      date: originalDate,
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Date Change Test',
+      amount: 4500, // $45.00 in cents
+      payerName: 'Alice',
+      expenseDate: new Date(originalDate),
     })
+
+    await page.goto(`/groups/${groupId}/expenses`)
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Click expense to edit
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Date Change Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Verify original date
     await expect(page.locator('input[type="date"]')).toHaveValue(originalDate)
 
     // Update date
+    const newDate = '2024-06-20'
     await page.locator('input[type="date"]').fill(newDate)
 
     // Submit
@@ -119,39 +120,41 @@ test.describe('Expense Editing', () => {
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
     // Click again to verify date was saved
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Date Change Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
     await expect(page.locator('input[type="date"]')).toHaveValue(newDate)
   })
 
   test('updates expense notes', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Notes Update ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+      `Notes Update ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
 
-    await navigateToGroup(page, groupId)
-
-    const expenseTitle = 'Notes Update Test'
     const originalNotes = 'Original notes content'
-    const newNotes = 'Updated notes with new information'
 
-    await createExpense(page, {
-      title: expenseTitle,
-      amount: '30.00',
-      payer: 'Alice',
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Notes Update Test',
+      amount: 3000, // $30.00 in cents
+      payerName: 'Alice',
       notes: originalNotes,
     })
 
+    await page.goto(`/groups/${groupId}/expenses`)
+
+    await page.goto(`/groups/${groupId}/expenses`)
+
     // Click expense to edit
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Notes Update Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Verify original notes
     await expect(page.locator('textarea')).toHaveValue(originalNotes)
 
     // Update notes
+    const newNotes = 'Updated notes with new information'
     const notesTextarea = page.locator('textarea')
     await notesTextarea.clear()
     await notesTextarea.fill(newNotes)
@@ -162,31 +165,33 @@ test.describe('Expense Editing', () => {
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
     // Click again to verify notes were saved
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Notes Update Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
     await expect(page.locator('textarea')).toHaveValue(newNotes)
   })
 
   test('updates all fields simultaneously', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `Full Update ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
-
-    await navigateToGroup(page, groupId)
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, `Full Update ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
 
     // Create initial expense
-    const originalTitle = 'Initial Full Test'
-    await createExpense(page, {
-      title: originalTitle,
-      amount: '100.00',
-      payer: 'Alice',
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Initial Full Test',
+      amount: 10000, // $100.00 in cents
+      payerName: 'Alice',
       notes: 'Original notes',
     })
 
+    await page.goto(`/groups/${groupId}/expenses`)
+
+    await page.goto(`/groups/${groupId}/expenses`)
+
     // Click expense to edit
-    await page.getByText(originalTitle).click()
+    await page.getByText('Initial Full Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Update all fields
@@ -219,7 +224,7 @@ test.describe('Expense Editing', () => {
     // Verify in list
     await expect(page.getByText(newTitle)).toBeVisible()
     await expect(page.getByText('$350.00')).toBeVisible()
-    await expect(page.getByText(originalTitle)).not.toBeVisible()
+    await expect(page.getByText('Initial Full Test')).not.toBeVisible()
 
     // Click to verify all values persisted
     await page.getByText(newTitle).click()
@@ -236,24 +241,25 @@ test.describe('Expense Editing', () => {
   })
 
   test('toggles reimbursement status', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Reimbursement Toggle ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
+      `Reimbursement Toggle ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
+
+    await createExpenseViaAPI(page, groupId, {
+      title: 'Reimbursement Toggle Test',
+      amount: 7500, // $75.00 in cents
+      payerName: 'Alice',
     })
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
 
-    const expenseTitle = 'Reimbursement Toggle Test'
-
-    await createExpense(page, {
-      title: expenseTitle,
-      amount: '75.00',
-      payer: 'Alice',
-    })
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Click expense to edit
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Reimbursement Toggle Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     // Check reimbursement
@@ -270,7 +276,7 @@ test.describe('Expense Editing', () => {
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
     // Click again to verify reimbursement status persisted
-    await page.getByText(expenseTitle).click()
+    await page.getByText('Reimbursement Toggle Test').click()
     await page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
 
     await expect(

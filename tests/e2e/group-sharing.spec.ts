@@ -1,15 +1,20 @@
 import { expect, test } from '@playwright/test'
-import { createGroup, extractGroupId, verifyGroupHeading } from '../helpers'
+import { extractGroupId, verifyGroupHeading } from '../helpers'
+import { createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test.describe('Group Sharing', () => {
   test('share group via copy URL button', async ({ page, context }) => {
-    const groupName = `PW E2E share ${Date.now()}`
+    const groupName = `share ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Grant clipboard permissions if supported
     try {
@@ -23,8 +28,7 @@ test.describe('Group Sharing', () => {
     // Verify we're on the expenses tab
     await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses$/)
 
-    // Extract group ID from URL
-    const groupId = extractGroupId(page.url())
+    // Verify group ID is valid
     expect(groupId).toBeTruthy()
     expect(groupId).not.toBe('create')
 
@@ -48,7 +52,7 @@ test.describe('Group Sharing', () => {
 
     // Verify copy success by checking for the check icon
     const checkIcon = page.locator('svg.lucide-check').first()
-    await expect(checkIcon).toBeVisible({ timeout: 5000 })
+    await expect(checkIcon).toBeVisible()
 
     // Try to verify clipboard contents if browser supports it
     try {
@@ -70,13 +74,12 @@ test.describe('Group Sharing', () => {
   })
 
   test('share URL includes ref parameter', async ({ page, context }) => {
-    const groupName = `PW E2E share ref ${Date.now()}`
+    const groupName = `share ref ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     try {
       await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
@@ -85,8 +88,6 @@ test.describe('Group Sharing', () => {
     } catch {
       // Continue without clipboard permissions
     }
-
-    const groupId = extractGroupId(page.url())
 
     // Open share popover
     await page.locator('button[title="Share"]').click()
@@ -114,15 +115,15 @@ test.describe('Group Sharing', () => {
   })
 
   test('shared URL navigation works correctly', async ({ page, context }) => {
-    const groupName = `PW E2E share navigation ${Date.now()}`
+    const groupName = `share navigation ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
-    const groupId = extractGroupId(page.url())
+    await page.goto(`/groups/${groupId}/expenses`)
+
+    const currentUrl = page.url()
+    const extractedGroupId = extractGroupId(currentUrl)
 
     // Simulate navigating via a shared URL
     const shareUrl = `${page.url()}?ref=share`
@@ -142,13 +143,12 @@ test.describe('Group Sharing', () => {
   })
 
   test('share button is accessible on group page', async ({ page }) => {
-    const groupName = `PW E2E share accessible ${Date.now()}`
+    const groupName = `share accessible ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // Verify share button is visible and has correct attributes
     const shareButton = page.locator('button[title="Share"]')
@@ -173,13 +173,12 @@ test.describe('Group Sharing', () => {
     page,
     context,
   }) => {
-    const groupName = `PW E2E copy feedback ${Date.now()}`
+    const groupName = `copy feedback ${randomId(4)}`
 
-    await createGroup({
-      page,
-      groupName,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
+
+    await page.goto(`/groups/${groupId}/expenses`)
 
     try {
       await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
@@ -205,7 +204,7 @@ test.describe('Group Sharing', () => {
 
     // Verify check icon appears (indicating success)
     const checkIcon = page.locator('svg.lucide-check').first()
-    await expect(checkIcon).toBeVisible({ timeout: 5000 })
+    await expect(checkIcon).toBeVisible()
 
     // Verify copy icon is no longer visible (replaced by check)
     await expect(copyIcon).not.toBeVisible()

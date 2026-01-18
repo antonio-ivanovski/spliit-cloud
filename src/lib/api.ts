@@ -9,8 +9,8 @@ import {
 import { nanoid } from 'nanoid'
 import { calculateNextDate } from './recurring-expenses'
 
-export function randomId() {
-  return nanoid()
+export function randomId(size?: number) {
+  return nanoid(size)
 }
 
 export async function createGroup(groupFormValues: GroupFormValues) {

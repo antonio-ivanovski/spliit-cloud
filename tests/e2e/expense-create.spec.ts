@@ -1,20 +1,18 @@
 import { expect, test } from '@playwright/test'
-import {
-  createExpense,
-  createGroup,
-  navigateToExpenseCreate,
-  navigateToGroup,
-} from '../helpers'
+import { createExpense, navigateToExpenseCreate } from '../helpers'
+import { createGroupViaAPI } from '../helpers/batch-api'
+import { randomId } from '@/lib/api'
 
 test.describe('Expense Creation', () => {
   test('creates basic expense with correct values', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Expense Create ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+      `Expense Create ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
 
     const expenseTitle = 'Dinner at Restaurant'
     const expenseAmount = '150.00'
@@ -37,13 +35,14 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates expense with category', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Category Test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+      `Category Test ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToExpenseCreate(page)
 
     const expenseTitle = 'Grocery Shopping'
@@ -82,13 +81,13 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates expense with specific date', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `Date Test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, `Date Test ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+    ])
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToExpenseCreate(page)
 
     const expenseTitle = 'Historical Expense'
@@ -125,13 +124,13 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates expense with notes', async ({ page }) => {
-    const groupId = await createGroup({
-      page,
-      groupName: `Notes Test ${Date.now()}`,
-      participants: ['Alice', 'Bob'],
-    })
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(page, `Notes Test ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+    ])
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
     await navigateToExpenseCreate(page)
 
     const expenseTitle = 'Expense with Notes'
@@ -168,13 +167,14 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates reimbursement expense', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Reimbursement Test ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+      `Reimbursement Test ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
 
     // First create a regular expense
     await createExpense(page, {
@@ -215,13 +215,14 @@ test.describe('Expense Creation', () => {
   })
 
   test('verifies expense data persists after creation', async ({ page }) => {
-    const groupId = await createGroup({
+    await page.goto('/groups')
+    const groupId = await createGroupViaAPI(
       page,
-      groupName: `Persistence Test ${Date.now()}`,
-      participants: ['Alice', 'Bob', 'Charlie'],
-    })
+      `Persistence Test ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
 
-    await navigateToGroup(page, groupId)
+    await page.goto(`/groups/${groupId}/expenses`)
 
     const expenseTitle = 'Persistence Check'
     const expenseAmount = '123.45'
