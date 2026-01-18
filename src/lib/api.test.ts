@@ -1,7 +1,8 @@
 import { ActivityType, PrismaClient, RecurrenceRule } from '@prisma/client'
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { createPayloadForNewRecurringExpenseLink } from './api'
 
-jest.mock('nanoid', () => ({
+mock.module('nanoid', () => ({
   nanoid: () => Math.random().toString(36).substring(2, 15),
 }))
 

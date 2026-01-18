@@ -220,7 +220,11 @@ test('Log pagination', async ({ page }) => {
   await expect(page.getByText(mostRecentExpense)).toBeVisible()
 
   // Scroll down to trigger infinite scroll pagination
-  await page.mouse.wheel(0, 1000)
+  // Scroll to bottom to trigger loading more
+  await page.evaluate(() => {
+    window.scrollTo(0, document.documentElement.scrollHeight)
+  })
+
   await page.waitForLoadState('networkidle')
 
   // Verify all created expenses are loaded after scrolling

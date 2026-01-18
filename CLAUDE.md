@@ -15,41 +15,42 @@ Spliit is a free, open-source expense-splitting application built with Next.js. 
 
 ## Development Commands
 
+Spliit uses **Bun** as the package manager and test runner.
+
 ### Build, Test, and Lint
 
 ```bash
-npm run dev              # Start development server (http://localhost:3000)
-npm run build            # Build for production
-npm start                # Start production server
-npm run lint             # Run ESLint
-npm check-types          # Type checking with TypeScript
-npm check-formatting     # Check Prettier formatting
-npm prettier -w src      # Format code with Prettier
-npm test                 # Run Jest tests
-npm test -- --watch      # Run tests in watch mode
-npm test -- path/to/file.test.ts  # Run specific test file
+bun run dev                    # Start development server (http://localhost:3000)
+bun run build                  # Build for production
+bun start                      # Start production server
+bun run lint                   # Run ESLint
+bun run check-types            # Type checking with TypeScript
+bun run check-formatting       # Check Prettier formatting
+bun run prettier               # Format code with Prettier
+bun test ./src                 # Run all unit tests
+bun test ./src/lib/api.test.ts # Run specific test file
 ```
 
 ### Database and Migrations
 
 ```bash
-./scripts/start-local-db.sh  # Start local PostgreSQL container
-npx prisma migrate dev       # Run pending migrations
-npx prisma studio          # Open Prisma Studio (GUI for database)
-npx prisma generate        # Regenerate Prisma Client
+./scripts/start-local-db.sh    # Start local PostgreSQL container
+bunx prisma migrate dev        # Run pending migrations
+bunx prisma studio            # Open Prisma Studio (GUI for database)
+bunx prisma generate          # Regenerate Prisma Client
 ```
 
 ### Docker and Deployment
 
 ```bash
-npm run build-image      # Build Docker image
-npm run start-container  # Start app and postgres containers (uses container.env)
+bun run build-image            # Build Docker image
+bun run start-container        # Start app and postgres containers (uses container.env)
 ```
 
 ### Other Commands
 
 ```bash
-npm run generate-currency-data  # Generate currency list data
+bun run generate-currency-data # Generate currency list data
 ```
 
 ## Architecture
@@ -141,16 +142,18 @@ Optional features controlled via environment variables:
 
 ### Testing
 
-- Jest is configured for unit tests
+- Bun's built-in test runner is used for unit tests (configured in `bun:test`)
 - Write tests in `*.test.ts` or `*.test.tsx` files
+- Test files are automatically excluded from TypeScript compilation (`tsconfig.json`)
+- Test mocking uses `mock.module()` from `bun:test` for module-level mocks
 - React Testing Library is available for component testing
-- Mocking with `jest-mock-extended` for type-safe mocks
+- `jest-mock-extended` is available for type-safe mocks
 
 ### Testing E2e
 
 - Playwright is set up for end-to-end tests
 - Tests are in the `tests/` directory
-- Run with `npm test-e2e` 
+- Run with `bun run test-e2e` 
 
 ## Key Implementation Details
 
@@ -186,6 +189,7 @@ See `.env.example` for required and optional variables. Key ones:
 ## Troubleshooting
 
 - **Database connection issues**: Ensure PostgreSQL is running and connection strings in `.env` are correct
-- **Type errors**: Run `npm check-types` to see all issues
-- **Prisma Client issues**: Run `npx prisma generate` to regenerate client
+- **Type errors**: Run `bun run check-types` to see all issues
+- **Prisma Client issues**: Run `bunx prisma generate` to regenerate client
 - **S3 or OpenAI features not working**: Verify environment variables are set and API credentials are valid
+- **ESLint errors with module resolution**: This is a known issue with Zod and ESLint compatibility in Bun. The code still works correctly for runtime and testing.

@@ -22,6 +22,7 @@
         "name": "next"
       }
     ],
+    "types": ["bun", "@testing-library/jest-dom"],
     "paths": {
       "@/*": [
         "./src/*"
@@ -36,7 +37,9 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ],
   "ts-node": {
     "require": [

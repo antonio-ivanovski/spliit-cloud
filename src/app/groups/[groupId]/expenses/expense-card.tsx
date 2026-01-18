@@ -103,7 +103,10 @@ export function ExpenseCard({
         <div className="text-xs text-muted-foreground">
           <DocumentsCount count={expense._count.documents} />
         </div>
-        <div className="text-xs text-muted-foreground" data-testid="expense-date">
+        <div
+          className="text-xs text-muted-foreground"
+          data-testid="expense-date"
+        >
           {formatDateOnly(expense.expenseDate, locale, { dateStyle: 'medium' })}
         </div>
       </div>

@@ -5,7 +5,7 @@ import { formatCategoryForAIPrompt } from '@/lib/utils'
 import OpenAI from 'openai'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
 
-let openai: OpenAI;
+let openai: OpenAI
 
 export async function extractExpenseInformationFromImage(imageUrl: string) {
   'use server'
