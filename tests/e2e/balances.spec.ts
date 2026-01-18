@@ -1,15 +1,15 @@
+import { randomId } from '@/lib/api'
 import { expect, test } from '@playwright/test'
 import { navigateToTab } from '../helpers'
 import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
-import { randomId } from '@/lib/api'
 
 test('suggested reimbursements displayed', async ({ page }) => {
   await page.goto('/groups')
-  const groupId = await createGroupViaAPI(
-    page,
-    `balances ${randomId(4)}`,
-    ['Alice', 'Bob', 'Charlie'],
-  )
+  const groupId = await createGroupViaAPI(page, `balances ${randomId(4)}`, [
+    'Alice',
+    'Bob',
+    'Charlie',
+  ])
 
   await createExpenseViaAPI(page, groupId, {
     title: 'Dinner',
@@ -28,7 +28,9 @@ test('suggested reimbursements displayed', async ({ page }) => {
   })
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
   await navigateToTab(page, 'Balances')
+  await page.waitForLoadState('networkidle')
 
   // Verify Suggested reimbursements section is visible
   const reimbursementsHeading = page.getByRole('heading', {
@@ -80,7 +82,9 @@ test('view balances page - calculates correctly', async ({ page }) => {
   })
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
   await navigateToTab(page, 'Balances')
+  await page.waitForLoadState('networkidle')
 
   // Verify Balances section header is visible
   const balancesHeading = page.getByRole('heading', { name: 'Balances' })
@@ -116,7 +120,9 @@ test('Active user balance highlighted', async ({ page }) => {
   )
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
   await navigateToTab(page, 'Balances')
+  await page.waitForLoadState('networkidle')
 
   // Verify balances list loads with all participants
   const balancesList = page.getByTestId('balances-list')
@@ -136,7 +142,9 @@ test('Zero balances display correctly', async ({ page }) => {
   )
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
   await navigateToTab(page, 'Balances')
+  await page.waitForLoadState('networkidle')
 
   // Verify balances list is displayed
   const balancesList = page.getByTestId('balances-list')
@@ -171,7 +179,9 @@ test('Balances match expected from expenses', async ({ page }) => {
   })
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
   await navigateToTab(page, 'Balances')
+  await page.waitForLoadState('networkidle')
 
   // Wait for balances list to be visible
   const balancesList = page.getByTestId('balances-list')
@@ -225,7 +235,9 @@ test('Suggested reimbursements minimized', async ({ page }) => {
   })
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
   await navigateToTab(page, 'Balances')
+  await page.waitForLoadState('networkidle')
 
   // Verify suggested reimbursements section exists
   const reimbursementsHeading = page.getByRole('heading', {
@@ -261,6 +273,7 @@ test('Create reimbursement expense', async ({ page }) => {
   })
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
 
   // Now create a reimbursement expense directly
   const createExpenseLink = page.getByRole('link', { name: 'Create expense' })
@@ -312,6 +325,7 @@ test('Reimbursement in expenses', async ({ page }) => {
   })
 
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
 
   // Verify expense appears
   await expect(page.getByTestId(`expense-item-${regularExpense}`)).toBeVisible()
@@ -324,11 +338,14 @@ test('Reimbursement in expenses', async ({ page }) => {
     isReimbursement: true,
   })
 
-
   await page.reload()
+  await page.waitForLoadState('networkidle')
   await page.goto(`/groups/${groupId}/expenses`)
+  await page.waitForLoadState('networkidle')
 
   // Verify both expenses appear
   await expect(page.getByTestId(`expense-item-${regularExpense}`)).toBeVisible()
-  await expect(page.getByTestId(`expense-item-${reimbursementExpense}`)).toBeVisible()
+  await expect(
+    page.getByTestId(`expense-item-${reimbursementExpense}`),
+  ).toBeVisible()
 })
