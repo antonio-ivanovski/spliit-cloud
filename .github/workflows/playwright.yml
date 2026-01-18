@@ -53,7 +53,7 @@ jobs:
         run: npm run prisma-migrate
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run all Playwright tests
         run: npm run test-e2e --project=${{ matrix.browser }}
