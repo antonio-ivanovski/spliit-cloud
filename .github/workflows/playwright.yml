@@ -56,7 +56,7 @@ jobs:
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run all Playwright tests
-        run: npm run test-e2e --project=${{ matrix.browser }}
+        run: npx playwright test --project=${{ matrix.browser }}
         if: github.event_name == 'pull_request'
 
       - uses: actions/upload-artifact@v4
