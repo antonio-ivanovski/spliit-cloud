@@ -1,13 +1,17 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
     env:
       POSTGRES_PRISMA_URL: postgresql://postgres:1234@localhost
       POSTGRES_URL_NON_POOLING: postgresql://postgres:1234@localhost
@@ -44,15 +48,16 @@ jobs:
 
       - name: Generate Prisma client
         run: npm run prisma-generate
-      
+
       - name: Run Prisma migrations
         run: npm run prisma-migrate
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: npm run test-e2e
+      - name: Run all Playwright tests
+        run: npm run test-e2e --project=${{ matrix.browser }}
+        if: github.event_name == 'pull_request'
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
