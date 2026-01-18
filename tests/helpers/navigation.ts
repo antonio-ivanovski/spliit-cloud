@@ -25,9 +25,16 @@ const TAB_URL_PATTERNS: Record<GroupTab, RegExp> = {
 export async function navigateToGroup(
   page: Page,
   groupId: string,
+  suppressActiveUserModal = true,
 ): Promise<void> {
   await page.goto(`/groups/${groupId}/expenses`)
   await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
+
+  if (suppressActiveUserModal) {
+    await page.evaluate((gId) => {
+      localStorage.setItem(`${gId}-activeUser`, 'None')
+    }, groupId)
+  }
 }
 
 /**
@@ -38,4 +45,43 @@ export async function navigateToTab(page: Page, tab: GroupTab): Promise<void> {
   await tabButton.waitFor({ state: 'visible' })
   await tabButton.click()
   await page.waitForURL(TAB_URL_PATTERNS[tab])
+}
+
+/**
+ * Switches the application locale/language
+ */
+export async function switchLocale(
+  page: Page,
+  localeName: string,
+): Promise<void> {
+  // Click the current locale button to open menu
+  const localeButton = page
+    .getByRole('button')
+    .filter({ hasText: /English|Español|Français|Deutsch/ })
+  await localeButton.click()
+
+  // Select the desired locale
+  const localeOption = page.getByRole('menuitem', { name: localeName })
+  await localeOption.click()
+  await page.waitForLoadState('networkidle')
+}
+
+/**
+ * Sets the active user in group settings
+ */
+export async function setActiveUser(
+  page: Page,
+  userName: string,
+): Promise<void> {
+  await navigateToTab(page, 'Settings')
+
+  // Open the active user selector
+  const activeUserSelector = page.getByTestId('active-user-selector')
+  await activeUserSelector.click()
+
+  // Select the user
+  await page.getByRole('option', { name: userName }).click()
+
+  // Save the settings
+  await page.getByRole('button', { name: 'Save' }).click()
 }

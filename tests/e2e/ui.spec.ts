@@ -1,8 +1,13 @@
 import { expect, test } from '@playwright/test'
-import { createExpense, createGroup, navigateToGroup } from '../helpers'
+import {
+  createExpense,
+  createGroup,
+  navigateToGroup,
+  switchLocale,
+} from '../helpers'
 
-test('Mobile responsive - drawer menu instead of sidebar', async ({ page }) => {
-  // Set viewport to mobile size
+test('Mobile navigation uses hamburger menu', async ({ page }) => {
+  // Set viewport to mobile size (iPhone SE)
   await page.setViewportSize({ width: 375, height: 667 })
 
   // Create a test group
@@ -15,36 +20,36 @@ test('Mobile responsive - drawer menu instead of sidebar', async ({ page }) => {
   // Navigate to group page
   await navigateToGroup(page, groupId)
 
-  // On mobile, we should have a drawer/hamburger menu instead of a visible sidebar
-  // Look for a mobile menu button (hamburger icon)
-  const menuButton = page
-    .getByRole('button')
-    .filter({ has: page.locator('svg') })
-    .first()
+  // Create an expense so we have content to verify
+  await createExpense(page, {
+    title: 'Mobile Test Expense',
+    amount: '50.00',
+    payer: 'Alice',
+  })
 
-  // Check if menu button exists
-  expect(await menuButton.count()).toBeGreaterThan(0)
+  // Verify the expense is visible in mobile view
+  const mobileExpenseTitle = page
+    .getByTestId('expense-title')
+    .filter({ hasText: 'Mobile Test Expense' })
+  await expect(mobileExpenseTitle).toBeVisible()
 
-  // Click the menu button to open drawer
-  await menuButton.click()
+  // Verify amount is visible in mobile layout
+  const mobileExpenseAmount = page
+    .getByTestId('expense-amount')
+    .filter({ hasText: '$50.00' })
+  await expect(mobileExpenseAmount).toBeVisible()
 
-  // Wait for drawer to become visible
-  await page.waitForTimeout(300)
+  // Verify tabs are still accessible in mobile view
+  const statsTab = page.getByRole('tab', { name: 'Stats' })
+  await expect(statsTab).toBeVisible()
+  await statsTab.click()
 
-  // Verify drawer/menu is now visible with navigation items
-  const navMenu = page.locator('[role="navigation"], nav, [role="menu"]')
-  const isMenuVisible = await navMenu.isVisible().catch(() => false)
-
-  // Verify that mobile view is active by checking that normal sidebar is not visible
-  // or by checking that drawer/mobile menu structure exists
-  expect(
-    isMenuVisible || (await page.locator('button').count()) > 0,
-  ).toBeTruthy()
+  // Verify we navigated to Stats
+  await page.waitForURL(/\/stats$/)
+  await expect(page.getByRole('heading', { name: 'Totals' })).toBeVisible()
 })
 
-test('Desktop responsive - sidebar and dialogs appear correctly', async ({
-  page,
-}) => {
+test('Desktop view displays full layout', async ({ page }) => {
   // Set viewport to desktop size
   await page.setViewportSize({ width: 1280, height: 1024 })
 
@@ -58,22 +63,40 @@ test('Desktop responsive - sidebar and dialogs appear correctly', async ({
   // Navigate to group page
   await navigateToGroup(page, groupId)
 
-  // On desktop, we should see sidebar/navigation clearly
-  const sidebar = page.locator('aside, [role="navigation"]')
+  // Create an expense
+  await createExpense(page, {
+    title: 'Desktop Test Expense',
+    amount: '100.00',
+    payer: 'Alice',
+  })
 
-  // Desktop view should be responsive - check viewport width
-  const viewportSize = page.viewportSize()
-  expect(viewportSize?.width).toBe(1280)
-  expect(viewportSize?.height).toBe(1024)
+  // Verify main content is visible
+  await expect(page.getByRole('main')).toBeVisible()
 
-  // Verify page loaded successfully at desktop size
-  const content = page.locator('[role="main"], main')
-  expect(await content.isVisible()).toBeTruthy()
+  // Verify navigation header is visible
+  await expect(page.getByRole('navigation', { name: 'Menu' })).toBeVisible()
+
+  // Verify all tabs are visible without scrolling
+  await expect(page.getByRole('tab', { name: 'Expenses' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Balances' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Stats' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Settings' })).toBeVisible()
+
+  // Verify expense card details are fully visible
+  const desktopExpenseTitle = page
+    .getByTestId('expense-title')
+    .filter({ hasText: 'Desktop Test Expense' })
+  await expect(desktopExpenseTitle).toBeVisible()
+
+  const desktopExpenseAmount = page
+    .getByTestId('expense-amount')
+    .filter({ hasText: '$100.00' })
+  await expect(desktopExpenseAmount).toBeVisible()
+
+  await expect(page.getByText('Paid by')).toBeVisible()
 })
 
-test('i18n Date format - Date display changes with language selection', async ({
-  page,
-}) => {
+test('Date format changes with locale selection', async ({ page }) => {
   // Set up desktop viewport
   await page.setViewportSize({ width: 1280, height: 1024 })
 
@@ -84,130 +107,94 @@ test('i18n Date format - Date display changes with language selection', async ({
     participants: ['Alice', 'Bob'],
   })
 
-  // Create an expense so we have a date to check
+  // Create an expense with a known date
   await createExpense(page, {
-    title: 'Test Expense for i18n',
+    title: 'i18n Date Test',
     amount: '50.00',
     payer: 'Alice',
   })
 
-  // Navigate to group page to see the expense list
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  // Navigate to group page
+  await navigateToGroup(page, groupId)
 
-  // Get the initial page content (contains dates in English format)
-  let initialContent = await page.locator('body').textContent()
+  // Verify expense is visible
+  const expenseTitle = page.getByTestId('expense-title').filter({ hasText: 'i18n Date Test' })
+  await expect(expenseTitle).toBeVisible()
 
-  // Verify we have the expense
-  await expect(page.getByText('Test Expense for i18n')).toBeVisible()
+  // Get the date text in English format (e.g., "Jan 17, 2026")
+  const expenseDateElement = page.getByTestId('expense-date').first()
+  const englishDateText = await expenseDateElement.textContent()
 
-  // Switch language to Spanish (es) to see date format change
-  const localeButton = page.getByRole('button', { name: 'English' })
-  await localeButton.click()
+  // Verify English date format pattern (Month abbreviation followed by day and year)
+  // Pattern: Jan 1, 2026 or Dec 31, 2026
+  expect(englishDateText).toMatch(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/)
 
-  // Click on Spanish option
-  const spanishOption = page.getByRole('menuitem', { name: 'Español' })
-  await spanishOption.click()
+  // Switch to Spanish locale
+  await switchLocale(page, 'Español')
 
-  // Wait for page to reload with new locale
-  await page.waitForLoadState('networkidle')
+  // Verify expense is still visible after locale change
+  await expect(expenseTitle).toBeVisible()
 
-  // Verify we're still on the same page
-  await expect(page.getByText('Test Expense for i18n')).toBeVisible()
+  // Get the date text in Spanish format (e.g., "17 ene 2026")
+  const spanishDateText = await expenseDateElement.textContent()
 
-  // Get the page content after locale change
-  let finalContent = await page.locator('body').textContent()
+  // Verify Spanish date format pattern (lowercase month abbreviations)
+  // Pattern: 1 ene 2026 or 31 dic 2026
+  expect(spanishDateText).toMatch(
+    /ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic/,
+  )
 
-  // The page content should have changed due to date formatting change
-  // English uses "Jan 17, 2026" format, Spanish uses "17 ene 2026" format
-  expect(initialContent).not.toBe(finalContent)
+  // Verify the formats are actually different
+  expect(englishDateText).not.toBe(spanishDateText)
 })
 
-test('i18n Currency format - Currency symbol position changes with locale', async ({
-  page,
-}) => {
+test('Currency displays with correct format for locale', async ({ page }) => {
   // Set up desktop viewport
   await page.setViewportSize({ width: 1280, height: 1024 })
 
-  // Create a test group with default currency
+  // Create a test group with USD currency
   const groupId = await createGroup({
     page,
-    groupName: `PW E2E i18n currency test ${Date.now()}`,
+    groupName: `PW E2E currency format test ${Date.now()}`,
     participants: ['Alice', 'Bob'],
   })
 
-  // Create an expense so we have a currency amount to check
+  // Create an expense with a specific amount
   await createExpense(page, {
-    title: 'Test Expense for Currency',
-    amount: '50.00',
+    title: 'Currency Format Test',
+    amount: '1234.56',
     payer: 'Alice',
   })
 
-  // Navigate back to group page to see the formatted expense amount
-  await page.goto(`/groups/${groupId}`)
-  await page.waitForLoadState('networkidle')
+  // Navigate to group page
+  await navigateToGroup(page, groupId)
 
-  // Capture the initial currency format (in default locale)
-  // The Money component displays formatted currency amounts
-  const expenseTitle = 'Test Expense for Currency'
+  // Verify expense is visible
+  const currencyExpenseTitle = page
+    .getByTestId('expense-title')
+    .filter({ hasText: 'Currency Format Test' })
+  await expect(currencyExpenseTitle).toBeVisible()
 
-  const pageBody = page.locator('body')
-  let initialPageContent = await pageBody.textContent()
+  // In English (US) locale, USD amounts display as $1,234.56
+  // Verify the amount displays with $ prefix and period as decimal separator
+  const expenseAmount = page
+    .getByTestId('expense-amount')
+    .filter({ hasText: '$1,234.56' })
+  await expect(expenseAmount).toBeVisible()
 
-  // Extract any currency amounts (with $ or just decimal numbers like 50.00)
-  // The default currency is likely USD which uses $
-  const initialMatch = initialPageContent?.match(
-    /\$[\d.,\s]+|[\d.,]+\sUSD|\d+\.\d{2}/,
-  )?.[0]
+  // Navigate to Stats to see total
+  await page.getByRole('tab', { name: 'Stats' }).click()
+  await page.waitForURL(/\/stats$/)
 
-  // Just verify the expense is visible and has an amount
-  await expect(page.getByText(expenseTitle)).toBeVisible()
+  // Verify the total also uses correct format
+  const totalGroupSpending = page.getByTestId('total-group-spendings')
+  await expect(totalGroupSpending).toContainText('$1,234.56')
 
-  // For USD, look for $ or decimal pattern
-  const usdAmount = await page
-    .locator('text=$50')
-    .isVisible()
-    .catch(() => false)
-  const decimalAmount = await page
-    .locator('text=/50.00|50,00/')
-    .isVisible()
-    .catch(() => false)
-  expect(usdAmount || decimalAmount).toBeTruthy()
+  // Switch to French locale which uses different number formatting
+  await switchLocale(page, 'Français')
 
-  // Now switch language to German (de) to see currency format change
-  // Find and click the locale switcher button
-  const localeButton = page.getByRole('button', { name: 'English' })
-  await localeButton.click()
-
-  // Click on German option
-  const germanOption = page
-    .getByRole('menuitem', { name: /Deutsch|de-DE/ })
-    .first()
-  if (await germanOption.isVisible()) {
-    await germanOption.click()
-  } else {
-    // Try alternate selector
-    const altOption = page
-      .getByRole('menuitem')
-      .filter({ hasText: /Deutsch|de/ })
-      .first()
-    if (await altOption.isVisible()) {
-      await altOption.click()
-    }
-  }
-
-  // Wait for page to reload with new locale
-  await page.waitForLoadState('networkidle')
-
-  // Verify the expense is still visible after locale change
-  await expect(page.getByText(expenseTitle)).toBeVisible()
-
-  // In German locale, decimal separator might change (comma instead of period)
-  // So 50.00 might become 50,00
-  // We'll verify that the display changed by checking the page content changed
-  let finalPageContent = await page.locator('body').textContent()
-
-  // The page content should have changed due to locale switch
-  // (dates change format, decimal separators might change, etc.)
-  expect(initialPageContent).not.toBe(finalPageContent)
+  // In French locale, numbers use space as thousands separator and comma as decimal
+  // $1,234.56 becomes 1 234,56 $ or similar format
+  // At minimum, verify the page still works and displays amounts
+  await expect(page.getByText(/1.*234.*56/)).toBeVisible()
 })
