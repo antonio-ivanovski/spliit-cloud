@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Generate Prisma client
-        run: npm prisma-generate
+        run: npm run prisma-generate
 
       - name: Check TypeScript types
         run: npm run check-types
