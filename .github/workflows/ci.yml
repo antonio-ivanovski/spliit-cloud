@@ -29,11 +29,51 @@ jobs:
       - name: Check TypeScript types
         run: npm run check-types
 
-      - name: Unit tests
-        run: npm run test
-
       - name: Check ESLint
         run: npm run lint
 
       - name: Check Prettier formatting
         run: npm run check-formatting
+  test:
+    needs: checks
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_PRISMA_URL: postgresql://postgres:1234@localhost
+      POSTGRES_URL_NON_POOLING: postgresql://postgres:1234@localhost
+      NEXT_PUBLIC_DEFAULT_CURRENCY_CODE: USD
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        # Wait for postgres to be ready
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run prisma-generate
+
+      - name: Run Prisma migrations
+        run: npm run prisma-migrate
+
+      - name: Run tests
+        run: npm run test
