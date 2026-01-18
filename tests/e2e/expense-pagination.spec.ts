@@ -157,7 +157,8 @@ test.describe('Expense List Pagination', () => {
     await navigateToGroup(page, groupId)
 
     // Should show empty state or "create first" message
-    await expect(page.getByText(/no expenses|create/i)).toBeVisible()
+    await expect(page.getByText('Here are the expenses that you created for your group')).toBeVisible()
+    await expect(page.getByText('Your group doesn’t contain any expense yet. Create the first one')).toBeVisible()
   })
 
   test('loading indicator appears during pagination', async ({ page }) => {
