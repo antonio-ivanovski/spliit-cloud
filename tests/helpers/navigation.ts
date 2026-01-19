@@ -83,5 +83,11 @@ export async function setActiveUser(
   await page.getByRole('option', { name: userName }).click()
 
   // Save the settings
-  await page.getByRole('button', { name: 'Save' }).click()
+  await clickSave(page)
+}
+
+export async function clickSave(page: Page): Promise<void> {
+    await page.getByRole('button', { name: 'Save' }).click()
+    await expect(page.getByRole('main').locator('div').filter({ hasText: 'Saving…' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled()
 }
