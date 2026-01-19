@@ -141,16 +141,35 @@ Optional features controlled via environment variables:
 
 ### Testing
 
-- Jest is configured for unit tests
-- Write tests in `*.test.ts` or `*.test.tsx` files
-- React Testing Library is available for component testing
-- Mocking with `jest-mock-extended` for type-safe mocks
+The project has three layers of testing: unit tests, integration tests (via tRPC API), and end-to-end tests.
 
-### Testing E2e
+#### Unit Tests (Jest)
 
-- Playwright is set up for end-to-end tests
-- Tests are in the `tests/` directory
-- Run with `npm test-e2e` 
+- Run unit tests: `npm test` (or `npm test -- --watch` for watch mode)
+- Run specific test file: `npm test -- path/to/file.test.ts`
+- Tests located in `src/**/*.test.ts` files alongside implementation
+- Primary focus: Testing utility functions and business logic (e.g., `balances.test.ts`, `totals.test.ts`, `currency.test.ts`)
+- Uses Jest with Node environment (configured in `jest.config.ts`)
+- Type-safe mocking available via `jest-mock-extended`
+- Follow existing patterns: create test data factories (e.g., `makeExpense()` helper) for cleaner tests
+
+#### End-to-End Tests (Playwright)
+
+- Run E2E tests: `npm run test-e2e`
+- Tests located in `tests/e2e/*.spec.ts` and `tests/*.spec.ts`
+- Test helpers organized in `tests/helpers/` for reusability (form actions, navigation, group/expense creation)
+- **Test stability patterns**:
+  - Use `page.waitForLoadState()` after navigation to avoid race conditions
+  - Use `page.waitForURL()` with regex patterns after form submissions
+  - Use `createGroupViaAPI()` instead of UI flows to speed up test setup
+  - Configure `fullyParallel: false` in playwright.config.ts to prevent database conflicts
+- Playwright configuration:
+  - Runs against local dev server (`npm run dev` started automatically via `webServer` config)
+  - Tests run across Chromium, Firefox, and WebKit browsers
+  - Uses `json` reporter when running in code agents (detected via `CLAUDE_CODE` or `OPENCODE` env vars)
+- Common patterns:
+  - Use test helpers like `createExpense()`, `navigateToExpenseCreate()` for consistency
+  - Use `randomId()` to generate unique group/expense names
 
 ## Key Implementation Details
 
