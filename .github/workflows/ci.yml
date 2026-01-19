@@ -8,7 +8,7 @@ on:
 
 jobs:
   checks:
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2
     env:
       POSTGRES_PRISMA_URL: postgresql://postgres:1234@localhost
       POSTGRES_URL_NON_POOLING: postgresql://postgres:1234@localhost
