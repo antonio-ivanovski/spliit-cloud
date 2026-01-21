@@ -7,6 +7,7 @@ import {
   RecurringExpenseLink,
 } from '@prisma/client'
 import { nanoid } from 'nanoid'
+import { emitEvent } from './events'
 import { calculateNextDate } from './recurring-expenses'
 
 export function randomId(size?: number) {
@@ -428,7 +429,7 @@ export async function logActivity(
   activityType: ActivityType,
   extra?: { participantId?: string; expenseId?: string; data?: string },
 ) {
-  return prisma.activity.create({
+  const activity = await prisma.activity.create({
     data: {
       id: randomId(),
       groupId,
@@ -436,6 +437,19 @@ export async function logActivity(
       ...extra,
     },
   })
+
+  await emitEvent({
+    type: activityType,
+    groupId,
+    data: {
+      participantId: extra?.participantId,
+      expenseId: extra?.expenseId,
+      data: extra?.data,
+    },
+    timestamp: activity.time,
+  })
+
+  return activity
 }
 
 export async function createRecurringExpenses() {

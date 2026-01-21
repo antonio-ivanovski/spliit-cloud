@@ -52,7 +52,7 @@ Discrete feature modules with internal extensibility:
   - `prisma/schema.prisma` - New models for sync users, sessions, webhooks, notification subscriptions
   - `src/app/api/auth/` - New auth routes (magic link, OAuth)
   - `src/app/settings/` - New settings pages for sync
-  - `src/app/groups/[groupId]/` - New pages for notifications/webhooks
+  - `src/app/groups/[groupId]/` - Group settings sections for notifications/webhooks (notifications below local settings)
   - `src/trpc/routers/` - New routers for sync, notifications, webhooks
   - `src/lib/plugins/` - New plugin module implementations
 - **Database**: New tables for auth and plugin configuration (non-breaking, additive)

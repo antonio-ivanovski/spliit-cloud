@@ -7,13 +7,18 @@ import {
   getStarredGroups,
 } from '@/app/groups/recent-groups-helpers'
 import { Button } from '@/components/ui/button'
+import {
+  subscribeToGroupSync,
+  triggerAutoSync,
+  useSyncStatus,
+} from '@/lib/sync-utils'
 import { getGroups } from '@/lib/api'
 import { trpc } from '@/trpc/client'
 import { AppRouterOutput } from '@/trpc/routers/_app'
-import { Loader2 } from 'lucide-react'
+import { Cloud, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { RecentGroupListCard } from './recent-group-list-card'
 
 export type RecentGroupsState =
@@ -63,7 +68,7 @@ function sortGroups({
 export function RecentGroupList() {
   const [state, setState] = useState<RecentGroupsState>({ status: 'pending' })
 
-  function loadGroups() {
+  const loadGroups = useCallback(() => {
     const groupsInStorage = getRecentGroups()
     const starredGroups = getStarredGroups()
     const archivedGroups = getArchivedGroups()
@@ -73,10 +78,17 @@ export function RecentGroupList() {
       starredGroups,
       archivedGroups,
     })
-  }
+  }, [])
 
   useEffect(() => {
     loadGroups()
+  }, [loadGroups])
+
+  useEffect(() => {
+    const unsubscribe = subscribeToGroupSync()
+    return () => {
+      unsubscribe()
+    }
   }, [])
 
   if (state.status === 'pending') return null
@@ -222,13 +234,35 @@ function GroupsPage({
   reload,
 }: PropsWithChildren<{ reload: () => void }>) {
   const t = useTranslations('Groups')
+  const { isAuthenticated, lastSyncAt } = useSyncStatus()
+  const isSyncEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_GROUP_SYNC?.toLowerCase() === 'true'
+  const syncLabel = lastSyncAt
+    ? t('syncStatus.lastSynced', {
+        time: new Intl.DateTimeFormat(undefined, {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        }).format(lastSyncAt),
+      })
+    : t('syncStatus.synced')
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <h1 className="font-bold text-2xl flex-1">
           <Link href="/groups">{t('myGroups')}</Link>
         </h1>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {isAuthenticated && isSyncEnabled && (
+            <>
+              <span className="inline-flex items-center gap-2 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground">
+                <Cloud className="h-3.5 w-3.5" />
+                {syncLabel}
+              </span>
+              <Button variant="secondary" size="sm" onClick={triggerAutoSync}>
+                {t('syncStatus.syncNow')}
+              </Button>
+            </>
+          )}
           <AddGroupByUrlButton reload={reload} />
           <Button asChild>
             <Link href="/groups/create">

@@ -1,60 +1,60 @@
 ## 1. Core Infrastructure
 
-- [ ] 1.1 Create event system (`src/lib/events.ts`) with event bus and handler registration
-- [ ] 1.2 Integrate event emission into `logActivity()` in `src/lib/api.ts`
-- [ ] 1.3 Add feature flags to `src/lib/featureFlags.ts` (ENABLE_GROUP_SYNC, ENABLE_NOTIFICATIONS, ENABLE_WEBHOOKS)
-- [ ] 1.4 Add encryption utility for secrets (`src/lib/crypto.ts`)
+- [x] 1.1 Create event system (`src/lib/events.ts`) with event bus and handler registration
+- [x] 1.2 Integrate event emission into `logActivity()` in `src/lib/api.ts`
+- [x] 1.3 Add feature flags to `src/lib/featureFlags.ts` (ENABLE_GROUP_SYNC, ENABLE_NOTIFICATIONS, ENABLE_WEBHOOKS)
+- [x] 1.4 Add encryption utility for secrets (`src/lib/crypto.ts`)
 
 ## 2. Database Schema
 
-- [ ] 2.1 Add `SyncUser` model to Prisma schema
-- [ ] 2.2 Add `SyncedGroup` model to Prisma schema
-- [ ] 2.3 Add `SyncSession` model to Prisma schema
-- [ ] 2.4 Add `MagicLinkToken` model to Prisma schema
+- [x] 2.1 Add `SyncUser` model to Prisma schema
+- [x] 2.2 Add `SyncedGroup` model to Prisma schema
+- [x] 2.3 Add `SyncSession` model to Prisma schema
+- [x] 2.4 Add `MagicLinkToken` model to Prisma schema
 - [ ] 2.5 Add `NotificationSubscription` model to Prisma schema
 - [ ] 2.6 Add `Webhook` model to Prisma schema
 - [ ] 2.7 Create and run database migration
 
 ## 3. Sync Authentication
 
-- [ ] 3.1 Create auth utilities (`src/lib/auth/`)
-  - [ ] 3.1.1 Session token generation and validation
-  - [ ] 3.1.2 Magic link token generation
-  - [ ] 3.1.3 Email sending utility (nodemailer)
-- [ ] 3.2 Implement magic link auth routes
-  - [ ] 3.2.1 `POST /api/auth/magic-link` - Request magic link
-  - [ ] 3.2.2 `GET /api/auth/magic-link/verify` - Verify and create session
-- [ ] 3.3 Implement OAuth routes (optional providers)
-  - [ ] 3.3.1 `GET /api/auth/oauth/google` - Initiate Google OAuth
-  - [ ] 3.3.2 `GET /api/auth/oauth/google/callback` - Handle callback
-  - [ ] 3.3.3 `GET /api/auth/oauth/github` - Initiate GitHub OAuth
-  - [ ] 3.3.4 `GET /api/auth/oauth/github/callback` - Handle callback
-- [ ] 3.4 Implement session management routes
-  - [ ] 3.4.1 `POST /api/auth/logout` - Logout current session
-  - [ ] 3.4.2 `POST /api/auth/logout-all` - Logout all sessions
-  - [ ] 3.4.3 `DELETE /api/auth/account` - Delete account
-- [ ] 3.5 Create auth context/hook for client (`src/lib/auth/use-sync-auth.ts`)
-- [ ] 3.6 Write unit tests for auth utilities
+- [x] 3.1 Create auth utilities (`src/lib/auth/`)
+  - [x] 3.1.1 Session token generation and validation
+  - [x] 3.1.2 Magic link token generation
+  - [x] 3.1.3 Email sending utility (nodemailer)
+- [x] 3.2 Implement magic link auth routes
+  - [x] 3.2.1 `POST /api/auth/magic-link` - Request magic link
+  - [x] 3.2.2 `GET /api/auth/magic-link/verify` - Verify and create session
+- [x] 3.3 Implement OAuth routes (optional providers)
+  - [x] 3.3.1 `GET /api/auth/oauth/google` - Initiate Google OAuth
+  - [x] 3.3.2 `GET /api/auth/oauth/google/callback` - Handle callback
+  - [x] 3.3.3 `GET /api/auth/oauth/github` - Initiate GitHub OAuth
+  - [x] 3.3.4 `GET /api/auth/oauth/github/callback` - Handle callback
+- [x] 3.4 Implement session management routes
+  - [x] 3.4.1 `POST /api/auth/logout` - Logout current session
+  - [x] 3.4.2 `POST /api/auth/logout-all` - Logout all sessions
+  - [x] 3.4.3 `DELETE /api/auth/account` - Delete account
+- [x] 3.5 Create auth context/hook for client (`src/lib/auth/use-sync-auth.ts`)
+- [x] 3.6 Write unit tests for auth utilities
 - [ ] 3.7 Write E2E tests for magic link flow
 
 ## 4. Group Sync (MVP: Spliit Cloud)
 
-- [ ] 4.1 Create sync provider interface (`src/lib/plugins/sync/types.ts`)
-- [ ] 4.2 Implement Spliit Cloud provider (`src/lib/plugins/sync/spliit-cloud.ts`)
-- [ ] 4.3 Create tRPC sync router (`src/trpc/routers/sync/`)
-  - [ ] 4.3.1 `getStatus` procedure - Get sync status and user info
-  - [ ] 4.3.2 `push` procedure - Upload local groups
-  - [ ] 4.3.3 `pull` procedure - Download groups
-  - [ ] 4.3.4 `disconnect` procedure - Logout
-- [ ] 4.4 Create sync settings UI (`src/app/settings/sync/`)
-  - [ ] 4.4.1 Auth form (email input, OAuth buttons)
-  - [ ] 4.4.2 Connected state with sync controls
-  - [ ] 4.4.3 Account management (logout, delete)
-- [ ] 4.5 Add sync indicator to groups page header
-- [ ] 4.6 Integrate sync with recent-groups-helpers.ts
-- [ ] 4.7 Write unit tests for sync logic
+- [x] 4.1 Create sync provider interface (`src/lib/plugins/sync/types.ts`)
+- [x] 4.2 Implement Spliit Cloud provider (`src/lib/plugins/sync/spliit-cloud.ts`)
+- [x] 4.3 Create tRPC sync router (`src/trpc/routers/sync/`)
+  - [x] 4.3.1 `getStatus` procedure - Get sync status and user info
+  - [x] 4.3.2 `push` procedure - Upload local groups
+  - [x] 4.3.3 `pull` procedure - Download groups
+  - [x] 4.3.4 `disconnect` procedure - Logout
+- [x] 4.4 Create sync settings UI (`src/app/settings/sync/`)
+  - [x] 4.4.1 Auth form (email input, OAuth buttons)
+  - [x] 4.4.2 Connected state with sync controls
+  - [x] 4.4.3 Account management (logout, delete)
+- [x] 4.5 Add sync indicator to groups page header
+- [x] 4.6 Integrate sync with recent-groups-helpers.ts
+- [x] 4.7 Write unit tests for sync logic
 - [ ] 4.8 Write E2E tests for sync flow
-- [ ] 4.9 Document SMTP setup in README
+- [x] 4.9 Document SMTP setup in README
 
 ## 5. Notifications (MVP: Telegram)
 
@@ -109,12 +109,13 @@
 ## 7. Integration & Polish
 
 - [ ] 7.1 Add settings navigation to group page (notifications, webhooks tabs)
-- [ ] 7.2 Add global settings page for sync (`src/app/settings/`)
-- [ ] 7.3 Add i18n messages for all new UI strings
-- [ ] 7.4 Update environment variable documentation
-- [ ] 7.5 Add feature flag checks to all new UI components
-- [ ] 7.6 Manual QA testing for all flows
-- [ ] 7.7 Update AGENTS.md docs with new architecture
+- [ ] 7.2 Add Settings link to main navbar with gear icon
+- [ ] 7.3 Create unified Settings page at `/settings` consolidating sync settings
+- [ ] 7.4 Add i18n messages for all new UI strings
+- [x] 7.5 Update environment variable documentation
+- [x] 7.6 Add feature flag checks to all new UI components
+- [ ] 7.7 Manual QA testing for all flows
+- [ ] 7.8 Update AGENTS.md docs with new architecture
 
 ## Dependencies
 

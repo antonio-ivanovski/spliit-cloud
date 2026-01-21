@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { env } from '@/lib/env'
+import { getRuntimeFeatureFlags } from '@/lib/featureFlags'
 import { TRPCProvider } from '@/trpc/client'
 import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider, useTranslations } from 'next-intl'
@@ -13,6 +14,7 @@ import { getLocale, getMessages } from 'next-intl/server'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { Settings } from 'lucide-react'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -63,7 +65,13 @@ export const viewport: Viewport = {
   themeColor: '#047857',
 }
 
-function Content({ children }: { children: React.ReactNode }) {
+function Content({
+  children,
+  showSettings,
+}: {
+  children: React.ReactNode
+  showSettings: boolean
+}) {
   const t = useTranslations()
   return (
     <TRPCProvider>
@@ -82,7 +90,7 @@ function Content({ children }: { children: React.ReactNode }) {
             />
           </h1>
         </Link>
-        <div role="navigation" aria-label="Menu" className="flex">
+        <nav aria-label="Menu" className="flex">
           <ul className="flex items-center text-sm">
             <li>
               <Button
@@ -94,6 +102,16 @@ function Content({ children }: { children: React.ReactNode }) {
                 <Link href="/groups">{t('Header.groups')}</Link>
               </Button>
             </li>
+            {showSettings ? (
+              <li>
+                <Button variant="ghost" size="icon" asChild className="text-primary">
+                  <Link href="/settings">
+                    <Settings className="h-4 w-4" />
+                    <span className="sr-only">{t('Settings.title')}</span>
+                  </Link>
+                </Button>
+              </li>
+            ) : null}
             <li>
               <LocaleSwitcher />
             </li>
@@ -101,7 +119,7 @@ function Content({ children }: { children: React.ReactNode }) {
               <ThemeToggle />
             </li>
           </ul>
-        </div>
+        </nav>
       </header>
 
       <div className="pt-16 flex-1 flex flex-col">{children}</div>
@@ -152,8 +170,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const locale = await getLocale()
-  const messages = await getMessages()
+  const [locale, messages, flags] = await Promise.all([
+    getLocale(),
+    getMessages(),
+    getRuntimeFeatureFlags(),
+  ])
+  const showSettings =
+    flags.enableGroupSync || flags.enableNotifications || flags.enableWebhooks
   return (
     <html lang={locale} suppressHydrationWarning>
       <ApplePwaSplash icon="/logo-with-text.png" color="#027756" />
@@ -168,7 +191,7 @@ export default async function RootLayout({
             <Suspense>
               <ProgressBar />
             </Suspense>
-            <Content>{children}</Content>
+            <Content showSettings={showSettings}>{children}</Content>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

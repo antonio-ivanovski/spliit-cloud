@@ -69,6 +69,11 @@
       "undoAlt": "Undo group removal",
       "undo": "Undo"
     },
+    "syncStatus": {
+      "synced": "Synced",
+      "lastSynced": "Synced {time}",
+      "syncNow": "Sync now"
+    },
     "AddByURL": {
       "button": "Add by URL",
       "title": "Add a group by URL",
@@ -341,7 +346,26 @@
     "empty": "No group information yet."
   },
   "Settings": {
-    "title": "Settings"
+    "title": "Settings",
+    "description": "Manage sync, notifications, and integrations for your account.",
+    "groupSync": {
+      "title": "Group sync",
+      "description": "Keep your recent groups available across devices.",
+      "loading": "Loading sync settings..."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Choose when Spliit should send you updates."
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "description": "Connect Spliit to external automations."
+    },
+    "comingSoon": "Coming soon.",
+    "empty": {
+      "title": "No settings available",
+      "description": "Enable sync, notifications, or webhooks to see options here."
+    }
   },
   "Share": {
     "title": "Share",

@@ -69,6 +69,11 @@
       "undoAlt": "Deshacer la eliminación del grupo",
       "undo": "Deshacer"
     },
+    "syncStatus": {
+      "synced": "Sincronizado",
+      "lastSynced": "Sincronizado {time}",
+      "syncNow": "Sincronizar ahora"
+    },
     "AddByURL": {
       "button": "Añadir mediante url",
       "title": "Añadir grupo mediante url",

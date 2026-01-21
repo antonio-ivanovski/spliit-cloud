@@ -312,6 +312,45 @@ TELEGRAM_BOT_TOKEN=...
 
 **Rationale**: Self-hosters can enable only what they need. Providers without credentials are automatically unavailable.
 
+### D8: Settings Navigation Architecture
+
+**Decision**: Add a global Settings page accessible from the main navbar, consolidating sync settings (and future notifications/webhooks) in one place.
+
+```
+Navigation Structure:
+┌─────────────────────────────────────────────────────────┐
+│ [Logo]                      [Groups] [Settings] [🌐] [🌙]│
+└─────────────────────────────────────────────────────────┘
+
+Settings Page Structure:
+/settings
+├── Group Sync section (when ENABLE_GROUP_SYNC=true)
+│   ├── Not connected: Login form (email + OAuth)
+│   └── Connected: Sync controls, account management
+├── Notifications section (future, when enabled)
+└── Webhooks section (future, when enabled)
+```
+
+**Rationale**:
+
+- Single Settings page is simpler than separate pages per feature
+- Navbar icon provides consistent access from anywhere in app
+- Settings link hidden when no features are enabled (no empty state)
+- Follows established patterns (locale switcher, theme toggle in navbar)
+
+**UI Implementation**:
+
+- Settings icon in navbar (gear/cog icon)
+- Full page at `/settings` (not a modal/drawer) for discoverability
+- Sections use Card components for visual grouping
+- Feature-flagged sections hidden when flag is false
+
+**Alternatives considered**:
+
+- Dropdown menu: Too cramped for sync login form
+- Separate pages per feature: Fragmented UX, harder to discover
+- User avatar/menu: No user concept in core app
+
 ## Data Model
 
 ### New Tables

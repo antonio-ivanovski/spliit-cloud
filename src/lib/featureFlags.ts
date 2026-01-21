@@ -7,6 +7,9 @@ export async function getRuntimeFeatureFlags() {
     enableExpenseDocuments: env.NEXT_PUBLIC_ENABLE_EXPENSE_DOCUMENTS,
     enableReceiptExtract: env.NEXT_PUBLIC_ENABLE_RECEIPT_EXTRACT,
     enableCategoryExtract: env.NEXT_PUBLIC_ENABLE_CATEGORY_EXTRACT,
+    enableGroupSync: env.NEXT_PUBLIC_ENABLE_GROUP_SYNC,
+    enableNotifications: env.NEXT_PUBLIC_ENABLE_NOTIFICATIONS,
+    enableWebhooks: env.NEXT_PUBLIC_ENABLE_WEBHOOKS,
   }
 }
 

@@ -131,3 +131,26 @@ The system SHALL manage authentication sessions for sync.
 - **WHEN** user requests "Sign out everywhere"
 - **THEN** the system invalidates all session tokens for that account
 - **AND** other devices must re-authenticate on next sync attempt
+
+### Requirement: Global Settings Navigation
+
+The system SHALL provide accessible navigation to global settings from the main navbar.
+
+#### Scenario: Access settings from navbar
+
+- **WHEN** user is on any page in the application
+- **THEN** the navbar displays a Settings icon/button
+- **AND** clicking it opens the Settings page with sync options
+
+#### Scenario: Settings page structure
+
+- **WHEN** user opens Settings page
+- **THEN** the page displays organized settings sections
+- **AND** Group Sync settings are prominently displayed (when feature flag enabled)
+- **AND** the page follows the app's existing design language
+
+#### Scenario: Settings hidden when no features enabled
+
+- **WHEN** no settings-related feature flags are enabled (sync, notifications, webhooks)
+- **THEN** the Settings link is hidden from the navbar
+- **AND** direct URL access shows appropriate empty state or redirect

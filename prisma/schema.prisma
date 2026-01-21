@@ -131,3 +131,52 @@ enum ActivityType {
   UPDATE_EXPENSE
   DELETE_EXPENSE
 }
+
+model SyncUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  // OAuth identities (optional)
+  googleId String? @unique
+  githubId String? @unique
+
+  // Synced data
+  syncedGroups SyncedGroup[]
+  sessions     SyncSession[]
+}
+
+model SyncedGroup {
+  id        String   @id @default(cuid())
+  userId    String
+  user      SyncUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupId   String
+  groupName String
+  addedAt   DateTime @default(now())
+
+  @@unique([userId, groupId])
+  @@index([userId])
+}
+
+model SyncSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      SyncUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
+model MagicLinkToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+}

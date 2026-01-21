@@ -3,10 +3,12 @@
 ### Requirement: Notification Subscriptions
 
 The system SHALL allow users to subscribe to notifications for group activity events.
+Subscriptions SHALL be linked to a participant identity in the group.
 
 #### Scenario: Subscribe to group notifications via Telegram (hosted Spliit)
 
-- **WHEN** user opens notification settings for a group on hosted Spliit
+- **WHEN** user opens group settings for a group on hosted Spliit
+- **AND** sees the notifications card below the local settings card
 - **AND** clicks "Connect Telegram"
 - **THEN** the system displays a deep link button to the official Spliit Telegram bot
 - **AND** when user clicks, Telegram opens with the bot
@@ -14,11 +16,12 @@ The system SHALL allow users to subscribe to notifications for group activity ev
 - **AND** the bot automatically captures user's chat ID via the deep link payload
 - **AND** the system links the Telegram chat to the group subscription
 - **AND** user selects events to receive in Spliit UI
+- **AND** the subscription is linked to the selected participant
 - **AND** future matching events trigger Telegram messages
 
 #### Scenario: Subscribe to group notifications via Telegram (self-hosted)
 
-- **WHEN** user opens notification settings for a group on self-hosted instance
+- **WHEN** user opens group settings for a group on self-hosted instance
 - **AND** self-hoster has configured their own Telegram bot token
 - **AND** clicks "Connect Telegram"
 - **THEN** the system displays a deep link button to the configured bot
@@ -29,6 +32,12 @@ The system SHALL allow users to subscribe to notifications for group activity ev
 - **WHEN** user removes a notification subscription
 - **THEN** the system deletes the subscription
 - **AND** stops sending notifications for that group/channel combination
+
+#### Scenario: Skip notifications for triggering participant
+
+- **WHEN** a notification subscription is linked to a participant
+- **AND** that participant triggers a subscribed event
+- **THEN** the system does not deliver a notification to that subscription
 
 #### Scenario: Test notification delivery
 
@@ -71,40 +80,44 @@ The system SHALL use Telegram deep links to enable frictionless user onboarding 
 
 ### Requirement: Notification Event Types
 
-The system SHALL emit notifications for the following event types when subscribed.
+The system SHALL dispatch real-time notifications for the following event types when subscribed.
 
 #### Scenario: Notify on expense created
 
 - **WHEN** a new expense is created in a group
 - **AND** a subscription exists for CREATE_EXPENSE event
 - **THEN** the system sends notification with expense title, amount, and payer
+- **AND** the notification is dispatched immediately
 
 #### Scenario: Notify on expense updated
 
 - **WHEN** an expense is modified in a group
 - **AND** a subscription exists for UPDATE_EXPENSE event
 - **THEN** the system sends notification with expense title and change summary
+- **AND** the notification is dispatched immediately
 
 #### Scenario: Notify on expense deleted
 
 - **WHEN** an expense is deleted from a group
 - **AND** a subscription exists for DELETE_EXPENSE event
 - **THEN** the system sends notification with deleted expense title
+- **AND** the notification is dispatched immediately
 
 #### Scenario: Notify on group settings changed
 
 - **WHEN** group name, currency, or participants change
 - **AND** a subscription exists for UPDATE_GROUP event
 - **THEN** the system sends notification describing the change
+- **AND** the notification is dispatched immediately
 
 ### Requirement: Balance Reminder Notifications
 
-The system SHALL support scheduled balance reminder notifications.
+The system SHALL support scheduled balance reminder and overview notifications.
 
 #### Scenario: Configure balance reminder
 
 - **WHEN** user enables balance reminders for a subscription
-- **AND** specifies frequency (daily, weekly)
+- **AND** specifies frequency (daily, weekly, monthly)
 - **THEN** the system schedules periodic notifications
 
 #### Scenario: Send balance reminder

@@ -123,6 +123,52 @@ NEXT_PUBLIC_ENABLE_CATEGORY_EXTRACT=true
 OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
+### Group Sync (Optional)
+
+Enable cross-device group synchronization via Spliit Cloud.
+
+#### Required Environment Variables
+
+```env
+# Enable the feature
+NEXT_PUBLIC_ENABLE_GROUP_SYNC=true
+
+# SMTP for magic link emails (required)
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your-smtp-user
+SMTP_PASSWORD=your-smtp-password
+SMTP_FROM=noreply@yourdomain.com
+```
+
+#### Optional: OAuth Providers
+
+For "Continue with Google/GitHub" authentication:
+
+```env
+# Google OAuth (optional)
+GOOGLE_OAUTH_CLIENT_ID=xxx
+GOOGLE_OAUTH_CLIENT_SECRET=xxx
+
+# GitHub OAuth (optional)
+GITHUB_OAUTH_CLIENT_ID=xxx
+GITHUB_OAUTH_CLIENT_SECRET=xxx
+```
+
+#### SMTP Provider Recommendations
+
+- **Resend** - Easy setup, generous free tier
+- **SendGrid** - Popular, reliable
+- **Amazon SES** - Cost-effective for high volume
+- **Mailgun** - Good developer experience
+
+#### OAuth Setup
+
+- **Google**: Create credentials at https://console.cloud.google.com
+  - Set redirect URI to `{YOUR_DOMAIN}/api/auth/oauth/google/callback`
+- **GitHub**: Create OAuth App at https://github.com/settings/developers
+  - Set callback URL to `{YOUR_DOMAIN}/api/auth/oauth/github/callback`
+
 ## License
 
 MIT, see [LICENSE](./LICENSE).
