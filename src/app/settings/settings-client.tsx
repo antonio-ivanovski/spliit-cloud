@@ -70,7 +70,6 @@ export function SettingsClient({
                 onLogout={logout}
                 onLogoutAll={logoutAll}
                 onDeleteAccount={deleteAccount}
-                variant="compact"
               />
             )}
           </CardContent>

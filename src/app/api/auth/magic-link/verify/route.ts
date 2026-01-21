@@ -23,7 +23,7 @@ export async function GET(req: Request) {
       return Response.json({ error: 'Invalid or expired token', code: 'invalid_token' }, { status: 400 })
     }
 
-    const user = await (prisma as unknown as { syncUser: any }).syncUser.upsert({
+    const user = await prisma.syncUser.upsert({
       where: { email: tokenRecord.email },
       update: {},
       create: { email: tokenRecord.email },

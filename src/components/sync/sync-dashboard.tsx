@@ -170,83 +170,81 @@ export function SyncDashboard({
       })
     : 'Never'
 
-    return (
-      <div className="grid gap-4">
-        <div className="rounded-lg border bg-muted/30 p-4">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <UserCheck className="h-4 w-4 text-emerald-500" />
-            Connected
-          </div>
-          <div className="mt-2 text-sm text-muted-foreground">Signed in as</div>
-          <div className="text-sm font-medium">{user.email}</div>
+  return (
+    <div className="grid gap-4">
+      <div className="rounded-lg border bg-muted/30 p-4">
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <UserCheck className="h-4 w-4 text-emerald-500" />
+          Connected
         </div>
+        <div className="mt-2 text-sm text-muted-foreground">Signed in as</div>
+        <div className="text-sm font-medium">{user.email}</div>
+      </div>
 
-        <div className="rounded-lg border bg-card p-4 space-y-3">
-          <div className="text-sm font-medium">Sync controls</div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={handleSync} disabled={syncing || !sessionToken}>
-              {syncing ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <RefreshCw className="mr-2 h-4 w-4" />
-              )}
-              Sync now
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => statusQuery.refetch()}
-              disabled={statusQuery.isFetching}
-            >
-              Refresh status
-            </Button>
-          </div>
-          <div className="grid gap-1 text-sm text-muted-foreground">
-            <div>Last sync: {lastSyncLabel}</div>
-            <div>
-              Synced groups: {syncStatus.syncedCount ?? getRecentGroups().length}
-            </div>
-          </div>
+      <div className="space-y-3 rounded-lg border bg-card p-4">
+        <div className="text-sm font-medium">Sync controls</div>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button onClick={handleSync} disabled={syncing || !sessionToken}>
+            {syncing ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="mr-2 h-4 w-4" />
+            )}
+            Sync now
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => statusQuery.refetch()}
+            disabled={statusQuery.isFetching}
+          >
+            Refresh status
+          </Button>
         </div>
-
-        <div className="rounded-lg border bg-card p-4 space-y-3">
-          <div className="text-sm font-medium">Account</div>
-          <div className="flex flex-col gap-3">
-            <AsyncButton variant="outline" action={onLogout}>
-              Sign out
-            </AsyncButton>
-            <AsyncButton variant="secondary" action={onLogoutAll}>
-              Sign out everywhere
-            </AsyncButton>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="destructive">Delete account</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogTitle>Delete sync account?</DialogTitle>
-                <DialogDescription>
-                  This removes your sync account and signs you out on every device.
-                  Synced groups will be deleted from the cloud.
-                </DialogDescription>
-                <DialogFooter className="flex flex-col gap-2">
-                  <AsyncButton
-                    variant="destructive"
-                    loadingContent="Deleting..."
-                    action={async () => {
-                      await onDeleteAccount()
-                      setRecentGroups([])
-                      writeSyncStatus({})
-                    }}
-                  >
-                    Delete account
-                  </AsyncButton>
-                  <DialogClose asChild>
-                    <Button variant="secondary">Cancel</Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
+        <div className="grid gap-1 text-sm text-muted-foreground">
+          <div>Last sync: {lastSyncLabel}</div>
+          <div>Synced groups: {syncStatus.syncedCount ?? getRecentGroups().length}</div>
         </div>
       </div>
-    )
+
+      <div className="space-y-3 rounded-lg border bg-card p-4">
+        <div className="text-sm font-medium">Account</div>
+        <div className="flex flex-col gap-3">
+          <AsyncButton variant="outline" action={onLogout}>
+            Sign out
+          </AsyncButton>
+          <AsyncButton variant="secondary" action={onLogoutAll}>
+            Sign out everywhere
+          </AsyncButton>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="destructive">Delete account</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Delete sync account?</DialogTitle>
+              <DialogDescription>
+                This removes your sync account and signs you out on every device. Synced
+                groups will be deleted from the cloud.
+              </DialogDescription>
+              <DialogFooter className="flex flex-col gap-2">
+                <AsyncButton
+                  variant="destructive"
+                  loadingContent="Deleting..."
+                  action={async () => {
+                    await onDeleteAccount()
+                    setRecentGroups([])
+                    writeSyncStatus({})
+                  }}
+                >
+                  Delete account
+                </AsyncButton>
+                <DialogClose asChild>
+                  <Button variant="secondary">Cancel</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+    </div>
+  )
 }

@@ -14,7 +14,6 @@ import { getLocale, getMessages } from 'next-intl/server'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { Settings } from 'lucide-react'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -104,11 +103,8 @@ function Content({
             </li>
             {showSettings ? (
               <li>
-                <Button variant="ghost" size="icon" asChild className="text-primary">
-                  <Link href="/settings">
-                    <Settings className="h-4 w-4" />
-                    <span className="sr-only">{t('Settings.title')}</span>
-                  </Link>
+                <Button variant="ghost" size="sm" asChild className="-my-3 text-primary">
+                  <Link href="/settings">Settings</Link>
                 </Button>
               </li>
             ) : null}

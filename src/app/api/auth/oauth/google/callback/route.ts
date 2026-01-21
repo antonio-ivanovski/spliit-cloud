@@ -60,27 +60,25 @@ const fetchGoogleUserInfo = async (accessToken: string) => {
   return (await response.json()) as GoogleUserInfo
 }
 
-const syncUserStore = (prisma as unknown as { syncUser: any }).syncUser
-
 const resolveSyncUser = async (email: string, googleId: string) => {
-  const existingByProvider = await syncUserStore.findUnique({
+  const existingByProvider = await prisma.syncUser.findUnique({
     where: { googleId },
   })
 
   if (existingByProvider) return existingByProvider
 
-  const existingByEmail = await syncUserStore.findUnique({
+  const existingByEmail = await prisma.syncUser.findUnique({
     where: { email },
   })
 
   if (existingByEmail) {
-    return syncUserStore.update({
+    return prisma.syncUser.update({
       where: { email },
       data: { googleId },
     })
   }
 
-  return syncUserStore.create({
+  return prisma.syncUser.create({
     data: { email, googleId },
   })
 }

@@ -55,9 +55,13 @@
 
 ## 5. Integration & Polish (Sync)
 
-- [ ] 5.1 Add Settings link to main navbar with gear icon
+- [x] 5.1 Add Settings link to main navbar with text-only label
 - [ ] 5.2 Create unified Settings page at `/settings` consolidating sync settings
 - [ ] 5.3 Add i18n messages for all new UI strings
 - [x] 5.4 Update environment variable documentation
 - [x] 5.5 Add feature flag checks to all new UI components
 - [ ] 5.6 Manual QA testing for sync flows
+
+## 6. Local Development / Testing
+
+- [x] 6.1 Add local mail testing service (writes to `.mail/`) and use it instead of SMTP in local testing

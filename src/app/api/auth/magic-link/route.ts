@@ -46,7 +46,7 @@ export async function POST(req: Request) {
 
     requestTracker.set(email, [...recentRequests, now])
 
-    await (prisma as unknown as { syncUser: any }).syncUser.upsert({
+    await prisma.syncUser.upsert({
       where: { email },
       update: {},
       create: { email },

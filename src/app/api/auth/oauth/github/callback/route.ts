@@ -92,27 +92,25 @@ const resolveGithubEmail = async (accessToken: string, userEmail?: string | null
   return emails.find((email) => email.primary)?.email ?? emails[0]?.email
 }
 
-const syncUserStore = (prisma as unknown as { syncUser: any }).syncUser
-
 const resolveSyncUser = async (email: string, githubId: string) => {
-  const existingByProvider = await syncUserStore.findUnique({
+  const existingByProvider = await prisma.syncUser.findUnique({
     where: { githubId },
   })
 
   if (existingByProvider) return existingByProvider
 
-  const existingByEmail = await syncUserStore.findUnique({
+  const existingByEmail = await prisma.syncUser.findUnique({
     where: { email },
   })
 
   if (existingByEmail) {
-    return syncUserStore.update({
+    return prisma.syncUser.update({
       where: { email },
       data: { githubId },
     })
   }
 
-  return syncUserStore.create({
+  return prisma.syncUser.create({
     data: { email, githubId },
   })
 }

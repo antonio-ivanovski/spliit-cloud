@@ -58,6 +58,7 @@ const envSchema = z
     SMTP_USER: z.string().optional(),
     SMTP_PASSWORD: z.string().optional(),
     SMTP_FROM: z.string().optional(),
+    MAIL_TRANSPORT: z.enum(['smtp', 'local']).optional(),
   })
   .superRefine((env, ctx) => {
     if (
@@ -84,6 +85,16 @@ const envSchema = z
         message:
           'If NEXT_PUBLIC_ENABLE_RECEIPT_EXTRACT or NEXT_PUBLIC_ENABLE_CATEGORY_EXTRACT is specified, then OPENAI_API_KEY must be specified too',
       })
+    }
+
+    if (env.MAIL_TRANSPORT === 'smtp') {
+      if (!env.SMTP_HOST || !env.SMTP_PORT || !env.SMTP_FROM) {
+        ctx.addIssue({
+          code: ZodIssueCode.custom,
+          message:
+            'If MAIL_TRANSPORT is set to smtp, then SMTP_HOST, SMTP_PORT, and SMTP_FROM must be specified',
+        })
+      }
     }
   })
 

@@ -10,6 +10,7 @@ This change adds an opt-in sync feature (Spliit Cloud) with lightweight authenti
 - Must remain self-hostable with minimal external dependencies
 - Feature flags control opt-in features
 - Privacy-first: user data only sent where user explicitly configures
+- Local development should work without configuring SMTP
 
 ## Goals / Non-Goals
 
@@ -44,6 +45,12 @@ OAuth flow:
 2. OAuth redirect -> callback with identity
 3. System links to existing account (if email matches) or creates new
 4. Session token stored in localStorage
+
+### D6: Local Mail Testing
+
+**Decision**: Provide a local mail transport for development/testing that writes outgoing emails to a local `.mail/` folder (gitignored), using the same `Mailer` interface as the SMTP implementation.
+
+Rationale: Keeps the project self-hostable while making local testing frictionless when SMTP isn't configured.
 
 ### D2: Sync Data Model
 

@@ -10,6 +10,7 @@ Spliit stores joined groups only in browser localStorage, so users lose access w
 - Add lightweight authentication for sync only (magic link email; optional Google/GitHub OAuth)
 - Add sync settings UI (connect/disconnect, push/pull, account management)
 - Add a small internal event bus (hooked into `logActivity()`) as a foundation for event-driven extensions (notifications/webhooks)
+- Add a local mail testing transport that writes outgoing emails to `.mail/` for local development/testing
 
 ## Impact
 
