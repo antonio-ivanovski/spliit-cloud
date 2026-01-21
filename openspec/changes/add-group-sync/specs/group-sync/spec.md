@@ -151,6 +151,6 @@ The system SHALL provide accessible navigation to global settings from the main 
 
 #### Scenario: Settings hidden when no features enabled
 
-- **WHEN** no settings-related feature flags are enabled (sync, notifications, webhooks)
+- **WHEN** no settings-related feature flags are enabled
 - **THEN** the Settings link is hidden from the navbar
 - **AND** direct URL access shows appropriate empty state or redirect
