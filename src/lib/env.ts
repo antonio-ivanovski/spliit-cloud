@@ -43,10 +43,6 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
-    NEXT_PUBLIC_ENABLE_WEBHOOKS: z.preprocess(
-      interpretEnvVarAsBool,
-      z.boolean().default(false),
-    ),
     GOOGLE_OAUTH_CLIENT_ID: z.string().optional(),
     GOOGLE_OAUTH_CLIENT_SECRET: z.string().optional(),
     GITHUB_OAUTH_CLIENT_ID: z.string().optional(),

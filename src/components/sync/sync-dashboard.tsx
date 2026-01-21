@@ -6,7 +6,6 @@ import {
 } from '@/app/groups/recent-groups-helpers'
 import { AsyncButton } from '@/components/async-button'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogClose,
@@ -69,7 +68,9 @@ export function SyncDashboard({
   const { getSessionToken } = useSyncAuth()
   const { toast } = useToast()
   const locale = useLocale()
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>(() => readSyncStatus())
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>(() =>
+    readSyncStatus(),
+  )
   const [syncing, setSyncing] = useState(false)
 
   const sessionToken = useMemo(() => getSessionToken(), [getSessionToken])
@@ -202,7 +203,9 @@ export function SyncDashboard({
         </div>
         <div className="grid gap-1 text-sm text-muted-foreground">
           <div>Last sync: {lastSyncLabel}</div>
-          <div>Synced groups: {syncStatus.syncedCount ?? getRecentGroups().length}</div>
+          <div>
+            Synced groups: {syncStatus.syncedCount ?? getRecentGroups().length}
+          </div>
         </div>
       </div>
 
@@ -222,8 +225,8 @@ export function SyncDashboard({
             <DialogContent>
               <DialogTitle>Delete sync account?</DialogTitle>
               <DialogDescription>
-                This removes your sync account and signs you out on every device. Synced
-                groups will be deleted from the cloud.
+                This removes your sync account and signs you out on every
+                device. Synced groups will be deleted from the cloud.
               </DialogDescription>
               <DialogFooter className="flex flex-col gap-2">
                 <AsyncButton

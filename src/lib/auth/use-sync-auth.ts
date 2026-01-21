@@ -79,7 +79,9 @@ export function useSyncAuth() {
     })
 
     if (!response.ok) {
-      const data = (await response.json().catch(() => null)) as { error?: string } | null
+      const data = (await response.json().catch(() => null)) as {
+        error?: string
+      } | null
       throw new Error(data?.error ?? 'Failed to request magic link')
     }
   }, [])

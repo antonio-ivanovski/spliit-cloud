@@ -7,7 +7,7 @@ export const resolveMailer = async (): Promise<Mailer> => {
     return localMailer
   }
   if (env.MAIL_TRANSPORT === 'smtp') {
-    return await import('@/lib/mail/smtp-mailer').then(m => m.smtpMailer)
+    return await import('@/lib/mail/smtp-mailer').then((m) => m.smtpMailer)
   }
 
   throw new Error(`Unsupported MAIL_TRANSPORT: ${env.MAIL_TRANSPORT}`)

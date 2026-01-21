@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useSyncAuth } from '@/lib/auth/use-sync-auth'
-import { Bell, Cloud, Webhook } from 'lucide-react'
+import { Bell, Cloud } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 type OAuthProviders = {
@@ -22,20 +22,18 @@ type SettingsClientProps = {
   oauthProviders: OAuthProviders
   enableGroupSync: boolean
   enableNotifications: boolean
-  enableWebhooks: boolean
 }
 
 export function SettingsClient({
   oauthProviders,
   enableGroupSync,
   enableNotifications,
-  enableWebhooks,
 }: SettingsClientProps) {
   const t = useTranslations('Settings')
   const { isAuthenticated, user, isLoading, logout, logoutAll, deleteAccount } =
     useSyncAuth()
 
-  if (!enableGroupSync && !enableNotifications && !enableWebhooks) {
+  if (!enableGroupSync && !enableNotifications) {
     return (
       <Card>
         <CardHeader>
@@ -84,21 +82,6 @@ export function SettingsClient({
               {t('notifications.title')}
             </CardTitle>
             <CardDescription>{t('notifications.description')}</CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            {t('comingSoon')}
-          </CardContent>
-        </Card>
-      ) : null}
-
-      {enableWebhooks ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Webhook className="h-4 w-4 text-emerald-500" />
-              {t('webhooks.title')}
-            </CardTitle>
-            <CardDescription>{t('webhooks.description')}</CardDescription>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
             {t('comingSoon')}

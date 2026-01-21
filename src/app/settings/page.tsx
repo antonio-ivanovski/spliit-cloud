@@ -26,7 +26,6 @@ export default async function SettingsPage() {
         oauthProviders={oauthProviders}
         enableGroupSync={flags.enableGroupSync}
         enableNotifications={flags.enableNotifications}
-        enableWebhooks={flags.enableWebhooks}
       />
     </main>
   )

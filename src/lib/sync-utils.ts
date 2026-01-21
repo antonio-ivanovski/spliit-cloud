@@ -31,7 +31,10 @@ export function getLocalGroupsForSync(): SyncedGroupData[] {
   }))
 }
 
-function mergeGroups(localGroups: RecentGroups, syncedGroups: SyncedGroupData[]) {
+function mergeGroups(
+  localGroups: RecentGroups,
+  syncedGroups: SyncedGroupData[],
+) {
   const groupMap = new Map(localGroups.map((group) => [group.id, group]))
 
   for (const syncedGroup of syncedGroups) {

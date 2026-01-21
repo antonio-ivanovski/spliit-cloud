@@ -15,7 +15,9 @@ const cleanupRequestTracker = (email: string, now: number) => {
   const existing = requestTracker.get(email)
   if (!existing) return []
 
-  const filtered = existing.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS)
+  const filtered = existing.filter(
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS,
+  )
   if (filtered.length === 0) {
     requestTracker.delete(email)
   } else {
@@ -30,7 +32,10 @@ export async function POST(req: Request) {
     const parsed = requestSchema.safeParse(body)
 
     if (!parsed.success) {
-      return Response.json({ error: 'Invalid email', code: 'invalid_email' }, { status: 400 })
+      return Response.json(
+        { error: 'Invalid email', code: 'invalid_email' },
+        { status: 400 },
+      )
     }
 
     const email = parsed.data.email.toLowerCase()

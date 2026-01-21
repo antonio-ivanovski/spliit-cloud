@@ -11,7 +11,9 @@ export async function POST(request: Request) {
     const headerToken = getBearerToken(request)
     const body = headerToken ? null : await request.json().catch(() => null)
     const tokenPayload = body as { token?: unknown } | null
-    const token = headerToken ?? (typeof tokenPayload?.token === 'string' ? tokenPayload.token : null)
+    const token =
+      headerToken ??
+      (typeof tokenPayload?.token === 'string' ? tokenPayload.token : null)
 
     if (!token) {
       return Response.json(

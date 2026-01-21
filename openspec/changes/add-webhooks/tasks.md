@@ -1,8 +1,8 @@
 ## 0. Dependencies
 
 - [x] 0.1 Event system exists and `logActivity()` emits events (`src/lib/events.ts`, `src/lib/api.ts`)
-- [x] 0.2 Feature flag exists: `NEXT_PUBLIC_ENABLE_WEBHOOKS`
-- [x] 0.3 Encryption utility exists for storing secrets (`src/lib/crypto.ts`)
+- [ ] 0.2 Feature flag exists: `NEXT_PUBLIC_ENABLE_WEBHOOKS`
+- [ ] 0.3 Encryption utility exists for storing secrets (`src/lib/crypto.ts`)
 
 ## 1. Database Schema
 

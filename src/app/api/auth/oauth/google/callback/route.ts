@@ -24,7 +24,10 @@ const buildRedirectUrl = (requestUrl: string, sessionToken: string) => {
 }
 
 const getRedirectUri = () =>
-  new URL('/api/auth/oauth/google/callback', env.NEXT_PUBLIC_BASE_URL).toString()
+  new URL(
+    '/api/auth/oauth/google/callback',
+    env.NEXT_PUBLIC_BASE_URL,
+  ).toString()
 
 const exchangeCodeForToken = async (code: string) => {
   const body = new URLSearchParams({
@@ -49,9 +52,12 @@ const exchangeCodeForToken = async (code: string) => {
 }
 
 const fetchGoogleUserInfo = async (accessToken: string) => {
-  const response = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  })
+  const response = await fetch(
+    'https://openidconnect.googleapis.com/v1/userinfo',
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  )
 
   if (!response.ok) {
     throw new Error('Failed to fetch Google user info')
@@ -107,7 +113,10 @@ export async function GET(req: Request) {
   cookieStore.delete(STATE_COOKIE)
 
   if (!storedState || storedState !== state) {
-    return Response.json({ error: 'Invalid state', code: 'invalid_state' }, { status: 400 })
+    return Response.json(
+      { error: 'Invalid state', code: 'invalid_state' },
+      { status: 400 },
+    )
   }
 
   try {

@@ -12,7 +12,10 @@ const createStateToken = () => randomId(32)
 
 const buildGithubAuthUrl = (state: string) => {
   const target = new URL('https://github.com/login/oauth/authorize')
-  const redirectUrl = new URL('/api/auth/oauth/github/callback', env.NEXT_PUBLIC_BASE_URL)
+  const redirectUrl = new URL(
+    '/api/auth/oauth/github/callback',
+    env.NEXT_PUBLIC_BASE_URL,
+  )
   target.searchParams.set('client_id', env.GITHUB_OAUTH_CLIENT_ID ?? '')
   target.searchParams.set('redirect_uri', redirectUrl.toString())
   target.searchParams.set('scope', 'user:email')

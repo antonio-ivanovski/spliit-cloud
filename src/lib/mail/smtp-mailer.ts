@@ -16,8 +16,7 @@ const smtpConfig = {
       : undefined,
 }
 
-const hasSmtpConfig =
-  !!smtpConfig.host && !!smtpConfig.port && !!env.SMTP_FROM
+const hasSmtpConfig = !!smtpConfig.host && !!smtpConfig.port && !!env.SMTP_FROM
 
 const transporter = hasSmtpConfig
   ? nodemailer.createTransport(smtpConfig)

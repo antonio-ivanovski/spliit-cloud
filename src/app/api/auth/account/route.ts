@@ -15,7 +15,9 @@ export async function DELETE(request: Request) {
     }
 
     await deleteAllUserSessions(session.userId)
-    await prismaClient.syncedGroup.deleteMany({ where: { userId: session.userId } })
+    await prismaClient.syncedGroup.deleteMany({
+      where: { userId: session.userId },
+    })
     await prismaClient.syncUser.delete({ where: { id: session.userId } })
 
     return Response.json({ success: true })

@@ -1,3 +1,9 @@
+export { sendMagicLinkEmail } from './email'
+export {
+  createMagicLink,
+  generateMagicLinkToken,
+  validateMagicLink,
+} from './magic-link'
 export {
   createSession,
   deleteAllUserSessions,
@@ -6,9 +12,3 @@ export {
   getSessionFromRequest,
   validateSession,
 } from './session'
-export {
-  createMagicLink,
-  generateMagicLinkToken,
-  validateMagicLink,
-} from './magic-link'
-export { sendMagicLinkEmail } from './email'

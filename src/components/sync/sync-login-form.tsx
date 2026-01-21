@@ -65,7 +65,11 @@ export function SyncLoginForm({
             required
           />
         </div>
-        <Button type="submit" className="w-full" disabled={status === 'sending'}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={status === 'sending'}
+        >
           <Mail className="mr-2 h-4 w-4" />
           {status === 'sent' ? 'Magic link sent' : 'Send magic link'}
         </Button>
@@ -106,5 +110,5 @@ export function SyncLoginForm({
     </div>
   )
 
-    return content
+  return content
 }

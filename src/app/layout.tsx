@@ -103,7 +103,12 @@ function Content({
             </li>
             {showSettings ? (
               <li>
-                <Button variant="ghost" size="sm" asChild className="-my-3 text-primary">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="-my-3 text-primary"
+                >
                   <Link href="/settings">Settings</Link>
                 </Button>
               </li>
@@ -172,7 +177,7 @@ export default async function RootLayout({
     getRuntimeFeatureFlags(),
   ])
   const showSettings =
-    flags.enableGroupSync || flags.enableNotifications || flags.enableWebhooks
+    flags.enableGroupSync || flags.enableNotifications
   return (
     <html lang={locale} suppressHydrationWarning>
       <ApplePwaSplash icon="/logo-with-text.png" color="#027756" />

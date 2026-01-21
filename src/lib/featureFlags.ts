@@ -9,7 +9,6 @@ export async function getRuntimeFeatureFlags() {
     enableCategoryExtract: env.NEXT_PUBLIC_ENABLE_CATEGORY_EXTRACT,
     enableGroupSync: env.NEXT_PUBLIC_ENABLE_GROUP_SYNC,
     enableNotifications: env.NEXT_PUBLIC_ENABLE_NOTIFICATIONS,
-    enableWebhooks: env.NEXT_PUBLIC_ENABLE_WEBHOOKS,
   }
 }
 

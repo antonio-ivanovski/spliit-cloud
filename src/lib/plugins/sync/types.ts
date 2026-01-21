@@ -18,5 +18,8 @@ export interface SyncProvider {
   pull(userId: string): Promise<SyncedGroupData[]>
 
   // Sync (push + pull with merge)
-  sync(userId: string, localGroups: SyncedGroupData[]): Promise<SyncedGroupData[]>
+  sync(
+    userId: string,
+    localGroups: SyncedGroupData[],
+  ): Promise<SyncedGroupData[]>
 }

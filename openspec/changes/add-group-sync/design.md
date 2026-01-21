@@ -73,7 +73,6 @@ Rationale: Hooks into existing activity logging without modifying core expense l
 ```env
 NEXT_PUBLIC_ENABLE_GROUP_SYNC=true
 NEXT_PUBLIC_ENABLE_NOTIFICATIONS=true
-NEXT_PUBLIC_ENABLE_WEBHOOKS=true
 ```
 
 ## API Design

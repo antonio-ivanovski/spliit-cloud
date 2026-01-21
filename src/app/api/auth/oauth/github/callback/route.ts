@@ -30,7 +30,10 @@ const buildRedirectUrl = (requestUrl: string, sessionToken: string) => {
 }
 
 const getRedirectUri = () =>
-  new URL('/api/auth/oauth/github/callback', env.NEXT_PUBLIC_BASE_URL).toString()
+  new URL(
+    '/api/auth/oauth/github/callback',
+    env.NEXT_PUBLIC_BASE_URL,
+  ).toString()
 
 const exchangeCodeForToken = async (code: string) => {
   const body = new URLSearchParams({
@@ -86,7 +89,10 @@ const fetchGithubEmails = async (accessToken: string) => {
   return (await response.json()) as GithubEmailInfo[]
 }
 
-const resolveGithubEmail = async (accessToken: string, userEmail?: string | null) => {
+const resolveGithubEmail = async (
+  accessToken: string,
+  userEmail?: string | null,
+) => {
   if (userEmail) return userEmail
   const emails = await fetchGithubEmails(accessToken)
   return emails.find((email) => email.primary)?.email ?? emails[0]?.email
@@ -139,7 +145,10 @@ export async function GET(req: Request) {
   cookieStore.delete(STATE_COOKIE)
 
   if (!storedState || storedState !== state) {
-    return Response.json({ error: 'Invalid state', code: 'invalid_state' }, { status: 400 })
+    return Response.json(
+      { error: 'Invalid state', code: 'invalid_state' },
+      { status: 400 },
+    )
   }
 
   try {

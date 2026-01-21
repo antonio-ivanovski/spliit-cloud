@@ -7,12 +7,12 @@ import {
   getStarredGroups,
 } from '@/app/groups/recent-groups-helpers'
 import { Button } from '@/components/ui/button'
+import { getGroups } from '@/lib/api'
 import {
   subscribeToGroupSync,
   triggerAutoSync,
   useSyncStatus,
 } from '@/lib/sync-utils'
-import { getGroups } from '@/lib/api'
 import { trpc } from '@/trpc/client'
 import { AppRouterOutput } from '@/trpc/routers/_app'
 import { Cloud, Loader2 } from 'lucide-react'
