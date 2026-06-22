@@ -1,8 +1,7 @@
+import { randomId } from '@/lib/api'
 import { expect, test } from '@playwright/test'
 import * as fs from 'fs'
 import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
-import { randomId } from '@/lib/api'
-import { browser } from 'process'
 
 interface ExpenseData {
   title?: string
@@ -44,7 +43,7 @@ test.describe('Export functionality', () => {
     if (browserName === 'webkit' && process.env.CI) {
       // https://github.com/microsoft/playwright/issues/38585
       // Skip WebKit on CI due to download issues
-      return;
+      return
     }
 
     const downloadPromise = page.waitForEvent('download')
@@ -106,7 +105,7 @@ test.describe('Export functionality', () => {
     if (browserName === 'webkit' && process.env.CI) {
       // https://github.com/microsoft/playwright/issues/38585
       // Skip WebKit on CI due to download issues
-      return;
+      return
     }
 
     const downloadPromise = page.waitForEvent('download')
@@ -131,11 +130,10 @@ test.describe('Export functionality', () => {
 
   test('Export CSV download', async ({ page, browserName }) => {
     await page.goto('/groups')
-    const groupId = await createGroupViaAPI(
-      page,
-      `export CSV ${randomId(4)}`,
-      ['Alice', 'Bob'],
-    )
+    const groupId = await createGroupViaAPI(page, `export CSV ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+    ])
 
     await createExpenseViaAPI(page, groupId, {
       title: 'Groceries',
@@ -157,7 +155,7 @@ test.describe('Export functionality', () => {
     if (browserName === 'webkit' && process.env.CI) {
       // https://github.com/microsoft/playwright/issues/38585
       // Skip WebKit on CI due to download issues
-      return;
+      return
     }
 
     const downloadPromise = page.waitForEvent('download')
@@ -183,14 +181,14 @@ test.describe('Export functionality', () => {
     if (browserName === 'webkit' && process.env.CI) {
       // https://github.com/microsoft/playwright/issues/38585
       // Skip WebKit on CI due to download issues
-      return;
+      return
     }
     await page.goto('/groups')
-    const groupId = await createGroupViaAPI(
-      page,
-      `CSV format ${randomId(4)}`,
-      ['Alice', 'Bob', 'Charlie'],
-    )
+    const groupId = await createGroupViaAPI(page, `CSV format ${randomId(4)}`, [
+      'Alice',
+      'Bob',
+      'Charlie',
+    ])
 
     const expenseTitle = 'Weekend Trip'
     await createExpenseViaAPI(page, groupId, {
@@ -213,7 +211,7 @@ test.describe('Export functionality', () => {
     if (browserName === 'webkit' && process.env.CI) {
       // https://github.com/microsoft/playwright/issues/38585
       // Skip WebKit on CI due to download issues
-      return;
+      return
     }
 
     const downloadPromise = page.waitForEvent('download')

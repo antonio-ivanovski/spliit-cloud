@@ -6,11 +6,11 @@ import {
   RecurrenceRule,
   RecurringExpenseLink,
 } from '@prisma/client'
-import { nanoid } from 'nanoid'
 import { calculateNextDate } from './recurring-expenses'
 
 export function randomId(size?: number) {
-  return nanoid(size)
+  const id = crypto.randomUUID().replaceAll('-', '')
+  return size ? id.slice(0, size) : id
 }
 
 export async function createGroup(groupFormValues: GroupFormValues) {
@@ -381,8 +381,8 @@ export async function getGroupExpenseCount(groupId: string) {
 }
 
 export async function getExpense(groupId: string, expenseId: string) {
-  return prisma.expense.findUnique({
-    where: { id: expenseId },
+  return prisma.expense.findFirst({
+    where: { id: expenseId, groupId },
     include: {
       paidBy: true,
       paidFor: true,
@@ -573,7 +573,7 @@ export async function createRecurringExpenses() {
 export function createPayloadForNewRecurringExpenseLink(
   recurrenceRule: RecurrenceRule,
   priorDateToNextRecurrence: Date,
-  groupId: String,
+  groupId: string,
 ): RecurringExpenseLink {
   const nextExpenseDate = calculateNextDate(
     recurrenceRule,

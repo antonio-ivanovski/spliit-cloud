@@ -1,15 +1,16 @@
-import { expect, test } from '@playwright/test'
-import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
-import { navigateToGroup } from '../helpers'
 import { randomId } from '@/lib/api'
+import { expect, test } from '@playwright/test'
+import { navigateToGroup } from '../helpers'
+import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
 
 test.describe('Expense List Filtering', () => {
   test('filters expenses by text search', async ({ page }) => {
     await page.goto('/groups')
-    const groupId = await createGroupViaAPI(page, `Filter Test ${randomId(4)}`, [
-      'Alice',
-      'Bob',
-    ])
+    const groupId = await createGroupViaAPI(
+      page,
+      `Filter Test ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
 
     await createExpenseViaAPI(page, groupId, {
       title: 'Pizza Dinner',
@@ -41,7 +42,7 @@ test.describe('Expense List Filtering', () => {
     await searchInput.fill('Pizza')
 
     // Wait for search
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     // Verify only Pizza visible
     await expect(page.getByText('Pizza Dinner')).toBeVisible()
@@ -80,7 +81,7 @@ test.describe('Expense List Filtering', () => {
     // Search lowercase for uppercase title
     const searchInput = page.getByPlaceholder(/search/i)
     await searchInput.fill('uppercase')
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     await expect(page.getByText('UPPERCASE EXPENSE')).toBeVisible()
     await expect(page.getByText('lowercase expense')).not.toBeVisible()
@@ -88,7 +89,7 @@ test.describe('Expense List Filtering', () => {
     // Search uppercase for lowercase title
     await searchInput.clear()
     await searchInput.fill('LOWERCASE')
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     await expect(page.getByText('UPPERCASE EXPENSE')).not.toBeVisible()
     await expect(page.getByText('lowercase expense')).toBeVisible()
@@ -119,7 +120,7 @@ test.describe('Expense List Filtering', () => {
     // Search for partial match "fast"
     const searchInput = page.getByPlaceholder(/search/i)
     await searchInput.fill('fast')
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     // Should match "Breakfast"
     await expect(page.getByText('Restaurant Dinner')).not.toBeVisible()
@@ -144,7 +145,7 @@ test.describe('Expense List Filtering', () => {
     // Search for non-existent text
     const searchInput = page.getByPlaceholder(/search/i)
     await searchInput.fill('xyz123nonexistent')
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     // Expense should not be visible
     await expect(page.getByText('Regular Expense')).not.toBeVisible()
@@ -158,11 +159,11 @@ test.describe('Expense List Filtering', () => {
 
   test('filter with multiple matching expenses', async ({ page }) => {
     await page.goto('/groups')
-    const groupId = await createGroupViaAPI(page, `Multi Match ${randomId(4)}`, [
-      'Alice',
-      'Bob',
-      'Charlie',
-    ])
+    const groupId = await createGroupViaAPI(
+      page,
+      `Multi Match ${randomId(4)}`,
+      ['Alice', 'Bob', 'Charlie'],
+    )
 
     await createExpenseViaAPI(page, groupId, {
       title: 'Dinner at Italian Restaurant',
@@ -187,7 +188,7 @@ test.describe('Expense List Filtering', () => {
     // Search for "Dinner"
     const searchInput = page.getByPlaceholder(/search/i)
     await searchInput.fill('Dinner')
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     // Both dinner expenses visible
     await expect(page.getByText('Dinner at Italian Restaurant')).toBeVisible()
@@ -225,7 +226,7 @@ test.describe('Expense List Filtering', () => {
     // Filter to show only one
     const searchInput = page.getByPlaceholder(/search/i)
     await searchInput.fill('One')
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     await expect(page.getByText('Test Expense One')).toBeVisible()
     await expect(page.getByText('Test Expense Two')).not.toBeVisible()
@@ -276,13 +277,11 @@ test.describe('Expense List Filtering', () => {
 
     // Type "Elec" progressively
     await searchInput.fill('E')
-        await page.waitForResponse('**groups.expenses.list**');
-
+    await page.waitForResponse('**groups.expenses.list**')
 
     // Should still show Electric items
     await searchInput.fill('Elec')
-       await page.waitForResponse('**groups.expenses.list**');
-
+    await page.waitForResponse('**groups.expenses.list**')
 
     await expect(page.getByText('Electricity Bill')).toBeVisible()
     await expect(page.getByText('Electric Car Charging')).toBeVisible()

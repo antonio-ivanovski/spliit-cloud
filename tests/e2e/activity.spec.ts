@@ -1,3 +1,4 @@
+import { randomId } from '@/lib/api'
 import { expect, test } from '@playwright/test'
 import { navigateToGroup, navigateToTab } from '../helpers'
 import {
@@ -5,7 +6,6 @@ import {
   createExpensesViaAPI,
   createGroupViaAPI,
 } from '../helpers/batch-api'
-import { randomId } from '@/lib/api'
 
 test('View activity page', async ({ page }) => {
   // Setup: Create group with 3 participants and immediately create an expense
@@ -86,22 +86,25 @@ test('Log shows update', async ({ page }) => {
   await page.goto('/groups')
   const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
-  await createExpenseViaAPI(page, groupId, {
+  const expenseId = await createExpenseViaAPI(page, groupId, {
     title: expenseTitle,
     amount: 3000,
     payerName: 'Alice',
   })
 
   // Navigate to group page
-  await navigateToGroup(page, groupId);
+  await navigateToGroup(page, groupId)
 
-  // Wait for the expense to be visible and clickable
-  const expenseRow = page.getByText(expenseTitle)
+  // Wait for the exact expense row to be visible and clickable. Matching by
+  // title alone is flaky while the route shell is rendering.
+  const expenseRow = page.getByTestId(`expense-item-${expenseId}`)
   await expect(expenseRow).toBeVisible()
 
   // Click on the expense to open edit page
-  await expenseRow.click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+  await Promise.all([
+    page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/),
+    expenseRow.click(),
+  ])
 
   // Update the expense title
   const titleInput = page.locator('input[name="title"]')
@@ -140,7 +143,7 @@ test('Log shows delete', async ({ page }) => {
   await page.goto('/groups')
   const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
-  await createExpenseViaAPI(page, groupId, {
+  const expenseId = await createExpenseViaAPI(page, groupId, {
     title: expenseTitle,
     amount: 4000,
     payerName: 'Bob',
@@ -150,8 +153,12 @@ test('Log shows delete', async ({ page }) => {
   await page.goto(`/groups/${groupId}/expenses`)
 
   // Click on the expense to open edit page
-  await page.getByText(expenseTitle).click()
-  await expect(page).toHaveURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/)
+  const expenseRow = page.getByTestId(`expense-item-${expenseId}`)
+  await expect(expenseRow).toBeVisible()
+  await Promise.all([
+    page.waitForURL(/\/groups\/[^/]+\/expenses\/[^/]+\/edit/),
+    expenseRow.click(),
+  ])
 
   // Click delete button
   const deleteButton = page.getByRole('button', { name: /delete/i })
@@ -197,7 +204,7 @@ test('Log pagination', async ({ page }) => {
   expect(createdExpenses).toHaveLength(numExpenses)
 
   // Navigate to group page
-  await navigateToGroup(page, groupId);
+  await navigateToGroup(page, groupId)
 
   // Navigate to Activity tab
   await navigateToTab(page, 'Activity')
@@ -207,7 +214,9 @@ test('Log pagination', async ({ page }) => {
   await expect(activityListWrapper).toBeVisible()
 
   // Verify the most recent expense appears (last in array)
-  await expect(page.getByText(`Expense “Expense ${numExpenses}” created`)).toBeVisible()
+  await expect(
+    page.getByText(`Expense “Expense ${numExpenses}” created`),
+  ).toBeVisible()
 
   // Scroll down to trigger infinite scroll pagination
   await page.mouse.wheel(0, 1000)

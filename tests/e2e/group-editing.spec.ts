@@ -1,3 +1,4 @@
+import { randomId } from '@/lib/api'
 import { expect, test } from '@playwright/test'
 import {
   clickSave,
@@ -9,7 +10,6 @@ import {
   verifyParticipantsOnBalancesTab,
 } from '../helpers'
 import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
-import { randomId } from '@/lib/api'
 
 test.describe('Group Editing', () => {
   test('update group name and information', async ({ page }) => {
@@ -106,7 +106,9 @@ test.describe('Group Editing', () => {
     // Verify participant count in settings
     await navigateToTab(page, 'Settings')
     const updatedNames = await getParticipantNames(page)
-    expect(updatedNames).toEqual(expect.arrayContaining([...initialParticipants, newParticipant]))
+    expect(updatedNames).toEqual(
+      expect.arrayContaining([...initialParticipants, newParticipant]),
+    )
   })
 
   test('remove unprotected participant', async ({ page }) => {
@@ -227,7 +229,7 @@ test.describe('Group Editing', () => {
     // Add some information
     const testInfo = 'Test information'
     await groupInfoInput.fill(testInfo)
-    await clickSave(page);
+    await clickSave(page)
 
     // Verify information appears
     await navigateToTab(page, 'Information')
@@ -237,7 +239,7 @@ test.describe('Group Editing', () => {
     await navigateToTab(page, 'Settings')
     await groupInfoInput.clear()
     await expect(groupInfoInput).toHaveValue('')
-    await clickSave(page);
+    await clickSave(page)
 
     // Verify information is cleared
     await navigateToTab(page, 'Information')
@@ -268,7 +270,7 @@ test.describe('Group Editing', () => {
     await bobInput.fill('Alice')
 
     // Save changes
-    await page.getByRole('button', { name: 'Save' }).click();
+    await page.getByRole('button', { name: 'Save' }).click()
 
     // Verify duplicate error message appears
     await expect(

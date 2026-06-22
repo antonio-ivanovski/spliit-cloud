@@ -1,4 +1,3 @@
-import { saveRecentGroup } from '@/app/groups/recent-groups-helpers'
 import type { AppRouter } from '@/trpc/routers/_app'
 import type { Page } from '@playwright/test'
 import { RecurrenceRule, SplitMode } from '@prisma/client'
@@ -136,7 +135,10 @@ export async function createExpensesViaAPI(
   if (typeof expenses === 'number') {
     // Legacy mode: generate expenses
     const count = expenses
-    const payers = groupData.group?.participants.map((p) => p.name) ?? ['Alice', 'Bob']
+    const payers = groupData.group?.participants.map((p) => p.name) ?? [
+      'Alice',
+      'Bob',
+    ]
     expensesToCreate = []
     for (let i = 1; i <= count; i++) {
       const payerName = payers[i % payers.length]!
@@ -190,7 +192,7 @@ export async function createExpensesViaAPI(
       notes: expense.notes,
     }
 
-    const result =await trpc.groups.expenses.create.mutate({
+    const result = await trpc.groups.expenses.create.mutate({
       groupId,
       expenseFormValues,
       participantId: payer.id,

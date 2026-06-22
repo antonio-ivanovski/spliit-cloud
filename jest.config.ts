@@ -8,6 +8,9 @@ const createJestConfig = nextJest({
 const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'node',
+  moduleNameMapper: {
+    '^superjson$': '<rootDir>/src/test/superjson-jest.ts',
+  },
 }
 
 export default createJestConfig(config)

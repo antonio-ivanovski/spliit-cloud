@@ -1,10 +1,10 @@
+import { randomId } from '@/lib/api'
 import { expect, test } from '@playwright/test'
 import {
   createExpensesViaAPI,
   createGroupViaAPI,
   navigateToGroup,
 } from '../helpers'
-import { randomId } from '@/lib/api'
 
 test.describe('Expense List Pagination', () => {
   test('loads initial page of expenses', async ({ page }) => {
@@ -17,7 +17,10 @@ test.describe('Expense List Pagination', () => {
     )
 
     // Create 15 expenses (less than PAGE_SIZE of 20)
-    const createdExpenses = await createExpensesViaAPI(page, groupId, 15, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 15, [
+      'Alice',
+      'Bob',
+    ])
 
     await navigateToGroup(page, groupId)
 
@@ -72,7 +75,10 @@ test.describe('Expense List Pagination', () => {
     )
 
     // Create 30 expenses (requires 2 pages)
-    const createdExpenses = await createExpensesViaAPI(page, groupId, 30, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 30, [
+      'Alice',
+      'Bob',
+    ])
 
     await navigateToGroup(page, groupId)
 
@@ -100,7 +106,10 @@ test.describe('Expense List Pagination', () => {
     )
 
     // Create 22 expenses
-    const createdExpenses = await createExpensesViaAPI(page, groupId, 22, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 22, [
+      'Alice',
+      'Bob',
+    ])
 
     await navigateToGroup(page, groupId)
 
@@ -118,7 +127,7 @@ test.describe('Expense List Pagination', () => {
     await expect(page.locator('.animate-pulse').first()).toBeVisible()
 
     // After loading more, older expenses should appear
-    for(const expense of createdExpenses) {
+    for (const expense of createdExpenses) {
       await expect(page.getByTestId(`expense-item-${expense}`)).toBeVisible()
     }
   })
@@ -139,7 +148,7 @@ test.describe('Expense List Pagination', () => {
     // Apply search filter
     const searchInput = page.getByPlaceholder(/search/i)
     await searchInput.fill('Expense 1')
-    await page.waitForResponse('**groups.expenses.list**');
+    await page.waitForResponse('**groups.expenses.list**')
 
     // Should filter to expenses 01, 10-19
     // Expense 10-19 should match "Expense 1"
@@ -153,16 +162,23 @@ test.describe('Expense List Pagination', () => {
 
   test('empty state when no expenses', async ({ page }) => {
     await page.goto('/groups')
-    const groupId = await createGroupViaAPI(page, `Empty State ${randomId(4)}`, [
-      'Alice',
-      'Bob',
-    ])
+    const groupId = await createGroupViaAPI(
+      page,
+      `Empty State ${randomId(4)}`,
+      ['Alice', 'Bob'],
+    )
 
     await navigateToGroup(page, groupId)
 
     // Should show empty state or "create first" message
-    await expect(page.getByText('Here are the expenses that you created for your group')).toBeVisible()
-    await expect(page.getByText('Your group doesn’t contain any expense yet. Create the first one')).toBeVisible()
+    await expect(
+      page.getByText('Here are the expenses that you created for your group'),
+    ).toBeVisible()
+    await expect(
+      page.getByText(
+        'Your group doesn’t contain any expense yet. Create the first one',
+      ),
+    ).toBeVisible()
   })
 
   test('loading indicator appears during pagination', async ({ page }) => {
@@ -197,7 +213,10 @@ test.describe('Expense List Pagination', () => {
     )
 
     // Create 25 expenses (amounts will be 1100, 1200, ... based on createExpensesViaAPI)
-    const createdExpenses = await createExpensesViaAPI(page, groupId, 25, ['Alice', 'Bob'])
+    const createdExpenses = await createExpensesViaAPI(page, groupId, 25, [
+      'Alice',
+      'Bob',
+    ])
 
     await navigateToGroup(page, groupId)
 
@@ -210,10 +229,12 @@ test.describe('Expense List Pagination', () => {
     })
 
     for (let index = 0; index < createdExpenses.length; index++) {
-      const expense = createdExpenses[index];
-      const expectedAmount = ((index + 1) * 100 + 1000) / 100;
-      const expenseItem = page.getByTestId(`expense-item-${expense}`);
-      await expect(expenseItem.getByText(`$${expectedAmount.toFixed(2)}`)).toBeVisible();
+      const expense = createdExpenses[index]
+      const expectedAmount = ((index + 1) * 100 + 1000) / 100
+      const expenseItem = page.getByTestId(`expense-item-${expense}`)
+      await expect(
+        expenseItem.getByText(`$${expectedAmount.toFixed(2)}`),
+      ).toBeVisible()
     }
   })
 })

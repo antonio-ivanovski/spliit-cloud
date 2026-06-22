@@ -1,7 +1,7 @@
+import { randomId } from '@/lib/api'
 import { expect, test } from '@playwright/test'
 import { navigateToTab, verifyGroupHeading } from '../helpers'
 import { createGroupViaAPI } from '../helpers/batch-api'
-import { randomId } from '@/lib/api'
 
 test.describe('Group Navigation', () => {
   test('navigate between multiple groups', async ({ page }) => {
@@ -232,7 +232,7 @@ test.describe('Group Navigation', () => {
     }
 
     // Reload the groups list page
-    await page.reload();
+    await page.reload()
 
     // Verify all groups are visible
     for (const groupName of groupNames) {
