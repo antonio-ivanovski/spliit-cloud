@@ -1,0 +1,39 @@
+{
+  "name": "@spliit/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./router": "./src/trpc/routers/_app.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "check-types": "tsc -p tsconfig.json --noEmit",
+    "test": "echo \"No API unit tests yet\""
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1073.0",
+    "@aws-sdk/s3-request-presigner": "^3.1073.0",
+    "@hono/node-server": "^1.19.14",
+    "@json2csv/plainjs": "^7.0.6",
+    "@prisma/client": "^6.19.3",
+    "@spliit/db": "workspace:*",
+    "@spliit/domain": "workspace:*",
+    "@trpc/server": "^11.18.0",
+    "content-disposition": "^0.5.4",
+    "dotenv": "^16.6.1",
+    "hono": "^4.12.26",
+    "nanoid": "^5.1.15",
+    "openai": "^4.25.0",
+    "superjson": "^2.2.6",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@spliit/config": "workspace:*",
+    "@types/content-disposition": "^0.5.9",
+    "tsx": "^4.22.4",
+    "typescript": "^5.9.3"
+  }
+}

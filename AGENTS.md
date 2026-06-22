@@ -1,25 +1,25 @@
 # AGENTS.md
 
-Spliit is an open-source expense-splitting app (Next.js + tRPC + Prisma + PostgreSQL).
+Spliit is an open-source expense-splitting app (React SPA + Hono + tRPC + Prisma + PostgreSQL).
 
 ## Commands
 
 ```bash
-npm run dev          # Dev server at localhost:3000
-npm run build        # Production build
-npm check-types      # TypeScript check (not `npm run tsc`)
-npm check-formatting # Prettier check
-npm test             # Jest unit tests
-npm run test-e2e     # Playwright e2e tests
+pnpm dev              # Web at localhost:3000 and API at localhost:3001
+pnpm build            # Production build
+pnpm check-types      # TypeScript check
+pnpm check-formatting # Prettier check
+pnpm test             # Unit tests
+pnpm test-e2e         # Playwright e2e tests
 ```
 
 ## Directory Structure
 
-- `src/app/` - Next.js App Router pages, layouts, Server Actions
-- `src/components/` - React components (shadcn/UI based)
-- `src/trpc/routers/` - tRPC procedures organized by domain
-- `src/lib/` - Utilities (balances, totals, currency, schemas)
-- `prisma/schema.prisma` - Database schema
+- `apps/web/` - Vite React SPA, TanStack Router routes, shadcn/UI components
+- `apps/api/` - Hono server, tRPC routers, API routes
+- `packages/domain/` - Shared schemas, calculations, currency, i18n metadata
+- `packages/db/prisma/schema.prisma` - Database schema and migrations
+- `packages/db/src/` - Prisma client singleton
 
 ## Key Patterns
 
@@ -30,25 +30,27 @@ npm run test-e2e     # Playwright e2e tests
 
 **Frontend**
 
-- Next.js App Router, Server Components default
-- shadcn/UI components in `src/components/ui/`
+- Vite React SPA with TanStack Router
+- shadcn/UI components in `apps/web/src/components/ui/`
 - Forms: React Hook Form + Zod + shadcn `<Form>`
 - tRPC hooks via `trpc.domain.procedure.useQuery/useMutation()`
+- i18n uses `i18next`/`react-i18next`
 
 **Backend**
 
-- tRPC procedures in `src/trpc/routers/`, one file per operation
+- tRPC procedures in `apps/api/src/trpc/routers/`, one file per operation
 - Zod for input validation on all procedures
-- Business logic in `src/lib/api.ts`, procedures are thin wrappers
+- Business logic in `apps/api/src/lib/api.ts`, procedures are thin wrappers
+- Hono hosts `/trpc/*`, `/health/*`, export routes, and upload presign routes
 
 **Database**
 
-- Prisma ORM, schema at `prisma/schema.prisma`
+- Prisma ORM, schema at `packages/db/prisma/schema.prisma`
 - Queries use `include` for relations, not separate fetches
 
 ## Detailed Docs
 
 - [Architecture](.agent/architecture.md) - Data model, tRPC structure, directory details
 - [Database](.agent/database.md) - Prisma patterns, migrations, queries
-- [Testing](.agent/testing.md) - Jest/Playwright patterns, helpers, factories
+- [Testing](.agent/testing.md) - Vitest/Playwright patterns, helpers, factories
 - [tRPC Procedures](.agent/trpc-procedures.md) - Adding new procedures, router composition

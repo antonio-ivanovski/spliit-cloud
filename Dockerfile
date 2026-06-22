@@ -1,49 +1,24 @@
-FROM node:21-alpine AS base
+FROM node:24-alpine
 
 WORKDIR /usr/app
-COPY ./package.json \
-     ./package-lock.json \
-     ./next.config.mjs \
-     ./tsconfig.json \
-     ./reset.d.ts \
-     ./tailwind.config.js \
-     ./postcss.config.js ./
-COPY ./scripts ./scripts
-COPY ./prisma ./prisma
 
-RUN apk add --no-cache openssl && \
-    npm ci --ignore-scripts && \
-    npx prisma generate
+RUN apk add --no-cache openssl && corepack enable
 
-COPY ./src ./src
-COPY ./messages ./messages
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/config/package.json ./packages/config/package.json
+COPY packages/db/package.json ./packages/db/package.json
+COPY packages/domain/package.json ./packages/domain/package.json
 
-ENV NEXT_TELEMETRY_DISABLED=1
+RUN pnpm install --frozen-lockfile
 
-COPY scripts/build.env .env
-RUN npm run build
+COPY apps ./apps
+COPY packages ./packages
+COPY scripts ./scripts
 
-RUN rm -r .next/cache
+RUN pnpm --filter @spliit/db prisma-generate && pnpm --filter @spliit/api build
 
-FROM node:21-alpine AS runtime-deps
-
-WORKDIR /usr/app
-COPY --from=base /usr/app/package.json /usr/app/package-lock.json /usr/app/next.config.mjs ./
-COPY --from=base /usr/app/prisma ./prisma
-
-RUN npm ci --omit=dev --omit=optional --ignore-scripts && \
-    npx prisma generate
-
-FROM node:21-alpine AS runner
-
-EXPOSE 3000/tcp
-WORKDIR /usr/app
-
-COPY --from=base /usr/app/package.json /usr/app/package-lock.json /usr/app/next.config.mjs ./
-COPY --from=runtime-deps /usr/app/node_modules ./node_modules
-COPY ./public ./public
-COPY ./scripts ./scripts
-COPY --from=base /usr/app/prisma ./prisma
-COPY --from=base /usr/app/.next ./.next
+EXPOSE 3001/tcp
 
 ENTRYPOINT ["/bin/sh", "/usr/app/scripts/container-entrypoint.sh"]

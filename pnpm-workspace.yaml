@@ -1,0 +1,14 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+trustLockfile: true
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+minimumReleaseAgeExclude:
+  - browserslist@4.28.4
+  - exsolve@1.1.0
+  - isbot@5.1.44
+  - nanoid@3.3.15

@@ -1,0 +1,9 @@
+{
+  "extends": "@spliit/config/tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.json"]
+}

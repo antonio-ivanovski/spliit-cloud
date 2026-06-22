@@ -1,1 +1,8 @@
-src/components/ui
+node_modules
+dist
+.turbo
+coverage
+playwright-report
+test-results
+apps/*/dist
+apps/web/src/components/ui

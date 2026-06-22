@@ -1,0 +1,23 @@
+{
+  "name": "@spliit/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "check-types": "tsc -p tsconfig.json --noEmit",
+    "prisma-migrate": "prisma migrate deploy --schema prisma/schema.prisma",
+    "prisma-generate": "prisma generate --schema prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "prisma": "^6.19.3"
+  },
+  "devDependencies": {
+    "@spliit/config": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

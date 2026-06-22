@@ -2,5 +2,5 @@
 
 set -euxo pipefail
 
-npx prisma migrate deploy
-exec npm run start
+pnpm --filter @spliit/db prisma-migrate
+exec pnpm --filter @spliit/api start
