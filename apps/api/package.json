@@ -7,8 +7,8 @@
     "./router": "./src/trpc/routers/_app.ts"
   },
   "scripts": {
-    "dev": "bun --watch src/server.ts",
-    "start": "bun run src/server.ts",
+    "dev": "bun --env-file=../../.env --watch src/server.ts",
+    "start": "bun --env-file=../../.env run src/server.ts",
     "check-types": "tsc --noEmit",
     "test": "echo \"No API unit tests yet\""
   },
