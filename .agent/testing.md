@@ -1,110 +1,26 @@
-# Testing
+# Testing Notes
 
-## Jest Unit Tests
-
-```bash
-npm test                          # Run all tests
-npm test -- --watch               # Watch mode
-npm test -- path/to/file.test.ts  # Specific file
-```
-
-Tests in `src/**/*.test.ts` alongside implementation.
-
-### Test Data Factory Pattern
-
-```typescript
-// src/lib/balances.test.ts
-const makeExpense = (overrides: Partial<BalancesExpense>): BalancesExpense =>
-  ({
-    id: 'e1',
-    expenseDate: new Date('2025-01-01T00:00:00.000Z'),
-    title: 'Dinner',
-    amount: 0,
-    isReimbursement: false,
-    splitMode: 'EVENLY',
-    paidBy: { id: 'p0', name: 'P0' },
-    paidFor: [{ participant: { id: 'p0', name: 'P0' }, shares: 1 }],
-    ...overrides,
-  }) as BalancesExpense
-
-// Usage
-const expenses = [
-  makeExpense({
-    amount: 100,
-    paidBy: { id: 'p0', name: 'P0' },
-    paidFor: [
-      { participant: { id: 'p0', name: 'P0' }, shares: 1 },
-      { participant: { id: 'p1', name: 'P1' }, shares: 1 },
-    ],
-  }),
-]
-```
-
-### Focus Areas
-
-- `balances.test.ts` - Balance calculations, split modes, edge cases
-- `totals.test.ts` - Expense totals, user shares
-- `currency.test.ts` - Currency formatting
-
-## Playwright E2E Tests
+Use repository scripts:
 
 ```bash
-npm run test-e2e  # Runs against local dev server
+bun run test       # turbo unit tests, mainly packages/domain Vitest tests
+bun test-e2e       # Playwright from apps/web
 ```
 
-Tests in `tests/e2e/*.spec.ts` and `tests/*.spec.ts`.
+## Unit Tests
 
-### Test Helpers (`tests/helpers/`)
+- Domain tests live next to domain code in `packages/domain/src/*.test.ts`.
+- Add/adjust unit tests for split math, totals, schemas, currency, and recurrence logic when touching `packages/domain`.
 
-| Helper                                          | Purpose                  |
-| ----------------------------------------------- | ------------------------ |
-| `createGroupViaAPI(page, name, participants)`   | Fast group setup via API |
-| `createExpense(page, { title, amount, payer })` | Fill expense form        |
-| `navigateToExpenseCreate(page, groupId)`        | Go to expense creation   |
-| `fillParticipants(page, names)`                 | Add participants to form |
-| `selectComboboxOption(page, label, value)`      | Select dropdown value    |
+## E2E Tests
 
-### Stability Patterns
+- Playwright tests live in `apps/web/tests/`.
+- `apps/web/playwright.config.ts` starts the API and web dev servers, so `bun test-e2e` is the normal entry point.
+- `fullyParallel: false` is intentional because tests share database state.
+- Prefer helpers in `apps/web/tests/helpers/` for group setup, navigation, forms, and expense creation.
 
-```typescript
-// Wait after navigation
-await page.goto(`/groups/${groupId}`)
-await page.waitForLoadState()
+## What To Run
 
-// Wait for URL after form submission
-await page.getByRole('button', { name: 'Create' }).click()
-await page.waitForURL(/\/groups\/[^/]+\/expenses/)
-
-// Use API for fast setup
-const groupId = await createGroupViaAPI(page, 'Test Group', ['Alice', 'Bob'])
-```
-
-### Example Test
-
-```typescript
-import { createExpense } from '../helpers'
-import { createGroupViaAPI } from '../helpers/batch-api'
-
-test('creates expense with correct values', async ({ page }) => {
-  const groupId = await createGroupViaAPI(page, `Test ${randomId(4)}`, [
-    'Alice',
-    'Bob',
-  ])
-  await page.goto(`/groups/${groupId}/expenses`)
-
-  await createExpense(page, {
-    title: 'Dinner',
-    amount: '150.00',
-    payer: 'Alice',
-  })
-
-  await expect(page.getByText('Dinner')).toBeVisible()
-  await expect(page.getByText('$150.00')).toBeVisible()
-})
-```
-
-### Config Notes
-
-- `fullyParallel: false` in playwright.config.ts prevents DB conflicts
-- Runs Chromium, Firefox, WebKit
-- `json` reporter when `CLAUDE_CODE` env var detected
+- Shared math/schema change: `bun run test`.
+- API/router/schema change: `bun check-types` plus targeted e2e when behavior changes.
+- UI workflow change: `bun check-types` and the relevant Playwright spec(s), or `bun test-e2e` if broad.

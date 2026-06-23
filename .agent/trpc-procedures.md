@@ -1,131 +1,25 @@
-# tRPC Procedures
+# tRPC Notes
 
-## Router Composition
+- Procedures live under `apps/api/src/trpc/routers/`, grouped by domain.
+- Use one `*.procedure.ts` file per operation and export it from the nearest router `index.ts`.
+- Validate every input with Zod. Prefer shared schemas from `@spliit/domain` for form-shaped data.
+- Keep procedures thin; call `apps/api/src/lib/api.ts` for DB/business operations.
+- Web calls use `trpc.<router>.<procedure>.useQuery()` or `.useMutation()` from `apps/web/src/trpc/client.tsx`.
 
-Routers compose hierarchically via `createTRPCRouter`:
+## Current Router Shape
 
-```typescript
-// src/trpc/routers/_app.ts (root)
-import { createTRPCRouter } from '../init'
-import { categoriesRouter } from './categories'
-import { groupsRouter } from './groups'
-
-export const appRouter = createTRPCRouter({
-  groups: groupsRouter,
-  categories: categoriesRouter,
-})
+```text
+appRouter
+  ai
+  categories.list
+  features.get
+  groups.get/getDetails/list/create/update
+  groups.expenses.list/get/create/update/delete
+  groups.balances.list
+  groups.stats.get
+  groups.activities.list
 ```
 
-```typescript
-// src/trpc/routers/groups/index.ts (domain)
-export const groupsRouter = createTRPCRouter({
-  expenses: groupExpensesRouter, // sub-router
-  balances: groupBalancesRouter,
-  stats: groupStatsRouter,
-  activities: activitiesRouter,
-  get: getGroupProcedure, // procedures
-  create: createGroupProcedure,
-})
-```
+## Serialization
 
-## Adding a New Procedure
-
-### 1. Create Procedure File
-
-```typescript
-// src/trpc/routers/groups/expenses/archive.procedure.ts
-import { prisma } from '@/lib/prisma'
-import { baseProcedure } from '@/trpc/init'
-import { z } from 'zod'
-
-export const archiveExpenseProcedure = baseProcedure
-  .input(
-    z.object({
-      expenseId: z.string().min(1),
-      groupId: z.string().min(1),
-    }),
-  )
-  .mutation(async ({ input: { expenseId, groupId } }) => {
-    const expense = await prisma.expense.update({
-      where: { id: expenseId, groupId },
-      data: { archived: true },
-    })
-    return { expenseId: expense.id }
-  })
-```
-
-### 2. Export from Router Index
-
-```typescript
-// src/trpc/routers/groups/expenses/index.ts
-import { archiveExpenseProcedure } from './archive.procedure'
-
-export const groupExpensesRouter = createTRPCRouter({
-  list: listGroupExpensesProcedure,
-  get: getGroupExpenseProcedure,
-  create: createGroupExpenseProcedure,
-  update: updateGroupExpenseProcedure,
-  delete: deleteGroupExpenseProcedure,
-  archive: archiveExpenseProcedure, // add here
-})
-```
-
-### 3. Use in Client
-
-```typescript
-// Query
-const { data } = trpc.groups.expenses.list.useQuery({ groupId })
-
-// Mutation
-const archiveMutation = trpc.groups.expenses.archive.useMutation()
-await archiveMutation.mutateAsync({ expenseId, groupId })
-```
-
-## Zod Validation
-
-Input validation via `.input()`:
-
-```typescript
-// Inline schema
-.input(z.object({
-  groupId: z.string().min(1),
-  title: z.string().min(2),
-  amount: z.number().positive(),
-}))
-
-// Shared schema (src/lib/schemas.ts)
-import { expenseFormSchema } from '@/lib/schemas'
-
-.input(z.object({
-  groupId: z.string(),
-  expenseFormValues: expenseFormSchema,
-}))
-```
-
-## Query vs Mutation
-
-```typescript
-// Query - fetching data
-export const listProcedure = baseProcedure
-  .input(z.object({ groupId: z.string() }))
-  .query(async ({ input }) => {
-    return prisma.expense.findMany({ where: { groupId: input.groupId } })
-  })
-
-// Mutation - modifying data
-export const createProcedure = baseProcedure
-  .input(z.object({ title: z.string() }))
-  .mutation(async ({ input }) => {
-    return prisma.expense.create({ data: input })
-  })
-```
-
-## SuperJSON Transformer
-
-Configured in `src/trpc/init.ts`. Automatically handles:
-
-- `Date` serialization
-- `BigInt` serialization
-- `Map`/`Set` serialization
-
-No manual conversion needed for these types.
+SuperJSON is configured on both API and web. The web client additionally registers `decimal.js`; do not manually stringify `Date`, `Decimal`, or similar values unless an external route requires plain JSON.
