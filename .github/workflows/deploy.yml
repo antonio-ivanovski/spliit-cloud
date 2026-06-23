@@ -24,11 +24,11 @@ jobs:
           - app: api
             scope: '@spliit/api'
             target: api
-            image: spliit-api
+            image: spliit-cloud-api
           - app: migrate
             scope: '@spliit/db'
             target: migrate
-            image: spliit-migrate
+            image: spliit-cloud-migrate
     steps:
       - name: Checkout
         uses: actions/checkout@v6

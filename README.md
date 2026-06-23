@@ -1,8 +1,8 @@
-[<img alt="Spliit" height="60" src="https://github.com/antonio-ivanovski/spliit/blob/main/public/logo-with-text.png?raw=true" />](https://github.com/antonio-ivanovski/spliit)
+[<img alt="Spliit Cloud" height="60" src="https://github.com/antonio-ivanovski/spliit-cloud/blob/main/apps/web/public/logo-with-text.webp?raw=true" />](https://spliit.cloud)
 
-Spliit is a free and open source alternative to Splitwise.
+Spliit Cloud is a free and open source alternative to Splitwise, hosted at [spliit.cloud](https://spliit.cloud).
 
-Spliit was created by [Sebastien Castiel](https://github.com/scastiel). This repository is a community fork of the original `spliit-app/spliit` project, which appears inactive, with issues and pull requests not receiving maintainer responses. This fork exists to keep the project moving in a more focused direction.
+Spliit Cloud is a community fork of Spliit, originally created by [Sebastien Castiel](https://github.com/scastiel). The original `spliit-app/spliit` project appears inactive, with issues and pull requests not receiving maintainer responses. This fork exists to keep the project moving in a more focused direction.
 
 The initial goals are:
 
@@ -11,7 +11,7 @@ The initial goals are:
 - focus on group synchronization through cloud accounts
 - decide whether offline account-less usage should remain, be removed, or return later without backward compatibility guarantees
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fantonio-ivanovski%2Fspliit&project-name=my-spliit-instance&repository-name=my-spliit-instance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D&)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fantonio-ivanovski%2Fspliit-cloud&project-name=my-spliit-cloud-instance&repository-name=my-spliit-cloud-instance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D&)
 
 ## Features
 
@@ -90,7 +90,7 @@ The application has a health check endpoint that can be used to check if the app
 
 ### Expense documents
 
-Spliit offers users to upload images (to an AWS S3 bucket) and attach them to expenses. To enable this feature:
+Spliit Cloud offers users to upload images (to an AWS S3 bucket) and attach them to expenses. To enable this feature:
 
 - Create and configure an S3-compatible bucket where images will be stored.
 - Update your environments variables with appropriate values:

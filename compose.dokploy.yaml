@@ -1,6 +1,6 @@
 services:
   migrate:
-    image: ghcr.io/antonio-ivanovski/spliit-migrate:latest
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-migrate:latest
     pull_policy: always
     restart: 'no'
     env_file:
@@ -11,7 +11,7 @@ services:
       - dokploy-network
 
   api:
-    image: ghcr.io/antonio-ivanovski/spliit-api:latest
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-api:latest
     pull_policy: always
     restart: unless-stopped
     depends_on:

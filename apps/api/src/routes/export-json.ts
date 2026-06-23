@@ -36,7 +36,7 @@ export async function exportGroupJson(groupId: string) {
   }
 
   const date = new Date().toISOString().split('T')[0]
-  const filename = `Spliit Export - ${date}.json`
+  const filename = `Spliit Cloud Export - ${date}.json`
   return Response.json(group, {
     headers: {
       'content-disposition': contentDisposition(filename),

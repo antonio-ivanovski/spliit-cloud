@@ -54,5 +54,5 @@ app.all('/trpc/*', (c) =>
 )
 
 serve({ fetch: app.fetch, port: env.PORT, hostname: '0.0.0.0' }, (info) => {
-  console.log(`Spliit API listening on http://localhost:${info.port}`)
+  console.log(`Spliit Cloud API listening on http://localhost:${info.port}`)
 })
