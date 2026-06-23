@@ -21,14 +21,14 @@ function Content() {
           className="flex items-center gap-2 hover:scale-105 transition-transform"
           href="/"
         >
-          <h1>
-            <Image
-              src="/logo-with-text.png"
-              className="m-1 h-[45px] w-auto"
-              width={(45 * 522) / 180}
-              height={45}
-              alt="Spliit"
-            />
+          <h1 className="flex items-center gap-2">
+              <Image
+                src="/logo-with-text.svg"
+                className="m-1 h-[45px] w-auto"
+                width={(45 * 522) / 180}
+                height={45}
+                alt="Spliit"
+              />
           </h1>
         </Link>
         <div role="navigation" aria-label="Menu" className="flex">
@@ -62,11 +62,11 @@ function Content() {
           <div className="sm:text-lg font-semibold text-base flex space-x-2 items-center">
             <Link className="flex items-center gap-2" href="/">
               <Image
-                src="/logo-with-text.png"
+                src="/logo-with-text.svg"
                 className="m-1 h-[45px] w-auto"
                 width={(45 * 522) / 180}
                 height={45}
-                alt="Spliit"
+                alt="Spliit Cloud"
               />
             </Link>
           </div>
@@ -76,7 +76,7 @@ function Content() {
               {t.rich('Footer.builtBy', {
                 source: (txt) => (
                   <a
-                    href="https://github.com/antonio-ivanovski/spliit/graphs/contributors"
+                    href="https://github.com/antonio-ivanovski/spliit-cloud/graphs/contributors"
                     target="_blank"
                     rel="noopener"
                   >
@@ -88,7 +88,7 @@ function Content() {
           </div>
         </div>
         <Button asChild variant="secondary" size="sm">
-          <Link href="https://github.com/antonio-ivanovski/spliit">
+          <Link href="https://github.com/antonio-ivanovski/spliit-cloud">
             <Github className="w-4 h-4 mr-2" />
             GitHub
           </Link>
