@@ -11,8 +11,8 @@
     "groups": "Gruplar"
   },
   "Footer": {
-    "madeIn": "Montréal, Québec 🇨🇦'da yapıldı",
-    "builtBy": "<author>Sebastien Castiel</author> ve <source>katkıda bulunanlar</source> tarafından geliştirildi"
+    "madeIn": "Created in Canada 🇨🇦, continued in Macedonia 🇲🇰",
+    "builtBy": "Created by <creator>Sebastien Castiel</creator>, continued by <maintainer>Antonio Ivanovski</maintainer>, with <source>contributors</source>"
   },
   "Expenses": {
     "title": "Masraflar",

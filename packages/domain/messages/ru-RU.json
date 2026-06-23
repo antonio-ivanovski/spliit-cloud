@@ -11,8 +11,8 @@
     "groups": "Группы"
   },
   "Footer": {
-    "madeIn": "Сделано в Монреале, Квебек 🇨🇦",
-    "builtBy": "Создано <author>Sebastien Castiel</author> и <source>соавторами</source>"
+    "madeIn": "Created in Canada 🇨🇦, continued in Macedonia 🇲🇰",
+    "builtBy": "Created by <creator>Sebastien Castiel</creator>, continued by <maintainer>Antonio Ivanovski</maintainer>, with <source>contributors</source>"
   },
   "Expenses": {
     "title": "Расходы",

@@ -321,8 +321,8 @@
     "groups": "그룹"
   },
   "Footer": {
-    "madeIn": "몬트리올, 퀘벡에서 제작 🇨🇦",
-    "builtBy": "<author>Sebastien Castiel</author>와 <source>공동 작업자들</source>이 함께 만들었어요"
+    "madeIn": "Created in Canada 🇨🇦, continued in Macedonia 🇲🇰",
+    "builtBy": "Created by <creator>Sebastien Castiel</creator>, continued by <maintainer>Antonio Ivanovski</maintainer>, with <source>contributors</source>"
   },
   "Settings": {
     "title": "설정"

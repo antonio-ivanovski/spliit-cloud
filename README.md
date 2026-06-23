@@ -1,8 +1,17 @@
-[<img alt="Spliit" height="60" src="https://github.com/spliit-app/spliit/blob/main/public/logo-with-text.png?raw=true" />](https://spliit.app)
+[<img alt="Spliit" height="60" src="https://github.com/antonio-ivanovski/spliit/blob/main/public/logo-with-text.png?raw=true" />](https://github.com/antonio-ivanovski/spliit)
 
-Spliit is a free and open source alternative to Splitwise. You can either use the official instance at [Spliit.app](https://spliit.app), or deploy your own instance:
+Spliit is a free and open source alternative to Splitwise.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fspliit-app%2Fspliit&project-name=my-spliit-instance&repository-name=my-spliit-instance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D&)
+Spliit was created by [Sebastien Castiel](https://github.com/scastiel). This repository is a fork continued by [Antonio Ivanovski](https://github.com/antonio-ivanovski). The original `spliit-app/spliit` repository appears inactive, with issues and pull requests not receiving maintainer responses, so this fork exists to keep the project moving in a more focused direction.
+
+The initial goals are:
+
+- make the tech stack lighter and easier to operate
+- build out complete test coverage
+- focus on group synchronization through cloud accounts
+- decide whether offline account-less usage should remain, be removed, or return later without backward compatibility guarantees
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fantonio-ivanovski%2Fspliit&project-name=my-spliit-instance&repository-name=my-spliit-instance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D&)
 
 ## Features
 
@@ -12,18 +21,19 @@ Spliit is a free and open source alternative to Splitwise. You can either use th
 - [x] Create reimbursement expenses
 - [x] Progressive Web App
 - [x] Select all/no participant for expenses
-- [x] Split expenses unevenly [(#6)](https://github.com/spliit-app/spliit/issues/6)
-- [x] Mark a group as favorite [(#29)](https://github.com/spliit-app/spliit/issues/29)
-- [x] Tell the application who you are when opening a group [(#7)](https://github.com/spliit-app/spliit/issues/7)
-- [x] Assign a category to expenses [(#35)](https://github.com/spliit-app/spliit/issues/35)
-- [x] Search for expenses in a group [(#51)](https://github.com/spliit-app/spliit/issues/51)
-- [x] Upload and attach images to expenses [(#63)](https://github.com/spliit-app/spliit/issues/63)
-- [x] Create expense by scanning a receipt [(#23)](https://github.com/spliit-app/spliit/issues/23)
+- [x] Split expenses unevenly
+- [x] Mark a group as favorite
+- [x] Tell the application who you are when opening a group
+- [x] Assign a category to expenses
+- [x] Search for expenses in a group
+- [x] Upload and attach images to expenses
+- [x] Create expense by scanning a receipt
 
 ### Possible incoming features
 
-- [ ] Ability to create recurring expenses [(#5)](https://github.com/spliit-app/spliit/issues/5)
-- [ ] Import expenses from Splitwise [(#22)](https://github.com/spliit-app/spliit/issues/22)
+- [ ] Ability to create recurring expenses
+- [ ] Import expenses from Splitwise
+- [ ] Cloud accounts and group synchronization
 
 ## Stack
 
@@ -36,12 +46,8 @@ Spliit is a free and open source alternative to Splitwise. You can either use th
 ## Contribute
 
 The project is open to contributions. Feel free to open an issue or even a pull-request!
-Join the discussion in [the Spliit Discord server](https://discord.gg/YSyVXbwvSY).
 
-If you want to contribute financially and help us keep the application free and without ads, you can also:
-
-- 💜 [Sponsor me (Sebastien)](https://github.com/sponsors/scastiel), or
-- 💙 [Make a small one-time donation](https://donate.stripe.com/28o3eh96G7hH8k89Ba).
+Financial support links are TBD.
 
 ### Translation
 

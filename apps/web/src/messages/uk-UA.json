@@ -11,8 +11,8 @@
     "groups": "Групи"
   },
   "Footer": {
-    "madeIn": "Зроблено в Монреалі, Квебек 🇨🇦",
-    "builtBy": "Створено <author>Себастіаном Кастіелем</author> та <source>учасниками</source>"
+    "madeIn": "Created in Canada 🇨🇦, continued in Macedonia 🇲🇰",
+    "builtBy": "Created by <creator>Sebastien Castiel</creator>, continued by <maintainer>Antonio Ivanovski</maintainer>, with <source>contributors</source>"
   },
   "Expenses": {
     "title": "Витрати",

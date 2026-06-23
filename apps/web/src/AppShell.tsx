@@ -74,14 +74,23 @@ function Content() {
             <span>{t('Footer.madeIn')}</span>
             <span>
               {t.rich('Footer.builtBy', {
-                author: (txt) => (
+                creator: (txt) => (
                   <a href="https://scastiel.dev" target="_blank" rel="noopener">
+                    {txt}
+                  </a>
+                ),
+                maintainer: (txt) => (
+                  <a
+                    href="https://github.com/antonio-ivanovski"
+                    target="_blank"
+                    rel="noopener"
+                  >
                     {txt}
                   </a>
                 ),
                 source: (txt) => (
                   <a
-                    href="https://github.com/spliit-app/spliit/graphs/contributors"
+                    href="https://github.com/antonio-ivanovski/spliit/graphs/contributors"
                     target="_blank"
                     rel="noopener"
                   >
@@ -93,7 +102,7 @@ function Content() {
           </div>
         </div>
         <Button asChild variant="secondary" size="sm">
-          <Link href="https://github.com/spliit-app/spliit">
+          <Link href="https://github.com/antonio-ivanovski/spliit">
             <Github className="w-4 h-4 mr-2" />
             GitHub
           </Link>

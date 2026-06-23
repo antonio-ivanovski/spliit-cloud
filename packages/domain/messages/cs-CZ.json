@@ -11,8 +11,8 @@
     "groups": "Skupiny"
   },
   "Footer": {
-    "madeIn": "Vyrobeno v Montréalu, Québec 🇨🇦",
-    "builtBy": "Vytvořil <author>Sebastien Castiel</author> a <source>další přispěvatelé</source>"
+    "madeIn": "Created in Canada 🇨🇦, continued in Macedonia 🇲🇰",
+    "builtBy": "Created by <creator>Sebastien Castiel</creator>, continued by <maintainer>Antonio Ivanovski</maintainer>, with <source>contributors</source>"
   },
   "Expenses": {
     "title": "Výdaje",

@@ -11,8 +11,8 @@
     "groups": "Grupos"
   },
   "Footer": {
-    "madeIn": "Hecho en Montréal, Québec 🇨🇦",
-    "builtBy": "Construido por <author>Sebastien Castiel</author> y <source>colaboradores</source>"
+    "madeIn": "Created in Canada 🇨🇦, continued in Macedonia 🇲🇰",
+    "builtBy": "Created by <creator>Sebastien Castiel</creator>, continued by <maintainer>Antonio Ivanovski</maintainer>, with <source>contributors</source>"
   },
   "Expenses": {
     "title": "Gastos",
