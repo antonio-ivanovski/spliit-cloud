@@ -1,49 +1,29 @@
-FROM node:21-alpine AS base
+# syntax=docker/dockerfile:1
 
-WORKDIR /usr/app
-COPY ./package.json \
-     ./package-lock.json \
-     ./next.config.mjs \
-     ./tsconfig.json \
-     ./reset.d.ts \
-     ./tailwind.config.js \
-     ./postcss.config.js ./
-COPY ./scripts ./scripts
-COPY ./prisma ./prisma
+FROM oven/bun:1.3.14 AS base
+WORKDIR /app
 
-RUN apk add --no-cache openssl && \
-    npm ci --ignore-scripts && \
-    npx prisma generate
+FROM base AS pruner
+ARG APP_SCOPE
+COPY . .
+RUN test -n "$APP_SCOPE"
+RUN --mount=type=cache,target=/root/.bun/install/cache bunx turbo@2.9.18 prune "$APP_SCOPE" --docker
 
-COPY ./src ./src
-COPY ./messages ./messages
+FROM base AS installer
+COPY --from=pruner /app/out/json/ ./
+COPY --from=pruner /app/out/bun.lock ./bun.lock
+RUN --mount=type=cache,target=/root/.bun/install/cache bun install
 
-ENV NEXT_TELEMETRY_DISABLED=1
+FROM base AS runner
+ENV NODE_ENV=production
+RUN mkdir -p /data
+COPY --from=installer /app ./
+COPY --from=pruner /app/out/full/ ./
+RUN bun --filter @spliit/db prisma-generate
 
-COPY scripts/build.env .env
-RUN npm run build
+FROM runner AS api
+EXPOSE 3001
+CMD ["bun", "run", "apps/api/src/server.ts"]
 
-RUN rm -r .next/cache
-
-FROM node:21-alpine AS runtime-deps
-
-WORKDIR /usr/app
-COPY --from=base /usr/app/package.json /usr/app/package-lock.json /usr/app/next.config.mjs ./
-COPY --from=base /usr/app/prisma ./prisma
-
-RUN npm ci --omit=dev --omit=optional --ignore-scripts && \
-    npx prisma generate
-
-FROM node:21-alpine AS runner
-
-EXPOSE 3000/tcp
-WORKDIR /usr/app
-
-COPY --from=base /usr/app/package.json /usr/app/package-lock.json /usr/app/next.config.mjs ./
-COPY --from=runtime-deps /usr/app/node_modules ./node_modules
-COPY ./public ./public
-COPY ./scripts ./scripts
-COPY --from=base /usr/app/prisma ./prisma
-COPY --from=base /usr/app/.next ./.next
-
-ENTRYPOINT ["/bin/sh", "/usr/app/scripts/container-entrypoint.sh"]
+FROM runner AS migrate
+CMD ["bun", "--filter", "@spliit/db", "prisma-migrate"]

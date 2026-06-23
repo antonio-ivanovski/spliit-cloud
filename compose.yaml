@@ -1,32 +1,73 @@
 services:
-  app:
+  migrate:
     build: .
     image: spliit:latest
-    ports:
-      - 3000:3000
-    env_file:
-      - container.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-spliit}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-spliit}
     depends_on:
       db:
         condition: service_healthy
+    command: ['bun', '--filter', '@spliit/db', 'prisma-migrate']
+    networks:
+      - spliit_network
+
+  api:
+    build: .
+    image: spliit:latest
+    restart: unless-stopped
+    ports:
+      - 3001:3001
+    environment:
+      PORT: 3001
+      WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:3000}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-spliit}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-spliit}
+      PUBLIC_DEFAULT_CURRENCY_CODE: ${PUBLIC_DEFAULT_CURRENCY_CODE:-}
+      PUBLIC_ENABLE_EXPENSE_DOCUMENTS: ${PUBLIC_ENABLE_EXPENSE_DOCUMENTS:-false}
+      PUBLIC_ENABLE_RECEIPT_EXTRACT: ${PUBLIC_ENABLE_RECEIPT_EXTRACT:-false}
+      PUBLIC_ENABLE_CATEGORY_EXTRACT: ${PUBLIC_ENABLE_CATEGORY_EXTRACT:-false}
+      S3_UPLOAD_KEY: ${S3_UPLOAD_KEY:-}
+      S3_UPLOAD_SECRET: ${S3_UPLOAD_SECRET:-}
+      S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET:-}
+      S3_UPLOAD_REGION: ${S3_UPLOAD_REGION:-}
+      S3_UPLOAD_ENDPOINT: ${S3_UPLOAD_ENDPOINT:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'bun -e "fetch(''http://127.0.0.1:3001/health/readiness'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     networks:
       - spliit_network
 
   db:
-    image: postgres:latest
-    expose:
-      - 5432
-    env_file:
-      - container.env
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-spliit}
+      POSTGRES_USER: ${POSTGRES_USER:-spliit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
       interval: 5s
       timeout: 5s
       retries: 5
     networks:
       - spliit_network
+
+volumes:
+  postgres_data:
 
 networks:
   spliit_network:

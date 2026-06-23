@@ -27,15 +27,15 @@ Spliit is a free and open source alternative to Splitwise. You can either use th
 
 ## Stack
 
-- [Next.js](https://nextjs.org/) for the web application
+- [Vite](https://vite.dev/) + [React](https://react.dev/) for the web SPA
+- [Hono](https://hono.dev/) + [tRPC](https://trpc.io/) for the API
 - [TailwindCSS](https://tailwindcss.com/) for the styling
 - [shadcn/UI](https://ui.shadcn.com/) for the UI components
 - [Prisma](https://prisma.io) to access the database
-- [Vercel](https://vercel.com/) for hosting (application and database)
 
 ## Contribute
 
-The project is open to contributions. Feel free to open an issue or even a pull-request! 
+The project is open to contributions. Feel free to open an issue or even a pull-request!
 Join the discussion in [the Spliit Discord server](https://discord.gg/YSyVXbwvSY).
 
 If you want to contribute financially and help us keep the application free and without ads, you can also:
@@ -45,7 +45,7 @@ If you want to contribute financially and help us keep the application free and 
 
 ### Translation
 
-The project's translations are managed using [our Weblate project](https://hosted.weblate.org/projects/spliit/spliit/). 
+The project's translations are managed using [our Weblate project](https://hosted.weblate.org/projects/spliit/spliit/).
 You can easily add missing translations to the project or even add a new language!
 Here is the current state of translation:
 
@@ -56,24 +56,29 @@ Here is the current state of translation:
 ## Run locally
 
 1. Clone the repository (or fork it if you intend to contribute)
-2. Start a PostgreSQL server. You can run `./scripts/start-local-db.sh` if you don’t have a server already.
-3. Copy the file `.env.example` as `.env`
-4. Run `npm install` to install dependencies. This will also apply database migrations and update Prisma Client.
-5. Run `npm run dev` to start the development server
+2. Run `bun install` to install dependencies.
+3. Start a PostgreSQL server with `./scripts/start-local-db.sh`.
+4. Copy the file `.env.example` as `.env`
+5. Run prisma migrations and generate the client with `bun prisma-migrate` and `bun prisma-generate`
+6. Run `bun dev` to start the web app at http://localhost:3000 and API at http://localhost:3001
 
 ## Run in a container
 
-1. Run `npm run build-image` to build the docker image from the Dockerfile
-2. Copy the file `container.env.example` as `container.env`
-3. Run `npm run start-container` to start the postgres and the spliit2 containers
-4. You can access the app by browsing to http://localhost:3000
+1. Copy the file `container.env.example` as `container.env`.
+2. Set `POSTGRES_PASSWORD` to a long random value.
+3. Set `WEB_ORIGINS` to the public web origin.
+4. Run `bun start-container` to start the API and Postgres.
+
+The API is available at http://localhost:3001. The database is only reachable on the internal Docker network and stores data in the `postgres_data` Docker volume.
+
+For Dokploy on a single Hetzner VPS, publish only the `api` service as your API domain and keep the `db` service private. If the web app is hosted on Cloudflare Pages, set `VITE_API_URL` there to the public Dokploy API origin, for example `https://api.spliit.example.com`. Configure off-server Postgres backups separately.
 
 ## Health check
 
 The application has a health check endpoint that can be used to check if the application is running and if the database is accessible.
 
-- `GET /api/health/readiness` or `GET /api/health` - Check if the application is ready to serve requests, including database connectivity.
-- `GET /api/health/liveness` - Check if the application is running, but not necessarily ready to serve requests.
+- `GET /health/readiness` or `GET /health` - Check if the API is ready to serve requests, including database connectivity.
+- `GET /health/liveness` - Check if the API process is running, but not necessarily ready to serve requests.
 
 ## Opt-in features
 
@@ -81,11 +86,11 @@ The application has a health check endpoint that can be used to check if the app
 
 Spliit offers users to upload images (to an AWS S3 bucket) and attach them to expenses. To enable this feature:
 
-- Follow the instructions in the _S3 bucket_ and _IAM user_ sections of [next-s3-upload](https://next-s3-upload.codingvalue.com/setup#s3-bucket) to create and set up an S3 bucket where images will be stored.
+- Create and configure an S3-compatible bucket where images will be stored.
 - Update your environments variables with appropriate values:
 
 ```.env
-NEXT_PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true
+PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true
 S3_UPLOAD_KEY=AAAAAAAAAAAAAAAAAAAA
 S3_UPLOAD_SECRET=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 S3_UPLOAD_BUCKET=name-of-s3-bucket
@@ -109,7 +114,7 @@ To enable the feature:
 - Update your environment variables with appropriate values:
 
 ```.env
-NEXT_PUBLIC_ENABLE_RECEIPT_EXTRACT=true
+PUBLIC_ENABLE_RECEIPT_EXTRACT=true
 OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
@@ -118,7 +123,7 @@ OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 You can offer users to automatically deduce the expense category from the title. Since this feature relies on a OpenAI subscription, follow the signup instructions above and configure the following environment variables:
 
 ```.env
-NEXT_PUBLIC_ENABLE_CATEGORY_EXTRACT=true
+PUBLIC_ENABLE_CATEGORY_EXTRACT=true
 OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
