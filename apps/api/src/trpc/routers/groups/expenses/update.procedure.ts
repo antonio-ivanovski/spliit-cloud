@@ -1,0 +1,27 @@
+import { expenseFormSchema } from '@spliit/domain'
+import { z } from 'zod'
+import { updateExpense } from '../../../../lib/api'
+import { baseProcedure } from '../../../init'
+
+export const updateGroupExpenseProcedure = baseProcedure
+  .input(
+    z.object({
+      expenseId: z.string().min(1),
+      groupId: z.string().min(1),
+      expenseFormValues: expenseFormSchema,
+      participantId: z.string().optional(),
+    }),
+  )
+  .mutation(
+    async ({
+      input: { expenseId, groupId, expenseFormValues, participantId },
+    }) => {
+      const expense = await updateExpense(
+        groupId,
+        expenseId,
+        expenseFormValues,
+        participantId,
+      )
+      return { expenseId: expense.id }
+    },
+  )

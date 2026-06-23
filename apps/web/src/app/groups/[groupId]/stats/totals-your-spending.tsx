@@ -1,0 +1,33 @@
+'use client'
+import { useLocale, useTranslations } from '@/i18n/react'
+import { Currency } from '@/lib/currency'
+import { cn, formatCurrency } from '@/lib/utils'
+
+export function TotalsYourSpendings({
+  totalParticipantSpendings = 0,
+  currency,
+}: {
+  totalParticipantSpendings?: number
+  currency: Currency
+}) {
+  const locale = useLocale()
+  const t = useTranslations('Stats.Totals')
+
+  const balance =
+    totalParticipantSpendings < 0 ? 'yourEarnings' : 'yourSpendings'
+
+  return (
+    <div data-testid="your-total-spendings">
+      <div className="text-muted-foreground">{t(balance)}</div>
+
+      <div
+        className={cn(
+          'text-lg',
+          totalParticipantSpendings < 0 ? 'text-green-600' : 'text-red-600',
+        )}
+      >
+        {formatCurrency(currency, Math.abs(totalParticipantSpendings), locale)}
+      </div>
+    </div>
+  )
+}

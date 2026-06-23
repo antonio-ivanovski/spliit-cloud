@@ -1,0 +1,45 @@
+import { prisma } from '@spliit/db'
+import contentDisposition from 'content-disposition'
+
+export async function exportGroupJson(groupId: string) {
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: {
+      id: true,
+      name: true,
+      currency: true,
+      currencyCode: true,
+      expenses: {
+        select: {
+          createdAt: true,
+          expenseDate: true,
+          title: true,
+          category: { select: { grouping: true, name: true } },
+          amount: true,
+          originalAmount: true,
+          originalCurrency: true,
+          conversionRate: true,
+          paidById: true,
+          paidFor: { select: { participantId: true, shares: true } },
+          isReimbursement: true,
+          splitMode: true,
+          recurrenceRule: true,
+        },
+        orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
+      },
+      participants: { select: { id: true, name: true } },
+    },
+  })
+
+  if (!group) {
+    return Response.json({ error: 'Invalid group ID' }, { status: 404 })
+  }
+
+  const date = new Date().toISOString().split('T')[0]
+  const filename = `Spliit Export - ${date}.json`
+  return Response.json(group, {
+    headers: {
+      'content-disposition': contentDisposition(filename),
+    },
+  })
+}

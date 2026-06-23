@@ -1,0 +1,27 @@
+{
+  "name": "@spliit/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "prisma generate --schema prisma/schema.prisma && tsc",
+    "check-types": "prisma generate --schema prisma/schema.prisma && tsc --noEmit",
+    "prisma-migrate": "prisma migrate deploy --schema prisma/schema.prisma",
+    "prisma-generate": "prisma generate --schema prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.8.0",
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "pg": "8.22.0",
+    "prisma": "^7.8.0"
+  },
+  "devDependencies": {
+    "@spliit/config": "workspace:*",
+    "@types/node": "24.13.2",
+    "typescript": "^5.9.3"
+  }
+}
