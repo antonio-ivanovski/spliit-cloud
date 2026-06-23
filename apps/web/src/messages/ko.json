@@ -321,8 +321,8 @@
     "groups": "그룹"
   },
   "Footer": {
-    "madeIn": "Created in Canada 🇨🇦, continued in Macedonia 🇲🇰",
-    "builtBy": "Created by <creator>Sebastien Castiel</creator>, continued by <maintainer>Antonio Ivanovski</maintainer>, with <source>contributors</source>"
+    "madeIn": "Made by the open-source community with love ❤️",
+    "builtBy": "See <source>source and contributors</source>"
   },
   "Settings": {
     "title": "설정"

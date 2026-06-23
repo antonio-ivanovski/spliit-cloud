@@ -2,7 +2,7 @@
 
 Spliit is a free and open source alternative to Splitwise.
 
-Spliit was created by [Sebastien Castiel](https://github.com/scastiel). This repository is a fork continued by [Antonio Ivanovski](https://github.com/antonio-ivanovski). The original `spliit-app/spliit` repository appears inactive, with issues and pull requests not receiving maintainer responses, so this fork exists to keep the project moving in a more focused direction.
+Spliit was created by [Sebastien Castiel](https://github.com/scastiel). This repository is a community fork of the original `spliit-app/spliit` project, which appears inactive, with issues and pull requests not receiving maintainer responses. This fork exists to keep the project moving in a more focused direction.
 
 The initial goals are:
 

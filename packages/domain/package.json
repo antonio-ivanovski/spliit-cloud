@@ -23,7 +23,6 @@
     "currency-list": "^1.0.8",
     "dayjs": "^1.11.21",
     "decimal.js": "^10.6.0",
-    "deepmerge": "^4.3.1",
     "tailwind-merge": "^1.14.0",
     "ts-pattern": "^5.9.0",
     "zod": "^3.25.76"

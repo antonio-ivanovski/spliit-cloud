@@ -1,5 +1,3 @@
-import deepmerge from 'deepmerge'
-
 export const localeLabels = {
   id: 'Bahasa Indonesia',
   ca: 'Català',
@@ -32,11 +30,3 @@ export const locales = Object.keys(localeLabels) as Array<
 export type Locale = keyof typeof localeLabels
 export type Locales = ReadonlyArray<Locale>
 export const defaultLocale: Locale = 'en-US'
-
-export async function loadMessages(locale: Locale) {
-  const localeMessages = (await import(`../messages/${locale}.json`)).default
-  if (locale === defaultLocale) return localeMessages
-  const defaultMessages = (await import(`../messages/${defaultLocale}.json`))
-    .default
-  return deepmerge(defaultMessages, localeMessages)
-}

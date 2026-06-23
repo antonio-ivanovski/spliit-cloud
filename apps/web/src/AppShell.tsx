@@ -74,20 +74,6 @@ function Content() {
             <span>{t('Footer.madeIn')}</span>
             <span>
               {t.rich('Footer.builtBy', {
-                creator: (txt) => (
-                  <a href="https://scastiel.dev" target="_blank" rel="noopener">
-                    {txt}
-                  </a>
-                ),
-                maintainer: (txt) => (
-                  <a
-                    href="https://github.com/antonio-ivanovski"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    {txt}
-                  </a>
-                ),
                 source: (txt) => (
                   <a
                     href="https://github.com/antonio-ivanovski/spliit/graphs/contributors"
