@@ -10,8 +10,9 @@ The initial goals are:
 
 - make the tech stack lighter and easier to operate
 - build out complete test coverage
-- focus on group synchronization through cloud accounts
-- decide whether offline account-less usage should remain, be removed, or return later without backward compatibility guarantees
+- make authenticated cloud accounts the source of truth
+- move group and direct expense accounting onto a shared ledger model
+- provide an extensible import path for existing expense data, starting with Spliit groups
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fantonio-ivanovski%2Fspliit-cloud&project-name=my-spliit-cloud-instance&repository-name=my-spliit-cloud-instance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D&)
 
@@ -36,6 +37,10 @@ The initial goals are:
 - [ ] Ability to create recurring expenses
 - [ ] Import expenses from Splitwise
 - [ ] Cloud accounts and group synchronization
+- [ ] [Accounts and cloud group sync](./openspec/changes/add-accounts-cloud-group-sync)
+- [ ] [Direct account-to-account expenses](./openspec/changes/add-direct-account-expenses)
+- [ ] [Account overview homepage](./openspec/changes/add-overview-homepage)
+- [ ] [Extensible expense import, starting with Spliit groups](./openspec/changes/import-spliit-groups)
 
 ## Stack
 
