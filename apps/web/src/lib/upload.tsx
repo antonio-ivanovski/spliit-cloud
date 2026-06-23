@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query'
 import { ChangeEvent, InputHTMLAttributes, useRef } from 'react'
 
 export async function getImageData(file: File) {
@@ -19,29 +20,32 @@ export async function getImageData(file: File) {
 export function usePresignedUpload() {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  async function uploadToS3(file: File) {
-    const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
-    const presignResponse = await fetch(`${apiUrl}/uploads/presign`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fileName: file.name,
-        contentType: file.type || 'application/octet-stream',
-      }),
-    })
-    if (!presignResponse.ok) throw new Error('Could not create upload URL')
-    const { uploadUrl, fileUrl } = (await presignResponse.json()) as {
-      uploadUrl: string
-      fileUrl: string
-    }
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': file.type || 'application/octet-stream' },
-      body: file,
-    })
-    if (!uploadResponse.ok) throw new Error('Upload failed')
-    return { url: fileUrl }
-  }
+  const uploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
+      const contentType = file.type || 'application/octet-stream'
+      const presignResponse = await fetch(`${apiUrl}/uploads/presign`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType,
+        }),
+      })
+      if (!presignResponse.ok) throw new Error('Could not create upload URL')
+      const { uploadUrl, fileUrl } = (await presignResponse.json()) as {
+        uploadUrl: string
+        fileUrl: string
+      }
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': contentType },
+        body: file,
+      })
+      if (!uploadResponse.ok) throw new Error('Upload failed')
+      return { url: fileUrl }
+    },
+  })
 
   function FileInput({
     onChange,
@@ -67,6 +71,7 @@ export function usePresignedUpload() {
   return {
     FileInput,
     openFileDialog: () => inputRef.current?.click(),
-    uploadToS3,
+    uploadToS3: uploadMutation.mutateAsync,
+    isUploading: uploadMutation.isPending,
   }
 }

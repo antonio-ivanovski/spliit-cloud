@@ -1,6 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import useSWR, { Fetcher } from 'swr'
 
 export function useMediaQuery(query: string): boolean {
   const getMatches = (query: string): boolean => {
@@ -73,13 +73,6 @@ interface FrankfurterAPIResponse {
   rates: Record<string, number>
 }
 
-const fetcher: Fetcher<FrankfurterAPIResponse> = (url: string) =>
-  fetch(url).then(async (res) => {
-    if (!res.ok)
-      throw new TypeError('Unsuccessful response from API', { cause: res })
-    return res.json() as Promise<FrankfurterAPIResponse>
-  })
-
 export function useCurrencyRate(
   date: Date,
   baseCurrency: string,
@@ -87,18 +80,30 @@ export function useCurrencyRate(
 ) {
   const dateString = dayjs(date).format('YYYY-MM-DD')
 
-  // Only send request if both currency codes are given and not the same
-  const url =
+  const enabled =
     !isNaN(date.getTime()) &&
     !!baseCurrency.length &&
     !!targetCurrency.length &&
-    baseCurrency !== targetCurrency &&
-    `https://api.frankfurter.app/${dateString}?base=${baseCurrency}`
-  const { data, error, isLoading, mutate } = useSWR<FrankfurterAPIResponse>(
-    url,
-    fetcher,
-    { shouldRetryOnError: false, revalidateOnFocus: false },
-  )
+    baseCurrency !== targetCurrency
+
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: ['currency-rate', dateString, baseCurrency, targetCurrency],
+    enabled,
+    retry: false,
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const params = new URLSearchParams({ base: baseCurrency })
+      const res = await fetch(
+        `https://api.frankfurter.app/${dateString}?${params}`,
+      )
+
+      if (!res.ok) {
+        throw new TypeError('Unsuccessful response from API', { cause: res })
+      }
+
+      return res.json() as Promise<FrankfurterAPIResponse>
+    },
+  })
 
   if (data) {
     let exchangeRate = undefined
@@ -114,7 +119,7 @@ export function useCurrencyRate(
       data: exchangeRate,
       error: sentError,
       isLoading,
-      refresh: mutate,
+      refresh: refetch,
     }
   }
 
@@ -122,6 +127,6 @@ export function useCurrencyRate(
     data,
     error,
     isLoading,
-    refresh: mutate,
+    refresh: refetch,
   }
 }
