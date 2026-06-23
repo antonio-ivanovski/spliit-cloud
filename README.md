@@ -1,6 +1,8 @@
-[<img alt="Spliit Cloud" height="60" src="https://github.com/antonio-ivanovski/spliit-cloud/blob/main/apps/web/public/logo-with-text.webp?raw=true" />](https://spliit.cloud)
+<img alt="Spliit" height="60" src="https://github.com/antonio-ivanovski/spliit-cloud/blob/main/apps/web/public/logo-with-text.svg?raw=true" />
 
-Spliit Cloud is a free and open source alternative to Splitwise, hosted at [spliit.cloud](https://spliit.cloud).
+Spliit is a free and open source alternative to Splitwise.
+
+> Coming soon — this project is still in development.
 
 Spliit Cloud is a community fork of Spliit, originally created by [Sebastien Castiel](https://github.com/scastiel). The original `spliit-app/spliit` project appears inactive, with issues and pull requests not receiving maintainer responses. This fork exists to keep the project moving in a more focused direction.
 

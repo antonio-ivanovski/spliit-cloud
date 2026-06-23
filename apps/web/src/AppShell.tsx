@@ -22,13 +22,13 @@ function Content() {
           href="/"
         >
           <h1 className="flex items-center gap-2">
-              <Image
-                src="/logo-with-text.svg"
-                className="m-1 h-[45px] w-auto"
-                width={(45 * 522) / 180}
-                height={45}
-                alt="Spliit"
-              />
+            <Image
+              src="/logo-with-text.svg"
+              className="m-1 h-[45px] w-auto"
+              width={(45 * 522) / 180}
+              height={45}
+              alt="Spliit"
+            />
           </h1>
         </Link>
         <div role="navigation" aria-label="Menu" className="flex">
