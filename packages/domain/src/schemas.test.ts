@@ -5,7 +5,7 @@ describe('expenseFormSchema', () => {
     const result = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       originalAmount: undefined,
       originalCurrency: '',
@@ -27,7 +27,7 @@ describe('expenseFormSchema', () => {
     const result = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Rent',
-      category: 0,
+      category: 'general',
       amount: 1000,
       originalAmount: undefined,
       originalCurrency: '',
@@ -48,7 +48,7 @@ describe('expenseFormSchema', () => {
   it('fails when title is missing', () => {
     const result = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
-      category: 0,
+      category: 'general',
       amount: 1000,
       originalCurrency: '',
       paidBy: 'p0',
@@ -67,7 +67,7 @@ describe('expenseFormSchema', () => {
     const result = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       paidBy: 'p0',
       paidFor: [{ participant: 'p0', shares: 1 }],
@@ -108,7 +108,7 @@ describe('expenseFormSchema', () => {
     const resultLess = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       paidBy: 'p0',
       paidFor: [
@@ -128,7 +128,7 @@ describe('expenseFormSchema', () => {
     const resultMore = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       paidBy: 'p0',
       paidFor: [
@@ -148,7 +148,7 @@ describe('expenseFormSchema', () => {
     const resultValid = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       paidBy: 'p0',
       paidFor: [
@@ -170,7 +170,7 @@ describe('expenseFormSchema', () => {
     const resultLess = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       paidBy: 'p0',
       paidFor: [
@@ -190,7 +190,7 @@ describe('expenseFormSchema', () => {
     const resultMore = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       paidBy: 'p0',
       paidFor: [
@@ -210,7 +210,7 @@ describe('expenseFormSchema', () => {
     const resultValid = expenseFormSchema.safeParse({
       expenseDate: new Date('2025-01-01T00:00:00.000Z'),
       title: 'Dinner',
-      category: 0,
+      category: 'general',
       amount: 1000,
       paidBy: 'p0',
       paidFor: [

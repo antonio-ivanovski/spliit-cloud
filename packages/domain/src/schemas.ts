@@ -1,6 +1,7 @@
 import Decimal from 'decimal.js'
 
 import * as z from 'zod'
+import { categoryIdSchema } from './categories'
 import { RecurrenceRule, SplitMode } from './enums'
 
 export const groupFormSchema = z
@@ -51,7 +52,7 @@ export const expenseFormSchema = z
   .object({
     expenseDate: z.coerce.date(),
     title: z.string({ required_error: 'titleRequired' }).min(2, 'min2'),
-    category: z.coerce.number().default(0),
+    category: categoryIdSchema,
     amount: z
       .union(
         [

@@ -29,16 +29,13 @@ export function CreateExpenseForm({
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
 
-  const { data: categoriesData } = trpc.categories.list.useQuery()
-  const categories = categoriesData?.categories
-
   const { mutateAsync: createExpenseMutateAsync } =
     trpc.groups.expenses.create.useMutation()
 
   const utils = trpc.useUtils()
   const router = useRouter()
 
-  if (!group || !categories) return null
+  if (!group) return null
 
   if (group.archived) {
     return (
@@ -66,7 +63,6 @@ export function CreateExpenseForm({
   return (
     <ExpenseForm
       group={group}
-      categories={categories}
       currentLedgerParticipantId={currentLedgerParticipantId}
       onSubmit={async (expenseFormValues) => {
         await createExpenseMutateAsync({

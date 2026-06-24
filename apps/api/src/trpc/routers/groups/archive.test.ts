@@ -181,7 +181,7 @@ function makeExpenseRow(args: {
     expenseDate: new Date(),
     createdAt: new Date(),
     title: 'Test expense',
-    categoryId: 0,
+    categoryId: 'general',
     isReimbursement: false,
     recurrenceRule: 'NONE',
     splitMode: args.splitMode ?? 'EVENLY',
@@ -329,7 +329,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
         amount: number
         paidById: string
         isReimbursement: boolean
-        categoryId: number
+        categoryId: string
         paidFor: { createMany: { data: Array<{ shares: number }> } }
       }
     }
@@ -337,7 +337,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
     expect(createCall.data.amount).toBe(50)
     expect(createCall.data.paidById).toBe('lp-bob')
     expect(createCall.data.isReimbursement).toBe(true)
-    expect(createCall.data.categoryId).toBe(1)
+    expect(createCall.data.categoryId).toBe('payment')
     expect(createCall.data.paidFor.createMany.data).toEqual([
       expect.objectContaining({ shares: 1 }),
     ])
@@ -627,7 +627,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
               amount: number
               paidById: string
               isReimbursement: boolean
-              categoryId: number
+              categoryId: string
             }
           }
         ).data,
@@ -636,7 +636,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
     expect(amounts).toEqual([333, 333])
     for (const leg of legs) {
       expect(leg.isReimbursement).toBe(true)
-      expect(leg.categoryId).toBe(1)
+      expect(leg.categoryId).toBe('payment')
       expect(['lp-bob', 'lp-carol']).toContain(leg.paidById)
     }
   })

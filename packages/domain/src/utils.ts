@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { Category } from './categories'
 import { Currency, getCurrency } from './currency'
 
 export function cn(...inputs: ClassValue[]) {
@@ -56,11 +57,9 @@ export function formatDateOnly(
   })
 }
 
-export function formatCategoryForAIPrompt(category: {
-  id: number
-  grouping: string
-  name: string
-}) {
+export function formatCategoryForAIPrompt(
+  category: Pick<Category, 'id' | 'grouping' | 'name'>,
+) {
   return `"${category.grouping}/${category.name}" (ID: ${category.id})`
 }
 

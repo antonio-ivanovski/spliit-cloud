@@ -1,4 +1,5 @@
 import { prisma } from '@spliit/db'
+import { getCategoryById } from '@spliit/domain'
 import contentDisposition from 'content-disposition'
 import { getAuthFromRequest } from '../lib/auth/session'
 
@@ -35,7 +36,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
       createdAt: true,
       expenseDate: true,
       title: true,
-      category: { select: { grouping: true, name: true } },
+      categoryId: true,
       amount: true,
       originalAmount: true,
       originalCurrency: true,
@@ -50,13 +51,18 @@ export async function exportGroupJson(request: Request, groupId: string) {
     orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
   })
 
+  const expensesWithCategory = expenses.map((expense) => ({
+    ...expense,
+    category: getCategoryById(expense.categoryId as never) ?? null,
+  }))
+
   const payload = {
     id: group.id,
     name: group.name,
     information: group.information,
     currency: group.ledger.currency,
     currencyCode: group.ledger.currencyCode,
-    expenses,
+    expenses: expensesWithCategory,
     participants: group.members.flatMap((m) =>
       m.ledgerParticipant
         ? [{ id: m.ledgerParticipant.id, name: m.ledgerParticipant.name }]

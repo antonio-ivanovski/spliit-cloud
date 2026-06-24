@@ -84,7 +84,7 @@ describe('exportGroupCsv', () => {
         id: 'exp-1',
         expenseDate: new Date('2024-06-01T00:00:00Z'),
         title: 'Dinner',
-        category: { name: 'Food' },
+        categoryId: 'groceries',
         amount: 3000,
         originalAmount: null,
         originalCurrency: null,

@@ -18,9 +18,6 @@ export function EditExpenseForm({
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
 
-  const { data: categoriesData } = trpc.categories.list.useQuery()
-  const categories = categoriesData?.categories
-
   const { data: expenseData } = trpc.groups.expenses.get.useQuery({
     groupId,
     expenseId,
@@ -35,7 +32,7 @@ export function EditExpenseForm({
   const utils = trpc.useUtils()
   const router = useRouter()
 
-  if (!group || !categories || !expense) return null
+  if (!group || !expense) return null
 
   const readOnly = !!group.archived
 
@@ -43,7 +40,6 @@ export function EditExpenseForm({
     <ExpenseForm
       group={group}
       expense={expense}
-      categories={categories}
       currentLedgerParticipantId={currentLedgerParticipantId}
       readOnly={readOnly}
       onSubmit={async (expenseFormValues) => {

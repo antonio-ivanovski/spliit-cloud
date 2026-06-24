@@ -10,11 +10,17 @@ import {
 } from '@spliit/db'
 import {
   calculateNextDate,
+  categoryIdSchema,
+  DEFAULT_CATEGORY_ID,
   getBalances,
+  getCategoryById,
   getPublicBalances,
   getSuggestedReimbursements,
+  PAYMENT_CATEGORY_ID,
   type BalanceExpense,
   type Balances,
+  type Category,
+  type CategoryId,
   type ExpenseFormValues,
   type GroupFormValues,
   type Reimbursement,
@@ -505,8 +511,30 @@ export async function getGroup(groupId: string) {
   }
 }
 
-export async function getCategories() {
-  return prisma.category.findMany()
+/**
+ * Resolve a `categoryId` string from the database to the in-code
+ * {@link Category} object. Returns the default "General" category when
+ * the stored id is not in the in-code list (e.g. it was written by an
+ * older version of the app or is otherwise invalid).
+ */
+function resolveCategory(categoryId: string): Category {
+  return (
+    getCategoryById(categoryIdSchema.parse(categoryId)) ?? {
+      id: DEFAULT_CATEGORY_ID,
+      grouping: 'Uncategorized',
+      name: 'General',
+    }
+  )
+}
+
+/**
+ * Narrow a `categoryId` string from the database to the {@link CategoryId}
+ * literal union, falling back to the default category if the stored id is
+ * not in the in-code list.
+ */
+function narrowCategoryId(categoryId: string): CategoryId {
+  const parsed = categoryIdSchema.safeParse(categoryId)
+  return parsed.success ? parsed.data : DEFAULT_CATEGORY_ID
 }
 
 export async function getGroupExpenses(
@@ -521,10 +549,10 @@ export async function getGroupExpenses(
   })
   if (!group?.ledgerId) return []
 
-  return prisma.expense.findMany({
+  const rows = await prisma.expense.findMany({
     select: {
       amount: true,
-      category: true,
+      categoryId: true,
       createdAt: true,
       expenseDate: true,
       id: true,
@@ -551,6 +579,12 @@ export async function getGroupExpenses(
     skip: options && options.offset,
     take: options && options.length,
   })
+
+  return rows.map((row) => ({
+    ...row,
+    categoryId: narrowCategoryId(row.categoryId),
+    category: resolveCategory(row.categoryId),
+  }))
 }
 
 export async function getGroupExpenseCount(groupId: string) {
@@ -568,16 +602,21 @@ export async function getExpense(groupId: string, expenseId: string) {
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) return null
-  return prisma.expense.findFirst({
+  const expense = await prisma.expense.findFirst({
     where: { id: expenseId, ledgerId: group.ledgerId },
     include: {
       paidBy: true,
       paidFor: true,
-      category: true,
       documents: true,
       recurringExpenseLink: true,
     },
   })
+  if (!expense) return null
+  return {
+    ...expense,
+    categoryId: narrowCategoryId(expense.categoryId),
+    category: resolveCategory(expense.categoryId),
+  }
 }
 
 export async function getActivities(
@@ -665,7 +704,6 @@ export async function createRecurringExpenses() {
           include: {
             paidBy: { select: { id: true, name: true } },
             paidFor: { select: { ledgerParticipantId: true, shares: true } },
-            category: { select: { id: true, name: true, grouping: true } },
             documents: {
               select: { id: true, url: true, width: true, height: true },
             },
@@ -690,7 +728,6 @@ export async function createRecurringExpenses() {
       )
 
       const {
-        category,
         paidBy,
         paidFor,
         documents,
@@ -732,7 +769,6 @@ export async function createRecurringExpenses() {
             include: {
               paidFor: true,
               documents: true,
-              category: true,
               paidBy: true,
             },
           })
@@ -887,9 +923,9 @@ export async function createSettlementExpensesForArchive(
         ledgerId: group.ledgerId,
         expenseDate: now,
         title: SETTLEMENT_TITLE,
-        // "Payment" is the existing category used by the manual
-        // reimbursement form (see `ExpenseForm` defaults).
-        categoryId: 1,
+        // "Payment" is the default reimbursement category shared with
+        // the manual reimbursement form (see `ExpenseForm` defaults).
+        categoryId: PAYMENT_CATEGORY_ID,
         amount: leg.amount,
         paidById: leg.from,
         splitMode: 'EVENLY',

@@ -283,12 +283,13 @@ model AccountGroupPreference {
 // Expenses, splits, documents, activities, recurrence
 // ---------------------------------------------------------------------------
 
-model Category {
-  id       Int       @id @default(autoincrement())
-  grouping String
-  name     String
-  Expense  Expense[]
-}
+// NOTE: There is no `Category` model on purpose. Default categories are
+// defined in code (`packages/domain/src/categories.ts`) and resolved
+// through i18n. `Expense.categoryId` stores a string id that is
+// validated against `categoryIdSchema` (a Zod enum of the in-code ids).
+// The column is intentionally not a foreign key: when user-created
+// categories land, a new `Category` table will be re-introduced and a
+// migration will restore the constraint.
 
 model Expense {
   id               String            @id
@@ -296,8 +297,9 @@ model Expense {
   ledgerId         String
   expenseDate      DateTime          @default(dbgenerated("CURRENT_DATE")) @db.Date
   title            String
-  category         Category          @relation(fields: [categoryId], references: [id])
-  categoryId       Int               @default(0)
+  // Descriptive id from the in-code category list, e.g. "general",
+  // "payment", "movies". See `packages/domain/src/categories.ts`.
+  categoryId       String            @default("general")
   // Normalized amount in ledger base-currency minor units.
   amount           Int
   originalAmount   Int?

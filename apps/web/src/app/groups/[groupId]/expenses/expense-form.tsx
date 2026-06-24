@@ -41,7 +41,7 @@ import { defaultCurrencyList, getCurrency } from '@/lib/currency'
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate } from '@/lib/hooks'
 import { useSearchParams } from '@/lib/navigation'
-import { ExpenseFormValues, expenseFormSchema } from '@/lib/schemas'
+import { expenseFormSchema, ExpenseFormValues } from '@/lib/schemas'
 import { calculateShare } from '@/lib/totals'
 import {
   amountAsDecimal,
@@ -53,9 +53,16 @@ import {
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
-import { RecurrenceRule } from '@spliit/domain'
+import {
+  categoryIdSchema,
+  DEFAULT_CATEGORIES,
+  DEFAULT_CATEGORY_ID,
+  PAYMENT_CATEGORY_ID,
+  RecurrenceRule,
+} from '@spliit/domain'
 import { ChevronRight, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import type { Resolver } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { match } from 'ts-pattern'
 import { DeletePopup } from '../../../../components/delete-popup'
@@ -69,6 +76,12 @@ const enforceCurrencyPattern = (value: string) =>
     .replace(/_/, '-') // change back _ to minus
     .replace(/#/, '.') // change back # to dot
     .replace(/[^-\d.]/g, '') // remove all non-numeric characters
+
+const parseCategoryIdFromUrl = (raw: string | null) => {
+  if (!raw) return DEFAULT_CATEGORY_ID
+  const parsed = categoryIdSchema.safeParse(raw)
+  return parsed.success ? parsed.data : DEFAULT_CATEGORY_ID
+}
 
 const getDefaultSplittingOptions = (
   group: NonNullable<AppRouterOutput['groups']['get']['group']>,
@@ -97,7 +110,6 @@ async function persistDefaultSplittingOptions(
 
 export function ExpenseForm({
   group,
-  categories,
   expense,
   onSubmit,
   onDelete,
@@ -106,7 +118,6 @@ export function ExpenseForm({
   readOnly = false,
 }: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
-  categories: AppRouterOutput['categories']['list']['categories']
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
   onSubmit: (value: ExpenseFormValues) => Promise<void>
   onDelete?: () => Promise<void>
@@ -137,8 +148,8 @@ export function ExpenseForm({
   }
   const defaultSplittingOptions = getDefaultSplittingOptions(group)
   const groupCurrency = getCurrencyFromGroup(group)
-  const form = useForm<ExpenseFormValues>({
-    resolver: zodResolver(expenseFormSchema),
+  const form = useForm<ExpenseFormValues, any, ExpenseFormValues>({
+    resolver: zodResolver(expenseFormSchema) as Resolver<ExpenseFormValues>,
     defaultValues: expense
       ? {
           title: expense.title,
@@ -173,7 +184,7 @@ export function ExpenseForm({
             originalCurrency: group.currencyCode,
             originalAmount: undefined,
             conversionRate: undefined,
-            category: 1, // category with Id 1 is Payment
+            category: PAYMENT_CATEGORY_ID,
             paidBy: searchParams.get('from') ?? undefined,
             paidFor: [
               searchParams.get('to')
@@ -199,9 +210,7 @@ export function ExpenseForm({
             originalCurrency: group.currencyCode ?? undefined,
             originalAmount: undefined,
             conversionRate: undefined,
-            category: searchParams.get('categoryId')
-              ? Number(searchParams.get('categoryId'))
-              : 0, // category with Id 0 is General
+            category: parseCategoryIdFromUrl(searchParams.get('categoryId')),
             // paid for all, split evenly
             paidFor: defaultSplittingOptions.paidFor,
             paidBy: getSelectedPayer(),
@@ -623,7 +632,7 @@ export function ExpenseForm({
                 <FormItem className="order-3 sm:order-2">
                   <FormLabel>{t('categoryField.label')}</FormLabel>
                   <CategorySelector
-                    categories={categories}
+                    categories={DEFAULT_CATEGORIES}
                     defaultValue={
                       form.watch(field.name) // may be overwritten externally
                     }

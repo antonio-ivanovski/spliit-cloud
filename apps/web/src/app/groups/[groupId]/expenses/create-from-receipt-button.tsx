@@ -33,6 +33,7 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
+import { categoryIdSchema, getCategoryById } from '@spliit/domain'
 import { ChevronRight, FileQuestion, Loader2, Receipt } from 'lucide-react'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useCurrentGroup } from '../current-group-context'
@@ -82,8 +83,6 @@ export function CreateFromReceiptButton() {
 
 function ReceiptDialogContent() {
   const { group } = useCurrentGroup()
-  const { data: categoriesData } = trpc.categories.list.useQuery()
-  const categories = categoriesData?.categories
 
   const locale = useLocale()
   const t = useTranslations('CreateFromReceipt')
@@ -145,9 +144,12 @@ function ReceiptDialogContent() {
     upload()
   }
 
+  const parsedReceiptCategoryId = receiptInfo?.categoryId
+    ? categoryIdSchema.safeParse(receiptInfo.categoryId)
+    : null
   const receiptInfoCategory =
-    (receiptInfo?.categoryId &&
-      categories?.find((c) => String(c.id) === receiptInfo.categoryId)) ||
+    (parsedReceiptCategoryId?.success &&
+      getCategoryById(parsedReceiptCategoryId.data)) ||
     null
 
   return (

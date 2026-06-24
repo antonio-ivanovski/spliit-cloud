@@ -2,6 +2,7 @@ import { Parser } from '@json2csv/plainjs'
 import { prisma } from '@spliit/db'
 import {
   formatAmountAsDecimal,
+  getCategoryById,
   getCurrency,
   getCurrencyFromGroup,
 } from '@spliit/domain'
@@ -67,7 +68,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     select: {
       expenseDate: true,
       title: true,
-      category: { select: { name: true } },
+      categoryId: true,
       amount: true,
       originalAmount: true,
       originalCurrency: true,
@@ -107,7 +108,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
   const rows = expenses.map((expense) => ({
     date: formatDate(expense.expenseDate),
     title: expense.title,
-    categoryName: expense.category?.name || '',
+    categoryName: getCategoryById(expense.categoryId as never)?.name ?? '',
     currency: group.ledger?.currencyCode ?? group.ledger?.currency ?? '',
     amount: formatAmountAsDecimal(expense.amount, currency),
     originalAmount: expense.originalAmount
