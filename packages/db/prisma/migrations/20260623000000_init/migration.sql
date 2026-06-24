@@ -8,7 +8,7 @@ CREATE TYPE "GroupRole" AS ENUM ('OWNER', 'ADMIN', 'MEMBER');
 CREATE TYPE "GroupMemberStatus" AS ENUM ('PENDING', 'ACTIVE', 'LEFT', 'REMOVED', 'SUSPENDED');
 
 -- CreateEnum
-CREATE TYPE "GroupInvitationStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REVOKED');
+CREATE TYPE "GroupInvitationStatus" AS ENUM ('PENDING', 'ACCEPTED', 'DECLINED', 'REVOKED');
 
 -- CreateEnum
 CREATE TYPE "SplitMode" AS ENUM ('EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT');
@@ -102,6 +102,7 @@ CREATE TABLE "Group" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "information" TEXT,
+    "archived" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ledgerId" TEXT NOT NULL,
 
@@ -137,6 +138,7 @@ CREATE TABLE "GroupInvitation" (
     "acceptedById" TEXT,
     "acceptedAt" TIMESTAMP(3),
     "revokedAt" TIMESTAMP(3),
+    "ledgerParticipantId" TEXT,
 
     CONSTRAINT "GroupInvitation_pkey" PRIMARY KEY ("id")
 );
@@ -375,6 +377,9 @@ ALTER TABLE "GroupInvitation" ADD CONSTRAINT "GroupInvitation_invitedById_fkey" 
 ALTER TABLE "GroupInvitation" ADD CONSTRAINT "GroupInvitation_acceptedById_fkey" FOREIGN KEY ("acceptedById") REFERENCES "Account"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "GroupInvitation" ADD CONSTRAINT "GroupInvitation_ledgerParticipantId_fkey" FOREIGN KEY ("ledgerParticipantId") REFERENCES "LedgerParticipant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "AccountGroupPreference" ADD CONSTRAINT "AccountGroupPreference_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -415,3 +420,4 @@ ALTER TABLE "Activity" ADD CONSTRAINT "Activity_ledgerParticipantId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "Activity" ADD CONSTRAINT "Activity_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
