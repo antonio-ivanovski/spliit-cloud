@@ -29,9 +29,9 @@ export type CategoryDefinition<Id extends string = string> = {
   name: string
 }
 
-function defineCategories<const Categories extends readonly CategoryDefinition[]>(
-  categories: Categories,
-): Categories {
+function defineCategories<
+  const Categories extends readonly CategoryDefinition[],
+>(categories: Categories): Categories {
   return categories
 }
 
@@ -111,10 +111,9 @@ export type Category = (typeof DEFAULT_CATEGORIES)[number]
 /** Descriptive string id of a default category. */
 export type CategoryId = Category['id']
 
-export const CATEGORY_IDS = DEFAULT_CATEGORIES.map((category) => category.id) as [
-  CategoryId,
-  ...CategoryId[],
-]
+export const CATEGORY_IDS = DEFAULT_CATEGORIES.map(
+  (category) => category.id,
+) as [CategoryId, ...CategoryId[]]
 
 /**
  * Zod schema that constrains a category id to one of the in-code
