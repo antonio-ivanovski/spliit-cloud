@@ -18,8 +18,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
-import { useRouter, useSearchParams } from '@/lib/navigation'
 import { useMutation } from '@tanstack/react-query'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { ChevronDown, Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
 
@@ -30,10 +30,16 @@ function getErrorMessage(error: unknown): string {
   return String(error)
 }
 
+function needsDisplayName(account: { name?: string | null; email?: string }) {
+  return !account.name || account.name === account.email
+}
+
 export function SignInPage() {
   const t = useTranslations('Auth')
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  const navigate = useNavigate()
+  const searchParams = new URLSearchParams(
+    useLocation({ select: (location) => location.searchStr }),
+  )
   const redirectTo = searchParams.get('redirect') ?? '/groups'
   const initialMode =
     searchParams.get('mode') === 'sign-up' ? 'sign-up' : 'sign-in'
@@ -43,6 +49,8 @@ export function SignInPage() {
       ? window.location.origin
       : 'http://localhost:3000'
   const callbackURL = `${webOrigin}${redirectTo}`
+  const completeProfilePath = `/auth/complete-profile?redirect=${encodeURIComponent(redirectTo)}`
+  const completeProfileCallbackURL = `${webOrigin}${completeProfilePath}`
 
   const [mode, setMode] = useState<Mode>(initialMode)
 
@@ -62,7 +70,6 @@ export function SignInPage() {
       email: string
       password: string
       confirmPassword: string
-      callbackURL: string
     }) => {
       if (vars.mode === 'sign-in') {
         const result = await authClient.signIn.email({
@@ -86,11 +93,10 @@ export function SignInPage() {
         email: vars.email.trim(),
         password: vars.password,
         // Pass an empty name so better-auth creates the account; the
-        // `RequireAuth` guard will detect the missing display name and
-        // redirect the user to `/auth/complete-profile`, matching the
-        // magic-link sign-up flow.
+        // profile-completion route will handle accounts that still need a
+        // display name after verification.
         name: '',
-        callbackURL: vars.callbackURL,
+        callbackURL: completeProfileCallbackURL,
       })
       if (result.error) {
         throw new Error(
@@ -101,13 +107,23 @@ export function SignInPage() {
       }
       return { mode: 'sign-up' as const }
     },
-    onSuccess(data) {
+    async onSuccess(data) {
       if (data.mode === 'sign-up') {
         // Email verification is required, so no session is created yet.
         // Show a confirmation message instead of redirecting.
         setVerificationEmailSent(true)
       } else {
-        router.replace(redirectTo)
+        const session = await authClient.getSession({
+          query: { disableCookieCache: true },
+        })
+        const account = session.data?.user
+        await navigate({
+          href:
+            account && needsDisplayName(account)
+              ? completeProfilePath
+              : redirectTo,
+          replace: true,
+        })
       }
     },
   })
@@ -152,7 +168,6 @@ export function SignInPage() {
       email,
       password,
       confirmPassword,
-      callbackURL,
     })
   }
 

@@ -70,6 +70,9 @@ export const auth = betterAuth({
   },
 
   emailVerification: {
+    // Verification should complete the sign-up by creating a session before
+    // redirecting back to the web app.
+    autoSignInAfterVerification: true,
     async sendVerificationEmail({ user, url }) {
       // Best-effort: a failed send must not break the sign-up flow.
       // better-auth already created the verification token in the DB, so the

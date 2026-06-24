@@ -4,7 +4,7 @@ import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useTranslations } from '@/i18n/react'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { Github, Loader2, LogIn, UserPlus, Users } from 'lucide-react'
+import { Loader2, LogIn, UserPlus, Users } from 'lucide-react'
 
 export default function HomePage() {
   const t = useTranslations()
@@ -49,12 +49,6 @@ export default function HomePage() {
                   <Link href="/auth/sign-in?mode=sign-up">
                     <UserPlus className="w-4 h-4 mr-2" />
                     {t('Homepage.button.createAccount')}
-                  </Link>
-                </Button>
-                <Button asChild variant="ghost" size="lg">
-                  <Link href="https://github.com/antonio-ivanovski/spliit-cloud">
-                    <Github className="w-4 h-4 mr-2" />
-                    {t('Homepage.button.github')}
                   </Link>
                 </Button>
               </>

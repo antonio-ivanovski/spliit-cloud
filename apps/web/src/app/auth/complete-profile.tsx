@@ -11,12 +11,11 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useTranslations } from '@/i18n/react'
-import { useRouter, useSearchParams } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
-import { Navigate } from '@tanstack/react-router'
+import { Navigate, useLocation, useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 /**
  * Profile completion screen. Shown when an authenticated account has no
@@ -29,8 +28,10 @@ import { useEffect, useState } from 'react'
  */
 export function CompleteProfilePage() {
   const t = useTranslations('CompleteProfile')
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  const navigate = useNavigate()
+  const searchParams = new URLSearchParams(
+    useLocation({ select: (location) => location.searchStr }),
+  )
   const redirectTo = searchParams.get('redirect') ?? '/groups'
   const { data: account, isPending, refetch } = useCurrentAccount()
 
@@ -40,15 +41,8 @@ export function CompleteProfilePage() {
 
   const updateProfile = trpc.account.updateProfile.useMutation()
 
-  // If the account already has a usable display name, bounce to the target.
   const needsProfile =
     !!account && (!account.name || account.name === account.email)
-
-  useEffect(() => {
-    if (account && !needsProfile) {
-      router.replace(redirectTo)
-    }
-  }, [account, needsProfile, redirectTo, router])
 
   if (isPending) {
     return (
@@ -64,11 +58,7 @@ export function CompleteProfilePage() {
   }
 
   if (!needsProfile) {
-    return (
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-      </main>
-    )
+    return <Navigate to={redirectTo} replace />
   }
 
   async function handleSubmit(event: React.FormEvent) {
@@ -89,7 +79,7 @@ export function CompleteProfilePage() {
       // Bust better-auth's cookie-cached session so `useCurrentAccount`
       // returns the updated name on the next read.
       await refetch({ query: { disableCookieCache: true } })
-      router.replace(redirectTo)
+      await navigate({ href: redirectTo, replace: true })
     } catch {
       setError(t('errors.generic'))
     } finally {
