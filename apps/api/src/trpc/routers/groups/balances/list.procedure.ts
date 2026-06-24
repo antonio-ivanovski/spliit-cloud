@@ -2,15 +2,26 @@ import {
   getBalances,
   getPublicBalances,
   getSuggestedReimbursements,
+  type BalanceExpense,
 } from '@spliit/domain'
 import { z } from 'zod'
 import { getGroupExpenses } from '../../../../lib/api'
-import { baseProcedure } from '../../../init'
+import { loadGroupContext, protectedProcedure } from '../../../init'
 
-export const listGroupBalancesProcedure = baseProcedure
+export const listGroupBalancesProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1) }))
-  .query(async ({ input: { groupId } }) => {
-    const expenses = await getGroupExpenses(groupId)
+  .query(async ({ input: { groupId }, ctx }) => {
+    await loadGroupContext({ groupId, accountId: ctx.auth.user.id })
+    const rows = await getGroupExpenses(groupId)
+    // Map LedgerParticipant references to the participant-like shape the
+    // domain balance functions expect, keeping the math untouched.
+    const expenses: BalanceExpense[] = rows.map((row) => ({
+      ...row,
+      paidFor: row.paidFor.map((pf) => ({
+        shares: pf.shares,
+        participant: pf.ledgerParticipant,
+      })),
+    }))
     const balances = getBalances(expenses)
     const reimbursements = getSuggestedReimbursements(balances)
     const publicBalances = getPublicBalances(reimbursements)

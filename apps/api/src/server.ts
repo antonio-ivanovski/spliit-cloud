@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { auth } from './lib/auth'
 import { env, webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'
 import { exportGroupCsv } from './routes/export-csv'
@@ -29,19 +30,28 @@ app.get('/health', () => checkLiveness())
 app.get('/health/liveness', () => checkLiveness())
 app.get('/health/readiness', () => checkReadiness())
 
+// better-auth handler — exposes /api/auth/sign-in, /api/auth/sign-up, etc.
+app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw))
+
 app.post('/uploads/presign', async (c) => {
-  const body = await c.req.json<{ fileName?: string; contentType?: string }>()
+  const body = await c.req.json<{
+    ledgerId?: string
+    fileName?: string
+    contentType?: string
+  }>()
   return createUploadUrl(
+    c.req.raw,
+    body.ledgerId,
     body.fileName ?? 'document',
     body.contentType ?? 'application/octet-stream',
   )
 })
 
 app.get('/groups/:groupId/expenses/export/json', (c) =>
-  exportGroupJson(c.req.param('groupId')),
+  exportGroupJson(c.req.raw, c.req.param('groupId')),
 )
 app.get('/groups/:groupId/expenses/export/csv', (c) =>
-  exportGroupCsv(c.req.param('groupId')),
+  exportGroupCsv(c.req.raw, c.req.param('groupId')),
 )
 
 app.all('/trpc/*', (c) =>
@@ -49,7 +59,7 @@ app.all('/trpc/*', (c) =>
     endpoint: '/trpc',
     req: c.req.raw,
     router: appRouter,
-    createContext: createTRPCContext,
+    createContext: () => createTRPCContext({ req: c.req.raw }),
   }),
 )
 

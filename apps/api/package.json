@@ -10,7 +10,7 @@
     "dev": "bun --env-file=../../.env --watch src/server.ts",
     "start": "bun --env-file=../../.env run src/server.ts",
     "check-types": "tsc --noEmit",
-    "test": "echo \"No API unit tests yet\""
+    "test": "vitest run --globals src"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1073.0",
@@ -20,6 +20,7 @@
     "@spliit/db": "workspace:*",
     "@spliit/domain": "workspace:*",
     "@trpc/server": "^11.18.0",
+    "better-auth": "^1.6.20",
     "content-disposition": "^0.5.4",
     "hono": "^4.12.26",
     "nanoid": "^5.1.15",
@@ -31,6 +32,7 @@
     "@spliit/config": "workspace:*",
     "@types/content-disposition": "^0.5.9",
     "@types/node": "24.13.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.9"
   }
 }
