@@ -1,0 +1,11 @@
+process.env.DATABASE_URL ??= 'postgresql://test:test@localhost:5432/test'
+process.env.BETTER_AUTH_SECRET ??= 'spliit-test-secret'
+process.env.BETTER_AUTH_URL ??= 'http://localhost:3001'
+process.env.NODE_ENV ??= 'test'
+process.env.WEB_ORIGINS ??= 'http://localhost:3000'
+// Pre-seed S3 env so the upload route does not short-circuit with 503.
+process.env.S3_UPLOAD_BUCKET ??= 'spliit-test-bucket'
+process.env.S3_UPLOAD_KEY ??= 'AKIA-TEST'
+process.env.S3_UPLOAD_REGION ??= 'us-east-1'
+process.env.S3_UPLOAD_SECRET ??= 'test-secret'
+process.env.S3_UPLOAD_ENDPOINT ??= ''
