@@ -82,7 +82,7 @@ export const i18n = i18next.createInstance()
 void i18n.use(initReactI18next).init({
   lng: typeof document === 'undefined' ? defaultLocale : detectLocale(),
   fallbackLng: defaultLocale,
-  interpolation: { escapeValue: false },
+  interpolation: { escapeValue: false, prefix: '{', suffix: '}' },
   resources: Object.fromEntries(
     Object.entries(resources).map(([locale, translation]) => [
       locale,
