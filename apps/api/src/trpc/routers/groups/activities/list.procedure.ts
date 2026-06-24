@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { getActivities } from '../../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupViewer, protectedProcedure } from '../../../init'
 
 export const listGroupActivitiesProcedure = protectedProcedure
   .input(
@@ -11,7 +11,11 @@ export const listGroupActivitiesProcedure = protectedProcedure
     }),
   )
   .query(async ({ input: { groupId, cursor, limit }, ctx }) => {
-    await loadGroupContext({ groupId, accountId: ctx.auth.user.id })
+    await loadGroupViewer({
+      groupId,
+      accountId: ctx.auth.user.id,
+      accountEmail: ctx.auth.user.email,
+    })
     const activities = await getActivities(groupId, {
       offset: cursor,
       length: limit + 1,

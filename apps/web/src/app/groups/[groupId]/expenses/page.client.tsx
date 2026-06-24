@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/card'
 import { useTranslations } from '@/i18n/react'
 import { Plus } from 'lucide-react'
-import { useCurrentGroup } from '../current-group-context'
+import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export default function GroupExpensesPageClient({
   enableReceiptExtract,
@@ -23,7 +23,12 @@ export default function GroupExpensesPageClient({
 }) {
   const t = useTranslations('Expenses')
   const { groupId, group } = useCurrentGroup()
+  const isPendingInvitee = useIsPendingInvitee()
   const isArchived = !!group?.archived
+  // Pending invitees have read-only access — block the export, receipt
+  // extraction, and "+" create affordances so they can only browse. The
+  // server rejects the corresponding mutations anyway.
+  const canEdit = !isArchived && !isPendingInvitee
 
   return (
     <Card className="mb-4 rounded-none -mx-4 border-x-0 sm:border-x sm:rounded-lg sm:mx-0">
@@ -33,9 +38,9 @@ export default function GroupExpensesPageClient({
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardHeader className="p-4 sm:p-6 flex flex-row space-y-0 gap-2">
-          <ExportButton groupId={groupId} />
-          {enableReceiptExtract && !isArchived && <CreateFromReceiptButton />}
-          {!isArchived && (
+          {!isPendingInvitee && <ExportButton groupId={groupId} />}
+          {enableReceiptExtract && canEdit && <CreateFromReceiptButton />}
+          {canEdit && (
             <Button asChild size="icon">
               <Link
                 href={`/groups/${groupId}/expenses/create`}

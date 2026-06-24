@@ -12,6 +12,7 @@ import { useTranslations } from '@/i18n/react'
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { useIsPendingInvitee } from '../current-group-context'
 import { ExpenseForm } from './expense-form'
 
 export function CreateExpenseForm({
@@ -28,6 +29,7 @@ export function CreateExpenseForm({
   const group = groupData?.group
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
+  const isPendingInvitee = useIsPendingInvitee()
 
   const { mutateAsync: createExpenseMutateAsync } =
     trpc.groups.expenses.create.useMutation()
@@ -36,6 +38,29 @@ export function CreateExpenseForm({
   const router = useRouter()
 
   if (!group) return null
+
+  if (isPendingInvitee) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{tGroups('pendingInviteeExpenseTitle')}</CardTitle>
+          <CardDescription>{t('create')}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <p className="text-sm text-muted-foreground">
+            {tGroups('pendingInviteeExpenseDescription')}
+          </p>
+          <div>
+            <Button asChild variant="secondary">
+              <Link href={`/groups/${groupId}/expenses`}>
+                {tGroups('backToExpenses')}
+              </Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   if (group.archived) {
     return (

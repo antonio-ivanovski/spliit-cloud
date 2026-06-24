@@ -382,15 +382,32 @@ function PendingInvitations() {
               invitation.invitedBy?.name ||
               invitation.invitedBy?.email ||
               t('invitations.unknownInviter')
+            const groupId = invitation.group?.id
+            // The row is clickable to preview the group before accepting.
+            // We use a stretched-link pattern: the group name is a real
+            // <Link>, and its ::before pseudo-element covers the row so
+            // clicking anywhere (except the action buttons) navigates.
             return (
               <li
                 key={invitation.id}
-                className="flex flex-col gap-2 p-3 first:rounded-t-lg last:rounded-b-lg sm:flex-row sm:items-center sm:justify-between"
+                className="relative flex flex-col gap-2 p-3 first:rounded-t-lg last:rounded-b-lg sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="font-medium text-foreground truncate">
-                    {invitation.group?.name ?? t('invitations.unknownGroup')}
-                  </p>
+                  {groupId ? (
+                    <Link
+                      href={`/groups/${groupId}`}
+                      className="font-medium text-foreground no-underline outline-none focus-visible:underline before:absolute before:inset-0 before:rounded-md before:content-['']"
+                      title={
+                        invitation.group?.name ?? t('invitations.unknownGroup')
+                      }
+                    >
+                      {invitation.group?.name ?? t('invitations.unknownGroup')}
+                    </Link>
+                  ) : (
+                    <p className="font-medium text-foreground truncate">
+                      {invitation.group?.name ?? t('invitations.unknownGroup')}
+                    </p>
+                  )}
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {t('invitations.invitedBy', { name: inviterName })}
                   </p>
@@ -400,7 +417,7 @@ function PendingInvitations() {
                     })}
                   </p>
                 </div>
-                <div className="flex gap-2 sm:shrink-0">
+                <div className="flex gap-2 sm:shrink-0 relative z-10">
                   <Button
                     size="sm"
                     variant="ghost"
@@ -448,7 +465,6 @@ function GroupCard({
   onToggleArchived?: () => void
 }) {
   const t = useTranslations('Groups')
-  const router = useRouter()
   const locale = useLocale()
   const isStarred = group.preference.starred
   const isHidden = group.preference.hidden
@@ -456,24 +472,24 @@ function GroupCard({
 
   return (
     <li key={group.id}>
-      <div
-        className="h-fit w-full py-3 px-3 rounded-lg border bg-card shadow-sm cursor-pointer text-base"
-        role="link"
-        tabIndex={0}
-        onClick={() => router.push(`/groups/${group.id}`)}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault()
-            router.push(`/groups/${group.id}`)
-          }
-        }}
-      >
+      {/* Stretched-link card. The visible card is a non-interactive
+          container; the group name is a real <Link> whose ::before
+          pseudo-element covers the entire card so clicking anywhere on
+          it (except the absolutely-positioned action buttons) navigates
+          to the group. */}
+      <div className="relative h-fit w-full py-3 pl-3 pr-1 rounded-lg border bg-card shadow-sm text-base">
         <div className="w-full flex flex-col gap-1">
-          <div className="text-base flex gap-2 justify-between">
-            <span className="flex-1 overflow-hidden text-ellipsis font-medium">
-              {group.name}
+          <div className="text-base flex gap-2 justify-between items-center">
+            <span className="flex-1 overflow-hidden text-ellipsis font-medium min-w-0">
+              <Link
+                href={`/groups/${group.id}`}
+                className="text-foreground no-underline outline-none focus-visible:underline before:absolute before:inset-0 before:rounded-lg before:content-['']"
+                title={group.name}
+              >
+                {group.name}
+              </Link>
             </span>
-            <span className="flex-shrink-0">
+            <span className="flex-shrink-0 relative z-10 flex items-center">
               <Button
                 size="icon"
                 variant="ghost"
@@ -482,6 +498,7 @@ function GroupCard({
                   event.stopPropagation()
                   onToggleStar()
                 }}
+                aria-label={isStarred ? t('unstarGroup') : t('starGroup')}
               >
                 {isStarred ? (
                   <StarFilledIcon className="w-4 h-4 text-orange-400" />
@@ -494,8 +511,9 @@ function GroupCard({
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="-my-3 -mr-3 -ml-1.5"
+                    className="-my-3 -mr-2 -ml-1.5"
                     onClick={(event) => event.stopPropagation()}
+                    aria-label={t('groupActions')}
                   >
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>

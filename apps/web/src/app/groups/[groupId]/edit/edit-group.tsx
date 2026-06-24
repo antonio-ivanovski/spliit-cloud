@@ -16,10 +16,11 @@ import { useTranslations } from '@/i18n/react'
 import { trpc } from '@/trpc/client'
 import { Archive, ArchiveRestore } from 'lucide-react'
 import { useState } from 'react'
-import { useCurrentGroup } from '../current-group-context'
+import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export const EditGroup = () => {
   const { groupId, group, currentMember } = useCurrentGroup()
+  const isPendingInvitee = useIsPendingInvitee()
   const { data, isLoading } = trpc.groups.getDetails.useQuery({ groupId })
   const { mutateAsync: updateGroup } = trpc.groups.update.useMutation()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
@@ -71,6 +72,28 @@ export const EditGroup = () => {
   }
 
   if (isLoading) return <></>
+
+  // PENDING invitees are read-only on this group until they accept the
+  // invitation. The route is still mounted (so deep links keep working)
+  // but the form is replaced with an explanation card. The server rejects
+  // the underlying `groups.update`/`groups.archive` mutations anyway.
+  if (isPendingInvitee) {
+    return (
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>{tGroups('pendingInviteeSettingsTitle')}</CardTitle>
+          <CardDescription>
+            {tGroups('pendingInviteeSettingsDescription')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button asChild variant="secondary">
+            <Link href={`/groups/${groupId}`}>{t('readOnlyBack')}</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
 
   // MEMBERs are not allowed to change group settings. The route is still
   // mounted (so deep links keep working) but the form is replaced with an

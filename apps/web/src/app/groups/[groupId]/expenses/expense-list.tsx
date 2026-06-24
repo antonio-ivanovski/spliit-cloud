@@ -12,7 +12,7 @@ import dayjs, { type Dayjs } from 'dayjs'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
-import { useCurrentGroup } from '../current-group-context'
+import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 const PAGE_SIZE = 20
 
@@ -81,6 +81,7 @@ const ExpenseListForSearch = ({
 }) => {
   const utils = trpc.useUtils()
   const { group } = useCurrentGroup()
+  const isPendingInvitee = useIsPendingInvitee()
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense
@@ -119,7 +120,7 @@ const ExpenseListForSearch = ({
     return (
       <p className="px-6 text-sm py-6">
         {t('noExpenses')}{' '}
-        {group.archived ? null : (
+        {group.archived || isPendingInvitee ? null : (
           <Button variant="link" asChild className="-m-4">
             <Link href={`/groups/${groupId}/expenses/create`}>
               {t('createFirst')}

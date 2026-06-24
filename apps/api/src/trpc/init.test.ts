@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import '../test/mocks'
 import { authState, prismaMock } from '../test/state'
-import { createTRPCContext, loadGroupContext, protectedProcedure } from './init'
+import {
+  createTRPCContext,
+  loadGroupContext,
+  loadGroupViewer,
+  protectedProcedure,
+} from './init'
 
 function makeRequest(): Request {
   return new Request('http://localhost/api/test', {
@@ -154,5 +159,106 @@ describe('loadGroupContext', () => {
     expect(result.group).toEqual(group)
     expect(result.member).toEqual(member)
     expect(result.ledger).toEqual(group.ledger)
+  })
+})
+
+describe('loadGroupViewer', () => {
+  const groupId = 'grp-1'
+  const accountId = 'acct-1'
+  const accountEmail = 'alice@example.com'
+
+  it('throws NOT_FOUND when the group does not exist', async () => {
+    prismaMock.group.findUnique.mockResolvedValue(null)
+    prismaMock.groupMember.findUnique.mockResolvedValue(null)
+
+    await expect(
+      loadGroupViewer({ groupId, accountId, accountEmail }),
+    ).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    })
+  })
+
+  it('returns an ACTIVE viewer with member and ledger for an ACTIVE member', async () => {
+    const group = {
+      id: groupId,
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD' },
+    }
+    const member = { groupId, accountId, role: 'OWNER', status: 'ACTIVE' }
+    prismaMock.group.findUnique.mockResolvedValue(group as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue(member as never)
+
+    const result = await loadGroupViewer({ groupId, accountId, accountEmail })
+
+    expect(result.group).toEqual(group)
+    expect(result.member).toEqual(member)
+    expect(result.ledger).toEqual(group.ledger)
+    expect(result.viewer).toEqual({ kind: 'ACTIVE' })
+  })
+
+  it('returns a PENDING_INVITEE viewer when a PENDING invitation matches the account email', async () => {
+    const group = {
+      id: groupId,
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD' },
+    }
+    prismaMock.group.findUnique.mockResolvedValue(group as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue(null)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue({
+      id: 'inv-1',
+      role: 'MEMBER',
+    } as never)
+
+    const result = await loadGroupViewer({ groupId, accountId, accountEmail })
+
+    expect(result.member).toBeNull()
+    expect(result.ledger).toEqual(group.ledger)
+    expect(result.viewer).toEqual({
+      kind: 'PENDING_INVITEE',
+      invitation: { id: 'inv-1', role: 'MEMBER' },
+    })
+  })
+
+  it('falls back to a PENDING invitation when the account membership is not ACTIVE', async () => {
+    const group = {
+      id: groupId,
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD' },
+    }
+    prismaMock.group.findUnique.mockResolvedValue(group as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId,
+      accountId,
+      role: 'MEMBER',
+      status: 'PENDING',
+    } as never)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue({
+      id: 'inv-2',
+      role: 'ADMIN',
+    } as never)
+
+    const result = await loadGroupViewer({ groupId, accountId, accountEmail })
+
+    expect(result.member).toBeNull()
+    expect(result.viewer).toEqual({
+      kind: 'PENDING_INVITEE',
+      invitation: { id: 'inv-2', role: 'ADMIN' },
+    })
+  })
+
+  it('throws FORBIDDEN when there is no ACTIVE member and no matching PENDING invitation', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue(null)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
+
+    await expect(
+      loadGroupViewer({ groupId, accountId, accountEmail }),
+    ).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 })

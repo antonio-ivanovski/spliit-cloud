@@ -12,6 +12,7 @@ import { useRouter } from '@/lib/navigation'
 import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
 import { Fragment } from 'react'
+import { useIsPendingInvitee } from '../current-group-context'
 
 type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
 
@@ -61,18 +62,24 @@ export function ExpenseCard({
   const t = useTranslations('ExpenseCard')
   const router = useRouter()
   const locale = useLocale()
+  const isPendingInvitee = useIsPendingInvitee()
+  // Pending invitees can browse the expense list but cannot edit; the
+  // server rejects `groups.expenses.update`/`delete` for them anyway.
+  const canEdit = !isPendingInvitee
 
   return (
     <div
       key={expense.id}
       data-testid={`expense-item-${expense.id}`}
       className={cn(
-        'flex justify-between sm:mx-6 px-4 sm:rounded-lg sm:pr-2 sm:pl-4 py-4 text-sm gap-1 items-stretch cursor-pointer hover:bg-accent',
+        'flex justify-between sm:mx-6 px-4 sm:rounded-lg sm:pr-2 sm:pl-4 py-4 text-sm gap-1 items-stretch',
+        canEdit && 'cursor-pointer hover:bg-accent',
         expense.isReimbursement && 'italic',
       )}
-      onClick={() =>
+      onClick={() => {
+        if (!canEdit) return
         router.push(`/groups/${groupId}/expenses/${expense.id}/edit`)
-      }
+      }}
     >
       <CategoryIcon
         category={expense.category}
@@ -120,16 +127,18 @@ export function ExpenseCard({
           {formatDateOnly(expense.expenseDate, locale, { dateStyle: 'medium' })}
         </div>
       </div>
-      <Button
-        size="icon"
-        variant="link"
-        className="self-center hidden sm:flex"
-        asChild
-      >
-        <Link href={`/groups/${groupId}/expenses/${expense.id}/edit`}>
-          <ChevronRight className="w-4 h-4" />
-        </Link>
-      </Button>
+      {canEdit && (
+        <Button
+          size="icon"
+          variant="link"
+          className="self-center hidden sm:flex"
+          asChild
+        >
+          <Link href={`/groups/${groupId}/expenses/${expense.id}/edit`}>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </Button>
+      )}
     </div>
   )
 }

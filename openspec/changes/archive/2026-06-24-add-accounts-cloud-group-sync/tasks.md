@@ -11,7 +11,10 @@
 - [x] 2.1 [Backend] Implement local auth module for magic link, Google OAuth, and email+password sign-in with verified-email identity merging.
 - [x] 2.2 [Backend] Add secure server session creation, lookup, and invalidation; expose authenticated account in `createTRPCContext`.
 - [x] 2.3 [Backend] Add `publicProcedure`, `protectedProcedure`, and group/ledger authorization helpers for tRPC routers.
+  - [x] 2.3.1 Add `loadGroupViewer` helper alongside `loadGroupContext` that allows ACTIVE members and PENDING invitees (account email matches a PENDING GroupInvitation) for read-only access. The returned `GroupViewer` discriminates between `ACTIVE` and `PENDING_INVITEE` kinds.
 - [x] 2.4 [Backend] Protect all group tRPC procedures with membership and role checks.
+  - [x] 2.4.1 Switch read-only procedures to `loadGroupViewer`: `groups.getDetails`, `groups.expenses.list`, `groups.expenses.get`, `groups.balances.list`, `groups.stats.get`, `groups.activities.list`. `groups.get` already supported pending invitees.
+  - [x] 2.4.2 Keep mutations on `loadGroupContext` (ACTIVE-only): `groups.update`, `groups.archive`, `groups.expenses.create/update/delete`, `invitations.create/revoke/list`. Pending invitees receive `FORBIDDEN`.
 - [x] 2.5 [Backend] Protect export routes and upload presign routes with authenticated ledger access checks.
 - [x] 2.6 [Backend] Implement group invitation create, accept, revoke, and list procedures with exact-email acceptance.
 
@@ -26,7 +29,12 @@
 
 - [x] 4.1 [Frontend] Add auth client/session bootstrap and route guards for protected app routes.
 - [x] 4.2 [Frontend] Replace recent/active group localStorage behavior with server-backed group membership, account preferences, and current account identity.
-- [x] 4.3 [Frontend] Update group create/edit forms to invite/select authenticated members instead of creating anonymous participants.
+  - [x] 4.2.1 Hide create-expense, create-from-receipt, export, and edit affordances for pending invitees in expenses list, expense card, information page, and expense form pages.
+  - [x] 4.2.2 Add read-only accept-prompt cards for pending invitees in create-expense, edit-expense, and edit-group pages.
+  - [x] 4.2.3 Add `useIsPendingInvitee` hook to `current-group-context.tsx`.
+  - [x] 4.2.4 Make GroupCard in /groups list a real `<Link>` (stretched-link pattern) for proper accessibility and navigation.
+  - [x] 4.2.5 Make pending-invitation rows in the /groups list clickable, navigating to the group page (read-only preview with Accept/Decline).
+  - [x] 4.2.6 Add translation strings for pending-invitee states (`pendingInviteeReadOnly*`, `pendingInviteeExpense*`, `pendingInviteeSettings*`).
 - [x] 4.4 [Frontend] Update expense forms and group views to use ledger participant IDs and account-backed display data.
 - [x] 4.5 [Frontend] Update export and document-upload calls to send ledger/group context required for authorization.
 
@@ -41,6 +49,7 @@
 ## 6. Verification
 
 - [x] 6.1 [Testing] Add unit tests for ledger currency conversion rules, split unit preservation, and ledger balance inputs in `packages/domain`.
+  - [x] 6.1.1 Add tests for `loadGroupViewer` in `apps/api/src/trpc/init.test.ts` covering: NOT_FOUND, ACTIVE viewer, PENDING_INVITEE viewer from email match, fallback from non-ACTIVE membership to invitation, and FORBIDDEN when no match.
 - [x] 6.2 [Testing] Add API tests or integration coverage for auth context, protected procedures, membership authorization, export authorization, and upload authorization.
 - [x] 6.3 [Testing] Update Playwright helpers (`batch-api.ts`, `recurring-expense-instances.spec.ts`) for new API shapes and Prisma field names.
 - [x] 6.4 [Testing] Run `bun prisma-generate`, `bun check-types`, `bun run test`, and targeted Playwright specs for auth/group/expense flows.

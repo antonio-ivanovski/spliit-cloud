@@ -12,11 +12,12 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTranslations } from '@/i18n/react'
 import { Pencil } from 'lucide-react'
-import { useCurrentGroup } from '../current-group-context'
+import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export default function GroupInformation({ groupId }: { groupId: string }) {
   const t = useTranslations('Information')
   const { isLoading, group } = useCurrentGroup()
+  const isPendingInvitee = useIsPendingInvitee()
 
   return (
     <>
@@ -24,11 +25,15 @@ export default function GroupInformation({ groupId }: { groupId: string }) {
         <CardHeader>
           <CardTitle className="flex justify-between">
             <span>{t('title')}</span>
-            <Button size="icon" asChild className="-mb-12">
-              <Link href={`/groups/${groupId}/edit`}>
-                <Pencil className="w-4 h-4" />
-              </Link>
-            </Button>
+            {/* PENDING invitees cannot edit group settings; the /edit route
+                renders a read-only explanation for them. */}
+            {!isPendingInvitee && (
+              <Button size="icon" asChild className="-mb-12">
+                <Link href={`/groups/${groupId}/edit`}>
+                  <Pencil className="w-4 h-4" />
+                </Link>
+              </Button>
+            )}
           </CardTitle>
           <CardDescription className="mr-12">
             {t('description')}

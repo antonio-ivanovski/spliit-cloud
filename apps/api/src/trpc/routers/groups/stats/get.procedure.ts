@@ -1,4 +1,3 @@
-import { prisma } from '@spliit/db'
 import {
   getTotalActiveUserPaidFor,
   getTotalActiveUserShare,
@@ -7,12 +6,15 @@ import {
 } from '@spliit/domain'
 import { z } from 'zod'
 import { getGroupExpenses } from '../../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupViewer, protectedProcedure } from '../../../init'
 
 /**
  * The new "active user" is the signed-in account. We resolve it from the
  * server-side membership/ledger participant mapping so the totals no longer
- * depend on the browser's localStorage active-participant selection.
+ * depend on the browser's localStorage active-participant selection. For
+ * pending invitees (PENDING GroupInvitation, no membership yet), there is
+ * no `activeParticipantId` and the per-user totals are 0 — the FE surfaces
+ * the Accept/Decline banner in that case.
  */
 export const getGroupStatsProcedure = protectedProcedure
   .input(
@@ -21,12 +23,12 @@ export const getGroupStatsProcedure = protectedProcedure
     }),
   )
   .query(async ({ input: { groupId }, ctx }) => {
-    await loadGroupContext({ groupId, accountId: ctx.auth.user.id })
-
-    const member = await prisma.groupMember.findFirst({
-      where: { groupId, accountId: ctx.auth.user.id },
-      include: { ledgerParticipant: true },
+    const { member } = await loadGroupViewer({
+      groupId,
+      accountId: ctx.auth.user.id,
+      accountEmail: ctx.auth.user.email,
     })
+
     const activeParticipantId = member?.ledgerParticipant?.id ?? null
 
     const rows = await getGroupExpenses(groupId)

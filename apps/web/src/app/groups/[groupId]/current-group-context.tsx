@@ -25,7 +25,9 @@ type GroupContext =
       // Set when the signed-in account is a pending invitee of this
       // group (the email matches and the invitation is PENDING). The
       // group header surfaces an Accept/Decline banner when this is
-      // non-null.
+      // non-null. While a PENDING invitation is in place, the viewer
+      // has read-only access — mutations are blocked on the server and
+      // edit affordances are hidden in the UI.
       currentInvitation: CurrentInvitation | null
     }
   | {
@@ -46,6 +48,18 @@ export const useCurrentGroup = () => {
       'Missing context. Should be called inside a CurrentGroupProvider.',
     )
   return context
+}
+
+/**
+ * True when the signed-in viewer is a PENDING invitee of this group (i.e.
+ * their account email matches a PENDING GroupInvitation, and they have not
+ * yet accepted). Pending invitees can read the group, but every mutation
+ * (create/update/delete/archive/invitations) is rejected on the server and
+ * edit affordances are hidden in the UI.
+ */
+export function useIsPendingInvitee() {
+  const { currentInvitation } = useCurrentGroup()
+  return currentInvitation != null
 }
 
 export const CurrentGroupProvider = ({

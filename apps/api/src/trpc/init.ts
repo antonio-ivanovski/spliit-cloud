@@ -1,4 +1,4 @@
-import { Prisma, prisma } from '@spliit/db'
+import { GroupInvitationStatus, Prisma, prisma } from '@spliit/db'
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import type { ResolvedAuth } from '../lib/auth/session'
@@ -145,4 +145,94 @@ export async function loadGroupContext({
   }
 
   return { group, member, ledger: group.ledger }
+}
+
+/**
+ * Resolve the current account's relationship to a group for read-only
+ * procedures. Allows both ACTIVE members and PENDING invitees (an account
+ * whose email matches a PENDING GroupInvitation for the group). The
+ * returned `viewer` describes which kind of viewer resolved; mutations
+ * (create/update/delete) must still call `loadGroupContext` to enforce
+ * the ACTIVE-only check.
+ *
+ * For ACTIVE viewers, the returned `member` is the existing membership
+ * row. For PENDING invitees, `member` is `null` and `viewer.invitation`
+ * carries the matching invitation id and role so resolvers can show
+ * Accept/Decline surfaces in the UI.
+ */
+export type GroupViewer =
+  | { kind: 'ACTIVE' }
+  | { kind: 'PENDING_INVITEE'; invitation: { id: string; role: string } }
+
+export type GroupViewerContext = {
+  group: NonNullable<Awaited<ReturnType<typeof prisma.group.findUnique>>> & {
+    ledger: NonNullable<Awaited<ReturnType<typeof prisma.ledger.findUnique>>>
+  }
+  member:
+    | (NonNullable<
+        Awaited<ReturnType<typeof prisma.groupMember.findUnique>>
+      > & {
+        ledgerParticipant: Awaited<
+          ReturnType<typeof prisma.ledgerParticipant.findUnique>
+        >
+      })
+    | null
+  ledger: NonNullable<Awaited<ReturnType<typeof prisma.ledger.findUnique>>>
+  viewer: GroupViewer
+}
+
+export async function loadGroupViewer({
+  groupId,
+  accountId,
+  accountEmail,
+}: {
+  groupId: string
+  accountId: string
+  accountEmail: string
+}): Promise<GroupViewerContext> {
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    include: { ledger: true },
+  })
+  if (!group) {
+    throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+  }
+
+  const member = await prisma.groupMember.findUnique({
+    where: { groupId_accountId: { groupId, accountId } },
+    include: { ledgerParticipant: true },
+  })
+
+  if (member && member.status === 'ACTIVE') {
+    return { group, member, ledger: group.ledger, viewer: { kind: 'ACTIVE' } }
+  }
+
+  // Fall back to a PENDING invitation whose email matches the account.
+  // Case-insensitive match mirrors `sendInvitationEmail` and the
+  // `acceptInvitation` flow.
+  const invitation = await prisma.groupInvitation.findFirst({
+    where: {
+      groupId,
+      status: GroupInvitationStatus.PENDING,
+      email: { equals: accountEmail, mode: 'insensitive' },
+    },
+    select: { id: true, role: true },
+  })
+
+  if (invitation) {
+    return {
+      group,
+      member: null,
+      ledger: group.ledger,
+      viewer: {
+        kind: 'PENDING_INVITEE',
+        invitation: { id: invitation.id, role: invitation.role },
+      },
+    }
+  }
+
+  throw new TRPCError({
+    code: 'FORBIDDEN',
+    message: 'You are not an active member of this group',
+  })
 }
