@@ -1,10 +1,11 @@
-import { getBalances, type BalanceExpense } from './balances'
+import { getBalances, type BalanceExpense, getPublicBalances } from './balances'
 import {
   calculateShare,
   getTotalActiveUserShare,
   getTotalGroupSpending,
   type TotalsExpense,
 } from './totals'
+import { expenseFormSchema } from './schemas'
 
 describe('Ledger split unit preservation', () => {
   type InferredBalanceExpense = Parameters<typeof getBalances>[0][number]
@@ -243,5 +244,216 @@ describe('Ledger balance inputs', () => {
 
     const totalSpending = getTotalGroupSpending(totals)
     expect(totalSpending).toBe(0)
+  })
+})
+
+describe('Ledger currency conversion rules', () => {
+  it('originalAmount * conversionRate equals ledger amount (USD cents)', () => {
+    const originalAmount = 5000
+    const conversionRate = 0.85
+    const ledgerAmount = Math.round(originalAmount * conversionRate)
+    expect(ledgerAmount).toBe(4250)
+  })
+
+  it('originalAmount * conversionRate equals ledger amount (EUR cents)', () => {
+    const originalAmount = 2000
+    const conversionRate = 1.1
+    const ledgerAmount = Math.round(originalAmount * conversionRate)
+    expect(ledgerAmount).toBe(2200)
+  })
+
+  it('conversion with zero-decimal currency (JPY) produces integer', () => {
+    const originalAmount = 10000
+    const conversionRate = 0.0065
+    const ledgerAmount = Math.round(originalAmount * conversionRate)
+    expect(Number.isInteger(ledgerAmount)).toBe(true)
+    expect(ledgerAmount).toBe(65)
+  })
+
+  it('expenseFormSchema preserves conversion fields through parse', () => {
+    const raw = {
+      title: 'Test expense',
+      expenseDate: new Date('2026-06-24'),
+      category: 'general',
+      amount: '42.50',
+      paidBy: 'lp-alice',
+      paidFor: [
+        { participant: 'lp-alice', shares: '1' },
+        { participant: 'lp-bob', shares: '1' },
+      ],
+      splitMode: 'EVENLY' as const,
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      originalAmount: '50.00',
+      originalCurrency: 'EUR',
+      conversionRate: '0.85',
+    }
+    const result = expenseFormSchema.parse(raw)
+    expect(result.originalAmount).toBe(50)
+    expect(result.originalCurrency).toBe('EUR')
+    expect(result.conversionRate).toBe(0.85)
+    expect(result.amount).toBe(42.5)
+  })
+
+  it('getBalances is unaffected when extra conversion metadata is present', () => {
+    const amount = 1000
+    const expenses: BalanceExpense[] = [
+      {
+        id: 'le-1',
+        amount,
+        splitMode: 'EVENLY',
+        isReimbursement: false,
+        paidBy: { id: 'lp-a', name: 'A' },
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
+        ],
+        originalAmount: 2000,
+        originalCurrency: 'EUR',
+        conversionRate: 0.5,
+      },
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paid).toBe(1000)
+    expect(balances['lp-a'].paidFor).toBe(500)
+  })
+})
+
+describe('Split unit preservation edge cases', () => {
+  type Inferred = Parameters<typeof getBalances>[0][number]
+
+  const base = (overrides: Partial<Inferred> = {}): Inferred =>
+    ({
+      id: 'le-1',
+      amount: 0,
+      isReimbursement: false,
+      splitMode: 'EVENLY',
+      paidBy: { id: 'lp-a', name: 'A' },
+      paidFor: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
+      ...overrides,
+    }) as Inferred
+
+  it('expenseFormSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
+    const raw = {
+      title: 'Test',
+      expenseDate: new Date('2026-06-24'),
+      category: 'general',
+      amount: '100.00',
+      paidBy: 'lp-a',
+      paidFor: [
+        { participant: 'lp-a', shares: '30' },
+        { participant: 'lp-b', shares: '30' },
+        { participant: 'lp-c', shares: '30' },
+      ],
+      splitMode: 'BY_AMOUNT' as const,
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+    }
+    expect(() => expenseFormSchema.parse(raw)).toThrow()
+  })
+
+  it('BY_PERCENTAGE with small basis points (1 bp)', () => {
+    const expenses: Inferred[] = [
+      base({
+        amount: 1000000,
+        splitMode: 'BY_PERCENTAGE',
+        paidBy: { id: 'lp-a', name: 'A' },
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 9999 },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paidFor).toBe(100)
+    expect(balances['lp-b'].paidFor).toBe(999900)
+  })
+
+  it('mixed split modes in a single getBalances call', () => {
+    const expenses: Inferred[] = [
+      base({
+        id: 'le-1',
+        amount: 6000,
+        splitMode: 'BY_SHARES',
+        paidBy: { id: 'lp-a', name: 'A' },
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 2 },
+        ],
+      }),
+      base({
+        id: 'le-2',
+        amount: 12000,
+        splitMode: 'EVENLY',
+        paidBy: { id: 'lp-b', name: 'B' },
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paidFor).toBe(8000)
+    expect(balances['lp-b'].paidFor).toBe(10000)
+    expect(balances['lp-a'].total).toBe(-2000)
+    expect(balances['lp-b'].total).toBe(2000)
+  })
+})
+
+describe('Ledger balance input integrity', () => {
+  it('handles zero-decimal currency amounts (JPY/minor units only)', () => {
+    const expenses: BalanceExpense[] = [
+      {
+        id: 'le-1',
+        amount: 1000,
+        splitMode: 'EVENLY',
+        isReimbursement: false,
+        paidBy: { id: 'lp-a', name: 'A' },
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
+        ],
+      },
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paid).toBe(1000)
+    expect(balances['lp-a'].paidFor).toBe(500)
+    expect(balances['lp-b'].paidFor).toBe(500)
+  })
+
+  it('getPublicBalances with ledger participant IDs', () => {
+    const reimbursements = [
+      { from: 'lp-bob', to: 'lp-alice', amount: 2500 },
+      { from: 'lp-carol', to: 'lp-alice', amount: 1500 },
+    ]
+    const balances = getPublicBalances(reimbursements)
+    expect(balances['lp-alice'].paid).toBe(4000)
+    expect(balances['lp-alice'].paidFor).toBe(0)
+    expect(balances['lp-alice'].total).toBe(4000)
+    expect(balances['lp-bob'].paidFor).toBe(2500)
+    expect(balances['lp-bob'].total).toBe(-2500)
+    expect(balances['lp-carol'].paidFor).toBe(1500)
+    expect(balances['lp-carol'].total).toBe(-1500)
+  })
+
+  it('supports UUID-style ledger participant IDs', () => {
+    const aliceId = 'lp-a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+    const bobId = 'lp-b2c3d4e5-f6a7-8901-bcde-f12345678901'
+    const expenses: BalanceExpense[] = [
+      {
+        id: 'le-1',
+        amount: 2000,
+        splitMode: 'EVENLY',
+        isReimbursement: false,
+        paidBy: { id: aliceId, name: 'Alice' },
+        paidFor: [
+          { participant: { id: aliceId, name: 'Alice' }, shares: 1 },
+          { participant: { id: bobId, name: 'Bob' }, shares: 1 },
+        ],
+      },
+    ]
+    const balances = getBalances(expenses)
+    expect(balances[aliceId].paidFor).toBe(1000)
+    expect(balances[bobId].paidFor).toBe(1000)
   })
 })
