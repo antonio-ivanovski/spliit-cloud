@@ -17,7 +17,7 @@ export async function getImageData(file: File) {
   }
 }
 
-export function usePresignedUpload() {
+export function usePresignedUpload(ledgerId?: string | null) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const uploadMutation = useMutation({
@@ -27,7 +27,9 @@ export function usePresignedUpload() {
       const presignResponse = await fetch(`${apiUrl}/uploads/presign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
+          ledgerId,
           fileName: file.name,
           contentType,
         }),
