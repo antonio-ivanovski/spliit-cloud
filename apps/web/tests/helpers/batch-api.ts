@@ -197,7 +197,6 @@ export async function createExpensesViaAPI(
     const result = await trpc.groups.expenses.create.mutate({
       groupId,
       expenseFormValues,
-      participantId: payer.id,
     })
 
     expenseIds.push(result.expenseId)

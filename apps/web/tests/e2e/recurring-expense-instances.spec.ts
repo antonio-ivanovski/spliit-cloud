@@ -11,14 +11,24 @@ test.describe('Recurring Expense Instances', () => {
       participants: ['Alice', 'Bob'],
     })
 
-    // Get the first participant to use as payer
+    // Get the first ledger participant to use as payer
     const group = await prisma.group.findUnique({
       where: { id: groupId },
-      include: { participants: true },
+      include: {
+        members: {
+          include: { ledgerParticipant: true },
+        },
+      },
     })
 
-    const payer = group?.participants[0]
+    const payer = group?.members[0]?.ledgerParticipant
     expect(payer).toBeDefined()
+
+    const ledgerParticipants = group?.members
+      .map((m) => m.ledgerParticipant)
+      .filter((lp): lp is NonNullable<typeof lp> => lp !== null)
+    const ledgerId = group?.ledgerId
+    expect(ledgerId).toBeDefined()
 
     // Create a recurring expense with a past date to trigger instance creation
     const yesterday = new Date()
@@ -30,7 +40,7 @@ test.describe('Recurring Expense Instances', () => {
     const recurringExpense = await prisma.expense.create({
       data: {
         id: `recurring-${randomId()}`,
-        groupId,
+        ledgerId: ledgerId!,
         expenseDate: yesterday,
         title: expenseTitle,
         amount: 2500,
@@ -40,14 +50,14 @@ test.describe('Recurring Expense Instances', () => {
         recurringExpenseLink: {
           create: {
             id: `link-${randomId()}`,
-            groupId,
+            ledgerId: ledgerId!,
             nextExpenseDate: yesterday,
           },
         },
         paidFor: {
           createMany: {
-            data: group!.participants.map((p) => ({
-              participantId: p.id,
+            data: ledgerParticipants!.map((lp) => ({
+              ledgerParticipantId: lp.id,
               shares: 1,
             })),
           },
@@ -58,7 +68,7 @@ test.describe('Recurring Expense Instances', () => {
 
     // Verify only one expense exists initially
     const initialExpenseCount = await prisma.expense.count({
-      where: { groupId, title: expenseTitle },
+      where: { ledgerId: ledgerId!, title: expenseTitle },
     })
     expect(initialExpenseCount).toBe(1)
 
@@ -73,14 +83,14 @@ test.describe('Recurring Expense Instances', () => {
 
     // Verify a new instance was created
     const updatedExpenseCount = await prisma.expense.count({
-      where: { groupId, title: expenseTitle },
+      where: { ledgerId: ledgerId!, title: expenseTitle },
     })
     expect(updatedExpenseCount).toBeGreaterThan(initialExpenseCount)
 
     // Verify the new expense has the correct date
     const newExpense = await prisma.expense.findFirst({
       where: {
-        groupId,
+        ledgerId: ledgerId!,
         title: expenseTitle,
         id: { not: recurringExpense.id },
       },
@@ -104,11 +114,21 @@ test.describe('Recurring Expense Instances', () => {
 
     const group = await prisma.group.findUnique({
       where: { id: groupId },
-      include: { participants: true },
+      include: {
+        members: {
+          include: { ledgerParticipant: true },
+        },
+      },
     })
 
-    const payer = group?.participants[0]
+    const payer = group?.members[0]?.ledgerParticipant
     expect(payer).toBeDefined()
+
+    const ledgerParticipants = group?.members
+      .map((m) => m.ledgerParticipant)
+      .filter((lp): lp is NonNullable<typeof lp> => lp !== null)
+    const ledgerId = group?.ledgerId
+    expect(ledgerId).toBeDefined()
 
     const yesterday = new Date()
     yesterday.setUTCDate(yesterday.getUTCDate() - 1)
@@ -121,7 +141,7 @@ test.describe('Recurring Expense Instances', () => {
     await prisma.expense.create({
       data: {
         id: `recurring-1-${randomId()}`,
-        groupId,
+        ledgerId: ledgerId!,
         expenseDate: yesterday,
         title: expense1Title,
         amount: 1000,
@@ -131,14 +151,14 @@ test.describe('Recurring Expense Instances', () => {
         recurringExpenseLink: {
           create: {
             id: `link-1-${randomId()}`,
-            groupId,
+            ledgerId: ledgerId!,
             nextExpenseDate: yesterday,
           },
         },
         paidFor: {
           createMany: {
-            data: group!.participants.map((p) => ({
-              participantId: p.id,
+            data: ledgerParticipants!.map((lp) => ({
+              ledgerParticipantId: lp.id,
               shares: 1,
             })),
           },
@@ -149,7 +169,7 @@ test.describe('Recurring Expense Instances', () => {
     await prisma.expense.create({
       data: {
         id: `recurring-2-${randomId()}`,
-        groupId,
+        ledgerId: ledgerId!,
         expenseDate: yesterday,
         title: expense2Title,
         amount: 2000,
@@ -159,14 +179,14 @@ test.describe('Recurring Expense Instances', () => {
         recurringExpenseLink: {
           create: {
             id: `link-2-${randomId()}`,
-            groupId,
+            ledgerId: ledgerId!,
             nextExpenseDate: yesterday,
           },
         },
         paidFor: {
           createMany: {
-            data: group!.participants.map((p) => ({
-              participantId: p.id,
+            data: ledgerParticipants!.map((lp) => ({
+              ledgerParticipantId: lp.id,
               shares: 1,
             })),
           },
@@ -175,10 +195,10 @@ test.describe('Recurring Expense Instances', () => {
     })
 
     const initialCount1 = await prisma.expense.count({
-      where: { groupId, title: expense1Title },
+      where: { ledgerId: ledgerId!, title: expense1Title },
     })
     const initialCount2 = await prisma.expense.count({
-      where: { groupId, title: expense2Title },
+      where: { ledgerId: ledgerId!, title: expense2Title },
     })
 
     expect(initialCount1).toBe(1)
@@ -191,10 +211,10 @@ test.describe('Recurring Expense Instances', () => {
 
     // Verify both expenses created new instances
     const updatedCount1 = await prisma.expense.count({
-      where: { groupId, title: expense1Title },
+      where: { ledgerId: ledgerId!, title: expense1Title },
     })
     const updatedCount2 = await prisma.expense.count({
-      where: { groupId, title: expense2Title },
+      where: { ledgerId: ledgerId!, title: expense2Title },
     })
 
     expect(updatedCount1).toBeGreaterThan(initialCount1)
