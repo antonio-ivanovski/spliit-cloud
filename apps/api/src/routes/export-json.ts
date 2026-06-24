@@ -51,6 +51,30 @@ export async function exportGroupJson(request: Request, groupId: string) {
     orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
   })
 
+  const participantIds = new Set([
+    ...group.members.flatMap((m) =>
+      m.ledgerParticipant ? [m.ledgerParticipant.id] : [],
+    ),
+    ...expenses.flatMap((expense) => [
+      expense.paidById,
+      ...expense.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
+    ]),
+  ])
+  const participants = await prisma.ledgerParticipant.findMany({
+    where: {
+      ledgerId,
+      id: { in: Array.from(participantIds) },
+    },
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' },
+  })
+  const participantOrder = new Map(
+    Array.from(participantIds).map((id, index) => [id, index]),
+  )
+  participants.sort(
+    (a, b) => participantOrder.get(a.id)! - participantOrder.get(b.id)!,
+  )
+
   const expensesWithCategory = expenses.map((expense) => ({
     ...expense,
     category: getCategoryById(expense.categoryId as never) ?? null,
@@ -63,11 +87,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
     currency: group.ledger.currency,
     currencyCode: group.ledger.currencyCode,
     expenses: expensesWithCategory,
-    participants: group.members.flatMap((m) =>
-      m.ledgerParticipant
-        ? [{ id: m.ledgerParticipant.id, name: m.ledgerParticipant.name }]
-        : [],
-    ),
+    participants,
   }
 
   const date = new Date().toISOString().split('T')[0]

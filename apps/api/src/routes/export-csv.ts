@@ -82,10 +82,28 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
   })
 
-  const participants = group.members.flatMap((m) =>
-    m.ledgerParticipant
-      ? [{ id: m.ledgerParticipant.id, name: m.ledgerParticipant.name }]
-      : [],
+  const participantIds = new Set([
+    ...group.members.flatMap((m) =>
+      m.ledgerParticipant ? [m.ledgerParticipant.id] : [],
+    ),
+    ...expenses.flatMap((expense) => [
+      expense.paidById,
+      ...expense.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
+    ]),
+  ])
+  const participants = await prisma.ledgerParticipant.findMany({
+    where: {
+      ledgerId,
+      id: { in: Array.from(participantIds) },
+    },
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' },
+  })
+  const participantOrder = new Map(
+    Array.from(participantIds).map((id, index) => [id, index]),
+  )
+  participants.sort(
+    (a, b) => participantOrder.get(a.id)! - participantOrder.get(b.id)!,
   )
 
   const fields = [
@@ -101,7 +119,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     { label: 'Split mode', value: 'splitMode' },
     ...participants.map((participant) => ({
       label: participant.name,
-      value: participant.name,
+      value: participant.id,
     })),
   ]
 
@@ -143,7 +161,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
         )
 
         return [
-          participant.name,
+          participant.id,
           participantAmountShare * (isPaidByParticipant ? 1 : -1),
         ]
       }),

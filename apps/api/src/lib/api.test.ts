@@ -4,7 +4,7 @@
 import { describe, expect, it } from 'vitest'
 import '../test/mocks'
 import { prismaMock } from '../test/state'
-import { getGroup } from '../lib/api'
+import { deleteExpense, getGroup } from '../lib/api'
 
 describe('getGroup — pending invitations as participants', () => {
   const groupId = 'grp-1'
@@ -197,5 +197,42 @@ describe('getGroup — pending invitations as participants', () => {
     ])
     expect(prismaMock.ledgerParticipant.create).not.toHaveBeenCalled()
     expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
+  })
+})
+
+describe('deleteExpense', () => {
+  it('does not delete an expense outside the group ledger', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.expense.findFirst.mockResolvedValue(null)
+
+    await expect(
+      deleteExpense('grp-1', 'exp-other-ledger', { accountId: 'acct-1' }),
+    ).rejects.toThrow('Invalid expense ID: exp-other-ledger')
+
+    expect(prismaMock.activity.create).not.toHaveBeenCalled()
+    expect(prismaMock.expense.deleteMany).not.toHaveBeenCalled()
+  })
+
+  it('deletes an expense only within the scoped ledger', async () => {
+    prismaMock.group.findUnique
+      .mockResolvedValueOnce({ ledgerId: 'ledger-1' } as never)
+      .mockResolvedValueOnce({ ledgerId: 'ledger-1' } as never)
+    prismaMock.expense.findFirst.mockResolvedValue({
+      id: 'exp-1',
+      ledgerId: 'ledger-1',
+      title: 'Dinner',
+      categoryId: 'general',
+      paidFor: [],
+    } as never)
+    prismaMock.activity.create.mockResolvedValue({} as never)
+    prismaMock.expense.deleteMany.mockResolvedValue({ count: 1 } as never)
+
+    await deleteExpense('grp-1', 'exp-1', { accountId: 'acct-1' })
+
+    expect(prismaMock.expense.deleteMany).toHaveBeenCalledWith({
+      where: { id: 'exp-1', ledgerId: 'ledger-1' },
+    })
   })
 })

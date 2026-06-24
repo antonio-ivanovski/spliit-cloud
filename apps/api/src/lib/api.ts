@@ -195,14 +195,16 @@ export async function deleteExpense(
   actor: { accountId: string },
 ) {
   const existingExpense = await getExpense(groupId, expenseId)
+  if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
+
   await logActivity(groupId, ActivityType.DELETE_EXPENSE, {
     accountId: actor.accountId,
     expenseId,
     data: existingExpense?.title,
   })
 
-  await prisma.expense.delete({
-    where: { id: expenseId },
+  await prisma.expense.deleteMany({
+    where: { id: expenseId, ledgerId: existingExpense.ledgerId },
   })
 }
 
@@ -518,12 +520,11 @@ export async function getGroup(groupId: string) {
  * older version of the app or is otherwise invalid).
  */
 function resolveCategory(categoryId: string): Category {
+  const parsedCategoryId = categoryIdSchema.safeParse(categoryId)
   return (
-    getCategoryById(categoryIdSchema.parse(categoryId)) ?? {
-      id: DEFAULT_CATEGORY_ID,
-      grouping: 'Uncategorized',
-      name: 'General',
-    }
+    (parsedCategoryId.success
+      ? getCategoryById(parsedCategoryId.data)
+      : undefined) ?? getCategoryById(DEFAULT_CATEGORY_ID)!
   )
 }
 

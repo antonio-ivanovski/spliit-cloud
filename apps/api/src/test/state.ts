@@ -63,6 +63,7 @@ const hoisted = vi.hoisted(() => {
       'create',
       'update',
       'delete',
+      'deleteMany',
     ]),
     expensePaidFor: makeMethodStubs([
       'findMany',

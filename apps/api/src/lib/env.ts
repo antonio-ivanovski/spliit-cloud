@@ -7,6 +7,7 @@ const interpretEnvVarAsBool = (val: unknown): boolean => {
 
 const envSchema = z
   .object({
+    NODE_ENV: z.string().optional(),
     PORT: z.coerce.number().int().positive().default(3001),
     WEB_ORIGINS: z.string().optional().default('http://localhost:3000'),
     DATABASE_URL: z.string().url().optional(),
@@ -44,6 +45,20 @@ const envSchema = z
     EMAIL_FROM: z.string().optional(),
   })
   .superRefine((env, ctx) => {
+    if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        path: ['BETTER_AUTH_SECRET'],
+        message: 'BETTER_AUTH_SECRET is required in production',
+      })
+    }
+    if (env.NODE_ENV === 'production' && !env.SMTP_HOST) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        path: ['SMTP_HOST'],
+        message: 'SMTP_HOST is required in production',
+      })
+    }
     if (
       env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS &&
       (!env.S3_UPLOAD_BUCKET ||
