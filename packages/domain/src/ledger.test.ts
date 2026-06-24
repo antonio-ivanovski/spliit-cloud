@@ -1,11 +1,11 @@
-import { getBalances, type BalanceExpense, getPublicBalances } from './balances'
+import { getBalances, getPublicBalances, type BalanceExpense } from './balances'
+import { expenseFormSchema } from './schemas'
 import {
   calculateShare,
   getTotalActiveUserShare,
   getTotalGroupSpending,
   type TotalsExpense,
 } from './totals'
-import { expenseFormSchema } from './schemas'
 
 describe('Ledger split unit preservation', () => {
   type InferredBalanceExpense = Parameters<typeof getBalances>[0][number]
