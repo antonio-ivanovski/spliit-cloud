@@ -2,10 +2,12 @@ import { Parser } from '@json2csv/plainjs'
 import { prisma } from '@spliit/db'
 import {
   formatAmountAsDecimal,
+  getCategoryById,
   getCurrency,
   getCurrencyFromGroup,
 } from '@spliit/domain'
 import contentDisposition from 'content-disposition'
+import { getAuthFromRequest } from '../lib/auth/session'
 
 const splitModeLabel = {
   EVENLY: 'Evenly',
@@ -22,36 +24,87 @@ function formatDate(dateValue: Date): string {
   return `${year}-${month}-${day}`
 }
 
-export async function exportGroupCsv(groupId: string) {
+async function ensureMemberOr404(request: Request, groupId: string) {
+  const auth = await getAuthFromRequest(request)
+  if (!auth) {
+    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
+  }
+  const member = await prisma.groupMember.findUnique({
+    where: { groupId_accountId: { groupId, accountId: auth.user.id } },
+  })
+  if (!member || member.status !== 'ACTIVE') {
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
+  }
+  return null
+}
+
+export async function exportGroupCsv(request: Request, groupId: string) {
+  const denial = await ensureMemberOr404(request, groupId)
+  if (denial) return denial
+
   const group = await prisma.group.findUnique({
     where: { id: groupId },
-    select: {
-      id: true,
-      name: true,
-      currency: true,
-      currencyCode: true,
-      expenses: {
-        select: {
-          expenseDate: true,
-          title: true,
-          category: { select: { name: true } },
-          amount: true,
-          originalAmount: true,
-          originalCurrency: true,
-          conversionRate: true,
-          paidById: true,
-          paidFor: { select: { participantId: true, shares: true } },
-          isReimbursement: true,
-          splitMode: true,
-        },
+    include: {
+      ledger: true,
+      members: {
+        where: { status: 'ACTIVE' },
+        include: { ledgerParticipant: true },
       },
-      participants: { select: { id: true, name: true } },
     },
   })
 
-  if (!group) {
+  if (!group || !group.ledger || !group.ledgerId) {
     return Response.json({ error: 'Invalid group ID' }, { status: 404 })
   }
+  const ledgerId = group.ledgerId
+
+  const groupForCurrency = {
+    currency: group.ledger.currency,
+    currencyCode: group.ledger.currencyCode,
+  }
+  const currency = getCurrencyFromGroup(groupForCurrency)
+
+  const expenses = await prisma.expense.findMany({
+    select: {
+      expenseDate: true,
+      title: true,
+      categoryId: true,
+      amount: true,
+      originalAmount: true,
+      originalCurrency: true,
+      conversionRate: true,
+      paidById: true,
+      paidFor: { select: { ledgerParticipantId: true, shares: true } },
+      isReimbursement: true,
+      splitMode: true,
+    },
+    where: { ledgerId },
+    orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
+  })
+
+  const participantIds = new Set([
+    ...group.members.flatMap((m) =>
+      m.ledgerParticipant ? [m.ledgerParticipant.id] : [],
+    ),
+    ...expenses.flatMap((expense) => [
+      expense.paidById,
+      ...expense.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
+    ]),
+  ])
+  const participants = await prisma.ledgerParticipant.findMany({
+    where: {
+      ledgerId,
+      id: { in: Array.from(participantIds) },
+    },
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' },
+  })
+  const participantOrder = new Map(
+    Array.from(participantIds).map((id, index) => [id, index]),
+  )
+  participants.sort(
+    (a, b) => participantOrder.get(a.id)! - participantOrder.get(b.id)!,
+  )
 
   const fields = [
     { label: 'Date', value: 'date' },
@@ -64,18 +117,17 @@ export async function exportGroupCsv(groupId: string) {
     { label: 'Conversion rate', value: 'conversionRate' },
     { label: 'Is Reimbursement', value: 'isReimbursement' },
     { label: 'Split mode', value: 'splitMode' },
-    ...group.participants.map((participant) => ({
+    ...participants.map((participant) => ({
       label: participant.name,
-      value: participant.name,
+      value: participant.id,
     })),
   ]
 
-  const currency = getCurrencyFromGroup(group)
-  const expenses = group.expenses.map((expense) => ({
+  const rows = expenses.map((expense) => ({
     date: formatDate(expense.expenseDate),
     title: expense.title,
-    categoryName: expense.category?.name || '',
-    currency: group.currencyCode ?? group.currency,
+    categoryName: getCategoryById(expense.categoryId as never)?.name ?? '',
+    currency: group.ledger?.currencyCode ?? group.ledger?.currency ?? '',
     amount: formatAmountAsDecimal(expense.amount, currency),
     originalAmount: expense.originalAmount
       ? formatAmountAsDecimal(
@@ -90,11 +142,11 @@ export async function exportGroupCsv(groupId: string) {
     isReimbursement: expense.isReimbursement ? 'Yes' : 'No',
     splitMode: splitModeLabel[expense.splitMode],
     ...Object.fromEntries(
-      group.participants.map((participant) => {
+      participants.map((participant) => {
         const { totalShares, participantShare } = expense.paidFor.reduce(
-          (acc, { participantId, shares }) => {
+          (acc, { ledgerParticipantId, shares }) => {
             acc.totalShares += shares
-            if (participantId === participant.id) {
+            if (ledgerParticipantId === participant.id) {
               acc.participantShare = shares
             }
             return acc
@@ -109,14 +161,14 @@ export async function exportGroupCsv(groupId: string) {
         )
 
         return [
-          participant.name,
+          participant.id,
           participantAmountShare * (isPaidByParticipant ? 1 : -1),
         ]
       }),
     ),
   }))
 
-  const csv = new Parser({ fields }).parse(expenses)
+  const csv = new Parser({ fields }).parse(rows)
   const date = new Date().toISOString().split('T')[0]
   const filename = `Spliit Cloud Export - ${group.name} - ${date}.csv`
 

@@ -1,11 +1,16 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { getExpense } from '../../../../lib/api'
-import { baseProcedure } from '../../../init'
+import { loadGroupViewer, protectedProcedure } from '../../../init'
 
-export const getGroupExpenseProcedure = baseProcedure
+export const getGroupExpenseProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1), expenseId: z.string().min(1) }))
-  .query(async ({ input: { groupId, expenseId } }) => {
+  .query(async ({ input: { groupId, expenseId }, ctx }) => {
+    await loadGroupViewer({
+      groupId,
+      accountId: ctx.auth.user.id,
+      accountEmail: ctx.auth.user.email,
+    })
     const expense = await getExpense(groupId, expenseId)
     if (!expense) {
       throw new TRPCError({

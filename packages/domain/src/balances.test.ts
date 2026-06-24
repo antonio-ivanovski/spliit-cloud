@@ -1,4 +1,8 @@
-import { getBalances, getSuggestedReimbursements } from './balances'
+import {
+  getBalances,
+  getPublicBalances,
+  getSuggestedReimbursements,
+} from './balances'
 
 type BalancesExpense = Parameters<typeof getBalances>[0][number]
 
@@ -523,5 +527,79 @@ describe('getSuggestedReimbursements', () => {
     const reimbursements = getSuggestedReimbursements(balances)
 
     expect(reimbursements).toEqual([])
+  })
+})
+
+describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
+  it('cancels fractional-cent rounding residuals so the UI shows zero balances', () => {
+    // 1 cent split evenly among 3 participants: each gets 0.333…,
+    // which `Math.round`s to 0 in `getBalances`. The payer is left
+    // with a 1-cent residual in the raw output, but the UI's
+    // `getPublicBalances(getSuggestedReimbursements(...))` pipeline
+    // drops the residual: `getSuggestedReimbursements` filters out the
+    // 0-total non-payers (loop doesn't execute with length 1), and
+    // `getPublicBalances` has no reimbursements to project.
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 1,
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+    ]
+
+    const rawBalances = getBalances(expenses)
+    // Raw balances retain the 1-cent residual.
+    expect(rawBalances.p0).toEqual({ paid: 1, paidFor: 0, total: 1 })
+    expect(rawBalances.p1).toEqual({ paid: 0, paidFor: 0, total: 0 })
+    expect(rawBalances.p2).toEqual({ paid: 0, paidFor: 0, total: 0 })
+
+    const reimbursements = getSuggestedReimbursements(rawBalances)
+    // Only the payer is non-zero, so the loop exits without generating
+    // any legs and the filter drops nothing.
+    expect(reimbursements).toEqual([])
+
+    const publicBalances = getPublicBalances(reimbursements)
+    // The UI sees an empty balance map, so the archive check based on
+    // `hasUnsettledBalances(publicBalances)` returns false.
+    expect(Object.values(publicBalances).every((b) => b.total === 0)).toBe(true)
+    expect(Object.keys(publicBalances)).toHaveLength(0)
+  })
+
+  it('keeps the public balances consistent with the raw balances when no rounding residual exists', () => {
+    // 30 cents split among 3 = 10 each. No rounding leftover; both
+    // pipelines should agree.
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 30,
+        splitMode: 'EVENLY',
+        paidBy: { id: 'p0', name: 'P0' },
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+    ]
+
+    const rawBalances = getBalances(expenses)
+    expect(rawBalances.p0).toEqual({ paid: 30, paidFor: 10, total: 20 })
+    expect(rawBalances.p1).toEqual({ paid: 0, paidFor: 10, total: -10 })
+    expect(rawBalances.p2).toEqual({ paid: 0, paidFor: 10, total: -10 })
+
+    const reimbursements = getSuggestedReimbursements(rawBalances)
+    const publicBalances = getPublicBalances(reimbursements)
+
+    // Both pipelines agree on the same per-participant totals when
+    // there is no rounding leftover.
+    expect(publicBalances.p0.total).toBe(rawBalances.p0.total)
+    expect(publicBalances.p1.total).toBe(rawBalances.p1.total)
+    expect(publicBalances.p2.total).toBe(rawBalances.p2.total)
   })
 })

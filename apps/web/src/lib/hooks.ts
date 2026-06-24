@@ -1,3 +1,4 @@
+import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
@@ -52,18 +53,30 @@ export function useBaseUrl() {
 }
 
 /**
- * @returns The active user, or `null` until it is fetched from local storage
+ * Resolve the active ledger participant id for a group. With the
+ * account-backed product, the active user is the signed-in account and the
+ * matching `LedgerParticipant` id is resolved server-side via `groups.get`.
+ *
+ * This hook now reads from the `CurrentGroupContext` rather than
+ * `localStorage`. Callers that are not inside a group layout will get
+ * `null`. Returns `null` while the group is still loading.
  */
 export function useActiveUser(groupId?: string) {
+  let ctx: ReturnType<typeof useCurrentGroup> | null = null
+  try {
+    ctx = useCurrentGroup()
+  } catch {
+    ctx = null
+  }
   const [activeUser, setActiveUser] = useState<string | null>(null)
 
   useEffect(() => {
-    if (groupId) {
-      const activeUser = localStorage.getItem(`${groupId}-activeUser`)
-      if (activeUser) setActiveUser(activeUser)
+    if (ctx && !ctx.isLoading && ctx.groupId === groupId) {
+      setActiveUser(ctx.currentLedgerParticipantId)
     }
-  }, [groupId])
+  }, [ctx, groupId])
 
+  if (!ctx || ctx.groupId !== groupId) return null
   return activeUser
 }
 

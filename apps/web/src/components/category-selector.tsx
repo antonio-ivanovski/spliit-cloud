@@ -17,20 +17,16 @@ import {
 } from '@/components/ui/popover'
 import { useTranslations } from '@/i18n/react'
 import { useMediaQuery } from '@/lib/hooks'
+import type { Category, CategoryId } from '@spliit/domain'
 import { forwardRef, useEffect, useState } from 'react'
 
-type Category = {
-  id: number
-  grouping: string
-  name: string
-}
-
 type Props = {
-  categories: Category[]
-  onValueChange: (categoryId: Category['id']) => void
+  categories: ReadonlyArray<Category>
+  onValueChange: (categoryId: CategoryId) => void
   /** Category ID to be selected by default. Overwriting this value will update current selection, too. */
-  defaultValue: Category['id']
+  defaultValue: CategoryId
   isLoading: boolean
+  disabled?: boolean
 }
 
 export function CategorySelector({
@@ -38,9 +34,10 @@ export function CategorySelector({
   onValueChange,
   defaultValue,
   isLoading,
+  disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState<number>(defaultValue)
+  const [value, setValue] = useState<CategoryId>(defaultValue)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
   // allow overwriting currently selected category from outside
@@ -60,6 +57,7 @@ export function CategorySelector({
             category={selectedCategory}
             open={open}
             isLoading={isLoading}
+            disabled={disabled}
           />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
@@ -83,6 +81,7 @@ export function CategorySelector({
           category={selectedCategory}
           open={open}
           isLoading={isLoading}
+          disabled={disabled}
         />
       </DrawerTrigger>
       <DrawerContent className="p-0">
@@ -103,8 +102,8 @@ function CategoryCommand({
   categories,
   onValueChange,
 }: {
-  categories: Category[]
-  onValueChange: (categoryId: Category['id']) => void
+  categories: ReadonlyArray<Category>
+  onValueChange: (categoryId: CategoryId) => void
 }) {
   const t = useTranslations('Categories')
   const categoriesByGroup = categories.reduce<Record<string, Category[]>>(
@@ -130,7 +129,7 @@ function CategoryCommand({
                     `${category.grouping}.heading`,
                   )} ${t(`${category.grouping}.${category.name}`)}`}
                   onSelect={(currentValue) => {
-                    const id = Number(currentValue.split(' ')[0])
+                    const id = currentValue.split(' ')[0] as CategoryId
                     onValueChange(id)
                   }}
                 >
@@ -149,6 +148,7 @@ type CategoryButtonProps = {
   category: Category
   open: boolean
   isLoading: boolean
+  disabled?: boolean
 }
 const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
   (

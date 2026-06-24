@@ -129,9 +129,9 @@ export function ActivityList() {
             </div>
             {groupActivities.map((activity) => {
               const participant =
-                activity.participantId !== null
+                activity.ledgerParticipantId !== null
                   ? group.participants.find(
-                      (p) => p.id === activity.participantId,
+                      (p) => p.id === activity.ledgerParticipantId,
                     )
                   : undefined
               return (

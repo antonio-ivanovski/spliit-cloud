@@ -24,24 +24,32 @@ import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { ComponentProps, useEffect, useState } from 'react'
+import { useIsPendingInvitee } from '../current-group-context'
 
 export function ActiveUserModal({ groupId }: { groupId: string }) {
   const t = useTranslations('Expenses.ActiveUserModal')
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const { data: groupData } = trpc.groups.get.useQuery({ groupId })
+  const isPendingInvitee = useIsPendingInvitee()
 
   const group = groupData?.group
 
   useEffect(() => {
     if (!group) return
 
+    // The "active user" selector is a per-device legacy concept that is no
+    // longer the source of truth (server-backed membership drives totals
+    // and balances). Skip it for PENDING invitees — they have no
+    // ledger participant id yet and the form is not useful.
+    if (isPendingInvitee) return
+
     const tempUser = localStorage.getItem(`newGroup-activeUser`)
     const activeUser = localStorage.getItem(`${group.id}-activeUser`)
     if (!tempUser && !activeUser) {
       setOpen(true)
     }
-  }, [group])
+  }, [group, isPendingInvitee])
 
   function updateOpen(open: boolean) {
     if (!group) return

@@ -1,3 +1,4 @@
+import { AccountMenu } from '@/components/account-menu'
 import Image from '@/components/app-image'
 import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
@@ -7,6 +8,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider, useTranslations } from '@/i18n/react'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { TRPCProvider } from '@/trpc/client'
 import { Outlet } from '@tanstack/react-router'
 import { Github } from 'lucide-react'
@@ -14,6 +16,12 @@ import { Suspense } from 'react'
 
 function Content() {
   const t = useTranslations()
+  // The "Groups" link in the navbar is only meaningful for signed-in users.
+  // While the session is being resolved we hide the link to avoid a brief
+  // flash of the "Go to my groups" CTA on the homepage / sign-in screens.
+  const { data: account, isPending } = useCurrentAccount()
+  const showGroupsLink = !!account && !isPending
+
   return (
     <TRPCProvider>
       <header className="fixed top-0 left-0 right-0 h-16 flex justify-between bg-white dark:bg-gray-950 bg-opacity-50 dark:bg-opacity-50 p-2 border-b backdrop-blur-sm z-50">
@@ -32,22 +40,27 @@ function Content() {
           </h1>
         </Link>
         <div role="navigation" aria-label="Menu" className="flex">
-          <ul className="flex items-center text-sm">
-            <li>
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="-my-3 text-primary"
-              >
-                <Link href="/groups">{t('Header.groups')}</Link>
-              </Button>
-            </li>
+          <ul className="flex items-center text-sm gap-1">
+            {showGroupsLink && (
+              <li>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="-my-3 text-primary"
+                >
+                  <Link href="/groups">{t('Header.groups')}</Link>
+                </Button>
+              </li>
+            )}
             <li>
               <LocaleSwitcher />
             </li>
             <li>
               <ThemeToggle />
+            </li>
+            <li>
+              <AccountMenu />
             </li>
           </ul>
         </div>

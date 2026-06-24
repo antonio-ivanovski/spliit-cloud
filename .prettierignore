@@ -7,3 +7,4 @@ test-results
 apps/*/dist
 apps/web/src/components/ui
 packages/db/src/generated
+openspec/**/*.md

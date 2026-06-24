@@ -89,7 +89,21 @@ Alternatives considered:
 - Single member role: simpler, but invites/removal/settings become all-or-nothing.
 - Capability-permission table from day one: flexible, but too heavy for the current roadmap.
 
-### 4. Put authentication in API context and split public/protected procedures
+### 4. Split read-only vs mutation authorization for pending invitees
+
+Refine the group authorization model: pending invitees (accounts whose email matches a PENDING `GroupInvitation`) receive read-only access — they can view the group, expenses, balances, stats, and activities — but every mutation is rejected with `FORBIDDEN`.
+
+The API exposes two helpers:
+- `loadGroupContext`: ACTIVE-member only, used by all mutations.
+- `loadGroupViewer`: allows both ACTIVE members and PENDING invitees, used by all read operations. Returns a `GroupViewer` discriminant (`ACTIVE` | `PENDING_INVITEE`) so resolvers can customize responses.
+
+Rationale: letting invitees preview the group before accepting reduces friction (they can see what they'd be joining). The UI already surfaces an Accept/Decline banner on the group page. All mutation pathways remain locked behind ACTIVE membership.
+
+Alternatives considered:
+- Block all access until accepted: simpler enforcement, but adds friction and prevents preview.
+- Grant temporary full access: risks write actions before explicit acceptance.
+
+### 5. Put authentication in API context and split public/protected procedures
 
 `createTRPCContext` should parse the request session and return:
 
@@ -110,7 +124,7 @@ Alternatives considered:
 - Authorize inside `apps/api/src/lib/api.ts` only: easy to miss on new procedures and external routes.
 - Put all auth behind Hono middleware only: useful for routes, but tRPC still needs typed account context.
 
-### 5. Use server sessions with secure cookies for the SPA
+### 6. Use server sessions with secure cookies for the SPA
 
 The web app should use secure, HTTP-only session cookies with CORS credentials. The client should not store bearer tokens in localStorage.
 
@@ -121,7 +135,7 @@ Alternatives considered:
 - Store JWT access tokens in localStorage: straightforward for SPA calls, but exposes auth tokens to XSS.
 - Pure stateless JWT cookies: simpler infrastructure, but revocation and account lifecycle controls become harder.
 
-### 6. Keep auth provider implementation behind a local auth module
+### 7. Keep auth provider implementation behind a local auth module
 
 Introduce an API-side auth module, for example `apps/api/src/lib/auth/`, that owns provider integration, password hashing, magic-link tokens, OAuth callback handling, session issuance, and account linking rules. The product should not leak a third-party auth package's schema into domain code.
 
@@ -132,7 +146,7 @@ Alternatives considered:
 - Build fully custom auth: maximum control, but higher security burden.
 - Use a provider/library schema everywhere: fastest start, but makes later schema and runtime changes harder.
 
-### 7. Browser storage is not a group source of truth
+### 8. Browser storage is not a group source of truth
 
 Replace current localStorage group ownership semantics with server-backed membership and account preference state. The client may retain non-authoritative UI preferences, but group membership, active user identity, starred/archived group state, and group access must come from the server.
 
@@ -152,7 +166,7 @@ Alternatives considered:
 
 - Keep recent groups and active participant in localStorage: conflicts with online source of truth.
 
-### 8. Introduce `Ledger` as the accounting core
+### 9. Introduce `Ledger` as the accounting core
 
 The current implementation uses `Group` as both the product container and the accounting container: `Expense` has `groupId`, `Activity` has `groupId`, participants are group-local, and balances are calculated from group expenses.
 
@@ -171,7 +185,7 @@ Alternatives considered:
 - Keep expenses attached directly to groups: simplest for current behavior, but direct expenses would require duplicated tables or hidden groups.
 - Use hidden groups for direct account relationships: reuses group logic but leaks group semantics into direct relationships.
 
-### 9. Put base currency on the ledger
+### 10. Put base currency on the ledger
 
 The current currency behavior is:
 
@@ -198,7 +212,7 @@ Alternatives considered:
 - Store every amount in original currency only: makes balances expensive and ambiguous.
 - Convert balances dynamically at display time: exchange rates change and would make historical balances unstable.
 
-### 10. Preserve domain math by normalizing identities at the boundary
+### 11. Preserve domain math by normalizing identities at the boundary
 
 Domain balance and totals functions should continue receiving participant-like identifiers, but callers should pass `LedgerParticipant` identifiers. Rename domain types from participant-oriented names only when it reduces confusion.
 

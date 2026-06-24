@@ -1,13 +1,18 @@
 import type { Page } from '@playwright/test'
 import type { AppRouter } from '@spliit/api/router'
-import { RecurrenceRule, SplitMode } from '@spliit/domain'
+import {
+  DEFAULT_CATEGORY_ID,
+  RecurrenceRule,
+  SplitMode,
+  type CategoryId,
+} from '@spliit/domain'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 
 interface ExpenseFormValues {
   expenseDate: Date
   title: string
-  category: number
+  category: CategoryId
   amount: number
   paidBy: string
   paidFor: Array<{ participant: string; shares: number }>
@@ -99,7 +104,7 @@ export async function createExpensesViaAPI(
         amount: number // in cents
         payerName: string
         isReimbursement?: boolean
-        category?: number
+        category?: CategoryId
         splitMode?: SplitMode
         expenseDate?: Date
         notes?: string
@@ -125,7 +130,7 @@ export async function createExpensesViaAPI(
     amount: number
     payerName: string
     isReimbursement?: boolean
-    category?: number
+    category?: CategoryId
     splitMode?: SplitMode
     expenseDate?: Date
     notes?: string
@@ -183,7 +188,7 @@ export async function createExpensesViaAPI(
     const expenseFormValues: ExpenseFormValues = {
       expenseDate: expense.expenseDate || new Date(),
       title: expense.title,
-      category: expense.category ?? 0,
+      category: expense.category ?? DEFAULT_CATEGORY_ID,
       amount: expense.amount,
       paidBy: payer.id,
       paidFor,
@@ -197,7 +202,6 @@ export async function createExpensesViaAPI(
     const result = await trpc.groups.expenses.create.mutate({
       groupId,
       expenseFormValues,
-      participantId: payer.id,
     })
 
     expenseIds.push(result.expenseId)
@@ -214,7 +218,7 @@ export async function createExpenseViaAPI(
     amount: number // in cents
     payerName: string
     isReimbursement?: boolean
-    category?: number
+    category?: CategoryId
     splitMode?: SplitMode
     expenseDate?: Date
     notes?: string

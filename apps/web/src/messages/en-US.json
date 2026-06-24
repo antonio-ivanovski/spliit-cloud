@@ -3,12 +3,17 @@
     "title": "Share <strong>Expenses</strong> with <strong>Friends & Family</strong>",
     "description": "Welcome to your new <strong>Spliit Cloud</strong> instance !",
     "button": {
-      "groups": "Go to groups",
-      "github": "GitHub"
+      "groups": "Go to my groups",
+      "github": "GitHub",
+      "signIn": "Sign in to Spliit Cloud",
+      "createAccount": "Create an account"
     }
   },
   "Header": {
-    "groups": "Groups"
+    "groups": "Groups",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "account": "Account"
   },
   "Footer": {
     "madeIn": "Made by the open-source community with love ❤️",
@@ -46,22 +51,65 @@
     "everyone": "everyone",
     "receivedBy": "Received by <strong>{paidBy}</strong> for <paidFor></paidFor>",
     "yourBalance": "Your balance:",
-    "notInvolved": "You are not involved"
+    "notInvolved": "You are not involved",
+    "settlementBadge": "Settlement"
   },
   "Groups": {
     "myGroups": "My groups",
     "create": "Create",
+    "createdInviteHint": "Group created. Invite members to get started.",
     "loadingRecent": "Loading recent groups…",
     "NoRecent": {
       "description": "You have not visited any group recently.",
       "create": "Create one",
       "orAsk": "or ask a friend to send you the link to an existing one."
     },
+    "NoRecentAllHidden": {
+      "description": "You have hidden all of your groups.",
+      "showHidden": "Show hidden groups"
+    },
     "recent": "Recent groups",
     "starred": "Starred groups",
     "archived": "Archived groups",
-    "archive": "Archive group",
-    "unarchive": "Unarchive group",
+    "hidden": "Hidden groups",
+    "showHidden": "Show hidden groups",
+    "hide": "Hide group",
+    "unhide": "Unhide group",
+    "starGroup": "Star group",
+    "unstarGroup": "Unstar group",
+    "groupActions": "Group actions",
+    "archiveGroup": "Archive group",
+    "unarchiveGroup": "Unarchive group",
+    "archiveSuccess": "Group archived.",
+    "unarchiveSuccess": "Group unarchived.",
+    "archiveWithBalancesTitle": "Unsettled balances",
+    "archiveWithBalancesDescription": "This group has unsettled balances. Archiving will create settlement expenses to zero them out. Continue?",
+    "archiveWithBalancesForce": "Force archive",
+    "archiveWithBalancesCancel": "Cancel",
+    "archiveWithBalancesSuccess": "Settlement expenses created and group archived.",
+    "archiveWithBalancesView": "View balances",
+    "archiveSectionTitle": "Archive group",
+    "archiveSectionDescription": "Archiving freezes the group. No new expenses can be added or modified, but the existing data stays visible. You can unarchive the group at any time.",
+    "archivedBadge": "Archived",
+    "bannerArchivedTitle": "This group is archived",
+    "bannerArchivedDescription": "No new expenses or invitations can be added while the group is archived. Existing data stays visible.",
+    "bannerArchived": "This group is archived. No new expenses can be added.",
+    "bannerUnarchive": "Unarchive",
+    "bannerUnarchiveSuccess": "Group unarchived.",
+    "invitationBannerTitle": "You've been invited to this group",
+    "invitationBannerDescription": "Accept to join as a member, or decline to discard the invitation.",
+    "invitationAccept": "Accept",
+    "invitationDecline": "Decline",
+    "invitationAccepted": "Invitation accepted.",
+    "invitationDeclined": "Invitation declined.",
+    "pendingInviteeReadOnlyTitle": "You've been invited",
+    "pendingInviteeReadOnlyDescription": "Accept the invitation above to start adding expenses and changing group settings. Until then, this group is read-only.",
+    "pendingInviteeSettingsTitle": "Group settings are locked",
+    "pendingInviteeSettingsDescription": "You need to accept the invitation before you can change group settings or invite members.",
+    "pendingInviteeExpenseTitle": "Expenses are read-only",
+    "pendingInviteeExpenseDescription": "Accept the invitation above to start adding or editing expenses. Until then, the group's existing data is visible but cannot be modified.",
+    "archivedReadOnly": "This group is archived. Expenses can no longer be added or modified.",
+    "backToExpenses": "Back to expenses",
     "removeRecent": "Remove from recent groups",
     "RecentRemovedToast": {
       "title": "Group has been removed",
@@ -69,19 +117,87 @@
       "undoAlt": "Undo group removal",
       "undo": "Undo"
     },
-    "AddByURL": {
-      "button": "Add by URL",
-      "title": "Add a group by URL",
-      "description": "If a group was shared with you, you can paste its URL here to add it to your list.",
-      "error": "Oops, we are not able to find the group from the URL you provided…"
-    },
     "NotFound": {
       "text": "This group does not exist.",
       "link": "Go to recently visited groups"
+    },
+    "Unauthorized": {
+      "title": "You don't have access to this group",
+      "description": "If you believe this is a mistake, ask a group owner or admin to invite you.",
+      "link": "Back to my groups"
+    },
+    "invitations": {
+      "title": "Pending invitations",
+      "description": "You have been invited to join the following groups.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "accepted": "Invitation accepted.",
+      "declined": "Invitation declined.",
+      "invitedBy": "Invited by {name}",
+      "unknownInviter": "someone",
+      "unknownGroup": "Unknown group",
+      "sentOn": "Sent {date}"
+    }
+  },
+  "Auth": {
+    "title": "Sign in to Spliit Cloud",
+    "signUpTitle": "Create your Spliit Cloud account",
+    "subtitle": "Use your account to access your groups across devices.",
+    "signUpSubtitle": "Create an account to save and sync your groups across devices.",
+    "email": "Email",
+    "password": "Password",
+    "signInWithPassword": "Sign in with password",
+    "signUpWithPassword": "Sign up with password",
+    "signInWithGoogle": "Continue with Google",
+    "sendMagicLink": "Send sign-in link",
+    "magicLinkEmail": "Email",
+    "usePasswordInstead": "Use email and password instead",
+    "hidePasswordForm": "Hide password form",
+    "passwordFormDescription": "If you'd rather use a password, enter your email and password below.",
+    "passwordFormDescriptionSignUp": "Create an account with your email and a password.",
+    "useDifferentEmail": "Use a different email",
+    "magicLinkSent": "Check your inbox for a sign-in link.",
+    "noAccount": "Don't have an account yet?",
+    "haveAccount": "Already have an account?",
+    "createAccount": "Create an account",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "confirmPassword": "Confirm password",
+    "passwordMismatch": "Passwords don't match.",
+    "passwordTooShort": "Password must be at least 8 characters.",
+    "errors": {
+      "invalidCredentials": "Email or password is incorrect.",
+      "emailRequired": "Enter your email address.",
+      "passwordRequired": "Enter your password.",
+      "nameRequired": "Enter a display name.",
+      "generic": "Something went wrong. Please try again.",
+      "magicLinkFailed": "Could not send the sign-in link."
+    },
+    "loading": "Loading…",
+    "signedInAs": "Signed in as {name}",
+    "required": "You need to sign in to access your groups.",
+    "back": "Back to home"
+  },
+  "CompleteProfile": {
+    "title": "Complete your profile",
+    "description": "Tell us the name you'd like your groups to see. You can change it later.",
+    "nameLabel": "Display name",
+    "namePlaceholder": "Your name",
+    "submit": "Save and continue",
+    "saving": "Saving…",
+    "signedInAs": "Signed in as {email}",
+    "errors": {
+      "nameRequired": "Enter a display name.",
+      "nameTooShort": "Name must be at least 2 characters.",
+      "generic": "Something went wrong. Please try again."
     }
   },
   "GroupForm": {
     "title": "Group information",
+    "readOnlyNote": "Only owners and admins can change group settings.",
+    "readOnlyTitle": "Group settings",
+    "readOnlyBack": "Back to group",
+    "archivedNotice": "This group is archived. Its settings are frozen and can no longer be changed.",
     "NameField": {
       "label": "Group name",
       "placeholder": "Summer vacations",
@@ -182,7 +298,6 @@
       "recurrenceRule": {
         "label": "Expense Recurrence",
         "description": "Select how often the expense should repeat.",
-
         "none": "None",
         "daily": "Daily",
         "weekly": "Weekly",
@@ -232,6 +347,9 @@
     "selectAll": "Select all",
     "shares": "share(s)",
     "advancedOptions": "Advanced splitting options…",
+    "participant": {
+      "pending": "(invited)"
+    },
     "SplitModeField": {
       "label": "Split mode",
       "evenly": "Evenly",
@@ -253,7 +371,8 @@
     "save": "Save",
     "saving": "Saving…",
     "cancel": "Cancel",
-    "reimbursement": "Reimbursement"
+    "reimbursement": "Reimbursement",
+    "readOnlyNotice": "This group is archived. The expense is shown read-only."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -447,6 +566,40 @@
     },
     "other": {
       "heading": "Other currencies"
+    }
+  },
+  "Members": {
+    "title": "Members",
+    "description": "People who can see and contribute to this group.",
+    "empty": "No active members yet.",
+    "unknownMember": "Unknown member",
+    "youBadge": "You",
+    "role": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "joinedOn": "Joined {date}",
+    "noManagePermission": "Only owners and admins can invite or revoke group members.",
+    "archivedNotice": "Invitations are disabled while the group is archived. Unarchive the group to invite new members.",
+    "invite": {
+      "title": "Invite member",
+      "description": "Send an invitation by email. The invitee joins once they accept from a matching account.",
+      "email": "Email",
+      "emailPlaceholder": "friend@example.com",
+      "role": "Role",
+      "send": "Send invite",
+      "invalidEmail": "Enter a valid email address."
+    },
+    "invitations": {
+      "title": "Pending invitations",
+      "description": "Invitations awaiting acceptance.",
+      "empty": "No pending invitations.",
+      "sentOn": "Sent {date}",
+      "revoke": "Revoke",
+      "revokeButton": "Revoke invitation",
+      "revoked": "Invitation revoked.",
+      "created": "Invitation sent to {email}."
     }
   }
 }

@@ -1,14 +1,7 @@
 import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -18,47 +11,61 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { useLocale, useTranslations } from '@/i18n/react'
 import { Locale } from '@/i18n/request'
 import { getGroup } from '@/lib/api'
 import { defaultCurrencyList, getCurrency } from '@/lib/currency'
 import { GroupFormValues, groupFormSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Save, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { Save } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 import { CurrencySelector } from './currency-selector'
 import { Textarea } from './ui/textarea'
 
 export type Props = {
   group?: NonNullable<Awaited<ReturnType<typeof getGroup>>>
-  onSubmit: (
-    groupFormValues: GroupFormValues,
-    participantId?: string,
-  ) => Promise<void>
-  protectedParticipantIds?: string[]
+  /**
+   * Current caller's role on the group (when editing an existing group).
+   * When set to `MEMBER`, the form renders in a read-only state: the
+   * input controls are disabled, no Save button is shown, and a small
+   * note explains the restriction. Inviting members is done from the
+   * Members tab; this form no longer collects pending invitations.
+   */
+  currentMemberRole?: 'OWNER' | 'ADMIN' | 'MEMBER'
+  /**
+   * When `true`, the group is archived and its settings are frozen.
+   * All inputs are disabled and no Save button is shown. Archived
+   * groups are not editable from this form even for OWNER/ADMIN —
+   * unarchive the group first.
+   */
+  archived?: boolean
+  onSubmit: (groupFormValues: GroupFormValues) => Promise<void>
 }
+
+/**
+ * Cloud groups are account-backed. The current account becomes the group
+ * OWNER on create, and additional members join through invitations.
+ *
+ * The `groupFormSchema` still requires a non-empty `participants` array, but
+ * the backend ignores it on create/edit; we satisfy the schema with a stable
+ * placeholder so the form always validates, even when the current account has
+ * no display name yet (which previously made the create button silently do
+ * nothing).
+ */
+const PARTICIPANTS_PLACEHOLDER = [{ name: 'Owner' }]
 
 export function GroupForm({
   group,
+  currentMemberRole,
+  archived = false,
   onSubmit,
-  protectedParticipantIds = [],
 }: Props) {
   const locale = useLocale()
   const t = useTranslations('GroupForm')
+  const readOnly = !!group && currentMemberRole === 'MEMBER'
+  const isArchived = !!group && archived
+
   const form = useForm<GroupFormValues>({
     resolver: zodResolver(groupFormSchema),
     defaultValues: group
@@ -67,62 +74,43 @@ export function GroupForm({
           information: group.information ?? '',
           currency: group.currency ?? '',
           currencyCode: group.currencyCode ?? '',
-          participants: group.participants,
+          // The backend ignores `participants` on update; the form's
+          // hidden `groupFormSchema.participants` validation only needs a
+          // stable placeholder. The group.participants array mixes in
+          // synthetic rows for pending invitations (with the invitee
+          // email as the name), which can exceed the schema's 50-char
+          // limit and break owner/admin saves with no visible field to
+          // fix.
+          participants: PARTICIPANTS_PLACEHOLDER,
         }
       : {
           name: '',
           information: '',
           currency: '',
-          currencyCode: import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD', // TODO: If VITE_DEFAULT_CURRENCY_CODE is not set, determine the default currency code based on locale
-          participants: [
-            { name: t('Participants.John') },
-            { name: t('Participants.Jane') },
-            { name: t('Participants.Jack') },
-          ],
+          currencyCode: import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD',
+          participants: PARTICIPANTS_PLACEHOLDER,
         },
   })
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'participants',
-    keyName: 'key',
-  })
-
-  const [activeUser, setActiveUser] = useState<string | null>(null)
-  useEffect(() => {
-    if (activeUser === null) {
-      const currentActiveUser =
-        fields.find(
-          (f) => f.id === localStorage.getItem(`${group?.id}-activeUser`),
-        )?.name || t('Settings.ActiveUserField.none')
-      setActiveUser(currentActiveUser)
-    }
-  }, [t, activeUser, fields, group?.id])
-
-  const updateActiveUser = () => {
-    if (!activeUser) return
-    if (group?.id) {
-      const participant = group.participants.find((p) => p.name === activeUser)
-      if (participant?.id) {
-        localStorage.setItem(`${group.id}-activeUser`, participant.id)
-      } else {
-        localStorage.setItem(`${group.id}-activeUser`, activeUser)
-      }
-    } else {
-      localStorage.setItem('newGroup-activeUser', activeUser)
-    }
-  }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (values) => {
-          await onSubmit(
-            values,
-            group?.participants.find((p) => p.name === activeUser)?.id ??
-              undefined,
-          )
+          if (readOnly || isArchived) return
+          await onSubmit(values)
         })}
       >
+        {isArchived && (
+          <p className="text-sm text-muted-foreground mb-4">
+            {t('archivedNotice')}
+          </p>
+        )}
+        {readOnly && !isArchived && (
+          <p className="text-sm text-muted-foreground mb-4">
+            {t('readOnlyNote')}
+          </p>
+        )}
+
         <Card className="mb-4">
           <CardHeader>
             <CardTitle>{t('title')}</CardTitle>
@@ -138,6 +126,7 @@ export function GroupForm({
                     <Input
                       className="text-base"
                       placeholder={t('NameField.placeholder')}
+                      disabled={readOnly || isArchived}
                       {...field}
                     />
                   </FormControl>
@@ -161,6 +150,7 @@ export function GroupForm({
                       t('CurrencyCodeField.customOption'),
                     )}
                     defaultValue={form.watch(field.name) ?? ''}
+                    disabled={readOnly || isArchived}
                     onValueChange={(newCurrency) => {
                       field.onChange(newCurrency)
                       const currency = getCurrency(newCurrency)
@@ -199,6 +189,7 @@ export function GroupForm({
                       className="text-base"
                       placeholder={t('CurrencyField.placeholder')}
                       max={5}
+                      disabled={readOnly || isArchived}
                       {...field}
                     />
                   </FormControl>
@@ -221,6 +212,7 @@ export function GroupForm({
                       <Textarea
                         rows={2}
                         className="text-base"
+                        disabled={readOnly || isArchived}
                         {...field}
                         placeholder={t('InformationField.placeholder')}
                       />
@@ -233,146 +225,23 @@ export function GroupForm({
           </CardContent>
         </Card>
 
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle>{t('Participants.title')}</CardTitle>
-            <CardDescription>{t('Participants.description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="flex flex-col gap-2">
-              {fields.map((item, index) => (
-                <li key={item.key}>
-                  <FormField
-                    control={form.control}
-                    name={`participants.${index}.name`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="sr-only">
-                          Participant #{index + 1}
-                        </FormLabel>
-                        <FormControl>
-                          <div className="flex gap-2">
-                            <Input
-                              className="text-base"
-                              {...field}
-                              placeholder={t('Participants.new')}
-                            />
-                            {item.id &&
-                            protectedParticipantIds.includes(item.id) ? (
-                              <HoverCard>
-                                <HoverCardTrigger>
-                                  <Button
-                                    variant="ghost"
-                                    className="text-destructive-"
-                                    type="button"
-                                    size="icon"
-                                    disabled
-                                  >
-                                    <Trash2 className="w-4 h-4 text-destructive opacity-50" />
-                                  </Button>
-                                </HoverCardTrigger>
-                                <HoverCardContent
-                                  align="end"
-                                  className="text-sm"
-                                >
-                                  {t('Participants.protectedParticipant')}
-                                </HoverCardContent>
-                              </HoverCard>
-                            ) : (
-                              <Button
-                                variant="ghost"
-                                className="text-destructive"
-                                onClick={() => remove(index)}
-                                type="button"
-                                size="icon"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-          <CardFooter>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                append({ name: '' })
-              }}
-              type="button"
-            >
-              {t('Participants.add')}
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle>{t('Settings.title')}</CardTitle>
-            <CardDescription>{t('Settings.description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {activeUser !== null && (
-                <FormItem>
-                  <FormLabel>{t('Settings.ActiveUserField.label')}</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        setActiveUser(value)
-                      }}
-                      defaultValue={activeUser}
-                    >
-                      <SelectTrigger data-testid="active-user-selector">
-                        <SelectValue
-                          placeholder={t(
-                            'Settings.ActiveUserField.placeholder',
-                          )}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[
-                          { name: t('Settings.ActiveUserField.none') },
-                          ...form.watch('participants'),
-                        ]
-                          .filter((item) => item.name.length > 0)
-                          .map(({ name }) => (
-                            <SelectItem key={name} value={name}>
-                              {name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription>
-                    {t('Settings.ActiveUserField.description')}
-                  </FormDescription>
-                </FormItem>
+        {!readOnly && !isArchived && (
+          <div className="flex mt-4 gap-2">
+            <SubmitButton
+              loadingContent={t(
+                group ? 'Settings.saving' : 'Settings.creating',
               )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex mt-4 gap-2">
-          <SubmitButton
-            loadingContent={t(group ? 'Settings.saving' : 'Settings.creating')}
-            onClick={updateActiveUser}
-          >
-            <Save className="w-4 h-4 mr-2" />{' '}
-            {t(group ? 'Settings.save' : 'Settings.create')}
-          </SubmitButton>
-          {!group && (
-            <Button variant="ghost" asChild>
-              <Link href="/groups">{t('Settings.cancel')}</Link>
-            </Button>
-          )}
-        </div>
+            >
+              <Save className="w-4 h-4 mr-2" />{' '}
+              {t(group ? 'Settings.save' : 'Settings.create')}
+            </SubmitButton>
+            {!group && (
+              <Button variant="ghost" asChild>
+                <Link href="/groups">{t('Settings.cancel')}</Link>
+              </Button>
+            )}
+          </div>
+        )}
       </form>
     </Form>
   )

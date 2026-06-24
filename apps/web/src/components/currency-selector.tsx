@@ -25,6 +25,7 @@ type Props = {
   /** Currency code to be selected by default. Overwriting this value will update current selection, too. */
   defaultValue: Currency['code']
   isLoading: boolean
+  disabled?: boolean
 }
 
 export function CurrencySelector({
@@ -32,6 +33,7 @@ export function CurrencySelector({
   onValueChange,
   defaultValue,
   isLoading,
+  disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<string>(defaultValue)
@@ -55,6 +57,7 @@ export function CurrencySelector({
             currency={selectedCurrency}
             open={open}
             isLoading={isLoading}
+            disabled={disabled}
           />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
@@ -78,6 +81,7 @@ export function CurrencySelector({
           currency={selectedCurrency}
           open={open}
           isLoading={isLoading}
+          disabled={disabled}
         />
       </DrawerTrigger>
       <DrawerContent className="p-0">
@@ -156,6 +160,7 @@ type CurrencyButtonProps = {
   currency: Currency
   open: boolean
   isLoading: boolean
+  disabled?: boolean
 }
 const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
   (

@@ -10,58 +10,314 @@ datasource db {
   provider = "postgresql"
 }
 
-model Group {
-  id           String        @id
-  name         String
-  information  String?       @db.Text
-  currency     String        @default("$")
-  currencyCode String?
-  participants Participant[]
-  expenses     Expense[]
-  activities   Activity[]
-  createdAt    DateTime      @default(now())
+// ---------------------------------------------------------------------------
+// Auth & accounts
+//
+// better-auth owns four core tables: user, session, account, verification.
+// We rename them to Spliit concepts via the better-auth `modelName` option:
+//   - better-auth "user"        -> Account  (stable global user profile)
+//   - better-auth "session"     -> Session  (server-recognized sessions)
+//   - better-auth "account"     -> AuthIdentity (provider identity records)
+//   - better-auth "verification"-> Verification (magic-link/email tokens)
+//
+// Field names match what better-auth expects by default so the Prisma adapter
+// can read/write without a field mapping.
+// ---------------------------------------------------------------------------
+
+model Account {
+  id            String   @id
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  name          String
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  authIdentities AuthIdentity[]
+  sessions       Session[]
+
+  groupMemberships    GroupMember[]
+  activities          Activity[]
+  // Invitations this account has been the target of (accepted-by).
+  receivedInvitations GroupInvitation[]        @relation("InvitationInviteeAccount")
+  // Invitations this account has issued as an owner/admin.
+  sentInvitations     GroupInvitation[]        @relation("InvitationInviter")
+  groupPreferences    AccountGroupPreference[]
 }
 
-model Participant {
-  id              String           @id
-  name            String
-  group           Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId         String
+model AuthIdentity {
+  id                    String    @id
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  // Provider identity: "credential" (email/password), "magic-link", or a social
+  // provider id such as "google".
+  providerId            String
+  // The provider-specific account id (e.g. Google sub, or the email for magic-link/credential).
+  accountId             String
+  // Refers to the owning Spliit account (better-auth "user").
+  account               Account   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  // Hashed password, only populated for the "credential" provider.
+  password              String?
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // The signed-in account this session belongs to.
+  account   Account  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  value      String
+  expiresAt  DateTime
+  identifier String
+
+  @@index([identifier])
+}
+
+// ---------------------------------------------------------------------------
+// Ledger accounting core
+//
+// Every group (and, in the future, every direct account relationship) has one
+// Ledger. Expenses, balances, activities, documents, recurrence, exports, and
+// base currency attach to the Ledger rather than the group product container.
+// ---------------------------------------------------------------------------
+
+model Ledger {
+  id           String   @id
+  // The base currency of the ledger. `currency` is the display symbol (e.g. "$"),
+  // `currencyCode` is the ISO-4217 code (e.g. "USD") or null for custom currencies.
+  currency     String   @default("$")
+  currencyCode String?
+  createdAt    DateTime @default(now())
+
+  participants          LedgerParticipant[]
+  expenses              Expense[]
+  activities            Activity[]
+  documents             ExpenseDocument[]      @relation("LedgerDocuments")
+  recurringExpenseLinks RecurringExpenseLink[]
+
+  group Group?
+}
+
+model LedgerParticipant {
+  id            String       @id
+  ledger        Ledger       @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId      String
+  // Display name used as the primary identity in expenses and balances.
+  name          String
+  // Backing group membership, if this participant is an account-backed group member.
+  // Null for imported/legacy participants and for the historical rows left behind
+  // after a member is removed (those rows keep existing for balance/history).
+  groupMember   GroupMember? @relation(fields: [groupMemberId], references: [id])
+  groupMemberId String?      @unique
+
   expensesPaidBy  Expense[]
   expensesPaidFor ExpensePaidFor[]
+  activities      Activity[]
+  // Pending invitations that materialized this ledger participant to allow
+  // pre-accept expenses. The link is cleared when the invitation is revoked.
+  invitations     GroupInvitation[]
+
+  @@index([ledgerId])
 }
 
-model Category {
-  id       Int       @id @default(autoincrement())
-  grouping String
-  name     String
-  Expense  Expense[]
+// ---------------------------------------------------------------------------
+// Groups, memberships, invitations
+// ---------------------------------------------------------------------------
+
+model Group {
+  id          String   @id
+  name        String
+  information String?  @db.Text
+  // Group-level archive flag. When true, the group is read-only for all
+  // members (no new expenses can be added) and it appears in the "Archived"
+  // section of every member's group list. The setting is owned by
+  // OWNER/ADMIN through the `groups.archive` tRPC mutation. This is
+  // distinct from the per-account `AccountGroupPreference.archived` column
+  // — see that model for the rename history.
+  archived    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  // One group has exactly one ledger that holds its accounting core.
+  ledger   Ledger @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId String @unique
+
+  members            GroupMember[]
+  invitations        GroupInvitation[]
+  accountPreferences AccountGroupPreference[]
 }
+
+enum GroupRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum GroupMemberStatus {
+  PENDING
+  ACTIVE
+  LEFT
+  REMOVED
+  SUSPENDED
+}
+
+model GroupMember {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group     Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  account   Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  role      GroupRole         @default(MEMBER)
+  status    GroupMemberStatus @default(ACTIVE)
+
+  // Display-name snapshot/override for this account inside the group.
+  displayName String?
+  joinedAt    DateTime?
+  leftAt      DateTime?
+
+  // The ledger participant that represents this member in expenses/balances.
+  // Null until a ledger participant has been materialized for this member.
+  ledgerParticipant LedgerParticipant?
+
+  @@unique([groupId, accountId])
+  @@index([accountId])
+}
+
+enum GroupInvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  REVOKED
+}
+
+model GroupInvitation {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId String
+
+  // Email the invitation was sent to. Acceptance requires an authenticated
+  // account whose email matches exactly (unless an owner/admin reassigns it).
+  email  String
+  role   GroupRole             @default(MEMBER)
+  status GroupInvitationStatus @default(PENDING)
+
+  // The inviter (owner/admin who created the invitation).
+  invitedBy   Account @relation("InvitationInviter", fields: [invitedById], references: [id])
+  invitedById String
+
+  // The account that accepted the invitation, once accepted.
+  acceptedBy   Account?  @relation("InvitationInviteeAccount", fields: [acceptedById], references: [id])
+  acceptedById String?
+  acceptedAt   DateTime?
+  revokedAt    DateTime?
+
+  // Optional virtual LedgerParticipant materialized for this pending invitation
+  // so expenses can be recorded against the invitee before they accept. The
+  // link is set when the group's participants list is read; it is reused when
+  // the invitation is accepted, and cleared on revoke.
+  ledgerParticipant   LedgerParticipant? @relation(fields: [ledgerParticipantId], references: [id], onDelete: SetNull)
+  ledgerParticipantId String?
+
+  @@index([groupId])
+  @@index([email])
+  @@index([email, status])
+  @@index([groupId, status])
+}
+
+// ---------------------------------------------------------------------------
+// Account-level group preferences (server source of truth, cross-device)
+// ---------------------------------------------------------------------------
+
+model AccountGroupPreference {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+
+  starred Boolean @default(false)
+  // The column is named `archived` for migration simplicity but the API
+  // surface exposes it as the per-account "hide" preference (it removes the
+  // group from the signed-in user's list, not from everyone else's). The
+  // group-level archive flag lives on `Group.archived` and is set by
+  // OWNER/ADMIN through the `groups.archive` mutation.
+  archived Boolean @default(false)
+  pinned   Boolean @default(false)
+  hidden   Boolean @default(false)
+
+  @@unique([accountId, groupId])
+}
+
+// ---------------------------------------------------------------------------
+// Expenses, splits, documents, activities, recurrence
+// ---------------------------------------------------------------------------
+
+// NOTE: There is no `Category` model on purpose. Default categories are
+// defined in code (`packages/domain/src/categories.ts`) and resolved
+// through i18n. `Expense.categoryId` stores a string id that is
+// validated against `categoryIdSchema` (a Zod enum of the in-code ids).
+// The column is intentionally not a foreign key: when user-created
+// categories land, a new `Category` table will be re-introduced and a
+// migration will restore the constraint.
 
 model Expense {
   id               String            @id
-  group            Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  ledger           Ledger            @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId         String
   expenseDate      DateTime          @default(dbgenerated("CURRENT_DATE")) @db.Date
   title            String
-  category         Category?         @relation(fields: [categoryId], references: [id])
-  categoryId       Int               @default(0)
+  // Descriptive id from the in-code category list, e.g. "general",
+  // "payment", "movies". See `packages/domain/src/categories.ts`.
+  categoryId       String            @default("general")
+  // Normalized amount in ledger base-currency minor units.
   amount           Int
   originalAmount   Int?
   originalCurrency String?
   conversionRate   Decimal?
-  paidBy           Participant       @relation(fields: [paidById], references: [id], onDelete: Cascade)
+  paidBy           LedgerParticipant @relation(fields: [paidById], references: [id], onDelete: Restrict)
   paidById         String
   paidFor          ExpensePaidFor[]
-  groupId          String
   isReimbursement  Boolean           @default(false)
   splitMode        SplitMode         @default(EVENLY)
   createdAt        DateTime          @default(now())
   documents        ExpenseDocument[]
   notes            String?
 
-  recurrenceRule         RecurrenceRule?       @default(NONE)
-  recurringExpenseLink   RecurringExpenseLink?
-  recurringExpenseLinkId String?
+  recurrenceRule       RecurrenceRule        @default(NONE)
+  recurringExpenseLink RecurringExpenseLink?
+
+  @@index([ledgerId])
 }
 
 model ExpenseDocument {
@@ -71,6 +327,8 @@ model ExpenseDocument {
   height    Int
   Expense   Expense? @relation(fields: [expenseId], references: [id])
   expenseId String?
+  Ledger    Ledger?  @relation("LedgerDocuments", fields: [ledgerId], references: [id])
+  ledgerId  String?
 }
 
 enum SplitMode {
@@ -82,18 +340,20 @@ enum SplitMode {
 
 model RecurringExpenseLink {
   id                    String  @id
-  groupId               String
+  ledgerId              String
   currentFrameExpense   Expense @relation(fields: [currentFrameExpenseId], references: [id], onDelete: Cascade)
   currentFrameExpenseId String  @unique
 
-  // Note: We do not want to link to the next expense because once it is created, it should be 
+  // Note: We do not want to link to the next expense because once it is created, it should be
   // treated as it's own independent entity. This means that if a user wants to delete an Expense
   // and any prior related recurring expenses, they'll need to delete them one by one.
   nextExpenseCreatedAt DateTime?
   nextExpenseDate      DateTime
 
-  @@index([groupId])
-  @@index([groupId, nextExpenseCreatedAt, nextExpenseDate(sort: Desc)])
+  ledger Ledger @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+
+  @@index([ledgerId])
+  @@index([ledgerId, nextExpenseCreatedAt, nextExpenseDate(sort: Desc)])
 }
 
 enum RecurrenceRule {
@@ -104,24 +364,31 @@ enum RecurrenceRule {
 }
 
 model ExpensePaidFor {
-  expense       Expense     @relation(fields: [expenseId], references: [id], onDelete: Cascade)
-  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  expenseId     String
-  participantId String
-  shares        Int         @default(1)
+  expense             Expense           @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  ledgerParticipant   LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Restrict)
+  expenseId           String
+  ledgerParticipantId String
+  shares              Int               @default(1)
 
-  @@id([expenseId, participantId])
+  @@id([expenseId, ledgerParticipantId])
 }
 
 model Activity {
-  id            String       @id
-  group         Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId       String
-  time          DateTime     @default(now())
-  activityType  ActivityType
-  participantId String?
-  expenseId     String?
-  data          String?
+  id                  String             @id
+  ledger              Ledger             @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId            String
+  time                DateTime           @default(now())
+  activityType        ActivityType
+  // Actor identifier: a ledger participant id (member-backed) when applicable.
+  ledgerParticipant   LedgerParticipant? @relation(fields: [ledgerParticipantId], references: [id], onDelete: SetNull)
+  ledgerParticipantId String?
+  // Optional: the account id of the actor (when known).
+  account             Account?           @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  accountId           String?
+  expenseId           String?
+  data                String?
+
+  @@index([ledgerId])
 }
 
 enum ActivityType {

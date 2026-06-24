@@ -12,7 +12,7 @@ import dayjs, { type Dayjs } from 'dayjs'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
-import { useCurrentGroup } from '../current-group-context'
+import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 const PAGE_SIZE = 20
 
@@ -61,29 +61,6 @@ export function ExpenseList() {
   const [searchText, setSearchText] = useState('')
   const [debouncedSearchText] = useDebounce(searchText, 300)
 
-  const participants = group?.participants
-
-  useEffect(() => {
-    if (!participants) return
-
-    const activeUser = localStorage.getItem('newGroup-activeUser')
-    const newUser = localStorage.getItem(`${groupId}-newUser`)
-    if (activeUser || newUser) {
-      localStorage.removeItem('newGroup-activeUser')
-      localStorage.removeItem(`${groupId}-newUser`)
-      if (activeUser === 'None') {
-        localStorage.setItem(`${groupId}-activeUser`, 'None')
-      } else {
-        const userId = participants.find(
-          (p) => p.name === (activeUser || newUser),
-        )?.id
-        if (userId) {
-          localStorage.setItem(`${groupId}-activeUser`, userId)
-        }
-      }
-    }
-  }, [groupId, participants])
-
   return (
     <>
       <SearchBar onValueChange={(value) => setSearchText(value)} />
@@ -104,6 +81,7 @@ const ExpenseListForSearch = ({
 }) => {
   const utils = trpc.useUtils()
   const { group } = useCurrentGroup()
+  const isPendingInvitee = useIsPendingInvitee()
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense
@@ -142,11 +120,13 @@ const ExpenseListForSearch = ({
     return (
       <p className="px-6 text-sm py-6">
         {t('noExpenses')}{' '}
-        <Button variant="link" asChild className="-m-4">
-          <Link href={`/groups/${groupId}/expenses/create`}>
-            {t('createFirst')}
-          </Link>
-        </Button>
+        {group.archived || isPendingInvitee ? null : (
+          <Button variant="link" asChild className="-m-4">
+            <Link href={`/groups/${groupId}/expenses/create`}>
+              {t('createFirst')}
+            </Link>
+          </Button>
+        )}
       </p>
     )
 

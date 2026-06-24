@@ -17,6 +17,8 @@ services:
     restart: unless-stopped
     ports:
       - 3001:3001
+    env_file:
+      - .env
     environment:
       PORT: 3001
       WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:3000}
@@ -30,7 +32,19 @@ services:
       S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET:-}
       S3_UPLOAD_REGION: ${S3_UPLOAD_REGION:-}
       S3_UPLOAD_ENDPOINT: ${S3_UPLOAD_ENDPOINT:-}
+      S3_UPLOAD_PUBLIC_URL: ${S3_UPLOAD_PUBLIC_URL:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # Better Auth (required in production: BETTER_AUTH_SECRET)
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      # SMTP (required in production: SMTP_HOST)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
     depends_on:
       db:
         condition: service_healthy

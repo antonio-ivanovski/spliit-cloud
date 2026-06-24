@@ -7,6 +7,7 @@ const interpretEnvVarAsBool = (val: unknown): boolean => {
 
 const envSchema = z
   .object({
+    NODE_ENV: z.string().optional(),
     PORT: z.coerce.number().int().positive().default(3001),
     WEB_ORIGINS: z.string().optional().default('http://localhost:3000'),
     DATABASE_URL: z.string().url().optional(),
@@ -20,6 +21,7 @@ const envSchema = z
     S3_UPLOAD_BUCKET: z.string().optional(),
     S3_UPLOAD_REGION: z.string().optional(),
     S3_UPLOAD_ENDPOINT: z.string().optional(),
+    S3_UPLOAD_PUBLIC_URL: z.string().url().optional(),
     PUBLIC_ENABLE_RECEIPT_EXTRACT: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
@@ -29,8 +31,58 @@ const envSchema = z
       z.boolean().default(false),
     ),
     OPENAI_API_KEY: z.string().optional(),
+
+    // better-auth
+    BETTER_AUTH_SECRET: z.string().optional(),
+    BETTER_AUTH_URL: z.string().url().optional(),
+    GOOGLE_CLIENT_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
+
+    // Email delivery (magic link + verification)
+    SMTP_HOST: z.string().optional(),
+    SMTP_PORT: z.coerce.number().int().positive().optional(),
+    SMTP_USER: z.string().optional(),
+    SMTP_PASS: z.string().optional(),
+    EMAIL_FROM: z.string().optional(),
   })
   .superRefine((env, ctx) => {
+    if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        path: ['BETTER_AUTH_SECRET'],
+        message: 'BETTER_AUTH_SECRET is required in production',
+      })
+    }
+    if (env.NODE_ENV === 'production' && !env.SMTP_HOST) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        path: ['SMTP_HOST'],
+        message: 'SMTP_HOST is required in production',
+      })
+    }
+    if (env.NODE_ENV === 'production' && !env.EMAIL_FROM) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        path: ['EMAIL_FROM'],
+        message: 'EMAIL_FROM is required in production',
+      })
+    }
+    // When SMTP is configured in production, require credentials. This rules
+    // out silent misconfiguration against real providers (SendGrid, Mailgun,
+    // Postmark, Gmail, ...), which all need a username + password. Local
+    // dev-only relays like MailHog are out of scope for production. Anyone
+    // who really needs anonymous relay in production can set dummy values.
+    if (
+      env.NODE_ENV === 'production' &&
+      env.SMTP_HOST &&
+      (!env.SMTP_USER || !env.SMTP_PASS)
+    ) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message:
+          'SMTP_USER and SMTP_PASS are required in production when SMTP_HOST is set',
+      })
+    }
     if (
       env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS &&
       (!env.S3_UPLOAD_BUCKET ||

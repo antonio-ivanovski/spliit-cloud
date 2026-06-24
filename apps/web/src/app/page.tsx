@@ -1,13 +1,15 @@
+'use client'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useTranslations } from '@/i18n/react'
-import { Github } from 'lucide-react'
-
-// FIX for https://github.com/vercel/next.js/issues/58615
-// export const dynamic = 'force-dynamic'
+import { useCurrentAccount } from '@/lib/use-current-account'
+import { Github, Loader2, LogIn, UserPlus, Users } from 'lucide-react'
 
 export default function HomePage() {
   const t = useTranslations()
+  const { data: account, isPending } = useCurrentAccount()
+
   return (
     <main>
       <section className="py-16 md:py-24 lg:py-32">
@@ -22,16 +24,41 @@ export default function HomePage() {
               strong: (chunks) => <strong>{chunks}</strong>,
             })}
           </p>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href="/groups">{t('Homepage.button.groups')}</Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link href="https://github.com/antonio-ivanovski/spliit-cloud">
-                <Github className="w-4 h-4 mr-2" />
-                {t('Homepage.button.github')}
-              </Link>
-            </Button>
+          <div className="flex flex-wrap justify-center gap-2">
+            {isPending ? (
+              <Button disabled size="lg">
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {t('Auth.loading')}
+              </Button>
+            ) : account ? (
+              <Button asChild size="lg">
+                <Link href="/groups">
+                  <Users className="w-4 h-4 mr-2" />
+                  {t('Homepage.button.groups')}
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild size="lg">
+                  <Link href="/auth/sign-in">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    {t('Homepage.button.signIn')}
+                  </Link>
+                </Button>
+                <Button asChild variant="secondary" size="lg">
+                  <Link href="/auth/sign-in?mode=sign-up">
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    {t('Homepage.button.createAccount')}
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost" size="lg">
+                  <Link href="https://github.com/antonio-ivanovski/spliit-cloud">
+                    <Github className="w-4 h-4 mr-2" />
+                    {t('Homepage.button.github')}
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </section>

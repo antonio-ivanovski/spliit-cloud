@@ -1,7 +1,6 @@
-import { formatCategoryForAIPrompt } from '@spliit/domain'
+import { DEFAULT_CATEGORIES, formatCategoryForAIPrompt } from '@spliit/domain'
 import OpenAI from 'openai'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
-import { getCategories } from './api'
 import { env } from './env'
 
 let openai: OpenAI
@@ -10,7 +9,7 @@ export async function extractExpenseInformationFromImage(imageUrl: string) {
   if (!openai) {
     openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
   }
-  const categories = await getCategories()
+  const categories = DEFAULT_CATEGORIES
 
   const body: ChatCompletionCreateParamsNonStreaming = {
     model: 'gpt-5-nano',

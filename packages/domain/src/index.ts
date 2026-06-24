@@ -1,4 +1,5 @@
 export * from './balances'
+export * from './categories'
 export * from './currency'
 export * from './enums'
 export * from './i18n'

@@ -29,15 +29,22 @@ import { useEffect, useState } from 'react'
 type Props = {
   documents: ExpenseFormValues['documents']
   updateDocuments: (documents: ExpenseFormValues['documents']) => void
+  ledgerId?: string | null
+  readOnly?: boolean
 }
 
 const MAX_FILE_SIZE = 5 * 1024 ** 2
 
-export function ExpenseDocumentsInput({ documents, updateDocuments }: Props) {
+export function ExpenseDocumentsInput({
+  documents,
+  updateDocuments,
+  ledgerId,
+  readOnly = false,
+}: Props) {
   const locale = useLocale()
   const t = useTranslations('ExpenseDocumentsInput')
   const [pending, setPending] = useState(false)
-  const { FileInput, openFileDialog, uploadToS3 } = usePresignedUpload() // use presigned uploads to addtionally support providers other than AWS
+  const { FileInput, openFileDialog, uploadToS3 } = usePresignedUpload(ledgerId) // use presigned uploads to addtionally support providers other than AWS
   const { toast } = useToast()
 
   const handleFileChange = async (file: File) => {
@@ -95,24 +102,27 @@ export function ExpenseDocumentsInput({ documents, updateDocuments }: Props) {
             deleteDocument={(document) => {
               updateDocuments(documents.filter((d) => d.id !== document.id))
             }}
+            readOnly={readOnly}
           />
         ))}
 
-        <div>
-          <Button
-            variant="secondary"
-            type="button"
-            onClick={openFileDialog}
-            className="w-full h-full"
-            disabled={pending}
-          >
-            {pending ? (
-              <Loader2 className="w-8 h-8 animate-spin" />
-            ) : (
-              <Plus className="w-8 h-8" />
-            )}
-          </Button>
-        </div>
+        {!readOnly && (
+          <div>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={openFileDialog}
+              className="w-full h-full"
+              disabled={pending}
+            >
+              {pending ? (
+                <Loader2 className="w-8 h-8 animate-spin" />
+              ) : (
+                <Plus className="w-8 h-8" />
+              )}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -122,10 +132,12 @@ export function DocumentThumbnail({
   document,
   documents,
   deleteDocument,
+  readOnly = false,
 }: {
   document: ExpenseFormValues['documents'][number]
   documents: ExpenseFormValues['documents']
   deleteDocument: (document: ExpenseFormValues['documents'][number]) => void
+  readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const [api, setApi] = useState<CarouselApi>()
@@ -163,19 +175,21 @@ export function DocumentThumbnail({
         <DialogDescription className="sr-only"></DialogDescription>
         <div className="flex flex-col gap-4">
           <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              className="text-destructive"
-              onClick={() => {
-                if (currentDocument !== null) {
-                  deleteDocument(documents[currentDocument])
-                }
-                setOpen(false)
-              }}
-            >
-              <Trash className="w-4 h-4 mr-2" />
-              Delete document
-            </Button>
+            {!readOnly && (
+              <Button
+                variant="ghost"
+                className="text-destructive"
+                onClick={() => {
+                  if (currentDocument !== null) {
+                    deleteDocument(documents[currentDocument])
+                  }
+                  setOpen(false)
+                }}
+              >
+                <Trash className="w-4 h-4 mr-2" />
+                Delete document
+              </Button>
+            )}
             <DialogClose asChild>
               <Button variant="ghost">
                 <X className="w-4 h-4 mr-2" /> Close

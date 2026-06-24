@@ -1,4 +1,4 @@
-import currencyList from './currency-data.json'
+import currencyList from './currency-data.json' with { type: 'json' }
 import { Locale } from './i18n'
 
 export type Currency = {
