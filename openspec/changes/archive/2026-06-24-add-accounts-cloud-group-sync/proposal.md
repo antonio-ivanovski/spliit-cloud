@@ -7,12 +7,13 @@ Spliit currently treats local/browser state and anonymous group participants as 
 - **BREAKING** Introduce authenticated accounts as required users for cloud groups and expenses.
 - **BREAKING** Replace anonymous group participants with account-backed group members for new native cloud groups.
 - **BREAKING** Treat the server database as the source of truth for groups, members, expenses, balances, activities, documents, and settings.
-- Add authentication using magic link, Google OAuth, and email plus password. Username-only password login is out of scope.
-- Add account profiles with stable IDs, display names, email identity, auth provider metadata, and account lifecycle state.
-- Add group membership roles and invitations so groups can be created, joined, and managed by accounts.
+- Add authentication using magic link, Google OAuth, and email plus password. Magic link is always available: production uses SMTP, local development writes the message to a `.mail/` directory so the flow can be exercised without external services. Username-only password login is out of scope.
+- Add account profiles with stable IDs, display names, email identity, auth provider metadata, and account lifecycle state. Email-and-password sign-up sends a verification email and only finalises sign-in once the email is verified.
+- Add group membership roles and invitations so groups can be created, joined, and managed by accounts. Invitations can be created for ADMIN or MEMBER roles only; the OWNER role is reserved for the group creator. Each invitation has a lifecycle of `PENDING`, `ACCEPTED`, `REVOKED`, or `DECLINED`. The system rejects duplicate pending invitations and self-invites.
 - Introduce `Ledger` as the shared accounting core for groups and future direct account relationships.
 - Replace browser-local group discovery and active participant selection with server-backed account membership state.
 - Remove local-only active participant selection for cloud groups; the active user is the signed-in account.
+- Add a group-level `archived` flag (OWNER/ADMIN only) that freezes new expenses for every member, and a per-account `hide` preference that only affects the owning account. Archiving a group with unsettled balances requires explicit `force: true`; the archive flow then auto-creates one "Settlement on archive" reimbursement per non-zero leg inside the same transaction.
 - Allow legacy schemas and data contracts to be changed freely because this roadmap is treated as greenfield for the new account-backed product.
 
 ## Capabilities
