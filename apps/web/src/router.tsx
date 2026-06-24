@@ -1,3 +1,5 @@
+import { CompleteProfilePage } from '@/app/auth/complete-profile'
+import { SignInPage } from '@/app/auth/sign-in'
 import { ActivityPageClient } from '@/app/groups/[groupId]/activity/page.client'
 import BalancesAndReimbursements from '@/app/groups/[groupId]/balances/balances-and-reimbursements'
 import { EditGroup } from '@/app/groups/[groupId]/edit/edit-group'
@@ -6,11 +8,13 @@ import { EditExpenseForm } from '@/app/groups/[groupId]/expenses/edit-expense-fo
 import GroupExpensesPageClient from '@/app/groups/[groupId]/expenses/page.client'
 import GroupInformation from '@/app/groups/[groupId]/information/group-information'
 import { GroupLayoutClient } from '@/app/groups/[groupId]/layout.client'
+import GroupMembersPage from '@/app/groups/[groupId]/members/page.client'
 import { TotalsPageClient } from '@/app/groups/[groupId]/stats/page.client'
 import { CreateGroup } from '@/app/groups/create/create-group'
 import { RecentGroupList } from '@/app/groups/recent-group-list'
 import HomePage from '@/app/page'
 import { AppShell } from '@/AppShell'
+import { RequireAuth } from '@/components/require-auth'
 import { trpc } from '@/trpc/client'
 import {
   createRootRoute,
@@ -44,9 +48,11 @@ function ExpenseEditRoute() {
 function GroupsLayoutRoute() {
   return (
     <Suspense>
-      <main className="flex-1 max-w-screen-md w-full mx-auto px-4 py-6 flex flex-col gap-6">
-        <Outlet />
-      </main>
+      <RequireAuth>
+        <main className="flex-1 max-w-screen-md w-full mx-auto px-4 py-6 flex flex-col gap-6">
+          <Outlet />
+        </main>
+      </RequireAuth>
     </Suspense>
   )
 }
@@ -56,6 +62,16 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: HomePage,
+})
+const authRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/auth/sign-in',
+  component: SignInPage,
+})
+const completeProfileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/auth/complete-profile',
+  component: CompleteProfilePage,
 })
 const groupsRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -140,9 +156,16 @@ const editRoute = createRoute({
   path: '/edit',
   component: EditGroup,
 })
+const membersRoute = createRoute({
+  getParentRoute: () => groupRoute,
+  path: '/members',
+  component: GroupMembersPage,
+})
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  authRoute,
+  completeProfileRoute,
   groupsRoute.addChildren([
     groupsIndexRoute,
     groupCreateRoute,
@@ -156,6 +179,7 @@ const routeTree = rootRoute.addChildren([
       activityRoute,
       informationRoute,
       editRoute,
+      membersRoute,
     ]),
   ]),
 ])

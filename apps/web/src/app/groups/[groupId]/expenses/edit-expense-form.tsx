@@ -15,6 +15,8 @@ export function EditExpenseForm({
 }) {
   const { data: groupData } = trpc.groups.get.useQuery({ groupId })
   const group = groupData?.group
+  const currentLedgerParticipantId =
+    groupData?.currentLedgerParticipantId ?? null
 
   const { data: categoriesData } = trpc.categories.list.useQuery()
   const categories = categoriesData?.categories
@@ -35,26 +37,30 @@ export function EditExpenseForm({
 
   if (!group || !categories || !expense) return null
 
+  const readOnly = !!group.archived
+
   return (
     <ExpenseForm
       group={group}
       expense={expense}
       categories={categories}
-      onSubmit={async (expenseFormValues, participantId) => {
+      currentLedgerParticipantId={currentLedgerParticipantId}
+      readOnly={readOnly}
+      onSubmit={async (expenseFormValues) => {
+        if (readOnly) return
         await updateExpenseMutateAsync({
           expenseId,
           groupId,
           expenseFormValues,
-          participantId,
         })
         utils.groups.expenses.invalidate()
         router.push(`/groups/${group.id}`)
       }}
-      onDelete={async (participantId) => {
+      onDelete={async () => {
+        if (readOnly) return
         await deleteExpenseMutateAsync({
           expenseId,
           groupId,
-          participantId,
         })
         utils.groups.expenses.invalidate()
         router.push(`/groups/${group.id}`)

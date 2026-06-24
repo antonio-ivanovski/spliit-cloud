@@ -1,14 +1,34 @@
 'use client'
 import { Money } from '@/components/money'
 import { useTranslations } from '@/i18n/react'
-import { getBalances } from '@/lib/balances'
+import { getBalances, type BalanceExpense } from '@/lib/balances'
 import { Currency } from '@/lib/currency'
 import { useActiveUser } from '@/lib/hooks'
+
+type GroupExpense = Awaited<
+  ReturnType<typeof import('@/lib/api').getGroupExpenses>
+>[number]
 
 type Props = {
   groupId: string
   currency: Currency
-  expense: Parameters<typeof getBalances>[0][number]
+  expense: GroupExpense
+}
+
+/**
+ * Convert the new ledger-participant-based expense shape returned by
+ * `getGroupExpenses` into the participant-like shape the domain balance
+ * functions expect. Keeps the balance math untouched.
+ */
+function toBalanceExpense(expense: GroupExpense): BalanceExpense {
+  return {
+    ...expense,
+    paidBy: expense.paidBy,
+    paidFor: expense.paidFor.map((pf) => ({
+      shares: pf.shares,
+      participant: pf.ledgerParticipant,
+    })),
+  }
 }
 
 export function ActiveUserBalance({ groupId, currency, expense }: Props) {
@@ -18,7 +38,7 @@ export function ActiveUserBalance({ groupId, currency, expense }: Props) {
     return null
   }
 
-  const balances = getBalances([expense])
+  const balances = getBalances([toBalanceExpense(expense)])
   let fmtBalance = <>{t('notInvolved')}</>
   if (Object.hasOwn(balances, activeUserId)) {
     const balance = balances[activeUserId]

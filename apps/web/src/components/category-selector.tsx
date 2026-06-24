@@ -31,6 +31,7 @@ type Props = {
   /** Category ID to be selected by default. Overwriting this value will update current selection, too. */
   defaultValue: Category['id']
   isLoading: boolean
+  disabled?: boolean
 }
 
 export function CategorySelector({
@@ -38,6 +39,7 @@ export function CategorySelector({
   onValueChange,
   defaultValue,
   isLoading,
+  disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<number>(defaultValue)
@@ -60,6 +62,7 @@ export function CategorySelector({
             category={selectedCategory}
             open={open}
             isLoading={isLoading}
+            disabled={disabled}
           />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
@@ -83,6 +86,7 @@ export function CategorySelector({
           category={selectedCategory}
           open={open}
           isLoading={isLoading}
+          disabled={disabled}
         />
       </DrawerTrigger>
       <DrawerContent className="p-0">
@@ -149,6 +153,7 @@ type CategoryButtonProps = {
   category: Category
   open: boolean
   isLoading: boolean
+  disabled?: boolean
 }
 const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
   (

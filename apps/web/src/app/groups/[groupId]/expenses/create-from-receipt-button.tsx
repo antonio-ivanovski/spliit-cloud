@@ -88,7 +88,9 @@ function ReceiptDialogContent() {
   const locale = useLocale()
   const t = useTranslations('CreateFromReceipt')
   const [pending, setPending] = useState(false)
-  const { uploadToS3, FileInput, openFileDialog } = usePresignedUpload()
+  const { uploadToS3, FileInput, openFileDialog } = usePresignedUpload(
+    group?.ledgerId,
+  )
   const { toast } = useToast()
   const router = useRouter()
   const extractReceiptMutation =

@@ -39,13 +39,9 @@ import { Locale } from '@/i18n/request'
 import { randomId } from '@/lib/api'
 import { defaultCurrencyList, getCurrency } from '@/lib/currency'
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
-import { useActiveUser, useCurrencyRate } from '@/lib/hooks'
+import { useCurrencyRate } from '@/lib/hooks'
 import { useSearchParams } from '@/lib/navigation'
-import {
-  ExpenseFormValues,
-  SplittingOptions,
-  expenseFormSchema,
-} from '@/lib/schemas'
+import { ExpenseFormValues, expenseFormSchema } from '@/lib/schemas'
 import { calculateShare } from '@/lib/totals'
 import {
   amountAsDecimal,
@@ -77,75 +73,26 @@ const enforceCurrencyPattern = (value: string) =>
 const getDefaultSplittingOptions = (
   group: NonNullable<AppRouterOutput['groups']['get']['group']>,
 ) => {
-  const defaultValue = {
+  // Default splitting: all ledger participants (active members + pending
+  // invitations), evenly. We no longer read per-device splitting defaults
+  // from localStorage; server-backed account preferences can replace this in
+  // a future pass.
+  return {
     splitMode: 'EVENLY' as const,
     paidFor: group.participants.map(({ id }) => ({
       participant: id,
       shares: '1' as any, // Use string to ensure consistent schema handling
     })),
   }
-
-  if (typeof localStorage === 'undefined') return defaultValue
-  const defaultSplitMode = localStorage.getItem(
-    `${group.id}-defaultSplittingOptions`,
-  )
-  if (defaultSplitMode === null) return defaultValue
-  const parsedDefaultSplitMode = JSON.parse(
-    defaultSplitMode,
-  ) as SplittingOptions
-
-  if (parsedDefaultSplitMode.paidFor === null) {
-    parsedDefaultSplitMode.paidFor = defaultValue.paidFor
-  }
-
-  // if there is a participant in the default options that does not exist anymore,
-  // remove the stale default splitting options
-  for (const parsedPaidFor of parsedDefaultSplitMode.paidFor) {
-    if (
-      !group.participants.some(({ id }) => id === parsedPaidFor.participant)
-    ) {
-      localStorage.removeItem(`${group.id}-defaultSplittingOptions`)
-      return defaultValue
-    }
-  }
-
-  return {
-    splitMode: parsedDefaultSplitMode.splitMode,
-    paidFor: parsedDefaultSplitMode.paidFor.map((paidFor) => ({
-      participant: paidFor.participant,
-      shares: (paidFor.shares / 100).toString() as any, // Convert to string for consistent schema handling
-    })),
-  }
 }
 
 async function persistDefaultSplittingOptions(
-  groupId: string,
-  expenseFormValues: ExpenseFormValues,
+  _groupId: string,
+  _expenseFormValues: ExpenseFormValues,
 ) {
-  if (localStorage && expenseFormValues.saveDefaultSplittingOptions) {
-    const computePaidFor = (): SplittingOptions['paidFor'] => {
-      if (expenseFormValues.splitMode === 'EVENLY') {
-        return expenseFormValues.paidFor.map(({ participant }) => ({
-          participant,
-          shares: 100,
-        }))
-      } else if (expenseFormValues.splitMode === 'BY_AMOUNT') {
-        return null
-      } else {
-        return expenseFormValues.paidFor
-      }
-    }
-
-    const splittingOptions = {
-      splitMode: expenseFormValues.splitMode,
-      paidFor: computePaidFor(),
-    } satisfies SplittingOptions
-
-    localStorage.setItem(
-      `${groupId}-defaultSplittingOptions`,
-      JSON.stringify(splittingOptions),
-    )
-  }
+  // No-op: per-device splitting defaults were stored in localStorage before
+  // the account-backed product. Server-backed account preferences can replace
+  // this in a future pass.
 }
 
 export function ExpenseForm({
@@ -155,13 +102,19 @@ export function ExpenseForm({
   onSubmit,
   onDelete,
   runtimeFeatureFlags,
+  currentLedgerParticipantId,
+  readOnly = false,
 }: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   categories: AppRouterOutput['categories']['list']['categories']
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
-  onSubmit: (value: ExpenseFormValues, participantId?: string) => Promise<void>
-  onDelete?: (participantId?: string) => Promise<void>
+  onSubmit: (value: ExpenseFormValues) => Promise<void>
+  onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
+  // Server-backed ledger participant id for the signed-in account. When
+  // creating an expense, we default the payer to this participant.
+  currentLedgerParticipantId?: string | null
+  readOnly?: boolean
 }) {
   const t = useTranslations('ExpenseForm')
   const locale = useLocale() as Locale
@@ -170,10 +123,10 @@ export function ExpenseForm({
   const searchParams = useSearchParams()
 
   const getSelectedPayer = (field?: { value: string }) => {
-    if (isCreate && typeof window !== 'undefined') {
-      const activeUser = localStorage.getItem(`${group.id}-activeUser`)
-      if (activeUser && activeUser !== 'None' && field?.value === undefined) {
-        return activeUser
+    if (isCreate && field?.value === undefined) {
+      // Default the payer to the signed-in account's ledger participant.
+      if (currentLedgerParticipantId) {
+        return currentLedgerParticipantId
       }
     }
     return field?.value
@@ -196,8 +149,8 @@ export function ExpenseForm({
           conversionRate: expense.conversionRate?.toNumber(),
           category: expense.categoryId,
           paidBy: expense.paidById,
-          paidFor: expense.paidFor.map(({ participantId, shares }) => ({
-            participant: participantId,
+          paidFor: expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
+            participant: ledgerParticipantId,
             shares: (expense.splitMode === 'BY_AMOUNT'
               ? amountAsDecimal(shares, groupCurrency)
               : (shares / 100).toString()) as any, // Convert to string to ensure consistent handling
@@ -270,9 +223,9 @@ export function ExpenseForm({
           },
   })
   const [isCategoryLoading, setCategoryLoading] = useState(false)
-  const activeUserId = useActiveUser(group.id)
 
   const submit = async (values: ExpenseFormValues) => {
+    if (readOnly) return
     await persistDefaultSplittingOptions(group.id, values)
 
     // Store monetary amounts in minor units (cents)
@@ -290,7 +243,7 @@ export function ExpenseForm({
       delete values.originalAmount
       delete values.originalCurrency
     }
-    return onSubmit(values, activeUserId ?? undefined)
+    return onSubmit(values)
   }
 
   const [isIncome, setIsIncome] = useState(Number(form.getValues().amount) < 0)
@@ -443,6 +396,11 @@ export function ExpenseForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
+        {readOnly && (
+          <p className="text-sm text-muted-foreground mb-4">
+            {t('readOnlyNotice')}
+          </p>
+        )}
         <Card>
           <CardHeader>
             <CardTitle>
@@ -460,10 +418,14 @@ export function ExpenseForm({
                     <Input
                       placeholder={t(`${sExpense}.TitleField.placeholder`)}
                       className="text-base"
+                      disabled={readOnly}
                       {...field}
                       onBlur={async () => {
                         field.onBlur() // avoid skipping other blur event listeners since we overwrite `field`
-                        if (runtimeFeatureFlags.enableCategoryExtract) {
+                        if (
+                          !readOnly &&
+                          runtimeFeatureFlags.enableCategoryExtract
+                        ) {
                           setCategoryLoading(true)
                           const { categoryId } =
                             await extractCategoryMutation.mutateAsync({
@@ -494,6 +456,7 @@ export function ExpenseForm({
                       className="date-base"
                       type="date"
                       defaultValue={formatDate(field.value)}
+                      disabled={readOnly}
                       onChange={(event) => {
                         return field.onChange(new Date(event.target.value))
                       }}
@@ -518,6 +481,7 @@ export function ExpenseForm({
                         currencies={defaultCurrencyList(locale, '')}
                         defaultValue={form.watch(field.name) ?? ''}
                         isLoading={false}
+                        disabled={readOnly}
                         onValueChange={(v) => onChange(v)}
                       />
                     ) : (
@@ -557,6 +521,7 @@ export function ExpenseForm({
                           type="text"
                           inputMode="decimal"
                           placeholder="0.00"
+                          disabled={readOnly}
                           onChange={(event) => {
                             const v = enforceCurrencyPattern(event.target.value)
                             onChange(v)
@@ -581,6 +546,7 @@ export function ExpenseForm({
                               className="h-auto py-0"
                               variant="link"
                               onClick={() => exchangeRate.refresh()}
+                              disabled={readOnly}
                             >
                               {t('conversionRateState.refresh')}
                             </Button>
@@ -599,7 +565,7 @@ export function ExpenseForm({
                 onOpenChange={setUsingCustomConversionRate}
               >
                 <CollapsibleTrigger asChild>
-                  <Button variant="link" className="-mx-4">
+                  <Button variant="link" className="-mx-4" disabled={readOnly}>
                     {usingCustomConversionRate
                       ? t('conversionRateField.useApi')
                       : t('conversionRateField.useCustom')}
@@ -628,6 +594,7 @@ export function ExpenseForm({
                               type="text"
                               inputMode="decimal"
                               placeholder="0.00"
+                              disabled={readOnly}
                               onChange={(event) => {
                                 const v = enforceCurrencyPattern(
                                   event.target.value,
@@ -662,6 +629,7 @@ export function ExpenseForm({
                     }
                     onValueChange={field.onChange}
                     isLoading={isCategoryLoading}
+                    disabled={readOnly}
                   />
                   <FormDescription>
                     {t(`${sExpense}.categoryFieldDescription`)}
@@ -685,6 +653,7 @@ export function ExpenseForm({
                         type="text"
                         inputMode="decimal"
                         placeholder="0.00"
+                        disabled={readOnly}
                         onChange={(event) => {
                           const v = enforceCurrencyPattern(event.target.value)
                           const income = Number(v) < 0
@@ -713,6 +682,7 @@ export function ExpenseForm({
                             <Checkbox
                               checked={field.value}
                               onCheckedChange={field.onChange}
+                              disabled={readOnly}
                             />
                           </FormControl>
                           <div>
@@ -737,6 +707,7 @@ export function ExpenseForm({
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={getSelectedPayer(field)}
+                    disabled={readOnly}
                   >
                     <SelectTrigger>
                       <SelectValue
@@ -744,9 +715,14 @@ export function ExpenseForm({
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      {group.participants.map(({ id, name }) => (
-                        <SelectItem key={id} value={id}>
-                          {name}
+                      {group.participants.map((participant) => (
+                        <SelectItem key={participant.id} value={participant.id}>
+                          {participant.name}
+                          {participant.pending && (
+                            <span className="ml-2 text-xs text-muted-foreground">
+                              {t('participant.pending')}
+                            </span>
+                          )}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -765,7 +741,11 @@ export function ExpenseForm({
                 <FormItem className="sm:order-6">
                   <FormLabel>{t('notesField.label')}</FormLabel>
                   <FormControl>
-                    <Textarea className="text-base" {...field} />
+                    <Textarea
+                      className="text-base"
+                      disabled={readOnly}
+                      {...field}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -781,6 +761,7 @@ export function ExpenseForm({
                       form.setValue('recurrenceRule', value as RecurrenceRule)
                     }}
                     defaultValue={getSelectedRecurrenceRule(field)}
+                    disabled={readOnly}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="NONE" />
@@ -818,6 +799,7 @@ export function ExpenseForm({
                 variant="link"
                 type="button"
                 className="-my-2 -mx-4"
+                disabled={readOnly}
                 onClick={() => {
                   const paidFor = form.getValues().paidFor
                   const allSelected =
@@ -855,12 +837,13 @@ export function ExpenseForm({
               name="paidFor"
               render={() => (
                 <FormItem className="sm:order-4 row-span-2 space-y-0">
-                  {group.participants.map(({ id, name }) => (
+                  {group.participants.map((participant) => (
                     <FormField
-                      key={id}
+                      key={participant.id}
                       control={form.control}
                       name="paidFor"
                       render={({ field }) => {
+                        const { id, name, pending } = participant
                         return (
                           <div
                             data-id={`${id}/${form.getValues().splitMode}/${
@@ -875,6 +858,7 @@ export function ExpenseForm({
                                     ({ participant }) => participant === id,
                                   )}
                                   onCheckedChange={(checked) => {
+                                    if (readOnly) return
                                     const options = {
                                       shouldDirty: true,
                                       shouldTouch: true,
@@ -900,10 +884,16 @@ export function ExpenseForm({
                                           options,
                                         )
                                   }}
+                                  disabled={readOnly}
                                 />
                               </FormControl>
                               <FormLabel className="text-sm font-normal flex-1">
                                 {name}
+                                {pending && (
+                                  <span className="ml-2 text-xs text-muted-foreground">
+                                    {t('participant.pending')}
+                                  </span>
+                                )}
                                 {field.value?.some(
                                   ({ participant }) => participant === id,
                                 ) &&
@@ -986,6 +976,7 @@ export function ExpenseForm({
                                                 type="text"
                                                 inputMode="decimal"
                                                 disabled={
+                                                  readOnly ||
                                                   !field.value?.some(
                                                     ({ participant }) =>
                                                       participant === id,
@@ -1093,6 +1084,7 @@ export function ExpenseForm({
                                               className="text-base w-[80px] -my-2"
                                               type="text"
                                               disabled={
+                                                readOnly ||
                                                 !field.value?.some(
                                                   ({ participant }) =>
                                                     participant === id,
@@ -1168,7 +1160,7 @@ export function ExpenseForm({
               defaultOpen={form.getValues().splitMode !== 'EVENLY'}
             >
               <CollapsibleTrigger asChild>
-                <Button variant="link" className="-mx-4">
+                <Button variant="link" className="-mx-4" disabled={readOnly}>
                   {t('advancedOptions')}
                 </Button>
               </CollapsibleTrigger>
@@ -1190,6 +1182,7 @@ export function ExpenseForm({
                               })
                             }}
                             defaultValue={field.value}
+                            disabled={readOnly}
                           >
                             <SelectTrigger>
                               <SelectValue />
@@ -1225,6 +1218,7 @@ export function ExpenseForm({
                           <Checkbox
                             checked={field.value}
                             onCheckedChange={field.onChange}
+                            disabled={readOnly}
                           />
                         </FormControl>
                         <div>
@@ -1259,6 +1253,8 @@ export function ExpenseForm({
                   <ExpenseDocumentsInput
                     documents={field.value}
                     updateDocuments={field.onChange}
+                    ledgerId={group.ledgerId}
+                    readOnly={readOnly}
                   />
                 )}
               />
@@ -1266,20 +1262,27 @@ export function ExpenseForm({
           </Card>
         )}
 
-        <div className="flex mt-4 gap-2">
-          <SubmitButton loadingContent={t(isCreate ? 'creating' : 'saving')}>
-            <Save className="w-4 h-4 mr-2" />
-            {t(isCreate ? 'create' : 'save')}
-          </SubmitButton>
-          {!isCreate && onDelete && (
-            <DeletePopup
-              onDelete={() => onDelete(activeUserId ?? undefined)}
-            ></DeletePopup>
-          )}
-          <Button variant="ghost" asChild>
-            <Link href={`/groups/${group.id}`}>{t('cancel')}</Link>
-          </Button>
-        </div>
+        {!readOnly && (
+          <div className="flex mt-4 gap-2">
+            <SubmitButton loadingContent={t(isCreate ? 'creating' : 'saving')}>
+              <Save className="w-4 h-4 mr-2" />
+              {t(isCreate ? 'create' : 'save')}
+            </SubmitButton>
+            {!isCreate && onDelete && (
+              <DeletePopup onDelete={() => onDelete()}></DeletePopup>
+            )}
+            <Button variant="ghost" asChild>
+              <Link href={`/groups/${group.id}`}>{t('cancel')}</Link>
+            </Button>
+          </div>
+        )}
+        {readOnly && (
+          <div className="flex mt-4 gap-2">
+            <Button variant="ghost" asChild>
+              <Link href={`/groups/${group.id}`}>{t('cancel')}</Link>
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   )

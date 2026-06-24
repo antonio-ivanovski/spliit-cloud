@@ -14,13 +14,13 @@ export function GroupLayoutClient({
   children,
 }: PropsWithChildren<{ groupId: string }>) {
   const { data, isLoading } = trpc.groups.get.useQuery({ groupId })
-  const t = useTranslations('Groups.NotFound')
+  const tNotFound = useTranslations('Groups.NotFound')
   const { toast } = useToast()
 
   useEffect(() => {
     if (data && !data.group) {
       toast({
-        description: t('text'),
+        description: tNotFound('text'),
         variant: 'destructive',
       })
     }
@@ -28,22 +28,27 @@ export function GroupLayoutClient({
 
   const props =
     isLoading || !data?.group
-      ? { isLoading: true as const, groupId, group: undefined }
-      : { isLoading: false as const, groupId, group: data.group }
-
-  if (isLoading) {
-    return (
-      <CurrentGroupProvider {...props}>
-        <GroupHeader />
-        {children ?? <Outlet />}
-      </CurrentGroupProvider>
-    )
-  }
+      ? {
+          isLoading: true as const,
+          groupId,
+          group: undefined,
+          currentLedgerParticipantId: undefined,
+          currentMember: undefined,
+        }
+      : {
+          isLoading: false as const,
+          groupId,
+          group: data.group,
+          currentLedgerParticipantId: data.currentLedgerParticipantId ?? null,
+          currentMember: data.currentMember,
+        }
 
   return (
     <CurrentGroupProvider {...props}>
-      <GroupHeader />
-      {children ?? <Outlet />}
+      <div className="flex flex-col gap-3">
+        <GroupHeader />
+        {children ?? <Outlet />}
+      </div>
       <SaveGroupLocally />
     </CurrentGroupProvider>
   )
