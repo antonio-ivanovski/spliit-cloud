@@ -24,6 +24,7 @@
     "content-disposition": "^0.5.4",
     "hono": "^4.12.26",
     "nanoid": "^5.1.15",
+    "nodemailer": "^9.0.1",
     "openai": "^4.25.0",
     "superjson": "^2.2.6",
     "zod": "^3.25.76"
@@ -32,6 +33,8 @@
     "@spliit/config": "workspace:*",
     "@types/content-disposition": "^0.5.9",
     "@types/node": "24.13.2",
+    "@types/nodemailer": "^8.0.1",
+    "nodemailer-mock": "^2.0.13",
     "typescript": "^5.9.3",
     "vitest": "^4.1.9"
   }

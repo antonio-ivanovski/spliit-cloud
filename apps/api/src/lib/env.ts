@@ -60,6 +60,29 @@ const envSchema = z
         message: 'SMTP_HOST is required in production',
       })
     }
+    if (env.NODE_ENV === 'production' && !env.EMAIL_FROM) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        path: ['EMAIL_FROM'],
+        message: 'EMAIL_FROM is required in production',
+      })
+    }
+    // When SMTP is configured in production, require credentials. This rules
+    // out silent misconfiguration against real providers (SendGrid, Mailgun,
+    // Postmark, Gmail, ...), which all need a username + password. Local
+    // dev-only relays like MailHog are out of scope for production. Anyone
+    // who really needs anonymous relay in production can set dummy values.
+    if (
+      env.NODE_ENV === 'production' &&
+      env.SMTP_HOST &&
+      (!env.SMTP_USER || !env.SMTP_PASS)
+    ) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message:
+          'SMTP_USER and SMTP_PASS are required in production when SMTP_HOST is set',
+      })
+    }
     if (
       env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS &&
       (!env.S3_UPLOAD_BUCKET ||
