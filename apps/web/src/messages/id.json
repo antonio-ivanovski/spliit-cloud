@@ -4,15 +4,20 @@
     "description": "Selamat datang di <strong>Spliit Cloud</strong> instance yang baru !",
     "button": {
       "groups": "Ke grup",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Masuk ke Spliit Cloud",
+      "createAccount": "Buat akun"
     }
   },
   "Header": {
-    "groups": "Grup"
+    "groups": "Grup",
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "account": "Akun"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
+    "builtBy": "Lihat <source>sumber dan kontributor</source>"
   },
   "Expenses": {
     "title": "Pengeluaran",
@@ -46,22 +51,21 @@
     "everyone": "semua orang",
     "receivedBy": "Diterima oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
     "yourBalance": "Saldo Anda:",
-    "notInvolved": "Anda tidak terlibat"
+    "notInvolved": "Anda tidak terlibat",
+    "settlementBadge": "Penyelesaian"
   },
   "Groups": {
     "myGroups": "Grup saya",
     "create": "Buat",
     "loadingRecent": "Memuat grup terbaru…",
     "NoRecent": {
-      "description": "Anda belum mengunjungi grup mana pun baru-baru ini.",
+      "description": "Anda belum memiliki grup apa pun.",
       "create": "Buat",
-      "orAsk": "atau minta teman untuk mengirimi Anda tautan ke situs yang sudah ada."
+      "orAsk": "atau minta teman untuk mengundang Anda ke grup mereka."
     },
     "recent": "Grup terbaru",
     "starred": "Grup berbintang",
     "archived": "Grup terarsipkan",
-    "archive": "Arsipkan grup",
-    "unarchive": "Batalkan pengarsipan grup",
     "removeRecent": "Hapus dari grup terbaru",
     "RecentRemovedToast": {
       "title": "Grup telah dihapus",
@@ -69,15 +73,70 @@
       "undoAlt": "Urungkan penghapusan grup",
       "undo": "Urungkan"
     },
-    "AddByURL": {
-      "button": "Tambahkan melalui URL",
-      "title": "Tambahkan grup melalui URL",
-      "description": "Jika suatu grup dibagikan kepada Anda, Anda dapat menempelkan URL-nya di sini untuk menambahkannya ke daftar Anda.",
-      "error": "Ups, kami tidak dapat menemukan grup dari URL yang Anda berikan…"
-    },
     "NotFound": {
       "text": "Grup ini tidak dapat ditemukan.",
       "link": "Buka grup yang baru saja dikunjungi"
+    },
+    "createdInviteHint": "Grup dibuat. Undang anggota untuk memulai.",
+    "NoRecentAllHidden": {
+      "description": "Anda telah menyembunyikan semua grup Anda.",
+      "showHidden": "Tampilkan grup yang disembunyikan"
+    },
+    "hidden": "Grup tersembunyi",
+    "showHidden": "Tampilkan grup tersembunyi",
+    "hide": "Sembunyikan grup",
+    "unhide": "Tampilkan grup",
+    "starGroup": "Bintangi grup",
+    "unstarGroup": "Hapus bintang grup",
+    "groupActions": "Tindakan grup",
+    "archiveGroup": "Arsipkan grup",
+    "unarchiveGroup": "Batalkan pengarsipan grup",
+    "archiveSuccess": "Grup diarsipkan.",
+    "unarchiveSuccess": "Pengarsipan grup dibatalkan.",
+    "archiveWithBalancesTitle": "Saldo yang belum diselesaikan",
+    "archiveWithBalancesDescription": "Grup ini memiliki saldo yang belum diselesaikan. Pengarsipan akan membuat pengeluaran penyelesaian untuk menghilangkannya. Lanjutkan?",
+    "archiveWithBalancesForce": "Paksa arsipkan",
+    "archiveWithBalancesCancel": "Batal",
+    "archiveWithBalancesSuccess": "Pengeluaran penyelesaian dibuat dan grup diarsipkan.",
+    "archiveWithBalancesView": "Lihat saldo",
+    "archiveSectionTitle": "Arsipkan grup",
+    "archiveSectionDescription": "Pengarsipan membekukan grup. Pengeluaran baru tidak dapat ditambahkan atau diubah, tetapi data yang ada tetap terlihat. Anda dapat membatalkan pengarsipan grup kapan saja.",
+    "archivedBadge": "Diarsipkan",
+    "bannerArchivedTitle": "Grup ini diarsipkan",
+    "bannerArchivedDescription": "Tidak ada pengeluaran atau undangan baru yang dapat ditambahkan saat grup diarsipkan. Data yang ada tetap terlihat.",
+    "bannerArchived": "Grup ini diarsipkan. Tidak ada pengeluaran baru yang dapat ditambahkan.",
+    "bannerUnarchive": "Batalkan pengarsipan",
+    "bannerUnarchiveSuccess": "Pengarsipan grup dibatalkan.",
+    "invitationBannerTitle": "Anda telah diundang ke grup ini",
+    "invitationBannerDescription": "Terima untuk bergabung sebagai anggota, atau tolak untuk mengabaikan undangan.",
+    "invitationAccept": "Terima",
+    "invitationDecline": "Tolak",
+    "invitationAccepted": "Undangan diterima.",
+    "invitationDeclined": "Undangan ditolak.",
+    "pendingInviteeReadOnlyTitle": "Anda telah diundang",
+    "pendingInviteeReadOnlyDescription": "Terima undangan di atas untuk mulai menambahkan pengeluaran dan mengubah pengaturan grup. Sampai saat itu, grup ini bersifat hanya-baca.",
+    "pendingInviteeSettingsTitle": "Pengaturan grup terkunci",
+    "pendingInviteeSettingsDescription": "Anda perlu menerima undangan sebelum dapat mengubah pengaturan grup atau mengundang anggota.",
+    "pendingInviteeExpenseTitle": "Pengeluaran bersifat hanya-baca",
+    "pendingInviteeExpenseDescription": "Terima undangan di atas untuk mulai menambahkan atau mengedit pengeluaran. Sampai saat itu, data grup yang ada terlihat tetapi tidak dapat diubah.",
+    "archivedReadOnly": "Grup ini diarsipkan. Pengeluaran tidak dapat lagi ditambahkan atau diubah.",
+    "backToExpenses": "Kembali ke pengeluaran",
+    "Unauthorized": {
+      "title": "Anda tidak memiliki akses ke grup ini",
+      "description": "Jika Anda yakin ini adalah kesalahan, minta pemilik atau admin grup untuk mengundang Anda.",
+      "link": "Kembali ke grup saya"
+    },
+    "invitations": {
+      "title": "Undangan tertunda",
+      "description": "Anda telah diundang untuk bergabung dengan grup berikut.",
+      "accept": "Terima",
+      "decline": "Tolak",
+      "accepted": "Undangan diterima.",
+      "declined": "Undangan ditolak.",
+      "invitedBy": "Diundang oleh {name}",
+      "unknownInviter": "seseorang",
+      "unknownGroup": "Grup tidak dikenal",
+      "sentOn": "Dikirim {date}"
     }
   },
   "GroupForm": {
@@ -126,7 +185,11 @@
       "create": "Buat",
       "creating": "Membuat…",
       "cancel": "Batalkan"
-    }
+    },
+    "readOnlyNote": "Hanya pemilik dan admin yang dapat mengubah pengaturan grup.",
+    "readOnlyTitle": "Pengaturan grup",
+    "readOnlyBack": "Kembali ke grup",
+    "archivedNotice": "Grup ini diarsipkan. Pengaturannya dibekukan dan tidak dapat diubah lagi."
   },
   "ExpenseForm": {
     "Income": {
@@ -252,7 +315,11 @@
     "save": "Simpan",
     "saving": "Menyimpan…",
     "cancel": "Batalkan",
-    "reimbursement": "Reimburse"
+    "reimbursement": "Reimburse",
+    "participant": {
+      "pending": "(diundang)"
+    },
+    "readOnlyNotice": "Grup ini diarsipkan. Pengeluaran ditampilkan hanya-baca."
   },
   "Currencies": {
     "custom": {
@@ -446,6 +513,93 @@
       "Trash": "Sampah",
       "TV/Phone/Internet": "TV/HP/Internet",
       "Water": "Air"
+    }
+  },
+  "Auth": {
+    "title": "Masuk ke Spliit Cloud",
+    "signUpTitle": "Buat akun Spliit Cloud Anda",
+    "subtitle": "Gunakan akun Anda untuk mengakses grup di seluruh perangkat.",
+    "signUpSubtitle": "Buat akun untuk menyimpan dan menyinkronkan grup Anda di seluruh perangkat.",
+    "email": "Email",
+    "password": "Kata Sandi",
+    "signInWithPassword": "Masuk dengan kata sandi",
+    "signUpWithPassword": "Daftar dengan kata sandi",
+    "signInWithGoogle": "Lanjutkan dengan Google",
+    "sendMagicLink": "Kirim tautan masuk",
+    "magicLinkEmail": "Email",
+    "usePasswordInstead": "Gunakan email dan kata sandi saja",
+    "hidePasswordForm": "Sembunyikan formulir kata sandi",
+    "passwordFormDescription": "Jika Anda lebih suka menggunakan kata sandi, masukkan email dan kata sandi Anda di bawah.",
+    "passwordFormDescriptionSignUp": "Buat akun dengan email dan kata sandi Anda.",
+    "useDifferentEmail": "Gunakan email yang berbeda",
+    "magicLinkSent": "Periksa kotak masuk Anda untuk tautan masuk.",
+    "noAccount": "Belum punya akun?",
+    "haveAccount": "Sudah punya akun?",
+    "createAccount": "Buat akun",
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "confirmPassword": "Konfirmasi kata sandi",
+    "passwordMismatch": "Kata sandi tidak cocok.",
+    "passwordTooShort": "Kata sandi harus minimal 8 karakter.",
+    "errors": {
+      "invalidCredentials": "Email atau kata sandi salah.",
+      "emailRequired": "Masukkan alamat email Anda.",
+      "passwordRequired": "Masukkan kata sandi Anda.",
+      "nameRequired": "Masukkan nama tampilan.",
+      "generic": "Terjadi kesalahan. Silakan coba lagi.",
+      "magicLinkFailed": "Tidak dapat mengirim tautan masuk."
+    },
+    "loading": "Memuat…",
+    "signedInAs": "Masuk sebagai {name}",
+    "required": "Anda perlu masuk untuk mengakses grup Anda.",
+    "back": "Kembali ke beranda"
+  },
+  "CompleteProfile": {
+    "title": "Lengkapi profil Anda",
+    "description": "Beri tahu kami nama yang Anda inginkan untuk dilihat oleh grup Anda. Anda dapat mengubahnya nanti.",
+    "nameLabel": "Nama tampilan",
+    "namePlaceholder": "Nama Anda",
+    "submit": "Simpan dan lanjutkan",
+    "saving": "Menyimpan…",
+    "signedInAs": "Masuk sebagai {email}",
+    "errors": {
+      "nameRequired": "Masukkan nama tampilan.",
+      "nameTooShort": "Nama harus minimal 2 karakter.",
+      "generic": "Terjadi kesalahan. Silakan coba lagi."
+    }
+  },
+  "Members": {
+    "title": "Anggota",
+    "description": "Orang yang dapat melihat dan berkontribusi ke grup ini.",
+    "empty": "Belum ada anggota aktif.",
+    "unknownMember": "Anggota tidak dikenal",
+    "youBadge": "Anda",
+    "role": {
+      "owner": "Pemilik",
+      "admin": "Admin",
+      "member": "Anggota"
+    },
+    "joinedOn": "Bergabung {date}",
+    "noManagePermission": "Hanya pemilik dan admin yang dapat mengundang atau mencabut anggota grup.",
+    "archivedNotice": "Undangan dinonaktifkan saat grup diarsipkan. Batalkan pengarsipan grup untuk mengundang anggota baru.",
+    "invite": {
+      "title": "Undang anggota",
+      "description": "Kirim undangan melalui email. Yang diundang bergabung setelah mereka menerima dari akun yang cocok.",
+      "email": "Email",
+      "emailPlaceholder": "friend@example.com",
+      "role": "Peran",
+      "send": "Kirim undangan",
+      "invalidEmail": "Masukkan alamat email yang valid."
+    },
+    "invitations": {
+      "title": "Undangan tertunda",
+      "description": "Undangan yang menunggu penerimaan.",
+      "empty": "Tidak ada undangan tertunda.",
+      "sentOn": "Dikirim {date}",
+      "revoke": "Cabut",
+      "revokeButton": "Cabut undangan",
+      "revoked": "Undangan dicabut.",
+      "created": "Undangan terkirim ke {email}."
     }
   }
 }

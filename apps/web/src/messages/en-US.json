@@ -60,9 +60,9 @@
     "createdInviteHint": "Group created. Invite members to get started.",
     "loadingRecent": "Loading recent groups…",
     "NoRecent": {
-      "description": "You have not visited any group recently.",
+      "description": "You don't have any group yet.",
       "create": "Create one",
-      "orAsk": "or ask a friend to send you the link to an existing one."
+      "orAsk": "or ask a friend to invite you to their group."
     },
     "NoRecentAllHidden": {
       "description": "You have hidden all of your groups.",

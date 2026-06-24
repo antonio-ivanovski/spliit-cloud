@@ -16,7 +16,8 @@
       "lastMonth": "지난달",
       "lastYear": "작년",
       "earlierThisYear": "올해 초",
-      "older": "이전"
+      "older": "이전",
+      "upcoming": "다가오는"
     },
     "title": "지출",
     "description": "그룹에서 만든 지출 항목들을 보여드려요.",
@@ -30,31 +31,85 @@
     "create": "만들기",
     "loadingRecent": "최신 그룹 불러오는 중…",
     "NoRecent": {
-      "description": "최근에 참여한 그룹이 없습니다.",
-      "orAsk": "또는 친구에게 기존 그룹 링크를 보내 달라고 요청하세요.",
+      "description": "아직 그룹이 없습니다.",
+      "orAsk": "또는 친구에게 자신의 그룹에 초대해 달라고 요청하세요.",
       "create": "그룹 만들기"
     },
     "recent": "최근 그룹",
     "starred": "즐겨찾기 그룹",
     "archived": "아카이브된 그룹",
-    "archive": "그룹 아카이브하기",
     "RecentRemovedToast": {
       "title": "그룹이 삭제되었습니다",
       "description": "그룹이 최신 그룹 목록에서 삭제되었습니다.",
-      "undoAlt": "그룹 삭제 취소"
-    },
-    "AddByURL": {
-      "button": "URL로 불러오기",
-      "title": "URL로 그룹 불러오기",
-      "description": "이미 공유받은 그룹이 있다면, 여기에 URL을 붙여넣어 추가하세요.",
-      "error": "헉, 입력하신 URL에서 그룹을 찾을 수 없네요…"
+      "undoAlt": "그룹 삭제 취소",
+      "undo": "실행 취소"
     },
     "NotFound": {
       "text": "그룹이 존재하지 않습니다.",
       "link": "최근에 방문한 그룹 보기"
     },
-    "unarchive": "그룹 다시 불러오기",
-    "removeRecent": "최근 그룹 목록에서 삭제하기"
+    "removeRecent": "최근 그룹 목록에서 삭제하기",
+    "createdInviteHint": "그룹이 생성되었습니다. 멤버를 초대해 시작하세요.",
+    "NoRecentAllHidden": {
+      "description": "모든 그룹을 숨겼습니다.",
+      "showHidden": "숨긴 그룹 보기"
+    },
+    "hidden": "숨긴 그룹",
+    "showHidden": "숨긴 그룹 보기",
+    "hide": "그룹 숨기기",
+    "unhide": "그룹 숨기기 취소",
+    "starGroup": "그룹 즐겨찾기",
+    "unstarGroup": "그룹 즐겨찾기 취소",
+    "groupActions": "그룹 작업",
+    "archiveGroup": "그룹 보관",
+    "unarchiveGroup": "그룹 보관 해제",
+    "archiveSuccess": "그룹이 보관되었습니다.",
+    "unarchiveSuccess": "그룹 보관이 해제되었습니다.",
+    "archiveWithBalancesTitle": "미정산 잔액",
+    "archiveWithBalancesDescription": "이 그룹에는 미정산 잔액이 있습니다. 보관하면 잔액을 0으로 만들기 위한 정산 지출이 생성됩니다. 계속하시겠습니까?",
+    "archiveWithBalancesForce": "강제 보관",
+    "archiveWithBalancesCancel": "취소",
+    "archiveWithBalancesSuccess": "정산 지출이 생성되고 그룹이 보관되었습니다.",
+    "archiveWithBalancesView": "잔액 보기",
+    "archiveSectionTitle": "그룹 보관",
+    "archiveSectionDescription": "보관하면 그룹이 고정됩니다. 새 지출을 추가하거나 수정할 수 없지만 기존 데이터는 계속 표시됩니다. 언제든지 그룹 보관을 해제할 수 있습니다.",
+    "archivedBadge": "보관됨",
+    "bannerArchivedTitle": "이 그룹은 보관되었습니다",
+    "bannerArchivedDescription": "그룹이 보관된 동안에는 새 지출이나 초대를 추가할 수 없습니다. 기존 데이터는 계속 표시됩니다.",
+    "bannerArchived": "이 그룹은 보관되었습니다. 새 지출을 추가할 수 없습니다.",
+    "bannerUnarchive": "보관 해제",
+    "bannerUnarchiveSuccess": "그룹 보관이 해제되었습니다.",
+    "invitationBannerTitle": "이 그룹에 초대되었습니다",
+    "invitationBannerDescription": "멤버로 참여하려면 수락하고, 초대를 거부하려면 거절하세요.",
+    "invitationAccept": "수락",
+    "invitationDecline": "거절",
+    "invitationAccepted": "초대가 수락되었습니다.",
+    "invitationDeclined": "초대가 거절되었습니다.",
+    "pendingInviteeReadOnlyTitle": "초대되었습니다",
+    "pendingInviteeReadOnlyDescription": "위 초대를 수락하면 지출 추가 및 그룹 설정 변경을 시작할 수 있습니다. 그 전까지 이 그룹은 읽기 전용입니다.",
+    "pendingInviteeSettingsTitle": "그룹 설정이 잠겨 있습니다",
+    "pendingInviteeSettingsDescription": "그룹 설정을 변경하거나 멤버를 초대하려면 먼저 초대를 수락해야 합니다.",
+    "pendingInviteeExpenseTitle": "지출이 읽기 전용입니다",
+    "pendingInviteeExpenseDescription": "위 초대를 수락하면 지출을 추가하거나 편집할 수 있습니다. 그 전까지 그룹의 기존 데이터는 볼 수 있지만 수정할 수 없습니다.",
+    "archivedReadOnly": "이 그룹은 보관되었습니다. 더 이상 지출을 추가하거나 수정할 수 없습니다.",
+    "backToExpenses": "지출로 돌아가기",
+    "Unauthorized": {
+      "title": "이 그룹에 접근할 수 없습니다",
+      "description": "오류라고 생각되면 그룹 소유자나 관리자에게 초대를 요청하세요.",
+      "link": "내 그룹으로 돌아가기"
+    },
+    "invitations": {
+      "title": "대기 중인 초대",
+      "description": "다음 그룹에 초대되었습니다.",
+      "accept": "수락",
+      "decline": "거절",
+      "accepted": "초대가 수락되었습니다.",
+      "declined": "초대가 거절되었습니다.",
+      "invitedBy": "{name}님의 초대",
+      "unknownInviter": "누군가",
+      "unknownGroup": "알 수 없는 그룹",
+      "sentOn": "{date}에 전송됨"
+    }
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -75,7 +130,8 @@
     "CurrencyCodeField": {
       "label": "기본 통화",
       "createDescription": "금액, 잔액 전부 이 통화로 표시돼요.",
-      "editDescription": "모든 금액이랑 잔액은 이 통화로 보여요. 통화를 바꿔도 이미 입력한 지출은 바뀌지 않아요. 단, (예: 미국 달러에서 일본 엔으로 바꿀 때처럼) 통화의 소수점 단위가 다를 경우에는 예외가 있을 수 있어요."
+      "editDescription": "모든 금액이랑 잔액은 이 통화로 보여요. 통화를 바꿔도 이미 입력한 지출은 바뀌지 않아요. 단, (예: 미국 달러에서 일본 엔으로 바꿀 때처럼) 통화의 소수점 단위가 다를 경우에는 예외가 있을 수 있어요.",
+      "customOption": "사용자 지정"
     },
     "Participants": {
       "title": "참여자",
@@ -84,7 +140,8 @@
       "add": "참가자 추가하기",
       "John": "민수",
       "Jane": "수영",
-      "Jack": "길동"
+      "Jack": "길동",
+      "new": "새로 만들기"
     },
     "Settings": {
       "ActiveUserField": {
@@ -97,8 +154,14 @@
       "saving": "저장중…",
       "description": "이 설정들은 기기별로 저장되며, 사용자 경험을 맞춤화하는 데 사용돼요.",
       "cancel": "취소",
-      "creating": "만드는 중…"
-    }
+      "creating": "만드는 중…",
+      "title": "로컬 설정",
+      "create": "만들기"
+    },
+    "readOnlyNote": "소유자와 관리자만 그룹 설정을 변경할 수 있습니다.",
+    "readOnlyTitle": "그룹 설정",
+    "readOnlyBack": "그룹으로 돌아가기",
+    "archivedNotice": "이 그룹은 보관되었습니다. 설정이 고정되어 더 이상 변경할 수 없습니다."
   },
   "ExpenseForm": {
     "Expense": {
@@ -128,13 +191,15 @@
         "description": "지출 반복 주기를 선택해 주세요.",
         "daily": "매일",
         "weekly": "매주",
-        "monthly": "매달"
+        "monthly": "매달",
+        "none": "없음"
       },
       "paidFor": {
         "title": "비용 부담자들",
         "description": "비용 부담자들을 선택해 주세요."
       },
-      "splitModeDescription": "지출을 어떻게 나눌지 선택해 주세요."
+      "splitModeDescription": "지출을 어떻게 나눌지 선택해 주세요.",
+      "attachDescription": "영수증을 확인하고 지출에 첨부합니다."
     },
     "amountField": {
       "label": "금액"
@@ -176,15 +241,57 @@
     "DeletePopup": {
       "description": "정말 이 지출을 삭제할까요? 한 번 삭제하면 되돌릴 수 없어요.",
       "yes": "네",
-      "cancel": "취소"
+      "cancel": "취소",
+      "label": "삭제",
+      "title": "이 지출을 삭제하시겠습니까?"
     },
     "Income": {
       "TitleField": {
-        "placeholder": "월요일 저녁 식사"
-      }
+        "placeholder": "월요일 저녁 식사",
+        "label": "수입 제목",
+        "description": "수입에 대한 설명을 입력하세요."
+      },
+      "create": "수입 만들기",
+      "edit": "수입 편집",
+      "DateField": {
+        "label": "수입 날짜",
+        "description": "수입을 받은 날짜를 입력하세요."
+      },
+      "currencyField": {
+        "label": "수입 통화",
+        "description": "수입이 수취된 통화입니다."
+      },
+      "categoryFieldDescription": "수입 카테고리를 선택하세요.",
+      "paidByField": {
+        "label": "수취인",
+        "description": "수입을 받은 참가자를 선택하세요."
+      },
+      "paidFor": {
+        "title": "수취 대상",
+        "description": "수입이 누구를 위해 수취되었는지 선택하세요."
+      },
+      "splitModeDescription": "수입 분할 방식을 선택하세요.",
+      "attachDescription": "영수증을 확인하고 수입에 첨부합니다."
     },
     "reimbursement": "정산",
-    "cancel": "취소"
+    "cancel": "취소",
+    "conversionUnavailable": "지출별로 다른 통화를 설정하고 금액을 변환하려면 그룹에 사용자 지정이 아닌 통화를 선택하세요.",
+    "originalAmountField": {
+      "label": "변환할 금액"
+    },
+    "selectNone": "선택 안 함",
+    "selectAll": "모두 선택",
+    "shares": "몫",
+    "advancedOptions": "고급 분할 옵션…",
+    "participant": {
+      "pending": "(초대됨)"
+    },
+    "attachDocuments": "문서 첨부",
+    "create": "만들기",
+    "creating": "만드는 중…",
+    "save": "저장",
+    "saving": "저장 중…",
+    "readOnlyNotice": "이 그룹은 보관되었습니다. 지출이 읽기 전용으로 표시됩니다."
   },
   "Balances": {
     "title": "잔액",
@@ -194,7 +301,8 @@
       "noImbursements": "그룹에선 따로 정산할 게 없네요 😁",
       "markAsPaid": "지불 완료로 표시하기",
       "owes": "<strong>{from}</strong>가 <strong>{to}</strong>에게 돈을 내야 해요"
-    }
+    },
+    "description": "각 참가자가 지불했거나 대신 지불받은 금액입니다."
   },
   "Stats": {
     "title": "현황",
@@ -203,7 +311,9 @@
       "description": "그룹 전체 지출 요약 입니다.",
       "groupSpendings": "그룹 총 지출액",
       "yourSpendings": "나의 총 지출",
-      "yourShare": "나의 총 부담금"
+      "yourShare": "나의 총 부담금",
+      "groupEarnings": "그룹 총 수입",
+      "yourEarnings": "내 총 수입"
     }
   },
   "Activity": {
@@ -224,7 +334,8 @@
     "settingsModified": "<strong>{participant}</strong>가 그룹 설정을 수정했어요.",
     "expenseCreated": "<strong>{participant}</strong>가 <em>{expense}</em> 지출 내역을 추가했어요.",
     "expenseUpdated": "<strong>{participant}</strong>가 <em>{expense}</em> 지출을 수정했어요.",
-    "expenseDeleted": "<strong>{participant}</strong>가 <em>{expense}</em> 지출을 삭제했어요."
+    "expenseDeleted": "<strong>{participant}</strong>가 <em>{expense}</em> 지출을 삭제했어요.",
+    "someone": "누군가"
   },
   "SchemaErrors": {
     "duplicateParticipantName": "이미 같은 이름을 가진 참가자가 있어요.",
@@ -234,20 +345,23 @@
     "amountTenMillion": "금액은 10,000,000보다 작아야 해요.",
     "ratePositive": "환율은 0보다 커야 해요.",
     "paidByRequired": "참가자를 선택해 주세요.",
-    "paidForMin1": "",
+    "paidForMin1": "지출은 최소 한 명의 참가자를 위해 지불되어야 합니다.",
     "noZeroShares": "각 몫은 0보다 커야 합니다.",
     "amountSum": "금액 합계가 지출 금액과 같아야 해요.",
     "percentageSum": "퍼센트 합이 100이 되어야 합니다.",
     "min1": "최소 한 글자 이상 입력해 주세요.",
     "min2": "최소 두 글자 이상 입력해 주세요.",
-    "titleRequired": "제목을 입력해 주세요."
+    "titleRequired": "제목을 입력해 주세요.",
+    "max5": "최대 5자까지 입력하세요.",
+    "max50": "최대 50자까지 입력하세요."
   },
   "Categories": {
     "search": "카테고리 선택...",
     "noCategory": "카테고리를 찾을 수 없어요.",
     "Uncategorized": {
       "heading": "카테고리 없음",
-      "General": "일반"
+      "General": "일반",
+      "Payment": "결제"
     },
     "Entertainment": {
       "heading": "엔터테인먼트",
@@ -273,7 +387,8 @@
       "Maintenance": "수리 / 관리",
       "Mortgage": "주택 담보 대출",
       "Pets": "반려동물",
-      "Rent": "임대료 / 월세"
+      "Rent": "임대료 / 월세",
+      "Services": "서비스"
     },
     "Life": {
       "Childcare": "육아 / 보육",
@@ -312,17 +427,22 @@
   "Homepage": {
     "button": {
       "github": "깃허브",
-      "groups": "그룹 보기"
+      "groups": "그룹 보기",
+      "signIn": "Spliit Cloud에 로그인",
+      "createAccount": "계정 만들기"
     },
     "title": "<strong>친구 & 가족</strong>과 <strong>지출</strong>을 함께 관리해요",
     "description": "<strong>Spliit Cloud</strong>와 함께하는 새 시작을 환영해요!"
   },
   "Header": {
-    "groups": "그룹"
+    "groups": "그룹",
+    "signIn": "로그인",
+    "signOut": "로그아웃",
+    "account": "계정"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "오픈소스 커뮤니티가 사랑을 담아 만들었어요 ❤️",
+    "builtBy": "<source>소스 코드 및 기여자</source>"
   },
   "Settings": {
     "title": "설정"
@@ -337,7 +457,9 @@
     "paidBy": "<strong>{paidBy}</strong>가 <paidFor></paidFor>를 위해 결제함",
     "everyone": "모두",
     "yourBalance": "내 잔액:",
-    "notInvolved": "당신은 관련이 없어요"
+    "notInvolved": "당신은 관련이 없어요",
+    "receivedBy": "<strong>{paidBy}</strong>님이 <paidFor></paidFor>를 위해 받음",
+    "settlementBadge": "정산"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -346,7 +468,8 @@
     },
     "ErrorToast": {
       "title": "문서 업로드 중 오류가 발생했어요",
-      "description": "문서 업로드 중 오류가 발생했습니다. 나중에 다시 시도하거나 다른 파일을 선택해 주세요."
+      "description": "문서 업로드 중 오류가 발생했습니다. 나중에 다시 시도하거나 다른 파일을 선택해 주세요.",
+      "retry": "다시 시도"
     }
   },
   "CreateFromReceipt": {
@@ -360,7 +483,8 @@
       "amountLabel": "금액:",
       "dateLabel": "날짜:",
       "editNext": "다음 단계에서 지출 정보를 수정할 수 있습니다.",
-      "continue": "계속하기"
+      "continue": "계속하기",
+      "title": "영수증으로 만들기"
     },
     "TooBigToast": {
       "title": "파일이 너무 커요",
@@ -368,12 +492,15 @@
     },
     "ErrorToast": {
       "title": "문서 업로드 중 오류가 발생했어요",
-      "description": "문서 업로드 중 오류가 발생했습니다. 나중에 다시 시도하거나 다른 파일을 선택해 주세요."
-    }
+      "description": "문서 업로드 중 오류가 발생했습니다. 나중에 다시 시도하거나 다른 파일을 선택해 주세요.",
+      "retry": "Retry"
+    },
+    "unknown": "알 수 없음"
   },
   "Information": {
     "title": "정보",
-    "empty": "아직 그룹 정보가 없어요."
+    "empty": "아직 그룹 정보가 없어요.",
+    "description": "그룹 참가자와 관련된 정보를 추가하려면 이 공간을 사용하세요."
   },
   "Currencies": {
     "search": "통화 선택하기...",
@@ -383,6 +510,96 @@
     },
     "other": {
       "heading": "그 외 통화"
+    },
+    "custom": {
+      "heading": "사용자 지정"
+    }
+  },
+  "Auth": {
+    "title": "Spliit Cloud에 로그인",
+    "signUpTitle": "Spliit Cloud 계정 만들기",
+    "subtitle": "계정을 사용하여 여러 기기에서 그룹에 액세스하세요.",
+    "signUpSubtitle": "계정을 만들어 여러 기기에서 그룹을 저장하고 동기화하세요.",
+    "email": "이메일",
+    "password": "비밀번호",
+    "signInWithPassword": "비밀번호로 로그인",
+    "signUpWithPassword": "비밀번호로 회원가입",
+    "signInWithGoogle": "Google로 계속하기",
+    "sendMagicLink": "로그인 링크 보내기",
+    "magicLinkEmail": "이메일",
+    "usePasswordInstead": "이메일과 비밀번호 사용하기",
+    "hidePasswordForm": "비밀번호 양식 숨기기",
+    "passwordFormDescription": "비밀번호를 사용하려면 아래에 이메일과 비밀번호를 입력하세요.",
+    "passwordFormDescriptionSignUp": "이메일과 비밀번호로 계정을 만드세요.",
+    "useDifferentEmail": "다른 이메일 사용",
+    "magicLinkSent": "받은 편지함에서 로그인 링크를 확인하세요.",
+    "noAccount": "아직 계정이 없으신가요?",
+    "haveAccount": "이미 계정이 있으신가요?",
+    "createAccount": "계정 만들기",
+    "signIn": "로그인",
+    "signOut": "로그아웃",
+    "confirmPassword": "비밀번호 확인",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다.",
+    "passwordTooShort": "비밀번호는 최소 8자 이상이어야 합니다.",
+    "errors": {
+      "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
+      "emailRequired": "이메일 주소를 입력하세요.",
+      "passwordRequired": "비밀번호를 입력하세요.",
+      "nameRequired": "표시 이름을 입력하세요.",
+      "generic": "문제가 발생했습니다. 다시 시도해 주세요.",
+      "magicLinkFailed": "로그인 링크를 보낼 수 없습니다."
+    },
+    "loading": "로딩 중…",
+    "signedInAs": "{name}(으)로 로그인됨",
+    "required": "그룹에 액세스하려면 로그인이 필요합니다.",
+    "back": "홈으로 돌아가기"
+  },
+  "CompleteProfile": {
+    "title": "프로필 완성하기",
+    "description": "그룹에 표시할 이름을 알려주세요. 나중에 변경할 수 있습니다.",
+    "nameLabel": "표시 이름",
+    "namePlaceholder": "이름",
+    "submit": "저장하고 계속하기",
+    "saving": "저장 중…",
+    "signedInAs": "{email}(으)로 로그인됨",
+    "errors": {
+      "nameRequired": "표시 이름을 입력하세요.",
+      "nameTooShort": "이름은 최소 2자 이상이어야 합니다.",
+      "generic": "문제가 발생했습니다. 다시 시도해 주세요."
+    }
+  },
+  "Members": {
+    "title": "멤버",
+    "description": "이 그룹을 보고 기여할 수 있는 사람들.",
+    "empty": "아직 활성 멤버가 없습니다.",
+    "unknownMember": "알 수 없는 멤버",
+    "youBadge": "나",
+    "role": {
+      "owner": "소유자",
+      "admin": "관리자",
+      "member": "멤버"
+    },
+    "joinedOn": "{date}에 가입함",
+    "noManagePermission": "소유자와 관리자만 멤버를 초대하거나 권한을 취소할 수 있습니다.",
+    "archivedNotice": "그룹이 보관된 동안에는 초대가 비활성화됩니다. 새 멤버를 초대하려면 그룹 보관을 해제하세요.",
+    "invite": {
+      "title": "멤버 초대",
+      "description": "이메일로 초대장을 보냅니다. 초대받은 사람이 해당 계정에서 수락하면 참여합니다.",
+      "email": "이메일",
+      "emailPlaceholder": "friend@example.com",
+      "role": "역할",
+      "send": "초대 보내기",
+      "invalidEmail": "유효한 이메일 주소를 입력하세요."
+    },
+    "invitations": {
+      "title": "대기 중인 초대",
+      "description": "수락을 기다리는 초대입니다.",
+      "empty": "대기 중인 초대가 없습니다.",
+      "sentOn": "{date}에 전송됨",
+      "revoke": "취소",
+      "revokeButton": "초대 취소",
+      "revoked": "초대가 취소되었습니다.",
+      "created": "{email}에 초대를 보냈습니다."
     }
   }
 }

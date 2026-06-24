@@ -4,15 +4,20 @@
     "description": "¡Bienvenido a tu nueva instancia de <strong>Spliit Cloud</strong>!",
     "button": {
       "groups": "Ir a grupos",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Iniciar sesión en Spliit Cloud",
+      "createAccount": "Crear una cuenta"
     }
   },
   "Header": {
-    "groups": "Grupos"
+    "groups": "Grupos",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "account": "Cuenta"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Hecho por la comunidad de código abierto con amor ❤️",
+    "builtBy": "Ver el <source>código fuente y los contribuidores</source>"
   },
   "Expenses": {
     "title": "Gastos",
@@ -46,22 +51,21 @@
     "receivedBy": "Recibido por <strong>{paidBy}</strong> para <paidFor></paidFor>",
     "yourBalance": "Tu balance:",
     "everyone": "todos",
-    "notInvolved": "No estás incluido"
+    "notInvolved": "No estás incluido",
+    "settlementBadge": "Liquidación"
   },
   "Groups": {
     "myGroups": "Mis grupos",
     "create": "Crear",
     "loadingRecent": "Cargando grupos recientes…",
     "NoRecent": {
-      "description": "No has visitado ningun grupo recientemente.",
+      "description": "Aún no tienes ningún grupo.",
       "create": "Crea uno",
-      "orAsk": "o pídele a un amigo que te envíe el enlace a uno ya existente."
+      "orAsk": "o pide a un amigo que te invite a su grupo."
     },
     "recent": "Grupos recientes",
     "starred": "Grupos favoritos",
     "archived": "Grupos archivados",
-    "archive": "Archivar grupo",
-    "unarchive": "Desarchivar groupo",
     "removeRecent": "Eliminar de grupos recientes",
     "RecentRemovedToast": {
       "title": "El grupo ha sido eliminado",
@@ -69,15 +73,70 @@
       "undoAlt": "Deshacer la eliminación del grupo",
       "undo": "Deshacer"
     },
-    "AddByURL": {
-      "button": "Añadir mediante url",
-      "title": "Añadir grupo mediante url",
-      "description": "Si un grupo ha sido compartido contigo, puedes pegar su URL aquí para añadirlo a tu lista.",
-      "error": "Ups, no pudimos encontrar el grupo a partir de la URL que proporcionaste…"
-    },
     "NotFound": {
       "text": "Este grupo no existe.",
       "link": "Ir a los grupos visitados recientemente"
+    },
+    "createdInviteHint": "Grupo creado. Invita a miembros para empezar.",
+    "NoRecentAllHidden": {
+      "description": "Has ocultado todos tus grupos.",
+      "showHidden": "Mostrar grupos ocultos"
+    },
+    "hidden": "Grupos ocultos",
+    "showHidden": "Mostrar grupos ocultos",
+    "hide": "Ocultar grupo",
+    "unhide": "Mostrar grupo",
+    "starGroup": "Añadir a favoritos",
+    "unstarGroup": "Quitar de favoritos",
+    "groupActions": "Acciones del grupo",
+    "archiveGroup": "Archivar grupo",
+    "unarchiveGroup": "Desarchivar grupo",
+    "archiveSuccess": "Grupo archivado.",
+    "unarchiveSuccess": "Grupo desarchivado.",
+    "archiveWithBalancesTitle": "Saldos pendientes",
+    "archiveWithBalancesDescription": "Este grupo tiene saldos pendientes. Al archivar se crearán gastos de liquidación para ponerlos a cero. ¿Continuar?",
+    "archiveWithBalancesForce": "Forzar archivo",
+    "archiveWithBalancesCancel": "Cancelar",
+    "archiveWithBalancesSuccess": "Gastos de liquidación creados y grupo archivado.",
+    "archiveWithBalancesView": "Ver saldos",
+    "archiveSectionTitle": "Archivar grupo",
+    "archiveSectionDescription": "El archivo congela el grupo. No se pueden añadir ni modificar gastos nuevos, pero los datos existentes siguen siendo visibles. Puedes desarchivar el grupo en cualquier momento.",
+    "archivedBadge": "Archivado",
+    "bannerArchivedTitle": "Este grupo está archivado",
+    "bannerArchivedDescription": "No se pueden añadir gastos ni invitaciones mientras el grupo esté archivado. Los datos existentes siguen siendo visibles.",
+    "bannerArchived": "Este grupo está archivado. No se pueden añadir gastos nuevos.",
+    "bannerUnarchive": "Desarchivar",
+    "bannerUnarchiveSuccess": "Grupo desarchivado.",
+    "invitationBannerTitle": "Has sido invitado a este grupo",
+    "invitationBannerDescription": "Acepta para unirte como miembro, o rechaza para descartar la invitación.",
+    "invitationAccept": "Aceptar",
+    "invitationDecline": "Rechazar",
+    "invitationAccepted": "Invitación aceptada.",
+    "invitationDeclined": "Invitación rechazada.",
+    "pendingInviteeReadOnlyTitle": "Has sido invitado",
+    "pendingInviteeReadOnlyDescription": "Acepta la invitación superior para empezar a añadir gastos y cambiar la configuración del grupo. Hasta entonces, este grupo es de solo lectura.",
+    "pendingInviteeSettingsTitle": "La configuración del grupo está bloqueada",
+    "pendingInviteeSettingsDescription": "Debes aceptar la invitación antes de poder cambiar la configuración del grupo o invitar miembros.",
+    "pendingInviteeExpenseTitle": "Los gastos son de solo lectura",
+    "pendingInviteeExpenseDescription": "Acepta la invitación superior para empezar a añadir o editar gastos. Hasta entonces, los datos existentes del grupo son visibles pero no se pueden modificar.",
+    "archivedReadOnly": "Este grupo está archivado. Ya no se pueden añadir ni modificar gastos.",
+    "backToExpenses": "Volver a gastos",
+    "Unauthorized": {
+      "title": "No tienes acceso a este grupo",
+      "description": "Si crees que esto es un error, pide a un propietario o administrador del grupo que te invite.",
+      "link": "Volver a mis grupos"
+    },
+    "invitations": {
+      "title": "Invitaciones pendientes",
+      "description": "Has sido invitado a unirte a los siguientes grupos.",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "accepted": "Invitación aceptada.",
+      "declined": "Invitación rechazada.",
+      "invitedBy": "Invitado por {name}",
+      "unknownInviter": "alguien",
+      "unknownGroup": "Grupo desconocido",
+      "sentOn": "Enviado el {date}"
     }
   },
   "GroupForm": {
@@ -126,7 +185,11 @@
       "createDescription": "Todos los importes y saldos estarán en esta moneda.",
       "editDescription": "Todos los importes y saldos estarán en esta moneda. Al cambiarla, NO se convertirán los gastos ya ingresados, excepto cuando la moneda tenga «unidades menores» diferentes a las actuales (por ejemplo, al cambiar de dólares estadounidenses a yenes japoneses)",
       "customOption": "Personalizado"
-    }
+    },
+    "readOnlyNote": "Solo los propietarios y administradores pueden cambiar la configuración del grupo.",
+    "readOnlyTitle": "Configuración del grupo",
+    "readOnlyBack": "Volver al grupo",
+    "archivedNotice": "Este grupo está archivado. Su configuración está congelada y ya no se puede modificar."
   },
   "ExpenseForm": {
     "Income": {
@@ -252,7 +315,11 @@
       "dateMismatch": "Tasas para la fecha: {date}",
       "refresh": "Actualizar",
       "customRate": "Utilizando tasa personalizada"
-    }
+    },
+    "participant": {
+      "pending": "(invitado)"
+    },
+    "readOnlyNotice": "Este grupo está archivado. El gasto se muestra en modo de solo lectura."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -351,8 +418,8 @@
   "SchemaErrors": {
     "min1": "Introduzca al menos un carácter.",
     "min2": "Introduzca al menos dos carácter.",
-    "max5": "Introduzca al menos cinco carácter.",
-    "max50": "Introduzca al menos treinta carácter.",
+    "max5": "Introduzca al máximo cinco caracteres.",
+    "max50": "Introduzca al máximo 50 caracteres.",
     "duplicateParticipantName": "Ya hay otro participante con el mismo nombre.",
     "titleRequired": "Por favor, introduzca un título.",
     "invalidNumber": "Número inválido.",
@@ -446,6 +513,93 @@
     },
     "other": {
       "heading": "Otras monedas"
+    }
+  },
+  "Auth": {
+    "title": "Iniciar sesión en Spliit Cloud",
+    "signUpTitle": "Crea tu cuenta de Spliit Cloud",
+    "subtitle": "Usa tu cuenta para acceder a tus grupos desde cualquier dispositivo.",
+    "signUpSubtitle": "Crea una cuenta para guardar y sincronizar tus grupos entre dispositivos.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signInWithPassword": "Iniciar sesión con contraseña",
+    "signUpWithPassword": "Registrarse con contraseña",
+    "signInWithGoogle": "Continuar con Google",
+    "sendMagicLink": "Enviar enlace de inicio de sesión",
+    "magicLinkEmail": "Correo electrónico",
+    "usePasswordInstead": "Usar correo y contraseña en su lugar",
+    "hidePasswordForm": "Ocultar formulario de contraseña",
+    "passwordFormDescription": "Si prefieres usar una contraseña, introduce tu correo y contraseña a continuación.",
+    "passwordFormDescriptionSignUp": "Crea una cuenta con tu correo electrónico y una contraseña.",
+    "useDifferentEmail": "Usar un correo diferente",
+    "magicLinkSent": "Revisa tu bandeja de entrada para ver el enlace de inicio de sesión.",
+    "noAccount": "¿Aún no tienes una cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "createAccount": "Crear una cuenta",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "confirmPassword": "Confirmar contraseña",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+    "errors": {
+      "invalidCredentials": "El correo o la contraseña son incorrectos.",
+      "emailRequired": "Introduce tu dirección de correo electrónico.",
+      "passwordRequired": "Introduce tu contraseña.",
+      "nameRequired": "Introduce un nombre para mostrar.",
+      "generic": "Algo salió mal. Inténtalo de nuevo.",
+      "magicLinkFailed": "No se pudo enviar el enlace de inicio de sesión."
+    },
+    "loading": "Cargando…",
+    "signedInAs": "Conectado como {name}",
+    "required": "Debes iniciar sesión para acceder a tus grupos.",
+    "back": "Volver al inicio"
+  },
+  "CompleteProfile": {
+    "title": "Completa tu perfil",
+    "description": "Dinos el nombre que te gustaría que vean tus grupos. Puedes cambiarlo más tarde.",
+    "nameLabel": "Nombre para mostrar",
+    "namePlaceholder": "Tu nombre",
+    "submit": "Guardar y continuar",
+    "saving": "Guardando…",
+    "signedInAs": "Conectado como {email}",
+    "errors": {
+      "nameRequired": "Introduce un nombre para mostrar.",
+      "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
+      "generic": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "Members": {
+    "title": "Miembros",
+    "description": "Personas que pueden ver y contribuir a este grupo.",
+    "empty": "Aún no hay miembros activos.",
+    "unknownMember": "Miembro desconocido",
+    "youBadge": "Tú",
+    "role": {
+      "owner": "Propietario",
+      "admin": "Admin",
+      "member": "Miembro"
+    },
+    "joinedOn": "Se unió el {date}",
+    "noManagePermission": "Solo los propietarios y administradores pueden invitar o revocar miembros del grupo.",
+    "archivedNotice": "Las invitaciones están desactivadas mientras el grupo esté archivado. Desarchiva el grupo para invitar nuevos miembros.",
+    "invite": {
+      "title": "Invitar miembro",
+      "description": "Envía una invitación por correo electrónico. El invitado se une una vez que la acepta desde una cuenta que coincida.",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "amigo@example.com",
+      "role": "Rol",
+      "send": "Enviar invitación",
+      "invalidEmail": "Introduce una dirección de correo electrónico válida."
+    },
+    "invitations": {
+      "title": "Invitaciones pendientes",
+      "description": "Invitaciones en espera de aceptación.",
+      "empty": "No hay invitaciones pendientes.",
+      "sentOn": "Enviado el {date}",
+      "revoke": "Revocar",
+      "revokeButton": "Revocar invitación",
+      "revoked": "Invitación revocada.",
+      "created": "Invitación enviada a {email}."
     }
   }
 }

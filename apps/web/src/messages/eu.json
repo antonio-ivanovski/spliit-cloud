@@ -4,15 +4,20 @@
     "description": "Ongi etorri zure <strong>Spliit Cloud</strong> intantzia berrira!",
     "button": {
       "groups": "Joan taldeetara",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Hasi saioa Spliit Cloud-en",
+      "createAccount": "Sortu kontua"
     }
   },
   "Header": {
-    "groups": "Taldeak"
+    "groups": "Taldeak",
+    "signIn": "Hasi saioa",
+    "signOut": "Amaitu saioa",
+    "account": "Kontua"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
+    "builtBy": "Ikusi <source>iturburu-kodea eta kolaboratzaileak</source>"
   },
   "Expenses": {
     "title": "Gastuak",
@@ -46,22 +51,21 @@
     "everyone": "denak",
     "receivedBy": "<strong>{paidBy}</strong>-k jasota <paidFor></paidFor>-rentzat",
     "yourBalance": "Zure saldoa:",
-    "notInvolved": "Ez duzu parte hartzen"
+    "notInvolved": "Ez duzu parte hartzen",
+    "settlementBadge": "Kitzea"
   },
   "Groups": {
     "myGroups": "Nire taldeak",
     "create": "Sortu",
     "loadingRecent": "Azken taldeak kargatzen…",
     "NoRecent": {
-      "description": "Azken aldian ez duzu talderik bisitatu.",
+      "description": "Oraindik ez duzu talderik.",
       "create": "Sortu bat",
-      "orAsk": "edo eskatu lagun bati lehendik dagoen baten esteka bidaltzeko."
+      "orAsk": "edo eskatu lagun bati bere taldera gonbidatzeko."
     },
     "recent": "Azken taldeak",
     "starred": "Gogoko taldeak",
     "archived": "Gordetako taldeak",
-    "archive": "Gorde taldea",
-    "unarchive": "Kendu taldea artxibotik",
     "removeRecent": "Kendu azken taldeetatik",
     "RecentRemovedToast": {
       "title": "Taldea ezabatu da",
@@ -69,15 +73,70 @@
       "undoAlt": "Desegin taldearen ezabatzea",
       "undo": "Desegin"
     },
-    "AddByURL": {
-      "button": "Gehitu URL bidez",
-      "title": "Gehitu talde bat URL bidez",
-      "description": "Talde bat zurekin partekatu bada, hemen itsatsi dezakezu bere URLa zure zerrendara gehitzeko.",
-      "error": "Oops, ezin dugu taldea aurkitu zuk emandako URLtik…"
-    },
     "NotFound": {
       "text": "Talde hori ez da existitzen.",
       "link": "Joan bisitatutako azken taldeetara"
+    },
+    "createdInviteHint": "Taldea sortuta. Gonbidatu kideak hasteko.",
+    "NoRecentAllHidden": {
+      "description": "Zure talde guztiak ezkutatu dituzu.",
+      "showHidden": "Erakutsi ezkutuko taldeak"
+    },
+    "hidden": "Ezkutuko taldeak",
+    "showHidden": "Erakutsi ezkutuko taldeak",
+    "hide": "Ezkutatu taldea",
+    "unhide": "Ikusi taldea berriro",
+    "starGroup": "Gogoko taldea",
+    "unstarGroup": "Kendu gogokoenetatik",
+    "groupActions": "Taldearen ekintzak",
+    "archiveGroup": "Artxibatu taldea",
+    "unarchiveGroup": "Desartxibatu taldea",
+    "archiveSuccess": "Taldea artxibatu da.",
+    "unarchiveSuccess": "Taldea desartxibatu da.",
+    "archiveWithBalancesTitle": "Kitatu gabeko saldoak",
+    "archiveWithBalancesDescription": "Talde honek kitatu gabeko saldoak ditu. Artxibatzeak kitatze-gastuak sortuko ditu saldoak zerora ekartzeko. Jarraitu?",
+    "archiveWithBalancesForce": "Behartu artxibatzea",
+    "archiveWithBalancesCancel": "Utzi",
+    "archiveWithBalancesSuccess": "Kitatze-gastuak sortu dira eta taldea artxibatu da.",
+    "archiveWithBalancesView": "Ikusi saldoak",
+    "archiveSectionTitle": "Artxibatu taldea",
+    "archiveSectionDescription": "Artxibatzeak taldea izozten du. Ezin da gastu berririk gehitu edo aldatu, baina existitzen diren datuak ikusgai geratzen dira. Taldea edonoiz desartxibatu dezakezu.",
+    "archivedBadge": "Artxibatua",
+    "bannerArchivedTitle": "Talde hau artxibatuta dago",
+    "bannerArchivedDescription": "Ezin da gastu edo gonbidapen berririk gehitu taldea artxibatuta dagoen bitartean. Existitzen diren datuak ikusgai geratzen dira.",
+    "bannerArchived": "Talde hau artxibatuta dago. Ezin da gastu berririk gehitu.",
+    "bannerUnarchive": "Desartxibatu",
+    "bannerUnarchiveSuccess": "Taldea desartxibatu da.",
+    "invitationBannerTitle": "Talde honetara gonbidatu zaituzte",
+    "invitationBannerDescription": "Onartu kide gisa sartzeko, edo ukatu gonbidapena baztertzeko.",
+    "invitationAccept": "Onartu",
+    "invitationDecline": "Ukatu",
+    "invitationAccepted": "Gonbidapena onartu da.",
+    "invitationDeclined": "Gonbidapena ukatu da.",
+    "pendingInviteeReadOnlyTitle": "Gonbidatu zaituzte",
+    "pendingInviteeReadOnlyDescription": "Onartu goiko gonbidapena gastuak gehitzen eta taldearen ezarpenak aldatzen hasteko. Bitartean, talde hau irakurtzeko soilik da.",
+    "pendingInviteeSettingsTitle": "Taldearen ezarpenak blokeatuta daude",
+    "pendingInviteeSettingsDescription": "Gonbidapena onartu behar duzu taldearen ezarpenak aldatu edo kideak gonbidatu aurretik.",
+    "pendingInviteeExpenseTitle": "Gastuak irakurtzeko soilik dira",
+    "pendingInviteeExpenseDescription": "Onartu goiko gonbidapena gastuak gehitzen edo editatzen hasteko. Bitartean, taldearen existitzen diren datuak ikusgai daude baina ezin dira aldatu.",
+    "archivedReadOnly": "Talde hau artxibatuta dago. Ezin da gastu berririk gehitu edo aldatu.",
+    "backToExpenses": "Itzuli gastuetara",
+    "Unauthorized": {
+      "title": "Ez duzu talde honetara sartzeko baimenik",
+      "description": "Uste baduzu huts bat dela, eskatu taldearen jabe edo administratzaile bati gonbidatzeko.",
+      "link": "Itzuli nire taldeetara"
+    },
+    "invitations": {
+      "title": "Gonbidapen zain",
+      "description": "Ondorengo taldeetan sartzeko gonbidatu zaituzte.",
+      "accept": "Onartu",
+      "decline": "Ukatu",
+      "accepted": "Gonbidapena onartu da.",
+      "declined": "Gonbidapena ukatu da.",
+      "invitedBy": "{name}-k gonbidatuta",
+      "unknownInviter": "norbait",
+      "unknownGroup": "Talde ezezaguna",
+      "sentOn": "{date} bidalia"
     }
   },
   "GroupForm": {
@@ -126,7 +185,11 @@
       "create": "Sortu",
       "creating": "Sortzen…",
       "cancel": "Utzi"
-    }
+    },
+    "readOnlyNote": "Jabeek eta administratzaileek bakarrik alda ditzakete taldearen ezarpenak.",
+    "readOnlyTitle": "Taldearen ezarpenak",
+    "readOnlyBack": "Itzuli taldera",
+    "archivedNotice": "Talde hau artxibatuta dago. Bere ezarpenak izoztuta daude eta ezin dira gehiago aldatu."
   },
   "ExpenseForm": {
     "Income": {
@@ -252,7 +315,11 @@
     "save": "Gorde",
     "saving": "Gordetzen…",
     "cancel": "Utzi",
-    "reimbursement": "Diru-itzultzea"
+    "reimbursement": "Diru-itzultzea",
+    "participant": {
+      "pending": "(gonbidatua)"
+    },
+    "readOnlyNotice": "Talde hau artxibatuta dago. Gastua irakurtzeko soilik erakusten da."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -446,6 +513,93 @@
     },
     "other": {
       "heading": "Beste monetak"
+    }
+  },
+  "Auth": {
+    "title": "Hasi saioa Spliit Cloud-en",
+    "signUpTitle": "Sortu zure Spliit Cloud kontua",
+    "subtitle": "Erabili zure kontua zure taldeetara gailuen artean sartzeko.",
+    "signUpSubtitle": "Sortu kontu bat zure taldeak gorde eta gailuen artean sinkronizatzeko.",
+    "email": "Helbide elektronikoa",
+    "password": "Pasahitza",
+    "signInWithPassword": "Hasi saioa pasahitzarekin",
+    "signUpWithPassword": "Erregistratu pasahitzarekin",
+    "signInWithGoogle": "Jarraitu Google-rekin",
+    "sendMagicLink": "Bidali saio-hasiera esteka",
+    "magicLinkEmail": "Helbide elektronikoa",
+    "usePasswordInstead": "Erabili helbide elektronikoa eta pasahitza",
+    "hidePasswordForm": "Ezkutatu pasahitz formularioa",
+    "passwordFormDescription": "Pasahitza erabili nahi baduzu, sartu zure helbide elektronikoa eta pasahitza behean.",
+    "passwordFormDescriptionSignUp": "Sortu kontu bat zure helbide elektronikoarekin eta pasahitz batekin.",
+    "useDifferentEmail": "Erabili beste helbide elektroniko bat",
+    "magicLinkSent": "Begiratu zure sarrera-ontzia saioa hasteko esteka bat ikusteko.",
+    "noAccount": "Oraindik ez duzu konturik?",
+    "haveAccount": "Dagoeneko baduzu kontua?",
+    "createAccount": "Sortu kontua",
+    "signIn": "Hasi saioa",
+    "signOut": "Amaitu saioa",
+    "confirmPassword": "Berretsi pasahitza",
+    "passwordMismatch": "Pasahitzak ez datoz bat.",
+    "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu.",
+    "errors": {
+      "invalidCredentials": "Helbide elektronikoa edo pasahitza okerra da.",
+      "emailRequired": "Sartu zure helbide elektronikoa.",
+      "passwordRequired": "Sartu zure pasahitza.",
+      "nameRequired": "Sartu erakusteko izen bat.",
+      "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez.",
+      "magicLinkFailed": "Ezin izan da saioa hasteko esteka bidali."
+    },
+    "loading": "Kargatzen…",
+    "signedInAs": "{name} gisa saioa hasita",
+    "required": "Saioa hasi behar duzu zure taldeetara sartzeko.",
+    "back": "Itzuli hasierara"
+  },
+  "CompleteProfile": {
+    "title": "Osatu zure profila",
+    "description": "Esan iezaguzu zure taldeek ikusi nahi duten izena. Geroago alda dezakezu.",
+    "nameLabel": "Erakusteko izena",
+    "namePlaceholder": "Zure izena",
+    "submit": "Gorde eta jarraitu",
+    "saving": "Gordetzen…",
+    "signedInAs": "{email} gisa saioa hasita",
+    "errors": {
+      "nameRequired": "Sartu erakusteko izen bat.",
+      "nameTooShort": "Izenak gutxienez 2 karaktere izan behar ditu.",
+      "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez."
+    }
+  },
+  "Members": {
+    "title": "Kideak",
+    "description": "Talde hau ikusi eta bertan lagundu dezaketen pertsonak.",
+    "empty": "Oraindik ez dago kide aktiborik.",
+    "unknownMember": "Kide ezezaguna",
+    "youBadge": "Zu",
+    "role": {
+      "owner": "Jabea",
+      "admin": "Administratzailea",
+      "member": "Kidea"
+    },
+    "joinedOn": "{date} batu zen",
+    "noManagePermission": "Jabeek eta administratzaileek bakarrik gonbida ditzakete kideak edo kendu kideak.",
+    "archivedNotice": "Gonbidapenak desgaituta daude taldea artxibatuta dagoen bitartean. Desartxibatu taldea kide berriak gonbidatzeko.",
+    "invite": {
+      "title": "Gonbidatu kidea",
+      "description": "Bidali gonbidapen bat helbide elektroniko bidez. Gonbidatuak onartu ondoren batuko da kontu batekin.",
+      "email": "Helbide elektronikoa",
+      "emailPlaceholder": "friend@example.com",
+      "role": "Rola",
+      "send": "Bidali gonbidapena",
+      "invalidEmail": "Sartu helbide elektroniko baliozko bat."
+    },
+    "invitations": {
+      "title": "Gonbidapen zain",
+      "description": "Onarpenaren zain dauden gonbidapenak.",
+      "empty": "Ez dago gonbidapen zainrik.",
+      "sentOn": "{date} bidalia",
+      "revoke": "Ezeztatu",
+      "revokeButton": "Ezeztatu gonbidapena",
+      "revoked": "Gonbidapena ezeztatu da.",
+      "created": "Gonbidapena bidali zaio {email}-i."
     }
   }
 }

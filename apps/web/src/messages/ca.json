@@ -4,15 +4,20 @@
     "description": "Benvinguda a <strong>Spliit Cloud</strong>!",
     "button": {
       "groups": "Veure els grups",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Inicia sessió a Spliit Cloud",
+      "createAccount": "Crea un compte"
     }
   },
   "Header": {
-    "groups": "Grups"
+    "groups": "Grups",
+    "signIn": "Inicia sessió",
+    "signOut": "Tanca sessió",
+    "account": "Compte"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
+    "builtBy": "Consulta el <source>codi font i col·laboradors</source>"
   },
   "Expenses": {
     "title": "Despeses",
@@ -46,38 +51,92 @@
     "receivedBy": "Debuda per <strong>{paidBy}</strong> para <paidFor></paidFor>",
     "yourBalance": "El teu balanç: balance:",
     "everyone": "totes",
-    "notInvolved": "No ets implicat o implicada"
+    "notInvolved": "No ets implicat o implicada",
+    "settlementBadge": "Liquidació"
   },
   "Groups": {
     "myGroups": "Els meus grups",
     "create": "Crear",
     "loadingRecent": "Arregant els grups recents…",
     "NoRecent": {
-      "description": "No has format part de cap grup darrerament.",
+      "description": "Encara no tens cap grup.",
       "create": "Crea'n un",
-      "orAsk": "o demana a una amiga que et comparteixi l'enllaç a un grup ja existent"
+      "orAsk": "o demana a un amic que et convidi al seu grup."
     },
     "recent": "Grups recents",
     "starred": "Grups preferits",
     "archived": "Grups arxivats",
-    "archive": "Arxivar el grup",
-    "unarchive": "Desarxivar el grup",
     "removeRecent": "Suprimeix dels grups recents",
     "RecentRemovedToast": {
       "title": "El grup ha estat eliminat",
-      "description": "El grup ha estat eliminat de la tebva llista de grups recents",
-      "undoAlt": "Reverteix la suoressió del grup",
+      "description": "El grup ha estat eliminat de la teva llista de grups recents",
+      "undoAlt": "Desfés la supressió del grup",
       "undo": "Desfer"
-    },
-    "AddByURL": {
-      "button": "Afegir mitjançant un enllaç",
-      "title": "Afegir un grup mitjançant un enllaç",
-      "description": "Si t'han compartit un grup, pots enganxar aqui el seu enllaç per afegir-lo a la teva llista",
-      "error": "Vatua l’olla! No podem trobar el grup des de l'enllaç que has proporcionat..."
     },
     "NotFound": {
       "text": "Aquest grup no existeix.",
       "link": "Anar als darrers grups visitats."
+    },
+    "createdInviteHint": "Grup creat. Convida membres per començar.",
+    "NoRecentAllHidden": {
+      "description": "Has amagat tots els teus grups.",
+      "showHidden": "Mostra grups amagats"
+    },
+    "hidden": "Grups amagats",
+    "showHidden": "Mostra grups amagats",
+    "hide": "Amaga el grup",
+    "unhide": "Mostra el grup",
+    "starGroup": "Afegeix als preferits",
+    "unstarGroup": "Treu dels preferits",
+    "groupActions": "Accions del grup",
+    "archiveGroup": "Arxiva el grup",
+    "unarchiveGroup": "Desarxivar el grup",
+    "archiveSuccess": "Grup arxivat.",
+    "unarchiveSuccess": "Grup desarxivat.",
+    "archiveWithBalancesTitle": "Saldos pendents",
+    "archiveWithBalancesDescription": "Aquest grup té saldos pendents. L'arxiu crearà despeses de liquidació per posar-los a zero. Continuar?",
+    "archiveWithBalancesForce": "Forçar l'arxiu",
+    "archiveWithBalancesCancel": "Cancel·lar",
+    "archiveWithBalancesSuccess": "Despeses de liquidació creades i grup arxivat.",
+    "archiveWithBalancesView": "Veure saldos",
+    "archiveSectionTitle": "Arxivar el grup",
+    "archiveSectionDescription": "L'arxiu congela el grup. No es poden afegir o modificar despeses noves, però les dades existents romanen visibles. Pots desarxivar el grup en qualsevol moment.",
+    "archivedBadge": "Arxivat",
+    "bannerArchivedTitle": "Aquest grup està arxivat",
+    "bannerArchivedDescription": "No es poden afegir despeses o invitacions noves mentre el grup estigui arxivat. Les dades existents romanen visibles.",
+    "bannerArchived": "Aquest grup està arxivat. No es poden afegir despeses noves.",
+    "bannerUnarchive": "Desarxivar",
+    "bannerUnarchiveSuccess": "Grup desarxivat.",
+    "invitationBannerTitle": "Has estat convidat a aquest grup",
+    "invitationBannerDescription": "Accepta per unir-te com a membre, o rebutja per descartar la invitació.",
+    "invitationAccept": "Acceptar",
+    "invitationDecline": "Rebutjar",
+    "invitationAccepted": "Invitació acceptada.",
+    "invitationDeclined": "Invitació rebutjada.",
+    "pendingInviteeReadOnlyTitle": "Has estat convidat",
+    "pendingInviteeReadOnlyDescription": "Accepta la invitació superior per començar a afegir despeses i canviar la configuració del grup. Fins aleshores, aquest grup és només de lectura.",
+    "pendingInviteeSettingsTitle": "La configuració del grup està bloquejada",
+    "pendingInviteeSettingsDescription": "Has d'acceptar la invitació abans de poder canviar la configuració del grup o convidar membres.",
+    "pendingInviteeExpenseTitle": "Les despeses són només de lectura",
+    "pendingInviteeExpenseDescription": "Accepta la invitació superior per començar a afegir o editar despeses. Fins aleshores, les dades existents del grup són visibles però no es poden modificar.",
+    "archivedReadOnly": "Aquest grup està arxivat. Les despeses ja no es poden afegir o modificar.",
+    "backToExpenses": "Torna a despeses",
+    "Unauthorized": {
+      "title": "No tens accés a aquest grup",
+      "description": "Si creus que és un error, demana a un propietari o administrador del grup que et convidi.",
+      "link": "Torna als meus grups"
+    },
+    "invitations": {
+      "title": "Invitacions pendents",
+      "description": "Has estat convidat a unir-te als següents grups.",
+      "accept": "Acceptar",
+      "decline": "Rebutjar",
+      "accepted": "Invitació acceptada.",
+      "declined": "Invitació rebutjada.",
+      "invitedBy": "Invitació per {name}",
+      "unknownInviter": "algú",
+      "unknownGroup": "Grup desconegut",
+      "sentOn": "Enviada el {date}"
     }
   },
   "GroupForm": {
@@ -126,7 +185,11 @@
       "createDescription": "Totes les quantitats i els balanços es mostraràn en aquesta moneda.",
       "editDescription": "Totes les quantitas i balanços es mostraràn en aquesta moneda. Canviar açò NO convertirà despeses ja enregistrades, excepte quan la moneda tinga \"unitats menors\" diferents que la actual (per exemple, canviar de Dólars estadounidencs a Yens japonesos)",
       "customOption": "Personalitzat"
-    }
+    },
+    "readOnlyNote": "Només els propietaris i administradors poden canviar la configuració del grup.",
+    "readOnlyTitle": "Configuració del grup",
+    "readOnlyBack": "Tornar al grup",
+    "archivedNotice": "Aquest grup està arxivat. La seva configuració està congelada i ja no es pot canviar."
   },
   "ExpenseForm": {
     "Income": {
@@ -145,14 +208,6 @@
       "paidByField": {
         "label": "Pagat per",
         "description": "Selecciona la participant que ha fet el pagament."
-      },
-      "recurrenceRule": {
-        "label": "Recurrència de la despesa",
-        "description": "Selecciona amb quina freqüència cal que es repeteixi la despesa.",
-        "none": "Puntual",
-        "daily": "Diària",
-        "weekly": "Setmanal",
-        "monthly": "Mensual"
       },
       "paidFor": {
         "title": "Pagat per a",
@@ -185,10 +240,10 @@
       },
       "paidFor": {
         "title": "Pagado per a",
-        "description": "Sleecciona per a qui s'ha pagat la despesa."
+        "description": "Selecciona per a qui s'ha pagat la despesa."
       },
       "splitModeDescription": "Selecciona com vols dividir la despesa.",
-      "attachDescription": "eure i adjuntar tiquets a la despesa.",
+      "attachDescription": "Veure i adjuntar tiquets a la despesa.",
       "currencyField": {
         "label": "Moneda de la despesa",
         "description": "La moneda en la que la despesa es va pagar."
@@ -217,7 +272,7 @@
     "selectNone": "No en seleccionis cap",
     "selectAll": "Selecciona'ls tots",
     "shares": "parts",
-    "advancedOptions": "Opciones avanzadas",
+    "advancedOptions": "Opcions avançades",
     "SplitModeField": {
       "label": "Mode de divisió",
       "evenly": "Uniforme",
@@ -252,15 +307,19 @@
     "conversionRateState": {
       "loading": "Aconseguint tases d'intercanvi…",
       "success": "Tases obtingudes:",
-      "error": "Ups, no hem pogut aconseguit les tases mes recents.",
+      "error": "Ups, no hem pogut aconseguir les tases mes recents.",
       "staleRate": "Utilizant la tasa:",
       "noRate": "Introdueix una tasa personalitzada ací.",
       "currencyNotFound": "Ups, Frankfurter no té la tasa per a la moneda triada aquest dia.",
-      "noDate": "Introdueix la data de ka despesa per a aconseguir la tasa de conversió.",
+      "noDate": "Introdueix la data de la despesa per a aconseguir la tasa de conversió.",
       "dateMismatch": "Tases per a la data: {date}",
       "refresh": "Refrescar",
       "customRate": "Emprant tasa personalitzada"
-    }
+    },
+    "participant": {
+      "pending": "(convidat)"
+    },
+    "readOnlyNotice": "Aquest grup està arxivat. La despesa es mostra només de lectura."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -364,15 +423,15 @@
     "duplicateParticipantName": "Una altra participant ja té el mateix nom",
     "titleRequired": "Si us plau, afegeix un títol",
     "invalidNumber": "Número invàlid",
-    "amountRequired": "Cal introduïr un import",
-    "amountNotZero": "L'import no por ser zero.",
+    "amountRequired": "Cal introduir un import",
+    "amountNotZero": "L'import no pot ser zero.",
     "amountTenMillion": "L'import ha de ser inferior a 10.000.000.",
     "paidByRequired": "Cal seleccionar una participant",
     "paidForMin1": "La despesa ha de ser pagada com a mínim per a una participant",
     "noZeroShares": "Totes les participacions han de ser superiors a 0",
     "amountSum": "La suma dels imports ha de ser igual a la suma de la despesa",
     "percentageSum": "La suma dels percentatges ha de ser igual a 100",
-    "ratePositive": "La tasa ha de ser estrictament major que zero."
+    "ratePositive": "La taxa ha de ser estrictament major que zero."
   },
   "Categories": {
     "search": "Cercar categoria...",
@@ -394,16 +453,16 @@
       "heading": "Menjar i beure",
       "Food and Drink": "Menjar i beure",
       "Dining Out": "Menjar fora",
-      "Groceries": "Menjar",
+      "Groceries": "Queviures",
       "Liquor": "Licors"
     },
     "Home": {
       "heading": "Casa",
       "Home": "Casa",
-      "Electronics": "Elecrtònica",
+      "Electronics": "Electrònica",
       "Furniture": "Mobles",
       "Household Supplies": "Subministres",
-      "Maintenance": " Manteniment",
+      "Maintenance": "Manteniment",
       "Mortgage": "Hipoteca",
       "Pets": "Mascotes",
       "Rent": "Lloguer",
@@ -438,13 +497,13 @@
       "Cleaning": "Neteja",
       "Electricity": "Electricitat",
       "Heat/Gas": "Calefacció/Gas",
-      "Trash": "Ecombraries",
+      "Trash": "Esmorzar",
       "TV/Phone/Internet": "TV/Telèfon/Internet",
       "Water": "Aigua"
     }
   },
   "Currencies": {
-    "search": "Buscar moneda...",
+    "search": "Cercar moneda...",
     "noCurrency": "No s'han trobat monedes.",
     "custom": {
       "heading": "Personalitzat"
@@ -454,6 +513,93 @@
     },
     "other": {
       "heading": "Altres monedes"
+    }
+  },
+  "Auth": {
+    "title": "Inicia sessió a Spliit Cloud",
+    "signUpTitle": "Crea el teu compte de Spliit Cloud",
+    "subtitle": "Utilitza el teu compte per accedir als teus grups des de qualsevol dispositiu.",
+    "signUpSubtitle": "Crea un compte per desar i sincronitzar els teus grups entre dispositius.",
+    "email": "Correu electrònic",
+    "password": "Contrasenya",
+    "signInWithPassword": "Inicia sessió amb contrasenya",
+    "signUpWithPassword": "Registra't amb contrasenya",
+    "signInWithGoogle": "Continua amb Google",
+    "sendMagicLink": "Envia enllaç d'inici de sessió",
+    "magicLinkEmail": "Correu electrònic",
+    "usePasswordInstead": "Utilitza correu i contrasenya",
+    "hidePasswordForm": "Amaga el formulari de contrasenya",
+    "passwordFormDescription": "Si prefereixes utilitzar una contrasenya, introdueix el teu correu i contrasenya a continuació.",
+    "passwordFormDescriptionSignUp": "Crea un compte amb el teu correu electrònic i una contrasenya.",
+    "useDifferentEmail": "Utilitza un correu diferent",
+    "magicLinkSent": "Comprova la teva bústia d'entrada per a l'enllaç d'inici de sessió.",
+    "noAccount": "Encara no tens un compte?",
+    "haveAccount": "Ja tens un compte?",
+    "createAccount": "Crea un compte",
+    "signIn": "Inicia sessió",
+    "signOut": "Tanca sessió",
+    "confirmPassword": "Confirma la contrasenya",
+    "passwordMismatch": "Les contrasenyes no coincideixen.",
+    "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters.",
+    "errors": {
+      "invalidCredentials": "El correu o la contrasenya són incorrectes.",
+      "emailRequired": "Introdueix la teva adreça de correu electrònic.",
+      "passwordRequired": "Introdueix la teva contrasenya.",
+      "nameRequired": "Introdueix un nom de visualització.",
+      "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar.",
+      "magicLinkFailed": "No s'ha pogut enviar l'enllaç d'inici de sessió."
+    },
+    "loading": "Carregant…",
+    "signedInAs": "Sessió iniciada com a {name}",
+    "required": "Has d'iniciar sessió per accedir als teus grups.",
+    "back": "Tornar a l'inici"
+  },
+  "CompleteProfile": {
+    "title": "Completa el teu perfil",
+    "description": "Digues el nom que t'agradaria que veiessin els teus grups. Pots canviar-lo més tard.",
+    "nameLabel": "Nom de visualització",
+    "namePlaceholder": "El teu nom",
+    "submit": "Desa i continua",
+    "saving": "Desant…",
+    "signedInAs": "Sessió iniciada com a {email}",
+    "errors": {
+      "nameRequired": "Introdueix un nom de visualització.",
+      "nameTooShort": "El nom ha de tenir almenys 2 caràcters.",
+      "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar."
+    }
+  },
+  "Members": {
+    "title": "Membres",
+    "description": "Persones que poden veure i contribuir a aquest grup.",
+    "empty": "Encara no hi ha membres actius.",
+    "unknownMember": "Membre desconegut",
+    "youBadge": "Tu",
+    "role": {
+      "owner": "Propietari",
+      "admin": "Admin",
+      "member": "Membre"
+    },
+    "joinedOn": "Es va unir el {date}",
+    "noManagePermission": "Només els propietaris i administradors poden convidar o revocar membres del grup.",
+    "archivedNotice": "Les invitacions estan desactivades mentre el grup estigui arxivat. Desarxivar el grup per invitar nous membres.",
+    "invite": {
+      "title": "Convidar membre",
+      "description": "Envia una invitació per correu electrònic. La persona convidada s'uneix un cop acceptada des d'un compte coincident.",
+      "email": "Correu electrònic",
+      "emailPlaceholder": "amic@example.com",
+      "role": "Rol",
+      "send": "Enviar invitació",
+      "invalidEmail": "Introdueix una adreça de correu electrònic vàlida."
+    },
+    "invitations": {
+      "title": "Invitacions pendents",
+      "description": "Invitacions pendents d'acceptació.",
+      "empty": "No hi ha invitacions pendents.",
+      "sentOn": "Enviada el {date}",
+      "revoke": "Revocar",
+      "revokeButton": "Revocar invitació",
+      "revoked": "Invitació revocada.",
+      "created": "Invitació enviada a {email}."
     }
   }
 }

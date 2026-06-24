@@ -4,15 +4,20 @@
     "description": "Bine ai venit pe noua ta instanță de <strong>Spliit Cloud</strong> !",
     "button": {
       "groups": "Mergi la grupuri",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Autentifică-te pe Spliit Cloud",
+      "createAccount": "Creează un cont"
     }
   },
   "Header": {
-    "groups": "Grupuri"
+    "groups": "Grupuri",
+    "signIn": "Autentifică-te",
+    "signOut": "Deconectează-te",
+    "account": "Cont"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
+    "builtBy": "Vezi <source>codul sursă și contribuitorii</source>"
   },
   "Expenses": {
     "title": "Cheltuieli",
@@ -38,27 +43,29 @@
       "earlierThisYear": "La începutul anului",
       "lastYear": "Anul trecut",
       "older": "Mai vechi"
-    }
+    },
+    "export": "Export"
   },
   "ExpenseCard": {
     "paidBy": "Plătit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
-    "yourBalance": "Soldul tău:"
+    "yourBalance": "Soldul tău:",
+    "everyone": "toată lumea",
+    "notInvolved": "Nu ești implicat",
+    "settlementBadge": "Decontare"
   },
   "Groups": {
     "myGroups": "Grupurile mele",
     "create": "Adaugă",
     "loadingRecent": "Se încarcă ultimele tale grupuri…",
     "NoRecent": {
-      "description": "Nu ai accesat niciun grup recent.",
+      "description": "Nu ai încă niciun grup.",
       "create": "Adaugă unul",
-      "orAsk": "sau roagă un prieten să îți trimită un link către unul deja existent."
+      "orAsk": "sau roagă un prieten să te invite în grupul lui."
     },
     "recent": "Ultimele grupuri",
     "starred": "Grupuri favorite",
     "archived": "Grupuri arhivate",
-    "archive": "Arhivează grupul",
-    "unarchive": "Dezarhivează grupul",
     "removeRecent": "Șterge din ultimele grupuri",
     "RecentRemovedToast": {
       "title": "Grupul a fost șters.",
@@ -66,15 +73,70 @@
       "undoAlt": "Anulează ștergerea grupului",
       "undo": "Anulează"
     },
-    "AddByURL": {
-      "button": "Adaugă folosind un URL",
-      "title": "Adaugă un grup folosind un URL",
-      "description": "Dacă un grup a fost distribuit cu tine, poți atașa URL-ul acestuia aici pentru a-l adăuga în listă.",
-      "error": "Ups, nu am găsit grupul folosind URL-ul primit de la tine…"
-    },
     "NotFound": {
       "text": "Acest grup nu există.",
       "link": "Mergi la ultimele grupuri vizitate"
+    },
+    "createdInviteHint": "Grup creat. Invită membri pentru a începe.",
+    "NoRecentAllHidden": {
+      "description": "Ai ascuns toate grupurile tale.",
+      "showHidden": "Arată grupurile ascunse"
+    },
+    "hidden": "Grupuri ascunse",
+    "showHidden": "Arată grupurile ascunse",
+    "hide": "Ascunde grupul",
+    "unhide": "Arată grupul",
+    "starGroup": "Adaugă la favorite",
+    "unstarGroup": "Elimină din favorite",
+    "groupActions": "Acțiuni asupra grupului",
+    "archiveGroup": "Arhivează grupul",
+    "unarchiveGroup": "Dezarhivează grupul",
+    "archiveSuccess": "Grup arhivat.",
+    "unarchiveSuccess": "Grup dezarhivat.",
+    "archiveWithBalancesTitle": "Solduri nereglate",
+    "archiveWithBalancesDescription": "Acest grup are solduri nereglate. Arhivarea va crea cheltuieli de decontare pentru a le aduce la zero. Continui?",
+    "archiveWithBalancesForce": "Forțează arhivarea",
+    "archiveWithBalancesCancel": "Anulează",
+    "archiveWithBalancesSuccess": "Cheltuieli de decontare create și grup arhivat.",
+    "archiveWithBalancesView": "Vezi soldurile",
+    "archiveSectionTitle": "Arhivează grupul",
+    "archiveSectionDescription": "Arhivarea îngheață grupul. Nu pot fi adăugate sau modificate cheltuieli noi, dar datele existente rămân vizibile. Poți dezarhiva grupul oricând.",
+    "archivedBadge": "Arhivat",
+    "bannerArchivedTitle": "Acest grup este arhivat",
+    "bannerArchivedDescription": "Nu pot fi adăugate cheltuieli sau invitații noi în timp ce grupul este arhivat. Datele existente rămân vizibile.",
+    "bannerArchived": "Acest grup este arhivat. Nu pot fi adăugate cheltuieli noi.",
+    "bannerUnarchive": "Dezarhivează",
+    "bannerUnarchiveSuccess": "Grup dezarhivat.",
+    "invitationBannerTitle": "Ai fost invitat în acest grup",
+    "invitationBannerDescription": "Acceptă pentru a te alătura ca membru sau refuză pentru a respinge invitația.",
+    "invitationAccept": "Acceptă",
+    "invitationDecline": "Refuză",
+    "invitationAccepted": "Invitație acceptată.",
+    "invitationDeclined": "Invitație refuzată.",
+    "pendingInviteeReadOnlyTitle": "Ai fost invitat",
+    "pendingInviteeReadOnlyDescription": "Acceptă invitația de mai sus pentru a începe să adaugi cheltuieli și să modifici setările grupului. Până atunci, acest grup este doar în citire.",
+    "pendingInviteeSettingsTitle": "Setările grupului sunt blocate",
+    "pendingInviteeSettingsDescription": "Trebuie să accepți invitația înainte de a putea schimba setările grupului sau a invita membri.",
+    "pendingInviteeExpenseTitle": "Cheltuielile sunt doar în citire",
+    "pendingInviteeExpenseDescription": "Acceptă invitația de mai sus pentru a începe să adaugi sau să editezi cheltuieli. Până atunci, datele existente ale grupului sunt vizibile dar nu pot fi modificate.",
+    "archivedReadOnly": "Acest grup este arhivat. Cheltuielile nu mai pot fi adăugate sau modificate.",
+    "backToExpenses": "Înapoi la cheltuieli",
+    "Unauthorized": {
+      "title": "Nu ai acces la acest grup",
+      "description": "Dacă crezi că este o greșeală, roagă un proprietar sau administrator al grupului să te invite.",
+      "link": "Înapoi la grupurile mele"
+    },
+    "invitations": {
+      "title": "Invitații în așteptare",
+      "description": "Ai fost invitat să te alături următoarelor grupuri.",
+      "accept": "Acceptă",
+      "decline": "Refuză",
+      "accepted": "Invitație acceptată.",
+      "declined": "Invitație refuzată.",
+      "invitedBy": "Invitat de {name}",
+      "unknownInviter": "cineva",
+      "unknownGroup": "Grup necunoscut",
+      "sentOn": "Trimisă pe {date}"
     }
   },
   "GroupForm": {
@@ -99,9 +161,9 @@
       "protectedParticipant": "Acest membru a luat parte la cheltuieli și nu poate să fie șters.",
       "new": "Nou",
       "add": "Adaugă membru",
-      "John": "John",
-      "Jane": "Jane",
-      "Jack": "Jack"
+      "John": "Ion",
+      "Jane": "Ioana",
+      "Jack": "Iacob"
     },
     "Settings": {
       "title": "Setări locale",
@@ -117,6 +179,16 @@
       "create": "Adaugă",
       "creating": "Se adaugă…",
       "cancel": "Anulează"
+    },
+    "readOnlyNote": "Doar proprietarii și administratorii pot modifica setările grupului.",
+    "readOnlyTitle": "Setări grup",
+    "readOnlyBack": "Înapoi la grup",
+    "archivedNotice": "Acest grup este arhivat. Setările sale sunt înghețate și nu mai pot fi modificate.",
+    "CurrencyCodeField": {
+      "label": "Moneda principală",
+      "createDescription": "Toate sumele și soldurile vor fi în această monedă.",
+      "editDescription": "Toate sumele și soldurile vor fi în această monedă. Modificarea aceasta NU va converti cheltuielile deja introduse, cu excepția cazului în care moneda are \"unități minore\" diferite de cea curentă (de exemplu, schimbarea din Dolar American în Yen Japonez)",
+      "customOption": "Personalizat"
     }
   },
   "ExpenseForm": {
@@ -142,7 +214,11 @@
         "description": "Selectează pentru cine a fost primit venitul."
       },
       "splitModeDescription": "Selectează cum să fie împărțit venitul.",
-      "attachDescription": "Vizualizează și atașează bonul pentru venit."
+      "attachDescription": "Vizualizează și atașează bonul pentru venit.",
+      "currencyField": {
+        "label": "Moneda venitului",
+        "description": "Moneda în care a fost primit venitul."
+      }
     },
     "Expense": {
       "create": "Adaugă o cheltuială",
@@ -159,20 +235,33 @@
       "categoryFieldDescription": "Selectează categoria cheltuielii.",
       "paidByField": {
         "label": "Plătit de către",
-        "description": "Selectează membrul care a plătit cheltuiala."
+        "description": "Selectează membrul care a plătit cheltuiala.",
+        "placeholder": "Selectează un membru"
       },
       "paidFor": {
         "title": "Plătit pentru",
-        "description": "Selectează pentru cine a fost platită cheltuiala."
+        "description": "Selectează pentru cine a fost plătită cheltuiala."
       },
       "splitModeDescription": "Selectează cum să fie împărțită cheltuiala.",
-      "attachDescription": "Vizualizează și atașează bonul pentru cheltuială."
+      "attachDescription": "Vizualizează și atașează bonul pentru cheltuială.",
+      "currencyField": {
+        "label": "Moneda cheltuielii",
+        "description": "Moneda în care a fost plătită cheltuiala."
+      },
+      "recurrenceRule": {
+        "label": "Recurența cheltuielii",
+        "description": "Selectează cât de des ar trebui să se repete cheltuiala.",
+        "none": "Niciuna",
+        "daily": "Zilnic",
+        "weekly": "Săptămânal",
+        "monthly": "Lunar"
+      }
     },
     "amountField": {
       "label": "Sumă"
     },
     "isReimbursementField": {
-      "label": "Aceasta este o rambursare."
+      "label": "Aceasta este o rambursare"
     },
     "categoryField": {
       "label": "Categorie"
@@ -182,7 +271,7 @@
     },
     "selectNone": "Nu selectez nimic",
     "selectAll": "Selectez tot",
-    "shares": "distribuiri",
+    "shares": "părți",
     "advancedOptions": "Opțiuni avansate de împărțire…",
     "SplitModeField": {
       "label": "Împărțire",
@@ -205,7 +294,32 @@
     "save": "Salvează",
     "saving": "Se salvează…",
     "cancel": "Anulează",
-    "reimbursement": "Rambursare"
+    "reimbursement": "Rambursare",
+    "conversionUnavailable": "Pentru a seta o monedă diferită per cheltuială și a converti sumele, selectează o monedă non-personalizată pentru grup.",
+    "originalAmountField": {
+      "label": "Suma de convertit"
+    },
+    "conversionRateField": {
+      "useApi": "Folosește rate de la Frankfurter",
+      "useCustom": "Folosește rată personalizată",
+      "label": "Curs de schimb"
+    },
+    "conversionRateState": {
+      "loading": "Se obțin cursurile de schimb…",
+      "success": "Cursuri obținute:",
+      "error": "Oops, nu am putut obține cele mai recente cursuri.",
+      "staleRate": "Curs utilizat:",
+      "noRate": "Introdu o rată personalizată mai jos.",
+      "currencyNotFound": "Oops, Frankfurter nu are cursul pentru această monedă la această dată.",
+      "noDate": "Introdu data cheltuielii pentru a obține un curs de schimb.",
+      "dateMismatch": "Cursuri de la data: {date}",
+      "refresh": "Reîmprospătează",
+      "customRate": "Se folosește o rată personalizată"
+    },
+    "participant": {
+      "pending": "(invitat)"
+    },
+    "readOnlyNotice": "Acest grup este arhivat. Cheltuiala este afișată doar în citire."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -214,7 +328,7 @@
     },
     "ErrorToast": {
       "title": "Eroare la adăugarea documentului.",
-      "description": "Ceva a mers greșit la adăugarea fișierului. Încearcă mai târziu sau cum un alt fișier.",
+      "description": "Ceva a mers greșit la adăugarea fișierului. Încearcă mai târziu sau alege un alt fișier.",
       "retry": "Reîncearcă"
     }
   },
@@ -229,17 +343,17 @@
       "categoryLabel": "Categorie:",
       "amountLabel": "Sumă:",
       "dateLabel": "Data:",
-      "editNext": "Vei putea sa modifici informațiile despre cheltuială în continuare.",
+      "editNext": "Vei putea să modifici informațiile despre cheltuială în continuare.",
       "continue": "Continuă"
     },
     "unknown": "Necunoscut",
     "TooBigToast": {
       "title": "Fișierul este prea mare",
-      "description": "Dimensiunea maximă a fișierului pe care il poți atașa este {maxSize}. Fișierul tău are {size}."
+      "description": "Dimensiunea maximă a fișierului pe care îl poți atașa este {maxSize}. Fișierul tău are {size}."
     },
     "ErrorToast": {
       "title": "Eroare la adăugarea documentului.",
-      "description": "Ceva a mers greșit la adăugarea fișierului. Încearcă mai târziu sau cum un alt fișier.",
+      "description": "Ceva a mers greșit la adăugarea fișierului. Încearcă mai târziu sau alege un alt fișier.",
       "retry": "Reîncearcă"
     }
   },
@@ -248,7 +362,7 @@
     "description": "Aceasta este suma pe care fiecare membru a plătit-o sau cu care a fost plătit.",
     "Reimbursements": {
       "title": "Rambursări sugerate",
-      "description": "Acestea sunt sugestiile pentru rambursări optimizate între membrii.",
+      "description": "Acestea sunt sugestiile pentru rambursări optimizate între membri.",
       "noImbursements": "Se pare că grupul tău nu are nevoie de rambursări 😁",
       "owes": "<strong>{from}</strong> datorează <strong>{to}</strong>",
       "markAsPaid": "Bifează ca plătit"
@@ -258,7 +372,7 @@
     "title": "Statistici",
     "Totals": {
       "title": "Totaluri",
-      "description": "Sumarul cheltuielior pentru întregul grup.",
+      "description": "Sumarul cheltuielilor pentru întregul grup.",
       "groupSpendings": "Totalul cheltuielilor din grup",
       "groupEarnings": "Totalul veniturilor din grup",
       "yourSpendings": "Totalul cheltuielilor tale",
@@ -281,7 +395,7 @@
       "earlierThisWeek": "La începutul săptămânii",
       "lastWeek": "Săptămâna trecută",
       "earlierThisMonth": "La începutul lunii",
-      "lastMonth": "Luna trecuta",
+      "lastMonth": "Luna trecută",
       "earlierThisYear": "La începutul anului",
       "lastYear": "Anul trecut",
       "older": "Mai vechi"
@@ -315,8 +429,9 @@
     "paidByRequired": "Trebuie să selectați un membru.",
     "paidForMin1": "Cheltuiala trebuie plătită pentru cel puțin un membru.",
     "noZeroShares": "Toate părțile trebuie să fie mai mari de 0.",
-    "amountSum": "Suma valorilor trebuie să fie egală cu suma cheltuielilor.",
-    "percentageSum": "Suma procentajelor trebuie să fie egală cu 100."
+    "amountSum": "Suma valorilor trebuie să fie egală cu suma cheltuielii.",
+    "percentageSum": "Suma procentajelor trebuie să fie egală cu 100.",
+    "ratePositive": "Rata trebuie să fie strict mai mare decât zero."
   },
   "Categories": {
     "search": "Căutați categorie…",
@@ -361,7 +476,8 @@
       "Gifts": "Cadouri",
       "Insurance": "Asigurare",
       "Medical Expenses": "Cheltuieli medicale",
-      "Taxes": "Impozite"
+      "Taxes": "Impozite",
+      "Donation": "Donare"
     },
     "Transportation": {
       "heading": "Transport",
@@ -384,6 +500,106 @@
       "Trash": "Gunoi",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Apă"
+    }
+  },
+  "Currencies": {
+    "search": "Caută monedă…",
+    "noCurrency": "Nicio monedă găsită.",
+    "custom": {
+      "heading": "Personalizat"
+    },
+    "common": {
+      "heading": "Cele mai comune"
+    },
+    "other": {
+      "heading": "Alte monede"
+    }
+  },
+  "Auth": {
+    "title": "Autentifică-te pe Spliit Cloud",
+    "signUpTitle": "Creează-ți contul Spliit Cloud",
+    "subtitle": "Folosește-ți contul pentru a accesa grupurile tale de pe orice dispozitiv.",
+    "signUpSubtitle": "Creează un cont pentru a salva și sincroniza grupurile tale între dispozitive.",
+    "email": "Email",
+    "password": "Parolă",
+    "signInWithPassword": "Autentifică-te cu parolă",
+    "signUpWithPassword": "Înregistrează-te cu parolă",
+    "signInWithGoogle": "Continuă cu Google",
+    "sendMagicLink": "Trimite link de autentificare",
+    "magicLinkEmail": "Email",
+    "usePasswordInstead": "Folosește email și parolă în schimb",
+    "hidePasswordForm": "Ascunde formularul de parolă",
+    "passwordFormDescription": "Dacă preferi să folosești o parolă, introdu emailul și parola mai jos.",
+    "passwordFormDescriptionSignUp": "Creează un cont cu emailul tău și o parolă.",
+    "useDifferentEmail": "Folosește un email diferit",
+    "magicLinkSent": "Verifică-ți căsuța poștală pentru linkul de autentificare.",
+    "noAccount": "Nu ai încă un cont?",
+    "haveAccount": "Ai deja un cont?",
+    "createAccount": "Creează un cont",
+    "signIn": "Autentifică-te",
+    "signOut": "Deconectează-te",
+    "confirmPassword": "Confirmă parola",
+    "passwordMismatch": "Parolele nu coincid.",
+    "passwordTooShort": "Parola trebuie să aibă cel puțin 8 caractere.",
+    "errors": {
+      "invalidCredentials": "Emailul sau parola este incorectă.",
+      "emailRequired": "Introdu adresa ta de email.",
+      "passwordRequired": "Introdu parola ta.",
+      "nameRequired": "Introdu un nume de afișare.",
+      "generic": "Ceva a mers greșit. Te rugăm să încerci din nou.",
+      "magicLinkFailed": "Nu s-a putut trimite linkul de autentificare."
+    },
+    "loading": "Se încarcă…",
+    "signedInAs": "Autentificat ca {name}",
+    "required": "Trebuie să te autentifici pentru a accesa grupurile tale.",
+    "back": "Înapoi la pagina principală"
+  },
+  "CompleteProfile": {
+    "title": "Completează-ți profilul",
+    "description": "Spune-ne numele pe care ai dori să-l vadă grupurile tale. Poți să-l schimbi mai târziu.",
+    "nameLabel": "Nume de afișare",
+    "namePlaceholder": "Numele tău",
+    "submit": "Salvează și continuă",
+    "saving": "Se salvează…",
+    "signedInAs": "Autentificat ca {email}",
+    "errors": {
+      "nameRequired": "Introdu un nume de afișare.",
+      "nameTooShort": "Numele trebuie să aibă cel puțin 2 caractere.",
+      "generic": "Ceva a mers greșit. Te rugăm să încerci din nou."
+    }
+  },
+  "Members": {
+    "title": "Membri",
+    "description": "Persoane care pot vedea și contribui la acest grup.",
+    "empty": "Niciun membru activ încă.",
+    "unknownMember": "Membru necunoscut",
+    "youBadge": "Tu",
+    "role": {
+      "owner": "Proprietar",
+      "admin": "Admin",
+      "member": "Membru"
+    },
+    "joinedOn": "S-a alăturat pe {date}",
+    "noManagePermission": "Doar proprietarii și administratorii pot invita sau revoca membri ai grupului.",
+    "archivedNotice": "Invitațiile sunt dezactivate în timp ce grupul este arhivat. Dezarhivează grupul pentru a invita membri noi.",
+    "invite": {
+      "title": "Invită membru",
+      "description": "Trimite o invitație prin email. Invitatul se alătură odată ce o acceptă de pe un cont corespunzător.",
+      "email": "Email",
+      "emailPlaceholder": "prieten@example.com",
+      "role": "Rol",
+      "send": "Trimite invitația",
+      "invalidEmail": "Introdu o adresă de email validă."
+    },
+    "invitations": {
+      "title": "Invitații în așteptare",
+      "description": "Invitații în așteptarea acceptării.",
+      "empty": "Nicio invitație în așteptare.",
+      "sentOn": "Trimisă pe {date}",
+      "revoke": "Revocă",
+      "revokeButton": "Revocă invitația",
+      "revoked": "Invitație revocată.",
+      "created": "Invitație trimisă către {email}."
     }
   }
 }

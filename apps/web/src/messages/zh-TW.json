@@ -4,15 +4,20 @@
     "description": "歡迎開始全新的<strong>Spliit Cloud</strong>",
     "button": {
       "groups": "前往群組",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "登入 Spliit Cloud",
+      "createAccount": "建立帳戶"
     }
   },
   "Header": {
-    "groups": "群組"
+    "groups": "群組",
+    "signIn": "登入",
+    "signOut": "登出",
+    "account": "帳戶"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "由開源社群用愛打造 ❤️",
+    "builtBy": "查看<source>原始碼和貢獻者</source>"
   },
   "Expenses": {
     "title": "消費",
@@ -38,27 +43,29 @@
       "earlierThisYear": "今年稍早",
       "lastYear": "去年",
       "older": "更早"
-    }
+    },
+    "export": "匯出"
   },
   "ExpenseCard": {
     "paidBy": "由 <strong>{paidBy}</strong> 支付 <paidFor></paidFor>。",
     "receivedBy": "由 <strong>{paidBy}</strong> 收取 <paidFor></paidFor>。",
-    "yourBalance": "你的餘額："
+    "yourBalance": "你的餘額：",
+    "everyone": "所有人",
+    "notInvolved": "您未參與其中",
+    "settlementBadge": "結算"
   },
   "Groups": {
     "myGroups": "我的群組",
     "create": "建立",
     "loadingRecent": "讀取最近的群組……",
     "NoRecent": {
-      "description": "你最近沒有訪問過任何群組。",
+      "description": "你還沒有任何群組。",
       "create": "建立一個新群組",
-      "orAsk": "或請朋友發送已建立的群組鏈接。"
+      "orAsk": "或請朋友邀請你加入他們的群組。"
     },
     "recent": "最近的群組",
     "starred": "已加星標的群組",
     "archived": "已封存的群組",
-    "archive": "將群組封存",
-    "unarchive": "取消封存群組",
     "removeRecent": "從最近的群組中移除",
     "RecentRemovedToast": {
       "title": "群組已被移除",
@@ -66,15 +73,70 @@
       "undoAlt": "撤銷移除群組",
       "undo": "取消操作"
     },
-    "AddByURL": {
-      "button": "透過連結加入",
-      "title": "透過連結加入群組",
-      "description": "如果某個群組已與您分享，您可以在此處貼上其網址以添加到群組列表中。",
-      "error": "哇哇，我們無法從您提供的網址中找到有效群組……"
-    },
     "NotFound": {
       "text": "該群組不存在。",
       "link": "前往最近訪問的群組"
+    },
+    "createdInviteHint": "群組已建立。邀請成員開始使用。",
+    "NoRecentAllHidden": {
+      "description": "您已隱藏所有群組。",
+      "showHidden": "顯示已隱藏的群組"
+    },
+    "hidden": "已隱藏的群組",
+    "showHidden": "顯示已隱藏的群組",
+    "hide": "隱藏群組",
+    "unhide": "取消隱藏群組",
+    "starGroup": "收藏群組",
+    "unstarGroup": "取消收藏群組",
+    "groupActions": "群組操作",
+    "archiveGroup": "封存群組",
+    "unarchiveGroup": "取消封存群組",
+    "archiveSuccess": "群組已封存。",
+    "unarchiveSuccess": "群組已取消封存。",
+    "archiveWithBalancesTitle": "未結算餘額",
+    "archiveWithBalancesDescription": "此群組有未結算的餘額。封存將建立結算支出以歸零。是否繼續？",
+    "archiveWithBalancesForce": "強制封存",
+    "archiveWithBalancesCancel": "取消",
+    "archiveWithBalancesSuccess": "結算支出已建立，群組已封存。",
+    "archiveWithBalancesView": "檢視餘額",
+    "archiveSectionTitle": "封存群組",
+    "archiveSectionDescription": "封存將凍結群組。無法新增或修改新支出，但現有資料仍然可見。您可以隨時取消封存群組。",
+    "archivedBadge": "已封存",
+    "bannerArchivedTitle": "此群組已封存",
+    "bannerArchivedDescription": "群組封存期間，無法新增支出或邀請。現有資料仍然可見。",
+    "bannerArchived": "此群組已封存。無法新增支出。",
+    "bannerUnarchive": "取消封存",
+    "bannerUnarchiveSuccess": "群組已取消封存。",
+    "invitationBannerTitle": "您已被邀請加入此群組",
+    "invitationBannerDescription": "接受以成員身分加入，或拒絕以忽略邀請。",
+    "invitationAccept": "接受",
+    "invitationDecline": "拒絕",
+    "invitationAccepted": "邀請已接受。",
+    "invitationDeclined": "邀請已拒絕。",
+    "pendingInviteeReadOnlyTitle": "您已被邀請",
+    "pendingInviteeReadOnlyDescription": "接受以上邀請以開始新增支出和更改群組設定。在此之前，此群組為唯讀狀態。",
+    "pendingInviteeSettingsTitle": "群組設定已鎖定",
+    "pendingInviteeSettingsDescription": "您需要先接受邀請，才能更改群組設定或邀請成員。",
+    "pendingInviteeExpenseTitle": "支出為唯讀",
+    "pendingInviteeExpenseDescription": "接受以上邀請以開始新增或編輯支出。在此之前，群組的現有資料可見但無法修改。",
+    "archivedReadOnly": "此群組已封存。無法再新增或修改支出。",
+    "backToExpenses": "返回支出",
+    "Unauthorized": {
+      "title": "您無權存取此群組",
+      "description": "如果您認為這是錯誤，請讓群組擁有者或管理員邀請您。",
+      "link": "返回我的群組"
+    },
+    "invitations": {
+      "title": "待處理的邀請",
+      "description": "您已被邀請加入以下群組。",
+      "accept": "接受",
+      "decline": "拒絕",
+      "accepted": "邀請已接受。",
+      "declined": "邀請已拒絕。",
+      "invitedBy": "由 {name} 邀請",
+      "unknownInviter": "某人",
+      "unknownGroup": "未知群組",
+      "sentOn": "傳送於 {date}"
     }
   },
   "GroupForm": {
@@ -117,6 +179,16 @@
       "create": "建立",
       "creating": "建立中……",
       "cancel": "取消"
+    },
+    "readOnlyNote": "只有擁有者和管理員可以更改群組設定。",
+    "readOnlyTitle": "群組設定",
+    "readOnlyBack": "返回群組",
+    "archivedNotice": "此群組已封存。設定已凍結，無法再更改。",
+    "CurrencyCodeField": {
+      "label": "主要貨幣",
+      "createDescription": "所有金額和餘額將以此貨幣顯示。",
+      "editDescription": "所有金額和餘額將以此貨幣顯示。更改此項不會轉換已輸入的支出，除非該貨幣與目前貨幣具有不同的「輔幣單位」（例如從美元變更為日圓）",
+      "customOption": "自訂"
     }
   },
   "ExpenseForm": {
@@ -142,7 +214,11 @@
         "description": "選擇應參與此筆收入的成員。"
       },
       "splitModeDescription": "選擇如何分配此筆收入。",
-      "attachDescription": "查看／附上此筆收入的收據。"
+      "attachDescription": "查看／附上此筆收入的收據。",
+      "currencyField": {
+        "label": "收入貨幣",
+        "description": "收入所使用的貨幣。"
+      }
     },
     "Expense": {
       "create": "新增消費紀錄",
@@ -159,13 +235,26 @@
       "categoryFieldDescription": "選擇消費類別。",
       "paidByField": {
         "label": "支付人",
-        "description": "选择支付这笔消费的群组成员。"
+        "description": "选择支付这笔消费的群组成员。",
+        "placeholder": "選擇參與者"
       },
       "paidFor": {
         "title": "應支付人",
         "description": "選擇需參與此筆消費的成員。"
       },
       "splitModeDescription": "選擇如何分配此筆消費。",
+      "currencyField": {
+        "label": "支出貨幣",
+        "description": "支付該支出所使用的貨幣。"
+      },
+      "recurrenceRule": {
+        "label": "支出重複週期",
+        "description": "選擇支出的重複頻率。",
+        "none": "無",
+        "daily": "每日",
+        "weekly": "每週",
+        "monthly": "每月"
+      },
       "attachDescription": "查看／附上此筆消費的收據。"
     },
     "amountField": {
@@ -205,7 +294,32 @@
     "save": "儲存",
     "saving": "儲存中……",
     "cancel": "取消",
-    "reimbursement": "報銷"
+    "reimbursement": "報銷",
+    "conversionUnavailable": "若要為每筆支出設定不同貨幣並轉換金額，請為群組選擇非自訂貨幣。",
+    "originalAmountField": {
+      "label": "要轉換的金額"
+    },
+    "conversionRateField": {
+      "useApi": "使用 Frankfurter 的匯率",
+      "useCustom": "使用自訂匯率",
+      "label": "匯率"
+    },
+    "conversionRateState": {
+      "loading": "正在取得匯率……",
+      "success": "取得的匯率：",
+      "error": "哎呀，我們無法取得最新的匯率。",
+      "staleRate": "使用的匯率：",
+      "noRate": "請在下方輸入自訂匯率。",
+      "currencyNotFound": "哎呀，Frankfurter 沒有此貨幣在該日的匯率。",
+      "noDate": "請輸入支出日期以取得匯率。",
+      "dateMismatch": "匯率日期：{date}",
+      "refresh": "重新整理",
+      "customRate": "使用自訂匯率中"
+    },
+    "participant": {
+      "pending": "（已邀請）"
+    },
+    "readOnlyNotice": "此群組已封存。支出以唯讀方式顯示。"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -316,7 +430,8 @@
     "paidForMin1": "這筆消費必須包含至少一個成員。",
     "noZeroShares": "份額需大於 0。",
     "amountSum": "金額總計必須等於消費金額。",
-    "percentageSum": "百分比加總必須等於 100。"
+    "percentageSum": "百分比加總必須等於 100。",
+    "ratePositive": "匯率必須嚴格大於零。"
   },
   "Categories": {
     "search": "搜尋類別……",
@@ -361,7 +476,8 @@
       "Gifts": "禮物",
       "Insurance": "保險",
       "Medical Expenses": "醫療支出",
-      "Taxes": "稅"
+      "Taxes": "稅",
+      "Donation": "Donation"
     },
     "Transportation": {
       "heading": "交通",
@@ -384,6 +500,106 @@
       "Trash": "垃圾費",
       "TV/Phone/Internet": "電視/電話/網路",
       "Water": "水費"
+    }
+  },
+  "Auth": {
+    "title": "登入 Spliit Cloud",
+    "signUpTitle": "建立您的 Spliit Cloud 帳戶",
+    "subtitle": "使用您的帳戶跨裝置存取群組。",
+    "signUpSubtitle": "建立帳戶以跨裝置儲存和同步您的群組。",
+    "email": "電子郵件",
+    "password": "密碼",
+    "signInWithPassword": "使用密碼登入",
+    "signUpWithPassword": "使用密碼註冊",
+    "signInWithGoogle": "使用 Google 繼續",
+    "sendMagicLink": "傳送登入連結",
+    "magicLinkEmail": "電子郵件",
+    "usePasswordInstead": "改用電子郵件和密碼",
+    "hidePasswordForm": "隱藏密碼表單",
+    "passwordFormDescription": "如果您想使用密碼，請在下方輸入電子郵件和密碼。",
+    "passwordFormDescriptionSignUp": "使用您的電子郵件和密碼建立帳戶。",
+    "useDifferentEmail": "使用不同的電子郵件",
+    "magicLinkSent": "請查看收件匣中的登入連結。",
+    "noAccount": "還沒有帳戶？",
+    "haveAccount": "已經有帳戶？",
+    "createAccount": "建立帳戶",
+    "signIn": "登入",
+    "signOut": "登出",
+    "confirmPassword": "確認密碼",
+    "passwordMismatch": "密碼不符。",
+    "passwordTooShort": "密碼必須至少 8 個字元。",
+    "errors": {
+      "invalidCredentials": "電子郵件或密碼不正確。",
+      "emailRequired": "請輸入您的電子郵件地址。",
+      "passwordRequired": "請輸入您的密碼。",
+      "nameRequired": "請輸入顯示名稱。",
+      "generic": "出了點問題。請再試一次。",
+      "magicLinkFailed": "無法傳送登入連結。"
+    },
+    "loading": "載入中……",
+    "signedInAs": "以 {name} 身分登入",
+    "required": "您需要登入才能存取您的群組。",
+    "back": "返回首頁"
+  },
+  "CompleteProfile": {
+    "title": "完善您的個人資料",
+    "description": "告訴我們您在群組中想要顯示的名稱。您可以稍後變更。",
+    "nameLabel": "顯示名稱",
+    "namePlaceholder": "您的姓名",
+    "submit": "儲存並繼續",
+    "saving": "儲存中……",
+    "signedInAs": "以 {email} 身分登入",
+    "errors": {
+      "nameRequired": "請輸入顯示名稱。",
+      "nameTooShort": "姓名必須至少 2 個字元。",
+      "generic": "出了點問題。請再試一次。"
+    }
+  },
+  "Currencies": {
+    "search": "搜尋貨幣...",
+    "noCurrency": "找不到貨幣。",
+    "custom": {
+      "heading": "自訂"
+    },
+    "common": {
+      "heading": "最常用"
+    },
+    "other": {
+      "heading": "其他貨幣"
+    }
+  },
+  "Members": {
+    "title": "成員",
+    "description": "可以檢視和參與此群組的人員。",
+    "empty": "暫無活躍成員。",
+    "unknownMember": "未知成員",
+    "youBadge": "您",
+    "role": {
+      "owner": "擁有者",
+      "admin": "管理員",
+      "member": "成員"
+    },
+    "joinedOn": "加入於 {date}",
+    "noManagePermission": "只有擁有者和管理員可以邀請或撤銷群組成員。",
+    "archivedNotice": "群組封存期間邀請功能已停用。取消封存群組以邀請新成員。",
+    "invite": {
+      "title": "邀請成員",
+      "description": "透過電子郵件傳送邀請。受邀者從相符帳戶接受後即可加入。",
+      "email": "電子郵件",
+      "emailPlaceholder": "friend@example.com",
+      "role": "角色",
+      "send": "傳送邀請",
+      "invalidEmail": "請輸入有效的電子郵件地址。"
+    },
+    "invitations": {
+      "title": "待處理的邀請",
+      "description": "等待接受的邀請。",
+      "empty": "暫無待處理的邀請。",
+      "sentOn": "傳送於 {date}",
+      "revoke": "撤銷",
+      "revokeButton": "撤銷邀請",
+      "revoked": "邀請已撤銷。",
+      "created": "邀請已傳送至 {email}。"
     }
   }
 }

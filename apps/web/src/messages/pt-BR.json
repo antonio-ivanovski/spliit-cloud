@@ -4,15 +4,20 @@
     "description": "Bem-vindo à sua nova instalação do <strong>Spliit Cloud</strong>!",
     "button": {
       "groups": "Ir para grupos",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Entrar no Spliit Cloud",
+      "createAccount": "Criar uma conta"
     }
   },
   "Header": {
-    "groups": "Grupos"
+    "groups": "Grupos",
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "account": "Conta"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Feito pela comunidade de código aberto com amor ❤️",
+    "builtBy": "Veja o <source>código-fonte e contribuidores</source>"
   },
   "Expenses": {
     "title": "Despesas",
@@ -46,22 +51,21 @@
     "receivedBy": "Recebido por <strong>{paidBy}</strong> para <paidFor></paidFor>",
     "yourBalance": "Seu saldo:",
     "everyone": "Todos",
-    "notInvolved": "Você não está envolvido"
+    "notInvolved": "Você não está envolvido",
+    "settlementBadge": "Acerto"
   },
   "Groups": {
     "myGroups": "Meus grupos",
     "create": "Criar",
     "loadingRecent": "Carregando grupos recentes…",
     "NoRecent": {
-      "description": "Você não visitou nenhum grupo recentemente.",
+      "description": "Você ainda não tem nenhum grupo.",
       "create": "Crie um",
-      "orAsk": "ou peça a um amigo para enviar o link de um existente."
+      "orAsk": "ou peça a um amigo para te convidar para o grupo dele."
     },
     "recent": "Grupos recentes",
     "starred": "Grupos favoritos",
     "archived": "Grupos arquivados",
-    "archive": "Arquivar grupo",
-    "unarchive": "Desarquivar grupo",
     "removeRecent": "Remover dos grupos recentes",
     "RecentRemovedToast": {
       "title": "Grupo removido",
@@ -69,15 +73,70 @@
       "undoAlt": "Desfazer remoção do grupo",
       "undo": "Desfazer"
     },
-    "AddByURL": {
-      "button": "Adicionar por URL",
-      "title": "Adicionar um grupo por URL",
-      "description": "Se um grupo foi compartilhado com você, você pode colar sua URL aqui para adicioná-lo à sua lista.",
-      "error": "Ops, não conseguimos encontrar o grupo a partir da URL fornecida…"
-    },
     "NotFound": {
       "text": "Este grupo não existe.",
       "link": "Ir para grupos visitados recentemente"
+    },
+    "createdInviteHint": "Grupo criado. Convide membros para começar.",
+    "NoRecentAllHidden": {
+      "description": "Você ocultou todos os seus grupos.",
+      "showHidden": "Mostrar grupos ocultos"
+    },
+    "hidden": "Grupos ocultos",
+    "showHidden": "Mostrar grupos ocultos",
+    "hide": "Ocultar grupo",
+    "unhide": "Exibir grupo",
+    "starGroup": "Favoritar grupo",
+    "unstarGroup": "Desfavoritar grupo",
+    "groupActions": "Ações do grupo",
+    "archiveGroup": "Arquivar grupo",
+    "unarchiveGroup": "Desarquivar grupo",
+    "archiveSuccess": "Grupo arquivado.",
+    "unarchiveSuccess": "Grupo desarquivado.",
+    "archiveWithBalancesTitle": "Saldos não liquidados",
+    "archiveWithBalancesDescription": "Este grupo tem saldos não liquidados. O arquivamento criará despesas de acerto para zerá-los. Continuar?",
+    "archiveWithBalancesForce": "Forçar arquivamento",
+    "archiveWithBalancesCancel": "Cancelar",
+    "archiveWithBalancesSuccess": "Despesas de acerto criadas e grupo arquivado.",
+    "archiveWithBalancesView": "Ver saldos",
+    "archiveSectionTitle": "Arquivar grupo",
+    "archiveSectionDescription": "O arquivamento congela o grupo. Nenhuma nova despesa pode ser adicionada ou modificada, mas os dados existentes permanecem visíveis. Você pode desarquivar o grupo a qualquer momento.",
+    "archivedBadge": "Arquivado",
+    "bannerArchivedTitle": "Este grupo está arquivado",
+    "bannerArchivedDescription": "Nenhuma nova despesa ou convite pode ser adicionado enquanto o grupo estiver arquivado. Os dados existentes permanecem visíveis.",
+    "bannerArchived": "Este grupo está arquivado. Nenhuma nova despesa pode ser adicionada.",
+    "bannerUnarchive": "Desarquivar",
+    "bannerUnarchiveSuccess": "Grupo desarquivado.",
+    "invitationBannerTitle": "Você foi convidado para este grupo",
+    "invitationBannerDescription": "Aceite para entrar como membro ou recuse para descartar o convite.",
+    "invitationAccept": "Aceitar",
+    "invitationDecline": "Recusar",
+    "invitationAccepted": "Convite aceito.",
+    "invitationDeclined": "Convite recusado.",
+    "pendingInviteeReadOnlyTitle": "Você foi convidado",
+    "pendingInviteeReadOnlyDescription": "Aceite o convite acima para começar a adicionar despesas e alterar configurações do grupo. Até lá, este grupo é somente leitura.",
+    "pendingInviteeSettingsTitle": "As configurações do grupo estão bloqueadas",
+    "pendingInviteeSettingsDescription": "Você precisa aceitar o convite antes de poder alterar as configurações do grupo ou convidar membros.",
+    "pendingInviteeExpenseTitle": "As despesas são somente leitura",
+    "pendingInviteeExpenseDescription": "Aceite o convite acima para começar a adicionar ou editar despesas. Até lá, os dados existentes do grupo estão visíveis, mas não podem ser modificados.",
+    "archivedReadOnly": "Este grupo está arquivado. Despesas não podem mais ser adicionadas ou modificadas.",
+    "backToExpenses": "Voltar para despesas",
+    "Unauthorized": {
+      "title": "Você não tem acesso a este grupo",
+      "description": "Se você acredita que isso é um erro, peça a um proprietário ou administrador do grupo para convidá-lo.",
+      "link": "Voltar aos meus grupos"
+    },
+    "invitations": {
+      "title": "Convites pendentes",
+      "description": "Você foi convidado a entrar nos seguintes grupos.",
+      "accept": "Aceitar",
+      "decline": "Recusar",
+      "accepted": "Convite aceito.",
+      "declined": "Convite recusado.",
+      "invitedBy": "Convidado por {name}",
+      "unknownInviter": "alguém",
+      "unknownGroup": "Grupo desconhecido",
+      "sentOn": "Enviado em {date}"
     }
   },
   "GroupForm": {
@@ -126,7 +185,11 @@
       "createDescription": "Todos os valores e saldos estarão nesta moeda.",
       "editDescription": "Todos os valores e saldos estarão nesta moeda. A sua alteração NÃO irá converter despesas já registradas, exceto quando a moeda possuir \"unidades menores\" que a atual (ex. Alterar de Dólar Americano para Yen Japonês)",
       "customOption": "Customizado"
-    }
+    },
+    "readOnlyNote": "Apenas proprietários e administradores podem alterar as configurações do grupo.",
+    "readOnlyTitle": "Configurações do grupo",
+    "readOnlyBack": "Voltar ao grupo",
+    "archivedNotice": "Este grupo está arquivado. Suas configurações estão congeladas e não podem mais ser alteradas."
   },
   "ExpenseForm": {
     "Income": {
@@ -151,7 +214,11 @@
         "description": "Selecione para quem a receita foi recebida."
       },
       "splitModeDescription": "Selecione como dividir a receita.",
-      "attachDescription": "Veja e anexe recibos à receita."
+      "attachDescription": "Veja e anexe recibos à receita.",
+      "currencyField": {
+        "label": "Moeda da receita",
+        "description": "A moeda na qual a receita foi recebida."
+      }
     },
     "Expense": {
       "create": "Criar despesa",
@@ -184,6 +251,10 @@
         "daily": "Diariamente",
         "weekly": "Semanalmente",
         "monthly": "Mensalmente"
+      },
+      "currencyField": {
+        "label": "Moeda da despesa",
+        "description": "A moeda na qual a despesa foi paga."
       }
     },
     "amountField": {
@@ -225,18 +296,35 @@
     "cancel": "Cancelar",
     "reimbursement": "Reembolso",
     "conversionRateField": {
-      "label": "Taxa de câmbio"
+      "label": "Taxa de câmbio",
+      "useApi": "Usar taxas do Frankfurter",
+      "useCustom": "Usar taxa personalizada"
     },
     "conversionRateState": {
       "success": "Taxas obtidas:",
       "error": "Opa, não conseguimos obter as taxas mais recentes.",
-      "refresh": "Atualizar"
-    }
+      "refresh": "Atualizar",
+      "loading": "Obtendo taxas de câmbio…",
+      "staleRate": "Usando taxa:",
+      "noRate": "Insira uma taxa personalizada abaixo.",
+      "currencyNotFound": "Ops, o Frankfurter não tem a taxa para esta moeda nesta data.",
+      "noDate": "Insira a data da despesa para obter uma taxa de câmbio.",
+      "dateMismatch": "Taxas da data: {date}",
+      "customRate": "Usando taxa personalizada"
+    },
+    "conversionUnavailable": "Para definir uma moeda diferente por despesa e converter valores, selecione uma moeda não personalizada para o grupo.",
+    "originalAmountField": {
+      "label": "Valor a converter"
+    },
+    "participant": {
+      "pending": "(convidado)"
+    },
+    "readOnlyNotice": "Este grupo está arquivado. A despesa é exibida como somente leitura."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
       "title": "O arquivo é muito grande",
-      "description": "O tamanho máximo de arquivo que você pode enviar é {maxSize}. O seu é ${size}."
+      "description": "O tamanho máximo de arquivo que você pode enviar é {maxSize}. O seu é {size}."
     },
     "ErrorToast": {
       "title": "Erro ao enviar documento",
@@ -261,7 +349,7 @@
     "unknown": "Desconhecido",
     "TooBigToast": {
       "title": "O arquivo é muito grande",
-      "description": "O tamanho máximo de arquivo que você pode enviar é {maxSize}. O seu é ${size}."
+      "description": "O tamanho máximo de arquivo que você pode enviar é {maxSize}. O seu é {size}."
     },
     "ErrorToast": {
       "title": "Erro ao enviar documento",
@@ -298,9 +386,9 @@
     "noActivity": "Ainda não há atividades no seu grupo.",
     "someone": "Alguém",
     "settingsModified": "As configurações do grupo foram modificadas por <strong>{participant}</strong>.",
-    "expenseCreated": "Despesa {expense} criada por <strong>{participant}</strong>.",
-    "expenseUpdated": "Despesa {expense} atualizada por <strong>{participant}</strong>.",
-    "expenseDeleted": "Despesa {expense} excluída por <strong>{participant}</strong>.",
+    "expenseCreated": "Despesa <em>{expense}</em> criada por <strong>{participant}</strong>.",
+    "expenseUpdated": "Despesa <em>{expense}</em> atualizada por <strong>{participant}</strong>.",
+    "expenseDeleted": "Despesa <em>{expense}</em> excluída por <strong>{participant}</strong>.",
     "Groups": {
       "today": "Hoje",
       "yesterday": "Ontem",
@@ -342,7 +430,8 @@
     "paidForMin1": "A despesa deve ser paga para pelo menos um participante.",
     "noZeroShares": "Todas as partes devem ser maiores que 0.",
     "amountSum": "A soma dos valores deve ser igual ao valor da despesa.",
-    "percentageSum": "A soma das porcentagens deve ser igual a 100."
+    "percentageSum": "A soma das porcentagens deve ser igual a 100.",
+    "ratePositive": "A taxa deve ser estritamente maior que zero."
   },
   "Categories": {
     "search": "Pesquisar categoria...",
@@ -424,6 +513,93 @@
     },
     "other": {
       "heading": "Outras moedas"
+    }
+  },
+  "Auth": {
+    "title": "Entrar no Spliit Cloud",
+    "signUpTitle": "Crie sua conta Spliit Cloud",
+    "subtitle": "Use sua conta para acessar seus grupos em todos os dispositivos.",
+    "signUpSubtitle": "Crie uma conta para salvar e sincronizar seus grupos entre dispositivos.",
+    "email": "E-mail",
+    "password": "Senha",
+    "signInWithPassword": "Entrar com senha",
+    "signUpWithPassword": "Cadastrar com senha",
+    "signInWithGoogle": "Continuar com Google",
+    "sendMagicLink": "Enviar link de acesso",
+    "magicLinkEmail": "E-mail",
+    "usePasswordInstead": "Usar e-mail e senha",
+    "hidePasswordForm": "Ocultar formulário de senha",
+    "passwordFormDescription": "Se preferir usar uma senha, insira seu e-mail e senha abaixo.",
+    "passwordFormDescriptionSignUp": "Crie uma conta com seu e-mail e uma senha.",
+    "useDifferentEmail": "Usar um e-mail diferente",
+    "magicLinkSent": "Verifique sua caixa de entrada para o link de acesso.",
+    "noAccount": "Ainda não tem uma conta?",
+    "haveAccount": "Já tem uma conta?",
+    "createAccount": "Criar uma conta",
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "confirmPassword": "Confirmar senha",
+    "passwordMismatch": "As senhas não coincidem.",
+    "passwordTooShort": "A senha deve ter pelo menos 8 caracteres.",
+    "errors": {
+      "invalidCredentials": "E-mail ou senha incorretos.",
+      "emailRequired": "Insira seu endereço de e-mail.",
+      "passwordRequired": "Insira sua senha.",
+      "nameRequired": "Insira um nome de exibição.",
+      "generic": "Algo deu errado. Por favor, tente novamente.",
+      "magicLinkFailed": "Não foi possível enviar o link de acesso."
+    },
+    "loading": "Carregando…",
+    "signedInAs": "Conectado como {name}",
+    "required": "Você precisa entrar para acessar seus grupos.",
+    "back": "Voltar ao início"
+  },
+  "CompleteProfile": {
+    "title": "Complete seu perfil",
+    "description": "Diga-nos o nome que você gostaria que seus grupos vissem. Você pode alterá-lo depois.",
+    "nameLabel": "Nome de exibição",
+    "namePlaceholder": "Seu nome",
+    "submit": "Salvar e continuar",
+    "saving": "Salvando…",
+    "signedInAs": "Conectado como {email}",
+    "errors": {
+      "nameRequired": "Insira um nome de exibição.",
+      "nameTooShort": "O nome deve ter pelo menos 2 caracteres.",
+      "generic": "Algo deu errado. Por favor, tente novamente."
+    }
+  },
+  "Members": {
+    "title": "Membros",
+    "description": "Pessoas que podem ver e contribuir com este grupo.",
+    "empty": "Nenhum membro ativo ainda.",
+    "unknownMember": "Membro desconhecido",
+    "youBadge": "Você",
+    "role": {
+      "owner": "Proprietário",
+      "admin": "Admin",
+      "member": "Membro"
+    },
+    "joinedOn": "Entrou em {date}",
+    "noManagePermission": "Apenas proprietários e administradores podem convidar ou remover membros do grupo.",
+    "archivedNotice": "Os convites estão desativados enquanto o grupo estiver arquivado. Desarquive o grupo para convidar novos membros.",
+    "invite": {
+      "title": "Convidar membro",
+      "description": "Envie um convite por e-mail. O convidado entra assim que aceitar de uma conta correspondente.",
+      "email": "E-mail",
+      "emailPlaceholder": "amigo@example.com",
+      "role": "Função",
+      "send": "Enviar convite",
+      "invalidEmail": "Insira um endereço de e-mail válido."
+    },
+    "invitations": {
+      "title": "Convites pendentes",
+      "description": "Convites aguardando aceitação.",
+      "empty": "Nenhum convite pendente.",
+      "sentOn": "Enviado em {date}",
+      "revoke": "Revogar",
+      "revokeButton": "Revogar convite",
+      "revoked": "Convite revogado.",
+      "created": "Convite enviado para {email}."
     }
   }
 }

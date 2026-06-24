@@ -4,15 +4,20 @@
     "description": "新しい<strong>Spliit Cloud</strong>インスタンスへようこそ！",
     "button": {
       "groups": "グループへ移動",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Spliit Cloudにサインイン",
+      "createAccount": "アカウントを作成"
     }
   },
   "Header": {
-    "groups": "グループ"
+    "groups": "グループ",
+    "signIn": "サインイン",
+    "signOut": "サインアウト",
+    "account": "アカウント"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
+    "builtBy": "ソースコードとコントリビューターは<source>こちら</source>"
   },
   "Expenses": {
     "title": "支出",
@@ -46,22 +51,21 @@
     "receivedBy": "<strong>{paidBy}</strong>が<paidFor></paidFor>のために受け取りました",
     "yourBalance": "あなたの残高:",
     "everyone": "全員",
-    "notInvolved": "あなたは関係していません"
+    "notInvolved": "あなたは関係していません",
+    "settlementBadge": "精算"
   },
   "Groups": {
     "myGroups": "マイグループ",
     "create": "作成",
     "loadingRecent": "最近のグループをロード中…",
     "NoRecent": {
-      "description": "最近訪れたグループはありません。",
+      "description": "まだグループがありません。",
       "create": "グループを作成する",
-      "orAsk": "または友達に既存のグループへのリンクを送ってもらいましょう。"
+      "orAsk": "または友達に自分のグループに招待してもらいましょう。"
     },
     "recent": "最近のグループ",
     "starred": "スター付きグループ",
     "archived": "アーカイブ済みグループ",
-    "archive": "グループをアーカイブ",
-    "unarchive": "グループのアーカイブを解除",
     "removeRecent": "最近のグループから削除",
     "RecentRemovedToast": {
       "title": "グループが削除されました",
@@ -69,15 +73,70 @@
       "undoAlt": "削除を元に戻す",
       "undo": "元に戻す"
     },
-    "AddByURL": {
-      "button": "URLで追加",
-      "title": "URLでグループを追加",
-      "description": "グループが共有された場合、そのURLをここに貼り付けてリストに追加できます。",
-      "error": "あら、提供されたURLからグループを見つけることができませんでした…"
-    },
     "NotFound": {
       "text": "このグループは存在しません。",
       "link": "最近訪れたグループへ移動"
+    },
+    "createdInviteHint": "グループを作成しました。メンバーを招待して始めましょう。",
+    "NoRecentAllHidden": {
+      "description": "すべてのグループを非表示にしました。",
+      "showHidden": "非表示のグループを表示"
+    },
+    "hidden": "非表示のグループ",
+    "showHidden": "非表示のグループを表示",
+    "hide": "グループを非表示",
+    "unhide": "グループの非表示を解除",
+    "starGroup": "グループにスターを付ける",
+    "unstarGroup": "グループのスターを外す",
+    "groupActions": "グループ操作",
+    "archiveGroup": "グループをアーカイブ",
+    "unarchiveGroup": "グループのアーカイブを解除",
+    "archiveSuccess": "グループをアーカイブしました。",
+    "unarchiveSuccess": "グループのアーカイブを解除しました。",
+    "archiveWithBalancesTitle": "未決済の残高",
+    "archiveWithBalancesDescription": "このグループには未決済の残高があります。アーカイブすると、残高をゼロにするための決済支出が作成されます。続行しますか？",
+    "archiveWithBalancesForce": "強制アーカイブ",
+    "archiveWithBalancesCancel": "キャンセル",
+    "archiveWithBalancesSuccess": "決済支出が作成され、グループがアーカイブされました。",
+    "archiveWithBalancesView": "残高を表示",
+    "archiveSectionTitle": "グループをアーカイブ",
+    "archiveSectionDescription": "アーカイブするとグループは凍結されます。新しい支出の追加や変更はできなくなりますが、既存のデータは引き続き表示されます。アーカイブはいつでも解除できます。",
+    "archivedBadge": "アーカイブ済み",
+    "bannerArchivedTitle": "このグループはアーカイブされています",
+    "bannerArchivedDescription": "グループがアーカイブされている間は、新しい支出や招待を追加できません。既存のデータは引き続き表示されます。",
+    "bannerArchived": "このグループはアーカイブされています。新しい支出は追加できません。",
+    "bannerUnarchive": "アーカイブを解除",
+    "bannerUnarchiveSuccess": "グループのアーカイブを解除しました。",
+    "invitationBannerTitle": "このグループに招待されました",
+    "invitationBannerDescription": "メンバーとして参加するには承認するか、招待を拒否するには辞退してください。",
+    "invitationAccept": "承認",
+    "invitationDecline": "辞退",
+    "invitationAccepted": "招待を承認しました。",
+    "invitationDeclined": "招待を辞退しました。",
+    "pendingInviteeReadOnlyTitle": "招待されました",
+    "pendingInviteeReadOnlyDescription": "上の招待を承認すると、支出の追加やグループ設定の変更ができるようになります。それまでは、このグループは読み取り専用です。",
+    "pendingInviteeSettingsTitle": "グループ設定はロックされています",
+    "pendingInviteeSettingsDescription": "グループ設定を変更したりメンバーを招待したりするには、招待を承認する必要があります。",
+    "pendingInviteeExpenseTitle": "支出は読み取り専用です",
+    "pendingInviteeExpenseDescription": "上の招待を承認すると、支出の追加や編集ができるようになります。それまでは、グループの既存データは表示できますが変更はできません。",
+    "archivedReadOnly": "このグループはアーカイブされています。支出の追加や変更はできません。",
+    "backToExpenses": "支出に戻る",
+    "Unauthorized": {
+      "title": "このグループにアクセスできません",
+      "description": "誤りだと思われる場合は、グループのオーナーまたは管理者に招待を依頼してください。",
+      "link": "マイグループに戻る"
+    },
+    "invitations": {
+      "title": "保留中の招待",
+      "description": "以下のグループへの招待があります。",
+      "accept": "承認",
+      "decline": "辞退",
+      "accepted": "招待を承認しました。",
+      "declined": "招待を辞退しました。",
+      "invitedBy": "{name}からの招待",
+      "unknownInviter": "誰か",
+      "unknownGroup": "不明なグループ",
+      "sentOn": "{date}に送信"
     }
   },
   "GroupForm": {
@@ -126,7 +185,11 @@
       "createDescription": "すべての金額および残高はこの通貨で表示されます。",
       "editDescription": "すべての金額および残高はこの通貨で表示されます。これを変更しても、既に入力された支出は変換されません。ただし、現在の通貨と変更先の通貨で小数単位（例：米ドルから日本円へ）の扱いが異なる場合は例外です",
       "customOption": "カスタム"
-    }
+    },
+    "readOnlyNote": "オーナーと管理者のみがグループ設定を変更できます。",
+    "readOnlyTitle": "グループ設定",
+    "readOnlyBack": "グループに戻る",
+    "archivedNotice": "このグループはアーカイブされています。設定は凍結されており、変更できません。"
   },
   "ExpenseForm": {
     "Income": {
@@ -252,7 +315,11 @@
       "refresh": "更新",
       "customRate": "カスタムレートを使用中",
       "dateMismatch": "適用開始日: {date}"
-    }
+    },
+    "participant": {
+      "pending": "(招待済み)"
+    },
+    "readOnlyNotice": "このグループはアーカイブされています。この支出は読み取り専用で表示されています。"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -446,6 +513,93 @@
     },
     "other": {
       "heading": "その他の通貨"
+    }
+  },
+  "Auth": {
+    "title": "Spliit Cloudにサインイン",
+    "signUpTitle": "Spliit Cloudアカウントを作成",
+    "subtitle": "アカウントを使用して、デバイス間でグループにアクセスします。",
+    "signUpSubtitle": "アカウントを作成して、グループをデバイス間で保存および同期します。",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "signInWithPassword": "パスワードでサインイン",
+    "signUpWithPassword": "パスワードでサインアップ",
+    "signInWithGoogle": "Googleで続ける",
+    "sendMagicLink": "サインインリンクを送信",
+    "magicLinkEmail": "メールアドレス",
+    "usePasswordInstead": "メールアドレスとパスワードを使用",
+    "hidePasswordForm": "パスワードフォームを非表示",
+    "passwordFormDescription": "パスワードを使用する場合は、以下にメールアドレスとパスワードを入力してください。",
+    "passwordFormDescriptionSignUp": "メールアドレスとパスワードでアカウントを作成します。",
+    "useDifferentEmail": "別のメールアドレスを使用",
+    "magicLinkSent": "受信トレイでサインインリンクを確認してください。",
+    "noAccount": "まだアカウントをお持ちでないですか？",
+    "haveAccount": "すでにアカウントをお持ちですか？",
+    "createAccount": "アカウントを作成",
+    "signIn": "サインイン",
+    "signOut": "サインアウト",
+    "confirmPassword": "パスワードを確認",
+    "passwordMismatch": "パスワードが一致しません。",
+    "passwordTooShort": "パスワードは8文字以上である必要があります。",
+    "errors": {
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
+      "emailRequired": "メールアドレスを入力してください。",
+      "passwordRequired": "パスワードを入力してください。",
+      "nameRequired": "表示名を入力してください。",
+      "generic": "問題が発生しました。もう一度お試しください。",
+      "magicLinkFailed": "サインインリンクを送信できませんでした。"
+    },
+    "loading": "読み込み中…",
+    "signedInAs": "{name}としてサインイン中",
+    "required": "グループにアクセスするにはサインインが必要です。",
+    "back": "ホームに戻る"
+  },
+  "CompleteProfile": {
+    "title": "プロフィールを完成",
+    "description": "グループに表示する名前をお知らせください。後で変更できます。",
+    "nameLabel": "表示名",
+    "namePlaceholder": "あなたの名前",
+    "submit": "保存して続ける",
+    "saving": "保存中…",
+    "signedInAs": "{email}としてサインイン中",
+    "errors": {
+      "nameRequired": "表示名を入力してください。",
+      "nameTooShort": "名前は2文字以上である必要があります。",
+      "generic": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "Members": {
+    "title": "メンバー",
+    "description": "このグループを閲覧・編集できるメンバー。",
+    "empty": "アクティブなメンバーはいません。",
+    "unknownMember": "不明なメンバー",
+    "youBadge": "あなた",
+    "role": {
+      "owner": "オーナー",
+      "admin": "管理者",
+      "member": "メンバー"
+    },
+    "joinedOn": "{date}に参加",
+    "noManagePermission": "オーナーと管理者のみがメンバーの招待や権限剥奪ができます。",
+    "archivedNotice": "グループがアーカイブされている間は招待が無効になっています。新しいメンバーを招待するにはグループのアーカイブを解除してください。",
+    "invite": {
+      "title": "メンバーを招待",
+      "description": "メールで招待状を送信します。招待された人が該当アカウントから承認すると参加できます。",
+      "email": "メールアドレス",
+      "emailPlaceholder": "friend@example.com",
+      "role": "役割",
+      "send": "招待を送信",
+      "invalidEmail": "有効なメールアドレスを入力してください。"
+    },
+    "invitations": {
+      "title": "保留中の招待",
+      "description": "承認待ちの招待。",
+      "empty": "保留中の招待はありません。",
+      "sentOn": "{date}に送信",
+      "revoke": "取り消す",
+      "revokeButton": "招待を取り消す",
+      "revoked": "招待を取り消しました。",
+      "created": "{email}に招待を送信しました。"
     }
   }
 }

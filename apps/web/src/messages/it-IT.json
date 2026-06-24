@@ -4,15 +4,20 @@
     "description": "Benvenuto nella tua nuova installazione di <strong>Spliit Cloud</strong>!",
     "button": {
       "groups": "Vai ai gruppi",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Accedi a Spliit Cloud",
+      "createAccount": "Crea un account"
     }
   },
   "Header": {
-    "groups": "Gruppi"
+    "groups": "Gruppi",
+    "signIn": "Accedi",
+    "signOut": "Esci",
+    "account": "Account"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Realizzato dalla comunità open-source con amore ❤️",
+    "builtBy": "Vedi il <source>codice sorgente e i collaboratori</source>"
   },
   "Expenses": {
     "title": "Spese",
@@ -46,22 +51,21 @@
     "receivedBy": "Ricevuto da <strong>{paidBy}</strong> per <paidFor></paidFor>",
     "yourBalance": "Il tuo saldo:",
     "notInvolved": "Non sei coinvolto",
-    "everyone": "tutti"
+    "everyone": "tutti",
+    "settlementBadge": "Pareggio"
   },
   "Groups": {
     "myGroups": "I miei gruppi",
     "create": "Crea",
     "loadingRecent": "Caricamento gruppi recenti…",
     "NoRecent": {
-      "description": "Non hai visitato nessun gruppo di recente.",
+      "description": "Non hai ancora nessun gruppo.",
       "create": "Creane uno",
-      "orAsk": "oppure chiedi a un amico di inviarti il link a uno esistente."
+      "orAsk": "oppure chiedi a un amico di invitarti nel suo gruppo."
     },
     "recent": "Gruppi recenti",
     "starred": "Gruppi speciali",
     "archived": "Gruppi archiviati",
-    "archive": "Archivia gruppo",
-    "unarchive": "Rimuovi il gruppo dall'archivio",
     "removeRecent": "Rimuovi dai gruppi recenti",
     "RecentRemovedToast": {
       "title": "Il gruppo è stato rimosso",
@@ -69,15 +73,70 @@
       "undoAlt": "Annulla la rimozione del gruppo",
       "undo": "Annulla"
     },
-    "AddByURL": {
-      "button": "Aggiungi tramite URL",
-      "title": "Aggiungi un gruppo tramite URL",
-      "description": "Se un gruppo è stato condiviso con te, puoi incollare qui il suo URL per aggiungerlo al tuo elenco.",
-      "error": "Oops, non siamo riusciti a trovare il gruppo dall'URL che hai fornito…"
-    },
     "NotFound": {
       "text": "Questo gruppo non esiste.",
       "link": "Vai ai gruppi visitati di recente"
+    },
+    "createdInviteHint": "Gruppo creato. Invita i membri per iniziare.",
+    "NoRecentAllHidden": {
+      "description": "Hai nascosto tutti i tuoi gruppi.",
+      "showHidden": "Mostra gruppi nascosti"
+    },
+    "hidden": "Gruppi nascosti",
+    "showHidden": "Mostra gruppi nascosti",
+    "hide": "Nascondi gruppo",
+    "unhide": "Mostra gruppo",
+    "starGroup": "Aggiungi ai preferiti",
+    "unstarGroup": "Rimuovi dai preferiti",
+    "groupActions": "Azioni del gruppo",
+    "archiveGroup": "Archivia gruppo",
+    "unarchiveGroup": "Ripristina gruppo",
+    "archiveSuccess": "Gruppo archiviato.",
+    "unarchiveSuccess": "Gruppo ripristinato.",
+    "archiveWithBalancesTitle": "Saldi in sospeso",
+    "archiveWithBalancesDescription": "Questo gruppo ha saldi in sospeso. L'archiviazione creerà spese di pareggio per azzerarli. Continuare?",
+    "archiveWithBalancesForce": "Forza archiviazione",
+    "archiveWithBalancesCancel": "Annulla",
+    "archiveWithBalancesSuccess": "Spese di pareggio create e gruppo archiviato.",
+    "archiveWithBalancesView": "Vedi saldi",
+    "archiveSectionTitle": "Archivia gruppo",
+    "archiveSectionDescription": "L'archiviazione congela il gruppo. Non è possibile aggiungere o modificare nuove spese, ma i dati esistenti rimangono visibili. Puoi ripristinare il gruppo in qualsiasi momento.",
+    "archivedBadge": "Archiviato",
+    "bannerArchivedTitle": "Questo gruppo è archiviato",
+    "bannerArchivedDescription": "Non è possibile aggiungere nuove spese o inviti mentre il gruppo è archiviato. I dati esistenti rimangono visibili.",
+    "bannerArchived": "Questo gruppo è archiviato. Non è possibile aggiungere nuove spese.",
+    "bannerUnarchive": "Ripristina",
+    "bannerUnarchiveSuccess": "Gruppo ripristinato.",
+    "invitationBannerTitle": "Sei stato invitato in questo gruppo",
+    "invitationBannerDescription": "Accetta per unirti come membro o rifiuta per ignorare l'invito.",
+    "invitationAccept": "Accetta",
+    "invitationDecline": "Rifiuta",
+    "invitationAccepted": "Invito accettato.",
+    "invitationDeclined": "Invito rifiutato.",
+    "pendingInviteeReadOnlyTitle": "Sei stato invitato",
+    "pendingInviteeReadOnlyDescription": "Accetta l'invito qui sopra per iniziare ad aggiungere spese e modificare le impostazioni del gruppo. Fino ad allora, questo gruppo è in sola lettura.",
+    "pendingInviteeSettingsTitle": "Le impostazioni del gruppo sono bloccate",
+    "pendingInviteeSettingsDescription": "Devi accettare l'invito prima di poter modificare le impostazioni del gruppo o invitare membri.",
+    "pendingInviteeExpenseTitle": "Le spese sono in sola lettura",
+    "pendingInviteeExpenseDescription": "Accetta l'invito qui sopra per iniziare ad aggiungere o modificare spese. Fino ad allora, i dati esistenti del gruppo sono visibili ma non possono essere modificati.",
+    "archivedReadOnly": "Questo gruppo è archiviato. Non è più possibile aggiungere o modificare spese.",
+    "backToExpenses": "Torna alle spese",
+    "Unauthorized": {
+      "title": "Non hai accesso a questo gruppo",
+      "description": "Se ritieni che si tratti di un errore, chiedi a un proprietario o amministratore del gruppo di invitarti.",
+      "link": "Torna ai miei gruppi"
+    },
+    "invitations": {
+      "title": "Inviti in sospeso",
+      "description": "Sei stato invitato a unirti ai seguenti gruppi.",
+      "accept": "Accetta",
+      "decline": "Rifiuta",
+      "accepted": "Invito accettato.",
+      "declined": "Invito rifiutato.",
+      "invitedBy": "Invitato da {name}",
+      "unknownInviter": "qualcuno",
+      "unknownGroup": "Gruppo sconosciuto",
+      "sentOn": "Inviato il {date}"
     }
   },
   "GroupForm": {
@@ -120,6 +179,16 @@
       "create": "Crea",
       "creating": "Sto creando…",
       "cancel": "Annulla"
+    },
+    "readOnlyNote": "Solo i proprietari e gli amministratori possono modificare le impostazioni del gruppo.",
+    "readOnlyTitle": "Impostazioni del gruppo",
+    "readOnlyBack": "Torna al gruppo",
+    "archivedNotice": "Questo gruppo è archiviato. Le sue impostazioni sono congelate e non possono più essere modificate.",
+    "CurrencyCodeField": {
+      "label": "Valuta principale",
+      "createDescription": "Tutti gli importi e i saldi saranno in questa valuta.",
+      "editDescription": "Tutti gli importi e i saldi saranno in questa valuta. La modifica NON convertirà le spese già inserite, eccetto quando la valuta ha \"unità minori\" diverse da quella corrente (es. passaggio da Dollaro USA a Yen Giapponese)",
+      "customOption": "Personalizzata"
     }
   },
   "ExpenseForm": {
@@ -140,20 +209,16 @@
         "label": "Ricevuta da",
         "description": "Seleziona il partecipante che ha ricevuto l'entrata."
       },
-      "recurrenceRule": {
-        "label": "Spesa ricorrente",
-        "description": "Seleziona quanto spesso deve ripetersi.",
-        "none": "Mai",
-        "daily": "Giornaliera",
-        "weekly": "Settimanale",
-        "monthly": "Mensile"
-      },
       "paidFor": {
         "title": "Ricevuto per",
         "description": "Seleziona per chi è stato ricevuto il reddito."
       },
       "splitModeDescription": "Seleziona come dividere l'entrata.",
-      "attachDescription": "Vedi ed allega la ricevuta per l'entrata."
+      "attachDescription": "Vedi ed allega la ricevuta per l'entrata.",
+      "currencyField": {
+        "label": "Valuta dell'entrata",
+        "description": "La valuta in cui è stata ricevuta l'entrata."
+      }
     },
     "Expense": {
       "create": "Crea spesa",
@@ -186,7 +251,11 @@
         "description": "Seleleziona per chi è stato pagato."
       },
       "splitModeDescription": "Seleziona come dividere la spesa.",
-      "attachDescription": "Vedi ed allega la ricevuta per la spesa."
+      "attachDescription": "Vedi ed allega la ricevuta per la spesa.",
+      "currencyField": {
+        "label": "Valuta della spesa",
+        "description": "La valuta in cui è stata pagata la spesa."
+      }
     },
     "amountField": {
       "label": "Importo"
@@ -227,8 +296,30 @@
     "cancel": "Annulla",
     "reimbursement": "Rimborso",
     "conversionRateState": {
-      "refresh": "Aggiornare"
-    }
+      "refresh": "Aggiorna",
+      "loading": "Recupero tassi di cambio…",
+      "success": "Tassi ottenuti:",
+      "error": "Ops, non abbiamo potuto ottenere i tassi più recenti.",
+      "staleRate": "Tasso utilizzato:",
+      "noRate": "Inserisci un tasso personalizzato qui sotto.",
+      "currencyNotFound": "Ops, Frankfurter non ha il tasso per questa valuta in questo giorno.",
+      "noDate": "Inserisci la data della spesa per ottenere un tasso di cambio.",
+      "dateMismatch": "Tassi dalla data: {date}",
+      "customRate": "Utilizzo tasso personalizzato"
+    },
+    "conversionUnavailable": "Per impostare una valuta diversa per ogni spesa e convertire gli importi, seleziona una valuta non personalizzata per il gruppo.",
+    "originalAmountField": {
+      "label": "Importo da convertire"
+    },
+    "conversionRateField": {
+      "useApi": "Usa tassi da Frankfurter",
+      "useCustom": "Usa tasso personalizzato",
+      "label": "Tasso di cambio"
+    },
+    "participant": {
+      "pending": "(invitato)"
+    },
+    "readOnlyNotice": "Questo gruppo è archiviato. La spesa è visualizzata in sola lettura."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -339,7 +430,8 @@
     "paidForMin1": "La spesa deve essere pagata per almeno un partecipante.",
     "noZeroShares": "Tutti gli importi devono essere superiori a 0.",
     "amountSum": "La somma degli importi deve essere uguale all'importo della spesa.",
-    "percentageSum": "La somma delle percentuali deve essere uguale a 100."
+    "percentageSum": "La somma delle percentuali deve essere uguale a 100.",
+    "ratePositive": "Il tasso deve essere strettamente maggiore di zero."
   },
   "Categories": {
     "search": "Cerca categoria...",
@@ -408,6 +500,106 @@
       "Trash": "Rifiuti",
       "TV/Phone/Internet": "TV/Telefono/Internet",
       "Water": "Acqua"
+    }
+  },
+  "Currencies": {
+    "search": "Cerca valuta...",
+    "noCurrency": "Nessuna valuta trovata.",
+    "custom": {
+      "heading": "Personalizzata"
+    },
+    "common": {
+      "heading": "Più comuni"
+    },
+    "other": {
+      "heading": "Altre valute"
+    }
+  },
+  "Auth": {
+    "title": "Accedi a Spliit Cloud",
+    "signUpTitle": "Crea il tuo account Spliit Cloud",
+    "subtitle": "Usa il tuo account per accedere ai tuoi gruppi su tutti i dispositivi.",
+    "signUpSubtitle": "Crea un account per salvare e sincronizzare i tuoi gruppi su tutti i dispositivi.",
+    "email": "Email",
+    "password": "Password",
+    "signInWithPassword": "Accedi con password",
+    "signUpWithPassword": "Registrati con password",
+    "signInWithGoogle": "Continua con Google",
+    "sendMagicLink": "Invia link di accesso",
+    "magicLinkEmail": "Email",
+    "usePasswordInstead": "Usa email e password invece",
+    "hidePasswordForm": "Nascondi modulo password",
+    "passwordFormDescription": "Se preferisci usare una password, inserisci la tua email e password qui sotto.",
+    "passwordFormDescriptionSignUp": "Crea un account con la tua email e una password.",
+    "useDifferentEmail": "Usa un'email diversa",
+    "magicLinkSent": "Controlla la tua casella di posta per il link di accesso.",
+    "noAccount": "Non hai ancora un account?",
+    "haveAccount": "Hai già un account?",
+    "createAccount": "Crea un account",
+    "signIn": "Accedi",
+    "signOut": "Esci",
+    "confirmPassword": "Conferma password",
+    "passwordMismatch": "Le password non corrispondono.",
+    "passwordTooShort": "La password deve contenere almeno 8 caratteri.",
+    "errors": {
+      "invalidCredentials": "Email o password non corretti.",
+      "emailRequired": "Inserisci il tuo indirizzo email.",
+      "passwordRequired": "Inserisci la tua password.",
+      "nameRequired": "Inserisci un nome visualizzato.",
+      "generic": "Qualcosa è andato storto. Per favore riprova.",
+      "magicLinkFailed": "Impossibile inviare il link di accesso."
+    },
+    "loading": "Caricamento…",
+    "signedInAs": "Connesso come {name}",
+    "required": "Devi accedere per accedere ai tuoi gruppi.",
+    "back": "Torna alla home"
+  },
+  "CompleteProfile": {
+    "title": "Completa il tuo profilo",
+    "description": "Dicci il nome che vorresti che i tuoi gruppi vedessero. Puoi cambiarlo in seguito.",
+    "nameLabel": "Nome visualizzato",
+    "namePlaceholder": "Il tuo nome",
+    "submit": "Salva e continua",
+    "saving": "Salvataggio…",
+    "signedInAs": "Connesso come {email}",
+    "errors": {
+      "nameRequired": "Inserisci un nome visualizzato.",
+      "nameTooShort": "Il nome deve contenere almeno 2 caratteri.",
+      "generic": "Qualcosa è andato storto. Per favore riprova."
+    }
+  },
+  "Members": {
+    "title": "Membri",
+    "description": "Persone che possono vedere e contribuire a questo gruppo.",
+    "empty": "Nessun membro attivo ancora.",
+    "unknownMember": "Membro sconosciuto",
+    "youBadge": "Tu",
+    "role": {
+      "owner": "Proprietario",
+      "admin": "Admin",
+      "member": "Membro"
+    },
+    "joinedOn": "Iscritto il {date}",
+    "noManagePermission": "Solo i proprietari e gli amministratori possono invitare o revocare membri del gruppo.",
+    "archivedNotice": "Gli inviti sono disattivati mentre il gruppo è archiviato. Ripristina il gruppo per invitare nuovi membri.",
+    "invite": {
+      "title": "Invita membro",
+      "description": "Invia un invito via email. L'invitato si unisce una volta accettato da un account corrispondente.",
+      "email": "Email",
+      "emailPlaceholder": "amico@example.com",
+      "role": "Ruolo",
+      "send": "Invia invito",
+      "invalidEmail": "Inserisci un indirizzo email valido."
+    },
+    "invitations": {
+      "title": "Inviti in sospeso",
+      "description": "Inviti in attesa di accettazione.",
+      "empty": "Nessun invito in sospeso.",
+      "sentOn": "Inviato il {date}",
+      "revoke": "Revoca",
+      "revokeButton": "Revoca invito",
+      "revoked": "Invito revocato.",
+      "created": "Invito inviato a {email}."
     }
   }
 }

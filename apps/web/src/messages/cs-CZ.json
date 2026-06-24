@@ -4,15 +4,20 @@
     "description": "Vítejte ve své nové instanci <strong>Spliit Cloud</strong>!",
     "button": {
       "groups": "Přejít na skupiny",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Přihlásit se do Spliit Cloud",
+      "createAccount": "Vytvořit účet"
     }
   },
   "Header": {
-    "groups": "Skupiny"
+    "groups": "Skupiny",
+    "signIn": "Přihlásit se",
+    "signOut": "Odhlásit se",
+    "account": "Účet"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
+    "builtBy": "Zobrazit <source>zdroj a přispěvatele</source>"
   },
   "Expenses": {
     "title": "Výdaje",
@@ -44,22 +49,67 @@
   "ExpenseCard": {
     "paidBy": "Zaplatil/a <strong>{paidBy}</strong> za <paidFor></paidFor>",
     "receivedBy": "Obdržel/a <strong>{paidBy}</strong> od <paidFor></paidFor>",
-    "yourBalance": "Váš zůstatek:"
+    "yourBalance": "Váš zůstatek:",
+    "everyone": "všechny",
+    "notInvolved": "Nejste zapojeni",
+    "settlementBadge": "Vyrovnání"
   },
   "Groups": {
     "myGroups": "Moje skupiny",
     "create": "Vytvořit",
+    "createdInviteHint": "Skupina vytvořena. Pozvěte členy, abyste mohli začít.",
     "loadingRecent": "Načítání nedávných skupin…",
     "NoRecent": {
-      "description": "Nedávno jste nenavštívili žádnou skupinu.",
+      "description": "Zatím nemáte žádnou skupinu.",
       "create": "Vytvořit skupinu",
-      "orAsk": "nebo požádejte přítele, aby vám poslal odkaz na existující."
+      "orAsk": "nebo požádejte přítele, aby vás pozval do své skupiny."
+    },
+    "NoRecentAllHidden": {
+      "description": "Skryli jste všechny své skupiny.",
+      "showHidden": "Zobrazit skryté skupiny"
     },
     "recent": "Nedávné skupiny",
     "starred": "Oblíbené skupiny",
     "archived": "Archivované skupiny",
-    "archive": "Archivovat skupinu",
-    "unarchive": "Zrušit archivaci skupiny",
+    "hidden": "Skryté skupiny",
+    "showHidden": "Zobrazit skryté skupiny",
+    "hide": "Skrýt skupinu",
+    "unhide": "Zobrazit skupinu",
+    "starGroup": "Označit hvězdičkou",
+    "unstarGroup": "Odznačit hvězdičku",
+    "groupActions": "Akce skupiny",
+    "archiveGroup": "Archivovat skupinu",
+    "unarchiveGroup": "Obnovit skupinu",
+    "archiveSuccess": "Skupina archivována.",
+    "unarchiveSuccess": "Skupina obnovena.",
+    "archiveWithBalancesTitle": "Nevyrovnané zůstatky",
+    "archiveWithBalancesDescription": "Tato skupina má nevyrovnané zůstatky. Archivace vytvoří vyrovnávací výdaje k jejich vynulování. Pokračovat?",
+    "archiveWithBalancesForce": "Vynutit archivaci",
+    "archiveWithBalancesCancel": "Zrušit",
+    "archiveWithBalancesSuccess": "Vyrovnávací výdaje vytvořeny a skupina archivována.",
+    "archiveWithBalancesView": "Zobrazit zůstatky",
+    "archiveSectionTitle": "Archivovat skupinu",
+    "archiveSectionDescription": "Archivace zmrazí skupinu. Nelze přidávat ani upravovat nové výdaje, ale stávající data zůstávají viditelná. Skupinu můžete kdykoli obnovit.",
+    "archivedBadge": "Archivováno",
+    "bannerArchivedTitle": "Tato skupina je archivována",
+    "bannerArchivedDescription": "Dokud je skupina archivována, nelze přidávat nové výdaje ani pozvánky. Stávající data zůstávají viditelná.",
+    "bannerArchived": "Tato skupina je archivována. Nelze přidávat nové výdaje.",
+    "bannerUnarchive": "Obnovit",
+    "bannerUnarchiveSuccess": "Skupina obnovena.",
+    "invitationBannerTitle": "Byli jste pozváni do této skupiny",
+    "invitationBannerDescription": "Přijměte a připojte se jako člen, nebo odmítnutím pozvání zrušte.",
+    "invitationAccept": "Přijmout",
+    "invitationDecline": "Odmítnout",
+    "invitationAccepted": "Pozvání přijato.",
+    "invitationDeclined": "Pozvání odmítnuto.",
+    "pendingInviteeReadOnlyTitle": "Byli jste pozváni",
+    "pendingInviteeReadOnlyDescription": "Přijměte pozvání výše a začněte přidávat výdaje a měnit nastavení skupiny. Do té doby je tato skupina jen pro čtení.",
+    "pendingInviteeSettingsTitle": "Nastavení skupiny je uzamčeno",
+    "pendingInviteeSettingsDescription": "Než budete moci změnit nastavení skupiny nebo pozvat členy, musíte přijmout pozvání.",
+    "pendingInviteeExpenseTitle": "Výdaje jsou jen pro čtení",
+    "pendingInviteeExpenseDescription": "Přijměte pozvání výše a začněte přidávat nebo upravovat výdaje. Do té doby jsou stávající data viditelná, ale nelze je měnit.",
+    "archivedReadOnly": "Tato skupina je archivována. Výdaje již nelze přidávat ani upravovat.",
+    "backToExpenses": "Zpět na výdaje",
     "removeRecent": "Odebrat z nedávných skupin",
     "RecentRemovedToast": {
       "title": "Skupina byla odebrána",
@@ -67,19 +117,34 @@
       "undoAlt": "Vrátit zpět odebrání skupiny",
       "undo": "Vrátit zpět"
     },
-    "AddByURL": {
-      "button": "Přidat pomocí URL",
-      "title": "Přidat skupinu pomocí URL",
-      "description": "Pokud s vámi byla skupina sdílena, můžete sem vložit její URL a přidat ji do svého seznamu.",
-      "error": "Bohužel se nám nepodařilo najít skupinu podle zadané URL…"
-    },
     "NotFound": {
       "text": "Tato skupina neexistuje.",
       "link": "Přejít na nedávno navštívené skupiny"
+    },
+    "Unauthorized": {
+      "title": "Nemáte přístup k této skupině",
+      "description": "Pokud se domníváte, že jde o omyl, požádejte vlastníka nebo správce skupiny, aby vás pozval.",
+      "link": "Zpět na mé skupiny"
+    },
+    "invitations": {
+      "title": "Čekající pozvánky",
+      "description": "Byli jste pozváni k připojení k následujícím skupinám.",
+      "accept": "Přijmout",
+      "decline": "Odmítnout",
+      "accepted": "Pozvání přijato.",
+      "declined": "Pozvání odmítnuto.",
+      "invitedBy": "Pozval {name}",
+      "unknownInviter": "někdo",
+      "unknownGroup": "Neznámá skupina",
+      "sentOn": "Odesláno {date}"
     }
   },
   "GroupForm": {
     "title": "Informace o skupině",
+    "readOnlyNote": "Pouze vlastníci a správci mohou měnit nastavení skupiny.",
+    "readOnlyTitle": "Nastavení skupiny",
+    "readOnlyBack": "Zpět na skupinu",
+    "archivedNotice": "Tato skupina je archivována. Její nastavení je zmrazeno a již jej nelze měnit.",
     "NameField": {
       "label": "Název skupiny",
       "placeholder": "Letní dovolená",
@@ -93,6 +158,12 @@
       "label": "Symbol měny",
       "placeholder": "CZK, Kč, $, €, £…",
       "description": "Použijeme ho pro zobrazení částek."
+    },
+    "CurrencyCodeField": {
+      "label": "Hlavní měna",
+      "createDescription": "Všechny částky a zůstatky budou v této měně.",
+      "editDescription": "Všechny částky a zůstatky budou v této měně. Změna NEPŘEPOČÍTÁ již zadané výdaje, s výjimkou případů, kdy má měna jiné \"vedlejší jednotky\" než stávající (např. změna z amerického dolaru na japonský jen).",
+      "customOption": "Vlastní"
     },
     "Participants": {
       "title": "Účastníci",
@@ -133,6 +204,10 @@
         "label": "Datum příjmu",
         "description": "Zadejte datum, kdy byl příjem přijat."
       },
+      "currencyField": {
+        "label": "Měna příjmu",
+        "description": "Měna, ve které byl příjem přijat."
+      },
       "categoryFieldDescription": "Vyberte kategorii příjmu.",
       "paidByField": {
         "label": "Obdržel/a",
@@ -157,9 +232,14 @@
         "label": "Datum výdaje",
         "description": "Zadejte datum, kdy byl výdaj zaplacen."
       },
+      "currencyField": {
+        "label": "Měna výdaje",
+        "description": "Měna, ve které byl výdaj zaplacen."
+      },
       "categoryFieldDescription": "Vyberte kategorii výdaje.",
       "paidByField": {
         "label": "Zaplatil/a",
+        "placeholder": "Vyberte účastníka",
         "description": "Vyberte účastníka, který výdaj zaplatil."
       },
       "recurrenceRule": {
@@ -180,6 +260,27 @@
     "amountField": {
       "label": "Částka"
     },
+    "conversionUnavailable": "Chcete-li nastavit jinou měnu pro jednotlivé výdaje a přepočítávat částky, vyberte pro skupinu standardní měnu.",
+    "originalAmountField": {
+      "label": "Částka k přepočtu"
+    },
+    "conversionRateField": {
+      "useApi": "Použít kurzy z Frankfurter",
+      "useCustom": "Použít vlastní kurz",
+      "label": "Směnný kurz"
+    },
+    "conversionRateState": {
+      "loading": "Získávání směnných kurzů…",
+      "success": "Získané kurzy:",
+      "error": "Bohužel se nám nepodařilo získat nejnovější kurzy.",
+      "staleRate": "Použitý kurz:",
+      "noRate": "Zadejte vlastní kurz níže.",
+      "currencyNotFound": "Bohužel Frankfurter nemá kurz pro tuto měnu k tomuto dni.",
+      "noDate": "Zadejte datum výdaje pro získání směnného kurzu.",
+      "dateMismatch": "Kurzy z data: {date}",
+      "refresh": "Obnovit",
+      "customRate": "Použít vlastní kurz"
+    },
     "isReimbursementField": {
       "label": "Toto je proplacení"
     },
@@ -193,6 +294,9 @@
     "selectAll": "Vybrat vše",
     "shares": "podíl(y)",
     "advancedOptions": "Pokročilé možnosti rozdělení…",
+    "participant": {
+      "pending": "(pozván/a)"
+    },
     "SplitModeField": {
       "label": "Způsob rozdělení",
       "evenly": "Rovnoměrně",
@@ -214,7 +318,8 @@
     "save": "Uložit",
     "saving": "Ukládání…",
     "cancel": "Zrušit",
-    "reimbursement": "Proplacení"
+    "reimbursement": "Proplacení",
+    "readOnlyNotice": "Tato skupina je archivována. Výdaj je zobrazen pouze pro čtení."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -321,6 +426,7 @@
     "amountRequired": "Musíte zadat částku.",
     "amountNotZero": "Částka nesmí být nula.",
     "amountTenMillion": "Částka musí být nižší než 10 000 000.",
+    "ratePositive": "Kurz musí být přísně větší než nula.",
     "paidByRequired": "Musíte vybrat účastníka.",
     "paidForMin1": "Výdaj musí být zaplacen alespoň za jednoho účastníka.",
     "noZeroShares": "Všechny podíly musí být větší než 0.",
@@ -394,6 +500,106 @@
       "Trash": "Odpad",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Voda"
+    }
+  },
+  "Auth": {
+    "title": "Přihlásit se do Spliit Cloud",
+    "signUpTitle": "Vytvořit si účet Spliit Cloud",
+    "subtitle": "Použijte svůj účet pro přístup ke skupinám napříč zařízeními.",
+    "signUpSubtitle": "Vytvořte si účet pro ukládání a synchronizaci skupin napříč zařízeními.",
+    "email": "E-mail",
+    "password": "Heslo",
+    "signInWithPassword": "Přihlásit se pomocí hesla",
+    "signUpWithPassword": "Zaregistrovat se pomocí hesla",
+    "signInWithGoogle": "Pokračovat přes Google",
+    "sendMagicLink": "Odeslat přihlašovací odkaz",
+    "magicLinkEmail": "E-mail",
+    "usePasswordInstead": "Použít e-mail a heslo",
+    "hidePasswordForm": "Skrýt formulář hesla",
+    "passwordFormDescription": "Pokud chcete raději použít heslo, zadejte svůj e-mail a heslo níže.",
+    "passwordFormDescriptionSignUp": "Vytvořte si účet pomocí e-mailu a hesla.",
+    "useDifferentEmail": "Použít jiný e-mail",
+    "magicLinkSent": "Zkontrolujte svou schránku pro přihlašovací odkaz.",
+    "noAccount": "Ještě nemáte účet?",
+    "haveAccount": "Už máte účet?",
+    "createAccount": "Vytvořit účet",
+    "signIn": "Přihlásit se",
+    "signOut": "Odhlásit se",
+    "confirmPassword": "Potvrdit heslo",
+    "passwordMismatch": "Hesla se neshodují.",
+    "passwordTooShort": "Heslo musí mít alespoň 8 znaků.",
+    "errors": {
+      "invalidCredentials": "E-mail nebo heslo je nesprávné.",
+      "emailRequired": "Zadejte svou e-mailovou adresu.",
+      "passwordRequired": "Zadejte své heslo.",
+      "nameRequired": "Zadejte zobrazované jméno.",
+      "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
+      "magicLinkFailed": "Odeslání přihlašovacího odkazu se nezdařilo."
+    },
+    "loading": "Načítání…",
+    "signedInAs": "Přihlášen jako {name}",
+    "required": "Pro přístup ke svým skupinám se musíte přihlásit.",
+    "back": "Zpět na domovskou stránku"
+  },
+  "CompleteProfile": {
+    "title": "Dokončete svůj profil",
+    "description": "Řekněte nám jméno, které mají vaše skupiny vidět. Můžete ho později změnit.",
+    "nameLabel": "Zobrazované jméno",
+    "namePlaceholder": "Vaše jméno",
+    "submit": "Uložit a pokračovat",
+    "saving": "Ukládání…",
+    "signedInAs": "Přihlášen jako {email}",
+    "errors": {
+      "nameRequired": "Zadejte zobrazované jméno.",
+      "nameTooShort": "Jméno musí mít alespoň 2 znaky.",
+      "generic": "Něco se pokazilo. Zkuste to prosím znovu."
+    }
+  },
+  "Currencies": {
+    "search": "Hledat měnu...",
+    "noCurrency": "Nebyly nalezeny žádné měny.",
+    "custom": {
+      "heading": "Vlastní"
+    },
+    "common": {
+      "heading": "Nejčastější"
+    },
+    "other": {
+      "heading": "Ostatní měny"
+    }
+  },
+  "Members": {
+    "title": "Členové",
+    "description": "Lidé, kteří mohou vidět a přispívat do této skupiny.",
+    "empty": "Zatím žádní aktivní členové.",
+    "unknownMember": "Neznámý člen",
+    "youBadge": "Vy",
+    "role": {
+      "owner": "Vlastník",
+      "admin": "Správce",
+      "member": "Člen"
+    },
+    "joinedOn": "Připojil se {date}",
+    "noManagePermission": "Pouze vlastníci a správci mohou zvát nebo odebírat členy skupiny.",
+    "archivedNotice": "Pozvánky jsou během archivace skupiny zakázány. Obnovte skupinu, abyste mohli pozvat nové členy.",
+    "invite": {
+      "title": "Pozvat člena",
+      "description": "Odešlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
+      "email": "E-mail",
+      "emailPlaceholder": "kamarad@priklad.cz",
+      "role": "Role",
+      "send": "Odeslat pozvánku",
+      "invalidEmail": "Zadejte platnou e-mailovou adresu."
+    },
+    "invitations": {
+      "title": "Čekající pozvánky",
+      "description": "Pozvánky čekající na přijetí.",
+      "empty": "Žádné čekající pozvánky.",
+      "sentOn": "Odesláno {date}",
+      "revoke": "Odvolat",
+      "revokeButton": "Odvolat pozvánku",
+      "revoked": "Pozvánka odvolána.",
+      "created": "Pozvánka odeslána na {email}."
     }
   }
 }

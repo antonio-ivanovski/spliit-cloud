@@ -4,15 +4,20 @@
     "description": "欢迎使用你的全新<strong>Spliit Cloud</strong>实例！",
     "button": {
       "groups": "前往群组",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "登录到 Spliit Cloud",
+      "createAccount": "创建账户"
     }
   },
   "Header": {
-    "groups": "群组"
+    "groups": "群组",
+    "signIn": "登录",
+    "signOut": "退出",
+    "account": "账户"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "由开源社区用爱打造 ❤️",
+    "builtBy": "查看<source>源代码和贡献者</source>"
   },
   "Expenses": {
     "title": "消费",
@@ -46,22 +51,21 @@
     "receivedBy": "<strong>{paidBy}</strong> 为 <paidFor></paidFor> 接收。",
     "yourBalance": "你的余额：",
     "everyone": "所有人",
-    "notInvolved": "您无需支付"
+    "notInvolved": "您无需支付",
+    "settlementBadge": "结算"
   },
   "Groups": {
     "myGroups": "我的群组",
     "create": "创建",
     "loadingRecent": "加载最近的群组……",
     "NoRecent": {
-      "description": "你最近没有访问任何群组。",
+      "description": "你还没有任何群组。",
       "create": "创建一个群组",
-      "orAsk": "或者让你的朋友发给你现有群组的链接。"
+      "orAsk": "或者让你的朋友邀请你加入他们的群组。"
     },
     "recent": "最近的群组",
     "starred": "已收藏的群组",
     "archived": "已归档的群组",
-    "archive": "归档群组",
-    "unarchive": "取消归档群组",
     "removeRecent": "从最近的群组中删除",
     "RecentRemovedToast": {
       "title": "群组已删除",
@@ -69,15 +73,70 @@
       "undoAlt": "撤销群组删除",
       "undo": "撤销"
     },
-    "AddByURL": {
-      "button": "使用URL添加",
-      "title": "使用URL添加一个群组",
-      "description": "如果你被分享了一个群组，你可以将群组的URL粘贴到这里以添加这个群组。",
-      "error": "哎呀，我们没办法根据你的URL找到相应的群组……"
-    },
     "NotFound": {
       "text": "该群组不存在。",
       "link": "跳转到最近访问过的群组"
+    },
+    "createdInviteHint": "群组已创建。邀请成员开始使用。",
+    "NoRecentAllHidden": {
+      "description": "您已隐藏所有群组。",
+      "showHidden": "显示已隐藏的群组"
+    },
+    "hidden": "隐藏的群组",
+    "showHidden": "显示已隐藏的群组",
+    "hide": "隐藏群组",
+    "unhide": "取消隐藏群组",
+    "starGroup": "收藏群组",
+    "unstarGroup": "取消收藏群组",
+    "groupActions": "群组操作",
+    "archiveGroup": "归档群组",
+    "unarchiveGroup": "取消归档群组",
+    "archiveSuccess": "群组已归档。",
+    "unarchiveSuccess": "群组已取消归档。",
+    "archiveWithBalancesTitle": "未结算余额",
+    "archiveWithBalancesDescription": "此群组有未结算的余额。归档将创建结算支出以清零。是否继续？",
+    "archiveWithBalancesForce": "强制归档",
+    "archiveWithBalancesCancel": "取消",
+    "archiveWithBalancesSuccess": "结算支出已创建，群组已归档。",
+    "archiveWithBalancesView": "查看余额",
+    "archiveSectionTitle": "归档群组",
+    "archiveSectionDescription": "归档将冻结群组。无法添加或修改新支出，但现有数据仍然可见。您可以随时取消归档群组。",
+    "archivedBadge": "已归档",
+    "bannerArchivedTitle": "此群组已归档",
+    "bannerArchivedDescription": "群组归档期间，无法添加新支出或邀请。现有数据仍然可见。",
+    "bannerArchived": "此群组已归档。无法添加新支出。",
+    "bannerUnarchive": "取消归档",
+    "bannerUnarchiveSuccess": "群组已取消归档。",
+    "invitationBannerTitle": "您已被邀请加入此群组",
+    "invitationBannerDescription": "接受以成员身份加入，或拒绝以忽略邀请。",
+    "invitationAccept": "接受",
+    "invitationDecline": "拒绝",
+    "invitationAccepted": "邀请已接受。",
+    "invitationDeclined": "邀请已拒绝。",
+    "pendingInviteeReadOnlyTitle": "您已被邀请",
+    "pendingInviteeReadOnlyDescription": "接受以上邀请以开始添加支出和更改群组设置。在此之前，此群组为只读状态。",
+    "pendingInviteeSettingsTitle": "群组设置已锁定",
+    "pendingInviteeSettingsDescription": "您需要先接受邀请，才能更改群组设置或邀请成员。",
+    "pendingInviteeExpenseTitle": "支出为只读",
+    "pendingInviteeExpenseDescription": "接受以上邀请以开始添加或编辑支出。在此之前，群组的现有数据可见但无法修改。",
+    "archivedReadOnly": "此群组已归档。无法再添加或修改支出。",
+    "backToExpenses": "返回支出",
+    "Unauthorized": {
+      "title": "您无权访问此群组",
+      "description": "如果您认为这是一个错误，请让群组所有者或管理员邀请您。",
+      "link": "返回我的群组"
+    },
+    "invitations": {
+      "title": "待处理的邀请",
+      "description": "您已被邀请加入以下群组。",
+      "accept": "接受",
+      "decline": "拒绝",
+      "accepted": "邀请已接受。",
+      "declined": "邀请已拒绝。",
+      "invitedBy": "由 {name} 邀请",
+      "unknownInviter": "某人",
+      "unknownGroup": "未知群组",
+      "sentOn": "发送于 {date}"
     }
   },
   "GroupForm": {
@@ -124,8 +183,13 @@
     "CurrencyCodeField": {
       "label": "首选货币",
       "createDescription": "所有的交易将使用此币种。",
-      "customOption": "自定义"
-    }
+      "customOption": "自定义",
+      "editDescription": "所有金额和余额都将以此货币显示。更改此项不会转换已输入的支出，除非该货币与当前货币具有不同的\"辅币单位\"（例如从美元更改为日元）"
+    },
+    "readOnlyNote": "只有所有者和管理员可以更改群组设置。",
+    "readOnlyTitle": "群组设置",
+    "readOnlyBack": "返回群组",
+    "archivedNotice": "此群组已归档。设置已冻结，无法再更改。"
   },
   "ExpenseForm": {
     "Income": {
@@ -152,7 +216,8 @@
       "splitModeDescription": "选择如何划分这笔收入。",
       "attachDescription": "查看并为这笔收入附加收据。",
       "currencyField": {
-        "label": "收入币种"
+        "label": "收入币种",
+        "description": "接收该收入所用的货币。"
       }
     },
     "Expense": {
@@ -180,7 +245,8 @@
       "splitModeDescription": "选择如何划分这笔消费。",
       "attachDescription": "查看并为这笔消费附加收据。",
       "currencyField": {
-        "label": "支出币种"
+        "label": "支出币种",
+        "description": "支付该支出所用的货币。"
       },
       "recurrenceRule": {
         "label": "订阅式支出",
@@ -243,8 +309,17 @@
       "currencyNotFound": "抱歉，Frankfurter无法为此货币提供此日期的汇率。",
       "noDate": "请输入交易发生日期来获取当天的汇率。",
       "refresh": "刷新",
-      "customRate": "使用自定义汇率"
-    }
+      "customRate": "使用自定义汇率",
+      "loading": "正在获取汇率……",
+      "success": "获取的汇率：",
+      "staleRate": "使用的汇率：",
+      "dateMismatch": "汇率日期：{date}"
+    },
+    "conversionUnavailable": "要为每笔支出设置不同的货币并转换金额，请为群组选择非自定义货币。",
+    "participant": {
+      "pending": "（已邀请）"
+    },
+    "readOnlyNotice": "此群组已归档。支出以只读方式显示。"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -438,6 +513,93 @@
     },
     "other": {
       "heading": "其他币种"
+    }
+  },
+  "Auth": {
+    "title": "登录到 Spliit Cloud",
+    "signUpTitle": "创建您的 Spliit Cloud 账户",
+    "subtitle": "使用您的账户跨设备访问群组。",
+    "signUpSubtitle": "创建账户以跨设备保存和同步您的群组。",
+    "email": "邮箱",
+    "password": "密码",
+    "signInWithPassword": "使用密码登录",
+    "signUpWithPassword": "使用密码注册",
+    "signInWithGoogle": "使用 Google 继续",
+    "sendMagicLink": "发送登录链接",
+    "magicLinkEmail": "邮箱",
+    "usePasswordInstead": "改用邮箱和密码",
+    "hidePasswordForm": "隐藏密码表单",
+    "passwordFormDescription": "如果您想使用密码，请在下方输入邮箱和密码。",
+    "passwordFormDescriptionSignUp": "使用您的邮箱和密码创建账户。",
+    "useDifferentEmail": "使用不同的邮箱",
+    "magicLinkSent": "请查看收件箱中的登录链接。",
+    "noAccount": "还没有账户？",
+    "haveAccount": "已有账户？",
+    "createAccount": "创建账户",
+    "signIn": "登录",
+    "signOut": "退出",
+    "confirmPassword": "确认密码",
+    "passwordMismatch": "密码不匹配。",
+    "passwordTooShort": "密码必须至少8个字符。",
+    "errors": {
+      "invalidCredentials": "邮箱或密码不正确。",
+      "emailRequired": "请输入您的邮箱地址。",
+      "passwordRequired": "请输入您的密码。",
+      "nameRequired": "请输入显示名称。",
+      "generic": "出了点问题。请重试。",
+      "magicLinkFailed": "无法发送登录链接。"
+    },
+    "loading": "加载中……",
+    "signedInAs": "以 {name} 身份登录",
+    "required": "您需要登录才能访问您的群组。",
+    "back": "返回首页"
+  },
+  "CompleteProfile": {
+    "title": "完善您的个人资料",
+    "description": "告诉我们在群组中希望显示的名称。您可以稍后更改。",
+    "nameLabel": "显示名称",
+    "namePlaceholder": "您的姓名",
+    "submit": "保存并继续",
+    "saving": "保存中……",
+    "signedInAs": "以 {email} 身份登录",
+    "errors": {
+      "nameRequired": "请输入显示名称。",
+      "nameTooShort": "姓名必须至少2个字符。",
+      "generic": "出了点问题。请重试。"
+    }
+  },
+  "Members": {
+    "title": "成员",
+    "description": "可以查看和参与此群组的人员。",
+    "empty": "暂无活跃成员。",
+    "unknownMember": "未知成员",
+    "youBadge": "您",
+    "role": {
+      "owner": "所有者",
+      "admin": "管理员",
+      "member": "成员"
+    },
+    "joinedOn": "加入于 {date}",
+    "noManagePermission": "只有所有者和管理员可以邀请或撤销群组成员。",
+    "archivedNotice": "群组归档期间邀请功能已禁用。取消归档群组以邀请新成员。",
+    "invite": {
+      "title": "邀请成员",
+      "description": "通过电子邮件发送邀请。受邀者从匹配账户接受后即可加入。",
+      "email": "邮箱",
+      "emailPlaceholder": "friend@example.com",
+      "role": "角色",
+      "send": "发送邀请",
+      "invalidEmail": "请输入有效的邮箱地址。"
+    },
+    "invitations": {
+      "title": "待处理的邀请",
+      "description": "等待接受的邀请。",
+      "empty": "暂无待处理的邀请。",
+      "sentOn": "发送于 {date}",
+      "revoke": "撤销",
+      "revokeButton": "撤销邀请",
+      "revoked": "邀请已撤销。",
+      "created": "邀请已发送至 {email}。"
     }
   }
 }

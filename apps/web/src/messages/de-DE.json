@@ -4,15 +4,20 @@
     "description": "Willkommen zu deiner neuen <strong>Spliit Cloud</strong>-Instanz!",
     "button": {
       "groups": "Zu den Gruppen",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Bei Spliit Cloud anmelden",
+      "createAccount": "Konto erstellen"
     }
   },
   "Header": {
-    "groups": "Gruppen"
+    "groups": "Gruppen",
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "account": "Konto"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
+    "builtBy": "Siehe <source>Quellcode und Mitwirkende</source>"
   },
   "Expenses": {
     "title": "Ausgaben",
@@ -46,22 +51,65 @@
     "receivedBy": "Empfangen von <strong>{paidBy}</strong> für <paidFor></paidFor>",
     "yourBalance": "Deine Bilanz:",
     "everyone": "jeder",
-    "notInvolved": "Du bist nicht involviert"
+    "notInvolved": "Du bist nicht involviert",
+    "settlementBadge": "Ausgleich"
   },
   "Groups": {
     "myGroups": "Meine Gruppen",
     "create": "Erstellen",
+    "createdInviteHint": "Gruppe erstellt. Lade Mitglieder ein, um loszulegen.",
     "loadingRecent": "Lade letzte Gruppen…",
     "NoRecent": {
-      "description": "Du hast in der letzten Zeit keine Gruppe besucht.",
+      "description": "Du hast noch keine Gruppe.",
       "create": "Erstelle eine",
-      "orAsk": "oder bitte einen Freund, dir einen Link zu einer Existierenden zu schicken."
+      "orAsk": "oder bitte einen Freund, dich zu seiner Gruppe einzuladen."
+    },
+    "NoRecentAllHidden": {
+      "description": "Du hast alle Gruppen ausgeblendet.",
+      "showHidden": "Ausgeblendete Gruppen anzeigen"
     },
     "recent": "Letzte Gruppen",
     "starred": "Favorisierte Gruppen",
     "archived": "Archivierte Gruppen",
-    "archive": "Gruppe archivieren",
-    "unarchive": "Gruppe wiederherstellen",
+    "hidden": "Ausgeblendete Gruppen",
+    "showHidden": "Ausgeblendete Gruppen anzeigen",
+    "hide": "Gruppe ausblenden",
+    "unhide": "Gruppe einblenden",
+    "starGroup": "Gruppe mit Stern markieren",
+    "unstarGroup": "Sternmarkierung entfernen",
+    "groupActions": "Gruppenaktionen",
+    "archiveGroup": "Gruppe archivieren",
+    "unarchiveGroup": "Gruppe wiederherstellen",
+    "archiveSuccess": "Gruppe archiviert.",
+    "unarchiveSuccess": "Gruppe wiederhergestellt.",
+    "archiveWithBalancesTitle": "Nicht ausgeglichene Salden",
+    "archiveWithBalancesDescription": "Diese Gruppe hat nicht ausgeglichene Salden. Beim Archivieren werden Ausgleichsposten erstellt, um diese auf Null zu setzen. Fortfahren?",
+    "archiveWithBalancesForce": "Trotzdem archivieren",
+    "archiveWithBalancesCancel": "Abbrechen",
+    "archiveWithBalancesSuccess": "Ausgleichsposten erstellt und Gruppe archiviert.",
+    "archiveWithBalancesView": "Salden anzeigen",
+    "archiveSectionTitle": "Gruppe archivieren",
+    "archiveSectionDescription": "Archivieren friert die Gruppe ein. Es können keine neuen Ausgaben hinzugefügt oder geändert werden, aber die vorhandenen Daten bleiben sichtbar. Du kannst die Gruppe jederzeit wiederherstellen.",
+    "archivedBadge": "Archiviert",
+    "bannerArchivedTitle": "Diese Gruppe ist archiviert",
+    "bannerArchivedDescription": "Solange die Gruppe archiviert ist, können keine neuen Ausgaben oder Einladungen hinzugefügt werden. Vorhandene Daten bleiben sichtbar.",
+    "bannerArchived": "Diese Gruppe ist archiviert. Es können keine neuen Ausgaben hinzugefügt werden.",
+    "bannerUnarchive": "Wiederherstellen",
+    "bannerUnarchiveSuccess": "Gruppe wiederhergestellt.",
+    "invitationBannerTitle": "Du wurdest zu dieser Gruppe eingeladen",
+    "invitationBannerDescription": "Akzeptieren, um als Mitglied beizutreten, oder ablehnen, um die Einladung zu verwerfen.",
+    "invitationAccept": "Akzeptieren",
+    "invitationDecline": "Ablehnen",
+    "invitationAccepted": "Einladung akzeptiert.",
+    "invitationDeclined": "Einladung abgelehnt.",
+    "pendingInviteeReadOnlyTitle": "Du wurdest eingeladen",
+    "pendingInviteeReadOnlyDescription": "Akzeptiere die obige Einladung, um Ausgaben hinzuzufügen und Gruppeneinstellungen zu ändern. Bis dahin ist diese Gruppe schreibgeschützt.",
+    "pendingInviteeSettingsTitle": "Gruppeneinstellungen sind gesperrt",
+    "pendingInviteeSettingsDescription": "Du musst die Einladung akzeptieren, bevor du Gruppeneinstellungen ändern oder Mitglieder einladen kannst.",
+    "pendingInviteeExpenseTitle": "Ausgaben sind schreibgeschützt",
+    "pendingInviteeExpenseDescription": "Akzeptiere die obige Einladung, um Ausgaben hinzuzufügen oder zu bearbeiten. Bis dahin sind die vorhandenen Daten sichtbar, können aber nicht geändert werden.",
+    "archivedReadOnly": "Diese Gruppe ist archiviert. Es können keine Ausgaben mehr hinzugefügt oder geändert werden.",
+    "backToExpenses": "Zurück zu den Ausgaben",
     "removeRecent": "Aus letzten Gruppen entfernen",
     "RecentRemovedToast": {
       "title": "Gruppe wurde entfernt",
@@ -69,19 +117,34 @@
       "undoAlt": "Gruppe entfernen rückgängig machen",
       "undo": "Rückgängig machen"
     },
-    "AddByURL": {
-      "button": "Mit URL hinzufügen",
-      "title": "Gruppe mit URL hinzufügen",
-      "description": "Wenn eine Gruppe mit dir geteilt wurde, kannst du ihre URL hier einfügen, um sie zu deiner Liste hinzuzufügen.",
-      "error": "Ups, wir können die Gruppe mit der angegebenen URL nicht finden…"
-    },
     "NotFound": {
       "text": "Diese Gruppe existiert nicht.",
       "link": "Gehe zu zuletzt besuchten Gruppen"
+    },
+    "Unauthorized": {
+      "title": "Du hast keinen Zugriff auf diese Gruppe",
+      "description": "Wenn du glaubst, dass dies ein Fehler ist, bitte einen Gruppenbesitzer oder Admin, dich einzuladen.",
+      "link": "Zurück zu meinen Gruppen"
+    },
+    "invitations": {
+      "title": "Ausstehende Einladungen",
+      "description": "Du wurdest eingeladen, den folgenden Gruppen beizutreten.",
+      "accept": "Akzeptieren",
+      "decline": "Ablehnen",
+      "accepted": "Einladung akzeptiert.",
+      "declined": "Einladung abgelehnt.",
+      "invitedBy": "Eingeladen von {name}",
+      "unknownInviter": "jemand",
+      "unknownGroup": "Unbekannte Gruppe",
+      "sentOn": "Gesendet {date}"
     }
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
+    "readOnlyNote": "Nur Besitzer und Administratoren können die Gruppeneinstellungen ändern.",
+    "readOnlyTitle": "Gruppeneinstellungen",
+    "readOnlyBack": "Zurück zur Gruppe",
+    "archivedNotice": "Diese Gruppe ist archiviert. Ihre Einstellungen sind eingefroren und können nicht mehr geändert werden.",
     "NameField": {
       "label": "Gruppenname",
       "placeholder": "Sommerurlaub",
@@ -95,6 +158,12 @@
       "label": "Währungssymbol",
       "placeholder": "€, $, £…",
       "description": "Wir benutzen es, um Beträge anzuzeigen."
+    },
+    "CurrencyCodeField": {
+      "label": "Hauptwährung",
+      "createDescription": "Alle Beträge und Salden werden in dieser Währung angegeben.",
+      "editDescription": "Alle Beträge und Salden werden in dieser Währung angegeben. Bei Änderung dieser, werden bereits eingegebene Ausgaben NICHT umgerechnet, es sei denn, die Währung hat andere \"kleinere Einheiten\" als die aktuelle (z. B. Wechsel von US-Dollar zu Japanischem Yen)",
+      "customOption": "benutzerdefiniert"
     },
     "Participants": {
       "title": "Mitglieder",
@@ -120,12 +189,6 @@
       "create": "Erstellen",
       "creating": "Erstellt…",
       "cancel": "Abbrechen"
-    },
-    "CurrencyCodeField": {
-      "label": "Hauptwährung",
-      "createDescription": "Alle Beträge und Salden werden in dieser Währung angegeben.",
-      "customOption": "benutzerdefiniert",
-      "editDescription": "Alle Beträge und Salden werden in dieser Währung angegeben. Bei Änderung dieser, werden bereits eingegebene Ausgaben NICHT umgerechnet, es sei denn, die Währung hat andere \"kleinere Einheiten\" als die aktuelle (z. B. Wechsel von US-Dollar zu Japanischem Yen)"
     }
   },
   "ExpenseForm": {
@@ -141,29 +204,21 @@
         "label": "Datum der Einnahme",
         "description": "Füge ein Datum hinzu für wann die Einnahme erhalten wurde."
       },
+      "currencyField": {
+        "label": "Währung der Einnahme",
+        "description": "Die Währung, in der die Einnahmen erhalten wurden."
+      },
       "categoryFieldDescription": "Wähle die Kategorie der Einnahme.",
       "paidByField": {
         "label": "Empfangen von",
         "description": "Wähle das Mitglied, das die Einnahme erhalten hat."
-      },
-      "recurrenceRule": {
-        "label": "Wiederholung der Einnahme",
-        "description": "Wähle aus, wie oft die Einnahme wiederholt werden soll.",
-        "none": "Keine Wiederholung",
-        "daily": "Täglich",
-        "weekly": "Wöchentlich",
-        "monthly": "Monatlich"
       },
       "paidFor": {
         "title": "Empfangen für",
         "description": "Wähle für wen die Einnahme empfangen wurde."
       },
       "splitModeDescription": "Wähle, wie die Einnahme aufgeteilt werden soll.",
-      "attachDescription": "Füge der Einnahme einen Beleg hinzu.",
-      "currencyField": {
-        "label": "Währung der Einnahme",
-        "description": "Die Währung, in der die Einnahmen erhalten wurden."
-      }
+      "attachDescription": "Füge der Einnahme einen Beleg hinzu."
     },
     "Expense": {
       "create": "Ausgabe erstellen",
@@ -176,6 +231,10 @@
       "DateField": {
         "label": "Datum der Ausgabe",
         "description": "Füge das Datum ein, zu dem die Ausgabe getätigt wurde."
+      },
+      "currencyField": {
+        "label": "Währung der Ausgabe",
+        "description": "Die Währung, in der die Ausgabe bezahlt wurde."
       },
       "categoryFieldDescription": "Wähle eine Kategorie für die Ausgabe.",
       "paidByField": {
@@ -196,14 +255,31 @@
         "description": "Wähle für wen die Ausgabe gezahlt wurde."
       },
       "splitModeDescription": "Wähle, wie die Ausgabe aufgeteilt werden soll.",
-      "attachDescription": "Füge der Ausgabe einen Beleg hinzu.",
-      "currencyField": {
-        "label": "Währung der Ausgabe",
-        "description": "Die Währung, in der die Ausgabe bezahlt wurde."
-      }
+      "attachDescription": "Füge der Ausgabe einen Beleg hinzu."
     },
     "amountField": {
       "label": "Betrag"
+    },
+    "conversionUnavailable": "Um für jede Ausgabe eine andere Währung festzulegen und Beträge umzurechnen, wählen Sie eine nicht benutzerdefinierte Währung für die Gruppe aus.",
+    "originalAmountField": {
+      "label": "Umzurechnender Betrag"
+    },
+    "conversionRateField": {
+      "useApi": "Benutze Zinssätze von Frankfurter",
+      "useCustom": "Benutze individuelle Rate",
+      "label": "Wechselkurs"
+    },
+    "conversionRateState": {
+      "loading": "Wechselkurse abrufen…",
+      "success": "Erhaltene Zinssätze:",
+      "error": "Oops, wir konnten die aktuellsten Zinssätze nicht abrufen.",
+      "staleRate": "Verwendeter Zinssatz:",
+      "noRate": "Geben Sie unten einen benutzerdefinierten Zinssatz ein.",
+      "currencyNotFound": "Oops, Frankfurter hat für diese Währung an diesem Tag keinen Zinssatz.",
+      "noDate": "Geben Sie das Ausgabedatum ein, um einen Umrechnungskurs zu erhalten.",
+      "dateMismatch": "Zinssätze von Datum: {date}",
+      "refresh": "Aktualisiere",
+      "customRate": "Benutzerdefinierte Rate verwenden"
     },
     "isReimbursementField": {
       "label": "Das ist eine Rückzahlung"
@@ -218,6 +294,9 @@
     "selectAll": "Alle auswählen",
     "shares": "Anteil(e)",
     "advancedOptions": "Fortgeschrittene Aufteilungsoptionen…",
+    "participant": {
+      "pending": "(eingeladen)"
+    },
     "SplitModeField": {
       "label": "Aufteilungsart",
       "evenly": "Gleich verteilt",
@@ -240,27 +319,7 @@
     "saving": "Speichert…",
     "cancel": "Abbrechen",
     "reimbursement": "Rückzahlung",
-    "conversionUnavailable": "Um für jede Ausgabe eine andere Währung festzulegen und Beträge umzurechnen, wählen Sie eine nicht benutzerdefinierte Währung für die Gruppe aus.",
-    "originalAmountField": {
-      "label": "Umzurechnender Betrag"
-    },
-    "conversionRateState": {
-      "customRate": "Benutzerdefinierte Rate verwenden",
-      "loading": "Wechselkurse abrufen…",
-      "success": "Erhaltene Zinssätze:",
-      "error": "Oops, wir konnten die aktuellsten Zinssätze nicht abrufen.",
-      "staleRate": "Verwendeter Zinssatz:",
-      "noRate": "Geben Sie unten einen benutzerdefinierten Zinssatz ein.",
-      "noDate": "Geben Sie das Ausgabedatum ein, um einen Umrechnungskurs zu erhalten.",
-      "dateMismatch": "Zinssätze von Datum: {date}",
-      "refresh": "Aktualisiere",
-      "currencyNotFound": "Oops, Frankfurter hat für diese Währung an diesem Tag keinen Zinssatz."
-    },
-    "conversionRateField": {
-      "useCustom": "Benutze individuelle Rate",
-      "label": "Wechselkurs",
-      "useApi": "Benutze Zinssätze von Frankfurter"
-    }
+    "readOnlyNotice": "Diese Gruppe ist archiviert. Die Ausgabe wird schreibgeschützt angezeigt."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -446,14 +505,101 @@
   "Currencies": {
     "search": "Währung suchen...",
     "noCurrency": "Keine Währungen gefunden.",
-    "other": {
-      "heading": "Andere Währungen"
-    },
     "custom": {
       "heading": "Benutzerdefinierte"
     },
     "common": {
       "heading": "Geläufigste"
+    },
+    "other": {
+      "heading": "Andere Währungen"
+    }
+  },
+  "Auth": {
+    "title": "Bei Spliit Cloud anmelden",
+    "signUpTitle": "Spliit Cloud-Konto erstellen",
+    "subtitle": "Verwenden Sie Ihr Konto, um geräteübergreifend auf Ihre Gruppen zuzugreifen.",
+    "signUpSubtitle": "Erstellen Sie ein Konto, um Ihre Gruppen geräteübergreifend zu speichern und zu synchronisieren.",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signInWithPassword": "Mit Passwort anmelden",
+    "signUpWithPassword": "Mit Passwort registrieren",
+    "signInWithGoogle": "Weiter mit Google",
+    "sendMagicLink": "Anmeldelink senden",
+    "magicLinkEmail": "E-Mail",
+    "usePasswordInstead": "Stattdessen E-Mail und Passwort verwenden",
+    "hidePasswordForm": "Passwortformular ausblenden",
+    "passwordFormDescription": "Wenn Sie lieber ein Passwort verwenden möchten, geben Sie unten Ihre E-Mail und Ihr Passwort ein.",
+    "passwordFormDescriptionSignUp": "Erstellen Sie ein Konto mit Ihrer E-Mail und einem Passwort.",
+    "useDifferentEmail": "Eine andere E-Mail verwenden",
+    "magicLinkSent": "Überprüfen Sie Ihren Posteingang auf einen Anmeldelink.",
+    "noAccount": "Noch kein Konto?",
+    "haveAccount": "Bereits ein Konto?",
+    "createAccount": "Konto erstellen",
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "confirmPassword": "Passwort bestätigen",
+    "passwordMismatch": "Passwörter stimmen nicht überein.",
+    "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+    "errors": {
+      "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+      "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",
+      "passwordRequired": "Geben Sie Ihr Passwort ein.",
+      "nameRequired": "Geben Sie einen Anzeigenamen ein.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+      "magicLinkFailed": "Der Anmeldelink konnte nicht gesendet werden."
+    },
+    "loading": "Lädt…",
+    "signedInAs": "Angemeldet als {name}",
+    "required": "Sie müssen sich anmelden, um auf Ihre Gruppen zuzugreifen.",
+    "back": "Zurück zur Startseite"
+  },
+  "CompleteProfile": {
+    "title": "Profil vervollständigen",
+    "description": "Teilen Sie uns den Namen mit, den Ihre Gruppen sehen sollen. Sie können ihn später ändern.",
+    "nameLabel": "Anzeigename",
+    "namePlaceholder": "Ihr Name",
+    "submit": "Speichern und fortfahren",
+    "saving": "Speichert…",
+    "signedInAs": "Angemeldet als {email}",
+    "errors": {
+      "nameRequired": "Geben Sie einen Anzeigenamen ein.",
+      "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    }
+  },
+  "Members": {
+    "title": "Mitglieder",
+    "description": "Personen, die diese Gruppe sehen und zu ihr beitragen können.",
+    "empty": "Noch keine aktiven Mitglieder.",
+    "unknownMember": "Unbekanntes Mitglied",
+    "youBadge": "Sie",
+    "role": {
+      "owner": "Besitzer",
+      "admin": "Admin",
+      "member": "Mitglied"
+    },
+    "joinedOn": "Beigetreten {date}",
+    "noManagePermission": "Nur Besitzer und Administratoren können Mitglieder einladen oder entfernen.",
+    "archivedNotice": "Einladungen sind deaktiviert, während die Gruppe archiviert ist. Stellen Sie die Gruppe wieder her, um neue Mitglieder einzuladen.",
+    "invite": {
+      "title": "Mitglied einladen",
+      "description": "Senden Sie eine Einladung per E-Mail. Der Eingeladene tritt bei, sobald er von einem passenden Konto aus akzeptiert.",
+      "email": "E-Mail",
+      "emailPlaceholder": "freund@example.com",
+      "role": "Rolle",
+      "send": "Einladung senden",
+      "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein."
+    },
+    "invitations": {
+      "title": "Ausstehende Einladungen",
+      "description": "Einladungen, die auf Annahme warten.",
+      "empty": "Keine ausstehenden Einladungen.",
+      "sentOn": "Gesendet {date}",
+      "revoke": "Widerrufen",
+      "revokeButton": "Einladung widerrufen",
+      "revoked": "Einladung widerrufen.",
+      "created": "Einladung an {email} gesendet."
     }
   }
 }

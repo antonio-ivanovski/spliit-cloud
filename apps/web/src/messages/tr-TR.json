@@ -4,15 +4,20 @@
     "description": "Yeni <strong>Spliit Cloud</strong> kurulumunuza hoş geldiniz !",
     "button": {
       "groups": "Gruplara git",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Spliit Cloud'da oturum açın",
+      "createAccount": "Hesap oluşturun"
     }
   },
   "Header": {
-    "groups": "Gruplar"
+    "groups": "Gruplar",
+    "signIn": "Oturum aç",
+    "signOut": "Oturumu kapat",
+    "account": "Hesap"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
+    "builtBy": "Bkz. <source>kaynak ve katkıda bulunanlar</source>"
   },
   "Expenses": {
     "title": "Masraflar",
@@ -38,27 +43,29 @@
       "earlierThisYear": "Bu yılın başlarında",
       "lastYear": "Geçen yıl",
       "older": "Daha eski"
-    }
+    },
+    "export": "Dışa aktar"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> tarafından ödendi, <paidFor></paidFor> için",
     "receivedBy": "<strong>{paidBy}</strong> tarafından alındı, <paidFor></paidFor> için",
-    "yourBalance": "Bakiyeniz:"
+    "yourBalance": "Bakiyeniz:",
+    "everyone": "herkes",
+    "notInvolved": "Dahil değilsiniz",
+    "settlementBadge": "Mutabakat"
   },
   "Groups": {
     "myGroups": "Gruplarım",
     "create": "Oluştur",
     "loadingRecent": "Son gruplar yükleniyor…",
     "NoRecent": {
-      "description": "Son zamanlarda hiç grup ziyaret etmediniz.",
+      "description": "Henüz hiçbir grubunuz yok.",
       "create": "Bir tane oluştur",
-      "orAsk": "ya da bir arkadaşınızdan mevcut bir grubun bağlantısını göndermesini isteyin."
+      "orAsk": "ya da bir arkadaşınızdan sizi grubuna davet etmesini isteyin."
     },
     "recent": "Son gruplar",
     "starred": "Yıldızlı gruplar",
     "archived": "Arşivlenmiş gruplar",
-    "archive": "Grubu arşivle",
-    "unarchive": "Arşivden çıkar",
     "removeRecent": "Son gruplardan kaldır",
     "RecentRemovedToast": {
       "title": "Grup kaldırıldı",
@@ -66,15 +73,70 @@
       "undoAlt": "Grup kaldırma işlemini geri al",
       "undo": "Geri al"
     },
-    "AddByURL": {
-      "button": "URL ile ekle",
-      "title": "URL ile grup ekle",
-      "description": "Bir grup sizinle paylaşıldıysa, URL'sini buraya yapıştırarak listeye ekleyebilirsiniz.",
-      "error": "Üzgünüz, sağladığınız URL'den bir grup bulamadık…"
-    },
     "NotFound": {
       "text": "Bu grup mevcut değil.",
       "link": "Son ziyaret ettiğiniz gruplara dön"
+    },
+    "createdInviteHint": "Grup oluşturuldu. Başlamak için üyeleri davet edin.",
+    "NoRecentAllHidden": {
+      "description": "Tüm gruplarınızı gizlediniz.",
+      "showHidden": "Gizli grupları göster"
+    },
+    "hidden": "Gizli gruplar",
+    "showHidden": "Gizli grupları göster",
+    "hide": "Grubu gizle",
+    "unhide": "Grubu göster",
+    "starGroup": "Yıldızla",
+    "unstarGroup": "Yıldızı kaldır",
+    "groupActions": "Grup işlemleri",
+    "archiveGroup": "Grubu arşivle",
+    "unarchiveGroup": "Arşivden çıkar",
+    "archiveSuccess": "Grup arşivlendi.",
+    "unarchiveSuccess": "Grup arşivden çıkarıldı.",
+    "archiveWithBalancesTitle": "Kapatılmamış bakiyeler",
+    "archiveWithBalancesDescription": "Bu grupta kapatılmamış bakiyeler var. Arşivleme, bakiyeleri sıfırlamak için mutabakat giderleri oluşturacak. Devam edilsin mi?",
+    "archiveWithBalancesForce": "Zorla arşivle",
+    "archiveWithBalancesCancel": "İptal",
+    "archiveWithBalancesSuccess": "Mutabakat giderleri oluşturuldu ve grup arşivlendi.",
+    "archiveWithBalancesView": "Bakiyeleri görüntüle",
+    "archiveSectionTitle": "Grubu arşivle",
+    "archiveSectionDescription": "Arşivleme grubu dondurur. Yeni gider eklenemez veya değiştirilemez, ancak mevcut veriler görünür kalır. Grubu istediğiniz zaman arşivden çıkarabilirsiniz.",
+    "archivedBadge": "Arşivlendi",
+    "bannerArchivedTitle": "Bu grup arşivlendi",
+    "bannerArchivedDescription": "Grup arşivliyken yeni gider veya davet eklenemez. Mevcut veriler görünür kalır.",
+    "bannerArchived": "Bu grup arşivlendi. Yeni gider eklenemez.",
+    "bannerUnarchive": "Arşivden çıkar",
+    "bannerUnarchiveSuccess": "Grup arşivden çıkarıldı.",
+    "invitationBannerTitle": "Bu gruba davet edildiniz",
+    "invitationBannerDescription": "Üye olarak katılmak için kabul edin veya daveti reddedin.",
+    "invitationAccept": "Kabul et",
+    "invitationDecline": "Reddet",
+    "invitationAccepted": "Davet kabul edildi.",
+    "invitationDeclined": "Davet reddedildi.",
+    "pendingInviteeReadOnlyTitle": "Davet edildiniz",
+    "pendingInviteeReadOnlyDescription": "Gider eklemeye ve grup ayarlarını değiştirmeye başlamak için yukarıdaki daveti kabul edin. O zamana kadar bu grup salt okunurdur.",
+    "pendingInviteeSettingsTitle": "Grup ayarları kilitli",
+    "pendingInviteeSettingsDescription": "Grup ayarlarını değiştirmeden veya üye davet etmeden önce daveti kabul etmelisiniz.",
+    "pendingInviteeExpenseTitle": "Giderler salt okunur",
+    "pendingInviteeExpenseDescription": "Gider eklemeye veya düzenlemeye başlamak için yukarıdaki daveti kabul edin. O zamana kadar grubun mevcut verileri görünür ancak değiştirilemez.",
+    "archivedReadOnly": "Bu grup arşivlendi. Giderler artık eklenemez veya değiştirilemez.",
+    "backToExpenses": "Giderlere dön",
+    "Unauthorized": {
+      "title": "Bu gruba erişiminiz yok",
+      "description": "Bunun bir hata olduğunu düşünüyorsanız, bir grup sahibinden veya yöneticiden sizi davet etmesini isteyin.",
+      "link": "Gruplarıma dön"
+    },
+    "invitations": {
+      "title": "Bekleyen davetler",
+      "description": "Aşağıdaki gruplara katılmaya davet edildiniz.",
+      "accept": "Kabul et",
+      "decline": "Reddet",
+      "accepted": "Davet kabul edildi.",
+      "declined": "Davet reddedildi.",
+      "invitedBy": "{name} tarafından davet edildiniz",
+      "unknownInviter": "birileri",
+      "unknownGroup": "Bilinmeyen grup",
+      "sentOn": "{date} gönderildi"
     }
   },
   "GroupForm": {
@@ -99,9 +161,9 @@
       "protectedParticipant": "Bu katılımcı masraflara dahil olduğundan kaldırılamaz.",
       "new": "Yeni",
       "add": "Katılımcı ekle",
-      "John": "John",
-      "Jane": "Jane",
-      "Jack": "Jack"
+      "John": "Ahmet",
+      "Jane": "Ayşe",
+      "Jack": "Ali"
     },
     "Settings": {
       "title": "Yerel ayarlar",
@@ -117,6 +179,16 @@
       "create": "Oluştur",
       "creating": "Oluşturuluyor…",
       "cancel": "İptal"
+    },
+    "readOnlyNote": "Yalnızca sahipler ve yöneticiler grup ayarlarını değiştirebilir.",
+    "readOnlyTitle": "Grup ayarları",
+    "readOnlyBack": "Gruba dön",
+    "archivedNotice": "Bu grup arşivlendi. Ayarları donduruldu ve artık değiştirilemez.",
+    "CurrencyCodeField": {
+      "label": "Ana para birimi",
+      "createDescription": "Tüm tutarlar ve bakiyeler bu para biriminde olacaktır.",
+      "editDescription": "Tüm tutarlar ve bakiyeler bu para biriminde olacaktır. Bunu değiştirmek, önceden girilen giderleri DÖNÜŞTÜRMEZ, ancak para biriminin mevcut olandan farklı \"alt birimleri\" varsa dönüştürür (ör. ABD Doları'ndan Japon Yeni'ne değiştirme).",
+      "customOption": "Özel"
     }
   },
   "ExpenseForm": {
@@ -142,7 +214,11 @@
         "description": "Gelirin kim(ler) için alındığını seçin."
       },
       "splitModeDescription": "Gelirin nasıl paylaştırılacağını seçin.",
-      "attachDescription": "Gelire makbuz ekleyin ve görüntüleyin."
+      "attachDescription": "Gelire makbuz ekleyin ve görüntüleyin.",
+      "currencyField": {
+        "label": "Gelirin para birimi",
+        "description": "Gelirin hangi para biriminde alındığı."
+      }
     },
     "Expense": {
       "create": "Masraf oluştur",
@@ -159,14 +235,27 @@
       "categoryFieldDescription": "Masraf kategorisini seçin.",
       "paidByField": {
         "label": "Ödeyen",
-        "description": "Masrafı ödeyen katılımcıyı seçin."
+        "description": "Masrafı ödeyen katılımcıyı seçin.",
+        "placeholder": "Bir katılımcı seçin"
       },
       "paidFor": {
         "title": "Masraf kimin için ödendi",
         "description": "Masrafın kim(ler) için ödendiğini seçin."
       },
       "splitModeDescription": "Masrafın nasıl paylaştırılacağını seçin.",
-      "attachDescription": "Masrafa makbuz ekleyin ve görüntüleyin."
+      "attachDescription": "Masrafa makbuz ekleyin ve görüntüleyin.",
+      "currencyField": {
+        "label": "Masrafın para birimi",
+        "description": "Masrafın hangi para biriminde ödendiği."
+      },
+      "recurrenceRule": {
+        "label": "Gider Tekrarlama",
+        "description": "Giderin ne sıklıkta tekrarlanacağını seçin.",
+        "none": "Yok",
+        "daily": "Günlük",
+        "weekly": "Haftalık",
+        "monthly": "Aylık"
+      }
     },
     "amountField": {
       "label": "Tutar"
@@ -205,7 +294,32 @@
     "save": "Kaydet",
     "saving": "Kaydediliyor…",
     "cancel": "İptal",
-    "reimbursement": "Geri ödeme"
+    "reimbursement": "Geri ödeme",
+    "conversionUnavailable": "Gider başına farklı bir para birimi ayarlamak ve tutarları dönüştürmek için grup için özel olmayan bir para birimi seçin.",
+    "originalAmountField": {
+      "label": "Dönüştürülecek tutar"
+    },
+    "conversionRateField": {
+      "useApi": "Frankfurter'dan kurları kullan",
+      "useCustom": "Özel kur kullan",
+      "label": "Döviz kuru"
+    },
+    "conversionRateState": {
+      "loading": "Döviz kurları alınıyor…",
+      "success": "Alınan kurlar:",
+      "error": "En güncel kurları alamadık.",
+      "staleRate": "Kullanılan kur:",
+      "noRate": "Aşağıya özel bir kur girin.",
+      "currencyNotFound": "Frankfurter'da bu para birimi için bu güne ait kur bulunmuyor.",
+      "noDate": "Döviz kuru almak için gider tarihini girin.",
+      "dateMismatch": "{date} tarihli kurlar",
+      "refresh": "Yenile",
+      "customRate": "Özel kur kullanılıyor"
+    },
+    "participant": {
+      "pending": "(davet edildi)"
+    },
+    "readOnlyNotice": "Bu grup arşivlendi. Gider salt okunur olarak gösteriliyor."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -316,7 +430,8 @@
     "paidForMin1": "Masraf en az bir katılımcı için ödenmiş olmalıdır.",
     "noZeroShares": "Tüm paylar 0'dan büyük olmalıdır.",
     "amountSum": "Tutarların toplamı masraf tutarına eşit olmalıdır.",
-    "percentageSum": "Yüzdelerin toplamı 100 olmalıdır."
+    "percentageSum": "Yüzdelerin toplamı 100 olmalıdır.",
+    "ratePositive": "Kur kesinlikle sıfırdan büyük olmalıdır."
   },
   "Categories": {
     "search": "Kategori ara...",
@@ -361,7 +476,8 @@
       "Gifts": "Hediyeler",
       "Insurance": "Sigorta",
       "Medical Expenses": "Sağlık Giderleri",
-      "Taxes": "Vergiler"
+      "Taxes": "Vergiler",
+      "Donation": "Bağış"
     },
     "Transportation": {
       "heading": "Ulaşım",
@@ -384,6 +500,106 @@
       "Trash": "Çöp",
       "TV/Phone/Internet": "TV/Telefon/İnternet",
       "Water": "Su"
+    }
+  },
+  "Auth": {
+    "title": "Spliit Cloud'da oturum açın",
+    "signUpTitle": "Spliit Cloud hesabınızı oluşturun",
+    "subtitle": "Gruplarınıza cihazlar arasında erişmek için hesabınızı kullanın.",
+    "signUpSubtitle": "Gruplarınızı cihazlar arasında kaydetmek ve senkronize etmek için bir hesap oluşturun.",
+    "email": "E-posta",
+    "password": "Şifre",
+    "signInWithPassword": "Şifreyle oturum aç",
+    "signUpWithPassword": "Şifreyle kaydol",
+    "signInWithGoogle": "Google ile devam et",
+    "sendMagicLink": "Oturum açma bağlantısı gönder",
+    "magicLinkEmail": "E-posta",
+    "usePasswordInstead": "E-posta ve şifre kullan",
+    "hidePasswordForm": "Şifre formunu gizle",
+    "passwordFormDescription": "Şifre kullanmak isterseniz, e-postanızı ve şifrenizi aşağıya girin.",
+    "passwordFormDescriptionSignUp": "E-postanız ve bir şifre ile hesap oluşturun.",
+    "useDifferentEmail": "Farklı bir e-posta kullan",
+    "magicLinkSent": "Gelen kutunuzda oturum açma bağlantısını kontrol edin.",
+    "noAccount": "Henüz hesabınız yok mu?",
+    "haveAccount": "Zaten hesabınız var mı?",
+    "createAccount": "Hesap oluştur",
+    "signIn": "Oturum aç",
+    "signOut": "Oturumu kapat",
+    "confirmPassword": "Şifreyi onayla",
+    "passwordMismatch": "Şifreler eşleşmiyor.",
+    "passwordTooShort": "Şifre en az 8 karakter olmalıdır.",
+    "errors": {
+      "invalidCredentials": "E-posta veya şifre hatalı.",
+      "emailRequired": "E-posta adresinizi girin.",
+      "passwordRequired": "Şifrenizi girin.",
+      "nameRequired": "Bir görünen ad girin.",
+      "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+      "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi."
+    },
+    "loading": "Yükleniyor…",
+    "signedInAs": "{name} olarak oturum açıldı",
+    "required": "Gruplarınıza erişmek için oturum açmalısınız.",
+    "back": "Ana sayfaya dön"
+  },
+  "CompleteProfile": {
+    "title": "Profilinizi tamamlayın",
+    "description": "Gruplarınızın görmesini istediğiniz adı bize söyleyin. Daha sonra değiştirebilirsiniz.",
+    "nameLabel": "Görünen ad",
+    "namePlaceholder": "Adınız",
+    "submit": "Kaydet ve devam et",
+    "saving": "Kaydediliyor…",
+    "signedInAs": "{email} olarak oturum açıldı",
+    "errors": {
+      "nameRequired": "Bir görünen ad girin.",
+      "nameTooShort": "Ad en az 2 karakter olmalıdır.",
+      "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
+    }
+  },
+  "Currencies": {
+    "search": "Para birimi ara...",
+    "noCurrency": "Para birimi bulunamadı.",
+    "custom": {
+      "heading": "Özel"
+    },
+    "common": {
+      "heading": "En yaygın"
+    },
+    "other": {
+      "heading": "Diğer para birimleri"
+    }
+  },
+  "Members": {
+    "title": "Üyeler",
+    "description": "Bu grubu görebilen ve katkıda bulunabilen kişiler.",
+    "empty": "Henüz aktif üye yok.",
+    "unknownMember": "Bilinmeyen üye",
+    "youBadge": "Siz",
+    "role": {
+      "owner": "Sahip",
+      "admin": "Yönetici",
+      "member": "Üye"
+    },
+    "joinedOn": "{date} katıldı",
+    "noManagePermission": "Yalnızca sahipler ve yöneticiler üye davet edebilir veya üyeliği iptal edebilir.",
+    "archivedNotice": "Grup arşivliyken davetler devre dışıdır. Yeni üyeler davet etmek için grubu arşivden çıkarın.",
+    "invite": {
+      "title": "Üye davet et",
+      "description": "E-posta ile davet gönderin. Davet edilen kişi, eşleşen bir hesaptan kabul ettiğinde katılır.",
+      "email": "E-posta",
+      "emailPlaceholder": "friend@example.com",
+      "role": "Rol",
+      "send": "Davet gönder",
+      "invalidEmail": "Geçerli bir e-posta adresi girin."
+    },
+    "invitations": {
+      "title": "Bekleyen davetler",
+      "description": "Kabul bekleyen davetler.",
+      "empty": "Bekleyen davet yok.",
+      "sentOn": "{date} gönderildi",
+      "revoke": "İptal et",
+      "revokeButton": "Daveti iptal et",
+      "revoked": "Davet iptal edildi.",
+      "created": "{email} adresine davet gönderildi."
     }
   }
 }

@@ -4,15 +4,20 @@
     "description": "Welkom op je nieuwe <strong>Spliit Cloud</strong>-instantie!",
     "button": {
       "groups": "Ga naar groepen",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Inloggen op Spliit Cloud",
+      "createAccount": "Account aanmaken"
     }
   },
   "Header": {
-    "groups": "Groepen"
+    "groups": "Groepen",
+    "signIn": "Inloggen",
+    "signOut": "Uitloggen",
+    "account": "Account"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Gemaakt met liefde door de open-source community ❤️",
+    "builtBy": "Zie <source>bron en bijdragers</source>"
   },
   "Expenses": {
     "title": "Uitgaven",
@@ -46,22 +51,65 @@
     "everyone": "iedereen",
     "receivedBy": "Ontvangen door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
     "yourBalance": "Jouw balans:",
-    "notInvolved": "Je bent hier niet bij betrokken"
+    "notInvolved": "Je bent hier niet bij betrokken",
+    "settlementBadge": "Verrekening"
   },
   "Groups": {
     "myGroups": "Mijn groepen",
     "create": "Maak",
+    "createdInviteHint": "Groep aangemaakt. Nodig leden uit om te beginnen.",
     "loadingRecent": "Recente groepen laden…",
     "NoRecent": {
-      "description": "Je hebt de laatste tijd geen groepen bezocht.",
+      "description": "Je hebt nog geen groep.",
       "create": "Maak er één",
-      "orAsk": "of vraag een vriend om je de link naar een bestaande groep te sturen."
+      "orAsk": "of vraag een vriend om je uit te nodigen voor hun groep."
+    },
+    "NoRecentAllHidden": {
+      "description": "Je hebt al je groepen verborgen.",
+      "showHidden": "Verborgen groepen tonen"
     },
     "recent": "Recente groepen",
     "starred": "Favoriete groepen",
     "archived": "Gearchiveerde groepen",
-    "archive": "Archiveer groep",
-    "unarchive": "Herstel groep",
+    "hidden": "Verborgen groepen",
+    "showHidden": "Verborgen groepen tonen",
+    "hide": "Groep verbergen",
+    "unhide": "Groep zichtbaar maken",
+    "starGroup": "Groep als favoriet markeren",
+    "unstarGroup": "Favoriet verwijderen",
+    "groupActions": "Groepsacties",
+    "archiveGroup": "Groep archiveren",
+    "unarchiveGroup": "Groep uit archief halen",
+    "archiveSuccess": "Groep gearchiveerd.",
+    "unarchiveSuccess": "Groep uit archief gehaald.",
+    "archiveWithBalancesTitle": "Niet-vereffende saldi",
+    "archiveWithBalancesDescription": "Deze groep heeft niet-vereffende saldi. Archiveren zal verrekeningsuitgaven aanmaken om deze op nul te zetten. Doorgaan?",
+    "archiveWithBalancesForce": "Toch archiveren",
+    "archiveWithBalancesCancel": "Annuleren",
+    "archiveWithBalancesSuccess": "Verrekeningsuitgaven aangemaakt en groep gearchiveerd.",
+    "archiveWithBalancesView": "Bekijk saldi",
+    "archiveSectionTitle": "Groep archiveren",
+    "archiveSectionDescription": "Archiveren bevriest de groep. Er kunnen geen nieuwe uitgaven worden toegevoegd of gewijzigd, maar de bestaande gegevens blijven zichtbaar. Je kunt de groep op elk moment weer uit het archief halen.",
+    "archivedBadge": "Gearchiveerd",
+    "bannerArchivedTitle": "Deze groep is gearchiveerd",
+    "bannerArchivedDescription": "Zolang de groep is gearchiveerd, kunnen er geen nieuwe uitgaven of uitnodigingen worden toegevoegd. Bestaande gegevens blijven zichtbaar.",
+    "bannerArchived": "Deze groep is gearchiveerd. Er kunnen geen nieuwe uitgaven worden toegevoegd.",
+    "bannerUnarchive": "Uit archief halen",
+    "bannerUnarchiveSuccess": "Groep uit archief gehaald.",
+    "invitationBannerTitle": "Je bent uitgenodigd voor deze groep",
+    "invitationBannerDescription": "Accepteer om lid te worden of wijs af om de uitnodiging te negeren.",
+    "invitationAccept": "Accepteren",
+    "invitationDecline": "Afwijzen",
+    "invitationAccepted": "Uitnodiging geaccepteerd.",
+    "invitationDeclined": "Uitnodiging afgewezen.",
+    "pendingInviteeReadOnlyTitle": "Je bent uitgenodigd",
+    "pendingInviteeReadOnlyDescription": "Accepteer de bovenstaande uitnodiging om uitgaven toe te voegen en groepsinstellingen te wijzigen. Tot die tijd is deze groep alleen-lezen.",
+    "pendingInviteeSettingsTitle": "Groepsinstellingen zijn vergrendeld",
+    "pendingInviteeSettingsDescription": "Je moet de uitnodiging accepteren voordat je groepsinstellingen kunt wijzigen of leden kunt uitnodigen.",
+    "pendingInviteeExpenseTitle": "Uitgaven zijn alleen-lezen",
+    "pendingInviteeExpenseDescription": "Accepteer de bovenstaande uitnodiging om uitgaven toe te voegen of te bewerken. Tot die tijd zijn de bestaande gegevens zichtbaar maar kunnen niet worden gewijzigd.",
+    "archivedReadOnly": "Deze groep is gearchiveerd. Er kunnen geen uitgaven meer worden toegevoegd of gewijzigd.",
+    "backToExpenses": "Terug naar uitgaven",
     "removeRecent": "Verwijder uit recente groepen",
     "RecentRemovedToast": {
       "title": "Groep verwijderd",
@@ -69,19 +117,34 @@
       "undoAlt": "Maak het verwijderen van de groep ongedaan",
       "undo": "Ongedaan maken"
     },
-    "AddByURL": {
-      "button": "Voeg toe met URL",
-      "title": "Voeg een groep toe met een URL",
-      "description": "Als een groep met je gedeeld is, kun je de URL hier plakken om deze aan je lijst toe te voegen.",
-      "error": "Oeps, we kunnen de groep niet vinden met de URL die je hebt opgegeven…"
-    },
     "NotFound": {
       "text": "Deze groep bestaat niet.",
       "link": "Ga naar je recente groepen"
+    },
+    "Unauthorized": {
+      "title": "Je hebt geen toegang tot deze groep",
+      "description": "Als je denkt dat dit een fout is, vraag dan een groepseigenaar of beheerder om je uit te nodigen.",
+      "link": "Terug naar mijn groepen"
+    },
+    "invitations": {
+      "title": "Openstaande uitnodigingen",
+      "description": "Je bent uitgenodigd om lid te worden van de volgende groepen.",
+      "accept": "Accepteren",
+      "decline": "Afwijzen",
+      "accepted": "Uitnodiging geaccepteerd.",
+      "declined": "Uitnodiging afgewezen.",
+      "invitedBy": "Uitgenodigd door {name}",
+      "unknownInviter": "iemand",
+      "unknownGroup": "Onbekende groep",
+      "sentOn": "Verzonden {date}"
     }
   },
   "GroupForm": {
     "title": "Groepsinformatie",
+    "readOnlyNote": "Alleen eigenaren en beheerders kunnen groepsinstellingen wijzigen.",
+    "readOnlyTitle": "Groepsinstellingen",
+    "readOnlyBack": "Terug naar groep",
+    "archivedNotice": "Deze groep is gearchiveerd. De instellingen zijn bevroren en kunnen niet meer worden gewijzigd.",
     "NameField": {
       "label": "Groepsnaam",
       "placeholder": "Zomervakantie",
@@ -95,6 +158,12 @@
       "label": "Symbool van de valuta",
       "placeholder": "€, $, £…",
       "description": "Die gebruiken we om de bedragen in de groep aan te geven."
+    },
+    "CurrencyCodeField": {
+      "label": "Hoofdvaluta",
+      "createDescription": "Alle hoeveelheden en saldi worden in deze valuta weergegeven.",
+      "editDescription": "Alle bedragen en saldi worden in deze valuta weergegeven. Als je dit wijzigt, worden reeds ingevoerde uitgaven NIET omgerekend, behalve wanneer de valuta andere \"kleinste eenheden\" heeft dan de huidige (bijvoorbeeld bij een wijziging van Amerikaanse dollar naar Japanse yen)",
+      "customOption": "Aangepast"
     },
     "Participants": {
       "title": "Deelnemers",
@@ -120,12 +189,6 @@
       "create": "Groep maken",
       "creating": "Aan het maken…",
       "cancel": "Annuleren"
-    },
-    "CurrencyCodeField": {
-      "label": "Hoofdvaluta",
-      "createDescription": "Alle hoeveelheden en saldi worden in deze valuta weergegeven.",
-      "editDescription": "Alle bedragen en saldi worden in deze valuta weergegeven. Als je dit wijzigt, worden reeds ingevoerde uitgaven NIET omgerekend, behalve wanneer de valuta andere \"kleinste eenheden\" heeft dan de huidige (bijvoorbeeld bij een wijziging van Amerikaanse dollar naar Japanse yen)",
-      "customOption": "Aangepast"
     }
   },
   "ExpenseForm": {
@@ -141,29 +204,21 @@
         "label": "Datum inkomen",
         "description": "Voer de datum in waarop het inkomen is ontvangen."
       },
+      "currencyField": {
+        "label": "Munteenheid van inkomen",
+        "description": "De munteenheid waar het inkomen in is ontvangen."
+      },
       "categoryFieldDescription": "Selecteer de inkomencategorie.",
       "paidByField": {
         "label": "Ontvangen door",
         "description": "Selecteer de deelnemer die het inkomen heeft ontvangen."
-      },
-      "recurrenceRule": {
-        "label": "Terugkerend inkomen",
-        "description": "Kies hoe vaak het inkomen herhaald wordt.",
-        "none": "Niet",
-        "daily": "Dagelijks",
-        "weekly": "Wekelijks",
-        "monthly": "Maandelijks"
       },
       "paidFor": {
         "title": "Ontvangen voor",
         "description": "Selecteer voor wie het inkomen is ontvangen."
       },
       "splitModeDescription": "Selecteer hoe het inkomen verdeeld moet worden.",
-      "attachDescription": "Bekijk en voeg bijlagen toe aan het inkomen.",
-      "currencyField": {
-        "label": "Munteenheid van inkomen",
-        "description": "De munteenheid waar het inkomen in is ontvangen."
-      }
+      "attachDescription": "Bekijk en voeg bijlagen toe aan het inkomen."
     },
     "Expense": {
       "create": "Maak uitgave",
@@ -177,11 +232,15 @@
         "label": "Datum uitgave",
         "description": "Voer de datum in waarop de uitgave is gedaan."
       },
+      "currencyField": {
+        "label": "Munteenheid van uitgave",
+        "description": "De munteenheid waar de uitgave in is betaald."
+      },
       "categoryFieldDescription": "Selecteer de uitgavecategorie.",
       "paidByField": {
         "label": "Betaald door",
-        "description": "Selecteer de deelnemer die de uitgave heeft gedaan.",
-        "placeholder": "Selecteer een deelnemer"
+        "placeholder": "Selecteer een deelnemer",
+        "description": "Selecteer de deelnemer die de uitgave heeft gedaan."
       },
       "recurrenceRule": {
         "label": "Terugkerende uitgave",
@@ -196,14 +255,31 @@
         "description": "Selecteer voor wie de uitgave is gedaan."
       },
       "splitModeDescription": "Selecteer hoe de uitgave verdeeld moet worden.",
-      "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave.",
-      "currencyField": {
-        "label": "Munteenheid van uitgave",
-        "description": "De munteenheid waar de uitgave in is betaald."
-      }
+      "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave."
     },
     "amountField": {
       "label": "Bedrag"
+    },
+    "conversionUnavailable": "Om een andere munteenheid in te stellen voor een uitgave en bedragen om te rekenen, kies een standaard munteenheid voor de groep.",
+    "originalAmountField": {
+      "label": "Om te rekenen bedrag"
+    },
+    "conversionRateField": {
+      "useApi": "Gebruik koersen van Frankfurter",
+      "useCustom": "Gebruik aangepaste koers",
+      "label": "Wisselkoers"
+    },
+    "conversionRateState": {
+      "loading": "Wisselkoers aan het ophalen…",
+      "success": "Verkregen wisselkoers:",
+      "error": "Oeps, we konden de nieuwste wisselkoersen niet verkrijgen.",
+      "staleRate": "Gebruikte wisselkoers:",
+      "noRate": "Voer hieronder een aangepaste koers in.",
+      "currencyNotFound": "Oeps, Frankfurter heeft geen koersen voor deze munteenheid op deze dag.",
+      "noDate": "Voer de datum van de uitgave in om een wisselkoers te krijgen.",
+      "dateMismatch": "Wisselkoers van: {date}",
+      "refresh": "Ververs",
+      "customRate": "Aangepaste wisselkoers wordt gebruikt"
     },
     "isReimbursementField": {
       "label": "Dit is een terugbetaling"
@@ -218,6 +294,9 @@
     "selectAll": "Selecteer iedereen",
     "shares": "deel/delen",
     "advancedOptions": "Andere split-opties…",
+    "participant": {
+      "pending": "(uitgenodigd)"
+    },
     "SplitModeField": {
       "label": "Split soort",
       "evenly": "Gelijk verdeeld",
@@ -240,27 +319,7 @@
     "saving": "Aan het opslaan…",
     "cancel": "Annuleren",
     "reimbursement": "Terugbetaling",
-    "conversionUnavailable": "Om een andere munteenheid in te stellen voor een uitgave en bedragen om te rekenen, kies een standaard munteenheid voor de groep.",
-    "originalAmountField": {
-      "label": "Om te rekenen bedrag"
-    },
-    "conversionRateField": {
-      "useApi": "Gebruik koersen van Frankfurter",
-      "useCustom": "Gebruik aangepaste koers",
-      "label": "Wisselkoers"
-    },
-    "conversionRateState": {
-      "loading": "Wisselkoers aan het ophalen…",
-      "success": "Verkregen wisselkoers:",
-      "error": "Oeps, we konden de nieuwste wisselkoersen niet verkrijgen.",
-      "staleRate": "Gebruikte wisselkoers:",
-      "noRate": "Voer hieronder een aangepaste koers in.",
-      "currencyNotFound": "Oeps, Frankfurter heeft geen koersen voor deze munteenheid op deze dag.",
-      "noDate": "Voer de datum van de uitgave in om een wisselkoers te krijgen.",
-      "dateMismatch": "Wisselkoers van: {date}",
-      "refresh": "Ververs",
-      "customRate": "Aangepaste wisselkoers wordt gebruikt"
-    }
+    "readOnlyNotice": "Deze groep is gearchiveerd. De uitgave wordt alleen-lezen weergegeven."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -444,6 +503,7 @@
     }
   },
   "Currencies": {
+    "search": "Valuta zoeken...",
     "noCurrency": "Geen valuta gevonden.",
     "custom": {
       "heading": "Aangepast"
@@ -453,7 +513,93 @@
     },
     "other": {
       "heading": "Andere valuta"
+    }
+  },
+  "Auth": {
+    "title": "Inloggen op Spliit Cloud",
+    "signUpTitle": "Maak je Spliit Cloud-account aan",
+    "subtitle": "Gebruik je account om toegang te krijgen tot je groepen op al je apparaten.",
+    "signUpSubtitle": "Maak een account aan om je groepen op te slaan en te synchroniseren op al je apparaten.",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "signInWithPassword": "Inloggen met wachtwoord",
+    "signUpWithPassword": "Registreren met wachtwoord",
+    "signInWithGoogle": "Doorgaan met Google",
+    "sendMagicLink": "Stuur inloglink",
+    "magicLinkEmail": "E-mail",
+    "usePasswordInstead": "Gebruik in plaats daarvan e-mail en wachtwoord",
+    "hidePasswordForm": "Verberg wachtwoordformulier",
+    "passwordFormDescription": "Als je liever een wachtwoord gebruikt, voer dan hieronder je e-mail en wachtwoord in.",
+    "passwordFormDescriptionSignUp": "Maak een account aan met je e-mail en een wachtwoord.",
+    "useDifferentEmail": "Gebruik een ander e-mailadres",
+    "magicLinkSent": "Check je inbox voor een inloglink.",
+    "noAccount": "Nog geen account?",
+    "haveAccount": "Heb je al een account?",
+    "createAccount": "Account aanmaken",
+    "signIn": "Inloggen",
+    "signOut": "Uitloggen",
+    "confirmPassword": "Bevestig wachtwoord",
+    "passwordMismatch": "Wachtwoorden komen niet overeen.",
+    "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten.",
+    "errors": {
+      "invalidCredentials": "E-mail of wachtwoord is onjuist.",
+      "emailRequired": "Voer je e-mailadres in.",
+      "passwordRequired": "Voer je wachtwoord in.",
+      "nameRequired": "Voer een weergavenaam in.",
+      "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "magicLinkFailed": "Kon de inloglink niet verzenden."
     },
-    "search": "Valuta zoeken..."
+    "loading": "Laden…",
+    "signedInAs": "Ingelogd als {name}",
+    "required": "Je moet inloggen om toegang te krijgen tot je groepen.",
+    "back": "Terug naar startpagina"
+  },
+  "CompleteProfile": {
+    "title": "Voltooi je profiel",
+    "description": "Vertel ons de naam die je groepen moeten zien. Je kunt deze later wijzigen.",
+    "nameLabel": "Weergavenaam",
+    "namePlaceholder": "Jouw naam",
+    "submit": "Opslaan en doorgaan",
+    "saving": "Aan het opslaan…",
+    "signedInAs": "Ingelogd als {email}",
+    "errors": {
+      "nameRequired": "Voer een weergavenaam in.",
+      "nameTooShort": "Naam moet minimaal 2 tekens bevatten.",
+      "generic": "Er is iets misgegaan. Probeer het opnieuw."
+    }
+  },
+  "Members": {
+    "title": "Leden",
+    "description": "Mensen die deze groep kunnen zien en eraan kunnen bijdragen.",
+    "empty": "Nog geen actieve leden.",
+    "unknownMember": "Onbekend lid",
+    "youBadge": "Jij",
+    "role": {
+      "owner": "Eigenaar",
+      "admin": "Beheerder",
+      "member": "Lid"
+    },
+    "joinedOn": "Lid geworden op {date}",
+    "noManagePermission": "Alleen eigenaren en beheerders kunnen leden uitnodigen of verwijderen.",
+    "archivedNotice": "Uitnodigingen zijn uitgeschakeld zolang de groep is gearchiveerd. Haal de groep uit het archief om nieuwe leden uit te nodigen.",
+    "invite": {
+      "title": "Lid uitnodigen",
+      "description": "Stuur een uitnodiging per e-mail. De genodigde wordt lid zodra deze vanuit een overeenkomend account accepteert.",
+      "email": "E-mail",
+      "emailPlaceholder": "vriend@voorbeeld.com",
+      "role": "Rol",
+      "send": "Uitnodiging sturen",
+      "invalidEmail": "Voer een geldig e-mailadres in."
+    },
+    "invitations": {
+      "title": "Openstaande uitnodigingen",
+      "description": "Uitnodigingen die wachten op acceptatie.",
+      "empty": "Geen openstaande uitnodigingen.",
+      "sentOn": "Verzonden {date}",
+      "revoke": "Intrekken",
+      "revokeButton": "Uitnodiging intrekken",
+      "revoked": "Uitnodiging ingetrokken.",
+      "created": "Uitnodiging verzonden naar {email}."
+    }
   }
 }

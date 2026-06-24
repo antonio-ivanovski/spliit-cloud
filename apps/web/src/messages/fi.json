@@ -4,15 +4,20 @@
     "description": "Tervetuloa uuteen Spliit Cloud-instanssiisi!",
     "button": {
       "groups": "Siirry ryhmiin",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Kirjaudu Spliit Cloudiin",
+      "createAccount": "Luo tili"
     }
   },
   "Header": {
-    "groups": "Ryhmät"
+    "groups": "Ryhmät",
+    "signIn": "Kirjaudu sisään",
+    "signOut": "Kirjaudu ulos",
+    "account": "Tili"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
+    "builtBy": "Katso <source>lähdekoodia ja tekijöitä</source>"
   },
   "Expenses": {
     "title": "Kulut",
@@ -20,6 +25,7 @@
     "create": "Lisää kulu",
     "createFirst": "Lisää ensimmäinen kulu",
     "noExpenses": "Ryhmälläsi ei ole vielä yhtään kulua.",
+    "export": "Vie",
     "exportJson": "Vie JSON-tiedostoon",
     "exportCsv": "Vie CSV-tiedostoon",
     "searchPlaceholder": "Etsi kulua…",
@@ -43,22 +49,67 @@
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> maksoi {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
     "receivedBy": "<strong>{paidBy}</strong> sai rahaa {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
-    "yourBalance": "Saldosi:"
+    "yourBalance": "Saldosi:",
+    "everyone": "kaikki",
+    "notInvolved": "Et ole osallisena",
+    "settlementBadge": "Tasaus"
   },
   "Groups": {
     "myGroups": "Omat ryhmät",
     "create": "Luo ryhmä",
+    "createdInviteHint": "Ryhmä luotu. Kutsu jäseniä aloittaaksesi.",
     "loadingRecent": "Ladataan äskettäisiä ryhmiä…",
     "NoRecent": {
-      "description": "Et ole ollut missään ryhmässä äskettäin.",
+      "description": "Sinulla ei ole vielä yhtään ryhmää.",
       "create": "Luo uusi ryhmä",
-      "orAsk": "tai pyydä ystävää lähettämään linkki olemassaolevaan ryhmään."
+      "orAsk": "tai pyydä ystävää kutsumaan sinut ryhmäänsä."
+    },
+    "NoRecentAllHidden": {
+      "description": "Olet piilottanut kaikki ryhmäsi.",
+      "showHidden": "Näytä piilotetut ryhmät"
     },
     "recent": "Äskettäiset",
     "starred": "Suosikit",
     "archived": "Arkistoidut",
-    "archive": "Arkistoi ryhmä",
-    "unarchive": "Palauta ryhmä arkistosta",
+    "hidden": "Piilotetut ryhmät",
+    "showHidden": "Näytä piilotetut ryhmät",
+    "hide": "Piilota ryhmä",
+    "unhide": "Paljasta ryhmä",
+    "starGroup": "Merkitse suosikiksi",
+    "unstarGroup": "Poista suosikki",
+    "groupActions": "Ryhmän toiminnot",
+    "archiveGroup": "Arkistoi ryhmä",
+    "unarchiveGroup": "Palauta arkistosta",
+    "archiveSuccess": "Ryhmä arkistoitu.",
+    "unarchiveSuccess": "Ryhmä palautettu arkistosta.",
+    "archiveWithBalancesTitle": "Tasaussaatavat",
+    "archiveWithBalancesDescription": "Tällä ryhmällä on tasaussaatavia. Arkistointi luo tasauskulut nollatakseen ne. Jatketaanko?",
+    "archiveWithBalancesForce": "Pakota arkistointi",
+    "archiveWithBalancesCancel": "Peruuta",
+    "archiveWithBalancesSuccess": "Tasauskulut luotu ja ryhmä arkistoitu.",
+    "archiveWithBalancesView": "Näytä saldot",
+    "archiveSectionTitle": "Arkistoi ryhmä",
+    "archiveSectionDescription": "Arkistointi jäädyttää ryhmän. Uusia kuluja ei voi lisätä tai muokata, mutta olemassa olevat tiedot pysyvät näkyvillä. Voit palauttaa ryhmän arkistosta milloin tahansa.",
+    "archivedBadge": "Arkistoitu",
+    "bannerArchivedTitle": "Tämä ryhmä on arkistoitu",
+    "bannerArchivedDescription": "Kun ryhmä on arkistoitu, uusia kuluja tai kutsuja ei voida lisätä. Olemassa olevat tiedot pysyvät näkyvillä.",
+    "bannerArchived": "Tämä ryhmä on arkistoitu. Uusia kuluja ei voida lisätä.",
+    "bannerUnarchive": "Palauta arkistosta",
+    "bannerUnarchiveSuccess": "Ryhmä palautettu arkistosta.",
+    "invitationBannerTitle": "Sinut on kutsuttu tähän ryhmään",
+    "invitationBannerDescription": "Hyväksy liittyäksesi jäseneksi tai hylkää hylätäksesi kutsun.",
+    "invitationAccept": "Hyväksy",
+    "invitationDecline": "Hylkää",
+    "invitationAccepted": "Kutsu hyväksytty.",
+    "invitationDeclined": "Kutsu hylätty.",
+    "pendingInviteeReadOnlyTitle": "Sinut on kutsuttu",
+    "pendingInviteeReadOnlyDescription": "Hyväksy yllä oleva kutsu aloittaaksesi kulujen lisäämisen ja ryhmän asetusten muuttamisen. Siihen asti tämä ryhmä on vain luku -tilassa.",
+    "pendingInviteeSettingsTitle": "Ryhmän asetukset on lukittu",
+    "pendingInviteeSettingsDescription": "Sinun täytyy hyväksyä kutsu ennen kuin voit muuttaa ryhmän asetuksia tai kutsua jäseniä.",
+    "pendingInviteeExpenseTitle": "Kulut ovat vain luku -tilassa",
+    "pendingInviteeExpenseDescription": "Hyväksy yllä oleva kutsu aloittaaksesi kulujen lisäämisen tai muokkaamisen. Siihen asti ryhmän olemassa olevat tiedot ovat näkyvillä mutta niitä ei voi muokata.",
+    "archivedReadOnly": "Tämä ryhmä on arkistoitu. Kuluja ei voida enää lisätä tai muokata.",
+    "backToExpenses": "Takaisin kuluihin",
     "removeRecent": "Poista äskettäisistä",
     "RecentRemovedToast": {
       "title": "Ryhmä poistettu",
@@ -66,19 +117,34 @@
       "undoAlt": "Peruuta ryhmän poisto",
       "undo": "Peruuta"
     },
-    "AddByURL": {
-      "button": "Lisää URLilla",
-      "title": "Lisää ryhmä URL-osoitteella",
-      "description": "Jos ryhmä on jaettu sinulle, voit lisätä sen listaasi liittämällä URL-osoitteen tähän.",
-      "error": "Hups, emme löytäneet ryhmää antamastasi URL-osoitteesta…"
-    },
     "NotFound": {
       "text": "Tätä ryhmää ei löydy.",
       "link": "Siirry äskettäisiin ryhmiin"
+    },
+    "Unauthorized": {
+      "title": "Sinulla ei ole pääsyä tähän ryhmään",
+      "description": "Jos uskot tämän olevan virhe, pyydä ryhmän omistajaa tai ylläpitäjää kutsumaan sinut.",
+      "link": "Takaisin ryhmiini"
+    },
+    "invitations": {
+      "title": "Odottavat kutsut",
+      "description": "Sinut on kutsuttu liittymään seuraaviin ryhmiin.",
+      "accept": "Hyväksy",
+      "decline": "Hylkää",
+      "accepted": "Kutsu hyväksytty.",
+      "declined": "Kutsu hylätty.",
+      "invitedBy": "Kutsunut {name}",
+      "unknownInviter": "joku",
+      "unknownGroup": "Tuntematon ryhmä",
+      "sentOn": "Lähetetty {date}"
     }
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
+    "readOnlyNote": "Vain omistajat ja ylläpitäjät voivat muuttaa ryhmän asetuksia.",
+    "readOnlyTitle": "Ryhmän asetukset",
+    "readOnlyBack": "Takaisin ryhmään",
+    "archivedNotice": "Tämä ryhmä on arkistoitu. Sen asetukset on jäädytetty eikä niitä voi enää muuttaa.",
     "NameField": {
       "label": "Ryhmän nimi",
       "placeholder": "Kesälomareissu",
@@ -93,12 +159,18 @@
       "placeholder": "$, €, £…",
       "description": "Näytetään rahasummien yhteydessä."
     },
+    "CurrencyCodeField": {
+      "label": "Päävaluutta",
+      "createDescription": "Kaikki summat ja saldot näytetään tässä valuutassa.",
+      "editDescription": "Kaikki summat ja saldot näytetään tässä valuutassa. Tämän muuttaminen EI muunna jo syötettyjä kuluja, paitsi jos valuutalla on eri \"pienemmät yksiköt\" kuin nykyisellä (esim. vaihdettaessa Yhdysvaltain dollarista Japanin jeniin)",
+      "customOption": "Mukautettu"
+    },
     "Participants": {
       "title": "Osallistujat",
       "description": "Syötä jokaisen osallistujan nimi.",
       "protectedParticipant": "Tätä osallistujaa ei voida poistaa, koska hän osallistuu kuluihin.",
-      "add": "Lisää osallistuja",
       "new": "Uusi",
+      "add": "Lisää osallistuja",
       "John": "Antti",
       "Jane": "Laura",
       "Jack": "Jussi"
@@ -132,6 +204,10 @@
         "label": "Päivä",
         "description": "Valitse päivä jolloin tulo saatiin."
       },
+      "currencyField": {
+        "label": "Tulon valuutta",
+        "description": "Valuutta, jossa tulo vastaanotettiin."
+      },
       "categoryFieldDescription": "Valitse tulokategoria.",
       "paidByField": {
         "label": "Vastaanottaja",
@@ -156,10 +232,23 @@
         "label": "Päivä",
         "description": "Valitse päivä jolloin kulu maksettiin."
       },
+      "currencyField": {
+        "label": "Kulun valuutta",
+        "description": "Valuutta, jossa kulu maksettiin."
+      },
       "categoryFieldDescription": "Valitse kulukategoria.",
       "paidByField": {
         "label": "Maksaja",
+        "placeholder": "Valitse osallistuja",
         "description": "Valitse kuka maksoi kulun."
+      },
+      "recurrenceRule": {
+        "label": "Kulun toistuvuus",
+        "description": "Valitse kuinka usein kulun tulisi toistua.",
+        "none": "Ei toistuvuutta",
+        "daily": "Päivittäin",
+        "weekly": "Viikoittain",
+        "monthly": "Kuukausittain"
       },
       "paidFor": {
         "title": "Kulun jakaminen",
@@ -170,6 +259,27 @@
     },
     "amountField": {
       "label": "Summa"
+    },
+    "conversionUnavailable": "Asettaaksesi eri valuutan kullekin kululle ja muuntaaksesi summia, valitse ei-mukautettu valuutta ryhmälle.",
+    "originalAmountField": {
+      "label": "Muunnettava summa"
+    },
+    "conversionRateField": {
+      "useApi": "Käytä kursseja Frankfurterista",
+      "useCustom": "Käytä mukautettua kurssia",
+      "label": "Vaihtokurssi"
+    },
+    "conversionRateState": {
+      "loading": "Haetaan vaihtokursseja…",
+      "success": "Saadut kurssit:",
+      "error": "Hups, emme saaneet uusimpia kursseja.",
+      "staleRate": "Käytettävä kurssi:",
+      "noRate": "Syötä mukautettu kurssi alle.",
+      "currencyNotFound": "Hups, Frankfurterilla ei ole kurssia tälle valuutalle tälle päivälle.",
+      "noDate": "Syötä kulun päivämäärä saadaksesi vaihtokurssin.",
+      "dateMismatch": "Kurssit päivältä: {date}",
+      "refresh": "Päivitä",
+      "customRate": "Käytetään mukautettua kurssia"
     },
     "isReimbursementField": {
       "label": "Tämä on velanmaksu"
@@ -184,6 +294,9 @@
     "selectAll": "Valitse kaikki",
     "shares": "osuutta",
     "advancedOptions": "Lisäasetuksia jakamiseen…",
+    "participant": {
+      "pending": "(kutsuttu)"
+    },
     "SplitModeField": {
       "label": "Jakamistapa",
       "evenly": "Tasan",
@@ -205,7 +318,8 @@
     "save": "Tallenna",
     "saving": "Tallennetaan…",
     "cancel": "Peruuta",
-    "reimbursement": "Velanmaksu"
+    "reimbursement": "Velanmaksu",
+    "readOnlyNotice": "Tämä ryhmä on arkistoitu. Kulu näytetään vain luku -tilassa."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -231,6 +345,16 @@
       "dateLabel": "Päivä:",
       "editNext": "Voit muokata kulun tietoja seuraavaksi.",
       "continue": "Jatka"
+    },
+    "unknown": "Tuntematon",
+    "TooBigToast": {
+      "title": "Tiedosto on liian suuri",
+      "description": "Maksimikoko ladattavalle tiedostolle on {maxSize}. Tiedostosi on {size}."
+    },
+    "ErrorToast": {
+      "title": "Virhe tiedostoa ladattaessa",
+      "description": "Jokin meni vikaan dokumentin lataamisessa. Yritä myöhemmin uudelleen tai valitse toinen tiedosto.",
+      "retry": "Yritä uudelleen"
     }
   },
   "Balances": {
@@ -306,7 +430,8 @@
     "paidForMin1": "Valitse vähintään yksi osallistuja.",
     "noZeroShares": "Jokaisen osuuden täytyy olla suurempi kuin 0.",
     "amountSum": "Osuuksien summan täytyy vastata kulun summaa.",
-    "percentageSum": "Prosenttiosuuksien summan täytyy olla 100."
+    "percentageSum": "Prosenttiosuuksien summan täytyy olla 100.",
+    "ratePositive": "Kurssin täytyy olla ehdottomasti suurempi kuin nolla."
   },
   "Categories": {
     "search": "Etsi kategoriaa...",
@@ -347,6 +472,7 @@
       "heading": "Elämä",
       "Childcare": "Lastenhoito",
       "Clothing": "Vaatteet",
+      "Donation": "Lahjoitus",
       "Education": "Opiskelu",
       "Gifts": "Lahjat",
       "Insurance": "Vakuutukset",
@@ -374,6 +500,106 @@
       "Trash": "Jätehuolto",
       "TV/Phone/Internet": "TV/Puhelin/Internet",
       "Water": "Vesi"
+    }
+  },
+  "Currencies": {
+    "search": "Etsi valuuttaa...",
+    "noCurrency": "Valuuttoja ei löytynyt.",
+    "custom": {
+      "heading": "Mukautettu"
+    },
+    "common": {
+      "heading": "Yleisimmät"
+    },
+    "other": {
+      "heading": "Muut valuutat"
+    }
+  },
+  "Auth": {
+    "title": "Kirjaudu Spliit Cloudiin",
+    "signUpTitle": "Luo Spliit Cloud -tilisi",
+    "subtitle": "Käytä tiliäsi päästäksesi ryhmiisi eri laitteilla.",
+    "signUpSubtitle": "Luo tili tallentaaksesi ja synkronoidaksesi ryhmäsi eri laitteiden välillä.",
+    "email": "Sähköposti",
+    "password": "Salasana",
+    "signInWithPassword": "Kirjaudu salasanalla",
+    "signUpWithPassword": "Rekisteröidy salasanalla",
+    "signInWithGoogle": "Jatka Googlella",
+    "sendMagicLink": "Lähetä kirjautumislinkki",
+    "magicLinkEmail": "Sähköposti",
+    "usePasswordInstead": "Käytä sen sijaan sähköpostia ja salasanaa",
+    "hidePasswordForm": "Piilota salasanalomake",
+    "passwordFormDescription": "Jos haluat mieluummin käyttää salasanaa, kirjoita sähköpostiosoitteesi ja salasanasi alle.",
+    "passwordFormDescriptionSignUp": "Luo tili sähköpostiosoitteellasi ja salasanalla.",
+    "useDifferentEmail": "Käytä toista sähköpostiosoitetta",
+    "magicLinkSent": "Tarkista sähköpostisi kirjautumislinkkiä varten.",
+    "noAccount": "Eikö sinulla ole vielä tiliä?",
+    "haveAccount": "Onko sinulla jo tili?",
+    "createAccount": "Luo tili",
+    "signIn": "Kirjaudu sisään",
+    "signOut": "Kirjaudu ulos",
+    "confirmPassword": "Vahvista salasana",
+    "passwordMismatch": "Salasanat eivät täsmää.",
+    "passwordTooShort": "Salasanan on oltava vähintään 8 merkkiä pitkä.",
+    "errors": {
+      "invalidCredentials": "Sähköposti tai salasana on virheellinen.",
+      "emailRequired": "Syötä sähköpostiosoitteesi.",
+      "passwordRequired": "Syötä salasanasi.",
+      "nameRequired": "Syötä näyttönimi.",
+      "generic": "Jokin meni vikaan. Yritä uudelleen.",
+      "magicLinkFailed": "Kirjautumislinkkiä ei voitu lähettää."
+    },
+    "loading": "Ladataan…",
+    "signedInAs": "Kirjautuneena käyttäjänä {name}",
+    "required": "Sinun täytyy kirjautua sisään päästäksesi ryhmiisi.",
+    "back": "Takaisin etusivulle"
+  },
+  "CompleteProfile": {
+    "title": "Täydennä profiilisi",
+    "description": "Kerro meille nimi, jonka haluat ryhmiesi näkevän. Voit muuttaa sitä myöhemmin.",
+    "nameLabel": "Näyttönimi",
+    "namePlaceholder": "Nimesi",
+    "submit": "Tallenna ja jatka",
+    "saving": "Tallennetaan…",
+    "signedInAs": "Kirjautuneena käyttäjänä {email}",
+    "errors": {
+      "nameRequired": "Syötä näyttönimi.",
+      "nameTooShort": "Nimen on oltava vähintään 2 merkkiä pitkä.",
+      "generic": "Jokin meni vikaan. Yritä uudelleen."
+    }
+  },
+  "Members": {
+    "title": "Jäsenet",
+    "description": "Henkilöt, jotka voivat nähdä tämän ryhmän ja osallistua siihen.",
+    "empty": "Ei vielä aktiivisia jäseniä.",
+    "unknownMember": "Tuntematon jäsen",
+    "youBadge": "Sinä",
+    "role": {
+      "owner": "Omistaja",
+      "admin": "Ylläpitäjä",
+      "member": "Jäsen"
+    },
+    "joinedOn": "Liittynyt {date}",
+    "noManagePermission": "Vain omistajat ja ylläpitäjät voivat kutsua tai poistaa ryhmän jäseniä.",
+    "archivedNotice": "Kutsut on poistettu käytöstä, kun ryhmä on arkistoitu. Palauta ryhmä arkistosta kutsuaksesi uusia jäseniä.",
+    "invite": {
+      "title": "Kutsu jäsen",
+      "description": "Lähetä kutsu sähköpostitse. Kutsuttu liittyy, kun hän hyväksyy kutsun vastaavalta tililtä.",
+      "email": "Sähköposti",
+      "emailPlaceholder": "kaveri@esimerkki.com",
+      "role": "Rooli",
+      "send": "Lähetä kutsu",
+      "invalidEmail": "Syötä kelvollinen sähköpostiosoite."
+    },
+    "invitations": {
+      "title": "Odottavat kutsut",
+      "description": "Kutsut, jotka odottavat hyväksyntää.",
+      "empty": "Ei odottavia kutsuja.",
+      "sentOn": "Lähetetty {date}",
+      "revoke": "Peruuta",
+      "revokeButton": "Peruuta kutsu",
+      "revoked": "Kutsu peruutettu.",
+      "created": "Kutsu lähetetty osoitteeseen {email}."
     }
   }
 }

@@ -4,15 +4,20 @@
     "description": "ברוך הבא למופע החדש שלך של <strong>Spliit Cloud</strong>!",
     "button": {
       "groups": "עבור לקבוצות",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "התחבר ל-Spliit Cloud",
+      "createAccount": "צור חשבון"
     }
   },
   "Header": {
-    "groups": "קבוצות"
+    "groups": "קבוצות",
+    "signIn": "התחבר",
+    "signOut": "התנתק",
+    "account": "חשבון"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "נוצר על ידי קהילת הקוד הפתוח באהבה ❤️",
+    "builtBy": "ראה <source>קוד מקור ותורמים</source>"
   },
   "Expenses": {
     "title": "הוצאות",
@@ -46,22 +51,21 @@
     "everyone": "כולם",
     "receivedBy": "התקבל על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
     "yourBalance": "היתרה שלך:",
-    "notInvolved": "אתה לא מעורב"
+    "notInvolved": "אתה לא מעורב",
+    "settlementBadge": "הסדר"
   },
   "Groups": {
     "myGroups": "הקבוצות שלי",
     "create": "צור",
     "loadingRecent": "טוען קבוצות אחרונות…",
     "NoRecent": {
-      "description": "לא ביקרת באף קבוצה לאחרונה.",
+      "description": "אין לך עדיין אף קבוצה.",
       "create": "צור אחת",
-      "orAsk": "או בקש מחבר לשלוח לך את הקישור לקבוצה קיימת."
+      "orAsk": "או בקש מחבר להזמין אותך לקבוצה שלו."
     },
     "recent": "קבוצות אחרונות",
     "starred": "קבוצות מסומנות בכוכב",
     "archived": "קבוצות בארכיון",
-    "archive": "העברת קבוצה לארכיון",
-    "unarchive": "הוצאת קבוצה מארכיון",
     "removeRecent": "הסר מקבוצות אחרונות",
     "RecentRemovedToast": {
       "title": "הקבוצה הוסרה",
@@ -69,15 +73,70 @@
       "undoAlt": "בטל הסרת קבוצה",
       "undo": "בטל"
     },
-    "AddByURL": {
-      "button": "הוסף באמצעות קישור",
-      "title": "הוסף קבוצה באמצעות קישור",
-      "description": "אם שיתפו איתך קבוצה, תוכל להדביק את הקישור שלה כאן כדי להוסיף אותה לרשימה שלך.",
-      "error": "אופס, אנחנו לא מצליחים למצוא את הקבוצה מכתובת ה-URL שסיפקת…"
-    },
     "NotFound": {
       "text": "קבוצה זו אינה קיימת.",
       "link": "עבור לקבוצות שביקרת בהן לאחרונה"
+    },
+    "createdInviteHint": "קבוצה נוצרה. הזמן חברים כדי להתחיל.",
+    "NoRecentAllHidden": {
+      "description": "הסתרת את כל הקבוצות שלך.",
+      "showHidden": "הצג קבוצות מוסתרות"
+    },
+    "hidden": "קבוצות מוסתרות",
+    "showHidden": "הצג קבוצות מוסתרות",
+    "hide": "הסתר קבוצה",
+    "unhide": "בטל הסתרה",
+    "starGroup": "סמן בכוכב",
+    "unstarGroup": "בטל סימון כוכב",
+    "groupActions": "פעולות קבוצה",
+    "archiveGroup": "ארכב קבוצה",
+    "unarchiveGroup": "בטל ארכוב",
+    "archiveSuccess": "הקבוצה אורכבה.",
+    "unarchiveSuccess": "הקבוצה שוחררה מארכוב.",
+    "archiveWithBalancesTitle": "יתרות לא מסודרות",
+    "archiveWithBalancesDescription": "לקבוצה זו יש יתרות לא מסודרות. ארכוב ייצור הוצאות הסדר כדי לאפס אותן. להמשיך?",
+    "archiveWithBalancesForce": "אלץ ארכוב",
+    "archiveWithBalancesCancel": "ביטול",
+    "archiveWithBalancesSuccess": "הוצאות הסדר נוצרו והקבוצה אורכבה.",
+    "archiveWithBalancesView": "הצג יתרות",
+    "archiveSectionTitle": "ארכב קבוצה",
+    "archiveSectionDescription": "ארכוב מקפיא את הקבוצה. לא ניתן להוסיף או לשנות הוצאות חדשות, אך הנתונים הקיימים נשארים גלויים. תוכל לבטל את הארכוב בכל עת.",
+    "archivedBadge": "בארכיון",
+    "bannerArchivedTitle": "קבוצה זו בארכיון",
+    "bannerArchivedDescription": "לא ניתן להוסיף הוצאות או הזמנות חדשות בזמן שהקבוצה בארכיון. הנתונים הקיימים נשארים גלויים.",
+    "bannerArchived": "קבוצה זו בארכיון. לא ניתן להוסיף הוצאות חדשות.",
+    "bannerUnarchive": "שחרר מארכוב",
+    "bannerUnarchiveSuccess": "הקבוצה שוחררה מארכוב.",
+    "invitationBannerTitle": "הוזמנת לקבוצה זו",
+    "invitationBannerDescription": "קבל כדי להצטרף כחבר, או דחה כדי לבטל את ההזמנה.",
+    "invitationAccept": "קבל",
+    "invitationDecline": "דחה",
+    "invitationAccepted": "ההזמנה התקבלה.",
+    "invitationDeclined": "ההזמנה נדחתה.",
+    "pendingInviteeReadOnlyTitle": "הוזמנת",
+    "pendingInviteeReadOnlyDescription": "קבל את ההזמנה למעלה כדי להתחיל להוסיף הוצאות ולשנות הגדרות קבוצה. עד אז, קבוצה זו לקריאה בלבד.",
+    "pendingInviteeSettingsTitle": "הגדרות הקבוצה נעולות",
+    "pendingInviteeSettingsDescription": "עליך לקבל את ההזמנה לפני שתוכל לשנות הגדרות קבוצה או להזמין חברים.",
+    "pendingInviteeExpenseTitle": "הוצאות לקריאה בלבד",
+    "pendingInviteeExpenseDescription": "קבל את ההזמנה למעלה כדי להתחיל להוסיף או לערוך הוצאות. עד אז, הנתונים הקיימים גלויים אך לא ניתנים לשינוי.",
+    "archivedReadOnly": "קבוצה זו בארכיון. לא ניתן עוד להוסיף או לשנות הוצאות.",
+    "backToExpenses": "חזור להוצאות",
+    "Unauthorized": {
+      "title": "אין לך גישה לקבוצה זו",
+      "description": "אם אתה חושב שזו טעות, בקש מבעל הקבוצה או מנהל להזמין אותך.",
+      "link": "חזור לקבוצות שלי"
+    },
+    "invitations": {
+      "title": "הזמנות ממתינות",
+      "description": "הוזמנת להצטרף לקבוצות הבאות.",
+      "accept": "קבל",
+      "decline": "דחה",
+      "accepted": "הזמנה התקבלה.",
+      "declined": "הזמנה נדחתה.",
+      "invitedBy": "הוזמנת על ידי {name}",
+      "unknownInviter": "מישהו",
+      "unknownGroup": "קבוצה לא ידועה",
+      "sentOn": "נשלח {date}"
     }
   },
   "GroupForm": {
@@ -126,7 +185,11 @@
       "create": "צור",
       "creating": "יוצר…",
       "cancel": "ביטול"
-    }
+    },
+    "readOnlyNote": "רק בעלים ומנהלים יכולים לשנות הגדרות קבוצה.",
+    "readOnlyTitle": "הגדרות קבוצה",
+    "readOnlyBack": "חזור לקבוצה",
+    "archivedNotice": "קבוצה זו בארכיון. ההגדרות שלה קפואות ולא ניתן יותר לשנות אותן."
   },
   "ExpenseForm": {
     "Income": {
@@ -252,7 +315,11 @@
     "save": "שמור",
     "saving": "שומר…",
     "cancel": "ביטול",
-    "reimbursement": "החזר"
+    "reimbursement": "החזר",
+    "participant": {
+      "pending": "(הוזמן)"
+    },
+    "readOnlyNotice": "קבוצה זו בארכיון. ההוצאה מוצגת לקריאה בלבד."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -446,6 +513,93 @@
     },
     "other": {
       "heading": "מטבעות אחרים"
+    }
+  },
+  "Auth": {
+    "title": "התחבר ל-Spliit Cloud",
+    "signUpTitle": "צור חשבון Spliit Cloud",
+    "subtitle": "השתמש בחשבון שלך כדי לגשת לקבוצות שלך בין מכשירים.",
+    "signUpSubtitle": "צור חשבון כדי לשמור ולסנכרן את הקבוצות שלך בין מכשירים.",
+    "email": "אימייל",
+    "password": "סיסמה",
+    "signInWithPassword": "התחבר עם סיסמה",
+    "signUpWithPassword": "הירשם עם סיסמה",
+    "signInWithGoogle": "המשך עם Google",
+    "sendMagicLink": "שלח קישור התחברות",
+    "magicLinkEmail": "אימייל",
+    "usePasswordInstead": "השתמש באימייל ובסיסמה במקום",
+    "hidePasswordForm": "הסתר טופס סיסמה",
+    "passwordFormDescription": "אם אתה מעדיף להשתמש בסיסמה, הזן את האימייל והסיסמה שלך למטה.",
+    "passwordFormDescriptionSignUp": "צור חשבון עם האימייל והסיסמה שלך.",
+    "useDifferentEmail": "השתמש באימייל אחר",
+    "magicLinkSent": "בדוק בתיבת הדואר הנכנס שלך לקבלת קישור התחברות.",
+    "noAccount": "אין לך עדיין חשבון?",
+    "haveAccount": "כבר יש לך חשבון?",
+    "createAccount": "צור חשבון",
+    "signIn": "התחבר",
+    "signOut": "התנתק",
+    "confirmPassword": "אשר סיסמה",
+    "passwordMismatch": "הסיסמאות אינן תואמות.",
+    "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+    "errors": {
+      "invalidCredentials": "אימייל או סיסמה שגויים.",
+      "emailRequired": "הזן את כתובת האימייל שלך.",
+      "passwordRequired": "הזן את הסיסמה שלך.",
+      "nameRequired": "הזן שם תצוגה.",
+      "generic": "משהו השתבש. אנא נסה שוב.",
+      "magicLinkFailed": "לא ניתן לשלוח את קישור ההתחברות."
+    },
+    "loading": "טוען…",
+    "signedInAs": "מחובר כ-{name}",
+    "required": "עליך להתחבר כדי לגשת לקבוצות שלך.",
+    "back": "חזרה לדף הבית"
+  },
+  "CompleteProfile": {
+    "title": "השלם את הפרופיל שלך",
+    "description": "ספר לנו את השם שבו הקבוצות שלך יראו אותך. תוכל לשנות אותו מאוחר יותר.",
+    "nameLabel": "שם תצוגה",
+    "namePlaceholder": "השם שלך",
+    "submit": "שמור והמשך",
+    "saving": "שומר…",
+    "signedInAs": "מחובר כ-{email}",
+    "errors": {
+      "nameRequired": "הזן שם תצוגה.",
+      "nameTooShort": "השם חייב להכיל לפחות 2 תווים.",
+      "generic": "משהו השתבש. אנא נסה שוב."
+    }
+  },
+  "Members": {
+    "title": "חברים",
+    "description": "אנשים שיכולים לראות ולתרום לקבוצה זו.",
+    "empty": "עדיין אין חברים פעילים.",
+    "unknownMember": "חבר לא ידוע",
+    "youBadge": "אתה",
+    "role": {
+      "owner": "בעלים",
+      "admin": "מנהל",
+      "member": "חבר"
+    },
+    "joinedOn": "הצטרף {date}",
+    "noManagePermission": "רק בעלים ומנהלים יכולים להזמין או להסיר חברי קבוצה.",
+    "archivedNotice": "הזמנות מבוטלות בזמן שהקבוצה בארכיון. בטל את הארכוב כדי להזמין חברים חדשים.",
+    "invite": {
+      "title": "הזמן חבר",
+      "description": "שלח הזמנה באימייל. המוזמן יצטרף כשהוא יקבל מחשבון תואם.",
+      "email": "אימייל",
+      "emailPlaceholder": "friend@example.com",
+      "role": "תפקיד",
+      "send": "שלח הזמנה",
+      "invalidEmail": "הזן כתובת אימייל חוקית."
+    },
+    "invitations": {
+      "title": "הזמנות ממתינות",
+      "description": "הזמנות שממתינות לאישור.",
+      "empty": "אין הזמנות ממתינות.",
+      "sentOn": "נשלח {date}",
+      "revoke": "בטל",
+      "revokeButton": "בטל הזמנה",
+      "revoked": "ההזמנה בוטלה.",
+      "created": "ההזמנה נשלחה ל-{email}."
     }
   }
 }

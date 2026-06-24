@@ -4,15 +4,20 @@
     "description": "Bem-vindo/a à tua nova instância <strong>Spliit Cloud</strong> !",
     "button": {
       "groups": "Ir para grupos",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "Iniciar sessão no Spliit Cloud",
+      "createAccount": "Criar uma conta"
     }
   },
   "Header": {
-    "groups": "Grupos"
+    "groups": "Grupos",
+    "signIn": "Iniciar sessão",
+    "signOut": "Terminar sessão",
+    "account": "Conta"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "madeIn": "Feito pela comunidade de código aberto com amor ❤️",
+    "builtBy": "Ver o <source>código-fonte e contribuidores</source>"
   },
   "Expenses": {
     "title": "Despesas",
@@ -46,22 +51,21 @@
     "everyone": "todos",
     "receivedBy": "Recebido por <strong>{paidBy}</strong> para <paidFor></paidFor>",
     "yourBalance": "O teu saldo:",
-    "notInvolved": "Não participaste"
+    "notInvolved": "Não participaste",
+    "settlementBadge": "Acerto"
   },
   "Groups": {
     "myGroups": "Os meus grupos",
     "create": "Criar",
     "loadingRecent": "A carregar grupos recentes…",
     "NoRecent": {
-      "description": "Não visitaste nenhum grupo recentemente.",
+      "description": "Ainda não tens nenhum grupo.",
       "create": "Criar um",
-      "orAsk": "ou pergunta a um amigo para te mandar o link de um já existente."
+      "orAsk": "ou pede a um amigo para te convidar para o grupo dele."
     },
     "recent": "Grupos recentes",
     "starred": "Grupos favoritos",
     "archived": "Grupos arquivados",
-    "archive": "Arquivar grupo",
-    "unarchive": "Desarquivar grupo",
     "removeRecent": "Remover dos grupos recentes",
     "RecentRemovedToast": {
       "title": "O grupo foi removido",
@@ -69,15 +73,70 @@
       "undoAlt": "Desfazer remoção do grupo",
       "undo": "Desfazer"
     },
-    "AddByURL": {
-      "button": "Adicionar por URL",
-      "title": "Adicionar um grupo por URL",
-      "description": "Se um grupo foi partilhado contigo, podes colar o URL aqui para o adicionar à tua lista.",
-      "error": "Oops, não conseguimos encontrar o grupo pelo URL que indicaste…"
-    },
     "NotFound": {
       "text": "Este grupo não existe.",
       "link": "Ir para os grupos visitados recentemente"
+    },
+    "createdInviteHint": "Grupo criado. Convida membros para começar.",
+    "NoRecentAllHidden": {
+      "description": "Ocultaste todos os teus grupos.",
+      "showHidden": "Mostrar grupos ocultos"
+    },
+    "hidden": "Grupos ocultos",
+    "showHidden": "Mostrar grupos ocultos",
+    "hide": "Ocultar grupo",
+    "unhide": "Mostrar grupo",
+    "starGroup": "Favoritar grupo",
+    "unstarGroup": "Desfavoritar grupo",
+    "groupActions": "Ações do grupo",
+    "archiveGroup": "Arquivar grupo",
+    "unarchiveGroup": "Desarquivar grupo",
+    "archiveSuccess": "Grupo arquivado.",
+    "unarchiveSuccess": "Grupo desarquivado.",
+    "archiveWithBalancesTitle": "Saldos por liquidar",
+    "archiveWithBalancesDescription": "Este grupo tem saldos por liquidar. O arquivamento criará despesas de acerto para os zerar. Continuar?",
+    "archiveWithBalancesForce": "Forçar arquivamento",
+    "archiveWithBalancesCancel": "Cancelar",
+    "archiveWithBalancesSuccess": "Despesas de acerto criadas e grupo arquivado.",
+    "archiveWithBalancesView": "Ver saldos",
+    "archiveSectionTitle": "Arquivar grupo",
+    "archiveSectionDescription": "O arquivamento congela o grupo. Não é possível adicionar ou modificar novas despesas, mas os dados existentes permanecem visíveis. Podes desarquivar o grupo a qualquer momento.",
+    "archivedBadge": "Arquivado",
+    "bannerArchivedTitle": "Este grupo está arquivado",
+    "bannerArchivedDescription": "Não é possível adicionar novas despesas ou convites enquanto o grupo estiver arquivado. Os dados existentes permanecem visíveis.",
+    "bannerArchived": "Este grupo está arquivado. Não é possível adicionar novas despesas.",
+    "bannerUnarchive": "Desarquivar",
+    "bannerUnarchiveSuccess": "Grupo desarquivado.",
+    "invitationBannerTitle": "Foste convidado para este grupo",
+    "invitationBannerDescription": "Aceita para te juntares como membro, ou recusa para descartar o convite.",
+    "invitationAccept": "Aceitar",
+    "invitationDecline": "Recusar",
+    "invitationAccepted": "Convite aceite.",
+    "invitationDeclined": "Convite recusado.",
+    "pendingInviteeReadOnlyTitle": "Foste convidado",
+    "pendingInviteeReadOnlyDescription": "Aceita o convite acima para começar a adicionar despesas e alterar definições do grupo. Até lá, este grupo é apenas de leitura.",
+    "pendingInviteeSettingsTitle": "As definições do grupo estão bloqueadas",
+    "pendingInviteeSettingsDescription": "Precisas de aceitar o convite antes de poder alterar as definições do grupo ou convidar membros.",
+    "pendingInviteeExpenseTitle": "As despesas são apenas de leitura",
+    "pendingInviteeExpenseDescription": "Aceita o convite acima para começar a adicionar ou editar despesas. Até lá, os dados existentes do grupo estão visíveis mas não podem ser modificados.",
+    "archivedReadOnly": "Este grupo está arquivado. As despesas já não podem ser adicionadas ou modificadas.",
+    "backToExpenses": "Voltar às despesas",
+    "Unauthorized": {
+      "title": "Não tens acesso a este grupo",
+      "description": "Se acreditas que isto é um erro, pede a um proprietário ou administrador do grupo que te convide.",
+      "link": "Voltar aos meus grupos"
+    },
+    "invitations": {
+      "title": "Convites pendentes",
+      "description": "Foste convidado a juntar-te aos seguintes grupos.",
+      "accept": "Aceitar",
+      "decline": "Recusar",
+      "accepted": "Convite aceite.",
+      "declined": "Convite recusado.",
+      "invitedBy": "Convidado por {name}",
+      "unknownInviter": "alguém",
+      "unknownGroup": "Grupo desconhecido",
+      "sentOn": "Enviado em {date}"
     }
   },
   "GroupForm": {
@@ -121,7 +180,426 @@
         "none": "Nenhum",
         "description": "Utilizador usado por defeito para pagar despesas."
       },
-      "save": "Gravar"
+      "save": "Gravar",
+      "saving": "A gravar…",
+      "create": "Criar",
+      "creating": "A criar…",
+      "cancel": "Cancelar"
+    },
+    "readOnlyNote": "Apenas proprietários e administradores podem alterar as definições do grupo.",
+    "readOnlyTitle": "Definições do grupo",
+    "readOnlyBack": "Voltar ao grupo",
+    "archivedNotice": "Este grupo está arquivado. As suas definições estão congeladas e já não podem ser alteradas."
+  },
+  "Auth": {
+    "title": "Iniciar sessão no Spliit Cloud",
+    "signUpTitle": "Cria a tua conta Spliit Cloud",
+    "subtitle": "Usa a tua conta para aceder aos teus grupos em todos os dispositivos.",
+    "signUpSubtitle": "Cria uma conta para guardar e sincronizar os teus grupos entre dispositivos.",
+    "email": "Email",
+    "password": "Palavra-passe",
+    "signInWithPassword": "Iniciar sessão com palavra-passe",
+    "signUpWithPassword": "Registar com palavra-passe",
+    "signInWithGoogle": "Continuar com Google",
+    "sendMagicLink": "Enviar link de acesso",
+    "magicLinkEmail": "Email",
+    "usePasswordInstead": "Usar email e palavra-passe",
+    "hidePasswordForm": "Ocultar formulário de palavra-passe",
+    "passwordFormDescription": "Se preferires usar uma palavra-passe, introduz o teu email e palavra-passe abaixo.",
+    "passwordFormDescriptionSignUp": "Cria uma conta com o teu email e uma palavra-passe.",
+    "useDifferentEmail": "Usar um email diferente",
+    "magicLinkSent": "Verifica a tua caixa de entrada para o link de acesso.",
+    "noAccount": "Ainda não tens uma conta?",
+    "haveAccount": "Já tens uma conta?",
+    "createAccount": "Criar uma conta",
+    "signIn": "Iniciar sessão",
+    "signOut": "Terminar sessão",
+    "confirmPassword": "Confirmar palavra-passe",
+    "passwordMismatch": "As palavras-passe não coincidem.",
+    "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres.",
+    "errors": {
+      "invalidCredentials": "Email ou palavra-passe incorretos.",
+      "emailRequired": "Introduz o teu endereço de email.",
+      "passwordRequired": "Introduz a tua palavra-passe.",
+      "nameRequired": "Introduz um nome de exibição.",
+      "generic": "Algo correu mal. Por favor, tenta novamente.",
+      "magicLinkFailed": "Não foi possível enviar o link de acesso."
+    },
+    "loading": "A carregar…",
+    "signedInAs": "Sessão iniciada como {name}",
+    "required": "Precisas de iniciar sessão para aceder aos teus grupos.",
+    "back": "Voltar ao início"
+  },
+  "CompleteProfile": {
+    "title": "Completa o teu perfil",
+    "description": "Diz-nos o nome que gostarias que os teus grupos vissem. Podes alterá-lo mais tarde.",
+    "nameLabel": "Nome de exibição",
+    "namePlaceholder": "O teu nome",
+    "submit": "Guardar e continuar",
+    "saving": "A guardar…",
+    "signedInAs": "Sessão iniciada como {email}",
+    "errors": {
+      "nameRequired": "Introduz um nome de exibição.",
+      "nameTooShort": "O nome deve ter pelo menos 2 caracteres.",
+      "generic": "Algo correu mal. Por favor, tenta novamente."
+    }
+  },
+  "ExpenseForm": {
+    "Income": {
+      "create": "Criar receita",
+      "edit": "Editar receita",
+      "TitleField": {
+        "label": "Título da receita",
+        "placeholder": "Restaurante de segunda à noite",
+        "description": "Introduz uma descrição para a receita."
+      },
+      "DateField": {
+        "label": "Data da receita",
+        "description": "Introduz a data em que a receita foi recebida."
+      },
+      "currencyField": {
+        "label": "Moeda da receita",
+        "description": "A moeda na qual a receita foi recebida."
+      },
+      "categoryFieldDescription": "Seleciona a categoria da receita.",
+      "paidByField": {
+        "label": "Recebido por",
+        "description": "Seleciona o participante que recebeu a receita."
+      },
+      "paidFor": {
+        "title": "Recebido para",
+        "description": "Seleciona para quem a receita foi recebida."
+      },
+      "splitModeDescription": "Seleciona como dividir a receita.",
+      "attachDescription": "Ver e anexar recibos à receita."
+    },
+    "Expense": {
+      "create": "Criar despesa",
+      "edit": "Editar despesa",
+      "TitleField": {
+        "label": "Título da despesa",
+        "placeholder": "Restaurante de segunda à noite",
+        "description": "Introduz uma descrição para a despesa."
+      },
+      "DateField": {
+        "label": "Data da despesa",
+        "description": "Introduz a data em que a despesa foi paga."
+      },
+      "currencyField": {
+        "label": "Moeda da despesa",
+        "description": "A moeda na qual a despesa foi paga."
+      },
+      "categoryFieldDescription": "Seleciona a categoria da despesa.",
+      "paidByField": {
+        "label": "Pago por",
+        "placeholder": "Seleciona um participante",
+        "description": "Seleciona o participante que pagou a despesa."
+      },
+      "recurrenceRule": {
+        "label": "Recorrência da despesa",
+        "description": "Seleciona a frequência com que a despesa se deve repetir.",
+        "none": "Nenhuma",
+        "daily": "Diariamente",
+        "weekly": "Semanalmente",
+        "monthly": "Mensalmente"
+      },
+      "paidFor": {
+        "title": "Pago para",
+        "description": "Seleciona para quem a despesa foi paga."
+      },
+      "splitModeDescription": "Seleciona como dividir a despesa.",
+      "attachDescription": "Ver e anexar recibos à despesa."
+    },
+    "amountField": {
+      "label": "Montante"
+    },
+    "conversionUnavailable": "Para definir uma moeda diferente por despesa e converter montantes, seleciona uma moeda não personalizada para o grupo.",
+    "originalAmountField": {
+      "label": "Montante a converter"
+    },
+    "conversionRateField": {
+      "useApi": "Usar taxas do Frankfurter",
+      "useCustom": "Usar taxa personalizada",
+      "label": "Taxa de câmbio"
+    },
+    "conversionRateState": {
+      "loading": "A obter taxas de câmbio…",
+      "success": "Taxas obtidas:",
+      "error": "Ops, não foi possível obter as taxas mais recentes.",
+      "staleRate": "Taxa utilizada:",
+      "noRate": "Introduz uma taxa personalizada abaixo.",
+      "currencyNotFound": "Ops, o Frankfurter não tem a taxa para esta moeda nesta data.",
+      "noDate": "Introduz a data da despesa para obter uma taxa de câmbio.",
+      "dateMismatch": "Taxas da data: {date}",
+      "refresh": "Atualizar",
+      "customRate": "A usar taxa personalizada"
+    },
+    "isReimbursementField": {
+      "label": "Isto é um reembolso"
+    },
+    "categoryField": {
+      "label": "Categoria"
+    },
+    "notesField": {
+      "label": "Notas"
+    },
+    "selectNone": "Selecionar nenhum",
+    "selectAll": "Selecionar todos",
+    "shares": "parte(s)",
+    "advancedOptions": "Opções avançadas de divisão…",
+    "participant": {
+      "pending": "(convidado)"
+    },
+    "SplitModeField": {
+      "label": "Modo de divisão",
+      "evenly": "Igualmente",
+      "byShares": "Desigualmente – Por partes",
+      "byPercentage": "Desigualmente – Por percentagem",
+      "byAmount": "Desigualmente – Por montante",
+      "saveAsDefault": "Guardar como opções de divisão padrão"
+    },
+    "DeletePopup": {
+      "label": "Eliminar",
+      "title": "Eliminar esta despesa?",
+      "description": "Tens a certeza que queres eliminar esta despesa? Esta ação é irreversível.",
+      "yes": "Sim",
+      "cancel": "Cancelar"
+    },
+    "attachDocuments": "Anexar documentos",
+    "create": "Criar",
+    "creating": "A criar…",
+    "save": "Guardar",
+    "saving": "A guardar…",
+    "cancel": "Cancelar",
+    "reimbursement": "Reembolso",
+    "readOnlyNotice": "Este grupo está arquivado. A despesa é exibida apenas como leitura."
+  },
+  "ExpenseDocumentsInput": {
+    "TooBigToast": {
+      "title": "O ficheiro é demasiado grande",
+      "description": "O tamanho máximo de ficheiro que podes enviar é {maxSize}. O teu tem {size}."
+    },
+    "ErrorToast": {
+      "title": "Erro ao enviar documento",
+      "description": "Algo correu mal ao enviar o documento. Por favor, tenta novamente mais tarde ou seleciona um ficheiro diferente.",
+      "retry": "Tentar novamente"
+    }
+  },
+  "CreateFromReceipt": {
+    "Dialog": {
+      "triggerTitle": "Criar despesa a partir de recibo",
+      "title": "Criar a partir de recibo",
+      "description": "Extrair as informações da despesa a partir de uma foto de recibo.",
+      "body": "Envia a foto de um recibo, e vamos digitalizá-la para extrair as informações da despesa se for possível.",
+      "selectImage": "Selecionar imagem…",
+      "titleLabel": "Título:",
+      "categoryLabel": "Categoria:",
+      "amountLabel": "Montante:",
+      "dateLabel": "Data:",
+      "editNext": "Poderás editar as informações da despesa de seguida.",
+      "continue": "Continuar"
+    },
+    "unknown": "Desconhecido",
+    "TooBigToast": {
+      "title": "O ficheiro é demasiado grande",
+      "description": "O tamanho máximo de ficheiro que podes enviar é {maxSize}. O teu tem {size}."
+    },
+    "ErrorToast": {
+      "title": "Erro ao enviar documento",
+      "description": "Algo correu mal ao enviar o documento. Por favor, tenta novamente mais tarde ou seleciona um ficheiro diferente.",
+      "retry": "Tentar novamente"
+    }
+  },
+  "Balances": {
+    "title": "Saldos",
+    "description": "Este é o montante que cada participante pagou ou recebeu.",
+    "Reimbursements": {
+      "title": "Reembolsos sugeridos",
+      "description": "Aqui estão sugestões para reembolsos otimizados entre participantes.",
+      "noImbursements": "Parece que o teu grupo não precisa de nenhum reembolso 😁",
+      "owes": "<strong>{from}</strong> deve a <strong>{to}</strong>",
+      "markAsPaid": "Marcar como pago"
+    }
+  },
+  "Stats": {
+    "title": "Estatísticas",
+    "Totals": {
+      "title": "Totais",
+      "description": "Resumo de gastos de todo o grupo.",
+      "groupSpendings": "Total de gastos do grupo",
+      "groupEarnings": "Total de receitas do grupo",
+      "yourSpendings": "Os teus gastos totais",
+      "yourEarnings": "As tuas receitas totais",
+      "yourShare": "A tua parte total"
+    }
+  },
+  "Activity": {
+    "title": "Atividade",
+    "description": "Visão geral de toda a atividade neste grupo.",
+    "noActivity": "Ainda não há atividade no teu grupo.",
+    "someone": "Alguém",
+    "settingsModified": "As definições do grupo foram modificadas por <strong>{participant}</strong>.",
+    "expenseCreated": "Despesa <em>{expense}</em> criada por <strong>{participant}</strong>.",
+    "expenseUpdated": "Despesa <em>{expense}</em> atualizada por <strong>{participant}</strong>.",
+    "expenseDeleted": "Despesa <em>{expense}</em> eliminada por <strong>{participant}</strong>.",
+    "Groups": {
+      "today": "Hoje",
+      "yesterday": "Ontem",
+      "earlierThisWeek": "No início desta semana",
+      "lastWeek": "Semana passada",
+      "earlierThisMonth": "No início deste mês",
+      "lastMonth": "Mês passado",
+      "earlierThisYear": "No início deste ano",
+      "lastYear": "Ano passado",
+      "older": "Mais antigos"
+    }
+  },
+  "Information": {
+    "title": "Informação",
+    "description": "Usa este espaço para adicionar qualquer informação que possa ser relevante para os participantes do grupo.",
+    "empty": "Ainda não há informação do grupo."
+  },
+  "Settings": {
+    "title": "Definições"
+  },
+  "Share": {
+    "title": "Partilhar",
+    "description": "Para que outros participantes vejam o grupo e adicionem despesas, partilha o seu URL com eles.",
+    "warning": "Aviso!",
+    "warningHelp": "Todas as pessoas com o URL do grupo poderão ver e editar despesas. Partilha com cuidado!"
+  },
+  "SchemaErrors": {
+    "min1": "Introduz pelo menos um caractere.",
+    "min2": "Introduz pelo menos dois caracteres.",
+    "max5": "Introduz no máximo cinco caracteres.",
+    "max50": "Introduz no máximo 50 caracteres.",
+    "duplicateParticipantName": "Outro participante já tem este nome.",
+    "titleRequired": "Por favor, introduz um título.",
+    "invalidNumber": "Número inválido.",
+    "amountRequired": "Tens de introduzir um montante.",
+    "amountNotZero": "O montante não deve ser zero.",
+    "amountTenMillion": "O montante deve ser inferior a 10.000.000.",
+    "ratePositive": "A taxa deve ser estritamente superior a zero.",
+    "paidByRequired": "Tens de selecionar um participante.",
+    "paidForMin1": "A despesa deve ser paga por pelo menos um participante.",
+    "noZeroShares": "Todas as partes devem ser superiores a 0.",
+    "amountSum": "A soma dos montantes deve igualar o montante da despesa.",
+    "percentageSum": "A soma das percentagens deve igualar 100."
+  },
+  "Categories": {
+    "search": "Pesquisar categoria...",
+    "noCategory": "Nenhuma categoria encontrada.",
+    "Uncategorized": {
+      "heading": "Sem categoria",
+      "General": "Geral",
+      "Payment": "Pagamento"
+    },
+    "Entertainment": {
+      "heading": "Entretenimento",
+      "Entertainment": "Entretenimento",
+      "Games": "Jogos",
+      "Movies": "Filmes",
+      "Music": "Música",
+      "Sports": "Desporto"
+    },
+    "Food and Drink": {
+      "heading": "Comida e Bebida",
+      "Food and Drink": "Comida e Bebida",
+      "Dining Out": "Comer fora",
+      "Groceries": "Mercearia",
+      "Liquor": "Bebidas alcoólicas"
+    },
+    "Home": {
+      "heading": "Casa",
+      "Home": "Casa",
+      "Electronics": "Eletrónicos",
+      "Furniture": "Móveis",
+      "Household Supplies": "Suprimentos domésticos",
+      "Maintenance": "Manutenção",
+      "Mortgage": "Hipoteca",
+      "Pets": "Animais de estimação",
+      "Rent": "Aluguer",
+      "Services": "Serviços"
+    },
+    "Life": {
+      "heading": "Vida",
+      "Childcare": "Cuidados infantis",
+      "Clothing": "Roupas",
+      "Donation": "Doação",
+      "Education": "Educação",
+      "Gifts": "Presentes",
+      "Insurance": "Seguro",
+      "Medical Expenses": "Despesas médicas",
+      "Taxes": "Impostos"
+    },
+    "Transportation": {
+      "heading": "Transporte",
+      "Transportation": "Transporte",
+      "Bicycle": "Bicicleta",
+      "Bus/Train": "Autocarro/Comboio",
+      "Car": "Carro",
+      "Gas/Fuel": "Gasolina/Combustível",
+      "Hotel": "Hotel",
+      "Parking": "Estacionamento",
+      "Plane": "Avião",
+      "Taxi": "Táxi"
+    },
+    "Utilities": {
+      "heading": "Utilidades",
+      "Utilities": "Utilidades",
+      "Cleaning": "Limpeza",
+      "Electricity": "Eletricidade",
+      "Heat/Gas": "Aquecimento/Gás",
+      "Trash": "Lixo",
+      "TV/Phone/Internet": "TV/Telefone/Internet",
+      "Water": "Água"
+    }
+  },
+  "Currencies": {
+    "search": "Pesquisar moeda...",
+    "noCurrency": "Nenhuma moeda encontrada.",
+    "custom": {
+      "heading": "Personalizado"
+    },
+    "common": {
+      "heading": "Mais comuns"
+    },
+    "other": {
+      "heading": "Outras moedas"
+    }
+  },
+  "Members": {
+    "title": "Membros",
+    "description": "Pessoas que podem ver e contribuir para este grupo.",
+    "empty": "Ainda não há membros ativos.",
+    "unknownMember": "Membro desconhecido",
+    "youBadge": "Tu",
+    "role": {
+      "owner": "Proprietário",
+      "admin": "Admin",
+      "member": "Membro"
+    },
+    "joinedOn": "Entrou em {date}",
+    "noManagePermission": "Apenas proprietários e administradores podem convidar ou revogar membros do grupo.",
+    "archivedNotice": "Os convites estão desativados enquanto o grupo estiver arquivado. Desarquiva o grupo para convidar novos membros.",
+    "invite": {
+      "title": "Convidar membro",
+      "description": "Envia um convite por email. O convidado junta-se assim que aceitar a partir de uma conta correspondente.",
+      "email": "Email",
+      "emailPlaceholder": "amigo@example.com",
+      "role": "Função",
+      "send": "Enviar convite",
+      "invalidEmail": "Introduz um endereço de email válido."
+    },
+    "invitations": {
+      "title": "Convites pendentes",
+      "description": "Convites à espera de aceitação.",
+      "empty": "Nenhum convite pendente.",
+      "sentOn": "Enviado em {date}",
+      "revoke": "Revogar",
+      "revokeButton": "Revogar convite",
+      "revoked": "Convite revogado.",
+      "created": "Convite enviado para {email}."
     }
   }
 }
