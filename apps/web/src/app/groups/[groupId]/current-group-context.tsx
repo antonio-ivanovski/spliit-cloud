@@ -5,6 +5,9 @@ type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 type CurrentMember = NonNullable<
   AppRouterOutput['groups']['get']['currentMember']
 >
+type CurrentInvitation = NonNullable<
+  AppRouterOutput['groups']['get']['currentInvitation']
+>
 
 type GroupContext =
   | {
@@ -13,10 +16,17 @@ type GroupContext =
       group: Group
       // Server-backed ledger participant id for the signed-in account in
       // this group. Replaces the localStorage "activeUser" selection.
+      // Null for pending invitees who have not yet accepted.
       currentLedgerParticipantId: string | null
       // Server-backed membership snapshot for the signed-in account.
       // Used to gate owner/admin-only surfaces (e.g. member management).
-      currentMember: CurrentMember
+      // Null for pending invitees who have not yet accepted.
+      currentMember: CurrentMember | null
+      // Set when the signed-in account is a pending invitee of this
+      // group (the email matches and the invitation is PENDING). The
+      // group header surfaces an Accept/Decline banner when this is
+      // non-null.
+      currentInvitation: CurrentInvitation | null
     }
   | {
       isLoading: true
@@ -24,6 +34,7 @@ type GroupContext =
       group: undefined
       currentLedgerParticipantId: undefined
       currentMember: undefined
+      currentInvitation: undefined
     }
 
 const CurrentGroupContext = createContext<GroupContext | null>(null)

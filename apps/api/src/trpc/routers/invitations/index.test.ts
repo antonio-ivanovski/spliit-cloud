@@ -523,7 +523,10 @@ describe('invitationsRouter.create — guards and email', () => {
     expect(call.to).toBe('bob@example.com')
     expect(call.subject).toContain('Roadtrip 2026')
     expect(call.text).toMatch(/open spliit/i)
-    expect(call.text).toContain('/groups/grp-1/members')
+    // Email links to the group page itself (not /members): the
+    // `groups.get` procedure now allows pending invitees to open
+    // /groups/:id and surfaces an Accept/Decline banner in the header.
+    expect(call.text).toContain('/groups/grp-1')
     expect(call.text).not.toMatch(/create an account/i)
   })
 

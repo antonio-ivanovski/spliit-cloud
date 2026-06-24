@@ -74,7 +74,14 @@ export function GroupForm({
           information: group.information ?? '',
           currency: group.currency ?? '',
           currencyCode: group.currencyCode ?? '',
-          participants: group.participants,
+          // The backend ignores `participants` on update; the form's
+          // hidden `groupFormSchema.participants` validation only needs a
+          // stable placeholder. The group.participants array mixes in
+          // synthetic rows for pending invitations (with the invitee
+          // email as the name), which can exceed the schema's 50-char
+          // limit and break owner/admin saves with no visible field to
+          // fix.
+          participants: PARTICIPANTS_PLACEHOLDER,
         }
       : {
           name: '',

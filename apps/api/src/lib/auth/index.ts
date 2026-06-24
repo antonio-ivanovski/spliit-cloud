@@ -2,9 +2,9 @@ import { Account, prisma } from '@spliit/db'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { magicLink } from 'better-auth/plugins'
-import { env } from '../env'
+import { env, webOrigins } from '../env'
 import { sendEmail } from '../mail/send'
-import { getApiBaseUrl, getWebBaseUrl } from './urls'
+import { getApiBaseUrl } from './urls'
 
 /**
  * Spliit authentication is built on better-auth. better-auth owns its own
@@ -27,7 +27,11 @@ export const auth = betterAuth({
   appName: 'Spliit',
   baseURL: getApiBaseUrl(),
   secret: env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me',
-  trustedOrigins: [getWebBaseUrl()],
+  // CORS already allows every configured WEB_ORIGINS entry; pass the full
+  // list to better-auth so its trusted-origin check agrees. With only the
+  // first entry here, sign-in from any additional origin would pass CORS
+  // and then be rejected by better-auth.
+  trustedOrigins: webOrigins,
 
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
@@ -79,13 +83,25 @@ export const auth = betterAuth({
     magicLink({
       disableSignUp: false,
       sendMagicLink: async ({ email, url }) => {
-        await sendEmail({
-          to: email,
-          subject: 'Your Spliit sign-in link',
-          text:
-            `Click the link below to sign in to Spliit.\n\n${url}\n\n` +
-            `If you did not request this email, you can safely ignore it.`,
-        })
+        // Best-effort: a failed send must not break the magic-link sign-in
+        // flow. better-auth already created the verification token in the DB,
+        // so the user can retry from the sign-in page and a fresh token will
+        // be issued on the next request. Mirrors the swallow-and-warn pattern
+        // used in lib/invitations.ts.
+        try {
+          await sendEmail({
+            to: email,
+            subject: 'Your Spliit sign-in link',
+            text:
+              `Click the link below to sign in to Spliit.\n\n${url}\n\n` +
+              `If you did not request this email, you can safely ignore it.`,
+          })
+        } catch (err) {
+          console.warn(
+            `[magic-link] failed to send magic link email to ${email}:`,
+            err,
+          )
+        }
       },
     }),
   ],

@@ -26,7 +26,11 @@ export async function extractCategoryFromTitle(description: string) {
   const body: ChatCompletionCreateParamsNonStreaming = {
     model: 'gpt-3.5-turbo',
     temperature: 0.1, // try to be highly deterministic so that each distinct title may lead to the same category every time
-    max_tokens: 1, // category ids are unlikely to go beyond ~4 digits so limit possible abuse
+    // Category ids are now string slugs (e.g. `tv-phone-internet`,
+    // `food-and-drink`); the previous cap of 1 token silently truncated
+    // the response and the id lookup fell back to `general`. 16 tokens
+    // is well above the longest slug (17 chars) and still bounded.
+    max_tokens: 16,
     messages: [
       {
         role: 'system',

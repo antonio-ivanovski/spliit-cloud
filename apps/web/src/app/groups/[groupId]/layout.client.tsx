@@ -34,6 +34,7 @@ export function GroupLayoutClient({
           group: undefined,
           currentLedgerParticipantId: undefined,
           currentMember: undefined,
+          currentInvitation: undefined,
         }
       : {
           isLoading: false as const,
@@ -41,6 +42,7 @@ export function GroupLayoutClient({
           group: data.group,
           currentLedgerParticipantId: data.currentLedgerParticipantId ?? null,
           currentMember: data.currentMember,
+          currentInvitation: data.currentInvitation ?? null,
         }
 
   return (

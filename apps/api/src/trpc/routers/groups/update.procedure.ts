@@ -12,7 +12,7 @@ export const updateGroupProcedure = protectedProcedure
     }),
   )
   .mutation(async ({ input: { groupId, groupFormValues }, ctx }) => {
-    const { member } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
     })
@@ -20,6 +20,12 @@ export const updateGroupProcedure = protectedProcedure
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Only owners and admins can change group settings',
+      })
+    }
+    if (group.archived) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'This group is archived and its settings cannot be modified',
       })
     }
     await updateGroup(groupId, groupFormValues, {

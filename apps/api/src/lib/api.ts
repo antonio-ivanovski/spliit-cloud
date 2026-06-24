@@ -7,6 +7,7 @@ import {
   RecurrenceRule,
   type Ledger,
   type LedgerParticipant,
+  type Prisma,
 } from '@spliit/db'
 import {
   calculateNextDate,
@@ -38,6 +39,24 @@ async function loadGroupWithLedger(groupId: string) {
     where: { id: groupId },
     include: { ledger: true },
   })
+}
+
+/**
+ * Resolve the ledger participant id backing a given account's membership
+ * in a group. Returns `null` when the account is not an active member or
+ * has no ledger participant materialized yet. Used to populate
+ * `Activity.ledgerParticipantId` so the activity feed can render the
+ * member who performed the action (instead of the generic "someone").
+ */
+async function getMemberLedgerParticipantId(
+  groupId: string,
+  accountId: string,
+): Promise<string | null> {
+  const member = await prisma.groupMember.findUnique({
+    where: { groupId_accountId: { groupId, accountId } },
+    include: { ledgerParticipant: { select: { id: true } } },
+  })
+  return member?.ledgerParticipant?.id ?? null
 }
 
 /**
@@ -108,9 +127,29 @@ export async function createExpense(
   })
   if (!group || !group.ledgerId) throw new Error(`Invalid group ID: ${groupId}`)
 
+  // Resolve the current member's ledger participant id so the activity
+  // feed can render the right actor (instead of the generic "someone"
+  // when only the account id is stored).
+  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+    groupId,
+    actor.accountId,
+  )
+
   const ledgerId = group.ledgerId
   const participants = await prisma.ledgerParticipant.findMany({
-    where: { ledgerId },
+    where: {
+      ledgerId,
+      // Exclude historical participants that no longer represent a
+      // current group member: rows with no backing GroupMember that
+      // are also not tied to a PENDING invitation. These show up after
+      // a pending invitation is revoked (the participant is left
+      // behind when expenses referenced it). Accepting them in
+      // `paidBy` / `paidFor` would re-materialize the invitee.
+      OR: [
+        { groupMemberId: { not: null } },
+        { invitations: { some: { status: 'PENDING' } } },
+      ],
+    },
     select: { id: true, name: true },
   })
   const participantIds = new Set(participants.map((p) => p.id))
@@ -127,6 +166,7 @@ export async function createExpense(
   const expenseId = randomId()
   await logActivity(groupId, ActivityType.CREATE_EXPENSE, {
     accountId: actor.accountId,
+    ledgerParticipantId: actorLedgerParticipantId,
     expenseId,
     data: expenseFormValues.title,
   })
@@ -197,8 +237,14 @@ export async function deleteExpense(
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
 
+  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+    groupId,
+    actor.accountId,
+  )
+
   await logActivity(groupId, ActivityType.DELETE_EXPENSE, {
     accountId: actor.accountId,
+    ledgerParticipantId: actorLedgerParticipantId,
     expenseId,
     data: existingExpense?.title,
   })
@@ -250,8 +296,22 @@ export async function updateExpense(
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
 
+  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+    groupId,
+    actor.accountId,
+  )
+
   const participants = await prisma.ledgerParticipant.findMany({
-    where: { ledgerId: group.ledgerId },
+    where: {
+      ledgerId: group.ledgerId,
+      // Same exclusion as `createExpense`: drop historical rows left
+      // behind by revoked invitations so an update cannot re-add a
+      // removed invitee.
+      OR: [
+        { groupMemberId: { not: null } },
+        { invitations: { some: { status: 'PENDING' } } },
+      ],
+    },
     select: { id: true },
   })
   const participantIds = new Set(participants.map((p) => p.id))
@@ -266,6 +326,7 @@ export async function updateExpense(
 
   await logActivity(groupId, ActivityType.UPDATE_EXPENSE, {
     accountId: actor.accountId,
+    ledgerParticipantId: actorLedgerParticipantId,
     expenseId,
     data: expenseFormValues.title,
   })
@@ -385,9 +446,18 @@ export async function updateGroup(
   const existingGroup = await loadGroupWithLedger(groupId)
   if (!existingGroup) throw new Error('Invalid group ID')
   if (!existingGroup.ledgerId) throw new Error('Group has no ledger')
+  if (existingGroup.archived) {
+    throw new Error('Cannot modify settings of an archived group')
+  }
+
+  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+    groupId,
+    actor.accountId,
+  )
 
   await logActivity(groupId, ActivityType.UPDATE_GROUP, {
     accountId: actor.accountId,
+    ledgerParticipantId: actorLedgerParticipantId,
   })
 
   return prisma.$transaction(async (tx) => {
@@ -658,19 +728,20 @@ export async function logActivity(
   activityType: ActivityType,
   extra?: {
     accountId?: string
-    ledgerParticipantId?: string
+    ledgerParticipantId?: string | null
     expenseId?: string
     data?: string
   },
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
-  const group = await prisma.group.findUnique({
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) {
     throw new Error('Cannot log activity for a group without a ledger')
   }
-  return prisma.activity.create({
+  return client.activity.create({
     data: {
       id: randomId(),
       ledgerId: group.ledgerId,
@@ -698,6 +769,14 @@ export async function createRecurringExpenses() {
         nextExpenseCreatedAt: null,
         nextExpenseDate: {
           lte: utcDateFromLocal,
+        },
+        // Archived groups are read-only. Skip the generation pass for
+        // their ledgers so viewing expenses in any other group does not
+        // silently re-materialize new expenses in the archived one.
+        ledger: {
+          group: {
+            archived: false,
+          },
         },
       },
       include: {
@@ -885,18 +964,21 @@ export function buildSettlementLegs(balances: Balances): Reimbursement[] {
  * Returns the number of expenses created. The caller is expected to run
  * this inside a `prisma.$transaction` together with the `Group.update` that
  * flips `Group.archived` so the archive either succeeds with all settlement
- * expenses persisted, or fails without partial writes.
+ * expenses persisted, or fails without partial writes. Pass the transaction
+ * client as `client` so settlement expenses, activity rows, and the archive
+ * flag flip are committed atomically.
  */
 export async function createSettlementExpensesForArchive(
   groupId: string,
   actor: { accountId: string },
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<{ createdExpenses: number }> {
   const balances = await getGroupBalances(groupId)
   if (!hasUnsettledBalances(balances)) {
     return { createdExpenses: 0 }
   }
 
-  const group = await prisma.group.findUnique({
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
@@ -913,12 +995,17 @@ export async function createSettlementExpensesForArchive(
   for (const leg of legs) {
     if (leg.amount <= 0) continue
     const expenseId = randomId()
-    await logActivity(groupId, ActivityType.CREATE_EXPENSE, {
-      accountId: actor.accountId,
-      expenseId,
-      data: SETTLEMENT_TITLE,
-    })
-    await prisma.expense.create({
+    await logActivity(
+      groupId,
+      ActivityType.CREATE_EXPENSE,
+      {
+        accountId: actor.accountId,
+        expenseId,
+        data: SETTLEMENT_TITLE,
+      },
+      client,
+    )
+    await client.expense.create({
       data: {
         id: expenseId,
         ledgerId: group.ledgerId,

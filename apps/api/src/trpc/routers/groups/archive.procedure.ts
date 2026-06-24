@@ -66,9 +66,11 @@ export const archiveGroupProcedure = protectedProcedure
         // between the optimistic read above and the write.
         const balances = await getGroupBalances(groupId)
         if (hasUnsettledBalances(balances)) {
-          await createSettlementExpensesForArchive(groupId, {
-            accountId: ctx.auth.user.id,
-          })
+          await createSettlementExpensesForArchive(
+            groupId,
+            { accountId: ctx.auth.user.id },
+            tx,
+          )
         }
         const updated = await tx.group.update({
           where: { id: groupId },

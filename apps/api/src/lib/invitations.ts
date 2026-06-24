@@ -199,7 +199,13 @@ export async function sendInvitationEmail(opts: {
   } = opts
 
   const webBase = getWebBaseUrl()
-  const acceptUrl = `${webBase}/groups/${groupId}/members`
+  // Both flows land on the group page. The /groups/:id route now allows
+  // pending invitees (matching the account email) to open the page and
+  // surfaces an Accept/Decline banner in the group header. Linking to
+  // /groups/:id/members (the previous target) forced a redirect through
+  // a forbidden loadGroupContext because pending invitees are not yet
+  // ACTIVE members.
+  const acceptUrl = `${webBase}/groups/${groupId}`
   const signInUrl = `${webBase}/auth/sign-in?invitation=${invitationId}`
 
   const subject = `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
