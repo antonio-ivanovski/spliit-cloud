@@ -34,6 +34,7 @@ services:
       S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET:-}
       S3_UPLOAD_REGION: ${S3_UPLOAD_REGION:-}
       S3_UPLOAD_ENDPOINT: ${S3_UPLOAD_ENDPOINT:-}
+      S3_UPLOAD_PUBLIC_URL: ${S3_UPLOAD_PUBLIC_URL:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     networks:
       - dokploy-network

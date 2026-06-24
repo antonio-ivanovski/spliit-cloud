@@ -87,8 +87,8 @@ export async function createUploadUrl(
   const uploadUrl = await getSignedUrl(getS3Client(), command, {
     expiresIn: 60,
   })
-  const fileUrl = env.S3_UPLOAD_ENDPOINT
-    ? `${env.S3_UPLOAD_ENDPOINT.replace(/\/$/, '')}/${env.S3_UPLOAD_BUCKET}/${key}`
+  const fileUrl = env.S3_UPLOAD_PUBLIC_URL
+    ? `${env.S3_UPLOAD_PUBLIC_URL.replace(/\/$/, '')}/${key}`
     : `https://${env.S3_UPLOAD_BUCKET}.s3.${env.S3_UPLOAD_REGION}.amazonaws.com/${key}`
 
   return Response.json({ uploadUrl, fileUrl, key })

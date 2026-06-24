@@ -108,6 +108,7 @@ S3_UPLOAD_KEY=AAAAAAAAAAAAAAAAAAAA
 S3_UPLOAD_SECRET=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 S3_UPLOAD_BUCKET=name-of-s3-bucket
 S3_UPLOAD_REGION=us-east-1
+S3_UPLOAD_PUBLIC_URL=https://uploads.example.com
 ```
 
 You can also use other S3 providers by providing a custom endpoint:
@@ -115,6 +116,11 @@ You can also use other S3 providers by providing a custom endpoint:
 ```.env
 S3_UPLOAD_ENDPOINT=http://localhost:9000
 ```
+
+`S3_UPLOAD_ENDPOINT` is used for signing uploads. `S3_UPLOAD_PUBLIC_URL` is an
+optional browser-readable base URL stored on expense documents and must serve
+objects by key, for example `https://uploads.example.com/document-...jpg`. If it
+is not configured, documents use the default AWS S3 public URL format.
 
 ### Create expense from receipt
 
