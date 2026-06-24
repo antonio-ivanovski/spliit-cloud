@@ -69,6 +69,32 @@ export const auth = betterAuth({
     maxPasswordLength: 128,
   },
 
+  emailVerification: {
+    // Verification should complete the sign-up by creating a session before
+    // redirecting back to the web app.
+    autoSignInAfterVerification: true,
+    async sendVerificationEmail({ user, url }) {
+      // Best-effort: a failed send must not break the sign-up flow.
+      // better-auth already created the verification token in the DB, so the
+      // user can retry from the sign-in page and a fresh token will be issued.
+      // Mirrors the swallow-and-warn pattern used for magic links.
+      try {
+        await sendEmail({
+          to: user.email,
+          subject: 'Verify your Spliit account',
+          text:
+            `Click the link below to verify your email address and sign in to Spliit.\n\n${url}\n\n` +
+            `If you did not create a Spliit account, you can safely ignore this email.`,
+        })
+      } catch (err) {
+        console.warn(
+          `[email-verification] failed to send verification email to ${user.email}:`,
+          err,
+        )
+      }
+    },
+  },
+
   socialProviders:
     env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
       ? {

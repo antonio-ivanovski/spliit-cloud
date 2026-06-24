@@ -18,16 +18,28 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
-import { useRouter, useSearchParams } from '@/lib/navigation'
+import { useMutation } from '@tanstack/react-query'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { ChevronDown, Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
 
 type Mode = 'sign-in' | 'sign-up'
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message
+  return String(error)
+}
+
+function needsDisplayName(account: { name?: string | null; email?: string }) {
+  return !account.name || account.name === account.email
+}
+
 export function SignInPage() {
   const t = useTranslations('Auth')
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  const navigate = useNavigate()
+  const searchParams = new URLSearchParams(
+    useLocation({ select: (location) => location.searchStr }),
+  )
   const redirectTo = searchParams.get('redirect') ?? '/groups'
   const initialMode =
     searchParams.get('mode') === 'sign-up' ? 'sign-up' : 'sign-in'
@@ -37,20 +49,103 @@ export function SignInPage() {
       ? window.location.origin
       : 'http://localhost:3000'
   const callbackURL = `${webOrigin}${redirectTo}`
+  const completeProfilePath = `/auth/complete-profile?redirect=${encodeURIComponent(redirectTo)}`
+  const completeProfileCallbackURL = `${webOrigin}${completeProfilePath}`
 
   const [mode, setMode] = useState<Mode>(initialMode)
 
   const [magicEmail, setMagicEmail] = useState('')
   const [magicLinkSent, setMagicLinkSent] = useState(false)
-  const [magicSubmitting, setMagicSubmitting] = useState(false)
-  const [magicError, setMagicError] = useState<string | null>(null)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [passwordOpen, setPasswordOpen] = useState(false)
+  const [verificationEmailSent, setVerificationEmailSent] = useState(false)
+
+  const emailAuth = useMutation({
+    retry: false,
+    mutationFn: async (vars: {
+      mode: Mode
+      email: string
+      password: string
+      confirmPassword: string
+    }) => {
+      if (vars.mode === 'sign-in') {
+        const result = await authClient.signIn.email({
+          email: vars.email.trim(),
+          password: vars.password,
+        })
+        if (result.error) {
+          throw new Error(t('errors.invalidCredentials'))
+        }
+        return { mode: 'sign-in' as const }
+      }
+
+      if (vars.password.length < 8) {
+        throw new Error(t('errors.passwordTooShort'))
+      }
+      if (vars.password !== vars.confirmPassword) {
+        throw new Error(t('passwordMismatch'))
+      }
+
+      const result = await authClient.signUp.email({
+        email: vars.email.trim(),
+        password: vars.password,
+        // Pass an empty name so better-auth creates the account; the
+        // profile-completion route will handle accounts that still need a
+        // display name after verification.
+        name: '',
+        callbackURL: completeProfileCallbackURL,
+      })
+      if (result.error) {
+        throw new Error(
+          result.error.message?.includes('already')
+            ? t('errors.invalidCredentials')
+            : t('errors.generic'),
+        )
+      }
+      return { mode: 'sign-up' as const }
+    },
+    async onSuccess(data) {
+      if (data.mode === 'sign-up') {
+        // Email verification is required, so no session is created yet.
+        // Show a confirmation message instead of redirecting.
+        setVerificationEmailSent(true)
+      } else {
+        const session = await authClient.getSession({
+          query: { disableCookieCache: true },
+        })
+        const account = session.data?.user
+        await navigate({
+          href:
+            account && needsDisplayName(account)
+              ? completeProfilePath
+              : redirectTo,
+          replace: true,
+        })
+      }
+    },
+  })
+
+  const magicLink = useMutation({
+    retry: false,
+    mutationFn: async (vars: { email: string; callbackURL: string }) => {
+      if (!vars.email.trim()) {
+        throw new Error(t('errors.emailRequired'))
+      }
+      const result = await authClient.signIn.magicLink({
+        email: vars.email.trim(),
+        callbackURL: vars.callbackURL,
+      })
+      if (result.error) {
+        throw new Error(t('errors.magicLinkFailed'))
+      }
+    },
+    onSuccess() {
+      setMagicLinkSent(true)
+    },
+  })
 
   const canSubmitEmailPassword = (() => {
     if (!email.trim()) return false
@@ -60,84 +155,29 @@ export function SignInPage() {
 
   function switchMode(next: Mode) {
     setMode(next)
-    setError(null)
-    setMagicError(null)
+    emailAuth.reset()
+    magicLink.reset()
     setMagicLinkSent(false)
+    setVerificationEmailSent(false)
   }
 
-  async function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    setError(null)
-    setSubmitting(true)
-    try {
-      if (mode === 'sign-in') {
-        const result = await authClient.signIn.email({
-          email: email.trim(),
-          password,
-        })
-        if (result.error) {
-          setError(t('errors.invalidCredentials'))
-          return
-        }
-      } else {
-        if (password.length < 8) {
-          setError(t('errors.passwordTooShort'))
-          return
-        }
-        if (password !== confirmPassword) {
-          setError(t('passwordMismatch'))
-          return
-        }
-        const result = await authClient.signUp.email({
-          email: email.trim(),
-          password,
-          // Pass an empty name so better-auth creates the account; the
-          // `RequireAuth` guard will detect the missing display name and
-          // redirect the user to `/auth/complete-profile`, matching the
-          // magic-link sign-up flow.
-          name: '',
-        })
-        if (result.error) {
-          setError(
-            result.error.message?.includes('already')
-              ? t('errors.invalidCredentials')
-              : t('errors.generic'),
-          )
-          return
-        }
-      }
-      router.replace(redirectTo)
-    } finally {
-      setSubmitting(false)
-    }
+    emailAuth.mutate({
+      mode,
+      email,
+      password,
+      confirmPassword,
+    })
   }
 
-  async function handleMagicLink(event: React.FormEvent) {
+  function handleMagicLink(event: React.FormEvent) {
     event.preventDefault()
-    setMagicError(null)
-    if (!magicEmail.trim()) {
-      setMagicError(t('errors.emailRequired'))
-      return
-    }
-    setMagicSubmitting(true)
-    try {
-      const result = await authClient.signIn.magicLink({
-        email: magicEmail.trim(),
-        callbackURL,
-      })
-      if (result.error) {
-        setMagicError(t('errors.magicLinkFailed'))
-        return
-      }
-      setMagicLinkSent(true)
-    } finally {
-      setMagicSubmitting(false)
-    }
+    magicLink.mutate({ email: magicEmail, callbackURL })
   }
 
-  async function handleGoogle() {
-    setError(null)
-    await authClient.signIn.social({
+  function handleGoogle() {
+    authClient.signIn.social({
       provider: 'google',
       callbackURL,
     })
@@ -166,7 +206,7 @@ export function SignInPage() {
                 variant="outline"
                 className="w-full"
                 onClick={handleGoogle}
-                disabled={magicSubmitting || submitting}
+                disabled={emailAuth.isPending || magicLink.isPending}
               >
                 <GoogleIcon className="w-4 h-4 mr-2" />
                 {t('signInWithGoogle')}
@@ -187,7 +227,7 @@ export function SignInPage() {
                   onClick={() => {
                     setMagicLinkSent(false)
                     setMagicEmail('')
-                    setMagicError(null)
+                    magicLink.reset()
                   }}
                 >
                   {t('useDifferentEmail')}
@@ -207,18 +247,18 @@ export function SignInPage() {
                     required
                   />
                 </div>
-                {magicError && (
+                {magicLink.isError && (
                   <p className="text-sm text-destructive" role="alert">
-                    {magicError}
+                    {getErrorMessage(magicLink.error)}
                   </p>
                 )}
                 <Button
                   type="submit"
                   variant="default"
                   className="w-full"
-                  disabled={magicSubmitting || !magicEmail.trim()}
+                  disabled={magicLink.isPending || !magicEmail.trim()}
                 >
-                  {magicSubmitting && (
+                  {magicLink.isPending && (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   )}
                   <Mail className="w-4 h-4 mr-2" />
@@ -250,73 +290,98 @@ export function SignInPage() {
             </CollapsibleTrigger>
 
             <CollapsibleContent>
-              <form
-                className="flex flex-col gap-3 pt-1"
-                onSubmit={handleSubmit}
-              >
-                <p className="text-sm text-muted-foreground text-center">
-                  {mode === 'sign-in'
-                    ? t('passwordFormDescription')
-                    : t('passwordFormDescriptionSignUp')}
-                </p>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="auth-email">{t('email')}</Label>
-                  <Input
-                    id="auth-email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+              {verificationEmailSent ? (
+                <div className="rounded-lg border bg-muted/40 px-4 py-5 text-center flex flex-col gap-3">
+                  <Mail className="w-5 h-5 mx-auto text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    {t('verificationEmailSent')}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="mx-auto -my-1 h-auto py-0"
+                    onClick={() => {
+                      setVerificationEmailSent(false)
+                      setEmail('')
+                      setPassword('')
+                      setConfirmPassword('')
+                      emailAuth.reset()
+                      switchMode('sign-in')
+                    }}
+                  >
+                    {t('signIn')}
+                  </Button>
                 </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="auth-password">{t('password')}</Label>
-                  <Input
-                    id="auth-password"
-                    type="password"
-                    autoComplete={
-                      mode === 'sign-in' ? 'current-password' : 'new-password'
-                    }
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                {mode === 'sign-up' && (
+              ) : (
+                <form
+                  className="flex flex-col gap-3 pt-1"
+                  onSubmit={handleSubmit}
+                >
+                  <p className="text-sm text-muted-foreground text-center">
+                    {mode === 'sign-in'
+                      ? t('passwordFormDescription')
+                      : t('passwordFormDescriptionSignUp')}
+                  </p>
                   <div className="grid gap-1.5">
-                    <Label htmlFor="auth-confirm-password">
-                      {t('confirmPassword')}
-                    </Label>
+                    <Label htmlFor="auth-email">{t('email')}</Label>
                     <Input
-                      id="auth-confirm-password"
-                      type="password"
-                      autoComplete="new-password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      id="auth-email"
+                      type="email"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
-                )}
-                {error && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {error}
-                  </p>
-                )}
-                <Button
-                  type="submit"
-                  variant="outline"
-                  className="w-full"
-                  disabled={submitting || !canSubmitEmailPassword}
-                >
-                  {submitting && (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="auth-password">{t('password')}</Label>
+                    <Input
+                      id="auth-password"
+                      type="password"
+                      autoComplete={
+                        mode === 'sign-in' ? 'current-password' : 'new-password'
+                      }
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  {mode === 'sign-up' && (
+                    <div className="grid gap-1.5">
+                      <Label htmlFor="auth-confirm-password">
+                        {t('confirmPassword')}
+                      </Label>
+                      <Input
+                        id="auth-confirm-password"
+                        type="password"
+                        autoComplete="new-password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                      />
+                    </div>
                   )}
-                  {mode === 'sign-in'
-                    ? t('signInWithPassword')
-                    : t('signUpWithPassword')}
-                </Button>
-              </form>
+                  {emailAuth.isError && (
+                    <p className="text-sm text-destructive" role="alert">
+                      {getErrorMessage(emailAuth.error)}
+                    </p>
+                  )}
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="w-full"
+                    disabled={emailAuth.isPending || !canSubmitEmailPassword}
+                  >
+                    {emailAuth.isPending && (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    )}
+                    {mode === 'sign-in'
+                      ? t('signInWithPassword')
+                      : t('signUpWithPassword')}
+                  </Button>
+                </form>
+              )}
             </CollapsibleContent>
           </Collapsible>
         </CardContent>
