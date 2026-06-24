@@ -157,6 +157,7 @@
     "passwordFormDescriptionSignUp": "Create an account with your email and a password.",
     "useDifferentEmail": "Use a different email",
     "magicLinkSent": "Check your inbox for a sign-in link.",
+    "verificationEmailSent": "Check your inbox to verify your account.",
     "noAccount": "Don't have an account yet?",
     "haveAccount": "Already have an account?",
     "createAccount": "Create an account",

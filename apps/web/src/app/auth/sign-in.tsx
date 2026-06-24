@@ -51,6 +51,7 @@ export function SignInPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [passwordOpen, setPasswordOpen] = useState(false)
+  const [verificationEmailSent, setVerificationEmailSent] = useState(false)
 
   const canSubmitEmailPassword = (() => {
     if (!email.trim()) return false
@@ -63,6 +64,7 @@ export function SignInPage() {
     setError(null)
     setMagicError(null)
     setMagicLinkSent(false)
+    setVerificationEmailSent(false)
   }
 
   async function handleSubmit(event: React.FormEvent) {
@@ -96,6 +98,7 @@ export function SignInPage() {
           // redirect the user to `/auth/complete-profile`, matching the
           // magic-link sign-up flow.
           name: '',
+          callbackURL,
         })
         if (result.error) {
           setError(
@@ -105,6 +108,10 @@ export function SignInPage() {
           )
           return
         }
+        // Email verification is required, so no session is created yet.
+        // Show a confirmation message instead of redirecting.
+        setVerificationEmailSent(true)
+        return
       }
       router.replace(redirectTo)
     } finally {
@@ -250,73 +257,98 @@ export function SignInPage() {
             </CollapsibleTrigger>
 
             <CollapsibleContent>
-              <form
-                className="flex flex-col gap-3 pt-1"
-                onSubmit={handleSubmit}
-              >
-                <p className="text-sm text-muted-foreground text-center">
-                  {mode === 'sign-in'
-                    ? t('passwordFormDescription')
-                    : t('passwordFormDescriptionSignUp')}
-                </p>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="auth-email">{t('email')}</Label>
-                  <Input
-                    id="auth-email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+              {verificationEmailSent ? (
+                <div className="rounded-lg border bg-muted/40 px-4 py-5 text-center flex flex-col gap-3">
+                  <Mail className="w-5 h-5 mx-auto text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    {t('verificationEmailSent')}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="mx-auto -my-1 h-auto py-0"
+                    onClick={() => {
+                      setVerificationEmailSent(false)
+                      setEmail('')
+                      setPassword('')
+                      setConfirmPassword('')
+                      setError(null)
+                      switchMode('sign-in')
+                    }}
+                  >
+                    {t('signIn')}
+                  </Button>
                 </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="auth-password">{t('password')}</Label>
-                  <Input
-                    id="auth-password"
-                    type="password"
-                    autoComplete={
-                      mode === 'sign-in' ? 'current-password' : 'new-password'
-                    }
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                {mode === 'sign-up' && (
+              ) : (
+                <form
+                  className="flex flex-col gap-3 pt-1"
+                  onSubmit={handleSubmit}
+                >
+                  <p className="text-sm text-muted-foreground text-center">
+                    {mode === 'sign-in'
+                      ? t('passwordFormDescription')
+                      : t('passwordFormDescriptionSignUp')}
+                  </p>
                   <div className="grid gap-1.5">
-                    <Label htmlFor="auth-confirm-password">
-                      {t('confirmPassword')}
-                    </Label>
+                    <Label htmlFor="auth-email">{t('email')}</Label>
                     <Input
-                      id="auth-confirm-password"
-                      type="password"
-                      autoComplete="new-password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      id="auth-email"
+                      type="email"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
-                )}
-                {error && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {error}
-                  </p>
-                )}
-                <Button
-                  type="submit"
-                  variant="outline"
-                  className="w-full"
-                  disabled={submitting || !canSubmitEmailPassword}
-                >
-                  {submitting && (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="auth-password">{t('password')}</Label>
+                    <Input
+                      id="auth-password"
+                      type="password"
+                      autoComplete={
+                        mode === 'sign-in' ? 'current-password' : 'new-password'
+                      }
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  {mode === 'sign-up' && (
+                    <div className="grid gap-1.5">
+                      <Label htmlFor="auth-confirm-password">
+                        {t('confirmPassword')}
+                      </Label>
+                      <Input
+                        id="auth-confirm-password"
+                        type="password"
+                        autoComplete="new-password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                      />
+                    </div>
                   )}
-                  {mode === 'sign-in'
-                    ? t('signInWithPassword')
-                    : t('signUpWithPassword')}
-                </Button>
-              </form>
+                  {error && (
+                    <p className="text-sm text-destructive" role="alert">
+                      {error}
+                    </p>
+                  )}
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="w-full"
+                    disabled={submitting || !canSubmitEmailPassword}
+                  >
+                    {submitting && (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    )}
+                    {mode === 'sign-in'
+                      ? t('signInWithPassword')
+                      : t('signUpWithPassword')}
+                  </Button>
+                </form>
+              )}
             </CollapsibleContent>
           </Collapsible>
         </CardContent>
