@@ -22,7 +22,6 @@ import { useToast } from '@/components/ui/use-toast'
 import { useLocale, useTranslations } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
-import { StarFilledIcon } from '@radix-ui/react-icons'
 import type { AppRouterOutput } from '@spliit/api/router'
 import {
   Archive,
@@ -501,7 +500,10 @@ function GroupCard({
                 aria-label={isStarred ? t('unstarGroup') : t('starGroup')}
               >
                 {isStarred ? (
-                  <StarFilledIcon className="w-4 h-4 text-orange-400" />
+                  <Star
+                    fill="currentColor"
+                    className="w-4 h-4 text-orange-400"
+                  />
                 ) : (
                   <Star className="w-4 h-4 text-muted-foreground" />
                 )}

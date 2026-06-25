@@ -103,6 +103,11 @@ const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
 export const auth = betterAuth({
   appName: 'Spliit',
   baseURL: getApiBaseUrl(),
+  // The Hono mount point is `/auth/*`; tell better-auth so its internal
+  // router strips the prefix when matching request paths. Without this,
+  // basePath defaults to `/api/auth` and every endpoint (sign-in, callback,
+  // social, session, …) returns 404.
+  basePath: '/auth',
   secret: env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me',
   // CORS already allows every configured WEB_ORIGINS entry; pass the full
   // list to better-auth so its trusted-origin check agrees. With only the
