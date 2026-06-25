@@ -11,9 +11,12 @@ import {
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { getRouteApi } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { ExpenseForm } from './expense-form'
+
+const createExpenseRouteApi = getRouteApi('/groups/$groupId/expenses/create')
 
 export function CreateExpenseForm({
   groupId,
@@ -36,6 +39,11 @@ export function CreateExpenseForm({
 
   const utils = trpc.useUtils()
   const router = useRouter()
+  // Read create-route search params here (we are guaranteed to be on the
+  // create route). `ExpenseForm` is shared with the edit route, where
+  // calling `useSearch` against the create route would throw "Could not
+  // find an active match".
+  const searchParams = createExpenseRouteApi.useSearch()
 
   if (!group) return null
 
@@ -88,6 +96,7 @@ export function CreateExpenseForm({
   return (
     <ExpenseForm
       group={group}
+      searchParams={searchParams}
       currentLedgerParticipantId={currentLedgerParticipantId}
       onSubmit={async (expenseFormValues) => {
         await createExpenseMutateAsync({

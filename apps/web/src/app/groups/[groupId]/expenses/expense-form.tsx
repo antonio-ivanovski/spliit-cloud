@@ -49,6 +49,7 @@ import {
   formatCurrency,
   getCurrencyFromGroup,
 } from '@/lib/utils'
+import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -59,7 +60,6 @@ import {
   PAYMENT_CATEGORY_ID,
   RecurrenceRule,
 } from '@spliit/domain'
-import { getRouteApi } from '@tanstack/react-router'
 import { ChevronRight, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Resolver } from 'react-hook-form'
@@ -68,8 +68,6 @@ import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 import { DeletePopup } from '../../../../components/delete-popup'
 import { Textarea } from '../../../../components/ui/textarea'
-
-const createExpenseRouteApi = getRouteApi('/groups/$groupId/expenses/create')
 
 const enforceCurrencyPattern = (value: string) =>
   value
@@ -114,6 +112,7 @@ async function persistDefaultSplittingOptions(
 export function ExpenseForm({
   group,
   expense,
+  searchParams,
   onSubmit,
   onDelete,
   runtimeFeatureFlags,
@@ -122,6 +121,10 @@ export function ExpenseForm({
 }: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
+  // Search-param defaults from the create route (reimbursement flow, receipt
+  // scan, etc.). Only provided when rendering the create form; undefined on
+  // the edit form, where defaults come from the loaded expense.
+  searchParams?: CreateExpenseSearch
   onSubmit: (value: ExpenseFormValues) => Promise<void>
   onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
@@ -134,7 +137,10 @@ export function ExpenseForm({
   const locale = useLocale() as Locale
   const extractCategoryMutation = trpc.ai.extractCategoryFromTitle.useMutation()
   const isCreate = expense === undefined
-  const searchParams = createExpenseRouteApi.useSearch()
+  // Fall back to an empty object so the create-mode defaultValues below can
+  // still read optional fields when the create route happens to be rendered
+  // without any search params (e.g. a bare `/expenses/create` link).
+  const createSearch = searchParams ?? {}
 
   const getSelectedPayer = (field?: { value: string }) => {
     if (isCreate && field?.value === undefined) {
@@ -176,23 +182,23 @@ export function ExpenseForm({
           notes: expense.notes ?? '',
           recurrenceRule: expense.recurrenceRule ?? undefined,
         }
-      : searchParams.reimbursement
+      : createSearch.reimbursement
         ? {
             title: t('reimbursement'),
             expenseDate: new Date(),
             amount: amountAsDecimal(
-              Number(searchParams.amount) || 0,
+              Number(createSearch.amount) || 0,
               groupCurrency,
             ),
             originalCurrency: group.currencyCode,
             originalAmount: undefined,
             conversionRate: undefined,
             category: PAYMENT_CATEGORY_ID,
-            paidBy: searchParams.from ?? undefined,
+            paidBy: createSearch.from ?? undefined,
             paidFor: [
-              searchParams.to
+              createSearch.to
                 ? {
-                    participant: searchParams.to,
+                    participant: createSearch.to,
                     shares: '1' as any, // String for consistent form handling
                   }
                 : undefined,
@@ -205,28 +211,28 @@ export function ExpenseForm({
             recurrenceRule: RecurrenceRule.NONE,
           }
         : {
-            title: searchParams.title ?? '',
-            expenseDate: searchParams.date
-              ? new Date(searchParams.date)
+            title: createSearch.title ?? '',
+            expenseDate: createSearch.date
+              ? new Date(createSearch.date)
               : new Date(),
-            amount: Number(searchParams.amount) || 0,
+            amount: Number(createSearch.amount) || 0,
             originalCurrency: group.currencyCode ?? undefined,
             originalAmount: undefined,
             conversionRate: undefined,
-            category: parseCategoryIdFromUrl(searchParams.categoryId),
+            category: parseCategoryIdFromUrl(createSearch.categoryId),
             // paid for all, split evenly
             paidFor: defaultSplittingOptions.paidFor,
             paidBy: getSelectedPayer(),
             isReimbursement: false,
             splitMode: defaultSplittingOptions.splitMode,
             saveDefaultSplittingOptions: false,
-            documents: searchParams.imageUrl
+            documents: createSearch.imageUrl
               ? [
                   {
                     id: randomId(),
-                    url: searchParams.imageUrl,
-                    width: Number(searchParams.imageWidth),
-                    height: Number(searchParams.imageHeight),
+                    url: createSearch.imageUrl,
+                    width: Number(createSearch.imageWidth),
+                    height: Number(createSearch.imageHeight),
                   },
                 ]
               : [],
