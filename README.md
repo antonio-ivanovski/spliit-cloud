@@ -2,7 +2,7 @@
 
 Spliit is a free and open source alternative to Splitwise.
 
-> Coming soon — this project is still in development.
+Spliit Cloud is deployed at [spliit.cloud](https://spliit.cloud).
 
 Spliit Cloud is a community fork of Spliit, originally created by [Sebastien Castiel](https://github.com/scastiel). The original `spliit-app/spliit` project appears inactive, with issues and pull requests not receiving maintainer responses. This fork exists to keep the project moving in a more focused direction.
 
@@ -31,21 +31,28 @@ The initial goals are:
 - [x] Search for expenses in a group
 - [x] Upload and attach images to expenses
 - [x] Create expense by scanning a receipt
+- [x] [Cloud accounts and group synchronization](./openspec/changes/add-accounts-cloud-group-sync)
 
 ### Possible incoming features
 
 - [ ] Ability to create recurring expenses
-- [ ] Import expenses from Splitwise
-- [ ] Cloud accounts and group synchronization
-- [ ] [Accounts and cloud group sync](./openspec/changes/add-accounts-cloud-group-sync)
+- [ ] MCP and simplified API surface for AI agent based usage
+- [ ] Publish API OpenAPI spec
+- [ ] Continue bundle-size reduction work. TanStack lazy routes and react-i18next lazy locale loading are already in place; current low-hanging fruit work resulted in the main chunk from roughly 1500 kB to 750 kB.
+- [ ] Complete offline usage and sync when online
+- [ ] Admin and self member management
+- [ ] Update the rest of the tech stack, including TypeScript
+- [ ] Self account settings, including synced theme preferences and display name
 - [ ] [Direct account-to-account expenses](./openspec/changes/add-direct-account-expenses)
 - [ ] [Account overview homepage](./openspec/changes/add-overview-homepage)
 - [ ] [Extensible expense import, starting with Spliit groups](./openspec/changes/import-spliit-groups)
+- [ ] End-to-end encrypted groups and expenses
 
 ## Stack
 
-- [Vite](https://vite.dev/) + [React](https://react.dev/) for the web SPA
-- [Hono](https://hono.dev/) + [tRPC](https://trpc.io/) for the API
+- [Vite](https://vite.dev/) + [React](https://react.dev/) for the web SPA, replacing Next.js in favor of simplicity, efficiency, and room for future expansion
+- [Hono](https://hono.dev/) + [tRPC](https://trpc.io/) for the API, also chosen over Next.js API routes for a smaller and more explicit runtime
+- [Bun](https://bun.sh/) for package management and the API runtime
 - [TailwindCSS](https://tailwindcss.com/) for the styling
 - [shadcn/UI](https://ui.shadcn.com/) for the UI components
 - [Prisma](https://prisma.io) to access the database
@@ -58,13 +65,8 @@ Financial support links are TBD.
 
 ### Translation
 
-The project's translations are managed using [our Weblate project](https://hosted.weblate.org/projects/spliit/spliit/).
-You can easily add missing translations to the project or even add a new language!
-Here is the current state of translation:
-
-<a href="https://hosted.weblate.org/engage/spliit/">
-<img src="https://hosted.weblate.org/widget/spliit/spliit/multi-auto.svg" alt="Translation status" />
-</a>
+Weblate is not set up for this fork yet. Until then, translation contributions
+are still welcome as direct JSON changes in the locale files.
 
 ## Run locally
 
