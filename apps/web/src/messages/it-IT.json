@@ -541,6 +541,7 @@
     "confirmPassword": "Conferma password",
     "passwordMismatch": "Le password non corrispondono.",
     "passwordTooShort": "La password deve contenere almeno 8 caratteri.",
+    "forgotPasswordLink": "Password dimenticata?",
     "errors": {
       "invalidCredentials": "Email o password non corretti.",
       "emailRequired": "Inserisci il tuo indirizzo email.",
@@ -566,6 +567,39 @@
       "nameRequired": "Inserisci un nome visualizzato.",
       "nameTooShort": "Il nome deve contenere almeno 2 caratteri.",
       "generic": "Qualcosa è andato storto. Per favore riprova."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Reimposta la tua password",
+    "subtitle": "Inserisci l'email del tuo account e ti invieremo un link per scegliere una nuova password.",
+    "emailLabel": "Email",
+    "submit": "Invia link di reimpostazione",
+    "emailSent": "Se esiste un account per quella email, riceverai un link di reimpostazione a breve.",
+    "tryAgain": "Usa un'email diversa",
+    "backToSignIn": "Torna all'accesso",
+    "errors": {
+      "sendFailed": "Impossibile inviare il link di reimpostazione. Per favore riprova."
+    }
+  },
+  "ResetPassword": {
+    "title": "Scegli una nuova password",
+    "subtitle": "Inserisci la nuova password per il tuo account Spliit.",
+    "newPassword": "Nuova password",
+    "confirmPassword": "Conferma nuova password",
+    "passwordMismatch": "Le password non corrispondono.",
+    "submit": "Salva nuova password",
+    "submitting": "Salvataggio…",
+    "success": "Password aggiornata",
+    "successDescription": "La tua password è stata modificata. Accedi con la tua nuova password per continuare.",
+    "goToSignIn": "Vai all'accesso",
+    "invalidTokenTitle": "Questo link di reimpostazione non può essere utilizzato",
+    "invalidTokenDescription": "Il link potrebbe essere scaduto o già stato utilizzato. Richiedine uno nuovo per riprovare.",
+    "requestNewLink": "Richiedi un nuovo link",
+    "backToSignIn": "Torna all'accesso",
+    "errors": {
+      "generic": "Qualcosa è andato storto. Per favore riprova.",
+      "invalidToken": "Questo link di reimpostazione è scaduto o è già stato utilizzato.",
+      "passwordTooShort": "La password deve contenere almeno 8 caratteri."
     }
   },
   "Members": {

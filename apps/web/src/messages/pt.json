@@ -217,6 +217,7 @@
     "confirmPassword": "Confirmar palavra-passe",
     "passwordMismatch": "As palavras-passe não coincidem.",
     "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres.",
+    "forgotPasswordLink": "Esqueceu-se da palavra-passe?",
     "errors": {
       "invalidCredentials": "Email ou palavra-passe incorretos.",
       "emailRequired": "Introduz o teu endereço de email.",
@@ -242,6 +243,39 @@
       "nameRequired": "Introduz um nome de exibição.",
       "nameTooShort": "O nome deve ter pelo menos 2 caracteres.",
       "generic": "Algo correu mal. Por favor, tenta novamente."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Reponha a sua palavra-passe",
+    "subtitle": "Introduz o e-mail da tua conta e enviar-te-emos um link para escolheres uma nova palavra-passe.",
+    "emailLabel": "Email",
+    "submit": "Enviar link de reposição",
+    "emailSent": "Se existir uma conta para esse e-mail, receberás um link de reposição em breve.",
+    "tryAgain": "Usar um e-mail diferente",
+    "backToSignIn": "Voltar ao início de sessão",
+    "errors": {
+      "sendFailed": "Não foi possível enviar o link de reposição. Tenta novamente."
+    }
+  },
+  "ResetPassword": {
+    "title": "Escolhe uma nova palavra-passe",
+    "subtitle": "Introduz a nova palavra-passe para a tua conta Spliit.",
+    "newPassword": "Nova palavra-passe",
+    "confirmPassword": "Confirmar nova palavra-passe",
+    "passwordMismatch": "As palavras-passe não coincidem.",
+    "submit": "Guardar nova palavra-passe",
+    "submitting": "A guardar…",
+    "success": "Palavra-passe atualizada",
+    "successDescription": "A sua palavra-passe foi alterada. Inicia sessão com a tua nova palavra-passe para continuar.",
+    "goToSignIn": "Ir para o início de sessão",
+    "invalidTokenTitle": "Este link de reposição não pode ser usado",
+    "invalidTokenDescription": "O link pode ter expirado ou já foi usado. Solicita um novo para tentares novamente.",
+    "requestNewLink": "Solicitar um novo link",
+    "backToSignIn": "Voltar ao início de sessão",
+    "errors": {
+      "generic": "Algo correu mal. Tenta novamente.",
+      "invalidToken": "Este link de reposição expirou ou já foi usado.",
+      "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres."
     }
   },
   "ExpenseForm": {

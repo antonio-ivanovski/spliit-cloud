@@ -10,7 +10,14 @@ import '../../test/mocks'
 // `options` property.
 const realAuthModule = (await vi.importActual('./index')) as {
   auth: {
-    options: { emailVerification?: { autoSignInAfterVerification?: boolean } }
+    options: {
+      emailVerification?: { autoSignInAfterVerification?: boolean }
+      emailAndPassword?: {
+        sendResetPassword?: unknown
+        revokeSessionsOnPasswordReset?: boolean
+        resetPasswordTokenExpiresIn?: number
+      }
+    }
   }
 }
 
@@ -22,6 +29,26 @@ describe('better-auth emailVerification config', () => {
     expect(
       realAuthModule.auth.options.emailVerification
         ?.autoSignInAfterVerification,
+    ).toBe(true)
+  })
+})
+
+describe('better-auth emailAndPassword config', () => {
+  it('configures sendResetPassword so /api/auth/request-password-reset works', () => {
+    // better-auth short-circuits the request-password-reset endpoint with a
+    // "RESET_PASSWORD_DISABLED" error when no sendResetPassword callback is
+    // configured. The web's forgot-password page would silently do nothing.
+    expect(
+      typeof realAuthModule.auth.options.emailAndPassword?.sendResetPassword,
+    ).toBe('function')
+  })
+
+  it('revokes existing sessions on password reset', () => {
+    // Sessions revoked on reset means a stolen cookie loses access as soon as
+    // the rightful owner resets their password.
+    expect(
+      realAuthModule.auth.options.emailAndPassword
+        ?.revokeSessionsOnPasswordReset,
     ).toBe(true)
   })
 })

@@ -541,6 +541,7 @@
     "confirmPassword": "אשר סיסמה",
     "passwordMismatch": "הסיסמאות אינן תואמות.",
     "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+    "forgotPasswordLink": "שכחת סיסמה?",
     "errors": {
       "invalidCredentials": "אימייל או סיסמה שגויים.",
       "emailRequired": "הזן את כתובת האימייל שלך.",
@@ -566,6 +567,39 @@
       "nameRequired": "הזן שם תצוגה.",
       "nameTooShort": "השם חייב להכיל לפחות 2 תווים.",
       "generic": "משהו השתבש. אנא נסה שוב."
+    }
+  },
+  "ForgotPassword": {
+    "title": "אפס את הסיסמה שלך",
+    "subtitle": "הכנס את האימייל של החשבון שלך ונשלח לך קישור לבחירת סיסמה חדשה.",
+    "emailLabel": "אימייל",
+    "submit": "שלח קישור לאיפוס",
+    "emailSent": "אם קיים חשבון עבור האימייל הזה, תקבל קישור איפוס בקרוב.",
+    "tryAgain": "השתמש באימייל אחר",
+    "backToSignIn": "חזרה להתחברות",
+    "errors": {
+      "sendFailed": "לא ניתן לשלוח את קישור האיפוס. אנא נסה שוב."
+    }
+  },
+  "ResetPassword": {
+    "title": "בחר סיסמה חדשה",
+    "subtitle": "הכנס את הסיסמה החדשה עבור חשבון Spliit שלך.",
+    "newPassword": "סיסמה חדשה",
+    "confirmPassword": "אשר סיסמה חדשה",
+    "passwordMismatch": "הסיסמאות אינן תואמות.",
+    "submit": "שמור סיסמה חדשה",
+    "submitting": "שומר…",
+    "success": "הסיסמה עודכנה",
+    "successDescription": "הסיסמה שלך שונתה. התחבר עם הסיסמה החדשה שלך כדי להמשיך.",
+    "goToSignIn": "עבור להתחברות",
+    "invalidTokenTitle": "לא ניתן להשתמש בקישור האיפוס הזה",
+    "invalidTokenDescription": "ייתכן שהקישור פג או שכבר נעשה בו שימוש. בקש קישור חדש כדי לנסות שוב.",
+    "requestNewLink": "בקש קישור חדש",
+    "backToSignIn": "חזרה להתחברות",
+    "errors": {
+      "generic": "משהו השתבש. אנא נסה שוב.",
+      "invalidToken": "קישור האיפוס הזה פג או שכבר נעשה בו שימוש.",
+      "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים."
     }
   },
   "Members": {

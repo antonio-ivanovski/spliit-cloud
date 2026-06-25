@@ -528,6 +528,7 @@
     "confirmPassword": "確認密碼",
     "passwordMismatch": "密碼不符。",
     "passwordTooShort": "密碼必須至少 8 個字元。",
+    "forgotPasswordLink": "忘記密碼？",
     "errors": {
       "invalidCredentials": "電子郵件或密碼不正確。",
       "emailRequired": "請輸入您的電子郵件地址。",
@@ -553,6 +554,39 @@
       "nameRequired": "請輸入顯示名稱。",
       "nameTooShort": "姓名必須至少 2 個字元。",
       "generic": "出了點問題。請再試一次。"
+    }
+  },
+  "ForgotPassword": {
+    "title": "重設密碼",
+    "subtitle": "輸入您的帳戶電子郵件，我們將寄送一個連結供您選擇新密碼。",
+    "emailLabel": "電子郵件",
+    "submit": "傳送重設連結",
+    "emailSent": "如果該電子郵件存在帳戶，您很快就會收到重設連結。",
+    "tryAgain": "使用其他電子郵件",
+    "backToSignIn": "返回登入",
+    "errors": {
+      "sendFailed": "無法傳送重設連結。請再試一次。"
+    }
+  },
+  "ResetPassword": {
+    "title": "選擇新密碼",
+    "subtitle": "為您的 Spliit 帳戶輸入新密碼。",
+    "newPassword": "新密碼",
+    "confirmPassword": "確認新密碼",
+    "passwordMismatch": "密碼不符。",
+    "submit": "儲存新密碼",
+    "submitting": "儲存中…",
+    "success": "密碼已更新",
+    "successDescription": "您的密碼已變更。請使用新密碼登入以繼續。",
+    "goToSignIn": "前往登入",
+    "invalidTokenTitle": "此重設連結無法使用",
+    "invalidTokenDescription": "該連結可能已過期或已被使用。請求一個新連結以重試。",
+    "requestNewLink": "請求新連結",
+    "backToSignIn": "返回登入",
+    "errors": {
+      "generic": "出了點問題。請再試一次。",
+      "invalidToken": "此重設連結已過期或已被使用。",
+      "passwordTooShort": "密碼必須至少 8 個字元。"
     }
   },
   "Currencies": {

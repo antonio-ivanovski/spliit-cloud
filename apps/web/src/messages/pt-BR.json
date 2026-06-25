@@ -541,6 +541,7 @@
     "confirmPassword": "Confirmar senha",
     "passwordMismatch": "As senhas não coincidem.",
     "passwordTooShort": "A senha deve ter pelo menos 8 caracteres.",
+    "forgotPasswordLink": "Esqueceu a senha?",
     "errors": {
       "invalidCredentials": "E-mail ou senha incorretos.",
       "emailRequired": "Insira seu endereço de e-mail.",
@@ -566,6 +567,39 @@
       "nameRequired": "Insira um nome de exibição.",
       "nameTooShort": "O nome deve ter pelo menos 2 caracteres.",
       "generic": "Algo deu errado. Por favor, tente novamente."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Redefina sua senha",
+    "subtitle": "Insira o e-mail da sua conta e enviaremos um link para escolher uma nova senha.",
+    "emailLabel": "E-mail",
+    "submit": "Enviar link de redefinição",
+    "emailSent": "Se existir uma conta para esse e-mail, você receberá um link de redefinição em breve.",
+    "tryAgain": "Usar um e-mail diferente",
+    "backToSignIn": "Voltar ao login",
+    "errors": {
+      "sendFailed": "Não foi possível enviar o link de redefinição. Tente novamente."
+    }
+  },
+  "ResetPassword": {
+    "title": "Escolha uma nova senha",
+    "subtitle": "Insira a nova senha para sua conta Spliit.",
+    "newPassword": "Nova senha",
+    "confirmPassword": "Confirmar nova senha",
+    "passwordMismatch": "As senhas não coincidem.",
+    "submit": "Salvar nova senha",
+    "submitting": "Salvando…",
+    "success": "Senha atualizada",
+    "successDescription": "Sua senha foi alterada. Faça login com sua nova senha para continuar.",
+    "goToSignIn": "Ir para o login",
+    "invalidTokenTitle": "Este link de redefinição não pode ser usado",
+    "invalidTokenDescription": "O link pode ter expirado ou já foi usado. Solicite um novo para tentar novamente.",
+    "requestNewLink": "Solicitar um novo link",
+    "backToSignIn": "Voltar ao login",
+    "errors": {
+      "generic": "Algo deu errado. Tente novamente.",
+      "invalidToken": "Este link de redefinição expirou ou já foi usado.",
+      "passwordTooShort": "A senha deve ter pelo menos 8 caracteres."
     }
   },
   "Members": {

@@ -541,6 +541,7 @@
     "confirmPassword": "パスワードを確認",
     "passwordMismatch": "パスワードが一致しません。",
     "passwordTooShort": "パスワードは8文字以上である必要があります。",
+    "forgotPasswordLink": "パスワードをお忘れですか？",
     "errors": {
       "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
       "emailRequired": "メールアドレスを入力してください。",
@@ -566,6 +567,39 @@
       "nameRequired": "表示名を入力してください。",
       "nameTooShort": "名前は2文字以上である必要があります。",
       "generic": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "ForgotPassword": {
+    "title": "パスワードをリセット",
+    "subtitle": "アカウントのメールアドレスを入力すると、新しいパスワードを設定するためのリンクをお送りします。",
+    "emailLabel": "メールアドレス",
+    "submit": "リセットリンクを送信",
+    "emailSent": "そのメールアドレスのアカウントが存在する場合、まもなくリセットリンクが届きます。",
+    "tryAgain": "別のメールアドレスを使用",
+    "backToSignIn": "サインインに戻る",
+    "errors": {
+      "sendFailed": "リセットリンクを送信できませんでした。もう一度お試しください。"
+    }
+  },
+  "ResetPassword": {
+    "title": "新しいパスワードを選択",
+    "subtitle": "Spliitアカウントの新しいパスワードを入力してください。",
+    "newPassword": "新しいパスワード",
+    "confirmPassword": "新しいパスワードを確認",
+    "passwordMismatch": "パスワードが一致しません。",
+    "submit": "新しいパスワードを保存",
+    "submitting": "保存中…",
+    "success": "パスワードを更新しました",
+    "successDescription": "パスワードが変更されました。新しいパスワードでサインインして続行してください。",
+    "goToSignIn": "サインインへ",
+    "invalidTokenTitle": "このリセットリンクは使用できません",
+    "invalidTokenDescription": "リンクが期限切れか、すでに使用されている可能性があります。新しいリンクをリクエストしてもう一度お試しください。",
+    "requestNewLink": "新しいリンクをリクエスト",
+    "backToSignIn": "サインインに戻る",
+    "errors": {
+      "generic": "問題が発生しました。もう一度お試しください。",
+      "invalidToken": "このリセットリンクは期限切れか、すでに使用されています。",
+      "passwordTooShort": "パスワードは8文字以上である必要があります。"
     }
   },
   "Members": {

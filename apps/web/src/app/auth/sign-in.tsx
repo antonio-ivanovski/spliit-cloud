@@ -347,6 +347,21 @@ export function SignInPage() {
                       required
                     />
                   </div>
+                  {mode === 'sign-in' && (
+                    <div className="-mt-1 text-right">
+                      <Button
+                        type="button"
+                        variant="link"
+                        size="sm"
+                        className="h-auto px-0 py-0 text-xs"
+                        onClick={() =>
+                          navigate({ href: '/auth/forgot-password' })
+                        }
+                      >
+                        {t('forgotPasswordLink')}
+                      </Button>
+                    </div>
+                  )}
                   {mode === 'sign-up' && (
                     <div className="grid gap-1.5">
                       <Label htmlFor="auth-confirm-password">

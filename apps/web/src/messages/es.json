@@ -541,6 +541,7 @@
     "confirmPassword": "Confirmar contraseña",
     "passwordMismatch": "Las contraseñas no coinciden.",
     "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+    "forgotPasswordLink": "¿Olvidaste tu contraseña?",
     "errors": {
       "invalidCredentials": "El correo o la contraseña son incorrectos.",
       "emailRequired": "Introduce tu dirección de correo electrónico.",
@@ -566,6 +567,39 @@
       "nameRequired": "Introduce un nombre para mostrar.",
       "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
       "generic": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Restablece tu contraseña",
+    "subtitle": "Introduce el correo de tu cuenta y te enviaremos un enlace para elegir una nueva contraseña.",
+    "emailLabel": "Correo electrónico",
+    "submit": "Enviar enlace de restablecimiento",
+    "emailSent": "Si existe una cuenta para ese correo, recibirás un enlace de restablecimiento en breve.",
+    "tryAgain": "Usar un correo diferente",
+    "backToSignIn": "Volver a iniciar sesión",
+    "errors": {
+      "sendFailed": "No se pudo enviar el enlace de restablecimiento. Inténtalo de nuevo."
+    }
+  },
+  "ResetPassword": {
+    "title": "Elige una nueva contraseña",
+    "subtitle": "Introduce la nueva contraseña para tu cuenta de Spliit.",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "submit": "Guardar nueva contraseña",
+    "submitting": "Guardando…",
+    "success": "Contraseña actualizada",
+    "successDescription": "Tu contraseña ha sido cambiada. Inicia sesión con tu nueva contraseña para continuar.",
+    "goToSignIn": "Ir a iniciar sesión",
+    "invalidTokenTitle": "Este enlace de restablecimiento no se puede usar",
+    "invalidTokenDescription": "El enlace puede haber caducado o ya haber sido usado. Solicita uno nuevo para intentarlo de nuevo.",
+    "requestNewLink": "Solicitar un nuevo enlace",
+    "backToSignIn": "Volver a iniciar sesión",
+    "errors": {
+      "generic": "Algo salió mal. Inténtalo de nuevo.",
+      "invalidToken": "Este enlace de restablecimiento ha caducado o ya ha sido usado.",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres."
     }
   },
   "Members": {

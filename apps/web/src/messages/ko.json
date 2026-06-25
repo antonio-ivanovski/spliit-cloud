@@ -541,6 +541,7 @@
     "confirmPassword": "비밀번호 확인",
     "passwordMismatch": "비밀번호가 일치하지 않습니다.",
     "passwordTooShort": "비밀번호는 최소 8자 이상이어야 합니다.",
+    "forgotPasswordLink": "비밀번호를 잊으셨나요?",
     "errors": {
       "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
       "emailRequired": "이메일 주소를 입력하세요.",
@@ -566,6 +567,39 @@
       "nameRequired": "표시 이름을 입력하세요.",
       "nameTooShort": "이름은 최소 2자 이상이어야 합니다.",
       "generic": "문제가 발생했습니다. 다시 시도해 주세요."
+    }
+  },
+  "ForgotPassword": {
+    "title": "비밀번호 재설정",
+    "subtitle": "계정 이메일을 입력하시면 새 비밀번호를 선택할 수 있는 링크를 보내드립니다.",
+    "emailLabel": "이메일",
+    "submit": "재설정 링크 보내기",
+    "emailSent": "해당 이메일의 계정이 존재하는 경우, 곧 재설정 링크를 받게 됩니다.",
+    "tryAgain": "다른 이메일 사용",
+    "backToSignIn": "로그인으로 돌아가기",
+    "errors": {
+      "sendFailed": "재설정 링크를 보낼 수 없습니다. 다시 시도해 주세요."
+    }
+  },
+  "ResetPassword": {
+    "title": "새 비밀번호 선택",
+    "subtitle": "Spliit 계정의 새 비밀번호를 입력하세요.",
+    "newPassword": "새 비밀번호",
+    "confirmPassword": "새 비밀번호 확인",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다.",
+    "submit": "새 비밀번호 저장",
+    "submitting": "저장 중…",
+    "success": "비밀번호 업데이트됨",
+    "successDescription": "비밀번호가 변경되었습니다. 계속하려면 새 비밀번호로 로그인하세요.",
+    "goToSignIn": "로그인으로 이동",
+    "invalidTokenTitle": "이 재설정 링크를 사용할 수 없습니다",
+    "invalidTokenDescription": "링크가 만료되었거나 이미 사용되었을 수 있습니다. 새 링크를 요청하여 다시 시도하세요.",
+    "requestNewLink": "새 링크 요청",
+    "backToSignIn": "로그인으로 돌아가기",
+    "errors": {
+      "generic": "문제가 발생했습니다. 다시 시도해 주세요.",
+      "invalidToken": "이 재설정 링크가 만료되었거나 이미 사용되었습니다.",
+      "passwordTooShort": "비밀번호는 최소 8자 이상이어야 합니다."
     }
   },
   "Members": {

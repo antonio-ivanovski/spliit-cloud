@@ -528,6 +528,7 @@
     "confirmPassword": "Potwierdź hasło",
     "passwordMismatch": "Hasła nie są zgodne.",
     "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+    "forgotPasswordLink": "Nie pamiętasz hasła?",
     "errors": {
       "invalidCredentials": "E-mail lub hasło jest nieprawidłowe.",
       "emailRequired": "Wprowadź swój adres e-mail.",
@@ -553,6 +554,39 @@
       "nameRequired": "Wprowadź nazwę wyświetlaną.",
       "nameTooShort": "Nazwa musi mieć co najmniej 2 znaki.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Zresetuj swoje hasło",
+    "subtitle": "Wprowadź e-mail swojego konta, a wyślemy Ci link do wyboru nowego hasła.",
+    "emailLabel": "E-mail",
+    "submit": "Wyślij link do resetowania",
+    "emailSent": "Jeśli istnieje konto dla tego e-maila, wkrótce otrzymasz link do resetowania.",
+    "tryAgain": "Użyj innego e-maila",
+    "backToSignIn": "Powrót do logowania",
+    "errors": {
+      "sendFailed": "Nie udało się wysłać linku do resetowania. Spróbuj ponownie."
+    }
+  },
+  "ResetPassword": {
+    "title": "Wybierz nowe hasło",
+    "subtitle": "Wprowadź nowe hasło dla swojego konta Spliit.",
+    "newPassword": "Nowe hasło",
+    "confirmPassword": "Potwierdź nowe hasło",
+    "passwordMismatch": "Hasła nie są zgodne.",
+    "submit": "Zapisz nowe hasło",
+    "submitting": "Zapisywanie…",
+    "success": "Hasło zaktualizowane",
+    "successDescription": "Twoje hasło zostało zmienione. Zaloguj się nowym hasłem, aby kontynuować.",
+    "goToSignIn": "Przejdź do logowania",
+    "invalidTokenTitle": "Ten link do resetowania nie może być użyty",
+    "invalidTokenDescription": "Link mógł wygasnąć lub został już użyty. Poproś o nowy, aby spróbować ponownie.",
+    "requestNewLink": "Poproś o nowy link",
+    "backToSignIn": "Powrót do logowania",
+    "errors": {
+      "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "invalidToken": "Ten link do resetowania wygasł lub został już użyty.",
+      "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków."
     }
   },
   "Currencies": {

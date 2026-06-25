@@ -166,6 +166,7 @@
     "confirmPassword": "Confirm password",
     "passwordMismatch": "Passwords don't match.",
     "passwordTooShort": "Password must be at least 8 characters.",
+    "forgotPasswordLink": "Forgot password?",
     "errors": {
       "invalidCredentials": "Email or password is incorrect.",
       "emailRequired": "Enter your email address.",
@@ -191,6 +192,39 @@
       "nameRequired": "Enter a display name.",
       "nameTooShort": "Name must be at least 2 characters.",
       "generic": "Something went wrong. Please try again."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Reset your password",
+    "subtitle": "Enter your account email and we'll send you a link to choose a new password.",
+    "emailLabel": "Email",
+    "submit": "Send reset link",
+    "emailSent": "If an account exists for that email, you'll receive a reset link shortly.",
+    "tryAgain": "Use a different email",
+    "backToSignIn": "Back to sign in",
+    "errors": {
+      "sendFailed": "Could not send the reset link. Please try again."
+    }
+  },
+  "ResetPassword": {
+    "title": "Choose a new password",
+    "subtitle": "Enter the new password for your Spliit account.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "passwordMismatch": "Passwords don't match.",
+    "submit": "Save new password",
+    "submitting": "Saving…",
+    "success": "Password updated",
+    "successDescription": "Your password has been changed. Sign in with your new password to continue.",
+    "goToSignIn": "Go to sign in",
+    "invalidTokenTitle": "This reset link can't be used",
+    "invalidTokenDescription": "The link may have expired or already been used. Request a new one to try again.",
+    "requestNewLink": "Request a new link",
+    "backToSignIn": "Back to sign in",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "invalidToken": "This reset link has expired or already been used.",
+      "passwordTooShort": "Password must be at least 8 characters."
     }
   },
   "GroupForm": {

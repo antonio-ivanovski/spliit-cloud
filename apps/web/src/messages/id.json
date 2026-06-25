@@ -541,6 +541,7 @@
     "confirmPassword": "Konfirmasi kata sandi",
     "passwordMismatch": "Kata sandi tidak cocok.",
     "passwordTooShort": "Kata sandi harus minimal 8 karakter.",
+    "forgotPasswordLink": "Lupa kata sandi?",
     "errors": {
       "invalidCredentials": "Email atau kata sandi salah.",
       "emailRequired": "Masukkan alamat email Anda.",
@@ -566,6 +567,39 @@
       "nameRequired": "Masukkan nama tampilan.",
       "nameTooShort": "Nama harus minimal 2 karakter.",
       "generic": "Terjadi kesalahan. Silakan coba lagi."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Atur ulang kata sandi Anda",
+    "subtitle": "Masukkan email akun Anda dan kami akan mengirimkan tautan untuk memilih kata sandi baru.",
+    "emailLabel": "Email",
+    "submit": "Kirim tautan atur ulang",
+    "emailSent": "Jika akun ada untuk email tersebut, Anda akan menerima tautan atur ulang dalam waktu singkat.",
+    "tryAgain": "Gunakan email yang berbeda",
+    "backToSignIn": "Kembali ke masuk",
+    "errors": {
+      "sendFailed": "Tidak dapat mengirim tautan atur ulang. Silakan coba lagi."
+    }
+  },
+  "ResetPassword": {
+    "title": "Pilih kata sandi baru",
+    "subtitle": "Masukkan kata sandi baru untuk akun Spliit Anda.",
+    "newPassword": "Kata sandi baru",
+    "confirmPassword": "Konfirmasi kata sandi baru",
+    "passwordMismatch": "Kata sandi tidak cocok.",
+    "submit": "Simpan kata sandi baru",
+    "submitting": "Menyimpan…",
+    "success": "Kata sandi diperbarui",
+    "successDescription": "Kata sandi Anda telah diubah. Masuk dengan kata sandi baru Anda untuk melanjutkan.",
+    "goToSignIn": "Pergi ke masuk",
+    "invalidTokenTitle": "Tautan atur ulang ini tidak dapat digunakan",
+    "invalidTokenDescription": "Tautan mungkin telah kedaluwarsa atau sudah digunakan. Minta yang baru untuk mencoba lagi.",
+    "requestNewLink": "Minta tautan baru",
+    "backToSignIn": "Kembali ke masuk",
+    "errors": {
+      "generic": "Terjadi kesalahan. Silakan coba lagi.",
+      "invalidToken": "Tautan atur ulang ini telah kedaluwarsa atau sudah digunakan.",
+      "passwordTooShort": "Kata sandi harus minimal 8 karakter."
     }
   },
   "Members": {

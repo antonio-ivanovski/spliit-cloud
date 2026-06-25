@@ -541,6 +541,7 @@
     "confirmPassword": "确认密码",
     "passwordMismatch": "密码不匹配。",
     "passwordTooShort": "密码必须至少8个字符。",
+    "forgotPasswordLink": "忘记密码？",
     "errors": {
       "invalidCredentials": "邮箱或密码不正确。",
       "emailRequired": "请输入您的邮箱地址。",
@@ -566,6 +567,39 @@
       "nameRequired": "请输入显示名称。",
       "nameTooShort": "姓名必须至少2个字符。",
       "generic": "出了点问题。请重试。"
+    }
+  },
+  "ForgotPassword": {
+    "title": "重置密码",
+    "subtitle": "输入您的账户邮箱，我们将向您发送一个链接以选择新密码。",
+    "emailLabel": "邮箱",
+    "submit": "发送重置链接",
+    "emailSent": "如果该邮箱存在账户，您将很快收到一个重置链接。",
+    "tryAgain": "使用其他邮箱",
+    "backToSignIn": "返回登录",
+    "errors": {
+      "sendFailed": "无法发送重置链接。请重试。"
+    }
+  },
+  "ResetPassword": {
+    "title": "选择新密码",
+    "subtitle": "为您的 Spliit 账户输入新密码。",
+    "newPassword": "新密码",
+    "confirmPassword": "确认新密码",
+    "passwordMismatch": "密码不匹配。",
+    "submit": "保存新密码",
+    "submitting": "保存中…",
+    "success": "密码已更新",
+    "successDescription": "您的密码已更改。请使用新密码登录以继续。",
+    "goToSignIn": "前往登录",
+    "invalidTokenTitle": "此重置链接无法使用",
+    "invalidTokenDescription": "该链接可能已过期或已被使用。请求一个新链接以重试。",
+    "requestNewLink": "请求新链接",
+    "backToSignIn": "返回登录",
+    "errors": {
+      "generic": "出了点问题。请重试。",
+      "invalidToken": "此重置链接已过期或已被使用。",
+      "passwordTooShort": "密码必须至少8个字符。"
     }
   },
   "Members": {

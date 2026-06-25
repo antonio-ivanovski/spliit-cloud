@@ -528,6 +528,7 @@
     "confirmPassword": "Potvrdit heslo",
     "passwordMismatch": "Hesla se neshodují.",
     "passwordTooShort": "Heslo musí mít alespoň 8 znaků.",
+    "forgotPasswordLink": "Zapomněli jste heslo?",
     "errors": {
       "invalidCredentials": "E-mail nebo heslo je nesprávné.",
       "emailRequired": "Zadejte svou e-mailovou adresu.",
@@ -553,6 +554,39 @@
       "nameRequired": "Zadejte zobrazované jméno.",
       "nameTooShort": "Jméno musí mít alespoň 2 znaky.",
       "generic": "Něco se pokazilo. Zkuste to prosím znovu."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Obnovte své heslo",
+    "subtitle": "Zadejte e-mail svého účtu a my vám pošleme odkaz pro nastavení nového hesla.",
+    "emailLabel": "E-mail",
+    "submit": "Odeslat odkaz pro obnovení",
+    "emailSent": "Pokud účet pro tento e-mail existuje, brzy obdržíte odkaz pro obnovení.",
+    "tryAgain": "Použít jiný e-mail",
+    "backToSignIn": "Zpět k přihlášení",
+    "errors": {
+      "sendFailed": "Odeslání odkazu pro obnovení se nezdařilo. Zkuste to prosím znovu."
+    }
+  },
+  "ResetPassword": {
+    "title": "Zvolte si nové heslo",
+    "subtitle": "Zadejte nové heslo pro svůj Spliit účet.",
+    "newPassword": "Nové heslo",
+    "confirmPassword": "Potvrďte nové heslo",
+    "passwordMismatch": "Hesla se neshodují.",
+    "submit": "Uložit nové heslo",
+    "submitting": "Ukládání…",
+    "success": "Heslo aktualizováno",
+    "successDescription": "Vaše heslo bylo změněno. Pro pokračování se přihlaste svým novým heslem.",
+    "goToSignIn": "Přejít k přihlášení",
+    "invalidTokenTitle": "Tento odkaz pro obnovení nelze použít",
+    "invalidTokenDescription": "Odkaz mohl vypršet nebo již byl použit. Požádejte o nový a zkuste to znovu.",
+    "requestNewLink": "Požádat o nový odkaz",
+    "backToSignIn": "Zpět k přihlášení",
+    "errors": {
+      "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
+      "invalidToken": "Tento odkaz pro obnovení vypršel nebo již byl použit.",
+      "passwordTooShort": "Heslo musí mít alespoň 8 znaků."
     }
   },
   "Currencies": {

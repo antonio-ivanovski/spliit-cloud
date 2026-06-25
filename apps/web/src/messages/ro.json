@@ -541,6 +541,7 @@
     "confirmPassword": "Confirmă parola",
     "passwordMismatch": "Parolele nu coincid.",
     "passwordTooShort": "Parola trebuie să aibă cel puțin 8 caractere.",
+    "forgotPasswordLink": "Ai uitat parola?",
     "errors": {
       "invalidCredentials": "Emailul sau parola este incorectă.",
       "emailRequired": "Introdu adresa ta de email.",
@@ -566,6 +567,39 @@
       "nameRequired": "Introdu un nume de afișare.",
       "nameTooShort": "Numele trebuie să aibă cel puțin 2 caractere.",
       "generic": "Ceva a mers greșit. Te rugăm să încerci din nou."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Resetează-ți parola",
+    "subtitle": "Introdu emailul contului tău și îți vom trimite un link pentru a alege o parolă nouă.",
+    "emailLabel": "Email",
+    "submit": "Trimite linkul de resetare",
+    "emailSent": "Dacă există un cont pentru acel email, vei primi un link de resetare în scurt timp.",
+    "tryAgain": "Folosește un alt email",
+    "backToSignIn": "Înapoi la autentificare",
+    "errors": {
+      "sendFailed": "Nu s-a putut trimite linkul de resetare. Încearcă din nou."
+    }
+  },
+  "ResetPassword": {
+    "title": "Alege o parolă nouă",
+    "subtitle": "Introdu noua parolă pentru contul tău Spliit.",
+    "newPassword": "Parolă nouă",
+    "confirmPassword": "Confirmă parola nouă",
+    "passwordMismatch": "Parolele nu coincid.",
+    "submit": "Salvează parola nouă",
+    "submitting": "Se salvează…",
+    "success": "Parolă actualizată",
+    "successDescription": "Parola ta a fost schimbată. Autentifică-te cu noua ta parolă pentru a continua.",
+    "goToSignIn": "Du-te la autentificare",
+    "invalidTokenTitle": "Acest link de resetare nu poate fi folosit",
+    "invalidTokenDescription": "Linkul poate fi expirat sau a fost deja folosit. Solicită unul nou pentru a încerca din nou.",
+    "requestNewLink": "Solicită un link nou",
+    "backToSignIn": "Înapoi la autentificare",
+    "errors": {
+      "generic": "Ceva a mers greșit. Încearcă din nou.",
+      "invalidToken": "Acest link de resetare a expirat sau a fost deja folosit.",
+      "passwordTooShort": "Parola trebuie să aibă cel puțin 8 caractere."
     }
   },
   "Members": {

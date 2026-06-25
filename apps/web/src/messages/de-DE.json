@@ -541,6 +541,7 @@
     "confirmPassword": "Passwort bestätigen",
     "passwordMismatch": "Passwörter stimmen nicht überein.",
     "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+    "forgotPasswordLink": "Passwort vergessen?",
     "errors": {
       "invalidCredentials": "E-Mail oder Passwort ist falsch.",
       "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",
@@ -566,6 +567,39 @@
       "nameRequired": "Geben Sie einen Anzeigenamen ein.",
       "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Passwort zurücksetzen",
+    "subtitle": "Geben Sie die E-Mail-Adresse Ihres Kontos ein und wir senden Ihnen einen Link zum Festlegen eines neuen Passworts.",
+    "emailLabel": "E-Mail",
+    "submit": "Reset-Link senden",
+    "emailSent": "Wenn ein Konto für diese E-Mail existiert, erhalten Sie in Kürze einen Reset-Link.",
+    "tryAgain": "Eine andere E-Mail verwenden",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "errors": {
+      "sendFailed": "Der Reset-Link konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
+    }
+  },
+  "ResetPassword": {
+    "title": "Wählen Sie ein neues Passwort",
+    "subtitle": "Geben Sie das neue Passwort für Ihr Spliit-Konto ein.",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Neues Passwort bestätigen",
+    "passwordMismatch": "Passwörter stimmen nicht überein.",
+    "submit": "Neues Passwort speichern",
+    "submitting": "Speichern…",
+    "success": "Passwort aktualisiert",
+    "successDescription": "Ihr Passwort wurde geändert. Melden Sie sich mit Ihrem neuen Passwort an, um fortzufahren.",
+    "goToSignIn": "Zur Anmeldung",
+    "invalidTokenTitle": "Dieser Reset-Link kann nicht verwendet werden",
+    "invalidTokenDescription": "Der Link ist möglicherweise abgelaufen oder wurde bereits verwendet. Fordern Sie einen neuen an und versuchen Sie es erneut.",
+    "requestNewLink": "Neuen Link anfordern",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+      "invalidToken": "Dieser Reset-Link ist abgelaufen oder wurde bereits verwendet.",
+      "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein."
     }
   },
   "Members": {

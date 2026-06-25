@@ -541,6 +541,7 @@
     "confirmPassword": "Confirmer le mot de passe",
     "passwordMismatch": "Les mots de passe ne correspondent pas.",
     "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+    "forgotPasswordLink": "Mot de passe oublié ?",
     "errors": {
       "invalidCredentials": "L'e-mail ou le mot de passe est incorrect.",
       "emailRequired": "Saisissez votre adresse e-mail.",
@@ -566,6 +567,39 @@
       "nameRequired": "Saisissez un nom d'affichage.",
       "nameTooShort": "Le nom doit contenir au moins 2 caractères.",
       "generic": "Une erreur s'est produite. Veuillez réessayer."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Réinitialisez votre mot de passe",
+    "subtitle": "Saisissez l'e-mail de votre compte et nous vous enverrons un lien pour choisir un nouveau mot de passe.",
+    "emailLabel": "E-mail",
+    "submit": "Envoyer le lien de réinitialisation",
+    "emailSent": "Si un compte existe pour cet e-mail, vous recevrez un lien de réinitialisation sous peu.",
+    "tryAgain": "Utiliser un autre e-mail",
+    "backToSignIn": "Retour à la connexion",
+    "errors": {
+      "sendFailed": "Impossible d'envoyer le lien de réinitialisation. Veuillez réessayer."
+    }
+  },
+  "ResetPassword": {
+    "title": "Choisissez un nouveau mot de passe",
+    "subtitle": "Saisissez le nouveau mot de passe pour votre compte Spliit.",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le nouveau mot de passe",
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "submit": "Enregistrer le nouveau mot de passe",
+    "submitting": "Enregistrement…",
+    "success": "Mot de passe mis à jour",
+    "successDescription": "Votre mot de passe a été modifié. Connectez-vous avec votre nouveau mot de passe pour continuer.",
+    "goToSignIn": "Aller à la connexion",
+    "invalidTokenTitle": "Ce lien de réinitialisation ne peut pas être utilisé",
+    "invalidTokenDescription": "Le lien a peut-être expiré ou a déjà été utilisé. Demandez-en un nouveau pour réessayer.",
+    "requestNewLink": "Demander un nouveau lien",
+    "backToSignIn": "Retour à la connexion",
+    "errors": {
+      "generic": "Une erreur s'est produite. Veuillez réessayer.",
+      "invalidToken": "Ce lien de réinitialisation a expiré ou a déjà été utilisé.",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères."
     }
   },
   "Members": {

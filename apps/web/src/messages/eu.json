@@ -541,6 +541,7 @@
     "confirmPassword": "Berretsi pasahitza",
     "passwordMismatch": "Pasahitzak ez datoz bat.",
     "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu.",
+    "forgotPasswordLink": "Pasahitza ahaztu duzu?",
     "errors": {
       "invalidCredentials": "Helbide elektronikoa edo pasahitza okerra da.",
       "emailRequired": "Sartu zure helbide elektronikoa.",
@@ -566,6 +567,39 @@
       "nameRequired": "Sartu erakusteko izen bat.",
       "nameTooShort": "Izenak gutxienez 2 karaktere izan behar ditu.",
       "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Berrezarri pasahitza",
+    "subtitle": "Sartu zure kontuaren helbide elektronikoa eta esteka bat bidaliko dizugu pasahitz berri bat aukeratzeko.",
+    "emailLabel": "Helbide elektronikoa",
+    "submit": "Bidali berrezartzeko esteka",
+    "emailSent": "Kontu bat badago helbide elektroniko horretarako, laster jasoko duzu berrezartzeko esteka bat.",
+    "tryAgain": "Erabili beste helbide elektroniko bat",
+    "backToSignIn": "Itzuli saio hasierara",
+    "errors": {
+      "sendFailed": "Ezin izan da berrezartzeko esteka bidali. Saiatu berriro."
+    }
+  },
+  "ResetPassword": {
+    "title": "Aukeratu pasahitz berri bat",
+    "subtitle": "Sartu pasahitz berria zure Spliit konturako.",
+    "newPassword": "Pasahitz berria",
+    "confirmPassword": "Berretsi pasahitz berria",
+    "passwordMismatch": "Pasahitzak ez datoz bat.",
+    "submit": "Gorde pasahitz berria",
+    "submitting": "Gordetzen…",
+    "success": "Pasahitza eguneratu da",
+    "successDescription": "Zure pasahitza aldatu da. Hasi saioa zure pasahitz berriarekin jarraitzeko.",
+    "goToSignIn": "Joan saio hasierara",
+    "invalidTokenTitle": "Berrezartzeko esteka hau ezin da erabili",
+    "invalidTokenDescription": "Esteka iraungitu edo jada erabilia izan daiteke. Eskatu esteka berri bat berriro saiatzeko.",
+    "requestNewLink": "Eskatu esteka berri bat",
+    "backToSignIn": "Itzuli saio hasierara",
+    "errors": {
+      "generic": "Zerbaitek huts egin du. Saiatu berriro.",
+      "invalidToken": "Berrezartzeko esteka hau iraungitu da edo jada erabilia izan da.",
+      "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu."
     }
   },
   "Members": {

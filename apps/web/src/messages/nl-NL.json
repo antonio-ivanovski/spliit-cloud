@@ -541,6 +541,7 @@
     "confirmPassword": "Bevestig wachtwoord",
     "passwordMismatch": "Wachtwoorden komen niet overeen.",
     "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten.",
+    "forgotPasswordLink": "Wachtwoord vergeten?",
     "errors": {
       "invalidCredentials": "E-mail of wachtwoord is onjuist.",
       "emailRequired": "Voer je e-mailadres in.",
@@ -566,6 +567,39 @@
       "nameRequired": "Voer een weergavenaam in.",
       "nameTooShort": "Naam moet minimaal 2 tekens bevatten.",
       "generic": "Er is iets misgegaan. Probeer het opnieuw."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Stel je wachtwoord opnieuw in",
+    "subtitle": "Voer het e-mailadres van je account in en we sturen je een link om een nieuw wachtwoord te kiezen.",
+    "emailLabel": "E-mail",
+    "submit": "Verzend resetlink",
+    "emailSent": "Als er een account bestaat voor dat e-mailadres, ontvang je binnenkort een resetlink.",
+    "tryAgain": "Gebruik een ander e-mailadres",
+    "backToSignIn": "Terug naar inloggen",
+    "errors": {
+      "sendFailed": "De resetlink kon niet worden verzonden. Probeer het opnieuw."
+    }
+  },
+  "ResetPassword": {
+    "title": "Kies een nieuw wachtwoord",
+    "subtitle": "Voer het nieuwe wachtwoord voor je Spliit-account in.",
+    "newPassword": "Nieuw wachtwoord",
+    "confirmPassword": "Bevestig nieuw wachtwoord",
+    "passwordMismatch": "Wachtwoorden komen niet overeen.",
+    "submit": "Nieuw wachtwoord opslaan",
+    "submitting": "Opslaan…",
+    "success": "Wachtwoord bijgewerkt",
+    "successDescription": "Je wachtwoord is gewijzigd. Log in met je nieuwe wachtwoord om door te gaan.",
+    "goToSignIn": "Naar inloggen",
+    "invalidTokenTitle": "Deze resetlink kan niet worden gebruikt",
+    "invalidTokenDescription": "De link is mogelijk verlopen of al gebruikt. Vraag een nieuwe aan om het opnieuw te proberen.",
+    "requestNewLink": "Een nieuwe link aanvragen",
+    "backToSignIn": "Terug naar inloggen",
+    "errors": {
+      "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "invalidToken": "Deze resetlink is verlopen of al gebruikt.",
+      "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten."
     }
   },
   "Members": {

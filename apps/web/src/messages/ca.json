@@ -541,6 +541,7 @@
     "confirmPassword": "Confirma la contrasenya",
     "passwordMismatch": "Les contrasenyes no coincideixen.",
     "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters.",
+    "forgotPasswordLink": "Has oblidat la contrasenya?",
     "errors": {
       "invalidCredentials": "El correu o la contrasenya són incorrectes.",
       "emailRequired": "Introdueix la teva adreça de correu electrònic.",
@@ -566,6 +567,39 @@
       "nameRequired": "Introdueix un nom de visualització.",
       "nameTooShort": "El nom ha de tenir almenys 2 caràcters.",
       "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Restableix la teva contrasenya",
+    "subtitle": "Introdueix el correu del teu compte i t'enviarem un enllaç per triar una nova contrasenya.",
+    "emailLabel": "Correu electrònic",
+    "submit": "Envia l'enllaç de restabliment",
+    "emailSent": "Si existeix un compte per a aquest correu, rebràs un enllaç de restabliment en breu.",
+    "tryAgain": "Utilitza un correu diferent",
+    "backToSignIn": "Tornar a l'inici de sessió",
+    "errors": {
+      "sendFailed": "No s'ha pogut enviar l'enllaç de restabliment. Torna-ho a intentar."
+    }
+  },
+  "ResetPassword": {
+    "title": "Tria una nova contrasenya",
+    "subtitle": "Introdueix la nova contrasenya per al teu compte de Spliit.",
+    "newPassword": "Nova contrasenya",
+    "confirmPassword": "Confirma la nova contrasenya",
+    "passwordMismatch": "Les contrasenyes no coincideixen.",
+    "submit": "Desa la nova contrasenya",
+    "submitting": "Desant…",
+    "success": "Contrasenya actualitzada",
+    "successDescription": "La teva contrasenya s'ha canviat. Inicia sessió amb la teva nova contrasenya per continuar.",
+    "goToSignIn": "Anar a l'inici de sessió",
+    "invalidTokenTitle": "Aquest enllaç de restabliment no es pot utilitzar",
+    "invalidTokenDescription": "L'enllaç pot haver caducat o ja s'ha utilitzat. Demana'n un de nou per tornar-ho a intentar.",
+    "requestNewLink": "Demana un nou enllaç",
+    "backToSignIn": "Tornar a l'inici de sessió",
+    "errors": {
+      "generic": "Alguna cosa ha anat malament. Torna-ho a intentar.",
+      "invalidToken": "Aquest enllaç de restabliment ha caducat o ja s'ha utilitzat.",
+      "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters."
     }
   },
   "Members": {

@@ -67,6 +67,35 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     minPasswordLength: 8,
     maxPasswordLength: 128,
+    // One-hour window between requesting the reset and clicking the link.
+    // Long enough to read the email, short enough that a leaked link is
+    // unlikely to still be useful to an attacker.
+    resetPasswordTokenExpiresIn: 60 * 60,
+    // Cut off any other sessions for this account when the password is
+    // changed. Standard recovery-flow hygiene: if a stolen session cookie
+    // outlived the user noticing the breach, the reset kicks it out.
+    revokeSessionsOnPasswordReset: true,
+    async sendResetPassword({ user, url }) {
+      // Best-effort: a failed send must not break the forgot-password flow.
+      // better-auth already created the verification token in the DB, so the
+      // user can retry from the forgot-password page and a fresh token will
+      // be issued on the next request. Mirrors the swallow-and-warn pattern
+      // used for verification emails and magic links above.
+      try {
+        await sendEmail({
+          to: user.email,
+          subject: 'Reset your Spliit password',
+          text:
+            `Click the link below to reset your Spliit password.\n\n${url}\n\n` +
+            `If you did not request a password reset, you can safely ignore this email.`,
+        })
+      } catch (err) {
+        console.warn(
+          `[password-reset] failed to send reset email to ${user.email}:`,
+          err,
+        )
+      }
+    },
   },
 
   emailVerification: {

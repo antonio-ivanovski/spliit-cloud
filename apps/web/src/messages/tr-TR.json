@@ -528,6 +528,7 @@
     "confirmPassword": "Şifreyi onayla",
     "passwordMismatch": "Şifreler eşleşmiyor.",
     "passwordTooShort": "Şifre en az 8 karakter olmalıdır.",
+    "forgotPasswordLink": "Şifrenizi mi unuttunuz?",
     "errors": {
       "invalidCredentials": "E-posta veya şifre hatalı.",
       "emailRequired": "E-posta adresinizi girin.",
@@ -553,6 +554,39 @@
       "nameRequired": "Bir görünen ad girin.",
       "nameTooShort": "Ad en az 2 karakter olmalıdır.",
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Şifrenizi sıfırlayın",
+    "subtitle": "Hesap e-postanızı girin, size yeni bir şifre seçmeniz için bir bağlantı gönderelim.",
+    "emailLabel": "E-posta",
+    "submit": "Sıfırlama bağlantısı gönder",
+    "emailSent": "Bu e-posta için bir hesap varsa, kısa süre içinde bir sıfırlama bağlantısı alacaksınız.",
+    "tryAgain": "Farklı bir e-posta kullan",
+    "backToSignIn": "Oturum açmaya geri dön",
+    "errors": {
+      "sendFailed": "Sıfırlama bağlantısı gönderilemedi. Lütfen tekrar deneyin."
+    }
+  },
+  "ResetPassword": {
+    "title": "Yeni bir şifre seçin",
+    "subtitle": "Spliit hesabınız için yeni şifreyi girin.",
+    "newPassword": "Yeni şifre",
+    "confirmPassword": "Yeni şifreyi onayla",
+    "passwordMismatch": "Şifreler eşleşmiyor.",
+    "submit": "Yeni şifreyi kaydet",
+    "submitting": "Kaydediliyor…",
+    "success": "Şifre güncellendi",
+    "successDescription": "Şifreniz değiştirildi. Devam etmek için yeni şifrenizle oturum açın.",
+    "goToSignIn": "Oturum açmaya git",
+    "invalidTokenTitle": "Bu sıfırlama bağlantısı kullanılamaz",
+    "invalidTokenDescription": "Bağlantının süresi dolmuş veya zaten kullanılmış olabilir. Tekrar denemek için yeni bir tane isteyin.",
+    "requestNewLink": "Yeni bağlantı iste",
+    "backToSignIn": "Oturum açmaya geri dön",
+    "errors": {
+      "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+      "invalidToken": "Bu sıfırlama bağlantısının süresi dolmuş veya zaten kullanılmış.",
+      "passwordTooShort": "Şifre en az 8 karakter olmalıdır."
     }
   },
   "Currencies": {

@@ -541,6 +541,7 @@
     "confirmPassword": "Vahvista salasana",
     "passwordMismatch": "Salasanat eivät täsmää.",
     "passwordTooShort": "Salasanan on oltava vähintään 8 merkkiä pitkä.",
+    "forgotPasswordLink": "Unohditko salasanan?",
     "errors": {
       "invalidCredentials": "Sähköposti tai salasana on virheellinen.",
       "emailRequired": "Syötä sähköpostiosoitteesi.",
@@ -566,6 +567,39 @@
       "nameRequired": "Syötä näyttönimi.",
       "nameTooShort": "Nimen on oltava vähintään 2 merkkiä pitkä.",
       "generic": "Jokin meni vikaan. Yritä uudelleen."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Palauta salasanasi",
+    "subtitle": "Anna tilisi sähköpostiosoite, niin lähetämme sinulle linkin uuden salasanan valitsemista varten.",
+    "emailLabel": "Sähköposti",
+    "submit": "Lähetä palautuslinkki",
+    "emailSent": "Jos tälle sähköpostille on olemassa tili, saat palautuslinkin pian.",
+    "tryAgain": "Käytä toista sähköpostiosoitetta",
+    "backToSignIn": "Takaisin kirjautumiseen",
+    "errors": {
+      "sendFailed": "Palautuslinkkiä ei voitu lähettää. Yritä uudelleen."
+    }
+  },
+  "ResetPassword": {
+    "title": "Valitse uusi salasana",
+    "subtitle": "Anna uusi salasana Spliit-tilillesi.",
+    "newPassword": "Uusi salasana",
+    "confirmPassword": "Vahvista uusi salasana",
+    "passwordMismatch": "Salasanat eivät täsmää.",
+    "submit": "Tallenna uusi salasana",
+    "submitting": "Tallennetaan…",
+    "success": "Salasana päivitetty",
+    "successDescription": "Salasanasi on vaihdettu. Kirjaudu sisään uudella salasanallasi jatkaaksesi.",
+    "goToSignIn": "Siirry kirjautumiseen",
+    "invalidTokenTitle": "Tätä palautuslinkkiä ei voi käyttää",
+    "invalidTokenDescription": "Linkki on saattanut vanhentua tai sitä on jo käytetty. Pyydä uusi linkki ja yritä uudelleen.",
+    "requestNewLink": "Pyydä uusi linkki",
+    "backToSignIn": "Takaisin kirjautumiseen",
+    "errors": {
+      "generic": "Jokin meni vikaan. Yritä uudelleen.",
+      "invalidToken": "Tämä palautuslinkki on vanhentunut tai sitä on jo käytetty.",
+      "passwordTooShort": "Salasanan on oltava vähintään 8 merkkiä pitkä."
     }
   },
   "Members": {
