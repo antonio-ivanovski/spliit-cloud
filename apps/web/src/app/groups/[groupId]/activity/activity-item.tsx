@@ -1,11 +1,12 @@
 'use client'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import { DateTimeStyle, cn, formatDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { ChevronRight } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
 
 export type Activity =
   AppRouterOutput['groups']['activities']['list']['activities'][number]
@@ -18,6 +19,22 @@ const ActivityType = {
   DELETE_EXPENSE: 'DELETE_EXPENSE',
 } as const
 
+type ActivitySummaryKey =
+  | 'Activity.settingsModified'
+  | 'Activity.expenseCreated'
+  | 'Activity.expenseUpdated'
+  | 'Activity.expenseDeleted'
+
+const summaryKeyByActivityType: Record<
+  (typeof ActivityType)[keyof typeof ActivityType],
+  ActivitySummaryKey
+> = {
+  UPDATE_GROUP: 'Activity.settingsModified',
+  CREATE_EXPENSE: 'Activity.expenseCreated',
+  UPDATE_EXPENSE: 'Activity.expenseUpdated',
+  DELETE_EXPENSE: 'Activity.expenseDeleted',
+}
+
 type Props = {
   groupId: string
   activity: Activity
@@ -26,27 +43,21 @@ type Props = {
 }
 
 function useSummary(activity: Activity, participantName?: string) {
-  const t = useTranslations('Activity')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
   const participant = participantName ?? t('someone')
   const expense = activity.data ?? ''
+  const i18nKey = summaryKeyByActivityType[activity.activityType]
 
-  const tr = (key: string) =>
-    t.rich(key, {
-      expense,
-      participant,
-      em: (chunks) => <em>&ldquo;{chunks}&rdquo;</em>,
-      strong: (chunks) => <strong>{chunks}</strong>,
-    })
-
-  if (activity.activityType == ActivityType.UPDATE_GROUP) {
-    return <>{tr('settingsModified')}</>
-  } else if (activity.activityType == ActivityType.CREATE_EXPENSE) {
-    return <>{tr('expenseCreated')}</>
-  } else if (activity.activityType == ActivityType.UPDATE_EXPENSE) {
-    return <>{tr('expenseUpdated')}</>
-  } else if (activity.activityType == ActivityType.DELETE_EXPENSE) {
-    return <>{tr('expenseDeleted')}</>
-  }
+  return (
+    <Trans
+      i18nKey={i18nKey}
+      values={{ expense, participant }}
+      components={{
+        em: <em />,
+        strong: <strong />,
+      }}
+    />
+  )
 }
 
 export function ActivityItem({

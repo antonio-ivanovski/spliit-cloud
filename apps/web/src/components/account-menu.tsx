@@ -9,14 +9,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
 import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { LogOut, User as UserIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export function AccountMenu() {
-  const t = useTranslations('Header')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
   const router = useRouter()
   const { data: account, isPending } = useCurrentAccount()
 

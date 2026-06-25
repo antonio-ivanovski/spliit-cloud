@@ -18,16 +18,18 @@ import {
 } from '@/components/ui/drawer'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useTranslations } from '@/i18n/react'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { ComponentProps, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 
 export function ActiveUserModal({ groupId }: { groupId: string }) {
-  const t = useTranslations('Expenses.ActiveUserModal')
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'Expenses.ActiveUserModal',
+  })
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const { data: groupData } = trpc.groups.get.useQuery({ groupId })
@@ -109,7 +111,9 @@ function ActiveUserForm({
   group?: AppRouterOutput['groups']['get']['group']
   close: () => void
 }) {
-  const t = useTranslations('Expenses.ActiveUserModal')
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'Expenses.ActiveUserModal',
+  })
   const [selected, setSelected] = useState('None')
 
   return (

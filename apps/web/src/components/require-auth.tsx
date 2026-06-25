@@ -2,11 +2,11 @@
 
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
-import { useTranslations } from '@/i18n/react'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { PropsWithChildren } from 'react'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Route guard. Shows a loader while the session is being resolved, redirects
@@ -59,7 +59,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
  * group layout in that case.
  */
 export function UnauthorizedGroup() {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   return (
     <div className="flex flex-col gap-3 py-10 text-center">
       <h2 className="text-xl font-semibold">{t('Unauthorized.title')}</h2>

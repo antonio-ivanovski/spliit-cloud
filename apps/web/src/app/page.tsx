@@ -3,7 +3,6 @@
 import { AuthPanel } from '@/components/auth/auth-panel'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
-import { useTranslations } from '@/i18n/react'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import {
   Cloud,
@@ -16,6 +15,7 @@ import {
   Tags,
   Users,
 } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
 
 const signedOutFeatures = [
   { key: 'accounts', icon: ShieldCheck },
@@ -24,10 +24,49 @@ const signedOutFeatures = [
   { key: 'splitting', icon: Split },
   { key: 'settlement', icon: Scale },
   { key: 'organization', icon: Tags },
-]
+] as const satisfies ReadonlyArray<{
+  key:
+    | 'accounts'
+    | 'groupsSync'
+    | 'expenses'
+    | 'splitting'
+    | 'settlement'
+    | 'organization'
+  icon: typeof ShieldCheck
+}>
+
+const featureI18nKeys = {
+  accounts: {
+    title: 'Homepage.features.accounts.title',
+    description: 'Homepage.features.accounts.description',
+  },
+  groupsSync: {
+    title: 'Homepage.features.groupsSync.title',
+    description: 'Homepage.features.groupsSync.description',
+  },
+  expenses: {
+    title: 'Homepage.features.expenses.title',
+    description: 'Homepage.features.expenses.description',
+  },
+  splitting: {
+    title: 'Homepage.features.splitting.title',
+    description: 'Homepage.features.splitting.description',
+  },
+  settlement: {
+    title: 'Homepage.features.settlement.title',
+    description: 'Homepage.features.settlement.description',
+  },
+  organization: {
+    title: 'Homepage.features.organization.title',
+    description: 'Homepage.features.organization.description',
+  },
+} as const satisfies Record<
+  (typeof signedOutFeatures)[number]['key'],
+  { title: string; description: string }
+>
 
 export default function HomePage() {
-  const t = useTranslations()
+  const { t } = useTranslation()
   const { data: account, isPending } = useCurrentAccount()
 
   if (!isPending && !account) {
@@ -46,14 +85,16 @@ export default function HomePage() {
       <section className="py-16 md:py-24 lg:py-32">
         <div className="container flex max-w-screen-md flex-col items-center gap-4 text-center">
           <h1 className="!leading-none font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl landing-header py-2">
-            {t.rich('Homepage.title', {
-              strong: (chunks) => <strong>{chunks}</strong>,
-            })}
+            <Trans
+              i18nKey="Homepage.title"
+              components={{ strong: <strong /> }}
+            />
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            {t.rich('Homepage.description', {
-              strong: (chunks) => <strong>{chunks}</strong>,
-            })}
+            <Trans
+              i18nKey="Homepage.description"
+              components={{ strong: <strong /> }}
+            />
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {isPending ? (
@@ -77,20 +118,19 @@ export default function HomePage() {
 }
 
 function LandingIntro() {
-  const t = useTranslations()
+  const { t } = useTranslation()
 
   return (
     <section className="mx-auto flex max-w-2xl flex-col gap-6 text-center lg:mx-0 lg:text-left">
       <div className="flex flex-col gap-4">
         <h1 className="landing-header py-2 text-3xl font-bold !leading-none sm:text-4xl lg:text-5xl">
-          {t.rich('Homepage.title', {
-            strong: (chunks) => <strong>{chunks}</strong>,
-          })}
+          <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
         </h1>
         <p className="text-base leading-7 text-muted-foreground sm:text-lg">
-          {t.rich('Homepage.description', {
-            strong: (chunks) => <strong>{chunks}</strong>,
-          })}
+          <Trans
+            i18nKey="Homepage.description"
+            components={{ strong: <strong /> }}
+          />
         </p>
       </div>
       <div className="grid gap-2 text-left sm:grid-cols-2">
@@ -98,8 +138,8 @@ function LandingIntro() {
           <FeatureItem
             key={feature.key}
             icon={feature.icon}
-            title={t(`Homepage.features.${feature.key}.title`)}
-            description={t(`Homepage.features.${feature.key}.description`)}
+            title={t(featureI18nKeys[feature.key].title)}
+            description={t(featureI18nKeys[feature.key].description)}
           />
         ))}
       </div>

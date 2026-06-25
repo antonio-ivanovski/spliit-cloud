@@ -15,10 +15,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useTranslations } from '@/i18n/react'
 import { useMediaQuery } from '@/lib/hooks'
-import type { Category, CategoryId } from '@spliit/domain'
+import {
+  DEFAULT_CATEGORIES,
+  type Category,
+  type CategoryId,
+} from '@spliit/domain'
 import { forwardRef, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   categories: ReadonlyArray<Category>
@@ -105,7 +109,7 @@ function CategoryCommand({
   categories: ReadonlyArray<Category>
   onValueChange: (categoryId: CategoryId) => void
 }) {
-  const t = useTranslations('Categories')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   const categoriesByGroup = categories.reduce<Record<string, Category[]>>(
     (acc, category) => ({
       ...acc,
@@ -121,13 +125,20 @@ function CategoryCommand({
       <div className="w-full max-h-[300px] overflow-y-auto">
         {Object.entries(categoriesByGroup).map(
           ([group, groupCategories], index) => (
-            <CommandGroup key={index} heading={t(`${group}.heading`)}>
+            <CommandGroup
+              key={index}
+              heading={t(
+                CATEGORY_GROUPING_HEADINGS[
+                  group as keyof typeof CATEGORY_GROUPING_HEADINGS
+                ],
+              )}
+            >
               {groupCategories.map((category) => (
                 <CommandItem
                   key={category.id}
                   value={`${category.id} ${t(
-                    `${category.grouping}.heading`,
-                  )} ${t(`${category.grouping}.${category.name}`)}`}
+                    CATEGORY_GROUPING_HEADINGS[category.grouping],
+                  )} ${t(categoryLabelKey(category))}`}
                   onSelect={(currentValue) => {
                     const id = currentValue.split(' ')[0] as CategoryId
                     onValueChange(id)
@@ -142,6 +153,33 @@ function CategoryCommand({
       </div>
     </Command>
   )
+}
+
+const CATEGORY_GROUPING_HEADINGS = {
+  Uncategorized: 'Uncategorized.heading',
+  Entertainment: 'Entertainment.heading',
+  'Food and Drink': 'Food and Drink.heading',
+  Home: 'Home.heading',
+  Life: 'Life.heading',
+  Transportation: 'Transportation.heading',
+  Utilities: 'Utilities.heading',
+} as const satisfies Record<
+  (typeof DEFAULT_CATEGORIES)[number]['grouping'],
+  string
+>
+
+type CategoryLabelKey = (typeof DEFAULT_CATEGORIES)[number] extends infer C
+  ? C extends { grouping: infer G; name: infer N }
+    ? G extends string
+      ? N extends string
+        ? `${G}.${N}`
+        : never
+      : never
+    : never
+  : never
+
+function categoryLabelKey(category: Category): CategoryLabelKey {
+  return `${category.grouping}.${category.name}` as CategoryLabelKey
 }
 
 type CategoryButtonProps = {
@@ -178,11 +216,11 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
 CategoryButton.displayName = 'CategoryButton'
 
 function CategoryLabel({ category }: { category: Category }) {
-  const t = useTranslations('Categories')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   return (
     <div className="flex items-center gap-3">
       <CategoryIcon category={category} className="w-4 h-4" />
-      {t(`${category.grouping}.${category.name}`)}
+      {t(categoryLabelKey(category))}
     </div>
   )
 }

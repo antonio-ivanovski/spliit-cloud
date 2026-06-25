@@ -34,7 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { Locale } from '@/i18n/request'
 import { randomId } from '@/lib/api'
 import { defaultCurrencyList, getCurrency } from '@/lib/currency'
@@ -64,6 +64,7 @@ import { ChevronRight, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Resolver } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 import { DeletePopup } from '../../../../components/delete-popup'
 import { Textarea } from '../../../../components/ui/textarea'
@@ -127,7 +128,7 @@ export function ExpenseForm({
   currentLedgerParticipantId?: string | null
   readOnly?: boolean
 }) {
-  const t = useTranslations('ExpenseForm')
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale() as Locale
   const extractCategoryMutation = trpc.ai.extractCategoryFromTitle.useMutation()
   const isCreate = expense === undefined
@@ -720,7 +721,7 @@ export function ExpenseForm({
                   >
                     <SelectTrigger>
                       <SelectValue
-                        placeholder={t(`${sExpense}.paidByField.placeholder`)}
+                        placeholder={t('Expense.paidByField.placeholder')}
                       />
                     </SelectTrigger>
                     <SelectContent>
@@ -764,7 +765,7 @@ export function ExpenseForm({
               name="recurrenceRule"
               render={({ field }) => (
                 <FormItem className="sm:order-5">
-                  <FormLabel>{t(`${sExpense}.recurrenceRule.label`)}</FormLabel>
+                  <FormLabel>{t('Expense.recurrenceRule.label')}</FormLabel>
                   <Select
                     onValueChange={(value) => {
                       form.setValue('recurrenceRule', value as RecurrenceRule)
@@ -777,21 +778,21 @@ export function ExpenseForm({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="NONE">
-                        {t(`${sExpense}.recurrenceRule.none`)}
+                        {t('Expense.recurrenceRule.none')}
                       </SelectItem>
                       <SelectItem value="DAILY">
-                        {t(`${sExpense}.recurrenceRule.daily`)}
+                        {t('Expense.recurrenceRule.daily')}
                       </SelectItem>
                       <SelectItem value="WEEKLY">
-                        {t(`${sExpense}.recurrenceRule.weekly`)}
+                        {t('Expense.recurrenceRule.weekly')}
                       </SelectItem>
                       <SelectItem value="MONTHLY">
-                        {t(`${sExpense}.recurrenceRule.monthly`)}
+                        {t('Expense.recurrenceRule.monthly')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    {t(`${sExpense}.recurrenceRule.description`)}
+                    {t('Expense.recurrenceRule.description')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

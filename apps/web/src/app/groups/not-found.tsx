@@ -1,9 +1,9 @@
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
-import { useTranslations } from '@/i18n/react'
+import { useTranslation } from 'react-i18next'
 
 export default function NotFound() {
-  const t = useTranslations('Groups.NotFound')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups.NotFound' })
   return (
     <div className="flex flex-col gap-2">
       <p>{t('text')}</p>

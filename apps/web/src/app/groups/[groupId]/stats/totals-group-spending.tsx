@@ -1,6 +1,7 @@
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   totalGroupSpendings: number
@@ -9,7 +10,7 @@ type Props = {
 
 export function TotalsGroupSpending({ totalGroupSpendings, currency }: Props) {
   const locale = useLocale()
-  const t = useTranslations('Stats.Totals')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Stats.Totals' })
   const balance = totalGroupSpendings < 0 ? 'groupEarnings' : 'groupSpendings'
   return (
     <div data-testid="total-group-spendings">

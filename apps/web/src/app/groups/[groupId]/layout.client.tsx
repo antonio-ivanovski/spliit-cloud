@@ -1,10 +1,10 @@
 'use client'
 
 import { useToast } from '@/components/ui/use-toast'
-import { useTranslations } from '@/i18n/react'
 import { trpc } from '@/trpc/client'
 import { Outlet } from '@tanstack/react-router'
 import { PropsWithChildren, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CurrentGroupProvider } from './current-group-context'
 import { GroupHeader } from './group-header'
 import { SaveGroupLocally } from './save-recent-group'
@@ -14,7 +14,9 @@ export function GroupLayoutClient({
   children,
 }: PropsWithChildren<{ groupId: string }>) {
   const { data, isLoading } = trpc.groups.get.useQuery({ groupId })
-  const tNotFound = useTranslations('Groups.NotFound')
+  const { t: tNotFound } = useTranslation(undefined, {
+    keyPrefix: 'Groups.NotFound',
+  })
   const { toast } = useToast()
 
   useEffect(() => {

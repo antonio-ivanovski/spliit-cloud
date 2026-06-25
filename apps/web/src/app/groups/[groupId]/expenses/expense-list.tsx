@@ -4,12 +4,12 @@ import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTranslations } from '@/i18n/react'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import dayjs, { type Dayjs } from 'dayjs'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
@@ -26,7 +26,20 @@ const EXPENSE_GROUPS = {
   EARLIER_THIS_YEAR: 'earlierThisYear',
   LAST_YEAR: 'lastYear',
   OLDER: 'older',
-}
+} as const
+
+const EXPENSE_GROUP_I18N_KEYS = {
+  upcoming: 'Groups.upcoming',
+  thisWeek: 'Groups.thisWeek',
+  earlierThisMonth: 'Groups.earlierThisMonth',
+  lastMonth: 'Groups.lastMonth',
+  earlierThisYear: 'Groups.earlierThisYear',
+  lastYear: 'Groups.lastYear',
+  older: 'Groups.older',
+} as const satisfies Record<
+  (typeof EXPENSE_GROUPS)[keyof typeof EXPENSE_GROUPS],
+  string
+>
 
 function getExpenseGroup(date: Dayjs, today: Dayjs) {
   if (today.isBefore(date)) {
@@ -48,12 +61,20 @@ function getExpenseGroup(date: Dayjs, today: Dayjs) {
 
 function getGroupedExpensesByDate(expenses: ExpensesType) {
   const today = dayjs()
-  return expenses.reduce((result: { [key: string]: ExpensesType }, expense) => {
+  const expenseGroupValues = Object.values(EXPENSE_GROUPS) as Array<
+    (typeof EXPENSE_GROUPS)[keyof typeof EXPENSE_GROUPS]
+  >
+  const result = Object.fromEntries(
+    expenseGroupValues.map((g) => [g, [] as ExpensesType]),
+  ) as Record<
+    (typeof EXPENSE_GROUPS)[keyof typeof EXPENSE_GROUPS],
+    ExpensesType
+  >
+  for (const expense of expenses) {
     const expenseGroup = getExpenseGroup(dayjs(expense.expenseDate), today)
-    result[expenseGroup] = result[expenseGroup] ?? []
     result[expenseGroup].push(expense)
-    return result
-  }, {})
+  }
+  return result
 }
 
 export function ExpenseList() {
@@ -89,7 +110,7 @@ const ExpenseListForSearch = ({
     utils.groups.expenses.invalidate()
   }, [utils])
 
-  const t = useTranslations('Expenses')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const { ref: loadingRef, inView } = useInView()
 
   const {
@@ -109,8 +130,13 @@ const ExpenseListForSearch = ({
     if (inView && hasMore && !isLoading) fetchNextPage()
   }, [fetchNextPage, hasMore, inView, isLoading])
 
-  const groupedExpensesByDate = useMemo(
-    () => (expenses ? getGroupedExpensesByDate(expenses) : {}),
+  const groupedExpensesByDate = useMemo<
+    Record<(typeof EXPENSE_GROUPS)[keyof typeof EXPENSE_GROUPS], ExpensesType>
+  >(
+    () =>
+      expenses
+        ? getGroupedExpensesByDate(expenses)
+        : getGroupedExpensesByDate([]),
     [expenses],
   )
 
@@ -132,7 +158,7 @@ const ExpenseListForSearch = ({
 
   return (
     <>
-      {Object.values(EXPENSE_GROUPS).map((expenseGroup: string) => {
+      {Object.values(EXPENSE_GROUPS).map((expenseGroup) => {
         let groupExpenses = groupedExpensesByDate[expenseGroup]
         if (!groupExpenses || groupExpenses.length === 0) return null
 
@@ -143,7 +169,7 @@ const ExpenseListForSearch = ({
                 'text-muted-foreground text-xs pl-4 sm:pl-6 py-1 font-semibold sticky top-16 bg-white dark:bg-[#1b1917]'
               }
             >
-              {t(`Groups.${expenseGroup}`)}
+              {t(EXPENSE_GROUP_I18N_KEYS[expenseGroup])}
             </div>
             {groupExpenses.map((expense) => (
               <ExpenseCard

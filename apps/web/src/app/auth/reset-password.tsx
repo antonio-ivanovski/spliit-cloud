@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import {
@@ -23,6 +22,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { Check, Circle, Loader2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Reset-password screen. Reached via the link emailed by the
@@ -37,7 +37,7 @@ import { useMemo, useState } from 'react'
  * so any existing session is already invalid.
  */
 export function ResetPasswordPage() {
-  const t = useTranslations('ResetPassword')
+  const { t } = useTranslation(undefined, { keyPrefix: 'ResetPassword' })
   const navigate = useNavigate()
   const searchParams = new URLSearchParams(
     useLocation({ select: (location) => location.searchStr }),
@@ -200,7 +200,7 @@ export function ResetPasswordPage() {
 }
 
 function PasswordChecklist({ password }: { password: string }) {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const requirements = useMemo(
     () => getPasswordRequirements(password),
     [password],

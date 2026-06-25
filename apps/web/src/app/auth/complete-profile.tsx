@@ -10,12 +10,12 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useTranslations } from '@/i18n/react'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { Navigate, useLocation, useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Profile completion screen. Shown when an authenticated account has no
@@ -27,7 +27,7 @@ import { useState } from 'react'
  * signed in, they are sent to `/` with a redirect back here.
  */
 export function CompleteProfilePage() {
-  const t = useTranslations('CompleteProfile')
+  const { t } = useTranslation(undefined, { keyPrefix: 'CompleteProfile' })
   const navigate = useNavigate()
   const searchParams = new URLSearchParams(
     useLocation({ select: (location) => location.searchStr }),

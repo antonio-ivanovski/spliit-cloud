@@ -1,7 +1,8 @@
 'use client'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { Currency } from '@/lib/currency'
 import { cn, formatCurrency } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 export function TotalsYourShare({
   totalParticipantShare = 0,
@@ -11,7 +12,7 @@ export function TotalsYourShare({
   currency: Currency
 }) {
   const locale = useLocale()
-  const t = useTranslations('Stats.Totals')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Stats.Totals' })
 
   return (
     <div data-testid="your-total-share">

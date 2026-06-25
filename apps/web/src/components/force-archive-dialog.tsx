@@ -10,11 +10,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useToast } from '@/components/ui/use-toast'
-import { useTranslations } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   /**
@@ -28,7 +28,7 @@ type Props = {
 }
 
 export function ForceArchiveDialog({ groupId, onClose }: Props) {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
   const utils = trpc.useUtils()
   const { toast } = useToast()

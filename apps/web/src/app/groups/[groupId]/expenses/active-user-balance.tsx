@@ -1,9 +1,9 @@
 'use client'
 import { Money } from '@/components/money'
-import { useTranslations } from '@/i18n/react'
 import { getBalances, type BalanceExpense } from '@/lib/balances'
 import { Currency } from '@/lib/currency'
 import { useActiveUser } from '@/lib/hooks'
+import { useTranslation } from 'react-i18next'
 
 type GroupExpense = Awaited<
   ReturnType<typeof import('@/lib/api').getGroupExpenses>
@@ -32,7 +32,7 @@ function toBalanceExpense(expense: GroupExpense): BalanceExpense {
 }
 
 export function ActiveUserBalance({ groupId, currency, expense }: Props) {
-  const t = useTranslations('ExpenseCard')
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const activeUserId = useActiveUser(groupId)
   if (activeUserId === null || activeUserId === '' || activeUserId === 'None') {
     return null

@@ -1,5 +1,5 @@
-import { useTranslations } from '@/i18n/react'
 import { Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { AsyncButton } from './async-button'
 import { Button } from './ui/button'
 import {
@@ -13,7 +13,9 @@ import {
 } from './ui/dialog'
 
 export function DeletePopup({ onDelete }: { onDelete: () => Promise<void> }) {
-  const t = useTranslations('ExpenseForm.DeletePopup')
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'ExpenseForm.DeletePopup',
+  })
   return (
     <Dialog>
       <DialogTrigger asChild>

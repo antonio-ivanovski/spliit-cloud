@@ -18,13 +18,14 @@ import {
 } from '@/components/ui/dialog'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
 import { ExpenseFormValues } from '@/lib/schemas'
 import { getImageData, usePresignedUpload } from '@/lib/upload'
 import { formatFileSize } from '@/lib/utils'
 import { Loader2, Plus, Trash, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   documents: ExpenseFormValues['documents']
@@ -42,7 +43,9 @@ export function ExpenseDocumentsInput({
   readOnly = false,
 }: Props) {
   const locale = useLocale()
-  const t = useTranslations('ExpenseDocumentsInput')
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'ExpenseDocumentsInput',
+  })
   const [pending, setPending] = useState(false)
   const { FileInput, openFileDialog, uploadToS3 } = usePresignedUpload(ledgerId) // use presigned uploads to addtionally support providers other than AWS
   const { toast } = useToast()

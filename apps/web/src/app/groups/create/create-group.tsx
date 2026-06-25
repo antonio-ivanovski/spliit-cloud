@@ -2,12 +2,12 @@
 
 import { GroupForm } from '@/components/group-form'
 import { useToast } from '@/components/ui/use-toast'
-import { useTranslations } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { useTranslation } from 'react-i18next'
 
 export const CreateGroup = () => {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { mutateAsync: createGroup } = trpc.groups.create.useMutation()
   const utils = trpc.useUtils()
   const router = useRouter()

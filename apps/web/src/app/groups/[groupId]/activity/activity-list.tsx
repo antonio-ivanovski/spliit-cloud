@@ -4,10 +4,10 @@ import {
   ActivityItem,
 } from '@/app/groups/[groupId]/activity/activity-item'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTranslations } from '@/i18n/react'
 import { trpc } from '@/trpc/client'
 import dayjs, { type Dayjs } from 'dayjs'
 import { forwardRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 import { useCurrentGroup } from '../current-group-context'
 
@@ -23,7 +23,22 @@ const DATE_GROUPS = {
   EARLIER_THIS_YEAR: 'earlierThisYear',
   LAST_YEAR: 'lastYear',
   OLDER: 'older',
-}
+} as const
+
+const DATE_GROUP_I18N_KEYS = {
+  today: 'Groups.today',
+  yesterday: 'Groups.yesterday',
+  earlierThisWeek: 'Groups.earlierThisWeek',
+  lastWeek: 'Groups.lastWeek',
+  earlierThisMonth: 'Groups.earlierThisMonth',
+  lastMonth: 'Groups.lastMonth',
+  earlierThisYear: 'Groups.earlierThisYear',
+  lastYear: 'Groups.lastYear',
+  older: 'Groups.older',
+} as const satisfies Record<
+  (typeof DATE_GROUPS)[keyof typeof DATE_GROUPS],
+  string
+>
 
 function getDateGroup(date: Dayjs, today: Dayjs) {
   if (today.isSame(date, 'day')) {
@@ -49,17 +64,17 @@ function getDateGroup(date: Dayjs, today: Dayjs) {
 
 function getGroupedActivitiesByDate(activities: Activity[]) {
   const today = dayjs()
-  return activities.reduce(
-    (result, activity) => {
-      const activityGroup = getDateGroup(dayjs(activity.time), today)
-      result[activityGroup] = result[activityGroup] ?? []
-      result[activityGroup].push(activity)
-      return result
-    },
-    {} as {
-      [key: string]: Activity[]
-    },
-  )
+  const dateGroupValues = Object.values(DATE_GROUPS) as Array<
+    (typeof DATE_GROUPS)[keyof typeof DATE_GROUPS]
+  >
+  const result = Object.fromEntries(
+    dateGroupValues.map((g) => [g, [] as Activity[]]),
+  ) as Record<(typeof DATE_GROUPS)[keyof typeof DATE_GROUPS], Activity[]>
+  for (const activity of activities) {
+    const activityGroup = getDateGroup(dayjs(activity.time), today)
+    result[activityGroup].push(activity)
+  }
+  return result
 }
 
 const ActivitiesLoading = forwardRef<HTMLDivElement>((_, ref) => {
@@ -84,7 +99,7 @@ const ActivitiesLoading = forwardRef<HTMLDivElement>((_, ref) => {
 ActivitiesLoading.displayName = 'ActivitiesLoading'
 
 export function ActivityList() {
-  const t = useTranslations('Activity')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
   const { group, groupId } = useCurrentGroup()
 
   const {
@@ -110,7 +125,7 @@ export function ActivityList() {
 
   return activities.length > 0 ? (
     <div data-testid="activity-list">
-      {Object.values(DATE_GROUPS).map((dateGroup: string) => {
+      {Object.values(DATE_GROUPS).map((dateGroup) => {
         let groupActivities = groupedActivitiesByDate[dateGroup]
         if (!groupActivities || groupActivities.length === 0) return null
         const dateStyle =
@@ -125,7 +140,7 @@ export function ActivityList() {
                 'text-muted-foreground text-xs py-1 font-semibold sticky top-16 bg-white dark:bg-[#1b1917]'
               }
             >
-              {t(`Groups.${dateGroup}`)}
+              {t(DATE_GROUP_I18N_KEYS[dateGroup])}
             </div>
             {groupActivities.map((activity) => {
               const participant =
