@@ -8,10 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useTranslations } from '@/i18n/react'
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { ExpenseForm } from './expense-form'
 
@@ -23,8 +23,8 @@ export function CreateExpenseForm({
   expenseId?: string
   runtimeFeatureFlags: RuntimeFeatureFlags
 }) {
-  const t = useTranslations('Expenses')
-  const tGroups = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { data: groupData } = trpc.groups.get.useQuery({ groupId })
   const group = groupData?.group
   const currentLedgerParticipantId =
@@ -96,7 +96,10 @@ export function CreateExpenseForm({
         })
         utils.groups.expenses.invalidate()
         utils.groups.activities.invalidate()
-        router.push(`/groups/${group.id}`)
+        router.push({
+          to: '/groups/$groupId',
+          params: { groupId: group.id },
+        })
       }}
       runtimeFeatureFlags={runtimeFeatureFlags}
     />

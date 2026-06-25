@@ -10,12 +10,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTranslations } from '@/i18n/react'
 import { Pencil } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export default function GroupInformation({ groupId }: { groupId: string }) {
-  const t = useTranslations('Information')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Information' })
   const { isLoading, group } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
 

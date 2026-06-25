@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { Locale } from '@/i18n/request'
 import { getGroup } from '@/lib/api'
 import { defaultCurrencyList, getCurrency } from '@/lib/currency'
@@ -20,6 +20,7 @@ import { GroupFormValues, groupFormSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { CurrencySelector } from './currency-selector'
 import { Textarea } from './ui/textarea'
 
@@ -62,7 +63,7 @@ export function GroupForm({
   onSubmit,
 }: Props) {
   const locale = useLocale()
-  const t = useTranslations('GroupForm')
+  const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const readOnly = !!group && currentMemberRole === 'MEMBER'
   const isArchived = !!group && archived
 

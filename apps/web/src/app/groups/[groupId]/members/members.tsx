@@ -27,13 +27,14 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserPlus } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useCurrentGroup } from '../current-group-context'
 
@@ -90,7 +91,7 @@ function formatDate(value: string | Date, locale: string) {
 }
 
 export default function GroupMembers() {
-  const t = useTranslations('Members')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const locale = useLocale()
   const { toast } = useToast()
   const { groupId, group, currentMember } = useCurrentGroup()

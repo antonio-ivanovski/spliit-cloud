@@ -7,15 +7,16 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
-import { I18nProvider, useTranslations } from '@/i18n/react'
+import { I18nProvider } from '@/i18n/react'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { TRPCProvider } from '@/trpc/client'
 import { Outlet } from '@tanstack/react-router'
 import { Github } from 'lucide-react'
 import { Suspense } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 
 function Content() {
-  const t = useTranslations()
+  const { t } = useTranslation()
   // The "Groups" link in the navbar is only meaningful for signed-in users.
   // While the session is being resolved we hide the link to avoid a brief
   // flash of the "Go to my groups" CTA on the homepage / sign-in screens.
@@ -87,17 +88,18 @@ function Content() {
             <div className="flex flex-col space-y a--no-underline-text-white">
               <span>{t('Footer.madeIn')}</span>
               <span>
-                {t.rich('Footer.builtBy', {
-                  source: (txt) => (
-                    <a
-                      href="https://github.com/antonio-ivanovski/spliit-cloud/graphs/contributors"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      {txt}
-                    </a>
-                  ),
-                })}
+                <Trans
+                  i18nKey="Footer.builtBy"
+                  components={{
+                    source: (
+                      <a
+                        href="https://github.com/antonio-ivanovski/spliit-cloud/graphs/contributors"
+                        target="_blank"
+                        rel="noopener"
+                      />
+                    ),
+                  }}
+                />
               </span>
             </div>
           </div>

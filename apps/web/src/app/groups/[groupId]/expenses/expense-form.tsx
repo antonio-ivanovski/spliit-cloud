@@ -34,13 +34,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { Locale } from '@/i18n/request'
 import { randomId } from '@/lib/api'
 import { defaultCurrencyList, getCurrency } from '@/lib/currency'
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate } from '@/lib/hooks'
-import { useSearchParams } from '@/lib/navigation'
 import { expenseFormSchema, ExpenseFormValues } from '@/lib/schemas'
 import { calculateShare } from '@/lib/totals'
 import {
@@ -60,13 +59,17 @@ import {
   PAYMENT_CATEGORY_ID,
   RecurrenceRule,
 } from '@spliit/domain'
+import { getRouteApi } from '@tanstack/react-router'
 import { ChevronRight, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Resolver } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 import { DeletePopup } from '../../../../components/delete-popup'
 import { Textarea } from '../../../../components/ui/textarea'
+
+const createExpenseRouteApi = getRouteApi('/groups/$groupId/expenses/create')
 
 const enforceCurrencyPattern = (value: string) =>
   value
@@ -77,7 +80,7 @@ const enforceCurrencyPattern = (value: string) =>
     .replace(/#/, '.') // change back # to dot
     .replace(/[^-\d.]/g, '') // remove all non-numeric characters
 
-const parseCategoryIdFromUrl = (raw: string | null) => {
+const parseCategoryIdFromUrl = (raw: string | null | undefined) => {
   if (!raw) return DEFAULT_CATEGORY_ID
   const parsed = categoryIdSchema.safeParse(raw)
   return parsed.success ? parsed.data : DEFAULT_CATEGORY_ID
@@ -127,11 +130,11 @@ export function ExpenseForm({
   currentLedgerParticipantId?: string | null
   readOnly?: boolean
 }) {
-  const t = useTranslations('ExpenseForm')
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale() as Locale
   const extractCategoryMutation = trpc.ai.extractCategoryFromTitle.useMutation()
   const isCreate = expense === undefined
-  const searchParams = useSearchParams()
+  const searchParams = createExpenseRouteApi.useSearch()
 
   const getSelectedPayer = (field?: { value: string }) => {
     if (isCreate && field?.value === undefined) {
@@ -173,23 +176,23 @@ export function ExpenseForm({
           notes: expense.notes ?? '',
           recurrenceRule: expense.recurrenceRule ?? undefined,
         }
-      : searchParams.get('reimbursement')
+      : searchParams.reimbursement
         ? {
             title: t('reimbursement'),
             expenseDate: new Date(),
             amount: amountAsDecimal(
-              Number(searchParams.get('amount')) || 0,
+              Number(searchParams.amount) || 0,
               groupCurrency,
             ),
             originalCurrency: group.currencyCode,
             originalAmount: undefined,
             conversionRate: undefined,
             category: PAYMENT_CATEGORY_ID,
-            paidBy: searchParams.get('from') ?? undefined,
+            paidBy: searchParams.from ?? undefined,
             paidFor: [
-              searchParams.get('to')
+              searchParams.to
                 ? {
-                    participant: searchParams.get('to')!,
+                    participant: searchParams.to,
                     shares: '1' as any, // String for consistent form handling
                   }
                 : undefined,
@@ -202,28 +205,28 @@ export function ExpenseForm({
             recurrenceRule: RecurrenceRule.NONE,
           }
         : {
-            title: searchParams.get('title') ?? '',
-            expenseDate: searchParams.get('date')
-              ? new Date(searchParams.get('date') as string)
+            title: searchParams.title ?? '',
+            expenseDate: searchParams.date
+              ? new Date(searchParams.date)
               : new Date(),
-            amount: Number(searchParams.get('amount')) || 0,
+            amount: Number(searchParams.amount) || 0,
             originalCurrency: group.currencyCode ?? undefined,
             originalAmount: undefined,
             conversionRate: undefined,
-            category: parseCategoryIdFromUrl(searchParams.get('categoryId')),
+            category: parseCategoryIdFromUrl(searchParams.categoryId),
             // paid for all, split evenly
             paidFor: defaultSplittingOptions.paidFor,
             paidBy: getSelectedPayer(),
             isReimbursement: false,
             splitMode: defaultSplittingOptions.splitMode,
             saveDefaultSplittingOptions: false,
-            documents: searchParams.get('imageUrl')
+            documents: searchParams.imageUrl
               ? [
                   {
                     id: randomId(),
-                    url: searchParams.get('imageUrl') as string,
-                    width: Number(searchParams.get('imageWidth')),
-                    height: Number(searchParams.get('imageHeight')),
+                    url: searchParams.imageUrl,
+                    width: Number(searchParams.imageWidth),
+                    height: Number(searchParams.imageHeight),
                   },
                 ]
               : [],
@@ -720,7 +723,7 @@ export function ExpenseForm({
                   >
                     <SelectTrigger>
                       <SelectValue
-                        placeholder={t(`${sExpense}.paidByField.placeholder`)}
+                        placeholder={t('Expense.paidByField.placeholder')}
                       />
                     </SelectTrigger>
                     <SelectContent>
@@ -764,7 +767,7 @@ export function ExpenseForm({
               name="recurrenceRule"
               render={({ field }) => (
                 <FormItem className="sm:order-5">
-                  <FormLabel>{t(`${sExpense}.recurrenceRule.label`)}</FormLabel>
+                  <FormLabel>{t('Expense.recurrenceRule.label')}</FormLabel>
                   <Select
                     onValueChange={(value) => {
                       form.setValue('recurrenceRule', value as RecurrenceRule)
@@ -777,21 +780,21 @@ export function ExpenseForm({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="NONE">
-                        {t(`${sExpense}.recurrenceRule.none`)}
+                        {t('Expense.recurrenceRule.none')}
                       </SelectItem>
                       <SelectItem value="DAILY">
-                        {t(`${sExpense}.recurrenceRule.daily`)}
+                        {t('Expense.recurrenceRule.daily')}
                       </SelectItem>
                       <SelectItem value="WEEKLY">
-                        {t(`${sExpense}.recurrenceRule.weekly`)}
+                        {t('Expense.recurrenceRule.weekly')}
                       </SelectItem>
                       <SelectItem value="MONTHLY">
-                        {t(`${sExpense}.recurrenceRule.monthly`)}
+                        {t('Expense.recurrenceRule.monthly')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    {t(`${sExpense}.recurrenceRule.description`)}
+                    {t('Expense.recurrenceRule.description')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

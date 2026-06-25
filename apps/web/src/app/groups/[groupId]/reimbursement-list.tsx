@@ -1,9 +1,10 @@
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { Reimbursement } from '@/lib/balances'
 import { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { Trans, useTranslation } from 'react-i18next'
 
 type Participant = { id: string; name: string }
 
@@ -21,7 +22,9 @@ export function ReimbursementList({
   groupId,
 }: Props) {
   const locale = useLocale()
-  const t = useTranslations('Balances.Reimbursements')
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'Balances.Reimbursements',
+  })
   if (reimbursements.length === 0) {
     return (
       <p className="text-sm pb-6" data-testid="no-reimbursements">
@@ -44,15 +47,22 @@ export function ReimbursementList({
           >
             <div className="flex flex-col gap-1 items-start sm:flex-row sm:items-baseline sm:gap-4">
               <div>
-                {t.rich('owes', {
-                  from: fromName,
-                  to: toName,
-                  strong: (chunks) => <strong>{chunks}</strong>,
-                })}
+                <Trans
+                  i18nKey="Balances.Reimbursements.owes"
+                  values={{ from: fromName, to: toName }}
+                  components={{ strong: <strong /> }}
+                />
               </div>
               <Button variant="link" asChild className="-mx-4 -my-3">
                 <Link
-                  href={`/groups/${groupId}/expenses/create?reimbursement=yes&from=${reimbursement.from}&to=${reimbursement.to}&amount=${reimbursement.amount}`}
+                  href="/groups/$groupId/expenses/create"
+                  params={{ groupId }}
+                  search={{
+                    reimbursement: 'yes',
+                    from: reimbursement.from,
+                    to: reimbursement.to,
+                    amount: reimbursement.amount.toString(),
+                  }}
                 >
                   {t('markAsPaid')}
                 </Link>

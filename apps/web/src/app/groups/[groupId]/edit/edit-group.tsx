@@ -12,10 +12,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { useTranslations } from '@/i18n/react'
 import { trpc } from '@/trpc/client'
 import { Archive, ArchiveRestore } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export const EditGroup = () => {
@@ -25,8 +25,8 @@ export const EditGroup = () => {
   const { mutateAsync: updateGroup } = trpc.groups.update.useMutation()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
   const utils = trpc.useUtils()
-  const t = useTranslations('GroupForm')
-  const tGroups = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { toast } = useToast()
   const [archivePending, setArchivePending] = useState(false)
   const [forceArchiveOpen, setForceArchiveOpen] = useState(false)

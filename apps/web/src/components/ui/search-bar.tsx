@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { Input } from '@/components/ui/input'
-import { useTranslations } from '@/i18n/react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Search, XCircle } from 'lucide-react'
 
@@ -11,7 +11,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, onValueChange, ...props }, ref) => {
-    const t = useTranslations('Expenses')
+    const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
     const [value, _setValue] = React.useState('')
 
     const setValue = (v: string) => {

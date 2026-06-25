@@ -11,7 +11,7 @@ import {
 } from 'react-hook-form'
 
 import { Label } from '@/components/ui/label'
-import { useMessages } from '@/i18n/react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 
 const Form = FormProvider
@@ -149,15 +149,16 @@ const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
-  const messages = useMessages()
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'SchemaErrors' })
   const { error, formMessageId } = useFormField()
-  let body
+  let body: React.ReactNode
   if (error) {
-    body = String(error?.message)
-    const translation = (messages as any).SchemaErrors?.[body]
-    if (translation) {
-      body = translation
-    }
+    const raw = String(error?.message)
+    // The Zod schema codes (e.g. "min1", "duplicateParticipantName") map
+    // 1:1 to keys under `SchemaErrors`. If the key exists, translate it;
+    // otherwise fall back to the raw message text.
+    const translated = i18n.exists(raw) ? t(raw as never) : raw
+    body = translated
   } else {
     body = children
   }

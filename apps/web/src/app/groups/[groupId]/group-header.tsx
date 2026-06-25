@@ -6,15 +6,15 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
-import { useTranslations } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import { Check, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from './current-group-context'
 
 export const GroupHeader = () => {
   const { isLoading, groupId, group, currentInvitation } = useCurrentGroup()
-  const tGroups = useTranslations('Groups')
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { toast } = useToast()
   const router = useRouter()
   const utils = trpc.useUtils()

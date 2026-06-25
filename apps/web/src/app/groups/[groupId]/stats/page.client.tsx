@@ -6,10 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useTranslations } from '@/i18n/react'
+import { useTranslation } from 'react-i18next'
 
 export function TotalsPageClient() {
-  const t = useTranslations('Stats')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Stats' })
 
   return (
     <>

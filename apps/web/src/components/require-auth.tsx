@@ -2,11 +2,16 @@
 
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
-import { useTranslations } from '@/i18n/react'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { PropsWithChildren } from 'react'
+import { useTranslation } from 'react-i18next'
+
+function currentPathWithSearch(): string {
+  if (typeof window === 'undefined') return '/groups'
+  return `${window.location.pathname}${window.location.search}`
+}
 
 /**
  * Route guard. Shows a loader while the session is being resolved, redirects
@@ -25,21 +30,16 @@ export function RequireAuth({ children }: PropsWithChildren) {
   }
 
   if (!account) {
-    const target =
-      typeof window !== 'undefined'
-        ? `${window.location.pathname}${window.location.search}`
-        : '/groups'
-    return <Navigate to="/" search={{ redirect: target }} replace />
+    return (
+      <Navigate to="/" search={{ redirect: currentPathWithSearch() }} replace />
+    )
   }
 
   // Authenticated but missing a display name (e.g. right after a magic-link
   // sign-up). Send them to the profile-completion flow, preserving the
   // original destination so they land back here once they've set a name.
   if (!account.name || account.name === account.email) {
-    const target =
-      typeof window !== 'undefined'
-        ? `${window.location.pathname}${window.location.search}`
-        : '/groups'
+    const target = currentPathWithSearch()
     return (
       <Navigate
         to="/auth/complete-profile"
@@ -59,7 +59,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
  * group layout in that case.
  */
 export function UnauthorizedGroup() {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   return (
     <div className="flex flex-col gap-3 py-10 text-center">
       <h2 className="text-xl font-semibold">{t('Unauthorized.title')}</h2>

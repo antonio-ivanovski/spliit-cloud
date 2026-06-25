@@ -12,7 +12,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import {
@@ -21,9 +20,12 @@ import {
   type PasswordRequirementId,
 } from '@spliit/domain/password'
 import { useMutation } from '@tanstack/react-query'
-import { useLocation, useNavigate } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { Check, Circle, Loader2, Mail } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+const homeRouteApi = getRouteApi('/')
 
 type Mode = 'sign-in' | 'sign-up'
 type EmailVariant = 'magic-link' | 'password'
@@ -39,14 +41,15 @@ function needsDisplayName(account: { name?: string | null; email?: string }) {
 }
 
 export function AuthPanel() {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const navigate = useNavigate()
-  const searchStr = useLocation({ select: (location) => location.searchStr })
-  const searchParams = new URLSearchParams(searchStr)
-  const redirectTo = searchParams.get('redirect') ?? '/groups'
-  const initialMode =
-    searchParams.get('mode') === 'sign-up' ? 'sign-up' : 'sign-in'
-  const initialEmail = searchParams.get('email') ?? ''
+  const {
+    redirect,
+    mode: initialSearchMode,
+    email: initialEmail,
+  } = homeRouteApi.useSearch()
+  const redirectTo = redirect ?? '/groups'
+  const initialMode = initialSearchMode === 'sign-up' ? 'sign-up' : 'sign-in'
 
   const webOrigin =
     typeof window !== 'undefined'
@@ -58,7 +61,7 @@ export function AuthPanel() {
 
   const [mode, setMode] = useState<Mode>(initialMode)
   const [emailVariant, setEmailVariant] = useState<EmailVariant>('magic-link')
-  const [email, setEmail] = useState(initialEmail)
+  const [email, setEmail] = useState<string>(initialEmail ?? '')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [successState, setSuccessState] = useState<SuccessState | null>(null)
@@ -299,7 +302,7 @@ function AuthCard({
   mode: Mode
   children: React.ReactNode
 }) {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   return (
     <Card className="w-full border-border/80 shadow-sm">
       <CardHeader className="space-y-2 text-center">
@@ -322,7 +325,7 @@ function MagicLinkForm(props: {
   onEmailChange: (email: string) => void
   onSubmit: (event: React.FormEvent) => void
 }) {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   return (
     <form className="flex flex-col gap-3 pt-4" onSubmit={props.onSubmit}>
       <EmailField value={props.email} onChange={props.onEmailChange} />
@@ -357,7 +360,7 @@ function PasswordForm(props: {
   onConfirmPasswordChange: (password: string) => void
   onSubmit: (event: React.FormEvent) => void
 }) {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   return (
     <form className="flex flex-col gap-3 pt-4" onSubmit={props.onSubmit}>
       <EmailField value={props.email} onChange={props.onEmailChange} />
@@ -382,11 +385,12 @@ function PasswordForm(props: {
           className="h-auto self-start px-0 py-0"
         >
           <Link
-            href={`/auth/forgot-password${
+            href="/auth/forgot-password"
+            search={
               props.email.trim()
-                ? `?email=${encodeURIComponent(props.email.trim())}`
-                : ''
-            }`}
+                ? { email: props.email.trim() }
+                : { email: undefined }
+            }
           >
             {t('forgotPasswordLink')}
           </Link>
@@ -442,7 +446,7 @@ function EmailField(props: {
   value: string
   onChange: (email: string) => void
 }) {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   return (
     <div className="grid gap-1.5">
       <Label htmlFor="auth-email">{t('email')}</Label>
@@ -460,7 +464,7 @@ function EmailField(props: {
 }
 
 function PasswordChecklist({ password }: { password: string }) {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const requirements = useMemo(
     () => getPasswordRequirements(password),
     [password],
@@ -500,7 +504,7 @@ function AuthSuccess(props: {
   message: string
   onReset: () => void
 }) {
-  const t = useTranslations('Auth')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   return (
     <div className="rounded-lg border bg-muted/30 px-4 py-6 text-center flex flex-col gap-3">
       <Mail className="w-6 h-6 mx-auto text-muted-foreground" />

@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -37,6 +37,7 @@ import {
   X,
 } from 'lucide-react'
 import { PropsWithChildren, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type AccountGroup = AppRouterOutput['account']['groups']['groups'][number]
 
@@ -78,7 +79,7 @@ function formatDate(value: string | Date, locale: string) {
 }
 
 export function RecentGroupList() {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const utils = trpc.useUtils()
   // `includeArchived: true` keeps the "Archived" section populated; the
   // "Show hidden groups" toggle below controls whether the user-hidden
@@ -315,7 +316,7 @@ function ForceArchiveDialogSection({
 }
 
 function PendingInvitations() {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale()
   const router = useRouter()
   const { toast } = useToast()
@@ -329,7 +330,7 @@ function PendingInvitations() {
         utils.account.groups.invalidate(),
         utils.invitations.listForAccount.invalidate(),
       ])
-      router.push(`/groups/${data.groupId}`)
+      router.push({ to: '/groups/$groupId', params: { groupId: data.groupId } })
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })
@@ -463,7 +464,7 @@ function GroupCard({
   // Only provided for OWNER/ADMIN. MEMBERs cannot archive the group.
   onToggleArchived?: () => void
 }) {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale()
   const isStarred = group.preference.starred
   const isHidden = group.preference.hidden
@@ -587,7 +588,7 @@ function GroupCard({
 }
 
 function GroupsPage({ children }: PropsWithChildren<{}>) {
-  const t = useTranslations('Groups')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">

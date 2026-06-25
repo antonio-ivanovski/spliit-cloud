@@ -10,10 +10,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTranslations } from '@/i18n/react'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { Fragment, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 import { useCurrentGroup } from '../current-group-context'
 
@@ -24,7 +24,7 @@ export default function BalancesAndReimbursements() {
     trpc.groups.balances.list.useQuery({
       groupId,
     })
-  const t = useTranslations('Balances')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense

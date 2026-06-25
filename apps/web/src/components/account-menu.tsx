@@ -9,14 +9,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
 import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { LogOut, User as UserIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export function AccountMenu() {
-  const t = useTranslations('Header')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
   const router = useRouter()
   const { data: account, isPending } = useCurrentAccount()
 
@@ -57,7 +57,7 @@ export function AccountMenu() {
           onSelect={async (event) => {
             event.preventDefault()
             await authClient.signOut()
-            router.replace('/')
+            router.replace({ href: '/' })
           }}
         >
           <LogOut className="w-4 h-4 mr-2" />

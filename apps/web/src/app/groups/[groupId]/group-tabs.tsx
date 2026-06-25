@@ -4,10 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
-import { useTranslations } from '@/i18n/react'
 import { usePathname, useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import { Archive as ArchiveIcon, ArchiveRestore } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from './current-group-context'
 
 type Props = {
@@ -15,8 +15,8 @@ type Props = {
 }
 
 export function GroupTabs({ groupId }: Props) {
-  const t = useTranslations()
-  const tGroups = useTranslations('Groups')
+  const { t } = useTranslation()
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const pathname = usePathname()
   const value =
     pathname.replace(/\/groups\/[^\/]+\/([^/]+).*/, '$1') || 'expenses'
@@ -75,7 +75,7 @@ export function GroupTabs({ groupId }: Props) {
         value={value}
         className="[&>*]:border overflow-x-auto"
         onValueChange={(value) => {
-          router.push(`/groups/${groupId}/${value}`)
+          router.push({ href: `/groups/${groupId}/${value}` })
         }}
       >
         <TabsList>

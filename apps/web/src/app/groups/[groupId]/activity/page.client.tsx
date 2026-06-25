@@ -6,10 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useTranslations } from '@/i18n/react'
+import { useTranslation } from 'react-i18next'
 
 export function ActivityPageClient() {
-  const t = useTranslations('Activity')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
 
   return (
     <>

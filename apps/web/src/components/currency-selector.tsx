@@ -14,10 +14,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useTranslations } from '@/i18n/react'
 import { Currency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { forwardRef, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   currencies: Currency[]
@@ -98,6 +98,14 @@ export function CurrencySelector({
   )
 }
 
+type CurrencyGrouping = 'common' | 'custom' | 'other'
+
+const CURRENCY_GROUPING_HEADINGS = {
+  common: 'common.heading',
+  custom: 'custom.heading',
+  other: 'other.heading',
+} as const satisfies Record<CurrencyGrouping, string>
+
 function CurrencyCommand({
   currencies,
   onValueChange,
@@ -105,7 +113,7 @@ function CurrencyCommand({
   currencies: Currency[]
   onValueChange: (currencyId: Currency['code']) => void
 }) {
-  const currencyGroup = (currency: Currency) => {
+  const currencyGroup = (currency: Currency): CurrencyGrouping => {
     switch (currency.code) {
       case 'USD':
       case 'EUR':
@@ -118,7 +126,7 @@ function CurrencyCommand({
         return 'other'
     }
   }
-  const t = useTranslations('Currencies')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Currencies' })
   const currenciesByGroup = currencies.reduce<Record<string, Currency[]>>(
     (acc, currency) => ({
       ...acc,
@@ -136,7 +144,10 @@ function CurrencyCommand({
       <div className="w-full max-h-[300px] overflow-y-auto">
         {Object.entries(currenciesByGroup).map(
           ([group, groupCurrencies], index) => (
-            <CommandGroup key={index} heading={t(`${group}.heading`)}>
+            <CommandGroup
+              key={index}
+              heading={t(CURRENCY_GROUPING_HEADINGS[group as CurrencyGrouping])}
+            >
               {groupCurrencies.map((currency) => (
                 <CommandItem
                   key={currency.code}

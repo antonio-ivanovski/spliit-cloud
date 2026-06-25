@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/drawer'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { useMediaQuery } from '@/lib/hooks'
 import { useRouter } from '@/lib/navigation'
 import { getImageData, usePresignedUpload } from '@/lib/upload'
@@ -36,6 +36,7 @@ import { trpc } from '@/trpc/client'
 import { categoryIdSchema, getCategoryById } from '@spliit/domain'
 import { ChevronRight, FileQuestion, Loader2, Receipt } from 'lucide-react'
 import { PropsWithChildren, ReactNode, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 
 const MAX_FILE_SIZE = 5 * 1024 ** 2
@@ -48,7 +49,7 @@ type ReceiptExtractedInfo = {
 }
 
 export function CreateFromReceiptButton() {
-  const t = useTranslations('CreateFromReceipt')
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
   const isDesktop = useMediaQuery('(min-width: 640px)')
 
   const DialogOrDrawer = isDesktop
@@ -85,7 +86,7 @@ function ReceiptDialogContent() {
   const { group } = useCurrentGroup()
 
   const locale = useLocale()
-  const t = useTranslations('CreateFromReceipt')
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
   const [pending, setPending] = useState(false)
   const { uploadToS3, FileInput, openFileDialog } = usePresignedUpload(
     group?.ledgerId,
@@ -256,17 +257,25 @@ function ReceiptDialogContent() {
           disabled={pending || !receiptInfo}
           onClick={() => {
             if (!receiptInfo || !group) return
-            router.push(
-              `/groups/${group.id}/expenses/create?amount=${
-                receiptInfo.amount
-              }&categoryId=${receiptInfo.categoryId}&date=${
-                receiptInfo.date
-              }&title=${encodeURIComponent(
-                receiptInfo.title ?? '',
-              )}&imageUrl=${encodeURIComponent(receiptInfo.url)}&imageWidth=${
-                receiptInfo.width
-              }&imageHeight=${receiptInfo.height}`,
-            )
+            router.push({
+              to: '/groups/$groupId/expenses/create',
+              params: { groupId: group.id },
+              search: {
+                amount: receiptInfo.amount.toString(),
+                categoryId: receiptInfo.categoryId ?? undefined,
+                date: receiptInfo.date ?? undefined,
+                title: receiptInfo.title ?? undefined,
+                imageUrl: receiptInfo.url,
+                imageWidth:
+                  receiptInfo.width !== undefined
+                    ? receiptInfo.width.toString()
+                    : undefined,
+                imageHeight:
+                  receiptInfo.height !== undefined
+                    ? receiptInfo.height.toString()
+                    : undefined,
+              },
+            })
           }}
         >
           {t('Dialog.continue')}
@@ -277,7 +286,7 @@ function ReceiptDialogContent() {
 }
 
 function Unknown() {
-  const t = useTranslations('CreateFromReceipt')
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
   return (
     <div className="flex gap-1 items-center text-muted-foreground">
       <FileQuestion className="w-4 h-4" />

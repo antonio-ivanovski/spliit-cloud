@@ -11,12 +11,14 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
 import { useMutation } from '@tanstack/react-query'
-import { useLocation } from '@tanstack/react-router'
+import { getRouteApi } from '@tanstack/react-router'
 import { Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+const forgotPasswordRouteApi = getRouteApi('/auth/forgot-password')
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message
@@ -32,12 +34,10 @@ function getErrorMessage(error: unknown): string {
  * token) so the response shape is identical.
  */
 export function ForgotPasswordPage() {
-  const t = useTranslations('ForgotPassword')
-  const searchParams = new URLSearchParams(
-    useLocation({ select: (location) => location.searchStr }),
-  )
+  const { t } = useTranslation(undefined, { keyPrefix: 'ForgotPassword' })
+  const { email: initialEmail } = forgotPasswordRouteApi.useSearch()
 
-  const [email, setEmail] = useState(searchParams.get('email') ?? '')
+  const [email, setEmail] = useState(initialEmail ?? '')
   const [emailSent, setEmailSent] = useState(false)
 
   const requestReset = useMutation({
@@ -129,9 +129,10 @@ export function ForgotPasswordPage() {
         <div className="flex flex-col gap-3 px-6 pb-6">
           <Button asChild variant="ghost" size="sm" className="w-full">
             <Link
-              href={`/${
-                email.trim() ? `?email=${encodeURIComponent(email.trim())}` : ''
-              }`}
+              href="/"
+              search={
+                email.trim() ? { email: email.trim() } : { email: undefined }
+              }
             >
               {t('backToSignIn')}
             </Link>

@@ -8,11 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTranslations } from '@/i18n/react'
 import { Download, FileDown, FileJson } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function ExportButton({ groupId }: { groupId: string }) {
-  const t = useTranslations('Expenses')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
   return (
     <DropdownMenu>

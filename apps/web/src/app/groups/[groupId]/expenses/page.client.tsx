@@ -12,8 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useTranslations } from '@/i18n/react'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export default function GroupExpensesPageClient({
@@ -21,7 +21,7 @@ export default function GroupExpensesPageClient({
 }: {
   enableReceiptExtract: boolean
 }) {
-  const t = useTranslations('Expenses')
+  const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const { groupId, group } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
   const isArchived = !!group?.archived

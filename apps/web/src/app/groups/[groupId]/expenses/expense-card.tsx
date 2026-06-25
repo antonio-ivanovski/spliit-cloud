@@ -5,16 +5,22 @@ import { DocumentsCount } from '@/app/groups/[groupId]/expenses/documents-count'
 import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { useLocale, useTranslations } from '@/i18n/react'
+import { useLocale } from '@/i18n/react'
 import { getGroupExpenses } from '@/lib/api'
 import { Currency } from '@/lib/currency'
 import { useRouter } from '@/lib/navigation'
 import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
 import { Fragment } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 
 type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
+
+const participantsKey = {
+  paidBy: 'ExpenseCard.paidBy',
+  receivedBy: 'ExpenseCard.receivedBy',
+} as const
 
 function Participants({
   expense,
@@ -23,8 +29,7 @@ function Participants({
   expense: Expense
   participantCount: number
 }) {
-  const t = useTranslations('ExpenseCard')
-  const key = expense.amount > 0 ? 'paidBy' : 'receivedBy'
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const paidFor =
     expense.paidFor.length == participantCount && participantCount >= 4 ? (
       <strong>{t('everyone')}</strong>
@@ -37,13 +42,21 @@ function Participants({
       ))
     )
 
-  const participants = t.rich(key, {
-    strong: (chunks) => <strong>{chunks}</strong>,
-    paidBy: expense.paidBy.name,
-    paidFor: () => paidFor,
-    forCount: expense.paidFor.length,
-  })
-  return <>{participants}</>
+  const i18nKey = participantsKey[expense.amount > 0 ? 'paidBy' : 'receivedBy']
+
+  return (
+    <Trans
+      i18nKey={i18nKey}
+      values={{
+        paidBy: expense.paidBy.name,
+        forCount: expense.paidFor.length,
+      }}
+      components={{
+        strong: <strong />,
+        paidFor: <>{paidFor}</>,
+      }}
+    />
+  )
 }
 
 type Props = {
@@ -59,7 +72,7 @@ export function ExpenseCard({
   groupId,
   participantCount,
 }: Props) {
-  const t = useTranslations('ExpenseCard')
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const router = useRouter()
   const locale = useLocale()
   const isPendingInvitee = useIsPendingInvitee()
@@ -78,7 +91,10 @@ export function ExpenseCard({
       )}
       onClick={() => {
         if (!canEdit) return
-        router.push(`/groups/${groupId}/expenses/${expense.id}/edit`)
+        router.push({
+          to: '/groups/$groupId/expenses/$expenseId/edit',
+          params: { groupId, expenseId: expense.id },
+        })
       }}
     >
       <CategoryIcon
