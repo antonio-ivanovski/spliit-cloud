@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "Dziel <strong>Wydatki</strong> z <strong>Rodziną i Przyjaciółmi</strong>",
-    "description": "Witaj na Twojej nowej instancji <strong>Spliit Cloud</strong> !",
+    "description": "Śledź wspólne wydatki i rozliczaj się. Darmowe i z otwartym kodem źródłowym, <strong>zsynchronizowane i zabezpieczone przez Twoje konto</strong>.",
     "button": {
       "groups": "Przejdź do grup",
       "github": "GitHub",
       "signIn": "Zaloguj się do Spliit Cloud",
       "createAccount": "Utwórz konto"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "Zaloguj się hasłem",
     "signUpWithPassword": "Zarejestruj się hasłem",
     "signInWithGoogle": "Kontynuuj przez Google",
+    "orContinueWithEmail": "lub kontynuuj przez e-mail",
+    "magicLinkTab": "Magiczny link",
+    "passwordTab": "Hasło",
     "sendMagicLink": "Wyślij link logowania",
     "magicLinkEmail": "E-mail",
     "usePasswordInstead": "Użyj e-maila i hasła",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "Utwórz konto za pomocą e-maila i hasła.",
     "useDifferentEmail": "Użyj innego e-maila",
     "magicLinkSent": "Sprawdź swoją skrzynkę odbiorczą w poszukiwaniu linku logowania.",
+    "verificationEmailSent": "Sprawdź swoją skrzynkę odbiorczą, aby zweryfikować konto.",
     "noAccount": "Nie masz jeszcze konta?",
     "haveAccount": "Masz już konto?",
     "createAccount": "Utwórz konto",
@@ -528,12 +558,21 @@
     "confirmPassword": "Potwierdź hasło",
     "passwordMismatch": "Hasła nie są zgodne.",
     "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+    "passwordRequirements": {
+      "minLength": "8 znaków",
+      "uppercase": "Wielka litera",
+      "lowercase": "Mała litera",
+      "number": "Cyfra",
+      "symbol": "Symbol"
+    },
+    "forgotPasswordLink": "Nie pamiętasz hasła?",
     "errors": {
       "invalidCredentials": "E-mail lub hasło jest nieprawidłowe.",
       "emailRequired": "Wprowadź swój adres e-mail.",
       "passwordRequired": "Wprowadź swoje hasło.",
       "nameRequired": "Wprowadź nazwę wyświetlaną.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "passwordPolicy": "Użyj co najmniej 8 znaków zawierających wielką literę, małą literę, cyfrę i symbol.",
       "magicLinkFailed": "Nie udało się wysłać linku logowania."
     },
     "loading": "Ładowanie…",
@@ -553,6 +592,40 @@
       "nameRequired": "Wprowadź nazwę wyświetlaną.",
       "nameTooShort": "Nazwa musi mieć co najmniej 2 znaki.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Zresetuj swoje hasło",
+    "subtitle": "Wprowadź e-mail swojego konta, a wyślemy Ci link do wyboru nowego hasła.",
+    "emailLabel": "E-mail",
+    "submit": "Wyślij link do resetowania",
+    "emailSent": "Jeśli istnieje konto dla tego e-maila, wkrótce otrzymasz link do resetowania.",
+    "tryAgain": "Użyj innego e-maila",
+    "backToSignIn": "Powrót do logowania",
+    "errors": {
+      "sendFailed": "Nie udało się wysłać linku do resetowania. Spróbuj ponownie."
+    }
+  },
+  "ResetPassword": {
+    "title": "Wybierz nowe hasło",
+    "subtitle": "Wprowadź nowe hasło dla swojego konta Spliit.",
+    "newPassword": "Nowe hasło",
+    "confirmPassword": "Potwierdź nowe hasło",
+    "passwordMismatch": "Hasła nie są zgodne.",
+    "submit": "Zapisz nowe hasło",
+    "submitting": "Zapisywanie…",
+    "success": "Hasło zaktualizowane",
+    "successDescription": "Twoje hasło zostało zmienione. Zaloguj się nowym hasłem, aby kontynuować.",
+    "goToSignIn": "Przejdź do logowania",
+    "invalidTokenTitle": "Ten link do resetowania nie może być użyty",
+    "invalidTokenDescription": "Link mógł wygasnąć lub został już użyty. Poproś o nowy, aby spróbować ponownie.",
+    "requestNewLink": "Poproś o nowy link",
+    "backToSignIn": "Powrót do logowania",
+    "errors": {
+      "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "invalidToken": "Ten link do resetowania wygasł lub został już użyty.",
+      "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+      "passwordPolicy": "Użyj co najmniej 8 znaków zawierających wielką literę, małą literę, cyfrę i symbol."
     }
   },
   "Currencies": {

@@ -1,5 +1,6 @@
 import { CompleteProfilePage } from '@/app/auth/complete-profile'
-import { SignInPage } from '@/app/auth/sign-in'
+import { ForgotPasswordPage } from '@/app/auth/forgot-password'
+import { ResetPasswordPage } from '@/app/auth/reset-password'
 import { ActivityPageClient } from '@/app/groups/[groupId]/activity/page.client'
 import BalancesAndReimbursements from '@/app/groups/[groupId]/balances/balances-and-reimbursements'
 import { EditGroup } from '@/app/groups/[groupId]/edit/edit-group'
@@ -63,10 +64,15 @@ const indexRoute = createRoute({
   path: '/',
   component: HomePage,
 })
-const authRoute = createRoute({
+const forgotPasswordRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/auth/sign-in',
-  component: SignInPage,
+  path: '/auth/forgot-password',
+  component: ForgotPasswordPage,
+})
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/auth/reset-password',
+  component: ResetPasswordPage,
 })
 const completeProfileRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -164,7 +170,8 @@ const membersRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  authRoute,
+  forgotPasswordRoute,
+  resetPasswordRoute,
   completeProfileRoute,
   groupsRoute.addChildren([
     groupsIndexRoute,

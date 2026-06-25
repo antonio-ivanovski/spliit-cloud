@@ -25,7 +25,7 @@ export function AccountMenu() {
   }
 
   // Unauthenticated: render nothing. The homepage provides the sign-in CTA,
-  // and protected routes redirect to `/auth/sign-in` via `RequireAuth`.
+  // and protected routes redirect to `/` via `RequireAuth`.
   if (!account) {
     return null
   }

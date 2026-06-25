@@ -206,7 +206,7 @@ export async function sendInvitationEmail(opts: {
   // a forbidden loadGroupContext because pending invitees are not yet
   // ACTIVE members.
   const acceptUrl = `${webBase}/groups/${groupId}`
-  const signInUrl = `${webBase}/auth/sign-in?invitation=${invitationId}`
+  const signInUrl = `${webBase}/?invitation=${invitationId}`
 
   const subject = `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
 

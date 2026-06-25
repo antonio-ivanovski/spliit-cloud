@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "<strong>Masrafları</strong> <strong>Arkadaşlar ve Aile</strong> ile paylaş",
-    "description": "Yeni <strong>Spliit Cloud</strong> kurulumunuza hoş geldiniz !",
+    "description": "Ortak harcamaları takip edin ve hesaplaşın. Ücretsiz ve açık kaynak, <strong>hesabınızla senkronize ve güvende</strong>.",
     "button": {
       "groups": "Gruplara git",
       "github": "GitHub",
       "signIn": "Spliit Cloud'da oturum açın",
       "createAccount": "Hesap oluşturun"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "Şifreyle oturum aç",
     "signUpWithPassword": "Şifreyle kaydol",
     "signInWithGoogle": "Google ile devam et",
+    "orContinueWithEmail": "veya e-posta ile devam et",
+    "magicLinkTab": "Sihirli bağlantı",
+    "passwordTab": "Şifre",
     "sendMagicLink": "Oturum açma bağlantısı gönder",
     "magicLinkEmail": "E-posta",
     "usePasswordInstead": "E-posta ve şifre kullan",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "E-postanız ve bir şifre ile hesap oluşturun.",
     "useDifferentEmail": "Farklı bir e-posta kullan",
     "magicLinkSent": "Gelen kutunuzda oturum açma bağlantısını kontrol edin.",
+    "verificationEmailSent": "Hesabınızı doğrulamak için gelen kutunuzu kontrol edin.",
     "noAccount": "Henüz hesabınız yok mu?",
     "haveAccount": "Zaten hesabınız var mı?",
     "createAccount": "Hesap oluştur",
@@ -528,12 +558,21 @@
     "confirmPassword": "Şifreyi onayla",
     "passwordMismatch": "Şifreler eşleşmiyor.",
     "passwordTooShort": "Şifre en az 8 karakter olmalıdır.",
+    "passwordRequirements": {
+      "minLength": "8 karakter",
+      "uppercase": "Büyük harf",
+      "lowercase": "Küçük harf",
+      "number": "Rakam",
+      "symbol": "Sembol"
+    },
+    "forgotPasswordLink": "Şifrenizi mi unuttunuz?",
     "errors": {
       "invalidCredentials": "E-posta veya şifre hatalı.",
       "emailRequired": "E-posta adresinizi girin.",
       "passwordRequired": "Şifrenizi girin.",
       "nameRequired": "Bir görünen ad girin.",
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+      "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin.",
       "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi."
     },
     "loading": "Yükleniyor…",
@@ -553,6 +592,40 @@
       "nameRequired": "Bir görünen ad girin.",
       "nameTooShort": "Ad en az 2 karakter olmalıdır.",
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Şifrenizi sıfırlayın",
+    "subtitle": "Hesap e-postanızı girin, size yeni bir şifre seçmeniz için bir bağlantı gönderelim.",
+    "emailLabel": "E-posta",
+    "submit": "Sıfırlama bağlantısı gönder",
+    "emailSent": "Bu e-posta için bir hesap varsa, kısa süre içinde bir sıfırlama bağlantısı alacaksınız.",
+    "tryAgain": "Farklı bir e-posta kullan",
+    "backToSignIn": "Oturum açmaya geri dön",
+    "errors": {
+      "sendFailed": "Sıfırlama bağlantısı gönderilemedi. Lütfen tekrar deneyin."
+    }
+  },
+  "ResetPassword": {
+    "title": "Yeni bir şifre seçin",
+    "subtitle": "Spliit hesabınız için yeni şifreyi girin.",
+    "newPassword": "Yeni şifre",
+    "confirmPassword": "Yeni şifreyi onayla",
+    "passwordMismatch": "Şifreler eşleşmiyor.",
+    "submit": "Yeni şifreyi kaydet",
+    "submitting": "Kaydediliyor…",
+    "success": "Şifre güncellendi",
+    "successDescription": "Şifreniz değiştirildi. Devam etmek için yeni şifrenizle oturum açın.",
+    "goToSignIn": "Oturum açmaya git",
+    "invalidTokenTitle": "Bu sıfırlama bağlantısı kullanılamaz",
+    "invalidTokenDescription": "Bağlantının süresi dolmuş veya zaten kullanılmış olabilir. Tekrar denemek için yeni bir tane isteyin.",
+    "requestNewLink": "Yeni bağlantı iste",
+    "backToSignIn": "Oturum açmaya geri dön",
+    "errors": {
+      "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+      "invalidToken": "Bu sıfırlama bağlantısının süresi dolmuş veya zaten kullanılmış.",
+      "passwordTooShort": "Şifre en az 8 karakter olmalıdır.",
+      "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin."
     }
   },
   "Currencies": {

@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "Comparteix <strong>despeses</strong> amb <strong>família i amics</strong>",
-    "description": "Benvinguda a <strong>Spliit Cloud</strong>!",
+    "description": "Seguiu les despeses compartides i saldeu els comptes. Gratuït i de codi obert, <strong>sincronitzat i protegit amb el vostre compte</strong>.",
     "button": {
       "groups": "Veure els grups",
       "github": "GitHub",
       "signIn": "Inicia sessió a Spliit Cloud",
       "createAccount": "Crea un compte"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Inicia sessió amb contrasenya",
     "signUpWithPassword": "Registra't amb contrasenya",
     "signInWithGoogle": "Continua amb Google",
+    "orContinueWithEmail": "o continua amb el correu electrònic",
+    "magicLinkTab": "Enllaç màgic",
+    "passwordTab": "Contrasenya",
     "sendMagicLink": "Envia enllaç d'inici de sessió",
     "magicLinkEmail": "Correu electrònic",
     "usePasswordInstead": "Utilitza correu i contrasenya",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Crea un compte amb el teu correu electrònic i una contrasenya.",
     "useDifferentEmail": "Utilitza un correu diferent",
     "magicLinkSent": "Comprova la teva bústia d'entrada per a l'enllaç d'inici de sessió.",
+    "verificationEmailSent": "Comprova la teva safata d'entrada per verificar el teu compte.",
     "noAccount": "Encara no tens un compte?",
     "haveAccount": "Ja tens un compte?",
     "createAccount": "Crea un compte",
@@ -541,12 +571,21 @@
     "confirmPassword": "Confirma la contrasenya",
     "passwordMismatch": "Les contrasenyes no coincideixen.",
     "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters.",
+    "passwordRequirements": {
+      "minLength": "8 caràcters",
+      "uppercase": "Majúscula",
+      "lowercase": "Minúscula",
+      "number": "Número",
+      "symbol": "Símbol"
+    },
+    "forgotPasswordLink": "Has oblidat la contrasenya?",
     "errors": {
       "invalidCredentials": "El correu o la contrasenya són incorrectes.",
       "emailRequired": "Introdueix la teva adreça de correu electrònic.",
       "passwordRequired": "Introdueix la teva contrasenya.",
       "nameRequired": "Introdueix un nom de visualització.",
       "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar.",
+      "passwordPolicy": "Utilitza almenys 8 caràcters amb majúscules, minúscules, un número i un símbol.",
       "magicLinkFailed": "No s'ha pogut enviar l'enllaç d'inici de sessió."
     },
     "loading": "Carregant…",
@@ -566,6 +605,40 @@
       "nameRequired": "Introdueix un nom de visualització.",
       "nameTooShort": "El nom ha de tenir almenys 2 caràcters.",
       "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Restableix la teva contrasenya",
+    "subtitle": "Introdueix el correu del teu compte i t'enviarem un enllaç per triar una nova contrasenya.",
+    "emailLabel": "Correu electrònic",
+    "submit": "Envia l'enllaç de restabliment",
+    "emailSent": "Si existeix un compte per a aquest correu, rebràs un enllaç de restabliment en breu.",
+    "tryAgain": "Utilitza un correu diferent",
+    "backToSignIn": "Tornar a l'inici de sessió",
+    "errors": {
+      "sendFailed": "No s'ha pogut enviar l'enllaç de restabliment. Torna-ho a intentar."
+    }
+  },
+  "ResetPassword": {
+    "title": "Tria una nova contrasenya",
+    "subtitle": "Introdueix la nova contrasenya per al teu compte de Spliit.",
+    "newPassword": "Nova contrasenya",
+    "confirmPassword": "Confirma la nova contrasenya",
+    "passwordMismatch": "Les contrasenyes no coincideixen.",
+    "submit": "Desa la nova contrasenya",
+    "submitting": "Desant…",
+    "success": "Contrasenya actualitzada",
+    "successDescription": "La teva contrasenya s'ha canviat. Inicia sessió amb la teva nova contrasenya per continuar.",
+    "goToSignIn": "Anar a l'inici de sessió",
+    "invalidTokenTitle": "Aquest enllaç de restabliment no es pot utilitzar",
+    "invalidTokenDescription": "L'enllaç pot haver caducat o ja s'ha utilitzat. Demana'n un de nou per tornar-ho a intentar.",
+    "requestNewLink": "Demana un nou enllaç",
+    "backToSignIn": "Tornar a l'inici de sessió",
+    "errors": {
+      "generic": "Alguna cosa ha anat malament. Torna-ho a intentar.",
+      "invalidToken": "Aquest enllaç de restabliment ha caducat o ja s'ha utilitzat.",
+      "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters.",
+      "passwordPolicy": "Utilitza almenys 8 caràcters amb majúscules, minúscules, un número i un símbol."
     }
   },
   "Members": {

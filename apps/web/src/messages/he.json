@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "שתף <strong>הוצאות</strong> עם <strong>חברים ומשפחה</strong>",
-    "description": "ברוך הבא למופע החדש שלך של <strong>Spliit Cloud</strong>!",
+    "description": "עקוב אחר הוצאות משותפות וסגור חשבונות. חינמי ובקוד פתוח, <strong>מסונכרן ומאובטח באמצעות החשבון שלך</strong>.",
     "button": {
       "groups": "עבור לקבוצות",
       "github": "GitHub",
       "signIn": "התחבר ל-Spliit Cloud",
       "createAccount": "צור חשבון"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "התחבר עם סיסמה",
     "signUpWithPassword": "הירשם עם סיסמה",
     "signInWithGoogle": "המשך עם Google",
+    "orContinueWithEmail": "או המשך עם דוא\"ל",
+    "magicLinkTab": "קישור קסם",
+    "passwordTab": "סיסמה",
     "sendMagicLink": "שלח קישור התחברות",
     "magicLinkEmail": "אימייל",
     "usePasswordInstead": "השתמש באימייל ובסיסמה במקום",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "צור חשבון עם האימייל והסיסמה שלך.",
     "useDifferentEmail": "השתמש באימייל אחר",
     "magicLinkSent": "בדוק בתיבת הדואר הנכנס שלך לקבלת קישור התחברות.",
+    "verificationEmailSent": "בדוק את תיבת הדואר הנכנס שלך כדי לאמת את החשבון.",
     "noAccount": "אין לך עדיין חשבון?",
     "haveAccount": "כבר יש לך חשבון?",
     "createAccount": "צור חשבון",
@@ -541,12 +571,21 @@
     "confirmPassword": "אשר סיסמה",
     "passwordMismatch": "הסיסמאות אינן תואמות.",
     "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+    "passwordRequirements": {
+      "minLength": "8 תווים",
+      "uppercase": "אות גדולה",
+      "lowercase": "אות קטנה",
+      "number": "מספר",
+      "symbol": "סימן"
+    },
+    "forgotPasswordLink": "שכחת סיסמה?",
     "errors": {
       "invalidCredentials": "אימייל או סיסמה שגויים.",
       "emailRequired": "הזן את כתובת האימייל שלך.",
       "passwordRequired": "הזן את הסיסמה שלך.",
       "nameRequired": "הזן שם תצוגה.",
       "generic": "משהו השתבש. אנא נסה שוב.",
+      "passwordPolicy": "השתמש בלפחות 8 תווים עם אות גדולה, אות קטנה, מספר וסימן.",
       "magicLinkFailed": "לא ניתן לשלוח את קישור ההתחברות."
     },
     "loading": "טוען…",
@@ -566,6 +605,40 @@
       "nameRequired": "הזן שם תצוגה.",
       "nameTooShort": "השם חייב להכיל לפחות 2 תווים.",
       "generic": "משהו השתבש. אנא נסה שוב."
+    }
+  },
+  "ForgotPassword": {
+    "title": "אפס את הסיסמה שלך",
+    "subtitle": "הכנס את האימייל של החשבון שלך ונשלח לך קישור לבחירת סיסמה חדשה.",
+    "emailLabel": "אימייל",
+    "submit": "שלח קישור לאיפוס",
+    "emailSent": "אם קיים חשבון עבור האימייל הזה, תקבל קישור איפוס בקרוב.",
+    "tryAgain": "השתמש באימייל אחר",
+    "backToSignIn": "חזרה להתחברות",
+    "errors": {
+      "sendFailed": "לא ניתן לשלוח את קישור האיפוס. אנא נסה שוב."
+    }
+  },
+  "ResetPassword": {
+    "title": "בחר סיסמה חדשה",
+    "subtitle": "הכנס את הסיסמה החדשה עבור חשבון Spliit שלך.",
+    "newPassword": "סיסמה חדשה",
+    "confirmPassword": "אשר סיסמה חדשה",
+    "passwordMismatch": "הסיסמאות אינן תואמות.",
+    "submit": "שמור סיסמה חדשה",
+    "submitting": "שומר…",
+    "success": "הסיסמה עודכנה",
+    "successDescription": "הסיסמה שלך שונתה. התחבר עם הסיסמה החדשה שלך כדי להמשיך.",
+    "goToSignIn": "עבור להתחברות",
+    "invalidTokenTitle": "לא ניתן להשתמש בקישור האיפוס הזה",
+    "invalidTokenDescription": "ייתכן שהקישור פג או שכבר נעשה בו שימוש. בקש קישור חדש כדי לנסות שוב.",
+    "requestNewLink": "בקש קישור חדש",
+    "backToSignIn": "חזרה להתחברות",
+    "errors": {
+      "generic": "משהו השתבש. אנא נסה שוב.",
+      "invalidToken": "קישור האיפוס הזה פג או שכבר נעשה בו שימוש.",
+      "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+      "passwordPolicy": "השתמש בלפחות 8 תווים עם אות גדולה, אות קטנה, מספר וסימן."
     }
   },
   "Members": {

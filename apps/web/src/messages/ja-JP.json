@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "友達や家族と<strong>費用</strong>を<strong>分担</strong>しよう",
-    "description": "新しい<strong>Spliit Cloud</strong>インスタンスへようこそ！",
+    "description": "共有費用在追跡して精算しましょう。無料でオープンソース、<strong>あなたのアカウントで同期・保護</strong>されています。",
     "button": {
       "groups": "グループへ移動",
       "github": "GitHub",
       "signIn": "Spliit Cloudにサインイン",
       "createAccount": "アカウントを作成"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "パスワードでサインイン",
     "signUpWithPassword": "パスワードでサインアップ",
     "signInWithGoogle": "Googleで続ける",
+    "orContinueWithEmail": "またはメールで続行",
+    "magicLinkTab": "マジックリンク",
+    "passwordTab": "パスワード",
     "sendMagicLink": "サインインリンクを送信",
     "magicLinkEmail": "メールアドレス",
     "usePasswordInstead": "メールアドレスとパスワードを使用",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "メールアドレスとパスワードでアカウントを作成します。",
     "useDifferentEmail": "別のメールアドレスを使用",
     "magicLinkSent": "受信トレイでサインインリンクを確認してください。",
+    "verificationEmailSent": "受信トレイを確認してアカウントを認証してください。",
     "noAccount": "まだアカウントをお持ちでないですか？",
     "haveAccount": "すでにアカウントをお持ちですか？",
     "createAccount": "アカウントを作成",
@@ -541,12 +571,21 @@
     "confirmPassword": "パスワードを確認",
     "passwordMismatch": "パスワードが一致しません。",
     "passwordTooShort": "パスワードは8文字以上である必要があります。",
+    "passwordRequirements": {
+      "minLength": "8文字",
+      "uppercase": "大文字",
+      "lowercase": "小文字",
+      "number": "数字",
+      "symbol": "記号"
+    },
+    "forgotPasswordLink": "パスワードをお忘れですか？",
     "errors": {
       "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
       "emailRequired": "メールアドレスを入力してください。",
       "passwordRequired": "パスワードを入力してください。",
       "nameRequired": "表示名を入力してください。",
       "generic": "問題が発生しました。もう一度お試しください。",
+      "passwordPolicy": "大文字、小文字、数字、記号を含む8文字以上を使用してください。",
       "magicLinkFailed": "サインインリンクを送信できませんでした。"
     },
     "loading": "読み込み中…",
@@ -566,6 +605,40 @@
       "nameRequired": "表示名を入力してください。",
       "nameTooShort": "名前は2文字以上である必要があります。",
       "generic": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "ForgotPassword": {
+    "title": "パスワードをリセット",
+    "subtitle": "アカウントのメールアドレスを入力すると、新しいパスワードを設定するためのリンクをお送りします。",
+    "emailLabel": "メールアドレス",
+    "submit": "リセットリンクを送信",
+    "emailSent": "そのメールアドレスのアカウントが存在する場合、まもなくリセットリンクが届きます。",
+    "tryAgain": "別のメールアドレスを使用",
+    "backToSignIn": "サインインに戻る",
+    "errors": {
+      "sendFailed": "リセットリンクを送信できませんでした。もう一度お試しください。"
+    }
+  },
+  "ResetPassword": {
+    "title": "新しいパスワードを選択",
+    "subtitle": "Spliitアカウントの新しいパスワードを入力してください。",
+    "newPassword": "新しいパスワード",
+    "confirmPassword": "新しいパスワードを確認",
+    "passwordMismatch": "パスワードが一致しません。",
+    "submit": "新しいパスワードを保存",
+    "submitting": "保存中…",
+    "success": "パスワードを更新しました",
+    "successDescription": "パスワードが変更されました。新しいパスワードでサインインして続行してください。",
+    "goToSignIn": "サインインへ",
+    "invalidTokenTitle": "このリセットリンクは使用できません",
+    "invalidTokenDescription": "リンクが期限切れか、すでに使用されている可能性があります。新しいリンクをリクエストしてもう一度お試しください。",
+    "requestNewLink": "新しいリンクをリクエスト",
+    "backToSignIn": "サインインに戻る",
+    "errors": {
+      "generic": "問題が発生しました。もう一度お試しください。",
+      "invalidToken": "このリセットリンクは期限切れか、すでに使用されています。",
+      "passwordTooShort": "パスワードは8文字以上である必要があります。",
+      "passwordPolicy": "大文字、小文字、数字、記号を含む8文字以上を使用してください。"
     }
   },
   "Members": {

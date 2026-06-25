@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "Ділися <strong>витратами</strong> з <strong>друзями та родиною</strong>",
-    "description": "Ласкаво просимо у ваш новий <strong>Spliit Cloud</strong>!",
+    "description": "Відстежуйте спільні витрати та розраховуйтеся. Безкоштовно та з відкритим кодом, <strong>синхронізовано та захищено вашим обліковим записом</strong>.",
     "button": {
       "groups": "Перейти до груп",
       "github": "GitHub",
       "signIn": "Увійти до Spliit Cloud",
       "createAccount": "Створити обліковий запис"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "Увійти з паролем",
     "signUpWithPassword": "Зареєструватися з паролем",
     "signInWithGoogle": "Продовжити через Google",
+    "orContinueWithEmail": "або продовжити з email",
+    "magicLinkTab": "Чарівне посилання",
+    "passwordTab": "Пароль",
     "sendMagicLink": "Надіслати посилання для входу",
     "magicLinkEmail": "Електронна пошта",
     "usePasswordInstead": "Використати електронну пошту та пароль",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "Створіть обліковий запис за допомогою електронної пошти та пароля.",
     "useDifferentEmail": "Використати іншу електронну пошту",
     "magicLinkSent": "Перевірте свою поштову скриньку — там буде посилання для входу.",
+    "verificationEmailSent": "Перевірте свою поштову скриньку, щоб підтвердити обліковий запис.",
     "noAccount": "Ще немає облікового запису?",
     "haveAccount": "Вже є обліковий запис?",
     "createAccount": "Створити обліковий запис",
@@ -528,12 +558,21 @@
     "confirmPassword": "Підтвердити пароль",
     "passwordMismatch": "Паролі не збігаються.",
     "passwordTooShort": "Пароль має містити щонайменше 8 символів.",
+    "passwordRequirements": {
+      "minLength": "8 символів",
+      "uppercase": "Велика літера",
+      "lowercase": "Мала літера",
+      "number": "Цифра",
+      "symbol": "Символ"
+    },
+    "forgotPasswordLink": "Забули пароль?",
     "errors": {
       "invalidCredentials": "Неправильна електронна пошта або пароль.",
       "emailRequired": "Введіть адресу електронної пошти.",
       "passwordRequired": "Введіть свій пароль.",
       "nameRequired": "Введіть відображуване ім'я.",
       "generic": "Щось пішло не так. Будь ласка, спробуйте ще раз.",
+      "passwordPolicy": "Використовуйте щонайменше 8 символів з великою літерою, малою літерою, цифрою та символом.",
       "magicLinkFailed": "Не вдалося надіслати посилання для входу."
     },
     "loading": "Завантаження…",
@@ -553,6 +592,40 @@
       "nameRequired": "Введіть відображуване ім'я.",
       "nameTooShort": "Ім'я має містити щонайменше 2 символи.",
       "generic": "Щось пішло не так. Будь ласка, спробуйте ще раз."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Скинути пароль",
+    "subtitle": "Введіть email вашого облікового запису, і ми надішлемо вам посилання для вибору нового пароля.",
+    "emailLabel": "Електронна пошта",
+    "submit": "Надіслати посилання для скидання",
+    "emailSent": "Якщо обліковий запис для цього email існує, ви скоро отримаєте посилання для скидання.",
+    "tryAgain": "Використати інший email",
+    "backToSignIn": "Назад до входу",
+    "errors": {
+      "sendFailed": "Не вдалося надіслати посилання для скидання. Спробуйте ще раз."
+    }
+  },
+  "ResetPassword": {
+    "title": "Виберіть новий пароль",
+    "subtitle": "Введіть новий пароль для вашого облікового запису Spliit.",
+    "newPassword": "Новий пароль",
+    "confirmPassword": "Підтвердіть новий пароль",
+    "passwordMismatch": "Паролі не збігаються.",
+    "submit": "Зберегти новий пароль",
+    "submitting": "Збереження…",
+    "success": "Пароль оновлено",
+    "successDescription": "Ваш пароль змінено. Увійдіть з новим паролем, щоб продовжити.",
+    "goToSignIn": "Перейти до входу",
+    "invalidTokenTitle": "Це посилання для скидання не можна використовувати",
+    "invalidTokenDescription": "Посилання могло застаріти або вже було використане. Запитайте нове, щоб спробувати знову.",
+    "requestNewLink": "Запитати нове посилання",
+    "backToSignIn": "Назад до входу",
+    "errors": {
+      "generic": "Щось пішло не так. Спробуйте ще раз.",
+      "invalidToken": "Це посилання для скидання застаріло або вже було використане.",
+      "passwordTooShort": "Пароль має містити щонайменше 8 символів.",
+      "passwordPolicy": "Використовуйте щонайменше 8 символів з великою літерою, малою літерою, цифрою та символом."
     }
   },
   "Currencies": {

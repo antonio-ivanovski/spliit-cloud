@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "Bagikan <strong>Expenses</strong> dengan <strong>Teman & Keluarga</strong>",
-    "description": "Selamat datang di <strong>Spliit Cloud</strong> instance yang baru !",
+    "description": "Lacak pengeluaran bersama dan selesaikan tagihan. Gratis dan sumber terbuka, <strong>sinkron dan aman dengan akun Anda</strong>.",
     "button": {
       "groups": "Ke grup",
       "github": "GitHub",
       "signIn": "Masuk ke Spliit Cloud",
       "createAccount": "Buat akun"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Masuk dengan kata sandi",
     "signUpWithPassword": "Daftar dengan kata sandi",
     "signInWithGoogle": "Lanjutkan dengan Google",
+    "orContinueWithEmail": "atau lanjutkan dengan email",
+    "magicLinkTab": "Tautan ajaib",
+    "passwordTab": "Kata sandi",
     "sendMagicLink": "Kirim tautan masuk",
     "magicLinkEmail": "Email",
     "usePasswordInstead": "Gunakan email dan kata sandi saja",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Buat akun dengan email dan kata sandi Anda.",
     "useDifferentEmail": "Gunakan email yang berbeda",
     "magicLinkSent": "Periksa kotak masuk Anda untuk tautan masuk.",
+    "verificationEmailSent": "Periksa kotak masuk Anda untuk memverifikasi akun Anda.",
     "noAccount": "Belum punya akun?",
     "haveAccount": "Sudah punya akun?",
     "createAccount": "Buat akun",
@@ -541,12 +571,21 @@
     "confirmPassword": "Konfirmasi kata sandi",
     "passwordMismatch": "Kata sandi tidak cocok.",
     "passwordTooShort": "Kata sandi harus minimal 8 karakter.",
+    "passwordRequirements": {
+      "minLength": "8 karakter",
+      "uppercase": "Huruf besar",
+      "lowercase": "Huruf kecil",
+      "number": "Angka",
+      "symbol": "Simbol"
+    },
+    "forgotPasswordLink": "Lupa kata sandi?",
     "errors": {
       "invalidCredentials": "Email atau kata sandi salah.",
       "emailRequired": "Masukkan alamat email Anda.",
       "passwordRequired": "Masukkan kata sandi Anda.",
       "nameRequired": "Masukkan nama tampilan.",
       "generic": "Terjadi kesalahan. Silakan coba lagi.",
+      "passwordPolicy": "Gunakan setidaknya 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol.",
       "magicLinkFailed": "Tidak dapat mengirim tautan masuk."
     },
     "loading": "Memuat…",
@@ -566,6 +605,40 @@
       "nameRequired": "Masukkan nama tampilan.",
       "nameTooShort": "Nama harus minimal 2 karakter.",
       "generic": "Terjadi kesalahan. Silakan coba lagi."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Atur ulang kata sandi Anda",
+    "subtitle": "Masukkan email akun Anda dan kami akan mengirimkan tautan untuk memilih kata sandi baru.",
+    "emailLabel": "Email",
+    "submit": "Kirim tautan atur ulang",
+    "emailSent": "Jika akun ada untuk email tersebut, Anda akan menerima tautan atur ulang dalam waktu singkat.",
+    "tryAgain": "Gunakan email yang berbeda",
+    "backToSignIn": "Kembali ke masuk",
+    "errors": {
+      "sendFailed": "Tidak dapat mengirim tautan atur ulang. Silakan coba lagi."
+    }
+  },
+  "ResetPassword": {
+    "title": "Pilih kata sandi baru",
+    "subtitle": "Masukkan kata sandi baru untuk akun Spliit Anda.",
+    "newPassword": "Kata sandi baru",
+    "confirmPassword": "Konfirmasi kata sandi baru",
+    "passwordMismatch": "Kata sandi tidak cocok.",
+    "submit": "Simpan kata sandi baru",
+    "submitting": "Menyimpan…",
+    "success": "Kata sandi diperbarui",
+    "successDescription": "Kata sandi Anda telah diubah. Masuk dengan kata sandi baru Anda untuk melanjutkan.",
+    "goToSignIn": "Pergi ke masuk",
+    "invalidTokenTitle": "Tautan atur ulang ini tidak dapat digunakan",
+    "invalidTokenDescription": "Tautan mungkin telah kedaluwarsa atau sudah digunakan. Minta yang baru untuk mencoba lagi.",
+    "requestNewLink": "Minta tautan baru",
+    "backToSignIn": "Kembali ke masuk",
+    "errors": {
+      "generic": "Terjadi kesalahan. Silakan coba lagi.",
+      "invalidToken": "Tautan atur ulang ini telah kedaluwarsa atau sudah digunakan.",
+      "passwordTooShort": "Kata sandi harus minimal 8 karakter.",
+      "passwordPolicy": "Gunakan setidaknya 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol."
     }
   },
   "Members": {

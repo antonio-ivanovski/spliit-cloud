@@ -1,7 +1,33 @@
 {
   "Homepage": {
     "title": "Share <strong>Expenses</strong> with <strong>Friends & Family</strong>",
-    "description": "Welcome to your new <strong>Spliit Cloud</strong> instance !",
+    "description": "Track shared expenses and settle up. Free and open source, <strong>synced and secured by your account</strong>.",
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
+    },
     "button": {
       "groups": "Go to my groups",
       "github": "GitHub",
@@ -149,6 +175,9 @@
     "signInWithPassword": "Sign in with password",
     "signUpWithPassword": "Sign up with password",
     "signInWithGoogle": "Continue with Google",
+    "orContinueWithEmail": "or continue with email",
+    "magicLinkTab": "Magic link",
+    "passwordTab": "Password",
     "sendMagicLink": "Send sign-in link",
     "magicLinkEmail": "Email",
     "usePasswordInstead": "Use email and password instead",
@@ -166,13 +195,22 @@
     "confirmPassword": "Confirm password",
     "passwordMismatch": "Passwords don't match.",
     "passwordTooShort": "Password must be at least 8 characters.",
+    "passwordRequirements": {
+      "minLength": "8 characters",
+      "uppercase": "Uppercase",
+      "lowercase": "Lowercase",
+      "number": "Number",
+      "symbol": "Symbol"
+    },
+    "forgotPasswordLink": "Forgot password?",
     "errors": {
       "invalidCredentials": "Email or password is incorrect.",
       "emailRequired": "Enter your email address.",
       "passwordRequired": "Enter your password.",
       "nameRequired": "Enter a display name.",
       "generic": "Something went wrong. Please try again.",
-      "magicLinkFailed": "Could not send the sign-in link."
+      "magicLinkFailed": "Could not send the sign-in link.",
+      "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol."
     },
     "loading": "Loading…",
     "signedInAs": "Signed in as {name}",
@@ -191,6 +229,40 @@
       "nameRequired": "Enter a display name.",
       "nameTooShort": "Name must be at least 2 characters.",
       "generic": "Something went wrong. Please try again."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Reset your password",
+    "subtitle": "Enter your account email and we'll send you a link to choose a new password.",
+    "emailLabel": "Email",
+    "submit": "Send reset link",
+    "emailSent": "If an account exists for that email, you'll receive a reset link shortly.",
+    "tryAgain": "Use a different email",
+    "backToSignIn": "Back to sign in",
+    "errors": {
+      "sendFailed": "Could not send the reset link. Please try again."
+    }
+  },
+  "ResetPassword": {
+    "title": "Choose a new password",
+    "subtitle": "Enter the new password for your Spliit account.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "passwordMismatch": "Passwords don't match.",
+    "submit": "Save new password",
+    "submitting": "Saving…",
+    "success": "Password updated",
+    "successDescription": "Your password has been changed. Sign in with your new password to continue.",
+    "goToSignIn": "Go to sign in",
+    "invalidTokenTitle": "This reset link can't be used",
+    "invalidTokenDescription": "The link may have expired or already been used. Request a new one to try again.",
+    "requestNewLink": "Request a new link",
+    "backToSignIn": "Back to sign in",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "invalidToken": "This reset link has expired or already been used.",
+      "passwordTooShort": "Password must be at least 8 characters.",
+      "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol."
     }
   },
   "GroupForm": {

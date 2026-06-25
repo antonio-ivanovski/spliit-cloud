@@ -30,8 +30,8 @@ app.get('/health', () => checkLiveness())
 app.get('/health/liveness', () => checkLiveness())
 app.get('/health/readiness', () => checkReadiness())
 
-// better-auth handler — exposes /api/auth/sign-in, /api/auth/sign-up, etc.
-app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw))
+// better-auth handler — exposes /auth/sign-in, /auth/sign-up, etc.
+app.on(['GET', 'POST'], '/auth/*', (c) => auth.handler(c.req.raw))
 
 app.post('/uploads/presign', async (c) => {
   const body = await c.req.json<{

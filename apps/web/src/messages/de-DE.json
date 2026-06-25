@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "Teile <strong>Ausgaben</strong> mit <strong>Freunden & Familie</strong>",
-    "description": "Willkommen zu deiner neuen <strong>Spliit Cloud</strong>-Instanz!",
+    "description": "Verfolge gemeinsame Ausgaben und gleiche Konten aus. Kostenlos und Open Source, <strong>synchronisiert und gesichert durch dein Konto</strong>.",
     "button": {
       "groups": "Zu den Gruppen",
       "github": "GitHub",
       "signIn": "Bei Spliit Cloud anmelden",
       "createAccount": "Konto erstellen"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Mit Passwort anmelden",
     "signUpWithPassword": "Mit Passwort registrieren",
     "signInWithGoogle": "Weiter mit Google",
+    "orContinueWithEmail": "oder mit E-Mail fortfahren",
+    "magicLinkTab": "Magic-Link",
+    "passwordTab": "Passwort",
     "sendMagicLink": "Anmeldelink senden",
     "magicLinkEmail": "E-Mail",
     "usePasswordInstead": "Stattdessen E-Mail und Passwort verwenden",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Erstellen Sie ein Konto mit Ihrer E-Mail und einem Passwort.",
     "useDifferentEmail": "Eine andere E-Mail verwenden",
     "magicLinkSent": "Überprüfen Sie Ihren Posteingang auf einen Anmeldelink.",
+    "verificationEmailSent": "Überprüfe deinen Posteingang, um dein Konto zu bestätigen.",
     "noAccount": "Noch kein Konto?",
     "haveAccount": "Bereits ein Konto?",
     "createAccount": "Konto erstellen",
@@ -541,12 +571,21 @@
     "confirmPassword": "Passwort bestätigen",
     "passwordMismatch": "Passwörter stimmen nicht überein.",
     "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+    "passwordRequirements": {
+      "minLength": "8 Zeichen",
+      "uppercase": "Großbuchstabe",
+      "lowercase": "Kleinbuchstabe",
+      "number": "Zahl",
+      "symbol": "Symbol"
+    },
+    "forgotPasswordLink": "Passwort vergessen?",
     "errors": {
       "invalidCredentials": "E-Mail oder Passwort ist falsch.",
       "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",
       "passwordRequired": "Geben Sie Ihr Passwort ein.",
       "nameRequired": "Geben Sie einen Anzeigenamen ein.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+      "passwordPolicy": "Verwende mindestens 8 Zeichen mit Großbuchstaben, Kleinbuchstaben, einer Zahl und einem Symbol.",
       "magicLinkFailed": "Der Anmeldelink konnte nicht gesendet werden."
     },
     "loading": "Lädt…",
@@ -566,6 +605,40 @@
       "nameRequired": "Geben Sie einen Anzeigenamen ein.",
       "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Passwort zurücksetzen",
+    "subtitle": "Geben Sie die E-Mail-Adresse Ihres Kontos ein und wir senden Ihnen einen Link zum Festlegen eines neuen Passworts.",
+    "emailLabel": "E-Mail",
+    "submit": "Reset-Link senden",
+    "emailSent": "Wenn ein Konto für diese E-Mail existiert, erhalten Sie in Kürze einen Reset-Link.",
+    "tryAgain": "Eine andere E-Mail verwenden",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "errors": {
+      "sendFailed": "Der Reset-Link konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
+    }
+  },
+  "ResetPassword": {
+    "title": "Wählen Sie ein neues Passwort",
+    "subtitle": "Geben Sie das neue Passwort für Ihr Spliit-Konto ein.",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Neues Passwort bestätigen",
+    "passwordMismatch": "Passwörter stimmen nicht überein.",
+    "submit": "Neues Passwort speichern",
+    "submitting": "Speichern…",
+    "success": "Passwort aktualisiert",
+    "successDescription": "Ihr Passwort wurde geändert. Melden Sie sich mit Ihrem neuen Passwort an, um fortzufahren.",
+    "goToSignIn": "Zur Anmeldung",
+    "invalidTokenTitle": "Dieser Reset-Link kann nicht verwendet werden",
+    "invalidTokenDescription": "Der Link ist möglicherweise abgelaufen oder wurde bereits verwendet. Fordern Sie einen neuen an und versuchen Sie es erneut.",
+    "requestNewLink": "Neuen Link anfordern",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+      "invalidToken": "Dieser Reset-Link ist abgelaufen oder wurde bereits verwendet.",
+      "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+      "passwordPolicy": "Verwende mindestens 8 Zeichen mit Großbuchstaben, Kleinbuchstaben, einer Zahl und einem Symbol."
     }
   },
   "Members": {

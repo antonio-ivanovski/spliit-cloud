@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "Deel <strong>Uitgaven</strong> met <strong>Vrienden & Familie</strong>",
-    "description": "Welkom op je nieuwe <strong>Spliit Cloud</strong>-instantie!",
+    "description": "Volg gedeelde uitgaven en verreken rekeningen. Gratis en open source, <strong>gesynchroniseerd en beveiligd met je account</strong>.",
     "button": {
       "groups": "Ga naar groepen",
       "github": "GitHub",
       "signIn": "Inloggen op Spliit Cloud",
       "createAccount": "Account aanmaken"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Inloggen met wachtwoord",
     "signUpWithPassword": "Registreren met wachtwoord",
     "signInWithGoogle": "Doorgaan met Google",
+    "orContinueWithEmail": "of ga verder met e-mail",
+    "magicLinkTab": "Magische link",
+    "passwordTab": "Wachtwoord",
     "sendMagicLink": "Stuur inloglink",
     "magicLinkEmail": "E-mail",
     "usePasswordInstead": "Gebruik in plaats daarvan e-mail en wachtwoord",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Maak een account aan met je e-mail en een wachtwoord.",
     "useDifferentEmail": "Gebruik een ander e-mailadres",
     "magicLinkSent": "Check je inbox voor een inloglink.",
+    "verificationEmailSent": "Controleer je inbox om je account te verifiëren.",
     "noAccount": "Nog geen account?",
     "haveAccount": "Heb je al een account?",
     "createAccount": "Account aanmaken",
@@ -541,12 +571,21 @@
     "confirmPassword": "Bevestig wachtwoord",
     "passwordMismatch": "Wachtwoorden komen niet overeen.",
     "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten.",
+    "passwordRequirements": {
+      "minLength": "8 tekens",
+      "uppercase": "Hoofdletter",
+      "lowercase": "Kleine letter",
+      "number": "Cijfer",
+      "symbol": "Symbool"
+    },
+    "forgotPasswordLink": "Wachtwoord vergeten?",
     "errors": {
       "invalidCredentials": "E-mail of wachtwoord is onjuist.",
       "emailRequired": "Voer je e-mailadres in.",
       "passwordRequired": "Voer je wachtwoord in.",
       "nameRequired": "Voer een weergavenaam in.",
       "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool.",
       "magicLinkFailed": "Kon de inloglink niet verzenden."
     },
     "loading": "Laden…",
@@ -566,6 +605,40 @@
       "nameRequired": "Voer een weergavenaam in.",
       "nameTooShort": "Naam moet minimaal 2 tekens bevatten.",
       "generic": "Er is iets misgegaan. Probeer het opnieuw."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Stel je wachtwoord opnieuw in",
+    "subtitle": "Voer het e-mailadres van je account in en we sturen je een link om een nieuw wachtwoord te kiezen.",
+    "emailLabel": "E-mail",
+    "submit": "Verzend resetlink",
+    "emailSent": "Als er een account bestaat voor dat e-mailadres, ontvang je binnenkort een resetlink.",
+    "tryAgain": "Gebruik een ander e-mailadres",
+    "backToSignIn": "Terug naar inloggen",
+    "errors": {
+      "sendFailed": "De resetlink kon niet worden verzonden. Probeer het opnieuw."
+    }
+  },
+  "ResetPassword": {
+    "title": "Kies een nieuw wachtwoord",
+    "subtitle": "Voer het nieuwe wachtwoord voor je Spliit-account in.",
+    "newPassword": "Nieuw wachtwoord",
+    "confirmPassword": "Bevestig nieuw wachtwoord",
+    "passwordMismatch": "Wachtwoorden komen niet overeen.",
+    "submit": "Nieuw wachtwoord opslaan",
+    "submitting": "Opslaan…",
+    "success": "Wachtwoord bijgewerkt",
+    "successDescription": "Je wachtwoord is gewijzigd. Log in met je nieuwe wachtwoord om door te gaan.",
+    "goToSignIn": "Naar inloggen",
+    "invalidTokenTitle": "Deze resetlink kan niet worden gebruikt",
+    "invalidTokenDescription": "De link is mogelijk verlopen of al gebruikt. Vraag een nieuwe aan om het opnieuw te proberen.",
+    "requestNewLink": "Een nieuwe link aanvragen",
+    "backToSignIn": "Terug naar inloggen",
+    "errors": {
+      "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "invalidToken": "Deze resetlink is verlopen of al gebruikt.",
+      "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten.",
+      "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool."
     }
   },
   "Members": {

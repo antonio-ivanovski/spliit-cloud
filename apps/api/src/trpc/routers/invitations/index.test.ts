@@ -563,7 +563,7 @@ describe('invitationsRouter.create — guards and email', () => {
     expect(call.to).toBe('newuser@example.com')
     expect(call.subject).toContain('Roadtrip 2026')
     expect(call.text).toMatch(/create an account/i)
-    expect(call.text).toContain('/auth/sign-in?invitation=inv-new')
+    expect(call.text).toContain('/?invitation=inv-new')
   })
 })
 

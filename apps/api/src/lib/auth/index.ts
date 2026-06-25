@@ -1,10 +1,87 @@
 import { Account, prisma } from '@spliit/db'
+import { isStrongPassword } from '@spliit/domain/password'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
+import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { magicLink } from 'better-auth/plugins'
 import { env, webOrigins } from '../env'
 import { sendEmail } from '../mail/send'
 import { getApiBaseUrl } from './urls'
+
+const authMethodLabels: Record<string, string> = {
+  credential: 'email and password',
+  google: 'Google',
+  'magic-link': 'email sign-in link',
+}
+
+async function getAuthMethodLabels(userId: string) {
+  const identities = await prisma.authIdentity.findMany({
+    where: { userId },
+    select: { providerId: true },
+    orderBy: { createdAt: 'asc' },
+  })
+
+  return Array.from(
+    new Set(
+      identities.map(
+        (identity) =>
+          authMethodLabels[identity.providerId] ?? identity.providerId,
+      ),
+    ),
+  )
+}
+
+function buildPasswordRecoveryEmail(opts: {
+  resetUrl: string
+  methodLabels: string[]
+}) {
+  const hasPassword = opts.methodLabels.includes(authMethodLabels.credential)
+  const otherMethods = opts.methodLabels.filter(
+    (method) => method !== authMethodLabels.credential,
+  )
+
+  if (hasPassword) {
+    const extra =
+      otherMethods.length > 0
+        ? `\n\nThis account can also sign in with: ${otherMethods.join(', ')}.`
+        : ''
+    return {
+      subject: 'Reset your Spliit password',
+      text:
+        `Click the link below to reset your Spliit password.\n\n${opts.resetUrl}` +
+        extra +
+        `\n\nIf you did not request a password reset, you can safely ignore this email.`,
+    }
+  }
+
+  const methods =
+    otherMethods.length > 0 ? otherMethods.join(', ') : 'an email sign-in link'
+
+  return {
+    subject: 'Sign in to Spliit',
+    text:
+      `We received a password reset request for this Spliit account, but it does not have a password sign-in method.\n\n` +
+      `Use one of these sign-in methods instead: ${methods}.\n\n` +
+      `If you did not request this email, you can safely ignore it.`,
+  }
+}
+
+const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
+  const password =
+    ctx.path === '/sign-up/email'
+      ? ctx.body?.password
+      : ctx.path === '/reset-password' || ctx.path === '/change-password'
+        ? ctx.body?.newPassword
+        : undefined
+
+  if (typeof password === 'string' && !isStrongPassword(password)) {
+    throw new APIError('BAD_REQUEST', {
+      message:
+        'Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.',
+      code: 'PASSWORD_POLICY_NOT_MET',
+    })
+  }
+})
 
 /**
  * Spliit authentication is built on better-auth. better-auth owns its own
@@ -26,6 +103,11 @@ import { getApiBaseUrl } from './urls'
 export const auth = betterAuth({
   appName: 'Spliit',
   baseURL: getApiBaseUrl(),
+  // The Hono mount point is `/auth/*`; tell better-auth so its internal
+  // router strips the prefix when matching request paths. Without this,
+  // basePath defaults to `/api/auth` and every endpoint (sign-in, callback,
+  // social, session, …) returns 404.
+  basePath: '/auth',
   secret: env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me',
   // CORS already allows every configured WEB_ORIGINS entry; pass the full
   // list to better-auth so its trusted-origin check agrees. With only the
@@ -62,11 +144,46 @@ export const auth = betterAuth({
     modelName: 'Verification',
   },
 
+  hooks: {
+    before: passwordPolicyMiddleware,
+  },
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
     minPasswordLength: 8,
     maxPasswordLength: 128,
+    // One-hour window between requesting the reset and clicking the link.
+    // Long enough to read the email, short enough that a leaked link is
+    // unlikely to still be useful to an attacker.
+    resetPasswordTokenExpiresIn: 60 * 60,
+    // Cut off any other sessions for this account when the password is
+    // changed. Standard recovery-flow hygiene: if a stolen session cookie
+    // outlived the user noticing the breach, the reset kicks it out.
+    revokeSessionsOnPasswordReset: true,
+    async sendResetPassword({ user, url }) {
+      // Best-effort: a failed send must not break the forgot-password flow.
+      // better-auth already created the verification token in the DB, so the
+      // user can retry from the forgot-password page and a fresh token will
+      // be issued on the next request. Mirrors the swallow-and-warn pattern
+      // used for verification emails and magic links above.
+      try {
+        const methodLabels = await getAuthMethodLabels(user.id)
+        const email = buildPasswordRecoveryEmail({
+          resetUrl: url,
+          methodLabels,
+        })
+        await sendEmail({
+          to: user.email,
+          ...email,
+        })
+      } catch (err) {
+        console.warn(
+          `[password-reset] failed to send reset email to ${user.email}:`,
+          err,
+        )
+      }
+    },
   },
 
   emailVerification: {

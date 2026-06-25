@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "跟<strong>朋友和家人</strong>一起共享<strong>消費紀錄</strong>",
-    "description": "歡迎開始全新的<strong>Spliit Cloud</strong>",
+    "description": "追蹤分攤費用並結清帳目。免費且開源，<strong>由你的帳戶同步和保護</strong>。",
     "button": {
       "groups": "前往群組",
       "github": "GitHub",
       "signIn": "登入 Spliit Cloud",
       "createAccount": "建立帳戶"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "使用密碼登入",
     "signUpWithPassword": "使用密碼註冊",
     "signInWithGoogle": "使用 Google 繼續",
+    "orContinueWithEmail": "或繼續使用電子郵件",
+    "magicLinkTab": "魔法連結",
+    "passwordTab": "密碼",
     "sendMagicLink": "傳送登入連結",
     "magicLinkEmail": "電子郵件",
     "usePasswordInstead": "改用電子郵件和密碼",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "使用您的電子郵件和密碼建立帳戶。",
     "useDifferentEmail": "使用不同的電子郵件",
     "magicLinkSent": "請查看收件匣中的登入連結。",
+    "verificationEmailSent": "請檢查您的收件匣以驗證您的帳戶。",
     "noAccount": "還沒有帳戶？",
     "haveAccount": "已經有帳戶？",
     "createAccount": "建立帳戶",
@@ -528,12 +558,21 @@
     "confirmPassword": "確認密碼",
     "passwordMismatch": "密碼不符。",
     "passwordTooShort": "密碼必須至少 8 個字元。",
+    "passwordRequirements": {
+      "minLength": "8個字元",
+      "uppercase": "大寫字母",
+      "lowercase": "小寫字母",
+      "number": "數字",
+      "symbol": "符號"
+    },
+    "forgotPasswordLink": "忘記密碼？",
     "errors": {
       "invalidCredentials": "電子郵件或密碼不正確。",
       "emailRequired": "請輸入您的電子郵件地址。",
       "passwordRequired": "請輸入您的密碼。",
       "nameRequired": "請輸入顯示名稱。",
       "generic": "出了點問題。請再試一次。",
+      "passwordPolicy": "請使用至少8個字元，包含大寫字母、小寫字母、數字和符號。",
       "magicLinkFailed": "無法傳送登入連結。"
     },
     "loading": "載入中……",
@@ -553,6 +592,40 @@
       "nameRequired": "請輸入顯示名稱。",
       "nameTooShort": "姓名必須至少 2 個字元。",
       "generic": "出了點問題。請再試一次。"
+    }
+  },
+  "ForgotPassword": {
+    "title": "重設密碼",
+    "subtitle": "輸入您的帳戶電子郵件，我們將寄送一個連結供您選擇新密碼。",
+    "emailLabel": "電子郵件",
+    "submit": "傳送重設連結",
+    "emailSent": "如果該電子郵件存在帳戶，您很快就會收到重設連結。",
+    "tryAgain": "使用其他電子郵件",
+    "backToSignIn": "返回登入",
+    "errors": {
+      "sendFailed": "無法傳送重設連結。請再試一次。"
+    }
+  },
+  "ResetPassword": {
+    "title": "選擇新密碼",
+    "subtitle": "為您的 Spliit 帳戶輸入新密碼。",
+    "newPassword": "新密碼",
+    "confirmPassword": "確認新密碼",
+    "passwordMismatch": "密碼不符。",
+    "submit": "儲存新密碼",
+    "submitting": "儲存中…",
+    "success": "密碼已更新",
+    "successDescription": "您的密碼已變更。請使用新密碼登入以繼續。",
+    "goToSignIn": "前往登入",
+    "invalidTokenTitle": "此重設連結無法使用",
+    "invalidTokenDescription": "該連結可能已過期或已被使用。請求一個新連結以重試。",
+    "requestNewLink": "請求新連結",
+    "backToSignIn": "返回登入",
+    "errors": {
+      "generic": "出了點問題。請再試一次。",
+      "invalidToken": "此重設連結已過期或已被使用。",
+      "passwordTooShort": "密碼必須至少 8 個字元。",
+      "passwordPolicy": "請使用至少8個字元，包含大寫字母、小寫字母、數字和符號。"
     }
   },
   "Currencies": {

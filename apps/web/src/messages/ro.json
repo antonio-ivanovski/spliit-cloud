@@ -1,12 +1,38 @@
 {
   "Homepage": {
     "title": "Distribuie <strong>Cheltuielile</strong> cu <strong>Prietenii & Familia</strong>",
-    "description": "Bine ai venit pe noua ta instanță de <strong>Spliit Cloud</strong> !",
+    "description": "Urmărește cheltuielile comune și regularizează conturile. Gratuit și open source, <strong>sincronizat și securizat de contul tău</strong>.",
     "button": {
       "groups": "Mergi la grupuri",
       "github": "GitHub",
       "signIn": "Autentifică-te pe Spliit Cloud",
       "createAccount": "Creează un cont"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Autentifică-te cu parolă",
     "signUpWithPassword": "Înregistrează-te cu parolă",
     "signInWithGoogle": "Continuă cu Google",
+    "orContinueWithEmail": "sau continuă cu e-mailul",
+    "magicLinkTab": "Link magic",
+    "passwordTab": "Parolă",
     "sendMagicLink": "Trimite link de autentificare",
     "magicLinkEmail": "Email",
     "usePasswordInstead": "Folosește email și parolă în schimb",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Creează un cont cu emailul tău și o parolă.",
     "useDifferentEmail": "Folosește un email diferit",
     "magicLinkSent": "Verifică-ți căsuța poștală pentru linkul de autentificare.",
+    "verificationEmailSent": "Verifică-ți căsuța de email pentru a-ți verifica contul.",
     "noAccount": "Nu ai încă un cont?",
     "haveAccount": "Ai deja un cont?",
     "createAccount": "Creează un cont",
@@ -541,12 +571,21 @@
     "confirmPassword": "Confirmă parola",
     "passwordMismatch": "Parolele nu coincid.",
     "passwordTooShort": "Parola trebuie să aibă cel puțin 8 caractere.",
+    "passwordRequirements": {
+      "minLength": "8 caractere",
+      "uppercase": "Majusculă",
+      "lowercase": "Minusculă",
+      "number": "Număr",
+      "symbol": "Simbol"
+    },
+    "forgotPasswordLink": "Ai uitat parola?",
     "errors": {
       "invalidCredentials": "Emailul sau parola este incorectă.",
       "emailRequired": "Introdu adresa ta de email.",
       "passwordRequired": "Introdu parola ta.",
       "nameRequired": "Introdu un nume de afișare.",
       "generic": "Ceva a mers greșit. Te rugăm să încerci din nou.",
+      "passwordPolicy": "Folosește cel puțin 8 caractere cu majuscule, minuscule, un număr și un simbol.",
       "magicLinkFailed": "Nu s-a putut trimite linkul de autentificare."
     },
     "loading": "Se încarcă…",
@@ -566,6 +605,40 @@
       "nameRequired": "Introdu un nume de afișare.",
       "nameTooShort": "Numele trebuie să aibă cel puțin 2 caractere.",
       "generic": "Ceva a mers greșit. Te rugăm să încerci din nou."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Resetează-ți parola",
+    "subtitle": "Introdu emailul contului tău și îți vom trimite un link pentru a alege o parolă nouă.",
+    "emailLabel": "Email",
+    "submit": "Trimite linkul de resetare",
+    "emailSent": "Dacă există un cont pentru acel email, vei primi un link de resetare în scurt timp.",
+    "tryAgain": "Folosește un alt email",
+    "backToSignIn": "Înapoi la autentificare",
+    "errors": {
+      "sendFailed": "Nu s-a putut trimite linkul de resetare. Încearcă din nou."
+    }
+  },
+  "ResetPassword": {
+    "title": "Alege o parolă nouă",
+    "subtitle": "Introdu noua parolă pentru contul tău Spliit.",
+    "newPassword": "Parolă nouă",
+    "confirmPassword": "Confirmă parola nouă",
+    "passwordMismatch": "Parolele nu coincid.",
+    "submit": "Salvează parola nouă",
+    "submitting": "Se salvează…",
+    "success": "Parolă actualizată",
+    "successDescription": "Parola ta a fost schimbată. Autentifică-te cu noua ta parolă pentru a continua.",
+    "goToSignIn": "Du-te la autentificare",
+    "invalidTokenTitle": "Acest link de resetare nu poate fi folosit",
+    "invalidTokenDescription": "Linkul poate fi expirat sau a fost deja folosit. Solicită unul nou pentru a încerca din nou.",
+    "requestNewLink": "Solicită un link nou",
+    "backToSignIn": "Înapoi la autentificare",
+    "errors": {
+      "generic": "Ceva a mers greșit. Încearcă din nou.",
+      "invalidToken": "Acest link de resetare a expirat sau a fost deja folosit.",
+      "passwordTooShort": "Parola trebuie să aibă cel puțin 8 caractere.",
+      "passwordPolicy": "Folosește cel puțin 8 caractere cu majuscule, minuscule, un număr și un simbol."
     }
   },
   "Members": {
