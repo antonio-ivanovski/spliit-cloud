@@ -28,7 +28,7 @@ const realAuthModule = (await vi.importActual('./index')) as {
 
 describe('better-auth emailVerification config', () => {
   it('enables autoSignInAfterVerification', () => {
-    // Without this flag, /api/auth/verify-email validates the token and 302s
+    // Without this flag, /auth/verify-email validates the token and 302s
     // to the callback URL without creating a session, which sends first-time
     // password sign-ups back to the sign-in page instead of profile completion.
     expect(
@@ -39,7 +39,7 @@ describe('better-auth emailVerification config', () => {
 })
 
 describe('better-auth emailAndPassword config', () => {
-  it('configures sendResetPassword so /api/auth/request-password-reset works', () => {
+  it('configures sendResetPassword so /auth/request-password-reset works', () => {
     // better-auth short-circuits the request-password-reset endpoint with a
     // "RESET_PASSWORD_DISABLED" error when no sendResetPassword callback is
     // configured. The web's forgot-password page would silently do nothing.

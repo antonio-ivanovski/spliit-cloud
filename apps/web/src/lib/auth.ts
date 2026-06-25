@@ -3,7 +3,7 @@ import { createAuthClient } from 'better-auth/react'
 
 /**
  * Spliit web auth client. Talks to the better-auth handler mounted at
- * `/api/auth/*` on the API server. Cookies are sent with credentials so the
+ * `/auth/*` on the API server. Cookies are sent with credentials so the
  * SPA does not need to store bearer tokens in localStorage.
  *
  * The API uses `betterAuth` with `Account`/`Session`/`AuthIdentity` model
@@ -13,7 +13,7 @@ import { createAuthClient } from 'better-auth/react'
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 
 export const authClient = createAuthClient({
-  baseURL: `${apiBaseUrl}/api/auth`,
+  baseURL: `${apiBaseUrl}/auth`,
   fetchOptions: {
     credentials: 'include',
   },
