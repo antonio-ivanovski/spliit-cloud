@@ -70,7 +70,7 @@ const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
   const password =
     ctx.path === '/sign-up/email'
       ? ctx.body?.password
-      : ctx.path === '/reset-password'
+      : ctx.path === '/reset-password' || ctx.path === '/change-password'
         ? ctx.body?.newPassword
         : undefined
 
