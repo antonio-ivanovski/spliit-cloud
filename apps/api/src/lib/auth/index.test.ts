@@ -3,6 +3,7 @@
 // modules are evaluated.
 import { describe, expect, it, vi } from 'vitest'
 import '../../test/mocks'
+import { prismaMock, sendEmailMock } from '../../test/state'
 
 // `vi.importActual` returns the real (un-mocked) module so we can inspect the
 // better-auth options we configured in `lib/auth/index.ts`. The existing
@@ -12,8 +13,12 @@ const realAuthModule = (await vi.importActual('./index')) as {
   auth: {
     options: {
       emailVerification?: { autoSignInAfterVerification?: boolean }
+      hooks?: { before?: unknown }
       emailAndPassword?: {
-        sendResetPassword?: unknown
+        sendResetPassword?: (params: {
+          user: { id: string; email: string }
+          url: string
+        }) => Promise<void>
         revokeSessionsOnPasswordReset?: boolean
         resetPasswordTokenExpiresIn?: number
       }
@@ -50,5 +55,54 @@ describe('better-auth emailAndPassword config', () => {
       realAuthModule.auth.options.emailAndPassword
         ?.revokeSessionsOnPasswordReset,
     ).toBe(true)
+  })
+
+  it('configures a before hook for the app password policy', () => {
+    expect(typeof realAuthModule.auth.options.hooks?.before).toBe('function')
+  })
+
+  it('mentions other linked sign-in methods in password reset emails', async () => {
+    prismaMock.authIdentity.findMany.mockResolvedValueOnce([
+      { providerId: 'credential' },
+      { providerId: 'google' },
+      { providerId: 'magic-link' },
+    ])
+
+    await realAuthModule.auth.options.emailAndPassword?.sendResetPassword?.({
+      user: { id: 'acct-1', email: 'alice@example.com' },
+      url: 'https://spliit.test/reset-token',
+    })
+
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        subject: 'Reset your Spliit password',
+        text: expect.stringContaining(
+          'This account can also sign in with: Google, email sign-in link.',
+        ),
+      }),
+    )
+  })
+
+  it('sends sign-in method guidance instead of reset copy for social-only accounts', async () => {
+    prismaMock.authIdentity.findMany.mockResolvedValueOnce([
+      { providerId: 'google' },
+      { providerId: 'magic-link' },
+    ])
+
+    await realAuthModule.auth.options.emailAndPassword?.sendResetPassword?.({
+      user: { id: 'acct-1', email: 'alice@example.com' },
+      url: 'https://spliit.test/reset-token',
+    })
+
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        subject: 'Sign in to Spliit',
+        text: expect.stringContaining(
+          'Use one of these sign-in methods instead: Google, email sign-in link.',
+        ),
+      }),
+    )
   })
 })

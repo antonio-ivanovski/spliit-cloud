@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Inloggen op Spliit Cloud",
       "createAccount": "Account aanmaken"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Inloggen met wachtwoord",
     "signUpWithPassword": "Registreren met wachtwoord",
     "signInWithGoogle": "Doorgaan met Google",
+    "orContinueWithEmail": "of ga verder met e-mail",
+    "magicLinkTab": "Magische link",
+    "passwordTab": "Wachtwoord",
     "sendMagicLink": "Stuur inloglink",
     "magicLinkEmail": "E-mail",
     "usePasswordInstead": "Gebruik in plaats daarvan e-mail en wachtwoord",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Maak een account aan met je e-mail en een wachtwoord.",
     "useDifferentEmail": "Gebruik een ander e-mailadres",
     "magicLinkSent": "Check je inbox voor een inloglink.",
+    "verificationEmailSent": "Controleer je inbox om je account te verifiëren.",
     "noAccount": "Nog geen account?",
     "haveAccount": "Heb je al een account?",
     "createAccount": "Account aanmaken",
@@ -541,6 +571,13 @@
     "confirmPassword": "Bevestig wachtwoord",
     "passwordMismatch": "Wachtwoorden komen niet overeen.",
     "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten.",
+    "passwordRequirements": {
+      "minLength": "8 tekens",
+      "uppercase": "Hoofdletter",
+      "lowercase": "Kleine letter",
+      "number": "Cijfer",
+      "symbol": "Symbool"
+    },
     "forgotPasswordLink": "Wachtwoord vergeten?",
     "errors": {
       "invalidCredentials": "E-mail of wachtwoord is onjuist.",
@@ -548,6 +585,7 @@
       "passwordRequired": "Voer je wachtwoord in.",
       "nameRequired": "Voer een weergavenaam in.",
       "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool.",
       "magicLinkFailed": "Kon de inloglink niet verzenden."
     },
     "loading": "Laden…",
@@ -599,7 +637,8 @@
     "errors": {
       "generic": "Er is iets misgegaan. Probeer het opnieuw.",
       "invalidToken": "Deze resetlink is verlopen of al gebruikt.",
-      "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten."
+      "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten.",
+      "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool."
     }
   },
   "Members": {

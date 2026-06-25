@@ -1,10 +1,87 @@
 import { Account, prisma } from '@spliit/db'
+import { isStrongPassword } from '@spliit/domain/password'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
+import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { magicLink } from 'better-auth/plugins'
 import { env, webOrigins } from '../env'
 import { sendEmail } from '../mail/send'
 import { getApiBaseUrl } from './urls'
+
+const authMethodLabels: Record<string, string> = {
+  credential: 'email and password',
+  google: 'Google',
+  'magic-link': 'email sign-in link',
+}
+
+async function getAuthMethodLabels(userId: string) {
+  const identities = await prisma.authIdentity.findMany({
+    where: { userId },
+    select: { providerId: true },
+    orderBy: { createdAt: 'asc' },
+  })
+
+  return Array.from(
+    new Set(
+      identities.map(
+        (identity) =>
+          authMethodLabels[identity.providerId] ?? identity.providerId,
+      ),
+    ),
+  )
+}
+
+function buildPasswordRecoveryEmail(opts: {
+  resetUrl: string
+  methodLabels: string[]
+}) {
+  const hasPassword = opts.methodLabels.includes(authMethodLabels.credential)
+  const otherMethods = opts.methodLabels.filter(
+    (method) => method !== authMethodLabels.credential,
+  )
+
+  if (hasPassword) {
+    const extra =
+      otherMethods.length > 0
+        ? `\n\nThis account can also sign in with: ${otherMethods.join(', ')}.`
+        : ''
+    return {
+      subject: 'Reset your Spliit password',
+      text:
+        `Click the link below to reset your Spliit password.\n\n${opts.resetUrl}` +
+        extra +
+        `\n\nIf you did not request a password reset, you can safely ignore this email.`,
+    }
+  }
+
+  const methods =
+    otherMethods.length > 0 ? otherMethods.join(', ') : 'an email sign-in link'
+
+  return {
+    subject: 'Sign in to Spliit',
+    text:
+      `We received a password reset request for this Spliit account, but it does not have a password sign-in method.\n\n` +
+      `Use one of these sign-in methods instead: ${methods}.\n\n` +
+      `If you did not request this email, you can safely ignore it.`,
+  }
+}
+
+const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
+  const password =
+    ctx.path === '/sign-up/email'
+      ? ctx.body?.password
+      : ctx.path === '/reset-password'
+        ? ctx.body?.newPassword
+        : undefined
+
+  if (typeof password === 'string' && !isStrongPassword(password)) {
+    throw new APIError('BAD_REQUEST', {
+      message:
+        'Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.',
+      code: 'PASSWORD_POLICY_NOT_MET',
+    })
+  }
+})
 
 /**
  * Spliit authentication is built on better-auth. better-auth owns its own
@@ -62,6 +139,10 @@ export const auth = betterAuth({
     modelName: 'Verification',
   },
 
+  hooks: {
+    before: passwordPolicyMiddleware,
+  },
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -82,12 +163,14 @@ export const auth = betterAuth({
       // be issued on the next request. Mirrors the swallow-and-warn pattern
       // used for verification emails and magic links above.
       try {
+        const methodLabels = await getAuthMethodLabels(user.id)
+        const email = buildPasswordRecoveryEmail({
+          resetUrl: url,
+          methodLabels,
+        })
         await sendEmail({
           to: user.email,
-          subject: 'Reset your Spliit password',
-          text:
-            `Click the link below to reset your Spliit password.\n\n${url}\n\n` +
-            `If you did not request a password reset, you can safely ignore this email.`,
+          ...email,
         })
       } catch (err) {
         console.warn(

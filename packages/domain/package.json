@@ -8,6 +8,7 @@
     "./balances": "./src/balances.ts",
     "./currency": "./src/currency.ts",
     "./i18n": "./src/i18n.ts",
+    "./password": "./src/password.ts",
     "./recurring-expenses": "./src/recurring-expenses.ts",
     "./schemas": "./src/schemas.ts",
     "./totals": "./src/totals.ts",

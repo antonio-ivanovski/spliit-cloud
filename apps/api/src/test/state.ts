@@ -16,6 +16,7 @@ const hoisted = vi.hoisted(() => {
       'update',
       'upsert',
     ]),
+    authIdentity: makeMethodStubs(['findMany']),
     group: makeMethodStubs([
       'findUnique',
       'findFirst',

@@ -13,10 +13,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
+import { cn } from '@/lib/utils'
+import {
+  getPasswordRequirements,
+  isStrongPassword,
+  type PasswordRequirementId,
+} from '@spliit/domain/password'
 import { useMutation } from '@tanstack/react-query'
 import { useLocation, useNavigate } from '@tanstack/react-router'
-import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { Check, Circle, Loader2 } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
 /**
  * Reset-password screen. Reached via the link emailed by the
@@ -25,7 +31,7 @@ import { useState } from 'react'
  * token is missing, expired, or already consumed, better-auth appends
  * `?error=INVALID_TOKEN` instead.
  *
- * On success we navigate to `/auth/sign-in` — the user re-authenticates
+ * On success we navigate to `/` — the user re-authenticates
  * with the new password. We deliberately do not auto-sign-in: better-auth
  * is configured with `revokeSessionsOnPasswordReset: true` for security,
  * so any existing session is already invalid.
@@ -76,8 +82,8 @@ export function ResetPasswordPage() {
     event.preventDefault()
     if (!token) return
     setClientError(null)
-    if (password.length < 8) {
-      setClientError(t('errors.passwordTooShort'))
+    if (!isStrongPassword(password)) {
+      setClientError(t('errors.passwordPolicy'))
       return
     }
     if (password !== confirmPassword) {
@@ -100,7 +106,7 @@ export function ResetPasswordPage() {
               <Link href="/auth/forgot-password">{t('requestNewLink')}</Link>
             </Button>
             <Button asChild variant="ghost" size="sm" className="w-full">
-              <Link href="/auth/sign-in">{t('backToSignIn')}</Link>
+              <Link href="/">{t('backToSignIn')}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -119,7 +125,7 @@ export function ResetPasswordPage() {
           <CardContent>
             <Button
               className="w-full"
-              onClick={() => navigate({ href: '/auth/sign-in', replace: true })}
+              onClick={() => navigate({ href: '/', replace: true })}
             >
               {t('goToSignIn')}
             </Button>
@@ -129,7 +135,7 @@ export function ResetPasswordPage() {
     )
   }
 
-  const canSubmit = password.length >= 8 && password === confirmPassword
+  const canSubmit = isStrongPassword(password) && password === confirmPassword
 
   return (
     <main className="flex-1 flex items-center justify-center px-4 py-10">
@@ -152,6 +158,7 @@ export function ResetPasswordPage() {
                 required
               />
             </div>
+            <PasswordChecklist password={password} />
             <div className="grid gap-1.5">
               <Label htmlFor="reset-confirm-password">
                 {t('confirmPassword')}
@@ -184,10 +191,46 @@ export function ResetPasswordPage() {
         </CardContent>
         <div className="flex flex-col gap-3 px-6 pb-6">
           <Button asChild variant="ghost" size="sm" className="w-full">
-            <Link href="/auth/sign-in">{t('backToSignIn')}</Link>
+            <Link href="/">{t('backToSignIn')}</Link>
           </Button>
         </div>
       </Card>
     </main>
+  )
+}
+
+function PasswordChecklist({ password }: { password: string }) {
+  const t = useTranslations('Auth')
+  const requirements = useMemo(
+    () => getPasswordRequirements(password),
+    [password],
+  )
+  const labels: Record<PasswordRequirementId, string> = {
+    minLength: t('passwordRequirements.minLength'),
+    uppercase: t('passwordRequirements.uppercase'),
+    lowercase: t('passwordRequirements.lowercase'),
+    number: t('passwordRequirements.number'),
+    symbol: t('passwordRequirements.symbol'),
+  }
+
+  return (
+    <ul className="grid grid-cols-1 gap-1 text-xs text-muted-foreground sm:grid-cols-2">
+      {requirements.map((requirement) => (
+        <li
+          key={requirement.id}
+          className={cn(
+            'flex items-center gap-1.5',
+            requirement.isMet && 'text-foreground',
+          )}
+        >
+          {requirement.isMet ? (
+            <Check className="h-3.5 w-3.5 text-emerald-600" />
+          ) : (
+            <Circle className="h-3 w-3" />
+          )}
+          <span>{labels[requirement.id]}</span>
+        </li>
+      ))}
+    </ul>
   )
 }

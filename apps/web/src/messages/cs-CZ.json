@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Přihlásit se do Spliit Cloud",
       "createAccount": "Vytvořit účet"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "Přihlásit se pomocí hesla",
     "signUpWithPassword": "Zaregistrovat se pomocí hesla",
     "signInWithGoogle": "Pokračovat přes Google",
+    "orContinueWithEmail": "nebo pokračovat e-mailem",
+    "magicLinkTab": "Kouzelný odkaz",
+    "passwordTab": "Heslo",
     "sendMagicLink": "Odeslat přihlašovací odkaz",
     "magicLinkEmail": "E-mail",
     "usePasswordInstead": "Použít e-mail a heslo",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "Vytvořte si účet pomocí e-mailu a hesla.",
     "useDifferentEmail": "Použít jiný e-mail",
     "magicLinkSent": "Zkontrolujte svou schránku pro přihlašovací odkaz.",
+    "verificationEmailSent": "Zkontrolujte svou e-mailovou schránku pro ověření účtu.",
     "noAccount": "Ještě nemáte účet?",
     "haveAccount": "Už máte účet?",
     "createAccount": "Vytvořit účet",
@@ -528,6 +558,13 @@
     "confirmPassword": "Potvrdit heslo",
     "passwordMismatch": "Hesla se neshodují.",
     "passwordTooShort": "Heslo musí mít alespoň 8 znaků.",
+    "passwordRequirements": {
+      "minLength": "8 znaků",
+      "uppercase": "Velké písmeno",
+      "lowercase": "Malé písmeno",
+      "number": "Číslice",
+      "symbol": "Symbol"
+    },
     "forgotPasswordLink": "Zapomněli jste heslo?",
     "errors": {
       "invalidCredentials": "E-mail nebo heslo je nesprávné.",
@@ -535,6 +572,7 @@
       "passwordRequired": "Zadejte své heslo.",
       "nameRequired": "Zadejte zobrazované jméno.",
       "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
+      "passwordPolicy": "Použijte alespoň 8 znaků s velkým písmenem, malým písmenem, číslicí a symbolem.",
       "magicLinkFailed": "Odeslání přihlašovacího odkazu se nezdařilo."
     },
     "loading": "Načítání…",
@@ -586,7 +624,8 @@
     "errors": {
       "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
       "invalidToken": "Tento odkaz pro obnovení vypršel nebo již byl použit.",
-      "passwordTooShort": "Heslo musí mít alespoň 8 znaků."
+      "passwordTooShort": "Heslo musí mít alespoň 8 znaků.",
+      "passwordPolicy": "Použijte alespoň 8 znaků s velkým písmenem, malým písmenem, číslicí a symbolem."
     }
   },
   "Currencies": {

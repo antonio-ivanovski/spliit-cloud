@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Spliit Cloud'da oturum açın",
       "createAccount": "Hesap oluşturun"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "Şifreyle oturum aç",
     "signUpWithPassword": "Şifreyle kaydol",
     "signInWithGoogle": "Google ile devam et",
+    "orContinueWithEmail": "veya e-posta ile devam et",
+    "magicLinkTab": "Sihirli bağlantı",
+    "passwordTab": "Şifre",
     "sendMagicLink": "Oturum açma bağlantısı gönder",
     "magicLinkEmail": "E-posta",
     "usePasswordInstead": "E-posta ve şifre kullan",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "E-postanız ve bir şifre ile hesap oluşturun.",
     "useDifferentEmail": "Farklı bir e-posta kullan",
     "magicLinkSent": "Gelen kutunuzda oturum açma bağlantısını kontrol edin.",
+    "verificationEmailSent": "Hesabınızı doğrulamak için gelen kutunuzu kontrol edin.",
     "noAccount": "Henüz hesabınız yok mu?",
     "haveAccount": "Zaten hesabınız var mı?",
     "createAccount": "Hesap oluştur",
@@ -528,6 +558,13 @@
     "confirmPassword": "Şifreyi onayla",
     "passwordMismatch": "Şifreler eşleşmiyor.",
     "passwordTooShort": "Şifre en az 8 karakter olmalıdır.",
+    "passwordRequirements": {
+      "minLength": "8 karakter",
+      "uppercase": "Büyük harf",
+      "lowercase": "Küçük harf",
+      "number": "Rakam",
+      "symbol": "Sembol"
+    },
     "forgotPasswordLink": "Şifrenizi mi unuttunuz?",
     "errors": {
       "invalidCredentials": "E-posta veya şifre hatalı.",
@@ -535,6 +572,7 @@
       "passwordRequired": "Şifrenizi girin.",
       "nameRequired": "Bir görünen ad girin.",
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+      "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin.",
       "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi."
     },
     "loading": "Yükleniyor…",
@@ -586,7 +624,8 @@
     "errors": {
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
       "invalidToken": "Bu sıfırlama bağlantısının süresi dolmuş veya zaten kullanılmış.",
-      "passwordTooShort": "Şifre en az 8 karakter olmalıdır."
+      "passwordTooShort": "Şifre en az 8 karakter olmalıdır.",
+      "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin."
     }
   },
   "Currencies": {

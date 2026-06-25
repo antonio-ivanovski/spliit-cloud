@@ -2,6 +2,32 @@
   "Homepage": {
     "title": "Share <strong>Expenses</strong> with <strong>Friends & Family</strong>",
     "description": "Track shared expenses and settle up. Free and open source, <strong>synced and secured by your account</strong>.",
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
+    },
     "button": {
       "groups": "Go to my groups",
       "github": "GitHub",
@@ -149,6 +175,9 @@
     "signInWithPassword": "Sign in with password",
     "signUpWithPassword": "Sign up with password",
     "signInWithGoogle": "Continue with Google",
+    "orContinueWithEmail": "or continue with email",
+    "magicLinkTab": "Magic link",
+    "passwordTab": "Password",
     "sendMagicLink": "Send sign-in link",
     "magicLinkEmail": "Email",
     "usePasswordInstead": "Use email and password instead",
@@ -166,6 +195,13 @@
     "confirmPassword": "Confirm password",
     "passwordMismatch": "Passwords don't match.",
     "passwordTooShort": "Password must be at least 8 characters.",
+    "passwordRequirements": {
+      "minLength": "8 characters",
+      "uppercase": "Uppercase",
+      "lowercase": "Lowercase",
+      "number": "Number",
+      "symbol": "Symbol"
+    },
     "forgotPasswordLink": "Forgot password?",
     "errors": {
       "invalidCredentials": "Email or password is incorrect.",
@@ -173,7 +209,8 @@
       "passwordRequired": "Enter your password.",
       "nameRequired": "Enter a display name.",
       "generic": "Something went wrong. Please try again.",
-      "magicLinkFailed": "Could not send the sign-in link."
+      "magicLinkFailed": "Could not send the sign-in link.",
+      "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol."
     },
     "loading": "Loading…",
     "signedInAs": "Signed in as {name}",
@@ -224,7 +261,8 @@
     "errors": {
       "generic": "Something went wrong. Please try again.",
       "invalidToken": "This reset link has expired or already been used.",
-      "passwordTooShort": "Password must be at least 8 characters."
+      "passwordTooShort": "Password must be at least 8 characters.",
+      "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol."
     }
   },
   "GroupForm": {

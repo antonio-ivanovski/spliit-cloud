@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Zaloguj się do Spliit Cloud",
       "createAccount": "Utwórz konto"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "Zaloguj się hasłem",
     "signUpWithPassword": "Zarejestruj się hasłem",
     "signInWithGoogle": "Kontynuuj przez Google",
+    "orContinueWithEmail": "lub kontynuuj przez e-mail",
+    "magicLinkTab": "Magiczny link",
+    "passwordTab": "Hasło",
     "sendMagicLink": "Wyślij link logowania",
     "magicLinkEmail": "E-mail",
     "usePasswordInstead": "Użyj e-maila i hasła",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "Utwórz konto za pomocą e-maila i hasła.",
     "useDifferentEmail": "Użyj innego e-maila",
     "magicLinkSent": "Sprawdź swoją skrzynkę odbiorczą w poszukiwaniu linku logowania.",
+    "verificationEmailSent": "Sprawdź swoją skrzynkę odbiorczą, aby zweryfikować konto.",
     "noAccount": "Nie masz jeszcze konta?",
     "haveAccount": "Masz już konto?",
     "createAccount": "Utwórz konto",
@@ -528,6 +558,13 @@
     "confirmPassword": "Potwierdź hasło",
     "passwordMismatch": "Hasła nie są zgodne.",
     "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+    "passwordRequirements": {
+      "minLength": "8 znaków",
+      "uppercase": "Wielka litera",
+      "lowercase": "Mała litera",
+      "number": "Cyfra",
+      "symbol": "Symbol"
+    },
     "forgotPasswordLink": "Nie pamiętasz hasła?",
     "errors": {
       "invalidCredentials": "E-mail lub hasło jest nieprawidłowe.",
@@ -535,6 +572,7 @@
       "passwordRequired": "Wprowadź swoje hasło.",
       "nameRequired": "Wprowadź nazwę wyświetlaną.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "passwordPolicy": "Użyj co najmniej 8 znaków zawierających wielką literę, małą literę, cyfrę i symbol.",
       "magicLinkFailed": "Nie udało się wysłać linku logowania."
     },
     "loading": "Ładowanie…",
@@ -586,7 +624,8 @@
     "errors": {
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "invalidToken": "Ten link do resetowania wygasł lub został już użyty.",
-      "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków."
+      "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+      "passwordPolicy": "Użyj co najmniej 8 znaków zawierających wielką literę, małą literę, cyfrę i symbol."
     }
   },
   "Currencies": {

@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "登入 Spliit Cloud",
       "createAccount": "建立帳戶"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "使用密碼登入",
     "signUpWithPassword": "使用密碼註冊",
     "signInWithGoogle": "使用 Google 繼續",
+    "orContinueWithEmail": "或繼續使用電子郵件",
+    "magicLinkTab": "魔法連結",
+    "passwordTab": "密碼",
     "sendMagicLink": "傳送登入連結",
     "magicLinkEmail": "電子郵件",
     "usePasswordInstead": "改用電子郵件和密碼",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "使用您的電子郵件和密碼建立帳戶。",
     "useDifferentEmail": "使用不同的電子郵件",
     "magicLinkSent": "請查看收件匣中的登入連結。",
+    "verificationEmailSent": "請檢查您的收件匣以驗證您的帳戶。",
     "noAccount": "還沒有帳戶？",
     "haveAccount": "已經有帳戶？",
     "createAccount": "建立帳戶",
@@ -528,6 +558,13 @@
     "confirmPassword": "確認密碼",
     "passwordMismatch": "密碼不符。",
     "passwordTooShort": "密碼必須至少 8 個字元。",
+    "passwordRequirements": {
+      "minLength": "8個字元",
+      "uppercase": "大寫字母",
+      "lowercase": "小寫字母",
+      "number": "數字",
+      "symbol": "符號"
+    },
     "forgotPasswordLink": "忘記密碼？",
     "errors": {
       "invalidCredentials": "電子郵件或密碼不正確。",
@@ -535,6 +572,7 @@
       "passwordRequired": "請輸入您的密碼。",
       "nameRequired": "請輸入顯示名稱。",
       "generic": "出了點問題。請再試一次。",
+      "passwordPolicy": "請使用至少8個字元，包含大寫字母、小寫字母、數字和符號。",
       "magicLinkFailed": "無法傳送登入連結。"
     },
     "loading": "載入中……",
@@ -586,7 +624,8 @@
     "errors": {
       "generic": "出了點問題。請再試一次。",
       "invalidToken": "此重設連結已過期或已被使用。",
-      "passwordTooShort": "密碼必須至少 8 個字元。"
+      "passwordTooShort": "密碼必須至少 8 個字元。",
+      "passwordPolicy": "請使用至少8個字元，包含大寫字母、小寫字母、數字和符號。"
     }
   },
   "Currencies": {

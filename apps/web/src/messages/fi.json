@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Kirjaudu Spliit Cloudiin",
       "createAccount": "Luo tili"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Kirjaudu salasanalla",
     "signUpWithPassword": "Rekisteröidy salasanalla",
     "signInWithGoogle": "Jatka Googlella",
+    "orContinueWithEmail": "tai jatka sähköpostilla",
+    "magicLinkTab": "Maaginen linkki",
+    "passwordTab": "Salasana",
     "sendMagicLink": "Lähetä kirjautumislinkki",
     "magicLinkEmail": "Sähköposti",
     "usePasswordInstead": "Käytä sen sijaan sähköpostia ja salasanaa",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Luo tili sähköpostiosoitteellasi ja salasanalla.",
     "useDifferentEmail": "Käytä toista sähköpostiosoitetta",
     "magicLinkSent": "Tarkista sähköpostisi kirjautumislinkkiä varten.",
+    "verificationEmailSent": "Tarkista sähköpostisi vahvistaaksesi tilisi.",
     "noAccount": "Eikö sinulla ole vielä tiliä?",
     "haveAccount": "Onko sinulla jo tili?",
     "createAccount": "Luo tili",
@@ -541,6 +571,13 @@
     "confirmPassword": "Vahvista salasana",
     "passwordMismatch": "Salasanat eivät täsmää.",
     "passwordTooShort": "Salasanan on oltava vähintään 8 merkkiä pitkä.",
+    "passwordRequirements": {
+      "minLength": "8 merkkiä",
+      "uppercase": "Iso kirjain",
+      "lowercase": "Pieni kirjain",
+      "number": "Numero",
+      "symbol": "Erikoismerkki"
+    },
     "forgotPasswordLink": "Unohditko salasanan?",
     "errors": {
       "invalidCredentials": "Sähköposti tai salasana on virheellinen.",
@@ -548,6 +585,7 @@
       "passwordRequired": "Syötä salasanasi.",
       "nameRequired": "Syötä näyttönimi.",
       "generic": "Jokin meni vikaan. Yritä uudelleen.",
+      "passwordPolicy": "Käytä vähintään 8 merkkiä, joissa on iso kirjain, pieni kirjain, numero ja erikoismerkki.",
       "magicLinkFailed": "Kirjautumislinkkiä ei voitu lähettää."
     },
     "loading": "Ladataan…",
@@ -599,7 +637,8 @@
     "errors": {
       "generic": "Jokin meni vikaan. Yritä uudelleen.",
       "invalidToken": "Tämä palautuslinkki on vanhentunut tai sitä on jo käytetty.",
-      "passwordTooShort": "Salasanan on oltava vähintään 8 merkkiä pitkä."
+      "passwordTooShort": "Salasanan on oltava vähintään 8 merkkiä pitkä.",
+      "passwordPolicy": "Käytä vähintään 8 merkkiä, joissa on iso kirjain, pieni kirjain, numero ja erikoismerkki."
     }
   },
   "Members": {

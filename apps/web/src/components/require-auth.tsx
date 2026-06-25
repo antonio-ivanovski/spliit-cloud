@@ -10,7 +10,7 @@ import { PropsWithChildren } from 'react'
 
 /**
  * Route guard. Shows a loader while the session is being resolved, redirects
- * unauthenticated users to `/auth/sign-in` (preserving the original target in
+ * unauthenticated users to `/` (preserving the original target in
  * a `redirect` query parameter), and otherwise renders the protected content.
  */
 export function RequireAuth({ children }: PropsWithChildren) {
@@ -29,7 +29,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
       typeof window !== 'undefined'
         ? `${window.location.pathname}${window.location.search}`
         : '/groups'
-    return <Navigate to="/auth/sign-in" search={{ redirect: target }} replace />
+    return <Navigate to="/" search={{ redirect: target }} replace />
   }
 
   // Authenticated but missing a display name (e.g. right after a magic-link

@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Hasi saioa Spliit Cloud-en",
       "createAccount": "Sortu kontua"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Hasi saioa pasahitzarekin",
     "signUpWithPassword": "Erregistratu pasahitzarekin",
     "signInWithGoogle": "Jarraitu Google-rekin",
+    "orContinueWithEmail": "edo posta elektronikoarekin jarraitu",
+    "magicLinkTab": "Esteka magikoa",
+    "passwordTab": "Pasahitza",
     "sendMagicLink": "Bidali saio-hasiera esteka",
     "magicLinkEmail": "Helbide elektronikoa",
     "usePasswordInstead": "Erabili helbide elektronikoa eta pasahitza",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Sortu kontu bat zure helbide elektronikoarekin eta pasahitz batekin.",
     "useDifferentEmail": "Erabili beste helbide elektroniko bat",
     "magicLinkSent": "Begiratu zure sarrera-ontzia saioa hasteko esteka bat ikusteko.",
+    "verificationEmailSent": "Egiaztatu zure sarrera-ontzia kontua egiaztatzeko.",
     "noAccount": "Oraindik ez duzu konturik?",
     "haveAccount": "Dagoeneko baduzu kontua?",
     "createAccount": "Sortu kontua",
@@ -541,6 +571,13 @@
     "confirmPassword": "Berretsi pasahitza",
     "passwordMismatch": "Pasahitzak ez datoz bat.",
     "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu.",
+    "passwordRequirements": {
+      "minLength": "8 karaktere",
+      "uppercase": "Letra larriz",
+      "lowercase": "Letra xehez",
+      "number": "Zenbakia",
+      "symbol": "Ikurra"
+    },
     "forgotPasswordLink": "Pasahitza ahaztu duzu?",
     "errors": {
       "invalidCredentials": "Helbide elektronikoa edo pasahitza okerra da.",
@@ -548,6 +585,7 @@
       "passwordRequired": "Sartu zure pasahitza.",
       "nameRequired": "Sartu erakusteko izen bat.",
       "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez.",
+      "passwordPolicy": "Erabili gutxienez 8 karaktere, letra larri eta xehez, zenbaki batez eta ikur batez.",
       "magicLinkFailed": "Ezin izan da saioa hasteko esteka bidali."
     },
     "loading": "Kargatzen…",
@@ -599,7 +637,8 @@
     "errors": {
       "generic": "Zerbaitek huts egin du. Saiatu berriro.",
       "invalidToken": "Berrezartzeko esteka hau iraungitu da edo jada erabilia izan da.",
-      "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu."
+      "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu.",
+      "passwordPolicy": "Erabili gutxienez 8 karaktere, letra larri eta xehez, zenbaki batez eta ikur batez."
     }
   },
   "Members": {

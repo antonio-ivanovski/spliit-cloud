@@ -28,7 +28,7 @@ import {
   type Locale,
 } from '@spliit/domain/i18n'
 import i18next from 'i18next'
-import { ReactNode } from 'react'
+import { Fragment, ReactNode } from 'react'
 import {
   I18nextProvider,
   initReactI18next,
@@ -105,19 +105,23 @@ function renderRich(
   values: TranslationValues = {},
 ): ReactNode {
   const parts: ReactNode[] = []
+  let partKey = 0
+  const pushPart = (node: ReactNode) => {
+    parts.push(<Fragment key={partKey++}>{node}</Fragment>)
+  }
   let rest = template
   const tagPattern = /<([a-zA-Z][\w-]*)>(.*?)<\/\1>/
   while (rest.length) {
     const match = rest.match(tagPattern)
     if (!match || match.index === undefined) {
-      parts.push(interpolate(rest, values))
+      pushPart(interpolate(rest, values))
       break
     }
     if (match.index > 0)
-      parts.push(interpolate(rest.slice(0, match.index), values))
+      pushPart(interpolate(rest.slice(0, match.index), values))
     const [, tag, content] = match
     const renderer = values[tag]
-    parts.push(
+    pushPart(
       typeof renderer === 'function'
         ? (renderer as (chunks: ReactNode) => ReactNode)(
             interpolate(content, values),

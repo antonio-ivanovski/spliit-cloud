@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Войти в Spliit Cloud",
       "createAccount": "Создать аккаунт"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -512,6 +538,9 @@
     "signInWithPassword": "Войти с паролем",
     "signUpWithPassword": "Зарегистрироваться с паролем",
     "signInWithGoogle": "Продолжить через Google",
+    "orContinueWithEmail": "или продолжить с email",
+    "magicLinkTab": "Волшебная ссылка",
+    "passwordTab": "Пароль",
     "sendMagicLink": "Отправить ссылку для входа",
     "magicLinkEmail": "Эл. почта",
     "usePasswordInstead": "Использовать эл. почту и пароль",
@@ -520,6 +549,7 @@
     "passwordFormDescriptionSignUp": "Создайте аккаунт с email и паролем.",
     "useDifferentEmail": "Использовать другой email",
     "magicLinkSent": "Проверьте свой почтовый ящик — там будет ссылка для входа.",
+    "verificationEmailSent": "Проверьте свой почтовый ящик, чтобы подтвердить аккаунт.",
     "noAccount": "Еще нет аккаунта?",
     "haveAccount": "Уже есть аккаунт?",
     "createAccount": "Создать аккаунт",
@@ -528,6 +558,13 @@
     "confirmPassword": "Подтвердите пароль",
     "passwordMismatch": "Пароли не совпадают.",
     "passwordTooShort": "Пароль должен содержать не менее 8 символов.",
+    "passwordRequirements": {
+      "minLength": "8 символов",
+      "uppercase": "Заглавная буква",
+      "lowercase": "Строчная буква",
+      "number": "Цифра",
+      "symbol": "Символ"
+    },
     "forgotPasswordLink": "Забыли пароль?",
     "errors": {
       "invalidCredentials": "Неверный email или пароль.",
@@ -535,6 +572,7 @@
       "passwordRequired": "Введите пароль.",
       "nameRequired": "Введите отображаемое имя.",
       "generic": "Что-то пошло не так. Пожалуйста, попробуйте еще раз.",
+      "passwordPolicy": "Используйте не менее 8 символов, включая заглавные и строчные буквы, цифру и символ.",
       "magicLinkFailed": "Не удалось отправить ссылку для входа."
     },
     "loading": "Загрузка…",
@@ -586,7 +624,8 @@
     "errors": {
       "generic": "Что-то пошло не так. Пожалуйста, попробуйте еще раз.",
       "invalidToken": "Срок действия этой ссылки для сброса истек, или она уже была использована.",
-      "passwordTooShort": "Пароль должен содержать не менее 8 символов."
+      "passwordTooShort": "Пароль должен содержать не менее 8 символов.",
+      "passwordPolicy": "Используйте не менее 8 символов, включая заглавные и строчные буквы, цифру и символ."
     }
   },
   "Currencies": {

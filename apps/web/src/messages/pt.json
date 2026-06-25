@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Iniciar sessão no Spliit Cloud",
       "createAccount": "Criar uma conta"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -201,6 +227,9 @@
     "signInWithPassword": "Iniciar sessão com palavra-passe",
     "signUpWithPassword": "Registar com palavra-passe",
     "signInWithGoogle": "Continuar com Google",
+    "orContinueWithEmail": "ou continua com e-mail",
+    "magicLinkTab": "Link mágico",
+    "passwordTab": "Palavra-passe",
     "sendMagicLink": "Enviar link de acesso",
     "magicLinkEmail": "Email",
     "usePasswordInstead": "Usar email e palavra-passe",
@@ -209,6 +238,7 @@
     "passwordFormDescriptionSignUp": "Cria uma conta com o teu email e uma palavra-passe.",
     "useDifferentEmail": "Usar um email diferente",
     "magicLinkSent": "Verifica a tua caixa de entrada para o link de acesso.",
+    "verificationEmailSent": "Verifica a tua caixa de entrada para verificar a tua conta.",
     "noAccount": "Ainda não tens uma conta?",
     "haveAccount": "Já tens uma conta?",
     "createAccount": "Criar uma conta",
@@ -217,6 +247,13 @@
     "confirmPassword": "Confirmar palavra-passe",
     "passwordMismatch": "As palavras-passe não coincidem.",
     "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres.",
+    "passwordRequirements": {
+      "minLength": "8 caracteres",
+      "uppercase": "Maiúscula",
+      "lowercase": "Minúscula",
+      "number": "Número",
+      "symbol": "Símbolo"
+    },
     "forgotPasswordLink": "Esqueceu-se da palavra-passe?",
     "errors": {
       "invalidCredentials": "Email ou palavra-passe incorretos.",
@@ -224,6 +261,7 @@
       "passwordRequired": "Introduz a tua palavra-passe.",
       "nameRequired": "Introduz um nome de exibição.",
       "generic": "Algo correu mal. Por favor, tenta novamente.",
+      "passwordPolicy": "Utiliza pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo.",
       "magicLinkFailed": "Não foi possível enviar o link de acesso."
     },
     "loading": "A carregar…",
@@ -275,7 +313,8 @@
     "errors": {
       "generic": "Algo correu mal. Tenta novamente.",
       "invalidToken": "Este link de reposição expirou ou já foi usado.",
-      "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres."
+      "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres.",
+      "passwordPolicy": "Utiliza pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo."
     }
   },
   "ExpenseForm": {

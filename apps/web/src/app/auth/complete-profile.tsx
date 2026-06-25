@@ -24,7 +24,7 @@ import { useState } from 'react'
  *
  * If the account already has a display name, the route redirects to the
  * original `redirect` target (defaulting to `/groups`). If the visitor is not
- * signed in, they are sent to `/auth/sign-in` with a redirect back here.
+ * signed in, they are sent to `/` with a redirect back here.
  */
 export function CompleteProfilePage() {
   const t = useTranslations('CompleteProfile')
@@ -54,7 +54,7 @@ export function CompleteProfilePage() {
 
   if (!account) {
     const back = `/auth/complete-profile?redirect=${encodeURIComponent(redirectTo)}`
-    return <Navigate to="/auth/sign-in" search={{ redirect: back }} replace />
+    return <Navigate to="/" search={{ redirect: back }} replace />
   }
 
   if (!needsProfile) {

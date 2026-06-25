@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "Iniciar sesión en Spliit Cloud",
       "createAccount": "Crear una cuenta"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "Iniciar sesión con contraseña",
     "signUpWithPassword": "Registrarse con contraseña",
     "signInWithGoogle": "Continuar con Google",
+    "orContinueWithEmail": "o continúa con el correo electrónico",
+    "magicLinkTab": "Enlace mágico",
+    "passwordTab": "Contraseña",
     "sendMagicLink": "Enviar enlace de inicio de sesión",
     "magicLinkEmail": "Correo electrónico",
     "usePasswordInstead": "Usar correo y contraseña en su lugar",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "Crea una cuenta con tu correo electrónico y una contraseña.",
     "useDifferentEmail": "Usar un correo diferente",
     "magicLinkSent": "Revisa tu bandeja de entrada para ver el enlace de inicio de sesión.",
+    "verificationEmailSent": "Revisa tu bandeja de entrada para verificar tu cuenta.",
     "noAccount": "¿Aún no tienes una cuenta?",
     "haveAccount": "¿Ya tienes una cuenta?",
     "createAccount": "Crear una cuenta",
@@ -541,6 +571,13 @@
     "confirmPassword": "Confirmar contraseña",
     "passwordMismatch": "Las contraseñas no coinciden.",
     "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+    "passwordRequirements": {
+      "minLength": "8 caracteres",
+      "uppercase": "Mayúscula",
+      "lowercase": "Minúscula",
+      "number": "Número",
+      "symbol": "Símbolo"
+    },
     "forgotPasswordLink": "¿Olvidaste tu contraseña?",
     "errors": {
       "invalidCredentials": "El correo o la contraseña son incorrectos.",
@@ -548,6 +585,7 @@
       "passwordRequired": "Introduce tu contraseña.",
       "nameRequired": "Introduce un nombre para mostrar.",
       "generic": "Algo salió mal. Inténtalo de nuevo.",
+      "passwordPolicy": "Usa al menos 8 caracteres con mayúsculas, minúsculas, un número y un símbolo.",
       "magicLinkFailed": "No se pudo enviar el enlace de inicio de sesión."
     },
     "loading": "Cargando…",
@@ -599,7 +637,8 @@
     "errors": {
       "generic": "Algo salió mal. Inténtalo de nuevo.",
       "invalidToken": "Este enlace de restablecimiento ha caducado o ya ha sido usado.",
-      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres."
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+      "passwordPolicy": "Usa al menos 8 caracteres con mayúsculas, minúsculas, un número y un símbolo."
     }
   },
   "Members": {

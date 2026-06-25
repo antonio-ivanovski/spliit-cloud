@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { useTranslations } from '@/i18n/react'
 import { authClient } from '@/lib/auth'
 import { useMutation } from '@tanstack/react-query'
+import { useLocation } from '@tanstack/react-router'
 import { Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
 
@@ -32,8 +33,11 @@ function getErrorMessage(error: unknown): string {
  */
 export function ForgotPasswordPage() {
   const t = useTranslations('ForgotPassword')
+  const searchParams = new URLSearchParams(
+    useLocation({ select: (location) => location.searchStr }),
+  )
 
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(searchParams.get('email') ?? '')
   const [emailSent, setEmailSent] = useState(false)
 
   const requestReset = useMutation({
@@ -124,7 +128,13 @@ export function ForgotPasswordPage() {
         </CardContent>
         <div className="flex flex-col gap-3 px-6 pb-6">
           <Button asChild variant="ghost" size="sm" className="w-full">
-            <Link href="/auth/sign-in">{t('backToSignIn')}</Link>
+            <Link
+              href={`/${
+                email.trim() ? `?email=${encodeURIComponent(email.trim())}` : ''
+              }`}
+            >
+              {t('backToSignIn')}
+            </Link>
           </Button>
         </div>
       </Card>

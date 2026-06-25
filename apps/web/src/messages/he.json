@@ -7,6 +7,32 @@
       "github": "GitHub",
       "signIn": "התחבר ל-Spliit Cloud",
       "createAccount": "צור חשבון"
+    },
+    "features": {
+      "groupsSync": {
+        "title": "Groups + sync",
+        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+      },
+      "expenses": {
+        "title": "Expenses + receipts",
+        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+      },
+      "splitting": {
+        "title": "Advanced split",
+        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+      },
+      "settlement": {
+        "title": "Balances",
+        "description": "See who paid what and optimize money transfers between participants."
+      },
+      "organization": {
+        "title": "Categories",
+        "description": "Assign categories so shared spending stays easy to scan."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "description": "Sign in once to protect your data and keep your expense history available."
+      }
     }
   },
   "Header": {
@@ -525,6 +551,9 @@
     "signInWithPassword": "התחבר עם סיסמה",
     "signUpWithPassword": "הירשם עם סיסמה",
     "signInWithGoogle": "המשך עם Google",
+    "orContinueWithEmail": "או המשך עם דוא\"ל",
+    "magicLinkTab": "קישור קסם",
+    "passwordTab": "סיסמה",
     "sendMagicLink": "שלח קישור התחברות",
     "magicLinkEmail": "אימייל",
     "usePasswordInstead": "השתמש באימייל ובסיסמה במקום",
@@ -533,6 +562,7 @@
     "passwordFormDescriptionSignUp": "צור חשבון עם האימייל והסיסמה שלך.",
     "useDifferentEmail": "השתמש באימייל אחר",
     "magicLinkSent": "בדוק בתיבת הדואר הנכנס שלך לקבלת קישור התחברות.",
+    "verificationEmailSent": "בדוק את תיבת הדואר הנכנס שלך כדי לאמת את החשבון.",
     "noAccount": "אין לך עדיין חשבון?",
     "haveAccount": "כבר יש לך חשבון?",
     "createAccount": "צור חשבון",
@@ -541,6 +571,13 @@
     "confirmPassword": "אשר סיסמה",
     "passwordMismatch": "הסיסמאות אינן תואמות.",
     "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+    "passwordRequirements": {
+      "minLength": "8 תווים",
+      "uppercase": "אות גדולה",
+      "lowercase": "אות קטנה",
+      "number": "מספר",
+      "symbol": "סימן"
+    },
     "forgotPasswordLink": "שכחת סיסמה?",
     "errors": {
       "invalidCredentials": "אימייל או סיסמה שגויים.",
@@ -548,6 +585,7 @@
       "passwordRequired": "הזן את הסיסמה שלך.",
       "nameRequired": "הזן שם תצוגה.",
       "generic": "משהו השתבש. אנא נסה שוב.",
+      "passwordPolicy": "השתמש בלפחות 8 תווים עם אות גדולה, אות קטנה, מספר וסימן.",
       "magicLinkFailed": "לא ניתן לשלוח את קישור ההתחברות."
     },
     "loading": "טוען…",
@@ -599,7 +637,8 @@
     "errors": {
       "generic": "משהו השתבש. אנא נסה שוב.",
       "invalidToken": "קישור האיפוס הזה פג או שכבר נעשה בו שימוש.",
-      "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים."
+      "passwordTooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+      "passwordPolicy": "השתמש בלפחות 8 תווים עם אות גדולה, אות קטנה, מספר וסימן."
     }
   },
   "Members": {
