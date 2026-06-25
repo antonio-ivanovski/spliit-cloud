@@ -43,6 +43,7 @@ The initial goals are:
 - [ ] Admin and self member management
 - [ ] Update the rest of the tech stack, including TypeScript
 - [ ] Self account settings, including synced theme preferences and display name
+- [ ] Phone and email notifications with granular per-event control in account settings
 - [ ] [Direct account-to-account expenses](./openspec/changes/add-direct-account-expenses)
 - [ ] [Account overview homepage](./openspec/changes/add-overview-homepage)
 - [ ] [Extensible expense import, starting with Spliit groups](./openspec/changes/import-spliit-groups)
