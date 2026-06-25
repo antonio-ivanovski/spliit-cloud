@@ -25,7 +25,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { useMediaQuery } from '@/lib/hooks'
 import { useRouter } from '@/lib/navigation'
-import { getImageData, usePresignedUpload } from '@/lib/upload'
+import { getImageData, maybeDecodeHeic, usePresignedUpload } from '@/lib/upload'
 import {
   formatCurrency,
   formatDate,
@@ -101,12 +101,13 @@ function ReceiptDialogContent() {
   >(null)
 
   const handleFileChange = async (file: File) => {
-    if (file.size > MAX_FILE_SIZE) {
+    const decoded = await maybeDecodeHeic(file)
+    if (decoded.size > MAX_FILE_SIZE) {
       toast({
         title: t('TooBigToast.title'),
         description: t('TooBigToast.description', {
           maxSize: formatFileSize(MAX_FILE_SIZE, locale),
-          size: formatFileSize(file.size, locale),
+          size: formatFileSize(decoded.size, locale),
         }),
         variant: 'destructive',
       })
@@ -117,11 +118,11 @@ function ReceiptDialogContent() {
       try {
         setPending(true)
         console.log('Uploading image…')
-        let { url } = await uploadToS3(file)
+        let { url } = await uploadToS3(decoded)
         console.log('Extracting information from receipt…')
         const { amount, categoryId, date, title } =
           await extractReceiptMutation.mutateAsync({ imageUrl: url })
-        const { width, height } = await getImageData(file)
+        const { width, height } = await getImageData(decoded)
         setReceiptInfo({ amount, categoryId, date, title, url, width, height })
       } catch (err) {
         console.error(err)
@@ -157,7 +158,10 @@ function ReceiptDialogContent() {
     <div className="prose prose-sm dark:prose-invert">
       <p>{t('Dialog.body')}</p>
       <div>
-        <FileInput onChange={handleFileChange} accept="image/jpeg,image/png" />
+        <FileInput
+          onChange={handleFileChange}
+          accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+        />
         <div className="grid gap-x-4 gap-y-2 grid-cols-3">
           <Button
             variant="secondary"

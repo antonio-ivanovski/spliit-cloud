@@ -1,4 +1,9 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  PutObjectTaggingCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { prisma } from '@spliit/db'
 import { randomId } from '../lib/api'
@@ -20,11 +25,48 @@ function getS3Client() {
   return s3Client
 }
 
+export async function deleteS3Object(fileUrl: string) {
+  if (
+    !env.S3_UPLOAD_BUCKET ||
+    !env.S3_UPLOAD_KEY ||
+    !env.S3_UPLOAD_REGION ||
+    !env.S3_UPLOAD_SECRET
+  )
+    return
+
+  const key = new URL(fileUrl).pathname.replace(/^\//, '')
+  await getS3Client().send(
+    new DeleteObjectCommand({ Bucket: env.S3_UPLOAD_BUCKET, Key: key }),
+  )
+}
+
+export async function markS3ObjectAsOwned(fileUrl: string) {
+  if (
+    !env.S3_UPLOAD_BUCKET ||
+    !env.S3_UPLOAD_KEY ||
+    !env.S3_UPLOAD_REGION ||
+    !env.S3_UPLOAD_SECRET
+  )
+    return
+
+  const key = new URL(fileUrl).pathname.replace(/^\//, '')
+  await getS3Client().send(
+    new PutObjectTaggingCommand({
+      Bucket: env.S3_UPLOAD_BUCKET,
+      Key: key,
+      Tagging: { TagSet: [{ Key: 'status', Value: 'owned' }] },
+    }),
+  )
+}
+
+const MAX_UPLOAD_SIZE = 2 * 1024 ** 2
+
 export async function createUploadUrl(
   request: Request,
   ledgerId: string | undefined,
   fileName: string,
   contentType: string,
+  fileSize?: number,
 ) {
   // Auth is checked first so unauthenticated callers always get 401, even
   // when the server-side uploader is not configured.
@@ -38,6 +80,13 @@ export async function createUploadUrl(
   // document would be unowned and could be attached to any expense.
   if (!ledgerId) {
     return Response.json({ error: 'Missing ledgerId' }, { status: 400 })
+  }
+
+  if (fileSize !== undefined && fileSize > MAX_UPLOAD_SIZE) {
+    return Response.json(
+      { error: 'File exceeds the maximum upload size' },
+      { status: 400 },
+    )
   }
 
   if (
@@ -83,6 +132,7 @@ export async function createUploadUrl(
     Bucket: env.S3_UPLOAD_BUCKET,
     Key: key,
     ContentType: contentType,
+    Tagging: 'status=unowned',
   })
   const uploadUrl = await getSignedUrl(getS3Client(), command, {
     expiresIn: 60,

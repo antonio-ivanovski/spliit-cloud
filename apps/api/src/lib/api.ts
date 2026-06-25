@@ -26,6 +26,7 @@ import {
   type GroupFormValues,
   type Reimbursement,
 } from '@spliit/domain'
+import { deleteS3Object, markS3ObjectAsOwned } from '../routes/upload'
 
 export function randomId(size?: number) {
   const id = crypto.randomUUID().replaceAll('-', '')
@@ -184,7 +185,7 @@ export async function createExpense(
       }
     : undefined
 
-  return prisma.expense.create({
+  const expense = await prisma.expense.create({
     data: {
       id: expenseId,
       ledgerId,
@@ -227,6 +228,12 @@ export async function createExpense(
       notes: expenseFormValues.notes,
     },
   })
+
+  for (const doc of expenseFormValues.documents) {
+    await markS3ObjectAsOwned(doc.url)
+  }
+
+  return expense
 }
 
 export async function deleteExpense(
@@ -248,6 +255,10 @@ export async function deleteExpense(
     expenseId,
     data: existingExpense?.title,
   })
+
+  for (const doc of existingExpense.documents) {
+    await deleteS3Object(doc.url)
+  }
 
   await prisma.expense.deleteMany({
     where: { id: expenseId, ledgerId: existingExpense.ledgerId },
@@ -331,6 +342,14 @@ export async function updateExpense(
     data: expenseFormValues.title,
   })
 
+  const removedDocuments = existingExpense.documents.filter(
+    (existingDoc) =>
+      !expenseFormValues.documents.some((doc) => doc.id === existingDoc.id),
+  )
+  for (const doc of removedDocuments) {
+    await deleteS3Object(doc.url)
+  }
+
   const isDeleteRecurrenceExpenseLink =
     existingExpense.recurrenceRule !== RecurrenceRule.NONE &&
     expenseFormValues.recurrenceRule === RecurrenceRule.NONE &&
@@ -358,7 +377,7 @@ export async function updateExpense(
     existingExpense.expenseDate,
   )
 
-  return prisma.expense.update({
+  const expense = await prisma.expense.update({
     where: { id: expenseId },
     data: {
       expenseDate: expenseFormValues.expenseDate,
@@ -436,6 +455,12 @@ export async function updateExpense(
       notes: expenseFormValues.notes,
     },
   })
+
+  for (const doc of expenseFormValues.documents) {
+    await markS3ObjectAsOwned(doc.url)
+  }
+
+  return expense
 }
 
 export async function updateGroup(

@@ -38,12 +38,14 @@ app.post('/uploads/presign', async (c) => {
     ledgerId?: string
     fileName?: string
     contentType?: string
+    fileSize?: number
   }>()
   return createUploadUrl(
     c.req.raw,
     body.ledgerId,
     body.fileName ?? 'document',
     body.contentType ?? 'application/octet-stream',
+    body.fileSize,
   )
 })
 

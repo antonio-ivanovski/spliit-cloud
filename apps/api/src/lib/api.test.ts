@@ -1,10 +1,15 @@
 // organize-imports-ignore: ./mocks must be imported before any module that
 // loads better-auth or @spliit/db so vi.mock is registered before those
 // modules are evaluated.
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import '../test/mocks'
 import { prismaMock } from '../test/state'
 import { deleteExpense, getGroup } from '../lib/api'
+
+vi.mock('../routes/upload', () => ({
+  deleteS3Object: vi.fn(),
+  markS3ObjectAsOwned: vi.fn(),
+}))
 
 describe('getGroup — pending invitations as participants', () => {
   const groupId = 'grp-1'
@@ -225,6 +230,7 @@ describe('deleteExpense', () => {
       title: 'Dinner',
       categoryId: 'general',
       paidFor: [],
+      documents: [],
     } as never)
     prismaMock.activity.create.mockResolvedValue({} as never)
     prismaMock.expense.deleteMany.mockResolvedValue({ count: 1 } as never)

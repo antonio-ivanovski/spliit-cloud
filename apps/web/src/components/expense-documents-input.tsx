@@ -21,7 +21,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
 import { ExpenseFormValues } from '@/lib/schemas'
-import { getImageData, usePresignedUpload } from '@/lib/upload'
+import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import { formatFileSize } from '@/lib/utils'
 import { Loader2, Plus, Trash, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -34,7 +34,7 @@ type Props = {
   readOnly?: boolean
 }
 
-const MAX_FILE_SIZE = 5 * 1024 ** 2
+const MAX_FILE_SIZE = 2 * 1024 ** 2
 
 export function ExpenseDocumentsInput({
   documents,
@@ -51,24 +51,22 @@ export function ExpenseDocumentsInput({
   const { toast } = useToast()
 
   const handleFileChange = async (file: File) => {
-    if (file.size > MAX_FILE_SIZE) {
-      toast({
-        title: t('TooBigToast.title'),
-        description: t('TooBigToast.description', {
-          maxSize: formatFileSize(MAX_FILE_SIZE, locale),
-          size: formatFileSize(file.size, locale),
-        }),
-        variant: 'destructive',
-      })
-      return
-    }
-
     const upload = async () => {
       try {
         setPending(true)
-        const { width, height } = await getImageData(file)
-        if (!width || !height) throw new Error('Cannot get image dimensions')
-        const { url } = await uploadToS3(file)
+        const { file: resizedFile, width, height } = await resizeImage(file)
+        if (resizedFile.size > MAX_FILE_SIZE) {
+          toast({
+            title: t('TooBigToast.title'),
+            description: t('TooBigToast.description', {
+              maxSize: formatFileSize(MAX_FILE_SIZE, locale),
+              size: formatFileSize(resizedFile.size, locale),
+            }),
+            variant: 'destructive',
+          })
+          return
+        }
+        const { url } = await uploadToS3(resizedFile)
         updateDocuments([...documents, { id: randomId(), url, width, height }])
       } catch (err) {
         console.error(err)
@@ -94,7 +92,10 @@ export function ExpenseDocumentsInput({
 
   return (
     <div>
-      <FileInput onChange={handleFileChange} accept="image/jpeg,image/png" />
+      <FileInput
+        onChange={handleFileChange}
+        accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+      />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 [&_*]:aspect-square">
         {documents.map((doc) => (

@@ -38,6 +38,7 @@
     "dayjs": "^1.11.21",
     "decimal.js": "^10.6.0",
     "embla-carousel-react": "^8.6.0",
+    "heic-to": "^1.5.2",
     "i18next": "^25.10.10",
     "lucide-react": "^0.501.0",
     "react": "^19.2.7",

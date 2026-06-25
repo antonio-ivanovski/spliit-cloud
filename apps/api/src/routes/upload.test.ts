@@ -85,6 +85,29 @@ describe('createUploadUrl', () => {
     expect(body.error).toBe('Not authorized to upload to this ledger')
   })
 
+  it('returns 400 when the file size exceeds the limit', async () => {
+    authState.session = {
+      user: { id: 'acct-1' },
+      session: { id: 'sess-1' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      email: 'alice@example.com',
+    })
+
+    const response = await createUploadUrl(
+      makeRequest(),
+      'ledger-1',
+      'receipt.pdf',
+      'application/pdf',
+      3 * 1024 ** 2, // 3 MB > 2 MB limit
+    )
+
+    expect(response.status).toBe(400)
+    const body = await response.json()
+    expect(body.error).toBe('File exceeds the maximum upload size')
+  })
+
   it('returns 404 when the ledger does not exist', async () => {
     authState.session = {
       user: { id: 'acct-1' },
