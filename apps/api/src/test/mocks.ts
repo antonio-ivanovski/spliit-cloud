@@ -33,7 +33,6 @@ vi.mock('@spliit/db', () => {
   return {
     prisma: livePrisma,
     GroupRole: {
-      OWNER: 'OWNER',
       ADMIN: 'ADMIN',
       MEMBER: 'MEMBER',
     },

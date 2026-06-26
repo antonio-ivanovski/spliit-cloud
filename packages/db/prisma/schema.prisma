@@ -170,7 +170,6 @@ model Group {
 }
 
 enum GroupRole {
-  OWNER
   ADMIN
   MEMBER
 }

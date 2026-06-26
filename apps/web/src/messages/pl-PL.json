@@ -648,7 +648,6 @@
     "unknownMember": "Nieznany członek",
     "youBadge": "Ty",
     "role": {
-      "owner": "Właściciel",
       "admin": "Administrator",
       "member": "Członek"
     },

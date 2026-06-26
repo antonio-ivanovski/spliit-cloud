@@ -79,10 +79,9 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
  */
 export function groupProcedure(opts: {
   /** Minimum group role required to call this procedure. */
-  minRole?: 'MEMBER' | 'ADMIN' | 'OWNER'
+  minRole?: 'MEMBER' | 'ADMIN'
 }) {
-  const rolesRank: Record<'OWNER' | 'ADMIN' | 'MEMBER', number> = {
-    OWNER: 3,
+  const rolesRank: Record<'ADMIN' | 'MEMBER', number> = {
     ADMIN: 2,
     MEMBER: 1,
   }
@@ -95,7 +94,7 @@ export function groupProcedure(opts: {
       ctx: {
         ...ctx,
         // Surface the role helper so resolvers can authorise further.
-        requireGroupRole(role: 'MEMBER' | 'ADMIN' | 'OWNER') {
+        requireGroupRole(role: 'MEMBER' | 'ADMIN') {
           if (rolesRank[role] < rolesRank[minRole]) {
             throw new TRPCError({
               code: 'FORBIDDEN',

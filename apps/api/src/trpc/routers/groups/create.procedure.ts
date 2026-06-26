@@ -12,8 +12,8 @@ export const createGroupProcedure = protectedProcedure
   .mutation(async ({ input: { groupFormValues }, ctx }) => {
     const account = ctx.auth.user
     const result = await createGroup(groupFormValues, {
-      ownerAccountId: account.id,
-      ownerDisplayName: account.name,
+      adminAccountId: account.id,
+      adminDisplayName: account.name,
     })
     return { groupId: result.group.id }
   })

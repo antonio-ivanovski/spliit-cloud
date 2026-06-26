@@ -99,7 +99,7 @@ export const accountRouter = createTRPCRouter({
         ...m.group,
         createdAt: m.group.createdAt.toISOString(),
         // The caller's role on this group. The web client uses it to gate
-        // the group-level archive action (OWNER/ADMIN only).
+        // the group-level archive action (ADMIN only).
         currentMemberRole: m.role,
         preference: prefByGroupId.get(m.groupId) ?? defaultPref,
       }))

@@ -648,7 +648,6 @@
     "unknownMember": "Tuntematon jäsen",
     "youBadge": "Sinä",
     "role": {
-      "owner": "Omistaja",
       "admin": "Ylläpitäjä",
       "member": "Jäsen"
     },

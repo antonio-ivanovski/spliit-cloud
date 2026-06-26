@@ -33,11 +33,11 @@ export type Props = {
    * note explains the restriction. Inviting members is done from the
    * Members tab; this form no longer collects pending invitations.
    */
-  currentMemberRole?: 'OWNER' | 'ADMIN' | 'MEMBER'
+  currentMemberRole?: 'ADMIN' | 'MEMBER'
   /**
    * When `true`, the group is archived and its settings are frozen.
    * All inputs are disabled and no Save button is shown. Archived
-   * groups are not editable from this form even for OWNER/ADMIN —
+   * groups are not editable from this form even for ADMIN —
    * unarchive the group first.
    */
   archived?: boolean
@@ -46,7 +46,7 @@ export type Props = {
 
 /**
  * Cloud groups are account-backed. The current account becomes the group
- * OWNER on create, and additional members join through invitations.
+ * ADMIN on create, and additional members join through invitations.
  *
  * The `groupFormSchema` still requires a non-empty `participants` array, but
  * the backend ignores it on create/edit; we satisfy the schema with a stable

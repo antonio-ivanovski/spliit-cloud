@@ -28,13 +28,10 @@ export function GroupTabs({ groupId }: Props) {
   const { group, currentMember } = useCurrentGroup()
   const memberCount = data?.members?.length ?? 0
   // The "Settings" tab is the /edit route, which is only meaningful for
-  // OWNER/ADMIN. MEMBERs are redirected to a read-only view, so we hide
+  // ADMIN. MEMBERs are redirected to a read-only view, so we hide
   // the tab entirely.
-  const canEditSettings =
-    currentMember?.role === 'OWNER' || currentMember?.role === 'ADMIN'
-  const canUnarchive =
-    !!group?.archived &&
-    (currentMember?.role === 'OWNER' || currentMember?.role === 'ADMIN')
+  const canEditSettings = currentMember?.role === 'ADMIN'
+  const canUnarchive = !!group?.archived && currentMember?.role === 'ADMIN'
   const isArchived = !!group?.archived
 
   async function handleUnarchive() {

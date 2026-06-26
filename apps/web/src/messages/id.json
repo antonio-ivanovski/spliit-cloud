@@ -648,7 +648,6 @@
     "unknownMember": "Anggota tidak dikenal",
     "youBadge": "Anda",
     "role": {
-      "owner": "Pemilik",
       "admin": "Admin",
       "member": "Anggota"
     },

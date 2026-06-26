@@ -46,8 +46,8 @@ async function authAs(userId: string) {
 }
 
 describe('invitationsRouter.list', () => {
-  it('returns the invitations list for an OWNER', async () => {
-    await authAs('acct-owner')
+  it('returns the invitations list for an ADMIN', async () => {
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -55,8 +55,8 @@ describe('invitationsRouter.list', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
     prismaMock.groupInvitation.findMany.mockResolvedValue([
@@ -70,7 +70,7 @@ describe('invitationsRouter.list', () => {
       },
     ])
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     const result = await caller.list({ groupId: 'grp-1' })
 
     expect(result.invitations).toHaveLength(1)
@@ -150,8 +150,8 @@ describe('invitationsRouter.list', () => {
 })
 
 describe('invitationsRouter.create', () => {
-  it('creates an invitation for an OWNER', async () => {
-    await authAs('acct-owner')
+  it('creates an invitation for an ADMIN', async () => {
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -159,15 +159,15 @@ describe('invitationsRouter.create', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
     prismaMock.groupInvitation.create.mockResolvedValue({
       id: 'inv-new',
     } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     const result = await caller.create({
       groupId: 'grp-1',
       email: 'bob@example.com',
@@ -180,7 +180,7 @@ describe('invitationsRouter.create', () => {
         data: expect.objectContaining({
           groupId: 'grp-1',
           email: 'bob@example.com',
-          invitedById: 'acct-owner',
+          invitedById: 'acct-admin',
           role: 'MEMBER',
         }),
       }),
@@ -323,8 +323,8 @@ describe('invitationsRouter.accept', () => {
 })
 
 describe('invitationsRouter.create — guards and email', () => {
-  it('rejects an OWNER role at the schema level', async () => {
-    await authAs('acct-owner')
+  it('rejects a legacy OWNER role at the schema level', async () => {
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -332,12 +332,12 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
         groupId: 'grp-1',
@@ -349,7 +349,7 @@ describe('invitationsRouter.create — guards and email', () => {
   })
 
   it('rejects a self-invite (inviter email matches invitee email)', async () => {
-    await authAs('acct-owner')
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -357,12 +357,12 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
         groupId: 'grp-1',
@@ -378,7 +378,7 @@ describe('invitationsRouter.create — guards and email', () => {
   })
 
   it('rejects inviting a person who is already a group member', async () => {
-    await authAs('acct-owner')
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -386,15 +386,15 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
     prismaMock.groupMember.findFirst.mockResolvedValue({
       id: 'gm-existing',
     } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
         groupId: 'grp-1',
@@ -409,7 +409,7 @@ describe('invitationsRouter.create — guards and email', () => {
   })
 
   it('rejects a duplicate pending invitation for the same email and group', async () => {
-    await authAs('acct-owner')
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -417,8 +417,8 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
     // First findFirst (existing member) → null; second (pending dup) → existing.
@@ -436,7 +436,7 @@ describe('invitationsRouter.create — guards and email', () => {
       return null
     }) as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
         groupId: 'grp-1',
@@ -451,7 +451,7 @@ describe('invitationsRouter.create — guards and email', () => {
   })
 
   it('rejects an invitation when the same email has already been accepted', async () => {
-    await authAs('acct-owner')
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -459,8 +459,8 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
     prismaMock.groupMember.findFirst.mockResolvedValue(null)
@@ -474,7 +474,7 @@ describe('invitationsRouter.create — guards and email', () => {
       return null
     }) as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
         groupId: 'grp-1',
@@ -489,7 +489,7 @@ describe('invitationsRouter.create — guards and email', () => {
   })
 
   it('sends an "in-app" invitation email when the recipient already has an account', async () => {
-    await authAs('acct-owner')
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       name: 'Roadtrip 2026',
@@ -498,8 +498,8 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
     prismaMock.groupInvitation.create.mockResolvedValue({
@@ -511,7 +511,7 @@ describe('invitationsRouter.create — guards and email', () => {
       id: 'acct-bob',
     } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await caller.create({
       groupId: 'grp-1',
       email: 'bob@example.com',
@@ -531,7 +531,7 @@ describe('invitationsRouter.create — guards and email', () => {
   })
 
   it('sends a "sign-up" invitation email when the recipient has no account', async () => {
-    await authAs('acct-owner')
+    await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       name: 'Roadtrip 2026',
@@ -540,8 +540,8 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
-      accountId: 'acct-owner',
-      role: 'OWNER',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
       status: 'ACTIVE',
     } as never)
     prismaMock.groupInvitation.create.mockResolvedValue({
@@ -551,7 +551,7 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     // prismaMock.account.findFirst returns null by default → no account.
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await caller.create({
       groupId: 'grp-1',
       email: 'newuser@example.com',

@@ -9,7 +9,7 @@ import {
 import { loadGroupContext, protectedProcedure } from '../../init'
 
 /**
- * Set or clear the group-level `archived` flag. OWNER/ADMIN only.
+ * Set or clear the group-level `archived` flag. ADMIN only.
  * Affects every member of the group; the UI uses this to show the
  * "Archived" section in everyone's group list and to block new expenses.
  *
@@ -33,10 +33,10 @@ export const archiveGroupProcedure = protectedProcedure
       groupId,
       accountId: ctx.auth.user.id,
     })
-    if (member.role !== 'OWNER' && member.role !== 'ADMIN') {
+    if (member.role !== 'ADMIN') {
       throw new TRPCError({
         code: 'FORBIDDEN',
-        message: 'Only owners and admins can archive a group',
+        message: 'Only admins can archive a group',
       })
     }
 

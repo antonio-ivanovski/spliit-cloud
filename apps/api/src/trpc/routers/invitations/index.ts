@@ -16,12 +16,13 @@ import {
   protectedProcedure,
 } from '../../init'
 
-// Only ADMIN and MEMBER roles are exposed in the invitation form. OWNER is
-// reserved for the group creator; ownership transfers are a separate flow.
+// Only ADMIN and MEMBER roles are exposed in the invitation form. The
+// group creator becomes an ADMIN at create time, so admins invite new
+// admins or members; ownership transfers are not a separate flow.
 const invitationRoleSchema = z.enum(['ADMIN', 'MEMBER'])
 
 export const invitationsRouter = createTRPCRouter({
-  // List pending + historical invitations for a group (OWNER/ADMIN only).
+  // List pending + historical invitations for a group (ADMIN only).
   list: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
     .query(async ({ input: { groupId }, ctx }) => {
@@ -29,14 +30,14 @@ export const invitationsRouter = createTRPCRouter({
         groupId,
         accountId: ctx.auth.user.id,
       })
-      if (member.role !== 'OWNER' && member.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Owner/admin only' })
+      if (member.role !== 'ADMIN') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
       }
       const invitations = await listGroupInvitations(groupId)
       return { invitations }
     }),
 
-  // Create a new invitation (OWNER/ADMIN only).
+  // Create a new invitation (ADMIN only).
   create: protectedProcedure
     .input(
       z.object({
@@ -50,8 +51,8 @@ export const invitationsRouter = createTRPCRouter({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
-      if (member.role !== 'OWNER' && member.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Owner/admin only' })
+      if (member.role !== 'ADMIN') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
       }
       const invitation = await createInvitation({
         groupId: input.groupId,
@@ -83,7 +84,7 @@ export const invitationsRouter = createTRPCRouter({
       return { invitationId: invitation.id }
     }),
 
-  // Revoke a pending invitation (OWNER/ADMIN only).
+  // Revoke a pending invitation (ADMIN only).
   revoke: protectedProcedure
     .input(z.object({ invitationId: z.string().min(1) }))
     .mutation(async ({ input: { invitationId }, ctx }) => {
@@ -100,8 +101,8 @@ export const invitationsRouter = createTRPCRouter({
         groupId: existing.groupId,
         accountId: ctx.auth.user.id,
       })
-      if (member.role !== 'OWNER' && member.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Owner/admin only' })
+      if (member.role !== 'ADMIN') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
       }
       await revokeInvitation({ invitationId, groupId: existing.groupId })
       return {}

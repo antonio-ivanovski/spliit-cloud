@@ -227,7 +227,6 @@ export function RecentGroupList() {
               })
             }
             onToggleArchived={
-              group.currentMemberRole === 'OWNER' ||
               group.currentMemberRole === 'ADMIN'
                 ? () => toggleArchived(group)
                 : undefined
@@ -461,7 +460,7 @@ function GroupCard({
   variant: 'active' | 'archived' | 'hidden'
   onToggleStar: () => void
   onToggleHidden: () => void
-  // Only provided for OWNER/ADMIN. MEMBERs cannot archive the group.
+  // Only provided for ADMIN. MEMBERs cannot archive the group.
   onToggleArchived?: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -541,7 +540,7 @@ function GroupCard({
                       </>
                     )}
                   </DropdownMenuItem>
-                  {/* Group-level "archive" — OWNER/ADMIN only. */}
+                  {/* Group-level "archive" — ADMIN only. */}
                   {onToggleArchived && (
                     <DropdownMenuItem
                       onClick={(event) => {

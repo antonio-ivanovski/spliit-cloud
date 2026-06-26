@@ -648,7 +648,6 @@
     "unknownMember": "알 수 없는 멤버",
     "youBadge": "나",
     "role": {
-      "owner": "소유자",
       "admin": "관리자",
       "member": "멤버"
     },

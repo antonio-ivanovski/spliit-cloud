@@ -51,7 +51,7 @@ describe('exportGroupCsv', () => {
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
       accountId: 'acct-1',
-      role: 'OWNER',
+      role: 'ADMIN',
       status: 'ACTIVE',
     })
     prismaMock.group.findUnique.mockResolvedValue({
@@ -65,7 +65,7 @@ describe('exportGroupCsv', () => {
           id: 'gm-1',
           groupId: 'grp-1',
           accountId: 'acct-1',
-          role: 'OWNER',
+          role: 'ADMIN',
           status: 'ACTIVE',
           ledgerParticipant: { id: 'lp-1', name: 'Alice' },
         },
@@ -138,7 +138,7 @@ describe('exportGroupCsv', () => {
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
       accountId: 'acct-1',
-      role: 'OWNER',
+      role: 'ADMIN',
       status: 'ACTIVE',
     })
     prismaMock.group.findUnique.mockResolvedValue({
@@ -152,7 +152,7 @@ describe('exportGroupCsv', () => {
           id: 'gm-1',
           groupId: 'grp-1',
           accountId: 'acct-1',
-          role: 'OWNER',
+          role: 'ADMIN',
           status: 'ACTIVE',
           ledgerParticipant: { id: 'lp-1', name: 'Alice' },
         },
@@ -211,7 +211,7 @@ describe('exportGroupCsv', () => {
     prismaMock.groupMember.findUnique.mockResolvedValue({
       groupId: 'grp-1',
       accountId: 'acct-1',
-      role: 'OWNER',
+      role: 'ADMIN',
       status: 'ACTIVE',
     })
     prismaMock.group.findUnique.mockResolvedValue(null)

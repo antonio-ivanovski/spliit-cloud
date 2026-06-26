@@ -37,7 +37,7 @@ async function authAs(userId: string) {
   })
 }
 
-function mockGroupWithMember(role: 'OWNER' | 'ADMIN' | 'MEMBER' | null) {
+function mockGroupWithMember(role: 'ADMIN' | 'MEMBER' | null) {
   prismaMock.group.findUnique.mockResolvedValue({
     id: 'grp-1',
     ledgerId: 'ledger-1',
@@ -65,15 +65,15 @@ function mockGroupWithMember(role: 'OWNER' | 'ADMIN' | 'MEMBER' | null) {
 }
 
 describe('groupsRouter.archive', () => {
-  it('archives a group when the caller is an OWNER', async () => {
-    await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+  it('archives a group when the caller is an ADMIN', async () => {
+    await authAs('acct-admin')
+    mockGroupWithMember('ADMIN')
     prismaMock.group.update.mockResolvedValue({
       id: 'grp-1',
       archived: true,
     } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     const result = await caller.archive({ groupId: 'grp-1', archived: true })
 
     expect(result.group).toMatchObject({ id: 'grp-1', archived: true })
@@ -85,7 +85,7 @@ describe('groupsRouter.archive', () => {
     )
   })
 
-  it('archives a group when the caller is an ADMIN', async () => {
+  it('archives a group when the caller is an ADMIN (alias check)', async () => {
     await authAs('acct-admin')
     mockGroupWithMember('ADMIN')
     prismaMock.group.update.mockResolvedValue({
@@ -101,15 +101,15 @@ describe('groupsRouter.archive', () => {
     )
   })
 
-  it('unarchives a group when the caller is an OWNER', async () => {
-    await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+  it('unarchives a group when the caller is an ADMIN', async () => {
+    await authAs('acct-admin')
+    mockGroupWithMember('ADMIN')
     prismaMock.group.update.mockResolvedValue({
       id: 'grp-1',
       archived: false,
     } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     const result = await caller.archive({ groupId: 'grp-1', archived: false })
 
     expect(result.group).toMatchObject({ archived: false })
@@ -200,7 +200,7 @@ function makeExpenseRow(args: {
 describe('groupsRouter.archive — unsettled balances', () => {
   it('rejects an archive with PRECONDITION_FAILED when balances are unsettled and no force flag is set', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // Alice paid 100 for both herself and Bob. Bob owes 50.
     prismaMock.expense.findMany.mockResolvedValue([
       makeExpenseRow({
@@ -224,7 +224,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('does not check balances when unarchiving', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -258,7 +258,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('does not check balances when re-archiving an already-archived group', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -291,7 +291,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('auto-creates one settlement expense per non-zero leg when force=true and balances are unsettled', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // Alice paid 100 for both — Bob owes 50.
     prismaMock.expense.findMany.mockResolvedValue([
       makeExpenseRow({
@@ -348,7 +348,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('creates a settlement expense for each leg when multiple members have non-zero balances', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // Alice paid 90 for everyone evenly. Bob paid 30 for everyone evenly.
     // After expenses:
     //   Alice paid 90, paidFor 30, total = +60
@@ -407,7 +407,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('force-archive is a no-op for settlement when balances are already zero', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // Settled: Alice paid 50 for herself; Bob paid 50 for himself.
     prismaMock.expense.findMany.mockResolvedValue([
       makeExpenseRow({
@@ -468,7 +468,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('archives a group whose UI balances are zero despite a fractional-cent raw residual', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // Alice paid 1 cent for everyone, evenly among 3. The raw balance
     // computation gives each non-payer 0.333… cents (rounds to 0) and
     // leaves the payer with a 1-cent residual — `hasUnsettledBalances`
@@ -511,7 +511,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('does not write settlement expenses for a zero-UI-balance group even when force=true', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // Same 1-cent 3-way expense as above, archived with `force: true`.
     // The UI shows no balances to settle, so the force-archive should
     // not auto-create any reimbursement expenses.
@@ -553,7 +553,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('rejects an archive with PRECONDITION_FAILED when the UI balance is non-zero, even with a fractional raw residual', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // 1000 cents split evenly among 3 = 333.333… each, which rounds
     // to 333 per participant. Raw: Alice +667, Bob -333, Carol -333.
     // Public: Alice +666, Bob -333, Carol -333 (1-cent residual on
@@ -582,7 +582,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
 
   it('force-archive a group with a real UI balance creates one settlement expense per UI leg', async () => {
     await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+    mockGroupWithMember('ADMIN')
     // Alice paid 1000 cents for all 3 evenly. The UI shows Alice
     // +666, Bob -333, Carol -333 (a 1-cent residual from the
     // integer-cents reimbursement). The expected settlement legs are
@@ -662,9 +662,9 @@ describe('groupsRouter.update — role check', () => {
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
 
-  it('allows an OWNER to update group settings', async () => {
-    await authAs('acct-owner')
-    mockGroupWithMember('OWNER')
+  it('allows an ADMIN to update group settings', async () => {
+    await authAs('acct-admin')
+    mockGroupWithMember('ADMIN')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       ledgerId: 'ledger-1',
@@ -674,7 +674,7 @@ describe('groupsRouter.update — role check', () => {
     prismaMock.group.update.mockResolvedValue({ id: 'grp-1' } as never)
     prismaMock.ledger.update.mockResolvedValue({ id: 'ledger-1' } as never)
 
-    const caller = makeCaller('acct-owner')
+    const caller = makeCaller('acct-admin')
     await caller.update({
       groupId: 'grp-1',
       groupFormValues: {

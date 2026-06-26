@@ -649,13 +649,22 @@
     "unknownMember": "Unknown member",
     "youBadge": "You",
     "role": {
-      "owner": "Owner",
       "admin": "Admin",
       "member": "Member"
     },
     "joinedOn": "Joined {date}",
-    "noManagePermission": "Only owners and admins can invite or revoke group members.",
-    "archivedNotice": "Invitations are disabled while the group is archived. Unarchive the group to invite new members.",
+    "changeRoleAria": "Change role",
+    "remove": "Remove",
+    "removed": "Member removed.",
+    "roleUpdated": "Role updated to {role}.",
+    "removeDialog": {
+      "title": "Remove member?",
+      "description": "Remove {name} from this group? Their past expenses stay in the ledger but they will no longer have access.",
+      "cancel": "Cancel",
+      "confirm": "Remove"
+    },
+    "noManagePermission": "Only admins can invite, revoke, or manage group members.",
+    "archivedNotice": "Invitations and member management are disabled while the group is archived. Unarchive the group to invite new members.",
     "invite": {
       "title": "Invite member",
       "description": "Send an invitation by email. The invitee joins once they accept from a matching account.",

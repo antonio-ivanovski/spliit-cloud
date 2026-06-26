@@ -30,6 +30,7 @@ const hoisted = vi.hoisted(() => {
       'findFirst',
       'findMany',
       'create',
+      'count',
       'update',
       'upsert',
       'delete',

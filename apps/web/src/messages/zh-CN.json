@@ -648,7 +648,6 @@
     "unknownMember": "未知成员",
     "youBadge": "您",
     "role": {
-      "owner": "所有者",
       "admin": "管理员",
       "member": "成员"
     },

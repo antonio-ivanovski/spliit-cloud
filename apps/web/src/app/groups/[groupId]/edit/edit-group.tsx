@@ -114,8 +114,7 @@ export const EditGroup = () => {
     )
   }
 
-  const canArchive =
-    currentMember?.role === 'OWNER' || currentMember?.role === 'ADMIN'
+  const canArchive = currentMember?.role === 'ADMIN'
   const isArchived = !!group?.archived
 
   return (

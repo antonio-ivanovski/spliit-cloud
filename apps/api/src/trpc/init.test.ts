@@ -150,7 +150,7 @@ describe('loadGroupContext', () => {
       ledgerId: 'ledger-1',
       ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD' },
     }
-    const member = { groupId, accountId, role: 'OWNER', status: 'ACTIVE' }
+    const member = { groupId, accountId, role: 'ADMIN', status: 'ACTIVE' }
     prismaMock.group.findUnique.mockResolvedValue(group as never)
     prismaMock.groupMember.findUnique.mockResolvedValue(member as never)
 
@@ -184,7 +184,7 @@ describe('loadGroupViewer', () => {
       ledgerId: 'ledger-1',
       ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD' },
     }
-    const member = { groupId, accountId, role: 'OWNER', status: 'ACTIVE' }
+    const member = { groupId, accountId, role: 'ADMIN', status: 'ACTIVE' }
     prismaMock.group.findUnique.mockResolvedValue(group as never)
     prismaMock.groupMember.findUnique.mockResolvedValue(member as never)
 

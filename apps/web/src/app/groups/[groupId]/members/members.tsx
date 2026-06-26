@@ -10,6 +10,14 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   Form,
   FormControl,
   FormField,
@@ -38,23 +46,21 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useCurrentGroup } from '../current-group-context'
 
-// Invited members can only be ADMIN or MEMBER. OWNER is reserved for the
-// group creator and is not exposed in the invite form.
+// Invited and active members can only be ADMIN or MEMBER. Group creators
+// start as ADMIN, and admins promote/demote other members from the
+// members page.
 type InvitableRole = 'ADMIN' | 'MEMBER'
 
-type MemberRole = 'OWNER' | 'ADMIN' | 'MEMBER'
+type MemberRole = 'ADMIN' | 'MEMBER'
 
 function roleLabel(
   role: MemberRole,
   labels: {
-    OWNER: string
     ADMIN: string
     MEMBER: string
   },
 ) {
   switch (role) {
-    case 'OWNER':
-      return labels.OWNER
     case 'ADMIN':
       return labels.ADMIN
     case 'MEMBER':
@@ -62,12 +68,8 @@ function roleLabel(
   }
 }
 
-function badgeVariantForRole(
-  role: MemberRole,
-): 'default' | 'secondary' | 'outline' {
+function badgeVariantForRole(role: MemberRole): 'secondary' | 'outline' {
   switch (role) {
-    case 'OWNER':
-      return 'default'
     case 'ADMIN':
       return 'secondary'
     case 'MEMBER':
@@ -102,10 +104,11 @@ export default function GroupMembers() {
 
   const role = currentMember?.role
   const isArchived = !!group?.archived
-  const canManage = !isArchived && (role === 'OWNER' || role === 'ADMIN')
+  const isAdmin = role === 'ADMIN'
+  const canManage = !isArchived && isAdmin
+  const currentMemberId = currentMember?.id ?? null
 
   const roleLabels = {
-    OWNER: t('role.owner'),
     ADMIN: t('role.admin'),
     MEMBER: t('role.member'),
   } as const
@@ -153,6 +156,42 @@ export default function GroupMembers() {
     },
   })
 
+  const updateRoleMutation = trpc.groups.members.updateRole.useMutation({
+    onSuccess: async (_data, vars) => {
+      const newRoleLabel = roleLabel(vars.role, roleLabels)
+      toast({
+        description: t('roleUpdated', { role: newRoleLabel }),
+      })
+      await Promise.all([
+        utils.account.members.invalidate({ groupId }),
+        utils.groups.get.invalidate({ groupId }),
+        utils.groups.getDetails.invalidate({ groupId }),
+      ])
+    },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
+    },
+  })
+
+  const removeMemberMutation = trpc.groups.members.remove.useMutation({
+    onSuccess: async () => {
+      toast({ description: t('removed') })
+      await Promise.all([
+        utils.account.members.invalidate({ groupId }),
+        utils.groups.get.invalidate({ groupId }),
+        utils.groups.getDetails.invalidate({ groupId }),
+      ])
+    },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
+    },
+  })
+
+  const [memberPendingRemove, setMemberPendingRemove] = useState<{
+    id: string
+    name: string
+  } | null>(null)
+
   const onInvite = form.handleSubmit(async (values) => {
     await createMutation.mutateAsync({
       groupId,
@@ -160,6 +199,15 @@ export default function GroupMembers() {
       role: roleValue,
     })
   })
+
+  async function confirmRemove() {
+    if (!memberPendingRemove) return
+    await removeMemberMutation.mutateAsync({
+      groupId,
+      memberId: memberPendingRemove.id,
+    })
+    setMemberPendingRemove(null)
+  }
 
   const listMembers = useMemo(
     () => membersQuery.data?.members ?? [],
@@ -193,6 +241,9 @@ export default function GroupMembers() {
                   member.displayName ||
                   member.account?.name ||
                   t('unknownMember')
+                const isSelfRow =
+                  member.id !== undefined && member.id === currentMemberId
+                const showAdminControls = canManage && !isSelfRow
                 return (
                   <li
                     key={member.id}
@@ -228,6 +279,52 @@ export default function GroupMembers() {
                         </p>
                       )}
                     </div>
+                    {showAdminControls && member.id && (
+                      <div className="flex shrink-0 items-center gap-2">
+                        {member.role === 'ADMIN' || member.role === 'MEMBER' ? (
+                          <Select
+                            value={member.role}
+                            disabled={updateRoleMutation.isPending}
+                            onValueChange={(value) =>
+                              updateRoleMutation.mutate({
+                                groupId,
+                                memberId: member.id!,
+                                role: value as 'ADMIN' | 'MEMBER',
+                              })
+                            }
+                          >
+                            <SelectTrigger
+                              className="w-[8rem]"
+                              aria-label={t('changeRoleAria')}
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="MEMBER">
+                                {t('role.member')}
+                              </SelectItem>
+                              <SelectItem value="ADMIN">
+                                {t('role.admin')}
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        ) : null}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive"
+                          disabled={removeMemberMutation.isPending}
+                          onClick={() =>
+                            setMemberPendingRemove({
+                              id: member.id!,
+                              name: displayName,
+                            })
+                          }
+                        >
+                          {t('remove')}
+                        </Button>
+                      </div>
+                    )}
                   </li>
                 )
               })}
@@ -238,7 +335,7 @@ export default function GroupMembers() {
 
       {!canManage && (
         <p className="text-sm text-muted-foreground">
-          {isArchived && (role === 'OWNER' || role === 'ADMIN')
+          {isArchived && isAdmin
             ? t('archivedNotice')
             : t('noManagePermission')}
         </p>
@@ -377,6 +474,42 @@ export default function GroupMembers() {
           </CardContent>
         </Card>
       )}
+
+      <Dialog
+        open={!!memberPendingRemove}
+        onOpenChange={(open) => {
+          if (!open) setMemberPendingRemove(null)
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('removeDialog.title')}</DialogTitle>
+            <DialogDescription>
+              {memberPendingRemove
+                ? t('removeDialog.description', {
+                    name: memberPendingRemove.name,
+                  })
+                : null}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setMemberPendingRemove(null)}
+              disabled={removeMemberMutation.isPending}
+            >
+              {t('removeDialog.cancel')}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmRemove}
+              disabled={removeMemberMutation.isPending}
+            >
+              {t('removeDialog.confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -42,7 +42,7 @@ function mockGroupWithMembership(
   groups: Array<{
     id: string
     archived: boolean
-    role: 'OWNER' | 'ADMIN' | 'MEMBER'
+    role: 'ADMIN' | 'MEMBER'
     members: number
     preferences?: Partial<{
       starred: boolean
@@ -176,12 +176,12 @@ describe('accountRouter.groups — archive + hide filters', () => {
   it('excludes group-archived and user-hidden groups by default', async () => {
     await authAs('acct-1')
     mockGroupWithMembership('acct-1', [
-      { id: 'g-active', archived: false, role: 'OWNER', members: 2 },
-      { id: 'g-archived', archived: true, role: 'OWNER', members: 3 },
+      { id: 'g-active', archived: false, role: 'ADMIN', members: 2 },
+      { id: 'g-archived', archived: true, role: 'ADMIN', members: 3 },
       {
         id: 'g-hidden',
         archived: false,
-        role: 'OWNER',
+        role: 'ADMIN',
         members: 2,
         preferences: { archived: true }, // user "hide" preference
       },
@@ -196,12 +196,12 @@ describe('accountRouter.groups — archive + hide filters', () => {
   it('includes group-archived and user-hidden groups when includeArchived is true', async () => {
     await authAs('acct-1')
     mockGroupWithMembership('acct-1', [
-      { id: 'g-active', archived: false, role: 'OWNER', members: 2 },
-      { id: 'g-archived', archived: true, role: 'OWNER', members: 3 },
+      { id: 'g-active', archived: false, role: 'ADMIN', members: 2 },
+      { id: 'g-archived', archived: true, role: 'ADMIN', members: 3 },
       {
         id: 'g-hidden',
         archived: false,
-        role: 'OWNER',
+        role: 'ADMIN',
         members: 2,
         preferences: { archived: true },
       },

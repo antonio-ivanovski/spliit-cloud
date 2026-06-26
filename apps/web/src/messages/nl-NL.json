@@ -648,7 +648,6 @@
     "unknownMember": "Onbekend lid",
     "youBadge": "Jij",
     "role": {
-      "owner": "Eigenaar",
       "admin": "Beheerder",
       "member": "Lid"
     },

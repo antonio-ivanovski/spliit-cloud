@@ -16,10 +16,10 @@ export const updateGroupProcedure = protectedProcedure
       groupId,
       accountId: ctx.auth.user.id,
     })
-    if (member.role !== 'OWNER' && member.role !== 'ADMIN') {
+    if (member.role !== 'ADMIN') {
       throw new TRPCError({
         code: 'FORBIDDEN',
-        message: 'Only owners and admins can change group settings',
+        message: 'Only admins can change group settings',
       })
     }
     if (group.archived) {

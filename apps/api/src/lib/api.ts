@@ -62,7 +62,7 @@ async function getMemberLedgerParticipantId(
 
 /**
  * Create a cloud group with its accounting Ledger. The current account is
- * added as an OWNER/ACTIVE member and a matching LedgerParticipant is created
+ * added as an ADMIN/ACTIVE member and a matching LedgerParticipant is created
  * so expenses can be recorded against them.
  *
  * `groupFormValues.participants` (if any) is treated as an "invite on create"
@@ -72,7 +72,7 @@ async function getMemberLedgerParticipantId(
  */
 export async function createGroup(
   groupFormValues: GroupFormValues,
-  options: { ownerAccountId: string; ownerDisplayName: string },
+  options: { adminAccountId: string; adminDisplayName: string },
 ) {
   return prisma.$transaction(async (tx) => {
     const ledger = await tx.ledger.create({
@@ -92,14 +92,14 @@ export async function createGroup(
       },
     })
 
-    const ownerMember = await tx.groupMember.create({
+    const adminMember = await tx.groupMember.create({
       data: {
         id: randomId(),
         groupId: group.id,
-        accountId: options.ownerAccountId,
-        role: GroupRole.OWNER,
+        accountId: options.adminAccountId,
+        role: GroupRole.ADMIN,
         status: GroupMemberStatus.ACTIVE,
-        displayName: options.ownerDisplayName,
+        displayName: options.adminDisplayName,
         joinedAt: new Date(),
       },
     })
@@ -108,12 +108,12 @@ export async function createGroup(
       data: {
         id: randomId(),
         ledgerId: ledger.id,
-        name: options.ownerDisplayName,
-        groupMemberId: ownerMember.id,
+        name: options.adminDisplayName,
+        groupMemberId: adminMember.id,
       },
     })
 
-    return { group, ledger, ownerMember }
+    return { group, ledger, adminMember }
   })
 }
 
@@ -1055,6 +1055,143 @@ export async function createSettlementExpensesForArchive(
   }
 
   return { createdExpenses: legs.length }
+}
+
+/**
+ * Update a member's role inside a group. The change is restricted to
+ * ADMIN <-> MEMBER (the only two roles the product supports). Caller
+ * must be an ADMIN of the group (enforced by the procedure that wraps
+ * this helper). The caller cannot change their own role through this
+ * helper — admins who want to step down must use the dedicated
+ * "leave group" flow so we never end up in a state where no ADMIN
+ * remains.
+ */
+export async function updateMemberRole(opts: {
+  groupId: string
+  memberId: string
+  role: 'ADMIN' | 'MEMBER'
+  actor: { accountId: string }
+}) {
+  const { groupId, memberId, role, actor } = opts
+
+  const target = await prisma.groupMember.findUnique({
+    where: { id: memberId },
+    include: { ledgerParticipant: { select: { id: true } } },
+  })
+  if (!target || target.groupId !== groupId) {
+    throw new Error('Member not found in this group')
+  }
+  if (target.status !== GroupMemberStatus.ACTIVE) {
+    throw new Error('Only active members can be updated')
+  }
+  if (target.accountId === actor.accountId) {
+    throw new Error('You cannot change your own role here; use the leave flow')
+  }
+  if (target.role === role) {
+    return target
+  }
+
+  return prisma.$transaction(async (tx) => {
+    // If we are demoting the last admin to member, refuse — the group
+    // must always keep at least one active admin.
+    if (role !== GroupRole.ADMIN && target.role === GroupRole.ADMIN) {
+      const remainingAdmins = await tx.groupMember.count({
+        where: {
+          groupId,
+          status: GroupMemberStatus.ACTIVE,
+          role: GroupRole.ADMIN,
+          NOT: { id: memberId },
+        },
+      })
+      if (remainingAdmins === 0) {
+        throw new Error('Group must keep at least one admin')
+      }
+    }
+    const updated = await tx.groupMember.update({
+      where: { id: memberId },
+      data: { role },
+    })
+    await logActivity(
+      groupId,
+      ActivityType.UPDATE_GROUP,
+      {
+        accountId: actor.accountId,
+        ledgerParticipantId: target.ledgerParticipant?.id ?? null,
+        data: `role:${role}`,
+      },
+      tx,
+    )
+    return updated
+  })
+}
+
+/**
+ * Remove a member from a group. Their ledger participant and historical
+ * expenses are kept so balances and activity history remain intact.
+ * The membership row is flipped to `REMOVED` and `leftAt` is set so the
+ * removed member disappears from the active roster without losing
+ * historical data.
+ *
+ * Admins cannot remove themselves through this flow — they must use
+ * the "leave group" path. Demoting-or-removing the last admin is also
+ * rejected so we never leave a group without an active admin.
+ */
+export async function removeMember(opts: {
+  groupId: string
+  memberId: string
+  actor: { accountId: string }
+}) {
+  const { groupId, memberId, actor } = opts
+
+  const target = await prisma.groupMember.findUnique({
+    where: { id: memberId },
+    include: { ledgerParticipant: { select: { id: true } } },
+  })
+  if (!target || target.groupId !== groupId) {
+    throw new Error('Member not found in this group')
+  }
+  if (target.status !== GroupMemberStatus.ACTIVE) {
+    throw new Error('Member is not active')
+  }
+  if (target.accountId === actor.accountId) {
+    throw new Error(
+      'You cannot remove yourself here; use the leave group flow instead',
+    )
+  }
+
+  return prisma.$transaction(async (tx) => {
+    if (target.role === GroupRole.ADMIN) {
+      const remainingAdmins = await tx.groupMember.count({
+        where: {
+          groupId,
+          status: GroupMemberStatus.ACTIVE,
+          role: GroupRole.ADMIN,
+          NOT: { id: memberId },
+        },
+      })
+      if (remainingAdmins === 0) {
+        throw new Error('Group must keep at least one admin')
+      }
+    }
+    const updated = await tx.groupMember.update({
+      where: { id: memberId },
+      data: {
+        status: GroupMemberStatus.REMOVED,
+        leftAt: new Date(),
+      },
+    })
+    await logActivity(
+      groupId,
+      ActivityType.UPDATE_GROUP,
+      {
+        accountId: actor.accountId,
+        ledgerParticipantId: target.ledgerParticipant?.id ?? null,
+        data: 'member:removed',
+      },
+      tx,
+    )
+    return updated
+  })
 }
 
 // Re-export helper types
