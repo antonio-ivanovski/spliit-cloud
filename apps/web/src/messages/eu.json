@@ -593,7 +593,8 @@
     "loading": "Kargatzen…",
     "signedInAs": "{name} gisa saioa hasita",
     "required": "Saioa hasi behar duzu zure taldeetara sartzeko.",
-    "back": "Itzuli hasierara"
+    "back": "Itzuli hasierara",
+    "signInWithGithub": "Jarraitu GitHub-ekin"
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",
@@ -673,7 +674,35 @@
       "revoke": "Ezeztatu",
       "revokeButton": "Ezeztatu gonbidapena",
       "revoked": "Gonbidapena ezeztatu da.",
-      "created": "Gonbidapena bidali zaio {email}-i."
+      "created": "Gonbidapena bidali zaio {email}-i.",
+      "revokeDialog": {
+        "title": "Gonbidapena ezeztatu?",
+        "description": "{email}(e)ri bidalitako gonbidapena ezeztatu? Oraindik ez dute onartu.",
+        "cancel": "Utzi",
+        "confirm": "Ezeztatu",
+        "unsettled": {
+          "title": "Kitatu gabeko saldoa duen gonbidapena ezeztatu?",
+          "toast": "Gonbidapena ezeztatuta, saldoak kitatuta.",
+          "description": "{email}(e)ri bidalitako gonbidapena ezeztatu? Kitatu gabeko saldoak dituzte — markatu beheko laukia automatikoki kitatzeko ezeztatu aurretik.",
+          "warning": {
+            "title": "Gonbidapen honek kitatu gabeko saldoak ditu",
+            "description": "Kitatu gabe ezeztatzeak saldoak liburuan mugarik gabe utziko ditu. Markatu beheko laukia gonbidatu hau inplikatzen duen hanka bakoitzeko itzultze-gastu bat sortzeko ezeztatu aurretik, edo kitatu gabe ezeztatu eta saldoak eskuz kudeatu."
+          },
+          "checkbox": "Sortu kitatze-itzultzea ezeztatu aurretik"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Kitatu gabeko saldoa duen kidea kendu?",
+        "toast": "Kidea kenduta, saldoak kitatuta.",
+        "description": "{name} talde honetatik kendu? Kitatu gabeko saldoak dituzte — markatu beheko laukia automatikoki kitatzeko kendu aurretik.",
+        "warning": {
+          "title": "Kide honek kitatu gabeko saldoak ditu",
+          "description": "Kitatu gabe kentzeak saldoak liburuan mugarik gabe utziko ditu. Markatu beheko laukia kide hau inplikatzen duen hanka bakoitzeko itzultze-gastu bat sortzeko kendu aurretik, edo kitatu gabe kendu eta saldoak eskuz kudeatu."
+        },
+        "checkbox": "Sortu kitatze-itzultzea kendu aurretik"
+      }
     }
   },
   "AccountSettings": {

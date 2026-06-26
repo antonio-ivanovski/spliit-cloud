@@ -593,7 +593,8 @@
     "loading": "Memuat…",
     "signedInAs": "Masuk sebagai {name}",
     "required": "Anda perlu masuk untuk mengakses grup Anda.",
-    "back": "Kembali ke beranda"
+    "back": "Kembali ke beranda",
+    "signInWithGithub": "Lanjutkan dengan GitHub"
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",
@@ -673,7 +674,35 @@
       "revoke": "Cabut",
       "revokeButton": "Cabut undangan",
       "revoked": "Undangan dicabut.",
-      "created": "Undangan terkirim ke {email}."
+      "created": "Undangan terkirim ke {email}.",
+      "revokeDialog": {
+        "title": "Cabut undangan?",
+        "description": "Cabut undangan ke {email}? Mereka belum menerima.",
+        "cancel": "Batal",
+        "confirm": "Cabut",
+        "unsettled": {
+          "title": "Cabut undangan dengan saldo belum diselesaikan?",
+          "toast": "Undangan dicabut, saldo diselesaikan.",
+          "description": "Cabut undangan ke {email}? Mereka memiliki saldo yang belum diselesaikan — centang kotak di bawah untuk menyelesaikannya secara otomatis sebelum mencabut.",
+          "warning": {
+            "title": "Undangan ini memiliki saldo yang belum diselesaikan",
+            "description": "Mencabut tanpa menyelesaikan akan meninggalkan saldo di buku besar tanpa batas waktu. Centang kotak di bawah untuk membuat satu pengeluaran penggantian per leg yang melibatkan yang diundang ini sebelum mencabut, atau cabut tanpa menyelesaikan dan urus saldonya secara manual."
+          },
+          "checkbox": "Buat penggantian biaya penyelesaian sebelum mencabut"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Hapus anggota dengan saldo belum diselesaikan?",
+        "toast": "Anggota dihapus, saldo diselesaikan.",
+        "description": "Hapus {name} dari grup ini? Mereka memiliki saldo yang belum diselesaikan — centang kotak di bawah untuk menyelesaikannya secara otomatis sebelum menghapus.",
+        "warning": {
+          "title": "Anggota ini memiliki saldo yang belum diselesaikan",
+          "description": "Menghapus tanpa menyelesaikan akan meninggalkan saldo di buku besar tanpa batas waktu. Centang kotak di bawah untuk membuat satu pengeluaran penggantian per leg yang melibatkan anggota ini sebelum menghapus, atau hapus tanpa menyelesaikan dan urus saldonya secara manual."
+        },
+        "checkbox": "Buat penggantian biaya penyelesaian sebelum menghapus"
+      }
     }
   },
   "AccountSettings": {

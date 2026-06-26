@@ -1,5 +1,8 @@
 import { createTRPCRouter } from '../../../init'
-import { removeMemberProcedure } from './remove.procedure'
+import {
+  removeMemberPreviewProcedure,
+  removeMemberProcedure,
+} from './remove.procedure'
 import { updateMemberRoleProcedure } from './updateRole.procedure'
 
 /**
@@ -11,4 +14,5 @@ import { updateMemberRoleProcedure } from './updateRole.procedure'
 export const groupMembersRouter = createTRPCRouter({
   updateRole: updateMemberRoleProcedure,
   remove: removeMemberProcedure,
+  removePreview: removeMemberPreviewProcedure,
 })

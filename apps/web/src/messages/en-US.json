@@ -218,7 +218,8 @@
     "loading": "Loading…",
     "signedInAs": "Signed in as {name}",
     "required": "You need to sign in to access your groups.",
-    "back": "Back to home"
+    "back": "Back to home",
+    "signInWithGithub": "Continue with GitHub"
   },
   "AccountSettings": {
     "title": "Account settings",
@@ -682,7 +683,17 @@
       "title": "Remove member?",
       "description": "Remove {name} from this group? Their past expenses stay in the ledger but they will no longer have access.",
       "cancel": "Cancel",
-      "confirm": "Remove"
+      "confirm": "Remove",
+      "unsettled": {
+        "title": "Remove member with unsettled balance?",
+        "description": "Remove {name} from this group? They have unsettled balances — tick the box below to settle them automatically before removing.",
+        "warning": {
+          "title": "This member has unsettled balances",
+          "description": "Removing without settling will leave these balances in the ledger indefinitely. Tick the box below to create one reimbursement expense per leg involving this member before removing them, or remove without settling and deal with the balances manually."
+        },
+        "toast": "Member removed, balances settled.",
+        "checkbox": "Create settle reimbursement before removing"
+      }
     },
     "noManagePermission": "Only admins can invite, revoke, or manage group members.",
     "archivedNotice": "Invitations and member management are disabled while the group is archived. Unarchive the group to invite new members.",
@@ -703,7 +714,61 @@
       "revoke": "Revoke",
       "revokeButton": "Revoke invitation",
       "revoked": "Invitation revoked.",
-      "created": "Invitation sent to {email}."
+      "created": "Invitation sent to {email}.",
+      "revokeDialog": {
+        "title": "Revoke invitation?",
+        "description": "Revoke the invitation to {email}? They have not accepted yet.",
+        "cancel": "Cancel",
+        "confirm": "Revoke",
+        "unsettled": {
+          "title": "Revoke invitation with unsettled balance?",
+          "description": "Revoke the invitation to {email}? They have unsettled balances — tick the box below to settle them automatically before revoking.",
+          "warning": {
+            "title": "This invitation has unsettled balances",
+            "description": "Revoking without settling will leave these balances in the ledger indefinitely. Tick the box below to create one reimbursement expense per leg involving this invitee before revoking, or revoke without settling and deal with the balances manually."
+          },
+          "toast": "Invitation revoked, balances settled.",
+          "checkbox": "Create settle reimbursement before revoking"
+        }
+      }
+    },
+    "leave": {
+      "button": "Leave group",
+      "title": "Leave group?",
+      "description": "You will lose access to this group's expenses, balances, and activity. Past data is kept in the ledger so other members can still see it.",
+      "body": {
+        "otherAdmins": "These admins will keep control after you leave: {names}.",
+        "lastAdmin": {
+          "title": "Choose a new admin",
+          "description": "You are the last admin of this group. Pick an active member to take over before you leave, otherwise no one will be able to manage the group.",
+          "placeholder": "Select a member"
+        },
+        "unsettled": {
+          "title": "You have unsettled balances",
+          "description": "Leaving with force will auto-create reimbursement expenses for the legs involving you so the ledger stays in sync. Other balances are left as-is."
+        },
+        "lastMember": {
+          "title": "This will delete the group",
+          "description": "You are the only active member of this group. Leaving will permanently delete the group, all its expenses, and all its history.",
+          "checkbox": "I understand that this will permanently delete the group and all its data.",
+          "suggestion": "Tip: if you want to keep this group as a record, you can archive it instead.",
+          "unsettledInfo": "You have unsettled balances in this group. They will be lost permanently when the group is deleted."
+        }
+      },
+      "cancel": "Cancel",
+      "confirm": "Leave group",
+      "confirmWithForce": "Settle and leave",
+      "toast": {
+        "left": "You left the group.",
+        "deleted": "Group deleted.",
+        "archived": "Group archived."
+      },
+      "error": {
+        "lastAdmin": "Choose a member to promote to admin before leaving.",
+        "lastMember": "Confirm the permanent deletion to continue.",
+        "unsettled": "Settle your balance or confirm forced settlement to leave."
+      },
+      "confirmDelete": "Delete and leave"
     }
   }
 }

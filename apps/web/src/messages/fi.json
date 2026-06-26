@@ -593,7 +593,8 @@
     "loading": "Ladataan…",
     "signedInAs": "Kirjautuneena käyttäjänä {name}",
     "required": "Sinun täytyy kirjautua sisään päästäksesi ryhmiisi.",
-    "back": "Takaisin etusivulle"
+    "back": "Takaisin etusivulle",
+    "signInWithGithub": "Jatka GitHubilla"
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",
@@ -673,7 +674,35 @@
       "revoke": "Peruuta",
       "revokeButton": "Peruuta kutsu",
       "revoked": "Kutsu peruutettu.",
-      "created": "Kutsu lähetetty osoitteeseen {email}."
+      "created": "Kutsu lähetetty osoitteeseen {email}.",
+      "revokeDialog": {
+        "title": "Peruutetaanko kutsu?",
+        "description": "Peruutetaanko kutsukäyttäjälle {email}? Hän ei ole vielä hyväksynyt.",
+        "cancel": "Peruuta",
+        "confirm": "Peruuta",
+        "unsettled": {
+          "title": "Peruutetaanko kutsu, jolla on tasaussaatavia?",
+          "toast": "Kutsu peruutettu, saatavat tasattu.",
+          "description": "Peruutetaanko kutsukäyttäjälle {email}? Hänellä on tasaussaatavia — valitse alla oleva valintaruutu tasataksesi ne automaattisesti ennen peruutusta.",
+          "warning": {
+            "title": "Tällä kutsulla on tasaussaatavia",
+            "description": "Peruuttaminen ilman tasausta jättää saatavat kirjanpitoon toistaiseksi. Valitse alla oleva valintaruutu luodaksesi yksi korvauskulu tähän kutsuttuun liittyvää osuutta kohden ennen peruutusta, tai peruuta ilman tasausta ja hoida saatavat manuaalisesti."
+          },
+          "checkbox": "Luo tasauskorvaus ennen peruutusta"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Poistetaanko jäsen, jolla on tasaussaatavia?",
+        "toast": "Jäsen poistettu, saatavat tasattu.",
+        "description": "Poistetaanko {name} tästä ryhmästä? Hänellä on tasaussaatavia — valitse alla oleva valintaruutu tasataksesi ne automaattisesti ennen poistoa.",
+        "warning": {
+          "title": "Tällä jäsenellä on tasaussaatavia",
+          "description": "Poistaminen ilman tasausta jättää saatavat kirjanpitoon toistaiseksi. Valitse alla oleva valintaruutu luodaksesi yksi korvauskulu tähän jäseneen liittyvää osuutta kohden ennen poistoa, tai poista ilman tasausta ja hoida saatavat manuaalisesti."
+        },
+        "checkbox": "Luo tasauskorvaus ennen poistoa"
+      }
     }
   },
   "AccountSettings": {

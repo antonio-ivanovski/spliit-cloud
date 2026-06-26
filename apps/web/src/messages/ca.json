@@ -593,7 +593,8 @@
     "loading": "Carregant…",
     "signedInAs": "Sessió iniciada com a {name}",
     "required": "Has d'iniciar sessió per accedir als teus grups.",
-    "back": "Tornar a l'inici"
+    "back": "Tornar a l'inici",
+    "signInWithGithub": "Continua amb GitHub"
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",
@@ -673,7 +674,35 @@
       "revoke": "Revocar",
       "revokeButton": "Revocar invitació",
       "revoked": "Invitació revocada.",
-      "created": "Invitació enviada a {email}."
+      "created": "Invitació enviada a {email}.",
+      "revokeDialog": {
+        "title": "Revocar invitació?",
+        "description": "Revocar la invitació a {email}? Encara no l'han acceptat.",
+        "cancel": "Cancel·lar",
+        "confirm": "Revocar",
+        "unsettled": {
+          "title": "Revocar invitació amb saldo pendent?",
+          "toast": "Invitació revocada, saldos liquidats.",
+          "description": "Revocar la invitació a {email}? Té saldos pendents — marca la casella de sota per liquidar-los automàticament abans de revocar.",
+          "warning": {
+            "title": "Aquesta invitació té saldos pendents",
+            "description": "Revocar sense liquidar deixarà els saldos al llibre de comptes indefinidament. Marca la casella de sota per crear una despesa de reemborsament per cada part que impliqui aquest convidat abans de revocar, o revoca sense liquidar i gestiona els saldos manualment."
+          },
+          "checkbox": "Crear reemborsament de liquidació abans de revocar"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Eliminar membre amb saldo pendent?",
+        "toast": "Membre eliminat, saldos liquidats.",
+        "description": "Eliminar {name} d'aquest grup? Té saldos pendents — marca la casella de sota per liquidar-los automàticament abans d'eliminar.",
+        "warning": {
+          "title": "Aquest membre té saldos pendents",
+          "description": "Eliminar sense liquidar deixarà els saldos al llibre de comptes indefinidament. Marca la casella de sota per crear una despesa de reemborsament per cada part que impliqui aquest membre abans d'eliminar-lo, o elimina sense liquidar i gestiona els saldos manualment."
+        },
+        "checkbox": "Crear reemborsament de liquidació abans d'eliminar"
+      }
     }
   },
   "AccountSettings": {

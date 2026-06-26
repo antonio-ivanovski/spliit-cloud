@@ -593,7 +593,8 @@
     "loading": "Lädt…",
     "signedInAs": "Angemeldet als {name}",
     "required": "Sie müssen sich anmelden, um auf Ihre Gruppen zuzugreifen.",
-    "back": "Zurück zur Startseite"
+    "back": "Zurück zur Startseite",
+    "signInWithGithub": "Weiter mit GitHub"
   },
   "CompleteProfile": {
     "title": "Profil vervollständigen",
@@ -673,7 +674,35 @@
       "revoke": "Widerrufen",
       "revokeButton": "Einladung widerrufen",
       "revoked": "Einladung widerrufen.",
-      "created": "Einladung an {email} gesendet."
+      "created": "Einladung an {email} gesendet.",
+      "revokeDialog": {
+        "title": "Einladung widerrufen?",
+        "description": "Einladung an {email} widerrufen? Die Einladung wurde noch nicht angenommen.",
+        "cancel": "Abbrechen",
+        "confirm": "Widerrufen",
+        "unsettled": {
+          "title": "Einladung mit nicht ausgeglichenem Saldo widerrufen?",
+          "toast": "Einladung widerrufen, Salden ausgeglichen.",
+          "description": "Einladung an {email} widerrufen? {email} hat nicht ausgeglichene Salden – aktiviere das Kontrollkästchen unten, um sie vor dem Widerruf automatisch auszugleichen.",
+          "warning": {
+            "title": "Diese Einladung hat nicht ausgeglichene Salden",
+            "description": "Der Widerruf ohne Ausgleich belässt die Salden dauerhaft im Hauptbuch. Aktiviere das Kontrollkästchen unten, um vor dem Widerruf eine Ausgleichsausgabe pro Bein zu erstellen, an dem dieser Eingeladene beteiligt ist, oder widerrufe ohne Ausgleich und bearbeite die Salden manuell."
+          },
+          "checkbox": "Ausgleichsausgabe vor dem Widerruf erstellen"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Mitglied mit nicht ausgeglichenem Saldo entfernen?",
+        "toast": "Mitglied entfernt, Salden ausgeglichen.",
+        "description": "{name} aus dieser Gruppe entfernen? {name} hat nicht ausgeglichene Salden – aktiviere das Kontrollkästchen unten, um sie vor dem Entfernen automatisch auszugleichen.",
+        "warning": {
+          "title": "Dieses Mitglied hat nicht ausgeglichene Salden",
+          "description": "Das Entfernen ohne Ausgleich belässt die Salden dauerhaft im Hauptbuch. Aktiviere das Kontrollkästchen unten, um vor dem Entfernen eine Ausgleichsausgabe pro Bein zu erstellen, an dem dieses Mitglied beteiligt ist, oder entferne ohne Ausgleich und bearbeite die Salden manuell."
+        },
+        "checkbox": "Ausgleichsausgabe vor dem Entfernen erstellen"
+      }
     }
   },
   "AccountSettings": {

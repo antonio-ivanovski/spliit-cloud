@@ -580,7 +580,8 @@
     "loading": "Ładowanie…",
     "signedInAs": "Zalogowany jako {name}",
     "required": "Musisz się zalogować, aby uzyskać dostęp do swoich grup.",
-    "back": "Powrót do strony głównej"
+    "back": "Powrót do strony głównej",
+    "signInWithGithub": "Kontynuuj przez GitHub"
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",
@@ -673,7 +674,35 @@
       "revoke": "Cofnij",
       "revokeButton": "Cofnij zaproszenie",
       "revoked": "Zaproszenie cofnięte.",
-      "created": "Zaproszenie wysłane na {email}."
+      "created": "Zaproszenie wysłane na {email}.",
+      "revokeDialog": {
+        "title": "Odwołać zaproszenie?",
+        "description": "Odwołać zaproszenie dla {email}? Jeszcze nie zostało zaakceptowane.",
+        "cancel": "Anuluj",
+        "confirm": "Odwołaj",
+        "unsettled": {
+          "title": "Odwołać zaproszenie z nierozliczonym saldem?",
+          "toast": "Zaproszenie odwołane, salda rozliczone.",
+          "description": "Odwołać zaproszenie dla {email}? {email} ma nierozliczone salda — zaznacz pole poniżej, aby rozliczyć je automatycznie przed odwołaniem.",
+          "warning": {
+            "title": "To zaproszenie ma nierozliczone salda",
+            "description": "Odwołanie bez rozliczenia pozostawi salda w księdze na stałe. Zaznacz pole poniżej, aby utworzyć jeden wydatek rozliczeniowy na każdą nogę, w którą zaangażowany jest ten zaproszony, przed odwołaniem, lub odwołaj bez rozliczania i zajmij się saldami ręcznie."
+          },
+          "checkbox": "Utwórz wydatek rozliczeniowy przed odwołaniem"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Usunąć członka z nierozliczonym saldem?",
+        "toast": "Członek usunięty, salda rozliczone.",
+        "description": "Usunąć {name} z tej grupy? {name} ma nierozliczone salda — zaznacz pole poniżej, aby rozliczyć je automatycznie przed usunięciem.",
+        "warning": {
+          "title": "Ten członek ma nierozliczone salda",
+          "description": "Usunięcie bez rozliczenia pozostawi salda w księdze na stałe. Zaznacz pole poniżej, aby utworzyć jeden wydatek rozliczeniowy na każdą nogę, w którą zaangażowany jest ten członek, przed usunięciem, lub usuń bez rozliczania i zajmij się saldami ręcznie."
+        },
+        "checkbox": "Utwórz wydatek rozliczeniowy przed usunięciem"
+      }
     }
   },
   "AccountSettings": {

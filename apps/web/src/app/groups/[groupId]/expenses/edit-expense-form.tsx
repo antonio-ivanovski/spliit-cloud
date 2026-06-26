@@ -91,6 +91,7 @@ export function EditExpenseForm({
         })
         utils.groups.expenses.invalidate()
         utils.groups.activities.invalidate()
+        utils.groups.leavePreview.invalidate({ groupId })
         router.push({
           to: '/groups/$groupId',
           params: { groupId: group.id },
@@ -104,6 +105,7 @@ export function EditExpenseForm({
         })
         utils.groups.expenses.invalidate()
         utils.groups.activities.invalidate()
+        utils.groups.leavePreview.invalidate({ groupId })
         router.push({
           to: '/groups/$groupId',
           params: { groupId: group.id },

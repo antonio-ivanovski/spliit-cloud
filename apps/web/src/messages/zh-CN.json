@@ -593,7 +593,8 @@
     "loading": "加载中……",
     "signedInAs": "以 {name} 身份登录",
     "required": "您需要登录才能访问您的群组。",
-    "back": "返回首页"
+    "back": "返回首页",
+    "signInWithGithub": "使用 GitHub 继续"
   },
   "CompleteProfile": {
     "title": "完善您的个人资料",
@@ -673,7 +674,35 @@
       "revoke": "撤销",
       "revokeButton": "撤销邀请",
       "revoked": "邀请已撤销。",
-      "created": "邀请已发送至 {email}。"
+      "created": "邀请已发送至 {email}。",
+      "revokeDialog": {
+        "title": "撤销邀请？",
+        "description": "撤销对{email}的邀请？他们尚未接受。",
+        "cancel": "取消",
+        "confirm": "撤销",
+        "unsettled": {
+          "title": "撤销有未结算余额的邀请？",
+          "toast": "邀请已撤销，余额已结算。",
+          "description": "撤销对{email}的邀请？他们有未结算的余额 — 勾选下方复选框可在撤销前自动结算。",
+          "warning": {
+            "title": "此邀请有未结算的余额",
+            "description": "不结算就撤销将使这些余额无限期留在账本中。勾选下方复选框可在撤销前对此受邀者涉及的每笔交易创建一笔报销支出，也可以不结算直接撤销并手动处理这些余额。"
+          },
+          "checkbox": "撤销前创建结算报销"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "删除有未结算余额的成员？",
+        "toast": "成员已删除，余额已结算。",
+        "description": "将{name}从此群组中删除？他们有未结算的余额 — 勾选下方复选框可在删除前自动结算。",
+        "warning": {
+          "title": "此成员有未结算的余额",
+          "description": "不结算就删除将使这些余额无限期留在账本中。勾选下方复选框可在删除前对此成员涉及的每笔交易创建一笔报销支出，也可以不结算直接删除并手动处理这些余额。"
+        },
+        "checkbox": "删除前创建结算报销"
+      }
     }
   },
   "AccountSettings": {

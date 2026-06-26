@@ -593,7 +593,8 @@
     "loading": "Cargando…",
     "signedInAs": "Conectado como {name}",
     "required": "Debes iniciar sesión para acceder a tus grupos.",
-    "back": "Volver al inicio"
+    "back": "Volver al inicio",
+    "signInWithGithub": "Continuar con GitHub"
   },
   "CompleteProfile": {
     "title": "Completa tu perfil",
@@ -673,7 +674,35 @@
       "revoke": "Revocar",
       "revokeButton": "Revocar invitación",
       "revoked": "Invitación revocada.",
-      "created": "Invitación enviada a {email}."
+      "created": "Invitación enviada a {email}.",
+      "revokeDialog": {
+        "title": "¿Revocar invitación?",
+        "description": "¿Revocar la invitación a {email}? Aún no la han aceptado.",
+        "cancel": "Cancelar",
+        "confirm": "Revocar",
+        "unsettled": {
+          "title": "¿Revocar invitación con saldo pendiente?",
+          "toast": "Invitación revocada, saldos liquidados.",
+          "description": "¿Revocar la invitación a {email}? Tiene saldos pendientes — marca la casilla a continuación para liquidarlos automáticamente antes de revocar.",
+          "warning": {
+            "title": "Esta invitación tiene saldos pendientes",
+            "description": "Revocar sin liquidar dejará los saldos en el libro de cuentas indefinidamente. Marca la casilla a continuación para crear un gasto de reembolso por cada participación que involucre a este invitado antes de revocar, o revoca sin liquidar y gestiona los saldos manualmente."
+          },
+          "checkbox": "Crear reembolso de liquidación antes de revocar"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "¿Eliminar miembro con saldo pendiente?",
+        "toast": "Miembro eliminado, saldos liquidados.",
+        "description": "¿Eliminar a {name} de este grupo? Tiene saldos pendientes — marca la casilla a continuación para liquidarlos automáticamente antes de eliminar.",
+        "warning": {
+          "title": "Este miembro tiene saldos pendientes",
+          "description": "Eliminar sin liquidar dejará los saldos en el libro de cuentas indefinidamente. Marca la casilla a continuación para crear un gasto de reembolso por cada participación que involucre a este miembro antes de eliminarlo, o elimina sin liquidar y gestiona los saldos manualmente."
+        },
+        "checkbox": "Crear reembolso de liquidación antes de eliminar"
+      }
     }
   },
   "AccountSettings": {

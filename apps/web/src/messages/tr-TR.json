@@ -580,7 +580,8 @@
     "loading": "Yükleniyor…",
     "signedInAs": "{name} olarak oturum açıldı",
     "required": "Gruplarınıza erişmek için oturum açmalısınız.",
-    "back": "Ana sayfaya dön"
+    "back": "Ana sayfaya dön",
+    "signInWithGithub": "GitHub ile devam et"
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",
@@ -673,7 +674,35 @@
       "revoke": "İptal et",
       "revokeButton": "Daveti iptal et",
       "revoked": "Davet iptal edildi.",
-      "created": "{email} adresine davet gönderildi."
+      "created": "{email} adresine davet gönderildi.",
+      "revokeDialog": {
+        "title": "Davet iptal edilsin mi?",
+        "description": "{email} adresine gönderilen davet iptal edilsin mi? Henüz kabul etmediler.",
+        "cancel": "İptal",
+        "confirm": "İptal et",
+        "unsettled": {
+          "title": "Kapatılmamış bakiyesi olan davet iptal edilsin mi?",
+          "toast": "Davet iptal edildi, bakiyeler kapatıldı.",
+          "description": "{email} adresine gönderilen davet iptal edilsin mi? Kapatılmamış bakiyeleri var — aşağıdaki kutuyu işaretleyerek iptal etmeden önce bunları otomatik olarak kapatın.",
+          "warning": {
+            "title": "Bu davetin kapatılmamış bakiyeleri var",
+            "description": "Kapatmadan iptal etmek, bakiyeleri defterde süresiz olarak bırakacaktır. Aşağıdaki kutuyu işaretleyerek bu davetliyi içeren her ayak başına bir geri ödeme gideri oluşturun veya kapatmadan iptal edip bakiyeleri manuel olarak halledin."
+          },
+          "checkbox": "İptal etmeden önce kapatma geri ödemesi oluştur"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Kapatılmamış bakiyesi olan üye çıkarılsın mı?",
+        "toast": "Üye çıkarıldı, bakiyeler kapatıldı.",
+        "description": "{name} kişisini bu gruptan çıkarılsın mı? Kapatılmamış bakiyeleri var — aşağıdaki kutuyu işaretleyerek çıkarmadan önce bunları otomatik olarak kapatın.",
+        "warning": {
+          "title": "Bu üyenin kapatılmamış bakiyeleri var",
+          "description": "Kapatmadan çıkarmak, bakiyeleri defterde süresiz olarak bırakacaktır. Aşağıdaki kutuyu işaretleyerek bu üyeyi içeren her ayak başına bir geri ödeme gideri oluşturun veya kapatmadan çıkarıp bakiyeleri manuel olarak halledin."
+        },
+        "checkbox": "Çıkarmadan önce kapatma geri ödemesi oluştur"
+      }
     }
   },
   "AccountSettings": {

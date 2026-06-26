@@ -593,7 +593,8 @@
     "loading": "Laden…",
     "signedInAs": "Ingelogd als {name}",
     "required": "Je moet inloggen om toegang te krijgen tot je groepen.",
-    "back": "Terug naar startpagina"
+    "back": "Terug naar startpagina",
+    "signInWithGithub": "Doorgaan met GitHub"
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",
@@ -673,7 +674,35 @@
       "revoke": "Intrekken",
       "revokeButton": "Uitnodiging intrekken",
       "revoked": "Uitnodiging ingetrokken.",
-      "created": "Uitnodiging verzonden naar {email}."
+      "created": "Uitnodiging verzonden naar {email}.",
+      "revokeDialog": {
+        "title": "Uitnodiging intrekken?",
+        "description": "Uitnodiging aan {email} intrekken? Deze is nog niet geaccepteerd.",
+        "cancel": "Annuleren",
+        "confirm": "Intrekken",
+        "unsettled": {
+          "title": "Uitnodiging met niet-vereffend saldo intrekken?",
+          "toast": "Uitnodiging ingetrokken, saldi vereffend.",
+          "description": "Uitnodiging aan {email} intrekken? {email} heeft niet-vereffende saldi — vink het vakje hieronder aan om ze automatisch te vereffenen vóór het intrekken.",
+          "warning": {
+            "title": "Deze uitnodiging heeft niet-vereffende saldi",
+            "description": "Intrekken zonder vereffenen laat de saldi voor onbepaalde tijd in het grootboek staan. Vink het vakje hieronder aan om één verrekeningsuitgave per been aan te maken waar deze genodigde bij betrokken is vóór het intrekken, of trek in zonder vereffenen en handel de saldi handmatig af."
+          },
+          "checkbox": "Verrekeningsuitgave aanmaken vóór intrekken"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Lid met niet-vereffend saldo verwijderen?",
+        "toast": "Lid verwijderd, saldi vereffend.",
+        "description": "{name} uit deze groep verwijderen? {name} heeft niet-vereffende saldi — vink het vakje hieronder aan om ze automatisch te vereffenen vóór het verwijderen.",
+        "warning": {
+          "title": "Dit lid heeft niet-vereffende saldi",
+          "description": "Verwijderen zonder vereffenen laat de saldi voor onbepaalde tijd in het grootboek staan. Vink het vakje hieronder aan om één verrekeningsuitgave per been aan te maken waar dit lid bij betrokken is vóór het verwijderen, of verwijder zonder vereffenen en handel de saldi handmatig af."
+        },
+        "checkbox": "Verrekeningsuitgave aanmaken vóór verwijderen"
+      }
     }
   },
   "AccountSettings": {

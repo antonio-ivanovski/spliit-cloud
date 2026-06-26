@@ -1,6 +1,10 @@
 import { GroupInvitationStatus, GroupRole, prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
-import { randomId } from './api'
+import {
+  createSettlementExpensesForLeave,
+  getGroupBalances,
+  randomId,
+} from './api'
 import { getWebBaseUrl } from './auth/urls'
 import { sendEmail } from './mail/send'
 
@@ -94,15 +98,70 @@ export async function listGroupInvitations(groupId: string) {
   })
 }
 
+/**
+ * Error thrown when an admin attempts to revoke a pending invitation whose
+ * materializeed ledger participant has unsettled balances without explicitly
+ * choosing whether to settle them first. Callers should map this to
+ * `PRECONDITION_FAILED` so the web client can re-render the revoke dialog
+ * with the missing decision (settle+revoke vs. revoke only).
+ */
+export class RevokeInvitationPreconditionError extends Error {
+  constructor(
+    public readonly reason: 'unsettledBalance',
+    message: string,
+  ) {
+    super(message)
+    this.name = 'RevokeInvitationPreconditionError'
+  }
+}
+
 export async function revokeInvitation(opts: {
   invitationId: string
   groupId: string
+  settleBalances?: boolean
+  actor: { accountId: string }
 }) {
+  // Pre-check: if the invitation has a materialized ledger participant,
+  // detect any unsettled balances involving it so we can prompt the admin
+  // for an explicit decision before touching the ledger. The same balance
+  // pipeline that backs the leave / remove flows (`getPublicBalances`) is
+  // used so the UI and the mutation agree on what "settled" means.
+  const invitation = await prisma.groupInvitation.findUnique({
+    where: { id: opts.invitationId },
+  })
+  if (!invitation) return null
+
+  let hasUnsettledBalance = false
+  if (invitation.ledgerParticipantId) {
+    const balances = await getGroupBalances(opts.groupId)
+    hasUnsettledBalance =
+      (balances[invitation.ledgerParticipantId]?.total ?? 0) !== 0
+  }
+  if (hasUnsettledBalance && opts.settleBalances === undefined) {
+    throw new RevokeInvitationPreconditionError(
+      'unsettledBalance',
+      'Invitation has unsettled balances. Settle them first or revoke without settling.',
+    )
+  }
+
   return prisma.$transaction(async (tx) => {
-    const invitation = await tx.groupInvitation.findUnique({
-      where: { id: opts.invitationId },
-    })
-    if (!invitation) return null
+    // When the admin opts in, write one reimbursement-style settlement
+    // expense per leg involving the invitation's participant before
+    // revoking. The expenses commit in the same transaction as the
+    // invitation status flip so the ledger and the membership state
+    // stay in sync.
+    if (
+      opts.settleBalances &&
+      invitation.ledgerParticipantId &&
+      invitation.status === GroupInvitationStatus.PENDING
+    ) {
+      await createSettlementExpensesForLeave(
+        opts.groupId,
+        invitation.ledgerParticipantId,
+        opts.actor,
+        tx,
+      )
+    }
 
     const updated = await tx.groupInvitation.update({
       where: { id: opts.invitationId },
@@ -134,6 +193,47 @@ export async function revokeInvitation(opts: {
 
     return updated
   })
+}
+
+/**
+ * Read-only summary the web client uses to render the admin "revoke
+ * invitation" dialog before the admin confirms. Bundles everything the
+ * dialog needs in a single query:
+ *   - the invitation's email (so the dialog can address it),
+ *   - whether the invitation's materialized ledger participant has
+ *     unsettled balances (so the dialog can pick between the simple
+ *     confirm and the three-option variant).
+ *
+ * Caller authorization (ADMIN of the group, invitation belongs to
+ * that group, invitation is still PENDING) is enforced by the
+ * procedure that wraps this helper — this function only loads the
+ * data.
+ */
+export async function getRevokeInvitationPreview(opts: {
+  invitationId: string
+  groupId: string
+}): Promise<{
+  invitationEmail: string
+  hasUnsettledBalance: boolean
+}> {
+  const invitation = await prisma.groupInvitation.findUnique({
+    where: { id: opts.invitationId },
+  })
+  if (!invitation || invitation.groupId !== opts.groupId) {
+    throw new Error('Invitation not found in this group')
+  }
+
+  let hasUnsettledBalance = false
+  if (invitation.ledgerParticipantId) {
+    const balances = await getGroupBalances(opts.groupId)
+    hasUnsettledBalance =
+      (balances[invitation.ledgerParticipantId]?.total ?? 0) !== 0
+  }
+
+  return {
+    invitationEmail: invitation.email,
+    hasUnsettledBalance,
+  }
 }
 
 /**

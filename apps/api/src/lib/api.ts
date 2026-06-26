@@ -1171,6 +1171,23 @@ export async function updateMemberRole(opts: {
 }
 
 /**
+ * Error thrown when an admin attempts to remove a member who has
+ * unsettled balances without explicitly choosing whether to settle
+ * them first. Callers should map this to `PRECONDITION_FAILED` so the
+ * web client can re-render the remove dialog with the missing
+ * decision (settle+remove vs. remove only).
+ */
+export class RemoveMemberPreconditionError extends Error {
+  constructor(
+    public readonly reason: 'unsettledBalance',
+    message: string,
+  ) {
+    super(message)
+    this.name = 'RemoveMemberPreconditionError'
+  }
+}
+
+/**
  * Remove a member from a group. Their ledger participant and historical
  * expenses are kept so balances and activity history remain intact.
  * The membership row is flipped to `REMOVED` and `leftAt` is set so the
@@ -1180,13 +1197,26 @@ export async function updateMemberRole(opts: {
  * Admins cannot remove themselves through this flow — they must use
  * the "leave group" path. Demoting-or-removing the last admin is also
  * rejected so we never leave a group without an active admin.
+ *
+ * When the target member has unsettled balances, the caller must
+ * explicitly choose a path via `settleBalances`:
+ *   - `settleBalances: true`  → create one reimbursement-style
+ *     settlement expense per leg involving the target before flipping
+ *     the membership to `REMOVED`, so the ledger stays in sync.
+ *   - `settleBalances: false` → flip the membership immediately; the
+ *     balances involving the target remain visible in the ledger but
+ *     cannot be cleared because the member can no longer participate.
+ *   - `settleBalances` unset (default) and the target has unsettled
+ *     balances → throw {@link RemoveMemberPreconditionError} so the
+ *     client can prompt for the decision.
  */
 export async function removeMember(opts: {
   groupId: string
   memberId: string
+  settleBalances?: boolean
   actor: { accountId: string }
 }) {
-  const { groupId, memberId, actor } = opts
+  const { groupId, memberId, settleBalances, actor } = opts
 
   const target = await prisma.groupMember.findUnique({
     where: { id: memberId },
@@ -1204,7 +1234,34 @@ export async function removeMember(opts: {
     )
   }
 
+  // Detect unsettled balances involving the target so the caller can
+  // be forced to make a settlement decision when there is one. We
+  // intentionally skip the check when the caller already supplied
+  // `settleBalances` so the same call can be retried without bouncing
+  // through the dialog again.
+  let hasUnsettledBalance = false
+  if (target.ledgerParticipant?.id) {
+    const balances = await getGroupBalances(groupId)
+    hasUnsettledBalance =
+      (balances[target.ledgerParticipant.id]?.total ?? 0) !== 0
+  }
+  if (hasUnsettledBalance && settleBalances === undefined) {
+    throw new RemoveMemberPreconditionError(
+      'unsettledBalance',
+      'Member has unsettled balances. Settle them first or remove without settling.',
+    )
+  }
+
   return prisma.$transaction(async (tx) => {
+    if (settleBalances && target.ledgerParticipant?.id) {
+      await createSettlementExpensesForLeave(
+        groupId,
+        target.ledgerParticipant.id,
+        actor,
+        tx,
+      )
+    }
+
     if (target.role === GroupRole.ADMIN) {
       const remainingAdmins = await tx.groupMember.count({
         where: {
@@ -1231,7 +1288,7 @@ export async function removeMember(opts: {
       {
         accountId: actor.accountId,
         ledgerParticipantId: target.ledgerParticipant?.id ?? null,
-        data: 'member:removed',
+        data: settleBalances ? 'member:removed:settled' : 'member:removed',
       },
       tx,
     )
@@ -1241,3 +1298,472 @@ export async function removeMember(opts: {
 
 // Re-export helper types
 export type { Ledger, LedgerParticipant }
+
+/**
+ * Title used for the auto-generated settlement expenses created when a
+ * member leaves a group. Marked so members can identify them in the
+ * expenses list and in the activity log.
+ */
+const SETTLEMENT_ON_LEAVE_TITLE = 'Settlement on leave'
+
+/**
+ * Filter the optimal set of settlement legs (from {@link buildSettlementLegs})
+ * down to the subset that involves a specific ledger participant, either as
+ * the debtor (`from`) or as the creditor (`to`). Used by the leave flow to
+ * scope the auto-generated settlement expenses to only the legs the leaving
+ * user can actually clear — non-zero balances between remaining members are
+ * left alone so the group can settle them on their own terms.
+ */
+export function getSettlementLegsForParticipant(
+  balances: Balances,
+  participantId: string,
+): Reimbursement[] {
+  return buildSettlementLegs(balances).filter(
+    (leg) => leg.from === participantId || leg.to === participantId,
+  )
+}
+
+/**
+ * Create one reimbursement-style `Expense` per settlement leg that involves
+ * `participantId`, mirroring {@link createSettlementExpensesForArchive} but
+ * scoped to a single participant. The caller is expected to run this inside
+ * a `prisma.$transaction` together with the membership mutation so the
+ * settlement writes and the `LEFT` flip commit atomically.
+ */
+export async function createSettlementExpensesForLeave(
+  groupId: string,
+  participantId: string,
+  actor: { accountId: string },
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+): Promise<{ createdExpenses: number }> {
+  const balances = await getGroupBalances(groupId)
+  const legs = getSettlementLegsForParticipant(balances, participantId)
+  if (legs.length === 0) return { createdExpenses: 0 }
+
+  const group = await client.group.findUnique({
+    where: { id: groupId },
+    select: { ledgerId: true },
+  })
+  if (!group?.ledgerId) {
+    throw new Error('Cannot settle balances: group has no ledger')
+  }
+
+  const now = new Date()
+  for (const leg of legs) {
+    if (leg.amount <= 0) continue
+    const expenseId = randomId()
+    await logActivity(
+      groupId,
+      ActivityType.CREATE_EXPENSE,
+      {
+        accountId: actor.accountId,
+        expenseId,
+        data: SETTLEMENT_ON_LEAVE_TITLE,
+      },
+      client,
+    )
+    await client.expense.create({
+      data: {
+        id: expenseId,
+        ledgerId: group.ledgerId,
+        expenseDate: now,
+        title: SETTLEMENT_ON_LEAVE_TITLE,
+        categoryId: PAYMENT_CATEGORY_ID,
+        amount: leg.amount,
+        paidById: leg.from,
+        splitMode: 'EVENLY',
+        recurrenceRule: RecurrenceRule.NONE,
+        isReimbursement: true,
+        paidFor: {
+          createMany: {
+            data: [{ ledgerParticipantId: leg.to, shares: 1 }],
+          },
+        },
+        notes: 'Auto-created when a member leaves the group.',
+      },
+    })
+  }
+
+  return { createdExpenses: legs.length }
+}
+
+/**
+ * Error thrown when the caller attempts to leave but must explicitly confirm
+ * or supply an additional input first. Callers should map this to
+ * `PRECONDITION_FAILED` so the web client can re-render the leave dialog
+ * with the missing confirmation.
+ */
+export class LeaveGroupPreconditionError extends Error {
+  constructor(
+    public readonly reason:
+      | 'confirmDeleteRequired'
+      | 'promotionRequired'
+      | 'unsettledBalance',
+    message: string,
+  ) {
+    super(message)
+    this.name = 'LeaveGroupPreconditionError'
+  }
+}
+
+/**
+ * Leave a group as an active member. Used by the dedicated "leave group"
+ * mutation so admins can step down without losing admin coverage (a separate
+ * promotion step is required when the leaving user is the last admin).
+ *
+ * The procedure that calls this helper enforces:
+ *   - caller is an active member of the group,
+ *   - the group is not archived (read-only),
+ *   - when the caller is the last active member, `confirmDelete` must be
+ *     `true` and the entire group is deleted (cascading),
+ *   - when the caller is the last admin and other active members exist,
+ *     `promoteMemberId` must point at another active member of the same
+ *     group (not the caller),
+ *   - when the caller has unsettled balances and `force` is not `true`,
+ *     throw a {@link LeaveGroupPreconditionError} so the web client can
+ *     prompt for confirmation,
+ *   - when `force` is `true`, auto-create one settlement expense per leg
+ *     involving the leaving user before flipping the membership to `LEFT`.
+ *
+ * Returns a small payload describing what happened (whether the group was
+ * deleted and which member was promoted) so the client can show a
+ * meaningful success toast.
+ */
+export async function leaveGroup(opts: {
+  groupId: string
+  actor: { accountId: string }
+  force?: boolean
+  promoteMemberId?: string
+  confirmDelete?: boolean
+}): Promise<{
+  deleted: boolean
+  promotedMemberId: string | null
+}> {
+  const {
+    groupId,
+    actor,
+    force = false,
+    promoteMemberId,
+    confirmDelete = false,
+  } = opts
+
+  const member = await prisma.groupMember.findUnique({
+    where: { groupId_accountId: { groupId, accountId: actor.accountId } },
+    include: { ledgerParticipant: { select: { id: true } } },
+  })
+  if (!member || member.status !== GroupMemberStatus.ACTIVE) {
+    throw new Error('You are not an active member of this group')
+  }
+
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { archived: true, ledgerId: true },
+  })
+  if (!group) throw new Error('Invalid group ID')
+  if (group.archived) {
+    throw new Error('Cannot leave an archived group')
+  }
+
+  const [otherAdminsCount, otherMembersCount] = await Promise.all([
+    prisma.groupMember.count({
+      where: {
+        groupId,
+        status: GroupMemberStatus.ACTIVE,
+        role: GroupRole.ADMIN,
+        NOT: { id: member.id },
+      },
+    }),
+    prisma.groupMember.count({
+      where: {
+        groupId,
+        status: GroupMemberStatus.ACTIVE,
+        NOT: { id: member.id },
+      },
+    }),
+  ])
+
+  const isLastActiveMember = otherMembersCount === 0
+  const isLastAdmin = member.role === GroupRole.ADMIN && otherAdminsCount === 0
+
+  if (isLastActiveMember) {
+    if (!confirmDelete) {
+      throw new LeaveGroupPreconditionError(
+        'confirmDeleteRequired',
+        'You are the last active member. Confirm deletion to continue.',
+      )
+    }
+    // No admin promotion needed when the group is about to be deleted.
+    // Cascade handles the ledger, members, invitations, expenses, etc.
+    // We intentionally do not write an activity row here: the group (and
+    // its activities) is being deleted in this same transaction, so any
+    // log row we wrote would be removed by the cascade before commit.
+    await prisma.group.delete({ where: { id: groupId } })
+    return { deleted: true, promotedMemberId: null }
+  }
+
+  if (isLastAdmin) {
+    if (!promoteMemberId) {
+      throw new LeaveGroupPreconditionError(
+        'promotionRequired',
+        'You are the last admin. Choose a member to promote before leaving.',
+      )
+    }
+    const target = await prisma.groupMember.findUnique({
+      where: { id: promoteMemberId },
+    })
+    if (
+      !target ||
+      target.groupId !== groupId ||
+      target.status !== GroupMemberStatus.ACTIVE
+    ) {
+      throw new Error('Promotion target must be an active member of this group')
+    }
+    if (target.id === member.id) {
+      throw new Error('You cannot promote yourself before leaving')
+    }
+  }
+
+  const participantId = member.ledgerParticipant?.id ?? null
+  let needsSettlement = false
+  if (participantId) {
+    const balances = await getGroupBalances(groupId)
+    const total = balances[participantId]?.total ?? 0
+    needsSettlement = total !== 0
+  }
+  if (needsSettlement && !force) {
+    throw new LeaveGroupPreconditionError(
+      'unsettledBalance',
+      'You have unsettled balances. Settle or force-leave to continue.',
+    )
+  }
+
+  return prisma.$transaction(async (tx) => {
+    if (needsSettlement && participantId) {
+      await createSettlementExpensesForLeave(groupId, participantId, actor, tx)
+    }
+
+    if (isLastAdmin && promoteMemberId) {
+      await tx.groupMember.update({
+        where: { id: promoteMemberId },
+        data: { role: GroupRole.ADMIN },
+      })
+    }
+
+    await tx.groupMember.update({
+      where: { id: member.id },
+      data: {
+        status: GroupMemberStatus.LEFT,
+        leftAt: new Date(),
+      },
+    })
+
+    await logActivity(
+      groupId,
+      ActivityType.UPDATE_GROUP,
+      {
+        accountId: actor.accountId,
+        ledgerParticipantId: participantId,
+        data: 'member:left',
+      },
+      tx,
+    )
+
+    return {
+      deleted: false,
+      promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
+    }
+  })
+}
+
+/**
+ * Archive a group for the current user instead of deleting it. Used by the
+ * last-member leave flow as a non-destructive alternative to outright
+ * deletion: the group is flipped to `Group.archived = true` (read-only
+ * for everyone) and the caller's per-account hide preference is set so
+ * the group drops out of their main list. The membership is intentionally
+ * kept — "archive for myself" is the alternative to leaving, not a way
+ * to leave.
+ *
+ * Restricted to the last-active-member case. When other active members
+ * exist, the group will survive a normal leave anyway, so the caller
+ * should just use `leave` (or the admin-only `groups.archive` mutation).
+ *
+ * The whole operation runs in a single transaction so the global archive
+ * flag, the per-account preference, and the activity log entry commit
+ * atomically. Returns `{ archived: true }` for the client.
+ */
+export async function archiveGroupForSelf(opts: {
+  groupId: string
+  accountId: string
+}): Promise<{ archived: true }> {
+  const { groupId, accountId } = opts
+
+  const member = await prisma.groupMember.findUnique({
+    where: { groupId_accountId: { groupId, accountId } },
+  })
+  if (!member || member.status !== GroupMemberStatus.ACTIVE) {
+    throw new Error('You are not an active member of this group')
+  }
+
+  const otherActiveMembers = await prisma.groupMember.count({
+    where: {
+      groupId,
+      status: GroupMemberStatus.ACTIVE,
+      NOT: { id: member.id },
+    },
+  })
+  if (otherActiveMembers > 0) {
+    throw new Error(
+      'Archive-for-self is only available when you are the last active member',
+    )
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.group.update({
+      where: { id: groupId },
+      data: { archived: true },
+    })
+
+    await tx.accountGroupPreference.upsert({
+      where: { accountId_groupId: { accountId, groupId } },
+      create: {
+        id: randomId(),
+        accountId,
+        groupId,
+        archived: true,
+      },
+      update: {
+        archived: true,
+      },
+    })
+
+    await logActivity(
+      groupId,
+      ActivityType.UPDATE_GROUP,
+      { accountId, data: 'group:archived-on-leave' },
+      tx,
+    )
+  })
+
+  return { archived: true }
+}
+
+/**
+ * Read-only summary the web client uses to render the leave-group dialog
+ * before the user confirms. Bundles everything the dialog needs in a
+ * single query so it can render without cross-referencing
+ * `account.members`, `groups.balances`, and `groups.get` separately.
+ */
+export async function getLeavePreview(opts: {
+  groupId: string
+  accountId: string
+}): Promise<{
+  role: GroupRole
+  isLastActiveMember: boolean
+  isLastAdmin: boolean
+  hasUnsettledBalance: boolean
+  otherAdmins: Array<{ id: string; name: string }>
+  promotableMembers: Array<{ id: string; name: string }>
+}> {
+  const { groupId, accountId } = opts
+
+  const member = await prisma.groupMember.findUnique({
+    where: { groupId_accountId: { groupId, accountId } },
+    include: { ledgerParticipant: { select: { id: true } } },
+  })
+  if (!member || member.status !== GroupMemberStatus.ACTIVE) {
+    throw new Error('You are not an active member of this group')
+  }
+
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { archived: true },
+  })
+  if (!group) throw new Error('Invalid group ID')
+
+  const otherActiveMembers = await prisma.groupMember.findMany({
+    where: {
+      groupId,
+      status: GroupMemberStatus.ACTIVE,
+      NOT: { id: member.id },
+    },
+    include: {
+      account: { select: { id: true, name: true } },
+    },
+    orderBy: [{ joinedAt: 'asc' }, { createdAt: 'asc' }],
+  })
+
+  const otherAdmins = otherActiveMembers
+    .filter((m) => m.role === GroupRole.ADMIN)
+    .map((m) => ({ id: m.id, name: m.account?.name ?? '' }))
+
+  const promotableMembers = otherActiveMembers.map((m) => ({
+    id: m.id,
+    name: m.account?.name ?? '',
+  }))
+
+  const participantId = member.ledgerParticipant?.id ?? null
+  let hasUnsettledBalance = false
+  if (participantId) {
+    const balances = await getGroupBalances(groupId)
+    hasUnsettledBalance = (balances[participantId]?.total ?? 0) !== 0
+  }
+
+  return {
+    role: member.role,
+    isLastActiveMember: otherActiveMembers.length === 0,
+    isLastAdmin:
+      member.role === GroupRole.ADMIN &&
+      !otherActiveMembers.some((m) => m.role === GroupRole.ADMIN),
+    hasUnsettledBalance,
+    otherAdmins,
+    promotableMembers,
+  }
+}
+
+/**
+ * Read-only summary the web client uses to render the admin "remove
+ * member" dialog before the admin confirms. Bundles everything the
+ * dialog needs to decide whether to surface the unsettled-balance
+ * warning:
+ *   - the target member's display name (so the dialog can address
+ *     them by name),
+ *   - whether the target has unsettled balances (so the dialog can
+ *     pick between the simple confirm and the three-option variant).
+ *
+ * Caller authorization (ADMIN of the group, group not archived,
+ * target is not the caller) is enforced by the procedure that wraps
+ * this helper — this function only loads the data.
+ */
+export async function getRemoveMemberPreview(opts: {
+  groupId: string
+  memberId: string
+}): Promise<{
+  memberName: string
+  hasUnsettledBalance: boolean
+}> {
+  const { groupId, memberId } = opts
+
+  const target = await prisma.groupMember.findUnique({
+    where: { id: memberId },
+    include: {
+      account: { select: { name: true } },
+      ledgerParticipant: { select: { id: true } },
+    },
+  })
+  if (!target || target.groupId !== groupId) {
+    throw new Error('Member not found in this group')
+  }
+
+  let hasUnsettledBalance = false
+  if (target.ledgerParticipant?.id) {
+    const balances = await getGroupBalances(groupId)
+    hasUnsettledBalance =
+      (balances[target.ledgerParticipant.id]?.total ?? 0) !== 0
+  }
+
+  return {
+    memberName: target.account?.name ?? '',
+    hasUnsettledBalance,
+  }
+}

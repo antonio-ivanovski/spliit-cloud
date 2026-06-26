@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -36,6 +38,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
+import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -147,9 +150,18 @@ export default function GroupMembers() {
   })
 
   const revokeMutation = trpc.invitations.revoke.useMutation({
-    onSuccess: async () => {
-      toast({ description: t('invitations.revoked') })
-      await utils.invitations.list.invalidate({ groupId })
+    onSuccess: async (_data, vars) => {
+      toast({
+        description: vars.settleBalances
+          ? t('invitations.revokeDialog.unsettled.toast')
+          : t('invitations.revoked'),
+      })
+      await Promise.all([
+        utils.invitations.list.invalidate({ groupId }),
+        utils.account.members.invalidate({ groupId }),
+        utils.groups.get.invalidate({ groupId }),
+        utils.groups.getDetails.invalidate({ groupId }),
+      ])
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })
@@ -166,6 +178,11 @@ export default function GroupMembers() {
         utils.account.members.invalidate({ groupId }),
         utils.groups.get.invalidate({ groupId }),
         utils.groups.getDetails.invalidate({ groupId }),
+        // The leave-preview snapshot caches role/admin-count/promotable
+        // members; without an explicit invalidate, the dialog would keep
+        // rendering the pre-change state if the user immediately opens
+        // the leave dialog after a role flip.
+        utils.groups.leavePreview.invalidate({ groupId }),
       ])
     },
     onError: (error) => {
@@ -174,12 +191,17 @@ export default function GroupMembers() {
   })
 
   const removeMemberMutation = trpc.groups.members.remove.useMutation({
-    onSuccess: async () => {
-      toast({ description: t('removed') })
+    onSuccess: async (_data, vars) => {
+      toast({
+        description: vars.settleBalances
+          ? t('removeDialog.unsettled.toast')
+          : t('removed'),
+      })
       await Promise.all([
         utils.account.members.invalidate({ groupId }),
         utils.groups.get.invalidate({ groupId }),
         utils.groups.getDetails.invalidate({ groupId }),
+        utils.groups.leavePreview.invalidate({ groupId }),
       ])
     },
     onError: (error) => {
@@ -192,6 +214,193 @@ export default function GroupMembers() {
     name: string
   } | null>(null)
 
+  // ---- Remove-member unsettled-balance confirmation ----
+  // When the admin clicks "Remove" on a member we open a dialog that
+  // first fetches `removePreview` to decide whether the member has
+  // unsettled balances. If they do, the dialog grows an extra warning
+  // panel and two confirm options (settle+remove, remove-only) so the
+  // admin can pick how the balances are handled before the mutation
+  // runs. The query is lazy so it only runs while the dialog is open
+  // and re-fetches each time the dialog is reopened with a different
+  // target member.
+  const removePreviewQuery = trpc.groups.members.removePreview.useQuery(
+    { groupId, memberId: memberPendingRemove?.id ?? '' },
+    { enabled: !!memberPendingRemove },
+  )
+
+  // Checkbox state for the "create settle reimbursement first" option in
+  // the remove dialog. Off by default so the destructive action stays
+  // one click; opting in prepends a settlement-expense pass to the
+  // mutation. Reset every time the dialog opens for a different member.
+  const [removeSettleChecked, setRemoveSettleChecked] = useState(false)
+
+  // ---- Revoke-invitation unsettled-balance confirmation ----
+  // Mirrors the remove flow: when the admin clicks "Revoke" on a
+  // pending invitation we open a dialog that fetches `revokePreview`
+  // to decide whether the invitee's materialized ledger participant
+  // has unsettled balances. Expenses can reference an invitee before
+  // they accept (the participant is materialized on invite), so this
+  // case is real and not just hypothetical. The query is lazy so it
+  // only runs while the dialog is open and refetches when reopened
+  // with a different invitation.
+  const [invitationPendingRevoke, setInvitationPendingRevoke] = useState<{
+    id: string
+    email: string
+  } | null>(null)
+  const revokePreviewQuery = trpc.invitations.revokePreview.useQuery(
+    {
+      groupId,
+      invitationId: invitationPendingRevoke?.id ?? '',
+    },
+    { enabled: !!invitationPendingRevoke },
+  )
+
+  // Same pattern as the remove dialog: unchecked by default; opting in
+  // prepends a settlement-expense pass to the revoke mutation.
+  const [revokeSettleChecked, setRevokeSettleChecked] = useState(false)
+
+  // ---- Leave group flow ----
+  // The dialog is opened by the "Leave group" button at the bottom of the
+  // page. We fetch the preview lazily so the balance/admin-count queries
+  // only run while the dialog is open. The preview drives the conditional
+  // sections (delete warning + checkbox, promotion selector, unsettled
+  // balance warning) and the confirm-button enablement.
+  const [leaveDialogOpen, setLeaveDialogOpen] = useState(false)
+  const [promoteMemberId, setPromoteMemberId] = useState<string | null>(null)
+  const [confirmDeleteChecked, setConfirmDeleteChecked] = useState(false)
+  const router = useRouter()
+
+  const leavePreviewQuery = trpc.groups.leavePreview.useQuery(
+    { groupId },
+    { enabled: leaveDialogOpen },
+  )
+
+  const leaveMutation = trpc.groups.leave.useMutation({
+    onSuccess: async (result) => {
+      // Navigate FIRST. The user just left (and possibly deleted) the
+      // group, so any in-flight refetch of `groups.get({ groupId })` or
+      // `groups.getDetails({ groupId })` would now return 403. By
+      // navigating away we unmount the group route before those
+      // invalidations have a chance to fire. We only refresh the
+      // account-scoped group list, which is the only query that still
+      // makes sense to refetch.
+      toast({
+        description: result.deleted
+          ? t('leave.toast.deleted')
+          : t('leave.toast.left'),
+      })
+      setLeaveDialogOpen(false)
+      router.push({ href: '/' })
+      utils.account.groups.invalidate()
+    },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
+    },
+  })
+
+  // Non-destructive alternative to the last-member leave flow. Instead
+  // of deleting the group, archives it globally and hides it from the
+  // caller's main list. Membership is preserved — the user keeps access
+  // to the ledger as a read-only record.
+  const archiveForSelfMutation = trpc.groups.archiveForSelf.useMutation({
+    onSuccess: async () => {
+      // Same reasoning as `leaveMutation.onSuccess`: navigate away
+      // before invalidating per-group queries that would now return
+      // FORBIDDEN.
+      toast({ description: t('leave.toast.archived') })
+      setLeaveDialogOpen(false)
+      router.push({ href: '/' })
+      utils.account.groups.invalidate()
+    },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
+    },
+  })
+
+  // Reset the dialog-scoped state every time it closes so the next open
+  // starts from a clean slate (no stale promotion target or checkbox).
+  useEffect(() => {
+    if (!leaveDialogOpen) {
+      setPromoteMemberId(null)
+      setConfirmDeleteChecked(false)
+    }
+  }, [leaveDialogOpen])
+
+  // Reset the "settle before action" checkboxes when their dialogs close
+  // so the next open defaults to unchecked (the safe destructive default).
+  useEffect(() => {
+    if (!memberPendingRemove) setRemoveSettleChecked(false)
+  }, [memberPendingRemove])
+  useEffect(() => {
+    if (!invitationPendingRevoke) setRevokeSettleChecked(false)
+  }, [invitationPendingRevoke])
+
+  const preview = leavePreviewQuery.data
+  const isLastActiveMember = !!preview?.isLastActiveMember
+  const isLastAdmin = !!preview?.isLastAdmin
+  const hasUnsettledBalance = !!preview?.hasUnsettledBalance
+  // `preview.role` is the caller's role on the group. The "admins in
+  // control" note only makes sense when the caller is themselves an ADMIN
+  // handing control over; a regular MEMBER leaving doesn't change who is
+  // in charge.
+  const isAdminLeaving = preview?.role === 'ADMIN'
+  const otherAdmins = preview?.otherAdmins ?? []
+  const promotableMembers = preview?.promotableMembers ?? []
+
+  // Preselect the oldest active member (preview sorts promotableMembers
+  // by `joinedAt ASC, createdAt ASC`) so the user has a sensible default
+  // and only needs to confirm unless they want a different admin. Re-runs
+  // when the preview's membership list changes (e.g. after a role flip
+  // invalidates the cache) so the default stays in sync.
+  useEffect(() => {
+    if (!preview) return
+    const oldest = promotableMembers[0]
+    const isCurrentValid =
+      !!promoteMemberId &&
+      promotableMembers.some((m) => m.id === promoteMemberId)
+    if (oldest && !isCurrentValid) {
+      setPromoteMemberId(oldest.id)
+    }
+    // `promoteMemberId` is intentionally excluded — it is the value being
+    // reconciled against the freshly-loaded preview.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preview])
+
+  // The promotion selector only matters when the caller is the last admin
+  // AND there are other active members to take over. When the caller is
+  // the last active member the group is being deleted, so no promotion
+  // is required and the selector is hidden entirely.
+  const needsPromotion = isLastAdmin && !isLastActiveMember
+
+  // The confirm button is disabled until every required input is in place.
+  // Promotion is only required when `needsPromotion`; the delete checkbox
+  // is only required when the caller is the last active member. Force
+  // settlement is implicit — we always pass `force: true` when the caller
+  // has unsettled balances, and the warning copy in the dialog is the
+  // confirmation.
+  const canConfirmLeave =
+    !!preview &&
+    !leaveMutation.isPending &&
+    (!needsPromotion || !!promoteMemberId) &&
+    (!isLastActiveMember || confirmDeleteChecked)
+
+  function handleConfirmLeave() {
+    if (!preview) return
+    // Force-settlement is only meaningful when the group is going to
+    // survive the leave. For the last-member path the group is deleted,
+    // so any settlement expense we wrote would be cascade-removed along
+    // with everything else — there is no point in creating them.
+    const shouldForce = !isLastActiveMember && preview.hasUnsettledBalance
+    leaveMutation.mutate({
+      groupId,
+      force: shouldForce ? true : undefined,
+      promoteMemberId: needsPromotion
+        ? (promoteMemberId ?? undefined)
+        : undefined,
+      confirmDelete: isLastActiveMember ? confirmDeleteChecked : undefined,
+    })
+  }
+
   const onInvite = form.handleSubmit(async (values) => {
     await createMutation.mutateAsync({
       groupId,
@@ -200,13 +409,23 @@ export default function GroupMembers() {
     })
   })
 
-  async function confirmRemove() {
+  async function confirmRemove(settleBalances?: boolean) {
     if (!memberPendingRemove) return
     await removeMemberMutation.mutateAsync({
       groupId,
       memberId: memberPendingRemove.id,
+      settleBalances,
     })
     setMemberPendingRemove(null)
+  }
+
+  async function confirmRevoke(settleBalances?: boolean) {
+    if (!invitationPendingRevoke) return
+    await revokeMutation.mutateAsync({
+      invitationId: invitationPendingRevoke.id,
+      settleBalances,
+    })
+    setInvitationPendingRevoke(null)
   }
 
   const listMembers = useMemo(
@@ -456,8 +675,9 @@ export default function GroupMembers() {
                         className="text-destructive shrink-0"
                         disabled={revokeMutation.isPending}
                         onClick={() =>
-                          revokeMutation.mutate({
-                            invitationId: invitation.id,
+                          setInvitationPendingRevoke({
+                            id: invitation.id,
+                            email: invitation.email,
                           })
                         }
                       >
@@ -478,17 +698,56 @@ export default function GroupMembers() {
           if (!open) setMemberPendingRemove(null)
         }}
       >
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>{t('removeDialog.title')}</DialogTitle>
+            <DialogTitle>
+              {removePreviewQuery.data?.hasUnsettledBalance
+                ? t('removeDialog.unsettled.title')
+                : t('removeDialog.title')}
+            </DialogTitle>
             <DialogDescription>
               {memberPendingRemove
-                ? t('removeDialog.description', {
-                    name: memberPendingRemove.name,
-                  })
+                ? removePreviewQuery.data?.hasUnsettledBalance
+                  ? t('removeDialog.unsettled.description', {
+                      name: memberPendingRemove.name,
+                    })
+                  : t('removeDialog.description', {
+                      name: memberPendingRemove.name,
+                    })
                 : null}
             </DialogDescription>
           </DialogHeader>
+
+          {removePreviewQuery.isLoading ? (
+            <div className="flex flex-col gap-2 py-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : removePreviewQuery.data?.hasUnsettledBalance ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                <p className="text-sm font-medium">
+                  {t('removeDialog.unsettled.warning.title')}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {t('removeDialog.unsettled.warning.description')}
+                </p>
+              <label className="flex items-start gap-2 text-sm cursor-pointer">
+                <Checkbox
+                  checked={removeSettleChecked}
+                  onCheckedChange={(checked) =>
+                    setRemoveSettleChecked(checked === true)
+                  }
+                  disabled={removeMemberMutation.isPending}
+                  className="mt-0.5"
+                />
+                <span>{t('removeDialog.unsettled.checkbox')}</span>
+              </label>
+              </div>
+            </div>
+          ) : null}
+
           <DialogFooter>
             <Button
               variant="ghost"
@@ -499,10 +758,252 @@ export default function GroupMembers() {
             </Button>
             <Button
               variant="destructive"
-              onClick={confirmRemove}
-              disabled={removeMemberMutation.isPending}
+              onClick={() =>
+                confirmRemove(
+                  removePreviewQuery.data?.hasUnsettledBalance
+                    ? removeSettleChecked
+                    : undefined,
+                )
+              }
+              disabled={
+                removeMemberMutation.isPending || removePreviewQuery.isLoading
+              }
             >
               {t('removeDialog.confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!invitationPendingRevoke}
+        onOpenChange={(open) => {
+          if (!open) setInvitationPendingRevoke(null)
+        }}
+      >
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {revokePreviewQuery.data?.hasUnsettledBalance
+                ? t('invitations.revokeDialog.unsettled.title')
+                : t('invitations.revokeDialog.title')}
+            </DialogTitle>
+            <DialogDescription>
+              {invitationPendingRevoke
+                ? revokePreviewQuery.data?.hasUnsettledBalance
+                  ? t('invitations.revokeDialog.unsettled.description', {
+                      email: invitationPendingRevoke.email,
+                    })
+                  : t('invitations.revokeDialog.description', {
+                      email: invitationPendingRevoke.email,
+                    })
+                : null}
+            </DialogDescription>
+          </DialogHeader>
+
+          {revokePreviewQuery.isLoading ? (
+            <div className="flex flex-col gap-2 py-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : revokePreviewQuery.data?.hasUnsettledBalance ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                <p className="text-sm font-medium">
+                  {t('invitations.revokeDialog.unsettled.warning.title')}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {t('invitations.revokeDialog.unsettled.warning.description')}
+                </p>
+              </div>
+              <label className="flex items-start gap-2 text-sm cursor-pointer">
+                <Checkbox
+                  checked={revokeSettleChecked}
+                  onCheckedChange={(checked) =>
+                    setRevokeSettleChecked(checked === true)
+                  }
+                  disabled={revokeMutation.isPending}
+                  className="mt-0.5"
+                />
+                <span>{t('invitations.revokeDialog.unsettled.checkbox')}</span>
+              </label>
+            </div>
+          ) : null}
+
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setInvitationPendingRevoke(null)}
+              disabled={revokeMutation.isPending}
+            >
+              {t('invitations.revokeDialog.cancel')}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                confirmRevoke(
+                  revokePreviewQuery.data?.hasUnsettledBalance
+                    ? revokeSettleChecked
+                    : undefined,
+                )
+              }
+              disabled={
+                revokeMutation.isPending || revokePreviewQuery.isLoading
+              }
+            >
+              {t('invitations.revokeDialog.confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {!isArchived && currentMember && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('leave.button')}</CardTitle>
+            <CardDescription>{t('leave.description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              variant="outline"
+              className="text-destructive border-destructive/40 hover:bg-destructive/10 hover:text-destructive"
+              onClick={() => setLeaveDialogOpen(true)}
+            >
+              {t('leave.button')}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      <Dialog
+        open={leaveDialogOpen}
+        onOpenChange={(open) => {
+          if (!open && leaveMutation.isPending) return
+          setLeaveDialogOpen(open)
+        }}
+      >
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{t('leave.title')}</DialogTitle>
+            <DialogDescription>{t('leave.description')}</DialogDescription>
+          </DialogHeader>
+
+          {leavePreviewQuery.isLoading || !preview ? (
+            <div className="flex flex-col gap-3 py-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {isAdminLeaving && otherAdmins.length > 0 && (
+                <p className="text-sm text-muted-foreground">
+                  {t('leave.body.otherAdmins', {
+                    names: otherAdmins
+                      .map((admin) => admin.name || '—')
+                      .join(', '),
+                  })}
+                </p>
+              )}
+
+              {needsPromotion && (
+                <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                  <p className="text-sm font-medium">
+                    {t('leave.body.lastAdmin.title')}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('leave.body.lastAdmin.description')}
+                  </p>
+                  <div className="flex flex-col gap-1.5 pt-1">
+                    <Label htmlFor="promote-member">
+                      {t('leave.body.lastAdmin.title')}
+                    </Label>
+                    <Select
+                      value={promoteMemberId ?? ''}
+                      onValueChange={(value) => setPromoteMemberId(value)}
+                      disabled={leaveMutation.isPending}
+                    >
+                      <SelectTrigger id="promote-member">
+                        <SelectValue
+                          placeholder={t('leave.body.lastAdmin.placeholder')}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {promotableMembers.map((member) => (
+                          <SelectItem key={member.id} value={member.id}>
+                            {member.name || '—'}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+
+              {hasUnsettledBalance && !isLastActiveMember && (
+                <div className="flex flex-col gap-1 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                  <p className="text-sm font-medium">
+                    {t('leave.body.unsettled.title')}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('leave.body.unsettled.description')}
+                  </p>
+                </div>
+              )}
+
+              {isLastActiveMember && (
+                <div className="flex flex-col gap-2 rounded-md border border-destructive/50 bg-destructive/5 p-3">
+                  <p className="text-sm font-medium text-destructive">
+                    {t('leave.body.lastMember.title')}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('leave.body.lastMember.description')}
+                  </p>
+                  {hasUnsettledBalance && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('leave.body.lastMember.unsettledInfo')}
+                    </p>
+                  )}
+                  <label className="flex items-start gap-2 pt-1 text-sm cursor-pointer">
+                    <Checkbox
+                      checked={confirmDeleteChecked}
+                      onCheckedChange={(checked) =>
+                        setConfirmDeleteChecked(checked === true)
+                      }
+                      disabled={leaveMutation.isPending}
+                      className="mt-0.5"
+                    />
+                    <span>{t('leave.body.lastMember.checkbox')}</span>
+                  </label>
+                  <p className="text-xs text-muted-foreground pt-2 border-t border-destructive/20">
+                    {t('leave.body.lastMember.suggestion')}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => setLeaveDialogOpen(false)}
+              disabled={
+                leaveMutation.isPending || archiveForSelfMutation.isPending
+              }
+            >
+              {t('leave.cancel')}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmLeave}
+              disabled={!canConfirmLeave}
+            >
+              {isLastActiveMember && preview
+                ? t('leave.confirmDelete')
+                : hasUnsettledBalance && preview
+                  ? t('leave.confirmWithForce')
+                  : t('leave.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

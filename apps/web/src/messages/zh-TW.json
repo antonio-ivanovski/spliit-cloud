@@ -580,7 +580,8 @@
     "loading": "載入中……",
     "signedInAs": "以 {name} 身分登入",
     "required": "您需要登入才能存取您的群組。",
-    "back": "返回首頁"
+    "back": "返回首頁",
+    "signInWithGithub": "使用 GitHub 繼續"
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",
@@ -673,7 +674,35 @@
       "revoke": "撤銷",
       "revokeButton": "撤銷邀請",
       "revoked": "邀請已撤銷。",
-      "created": "邀請已傳送至 {email}。"
+      "created": "邀請已傳送至 {email}。",
+      "revokeDialog": {
+        "title": "撤銷邀請？",
+        "description": "撤銷對{email}的邀請？他們尚未接受。",
+        "cancel": "取消",
+        "confirm": "撤銷",
+        "unsettled": {
+          "title": "撤銷有未結算餘額的邀請？",
+          "toast": "邀請已撤銷，餘額已結算。",
+          "description": "撤銷對{email}的邀請？他們有未結算的餘額 — 勾選下方核取方塊可在撤銷前自動結算。",
+          "warning": {
+            "title": "此邀請有未結算的餘額",
+            "description": "不結算就撤銷將使這些餘額無限期留在帳本中。勾選下方核取方塊可在撤銷前對此受邀者涉及的每條交易建立一筆報銷支出，也可以不結算直接撤銷並手動處理這些餘額。"
+          },
+          "checkbox": "撤銷前建立結算報銷"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "刪除有未結算餘額的成員？",
+        "toast": "成員已移除，餘額已結算。",
+        "description": "將{name}從此群組中移除？他們有未結算的餘額 — 勾選下方核取方塊可在移除前自動結算。",
+        "warning": {
+          "title": "此成員有未結算的餘額",
+          "description": "不結算就移除將使這些餘額無限期留在帳本中。勾選下方核取方塊可在移除前對此成員涉及的每條交易建立一筆報銷支出，也可以不結算直接移除並手動處理這些餘額。"
+        },
+        "checkbox": "移除前建立結算報銷"
+      }
     }
   },
   "AccountSettings": {

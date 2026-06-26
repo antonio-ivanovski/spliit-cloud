@@ -593,7 +593,8 @@
     "loading": "Se încarcă…",
     "signedInAs": "Autentificat ca {name}",
     "required": "Trebuie să te autentifici pentru a accesa grupurile tale.",
-    "back": "Înapoi la pagina principală"
+    "back": "Înapoi la pagina principală",
+    "signInWithGithub": "Continuă cu GitHub"
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",
@@ -673,7 +674,35 @@
       "revoke": "Revocă",
       "revokeButton": "Revocă invitația",
       "revoked": "Invitație revocată.",
-      "created": "Invitație trimisă către {email}."
+      "created": "Invitație trimisă către {email}.",
+      "revokeDialog": {
+        "title": "Revoci invitația?",
+        "description": "Revoci invitația pentru {email}? Nu a acceptat încă.",
+        "cancel": "Anulează",
+        "confirm": "Revocă",
+        "unsettled": {
+          "title": "Revoci invitația cu sold nedecontat?",
+          "toast": "Invitație revocată, solduri decontate.",
+          "description": "Revoci invitația pentru {email}? Are solduri nedecontate — bifează căsuța de mai jos pentru a le deconta automat înainte de revocare.",
+          "warning": {
+            "title": "Această invitație are solduri nedecontate",
+            "description": "Revocarea fără decontare va lăsa soldurile în registru pe termen nelimitat. Bifează căsuța de mai jos pentru a crea o cheltuială de rambursare pentru fiecare parte care implică acest invitat înainte de revocare, sau revocă fără decontare și gestionează soldurile manual."
+          },
+          "checkbox": "Creează rambursare de decontare înainte de revocare"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Elimini membrul cu sold nedecontat?",
+        "toast": "Membru eliminat, solduri decontate.",
+        "description": "Elimini {name} din acest grup? Are solduri nedecontate — bifează căsuța de mai jos pentru a le deconta automat înainte de eliminare.",
+        "warning": {
+          "title": "Acest membru are solduri nedecontate",
+          "description": "Eliminarea fără decontare va lăsa soldurile în registru pe termen nelimitat. Bifează căsuța de mai jos pentru a crea o cheltuială de rambursare pentru fiecare parte care implică acest membru înainte de a-l elimina, sau elimină fără decontare și gestionează soldurile manual."
+        },
+        "checkbox": "Creează rambursare de decontare înainte de eliminare"
+      }
     }
   },
   "AccountSettings": {

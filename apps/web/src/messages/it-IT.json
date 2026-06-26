@@ -593,7 +593,8 @@
     "loading": "Caricamento…",
     "signedInAs": "Connesso come {name}",
     "required": "Devi accedere per accedere ai tuoi gruppi.",
-    "back": "Torna alla home"
+    "back": "Torna alla home",
+    "signInWithGithub": "Continua con GitHub"
   },
   "CompleteProfile": {
     "title": "Completa il tuo profilo",
@@ -673,7 +674,35 @@
       "revoke": "Revoca",
       "revokeButton": "Revoca invito",
       "revoked": "Invito revocato.",
-      "created": "Invito inviato a {email}."
+      "created": "Invito inviato a {email}.",
+      "revokeDialog": {
+        "title": "Revocare l'invito?",
+        "description": "Revocare l'invito a {email}? Non l'ha ancora accettato.",
+        "cancel": "Annulla",
+        "confirm": "Revoca",
+        "unsettled": {
+          "title": "Revocare l'invito con saldo in sospeso?",
+          "toast": "Invito revocato, saldi saldati.",
+          "description": "Revocare l'invito a {email}? Ha saldi in sospeso — spunta la casella qui sotto per saldarli automaticamente prima di revocare.",
+          "warning": {
+            "title": "Questo invito ha saldi in sospeso",
+            "description": "Revocare senza saldare lascerà i saldi nella contabilità a tempo indeterminato. Spunta la casella qui sotto per creare una spesa di rimborso per ogni quota che coinvolge questo invitato prima di revocare, o revoca senza saldare e gestisci i saldi manualmente."
+          },
+          "checkbox": "Crea rimborso di saldo prima di revocare"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Rimuovere il membro con saldo in sospeso?",
+        "toast": "Membro rimosso, saldi saldati.",
+        "description": "Rimuovere {name} da questo gruppo? Ha saldi in sospeso — spunta la casella qui sotto per saldarli automaticamente prima di rimuovere.",
+        "warning": {
+          "title": "Questo membro ha saldi in sospeso",
+          "description": "Rimuovere senza saldare lascerà i saldi nella contabilità a tempo indeterminato. Spunta la casella qui sotto per creare una spesa di rimborso per ogni quota che coinvolge questo membro prima di rimuoverlo, o rimuovi senza saldare e gestisci i saldi manualmente."
+        },
+        "checkbox": "Crea rimborso di saldo prima di rimuovere"
+      }
     }
   },
   "AccountSettings": {

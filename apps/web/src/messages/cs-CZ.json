@@ -580,7 +580,8 @@
     "loading": "Načítání…",
     "signedInAs": "Přihlášen jako {name}",
     "required": "Pro přístup ke svým skupinám se musíte přihlásit.",
-    "back": "Zpět na domovskou stránku"
+    "back": "Zpět na domovskou stránku",
+    "signInWithGithub": "Pokračovat přes GitHub"
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",
@@ -673,7 +674,35 @@
       "revoke": "Odvolat",
       "revokeButton": "Odvolat pozvánku",
       "revoked": "Pozvánka odvolána.",
-      "created": "Pozvánka odeslána na {email}."
+      "created": "Pozvánka odeslána na {email}.",
+      "revokeDialog": {
+        "title": "Zrušit pozvánku?",
+        "description": "Zrušit pozvánku pro {email}? Ještě nebyla přijata.",
+        "cancel": "Zrušit",
+        "confirm": "Zrušit",
+        "unsettled": {
+          "title": "Zrušit pozvánku s nevyrovnaným zůstatkem?",
+          "toast": "Pozvánka zrušena, zůstatky vyrovnány.",
+          "description": "Zrušit pozvánku pro {email}? {email} má nevyrovnané zůstatky — zaškrtni políčko níže, aby se automaticky vyrovnaly před zrušením.",
+          "warning": {
+            "title": "Tato pozvánka má nevyrovnané zůstatky",
+            "description": "Zrušení bez vyrovnání ponechá zůstatky v účetní knize na neurčito. Zaškrtni políčko níže pro vytvoření jednoho vyrovnávacího výdaje za každou nohu, které se tento pozvaný účastní, před zrušením, nebo zruš bez vyrovnání a řeš zůstatky ručně."
+          },
+          "checkbox": "Vytvořit vyrovnávací výdaj před zrušením"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Odebrat člena s nevyrovnaným zůstatkem?",
+        "toast": "Člen odebrán, zůstatky vyrovnány.",
+        "description": "Odebrat {name} z této skupiny? {name} má nevyrovnané zůstatky — zaškrtni políčko níže, aby se automaticky vyrovnaly před odebráním.",
+        "warning": {
+          "title": "Tento člen má nevyrovnané zůstatky",
+          "description": "Odebrání bez vyrovnání ponechá zůstatky v účetní knize na neurčito. Zaškrtni políčko níže pro vytvoření jednoho vyrovnávacího výdaje za každou nohu, které se tento člen účastní, před odebráním, nebo odeber bez vyrovnání a řeš zůstatky ručně."
+        },
+        "checkbox": "Vytvořit vyrovnávací výdaj před odebráním"
+      }
     }
   },
   "AccountSettings": {

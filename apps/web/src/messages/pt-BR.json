@@ -593,7 +593,8 @@
     "loading": "Carregando…",
     "signedInAs": "Conectado como {name}",
     "required": "Você precisa entrar para acessar seus grupos.",
-    "back": "Voltar ao início"
+    "back": "Voltar ao início",
+    "signInWithGithub": "Continuar com GitHub"
   },
   "CompleteProfile": {
     "title": "Complete seu perfil",
@@ -673,7 +674,35 @@
       "revoke": "Revogar",
       "revokeButton": "Revogar convite",
       "revoked": "Convite revogado.",
-      "created": "Convite enviado para {email}."
+      "created": "Convite enviado para {email}.",
+      "revokeDialog": {
+        "title": "Revogar convite?",
+        "description": "Revogar o convite para {email}? Ele ainda não foi aceito.",
+        "cancel": "Cancelar",
+        "confirm": "Revogar",
+        "unsettled": {
+          "title": "Revogar convite com saldo pendente?",
+          "toast": "Convite revogado, saldos acertados.",
+          "description": "Revogar o convite para {email}? Ele tem saldos pendentes — marque a caixa abaixo para acertá-los automaticamente antes de revogar.",
+          "warning": {
+            "title": "Este convite tem saldos pendentes",
+            "description": "Revogar sem acertar deixará os saldos no livro-razão indefinidamente. Marque a caixa abaixo para criar uma despesa de reembolso por cada parte que envolve este convidado antes de revogar, ou revogue sem acertar e lide com os saldos manualmente."
+          },
+          "checkbox": "Criar reembolso de acerto antes de revogar"
+        }
+      }
+    },
+    "removeDialog": {
+      "unsettled": {
+        "title": "Remover membro com saldo pendente?",
+        "toast": "Membro removido, saldos acertados.",
+        "description": "Remover {name} deste grupo? Ele tem saldos pendentes — marque a caixa abaixo para acertá-los automaticamente antes de remover.",
+        "warning": {
+          "title": "Este membro tem saldos pendentes",
+          "description": "Remover sem acertar deixará os saldos no livro-razão indefinidamente. Marque a caixa abaixo para criar uma despesa de reembolso por cada parte que envolve este membro antes de removê-lo, ou remova sem acertar e lide com os saldos manualmente."
+        },
+        "checkbox": "Criar reembolso de acerto antes de remover"
+      }
     }
   },
   "AccountSettings": {
