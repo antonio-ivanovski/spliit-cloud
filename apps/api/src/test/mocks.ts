@@ -49,6 +49,10 @@ vi.mock('@spliit/db', () => {
       DECLINED: 'DECLINED',
       REVOKED: 'REVOKED',
     },
+    GroupInvitationType: {
+      EMAIL: 'EMAIL',
+      LINK: 'LINK',
+    },
     ActivityType: {
       UPDATE_GROUP: 'UPDATE_GROUP',
       CREATE_EXPENSE: 'CREATE_EXPENSE',

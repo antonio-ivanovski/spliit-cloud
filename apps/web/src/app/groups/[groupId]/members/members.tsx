@@ -235,17 +235,14 @@ export default function GroupMembers() {
   const [removeSettleChecked, setRemoveSettleChecked] = useState(false)
 
   // ---- Revoke-invitation unsettled-balance confirmation ----
-  // Mirrors the remove flow: when the admin clicks "Revoke" on a
-  // pending invitation we open a dialog that fetches `revokePreview`
-  // to decide whether the invitee's materialized ledger participant
-  // has unsettled balances. Expenses can reference an invitee before
-  // they accept (the participant is materialized on invite), so this
-  // case is real and not just hypothetical. The query is lazy so it
-  // only runs while the dialog is open and refetches when reopened
-  // with a different invitation.
+  // Mirrors the remove flow: opening the dialog fetches `revokePreview`
+  // to decide whether the invitee has unsettled balances. We track
+  // `label` (temporaryName ?? email) so the dialog can address the
+  // invitee naturally.
   const [invitationPendingRevoke, setInvitationPendingRevoke] = useState<{
     id: string
     email: string
+    label: string
   } | null>(null)
   const revokePreviewQuery = trpc.invitations.revokePreview.useQuery(
     {
@@ -651,49 +648,55 @@ export default function GroupMembers() {
               </p>
             ) : (
               <ul className="flex flex-col divide-y">
-                {invitations.map((invitation) => (
-                  <li
-                    key={invitation.id}
-                    className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-medium text-foreground truncate">
-                          {invitation.email}
-                        </span>
-                        <Badge variant="secondary" className="shrink-0">
-                          {roleLabel(invitation.role, roleLabels)}
-                        </Badge>
-                        <Badge variant="outline" className="shrink-0">
-                          {invitation.status}
-                        </Badge>
+                {invitations.map((invitation) => {
+                  // Pending-only display label: temporaryName when set,
+                  // otherwise the raw email.
+                  const label = invitation.temporaryName ?? invitation.email
+                  return (
+                    <li
+                      key={invitation.id}
+                      className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-medium text-foreground truncate">
+                            {label}
+                          </span>
+                          <Badge variant="secondary" className="shrink-0">
+                            {roleLabel(invitation.role, roleLabels)}
+                          </Badge>
+                          <Badge variant="outline" className="shrink-0">
+                            {invitation.status}
+                          </Badge>
+                        </div>
+                        {invitation.createdAt && (
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {t('invitations.sentOn', {
+                              date: formatDate(invitation.createdAt, locale),
+                            })}
+                          </p>
+                        )}
                       </div>
-                      {invitation.createdAt && (
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {t('invitations.sentOn', {
-                            date: formatDate(invitation.createdAt, locale),
-                          })}
-                        </p>
+                      {invitation.status === 'PENDING' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive shrink-0"
+                          disabled={revokeMutation.isPending}
+                          onClick={() =>
+                            setInvitationPendingRevoke({
+                              id: invitation.id,
+                              email: invitation.email,
+                              label,
+                            })
+                          }
+                        >
+                          {t('invitations.revokeButton')}
+                        </Button>
                       )}
-                    </div>
-                    {invitation.status === 'PENDING' && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-destructive shrink-0"
-                        disabled={revokeMutation.isPending}
-                        onClick={() =>
-                          setInvitationPendingRevoke({
-                            id: invitation.id,
-                            email: invitation.email,
-                          })
-                        }
-                      >
-                        {t('invitations.revokeButton')}
-                      </Button>
-                    )}
-                  </li>
-                ))}
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </CardContent>
@@ -800,10 +803,10 @@ export default function GroupMembers() {
               {invitationPendingRevoke
                 ? revokePreviewQuery.data?.hasUnsettledBalance
                   ? t('invitations.revokeDialog.unsettled.description', {
-                      email: invitationPendingRevoke.email,
+                      email: invitationPendingRevoke.label,
                     })
                   : t('invitations.revokeDialog.description', {
-                      email: invitationPendingRevoke.email,
+                      email: invitationPendingRevoke.label,
                     })
                 : null}
             </DialogDescription>

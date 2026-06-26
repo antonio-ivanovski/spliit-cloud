@@ -199,6 +199,84 @@ describe('getGroup — pending invitations as participants', () => {
     expect(prismaMock.ledgerParticipant.create).not.toHaveBeenCalled()
     expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
   })
+
+  it('prefers the invitation temporaryName over the email when rendering a pending participant', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      name: 'Trip',
+      information: null,
+      createdAt: new Date(),
+      ledgerId,
+      ledger: { id: ledgerId, currency: '$', currencyCode: 'USD' },
+      members: [],
+      invitations: [
+        {
+          id: 'inv-3',
+          groupId,
+          email: 'dave@example.com',
+          temporaryName: 'Dave from accounting',
+          status: 'PENDING',
+          ledgerParticipantId: 'lp-dave',
+        },
+      ],
+    } as never)
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-3',
+        groupId,
+        email: 'dave@example.com',
+        temporaryName: 'Dave from accounting',
+        ledgerParticipant: { id: 'lp-dave' },
+      },
+    ] as never)
+
+    const group = await getGroup(groupId)
+
+    expect(group!.participants).toEqual([
+      {
+        id: 'lp-dave',
+        name: 'Dave from accounting',
+        pending: true,
+      },
+    ])
+  })
+
+  it('falls back to the email when the pending invitation has no temporaryName', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      name: 'Trip',
+      information: null,
+      createdAt: new Date(),
+      ledgerId,
+      ledger: { id: ledgerId, currency: '$', currencyCode: 'USD' },
+      members: [],
+      invitations: [
+        {
+          id: 'inv-4',
+          groupId,
+          email: 'dave@example.com',
+          temporaryName: null,
+          status: 'PENDING',
+          ledgerParticipantId: 'lp-dave',
+        },
+      ],
+    } as never)
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-4',
+        groupId,
+        email: 'dave@example.com',
+        temporaryName: null,
+        ledgerParticipant: { id: 'lp-dave' },
+      },
+    ] as never)
+
+    const group = await getGroup(groupId)
+
+    expect(group!.participants).toEqual([
+      { id: 'lp-dave', name: 'dave@example.com', pending: true },
+    ])
+  })
 })
 
 describe('deleteExpense', () => {
@@ -345,7 +423,7 @@ describe('getActivities', () => {
         data: 'Dinner',
         ledgerParticipant: {
           groupMember: null,
-          invitations: [{ email: 'dave@example.com' }],
+          invitations: [{ email: 'dave@example.com', temporaryName: null }],
         },
       },
     ] as never)
@@ -355,6 +433,40 @@ describe('getActivities', () => {
 
     expect(activities[0]).toMatchObject({
       actorName: 'dave@example.com',
+    })
+  })
+
+  it('prefers a pending invitation temporaryName over the email when rendering the actor', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.activity.findMany.mockResolvedValue([
+      {
+        id: 'act-5',
+        ledgerId: 'ledger-1',
+        time: new Date(),
+        activityType: 'CREATE_EXPENSE',
+        ledgerParticipantId: 'lp-invitee',
+        accountId: null,
+        expenseId: 'exp-5',
+        data: 'Lunch',
+        ledgerParticipant: {
+          groupMember: null,
+          invitations: [
+            {
+              email: 'erin@example.com',
+              temporaryName: 'Erin from the office',
+            },
+          ],
+        },
+      },
+    ] as never)
+    prismaMock.expense.findMany.mockResolvedValue([] as never)
+
+    const activities = await getActivities('grp-1')
+
+    expect(activities[0]).toMatchObject({
+      actorName: 'Erin from the office',
     })
   })
 

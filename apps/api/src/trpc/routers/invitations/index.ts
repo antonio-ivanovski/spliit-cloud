@@ -4,11 +4,11 @@ import { z } from 'zod'
 import {
   RevokeInvitationPreconditionError,
   acceptInvitation,
-  createInvitation,
+  createEmailInvitation,
   declineInvitation,
   getRevokeInvitationPreview,
   listGroupInvitations,
-  listPendingInvitationsForAccount,
+  listPendingEmailInvitationsForAccount,
   revokeInvitation,
   sendInvitationEmail,
 } from '../../../lib/invitations'
@@ -48,13 +48,17 @@ export const invitationsRouter = createTRPCRouter({
       return { invitations }
     }),
 
-  // Create a new invitation (ADMIN only).
+  // Create an email invitation (ADMIN only). Today this is the only
+  // invite kind; a link-invite sibling will sit next to it later.
   create: protectedProcedure
     .input(
       z.object({
         groupId: z.string().min(1),
         email: z.string().email(),
         role: invitationRoleSchema.default('MEMBER'),
+        // Pending-only label that wins over the email wherever a
+        // pending invitee is rendered.
+        temporaryName: z.string().trim().min(1).max(120).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -65,11 +69,12 @@ export const invitationsRouter = createTRPCRouter({
       if (member.role !== 'ADMIN') {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
       }
-      const invitation = await createInvitation({
+      const invitation = await createEmailInvitation({
         groupId: input.groupId,
         email: input.email,
         role: input.role as GroupRole,
         inviterAccountId: ctx.auth.user.id,
+        temporaryName: input.temporaryName ?? null,
       })
 
       // Differentiate the email body by whether the recipient already has an
@@ -177,7 +182,8 @@ export const invitationsRouter = createTRPCRouter({
       return {}
     }),
 
-  // Accept an invitation by id. Email must match the authenticated account.
+  // Accept an email invitation. Link-invite handoff will branch on
+  // invitation type to swap the auth helper.
   accept: protectedProcedure
     .input(z.object({ invitationId: z.string().min(1) }))
     .mutation(async ({ input: { invitationId }, ctx }) => {
@@ -202,9 +208,9 @@ export const invitationsRouter = createTRPCRouter({
       return {}
     }),
 
-  // Pending invitations for the current account.
+  // Pending email invitations for the current account.
   listForAccount: protectedProcedure.query(async ({ ctx }) => {
-    const invitations = await listPendingInvitationsForAccount(
+    const invitations = await listPendingEmailInvitationsForAccount(
       ctx.auth.user.email,
     )
     return { invitations }

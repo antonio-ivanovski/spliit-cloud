@@ -227,6 +227,7 @@ describe('invitationsRouter.accept', () => {
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-1',
       groupId: 'grp-1',
+      type: 'EMAIL',
       email: 'bob@example.com',
       status: 'PENDING',
       role: 'MEMBER',
@@ -283,6 +284,7 @@ describe('invitationsRouter.accept', () => {
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-1',
       groupId: 'grp-1',
+      type: 'EMAIL',
       email: 'bob@example.com',
       status: 'PENDING',
       role: 'MEMBER',
@@ -309,6 +311,7 @@ describe('invitationsRouter.accept', () => {
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-1',
       groupId: 'grp-1',
+      type: 'EMAIL',
       email: 'bob@example.com',
       status: 'REVOKED',
       role: 'MEMBER',
@@ -581,6 +584,7 @@ describe('invitationsRouter.decline', () => {
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-1',
       groupId: 'grp-1',
+      type: 'EMAIL',
       email: 'bob@example.com',
       status: 'PENDING',
       role: 'MEMBER',
@@ -606,6 +610,7 @@ describe('invitationsRouter.decline', () => {
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-1',
       groupId: 'grp-1',
+      type: 'EMAIL',
       email: 'bob@example.com',
       status: 'PENDING',
       role: 'MEMBER',
@@ -622,6 +627,7 @@ describe('invitationsRouter.decline', () => {
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-1',
       groupId: 'grp-1',
+      type: 'EMAIL',
       email: 'bob@example.com',
       status: 'ACCEPTED',
       role: 'MEMBER',

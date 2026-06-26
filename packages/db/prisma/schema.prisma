@@ -208,6 +208,19 @@ enum GroupInvitationStatus {
   REVOKED
 }
 
+enum GroupInvitationType {
+  // Targeted invite for a specific account by email. Acceptance requires
+  // the authenticated account's email to match `email` case-insensitively.
+  EMAIL
+  // Shareable invite intended to be claimed by anyone with the link.
+  // The `email` column is still populated, but as a unique synthetic
+  // placeholder of the form `${token}@link.placeholder.local` (the
+  // `.placeholder.local` suffix is the signal for "not a real address";
+  // see `lib/invitations.ts` for the generator). Acceptance is gated on
+  // the synthetic match rather than an account email match.
+  LINK
+}
+
 model GroupInvitation {
   id        String   @id
   createdAt DateTime @default(now())
@@ -216,9 +229,22 @@ model GroupInvitation {
   group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId String
 
-  // Email the invitation was sent to. Acceptance requires an authenticated
-  // account whose email matches exactly (unless an owner/admin reassigns it).
-  email  String
+  type GroupInvitationType @default(EMAIL)
+
+  // Email the invitation targets. For `EMAIL` invitations this is the
+  // recipient's real address; for `LINK` invitations it is a unique
+  // synthetic placeholder under the `.placeholder.local` reserved
+  // domain (so the global unique constraint stays the source of
+  // identity and the column is always non-null).
+  email String
+
+  // Optional pending-only label. When set, the UI surfaces this name
+  // (e.g. in the participant picker, expense cards, and activity feed)
+  // instead of the raw email while the invitation is still PENDING.
+  // After acceptance, the account profile (`Account.name`) wins.
+  // Accepted invitations keep this column populated for historical reads.
+  temporaryName String?
+
   role   GroupRole             @default(MEMBER)
   status GroupInvitationStatus @default(PENDING)
 

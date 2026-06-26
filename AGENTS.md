@@ -32,6 +32,7 @@ bun prisma-migrate       # deploy migrations for local/container DB
 - When changing schema, commit `packages/db/prisma/schema.prisma` and the migration together, then run `bun prisma-generate`.
 - API runs TypeScript directly with Bun; do not add an API build step unless changing the runtime model.
 - Docker API stage runs `bun run apps/api/src/server.ts`; add another server as a new `FROM runner AS <name>` stage with its own `CMD`.
+- Keep code comments terse. JSDoc/inline comments should explain the _why_ (non-obvious behavior, constraints, seams) in a sentence or two, not re-narrate the code. When in doubt, drop the comment.
 
 More focused notes: [.agent/architecture.md](.agent/architecture.md), [.agent/database.md](.agent/database.md), [.agent/testing.md](.agent/testing.md), [.agent/trpc-procedures.md](.agent/trpc-procedures.md).
 

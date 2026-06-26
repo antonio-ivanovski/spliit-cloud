@@ -27,6 +27,7 @@ import {
   type Reimbursement,
 } from '@spliit/domain'
 import { deleteS3Object, markS3ObjectAsOwned } from '../routes/upload'
+import { resolveParticipantDisplayName } from './invitations'
 
 export function randomId(size?: number) {
   const id = crypto.randomUUID().replaceAll('-', '')
@@ -534,9 +535,9 @@ export async function getGroup(groupId: string) {
   // form (paid-by / paid-for) before they accept the invitation. Once the
   // invitation is accepted, the participant is reused for the new
   // GroupMember. If the invitation is revoked, the participant is removed.
-  // The display name shown for the materialized participant is resolved at
-  // read time from `GroupInvitation.email` — the LedgerParticipant itself
-  // carries no name.
+  // The display name is resolved at read time through
+  // `resolveParticipantDisplayName`; the LedgerParticipant itself carries
+  // no name.
   if (group.ledgerId && group.invitations.length > 0) {
     await prisma.$transaction(async (tx) => {
       for (const invitation of group.invitations) {
@@ -580,13 +581,10 @@ export async function getGroup(groupId: string) {
         })
       : []
 
-  // Flatten to the shape callers expect: ledger currency fields at the top
-  // level, and a list of `participants` derived from active ledger
-  // participants so the existing UI keeps working until it is updated.
-  // The display name is resolved at read time: `account.name` for
-  // account-backed members, `invitation.email` for pending invitations.
-  // Pending invitations appear as synthetic participants so they can be
-  // selected in the expense form before they accept.
+  // Flatten to the shape callers expect. Display name is resolved at
+  // read time through `resolveParticipantDisplayName`. Pending
+  // invitations appear as synthetic participants so they can be selected
+  // in the expense form before they accept.
   return {
     ...group,
     currency: group.ledger?.currency ?? '$',
@@ -608,7 +606,15 @@ export async function getGroup(groupId: string) {
           ? [
               {
                 id: inv.ledgerParticipant.id,
-                name: inv.email,
+                name: resolveParticipantDisplayName({
+                  groupMember: null,
+                  invitations: [
+                    {
+                      email: inv.email,
+                      temporaryName: inv.temporaryName,
+                    },
+                  ],
+                }),
                 pending: true,
               },
             ]
@@ -668,7 +674,7 @@ export async function getGroupExpenses(
           id: true,
           groupMember: { select: { account: { select: { name: true } } } },
           invitations: {
-            select: { email: true },
+            select: { email: true, temporaryName: true },
             take: 1,
             orderBy: { createdAt: 'desc' },
           },
@@ -681,7 +687,7 @@ export async function getGroupExpenses(
               id: true,
               groupMember: { select: { account: { select: { name: true } } } },
               invitations: {
-                select: { email: true },
+                select: { email: true, temporaryName: true },
                 take: 1,
                 orderBy: { createdAt: 'desc' },
               },
@@ -708,24 +714,17 @@ export async function getGroupExpenses(
 
   // Flatten paidBy and paidFor.ledgerParticipant to the { id, name } shape
   // the rest of the app expects. The display name is resolved at read time
-  // from `account.name` for account-backed participants and from the
-  // pending invitation email otherwise.
+  // through `resolveParticipantDisplayName`.
   return rows.map((row) => ({
     ...row,
     paidBy: {
       id: row.paidBy.id,
-      name:
-        row.paidBy.groupMember?.account?.name ??
-        row.paidBy.invitations[0]?.email ??
-        '',
+      name: resolveParticipantDisplayName(row.paidBy),
     },
     paidFor: row.paidFor.map((pf) => ({
       ledgerParticipant: {
         id: pf.ledgerParticipant.id,
-        name:
-          pf.ledgerParticipant.groupMember?.account?.name ??
-          pf.ledgerParticipant.invitations[0]?.email ??
-          '',
+        name: resolveParticipantDisplayName(pf.ledgerParticipant),
       },
       shares: pf.shares,
     })),
@@ -793,7 +792,7 @@ export async function getActivities(
         select: {
           groupMember: { select: { account: { select: { name: true } } } },
           invitations: {
-            select: { email: true },
+            select: { email: true, temporaryName: true },
             take: 1,
             orderBy: { createdAt: 'desc' },
           },
@@ -811,9 +810,7 @@ export async function getActivities(
 
   return activities.map((activity) => {
     const lp = activity.ledgerParticipant
-    const actorName = lp
-      ? (lp.groupMember?.account?.name ?? lp.invitations[0]?.email ?? null)
-      : null
+    const actorName = lp ? resolveParticipantDisplayName(lp) || null : null
     // Strip the raw relation from the spread — we expose `actorName`
     // instead so the frontend can render the name directly.
     const { ledgerParticipant: _lp, ...rest } = activity

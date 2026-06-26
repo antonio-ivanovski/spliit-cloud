@@ -251,15 +251,22 @@ describe('better-auth socialProviders config', () => {
     })
   })
 
-  it('rejects GitHub sign-in when GitHub returns no verified email', async () => {
+  it('falls back to a synthetic placeholder email when GitHub returns no verified email', async () => {
+    // When the user has no verified email on GitHub (private email,
+    // missing `user:email` scope, no verified address), we no longer
+    // hard-fail the sign-in. Instead we synthesize a placeholder under
+    // the reserved `.placeholder.local` domain so the user gets a
+    // complete account and can sign in normally via GitHub. Email-only
+    // features (magic-link sign-in, password reset, notifications) skip
+    // these accounts because their email is a placeholder.
     const fetchMock = vi.fn(async (url: string) => {
       if (url.endsWith('/user')) {
         return Response.json({
           id: 789,
           login: 'no-verified-email',
-          name: null,
+          name: 'Octocat',
           email: null,
-          avatar_url: null,
+          avatar_url: 'https://github.test/avatar.png',
         })
       }
       return Response.json([
@@ -273,9 +280,17 @@ describe('better-auth socialProviders config', () => {
     })
     vi.stubGlobal('fetch', fetchMock)
 
-    await expect(
-      realAuthModule.getVerifiedGitHubUserInfo({ accessToken: 'token-3' }),
-    ).rejects.toThrow('GitHub did not provide a verified email address')
+    const result = await realAuthModule.getVerifiedGitHubUserInfo({
+      accessToken: 'token-3',
+    })
+
+    expect(result?.user).toMatchObject({
+      id: '789',
+      name: 'Octocat',
+      email: '789@github.placeholder.local',
+      emailVerified: false,
+    })
+    expect(result?.data).toMatchObject({ isPlaceholderEmail: true })
   })
 
   it('keeps Google as a social provider alongside GitHub', () => {

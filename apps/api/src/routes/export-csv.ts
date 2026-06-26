@@ -8,6 +8,7 @@ import {
 } from '@spliit/domain'
 import contentDisposition from 'content-disposition'
 import { getAuthFromRequest } from '../lib/auth/session'
+import { resolveParticipantDisplayName } from '../lib/invitations'
 
 const splitModeLabel = {
   EVENLY: 'Evenly',
@@ -36,22 +37,6 @@ async function ensureMemberOr404(request: Request, groupId: string) {
     return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
   return null
-}
-
-/**
- * Resolve a LedgerParticipant's display name from its relations. Account-
- * backed participants always resolve to `Account.name`; the materialized
- * participant for a pending invitation resolves to that invitation's email.
- */
-function resolveParticipantName(participant: {
-  groupMember: { account: { name: string } } | null
-  invitations: Array<{ email: string }>
-}): string {
-  return (
-    participant.groupMember?.account.name ??
-    participant.invitations[0]?.email ??
-    ''
-  )
 }
 
 export async function exportGroupCsv(request: Request, groupId: string) {
@@ -116,7 +101,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       id: true,
       groupMember: { select: { account: { select: { name: true } } } },
       invitations: {
-        select: { email: true },
+        select: { email: true, temporaryName: true },
         take: 1,
         orderBy: { createdAt: 'desc' },
       },
@@ -142,7 +127,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     { label: 'Is Reimbursement', value: 'isReimbursement' },
     { label: 'Split mode', value: 'splitMode' },
     ...participants.map((participant) => ({
-      label: resolveParticipantName(participant),
+      label: resolveParticipantDisplayName(participant),
       value: participant.id,
     })),
   ]

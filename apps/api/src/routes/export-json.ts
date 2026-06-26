@@ -2,22 +2,7 @@ import { prisma } from '@spliit/db'
 import { getCategoryById } from '@spliit/domain'
 import contentDisposition from 'content-disposition'
 import { getAuthFromRequest } from '../lib/auth/session'
-
-/**
- * Resolve a LedgerParticipant's display name from its relations. Account-
- * backed participants always resolve to `Account.name`; the materialized
- * participant for a pending invitation resolves to that invitation's email.
- */
-function resolveParticipantName(participant: {
-  groupMember: { account: { name: string } } | null
-  invitations: Array<{ email: string }>
-}): string {
-  return (
-    participant.groupMember?.account.name ??
-    participant.invitations[0]?.email ??
-    ''
-  )
-}
+import { resolveParticipantDisplayName } from '../lib/invitations'
 
 export async function exportGroupJson(request: Request, groupId: string) {
   const auth = await getAuthFromRequest(request)
@@ -85,7 +70,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
       id: true,
       groupMember: { select: { account: { select: { name: true } } } },
       invitations: {
-        select: { email: true },
+        select: { email: true, temporaryName: true },
         take: 1,
         orderBy: { createdAt: 'desc' },
       },
@@ -113,7 +98,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
     expenses: expensesWithCategory,
     participants: participants.map((participant) => ({
       id: participant.id,
-      name: resolveParticipantName(participant),
+      name: resolveParticipantDisplayName(participant),
     })),
   }
 

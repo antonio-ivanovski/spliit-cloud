@@ -5,6 +5,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { magicLink } from 'better-auth/plugins'
 import { env, webOrigins } from '../env'
+import { buildProviderPlaceholderEmail } from '../invitations'
 import { sendEmail } from '../mail/send'
 import { getApiBaseUrl } from './urls'
 
@@ -114,6 +115,16 @@ async function fetchGitHubJson<T>(url: string, accessToken: string) {
   return (await response.json()) as T
 }
 
+/**
+ * Resolve the Spliit `Account` for a GitHub OAuth sign-in. Prefers a
+ * verified email from GitHub's `/user/emails` endpoint; falls back to a
+ * synthetic placeholder email (`<id>@github.placeholder.local`) when the
+ * user has no verified email on file (private email, missing
+ * `user:email` scope). The synthetic path is what enables "email-less
+ * accounts" — the user gets a complete account and can use the app,
+ * but email-only features (magic-link sign-in, password reset,
+ * notifications) skip them because the email is a placeholder.
+ */
 export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   if (!token.accessToken) return null
 
@@ -132,25 +143,43 @@ export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
     emails?.find((email) => email.primary && email.verified) ??
     emails?.find((email) => email.verified)
 
-  if (!verifiedEmail) {
-    throw new APIError('BAD_REQUEST', {
-      code: 'GITHUB_VERIFIED_EMAIL_REQUIRED',
-      message:
-        'GitHub did not provide a verified email address. Verify an email on GitHub, then try again.',
-    })
+  const profileId = String(profile.id)
+  const displayName = profile.name || profile.login || ''
+  const image = profile.avatar_url ?? undefined
+
+  if (verifiedEmail) {
+    return {
+      user: {
+        id: profileId,
+        name: displayName,
+        email: verifiedEmail.email,
+        image,
+        emailVerified: true,
+      },
+      data: {
+        ...profile,
+        email: verifiedEmail.email,
+      },
+    }
   }
 
+  // No verified email on GitHub. Synthesize a placeholder so the user
+  // can still sign in. `emailVerified: false` keeps magic-link sign-in
+  // and password recovery off the table for these accounts (they have
+  // no real address to send to) and `isPlaceholderEmail(...)` is the
+  // application-side marker to skip email-only features.
   return {
     user: {
-      id: String(profile.id),
-      name: profile.name || profile.login || '',
-      email: verifiedEmail.email,
-      image: profile.avatar_url ?? undefined,
-      emailVerified: true,
+      id: profileId,
+      name: displayName,
+      email: buildProviderPlaceholderEmail('github', profileId),
+      image,
+      emailVerified: false,
     },
     data: {
       ...profile,
-      email: verifiedEmail.email,
+      email: null,
+      isPlaceholderEmail: true,
     },
   }
 }

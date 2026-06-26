@@ -1,4 +1,9 @@
-import { GroupInvitationStatus, GroupRole, prisma } from '@spliit/db'
+import {
+  GroupInvitationStatus,
+  GroupInvitationType,
+  GroupRole,
+  prisma,
+} from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import {
   createSettlementExpensesForLeave,
@@ -8,11 +13,57 @@ import {
 import { getWebBaseUrl } from './auth/urls'
 import { sendEmail } from './mail/send'
 
+/**
+ * Generic "Pending invite" fallback label for invitations with no email
+ * and no temporary name.
+ */
+export const PENDING_INVITEE_FALLBACK_LABEL = 'Pending invite'
+
+/**
+ * Reserved TLDs used for synthetic placeholder emails. Anything under
+ * `*.placeholder.local` is by convention not a real address — it is a
+ * synthetic identifier that satisfies `Account.email`'s non-null /
+ * unique contract for users and invitations that have no real address.
+ *
+ *   - `${token}@link.placeholder.local`           — link-invite recipient
+ *   - `${providerAccountId}@${provider}.placeholder.local` — OAuth
+ *     provider that did not return an email (e.g. Reddit, Discord
+ *     phone-only accounts)
+ *
+ * The unique constraint on `Account.email` stays the source of
+ * identity, and application code can treat `.placeholder.local` as a
+ * "no real email" marker (e.g. to skip email-only features like
+ * password reset or notifications for these users).
+ */
+export const PLACEHOLDER_EMAIL_DOMAIN = 'placeholder.local'
+
+/** True when the email is a synthetic placeholder, not a real address. */
+export function isPlaceholderEmail(email: string | null | undefined): boolean {
+  if (!email) return false
+  return email.toLowerCase().endsWith(`.${PLACEHOLDER_EMAIL_DOMAIN}`)
+}
+
+/** Build a synthetic email for an OAuth provider that did not return one. */
+export function buildProviderPlaceholderEmail(
+  provider: string,
+  providerAccountId: string,
+): string {
+  const safeProvider = provider.toLowerCase().replace(/[^a-z0-9-]/g, '-')
+  return `${providerAccountId}@${safeProvider}.${PLACEHOLDER_EMAIL_DOMAIN}`
+}
+
+/** Build a synthetic email for a link invitation. `token` must be unique. */
+export function buildLinkPlaceholderEmail(token: string): string {
+  return `${token}@link.${PLACEHOLDER_EMAIL_DOMAIN}`
+}
+
 export type CreateInvitationInput = {
   groupId: string
   email: string
   role: GroupRole
   inviterAccountId: string
+  /** Pending-only label. Ignored after acceptance. */
+  temporaryName?: string | null
 }
 
 export class InvitationError extends TRPCError {
@@ -21,14 +72,44 @@ export class InvitationError extends TRPCError {
   }
 }
 
-export async function createInvitation({
-  groupId,
-  email,
-  role,
-  inviterAccountId,
-}: CreateInvitationInput) {
-  const normalizedEmail = email.toLowerCase()
+/**
+ * Display name for an invitation row. Priority:
+ * `temporaryName` → `email` → {@link PENDING_INVITEE_FALLBACK_LABEL}.
+ * Callers should prefer `Account.name` for accepted invitations.
+ */
+export function getInvitationDisplayName(invitation: {
+  email: string | null
+  temporaryName: string | null
+}): string {
+  return (
+    invitation.temporaryName ??
+    invitation.email ??
+    PENDING_INVITEE_FALLBACK_LABEL
+  )
+}
 
+/**
+ * Display name for a `LedgerParticipant`. Priority: accepted
+ * `Account.name` → invitation `temporaryName` → invitation `email`.
+ */
+export function resolveParticipantDisplayName(participant: {
+  groupMember: { account: { name: string } } | null
+  invitations: Array<{
+    email: string | null
+    temporaryName: string | null
+  }>
+}): string {
+  const accountName = participant.groupMember?.account.name
+  if (accountName) return accountName
+  const invitation = participant.invitations[0]
+  if (!invitation) return ''
+  return getInvitationDisplayName(invitation)
+}
+
+async function assertNotInvitingSelf(
+  inviterAccountId: string,
+  normalizedEmail: string,
+) {
   const inviter = await prisma.account.findUnique({
     where: { id: inviterAccountId },
   })
@@ -37,7 +118,12 @@ export async function createInvitation({
       'You cannot invite yourself to a group you belong to.',
     )
   }
+}
 
+async function assertNotExistingMember(
+  groupId: string,
+  normalizedEmail: string,
+) {
   const existingMember = await prisma.groupMember.findFirst({
     where: {
       groupId,
@@ -48,12 +134,16 @@ export async function createInvitation({
   if (existingMember) {
     throw new InvitationError('This person is already a member of the group.')
   }
+}
 
-  // Reject if there is already a pending invitation for the same email in
-  // this group. The user should revoke the existing invitation first.
+async function assertNoConflictingEmailInvitation(
+  groupId: string,
+  normalizedEmail: string,
+) {
   const existingPending = await prisma.groupInvitation.findFirst({
     where: {
       groupId,
+      type: GroupInvitationType.EMAIL,
       email: { equals: normalizedEmail, mode: 'insensitive' },
       status: GroupInvitationStatus.PENDING,
     },
@@ -64,13 +154,10 @@ export async function createInvitation({
       'An invitation is already pending for this email. Revoke the existing one below and try again.',
     )
   }
-
-  // Reject if there is already an accepted invitation for the same email in
-  // this group. The account already belongs to the group (or the email was
-  // claimed by someone else).
   const existingAccepted = await prisma.groupInvitation.findFirst({
     where: {
       groupId,
+      type: GroupInvitationType.EMAIL,
       email: { equals: normalizedEmail, mode: 'insensitive' },
       status: GroupInvitationStatus.ACCEPTED,
     },
@@ -79,17 +166,40 @@ export async function createInvitation({
   if (existingAccepted) {
     throw new InvitationError('This email is already a member of the group.')
   }
+}
+
+/**
+ * Create an email-targeted invitation. Owns normalization, duplicate
+ * checks, and the create call. The seam exists so a future
+ * `createLinkInvitation` can sit next to it.
+ */
+export async function createEmailInvitation({
+  groupId,
+  email,
+  role,
+  inviterAccountId,
+  temporaryName,
+}: CreateInvitationInput) {
+  const normalizedEmail = email.toLowerCase()
+
+  await assertNotInvitingSelf(inviterAccountId, normalizedEmail)
+  await assertNotExistingMember(groupId, normalizedEmail)
+  await assertNoConflictingEmailInvitation(groupId, normalizedEmail)
 
   return prisma.groupInvitation.create({
     data: {
       id: randomId(),
+      type: GroupInvitationType.EMAIL,
       groupId,
       email: normalizedEmail,
       role,
+      temporaryName: temporaryName ?? null,
       invitedById: inviterAccountId,
     },
   })
 }
+
+export const createInvitation = createEmailInvitation
 
 export async function listGroupInvitations(groupId: string) {
   return prisma.groupInvitation.findMany({
@@ -212,24 +322,16 @@ export async function revokeInvitation(opts: {
 }
 
 /**
- * Read-only summary the web client uses to render the admin "revoke
- * invitation" dialog before the admin confirms. Bundles everything the
- * dialog needs in a single query:
- *   - the invitation's email (so the dialog can address it),
- *   - whether the invitation's materialized ledger participant has
- *     unsettled balances (so the dialog can pick between the simple
- *     confirm and the three-option variant).
- *
- * Caller authorization (ADMIN of the group, invitation belongs to
- * that group, invitation is still PENDING) is enforced by the
- * procedure that wraps this helper — this function only loads the
- * data.
+ * Read-only summary for the admin "revoke invitation" dialog: the
+ * invitation's display label and whether the invitee has unsettled
+ * balances. Caller authorization is enforced by the procedure.
  */
 export async function getRevokeInvitationPreview(opts: {
   invitationId: string
   groupId: string
 }): Promise<{
   invitationEmail: string
+  invitationLabel: string
   hasUnsettledBalance: boolean
 }> {
   const invitation = await prisma.groupInvitation.findUnique({
@@ -248,14 +350,51 @@ export async function getRevokeInvitationPreview(opts: {
 
   return {
     invitationEmail: invitation.email,
+    invitationLabel: getInvitationDisplayName(invitation),
     hasUnsettledBalance,
   }
 }
 
+/** Email match guard for accepting an email-targeted invitation. */
+export function assertCanAcceptEmailInvitation(
+  invitation: { email: string | null; type: GroupInvitationType },
+  accountEmail: string,
+) {
+  if (invitation.type !== GroupInvitationType.EMAIL) {
+    throw new InvitationError('This invitation is not an email invitation.')
+  }
+  if (
+    !invitation.email ||
+    invitation.email.toLowerCase() !== accountEmail.toLowerCase()
+  ) {
+    throw new InvitationError(
+      'Invitation email does not match the authenticated account email',
+    )
+  }
+}
+
+/** Email match guard for declining an email-targeted invitation. */
+export function assertCanDeclineEmailInvitation(
+  invitation: { email: string | null; type: GroupInvitationType },
+  accountEmail: string,
+) {
+  if (invitation.type !== GroupInvitationType.EMAIL) {
+    throw new InvitationError('This invitation is not an email invitation.')
+  }
+  if (
+    !invitation.email ||
+    invitation.email.toLowerCase() !== accountEmail.toLowerCase()
+  ) {
+    throw new InvitationError('This invitation was not sent to your account.')
+  }
+}
+
 /**
- * Mark a pending invitation as declined by the invitee. The authenticated
- * account email must match the invitation email (case-insensitive); the
- * invitation must be in the PENDING state.
+ * Mark a pending invitation as declined by the invitee. Today every
+ * invitation is email-targeted, so this delegates to
+ * {@link assertCanDeclineEmailInvitation} which preserves the previous
+ * case-insensitive email match. The status flip remains identical to
+ * the pre-refactor behavior.
  */
 export async function declineInvitation(opts: {
   invitationId: string
@@ -270,9 +409,7 @@ export async function declineInvitation(opts: {
   if (invitation.status !== GroupInvitationStatus.PENDING) {
     throw new InvitationError('Invitation is no longer pending.')
   }
-  if (invitation.email.toLowerCase() !== opts.accountEmail.toLowerCase()) {
-    throw new InvitationError('This invitation was not sent to your account.')
-  }
+  assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
   return prisma.groupInvitation.update({
     where: { id: opts.invitationId },
     data: {
@@ -336,7 +473,7 @@ export async function sendInvitationEmail(opts: {
         `If you don't recognize this group, you can safely ignore this email.`,
       ].join('\n')
     : [
-        `${inviterDisplayName} invited you to "${groupName}" on Spliit Cloud.`,
+        `${inviterDisplayName} invited you to join "${groupName}" on Spliit Cloud.`,
         '',
         `Create an account to join the group:`,
         signInUrl,
@@ -355,10 +492,12 @@ export async function sendInvitationEmail(opts: {
 }
 
 /**
- * Accept a pending invitation for the current account. The invitation must
- * exist, be PENDING, and the authenticated account email must match the
- * invitation email exactly (case-insensitive). The function is idempotent in
- * the sense that accepting a non-pending invitation is rejected.
+ * Accept a pending invitation for the current account. Today every
+ * invitation is email-targeted, so this calls
+ * {@link assertCanAcceptEmailInvitation} (case-insensitive email match)
+ * before flipping the status. The transaction that materializes the new
+ * `GroupMember` and reuses the existing pending `LedgerParticipant` is
+ * unchanged.
  */
 export async function acceptInvitation(opts: {
   invitationId: string
@@ -375,11 +514,7 @@ export async function acceptInvitation(opts: {
   if (invitation.status !== GroupInvitationStatus.PENDING) {
     throw new Error('Invitation is no longer pending')
   }
-  if (invitation.email.toLowerCase() !== opts.accountEmail.toLowerCase()) {
-    throw new Error(
-      'Invitation email does not match the authenticated account email',
-    )
-  }
+  assertCanAcceptEmailInvitation(invitation, opts.accountEmail)
   if (!invitation.group.ledger) {
     throw new Error('Group has no ledger')
   }
@@ -449,9 +584,13 @@ export async function acceptInvitation(opts: {
   return result
 }
 
-export async function listPendingInvitationsForAccount(accountEmail: string) {
+/** List pending email invitations targeted at the current account. */
+export async function listPendingEmailInvitationsForAccount(
+  accountEmail: string,
+) {
   return prisma.groupInvitation.findMany({
     where: {
+      type: GroupInvitationType.EMAIL,
       status: GroupInvitationStatus.PENDING,
       email: accountEmail.toLowerCase(),
     },
@@ -462,3 +601,6 @@ export async function listPendingInvitationsForAccount(accountEmail: string) {
     },
   })
 }
+
+export const listPendingInvitationsForAccount =
+  listPendingEmailInvitationsForAccount
