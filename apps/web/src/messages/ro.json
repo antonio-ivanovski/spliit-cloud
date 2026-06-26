@@ -39,7 +39,9 @@
     "groups": "Grupuri",
     "signIn": "Autentifică-te",
     "signOut": "Deconectează-te",
-    "account": "Cont"
+    "account": "Cont",
+    "accountSettings": "Setările contului",
+    "back": "Înapoi"
   },
   "Footer": {
     "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Revocă invitația",
       "revoked": "Invitație revocată.",
       "created": "Invitație trimisă către {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Setările contului",
+    "profile": {
+      "title": "Profil",
+      "description": "Actualizați modul în care apăreați în grupurile dvs."
+    },
+    "nameLabel": "Nume afișat",
+    "emailLabel": "E-mail",
+    "emailHelp": "E-mailul dvs. este legat de cont și nu poate fi schimbat aici.",
+    "submit": "Salvați modificările",
+    "saving": "Se salvează…",
+    "success": "Profil actualizat.",
+    "errors": {
+      "nameRequired": "Introduceți un nume de afișat.",
+      "nameTooShort": "Numele trebuie să aibă cel puțin 2 caractere.",
+      "nameTooLong": "Numele trebuie să aibă cel mult 50 de caractere.",
+      "generic": "Ceva a mers greșit. Încercați din nou."
     }
   }
 }

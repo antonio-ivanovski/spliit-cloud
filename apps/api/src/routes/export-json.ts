@@ -3,6 +3,22 @@ import { getCategoryById } from '@spliit/domain'
 import contentDisposition from 'content-disposition'
 import { getAuthFromRequest } from '../lib/auth/session'
 
+/**
+ * Resolve a LedgerParticipant's display name from its relations. Account-
+ * backed participants always resolve to `Account.name`; the materialized
+ * participant for a pending invitation resolves to that invitation's email.
+ */
+function resolveParticipantName(participant: {
+  groupMember: { account: { name: string } } | null
+  invitations: Array<{ email: string }>
+}): string {
+  return (
+    participant.groupMember?.account.name ??
+    participant.invitations[0]?.email ??
+    ''
+  )
+}
+
 export async function exportGroupJson(request: Request, groupId: string) {
   const auth = await getAuthFromRequest(request)
   if (!auth) {
@@ -65,8 +81,16 @@ export async function exportGroupJson(request: Request, groupId: string) {
       ledgerId,
       id: { in: Array.from(participantIds) },
     },
-    select: { id: true, name: true },
-    orderBy: { name: 'asc' },
+    select: {
+      id: true,
+      groupMember: { select: { account: { select: { name: true } } } },
+      invitations: {
+        where: { status: 'PENDING' },
+        select: { email: true },
+        take: 1,
+      },
+    },
+    orderBy: { groupMember: { account: { name: 'asc' } } },
   })
   const participantOrder = new Map(
     Array.from(participantIds).map((id, index) => [id, index]),
@@ -87,7 +111,10 @@ export async function exportGroupJson(request: Request, groupId: string) {
     currency: group.ledger.currency,
     currencyCode: group.ledger.currencyCode,
     expenses: expensesWithCategory,
-    participants,
+    participants: participants.map((participant) => ({
+      id: participant.id,
+      name: resolveParticipantName(participant),
+    })),
   }
 
   const date = new Date().toISOString().split('T')[0]

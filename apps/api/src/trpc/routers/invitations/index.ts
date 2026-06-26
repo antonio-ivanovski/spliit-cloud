@@ -117,7 +117,6 @@ export const invitationsRouter = createTRPCRouter({
         invitationId,
         accountId: account.id,
         accountEmail: account.email,
-        accountDisplayName: account.name,
       })
       return { groupId: member.groupId }
     }),

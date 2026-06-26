@@ -125,11 +125,7 @@ model LedgerParticipant {
   id            String       @id
   ledger        Ledger       @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   ledgerId      String
-  // Display name used as the primary identity in expenses and balances.
-  name          String
   // Backing group membership, if this participant is an account-backed group member.
-  // Null for imported/legacy participants and for the historical rows left behind
-  // after a member is removed (those rows keep existing for balance/history).
   groupMember   GroupMember? @relation(fields: [groupMemberId], references: [id])
   groupMemberId String?      @unique
 
@@ -194,8 +190,6 @@ model GroupMember {
   role      GroupRole         @default(MEMBER)
   status    GroupMemberStatus @default(ACTIVE)
 
-  // Display-name snapshot/override for this account inside the group.
-  displayName String?
   joinedAt    DateTime?
   leftAt      DateTime?
 

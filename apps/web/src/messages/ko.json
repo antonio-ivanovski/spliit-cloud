@@ -464,7 +464,9 @@
     "groups": "그룹",
     "signIn": "로그인",
     "signOut": "로그아웃",
-    "account": "계정"
+    "account": "계정",
+    "accountSettings": "계정 설정",
+    "back": "뒤로"
   },
   "Footer": {
     "madeIn": "오픈소스 커뮤니티가 사랑을 담아 만들었어요 ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "초대 취소",
       "revoked": "초대가 취소되었습니다.",
       "created": "{email}에 초대를 보냈습니다."
+    }
+  },
+  "AccountSettings": {
+    "title": "계정 설정",
+    "profile": {
+      "title": "프로필",
+      "description": "그룹에 표시되는 방식을 업데이트하세요."
+    },
+    "nameLabel": "표시 이름",
+    "emailLabel": "이메일",
+    "emailHelp": "이메일은 계정에 연결되어 있어 여기에서 변경할 수 없습니다.",
+    "submit": "변경사항 저장",
+    "saving": "저장 중…",
+    "success": "프로필이 업데이트되었습니다.",
+    "errors": {
+      "nameRequired": "표시 이름을 입력하세요.",
+      "nameTooShort": "이름은 최소 2자 이상이어야 합니다.",
+      "nameTooLong": "이름은 최대 50자까지 가능합니다.",
+      "generic": "문제가 발생했습니다. 다시 시도해 주세요."
     }
   }
 }

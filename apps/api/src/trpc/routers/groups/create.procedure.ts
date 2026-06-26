@@ -13,7 +13,6 @@ export const createGroupProcedure = protectedProcedure
     const account = ctx.auth.user
     const result = await createGroup(groupFormValues, {
       adminAccountId: account.id,
-      adminDisplayName: account.name,
     })
     return { groupId: result.group.id }
   })

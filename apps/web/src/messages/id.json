@@ -39,7 +39,9 @@
     "groups": "Grup",
     "signIn": "Masuk",
     "signOut": "Keluar",
-    "account": "Akun"
+    "account": "Akun",
+    "accountSettings": "Pengaturan akun",
+    "back": "Kembali"
   },
   "Footer": {
     "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Cabut undangan",
       "revoked": "Undangan dicabut.",
       "created": "Undangan terkirim ke {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Pengaturan akun",
+    "profile": {
+      "title": "Profil",
+      "description": "Perbarui tampilan Anda di grup."
+    },
+    "nameLabel": "Nama tampilan",
+    "emailLabel": "Email",
+    "emailHelp": "Email Anda terikat ke akun dan tidak dapat diubah di sini.",
+    "submit": "Simpan perubahan",
+    "saving": "Menyimpan…",
+    "success": "Profil diperbarui.",
+    "errors": {
+      "nameRequired": "Masukkan nama tampilan.",
+      "nameTooShort": "Nama harus minimal 2 karakter.",
+      "nameTooLong": "Nama harus maksimal 50 karakter.",
+      "generic": "Terjadi kesalahan. Silakan coba lagi."
     }
   }
 }

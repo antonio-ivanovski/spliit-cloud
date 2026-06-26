@@ -39,7 +39,9 @@
     "groups": "Skupiny",
     "signIn": "Přihlásit se",
     "signOut": "Odhlásit se",
-    "account": "Účet"
+    "account": "Účet",
+    "accountSettings": "Nastavení účtu",
+    "back": "Zpět"
   },
   "Footer": {
     "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Odvolat pozvánku",
       "revoked": "Pozvánka odvolána.",
       "created": "Pozvánka odeslána na {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Nastavení účtu",
+    "profile": {
+      "title": "Profil",
+      "description": "Aktualizujte, jak se zobrazujete ve svých skupinách."
+    },
+    "nameLabel": "Zobrazované jméno",
+    "emailLabel": "E-mail",
+    "emailHelp": "Váš e-mail je propojen s účtem a nelze jej zde změnit.",
+    "submit": "Uložit změny",
+    "saving": "Ukládání…",
+    "success": "Profil aktualizován.",
+    "errors": {
+      "nameRequired": "Zadejte zobrazované jméno.",
+      "nameTooShort": "Jméno musí mít alespoň 2 znaky.",
+      "nameTooLong": "Jméno může mít maximálně 50 znaků.",
+      "generic": "Něco se pokazilo. Zkuste to znovu."
     }
   }
 }

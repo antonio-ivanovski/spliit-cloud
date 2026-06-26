@@ -39,7 +39,9 @@
     "groups": "群组",
     "signIn": "登录",
     "signOut": "退出",
-    "account": "账户"
+    "account": "账户",
+    "accountSettings": "账户设置",
+    "back": "返回"
   },
   "Footer": {
     "madeIn": "由开源社区用爱打造 ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "撤销邀请",
       "revoked": "邀请已撤销。",
       "created": "邀请已发送至 {email}。"
+    }
+  },
+  "AccountSettings": {
+    "title": "账户设置",
+    "profile": {
+      "title": "个人资料",
+      "description": "更新您在群组中的显示方式。"
+    },
+    "nameLabel": "显示名称",
+    "emailLabel": "邮箱",
+    "emailHelp": "您的邮箱与账户绑定，无法在此更改。",
+    "submit": "保存更改",
+    "saving": "保存中…",
+    "success": "个人资料已更新。",
+    "errors": {
+      "nameRequired": "请输入显示名称。",
+      "nameTooShort": "名称至少需要2个字符。",
+      "nameTooLong": "名称最多50个字符。",
+      "generic": "出了点问题。请重试。"
     }
   }
 }

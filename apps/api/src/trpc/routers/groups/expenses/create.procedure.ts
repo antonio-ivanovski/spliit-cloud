@@ -25,7 +25,6 @@ export const createGroupExpenseProcedure = protectedProcedure
     const account = ctx.auth.user
     const expense = await createExpense(expenseFormValues, groupId, {
       accountId: account.id,
-      displayName: account.name,
     })
     return { expenseId: expense.id }
   })

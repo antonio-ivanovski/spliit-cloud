@@ -39,7 +39,9 @@
     "groups": "Gruplar",
     "signIn": "Oturum aç",
     "signOut": "Oturumu kapat",
-    "account": "Hesap"
+    "account": "Hesap",
+    "accountSettings": "Hesap ayarları",
+    "back": "Geri"
   },
   "Footer": {
     "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Daveti iptal et",
       "revoked": "Davet iptal edildi.",
       "created": "{email} adresine davet gönderildi."
+    }
+  },
+  "AccountSettings": {
+    "title": "Hesap ayarları",
+    "profile": {
+      "title": "Profil",
+      "description": "Gruplarınızda nasıl göründüğünüzü güncelleyin."
+    },
+    "nameLabel": "Görünen ad",
+    "emailLabel": "E-posta",
+    "emailHelp": "E-postanız hesabınıza bağlıdır ve buradan değiştirilemez.",
+    "submit": "Değişiklikleri kaydet",
+    "saving": "Kaydediliyor…",
+    "success": "Profil güncellendi.",
+    "errors": {
+      "nameRequired": "Bir görünen ad girin.",
+      "nameTooShort": "Ad en az 2 karakter olmalıdır.",
+      "nameTooLong": "Ad en fazla 50 karakter olmalıdır.",
+      "generic": "Bir şeyler ters gitti. Lütfen tekrar deneyin."
     }
   }
 }

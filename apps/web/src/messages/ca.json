@@ -39,7 +39,9 @@
     "groups": "Grups",
     "signIn": "Inicia sessió",
     "signOut": "Tanca sessió",
-    "account": "Compte"
+    "account": "Compte",
+    "accountSettings": "Configuració del compte",
+    "back": "Enrere"
   },
   "Footer": {
     "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Revocar invitació",
       "revoked": "Invitació revocada.",
       "created": "Invitació enviada a {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Configuració del compte",
+    "profile": {
+      "title": "Perfil",
+      "description": "Actualitzeu com apareixeu als vostres grups."
+    },
+    "nameLabel": "Nom per mostrar",
+    "emailLabel": "Correu electrònic",
+    "emailHelp": "El vostre correu està vinculat al vostre compte i no es pot canviar aquí.",
+    "submit": "Desa els canvis",
+    "saving": "Desant…",
+    "success": "Perfil actualitzat.",
+    "errors": {
+      "nameRequired": "Introduïu un nom per mostrar.",
+      "nameTooShort": "El nom ha de tenir almenys 2 caràcters.",
+      "nameTooLong": "El nom ha de tenir com a màxim 50 caràcters.",
+      "generic": "Alguna cosa ha anat malament. Torneu-ho a provar."
     }
   }
 }

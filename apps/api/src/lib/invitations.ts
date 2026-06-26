@@ -248,7 +248,6 @@ export async function acceptInvitation(opts: {
   invitationId: string
   accountId: string
   accountEmail: string
-  accountDisplayName: string
 }) {
   const invitation = await prisma.groupInvitation.findUnique({
     where: { id: opts.invitationId },
@@ -272,6 +271,8 @@ export async function acceptInvitation(opts: {
   const result = await prisma.$transaction(async (tx) => {
     // Create the group member (or upgrade a PENDING one) and a matching
     // LedgerParticipant so expenses can be recorded against the new member.
+    // No display name is stored on either row: the name is always resolved
+    // at read time from `Account.name` via the relations.
     const member = await tx.groupMember.upsert({
       where: {
         groupId_accountId: {
@@ -285,13 +286,11 @@ export async function acceptInvitation(opts: {
         accountId: opts.accountId,
         role: invitation.role,
         status: 'ACTIVE',
-        displayName: opts.accountDisplayName,
         joinedAt: new Date(),
       },
       update: {
         role: invitation.role,
         status: 'ACTIVE',
-        displayName: opts.accountDisplayName,
         joinedAt: new Date(),
         leftAt: null,
       },
@@ -304,7 +303,6 @@ export async function acceptInvitation(opts: {
       await tx.ledgerParticipant.update({
         where: { id: invitation.ledgerParticipantId },
         data: {
-          name: opts.accountDisplayName,
           groupMemberId: member.id,
         },
       })
@@ -314,12 +312,9 @@ export async function acceptInvitation(opts: {
         create: {
           id: randomId(),
           ledgerId: invitation.group.ledger!.id,
-          name: opts.accountDisplayName,
           groupMemberId: member.id,
         },
-        update: {
-          name: opts.accountDisplayName,
-        },
+        update: {},
       })
     }
 

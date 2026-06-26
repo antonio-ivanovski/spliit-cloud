@@ -39,7 +39,9 @@
     "groups": "Gruppi",
     "signIn": "Accedi",
     "signOut": "Esci",
-    "account": "Account"
+    "account": "Account",
+    "accountSettings": "Impostazioni account",
+    "back": "Indietro"
   },
   "Footer": {
     "madeIn": "Realizzato dalla comunità open-source con amore ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Revoca invito",
       "revoked": "Invito revocato.",
       "created": "Invito inviato a {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Impostazioni account",
+    "profile": {
+      "title": "Profilo",
+      "description": "Aggiorna come appari ai tuoi gruppi."
+    },
+    "nameLabel": "Nome visualizzato",
+    "emailLabel": "E-mail",
+    "emailHelp": "La tua e-mail è collegata al tuo account e non può essere modificata qui.",
+    "submit": "Salva modifiche",
+    "saving": "Salvataggio…",
+    "success": "Profilo aggiornato.",
+    "errors": {
+      "nameRequired": "Inserisci un nome visualizzato.",
+      "nameTooShort": "Il nome deve contenere almeno 2 caratteri.",
+      "nameTooLong": "Il nome deve contenere al massimo 50 caratteri.",
+      "generic": "Qualcosa è andato storto. Riprova."
     }
   }
 }

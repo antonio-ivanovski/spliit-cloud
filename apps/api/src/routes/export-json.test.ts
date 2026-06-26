@@ -93,13 +93,17 @@ describe('exportGroupJson', () => {
           accountId: 'acct-1',
           role: 'ADMIN',
           status: 'ACTIVE',
-          ledgerParticipant: { id: 'lp-1', name: 'Alice' },
+          ledgerParticipant: { id: 'lp-1' },
         },
       ],
     })
     prismaMock.expense.findMany.mockResolvedValue([])
     prismaMock.ledgerParticipant.findMany.mockResolvedValue([
-      { id: 'lp-1', name: 'Alice' },
+      {
+        id: 'lp-1',
+        groupMember: { account: { name: 'Alice' } },
+        invitations: [],
+      },
     ] as never)
 
     const response = await exportGroupJson(makeRequest(), 'grp-1')
@@ -150,7 +154,7 @@ describe('exportGroupJson', () => {
           accountId: 'acct-1',
           role: 'ADMIN',
           status: 'ACTIVE',
-          ledgerParticipant: { id: 'lp-1', name: 'Alice' },
+          ledgerParticipant: { id: 'lp-1' },
         },
       ],
     })
@@ -176,21 +180,29 @@ describe('exportGroupJson', () => {
       },
     ])
     prismaMock.ledgerParticipant.findMany.mockResolvedValue([
-      { id: 'lp-1', name: 'Alice' },
-      { id: 'lp-pending', name: 'bob@example.com' },
+      {
+        id: 'lp-1',
+        groupMember: { account: { name: 'Alice' } },
+        invitations: [],
+      },
+      {
+        id: 'lp-pending',
+        groupMember: null,
+        invitations: [{ email: 'bob@example.com' }],
+      },
     ] as never)
 
     const response = await exportGroupJson(makeRequest(), 'grp-1')
 
     expect(response.status).toBe(200)
-    expect(prismaMock.ledgerParticipant.findMany).toHaveBeenCalledWith({
-      where: {
-        ledgerId: 'ledger-1',
-        id: { in: ['lp-1', 'lp-pending'] },
-      },
-      select: { id: true, name: true },
-      orderBy: { name: 'asc' },
-    })
+    expect(prismaMock.ledgerParticipant.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          ledgerId: 'ledger-1',
+          id: { in: ['lp-1', 'lp-pending'] },
+        },
+      }),
+    )
     const body = await response.json()
     expect(body.participants).toEqual([
       { id: 'lp-1', name: 'Alice' },

@@ -39,7 +39,9 @@
     "groups": "Groupes",
     "signIn": "Se connecter",
     "signOut": "Se déconnecter",
-    "account": "Compte"
+    "account": "Compte",
+    "accountSettings": "Paramètres du compte",
+    "back": "Retour"
   },
   "Footer": {
     "madeIn": "Créé par la communauté open-source avec amour ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Révoquer l'invitation",
       "revoked": "Invitation révoquée.",
       "created": "Invitation envoyée à {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Paramètres du compte",
+    "profile": {
+      "title": "Profil",
+      "description": "Modifiez l'affichage de votre nom dans vos groupes."
+    },
+    "nameLabel": "Nom d'affichage",
+    "emailLabel": "E-mail",
+    "emailHelp": "Votre e-mail est lié à votre compte et ne peut pas être modifié ici.",
+    "submit": "Enregistrer",
+    "saving": "Enregistrement…",
+    "success": "Profil mis à jour.",
+    "errors": {
+      "nameRequired": "Saisissez un nom d'affichage.",
+      "nameTooShort": "Le nom doit contenir au moins 2 caractères.",
+      "nameTooLong": "Le nom doit contenir au maximum 50 caractères.",
+      "generic": "Une erreur est survenue. Veuillez réessayer."
     }
   }
 }

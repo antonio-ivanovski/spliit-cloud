@@ -39,7 +39,9 @@
     "groups": "Grupy",
     "signIn": "Zaloguj się",
     "signOut": "Wyloguj się",
-    "account": "Konto"
+    "account": "Konto",
+    "accountSettings": "Ustawienia konta",
+    "back": "Wstecz"
   },
   "Footer": {
     "madeIn": "Stworzone przez społeczność open-source z miłością ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Cofnij zaproszenie",
       "revoked": "Zaproszenie cofnięte.",
       "created": "Zaproszenie wysłane na {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Ustawienia konta",
+    "profile": {
+      "title": "Profil",
+      "description": "Zaktualizuj, jak wyświetlasz się w swoich grupach."
+    },
+    "nameLabel": "Nazwa wyświetlana",
+    "emailLabel": "E-mail",
+    "emailHelp": "Twój e-mail jest powiązany z kontem i nie można go tutaj zmienić.",
+    "submit": "Zapisz zmiany",
+    "saving": "Zapisywanie…",
+    "success": "Profil zaktualizowany.",
+    "errors": {
+      "nameRequired": "Wprowadź nazwę wyświetlaną.",
+      "nameTooShort": "Nazwa musi mieć co najmniej 2 znaki.",
+      "nameTooLong": "Nazwa może mieć maksymalnie 50 znaków.",
+      "generic": "Coś poszło nie tak. Spróbuj ponownie."
     }
   }
 }

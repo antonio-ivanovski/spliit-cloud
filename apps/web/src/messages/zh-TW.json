@@ -39,7 +39,9 @@
     "groups": "群組",
     "signIn": "登入",
     "signOut": "登出",
-    "account": "帳戶"
+    "account": "帳戶",
+    "accountSettings": "帳戶設定",
+    "back": "返回"
   },
   "Footer": {
     "madeIn": "由開源社群用愛打造 ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "撤銷邀請",
       "revoked": "邀請已撤銷。",
       "created": "邀請已傳送至 {email}。"
+    }
+  },
+  "AccountSettings": {
+    "title": "帳戶設定",
+    "profile": {
+      "title": "個人資料",
+      "description": "更新您在群組中的顯示方式。"
+    },
+    "nameLabel": "顯示名稱",
+    "emailLabel": "電子郵件",
+    "emailHelp": "您的電子郵件與帳戶綁定，無法在此變更。",
+    "submit": "儲存變更",
+    "saving": "儲存中…",
+    "success": "個人資料已更新。",
+    "errors": {
+      "nameRequired": "請輸入顯示名稱。",
+      "nameTooShort": "名稱至少需要2個字元。",
+      "nameTooLong": "名稱最多50個字元。",
+      "generic": "出了點問題。請重試。"
     }
   }
 }

@@ -16,6 +16,7 @@ import { Route as GroupsCreateRouteImport } from './routes/groups/create'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
+import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as GroupsGroupIdRouteRouteImport } from './routes/groups/$groupId/route'
 import { Route as GroupsGroupIdIndexRouteImport } from './routes/groups/$groupId/index'
 import { Route as GroupsGroupIdStatsRouteImport } from './routes/groups/$groupId/stats'
@@ -69,6 +70,13 @@ const AuthCompleteProfileRoute = AuthCompleteProfileRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
   import('./routes/auth/complete-profile.lazy').then((d) => d.Route),
+)
+const AccountSettingsRoute = AccountSettingsRouteImport.update({
+  id: '/account/settings',
+  path: '/account/settings',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/account/settings.lazy').then((d) => d.Route),
 )
 const GroupsGroupIdRouteRoute = GroupsGroupIdRouteRouteImport.update({
   id: '/$groupId',
@@ -167,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
+  '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -186,6 +195,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -207,6 +217,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
+  '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -230,6 +241,7 @@ export interface FileRouteTypes {
     | '/'
     | '/groups'
     | '/groups/$groupId'
+    | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
     | '/auth/reset-password'
@@ -249,6 +261,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
     | '/auth/reset-password'
@@ -269,6 +282,7 @@ export interface FileRouteTypes {
     | '/'
     | '/groups'
     | '/groups/$groupId'
+    | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
     | '/auth/reset-password'
@@ -290,6 +304,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GroupsRouteRoute: typeof GroupsRouteRouteWithChildren
+  AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCompleteProfileRoute: typeof AuthCompleteProfileRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
@@ -344,6 +359,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/complete-profile'
       fullPath: '/auth/complete-profile'
       preLoaderRoute: typeof AuthCompleteProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/settings': {
+      id: '/account/settings'
+      path: '/account/settings'
+      fullPath: '/account/settings'
+      preLoaderRoute: typeof AccountSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/groups/$groupId': {
@@ -495,6 +517,7 @@ const GroupsRouteRouteWithChildren = GroupsRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GroupsRouteRoute: GroupsRouteRouteWithChildren,
+  AccountSettingsRoute: AccountSettingsRoute,
   AuthCompleteProfileRoute: AuthCompleteProfileRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,

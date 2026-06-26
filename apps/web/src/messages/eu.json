@@ -39,7 +39,9 @@
     "groups": "Taldeak",
     "signIn": "Hasi saioa",
     "signOut": "Amaitu saioa",
-    "account": "Kontua"
+    "account": "Kontua",
+    "accountSettings": "Kontuaren ezarpenak",
+    "back": "Atzera"
   },
   "Footer": {
     "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Ezeztatu gonbidapena",
       "revoked": "Gonbidapena ezeztatu da.",
       "created": "Gonbidapena bidali zaio {email}-i."
+    }
+  },
+  "AccountSettings": {
+    "title": "Kontuaren ezarpenak",
+    "profile": {
+      "title": "Profila",
+      "description": "Eguneratu nola agertzen zaren zure taldeetan."
+    },
+    "nameLabel": "Erakusteko izena",
+    "emailLabel": "Helbide elektronikoa",
+    "emailHelp": "Zure helbide elektronikoa kontuarekin lotuta dago eta ezin da hemen aldatu.",
+    "submit": "Gorde aldaketak",
+    "saving": "Gordetzen…",
+    "success": "Profila eguneratu da.",
+    "errors": {
+      "nameRequired": "Sartu erakusteko izen bat.",
+      "nameTooShort": "Izenak gutxienez 2 karaktere izan behar ditu.",
+      "nameTooLong": "Izenak gehienez 50 karaktere izan ditzake.",
+      "generic": "Zerbait gaizki joan da. Saiatu berriro."
     }
   }
 }

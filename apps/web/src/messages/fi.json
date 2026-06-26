@@ -39,7 +39,9 @@
     "groups": "Ryhmät",
     "signIn": "Kirjaudu sisään",
     "signOut": "Kirjaudu ulos",
-    "account": "Tili"
+    "account": "Tili",
+    "accountSettings": "Tilin asetukset",
+    "back": "Takaisin"
   },
   "Footer": {
     "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Peruuta kutsu",
       "revoked": "Kutsu peruutettu.",
       "created": "Kutsu lähetetty osoitteeseen {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Tilin asetukset",
+    "profile": {
+      "title": "Profiili",
+      "description": "Päivitä, miten näyt ryhmissäsi."
+    },
+    "nameLabel": "Näyttönimi",
+    "emailLabel": "Sähköposti",
+    "emailHelp": "Sähköpostisi on sidottu tiliisi, eikä sitä voi muuttaa tässä.",
+    "submit": "Tallenna muutokset",
+    "saving": "Tallennetaan…",
+    "success": "Profiili päivitetty.",
+    "errors": {
+      "nameRequired": "Anna näyttönimi.",
+      "nameTooShort": "Nimen on oltava vähintään 2 merkkiä.",
+      "nameTooLong": "Nimi voi olla enintään 50 merkkiä.",
+      "generic": "Jotain meni pieleen. Yritä uudelleen."
     }
   }
 }

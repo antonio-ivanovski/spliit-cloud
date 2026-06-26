@@ -38,6 +38,22 @@ async function ensureMemberOr404(request: Request, groupId: string) {
   return null
 }
 
+/**
+ * Resolve a LedgerParticipant's display name from its relations. Account-
+ * backed participants always resolve to `Account.name`; the materialized
+ * participant for a pending invitation resolves to that invitation's email.
+ */
+function resolveParticipantName(participant: {
+  groupMember: { account: { name: string } } | null
+  invitations: Array<{ email: string }>
+}): string {
+  return (
+    participant.groupMember?.account.name ??
+    participant.invitations[0]?.email ??
+    ''
+  )
+}
+
 export async function exportGroupCsv(request: Request, groupId: string) {
   const denial = await ensureMemberOr404(request, groupId)
   if (denial) return denial
@@ -96,8 +112,16 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       ledgerId,
       id: { in: Array.from(participantIds) },
     },
-    select: { id: true, name: true },
-    orderBy: { name: 'asc' },
+    select: {
+      id: true,
+      groupMember: { select: { account: { select: { name: true } } } },
+      invitations: {
+        where: { status: 'PENDING' },
+        select: { email: true },
+        take: 1,
+      },
+    },
+    orderBy: { groupMember: { account: { name: 'asc' } } },
   })
   const participantOrder = new Map(
     Array.from(participantIds).map((id, index) => [id, index]),
@@ -118,7 +142,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     { label: 'Is Reimbursement', value: 'isReimbursement' },
     { label: 'Split mode', value: 'splitMode' },
     ...participants.map((participant) => ({
-      label: participant.name,
+      label: resolveParticipantName(participant),
       value: participant.id,
     })),
   ]

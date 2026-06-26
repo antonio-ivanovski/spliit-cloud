@@ -39,7 +39,9 @@
     "groups": "グループ",
     "signIn": "サインイン",
     "signOut": "サインアウト",
-    "account": "アカウント"
+    "account": "アカウント",
+    "accountSettings": "アカウント設定",
+    "back": "戻る"
   },
   "Footer": {
     "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "招待を取り消す",
       "revoked": "招待を取り消しました。",
       "created": "{email}に招待を送信しました。"
+    }
+  },
+  "AccountSettings": {
+    "title": "アカウント設定",
+    "profile": {
+      "title": "プロフィール",
+      "description": "グループでの表示名を更新します。"
+    },
+    "nameLabel": "表示名",
+    "emailLabel": "メールアドレス",
+    "emailHelp": "メールアドレスはアカウントに紐づいており、ここでは変更できません。",
+    "submit": "変更を保存",
+    "saving": "保存中…",
+    "success": "プロフィールを更新しました。",
+    "errors": {
+      "nameRequired": "表示名を入力してください。",
+      "nameTooShort": "名前は2文字以上で入力してください。",
+      "nameTooLong": "名前は50文字以内で入力してください。",
+      "generic": "エラーが発生しました。もう一度お試しください。"
     }
   }
 }

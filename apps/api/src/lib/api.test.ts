@@ -30,9 +30,8 @@ describe('getGroup — pending invitations as participants', () => {
           accountId: 'acct-owner',
           role: 'ADMIN',
           status: 'ACTIVE',
-          displayName: 'Alice',
           joinedAt: new Date(),
-          ledgerParticipant: { id: 'lp-owner', name: 'Alice' },
+          ledgerParticipant: { id: 'lp-owner' },
           account: {
             id: 'acct-owner',
             email: 'alice@example.com',
@@ -70,9 +69,8 @@ describe('getGroup — pending invitations as participants', () => {
           {
             id: 'inv-1',
             groupId,
-            ledgerParticipant: createdId
-              ? { id: createdId, name: 'bob@example.com' }
-              : null,
+            email: 'bob@example.com',
+            ledgerParticipant: createdId ? { id: createdId } : null,
           },
         ] as never) as never,
     )
@@ -102,7 +100,6 @@ describe('getGroup — pending invitations as participants', () => {
       expect.objectContaining({
         data: expect.objectContaining({
           ledgerId,
-          name: 'bob@example.com',
         }),
       }),
     )
@@ -143,9 +140,9 @@ describe('getGroup — pending invitations as participants', () => {
       {
         id: 'inv-2',
         groupId,
+        email: 'carol@example.com',
         ledgerParticipant: {
           id: 'lp-existing',
-          name: 'carol@example.com',
         },
       },
     ] as never)
@@ -181,9 +178,8 @@ describe('getGroup — pending invitations as participants', () => {
           accountId: 'acct-owner',
           role: 'ADMIN',
           status: 'ACTIVE',
-          displayName: 'Alice',
           joinedAt: new Date(),
-          ledgerParticipant: { id: 'lp-owner', name: 'Alice' },
+          ledgerParticipant: { id: 'lp-owner' },
           account: {
             id: 'acct-owner',
             email: 'alice@example.com',

@@ -39,7 +39,9 @@
     "groups": "Groepen",
     "signIn": "Inloggen",
     "signOut": "Uitloggen",
-    "account": "Account"
+    "account": "Account",
+    "accountSettings": "Accountinstellingen",
+    "back": "Terug"
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de open-source community ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Uitnodiging intrekken",
       "revoked": "Uitnodiging ingetrokken.",
       "created": "Uitnodiging verzonden naar {email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "Accountinstellingen",
+    "profile": {
+      "title": "Profiel",
+      "description": "Werk bij hoe je verschijnt in je groepen."
+    },
+    "nameLabel": "Weergavenaam",
+    "emailLabel": "E-mail",
+    "emailHelp": "Je e-mail is gekoppeld aan je account en kan hier niet worden gewijzigd.",
+    "submit": "Wijzigingen opslaan",
+    "saving": "Opslaan…",
+    "success": "Profiel bijgewerkt.",
+    "errors": {
+      "nameRequired": "Voer een weergavenaam in.",
+      "nameTooShort": "De naam moet minimaal 2 tekens bevatten.",
+      "nameTooLong": "De naam mag maximaal 50 tekens bevatten.",
+      "generic": "Er is iets misgegaan. Probeer het opnieuw."
     }
   }
 }

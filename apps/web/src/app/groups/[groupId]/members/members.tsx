@@ -237,10 +237,7 @@ export default function GroupMembers() {
             <ul className="flex flex-col divide-y">
               {listMembers.map((member) => {
                 const isMe = !!account?.id && member.account?.id === account.id
-                const displayName =
-                  member.displayName ||
-                  member.account?.name ||
-                  t('unknownMember')
+                const displayName = member.account?.name || t('unknownMember')
                 const isSelfRow =
                   member.id !== undefined && member.id === currentMemberId
                 const showAdminControls = canManage && !isSelfRow

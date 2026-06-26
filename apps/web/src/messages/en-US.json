@@ -39,7 +39,9 @@
     "groups": "Groups",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "account": "Account"
+    "account": "Account",
+    "accountSettings": "Account settings",
+    "back": "Back"
   },
   "Footer": {
     "madeIn": "Made by the open-source community with love ❤️",
@@ -217,6 +219,25 @@
     "signedInAs": "Signed in as {name}",
     "required": "You need to sign in to access your groups.",
     "back": "Back to home"
+  },
+  "AccountSettings": {
+    "title": "Account settings",
+    "profile": {
+      "title": "Profile",
+      "description": "Update how you appear to your groups."
+    },
+    "nameLabel": "Display name",
+    "emailLabel": "Email",
+    "emailHelp": "Your email is tied to your account and can't be changed here.",
+    "submit": "Save changes",
+    "saving": "Saving…",
+    "success": "Profile updated.",
+    "errors": {
+      "nameRequired": "Enter a display name.",
+      "nameTooShort": "Name must be at least 2 characters.",
+      "nameTooLong": "Name must be at most 50 characters.",
+      "generic": "Something went wrong. Please try again."
+    }
   },
   "CompleteProfile": {
     "title": "Complete your profile",

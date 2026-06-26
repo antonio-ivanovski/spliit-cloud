@@ -175,6 +175,12 @@ function makeExpenseRow(args: {
   }>
   splitMode?: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
 }) {
+  // `getGroupExpenses` resolves the display name at read time through
+  // `GroupMember.account.name`. Tests that exercise the archive flow
+  // don't model GroupMembers, so they supply the name via the `account`
+  // relation (the post-processing step in `getGroupExpenses` falls back
+  // to `account.name` when `groupMember` is null).
+  const paidByName = args.paidByName ?? args.paidById
   return {
     id: args.id,
     amount: args.amount,
@@ -185,14 +191,22 @@ function makeExpenseRow(args: {
     isReimbursement: false,
     recurrenceRule: 'NONE',
     splitMode: args.splitMode ?? 'EVENLY',
-    paidBy: { id: args.paidById, name: args.paidByName ?? args.paidById },
-    paidFor: args.paidFor.map((pf) => ({
-      shares: pf.shares,
-      ledgerParticipant: {
-        id: pf.participantId,
-        name: pf.participantName ?? pf.participantId,
-      },
-    })),
+    paidBy: {
+      id: args.paidById,
+      groupMember: { account: { name: paidByName } },
+      invitations: [],
+    },
+    paidFor: args.paidFor.map((pf) => {
+      const participantName = pf.participantName ?? pf.participantId
+      return {
+        shares: pf.shares,
+        ledgerParticipant: {
+          id: pf.participantId,
+          groupMember: { account: { name: participantName } },
+          invitations: [],
+        },
+      }
+    }),
     _count: { documents: 0 },
   }
 }

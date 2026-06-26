@@ -39,7 +39,9 @@
     "groups": "קבוצות",
     "signIn": "התחבר",
     "signOut": "התנתק",
-    "account": "חשבון"
+    "account": "חשבון",
+    "accountSettings": "הגדרות חשבון",
+    "back": "חזרה"
   },
   "Footer": {
     "madeIn": "נוצר על ידי קהילת הקוד הפתוח באהבה ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "בטל הזמנה",
       "revoked": "ההזמנה בוטלה.",
       "created": "ההזמנה נשלחה ל-{email}."
+    }
+  },
+  "AccountSettings": {
+    "title": "הגדרות חשבון",
+    "profile": {
+      "title": "פרופיל",
+      "description": "עדכן כיצד אתה מופיע בקבוצות שלך."
+    },
+    "nameLabel": "שם תצוגה",
+    "emailLabel": "אימייל",
+    "emailHelp": "האימייל שלך מקושר לחשבון שלך ולא ניתן לשינוי כאן.",
+    "submit": "שמור שינויים",
+    "saving": "שומר…",
+    "success": "הפרופיל עודכן.",
+    "errors": {
+      "nameRequired": "הכנס שם תצוגה.",
+      "nameTooShort": "השם חייב להכיל לפחות 2 תווים.",
+      "nameTooLong": "השם חייב להכיל לכל היותר 50 תווים.",
+      "generic": "משהו השתבש. נסה שוב."
     }
   }
 }

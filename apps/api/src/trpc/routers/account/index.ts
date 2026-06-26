@@ -196,7 +196,7 @@ export const accountRouter = createTRPCRouter({
         where: { groupId, status: GroupMemberStatus.ACTIVE },
         include: {
           account: { select: { id: true, name: true, email: true } },
-          ledgerParticipant: { select: { id: true, name: true } },
+          ledgerParticipant: { select: { id: true } },
         },
         orderBy: [{ joinedAt: 'asc' }, { createdAt: 'asc' }],
       })

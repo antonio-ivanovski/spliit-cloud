@@ -72,7 +72,7 @@ async function getMemberLedgerParticipantId(
  */
 export async function createGroup(
   groupFormValues: GroupFormValues,
-  options: { adminAccountId: string; adminDisplayName: string },
+  options: { adminAccountId: string },
 ) {
   return prisma.$transaction(async (tx) => {
     const ledger = await tx.ledger.create({
@@ -99,7 +99,6 @@ export async function createGroup(
         accountId: options.adminAccountId,
         role: GroupRole.ADMIN,
         status: GroupMemberStatus.ACTIVE,
-        displayName: options.adminDisplayName,
         joinedAt: new Date(),
       },
     })
@@ -108,7 +107,6 @@ export async function createGroup(
       data: {
         id: randomId(),
         ledgerId: ledger.id,
-        name: options.adminDisplayName,
         groupMemberId: adminMember.id,
       },
     })
@@ -120,7 +118,7 @@ export async function createGroup(
 export async function createExpense(
   expenseFormValues: ExpenseFormValues,
   groupId: string,
-  actor: { accountId: string; displayName?: string },
+  actor: { accountId: string },
 ): Promise<Expense> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -151,7 +149,7 @@ export async function createExpense(
         { invitations: { some: { status: 'PENDING' } } },
       ],
     },
-    select: { id: true, name: true },
+    select: { id: true },
   })
   const participantIds = new Set(participants.map((p) => p.id))
 
@@ -530,6 +528,9 @@ export async function getGroup(groupId: string) {
   // form (paid-by / paid-for) before they accept the invitation. Once the
   // invitation is accepted, the participant is reused for the new
   // GroupMember. If the invitation is revoked, the participant is removed.
+  // The display name shown for the materialized participant is resolved at
+  // read time from `GroupInvitation.email` — the LedgerParticipant itself
+  // carries no name.
   if (group.ledgerId && group.invitations.length > 0) {
     await prisma.$transaction(async (tx) => {
       for (const invitation of group.invitations) {
@@ -538,8 +539,10 @@ export async function getGroup(groupId: string) {
         const existing = await tx.ledgerParticipant.findFirst({
           where: {
             ledgerId: group.ledgerId!,
-            name: invitation.email,
             groupMemberId: null,
+            invitations: {
+              some: { email: invitation.email, status: 'PENDING' },
+            },
           },
           select: { id: true },
         })
@@ -550,7 +553,6 @@ export async function getGroup(groupId: string) {
             data: {
               id: participantId,
               ledgerId: group.ledgerId!,
-              name: invitation.email,
             },
           })
         }
@@ -575,6 +577,8 @@ export async function getGroup(groupId: string) {
   // Flatten to the shape callers expect: ledger currency fields at the top
   // level, and a list of `participants` derived from active ledger
   // participants so the existing UI keeps working until it is updated.
+  // The display name is resolved at read time: `account.name` for
+  // account-backed members, `invitation.email` for pending invitations.
   // Pending invitations appear as synthetic participants so they can be
   // selected in the expense form before they accept.
   return {
@@ -587,7 +591,7 @@ export async function getGroup(groupId: string) {
           ? [
               {
                 id: m.ledgerParticipant.id,
-                name: m.ledgerParticipant.name,
+                name: m.account?.name ?? '',
                 pending: false,
               },
             ]
@@ -598,7 +602,7 @@ export async function getGroup(groupId: string) {
           ? [
               {
                 id: inv.ledgerParticipant.id,
-                name: inv.ledgerParticipant.name,
+                name: inv.email,
                 pending: true,
               },
             ]
@@ -653,10 +657,30 @@ export async function getGroupExpenses(
       expenseDate: true,
       id: true,
       isReimbursement: true,
-      paidBy: { select: { id: true, name: true } },
+      paidBy: {
+        select: {
+          id: true,
+          groupMember: { select: { account: { select: { name: true } } } },
+          invitations: {
+            where: { status: 'PENDING' },
+            select: { email: true },
+            take: 1,
+          },
+        },
+      },
       paidFor: {
         select: {
-          ledgerParticipant: { select: { id: true, name: true } },
+          ledgerParticipant: {
+            select: {
+              id: true,
+              groupMember: { select: { account: { select: { name: true } } } },
+              invitations: {
+                where: { status: 'PENDING' },
+                select: { email: true },
+                take: 1,
+              },
+            },
+          },
           shares: true,
         },
       },
@@ -676,8 +700,29 @@ export async function getGroupExpenses(
     take: options && options.length,
   })
 
+  // Flatten paidBy and paidFor.ledgerParticipant to the { id, name } shape
+  // the rest of the app expects. The display name is resolved at read time
+  // from `account.name` for account-backed participants and from the
+  // pending invitation email otherwise.
   return rows.map((row) => ({
     ...row,
+    paidBy: {
+      id: row.paidBy.id,
+      name:
+        row.paidBy.groupMember?.account?.name ??
+        row.paidBy.invitations[0]?.email ??
+        '',
+    },
+    paidFor: row.paidFor.map((pf) => ({
+      ledgerParticipant: {
+        id: pf.ledgerParticipant.id,
+        name:
+          pf.ledgerParticipant.groupMember?.account?.name ??
+          pf.ledgerParticipant.invitations[0]?.email ??
+          '',
+      },
+      shares: pf.shares,
+    })),
     categoryId: narrowCategoryId(row.categoryId),
     category: resolveCategory(row.categoryId),
   }))
@@ -807,7 +852,7 @@ export async function createRecurringExpenses() {
       include: {
         currentFrameExpense: {
           include: {
-            paidBy: { select: { id: true, name: true } },
+            paidBy: { select: { id: true } },
             paidFor: { select: { ledgerParticipantId: true, shares: true } },
             documents: {
               select: { id: true, url: true, width: true, height: true },

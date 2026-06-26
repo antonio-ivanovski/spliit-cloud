@@ -12,7 +12,12 @@ import {
 import { authClient } from '@/lib/auth'
 import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { LogOut, User as UserIcon } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import {
+  LogOut,
+  Settings as SettingsIcon,
+  User as UserIcon,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export function AccountMenu() {
@@ -51,6 +56,13 @@ export function AccountMenu() {
             {account.email}
           </span>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to="/account/settings">
+            <SettingsIcon className="w-4 h-4 mr-2" />
+            {t('accountSettings')}
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"

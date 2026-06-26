@@ -39,7 +39,9 @@
     "groups": "Gruppen",
     "signIn": "Anmelden",
     "signOut": "Abmelden",
-    "account": "Konto"
+    "account": "Konto",
+    "accountSettings": "Kontoeinstellungen",
+    "back": "Zurück"
   },
   "Footer": {
     "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
@@ -672,6 +674,25 @@
       "revokeButton": "Einladung widerrufen",
       "revoked": "Einladung widerrufen.",
       "created": "Einladung an {email} gesendet."
+    }
+  },
+  "AccountSettings": {
+    "title": "Kontoeinstellungen",
+    "profile": {
+      "title": "Profil",
+      "description": "Aktualisieren Sie, wie Sie in Ihren Gruppen angezeigt werden."
+    },
+    "nameLabel": "Anzeigename",
+    "emailLabel": "E-Mail",
+    "emailHelp": "Ihre E-Mail ist mit Ihrem Konto verknüpft und kann hier nicht geändert werden.",
+    "submit": "Änderungen speichern",
+    "saving": "Speichern…",
+    "success": "Profil aktualisiert.",
+    "errors": {
+      "nameRequired": "Geben Sie einen Anzeigenamen ein.",
+      "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein.",
+      "nameTooLong": "Der Name darf höchstens 50 Zeichen lang sein.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
     }
   }
 }
