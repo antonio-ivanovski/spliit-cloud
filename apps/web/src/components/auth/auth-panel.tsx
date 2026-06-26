@@ -198,8 +198,8 @@ export function AuthPanel() {
     })
   }
 
-  const googleEnabled = isFeatureFlagEnabled('VITE_ENABLE_GOOGLE_OAUTH') || true
-  const githubEnabled = isFeatureFlagEnabled('VITE_ENABLE_GITHUB_OAUTH') || true
+  const googleEnabled = isFeatureFlagEnabled('VITE_ENABLE_GOOGLE_OAUTH')
+  const githubEnabled = isFeatureFlagEnabled('VITE_ENABLE_GITHUB_OAUTH')
   const socialEnabled = googleEnabled || githubEnabled
 
   if (successState) {
