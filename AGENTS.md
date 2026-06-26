@@ -34,3 +34,7 @@ bun prisma-migrate       # deploy migrations for local/container DB
 - Docker API stage runs `bun run apps/api/src/server.ts`; add another server as a new `FROM runner AS <name>` stage with its own `CMD`.
 
 More focused notes: [.agent/architecture.md](.agent/architecture.md), [.agent/database.md](.agent/database.md), [.agent/testing.md](.agent/testing.md), [.agent/trpc-procedures.md](.agent/trpc-procedures.md).
+
+## Translations
+
+`apps/web/src/messages/en-US.json` is the source of truth; other locales fall back to it at runtime. **Never hand-edit** any file in `apps/web/src/messages/` — use the `bun i18n` CLI. For the full workflow (adding strings, translating into other locales, listing what a git change introduces), load the `translate-strings` skill at `.agents/skills/translate-strings/SKILL.md`.

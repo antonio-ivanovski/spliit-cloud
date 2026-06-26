@@ -1,0 +1,14 @@
+{
+  "name": "@spliit/i18n-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Internal CLI/lib for editing apps/web/src/messages JSON files. en-US is the source of truth.",
+  "scripts": {
+    "cli": "bun src/cli.ts",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.9"
+  }
+}

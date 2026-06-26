@@ -149,6 +149,13 @@
         "vitest": "^4.1.9",
       },
     },
+    "scripts/i18n": {
+      "name": "@spliit/i18n-tools",
+      "version": "0.1.0",
+      "devDependencies": {
+        "vitest": "^4.1.9",
+      },
+    },
   },
   "trustedDependencies": [
     "esbuild",
@@ -591,6 +598,8 @@
     "@spliit/db": ["@spliit/db@workspace:packages/db"],
 
     "@spliit/domain": ["@spliit/domain@workspace:packages/domain"],
+
+    "@spliit/i18n-tools": ["@spliit/i18n-tools@workspace:scripts/i18n"],
 
     "@spliit/web": ["@spliit/web@workspace:apps/web"],
 

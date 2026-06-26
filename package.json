@@ -5,7 +5,8 @@
   "packageManager": "bun@1.3.14",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "scripts/i18n"
   ],
   "trustedDependencies": [
     "@prisma/adapter-pg",
@@ -26,7 +27,8 @@
     "prisma-generate": "bun run --filter @spliit/db prisma-generate",
     "start-container": "docker compose --env-file container.env up",
     "test": "turbo --ui=tui run test",
-    "test-e2e": "bun --filter @spliit/web test-e2e"
+    "test-e2e": "bun --filter @spliit/web test-e2e",
+    "i18n": "bun scripts/i18n/src/cli.ts"
   },
   "devDependencies": {
     "@types/node": "24.13.2",
