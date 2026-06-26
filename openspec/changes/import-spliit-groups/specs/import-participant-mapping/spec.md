@@ -1,43 +1,49 @@
 ## ADDED Requirements
 
-### Requirement: Participant mapping modes
+### Requirement: Participant mapping modes in the wizard
 
-The system SHALL let the importer map each source participant by name to an existing account, an unlinked participant entry, or skip the participant only when safe.
+The system SHALL let the importer map each source participant by name to an existing account, an unlinked participant entry, or skip the participant only when the source expenses no longer reference them.
 
-#### Scenario: Link existing account
+#### Scenario: Link to an existing account
 
 - **WHEN** the importer maps a source participant to an existing account
-- **THEN** the destination LedgerParticipant is account-backed
+- **THEN** the destination `LedgerParticipant` is `ACCOUNT_MEMBER` and a `GroupMember` is created or reactivated if needed
 
 #### Scenario: Leave participant unlinked
 
 - **WHEN** the importer maps a source participant as unlinked
-- **THEN** the destination LedgerParticipant has a display name but no app access
+- **THEN** the destination `LedgerParticipant` is `UNLINKED_PARTICIPANT` with the source name as its `displayName` and no app access
 
-### Requirement: No new unlinked participants after import
+#### Scenario: Skip a source participant
 
-The system SHALL NOT allow users to create brand new unlinked participant entries after the import is committed.
+- **WHEN** the importer marks a source participant as `SKIP`
+- **THEN** the destination group does not create a `LedgerParticipant` for that source identity
+- **THEN** the web app drops that source identity from any `paidBy` / `paidFor` reference in the submitted expenses
 
-#### Scenario: New expense with imported unlinked participant
+### Requirement: One-way admin participant linking
 
-- **WHEN** a user creates a new expense in an imported group
-- **THEN** the user can select unlinked participant entries that were created during import
+The system SHALL let an owner or admin link an unlinked `LedgerParticipant` to an existing account as a one-way ownership migration. After the link, the historical and future balances of the `LedgerParticipant` are associated with the account and appear in account-level views.
 
-#### Scenario: Attempt create new unlinked participant
+#### Scenario: Admin maps an unlinked participant
 
-- **WHEN** a user attempts to add a new unlinked participant after import
-- **THEN** the system rejects the operation
+- **WHEN** an owner or admin maps an unlinked `LedgerParticipant` to an account
+- **THEN** the system migrates the `LedgerParticipant` to `ACCOUNT_MEMBER` and creates or activates the account's `GroupMember` if needed
 
-### Requirement: One-way participant linking
+#### Scenario: Linked balances surface in the account
 
-The system SHALL link an unlinked participant entry to an account as a one-way ownership migration only through an owner/admin mapping decision.
+- **WHEN** an unlinked `LedgerParticipant` is linked to an account
+- **THEN** historical and future balances for that `LedgerParticipant` immediately contribute to the linked account's group and overview totals
 
-#### Scenario: Admin maps unlinked participant
+### Requirement: Unlinked participants have no app access
 
-- **WHEN** an owner or admin maps an unlinked LedgerParticipant to an account
-- **THEN** the system migrates the unlinked LedgerParticipant to account ownership and creates or activates group membership if needed
+The system SHALL distinguish authenticated group members from unlinked `LedgerParticipant` entries and SHALL NOT grant group access to unlinked participants.
 
-#### Scenario: Linked balances appear
+#### Scenario: Unlinked participant exists
 
-- **WHEN** an unlinked LedgerParticipant is linked to an account
-- **THEN** historical and future balances for that LedgerParticipant are associated with the account
+- **WHEN** an imported group contains an unlinked `LedgerParticipant` entry
+- **THEN** that entry can appear in expenses and balances but cannot sign in or access the group
+
+#### Scenario: Unlinked entry surfaces in the UI
+
+- **WHEN** an unlinked `LedgerParticipant` appears in an expense card, a balance row, the expense form, or the admin link list
+- **THEN** the UI labels it as unlinked so it is not confused with an app user

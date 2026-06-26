@@ -1,257 +1,243 @@
 ## Context
 
-The new account-backed product requires authentication to use the app, but imported data may contain people who do not have accounts, have left the group, or should never be invited. The first source is existing Spliit groups, but the importer must establish a provider-neutral pattern so Splitwise or other platforms can be added later without replacing the import workflow.
+The new account-backed product requires authentication to use the app, but imported data may contain people who do not have accounts, have left the group, or should never be invited. The first source is existing Spliit groups, but the import UX should be a small wizard that runs entirely in the web app: the user picks a source, previews the parsed data, maps participants, and submits. The server is the executor, not the wizard host.
 
-This design depends on `add-accounts-cloud-group-sync` for accounts, group memberships, authorization, and cloud group source-of-truth semantics. It must support both direct import by `spliit.app` group URL and import from exported JSON when URL-based import is unavailable or unreliable. Splitwise import is not implemented in this change, but the import source architecture must make it a bounded adapter addition later.
+This design depends on `add-accounts-cloud-group-sync` for accounts, group memberships, authorization, and cloud group source-of-truth semantics. It must support both direct import by `spliit.app` group URL (best-effort) and import from exported JSON/CSV (the reliable path). Splitwise import is out of scope, but the wizard and server procedure are generic enough to accept new source types later by adding a parser in the web.
+
+A second entry point is the "not found" hand-off: when a user navigates to a group URL that does not exist on the new domain, the server tries to look it up on `spliit.app` and, if it finds it, routes the user into the import wizard with the source pre-filled. This is the recommended path for users who switch from `spliit.app` to the new domain: they paste their old group URL and the import is offered automatically. Imported groups get a **fresh cloud group id**; the source id is recorded in the activity feed for traceability but is not reused as the destination id (destination ids stay short and unpredictable).
 
 ## Goals / Non-Goals
 
 **Goals:**
 
-- Import an existing external expense group into a cloud group owned by the importer, with Spliit as the first implemented source.
-- Establish a provider-neutral source adapter pipeline for future platforms such as Splitwise.
-- Support source discovery from a `spliit.app` group URL and from exported JSON.
-- Preview imported group metadata, participants, expenses, splits, reimbursements, categories, dates, notes, currency fields, and supported documents before writing.
-- Let the importer create mappings before import and adjust mappings during the wizard if validation reveals issues.
-- Let imported people be linked to accounts by admin decision during import or after import, or deliberately left unlinked.
-- Preserve expenses that involve people who have left and should not join the new cloud group.
-- Allow unlinked participant entries created by import to remain in imported groups and be linkable in the future.
-- Make the final import write transactional, auditable, and duplicate-resistant.
+- Let a user import a Spliit group — into a new cloud group or an existing one — in one short session with no long-lived server state.
+- Accept Spliit URL, exported JSON, and exported CSV as source inputs. URL is best-effort; JSON/CSV is the reliable path.
+- Show a preview of the parsed group, participants, and expenses before the user commits.
+- Let the user map each source participant to an existing account, an unlinked name-only entry, or skip.
+- Persist the imported group as a normal cloud group with an account-backed membership model and a ledger.
+- Keep imported unlinked participants visible in expenses and balances; let an owner/admin link them to an account after the import.
 
 **Non-Goals:**
 
 - Circumventing `spliit.app` access controls or scraping private data the importer cannot access.
-- Guaranteeing document import if source document URLs are inaccessible or terms disallow copying.
+- Guaranteeing document import if the source document URLs are inaccessible or terms disallow copying. The server keeps the source URLs as references; the user re-uploads documents if they want them in our storage.
 - Granting app access to unlinked participant entries.
 - Automatically forcing every imported participant to create an account.
 - Solving every old schema variant without validation failure paths.
+- Cross-device wizard resume. The wizard is a single browser session.
+- Server-side audit trail of source→destination records. The imported group is the audit.
 - Implementing Splitwise import in this change.
 
 ## Decisions
 
-### 1. Use a wizard with one final destination-group commit
+### 1. The web app drives the wizard; the server is the executor
 
-The import UX should be a wizard-style flow:
+The import is a single browser session:
 
-1. Choose an import source.
-2. Enter `spliit.app` URL or upload exported JSON for the Spliit source.
-3. Fetch/parse and normalize source data.
-4. Preview group, participants, expenses, and validation warnings/errors.
-5. Map source participants to accounts or unlinked entries.
-6. Confirm import.
-7. Transactionally create the destination group and imported data.
+1. **Source** — pick a source (file upload for JSON/CSV, or paste a `spliit.app` group URL), OR arrive with a source already pre-filled from the "not found" hand-off (see Decision 1b). URL fetches go through the server-side proxy (Decision 3b / 3c).
+2. **Destination** — choose between creating a new cloud group or importing into an existing group the user is a member of. (When the user arrives from the not-found hand-off, the source is already known; this step is the wizard's landing point.)
+3. **Preview** — parsed group metadata, source participants, and source expenses, with per-row validation surfaced.
+4. **Mapping** — per source participant, link to an existing account, leave unlinked by name, or skip. SKIP rows are dropped from `paidBy` / `paidFor` before the batch is built.
+5. **Confirm** — review the summary and submit. The server creates everything in a single transaction.
+6. **Done** — link to the new (or existing) group.
 
-There should be no visible intermediate destination group while the wizard is in progress. The server may persist an `ImportSession` for validation, duplicate detection, and audit, but the destination group should be created only during final commit.
+There is no `ImportSession` table, no `ImportParticipant` table, no `ImportIssue` table, no `ImportSourceRecord` table. The wizard lives in component state.
 
-Recommended models:
-
-- `ImportSession(id, importerAccountId, sourceProvider, sourceType, sourceGroupId, sourceUrl, normalizedPayloadHash, createdAt, completedAt)`.
-- `ImportParticipant(id, importSessionId, sourceParticipantId, sourceName, mappingMode, accountId?, destinationParticipantEntryId?)`.
-- `ImportIssue(id, importSessionId, severity, code, path, message, resolutionState)`.
-- `ImportSourceRecord(importSessionId, sourceRecordType, sourceRecordId, destinationRecordId)` for duplicate detection/audit.
-
-Rationale: the lifecycle stays simple for users and avoids half-created groups, while still giving the server enough state to validate and prevent duplicates.
+Rationale: import is a short interactive event. Holding state on the server adds lifecycle complexity, race conditions, and a table to migrate later. The web already needs a preview/mapping UI anyway, so all the wizard state is in the browser.
 
 Alternatives considered:
 
-- Single "paste URL and import immediately" action: too risky because participant mapping and unsupported data need review.
-- Long-lived intermediate destination groups: more lifecycle complexity than this import needs.
-- Fully client-side import: exposes source parsing complexity to the browser and weakens transactional guarantees.
+- Server-stored wizard sessions (the original design): rejected as over-engineered. Adds a table, a service, and a router for state that lives in the browser during one session.
+- Fully client-side import with no server involvement: rejected because the destination group must be created transactionally on the server. The batch submit keeps that guarantee.
+- Browser-side URL fetch for `spliit.app`: rejected because the public `spliit.app` API either doesn't support CORS or rotates access. The server-side proxy keeps the cross-origin call, the access policy, and the rate-limit handling on the server.
 
-### 2. Use provider-neutral normalized import records
+### 1b. "Group not found" hand-off into the import wizard
 
-Each source adapter should convert provider-specific data into internal normalized records before mapping or writing:
+When a user navigates to `/groups/<id>` on the new domain and the group does not exist locally, the server treats that as a potential import request rather than a hard 404:
 
-- `ImportedGroup`.
-- `ImportedParticipant`.
-- `ImportedExpense`.
-- `ImportedExpensePaidFor`.
-- `ImportedDocument`.
-- `ImportedCategory`.
+- The existing `groups.get` (or a thin companion `groups.lookup`) procedure tries to fetch the source group from `spliit.app` (or from the configured import providers) using the same server-side proxy as Decision 1.
+- If the source group is found, the server returns a structured "importable" response: `{ status: 'IMPORTABLE', sourceUrl, sourceGroupId, sourceProvider: 'SPLIIT' }`. The web app reads this and routes to `/groups/import?source=<encoded sourceUrl>` with the wizard pre-filled.
+- If the source group is not found on `spliit.app` either, the server returns a normal "not found" response and the web app shows the existing not-found page.
 
-Normalize money to integer minor units and percentage splits to basis points, matching domain rules. Preserve provider name, original IDs, and raw source fragments in the import session for audit/debugging, but only write normalized data into cloud tables.
+The hand-off is a discovery convenience, not a bypass: the user still walks the import wizard, still maps participants, and still confirms. The only thing it skips is the manual "pick a source" step.
 
-Rationale: source format can differ from destination schema, especially across Spliit versions or export formats.
+Important: when the import commits, the destination group id is a **fresh** id (the server generates it). The source group id is recorded in the destination group's first activity entry as a `data` string ("Imported from `spliit.app` group `<sourceId>`") so the audit trail is preserved without leaking the source id into the destination primary key.
 
-Alternatives considered:
-
-- Write directly from provider JSON into Prisma create calls: fragile and hard to validate.
-- Convert entirely in the client: makes validation and idempotency harder.
-
-### 3. Use source adapters plus an import pipeline
-
-Use a small source-adapter pipeline rather than provider-specific import flows. The preferred pattern is a Strategy-style source adapter composed with shared importer services:
-
-- `ImportSourceAdapter`: provider-specific discovery, extraction, and normalization.
-- `ImportValidator`: shared validation visitor over normalized records.
-- `ImportPlanner`: builds the destination write plan and participant mapping requirements.
-- `ImportCommitter`: performs the transactional write from the normalized plan.
-
-This is more appropriate than a command-per-provider implementation because most steps after normalization are shared. It is also simpler than a full visitor pattern for every provider object because adapters can normalize to one internal shape first.
-
-Initial source adapters:
-
-- `SpliitPublicUrlSource`: fetches from public endpoints behind a `spliit.app` group URL if available and acceptable.
-- `SpliitExportJsonSource`: accepts exported JSON.
-- Future adapters, such as `SplitwiseExportSource` or `SplitwiseApiSource`, can be added without changing mapping, validation, commit, or UI review logic.
-
-Adapter contract:
-
-- `canHandle(input)`.
-- `discover(input)`.
-- `fetchFullGroup(discovery)`.
-- `normalize(sourcePayload): NormalizedImport`.
-
-Rationale: direct URL import is the preferred user experience, but exported JSON must be supported as a reliable fallback and explicit import path.
+Rationale: destination group ids are short, opaque, and should not collide with source ids. The "switch your domain" UX is the cleanest onboarding for users moving from `spliit.app` to the new domain, and the source group id entropy is high enough that a missing local group is almost always a deliberate cross-domain paste.
 
 Alternatives considered:
 
-- Hardcode direct API fetch: fastest if it works, but high stability and policy risk.
-- Require manual JSON only: reliable, but worse user experience.
-- Implement separate importer workflows per provider: duplicates mapping, validation, duplicate detection, and commit behavior.
+- Reuse the source group id as the destination id: rejected. The source id is from a different id space; mixing them risks collisions and weakens the "destination id is a fresh opaque token" invariant.
+- Auto-import on the first visit: rejected. Mapping and confirmation are mandatory, so this is only a routing convenience.
 
-### 4. Participant mapping is explicit and can remain incomplete
+### 1c. Import is all-or-nothing — no partial imports
 
-For each source participant, the importer chooses one mapping mode:
+The wizard does not let the user pick a subset of expenses to bring in. Either every expense in the parsed source is imported, or the import is blocked by validation. Per-expense skip is only for source participants (which the user marks `SKIP` and which the web app drops from `paidBy` / `paidFor` before submitting), never for expenses.
 
-- `LINK_ACCOUNT`: map to an existing account.
-- `UNLINKED_PARTICIPANT`: keep unlinked as a named participant entry with no app access.
-- `SKIP`: only allowed if no imported expenses reference that participant, or if skipping referenced expenses is explicitly selected.
-
-Source participants are name-only from the importer's perspective. The UI should allow the importer to set mappings before import and revise mappings during validation when issues appear. It should also allow intentionally leaving people unlinked, especially members who left the original group and should not be invited.
-
-Rationale: authenticated accounts are the only app users, but imported groups may still need named expense parties that do not have accounts.
+Rationale: financial history is all-or-nothing by nature. Letting the user pick a subset of expenses during import is a high-risk UX (the user might forget an expense that mattered), and it complicates the server's transactional commit (which expenses are in the batch vs. which are out?). If the user wants a subset later, they can delete individual expenses from the imported group.
 
 Alternatives considered:
 
-- Require every participant to map to an account or invite: too strict and blocks departed/inactive people.
-- Import source participants as app users without authentication: violates the account-backed roadmap.
+- Optional per-expense checkbox in the wizard: rejected. See above. Defer to "delete individual expenses after import" if the user wants to drop something.
+- Per-category or per-date filter: rejected. Same reason, plus these filters are easy to add later as plain expense queries once the data is in the cloud.
 
-### 5. Represent unlinked participant entries separately from authenticated members
+### 2. Reuse the existing form schemas for the batch payload
 
-The destination schema needs a way for imported expenses and later edits to reference unlinked people without making them authenticated members.
+The web builds a payload that uses the same Zod schemas as the regular create-group / create-expense flows:
 
-Recommended approach:
+- `groupFormValues` (name, information, currency, currencyCode) when creating a new group.
+- `participants: [{ sourceName, mode: 'LINK_ACCOUNT' | 'UNLINKED_PARTICIPANT' | 'SKIP', linkedAccountId? }]` — one entry per source participant.
+- `expenses: [ExpenseFormValues]` — each expense already references participants by their destination `LedgerParticipant` id, so the web must resolve source ids → destination ids before submitting.
 
-- Add a group participant entry table that can represent either `ACCOUNT_MEMBER` or `UNLINKED_PARTICIPANT`.
-- Account-backed participant entries point to authenticated accounts through group membership and can access the group according to membership rules.
-- Unlinked participant entries have display names, can be referenced by expenses in imported groups, and have no login, permissions, notifications, or group access.
-- New unlinked participant entries cannot be created after import; only the source participants imported by the wizard can remain unlinked.
-- A participant entry can later be linked to an account only by an owner/admin mapping decision. If the selected account is not already a group member, the system should create or activate that account's group membership during linking.
-- Group owners/admins can map or correct participant-entry mappings after import.
+The web resolves the source→destination mapping before submit: for each `paidBy` / `paidFor` reference, it picks the destination `LedgerParticipant` id that the server will create (account-backed or unlinked). SKIP participants are dropped from expenses before submit.
 
-Rationale: imported groups must balance correctly even when some people are not cloud users. The presence of unlinked entries is sufficient; no separate migrating state is needed.
+Rationale: reuses the existing form schemas, validation, and `expenseFormSchema` shape. The server doesn't need a parallel "import expense" schema.
 
 Alternatives considered:
 
-- Create inactive `GroupMember` rows without accounts: simpler, but dilutes the "member means account" invariant.
-- Rewrite historical expenses to the importer: corrupts history.
+- A new import-specific expense schema: rejected. The destination data shape is the same; only the import-specific identifier is the source participant id, which the web resolves client-side.
 
-### 6. Commit creates group, participants, expenses, and mappings transactionally
+### 3. One server procedure, one transactional write
 
-During final commit:
+The server exposes a single `groups.import` procedure:
 
-1. Create destination cloud group.
-2. Create active group members and account-backed participant entries for linked accounts.
-3. Create unlinked participant entries for unlinked mappings.
-4. Write imported expenses using destination participant entry IDs.
-5. Write documents if supported.
-6. Write import audit/source mapping records.
+```ts
+input: {
+  // Either provide a target group id to merge into an existing group,
+  // or provide form values to create a new one.
+  targetGroupId?: string
+  groupFormValues?: GroupFormValues
+  // Per source participant, the mapping decision.
+  participants: Array<{
+    sourceName: string
+    mode: 'LINK_ACCOUNT' | 'UNLINKED_PARTICIPANT' | 'SKIP'
+    linkedAccountId?: string
+  }>
+  // Imported expenses, already resolved to destination participant ids.
+  expenses: Array<ExpenseFormValues>
+}
+```
 
-Rationale: expense writes need stable destination participant entry IDs, and the user should not see a partially imported group.
+The procedure:
 
-Alternatives considered:
+1. Verifies the caller is authorized (admin of the target group, or any signed-in user for a new group).
+2. Opens a Prisma transaction.
+3. Creates or reuses the group and ledger (the destination group id is always a fresh id, regardless of any source id; see Decision 1b).
+4. For each mapping, creates a `LedgerParticipant` (account-backed for `LINK_ACCOUNT`, unlinked for `UNLINKED_PARTICIPANT`) and, for `LINK_ACCOUNT`, creates/activates the `GroupMember`.
+5. For each expense, calls the existing expense-creation path (so documents, split math, and activity logging all behave the same as a normal expense).
+6. Records an `UPDATE_GROUP` activity entry with `data = "Imported from <provider> group <sourceId>"` so the source identity is auditable without leaking into the primary key.
+7. Returns `{ groupId, ledgerId }`.
 
-- Create a normal group immediately and mutate it during mapping: exposes half-imported data.
-- Write expenses outside a transaction: risks partial imports.
-
-### 7. Unlinked entries remain linkable after import
-
-After import:
-
-- Linked accounts and accepted invitees can be active members.
-- Unlinked participant entries appear in expense detail, balances, and history.
-- Imported expenses remain editable, including payer/split edits involving unlinked entries, matching current group edit behavior.
-- New expenses can use unlinked participant entries that were created during import.
-- Users cannot create brand new unlinked participant entries after the import is committed.
-- Unlinked participant entries can be linked later by an owner/admin selecting the account that should own the entry.
-- Linking is a one-way operation: the ledger participant entry is migrated to account ownership and membership is created/activated if needed, after which its historical and future balances immediately become associated with that account and appear in account-level views such as the homepage.
-
-Rationale: the import can complete without forcing every person into an account. Unlinked entries are not a workflow state; they are durable participant records until linked or left unlinked.
-
-Alternatives considered:
-
-- Add a separate import/linking group status: adds lifecycle complexity without a clear product purpose.
-- Freeze all imported expenses forever: safe, but too restrictive for typo/category cleanup.
-- Keep a reversible link/unlink model: more flexible, but harder to reason about than one-way account ownership.
-
-### 8. Duplicate detection uses source identity and payload hash
-
-Store source provider, source group identifier, source adapter type, and normalized payload hash. Before commit, check if the same importer or destination group has already imported the same source group/hash.
-
-Import should support:
-
-- `BLOCK_DUPLICATE`: default.
-- `REIMPORT_AS_NEW`: explicit user action, creates a separate group.
-- Future `MERGE_UPDATE`: out of scope until source delta semantics are known.
-
-Rationale: accidental duplicate imports are likely and expensive to clean manually.
+Rationale: a single procedure is the simplest possible API. The transactional guarantee is provided by Prisma's `$transaction`; the per-expense work reuses the existing `createExpense` helper for consistency.
 
 Alternatives considered:
 
-- Blind imports: simple but dangerous.
-- Automatic merge: hard without stable source update semantics.
+- A `createImportSession` / `commitImport` pair with server-stored state: rejected (see Decision 1).
+- A per-expense `createExpense` call from the web: rejected. The web would need to handle partial failures across N HTTP calls; the server should commit atomically.
 
-### 9. Validation is strict before writes
+### 3b. Server-side URL proxy for `spliit.app` group discovery
 
-Validation should catch:
+The web app never fetches `spliit.app` directly. Instead, the server exposes a small discovery endpoint (for example `import.previewFromUrl` or `groups.lookup`):
 
-- Missing or duplicate source participant IDs/names.
-- Referenced participant has no mapping.
-- Unsupported split modes.
-- Invalid amount/currency/conversion data.
-- Paid-for shares that do not match the source total semantics.
-- Reimbursements that cannot map cleanly.
-- Unsupported recurring expense fields.
-- Document URLs that cannot be fetched or copied.
-- Destination account conflicts, such as mapping two source people to the same account without confirmation.
+- Input: `{ sourceUrl: string }` (a `spliit.app` group URL, or just the id).
+- Output: either `{ kind: 'OK', source: NormalizedSource }` with the parsed group ready to drop into the wizard, or `{ kind: 'NOT_FOUND' }` / `{ kind: 'ERROR', message }` for the failure cases.
+- The server makes the cross-origin call, applies the access policy / rate limits, and returns the parsed payload.
+- The wizard's "source" step calls this endpoint when the user provides a URL and shows the preview without ever touching `spliit.app` itself.
 
-Warnings can allow import with acknowledged data loss. Errors must block commit.
+Rationale: the public `spliit.app` API is rate-limited and access is policy-sensitive. The server is the right place for the cross-origin call so the URL fetch, retry policy, and access policy are server-controlled. It also gives the server everything it needs to power the "not found" hand-off (Decision 1b).
 
-Rationale: import mistakes can permanently pollute financial history.
+### 3c. In-memory cache keyed by source group id
+
+The URL proxy keeps a small in-memory cache keyed by the source group id (the `spliit.app` group id, or whatever id the configured provider uses). The cache is the single source of truth for "is this source group known to us?":
+
+- A cache hit returns the previously parsed source payload without re-fetching from `spliit.app`.
+- A cache miss triggers a `spliit.app` fetch; on success the parsed payload is stored in the cache; on failure the call returns `NOT_FOUND` or `ERROR`.
+- The cache is per-process (in-memory, no Redis, no DB), bounded in size, and has a short TTL (e.g. a few minutes) so stale source data is bounded.
+- The "not found" hand-off (Decision 1b) reuses the same cache: when a local group lookup misses, the server checks the cache, and a cache hit is the signal that the group exists on `spliit.app` (because we have a recent successful fetch on record).
+
+Rationale: a single in-memory cache doubles as a fetch accelerator (no need to re-fetch during a wizard session) and as the "have we seen this group on `spliit.app`" detector for the not-found-import flow. It avoids the complexity of a distributed cache or a separate source-discovery table while still being fast and bounded.
 
 Alternatives considered:
 
-- Best-effort import with logs: faster, but too risky for expense data.
+- No cache (every URL proxy call hits `spliit.app`): rejected. The wizard may re-fetch on every step, and the not-found flow would always re-fetch too. Wasteful and slow.
+- A `SourceGroupCache` table in the database: rejected. The data is short-lived and doesn't need transactional durability. The cache is invalidated on TTL; a database table would be a write per lookup.
+- A third-party cache (Redis): rejected for v1. Per-process in-memory is good enough for a single-node deployment; switching to Redis is a bounded change when we need it.
+
+### 4. Unlinked `LedgerParticipant` entries for people without accounts
+
+The destination schema gains:
+
+- `LedgerParticipant.kind: LedgerParticipantKind` — `ACCOUNT_MEMBER` (default) or `UNLINKED_PARTICIPANT`.
+- `LedgerParticipant.displayName: String?` — populated only for unlinked entries; null for account-backed ones.
+
+The existing `getGroup` participants list and the existing `createExpense` / `updateExpense` participant-validation list both gain `OR: { kind: 'UNLINKED_PARTICIPANT' }` so unlinked entries are selectable in expense forms and balance rows. The existing `resolveParticipantDisplayName` falls back to `displayName` for unlinked entries.
+
+Enforcement: the import procedure is the only writer that creates `UNLINKED_PARTICIPANT` rows. No other code path sets `kind` explicitly (so it defaults to `ACCOUNT_MEMBER`). UI flows (invite, member management) do not surface an "add unlinked participant" action.
+
+Rationale: imported groups must balance correctly even when some people are not cloud users. Adding a kind to the existing `LedgerParticipant` is the minimum schema change that supports this.
+
+Alternatives considered:
+
+- A separate `UnlinkedParticipant` table: rejected. The existing `LedgerParticipant` already supports `groupMemberId = null` (for the pending-invite use case); adding a `kind` enum reuses the same table and the same query paths.
+- A "shadow" Account for each unlinked person: rejected. It conflates real users with imported-name placeholders and pollutes the account listing.
+
+### 5. One-way admin mapping after import
+
+The existing `importLinks` flow (already in the original proposal) survives: an owner/admin can call a `link` procedure to migrate an unlinked `LedgerParticipant` to an account. The destination `GroupMember` is created or reactivated, the `LedgerParticipant.groupMemberId` is set, and `kind` flips to `ACCOUNT_MEMBER`. The historical and future balances of the participant immediately contribute to the linked account's group and overview totals.
+
+Rationale: people who were unlinked at import time (departed members, friends without accounts) may eventually sign up. A one-way link keeps the model simple — there is no un-link state.
+
+### 6. Validation happens in the web, with a server-side defense-in-depth check
+
+The web runs validation on the parsed payload before the submit button enables. Validation includes:
+
+- Every source participant has a mapping decision.
+- No two source participants have the same `sourceName` (case-insensitive).
+- Every `paidBy` / `paidFor` reference resolves to a destination participant id.
+- Every expense's split math is internally consistent.
+- The destination group form values pass the existing `groupFormSchema` validation.
+
+The server re-runs the same Zod checks on the batch payload via tRPC's input validation. Server-side validation never has to invent issues that the web didn't already surface; it's a guard against tampered or buggy clients.
+
+Rationale: validation in the web gives the user immediate feedback during the wizard; server-side Zod validation guarantees the same shape rules apply regardless of client. There is no separate "validator service" — the existing schemas are the contract.
+
+Alternatives considered:
+
+- A standalone `ImportValidator` service: rejected. The web needs the same checks for the preview; reusing the existing schemas avoids two implementations of the same rules.
+
+### 7. No server-side audit trail, no duplicate detection
+
+The original design proposed `ImportSourceRecord` and a payload-hash duplicate check. Both are dropped:
+
+- Audit trail: the imported group itself records what was created, when, by whom, and with what data. Activity entries, expense history, and the group ledger are the audit. A separate import audit table would only duplicate that information.
+- Duplicate detection: out of scope for v1. If a user accidentally re-imports the same JSON, they end up with two groups — the same behavior as accidentally creating any duplicate group today. A simple "you have a group with this name already" warning is enough for the foreseeable UX. A full duplicate-detection mechanism (source id, payload hash, source→destination record mapping) can be added later if needed without changing the public API.
+
+Rationale: the cost (a multi-table schema, hashing, fuzzy matching) outweighs the benefit (catching rare user mistakes) for v1.
 
 ## Risks / Trade-offs
 
-- [Risk] Direct `spliit.app` URL import may be unstable or disallowed. -> Mitigate with source adapter abstraction and exported JSON fallback.
-- [Risk] Provider-specific assumptions can leak into shared import logic. -> Mitigate with normalized import records and shared validation/commit services that do not depend on Spliit-specific fields.
-- [Risk] Unlinked participant entries can be mistaken for app users. -> Mitigate by labeling them as unlinked, giving them no access, and separating participant entries from authenticated members in the UI.
-- [Risk] Mapping UX can become complex for large groups. -> Mitigate with bulk actions, auto-suggest by email/name, and validation-driven fixes.
-- [Risk] Imported data may not match new schema exactly. -> Mitigate with normalization, strict validation, and explicit warning acknowledgements.
-- [Risk] Document import can fail independently from expense import. -> Mitigate with optional document import, per-document issues, and retry support.
-- [Risk] Long imports can partially write data. -> Mitigate with transactional final commit and no visible destination group until commit succeeds.
+- [Risk] Direct `spliit.app` URL import may be unstable or disallowed. -> Mitigate with the JSON/CSV fallback as the reliable path. URL import is best-effort and surfaces a clear error when it fails.
+- [Risk] Source-specific parsing complexity leaks into the web. -> Mitigate by keeping each parser small and returning the same in-memory shape (the destination `expenseFormValues` + per-participant mapping). New sources are a new parser file in the web, not a new server concept.
+- [Risk] Unlinked participant entries can be mistaken for app users. -> Mitigate by labeling them as unlinked in the UI, giving them no access, and surfacing a dedicated "unlinked" entry point for the post-import admin link flow.
+- [Risk] Mapping UX can become complex for large groups. -> Mitigate with bulk actions, search, and auto-suggest by name/email in the wizard.
+- [Risk] The web submits a large batch in a single call. -> Mitigate by chunking expenses on the client when the batch exceeds a sensible size (e.g. > 500 expenses), or by failing with a clear error if a single transaction is too large. Spliit exports are typically < 200 expenses, so this is not a current concern.
+- [Risk] A bug in the parser corrupts financial history. -> Mitigate by reusing the existing `expenseFormSchema` Zod validation on both client and server, and by previewing the parsed result before submit.
 
 ## Migration Plan
 
-1. Complete account/membership foundation and decide participant entry schema.
-2. Add import session, participant mapping, issue, and source record tables with source provider metadata.
-3. Implement source adapter interfaces plus shared validator, planner, and committer services.
-4. Implement Spliit URL and JSON adapters on top of the shared import pipeline.
-5. Add protected importer API procedures: create/parse session, update mappings, validate, commit, cancel.
-6. Add import UI: URL/JSON input, preview, participant mapping, issue resolution, final confirmation, and post-import review.
-7. Add transactional commit that creates group, identities, expenses, documents, and audit records.
-8. Add duplicate detection and idempotency checks.
-9. Add tests for unlinked participant behavior, mapping modes, validation failures, duplicate import, and authorization.
+1. Extend `LedgerParticipant` with `kind` and `displayName`. Backfill is unnecessary — every existing row defaults to `ACCOUNT_MEMBER`.
+2. Update `getGroup`, `createExpense`, and `updateExpense` to include unlinked `LedgerParticipant` rows in their participants list.
+3. Extend `resolveParticipantDisplayName` to fall back to `displayName` for unlinked rows.
+4. Add the `importGroup` helper and the `groups.import` procedure.
+5. Add the `importLinks.listUnlinked` and `importLinks.link` procedures (one-way admin link).
+6. Add the web wizard at `/groups/import`: source selection → preview → mapping → confirm → done.
+7. Surface the wizard entry point from the signed-in homepage.
+8. Add unit tests for the parsers, the `importGroup` helper, and the existing schemas; add a Playwright happy-path test for the wizard.
 
-Rollback strategy: keep import feature disabled until stable. Completed imported groups are normal cloud data plus import audit records, so rollback should disable new imports rather than delete imported groups.
+Rollback strategy: keep the import entry point hidden behind a feature flag until stable. The schema additions (`kind`, `displayName`) are additive and can stay even if the wizard is disabled.
 
 ## Open Questions
 
-- What source formats are actually available from `spliit.app`: public URL API, export JSON, both, or neither?
-- What source shape should a future Splitwise adapter use first: exported file or API integration?
-- Should imported group ownership default only to the importer, or can importer assign owners/admins during mapping?
-- Should document import copy files into this app's storage or only preserve source links?
-- Should import support partial import of selected expenses, or all-or-nothing only?
+- _Resolved:_ All-or-nothing import. The wizard never lets the user pick a subset of expenses; every expense in the parsed source is either imported or the import is blocked by validation. Decision 1c.
+- _Resolved:_ The "not found" hand-off signals "intent to import" to the web app, which routes the user into the import wizard at the **destination step** (new group vs. existing group) with the source already pre-filled. Decision 1b.
+- _Resolved:_ The URL proxy uses a simple in-memory cache keyed by source group id. The cache is also the lookup that determines whether a `spliit.app` group exists during the not-found-import flow. Decision 3c.
