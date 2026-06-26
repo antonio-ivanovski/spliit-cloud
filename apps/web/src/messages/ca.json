@@ -681,14 +681,14 @@
         "cancel": "Cancel·lar",
         "confirm": "Revocar",
         "unsettled": {
-          "title": "Revocar invitació amb saldo pendent?",
           "toast": "Invitació revocada, saldos liquidats.",
-          "description": "Revocar la invitació a {email}? Té saldos pendents — marca la casella de sota per liquidar-los automàticament abans de revocar.",
+          "title": "Liquidar saldos abans de revocar",
+          "description": "Revocar la invitació a {email}? Cal liquidar primer els saldos.",
           "warning": {
             "title": "Aquesta invitació té saldos pendents",
-            "description": "Revocar sense liquidar deixarà els saldos al llibre de comptes indefinidament. Marca la casella de sota per crear una despesa de reemborsament per cada part que impliqui aquest convidat abans de revocar, o revoca sense liquidar i gestiona els saldos manualment."
+            "description": "Marca la casella de sota per crear una despesa de reemborsament per cada part que impliqui aquest convidat abans de revocar. La invitació només es pot revocar un cop liquidats els saldos."
           },
-          "checkbox": "Crear reemborsament de liquidació abans de revocar"
+          "checkbox": "Liquidar els saldos del convidat abans de revocar"
         }
       }
     },

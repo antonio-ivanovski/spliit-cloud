@@ -681,14 +681,14 @@
         "cancel": "Annuler",
         "confirm": "Révoquer",
         "unsettled": {
-          "title": "Révoquer l'invitation avec un solde impayé ?",
           "toast": "Invitation révoquée, soldes réglés.",
-          "description": "Révoquer l'invitation de {email} ? Il a des soldes impayés — cochez la case ci-dessous pour les régler automatiquement avant de révoquer.",
+          "title": "Régler les soldes avant de révoquer",
+          "description": "Révoquer l'invitation de {email} ? Ses soldes doivent d'abord être réglés.",
           "warning": {
             "title": "Cette invitation a des soldes impayés",
-            "description": "Révoquer sans régler laissera les soldes dans le grand livre indéfiniment. Cochez la case ci-dessous pour créer une dépense de remboursement par part impliquant cet invité avant de révoquer, ou révoquez sans régler et gérez les soldes manuellement."
+            "description": "Cochez la case ci-dessous pour créer une dépense de remboursement par part impliquant cet invité avant de révoquer. L'invitation ne peut être révoquée qu'une fois les soldes réglés."
           },
-          "checkbox": "Créer un remboursement de régularisation avant de révoquer"
+          "checkbox": "Régler les soldes de l'invité avant de révoquer"
         }
       }
     },

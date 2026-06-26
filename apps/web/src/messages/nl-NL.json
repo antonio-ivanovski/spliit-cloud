@@ -681,14 +681,14 @@
         "cancel": "Annuleren",
         "confirm": "Intrekken",
         "unsettled": {
-          "title": "Uitnodiging met niet-vereffend saldo intrekken?",
           "toast": "Uitnodiging ingetrokken, saldi vereffend.",
-          "description": "Uitnodiging aan {email} intrekken? {email} heeft niet-vereffende saldi — vink het vakje hieronder aan om ze automatisch te vereffenen vóór het intrekken.",
+          "title": "Vereffen saldi vóór intrekken",
+          "description": "Uitnodiging aan {email} intrekken? De saldi moeten eerst vereffend worden.",
           "warning": {
             "title": "Deze uitnodiging heeft niet-vereffende saldi",
-            "description": "Intrekken zonder vereffenen laat de saldi voor onbepaalde tijd in het grootboek staan. Vink het vakje hieronder aan om één verrekeningsuitgave per been aan te maken waar deze genodigde bij betrokken is vóór het intrekken, of trek in zonder vereffenen en handel de saldi handmatig af."
+            "description": "Vink het vakje hieronder aan om één verrekeningsuitgave per been aan te maken waar deze genodigde bij betrokken is vóór het intrekken. De uitnodiging kan pas worden ingetrokken zodra de saldi vereffend zijn."
           },
-          "checkbox": "Verrekeningsuitgave aanmaken vóór intrekken"
+          "checkbox": "Vereffen de saldi van de genodigde vóór het intrekken"
         }
       }
     },

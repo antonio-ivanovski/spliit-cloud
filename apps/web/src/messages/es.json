@@ -681,14 +681,14 @@
         "cancel": "Cancelar",
         "confirm": "Revocar",
         "unsettled": {
-          "title": "¿Revocar invitación con saldo pendiente?",
           "toast": "Invitación revocada, saldos liquidados.",
-          "description": "¿Revocar la invitación a {email}? Tiene saldos pendientes — marca la casilla a continuación para liquidarlos automáticamente antes de revocar.",
+          "title": "Liquidar saldos antes de revocar",
+          "description": "¿Revocar la invitación a {email}? Sus saldos deben liquidarse primero.",
           "warning": {
             "title": "Esta invitación tiene saldos pendientes",
-            "description": "Revocar sin liquidar dejará los saldos en el libro de cuentas indefinidamente. Marca la casilla a continuación para crear un gasto de reembolso por cada participación que involucre a este invitado antes de revocar, o revoca sin liquidar y gestiona los saldos manualmente."
+            "description": "Marca la casilla a continuación para crear un gasto de reembolso por cada participación que involucre a este invitado antes de revocar. La invitación solo puede revocarse una vez liquidados los saldos."
           },
-          "checkbox": "Crear reembolso de liquidación antes de revocar"
+          "checkbox": "Liquidar los saldos del invitado antes de revocar"
         }
       }
     },

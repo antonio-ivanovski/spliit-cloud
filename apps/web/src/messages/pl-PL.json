@@ -681,14 +681,14 @@
         "cancel": "Anuluj",
         "confirm": "Odwołaj",
         "unsettled": {
-          "title": "Odwołać zaproszenie z nierozliczonym saldem?",
           "toast": "Zaproszenie odwołane, salda rozliczone.",
-          "description": "Odwołać zaproszenie dla {email}? {email} ma nierozliczone salda — zaznacz pole poniżej, aby rozliczyć je automatycznie przed odwołaniem.",
+          "title": "Rozlicz salda przed odwołaniem",
+          "description": "Odwołać zaproszenie dla {email}? Salda muszą najpierw zostać rozliczone.",
           "warning": {
             "title": "To zaproszenie ma nierozliczone salda",
-            "description": "Odwołanie bez rozliczenia pozostawi salda w księdze na stałe. Zaznacz pole poniżej, aby utworzyć jeden wydatek rozliczeniowy na każdą nogę, w którą zaangażowany jest ten zaproszony, przed odwołaniem, lub odwołaj bez rozliczania i zajmij się saldami ręcznie."
+            "description": "Zaznacz pole poniżej, aby utworzyć jeden wydatek rozliczeniowy na każdą nogę, w którą zaangażowany jest ten zaproszony, przed odwołaniem. Zaproszenie można odwołać dopiero po rozliczeniu sald."
           },
-          "checkbox": "Utwórz wydatek rozliczeniowy przed odwołaniem"
+          "checkbox": "Rozlicz salda zaproszonego przed odwołaniem"
         }
       }
     },

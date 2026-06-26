@@ -681,14 +681,14 @@
         "cancel": "Cancelar",
         "confirm": "Revogar",
         "unsettled": {
-          "title": "Revogar convite com saldo pendente?",
           "toast": "Convite revogado, saldos acertados.",
-          "description": "Revogar o convite para {email}? Ele tem saldos pendentes — marque a caixa abaixo para acertá-los automaticamente antes de revogar.",
+          "title": "Liquidar saldos antes de revogar",
+          "description": "Revogar o convite para {email}? Os saldos dele devem ser liquidados primeiro.",
           "warning": {
             "title": "Este convite tem saldos pendentes",
-            "description": "Revogar sem acertar deixará os saldos no livro-razão indefinidamente. Marque a caixa abaixo para criar uma despesa de reembolso por cada parte que envolve este convidado antes de revogar, ou revogue sem acertar e lide com os saldos manualmente."
+            "description": "Marque a caixa abaixo para criar uma despesa de reembolso por cada parte que envolve este convidado antes de revogar. O convite só pode ser revogado depois que os saldos forem liquidados."
           },
-          "checkbox": "Criar reembolso de acerto antes de revogar"
+          "checkbox": "Liquidar os saldos do convidado antes de revogar"
         }
       }
     },

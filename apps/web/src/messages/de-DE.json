@@ -681,14 +681,14 @@
         "cancel": "Abbrechen",
         "confirm": "Widerrufen",
         "unsettled": {
-          "title": "Einladung mit nicht ausgeglichenem Saldo widerrufen?",
           "toast": "Einladung widerrufen, Salden ausgeglichen.",
-          "description": "Einladung an {email} widerrufen? {email} hat nicht ausgeglichene Salden – aktiviere das Kontrollkästchen unten, um sie vor dem Widerruf automatisch auszugleichen.",
+          "title": "Salden vor dem Widerruf ausgleichen",
+          "description": "Einladung an {email} widerrufen? Die Salden müssen zuerst ausgeglichen werden.",
           "warning": {
             "title": "Diese Einladung hat nicht ausgeglichene Salden",
-            "description": "Der Widerruf ohne Ausgleich belässt die Salden dauerhaft im Hauptbuch. Aktiviere das Kontrollkästchen unten, um vor dem Widerruf eine Ausgleichsausgabe pro Bein zu erstellen, an dem dieser Eingeladene beteiligt ist, oder widerrufe ohne Ausgleich und bearbeite die Salden manuell."
+            "description": "Aktiviere das Kontrollkästchen unten, um vor dem Widerruf eine Ausgleichsausgabe pro Bein zu erstellen, an dem dieser Eingeladene beteiligt ist. Die Einladung kann erst widerrufen werden, nachdem die Salden ausgeglichen sind."
           },
-          "checkbox": "Ausgleichsausgabe vor dem Widerruf erstellen"
+          "checkbox": "Salden des Eingeladenen vor dem Widerruf ausgleichen"
         }
       }
     },

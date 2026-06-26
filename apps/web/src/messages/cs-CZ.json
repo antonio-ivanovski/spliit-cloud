@@ -681,14 +681,14 @@
         "cancel": "Zrušit",
         "confirm": "Zrušit",
         "unsettled": {
-          "title": "Zrušit pozvánku s nevyrovnaným zůstatkem?",
           "toast": "Pozvánka zrušena, zůstatky vyrovnány.",
-          "description": "Zrušit pozvánku pro {email}? {email} má nevyrovnané zůstatky — zaškrtni políčko níže, aby se automaticky vyrovnaly před zrušením.",
+          "title": "Vyrovnat zůstatky před zrušením",
+          "description": "Zrušit pozvánku pro {email}? Zůstatky je třeba nejprve vyrovnat.",
           "warning": {
             "title": "Tato pozvánka má nevyrovnané zůstatky",
-            "description": "Zrušení bez vyrovnání ponechá zůstatky v účetní knize na neurčito. Zaškrtni políčko níže pro vytvoření jednoho vyrovnávacího výdaje za každou nohu, které se tento pozvaný účastní, před zrušením, nebo zruš bez vyrovnání a řeš zůstatky ručně."
+            "description": "Zaškrtni políčko níže pro vytvoření jednoho vyrovnávacího výdaje za každou nohu, které se tento pozvaný účastní, před zrušením. Pozvánku lze zrušit až po vyrovnání zůstatků."
           },
-          "checkbox": "Vytvořit vyrovnávací výdaj před zrušením"
+          "checkbox": "Vyrovnat zůstatky pozvaného před zrušením"
         }
       }
     },

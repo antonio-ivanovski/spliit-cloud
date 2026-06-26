@@ -681,14 +681,14 @@
         "cancel": "Utzi",
         "confirm": "Ezeztatu",
         "unsettled": {
-          "title": "Kitatu gabeko saldoa duen gonbidapena ezeztatu?",
           "toast": "Gonbidapena ezeztatuta, saldoak kitatuta.",
-          "description": "{email}(e)ri bidalitako gonbidapena ezeztatu? Kitatu gabeko saldoak dituzte — markatu beheko laukia automatikoki kitatzeko ezeztatu aurretik.",
+          "title": "Kitatu saldoak ezeztatu aurretik",
+          "description": "{email}(e)ri bidalitako gonbidapena ezeztatu? Lehenik saldoak kitatu behar dira.",
           "warning": {
             "title": "Gonbidapen honek kitatu gabeko saldoak ditu",
-            "description": "Kitatu gabe ezeztatzeak saldoak liburuan mugarik gabe utziko ditu. Markatu beheko laukia gonbidatu hau inplikatzen duen hanka bakoitzeko itzultze-gastu bat sortzeko ezeztatu aurretik, edo kitatu gabe ezeztatu eta saldoak eskuz kudeatu."
+            "description": "Markatu beheko laukia gonbidatu hau inplikatzen duen hanka bakoitzeko itzultze-gastu bat sortzeko ezeztatu aurretik. Gonbidapena ezin da ezeztatu saldoak kitatu arte."
           },
-          "checkbox": "Sortu kitatze-itzultzea ezeztatu aurretik"
+          "checkbox": "Kitatu gonbidatuaren saldoak ezeztatu aurretik"
         }
       }
     },

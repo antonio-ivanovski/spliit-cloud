@@ -681,14 +681,14 @@
         "cancel": "Batal",
         "confirm": "Cabut",
         "unsettled": {
-          "title": "Cabut undangan dengan saldo belum diselesaikan?",
           "toast": "Undangan dicabut, saldo diselesaikan.",
-          "description": "Cabut undangan ke {email}? Mereka memiliki saldo yang belum diselesaikan — centang kotak di bawah untuk menyelesaikannya secara otomatis sebelum mencabut.",
+          "title": "Selesaikan saldo sebelum mencabut",
+          "description": "Cabut undangan ke {email}? Saldo mereka harus diselesaikan terlebih dahulu.",
           "warning": {
             "title": "Undangan ini memiliki saldo yang belum diselesaikan",
-            "description": "Mencabut tanpa menyelesaikan akan meninggalkan saldo di buku besar tanpa batas waktu. Centang kotak di bawah untuk membuat satu pengeluaran penggantian per leg yang melibatkan yang diundang ini sebelum mencabut, atau cabut tanpa menyelesaikan dan urus saldonya secara manual."
+            "description": "Centang kotak di bawah untuk membuat satu pengeluaran penggantian per leg yang melibatkan yang diundang ini sebelum mencabut. Undangan hanya dapat dicabut setelah saldo diselesaikan."
           },
-          "checkbox": "Buat penggantian biaya penyelesaian sebelum mencabut"
+          "checkbox": "Selesaikan saldo yang diundang sebelum mencabut"
         }
       }
     },

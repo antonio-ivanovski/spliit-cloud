@@ -681,14 +681,14 @@
         "cancel": "Anulează",
         "confirm": "Revocă",
         "unsettled": {
-          "title": "Revoci invitația cu sold nedecontat?",
           "toast": "Invitație revocată, solduri decontate.",
-          "description": "Revoci invitația pentru {email}? Are solduri nedecontate — bifează căsuța de mai jos pentru a le deconta automat înainte de revocare.",
+          "title": "Decontează soldurile înainte de revocare",
+          "description": "Revoci invitația pentru {email}? Soldurile trebuie decontate mai întâi.",
           "warning": {
             "title": "Această invitație are solduri nedecontate",
-            "description": "Revocarea fără decontare va lăsa soldurile în registru pe termen nelimitat. Bifează căsuța de mai jos pentru a crea o cheltuială de rambursare pentru fiecare parte care implică acest invitat înainte de revocare, sau revocă fără decontare și gestionează soldurile manual."
+            "description": "Bifează căsuța de mai jos pentru a crea o cheltuială de rambursare pentru fiecare parte care implică acest invitat înainte de revocare. Invitația poate fi revocată doar după decontarea soldurilor."
           },
-          "checkbox": "Creează rambursare de decontare înainte de revocare"
+          "checkbox": "Decontează soldurile invitatului înainte de revocare"
         }
       }
     },

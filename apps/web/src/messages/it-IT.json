@@ -681,14 +681,14 @@
         "cancel": "Annulla",
         "confirm": "Revoca",
         "unsettled": {
-          "title": "Revocare l'invito con saldo in sospeso?",
           "toast": "Invito revocato, saldi saldati.",
-          "description": "Revocare l'invito a {email}? Ha saldi in sospeso — spunta la casella qui sotto per saldarli automaticamente prima di revocare.",
+          "title": "Salda i saldi prima di revocare",
+          "description": "Revocare l'invito a {email}? I suoi saldi devono essere saldati prima.",
           "warning": {
             "title": "Questo invito ha saldi in sospeso",
-            "description": "Revocare senza saldare lascerà i saldi nella contabilità a tempo indeterminato. Spunta la casella qui sotto per creare una spesa di rimborso per ogni quota che coinvolge questo invitato prima di revocare, o revoca senza saldare e gestisci i saldi manualmente."
+            "description": "Spunta la casella qui sotto per creare una spesa di rimborso per ogni quota che coinvolge questo invitato prima di revocare. L'invito può essere revocato solo dopo che i saldi sono stati saldati."
           },
-          "checkbox": "Crea rimborso di saldo prima di revocare"
+          "checkbox": "Salda i saldi dell'invitato prima di revocare"
         }
       }
     },

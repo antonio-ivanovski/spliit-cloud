@@ -681,14 +681,14 @@
         "cancel": "İptal",
         "confirm": "İptal et",
         "unsettled": {
-          "title": "Kapatılmamış bakiyesi olan davet iptal edilsin mi?",
           "toast": "Davet iptal edildi, bakiyeler kapatıldı.",
-          "description": "{email} adresine gönderilen davet iptal edilsin mi? Kapatılmamış bakiyeleri var — aşağıdaki kutuyu işaretleyerek iptal etmeden önce bunları otomatik olarak kapatın.",
+          "title": "İptalden önce bakiyeleri kapat",
+          "description": "{email} adresine gönderilen davet iptal edilsin mi? Bakiyelerin önce kapatılması gerekir.",
           "warning": {
             "title": "Bu davetin kapatılmamış bakiyeleri var",
-            "description": "Kapatmadan iptal etmek, bakiyeleri defterde süresiz olarak bırakacaktır. Aşağıdaki kutuyu işaretleyerek bu davetliyi içeren her ayak başına bir geri ödeme gideri oluşturun veya kapatmadan iptal edip bakiyeleri manuel olarak halledin."
+            "description": "Aşağıdaki kutuyu işaretleyerek bu davetliyi içeren her ayak başına bir kapatma geri ödeme gideri oluşturun. Davet yalnızca bakiyeler kapatıldıktan sonra iptal edilebilir."
           },
-          "checkbox": "İptal etmeden önce kapatma geri ödemesi oluştur"
+          "checkbox": "İptalden önce davetlinin bakiyelerini kapat"
         }
       }
     },

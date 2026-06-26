@@ -681,14 +681,14 @@
         "cancel": "Peruuta",
         "confirm": "Peruuta",
         "unsettled": {
-          "title": "Peruutetaanko kutsu, jolla on tasaussaatavia?",
           "toast": "Kutsu peruutettu, saatavat tasattu.",
-          "description": "Peruutetaanko kutsukäyttäjälle {email}? Hänellä on tasaussaatavia — valitse alla oleva valintaruutu tasataksesi ne automaattisesti ennen peruutusta.",
+          "title": "Tasaa saatavat ennen peruutusta",
+          "description": "Peruutetaanko kutsu käyttäjälle {email}? Hänen saatavansa on tasattava ensin.",
           "warning": {
             "title": "Tällä kutsulla on tasaussaatavia",
-            "description": "Peruuttaminen ilman tasausta jättää saatavat kirjanpitoon toistaiseksi. Valitse alla oleva valintaruutu luodaksesi yksi korvauskulu tähän kutsuttuun liittyvää osuutta kohden ennen peruutusta, tai peruuta ilman tasausta ja hoida saatavat manuaalisesti."
+            "description": "Valitse alla oleva valintaruutu luodaksesi yksi korvauskulu tähän kutsuttuun liittyvää osuutta kohden ennen peruutusta. Kutsun voi peruuttaa vasta, kun saatavat on tasattu."
           },
-          "checkbox": "Luo tasauskorvaus ennen peruutusta"
+          "checkbox": "Tasaa kutsutun saatavat ennen peruutusta"
         }
       }
     },
