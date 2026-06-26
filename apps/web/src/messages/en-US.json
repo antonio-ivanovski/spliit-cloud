@@ -136,6 +136,7 @@
     "pendingInviteeExpenseDescription": "Accept the invitation above to start adding or editing expenses. Until then, the group's existing data is visible but cannot be modified.",
     "archivedReadOnly": "This group is archived. Expenses can no longer be added or modified.",
     "backToExpenses": "Back to expenses",
+    "backToGroups": "Back to groups",
     "removeRecent": "Remove from recent groups",
     "RecentRemovedToast": {
       "title": "Group has been removed",

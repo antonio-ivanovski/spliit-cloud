@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
-import { Check, X } from 'lucide-react'
+import { ArrowLeft, Check, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from './current-group-context'
 
@@ -56,7 +56,12 @@ export const GroupHeader = () => {
 
   return (
     <div className="flex flex-col justify-between gap-3">
-      <h1 className="font-bold text-2xl">
+      <h1 className="font-bold text-2xl flex items-center gap-2">
+        <Button variant="ghost" size="icon" asChild className="-ml-2">
+          <Link href="/groups" title={tGroups('backToGroups')}>
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+        </Button>
         <Link href={`/groups/${groupId}`}>
           {isLoading ? (
             <Skeleton className="mt-1.5 mb-1.5 h-5 w-32" />

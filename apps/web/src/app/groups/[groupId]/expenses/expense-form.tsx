@@ -60,7 +60,7 @@ import {
   PAYMENT_CATEGORY_ID,
   RecurrenceRule,
 } from '@spliit/domain'
-import { ChevronRight, Save } from 'lucide-react'
+import { ArrowLeft, ChevronRight, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Resolver } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
@@ -134,6 +134,7 @@ export function ExpenseForm({
   readOnly?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale() as Locale
   const extractCategoryMutation = trpc.ai.extractCategoryFromTitle.useMutation()
   const isCreate = expense === undefined
@@ -420,7 +421,15 @@ export function ExpenseForm({
           </p>
         )}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center gap-2 space-y-0">
+            <Button variant="ghost" size="icon" asChild className="-ml-2">
+              <Link
+                href={`/groups/${group.id}/expenses`}
+                title={tGroups('backToExpenses')}
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+            </Button>
             <CardTitle>
               {t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
             </CardTitle>
