@@ -3,10 +3,10 @@
     "title": "שתף <strong>הוצאות</strong> עם <strong>חברים ומשפחה</strong>",
     "description": "עקוב אחר הוצאות משותפות וסגור חשבונות. חינמי ובקוד פתוח, <strong>מסונכרן ומאובטח באמצעות החשבון שלך</strong>.",
     "button": {
-      "groups": "עבור לקבוצות",
       "github": "GitHub",
       "signIn": "התחבר ל-Spliit Cloud",
-      "createAccount": "צור חשבון"
+      "createAccount": "צור חשבון",
+      "createGroup": "צור קבוצה"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "ברוך השב, {name}."
   },
   "Header": {
-    "groups": "קבוצות",
     "signIn": "התחבר",
     "signOut": "התנתק",
     "account": "חשבון",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "קבוצה זו אינה קיימת.",
-      "link": "עבור לקבוצות שביקרת בהן לאחרונה"
+      "link": "עבור לדף הבית"
     },
     "createdInviteHint": "קבוצה נוצרה. הזמן חברים כדי להתחיל.",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "אין לך גישה לקבוצה זו",
       "description": "אם אתה חושב שזו טעות, בקש מבעל הקבוצה או מנהל להזמין אותך.",
-      "link": "חזור לקבוצות שלי"
+      "link": "חזרה לדף הבית"
     },
     "invitations": {
       "title": "הזמנות ממתינות",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "קישור ההזמנה אינו תקין",
       "description": "הקישור שגוי או שאינו תואם אף הזמנה בקבוצה זו."
-    }
+    },
+    "backToHome": "חזרה לדף הבית"
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",

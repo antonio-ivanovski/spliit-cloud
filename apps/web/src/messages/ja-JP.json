@@ -3,10 +3,10 @@
     "title": "友達や家族と<strong>費用</strong>を<strong>分担</strong>しよう",
     "description": "共有費用在追跡して精算しましょう。無料でオープンソース、<strong>あなたのアカウントで同期・保護</strong>されています。",
     "button": {
-      "groups": "グループへ移動",
       "github": "GitHub",
       "signIn": "Spliit Cloudにサインイン",
-      "createAccount": "アカウントを作成"
+      "createAccount": "アカウントを作成",
+      "createGroup": "グループを作成"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "おかえりなさい、{name}。"
   },
   "Header": {
-    "groups": "グループ",
     "signIn": "サインイン",
     "signOut": "サインアウト",
     "account": "アカウント",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "このグループは存在しません。",
-      "link": "最近訪れたグループへ移動"
+      "link": "ホームへ移動"
     },
     "createdInviteHint": "グループを作成しました。メンバーを招待して始めましょう。",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "このグループにアクセスできません",
       "description": "誤りだと思われる場合は、グループのオーナーまたは管理者に招待を依頼してください。",
-      "link": "マイグループに戻る"
+      "link": "ホームに戻る"
     },
     "invitations": {
       "title": "保留中の招待",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "この招待リンクは無効です",
       "description": "リンクの形式が正しくないか、このグループのどの招待にも一致しません。"
-    }
+    },
+    "backToHome": "ホームに戻る"
   },
   "GroupForm": {
     "title": "グループ情報",

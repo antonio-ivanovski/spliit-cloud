@@ -18,7 +18,7 @@ test.describe('Group Editing', () => {
     const newGroupInfo = `Updated info ${randomId(4)}`
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, initialGroupName, [
       'Alice',
       'Bob',
@@ -64,7 +64,7 @@ test.describe('Group Editing', () => {
     const newParticipant = 'Dave'
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       groupName,
@@ -117,7 +117,7 @@ test.describe('Group Editing', () => {
     const participantToRemove = 'Dave'
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, participants)
 
     // Create an expense with Alice as payer, excluding Dave from the split
@@ -164,7 +164,7 @@ test.describe('Group Editing', () => {
     const groupName = `protected participant ${randomId(4)}`
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     // Create an expense with Alice as payer, excluding Bob from the split
@@ -216,7 +216,7 @@ test.describe('Group Editing', () => {
     const groupName = `empty info ${randomId(4)}`
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     await page.goto(`/groups/${groupId}/expenses`)
@@ -252,7 +252,7 @@ test.describe('Group Editing', () => {
     const groupName = `duplicate edit ${randomId(4)}`
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, [
       'Alice',
       'Bob',

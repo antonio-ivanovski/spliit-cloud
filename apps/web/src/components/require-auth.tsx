@@ -9,7 +9,7 @@ import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function currentPathWithSearch(): string {
-  if (typeof window === 'undefined') return '/groups'
+  if (typeof window === 'undefined') return '/'
   return `${window.location.pathname}${window.location.search}`
 }
 
@@ -68,7 +68,7 @@ export function UnauthorizedGroup() {
       </p>
       <div className="flex justify-center">
         <Button asChild variant="secondary">
-          <Link href="/groups">{t('Unauthorized.link')}</Link>
+          <Link href="/">{t('Unauthorized.link')}</Link>
         </Button>
       </div>
     </div>

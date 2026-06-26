@@ -15,7 +15,7 @@ export async function createGroup({
   participants: string[]
   suppressActiveUserModal?: boolean
 }): Promise<string> {
-  await page.goto('/groups')
+  await page.goto('/')
   await page.getByRole('link', { name: 'Create' }).first().click()
 
   await page.getByLabel('Group name').fill(groupName)

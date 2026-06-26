@@ -3,10 +3,10 @@
     "title": "跟<strong>朋友和家人</strong>一起共享<strong>消費紀錄</strong>",
     "description": "追蹤分攤費用並結清帳目。免費且開源，<strong>由你的帳戶同步和保護</strong>。",
     "button": {
-      "groups": "前往群組",
       "github": "GitHub",
       "signIn": "登入 Spliit Cloud",
-      "createAccount": "建立帳戶"
+      "createAccount": "建立帳戶",
+      "createGroup": "建立群組"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "歡迎回來，{name}。"
   },
   "Header": {
-    "groups": "群組",
     "signIn": "登入",
     "signOut": "登出",
     "account": "帳戶",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "該群組不存在。",
-      "link": "前往最近訪問的群組"
+      "link": "前往首頁"
     },
     "createdInviteHint": "群組已建立。邀請成員開始使用。",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "您無權存取此群組",
       "description": "如果您認為這是錯誤，請讓群組擁有者或管理員邀請您。",
-      "link": "返回我的群組"
+      "link": "返回首頁"
     },
     "invitations": {
       "title": "待處理的邀請",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "此邀請連結無效",
       "description": "該連結格式錯誤或與本群組中的任何邀請都不相符。"
-    }
+    },
+    "backToHome": "返回首頁"
   },
   "GroupForm": {
     "title": "群組資訊",

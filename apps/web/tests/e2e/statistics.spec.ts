@@ -4,7 +4,7 @@ import { navigateToTab, setActiveUser } from '../helpers'
 import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
 
 test('View statistics page', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
 
   const groupName = `stats ${randomId(4)}`
   const groupId = await createGroupViaAPI(page, groupName, [
@@ -26,7 +26,7 @@ test('View statistics page', async ({ page }) => {
 test('Verify Group Total', async ({ page }) => {
   const groupName = `group total ${randomId(4)}`
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     'Alice',
     'Bob',
@@ -69,7 +69,7 @@ test('User statistics calculate paid and share correctly', async ({ page }) => {
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,

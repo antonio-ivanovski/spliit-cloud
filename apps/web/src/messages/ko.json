@@ -46,7 +46,7 @@
     },
     "NotFound": {
       "text": "그룹이 존재하지 않습니다.",
-      "link": "최근에 방문한 그룹 보기"
+      "link": "홈으로 가기"
     },
     "removeRecent": "최근 그룹 목록에서 삭제하기",
     "createdInviteHint": "그룹이 생성되었습니다. 멤버를 초대해 시작하세요.",
@@ -96,7 +96,7 @@
     "Unauthorized": {
       "title": "이 그룹에 접근할 수 없습니다",
       "description": "오류라고 생각되면 그룹 소유자나 관리자에게 초대를 요청하세요.",
-      "link": "내 그룹으로 돌아가기"
+      "link": "홈으로 돌아가기"
     },
     "invitations": {
       "title": "대기 중인 초대",
@@ -121,7 +121,8 @@
     "linkInvitationInvalid": {
       "title": "이 초대 링크는 유효하지 않습니다",
       "description": "링크 형식이 잘못되었거나 이 그룹의 초대와 일치하지 않습니다."
-    }
+    },
+    "backToHome": "홈으로 돌아가기"
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -440,9 +441,9 @@
   "Homepage": {
     "button": {
       "github": "깃허브",
-      "groups": "그룹 보기",
       "signIn": "Spliit Cloud에 로그인",
-      "createAccount": "계정 만들기"
+      "createAccount": "계정 만들기",
+      "createGroup": "그룹 만들기"
     },
     "title": "<strong>친구 & 가족</strong>과 <strong>지출</strong>을 함께 관리해요",
     "description": "공유 지출을 추적하고 정산하세요. 무료 오픈 소스, <strong>내 계정으로 동기화 및 보호</strong>됩니다.",
@@ -471,10 +472,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "돌아오신 것을 환영합니다, {name}."
   },
   "Header": {
-    "groups": "그룹",
     "signIn": "로그인",
     "signOut": "로그아웃",
     "account": "계정",

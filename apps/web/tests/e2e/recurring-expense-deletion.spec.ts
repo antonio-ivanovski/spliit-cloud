@@ -9,7 +9,7 @@ test.describe('Recurring Expense Deletion', () => {
     const expenseTitle2 = `Expense 2 ${randomId(4)}-2`
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, 'Test Group', [
       'Alice',
       'Bob',
@@ -62,7 +62,7 @@ test.describe('Recurring Expense Deletion', () => {
     const regularTitle = `Regular Expense ${randomId(4)}`
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, 'Test Group', [
       'Alice',
       'Bob',
@@ -112,7 +112,7 @@ test.describe('Recurring Expense Deletion', () => {
     const expenseTitle = `Expense ${randomId(4)}`
 
     // Setup via API
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, 'Test Group', [
       'Alice',
       'Bob',

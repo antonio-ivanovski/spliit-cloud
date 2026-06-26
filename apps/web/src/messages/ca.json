@@ -3,10 +3,10 @@
     "title": "Comparteix <strong>despeses</strong> amb <strong>família i amics</strong>",
     "description": "Seguiu les despeses compartides i saldeu els comptes. Gratuït i de codi obert, <strong>sincronitzat i protegit amb el vostre compte</strong>.",
     "button": {
-      "groups": "Veure els grups",
       "github": "GitHub",
       "signIn": "Inicia sessió a Spliit Cloud",
-      "createAccount": "Crea un compte"
+      "createAccount": "Crea un compte",
+      "createGroup": "Crear un grup"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Benvingut de nou, {name}."
   },
   "Header": {
-    "groups": "Grups",
     "signIn": "Inicia sessió",
     "signOut": "Tanca sessió",
     "account": "Compte",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "Aquest grup no existeix.",
-      "link": "Anar als darrers grups visitats."
+      "link": "Anar a l'inici"
     },
     "createdInviteHint": "Grup creat. Convida membres per començar.",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "No tens accés a aquest grup",
       "description": "Si creus que és un error, demana a un propietari o administrador del grup que et convidi.",
-      "link": "Torna als meus grups"
+      "link": "Tornar a l'inici"
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Aquest enllaç d'invitació no és vàlid",
       "description": "L'enllaç té un format incorrecte o no coincideix amb cap invitació d'aquest grup."
-    }
+    },
+    "backToHome": "Tornar a l'inici"
   },
   "GroupForm": {
     "title": "Informació del grup",

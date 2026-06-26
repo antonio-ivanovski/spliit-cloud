@@ -3,10 +3,10 @@
     "title": "Partekatu <strong>gastuak lagunekin eta familiarekin</strong>",
     "description": "Jarraitu partekatutako gastuak eta likidatu kontuak. Doakoa eta kode irekikoa, <strong>zure kontuarekin sinkronizatua eta babestua</strong>.",
     "button": {
-      "groups": "Joan taldeetara",
       "github": "GitHub",
       "signIn": "Hasi saioa Spliit Cloud-en",
-      "createAccount": "Sortu kontua"
+      "createAccount": "Sortu kontua",
+      "createGroup": "Talde bat sortu"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Ongi etorri berriro, {name}."
   },
   "Header": {
-    "groups": "Taldeak",
     "signIn": "Hasi saioa",
     "signOut": "Amaitu saioa",
     "account": "Kontua",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "Talde hori ez da existitzen.",
-      "link": "Joan bisitatutako azken taldeetara"
+      "link": "Joan hasierara"
     },
     "createdInviteHint": "Taldea sortuta. Gonbidatu kideak hasteko.",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "Ez duzu talde honetara sartzeko baimenik",
       "description": "Uste baduzu huts bat dela, eskatu taldearen jabe edo administratzaile bati gonbidatzeko.",
-      "link": "Itzuli nire taldeetara"
+      "link": "Itzuli hasierara"
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Gonbidapen-esteka hau ez da baliozkoa",
       "description": "Estekak formatu okerra du edo ez dagokio taldeko inolako gonbidapenari."
-    }
+    },
+    "backToHome": "Itzuli hasierara"
   },
   "GroupForm": {
     "title": "Taldeko informazioa",

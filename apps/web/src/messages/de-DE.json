@@ -3,10 +3,10 @@
     "title": "Teile <strong>Ausgaben</strong> mit <strong>Freunden & Familie</strong>",
     "description": "Verfolge gemeinsame Ausgaben und gleiche Konten aus. Kostenlos und Open Source, <strong>synchronisiert und gesichert durch dein Konto</strong>.",
     "button": {
-      "groups": "Zu den Gruppen",
       "github": "GitHub",
       "signIn": "Bei Spliit Cloud anmelden",
-      "createAccount": "Konto erstellen"
+      "createAccount": "Konto erstellen",
+      "createGroup": "Gruppe erstellen"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Willkommen zurück, {name}."
   },
   "Header": {
-    "groups": "Gruppen",
     "signIn": "Anmelden",
     "signOut": "Abmelden",
     "account": "Konto",
@@ -147,12 +147,12 @@
     },
     "NotFound": {
       "text": "Diese Gruppe existiert nicht.",
-      "link": "Gehe zu zuletzt besuchten Gruppen"
+      "link": "Zur Startseite"
     },
     "Unauthorized": {
       "title": "Du hast keinen Zugriff auf diese Gruppe",
       "description": "Wenn du glaubst, dass dies ein Fehler ist, bitte einen Gruppenbesitzer oder Admin, dich einzuladen.",
-      "link": "Zurück zu meinen Gruppen"
+      "link": "Zurück zur Startseite"
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Dieser Einladungslink ist ungültig",
       "description": "Der Link ist fehlerhaft oder stimmt mit keiner Einladung in dieser Gruppe überein."
-    }
+    },
+    "backToHome": "Zurück zur Startseite"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",

@@ -4,7 +4,7 @@ import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
 
 test.describe('Expense Editing', () => {
   test('updates expense title and amount', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `Edit Test ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -47,7 +47,7 @@ test.describe('Expense Editing', () => {
   })
 
   test('updates expense payer', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Payer Update ${randomId(4)}`,
@@ -84,7 +84,7 @@ test.describe('Expense Editing', () => {
   })
 
   test('updates expense date', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Date Update ${randomId(4)}`,
@@ -127,7 +127,7 @@ test.describe('Expense Editing', () => {
   })
 
   test('updates expense notes', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Notes Update ${randomId(4)}`,
@@ -172,7 +172,7 @@ test.describe('Expense Editing', () => {
   })
 
   test('updates all fields simultaneously', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Full Update ${randomId(4)}`,
@@ -242,7 +242,7 @@ test.describe('Expense Editing', () => {
   })
 
   test('toggles reimbursement status', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Reimbursement Toggle ${randomId(4)}`,

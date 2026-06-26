@@ -16,7 +16,7 @@ interface ExpenseData {
 
 test.describe('Export functionality', () => {
   test('Export JSON download', async ({ page, browserName }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `export JSON ${randomId(4)}`,
@@ -73,7 +73,7 @@ test.describe('Export functionality', () => {
   })
 
   test('Export JSON content', async ({ page, browserName }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `export content ${randomId(4)}`,
@@ -129,7 +129,7 @@ test.describe('Export functionality', () => {
   })
 
   test('Export CSV download', async ({ page, browserName }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `export CSV ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -183,7 +183,7 @@ test.describe('Export functionality', () => {
       // Skip WebKit on CI due to download issues
       return
     }
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `CSV format ${randomId(4)}`, [
       'Alice',
       'Bob',

@@ -10,7 +10,7 @@ import {
 test('View activity page', async ({ page }) => {
   // Setup: Create group with 3 participants and immediately create an expense
   // (if group has no activity, the page shows empty state which doesn't have activity-list testid)
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `activity test ${randomId(4)}`,
@@ -50,7 +50,7 @@ test('Log shows create', async ({ page }) => {
   const groupName = `activity create ${randomId(4)}`
   const expenseTitle = `Test Expense ${randomId(4)}`
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
   await createExpenseViaAPI(page, groupId, {
@@ -83,7 +83,7 @@ test('Log shows update', async ({ page }) => {
   const updatedTitle = `Updated Expense ${randomId(4)}`
   const updatedAmount = '50.00'
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
   const expenseId = await createExpenseViaAPI(page, groupId, {
@@ -140,7 +140,7 @@ test('Log shows delete', async ({ page }) => {
   const groupName = `activity delete ${randomId(4)}`
   const expenseTitle = `Delete Test Expense ${randomId(4)}`
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
   const expenseId = await createExpenseViaAPI(page, groupId, {
@@ -196,7 +196,7 @@ test('Log pagination', async ({ page }) => {
   const groupName = `activity pagination ${randomId(4)}`
   const numExpenses = 25
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
   // Create 25 expenses via API to populate activity log

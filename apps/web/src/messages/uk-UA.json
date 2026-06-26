@@ -3,10 +3,10 @@
     "title": "Ділися <strong>витратами</strong> з <strong>друзями та родиною</strong>",
     "description": "Відстежуйте спільні витрати та розраховуйтеся. Безкоштовно та з відкритим кодом, <strong>синхронізовано та захищено вашим обліковим записом</strong>.",
     "button": {
-      "groups": "Перейти до груп",
       "github": "GitHub",
       "signIn": "Увійти до Spliit Cloud",
-      "createAccount": "Створити обліковий запис"
+      "createAccount": "Створити обліковий запис",
+      "createGroup": "Створити групу"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "З поверненням, {name}."
   },
   "Header": {
-    "groups": "Групи",
     "signIn": "Увійти",
     "signOut": "Вийти",
     "account": "Обліковий запис",
@@ -147,12 +147,12 @@
     },
     "NotFound": {
       "text": "Цієї групи не існує",
-      "link": "Перейти до нещодавно відвіданих груп"
+      "link": "Перейти на головну"
     },
     "Unauthorized": {
       "title": "У вас немає доступу до цієї групи",
       "description": "Якщо ви вважаєте, що це помилка, попросіть власника або адміністратора групи запросити вас.",
-      "link": "Назад до моїх груп"
+      "link": "На головну"
     },
     "invitations": {
       "title": "Очікувані запрошення",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Це посилання-запрошення недійсне",
       "description": "Посилання має неправильний формат або не відповідає жодному запрошенню в цій групі."
-    }
+    },
+    "backToHome": "На головну"
   },
   "GroupForm": {
     "title": "Інформація про групу",

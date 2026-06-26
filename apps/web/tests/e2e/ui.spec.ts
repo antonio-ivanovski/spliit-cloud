@@ -8,7 +8,7 @@ test('Mobile navigation uses hamburger menu', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 })
 
   // Create a test group
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, `mobile test ${randomId(4)}`, [
     'Alice',
     'Bob',
@@ -51,7 +51,7 @@ test('Desktop view displays full layout', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 1024 })
 
   // Create a test group
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, `desktop test ${randomId(4)}`, [
     'Alice',
     'Bob',
@@ -95,7 +95,7 @@ test('Desktop view displays full layout', async ({ page }) => {
 
 test('Date format changes with locale selection', async ({ page }) => {
   // Create a test group
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `i18n date test ${randomId(4)}`,
@@ -129,7 +129,7 @@ test('Date format changes with locale selection', async ({ page }) => {
 
 test('Currency displays with correct format for locale', async ({ page }) => {
   // Create a test group with USD currency
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `currency format test ${randomId(4)}`,

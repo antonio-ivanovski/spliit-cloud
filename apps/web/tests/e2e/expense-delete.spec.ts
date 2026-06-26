@@ -4,7 +4,7 @@ import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
 
 test.describe('Expense Deletion', () => {
   test('deletes expense with confirmation dialog', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Delete Test ${randomId(4)}`,
@@ -51,7 +51,7 @@ test.describe('Expense Deletion', () => {
   })
 
   test('cancels deletion when clicking cancel', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Cancel Delete ${randomId(4)}`,
@@ -95,7 +95,7 @@ test.describe('Expense Deletion', () => {
   })
 
   test('deletes one of multiple expenses', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Multi Delete ${randomId(4)}`,
@@ -154,7 +154,7 @@ test.describe('Expense Deletion', () => {
   })
 
   test('deletes reimbursement expense', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Delete Reimbursement ${randomId(4)}`,
@@ -199,7 +199,7 @@ test.describe('Expense Deletion', () => {
   })
 
   test('delete button is visible in edit form', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Delete Button ${randomId(4)}`,

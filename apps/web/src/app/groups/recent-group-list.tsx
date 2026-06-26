@@ -36,7 +36,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
-import { PropsWithChildren, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type AccountGroup = AppRouterOutput['account']['groups']['groups'][number]
@@ -293,14 +293,14 @@ export function RecentGroupList() {
   }
 
   return (
-    <GroupsPage>
+    <>
       <PendingInvitations />
       {body}
       <ForceArchiveDialogSection
         target={forceArchiveTarget}
         onClose={() => setForceArchiveTarget(null)}
       />
-    </GroupsPage>
+    </>
   )
 }
 
@@ -583,24 +583,5 @@ function GroupCard({
         </div>
       </div>
     </li>
-  )
-}
-
-function GroupsPage({ children }: PropsWithChildren<{}>) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
-  return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <h1 className="font-bold text-2xl flex-1">
-          <Link href="/groups">{t('myGroups')}</Link>
-        </h1>
-        <div className="flex gap-2">
-          <Button asChild>
-            <Link href="/groups/create">{t('create')}</Link>
-          </Button>
-        </div>
-      </div>
-      <div className="space-y-4">{children}</div>
-    </>
   )
 }

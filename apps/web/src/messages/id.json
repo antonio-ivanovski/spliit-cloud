@@ -3,10 +3,10 @@
     "title": "Bagikan <strong>Expenses</strong> dengan <strong>Teman & Keluarga</strong>",
     "description": "Lacak pengeluaran bersama dan selesaikan tagihan. Gratis dan sumber terbuka, <strong>sinkron dan aman dengan akun Anda</strong>.",
     "button": {
-      "groups": "Ke grup",
       "github": "GitHub",
       "signIn": "Masuk ke Spliit Cloud",
-      "createAccount": "Buat akun"
+      "createAccount": "Buat akun",
+      "createGroup": "Buat grup"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Selamat datang kembali, {name}."
   },
   "Header": {
-    "groups": "Grup",
     "signIn": "Masuk",
     "signOut": "Keluar",
     "account": "Akun",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "Grup ini tidak dapat ditemukan.",
-      "link": "Buka grup yang baru saja dikunjungi"
+      "link": "Buka beranda"
     },
     "createdInviteHint": "Grup dibuat. Undang anggota untuk memulai.",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "Anda tidak memiliki akses ke grup ini",
       "description": "Jika Anda yakin ini adalah kesalahan, minta pemilik atau admin grup untuk mengundang Anda.",
-      "link": "Kembali ke grup saya"
+      "link": "Kembali ke beranda"
     },
     "invitations": {
       "title": "Undangan tertunda",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Tautan undangan ini tidak valid",
       "description": "Tautan ini tidak valid atau tidak cocok dengan undangan apa pun di grup ini."
-    }
+    },
+    "backToHome": "Kembali ke beranda"
   },
   "GroupForm": {
     "title": "Informasi grup",

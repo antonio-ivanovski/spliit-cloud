@@ -8,7 +8,7 @@ test.describe('Active User Modal', () => {
     page,
   }) => {
     // Create a group WITH modal suppression (default behavior)
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `modal suppressed test ${randomId(4)}`,
@@ -39,7 +39,7 @@ test.describe('Active User Modal', () => {
     page,
   }) => {
     // Create group with suppression to test modal appearance separately
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `modal test ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -71,7 +71,7 @@ test.describe('Active User Modal', () => {
 
   test('Can select a participant in the modal', async ({ page }) => {
     // Create and reload to show modal
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `modal participant test ${randomId(4)}`,
@@ -114,7 +114,7 @@ test.describe('Active User Modal', () => {
   test('Can save modal with default "I don\'t want to select anyone" selection', async ({
     page,
   }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `modal default test ${randomId(4)}`,
@@ -150,7 +150,7 @@ test.describe('Active User Modal', () => {
   })
 
   test('Modal does not reappear after being dismissed', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `modal reappear test ${randomId(4)}`,
@@ -179,7 +179,7 @@ test.describe('Active User Modal', () => {
     await expect(dialog).not.toBeVisible()
 
     // Navigate away and back to the group
-    await page.goto('/groups')
+    await page.goto('/')
     await navigateToGroup(page, groupId, false)
 
     // Modal should NOT reappear because localStorage is set
@@ -189,7 +189,7 @@ test.describe('Active User Modal', () => {
   test('navigateToGroup with suppressActiveUserModal: false sets localStorage', async ({
     page,
   }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `nav test ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -221,7 +221,7 @@ test.describe('Active User Modal', () => {
   test('navigateToGroup with suppressActiveUserModal: true sets localStorage', async ({
     page,
   }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `nav suppress test ${randomId(4)}`,

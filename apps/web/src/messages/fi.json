@@ -3,10 +3,10 @@
     "title": "Jaa kulut ystävien ja perheen kanssa",
     "description": "Seuraa yhteisiä kuluja ja tasoita tilit. Ilmainen ja avoimen lähdekoodin, <strong>synkronoitu ja suojattu tililläsi</strong>.",
     "button": {
-      "groups": "Siirry ryhmiin",
       "github": "GitHub",
       "signIn": "Kirjaudu Spliit Cloudiin",
-      "createAccount": "Luo tili"
+      "createAccount": "Luo tili",
+      "createGroup": "Luo ryhmä"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Tervetuloa takaisin, {name}."
   },
   "Header": {
-    "groups": "Ryhmät",
     "signIn": "Kirjaudu sisään",
     "signOut": "Kirjaudu ulos",
     "account": "Tili",
@@ -147,12 +147,12 @@
     },
     "NotFound": {
       "text": "Tätä ryhmää ei löydy.",
-      "link": "Siirry äskettäisiin ryhmiin"
+      "link": "Siirry etusivulle"
     },
     "Unauthorized": {
       "title": "Sinulla ei ole pääsyä tähän ryhmään",
       "description": "Jos uskot tämän olevan virhe, pyydä ryhmän omistajaa tai ylläpitäjää kutsumaan sinut.",
-      "link": "Takaisin ryhmiini"
+      "link": "Takaisin etusivulle"
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Tämä kutsulinkki ei ole kelvollinen",
       "description": "Linkki on virheellinen tai se ei vastaa mitään tämän ryhmän kutsua."
-    }
+    },
+    "backToHome": "Takaisin etusivulle"
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",

@@ -5,7 +5,7 @@ import { createGroupViaAPI } from '../helpers/batch-api'
 
 test.describe('Expense Form Validation', () => {
   test('prevents submission with empty title', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Empty Title ${randomId(4)}`,
@@ -36,7 +36,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('prevents submission with missing payer', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation No Payer ${randomId(4)}`,
@@ -58,7 +58,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('prevents submission with zero amount', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Zero Amount ${randomId(4)}`,
@@ -86,7 +86,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('allows negative amount for income', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Negative ${randomId(4)}`,
@@ -120,7 +120,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('valid form submits successfully', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Success ${randomId(4)}`,
@@ -155,7 +155,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('sanitizes amount input to valid decimal', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Sanitize ${randomId(4)}`,
@@ -191,7 +191,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('validates date is not in invalid format', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Date ${randomId(4)}`,
@@ -226,7 +226,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('form shows error state visually', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Visual ${randomId(4)}`,
@@ -248,7 +248,7 @@ test.describe('Expense Form Validation', () => {
   })
 
   test('whitespace-only title is invalid', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Validation Whitespace ${randomId(4)}`,

@@ -132,7 +132,7 @@ export const GroupHeader = () => {
   // Leave the group page entirely. Used by the "no longer valid"
   // banner, where the viewer is not a member and the bare group URL
   // would surface the "you don't have access" page.
-  const leaveToGroupsList = () => router.push({ to: '/groups' })
+  const leaveToGroupsList = () => router.push({ to: '/' })
 
   const isLinkBanner = currentInvitation?.type === 'LINK'
 
@@ -140,7 +140,7 @@ export const GroupHeader = () => {
     <div className="flex flex-col justify-between gap-3">
       <h1 className="font-bold text-2xl flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild className="-ml-2">
-          <Link href="/groups" title={tGroups('backToGroups')}>
+          <Link href="/" title={tGroups('backToHome')}>
             <ArrowLeft className="w-5 h-5" />
           </Link>
         </Button>

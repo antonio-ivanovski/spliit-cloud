@@ -9,7 +9,7 @@ test.describe('Group Navigation', () => {
     const groupName2 = `navigate 2 ${randomId(4)}`
 
     // Create first group
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId1 = await createGroupViaAPI(page, groupName1, ['Alice', 'Bob'])
     await page.goto(`/groups/${groupId1}/expenses`)
 
@@ -18,7 +18,7 @@ test.describe('Group Navigation', () => {
     await verifyGroupHeading(page, groupName1)
 
     // Create second group
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId2 = await createGroupViaAPI(page, groupName2, [
       'Charlie',
       'Dave',
@@ -30,7 +30,7 @@ test.describe('Group Navigation', () => {
     await verifyGroupHeading(page, groupName2)
 
     // Navigate to groups list
-    await page.goto('/groups')
+    await page.goto('/')
 
     // Verify both groups appear in the list
     const group1Link = page.getByText(groupName1)
@@ -49,8 +49,8 @@ test.describe('Group Navigation', () => {
     await expect(page.getByText('Bob', { exact: true })).toBeVisible()
 
     // Navigate back to groups list
-    await page.goto('/groups')
-    await expect(page).toHaveURL('/groups')
+    await page.goto('/')
+    await expect(page).toHaveURL('/')
 
     // Navigate to second group
     await page.getByText(groupName2).click()
@@ -67,7 +67,7 @@ test.describe('Group Navigation', () => {
     const groupName = `recent ${randomId(4)}`
 
     // Create a group
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
     await page.goto(`/groups/${groupId}/expenses`)
 
@@ -75,8 +75,8 @@ test.describe('Group Navigation', () => {
     await expect(page).toHaveURL(new RegExp(`/groups/${groupId}/expenses$`))
 
     // Navigate to groups list
-    await page.goto('/groups')
-    await expect(page).toHaveURL('/groups')
+    await page.goto('/')
+    await expect(page).toHaveURL('/')
 
     // Verify group appears in recent list
     const groupLink = page.getByText(groupName)
@@ -84,7 +84,7 @@ test.describe('Group Navigation', () => {
 
     // Reload the page to test persistence
     await page.reload()
-    await expect(page).toHaveURL('/groups')
+    await expect(page).toHaveURL('/')
 
     // Verify group still appears after reload
     await expect(page.getByText(groupName)).toBeVisible()
@@ -98,7 +98,7 @@ test.describe('Group Navigation', () => {
   test('navigate to group information tab', async ({ page }) => {
     const groupName = `info tab ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, [
       'Alice',
       'Bob',
@@ -125,7 +125,7 @@ test.describe('Group Navigation', () => {
   test('navigate between all group tabs', async ({ page }) => {
     const groupName = `all tabs ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
     await page.goto(`/groups/${groupId}/expenses`)
 
@@ -161,7 +161,7 @@ test.describe('Group Navigation', () => {
   test('direct URL navigation to group tabs', async ({ page }) => {
     const groupName = `direct URL ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     // Test direct navigation to each tab
@@ -187,7 +187,7 @@ test.describe('Group Navigation', () => {
   test('browser back button navigation', async ({ page }) => {
     const groupName = `back button ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
     await page.goto(`/groups/${groupId}/expenses`)
 
@@ -215,7 +215,7 @@ test.describe('Group Navigation', () => {
   })
 
   test('group list shows multiple recent groups in order', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
 
     const groupNames = [
       `recent 1 ${randomId(4)}-1`,

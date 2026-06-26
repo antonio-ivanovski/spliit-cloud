@@ -3,7 +3,7 @@ import { randomId } from '@spliit/domain'
 import { createGroupViaAPI } from '../helpers/batch-api'
 
 test('Theme selection persists after reload', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
 
   // Open theme toggle menu
   const themeToggle = page.getByRole('button', { name: 'Toggle theme' })
@@ -29,7 +29,7 @@ test('Theme selection persists after reload', async ({ page }) => {
 test('Expense displays with selected category', async ({ page }) => {
   const expenseTitle = `Test Expense ${randomId(4)}`
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `category test ${randomId(4)}`,
@@ -91,7 +91,7 @@ test('Expense displays with selected category', async ({ page }) => {
 })
 
 test('Default category is General', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `default category ${randomId(4)}`,

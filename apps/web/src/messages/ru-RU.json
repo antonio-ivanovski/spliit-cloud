@@ -3,10 +3,10 @@
     "title": "Делитесь <strong>расходами</strong> с <strong>друзьями и семьей</strong>",
     "description": "Отслеживайте общие расходы и рассчитывайтесь. Бесплатно и с открытым исходным кодом, <strong>синхронизировано и защищено вашей учетной записью</strong>.",
     "button": {
-      "groups": "Перейти к группам",
       "github": "GitHub",
       "signIn": "Войти в Spliit Cloud",
-      "createAccount": "Создать аккаунт"
+      "createAccount": "Создать аккаунт",
+      "createGroup": "Создать группу"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "С возвращением, {name}."
   },
   "Header": {
-    "groups": "Группы",
     "signIn": "Войти",
     "signOut": "Выйти",
     "account": "Аккаунт",
@@ -147,12 +147,12 @@
     },
     "NotFound": {
       "text": "Этой группы не существует",
-      "link": "Перейти к списку недавних групп"
+      "link": "На главную"
     },
     "Unauthorized": {
       "title": "У вас нет доступа к этой группе",
       "description": "Если вы считаете, что это ошибка, попросите владельца или администратора группы пригласить вас.",
-      "link": "Назад к моим группам"
+      "link": "На главную"
     },
     "invitations": {
       "title": "Ожидающие приглашения",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Эта ссылка-приглашение недействительна",
       "description": "Ссылка повреждена или не соответствует ни одному приглашению в этой группе."
-    }
+    },
+    "backToHome": "На главную"
   },
   "GroupForm": {
     "title": "Сведения о группе",

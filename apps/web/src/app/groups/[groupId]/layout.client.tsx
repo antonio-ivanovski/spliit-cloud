@@ -74,7 +74,7 @@ export function GroupLayoutClient({
             {tInvalid('description')}
           </p>
           <Button asChild variant="outline">
-            <Link href="/groups">{tForbidden('backToGroups')}</Link>
+            <Link href="/">{tForbidden('backToHome')}</Link>
           </Button>
         </div>
       </main>
@@ -92,7 +92,7 @@ export function GroupLayoutClient({
             {tForbidden('Unauthorized.description')}
           </p>
           <Button asChild variant="outline">
-            <Link href="/groups">{tForbidden('backToGroups')}</Link>
+            <Link href="/">{tForbidden('backToHome')}</Link>
           </Button>
         </div>
       </main>

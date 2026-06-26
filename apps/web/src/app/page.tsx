@@ -8,14 +8,15 @@ import {
   Cloud,
   Image,
   Loader2,
+  Plus,
   Receipt,
   Scale,
   ShieldCheck,
   Split,
   Tags,
-  Users,
 } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
+import { RecentGroupList } from './groups/recent-group-list'
 
 const signedOutFeatures = [
   { key: 'accounts', icon: ShieldCheck },
@@ -81,39 +82,48 @@ export default function HomePage() {
   }
 
   return (
-    <main>
-      <section className="py-16 md:py-24 lg:py-32">
-        <div className="container flex max-w-screen-md flex-col items-center gap-4 text-center">
-          <h1 className="!leading-none font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl landing-header py-2">
-            <Trans
-              i18nKey="Homepage.title"
-              components={{ strong: <strong /> }}
-            />
-          </h1>
-          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            <Trans
-              i18nKey="Homepage.description"
-              components={{ strong: <strong /> }}
-            />
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {isPending ? (
-              <Button disabled size="lg">
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {t('Auth.loading')}
-              </Button>
-            ) : account ? (
-              <Button asChild size="lg">
-                <Link href="/groups">
-                  <Users className="w-4 h-4 mr-2" />
-                  {t('Homepage.button.groups')}
-                </Link>
-              </Button>
-            ) : null}
-          </div>
+    <main className="flex-1 max-w-screen-md w-full mx-auto px-4 py-6 flex flex-col gap-6">
+      <SignedInHero />
+      {isPending ? (
+        <div className="flex items-center justify-center py-10">
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
         </div>
-      </section>
+      ) : (
+        account && <RecentGroupList />
+      )}
     </main>
+  )
+}
+
+function SignedInHero() {
+  const { t } = useTranslation()
+  const { data: account, isPending } = useCurrentAccount()
+
+  return (
+    <section className="flex flex-col gap-4 text-center sm:text-left">
+      {!isPending && account?.name ? (
+        <p className="text-sm text-muted-foreground">
+          {t('Homepage.welcomeBack', { name: account.name })}
+        </p>
+      ) : null}
+      <h1 className="!leading-none font-bold text-2xl sm:text-3xl md:text-4xl landing-header py-2">
+        <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
+      </h1>
+      <p className="leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+        <Trans
+          i18nKey="Homepage.description"
+          components={{ strong: <strong /> }}
+        />
+      </p>
+      <div className="flex flex-wrap gap-2 sm:justify-start justify-center">
+        <Button asChild size="lg">
+          <Link href="/groups/create">
+            <Plus className="w-4 h-4 mr-2" />
+            {t('Homepage.button.createGroup')}
+          </Link>
+        </Button>
+      </div>
+    </section>
   )
 }
 

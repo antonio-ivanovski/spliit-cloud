@@ -10,7 +10,7 @@ test('Create expense - evenly split (most common flow)', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants (Alice, Bob, Charlie)
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,
@@ -96,7 +96,7 @@ test('Create expense - by shares split mode', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,
@@ -203,7 +203,7 @@ test('Create expense - by percentage split mode', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,
@@ -309,7 +309,7 @@ test('Create expense - by amount split mode', async ({ page }) => {
   const participantC = 'Charlie'
 
   // Step 1: Create group with 3 participants
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,

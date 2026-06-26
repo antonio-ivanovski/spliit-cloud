@@ -8,7 +8,6 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
-import { useCurrentAccount } from '@/lib/use-current-account'
 import { TRPCProvider } from '@/trpc/client'
 import { Outlet } from '@tanstack/react-router'
 import { Github } from 'lucide-react'
@@ -17,11 +16,6 @@ import { Trans, useTranslation } from 'react-i18next'
 
 function Content() {
   const { t } = useTranslation()
-  // The "Groups" link in the navbar is only meaningful for signed-in users.
-  // While the session is being resolved we hide the link to avoid a brief
-  // flash of the "Go to my groups" CTA on the homepage / sign-in screens.
-  const { data: account, isPending } = useCurrentAccount()
-  const showGroupsLink = !!account && !isPending
 
   return (
     <TRPCProvider>
@@ -43,18 +37,6 @@ function Content() {
           </Link>
           <div role="navigation" aria-label="Menu" className="flex">
             <ul className="flex items-center text-sm gap-1">
-              {showGroupsLink && (
-                <li>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    asChild
-                    className="-my-3 text-primary"
-                  >
-                    <Link href="/groups">{t('Header.groups')}</Link>
-                  </Button>
-                </li>
-              )}
               <li>
                 <LocaleSwitcher />
               </li>

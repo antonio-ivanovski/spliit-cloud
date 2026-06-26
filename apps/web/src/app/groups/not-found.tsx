@@ -9,7 +9,7 @@ export default function NotFound() {
       <p>{t('text')}</p>
       <p>
         <Button asChild variant="secondary">
-          <Link href="/groups">{t('link')}</Link>
+          <Link href="/">{t('link')}</Link>
         </Button>
       </p>
     </div>

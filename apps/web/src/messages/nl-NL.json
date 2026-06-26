@@ -3,10 +3,10 @@
     "title": "Deel <strong>Uitgaven</strong> met <strong>Vrienden & Familie</strong>",
     "description": "Volg gedeelde uitgaven en verreken rekeningen. Gratis en open source, <strong>gesynchroniseerd en beveiligd met je account</strong>.",
     "button": {
-      "groups": "Ga naar groepen",
       "github": "GitHub",
       "signIn": "Inloggen op Spliit Cloud",
-      "createAccount": "Account aanmaken"
+      "createAccount": "Account aanmaken",
+      "createGroup": "Groep aanmaken"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Welkom terug, {name}."
   },
   "Header": {
-    "groups": "Groepen",
     "signIn": "Inloggen",
     "signOut": "Uitloggen",
     "account": "Account",
@@ -147,12 +147,12 @@
     },
     "NotFound": {
       "text": "Deze groep bestaat niet.",
-      "link": "Ga naar je recente groepen"
+      "link": "Ga naar startpagina"
     },
     "Unauthorized": {
       "title": "Je hebt geen toegang tot deze groep",
       "description": "Als je denkt dat dit een fout is, vraag dan een groepseigenaar of beheerder om je uit te nodigen.",
-      "link": "Terug naar mijn groepen"
+      "link": "Terug naar startpagina"
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Deze uitnodigingslink is ongeldig",
       "description": "De link is misvormd of komt niet overeen met een uitnodiging voor deze groep."
-    }
+    },
+    "backToHome": "Terug naar startpagina"
   },
   "GroupForm": {
     "title": "Groepsinformatie",

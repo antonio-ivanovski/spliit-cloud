@@ -3,10 +3,10 @@
     "title": "Distribuie <strong>Cheltuielile</strong> cu <strong>Prietenii & Familia</strong>",
     "description": "Urmărește cheltuielile comune și regularizează conturile. Gratuit și open source, <strong>sincronizat și securizat de contul tău</strong>.",
     "button": {
-      "groups": "Mergi la grupuri",
       "github": "GitHub",
       "signIn": "Autentifică-te pe Spliit Cloud",
-      "createAccount": "Creează un cont"
+      "createAccount": "Creează un cont",
+      "createGroup": "Creează un grup"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Bine ai revenit, {name}."
   },
   "Header": {
-    "groups": "Grupuri",
     "signIn": "Autentifică-te",
     "signOut": "Deconectează-te",
     "account": "Cont",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "Acest grup nu există.",
-      "link": "Mergi la ultimele grupuri vizitate"
+      "link": "Mergi la pagina principală"
     },
     "createdInviteHint": "Grup creat. Invită membri pentru a începe.",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "Nu ai acces la acest grup",
       "description": "Dacă crezi că este o greșeală, roagă un proprietar sau administrator al grupului să te invite.",
-      "link": "Înapoi la grupurile mele"
+      "link": "Înapoi la pagina principală"
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Acest link de invitație este invalid",
       "description": "Linkul este deformat sau nu corespunde niciunei invitații din acest grup."
-    }
+    },
+    "backToHome": "Înapoi la pagina principală"
   },
   "GroupForm": {
     "title": "Informații despre grup",

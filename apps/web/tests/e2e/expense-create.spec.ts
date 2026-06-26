@@ -5,7 +5,7 @@ import { createGroupViaAPI } from '../helpers/batch-api'
 
 test.describe('Expense Creation', () => {
   test('creates basic expense with correct values', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Expense Create ${randomId(4)}`,
@@ -35,7 +35,7 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates expense with category', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Category Test ${randomId(4)}`,
@@ -81,7 +81,7 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates expense with specific date', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `Date Test ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -124,7 +124,7 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates expense with notes', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `Notes Test ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -167,7 +167,7 @@ test.describe('Expense Creation', () => {
   })
 
   test('creates reimbursement expense', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Reimbursement Test ${randomId(4)}`,
@@ -215,7 +215,7 @@ test.describe('Expense Creation', () => {
   })
 
   test('verifies expense data persists after creation', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Persistence Test ${randomId(4)}`,

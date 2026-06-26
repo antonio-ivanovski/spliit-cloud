@@ -3,10 +3,10 @@
     "title": "与<strong>朋友和家人</strong>共享<strong>开支</strong>",
     "description": "追踪分摊费用并结清账目。免费且开源，<strong>由你的账户同步和保护</strong>。",
     "button": {
-      "groups": "前往群组",
       "github": "GitHub",
       "signIn": "登录到 Spliit Cloud",
-      "createAccount": "创建账户"
+      "createAccount": "创建账户",
+      "createGroup": "创建群组"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "欢迎回来，{name}。"
   },
   "Header": {
-    "groups": "群组",
     "signIn": "登录",
     "signOut": "退出",
     "account": "账户",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "该群组不存在。",
-      "link": "跳转到最近访问过的群组"
+      "link": "前往首页"
     },
     "createdInviteHint": "群组已创建。邀请成员开始使用。",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "您无权访问此群组",
       "description": "如果您认为这是一个错误，请让群组所有者或管理员邀请您。",
-      "link": "返回我的群组"
+      "link": "返回首页"
     },
     "invitations": {
       "title": "待处理的邀请",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "此邀请链接无效",
       "description": "该链接格式错误或与本群组中的任何邀请都不匹配。"
-    }
+    },
+    "backToHome": "返回首页"
   },
   "GroupForm": {
     "title": "群组信息",

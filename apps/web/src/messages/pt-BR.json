@@ -3,10 +3,10 @@
     "title": "Compartilhe <strong>Despesas</strong> com <strong>Amigos e Família</strong>",
     "description": "Acompanhe despesas compartilhadas e acerte as contas. Gratuito e de código aberto, <strong>sincronizado e protegido pela sua conta</strong>.",
     "button": {
-      "groups": "Ir para grupos",
       "github": "GitHub",
       "signIn": "Entrar no Spliit Cloud",
-      "createAccount": "Criar uma conta"
+      "createAccount": "Criar uma conta",
+      "createGroup": "Criar um grupo"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Bem-vindo de volta, {name}."
   },
   "Header": {
-    "groups": "Grupos",
     "signIn": "Entrar",
     "signOut": "Sair",
     "account": "Conta",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "Este grupo não existe.",
-      "link": "Ir para grupos visitados recentemente"
+      "link": "Ir para o início"
     },
     "createdInviteHint": "Grupo criado. Convide membros para começar.",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "Você não tem acesso a este grupo",
       "description": "Se você acredita que isso é um erro, peça a um proprietário ou administrador do grupo para convidá-lo.",
-      "link": "Voltar aos meus grupos"
+      "link": "Voltar ao início"
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Este link de convite é inválido",
       "description": "O link está malformado ou não corresponde a nenhum convite neste grupo."
-    }
+    },
+    "backToHome": "Voltar ao início"
   },
   "GroupForm": {
     "title": "Informações do grupo",

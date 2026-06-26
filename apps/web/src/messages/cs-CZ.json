@@ -3,10 +3,10 @@
     "title": "Sdílejte <strong>výdaje</strong> s <strong>přáteli a rodinou</strong>",
     "description": "Sledujte sdílené výdaje a vyrovnejte účty. Zdarma a s otevřeným zdrojovým kódem, <strong>synchronizováno a zabezpečeno vaším účtem</strong>.",
     "button": {
-      "groups": "Přejít na skupiny",
       "github": "GitHub",
       "signIn": "Přihlásit se do Spliit Cloud",
-      "createAccount": "Vytvořit účet"
+      "createAccount": "Vytvořit účet",
+      "createGroup": "Vytvořit skupinu"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Vítej zpátky, {name}."
   },
   "Header": {
-    "groups": "Skupiny",
     "signIn": "Přihlásit se",
     "signOut": "Odhlásit se",
     "account": "Účet",
@@ -147,12 +147,12 @@
     },
     "NotFound": {
       "text": "Tato skupina neexistuje.",
-      "link": "Přejít na nedávno navštívené skupiny"
+      "link": "Přejít na domovskou stránku"
     },
     "Unauthorized": {
       "title": "Nemáte přístup k této skupině",
       "description": "Pokud se domníváte, že jde o omyl, požádejte vlastníka nebo správce skupiny, aby vás pozval.",
-      "link": "Zpět na mé skupiny"
+      "link": "Zpět na domovskou stránku"
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Tento odkaz na pozvánku není platný",
       "description": "Odkaz má nesprávný formát nebo neodpovídá žádné pozvánce v této skupině."
-    }
+    },
+    "backToHome": "Zpět na domovskou stránku"
   },
   "GroupForm": {
     "title": "Informace o skupině",

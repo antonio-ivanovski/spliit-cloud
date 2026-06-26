@@ -3,10 +3,10 @@
     "title": "Dziel <strong>Wydatki</strong> z <strong>Rodziną i Przyjaciółmi</strong>",
     "description": "Śledź wspólne wydatki i rozliczaj się. Darmowe i z otwartym kodem źródłowym, <strong>zsynchronizowane i zabezpieczone przez Twoje konto</strong>.",
     "button": {
-      "groups": "Przejdź do grup",
       "github": "GitHub",
       "signIn": "Zaloguj się do Spliit Cloud",
-      "createAccount": "Utwórz konto"
+      "createAccount": "Utwórz konto",
+      "createGroup": "Utwórz grupę"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Witaj z powrotem, {name}."
   },
   "Header": {
-    "groups": "Grupy",
     "signIn": "Zaloguj się",
     "signOut": "Wyloguj się",
     "account": "Konto",
@@ -147,12 +147,12 @@
     },
     "NotFound": {
       "text": "Ta grupa nie istnieje.",
-      "link": "Idź do ostatnio odwiedzanych grup"
+      "link": "Przejdź do strony głównej"
     },
     "Unauthorized": {
       "title": "Nie masz dostępu do tej grupy",
       "description": "Jeśli uważasz, że to pomyłka, poproś właściciela lub administratora grupy o zaproszenie.",
-      "link": "Powrót do moich grup"
+      "link": "Powrót do strony głównej"
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Ten link zaproszenia jest nieprawidłowy",
       "description": "Link jest nieprawidłowo sformatowany lub nie pasuje do żadnego zaproszenia w tej grupie."
-    }
+    },
+    "backToHome": "Powrót do strony głównej"
   },
   "GroupForm": {
     "title": "Informacje o grupie",

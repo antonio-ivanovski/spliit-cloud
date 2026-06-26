@@ -29,14 +29,14 @@
       }
     },
     "button": {
-      "groups": "Go to my groups",
       "github": "GitHub",
       "signIn": "Sign in to Spliit Cloud",
-      "createAccount": "Create an account"
-    }
+      "createAccount": "Create an account",
+      "createGroup": "Create a group"
+    },
+    "welcomeBack": "Welcome back, {name}."
   },
   "Header": {
-    "groups": "Groups",
     "signIn": "Sign in",
     "signOut": "Sign out",
     "account": "Account",
@@ -148,12 +148,12 @@
     },
     "NotFound": {
       "text": "This group does not exist.",
-      "link": "Go to recently visited groups"
+      "link": "Go to home"
     },
     "Unauthorized": {
       "title": "You don't have access to this group",
       "description": "If you believe this is a mistake, ask a group owner or admin to invite you.",
-      "link": "Back to my groups"
+      "link": "Back to home"
     },
     "invitations": {
       "title": "Pending invitations",
@@ -178,7 +178,8 @@
     "linkInvitationInvalid": {
       "title": "This invite link is invalid",
       "description": "The link is malformed or doesn't match any invitation on this group."
-    }
+    },
+    "backToHome": "Back to home"
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",

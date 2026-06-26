@@ -37,6 +37,7 @@ aws s3api put-bucket-lifecycle-configuration \
 This covers the gap where a user uploads a document in the expense form but never creates the expense (closes tab, refreshes, etc.).
 
 **Client-side resize pipeline** (`apps/web/src/lib/upload.tsx`):
+
 - Detects HEIC/HEIF via MIME type and lazy-imports `heic-to` for conversion to JPEG.
 - Resizes to max 2560px on the longest edge.
 - Re-encodes as JPEG at 80% quality.

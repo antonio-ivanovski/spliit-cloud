@@ -53,7 +53,7 @@ export function AuthPanel() {
     mode: initialSearchMode,
     email: initialEmail,
   } = homeRouteApi.useSearch()
-  const redirectTo = redirect ?? '/groups'
+  const redirectTo = redirect ?? '/'
   const initialMode = initialSearchMode === 'sign-up' ? 'sign-up' : 'sign-in'
 
   const webOrigin =

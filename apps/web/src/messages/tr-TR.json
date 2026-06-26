@@ -3,10 +3,10 @@
     "title": "<strong>Masrafları</strong> <strong>Arkadaşlar ve Aile</strong> ile paylaş",
     "description": "Ortak harcamaları takip edin ve hesaplaşın. Ücretsiz ve açık kaynak, <strong>hesabınızla senkronize ve güvende</strong>.",
     "button": {
-      "groups": "Gruplara git",
       "github": "GitHub",
       "signIn": "Spliit Cloud'da oturum açın",
-      "createAccount": "Hesap oluşturun"
+      "createAccount": "Hesap oluşturun",
+      "createGroup": "Grup oluştur"
     },
     "features": {
       "groupsSync": {
@@ -33,10 +33,10 @@
         "title": "Accounts",
         "description": "Sign in once to protect your data and keep your expense history available."
       }
-    }
+    },
+    "welcomeBack": "Tekrar hoş geldin, {name}."
   },
   "Header": {
-    "groups": "Gruplar",
     "signIn": "Oturum aç",
     "signOut": "Oturumu kapat",
     "account": "Hesap",
@@ -103,7 +103,7 @@
     },
     "NotFound": {
       "text": "Bu grup mevcut değil.",
-      "link": "Son ziyaret ettiğiniz gruplara dön"
+      "link": "Ana sayfaya git"
     },
     "createdInviteHint": "Grup oluşturuldu. Başlamak için üyeleri davet edin.",
     "NoRecentAllHidden": {
@@ -152,7 +152,7 @@
     "Unauthorized": {
       "title": "Bu gruba erişiminiz yok",
       "description": "Bunun bir hata olduğunu düşünüyorsanız, bir grup sahibinden veya yöneticiden sizi davet etmesini isteyin.",
-      "link": "Gruplarıma dön"
+      "link": "Ana sayfaya dön"
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -177,7 +177,8 @@
     "linkInvitationInvalid": {
       "title": "Bu davet bağlantısı geçersiz",
       "description": "Bağlantı hatalı biçimlendirilmiş veya bu gruptaki hiçbir davetle eşleşmiyor."
-    }
+    },
+    "backToHome": "Ana sayfaya dön"
   },
   "GroupForm": {
     "title": "Grup bilgileri",

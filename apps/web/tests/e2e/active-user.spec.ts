@@ -9,7 +9,7 @@ test('Active user changes balance view', async ({ page }) => {
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,
@@ -67,7 +67,7 @@ test('Clear active user - neutral view', async ({ page }) => {
   const participantA = 'Alice'
   const participantB = 'Bob'
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,
@@ -104,7 +104,7 @@ test('Updates stats when active user changes', async ({ page }) => {
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,
@@ -171,7 +171,7 @@ test('Active user selection persists after page reload', async ({ page }) => {
   const participantB = 'Bob'
   const participantC = 'Charlie'
 
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, groupName, [
     participantA,
     participantB,

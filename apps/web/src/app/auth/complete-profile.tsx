@@ -25,14 +25,14 @@ const completeProfileRouteApi = getRouteApi('/auth/complete-profile')
  * account with only an email).
  *
  * If the account already has a display name, the route redirects to the
- * original `redirect` target (defaulting to `/groups`). If the visitor is not
+ * original `redirect` target (defaulting to `/`). If the visitor is not
  * signed in, they are sent to `/` with a redirect back here.
  */
 export function CompleteProfilePage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CompleteProfile' })
   const navigate = useNavigate()
   const { redirect } = completeProfileRouteApi.useSearch()
-  const redirectTo = redirect ?? '/groups'
+  const redirectTo = redirect ?? '/'
   const { data: account, isPending, refetch } = useCurrentAccount()
 
   const [name, setName] = useState('')

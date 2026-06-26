@@ -5,7 +5,7 @@ import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
 
 test.describe('Expense List Filtering', () => {
   test('filters expenses by text search', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Filter Test ${randomId(4)}`,
@@ -58,7 +58,7 @@ test.describe('Expense List Filtering', () => {
   })
 
   test('case insensitive search', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `Case Test ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -96,7 +96,7 @@ test.describe('Expense List Filtering', () => {
   })
 
   test('partial text match', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Partial Test ${randomId(4)}`,
@@ -128,7 +128,7 @@ test.describe('Expense List Filtering', () => {
   })
 
   test('no results found', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, `No Results ${randomId(4)}`, [
       'Alice',
       'Bob',
@@ -158,7 +158,7 @@ test.describe('Expense List Filtering', () => {
   })
 
   test('filter with multiple matching expenses', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Multi Match ${randomId(4)}`,
@@ -202,7 +202,7 @@ test.describe('Expense List Filtering', () => {
   })
 
   test('clear search with x button', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Clear Button ${randomId(4)}`,
@@ -246,7 +246,7 @@ test.describe('Expense List Filtering', () => {
   })
 
   test('search persists while typing', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Type Persist ${randomId(4)}`,

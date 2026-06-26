@@ -7,7 +7,7 @@ test.describe('Group Sharing', () => {
   test('share group via copy URL button', async ({ page, context }) => {
     const groupName = `share ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, [
       'Alice',
       'Bob',
@@ -76,7 +76,7 @@ test.describe('Group Sharing', () => {
   test('share URL includes ref parameter', async ({ page, context }) => {
     const groupName = `share ref ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     await page.goto(`/groups/${groupId}/expenses`)
@@ -117,7 +117,7 @@ test.describe('Group Sharing', () => {
   test('shared URL navigation works correctly', async ({ page, context }) => {
     const groupName = `share navigation ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     await page.goto(`/groups/${groupId}/expenses`)
@@ -145,7 +145,7 @@ test.describe('Group Sharing', () => {
   test('share button is accessible on group page', async ({ page }) => {
     const groupName = `share accessible ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     await page.goto(`/groups/${groupId}/expenses`)
@@ -175,7 +175,7 @@ test.describe('Group Sharing', () => {
   }) => {
     const groupName = `copy feedback ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(page, groupName, ['Alice', 'Bob'])
 
     await page.goto(`/groups/${groupId}/expenses`)

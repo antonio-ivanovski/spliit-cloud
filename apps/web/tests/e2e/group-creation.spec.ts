@@ -6,7 +6,7 @@ test.describe('Group Creation', () => {
   test('create group with custom currency', async ({ page }) => {
     const groupName = `custom currency ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     await page.getByRole('link', { name: 'Create' }).first().click()
 
     // Verify we're on the creation page
@@ -44,7 +44,7 @@ test.describe('Group Creation', () => {
   })
 
   test('validate group creation form', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     await page.getByRole('link', { name: 'Create' }).first().click()
 
     // Test: Submit empty form should show validation errors
@@ -103,7 +103,7 @@ test.describe('Group Creation', () => {
   test('create group with default currency', async ({ page }) => {
     const groupName = `default currency ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     await page.getByRole('link', { name: 'Create' }).first().click()
 
     await page.getByLabel('Group name').fill(groupName)
@@ -126,7 +126,7 @@ test.describe('Group Creation', () => {
   test('create group with many participants', async ({ page }) => {
     const groupName = `many participants ${randomId(4)}`
 
-    await page.goto('/groups')
+    await page.goto('/')
     await page.getByRole('link', { name: 'Create' }).first().click()
 
     await page.getByLabel('Group name').fill(groupName)

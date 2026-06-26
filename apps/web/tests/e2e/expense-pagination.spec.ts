@@ -9,7 +9,7 @@ import {
 test.describe('Expense List Pagination', () => {
   test('loads initial page of expenses', async ({ page }) => {
     // Create group via API for speed
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Pagination Init ${randomId(4)}`,
@@ -33,7 +33,7 @@ test.describe('Expense List Pagination', () => {
   test('loads more expenses on scroll with infinite scroll', async ({
     page,
   }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Pagination Scroll ${randomId(4)}`,
@@ -67,7 +67,7 @@ test.describe('Expense List Pagination', () => {
   test('displays correct expense count after loading all pages', async ({
     page,
   }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Pagination Count ${randomId(4)}`,
@@ -98,7 +98,7 @@ test.describe('Expense List Pagination', () => {
   })
 
   test('maintains expense order after pagination', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Pagination Order ${randomId(4)}`,
@@ -133,7 +133,7 @@ test.describe('Expense List Pagination', () => {
   })
 
   test('pagination works with search filter', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Pagination Filter ${randomId(4)}`,
@@ -161,7 +161,7 @@ test.describe('Expense List Pagination', () => {
   })
 
   test('empty state when no expenses', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Empty State ${randomId(4)}`,
@@ -182,7 +182,7 @@ test.describe('Expense List Pagination', () => {
   })
 
   test('loading indicator appears during pagination', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Loading State ${randomId(4)}`,
@@ -205,7 +205,7 @@ test.describe('Expense List Pagination', () => {
   })
 
   test('expense amounts display correctly across pages', async ({ page }) => {
-    await page.goto('/groups')
+    await page.goto('/')
     const groupId = await createGroupViaAPI(
       page,
       `Amount Display ${randomId(4)}`,

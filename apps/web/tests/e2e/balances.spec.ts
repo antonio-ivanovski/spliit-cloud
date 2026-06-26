@@ -4,7 +4,7 @@ import { navigateToTab } from '../helpers'
 import { createExpenseViaAPI, createGroupViaAPI } from '../helpers/batch-api'
 
 test('suggested reimbursements displayed', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(page, `balances ${randomId(4)}`, [
     'Alice',
     'Bob',
@@ -63,7 +63,7 @@ test('suggested reimbursements displayed', async ({ page }) => {
 })
 
 test('view balances page - calculates correctly', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `balance calculation ${randomId(4)}`,
@@ -112,7 +112,7 @@ test('view balances page - calculates correctly', async ({ page }) => {
 })
 
 test('Active user balance highlighted', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `active user balance ${randomId(4)}`,
@@ -134,7 +134,7 @@ test('Active user balance highlighted', async ({ page }) => {
 })
 
 test('Zero balances display correctly', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `zero balances ${randomId(4)}`,
@@ -160,7 +160,7 @@ test('Zero balances display correctly', async ({ page }) => {
 })
 
 test('Balances match expected from expenses', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `balance verification ${randomId(4)}`,
@@ -211,7 +211,7 @@ test('Balances match expected from expenses', async ({ page }) => {
 })
 
 test('Suggested reimbursements minimized', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `reimbursement optimization ${randomId(4)}`,
@@ -258,7 +258,7 @@ test('Suggested reimbursements minimized', async ({ page }) => {
 })
 
 test('Create reimbursement expense', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
 
   const groupId = await createGroupViaAPI(
     page,
@@ -311,7 +311,7 @@ test('Create reimbursement expense', async ({ page }) => {
 })
 
 test('Reimbursement in expenses', async ({ page }) => {
-  await page.goto('/groups')
+  await page.goto('/')
   const groupId = await createGroupViaAPI(
     page,
     `reimbursement totals ${randomId(4)}`,
