@@ -2,7 +2,7 @@
 
 Spliit is a free and open source alternative to Splitwise.
 
-Spliit Cloud is deployed at [spliit.cloud](https://spliit.cloud).
+Spliit Cloud is deployed at [spliit.cloud](https://spliit.cloud) — web on Cloudflare Pages, API on a Hetzner VPS via Dokploy (PostgreSQL on the same VPS). Database backed up to a dedicated R2 bucket; asset uploads stored in a separate R2 bucket.
 
 Spliit Cloud is a community fork of Spliit, originally created by [Sebastien Castiel](https://github.com/scastiel). The original `spliit-app/spliit` project appears inactive, with issues and pull requests not receiving maintainer responses. This fork exists to keep the project moving in a more focused direction.
 
