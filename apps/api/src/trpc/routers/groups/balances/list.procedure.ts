@@ -6,15 +6,26 @@ import {
 } from '@spliit/domain'
 import { z } from 'zod'
 import { getGroupExpenses } from '../../../../lib/api'
-import { loadGroupViewer, protectedProcedure } from '../../../init'
+import {
+  hashLinkInviteToken,
+  linkInviteTokenInput,
+  loadGroupViewer,
+  protectedProcedure,
+} from '../../../init'
 
 export const listGroupBalancesProcedure = protectedProcedure
-  .input(z.object({ groupId: z.string().min(1) }))
-  .query(async ({ input: { groupId }, ctx }) => {
+  .input(
+    z.object({
+      groupId: z.string().min(1),
+      linkInviteToken: linkInviteTokenInput,
+    }),
+  )
+  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     await loadGroupViewer({
       groupId,
       accountId: ctx.auth.user.id,
       accountEmail: ctx.auth.user.email,
+      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
     })
     const rows = await getGroupExpenses(groupId)
     // Map LedgerParticipant references to the participant-like shape the

@@ -1,6 +1,11 @@
 import { z } from 'zod'
 import { getGroupExpenses } from '../../../../lib/api'
-import { loadGroupViewer, protectedProcedure } from '../../../init'
+import {
+  hashLinkInviteToken,
+  linkInviteTokenInput,
+  loadGroupViewer,
+  protectedProcedure,
+} from '../../../init'
 
 export const listGroupExpensesProcedure = protectedProcedure
   .input(
@@ -9,14 +14,19 @@ export const listGroupExpensesProcedure = protectedProcedure
       cursor: z.number().optional(),
       limit: z.number().optional(),
       filter: z.string().optional(),
+      linkInviteToken: linkInviteTokenInput,
     }),
   )
   .query(
-    async ({ input: { groupId, cursor = 0, limit = 10, filter }, ctx }) => {
+    async ({
+      input: { groupId, cursor = 0, limit = 10, filter, linkInviteToken },
+      ctx,
+    }) => {
       await loadGroupViewer({
         groupId,
         accountId: ctx.auth.user.id,
         accountEmail: ctx.auth.user.email,
+        linkTokenHash: await hashLinkInviteToken(linkInviteToken),
       })
       const expenses = await getGroupExpenses(groupId, {
         offset: cursor,

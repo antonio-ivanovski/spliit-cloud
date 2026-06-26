@@ -166,6 +166,18 @@
       "unknownInviter": "someone",
       "unknownGroup": "Unknown group",
       "sentOn": "Sent {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} invited you to join {groupName} on Spliit.",
+    "linkInvitationSingleUse": "This link can only be used once. After you accept, it will stop working.",
+    "linkInvitationTemporaryName": "You'll join as {name}.",
+    "linkInvitationAlreadyMemberTitle": "You're already in {groupName}",
+    "linkInvitationAlreadyMemberDescription": "You already have an account on this group. The invite link isn't needed.",
+    "linkInvitationDismiss": "Dismiss",
+    "linkInvitationExpiredTitle": "This invite link is no longer valid",
+    "linkInvitationExpiredDescription": "The link was either revoked, declined, or has expired. Ask the inviter to send a new one.",
+    "linkInvitationInvalid": {
+      "title": "This invite link is invalid",
+      "description": "The link is malformed or doesn't match any invitation on this group."
     }
   },
   "Auth": {
@@ -337,7 +349,8 @@
       "saving": "Saving…",
       "create": "Create",
       "creating": "Creating…",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "inviteAfterCreate": "After the group is created, open the Members tab to invite people by email or by shareable link."
     }
   },
   "ExpenseForm": {
@@ -699,12 +712,33 @@
     "archivedNotice": "Invitations and member management are disabled while the group is archived. Unarchive the group to invite new members.",
     "invite": {
       "title": "Invite member",
-      "description": "Send an invitation by email. The invitee joins once they accept from a matching account.",
       "email": "Email",
       "emailPlaceholder": "friend@example.com",
       "role": "Role",
       "send": "Send invite",
-      "invalidEmail": "Enter a valid email address."
+      "invalidEmail": "Enter a valid email address.",
+      "tab": {
+        "email": "Email",
+        "link": "Invite link"
+      },
+      "link": {
+        "generate": "Generate invite link",
+        "generating": "Generating…",
+        "singleUse": "This invite link can be used once. After someone accepts it, the link will stop working.",
+        "copy": "Copy invite link",
+        "copied": "Copied!",
+        "expiresOn": "Expires {date}",
+        "created": "Invite link ready. Copy and share it before the group leaves this page.",
+        "intro": "Here's your single-use invite link for {groupName}. Send it to the person you want to join — the first one to use it becomes a member, then the link stops working.",
+        "share": "Share invite link",
+        "shareTitle": "Join {groupName} on Spliit Cloud",
+        "shareText": "I just created {groupName} for our shared expenses on Spliit Cloud. Here's a one-time invite link — open it to join:\n{inviteUrl}",
+        "generateNew": "Generate new link"
+      },
+      "emailDescription": "Send an invitation by email. The invitee joins once they accept from a matching account.",
+      "linkDescription": "Generate a single-use link anyone can use to join. The link stops working after the first accept.",
+      "temporaryName": "Temporary name (optional)",
+      "temporaryNamePlaceholder": "e.g. Alex's roommate"
     },
     "invitations": {
       "title": "Pending invitations",
@@ -730,6 +764,10 @@
           "toast": "Invitation revoked, balances settled.",
           "checkbox": "Settle the invitee's balances before revoking"
         }
+      },
+      "link": {
+        "type": "Single-use link",
+        "fallbackLabel": "Invite link"
       }
     },
     "leave": {

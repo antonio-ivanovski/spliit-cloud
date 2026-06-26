@@ -258,6 +258,15 @@ model GroupInvitation {
   acceptedAt   DateTime?
   revokedAt    DateTime?
 
+  // Link-invite fields (populated only when `type = LINK`).
+  // `tokenHash` is a SHA-256 hash of the raw token. The raw token is
+  // returned to the inviter exactly once at create time and is never
+  // stored, so the link can be revoked or rotated without leaking the
+  // original URL. `expiresAt` is optional: when set, the API rejects
+  // accept attempts after that timestamp.
+  tokenHash String?   @unique
+  expiresAt DateTime?
+
   // Optional virtual LedgerParticipant materialized for this pending invitation
   // so expenses can be recorded against the invitee before they accept. The
   // link is set when the group's participants list is read; it is reused when

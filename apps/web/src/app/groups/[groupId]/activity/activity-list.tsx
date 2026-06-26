@@ -10,6 +10,7 @@ import { forwardRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 import { useCurrentGroup } from '../current-group-context'
+import { useLinkInviteToken } from '../use-link-invite-token'
 
 const PAGE_SIZE = 20
 
@@ -101,13 +102,14 @@ ActivitiesLoading.displayName = 'ActivitiesLoading'
 export function ActivityList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
   const { group, groupId } = useCurrentGroup()
+  const linkInviteToken = useLinkInviteToken()
 
   const {
     data: activitiesData,
     isLoading,
     fetchNextPage,
   } = trpc.groups.activities.list.useInfiniteQuery(
-    { groupId, limit: PAGE_SIZE },
+    { groupId, limit: PAGE_SIZE, linkInviteToken },
     { getNextPageParam: ({ nextCursor }) => nextCursor },
   )
   const { ref: loadingRef, inView } = useInView()

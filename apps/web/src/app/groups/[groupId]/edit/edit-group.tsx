@@ -17,11 +17,16 @@ import { Archive, ArchiveRestore } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import { useLinkInviteToken } from '../use-link-invite-token'
 
 export const EditGroup = () => {
   const { groupId, group, currentMember } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
-  const { data, isLoading } = trpc.groups.getDetails.useQuery({ groupId })
+  const linkInviteToken = useLinkInviteToken()
+  const { data, isLoading } = trpc.groups.getDetails.useQuery({
+    groupId,
+    linkInviteToken,
+  })
   const { mutateAsync: updateGroup } = trpc.groups.update.useMutation()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
   const utils = trpc.useUtils()

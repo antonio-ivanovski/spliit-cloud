@@ -165,6 +165,18 @@
       "unknownInviter": "alguém",
       "unknownGroup": "Grupo desconhecido",
       "sentOn": "Enviado em {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} convidou-te para te juntares a {groupName} no Spliit.",
+    "linkInvitationSingleUse": "Esta ligação só pode ser usada uma vez. Depois de a aceitares, deixa de funcionar.",
+    "linkInvitationTemporaryName": "Vais entrar como {name}.",
+    "linkInvitationAlreadyMemberTitle": "Já pertences a {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Já tens uma conta neste grupo. Podes abri-lo através do botão abaixo.",
+    "linkInvitationDismiss": "Descartar",
+    "linkInvitationExpiredTitle": "Esta ligação de convite já não é válida",
+    "linkInvitationExpiredDescription": "A ligação foi revogada, recusada ou expirou. Pede a quem convidou para enviar uma nova.",
+    "linkInvitationInvalid": {
+      "title": "Este link de convite é inválido",
+      "description": "O link está malformado ou não corresponde a nenhum convite neste grupo."
     }
   },
   "GroupForm": {
@@ -212,7 +224,8 @@
       "saving": "A gravar…",
       "create": "Criar",
       "creating": "A criar…",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "inviteAfterCreate": "Depois de o grupo ser criado, abre o separador Members para convidar pessoas por e-mail ou através de uma ligação partilhável."
     },
     "readOnlyNote": "Apenas proprietários e administradores podem alterar as definições do grupo.",
     "readOnlyTitle": "Definições do grupo",
@@ -659,12 +672,33 @@
     "archivedNotice": "Os convites estão desativados enquanto o grupo estiver arquivado. Desarquiva o grupo para convidar novos membros.",
     "invite": {
       "title": "Convidar membro",
-      "description": "Envia um convite por email. O convidado junta-se assim que aceitar a partir de uma conta correspondente.",
       "email": "Email",
       "emailPlaceholder": "amigo@example.com",
       "role": "Função",
       "send": "Enviar convite",
-      "invalidEmail": "Introduz um endereço de email válido."
+      "invalidEmail": "Introduz um endereço de email válido.",
+      "emailDescription": "Envia um convite por e-mail. O convidado junta-se assim que aceitar a partir de uma conta compatível.",
+      "linkDescription": "Gera uma ligação de utilização única para que qualquer pessoa se possa juntar. A ligação deixa de funcionar após a primeira aceitação.",
+      "temporaryName": "Nome temporário (opcional)",
+      "link": {
+        "generate": "Gerar ligação de convite",
+        "generating": "A gerar…",
+        "singleUse": "Esta ligação de convite só pode ser usada uma vez. Depois de alguém a aceitar, a ligação deixa de funcionar.",
+        "copy": "Copiar ligação de convite",
+        "copied": "Copiado!",
+        "expiresOn": "Expira a {date}",
+        "created": "Ligação de convite pronta. Copia e partilha antes de saíres desta página.",
+        "intro": "Aqui está a tua ligação de convite de utilização única para {groupName}. Envia-a à pessoa que queres que se junte — a primeira a utilizá-la torna-se membro e, depois disso, a ligação deixa de funcionar.",
+        "share": "Partilhar ligação de convite",
+        "shareTitle": "Junta-te a {groupName} no Spliit Cloud",
+        "shareText": "Acabei de criar {groupName} para as nossas despesas partilhadas no Spliit Cloud. Aqui está uma ligação de convite única — abre-a para te juntares:\n{inviteUrl}",
+        "generateNew": "Gerar nova ligação"
+      },
+      "tab": {
+        "email": "E-mail",
+        "link": "Ligação de convite"
+      },
+      "temporaryNamePlaceholder": "ex.: colega de quarto do Alex"
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Liquidar os saldos do convidado antes de revogar"
         }
+      },
+      "link": {
+        "type": "Ligação de utilização única",
+        "fallbackLabel": "Ligação de convite"
       }
     },
     "removeDialog": {

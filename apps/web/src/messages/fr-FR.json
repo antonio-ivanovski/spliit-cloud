@@ -165,6 +165,18 @@
       "unknownInviter": "quelqu'un",
       "unknownGroup": "Groupe inconnu",
       "sentOn": "Envoyé le {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} vous a invité à rejoindre {groupName} sur Spliit.",
+    "linkInvitationSingleUse": "Ce lien ne peut être utilisé qu'une seule fois. Après votre acceptation, il cessera de fonctionner.",
+    "linkInvitationTemporaryName": "Vous rejoindrez le groupe sous le nom {name}.",
+    "linkInvitationAlreadyMemberTitle": "Vous êtes déjà dans {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Vous avez déjà un compte sur ce groupe. Vous pouvez l'ouvrir à l'aide du bouton ci-dessous.",
+    "linkInvitationDismiss": "Ignorer",
+    "linkInvitationExpiredTitle": "Ce lien d'invitation n'est plus valide",
+    "linkInvitationExpiredDescription": "Le lien a été révoqué, refusé ou a expiré. Demandez à la personne qui vous a invité d'en envoyer un nouveau.",
+    "linkInvitationInvalid": {
+      "title": "Ce lien d'invitation est invalide",
+      "description": "Le lien est mal formé ou ne correspond à aucune invitation de ce groupe."
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "Sauvegarde…",
       "create": "Créer",
       "creating": "Création…",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "inviteAfterCreate": "Une fois le groupe créé, ouvrez l'onglet Members pour inviter des personnes par e-mail ou via un lien partageable."
     },
     "CurrencyCodeField": {
       "label": "Devise principale",
@@ -659,12 +672,33 @@
     "archivedNotice": "Les invitations sont désactivées pendant que le groupe est archivé. Désarchivez le groupe pour inviter de nouveaux membres.",
     "invite": {
       "title": "Inviter un membre",
-      "description": "Envoyez une invitation par e-mail. L'invité rejoint le groupe une fois qu'il accepte depuis un compte correspondant.",
       "email": "E-mail",
       "emailPlaceholder": "ami@example.com",
       "role": "Rôle",
       "send": "Envoyer l'invitation",
-      "invalidEmail": "Saisissez une adresse e-mail valide."
+      "invalidEmail": "Saisissez une adresse e-mail valide.",
+      "tab": {
+        "email": "E-mail",
+        "link": "Lien d'invitation"
+      },
+      "emailDescription": "Envoyez une invitation par e-mail. L'invité rejoint le groupe dès qu'il l'accepte depuis un compte correspondant.",
+      "linkDescription": "Générez un lien à usage unique que n'importe qui peut utiliser pour rejoindre le groupe. Le lien cesse de fonctionner après la première acceptation.",
+      "temporaryName": "Nom temporaire (facultatif)",
+      "temporaryNamePlaceholder": "p. ex. le colocataire d'Alex",
+      "link": {
+        "generate": "Générer le lien d'invitation",
+        "generating": "Génération…",
+        "singleUse": "Ce lien d'invitation peut être utilisé une seule fois. Dès que quelqu'un l'accepte, il cessera de fonctionner.",
+        "copy": "Copier le lien d'invitation",
+        "copied": "Copié !",
+        "expiresOn": "Expire le {date}",
+        "created": "Le lien d'invitation est prêt. Copiez-le et partagez-le avant que le groupe ne quitte cette page.",
+        "intro": "Voici votre lien d'invitation à usage unique pour {groupName}. Envoyez-le à la personne que vous souhaitez inviter — la première à l'utiliser deviendra membre, puis le lien cessera de fonctionner.",
+        "share": "Partager le lien d'invitation",
+        "shareTitle": "Rejoindre {groupName} sur Spliit Cloud",
+        "shareText": "Je viens de créer {groupName} pour nos dépenses partagées sur Spliit Cloud. Voici un lien d'invitation à usage unique — ouvrez-le pour nous rejoindre :\n{inviteUrl}",
+        "generateNew": "Générer un nouveau lien"
+      }
     },
     "invitations": {
       "title": "Invitations en attente",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Régler les soldes de l'invité avant de révoquer"
         }
+      },
+      "link": {
+        "type": "Lien à usage unique",
+        "fallbackLabel": "Lien d'invitation"
       }
     },
     "removeDialog": {

@@ -165,6 +165,18 @@
       "unknownInviter": "joku",
       "unknownGroup": "Tuntematon ryhmä",
       "sentOn": "Lähetetty {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} kutsui sinut liittymään ryhmään {groupName} Spliitissä.",
+    "linkInvitationSingleUse": "Tätä linkkiä voi käyttää vain kerran. Hyväksymisen jälkeen se lakkaa toimimasta.",
+    "linkInvitationTemporaryName": "Liityt nimellä {name}.",
+    "linkInvitationAlreadyMemberTitle": "Olet jo ryhmässä {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Sinulla on jo tili tässä ryhmässä. Voit avata sen alla olevasta painikkeesta.",
+    "linkInvitationDismiss": "Sulje",
+    "linkInvitationExpiredTitle": "Tämä kutsulinkki ei ole enää voimassa",
+    "linkInvitationExpiredDescription": "Linkki on peruutettu, hylätty tai vanhentunut. Pyydä kutsujaa lähettämään uusi.",
+    "linkInvitationInvalid": {
+      "title": "Tämä kutsulinkki ei ole kelvollinen",
+      "description": "Linkki on virheellinen tai se ei vastaa mitään tämän ryhmän kutsua."
     }
   },
   "GroupForm": {
@@ -216,7 +228,8 @@
       "saving": "Tallennetaan…",
       "create": "Luo ryhmä",
       "creating": "Luodaan…",
-      "cancel": "Peruuta"
+      "cancel": "Peruuta",
+      "inviteAfterCreate": "Kun ryhmä on luotu, avaa Jäsenet-välilehti ja kutsu ihmisiä sähköpostilla tai jaettavalla linkillä."
     }
   },
   "ExpenseForm": {
@@ -659,12 +672,33 @@
     "archivedNotice": "Kutsut on poistettu käytöstä, kun ryhmä on arkistoitu. Palauta ryhmä arkistosta kutsuaksesi uusia jäseniä.",
     "invite": {
       "title": "Kutsu jäsen",
-      "description": "Lähetä kutsu sähköpostitse. Kutsuttu liittyy, kun hän hyväksyy kutsun vastaavalta tililtä.",
       "email": "Sähköposti",
       "emailPlaceholder": "kaveri@esimerkki.com",
       "role": "Rooli",
       "send": "Lähetä kutsu",
-      "invalidEmail": "Syötä kelvollinen sähköpostiosoite."
+      "invalidEmail": "Syötä kelvollinen sähköpostiosoite.",
+      "tab": {
+        "email": "Sähköposti",
+        "link": "Kutsulinkki"
+      },
+      "emailDescription": "Lähetä kutsu sähköpostilla. Kutsuttu liittyy, kun hän hyväksyy sen vastaavalta tililtä.",
+      "linkDescription": "Luo kertakäyttöinen linkki, jota kuka tahansa voi käyttää liittyäkseen. Linkki lakkaa toimimasta ensimmäisen hyväksymisen jälkeen.",
+      "temporaryName": "Väliaikainen nimi (valinnainen)",
+      "link": {
+        "generate": "Luo kutsulinkki",
+        "generating": "Luodaan…",
+        "singleUse": "Tätä kutsulinkkiä voi käyttää vain kerran. Kun joku hyväksyy sen, linkki lakkaa toimimasta.",
+        "copy": "Kopioi kutsulinkki",
+        "copied": "Kopioitu!",
+        "expiresOn": "Vanhenee {date}",
+        "created": "Kutsulinkki on valmis. Kopioi ja jaa se, ennen kuin ryhmä poistuu tältä sivulta.",
+        "intro": "Tässä on kertakäyttöinen kutsulinkkisi ryhmään {groupName}. Lähetä se henkilölle, jonka haluat liittyvän — ensimmäinen käyttäjä liittyy jäseneksi, minkä jälkeen linkki lakkaa toimimasta.",
+        "share": "Jaa kutsulinkki",
+        "shareTitle": "Liity ryhmään {groupName} Spliit Cloudissa",
+        "shareText": "Loin juuri ryhmän {groupName} yhteisiä kuluja varten Spliit Cloudissa. Tässä on kertakäyttöinen kutsulinkki — avaa se liittyäksesi:\n{inviteUrl}",
+        "generateNew": "Luo uusi linkki"
+      },
+      "temporaryNamePlaceholder": "esim. Alexin kämppäkaveri"
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Tasaa kutsutun saatavat ennen peruutusta"
         }
+      },
+      "link": {
+        "type": "Kertakäyttöinen linkki",
+        "fallbackLabel": "Kutsulinkki"
       }
     },
     "removeDialog": {

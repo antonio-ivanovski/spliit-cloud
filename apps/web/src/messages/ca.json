@@ -165,6 +165,18 @@
       "unknownInviter": "algú",
       "unknownGroup": "Grup desconegut",
       "sentOn": "Enviada el {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} t'ha convidat a unir-te a {groupName} a Spliit.",
+    "linkInvitationSingleUse": "Aquest enllaç només es pot fer servir un cop. Després que l'acceptis, deixarà de funcionar.",
+    "linkInvitationTemporaryName": "T'hi uniràs com a {name}.",
+    "linkInvitationAlreadyMemberTitle": "Ja ets a {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Ja tens un compte en aquest grup. Pots obrir-lo des del botó següent.",
+    "linkInvitationDismiss": "Descarta",
+    "linkInvitationExpiredTitle": "Aquest enllaç d'invitació ja no és vàlid",
+    "linkInvitationExpiredDescription": "L'enllaç ha estat revocat, rebutjat o ha caducat. Demana a la persona que t'ha convidat que n'enviï un de nou.",
+    "linkInvitationInvalid": {
+      "title": "Aquest enllaç d'invitació no és vàlid",
+      "description": "L'enllaç té un format incorrecte o no coincideix amb cap invitació d'aquest grup."
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "Desant",
       "create": "Crear",
       "creating": "Creant",
-      "cancel": "Cancel·lar"
+      "cancel": "Cancel·lar",
+      "inviteAfterCreate": "Quan el grup estigui creat, obre la pestanya Membres per convidar gent per correu o amb un enllaç per compartir."
     },
     "CurrencyCodeField": {
       "label": "Divisa principal",
@@ -659,12 +672,33 @@
     "archivedNotice": "Les invitacions estan desactivades mentre el grup estigui arxivat. Desarxivar el grup per invitar nous membres.",
     "invite": {
       "title": "Convidar membre",
-      "description": "Envia una invitació per correu electrònic. La persona convidada s'uneix un cop acceptada des d'un compte coincident.",
       "email": "Correu electrònic",
       "emailPlaceholder": "amic@example.com",
       "role": "Rol",
       "send": "Enviar invitació",
-      "invalidEmail": "Introdueix una adreça de correu electrònic vàlida."
+      "invalidEmail": "Introdueix una adreça de correu electrònic vàlida.",
+      "tab": {
+        "email": "Correu electrònic",
+        "link": "Enllaç d'invitació"
+      },
+      "emailDescription": "Envia una invitació per correu electrònic. La persona convidada s'hi unirà quan l'accepti des d'un compte que coincideixi.",
+      "linkDescription": "Genera un enllaç d'un sol ús que qualsevol pot fer servir per unir-se. L'enllaç deixa de funcionar després de la primera acceptació.",
+      "temporaryName": "Nom temporal (opcional)",
+      "link": {
+        "generate": "Genera l'enllaç d'invitació",
+        "generating": "Generant…",
+        "singleUse": "Aquest enllaç d'invitació es pot fer servir un cop. Després que algú l'accepti, l'enllaç deixarà de funcionar.",
+        "copy": "Copia l'enllaç d'invitació",
+        "copied": "Copiat!",
+        "expiresOn": "Caduca el {date}",
+        "created": "L'enllaç d'invitació està llest. Copia'l i comparteix-lo abans que el grup surti d'aquesta pàgina.",
+        "intro": "Aquí tens el teu enllaç d'invitació d'un sol ús per a {groupName}. Envia'l a la persona que vulguis que s'hi uneixi — la primera a fer-lo servir esdevindrà membre i l'enllaç deixarà de funcionar.",
+        "share": "Comparteix l'enllaç d'invitació",
+        "shareTitle": "Uneix-te a {groupName} a Spliit Cloud",
+        "shareText": "Acabo de crear {groupName} per a les nostres despeses compartides a Spliit Cloud. Aquí tens un enllaç d'invitació d'un sol ús — obre'l per unir-te:\n{inviteUrl}",
+        "generateNew": "Genera un enllaç nou"
+      },
+      "temporaryNamePlaceholder": "p. ex. el company de pis de l'Alex"
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Liquidar els saldos del convidat abans de revocar"
         }
+      },
+      "link": {
+        "type": "Enllaç d'un sol ús",
+        "fallbackLabel": "Enllaç d'invitació"
       }
     },
     "removeDialog": {

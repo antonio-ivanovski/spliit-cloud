@@ -165,6 +165,18 @@
       "unknownInviter": "jemand",
       "unknownGroup": "Unbekannte Gruppe",
       "sentOn": "Gesendet {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} hat dich eingeladen, der Gruppe {groupName} auf Spliit beizutreten.",
+    "linkInvitationSingleUse": "Dieser Link kann nur einmal verwendet werden. Nachdem du ihn akzeptiert hast, funktioniert er nicht mehr.",
+    "linkInvitationTemporaryName": "Du trittst als {name} bei.",
+    "linkInvitationAlreadyMemberTitle": "Du bist bereits in {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Du hast bereits ein Konto in dieser Gruppe. Du kannst sie über die Schaltfläche unten öffnen.",
+    "linkInvitationDismiss": "Schließen",
+    "linkInvitationExpiredTitle": "Dieser Einladungslink ist nicht mehr gültig",
+    "linkInvitationExpiredDescription": "Der Link wurde widerrufen, abgelehnt oder ist abgelaufen. Bitte den Einladenden, einen neuen zu senden.",
+    "linkInvitationInvalid": {
+      "title": "Dieser Einladungslink ist ungültig",
+      "description": "Der Link ist fehlerhaft oder stimmt mit keiner Einladung in dieser Gruppe überein."
     }
   },
   "GroupForm": {
@@ -216,7 +228,8 @@
       "saving": "Speichert…",
       "create": "Erstellen",
       "creating": "Erstellt…",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "inviteAfterCreate": "Öffne nach dem Erstellen der Gruppe den Tab „Mitglieder“, um Personen per E-Mail oder über einen teilbaren Link einzuladen."
     }
   },
   "ExpenseForm": {
@@ -659,12 +672,33 @@
     "archivedNotice": "Einladungen sind deaktiviert, während die Gruppe archiviert ist. Stellen Sie die Gruppe wieder her, um neue Mitglieder einzuladen.",
     "invite": {
       "title": "Mitglied einladen",
-      "description": "Senden Sie eine Einladung per E-Mail. Der Eingeladene tritt bei, sobald er von einem passenden Konto aus akzeptiert.",
       "email": "E-Mail",
       "emailPlaceholder": "freund@example.com",
       "role": "Rolle",
       "send": "Einladung senden",
-      "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein."
+      "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "tab": {
+        "email": "E-Mail",
+        "link": "Einladungslink"
+      },
+      "emailDescription": "Sende eine Einladung per E-Mail. Die eingeladene Person tritt bei, sobald sie von einem passenden Konto aus annimmt.",
+      "linkDescription": "Erstelle einen Einmal-Link, mit dem jeder beitreten kann. Nach der ersten Annahme funktioniert der Link nicht mehr.",
+      "temporaryName": "Vorläufiger Name (optional)",
+      "link": {
+        "generate": "Einladungslink erstellen",
+        "generating": "Wird erstellt…",
+        "singleUse": "Dieser Einladungslink kann nur einmal verwendet werden. Sobald ihn jemand annimmt, funktioniert er nicht mehr.",
+        "copy": "Einladungslink kopieren",
+        "copied": "Kopiert!",
+        "expiresOn": "Läuft am {date} ab",
+        "created": "Einladungslink bereit. Kopiere und teile ihn, bevor die Gruppe diese Seite verlässt.",
+        "intro": "Hier ist dein Einmal-Einladungslink für {groupName}. Sende ihn der Person, die beitreten soll — die erste Person, die ihn verwendet, wird Mitglied, danach funktioniert der Link nicht mehr.",
+        "share": "Einladungslink teilen",
+        "shareTitle": "Tritt {groupName} auf Spliit Cloud bei",
+        "shareText": "Ich habe gerade {groupName} für unsere gemeinsamen Ausgaben auf Spliit Cloud erstellt. Hier ist ein Einmal-Einladungslink — öffne ihn, um beizutreten:\n{inviteUrl}",
+        "generateNew": "Neuen Link erstellen"
+      },
+      "temporaryNamePlaceholder": "z. B. Alex' Mitbewohner"
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Salden des Eingeladenen vor dem Widerruf ausgleichen"
         }
+      },
+      "link": {
+        "type": "Einmal-Link",
+        "fallbackLabel": "Einladungslink"
       }
     },
     "removeDialog": {

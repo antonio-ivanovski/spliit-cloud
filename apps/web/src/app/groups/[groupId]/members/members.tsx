@@ -1,5 +1,6 @@
 'use client'
 
+import { CopyButton } from '@/components/copy-button'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -36,13 +37,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { UserPlus } from 'lucide-react'
+import { Link2, Share2, UserPlus } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -82,9 +84,26 @@ function badgeVariantForRole(role: MemberRole): 'secondary' | 'outline' {
 
 const emailFormSchema = z.object({
   email: z.string().email(),
+  // Optional pending-only label. Wins over the email in the participant
+  // picker / activity feed while the invitation is still PENDING.
+  // After acceptance, `Account.name` resolves the participant.
+  temporaryName: z.string().trim().max(120).optional(),
 })
 
 type EmailFormValues = z.infer<typeof emailFormSchema>
+
+const linkFormSchema = z.object({
+  temporaryName: z.string().trim().max(120).optional(),
+})
+
+type LinkFormValues = z.infer<typeof linkFormSchema>
+
+type GeneratedLink = {
+  inviteUrl: string
+  temporaryName: string | null
+  role: InvitableRole
+  expiresAt: Date | string
+}
 
 function formatDate(value: string | Date, locale: string) {
   const date = typeof value === 'string' ? new Date(value) : value
@@ -118,25 +137,68 @@ export default function GroupMembers() {
 
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(emailFormSchema),
-    defaultValues: { email: '' },
+    defaultValues: { email: '', temporaryName: '' },
+  })
+
+  const linkForm = useForm<LinkFormValues>({
+    defaultValues: { temporaryName: '' },
   })
 
   const email = form.watch('email')
   const [roleValue, setRoleValue] = useState<InvitableRole>('MEMBER')
+  const [linkRoleValue, setLinkRoleValue] = useState<InvitableRole>('MEMBER')
+  const [generatedLink, setGeneratedLink] = useState<GeneratedLink | null>(null)
+  const [inviteTab, setInviteTab] = useState<'email' | 'link'>('email')
+  // `navigator.share` exists on iOS Safari, Android Chrome, and a few
+  // desktop browsers. We probe on mount so SSR doesn't trip and so the
+  // Share button only renders on capable devices.
+  const [canShare, setCanShare] = useState(false)
+  useEffect(() => {
+    setCanShare(
+      typeof navigator !== 'undefined' && typeof navigator.share === 'function',
+    )
+  }, [])
   useEffect(() => {
     if (canManage) setRoleValue('MEMBER')
+  }, [canManage])
+  useEffect(() => {
+    if (canManage) setLinkRoleValue('MEMBER')
   }, [canManage])
 
   const utils = trpc.useUtils()
   const createMutation = trpc.invitations.create.useMutation({
     onSuccess: async (_data, vars) => {
       toast({ description: t('invitations.created', { email: vars.email }) })
-      form.reset({ email: '' })
+      form.reset({ email: '', temporaryName: '' })
       // Invalidate every cache that surfaces the group roster so the
       // newly-invited member appears in the expense form's "paid by" /
       // "paid for" selectors and on the edit page without a manual refresh.
       // `groups.get` and `groups.getDetails` each cache their own `group`
       // payload; `account.members` is what the members tab itself reads.
+      await Promise.all([
+        utils.invitations.list.invalidate({ groupId }),
+        utils.groups.get.invalidate({ groupId }),
+        utils.groups.getDetails.invalidate({ groupId }),
+        utils.account.members.invalidate({ groupId }),
+      ])
+    },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
+    },
+  })
+
+  const createLinkMutation = trpc.invitations.createLink.useMutation({
+    onSuccess: async (data) => {
+      setGeneratedLink({
+        inviteUrl: data.inviteUrl,
+        temporaryName: data.temporaryName,
+        role: data.role as InvitableRole,
+        expiresAt: data.expiresAt,
+      })
+      toast({ description: t('invite.link.created') })
+      linkForm.reset({ temporaryName: '' })
+      // The pending invitee list and the group roster cache both need
+      // to refresh so the new link invitation shows up immediately.
       await Promise.all([
         utils.invitations.list.invalidate({ groupId }),
         utils.groups.get.invalidate({ groupId }),
@@ -399,12 +461,49 @@ export default function GroupMembers() {
   }
 
   const onInvite = form.handleSubmit(async (values) => {
+    const temporaryName = values.temporaryName?.trim()
     await createMutation.mutateAsync({
       groupId,
       email: values.email,
       role: roleValue,
+      temporaryName: temporaryName ? temporaryName : undefined,
     })
   })
+
+  const onGenerateLink = linkForm.handleSubmit(async (values) => {
+    const temporaryName = values.temporaryName?.trim()
+    await createLinkMutation.mutateAsync({
+      groupId,
+      role: linkRoleValue,
+      temporaryName: temporaryName ? temporaryName : undefined,
+    })
+  })
+
+  // Mobile share via the Web Share API. The share sheet receives a
+  // human-friendly text body (not just a bare URL) so the recipient
+  // gets context in messaging apps. `navigator.share` is undefined on
+  // most desktop browsers; the button is only rendered when probing
+  // detected it.
+  async function handleShareLink() {
+    if (!generatedLink || !canShare) return
+    const groupName = group?.name ?? ''
+    try {
+      await navigator.share({
+        title: t('invite.link.shareTitle', { groupName }),
+        text: t('invite.link.shareText', {
+          groupName,
+          inviteUrl: generatedLink.inviteUrl,
+        }),
+      })
+    } catch (err) {
+      // `AbortError` means the user dismissed the share sheet — not a
+      // real failure. Other errors are logged so they show up in the
+      // dev console but don't interrupt the UX.
+      if (err instanceof Error && err.name !== 'AbortError') {
+        console.warn('[invite] share failed:', err)
+      }
+    }
+  }
 
   async function confirmRemove(settleBalances?: boolean) {
     if (!memberPendingRemove) return
@@ -566,66 +665,213 @@ export default function GroupMembers() {
         <Card>
           <CardHeader>
             <CardTitle>{t('invite.title')}</CardTitle>
-            <CardDescription>{t('invite.description')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={onInvite}
-                className="flex flex-col gap-3 sm:flex-row sm:items-end"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>{t('invite.email')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="text-base"
-                          type="email"
-                          inputMode="email"
-                          autoComplete="email"
-                          spellCheck={false}
-                          placeholder={t('invite.emailPlaceholder')}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormItem>
-                  <FormLabel>{t('invite.role')}</FormLabel>
-                  <FormControl>
-                    <Select
-                      value={roleValue}
-                      onValueChange={(value) =>
-                        setRoleValue(value as InvitableRole)
-                      }
-                    >
-                      <SelectTrigger className="w-[10rem]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="MEMBER">
-                          {t('role.member')}
-                        </SelectItem>
-                        <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-                <Button
-                  type="submit"
-                  disabled={createMutation.isPending || !email}
-                  className="sm:self-end"
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  {t('invite.send')}
-                </Button>
-              </form>
-            </Form>
+            <Tabs
+              value={inviteTab}
+              onValueChange={(value) => setInviteTab(value as 'email' | 'link')}
+              className="flex flex-col gap-4"
+            >
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="email">{t('invite.tab.email')}</TabsTrigger>
+                <TabsTrigger value="link">{t('invite.tab.link')}</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="email" className="mt-0 flex flex-col gap-4">
+                <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
+                  {t('invite.emailDescription')}
+                </p>
+                <Form {...form}>
+                  <form onSubmit={onInvite} className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('invite.email')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="text-base"
+                              type="email"
+                              inputMode="email"
+                              autoComplete="email"
+                              spellCheck={false}
+                              placeholder={t('invite.emailPlaceholder')}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="temporaryName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('invite.temporaryName')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="text-base"
+                              type="text"
+                              spellCheck={false}
+                              autoComplete="off"
+                              placeholder={t('invite.temporaryNamePlaceholder')}
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
+                      <FormItem className="space-y-0 sm:w-[10rem]">
+                        <FormLabel className="sm:sr-only">
+                          {t('invite.role')}
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            value={roleValue}
+                            onValueChange={(value) =>
+                              setRoleValue(value as InvitableRole)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="MEMBER">
+                                {t('role.member')}
+                              </SelectItem>
+                              <SelectItem value="ADMIN">
+                                {t('role.admin')}
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                      <Button
+                        type="submit"
+                        disabled={createMutation.isPending || !email}
+                      >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        {t('invite.send')}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </TabsContent>
+
+              <TabsContent value="link" className="mt-0 flex flex-col gap-4">
+                <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
+                  {t('invite.linkDescription')}
+                </p>
+                <Form {...linkForm}>
+                  <form
+                    onSubmit={onGenerateLink}
+                    className="flex flex-col gap-3"
+                  >
+                    <FormField
+                      control={linkForm.control}
+                      name="temporaryName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('invite.temporaryName')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="text-base"
+                              type="text"
+                              spellCheck={false}
+                              autoComplete="off"
+                              placeholder={t('invite.temporaryNamePlaceholder')}
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
+                      <FormItem className="space-y-0 sm:w-[10rem]">
+                        <FormLabel className="sm:sr-only">
+                          {t('invite.role')}
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            value={linkRoleValue}
+                            onValueChange={(value) =>
+                              setLinkRoleValue(value as InvitableRole)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="MEMBER">
+                                {t('role.member')}
+                              </SelectItem>
+                              <SelectItem value="ADMIN">
+                                {t('role.admin')}
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                      <Button
+                        type="submit"
+                        disabled={createLinkMutation.isPending}
+                      >
+                        <Link2 className="w-4 h-4 mr-2" />
+                        {createLinkMutation.isPending
+                          ? t('invite.link.generating')
+                          : generatedLink
+                            ? t('invite.link.generateNew')
+                            : t('invite.link.generate')}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+
+                {generatedLink && (
+                  <div
+                    className="mt-4 flex flex-col gap-3"
+                    data-testid="generated-invite-link"
+                  >
+                    <p className="text-sm text-muted-foreground">
+                      {t('invite.link.intro', {
+                        groupName: group?.name ?? '',
+                      })}
+                    </p>
+                    <p className="border-l-2 border-amber-500/50 pl-3 text-sm text-amber-900 dark:text-amber-200">
+                      {t('invite.link.singleUse')}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        readOnly
+                        value={generatedLink.inviteUrl}
+                        className="font-mono text-xs"
+                        onFocus={(event) => event.currentTarget.select()}
+                      />
+                      <CopyButton text={generatedLink.inviteUrl} />
+                      {canShare && (
+                        <Button
+                          size="icon"
+                          variant="secondary"
+                          type="button"
+                          onClick={handleShareLink}
+                          aria-label={t('invite.link.share')}
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {t('invite.link.expiresOn', {
+                        date: formatDate(generatedLink.expiresAt, locale),
+                      })}
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       )}
@@ -649,9 +895,18 @@ export default function GroupMembers() {
             ) : (
               <ul className="flex flex-col divide-y">
                 {invitations.map((invitation) => {
-                  // Pending-only display label: temporaryName when set,
-                  // otherwise the raw email.
-                  const label = invitation.temporaryName ?? invitation.email
+                  // Pending-only display label. For LINK invitations the
+                  // stored email is a synthetic placeholder
+                  // (e.g. `tok…@link.placeholder.local`), so the
+                  // temporaryName (when present) or the generic
+                  // "Invite link" fallback is what the user actually
+                  // wants to see. EMAIL invitations still use the raw
+                  // email.
+                  const isLink = invitation.type === 'LINK'
+                  const label = isLink
+                    ? (invitation.temporaryName ??
+                      t('invitations.link.fallbackLabel'))
+                    : (invitation.temporaryName ?? invitation.email)
                   return (
                     <li
                       key={invitation.id}
@@ -665,6 +920,11 @@ export default function GroupMembers() {
                           <Badge variant="secondary" className="shrink-0">
                             {roleLabel(invitation.role, roleLabels)}
                           </Badge>
+                          {isLink && (
+                            <Badge variant="outline" className="shrink-0">
+                              {t('invitations.link.type')}
+                            </Badge>
+                          )}
                           <Badge variant="outline" className="shrink-0">
                             {invitation.status}
                           </Badge>

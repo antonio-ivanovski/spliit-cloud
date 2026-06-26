@@ -6,7 +6,12 @@ import {
 } from '@spliit/domain'
 import { z } from 'zod'
 import { getGroupExpenses } from '../../../../lib/api'
-import { loadGroupViewer, protectedProcedure } from '../../../init'
+import {
+  hashLinkInviteToken,
+  linkInviteTokenInput,
+  loadGroupViewer,
+  protectedProcedure,
+} from '../../../init'
 
 /**
  * The new "active user" is the signed-in account. We resolve it from the
@@ -20,13 +25,15 @@ export const getGroupStatsProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
+      linkInviteToken: linkInviteTokenInput,
     }),
   )
-  .query(async ({ input: { groupId }, ctx }) => {
+  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     const { member } = await loadGroupViewer({
       groupId,
       accountId: ctx.auth.user.id,
       accountEmail: ctx.auth.user.email,
+      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
     })
 
     const activeParticipantId = member?.ledgerParticipant?.id ?? null

@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import { useLinkInviteToken } from '../use-link-invite-token'
 
 const PAGE_SIZE = 20
 
@@ -78,7 +79,8 @@ function getGroupedExpensesByDate(expenses: ExpensesType) {
 }
 
 export function ExpenseList() {
-  const { groupId, group } = useCurrentGroup()
+  const { groupId } = useCurrentGroup()
+  const linkInviteToken = useLinkInviteToken()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearchText] = useDebounce(searchText, 300)
 
@@ -88,6 +90,7 @@ export function ExpenseList() {
       <ExpenseListForSearch
         groupId={groupId}
         searchText={debouncedSearchText}
+        linkInviteToken={linkInviteToken}
       />
     </>
   )
@@ -96,9 +99,11 @@ export function ExpenseList() {
 const ExpenseListForSearch = ({
   groupId,
   searchText,
+  linkInviteToken,
 }: {
   groupId: string
   searchText: string
+  linkInviteToken: string | undefined
 }) => {
   const utils = trpc.useUtils()
   const { group } = useCurrentGroup()
@@ -118,7 +123,7 @@ const ExpenseListForSearch = ({
     isLoading: expensesAreLoading,
     fetchNextPage,
   } = trpc.groups.expenses.list.useInfiniteQuery(
-    { groupId, limit: PAGE_SIZE, filter: searchText },
+    { groupId, limit: PAGE_SIZE, filter: searchText, linkInviteToken },
     { getNextPageParam: ({ nextCursor }) => nextCursor },
   )
   const expenses = data?.pages.flatMap((page) => page.expenses)

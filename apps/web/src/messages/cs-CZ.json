@@ -165,6 +165,18 @@
       "unknownInviter": "někdo",
       "unknownGroup": "Neznámá skupina",
       "sentOn": "Odesláno {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} vás pozval(a) připojit se ke skupině {groupName} na Spliitu.",
+    "linkInvitationSingleUse": "Tento odkaz lze použít pouze jednou. Jakmile ho přijmete, přestane fungovat.",
+    "linkInvitationTemporaryName": "Připojíte se jako {name}.",
+    "linkInvitationAlreadyMemberTitle": "Již jste ve skupině {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Na této skupině již máte účet. Můžete ji otevřít tlačítkem níže.",
+    "linkInvitationDismiss": "Zavřít",
+    "linkInvitationExpiredTitle": "Tento odkaz pozvánky již není platný",
+    "linkInvitationExpiredDescription": "Odkaz byl zrušen, odmítnut nebo vypršel. Požádejte zvoucího o zaslání nového.",
+    "linkInvitationInvalid": {
+      "title": "Tento odkaz na pozvánku není platný",
+      "description": "Odkaz má nesprávný formát nebo neodpovídá žádné pozvánce v této skupině."
     }
   },
   "GroupForm": {
@@ -216,7 +228,8 @@
       "saving": "Ukládání…",
       "create": "Vytvořit",
       "creating": "Vytváření…",
-      "cancel": "Zrušit"
+      "cancel": "Zrušit",
+      "inviteAfterCreate": "Po vytvoření skupiny otevřete kartu Členové a pozvěte lidi e-mailem nebo pomocí sdílitelného odkazu."
     }
   },
   "ExpenseForm": {
@@ -659,12 +672,33 @@
     "archivedNotice": "Pozvánky jsou během archivace skupiny zakázány. Obnovte skupinu, abyste mohli pozvat nové členy.",
     "invite": {
       "title": "Pozvat člena",
-      "description": "Odešlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
       "email": "E-mail",
       "emailPlaceholder": "kamarad@priklad.cz",
       "role": "Role",
       "send": "Odeslat pozvánku",
-      "invalidEmail": "Zadejte platnou e-mailovou adresu."
+      "invalidEmail": "Zadejte platnou e-mailovou adresu.",
+      "tab": {
+        "email": "E-mail",
+        "link": "Odkaz pozvánky"
+      },
+      "emailDescription": "Pošlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
+      "linkDescription": "Vygenerujte jednorázový odkaz, pomocí kterého se může kdokoli připojit. Po prvním přijetí přestane fungovat.",
+      "temporaryName": "Dočasné jméno (volitelné)",
+      "link": {
+        "generate": "Vygenerovat odkaz pozvánky",
+        "generating": "Generuji…",
+        "singleUse": "Tento odkaz pozvánky lze použít pouze jednou. Jakmile ho někdo přijme, přestane fungovat.",
+        "copy": "Kopírovat odkaz pozvánky",
+        "copied": "Zkopírováno!",
+        "expiresOn": "Vyprší {date}",
+        "created": "Odkaz pozvánky je připravený. Zkopírujte ho a sdílejte, než skupina opustí tuto stránku.",
+        "intro": "Zde je váš jednorázový odkaz pozvánky do skupiny {groupName}. Pošlete ho osobě, kterou chcete přizvat — první, kdo ho použije, se stane členem a odkaz přestane fungovat.",
+        "share": "Sdílet odkaz pozvánky",
+        "shareTitle": "Připojte se ke skupině {groupName} na Spliit Cloud",
+        "shareText": "Právě jsem vytvořil(a) skupinu {groupName} pro naše sdílené výdaje na Spliit Cloud. Zde je jednorázový odkaz pozvánky — otevřete ho a připojte se:\n{inviteUrl}",
+        "generateNew": "Vygenerovat nový odkaz"
+      },
+      "temporaryNamePlaceholder": "např. Alexův spolubydlící"
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Vyrovnat zůstatky pozvaného před zrušením"
         }
+      },
+      "link": {
+        "type": "Jednorázový odkaz",
+        "fallbackLabel": "Odkaz pozvánky"
       }
     },
     "removeDialog": {

@@ -109,6 +109,18 @@
       "unknownInviter": "누군가",
       "unknownGroup": "알 수 없는 그룹",
       "sentOn": "{date}에 전송됨"
+    },
+    "linkInvitationBannerDescription": "{inviter} 님이 Spliit에서 {groupName} 그룹에 초대했습니다.",
+    "linkInvitationSingleUse": "이 링크는 한 번만 사용할 수 있습니다. 수락하면 더 이상 사용할 수 없게 됩니다.",
+    "linkInvitationTemporaryName": "{name}(으)로 참여하게 됩니다.",
+    "linkInvitationAlreadyMemberTitle": "{groupName} 그룹에 이미 참여 중입니다",
+    "linkInvitationAlreadyMemberDescription": "이 그룹에 이미 계정이 있습니다. 아래 버튼을 눌러 열 수 있습니다.",
+    "linkInvitationDismiss": "닫기",
+    "linkInvitationExpiredTitle": "이 초대 링크는 더 이상 유효하지 않습니다",
+    "linkInvitationExpiredDescription": "링크가 취소되었거나, 거절되었거나, 만료되었습니다. 초대한 사람에게 새로운 링크를 요청하세요.",
+    "linkInvitationInvalid": {
+      "title": "이 초대 링크는 유효하지 않습니다",
+      "description": "링크 형식이 잘못되었거나 이 그룹의 초대와 일치하지 않습니다."
     }
   },
   "GroupForm": {
@@ -156,7 +168,8 @@
       "cancel": "취소",
       "creating": "만드는 중…",
       "title": "로컬 설정",
-      "create": "만들기"
+      "create": "만들기",
+      "inviteAfterCreate": "그룹을 만든 후에는 멤버 탭에서 이메일이나 공유 가능한 링크로 사람을 초대할 수 있습니다."
     },
     "readOnlyNote": "소유자와 관리자만 그룹 설정을 변경할 수 있습니다.",
     "readOnlyTitle": "그룹 설정",
@@ -659,12 +672,33 @@
     "archivedNotice": "그룹이 보관된 동안에는 초대가 비활성화됩니다. 새 멤버를 초대하려면 그룹 보관을 해제하세요.",
     "invite": {
       "title": "멤버 초대",
-      "description": "이메일로 초대장을 보냅니다. 초대받은 사람이 해당 계정에서 수락하면 참여합니다.",
       "email": "이메일",
       "emailPlaceholder": "friend@example.com",
       "role": "역할",
       "send": "초대 보내기",
-      "invalidEmail": "유효한 이메일 주소를 입력하세요."
+      "invalidEmail": "유효한 이메일 주소를 입력하세요.",
+      "link": {
+        "generate": "초대 링크 생성",
+        "generating": "생성 중…",
+        "singleUse": "이 초대 링크는 한 번만 사용할 수 있습니다. 누군가 수락하면 링크는 더 이상 작동하지 않습니다.",
+        "copy": "초대 링크 복사",
+        "copied": "복사되었습니다!",
+        "expiresOn": "{date}에 만료",
+        "created": "초대 링크가 준비되었습니다. 그룹이 이 페이지를 떠나기 전에 복사하여 공유하세요.",
+        "intro": "{groupName} 그룹의 1회용 초대 링크입니다. 참여할 사람에게 보내세요. 가장 먼저 사용하는 사람이 멤버가 되고 링크는 더 이상 작동하지 않습니다.",
+        "share": "초대 링크 공유",
+        "shareTitle": "Spliit Cloud에서 {groupName}에 참여하기",
+        "shareText": "Spliit Cloud에서 공동 비용 관리를 위해 {groupName} 그룹을 만들었어요. 1회용 초대 링크를 보내드릴게요. 열어서 참여해 주세요:\n{inviteUrl}",
+        "generateNew": "새 링크 생성"
+      },
+      "tab": {
+        "email": "이메일",
+        "link": "초대 링크"
+      },
+      "emailDescription": "이메일로 초대를 보냅니다. 초대받은 사람이 일치하는 계정에서 수락하면 참여됩니다.",
+      "linkDescription": "누구나 참여할 수 있는 1회용 링크를 생성합니다. 첫 번째 사람이 수락하면 링크는 더 이상 작동하지 않습니다.",
+      "temporaryName": "임시 이름 (선택 사항)",
+      "temporaryNamePlaceholder": "예: Alex의 룸메이트"
     },
     "invitations": {
       "title": "대기 중인 초대",
@@ -690,6 +724,10 @@
           },
           "checkbox": "취소 전에 초대받은 사람의 잔액 정산"
         }
+      },
+      "link": {
+        "type": "1회용 링크",
+        "fallbackLabel": "초대 링크"
       }
     },
     "removeDialog": {

@@ -165,6 +165,18 @@
       "unknownInviter": "seseorang",
       "unknownGroup": "Grup tidak dikenal",
       "sentOn": "Dikirim {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} mengundang Anda untuk bergabung ke {groupName} di Spliit.",
+    "linkInvitationSingleUse": "Tautan ini hanya dapat digunakan satu kali. Setelah Anda menerimanya, tautan tidak akan dapat digunakan lagi.",
+    "linkInvitationTemporaryName": "Anda akan bergabung sebagai {name}.",
+    "linkInvitationAlreadyMemberTitle": "Anda sudah menjadi anggota {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Anda sudah memiliki akun untuk grup ini. Anda dapat membukanya dari tombol di bawah.",
+    "linkInvitationDismiss": "Tutup",
+    "linkInvitationExpiredTitle": "Tautan undangan ini sudah tidak berlaku",
+    "linkInvitationExpiredDescription": "Tautan ini telah dicabut, ditolak, atau kedaluwarsa. Minta pengirim untuk mengirim tautan baru.",
+    "linkInvitationInvalid": {
+      "title": "Tautan undangan ini tidak valid",
+      "description": "Tautan ini tidak valid atau tidak cocok dengan undangan apa pun di grup ini."
     }
   },
   "GroupForm": {
@@ -212,7 +224,8 @@
       "saving": "Meyimpan…",
       "create": "Buat",
       "creating": "Membuat…",
-      "cancel": "Batalkan"
+      "cancel": "Batalkan",
+      "inviteAfterCreate": "Setelah grup dibuat, buka tab Members untuk mengundang orang melalui email atau tautan yang dapat dibagikan."
     },
     "readOnlyNote": "Hanya pemilik dan admin yang dapat mengubah pengaturan grup.",
     "readOnlyTitle": "Pengaturan grup",
@@ -659,12 +672,33 @@
     "archivedNotice": "Undangan dinonaktifkan saat grup diarsipkan. Batalkan pengarsipan grup untuk mengundang anggota baru.",
     "invite": {
       "title": "Undang anggota",
-      "description": "Kirim undangan melalui email. Yang diundang bergabung setelah mereka menerima dari akun yang cocok.",
       "email": "Email",
       "emailPlaceholder": "friend@example.com",
       "role": "Peran",
       "send": "Kirim undangan",
-      "invalidEmail": "Masukkan alamat email yang valid."
+      "invalidEmail": "Masukkan alamat email yang valid.",
+      "tab": {
+        "email": "Email",
+        "link": "Tautan undangan"
+      },
+      "emailDescription": "Kirim undangan melalui email. Yang diundang akan bergabung setelah menerimanya dari akun yang cocok.",
+      "linkDescription": "Buat tautan sekali pakai yang dapat digunakan siapa saja untuk bergabung. Tautan akan berhenti berfungsi setelah penerimaan pertama.",
+      "temporaryName": "Nama sementara (opsional)",
+      "temporaryNamePlaceholder": "mis. teman sekamar Alex",
+      "link": {
+        "generate": "Buat tautan undangan",
+        "generating": "Membuat…",
+        "singleUse": "Tautan undangan ini hanya dapat digunakan satu kali. Setelah seseorang menerimanya, tautan akan berhenti berfungsi.",
+        "copy": "Salin tautan undangan",
+        "copied": "Tersalin!",
+        "expiresOn": "Kedaluwarsa pada {date}",
+        "created": "Tautan undangan siap. Salin dan bagikan sebelum halaman grup ditutup.",
+        "intro": "Berikut adalah tautan undangan sekali pakai untuk {groupName}. Kirimkan ke orang yang ingin Anda ajak bergabung — orang pertama yang menggunakannya akan menjadi anggota, lalu tautan berhenti berfungsi.",
+        "share": "Bagikan tautan undangan",
+        "shareTitle": "Bergabung ke {groupName} di Spliit Cloud",
+        "shareText": "Saya baru saja membuat {groupName} untuk pengeluaran bersama kita di Spliit Cloud. Berikut adalah tautan undangan sekali pakai — buka untuk bergabung:\n{inviteUrl}",
+        "generateNew": "Buat tautan baru"
+      }
     },
     "invitations": {
       "title": "Undangan tertunda",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Selesaikan saldo yang diundang sebelum mencabut"
         }
+      },
+      "link": {
+        "type": "Tautan sekali pakai",
+        "fallbackLabel": "Tautan undangan"
       }
     },
     "removeDialog": {

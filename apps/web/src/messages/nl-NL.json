@@ -165,6 +165,18 @@
       "unknownInviter": "iemand",
       "unknownGroup": "Onbekende groep",
       "sentOn": "Verzonden {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} heeft je uitgenodigd om lid te worden van {groupName} op Spliit.",
+    "linkInvitationSingleUse": "Deze link kan maar één keer gebruikt worden. Zodra je hem accepteert, werkt hij niet meer.",
+    "linkInvitationTemporaryName": "Je wordt lid als {name}.",
+    "linkInvitationAlreadyMemberTitle": "Je zit al in {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Je hebt al een account voor deze groep. Je kunt de groep openen via de knop hieronder.",
+    "linkInvitationDismiss": "Sluiten",
+    "linkInvitationExpiredTitle": "Deze uitnodigingslink is niet meer geldig",
+    "linkInvitationExpiredDescription": "De link is ingetrokken, geweigerd of verlopen. Vraag de uitnodiger om een nieuwe link te sturen.",
+    "linkInvitationInvalid": {
+      "title": "Deze uitnodigingslink is ongeldig",
+      "description": "De link is misvormd of komt niet overeen met een uitnodiging voor deze groep."
     }
   },
   "GroupForm": {
@@ -216,7 +228,8 @@
       "saving": "Aan het opslaan…",
       "create": "Groep maken",
       "creating": "Aan het maken…",
-      "cancel": "Annuleren"
+      "cancel": "Annuleren",
+      "inviteAfterCreate": "Zodra de groep is aangemaakt, open je het tabblad Members om mensen uit te nodigen via e-mail of via een deelbare link."
     }
   },
   "ExpenseForm": {
@@ -659,12 +672,33 @@
     "archivedNotice": "Uitnodigingen zijn uitgeschakeld zolang de groep is gearchiveerd. Haal de groep uit het archief om nieuwe leden uit te nodigen.",
     "invite": {
       "title": "Lid uitnodigen",
-      "description": "Stuur een uitnodiging per e-mail. De genodigde wordt lid zodra deze vanuit een overeenkomend account accepteert.",
       "email": "E-mail",
       "emailPlaceholder": "vriend@voorbeeld.com",
       "role": "Rol",
       "send": "Uitnodiging sturen",
-      "invalidEmail": "Voer een geldig e-mailadres in."
+      "invalidEmail": "Voer een geldig e-mailadres in.",
+      "tab": {
+        "email": "E-mail",
+        "link": "Uitnodigingslink"
+      },
+      "emailDescription": "Stuur een uitnodiging via e-mail. De genodigde wordt lid zodra hij vanuit een overeenkomend account accepteert.",
+      "linkDescription": "Genereer een link die één keer gebruikt kan worden om lid te worden. De link werkt niet meer zodra iemand hem accepteert.",
+      "temporaryName": "Tijdelijke naam (optioneel)",
+      "link": {
+        "generate": "Uitnodigingslink genereren",
+        "generating": "Genereren…",
+        "singleUse": "Deze uitnodigingslink kan maar één keer gebruikt worden. Zodra iemand hem accepteert, werkt hij niet meer.",
+        "copy": "Uitnodigingslink kopiëren",
+        "copied": "Gekopieerd!",
+        "expiresOn": "Verloopt op {date}",
+        "created": "Uitnodigingslink klaar. Kopieer en deel hem voordat je deze pagina verlaat.",
+        "intro": "Hier is je uitnodigingslink voor {groupName}. Stuur hem naar de persoon die je wilt laten toetreden — degene die hem als eerste gebruikt wordt lid, daarna werkt de link niet meer.",
+        "share": "Uitnodigingslink delen",
+        "shareTitle": "Word lid van {groupName} op Spliit Cloud",
+        "shareText": "Ik heb {groupName} aangemaakt voor onze gedeelde uitgaven op Spliit Cloud. Hier is een eenmalige uitnodigingslink — open hem om lid te worden:\n{inviteUrl}",
+        "generateNew": "Nieuwe link genereren"
+      },
+      "temporaryNamePlaceholder": "bijv. Alex' huisgenoot"
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Vereffen de saldi van de genodigde vóór het intrekken"
         }
+      },
+      "link": {
+        "type": "Eenmalige link",
+        "fallbackLabel": "Uitnodigingslink"
       }
     },
     "removeDialog": {

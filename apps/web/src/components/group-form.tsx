@@ -18,7 +18,7 @@ import { getGroup } from '@/lib/api'
 import { defaultCurrencyList, getCurrency } from '@/lib/currency'
 import { GroupFormValues, groupFormSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Save } from 'lucide-react'
+import { Save, UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { CurrencySelector } from './currency-selector'
@@ -226,21 +226,30 @@ export function GroupForm({
           </CardContent>
         </Card>
 
+        {!group && (
+          <p className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+            <UserPlus className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>{t('Settings.inviteAfterCreate')}</span>
+          </p>
+        )}
+
         {!readOnly && !isArchived && (
-          <div className="flex mt-4 gap-2">
-            <SubmitButton
-              loadingContent={t(
-                group ? 'Settings.saving' : 'Settings.creating',
+          <div className="mt-4 flex flex-col gap-3">
+            <div className="flex gap-2">
+              <SubmitButton
+                loadingContent={t(
+                  group ? 'Settings.saving' : 'Settings.creating',
+                )}
+              >
+                <Save className="w-4 h-4 mr-2" />{' '}
+                {t(group ? 'Settings.save' : 'Settings.create')}
+              </SubmitButton>
+              {!group && (
+                <Button variant="ghost" asChild>
+                  <Link href="/groups">{t('Settings.cancel')}</Link>
+                </Button>
               )}
-            >
-              <Save className="w-4 h-4 mr-2" />{' '}
-              {t(group ? 'Settings.save' : 'Settings.create')}
-            </SubmitButton>
-            {!group && (
-              <Button variant="ghost" asChild>
-                <Link href="/groups">{t('Settings.cancel')}</Link>
-              </Button>
-            )}
+            </div>
           </div>
         )}
       </form>

@@ -165,6 +165,18 @@
       "unknownInviter": "alguém",
       "unknownGroup": "Grupo desconhecido",
       "sentOn": "Enviado em {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} convidou você para participar de {groupName} no Spliit.",
+    "linkInvitationSingleUse": "Este link só pode ser usado uma vez. Depois que você aceitá-lo, ele deixará de funcionar.",
+    "linkInvitationTemporaryName": "Você vai entrar como {name}.",
+    "linkInvitationAlreadyMemberTitle": "Você já faz parte de {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Você já tem uma conta neste grupo. Pode abri-lo pelo botão abaixo.",
+    "linkInvitationDismiss": "Descartar",
+    "linkInvitationExpiredTitle": "Este link de convite não é mais válido",
+    "linkInvitationExpiredDescription": "O link foi revogado, recusado ou expirou. Peça a quem convidou para enviar um novo.",
+    "linkInvitationInvalid": {
+      "title": "Este link de convite é inválido",
+      "description": "O link está malformado ou não corresponde a nenhum convite neste grupo."
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "Salvando…",
       "create": "Criar",
       "creating": "Criando…",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "inviteAfterCreate": "Depois que o grupo for criado, abra a aba Members para convidar pessoas por e-mail ou por um link compartilhável."
     },
     "CurrencyCodeField": {
       "label": "Moeda principal",
@@ -659,12 +672,33 @@
     "archivedNotice": "Os convites estão desativados enquanto o grupo estiver arquivado. Desarquive o grupo para convidar novos membros.",
     "invite": {
       "title": "Convidar membro",
-      "description": "Envie um convite por e-mail. O convidado entra assim que aceitar de uma conta correspondente.",
       "email": "E-mail",
       "emailPlaceholder": "amigo@example.com",
       "role": "Função",
       "send": "Enviar convite",
-      "invalidEmail": "Insira um endereço de e-mail válido."
+      "invalidEmail": "Insira um endereço de e-mail válido.",
+      "tab": {
+        "email": "E-mail",
+        "link": "Link de convite"
+      },
+      "emailDescription": "Envie um convite por e-mail. O convidado entra assim que aceitar a partir de uma conta compatível.",
+      "linkDescription": "Gere um link de uso único para que qualquer pessoa possa entrar. O link deixa de funcionar após o primeiro aceite.",
+      "link": {
+        "generate": "Gerar link de convite",
+        "generating": "Gerando…",
+        "singleUse": "Este link de convite só pode ser usado uma vez. Depois que alguém aceitá-lo, o link deixará de funcionar.",
+        "copy": "Copiar link de convite",
+        "copied": "Copiado!",
+        "expiresOn": "Expira em {date}",
+        "created": "Link de convite pronto. Copie e compartilhe antes de sair desta página.",
+        "intro": "Aqui está o link de convite de uso único para {groupName}. Envie-o à pessoa que você quer que entre — a primeira a usá-lo vira membro, e depois o link deixa de funcionar.",
+        "share": "Compartilhar link de convite",
+        "shareTitle": "Entre em {groupName} no Spliit Cloud",
+        "shareText": "Acabei de criar {groupName} para nossas despesas compartilhadas no Spliit Cloud. Aqui está um link de convite de uso único — abra-o para entrar:\n{inviteUrl}",
+        "generateNew": "Gerar novo link"
+      },
+      "temporaryName": "Nome temporário (opcional)",
+      "temporaryNamePlaceholder": "ex.: colega de quarto do Alex"
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Liquidar os saldos do convidado antes de revogar"
         }
+      },
+      "link": {
+        "type": "Link de uso único",
+        "fallbackLabel": "Link de convite"
       }
     },
     "removeDialog": {

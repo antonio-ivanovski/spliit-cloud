@@ -13,6 +13,7 @@ import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
+import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form'
 
 export function EditExpenseForm({
@@ -30,10 +31,12 @@ export function EditExpenseForm({
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
   const isPendingInvitee = useIsPendingInvitee()
+  const linkInviteToken = useLinkInviteToken()
 
   const { data: expenseData } = trpc.groups.expenses.get.useQuery({
     groupId,
     expenseId,
+    linkInviteToken,
   })
   const expense = expenseData?.expense
 

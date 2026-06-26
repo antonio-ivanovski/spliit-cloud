@@ -165,6 +165,18 @@
       "unknownInviter": "norbait",
       "unknownGroup": "Talde ezezaguna",
       "sentOn": "{date} bidalia"
+    },
+    "linkInvitationBannerDescription": "{inviter}-k {groupName} taldera batzeko gonbidatu zaitu Spliiten.",
+    "linkInvitationSingleUse": "Esteka hau behin bakarrik erabili daiteke. Onartu ondoren, ez du funtzionatuko.",
+    "linkInvitationTemporaryName": "{name} gisa batuko zara.",
+    "linkInvitationAlreadyMemberTitle": "Dagoeneko {groupName} taldean zaude",
+    "linkInvitationAlreadyMemberDescription": "Baduzu kontua talde honetan. Beheko botoitik ireki dezakezu.",
+    "linkInvitationDismiss": "Baztertu",
+    "linkInvitationExpiredTitle": "Gonbidapen-esteka hau ez da jada baliozkoa",
+    "linkInvitationExpiredDescription": "Esteka baliogabetu, ukatu edo iraungi da. Eskatu gonbidatzaileari berri bat bidaltzeko.",
+    "linkInvitationInvalid": {
+      "title": "Gonbidapen-esteka hau ez da baliozkoa",
+      "description": "Estekak formatu okerra du edo ez dagokio taldeko inolako gonbidapenari."
     }
   },
   "GroupForm": {
@@ -212,7 +224,8 @@
       "saving": "Gordetzen…",
       "create": "Sortu",
       "creating": "Sortzen…",
-      "cancel": "Utzi"
+      "cancel": "Utzi",
+      "inviteAfterCreate": "Taldea sortu ondoren, ireki Kideak fitxa pertsonak e-mail bidez edo partekatzeko esteka baten bidez gonbidatzeko."
     },
     "readOnlyNote": "Jabeek eta administratzaileek bakarrik alda ditzakete taldearen ezarpenak.",
     "readOnlyTitle": "Taldearen ezarpenak",
@@ -659,12 +672,33 @@
     "archivedNotice": "Gonbidapenak desgaituta daude taldea artxibatuta dagoen bitartean. Desartxibatu taldea kide berriak gonbidatzeko.",
     "invite": {
       "title": "Gonbidatu kidea",
-      "description": "Bidali gonbidapen bat helbide elektroniko bidez. Gonbidatuak onartu ondoren batuko da kontu batekin.",
       "email": "Helbide elektronikoa",
       "emailPlaceholder": "friend@example.com",
       "role": "Rola",
       "send": "Bidali gonbidapena",
-      "invalidEmail": "Sartu helbide elektroniko baliozko bat."
+      "invalidEmail": "Sartu helbide elektroniko baliozko bat.",
+      "tab": {
+        "email": "E-maila",
+        "link": "Gonbidapen-esteka"
+      },
+      "emailDescription": "Bidali gonbidapen bat e-mail bidez. Gonbidatua batuko da bat datorren kontu batetik onartzen duenean.",
+      "linkDescription": "Sortu behin erabil daitekeen esteka edonork batzeko erabil dezakeena. Lehen onarpenaren ondoren estekak ez du funtzionatuko.",
+      "temporaryName": "Behin-behineko izena (aukerakoa)",
+      "link": {
+        "generate": "Sortu gonbidapen-esteka",
+        "generating": "Sortzen…",
+        "singleUse": "Gonbidapen-esteka hau behin erabil daiteke. Norbaitek onartzen duenean, estekak ez du funtzionatuko.",
+        "copy": "Kopiatu gonbidapen-esteka",
+        "copied": "Kopiatuta!",
+        "expiresOn": "{date}ean iraungitzen da",
+        "created": "Gonbidapen-esteka prest. Kopiatu eta partekatu taldea orri hau utzi baino lehen.",
+        "intro": "Hona hemen {groupName} talderako behin erabil daitekeen gonbidapen-esteka. Bidali batzea nahi duzun pertsonari — lehenengo erabiltzailea kide bihurtuko da, eta gero estekak ez du funtzionatuko.",
+        "share": "Partekatu gonbidapen-esteka",
+        "shareTitle": "Batu {groupName} taldera Spliit Cloud-en",
+        "shareText": "Berriki sortu dut {groupName} gure gastu partekatuetarako Spliit Cloud-en. Hona hemen behin erabil daitekeen gonbidapen-esteka — ireki batzeko:\n{inviteUrl}",
+        "generateNew": "Sortu esteka berria"
+      },
+      "temporaryNamePlaceholder": "adib. Alex-en gelakidea"
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Kitatu gonbidatuaren saldoak ezeztatu aurretik"
         }
+      },
+      "link": {
+        "type": "Behin erabil daitekeen esteka",
+        "fallbackLabel": "Gonbidapen-esteka"
       }
     },
     "removeDialog": {

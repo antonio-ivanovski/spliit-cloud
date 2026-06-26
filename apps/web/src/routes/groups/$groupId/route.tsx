@@ -1,4 +1,4 @@
-import { groupParamsSchema } from '@/router/schemas'
+import { groupParamsSchema, groupSearchSchema } from '@/router/schemas'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/groups/$groupId')({
@@ -6,4 +6,5 @@ export const Route = createFileRoute('/groups/$groupId')({
     parse: groupParamsSchema.parse,
     stringify: (params) => ({ groupId: params.groupId }),
   },
+  validateSearch: groupSearchSchema,
 })

@@ -6,11 +6,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { useCurrentGroup } from '../current-group-context'
+import { useLinkInviteToken } from '../use-link-invite-token'
 
 export function Totals() {
   const { groupId, group } = useCurrentGroup()
+  const linkInviteToken = useLinkInviteToken()
 
-  const { data } = trpc.groups.stats.get.useQuery({ groupId })
+  const { data } = trpc.groups.stats.get.useQuery({
+    groupId,
+    linkInviteToken,
+  })
 
   if (!data || !group)
     return (

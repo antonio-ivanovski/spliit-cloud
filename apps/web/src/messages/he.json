@@ -165,6 +165,18 @@
       "unknownInviter": "מישהו",
       "unknownGroup": "קבוצה לא ידועה",
       "sentOn": "נשלח {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} הזמין אותך להצטרף ל-{groupName} ב-Spliit.",
+    "linkInvitationSingleUse": "ניתן להשתמש בקישור זה פעם אחת בלבד. לאחר שתאשרו, הוא יפסיק לעבוד.",
+    "linkInvitationTemporaryName": "תצטרפו בשם {name}.",
+    "linkInvitationAlreadyMemberTitle": "אתם כבר ב-{groupName}",
+    "linkInvitationAlreadyMemberDescription": "יש לכם כבר חשבון בקבוצה זו. תוכלו לפתוח אותה מהכפתור למטה.",
+    "linkInvitationDismiss": "סגירה",
+    "linkInvitationExpiredTitle": "קישור ההזמנה אינו תקף עוד",
+    "linkInvitationExpiredDescription": "הקישור בוטל, נדחה או שפג תוקפו. בקשו מהמזמין לשלוח קישור חדש.",
+    "linkInvitationInvalid": {
+      "title": "קישור ההזמנה אינו תקין",
+      "description": "הקישור שגוי או שאינו תואם אף הזמנה בקבוצה זו."
     }
   },
   "GroupForm": {
@@ -212,7 +224,8 @@
       "saving": "שומר…",
       "create": "צור",
       "creating": "יוצר…",
-      "cancel": "ביטול"
+      "cancel": "ביטול",
+      "inviteAfterCreate": "לאחר יצירת הקבוצה, פתחו את הכרטיסייה Members כדי להזמין אנשים בדוא״ל או באמצעות קישור לשיתוף."
     },
     "readOnlyNote": "רק בעלים ומנהלים יכולים לשנות הגדרות קבוצה.",
     "readOnlyTitle": "הגדרות קבוצה",
@@ -659,12 +672,33 @@
     "archivedNotice": "הזמנות מבוטלות בזמן שהקבוצה בארכיון. בטל את הארכוב כדי להזמין חברים חדשים.",
     "invite": {
       "title": "הזמן חבר",
-      "description": "שלח הזמנה באימייל. המוזמן יצטרף כשהוא יקבל מחשבון תואם.",
       "email": "אימייל",
       "emailPlaceholder": "friend@example.com",
       "role": "תפקיד",
       "send": "שלח הזמנה",
-      "invalidEmail": "הזן כתובת אימייל חוקית."
+      "invalidEmail": "הזן כתובת אימייל חוקית.",
+      "tab": {
+        "email": "דוא״ל",
+        "link": "קישור הזמנה"
+      },
+      "emailDescription": "שלחו הזמנה בדוא״ל. המוזמן יצטרף לאחר שיאשר אותה מחשבון תואם.",
+      "linkDescription": "צרו קישור חד-פעמי שכל אחד יכול להשתמש בו כדי להצטרף. הקישור יפסיק לפעול לאחר האישור הראשון.",
+      "temporaryName": "שם זמני (לא חובה)",
+      "temporaryNamePlaceholder": "למשל, השותף של אלכס",
+      "link": {
+        "generate": "יצירת קישור הזמנה",
+        "generating": "יוצר…",
+        "singleUse": "ניתן להשתמש בקישור ההזמנה פעם אחת בלבד. לאחר שמישהו יאשר אותו, הוא יפסיק לעבוד.",
+        "copy": "העתקת קישור ההזמנה",
+        "copied": "הועתק!",
+        "expiresOn": "יפוג בתאריך {date}",
+        "created": "קישור ההזמנה מוכן. העתיקו ושתפו אותו לפני שהקבוצה עוזבת את הדף.",
+        "intro": "הנה קישור ההזמנה החד-פעמי שלכם ל-{groupName}. שלחו אותו לאדם שאתם רוצים שיצטרף — הראשון שישתמש בו יהפוך לחבר, ואז הקישור יפסיק לעבוד.",
+        "share": "שיתוף קישור ההזמנה",
+        "shareTitle": "הצטרפות ל-{groupName} ב-Spliit Cloud",
+        "shareText": "יצרתי את {groupName} עבור ההוצאות המשותפות שלנו ב-Spliit Cloud. הנה קישור הזמנה חד-פעמי — פתחו אותו כדי להצטרף:\n{inviteUrl}",
+        "generateNew": "יצירת קישור חדש"
+      }
     },
     "invitations": {
       "title": "הזמנות ממתינות",
@@ -690,6 +724,10 @@
           },
           "checkbox": "הסדר את יתרות המוזמן לפני הביטול"
         }
+      },
+      "link": {
+        "type": "קישור חד-פעמי",
+        "fallbackLabel": "קישור הזמנה"
       }
     },
     "removeDialog": {

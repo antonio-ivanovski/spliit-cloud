@@ -165,6 +165,18 @@
       "unknownInviter": "qualcuno",
       "unknownGroup": "Gruppo sconosciuto",
       "sentOn": "Inviato il {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} ti ha invitato a unirti a {groupName} su Spliit.",
+    "linkInvitationSingleUse": "Questo link può essere usato una sola volta. Dopo che lo accetti, smetterà di funzionare.",
+    "linkInvitationTemporaryName": "Entrerai nel gruppo con il nome {name}.",
+    "linkInvitationAlreadyMemberTitle": "Sei già in {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Hai già un account per questo gruppo. Puoi aprirlo dal pulsante qui sotto.",
+    "linkInvitationDismiss": "Chiudi",
+    "linkInvitationExpiredTitle": "Questo link di invito non è più valido",
+    "linkInvitationExpiredDescription": "Il link è stato revocato, rifiutato o è scaduto. Chiedi a chi ti ha invitato di inviarne uno nuovo.",
+    "linkInvitationInvalid": {
+      "title": "Questo link di invito non è valido",
+      "description": "Il link è in un formato non valido o non corrisponde a nessun invito di questo gruppo."
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "Salvataggio…",
       "create": "Crea",
       "creating": "Sto creando…",
-      "cancel": "Annulla"
+      "cancel": "Annulla",
+      "inviteAfterCreate": "Dopo aver creato il gruppo, apri la scheda Members per invitare persone tramite email o link condivisibile."
     },
     "readOnlyNote": "Solo i proprietari e gli amministratori possono modificare le impostazioni del gruppo.",
     "readOnlyTitle": "Impostazioni del gruppo",
@@ -659,12 +672,33 @@
     "archivedNotice": "Gli inviti sono disattivati mentre il gruppo è archiviato. Ripristina il gruppo per invitare nuovi membri.",
     "invite": {
       "title": "Invita membro",
-      "description": "Invia un invito via email. L'invitato si unisce una volta accettato da un account corrispondente.",
       "email": "Email",
       "emailPlaceholder": "amico@example.com",
       "role": "Ruolo",
       "send": "Invia invito",
-      "invalidEmail": "Inserisci un indirizzo email valido."
+      "invalidEmail": "Inserisci un indirizzo email valido.",
+      "tab": {
+        "email": "Email",
+        "link": "Link di invito"
+      },
+      "emailDescription": "Invia un invito tramite email. L'invitato si unisce dopo averlo accettato da un account corrispondente.",
+      "linkDescription": "Genera un link monouso che chiunque può usare per unirsi. Il link smette di funzionare dopo la prima accettazione.",
+      "temporaryName": "Nome temporaneo (facoltativo)",
+      "temporaryNamePlaceholder": "es. il coinquilino di Alex",
+      "link": {
+        "generate": "Genera link di invito",
+        "generating": "Generazione…",
+        "singleUse": "Questo link di invito può essere usato una sola volta. Dopo che qualcuno lo accetta, smetterà di funzionare.",
+        "copy": "Copia link di invito",
+        "copied": "Copiato!",
+        "expiresOn": "Scade il {date}",
+        "created": "Link di invito pronto. Copialo e condividilo prima di lasciare la pagina del gruppo.",
+        "intro": "Ecco il tuo link di invito monouso per {groupName}. Invialo alla persona che vuoi far entrare — il primo a usarlo diventerà membro, poi il link smetterà di funzionare.",
+        "share": "Condividi link di invito",
+        "shareTitle": "Unisciti a {groupName} su Spliit Cloud",
+        "shareText": "Ho appena creato {groupName} per le nostre spese condivise su Spliit Cloud. Ecco un link di invito monouso — aprilo per unirti:\n{inviteUrl}",
+        "generateNew": "Genera nuovo link"
+      }
     },
     "invitations": {
       "title": "Inviti in sospeso",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Salda i saldi dell'invitato prima di revocare"
         }
+      },
+      "link": {
+        "type": "Link monouso",
+        "fallbackLabel": "Link di invito"
       }
     },
     "removeDialog": {

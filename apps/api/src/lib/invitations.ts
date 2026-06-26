@@ -1,7 +1,9 @@
 import {
   GroupInvitationStatus,
   GroupInvitationType,
+  GroupMemberStatus,
   GroupRole,
+  type Prisma,
   prisma,
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
@@ -550,24 +552,15 @@ export async function acceptInvitation(opts: {
     // Reuse the LedgerParticipant materialized for the pending invitation
     // (if any) so expenses recorded against the invitee before acceptance are
     // preserved. Otherwise create a new participant linked to the member.
-    if (invitation.ledgerParticipantId) {
-      await tx.ledgerParticipant.update({
-        where: { id: invitation.ledgerParticipantId },
-        data: {
-          groupMemberId: member.id,
-        },
-      })
-    } else {
-      await tx.ledgerParticipant.upsert({
-        where: { groupMemberId: member.id },
-        create: {
-          id: randomId(),
-          ledgerId: invitation.group.ledger!.id,
-          groupMemberId: member.id,
-        },
-        update: {},
-      })
-    }
+    // The helper also handles the re-invite case where the member already
+    // has a participant from a prior membership — in that situation the
+    // pending placeholder is discarded and its expenses are reassigned to
+    // the existing participant (see `reconcileMemberLedgerParticipant`).
+    await reconcileMemberLedgerParticipant(tx, {
+      memberId: member.id,
+      ledgerId: invitation.group.ledger!.id,
+      pendingParticipantId: invitation.ledgerParticipantId,
+    })
 
     await tx.groupInvitation.update({
       where: { id: invitation.id },
@@ -604,3 +597,395 @@ export async function listPendingEmailInvitationsForAccount(
 
 export const listPendingInvitationsForAccount =
   listPendingEmailInvitationsForAccount
+
+// ---------------------------------------------------------------------------
+// Participant reconciliation
+//
+// Shared by the email and link accept flows. After flipping the
+// invitation to ACCEPTED and upserting the GroupMember, the new
+// member needs a `LedgerParticipant` linked through `groupMemberId`
+// (which is `UNIQUE`). Three cases can land here:
+//
+//   1. The pending invitation already has a `ledgerParticipantId` and
+//      the member has no prior participant → link the pending one to
+//      the member (the common case).
+//   2. The member already has a `LedgerParticipant` from a previous
+//      membership (e.g. they were removed and re-invited) and the
+//      pending one is a fresh placeholder with no history → reuse the
+//      existing participant and discard the pending one. Linking the
+//      pending one would violate the unique constraint on
+//      `groupMemberId`.
+//   3. The member has a prior participant AND the pending one
+//      captured some pre-accept expenses → reassign those expenses
+//      from the pending participant to the existing one, then delete
+//      the now-empty pending participant.
+// ---------------------------------------------------------------------------
+
+export async function reconcileMemberLedgerParticipant(
+  tx: Prisma.TransactionClient,
+  args: {
+    memberId: string
+    ledgerId: string
+    pendingParticipantId: string | null
+  },
+): Promise<void> {
+  const { memberId, ledgerId, pendingParticipantId } = args
+
+  // The member may already have a `LedgerParticipant` from a prior
+  // membership. `groupMemberId` is `UNIQUE`, so the lookup is cheap.
+  const existingParticipant = await tx.ledgerParticipant.findUnique({
+    where: { groupMemberId: memberId },
+  })
+
+  if (pendingParticipantId) {
+    if (
+      existingParticipant &&
+      existingParticipant.id !== pendingParticipantId
+    ) {
+      // Reassign any pre-accept expenses from the placeholder to the
+      // member's existing participant, then drop the placeholder.
+      await tx.expense.updateMany({
+        where: { paidById: pendingParticipantId },
+        data: { paidById: existingParticipant.id },
+      })
+      await tx.expensePaidFor.updateMany({
+        where: { ledgerParticipantId: pendingParticipantId },
+        data: { ledgerParticipantId: existingParticipant.id },
+      })
+      // Best-effort delete: the pending row has `groupMemberId = null`
+      // and is now unreferenced, so this should always succeed.
+      await tx.ledgerParticipant
+        .delete({ where: { id: pendingParticipantId } })
+        .catch(() => undefined)
+      return
+    }
+    if (!existingParticipant) {
+      await tx.ledgerParticipant.update({
+        where: { id: pendingParticipantId },
+        data: { groupMemberId: memberId },
+      })
+      return
+    }
+    // The pending and the existing happen to be the same row (rare
+    // race during concurrent accept). Nothing to do.
+    return
+  }
+
+  if (!existingParticipant) {
+    await tx.ledgerParticipant.upsert({
+      where: { groupMemberId: memberId },
+      create: {
+        id: randomId(),
+        ledgerId,
+        groupMemberId: memberId,
+      },
+      update: {},
+    })
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Link invitations
+//
+// A link invitation produces a single-use URL the inviter hands to whoever
+// they want to join. The raw token is returned to the inviter exactly once
+// at create time; the row stores only its hash. The accept path looks the
+// invite up by hash, refuses expired/revoked/used tokens in a transaction,
+// and reuses the materialized `LedgerParticipant` for the pending invitee.
+// ---------------------------------------------------------------------------
+
+/** Default expiry for link invitations. 30 days is a sensible product
+ * default for shareable links; admins can override per call. */
+export const LINK_INVITATION_DEFAULT_TTL_MS = 30 * 24 * 60 * 60 * 1000
+
+/** Generate a high-entropy, URL-safe raw token for a new link invitation.
+ * Uses 32 random bytes (~256 bits) encoded as base64url, which is the
+ * standard format for shareable invite URLs. */
+export function generateLinkToken(): string {
+  const bytes = new Uint8Array(32)
+  crypto.getRandomValues(bytes)
+  return base64UrlEncode(bytes)
+}
+
+/** SHA-256 hash of a link token. Stored in `GroupInvitation.tokenHash`. */
+export async function hashLinkToken(token: string): Promise<string> {
+  const data = new TextEncoder().encode(token)
+  const digest = await crypto.subtle.digest('SHA-256', data)
+  return base64UrlEncode(new Uint8Array(digest))
+}
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  let binary = ''
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i])
+  }
+  return btoa(binary)
+    .replaceAll('+', '-')
+    .replaceAll('/', '_')
+    .replace(/=+$/, '')
+}
+
+/**
+ * Read the expiry for a link invitation. Falls back to the default TTL
+ * when the caller does not pass one.
+ */
+function resolveLinkExpiresAt(expiresAt: Date | null | undefined): Date {
+  if (expiresAt) return expiresAt
+  return new Date(Date.now() + LINK_INVITATION_DEFAULT_TTL_MS)
+}
+
+export type CreateLinkInvitationInput = {
+  groupId: string
+  role: GroupRole
+  inviterAccountId: string
+  /** Optional pending-only label. After acceptance, `Account.name` wins. */
+  temporaryName?: string | null
+  /** Optional override for the expiry timestamp. */
+  expiresAt?: Date | null
+}
+
+export type CreateLinkInvitationResult = {
+  invitation: {
+    id: string
+    groupId: string
+    role: GroupRole
+    temporaryName: string | null
+    expiresAt: Date
+  }
+  /** Raw token — return only this once. Never store, never log. */
+  token: string
+  /** Shareable URL, ready for the inviter to copy. */
+  inviteUrl: string
+}
+
+/**
+ * Create a link invitation. Generates a high-entropy raw token, stores
+ * only its hash, and returns the raw token plus the shareable URL
+ * exactly once. Authorization is enforced by the caller (typically a
+ * tRPC procedure that has already loaded the group context).
+ */
+export async function createLinkInvitation(
+  input: CreateLinkInvitationInput,
+): Promise<CreateLinkInvitationResult> {
+  const token = generateLinkToken()
+  const tokenHash = await hashLinkToken(token)
+  const expiresAt = resolveLinkExpiresAt(input.expiresAt)
+  const webBase = getWebBaseUrl()
+
+  const invitation = await prisma.groupInvitation.create({
+    data: {
+      id: randomId(),
+      type: GroupInvitationType.LINK,
+      groupId: input.groupId,
+      // Synthetic email placeholder keeps the unique index on `email` as
+      // the source of identity and the column non-null, mirroring the
+      // existing LINK-acceptance flow. The hash is what actually
+      // identifies the link; the placeholder is just filler.
+      email: buildLinkPlaceholderEmail(token),
+      role: input.role,
+      temporaryName: input.temporaryName ?? null,
+      invitedById: input.inviterAccountId,
+      tokenHash,
+      expiresAt,
+    },
+  })
+
+  return {
+    invitation: {
+      id: invitation.id,
+      groupId: invitation.groupId,
+      role: invitation.role,
+      temporaryName: invitation.temporaryName,
+      expiresAt: invitation.expiresAt!,
+    },
+    token,
+    // The link is a group URL with the raw token as a search param.
+    // Opening it lands the recipient on the regular group page where
+    // the same Accept/Decline banner used for email invites is shown.
+    // This keeps the UX consistent across invite kinds and avoids a
+    // separate `/invite/$token` route.
+    inviteUrl: `${webBase}/groups/${invitation.groupId}?invite=${token}`,
+  }
+}
+
+export type LinkInvitationPreview = {
+  /** Group id and name. */
+  group: { id: string; name: string }
+  /** Inviter display label. */
+  inviter: { name: string }
+  /** Optional pending-only label. */
+  temporaryName: string | null
+  /** Role the invitee will receive on accept. */
+  role: GroupRole
+  /** True when the invite is in a state where the URL is usable right now. */
+  usable: boolean
+  /** Reason `usable` is false: 'revoked' | 'declined' | 'accepted' | 'expired' | 'unknown'. */
+  reason: 'revoked' | 'declined' | 'accepted' | 'expired' | 'unknown' | null
+  /** Invitation expiry, when known. */
+  expiresAt: Date | null
+}
+
+/**
+ * Public-safe preview of a link invitation, looked up by the raw token
+ * (not the hash). Returns a small redacted shape so the accept page can
+ * render group/inviter context before the user is authenticated, without
+ * leaking the full invitation row.
+ */
+export async function getLinkInvitationPreview(
+  token: string,
+): Promise<LinkInvitationPreview | null> {
+  const tokenHash = await hashLinkToken(token)
+  const invitation = await prisma.groupInvitation.findFirst({
+    where: { tokenHash },
+    include: {
+      group: { select: { id: true, name: true } },
+      invitedBy: { select: { name: true } },
+    },
+  })
+  if (!invitation) return null
+
+  let reason: LinkInvitationPreview['reason'] = null
+  let usable = invitation.status === GroupInvitationStatus.PENDING
+  if (!usable) {
+    if (invitation.status === GroupInvitationStatus.REVOKED) reason = 'revoked'
+    else if (invitation.status === GroupInvitationStatus.DECLINED)
+      reason = 'declined'
+    else if (invitation.status === GroupInvitationStatus.ACCEPTED)
+      reason = 'accepted'
+    else reason = 'unknown'
+  } else if (invitation.expiresAt && invitation.expiresAt < new Date()) {
+    usable = false
+    reason = 'expired'
+  }
+
+  return {
+    group: { id: invitation.group.id, name: invitation.group.name },
+    inviter: { name: invitation.invitedBy?.name ?? '' },
+    temporaryName: invitation.temporaryName,
+    role: invitation.role,
+    usable,
+    reason,
+    expiresAt: invitation.expiresAt ?? null,
+  }
+}
+
+/**
+ * Accept a link invitation for the current account. Unlike email
+ * invitations, this does not require the account email to match — any
+ * signed-in account can claim the link. The transaction flips the
+ * status only when the row is still `PENDING` (or, on expiry races,
+ * still usable) to guard against double-accept.
+ */
+export async function acceptLinkInvitation(opts: {
+  token: string
+  accountId: string
+}) {
+  const tokenHash = await hashLinkToken(opts.token)
+
+  // Pre-check outside the transaction so we can return a precise reason
+  // (revoked, expired, already accepted, …) to the web client. The
+  // transaction still owns the final status flip and row-level
+  // concurrency guard, so this is only a UX hint.
+  const preview = await getLinkInvitationPreview(opts.token)
+  if (!preview) {
+    throw new InvitationError('Invitation not found.')
+  }
+  if (!preview.usable) {
+    const reason =
+      preview.reason === 'expired'
+        ? 'This invitation link has expired.'
+        : preview.reason === 'revoked'
+          ? 'This invitation link was revoked by an admin.'
+          : preview.reason === 'declined'
+            ? 'This invitation link was declined.'
+            : preview.reason === 'accepted'
+              ? 'This invitation link has already been used.'
+              : 'This invitation link is no longer valid.'
+    throw new InvitationError(reason)
+  }
+
+  // Reject when the accepting account is already an active member of the
+  // group, to avoid silently consuming the link. The error matches the
+  // group viewer "already a member" guard so the UI can guide the user
+  // to open the group directly.
+  const existingMember = await prisma.groupMember.findFirst({
+    where: {
+      groupId: preview.group.id,
+      accountId: opts.accountId,
+      status: GroupMemberStatus.ACTIVE,
+    },
+    select: { id: true },
+  })
+  if (existingMember) {
+    throw new InvitationError(
+      'You are already a member of this group. Open the group from your list instead.',
+    )
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    // Atomic guard: only update if still PENDING and the token still
+    // matches. `updateMany` returns the affected row count, so a
+    // double-click or a race with revocation cannot flip the row twice.
+    const flipped = await tx.groupInvitation.updateMany({
+      where: {
+        tokenHash,
+        status: GroupInvitationStatus.PENDING,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      },
+      data: {
+        status: GroupInvitationStatus.ACCEPTED,
+        acceptedById: opts.accountId,
+        acceptedAt: new Date(),
+      },
+    })
+    if (flipped.count === 0) {
+      throw new InvitationError('This invitation link is no longer valid.')
+    }
+
+    const invitation = await tx.groupInvitation.findUnique({
+      where: { tokenHash },
+      include: { group: { include: { ledger: true } } },
+    })
+    if (!invitation || !invitation.group.ledger) {
+      throw new InvitationError('Invitation is missing its group ledger.')
+    }
+
+    const member = await tx.groupMember.upsert({
+      where: {
+        groupId_accountId: {
+          groupId: invitation.groupId,
+          accountId: opts.accountId,
+        },
+      },
+      create: {
+        id: randomId(),
+        groupId: invitation.groupId,
+        accountId: opts.accountId,
+        role: invitation.role,
+        status: 'ACTIVE',
+        joinedAt: new Date(),
+      },
+      update: {
+        role: invitation.role,
+        status: 'ACTIVE',
+        joinedAt: new Date(),
+        leftAt: null,
+      },
+    })
+
+    // Reuse the LedgerParticipant materialized for the pending
+    // invitation (if any) so pre-accept expenses stay attributed to
+    // the same person. Otherwise create one. The helper also handles
+    // the re-invite case where the member already has a participant
+    // from a prior membership — see `reconcileMemberLedgerParticipant`.
+    await reconcileMemberLedgerParticipant(tx, {
+      memberId: member.id,
+      ledgerId: invitation.group.ledger.id,
+      pendingParticipantId: invitation.ledgerParticipantId,
+    })
+
+    return { groupId: invitation.groupId, role: invitation.role }
+  })
+
+  return result
+}

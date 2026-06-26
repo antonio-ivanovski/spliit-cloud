@@ -41,6 +41,7 @@ const hoisted = vi.hoisted(() => {
       'findMany',
       'create',
       'update',
+      'updateMany',
       'delete',
     ]),
     ledger: makeMethodStubs([
@@ -57,6 +58,7 @@ const hoisted = vi.hoisted(() => {
       'create',
       'update',
       'upsert',
+      'delete',
     ]),
     expense: makeMethodStubs([
       'findUnique',
@@ -64,6 +66,7 @@ const hoisted = vi.hoisted(() => {
       'findMany',
       'create',
       'update',
+      'updateMany',
       'delete',
       'deleteMany',
     ]),
@@ -73,6 +76,7 @@ const hoisted = vi.hoisted(() => {
       'createMany',
       'count',
       'deleteMany',
+      'updateMany',
     ]),
     recurringExpenseLink: makeMethodStubs([
       'findUnique',

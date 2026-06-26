@@ -165,6 +165,18 @@
       "unknownInviter": "某人",
       "unknownGroup": "未知群組",
       "sentOn": "傳送於 {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} 邀請您加入 Spliit 上的 {groupName}。",
+    "linkInvitationSingleUse": "此連結只能使用一次。您接受後，連結將失效。",
+    "linkInvitationTemporaryName": "您將以 {name} 的身分加入。",
+    "linkInvitationAlreadyMemberTitle": "您已在 {groupName} 中",
+    "linkInvitationAlreadyMemberDescription": "您已擁有此群組的帳號，可以透過下方按鈕開啟。",
+    "linkInvitationDismiss": "關閉",
+    "linkInvitationExpiredTitle": "此邀請連結已失效",
+    "linkInvitationExpiredDescription": "該連結已被撤銷、拒絕或已過期。請邀請人重新發送。",
+    "linkInvitationInvalid": {
+      "title": "此邀請連結無效",
+      "description": "該連結格式錯誤或與本群組中的任何邀請都不相符。"
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "保存中……",
       "create": "建立",
       "creating": "建立中……",
-      "cancel": "取消"
+      "cancel": "取消",
+      "inviteAfterCreate": "群組建立後，請開啟 Members 分頁，透過電子郵件或可分享連結邀請成員。"
     },
     "readOnlyNote": "只有擁有者和管理員可以更改群組設定。",
     "readOnlyTitle": "群組設定",
@@ -659,12 +672,33 @@
     "archivedNotice": "群組封存期間邀請功能已停用。取消封存群組以邀請新成員。",
     "invite": {
       "title": "邀請成員",
-      "description": "透過電子郵件傳送邀請。受邀者從相符帳戶接受後即可加入。",
       "email": "電子郵件",
       "emailPlaceholder": "friend@example.com",
       "role": "角色",
       "send": "傳送邀請",
-      "invalidEmail": "請輸入有效的電子郵件地址。"
+      "invalidEmail": "請輸入有效的電子郵件地址。",
+      "tab": {
+        "email": "電子郵件",
+        "link": "邀請連結"
+      },
+      "emailDescription": "透過電子郵件發送邀請。受邀者在相符的帳號上接受後即可加入。",
+      "linkDescription": "產生一個一次性連結，任何人都可使用該連結加入。在首次接受後，連結將失效。",
+      "temporaryName": "臨時名稱（選填）",
+      "temporaryNamePlaceholder": "例如：Alex 的室友",
+      "link": {
+        "generate": "產生邀請連結",
+        "generating": "產生中…",
+        "singleUse": "此邀請連結僅可使用一次。有人接受後，連結將失效。",
+        "copy": "複製邀請連結",
+        "copied": "已複製！",
+        "expiresOn": "{date} 過期",
+        "created": "邀請連結已就緒。請在群組離開此頁面之前複製並分享。",
+        "intro": "這是 {groupName} 的一次性邀請連結。傳送給您想邀請的人——第一位使用者將成為成員，之後連結將失效。",
+        "share": "分享邀請連結",
+        "shareTitle": "在 Spliit Cloud 上加入 {groupName}",
+        "shareText": "我剛在 Spliit Cloud 上為我們的共同支出建立了 {groupName}。這是一個一次性邀請連結——開啟即可加入：\n{inviteUrl}",
+        "generateNew": "產生新連結"
+      }
     },
     "invitations": {
       "title": "待處理的邀請",
@@ -690,6 +724,10 @@
           },
           "checkbox": "撤銷前先結算該受邀者的餘額"
         }
+      },
+      "link": {
+        "type": "一次性連結",
+        "fallbackLabel": "邀請連結"
       }
     },
     "removeDialog": {

@@ -165,6 +165,18 @@
       "unknownInviter": "誰か",
       "unknownGroup": "不明なグループ",
       "sentOn": "{date}に送信"
+    },
+    "linkInvitationBannerDescription": "{inviter}さんから、Spliitの{groupName}に参加するよう招待されました。",
+    "linkInvitationSingleUse": "このリンクは一度しか使用できません。参加を承認すると、リンクは使えなくなります。",
+    "linkInvitationTemporaryName": "{name}として参加します。",
+    "linkInvitationAlreadyMemberTitle": "すでに{groupName}のメンバーです",
+    "linkInvitationAlreadyMemberDescription": "このグループのアカウントはすでにあります。下のボタンから開くことができます。",
+    "linkInvitationDismiss": "閉じる",
+    "linkInvitationExpiredTitle": "この招待リンクは無効になりました",
+    "linkInvitationExpiredDescription": "リンクは取り消されたか、辞退されたか、有効期限が切れています。招待者に新しいリンクを送ってもらってください。",
+    "linkInvitationInvalid": {
+      "title": "この招待リンクは無効です",
+      "description": "リンクの形式が正しくないか、このグループのどの招待にも一致しません。"
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "保存中…",
       "create": "作成",
       "creating": "作成中…",
-      "cancel": "キャンセル"
+      "cancel": "キャンセル",
+      "inviteAfterCreate": "グループを作成したら、Membersタブを開いて、メールまたは共有リンクで人を招待してください。"
     },
     "CurrencyCodeField": {
       "label": "主な通貨",
@@ -659,12 +672,33 @@
     "archivedNotice": "グループがアーカイブされている間は招待が無効になっています。新しいメンバーを招待するにはグループのアーカイブを解除してください。",
     "invite": {
       "title": "メンバーを招待",
-      "description": "メールで招待状を送信します。招待された人が該当アカウントから承認すると参加できます。",
       "email": "メールアドレス",
       "emailPlaceholder": "friend@example.com",
       "role": "役割",
       "send": "招待を送信",
-      "invalidEmail": "有効なメールアドレスを入力してください。"
+      "invalidEmail": "有効なメールアドレスを入力してください。",
+      "tab": {
+        "email": "メールアドレス",
+        "link": "招待リンク"
+      },
+      "emailDescription": "メールで招待を送信します。招待を受けた人が対応するアカウントから承認すると参加できます。",
+      "linkDescription": "誰でも参加できる一回限りのリンクを生成します。最初の承認後、リンクは無効になります。",
+      "temporaryName": "仮の名前（任意）",
+      "temporaryNamePlaceholder": "例：Alexのルームメイト",
+      "link": {
+        "generate": "招待リンクを生成",
+        "generating": "生成中…",
+        "singleUse": "この招待リンクは一度しか使用できません。誰かが承認すると、リンクは無効になります。",
+        "copy": "招待リンクをコピー",
+        "copied": "コピーしました！",
+        "expiresOn": "{date}に有効期限切れ",
+        "created": "招待リンクの準備ができました。グループのページから離れる前にコピーして共有してください。",
+        "intro": "{groupName}への一回限りの招待リンクはこちらです。参加してほしい人に送ってください — 最初に使用した人がメンバーになり、リンクは無効になります。",
+        "share": "招待リンクを共有",
+        "shareTitle": "Spliit Cloudの{groupName}に参加",
+        "shareText": "Spliit Cloudで共同の出費のために{groupName}を作成しました。一回限りの招待リンクはこちらです — 開いて参加してください：\n{inviteUrl}",
+        "generateNew": "新しいリンクを生成"
+      }
     },
     "invitations": {
       "title": "保留中の招待",
@@ -690,6 +724,10 @@
           },
           "checkbox": "取り消す前にこの招待者の残高を精算"
         }
+      },
+      "link": {
+        "type": "一回限りリンク",
+        "fallbackLabel": "招待リンク"
       }
     },
     "removeDialog": {

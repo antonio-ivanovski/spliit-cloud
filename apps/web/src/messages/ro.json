@@ -165,6 +165,18 @@
       "unknownInviter": "cineva",
       "unknownGroup": "Grup necunoscut",
       "sentOn": "Trimisă pe {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} te-a invitat să te alături grupului {groupName} pe Spliit.",
+    "linkInvitationSingleUse": "Acest link poate fi utilizat o singură dată. După ce îl accepți, nu va mai funcționa.",
+    "linkInvitationTemporaryName": "Te vei alătura ca {name}.",
+    "linkInvitationAlreadyMemberTitle": "Ești deja în {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Ai deja un cont în acest grup. Îl poți deschide din butonul de mai jos.",
+    "linkInvitationDismiss": "Închide",
+    "linkInvitationExpiredTitle": "Acest link de invitație nu mai este valid",
+    "linkInvitationExpiredDescription": "Link-ul a fost revocat, refuzat sau a expirat. Cere-i persoanei care a trimis invitația să trimită una nouă.",
+    "linkInvitationInvalid": {
+      "title": "Acest link de invitație este invalid",
+      "description": "Linkul este deformat sau nu corespunde niciunei invitații din acest grup."
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "Se salvează…",
       "create": "Adaugă",
       "creating": "Se adaugă…",
-      "cancel": "Anulează"
+      "cancel": "Anulează",
+      "inviteAfterCreate": "După ce grupul este creat, deschide fila Members pentru a invita persoane prin e-mail sau printr-un link partajabil."
     },
     "readOnlyNote": "Doar proprietarii și administratorii pot modifica setările grupului.",
     "readOnlyTitle": "Setări grup",
@@ -659,12 +672,33 @@
     "archivedNotice": "Invitațiile sunt dezactivate în timp ce grupul este arhivat. Dezarhivează grupul pentru a invita membri noi.",
     "invite": {
       "title": "Invită membru",
-      "description": "Trimite o invitație prin email. Invitatul se alătură odată ce o acceptă de pe un cont corespunzător.",
       "email": "Email",
       "emailPlaceholder": "prieten@example.com",
       "role": "Rol",
       "send": "Trimite invitația",
-      "invalidEmail": "Introdu o adresă de email validă."
+      "invalidEmail": "Introdu o adresă de email validă.",
+      "link": {
+        "generate": "Generează link de invitație",
+        "generating": "Se generează…",
+        "singleUse": "Acest link de invitație poate fi utilizat o singură dată. După ce cineva îl acceptă, link-ul nu va mai funcționa.",
+        "copy": "Copiază link-ul de invitație",
+        "copied": "Copiat!",
+        "expiresOn": "Expiră pe {date}",
+        "created": "Link-ul de invitație este gata. Copiază-l și distribuie-l înainte ca grupul să părăsească această pagină.",
+        "intro": "Acesta este link-ul tău de invitație de unică folosință pentru {groupName}. Trimite-l persoanei pe care vrei să o inviți — prima care îl folosește devine membru, apoi link-ul nu mai funcționează.",
+        "share": "Distribuie link-ul de invitație",
+        "shareTitle": "Alătură-te grupului {groupName} pe Spliit Cloud",
+        "shareText": "Tocmai am creat {groupName} pentru cheltuielile noastre comune pe Spliit Cloud. Acesta este un link de invitație de unică folosință — deschide-l pentru a te alătura:\n{inviteUrl}",
+        "generateNew": "Generează un link nou"
+      },
+      "tab": {
+        "email": "E-mail",
+        "link": "Link de invitație"
+      },
+      "emailDescription": "Trimite o invitație prin e-mail. Persoana invitată se alătură după ce acceptă de pe un cont corespunzător.",
+      "linkDescription": "Generează un link de unică folosință pe care oricine îl poate folosi pentru a se alătura. Link-ul nu mai funcționează după prima acceptare.",
+      "temporaryName": "Nume temporar (opțional)",
+      "temporaryNamePlaceholder": "ex. colegul de apartament al lui Alex"
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Decontează soldurile invitatului înainte de revocare"
         }
+      },
+      "link": {
+        "type": "Link de unică folosință",
+        "fallbackLabel": "Link de invitație"
       }
     },
     "removeDialog": {

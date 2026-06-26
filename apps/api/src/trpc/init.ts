@@ -6,8 +6,10 @@ import {
 } from '@spliit/db'
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
+import { z } from 'zod'
 import type { ResolvedAuth } from '../lib/auth/session'
 import { getAuthFromRequest } from '../lib/auth/session'
+import { hashLinkToken } from '../lib/invitations'
 
 superjson.registerCustom<Prisma.Decimal, string>(
   {
@@ -117,6 +119,28 @@ export function groupProcedure(opts: {
 }
 
 /**
+ * Shared input field for a raw link-invite token carried in the page URL.
+ * Use in any read procedure that should be accessible to pending
+ * link-invitees (in addition to active members and pending email-invitees,
+ * which the viewer already accepts). Token validity is enforced by
+ * `loadGroupViewer` against the stored hash, so no client-side format
+ * check is needed.
+ */
+export const linkInviteTokenInput = z.string().optional()
+
+/**
+ * Hash a raw link-invite token for use with {@link loadGroupViewer}'s
+ * `linkTokenHash` parameter. Returns `null` when no token is present so
+ * callers can forward the value unchanged.
+ */
+export async function hashLinkInviteToken(
+  token: string | undefined,
+): Promise<string | null> {
+  if (!token) return null
+  return hashLinkToken(token)
+}
+
+/**
  * Resolve the current account's membership, role, status, and the group +
  * ledger records for a given groupId. Throws when the account is not an
  * active member. Designed to be called from within a `groupProcedure` (or
@@ -188,10 +212,18 @@ export async function loadGroupViewer({
   groupId,
   accountId,
   accountEmail,
+  linkTokenHash,
 }: {
   groupId: string
   accountId: string
   accountEmail: string
+  /**
+   * Optional SHA-256 hash of the raw link-invite token carried in the
+   * page URL. When present, a PENDING LINK invitation with a matching
+   * `tokenHash` is enough to grant the read-only viewer — the token
+   * itself is the credential.
+   */
+  linkTokenHash?: string | null
 }): Promise<GroupViewerContext> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -212,7 +244,8 @@ export async function loadGroupViewer({
 
   // Fall back to a PENDING email invitation matching the account
   // email. Skipped when the account has no email (forward-compat with
-  // email-less accounts); those callers fall through to FORBIDDEN.
+  // email-less accounts); those callers fall through to a LINK token
+  // check, then to FORBIDDEN.
   if (accountEmail) {
     const invitation = await prisma.groupInvitation.findFirst({
       where: {
@@ -224,6 +257,36 @@ export async function loadGroupViewer({
       select: { id: true, role: true, type: true },
     })
 
+    if (invitation) {
+      return {
+        group,
+        member: null,
+        ledger: group.ledger,
+        viewer: {
+          kind: 'PENDING_INVITEE',
+          invitation: {
+            id: invitation.id,
+            role: invitation.role,
+            type: invitation.type,
+          },
+        },
+      }
+    }
+  }
+
+  // Last chance: a PENDING LINK invitation whose `tokenHash` matches
+  // the URL-borne token. The lookup is by hashed value (the raw token
+  // is never stored), so the page URL itself is the credential.
+  if (linkTokenHash) {
+    const invitation = await prisma.groupInvitation.findFirst({
+      where: {
+        groupId,
+        type: GroupInvitationType.LINK,
+        status: GroupInvitationStatus.PENDING,
+        tokenHash: linkTokenHash,
+      },
+      select: { id: true, role: true, type: true },
+    })
     if (invitation) {
       return {
         group,

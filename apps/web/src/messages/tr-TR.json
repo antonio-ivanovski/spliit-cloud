@@ -165,6 +165,18 @@
       "unknownInviter": "birileri",
       "unknownGroup": "Bilinmeyen grup",
       "sentOn": "{date} gönderildi"
+    },
+    "linkInvitationBannerDescription": "{inviter} sizi Spliit'teki {groupName} grubuna katılmaya davet etti.",
+    "linkInvitationSingleUse": "Bu bağlantı yalnızca bir kez kullanılabilir. Kabul ettikten sonra çalışmayı durduracaktır.",
+    "linkInvitationTemporaryName": "{name} olarak katılacaksınız.",
+    "linkInvitationAlreadyMemberTitle": "Zaten {groupName} grubundasınız",
+    "linkInvitationAlreadyMemberDescription": "Bu grupta zaten bir hesabınız var. Aşağıdaki düğmeden açabilirsiniz.",
+    "linkInvitationDismiss": "Kapat",
+    "linkInvitationExpiredTitle": "Bu davet bağlantısı artık geçerli değil",
+    "linkInvitationExpiredDescription": "Bağlantı iptal edilmiş, reddedilmiş ya da süresi dolmuş. Davet edenden yenisini göndermesini isteyin.",
+    "linkInvitationInvalid": {
+      "title": "Bu davet bağlantısı geçersiz",
+      "description": "Bağlantı hatalı biçimlendirilmiş veya bu gruptaki hiçbir davetle eşleşmiyor."
     }
   },
   "GroupForm": {
@@ -206,7 +218,8 @@
       "saving": "Kaydediliyor…",
       "create": "Oluştur",
       "creating": "Oluşturuluyor…",
-      "cancel": "İptal"
+      "cancel": "İptal",
+      "inviteAfterCreate": "Grup oluşturulduktan sonra, kişileri e-postayla veya paylaşılabilir bir bağlantıyla davet etmek için Members sekmesini açın."
     },
     "readOnlyNote": "Yalnızca sahipler ve yöneticiler grup ayarlarını değiştirebilir.",
     "readOnlyTitle": "Grup ayarları",
@@ -659,12 +672,33 @@
     "archivedNotice": "Grup arşivliyken davetler devre dışıdır. Yeni üyeler davet etmek için grubu arşivden çıkarın.",
     "invite": {
       "title": "Üye davet et",
-      "description": "E-posta ile davet gönderin. Davet edilen kişi, eşleşen bir hesaptan kabul ettiğinde katılır.",
       "email": "E-posta",
       "emailPlaceholder": "friend@example.com",
       "role": "Rol",
       "send": "Davet gönder",
-      "invalidEmail": "Geçerli bir e-posta adresi girin."
+      "invalidEmail": "Geçerli bir e-posta adresi girin.",
+      "tab": {
+        "email": "E-posta",
+        "link": "Davet bağlantısı"
+      },
+      "emailDescription": "E-postayla davet gönderin. Davetli, eşleşen bir hesaptan kabul ettiğinde katılır.",
+      "linkDescription": "Katılmak için herkesin kullanabileceği tek kullanımlık bir bağlantı oluşturun. İlk kabulden sonra bağlantı çalışmayı durdurur.",
+      "temporaryName": "Geçici ad (isteğe bağlı)",
+      "temporaryNamePlaceholder": "örn. Alex'in oda arkadaşı",
+      "link": {
+        "generate": "Davet bağlantısı oluştur",
+        "generating": "Oluşturuluyor…",
+        "singleUse": "Bu davet bağlantısı yalnızca bir kez kullanılabilir. Biri kabul ettikten sonra bağlantı çalışmayı durduracaktır.",
+        "copy": "Davet bağlantısını kopyala",
+        "copied": "Kopyalandı!",
+        "expiresOn": "{date} tarihinde sona erer",
+        "created": "Davet bağlantısı hazır. Grup bu sayfadan ayrılmadan kopyalayıp paylaşın.",
+        "intro": "İşte {groupName} grubu için tek kullanımlık davet bağlantınız. Katılmasını istediğiniz kişiye gönderin — ilk kullanan kişi üye olur ve ardından bağlantı çalışmayı durdurur.",
+        "share": "Davet bağlantısını paylaş",
+        "shareTitle": "Spliit Cloud'da {groupName} grubuna katıl",
+        "shareText": "Spliit Cloud'da ortak harcamalarımız için az önce {groupName} grubunu oluşturdum. İşte tek kullanımlık bir davet bağlantısı — katılmak için açın:\n{inviteUrl}",
+        "generateNew": "Yeni bağlantı oluştur"
+      }
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -690,6 +724,10 @@
           },
           "checkbox": "İptalden önce davetlinin bakiyelerini kapat"
         }
+      },
+      "link": {
+        "type": "Tek kullanımlık bağlantı",
+        "fallbackLabel": "Davet bağlantısı"
       }
     },
     "removeDialog": {

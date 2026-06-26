@@ -16,13 +16,16 @@ import { Fragment, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 import { useCurrentGroup } from '../current-group-context'
+import { useLinkInviteToken } from '../use-link-invite-token'
 
 export default function BalancesAndReimbursements() {
   const utils = trpc.useUtils()
   const { groupId, group } = useCurrentGroup()
+  const linkInviteToken = useLinkInviteToken()
   const { data: balancesData, isLoading: balancesAreLoading } =
     trpc.groups.balances.list.useQuery({
       groupId,
+      linkInviteToken,
     })
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
 

@@ -165,6 +165,18 @@
       "unknownInviter": "ktoś",
       "unknownGroup": "Nieznana grupa",
       "sentOn": "Wysłano {date}"
+    },
+    "linkInvitationBannerDescription": "{inviter} zaprosił Cię do dołączenia do {groupName} w Spliit.",
+    "linkInvitationSingleUse": "Ten link można użyć tylko raz. Po zaakceptowaniu przestanie działać.",
+    "linkInvitationTemporaryName": "Dołączysz jako {name}.",
+    "linkInvitationAlreadyMemberTitle": "Już należysz do {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Masz już konto w tej grupie. Możesz ją otworzyć za pomocą przycisku poniżej.",
+    "linkInvitationDismiss": "Zamknij",
+    "linkInvitationExpiredTitle": "Ten link zaproszenia jest już nieważny",
+    "linkInvitationExpiredDescription": "Link został cofnięty, odrzucony lub wygasł. Poproś osobę zapraszającą o wysłanie nowego.",
+    "linkInvitationInvalid": {
+      "title": "Ten link zaproszenia jest nieprawidłowy",
+      "description": "Link jest nieprawidłowo sformatowany lub nie pasuje do żadnego zaproszenia w tej grupie."
     }
   },
   "GroupForm": {
@@ -216,7 +228,8 @@
       "saving": "Zapisywanie…",
       "create": "Stwórz",
       "creating": "Tworzenie…",
-      "cancel": "Anuluj"
+      "cancel": "Anuluj",
+      "inviteAfterCreate": "Po utworzeniu grupy otwórz kartę Members, aby zaprosić osoby e-mailem lub za pomocą linku do udostępnienia."
     }
   },
   "ExpenseForm": {
@@ -659,12 +672,33 @@
     "archivedNotice": "Zaproszenia są wyłączone, gdy grupa jest zarchiwizowana. Przywróć grupę, aby zaprosić nowych członków.",
     "invite": {
       "title": "Zaproś członka",
-      "description": "Wyślij zaproszenie e-mailem. Zaproszony dołączy po zaakceptowaniu z pasującego konta.",
       "email": "E-mail",
       "emailPlaceholder": "znajomy@przyklad.pl",
       "role": "Rola",
       "send": "Wyślij zaproszenie",
-      "invalidEmail": "Wprowadź prawidłowy adres e-mail."
+      "invalidEmail": "Wprowadź prawidłowy adres e-mail.",
+      "tab": {
+        "email": "E-mail",
+        "link": "Link zaproszenia"
+      },
+      "link": {
+        "generate": "Wygeneruj link zaproszenia",
+        "generating": "Generowanie…",
+        "singleUse": "Ten link zaproszenia może być użyty tylko raz. Gdy ktoś go zaakceptuje, link przestanie działać.",
+        "copy": "Kopiuj link zaproszenia",
+        "copied": "Skopiowano!",
+        "expiresOn": "Wygasa {date}",
+        "created": "Link zaproszenia gotowy. Skopiuj go i udostępnij, zanim opuścisz tę stronę.",
+        "intro": "Oto jednorazowy link zaproszenia do {groupName}. Wyślij go osobie, którą chcesz zaprosić — pierwsza osoba, która go użyje, stanie się członkiem, a link przestanie działać.",
+        "share": "Udostępnij link zaproszenia",
+        "shareTitle": "Dołącz do {groupName} w Spliit Cloud",
+        "shareText": "Właśnie utworzyłem grupę {groupName} dla naszych wspólnych wydatków w Spliit Cloud. Oto jednorazowy link zaproszenia — otwórz go, aby dołączyć:\n{inviteUrl}",
+        "generateNew": "Wygeneruj nowy link"
+      },
+      "emailDescription": "Wyślij zaproszenie e-mailem. Zaproszona osoba dołączy po zaakceptowaniu z pasującego konta.",
+      "linkDescription": "Wygeneruj jednorazowy link, za pomocą którego można dołączyć do grupy. Link przestanie działać po pierwszym zaakceptowaniu.",
+      "temporaryName": "Tymczasowa nazwa (opcjonalnie)",
+      "temporaryNamePlaceholder": "np. współlokator Alexa"
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",
@@ -690,6 +724,10 @@
           },
           "checkbox": "Rozlicz salda zaproszonego przed odwołaniem"
         }
+      },
+      "link": {
+        "type": "Jednorazowy link",
+        "fallbackLabel": "Link zaproszenia"
       }
     },
     "removeDialog": {

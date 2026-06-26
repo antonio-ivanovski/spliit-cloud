@@ -8,6 +8,9 @@ type CurrentMember = NonNullable<
 type CurrentInvitation = NonNullable<
   AppRouterOutput['groups']['get']['currentInvitation']
 >
+type LinkInviteState = NonNullable<
+  AppRouterOutput['groups']['get']['linkInviteState']
+>
 
 type GroupContext =
   | {
@@ -29,6 +32,11 @@ type GroupContext =
       // has read-only access — mutations are blocked on the server and
       // edit affordances are hidden in the UI.
       currentInvitation: CurrentInvitation | null
+      // State of the URL-borne link-invite token, if any. Drives the
+      // "already a member" / "no longer valid" banners when the token
+      // resolves to a non-PENDING invitation. `null` when the URL has
+      // no token (or it didn't match anything).
+      linkInviteState: LinkInviteState | null
     }
   | {
       isLoading: true
@@ -37,6 +45,7 @@ type GroupContext =
       currentLedgerParticipantId: undefined
       currentMember: undefined
       currentInvitation: undefined
+      linkInviteState: undefined
     }
 
 const CurrentGroupContext = createContext<GroupContext | null>(null)

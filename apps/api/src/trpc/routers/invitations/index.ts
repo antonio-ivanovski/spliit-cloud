@@ -4,8 +4,11 @@ import { z } from 'zod'
 import {
   RevokeInvitationPreconditionError,
   acceptInvitation,
+  acceptLinkInvitation,
   createEmailInvitation,
+  createLinkInvitation,
   declineInvitation,
+  getLinkInvitationPreview,
   getRevokeInvitationPreview,
   listGroupInvitations,
   listPendingEmailInvitationsForAccount,
@@ -16,12 +19,20 @@ import {
   createTRPCRouter,
   loadGroupContext,
   protectedProcedure,
+  publicProcedure,
 } from '../../init'
 
 // Only ADMIN and MEMBER roles are exposed in the invitation form. The
 // group creator becomes an ADMIN at create time, so admins invite new
 // admins or members; ownership transfers are not a separate flow.
 const invitationRoleSchema = z.enum(['ADMIN', 'MEMBER'])
+
+/** Validate a raw link-invite token. Same charset the generator emits. */
+const linkTokenSchema = z
+  .string()
+  .min(16)
+  .max(128)
+  .regex(/^[A-Za-z0-9_-]+$/, 'Invalid invitation token')
 
 export const invitationsRouter = createTRPCRouter({
   // List pending invitations for a group (ADMIN only). The UI labels
@@ -46,6 +57,68 @@ export const invitationsRouter = createTRPCRouter({
         (invitation) => invitation.status === GroupInvitationStatus.PENDING,
       )
       return { invitations }
+    }),
+
+  // Create a single-use link invitation (ADMIN only). The raw token is
+  // returned exactly once; subsequent reads only see the hash. The
+  // web client surfaces the URL in a copyable card right after
+  // generation.
+  createLink: protectedProcedure
+    .input(
+      z.object({
+        groupId: z.string().min(1),
+        role: invitationRoleSchema.default('MEMBER'),
+        temporaryName: z.string().trim().min(1).max(120).optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { member } = await loadGroupContext({
+        groupId: input.groupId,
+        accountId: ctx.auth.user.id,
+      })
+      if (member.role !== 'ADMIN') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
+      }
+      const result = await createLinkInvitation({
+        groupId: input.groupId,
+        role: input.role as GroupRole,
+        inviterAccountId: ctx.auth.user.id,
+        temporaryName: input.temporaryName ?? null,
+      })
+
+      return {
+        invitationId: result.invitation.id,
+        inviteUrl: result.inviteUrl,
+        expiresAt: result.invitation.expiresAt,
+        temporaryName: result.invitation.temporaryName,
+        role: result.invitation.role,
+      }
+    }),
+
+  // Public preview of a link invitation. The accept page calls this
+  // before showing the Accept button so unauthenticated visitors can
+  // see the group name and inviter (and a clear error message when the
+  // link is no longer usable). No auth is required because the URL
+  // itself is the credential — and the helper returns only redacted
+  // fields, not the full invitation row.
+  previewLink: publicProcedure
+    .input(z.object({ token: linkTokenSchema }))
+    .query(async ({ input }) => {
+      const preview = await getLinkInvitationPreview(input.token)
+      return { preview }
+    }),
+
+  // Accept a link invitation for the current account. The helper
+  // refuses expired / revoked / already-used tokens and the
+  // double-active-member case.
+  acceptLink: protectedProcedure
+    .input(z.object({ token: linkTokenSchema }))
+    .mutation(async ({ input: { token }, ctx }) => {
+      const result = await acceptLinkInvitation({
+        token,
+        accountId: ctx.auth.user.id,
+      })
+      return { groupId: result.groupId, role: result.role }
     }),
 
   // Create an email invitation (ADMIN only). Today this is the only
