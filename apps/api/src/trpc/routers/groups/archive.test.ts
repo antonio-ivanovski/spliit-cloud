@@ -306,6 +306,15 @@ describe('groupsRouter.archive — unsettled balances', () => {
   it('auto-creates one settlement expense per non-zero leg when force=true and balances are unsettled', async () => {
     await authAs('acct-owner')
     mockGroupWithMember('ADMIN')
+    // The caller's ledger participant id is needed so the activity log
+    // can render the actor's name (instead of "someone"). Mock it in.
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-owner',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+      ledgerParticipant: { id: 'lp-alice' },
+    } as never)
     // Alice paid 100 for both — Bob owes 50.
     prismaMock.expense.findMany.mockResolvedValue([
       makeExpenseRow({
@@ -358,6 +367,24 @@ describe('groupsRouter.archive — unsettled balances', () => {
     // The group archive and the settlement expense creation must run in
     // the same transaction.
     expect(prisma$Transaction).toHaveBeenCalledTimes(1)
+    // The settlement-on-archive activity is logged with the caller's
+    // participant id so the activity feed renders their name instead of
+    // falling back to "someone".
+    const settlementActivityCall = prismaMock.activity.create.mock.calls.find(
+      (call) =>
+        (call[0] as { data: { data?: string } }).data?.data ===
+        'Settlement on archive',
+    )
+    expect(settlementActivityCall).toBeDefined()
+    expect(settlementActivityCall![0]).toEqual(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          activityType: 'CREATE_EXPENSE',
+          ledgerParticipantId: 'lp-alice',
+          data: 'Settlement on archive',
+        }),
+      }),
+    )
   })
 
   it('creates a settlement expense for each leg when multiple members have non-zero balances', async () => {

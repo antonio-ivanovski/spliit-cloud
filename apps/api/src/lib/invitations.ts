@@ -100,10 +100,12 @@ export async function listGroupInvitations(groupId: string) {
 
 /**
  * Error thrown when an admin attempts to revoke a pending invitation whose
- * materializeed ledger participant has unsettled balances without explicitly
- * choosing whether to settle them first. Callers should map this to
- * `PRECONDITION_FAILED` so the web client can re-render the revoke dialog
- * with the missing decision (settle+revoke vs. revoke only).
+ * materialized ledger participant has unsettled balances without settling
+ * them first. Revoking with an unsettled balance would leave the ledger
+ * pointing at a participant that no longer appears in the group, which
+ * breaks the balances view — so this is rejected outright. The web
+ * client maps this to `PRECONDITION_FAILED` so the revoke dialog can
+ * prompt for the settle-and-revoke decision.
  */
 export class RevokeInvitationPreconditionError extends Error {
   constructor(
@@ -118,14 +120,24 @@ export class RevokeInvitationPreconditionError extends Error {
 export async function revokeInvitation(opts: {
   invitationId: string
   groupId: string
+  /**
+   * Required when the invitee has unsettled balances. When `true`, the
+   * helper auto-creates one settlement expense per leg involving the
+   * invitee before flipping the invitation to `REVOKED`, so the ledger
+   * stays in sync. When `false` or unset while balances are unsettled,
+   * {@link RevokeInvitationPreconditionError} is thrown — the only way
+   * out is to settle first.
+   */
   settleBalances?: boolean
   actor: { accountId: string }
 }) {
   // Pre-check: if the invitation has a materialized ledger participant,
-  // detect any unsettled balances involving it so we can prompt the admin
-  // for an explicit decision before touching the ledger. The same balance
-  // pipeline that backs the leave / remove flows (`getPublicBalances`) is
-  // used so the UI and the mutation agree on what "settled" means.
+  // detect any unsettled balances involving it. We use the same balance
+  // pipeline that backs the leave / archive flows so the UI and the
+  // mutation agree on what "settled" means. The invitee must be settled
+  // before the revoke can proceed — otherwise the participant stays in
+  // the ledger but disappears from the active roster, leaving the
+  // balances view with an orphan side of a leg.
   const invitation = await prisma.groupInvitation.findUnique({
     where: { id: opts.invitationId },
   })
@@ -137,10 +149,10 @@ export async function revokeInvitation(opts: {
     hasUnsettledBalance =
       (balances[invitation.ledgerParticipantId]?.total ?? 0) !== 0
   }
-  if (hasUnsettledBalance && opts.settleBalances === undefined) {
+  if (hasUnsettledBalance && opts.settleBalances !== true) {
     throw new RevokeInvitationPreconditionError(
       'unsettledBalance',
-      'Invitation has unsettled balances. Settle them first or revoke without settling.',
+      'Invitation has unsettled balances. Settle them before revoking.',
     )
   }
 
@@ -168,7 +180,11 @@ export async function revokeInvitation(opts: {
       data: {
         status: GroupInvitationStatus.REVOKED,
         revokedAt: new Date(),
-        ledgerParticipantId: null,
+        // Keep `ledgerParticipantId` set on revoke so historical expenses
+        // (which reference this participant through `paidBy` / `paidFor`)
+        // still resolve a name in the activity feed via the participant's
+        // invitation relation. The UI only renders PENDING invitations, so
+        // the link is invisible to the user but useful for read-time joins.
       },
     })
 

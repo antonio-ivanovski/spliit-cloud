@@ -10,7 +10,6 @@ import { Trans, useTranslation } from 'react-i18next'
 
 export type Activity =
   AppRouterOutput['groups']['activities']['list']['activities'][number]
-type Participant = { id: string; name: string }
 
 const ActivityType = {
   UPDATE_GROUP: 'UPDATE_GROUP',
@@ -38,13 +37,12 @@ const summaryKeyByActivityType: Record<
 type Props = {
   groupId: string
   activity: Activity
-  participant?: Participant
   dateStyle: DateTimeStyle
 }
 
-function useSummary(activity: Activity, participantName?: string) {
+function useSummary(activity: Activity) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
-  const participant = participantName ?? t('someone')
+  const participant = activity.actorName ?? t('someone')
   const expense = activity.data ?? ''
   const i18nKey = summaryKeyByActivityType[activity.activityType]
 
@@ -60,17 +58,12 @@ function useSummary(activity: Activity, participantName?: string) {
   )
 }
 
-export function ActivityItem({
-  groupId,
-  activity,
-  participant,
-  dateStyle,
-}: Props) {
+export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   const router = useRouter()
   const locale = useLocale()
 
   const expenseExists = activity.expense !== undefined
-  const summary = useSummary(activity, participant?.name)
+  const summary = useSummary(activity)
 
   return (
     <div

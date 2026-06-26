@@ -4,7 +4,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import '../test/mocks'
 import { prismaMock } from '../test/state'
-import { deleteExpense, getGroup } from '../lib/api'
+import { deleteExpense, getActivities, getGroup } from '../lib/api'
 
 vi.mock('../routes/upload', () => ({
   deleteS3Object: vi.fn(),
@@ -236,5 +236,149 @@ describe('deleteExpense', () => {
     expect(prismaMock.expense.deleteMany).toHaveBeenCalledWith({
       where: { id: 'exp-1', ledgerId: 'ledger-1' },
     })
+  })
+})
+
+describe('getActivities', () => {
+  it("resolves the actor's display name from the participant's account at read time", async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.activity.findMany.mockResolvedValue([
+      {
+        id: 'act-1',
+        ledgerId: 'ledger-1',
+        time: new Date(),
+        activityType: 'CREATE_EXPENSE',
+        ledgerParticipantId: 'lp-alice',
+        accountId: 'acct-alice',
+        expenseId: 'exp-1',
+        data: 'Dinner',
+        ledgerParticipant: {
+          groupMember: { account: { name: 'Alice' } },
+          invitations: [],
+        },
+      },
+      {
+        id: 'act-2',
+        ledgerId: 'ledger-1',
+        time: new Date(),
+        activityType: 'UPDATE_GROUP',
+        ledgerParticipantId: 'lp-bob',
+        accountId: 'acct-bob',
+        expenseId: null,
+        data: 'group:settings',
+        ledgerParticipant: {
+          groupMember: { account: { name: 'Bob' } },
+          invitations: [],
+        },
+      },
+    ] as never)
+    prismaMock.expense.findMany.mockResolvedValue([
+      { id: 'exp-1', ledgerId: 'ledger-1' },
+    ] as never)
+
+    const activities = await getActivities('grp-1')
+
+    expect(activities).toHaveLength(2)
+    expect(activities[0]).toMatchObject({
+      id: 'act-1',
+      actorName: 'Alice',
+    })
+    expect(activities[1]).toMatchObject({
+      id: 'act-2',
+      actorName: 'Bob',
+    })
+    // The raw `ledgerParticipant` relation is not leaked into the
+    // response — the API exposes only `actorName`.
+    expect(
+      (activities[0] as Record<string, unknown>).ledgerParticipant,
+    ).toBeUndefined()
+  })
+
+  it('resolves the actor name from a pending invitation when the participant is invitee-backed', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.activity.findMany.mockResolvedValue([
+      {
+        id: 'act-3',
+        ledgerId: 'ledger-1',
+        time: new Date(),
+        activityType: 'CREATE_EXPENSE',
+        ledgerParticipantId: 'lp-invitee',
+        accountId: null,
+        expenseId: 'exp-2',
+        data: 'Lunch',
+        ledgerParticipant: {
+          groupMember: null,
+          invitations: [{ email: 'carol@example.com' }],
+        },
+      },
+    ] as never)
+    prismaMock.expense.findMany.mockResolvedValue([] as never)
+
+    const activities = await getActivities('grp-1')
+
+    expect(activities[0]).toMatchObject({
+      actorName: 'carol@example.com',
+    })
+  })
+
+  it('resolves the actor name from a REVOKED invitation when the invitee never accepted and the invite was later revoked', async () => {
+    // The participant has no groupMember (invitee never accepted) and
+    // the invitation is REVOKED — but the link is preserved on revoke
+    // so the activity feed can still recover the email. The UI only
+    // shows PENDING invitations, so the link is invisible to users.
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.activity.findMany.mockResolvedValue([
+      {
+        id: 'act-revoked',
+        ledgerId: 'ledger-1',
+        time: new Date(),
+        activityType: 'CREATE_EXPENSE',
+        ledgerParticipantId: 'lp-revoked-invitee',
+        accountId: null,
+        expenseId: 'exp-3',
+        data: 'Dinner',
+        ledgerParticipant: {
+          groupMember: null,
+          invitations: [{ email: 'dave@example.com' }],
+        },
+      },
+    ] as never)
+    prismaMock.expense.findMany.mockResolvedValue([] as never)
+
+    const activities = await getActivities('grp-1')
+
+    expect(activities[0]).toMatchObject({
+      actorName: 'dave@example.com',
+    })
+  })
+
+  it('returns null actorName when the activity has no participant', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.activity.findMany.mockResolvedValue([
+      {
+        id: 'act-4',
+        ledgerId: 'ledger-1',
+        time: new Date(),
+        activityType: 'UPDATE_GROUP',
+        ledgerParticipantId: null,
+        accountId: null,
+        expenseId: null,
+        data: null,
+        ledgerParticipant: null,
+      },
+    ] as never)
+    prismaMock.expense.findMany.mockResolvedValue([] as never)
+
+    const activities = await getActivities('grp-1')
+
+    expect(activities[0]).toMatchObject({ actorName: null })
   })
 })

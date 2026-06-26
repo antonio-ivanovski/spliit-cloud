@@ -48,12 +48,18 @@ async function loadGroupWithLedger(groupId: string) {
  * has no ledger participant materialized yet. Used to populate
  * `Activity.ledgerParticipantId` so the activity feed can render the
  * member who performed the action (instead of the generic "someone").
+ *
+ * Accepts an optional Prisma client (transactional or top-level) so the
+ * lookup can reuse the same client as the surrounding write — important
+ * for the leave/remove/archive flows that log activity from inside a
+ * transaction.
  */
 async function getMemberLedgerParticipantId(
   groupId: string,
   accountId: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<string | null> {
-  const member = await prisma.groupMember.findUnique({
+  const member = await client.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId } },
     include: { ledgerParticipant: { select: { id: true } } },
   })
@@ -662,9 +668,9 @@ export async function getGroupExpenses(
           id: true,
           groupMember: { select: { account: { select: { name: true } } } },
           invitations: {
-            where: { status: 'PENDING' },
             select: { email: true },
             take: 1,
+            orderBy: { createdAt: 'desc' },
           },
         },
       },
@@ -675,9 +681,9 @@ export async function getGroupExpenses(
               id: true,
               groupMember: { select: { account: { select: { name: true } } } },
               invitations: {
-                where: { status: 'PENDING' },
                 select: { email: true },
                 take: 1,
+                orderBy: { createdAt: 'desc' },
               },
             },
           },
@@ -775,6 +781,25 @@ export async function getActivities(
     orderBy: [{ time: 'desc' }],
     skip: options?.offset,
     take: options?.length,
+    // Resolve the actor's display name at read time so the activity
+    // feed renders it even after the actor is removed, leaves, or has
+    // their pending invitation revoked (their `LedgerParticipant` is
+    // preserved for history, so the account/invitation relation still
+    // resolves a name). We don't filter invitations by status because
+    // revoked invitations keep the link to the participant — that's
+    // how we recover the email of an invitee who never accepted.
+    include: {
+      ledgerParticipant: {
+        select: {
+          groupMember: { select: { account: { select: { name: true } } } },
+          invitations: {
+            select: { email: true },
+            take: 1,
+            orderBy: { createdAt: 'desc' },
+          },
+        },
+      },
+    },
   })
 
   const expenseIds = activities
@@ -784,13 +809,23 @@ export async function getActivities(
     where: { ledgerId: group.ledgerId, id: { in: expenseIds } },
   })
 
-  return activities.map((activity) => ({
-    ...activity,
-    expense:
-      activity.expenseId !== null
-        ? expenses.find((expense) => expense.id === activity.expenseId)
-        : undefined,
-  }))
+  return activities.map((activity) => {
+    const lp = activity.ledgerParticipant
+    const actorName = lp
+      ? (lp.groupMember?.account?.name ?? lp.invitations[0]?.email ?? null)
+      : null
+    // Strip the raw relation from the spread — we expose `actorName`
+    // instead so the frontend can render the name directly.
+    const { ledgerParticipant: _lp, ...rest } = activity
+    return {
+      ...rest,
+      actorName,
+      expense:
+        activity.expenseId !== null
+          ? expenses.find((expense) => expense.id === activity.expenseId)
+          : undefined,
+    }
+  })
 }
 
 export async function logActivity(
@@ -1061,6 +1096,14 @@ export async function createSettlementExpensesForArchive(
     return { createdExpenses: 0 }
   }
 
+  // Resolve the actor's ledger participant so the activity feed renders
+  // the member who triggered the archive (instead of "someone").
+  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+    groupId,
+    actor.accountId,
+    client,
+  )
+
   const now = new Date()
   for (const leg of legs) {
     if (leg.amount <= 0) continue
@@ -1070,6 +1113,7 @@ export async function createSettlementExpensesForArchive(
       ActivityType.CREATE_EXPENSE,
       {
         accountId: actor.accountId,
+        ledgerParticipantId: actorLedgerParticipantId,
         expenseId,
         data: SETTLEMENT_TITLE,
       },
@@ -1357,6 +1401,7 @@ export async function createSettlementExpensesForLeave(
       ActivityType.CREATE_EXPENSE,
       {
         accountId: actor.accountId,
+        ledgerParticipantId: participantId,
         expenseId,
         data: SETTLEMENT_ON_LEAVE_TITLE,
       },
@@ -1637,10 +1682,22 @@ export async function archiveGroupForSelf(opts: {
       },
     })
 
+    // Resolve the caller's participant id so the activity feed renders
+    // the member who triggered the archive (instead of "someone").
+    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+      groupId,
+      accountId,
+      tx,
+    )
+
     await logActivity(
       groupId,
       ActivityType.UPDATE_GROUP,
-      { accountId, data: 'group:archived-on-leave' },
+      {
+        accountId,
+        ledgerParticipantId: actorLedgerParticipantId,
+        data: 'group:archived-on-leave',
+      },
       tx,
     )
   })

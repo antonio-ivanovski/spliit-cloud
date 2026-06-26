@@ -106,6 +106,11 @@ export function CreateExpenseForm({
         utils.groups.expenses.invalidate()
         utils.groups.activities.invalidate()
         utils.groups.leavePreview.invalidate({ groupId })
+        // A manual settlement expense (reimbursement) can clear the
+        // invitee's balance; drop the cached `revokePreview` so the
+        // revoke dialog re-reads `hasUnsettledBalance` instead of
+        // showing the stale warning.
+        utils.invitations.revokePreview.invalidate()
         router.push({
           to: '/groups/$groupId',
           params: { groupId: group.id },

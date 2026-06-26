@@ -133,12 +133,13 @@ export const invitationsRouter = createTRPCRouter({
   // Revoke a pending invitation (ADMIN only).
   //
   // If the invitation's materialized ledger participant has unsettled
-  // balances the caller must supply `settleBalances: true` (create
+  // balances the caller MUST supply `settleBalances: true` (create
   // settlement expenses for the legs involving the invitee before
-  // flipping the status) or `settleBalances: false` (revoke without
-  // touching the ledger). When the flag is missing the mutation throws
-  // `PRECONDITION_FAILED` so the web client can re-render the revoke
-  // dialog with the missing decision.
+  // flipping the status). Anything else throws `PRECONDITION_FAILED` so
+  // the web client can re-render the revoke dialog with the settle
+  // checkbox. This is stricter than the member-remove flow because
+  // revoking a non-member leaves the invitee's participant orphaned in
+  // the ledger, which breaks the balances view.
   revoke: protectedProcedure
     .input(
       z.object({

@@ -721,14 +721,14 @@
         "cancel": "Cancel",
         "confirm": "Revoke",
         "unsettled": {
-          "title": "Revoke invitation with unsettled balance?",
-          "description": "Revoke the invitation to {email}? They have unsettled balances — tick the box below to settle them automatically before revoking.",
+          "title": "Settle balances before revoking",
+          "description": "Revoke the invitation to {email}? Their balances must be settled first.",
           "warning": {
             "title": "This invitation has unsettled balances",
-            "description": "Revoking without settling will leave these balances in the ledger indefinitely. Tick the box below to create one reimbursement expense per leg involving this invitee before revoking, or revoke without settling and deal with the balances manually."
+            "description": "Tick the box below to create one reimbursement expense per leg involving this invitee before revoking. The invitation can only be revoked once the balances are settled."
           },
           "toast": "Invitation revoked, balances settled.",
-          "checkbox": "Create settle reimbursement before revoking"
+          "checkbox": "Settle the invitee's balances before revoking"
         }
       }
     },

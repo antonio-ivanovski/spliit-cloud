@@ -557,6 +557,24 @@ describe('groupsRouter.members.remove', () => {
         data: expect.objectContaining({ data: 'member:removed:settled' }),
       }),
     )
+    // The settlement-on-leave activity is logged with the leaving
+    // member's participant id so the activity feed renders their name
+    // instead of falling back to "someone".
+    const settlementActivityCall = prismaMock.activity.create.mock.calls.find(
+      (call) =>
+        (call[0] as { data: { data?: string } }).data?.data ===
+        'Settlement on leave',
+    )
+    expect(settlementActivityCall).toBeDefined()
+    expect(settlementActivityCall![0]).toEqual(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          activityType: 'CREATE_EXPENSE',
+          ledgerParticipantId: 'lp-target',
+          data: 'Settlement on leave',
+        }),
+      }),
+    )
   })
 
   it('removes without touching balances when settleBalances=false even if the target has unsettled balances', async () => {

@@ -85,9 +85,9 @@ export async function exportGroupJson(request: Request, groupId: string) {
       id: true,
       groupMember: { select: { account: { select: { name: true } } } },
       invitations: {
-        where: { status: 'PENDING' },
         select: { email: true },
         take: 1,
+        orderBy: { createdAt: 'desc' },
       },
     },
     orderBy: { groupMember: { account: { name: 'asc' } } },

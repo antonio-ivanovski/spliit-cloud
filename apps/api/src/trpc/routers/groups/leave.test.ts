@@ -678,6 +678,24 @@ describe('groupsRouter.leave — unsettled balances', () => {
     expect(createCall.data.isReimbursement).toBe(true)
     expect(createCall.data.categoryId).toBe('payment')
     expect(prisma$Transaction).toHaveBeenCalledTimes(1)
+    // The settlement-on-leave activity is logged with the leaving user's
+    // participant id so the activity feed renders their name instead of
+    // falling back to "someone".
+    const settlementActivityCall = prismaMock.activity.create.mock.calls.find(
+      (call) =>
+        (call[0] as { data: { data?: string } }).data?.data ===
+        'Settlement on leave',
+    )
+    expect(settlementActivityCall).toBeDefined()
+    expect(settlementActivityCall![0]).toEqual(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          activityType: 'CREATE_EXPENSE',
+          ledgerParticipantId: 'lp-self',
+          data: 'Settlement on leave',
+        }),
+      }),
+    )
   })
 
   it('writes a settlement expense for a leaving debtor with the debtor as payer', async () => {
@@ -871,6 +889,24 @@ describe('groupsRouter.archiveForSelf', () => {
     expect(prisma$Transaction).toHaveBeenCalledTimes(1)
     // The group itself is not deleted.
     expect(prismaMock.group.delete).not.toHaveBeenCalled()
+    // The archive-on-leave activity is logged with the caller's
+    // participant id so the activity feed renders their name instead of
+    // falling back to "someone".
+    const archiveActivityCall = prismaMock.activity.create.mock.calls.find(
+      (call) =>
+        (call[0] as { data: { data?: string } }).data?.data ===
+        'group:archived-on-leave',
+    )
+    expect(archiveActivityCall).toBeDefined()
+    expect(archiveActivityCall![0]).toEqual(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          activityType: 'UPDATE_GROUP',
+          ledgerParticipantId: 'lp-self',
+          data: 'group:archived-on-leave',
+        }),
+      }),
+    )
   })
 
   it('rejects archiveForSelf with BAD_REQUEST when other active members exist', async () => {

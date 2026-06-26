@@ -92,6 +92,10 @@ export function EditExpenseForm({
         utils.groups.expenses.invalidate()
         utils.groups.activities.invalidate()
         utils.groups.leavePreview.invalidate({ groupId })
+        // Updating an expense can change invitee balances; drop the
+        // cached `revokePreview` so the dialog re-reads the current
+        // `hasUnsettledBalance` instead of showing stale state.
+        utils.invitations.revokePreview.invalidate()
         router.push({
           to: '/groups/$groupId',
           params: { groupId: group.id },
@@ -106,6 +110,10 @@ export function EditExpenseForm({
         utils.groups.expenses.invalidate()
         utils.groups.activities.invalidate()
         utils.groups.leavePreview.invalidate({ groupId })
+        // Deleting an expense can resurrect an invitee balance; drop
+        // the cached `revokePreview` so the dialog re-reads the current
+        // `hasUnsettledBalance` instead of showing stale state.
+        utils.invitations.revokePreview.invalidate()
         router.push({
           to: '/groups/$groupId',
           params: { groupId: group.id },

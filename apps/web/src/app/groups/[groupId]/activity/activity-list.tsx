@@ -142,23 +142,14 @@ export function ActivityList() {
             >
               {t(DATE_GROUP_I18N_KEYS[dateGroup])}
             </div>
-            {groupActivities.map((activity) => {
-              const participant =
-                activity.ledgerParticipantId !== null
-                  ? group.participants.find(
-                      (p) => p.id === activity.ledgerParticipantId,
-                    )
-                  : undefined
-              return (
-                <ActivityItem
-                  key={activity.id}
-                  groupId={groupId}
-                  activity={activity}
-                  participant={participant}
-                  dateStyle={dateStyle}
-                />
-              )
-            })}
+            {groupActivities.map((activity) => (
+              <ActivityItem
+                key={activity.id}
+                groupId={groupId}
+                activity={activity}
+                dateStyle={dateStyle}
+              />
+            ))}
           </div>
         )
       })}

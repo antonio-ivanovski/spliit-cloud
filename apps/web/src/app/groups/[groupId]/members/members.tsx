@@ -419,8 +419,16 @@ export default function GroupMembers() {
     setMemberPendingRemove(null)
   }
 
-  async function confirmRevoke(settleBalances?: boolean) {
+  async function confirmRevoke() {
     if (!invitationPendingRevoke) return
+    // When the invitee has unsettled balances, the API requires
+    // `settleBalances: true` (and the button is gated on the checkbox
+    // below), so the value is always `true` here when there are
+    // balances. When there are no balances, `settleBalances` is left
+    // unset — the API treats it as a no-op settle pass.
+    const settleBalances = revokePreviewQuery.data?.hasUnsettledBalance
+      ? true
+      : undefined
     await revokeMutation.mutateAsync({
       invitationId: invitationPendingRevoke.id,
       settleBalances,
@@ -733,17 +741,17 @@ export default function GroupMembers() {
                 <p className="text-sm text-muted-foreground">
                   {t('removeDialog.unsettled.warning.description')}
                 </p>
-              <label className="flex items-start gap-2 text-sm cursor-pointer">
-                <Checkbox
-                  checked={removeSettleChecked}
-                  onCheckedChange={(checked) =>
-                    setRemoveSettleChecked(checked === true)
-                  }
-                  disabled={removeMemberMutation.isPending}
-                  className="mt-0.5"
-                />
-                <span>{t('removeDialog.unsettled.checkbox')}</span>
-              </label>
+                <label className="flex items-start gap-2 text-sm cursor-pointer">
+                  <Checkbox
+                    checked={removeSettleChecked}
+                    onCheckedChange={(checked) =>
+                      setRemoveSettleChecked(checked === true)
+                    }
+                    disabled={removeMemberMutation.isPending}
+                    className="mt-0.5"
+                  />
+                  <span>{t('removeDialog.unsettled.checkbox')}</span>
+                </label>
               </div>
             </div>
           ) : null}
@@ -841,15 +849,15 @@ export default function GroupMembers() {
             </Button>
             <Button
               variant="destructive"
-              onClick={() =>
-                confirmRevoke(
-                  revokePreviewQuery.data?.hasUnsettledBalance
-                    ? revokeSettleChecked
-                    : undefined,
-                )
-              }
+              onClick={() => confirmRevoke()}
               disabled={
-                revokeMutation.isPending || revokePreviewQuery.isLoading
+                revokeMutation.isPending ||
+                revokePreviewQuery.isLoading ||
+                // When the invitee has unsettled balances, the API
+                // rejects any revoke that doesn't settle first, so the
+                // button stays disabled until the settle box is ticked.
+                (revokePreviewQuery.data?.hasUnsettledBalance === true &&
+                  !revokeSettleChecked)
               }
             >
               {t('invitations.revokeDialog.confirm')}
