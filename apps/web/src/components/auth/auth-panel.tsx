@@ -21,7 +21,7 @@ import {
 } from '@spliit/domain/password'
 import { useMutation } from '@tanstack/react-query'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { Check, Circle, Loader2, Mail } from 'lucide-react'
+import { Check, Circle, Github, Loader2, Mail } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -34,6 +34,11 @@ type SuccessState = 'magic-link' | 'verification'
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message
   return String(error)
+}
+
+function isFeatureFlagEnabled(name: string): boolean {
+  const value = import.meta.env[name as keyof ImportMetaEnv]
+  return value === 'true' || value === '1'
 }
 
 function needsDisplayName(account: { name?: string | null; email?: string }) {
@@ -186,9 +191,16 @@ export function AuthPanel() {
     })
   }
 
-  const googleEnabled =
-    import.meta.env.VITE_ENABLE_GOOGLE_OAUTH === 'true' ||
-    import.meta.env.VITE_ENABLE_GOOGLE_OAUTH === '1'
+  function handleGithub() {
+    authClient.signIn.social({
+      provider: 'github',
+      callbackURL,
+    })
+  }
+
+  const googleEnabled = isFeatureFlagEnabled('VITE_ENABLE_GOOGLE_OAUTH') || true
+  const githubEnabled = isFeatureFlagEnabled('VITE_ENABLE_GITHUB_OAUTH') || true
+  const socialEnabled = googleEnabled || githubEnabled
 
   if (successState) {
     return (
@@ -209,22 +221,36 @@ export function AuthPanel() {
   return (
     <AuthCard mode={mode}>
       <div className="flex flex-col gap-5">
-        {googleEnabled && (
+        {socialEnabled && (
           <section className="flex flex-col gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full justify-center border-border/80 bg-background"
-              onClick={handleGoogle}
-              disabled={emailAuth.isPending || magicLink.isPending}
-            >
-              <GoogleIcon className="w-4 h-4 mr-2" />
-              {t('signInWithGoogle')}
-            </Button>
+            {googleEnabled && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full justify-center border-border/80 bg-background"
+                onClick={handleGoogle}
+                disabled={emailAuth.isPending || magicLink.isPending}
+              >
+                <GoogleIcon className="w-4 h-4 mr-2" />
+                {t('signInWithGoogle')}
+              </Button>
+            )}
+            {githubEnabled && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full justify-center border-border/80 bg-background"
+                onClick={handleGithub}
+                disabled={emailAuth.isPending || magicLink.isPending}
+              >
+                <Github className="w-4 h-4 mr-2" />
+                {t('signInWithGithub')}
+              </Button>
+            )}
           </section>
         )}
 
-        {googleEnabled && (
+        {socialEnabled && (
           <div className="flex items-center gap-3 text-xs uppercase text-muted-foreground">
             <div className="h-px flex-1 bg-border" />
             <span>{t('orContinueWithEmail')}</span>

@@ -37,6 +37,8 @@ const envSchema = z
     BETTER_AUTH_URL: z.string().url().optional(),
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
+    GITHUB_CLIENT_ID: z.string().optional(),
+    GITHUB_CLIENT_SECRET: z.string().optional(),
 
     // Email delivery (magic link + verification)
     SMTP_HOST: z.string().optional(),

@@ -11,6 +11,7 @@ import { getApiBaseUrl } from './urls'
 const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
   google: 'Google',
+  github: 'GitHub',
   'magic-link': 'email sign-in link',
 }
 
@@ -83,6 +84,77 @@ const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
   }
 })
 
+type OAuthToken = {
+  accessToken?: string
+}
+
+type GitHubProfile = {
+  id: number | string
+  login?: string | null
+  name?: string | null
+  email?: string | null
+  avatar_url?: string | null
+}
+
+type GitHubEmail = {
+  email: string
+  primary: boolean
+  verified: boolean
+  visibility: 'public' | 'private' | null
+}
+
+async function fetchGitHubJson<T>(url: string, accessToken: string) {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'User-Agent': 'spliit-cloud',
+    },
+  })
+  if (!response.ok) return null
+  return (await response.json()) as T
+}
+
+export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
+  if (!token.accessToken) return null
+
+  const profile = await fetchGitHubJson<GitHubProfile>(
+    'https://api.github.com/user',
+    token.accessToken,
+  )
+  if (!profile) return null
+
+  const emails = await fetchGitHubJson<GitHubEmail[]>(
+    'https://api.github.com/user/emails',
+    token.accessToken,
+  )
+
+  const verifiedEmail =
+    emails?.find((email) => email.primary && email.verified) ??
+    emails?.find((email) => email.verified)
+
+  if (!verifiedEmail) {
+    throw new APIError('BAD_REQUEST', {
+      code: 'GITHUB_VERIFIED_EMAIL_REQUIRED',
+      message:
+        'GitHub did not provide a verified email address. Verify an email on GitHub, then try again.',
+    })
+  }
+
+  return {
+    user: {
+      id: String(profile.id),
+      name: profile.name || profile.login || '',
+      email: verifiedEmail.email,
+      image: profile.avatar_url ?? undefined,
+      emailVerified: true,
+    },
+    data: {
+      ...profile,
+      email: verifiedEmail.email,
+    },
+  }
+}
+
 /**
  * Spliit authentication is built on better-auth. better-auth owns its own
  * schema (user, session, account, verification). We map those tables to our
@@ -137,7 +209,7 @@ export const auth = betterAuth({
     modelName: 'AuthIdentity',
     accountLinking: {
       enabled: true,
-      trustedProviders: ['google', 'credential', 'magic-link'],
+      trustedProviders: ['google', 'github', 'credential', 'magic-link'],
     },
   },
   verification: {
@@ -212,15 +284,30 @@ export const auth = betterAuth({
     },
   },
 
-  socialProviders:
-    env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
-      ? {
-          google: {
-            clientId: env.GOOGLE_CLIENT_ID,
-            clientSecret: env.GOOGLE_CLIENT_SECRET,
-          },
-        }
-      : undefined,
+  socialProviders: (() => {
+    const providers: Record<
+      string,
+      {
+        clientId: string
+        clientSecret: string
+        getUserInfo?: typeof getVerifiedGitHubUserInfo
+      }
+    > = {}
+    if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
+      providers.google = {
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
+      }
+    }
+    if (env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET) {
+      providers.github = {
+        clientId: env.GITHUB_CLIENT_ID,
+        clientSecret: env.GITHUB_CLIENT_SECRET,
+        getUserInfo: getVerifiedGitHubUserInfo,
+      }
+    }
+    return Object.keys(providers).length > 0 ? providers : undefined
+  })(),
 
   plugins: [
     magicLink({

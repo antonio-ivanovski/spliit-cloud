@@ -9,3 +9,10 @@ process.env.S3_UPLOAD_KEY ??= 'AKIA-TEST'
 process.env.S3_UPLOAD_REGION ??= 'us-east-1'
 process.env.S3_UPLOAD_SECRET ??= 'test-secret'
 process.env.S3_UPLOAD_ENDPOINT ??= ''
+// Pre-seed social provider env so the auth module exposes Google + GitHub
+// in its config (used by lib/auth tests). Real values are never exchanged
+// here — the auth module is only inspected via `vi.importActual`, not started.
+process.env.GOOGLE_CLIENT_ID ??= 'test-google-client-id'
+process.env.GOOGLE_CLIENT_SECRET ??= 'test-google-client-secret'
+process.env.GITHUB_CLIENT_ID ??= 'test-github-client-id'
+process.env.GITHUB_CLIENT_SECRET ??= 'test-github-client-secret'
