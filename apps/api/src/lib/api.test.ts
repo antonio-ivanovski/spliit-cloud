@@ -314,36 +314,36 @@ describe('getGroup — pending invitations as participants', () => {
       members: [],
       invitations: [
         {
-          id: 'inv-bela',
+          id: 'inv-jane',
           groupId,
           email: 'link-placeholder@placeholder.local',
-          temporaryName: 'Bela',
+          temporaryName: 'Jane',
           status: 'PENDING',
-          ledgerParticipantId: 'lp-bela',
+          ledgerParticipantId: 'lp-jane',
         },
       ],
     } as never)
     // The pending link invitation has its LP attached.
     prismaMock.groupInvitation.findMany.mockResolvedValue([
       {
-        id: 'inv-bela',
+        id: 'inv-jane',
         groupId,
         email: 'link-placeholder@placeholder.local',
-        temporaryName: 'Bela',
-        ledgerParticipant: { id: 'lp-bela' },
+        temporaryName: 'Jane',
+        ledgerParticipant: { id: 'lp-jane' },
       },
     ] as never)
     // The same LP is also surfaced as an unlinked entry — this is
     // the state the import commit leaves behind. The read path must
     // filter it out so the balances list doesn't double-count.
     prismaMock.ledgerParticipant.findMany.mockResolvedValue([
-      { id: 'lp-bela', displayName: 'Bela' },
+      { id: 'lp-jane', displayName: 'Jane' },
     ] as never)
     const group = await getGroup(groupId)
     expect(group!.participants).toEqual([
       {
-        id: 'lp-bela',
-        name: 'Bela',
+        id: 'lp-jane',
+        name: 'Jane',
         pending: true,
         unlinked: false,
       },
@@ -605,7 +605,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
       linkUnlinkedParticipantToAccount({
         groupId: 'grp-1',
         ledgerParticipantId: 'lp-alice',
-        accountId: 'acct-bela',
+        accountId: 'acct-jane',
         actor: { accountId: 'acct-admin' },
       }),
     ).rejects.toThrow('Ledger participant is not unlinked')
@@ -616,11 +616,11 @@ describe('linkUnlinkedParticipantToAccount', () => {
       ledgerId: 'ledger-1',
     } as never)
     prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
-      id: 'lp-bela',
+      id: 'lp-jane',
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
     prismaMock.account.findUnique.mockResolvedValue({
@@ -639,17 +639,17 @@ describe('linkUnlinkedParticipantToAccount', () => {
 
     const result = await linkUnlinkedParticipantToAccount({
       groupId: 'grp-1',
-      ledgerParticipantId: 'lp-bela',
+      ledgerParticipantId: 'lp-jane',
       accountId: 'acct-alice',
       actor: { accountId: 'acct-admin' },
     })
 
     expect(result).toEqual({
       groupMemberId: 'gm-alice',
-      ledgerParticipantId: 'lp-bela',
+      ledgerParticipantId: 'lp-jane',
     })
     expect(prismaMock.ledgerParticipant.update).toHaveBeenCalledWith({
-      where: { id: 'lp-bela' },
+      where: { id: 'lp-jane' },
       data: {
         groupMemberId: 'gm-alice',
         kind: 'ACCOUNT_MEMBER',
@@ -665,7 +665,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          data: 'ledger-participant:linked:lp-bela',
+          data: 'ledger-participant:linked:lp-jane',
         }),
       }),
     )
@@ -686,13 +686,13 @@ describe('linkUnlinkedParticipantToAccount', () => {
         const where = (
           args as { where: { id?: string; groupMemberId?: string } }
         ).where
-        if (where.id === 'lp-bela') {
+        if (where.id === 'lp-jane') {
           return {
-            id: 'lp-bela',
+            id: 'lp-jane',
             ledgerId: 'ledger-1',
             groupMemberId: null,
             kind: 'UNLINKED_PARTICIPANT',
-            displayName: 'Bela',
+            displayName: 'Jane',
             ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
           } as never
         }
@@ -736,7 +736,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
 
     const result = await linkUnlinkedParticipantToAccount({
       groupId: 'grp-1',
-      ledgerParticipantId: 'lp-bela',
+      ledgerParticipantId: 'lp-jane',
       accountId: 'acct-alice',
       actor: { accountId: 'acct-admin' },
     })
@@ -747,15 +747,15 @@ describe('linkUnlinkedParticipantToAccount', () => {
       ledgerParticipantId: 'lp-alice',
     })
     expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
-      where: { ledgerParticipantId: 'lp-bela' },
+      where: { ledgerParticipantId: 'lp-jane' },
       data: { ledgerParticipantId: 'lp-alice' },
     })
     expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-bela' },
+      where: { paidById: 'lp-jane' },
       data: { paidById: 'lp-alice' },
     })
     expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
-      where: { id: 'lp-bela' },
+      where: { id: 'lp-jane' },
     })
     // The merge path does not update the LP — the existing LP and
     // groupMember are unchanged. The @unique constraint stays safe.
@@ -772,7 +772,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          data: 'ledger-participant:merged:lp-bela:lp-alice',
+          data: 'ledger-participant:merged:lp-jane:lp-alice',
         }),
       }),
     )
@@ -787,13 +787,13 @@ describe('linkUnlinkedParticipantToAccount', () => {
         const where = (
           args as { where: { id?: string; groupMemberId?: string } }
         ).where
-        if (where.id === 'lp-bela') {
+        if (where.id === 'lp-jane') {
           return {
-            id: 'lp-bela',
+            id: 'lp-jane',
             ledgerId: 'ledger-1',
             groupMemberId: null,
             kind: 'UNLINKED_PARTICIPANT',
-            displayName: 'Bela',
+            displayName: 'Jane',
             ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
           } as never
         }
@@ -837,7 +837,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
 
     const result = await linkUnlinkedParticipantToAccount({
       groupId: 'grp-1',
-      ledgerParticipantId: 'lp-bela',
+      ledgerParticipantId: 'lp-jane',
       accountId: 'acct-alice',
       actor: { accountId: 'acct-admin' },
     })
@@ -855,7 +855,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          data: 'ledger-participant:merged:lp-bela:lp-alice',
+          data: 'ledger-participant:merged:lp-jane:lp-alice',
         }),
       }),
     )

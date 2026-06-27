@@ -8,12 +8,12 @@ import {
 
 const validExport = {
   id: 'grp-123',
-  name: 'Sardinia 2025/6',
+  name: 'Spliit Export Group',
   currency: '€',
   currencyCode: 'EUR',
   participants: [
-    { id: 'p-1', name: 'Antonio' },
-    { id: 'p-2', name: 'Bela' },
+    { id: 'p-1', name: 'John' },
+    { id: 'p-2', name: 'Jane' },
   ],
   expenses: [
     {
@@ -57,12 +57,12 @@ describe('parseSpliitExport', () => {
     const result = parseSpliitExport(validExport)
     expect(result.sourceGroupId).toBe('grp-123')
     expect(result.sourceUrl).toBe('https://spliit.app/groups/grp-123')
-    expect(result.name).toBe('Sardinia 2025/6')
+    expect(result.name).toBe('Spliit Export Group')
     expect(result.currency).toBe('€')
     expect(result.currencyCode).toBe('EUR')
     expect(result.participants).toEqual([
-      { sourceId: 'spliit-participant-0', sourceName: 'Antonio' },
-      { sourceId: 'spliit-participant-1', sourceName: 'Bela' },
+      { sourceId: 'spliit-participant-0', sourceName: 'John' },
+      { sourceId: 'spliit-participant-1', sourceName: 'Jane' },
     ])
     expect(result.expenses).toHaveLength(2)
     const [first, second] = result.expenses

@@ -89,12 +89,12 @@ const baseExpense = {
 const baseParticipants = [
   {
     mode: 'UNLINKED_PARTICIPANT' as const,
-    sourceName: 'Antonio',
+    sourceName: 'John',
     destLedgerParticipantId: 'dest-lp-1',
   },
   {
     mode: 'UNLINKED_PARTICIPANT' as const,
-    sourceName: 'Bela',
+    sourceName: 'Jane',
     destLedgerParticipantId: 'dest-lp-2',
   },
 ]
@@ -283,13 +283,13 @@ describe('importGroup', () => {
         participants: [
           {
             mode: 'LINK_ACCOUNT',
-            sourceName: 'Antonio',
+            sourceName: 'John',
             linkedAccountId: 'acct-importer',
             destLedgerParticipantId: 'web-supplied-lp',
           },
           {
             mode: 'UNLINKED_PARTICIPANT',
-            sourceName: 'Bela',
+            sourceName: 'Jane',
             destLedgerParticipantId: 'dest-lp-2',
           },
         ],
@@ -317,7 +317,7 @@ describe('importGroup', () => {
       paidFor: { createMany: { data: Array<{ ledgerParticipantId: string }> } }
     }
     // The LINK_ACCOUNT branch created a fresh LP with the
-    // web-supplied `destLedgerParticipantId` for Antonio, linked to
+    // web-supplied `destLedgerParticipantId` for John, linked to
     // the existing admin GroupMember. The expense's paidById
     // points at this fresh id (not at a server-generated LP for
     // the admin).
@@ -369,12 +369,12 @@ describe('importGroup', () => {
         participants: [
           {
             mode: 'UNLINKED_PARTICIPANT',
-            sourceName: 'Antonio',
+            sourceName: 'John',
             destLedgerParticipantId: 'dest-lp-1',
           },
           {
             mode: 'UNLINKED_PARTICIPANT',
-            sourceName: 'Bela',
+            sourceName: 'Jane',
             destLedgerParticipantId: 'dest-lp-2',
           },
         ],
@@ -442,12 +442,12 @@ describe('importGroup', () => {
           participants: [
             {
               mode: 'UNLINKED_PARTICIPANT',
-              sourceName: 'Antonio',
+              sourceName: 'John',
               destLedgerParticipantId: 'dest-lp-1',
             },
             {
               mode: 'UNLINKED_PARTICIPANT',
-              sourceName: 'Bela',
+              sourceName: 'Jane',
               destLedgerParticipantId: 'dest-lp-2',
             },
           ],
@@ -665,10 +665,10 @@ describe('importGroup', () => {
         participants: [
           {
             mode: 'LINK_ACCOUNT',
-            sourceName: 'Antonio',
+            sourceName: 'John',
             linkedAccountId: 'acct-importer',
           },
-          { mode: 'INVITE_BY_LINK', sourceName: 'Bela' },
+          { mode: 'INVITE_BY_LINK', sourceName: 'Jane' },
         ],
         expenses: [],
       },
@@ -725,7 +725,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-other' } },
     } as never)
     await expect(
@@ -746,14 +746,14 @@ describe('linkUnlinkedParticipantToAccount', () => {
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
     prismaMock.account.findUnique.mockResolvedValue({
       id: 'acct-other',
       email: 'b@example.com',
       emailVerified: true,
-      name: 'Bela',
+      name: 'Jane',
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue(null as never)
     prismaMock.groupMember.create.mockResolvedValue({
@@ -783,14 +783,14 @@ describe('linkUnlinkedParticipantToAccount', () => {
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
     prismaMock.account.findUnique.mockResolvedValue({
       id: 'acct-other',
       email: 'b@example.com',
       emailVerified: true,
-      name: 'Bela',
+      name: 'Jane',
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
       id: 'gm-existing',
@@ -826,12 +826,12 @@ describe('listUnlinkedParticipants', () => {
       ledgerId: 'ledger-1',
     } as never)
     prismaMock.ledgerParticipant.findMany.mockResolvedValue([
-      { id: 'lp-1', displayName: 'Bela' },
+      { id: 'lp-1', displayName: 'Jane' },
       { id: 'lp-2', displayName: 'Cleo' },
     ] as never)
     const result = await listUnlinkedParticipants('grp-1')
     expect(result).toEqual([
-      { id: 'lp-1', displayName: 'Bela' },
+      { id: 'lp-1', displayName: 'Jane' },
       { id: 'lp-2', displayName: 'Cleo' },
     ])
   })
@@ -889,13 +889,13 @@ describe('importGroup — LINK_EXISTING_PARTICIPANT', () => {
         participants: [
           {
             mode: 'LINK_ACCOUNT',
-            sourceName: 'Antonio',
+            sourceName: 'John',
             linkedAccountId: 'acct-importer',
             destLedgerParticipantId: 'fresh-lp-importer',
           },
           {
             mode: 'LINK_EXISTING_PARTICIPANT',
-            sourceName: 'Bela',
+            sourceName: 'Jane',
             destLedgerParticipantId: 'existing-lp-1',
           },
           {
@@ -941,13 +941,13 @@ describe('importGroup — LINK_EXISTING_PARTICIPANT', () => {
           participants: [
             {
               mode: 'LINK_ACCOUNT',
-              sourceName: 'Antonio',
+              sourceName: 'John',
               linkedAccountId: 'acct-importer',
               destLedgerParticipantId: 'fresh-lp-importer',
             },
             {
               mode: 'LINK_EXISTING_PARTICIPANT',
-              sourceName: 'Bela',
+              sourceName: 'Jane',
               // not in the mocked ledgerParticipant.findMany result
               destLedgerParticipantId: 'ghost-lp',
             },
@@ -999,13 +999,13 @@ describe('importGroup — LINK_EXISTING_PARTICIPANT', () => {
           participants: [
             {
               mode: 'LINK_ACCOUNT',
-              sourceName: 'Antonio',
+              sourceName: 'John',
               linkedAccountId: 'acct-importer',
               destLedgerParticipantId: 'fresh-lp-importer',
             },
             {
               mode: 'LINK_EXISTING_PARTICIPANT',
-              sourceName: 'Bela',
+              sourceName: 'Jane',
               destLedgerParticipantId: 'some-existing-lp',
             },
           ],

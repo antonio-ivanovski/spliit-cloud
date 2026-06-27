@@ -77,48 +77,48 @@ const baseExpense = (
 
 describe('substringsOverlap', () => {
   it('returns false for empty inputs', () => {
-    expect(substringsOverlap('', 'Antonio')).toBe(false)
-    expect(substringsOverlap('Antonio', '')).toBe(false)
-    expect(substringsOverlap('   ', 'Antonio')).toBe(false)
+    expect(substringsOverlap('', 'John')).toBe(false)
+    expect(substringsOverlap('John', '')).toBe(false)
+    expect(substringsOverlap('   ', 'John')).toBe(false)
   })
 
   it('returns true for an exact match', () => {
-    expect(substringsOverlap('Antonio', 'Antonio')).toBe(true)
+    expect(substringsOverlap('John', 'John')).toBe(true)
   })
 
   it('is case-insensitive', () => {
     expect(substringsOverlap('ANTONIO', 'antonio')).toBe(true)
-    expect(substringsOverlap('Antonio', 'ANT')).toBe(true)
+    expect(substringsOverlap('John', 'JOH')).toBe(true)
     expect(substringsOverlap('  AnTo  ', 'to')).toBe(true)
   })
 
   it('returns true when either is a substring of the other', () => {
-    expect(substringsOverlap('Antonio', 'Ant')).toBe(true)
-    expect(substringsOverlap('Ant', 'Antonio')).toBe(true)
+    expect(substringsOverlap('John', 'Joh')).toBe(true)
+    expect(substringsOverlap('Joh', 'John')).toBe(true)
   })
 
   it('returns false for unrelated strings', () => {
-    expect(substringsOverlap('Antonio', 'Bela')).toBe(false)
+    expect(substringsOverlap('John', 'Jane')).toBe(false)
   })
 })
 
 describe('findBestNameMatch', () => {
   const candidates: DestinationParticipant[] = [
-    dest('d-1', 'Antonio'),
-    dest('d-2', 'Bela'),
+    dest('d-1', 'John'),
+    dest('d-2', 'Jane'),
     dest('d-3', 'Ant'),
   ]
 
   it('returns null when there are no candidates', () => {
-    expect(findBestNameMatch('Antonio', [])).toBeNull()
+    expect(findBestNameMatch('John', [])).toBeNull()
   })
 
   it('prefers an exact match over a substring match', () => {
-    expect(findBestNameMatch('Antonio', candidates)).toEqual(candidates[0])
+    expect(findBestNameMatch('John', candidates)).toEqual(candidates[0])
   })
 
   it('picks the longer substring match when no exact match exists', () => {
-    expect(findBestNameMatch('Anto', candidates)).toEqual(candidates[0])
+    expect(findBestNameMatch('Joh', candidates)).toEqual(candidates[0])
   })
 
   it('returns null when no candidate overlaps', () => {
@@ -133,7 +133,7 @@ describe('findBestNameMatch', () => {
 describe('applyAutoMatch', () => {
   it('returns the same array reference when nothing changes', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT'),
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
       mappingRow('p-1', 'Carla', 'INVITE_BY_EMAIL'),
     ]
     const next = applyAutoMatch(participants, [])
@@ -142,10 +142,10 @@ describe('applyAutoMatch', () => {
 
   it('promotes INVITE_BY_EMAIL rows to LINK_EXISTING_PARTICIPANT on match', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT'),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_EMAIL'),
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
+      mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL'),
     ]
-    const next = applyAutoMatch(participants, [dest('d-1', 'Bela')])
+    const next = applyAutoMatch(participants, [dest('d-1', 'Jane')])
     expect(next[1].mode).toBe('LINK_EXISTING_PARTICIPANT')
     expect(next[1].existingLedgerParticipantId).toBe('d-1')
     expect(next[1].inviteEmail).toBeUndefined()
@@ -154,12 +154,12 @@ describe('applyAutoMatch', () => {
 
   it('preserves the first row even when its name matches a candidate', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'INVITE_BY_EMAIL'),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_EMAIL'),
+      mappingRow('p-0', 'John', 'INVITE_BY_EMAIL'),
+      mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL'),
     ]
     const next = applyAutoMatch(participants, [
-      dest('d-1', 'Antonio'),
-      dest('d-2', 'Bela'),
+      dest('d-1', 'John'),
+      dest('d-2', 'Jane'),
     ])
     expect(next[0]).toBe(participants[0])
     expect(next[1].mode).toBe('LINK_EXISTING_PARTICIPANT')
@@ -167,26 +167,26 @@ describe('applyAutoMatch', () => {
 
   it('only auto-matches rows still in the default INVITE_BY_EMAIL state', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT'),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_LINK', {
-        inviteEmail: 'bela@example.com',
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
+      mappingRow('p-1', 'Jane', 'INVITE_BY_LINK', {
+        inviteEmail: 'jane@example.com',
       }),
       mappingRow('p-2', 'Carla', 'INVITE_BY_EMAIL'),
     ]
-    const next = applyAutoMatch(participants, [dest('d-1', 'Bela')])
+    const next = applyAutoMatch(participants, [dest('d-1', 'Jane')])
     expect(next[1].mode).toBe('INVITE_BY_LINK')
-    expect(next[1].inviteEmail).toBe('bela@example.com')
+    expect(next[1].inviteEmail).toBe('jane@example.com')
     expect(next[2].mode).toBe('INVITE_BY_EMAIL')
   })
 
   it('picks the first match when multiple candidates share the same name', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT'),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_EMAIL'),
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
+      mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL'),
     ]
     const next = applyAutoMatch(participants, [
-      dest('d-1', 'Bela'),
-      dest('d-2', 'Bela'),
+      dest('d-1', 'Jane'),
+      dest('d-2', 'Jane'),
     ])
     expect(next[1].existingLedgerParticipantId).toBe('d-1')
   })
@@ -195,15 +195,15 @@ describe('applyAutoMatch', () => {
 describe('findImportConflicts', () => {
   it('flags two source rows linked to the same existing member (Rule A)', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-1',
       }),
-      mappingRow('p-1', 'Bela', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-1', 'Jane', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-1',
       }),
     ]
     const conflicts = findImportConflicts(participants, [
-      dest('d-1', 'Antonio'),
+      dest('d-1', 'John'),
     ])
     expect(conflicts.get('p-0')).toBe(
       'Two source rows are mapped to the same existing member.',
@@ -215,48 +215,48 @@ describe('findImportConflicts', () => {
 
   it('flags an email invite matching a pending destination invite (Rule B)', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-1',
       }),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_EMAIL', {
-        inviteEmail: 'bela@example.com',
+      mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL', {
+        inviteEmail: 'jane@example.com',
       }),
     ]
     const conflicts = findImportConflicts(participants, [
-      dest('d-1', 'Bela', { pending: true }),
+      dest('d-1', 'Jane', { pending: true }),
     ])
     expect(conflicts.get('p-1')).toBe(
-      `You're inviting bela@example.com but they're already a pending invite; link to them instead.`,
+      `You're inviting jane@example.com but they're already a pending invite; link to them instead.`,
     )
   })
 
   it('flags an email invite matching an active member (Rule C)', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-1',
       }),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_EMAIL', {
-        inviteEmail: 'bela@example.com',
+      mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL', {
+        inviteEmail: 'jane@example.com',
       }),
     ]
-    const conflicts = findImportConflicts(participants, [dest('d-1', 'Bela')])
+    const conflicts = findImportConflicts(participants, [dest('d-1', 'Jane')])
     expect(conflicts.get('p-1')).toBe(
-      `You're inviting bela@example.com but they're already a member of this group; link to them instead.`,
+      `You're inviting jane@example.com but they're already a member of this group; link to them instead.`,
     )
   })
 
   it('flags two LINK_EXISTING rows whose destination names look the same (Rule D)', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-1',
       }),
-      mappingRow('p-1', 'Bela', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-1', 'Jane', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-2',
       }),
     ]
     const conflicts = findImportConflicts(participants, [
-      dest('d-1', 'Antonio Garcia'),
-      dest('d-2', 'Antonio'),
+      dest('d-1', 'John Garcia'),
+      dest('d-2', 'John'),
     ])
     expect(conflicts.get('p-0')).toBe(
       'Two existing members look like the same person — pick one.',
@@ -268,10 +268,10 @@ describe('findImportConflicts', () => {
 
   it('does not flag single-letter names on Rule D', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-1',
       }),
-      mappingRow('p-1', 'Bela', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-1', 'Jane', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'd-2',
       }),
     ]
@@ -284,9 +284,9 @@ describe('findImportConflicts', () => {
 
   it('returns no conflicts when mapping is clean', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT'),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_EMAIL', {
-        inviteEmail: 'bela@example.com',
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
+      mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL', {
+        inviteEmail: 'jane@example.com',
       }),
     ]
     const conflicts = findImportConflicts(participants, [dest('d-1', 'Carla')])
@@ -299,9 +299,9 @@ describe('buildImportBatch', () => {
 
   it('produces a NEW_GROUP-shaped batch with an Owner placeholder', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT', { linkedAccountId }),
-      mappingRow('p-1', 'Bela', 'INVITE_BY_EMAIL', {
-        inviteEmail: 'bela@example.com',
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT', { linkedAccountId }),
+      mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL', {
+        inviteEmail: 'jane@example.com',
       }),
     ]
     const state: ImportBatchState = {
@@ -331,14 +331,14 @@ describe('buildImportBatch', () => {
     expect(batch.participants).toEqual([
       {
         mode: 'LINK_ACCOUNT',
-        sourceName: 'Antonio',
+        sourceName: 'John',
         linkedAccountId,
         destLedgerParticipantId: 'dest-a',
       },
       {
         mode: 'INVITE_BY_EMAIL',
-        sourceName: 'Bela',
-        email: 'bela@example.com',
+        sourceName: 'Jane',
+        email: 'jane@example.com',
         destLedgerParticipantId: 'dest-b',
       },
     ])
@@ -352,7 +352,7 @@ describe('buildImportBatch', () => {
 
   it('produces an EXISTING_GROUP-shaped batch when targetGroupId is set', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'LINK_EXISTING_PARTICIPANT', {
+      mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {
         existingLedgerParticipantId: 'lp-1',
       }),
     ]
@@ -378,7 +378,7 @@ describe('buildImportBatch', () => {
     expect(batch.participants).toEqual([
       {
         mode: 'LINK_EXISTING_PARTICIPANT',
-        sourceName: 'Antonio',
+        sourceName: 'John',
         destLedgerParticipantId: 'lp-1',
       },
     ])
@@ -386,7 +386,7 @@ describe('buildImportBatch', () => {
 
   it('produces an INVITE_BY_LINK payload for that mode', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'INVITE_BY_LINK'),
+      mappingRow('p-0', 'John', 'INVITE_BY_LINK'),
     ]
     const state: ImportBatchState = {
       source: baseSource,
@@ -408,7 +408,7 @@ describe('buildImportBatch', () => {
     expect(batch.participants).toEqual([
       {
         mode: 'INVITE_BY_LINK',
-        sourceName: 'Antonio',
+        sourceName: 'John',
         destLedgerParticipantId: 'dest-a',
       },
     ])
@@ -416,7 +416,7 @@ describe('buildImportBatch', () => {
 
   it('produces an UNLINKED_PARTICIPANT payload without an account id', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'UNLINKED_PARTICIPANT'),
+      mappingRow('p-0', 'John', 'UNLINKED_PARTICIPANT'),
     ]
     const state: ImportBatchState = {
       source: baseSource,
@@ -438,7 +438,7 @@ describe('buildImportBatch', () => {
     expect(batch.participants).toEqual([
       {
         mode: 'UNLINKED_PARTICIPANT',
-        sourceName: 'Antonio',
+        sourceName: 'John',
         destLedgerParticipantId: 'dest-a',
       },
     ])
@@ -446,7 +446,7 @@ describe('buildImportBatch', () => {
 
   it('throws when a non-LINK_EXISTING participant is missing a destination id', () => {
     const participants: ParticipantMappingState[] = [
-      mappingRow('p-0', 'Antonio', 'INVITE_BY_LINK'),
+      mappingRow('p-0', 'John', 'INVITE_BY_LINK'),
     ]
     const state: ImportBatchState = {
       source: baseSource,
@@ -464,14 +464,14 @@ describe('buildImportBatch', () => {
       resolvedExpenses: [],
     }
     expect(() => buildImportBatch(state, 'EUR')).toThrow(
-      'Missing destination id for source participant "Antonio"',
+      'Missing destination id for source participant "John"',
     )
   })
 
   describe('cross-currency original fields', () => {
     it('does not override original fields when source and destination currency codes match', () => {
       const participants: ParticipantMappingState[] = [
-        mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT', {
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
         }),
       ]
@@ -506,7 +506,7 @@ describe('buildImportBatch', () => {
 
     it('sets original fields when source EUR and destination USD differ', () => {
       const participants: ParticipantMappingState[] = [
-        mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT', {
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
         }),
       ]
@@ -535,7 +535,7 @@ describe('buildImportBatch', () => {
 
     it('does not override when both currencies are EUR (same)', () => {
       const participants: ParticipantMappingState[] = [
-        mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT', {
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
         }),
       ]
@@ -570,7 +570,7 @@ describe('buildImportBatch', () => {
 
     it('uses source currencyCode as originalCurrency when source has originalAmount set and destination differs', () => {
       const participants: ParticipantMappingState[] = [
-        mappingRow('p-0', 'Antonio', 'LINK_ACCOUNT', {
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
         }),
       ]

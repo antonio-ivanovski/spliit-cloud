@@ -89,7 +89,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
     prismaMock.account.findFirst.mockResolvedValue({
@@ -112,7 +112,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
     const result = await caller.link({
       groupId: 'grp-1',
       ledgerParticipantId: 'lp-1',
-      email: 'Bela@Example.com',
+      email: 'Jane@Example.com',
     })
 
     expect(result).toEqual({
@@ -122,7 +122,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
     expect(groupMemberCalls).toBeGreaterThanOrEqual(2)
     // The lookup used the lowercased email.
     expect(prismaMock.account.findFirst).toHaveBeenCalledWith({
-      where: { email: 'bela@example.com' },
+      where: { email: 'jane@example.com' },
       select: { id: true },
     })
   })
@@ -205,11 +205,11 @@ describe('importLinksRouter.link — email-based lookup', () => {
       },
     )
     prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
-      id: 'lp-bela',
+      id: 'lp-jane',
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
     prismaMock.account.findFirst.mockResolvedValue({
@@ -231,13 +231,13 @@ describe('importLinksRouter.link — email-based lookup', () => {
     const caller = importLinksRouter.createCaller(makeCaller('acct-admin'))
     const result = await caller.link({
       groupId: 'grp-1',
-      ledgerParticipantId: 'lp-bela',
+      ledgerParticipantId: 'lp-jane',
       email: 'alice@example.com',
     })
 
     expect(result).toEqual({
       groupMemberId: 'gm-alice',
-      ledgerParticipantId: 'lp-bela',
+      ledgerParticipantId: 'lp-jane',
     })
     expect(groupMemberCalls).toBeGreaterThanOrEqual(2)
     expect(prismaMock.account.findFirst).toHaveBeenCalledWith({
@@ -251,13 +251,13 @@ describe('importLinksRouter.link — email-based lookup', () => {
     prismaMock.ledgerParticipant.findUnique.mockImplementation(
       async (args: unknown) => {
         const where = (args as { where: { id: string } }).where
-        if (where.id === 'lp-bela') {
+        if (where.id === 'lp-jane') {
           return {
-            id: 'lp-bela',
+            id: 'lp-jane',
             ledgerId: 'ledger-1',
             groupMemberId: null,
             kind: 'UNLINKED_PARTICIPANT',
-            displayName: 'Bela',
+            displayName: 'Jane',
             ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
           } as never
         }
@@ -286,7 +286,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
     const caller = importLinksRouter.createCaller(makeCaller('acct-admin'))
     const result = await caller.link({
       groupId: 'grp-1',
-      ledgerParticipantId: 'lp-bela',
+      ledgerParticipantId: 'lp-jane',
       pendingInvitationId: 'inv-carla',
     })
 
@@ -295,15 +295,15 @@ describe('importLinksRouter.link — email-based lookup', () => {
       ledgerParticipantId: 'lp-carla-pending',
     })
     expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
-      where: { ledgerParticipantId: 'lp-bela' },
+      where: { ledgerParticipantId: 'lp-jane' },
       data: { ledgerParticipantId: 'lp-carla-pending' },
     })
     expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-bela' },
+      where: { paidById: 'lp-jane' },
       data: { paidById: 'lp-carla-pending' },
     })
     expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
-      where: { id: 'lp-bela' },
+      where: { id: 'lp-jane' },
     })
     // Email-based account resolution is skipped when pendingInvitationId
     // is supplied.
@@ -313,11 +313,11 @@ describe('importLinksRouter.link — email-based lookup', () => {
   it('rejects the link to a non-pending invitation', async () => {
     stubGroupContext()
     prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
-      id: 'lp-bela',
+      id: 'lp-jane',
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
@@ -333,7 +333,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
     await expect(
       caller.link({
         groupId: 'grp-1',
-        ledgerParticipantId: 'lp-bela',
+        ledgerParticipantId: 'lp-jane',
         pendingInvitationId: 'inv-carla',
       }),
     ).rejects.toThrow(/Invitation is not pending/)
@@ -349,13 +349,13 @@ describe('importLinksRouter.link — email-based lookup', () => {
     prismaMock.ledgerParticipant.findUnique.mockImplementation(
       async (args: unknown) => {
         const where = (args as { where: { id: string } }).where
-        if (where.id === 'lp-bela') {
+        if (where.id === 'lp-jane') {
           return {
-            id: 'lp-bela',
+            id: 'lp-jane',
             ledgerId: 'ledger-1',
             groupMemberId: null,
             kind: 'UNLINKED_PARTICIPANT',
-            displayName: 'Bela',
+            displayName: 'Jane',
             ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
           } as never
         }
@@ -363,13 +363,13 @@ describe('importLinksRouter.link — email-based lookup', () => {
       },
     )
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
-      id: 'inv-link-bela',
+      id: 'inv-link-jane',
       groupId: 'grp-1',
       type: 'LINK',
       status: 'PENDING',
       email: 'tok-abc-123@link.placeholder.local',
       ledgerParticipant: {
-        id: 'lp-link-bela-pending',
+        id: 'lp-link-jane-pending',
         ledgerId: 'ledger-1',
         groupMemberId: null,
       },
@@ -384,24 +384,24 @@ describe('importLinksRouter.link — email-based lookup', () => {
     const caller = importLinksRouter.createCaller(makeCaller('acct-admin'))
     const result = await caller.link({
       groupId: 'grp-1',
-      ledgerParticipantId: 'lp-bela',
-      pendingInvitationId: 'inv-link-bela',
+      ledgerParticipantId: 'lp-jane',
+      pendingInvitationId: 'inv-link-jane',
     })
 
     expect(result).toEqual({
       groupMemberId: null,
-      ledgerParticipantId: 'lp-link-bela-pending',
+      ledgerParticipantId: 'lp-link-jane-pending',
     })
     expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
-      where: { ledgerParticipantId: 'lp-bela' },
-      data: { ledgerParticipantId: 'lp-link-bela-pending' },
+      where: { ledgerParticipantId: 'lp-jane' },
+      data: { ledgerParticipantId: 'lp-link-jane-pending' },
     })
     expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-bela' },
-      data: { paidById: 'lp-link-bela-pending' },
+      where: { paidById: 'lp-jane' },
+      data: { paidById: 'lp-link-jane-pending' },
     })
     expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
-      where: { id: 'lp-bela' },
+      where: { id: 'lp-jane' },
     })
     // Account lookup is bypassed when pendingInvitationId is supplied.
     expect(prismaMock.account.findFirst).not.toHaveBeenCalled()
@@ -415,7 +415,7 @@ describe('importLinksRouter.candidates', () => {
       ledgerId: 'ledger-1',
       groupMemberId: null,
       kind: 'UNLINKED_PARTICIPANT',
-      displayName: 'Bela',
+      displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
   }
@@ -465,7 +465,7 @@ describe('importLinksRouter.candidates', () => {
   it('excludes a MEMBER whose LP is on the opposite side of an expense leg', async () => {
     stubGroupContext()
     stubUnlinkedParticipant('lp-unlinked')
-    // Bela paid; Bob (already a member) owes the share. Linking Bela to
+    // Jane paid; Bob (already a member) owes the share. Linking Jane to
     // Bob's LP would put the same person on both sides of the leg.
     prismaMock.expense.findMany.mockResolvedValue([
       {
@@ -516,7 +516,7 @@ describe('importLinksRouter.candidates', () => {
       {
         id: 'lp-unlinked',
         groupMember: {
-          account: { name: 'Bela', email: 'bela@example.com' },
+          account: { name: 'Jane', email: 'jane@example.com' },
         },
       },
       {
@@ -556,7 +556,7 @@ describe('importLinksRouter.candidates', () => {
   it('returns an empty list when every member is blocked', async () => {
     stubGroupContext()
     stubUnlinkedParticipant('lp-unlinked')
-    // Single expense where Bela is the payer and is also on the
+    // Single expense where Jane is the payer and is also on the
     // paidFor side of every other LP. Combined with the ACTIVE-member
     // candidate list returning just Bob, Bob ends up in the blocked
     // set.

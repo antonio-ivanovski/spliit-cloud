@@ -7,8 +7,8 @@ import { parseSpliitExport, tryParseSpliitExport } from './spliit'
 import { tryParseSpliitCsv } from './spliit-csv'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const jsonFixturePath = resolve(here, '../fixtures/spliit-sardinia.json')
-const csvFixturePath = resolve(here, '../fixtures/spliit-sardinia.csv')
+const jsonFixturePath = resolve(here, '../fixtures/spliit-export.json')
+const csvFixturePath = resolve(here, '../fixtures/spliit-export.csv')
 
 const spliitExport = JSON.parse(readFileSync(jsonFixturePath, 'utf8'))
 const spliitCsv = readFileSync(csvFixturePath, 'utf8')
@@ -43,7 +43,7 @@ function sourceIdForUpstream(upstreamId: string): string {
 }
 
 describe('JSON integration: Spliit export round-trips', () => {
-  it('parses the public Sardinia sample into the expected shape', () => {
+  it('parses the public Spliit Export sample into the expected shape', () => {
     const result = tryParseSpliitExport(spliitExport)
     expect(result.ok).toBe(true)
     if (!result.ok) return
@@ -155,14 +155,14 @@ describe('JSON integration: Spliit export round-trips', () => {
 })
 
 describe('CSV integration: Spliit CSV round-trips', () => {
-  it('parses the public Sardinia sample', () => {
+  it('parses the public Spliit Export sample', () => {
     const result = tryParseSpliitCsv(spliitCsv)
     expect(result.ok).toBe(true)
     if (!result.ok) return
     expect(result.source.participants).toHaveLength(2)
     expect(result.source.participants.map((p) => p.sourceName)).toEqual([
-      'Antonio',
-      'Bela',
+      'John',
+      'Jane',
     ])
     expect(result.source.participants.map((p) => p.sourceId)).toEqual([
       'csv-participant-0',

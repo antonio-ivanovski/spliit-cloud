@@ -2,7 +2,7 @@ import Papa from 'papaparse'
 import { describe, expect, it } from 'vitest'
 import { tryParseSpliitCsv } from './spliit-csv'
 
-const sampleCsv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Antonio ","Bela"
+const sampleCsv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-12","Kafe plazha ","Dining Out","EUR","3.60",,,,"No","Unevenly – By shares",-2.16,1.44
 "2026-01-12","Kirija + gas ","Gas/Fuel","EUR","474.00",,,,"No","Unevenly – By shares",284.4,-189.6
 "2025-12-08","Gas","Gas/Fuel","EUR","67.50",,,,"No","Unevenly – By shares",45,-22.5
@@ -36,8 +36,8 @@ describe('tryParseSpliitCsv', () => {
     expect(result.ok).toBe(true)
     if (!result.ok) return
     expect(result.source.participants).toHaveLength(2)
-    expect(result.source.participants[0].sourceName).toBe('Antonio')
-    expect(result.source.participants[1].sourceName).toBe('Bela')
+    expect(result.source.participants[0].sourceName).toBe('John')
+    expect(result.source.participants[1].sourceName).toBe('Jane')
     expect(result.source.sourceUrl).toBeNull()
     expect(result.source.expenses).toHaveLength(4)
     const first = result.source.expenses[0]
@@ -60,7 +60,7 @@ describe('tryParseSpliitCsv', () => {
 
   it('skips rows with unparseable amounts and returns no expenses', () => {
     const result = tryParseSpliitCsv(
-      `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Antonio "
+      `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
 "2025-01-01","Bad","General","EUR","abc",,,,"No","Evenly",1.00`,
     )
     expect(result.ok).toBe(false)
@@ -69,7 +69,7 @@ describe('tryParseSpliitCsv', () => {
   })
 
   it('marks reimbursement expenses as such', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Antonio ","Bela"
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-03-12","Reimbursement","Payment","EUR","51.92",,,,"Yes","Unevenly – By shares",0,-51.92`
     const result = tryParseSpliitCsv(csv)
     expect(result.ok).toBe(true)
@@ -85,7 +85,7 @@ describe('tryParseSpliitCsv', () => {
   })
 
   it('maps category names to in-code category ids', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Antonio "
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
 "2025-12-23","Gas","Gas/Fuel","EUR","70.00",,,,"No","Evenly",46.67`
     const result = tryParseSpliitCsv(csv)
     expect(result.ok).toBe(true)
@@ -102,7 +102,7 @@ describe('tryParseSpliitCsv', () => {
   })
 
   it('handles a quoted Description field with an embedded comma', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Antonio ","Bela"
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-22","Leb, pekara","General","EUR","4.15",,,,"No","Evenly",-2.49,1.66`
     const result = tryParseSpliitCsv(csv)
     expect(result.ok).toBe(true)
@@ -111,7 +111,7 @@ describe('tryParseSpliitCsv', () => {
   })
 
   it('handles Cyrillic and accented characters in titles and categories', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Antonio ","Bela"
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-31","Патарина","Payment","EUR","17.40",,,,"No","Evenly",10.44,-6.96
 "2026-01-12","Café, plage","Dining Out","EUR","3.60",,,,"No","Evenly",-2.16,1.44`
     const result = tryParseSpliitCsv(csv)
@@ -123,7 +123,7 @@ describe('tryParseSpliitCsv', () => {
   })
 
   it('absorbs per-row rounding drift so the paidFor sum equals the amount (BY_AMOUNT)', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Antonio ","Bela"
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-25","Podaroci","General","EUR","10.75",,,,"No","Evenly",5.38,5.38`
     const result = tryParseSpliitCsv(csv)
     expect(result.ok).toBe(true)
