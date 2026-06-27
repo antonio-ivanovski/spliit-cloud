@@ -178,7 +178,126 @@
       "title": "Ten link zaproszenia jest nieprawidłowy",
       "description": "Link jest nieprawidłowo sformatowany lub nie pasuje do żadnego zaproszenia w tej grupie."
     },
-    "backToHome": "Powrót do strony głównej"
+    "backToHome": "Powrót do strony głównej",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "Miejsce docelowe",
+        "newGroupFormat": "Nowa grupa · {currency}",
+        "existingGroupFormat": "Istniejąca grupa · scalona",
+        "summaryLabel": "Podsumowanie",
+        "sourceParticipants": "{count} uczestników źródłowych",
+        "participantBreakdown": "{linked} połączonych · {email} zaproszenia e-mail · {link} zaproszenia przez link · {unlinked} niepołączonych",
+        "expenseCount": "Zostanie utworzonych {count} wydatków",
+        "sourceName": "Źródło: {name}",
+        "footer": "Każdy uczestnik źródłowy i wydatek zostanie zaimportowany. Zaproszenia są wysyłane/generowane po utworzeniu grupy.",
+        "importingButton": "Importowanie…",
+        "importButton": "Importuj grupę"
+      },
+      "Destination": {
+        "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
+        "newGroup": "Nowa grupa",
+        "existingGroup": "Istniejąca grupa",
+        "loading": "Ładowanie…",
+        "noAdminGroups": "Nie administrujesz jeszcze żadną grupą.",
+        "memberCount": "{count} członków"
+      },
+      "Done": {
+        "importComplete": "Import zakończony",
+        "description": "Twoja zaimportowana grupa jest gotowa. Możesz dostosować uczestników, połączyć niepołączone wpisy z kontami lub edytować dowolny wydatek jak zwykle.",
+        "openGroup": "Otwórz grupę",
+        "shareableLinksTitle": "Współdzielone linki zaproszeń",
+        "shareableLinksDescription": "Skopiuj każdy link i wyślij go odpowiedniej osobie. Link jest jednorazowy; dołączą do grupy, gdy tylko go otworzą.",
+        "shareAriaLabel": "Udostępnij link zaproszenia",
+        "emailInvitesTitle": "Zaproszenia e-mail wysłane",
+        "emailInvitesDescription": "Serwer wysłał e-mail do następujących osób. Zobaczą baner Akceptuj/Odrzuć na stronie grupy po zalogowaniu.",
+        "shareTitle": "Dołącz do mojej grupy Spliit",
+        "shareText": "Dołącz do naszej grupy wydatków na Spliit Cloud — {name}. Otwórz ten link, aby zaakceptować: {url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "Dwa wiersze źródłowe są mapowane do tego samego istniejącego członka.",
+          "inviteConflictsPending": "Zapraszasz {email}, ale mają już oczekujące zaproszenie; zamiast tego połącz ich.",
+          "inviteConflictsMember": "Zapraszasz {email}, ale są już członkiem tej grupy; zamiast tego połącz ich.",
+          "duplicateMemberName": "Dwóch istniejących członków wygląda jak ta sama osoba — wybierz jednego.",
+          "onlyOneLinkedAccount": "Tylko jeden wiersz źródłowy może być połączony z twoim kontem.",
+          "missingExistingMember": "Wybierz istniejącego członka do połączenia.",
+          "missingEmail": "Dodaj adres e-mail, aby zaprosić e-mailem.",
+          "selfEmailAddress": "To twój adres e-mail — zamiast tego wybierz „Połącz ze mną”.",
+          "duplicateEmail": "Ten adres e-mail jest już zaproszony z innego wiersza."
+        },
+        "headsUp": "Uwaga",
+        "noLinkAccount": "Żaden uczestnik nie jest połączony z twoim kontem. Importer (ty) zostanie utworzony jako nowy uczestnik-właściciel w zaimportowanej grupie — jego udział w zaimportowanych wydatkach będzie zerowy, dopóki nie połączysz wiersza źródłowego ze swoim kontem lub nie zaprosisz się sam.",
+        "continue": "Kontynuuj do potwierdzenia",
+        "Row": {
+          "linkToMe": "Połącz ze mną",
+          "linkToMeDescription": "Łączy tę osobę z twoim kontem.",
+          "linkToMeFollowUp": "{name} zostanie połączony z twoim kontem w tej grupie. Ich przeszłe i przyszłe wydatki pojawią się pod twoim imieniem.",
+          "inviteByEmail": "Zaproś e-mailem",
+          "inviteByEmailDescription": "Wysyła e-mail z zaproszeniem po zatwierdzeniu importu.",
+          "inviteeEmailLabel": "E-mail zaproszonego",
+          "inviteeEmailPlaceholder": "zaproszony@przyklad.pl",
+          "selfEmailDetected": "To twój e-mail — przełączono na „Połącz ze mną”.",
+          "inviteByLink": "Zaproś przez link",
+          "inviteByLinkDescription": "Generuje współdzielony URL w kroku Gotowe.",
+          "inviteByLinkFollowUp": "Wygenerujemy jednorazowy współdzielony URL po zatwierdzeniu importu. Znajdziesz go w kroku Gotowe — skopiuj i wyślij go samodzielnie do {name}.",
+          "linkToExisting": "Połącz z istniejącym członkiem",
+          "linkToExistingDescription": "Mapuje tę osobę na istniejącego aktywnego członka lub oczekujące zaproszenie w grupie docelowej. Nie jest tworzony nowy uczestnik.",
+          "selectExistingMember": "Wybierz istniejącego członka",
+          "selectExistingPlaceholder": "Wybierz istniejącego członka…",
+          "membersLabel": "Członkowie",
+          "pendingInvitesLabel": "Oczekujące zaproszenia",
+          "pendingSuffix": "(oczekujące)",
+          "leaveUnlinked": "Pozostaw niepołączone",
+          "leaveUnlinkedDescription": "Zachowuje tylko nazwę — połącz później z Członkowie.",
+          "leaveUnlinkedFollowUp": "{name} pojawi się jako wpis tylko z nazwą bez dostępu do aplikacji. Możesz połączyć go z kontem później z zakładki Członkowie."
+        }
+      },
+      "fetchingGroup": "Pobieranie grupy z spliit.app…",
+      "notFound": "Spliit nie znalazł tej grupy",
+      "fetchSourceError": "Nie udało się pobrać źródła",
+      "Source": {
+        "fromSpliit": "Ze Spliit",
+        "splitwise": "Splitwise (wkrótce)",
+        "tricount": "Tricount (wkrótce)",
+        "settleUp": "Settle Up (wkrótce)",
+        "spliitDescription": "Przenieś istniejącą grupę z spliit.app do Spliit Cloud. Odczytujemy nazwę grupy, uczestników i każdy wydatek, aby nic nie zostało utracone podczas importu.",
+        "splitwiseComingTitle": "Import ze Splitwise jest w drodze",
+        "splitwiseComingDescription": "Pracujemy nad przeniesieniem eksportów CSV ze Splitwise do Spliit Cloud. Proces będzie dostępny tutaj, gdy tylko zostanie ukończony — w międzyczasie nie musisz niczego ponownie importować.",
+        "tricountComingTitle": "Import z Tricount jest w drodze",
+        "tricountComingDescription": "Wsparcie dla eksportu CSV z Tricount znajduje się na naszej liście planów.",
+        "settleUpComingTitle": "Import z Settle Up jest w drodze",
+        "settleUpComingDescription": "Wsparcie dla eksportu CSV z Settle Up znajduje się na naszej liście planów.",
+        "dropFile": "Upuść plik JSON lub CSV lub kliknij, aby wybrać",
+        "dropFileDescription": "JSON zachowuje każdą kwotę i płatnika dokładnie. CSV jest rozwiązaniem awaryjnym — Spliit zaokrągla każdą kwotę na uczestnika do 2 miejsc po przecinku.",
+        "or": "lub",
+        "pasteUrl": "Wklej URL spliit.app",
+        "urlDescription": "Nasz serwer pobiera grupę przez publiczny endpoint eksportu spliit.app w twoim imieniu.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "Pobieranie…",
+        "fetchGroupButton": "Pobierz grupę",
+        "receiptWarningTitle": "Obrazy paragonów nie są importowane.",
+        "receiptWarningDescription": "Eksport Spliit odwołuje się do oryginalnego URL paragonu, ale magazyn nowej grupy jest oddzielny. Prześlij paragony ponownie w grupie docelowej, jeśli ich potrzebujesz.",
+        "invalidUrl": "Wklej prawidłowy URL grupy spliit.app",
+        "notFoundUrl": "Spliit nie znalazł tej grupy",
+        "fetchUrlError": "Nie udało się pobrać źródła",
+        "fileReadError": "Nie udało się odczytać pliku"
+      },
+      "StepHeader": {
+        "title": "Importuj grupę",
+        "source": "1. Źródło",
+        "destination": "2. Miejsce docelowe",
+        "mapping": "3. Mapowanie",
+        "confirm": "4. Potwierdź",
+        "done": "5. Gotowe",
+        "backAriaLabel": "Wstecz"
+      }
+    },
+    "Importable": {
+      "title": "Znaleziono tę grupę na spliit.app",
+      "description": "„{name}” jest dostępna na spliit.app. Czy chcesz zaimportować ją do Spliit Cloud?",
+      "cta": "Importuj tę grupę",
+      "backToHome": "Przejdź do strony głównej"
+    }
   },
   "GroupForm": {
     "title": "Informacje o grupie",

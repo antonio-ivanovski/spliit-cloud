@@ -178,7 +178,126 @@
       "title": "Bu davet bağlantısı geçersiz",
       "description": "Bağlantı hatalı biçimlendirilmiş veya bu gruptaki hiçbir davetle eşleşmiyor."
     },
-    "backToHome": "Ana sayfaya dön"
+    "backToHome": "Ana sayfaya dön",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "Hedef",
+        "newGroupFormat": "Yeni grup · {currency}",
+        "existingGroupFormat": "Mevcut grup · birleştirildi",
+        "summaryLabel": "Özet",
+        "sourceParticipants": "{count} kaynak katılımcı",
+        "participantBreakdown": "{linked} bağlı · {email} e-posta daveti · {link} bağlantı daveti · {unlinked} bağlı değil",
+        "expenseCount": "{count} harcama oluşturulacak",
+        "sourceName": "Kaynak: {name}",
+        "footer": "Her kaynak katılımcı ve harcama içe aktarılacak. Davetler, grup oluşturulduktan sonra gönderilir/oluşturulur.",
+        "importingButton": "İçe aktarılıyor…",
+        "importButton": "Grubu içe aktar"
+      },
+      "Destination": {
+        "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
+        "newGroup": "Yeni grup",
+        "existingGroup": "Mevcut grup",
+        "loading": "Yükleniyor…",
+        "noAdminGroups": "Henüz hiçbir grubu yönetmiyorsunuz.",
+        "memberCount": "{count} üye"
+      },
+      "Done": {
+        "importComplete": "İçe aktarma tamamlandı",
+        "description": "İçe aktarılan grubunuz hazır. Katılımcıları ayarlayabilir, bağlanmamış girişleri hesaplara bağlayabilir veya herhangi bir harcamayı her zamanki gibi düzenleyebilirsiniz.",
+        "openGroup": "Grubu aç",
+        "shareableLinksTitle": "Paylaşılabilir davet bağlantıları",
+        "shareableLinksDescription": "Her bağlantıyı kopyalayın ve ilgili kişiye gönderin. Bağlantı tek kullanımlıktır; açtıklarında hemen gruba katılırlar.",
+        "shareAriaLabel": "Davet bağlantısını paylaş",
+        "emailInvitesTitle": "E-posta davetleri gönderildi",
+        "emailInvitesDescription": "Sunucu aşağıdaki kişilere e-posta gönderdi. Oturum açtıklarında grup sayfasında bir Kabul Et/Reddet bildirimi görecekler.",
+        "shareTitle": "Spliit grubuma katıl",
+        "shareText": "Spliit Cloud'daki harcama grubumuza katılın — {name}. Kabul etmek için bu bağlantıyı açın: {url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "İki kaynak satırı aynı mevcut üyeye eşleniyor.",
+          "inviteConflictsPending": "{email} adresini davet ediyorsunuz ancak zaten bekleyen bir davetleri var; bunun yerine onları bağlayın.",
+          "inviteConflictsMember": "{email} adresini davet ediyorsunuz ancak zaten bu grubun üyeleri; bunun yerine onları bağlayın.",
+          "duplicateMemberName": "İki mevcut üye aynı kişi gibi görünüyor — birini seçin.",
+          "onlyOneLinkedAccount": "Hesabınıza yalnızca bir kaynak satırı bağlanabilir.",
+          "missingExistingMember": "Bağlanacak mevcut bir üye seçin.",
+          "missingEmail": "E-posta ile davet etmek için bir e-posta adresi ekleyin.",
+          "selfEmailAddress": "Bu sizin e-postanız — bunun yerine \"Bana bağla\" seçeneğini seçin.",
+          "duplicateEmail": "Bu e-posta başka bir satırdan zaten davet edilmiş."
+        },
+        "headsUp": "Dikkat",
+        "noLinkAccount": "Hiçbir katılımcı hesabınıza bağlı değil. İçe aktarıcı (siz), içe aktarılan grupta yeni bir sahip katılımcı olarak oluşturulacak — bir kaynak satırını hesabınıza bağlayana veya kendinizi davet edene kadar içe aktarılan harcamalardaki payları sıfır olacaktır.",
+        "continue": "Onaylamak için devam et",
+        "Row": {
+          "linkToMe": "Bana bağla",
+          "linkToMeDescription": "Bu kişiyi hesabınıza bağlar.",
+          "linkToMeFollowUp": "{name}, bu grupta hesabınıza bağlanacak. Geçmiş ve gelecekteki harcamaları sizin adınız altında görünecek.",
+          "inviteByEmail": "E-posta ile davet et",
+          "inviteByEmailDescription": "İçe aktarma onaylandıktan sonra bir davet e-postası gönderir.",
+          "inviteeEmailLabel": "Davet edilenin e-postası",
+          "inviteeEmailPlaceholder": "davetli@ornek.com",
+          "selfEmailDetected": "Bu sizin e-postanız — \"Bana bağla\" olarak değiştirildi.",
+          "inviteByLink": "Bağlantı ile davet et",
+          "inviteByLinkDescription": "\"Tamam\" adımında paylaşılabilir bir URL oluşturur.",
+          "inviteByLinkFollowUp": "İçe aktarma onaylandıktan sonra tek kullanımlık paylaşılabilir bir URL oluşturacağız. \"Tamam\" adımında bulacaksınız — kopyalayıp {name}'e kendiniz gönderin.",
+          "linkToExisting": "Mevcut üyeye bağla",
+          "linkToExistingDescription": "Bu kişiyi hedef gruptaki mevcut bir aktif üyeye veya bekleyen davete eşler. Yeni bir katılımcı oluşturulmaz.",
+          "selectExistingMember": "Mevcut üyeyi seçin",
+          "selectExistingPlaceholder": "Mevcut bir üye seçin…",
+          "membersLabel": "Üyeler",
+          "pendingInvitesLabel": "Bekleyen davetler",
+          "pendingSuffix": "(bekliyor)",
+          "leaveUnlinked": "Bağlanmamış bırak",
+          "leaveUnlinkedDescription": "Yalnızca adı korur — daha sonra Üyeler'den bağlayın.",
+          "leaveUnlinkedFollowUp": "{name}, uygulama erişimi olmayan yalnızca ad girişi olarak görünecektir. Daha sonra Üyeler sekmesinden bir hesaba bağlayabilirsiniz."
+        }
+      },
+      "fetchingGroup": "Grup spliit.app'ten getiriliyor…",
+      "notFound": "Spliit bu grubu bulamadı",
+      "fetchSourceError": "Kaynak getirilemedi",
+      "Source": {
+        "fromSpliit": "Spliit'ten",
+        "splitwise": "Splitwise (çok yakında)",
+        "tricount": "Tricount (çok yakında)",
+        "settleUp": "Settle Up (çok yakında)",
+        "spliitDescription": "Mevcut bir spliit.app grubunu Spliit Cloud'a taşıyın. Grup adını, katılımcıları ve her harcamayı okuyoruz, böylece içe aktarma sırasında hiçbir şey kaybolmaz.",
+        "splitwiseComingTitle": "Splitwise içe aktarma yolda",
+        "splitwiseComingDescription": "Splitwise CSV dışa aktarımlarını Spliit Cloud'a getirmek için çalışıyoruz. İşlem hazır olduğunda burada kullanıma sunulacak — bu arada hiçbir şeyi yeniden içe aktarmanız gerekmez.",
+        "tricountComingTitle": "Tricount içe aktarma yolda",
+        "tricountComingDescription": "Tricount CSV dışa aktarım desteği yol haritamızda yer alıyor.",
+        "settleUpComingTitle": "Settle Up içe aktarma yolda",
+        "settleUpComingDescription": "Settle Up CSV dışa aktarım desteği yol haritamızda yer alıyor.",
+        "dropFile": "Bir JSON veya CSV dosyası bırakın veya seçmek için tıklayın",
+        "dropFileDescription": "JSON her tutarı ve ödeyeni tam olarak korur. CSV bir yedek seçenektir — Spliit, katılımcı başına her tutarı 2 ondalık basamağa yuvarlar.",
+        "or": "veya",
+        "pasteUrl": "Bir spliit.app URL'si yapıştırın",
+        "urlDescription": "Sunucumuz, spliit.app genel dışa aktarım uç noktası aracılığıyla grubu sizin adınıza getirir.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "Getiriliyor…",
+        "fetchGroupButton": "Grubu getir",
+        "receiptWarningTitle": "Makbuz görüntüleri içe aktarılmaz.",
+        "receiptWarningDescription": "Spliit dışa aktarımı orijinal makbuz URL'sine başvurur, ancak yeni grubun depolaması ayrıdır. İhtiyacınız varsa, hedef gruptaki makbuzları yeniden yükleyin.",
+        "invalidUrl": "Lütfen geçerli bir spliit.app grup URL'si yapıştırın",
+        "notFoundUrl": "Spliit bu grubu bulamadı",
+        "fetchUrlError": "Kaynak getirilemedi",
+        "fileReadError": "Dosya okunamadı"
+      },
+      "StepHeader": {
+        "title": "Bir grubu içe aktar",
+        "source": "1. Kaynak",
+        "destination": "2. Hedef",
+        "mapping": "3. Eşleme",
+        "confirm": "4. Onayla",
+        "done": "5. Tamam",
+        "backAriaLabel": "Geri"
+      }
+    },
+    "Importable": {
+      "title": "Bu grup spliit.app'te bulundu",
+      "description": "\"{name}\" spliit.app üzerinden erişilebilir. Spliit Cloud'a aktarmak ister misiniz?",
+      "cta": "Bu grubu içe aktar",
+      "backToHome": "Ana sayfaya git"
+    }
   },
   "GroupForm": {
     "title": "Grup bilgileri",

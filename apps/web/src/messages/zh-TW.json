@@ -178,7 +178,126 @@
       "title": "此邀請連結無效",
       "description": "該連結格式錯誤或與本群組中的任何邀請都不相符。"
     },
-    "backToHome": "返回首頁"
+    "backToHome": "返回首頁",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "目的地",
+        "newGroupFormat": "新群組 · {currency}",
+        "existingGroupFormat": "現有群組 · 已合併",
+        "summaryLabel": "摘要",
+        "sourceParticipants": "{count} 個來源參與者",
+        "participantBreakdown": "{linked} 已連結 · {email} 電子郵件邀請 · {link} 連結邀請 · {unlinked} 未連結",
+        "expenseCount": "將建立 {count} 筆支出",
+        "sourceName": "來源：{name}",
+        "footer": "每個來源參與者和每筆支出都會被匯入。邀請會在群組建立後傳送/產生。",
+        "importingButton": "匯入中…",
+        "importButton": "匯入群組"
+      },
+      "Destination": {
+        "heading": "您想要將 <strong>{name}</strong> 匯入到哪裡？（{participantCount} 位參與者 · {expenseCount} 筆支出）",
+        "newGroup": "新群組",
+        "existingGroup": "現有群組",
+        "loading": "載入中…",
+        "noAdminGroups": "您尚未管理任何群組。",
+        "memberCount": "{count} 位成員"
+      },
+      "Done": {
+        "importComplete": "匯入完成",
+        "description": "您匯入的群組已準備就緒。您可以調整參與者、將未連結的項目連結到帳戶，或像往常一樣編輯任何支出。",
+        "openGroup": "開啟群組",
+        "shareableLinksTitle": "可分享的邀請連結",
+        "shareableLinksDescription": "複製每個連結並傳送給相應的人。連結為一次性使用；他們開啟後即可加入群組。",
+        "shareAriaLabel": "分享邀請連結",
+        "emailInvitesTitle": "電子郵件邀請已傳送",
+        "emailInvitesDescription": "伺服器已向下列人員傳送電子郵件。他們登入後將在群組頁面上看到「接受/拒絕」橫幅。",
+        "shareTitle": "加入我的 Spliit 群組",
+        "shareText": "加入我們在 Spliit Cloud 上的支出群組——{name}。開啟此連結以接受：{url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "兩個來源列對應到同一個現有成員。",
+          "inviteConflictsPending": "您正在邀請 {email}，但他們已有待處理的邀請；請改為連結他們。",
+          "inviteConflictsMember": "您正在邀請 {email}，但他們已是此群組的成員；請改為連結他們。",
+          "duplicateMemberName": "兩個現有成員看起來是同一個人——請選擇一個。",
+          "onlyOneLinkedAccount": "只能將一個來源列連結到您的帳戶。",
+          "missingExistingMember": "選取一個現有成員進行連結。",
+          "missingEmail": "新增電子郵件地址以透過電子郵件邀請。",
+          "selfEmailAddress": "這是您的電子郵件——請改為選擇「連結到我」。",
+          "duplicateEmail": "此電子郵件已從另一列受邀。"
+        },
+        "headsUp": "注意",
+        "noLinkAccount": "沒有參與者與您的帳戶連結。匯入者（您）將被建立為匯入群組中的新擁有者參與者——在您將來源列連結到您的帳戶或邀請自己之前，他們分攤的匯入支出將為零。",
+        "continue": "繼續確認",
+        "Row": {
+          "linkToMe": "連結到我",
+          "linkToMeDescription": "將此人連線到您的帳戶。",
+          "linkToMeFollowUp": "{name} 將在此群組中連結到您的帳戶。他們過去和未來的支出將顯示在您的名下。",
+          "inviteByEmail": "透過電子郵件邀請",
+          "inviteByEmailDescription": "在匯入確認後傳送邀請電子郵件。",
+          "inviteeEmailLabel": "受邀者的電子郵件",
+          "inviteeEmailPlaceholder": "invitee@example.com",
+          "selfEmailDetected": "這是您的電子郵件——已切換為「連結到我」。",
+          "inviteByLink": "透過連結邀請",
+          "inviteByLinkDescription": "在「完成」步驟產生可分享的 URL。",
+          "inviteByLinkFollowUp": "我們將在匯入確認後產生一個一次性可分享的 URL。您可以在「完成」步驟中找到它——複製並自行傳送給 {name}。",
+          "linkToExisting": "連結到現有成員",
+          "linkToExistingDescription": "將此人對應到目的地群組中的現有活躍成員或待處理的邀請。不會建立新的參與者。",
+          "selectExistingMember": "選取現有成員",
+          "selectExistingPlaceholder": "選取一個現有成員…",
+          "membersLabel": "成員",
+          "pendingInvitesLabel": "待處理的邀請",
+          "pendingSuffix": "（待處理）",
+          "leaveUnlinked": "保持未連結",
+          "leaveUnlinkedDescription": "僅保留名稱——稍後從「成員」連結。",
+          "leaveUnlinkedFollowUp": "{name} 將顯示為僅有名稱的項目，無法存取應用程式。您可以稍後從「成員」分頁將其連結到帳戶。"
+        }
+      },
+      "fetchingGroup": "正在從 spliit.app 擷取群組…",
+      "notFound": "Spliit 找不到此群組",
+      "fetchSourceError": "無法擷取來源",
+      "Source": {
+        "fromSpliit": "從 Spliit",
+        "splitwise": "Splitwise（即將推出）",
+        "tricount": "Tricount（即將推出）",
+        "settleUp": "Settle Up（即將推出）",
+        "spliitDescription": "將現有的 spliit.app 群組帶入 Spliit Cloud。我們會讀取群組名稱、參與者和每筆支出，確保匯入過程中不遺失任何資料。",
+        "splitwiseComingTitle": "Splitwise 匯入功能即將推出",
+        "splitwiseComingDescription": "我們正在努力將 Splitwise CSV 匯出功能整合到 Spliit Cloud。此流程將在準備就緒後在此提供——在此期間無需重新匯入任何內容。",
+        "tricountComingTitle": "Tricount 匯入功能即將推出",
+        "tricountComingDescription": "Tricount CSV 匯出支援已列入我們的開發藍圖。",
+        "settleUpComingTitle": "Settle Up 匯入功能即將推出",
+        "settleUpComingDescription": "Settle Up CSV 匯出支援已列入我們的開發藍圖。",
+        "dropFile": "拖放 JSON 或 CSV 檔案，或按一下以選取",
+        "dropFileDescription": "JSON 可精確保留每筆金額和付款人。CSV 是備用方案——Spliit 會將每位參與者的金額四捨五入到小數點後 2 位。",
+        "or": "或",
+        "pasteUrl": "貼上 spliit.app URL",
+        "urlDescription": "我們的伺服器會透過 spliit.app 的公開匯出端點代您擷取群組。",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "擷取中…",
+        "fetchGroupButton": "擷取群組",
+        "receiptWarningTitle": "收據圖片不會被匯入。",
+        "receiptWarningDescription": "Spliit 的匯出會參照原始收據 URL，但新群組的儲存空間是分開的。如有需要，請在目的地群組中重新上傳收據。",
+        "invalidUrl": "請貼上有效的 spliit.app 群組 URL",
+        "notFoundUrl": "Spliit 找不到此群組",
+        "fetchUrlError": "無法擷取來源",
+        "fileReadError": "無法讀取檔案"
+      },
+      "StepHeader": {
+        "title": "匯入群組",
+        "source": "1. 來源",
+        "destination": "2. 目的地",
+        "mapping": "3. 對應",
+        "confirm": "4. 確認",
+        "done": "5. 完成",
+        "backAriaLabel": "返回"
+      }
+    },
+    "Importable": {
+      "title": "在 spliit.app 上找到了此群組",
+      "description": "「{name}」可在 spliit.app 上存取。是否要將其匯入到 Spliit Cloud？",
+      "cta": "匯入此群組",
+      "backToHome": "返回首頁"
+    }
   },
   "GroupForm": {
     "title": "群組資訊",

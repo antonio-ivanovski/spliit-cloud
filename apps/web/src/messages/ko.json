@@ -122,7 +122,126 @@
       "title": "이 초대 링크는 유효하지 않습니다",
       "description": "링크 형식이 잘못되었거나 이 그룹의 초대와 일치하지 않습니다."
     },
-    "backToHome": "홈으로 돌아가기"
+    "backToHome": "홈으로 돌아가기",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "대상",
+        "newGroupFormat": "새 그룹 · {currency}",
+        "existingGroupFormat": "기존 그룹 · 병합됨",
+        "summaryLabel": "요약",
+        "sourceParticipants": "{count}명의 소스 참가자",
+        "participantBreakdown": "{linked} 연결됨 · {email} 이메일 초대 · {link} 링크 초대 · {unlinked} 연결 안 됨",
+        "expenseCount": "{count}개의 지출이 생성됩니다",
+        "sourceName": "소스: {name}",
+        "footer": "모든 소스 참가자와 지출이 가져와집니다. 초대는 그룹이 생성된 후 전송/생성됩니다.",
+        "importingButton": "가져오는 중…",
+        "importButton": "그룹 가져오기"
+      },
+      "Destination": {
+        "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
+        "newGroup": "새 그룹",
+        "existingGroup": "기존 그룹",
+        "loading": "로딩 중…",
+        "noAdminGroups": "아직 관리하는 그룹이 없습니다.",
+        "memberCount": "{count}명의 멤버"
+      },
+      "Done": {
+        "importComplete": "가져오기 완료",
+        "description": "가져온 그룹이 준비되었습니다. 참가자를 조정하고, 연결되지 않은 항목을 계정에 연결하거나, 평소와 같이 지출을 편집할 수 있습니다.",
+        "openGroup": "그룹 열기",
+        "shareableLinksTitle": "공유 가능한 초대 링크",
+        "shareableLinksDescription": "각 링크를 복사하여 해당 사람에게 보내세요. 링크는 일회용입니다. 링크를 열면 즉시 그룹에 참여합니다.",
+        "shareAriaLabel": "초대 링크 공유",
+        "emailInvitesTitle": "이메일 초대 전송 완료",
+        "emailInvitesDescription": "서버가 다음 사람들에게 이메일을 보냈습니다. 로그인하면 그룹 페이지에서 수락/거절 배너를 볼 수 있습니다.",
+        "shareTitle": "내 Spliit 그룹에 참여",
+        "shareText": "Spliit Cloud의 지출 그룹에 참여 — {name}. 수락하려면 이 링크를 여세요: {url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "두 개의 소스 행이 동일한 기존 멤버에 매핑되어 있습니다.",
+          "inviteConflictsPending": "{email}을(를) 초대 중이지만 이미 보류 중인 초대가 있습니다. 대신 연결하세요.",
+          "inviteConflictsMember": "{email}을(를) 초대 중이지만 이미 이 그룹의 멤버입니다. 대신 연결하세요.",
+          "duplicateMemberName": "두 명의 기존 멤버가 같은 사람으로 보입니다 — 하나를 선택하세요.",
+          "onlyOneLinkedAccount": "계정에 연결할 수 있는 소스 행은 하나뿐입니다.",
+          "missingExistingMember": "연결할 기존 멤버를 선택하세요.",
+          "missingEmail": "이메일로 초대하려면 이메일 주소를 추가하세요.",
+          "selfEmailAddress": "귀하의 이메일입니다 — 대신 \"내게 연결\"을 선택하세요.",
+          "duplicateEmail": "이 이메일은 다른 행에서 이미 초대되었습니다."
+        },
+        "headsUp": "알림",
+        "noLinkAccount": "계정에 연결된 참가자가 없습니다. 가져오기 사용자(귀하)는 가져온 그룹에 새 소유자 참가자로 생성됩니다. 소스 행을 계정에 연결하거나 자신을 초대할 때까지 가져온 지출에서의 몫은 0이 됩니다.",
+        "continue": "확인 계속하기",
+        "Row": {
+          "linkToMe": "내게 연결",
+          "linkToMeDescription": "이 사람을 계정에 연결합니다.",
+          "linkToMeFollowUp": "{name}이(가) 이 그룹에서 계정에 연결됩니다. 과거 및 미래의 지출이 귀하의 이름으로 표시됩니다.",
+          "inviteByEmail": "이메일로 초대",
+          "inviteByEmailDescription": "가져오기가 확정된 후 초대 이메일을 보냅니다.",
+          "inviteeEmailLabel": "초대받는 사람 이메일",
+          "inviteeEmailPlaceholder": "invitee@example.com",
+          "selfEmailDetected": "귀하의 이메일입니다 — \"내게 연결\"로 전환했습니다.",
+          "inviteByLink": "링크로 초대",
+          "inviteByLinkDescription": "\"완료\" 단계에서 공유 가능한 URL을 생성합니다.",
+          "inviteByLinkFollowUp": "가져오기가 확정된 후 일회용 공유 가능 URL을 생성합니다. \"완료\" 단계에서 찾을 수 있습니다 — 복사하여 {name}에게 직접 보내세요.",
+          "linkToExisting": "기존 멤버에 연결",
+          "linkToExistingDescription": "이 사람을 대상 그룹의 기존 활성 멤버 또는 보류 중인 초대에 매핑합니다. 새 참가자가 생성되지 않습니다.",
+          "selectExistingMember": "기존 멤버 선택",
+          "selectExistingPlaceholder": "기존 멤버 선택…",
+          "membersLabel": "멤버",
+          "pendingInvitesLabel": "보류 중인 초대",
+          "pendingSuffix": "(보류 중)",
+          "leaveUnlinked": "연결하지 않음",
+          "leaveUnlinkedDescription": "이름만 유지 — 나중에 멤버에서 연결합니다.",
+          "leaveUnlinkedFollowUp": "{name}은(는) 앱 접근 권한이 없는 이름만의 항목으로 표시됩니다. 나중에 멤버 탭에서 계정에 연결할 수 있습니다."
+        }
+      },
+      "fetchingGroup": "spliit.app에서 그룹을 가져오는 중…",
+      "notFound": "Spliit에서 이 그룹을 찾을 수 없습니다",
+      "fetchSourceError": "소스를 가져오지 못했습니다",
+      "Source": {
+        "fromSpliit": "Spliit에서",
+        "splitwise": "Splitwise (출시 예정)",
+        "tricount": "Tricount (출시 예정)",
+        "settleUp": "Settle Up (출시 예정)",
+        "spliitDescription": "기존 spliit.app 그룹을 Spliit Cloud로 가져옵니다. 그룹 이름, 참가자 및 모든 지출을 읽어 가져오기 과정에서 손실되는 것이 없도록 합니다.",
+        "splitwiseComingTitle": "Splitwise 가져오기 준비 중",
+        "splitwiseComingDescription": "Splitwise CSV 내보내기를 Spliit Cloud로 가져오기 위해 작업 중입니다. 준비되는 대로 여기에서 사용할 수 있습니다. 그동안 아무것도 다시 가져올 필요가 없습니다.",
+        "tricountComingTitle": "Tricount 가져오기 준비 중",
+        "tricountComingDescription": "Tricount CSV 내보내기 지원이 로드맵에 포함되어 있습니다.",
+        "settleUpComingTitle": "Settle Up 가져오기 준비 중",
+        "settleUpComingDescription": "Settle Up CSV 내보내기 지원이 로드맵에 포함되어 있습니다.",
+        "dropFile": "JSON 또는 CSV 파일을 드롭하거나 클릭하여 선택",
+        "dropFileDescription": "JSON은 모든 금액과 지불자를 정확하게 보존합니다. CSV는 대체 수단입니다 — Spliit은 참가자별 금액을 소수점 2자리로 반올림합니다.",
+        "or": "또는",
+        "pasteUrl": "spliit.app URL 붙여넣기",
+        "urlDescription": "저희 서버가 spliit.app 공개 내보내기 엔드포인트를 통해 대신 그룹을 가져옵니다.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "가져오는 중…",
+        "fetchGroupButton": "그룹 가져오기",
+        "receiptWarningTitle": "영수증 이미지는 가져오지 않습니다.",
+        "receiptWarningDescription": "Spliit 내보내기는 원본 영수증 URL을 참조하지만 새 그룹의 저장소는 별개입니다. 필요한 경우 대상 그룹에 영수증을 다시 업로드하세요.",
+        "invalidUrl": "유효한 spliit.app 그룹 URL을 붙여넣으세요",
+        "notFoundUrl": "Spliit에서 이 그룹을 찾을 수 없습니다",
+        "fetchUrlError": "소스를 가져오지 못했습니다",
+        "fileReadError": "파일을 읽지 못했습니다"
+      },
+      "StepHeader": {
+        "title": "그룹 가져오기",
+        "source": "1. 소스",
+        "destination": "2. 대상",
+        "mapping": "3. 매핑",
+        "confirm": "4. 확인",
+        "done": "5. 완료",
+        "backAriaLabel": "뒤로"
+      }
+    },
+    "Importable": {
+      "title": "spliit.app에서 이 그룹을 찾았습니다",
+      "description": "\"{name}\"은(는) spliit.app에서 접근 가능합니다. Spliit Cloud로 가져오시겠습니까?",
+      "cta": "이 그룹 가져오기",
+      "backToHome": "홈으로 이동"
+    }
   },
   "GroupForm": {
     "title": "그룹 정보",

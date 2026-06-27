@@ -178,7 +178,126 @@
       "title": "Deze uitnodigingslink is ongeldig",
       "description": "De link is misvormd of komt niet overeen met een uitnodiging voor deze groep."
     },
-    "backToHome": "Terug naar startpagina"
+    "backToHome": "Terug naar startpagina",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "Bestemming",
+        "newGroupFormat": "Nieuwe groep · {currency}",
+        "existingGroupFormat": "Bestaande groep · samengevoegd",
+        "summaryLabel": "Samenvatting",
+        "sourceParticipants": "{count} brondeelnemers",
+        "participantBreakdown": "{linked} gekoppeld · {email} e-mailuitnodigingen · {link} linkuitnodigingen · {unlinked} niet gekoppeld",
+        "expenseCount": "{count} uitgaven worden aangemaakt",
+        "sourceName": "Bron: {name}",
+        "footer": "Elke brondeelnemer en -uitgave wordt geïmporteerd. Uitnodigingen worden verzonden/generated na het aanmaken van de groep.",
+        "importingButton": "Importeren…",
+        "importButton": "Importeer groep"
+      },
+      "Destination": {
+        "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
+        "newGroup": "Nieuwe groep",
+        "existingGroup": "Bestaande groep",
+        "loading": "Laden…",
+        "noAdminGroups": "Je beheert nog geen groep.",
+        "memberCount": "{count} leden"
+      },
+      "Done": {
+        "importComplete": "Import voltooid",
+        "description": "Je geïmporteerde groep is klaar. Je kunt deelnemers aanpassen, niet-gekoppelde vermeldingen aan accounts koppelen of zoals gebruikelijk uitgaven bewerken.",
+        "openGroup": "Open groep",
+        "shareableLinksTitle": "Deelbare uitnodigingslinks",
+        "shareableLinksDescription": "Kopieer elke link en stuur deze naar de juiste persoon. De link is eenmalig; ze worden lid van de groep zodra ze deze openen.",
+        "shareAriaLabel": "Deel uitnodigingslink",
+        "emailInvitesTitle": "E-mailuitnodigingen verzonden",
+        "emailInvitesDescription": "De server heeft een e-mail gestuurd naar de volgende personen. Ze zien een Accepteren/Afwijzen-banner op de groepspagina wanneer ze inloggen.",
+        "shareTitle": "Word lid van mijn Spliit-groep",
+        "shareText": "Word lid van onze uitgavengroep op Spliit Cloud — {name}. Open deze link om te accepteren: {url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "Twee bronrijen zijn aan hetzelfde bestaande lid gekoppeld.",
+          "inviteConflictsPending": "Je nodigt {email} uit, maar ze hebben al een openstaande uitnodiging; koppel ze in plaats daarvan.",
+          "inviteConflictsMember": "Je nodigt {email} uit, maar ze zijn al lid van deze groep; koppel ze in plaats daarvan.",
+          "duplicateMemberName": "Twee bestaande leden lijken dezelfde persoon — kies er een.",
+          "onlyOneLinkedAccount": "Slechts één bronrij kan aan je account worden gekoppeld.",
+          "missingExistingMember": "Kies een bestaand lid om te koppelen.",
+          "missingEmail": "Voeg een e-mailadres toe om per e-mail uit te nodigen.",
+          "selfEmailAddress": "Dit is jouw e-mailadres — kies in plaats daarvan \"Koppel aan mij\".",
+          "duplicateEmail": "Dit e-mailadres is al uitgenodigd vanaf een andere rij."
+        },
+        "headsUp": "Let op",
+        "noLinkAccount": "Geen enkele deelnemer is gekoppeld aan je account. De importeur (jij) wordt aangemaakt als een nieuwe eigenaar-deelnemer in de geïmporteerde groep — hun aandeel in de geïmporteerde uitgaven is nul totdat je een bronrij aan je account koppelt of jezelf uitnodigt.",
+        "continue": "Doorgaan naar bevestiging",
+        "Row": {
+          "linkToMe": "Koppel aan mij",
+          "linkToMeDescription": "Verbindt deze persoon met je account.",
+          "linkToMeFollowUp": "{name} wordt aan je account gekoppeld in deze groep. Hun eerdere en toekomstige uitgaven verschijnen onder jouw naam.",
+          "inviteByEmail": "Uitnodigen per e-mail",
+          "inviteByEmailDescription": "Stuurt een uitnodigingsmail nadat de import is bevestigd.",
+          "inviteeEmailLabel": "E-mail van genodigde",
+          "inviteeEmailPlaceholder": "genodigde@voorbeeld.nl",
+          "selfEmailDetected": "Dat is jouw e-mail — omgezet naar \"Koppel aan mij\".",
+          "inviteByLink": "Uitnodigen via link",
+          "inviteByLinkDescription": "Genereert een deelbare URL in de stap Gereed.",
+          "inviteByLinkFollowUp": "We genereren een eenmalige deelbare URL nadat de import is bevestigd. Je vindt deze in de stap Gereed — kopieer en stuur hem zelf naar {name}.",
+          "linkToExisting": "Koppel aan bestaand lid",
+          "linkToExistingDescription": "Koppelt deze persoon aan een bestaand actief lid of openstaande uitnodiging in de doelgroep. Er wordt geen nieuwe deelnemer aangemaakt.",
+          "selectExistingMember": "Selecteer bestaand lid",
+          "selectExistingPlaceholder": "Kies een bestaand lid…",
+          "membersLabel": "Leden",
+          "pendingInvitesLabel": "Openstaande uitnodigingen",
+          "pendingSuffix": "(openstaand)",
+          "leaveUnlinked": "Niet koppelen",
+          "leaveUnlinkedDescription": "Houdt alleen de naam — koppel later via Leden.",
+          "leaveUnlinkedFollowUp": "{name} verschijnt als een alleen-naam vermelding zonder app-toegang. Je kunt ze later koppelen aan een account via het tabblad Leden."
+        }
+      },
+      "fetchingGroup": "Groep ophalen van spliit.app…",
+      "notFound": "Spliit heeft deze groep niet gevonden",
+      "fetchSourceError": "Bron ophalen mislukt",
+      "Source": {
+        "fromSpliit": "Van Spliit",
+        "splitwise": "Splitwise (binnenkort)",
+        "tricount": "Tricount (binnenkort)",
+        "settleUp": "Settle Up (binnenkort)",
+        "spliitDescription": "Breng een bestaande spliit.app-groep naar Spliit Cloud. We lezen de groepsnaam, deelnemers en elke uitgave, zodat er niets verloren gaat bij het importeren.",
+        "splitwiseComingTitle": "Splitwise-import is onderweg",
+        "splitwiseComingDescription": "We werken aan het importeren van Splitwise CSV-export in Spliit Cloud. De flow is hier beschikbaar zodra hij klaar is — je hoeft in de tussentijd niets opnieuw te importeren.",
+        "tricountComingTitle": "Tricount-import is onderweg",
+        "tricountComingDescription": "Ondersteuning voor Tricount CSV-export staat op de routekaart.",
+        "settleUpComingTitle": "Settle Up-import is onderweg",
+        "settleUpComingDescription": "Ondersteuning voor Settle Up CSV-export staat op de routekaart.",
+        "dropFile": "Sleep een JSON- of CSV-bestand, of klik om te selecteren",
+        "dropFileDescription": "JSON behoudt elk bedrag en elke betaler exact. CSV is een reserve — Spliit rondt elk bedrag per deelnemer af op 2 decimalen.",
+        "or": "of",
+        "pasteUrl": "Plak een spliit.app-URL",
+        "urlDescription": "Onze server haalt de groep op via het openbare exporteindpunt van spliit.app namens jou.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "Ophalen…",
+        "fetchGroupButton": "Groep ophalen",
+        "receiptWarningTitle": "Bonafbeeldingen worden niet geïmporteerd.",
+        "receiptWarningDescription": "De export van Spliit verwijst naar de originele bon-URL, maar de opslag van de nieuwe groep is apart. Upload de bonnen opnieuw in de doelgroep als je ze nodig hebt.",
+        "invalidUrl": "Plak een geldige spliit.app-groeps-URL",
+        "notFoundUrl": "Spliit heeft deze groep niet gevonden",
+        "fetchUrlError": "Bron ophalen mislukt",
+        "fileReadError": "Bestand lezen mislukt"
+      },
+      "StepHeader": {
+        "title": "Importeer een groep",
+        "source": "1. Bron",
+        "destination": "2. Bestemming",
+        "mapping": "3. Koppeling",
+        "confirm": "4. Bevestigen",
+        "done": "5. Gereed",
+        "backAriaLabel": "Terug"
+      }
+    },
+    "Importable": {
+      "title": "Deze groep gevonden op spliit.app",
+      "description": "\"{name}\" is bereikbaar op spliit.app. Wil je deze importeren in Spliit Cloud?",
+      "cta": "Importeer deze groep",
+      "backToHome": "Naar home"
+    }
   },
   "GroupForm": {
     "title": "Groepsinformatie",

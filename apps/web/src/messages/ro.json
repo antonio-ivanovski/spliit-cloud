@@ -178,7 +178,126 @@
       "title": "Acest link de invitație este invalid",
       "description": "Linkul este deformat sau nu corespunde niciunei invitații din acest grup."
     },
-    "backToHome": "Înapoi la pagina principală"
+    "backToHome": "Înapoi la pagina principală",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "Destinație",
+        "newGroupFormat": "Grup nou · {currency}",
+        "existingGroupFormat": "Grup existent · îmbinat",
+        "summaryLabel": "Rezumat",
+        "sourceParticipants": "{count} participanți sursă",
+        "participantBreakdown": "{linked} legați · {email} invitații prin e-mail · {link} invitații prin link · {unlinked} nelegați",
+        "expenseCount": "Se vor crea {count} cheltuieli",
+        "sourceName": "Sursă: {name}",
+        "footer": "Fiecare participant sursă și cheltuială va fi importat. Invitațiile sunt trimise/generate după crearea grupului.",
+        "importingButton": "Se importă…",
+        "importButton": "Importați grupul"
+      },
+      "Destination": {
+        "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",
+        "newGroup": "Grup nou",
+        "existingGroup": "Grup existent",
+        "loading": "Se încarcă…",
+        "noAdminGroups": "Nu administrați încă niciun grup.",
+        "memberCount": "{count} membri"
+      },
+      "Done": {
+        "importComplete": "Import finalizat",
+        "description": "Grupul dumneavoastră importat este gata. Puteți ajusta participanții, lega intrările nelegate de conturi sau edita orice cheltuială ca de obicei.",
+        "openGroup": "Deschideți grupul",
+        "shareableLinksTitle": "Linkuri de invitație partajabile",
+        "shareableLinksDescription": "Copiați fiecare link și trimiteți-l persoanei potrivite. Linkul este de unică folosință; se alătură grupului imediat ce îl deschid.",
+        "shareAriaLabel": "Partajați linkul de invitație",
+        "emailInvitesTitle": "Invitațiile prin e-mail au fost trimise",
+        "emailInvitesDescription": "Serverul a trimis e-mail următoarelor persoane. Acestea vor vedea un banner Acceptați/Refuzați în pagina grupului când se conectează.",
+        "shareTitle": "Alăturați-vă grupului meu Spliit",
+        "shareText": "Alăturați-vă grupului nostru de cheltuieli pe Spliit Cloud — {name}. Deschideți acest link pentru a accepta: {url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "Două rânduri sursă sunt mapate la același membru existent.",
+          "inviteConflictsPending": "Invitați pe {email} dar au deja o invitație în așteptare; legați-i în schimb.",
+          "inviteConflictsMember": "Invitați pe {email} dar sunt deja membri ai acestui grup; legați-i în schimb.",
+          "duplicateMemberName": "Doi membri existenți par aceeași persoană — alegeți unul.",
+          "onlyOneLinkedAccount": "Doar un rând sursă poate fi legat de contul dumneavoastră.",
+          "missingExistingMember": "Alegeți un membru existent pentru legare.",
+          "missingEmail": "Adăugați o adresă de e-mail pentru a invita prin e-mail.",
+          "selfEmailAddress": "Acesta este e-mailul dumneavoastră — alegeți „Leagă de mine” în schimb.",
+          "duplicateEmail": "Acest e-mail este deja invitat de pe un alt rând."
+        },
+        "headsUp": "Atenție",
+        "noLinkAccount": "Niciun participant nu este legat de contul dumneavoastră. Importatorul (dumneavoastră) va fi creat ca un nou participant proprietar în grupul importat — partea sa din cheltuielile importate va fi zero până când legați un rând sursă de contul dumneavoastră sau vă invitați.",
+        "continue": "Continuați pentru confirmare",
+        "Row": {
+          "linkToMe": "Leagă de mine",
+          "linkToMeDescription": "Conectează această persoană la contul dumneavoastră.",
+          "linkToMeFollowUp": "{name} va fi legat de contul dumneavoastră în acest grup. Cheltuielile lor trecute și viitoare vor apărea sub numele dumneavoastră.",
+          "inviteByEmail": "Invitați prin e-mail",
+          "inviteByEmailDescription": "Trimite un e-mail de invitație după confirmarea importului.",
+          "inviteeEmailLabel": "E-mailul invitatului",
+          "inviteeEmailPlaceholder": "invitat@exemplu.ro",
+          "selfEmailDetected": "Acesta este e-mailul dumneavoastră — comutat la „Leagă de mine”.",
+          "inviteByLink": "Invitați prin link",
+          "inviteByLinkDescription": "Generează un URL partajabil la pasul Gata.",
+          "inviteByLinkFollowUp": "Vom genera un URL partajabil de unică folosință după confirmarea importului. Îl veți găsi la pasul Gata — copiați-l și trimiteți-l personal către {name}.",
+          "linkToExisting": "Leagă de un membru existent",
+          "linkToExistingDescription": "Mapează această persoană la un membru activ existent sau o invitație în așteptare în grupul de destinație. Nu se creează niciun participant nou.",
+          "selectExistingMember": "Selectați un membru existent",
+          "selectExistingPlaceholder": "Alegeți un membru existent…",
+          "membersLabel": "Membri",
+          "pendingInvitesLabel": "Invitații în așteptare",
+          "pendingSuffix": "(în așteptare)",
+          "leaveUnlinked": "Lăsați nelegat",
+          "leaveUnlinkedDescription": "Păstrează doar numele — legați mai târziu din Membri.",
+          "leaveUnlinkedFollowUp": "{name} va apărea ca o intrare doar cu nume, fără acces la aplicație. Îl puteți lega de un cont mai târziu din fila Membri."
+        }
+      },
+      "fetchingGroup": "Se preia grupul de pe spliit.app…",
+      "notFound": "Spliit nu a găsit acest grup",
+      "fetchSourceError": "Nu s-a putut prelua sursa",
+      "Source": {
+        "fromSpliit": "Din Spliit",
+        "splitwise": "Splitwise (în curând)",
+        "tricount": "Tricount (în curând)",
+        "settleUp": "Settle Up (în curând)",
+        "spliitDescription": "Aduceți un grup existent de pe spliit.app în Spliit Cloud. Citim numele grupului, participanții și fiecare cheltuială pentru ca nimic să nu se piardă la import.",
+        "splitwiseComingTitle": "Importul din Splitwise este pe drum",
+        "splitwiseComingDescription": "Lucrăm pentru a aduce exporturile CSV din Splitwise în Spliit Cloud. Fluxul va fi disponibil aici imediat ce este gata — nu este nevoie să reimportați nimic între timp.",
+        "tricountComingTitle": "Importul din Tricount este pe drum",
+        "tricountComingDescription": "Suportul pentru export CSV din Tricount se află pe lista noastră de priorități.",
+        "settleUpComingTitle": "Importul din Settle Up este pe drum",
+        "settleUpComingDescription": "Suportul pentru export CSV din Settle Up se află pe lista noastră de priorități.",
+        "dropFile": "Lăsați un fișier JSON sau CSV, sau faceți clic pentru a selecta",
+        "dropFileDescription": "JSON păstrează fiecare sumă și plătitor exact. CSV este o soluție de rezervă — Spliit rotunjește fiecare sumă per participant la 2 zecimale.",
+        "or": "sau",
+        "pasteUrl": "Lipiți un URL spliit.app",
+        "urlDescription": "Serverul nostru preia grupul prin intermediul endpoint-ului public de export al spliit.app în numele dumneavoastră.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "Se preia…",
+        "fetchGroupButton": "Preia grupul",
+        "receiptWarningTitle": "Imaginile chitanțelor nu sunt importate.",
+        "receiptWarningDescription": "Exportul Spliit face referire la URL-ul original al chitanței, dar stocarea noului grup este separată. Reîncărcați chitanțele în grupul de destinație dacă aveți nevoie de ele.",
+        "invalidUrl": "Lipiți un URL valid de grup spliit.app",
+        "notFoundUrl": "Spliit nu a găsit acest grup",
+        "fetchUrlError": "Nu s-a putut prelua sursa",
+        "fileReadError": "Nu s-a putut citi fișierul"
+      },
+      "StepHeader": {
+        "title": "Importați un grup",
+        "source": "1. Sursă",
+        "destination": "2. Destinație",
+        "mapping": "3. Mapare",
+        "confirm": "4. Confirmare",
+        "done": "5. Gata",
+        "backAriaLabel": "Înapoi"
+      }
+    },
+    "Importable": {
+      "title": "Acest grup a fost găsit pe spliit.app",
+      "description": "„{name}” este accesibil pe spliit.app. Doriți să-l importați în Spliit Cloud?",
+      "cta": "Importați acest grup",
+      "backToHome": "Mergi la pagina principală"
+    }
   },
   "GroupForm": {
     "title": "Informații despre grup",
