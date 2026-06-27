@@ -2,7 +2,7 @@
 
 ### Requirement: Web-driven import wizard
 
-The system SHALL let an authenticated user import an existing Spliit group through a single in-browser wizard. The wizard runs entirely in the web app; the server SHALL NOT persist any import wizard state. The wizard has six steps in order: **source → destination → preview → mapping → confirm → done**.
+The system SHALL let an authenticated user import an existing Spliit group through a single in-browser wizard. The wizard runs entirely in the web app; the server SHALL NOT persist any import wizard state. The wizard has five steps in order: **source → destination → mapping → confirm → done**.
 
 #### Scenario: User opens the wizard
 
@@ -11,7 +11,7 @@ The system SHALL let an authenticated user import an existing Spliit group throu
 
 #### Scenario: Wizard state lives in the browser
 
-- **WHEN** the user walks the wizard through source, destination, preview, mapping, confirm, and done
+- **WHEN** the user walks the wizard through source, destination, mapping, confirm, and done
 - **THEN** every step's data is held in client memory; no server endpoint is called until the user confirms
 
 #### Scenario: Destination step is mandatory
@@ -135,12 +135,12 @@ The system SHALL submit the import as a single batch and the server SHALL create
 
 ### Requirement: All-or-nothing import
 
-The import is all-or-nothing: every expense in the parsed source is imported, or the import fails. The wizard SHALL NOT offer per-expense skip; per-participant skip is the only available skip granularity, and the web app drops `SKIP` participants from `paidBy` / `paidFor` before submitting the batch.
+The import is all-or-nothing: every expense in the parsed source is imported, or the import fails. The wizard SHALL NOT offer per-expense skip. Per-participant options (link to me, invite by email, invite by link, link to existing member, leave unlinked) are the only available granularity.
 
 #### Scenario: No per-expense skip in the wizard
 
 - **WHEN** the user is on the mapping step
-- **THEN** the wizard exposes per-participant controls (link / unlink / skip) only
+- **THEN** the wizard exposes per-participant controls (link to me / invite by email / invite by link / link to existing member / leave unlinked) only
 - **THEN** the wizard does not surface a per-expense checkbox or filter
 
 #### Scenario: User wants to drop a single expense
@@ -206,3 +206,50 @@ When an authenticated user navigates to a group URL that does not exist on the n
 - **WHEN** the user confirms an import that started from the "not found" hand-off
 - **THEN** the destination group is created with a fresh cloud group id, not the source id
 - **THEN** the source id is preserved in the destination group's activity feed
+
+### Requirement: Source step lists available and coming-soon providers
+
+The source step SHALL present a tabbed UI with "From Spliit" (active) and Splitwise, Tricount, and Settle Up (coming soon) as provider tabs.
+
+#### Scenario: Spliit tab shows file upload and URL input
+
+- **WHEN** the user opens the source step
+- **THEN** the Spliit tab is active by default and shows drag-and-drop file upload (JSON/CSV) and a URL paste input for `spliit.app` group URLs
+
+#### Scenario: Non-Spliit tabs show a coming-soon dialog
+
+- **WHEN** the user switches to the Splitwise, Tricount, or Settle Up tab
+- **THEN** the UI renders a card with a clock icon and a localized "coming soon" message
+
+### Requirement: Cross-currency import
+
+When the source group's currency differs from the destination ledger's currency, the system SHALL set `originalAmount`, `originalCurrency`, and `conversionRate` on each imported expense so the source-currency values are preserved alongside the destination-currency amount.
+
+#### Scenario: Currencies differ triggers auto-fill
+
+- **WHEN** the source currency code differs from the destination ledger currency code
+- **THEN** each imported expense has `originalAmount` set to the source `amount`, `originalCurrency` set to the source currency code, and `conversionRate` set to `1`
+
+#### Scenario: Same currency passes through original fields
+
+- **WHEN** the source and destination currency codes match
+- **THEN** each imported expense preserves any `originalAmount`, `originalCurrency`, and `conversionRate` that were present in the source export; absent fields remain absent
+
+### Requirement: Source URL attribution
+
+The system SHALL preserve the source group URL in the `NormalizedSource.sourceUrl` field and SHALL compose an "Imported from:" note using the `appendImportedFromNote` helper.
+
+#### Scenario: Source URL pre-fills the group information field
+
+- **WHEN** the user chooses to create a new group and the source has a `sourceUrl`
+- **THEN** the destination step pre-fills the group information text area with `Imported from: <sourceUrl>` (produced by `appendImportedFromNote`)
+
+#### Scenario: Source URL is recorded in the import activity entry
+
+- **WHEN** the wizard submits an import batch with `sourceMeta.sourceUrl`
+- **THEN** the server records an activity entry containing the source provider, source group id, and source URL for traceability
+
+#### Scenario: CSV import has no source URL
+
+- **WHEN** the source is parsed from a CSV file
+- **THEN** `sourceUrl` is `null` and no attribution note is generated
