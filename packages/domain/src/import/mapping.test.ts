@@ -282,6 +282,35 @@ describe('findImportConflicts', () => {
     expect(conflicts.size).toBe(0)
   })
 
+  it('handles undefined destinationParticipants without crashing', () => {
+    const participants: ParticipantMappingState[] = [
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
+    ]
+    const conflicts = findImportConflicts(participants)
+    expect(conflicts).toBeInstanceOf(Map)
+    expect(conflicts.size).toBe(0)
+  })
+
+  it('handles undefined destinationParticipants without crashing when called explicitly with undefined', () => {
+    const participants: ParticipantMappingState[] = [
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
+    ]
+    const conflicts = findImportConflicts(participants, undefined)
+    expect(conflicts).toBeInstanceOf(Map)
+    expect(conflicts.size).toBe(0)
+  })
+
+  it('handles undefined destinationParticipants with LINK_EXISTING rows without crashing', () => {
+    const participants: ParticipantMappingState[] = [
+      mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {
+        existingLedgerParticipantId: 'd-1',
+      }),
+    ]
+    const conflicts = findImportConflicts(participants)
+    expect(conflicts).toBeInstanceOf(Map)
+    expect(conflicts.size).toBe(0)
+  })
+
   it('returns no conflicts when mapping is clean', () => {
     const participants: ParticipantMappingState[] = [
       mappingRow('p-0', 'John', 'LINK_ACCOUNT'),
@@ -442,6 +471,32 @@ describe('buildImportBatch', () => {
         destLedgerParticipantId: 'dest-a',
       },
     ])
+  })
+
+  it('throws when an expense paidBy is missing from sourceIdToDestId', () => {
+    const participants: ParticipantMappingState[] = [
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+        linkedAccountId: 'acc-1',
+      }),
+    ]
+    const state: ImportBatchState = {
+      source: baseSource,
+      mode: 'NEW_GROUP',
+      targetGroupId: null,
+      groupFormValues: {
+        name: 'Trip',
+        information: '',
+        currency: '€',
+        currencyCode: 'EUR',
+      },
+      participants,
+      sourceIdToDestId: {},
+      destIds: { 'p-0': 'dest-a' },
+      resolvedExpenses: [baseExpense('p-0', [])],
+    }
+    expect(() => buildImportBatch(state, 'EUR')).toThrow(
+      'Missing destination id for paidBy participant p-0',
+    )
   })
 
   it('throws when a non-LINK_EXISTING participant is missing a destination id', () => {

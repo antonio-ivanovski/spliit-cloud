@@ -122,6 +122,29 @@ describe('tryParseSpliitCsv', () => {
     expect(result.source.expenses[1].title).toBe('Café, plage')
   })
 
+  it('skips expense rows where no payer is identified (all negative values)', () => {
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+"2026-01-12","Dinner","Dining Out","EUR","30.00",,,,"No","Evenly",-15.00,-15.00`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error).toMatch(/CSV had no parseable expenses/i)
+  })
+
+  it('treats the first zero-value participant as payer when all participant values are zero', () => {
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+"2026-01-12","Zero Split","General","EUR","0.00",,,,"No","Evenly",0.00,0.00`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.expenses).toHaveLength(1)
+    expect(result.source.expenses[0].title).toBe('Zero Split')
+    expect(result.source.expenses[0].paidBySourceId).toBe(
+      result.source.participants[0].sourceId,
+    )
+    expect(result.source.expenses[0].amount).toBe(0)
+  })
+
   it('absorbs per-row rounding drift so the paidFor sum equals the amount (BY_AMOUNT)', () => {
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-25","Podaroci","General","EUR","10.75",,,,"No","Evenly",5.38,5.38`

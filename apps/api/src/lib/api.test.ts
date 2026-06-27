@@ -9,6 +9,8 @@ import {
   getActivities,
   getGroup,
   linkUnlinkedParticipantToAccount,
+  linkUnlinkedParticipantToPendingInvite,
+  mergeLedgerParticipantReferences,
 } from '../lib/api'
 
 vi.mock('../routes/upload', () => ({
@@ -859,5 +861,408 @@ describe('linkUnlinkedParticipantToAccount', () => {
         }),
       }),
     )
+  })
+
+  it('rejects when the linked account is not found', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      ledgerId: 'ledger-1',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+    } as never)
+    // account.findUnique defaults to null — not found
+
+    await expect(
+      linkUnlinkedParticipantToAccount({
+        groupId: 'grp-1',
+        ledgerParticipantId: 'lp-jane',
+        accountId: 'acct-missing',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Account not found')
+  })
+
+  it('rejects when the participant is already linked to a member', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      ledgerId: 'ledger-1',
+      groupMemberId: 'gm-jane',
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToAccount({
+        groupId: 'grp-1',
+        ledgerParticipantId: 'lp-jane',
+        accountId: 'acct-alice',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Ledger participant is already linked to a member')
+  })
+})
+
+describe('mergeLedgerParticipantReferences', () => {
+  it('updates expense and expensePaidFor references from source to target', async () => {
+    prismaMock.expense.updateMany.mockResolvedValue({ count: 1 } as never)
+    prismaMock.expensePaidFor.updateMany.mockResolvedValue({
+      count: 2,
+    } as never)
+
+    await mergeLedgerParticipantReferences(prismaMock as never, {
+      sourceId: 'lp-source',
+      targetId: 'lp-target',
+    })
+
+    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
+      where: { paidById: 'lp-source' },
+      data: { paidById: 'lp-target' },
+    })
+    expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-source' },
+      data: { ledgerParticipantId: 'lp-target' },
+    })
+  })
+})
+
+describe('linkUnlinkedParticipantToPendingInvite', () => {
+  const groupId = 'grp-1'
+  const ledgerId = 'ledger-1'
+
+  it('rejects when the source ledger participant is not found', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue(null as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-missing',
+        pendingInvitationId: 'inv-1',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Ledger participant not found')
+  })
+
+  it('rejects when participant does not belong to this group', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-other',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: 'ledger-2', group: { id: 'grp-other' } },
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-other',
+        pendingInvitationId: 'inv-1',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Ledger participant does not belong to this group')
+  })
+
+  it('rejects when participant is not unlinked', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: null,
+      kind: 'ACCOUNT_MEMBER',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-1',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Ledger participant is not unlinked')
+  })
+
+  it('rejects when participant already has a groupMemberId', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: 'gm-jane',
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-1',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Ledger participant is already linked to a member')
+  })
+
+  it('rejects when invitation is not found', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue(null as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-missing',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Invitation not found')
+  })
+
+  it('rejects when invitation belongs to a different group', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-other',
+      groupId: 'grp-other',
+      email: 'bob@other.com',
+      status: 'PENDING',
+      ledgerParticipant: null,
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-other',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Invitation does not belong to this group')
+  })
+
+  it('rejects when invitation is not pending', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-accepted',
+      groupId,
+      email: 'bob@example.com',
+      status: 'ACCEPTED',
+      ledgerParticipant: null,
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-accepted',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Invitation is not pending')
+  })
+
+  it('rejects when invitation has no materialized ledger participant', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-no-lp',
+      groupId,
+      email: 'bob@example.com',
+      status: 'PENDING',
+      ledgerParticipant: null,
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-no-lp',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow(
+      'Invitation has no materialized ledger participant',
+    )
+  })
+
+  it('rejects when target LP is in a different ledger', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-1',
+      groupId,
+      email: 'bob@example.com',
+      status: 'PENDING',
+      ledgerParticipant: {
+        id: 'lp-target',
+        ledgerId: 'ledger-other',
+        groupMemberId: null,
+      },
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-1',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow(
+      'Invitation ledger participant is in a different ledger',
+    )
+  })
+
+  it('rejects when merging a participant into itself (self-merge guard)', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-jane',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-1',
+      groupId,
+      email: 'bob@example.com',
+      status: 'PENDING',
+      ledgerParticipant: {
+        id: 'lp-jane',
+        ledgerId,
+        groupMemberId: null,
+      },
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToPendingInvite({
+        groupId,
+        ledgerParticipantId: 'lp-jane',
+        pendingInvitationId: 'inv-1',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Cannot merge a participant into itself')
+  })
+
+  it('happy path: merges references, deletes source LP, and logs activity', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-unlinked',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Jane',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-1',
+      groupId,
+      email: 'bob@example.com',
+      status: 'PENDING',
+      ledgerParticipant: {
+        id: 'lp-target',
+        ledgerId,
+        groupMemberId: null,
+      },
+    } as never)
+    prismaMock.expense.updateMany.mockResolvedValue({ count: 1 } as never)
+    prismaMock.expensePaidFor.updateMany.mockResolvedValue({
+      count: 2,
+    } as never)
+    prismaMock.ledgerParticipant.delete.mockResolvedValue({} as never)
+    // logActivity needs group lookup and activity.create
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId,
+    } as never)
+    prismaMock.activity.create.mockResolvedValue({} as never)
+
+    const result = await linkUnlinkedParticipantToPendingInvite({
+      groupId,
+      ledgerParticipantId: 'lp-unlinked',
+      pendingInvitationId: 'inv-1',
+      actor: { accountId: 'acct-admin' },
+    })
+
+    expect(result).toEqual({
+      groupMemberId: null,
+      ledgerParticipantId: 'lp-target',
+    })
+    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
+      where: { paidById: 'lp-unlinked' },
+      data: { paidById: 'lp-target' },
+    })
+    expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-unlinked' },
+      data: { ledgerParticipantId: 'lp-target' },
+    })
+    expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
+      where: { id: 'lp-unlinked' },
+    })
+    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          data: 'ledger-participant:merged-into-invitation:lp-unlinked:lp-target',
+        }),
+      }),
+    )
+  })
+
+  it('correctly returns ledgerParticipantId of the target LP', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-source',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Source',
+      ledger: { id: ledgerId, group: { id: groupId } },
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-2',
+      groupId,
+      email: 'carol@example.com',
+      status: 'PENDING',
+      ledgerParticipant: {
+        id: 'lp-canonical',
+        ledgerId,
+        groupMemberId: null,
+      },
+    } as never)
+    prismaMock.expense.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.expensePaidFor.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.ledgerParticipant.delete.mockResolvedValue({} as never)
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId,
+    } as never)
+    prismaMock.activity.create.mockResolvedValue({} as never)
+
+    const result = await linkUnlinkedParticipantToPendingInvite({
+      groupId,
+      ledgerParticipantId: 'lp-source',
+      pendingInvitationId: 'inv-2',
+      actor: { accountId: 'acct-admin' },
+    })
+
+    // The returned ledgerParticipantId must be the target (canonical) LP, not the source
+    expect(result.ledgerParticipantId).toBe('lp-canonical')
+    expect(result.groupMemberId).toBeNull()
   })
 })
