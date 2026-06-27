@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { Navigate, Outlet, useSearch } from '@tanstack/react-router'
+import { Cloud, Loader2 } from 'lucide-react'
 import { PropsWithChildren, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrentGroupProvider } from './current-group-context'
@@ -36,6 +37,9 @@ export function GroupLayoutClient({
   })
   const { t: tForbidden } = useTranslation(undefined, {
     keyPrefix: 'Groups',
+  })
+  const { t: tImportable } = useTranslation(undefined, {
+    keyPrefix: 'Groups.Importable',
   })
   const { toast } = useToast()
   const { isPending: accountPending } = useCurrentAccount()
@@ -99,6 +103,16 @@ export function GroupLayoutClient({
     )
   }
 
+  // Not-found hand-off: when the local group does not exist, the
+  // server returns NOT_FOUND. The web asks the lookup procedure to
+  // check the in-memory source cache and, on a miss, attempt a
+  // `spliit.app` fetch. A hit returns `IMPORTABLE` and we render a
+  // CTA that walks the user into the import wizard with the source
+  // pre-filled.
+  if (!isLoading && error?.data?.code === 'NOT_FOUND') {
+    return <NotFoundGroup groupId={groupId} tImportable={tImportable} />
+  }
+
   const props =
     isLoading || !data?.group
       ? {
@@ -128,5 +142,64 @@ export function GroupLayoutClient({
       </div>
       <SaveGroupLocally />
     </CurrentGroupProvider>
+  )
+}
+
+function NotFoundGroup({
+  groupId,
+  tImportable,
+}: {
+  groupId: string
+  tImportable: ReturnType<typeof useTranslation>['t']
+}) {
+  const { t: tNotFound } = useTranslation(undefined, {
+    keyPrefix: 'Groups.NotFound',
+  })
+  const lookup = trpc.groups.lookup.useQuery({ groupId }, { retry: false })
+  if (lookup.isLoading) {
+    return (
+      <main className="flex-1 flex items-center justify-center px-4 py-10">
+        <div className="flex flex-col items-center gap-2 text-muted-foreground">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          <p className="text-sm">Looking for this group…</p>
+        </div>
+      </main>
+    )
+  }
+  if (lookup.data?.status === 'IMPORTABLE') {
+    const sourceUrl = lookup.data.sourceUrl
+    return (
+      <main className="flex-1 flex items-center justify-center px-4 py-10">
+        <div className="flex flex-col items-center gap-3 text-center max-w-md">
+          <Cloud className="w-8 h-8 text-primary" />
+          <h1 className="text-2xl font-semibold">{tImportable('title')}</h1>
+          <p className="text-sm text-muted-foreground">
+            {tImportable('description', { name: lookup.data.source.name })}
+          </p>
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link
+                href={`/groups/import?source=${encodeURIComponent(sourceUrl)}`}
+              >
+                {tImportable('cta')}
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/">{tImportable('backToHome')}</Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+    )
+  }
+  return (
+    <main className="flex-1 flex items-center justify-center px-4 py-10">
+      <div className="flex flex-col items-center gap-3 text-center max-w-md">
+        <h1 className="text-2xl font-semibold">{tNotFound('text')}</h1>
+        <Button asChild variant="outline">
+          <Link href="/">{tNotFound('link')}</Link>
+        </Button>
+      </div>
+    </main>
   )
 }

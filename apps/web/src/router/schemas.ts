@@ -21,6 +21,16 @@ export const groupIdParamSchema = cuidLike
 export const expenseIdParamSchema = cuidLike
 
 /**
+ * Search-param schema for the `/groups/import` wizard. The `source`
+ * field carries an encoded `spliit.app` group URL when the user
+ * arrived from the not-found hand-off; the wizard opens on the
+ * destination step when this is set.
+ */
+export const importGroupSearchSchema = z.object({
+  source: z.string().optional(),
+})
+
+/**
  * Search-param schema for the `/groups/$groupId` route. The `invite`
  * field carries a link-invite token. Any string (or absence) is
  * captured and forwarded to the server, which is the source of truth

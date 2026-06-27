@@ -41,6 +41,26 @@ export type Props = {
    * unarchive the group first.
    */
   archived?: boolean
+  /**
+   * When `true`, hide the "After the group is created, open the
+   * Members tab to invite people" hint. The import wizard renders
+   * this form inline and surfaces invites on its own Done step, so
+   * the hint would be misleading there.
+   */
+  hideInviteHint?: boolean
+  /**
+   * Optional initial values for a brand-new group. Only used when
+   * `group` is unset — the import wizard pre-fills the name,
+   * currency, and a default "imported from Spliit" note so the
+   * user can hit Create without re-typing. Edits to the form
+   * still flow through normally.
+   */
+  initialValues?: {
+    name?: string
+    information?: string
+    currency?: string
+    currencyCode?: string
+  }
   onSubmit: (groupFormValues: GroupFormValues) => Promise<void>
 }
 
@@ -60,6 +80,8 @@ export function GroupForm({
   group,
   currentMemberRole,
   archived = false,
+  hideInviteHint = false,
+  initialValues,
   onSubmit,
 }: Props) {
   const locale = useLocale()
@@ -85,10 +107,12 @@ export function GroupForm({
           participants: PARTICIPANTS_PLACEHOLDER,
         }
       : {
-          name: '',
-          information: '',
-          currency: '',
-          currencyCode: import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD',
+          name: initialValues?.name ?? '',
+          information: initialValues?.information ?? '',
+          currency: initialValues?.currency ?? '',
+          currencyCode:
+            initialValues?.currencyCode ??
+            (import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'),
           participants: PARTICIPANTS_PLACEHOLDER,
         },
   })
@@ -226,7 +250,7 @@ export function GroupForm({
           </CardContent>
         </Card>
 
-        {!group && (
+        {!group && !hideInviteHint && (
           <p className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
             <UserPlus className="mt-0.5 h-4 w-4 shrink-0" />
             <span>{t('Settings.inviteAfterCreate')}</span>

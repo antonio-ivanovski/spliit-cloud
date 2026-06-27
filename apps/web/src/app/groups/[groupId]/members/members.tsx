@@ -50,6 +50,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useCurrentGroup } from '../current-group-context'
+import { LinkUnlinkedParticipantDialog } from './link-unlinked-participant-dialog'
 
 // Invited and active members can only be ADMIN or MEMBER. Group creators
 // start as ADMIN, and admins promote/demote other members from the
@@ -180,6 +181,7 @@ export default function GroupMembers() {
         utils.groups.get.invalidate({ groupId }),
         utils.groups.getDetails.invalidate({ groupId }),
         utils.account.members.invalidate({ groupId }),
+        utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
       ])
     },
     onError: (error) => {
@@ -204,6 +206,7 @@ export default function GroupMembers() {
         utils.groups.get.invalidate({ groupId }),
         utils.groups.getDetails.invalidate({ groupId }),
         utils.account.members.invalidate({ groupId }),
+        utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
       ])
     },
     onError: (error) => {
@@ -652,6 +655,8 @@ export default function GroupMembers() {
           )}
         </CardContent>
       </Card>
+
+      <UnlinkedParticipantsSection groupId={groupId} canManage={canManage} />
 
       {!canManage && (
         <p className="text-sm text-muted-foreground">
@@ -1280,5 +1285,97 @@ export default function GroupMembers() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+/**
+ * Post-import admin section: render the unlinked
+ * `LedgerParticipant` rows in the group (e.g. imported as
+ * UNLINKED_PARTICIPANT) and let the admin link each to an account
+ * by typing its email. The lookup is server-side via the
+ * `importLinks.link` procedure, which falls back to
+ * `email → accountId` resolution when only an email is supplied.
+ *
+ * The section only renders for admins (`canManage`) and only
+ * surfaces unlinked rows when the group actually has any — the
+ * list is hidden otherwise to keep the Members tab quiet for
+ * groups that don't need it.
+ */
+function UnlinkedParticipantsSection({
+  groupId,
+  canManage,
+}: {
+  groupId: string
+  canManage: boolean
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const { data, isLoading } = trpc.groups.importLinks.listUnlinked.useQuery({
+    groupId,
+  })
+
+  const [linkTarget, setLinkTarget] = useState<{
+    id: string
+    displayName: string
+  } | null>(null)
+
+  if (!canManage) return null
+  const unlinked = data?.unlinked ?? []
+  if (!isLoading && unlinked.length === 0) return null
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('unlinked.title')}</CardTitle>
+        <CardDescription>{t('unlinked.description')}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex flex-col gap-3 py-1">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        ) : (
+          <ul className="flex flex-col divide-y">
+            {unlinked.map((p) => (
+              <li
+                key={p.id}
+                className="flex flex-col gap-2 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium">
+                    {p.displayName || t('unknownMember')}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('unlinked.idHint', { id: p.id })}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setLinkTarget({
+                      id: p.id,
+                      displayName: p.displayName || t('unknownMember'),
+                    })
+                  }
+                >
+                  {t('unlinked.linkButton')}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+
+      <LinkUnlinkedParticipantDialog
+        groupId={groupId}
+        unlinkedParticipantId={linkTarget?.id ?? ''}
+        displayName={linkTarget?.displayName ?? ''}
+        open={!!linkTarget}
+        onOpenChange={(open) => {
+          if (!open) setLinkTarget(null)
+        }}
+      />
+    </Card>
   )
 }

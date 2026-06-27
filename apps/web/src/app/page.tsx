@@ -122,6 +122,12 @@ function SignedInHero() {
             {t('Homepage.button.createGroup')}
           </Link>
         </Button>
+        <Button asChild size="lg" variant="outline">
+          <Link href="/groups/import">
+            <Cloud className="w-4 h-4 mr-2" />
+            {t('Homepage.button.importGroup')}
+          </Link>
+        </Button>
       </div>
     </section>
   )
