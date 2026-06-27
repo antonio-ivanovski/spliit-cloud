@@ -12,7 +12,8 @@
     "./recurring-expenses": "./src/recurring-expenses.ts",
     "./schemas": "./src/schemas.ts",
     "./totals": "./src/totals.ts",
-    "./utils": "./src/utils.ts"
+    "./utils": "./src/utils.ts",
+    "./import": "./src/import/index.ts"
   },
   "scripts": {
     "build": "tsc",
@@ -24,6 +25,7 @@
     "currency-list": "^1.0.8",
     "dayjs": "^1.11.21",
     "decimal.js": "^10.6.0",
+    "papaparse": "^5.4.1",
     "tailwind-merge": "^1.14.0",
     "ts-pattern": "^5.9.0",
     "zod": "^3.25.76"
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
+    "@types/papaparse": "^5.3.14",
     "typescript": "^5.9.3",
     "vitest": "^4.1.9"
   }

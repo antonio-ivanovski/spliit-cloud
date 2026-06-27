@@ -165,6 +165,56 @@ describe('expenseFormSchema', () => {
     expect(resultValid.success).toBe(true)
   })
 
+  it('rejects BY_PERCENTAGE shares sent as strings of basis points', () => {
+    // Regression: the import wizard used to send shares as strings of
+    // basis points (e.g. "3000" for 30%). The schema's string branch
+    // multiplies by 100, so this doubled the values and tripped the
+    // percentageSum check. The wizard now sends numbers.
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      paidBy: 'p0',
+      paidFor: [
+        { participant: 'p0', shares: '7000' },
+        { participant: 'p1', shares: '3000' },
+      ],
+      splitMode: 'BY_PERCENTAGE',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(result.error.issues[0].message).toBe('percentageSum')
+  })
+
+  it('passes BY_PERCENTAGE shares sent as numbers in basis points', () => {
+    // The wizard contract: shares are already in basis points
+    // (3000 = 30%). The schema must accept this directly.
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      paidBy: 'p0',
+      paidFor: [
+        { participant: 'p0', shares: 7000 },
+        { participant: 'p1', shares: 3000 },
+      ],
+      splitMode: 'BY_PERCENTAGE',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+
+    expect(result.success).toBe(true)
+  })
+
   it('validates amount sum equals total', () => {
     // Invalid: sum < total (300 + 400 = 700 < 1000)
     const resultLess = expenseFormSchema.safeParse({
