@@ -1,15 +1,29 @@
 // organize-imports-ignore: ./mocks must be imported before any module that
 // loads better-auth or @spliit/db so vi.mock is registered before those
 // modules are evaluated.
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import '../test/mocks'
 import { prismaMock } from '../test/state'
-import { deleteExpense, getActivities, getGroup } from '../lib/api'
+import {
+  deleteExpense,
+  getActivities,
+  getGroup,
+  linkUnlinkedParticipantToAccount,
+} from '../lib/api'
 
 vi.mock('../routes/upload', () => ({
   deleteS3Object: vi.fn(),
   markS3ObjectAsOwned: vi.fn(),
 }))
+
+beforeEach(() => {
+  // The import-aware `getGroup` always reads unlinked
+  // LedgerParticipants (a name-only imported-entry pool) and merges
+  // them into the participants list. The default per-method stub
+  // returns null, which would crash the spread — default it to an
+  // empty array so the existing test fixtures keep working.
+  prismaMock.ledgerParticipant.findMany.mockResolvedValue([] as never)
+})
 
 describe('getGroup — pending invitations as participants', () => {
   const groupId = 'grp-1'
@@ -194,7 +208,7 @@ describe('getGroup — pending invitations as participants', () => {
     const group = await getGroup(groupId)
 
     expect(group!.participants).toEqual([
-      { id: 'lp-owner', name: 'Alice', pending: false },
+      { id: 'lp-owner', name: 'Alice', pending: false, unlinked: false },
     ])
     expect(prismaMock.ledgerParticipant.create).not.toHaveBeenCalled()
     expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
@@ -237,6 +251,7 @@ describe('getGroup — pending invitations as participants', () => {
         id: 'lp-dave',
         name: 'Dave from accounting',
         pending: true,
+        unlinked: false,
       },
     ])
   })
@@ -274,7 +289,87 @@ describe('getGroup — pending invitations as participants', () => {
     const group = await getGroup(groupId)
 
     expect(group!.participants).toEqual([
-      { id: 'lp-dave', name: 'dave@example.com', pending: true },
+      {
+        id: 'lp-dave',
+        name: 'dave@example.com',
+        pending: true,
+        unlinked: false,
+      },
+    ])
+  })
+
+  it('skips an unlinked LedgerParticipant that a pending invitation already references', async () => {
+    // When an INVITE_BY_LINK import materializes the invitee's LP
+    // before the commit (so expenses already point at it), the
+    // invitation's `ledgerParticipantId` matches the unlinked LP.
+    // `getGroup` must NOT surface the same person twice (once as
+    // unlinked + once as pending invitee) — the pending view wins.
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      name: 'Trip',
+      information: null,
+      createdAt: new Date(),
+      ledgerId,
+      ledger: { id: ledgerId, currency: '$', currencyCode: 'USD' },
+      members: [],
+      invitations: [
+        {
+          id: 'inv-bela',
+          groupId,
+          email: 'link-placeholder@placeholder.local',
+          temporaryName: 'Bela',
+          status: 'PENDING',
+          ledgerParticipantId: 'lp-bela',
+        },
+      ],
+    } as never)
+    // The pending link invitation has its LP attached.
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-bela',
+        groupId,
+        email: 'link-placeholder@placeholder.local',
+        temporaryName: 'Bela',
+        ledgerParticipant: { id: 'lp-bela' },
+      },
+    ] as never)
+    // The same LP is also surfaced as an unlinked entry — this is
+    // the state the import commit leaves behind. The read path must
+    // filter it out so the balances list doesn't double-count.
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      { id: 'lp-bela', displayName: 'Bela' },
+    ] as never)
+    const group = await getGroup(groupId)
+    expect(group!.participants).toEqual([
+      {
+        id: 'lp-bela',
+        name: 'Bela',
+        pending: true,
+        unlinked: false,
+      },
+    ])
+  })
+
+  it('keeps unlinked LedgerParticipants that are NOT referenced by any invitation', async () => {
+    // Sanity check: the filter only removes unlinked LPs that are
+    // already covered by a pending invitation. Genuinely unlinked
+    // imported entries (no matching invite) keep their surface.
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      name: 'Trip',
+      information: null,
+      createdAt: new Date(),
+      ledgerId,
+      ledger: { id: ledgerId, currency: '$', currencyCode: 'USD' },
+      members: [],
+      invitations: [],
+    } as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      { id: 'lp-orphan', displayName: 'Carlos' },
+    ] as never)
+    const group = await getGroup(groupId)
+    expect(group!.participants).toEqual([
+      { id: 'lp-orphan', name: 'Carlos', pending: false, unlinked: true },
     ])
   })
 })
@@ -492,5 +587,277 @@ describe('getActivities', () => {
     const activities = await getActivities('grp-1')
 
     expect(activities[0]).toMatchObject({ actorName: null })
+  })
+})
+
+describe('linkUnlinkedParticipantToAccount', () => {
+  it('rejects when the source LP is not an UNLINKED_PARTICIPANT', async () => {
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-alice',
+      ledgerId: 'ledger-1',
+      groupMemberId: 'gm-alice',
+      kind: 'ACCOUNT_MEMBER',
+      displayName: null,
+      ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+    } as never)
+
+    await expect(
+      linkUnlinkedParticipantToAccount({
+        groupId: 'grp-1',
+        ledgerParticipantId: 'lp-alice',
+        accountId: 'acct-bela',
+        actor: { accountId: 'acct-admin' },
+      }),
+    ).rejects.toThrow('Ledger participant is not unlinked')
+  })
+
+  it('migrates an UNLINKED_PARTICIPANT to the target account and logs activity', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.ledgerParticipant.findUnique.mockResolvedValue({
+      id: 'lp-bela',
+      ledgerId: 'ledger-1',
+      groupMemberId: null,
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: 'Bela',
+      ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+    } as never)
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-alice',
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue(null as never)
+    prismaMock.groupMember.create.mockResolvedValue({
+      id: 'gm-alice',
+      groupId: 'grp-1',
+      accountId: 'acct-alice',
+      role: 'MEMBER',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.ledgerParticipant.update.mockResolvedValue({} as never)
+    prismaMock.activity.create.mockResolvedValue({} as never)
+
+    const result = await linkUnlinkedParticipantToAccount({
+      groupId: 'grp-1',
+      ledgerParticipantId: 'lp-bela',
+      accountId: 'acct-alice',
+      actor: { accountId: 'acct-admin' },
+    })
+
+    expect(result).toEqual({
+      groupMemberId: 'gm-alice',
+      ledgerParticipantId: 'lp-bela',
+    })
+    expect(prismaMock.ledgerParticipant.update).toHaveBeenCalledWith({
+      where: { id: 'lp-bela' },
+      data: {
+        groupMemberId: 'gm-alice',
+        kind: 'ACCOUNT_MEMBER',
+        displayName: null,
+      },
+    })
+    expect(prismaMock.groupMember.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ role: 'MEMBER' }),
+      }),
+    )
+    expect(prismaMock.groupMember.update).not.toHaveBeenCalled()
+    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          data: 'ledger-participant:linked:lp-bela',
+        }),
+      }),
+    )
+  })
+
+  it('merges the unlinked LP into the existing member LP when the destination is already a member', async () => {
+    // Regression: when the destination account is already a group
+    // member with an LP in this ledger, the previous flow tried to
+    // UPDATE the unlinked LP's `groupMemberId` to the member's id and
+    // tripped the @unique constraint on `groupMemberId` because the
+    // existing LP already owned that value. The merge path rewrites
+    // references and drops the unlinked row.
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.ledgerParticipant.findUnique.mockImplementation(
+      async (args: unknown) => {
+        const where = (
+          args as { where: { id?: string; groupMemberId?: string } }
+        ).where
+        if (where.id === 'lp-bela') {
+          return {
+            id: 'lp-bela',
+            ledgerId: 'ledger-1',
+            groupMemberId: null,
+            kind: 'UNLINKED_PARTICIPANT',
+            displayName: 'Bela',
+            ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+          } as never
+        }
+        if (where.groupMemberId === 'gm-alice') {
+          return {
+            id: 'lp-alice',
+            ledgerId: 'ledger-1',
+            groupMemberId: 'gm-alice',
+            kind: 'ACCOUNT_MEMBER',
+            displayName: null,
+            ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+          } as never
+        }
+        return null as never
+      },
+    )
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-alice',
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      id: 'gm-alice',
+      groupId: 'grp-1',
+      accountId: 'acct-alice',
+      role: 'MEMBER',
+      status: 'ACTIVE',
+      joinedAt: new Date(),
+    } as never)
+    prismaMock.groupMember.update.mockResolvedValue({
+      id: 'gm-alice',
+      groupId: 'grp-1',
+      accountId: 'acct-alice',
+      role: 'MEMBER',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.expensePaidFor.updateMany.mockResolvedValue({
+      count: 2,
+    } as never)
+    prismaMock.expense.updateMany.mockResolvedValue({ count: 1 } as never)
+    prismaMock.ledgerParticipant.delete.mockResolvedValue({} as never)
+    prismaMock.activity.create.mockResolvedValue({} as never)
+
+    const result = await linkUnlinkedParticipantToAccount({
+      groupId: 'grp-1',
+      ledgerParticipantId: 'lp-bela',
+      accountId: 'acct-alice',
+      actor: { accountId: 'acct-admin' },
+    })
+
+    // The canonical (existing) LP id is returned, not the source LP id.
+    expect(result).toEqual({
+      groupMemberId: 'gm-alice',
+      ledgerParticipantId: 'lp-alice',
+    })
+    expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-bela' },
+      data: { ledgerParticipantId: 'lp-alice' },
+    })
+    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
+      where: { paidById: 'lp-bela' },
+      data: { paidById: 'lp-alice' },
+    })
+    expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
+      where: { id: 'lp-bela' },
+    })
+    // The merge path does not update the LP — the existing LP and
+    // groupMember are unchanged. The @unique constraint stays safe.
+    expect(prismaMock.ledgerParticipant.update).not.toHaveBeenCalled()
+    // The reactivation update must not touch `role` — preserving the
+    // existing member's privilege level (regression for admin demotion).
+    expect(prismaMock.groupMember.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'gm-alice' },
+        data: expect.not.objectContaining({ role: expect.anything() }),
+      }),
+    )
+    expect(prismaMock.groupMember.create).not.toHaveBeenCalled()
+    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          data: 'ledger-participant:merged:lp-bela:lp-alice',
+        }),
+      }),
+    )
+  })
+
+  it('preserves ADMIN role when an admin re-links an unlinked LP into their own existing membership', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.ledgerParticipant.findUnique.mockImplementation(
+      async (args: unknown) => {
+        const where = (
+          args as { where: { id?: string; groupMemberId?: string } }
+        ).where
+        if (where.id === 'lp-bela') {
+          return {
+            id: 'lp-bela',
+            ledgerId: 'ledger-1',
+            groupMemberId: null,
+            kind: 'UNLINKED_PARTICIPANT',
+            displayName: 'Bela',
+            ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+          } as never
+        }
+        if (where.groupMemberId === 'gm-alice') {
+          return {
+            id: 'lp-alice',
+            ledgerId: 'ledger-1',
+            groupMemberId: 'gm-alice',
+            kind: 'ACCOUNT_MEMBER',
+            displayName: null,
+            ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
+          } as never
+        }
+        return null as never
+      },
+    )
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-alice',
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      id: 'gm-alice',
+      groupId: 'grp-1',
+      accountId: 'acct-alice',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+      joinedAt: new Date(),
+    } as never)
+    prismaMock.groupMember.update.mockResolvedValue({
+      id: 'gm-alice',
+      groupId: 'grp-1',
+      accountId: 'acct-alice',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.expensePaidFor.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.expense.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.ledgerParticipant.delete.mockResolvedValue({} as never)
+    prismaMock.activity.create.mockResolvedValue({} as never)
+
+    const result = await linkUnlinkedParticipantToAccount({
+      groupId: 'grp-1',
+      ledgerParticipantId: 'lp-bela',
+      accountId: 'acct-alice',
+      actor: { accountId: 'acct-admin' },
+    })
+
+    expect(result).toEqual({
+      groupMemberId: 'gm-alice',
+      ledgerParticipantId: 'lp-alice',
+    })
+    // The reactivation update must not include `role` — admins stay admins.
+    const updateCall = prismaMock.groupMember.update.mock.calls[0][0] as {
+      data: Record<string, unknown>
+    }
+    expect(updateCall.data).not.toHaveProperty('role')
+    expect(prismaMock.groupMember.create).not.toHaveBeenCalled()
+    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          data: 'ledger-participant:merged:lp-bela:lp-alice',
+        }),
+      }),
+    )
   })
 })

@@ -1,8 +1,10 @@
 import {
   ActivityType,
   Expense,
+  GroupInvitationStatus,
   GroupMemberStatus,
   GroupRole,
+  LedgerParticipantKind,
   prisma,
   RecurrenceRule,
   type Ledger,
@@ -145,15 +147,14 @@ export async function createExpense(
   const participants = await prisma.ledgerParticipant.findMany({
     where: {
       ledgerId,
-      // Exclude historical participants that no longer represent a
-      // current group member: rows with no backing GroupMember that
-      // are also not tied to a PENDING invitation. These show up after
-      // a pending invitation is revoked (the participant is left
-      // behind when expenses referenced it). Accepting them in
-      // `paidBy` / `paidFor` would re-materialize the invitee.
+      // Allow account-backed participants (the common case), pending
+      // invitation placeholders (so invitees can be referenced before
+      // they accept), and unlinked imported entries (name-only rows
+      // with no account and no app access).
       OR: [
         { groupMemberId: { not: null } },
         { invitations: { some: { status: 'PENDING' } } },
+        { kind: 'UNLINKED_PARTICIPANT' },
       ],
     },
     select: { id: true },
@@ -320,12 +321,14 @@ export async function updateExpense(
   const participants = await prisma.ledgerParticipant.findMany({
     where: {
       ledgerId: group.ledgerId,
-      // Same exclusion as `createExpense`: drop historical rows left
-      // behind by revoked invitations so an update cannot re-add a
-      // removed invitee.
+      // Same allow-list as `createExpense`: account-backed,
+      // pending-invitation placeholders, and unlinked imported entries.
+      // Historical rows left behind by revoked invitations stay out so
+      // an update cannot re-add a removed invitee.
       OR: [
         { groupMemberId: { not: null } },
         { invitations: { some: { status: 'PENDING' } } },
+        { kind: 'UNLINKED_PARTICIPANT' },
       ],
     },
     select: { id: true },
@@ -581,10 +584,36 @@ export async function getGroup(groupId: string) {
         })
       : []
 
+  // Pick up unlinked LedgerParticipants (kind = UNLINKED_PARTICIPANT) so
+  // imported name-only entries can be referenced in expense forms and
+  // balances. Account-backed participants are surfaced above through
+  // `group.members`; this query only collects the no-account leftovers.
+  //
+  // Filter out any LP that's already surfaced as a pending invitation
+  // below — otherwise an INVITE_BY_LINK import would render the same
+  // person twice (once as the imported unlinked row, once as a pending
+  // link-invitee) and the balances list would show duplicate names.
+  const allUnlinkedParticipants = group.ledgerId
+    ? await prisma.ledgerParticipant.findMany({
+        where: { ledgerId: group.ledgerId, kind: 'UNLINKED_PARTICIPANT' },
+        orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
+        select: { id: true, displayName: true },
+      })
+    : []
+  const linkedViaInvitation = new Set<string>()
+  for (const inv of invitationsWithParticipants) {
+    if (inv.ledgerParticipant) linkedViaInvitation.add(inv.ledgerParticipant.id)
+  }
+  const unlinkedParticipants = allUnlinkedParticipants.filter(
+    (p) => !linkedViaInvitation.has(p.id),
+  )
+
   // Flatten to the shape callers expect. Display name is resolved at
   // read time through `resolveParticipantDisplayName`. Pending
   // invitations appear as synthetic participants so they can be selected
-  // in the expense form before they accept.
+  // in the expense form before they accept. Unlinked participants are
+  // durable entries with no app account — they show up as participants
+  // in the same list so the expense form can select them.
   return {
     ...group,
     currency: group.ledger?.currency ?? '$',
@@ -597,6 +626,7 @@ export async function getGroup(groupId: string) {
                 id: m.ledgerParticipant.id,
                 name: m.account?.name ?? '',
                 pending: false,
+                unlinked: false,
               },
             ]
           : [],
@@ -616,10 +646,17 @@ export async function getGroup(groupId: string) {
                   ],
                 }),
                 pending: true,
+                unlinked: false,
               },
             ]
           : [],
       ),
+      ...unlinkedParticipants.map((p) => ({
+        id: p.id,
+        name: p.displayName ?? '',
+        pending: false,
+        unlinked: true,
+      })),
     ],
   }
 }
@@ -1820,4 +1857,789 @@ export async function getRemoveMemberPreview(opts: {
     memberName: target.account?.name ?? '',
     hasUnsettledBalance,
   }
+}
+
+// ---------------------------------------------------------------------------
+// Group import
+// ---------------------------------------------------------------------------
+
+export type ImportParticipantMapping =
+  | {
+      mode: 'LINK_ACCOUNT'
+      sourceName: string
+      linkedAccountId: string
+      destLedgerParticipantId: string
+    }
+  | {
+      mode: 'INVITE_BY_EMAIL'
+      sourceName: string
+      email: string
+      destLedgerParticipantId: string
+    }
+  | {
+      mode: 'INVITE_BY_LINK'
+      sourceName: string
+      destLedgerParticipantId: string
+    }
+  | {
+      mode: 'UNLINKED_PARTICIPANT'
+      sourceName: string
+      destLedgerParticipantId: string
+    }
+  | {
+      /**
+       * Map this source participant onto an existing LedgerParticipant
+       * in the destination group (active member or pending invite).
+       * No new participant / membership / invitation is created. The
+       * destination `LedgerParticipant.id` is used directly. Only
+       * valid for `EXISTING_GROUP` imports; the wizard hides the
+       * option otherwise.
+       */
+      mode: 'LINK_EXISTING_PARTICIPANT'
+      sourceName: string
+      destLedgerParticipantId: string
+    }
+
+export type ImportSourceMeta = {
+  provider: string
+  sourceGroupId: string
+  sourceUrl?: string
+}
+
+export type ImportInput = {
+  targetGroupId?: string
+  groupFormValues?: GroupFormValues
+  participants: ImportParticipantMapping[]
+  expenses: ExpenseFormValues[]
+  sourceMeta?: ImportSourceMeta
+}
+
+export type ImportInviteResult = {
+  sourceName: string
+  kind: 'EMAIL' | 'LINK'
+  invitationId: string
+  inviteUrl?: string
+  email?: string
+}
+
+export type ImportResult = {
+  groupId: string
+  ledgerId: string
+  importedExpenses: number
+  sourceGroupId: string | null
+  invites: ImportInviteResult[]
+}
+
+export async function importGroup(
+  input: ImportInput,
+  actor: { accountId: string },
+): Promise<ImportResult> {
+  // The transactional commit creates the group + participants +
+  // expenses. Invitations are produced AFTER the commit because the
+  // email-send + link-generator live outside this transaction's
+  // surface (and we want the wizard to surface the URL even if the
+  // invitation side-effects fail). We collect the invite mappings
+  // inside the transaction and emit them below.
+  const baseResult = await prisma.$transaction(async (tx) => {
+    let groupId: string
+    let ledgerId: string
+
+    if (input.targetGroupId) {
+      const existing = await tx.group.findUnique({
+        where: { id: input.targetGroupId },
+        select: { id: true, ledgerId: true, archived: true },
+      })
+      if (!existing) {
+        throw new Error('Target group not found')
+      }
+      if (existing.archived) {
+        throw new Error('Cannot import into an archived group')
+      }
+      if (!existing.ledgerId) {
+        throw new Error('Target group is missing its ledger')
+      }
+      groupId = existing.id
+      ledgerId = existing.ledgerId
+    } else {
+      if (!input.groupFormValues) {
+        throw new Error('Either targetGroupId or groupFormValues is required')
+      }
+      const ledger = await tx.ledger.create({
+        data: {
+          id: randomId(),
+          currency: input.groupFormValues.currency,
+          currencyCode: input.groupFormValues.currencyCode || null,
+        },
+      })
+      const group = await tx.group.create({
+        data: {
+          id: randomId(),
+          name: input.groupFormValues.name,
+          information: input.groupFormValues.information,
+          ledgerId: ledger.id,
+        },
+      })
+      // Admin's LedgerParticipant is created lazily by the mapping
+      // loop (LINK_ACCOUNT branch), not eagerly here. Prevents a
+      // duplicate row when the importer's name matches a source
+      // participant's.
+      const adminMember = await tx.groupMember.create({
+        data: {
+          id: randomId(),
+          groupId: group.id,
+          accountId: actor.accountId,
+          role: GroupRole.ADMIN,
+          status: GroupMemberStatus.ACTIVE,
+          joinedAt: new Date(),
+        },
+      })
+      groupId = group.id
+      ledgerId = ledger.id
+      void adminMember
+    }
+
+    // Create destination LedgerParticipants from the mapping. Expense
+    // refs use client-supplied destLedgerParticipantId which we reuse
+    // as the PK. LINK_ACCOUNT reuses existing members.
+    const destIdByClientKey = new Map<string, string>()
+    const inviteMappings: Array<{
+      mode: 'INVITE_BY_EMAIL' | 'INVITE_BY_LINK'
+      sourceName: string
+      destLedgerParticipantId: string
+      email?: string
+    }> = []
+
+    // For LINK_EXISTING_PARTICIPANT mappings (existing-group imports
+    // only), the supplied destLedgerParticipantId must already exist
+    // in the destination ledger. Snapshot the valid ids once so the
+    // loop is O(1) per mapping.
+    const existingLpIds = input.targetGroupId
+      ? new Set(
+          (
+            await tx.ledgerParticipant.findMany({
+              where: { ledgerId },
+              select: { id: true },
+            })
+          ).map((p) => p.id),
+        )
+      : null
+
+    for (const mapping of input.participants) {
+      // The web wizard pre-allocates a fresh id per source
+      // participant and points the imported paidBy/paidFor references
+      // at it before submitting. We re-use the same id so the
+      // destination rows are addressable from the imported expenses
+      // without a second resolve pass.
+      const destId = mapping.destLedgerParticipantId
+      if (mapping.mode === 'UNLINKED_PARTICIPANT') {
+        await tx.ledgerParticipant.create({
+          data: {
+            id: destId,
+            ledgerId,
+            kind: LedgerParticipantKind.UNLINKED_PARTICIPANT,
+            displayName: mapping.sourceName,
+          },
+        })
+        destIdByClientKey.set(destId, destId)
+        continue
+      }
+      if (
+        mapping.mode === 'INVITE_BY_EMAIL' ||
+        mapping.mode === 'INVITE_BY_LINK'
+      ) {
+        // Materialize as an unlinked entry so the imported expenses
+        // can reference the invitee; the invitation row + email /
+        // link are produced after commit.
+        await tx.ledgerParticipant.create({
+          data: {
+            id: destId,
+            ledgerId,
+            kind: LedgerParticipantKind.UNLINKED_PARTICIPANT,
+            displayName: mapping.sourceName,
+          },
+        })
+        destIdByClientKey.set(destId, destId)
+        inviteMappings.push({
+          mode: mapping.mode,
+          sourceName: mapping.sourceName,
+          destLedgerParticipantId: destId,
+          email: mapping.mode === 'INVITE_BY_EMAIL' ? mapping.email : undefined,
+        })
+        continue
+      }
+      if (mapping.mode === 'LINK_EXISTING_PARTICIPANT') {
+        // Existing-group imports only. The supplied id must already
+        // exist in the destination ledger; if it doesn't, the wizard is
+        // being bypassed or has stale state. The wizard UI also blocks
+        // this from being submitted, so reaching here is a server-side
+        // defensive check.
+        if (!existingLpIds) {
+          throw new Error(
+            `Cannot map to an existing participant when creating a new group: ${mapping.sourceName}.`,
+          )
+        }
+        if (!existingLpIds.has(destId)) {
+          throw new Error(
+            `Destination LedgerParticipant "${destId}" not found in target group for source participant "${mapping.sourceName}.`,
+          )
+        }
+        destIdByClientKey.set(destId, destId)
+        continue
+      }
+      // LINK_ACCOUNT: the destination account must exist and the
+      // membership must be either created (account not yet a
+      // member) or reused (account is already an active member,
+      // e.g. the importer themselves).
+      const account = await tx.account.findUnique({
+        where: { id: mapping.linkedAccountId },
+        select: { id: true },
+      })
+      if (!account) {
+        throw new Error(`Linked account not found: ${mapping.linkedAccountId}`)
+      }
+      const existingMember = await tx.groupMember.findUnique({
+        where: {
+          groupId_accountId: {
+            groupId,
+            accountId: mapping.linkedAccountId,
+          },
+        },
+        include: { ledgerParticipant: true },
+      })
+      let memberId: string
+      if (existingMember) {
+        memberId = existingMember.id
+      } else {
+        const created = await tx.groupMember.create({
+          data: {
+            id: randomId(),
+            groupId,
+            accountId: mapping.linkedAccountId,
+            role: GroupRole.MEMBER,
+            status: GroupMemberStatus.ACTIVE,
+            joinedAt: new Date(),
+          },
+        })
+        memberId = created.id
+      }
+      // Reuse an existing participant for the same member if one
+      // already exists (the importer, when they link themselves),
+      // otherwise create a fresh one. When reusing, the supplied
+      // destLedgerParticipantId is discarded — the imported
+      // paidBy/paidFor references will be rewritten below to point
+      // at the existing participant id.
+      if (existingMember?.ledgerParticipant) {
+        destIdByClientKey.set(destId, existingMember.ledgerParticipant.id)
+        continue
+      }
+      await tx.ledgerParticipant.create({
+        data: {
+          id: destId,
+          ledgerId,
+          groupMemberId: memberId,
+        },
+      })
+      destIdByClientKey.set(destId, destId)
+    }
+
+    // Write expenses inside the same transaction as group + participants.
+    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+      groupId,
+      actor.accountId,
+      tx,
+    )
+
+    for (const expense of input.expenses) {
+      const expenseId = randomId()
+      await logActivity(
+        groupId,
+        ActivityType.CREATE_EXPENSE,
+        {
+          accountId: actor.accountId,
+          ledgerParticipantId: actorLedgerParticipantId,
+          expenseId,
+          data: expense.title,
+        },
+        tx,
+      )
+      // The web-supplied participant ids may have been discarded
+      // (LINK_ACCOUNT reuses the existing member's participant id
+      // instead of creating a new row). Rewrite the paidBy /
+      // paidFor references through the actual destination ids we
+      // computed above.
+      const resolvedPaidBy = destIdByClientKey.get(expense.paidBy)
+      if (!resolvedPaidBy) {
+        throw new Error(
+          `Missing destination id for paidBy participant ${expense.paidBy}`,
+        )
+      }
+      const resolvedPaidFor: Array<{
+        ledgerParticipantId: string
+        shares: number
+      }> = []
+      const seenPaidForIds = new Set<string>()
+      for (const paidFor of expense.paidFor) {
+        const resolved = destIdByClientKey.get(paidFor.participant)
+        if (!resolved) continue
+        if (seenPaidForIds.has(resolved)) {
+          // Two source participants collapsed to the same destination
+          // LedgerParticipant. The mapping UI prevents this state from
+          // being submitted (only one row can be LINK_ACCOUNT, and
+          // INVITE_BY_EMAIL emails are deduped), so reaching here means
+          // the wizard is being bypassed or has a bug. Fail loudly
+          // rather than silently merging the duplicate — silent
+          // merging masks data corruption and the user can never tell
+          // something went wrong.
+          throw new Error(
+            `Expense "${expense.title}" has two paidFor entries for the same LedgerParticipant (${resolved}). Each source participant must map to a unique destination.`,
+          )
+        }
+        seenPaidForIds.add(resolved)
+        resolvedPaidFor.push({
+          ledgerParticipantId: resolved,
+          shares: paidFor.shares,
+        })
+      }
+      if (resolvedPaidFor.length === 0) {
+        throw new Error(
+          `Expense "${expense.title}" has no remaining paidFor participants after import resolution`,
+        )
+      }
+      await tx.expense.create({
+        data: {
+          id: expenseId,
+          ledgerId,
+          expenseDate: expense.expenseDate,
+          title: expense.title,
+          categoryId: expense.category,
+          amount: expense.amount,
+          originalAmount: expense.originalAmount,
+          originalCurrency: expense.originalCurrency,
+          conversionRate: expense.conversionRate,
+          paidById: resolvedPaidBy,
+          splitMode: expense.splitMode,
+          recurrenceRule: expense.recurrenceRule,
+          isReimbursement: expense.isReimbursement,
+          notes: expense.notes,
+          paidFor: {
+            createMany: {
+              data: resolvedPaidFor,
+            },
+          },
+          documents: {
+            createMany: {
+              data: expense.documents.map((doc) => ({
+                id: randomId(),
+                url: doc.url,
+                width: doc.width,
+                height: doc.height,
+              })),
+            },
+          },
+        },
+      })
+    }
+
+    // Record the import as a single UPDATE_GROUP activity so the
+    // destination group records its source identity. The source id is
+    // preserved in the `data` field for traceability; the destination
+    // group id was always fresh (see `randomId()` above).
+    if (input.sourceMeta) {
+      const data = `Imported from ${input.sourceMeta.provider} group ${input.sourceMeta.sourceGroupId}`
+      await logActivity(
+        groupId,
+        ActivityType.UPDATE_GROUP,
+        {
+          accountId: actor.accountId,
+          ledgerParticipantId: actorLedgerParticipantId,
+          data,
+        },
+        tx,
+      )
+    }
+
+    return {
+      groupId,
+      ledgerId,
+      importedExpenses: input.expenses.length,
+      sourceGroupId: input.sourceMeta?.sourceGroupId ?? null,
+      inviteMappings,
+    }
+  })
+
+  // After the transactional commit: emit the invites that the wizard
+  // collected during the commit. Each invite has a corresponding
+  // unlinked `LedgerParticipant` row created in the commit so the
+  // imported expenses already reference the right id.
+  //
+  // We import these helpers lazily to avoid a circular import
+  // (`invitations.ts` reaches back into `api.ts` for activity logging,
+  // balance queries, etc.).
+  const { createEmailInvitation, createLinkInvitation, sendInvitationEmail } =
+    await import('./invitations')
+  const group = await prisma.group.findUnique({
+    where: { id: baseResult.groupId },
+    select: { name: true },
+  })
+  if (!group) {
+    throw new Error('Group not found after import commit')
+  }
+  const inviter = await prisma.account.findUnique({
+    where: { id: actor.accountId },
+    select: { name: true, email: true },
+  })
+  const inviterDisplayName = inviter?.name || inviter?.email || 'Someone'
+
+  const inviteResults: ImportInviteResult[] = []
+  for (const invite of baseResult.inviteMappings) {
+    if (invite.mode === 'INVITE_BY_EMAIL') {
+      const email = invite.email!
+      const invitation = await createEmailInvitation({
+        groupId: baseResult.groupId,
+        email,
+        role: GroupRole.MEMBER,
+        inviterAccountId: actor.accountId,
+        temporaryName: invite.sourceName,
+      })
+      const existingAccount = await prisma.account.findFirst({
+        where: { email: { equals: email.toLowerCase(), mode: 'insensitive' } },
+        select: { id: true },
+      })
+      await sendInvitationEmail({
+        invitationId: invitation.id,
+        groupId: baseResult.groupId,
+        groupName: group.name,
+        inviterDisplayName,
+        inviterRole: GroupRole.ADMIN,
+        recipientEmail: invitation.email,
+        recipientIsExistingUser: !!existingAccount,
+      })
+      inviteResults.push({
+        sourceName: invite.sourceName,
+        kind: 'EMAIL',
+        invitationId: invitation.id,
+        email,
+      })
+    } else {
+      const link = await createLinkInvitation({
+        groupId: baseResult.groupId,
+        role: GroupRole.MEMBER,
+        inviterAccountId: actor.accountId,
+        temporaryName: invite.sourceName,
+        // Reuse the LedgerParticipant already materialized for the
+        // invitee during the import commit. Without this, `getGroup`
+        // would surface the same person twice (once as the unlinked
+        // entry, once as a pending invitation).
+        ledgerParticipantId: invite.destLedgerParticipantId,
+      })
+      inviteResults.push({
+        sourceName: invite.sourceName,
+        kind: 'LINK',
+        invitationId: link.invitation.id,
+        inviteUrl: link.inviteUrl,
+      })
+    }
+  }
+
+  return {
+    groupId: baseResult.groupId,
+    ledgerId: baseResult.ledgerId,
+    importedExpenses: baseResult.importedExpenses,
+    sourceGroupId: baseResult.sourceGroupId,
+    invites: inviteResults,
+  }
+}
+
+/**
+ * One-way admin migration of an unlinked `LedgerParticipant` to an
+ * account. The destination `GroupMember` is created if the account
+ * is not yet a member, or reactivated (PENDING -> ACTIVE, or
+ * LEFT/REMOVED -> ACTIVE) if the account has prior history. The
+ * historical and future balances of the `LedgerParticipant`
+ * immediately contribute to the linked account's group and overview
+ * totals — there is no un-link state, this is a one-way move.
+ */
+export async function linkUnlinkedParticipantToAccount(opts: {
+  groupId: string
+  ledgerParticipantId: string
+  accountId: string
+  actor: { accountId: string }
+}): Promise<{ groupMemberId: string; ledgerParticipantId: string }> {
+  const { groupId, ledgerParticipantId, accountId, actor } = opts
+
+  return prisma.$transaction(async (tx) => {
+    const participant = await tx.ledgerParticipant.findUnique({
+      where: { id: ledgerParticipantId },
+      include: {
+        ledger: { select: { id: true, group: { select: { id: true } } } },
+      },
+    })
+    if (!participant) {
+      throw new Error('Ledger participant not found')
+    }
+    if (participant.ledger.group?.id !== groupId) {
+      throw new Error('Ledger participant does not belong to this group')
+    }
+    if (participant.kind !== LedgerParticipantKind.UNLINKED_PARTICIPANT) {
+      throw new Error('Ledger participant is not unlinked')
+    }
+    if (participant.groupMemberId) {
+      throw new Error('Ledger participant is already linked to a member')
+    }
+
+    const account = await tx.account.findUnique({
+      where: { id: accountId },
+      select: { id: true },
+    })
+    if (!account) {
+      throw new Error('Account not found')
+    }
+
+    const existingMember = await tx.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId } },
+    })
+
+    let groupMemberId: string
+    if (existingMember) {
+      // Reactivate a prior member (LEFT/REMOVED/SUSPENDED) so the
+      // historical balances re-attach to an ACTIVE member. The
+      // existing row's `ledgerParticipant` is reused if present;
+      // otherwise the unlinked row is reassigned. The `role` is
+      // intentionally preserved so an admin who left and re-links
+      // does not get silently demoted to a regular member.
+      const reactivated = await tx.groupMember.update({
+        where: { id: existingMember.id },
+        data: {
+          status: GroupMemberStatus.ACTIVE,
+          joinedAt: existingMember.joinedAt ?? new Date(),
+          leftAt: null,
+        },
+      })
+      groupMemberId = reactivated.id
+    } else {
+      const created = await tx.groupMember.create({
+        data: {
+          id: randomId(),
+          groupId,
+          accountId,
+          role: GroupRole.MEMBER,
+          status: GroupMemberStatus.ACTIVE,
+          joinedAt: new Date(),
+        },
+      })
+      groupMemberId = created.id
+    }
+
+    // If the destination account already has a `LedgerParticipant` in
+    // this ledger, the unlinked LP must merge into it: rewriting the
+    // unique `groupMemberId` onto the unlinked row would collide with
+    // the existing one and trip the @unique constraint. The
+    // user-visible intent ("this unlinked person is the same as that
+    // existing member") is satisfied by redirecting references to the
+    // canonical LP and dropping the unlinked row.
+    const existingLp = await tx.ledgerParticipant.findUnique({
+      where: { groupMemberId },
+    })
+    if (existingLp && existingLp.id !== participant.id) {
+      await mergeLedgerParticipantReferences(tx, {
+        sourceId: participant.id,
+        targetId: existingLp.id,
+      })
+      await tx.ledgerParticipant.delete({ where: { id: participant.id } })
+
+      const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+        groupId,
+        actor.accountId,
+        tx,
+      )
+      await logActivity(
+        groupId,
+        ActivityType.UPDATE_GROUP,
+        {
+          accountId: actor.accountId,
+          ledgerParticipantId: actorLedgerParticipantId,
+          data: `ledger-participant:merged:${participant.id}:${existingLp.id}`,
+        },
+        tx,
+      )
+
+      return {
+        groupMemberId,
+        ledgerParticipantId: existingLp.id,
+      }
+    }
+
+    // Move the unlinked row's groupMemberId to the new (or reactivated)
+    // member. The row's id is preserved so existing expenses keep
+    // resolving the same participant id, and the `kind` flips to
+    // ACCOUNT_MEMBER so the display name now resolves through
+    // `Account.name`. `displayName` is cleared: the relation wins.
+    await tx.ledgerParticipant.update({
+      where: { id: participant.id },
+      data: {
+        groupMemberId,
+        kind: LedgerParticipantKind.ACCOUNT_MEMBER,
+        displayName: null,
+      },
+    })
+
+    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+      groupId,
+      actor.accountId,
+      tx,
+    )
+    await logActivity(
+      groupId,
+      ActivityType.UPDATE_GROUP,
+      {
+        accountId: actor.accountId,
+        ledgerParticipantId: actorLedgerParticipantId,
+        data: `ledger-participant:linked:${participant.id}`,
+      },
+      tx,
+    )
+
+    return {
+      groupMemberId,
+      ledgerParticipantId: participant.id,
+    }
+  })
+}
+
+/**
+ * Rewrite all `Expense.paidById` and `ExpensePaidFor.ledgerParticipantId`
+ * references from one `LedgerParticipant` id to another, then delete the
+ * source row. Used by the unlinked-LP merge paths (into an existing
+ * account-backed LP, or into a pending invitation's materialized LP).
+ * Caller is responsible for confirming the source row is no longer
+ * referenced before deletion.
+ */
+export async function mergeLedgerParticipantReferences(
+  tx: Prisma.TransactionClient,
+  opts: { sourceId: string; targetId: string },
+): Promise<void> {
+  const { sourceId, targetId } = opts
+  await tx.expense.updateMany({
+    where: { paidById: sourceId },
+    data: { paidById: targetId },
+  })
+  await tx.expensePaidFor.updateMany({
+    where: { ledgerParticipantId: sourceId },
+    data: { ledgerParticipantId: targetId },
+  })
+}
+
+/**
+ * One-way admin migration of an unlinked `LedgerParticipant` onto the
+ * materialized `LedgerParticipant` of a pending EMAIL or LINK-type
+ * invitation in the same group. The unlinked LP is deleted; the
+ * pending invitee's LP is preserved and reused when they accept the
+ * invitation. The merge keeps the single-LP-per-person invariant
+ * intact. Matching is by `pendingInvitationId`, not by email, so
+ * LINK-type invitations with their synthetic `*.placeholder.local`
+ * address are supported without any account lookup.
+ */
+export async function linkUnlinkedParticipantToPendingInvite(opts: {
+  groupId: string
+  ledgerParticipantId: string
+  pendingInvitationId: string
+  actor: { accountId: string }
+}): Promise<{ groupMemberId: null; ledgerParticipantId: string }> {
+  const { groupId, ledgerParticipantId, pendingInvitationId, actor } = opts
+
+  return prisma.$transaction(async (tx) => {
+    const participant = await tx.ledgerParticipant.findUnique({
+      where: { id: ledgerParticipantId },
+      include: {
+        ledger: { select: { id: true, group: { select: { id: true } } } },
+      },
+    })
+    if (!participant) {
+      throw new Error('Ledger participant not found')
+    }
+    if (participant.ledger.group?.id !== groupId) {
+      throw new Error('Ledger participant does not belong to this group')
+    }
+    if (participant.kind !== LedgerParticipantKind.UNLINKED_PARTICIPANT) {
+      throw new Error('Ledger participant is not unlinked')
+    }
+    if (participant.groupMemberId) {
+      throw new Error('Ledger participant is already linked to a member')
+    }
+
+    const invitation = await tx.groupInvitation.findUnique({
+      where: { id: pendingInvitationId },
+      include: {
+        ledgerParticipant: {
+          select: { id: true, ledgerId: true, groupMemberId: true },
+        },
+      },
+    })
+    if (!invitation) {
+      throw new Error('Invitation not found')
+    }
+    if (invitation.groupId !== groupId) {
+      throw new Error('Invitation does not belong to this group')
+    }
+    if (invitation.status !== GroupInvitationStatus.PENDING) {
+      throw new Error('Invitation is not pending')
+    }
+    const targetLp = invitation.ledgerParticipant
+    if (!targetLp) {
+      throw new Error('Invitation has no materialized ledger participant')
+    }
+    if (targetLp.ledgerId !== participant.ledger.id) {
+      throw new Error('Invitation ledger participant is in a different ledger')
+    }
+    if (targetLp.id === participant.id) {
+      throw new Error('Cannot merge a participant into itself')
+    }
+
+    await mergeLedgerParticipantReferences(tx, {
+      sourceId: participant.id,
+      targetId: targetLp.id,
+    })
+    await tx.ledgerParticipant.delete({ where: { id: participant.id } })
+
+    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
+      groupId,
+      actor.accountId,
+      tx,
+    )
+    await logActivity(
+      groupId,
+      ActivityType.UPDATE_GROUP,
+      {
+        accountId: actor.accountId,
+        ledgerParticipantId: actorLedgerParticipantId,
+        data: `ledger-participant:merged-into-invitation:${participant.id}:${targetLp.id}`,
+      },
+      tx,
+    )
+
+    return { groupMemberId: null, ledgerParticipantId: targetLp.id }
+  })
+}
+
+/**
+ * List the unlinked `LedgerParticipant` rows in a group along with the
+ * source name and the raw id. Used by the post-import admin link flow
+ * to surface name-only entries that may be migrated to accounts.
+ */
+export async function listUnlinkedParticipants(groupId: string): Promise<
+  Array<{
+    id: string
+    displayName: string | null
+  }>
+> {
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { ledgerId: true },
+  })
+  if (!group?.ledgerId) return []
+  return prisma.ledgerParticipant.findMany({
+    where: { ledgerId: group.ledgerId, kind: 'UNLINKED_PARTICIPANT' },
+    orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
+    select: { id: true, displayName: true },
+  })
 }

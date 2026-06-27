@@ -93,6 +93,11 @@ export function getInvitationDisplayName(invitation: {
 /**
  * Display name for a `LedgerParticipant`. Priority: accepted
  * `Account.name` → invitation `temporaryName` → invitation `email`.
+ *
+ * Unlinked participants carry their label on `displayName` instead — they
+ * have no `groupMember` and no invitations, so the relation-based lookup
+ * returns an empty string. The unlinked-name fallback is the only path
+ * that surfaces the name on imported name-only entries.
  */
 export function resolveParticipantDisplayName(participant: {
   groupMember: { account: { name: string } } | null
@@ -100,12 +105,13 @@ export function resolveParticipantDisplayName(participant: {
     email: string | null
     temporaryName: string | null
   }>
+  displayName?: string | null
 }): string {
   const accountName = participant.groupMember?.account.name
   if (accountName) return accountName
   const invitation = participant.invitations[0]
-  if (!invitation) return ''
-  return getInvitationDisplayName(invitation)
+  if (invitation) return getInvitationDisplayName(invitation)
+  return participant.displayName ?? ''
 }
 
 async function assertNotInvitingSelf(
@@ -742,6 +748,16 @@ export type CreateLinkInvitationInput = {
   temporaryName?: string | null
   /** Optional override for the expiry timestamp. */
   expiresAt?: Date | null
+  /**
+   * Optional existing `LedgerParticipant.id` to attach to the
+   * invitation. Used by the import flow to reuse the unlinked LP
+   * already materialized for the source participant — without it,
+   * `getGroup` would surface the same person twice (once as the
+   * unlinked entry, once as a pending invitation). If omitted, the
+   * caller is responsible for materializing or accepting the LP
+   * via the regular accept flow.
+   */
+  ledgerParticipantId?: string | null
 }
 
 export type CreateLinkInvitationResult = {
@@ -787,6 +803,9 @@ export async function createLinkInvitation(
       invitedById: input.inviterAccountId,
       tokenHash,
       expiresAt,
+      ...(input.ledgerParticipantId
+        ? { ledgerParticipantId: input.ledgerParticipantId }
+        : {}),
     },
   })
 

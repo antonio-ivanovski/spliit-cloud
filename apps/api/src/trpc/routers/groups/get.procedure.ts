@@ -44,6 +44,18 @@ export const getGroupProcedure = protectedProcedure
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     const account = ctx.auth.user
 
+    // Distinguish "group does not exist" from "you are not a member":
+    // the web layout uses NOT_FOUND to trigger the import hand-off
+    // (see `groups.lookup`), while FORBIDDEN stays the standard
+    // "not a member" signal.
+    const groupExists = await prisma.group.findUnique({
+      where: { id: groupId },
+      select: { id: true },
+    })
+    if (!groupExists) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+    }
+
     // Active members get the full payload. If they also carry a link
     // token, look it up so we can tell them whether the link is
     // still usable (typically it isn't — they're already in).
