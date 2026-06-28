@@ -24,10 +24,12 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 // ── Skip guard (evaluated once at module load) ───────────────────────────
 
-const apiReachable = await probeExistingApi()
-const describeIntegration = apiReachable
-  ? describe
-  : describe.skip('API server not running — start with `bun dev` first')
+if (!(await probeExistingApi())) {
+  throw new Error(
+    `API server not running on http://localhost:3001. ` +
+      `Start it with \`bun dev\` first.`,
+  )
+}
 
 // ── Hoisted mocks ────────────────────────────────────────────────────────
 
@@ -158,7 +160,7 @@ async function trpcCall<T = unknown>(
 
 // ── Integration tests ────────────────────────────────────────────────────
 
-describeIntegration('Group CRUD via existing API', () => {
+describe('Group CRUD via existing API', () => {
   beforeAll(async () => {
     // Create a session for the test user
     sessionCookie = await createTestSession(API_URL, testEmail, testPassword)
