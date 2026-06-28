@@ -276,7 +276,7 @@
         "fetchingButton": "Important…",
         "fetchGroupButton": "Importa el grup",
         "receiptWarningTitle": "Les imatges dels rebuts no s'importen.",
-        "receiptWarningDescription": "L'exportació de Spliit fa referència a l'URL original del rebut, però l'emmagatzematge del nou grup és separat. Torneu a pujar els rebuts al grup de destí si els necessiteu.",
+        "receiptWarningDescription": "L'exportació de spliit.app no inclou imatges dels rebuts. Torneu a pujar-los al grup de destí si els necessiteu.",
         "invalidUrl": "Enganxeu un URL de grup de spliit.app vàlid",
         "notFoundUrl": "Spliit no ha trobat aquest grup",
         "fetchUrlError": "No s'ha pogut obtenir l'origen",

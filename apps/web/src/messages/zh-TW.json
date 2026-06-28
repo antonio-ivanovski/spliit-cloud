@@ -276,7 +276,7 @@
         "fetchingButton": "匯入中…",
         "fetchGroupButton": "匯入群組",
         "receiptWarningTitle": "收據圖片不會被匯入。",
-        "receiptWarningDescription": "Spliit 的匯出會參照原始收據 URL，但新群組的儲存空間是分開的。如有需要，請在目的地群組中重新上傳收據。",
+        "receiptWarningDescription": "spliit.app 的匯出不包含收據圖片。如有需要，請在目的地群組中重新上傳。",
         "invalidUrl": "請貼上有效的 spliit.app 群組 URL",
         "notFoundUrl": "Spliit 找不到此群組",
         "fetchUrlError": "無法擷取來源",

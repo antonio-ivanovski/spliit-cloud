@@ -276,7 +276,7 @@
         "fetchingButton": "Inportatzen…",
         "fetchGroupButton": "Inportatu taldea",
         "receiptWarningTitle": "Ordainagirien irudiak ez dira inportatzen.",
-        "receiptWarningDescription": "Spliit-en esportazioak jatorrizko ordainagiriaren URL-a erreferentziatzen du, baina talde berriaren biltegia bereizia da. Berriro igo ordainagiriak helburuko taldean behar badituzu.",
+        "receiptWarningDescription": "Spliit.app-eko esportazioak ez ditu ordainagirien irudiak barne hartzen. Berriro igo itzazu helburuko taldean behar badituzu.",
         "invalidUrl": "Itsatsi baliozko spliit.app taldeko URL bat",
         "notFoundUrl": "Spliit-ek ez du talde hau aurkitu",
         "fetchUrlError": "Ezin izan da iturburua eskuratu",

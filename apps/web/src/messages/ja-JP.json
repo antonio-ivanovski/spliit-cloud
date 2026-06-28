@@ -276,7 +276,7 @@
         "fetchingButton": "インポート中…",
         "fetchGroupButton": "グループをインポート",
         "receiptWarningTitle": "レシート画像はインポートされません。",
-        "receiptWarningDescription": "Spliit のエクスポートは元のレシート URL を参照しますが、新しいグループのストレージは別です。必要な場合は、宛先グループにレシートを再アップロードしてください。",
+        "receiptWarningDescription": "spliit.app のエクスポートにはレシート画像は含まれません。必要な場合は、宛先グループに再アップロードしてください。",
         "invalidUrl": "有効な spliit.app グループ URL を貼り付けてください",
         "notFoundUrl": "Spliit はこのグループを見つけられませんでした",
         "fetchUrlError": "ソースの取得に失敗しました",

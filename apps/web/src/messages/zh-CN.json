@@ -276,7 +276,7 @@
         "fetchingButton": "导入中…",
         "fetchGroupButton": "导入群组",
         "receiptWarningTitle": "收据图片不会被导入。",
-        "receiptWarningDescription": "Spliit 的导出引用原始收据 URL，但新群组的存储是独立的。如果需要，请在目标群组中重新上传收据。",
+        "receiptWarningDescription": "spliit.app 的导出不包含收据图片。如果需要，请在目标群组中重新上传。",
         "invalidUrl": "请粘贴有效的 spliit.app 群组 URL",
         "notFoundUrl": "Spliit 未找到此群组",
         "fetchUrlError": "获取来源失败",

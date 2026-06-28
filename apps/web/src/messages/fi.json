@@ -276,7 +276,7 @@
         "fetchingButton": "Tuodaan…",
         "fetchGroupButton": "Tuo ryhmä",
         "receiptWarningTitle": "Kuittikuvia ei tuoda.",
-        "receiptWarningDescription": "Spliitin vienti viittaa alkuperäiseen kuitin URL-osoitteeseen, mutta uuden ryhmän tallennustila on erillinen. Lataa kuitit uudelleen kohderyhmään, jos tarvitset niitä.",
+        "receiptWarningDescription": "Spliit.app-vienti ei sisällä kuittikuvia. Lataa ne uudelleen kohderyhmään, jos tarvitset niitä.",
         "invalidUrl": "Liitä kelvollinen spliit.app-ryhmän URL-osoite",
         "notFoundUrl": "Spliit ei löytänyt tätä ryhmää",
         "fetchUrlError": "Lähteen noutaminen epäonnistui",

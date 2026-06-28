@@ -276,7 +276,7 @@
         "fetchingButton": "Mengimpor…",
         "fetchGroupButton": "Impor grup",
         "receiptWarningTitle": "Gambar tanda terima tidak diimpor.",
-        "receiptWarningDescription": "Ekspor Spliit mereferensikan URL tanda terima asli, tetapi penyimpanan grup baru terpisah. Unggah ulang tanda terima di grup tujuan jika Anda membutuhkannya.",
+        "receiptWarningDescription": "Ekspor spliit.app tidak menyertakan gambar tanda terima. Unggah ulang di grup tujuan jika Anda membutuhkannya.",
         "invalidUrl": "Harap tempelkan URL grup spliit.app yang valid",
         "notFoundUrl": "Spliit tidak menemukan grup ini",
         "fetchUrlError": "Gagal mengambil sumber",

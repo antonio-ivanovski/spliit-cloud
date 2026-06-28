@@ -276,7 +276,7 @@
         "fetchingButton": "מייבא…",
         "fetchGroupButton": "ייבא קבוצה",
         "receiptWarningTitle": "תמונות קבלות לא מיובאות.",
-        "receiptWarningDescription": "ייצוא Spliit מפנה לכתובת הקבלה המקורית, אך האחסון של הקבוצה החדשה נפרד. העלה קבלות מחדש בקבוצת היעד אם אתה צריך אותן.",
+        "receiptWarningDescription": "הייצוא של spliit.app אינו כולל תמונות קבלות. העלה אותן מחדש בקבוצת היעד אם אתה צריך אותן.",
         "invalidUrl": "אנא הדבק כתובת URL תקינה של קבוצת spliit.app",
         "notFoundUrl": "Spliit לא מצא קבוצה זו",
         "fetchUrlError": "נכשלה הבאת המקור",

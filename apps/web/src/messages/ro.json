@@ -276,7 +276,7 @@
         "fetchingButton": "Se importă…",
         "fetchGroupButton": "Importă grupul",
         "receiptWarningTitle": "Imaginile chitanțelor nu sunt importate.",
-        "receiptWarningDescription": "Exportul Spliit face referire la URL-ul original al chitanței, dar stocarea noului grup este separată. Reîncărcați chitanțele în grupul de destinație dacă aveți nevoie de ele.",
+        "receiptWarningDescription": "Exportul spliit.app nu include imaginile chitanțelor. Reîncărcați-le în grupul de destinație dacă aveți nevoie de ele.",
         "invalidUrl": "Lipiți un URL valid de grup spliit.app",
         "notFoundUrl": "Spliit nu a găsit acest grup",
         "fetchUrlError": "Nu s-a putut prelua sursa",

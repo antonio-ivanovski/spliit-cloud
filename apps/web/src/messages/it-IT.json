@@ -276,7 +276,7 @@
         "fetchingButton": "Importazione…",
         "fetchGroupButton": "Importa gruppo",
         "receiptWarningTitle": "Le immagini delle ricevute non vengono importate.",
-        "receiptWarningDescription": "L'esportazione di Spliit fa riferimento all'URL della ricevuta originale, ma l'archiviazione del nuovo gruppo è separata. Ricarica le ricevute nel gruppo di destinazione se ti servono.",
+        "receiptWarningDescription": "L'esportazione di spliit.app non include le immagini delle ricevute. Ricaricale nel gruppo di destinazione se ti servono.",
         "invalidUrl": "Incolla un URL valido di un gruppo spliit.app",
         "notFoundUrl": "Spliit non ha trovato questo gruppo",
         "fetchUrlError": "Impossibile recuperare l'origine",

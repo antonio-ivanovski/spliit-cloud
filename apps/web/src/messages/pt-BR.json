@@ -276,7 +276,7 @@
         "fetchingButton": "Importando…",
         "fetchGroupButton": "Importar grupo",
         "receiptWarningTitle": "As imagens de recibos não são importadas.",
-        "receiptWarningDescription": "A exportação do Spliit faz referência à URL original do recibo, mas o armazenamento do novo grupo é separado. Refaça o upload dos recibos no grupo de destino se precisar deles.",
+        "receiptWarningDescription": "A exportação do spliit.app não inclui imagens de recibos. Refaça o upload no grupo de destino se precisar deles.",
         "invalidUrl": "Cole uma URL de grupo spliit.app válida",
         "notFoundUrl": "Spliit não encontrou este grupo",
         "fetchUrlError": "Falha ao buscar a origem",

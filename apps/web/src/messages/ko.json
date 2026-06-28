@@ -220,7 +220,7 @@
         "fetchingButton": "가져오는 중…",
         "fetchGroupButton": "그룹 가져오기",
         "receiptWarningTitle": "영수증 이미지는 가져오지 않습니다.",
-        "receiptWarningDescription": "Spliit 내보내기는 원본 영수증 URL을 참조하지만 새 그룹의 저장소는 별개입니다. 필요한 경우 대상 그룹에 영수증을 다시 업로드하세요.",
+        "receiptWarningDescription": "spliit.app 내보내기에는 영수증 이미지가 포함되지 않습니다. 필요한 경우 대상 그룹에 다시 업로드하세요.",
         "invalidUrl": "유효한 spliit.app 그룹 URL을 붙여넣으세요",
         "notFoundUrl": "Spliit에서 이 그룹을 찾을 수 없습니다",
         "fetchUrlError": "소스를 가져오지 못했습니다",

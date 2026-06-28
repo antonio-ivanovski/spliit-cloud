@@ -276,7 +276,7 @@
         "fetchingButton": "Importieren…",
         "fetchGroupButton": "Gruppe importieren",
         "receiptWarningTitle": "Belegbilder werden nicht importiert.",
-        "receiptWarningDescription": "Der Spliit-Export verweist auf die ursprüngliche Beleg-URL, aber der Speicher der neuen Gruppe ist getrennt. Lade die Belege in der Zielgruppe erneut hoch, falls du sie benötigst.",
+        "receiptWarningDescription": "Der spliit.app-Export enthält keine Belegbilder. Lade sie bei Bedarf in der Zielgruppe erneut hoch.",
         "invalidUrl": "Bitte füge eine gültige spliit.app-Gruppen-URL ein",
         "notFoundUrl": "Spliit hat diese Gruppe nicht gefunden",
         "fetchUrlError": "Quelle konnte nicht abgerufen werden",

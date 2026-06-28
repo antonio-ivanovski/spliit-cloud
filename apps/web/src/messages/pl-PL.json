@@ -276,7 +276,7 @@
         "fetchingButton": "Importowanie…",
         "fetchGroupButton": "Importuj grupę",
         "receiptWarningTitle": "Obrazy paragonów nie są importowane.",
-        "receiptWarningDescription": "Eksport Spliit odwołuje się do oryginalnego URL paragonu, ale magazyn nowej grupy jest oddzielny. Prześlij paragony ponownie w grupie docelowej, jeśli ich potrzebujesz.",
+        "receiptWarningDescription": "Eksport spliit.app nie zawiera obrazów paragonów. Prześlij je ponownie w grupie docelowej, jeśli ich potrzebujesz.",
         "invalidUrl": "Wklej prawidłowy URL grupy spliit.app",
         "notFoundUrl": "Spliit nie znalazł tej grupy",
         "fetchUrlError": "Nie udało się pobrać źródła",

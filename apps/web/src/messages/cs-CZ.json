@@ -276,7 +276,7 @@
         "fetchingButton": "Importuji…",
         "fetchGroupButton": "Importovat skupinu",
         "receiptWarningTitle": "Obrázky účtenek se neimportují.",
-        "receiptWarningDescription": "Export Spliit odkazuje na původní URL účtenky, ale úložiště nové skupiny je oddělené. Pokud je potřebujete, nahrajte účtenky znovu do cílové skupiny.",
+        "receiptWarningDescription": "Export spliit.app neobsahuje obrázky účtenek. V případě potřeby je nahrajte znovu do cílové skupiny.",
         "invalidUrl": "Vložte prosím platné URL skupiny spliit.app",
         "notFoundUrl": "Spliit tuto skupinu nenašel",
         "fetchUrlError": "Nepodařilo se načíst zdroj",

@@ -276,7 +276,7 @@
         "fetchingButton": "Importeren…",
         "fetchGroupButton": "Groep importeren",
         "receiptWarningTitle": "Bonafbeeldingen worden niet geïmporteerd.",
-        "receiptWarningDescription": "De export van Spliit verwijst naar de originele bon-URL, maar de opslag van de nieuwe groep is apart. Upload de bonnen opnieuw in de doelgroep als je ze nodig hebt.",
+        "receiptWarningDescription": "De spliit.app-export bevat geen bonafbeeldingen. Upload ze opnieuw in de doelgroep als je ze nodig hebt.",
         "invalidUrl": "Plak een geldige spliit.app-groeps-URL",
         "notFoundUrl": "Spliit heeft deze groep niet gevonden",
         "fetchUrlError": "Bron ophalen mislukt",

@@ -276,7 +276,7 @@
         "fetchingButton": "İçe aktarılıyor…",
         "fetchGroupButton": "Grubu içe aktar",
         "receiptWarningTitle": "Makbuz görüntüleri içe aktarılmaz.",
-        "receiptWarningDescription": "Spliit dışa aktarımı orijinal makbuz URL'sine başvurur, ancak yeni grubun depolaması ayrıdır. İhtiyacınız varsa, hedef gruptaki makbuzları yeniden yükleyin.",
+        "receiptWarningDescription": "Spliit.app dışa aktarımı makbuz görüntülerini içermez. İhtiyacınız varsa, hedef grupta bunları yeniden yükleyin.",
         "invalidUrl": "Lütfen geçerli bir spliit.app grup URL'si yapıştırın",
         "notFoundUrl": "Spliit bu grubu bulamadı",
         "fetchUrlError": "Kaynak getirilemedi",
