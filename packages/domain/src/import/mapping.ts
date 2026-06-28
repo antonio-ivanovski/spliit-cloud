@@ -188,6 +188,7 @@ export function findImportConflicts(
 export function buildImportBatch(
   state: ImportBatchState,
   destinationCurrencyCode: string,
+  rates?: ImportRatesByKey,
 ): {
   batch:
     | {
@@ -262,6 +263,12 @@ export function buildImportBatch(
     }
   })
 
+  const sourceCurrencyCode = state.source?.currencyCode ?? ''
+  const groupCurrencyMismatch =
+    !!sourceCurrencyCode &&
+    !!destinationCurrencyCode &&
+    sourceCurrencyCode !== destinationCurrencyCode
+
   const expenses: ImportBatchExpense[] = state.resolvedExpenses.map((e) => {
     const paidBy = state.sourceIdToDestId[e.paidBySourceId]
     if (!paidBy) {
@@ -279,24 +286,68 @@ export function buildImportBatch(
       }
       paidFor.push({ participant: destId, shares: p.shares })
     }
-    const sourceCurrencyCode = state.source?.currencyCode ?? ''
-    const crossCurrency =
-      !!sourceCurrencyCode &&
+
+    // The "effective original" is the source expense's prior-conversion
+    // metadata when present (e.g. an expense originally entered in USD
+    // and converted to the source group's EUR), and otherwise the source
+    // group's currency. When the source group's currency matches the
+    // destination's, conversion is a no-op and we pass the source
+    // expense's existing audit fields through verbatim. When it differs,
+    // we look up the rate for the effective original on the expense's
+    // date and convert.
+    const effectiveOriginalCurrency = e.originalCurrency ?? sourceCurrencyCode
+    const effectiveOriginalAmount = e.originalAmount ?? e.amount
+    const needsConversion =
+      groupCurrencyMismatch &&
       !!destinationCurrencyCode &&
-      sourceCurrencyCode !== destinationCurrencyCode
+      !!effectiveOriginalCurrency &&
+      effectiveOriginalCurrency !== destinationCurrencyCode
+
+    if (needsConversion) {
+      if (!rates) {
+        throw new Error(
+          `Cannot import "${e.title}": cross-currency conversion needs an exchange rate from ${effectiveOriginalCurrency} to ${destinationCurrencyCode}.`,
+        )
+      }
+      const dateKey = e.expenseDate.slice(0, 10)
+      const rateKey = makeRateKey(
+        dateKey,
+        effectiveOriginalCurrency,
+        destinationCurrencyCode,
+      )
+      const rate = rates[rateKey]
+      if (typeof rate !== 'number') {
+        throw new Error(
+          `Cannot import "${e.title}": missing exchange rate for ${effectiveOriginalCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
+        )
+      }
+      return {
+        expenseDate: new Date(e.expenseDate),
+        title: e.title,
+        category: e.category as never,
+        amount: Math.round(effectiveOriginalAmount * rate),
+        originalAmount: effectiveOriginalAmount,
+        originalCurrency: effectiveOriginalCurrency,
+        conversionRate: rate,
+        paidBy,
+        paidFor,
+        splitMode: e.splitMode,
+        saveDefaultSplittingOptions: false,
+        isReimbursement: e.isReimbursement,
+        documents: [],
+        notes: e.notes ?? undefined,
+        recurrenceRule: e.recurrenceRule,
+      }
+    }
 
     return {
       expenseDate: new Date(e.expenseDate),
       title: e.title,
       category: e.category as never,
       amount: e.amount,
-      originalAmount: crossCurrency
-        ? e.amount
-        : (e.originalAmount ?? undefined),
-      originalCurrency: crossCurrency
-        ? sourceCurrencyCode || state.source?.currency || undefined
-        : (e.originalCurrency ?? undefined),
-      conversionRate: crossCurrency ? 1 : (e.conversionRate ?? undefined),
+      originalAmount: e.originalAmount ?? undefined,
+      originalCurrency: e.originalCurrency ?? undefined,
+      conversionRate: e.conversionRate ?? undefined,
       paidBy,
       paidFor,
       splitMode: e.splitMode,
@@ -324,6 +375,73 @@ export function buildImportBatch(
         }
 
   return { batch }
+}
+
+/**
+ * Cache key for an exchange rate lookup. Matches the format the importer
+ * client uses when it builds the rates payload from a batched tRPC
+ * response, so the two sides stay aligned.
+ */
+export function makeRateKey(
+  date: string,
+  base: string,
+  target: string,
+): string {
+  return `${date}|${base.toUpperCase()}|${target.toUpperCase()}`
+}
+
+/**
+ * Pre-fetched exchange rates keyed by `makeRateKey(date, base, target)`.
+ * The wizard collects these on the confirm step and passes them to
+ * `buildImportBatch` so cross-currency expenses are converted before
+ * being sent to the server.
+ */
+export type ImportRatesByKey = Record<string, number>
+
+export type ImportRateKeyItem = {
+  date: string
+  base: string
+  target: string
+}
+
+/**
+ * Compute the unique exchange-rate lookups required to import a set of
+ * resolved expenses into a destination ledger. The wizard uses the
+ * result to drive a single batched tRPC call to `currency.getRates`
+ * before submitting. Items are deduplicated by `makeRateKey` and
+ * returned in a stable order so the round trip is easy to test.
+ *
+ * Per-expense prior conversions are honored: an expense whose source
+ * export already carried `originalCurrency` keeps that currency as the
+ * effective base, even when the source group is in a different
+ * currency. Items are only emitted when the effective base differs
+ * from the destination ledger's currency.
+ */
+export function computeImportRateKeys(
+  expenses: NormalizedSourceExpense[],
+  sourceCurrencyCode: string,
+  destinationCurrencyCode: string,
+): ImportRateKeyItem[] {
+  if (
+    !sourceCurrencyCode ||
+    !destinationCurrencyCode ||
+    sourceCurrencyCode === destinationCurrencyCode
+  ) {
+    return []
+  }
+
+  const seen = new Set<string>()
+  const items: ImportRateKeyItem[] = []
+  for (const expense of expenses) {
+    const base = (expense.originalCurrency ?? sourceCurrencyCode).toUpperCase()
+    if (base === destinationCurrencyCode.toUpperCase()) continue
+    const date = expense.expenseDate.slice(0, 10)
+    const key = makeRateKey(date, base, destinationCurrencyCode)
+    if (seen.has(key)) continue
+    seen.add(key)
+    items.push({ date, base, target: destinationCurrencyCode.toUpperCase() })
+  }
+  return items
 }
 
 export type ImportBatchParticipant =

@@ -5,6 +5,7 @@ import {
   CurrencyRateNotFoundError,
   CurrencyRateProviderError,
   getCurrencyRate,
+  getCurrencyRates,
   UnsupportedCurrencyError,
 } from '../currency-rates'
 
@@ -172,5 +173,73 @@ describe('getCurrencyRate', () => {
 
     expect(fetchImpl).toHaveBeenCalledTimes(3)
     expect(currencyRateCacheSize()).toBe(3)
+  })
+})
+
+describe('getCurrencyRates', () => {
+  beforeEach(() => {
+    clearCurrencyRateCache()
+  })
+
+  afterEach(() => {
+    clearCurrencyRateCache()
+  })
+
+  it('resolves each item in the input order, even when some fail', async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockImplementation(async (date: string, base: string) =>
+        makePayload({ base, date, rates: { USD: 1.1, GBP: 0.85 } }),
+      )
+
+    const results = await getCurrencyRates(
+      [
+        { date: '2026-06-28', base: 'EUR', target: 'USD' },
+        { date: '2026-06-28', base: 'ZZZ', target: 'USD' },
+        { date: '2026-06-28', base: 'EUR', target: 'GBP' },
+      ],
+      { fetchImpl: fetchImpl as never },
+    )
+
+    expect(results).toHaveLength(3)
+    expect(results[0]).toMatchObject({ ok: true, rate: { rate: 1.1 } })
+    expect(results[1]).toMatchObject({
+      ok: false,
+      error: { code: 'UNSUPPORTED_CURRENCY', currency: 'ZZZ' },
+    })
+    expect(results[2]).toMatchObject({ ok: true, rate: { rate: 0.85 } })
+  })
+
+  it('surfaces a RATE_NOT_FOUND error when the provider omits the target', async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValue(makePayload({ rates: { GBP: 0.85 } }))
+
+    const results = await getCurrencyRates(
+      [{ date: '2026-06-28', base: 'EUR', target: 'USD' }],
+      { fetchImpl: fetchImpl as never },
+    )
+
+    expect(results[0]).toMatchObject({
+      ok: false,
+      error: { code: 'RATE_NOT_FOUND', target: 'USD' },
+    })
+  })
+
+  it('shares the underlying fetch across targets on the same (date, base) pair', async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValue(makePayload({ rates: { USD: 1.1, GBP: 0.85 } }))
+
+    await getCurrencyRates(
+      [
+        { date: '2026-06-28', base: 'EUR', target: 'USD' },
+        { date: '2026-06-28', base: 'EUR', target: 'GBP' },
+      ],
+      { fetchImpl: fetchImpl as never },
+    )
+
+    expect(fetchImpl).toHaveBeenCalledTimes(1)
+    expect(currencyRateCacheSize()).toBe(2)
   })
 })

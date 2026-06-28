@@ -191,7 +191,14 @@
         "sourceName": "来源：{name}",
         "footer": "每位来源参与者和每笔支出都将被导入。邀请在群组创建后发送/生成。",
         "importingButton": "导入中…",
-        "importButton": "导入群组"
+        "importButton": "导入群组",
+        "ratesLoading": "正在获取跨币种支出的汇率…",
+        "rateFetchError": "无法获取汇率。在汇率提供方恢复可用之前，导入将被阻止。",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "请求日期 {requested} · 提供方使用日期 {asOf}",
+        "currencyConversionTitle": "货币换算",
+        "currencyConversionDescription": "支出将使用以下汇率从源币种转换为目标账簿币种。",
+        "currencyRateForDateFormat": "适用于日期 {date} 的支出"
       },
       "Destination": {
         "heading": "您想将 <strong>{name}</strong> 导入到哪里？（{participantCount} 名参与者 · {expenseCount} 笔支出）",

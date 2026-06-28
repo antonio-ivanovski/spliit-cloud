@@ -135,7 +135,14 @@
         "sourceName": "소스: {name}",
         "footer": "모든 소스 참가자와 지출이 가져와집니다. 초대는 그룹이 생성된 후 전송/생성됩니다.",
         "importingButton": "가져오는 중…",
-        "importButton": "그룹 가져오기"
+        "importButton": "그룹 가져오기",
+        "ratesLoading": "다중 통화 지출에 대한 환율을 가져오는 중…",
+        "rateFetchError": "환율을 가져올 수 없습니다. 환율 제공자가 다시 접속 가능해질 때까지 가져오기가 차단됩니다.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "요청일 {requested} · 제공자 사용일 {asOf}",
+        "currencyConversionTitle": "통화 변환",
+        "currencyConversionDescription": "지출은 아래 환율을 사용하여 소스 통화에서 대상 원장 통화로 변환됩니다.",
+        "currencyRateForDateFormat": "{date} 날짜의 지출에 적용됨"
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",

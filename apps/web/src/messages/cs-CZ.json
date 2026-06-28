@@ -191,7 +191,14 @@
         "sourceName": "Zdroj: {name}",
         "footer": "Každý zdrojový účastník a výdaj bude importován. Pozvánky jsou odesílány / generovány po vytvoření skupiny.",
         "importingButton": "Importuji…",
-        "importButton": "Importovat skupinu"
+        "importButton": "Importovat skupinu",
+        "ratesLoading": "Načítání kurzů pro přeshraniční výdaje…",
+        "rateFetchError": "Nepodařilo se načíst směnné kurzy. Import je blokován, dokud nebude poskytovatel kurzů opět dostupný.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Požadováno {requested} · poskytovatel použil {asOf}",
+        "currencyConversionTitle": "Konverze měny",
+        "currencyConversionDescription": "Výdaje budou převedeny z původní měny do cílové měny účtu pomocí níže uvedených kurzů.",
+        "currencyRateForDateFormat": "Použito pro výdaje s datem {date}"
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",

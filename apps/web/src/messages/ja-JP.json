@@ -191,7 +191,14 @@
         "sourceName": "ソース: {name}",
         "footer": "すべてのソース参加者と支出がインポートされます。招待はグループ作成後に送信/生成されます。",
         "importingButton": "インポート中…",
-        "importButton": "グループをインポート"
+        "importButton": "グループをインポート",
+        "ratesLoading": "クロスカレンシー経費の為替レートを取得中…",
+        "rateFetchError": "為替レートを取得できませんでした。レートプロバイダーが復旧するまでインポートはブロックされます。",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "要求日 {requested} · プロバイダー使用日 {asOf}",
+        "currencyConversionTitle": "通貨換算",
+        "currencyConversionDescription": "経費は以下のレートを使用してソース通貨から宛先の元帳通貨に換算されます。",
+        "currencyRateForDateFormat": "日付 {date} の経費に適用"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",

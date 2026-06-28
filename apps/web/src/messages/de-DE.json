@@ -191,7 +191,14 @@
         "sourceName": "Quelle: {name}",
         "footer": "Jeder Quellteilnehmer und jede Ausgabe wird importiert. Einladungen werden nach der Gruppenerstellung versandt/generiert.",
         "importingButton": "Importiere…",
-        "importButton": "Gruppe importieren"
+        "importButton": "Gruppe importieren",
+        "ratesLoading": "Wechselkurse für währungsübergreifende Ausgaben werden abgerufen…",
+        "rateFetchError": "Wechselkurse konnten nicht abgerufen werden. Der Import ist blockiert, bis der Kursanbieter wieder erreichbar ist.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Angefragt {requested} · verwendet {asOf}",
+        "currencyConversionTitle": "Währungsumrechnung",
+        "currencyConversionDescription": "Ausgaben werden von der Quellwährung mit den untenstehenden Kursen in die Zielwährung umgerechnet.",
+        "currencyRateForDateFormat": "Angewandt für Ausgaben vom {date}"
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",

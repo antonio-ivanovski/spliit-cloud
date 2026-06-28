@@ -11,10 +11,16 @@ import type {
   NormalizedSourceExpense,
   NormalizedSourceParticipant,
 } from '@spliit/domain/import'
-import { applyAutoMatch, buildImportBatch } from '@spliit/domain/import'
+import {
+  applyAutoMatch,
+  buildImportBatch,
+  computeImportRateKeys,
+  makeRateKey,
+  type ImportRatesByKey,
+} from '@spliit/domain/import'
 import { getRouteApi } from '@tanstack/react-router'
 import { ChevronLeft, Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ConfirmStep } from './confirm-step'
 import { DestinationStep } from './destination-step'
@@ -67,6 +73,12 @@ type WizardState = {
   sourceIdToDestId: Record<string, string>
   destIds: Record<string, string>
   resolvedExpenses: NormalizedSourceExpense[]
+  /**
+   * Exchange rates pre-fetched for cross-currency expenses, keyed by
+   * `makeRateKey(date, base, target)`. Empty when no conversion is
+   * needed; `undefined` while the rates are still being fetched.
+   */
+  rates: ImportRatesByKey | null | undefined
 }
 
 const initialGroupFormValues = (source: NormalizedSource | null) => ({
@@ -97,6 +109,7 @@ export function ImportGroupWizard() {
     sourceIdToDestId: {},
     destIds: {},
     resolvedExpenses: [],
+    rates: undefined,
   }))
 
   const { data: destinationGroupData } = trpc.groups.get.useQuery(
@@ -275,37 +288,181 @@ export function ImportGroupWizard() {
       resolvedExpenses: NormalizedSourceExpense[]
     }) => {
       window.history.pushState({ importWizard: true }, '')
+      // `rates: undefined` triggers the tRPC batched fetch on the
+      // confirm step; an empty object means "no conversion needed"
+      // (source and destination currencies match).
       setState((s) => ({
         ...s,
         sourceIdToDestId: resolved.sourceIdToDestId,
         destIds: resolved.destIds,
         resolvedExpenses: resolved.resolvedExpenses,
+        rates: undefined,
         step: 'confirm',
       }))
     },
     [],
   )
 
+  // Resolve the destination ledger's currency code. For existing groups
+  // we wait for `destinationGroupData` so we never fetch a rate against
+  // a stale or empty target.
+  const destinationCurrencyCode =
+    state.mode === 'EXISTING_GROUP'
+      ? (destinationGroupData?.group?.currencyCode ?? '')
+      : state.groupFormValues.currencyCode
+  const sourceCurrencyCode = state.source?.currencyCode ?? ''
+
+  // The unique rate lookups required for this import, computed from the
+  // resolved expenses + source/destination currencies. An empty array
+  // means the source and destination currencies match and no fetch is
+  // needed.
+  const rateKeyItems = useMemo(() => {
+    if (state.step !== 'confirm') return []
+    return computeImportRateKeys(
+      state.resolvedExpenses,
+      sourceCurrencyCode,
+      destinationCurrencyCode,
+    )
+  }, [
+    state.step,
+    state.resolvedExpenses,
+    sourceCurrencyCode,
+    destinationCurrencyCode,
+  ])
+
+  const ratesQuery = trpc.currency.getRates.useQuery(
+    { items: rateKeyItems },
+    {
+      enabled:
+        state.step === 'confirm' &&
+        rateKeyItems.length > 0 &&
+        destinationCurrencyCode.length > 0,
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  )
+
+  // Reconcile the tRPC response into a rates map keyed by
+  // `makeRateKey(date, base, target)`. Any per-item failure collapses
+  // the whole batch into `null` so the import is blocked with a clear
+  // message instead of silently using a half-complete rate set.
+  const ratesFromQuery: ImportRatesByKey | null | undefined = useMemo(() => {
+    if (rateKeyItems.length === 0) return {}
+    if (ratesQuery.isLoading || ratesQuery.isFetching) return undefined
+    if (ratesQuery.error || !ratesQuery.data) return null
+    const out: ImportRatesByKey = {}
+    for (const item of ratesQuery.data) {
+      if (!item.ok) return null
+      out[
+        makeRateKey(item.rate.requestedDate, item.rate.base, item.rate.target)
+      ] = item.rate.rate
+    }
+    return out
+  }, [
+    rateKeyItems,
+    ratesQuery.data,
+    ratesQuery.error,
+    ratesQuery.isLoading,
+    ratesQuery.isFetching,
+  ])
+
+  // Persist the resolved rates back into wizard state so the submit
+  // handler reads a stable value rather than re-querying.
+  useEffect(() => {
+    if (state.step !== 'confirm') return
+    if (state.rates === ratesFromQuery) return
+    setState((s) =>
+      s.step === 'confirm' ? { ...s, rates: ratesFromQuery } : s,
+    )
+  }, [state.step, state.rates, ratesFromQuery])
+
+  // Surface a friendly status object to the confirm step. `idle` means
+  // no cross-currency conversion is needed; `loading` and `error`
+  // reflect the tRPC batched rate fetch.
+  const confirmRatesStatus = useMemo<
+    | { kind: 'idle' }
+    | { kind: 'loading' }
+    | { kind: 'ready' }
+    | { kind: 'error' }
+  >(() => {
+    if (state.step !== 'confirm') return { kind: 'idle' }
+    if (rateKeyItems.length === 0) return { kind: 'idle' }
+    if (ratesFromQuery === undefined) return { kind: 'loading' }
+    if (ratesFromQuery === null) return { kind: 'error' }
+    return { kind: 'ready' }
+  }, [state.step, rateKeyItems.length, ratesFromQuery])
+
+  // Displayable currency conversion entries: one row per
+  // `(date, base, target)` triple, paired with the rate the provider
+  // returned. The list is built in input order so the confirm step can
+  // show rates alongside the dates they apply to. We only emit entries
+  // when the tRPC batch succeeded — the error / loading banners already
+  // handle the other states.
+  const currencyConversions = useMemo<
+    Array<{
+      date: string
+      source: string
+      target: string
+      rate: number
+      asOfDate: string
+    }>
+  >(() => {
+    if (!ratesQuery.data) return []
+    return rateKeyItems
+      .map((item, idx) => {
+        const result = ratesQuery.data?.[idx]
+        if (!result || !result.ok) return null
+        return {
+          date: item.date,
+          source: item.base,
+          target: item.target,
+          rate: result.rate.rate,
+          asOfDate: result.rate.asOfDate,
+        }
+      })
+      .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+  }, [rateKeyItems, ratesQuery.data])
+
   const handleSubmit = useCallback(async () => {
     if (!state.source) return
     if (!state.mode) return
     if (!account) return
+    // Cross-currency imports must wait until the rates are ready and
+    // must block when the fetch failed — silently falling back would
+    // store source-currency amounts in the destination ledger.
+    if (rateKeyItems.length > 0) {
+      if (state.rates === undefined || state.rates === null) {
+        toast({
+          description: t('Groups.Import.Confirm.rateFetchError'),
+          variant: 'destructive',
+        })
+        return
+      }
+    }
     try {
       const sourceMeta = {
         provider: 'SPLIIT',
         sourceGroupId: state.source.sourceGroupId,
         sourceUrl: state.prefillSourceUrl ?? undefined,
       }
-      const destinationCurrencyCode =
-        state.mode === 'EXISTING_GROUP'
-          ? (destinationGroupData?.group?.currencyCode ?? '')
-          : state.groupFormValues.currencyCode
-      const { batch } = buildImportBatch(state, destinationCurrencyCode)
+      const { batch } = buildImportBatch(
+        state,
+        destinationCurrencyCode,
+        state.rates === undefined ? undefined : (state.rates ?? undefined),
+      )
       await importMutation.mutateAsync({ ...batch, sourceMeta })
     } catch {
       // Error surfaced via onError.
     }
-  }, [state, importMutation, account, destinationGroupData])
+  }, [
+    state,
+    importMutation,
+    account,
+    destinationCurrencyCode,
+    rateKeyItems.length,
+    toast,
+    t,
+  ])
 
   const handleDoneNavigate = useCallback(() => {
     const groupId = importMutation.data?.groupId
@@ -374,6 +531,8 @@ export function ImportGroupWizard() {
           resolvedExpenses={state.resolvedExpenses}
           invites={importMutation.data?.invites ?? []}
           isSubmitting={importMutation.isPending}
+          ratesStatus={confirmRatesStatus}
+          currencyConversions={currencyConversions}
           onBack={() => setState((s) => ({ ...s, step: 'mapping' }))}
           onSubmit={handleSubmit}
         />

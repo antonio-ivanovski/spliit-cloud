@@ -191,7 +191,14 @@
         "sourceName": "Lähde: {name}",
         "footer": "Jokainen lähdeosallistuja ja -kulu tuodaan. Kutsut lähetetään/luodaan ryhmän luomisen jälkeen.",
         "importingButton": "Tuodaan…",
-        "importButton": "Tuo ryhmä"
+        "importButton": "Tuo ryhmä",
+        "ratesLoading": "Haetaan valuuttakursseja valuuttojen välisille kuluille…",
+        "rateFetchError": "Valuuttakursseja ei voitu hakea. Tuonti on estetty, kunnes kurssipalvelu on jälleen tavoitettavissa.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Pyydetty {requested} · käytetty {asOf}",
+        "currencyConversionTitle": "Valuuttamuunnos",
+        "currencyConversionDescription": "Kulut muunnetaan lähdevaluutasta kohdevaluuttaan alla olevia kursseja käyttäen.",
+        "currencyRateForDateFormat": "Käytetty kuluille, joiden päivämäärä on {date}"
       },
       "Destination": {
         "heading": "Mihin haluat tuoda <strong>{name}</strong>? ({participantCount} osallistujaa · {expenseCount} kulua)",

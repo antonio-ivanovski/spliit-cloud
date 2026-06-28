@@ -191,7 +191,14 @@
         "sourceName": "Origen: {name}",
         "footer": "Tots els participants d'origen i despeses s'importaran. Les invitacions s'envien o es generen després de crear el grup.",
         "importingButton": "Important…",
-        "importButton": "Importa el grup"
+        "importButton": "Importa el grup",
+        "ratesLoading": "S'estan obtenint els tipus de canvi per a despeses en diverses monedes…",
+        "rateFetchError": "No s'han pogut obtenir els tipus de canvi. La importació està bloquejada fins que el proveïdor de tipus de canvi torni a estar disponible.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Sol·licitat {requested} · proveïdor usà {asOf}",
+        "currencyConversionTitle": "Conversió de moneda",
+        "currencyConversionDescription": "Les despeses es convertiran de la moneda d'origen a la moneda del llibre de destinació utilitzant els tipus de canvi següents.",
+        "currencyRateForDateFormat": "Aplicat per a despeses amb data {date}"
       },
       "Destination": {
         "heading": "On voleu importar <strong>{name}</strong>? ({participantCount} participants · {expenseCount} despeses)",

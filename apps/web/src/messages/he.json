@@ -191,7 +191,14 @@
         "sourceName": "מקור: {name}",
         "footer": "כל משתתף מקור וכל הוצאה ייובאו. הזמנות נשלחות/נוצרות לאחר יצירת הקבוצה.",
         "importingButton": "מייבא…",
-        "importButton": "ייבא קבוצה"
+        "importButton": "ייבא קבוצה",
+        "ratesLoading": "מביא שערי חליפין עבור הוצאות בין־מטבעיות…",
+        "rateFetchError": "לא ניתן להביא שערי חליפין. הייבוא חסום עד שספק השערים יהיה זמין שוב.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "תאריך מבוקש {requested} · הספק השתמש ב־{asOf}",
+        "currencyConversionTitle": "המרת מטבע",
+        "currencyConversionDescription": "הוצאות יומרו ממטבע המקור למטבע החשבון הראשי באמצעות השערים שלהלן.",
+        "currencyRateForDateFormat": "הוחל על הוצאות מתאריך {date}"
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",

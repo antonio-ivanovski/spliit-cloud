@@ -191,7 +191,14 @@
         "sourceName": "Джерело: {name}",
         "footer": "Кожного вихідного учасника та витрату буде імпортовано. Запрошення надсилаються/генеруються після створення групи.",
         "importingButton": "Імпорт…",
-        "importButton": "Імпортувати групу"
+        "importButton": "Імпортувати групу",
+        "ratesLoading": "Завантаження курсів валют для мультивалютних витрат…",
+        "rateFetchError": "Не вдалося завантажити курси валют. Імпорт заблоковано, доки постачальник курсів знову не стане доступним.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Запитувано {requested} · постачальник використав {asOf}",
+        "currencyConversionTitle": "Конвертація валюти",
+        "currencyConversionDescription": "Витрати буде конвертовано з вихідної валюти у цільову валюту книги з використанням курсів нижче.",
+        "currencyRateForDateFormat": "Застосовано для витрат від {date}"
       },
       "Destination": {
         "heading": "Куди ви хочете імпортувати <strong>{name}</strong>? ({participantCount} учасників · {expenseCount} витрат)",

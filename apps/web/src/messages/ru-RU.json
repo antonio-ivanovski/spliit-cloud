@@ -191,7 +191,14 @@
         "sourceName": "Источник: {name}",
         "footer": "Каждый исходный участник и трата будут импортированы. Приглашения отправляются/создаются после создания группы.",
         "importingButton": "Импорт…",
-        "importButton": "Импортировать группу"
+        "importButton": "Импортировать группу",
+        "ratesLoading": "Загрузка курсов валют для мультивалютных расходов…",
+        "rateFetchError": "Не удалось загрузить курсы валют. Импорт заблокирован до восстановления доступности поставщика курсов.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Запрошено {requested} · поставщик использовал {asOf}",
+        "currencyConversionTitle": "Конвертация валюты",
+        "currencyConversionDescription": "Расходы будут конвертированы из исходной валюты в целевую валюту книги по курсам ниже.",
+        "currencyRateForDateFormat": "Применено для расходов от {date}"
       },
       "Destination": {
         "heading": "Куда вы хотите импортировать <strong>{name}</strong>? ({participantCount} участников · {expenseCount} трат)",

@@ -22,14 +22,14 @@ export type CurrencyRate = {
 }
 
 export class UnsupportedCurrencyError extends Error {
-  constructor(code: string) {
+  constructor(readonly code: string) {
     super(`Unsupported currency code: ${code}`)
     this.name = 'UnsupportedCurrencyError'
   }
 }
 
 export class CurrencyRateNotFoundError extends Error {
-  constructor(target: string) {
+  constructor(readonly target: string) {
     super(`Provider did not return a rate for target ${target}`)
     this.name = 'CurrencyRateNotFoundError'
   }
@@ -199,4 +199,172 @@ export function clearCurrencyRateCache() {
 export function currencyRateCacheSize() {
   evictExpired(Date.now())
   return store.size
+}
+
+export type BatchRateRequest = {
+  date: string
+  base: string
+  target: string
+}
+
+/**
+ * Discriminated union describing a single rate lookup outcome. Per-item
+ * failures are returned alongside successes so the caller can block or
+ * surface a specific message per offending expense instead of failing the
+ * whole batch.
+ */
+export type BatchRateResult =
+  | { ok: true; rate: CurrencyRate }
+  | {
+      ok: false
+      error:
+        | { code: 'UNSUPPORTED_CURRENCY'; currency: string }
+        | { code: 'RATE_NOT_FOUND'; target: string }
+        | { code: 'INVALID_DATE'; date: string }
+        | { code: 'PROVIDER_ERROR'; message: string }
+    }
+
+/**
+ * Resolve multiple rates in parallel. The requests are grouped by
+ * (date, base) so a single batch with N targets on the same (date, base)
+ * costs one upstream call — Frankfurter's bulk endpoint returns every
+ * quote for a base in one response, and we extract the requested targets
+ * from there. Per-target failures are returned alongside successes so
+ * the caller can block on a specific expense without aborting the batch.
+ *
+ * `fetchImpl` is test-only and defaults to the live provider; it lets
+ * unit tests swap in a stub for the upstream call.
+ */
+export async function getCurrencyRates(
+  requests: BatchRateRequest[],
+  options: {
+    fetchImpl?: (date: string, base: string) => Promise<FrankfurterResponse>
+  } = {},
+): Promise<BatchRateResult[]> {
+  const fetchImpl = options.fetchImpl ?? fetchFromProvider
+
+  // Group requests by (date, base) so each upstream call is shared by
+  // every target that pair covers. We preserve the original input order
+  // in the returned array.
+  type Key = string
+  const groupKey = (date: string, base: string): Key =>
+    `${date}|${base.toUpperCase()}`
+  const groups = new Map<
+    Key,
+    {
+      date: string
+      base: string
+      targets: string[]
+      indicesByTarget: Map<string, number[]>
+    }
+  >()
+  requests.forEach((req, idx) => {
+    const base = req.base.toUpperCase()
+    const target = req.target.toUpperCase()
+    const key = groupKey(req.date, base)
+    const existing = groups.get(key)
+    if (existing) {
+      if (!existing.indicesByTarget.has(target)) {
+        existing.targets.push(target)
+        existing.indicesByTarget.set(target, [])
+      }
+      existing.indicesByTarget.get(target)!.push(idx)
+    } else {
+      const indicesByTarget = new Map<string, number[]>()
+      indicesByTarget.set(target, [idx])
+      groups.set(key, {
+        date: req.date,
+        base,
+        targets: [target],
+        indicesByTarget,
+      })
+    }
+  })
+
+  type ResolvedGroup = {
+    byTarget: Map<string, BatchRateResult>
+  }
+  const resolvedByKey = new Map<Key, ResolvedGroup>()
+
+  await Promise.all(
+    Array.from(groups.entries()).map(async ([key, group]) => {
+      const byTarget = new Map<string, BatchRateResult>()
+      try {
+        // Currency and date validation happen up here so the provider
+        // is never called for unsupported codes or malformed dates.
+        assertSupported(group.base)
+        if (!ISO_DATE_RE.test(group.date)) {
+          throw new CurrencyRateProviderError(`Invalid date: ${group.date}`)
+        }
+
+        const payload = await fetchImpl(group.date, group.base)
+        for (const target of group.targets) {
+          const rate = payload.rates[target]
+          if (typeof rate !== 'number') {
+            byTarget.set(target, {
+              ok: false,
+              error: { code: 'RATE_NOT_FOUND', target },
+            })
+            continue
+          }
+          const result: CurrencyRate = {
+            rate,
+            requestedDate: group.date,
+            asOfDate: payload.date,
+            base: group.base,
+            target,
+          }
+          writeCache(
+            cacheKey(group.base, target, group.date),
+            result,
+            DEFAULT_TTL_MS,
+          )
+          byTarget.set(target, { ok: true, rate: result })
+        }
+      } catch (err) {
+        for (const target of group.targets) {
+          byTarget.set(target, {
+            ok: false,
+            error: classifyBatchError(err, group.date, target),
+          })
+        }
+      }
+      resolvedByKey.set(key, { byTarget })
+    }),
+  )
+
+  const output: BatchRateResult[] = new Array(requests.length)
+  for (const [key, group] of groups) {
+    const { byTarget } = resolvedByKey.get(key)!
+    for (const target of group.targets) {
+      const result = byTarget.get(target)!
+      for (const idx of group.indicesByTarget.get(target)!) {
+        output[idx] = result
+      }
+    }
+  }
+  return output
+}
+
+function classifyBatchError(
+  err: unknown,
+  date: string,
+  target: string,
+): Extract<BatchRateResult, { ok: false }>['error'] {
+  if (err instanceof UnsupportedCurrencyError) {
+    return { code: 'UNSUPPORTED_CURRENCY', currency: err.code }
+  }
+  if (err instanceof CurrencyRateNotFoundError) {
+    return { code: 'RATE_NOT_FOUND', target: err.target }
+  }
+  if (err instanceof CurrencyRateProviderError) {
+    return { code: 'PROVIDER_ERROR', message: err.message }
+  }
+  if (err instanceof Error && /Invalid date/.test(err.message)) {
+    return { code: 'INVALID_DATE', date }
+  }
+  return {
+    code: 'PROVIDER_ERROR',
+    message: err instanceof Error ? err.message : String(err),
+  }
 }

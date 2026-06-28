@@ -191,7 +191,14 @@
         "sourceName": "Bron: {name}",
         "footer": "Elke brondeelnemer en -uitgave wordt geïmporteerd. Uitnodigingen worden verzonden/generated na het aanmaken van de groep.",
         "importingButton": "Importeren…",
-        "importButton": "Importeer groep"
+        "importButton": "Importeer groep",
+        "ratesLoading": "Wisselkoersen voor valutaoverschrijdende uitgaven worden opgehaald…",
+        "rateFetchError": "Wisselkoersen konden niet worden opgehaald. De import is geblokkeerd totdat de koersaanbieder weer bereikbaar is.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Aangevraagd {requested} · gebruikt {asOf}",
+        "currencyConversionTitle": "Valutaomrekening",
+        "currencyConversionDescription": "Uitgaven worden omgerekend van de bronvaluta naar de doelvaluta met behulp van onderstaande koersen.",
+        "currencyRateForDateFormat": "Toegepast voor uitgaven van {date}"
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",

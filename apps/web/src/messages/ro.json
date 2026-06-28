@@ -191,7 +191,14 @@
         "sourceName": "Sursă: {name}",
         "footer": "Fiecare participant sursă și cheltuială va fi importat. Invitațiile sunt trimise/generate după crearea grupului.",
         "importingButton": "Se importă…",
-        "importButton": "Importați grupul"
+        "importButton": "Importați grupul",
+        "ratesLoading": "Se preiau cursurile de schimb pentru cheltuieli multi-valutare…",
+        "rateFetchError": "Nu s-au putut prelua cursurile de schimb. Importul este blocat până când furnizorul de cursuri devine din nou accesibil.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Solicitat {requested} · furnizorul a folosit {asOf}",
+        "currencyConversionTitle": "Conversie valutară",
+        "currencyConversionDescription": "Cheltuielile vor fi convertite din moneda sursă în moneda destinație a registrului folosind cursurile de mai jos.",
+        "currencyRateForDateFormat": "Aplicat pentru cheltuielile datate {date}"
       },
       "Destination": {
         "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",

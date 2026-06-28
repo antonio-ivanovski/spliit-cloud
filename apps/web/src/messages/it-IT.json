@@ -191,7 +191,14 @@
         "sourceName": "Origine: {name}",
         "footer": "Ogni partecipante di origine e spesa verrà importato. Gli inviti vengono inviati/generati dopo la creazione del gruppo.",
         "importingButton": "Importazione…",
-        "importButton": "Importa gruppo"
+        "importButton": "Importa gruppo",
+        "ratesLoading": "Recupero dei tassi di cambio per spese in valute multiple…",
+        "rateFetchError": "Impossibile recuperare i tassi di cambio. L'importazione è bloccata fino a quando il fornitore di tassi non sarà di nuovo raggiungibile.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Richiesto il {requested} · fornitore usato il {asOf}",
+        "currencyConversionTitle": "Conversione valuta",
+        "currencyConversionDescription": "Le spese verranno convertite dalla valuta di origine alla valuta del registro di destinazione utilizzando i tassi seguenti.",
+        "currencyRateForDateFormat": "Applicato per spese datate {date}"
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",

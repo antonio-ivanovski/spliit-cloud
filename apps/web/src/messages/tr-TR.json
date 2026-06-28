@@ -191,7 +191,14 @@
         "sourceName": "Kaynak: {name}",
         "footer": "Her kaynak katılımcı ve harcama içe aktarılacak. Davetler, grup oluşturulduktan sonra gönderilir/oluşturulur.",
         "importingButton": "İçe aktarılıyor…",
-        "importButton": "Grubu içe aktar"
+        "importButton": "Grubu içe aktar",
+        "ratesLoading": "Çapraz dövizli harcamalar için döviz kurları alınıyor…",
+        "rateFetchError": "Döviz kurları alınamadı. Kur sağlayıcısı tekrar erişilebilir olana kadar içe aktarma engellendi.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Talep {requested} · kullanılan {asOf}",
+        "currencyConversionTitle": "Döviz dönüşümü",
+        "currencyConversionDescription": "Harcamalar, aşağıdaki kurlar kullanılarak kaynak dövizden hedef döviz birimine dönüştürülecek.",
+        "currencyRateForDateFormat": "{date} tarihli harcamalar için uygulanan"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",

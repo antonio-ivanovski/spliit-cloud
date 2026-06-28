@@ -287,7 +287,14 @@
         "sourceName": "Source: {name}",
         "footer": "Every source participant and expense will be imported. Invitations are sent / generated after the group is created.",
         "importingButton": "Importing…",
-        "importButton": "Import group"
+        "importButton": "Import group",
+        "ratesLoading": "Fetching exchange rates for cross-currency expenses…",
+        "rateFetchError": "Couldn't fetch exchange rates. The import is blocked until the rate provider is reachable again.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Requested {requested} · provider used {asOf}",
+        "currencyConversionTitle": "Currency conversion",
+        "currencyConversionDescription": "Expenses will be converted from the source currency to the destination ledger currency using the rates below.",
+        "currencyRateForDateFormat": "Applied for expenses dated {date}"
       },
       "Done": {
         "importComplete": "Import complete",

@@ -191,7 +191,14 @@
         "sourceName": "Origem: {name}",
         "footer": "Cada participante de origem e despesa será importado. Convites são enviados/gerados após a criação do grupo.",
         "importingButton": "Importando…",
-        "importButton": "Importar grupo"
+        "importButton": "Importar grupo",
+        "ratesLoading": "Buscando taxas de câmbio para despesas em várias moedas…",
+        "rateFetchError": "Não foi possível buscar as taxas de câmbio. A importação está bloqueada até que o provedor de taxas esteja acessível novamente.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Solicitado {requested} · provedor usou {asOf}",
+        "currencyConversionTitle": "Conversão de moeda",
+        "currencyConversionDescription": "As despesas serão convertidas da moeda de origem para a moeda do livro de destino usando as taxas abaixo.",
+        "currencyRateForDateFormat": "Aplicado para despesas com data {date}"
       },
       "Destination": {
         "heading": "Onde você gostaria de importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",

@@ -223,17 +223,33 @@ The source step SHALL present a tabbed UI with "From Spliit" (active) and Splitw
 
 ### Requirement: Cross-currency import
 
-When the source group's currency differs from the destination ledger's currency, the system SHALL set `originalAmount`, `originalCurrency`, and `conversionRate` on each imported expense so the source-currency values are preserved alongside the destination-currency amount.
+When the source group's currency differs from the destination ledger's currency, the system SHALL convert each affected expense into the destination currency using a real exchange rate from the Frankfurter provider, and SHALL preserve the source-currency values alongside the converted amount so the conversion is auditable.
 
-#### Scenario: Currencies differ triggers auto-fill
+#### Scenario: Currencies differ uses a real exchange rate from Frankfurter
 
 - **WHEN** the source currency code differs from the destination ledger currency code
-- **THEN** each imported expense has `originalAmount` set to the source `amount`, `originalCurrency` set to the source currency code, and `conversionRate` set to `1`
+- **THEN** the wizard fetches an exchange rate from the API proxy for each unique `(date, source, destination)` tuple across the resolved expenses
+- **AND** each imported expense has `originalAmount` set to the source-currency amount, `originalCurrency` set to the effective source currency code, `conversionRate` set to the rate returned by the provider for the expense's date, and `amount` set to `round(originalAmount * conversionRate)` in destination-currency minor units
 
-#### Scenario: Same currency passes through original fields
+#### Scenario: Per-expense prior conversion is preserved across groups
+
+- **WHEN** a source expense already carries `originalAmount` and `originalCurrency` from a prior USD→EUR conversion (the source group is EUR) and the destination ledger is GBP
+- **THEN** the import treats USD as the effective source currency for that expense, fetches a USD→GBP rate for the expense's date, and writes `originalAmount`, `originalCurrency: USD`, the USD→GBP `conversionRate`, and the converted `amount` in GBP minor units
+
+#### Scenario: Same-currency import passes through unchanged
 
 - **WHEN** the source and destination currency codes match
-- **THEN** each imported expense preserves any `originalAmount`, `originalCurrency`, and `conversionRate` that were present in the source export; absent fields remain absent
+- **THEN** each imported expense preserves any `originalAmount`, `originalCurrency`, and `conversionRate` from the source export and `amount` is left in the destination ledger's currency without further conversion
+
+#### Scenario: No prior conversion in same-currency import
+
+- **WHEN** the source and destination currency codes match and the source expense has no `originalAmount`/`originalCurrency`/`conversionRate`
+- **THEN** `originalAmount`, `originalCurrency`, and `conversionRate` are all absent on the imported expense
+
+#### Scenario: Cross-currency import blocks when the rate provider is unavailable
+
+- **WHEN** the source and destination currency codes differ and the API proxy returns an error for any required rate (unsupported currency, rate not found, provider error, invalid date)
+- **THEN** the confirm step displays the failure and disables the import button until the user retries; the import mutation is never sent
 
 ### Requirement: Source URL attribution
 

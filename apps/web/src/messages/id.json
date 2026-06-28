@@ -191,7 +191,14 @@
         "sourceName": "Sumber: {name}",
         "footer": "Setiap peserta sumber dan pengeluaran akan diimpor. Undangan dikirim/dibuat setelah grup dibuat.",
         "importingButton": "Mengimpor…",
-        "importButton": "Impor grup"
+        "importButton": "Impor grup",
+        "ratesLoading": "Mengambil nilai tukar untuk pengeluaran antar-mata uang…",
+        "rateFetchError": "Gagal mengambil nilai tukar. Impor diblokir hingga penyedia nilai tukar dapat dijangkau kembali.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Diminta {requested} · penyedia menggunakan {asOf}",
+        "currencyConversionTitle": "Konversi mata uang",
+        "currencyConversionDescription": "Pengeluaran akan dikonversi dari mata uang sumber ke mata uang buku besar tujuan menggunakan nilai tukar di bawah.",
+        "currencyRateForDateFormat": "Diterapkan untuk pengeluaran tanggal {date}"
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",

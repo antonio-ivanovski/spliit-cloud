@@ -1,15 +1,58 @@
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
-  CurrencyRateNotFoundError,
-  CurrencyRateProviderError,
-  getCurrencyRate,
-  UnsupportedCurrencyError,
+  getCurrencyRates,
+  type BatchRateResult,
 } from '../../../lib/currency-rates'
 import { baseProcedure, createTRPCRouter } from '../../init'
 
 // `YYYY-MM-DD` (no time component). Frankfurter's date is the
 // requested date for the rate, not a timestamp.
 const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
+const currencyCodeSchema = z.string().min(3).max(3)
+
+const singleRateInput = z.object({
+  date: dateSchema,
+  base: currencyCodeSchema,
+  target: currencyCodeSchema,
+})
+
+const batchRateItem = singleRateInput
+const batchRateInput = z.object({
+  items: z.array(batchRateItem).min(1).max(500),
+})
+
+/**
+ * Translate a `BatchRateResult` error into a tRPC error with a stable code
+ * the client can switch on. The shape is preserved so the caller can
+ * decide whether to surface `currency`/`target`/`date` to the user.
+ */
+function raiseBatchError(
+  err: Extract<BatchRateResult, { ok: false }>['error'],
+) {
+  switch (err.code) {
+    case 'UNSUPPORTED_CURRENCY':
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: `Unsupported currency code: ${err.currency}`,
+      })
+    case 'RATE_NOT_FOUND':
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: `No rate available for target ${err.target}`,
+      })
+    case 'INVALID_DATE':
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: `Invalid date: ${err.date}`,
+      })
+    case 'PROVIDER_ERROR':
+      throw new TRPCError({
+        code: 'BAD_GATEWAY',
+        message: err.message,
+      })
+  }
+}
 
 export const currencyRouter = createTRPCRouter({
   /**
@@ -23,32 +66,46 @@ export const currencyRouter = createTRPCRouter({
    * client can show a warning when the as-of differs from the
    * requested date (e.g. weekend or future date fallback).
    */
-  getRate: baseProcedure
-    .input(
-      z.object({
-        date: dateSchema,
-        base: z.string().min(3).max(3),
-        target: z.string().min(3).max(3),
-      }),
+  getRate: baseProcedure.input(singleRateInput).query(async ({ input }) => {
+    const [result] = await getCurrencyRates([
+      {
+        date: input.date,
+        base: input.base.toUpperCase(),
+        target: input.target.toUpperCase(),
+      },
+    ])
+    // Result is always present (one input → one result). Treat both
+    // the success and the impossible `undefined` branches as success
+    // for type-narrowing purposes; failures throw.
+    if (!result || result.ok) {
+      return result?.rate
+    }
+    raiseBatchError(result.error)
+  }),
+
+  /**
+   * Batch variant of `getRate`. Returns the requested rate and as-of date
+   * for each item in the input order. Per-item failures are returned
+   * alongside successes so the caller can block the import with a clear
+   * message per offending expense rather than failing the whole batch.
+   *
+   * The underlying Frankfurter fetches are deduplicated by (date, base)
+   * in-process, so a batch of N expenses on the same date with the same
+   * source currency costs one upstream call.
+   */
+  getRates: baseProcedure.input(batchRateInput).query(async ({ input }) => {
+    const results = await getCurrencyRates(
+      input.items.map((item) => ({
+        date: item.date,
+        base: item.base.toUpperCase(),
+        target: item.target.toUpperCase(),
+      })),
     )
-    .query(async ({ input }) => {
-      try {
-        return await getCurrencyRate({
-          date: input.date,
-          base: input.base.toUpperCase(),
-          target: input.target.toUpperCase(),
-        })
-      } catch (err) {
-        if (err instanceof UnsupportedCurrencyError) {
-          throw new Error(`Unsupported currency: ${err.message}`)
-        }
-        if (err instanceof CurrencyRateNotFoundError) {
-          throw new Error(err.message)
-        }
-        if (err instanceof CurrencyRateProviderError) {
-          throw new Error(`Failed to fetch exchange rate: ${err.message}`)
-        }
-        throw err
+    return results.map((result) => {
+      if (result.ok) {
+        return { ok: true as const, rate: result.rate }
       }
-    }),
+      return { ok: false as const, error: result.error }
+    })
+  }),
 })

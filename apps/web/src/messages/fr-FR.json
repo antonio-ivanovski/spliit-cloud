@@ -191,7 +191,14 @@
         "sourceName": "Source: {name}",
         "footer": "Chaque participant source et chaque dépense seront importés. Les invitations sont envoyées/générées après la création du groupe.",
         "importingButton": "Importation…",
-        "importButton": "Importer le groupe"
+        "importButton": "Importer le groupe",
+        "ratesLoading": "Récupération des taux de change pour les dépenses multi-monnaies…",
+        "rateFetchError": "Impossible de récupérer les taux de change. L'importation est bloquée jusqu'à ce que le fournisseur de taux soit à nouveau accessible.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Demandé le {requested} · fournisseur utilisé le {asOf}",
+        "currencyConversionTitle": "Conversion de devise",
+        "currencyConversionDescription": "Les dépenses seront converties de la devise source vers la devise du compte de destination en utilisant les taux ci-dessous.",
+        "currencyRateForDateFormat": "Appliqué aux dépenses datées du {date}"
       },
       "Destination": {
         "heading": "Où souhaitez-vous importer <strong>{name}</strong>? ({participantCount} participants · {expenseCount} dépenses)",

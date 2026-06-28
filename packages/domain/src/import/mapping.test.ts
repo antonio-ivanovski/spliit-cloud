@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest'
 import {
   applyAutoMatch,
   buildImportBatch,
+  computeImportRateKeys,
   findBestNameMatch,
   findImportConflicts,
+  makeRateKey,
   substringsOverlap,
   type DestinationParticipant,
   type ImportBatchState,
@@ -578,12 +580,16 @@ describe('buildImportBatch', () => {
         destIds: { 'p-0': 'dest-a' },
         resolvedExpenses: [baseExpense('p-0', [])],
       }
-      const { batch } = buildImportBatch(state, 'USD')
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].originalAmount).toBe(1000)
       expect(batch.expenses[0].originalCurrency).toBe('EUR')
-      expect(batch.expenses[0].conversionRate).toBe(1)
+      expect(batch.expenses[0].conversionRate).toBe(1.1)
+      expect(batch.expenses[0].amount).toBe(1100)
     })
 
     it('does not override when both currencies are EUR (same)', () => {
@@ -621,7 +627,11 @@ describe('buildImportBatch', () => {
       expect(batch.expenses[0].conversionRate).toBeUndefined()
     })
 
-    it('uses source currencyCode as originalCurrency when source has originalAmount set and destination differs', () => {
+    it('uses source expense originalCurrency (not source group currency) when the source already had a prior conversion and destination differs', () => {
+      // The source group is in EUR, but the source expense was originally
+      // entered as 1500 JPY and converted to 2000 EUR at a rate of 0.75.
+      // Importing into a USD group should convert the *original* JPY
+      // amount to USD, not redo the JPY->EUR conversion.
       const participants: ParticipantMappingState[] = [
         mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
@@ -649,12 +659,207 @@ describe('buildImportBatch', () => {
           }),
         ],
       }
-      const { batch } = buildImportBatch(state, 'USD')
+      const rates = {
+        [makeRateKey('2025-11-15', 'JPY', 'USD')]: 0.0067,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
-      expect(batch.expenses[0].originalAmount).toBe(2000)
-      expect(batch.expenses[0].originalCurrency).toBe('EUR')
-      expect(batch.expenses[0].conversionRate).toBe(1)
+      expect(batch.expenses[0].originalAmount).toBe(1500)
+      expect(batch.expenses[0].originalCurrency).toBe('JPY')
+      expect(batch.expenses[0].conversionRate).toBe(0.0067)
+      expect(batch.expenses[0].amount).toBe(Math.round(1500 * 0.0067))
+    })
+
+    it('preserves the source expense originalAmount when destination matches the source group currency', () => {
+      // The source expense already has a USD->EUR prior conversion. The
+      // destination is also EUR, so the wizard should NOT redo the
+      // conversion; the source expense's audit fields pass through and
+      // the converted `amount` is left alone.
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a' },
+        destIds: { 'p-0': 'dest-a' },
+        resolvedExpenses: [
+          baseExpense('p-0', [], {
+            amount: 2000,
+            originalAmount: 1500,
+            originalCurrency: 'USD',
+            conversionRate: 0.75,
+          }),
+        ],
+      }
+      const { batch } = buildImportBatch(state, 'EUR')
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      expect(batch.expenses[0].amount).toBe(2000)
+      expect(batch.expenses[0].originalAmount).toBe(1500)
+      expect(batch.expenses[0].originalCurrency).toBe('USD')
+      expect(batch.expenses[0].conversionRate).toBe(0.75)
+    })
+
+    it('throws when a cross-currency expense is missing the required rate', () => {
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a' },
+        destIds: { 'p-0': 'dest-a' },
+        resolvedExpenses: [baseExpense('p-0', [])],
+      }
+      // The wizard passed no `rates` map at all — import must not
+      // silently fall back to a placeholder.
+      expect(() => buildImportBatch(state, 'USD')).toThrow(
+        /cross-currency conversion needs an exchange rate from EUR to USD/,
+      )
+      // Even with a rates map, a missing key for the specific
+      // (date, base, target) tuple is a hard error.
+      expect(() => buildImportBatch(state, 'USD', {})).toThrow(
+        /missing exchange rate for EUR -> USD on 2025-11-15/,
+      )
+    })
+
+    it('rounds the converted amount to the nearest minor unit', () => {
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a' },
+        destIds: { 'p-0': 'dest-a' },
+        resolvedExpenses: [baseExpense('p-0', [], { amount: 333 })],
+      }
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1234,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      expect(batch.expenses[0].amount).toBe(Math.round(333 * 1.1234))
+    })
+  })
+
+  describe('computeImportRateKeys', () => {
+    it('returns no items when source and destination currencies match', () => {
+      expect(computeImportRateKeys([baseExpense('p-0')], 'EUR', 'EUR')).toEqual(
+        [],
+      )
+    })
+
+    it('returns no items when either currency code is missing', () => {
+      expect(computeImportRateKeys([], '', 'USD')).toEqual([])
+      expect(computeImportRateKeys([], 'EUR', '')).toEqual([])
+    })
+
+    it('emits one key per (date, source) pair, deduplicated across expenses', () => {
+      const keys = computeImportRateKeys(
+        [
+          baseExpense('p-0', [], {
+            expenseDate: '2025-11-15T00:00:00.000Z',
+          }),
+          baseExpense('p-1', [], {
+            expenseDate: '2025-11-15T00:00:00.000Z',
+          }),
+          baseExpense('p-2', [], {
+            expenseDate: '2025-11-16T00:00:00.000Z',
+          }),
+        ],
+        'EUR',
+        'USD',
+      )
+
+      expect(keys).toEqual([
+        { date: '2025-11-15', base: 'EUR', target: 'USD' },
+        { date: '2025-11-16', base: 'EUR', target: 'USD' },
+      ])
+    })
+
+    it('uses the expense originalCurrency as the base when it differs from the source group currency', () => {
+      const keys = computeImportRateKeys(
+        [
+          baseExpense('p-0', [], {
+            expenseDate: '2025-11-15T00:00:00.000Z',
+            amount: 2000,
+            originalAmount: 1500,
+            originalCurrency: 'JPY',
+            conversionRate: 0.75,
+          }),
+        ],
+        'EUR',
+        'GBP',
+      )
+
+      expect(keys).toEqual([{ date: '2025-11-15', base: 'JPY', target: 'GBP' }])
+    })
+
+    it('skips expenses whose effective original currency already matches the destination', () => {
+      const keys = computeImportRateKeys(
+        [
+          baseExpense('p-0', [], {
+            expenseDate: '2025-11-15T00:00:00.000Z',
+            amount: 2000,
+            originalAmount: 1500,
+            originalCurrency: 'USD',
+            conversionRate: 0.75,
+          }),
+          baseExpense('p-1', [], {
+            expenseDate: '2025-11-16T00:00:00.000Z',
+          }),
+        ],
+        'EUR',
+        'USD',
+      )
+
+      // The first expense was already in USD (matches destination), the
+      // second has no prior conversion so it falls back to the source
+      // group's EUR. Only the second needs a rate.
+      expect(keys).toEqual([{ date: '2025-11-16', base: 'EUR', target: 'USD' }])
+    })
+
+    it('normalizes currency codes to upper case', () => {
+      const keys = computeImportRateKeys(
+        [baseExpense('p-0', [], { expenseDate: '2025-11-15T00:00:00.000Z' })],
+        'eur',
+        'usd',
+      )
+      expect(keys).toEqual([{ date: '2025-11-15', base: 'EUR', target: 'USD' }])
     })
   })
 })

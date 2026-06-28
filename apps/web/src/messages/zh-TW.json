@@ -191,7 +191,14 @@
         "sourceName": "來源：{name}",
         "footer": "每個來源參與者和每筆支出都會被匯入。邀請會在群組建立後傳送/產生。",
         "importingButton": "匯入中…",
-        "importButton": "匯入群組"
+        "importButton": "匯入群組",
+        "ratesLoading": "正在取得跨幣種支出的匯率…",
+        "rateFetchError": "無法取得匯率。在匯率提供方恢復可用之前，匯入將被阻止。",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "請求日期 {requested} · 提供方使用日期 {asOf}",
+        "currencyConversionTitle": "貨幣換算",
+        "currencyConversionDescription": "支出將使用以下匯率從來源幣種轉換為目標帳簿幣種。",
+        "currencyRateForDateFormat": "適用於日期 {date} 的支出"
       },
       "Destination": {
         "heading": "您想要將 <strong>{name}</strong> 匯入到哪裡？（{participantCount} 位參與者 · {expenseCount} 筆支出）",

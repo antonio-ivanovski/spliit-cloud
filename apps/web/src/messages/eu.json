@@ -191,7 +191,14 @@
         "sourceName": "Iturburua: {name}",
         "footer": "Iturburuko parte-hartzaile eta gastu guztiak inportatuko dira. Gonbidapenak taldea sortu ondoren bidaltzen/sortzen dira.",
         "importingButton": "Inportatzen…",
-        "importButton": "Inportatu taldea"
+        "importButton": "Inportatu taldea",
+        "ratesLoading": "Moneta arteko gastuen truke-tasak eskuratzen…",
+        "rateFetchError": "Ezin izan dira truke-tasak eskuratu. Inportazioa blokeatuta dago truke-tasa hornitzailea berriro eskuragarri egon arte.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Eskatua {requested} · erabilitakoa {asOf}",
+        "currencyConversionTitle": "Moneta bihurketa",
+        "currencyConversionDescription": "Gastuak iturburuko monetatik helburuko monetara bihurtuko dira azpiko tasak erabiliz.",
+        "currencyRateForDateFormat": "Aplikatua {date} datako gastuetarako"
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
