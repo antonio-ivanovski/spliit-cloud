@@ -136,7 +136,7 @@ const mockExpense = {
   originalCurrency: null,
   originalAmount: null,
   conversionRate: null,
-  categoryId: 'food-drink-dinner',
+  categoryId: 'food-and-drink',
   paidById: 'lp-1',
   paidFor: [
     { ledgerParticipantId: 'lp-1', shares: 2500 },
@@ -230,6 +230,106 @@ describe('ExpenseForm', () => {
 
     // Notes should be pre-filled
     expect(screen.getByDisplayValue('Great dinner')).toBeInTheDocument()
+  })
+
+  it('edit mode pre-fills originalAmount as decimal (not cents) when currency conversion is active', () => {
+    const expenseWithConversion = {
+      ...mockExpense,
+      originalCurrency: 'EUR',
+      originalAmount: 5000, // €50.00 in cents (stored as minor units)
+      conversionRate: { toNumber: () => 1.1 } as any,
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expenseWithConversion as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // The conversion rate input should be visible (confirms conversion mode is active)
+    expect(screen.getByDisplayValue('1.1')).toBeInTheDocument()
+
+    // The originalAmount input should show '50' (decimal), not '5000' (cents)
+    const originalAmountInput = screen.getByRole('textbox', {
+      name: /amount to convert/i,
+    })
+    expect(originalAmountInput).toHaveValue('50')
+  })
+
+  it('submit converts originalAmount to minor units when currency conversion is active', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={
+          {
+            ...mockGroup,
+            participants: [
+              { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+            ],
+          } as any
+        }
+        expense={
+          {
+            ...mockExpense,
+            originalCurrency: 'EUR',
+            originalAmount: 5000,
+            conversionRate: { toNumber: () => 1.1 } as any,
+            paidFor: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
+          } as any
+        }
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const saveButton = screen.getByRole('button', { name: /save/i })
+    await user.click(saveButton)
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    const submittedValues = onSubmit.mock.calls[0][0]
+    expect(submittedValues).toHaveProperty('originalAmount', 5000)
+    expect(submittedValues).toHaveProperty('originalCurrency', 'EUR')
+  })
+
+  it('deletes originalAmount and originalCurrency when currencies match', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={
+          {
+            ...mockGroup,
+            participants: [
+              { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+            ],
+          } as any
+        }
+        expense={
+          {
+            ...mockExpense,
+            originalCurrency: 'USD',
+            originalAmount: 5000,
+            conversionRate: { toNumber: () => 1 } as any,
+            paidFor: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
+          } as any
+        }
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const saveButton = screen.getByRole('button', { name: /save/i })
+    await user.click(saveButton)
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    const submittedValues = onSubmit.mock.calls[0][0]
+    expect(submittedValues).not.toHaveProperty('originalAmount')
+    expect(submittedValues).not.toHaveProperty('originalCurrency')
   })
 
   it('split mode toggle changes UI (advanced options)', async () => {

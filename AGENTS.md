@@ -45,11 +45,11 @@ bun run test:integration
 
 ### Test architecture
 
-| Suite                      | Command                | DB needed | API server needed | Speed   |
-| -------------------------- | ---------------------- | --------- | ----------------- | ------- |
-| Unit tests (mock)          | `bun test`             | No        | No                | ~3s     |
-| API integration (real DB)  | `bun test:integration` | Yes       | No                | ~5s     |
-| Web integration (real API) | `bun test:integration` | Yes       | Yes               | ~5s     |
+| Suite                                 | Command                | DB needed | API server needed | Speed   |
+| ------------------------------------- | ---------------------- | --------- | ----------------- | ------- |
+| Unit tests (mock)                     | `bun test`             | No        | No                | ~3s     |
+| API integration (real DB)             | `bun test:integration` | Yes       | No                | ~5s     |
+| Web integration (real API)            | `bun test:integration` | Yes       | Yes               | ~5s     |
 | E2E (Playwright) (broken, do not run) | `bun test-e2e`         | Yes       | Starts both       | Minutes |
 
 Default `bun test` runs all mock-based tests and skips integration suites.
