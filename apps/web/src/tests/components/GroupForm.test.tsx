@@ -68,6 +68,8 @@ const mockGroup = {
     currency: '$',
     currencyCode: 'USD',
     groupId: 'group-1',
+    createdAt: new Date('2025-01-01'),
+    updatedAt: new Date('2025-01-01'),
   },
   members: [],
   invitations: [],

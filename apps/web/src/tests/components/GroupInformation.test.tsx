@@ -33,6 +33,39 @@ import {
 } from '@/app/groups/[groupId]/current-group-context'
 import GroupInformation from '@/app/groups/[groupId]/information/group-information'
 
+// ── Fixtures ────────────────────────────────────────────────────────────
+
+const mockGroup = {
+  id: 'group-1',
+  name: 'Trip',
+  information: 'We are going to Paris!',
+  archived: false,
+  createdAt: new Date('2025-01-01'),
+  updatedAt: new Date('2025-01-01'),
+  ledgerId: 'ledger-1',
+  currency: 'EUR',
+  currencyCode: 'EUR',
+  ledger: {
+    id: 'ledger-1',
+    currency: 'EUR',
+    currencyCode: 'EUR',
+    groupId: 'group-1',
+    createdAt: new Date('2025-01-01'),
+    updatedAt: new Date('2025-01-01'),
+  },
+  participants: [
+    { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+  ],
+  members: [],
+  invitations: [],
+}
+
+const mockMember = {
+  id: 'cm-1',
+  role: 'ADMIN' as const,
+  status: 'ACTIVE' as const,
+}
+
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('GroupInformation', () => {
@@ -63,15 +96,9 @@ describe('GroupInformation', () => {
     vi.mocked(useCurrentGroup).mockReturnValue({
       isLoading: false,
       groupId: 'group-1',
-      group: {
-        id: 'group-1',
-        name: 'Trip',
-        information: 'We are going to Paris!',
-        archived: false,
-        currency: 'EUR',
-      },
+      group: mockGroup,
       currentLedgerParticipantId: 'lp-1',
-      currentMember: { id: 'cm-1', role: 'ADMIN' },
+      currentMember: mockMember,
       currentInvitation: null,
       linkInviteState: null,
     })
@@ -89,15 +116,9 @@ describe('GroupInformation', () => {
     vi.mocked(useCurrentGroup).mockReturnValue({
       isLoading: false,
       groupId: 'group-1',
-      group: {
-        id: 'group-1',
-        name: 'Trip',
-        information: null,
-        archived: false,
-        currency: 'EUR',
-      },
+      group: { ...mockGroup, information: null },
       currentLedgerParticipantId: 'lp-1',
-      currentMember: { id: 'cm-1', role: 'ADMIN' },
+      currentMember: mockMember,
       currentInvitation: null,
       linkInviteState: null,
     })
@@ -112,15 +133,9 @@ describe('GroupInformation', () => {
     vi.mocked(useCurrentGroup).mockReturnValue({
       isLoading: false,
       groupId: 'group-1',
-      group: {
-        id: 'group-1',
-        name: 'Trip',
-        information: 'Some info',
-        archived: false,
-        currency: 'EUR',
-      },
+      group: mockGroup,
       currentLedgerParticipantId: 'lp-1',
-      currentMember: { id: 'cm-1', role: 'ADMIN' },
+      currentMember: mockMember,
       currentInvitation: null,
       linkInviteState: null,
     })
@@ -140,16 +155,14 @@ describe('GroupInformation', () => {
     vi.mocked(useCurrentGroup).mockReturnValue({
       isLoading: false,
       groupId: 'group-1',
-      group: {
-        id: 'group-1',
-        name: 'Trip',
-        information: 'Some info',
-        archived: false,
-        currency: 'EUR',
-      },
+      group: mockGroup,
       currentLedgerParticipantId: null,
       currentMember: null,
-      currentInvitation: { id: 'inv-1', email: 'test@example.com' },
+      currentInvitation: {
+        id: 'inv-1',
+        role: 'MEMBER',
+        type: 'EMAIL',
+      },
       linkInviteState: null,
     })
     vi.mocked(useIsPendingInvitee).mockReturnValue(true)

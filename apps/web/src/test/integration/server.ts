@@ -12,10 +12,9 @@
  * - Migrations must be up to date (run `bun prisma-migrate` first).
  */
 
-import { serve } from '@hono/node-server'
-import type { Server } from 'node:http'
+import { serve, type ServerType } from '@hono/node-server'
 
-let server: Server | null = null
+let server: ServerType | null = null
 
 /**
  * Start the API server on a random available port.
@@ -30,21 +29,22 @@ export async function startTestServer(): Promise<{
   const { app } = await import('@spliit/api/app')
 
   return new Promise((resolve, reject) => {
-    server = serve({ fetch: app.fetch, port: 0 }, (listener: Server) => {
-      const addr = listener.address()
-      if (!addr || typeof addr === 'string') {
-        reject(new Error('Could not determine server address'))
+    server = serve({ fetch: app.fetch, port: 0 }, (info) => {
+      const handle = server
+      if (!handle) {
+        reject(new Error('Server handle missing after listen'))
         return
       }
       resolve({
-        port: addr.port,
-        close: () => closeTestServer(listener),
+        port: info.port,
+        close: () => closeTestServer(handle),
       })
     })
+    server?.once('error', reject)
   })
 }
 
-async function closeTestServer(s: Server) {
+async function closeTestServer(s: ServerType) {
   await new Promise<void>((resolve, reject) => {
     s.close((err) => (err ? reject(err) : resolve()))
   })

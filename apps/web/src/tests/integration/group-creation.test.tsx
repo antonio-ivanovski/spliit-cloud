@@ -176,10 +176,25 @@ describeIntegration('Group creation integration', () => {
         name: testGroup.name,
         information: null,
         archived: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ledgerId: 'ledger-dummy',
         currency: 'EUR',
+        currencyCode: 'EUR',
+        ledger: {
+          id: 'ledger-dummy',
+          currency: 'EUR',
+          currencyCode: 'EUR',
+          groupId: testGroup.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        participants: [],
+        members: [],
+        invitations: [],
       },
       currentLedgerParticipantId: 'lp-dummy',
-      currentMember: { id: 'cm-dummy', role: 'ADMIN' },
+      currentMember: { id: 'cm-dummy', role: 'ADMIN', status: 'ACTIVE' },
       currentInvitation: null,
       linkInviteState: null,
     })
@@ -205,8 +220,20 @@ describeIntegration('Group creation integration', () => {
         id: testGroup.id,
         name: testGroup.name,
         archived: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ledgerId: 'ledger-dummy',
+        information: null,
         currency: 'EUR',
         currencyCode: 'EUR',
+        ledger: {
+          id: 'ledger-dummy',
+          currency: 'EUR',
+          currencyCode: 'EUR',
+          groupId: testGroup.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
         participants: [
           {
             id: 'lp-dummy',
@@ -215,9 +242,11 @@ describeIntegration('Group creation integration', () => {
             unlinked: false,
           },
         ],
+        members: [],
+        invitations: [],
       },
       currentLedgerParticipantId: 'lp-dummy',
-      currentMember: { id: 'cm-dummy', role: 'ADMIN' },
+      currentMember: { id: 'cm-dummy', role: 'ADMIN', status: 'ACTIVE' },
       currentInvitation: null,
       linkInviteState: null,
     })
@@ -230,27 +259,27 @@ describeIntegration('Group creation integration', () => {
       id: testExpense.id,
       title: testExpense.title,
       amount: testExpense.amount,
-      categoryId: 'food',
-      category: 'food',
+      categoryId: 'general',
+      category: { id: 'general', grouping: 'General', name: 'General' },
       expenseDate: new Date(),
       createdAt: new Date(),
       paidBy: { id: 'lp-dummy', name: 'You' },
       paidFor: [
         {
           ledgerParticipant: { id: 'lp-dummy', name: 'You' },
-          shares: null,
+          shares: 1,
         },
       ],
       isReimbursement: false,
-      splitMode: 'EQUAL' as const,
-      recurrenceRule: null,
+      splitMode: 'EVENLY' as const,
+      recurrenceRule: 'NONE' as const,
       _count: { documents: 0 },
     }
 
     render(
       <ExpenseCard
-        expense={expenseData}
-        currency={{ symbol: '€', code: 'EUR', name: 'Euro' }}
+        expense={expenseData as any}
+        currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
         groupId={testGroup.id}
         participantCount={1}
       />,
@@ -274,11 +303,18 @@ describeIntegration('Group creation integration', () => {
       linkInviteToken: undefined,
     })
 
-    // BalancesList expects { [participantId]: { total: number } }
-    const balancesMap: Record<string, { total: number }> = {}
+    // BalancesList expects { [participantId]: { paid, paidFor, total } }
+    const balancesMap: Record<
+      string,
+      { paid: number; paidFor: number; total: number }
+    > = {}
     if (balancesResult.balances) {
       for (const b of balancesResult.balances) {
-        balancesMap[b.participant.id] = { total: b.balance }
+        balancesMap[b.participant.id] = {
+          paid: 0,
+          paidFor: 0,
+          total: b.balance,
+        }
       }
     }
 
@@ -294,7 +330,7 @@ describeIntegration('Group creation integration', () => {
       <BalancesList
         balances={balancesMap}
         participants={participants}
-        currency={{ symbol: '€', code: 'EUR', name: 'Euro' }}
+        currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
       />,
     )
 

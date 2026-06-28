@@ -47,12 +47,15 @@ import { useActiveUser } from '@/lib/hooks'
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
 
-function makeExpense(overrides: Record<string, unknown> = {}) {
+function makeExpense(overrides: Record<string, unknown> = {}): any {
   return {
     id: 'exp-1',
     title: 'Dinner',
     amount: 3000, // €30.00
     expenseDate: new Date('2025-06-15T00:00:00.000Z'),
+    createdAt: new Date('2025-06-15T00:00:00.000Z'),
+    categoryId: 'general' as const,
+    recurrenceRule: 'NONE' as const,
     isReimbursement: false,
     splitMode: 'EVENLY' as const,
     paidBy: { id: 'user-alice', name: 'Alice' },
@@ -62,7 +65,7 @@ function makeExpense(overrides: Record<string, unknown> = {}) {
         shares: 1,
       },
     ],
-    category: { grouping: 'Food and Drink', name: 'Dining Out' },
+    category: { id: 'general', grouping: 'Food and Drink', name: 'Dining Out' },
     _count: { documents: 0 },
     ...overrides,
   }

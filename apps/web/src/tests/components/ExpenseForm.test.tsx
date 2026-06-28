@@ -14,7 +14,7 @@ const mockUseMutation = vi.fn(() => ({
   mutateAsync: vi.fn().mockResolvedValue({ categoryId: 'general' }),
 }))
 
-const mockUseQuery = vi.fn(() => ({
+const mockUseQuery = vi.fn((_opts?: unknown) => ({
   data: undefined,
   error: null,
   isLoading: false,

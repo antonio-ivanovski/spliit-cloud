@@ -82,30 +82,28 @@ describe('ThemeProvider', () => {
     // Override matchMedia so it reports dark mode preference
     const listeners: Record<
       string,
-      Array<(e: MediaQueryListEvent) => void>
+      Array<EventListenerOrEventListenerObject>
     > = {}
     vi.spyOn(window, 'matchMedia').mockImplementation(
       (query: string): MediaQueryList => ({
         matches: true,
         media: query,
         onchange: null,
-        addListener: () => {},
-        removeListener: () => {},
-        addEventListener: (
-          event: string,
-          cb: (e: MediaQueryListEvent) => void,
-        ) => {
-          if (!listeners[event]) listeners[event] = []
-          listeners[event].push(cb)
-        },
-        removeEventListener: (
-          event: string,
-          cb: (e: MediaQueryListEvent) => void,
-        ) => {
-          if (listeners[event]) {
-            listeners[event] = listeners[event].filter((l) => l !== cb)
-          }
-        },
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(
+          (event: string, cb: EventListenerOrEventListenerObject) => {
+            if (!listeners[event]) listeners[event] = []
+            listeners[event].push(cb)
+          },
+        ),
+        removeEventListener: vi.fn(
+          (event: string, cb: EventListenerOrEventListenerObject) => {
+            if (listeners[event]) {
+              listeners[event] = listeners[event].filter((l) => l !== cb)
+            }
+          },
+        ),
         dispatchEvent: () => true,
       }),
     )

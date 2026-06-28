@@ -49,7 +49,7 @@ vi.mock('@/trpc/client', () => ({
 function mockAccount(
   overrides: Partial<{
     id: string
-    name: string | null
+    name: string
     email: string
     emailVerified: boolean
     image: string | null
@@ -59,7 +59,7 @@ function mockAccount(
 ) {
   const defaults = {
     id: 'user-1',
-    name: null as string | null,
+    name: 'Alice',
     email: 'alice@example.com',
     emailVerified: true,
     image: null as string | null,
@@ -125,7 +125,7 @@ describe('CompleteProfilePage', () => {
 
   it('shows form when account has no name', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
-      data: mockAccount({ name: null }),
+      data: mockAccount({ name: '' }),
       isPending: false,
       isRefetching: false,
       error: null,
@@ -146,7 +146,7 @@ describe('CompleteProfilePage', () => {
 
   it('shows error when name is empty', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
-      data: mockAccount({ name: null }),
+      data: mockAccount({ name: '' }),
       isPending: false,
       isRefetching: false,
       error: null,
@@ -166,7 +166,7 @@ describe('CompleteProfilePage', () => {
 
   it('shows error when name is too short (< 2 chars)', async () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
-      data: mockAccount({ name: null }),
+      data: mockAccount({ name: '' }),
       isPending: false,
       isRefetching: false,
       error: null,
@@ -194,7 +194,7 @@ describe('CompleteProfilePage', () => {
     mockNavigate.mockResolvedValue(undefined)
 
     vi.mocked(useCurrentAccount).mockReturnValue({
-      data: mockAccount({ name: null }),
+      data: mockAccount({ name: '' }),
       isPending: false,
       isRefetching: false,
       error: null,
