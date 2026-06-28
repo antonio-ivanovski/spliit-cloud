@@ -49,9 +49,9 @@ export const spliitExportSchema = z.object({
         })
         .optional()
         .nullable(),
-      originalAmount: z.number().int().nullable().optional(),
+      originalAmount: z.coerce.number().int().nullable().optional(),
       originalCurrency: z.string().length(3).nullable().optional(),
-      conversionRate: z.number().nullable().optional(),
+      conversionRate: z.coerce.number().nullable().optional(),
       notes: z.string().optional(),
     }),
   ),
