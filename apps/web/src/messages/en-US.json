@@ -32,7 +32,8 @@
       "github": "GitHub",
       "signIn": "Sign in to Spliit Cloud",
       "createAccount": "Create an account",
-      "createGroup": "Create a group"
+      "createGroup": "Create a group",
+      "importGroup": "Import group from another service"
     },
     "welcomeBack": "Welcome back, {name}."
   },
@@ -150,6 +151,12 @@
       "text": "This group does not exist.",
       "link": "Go to home"
     },
+    "Importable": {
+      "title": "Found this group on spliit.app",
+      "description": "\"{name}\" is reachable on spliit.app. Would you like to import it into Spliit Cloud?",
+      "cta": "Import this group",
+      "backToHome": "Go to home"
+    },
     "Unauthorized": {
       "title": "You don't have access to this group",
       "description": "If you believe this is a mistake, ask a group owner or admin to invite you.",
@@ -179,7 +186,122 @@
       "title": "This invite link is invalid",
       "description": "The link is malformed or doesn't match any invitation on this group."
     },
-    "backToHome": "Back to home"
+    "backToHome": "Back to home",
+    "Import": {
+      "StepHeader": {
+        "title": "Import a group",
+        "source": "1. Source",
+        "destination": "2. Destination",
+        "mapping": "3. Mapping",
+        "confirm": "4. Confirm",
+        "done": "5. Done",
+        "backAriaLabel": "Back"
+      },
+      "fetchingGroup": "Fetching the group from spliit.app…",
+      "notFound": "Spliit did not find this group",
+      "fetchSourceError": "Failed to fetch the source",
+      "Source": {
+        "fromSpliit": "From Spliit",
+        "splitwise": "Splitwise (coming soon)",
+        "tricount": "Tricount (coming soon)",
+        "settleUp": "Settle Up (coming soon)",
+        "spliitDescription": "Bring an existing spliit.app group into Spliit Cloud. We read the group name, participants, and every expense.",
+        "splitwiseComingTitle": "Splitwise import is on the way",
+        "splitwiseComingDescription": "We're working on bringing Splitwise CSV exports into Spliit Cloud. The flow will be available here once it ships — no need to re-import anything in the meantime.",
+        "tricountComingTitle": "Tricount import is on the way",
+        "tricountComingDescription": "Tricount CSV export support is on the roadmap.",
+        "settleUpComingTitle": "Settle Up import is on the way",
+        "settleUpComingDescription": "Settle Up CSV export support is on the roadmap.",
+        "dropFile": "Drop a JSON or CSV file, or click to select",
+        "dropFileDescription": "JSON preserves every amount and payer exactly. CSV is a fallback — Spliit rounds each per-participant amount to 2 decimals.",
+        "or": "or",
+        "pasteUrl": "Paste a spliit.app URL",
+        "urlDescription": "Our server fetches the group through the spliit.app public export endpoint on your behalf.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "Importing…",
+        "fetchGroupButton": "Import group",
+        "receiptWarningTitle": "Receipt images are not imported.",
+        "receiptWarningDescription": "The spliit.app export does not include receipt images. Re-upload them in the destination group if you need them.",
+        "invalidUrl": "Please paste a valid spliit.app group URL",
+        "notFoundUrl": "Spliit did not find this group",
+        "fetchUrlError": "Failed to fetch the source",
+        "fileReadError": "Failed to read the file",
+        "appToCloudDescription": "Change .app to .cloud in any spliit.app group URL to import it into Spliit Cloud.",
+        "appToCloudTitle": "Swap .app for .cloud"
+      },
+      "Destination": {
+        "heading": "Where would you like to import <strong>{name}</strong>? ({participantCount} participants · {expenseCount} expenses)",
+        "newGroup": "New group",
+        "existingGroup": "Existing group",
+        "loading": "Loading…",
+        "noAdminGroups": "You don't administer any group yet.",
+        "memberCount": "{count} members"
+      },
+      "Mapping": {
+        "headsUp": "Heads up",
+        "noLinkAccount": "No participant is linked to your account. The importer (you) will be created as a fresh owner participant on the imported group — their share of the imported expenses will be zero until you link a source row to your account or invite yourself.",
+        "continue": "Continue to confirm",
+        "Row": {
+          "linkToMe": "Link to me",
+          "linkToMeDescription": "Connects this person to your account.",
+          "linkToMeFollowUp": "{name} will be linked to your account on this group. Their past and future expenses will appear under your name.",
+          "inviteByEmail": "Invite by email",
+          "inviteByEmailDescription": "Sends an invite mail after the import commits.",
+          "inviteeEmailLabel": "Invitee email",
+          "inviteeEmailPlaceholder": "invitee@example.com",
+          "selfEmailDetected": "That's your email — switched to \"Link to me\".",
+          "inviteByLink": "Invite by link",
+          "inviteByLinkDescription": "Generates a shareable URL on the Done step.",
+          "inviteByLinkFollowUp": "We'll generate a single-use shareable URL after the import commits. You'll find it on the Done step — copy and send it to {name} yourself.",
+          "linkToExisting": "Link to existing member",
+          "linkToExistingDescription": "Maps this person to an existing active member or pending invite in the destination group. No new participant is created.",
+          "selectExistingMember": "Select existing member",
+          "selectExistingPlaceholder": "Pick an existing member…",
+          "membersLabel": "Members",
+          "pendingInvitesLabel": "Pending invites",
+          "pendingSuffix": "(pending)",
+          "leaveUnlinked": "Leave unlinked",
+          "leaveUnlinkedDescription": "Keeps the name only — link later from Members.",
+          "leaveUnlinkedFollowUp": "{name} will appear as a name-only entry with no app access. You can link them to an account later from the Members tab."
+        },
+        "Errors": {
+          "duplicateExistingMember": "Two source rows are mapped to the same existing member.",
+          "inviteConflictsPending": "You're inviting {email} but they're already a pending invite; link to them instead.",
+          "inviteConflictsMember": "You're inviting {email} but they're already a member of this group; link to them instead.",
+          "duplicateMemberName": "Two existing members look like the same person — pick one.",
+          "onlyOneLinkedAccount": "Only one source row can be linked to your account.",
+          "missingExistingMember": "Pick an existing member to link to.",
+          "missingEmail": "Add an email address to invite by email.",
+          "selfEmailAddress": "This is your email — pick \"Link to me\" instead.",
+          "duplicateEmail": "This email is already invited from another row."
+        }
+      },
+      "Confirm": {
+        "destinationLabel": "Destination",
+        "newGroupFormat": "New group · {currency}",
+        "existingGroupFormat": "Existing group · merged",
+        "summaryLabel": "Summary",
+        "sourceParticipants": "{count} source participants",
+        "participantBreakdown": "{linked} linked · {email} email invites · {link} link invites · {unlinked} unlinked",
+        "expenseCount": "{count} expenses will be created",
+        "sourceName": "Source: {name}",
+        "footer": "Every source participant and expense will be imported. Invitations are sent / generated after the group is created.",
+        "importingButton": "Importing…",
+        "importButton": "Import group"
+      },
+      "Done": {
+        "importComplete": "Import complete",
+        "description": "Your imported group is ready. You can adjust participants, link unlinked entries to accounts, or edit any expense as usual.",
+        "openGroup": "Open group",
+        "shareableLinksTitle": "Shareable invite links",
+        "shareableLinksDescription": "Copy each link and send it to the matching person. The link is single-use; they join the group as soon as they open it.",
+        "shareAriaLabel": "Share invite link",
+        "emailInvitesTitle": "Email invites sent",
+        "emailInvitesDescription": "The server emailed the following people. They'll see an Accept/Decline banner in the group page when they sign in.",
+        "shareTitle": "Join my Spliit group",
+        "shareText": "Join our expense group on Spliit Cloud — {name}. Open this link to accept: {url}"
+      }
+    }
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -808,6 +930,28 @@
         "unsettled": "Settle your balance or confirm forced settlement to leave."
       },
       "confirmDelete": "Delete and leave"
+    },
+    "unlinked": {
+      "title": "Unlinked participants",
+      "description": "These people have a name in the group but no app account yet. Link each to an existing account to associate their expenses with that user.",
+      "emailPlaceholder": "account@example.com",
+      "link": "Link to account",
+      "linkSuccess": "Participant linked to account",
+      "idHint": "Ledger participant id: {id}",
+      "linkDialog": {
+        "title": "Link unlinked participant",
+        "description": "Pick the existing member that {displayName} should be linked to. The destination must not already be on the opposite side of an expense leg with this participant.",
+        "membersGroup": "Members",
+        "cancel": "Cancel",
+        "confirm": "Link",
+        "noCandidates": "No compatible members found. This usually means this unlinked participant is on both sides of an expense leg with every other member — the import needs to be redone or expenses adjusted first.",
+        "pendingLabel": "pending",
+        "pendingHint": "Linking to a pending invitation merges this name-only entry into the invitee. The invitee keeps their own row; the merged references now resolve through it when they accept.",
+        "membersGroupWithPending": "Members and pending invitations",
+        "pendingGroup": "Pending invites",
+        "pendingSuffix": "(pending)"
+      },
+      "linkButton": "Link"
     }
   }
 }

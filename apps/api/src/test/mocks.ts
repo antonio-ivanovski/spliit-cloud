@@ -71,6 +71,10 @@ vi.mock('@spliit/db', () => {
       WEEKLY: 'WEEKLY',
       MONTHLY: 'MONTHLY',
     },
+    LedgerParticipantKind: {
+      ACCOUNT_MEMBER: 'ACCOUNT_MEMBER',
+      UNLINKED_PARTICIPANT: 'UNLINKED_PARTICIPANT',
+    },
     Prisma: {
       Decimal: { isDecimal: (_v: unknown) => false },
     },

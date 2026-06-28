@@ -121,6 +121,17 @@ model Ledger {
   group Group?
 }
 
+enum LedgerParticipantKind {
+  // Account-backed group member. `groupMemberId` is non-null and the
+  // display name resolves through the `Account.name` relation.
+  ACCOUNT_MEMBER
+  // Name-only entry that has no account and no app access. `groupMemberId`
+  // is null and `displayName` carries the human-readable label. Used
+  // exclusively for imported groups: a one-way admin link migrates an
+  // unlinked entry to ACCOUNT_MEMBER.
+  UNLINKED_PARTICIPANT
+}
+
 model LedgerParticipant {
   id            String       @id
   ledger        Ledger       @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
@@ -128,6 +139,13 @@ model LedgerParticipant {
   // Backing group membership, if this participant is an account-backed group member.
   groupMember   GroupMember? @relation(fields: [groupMemberId], references: [id])
   groupMemberId String?      @unique
+  // Discriminator between account-backed and name-only participants.
+  // Default is ACCOUNT_MEMBER; UNLINKED_PARTICIPANT is only ever created
+  // by the import path.
+  kind          LedgerParticipantKind @default(ACCOUNT_MEMBER)
+  // Display label for UNLINKED_PARTICIPANT rows. Null for account-backed
+  // rows (the display name is resolved through `groupMember.account.name`).
+  displayName   String?
 
   expensesPaidBy  Expense[]
   expensesPaidFor ExpensePaidFor[]

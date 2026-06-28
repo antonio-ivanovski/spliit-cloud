@@ -1,0 +1,339 @@
+{
+  "id": "99hWo7yVasdbL0ZfEwfsWa",
+  "name": "Test Import Complex Group",
+  "currency": "€",
+  "currencyCode": "EUR",
+  "expenses": [
+    {
+      "createdAt": "2026-06-28T00:42:49.883Z",
+      "expenseDate": "2026-06-01T00:00:00.000Z",
+      "title": "Dinner at restaurant",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 4500,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "7VOQsE0V1nnXkkk3p1xo3",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 100
+        },
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 100
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:28.224Z",
+      "expenseDate": "2026-06-01T00:00:00.000Z",
+      "title": "Dinner at restaurant",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 6000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "7VOQsE0V1nnXkkk3p1xo3",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 100
+        },
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 100
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:37.183Z",
+      "expenseDate": "2026-06-01T00:00:00.000Z",
+      "title": "Monthly rent",
+      "category": {
+        "grouping": "Home",
+        "name": "Rent"
+      },
+      "amount": 60000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "HeQzCYaVTMVlYD7qUBRZg",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 30000
+        },
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 20000
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 10000
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_AMOUNT",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:50.111Z",
+      "expenseDate": "2026-06-01T00:00:00.000Z",
+      "title": "Netflix subscription",
+      "category": {
+        "grouping": "Entertainment",
+        "name": "Movies"
+      },
+      "amount": 1500,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "7VOQsE0V1nnXkkk3p1xo3",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 100
+        },
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 100
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "MONTHLY"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:50.925Z",
+      "expenseDate": "2026-06-01T00:00:00.000Z",
+      "title": "Gym membership",
+      "category": {
+        "grouping": "Life",
+        "name": "Childcare"
+      },
+      "amount": 3000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "mAbTdLx3Koz4ztk6WSUJy",
+      "paidFor": [
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 100
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "WEEKLY"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:51.679Z",
+      "expenseDate": "2026-06-01T00:00:00.000Z",
+      "title": "Daily parking",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Parking"
+      },
+      "amount": 500,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "HeQzCYaVTMVlYD7qUBRZg",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 100
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "DAILY"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:36.381Z",
+      "expenseDate": "2026-06-03T00:00:00.000Z",
+      "title": "Weekly groceries",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 12000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "mAbTdLx3Koz4ztk6WSUJy",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 200
+        },
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 300
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:36.783Z",
+      "expenseDate": "2026-06-05T00:00:00.000Z",
+      "title": "Gas bill",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 8000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "7VOQsE0V1nnXkkk3p1xo3",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 5000
+        },
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 3000
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 2000
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_PERCENTAGE",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:49.741Z",
+      "expenseDate": "2026-06-10T00:00:00.000Z",
+      "title": "Bob reimburses Alice for dinner",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "Payment"
+      },
+      "amount": 2000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "mAbTdLx3Koz4ztk6WSUJy",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": true,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:50.508Z",
+      "expenseDate": "2026-06-15T00:00:00.000Z",
+      "title": "Hotel booking (USD)",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Hotel"
+      },
+      "amount": 45000,
+      "originalAmount": 50000,
+      "originalCurrency": "USD",
+      "conversionRate": "0.9",
+      "paidById": "mAbTdLx3Koz4ztk6WSUJy",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 100
+        },
+        {
+          "participantId": "mAbTdLx3Koz4ztk6WSUJy",
+          "shares": 100
+        },
+        {
+          "participantId": "HeQzCYaVTMVlYD7qUBRZg",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-06-28T00:43:51.304Z",
+      "expenseDate": "2026-06-20T00:00:00.000Z",
+      "title": "Personal shopping",
+      "category": {
+        "grouping": "Life",
+        "name": "Clothing"
+      },
+      "amount": 5000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "7VOQsE0V1nnXkkk3p1xo3",
+      "paidFor": [
+        {
+          "participantId": "7VOQsE0V1nnXkkk3p1xo3",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    }
+  ],
+  "participants": [
+    {
+      "id": "7VOQsE0V1nnXkkk3p1xo3",
+      "name": "Alice"
+    },
+    {
+      "id": "mAbTdLx3Koz4ztk6WSUJy",
+      "name": "Bob"
+    },
+    {
+      "id": "HeQzCYaVTMVlYD7qUBRZg",
+      "name": "Charlie"
+    }
+  ]
+}

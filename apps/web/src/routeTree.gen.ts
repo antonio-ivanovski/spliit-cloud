@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GroupsImportRouteImport } from './routes/groups/import'
 import { Route as GroupsCreateRouteImport } from './routes/groups/create'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
@@ -39,6 +40,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const GroupsImportRoute = GroupsImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => GroupsRouteRoute,
+} as any).lazy(() => import('./routes/groups/import.lazy').then((d) => d.Route))
 const GroupsCreateRoute = GroupsCreateRouteImport.update({
   id: '/create',
   path: '/create',
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/groups/create': typeof GroupsCreateRoute
+  '/groups/import': typeof GroupsImportRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/groups/create': typeof GroupsCreateRoute
+  '/groups/import': typeof GroupsImportRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/groups/create': typeof GroupsCreateRoute
+  '/groups/import': typeof GroupsImportRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/groups/create'
+    | '/groups/import'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/groups/create'
+    | '/groups/import'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/groups/create'
+    | '/groups/import'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -315,6 +327,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/groups/import': {
+      id: '/groups/import'
+      path: '/import'
+      fullPath: '/groups/import'
+      preLoaderRoute: typeof GroupsImportRouteImport
+      parentRoute: typeof GroupsRouteRoute
     }
     '/groups/create': {
       id: '/groups/create'
@@ -484,11 +503,13 @@ const GroupsGroupIdRouteRouteWithChildren =
 interface GroupsRouteRouteChildren {
   GroupsGroupIdRouteRoute: typeof GroupsGroupIdRouteRouteWithChildren
   GroupsCreateRoute: typeof GroupsCreateRoute
+  GroupsImportRoute: typeof GroupsImportRoute
 }
 
 const GroupsRouteRouteChildren: GroupsRouteRouteChildren = {
   GroupsGroupIdRouteRoute: GroupsGroupIdRouteRouteWithChildren,
   GroupsCreateRoute: GroupsCreateRoute,
+  GroupsImportRoute: GroupsImportRoute,
 }
 
 const GroupsRouteRouteWithChildren = GroupsRouteRoute._addFileChildren(

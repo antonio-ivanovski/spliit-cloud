@@ -1,0 +1,2023 @@
+{
+  "id": "s2LrTV4IIYMjs19OVxQ1x",
+  "name": "Spliit Export Group",
+  "currency": "€",
+  "currencyCode": "EUR",
+  "expenses": [
+    {
+      "createdAt": "2025-11-17T18:39:16.391Z",
+      "expenseDate": "2025-11-15T00:00:00.000Z",
+      "title": "Dures Bari",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Transportation"
+      },
+      "amount": 23000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:40:01.176Z",
+      "expenseDate": "2025-11-16T00:00:00.000Z",
+      "title": "Rome Sardinia ferry",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Transportation"
+      },
+      "amount": 21000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:40:53.141Z",
+      "expenseDate": "2025-11-16T00:00:00.000Z",
+      "title": "Gas MK-IT",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 4000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:42:23.726Z",
+      "expenseDate": "2025-11-16T00:00:00.000Z",
+      "title": "Bari-Rome Toll",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Car"
+      },
+      "amount": 3600,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 100
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:45:41.162Z",
+      "expenseDate": "2025-11-16T00:00:00.000Z",
+      "title": "Lidl пред траект",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 2000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:46:12.263Z",
+      "expenseDate": "2025-11-16T00:00:00.000Z",
+      "title": "Parking Rome ",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Parking"
+      },
+      "amount": 600,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:47:10.254Z",
+      "expenseDate": "2025-11-16T00:00:00.000Z",
+      "title": "Limon",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 1350,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:37:57.140Z",
+      "expenseDate": "2025-11-17T00:00:00.000Z",
+      "title": "Market",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 9700,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T18:55:06.306Z",
+      "expenseDate": "2025-11-17T00:00:00.000Z",
+      "title": "Suplementi i lekovi",
+      "category": {
+        "grouping": "Life",
+        "name": "Medical Expenses"
+      },
+      "amount": 11500,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 3000
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 7000
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_PERCENTAGE",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-17T23:01:40.301Z",
+      "expenseDate": "2025-11-17T00:00:00.000Z",
+      "title": "Pizza",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 5430,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-18T17:39:44.358Z",
+      "expenseDate": "2025-11-18T00:00:00.000Z",
+      "title": "Lidl",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 3880,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-19T14:40:40.005Z",
+      "expenseDate": "2025-11-19T00:00:00.000Z",
+      "title": "Conad market",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 2750,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-21T08:52:45.234Z",
+      "expenseDate": "2025-11-21T00:00:00.000Z",
+      "title": "Golden milk ingredients ",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 1700,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-21T20:06:17.371Z",
+      "expenseDate": "2025-11-21T00:00:00.000Z",
+      "title": "Groceries ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 3300,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-22T21:55:48.024Z",
+      "expenseDate": "2025-11-22T00:00:00.000Z",
+      "title": "Lidl ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 5900,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-23T16:30:48.282Z",
+      "expenseDate": "2025-11-23T00:00:00.000Z",
+      "title": "Palau Caffe ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 650,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-25T09:24:29.352Z",
+      "expenseDate": "2025-11-25T00:00:00.000Z",
+      "title": "Eurospin ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 3624,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 400
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-26T19:15:43.729Z",
+      "expenseDate": "2025-11-26T00:00:00.000Z",
+      "title": "Pizza ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 2100,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-27T20:04:05.346Z",
+      "expenseDate": "2025-11-27T00:00:00.000Z",
+      "title": "Eurospin ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 7142,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-29T10:40:15.599Z",
+      "expenseDate": "2025-11-29T00:00:00.000Z",
+      "title": "Gas ",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 6800,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 400
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-30T12:51:33.596Z",
+      "expenseDate": "2025-11-30T00:00:00.000Z",
+      "title": "Фокача",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 500,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-11-30T12:52:34.169Z",
+      "expenseDate": "2025-11-30T00:00:00.000Z",
+      "title": "Озиери Вино",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Liquor"
+      },
+      "amount": 2000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-01T20:28:12.375Z",
+      "expenseDate": "2025-12-01T00:00:00.000Z",
+      "title": "Conad ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 12233,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T16:52:58.518Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Gas",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 6750,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 400
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T16:53:27.200Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Gelato Esmeralda",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 900,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T16:53:51.424Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Cafe Oristano",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 320,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T16:54:17.509Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Cafe Algero",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 400,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T16:54:35.421Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Conad water",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 720,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T16:55:05.292Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Conad",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 7786,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T16:58:01.453Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Area 51",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 1350,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T18:45:51.835Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Margarita pizza parche ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 360,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T18:46:54.609Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Fonni kafe",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 380,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T18:47:18.096Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Fonni kesh ruchek",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 1500,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-08T22:24:27.473Z",
+      "expenseDate": "2025-12-08T00:00:00.000Z",
+      "title": "Conad",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 2915,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-11T17:36:22.326Z",
+      "expenseDate": "2025-12-11T00:00:00.000Z",
+      "title": "Rent 11.17-12.17",
+      "category": {
+        "grouping": "Home",
+        "name": "Rent"
+      },
+      "amount": 32000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 200
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-11T17:37:27.332Z",
+      "expenseDate": "2025-12-11T00:00:00.000Z",
+      "title": "Utilities 11-12",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 8000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-12T13:56:50.728Z",
+      "expenseDate": "2025-12-12T00:00:00.000Z",
+      "title": "Burgers ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 3150,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-12T20:07:09.517Z",
+      "expenseDate": "2025-12-12T00:00:00.000Z",
+      "title": "Conad ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 5166,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-14T11:31:27.861Z",
+      "expenseDate": "2025-12-14T00:00:00.000Z",
+      "title": "Cafe x2",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 1180,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-15T11:26:43.398Z",
+      "expenseDate": "2025-12-15T00:00:00.000Z",
+      "title": "Conad pred plazha",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 1013,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-22T18:01:58.933Z",
+      "expenseDate": "2025-12-16T00:00:00.000Z",
+      "title": "Pizza",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 3390,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-22T18:02:30.950Z",
+      "expenseDate": "2025-12-17T00:00:00.000Z",
+      "title": "Conad",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 16028,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-22T18:03:00.845Z",
+      "expenseDate": "2025-12-22T00:00:00.000Z",
+      "title": "Leb pekara",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 415,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-23T18:19:09.565Z",
+      "expenseDate": "2025-12-23T00:00:00.000Z",
+      "title": "Gas",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 7000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 400
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-23T19:48:06.275Z",
+      "expenseDate": "2025-12-23T00:00:00.000Z",
+      "title": "Carrefour",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 12282,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-27T17:53:37.724Z",
+      "expenseDate": "2025-12-27T00:00:00.000Z",
+      "title": "Podaroci",
+      "category": {
+        "grouping": "Life",
+        "name": "Gifts"
+      },
+      "amount": 1075,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 100
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-31T08:52:00.918Z",
+      "expenseDate": "2025-12-31T00:00:00.000Z",
+      "title": "Kafe posle plazha",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 400,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2025-12-31T08:52:45.755Z",
+      "expenseDate": "2025-12-31T00:00:00.000Z",
+      "title": "Conad ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 10712,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-01T15:33:35.654Z",
+      "expenseDate": "2026-01-01T00:00:00.000Z",
+      "title": "Cagliari smeshtaj",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 17000,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-03T16:07:08.909Z",
+      "expenseDate": "2026-01-03T00:00:00.000Z",
+      "title": "Gas",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 9600,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 400
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-03T16:08:24.636Z",
+      "expenseDate": "2026-01-03T00:00:00.000Z",
+      "title": "Fried seafood ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 1500,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-04T14:59:26.551Z",
+      "expenseDate": "2026-01-04T00:00:00.000Z",
+      "title": "Fashion Bella",
+      "category": {
+        "grouping": "Life",
+        "name": "Clothing"
+      },
+      "amount": 8100,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-04T15:06:39.519Z",
+      "expenseDate": "2026-01-04T00:00:00.000Z",
+      "title": "Pizza+Doner",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Food and Drink"
+      },
+      "amount": 2200,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-06T11:28:59.269Z",
+      "expenseDate": "2026-01-06T00:00:00.000Z",
+      "title": "Christmas shopping ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 6750,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-12T19:20:34.286Z",
+      "expenseDate": "2026-01-12T00:00:00.000Z",
+      "title": "Kafe plazha ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Dining Out"
+      },
+      "amount": 360,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-12T19:21:57.134Z",
+      "expenseDate": "2026-01-12T00:00:00.000Z",
+      "title": "Kirija + gas ",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 47400,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-13T19:53:07.015Z",
+      "expenseDate": "2026-01-13T00:00:00.000Z",
+      "title": "Conad ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 5240,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-21T19:54:51.924Z",
+      "expenseDate": "2026-01-21T00:00:00.000Z",
+      "title": "Conad ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 1710,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-21T19:55:15.393Z",
+      "expenseDate": "2026-01-21T00:00:00.000Z",
+      "title": "Conad",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 6302,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-21T19:55:40.822Z",
+      "expenseDate": "2026-01-21T00:00:00.000Z",
+      "title": "Conad",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 3617,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-23T14:42:16.568Z",
+      "expenseDate": "2026-01-23T00:00:00.000Z",
+      "title": "Conad",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 4314,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-23T21:06:21.551Z",
+      "expenseDate": "2026-01-23T00:00:00.000Z",
+      "title": "Refundacija erasmus",
+      "category": {
+        "grouping": "Life",
+        "name": "Education"
+      },
+      "amount": 24200,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "EVENLY",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-25T15:41:00.248Z",
+      "expenseDate": "2026-01-25T00:00:00.000Z",
+      "title": "Parmezan za doma",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 1594,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-25T15:41:57.749Z",
+      "expenseDate": "2026-01-25T00:00:00.000Z",
+      "title": "Carrefour ",
+      "category": {
+        "grouping": "Food and Drink",
+        "name": "Groceries"
+      },
+      "amount": 3186,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-30T10:01:20.511Z",
+      "expenseDate": "2026-01-30T00:00:00.000Z",
+      "title": "Kirija",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 30800,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-30T10:01:50.031Z",
+      "expenseDate": "2026-01-30T00:00:00.000Z",
+      "title": "Ferry",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Plane"
+      },
+      "amount": 20771,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "E85WHqddSutrP1IyNpjAC",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-31T06:40:10.124Z",
+      "expenseDate": "2026-01-31T00:00:00.000Z",
+      "title": "Gas",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 6700,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-31T06:46:25.454Z",
+      "expenseDate": "2026-01-31T00:00:00.000Z",
+      "title": "Patarina",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 260,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-31T07:08:39.241Z",
+      "expenseDate": "2026-01-31T00:00:00.000Z",
+      "title": "Patarina",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 260,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-31T08:51:10.678Z",
+      "expenseDate": "2026-01-31T00:00:00.000Z",
+      "title": "Patarina",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "General"
+      },
+      "amount": 890,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-31T12:32:51.712Z",
+      "expenseDate": "2026-01-31T00:00:00.000Z",
+      "title": "Патарина",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "Payment"
+      },
+      "amount": 1740,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        },
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-31T18:26:42.562Z",
+      "expenseDate": "2026-01-31T00:00:00.000Z",
+      "title": "Doplata za kola",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Car"
+      },
+      "amount": 8400,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-01-31T18:27:53.515Z",
+      "expenseDate": "2026-01-31T00:00:00.000Z",
+      "title": "Gorivo",
+      "category": {
+        "grouping": "Transportation",
+        "name": "Gas/Fuel"
+      },
+      "amount": 2200,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-02-14T15:50:20.725Z",
+      "expenseDate": "2026-02-14T00:00:00.000Z",
+      "title": "Dopolnitelno za struja",
+      "category": {
+        "grouping": "Utilities",
+        "name": "Electricity"
+      },
+      "amount": 6300,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 200
+        },
+        {
+          "participantId": "MBLO4_g_ACAZZ_ArAxw0u",
+          "shares": 300
+        }
+      ],
+      "isReimbursement": false,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    },
+    {
+      "createdAt": "2026-03-12T10:24:46.368Z",
+      "expenseDate": "2026-03-12T00:00:00.000Z",
+      "title": "Reimbursement",
+      "category": {
+        "grouping": "Uncategorized",
+        "name": "Payment"
+      },
+      "amount": 5192,
+      "originalAmount": null,
+      "originalCurrency": null,
+      "conversionRate": null,
+      "paidById": "MBLO4_g_ACAZZ_ArAxw0u",
+      "paidFor": [
+        {
+          "participantId": "E85WHqddSutrP1IyNpjAC",
+          "shares": 100
+        }
+      ],
+      "isReimbursement": true,
+      "splitMode": "BY_SHARES",
+      "recurrenceRule": "NONE"
+    }
+  ],
+  "participants": [
+    {
+      "id": "MBLO4_g_ACAZZ_ArAxw0u",
+      "name": "John "
+    },
+    {
+      "id": "E85WHqddSutrP1IyNpjAC",
+      "name": "Jane"
+    }
+  ]
+}

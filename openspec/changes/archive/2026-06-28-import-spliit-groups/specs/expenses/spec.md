@@ -24,5 +24,15 @@ The system SHALL normalize imported expense amounts to the destination Ledger ba
 
 #### Scenario: Imported converted expense
 
-- **WHEN** an imported expense has original currency and conversion data
-- **THEN** the system stores the Ledger-currency amount and preserves original conversion fields
+- **WHEN** an imported expense has original currency and conversion data in the source export
+- **THEN** the system stores the Ledger-currency amount and preserves the original conversion fields
+
+#### Scenario: Cross-currency import auto-fills original fields
+
+- **WHEN** the source group's currency code differs from the destination ledger's currency code
+- **THEN** each imported expense has `originalAmount` set to the source `amount`, `originalCurrency` set to the source currency code, and `conversionRate` set to `1` regardless of whether the source export carried conversion data
+
+#### Scenario: Same-currency import passes original fields through
+
+- **WHEN** the source and destination currency codes match
+- **THEN** the imported expenses preserve any `originalAmount`, `originalCurrency`, and `conversionRate` from the source export; absent fields remain absent
