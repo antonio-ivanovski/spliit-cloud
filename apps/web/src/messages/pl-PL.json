@@ -280,7 +280,9 @@
         "invalidUrl": "Wklej prawidłowy URL grupy spliit.app",
         "notFoundUrl": "Spliit nie znalazł tej grupy",
         "fetchUrlError": "Nie udało się pobrać źródła",
-        "fileReadError": "Nie udało się odczytać pliku"
+        "fileReadError": "Nie udało się odczytać pliku",
+        "appToCloudDescription": "Zamień .app na .cloud w dowolnym URL-u grupy spliit.app, aby zaimportować ją do Spliit Cloud.",
+        "appToCloudTitle": "Zamień .app na .cloud"
       },
       "StepHeader": {
         "title": "Importuj grupę",

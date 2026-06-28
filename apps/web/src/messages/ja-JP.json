@@ -280,7 +280,9 @@
         "invalidUrl": "有効な spliit.app グループ URL を貼り付けてください",
         "notFoundUrl": "Spliit はこのグループを見つけられませんでした",
         "fetchUrlError": "ソースの取得に失敗しました",
-        "fileReadError": "ファイルの読み取りに失敗しました"
+        "fileReadError": "ファイルの読み取りに失敗しました",
+        "appToCloudDescription": "spliit.app のグループ URL の .app を .cloud に変更して、Spliit Cloud にインポートしてください。",
+        "appToCloudTitle": ".app を .cloud に変更"
       },
       "StepHeader": {
         "title": "グループをインポート",

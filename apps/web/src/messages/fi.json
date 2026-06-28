@@ -280,7 +280,9 @@
         "invalidUrl": "Liitä kelvollinen spliit.app-ryhmän URL-osoite",
         "notFoundUrl": "Spliit ei löytänyt tätä ryhmää",
         "fetchUrlError": "Lähteen noutaminen epäonnistui",
-        "fileReadError": "Tiedoston lukeminen epäonnistui"
+        "fileReadError": "Tiedoston lukeminen epäonnistui",
+        "appToCloudDescription": "Vaihda .app .cloudiksi missä tahansa spliit.app-ryhmän URL-osoitteessa tuodaksesi ryhmän Spliit Cloudiin.",
+        "appToCloudTitle": "Vaihda .app .cloudiksi"
       },
       "StepHeader": {
         "title": "Tuo ryhmä",

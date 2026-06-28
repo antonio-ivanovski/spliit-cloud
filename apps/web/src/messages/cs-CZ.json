@@ -280,7 +280,9 @@
         "invalidUrl": "Vložte prosím platné URL skupiny spliit.app",
         "notFoundUrl": "Spliit tuto skupinu nenašel",
         "fetchUrlError": "Nepodařilo se načíst zdroj",
-        "fileReadError": "Nepodařilo se přečíst soubor"
+        "fileReadError": "Nepodařilo se přečíst soubor",
+        "appToCloudDescription": "Nahraďte .app za .cloud v libovolné URL skupiny spliit.app a importujte ji do Spliit Cloud.",
+        "appToCloudTitle": "Nahraďte .app za .cloud"
       },
       "StepHeader": {
         "title": "Importovat skupinu",

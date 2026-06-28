@@ -280,7 +280,9 @@
         "invalidUrl": "Lipiți un URL valid de grup spliit.app",
         "notFoundUrl": "Spliit nu a găsit acest grup",
         "fetchUrlError": "Nu s-a putut prelua sursa",
-        "fileReadError": "Nu s-a putut citi fișierul"
+        "fileReadError": "Nu s-a putut citi fișierul",
+        "appToCloudDescription": "Înlocuiți .app cu .cloud în orice URL de grup spliit.app pentru a-l importa în Spliit Cloud.",
+        "appToCloudTitle": "Înlocuiți .app cu .cloud"
       },
       "StepHeader": {
         "title": "Importați un grup",

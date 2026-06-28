@@ -280,7 +280,9 @@
         "invalidUrl": "אנא הדבק כתובת URL תקינה של קבוצת spliit.app",
         "notFoundUrl": "Spliit לא מצא קבוצה זו",
         "fetchUrlError": "נכשלה הבאת המקור",
-        "fileReadError": "נכשלה קריאת הקובץ"
+        "fileReadError": "נכשלה קריאת הקובץ",
+        "appToCloudDescription": "שנה .app ל-.cloud בכל כתובת URL של קבוצת spliit.app כדי לייבא אותה ל-Spliit Cloud.",
+        "appToCloudTitle": "החלף .app ב-.cloud"
       },
       "StepHeader": {
         "title": "ייבא קבוצה",

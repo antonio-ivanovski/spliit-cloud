@@ -280,7 +280,9 @@
         "invalidUrl": "Plak een geldige spliit.app-groeps-URL",
         "notFoundUrl": "Spliit heeft deze groep niet gevonden",
         "fetchUrlError": "Bron ophalen mislukt",
-        "fileReadError": "Bestand lezen mislukt"
+        "fileReadError": "Bestand lezen mislukt",
+        "appToCloudDescription": "Vervang .app door .cloud in elke spliit.app-groeps-URL om deze te importeren in Spliit Cloud.",
+        "appToCloudTitle": "Vervang .app door .cloud"
       },
       "StepHeader": {
         "title": "Importeer een groep",

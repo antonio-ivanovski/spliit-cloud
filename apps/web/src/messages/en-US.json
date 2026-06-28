@@ -225,7 +225,9 @@
         "invalidUrl": "Please paste a valid spliit.app group URL",
         "notFoundUrl": "Spliit did not find this group",
         "fetchUrlError": "Failed to fetch the source",
-        "fileReadError": "Failed to read the file"
+        "fileReadError": "Failed to read the file",
+        "appToCloudDescription": "Change .app to .cloud in any spliit.app group URL to import it into Spliit Cloud.",
+        "appToCloudTitle": "Swap .app for .cloud"
       },
       "Destination": {
         "heading": "Where would you like to import <strong>{name}</strong>? ({participantCount} participants · {expenseCount} expenses)",

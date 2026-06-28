@@ -280,7 +280,9 @@
         "invalidUrl": "Itsatsi baliozko spliit.app taldeko URL bat",
         "notFoundUrl": "Spliit-ek ez du talde hau aurkitu",
         "fetchUrlError": "Ezin izan da iturburua eskuratu",
-        "fileReadError": "Ezin izan da fitxategia irakurri"
+        "fileReadError": "Ezin izan da fitxategia irakurri",
+        "appToCloudDescription": "Ordeztu .app .cloud-ekin edozein spliit.app taldeko URL-an, Spliit Cloud-era inportatzeko.",
+        "appToCloudTitle": "Ordeztu .app .cloud-ekin"
       },
       "StepHeader": {
         "title": "Talde bat inportatu",

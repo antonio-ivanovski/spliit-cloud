@@ -280,7 +280,9 @@
         "invalidUrl": "Harap tempelkan URL grup spliit.app yang valid",
         "notFoundUrl": "Spliit tidak menemukan grup ini",
         "fetchUrlError": "Gagal mengambil sumber",
-        "fileReadError": "Gagal membaca file"
+        "fileReadError": "Gagal membaca file",
+        "appToCloudDescription": "Ubah .app menjadi .cloud di URL grup spliit.app mana pun untuk mengimpornya ke Spliit Cloud.",
+        "appToCloudTitle": "Ganti .app dengan .cloud"
       },
       "StepHeader": {
         "title": "Impor grup",

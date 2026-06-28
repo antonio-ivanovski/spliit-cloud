@@ -1,9 +1,6 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { trpc } from '@/trpc/client'
 import {
@@ -12,24 +9,60 @@ import {
   tryParseSpliitExport,
   type NormalizedSource,
 } from '@spliit/domain/import'
-import { AlertTriangle, Clock, FileUp, Globe } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { AlertTriangle, Clock } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { DomainSwapCard } from './domain-swap-card'
+import { FileUploadCard } from './file-upload-card'
+import { PasteUrlCard } from './paste-url-card'
 
 type Props = {
   onLoaded: (source: NormalizedSource) => void
   onError: (message: string) => void
+  prefillUrl?: string | null
 }
 
 type SourceMode = 'spliit' | 'splitwise' | 'tricount' | 'settleup'
 
-export function SourceStep({ onLoaded, onError }: Props) {
+export function SourceStep({ onLoaded, onError, prefillUrl }: Props) {
   const { t } = useTranslation()
   const [provider, setProvider] = useState<SourceMode>('spliit')
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState<string | null>(null)
   const previewFromUrl = trpc.groups.importPreview.useMutation()
   const [isDragging, setIsDragging] = useState(false)
+  const autoSubmittedRef = useRef(false)
+
+  // Auto-submit when the wizard passes a prefillUrl (from ?source=).
+  useEffect(() => {
+    if (!prefillUrl) return
+    if (autoSubmittedRef.current) return
+    autoSubmittedRef.current = true
+
+    setUrl(prefillUrl)
+    setUrlError(null)
+
+    previewFromUrl
+      .mutateAsync({ sourceUrl: prefillUrl })
+      .then((result) => {
+        if (result.kind === 'OK') {
+          onLoaded(result.source)
+          return
+        }
+        if (result.kind === 'NOT_FOUND') {
+          setUrlError(t('Groups.Import.Source.notFoundUrl'))
+          return
+        }
+        setUrlError(result.message)
+      })
+      .catch((err) => {
+        const message =
+          err instanceof Error
+            ? err.message
+            : t('Groups.Import.Source.fetchUrlError')
+        setUrlError(message)
+      })
+  }, [prefillUrl, previewFromUrl, onLoaded, t])
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -61,18 +94,52 @@ export function SourceStep({ onLoaded, onError }: Props) {
         onError(message)
       }
     },
-    [onError, onLoaded],
+    [onError, onLoaded, t],
+  )
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (file) handleFile(file)
+      e.target.value = ''
+    },
+    [handleFile],
+  )
+
+  const handleDragOver = useCallback(
+    (e: React.DragEvent) => {
+      if (provider !== 'spliit') return
+      e.preventDefault()
+      setIsDragging(true)
+    },
+    [provider],
+  )
+
+  const handleDragLeave = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      if (provider !== 'spliit') return
+      e.preventDefault()
+      setIsDragging(false)
+      const file = e.dataTransfer.files?.[0]
+      if (file) handleFile(file)
+    },
+    [provider, handleFile],
   )
 
   const handleUrlSubmit = useCallback(async () => {
     setUrlError(null)
-    const sourceGroupId = extractSpliitGroupIdFromUrl(url.trim())
+    const trimmed = url.trim()
+    const sourceGroupId = extractSpliitGroupIdFromUrl(trimmed)
     if (!sourceGroupId) {
       setUrlError(t('Groups.Import.Source.invalidUrl'))
       return
     }
     try {
-      const result = await previewFromUrl.mutateAsync({ sourceUrl: url.trim() })
+      const result = await previewFromUrl.mutateAsync({ sourceUrl: trimmed })
       if (result.kind === 'OK') {
         onLoaded(result.source)
         return
@@ -89,7 +156,15 @@ export function SourceStep({ onLoaded, onError }: Props) {
           : t('Groups.Import.Source.fetchUrlError')
       setUrlError(message)
     }
-  }, [url, previewFromUrl, onLoaded])
+  }, [url, previewFromUrl, onLoaded, t])
+
+  const handleUrlChange = useCallback(
+    (value: string) => {
+      setUrl(value)
+      if (urlError) setUrlError(null)
+    },
+    [urlError],
+  )
 
   const spliitDisabled = provider !== 'spliit'
 
@@ -168,91 +243,46 @@ export function SourceStep({ onLoaded, onError }: Props) {
 
       {provider === 'spliit' && (
         <>
-          <Card>
-            <CardContent className="flex flex-col gap-4 p-4">
-              <label
-                className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 transition ${
-                  spliitDisabled
-                    ? 'pointer-events-none opacity-50'
-                    : 'cursor-pointer hover:border-primary/60'
-                } ${isDragging ? 'border-primary bg-primary/5' : 'border-muted'}`}
-                onDragOver={(e) => {
-                  if (spliitDisabled) return
-                  e.preventDefault()
-                  setIsDragging(true)
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={(e) => {
-                  if (spliitDisabled) return
-                  e.preventDefault()
-                  setIsDragging(false)
-                  const file = e.dataTransfer.files?.[0]
-                  if (file) handleFile(file)
-                }}
-              >
-                <FileUp className="h-5 w-5 text-muted-foreground" />
-                <span className="text-sm font-medium">
-                  {t('Groups.Import.Source.dropFile')}
-                </span>
-                <span className="text-xs text-muted-foreground text-center max-w-md">
-                  {t('Groups.Import.Source.dropFileDescription')}
-                </span>
-                <input
-                  type="file"
-                  accept=".json,.csv,application/json,text/csv"
-                  className="hidden"
-                  disabled={spliitDisabled}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) handleFile(file)
-                    // Reset so the same file can be re-selected.
-                    e.target.value = ''
-                  }}
-                />
-              </label>
+          <DomainSwapCard
+            title={t('Groups.Import.Source.appToCloudTitle')}
+            description={t('Groups.Import.Source.appToCloudDescription')}
+            disabled={spliitDisabled}
+          />
 
-              <div className="flex items-center gap-3 text-xs uppercase tracking-wide text-muted-foreground">
-                <div className="h-px flex-1 bg-border" />
-                <span>{t('Groups.Import.Source.or')}</span>
-                <div className="h-px flex-1 bg-border" />
-              </div>
+          <OrDivider label={t('Groups.Import.Source.or')} />
 
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="spliit-url" className="flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-muted-foreground" />
-                  {t('Groups.Import.Source.pasteUrl')}
-                </Label>
-                <p className="text-xs text-muted-foreground">
-                  {t('Groups.Import.Source.urlDescription')}
-                </p>
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <Input
-                    id="spliit-url"
-                    placeholder={t('Groups.Import.Source.urlPlaceholder')}
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    disabled={spliitDisabled}
-                  />
-                  <Button
-                    onClick={handleUrlSubmit}
-                    disabled={
-                      previewFromUrl.isPending ||
-                      url.trim().length === 0 ||
-                      spliitDisabled
-                    }
-                    className="sm:w-auto"
-                  >
-                    {previewFromUrl.isPending
-                      ? t('Groups.Import.Source.fetchingButton')
-                      : t('Groups.Import.Source.fetchGroupButton')}
-                  </Button>
-                </div>
-                {urlError && (
-                  <p className="text-sm text-destructive">{urlError}</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <PasteUrlCard
+            disabled={spliitDisabled}
+            isPending={previewFromUrl.isPending}
+            url={url}
+            urlError={urlError}
+            onUrlChange={handleUrlChange}
+            onSubmit={handleUrlSubmit}
+            labels={{
+              pasteUrl: t('Groups.Import.Source.pasteUrl'),
+              urlDescription: t('Groups.Import.Source.urlDescription'),
+              urlPlaceholder: t('Groups.Import.Source.urlPlaceholder'),
+              fetchGroupButton: t('Groups.Import.Source.fetchGroupButton'),
+              fetchingButton: t('Groups.Import.Source.fetchingButton'),
+            }}
+          />
+
+          <OrDivider label={t('Groups.Import.Source.or')} />
+
+          <FileUploadCard
+            disabled={spliitDisabled}
+            isDragging={isDragging}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onFileChange={handleFileChange}
+            labels={{
+              dropFile: t('Groups.Import.Source.dropFile'),
+              dropFileDescription: t(
+                'Groups.Import.Source.dropFileDescription',
+              ),
+            }}
+          />
 
           <div className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
@@ -263,6 +293,16 @@ export function SourceStep({ onLoaded, onError }: Props) {
           </div>
         </>
       )}
+    </div>
+  )
+}
+
+function OrDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-3 text-xs uppercase tracking-wide text-muted-foreground">
+      <div className="h-px flex-1 bg-border" />
+      <span>{label}</span>
+      <div className="h-px flex-1 bg-border" />
     </div>
   )
 }

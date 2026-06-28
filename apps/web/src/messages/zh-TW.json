@@ -280,7 +280,9 @@
         "invalidUrl": "請貼上有效的 spliit.app 群組 URL",
         "notFoundUrl": "Spliit 找不到此群組",
         "fetchUrlError": "無法擷取來源",
-        "fileReadError": "無法讀取檔案"
+        "fileReadError": "無法讀取檔案",
+        "appToCloudDescription": "將任何 spliit.app 群組 URL 中的 .app 改為 .cloud，即可匯入到 Spliit Cloud。",
+        "appToCloudTitle": "將 .app 換成 .cloud"
       },
       "StepHeader": {
         "title": "匯入群組",

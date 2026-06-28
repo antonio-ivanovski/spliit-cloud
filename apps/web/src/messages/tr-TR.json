@@ -280,7 +280,9 @@
         "invalidUrl": "Lütfen geçerli bir spliit.app grup URL'si yapıştırın",
         "notFoundUrl": "Spliit bu grubu bulamadı",
         "fetchUrlError": "Kaynak getirilemedi",
-        "fileReadError": "Dosya okunamadı"
+        "fileReadError": "Dosya okunamadı",
+        "appToCloudDescription": "Herhangi bir spliit.app grup URL'sindeki .app'i .cloud olarak değiştirerek Spliit Cloud'a aktarın.",
+        "appToCloudTitle": ".app'i .cloud'la değiştirin"
       },
       "StepHeader": {
         "title": "Bir grubu içe aktar",

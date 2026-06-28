@@ -280,7 +280,9 @@
         "invalidUrl": "Pega una URL válida de grupo de spliit.app",
         "notFoundUrl": "Spliit no encontró este grupo",
         "fetchUrlError": "Error al obtener el origen",
-        "fileReadError": "Error al leer el archivo"
+        "fileReadError": "Error al leer el archivo",
+        "appToCloudDescription": "Cambia .app por .cloud en cualquier URL de grupo de spliit.app para importarlo a Spliit Cloud.",
+        "appToCloudTitle": "Cambia .app por .cloud"
       },
       "StepHeader": {
         "title": "Importar un grupo",
