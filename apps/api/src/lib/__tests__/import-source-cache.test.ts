@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import type { NormalizedSource } from '@spliit/domain/import'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  clearSourceCache,
   getCachedSource,
   setCachedSource,
-  clearSourceCache,
   sourceCacheSize,
 } from '../import-source-cache'
-import type { NormalizedSource } from '@spliit/domain/import'
 
 const MAX_ENTRIES = 256
 

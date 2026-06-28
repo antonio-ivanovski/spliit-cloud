@@ -1097,9 +1097,7 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
         pendingInvitationId: 'inv-no-lp',
         actor: { accountId: 'acct-admin' },
       }),
-    ).rejects.toThrow(
-      'Invitation has no materialized ledger participant',
-    )
+    ).rejects.toThrow('Invitation has no materialized ledger participant')
   })
 
   it('rejects when target LP is in a different ledger', async () => {
@@ -1129,9 +1127,7 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
         pendingInvitationId: 'inv-1',
         actor: { accountId: 'acct-admin' },
       }),
-    ).rejects.toThrow(
-      'Invitation ledger participant is in a different ledger',
-    )
+    ).rejects.toThrow('Invitation ledger participant is in a different ledger')
   })
 
   it('rejects when merging a participant into itself (self-merge guard)', async () => {

@@ -202,9 +202,7 @@ describe('findImportConflicts', () => {
         existingLedgerParticipantId: 'd-1',
       }),
     ]
-    const conflicts = findImportConflicts(participants, [
-      dest('d-1', 'John'),
-    ])
+    const conflicts = findImportConflicts(participants, [dest('d-1', 'John')])
     expect(conflicts.get('p-0')).toBe(
       'Two source rows are mapped to the same existing member.',
     )

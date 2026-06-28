@@ -38,9 +38,6 @@ export function GroupLayoutClient({
   const { t: tForbidden } = useTranslation(undefined, {
     keyPrefix: 'Groups',
   })
-  const { t: tImportable } = useTranslation(undefined, {
-    keyPrefix: 'Groups.Importable',
-  })
   const { toast } = useToast()
   const { isPending: accountPending } = useCurrentAccount()
 
@@ -110,7 +107,7 @@ export function GroupLayoutClient({
   // CTA that walks the user into the import wizard with the source
   // pre-filled.
   if (!isLoading && error?.data?.code === 'NOT_FOUND') {
-    return <NotFoundGroup groupId={groupId} tImportable={tImportable} />
+    return <NotFoundGroup groupId={groupId} />
   }
 
   const props =
@@ -145,15 +142,12 @@ export function GroupLayoutClient({
   )
 }
 
-function NotFoundGroup({
-  groupId,
-  tImportable,
-}: {
-  groupId: string
-  tImportable: ReturnType<typeof useTranslation>['t']
-}) {
+function NotFoundGroup({ groupId }: { groupId: string }) {
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
+  })
+  const { t: tImportable } = useTranslation(undefined, {
+    keyPrefix: 'Groups.Importable',
   })
   const lookup = trpc.groups.lookup.useQuery({ groupId }, { retry: false })
   if (lookup.isLoading) {
