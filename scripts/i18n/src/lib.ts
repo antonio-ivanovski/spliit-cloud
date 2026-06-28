@@ -19,6 +19,7 @@ export const LOCALE_TO_FILE: Record<Locale, string> = {
   'it-IT': 'it-IT.json',
   'ja-JP': 'ja-JP.json',
   ko: 'ko.json',
+  'mk-MK': 'mk-MK.json',
   'nl-NL': 'nl-NL.json',
   'pl-PL': 'pl-PL.json',
   pt: 'pt.json',

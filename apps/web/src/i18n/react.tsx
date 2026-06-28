@@ -30,6 +30,7 @@ export const localeLoaders = {
   'it-IT': () => import('@/messages/it-IT.json'),
   'ja-JP': () => import('@/messages/ja-JP.json'),
   ko: () => import('@/messages/ko.json'),
+  'mk-MK': () => import('@/messages/mk-MK.json'),
   'nl-NL': () => import('@/messages/nl-NL.json'),
   'pl-PL': () => import('@/messages/pl-PL.json'),
   pt: () => import('@/messages/pt.json'),
