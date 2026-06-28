@@ -65,7 +65,7 @@ export async function createTestSession(
     // better-auth checks trustedOrigins and rejects requests without a
     // matching Origin header. Vitest's fetch (Node.js undici) does not
     // send an Origin header automatically, so we add one explicitly.
-    'Origin': 'http://localhost:3000',
+    Origin: 'http://localhost:3000',
   }
 
   // Try sign-in first; might work if account was already verified

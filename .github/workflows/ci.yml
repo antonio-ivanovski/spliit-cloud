@@ -15,7 +15,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:18
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 1234
@@ -61,7 +61,6 @@ jobs:
 
       - name: Run integration tests
         run: bun run test:integration
-        continue-on-error: true  # integration tests are optional (DB-dependent)
 
       - name: Build
         run: bun run build

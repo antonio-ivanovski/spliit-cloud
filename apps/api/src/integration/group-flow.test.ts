@@ -1,12 +1,11 @@
 import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { groupsRouter } from '../trpc/routers/groups'
-import { checkDbConnection, isDbReachable, testRunId } from './setup'
+import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
-const describeDb = describe.skipIf(!isDbReachable())
 
-describeDb('Group flow — real DB', () => {
+describe('Group flow — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-admin-${runId}`
   const adminEmail = `admin-${runId}@test.example`
@@ -192,23 +191,55 @@ describeDb('Group flow — real DB', () => {
     extraAccountIds.push(member1Id, member2Id)
     await prisma.account.createMany({
       data: [
-        { id: member1Id, email: `m1-${runId}@test.example`, emailVerified: true, name: 'Member 1' },
-        { id: member2Id, email: `m2-${runId}@test.example`, emailVerified: true, name: 'Member 2' },
+        {
+          id: member1Id,
+          email: `m1-${runId}@test.example`,
+          emailVerified: true,
+          name: 'Member 1',
+        },
+        {
+          id: member2Id,
+          email: `m2-${runId}@test.example`,
+          emailVerified: true,
+          name: 'Member 2',
+        },
       ],
     })
 
     const gm1 = await prisma.groupMember.create({
-      data: { id: `gm-${member1Id}`, groupId, accountId: member1Id, role: 'MEMBER', status: 'ACTIVE', joinedAt: new Date() },
+      data: {
+        id: `gm-${member1Id}`,
+        groupId,
+        accountId: member1Id,
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        joinedAt: new Date(),
+      },
     })
     const lp1 = await prisma.ledgerParticipant.create({
-      data: { id: `lp-${member1Id}`, ledgerId: ledger.id, groupMemberId: gm1.id },
+      data: {
+        id: `lp-${member1Id}`,
+        ledgerId: ledger.id,
+        groupMemberId: gm1.id,
+      },
     })
 
     const gm2 = await prisma.groupMember.create({
-      data: { id: `gm-${member2Id}`, groupId, accountId: member2Id, role: 'MEMBER', status: 'ACTIVE', joinedAt: new Date() },
+      data: {
+        id: `gm-${member2Id}`,
+        groupId,
+        accountId: member2Id,
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        joinedAt: new Date(),
+      },
     })
     const lp2 = await prisma.ledgerParticipant.create({
-      data: { id: `lp-${member2Id}`, ledgerId: ledger.id, groupMemberId: gm2.id },
+      data: {
+        id: `lp-${member2Id}`,
+        ledgerId: ledger.id,
+        groupMemberId: gm2.id,
+      },
     })
 
     // Expense 1: admin paid $30, split EVENLY among 3 → $10 each

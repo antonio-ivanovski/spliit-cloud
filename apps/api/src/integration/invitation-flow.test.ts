@@ -2,12 +2,11 @@ import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
-import { checkDbConnection, isDbReachable, testRunId } from './setup'
+import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
-const describeDb = describe.skipIf(!isDbReachable())
 
-describeDb('Invitation flow — real DB', () => {
+describe('Invitation flow — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-admin-${runId}`
   const adminEmail = `admin-${runId}@test.example`
@@ -33,7 +32,10 @@ describeDb('Invitation flow — real DB', () => {
     } as never)
   }
 
-  function invitationsCaller(overrides?: { accountId?: string; email?: string }) {
+  function invitationsCaller(overrides?: {
+    accountId?: string
+    email?: string
+  }) {
     return invitationsRouter.createCaller({
       auth: {
         session: { id: 'sess-test' },
@@ -52,12 +54,22 @@ describeDb('Invitation flow — real DB', () => {
     await prisma.account.upsert({
       where: { email: adminEmail },
       update: {},
-      create: { id: adminId, email: adminEmail, emailVerified: true, name: 'Test Admin' },
+      create: {
+        id: adminId,
+        email: adminEmail,
+        emailVerified: true,
+        name: 'Test Admin',
+      },
     })
     await prisma.account.upsert({
       where: { email: inviteeEmail },
       update: {},
-      create: { id: inviteeId, email: inviteeEmail, emailVerified: true, name: 'Test User' },
+      create: {
+        id: inviteeId,
+        email: inviteeEmail,
+        emailVerified: true,
+        name: 'Test User',
+      },
     })
   })
 

@@ -1,10 +1,10 @@
-import { render, screen, waitFor } from '@/test/integration/test-utils'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import {
   cleanupTestAccount,
   createTestSession,
   probeExistingApi,
 } from '@/test/integration/client'
+import { render, screen, waitFor } from '@/test/integration/test-utils'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 /**
  * Integration tests: real API + real TRPCProvider.
@@ -25,7 +25,9 @@ import {
 // ── Skip guard (evaluated once at module load) ───────────────────────────
 
 const apiReachable = await probeExistingApi()
-const describeIntegration = describe.skipIf(!apiReachable)
+const describeIntegration = apiReachable
+  ? describe
+  : describe.skip('API server not running — start with `bun dev` first')
 
 // ── Hoisted mocks ────────────────────────────────────────────────────────
 
@@ -86,7 +88,12 @@ interface TestGroup {
   name: string
   currency: string
   currencyCode: string
-  ledger: { id: string; currency: string; currencyCode: string; groupId: string }
+  ledger: {
+    id: string
+    currency: string
+    currencyCode: string
+    groupId: string
+  }
   participants: Array<{ id: string; name: string }>
 }
 
@@ -169,7 +176,10 @@ describeIntegration('Group CRUD via existing API', () => {
     const groupResult = await trpcCall<{
       group: TestGroup
       currentLedgerParticipantId: string | null
-    }>('groups.get', { groupId: createResult.groupId, linkInviteToken: undefined })
+    }>('groups.get', {
+      groupId: createResult.groupId,
+      linkInviteToken: undefined,
+    })
     testGroup = groupResult.group
 
     // ── Add a test expense (self-pay) ──────────────────────────────
@@ -350,10 +360,7 @@ describeIntegration('Group CRUD via existing API', () => {
     // Fetch real balances from the API.
     // The API returns { balances: { [participantId]: { paid, paidFor, total } } }
     const balancesResult = await trpcCall<{
-      balances: Record<
-        string,
-        { paid: number; paidFor: number; total: number }
-      >
+      balances: Record<string, { paid: number; paidFor: number; total: number }>
       reimbursements: Array<unknown>
     }>('groups.balances.list', {
       groupId: testGroup.id,
@@ -390,9 +397,7 @@ describeIntegration('Group CRUD via existing API', () => {
       expect(screen.getByTestId('balances-list')).toBeInTheDocument()
     } else {
       for (const p of testGroup.participants) {
-        expect(
-          screen.getByTestId(`balance-row-${p.name}`),
-        ).toBeInTheDocument()
+        expect(screen.getByTestId(`balance-row-${p.name}`)).toBeInTheDocument()
       }
     }
   })

@@ -1,12 +1,11 @@
 import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { groupsRouter } from '../trpc/routers/groups'
-import { checkDbConnection, isDbReachable, testRunId } from './setup'
+import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
-const describeDb = describe.skipIf(!isDbReachable())
 
-describeDb('Expense CRUD — real DB', () => {
+describe('Expense CRUD — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-exp-${runId}`
   const adminEmail = `exp-${runId}@test.example`
@@ -34,7 +33,12 @@ describeDb('Expense CRUD — real DB', () => {
     await prisma.account.upsert({
       where: { email: adminEmail },
       update: {},
-      create: { id: adminId, email: adminEmail, emailVerified: true, name: 'Test Admin' },
+      create: {
+        id: adminId,
+        email: adminEmail,
+        emailVerified: true,
+        name: 'Test Admin',
+      },
     })
   })
 
@@ -46,7 +50,9 @@ describeDb('Expense CRUD — real DB', () => {
   })
 
   /** Helper: create a group and return its id + the admin's ledger participant id. */
-  async function createGroup(name: string): Promise<{ groupId: string; participantId: string }> {
+  async function createGroup(
+    name: string,
+  ): Promise<{ groupId: string; participantId: string }> {
     const caller = makeCaller()
     const { groupId } = await caller.create({
       groupFormValues: {
@@ -80,9 +86,7 @@ describeDb('Expense CRUD — real DB', () => {
         title: 'Even Split',
         amount: 4000,
         paidBy: participantId,
-        paidFor: [
-          { participant: participantId, shares: 1 },
-        ],
+        paidFor: [{ participant: participantId, shares: 1 }],
         category: 'general',
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
@@ -94,7 +98,9 @@ describeDb('Expense CRUD — real DB', () => {
     })
     expect(result).toHaveProperty('expenseId')
 
-    const expense = await prisma.expense.findUnique({ where: { id: result.expenseId } })
+    const expense = await prisma.expense.findUnique({
+      where: { id: result.expenseId },
+    })
     expect(expense!.splitMode).toBe('EVENLY')
     expect(expense!.amount).toBe(4000)
   })
@@ -112,9 +118,7 @@ describeDb('Expense CRUD — real DB', () => {
         title: 'By Amount Split',
         amount: 3000,
         paidBy: participantId,
-        paidFor: [
-          { participant: participantId, shares: 3000 },
-        ],
+        paidFor: [{ participant: participantId, shares: 3000 }],
         category: 'general',
         splitMode: 'BY_AMOUNT',
         expenseDate: new Date().toISOString(),
@@ -161,7 +165,9 @@ describeDb('Expense CRUD — real DB', () => {
     })
     expect(result).toHaveProperty('expenseId')
 
-    const expense = await prisma.expense.findUnique({ where: { id: result.expenseId } })
+    const expense = await prisma.expense.findUnique({
+      where: { id: result.expenseId },
+    })
     expect(expense!.splitMode).toBe('BY_PERCENTAGE')
   })
 
@@ -192,7 +198,9 @@ describeDb('Expense CRUD — real DB', () => {
     })
     expect(result).toHaveProperty('expenseId')
 
-    const expense = await prisma.expense.findUnique({ where: { id: result.expenseId } })
+    const expense = await prisma.expense.findUnique({
+      where: { id: result.expenseId },
+    })
     expect(expense!.splitMode).toBe('BY_SHARES')
   })
 

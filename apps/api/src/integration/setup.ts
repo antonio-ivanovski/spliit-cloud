@@ -1,19 +1,18 @@
 import { prisma } from '@spliit/db'
 
-let dbReachable = false
-
-export async function checkDbConnection(): Promise<boolean> {
+/**
+ * Verify the test database is reachable.
+ * Throws with a clear message if not — the test file will fail at load time.
+ */
+export async function checkDbConnection(): Promise<void> {
   try {
     await prisma.$queryRaw`SELECT 1`
-    dbReachable = true
-    return true
   } catch {
-    return false
+    throw new Error(
+      `Database not reachable at ${process.env.DATABASE_URL ?? '(not set)'}. ` +
+        `Start the test database and run migrations first.`,
+    )
   }
-}
-
-export function isDbReachable() {
-  return dbReachable
 }
 
 /** Unique identifier for a single test-run across parallel workers. */
