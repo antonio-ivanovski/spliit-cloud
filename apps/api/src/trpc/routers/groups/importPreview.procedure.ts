@@ -89,7 +89,7 @@ export const previewFromUrlProcedure = protectedProcedure
       sourceUrl: z.string().min(1),
     }),
   )
-  .mutation(async ({ input: { sourceUrl } }) => {
+  .query(async ({ input: { sourceUrl } }) => {
     const sourceGroupId = extractSpliitGroupIdFromUrl(sourceUrl)
     if (!sourceGroupId) {
       throw new TRPCError({

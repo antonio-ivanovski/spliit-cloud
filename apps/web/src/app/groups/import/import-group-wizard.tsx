@@ -21,6 +21,7 @@ import { DestinationStep } from './destination-step'
 import { DoneStep } from './done-step'
 import { MappingStep } from './mapping-step'
 import { SourceStep } from './source-step'
+import { useImportSource } from './use-import-source'
 
 const importRoute = getRouteApi('/groups/import')
 
@@ -194,54 +195,46 @@ export function ImportGroupWizard() {
     [account?.id],
   )
 
-  // Fetch the source when the wizard lands with ?source=<url>
-  const previewFromUrl = trpc.groups.importPreview.useMutation()
+  // ?source=<url> handoff — delegate to the same hook SourceStep uses.
+  const {
+    data: sourcePreview,
+    error: sourcePreviewError,
+    submit,
+  } = useImportSource()
   useEffect(() => {
-    if (!prefillSourceUrl) return
-    if (state.source) return
-    if (previewFromUrl.isPending || previewFromUrl.isSuccess) return
-    let cancelled = false
-    void (async () => {
-      try {
-        const result = await previewFromUrl.mutateAsync({
-          sourceUrl: prefillSourceUrl,
-        })
-        if (cancelled) return
-        if (result.kind === 'OK') {
-          handleSourceLoaded(result.source)
-          return
-        }
-        if (result.kind === 'NOT_FOUND') {
-          toast({
-            description: t('Groups.Import.notFound'),
-            variant: 'destructive',
-          })
-        } else {
-          toast({ description: result.message, variant: 'destructive' })
-        }
-        setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
-      } catch (err) {
-        if (cancelled) return
-        toast({
-          description:
-            err instanceof Error
-              ? err.message
-              : t('Groups.Import.fetchSourceError'),
-          variant: 'destructive',
-        })
-        setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
-      }
-    })()
-    return () => {
-      cancelled = true
+    if (prefillSourceUrl && !state.source) {
+      submit(prefillSourceUrl)
     }
-  }, [
-    prefillSourceUrl,
-    state.source,
-    previewFromUrl,
-    handleSourceLoaded,
-    toast,
-  ])
+  }, [prefillSourceUrl, state.source, submit])
+  useEffect(() => {
+    if (state.source) return
+    if (!sourcePreview) return
+    if (sourcePreview.kind === 'OK') {
+      handleSourceLoaded(sourcePreview.source)
+      return
+    }
+    if (sourcePreview.kind === 'NOT_FOUND') {
+      toast({
+        description: t('Groups.Import.notFound'),
+        variant: 'destructive',
+      })
+    } else {
+      toast({
+        description: sourcePreview.message,
+        variant: 'destructive',
+      })
+    }
+    setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
+  }, [sourcePreview, state.source, handleSourceLoaded, toast, t])
+  useEffect(() => {
+    if (state.source) return
+    if (!sourcePreviewError) return
+    toast({
+      description: sourcePreviewError.message,
+      variant: 'destructive',
+    })
+    setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
+  }, [sourcePreviewError, state.source, toast])
 
   const handleSourceError = useCallback(
     (message: string) => {

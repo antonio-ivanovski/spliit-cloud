@@ -2,7 +2,6 @@
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { trpc } from '@/trpc/client'
 import {
   extractSpliitGroupIdFromUrl,
   tryParseSpliitCsv,
@@ -10,59 +9,51 @@ import {
   type NormalizedSource,
 } from '@spliit/domain/import'
 import { AlertTriangle, Clock } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DomainSwapCard } from './domain-swap-card'
 import { FileUploadCard } from './file-upload-card'
 import { PasteUrlCard } from './paste-url-card'
+import { useImportSource } from './use-import-source'
 
 type Props = {
   onLoaded: (source: NormalizedSource) => void
   onError: (message: string) => void
-  prefillUrl?: string | null
 }
 
 type SourceMode = 'spliit' | 'splitwise' | 'tricount' | 'settleup'
 
-export function SourceStep({ onLoaded, onError, prefillUrl }: Props) {
+export function SourceStep({ onLoaded, onError }: Props) {
   const { t } = useTranslation()
   const [provider, setProvider] = useState<SourceMode>('spliit')
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState<string | null>(null)
-  const previewFromUrl = trpc.groups.importPreview.useMutation()
   const [isDragging, setIsDragging] = useState(false)
-  const autoSubmittedRef = useRef(false)
+  const {
+    data: sourcePreview,
+    isLoading: isPreviewLoading,
+    error: sourcePreviewError,
+    submit: submitPreview,
+    reset: resetPreview,
+  } = useImportSource()
 
-  // Auto-submit when the wizard passes a prefillUrl (from ?source=).
   useEffect(() => {
-    if (!prefillUrl) return
-    if (autoSubmittedRef.current) return
-    autoSubmittedRef.current = true
-
-    setUrl(prefillUrl)
-    setUrlError(null)
-
-    previewFromUrl
-      .mutateAsync({ sourceUrl: prefillUrl })
-      .then((result) => {
-        if (result.kind === 'OK') {
-          onLoaded(result.source)
-          return
-        }
-        if (result.kind === 'NOT_FOUND') {
-          setUrlError(t('Groups.Import.Source.notFoundUrl'))
-          return
-        }
-        setUrlError(result.message)
-      })
-      .catch((err) => {
-        const message =
-          err instanceof Error
-            ? err.message
-            : t('Groups.Import.Source.fetchUrlError')
-        setUrlError(message)
-      })
-  }, [prefillUrl, previewFromUrl, onLoaded, t])
+    if (!sourcePreview) return
+    if (sourcePreview.kind === 'OK') {
+      onLoaded(sourcePreview.source)
+      resetPreview()
+      return
+    }
+    if (sourcePreview.kind === 'NOT_FOUND') {
+      setUrlError(t('Groups.Import.Source.notFoundUrl'))
+      return
+    }
+    setUrlError(sourcePreview.message)
+  }, [sourcePreview, resetPreview, onLoaded, t])
+  useEffect(() => {
+    if (!sourcePreviewError) return
+    setUrlError(sourcePreviewError.message)
+  }, [sourcePreviewError])
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -130,7 +121,7 @@ export function SourceStep({ onLoaded, onError, prefillUrl }: Props) {
     [provider, handleFile],
   )
 
-  const handleUrlSubmit = useCallback(async () => {
+  const handleUrlSubmit = useCallback(() => {
     setUrlError(null)
     const trimmed = url.trim()
     const sourceGroupId = extractSpliitGroupIdFromUrl(trimmed)
@@ -138,25 +129,8 @@ export function SourceStep({ onLoaded, onError, prefillUrl }: Props) {
       setUrlError(t('Groups.Import.Source.invalidUrl'))
       return
     }
-    try {
-      const result = await previewFromUrl.mutateAsync({ sourceUrl: trimmed })
-      if (result.kind === 'OK') {
-        onLoaded(result.source)
-        return
-      }
-      if (result.kind === 'NOT_FOUND') {
-        setUrlError(t('Groups.Import.Source.notFoundUrl'))
-        return
-      }
-      setUrlError(result.message)
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : t('Groups.Import.Source.fetchUrlError')
-      setUrlError(message)
-    }
-  }, [url, previewFromUrl, onLoaded, t])
+    submitPreview(trimmed)
+  }, [url, submitPreview, t])
 
   const handleUrlChange = useCallback(
     (value: string) => {
@@ -253,7 +227,7 @@ export function SourceStep({ onLoaded, onError, prefillUrl }: Props) {
 
           <PasteUrlCard
             disabled={spliitDisabled}
-            isPending={previewFromUrl.isPending}
+            isPending={isPreviewLoading}
             url={url}
             urlError={urlError}
             onUrlChange={handleUrlChange}
