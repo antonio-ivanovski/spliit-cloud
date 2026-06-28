@@ -676,6 +676,185 @@
     },
     "other": {
       "heading": "Beste monetak"
+    },
+    "byCode": {
+      "AED": {
+        "name": "Arabiar Emirerri Batuetako dirham"
+      },
+      "ARS": {
+        "name": "Argentinako peso"
+      },
+      "AUD": {
+        "name": "Australiako dolar"
+      },
+      "BDT": {
+        "name": "Bangladesheko taka"
+      },
+      "BGN": {
+        "name": "Bulgariako lev"
+      },
+      "BRL": {
+        "name": "Brasilgo real"
+      },
+      "CAD": {
+        "name": "Kanadako dolar"
+      },
+      "CHF": {
+        "name": "Suitzako franko"
+      },
+      "CLP": {
+        "name": "Txileko peso"
+      },
+      "CNY": {
+        "name": "Txinako yuan"
+      },
+      "COP": {
+        "name": "Kolonbiako peso"
+      },
+      "CZK": {
+        "name": "Txekiar koroa"
+      },
+      "DKK": {
+        "name": "Danimarkako koroa"
+      },
+      "EGP": {
+        "name": "Egiptoko libera"
+      },
+      "EUR": {
+        "name": "euroa"
+      },
+      "GBP": {
+        "name": "libera esterlina"
+      },
+      "GEL": {
+        "name": "Georgiako lari"
+      },
+      "GHS": {
+        "name": "Ghanako cedi"
+      },
+      "HKD": {
+        "name": "Hong Kongeko dolar"
+      },
+      "HNL": {
+        "name": "Hondurasko lempira"
+      },
+      "HRK": {
+        "name": "Kroaziako kuna"
+      },
+      "HUF": {
+        "name": "Hungariako florin"
+      },
+      "IDR": {
+        "name": "Indonesiako errupia"
+      },
+      "ILS": {
+        "name": "Israelgo shekel berri"
+      },
+      "INR": {
+        "name": "Indiako errupia"
+      },
+      "ISK": {
+        "name": "Islandiako koroa"
+      },
+      "JPY": {
+        "name": "Japoniako yen"
+      },
+      "KES": {
+        "name": "Kenyako txelin"
+      },
+      "KHR": {
+        "name": "Kanbodiako riel"
+      },
+      "KRW": {
+        "name": "Hego Koreako won"
+      },
+      "KWD": {
+        "name": "Kuwaiteko dinar"
+      },
+      "KZT": {
+        "name": "Kazakhstango tenge"
+      },
+      "LKR": {
+        "name": "Sri Lankako errupia"
+      },
+      "MAD": {
+        "name": "Marokoko dirham"
+      },
+      "MDL": {
+        "name": "Moldaviako leu"
+      },
+      "MKD": {
+        "name": "Mazedoniako denar"
+      },
+      "MXN": {
+        "name": "Mexikoko peso"
+      },
+      "MYR": {
+        "name": "Malaysiako ringgit"
+      },
+      "NGN": {
+        "name": "Nigeriako naira"
+      },
+      "NOK": {
+        "name": "Norvegiako koroa"
+      },
+      "NZD": {
+        "name": "Zeelanda Berriko dolar"
+      },
+      "PEN": {
+        "name": "Peruko sol"
+      },
+      "PHP": {
+        "name": "Filipinetako peso"
+      },
+      "PKR": {
+        "name": "Pakistango errupia"
+      },
+      "PLN": {
+        "name": "Poloniako zloty"
+      },
+      "QAR": {
+        "name": "Katareko rial"
+      },
+      "RON": {
+        "name": "Errumaniako leu"
+      },
+      "RUB": {
+        "name": "Errusiako errublo"
+      },
+      "SAR": {
+        "name": "Saudiko errial"
+      },
+      "SEK": {
+        "name": "Suediako koroa"
+      },
+      "SGD": {
+        "name": "Singapurreko dolar"
+      },
+      "THB": {
+        "name": "Thailandiako baht"
+      },
+      "TRY": {
+        "name": "Turkiako lira"
+      },
+      "TWD": {
+        "name": "Taiwan Berriko dolar"
+      },
+      "UAH": {
+        "name": "Ukrainako hryvnia"
+      },
+      "USD": {
+        "name": "AEBetako dolar"
+      },
+      "UYU": {
+        "name": "Uruguaiko peso"
+      },
+      "VND": {
+        "name": "Vietnamgo dong"
+      },
+      "ZAR": {
+        "name": "Hegoafrikako rand"
+      }
     }
   },
   "Auth": {

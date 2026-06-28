@@ -1,0 +1,356 @@
+[
+  {
+    "code": "AED",
+    "symbol": "AED",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "ARS",
+    "symbol": "AR$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "AUD",
+    "symbol": "AU$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "BDT",
+    "symbol": "Tk",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "BGN",
+    "symbol": "BGN",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "BRL",
+    "symbol": "R$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "CAD",
+    "symbol": "CA$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "CHF",
+    "symbol": "CHF",
+    "rounding": 0.05,
+    "decimal_digits": 2
+  },
+  {
+    "code": "CLP",
+    "symbol": "CL$",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "CNY",
+    "symbol": "CN\u00a5",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "COP",
+    "symbol": "CO$",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "CZK",
+    "symbol": "K\u010d",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "DKK",
+    "symbol": "Dkr",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "EGP",
+    "symbol": "EGP",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "EUR",
+    "symbol": "\u20ac",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "GBP",
+    "symbol": "\u00a3",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "GEL",
+    "symbol": "GEL",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "GHS",
+    "symbol": "GH\u20b5",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "HKD",
+    "symbol": "HK$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "HNL",
+    "symbol": "HNL",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "HRK",
+    "symbol": "kn",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "HUF",
+    "symbol": "Ft",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "IDR",
+    "symbol": "Rp",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "ILS",
+    "symbol": "\u20aa",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "INR",
+    "symbol": "Rs",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "ISK",
+    "symbol": "Ikr",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "JPY",
+    "symbol": "\u00a5",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "KES",
+    "symbol": "Ksh",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "KHR",
+    "symbol": "KHR",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "KRW",
+    "symbol": "\u20a9",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "KWD",
+    "symbol": "KD",
+    "rounding": 0,
+    "decimal_digits": 3
+  },
+  {
+    "code": "KZT",
+    "symbol": "KZT",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "LKR",
+    "symbol": "SLRs",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "MAD",
+    "symbol": "MAD",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "MDL",
+    "symbol": "MDL",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "MKD",
+    "symbol": "MKD",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "MXN",
+    "symbol": "MX$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "MYR",
+    "symbol": "RM",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "NGN",
+    "symbol": "\u20a6",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "NOK",
+    "symbol": "Nkr",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "NZD",
+    "symbol": "NZ$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "PEN",
+    "symbol": "S/.",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "PHP",
+    "symbol": "\u20b1",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "PKR",
+    "symbol": "PKRs",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "PLN",
+    "symbol": "z\u0142",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "QAR",
+    "symbol": "QR",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "RON",
+    "symbol": "RON",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "RUB",
+    "symbol": "RUB",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "SAR",
+    "symbol": "SR",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "SEK",
+    "symbol": "Skr",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "SGD",
+    "symbol": "S$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "THB",
+    "symbol": "\u0e3f",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "TRY",
+    "symbol": "TL",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "TWD",
+    "symbol": "NT$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "UAH",
+    "symbol": "\u20b4",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "USD",
+    "symbol": "$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "UYU",
+    "symbol": "$U",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "VND",
+    "symbol": "\u20ab",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "ZAR",
+    "symbol": "R",
+    "rounding": 0,
+    "decimal_digits": 2
+  }
+]

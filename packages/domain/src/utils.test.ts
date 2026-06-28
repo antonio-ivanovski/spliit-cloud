@@ -14,11 +14,8 @@ import {
 describe('formatCurrency', () => {
   it('supports custom currency symbol when currency code is empty', () => {
     const currency: Currency = {
-      name: 'Test',
-      symbol_native: '',
       symbol: 'CUR',
       code: '',
-      name_plural: '',
       rounding: 0,
       decimal_digits: 2,
     }
@@ -32,11 +29,8 @@ describe('formatCurrency', () => {
 
   it('supports zero-decimal currencies (JPY)', () => {
     const jpy: Currency = {
-      name: 'Japanese Yen',
-      symbol_native: '￥',
       symbol: '¥',
       code: 'JPY',
-      name_plural: 'Japanese yen',
       rounding: 0,
       decimal_digits: 0,
     }
@@ -47,11 +41,8 @@ describe('formatCurrency', () => {
   })
 
   const currency: Currency = {
-    name: 'Test',
-    symbol_native: '',
     symbol: 'CUR',
     code: '',
-    name_plural: '',
     rounding: 0,
     decimal_digits: 2,
   }
@@ -220,11 +211,8 @@ describe('delay', () => {
 describe('formatAmountAsDecimal', () => {
   it('formats with correct decimals', () => {
     const usd: Currency = {
-      name: 'US Dollar',
-      symbol_native: '$',
       symbol: '$',
       code: 'USD',
-      name_plural: 'US dollars',
       rounding: 0,
       decimal_digits: 2,
     }
@@ -234,11 +222,8 @@ describe('formatAmountAsDecimal', () => {
     expect(formatAmountAsDecimal(5, usd)).toBe('0.05')
 
     const jpy: Currency = {
-      name: 'Japanese Yen',
-      symbol_native: '￥',
       symbol: '¥',
       code: 'JPY',
-      name_plural: 'Japanese yen',
       rounding: 0,
       decimal_digits: 0,
     }

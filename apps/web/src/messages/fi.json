@@ -676,6 +676,185 @@
     },
     "other": {
       "heading": "Muut valuutat"
+    },
+    "byCode": {
+      "EUR": {
+        "name": "euro"
+      },
+      "AED": {
+        "name": "Yhdistyneiden arabiemiirikuntien dirhami"
+      },
+      "ARS": {
+        "name": "Argentiinan peso"
+      },
+      "AUD": {
+        "name": "Australian dollari"
+      },
+      "BDT": {
+        "name": "Bangladeshin taka"
+      },
+      "BGN": {
+        "name": "Bulgarian lev"
+      },
+      "BRL": {
+        "name": "Brasilian real"
+      },
+      "CAD": {
+        "name": "Kanadan dollari"
+      },
+      "CHF": {
+        "name": "Sveitsin frangi"
+      },
+      "CLP": {
+        "name": "Chilen peso"
+      },
+      "CNY": {
+        "name": "Kiinan juan"
+      },
+      "COP": {
+        "name": "Kolumbian peso"
+      },
+      "CZK": {
+        "name": "Tšekin koruna"
+      },
+      "DKK": {
+        "name": "Tanskan kruunu"
+      },
+      "EGP": {
+        "name": "Egyptin punta"
+      },
+      "GBP": {
+        "name": "Ison-Britannian punta"
+      },
+      "GEL": {
+        "name": "Georgian lari"
+      },
+      "GHS": {
+        "name": "Ghanan cedi"
+      },
+      "HKD": {
+        "name": "Hongkongin dollari"
+      },
+      "HNL": {
+        "name": "Hondurasin lempira"
+      },
+      "HRK": {
+        "name": "Kroatian kuna"
+      },
+      "HUF": {
+        "name": "Unkarin forintti"
+      },
+      "IDR": {
+        "name": "Indonesian rupia"
+      },
+      "ILS": {
+        "name": "Israelin uusi sekeli"
+      },
+      "INR": {
+        "name": "Intian rupia"
+      },
+      "ISK": {
+        "name": "Islannin kruunu"
+      },
+      "JPY": {
+        "name": "Japanin jeni"
+      },
+      "KES": {
+        "name": "Kenian shillinki"
+      },
+      "KHR": {
+        "name": "Kambodžan riel"
+      },
+      "KRW": {
+        "name": "Etelä-Korean won"
+      },
+      "KWD": {
+        "name": "Kuwaitin dinaari"
+      },
+      "KZT": {
+        "name": "Kazakstanin tenge"
+      },
+      "LKR": {
+        "name": "Sri Lankan rupia"
+      },
+      "MAD": {
+        "name": "Marokon dirhami"
+      },
+      "MDL": {
+        "name": "Moldovan leu"
+      },
+      "MKD": {
+        "name": "Makedonian denaari"
+      },
+      "MXN": {
+        "name": "Meksikon peso"
+      },
+      "MYR": {
+        "name": "Malesian ringgit"
+      },
+      "NGN": {
+        "name": "Nigerian naira"
+      },
+      "NOK": {
+        "name": "Norjan kruunu"
+      },
+      "NZD": {
+        "name": "Uuden-Seelannin dollari"
+      },
+      "PEN": {
+        "name": "Perun sol"
+      },
+      "PHP": {
+        "name": "Filippiinien peso"
+      },
+      "PKR": {
+        "name": "Pakistanin rupia"
+      },
+      "PLN": {
+        "name": "Puolan zloty"
+      },
+      "QAR": {
+        "name": "Qatarin rial"
+      },
+      "RON": {
+        "name": "Romanian leu"
+      },
+      "RUB": {
+        "name": "Venäjän rupla"
+      },
+      "SAR": {
+        "name": "Saudi-Arabian rial"
+      },
+      "SEK": {
+        "name": "Ruotsin kruunu"
+      },
+      "SGD": {
+        "name": "Singaporen dollari"
+      },
+      "THB": {
+        "name": "Thaimaan baht"
+      },
+      "TRY": {
+        "name": "Turkin liira"
+      },
+      "TWD": {
+        "name": "Uuden-Taiwanin dollari"
+      },
+      "UAH": {
+        "name": "Ukrainan hryvnia"
+      },
+      "USD": {
+        "name": "Yhdysvaltain dollari"
+      },
+      "UYU": {
+        "name": "Uruguayn peso"
+      },
+      "VND": {
+        "name": "Vietnamin dong"
+      },
+      "ZAR": {
+        "name": "Etelä-Afrikan rand"
+      }
     }
   },
   "Auth": {

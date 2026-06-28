@@ -12,10 +12,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useLocale } from '@/i18n/react'
-import { Locale } from '@/i18n/request'
 import { getGroup } from '@/lib/api'
-import { defaultCurrencyList, getCurrency } from '@/lib/currency'
+import { getCurrency, useCurrencies } from '@/lib/currency'
 import { GroupFormValues, groupFormSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save, UserPlus } from 'lucide-react'
@@ -84,7 +82,6 @@ export function GroupForm({
   initialValues,
   onSubmit,
 }: Props) {
-  const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const readOnly = !!group && currentMemberRole === 'MEMBER'
   const isArchived = !!group && archived
@@ -116,6 +113,11 @@ export function GroupForm({
           participants: PARTICIPANTS_PLACEHOLDER,
         },
   })
+
+  const currencies = useCurrencies(
+    t('CurrencyCodeField.customOption'),
+    form.watch('currency') || undefined,
+  )
 
   return (
     <Form {...form}>
@@ -170,15 +172,19 @@ export function GroupForm({
                 <FormItem>
                   <FormLabel>{t('CurrencyCodeField.label')}</FormLabel>
                   <CurrencySelector
-                    currencies={defaultCurrencyList(
-                      locale as Locale,
-                      t('CurrencyCodeField.customOption'),
-                    )}
+                    currencies={currencies}
                     defaultValue={form.watch(field.name) ?? ''}
                     disabled={readOnly || isArchived}
                     onValueChange={(newCurrency) => {
                       field.onChange(newCurrency)
-                      const currency = getCurrency(newCurrency)
+                      const currency =
+                        getCurrency(newCurrency) ??
+                        ({
+                          code: '',
+                          symbol: '',
+                          rounding: 0,
+                          decimal_digits: 2,
+                        } as const)
                       if (
                         currency.code.length ||
                         form.getFieldState('currency').isTouched

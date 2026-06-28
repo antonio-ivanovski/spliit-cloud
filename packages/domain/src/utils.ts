@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import type { Category } from './categories'
-import { Currency, getCurrency } from './currency'
+import { Currency, getCurrencyFromGroup } from './currency'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -90,23 +90,7 @@ export function formatCurrency(
   return formatted.replace('€', currency.symbol)
 }
 
-export function getCurrencyFromGroup(group: {
-  currency: string
-  currencyCode?: string | null
-}): Currency {
-  if (!group.currencyCode) {
-    return {
-      name: 'Custom',
-      symbol_native: group.currency,
-      symbol: group.currency,
-      code: '',
-      name_plural: '',
-      rounding: 0,
-      decimal_digits: 2,
-    }
-  }
-  return getCurrency(group.currencyCode)
-}
+export { getCurrencyFromGroup }
 
 /**
  * Converts monetary amounts in minor units to the corresponding amount in major units in the given currency.

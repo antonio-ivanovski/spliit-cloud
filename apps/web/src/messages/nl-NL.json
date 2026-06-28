@@ -676,6 +676,185 @@
     },
     "other": {
       "heading": "Andere valuta"
+    },
+    "byCode": {
+      "AED": {
+        "name": "Verenigde Arabische Emiraten-dirham"
+      },
+      "ARS": {
+        "name": "Argentijnse peso"
+      },
+      "AUD": {
+        "name": "Australische dollar"
+      },
+      "BDT": {
+        "name": "Bengalese taka"
+      },
+      "BGN": {
+        "name": "Bulgaarse lev"
+      },
+      "BRL": {
+        "name": "Braziliaanse real"
+      },
+      "CAD": {
+        "name": "Canadese dollar"
+      },
+      "CHF": {
+        "name": "Zwitserse frank"
+      },
+      "CLP": {
+        "name": "Chileense peso"
+      },
+      "CNY": {
+        "name": "Chinese yuan"
+      },
+      "COP": {
+        "name": "Colombiaanse peso"
+      },
+      "CZK": {
+        "name": "Tsjechische kroon"
+      },
+      "DKK": {
+        "name": "Deense kroon"
+      },
+      "EGP": {
+        "name": "Egyptisch pond"
+      },
+      "EUR": {
+        "name": "Euro"
+      },
+      "GBP": {
+        "name": "Brits pond"
+      },
+      "GEL": {
+        "name": "Georgische lari"
+      },
+      "GHS": {
+        "name": "Ghanese cedi"
+      },
+      "HKD": {
+        "name": "Hongkongse dollar"
+      },
+      "HNL": {
+        "name": "Hondurese lempira"
+      },
+      "HRK": {
+        "name": "Kroatische kuna"
+      },
+      "HUF": {
+        "name": "Hongaarse forint"
+      },
+      "IDR": {
+        "name": "Indonesische roepia"
+      },
+      "ILS": {
+        "name": "Israëlische sjekel"
+      },
+      "INR": {
+        "name": "Indiase roepie"
+      },
+      "ISK": {
+        "name": "IJslandse kroon"
+      },
+      "JPY": {
+        "name": "Japanse yen"
+      },
+      "KES": {
+        "name": "Keniaanse shilling"
+      },
+      "KHR": {
+        "name": "Cambodjaanse riel"
+      },
+      "KRW": {
+        "name": "Zuid-Koreaanse won"
+      },
+      "KWD": {
+        "name": "Koeweitse dinar"
+      },
+      "KZT": {
+        "name": "Kazachse tenge"
+      },
+      "LKR": {
+        "name": "Sri Lankaanse roepie"
+      },
+      "MAD": {
+        "name": "Marokkaanse dirham"
+      },
+      "MDL": {
+        "name": "Moldavische leu"
+      },
+      "MKD": {
+        "name": "Macedonische denar"
+      },
+      "MXN": {
+        "name": "Mexicaanse peso"
+      },
+      "MYR": {
+        "name": "Maleisische ringgit"
+      },
+      "NGN": {
+        "name": "Nigeriaanse naira"
+      },
+      "NOK": {
+        "name": "Noorse kroon"
+      },
+      "NZD": {
+        "name": "Nieuw-Zeelandse dollar"
+      },
+      "PEN": {
+        "name": "Peruaanse sol"
+      },
+      "PHP": {
+        "name": "Filipijnse peso"
+      },
+      "PKR": {
+        "name": "Pakistaanse roepie"
+      },
+      "PLN": {
+        "name": "Poolse zloty"
+      },
+      "QAR": {
+        "name": "Qatarese rial"
+      },
+      "RON": {
+        "name": "Roemeense leu"
+      },
+      "RUB": {
+        "name": "Russische roebel"
+      },
+      "SAR": {
+        "name": "Saoedische riyal"
+      },
+      "SEK": {
+        "name": "Zweedse kroon"
+      },
+      "SGD": {
+        "name": "Singaporese dollar"
+      },
+      "THB": {
+        "name": "Thaise baht"
+      },
+      "TRY": {
+        "name": "Turkse lira"
+      },
+      "TWD": {
+        "name": "Nieuwe Taiwanese dollar"
+      },
+      "UAH": {
+        "name": "Oekraïense hryvnia"
+      },
+      "USD": {
+        "name": "Amerikaanse dollar"
+      },
+      "UYU": {
+        "name": "Uruguayaanse peso"
+      },
+      "VND": {
+        "name": "Vietnamese dong"
+      },
+      "ZAR": {
+        "name": "Zuid-Afrikaanse rand"
+      }
     }
   },
   "Auth": {

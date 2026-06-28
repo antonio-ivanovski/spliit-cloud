@@ -676,6 +676,185 @@
     },
     "other": {
       "heading": "Alte monede"
+    },
+    "byCode": {
+      "EUR": {
+        "name": "Euro"
+      },
+      "AED": {
+        "name": "Dirham din Emiratele Arabe Unite"
+      },
+      "ARS": {
+        "name": "Peso argentinian"
+      },
+      "AUD": {
+        "name": "Dolar australian"
+      },
+      "BDT": {
+        "name": "Taka din Bangladesh"
+      },
+      "BGN": {
+        "name": "Leva bulgărească"
+      },
+      "BRL": {
+        "name": "Real brazilian"
+      },
+      "CAD": {
+        "name": "Dolar canadian"
+      },
+      "CHF": {
+        "name": "Franc elvețian"
+      },
+      "CLP": {
+        "name": "Peso chilian"
+      },
+      "CNY": {
+        "name": "Yuan chinezesc"
+      },
+      "COP": {
+        "name": "Peso columbian"
+      },
+      "CZK": {
+        "name": "Coroană cehă"
+      },
+      "DKK": {
+        "name": "Coroană daneză"
+      },
+      "EGP": {
+        "name": "Liră egipteană"
+      },
+      "GBP": {
+        "name": "Liră sterlină"
+      },
+      "GEL": {
+        "name": "Lari georgian"
+      },
+      "GHS": {
+        "name": "Cedi ghanez"
+      },
+      "HKD": {
+        "name": "Dolar din Hong Kong"
+      },
+      "HNL": {
+        "name": "Lempira honduriană"
+      },
+      "HRK": {
+        "name": "Kuna croată"
+      },
+      "HUF": {
+        "name": "Forint maghiar"
+      },
+      "IDR": {
+        "name": "Rupie indoneziană"
+      },
+      "ILS": {
+        "name": "Shekel israelian nou"
+      },
+      "INR": {
+        "name": "Rupie indiană"
+      },
+      "ISK": {
+        "name": "Coroană islandeză"
+      },
+      "JPY": {
+        "name": "Yen japonez"
+      },
+      "KES": {
+        "name": "Șiling kenyan"
+      },
+      "KHR": {
+        "name": "Riel cambodgian"
+      },
+      "KRW": {
+        "name": "Won sud-coreean"
+      },
+      "KWD": {
+        "name": "Dinar kuweitian"
+      },
+      "KZT": {
+        "name": "Tenge kazah"
+      },
+      "LKR": {
+        "name": "Rupie srilankeză"
+      },
+      "MAD": {
+        "name": "Dirham marocan"
+      },
+      "MDL": {
+        "name": "Leu moldovenesc"
+      },
+      "MKD": {
+        "name": "Denar macedonean"
+      },
+      "MXN": {
+        "name": "Peso mexican"
+      },
+      "MYR": {
+        "name": "Ringgit malaysian"
+      },
+      "NGN": {
+        "name": "Naira nigeriană"
+      },
+      "NOK": {
+        "name": "Coroană norvegiană"
+      },
+      "NZD": {
+        "name": "Dolar neozeelandez"
+      },
+      "PEN": {
+        "name": "Sol peruvian"
+      },
+      "PHP": {
+        "name": "Peso filipinez"
+      },
+      "PKR": {
+        "name": "Rupie pakistaneză"
+      },
+      "PLN": {
+        "name": "Zlot polonez"
+      },
+      "QAR": {
+        "name": "Rial qatarez"
+      },
+      "RON": {
+        "name": "Leu românesc"
+      },
+      "RUB": {
+        "name": "Rublă rusească"
+      },
+      "SAR": {
+        "name": "Riyal saudit"
+      },
+      "SEK": {
+        "name": "Coroană suedeză"
+      },
+      "SGD": {
+        "name": "Dolar singaporez"
+      },
+      "THB": {
+        "name": "Baht thailandez"
+      },
+      "TRY": {
+        "name": "Liră turcească"
+      },
+      "TWD": {
+        "name": "Dolar taiwanez nou"
+      },
+      "UAH": {
+        "name": "Hryvnia ucraineană"
+      },
+      "USD": {
+        "name": "Dolar american"
+      },
+      "UYU": {
+        "name": "Peso uruguayan"
+      },
+      "VND": {
+        "name": "Dong vietnamez"
+      },
+      "ZAR": {
+        "name": "Rand sud-african"
+      }
     }
   },
   "Auth": {

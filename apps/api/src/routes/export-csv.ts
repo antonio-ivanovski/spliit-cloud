@@ -141,7 +141,9 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     originalAmount: expense.originalAmount
       ? formatAmountAsDecimal(
           expense.originalAmount,
-          getCurrency(expense.originalCurrency),
+          expense.originalCurrency
+            ? (getCurrency(expense.originalCurrency) ?? currency)
+            : currency,
         )
       : null,
     originalCurrency: expense.originalCurrency,

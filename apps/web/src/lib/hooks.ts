@@ -1,5 +1,5 @@
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
-import { useQuery } from '@tanstack/react-query'
+import { trpc } from '@/trpc/client'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 
@@ -80,17 +80,32 @@ export function useActiveUser(groupId?: string) {
   return activeUser
 }
 
-interface FrankfurterAPIResponse {
-  base: string
-  date: string
-  rates: Record<string, number>
+type UseCurrencyRateResult = {
+  data: number | undefined
+  error: Error | null
+  isLoading: boolean
+  refresh: () => Promise<unknown>
 }
 
+/**
+ * Fetch the exchange rate for an expense-form conversion via the API
+ * (which itself talks to the Frankfurter rate provider and caches the
+ * result in-process). Going through the API sidesteps the CORS error the
+ * browser raises when calling `api.frankfurter.app` directly: that
+ * endpoint 301-redirects to `api.frankfurter.dev/v1/...` without
+ * `Access-Control-Allow-Origin` headers, so the redirect itself is
+ * blocked. The server-side fetch has no such restriction.
+ *
+ * Returns the rate as `data` and a `RangeError` in `error` when the
+ * provider's as-of date doesn't match the requested date (e.g. the
+ * user picked a future date or a weekend and the API fell back to the
+ * latest available rate).
+ */
 export function useCurrencyRate(
   date: Date,
   baseCurrency: string,
   targetCurrency: string,
-) {
+): UseCurrencyRateResult {
   const dateString = dayjs(date).format('YYYY-MM-DD')
 
   const enabled =
@@ -99,47 +114,30 @@ export function useCurrencyRate(
     !!targetCurrency.length &&
     baseCurrency !== targetCurrency
 
-  const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ['currency-rate', dateString, baseCurrency, targetCurrency],
-    enabled,
-    retry: false,
-    refetchOnWindowFocus: false,
-    queryFn: async () => {
-      const params = new URLSearchParams({ base: baseCurrency })
-      const res = await fetch(
-        `https://api.frankfurter.app/${dateString}?${params}`,
-      )
+  const { data, error, isLoading, refetch } = trpc.currency.getRate.useQuery(
+    { date: dateString, base: baseCurrency, target: targetCurrency },
+    { enabled, retry: false, refetchOnWindowFocus: false },
+  )
 
-      if (!res.ok) {
-        throw new TypeError('Unsuccessful response from API', { cause: res })
-      }
-
-      return res.json() as Promise<FrankfurterAPIResponse>
-    },
-  })
-
-  if (data) {
-    let exchangeRate = undefined
-    let sentError = error
-    if (!error && data.date !== dateString) {
-      // this happens if for example, the requested date is in the future.
-      sentError = new RangeError(data.date)
-    }
-    if (data.rates[targetCurrency]) {
-      exchangeRate = data.rates[targetCurrency]
-    }
+  if (!data) {
     return {
-      data: exchangeRate,
-      error: sentError,
+      data: undefined,
+      error: error ? new Error(error.message) : null,
       isLoading,
-      refresh: refetch,
+      refresh: () => refetch(),
     }
   }
 
+  let sentError: Error | null = error ? new Error(error.message) : null
+  if (!error && data.asOfDate !== dateString) {
+    // this happens if for example, the requested date is in the future.
+    sentError = new RangeError(data.asOfDate)
+  }
+
   return {
-    data,
-    error,
+    data: data.rate,
+    error: sentError,
     isLoading,
-    refresh: refetch,
+    refresh: () => refetch(),
   }
 }

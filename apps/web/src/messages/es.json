@@ -676,6 +676,185 @@
     },
     "other": {
       "heading": "Otras monedas"
+    },
+    "byCode": {
+      "USD": {
+        "name": "Dólar estadounidense"
+      },
+      "AED": {
+        "name": "Dírham de los Emiratos Árabes Unidos"
+      },
+      "ARS": {
+        "name": "Peso argentino"
+      },
+      "AUD": {
+        "name": "Dólar australiano"
+      },
+      "BDT": {
+        "name": "Taka bangladesí"
+      },
+      "BGN": {
+        "name": "Lev búlgaro"
+      },
+      "BRL": {
+        "name": "Real brasileño"
+      },
+      "CAD": {
+        "name": "Dólar canadiense"
+      },
+      "CHF": {
+        "name": "Franco suizo"
+      },
+      "CLP": {
+        "name": "Peso chileno"
+      },
+      "CNY": {
+        "name": "Yuan chino"
+      },
+      "COP": {
+        "name": "Peso colombiano"
+      },
+      "CZK": {
+        "name": "Corona checa"
+      },
+      "DKK": {
+        "name": "Corona danesa"
+      },
+      "EGP": {
+        "name": "Libra egipcia"
+      },
+      "EUR": {
+        "name": "Euro"
+      },
+      "GBP": {
+        "name": "Libra esterlina"
+      },
+      "GEL": {
+        "name": "Lari georgiano"
+      },
+      "GHS": {
+        "name": "Cedi ghanés"
+      },
+      "HKD": {
+        "name": "Dólar de Hong Kong"
+      },
+      "HNL": {
+        "name": "Lempira hondureño"
+      },
+      "HRK": {
+        "name": "Kuna croata"
+      },
+      "HUF": {
+        "name": "Forinto húngaro"
+      },
+      "IDR": {
+        "name": "Rupia indonesia"
+      },
+      "ILS": {
+        "name": "Nuevo shéquel israelí"
+      },
+      "INR": {
+        "name": "Rupia india"
+      },
+      "ISK": {
+        "name": "Corona islandesa"
+      },
+      "JPY": {
+        "name": "Yen japonés"
+      },
+      "KES": {
+        "name": "Chelín keniano"
+      },
+      "KHR": {
+        "name": "Riel camboyano"
+      },
+      "KRW": {
+        "name": "Won surcoreano"
+      },
+      "KWD": {
+        "name": "Dinar kuwaití"
+      },
+      "KZT": {
+        "name": "Tenge kazajo"
+      },
+      "LKR": {
+        "name": "Rupia de Sri Lanka"
+      },
+      "MAD": {
+        "name": "Dírham marroquí"
+      },
+      "MDL": {
+        "name": "Leu moldavo"
+      },
+      "MKD": {
+        "name": "Denar macedonio"
+      },
+      "MXN": {
+        "name": "Peso mexicano"
+      },
+      "MYR": {
+        "name": "Ringgit malasio"
+      },
+      "NGN": {
+        "name": "Naira nigeriana"
+      },
+      "NOK": {
+        "name": "Corona noruega"
+      },
+      "NZD": {
+        "name": "Dólar neozelandés"
+      },
+      "PEN": {
+        "name": "Sol peruano"
+      },
+      "PHP": {
+        "name": "Peso filipino"
+      },
+      "PKR": {
+        "name": "Rupia pakistaní"
+      },
+      "PLN": {
+        "name": "Zloty polaco"
+      },
+      "QAR": {
+        "name": "Rial catarí"
+      },
+      "RON": {
+        "name": "Leu rumano"
+      },
+      "RUB": {
+        "name": "Rublo ruso"
+      },
+      "SAR": {
+        "name": "Rial saudí"
+      },
+      "SEK": {
+        "name": "Corona sueca"
+      },
+      "SGD": {
+        "name": "Dólar singapurense"
+      },
+      "THB": {
+        "name": "Baht tailandés"
+      },
+      "TRY": {
+        "name": "Lira turca"
+      },
+      "TWD": {
+        "name": "Nuevo dólar taiwanés"
+      },
+      "UAH": {
+        "name": "Grivna ucraniana"
+      },
+      "UYU": {
+        "name": "Peso uruguayo"
+      },
+      "VND": {
+        "name": "Dong vietnamita"
+      },
+      "ZAR": {
+        "name": "Rand sudafricano"
+      }
     }
   },
   "Auth": {

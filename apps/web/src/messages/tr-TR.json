@@ -777,6 +777,185 @@
     },
     "other": {
       "heading": "Diğer para birimleri"
+    },
+    "byCode": {
+      "AED": {
+        "name": "Birleşik Arap Emirlikleri dirhemi"
+      },
+      "ARS": {
+        "name": "Arjantin pesosu"
+      },
+      "AUD": {
+        "name": "Avustralya doları"
+      },
+      "BDT": {
+        "name": "Bangladeş takası"
+      },
+      "BGN": {
+        "name": "Bulgar levası"
+      },
+      "BRL": {
+        "name": "Brezilya reali"
+      },
+      "CAD": {
+        "name": "Kanada doları"
+      },
+      "CHF": {
+        "name": "İsviçre frangı"
+      },
+      "CLP": {
+        "name": "Şili pesosu"
+      },
+      "CNY": {
+        "name": "Çin yuanı"
+      },
+      "COP": {
+        "name": "Kolombiya pesosu"
+      },
+      "CZK": {
+        "name": "Çek korunası"
+      },
+      "DKK": {
+        "name": "Danimarka kronu"
+      },
+      "EGP": {
+        "name": "Mısır lirası"
+      },
+      "EUR": {
+        "name": "Euro"
+      },
+      "GBP": {
+        "name": "İngiliz sterlini"
+      },
+      "GEL": {
+        "name": "Gürcistan larisi"
+      },
+      "GHS": {
+        "name": "Gana sedisi"
+      },
+      "HKD": {
+        "name": "Hong Kong doları"
+      },
+      "HNL": {
+        "name": "Honduras lempirası"
+      },
+      "HRK": {
+        "name": "Hırvat kunası"
+      },
+      "HUF": {
+        "name": "Macar forinti"
+      },
+      "IDR": {
+        "name": "Endonezya rupisi"
+      },
+      "ILS": {
+        "name": "İsrail yeni şekeli"
+      },
+      "INR": {
+        "name": "Hindistan rupisi"
+      },
+      "ISK": {
+        "name": "İzlanda kronu"
+      },
+      "JPY": {
+        "name": "Japon yeni"
+      },
+      "KES": {
+        "name": "Kenya şilini"
+      },
+      "KHR": {
+        "name": "Kamboçya rieli"
+      },
+      "KRW": {
+        "name": "Güney Kore wonu"
+      },
+      "KWD": {
+        "name": "Kuveyt dinarı"
+      },
+      "KZT": {
+        "name": "Kazakistan tengesi"
+      },
+      "LKR": {
+        "name": "Sri Lanka rupisi"
+      },
+      "MAD": {
+        "name": "Fas dirhemi"
+      },
+      "MDL": {
+        "name": "Moldova leyi"
+      },
+      "MKD": {
+        "name": "Makedonya dinarı"
+      },
+      "MXN": {
+        "name": "Meksika pesosu"
+      },
+      "MYR": {
+        "name": "Malezya ringgiti"
+      },
+      "NGN": {
+        "name": "Nijerya nairası"
+      },
+      "NOK": {
+        "name": "Norveç kronu"
+      },
+      "NZD": {
+        "name": "Yeni Zelanda doları"
+      },
+      "PEN": {
+        "name": "Peru solu"
+      },
+      "PHP": {
+        "name": "Filipin pesosu"
+      },
+      "PKR": {
+        "name": "Pakistan rupisi"
+      },
+      "PLN": {
+        "name": "Polonya zlotisi"
+      },
+      "QAR": {
+        "name": "Katar riyali"
+      },
+      "RON": {
+        "name": "Rumen leyi"
+      },
+      "RUB": {
+        "name": "Rus rublesi"
+      },
+      "SAR": {
+        "name": "Suudi riyali"
+      },
+      "SEK": {
+        "name": "İsveç kronu"
+      },
+      "SGD": {
+        "name": "Singapur doları"
+      },
+      "THB": {
+        "name": "Tayland bahtı"
+      },
+      "TRY": {
+        "name": "Türk lirası"
+      },
+      "TWD": {
+        "name": "Yeni Tayvan doları"
+      },
+      "UAH": {
+        "name": "Ukrayna grivnası"
+      },
+      "USD": {
+        "name": "Amerikan doları"
+      },
+      "UYU": {
+        "name": "Uruguay pesosu"
+      },
+      "VND": {
+        "name": "Vietnam dongu"
+      },
+      "ZAR": {
+        "name": "Güney Afrika randı"
+      }
     }
   },
   "Members": {

@@ -14,16 +14,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Currency } from '@/lib/currency'
+import { type DisplayCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { forwardRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
-  currencies: Currency[]
-  onValueChange: (currencyCode: Currency['code']) => void
+  currencies: DisplayCurrency[]
+  onValueChange: (currencyCode: DisplayCurrency['code']) => void
   /** Currency code to be selected by default. Overwriting this value will update current selection, too. */
-  defaultValue: Currency['code']
+  defaultValue: DisplayCurrency['code']
   isLoading: boolean
   disabled?: boolean
 }
@@ -100,6 +100,11 @@ export function CurrencySelector({
 
 type CurrencyGrouping = 'common' | 'custom' | 'other'
 
+// Fixed display order: most-common codes first, custom second, everything
+// else last. Defining this as a tuple (not an object) keeps the iteration
+// order stable regardless of the input list's insertion order.
+const CURRENCY_GROUPING_ORDER = ['common', 'custom', 'other'] as const
+
 const CURRENCY_GROUPING_HEADINGS = {
   common: 'common.heading',
   custom: 'custom.heading',
@@ -110,10 +115,10 @@ function CurrencyCommand({
   currencies,
   onValueChange,
 }: {
-  currencies: Currency[]
-  onValueChange: (currencyId: Currency['code']) => void
+  currencies: DisplayCurrency[]
+  onValueChange: (currencyId: DisplayCurrency['code']) => void
 }) {
-  const currencyGroup = (currency: Currency): CurrencyGrouping => {
+  const currencyGroup = (currency: DisplayCurrency): CurrencyGrouping => {
     switch (currency.code) {
       case 'USD':
       case 'EUR':
@@ -127,14 +132,15 @@ function CurrencyCommand({
     }
   }
   const { t } = useTranslation(undefined, { keyPrefix: 'Currencies' })
-  const currenciesByGroup = currencies.reduce<Record<string, Currency[]>>(
-    (acc, currency) => ({
-      ...acc,
-      [currencyGroup(currency)]: (acc[currencyGroup(currency)] ?? []).concat([
-        currency,
-      ]),
-    }),
-    {},
+  const currenciesByGroup = currencies.reduce<
+    Record<CurrencyGrouping, DisplayCurrency[]>
+  >(
+    (acc, currency) => {
+      const group = currencyGroup(currency)
+      acc[group].push(currency)
+      return acc
+    },
+    { common: [], custom: [], other: [] },
   )
 
   return (
@@ -142,33 +148,33 @@ function CurrencyCommand({
       <CommandInput placeholder={t('search')} className="text-base" />
       <CommandEmpty>{t('noCurrency')}</CommandEmpty>
       <div className="w-full max-h-[300px] overflow-y-auto">
-        {Object.entries(currenciesByGroup).map(
-          ([group, groupCurrencies], index) => (
+        {CURRENCY_GROUPING_ORDER.map((group) => {
+          const groupCurrencies = currenciesByGroup[group]
+          if (groupCurrencies.length === 0) return null
+          return (
             <CommandGroup
-              key={index}
-              heading={t(CURRENCY_GROUPING_HEADINGS[group as CurrencyGrouping])}
+              key={group}
+              heading={t(CURRENCY_GROUPING_HEADINGS[group])}
             >
               {groupCurrencies.map((currency) => (
                 <CommandItem
-                  key={currency.code}
+                  key={currency.code || currency.symbol || currency.name}
                   value={`${currency.code} ${currency.name} ${currency.symbol}`}
-                  onSelect={(currentValue) => {
-                    onValueChange(currency.code)
-                  }}
+                  onSelect={() => onValueChange(currency.code)}
                 >
                   <CurrencyLabel currency={currency} />
                 </CommandItem>
               ))}
             </CommandGroup>
-          ),
-        )}
+          )
+        })}
       </div>
     </Command>
   )
 }
 
 type CurrencyButtonProps = {
-  currency: Currency
+  currency: DisplayCurrency
   open: boolean
   isLoading: boolean
   disabled?: boolean
@@ -200,7 +206,7 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
 )
 CurrencyButton.displayName = 'CurrencyButton'
 
-function CurrencyLabel({ currency }: { currency: Currency }) {
+function CurrencyLabel({ currency }: { currency: DisplayCurrency }) {
   const flagUrl = `https://flagcdn.com/h24/${
     currency?.code.length ? currency.code.slice(0, 2).toLowerCase() : 'un'
   }.png`

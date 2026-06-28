@@ -37,7 +37,7 @@ import {
 import { useLocale } from '@/i18n/react'
 import { Locale } from '@/i18n/request'
 import { randomId } from '@/lib/api'
-import { defaultCurrencyList, getCurrency } from '@/lib/currency'
+import { getCurrency, useCurrencies } from '@/lib/currency'
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate } from '@/lib/hooks'
 import { expenseFormSchema, ExpenseFormValues } from '@/lib/schemas'
@@ -272,11 +272,16 @@ export function ExpenseForm({
 
   const sExpense = isIncome ? 'Income' : 'Expense'
 
-  const originalCurrency = getCurrency(
-    form.getValues('originalCurrency'),
-    locale,
-    'Custom',
-  )
+  const originalCurrencyCode = form.getValues('originalCurrency')
+  const originalCurrency = originalCurrencyCode
+    ? (getCurrency(originalCurrencyCode) ?? {
+        code: '',
+        symbol: 'Custom',
+        rounding: 0,
+        decimal_digits: 2,
+      })
+    : { code: '', symbol: 'Custom', rounding: 0, decimal_digits: 2 }
+  const originalCurrencies = useCurrencies('')
   const exchangeRate = useCurrencyRate(
     form.watch('expenseDate'),
     form.watch('originalCurrency') ?? '',
@@ -505,7 +510,7 @@ export function ExpenseForm({
                   <FormControl>
                     {group.currencyCode ? (
                       <CurrencySelector
-                        currencies={defaultCurrencyList(locale, '')}
+                        currencies={originalCurrencies}
                         defaultValue={form.watch(field.name) ?? ''}
                         isLoading={false}
                         disabled={readOnly}

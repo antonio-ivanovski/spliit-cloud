@@ -777,6 +777,185 @@
     },
     "other": {
       "heading": "Ostatní měny"
+    },
+    "byCode": {
+      "AED": {
+        "name": "Emirátský dirham"
+      },
+      "ARS": {
+        "name": "Argentinské peso"
+      },
+      "AUD": {
+        "name": "Australský dolar"
+      },
+      "BDT": {
+        "name": "Bangladéšská taka"
+      },
+      "BGN": {
+        "name": "Bulharský lev"
+      },
+      "BRL": {
+        "name": "Brazilský real"
+      },
+      "CAD": {
+        "name": "Kanadský dolar"
+      },
+      "CHF": {
+        "name": "Švýcarský frank"
+      },
+      "CLP": {
+        "name": "Chilské peso"
+      },
+      "CNY": {
+        "name": "Čínský jüan"
+      },
+      "COP": {
+        "name": "Kolumbijské peso"
+      },
+      "CZK": {
+        "name": "Česká koruna"
+      },
+      "DKK": {
+        "name": "Dánská koruna"
+      },
+      "EGP": {
+        "name": "Egyptská libra"
+      },
+      "EUR": {
+        "name": "Euro"
+      },
+      "GBP": {
+        "name": "Britská libra"
+      },
+      "GEL": {
+        "name": "Gruzínské lari"
+      },
+      "GHS": {
+        "name": "Ghanský cedi"
+      },
+      "HKD": {
+        "name": "Hongkongský dolar"
+      },
+      "HNL": {
+        "name": "Honduraská lempira"
+      },
+      "HRK": {
+        "name": "Chorvatská kuna"
+      },
+      "HUF": {
+        "name": "Maďarský forint"
+      },
+      "IDR": {
+        "name": "Indonéská rupie"
+      },
+      "ILS": {
+        "name": "Izraelský nový šekel"
+      },
+      "INR": {
+        "name": "Indická rupie"
+      },
+      "ISK": {
+        "name": "Islandská koruna"
+      },
+      "JPY": {
+        "name": "Japonský jen"
+      },
+      "KES": {
+        "name": "Keňský šilink"
+      },
+      "KHR": {
+        "name": "Kambodžský riel"
+      },
+      "KRW": {
+        "name": "Jihokorejský won"
+      },
+      "KWD": {
+        "name": "Kuvajtský dinár"
+      },
+      "KZT": {
+        "name": "Kazachstánské tenge"
+      },
+      "LKR": {
+        "name": "Srílanská rupie"
+      },
+      "MAD": {
+        "name": "Marocký dirham"
+      },
+      "MDL": {
+        "name": "Moldavský leu"
+      },
+      "MKD": {
+        "name": "Makedonský denár"
+      },
+      "MXN": {
+        "name": "Mexické peso"
+      },
+      "MYR": {
+        "name": "Malajsijský ringgit"
+      },
+      "NGN": {
+        "name": "Nigerijská naira"
+      },
+      "NOK": {
+        "name": "Norská koruna"
+      },
+      "NZD": {
+        "name": "Novozélandský dolar"
+      },
+      "PEN": {
+        "name": "Peruánský sol"
+      },
+      "PHP": {
+        "name": "Filipínské peso"
+      },
+      "PKR": {
+        "name": "Pákistánská rupie"
+      },
+      "PLN": {
+        "name": "Polský zlotý"
+      },
+      "QAR": {
+        "name": "Katarský rijál"
+      },
+      "RON": {
+        "name": "Rumunský leu"
+      },
+      "RUB": {
+        "name": "Ruský rubl"
+      },
+      "SAR": {
+        "name": "Saúdský rijál"
+      },
+      "SEK": {
+        "name": "Švédská koruna"
+      },
+      "SGD": {
+        "name": "Singapurský dolar"
+      },
+      "THB": {
+        "name": "Thajský baht"
+      },
+      "TRY": {
+        "name": "Turecká lira"
+      },
+      "TWD": {
+        "name": "Nový tchajwanský dolar"
+      },
+      "UAH": {
+        "name": "Ukrajinská hřivna"
+      },
+      "USD": {
+        "name": "Americký dolar"
+      },
+      "UYU": {
+        "name": "Uruguayské peso"
+      },
+      "VND": {
+        "name": "Vietnamský dong"
+      },
+      "ZAR": {
+        "name": "Jihoafrický rand"
+      }
     }
   },
   "Members": {

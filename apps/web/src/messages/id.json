@@ -495,6 +495,185 @@
     },
     "other": {
       "heading": "Mata uang lainnya"
+    },
+    "byCode": {
+      "AED": {
+        "name": "Dirham Uni Emirat Arab"
+      },
+      "ARS": {
+        "name": "Peso Argentina"
+      },
+      "AUD": {
+        "name": "Dolar Australia"
+      },
+      "BDT": {
+        "name": "Taka Bangladesh"
+      },
+      "BGN": {
+        "name": "Lev Bulgaria"
+      },
+      "BRL": {
+        "name": "Real Brasil"
+      },
+      "CAD": {
+        "name": "Dolar Kanada"
+      },
+      "CHF": {
+        "name": "Franc Swiss"
+      },
+      "CLP": {
+        "name": "Peso Chili"
+      },
+      "CNY": {
+        "name": "Yuan Tiongkok"
+      },
+      "COP": {
+        "name": "Peso Kolombia"
+      },
+      "CZK": {
+        "name": "Koruna Ceko"
+      },
+      "DKK": {
+        "name": "Krone Denmark"
+      },
+      "EGP": {
+        "name": "Pound Mesir"
+      },
+      "EUR": {
+        "name": "Euro"
+      },
+      "GBP": {
+        "name": "Pound Britania"
+      },
+      "GEL": {
+        "name": "Lari Georgia"
+      },
+      "GHS": {
+        "name": "Cedi Ghana"
+      },
+      "HKD": {
+        "name": "Dolar Hong Kong"
+      },
+      "HNL": {
+        "name": "Lempira Honduras"
+      },
+      "HRK": {
+        "name": "Kuna Kroasia"
+      },
+      "HUF": {
+        "name": "Forint Hungaria"
+      },
+      "IDR": {
+        "name": "Rupiah Indonesia"
+      },
+      "ILS": {
+        "name": "Shekel Baru Israel"
+      },
+      "INR": {
+        "name": "Rupee India"
+      },
+      "ISK": {
+        "name": "Króna Islandia"
+      },
+      "JPY": {
+        "name": "Yen Jepang"
+      },
+      "KES": {
+        "name": "Shilling Kenya"
+      },
+      "KHR": {
+        "name": "Riel Kamboja"
+      },
+      "KRW": {
+        "name": "Won Korea Selatan"
+      },
+      "KWD": {
+        "name": "Dinar Kuwait"
+      },
+      "KZT": {
+        "name": "Tenge Kazakhstan"
+      },
+      "LKR": {
+        "name": "Rupee Sri Lanka"
+      },
+      "MAD": {
+        "name": "Dirham Maroko"
+      },
+      "MDL": {
+        "name": "Leu Moldova"
+      },
+      "MKD": {
+        "name": "Denar Makedonia"
+      },
+      "MXN": {
+        "name": "Peso Meksiko"
+      },
+      "MYR": {
+        "name": "Ringgit Malaysia"
+      },
+      "NGN": {
+        "name": "Naira Nigeria"
+      },
+      "NOK": {
+        "name": "Krone Norwegia"
+      },
+      "NZD": {
+        "name": "Dolar Selandia Baru"
+      },
+      "PEN": {
+        "name": "Sol Peru"
+      },
+      "PHP": {
+        "name": "Peso Filipina"
+      },
+      "PKR": {
+        "name": "Rupee Pakistan"
+      },
+      "PLN": {
+        "name": "Zloty Polandia"
+      },
+      "QAR": {
+        "name": "Rial Qatar"
+      },
+      "RON": {
+        "name": "Leu Rumania"
+      },
+      "RUB": {
+        "name": "Rubel Rusia"
+      },
+      "SAR": {
+        "name": "Riyal Saudi"
+      },
+      "SEK": {
+        "name": "Krona Swedia"
+      },
+      "SGD": {
+        "name": "Dolar Singapura"
+      },
+      "THB": {
+        "name": "Baht Thailand"
+      },
+      "TRY": {
+        "name": "Lira Turki"
+      },
+      "TWD": {
+        "name": "Dolar Taiwan Baru"
+      },
+      "UAH": {
+        "name": "Hryvnia Ukraina"
+      },
+      "USD": {
+        "name": "Dolar AS"
+      },
+      "UYU": {
+        "name": "Peso Uruguay"
+      },
+      "VND": {
+        "name": "Dong Vietnam"
+      },
+      "ZAR": {
+        "name": "Rand Afrika Selatan"
+      }
     }
   },
   "ExpenseDocumentsInput": {

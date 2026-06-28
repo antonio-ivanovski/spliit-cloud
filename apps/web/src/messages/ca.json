@@ -676,6 +676,185 @@
     },
     "other": {
       "heading": "Altres monedes"
+    },
+    "byCode": {
+      "AED": {
+        "name": "Dírham dels Emirats Àrabs Units"
+      },
+      "ARS": {
+        "name": "Peso argentí"
+      },
+      "AUD": {
+        "name": "Dòlar australià"
+      },
+      "BDT": {
+        "name": "Taka de Bangla Desh"
+      },
+      "BGN": {
+        "name": "Lev búlgar"
+      },
+      "BRL": {
+        "name": "Real brasiler"
+      },
+      "CAD": {
+        "name": "Dòlar canadenc"
+      },
+      "CHF": {
+        "name": "Franc suís"
+      },
+      "CLP": {
+        "name": "Peso xilè"
+      },
+      "CNY": {
+        "name": "Iuan xinès"
+      },
+      "COP": {
+        "name": "Peso colombià"
+      },
+      "CZK": {
+        "name": "Corona txeca"
+      },
+      "DKK": {
+        "name": "Corona danesa"
+      },
+      "EGP": {
+        "name": "Lliura egípcia"
+      },
+      "EUR": {
+        "name": "Euro"
+      },
+      "GBP": {
+        "name": "Lliura esterlina"
+      },
+      "GEL": {
+        "name": "Lari georgià"
+      },
+      "GHS": {
+        "name": "Cedi ghanès"
+      },
+      "HKD": {
+        "name": "Dòlar de Hong Kong"
+      },
+      "HNL": {
+        "name": "Lempira hondurenya"
+      },
+      "HRK": {
+        "name": "Kuna croata"
+      },
+      "HUF": {
+        "name": "Fòrint hongarès"
+      },
+      "IDR": {
+        "name": "Rupia indonèsia"
+      },
+      "ILS": {
+        "name": "Nou xéquel israelià"
+      },
+      "INR": {
+        "name": "Rupia índia"
+      },
+      "ISK": {
+        "name": "Corona islandesa"
+      },
+      "JPY": {
+        "name": "Ien japonès"
+      },
+      "KES": {
+        "name": "Xíling kenyà"
+      },
+      "KHR": {
+        "name": "Riel cambodjà"
+      },
+      "KRW": {
+        "name": "Won sud-coreà"
+      },
+      "KWD": {
+        "name": "Dinar kuwaitià"
+      },
+      "KZT": {
+        "name": "Tenge kazakh"
+      },
+      "LKR": {
+        "name": "Rupia de Sri Lanka"
+      },
+      "MAD": {
+        "name": "Dírham marroquí"
+      },
+      "MDL": {
+        "name": "Leu moldau"
+      },
+      "MKD": {
+        "name": "Denar macedoni"
+      },
+      "MXN": {
+        "name": "Peso mexicà"
+      },
+      "MYR": {
+        "name": "Ringgit malaisi"
+      },
+      "NGN": {
+        "name": "Naira nigeriana"
+      },
+      "NOK": {
+        "name": "Corona noruega"
+      },
+      "NZD": {
+        "name": "Dòlar neozelandès"
+      },
+      "PEN": {
+        "name": "Sol peruà"
+      },
+      "PHP": {
+        "name": "Peso filipí"
+      },
+      "PKR": {
+        "name": "Rupia pakistanesa"
+      },
+      "PLN": {
+        "name": "Zloty polonès"
+      },
+      "QAR": {
+        "name": "Rial de Qatar"
+      },
+      "RON": {
+        "name": "Leu romanès"
+      },
+      "RUB": {
+        "name": "Ruble rus"
+      },
+      "SAR": {
+        "name": "Rial saudita"
+      },
+      "SEK": {
+        "name": "Corona sueca"
+      },
+      "SGD": {
+        "name": "Dòlar de Singapur"
+      },
+      "THB": {
+        "name": "Baht tailandès"
+      },
+      "TRY": {
+        "name": "Lira turca"
+      },
+      "TWD": {
+        "name": "Nou dòlar taiwanès"
+      },
+      "UAH": {
+        "name": "Hrívnia ucraïnesa"
+      },
+      "USD": {
+        "name": "Dòlar dels Estats Units"
+      },
+      "UYU": {
+        "name": "Peso uruguaià"
+      },
+      "VND": {
+        "name": "Dong vietnamita"
+      },
+      "ZAR": {
+        "name": "Rand sud-africà"
+      }
     }
   },
   "Auth": {
