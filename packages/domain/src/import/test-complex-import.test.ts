@@ -1,10 +1,13 @@
-import { describe, expect, it } from 'vitest'
-import { tryParseSpliitExport } from './spliit'
 import * as fs from 'fs'
 import * as path from 'path'
+import { describe, expect, it } from 'vitest'
+import { tryParseSpliitExport } from './spliit'
 
 describe('complex spliit.app export with all features', () => {
-  const fixturePath = path.resolve(__dirname, '../fixtures/spliit-export-features.json')
+  const fixturePath = path.resolve(
+    __dirname,
+    '../fixtures/spliit-export-features.json',
+  )
   const raw = JSON.parse(fs.readFileSync(fixturePath, 'utf-8'))
 
   it('parses successfully', () => {
@@ -35,7 +38,9 @@ describe('complex spliit.app export with all features', () => {
   it('handles reimbursement flag', () => {
     const result = tryParseSpliitExport(raw)
     if (!result.ok) return
-    const reimbursements = result.source.expenses.filter((e) => e.isReimbursement)
+    const reimbursements = result.source.expenses.filter(
+      (e) => e.isReimbursement,
+    )
     expect(reimbursements.length).toBeGreaterThan(0)
   })
 
