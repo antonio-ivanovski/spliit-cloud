@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./router": "./src/trpc/routers/_app.ts"
+    "./router": "./src/trpc/routers/_app.ts",
+    "./app": "./src/app.ts",
+    "./server": "./src/server.ts"
   },
   "scripts": {
     "dev": "bun --env-file=../../.env --watch src/server.ts",
