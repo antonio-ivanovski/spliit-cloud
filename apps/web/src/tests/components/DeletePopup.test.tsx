@@ -1,6 +1,6 @@
-import { render, screen, waitFor } from '@/test/test-utils'
 import { DeletePopup } from '@/components/delete-popup'
-import { describe, it, expect, vi } from 'vitest'
+import { render, screen, waitFor } from '@/test/test-utils'
+import { describe, expect, it, vi } from 'vitest'
 
 describe('DeletePopup', () => {
   it('renders a trigger button with the label text', () => {

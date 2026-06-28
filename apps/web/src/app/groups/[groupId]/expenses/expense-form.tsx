@@ -267,8 +267,7 @@ export function ExpenseForm({
 
     // Convert originalAmount back to minor units for storage
     if (values.originalAmount != null && values.originalCurrency) {
-      const origCurrency =
-        getCurrency(values.originalCurrency) ?? groupCurrency
+      const origCurrency = getCurrency(values.originalCurrency) ?? groupCurrency
       values.originalAmount = amountAsMinorUnits(
         values.originalAmount,
         origCurrency,

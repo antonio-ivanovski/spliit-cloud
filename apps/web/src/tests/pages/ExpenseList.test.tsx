@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@/test/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * BLOCK B: Mock-based tests for ExpenseList
@@ -229,9 +229,7 @@ describe('ExpenseList', () => {
   // ── Expense rendering with date groups ────────────────────────────
 
   it('renders expense cards grouped by date periods', () => {
-    const upcomingDate = new Date(
-      today.getTime() + 365 * 24 * 60 * 60 * 1000,
-    )
+    const upcomingDate = new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)
     const olderDate = new Date('2020-06-15T12:00:00Z')
 
     const upcomingExpense = makeExpense({
@@ -283,8 +281,7 @@ describe('ExpenseList', () => {
   it('debounces search input', async () => {
     const { user } = render(<ExpenseList />)
 
-    const searchInput =
-      screen.getByPlaceholderText(/search for an expense/i)
+    const searchInput = screen.getByPlaceholderText(/search for an expense/i)
     await user.type(searchInput, 'pizza')
 
     expect(screen.getByDisplayValue('pizza')).toBeInTheDocument()

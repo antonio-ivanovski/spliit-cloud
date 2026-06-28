@@ -1,5 +1,5 @@
-import { render, screen, waitFor } from '@/test/test-utils'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { render, screen } from '@/test/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
 
@@ -83,9 +83,7 @@ describe('AuthPanel', () => {
 
   it('renders sign-in title by default', () => {
     render(<AuthPanel />)
-    expect(
-      screen.getByText('Sign in to Spliit Cloud'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Sign in to Spliit Cloud')).toBeInTheDocument()
   })
 
   it('switch mode button switches to sign-up', async () => {
@@ -161,13 +159,9 @@ describe('AuthPanel', () => {
     render(<AuthPanel />)
 
     // Magic-link tab is the default
-    expect(
-      screen.getByRole('tab', { name: /magic link/i }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /magic link/i })).toBeInTheDocument()
     expect(screen.getByLabelText('Email')).toBeInTheDocument()
-    expect(
-      screen.getByText('Send sign-in link'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Send sign-in link')).toBeInTheDocument()
   })
 
   it('password tab shows email + password fields', async () => {
@@ -197,7 +191,9 @@ describe('AuthPanel', () => {
     await user.type(passwordInput, 'mypassword')
 
     // Submit button should be enabled
-    const submitButton = screen.getByText('Sign in with password').closest('button')
+    const submitButton = screen
+      .getByText('Sign in with password')
+      .closest('button')
     expect(submitButton).toBeEnabled()
   })
 
@@ -231,9 +227,7 @@ describe('AuthPanel', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('alice@example.com')).toBeInTheDocument()
     // "Use a different email" button should appear in success state
-    expect(
-      screen.getByText('Use a different email'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Use a different email')).toBeInTheDocument()
   })
 
   // ── Social buttons ──────────────────────────────────────────────────
@@ -255,8 +249,6 @@ describe('AuthPanel', () => {
     await switchToPasswordTab(user)
 
     // The "Forgot password?" link is only rendered in sign-in mode (default)
-    expect(
-      screen.getByText('Forgot password?'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Forgot password?')).toBeInTheDocument()
   })
 })

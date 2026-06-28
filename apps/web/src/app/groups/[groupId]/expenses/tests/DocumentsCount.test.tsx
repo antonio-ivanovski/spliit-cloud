@@ -1,5 +1,5 @@
-import { render, screen } from '@/test/test-utils'
 import { DocumentsCount } from '@/app/groups/[groupId]/expenses/documents-count'
+import { render, screen } from '@/test/test-utils'
 
 describe('DocumentsCount', () => {
   it('renders nothing when count is 0', () => {

@@ -10,15 +10,28 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
 
 // Mock @tanstack/react-router for Link
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, ...props }: { to: string; children: React.ReactNode; [key: string]: unknown }) => (
-    <a href={to} {...props}>{children}</a>
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
   ),
 }))
 
 // ── SUT ─────────────────────────────────────────────────────────────────
 
+import {
+  useCurrentGroup,
+  useIsPendingInvitee,
+} from '@/app/groups/[groupId]/current-group-context'
 import GroupInformation from '@/app/groups/[groupId]/information/group-information'
-import { useCurrentGroup, useIsPendingInvitee } from '@/app/groups/[groupId]/current-group-context'
 
 // ── Tests ───────────────────────────────────────────────────────────────
 
@@ -67,7 +80,9 @@ describe('GroupInformation', () => {
     render(<GroupInformation groupId="group-1" />)
 
     expect(screen.getByText('We are going to Paris!')).toBeInTheDocument()
-    expect(screen.queryByText('No group information yet.')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('No group information yet.'),
+    ).not.toBeInTheDocument()
   })
 
   it('shows empty state when group has no information', () => {

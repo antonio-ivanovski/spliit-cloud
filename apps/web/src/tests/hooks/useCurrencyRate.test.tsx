@@ -1,6 +1,6 @@
-import { render, screen } from '@/test/test-utils'
 import { useCurrencyRate } from '@/lib/hooks'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen } from '@/test/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Mock tRPC client ───────────────────────────────────────────────────
 
@@ -39,9 +39,7 @@ function TestComponent({
       <div data-testid="error-type">
         {result.error !== null ? result.error.constructor.name : 'null'}
       </div>
-      <div data-testid="isLoading">
-        {result.isLoading ? 'true' : 'false'}
-      </div>
+      <div data-testid="isLoading">{result.isLoading ? 'true' : 'false'}</div>
       <button
         data-testid="refresh"
         onClick={() => {
@@ -72,11 +70,7 @@ describe('useCurrencyRate', () => {
     })
 
     render(
-      <TestComponent
-        date={date}
-        baseCurrency="EUR"
-        targetCurrency="EUR"
-      />,
+      <TestComponent date={date} baseCurrency="EUR" targetCurrency="EUR" />,
     )
 
     expect(screen.getByTestId('data')).toHaveTextContent('undefined')
@@ -92,13 +86,7 @@ describe('useCurrencyRate', () => {
       refetch: vi.fn(),
     })
 
-    render(
-      <TestComponent
-        date={date}
-        baseCurrency=""
-        targetCurrency="USD"
-      />,
-    )
+    render(<TestComponent date={date} baseCurrency="" targetCurrency="USD" />)
 
     expect(screen.getByTestId('data')).toHaveTextContent('undefined')
     expect(screen.getByTestId('error')).toHaveTextContent('null')
@@ -114,11 +102,7 @@ describe('useCurrencyRate', () => {
     })
 
     render(
-      <TestComponent
-        date={date}
-        baseCurrency="EUR"
-        targetCurrency="USD"
-      />,
+      <TestComponent date={date} baseCurrency="EUR" targetCurrency="USD" />,
     )
 
     expect(screen.getByTestId('data')).toHaveTextContent('1.0923')
@@ -135,11 +119,7 @@ describe('useCurrencyRate', () => {
     })
 
     render(
-      <TestComponent
-        date={date}
-        baseCurrency="EUR"
-        targetCurrency="USD"
-      />,
+      <TestComponent date={date} baseCurrency="EUR" targetCurrency="USD" />,
     )
 
     expect(screen.getByTestId('data')).toHaveTextContent('undefined')
@@ -156,11 +136,7 @@ describe('useCurrencyRate', () => {
     })
 
     render(
-      <TestComponent
-        date={date}
-        baseCurrency="EUR"
-        targetCurrency="USD"
-      />,
+      <TestComponent date={date} baseCurrency="EUR" targetCurrency="USD" />,
     )
 
     expect(screen.getByTestId('data')).toHaveTextContent('1.0923')

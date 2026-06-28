@@ -1,6 +1,6 @@
+import { BalancesList } from '@/app/groups/[groupId]/balances-list'
 import { render, screen } from '@/test/test-utils'
 import { describe, expect, it } from 'vitest'
-import { BalancesList } from '@/app/groups/[groupId]/balances-list'
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -63,10 +63,14 @@ describe('BalancesList', () => {
     expect(aliceRow.className).not.toContain('flex-row-reverse')
 
     // The green bar should be present for Alice
-    const greenBars = container.querySelectorAll('.bg-green-200, .dark\\:bg-green-800')
+    const greenBars = container.querySelectorAll(
+      '.bg-green-200, .dark\\:bg-green-800',
+    )
     expect(greenBars.length).toBeGreaterThanOrEqual(1)
 
-    const redBars = container.querySelectorAll('.bg-red-200, .dark\\:bg-red-800')
+    const redBars = container.querySelectorAll(
+      '.bg-red-200, .dark\\:bg-red-800',
+    )
     expect(redBars.length).toBeGreaterThanOrEqual(1)
   })
 
@@ -93,7 +97,9 @@ describe('BalancesList', () => {
     expect(bobRow.className).toContain('flex-row-reverse')
 
     // Red bar should be present for Bob
-    const redBars = container.querySelectorAll('.bg-red-200, .dark\\:bg-red-800')
+    const redBars = container.querySelectorAll(
+      '.bg-red-200, .dark\\:bg-red-800',
+    )
     expect(redBars.length).toBeGreaterThanOrEqual(1)
   })
 
@@ -112,8 +118,12 @@ describe('BalancesList', () => {
     )
 
     // No colored bars for zero balances
-    const greenBars = container.querySelectorAll('.bg-green-200, .dark\\:bg-green-800')
-    const redBars = container.querySelectorAll('.bg-red-200, .dark\\:bg-red-800')
+    const greenBars = container.querySelectorAll(
+      '.bg-green-200, .dark\\:bg-green-800',
+    )
+    const redBars = container.querySelectorAll(
+      '.bg-red-200, .dark\\:bg-red-800',
+    )
     expect(greenBars.length).toBe(0)
     expect(redBars.length).toBe(0)
 

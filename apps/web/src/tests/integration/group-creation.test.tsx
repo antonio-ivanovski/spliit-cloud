@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@/test/integration/test-utils'
-import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 /**
  * BLOCK C: Integration tests (real API + real TRPCProvider).
@@ -17,8 +17,7 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
 
 // ── Skip guard ──────────────────────────────────────────────────────────
 
-const isIntegrationEnv =
-  !!process.env.INTEGRATION_TEST || !!process.env.CI
+const isIntegrationEnv = !!process.env.INTEGRATION_TEST || !!process.env.CI
 const describeIntegration = describe.skipIf(!isIntegrationEnv)
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
@@ -115,9 +114,8 @@ async function trpcCall<T = unknown>(
 describeIntegration('Group creation integration', () => {
   beforeAll(async () => {
     // ── Start test server ──────────────────────────────────────────
-    const { startTestServer, createTestSession } = await import(
-      '@/test/integration/server'
-    )
+    const { startTestServer, createTestSession } =
+      await import('@/test/integration/server')
 
     const server = await startTestServer()
     port = server.port
@@ -130,14 +128,11 @@ describeIntegration('Group creation integration', () => {
     sessionCookie = await createTestSession(port, testEmail, testPassword)
 
     // ── Create a test group via the real API ───────────────────────
-    const createResult = await trpcCall<{ group: TestGroup }>(
-      'groups.create',
-      {
-        name: 'Integration Test Group',
-        currency: 'EUR',
-        participants: [],
-      },
-    )
+    const createResult = await trpcCall<{ group: TestGroup }>('groups.create', {
+      name: 'Integration Test Group',
+      currency: 'EUR',
+      participants: [],
+    })
     testGroup = createResult.group
 
     // ── Add a test expense ─────────────────────────────────────────
@@ -191,9 +186,7 @@ describeIntegration('Group creation integration', () => {
     contextMocks.mockUseIsPendingInvitee.mockReturnValue(false)
 
     const GroupInformation = (
-      await import(
-        '@/app/groups/[groupId]/information/group-information'
-      )
+      await import('@/app/groups/[groupId]/information/group-information')
     ).default
 
     render(<GroupInformation groupId={testGroup.id} />)
@@ -230,9 +223,8 @@ describeIntegration('Group creation integration', () => {
     })
     contextMocks.mockUseIsPendingInvitee.mockReturnValue(false)
 
-    const { ExpenseCard } = await import(
-      '@/app/groups/[groupId]/expenses/expense-card'
-    )
+    const { ExpenseCard } =
+      await import('@/app/groups/[groupId]/expenses/expense-card')
 
     const expenseData = {
       id: testExpense.id,
@@ -295,9 +287,8 @@ describeIntegration('Group creation integration', () => {
       name: b.participant.name,
     }))
 
-    const { BalancesList } = await import(
-      '@/app/groups/[groupId]/balances-list'
-    )
+    const { BalancesList } =
+      await import('@/app/groups/[groupId]/balances-list')
 
     render(
       <BalancesList
@@ -315,14 +306,10 @@ describeIntegration('Group creation integration', () => {
     // If an expense was created (self-pay for the whole amount), the
     // creator should have a positive balance of 2500 cents = €25.00
     if (testExpense && balancesResult.balances.length > 0) {
-      const payerBalance = balancesResult.balances.find(
-        (b) => b.balance > 0,
-      )
+      const payerBalance = balancesResult.balances.find((b) => b.balance > 0)
       if (payerBalance) {
         expect(
-          screen.getByTestId(
-            `balance-row-${payerBalance.participant.name}`,
-          ),
+          screen.getByTestId(`balance-row-${payerBalance.participant.name}`),
         ).toBeInTheDocument()
         expect(screen.getByText('€25.00')).toBeInTheDocument()
       }

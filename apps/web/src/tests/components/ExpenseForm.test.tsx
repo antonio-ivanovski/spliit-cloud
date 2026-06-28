@@ -1,10 +1,8 @@
-import { render, screen } from '@/test/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import userEvent from '@testing-library/user-event'
 import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form'
+import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
-import { useCurrencies, getCurrency } from '@/lib/currency'
-import { randomId } from '@/lib/api'
+import { render, screen } from '@/test/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -88,9 +86,21 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
 // ── Fixtures ────────────────────────────────────────────────────────────
 
 const defaultCurrencies = [
-  { code: 'USD', symbol: '$', rounding: 0, decimal_digits: 2, name: 'US Dollar' },
+  {
+    code: 'USD',
+    symbol: '$',
+    rounding: 0,
+    decimal_digits: 2,
+    name: 'US Dollar',
+  },
   { code: 'EUR', symbol: '€', rounding: 0, decimal_digits: 2, name: 'Euro' },
-  { code: 'GBP', symbol: '£', rounding: 0, decimal_digits: 2, name: 'British Pound' },
+  {
+    code: 'GBP',
+    symbol: '£',
+    rounding: 0,
+    decimal_digits: 2,
+    name: 'British Pound',
+  },
 ]
 
 const mockGroup = {
@@ -283,12 +293,12 @@ describe('ExpenseForm', () => {
     )
 
     // Read-only notice should be visible
-    expect(
-      screen.getByText(/this group is archived/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/this group is archived/i)).toBeInTheDocument()
 
     // Title input should be disabled
-    expect(screen.getByPlaceholderText('Monday evening restaurant')).toBeDisabled()
+    expect(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+    ).toBeDisabled()
 
     // No Save button
     expect(

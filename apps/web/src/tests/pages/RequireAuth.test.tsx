@@ -1,6 +1,6 @@
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { useCurrentAccount } from '@/lib/use-current-account'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -9,8 +9,18 @@ const { mockNavigate } = vi.hoisted(() => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  Navigate: ({ to, search }: { to: string; search?: Record<string, string> }) => (
-    <div data-testid="navigate" data-to={to} data-search={JSON.stringify(search ?? {})} />
+  Navigate: ({
+    to,
+    search,
+  }: {
+    to: string
+    search?: Record<string, string>
+  }) => (
+    <div
+      data-testid="navigate"
+      data-to={to}
+      data-search={JSON.stringify(search ?? {})}
+    />
   ),
 }))
 

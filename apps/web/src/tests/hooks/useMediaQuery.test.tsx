@@ -1,6 +1,6 @@
-import { render, screen, act } from '@/test/test-utils'
 import { useMediaQuery } from '@/lib/hooks'
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { act, render, screen } from '@/test/test-utils'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // ── Helper component ───────────────────────────────────────────────────
 
@@ -101,8 +101,14 @@ describe('useMediaQuery', () => {
     } as unknown as MediaQueryList)
 
     const { unmount } = render(<TestComponent query="(min-width: 768px)" />)
-    expect(addEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+    expect(addEventListener).toHaveBeenCalledWith(
+      'change',
+      expect.any(Function),
+    )
     unmount()
-    expect(removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+    expect(removeEventListener).toHaveBeenCalledWith(
+      'change',
+      expect.any(Function),
+    )
   })
 })

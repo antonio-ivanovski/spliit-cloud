@@ -93,7 +93,10 @@ if (navProto && Object.getOwnPropertyDescriptor(navProto, 'clipboard')) {
 Object.defineProperty(navigator, 'clipboard', {
   writable: true,
   configurable: true,
-  value: { writeText: () => Promise.resolve(), readText: () => Promise.resolve('') },
+  value: {
+    writeText: () => Promise.resolve(),
+    readText: () => Promise.resolve(''),
+  },
 })
 
 // ── Initialize i18n (loads en-US locale for tests) ─────────────────────

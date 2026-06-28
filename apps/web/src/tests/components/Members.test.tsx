@@ -1,9 +1,8 @@
-import { render, screen } from '@/test/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import userEvent from '@testing-library/user-event'
+import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import GroupMembers from '@/app/groups/[groupId]/members/members'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
+import { render, screen } from '@/test/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -61,11 +60,15 @@ vi.mock('@/trpc/client', () => {
   return {
     trpc: {
       useUtils: () => ({
-        invitations: { list: { invalidate: vi.fn().mockResolvedValue(undefined) } },
+        invitations: {
+          list: { invalidate: vi.fn().mockResolvedValue(undefined) },
+        },
         groups: {
           get: { invalidate: vi.fn().mockResolvedValue(undefined) },
           getDetails: { invalidate: vi.fn().mockResolvedValue(undefined) },
-          importLinks: { listUnlinked: { invalidate: vi.fn().mockResolvedValue(undefined) } },
+          importLinks: {
+            listUnlinked: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          },
           leavePreview: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
         account: {
@@ -87,7 +90,10 @@ vi.mock('@/trpc/client', () => {
           },
         },
         revoke: {
-          useMutation: () => ({ mutateAsync: mockRevokeMutation, isPending: false }),
+          useMutation: () => ({
+            mutateAsync: mockRevokeMutation,
+            isPending: false,
+          }),
         },
         list: {
           useQuery: () => ({ data: mockInvitationsData, isLoading: false }),
@@ -104,10 +110,16 @@ vi.mock('@/trpc/client', () => {
       groups: {
         members: {
           updateRole: {
-            useMutation: () => ({ mutate: mockUpdateRoleMutation, isPending: false }),
+            useMutation: () => ({
+              mutate: mockUpdateRoleMutation,
+              isPending: false,
+            }),
           },
           remove: {
-            useMutation: () => ({ mutateAsync: mockRemoveMemberMutation, isPending: false }),
+            useMutation: () => ({
+              mutateAsync: mockRemoveMemberMutation,
+              isPending: false,
+            }),
           },
           removePreview: {
             useQuery: () => ({ data: undefined, isLoading: false }),
@@ -122,7 +134,10 @@ vi.mock('@/trpc/client', () => {
           useMutation: () => ({ mutate: mockLeaveMutation, isPending: false }),
         },
         archiveForSelf: {
-          useMutation: () => ({ mutateAsync: mockArchiveForSelfMutation, isPending: false }),
+          useMutation: () => ({
+            mutateAsync: mockArchiveForSelfMutation,
+            isPending: false,
+          }),
         },
         leavePreview: {
           useQuery: () => ({ data: undefined, isLoading: false }),
@@ -160,7 +175,12 @@ const mockGroup = {
   information: '',
   createdAt: new Date(),
   updatedAt: new Date(),
-  ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD', groupId: 'group-1' },
+  ledger: {
+    id: 'ledger-1',
+    currency: '$',
+    currencyCode: 'USD',
+    groupId: 'group-1',
+  },
   members: [],
   invitations: [],
   participants: [],
@@ -268,8 +288,20 @@ describe('GroupMembers', () => {
       group: {
         ...mockGroup,
         members: [
-          { id: 'gm-1', accountId: 'user-1', role: 'ADMIN', status: 'ACTIVE', ledgerParticipant: { id: 'lp-1' } },
-          { id: 'gm-2', accountId: 'user-2', role: 'MEMBER', status: 'ACTIVE', ledgerParticipant: { id: 'lp-2' } },
+          {
+            id: 'gm-1',
+            accountId: 'user-1',
+            role: 'ADMIN',
+            status: 'ACTIVE',
+            ledgerParticipant: { id: 'lp-1' },
+          },
+          {
+            id: 'gm-2',
+            accountId: 'user-2',
+            role: 'MEMBER',
+            status: 'ACTIVE',
+            ledgerParticipant: { id: 'lp-2' },
+          },
         ],
       } as any,
       currentLedgerParticipantId: 'lp-1',
@@ -310,7 +342,13 @@ describe('GroupMembers', () => {
       group: {
         ...mockGroup,
         members: [
-          { id: 'gm-1', accountId: 'user-1', role: 'ADMIN', status: 'ACTIVE', ledgerParticipant: { id: 'lp-1' } },
+          {
+            id: 'gm-1',
+            accountId: 'user-1',
+            role: 'ADMIN',
+            status: 'ACTIVE',
+            ledgerParticipant: { id: 'lp-1' },
+          },
         ],
       } as any,
       currentLedgerParticipantId: 'lp-1',
@@ -344,9 +382,7 @@ describe('GroupMembers', () => {
 
     render(<GroupMembers />)
 
-    expect(
-      screen.getByText(/only admins can invite/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/only admins can invite/i)).toBeInTheDocument()
   })
 
   it('submit creates invitation via email', async () => {
@@ -400,7 +436,9 @@ describe('GroupMembers', () => {
 
     // The generated link section should appear
     await vi.waitFor(() => {
-      expect(screen.getByDisplayValue('https://spliit.app/invite/abc123')).toBeInTheDocument()
+      expect(
+        screen.getByDisplayValue('https://spliit.app/invite/abc123'),
+      ).toBeInTheDocument()
     })
   })
 })

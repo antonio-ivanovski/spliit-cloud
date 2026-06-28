@@ -4,7 +4,19 @@ import { describe, expect, it, vi } from 'vitest'
 // ── Module mocks ────────────────────────────────────────────────────────
 
 vi.mock('@tanstack/react-router', () => {
-  const MockLink = ({ to, children, search, params, ...props }: { to: string; children: React.ReactNode; search?: Record<string, string>; params?: Record<string, string>; [key: string]: unknown }) => {
+  const MockLink = ({
+    to,
+    children,
+    search,
+    params,
+    ...props
+  }: {
+    to: string
+    children: React.ReactNode
+    search?: Record<string, string>
+    params?: Record<string, string>
+    [key: string]: unknown
+  }) => {
     // Build href from to, params, and search
     let href = to
     if (params) {
@@ -16,13 +28,22 @@ vi.mock('@tanstack/react-router', () => {
       const query = new URLSearchParams(search)
       href += '?' + query.toString()
     }
-    return <a href={href} {...props}>{children}</a>
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    )
   }
   return { Link: MockLink }
 })
 
 vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    refresh: vi.fn(),
+  }),
 }))
 
 import { ReimbursementList } from '@/app/groups/[groupId]/reimbursement-list'
@@ -51,7 +72,7 @@ describe('ReimbursementList', () => {
     expect(screen.getByTestId('no-reimbursements')).toBeInTheDocument()
     expect(
       screen.getByText(
-        "It looks like your group doesn\u2019t need any reimbursement \uD83D\uDE01",
+        'It looks like your group doesn\u2019t need any reimbursement \uD83D\uDE01',
       ),
     ).toBeInTheDocument()
     expect(screen.queryByTestId('reimbursements-list')).not.toBeInTheDocument()
@@ -62,9 +83,7 @@ describe('ReimbursementList', () => {
       makeParticipant('alice-id', 'Alice'),
       makeParticipant('bob-id', 'Bob'),
     ]
-    const reimbursements = [
-      { from: 'alice-id', to: 'bob-id', amount: 1500 },
-    ]
+    const reimbursements = [{ from: 'alice-id', to: 'bob-id', amount: 1500 }]
 
     render(
       <ReimbursementList
@@ -89,9 +108,7 @@ describe('ReimbursementList', () => {
       makeParticipant('alice-id', 'Alice'),
       makeParticipant('bob-id', 'Bob'),
     ]
-    const reimbursements = [
-      { from: 'alice-id', to: 'bob-id', amount: 1500 },
-    ]
+    const reimbursements = [{ from: 'alice-id', to: 'bob-id', amount: 1500 }]
 
     render(
       <ReimbursementList
@@ -111,9 +128,7 @@ describe('ReimbursementList', () => {
       makeParticipant('alice-id', 'Alice'),
       makeParticipant('bob-id', 'Bob'),
     ]
-    const reimbursements = [
-      { from: 'alice-id', to: 'bob-id', amount: 2000 },
-    ]
+    const reimbursements = [{ from: 'alice-id', to: 'bob-id', amount: 2000 }]
 
     render(
       <ReimbursementList

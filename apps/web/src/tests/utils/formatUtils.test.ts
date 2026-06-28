@@ -1,12 +1,12 @@
 import {
-  formatCurrency,
-  formatDateOnly,
   amountAsDecimal,
   amountAsMinorUnits,
+  formatCurrency,
+  formatDateOnly,
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import type { Currency } from '@spliit/domain/currency'
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 // ── Fixtures ───────────────────────────────────────────────────────────
 

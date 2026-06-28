@@ -1,4 +1,4 @@
-import { render, screen, within } from '@/test/test-utils'
+import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -8,13 +8,28 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, ...props }: { to: string; children: React.ReactNode; [key: string]: unknown }) => (
-    <a href={to} {...props}>{children}</a>
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
   ),
 }))
 
 vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    refresh: vi.fn(),
+  }),
 }))
 
 // Mock useActiveUser so ActiveUserBalance can resolve
@@ -24,8 +39,8 @@ vi.mock('@/lib/hooks', () => ({
 
 // ── SUT ─────────────────────────────────────────────────────────────────
 
-import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import { useIsPendingInvitee } from '@/app/groups/[groupId]/current-group-context'
+import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import { useActiveUser } from '@/lib/hooks'
 
 // ── Helpers ──────────────────────────────────────────────────────────────

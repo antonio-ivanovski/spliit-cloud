@@ -30,20 +30,17 @@ export async function startTestServer(): Promise<{
   const { app } = await import('@spliit/api/app')
 
   return new Promise((resolve, reject) => {
-    server = serve(
-      { fetch: app.fetch, port: 0 },
-      (listener: Server) => {
-        const addr = listener.address()
-        if (!addr || typeof addr === 'string') {
-          reject(new Error('Could not determine server address'))
-          return
-        }
-        resolve({
-          port: addr.port,
-          close: () => closeTestServer(listener),
-        })
-      },
-    )
+    server = serve({ fetch: app.fetch, port: 0 }, (listener: Server) => {
+      const addr = listener.address()
+      if (!addr || typeof addr === 'string') {
+        reject(new Error('Could not determine server address'))
+        return
+      }
+      resolve({
+        port: addr.port,
+        close: () => closeTestServer(listener),
+      })
+    })
   })
 }
 

@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@/test/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * BLOCK A: Mock-based tests for RecentGroupList
@@ -593,8 +593,7 @@ describe('RecentGroupList', () => {
     const { container } = render(<RecentGroupList />)
 
     // PendingInvitations shows skeleton cards while loading
-    const skeletons =
-      container.querySelectorAll('[class*="animate-pulse"]')
+    const skeletons = container.querySelectorAll('[class*="animate-pulse"]')
     // The PendingInvitations skeleton renders two skeleton rows inside the card
     expect(skeletons.length).toBeGreaterThan(0)
     // The title should still be visible

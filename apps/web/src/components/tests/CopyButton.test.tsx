@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, act } from '@/test/test-utils'
 import { CopyButton } from '@/components/copy-button'
+import { act, fireEvent, render, screen } from '@/test/test-utils'
 
 describe('CopyButton', () => {
   it('copies the provided text to clipboard on click', async () => {

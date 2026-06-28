@@ -1,6 +1,6 @@
-import { render, screen } from '@/test/test-utils'
-import { localeLabels, type Locale } from '@/i18n/request'
 import * as i18nReact from '@/i18n/react'
+import { localeLabels } from '@/i18n/request'
+import { render, screen } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 

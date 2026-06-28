@@ -9,7 +9,11 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import { I18nProvider } from '@/i18n/react'
 import { TRPCProvider } from '@/trpc/client'
-import { cleanup, render as rtlRender, type RenderOptions } from '@testing-library/react'
+import {
+  cleanup,
+  render as rtlRender,
+  type RenderOptions,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type ReactElement } from 'react'
 import { afterEach } from 'vitest'
@@ -38,6 +42,5 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
   }
 }
 
-export { render }
 export * from '@testing-library/react'
-export { userEvent }
+export { render, userEvent }

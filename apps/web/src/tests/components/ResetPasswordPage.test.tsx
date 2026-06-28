@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ResetPasswordPage } from '@/app/auth/reset-password'
 
@@ -43,9 +43,7 @@ describe('ResetPasswordPage', () => {
 
     expect(screen.getByText('Choose a new password')).toBeInTheDocument()
     expect(screen.getByLabelText('New password')).toBeInTheDocument()
-    expect(
-      screen.getByLabelText('Confirm new password'),
-    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Confirm new password')).toBeInTheDocument()
     expect(screen.getByText('Save new password')).toBeInTheDocument()
   })
 

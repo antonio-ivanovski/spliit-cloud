@@ -1,8 +1,7 @@
-import { render, screen } from '@/test/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import userEvent from '@testing-library/user-event'
 import { GroupForm, type Props } from '@/components/group-form'
-import { useCurrencies, getCurrency } from '@/lib/currency'
+import { getCurrency, useCurrencies } from '@/lib/currency'
+import { render, screen } from '@/test/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -43,7 +42,13 @@ vi.mock('@/lib/currency', () => ({
 // ── Fixtures ────────────────────────────────────────────────────────────
 
 const defaultCurrencies = [
-  { code: 'USD', symbol: '$', rounding: 0, decimal_digits: 2, name: 'US Dollar' },
+  {
+    code: 'USD',
+    symbol: '$',
+    rounding: 0,
+    decimal_digits: 2,
+    name: 'US Dollar',
+  },
   { code: 'EUR', symbol: '€', rounding: 0, decimal_digits: 2, name: 'Euro' },
 ]
 
@@ -96,7 +101,9 @@ describe('GroupForm', () => {
 
     // All three main fields should be present
     expect(screen.getByText('Group name')).toBeInTheDocument()
-    expect(screen.getByText('Group information', { selector: 'label' })).toBeInTheDocument()
+    expect(
+      screen.getByText('Group information', { selector: 'label' }),
+    ).toBeInTheDocument()
 
     // Currency selector trigger (combobox) should be present
     expect(screen.getByRole('combobox')).toBeInTheDocument()
@@ -110,18 +117,14 @@ describe('GroupForm', () => {
     render(<GroupForm onSubmit={onSubmit} />)
 
     // The hint paragraph contains the inviteAfterCreate message
-    expect(
-      screen.getByText(/open the Members tab/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/open the Members tab/i)).toBeInTheDocument()
   })
 
   it('hides the Members tab hint when hideInviteHint is true', () => {
     const onSubmit = vi.fn()
     render(<GroupForm onSubmit={onSubmit} hideInviteHint />)
 
-    expect(
-      screen.queryByText(/open the Members tab/i),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText(/open the Members tab/i)).not.toBeInTheDocument()
   })
 
   it('renders read-only when currentMemberRole is MEMBER', () => {
@@ -135,9 +138,7 @@ describe('GroupForm', () => {
     )
 
     // Read-only note should be visible
-    expect(
-      screen.getByText(/only owners and admins/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/only owners and admins/i)).toBeInTheDocument()
 
     // Name input should be disabled
     expect(screen.getByRole('textbox', { name: /name/i })).toBeDisabled()
@@ -159,9 +160,7 @@ describe('GroupForm', () => {
     )
 
     // Archived notice should be visible
-    expect(
-      screen.getByText(/this group is archived/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/this group is archived/i)).toBeInTheDocument()
 
     // Name input should be disabled
     expect(screen.getByRole('textbox', { name: /name/i })).toBeDisabled()

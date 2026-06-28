@@ -1,11 +1,6 @@
+import { detectLocale, i18n, loadLocale, setUserLocale } from '@/i18n/react'
 import { defaultLocale } from '@/i18n/request'
-import {
-  detectLocale,
-  loadLocale,
-  setUserLocale,
-  i18n,
-} from '@/i18n/react'
-import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Helpers ────────────────────────────────────────────────────────────
 

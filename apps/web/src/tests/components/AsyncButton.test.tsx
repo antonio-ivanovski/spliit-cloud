@@ -1,16 +1,21 @@
-import { render, screen } from '@/test/test-utils'
 import { AsyncButton } from '@/components/async-button'
-import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@/test/test-utils'
+import { describe, expect, it, vi } from 'vitest'
 
 describe('AsyncButton', () => {
   it('renders children when idle', () => {
     render(<AsyncButton>Click me</AsyncButton>)
-    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /click me/i }),
+    ).toBeInTheDocument()
   })
 
   it('shows Loader2 and loadingContent when action is in progress', async () => {
     const { user } = render(
-      <AsyncButton action={() => new Promise(() => {})} loadingContent="Saving…">
+      <AsyncButton
+        action={() => new Promise(() => {})}
+        loadingContent="Saving…"
+      >
         Click me
       </AsyncButton>,
     )
@@ -18,7 +23,9 @@ describe('AsyncButton', () => {
     await user.click(screen.getByRole('button'))
 
     // The button should now contain a Loader2 icon and the loading content
-    expect(screen.getByRole('button').querySelector('.animate-spin')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button').querySelector('.animate-spin'),
+    ).toBeInTheDocument()
     expect(screen.getByRole('button')).toHaveTextContent('Saving…')
   })
 
@@ -64,7 +71,9 @@ describe('AsyncButton', () => {
 
     // While loading, the button should show loading content
     expect(screen.getByRole('button')).toHaveTextContent('Working…')
-    expect(screen.getByRole('button').querySelector('.animate-spin')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button').querySelector('.animate-spin'),
+    ).toBeInTheDocument()
 
     // Resolve the action
     resolvePromise()

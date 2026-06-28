@@ -1,8 +1,8 @@
-import { render, screen } from '@/test/test-utils'
 import { SubmitButton } from '@/components/submit-button'
-import { FormProvider, useForm } from 'react-hook-form'
-import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@/test/test-utils'
 import type { ReactNode } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { describe, expect, it, vi } from 'vitest'
 
 /**
  * A test wrapper that provides react-hook-form context via FormProvider.
@@ -52,7 +52,9 @@ describe('SubmitButton', () => {
     await user.click(screen.getByRole('button'))
 
     // The button should now show loading state
-    expect(screen.getByRole('button').querySelector('.animate-spin')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button').querySelector('.animate-spin'),
+    ).toBeInTheDocument()
     expect(screen.getByRole('button')).toHaveTextContent('Saving…')
 
     // Resolve the submission

@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@/test/test-utils'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { fireEvent, render, screen } from '@/test/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { CompleteProfilePage } from '@/app/auth/complete-profile'
 import { useCurrentAccount } from '@/lib/use-current-account'
@@ -16,7 +16,13 @@ vi.mock('@tanstack/react-router', () => ({
     useSearch: () => ({ redirect: undefined }),
   }),
   useNavigate: () => mockNavigate,
-  Navigate: ({ to, search }: { to: string; search?: Record<string, unknown> }) => {
+  Navigate: ({
+    to,
+    search,
+  }: {
+    to: string
+    search?: Record<string, unknown>
+  }) => {
     // Render nothing in tests; the caller asserts that the form is absent.
     return null
   },
@@ -40,15 +46,17 @@ vi.mock('@/trpc/client', () => ({
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
-function mockAccount(overrides: Partial<{
-  id: string
-  name: string | null
-  email: string
-  emailVerified: boolean
-  image: string | null
-  createdAt: Date
-  updatedAt: Date
-}> = {}) {
+function mockAccount(
+  overrides: Partial<{
+    id: string
+    name: string | null
+    email: string
+    emailVerified: boolean
+    image: string | null
+    createdAt: Date
+    updatedAt: Date
+  }> = {},
+) {
   const defaults = {
     id: 'user-1',
     name: null as string | null,
@@ -97,9 +105,7 @@ describe('CompleteProfilePage', () => {
     render(<CompleteProfilePage />)
 
     // The form should not be rendered — Navigate was returned instead
-    expect(
-      screen.queryByText('Complete your profile'),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText('Complete your profile')).not.toBeInTheDocument()
   })
 
   it('redirects to redirectTo when account already has name', () => {
@@ -114,9 +120,7 @@ describe('CompleteProfilePage', () => {
     render(<CompleteProfilePage />)
 
     // The form should not be rendered — Navigate was returned instead
-    expect(
-      screen.queryByText('Complete your profile'),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText('Complete your profile')).not.toBeInTheDocument()
   })
 
   it('shows form when account has no name', () => {
@@ -137,9 +141,7 @@ describe('CompleteProfilePage', () => {
       ),
     ).toBeInTheDocument()
     expect(screen.getByLabelText('Display name')).toBeInTheDocument()
-    expect(
-      screen.getByText('Save and continue'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Save and continue')).toBeInTheDocument()
   })
 
   it('shows error when name is empty', () => {
@@ -157,13 +159,9 @@ describe('CompleteProfilePage', () => {
     const form = container.querySelector('form') as HTMLFormElement
     fireEvent.submit(form)
 
-    expect(
-      screen.getByText('Enter a display name.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Enter a display name.')).toBeInTheDocument()
     // The alert role should be present
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'Enter a display name.',
-    )
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter a display name.')
   })
 
   it('shows error when name is too short (< 2 chars)', async () => {

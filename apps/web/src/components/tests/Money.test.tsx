@@ -1,8 +1,13 @@
-import { render, screen } from '@/test/test-utils'
 import { Money } from '@/components/money'
 import type { Currency } from '@/lib/currency'
+import { render, screen } from '@/test/test-utils'
 
-const usd: Currency = { code: 'USD', symbol: '$', rounding: 0, decimal_digits: 2 }
+const usd: Currency = {
+  code: 'USD',
+  symbol: '$',
+  rounding: 0,
+  decimal_digits: 2,
+}
 
 describe('Money', () => {
   it('renders formatted currency without bold or color classes by default', () => {

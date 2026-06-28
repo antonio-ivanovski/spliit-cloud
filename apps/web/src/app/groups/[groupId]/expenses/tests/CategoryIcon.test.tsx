@@ -1,10 +1,12 @@
-import { render } from '@/test/test-utils'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
+import { render } from '@/test/test-utils'
 
 describe('CategoryIcon', () => {
   it('renders the correct icon for a known category', () => {
     const { container } = render(
-      <CategoryIcon category={{ grouping: 'Food and Drink', name: 'Groceries' }} />,
+      <CategoryIcon
+        category={{ grouping: 'Food and Drink', name: 'Groceries' }}
+      />,
     )
     const svg = container.querySelector('svg')
     expect(svg).toBeInTheDocument()

@@ -1,6 +1,6 @@
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { useCurrentAccount } from '@/lib/use-current-account'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -9,19 +9,38 @@ vi.mock('@/lib/use-current-account', () => ({
 }))
 
 vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    refresh: vi.fn(),
+  }),
   usePathname: () => '/',
   useSearchParams: () => new URLSearchParams(),
 }))
 
 // Mock @tanstack/react-router for Link and navigation
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, ...props }: { to: string; children: React.ReactNode; [key: string]: unknown }) => (
-    <a href={to} {...props}>{children}</a>
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
   ),
   useNavigate: () => vi.fn(),
   getRouteApi: () => ({
-    useSearch: () => ({ redirect: undefined, mode: undefined, email: undefined }),
+    useSearch: () => ({
+      redirect: undefined,
+      mode: undefined,
+      email: undefined,
+    }),
   }),
 }))
 
@@ -41,7 +60,9 @@ vi.mock('@/components/auth/auth-panel', () => ({
 
 // Mock RecentGroupList to avoid tRPC
 vi.mock('@/app/groups/recent-group-list', () => ({
-  RecentGroupList: () => <div data-testid="recent-group-list">Recent groups</div>,
+  RecentGroupList: () => (
+    <div data-testid="recent-group-list">Recent groups</div>
+  ),
 }))
 
 // ── SUT ─────────────────────────────────────────────────────────────────
@@ -130,7 +151,9 @@ describe('HomePage (signed-out)', () => {
     render(<HomePage />)
 
     expect(screen.getByText('Create a group')).toBeInTheDocument()
-    expect(screen.getByText('Import group from another service')).toBeInTheDocument()
+    expect(
+      screen.getByText('Import group from another service'),
+    ).toBeInTheDocument()
   })
 })
 

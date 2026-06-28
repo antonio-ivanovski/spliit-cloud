@@ -80,8 +80,10 @@ describe('ThemeProvider', () => {
 
   it('system dark preference resolves dark class when theme is system', async () => {
     // Override matchMedia so it reports dark mode preference
-    const listeners: Record<string, Array<(e: MediaQueryListEvent) => void>> =
-      {}
+    const listeners: Record<
+      string,
+      Array<(e: MediaQueryListEvent) => void>
+    > = {}
     vi.spyOn(window, 'matchMedia').mockImplementation(
       (query: string): MediaQueryList => ({
         matches: true,

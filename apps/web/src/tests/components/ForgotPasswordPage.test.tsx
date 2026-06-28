@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ForgotPasswordPage } from '@/app/auth/forgot-password'
 
@@ -44,9 +44,7 @@ describe('ForgotPasswordPage', () => {
     ).toBeInTheDocument()
     expect(screen.getByLabelText('Email')).toBeInTheDocument()
     expect(screen.getByText('Send reset link')).toBeInTheDocument()
-    expect(
-      screen.getByText('Back to sign in'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Back to sign in')).toBeInTheDocument()
   })
 
   it('shows success message after submitting email', async () => {
@@ -66,9 +64,7 @@ describe('ForgotPasswordPage', () => {
       ),
     ).toBeInTheDocument()
     // "Use a different email" button should be present
-    expect(
-      screen.getByText('Use a different email'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Use a different email')).toBeInTheDocument()
   })
 
   it('shows error when email is invalid', async () => {

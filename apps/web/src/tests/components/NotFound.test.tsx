@@ -4,8 +4,18 @@ import { describe, expect, it, vi } from 'vitest'
 // ── Module mocks ────────────────────────────────────────────────────────
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, ...props }: { to: string; children: React.ReactNode; [key: string]: unknown }) => (
-    <a href={to} {...props}>{children}</a>
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
   ),
 }))
 
@@ -19,9 +29,7 @@ describe('NotFound', () => {
   it("renders 'not found' text", () => {
     render(<NotFound />)
 
-    expect(
-      screen.getByText('This group does not exist.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('This group does not exist.')).toBeInTheDocument()
   })
 
   it('renders a link back to home', () => {
