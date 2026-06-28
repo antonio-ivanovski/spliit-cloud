@@ -43,10 +43,13 @@ The main things I wanted to improve are:
 
 - authenticated accounts
 - reliable group syncing across devices and users
+- account-only groups (no more anonymous local-only groups)
 - a stronger test suite
 - a lighter and easier-to-operate stack
 - clearer self-hosting and deployment paths
 - migration/import support for existing Spliit groups
+
+Spliit Cloud intentionally ships only account-bound groups. I explored supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became hard to implement and hard to explain. Account-only groups keep the mental model simple, the data secure, and the path clear for future features. See the [FAQ](#why-are-there-no-local-only--anonymous-groups) for the full reasoning.
 
 Spliit Cloud is not affiliated with the original Spliit project unless stated otherwise.
 
@@ -321,6 +324,17 @@ Yes. Self-hosting is supported. See the local and container setup instructions b
 ### Can I migrate from original Spliit?
 
 Yes. Import of `spliit.app` group exports is supported today; see [docs/migration.md](./docs/migration.md) for the step-by-step. Self-hosted Spliit instances can be migrated by exporting each group and importing it into Spliit Cloud.
+
+### Why are there no local-only / anonymous groups?
+
+In the original Spliit, groups lived entirely in your browser and were identified by a URL or group ID. In practice that led to:
+
+- **Confusion**: friends and family who tried the app weren't sure how local groups worked, who could edit what, or where the data lived.
+- **Data loss**: clearing site data, switching browsers, or reinstalling silently remove the group from their "account".
+- **Lost access**: lose the link and the group is gone.
+- **Weak security**: anyone who stumbled on a group ID had full edit access, and even trusted participants could make a mistaken or bad-faith edit with no real recourse.
+
+I tried supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became too complex to build and too complex to explain. Account-only groups give Spliit Cloud a simpler mental model, real ownership, easier collaboration, and a foundation for features like member management and notifications. Local-only groups are probably not coming back.
 
 ### Is my data end-to-end encrypted?
 
