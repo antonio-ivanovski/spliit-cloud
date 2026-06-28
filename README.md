@@ -1,20 +1,75 @@
-<img alt="Spliit" height="60" src="https://github.com/antonio-ivanovski/spliit-cloud/blob/main/apps/web/public/logo-with-text.svg?raw=true" />
+<img alt="Spliit Cloud" height="60" src="https://github.com/antonio-ivanovski/spliit-cloud/blob/main/apps/web/public/logo-with-text.svg?raw=true" />
 
-Spliit is a free and open source alternative to Splitwise.
+**Spliit Cloud is a community-maintained fork of Spliit: a free, open-source expense splitting app for groups, trips, roommates, friends, and shared costs.**
 
-Spliit Cloud is deployed at [spliit.cloud](https://spliit.cloud) — web on Cloudflare Pages, API on a Hetzner VPS via Dokploy (PostgreSQL on the same VPS). Database backed up to a dedicated R2 bucket; asset uploads stored in a separate R2 bucket.
+It keeps the simplicity of the original Spliit while moving toward cloud accounts, reliable group syncing, stronger tests, and a more maintainable stack.
 
-Spliit Cloud is a community fork of Spliit, originally created by [Sebastien Castiel](https://github.com/scastiel). The original `spliit-app/spliit` project appears inactive, with issues and pull requests not receiving maintainer responses. This fork exists to keep the project moving in a more focused direction.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Status: Active Development](https://img.shields.io/badge/status-active%20development-blue)
+![Open Source](https://img.shields.io/badge/open%20source-yes-brightgreen)
+![GitHub stars](https://img.shields.io/github/stars/antonio-ivanovski/spliit-cloud)
+![GitHub issues](https://img.shields.io/github/issues/antonio-ivanovski/spliit-cloud)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/antonio-ivanovski/spliit-cloud)
 
-The initial goals are:
+> [!NOTE]
+> Spliit Cloud is stable enough for testing and everyday usage, but it is still evolving quickly. Please report bugs, missing features, and migration issues.
 
-- make the tech stack lighter and easier to operate
-- build out complete test coverage
-- make authenticated cloud accounts the source of truth
-- move group and direct expense accounting onto a shared ledger model
-- provide an extensible import path for existing expense data, starting with Spliit groups
+## Try it
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fantonio-ivanovski%2Fspliit-cloud&project-name=my-spliit-cloud-instance&repository-name=my-spliit-cloud-instance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D&)
+Public instance: **[https://spliit.cloud](https://spliit.cloud)**
+
+You can also self-host your own instance. See [Self-hosting overview](#self-hosting-overview), [Run locally](#run-locally), and [Run in a container](#run-in-a-container).
+
+> [!IMPORTANT]
+> The public instance is provided as a community-hosted service. If you need full control over data, uptime, backups, or privacy, self-hosting is recommended.
+
+![Spliit Cloud screenshots](./docs/screenshots/header-promo.webp)
+
+## What is Spliit Cloud?
+
+Spliit Cloud is a community-maintained fork of [Spliit](https://github.com/spliit-app/spliit), the open-source expense splitter originally created by [Sebastien Castiel](https://github.com/scastiel). It aims to keep the lightweight, no-frills experience that made Spliit popular while evolving the product toward real cloud accounts, reliable multi-device sync, and a stack that is easier to operate and self-host.
+
+The public instance lives at [spliit.cloud](https://spliit.cloud): the web app runs on Cloudflare Pages, the API runs on a Hetzner VPS via Dokploy with PostgreSQL on the same VPS, database backups are written to a dedicated Cloudflare R2 bucket, and asset uploads are stored in a separate Cloudflare R2 bucket.
+
+## Why this fork exists
+
+Spliit Cloud exists because I liked Spliit and wanted to keep using it with my friends.
+
+The original Spliit project, created by [Sebastien Castiel](https://github.com/scastiel), is a clean and useful open-source alternative to Splitwise. I first looked at contributing improvements upstream, but after submitting fixes and reviewing existing issues and pull requests, the project appeared to have slowed down.
+
+This fork is meant to continue that work openly, with proper credit to the original author and project.
+
+The main things I wanted to improve are:
+
+- authenticated accounts
+- reliable group syncing across devices and users
+- a stronger test suite
+- a lighter and easier-to-operate stack
+- clearer self-hosting and deployment paths
+- migration/import support for existing Spliit groups
+
+Spliit Cloud is not affiliated with the original Spliit project unless stated otherwise.
+
+## Relationship to Spliit
+
+Spliit Cloud is a community fork of [spliit-app/spliit](https://github.com/spliit-app/spliit).
+
+Credit for the original idea, design, and foundation belongs to the original Spliit project and its creator, [Sebastien Castiel](https://github.com/scastiel).
+
+This fork keeps the project open-source and aims to continue development in a direction focused on accounts, syncing, maintainability, and self-hosting.
+
+The original `spliit-app/spliit` project appears to have slowed down, with many issues and pull requests not receiving maintainer responses recently. This fork exists to keep the project moving in a more focused direction while preserving credit to the original work.
+
+## Who is this for?
+
+Spliit Cloud may be useful if you want:
+
+- a free and open-source alternative to Splitwise
+- shared expense tracking for trips, friends, roommates, couples, or small groups
+- a hosted app with accounts and synced groups
+- a self-hostable expense splitting app
+- a project that is actively maintained and open to contributions
+- a codebase with stronger tests and a simpler operating model
 
 ## Features
 
@@ -31,43 +86,81 @@ The initial goals are:
 - [x] Search for expenses in a group
 - [x] Upload and attach images to expenses
 - [x] Create expense by scanning a receipt
-- [x] [Cloud accounts and group synchronization](./openspec/changes/add-accounts-cloud-group-sync)
+- [x] Cloud accounts and group synchronization
 
-### Possible incoming features
+## Roadmap
 
-- [ ] Ability to create recurring expenses
-- [ ] MCP and simplified API surface for AI agent based usage
-- [ ] Publish API OpenAPI spec
-- [ ] Continue bundle-size reduction work. TanStack lazy routes and react-i18next lazy locale loading are already in place; current low-hanging fruit work resulted in the main chunk from roughly 1500 kB to 750 kB.
-- [ ] Complete offline usage and sync when online
-- [ ] Admin and self member management
-- [ ] Update the rest of the tech stack, including TypeScript
-- [ ] Self account settings, including synced theme preferences and display name
-- [ ] Phone and email notifications with granular per-event control in account settings
-- [ ] [Direct account-to-account expenses](./openspec/changes/add-direct-account-expenses)
-- [ ] [Account overview homepage](./openspec/changes/add-overview-homepage)
-- [ ] [Extensible expense import, starting with Spliit groups](./openspec/changes/import-spliit-groups)
+The current focus areas, in rough order. See [ROADMAP.md](./ROADMAP.md) for the long-form version.
+
+### Phase 1: Reliable cloud foundation
+
+- [x] Public hosted instance
+- [x] PostgreSQL-backed API
+- [x] Asset uploads
+- [x] Database backups
+- [x] Account-based group ownership
+- [x] Reliable group sync between account devices
+- [x] Basic account settings
+
+### Phase 2: Migration and compatibility
+
+- [x] Import existing Spliit groups
+- [x] Export user/group data
+- [x] Migration guide for existing self-hosted users
+
+### Phase 3: Better expense workflows
+
+- [ ] Direct account-to-account expenses
+- [ ] Recurring expenses
+- [ ] Account overview homepage
+- [x] Member management
+- [ ] Notifications
+
+### Phase 4: Trust, privacy, and scale
+
+- [x] Complete test coverage for critical flows
+- [ ] Better offline support
 - [ ] End-to-end encrypted groups and expenses
+- [ ] OpenAPI spec
+- [ ] Public API / MCP support for agent-based workflows
 
-## Stack
+## Known limitations
 
-- [Vite](https://vite.dev/) + [React](https://react.dev/) for the web SPA, replacing Next.js in favor of simplicity, efficiency, and room for future expansion
-- [Hono](https://hono.dev/) + [tRPC](https://trpc.io/) for the API, also chosen over Next.js API routes for a smaller and more explicit runtime
-- [Bun](https://bun.sh/) for package management and the API runtime
-- [TailwindCSS](https://tailwindcss.com/) for the styling
-- [shadcn/UI](https://ui.shadcn.com/) for the UI components
-- [Prisma](https://prisma.io) to access the database
+Spliit Cloud is still evolving. Current limitations may include:
 
-## Contribute
+- account and sync flows are still being refined
+- offline-first usage is not complete yet
+- notification settings are not implemented yet
+- Weblate translation workflow is not set up for this fork yet
+- end-to-end encryption is planned but not available yet
 
-The project is open to contributions. Feel free to open an issue or even a pull-request!
+Please open an issue if you hit a bug or if a missing feature blocks your usage.
 
-Financial support links are TBD.
+## Data and privacy
 
-### Translation
+Spliit Cloud stores expense data needed to make the app work, including groups, participants, expenses, balances, and uploaded expense documents if that feature is enabled.
 
-Weblate is not set up for this fork yet. Until then, translation contributions
-are still welcome as direct JSON changes in the locale files.
+The public instance is hosted as follows:
+
+- web app: Cloudflare Pages
+- API: Hetzner VPS via Dokploy
+- database: PostgreSQL
+- database backups: Cloudflare R2
+- uploaded assets: Cloudflare R2
+
+For users who want full control over data and infrastructure, self-hosting is supported. See [PRIVACY.md](./PRIVACY.md) for the detailed data-handling notes and [Self-hosting overview](#self-hosting-overview) for running your own instance.
+
+## Security
+
+If you discover a security issue, please follow the responsible disclosure process in [SECURITY.md](./SECURITY.md) instead of opening a public issue.
+
+## Self-hosting overview
+
+The current project focus is on the cloud account system and the public instance at [spliit.cloud](https://spliit.cloud). Self-hosting is supported but is not the primary development priority at this stage.
+
+Spliit Cloud can be self-hosted with a web frontend, an API service, PostgreSQL, optional S3-compatible storage for expense documents, and optional OpenAI-compatible configuration for receipt scanning and category extraction.
+
+The simplest local setup uses the included scripts and a local PostgreSQL container.
 
 ## Run locally
 
@@ -88,6 +181,21 @@ are still welcome as direct JSON changes in the locale files.
 The API is available at http://localhost:3001. The database is only reachable on the internal Docker network and stores data in the `postgres_data` Docker volume.
 
 For Dokploy on a single Hetzner VPS, publish only the `api` service as your API domain and keep the `db` service private. If the web app is hosted on Cloudflare Pages, set `VITE_API_URL` there to the public Dokploy API origin, for example `https://api.spliit.example.com`. Configure off-server Postgres backups separately.
+
+See [docs/deployment.md](./docs/deployment.md) for preliminary production notes.
+
+## Production deployment
+
+> Production self-hosting guidance is preliminary. The project is focused on the cloud account system; detailed deployment documentation will be expanded as self-hosting matures.
+
+Key requirements for a public instance:
+
+- `BETTER_AUTH_SECRET` (generate with `openssl rand -base64 32`)
+- HTTPS on both web and API origins
+- persistent PostgreSQL storage with off-server backups
+- SMTP configured (`SMTP_HOST`, `EMAIL_FROM`) for sign-in and invitations
+- `db` service on a private network (only `api` reachable publicly)
+- tested database restore procedure
 
 ## Health check
 
@@ -148,6 +256,97 @@ You can offer users to automatically deduce the expense category from the title.
 PUBLIC_ENABLE_CATEGORY_EXTRACT=true
 OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
+
+## Stack
+
+- [Vite](https://vite.dev/) + [React](https://react.dev/) for the web SPA, replacing Next.js in favor of simplicity, efficiency, and room for future expansion
+- [Hono](https://hono.dev/) + [tRPC](https://trpc.io/) for the API, also chosen over Next.js API routes for a smaller and more explicit runtime
+- [Bun](https://bun.sh/) for package management and the API runtime
+- [TailwindCSS](https://tailwindcss.com/) for the styling
+- [shadcn/UI](https://ui.shadcn.com/) for the UI components
+- [Prisma](https://prisma.io) to access the database
+
+## Import and export
+
+Import support is done for `spliit.app` groups. Import goals:
+
+- import existing group data where possible
+- preserve expenses, participants, balances, and categories
+- make migration from original Spliit instances as painless as possible
+
+Export support is also planned so users can keep ownership of their data.
+
+See [docs/migration.md](./docs/migration.md) for the step-by-step migration guide from original Spliit.
+
+## Contributing
+
+The project is open to contributions. Feel free to open an issue or even a pull request!
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow, local setup, and PR expectations.
+
+Financial support links are TBD. See [Support the project](#support-the-project) for non-financial ways to help.
+
+### Development principles
+
+- Keep the stack small and explicit. Vite + React on the web, Hono + tRPC on the API, PostgreSQL via Prisma.
+- Validate at the boundary with Zod, keep tRPC procedures thin, and put real business logic in shared domain or API helpers.
+- Treat the schema, migrations, and generated Prisma client as a single unit — commit them together.
+- Comments explain _why_, not _what_. When in doubt, drop the comment.
+- Money is stored as integer cents; percentage shares use basis points.
+
+### Correctness
+
+- Unit tests live next to the code they cover and run with `bun run test`.
+- Critical flows (balances, splits, recurrence, currency conversion) are expected to have tests before they ship.
+- Type safety is enforced with `bun check-types`; CI should not be the first place a type error surfaces.
+
+## FAQ
+
+### Is Spliit Cloud affiliated with the original Spliit project?
+
+No. Spliit Cloud is an independent community fork of Spliit. The original Spliit project was created by Sebastien Castiel.
+
+### Why not just contribute to the original project?
+
+That was the original intention. After submitting fixes and reviewing existing issues and pull requests, the original project appeared to have slowed down. This fork allows development to continue while keeping the work open-source and properly attributed.
+
+### Is Spliit Cloud free?
+
+The code is open-source under the MIT license. The public hosted instance is currently provided as a community service. Long-term hosting/support details may evolve.
+
+### Can I self-host it?
+
+Yes. Self-hosting is supported. See the local and container setup instructions below.
+
+### Can I migrate from original Spliit?
+
+Yes. Import of `spliit.app` group exports is supported today; see [docs/migration.md](./docs/migration.md) for the step-by-step. Self-hosted Spliit instances can be migrated by exporting each group and importing it into Spliit Cloud.
+
+### Is my data end-to-end encrypted?
+
+Not yet. End-to-end encrypted groups and expenses are on the roadmap.
+
+### Can I contribute?
+
+Yes. Issues, bug reports, tests, documentation, translations, and pull requests are welcome.
+
+## Support the project
+
+For now, the best ways to support Spliit Cloud are:
+
+- star the repository
+- try the app and report bugs
+- improve documentation
+- contribute tests
+- help with translations
+- share feedback from real usage
+
+## Links
+
+- App: [spliit.cloud](https://spliit.cloud)
+- Repository: [github.com/antonio-ivanovski/spliit-cloud](https://github.com/antonio-ivanovski/spliit-cloud)
+- Original Spliit repository: [github.com/spliit-app/spliit](https://github.com/spliit-app/spliit)
+- Original creator: [Sebastien Castiel](https://github.com/scastiel)
 
 ## License
 
