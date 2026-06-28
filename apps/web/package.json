@@ -10,6 +10,7 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts --reporter=verbose",
     "test:watch": "vitest",
     "test-e2e": "playwright test"
   },

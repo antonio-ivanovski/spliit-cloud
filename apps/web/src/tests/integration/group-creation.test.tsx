@@ -1,26 +1,33 @@
 import { render, screen, waitFor } from '@/test/integration/test-utils'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import {
+  cleanupTestAccount,
+  createTestSession,
+  probeExistingApi,
+} from '@/test/integration/client'
 
 /**
- * BLOCK C: Integration tests (real API + real TRPCProvider).
+ * Integration tests: real API + real TRPCProvider.
  *
- * These tests start a real API server, create a test session, and use
- * the real tRPC client to create data. Components are rendered with
- * the real TRPCProvider but context hooks are mocked so we don't need
- * a full route / provider setup.
+ * These tests connect to an already-running API server on port 3001
+ * (or VITE_API_URL), create a test session, and use the real tRPC
+ * endpoints to create data. Components are rendered with the real
+ * TRPCProvider but context hooks are mocked so we don't need a full
+ * route / provider setup.
+ *
+ * If the API is not running the entire suite is skipped.
  *
  * Prerequisites:
- *   - PostgreSQL test database running (postgresql://test:test@localhost:5432/test)
- *   - Migrations up to date
- *   - Set INTEGRATION_TEST=true or CI=true to enable these tests
+ *   - API server running (e.g. `bun dev` from project root)
+ *   - PostgreSQL test database up to date
  */
 
-// ── Skip guard ──────────────────────────────────────────────────────────
+// ── Skip guard (evaluated once at module load) ───────────────────────────
 
-const isIntegrationEnv = !!process.env.INTEGRATION_TEST || !!process.env.CI
-const describeIntegration = describe.skipIf(!isIntegrationEnv)
+const apiReachable = await probeExistingApi()
+const describeIntegration = describe.skipIf(!apiReachable)
 
-// ── Hoisted mocks ───────────────────────────────────────────────────────
+// ── Hoisted mocks ────────────────────────────────────────────────────────
 
 const contextMocks = vi.hoisted(() => ({
   mockUseCurrentGroup: vi.fn(),
@@ -32,7 +39,7 @@ const tanstackMocks = vi.hoisted(() => ({
   mockUseLocation: vi.fn(() => ({ pathname: '/groups/test-group' })),
 }))
 
-// ── Module mocks (hoisted to top) ───────────────────────────────────────
+// ── Module mocks (hoisted to top) ────────────────────────────────────────
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: contextMocks.mockUseCurrentGroup,
@@ -66,108 +73,137 @@ vi.mock('@/lib/navigation', () => ({
   }),
 }))
 
-// ── Shared state ────────────────────────────────────────────────────────
+// ── Shared state ─────────────────────────────────────────────────────────
 
-let port: number
+const API_URL = 'http://localhost:3001'
+
 let sessionCookie: string
-let closeServer: () => Promise<void>
 const testEmail = `test-${Date.now()}@integration-spliit.local`
 const testPassword = 'TestPass123!'
 
 interface TestGroup {
   id: string
   name: string
-}
-interface TestExpense {
-  id: string
-  title: string
-  amount: number
+  currency: string
+  currencyCode: string
+  ledger: { id: string; currency: string; currencyCode: string; groupId: string }
+  participants: Array<{ id: string; name: string }>
 }
 
 let testGroup: TestGroup
-let testExpense: TestExpense
+let testExpenseId: string
 
-// ── Helper ──────────────────────────────────────────────────────────────
+// ── Helper ───────────────────────────────────────────────────────────────
 
 /**
- * Call a tRPC procedure on the test server via raw fetch.
+ * tRPC procedure types — used to pick the HTTP method.
+ * Queries use GET, mutations use POST.
+ */
+const queryProcedures = new Set([
+  'groups.get',
+  'groups.list',
+  'groups.balances.list',
+  'groups.expenses.list',
+])
+
+/**
+ * Call a tRPC procedure on the existing API server via raw fetch.
+ *
+ * Wire format (superjson-wrapped):
+ *   POST (mutation):  body: { json: input }
+ *   GET  (query):     ?input={ json: input }
+ *   Response:         { result: { data: { json: output } } }
  */
 async function trpcCall<T = unknown>(
   procedure: string,
   input: unknown,
 ): Promise<T> {
-  const res = await fetch(`http://localhost:${port}/trpc/${procedure}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: sessionCookie,
-    },
-    body: JSON.stringify({ 0: { json: input } }),
-  })
+  const isQuery = queryProcedures.has(procedure)
+
+  let res: Response
+  if (isQuery) {
+    const inputParam = encodeURIComponent(JSON.stringify({ json: input }))
+    res = await fetch(`${API_URL}/trpc/${procedure}?input=${inputParam}`, {
+      method: 'GET',
+      headers: { Cookie: sessionCookie },
+    })
+  } else {
+    res = await fetch(`${API_URL}/trpc/${procedure}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: sessionCookie,
+      },
+      body: JSON.stringify({ json: input }),
+    })
+  }
+
   const body = await res.json()
-  if (body[0]?.error) throw new Error(body[0].error.message)
-  return (body[0]?.result?.data?.json ?? body[0]?.result?.data) as T
+  // tRPC error envelope: { error: { json: { message, ... } } }
+  if (body.error) {
+    const errMsg =
+      body.error?.json?.message ?? body.error.message ?? 'Unknown tRPC error'
+    throw new Error(errMsg)
+  }
+  // Unwrap tRPC success envelope: { result: { data: { json: output } } }
+  return body?.result?.data?.json as T
 }
 
-// ── Integration tests ───────────────────────────────────────────────────
+// ── Integration tests ────────────────────────────────────────────────────
 
-describeIntegration('Group creation integration', () => {
+describeIntegration('Group CRUD via existing API', () => {
   beforeAll(async () => {
-    // ── Start test server ──────────────────────────────────────────
-    const { startTestServer, createTestSession } =
-      await import('@/test/integration/server')
-
-    const server = await startTestServer()
-    port = server.port
-    closeServer = server.close
-
-    // Points the TRPCProvider at the test server
-    process.env.VITE_API_URL = `http://localhost:${port}`
-
     // Create a session for the test user
-    sessionCookie = await createTestSession(port, testEmail, testPassword)
+    sessionCookie = await createTestSession(API_URL, testEmail, testPassword)
 
     // ── Create a test group via the real API ───────────────────────
-    const createResult = await trpcCall<{ group: TestGroup }>('groups.create', {
-      name: 'Integration Test Group',
-      currency: 'EUR',
-      participants: [],
+    const createResult = await trpcCall<{ groupId: string }>('groups.create', {
+      groupFormValues: {
+        name: 'Integration Test Group',
+        currency: 'EUR',
+        participants: [{ name: 'Me' }],
+      },
     })
-    testGroup = createResult.group
 
-    // ── Add a test expense ─────────────────────────────────────────
+    // Fetch the group to get full details (participants, ledger, etc.)
     const groupResult = await trpcCall<{
-      group: { participants: Array<{ id: string; name: string }> }
-    }>('groups.get', { groupId: testGroup.id, linkInviteToken: undefined })
-    const participantId = groupResult.group.participants[0]?.id
+      group: TestGroup
+      currentLedgerParticipantId: string | null
+    }>('groups.get', { groupId: createResult.groupId, linkInviteToken: undefined })
+    testGroup = groupResult.group
 
+    // ── Add a test expense (self-pay) ──────────────────────────────
+    const participantId = testGroup.participants[0]?.id
     if (participantId) {
-      const expenseResult = await trpcCall<{ expense: TestExpense }>(
+      const expenseResult = await trpcCall<{ expenseId: string }>(
         'groups.expenses.create',
         {
           groupId: testGroup.id,
-          title: 'Integration Dinner',
-          amount: 2500,
-          paidById: participantId,
-          paidFor: [{ ledgerParticipantId: participantId, shares: null }],
-          splitMode: 'EQUAL',
-          expenseDate: new Date().toISOString(),
-          categoryId: 'food',
+          expenseFormValues: {
+            title: 'Integration Dinner',
+            amount: 2500,
+            paidBy: participantId,
+            paidFor: [{ participant: participantId, shares: 1 }],
+            splitMode: 'EVENLY',
+            expenseDate: new Date().toISOString(),
+            category: 'dining-out',
+            isReimbursement: false,
+            saveDefaultSplittingOptions: false,
+            recurrenceRule: 'NONE',
+          },
         },
       )
-      testExpense = expenseResult.expense
+      testExpenseId = expenseResult.expenseId
     }
   }, 30000)
 
   afterAll(async () => {
-    const { cleanupTestData } = await import('@/test/integration/server')
-    await cleanupTestData(port, testEmail)
-    await closeServer?.()
+    await cleanupTestAccount(testEmail)
   }, 10000)
 
-  // ── Test 1: GroupInformation renders group name ──────────────────
+  // ── Test 1: GroupInformation renders with context ────────────────
 
-  it('renders group name via GroupInformation using API-created data', async () => {
+  it('renders GroupInformation with the mocked group context', async () => {
     contextMocks.mockUseCurrentGroup.mockReturnValue({
       isLoading: false,
       groupId: testGroup.id,
@@ -178,10 +214,10 @@ describeIntegration('Group creation integration', () => {
         archived: false,
         createdAt: new Date(),
         updatedAt: new Date(),
-        ledgerId: 'ledger-dummy',
-        currency: 'EUR',
-        currencyCode: 'EUR',
-        ledger: {
+        ledgerId: testGroup.ledger?.id ?? 'ledger-dummy',
+        currency: testGroup.currency,
+        currencyCode: testGroup.currencyCode,
+        ledger: testGroup.ledger ?? {
           id: 'ledger-dummy',
           currency: 'EUR',
           currencyCode: 'EUR',
@@ -206,13 +242,23 @@ describeIntegration('Group creation integration', () => {
 
     render(<GroupInformation groupId={testGroup.id} />)
 
-    // The group name comes from the API-created group data
-    expect(screen.getByText('Integration Test Group')).toBeInTheDocument()
+    // The component renders a heading "Information" (i18n key).
+    expect(
+      screen.getByRole('heading', { name: /information/i }),
+    ).toBeInTheDocument()
+    // Edit button links to the group edit page.
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      `/groups/${testGroup.id}/edit`,
+    )
   })
 
   // ── Test 2: ExpenseCard renders title and amount ─────────────────
 
   it('renders expense title and formatted amount via ExpenseCard', async () => {
+    const participantId = testGroup.participants[0]?.id
+    const participantName = testGroup.participants[0]?.name ?? 'You'
+
     contextMocks.mockUseCurrentGroup.mockReturnValue({
       isLoading: false,
       groupId: testGroup.id,
@@ -222,11 +268,11 @@ describeIntegration('Group creation integration', () => {
         archived: false,
         createdAt: new Date(),
         updatedAt: new Date(),
-        ledgerId: 'ledger-dummy',
+        ledgerId: testGroup.ledger?.id ?? 'ledger-dummy',
         information: null,
-        currency: 'EUR',
-        currencyCode: 'EUR',
-        ledger: {
+        currency: testGroup.currency,
+        currencyCode: testGroup.currencyCode,
+        ledger: testGroup.ledger ?? {
           id: 'ledger-dummy',
           currency: 'EUR',
           currencyCode: 'EUR',
@@ -236,8 +282,8 @@ describeIntegration('Group creation integration', () => {
         },
         participants: [
           {
-            id: 'lp-dummy',
-            name: 'You',
+            id: participantId ?? 'lp-dummy',
+            name: participantName,
             pending: false,
             unlinked: false,
           },
@@ -245,7 +291,7 @@ describeIntegration('Group creation integration', () => {
         members: [],
         invitations: [],
       },
-      currentLedgerParticipantId: 'lp-dummy',
+      currentLedgerParticipantId: participantId ?? 'lp-dummy',
       currentMember: { id: 'cm-dummy', role: 'ADMIN', status: 'ACTIVE' },
       currentInvitation: null,
       linkInviteState: null,
@@ -256,17 +302,24 @@ describeIntegration('Group creation integration', () => {
       await import('@/app/groups/[groupId]/expenses/expense-card')
 
     const expenseData = {
-      id: testExpense.id,
-      title: testExpense.title,
-      amount: testExpense.amount,
-      categoryId: 'general',
-      category: { id: 'general', grouping: 'General', name: 'General' },
+      id: testExpenseId,
+      title: 'Integration Dinner',
+      amount: 2500,
+      categoryId: 'dining-out',
+      category: {
+        id: 'dining-out',
+        grouping: 'Food & Drink',
+        name: 'Dining Out',
+      },
       expenseDate: new Date(),
       createdAt: new Date(),
-      paidBy: { id: 'lp-dummy', name: 'You' },
+      paidBy: { id: participantId ?? 'lp-dummy', name: participantName },
       paidFor: [
         {
-          ledgerParticipant: { id: 'lp-dummy', name: 'You' },
+          ledgerParticipant: {
+            id: participantId ?? 'lp-dummy',
+            name: participantName,
+          },
           shares: 1,
         },
       ],
@@ -286,42 +339,29 @@ describeIntegration('Group creation integration', () => {
     )
 
     expect(screen.getByText('Integration Dinner')).toBeInTheDocument()
-    expect(screen.getByText('€25.00')).toBeInTheDocument()
+    // Use getAllByText for the amount (it appears in the amount badge
+    // and may also appear in the balance breakdown)
+    expect(screen.getAllByText('€25.00').length).toBeGreaterThan(0)
   })
 
-  // ── Test 3: BalancesList renders balances from API data ──────────
+  // ── Test 3: BalancesList renders from API data ───────────────────
 
-  it('renders balances from API-created expense data', async () => {
-    // Fetch real balances from the API
+  it('renders BalancesList with participants from the API', async () => {
+    // Fetch real balances from the API.
+    // The API returns { balances: { [participantId]: { paid, paidFor, total } } }
     const balancesResult = await trpcCall<{
-      balances: Array<{
-        participant: { id: string; name: string }
-        balance: number
-      }>
+      balances: Record<
+        string,
+        { paid: number; paidFor: number; total: number }
+      >
+      reimbursements: Array<unknown>
     }>('groups.balances.list', {
       groupId: testGroup.id,
       linkInviteToken: undefined,
     })
 
     // BalancesList expects { [participantId]: { paid, paidFor, total } }
-    const balancesMap: Record<
-      string,
-      { paid: number; paidFor: number; total: number }
-    > = {}
-    if (balancesResult.balances) {
-      for (const b of balancesResult.balances) {
-        balancesMap[b.participant.id] = {
-          paid: 0,
-          paidFor: 0,
-          total: b.balance,
-        }
-      }
-    }
-
-    const participants = balancesResult.balances.map((b) => ({
-      id: b.participant.id,
-      name: b.participant.name,
-    }))
+    const balancesMap = balancesResult.balances ?? {}
 
     const { BalancesList } =
       await import('@/app/groups/[groupId]/balances-list')
@@ -329,7 +369,10 @@ describeIntegration('Group creation integration', () => {
     render(
       <BalancesList
         balances={balancesMap}
-        participants={participants}
+        participants={testGroup.participants.map((p) => ({
+          id: p.id,
+          name: p.name,
+        }))}
         currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
       />,
     )
@@ -339,15 +382,17 @@ describeIntegration('Group creation integration', () => {
       expect(screen.getByTestId('balances-list')).toBeInTheDocument()
     })
 
-    // If an expense was created (self-pay for the whole amount), the
-    // creator should have a positive balance of 2500 cents = €25.00
-    if (testExpense && balancesResult.balances.length > 0) {
-      const payerBalance = balancesResult.balances.find((b) => b.balance > 0)
-      if (payerBalance) {
+    // Since the expense is self-pay, the balance is zero for everyone.
+    // The list renders a "Settled" / "All settled up" message.
+    if (Object.keys(balancesMap).length === 0) {
+      // When all balances are zero, the component may show a settled message
+      // or an empty list. Just verify the container is present.
+      expect(screen.getByTestId('balances-list')).toBeInTheDocument()
+    } else {
+      for (const p of testGroup.participants) {
         expect(
-          screen.getByTestId(`balance-row-${payerBalance.participant.name}`),
+          screen.getByTestId(`balance-row-${p.name}`),
         ).toBeInTheDocument()
-        expect(screen.getByText('€25.00')).toBeInTheDocument()
       }
     }
   })

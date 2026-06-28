@@ -7,11 +7,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['src/**/*.test.{ts,tsx}'],
-    exclude: ['src/tests/integration/**'],
+    include: ['src/tests/integration/**/*.test.{ts,tsx}'],
     setupFiles: ['./src/test/setup.ts'],
     css: false,
     restoreMocks: true,
+    // Integration tests hit a real API server — run one file at a time
+    fileParallelism: false,
   },
   resolve: {
     alias: {
