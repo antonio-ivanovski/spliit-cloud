@@ -164,9 +164,18 @@ export function SourceStep({ onLoaded, onError }: Props) {
         </TabsList>
 
         <TabsContent value="spliit">
-          <p className="text-sm text-muted-foreground">
-            {t('Groups.Import.Source.spliitDescription')}
-          </p>
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-muted-foreground">
+              {t('Groups.Import.Source.spliitDescription')}
+            </p>
+            <div className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+              <p>
+                <strong>{t('Groups.Import.Source.receiptWarningTitle')}</strong>{' '}
+                {t('Groups.Import.Source.receiptWarningDescription')}
+              </p>
+            </div>
+          </div>
         </TabsContent>
         <TabsContent value="splitwise">
           <Card>
@@ -257,14 +266,6 @@ export function SourceStep({ onLoaded, onError }: Props) {
               ),
             }}
           />
-
-          <div className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-            <p>
-              <strong>{t('Groups.Import.Source.receiptWarningTitle')}</strong>{' '}
-              {t('Groups.Import.Source.receiptWarningDescription')}
-            </p>
-          </div>
         </>
       )}
     </div>

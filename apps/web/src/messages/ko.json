@@ -204,7 +204,7 @@
         "splitwise": "Splitwise (출시 예정)",
         "tricount": "Tricount (출시 예정)",
         "settleUp": "Settle Up (출시 예정)",
-        "spliitDescription": "기존 spliit.app 그룹을 Spliit Cloud로 가져옵니다. 그룹 이름, 참가자 및 모든 지출을 읽어 가져오기 과정에서 손실되는 것이 없도록 합니다.",
+        "spliitDescription": "기존 spliit.app 그룹을 Spliit Cloud로 가져옵니다. 그룹 이름, 참가자 및 모든 지출을 읽어 들입니다.",
         "splitwiseComingTitle": "Splitwise 가져오기 준비 중",
         "splitwiseComingDescription": "Splitwise CSV 내보내기를 Spliit Cloud로 가져오기 위해 작업 중입니다. 준비되는 대로 여기에서 사용할 수 있습니다. 그동안 아무것도 다시 가져올 필요가 없습니다.",
         "tricountComingTitle": "Tricount 가져오기 준비 중",

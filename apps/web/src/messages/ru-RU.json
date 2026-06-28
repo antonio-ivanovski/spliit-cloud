@@ -260,7 +260,7 @@
         "splitwise": "Splitwise (скоро)",
         "tricount": "Tricount (скоро)",
         "settleUp": "Settle Up (скоро)",
-        "spliitDescription": "Перенесите существующую группу из spliit.app в Spliit Cloud. Мы считываем название группы, участников и каждую трату, чтобы ничего не потерялось при импорте.",
+        "spliitDescription": "Перенесите существующую группу из spliit.app в Spliit Cloud. Мы считываем название группы, участников и каждую трату.",
         "splitwiseComingTitle": "Импорт из Splitwise в пути",
         "splitwiseComingDescription": "Мы работаем над интеграцией CSV-экспорта из Splitwise в Spliit Cloud. Функция будет доступна здесь, как только будет готова — повторно импортировать ничего не нужно.",
         "tricountComingTitle": "Импорт из Tricount в пути",

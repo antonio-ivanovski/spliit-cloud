@@ -260,7 +260,7 @@
         "splitwise": "Splitwise (wkrótce)",
         "tricount": "Tricount (wkrótce)",
         "settleUp": "Settle Up (wkrótce)",
-        "spliitDescription": "Przenieś istniejącą grupę z spliit.app do Spliit Cloud. Odczytujemy nazwę grupy, uczestników i każdy wydatek, aby nic nie zostało utracone podczas importu.",
+        "spliitDescription": "Przenieś istniejącą grupę z spliit.app do Spliit Cloud. Odczytujemy nazwę grupy, uczestników i każdy wydatek.",
         "splitwiseComingTitle": "Import ze Splitwise jest w drodze",
         "splitwiseComingDescription": "Pracujemy nad przeniesieniem eksportów CSV ze Splitwise do Spliit Cloud. Proces będzie dostępny tutaj, gdy tylko zostanie ukończony — w międzyczasie nie musisz niczego ponownie importować.",
         "tricountComingTitle": "Import z Tricount jest w drodze",

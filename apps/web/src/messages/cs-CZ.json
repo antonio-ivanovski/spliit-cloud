@@ -260,7 +260,7 @@
         "splitwise": "Splitwise (již brzy)",
         "tricount": "Tricount (již brzy)",
         "settleUp": "Settle Up (již brzy)",
-        "spliitDescription": "Přeneste existující skupinu z spliit.app do Spliit Cloud. Načteme název skupiny, účastníky a každý výdaj, aby se při importu nic neztratilo.",
+        "spliitDescription": "Přeneste existující skupinu z spliit.app do Spliit Cloud. Načteme název skupiny, účastníky a každý výdaj.",
         "splitwiseComingTitle": "Import ze Splitwise je na cestě",
         "splitwiseComingDescription": "Pracujeme na tom, aby bylo možné importovat CSV exporty ze Splitwise do Spliit Cloud. Jakmile bude hotovo, funkce se zde objeví — mezitím není třeba nic znovu importovat.",
         "tricountComingTitle": "Import z Tricount je na cestě",

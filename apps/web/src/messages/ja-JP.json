@@ -260,7 +260,7 @@
         "splitwise": "Splitwise（近日対応予定）",
         "tricount": "Tricount（近日対応予定）",
         "settleUp": "Settle Up（近日対応予定）",
-        "spliitDescription": "既存の spliit.app グループを Spliit Cloud に取り込みます。グループ名、参加者、すべての支出を読み取り、インポート時に何も失われないようにします。",
+        "spliitDescription": "既存の spliit.app グループを Spliit Cloud に取り込みます。グループ名、参加者、すべての支出を読み取ります。",
         "splitwiseComingTitle": "Splitwise インポートの準備中",
         "splitwiseComingDescription": "Splitwise の CSV エクスポートを Spliit Cloud に取り込む作業を進めています。準備ができ次第、こちらで利用可能になります。それまでの間、再インポートの必要はありません。",
         "tricountComingTitle": "Tricount インポートの準備中",

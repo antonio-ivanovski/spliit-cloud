@@ -260,7 +260,7 @@
         "splitwise": "Splitwise (binnenkort)",
         "tricount": "Tricount (binnenkort)",
         "settleUp": "Settle Up (binnenkort)",
-        "spliitDescription": "Breng een bestaande spliit.app-groep naar Spliit Cloud. We lezen de groepsnaam, deelnemers en elke uitgave, zodat er niets verloren gaat bij het importeren.",
+        "spliitDescription": "Breng een bestaande spliit.app-groep naar Spliit Cloud. We lezen de groepsnaam, deelnemers en elke uitgave.",
         "splitwiseComingTitle": "Splitwise-import is onderweg",
         "splitwiseComingDescription": "We werken aan het importeren van Splitwise CSV-export in Spliit Cloud. De flow is hier beschikbaar zodra hij klaar is — je hoeft in de tussentijd niets opnieuw te importeren.",
         "tricountComingTitle": "Tricount-import is onderweg",
