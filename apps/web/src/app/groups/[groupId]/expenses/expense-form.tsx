@@ -166,7 +166,15 @@ export function ExpenseForm({
           expenseDate: expense.expenseDate ?? new Date(),
           amount: amountAsDecimal(expense.amount, groupCurrency),
           originalCurrency: expense.originalCurrency ?? group.currencyCode,
-          originalAmount: expense.originalAmount ?? undefined,
+          originalAmount:
+            expense.originalAmount != null
+              ? amountAsDecimal(
+                  expense.originalAmount,
+                  expense.originalCurrency
+                    ? (getCurrency(expense.originalCurrency) ?? groupCurrency)
+                    : groupCurrency,
+                )
+              : undefined,
           conversionRate: expense.conversionRate?.toNumber(),
           category: expense.categoryId,
           paidBy: expense.paidById,
@@ -256,6 +264,15 @@ export function ExpenseForm({
           ? amountAsMinorUnits(shares, groupCurrency)
           : shares,
     }))
+
+    // Convert originalAmount back to minor units for storage
+    if (values.originalAmount != null && values.originalCurrency) {
+      const origCurrency = getCurrency(values.originalCurrency) ?? groupCurrency
+      values.originalAmount = amountAsMinorUnits(
+        values.originalAmount,
+        origCurrency,
+      )
+    }
 
     // Currency should be blank if same as group currency
     if (!conversionRequired) {

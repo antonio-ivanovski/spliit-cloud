@@ -4,13 +4,16 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./router": "./src/trpc/routers/_app.ts"
+    "./router": "./src/trpc/routers/_app.ts",
+    "./app": "./src/app.ts",
+    "./server": "./src/server.ts"
   },
   "scripts": {
     "dev": "bun --env-file=../../.env --watch src/server.ts",
     "start": "bun --env-file=../../.env run src/server.ts",
     "check-types": "tsc --noEmit",
-    "test": "vitest run --globals src"
+    "test": "vitest run --globals src",
+    "test:integration": "vitest run --config vitest.integration.config.ts --reporter=verbose"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1073.0",

@@ -8,14 +8,14 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 
 - [x] Public hosted instance, PostgreSQL API, asset uploads, database backups
 - [x] Account-based group ownership, multi-device sync, basic account settings
-  — addresses upstream **[#76](https://github.com/spliit-app/spliit/issues/76)**, **[#257](https://github.com/spliit-app/spliit/issues/257)**, **[#336](https://github.com/spliit-app/spliit/issues/336)**
+      — addresses upstream **[#76](https://github.com/spliit-app/spliit/issues/76)**, **[#257](https://github.com/spliit-app/spliit/issues/257)**, **[#336](https://github.com/spliit-app/spliit/issues/336)**
 
 ## Phase 2: Migration and compatibility — shipped
 
 - [x] Import existing Spliit groups
 - [x] Export user/group data
 - [x] Migration guide ([docs/migration.md](./docs/migration.md))
-  — addresses upstream [#22](https://github.com/spliit-app/spliit/issues/22) and the link-flow work in PR [#472](https://github.com/spliit-app/spliit/pull/472) / [#483](https://github.com/spliit-app/spliit/pull/483)
+      — addresses upstream [#22](https://github.com/spliit-app/spliit/issues/22) and the link-flow work in PR [#472](https://github.com/spliit-app/spliit/pull/472) / [#483](https://github.com/spliit-app/spliit/pull/483)
 
 ## Phase 3: Better expense workflows — in progress
 

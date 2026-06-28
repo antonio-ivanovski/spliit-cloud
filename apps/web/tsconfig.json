@@ -2,7 +2,7 @@
   "extends": "@spliit/config/tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["vite/client", "node"],
+    "types": ["vite/client", "vitest/globals", "node"],
     "paths": {
       "@/*": ["./src/*"]
     }

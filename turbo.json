@@ -22,6 +22,11 @@
     "test-e2e": {
       "dependsOn": ["^build"],
       "cache": false
+    },
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "passThroughEnv": ["DATABASE_URL"]
     }
   }
 }

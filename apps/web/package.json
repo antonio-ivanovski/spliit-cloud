@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "echo \"No web unit tests yet\"",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts --reporter=verbose",
+    "test:watch": "vitest",
     "test-e2e": "playwright test"
   },
   "dependencies": {
@@ -55,6 +57,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@hono/node-server": "^2.0.6",
     "@playwright/test": "^1.61.0",
     "@spliit/api": "workspace:*",
     "@spliit/config": "workspace:*",
@@ -64,12 +67,14 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
     "autoprefixer": "^10.5.0",
     "eslint": "^9.39.4",
+    "jsdom": "^29.1.1",
     "postcss": "^8.5.15",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",

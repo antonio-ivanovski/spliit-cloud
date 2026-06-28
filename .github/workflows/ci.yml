@@ -15,7 +15,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:18
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 1234
@@ -58,6 +58,40 @@ jobs:
 
       - name: Run tests
         run: bun run test
+
+      - name: Run integration tests
+        run: |
+          set -e
+
+          # Web integration tests probe http://localhost:3001/health at
+          # module load time and throw if the API is not running, so we
+          # start the API server here and wait for it to respond.
+          echo "Starting API server in the background..."
+          bun --filter @spliit/api start > /tmp/api-server.log 2>&1 &
+          API_PID=$!
+
+          cleanup() {
+            kill "$API_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          echo "Waiting for API server on http://localhost:3001/health..."
+          for i in {1..60}; do
+            if curl -s -f http://localhost:3001/health > /dev/null; then
+              echo "API server is ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+
+          if ! curl -s -f http://localhost:3001/health > /dev/null; then
+            echo "::error::API server failed to become ready within 60s"
+            echo "--- API server log ---"
+            cat /tmp/api-server.log
+            exit 1
+          fi
+
+          bun run test:integration
 
       - name: Build
         run: bun run build

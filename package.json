@@ -27,6 +27,7 @@
     "prisma-generate": "bun run --filter @spliit/db prisma-generate",
     "start-container": "docker compose --env-file container.env up",
     "test": "turbo --ui=tui run test",
+    "test:integration": "turbo run test:integration",
     "test-e2e": "bun --filter @spliit/web test-e2e",
     "i18n": "bun scripts/i18n/src/cli.ts"
   },

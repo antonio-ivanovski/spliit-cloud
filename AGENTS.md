@@ -13,9 +13,46 @@ bun check-types
 bun check-formatting
 bun run test             # Vitest unit tests through turbo
 bun test-e2e             # Playwright; starts web/API via config
+bun test:integration     # Real-DB integration tests (API + web)
 bun prisma-generate
 bun prisma-migrate       # deploy migrations for local/container DB
 ```
+
+## Integration tests
+
+The project has two kinds of integration tests that hit a real PostgreSQL database:
+
+- **API integration tests** (`apps/api/src/integration/`): Test tRPC procedures against a real database using `createCaller`. Covers group CRUD, expense CRUD, invitations (email + link), and email flows.
+- **Web integration tests** (`apps/web/src/tests/integration/`): Render React components with the real TRPCProvider, connecting to the existing API server. Covers group/expense rendering with data created via the real API.
+
+### Running integration tests
+
+```bash
+bun run test:integration
+```
+
+**Prerequisites:**
+
+- The test PostgreSQL database must be running (same connection as API dev: `postgresql://test:test@localhost:5432/test` or `DATABASE_URL` env var).
+- Migrations must be up to date (`bun prisma-migrate`).
+- For the **web integration tests**, the API server must be running on port 3001 (`bun dev` from project root or `bun --filter @spliit/api dev`).
+
+### ⚠️ Agent rules for integration tests
+
+- **Never start the dev server.** The integration tests assume an existing API server on port 3001. If the server is not running, the tests will fail with a clear error message.
+- If you need the server running and it is not, **ask the user for explicit permission** before starting it.
+- The API real-DB tests (`apps/api/src/integration/`) do not need a running server — they call tRPC procedures directly via `createCaller`. They only need the database.
+
+### Test architecture
+
+| Suite                                 | Command                | DB needed | API server needed | Speed   |
+| ------------------------------------- | ---------------------- | --------- | ----------------- | ------- |
+| Unit tests (mock)                     | `bun test`             | No        | No                | ~3s     |
+| API integration (real DB)             | `bun test:integration` | Yes       | No                | ~5s     |
+| Web integration (real API)            | `bun test:integration` | Yes       | Yes               | ~5s     |
+| E2E (Playwright) (broken, do not run) | `bun test-e2e`         | Yes       | Starts both       | Minutes |
+
+Default `bun test` runs all mock-based tests and skips integration suites.
 
 ## Paths
 
