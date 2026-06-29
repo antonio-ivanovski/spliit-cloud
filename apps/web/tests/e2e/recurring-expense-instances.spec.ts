@@ -44,7 +44,12 @@ test.describe('Recurring Expense Instances', () => {
         expenseDate: yesterday,
         title: expenseTitle,
         amount: 2500,
-        paidById: payer!.id,
+        paidByList: {
+          create: {
+            ledgerParticipantId: payer!.id,
+            shares: 2500,
+          },
+        },
         splitMode: 'EVENLY',
         recurrenceRule: 'DAILY',
         recurringExpenseLink: {
@@ -63,7 +68,6 @@ test.describe('Recurring Expense Instances', () => {
           },
         },
       },
-      include: { recurringExpenseLink: true },
     })
 
     // Verify only one expense exists initially
@@ -99,7 +103,7 @@ test.describe('Recurring Expense Instances', () => {
 
     expect(newExpense).toBeDefined()
     expect(newExpense!.expenseDate.getTime()).toBeGreaterThanOrEqual(
-      recurringExpense.recurringExpenseLink!.nextExpenseDate.getTime(),
+      yesterday.getTime(),
     )
   })
 
@@ -145,7 +149,12 @@ test.describe('Recurring Expense Instances', () => {
         expenseDate: yesterday,
         title: expense1Title,
         amount: 1000,
-        paidById: payer!.id,
+        paidByList: {
+          create: {
+            ledgerParticipantId: payer!.id,
+            shares: 1000,
+          },
+        },
         splitMode: 'EVENLY',
         recurrenceRule: 'DAILY',
         recurringExpenseLink: {
@@ -173,7 +182,12 @@ test.describe('Recurring Expense Instances', () => {
         expenseDate: yesterday,
         title: expense2Title,
         amount: 2000,
-        paidById: payer!.id,
+        paidByList: {
+          create: {
+            ledgerParticipantId: payer!.id,
+            shares: 2000,
+          },
+        },
         splitMode: 'EVENLY',
         recurrenceRule: 'WEEKLY',
         recurringExpenseLink: {
