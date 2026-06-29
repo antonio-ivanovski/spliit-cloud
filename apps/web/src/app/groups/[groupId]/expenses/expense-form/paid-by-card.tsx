@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select'
 import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
-import type { Currency, ExpenseFormValues } from '@spliit/domain'
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { type SplitMode } from '@spliit/domain'
 import { SetStateAction, useEffect, type Dispatch } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
@@ -30,7 +30,7 @@ import { PaidBySplitOptionCards } from './split-option-cards'
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
 export function PaidByCard(props: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
   payerCurrency: Currency
@@ -64,7 +64,7 @@ export function PaidByCard(props: {
     : Number(amount) || 0
   const singlePayerPaidByList = (
     participant: string,
-  ): ExpenseFormValues['paidByList'] => [
+  ): ExpenseFormInputValues['paidByList'] => [
     { participant, shares: singlePayerTargetAmount },
   ]
   const initialMultiPayerShare = (splitMode: SplitMode) =>
@@ -89,7 +89,7 @@ export function PaidByCard(props: {
       shouldTouch: true,
       shouldValidate: true,
     })
-    form.setValue('paidByList', converted as any, {
+    form.setValue('paidByList', converted, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true,
@@ -130,7 +130,7 @@ export function PaidByCard(props: {
                         paidByList.find((pb) => pb.participant === p.id)
                           ?.shares ?? 1,
                     }))
-                form.setValue('paidByList', newPaidByList as any, {
+                form.setValue('paidByList', newPaidByList, {
                   shouldDirty: true,
                   shouldTouch: true,
                   shouldValidate: true,
@@ -251,12 +251,10 @@ export function PaidByCard(props: {
               const paidByCount = paidByList.length
               const sharesForFooter =
                 paidBySplitMode === 'BY_AMOUNT'
-                  ? paidByList.map((p: any) =>
+                  ? paidByList.map((p) =>
                       amountAsMinorUnits(Number(p.shares) || 0, payerCurrency),
                     )
-                  : paidBySplitMode === 'BY_PERCENTAGE'
-                    ? paidByList.map((p: any) => Number(p.shares) || 0)
-                    : paidByList.map((p: any) => Number(p.shares) || 0)
+                  : paidByList.map((p) => Number(p.shares) || 0)
               const isOriginalPayer = payerCurrency.code !== groupCurrency.code
               const targetAmount = isOriginalPayer
                 ? Number(originalAmount) || 0

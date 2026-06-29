@@ -18,7 +18,7 @@ import {
 import { getCurrency } from '@/lib/currency'
 import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
-import type { Currency, ExpenseFormValues } from '@spliit/domain'
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { type SplitMode } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
@@ -31,7 +31,7 @@ import { PaidForSplitOptionCards } from './split-option-cards'
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
 export function PaidForCard(props: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
   payerCurrency: Currency
@@ -87,7 +87,7 @@ export function PaidForCard(props: {
       shouldTouch: true,
       shouldValidate: true,
     })
-    form.setValue('paidFor', converted as any, {
+    form.setValue('paidFor', converted, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true,
@@ -97,7 +97,7 @@ export function PaidForCard(props: {
         participant,
         shares,
       }))
-      form.setValue('paidFor', stripped as any, {
+      form.setValue('paidFor', stripped, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true,
@@ -122,10 +122,11 @@ export function PaidForCard(props: {
                 ? []
                 : group.participants.map((p) => ({
                     participant: p.id,
-                    shares: (paidFor.find((pfor) => pfor.participant === p.id)
-                      ?.shares ?? '1') as any,
+                    shares:
+                      paidFor.find((pfor) => pfor.participant === p.id)
+                        ?.shares ?? 1,
                   }))
-              form.setValue('paidFor', newPaidFor as any, {
+              form.setValue('paidFor', newPaidFor, {
                 shouldDirty: true,
                 shouldTouch: true,
                 shouldValidate: true,
@@ -188,10 +189,10 @@ export function PaidForCard(props: {
           }
           shares={
             splitMode === 'BY_AMOUNT'
-              ? paidFor.map((p: any) =>
-                  amountAsMinorUnits(Number(p.shares) || 0, groupCurrency),
+              ? paidFor.map((p) =>
+                  amountAsMinorUnits(p.shares || 0, groupCurrency),
                 )
-              : paidFor.map((p: any) => Number(p.shares) || 0)
+              : paidFor.map((p) => p.shares || 0)
           }
           currency={groupCurrency}
           paidByCount={paidFor.length}

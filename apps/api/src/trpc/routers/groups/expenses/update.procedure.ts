@@ -1,4 +1,4 @@
-import { expenseFormSchema } from '@spliit/domain'
+import { expenseApiSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { updateExpense } from '../../../../lib/api'
@@ -9,7 +9,7 @@ export const updateGroupExpenseProcedure = protectedProcedure
     z.object({
       expenseId: z.string().min(1),
       groupId: z.string().min(1),
-      expenseFormValues: expenseFormSchema,
+      expenseFormValues: expenseApiSchema,
     }),
   )
   .mutation(

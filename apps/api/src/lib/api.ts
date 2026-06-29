@@ -24,7 +24,7 @@ import {
   type Balances,
   type Category,
   type CategoryId,
-  type ExpenseFormValues,
+  type ExpenseApiPayload,
   type GroupFormValues,
   type Reimbursement,
 } from '@spliit/domain'
@@ -125,7 +125,7 @@ export async function createGroup(
 }
 
 export async function createExpense(
-  expenseFormValues: ExpenseFormValues,
+  expenseFormValues: ExpenseApiPayload,
   groupId: string,
   actor: { accountId: string },
 ): Promise<Expense> {
@@ -309,7 +309,7 @@ export async function getGroups(groupIds: string[]) {
 export async function updateExpense(
   groupId: string,
   expenseId: string,
-  expenseFormValues: ExpenseFormValues,
+  expenseFormValues: ExpenseApiPayload,
   actor: { accountId: string },
 ) {
   const group = await prisma.group.findUnique({
@@ -2011,7 +2011,7 @@ export type ImportInput = {
   targetGroupId?: string
   groupFormValues?: GroupFormValues
   participants: ImportParticipantMapping[]
-  expenses: ExpenseFormValues[]
+  expenses: ExpenseApiPayload[]
   sourceMeta?: ImportSourceMeta
 }
 

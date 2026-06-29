@@ -1,4 +1,4 @@
-import { expenseFormSchema } from '@spliit/domain'
+import { expenseApiSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createExpense } from '../../../../lib/api'
@@ -8,7 +8,7 @@ export const createGroupExpenseProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      expenseFormValues: expenseFormSchema,
+      expenseFormValues: expenseApiSchema,
     }),
   )
   .mutation(async ({ input: { groupId, expenseFormValues }, ctx }) => {

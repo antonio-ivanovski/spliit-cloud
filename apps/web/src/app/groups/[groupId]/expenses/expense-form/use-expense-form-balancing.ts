@@ -1,10 +1,10 @@
-import type { Currency, ExpenseFormValues } from '@spliit/domain'
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 
 export function useExpenseFormBalancing(args: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   groupCurrency: Currency
   payerCurrency: Currency
 }): {
@@ -83,9 +83,9 @@ export function useExpenseFormBalancing(args: {
           if (!editedParticipants.includes(participant.participant)) {
             return {
               ...participant,
-              shares: amountPerRemaining.toFixed(
-                args.groupCurrency.decimal_digits,
-              ) as any,
+              shares: Number(
+                amountPerRemaining.toFixed(args.groupCurrency.decimal_digits),
+              ),
             }
           }
           return participant
@@ -131,9 +131,9 @@ export function useExpenseFormBalancing(args: {
           if (!editedPayers.includes(payer.participant)) {
             return {
               ...payer,
-              shares: amountPerRemaining.toFixed(
-                args.payerCurrency.decimal_digits,
-              ) as any,
+              shares: Number(
+                amountPerRemaining.toFixed(args.payerCurrency.decimal_digits),
+              ),
             }
           }
           return payer

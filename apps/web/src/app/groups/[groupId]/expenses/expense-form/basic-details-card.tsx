@@ -30,7 +30,7 @@ import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import type { AppRouterOutput } from '@spliit/api/router'
-import type { Currency, ExpenseFormValues } from '@spliit/domain'
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { DEFAULT_CATEGORIES, RecurrenceRule } from '@spliit/domain'
 import { ArrowLeft } from 'lucide-react'
 import { useState, type Dispatch, type SetStateAction } from 'react'
@@ -41,7 +41,7 @@ import { enforceCurrencyPattern, formatDate } from './currency-utils'
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
 export function BasicDetailsCard(props: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
   readOnly: boolean

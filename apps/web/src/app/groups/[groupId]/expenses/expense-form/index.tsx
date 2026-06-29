@@ -1,7 +1,11 @@
 import { Form } from '@/components/ui/form'
 import { getCurrency } from '@/lib/currency'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
-import { expenseFormSchema, type ExpenseFormValues } from '@/lib/schemas'
+import {
+  expenseFormInputSchema,
+  type ExpenseApiPayload,
+  type ExpenseFormInputValues,
+} from '@/lib/schemas'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
@@ -9,7 +13,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency } from '@spliit/domain'
 import { useState } from 'react'
-import type { Resolver } from 'react-hook-form'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BasicDetailsCard } from './basic-details-card'
@@ -29,15 +32,15 @@ export function ExpenseForm(props: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
   searchParams?: CreateExpenseSearch
-  onSubmit: (value: ExpenseFormValues) => Promise<void>
+  onSubmit: (value: ExpenseApiPayload) => Promise<void>
   onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
   currentLedgerParticipantId?: string | null
   readOnly?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
-  const form = useForm<ExpenseFormValues, any, ExpenseFormValues>({
-    resolver: zodResolver(expenseFormSchema) as Resolver<ExpenseFormValues>,
+  const form = useForm<ExpenseFormInputValues>({
+    resolver: zodResolver(expenseFormInputSchema),
     defaultValues: buildExpenseFormDefaults({
       isCreate: props.expense === undefined,
       expense: props.expense,
@@ -77,7 +80,7 @@ export function ExpenseForm(props: {
 
   const sExpense = (isIncome ? 'Income' : 'Expense') as 'Expense' | 'Income'
 
-  const submit = async (values: ExpenseFormValues) => {
+  const submit = async (values: ExpenseFormInputValues) => {
     if (props.readOnly) return
     await persistDefaultSplittingOptions(props.group.id, form.getValues())
     return props.onSubmit(

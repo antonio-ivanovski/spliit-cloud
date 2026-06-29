@@ -3,7 +3,7 @@ import { FormControl, FormField, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { calculateShare } from '@/lib/totals'
 import { amountAsMinorUnits, cn } from '@/lib/utils'
-import type { Currency, ExpenseFormValues } from '@spliit/domain'
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
@@ -27,7 +27,7 @@ export function PaidForRow({
   setManuallyEditedParticipants,
   t,
 }: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   participant: {
     id: string
     name: string
@@ -83,15 +83,15 @@ export function PaidForRow({
                     ...field.value,
                     {
                       participant: id,
-                      shares: '1',
+                      shares: 1,
                     },
-                  ] as any,
+                  ],
                   options,
                 )
               } else {
                 form.setValue(
                   'paidFor',
-                  field.value?.filter((value: any) => value.participant !== id),
+                  field.value?.filter((value) => value.participant !== id),
                   options,
                 )
               }
@@ -129,22 +129,14 @@ export function PaidForRow({
                   amount={calculateShare(id, {
                     amount: amountAsMinorUnits(Number(amount), groupCurrency),
                     paidFor: field.value.map(
-                      ({
-                        participant: pid,
-                        shares,
-                      }: {
-                        participant: string
-                        shares: any
-                      }) => ({
+                      ({ participant: pid, shares }) => ({
                         participant: {
                           id: pid,
                           name: '',
                           groupId: '',
                         },
                         shares:
-                          splitMode === 'BY_PERCENTAGE'
-                            ? Number(shares) * 100
-                            : Number(shares),
+                          splitMode === 'BY_PERCENTAGE' ? shares * 100 : shares,
                         expenseId: '',
                         participantId: '',
                       }),
@@ -183,15 +175,18 @@ export function PaidForRow({
                               )
                             : next
                         field.onChange(
-                          field.value.map((p: any) =>
+                          field.value.map((p) =>
                             p.participant === id
                               ? conversionRequired
                                 ? {
                                     participant: id,
-                                    shares: converted,
+                                    shares: Number(converted) || 0,
                                     originalAmount: next,
                                   }
-                                : { participant: id, shares: next }
+                                : {
+                                    participant: id,
+                                    shares: Number(next) || 0,
+                                  }
                               : p,
                           ),
                         )
@@ -268,14 +263,17 @@ export function PaidForRow({
                               value={String(row?.shares ?? '')}
                               onChange={(event) => {
                                 field.onChange(
-                                  field.value.map((p: any) =>
+                                  field.value.map((p) =>
                                     p.participant === id
                                       ? {
                                           participant: id,
-                                          shares: (
-                                            modeProps?.sanitizer ??
-                                            enforceCurrencyPattern
-                                          )(event.target.value),
+                                          shares:
+                                            Number(
+                                              (
+                                                modeProps?.sanitizer ??
+                                                enforceCurrencyPattern
+                                              )(event.target.value),
+                                            ) || 0,
                                         }
                                       : p,
                                   ),

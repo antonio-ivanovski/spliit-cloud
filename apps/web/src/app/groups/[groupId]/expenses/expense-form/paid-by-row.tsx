@@ -3,7 +3,7 @@ import { FormControl, FormField, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { calculatePaidByShare } from '@/lib/totals'
 import { amountAsMinorUnits, cn } from '@/lib/utils'
-import type { Currency, ExpenseFormValues } from '@spliit/domain'
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
@@ -25,7 +25,7 @@ export function PaidByRow({
   setManuallyEditedPayers,
   t,
 }: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   participant: {
     id: string
     name: string
@@ -63,8 +63,8 @@ export function PaidByRow({
     ? Number(originalAmount) || 0
     : Number(amount) || 0
 
-  const paidByListForCalc = paidByList.map((p: any) => {
-    const rawShares = Number(p.shares) || 0
+  const paidByListForCalc = paidByList.map((p) => {
+    const rawShares = p.shares || 0
     const shares =
       paidBySplitMode === 'BY_PERCENTAGE'
         ? rawShares * 100
@@ -112,15 +112,15 @@ export function PaidByRow({
                     ...field.value,
                     {
                       participant: id,
-                      shares: '1',
+                      shares: 1,
                     },
-                  ] as any,
+                  ],
                   options,
                 )
               } else {
                 form.setValue(
                   'paidByList',
-                  field.value?.filter((value: any) => value.participant !== id),
+                  field.value?.filter((value) => value.participant !== id),
                   options,
                 )
               }
@@ -179,13 +179,16 @@ export function PaidByRow({
                                 value={String(row?.shares ?? '')}
                                 onChange={(event) => {
                                   field.onChange(
-                                    field.value.map((p: any) =>
+                                    field.value.map((p) =>
                                       p.participant === id
                                         ? {
                                             participant: id,
-                                            shares: enforceCurrencyPattern(
-                                              event.target.value,
-                                            ),
+                                            shares:
+                                              Number(
+                                                enforceCurrencyPattern(
+                                                  event.target.value,
+                                                ),
+                                              ) || 0,
                                           }
                                         : p,
                                     ),
@@ -242,14 +245,17 @@ export function PaidByRow({
                               value={String(row?.shares ?? '')}
                               onChange={(event) => {
                                 field.onChange(
-                                  field.value.map((p: any) =>
+                                  field.value.map((p) =>
                                     p.participant === id
                                       ? {
                                           participant: id,
-                                          shares: (
-                                            modeProps?.sanitizer ??
-                                            enforceCurrencyPattern
-                                          )(event.target.value),
+                                          shares:
+                                            Number(
+                                              (
+                                                modeProps?.sanitizer ??
+                                                enforceCurrencyPattern
+                                              )(event.target.value),
+                                            ) || 0,
                                         }
                                       : p,
                                   ),

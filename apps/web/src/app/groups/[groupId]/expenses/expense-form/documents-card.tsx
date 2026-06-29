@@ -8,14 +8,14 @@ import {
 } from '@/components/ui/card'
 import { FormField } from '@/components/ui/form'
 import type { AppRouterOutput } from '@spliit/api/router'
-import type { ExpenseFormValues } from '@spliit/domain'
+import type { ExpenseFormInputValues } from '@spliit/domain'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
 export function DocumentsCard(props: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   readOnly: boolean
   sExpense: 'Expense' | 'Income'

@@ -1,7 +1,7 @@
 import type { Group } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
-import type { Currency, ExpenseFormValues } from '@spliit/domain'
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
@@ -17,7 +17,7 @@ const enforceCurrencyPattern = (value: string) =>
     .replace(/[^-\d.]/g, '') // remove all non-numeric characters
 
 export function useExpenseCurrencyConversion(args: {
-  form: UseFormReturn<ExpenseFormValues, any, ExpenseFormValues>
+  form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
   t: (key: string, opts?: Record<string, unknown>) => string

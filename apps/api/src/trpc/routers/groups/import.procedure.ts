@@ -1,5 +1,5 @@
 import { GroupRole } from '@spliit/db'
-import { expenseFormSchema, groupFormSchema } from '@spliit/domain'
+import { expenseApiSchema, groupFormSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { importGroup } from '../../../lib/api'
@@ -48,7 +48,7 @@ export const importGroupProcedure = protectedProcedure
         targetGroupId: z.string().min(1).optional(),
         groupFormValues: groupFormSchema.optional(),
         participants: z.array(importParticipantMappingSchema).min(1),
-        expenses: z.array(expenseFormSchema).min(0).default([]),
+        expenses: z.array(expenseApiSchema).min(0).default([]),
         sourceMeta: importSourceMetaSchema.optional(),
       })
       .superRefine((value, ctx) => {

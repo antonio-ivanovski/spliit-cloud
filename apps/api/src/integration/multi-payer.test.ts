@@ -1,6 +1,6 @@
 import { Parser } from '@json2csv/plainjs'
 import { prisma } from '@spliit/db'
-import { getBalances, type ExpenseFormValues } from '@spliit/domain'
+import { getBalances, type ExpenseApiPayload } from '@spliit/domain'
 import { parseSpliitExport } from '@spliit/domain/import'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
@@ -1007,7 +1007,7 @@ describe('Multi-payer expenses — real DB', () => {
       documents: [],
       notes: undefined,
       recurrenceRule: e.recurrenceRule,
-    })) as unknown as ExpenseFormValues[]
+    })) as unknown as ExpenseApiPayload[]
 
     const result = await makeCaller().import({
       targetGroupId: groupId,

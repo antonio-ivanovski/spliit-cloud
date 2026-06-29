@@ -3,7 +3,7 @@ import {
   getDefaultSplittingOptions,
   persistDefaultSplittingOptions,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
-import type { ExpenseFormValues } from '@spliit/domain'
+import type { ExpenseFormInputValues } from '@spliit/domain'
 import {
   getCurrency,
   PAYMENT_CATEGORY_ID,
@@ -12,6 +12,25 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const STORAGE_KEY = 'spliit.defaultSplittingOptions'
+const originalWindowDescriptor = Object.getOwnPropertyDescriptor(
+  globalThis,
+  'window',
+)
+
+function setTestWindow(localStorage: Storage) {
+  Object.defineProperty(globalThis, 'window', {
+    value: { localStorage },
+    configurable: true,
+  })
+}
+
+function restoreTestWindow() {
+  if (originalWindowDescriptor) {
+    Object.defineProperty(globalThis, 'window', originalWindowDescriptor)
+  } else {
+    Reflect.deleteProperty(globalThis, 'window')
+  }
+}
 
 const mockGroup = {
   id: 'group-1',
@@ -26,9 +45,9 @@ const mockGroup = {
   invitations: [],
 }
 
-const baseFormValues: ExpenseFormValues = {
+const baseFormValues: ExpenseFormInputValues = {
   title: 'Dinner',
-  amount: 5000,
+  amount: 50, // $50.00 in major units
   splitMode: 'BY_AMOUNT',
   paidFor: [
     { participant: 'lp-1', shares: 25 },
@@ -65,15 +84,15 @@ describe('persistDefaultSplittingOptions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.stubGlobal('window', { localStorage: localStorageMock })
+    setTestWindow(localStorageMock as unknown as Storage)
     localStorageMock.clear()
   })
 
   afterEach(() => {
-    vi.unstubAllGlobals()
+    restoreTestWindow()
   })
 
-  it('saves splitMode and paidFor when saveDefaultSplittingOptions is true', async () => {
+  it('writes the form values verbatim to localStorage', async () => {
     await persistDefaultSplittingOptions('group-1', {
       ...baseFormValues,
       saveDefaultSplittingOptions: true,
@@ -86,6 +105,29 @@ describe('persistDefaultSplittingOptions', () => {
         paidFor: [
           { participant: 'lp-1', shares: 25 },
           { participant: 'lp-2', shares: 25 },
+        ],
+      }),
+    )
+  })
+
+  it('persists BY_PERCENTAGE display percentages verbatim (60, not 6000)', async () => {
+    await persistDefaultSplittingOptions('group-1', {
+      ...baseFormValues,
+      splitMode: 'BY_PERCENTAGE',
+      paidFor: [
+        { participant: 'lp-1', shares: 60 },
+        { participant: 'lp-2', shares: 40 },
+      ],
+      saveDefaultSplittingOptions: true,
+    })
+
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      STORAGE_KEY,
+      JSON.stringify({
+        splitMode: 'BY_PERCENTAGE',
+        paidFor: [
+          { participant: 'lp-1', shares: 60 },
+          { participant: 'lp-2', shares: 40 },
         ],
       }),
     )
@@ -129,12 +171,12 @@ describe('getDefaultSplittingOptions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.stubGlobal('window', { localStorage: localStorageMock })
+    setTestWindow(localStorageMock as unknown as Storage)
     localStorageMock.clear()
   })
 
   afterEach(() => {
-    vi.unstubAllGlobals()
+    restoreTestWindow()
   })
 
   it('returns saved defaults when localStorage has valid data', () => {
@@ -155,8 +197,8 @@ describe('getDefaultSplittingOptions', () => {
     const result = getDefaultSplittingOptions(mockGroup as any)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toEqual([
-      { participant: 'lp-1', shares: '1' },
-      { participant: 'lp-2', shares: '1' },
+      { participant: 'lp-1', shares: 1 },
+      { participant: 'lp-2', shares: 1 },
     ])
   })
 
@@ -166,15 +208,15 @@ describe('getDefaultSplittingOptions', () => {
       JSON.stringify({
         splitMode: 'BY_PERCENTAGE',
         paidFor: [
-          { participant: 'lp-1', shares: '50' },
-          { participant: 'lp-999', shares: '50' },
+          { participant: 'lp-1', shares: 50 },
+          { participant: 'lp-999', shares: 50 },
         ],
       }),
     )
 
     const result = getDefaultSplittingOptions(mockGroup as any)
     expect(result.splitMode).toBe('BY_PERCENTAGE')
-    expect(result.paidFor).toEqual([{ participant: 'lp-1', shares: 5000 }])
+    expect(result.paidFor).toEqual([{ participant: 'lp-1', shares: 50 }])
   })
 
   it('falls back to default when no saved participants remain in the group', () => {
@@ -191,35 +233,34 @@ describe('getDefaultSplittingOptions', () => {
     expect(result.paidFor).toHaveLength(2)
   })
 
-  it('roundtrips BY_PERCENTAGE: 80% persists and loads as 8000 basis points', () => {
+  it('returns shares unmodified on load (no x100)', () => {
     localStorageMock.setItem(
       STORAGE_KEY,
       JSON.stringify({
         splitMode: 'BY_PERCENTAGE',
         paidFor: [
-          { participant: 'lp-1', shares: '80' },
-          { participant: 'lp-2', shares: '20' },
+          { participant: 'lp-1', shares: 80 },
+          { participant: 'lp-2', shares: 20 },
         ],
       }),
     )
 
     const result = getDefaultSplittingOptions(mockGroup as any)
-    expect(result.splitMode).toBe('BY_PERCENTAGE')
     expect(result.paidFor).toEqual([
-      { participant: 'lp-1', shares: 8000 },
-      { participant: 'lp-2', shares: 2000 },
+      { participant: 'lp-1', shares: 80 },
+      { participant: 'lp-2', shares: 20 },
     ])
   })
 
-  it('roundtrips BY_SHARES: 1 share persists and loads as 100 basis points', () => {
+  it('roundtrips BY_SHARES without scaling', () => {
     localStorageMock.setItem(
       STORAGE_KEY,
       JSON.stringify({
         splitMode: 'BY_SHARES',
         paidFor: [
-          { participant: 'lp-1', shares: '1' },
-          { participant: 'lp-2', shares: '2' },
-          { participant: 'lp-3', shares: '3' },
+          { participant: 'lp-1', shares: 1 },
+          { participant: 'lp-2', shares: 2 },
+          { participant: 'lp-3', shares: 3 },
         ],
       }),
     )
@@ -227,47 +268,8 @@ describe('getDefaultSplittingOptions', () => {
     const result = getDefaultSplittingOptions(mockGroup as any)
     expect(result.splitMode).toBe('BY_SHARES')
     expect(result.paidFor).toEqual([
-      { participant: 'lp-1', shares: 100 },
-      { participant: 'lp-2', shares: 200 },
-    ])
-  })
-
-  it('roundtrips BY_PERCENTAGE: persist and get yields basis points', async () => {
-    await persistDefaultSplittingOptions('group-1', {
-      ...baseFormValues,
-      splitMode: 'BY_PERCENTAGE',
-      paidFor: [
-        { participant: 'lp-1', shares: '80' as any },
-        { participant: 'lp-2', shares: '20' as any },
-      ],
-      saveDefaultSplittingOptions: true,
-    })
-
-    const result = getDefaultSplittingOptions(mockGroup as any)
-    expect(result.splitMode).toBe('BY_PERCENTAGE')
-    expect(result.paidFor).toEqual([
-      { participant: 'lp-1', shares: 8000 },
-      { participant: 'lp-2', shares: 2000 },
-    ])
-  })
-
-  it('returns BY_PERCENTAGE shares in basis points when saved as numbers', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_PERCENTAGE',
-        paidFor: [
-          { participant: 'lp-1', shares: 50 },
-          { participant: 'lp-2', shares: 50 },
-        ],
-      }),
-    )
-
-    const result = getDefaultSplittingOptions(mockGroup as any)
-    expect(result.splitMode).toBe('BY_PERCENTAGE')
-    expect(result.paidFor).toEqual([
-      { participant: 'lp-1', shares: 5000 },
-      { participant: 'lp-2', shares: 5000 },
+      { participant: 'lp-1', shares: 1 },
+      { participant: 'lp-2', shares: 2 },
     ])
   })
 
@@ -299,12 +301,12 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.stubGlobal('window', { localStorage: localStorageMock })
+    setTestWindow(localStorageMock as unknown as Storage)
     localStorageMock.clear()
   })
 
   afterEach(() => {
-    vi.unstubAllGlobals()
+    restoreTestWindow()
   })
 
   it('forces splitMode to EVENLY when no saved defaults exist', () => {
@@ -323,9 +325,11 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     })
 
     expect(result.splitMode).toBe('EVENLY')
-    expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: '1' }])
+    expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: 1 }])
     expect(result.isReimbursement).toBe(true)
     expect(result.category).toBe(PAYMENT_CATEGORY_ID)
+    // searchParams.amount is in cents (e.g., 50 cents = $0.50); the form
+    // stores amount and paidByList shares in major units.
     expect(result.paidByList).toEqual([{ participant: 'lp-1', shares: 0.5 }])
     expect(result.isMultiPayer).toBe(false)
   })
@@ -357,7 +361,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     })
 
     expect(result.splitMode).toBe('EVENLY')
-    expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: '1' }])
+    expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: 1 }])
   })
 
   it('forces splitMode to EVENLY even when saved defaults are BY_PERCENTAGE', () => {
@@ -366,8 +370,8 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       JSON.stringify({
         splitMode: 'BY_PERCENTAGE',
         paidFor: [
-          { participant: 'lp-1', shares: 5000 },
-          { participant: 'lp-2', shares: 5000 },
+          { participant: 'lp-1', shares: 80 },
+          { participant: 'lp-2', shares: 20 },
         ],
       }),
     )
@@ -387,7 +391,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     })
 
     expect(result.splitMode).toBe('EVENLY')
-    expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: '1' }])
+    expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: 1 }])
   })
 
   it('uses searchParams.to as the only paidFor recipient', () => {
@@ -406,7 +410,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     })
 
     expect(result.paidFor).toHaveLength(1)
-    expect(result.paidFor[0]).toEqual({ participant: 'lp-2', shares: '1' })
+    expect(result.paidFor[0]).toEqual({ participant: 'lp-2', shares: 1 })
   })
 
   it('still sets the payment category and recurrence for reimbursement', () => {

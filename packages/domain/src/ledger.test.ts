@@ -1,5 +1,5 @@
 import { getBalances, getPublicBalances, type BalanceExpense } from './balances'
-import { expenseFormSchema } from './schemas'
+import { expenseFormInputSchema } from './schemas'
 import {
   calculateShare,
   getTotalActiveUserShare,
@@ -294,27 +294,27 @@ describe('Ledger currency conversion rules', () => {
     expect(ledgerAmount).toBe(65)
   })
 
-  it('expenseFormSchema preserves conversion fields through parse', () => {
+  it('expenseFormInputSchema preserves conversion fields through parse', () => {
     const raw = {
       title: 'Test expense',
       expenseDate: new Date('2026-06-24'),
       category: 'general',
-      amount: '42.50',
+      amount: 42.5,
       isMultiPayer: false,
       paidBySplitMode: 'EVENLY' as const,
-      paidByList: [{ participant: 'lp-alice', shares: '1' }],
+      paidByList: [{ participant: 'lp-alice', shares: 1 }],
       paidFor: [
-        { participant: 'lp-alice', shares: '1' },
-        { participant: 'lp-bob', shares: '1' },
+        { participant: 'lp-alice', shares: 1 },
+        { participant: 'lp-bob', shares: 1 },
       ],
       splitMode: 'EVENLY' as const,
       saveDefaultSplittingOptions: false,
       isReimbursement: false,
-      originalAmount: '50.00',
+      originalAmount: 50,
       originalCurrency: 'EUR',
-      conversionRate: '0.85',
+      conversionRate: 0.85,
     }
-    const result = expenseFormSchema.parse(raw)
+    const result = expenseFormInputSchema.parse(raw)
     expect(result.originalAmount).toBe(50)
     expect(result.originalCurrency).toBe('EUR')
     expect(result.conversionRate).toBe(0.85)
@@ -361,25 +361,25 @@ describe('Split unit preservation edge cases', () => {
       ...overrides,
     }) as Inferred
 
-  it('expenseFormSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
+  it('expenseFormInputSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
     const raw = {
       title: 'Test',
       expenseDate: new Date('2026-06-24'),
       category: 'general',
-      amount: '100.00',
+      amount: 100,
       isMultiPayer: false,
       paidBySplitMode: 'EVENLY' as const,
-      paidByList: [{ participant: 'lp-a', shares: '30' }],
+      paidByList: [{ participant: 'lp-a', shares: 30 }],
       paidFor: [
-        { participant: 'lp-a', shares: '30' },
-        { participant: 'lp-b', shares: '30' },
-        { participant: 'lp-c', shares: '30' },
+        { participant: 'lp-a', shares: 30 },
+        { participant: 'lp-b', shares: 30 },
+        { participant: 'lp-c', shares: 30 },
       ],
       splitMode: 'BY_AMOUNT' as const,
       saveDefaultSplittingOptions: false,
       isReimbursement: false,
     }
-    expect(() => expenseFormSchema.parse(raw)).toThrow()
+    expect(() => expenseFormInputSchema.parse(raw)).toThrow()
   })
 
   it('BY_PERCENTAGE with small basis points (1 bp)', () => {
