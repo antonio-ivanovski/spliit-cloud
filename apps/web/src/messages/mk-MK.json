@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Платил <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "paidByMultiple": "Платиле <paidByNames></paidByNames> за <paidFor></paidFor>",
     "everyone": "сите",
     "receivedBy": "Примил <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "receivedByMultiple": "Примиле <paidByNames></paidByNames> за <paidFor></paidFor>",
     "yourBalance": "Вашето салдо:",
     "notInvolved": "Не сте вклучени",
     "settlementBadge": "Пресметка"
@@ -585,7 +587,6 @@
     "selectNone": "Избери никој",
     "selectAll": "Избери ги сите",
     "shares": "удел(и)",
-    "advancedOptions": "Напредни опции за делење…",
     "participant": {
       "pending": "(поканет)"
     },
@@ -611,7 +612,43 @@
     "saving": "Се зачувува…",
     "cancel": "Откажи",
     "reimbursement": "Раздолжување",
-    "readOnlyNotice": "Оваа група е архивирана. Трошокот се прикажува само за читање."
+    "readOnlyNotice": "Оваа група е архивирана. Трошокот се прикажува само за читање.",
+    "PaidBySplitModeField": {
+      "label": "Начин на делење за плаќач"
+    },
+    "ParticipantDistribution": {
+      "missing": "Недостига {missing} од {total}",
+      "surplus": "Вишок: {extra} од {total}",
+      "matches": "✓ Се совпаѓа со {total}",
+      "evenlySplit": "Подеднакво поделено: {amount} × {count}",
+      "sharesTotal": "Вкупна тежина: {sum} удели",
+      "percentageMatches": "✓ Се совпаѓа 100%",
+      "percentageMissing": "Недостига {pct}%",
+      "percentageSurplus": "Вишок: {pct}%"
+    },
+    "splittingOptions": "Опции за поделба",
+    "multiplePayers": "Повеќе плаќачи",
+    "paidByOptionSinglePayer": "Еден плаќач",
+    "paidByOptionEvenly": "Рамномерно",
+    "paidByOptionByShares": "По удели",
+    "paidByOptionByPercentage": "По процент",
+    "paidByOptionByAmount": "По износ",
+    "paidForOptionEvenly": "Рамномерно",
+    "paidForOptionByShares": "По удели",
+    "paidForOptionByPercentage": "По процент",
+    "paidForOptionByAmount": "По износ",
+    "paidBySectionSingle": "Еден",
+    "paidBySectionMultiple": "Повеќе плаќачи",
+    "paidForSection": "Поделено меѓу учесниците",
+    "paidByOptionSinglePayerHelper": "Едно лице го покрива целиот трошок",
+    "paidByOptionEvenlyHelper": "Секој плаќа еднаков удел",
+    "paidByOptionBySharesHelper": "Секој плаќа пондериран удел",
+    "paidByOptionByPercentageHelper": "Секој плаќа процент",
+    "paidByOptionByAmountHelper": "Секој плаќа фиксен износ",
+    "paidForOptionEvenlyHelper": "Рамномерно поделено меѓу сите",
+    "paidForOptionBySharesHelper": "Доделете удел на секое лице",
+    "paidForOptionByPercentageHelper": "Доделете процент на секое лице",
+    "paidForOptionByAmountHelper": "Доделете точен износ на секое лице"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +760,11 @@
     "paidForMin1": "Трошокот мора да биде платен за барем еден учесник.",
     "noZeroShares": "Сите удели мора да бидат поголеми од 0.",
     "amountSum": "Збирот на износите мора да биде еднаков на износот на трошокот.",
-    "percentageSum": "Збирот на процентите мора да биде 100."
+    "percentageSum": "Збирот на процентите мора да биде 100.",
+    "paidByMin1": "Мора да се избере најмалку еден плаќач.",
+    "paidByAmountSum": "Збирот на износите на плаќачите мора да биде еднаков на износот на трошокот.",
+    "paidByPercentageSum": "Збирот на процентите на плаќачите мора да биде 100.",
+    "duplicateParticipant": "Друг плаќач је већ изабран."
   },
   "Categories": {
     "search": "Пребарај категорија...",

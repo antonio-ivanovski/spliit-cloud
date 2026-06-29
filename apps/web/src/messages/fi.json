@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> maksoi {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
     "receivedBy": "<strong>{paidBy}</strong> sai rahaa {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
+    "receivedByMultiple": "Sai rahaa <paidByNames></paidByNames> <paidFor></paidFor> puolesta",
     "yourBalance": "Saldosi:",
+    "paidByMultiple": "Maksoi <paidByNames></paidByNames> <paidFor></paidFor> puolesta",
     "everyone": "kaikki",
     "notInvolved": "Et ole osallisena",
     "settlementBadge": "Tasaus"
@@ -465,7 +467,6 @@
     "selectNone": "Tyhjennä valinnat",
     "selectAll": "Valitse kaikki",
     "shares": "osuutta",
-    "advancedOptions": "Lisäasetuksia jakamiseen…",
     "participant": {
       "pending": "(kutsuttu)"
     },
@@ -491,7 +492,43 @@
     "saving": "Tallennetaan…",
     "cancel": "Peruuta",
     "reimbursement": "Velanmaksu",
-    "readOnlyNotice": "Tämä ryhmä on arkistoitu. Kulu näytetään vain luku -tilassa."
+    "readOnlyNotice": "Tämä ryhmä on arkistoitu. Kulu näytetään vain luku -tilassa.",
+    "PaidBySplitModeField": {
+      "label": "Maksajan jakamistapa"
+    },
+    "ParticipantDistribution": {
+      "missing": "Puuttuu {missing}/{total}",
+      "surplus": "Ylijäämä: {extra}/{total}",
+      "matches": "✓ Vastaa {total}",
+      "evenlySplit": "Jaettu tasan: {amount} × {count}",
+      "sharesTotal": "Kokonaispaino: {sum} osuutta",
+      "percentageMatches": "✓ Vastaa 100 %",
+      "percentageMissing": "Puuttuu {pct}%",
+      "percentageSurplus": "Ylijäämä: {pct}%"
+    },
+    "splittingOptions": "Jakovaihtoehdot",
+    "multiplePayers": "Useita maksajia",
+    "paidByOptionSinglePayer": "Yksi maksaja",
+    "paidByOptionEvenly": "Tasan",
+    "paidByOptionByShares": "Osuuksien mukaan",
+    "paidByOptionByPercentage": "Prosenttien mukaan",
+    "paidByOptionByAmount": "Summan mukaan",
+    "paidForOptionEvenly": "Tasan",
+    "paidForOptionByShares": "Osuuksien mukaan",
+    "paidForOptionByPercentage": "Prosenttien mukaan",
+    "paidForOptionByAmount": "Summan mukaan",
+    "paidBySectionSingle": "Yksi",
+    "paidBySectionMultiple": "Useita maksajia",
+    "paidForSection": "Jaa osallistujien kesken",
+    "paidByOptionSinglePayerHelper": "Yksi henkilö maksaa koko kulun",
+    "paidByOptionEvenlyHelper": "Kukin maksaa saman osuuden",
+    "paidByOptionBySharesHelper": "Kukin maksaa painotetun osuuden",
+    "paidByOptionByPercentageHelper": "Kukin maksaa prosenttiosuuden",
+    "paidByOptionByAmountHelper": "Kukin maksaa kiinteän summan",
+    "paidForOptionEvenlyHelper": "Jaa tasan kaikkien kesken",
+    "paidForOptionBySharesHelper": "Anna kullekin henkilölle osuus",
+    "paidForOptionByPercentageHelper": "Anna kullekin henkilölle prosenttiosuus",
+    "paidForOptionByAmountHelper": "Anna kullekin henkilölle tarkka summa"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "noZeroShares": "Jokaisen osuuden täytyy olla suurempi kuin 0.",
     "amountSum": "Osuuksien summan täytyy vastata kulun summaa.",
     "percentageSum": "Prosenttiosuuksien summan täytyy olla 100.",
-    "ratePositive": "Kurssin täytyy olla ehdottomasti suurempi kuin nolla."
+    "ratePositive": "Kurssin täytyy olla ehdottomasti suurempi kuin nolla.",
+    "paidByMin1": "Vähintään yksi maksaja on valittava.",
+    "paidByAmountSum": "Maksajien summan on oltava sama kuin kulun määrä.",
+    "paidByPercentageSum": "Maksajien prosenttiosuuksien summan on oltava 100.",
+    "duplicateParticipant": "Toinen maksaja on jo valittu."
   },
   "Categories": {
     "search": "Etsi kategoriaa...",

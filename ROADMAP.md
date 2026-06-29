@@ -21,7 +21,7 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 
 ### Headline features (community high-demand)
 
-- [ ] **Multi-payer expenses** — a single expense paid by several members, with a share per payer. Closes the gap with Splitwise. — upstream **[#14](https://github.com/spliit-app/spliit/issues/14)** (PRs [#146](https://github.com/spliit-app/spliit/pull/146) / [#396](https://github.com/spliit-app/spliit/pull/396) open 1.5+ years)
+- [x] **Multi-payer expenses** — a single expense paid by several members, with a share per payer. Closes the gap with Splitwise. — upstream **[#14](https://github.com/spliit-app/spliit/issues/14)** (PRs [#146](https://github.com/spliit-app/spliit/pull/146) / [#396](https://github.com/spliit-app/spliit/pull/396) open 1.5+ years)
 - [ ] **Itemized expenses** — split an expense by line items, with tax and tip, and per-person sub-totals. The most-asked "real Splitwise" feature after recurring. — upstream [#395](https://github.com/spliit-app/spliit/issues/395)
 - [ ] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
 - [ ] Recurring expenses — `calculateNextDate` and daily/weekly/monthly tests already in place
@@ -68,6 +68,16 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - [ ] **Keyboard navigation broken in category / currency selectors** — upstream [#491](https://github.com/spliit-app/spliit/pull/491)
 - [ ] **CSV export 500 on group names with umlauts** — upstream [#458](https://github.com/spliit-app/spliit/issues/458), fix PR [#377](https://github.com/spliit-app/spliit/pull/377)
 - [ ] **Postgres volume mount in modern images** — upstream [#463](https://github.com/spliit-app/spliit/issues/463), fix PR [#464](https://github.com/spliit-app/spliit/pull/464)
+
+## Phase 5: Account customization & settings — planned
+
+### Headline features
+
+- [ ] **Profile photos** — upload and manage profile avatars, displayed in group member lists and expense participants
+- [ ] **App theme** — light, dark, and system theme preference persisted per account and synced across devices
+- [ ] **Favourite currencies** — user-curated list of preferred currencies that replaces the hardcoded "common currencies" in the expense creation flow. Addresses the steady stream of currency addition PRs by making the selector personal.
+- [ ] **Bring-your-own AI key (per-user)** — per-user API key configuration for receipt scanning and category extraction, allowing users to bring their own OpenAI-compatible endpoint and model. Complements the server-level BYOK from Phase 4.
+- [ ] **Settings sync across devices** — preferences, favourite currencies, theme, and AI configuration are stored server-side and synced across all sessions. Builds on the account system from Phase 1.
 
 ## Cross-cutting
 

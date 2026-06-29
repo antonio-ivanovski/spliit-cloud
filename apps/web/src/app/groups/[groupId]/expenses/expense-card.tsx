@@ -19,7 +19,9 @@ type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
 
 const participantsKey = {
   paidBy: 'ExpenseCard.paidBy',
+  paidByMultiple: 'ExpenseCard.paidByMultiple',
   receivedBy: 'ExpenseCard.receivedBy',
+  receivedByMultiple: 'ExpenseCard.receivedByMultiple',
 } as const
 
 function Participants({
@@ -42,13 +44,40 @@ function Participants({
       ))
     )
 
-  const i18nKey = participantsKey[expense.amount > 0 ? 'paidBy' : 'receivedBy']
+  const isMultiPayer = expense.paidByList.length > 1
+  const direction = expense.amount > 0 ? 'paidBy' : 'receivedBy'
+  const i18nKey = isMultiPayer
+    ? participantsKey[`${direction}Multiple`]
+    : participantsKey[direction]
+
+  if (isMultiPayer) {
+    // Decision #13: sort payers alphabetically by resolved display name.
+    const sortedPaidByList = [...expense.paidByList].sort((a, b) =>
+      a.ledgerParticipant.name.localeCompare(b.ledgerParticipant.name),
+    )
+    const paidByNames = sortedPaidByList.map((pb, index) => (
+      <Fragment key={pb.ledgerParticipant.id}>
+        {index !== 0 && <>, </>}
+        <strong>{pb.ledgerParticipant.name}</strong>
+      </Fragment>
+    ))
+    return (
+      <Trans
+        i18nKey={i18nKey}
+        values={{ forCount: expense.paidFor.length }}
+        components={{
+          paidByNames: <>{paidByNames}</>,
+          paidFor: <>{paidFor}</>,
+        }}
+      />
+    )
+  }
 
   return (
     <Trans
       i18nKey={i18nKey}
       values={{
-        paidBy: expense.paidBy.name,
+        paidBy: expense.paidByList[0].ledgerParticipant.name,
         forCount: expense.paidFor.length,
       }}
       components={{

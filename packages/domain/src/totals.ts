@@ -4,12 +4,19 @@ export type TotalsExpense = {
   id?: string
   amount: number
   splitMode: SplitMode
+  paidBySplitMode: SplitMode
   isReimbursement: boolean
-  paidBy: { id: string; name?: string }
+  paidByList: Array<{
+    shares: number
+    participant: { id: string; name?: string }
+  }>
   paidFor: Array<{
     shares: number
     participant: { id: string; name?: string }
   }>
+  originalAmount?: number | null
+  originalCurrency?: string | null
+  conversionRate?: number | string | null
   [key: string]: unknown
 }
 
@@ -25,13 +32,76 @@ export function getTotalActiveUserPaidFor(
   activeUserId: string | null,
   expenses: TotalsExpense[],
 ): number {
-  return expenses.reduce(
-    (total, expense) =>
-      expense.paidBy.id === activeUserId && !expense.isReimbursement
-        ? total + expense.amount
-        : total,
-    0,
+  return expenses.reduce((total, expense) => {
+    if (expense.isReimbursement) return total
+    for (const paidBy of expense.paidByList) {
+      if (paidBy.participant.id === activeUserId) {
+        return total + calculatePaidByShare(activeUserId, expense)
+      }
+    }
+    return total
+  }, 0)
+}
+
+export function calculatePaidByShare(
+  participantId: string | null,
+  expense: Pick<
+    TotalsExpense,
+    | 'amount'
+    | 'paidByList'
+    | 'paidBySplitMode'
+    | 'isReimbursement'
+    | 'originalAmount'
+    | 'originalCurrency'
+    | 'conversionRate'
+  >,
+): number {
+  if (expense.isReimbursement) return 0
+
+  const paidBys = expense.paidByList
+  const userPaidBy = paidBys.find(
+    (paidBy) => paidBy.participant.id === participantId,
   )
+
+  if (!userPaidBy) return 0
+
+  // When the expense was paid in a foreign currency, shares are in
+  // original currency and must be converted to ledger currency to
+  // match getBalances()'s unit on balances.paid.
+  const useOriginal = Boolean(
+    expense.originalCurrency && expense.conversionRate,
+  )
+  const conversionRate = useOriginal ? Number(expense.conversionRate) : 1
+  const base = useOriginal
+    ? (expense.originalAmount ?? expense.amount)
+    : expense.amount
+  const shares = Number(userPaidBy.shares)
+
+  let dividedAmount: number
+  switch (expense.paidBySplitMode) {
+    case 'EVENLY':
+      dividedAmount = base / paidBys.length
+      break
+    case 'BY_AMOUNT':
+      dividedAmount = shares
+      break
+    case 'BY_PERCENTAGE':
+      dividedAmount = (base * shares) / 10000
+      break
+    case 'BY_SHARES':
+      const totalShares = paidBys.reduce(
+        (sum, paidBy) => sum + Number(paidBy.shares),
+        0,
+      )
+      dividedAmount = (base * shares) / totalShares
+      break
+    default:
+      return 0
+  }
+
+  return useOriginal
+    ? Math.round(dividedAmount * conversionRate)
+    : dividedAmount
 }
 
 export function calculateShare(

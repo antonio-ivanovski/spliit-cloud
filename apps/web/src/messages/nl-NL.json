@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
+    "paidByMultiple": "Betaald door <paidByNames></paidByNames> voor <paidFor></paidFor>",
     "everyone": "iedereen",
     "receivedBy": "Ontvangen door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
+    "receivedByMultiple": "Ontvangen door <paidByNames></paidByNames> voor <paidFor></paidFor>",
     "yourBalance": "Jouw balans:",
     "notInvolved": "Je bent hier niet bij betrokken",
     "settlementBadge": "Verrekening"
@@ -465,7 +467,6 @@
     "selectNone": "Selecteer niemand",
     "selectAll": "Selecteer iedereen",
     "shares": "deel/delen",
-    "advancedOptions": "Andere split-opties…",
     "participant": {
       "pending": "(uitgenodigd)"
     },
@@ -491,7 +492,43 @@
     "saving": "Aan het opslaan…",
     "cancel": "Annuleren",
     "reimbursement": "Terugbetaling",
-    "readOnlyNotice": "Deze groep is gearchiveerd. De uitgave wordt alleen-lezen weergegeven."
+    "readOnlyNotice": "Deze groep is gearchiveerd. De uitgave wordt alleen-lezen weergegeven.",
+    "PaidBySplitModeField": {
+      "label": "Splitsingssoort betaler"
+    },
+    "ParticipantDistribution": {
+      "missing": "Ontbreekt {missing} van {total}",
+      "surplus": "Overschot: {extra} van {total}",
+      "matches": "✓ Komt overeen met {total}",
+      "evenlySplit": "Gelijk verdeeld: {amount} × {count}",
+      "sharesTotal": "Totaal gewicht: {sum} delen",
+      "percentageMatches": "✓ Komt overeen met 100%",
+      "percentageMissing": "Ontbreekt {pct}%",
+      "percentageSurplus": "Overschot: {pct}%"
+    },
+    "splittingOptions": "Splitsingsopties",
+    "multiplePayers": "Meerdere betalers",
+    "paidByOptionSinglePayer": "Enkele betaler",
+    "paidByOptionEvenly": "Gelijk verdeeld",
+    "paidByOptionByShares": "Met delen",
+    "paidByOptionByPercentage": "Met percentage",
+    "paidByOptionByAmount": "Met bedrag",
+    "paidForOptionEvenly": "Gelijk verdeeld",
+    "paidForOptionByShares": "Met delen",
+    "paidForOptionByPercentage": "Met percentage",
+    "paidForOptionByAmount": "Met bedrag",
+    "paidBySectionSingle": "Enkel",
+    "paidBySectionMultiple": "Meerdere betalers",
+    "paidForSection": "Verdelen tussen deelnemers",
+    "paidByOptionSinglePayerHelper": "Eén persoon betaalt de volledige uitgave",
+    "paidByOptionEvenlyHelper": "Iedereen betaalt een gelijk aandeel",
+    "paidByOptionBySharesHelper": "Iedereen betaalt een gewogen aandeel",
+    "paidByOptionByPercentageHelper": "Iedereen betaalt een percentage",
+    "paidByOptionByAmountHelper": "Iedereen betaalt een vast bedrag",
+    "paidForOptionEvenlyHelper": "Gelijkmatig verdelen tussen iedereen",
+    "paidForOptionBySharesHelper": "Wijs een aandeel toe aan elke persoon",
+    "paidForOptionByPercentageHelper": "Wijs een percentage toe aan elke persoon",
+    "paidForOptionByAmountHelper": "Wijs een exact bedrag toe aan elke persoon"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "noZeroShares": "Een deel mag niet 0 zijn.",
     "amountSum": "Het totaalbedrag moet gelijk zijn aan het uitgavebedrag.",
     "percentageSum": "Het totaalpercentage moet gelijk zijn aan 100%.",
-    "ratePositive": "De koers moet groter dan nul zijn."
+    "ratePositive": "De koers moet groter dan nul zijn.",
+    "paidByMin1": "Selecteer ten minste één betaler.",
+    "paidByAmountSum": "Het totaal van de betalers moet gelijk zijn aan het uitgavenbedrag.",
+    "paidByPercentageSum": "Het totaal van de percentages van de betalers moet 100 zijn.",
+    "duplicateParticipant": "Er is al een andere betaler geselecteerd."
   },
   "Categories": {
     "search": "Categorie zoeken…",

@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Zaplatil/a <strong>{paidBy}</strong> za <paidFor></paidFor>",
     "receivedBy": "Obdržel/a <strong>{paidBy}</strong> od <paidFor></paidFor>",
+    "receivedByMultiple": "Obdržel/a <paidByNames></paidByNames> od <paidFor></paidFor>",
     "yourBalance": "Váš zůstatek:",
+    "paidByMultiple": "Zaplatil/a <paidByNames></paidByNames> za <paidFor></paidFor>",
     "everyone": "všechny",
     "notInvolved": "Nejste zapojeni",
     "settlementBadge": "Vyrovnání"
@@ -465,7 +467,6 @@
     "selectNone": "Nevybrat nic",
     "selectAll": "Vybrat vše",
     "shares": "podíl(y)",
-    "advancedOptions": "Pokročilé možnosti rozdělení…",
     "participant": {
       "pending": "(pozván/a)"
     },
@@ -491,7 +492,43 @@
     "saving": "Ukládání…",
     "cancel": "Zrušit",
     "reimbursement": "Proplacení",
-    "readOnlyNotice": "Tato skupina je archivována. Výdaj je zobrazen pouze pro čtení."
+    "readOnlyNotice": "Tato skupina je archivována. Výdaj je zobrazen pouze pro čtení.",
+    "PaidBySplitModeField": {
+      "label": "Způsob rozdělení plátce"
+    },
+    "ParticipantDistribution": {
+      "missing": "Chybí {missing} z {total}",
+      "surplus": "Přebytek: {extra} z {total}",
+      "matches": "✓ Odpovídá {total}",
+      "evenlySplit": "Rozděleno rovnoměrně: {amount} × {count}",
+      "sharesTotal": "Celková váha: {sum} podílů",
+      "percentageMatches": "✓ Odpovídá 100 %",
+      "percentageMissing": "Chybí {pct}%",
+      "percentageSurplus": "Přebytek: {pct}%"
+    },
+    "splittingOptions": "Možnosti dělení",
+    "multiplePayers": "Více plátců",
+    "paidByOptionSinglePayer": "Jeden plátce",
+    "paidByOptionEvenly": "Rovnoměrně",
+    "paidByOptionByShares": "Podle podílů",
+    "paidByOptionByPercentage": "Podle procent",
+    "paidByOptionByAmount": "Podle částky",
+    "paidForOptionEvenly": "Rovnoměrně",
+    "paidForOptionByShares": "Podle podílů",
+    "paidForOptionByPercentage": "Podle procent",
+    "paidForOptionByAmount": "Podle částky",
+    "paidBySectionSingle": "Jeden",
+    "paidBySectionMultiple": "Více plátců",
+    "paidForSection": "Rozdělit mezi účastníky",
+    "paidByOptionSinglePayerHelper": "Jedna osoba hradí celý výdaj",
+    "paidByOptionEvenlyHelper": "Každý zaplatí stejný podíl",
+    "paidByOptionBySharesHelper": "Každý zaplatí vážený podíl",
+    "paidByOptionByPercentageHelper": "Každý zaplatí určité procento",
+    "paidByOptionByAmountHelper": "Každý zaplatí pevnou částku",
+    "paidForOptionEvenlyHelper": "Rovnoměrné rozdělení mezi všechny",
+    "paidForOptionBySharesHelper": "Přiřaďte podíl každé osobě",
+    "paidForOptionByPercentageHelper": "Přiřaďte procento každé osobě",
+    "paidForOptionByAmountHelper": "Přiřaďte přesnou částku každé osobě"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "paidForMin1": "Výdaj musí být zaplacen alespoň za jednoho účastníka.",
     "noZeroShares": "Všechny podíly musí být větší než 0.",
     "amountSum": "Součet částek se musí rovnat částce výdaje.",
-    "percentageSum": "Součet procent musí být 100."
+    "percentageSum": "Součet procent musí být 100.",
+    "paidByMin1": "Musíte vybrat alespoň jednoho plátce.",
+    "paidByAmountSum": "Součet částek plátců se musí rovnat částce výdaje.",
+    "paidByPercentageSum": "Součet procent plátců musí být 100.",
+    "duplicateParticipant": "Jiný plátce je již vybrán."
   },
   "Categories": {
     "search": "Hledat kategorii...",

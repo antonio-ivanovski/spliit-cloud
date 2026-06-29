@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>-k ordaindua <paidFor></paidFor>-rentzat",
+    "paidByMultiple": "<paidByNames></paidByNames>-(e)k ordaindua <paidFor></paidFor>-rentzat",
     "everyone": "denak",
     "receivedBy": "<strong>{paidBy}</strong>-k jasota <paidFor></paidFor>-rentzat",
+    "receivedByMultiple": "<paidByNames></paidByNames>-ek jasota <paidFor></paidFor>-rentzat",
     "yourBalance": "Zure saldoa:",
     "notInvolved": "Ez duzu parte hartzen",
     "settlementBadge": "Kitzea"
@@ -465,7 +467,6 @@
     "selectNone": "Hautatu bat ere ez",
     "selectAll": "Hautatu denak",
     "shares": "partekatzea(k)",
-    "advancedOptions": "Zatitzeko aukera aurreratuak…",
     "SplitModeField": {
       "label": "Zatitzeko modua",
       "evenly": "Zati berdinetan",
@@ -491,7 +492,43 @@
     "participant": {
       "pending": "(gonbidatua)"
     },
-    "readOnlyNotice": "Talde hau artxibatuta dago. Gastua irakurtzeko soilik erakusten da."
+    "readOnlyNotice": "Talde hau artxibatuta dago. Gastua irakurtzeko soilik erakusten da.",
+    "PaidBySplitModeField": {
+      "label": "Ordaintzailearen zatiketa modua"
+    },
+    "ParticipantDistribution": {
+      "missing": "{missing} falta {total}-tik",
+      "surplus": "Soberan: {extra} {total}-tik",
+      "matches": "✓ Bat dator {total}-rekin",
+      "evenlySplit": "Berdin banatuta: {amount} × {count}",
+      "sharesTotal": "Pisu osoa: {sum} parteketa",
+      "percentageMatches": "✓ Bat dator %100ekin",
+      "percentageMissing": "%{pct} falta da",
+      "percentageSurplus": "%{pct} soberan"
+    },
+    "splittingOptions": "Zatiketa aukerak",
+    "multiplePayers": "Ordaintzaile anitz",
+    "paidByOptionSinglePayer": "Ordaintzaile bakarra",
+    "paidByOptionEvenly": "Zati berdinetan",
+    "paidByOptionByShares": "Partekatzetan",
+    "paidByOptionByPercentage": "Ehunekoen bidez",
+    "paidByOptionByAmount": "Zenbatekoen bidez",
+    "paidForOptionEvenly": "Zati berdinetan",
+    "paidForOptionByShares": "Partekatzetan",
+    "paidForOptionByPercentage": "Ehunekoen bidez",
+    "paidForOptionByAmount": "Zenbatekoen bidez",
+    "paidBySectionSingle": "Bakarra",
+    "paidBySectionMultiple": "Ordaintzaile anitz",
+    "paidForSection": "Parte-hartzaileen artean banatu",
+    "paidByOptionSinglePayerHelper": "Pertsona batek gastu osoa estaltzen du",
+    "paidByOptionEvenlyHelper": "Bakoitzak zati berdina ordaintzen du",
+    "paidByOptionBySharesHelper": "Bakoitzak zati haztatua ordaintzen du",
+    "paidByOptionByPercentageHelper": "Bakoitzak ehuneko bat ordaintzen du",
+    "paidByOptionByAmountHelper": "Bakoitzak zenbateko finko bat ordaintzen du",
+    "paidForOptionEvenlyHelper": "Denen artean zati berdinetan banatzen da",
+    "paidForOptionBySharesHelper": "Esleitu parte bat pertsona bakoitzari",
+    "paidForOptionByPercentageHelper": "Esleitu ehuneko bat pertsona bakoitzari",
+    "paidForOptionByAmountHelper": "Esleitu zenbateko zehatz bat pertsona bakoitzari"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "paidForMin1": "Gastua gutxienez kide batek ordaindu behar du.",
     "noZeroShares": "Parte guztiek zero baino handiagoak izan behar dute.",
     "amountSum": "Zenbatekoen baturak gastuaren zenbatekoa berdindu behar du.",
-    "percentageSum": "Ehunekoen baturak 100 izan behar du."
+    "percentageSum": "Ehunekoen baturak 100 izan behar du.",
+    "paidByMin1": "Gutxienez ordaintzaile bat hautatu behar da.",
+    "paidByAmountSum": "Ordaintzaileen zenbatekoen baturak gastuaren zenbatekoa berdindu behar du.",
+    "paidByPercentageSum": "Ordaintzaileen ehunekoen baturak 100 izan behar du.",
+    "duplicateParticipant": "Beste ordaintzaile bat dago jada hautatuta."
   },
   "Categories": {
     "search": "Bilatu kategoria...",

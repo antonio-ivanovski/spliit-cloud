@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "由 <strong>{paidBy}</strong> 支付 <paidFor></paidFor>。",
     "receivedBy": "由 <strong>{paidBy}</strong> 收取 <paidFor></paidFor>。",
+    "receivedByMultiple": "由 <paidByNames></paidByNames> 為 <paidFor></paidFor> 收取",
     "yourBalance": "你的餘額：",
+    "paidByMultiple": "由 <paidByNames></paidByNames> 為 <paidFor></paidFor> 支付",
     "everyone": "所有人",
     "notInvolved": "您未參與其中",
     "settlementBadge": "結算"
@@ -444,7 +446,6 @@
     "selectNone": "取消全選",
     "selectAll": "全選",
     "shares": "份額",
-    "advancedOptions": "進階分帳選項……",
     "SplitModeField": {
       "label": "分帳方式",
       "evenly": "平均分配",
@@ -491,7 +492,43 @@
     "participant": {
       "pending": "（已邀請）"
     },
-    "readOnlyNotice": "此群組已封存。支出以唯讀方式顯示。"
+    "readOnlyNotice": "此群組已封存。支出以唯讀方式顯示。",
+    "PaidBySplitModeField": {
+      "label": "付款人分帳方式"
+    },
+    "ParticipantDistribution": {
+      "missing": "缺少 {missing}，共 {total}",
+      "surplus": "超出 {extra}，共 {total}",
+      "matches": "✓ 符合 {total}",
+      "evenlySplit": "均分: {amount} × {count}",
+      "sharesTotal": "總權重: {sum} 份",
+      "percentageMatches": "✓ 符合 100%",
+      "percentageMissing": "缺少 {pct}%",
+      "percentageSurplus": "超出 {pct}%"
+    },
+    "splittingOptions": "分攤選項",
+    "multiplePayers": "多個付款人",
+    "paidByOptionSinglePayer": "單一付款人",
+    "paidByOptionEvenly": "平均",
+    "paidByOptionByShares": "自訂份額",
+    "paidByOptionByPercentage": "自訂百分比",
+    "paidByOptionByAmount": "自訂金額",
+    "paidForOptionEvenly": "平均",
+    "paidForOptionByShares": "自訂份額",
+    "paidForOptionByPercentage": "自訂百分比",
+    "paidForOptionByAmount": "自訂金額",
+    "paidBySectionSingle": "單一",
+    "paidBySectionMultiple": "多個付款人",
+    "paidForSection": "在群組成員之間分攤",
+    "paidByOptionSinglePayerHelper": "由一人支付全部費用",
+    "paidByOptionEvenlyHelper": "每人支付相同份額",
+    "paidByOptionBySharesHelper": "每人按加權份額支付",
+    "paidByOptionByPercentageHelper": "每人按百分比支付",
+    "paidByOptionByAmountHelper": "每人支付固定金額",
+    "paidForOptionEvenlyHelper": "在所有人之間平均分攤",
+    "paidForOptionBySharesHelper": "為每個人指定份額",
+    "paidForOptionByPercentageHelper": "為每個人指定百分比",
+    "paidForOptionByAmountHelper": "為每個人指定具體金額"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "noZeroShares": "份額需大於 0。",
     "amountSum": "金額總計必須等於消費金額。",
     "percentageSum": "百分比加總必須等於 100。",
-    "ratePositive": "匯率必須嚴格大於零。"
+    "ratePositive": "匯率必須嚴格大於零。",
+    "paidByMin1": "至少需要選取一位付款人。",
+    "paidByAmountSum": "付款人金額之和必須等於支出金額。",
+    "paidByPercentageSum": "付款人百分比之和必須為100。",
+    "duplicateParticipant": "另一位付款人已經被選取。"
   },
   "Categories": {
     "search": "搜尋類別……",

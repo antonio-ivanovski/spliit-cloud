@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
+    "paidByMultiple": "שולם על ידי <paidByNames></paidByNames> עבור <paidFor></paidFor>",
     "everyone": "כולם",
     "receivedBy": "התקבל על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
+    "receivedByMultiple": "התקבל על ידי <paidByNames></paidByNames> עבור <paidFor></paidFor>",
     "yourBalance": "היתרה שלך:",
     "notInvolved": "אתה לא מעורב",
     "settlementBadge": "הסדר"
@@ -465,7 +467,6 @@
     "selectNone": "הסר בחירה",
     "selectAll": "בחר הכל",
     "shares": "חלק(י) השתתפות",
-    "advancedOptions": "אפשרויות פיצול מתקדמות…",
     "SplitModeField": {
       "label": "מצב פיצול",
       "evenly": "באופן שווה",
@@ -491,7 +492,43 @@
     "participant": {
       "pending": "(הוזמן)"
     },
-    "readOnlyNotice": "קבוצה זו בארכיון. ההוצאה מוצגת לקריאה בלבד."
+    "readOnlyNotice": "קבוצה זו בארכיון. ההוצאה מוצגת לקריאה בלבד.",
+    "PaidBySplitModeField": {
+      "label": "מצב פיצול לפי משלם"
+    },
+    "ParticipantDistribution": {
+      "missing": "חסר {missing} מתוך {total}",
+      "surplus": "עודף: {extra} מתוך {total}",
+      "matches": "✓ תואם {total}",
+      "evenlySplit": "חלוקה שווה: {amount} × {count}",
+      "sharesTotal": "משקל כולל: {sum} חלקים",
+      "percentageMatches": "✓ תואם 100%",
+      "percentageMissing": "חסר {pct}%",
+      "percentageSurplus": "עודף: {pct}%"
+    },
+    "splittingOptions": "אפשרויות חלוקה",
+    "multiplePayers": "מספר משלמים",
+    "paidByOptionSinglePayer": "משלם יחיד",
+    "paidByOptionEvenly": "באופן שווה",
+    "paidByOptionByShares": "לפי חלקי השתתפות",
+    "paidByOptionByPercentage": "לפי אחוזים",
+    "paidByOptionByAmount": "לפי סכום",
+    "paidForOptionEvenly": "באופן שווה",
+    "paidForOptionByShares": "לפי חלקי השתתפות",
+    "paidForOptionByPercentage": "לפי אחוזים",
+    "paidForOptionByAmount": "לפי סכום",
+    "paidBySectionSingle": "יחיד",
+    "paidBySectionMultiple": "מספר משלמים",
+    "paidForSection": "חלוקה בין משתתפים",
+    "paidByOptionSinglePayerHelper": "אדם אחד מכסה את ההוצאה במלואה",
+    "paidByOptionEvenlyHelper": "כל אחד משלם חלק שווה",
+    "paidByOptionBySharesHelper": "כל אחד משלם חלק משוקלל",
+    "paidByOptionByPercentageHelper": "כל אחד משלם אחוז",
+    "paidByOptionByAmountHelper": "כל אחד משלם סכום קבוע",
+    "paidForOptionEvenlyHelper": "חלוקה שווה בין כולם",
+    "paidForOptionBySharesHelper": "הקצה חלק לכל אדם",
+    "paidForOptionByPercentageHelper": "הקצה אחוז לכל אדם",
+    "paidForOptionByAmountHelper": "הקצה סכום מדויק לכל אדם"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "paidForMin1": "ההוצאה חייבת להיות משולמת עבור לפחות משתתף אחד.",
     "noZeroShares": "כל חלקי ההשתתפות חייבים להיות גבוהים מ-0.",
     "amountSum": "סיכום הסכומים חייב להיות שווה לסכום ההוצאה.",
-    "percentageSum": "סיכום האחוזים חייב להיות שווה ל-100."
+    "percentageSum": "סיכום האחוזים חייב להיות שווה ל-100.",
+    "paidByMin1": "עליך לבחור לפחות משלם אחד.",
+    "paidByAmountSum": "סיכום סכומי המשלמים חייב להיות שווה לסכום ההוצאה.",
+    "paidByPercentageSum": "סיכום אחוזי המשלמים חייב להיות שווה ל-100.",
+    "duplicateParticipant": "משלם אחר כבר נבחר."
   },
   "Categories": {
     "search": "חפש קטגוריה...",

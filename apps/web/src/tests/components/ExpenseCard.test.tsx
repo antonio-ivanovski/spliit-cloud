@@ -58,7 +58,10 @@ function makeExpense(overrides: Record<string, unknown> = {}): any {
     recurrenceRule: 'NONE' as const,
     isReimbursement: false,
     splitMode: 'EVENLY' as const,
-    paidBy: { id: 'user-alice', name: 'Alice' },
+    paidBySplitMode: 'BY_AMOUNT' as const,
+    paidByList: [
+      { ledgerParticipant: { id: 'user-alice', name: 'Alice' }, shares: 3000 },
+    ],
     paidFor: [
       {
         ledgerParticipant: { id: 'user-alice', name: 'Alice' },
@@ -192,7 +195,12 @@ describe('ExpenseCard', () => {
 
     const expense = makeExpense({
       splitMode: 'EVENLY',
-      paidBy: { id: 'user-alice', name: 'Alice' },
+      paidByList: [
+        {
+          ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+          shares: 2000,
+        },
+      ],
       paidFor: [
         { ledgerParticipant: { id: 'user-alice', name: 'Alice' }, shares: 1 },
         { ledgerParticipant: { id: 'user-bob', name: 'Bob' }, shares: 1 },
@@ -212,5 +220,113 @@ describe('ExpenseCard', () => {
     // The ActiveUserBalance renders "Your balance:" text
     expect(container.textContent).toContain('Your balance:')
     expect(container.textContent).toContain('€10.00')
+  })
+
+  describe('multi-payer rendering', () => {
+    it('renders comma-separated payer names (alphabetical) using paidByMultiple key', () => {
+      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useActiveUser).mockReturnValue(null)
+
+      // Fixture is intentionally in non-alphabetical order to verify the
+      // card sorts at read time (Decision #13).
+      const expense = makeExpense({
+        amount: 5000,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [
+          {
+            ledgerParticipant: { id: 'user-bob', name: 'Bob' },
+            shares: 2000,
+          },
+          {
+            ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+            shares: 3000,
+          },
+        ],
+        paidFor: [
+          {
+            ledgerParticipant: { id: 'user-carol', name: 'Carol' },
+            shares: 1,
+          },
+        ],
+      })
+
+      const { container } = render(
+        <ExpenseCard
+          expense={expense}
+          currency={EUR}
+          groupId="group-1"
+          participantCount={3}
+        />,
+      )
+
+      // Both payer names render, in alphabetical order: "Alice, Bob".
+      // The paidFor ("Carol") is distinct so the strong-order check below
+      // unambiguously verifies the paidByNames slot.
+      expect(container.textContent).toContain('Alice')
+      expect(container.textContent).toContain('Bob')
+      expect(container.textContent).toContain('Alice, Bob')
+      // The multi-payer key starts with "Paid by".
+      expect(container.textContent).toContain('Paid by')
+      // The paidByNames slot renders the sorted names first, each inside
+      // its own <strong>, followed by the paidFor <strong>.
+      const strongTexts = Array.from(container.querySelectorAll('strong')).map(
+        (s) => s.textContent,
+      )
+      expect(strongTexts).toEqual(['Alice', 'Bob', 'Carol'])
+    })
+
+    it('sorts 3 payers alphabetically (Bob, Alice, Carol) before the payee', () => {
+      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useActiveUser).mockReturnValue(null)
+
+      // 3 payers in non-alphabetical source order, single payee Dave,
+      // to verify that the multi-payer slot sorts at read time and not
+      // at write time.
+      const expense = makeExpense({
+        amount: 9000,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [
+          {
+            ledgerParticipant: { id: 'user-bob', name: 'Bob' },
+            shares: 3000,
+          },
+          {
+            ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+            shares: 3000,
+          },
+          {
+            ledgerParticipant: { id: 'user-carol', name: 'Carol' },
+            shares: 3000,
+          },
+        ],
+        paidFor: [
+          {
+            ledgerParticipant: { id: 'user-dave', name: 'Dave' },
+            shares: 1,
+          },
+        ],
+      })
+
+      const { container } = render(
+        <ExpenseCard
+          expense={expense}
+          currency={EUR}
+          groupId="group-1"
+          participantCount={4}
+        />,
+      )
+
+      // Comma-separated, sorted: "Alice, Bob, Carol".
+      expect(container.textContent).toContain('Alice, Bob, Carol')
+      // Phrase template renders the payer group before the payee.
+      expect(container.textContent).toContain(
+        'Paid by Alice, Bob, Carol for Dave',
+      )
+      // The strong-order check pins the exact slot order.
+      const strongTexts = Array.from(container.querySelectorAll('strong')).map(
+        (s) => s.textContent,
+      )
+      expect(strongTexts).toEqual(['Alice', 'Bob', 'Carol', 'Dave'])
+    })
   })
 })

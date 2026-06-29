@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> para <paidFor></paidFor>",
+    "paidByMultiple": "Pago por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "everyone": "todos",
     "receivedBy": "Recebido por <strong>{paidBy}</strong> para <paidFor></paidFor>",
+    "receivedByMultiple": "Recebido por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "yourBalance": "O teu saldo:",
     "notInvolved": "Não participaste",
     "settlementBadge": "Acerto"
@@ -566,7 +568,6 @@
     "selectNone": "Selecionar nenhum",
     "selectAll": "Selecionar todos",
     "shares": "parte(s)",
-    "advancedOptions": "Opções avançadas de divisão…",
     "participant": {
       "pending": "(convidado)"
     },
@@ -592,7 +593,43 @@
     "saving": "A guardar…",
     "cancel": "Cancelar",
     "reimbursement": "Reembolso",
-    "readOnlyNotice": "Este grupo está arquivado. A despesa é exibida apenas como leitura."
+    "readOnlyNotice": "Este grupo está arquivado. A despesa é exibida apenas como leitura.",
+    "PaidBySplitModeField": {
+      "label": "Modo de divisão do pagador"
+    },
+    "ParticipantDistribution": {
+      "missing": "Falta {missing} de {total}",
+      "surplus": "Excedente: {extra} de {total}",
+      "matches": "✓ Corresponde a {total}",
+      "evenlySplit": "Dividido equitativamente: {amount} × {count}",
+      "sharesTotal": "Peso total: {sum} partes",
+      "percentageMatches": "✓ Corresponde a 100%",
+      "percentageMissing": "Falta {pct}%",
+      "percentageSurplus": "Excedente: {pct}%"
+    },
+    "splittingOptions": "Opções de divisão",
+    "multiplePayers": "Vários pagadores",
+    "paidByOptionSinglePayer": "Pagador único",
+    "paidByOptionEvenly": "Igualmente",
+    "paidByOptionByShares": "Por partes",
+    "paidByOptionByPercentage": "Por percentagem",
+    "paidByOptionByAmount": "Por montante",
+    "paidForOptionEvenly": "Igualmente",
+    "paidForOptionByShares": "Por partes",
+    "paidForOptionByPercentage": "Por percentagem",
+    "paidForOptionByAmount": "Por montante",
+    "paidBySectionSingle": "Único",
+    "paidBySectionMultiple": "Vários pagadores",
+    "paidForSection": "Dividir entre participantes",
+    "paidByOptionSinglePayerHelper": "Uma pessoa cobre a totalidade da despesa",
+    "paidByOptionEvenlyHelper": "Cada um paga uma parte igual",
+    "paidByOptionBySharesHelper": "Cada um paga uma parte ponderada",
+    "paidByOptionByPercentageHelper": "Cada um paga uma percentagem",
+    "paidByOptionByAmountHelper": "Cada um paga um montante fixo",
+    "paidForOptionEvenlyHelper": "Dividido igualmente entre todos",
+    "paidForOptionBySharesHelper": "Atribui uma parte a cada pessoa",
+    "paidForOptionByPercentageHelper": "Atribui uma percentagem a cada pessoa",
+    "paidForOptionByAmountHelper": "Atribui um montante exato a cada pessoa"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -704,7 +741,11 @@
     "paidForMin1": "A despesa deve ser paga por pelo menos um participante.",
     "noZeroShares": "Todas as partes devem ser superiores a 0.",
     "amountSum": "A soma dos montantes deve igualar o montante da despesa.",
-    "percentageSum": "A soma das percentagens deve igualar 100."
+    "percentageSum": "A soma das percentagens deve igualar 100.",
+    "paidByMin1": "Tens de selecionar pelo menos um pagador.",
+    "paidByAmountSum": "A soma dos valores dos pagadores deve ser igual ao valor da despesa.",
+    "paidByPercentageSum": "A soma das percentagens dos pagadores deve ser 100.",
+    "duplicateParticipant": "Outro pagador já está selecionado."
   },
   "Categories": {
     "search": "Pesquisar categoria...",

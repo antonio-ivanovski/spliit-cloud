@@ -90,42 +90,11 @@ Spliit Cloud may be useful if you want:
 - [x] Upload and attach images to expenses
 - [x] Create expense by scanning a receipt
 - [x] Cloud accounts and group synchronization
+- [x] Multi-payer expenses — split the cost paid by several members with per-payer shares
 
 ## Roadmap
 
-The current focus areas, in rough order. See [ROADMAP.md](./ROADMAP.md) for the long-form version.
-
-### Phase 1: Reliable cloud foundation
-
-- [x] Public hosted instance
-- [x] PostgreSQL-backed API
-- [x] Asset uploads
-- [x] Database backups
-- [x] Account-based group ownership
-- [x] Reliable group sync between account devices
-- [x] Basic account settings
-
-### Phase 2: Migration and compatibility
-
-- [x] Import existing Spliit groups
-- [x] Export user/group data
-- [x] Migration guide for existing self-hosted users
-
-### Phase 3: Better expense workflows
-
-- [ ] Direct account-to-account expenses
-- [ ] Recurring expenses
-- [ ] Account overview homepage
-- [x] Member management
-- [ ] Notifications
-
-### Phase 4: Trust, privacy, and scale
-
-- [x] Complete test coverage for critical flows
-- [ ] Better offline support
-- [ ] End-to-end encrypted groups and expenses
-- [ ] OpenAPI spec
-- [ ] Public API / MCP support for agent-based workflows
+The [detailed roadmap](./ROADMAP.md) is the source of truth. Current work focuses on expense workflow improvements (multi-payer, itemized, recurring expenses, account overview), account customization (profile photos, app theme, favourite currencies, per-user BYOK), and privacy/trust features (end-to-end encryption, public API, offline support).
 
 ## Known limitations
 

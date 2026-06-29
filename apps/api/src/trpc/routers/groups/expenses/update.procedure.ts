@@ -1,4 +1,4 @@
-import { expenseFormSchema } from '@spliit/domain'
+import { expenseApiSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { updateExpense } from '../../../../lib/api'
@@ -9,27 +9,22 @@ export const updateGroupExpenseProcedure = protectedProcedure
     z.object({
       expenseId: z.string().min(1),
       groupId: z.string().min(1),
-      expenseFormValues: expenseFormSchema,
+      expense: expenseApiSchema,
     }),
   )
-  .mutation(
-    async ({ input: { expenseId, groupId, expenseFormValues }, ctx }) => {
-      const { group } = await loadGroupContext({
-        groupId,
-        accountId: ctx.auth.user.id,
+  .mutation(async ({ input: { expenseId, groupId, expense }, ctx }) => {
+    const { group } = await loadGroupContext({
+      groupId,
+      accountId: ctx.auth.user.id,
+    })
+    if (group.archived) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'This group is archived and expenses cannot be modified',
       })
-      if (group.archived) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'This group is archived and expenses cannot be modified',
-        })
-      }
-      const expense = await updateExpense(
-        groupId,
-        expenseId,
-        expenseFormValues,
-        { accountId: ctx.auth.user.id },
-      )
-      return { expenseId: expense.id }
-    },
-  )
+    }
+    const { id } = await updateExpense(groupId, expenseId, expense, {
+      accountId: ctx.auth.user.id,
+    })
+    return { expenseId: id }
+  })

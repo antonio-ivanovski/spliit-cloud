@@ -9,21 +9,6 @@ import {
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 
-interface ExpenseFormValues {
-  expenseDate: Date
-  title: string
-  category: CategoryId
-  amount: number
-  paidBy: string
-  paidFor: Array<{ participant: string; shares: number }>
-  splitMode: SplitMode
-  isReimbursement: boolean
-  recurrenceRule: RecurrenceRule | 'NONE'
-  saveDefaultSplittingOptions: boolean
-  documents?: Array<{ id: string; url: string; width: number; height: number }>
-  notes?: string
-}
-
 interface GroupFormValues {
   name: string
   information?: string
@@ -185,12 +170,13 @@ export async function createExpensesViaAPI(
       }))
     }
 
-    const expenseFormValues: ExpenseFormValues = {
+    const expensePayload = {
       expenseDate: expense.expenseDate || new Date(),
       title: expense.title,
       category: expense.category ?? DEFAULT_CATEGORY_ID,
       amount: expense.amount,
-      paidBy: payer.id,
+      paidByList: [{ participant: payer.id, shares: expense.amount }],
+      paidBySplitMode: SplitMode.BY_AMOUNT,
       paidFor,
       splitMode: expense.splitMode || SplitMode.EVENLY,
       isReimbursement: expense.isReimbursement || false,
@@ -201,7 +187,7 @@ export async function createExpensesViaAPI(
 
     const result = await trpc.groups.expenses.create.mutate({
       groupId,
-      expenseFormValues,
+      expense: expensePayload,
     })
 
     expenseIds.push(result.expenseId)

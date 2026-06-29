@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
+    "paidByMultiple": "Dibayar oleh <paidByNames></paidByNames> untuk <paidFor></paidFor>",
     "everyone": "semua orang",
     "receivedBy": "Diterima oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
+    "receivedByMultiple": "Diterima oleh <paidByNames></paidByNames> untuk <paidFor></paidFor>",
     "yourBalance": "Saldo Anda:",
     "notInvolved": "Anda tidak terlibat",
     "settlementBadge": "Penyelesaian"
@@ -465,7 +467,6 @@
     "selectNone": "Pilih tidak ada",
     "selectAll": "Pilih semua",
     "shares": "porsi",
-    "advancedOptions": "Opsi lanjutan pembagian…",
     "SplitModeField": {
       "label": "Mode pembagian",
       "evenly": "Bagi merata",
@@ -491,7 +492,43 @@
     "participant": {
       "pending": "(diundang)"
     },
-    "readOnlyNotice": "Grup ini diarsipkan. Pengeluaran ditampilkan hanya-baca."
+    "readOnlyNotice": "Grup ini diarsipkan. Pengeluaran ditampilkan hanya-baca.",
+    "PaidBySplitModeField": {
+      "label": "Mode pembagian pembayaran"
+    },
+    "ParticipantDistribution": {
+      "missing": "Kurang {missing} dari {total}",
+      "surplus": "Lebih: {extra} dari {total}",
+      "matches": "✓ Sesuai {total}",
+      "evenlySplit": "Dibagi rata: {amount} × {count}",
+      "sharesTotal": "Bobot total: {sum} bagian",
+      "percentageMatches": "✓ Sesuai 100%",
+      "percentageMissing": "Kurang {pct}%",
+      "percentageSurplus": "Lebih: {pct}%"
+    },
+    "splittingOptions": "Opsi pembagian",
+    "multiplePayers": "Beberapa pembayar",
+    "paidByOptionSinglePayer": "Pembayar tunggal",
+    "paidByOptionEvenly": "Bagi merata",
+    "paidByOptionByShares": "Berdasarkan porsi",
+    "paidByOptionByPercentage": "Berdasarkan persenan",
+    "paidByOptionByAmount": "Berdasarkan jumlah",
+    "paidForOptionEvenly": "Bagi merata",
+    "paidForOptionByShares": "Berdasarkan porsi",
+    "paidForOptionByPercentage": "Berdasarkan persenan",
+    "paidForOptionByAmount": "Berdasarkan jumlah",
+    "paidBySectionSingle": "Tunggal",
+    "paidBySectionMultiple": "Beberapa pembayar",
+    "paidForSection": "Dibagi di antara peserta",
+    "paidByOptionSinglePayerHelper": "Satu orang menanggung seluruh pengeluaran",
+    "paidByOptionEvenlyHelper": "Setiap orang membayar bagian yang sama",
+    "paidByOptionBySharesHelper": "Setiap orang membayar bagian tertimbang",
+    "paidByOptionByPercentageHelper": "Setiap orang membayar persentase",
+    "paidByOptionByAmountHelper": "Setiap orang membayar jumlah tetap",
+    "paidForOptionEvenlyHelper": "Dibagi rata di antara semua orang",
+    "paidForOptionBySharesHelper": "Tetapkan porsi untuk setiap orang",
+    "paidForOptionByPercentageHelper": "Tetapkan persenan untuk setiap orang",
+    "paidForOptionByAmountHelper": "Tetapkan jumlah yang tepat untuk setiap orang"
   },
   "Currencies": {
     "custom": {
@@ -795,7 +832,11 @@
     "paidForMin1": "Pengeluaran harus dibayarkan untuk setidaknya satu peserta.",
     "noZeroShares": "Semua porsi harus lebih tinggi dari 0.",
     "amountSum": "Total harus sama dengan jumlah pengeluaran.",
-    "percentageSum": "Total persentase harus sama dengan 100."
+    "percentageSum": "Total persentase harus sama dengan 100.",
+    "paidByMin1": "Setidaknya satu pembayar harus dipilih.",
+    "paidByAmountSum": "Total jumlah pembayaran harus sama dengan jumlah pengeluaran.",
+    "paidByPercentageSum": "Total persentase pembayaran harus sama dengan 100.",
+    "duplicateParticipant": "Pembayar lain sudah dipilih."
   },
   "Categories": {
     "search": "Cari kategori...",

@@ -14,8 +14,7 @@ import { useInView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
-
-const PAGE_SIZE = 20
+import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 
 type ExpensesType = AppRouterOutput['groups']['expenses']['list']['expenses']
 
@@ -105,15 +104,8 @@ const ExpenseListForSearch = ({
   searchText: string
   linkInviteToken: string | undefined
 }) => {
-  const utils = trpc.useUtils()
   const { group } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
-
-  useEffect(() => {
-    // Until we use tRPC more widely and can invalidate the cache on expense
-    // update, it's easier and safer to invalidate the cache on page load.
-    utils.groups.expenses.invalidate()
-  }, [utils])
 
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const { ref: loadingRef, inView } = useInView()
@@ -123,7 +115,12 @@ const ExpenseListForSearch = ({
     isLoading: expensesAreLoading,
     fetchNextPage,
   } = trpc.groups.expenses.list.useInfiniteQuery(
-    { groupId, limit: PAGE_SIZE, filter: searchText, linkInviteToken },
+    {
+      groupId,
+      limit: EXPENSE_LIST_PAGE_SIZE,
+      filter: searchText,
+      linkInviteToken,
+    },
     { getNextPageParam: ({ nextCursor }) => nextCursor },
   )
   const expenses = data?.pages.flatMap((page) => page.expenses)

@@ -42,7 +42,23 @@ export async function exportGroupJson(request: Request, groupId: string) {
       originalAmount: true,
       originalCurrency: true,
       conversionRate: true,
-      paidById: true,
+      paidBySplitMode: true,
+      paidByList: {
+        select: {
+          ledgerParticipant: {
+            select: {
+              id: true,
+              groupMember: { select: { account: { select: { name: true } } } },
+              invitations: {
+                select: { email: true, temporaryName: true },
+                take: 1,
+                orderBy: { createdAt: 'desc' },
+              },
+            },
+          },
+          shares: true,
+        },
+      },
       paidFor: { select: { ledgerParticipantId: true, shares: true } },
       isReimbursement: true,
       splitMode: true,
@@ -57,7 +73,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
       m.ledgerParticipant ? [m.ledgerParticipant.id] : [],
     ),
     ...expenses.flatMap((expense) => [
-      expense.paidById,
+      ...expense.paidByList.map((pb) => pb.ledgerParticipant.id),
       ...expense.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
     ]),
   ])
@@ -86,6 +102,10 @@ export async function exportGroupJson(request: Request, groupId: string) {
 
   const expensesWithCategory = expenses.map((expense) => ({
     ...expense,
+    paidByList: expense.paidByList.map((pb) => ({
+      ledgerParticipantId: pb.ledgerParticipant.id,
+      shares: pb.shares,
+    })),
     category: getCategoryById(expense.categoryId as never) ?? null,
   }))
 

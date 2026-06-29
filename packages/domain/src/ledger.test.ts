@@ -1,5 +1,5 @@
 import { getBalances, getPublicBalances, type BalanceExpense } from './balances'
-import { expenseFormSchema } from './schemas'
+import { expenseFormInputSchema } from './schemas'
 import {
   calculateShare,
   getTotalActiveUserShare,
@@ -18,7 +18,10 @@ describe('Ledger split unit preservation', () => {
       amount: 0,
       isReimbursement: false,
       splitMode: 'EVENLY',
-      paidBy: { id: 'lp-owner', name: 'Owner' },
+      paidBySplitMode: 'EVENLY',
+      paidByList: [
+        { participant: { id: 'lp-owner', name: 'Owner' }, shares: 1 },
+      ],
       paidFor: [{ participant: { id: 'lp-owner', name: 'Owner' }, shares: 1 }],
       ...overrides,
     }) as InferredBalanceExpense
@@ -29,7 +32,9 @@ describe('Ledger split unit preservation', () => {
       makeExpense({
         amount,
         splitMode: 'BY_AMOUNT',
-        paidBy: { id: 'lp-alice', name: 'Alice' },
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 500 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1000 },
@@ -51,7 +56,9 @@ describe('Ledger split unit preservation', () => {
       makeExpense({
         amount: 20000, // 200.00
         splitMode: 'BY_PERCENTAGE',
-        paidBy: { id: 'lp-alice', name: 'Alice' },
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 2500 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 7500 },
@@ -69,7 +76,9 @@ describe('Ledger split unit preservation', () => {
       makeExpense({
         amount: 3000,
         splitMode: 'EVENLY',
-        paidBy: { id: 'lp-alice', name: 'Alice' },
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 99 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
@@ -89,7 +98,9 @@ describe('Ledger split unit preservation', () => {
       makeExpense({
         amount: 6000,
         splitMode: 'BY_SHARES',
-        paidBy: { id: 'lp-alice', name: 'Alice' },
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 2 },
@@ -118,7 +129,10 @@ describe('Ledger participant identifiers in domain math', () => {
       amount: 1000,
       isReimbursement: false,
       splitMode: 'EVENLY',
-      paidBy: { id: 'lp-alice', name: 'Alice' },
+      paidBySplitMode: 'EVENLY',
+      paidByList: [
+        { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+      ],
       paidFor: [
         { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
         { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
@@ -137,7 +151,9 @@ describe('Ledger participant identifiers in domain math', () => {
         id: 'le-1',
         amount: 3000,
         splitMode: 'BY_AMOUNT',
-        paidBy: { id: 'lp-alice', name: 'Alice' },
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1000 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 2000 },
@@ -147,7 +163,7 @@ describe('Ledger participant identifiers in domain math', () => {
         id: 'le-2',
         amount: 600,
         splitMode: 'BY_PERCENTAGE',
-        paidBy: { id: 'lp-bob', name: 'Bob' },
+        paidByList: [{ participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 2500 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 7500 },
@@ -167,8 +183,9 @@ describe('Ledger balance inputs', () => {
         id: 'le-1',
         amount: 333,
         splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
         isReimbursement: false,
-        paidBy: { id: 'lp-a', name: 'A' },
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
           { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
@@ -192,8 +209,9 @@ describe('Ledger balance inputs', () => {
         id: 'le-1',
         amount: ledgerCents,
         splitMode: 'BY_AMOUNT',
+        paidBySplitMode: 'EVENLY',
         isReimbursement: false,
-        paidBy: { id: 'lp-a', name: 'A' },
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 400 },
           { participant: { id: 'lp-b', name: 'B' }, shares: 600 },
@@ -215,8 +233,11 @@ describe('Ledger balance inputs', () => {
         id: 'le-1',
         amount: 5000,
         splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
         isReimbursement: true,
-        paidBy: { id: 'lp-alice', name: 'Alice' },
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
@@ -229,8 +250,11 @@ describe('Ledger balance inputs', () => {
         id: 'le-1',
         amount: 5000,
         splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
         isReimbursement: true,
-        paidBy: { id: 'lp-alice', name: 'Alice' },
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
           { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
@@ -270,25 +294,27 @@ describe('Ledger currency conversion rules', () => {
     expect(ledgerAmount).toBe(65)
   })
 
-  it('expenseFormSchema preserves conversion fields through parse', () => {
+  it('expenseFormInputSchema preserves conversion fields through parse', () => {
     const raw = {
       title: 'Test expense',
       expenseDate: new Date('2026-06-24'),
       category: 'general',
-      amount: '42.50',
-      paidBy: 'lp-alice',
+      amount: 42.5,
+      isMultiPayer: false,
+      paidBySplitMode: 'EVENLY' as const,
+      paidByList: [{ participant: 'lp-alice', shares: 1 }],
       paidFor: [
-        { participant: 'lp-alice', shares: '1' },
-        { participant: 'lp-bob', shares: '1' },
+        { participant: 'lp-alice', shares: 1 },
+        { participant: 'lp-bob', shares: 1 },
       ],
       splitMode: 'EVENLY' as const,
       saveDefaultSplittingOptions: false,
       isReimbursement: false,
-      originalAmount: '50.00',
+      originalAmount: 50,
       originalCurrency: 'EUR',
-      conversionRate: '0.85',
+      conversionRate: 0.85,
     }
-    const result = expenseFormSchema.parse(raw)
+    const result = expenseFormInputSchema.parse(raw)
     expect(result.originalAmount).toBe(50)
     expect(result.originalCurrency).toBe('EUR')
     expect(result.conversionRate).toBe(0.85)
@@ -302,8 +328,9 @@ describe('Ledger currency conversion rules', () => {
         id: 'le-1',
         amount,
         splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
         isReimbursement: false,
-        paidBy: { id: 'lp-a', name: 'A' },
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
           { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
@@ -328,28 +355,31 @@ describe('Split unit preservation edge cases', () => {
       amount: 0,
       isReimbursement: false,
       splitMode: 'EVENLY',
-      paidBy: { id: 'lp-a', name: 'A' },
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
       paidFor: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
       ...overrides,
     }) as Inferred
 
-  it('expenseFormSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
+  it('expenseFormInputSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
     const raw = {
       title: 'Test',
       expenseDate: new Date('2026-06-24'),
       category: 'general',
-      amount: '100.00',
-      paidBy: 'lp-a',
+      amount: 100,
+      isMultiPayer: false,
+      paidBySplitMode: 'EVENLY' as const,
+      paidByList: [{ participant: 'lp-a', shares: 30 }],
       paidFor: [
-        { participant: 'lp-a', shares: '30' },
-        { participant: 'lp-b', shares: '30' },
-        { participant: 'lp-c', shares: '30' },
+        { participant: 'lp-a', shares: 30 },
+        { participant: 'lp-b', shares: 30 },
+        { participant: 'lp-c', shares: 30 },
       ],
       splitMode: 'BY_AMOUNT' as const,
       saveDefaultSplittingOptions: false,
       isReimbursement: false,
     }
-    expect(() => expenseFormSchema.parse(raw)).toThrow()
+    expect(() => expenseFormInputSchema.parse(raw)).toThrow()
   })
 
   it('BY_PERCENTAGE with small basis points (1 bp)', () => {
@@ -357,7 +387,7 @@ describe('Split unit preservation edge cases', () => {
       base({
         amount: 1000000,
         splitMode: 'BY_PERCENTAGE',
-        paidBy: { id: 'lp-a', name: 'A' },
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
           { participant: { id: 'lp-b', name: 'B' }, shares: 9999 },
@@ -375,7 +405,7 @@ describe('Split unit preservation edge cases', () => {
         id: 'le-1',
         amount: 6000,
         splitMode: 'BY_SHARES',
-        paidBy: { id: 'lp-a', name: 'A' },
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
           { participant: { id: 'lp-b', name: 'B' }, shares: 2 },
@@ -385,7 +415,7 @@ describe('Split unit preservation edge cases', () => {
         id: 'le-2',
         amount: 12000,
         splitMode: 'EVENLY',
-        paidBy: { id: 'lp-b', name: 'B' },
+        paidByList: [{ participant: { id: 'lp-b', name: 'B' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
           { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
@@ -407,8 +437,9 @@ describe('Ledger balance input integrity', () => {
         id: 'le-1',
         amount: 1000,
         splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
         isReimbursement: false,
-        paidBy: { id: 'lp-a', name: 'A' },
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
           { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
@@ -444,8 +475,11 @@ describe('Ledger balance input integrity', () => {
         id: 'le-1',
         amount: 2000,
         splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
         isReimbursement: false,
-        paidBy: { id: aliceId, name: 'Alice' },
+        paidByList: [
+          { participant: { id: aliceId, name: 'Alice' }, shares: 1 },
+        ],
         paidFor: [
           { participant: { id: aliceId, name: 'Alice' }, shares: 1 },
           { participant: { id: bobId, name: 'Bob' }, shares: 1 },

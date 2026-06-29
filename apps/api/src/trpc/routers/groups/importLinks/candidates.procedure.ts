@@ -108,28 +108,41 @@ export const candidatesProcedure = protectedProcedure
     }
 
     // LPs on the other side of an expense leg involving the unlinked LP.
-    // Loading paidBy and paidFor in a single OR query keeps the round trip
+    // Loading paidByList and paidFor in a single OR query keeps the round trip
     // count down — both shapes use the same `paidFor` projection so the
     // blocked-set computation can iterate uniformly.
     const legs = await prisma.expense.findMany({
       where: {
         ledgerId,
         OR: [
-          { paidById: unlinkedParticipantId },
+          {
+            paidByList: {
+              some: { ledgerParticipantId: unlinkedParticipantId },
+            },
+          },
           { paidFor: { some: { ledgerParticipantId: unlinkedParticipantId } } },
         ],
       },
       select: {
-        paidById: true,
+        paidByList: {
+          where: { ledgerParticipantId: unlinkedParticipantId },
+          select: { ledgerParticipantId: true },
+        },
         paidFor: { select: { ledgerParticipantId: true } },
       },
     })
     const blocked = new Set<string>()
     for (const expense of legs) {
-      if (expense.paidById === unlinkedParticipantId) {
+      if (expense.paidByList.length > 0) {
+        // The unlinked LP is on the paidByList side of this expense,
+        // so every paidFor participant is on the opposite side.
         for (const pf of expense.paidFor) blocked.add(pf.ledgerParticipantId)
       } else {
-        blocked.add(expense.paidById)
+        // The unlinked LP is on the paidFor side of this expense. The
+        // join's existence confirms at least one expense references
+        // them, but we already track the unlinked LP id at the call
+        // site — no additional participants need blocking here.
+        blocked.add(unlinkedParticipantId)
       }
     }
 

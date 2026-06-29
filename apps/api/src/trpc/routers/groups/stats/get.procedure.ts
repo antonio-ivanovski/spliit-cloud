@@ -41,6 +41,10 @@ export const getGroupStatsProcedure = protectedProcedure
     const rows = await getGroupExpenses(groupId)
     const expenses: TotalsExpense[] = rows.map((row) => ({
       ...row,
+      paidByList: row.paidByList.map((pb) => ({
+        shares: pb.shares,
+        participant: pb.ledgerParticipant,
+      })),
       paidFor: row.paidFor.map((pf) => ({
         shares: pf.shares,
         participant: pf.ledgerParticipant,

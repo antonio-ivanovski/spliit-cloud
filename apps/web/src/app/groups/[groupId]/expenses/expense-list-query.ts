@@ -1,0 +1,1 @@
+export const EXPENSE_LIST_PAGE_SIZE = 20

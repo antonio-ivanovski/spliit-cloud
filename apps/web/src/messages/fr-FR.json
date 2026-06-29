@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Payé par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
     "receivedBy": "Reçu par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
+    "receivedByMultiple": "Reçu par <paidByNames></paidByNames> pour <paidFor></paidFor>",
     "yourBalance": "Votre solde :",
+    "paidByMultiple": "Payé par <paidByNames></paidByNames> pour <paidFor></paidFor>",
     "everyone": "tout le monde",
     "notInvolved": "Vous n'êtes pas concerné",
     "settlementBadge": "Règlement"
@@ -444,7 +446,6 @@
     "selectNone": "Tout désélectionner",
     "selectAll": "Tout sélectionner",
     "shares": "part(s)",
-    "advancedOptions": "Options de répartition avancées…",
     "SplitModeField": {
       "label": "Mode de répartition",
       "evenly": "Également",
@@ -491,7 +492,43 @@
     "participant": {
       "pending": "(invité)"
     },
-    "readOnlyNotice": "Ce groupe est archivé. La dépense est affichée en lecture seule."
+    "readOnlyNotice": "Ce groupe est archivé. La dépense est affichée en lecture seule.",
+    "PaidBySplitModeField": {
+      "label": "Mode de répartition du payeur"
+    },
+    "ParticipantDistribution": {
+      "missing": "Manque {missing} sur {total}",
+      "surplus": "Excédent : {extra} sur {total}",
+      "matches": "✓ Correspond à {total}",
+      "evenlySplit": "Réparti équitablement : {amount} × {count}",
+      "sharesTotal": "Poids total : {sum} parts",
+      "percentageMatches": "✓ Correspond à 100 %",
+      "percentageMissing": "Manque {pct} %",
+      "percentageSurplus": "Excédent : {pct} %"
+    },
+    "splittingOptions": "Options de répartition",
+    "multiplePayers": "Plusieurs payeurs",
+    "paidByOptionSinglePayer": "Un seul payeur",
+    "paidByOptionEvenly": "Également",
+    "paidByOptionByShares": "Par parts",
+    "paidByOptionByPercentage": "Par pourcentage",
+    "paidByOptionByAmount": "Par montant",
+    "paidForOptionEvenly": "Également",
+    "paidForOptionByShares": "Par parts",
+    "paidForOptionByPercentage": "Par pourcentage",
+    "paidForOptionByAmount": "Par montant",
+    "paidBySectionSingle": "Unique",
+    "paidBySectionMultiple": "Plusieurs payeurs",
+    "paidForSection": "Répartir entre les participants",
+    "paidByOptionSinglePayerHelper": "Une personne couvre l'intégralité de la dépense",
+    "paidByOptionEvenlyHelper": "Chacun paie une part égale",
+    "paidByOptionBySharesHelper": "Chacun paie une part pondérée",
+    "paidByOptionByPercentageHelper": "Chacun paie un pourcentage",
+    "paidByOptionByAmountHelper": "Chacun paie un montant fixe",
+    "paidForOptionEvenlyHelper": "Répartition équitable entre tous",
+    "paidForOptionBySharesHelper": "Attribuez une part à chaque personne",
+    "paidForOptionByPercentageHelper": "Attribuez un pourcentage à chaque personne",
+    "paidForOptionByAmountHelper": "Attribuez un montant exact à chaque personne"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "noZeroShares": "Toutes les parts doivent être supérieures à 0.",
     "amountSum": "La somme des montants doit être égale au montant de la dépense.",
     "percentageSum": "La somme des pourcentages doit être égale à 100.",
-    "ratePositive": "Le taux de change doit être strictement supérieur à zéro."
+    "ratePositive": "Le taux de change doit être strictement supérieur à zéro.",
+    "paidByMin1": "Au moins un payeur doit être sélectionné.",
+    "paidByAmountSum": "La somme des montants des payeurs doit être égale au montant de la dépense.",
+    "paidByPercentageSum": "La somme des pourcentages des payeurs doit être égale à 100.",
+    "duplicateParticipant": "Un autre payeur est déjà sélectionné."
   },
   "Categories": {
     "search": "Rechercher une catégorie…",

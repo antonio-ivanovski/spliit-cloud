@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>が<paidFor></paidFor>のために支払いました",
     "receivedBy": "<strong>{paidBy}</strong>が<paidFor></paidFor>のために受け取りました",
+    "receivedByMultiple": "<paidByNames></paidByNames>が<paidFor></paidFor>のために受け取りました",
     "yourBalance": "あなたの残高:",
+    "paidByMultiple": "<paidByNames></paidByNames>が<paidFor></paidFor>のために支払いました",
     "everyone": "全員",
     "notInvolved": "あなたは関係していません",
     "settlementBadge": "精算"
@@ -444,7 +446,6 @@
     "selectNone": "選択解除",
     "selectAll": "すべて選択",
     "shares": "シェア",
-    "advancedOptions": "詳細な分割オプション…",
     "SplitModeField": {
       "label": "分割モード",
       "evenly": "均等に",
@@ -491,7 +492,43 @@
     "participant": {
       "pending": "(招待済み)"
     },
-    "readOnlyNotice": "このグループはアーカイブされています。この支出は読み取り専用で表示されています。"
+    "readOnlyNotice": "このグループはアーカイブされています。この支出は読み取り専用で表示されています。",
+    "PaidBySplitModeField": {
+      "label": "支払者の分割モード"
+    },
+    "ParticipantDistribution": {
+      "missing": "{total} 中 {missing} 不足",
+      "surplus": "{total} 中 {extra} 超過",
+      "matches": "✓ {total} に一致",
+      "evenlySplit": "均等割り: {amount} × {count}",
+      "sharesTotal": "総ウェイト: {sum} シェア",
+      "percentageMatches": "✓ 100% に一致",
+      "percentageMissing": "{pct}% 不足",
+      "percentageSurplus": "{pct}% 超過"
+    },
+    "splittingOptions": "分割オプション",
+    "multiplePayers": "複数の支払い者",
+    "paidByOptionSinglePayer": "1人の支払い者",
+    "paidByOptionEvenly": "均等に",
+    "paidByOptionByShares": "シェアで",
+    "paidByOptionByPercentage": "パーセンテージで",
+    "paidByOptionByAmount": "金額で",
+    "paidForOptionEvenly": "均等に",
+    "paidForOptionByShares": "シェアで",
+    "paidForOptionByPercentage": "パーセンテージで",
+    "paidForOptionByAmount": "金額で",
+    "paidBySectionSingle": "単独",
+    "paidBySectionMultiple": "複数の支払い者",
+    "paidForSection": "参加者間で分割",
+    "paidByOptionSinglePayerHelper": "1人で全額を負担",
+    "paidByOptionEvenlyHelper": "全員が同じ額を支払う",
+    "paidByOptionBySharesHelper": "重み付けされたシェアを支払う",
+    "paidByOptionByPercentageHelper": "パーセンテージを支払う",
+    "paidByOptionByAmountHelper": "固定額を支払う",
+    "paidForOptionEvenlyHelper": "全員で均等に分割",
+    "paidForOptionBySharesHelper": "各メンバーにシェアを割り当て",
+    "paidForOptionByPercentageHelper": "各メンバーにパーセンテージを割り当て",
+    "paidForOptionByAmountHelper": "各メンバーに正確な金額を割り当て"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "noZeroShares": "すべてのシェアは0より大きくなければなりません。",
     "amountSum": "金額の合計は支出金額と一致する必要があります。",
     "percentageSum": "パーセンテージの合計は100である必要があります。",
-    "ratePositive": "レートは必ずゼロより大きくなければなりません。"
+    "ratePositive": "レートは必ずゼロより大きくなければなりません。",
+    "paidByMin1": "請求者は少なくとも1人選択してください。",
+    "paidByAmountSum": "請求者金額の合計が支出額と一致しません。",
+    "paidByPercentageSum": "請求者パーセンテージの合計が100になる必要があります。",
+    "duplicateParticipant": "その請求者は既に選択されています。"
   },
   "Categories": {
     "search": "カテゴリーを検索...",

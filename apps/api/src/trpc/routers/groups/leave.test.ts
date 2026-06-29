@@ -151,11 +151,17 @@ function makeExpenseRow(args: {
     isReimbursement: false,
     recurrenceRule: 'NONE',
     splitMode: 'EVENLY',
-    paidBy: {
-      id: args.paidById,
-      groupMember: { account: { name: args.paidById } },
-      invitations: [],
-    },
+    paidBySplitMode: 'BY_AMOUNT',
+    paidByList: [
+      {
+        shares: args.amount,
+        ledgerParticipant: {
+          id: args.paidById,
+          groupMember: { account: { name: args.paidById } },
+          invitations: [],
+        },
+      },
+    ],
     paidFor: args.paidFor.map((pf) => ({
       shares: pf.shares,
       ledgerParticipant: {
@@ -663,7 +669,12 @@ describe('groupsRouter.leave — unsettled balances', () => {
       data: {
         title: string
         amount: number
-        paidById: string
+        paidBySplitMode: string
+        paidByList: {
+          createMany: {
+            data: Array<{ ledgerParticipantId: string; shares: number }>
+          }
+        }
         paidFor: { createMany: { data: Array<{ shares: number }> } }
         isReimbursement: boolean
         categoryId: string
@@ -671,7 +682,10 @@ describe('groupsRouter.leave — unsettled balances', () => {
     }
     expect(createCall.data.title).toBe('Settlement on leave')
     expect(createCall.data.amount).toBe(30)
-    expect(createCall.data.paidById).toBe('lp-bob')
+    expect(createCall.data.paidBySplitMode).toBe('BY_AMOUNT')
+    expect(createCall.data.paidByList.createMany.data).toEqual([
+      { ledgerParticipantId: 'lp-bob', shares: 30 },
+    ])
     expect(createCall.data.paidFor.createMany.data).toEqual([
       expect.objectContaining({ shares: 1 }),
     ])
@@ -731,9 +745,19 @@ describe('groupsRouter.leave — unsettled balances', () => {
 
     expect(prismaMock.expense.create).toHaveBeenCalledTimes(1)
     const createCall = prismaMock.expense.create.mock.calls[0][0] as {
-      data: { amount: number; paidById: string }
+      data: {
+        amount: number
+        paidBySplitMode: string
+        paidByList: {
+          createMany: {
+            data: Array<{ ledgerParticipantId: string; shares: number }>
+          }
+        }
+      }
     }
-    expect(createCall.data.paidById).toBe('lp-self')
+    expect(createCall.data.paidByList.createMany.data).toEqual([
+      { ledgerParticipantId: 'lp-self', shares: 50 },
+    ])
     expect(createCall.data.amount).toBe(50)
   })
 

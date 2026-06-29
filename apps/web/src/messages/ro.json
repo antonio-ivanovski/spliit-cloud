@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Plătit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
+    "receivedByMultiple": "Primit de <paidByNames></paidByNames> pentru <paidFor></paidFor>",
     "yourBalance": "Soldul tău:",
+    "paidByMultiple": "Plătit de <paidByNames></paidByNames> pentru <paidFor></paidFor>",
     "everyone": "toată lumea",
     "notInvolved": "Nu ești implicat",
     "settlementBadge": "Decontare"
@@ -444,7 +446,6 @@
     "selectNone": "Nu selectez nimic",
     "selectAll": "Selectez tot",
     "shares": "părți",
-    "advancedOptions": "Opțiuni avansate de împărțire…",
     "SplitModeField": {
       "label": "Împărțire",
       "evenly": "Egal",
@@ -491,7 +492,43 @@
     "participant": {
       "pending": "(invitat)"
     },
-    "readOnlyNotice": "Acest grup este arhivat. Cheltuiala este afișată doar în citire."
+    "readOnlyNotice": "Acest grup este arhivat. Cheltuiala este afișată doar în citire.",
+    "PaidBySplitModeField": {
+      "label": "Mod de împărțire plătitor"
+    },
+    "ParticipantDistribution": {
+      "missing": "Lipsă {missing} din {total}",
+      "surplus": "Excedent: {extra} din {total}",
+      "matches": "✓ Se potrivește {total}",
+      "evenlySplit": "Împărțit egal: {amount} × {count}",
+      "sharesTotal": "Greutate totală: {sum} părți",
+      "percentageMatches": "✓ Se potrivește 100%",
+      "percentageMissing": "Lipsă {pct}%",
+      "percentageSurplus": "Excedent: {pct}%"
+    },
+    "splittingOptions": "Opțiuni de împărțire",
+    "multiplePayers": "Mai mulți plătitori",
+    "paidByOptionSinglePayer": "Plătitor unic",
+    "paidByOptionEvenly": "Egal",
+    "paidByOptionByShares": "În funcție de parte",
+    "paidByOptionByPercentage": "În funcție de procentaj",
+    "paidByOptionByAmount": "În funcție de sumă",
+    "paidForOptionEvenly": "Egal",
+    "paidForOptionByShares": "În funcție de parte",
+    "paidForOptionByPercentage": "În funcție de procentaj",
+    "paidForOptionByAmount": "În funcție de sumă",
+    "paidBySectionSingle": "Unic",
+    "paidBySectionMultiple": "Mai mulți plătitori",
+    "paidForSection": "Împărțire între participanți",
+    "paidByOptionSinglePayerHelper": "O singură persoană acoperă toată cheltuiala",
+    "paidByOptionEvenlyHelper": "Fiecare plătește o parte egală",
+    "paidByOptionBySharesHelper": "Fiecare plătește o parte ponderată",
+    "paidByOptionByPercentageHelper": "Fiecare plătește un procentaj",
+    "paidByOptionByAmountHelper": "Fiecare plătește o sumă fixă",
+    "paidForOptionEvenlyHelper": "Împărțit egal între toți",
+    "paidForOptionBySharesHelper": "Atribuie o parte fiecărei persoane",
+    "paidForOptionByPercentageHelper": "Atribuie un procentaj fiecărei persoane",
+    "paidForOptionByAmountHelper": "Atribuie o sumă exactă fiecărei persoane"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "noZeroShares": "Toate părțile trebuie să fie mai mari de 0.",
     "amountSum": "Suma valorilor trebuie să fie egală cu suma cheltuielii.",
     "percentageSum": "Suma procentajelor trebuie să fie egală cu 100.",
-    "ratePositive": "Rata trebuie să fie strict mai mare decât zero."
+    "ratePositive": "Rata trebuie să fie strict mai mare decât zero.",
+    "paidByMin1": "Trebuie selectat cel puțin un plătitor.",
+    "paidByAmountSum": "Suma plătitorilor trebuie să fie egală cu suma cheltuielii.",
+    "paidByPercentageSum": "Suma procentelor plătitorilor trebuie să fie 100.",
+    "duplicateParticipant": "Un alt plătitor este deja selectat."
   },
   "Categories": {
     "search": "Căutați categorie…",

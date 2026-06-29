@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> for <paidFor></paidFor>",
+    "paidByMultiple": "Paid by <paidByNames></paidByNames> for <paidFor></paidFor>",
     "everyone": "everyone",
     "receivedBy": "Received by <strong>{paidBy}</strong> for <paidFor></paidFor>",
+    "receivedByMultiple": "Received by <paidByNames></paidByNames> for <paidFor></paidFor>",
     "yourBalance": "Your balance:",
     "notInvolved": "You are not involved",
     "settlementBadge": "Settlement"
@@ -503,7 +505,7 @@
       "categoryFieldDescription": "Select the income category.",
       "paidByField": {
         "label": "Received by",
-        "description": "Select the participant who received the income."
+        "description": "Select who received this income and how to split it."
       },
       "paidFor": {
         "title": "Received for",
@@ -532,7 +534,7 @@
       "paidByField": {
         "label": "Paid by",
         "placeholder": "Select a participant",
-        "description": "Select the participant who paid the expense."
+        "description": "Select who paid for this expense and how to split the payment."
       },
       "recurrenceRule": {
         "label": "Expense Recurrence",
@@ -585,7 +587,6 @@
     "selectNone": "Select none",
     "selectAll": "Select all",
     "shares": "share(s)",
-    "advancedOptions": "Advanced splitting options…",
     "participant": {
       "pending": "(invited)"
     },
@@ -596,6 +597,9 @@
       "byPercentage": "Unevenly – By percentage",
       "byAmount": "Unevenly – By amount",
       "saveAsDefault": "Save as default splitting options"
+    },
+    "PaidBySplitModeField": {
+      "label": "Payer split mode"
     },
     "DeletePopup": {
       "label": "Delete",
@@ -611,7 +615,40 @@
     "saving": "Saving…",
     "cancel": "Cancel",
     "reimbursement": "Reimbursement",
-    "readOnlyNotice": "This group is archived. The expense is shown read-only."
+    "readOnlyNotice": "This group is archived. The expense is shown read-only.",
+    "ParticipantDistribution": {
+      "missing": "Missing {missing} of {total}",
+      "surplus": "Surplus {extra} of {total}",
+      "matches": "✓ Matches {total}",
+      "evenlySplit": "Evenly split: {amount} × {count}",
+      "sharesTotal": "Total weight: {sum} shares",
+      "percentageMatches": "✓ Matches 100%",
+      "percentageMissing": "Missing {pct}%",
+      "percentageSurplus": "Surplus {pct}%"
+    },
+    "splittingOptions": "Splitting options",
+    "multiplePayers": "Multiple payers",
+    "paidByOptionSinglePayer": "Single payer",
+    "paidByOptionEvenly": "Evenly",
+    "paidByOptionByShares": "By shares",
+    "paidByOptionByPercentage": "By percentage",
+    "paidByOptionByAmount": "By amount",
+    "paidForOptionEvenly": "Evenly",
+    "paidForOptionByShares": "By shares",
+    "paidForOptionByPercentage": "By percentage",
+    "paidForOptionByAmount": "By amount",
+    "paidBySectionSingle": "Single",
+    "paidBySectionMultiple": "Multiple payers",
+    "paidForSection": "Split between participants",
+    "paidByOptionSinglePayerHelper": "One person covers the full expense",
+    "paidByOptionEvenlyHelper": "Each pays an equal share",
+    "paidByOptionBySharesHelper": "Each pays a weighted share",
+    "paidByOptionByPercentageHelper": "Each pays a percentage",
+    "paidByOptionByAmountHelper": "Each pays a fixed amount",
+    "paidForOptionEvenlyHelper": "Split evenly between everyone",
+    "paidForOptionBySharesHelper": "Assign a share to each person",
+    "paidForOptionByPercentageHelper": "Assign a percentage to each person",
+    "paidForOptionByAmountHelper": "Assign an exact amount to each person"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +760,11 @@
     "paidForMin1": "The expense must be paid for at least one participant.",
     "noZeroShares": "All shares must be higher than 0.",
     "amountSum": "Sum of amounts must equal the expense amount.",
-    "percentageSum": "Sum of percentages must equal 100."
+    "percentageSum": "Sum of percentages must equal 100.",
+    "paidByMin1": "At least one payer must be selected.",
+    "paidByAmountSum": "Sum of payer amounts must equal the expense amount.",
+    "paidByPercentageSum": "Sum of payer percentages must equal 100.",
+    "duplicateParticipant": "Another payer is already selected."
   },
   "Categories": {
     "search": "Search category...",

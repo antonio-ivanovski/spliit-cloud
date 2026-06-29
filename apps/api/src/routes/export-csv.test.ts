@@ -89,7 +89,8 @@ describe('exportGroupCsv', () => {
         originalAmount: null,
         originalCurrency: null,
         conversionRate: null,
-        paidById: 'lp-1',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ ledgerParticipantId: 'lp-1', shares: 3000 }],
         paidFor: [
           { ledgerParticipantId: 'lp-1', shares: 1 },
           { ledgerParticipantId: 'lp-2', shares: 1 },
@@ -176,7 +177,8 @@ describe('exportGroupCsv', () => {
         originalAmount: null,
         originalCurrency: null,
         conversionRate: null,
-        paidById: 'lp-1',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ ledgerParticipantId: 'lp-1', shares: 3000 }],
         paidFor: [
           { ledgerParticipantId: 'lp-1', shares: 1 },
           { ledgerParticipantId: 'lp-pending', shares: 1 },

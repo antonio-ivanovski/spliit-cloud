@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",
     "receivedBy": "Отримано <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "receivedByMultiple": "Отримано <paidByNames></paidByNames> за <paidFor></paidFor>",
     "yourBalance": "Ваш баланс:",
+    "paidByMultiple": "Сплачено <paidByNames></paidByNames> за <paidFor></paidFor>",
     "everyone": "всі",
     "notInvolved": "Ви не берете участі",
     "settlementBadge": "Розрахунок"
@@ -465,7 +467,6 @@
     "selectNone": "Обрати жодного",
     "selectAll": "Обрати всіх",
     "shares": "частка(и)",
-    "advancedOptions": "Розширені опції поділу..",
     "participant": {
       "pending": "(запрошений)"
     },
@@ -491,7 +492,43 @@
     "saving": "Збереження..",
     "cancel": "Скасувати",
     "reimbursement": "Відшкодування",
-    "readOnlyNotice": "Цю групу заархівовано. Витрата відображається лише для читання."
+    "readOnlyNotice": "Цю групу заархівовано. Витрата відображається лише для читання.",
+    "PaidBySplitModeField": {
+      "label": "Режим поділу платника"
+    },
+    "ParticipantDistribution": {
+      "missing": "Бракує {missing} з {total}",
+      "surplus": "Надлишок: {extra} з {total}",
+      "matches": "✓ Збігається з {total}",
+      "evenlySplit": "Поділено порівну: {amount} × {count}",
+      "sharesTotal": "Загальна вага: {sum} часток",
+      "percentageMatches": "✓ Збігається 100%",
+      "percentageMissing": "Бракує {pct}%",
+      "percentageSurplus": "Надлишок: {pct}%"
+    },
+    "splittingOptions": "Опції розподілу",
+    "multiplePayers": "Кілька платників",
+    "paidByOptionSinglePayer": "Один платник",
+    "paidByOptionEvenly": "Рівномірно",
+    "paidByOptionByShares": "За частками",
+    "paidByOptionByPercentage": "За відсотками",
+    "paidByOptionByAmount": "За сумами",
+    "paidForOptionEvenly": "Рівномірно",
+    "paidForOptionByShares": "За частками",
+    "paidForOptionByPercentage": "За відсотками",
+    "paidForOptionByAmount": "За сумами",
+    "paidBySectionSingle": "Один",
+    "paidBySectionMultiple": "Кілька платників",
+    "paidForSection": "Розділити між учасниками",
+    "paidByOptionSinglePayerHelper": "Одна особа покриває всю витрату",
+    "paidByOptionEvenlyHelper": "Кожен платить рівну частку",
+    "paidByOptionBySharesHelper": "Кожен платить зважену частку",
+    "paidByOptionByPercentageHelper": "Кожен платить відсоток",
+    "paidByOptionByAmountHelper": "Кожен платить фіксовану суму",
+    "paidForOptionEvenlyHelper": "Рівномірний розподіл між усіма",
+    "paidForOptionBySharesHelper": "Призначте частку кожній особі",
+    "paidForOptionByPercentageHelper": "Призначте відсоток кожній особі",
+    "paidForOptionByAmountHelper": "Призначте точну суму кожній особі"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +640,11 @@
     "paidForMin1": "Витрата повинна бути сплачена принаймні для одного учасника",
     "noZeroShares": "Усі частки повинні бути більшими за 0",
     "amountSum": "Сума повинна відповідати витраті",
-    "percentageSum": "Сума відсотків повинна дорівнювати 100"
+    "percentageSum": "Сума відсотків повинна дорівнювати 100",
+    "paidByMin1": "Повинен бути обраний щонайменше один платник.",
+    "paidByAmountSum": "Сума платників має дорівнювати сумі витрати.",
+    "paidByPercentageSum": "Сума відсотків платників має становити 100.",
+    "duplicateParticipant": "Інший платник уже обраний."
   },
   "Categories": {
     "search": "Шукати категорію..",

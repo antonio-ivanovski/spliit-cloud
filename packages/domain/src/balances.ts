@@ -3,15 +3,21 @@ import type { SplitMode } from './enums'
 
 type ParticipantLike = { id: string; name?: string }
 
+type PayerShare = {
+  shares: number
+  participant: ParticipantLike
+}
+
 export type BalanceExpense = {
   id?: string
   amount: number
   splitMode: SplitMode
-  paidBy: ParticipantLike
-  paidFor: Array<{
-    shares: number
-    participant: ParticipantLike
-  }>
+  paidBySplitMode: SplitMode
+  paidByList: PayerShare[]
+  paidFor: PayerShare[]
+  originalAmount?: number | null
+  originalCurrency?: string | null
+  conversionRate?: number | string | null
   [key: string]: unknown
 }
 
@@ -26,21 +32,63 @@ export type Reimbursement = {
   amount: number
 }
 
+function isOriginalCurrency(expense: BalanceExpense): boolean {
+  return Boolean(expense.originalCurrency && expense.conversionRate)
+}
+
 export function getBalances(expenses: BalanceExpense[]): Balances {
   const balances: Balances = {}
 
   for (const expense of expenses) {
-    const paidBy = expense.paidBy.id
+    const paidBys = expense.paidByList
     const paidFors = expense.paidFor
+    const useOriginal = isOriginalCurrency(expense)
+    // When the expense was paid in a foreign currency, paidByList.shares
+    // are in original currency, summing to originalAmount. Dividing by
+    // expense.amount (ledger cents) would mix currencies, so we divide
+    // against originalAmount and convert to ledger at the end.
+    const payerBase = useOriginal
+      ? (expense.originalAmount ?? expense.amount)
+      : expense.amount
+    const conversionRate = useOriginal ? Number(expense.conversionRate) : 1
 
-    if (!balances[paidBy]) balances[paidBy] = { paid: 0, paidFor: 0, total: 0 }
-    balances[paidBy].paid += expense.amount
+    const totalPaidByShares = paidBys.reduce(
+      (sum, paidBy) => sum + paidBy.shares,
+      0,
+    )
+    let remaining = payerBase
+    paidBys.forEach((paidBy, index) => {
+      const paidById = paidBy.participant.id
+      if (!balances[paidById])
+        balances[paidById] = { paid: 0, paidFor: 0, total: 0 }
+
+      const isLast = index === paidBys.length - 1
+
+      const [shares, totalShares] = match(expense.paidBySplitMode)
+        .with('EVENLY', () => [1, paidBys.length] as const)
+        .with('BY_SHARES', () => [paidBy.shares, totalPaidByShares] as const)
+        .with(
+          'BY_PERCENTAGE',
+          () => [paidBy.shares, totalPaidByShares] as const,
+        )
+        .with('BY_AMOUNT', () => [paidBy.shares, totalPaidByShares] as const)
+        .exhaustive()
+
+      const dividedAmount = isLast
+        ? remaining
+        : (payerBase * shares) / totalShares
+      remaining -= dividedAmount
+      const ledgerCurrencyPaid = useOriginal
+        ? Math.round(dividedAmount * conversionRate)
+        : dividedAmount
+      balances[paidById].paid += ledgerCurrencyPaid
+    })
 
     const totalPaidForShares = paidFors.reduce(
       (sum, paidFor) => sum + paidFor.shares,
       0,
     )
-    let remaining = expense.amount
+    remaining = expense.amount
     paidFors.forEach((paidFor, index) => {
       if (!balances[paidFor.participant.id])
         balances[paidFor.participant.id] = { paid: 0, paidFor: 0, total: 0 }
@@ -48,10 +96,13 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
       const isLast = index === paidFors.length - 1
 
       const [shares, totalShares] = match(expense.splitMode)
-        .with('EVENLY', () => [1, paidFors.length])
-        .with('BY_SHARES', () => [paidFor.shares, totalPaidForShares])
-        .with('BY_PERCENTAGE', () => [paidFor.shares, totalPaidForShares])
-        .with('BY_AMOUNT', () => [paidFor.shares, totalPaidForShares])
+        .with('EVENLY', () => [1, paidFors.length] as const)
+        .with('BY_SHARES', () => [paidFor.shares, totalPaidForShares] as const)
+        .with(
+          'BY_PERCENTAGE',
+          () => [paidFor.shares, totalPaidForShares] as const,
+        )
+        .with('BY_AMOUNT', () => [paidFor.shares, totalPaidForShares] as const)
         .exhaustive()
 
       const dividedAmount = isLast

@@ -20,7 +20,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
-import { ExpenseFormValues } from '@/lib/schemas'
+import { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import { formatFileSize } from '@/lib/utils'
 import { Loader2, Plus, Trash, X } from 'lucide-react'
@@ -28,8 +28,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
-  documents: ExpenseFormValues['documents']
-  updateDocuments: (documents: ExpenseFormValues['documents']) => void
+  documents: ExpenseFormInputValues['documents']
+  updateDocuments: (documents: ExpenseFormInputValues['documents']) => void
   ledgerId?: string | null
   readOnly?: boolean
 }
@@ -138,9 +138,11 @@ export function DocumentThumbnail({
   deleteDocument,
   readOnly = false,
 }: {
-  document: ExpenseFormValues['documents'][number]
-  documents: ExpenseFormValues['documents']
-  deleteDocument: (document: ExpenseFormValues['documents'][number]) => void
+  document: ExpenseFormInputValues['documents'][number]
+  documents: ExpenseFormInputValues['documents']
+  deleteDocument: (
+    document: ExpenseFormInputValues['documents'][number],
+  ) => void
   readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)

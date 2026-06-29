@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form'
+import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 
 export function EditExpenseForm({
   groupId,
@@ -85,22 +86,32 @@ export function EditExpenseForm({
       expense={expense}
       currentLedgerParticipantId={currentLedgerParticipantId}
       readOnly={readOnly}
-      onSubmit={async (expenseFormValues) => {
+      onSubmit={async (expense) => {
         if (readOnly) return
         await updateExpenseMutateAsync({
           expenseId,
           groupId,
-          expenseFormValues,
+          expense,
         })
-        utils.groups.expenses.invalidate()
-        utils.groups.activities.invalidate()
-        utils.groups.leavePreview.invalidate({ groupId })
+        await utils.groups.expenses.list.reset({
+          groupId,
+          limit: EXPENSE_LIST_PAGE_SIZE,
+          filter: '',
+          linkInviteToken,
+        })
+        await utils.groups.expenses.get.invalidate({
+          groupId,
+          expenseId,
+          linkInviteToken,
+        })
+        await utils.groups.activities.invalidate()
+        await utils.groups.leavePreview.invalidate({ groupId })
         // Updating an expense can change invitee balances; drop the
         // cached `revokePreview` so the dialog re-reads the current
         // `hasUnsettledBalance` instead of showing stale state.
-        utils.invitations.revokePreview.invalidate()
+        await utils.invitations.revokePreview.invalidate()
         router.push({
-          to: '/groups/$groupId',
+          to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
         })
       }}
@@ -110,15 +121,25 @@ export function EditExpenseForm({
           expenseId,
           groupId,
         })
-        utils.groups.expenses.invalidate()
-        utils.groups.activities.invalidate()
-        utils.groups.leavePreview.invalidate({ groupId })
+        await utils.groups.expenses.list.reset({
+          groupId,
+          limit: EXPENSE_LIST_PAGE_SIZE,
+          filter: '',
+          linkInviteToken,
+        })
+        await utils.groups.expenses.get.invalidate({
+          groupId,
+          expenseId,
+          linkInviteToken,
+        })
+        await utils.groups.activities.invalidate()
+        await utils.groups.leavePreview.invalidate({ groupId })
         // Deleting an expense can resurrect an invitee balance; drop
         // the cached `revokePreview` so the dialog re-reads the current
         // `hasUnsettledBalance` instead of showing stale state.
-        utils.invitations.revokePreview.invalidate()
+        await utils.invitations.revokePreview.invalidate()
         router.push({
-          to: '/groups/$groupId',
+          to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
         })
       }}

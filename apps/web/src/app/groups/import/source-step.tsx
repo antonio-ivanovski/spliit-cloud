@@ -9,7 +9,7 @@ import {
   type NormalizedSource,
 } from '@spliit/domain/import'
 import { AlertTriangle, Clock } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DomainSwapCard } from './domain-swap-card'
 import { FileUploadCard } from './file-upload-card'
@@ -140,6 +140,18 @@ export function SourceStep({ onLoaded, onError }: Props) {
     [urlError],
   )
 
+  const tabsListRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Scroll the active tab into view on mount so "spliit" isn't clipped on mobile
+    const activeTab = tabsListRef.current?.querySelector(
+      '[data-state="active"]',
+    )
+    if (activeTab) {
+      activeTab.scrollIntoView({ block: 'nearest', inline: 'start' })
+    }
+  }, [])
+
   const spliitDisabled = provider !== 'spliit'
 
   return (
@@ -148,7 +160,10 @@ export function SourceStep({ onLoaded, onError }: Props) {
         value={provider}
         onValueChange={(v) => setProvider(v as SourceMode)}
       >
-        <TabsList className="w-full sm:w-auto">
+        <TabsList
+          ref={tabsListRef}
+          className="w-full sm:w-auto overflow-x-auto justify-start"
+        >
           <TabsTrigger value="spliit">
             {t('Groups.Import.Source.fromSpliit')}
           </TabsTrigger>

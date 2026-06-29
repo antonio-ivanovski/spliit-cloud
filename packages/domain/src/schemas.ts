@@ -35,83 +35,138 @@ export const groupFormSchema = z
 
 export type GroupFormValues = z.infer<typeof groupFormSchema>
 
-const inputCoercedToNumber = z.union([
-  z.number(),
-  z.string().transform((value, ctx) => {
-    const valueAsNumber = Number(value)
-    if (Number.isNaN(valueAsNumber))
+const splitModeSchema = z
+  .enum<SplitMode, [SplitMode, ...SplitMode[]]>(Object.values(SplitMode) as any)
+  .default('EVENLY')
+
+const paidBySplitModeSchema = z
+  .enum<SplitMode, [SplitMode, ...SplitMode[]]>(Object.values(SplitMode) as any)
+  .default('BY_AMOUNT')
+
+const recurrenceRuleSchema = z
+  .enum<
+    RecurrenceRule,
+    [RecurrenceRule, ...RecurrenceRule[]]
+  >(Object.values(RecurrenceRule) as any)
+  .default('NONE')
+
+const documentsSchema = z
+  .array(
+    z.object({
+      id: z.string(),
+      url: z.string().url(),
+      width: z.number().int().min(1),
+      height: z.number().int().min(1),
+    }),
+  )
+  .default([])
+
+// Row shape used by the form schema. `paidFor[].originalAmount` is a
+// UI-only string used by the BY_AMOUNT cross-currency input — it is
+// never sent to the server. `shares` is a number in user-facing units.
+const formPaidForRowSchema = z.object({
+  participant: z.string(),
+  originalAmount: z.string().optional(),
+  shares: z.number(),
+})
+
+const formPaidByRowSchema = z.object({
+  participant: z.string(),
+  shares: z.number(),
+})
+
+// Row shape used by the API/domain schema. Shares are integers: basis
+// points for BY_PERCENTAGE, minor units for BY_AMOUNT, raw counts for
+// BY_SHARES / EVENLY.
+const apiPaidForRowSchema = z.object({
+  participant: z.string(),
+  shares: z.number().int(),
+})
+
+const apiPaidByRowSchema = z.object({
+  participant: z.string(),
+  shares: z.number().int(),
+})
+
+const paidByDuplicateGuard = (
+  paidByList: Array<{ participant: string }>,
+  ctx: z.RefinementCtx,
+) => {
+  const seen = new Set<string>()
+  paidByList.forEach((row, i) => {
+    if (seen.has(row.participant)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'invalidNumber',
+        message: 'duplicateParticipant',
+        path: [i, 'participant'],
       })
-    return valueAsNumber
-  }),
-])
+    } else {
+      seen.add(row.participant)
+    }
+  })
+}
 
-export const expenseFormSchema = z
+// paidByList BY_AMOUNT sum check, shared by both schemas. `paidByList`
+// shares are in `originalCurrency` when `originalCurrency` is set, so
+// the sum is checked against `originalAmount` (falling back to amount
+// when originalCurrency is absent).
+const paidByAmountSumOk = (sum: Decimal, target: number): boolean =>
+  sum.equals(new Decimal(target))
+
+// `expenseFormInputSchema` validates the user-facing form values:
+// numbers in display units (decimal major units for amounts,
+// display percentages for BY_PERCENTAGE). Conversion to storage units
+// happens in `submit-values.ts` before the values reach the API.
+export const expenseFormInputSchema = z
   .object({
     expenseDate: z.coerce.date(),
     title: z.string({ required_error: 'titleRequired' }).min(2, 'min2'),
     category: categoryIdSchema,
-    amount: z
-      .union(
-        [
-          z.number(),
-          z.string().transform((value, ctx) => {
-            const valueAsNumber = Number(value)
-            if (Number.isNaN(valueAsNumber))
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: 'invalidNumber',
-              })
-            return valueAsNumber
-          }),
-        ],
-        { required_error: 'amountRequired' },
-      )
+    // Text inputs feed raw strings into react-hook-form; coerce at the
+    // schema boundary so empty / numeric strings round-trip to numbers
+    // before the major-unit refines run.
+    amount: z.coerce
+      .number()
+      .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
       .refine((amount) => amount != 0, 'amountNotZero')
-      .refine((amount) => amount <= 10_000_000_00, 'amountTenMillion'),
-    originalAmount: z
-      .union([
-        z.literal('').transform(() => undefined),
-        inputCoercedToNumber
-          .refine((amount) => amount != 0, 'amountNotZero')
-          .refine((amount) => amount <= 10_000_000_00, 'amountTenMillion'),
-      ])
+      // Major-unit ceiling: $10,000,000 equivalent (matches the prior
+      // 10_000_000_00 minor-unit ceiling; same error key for i18n).
+      .refine((amount) => amount <= 10_000_000, 'amountTenMillion'),
+    originalAmount: z.coerce
+      .number()
+      .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
+      .refine((amount) => amount != 0, 'amountNotZero')
+      .refine((amount) => amount <= 10_000_000, 'amountTenMillion')
       .optional(),
     originalCurrency: z.union([z.string().length(3).nullish(), z.literal('')]),
-    conversionRate: z
-      .union([
-        z.literal('').transform(() => undefined),
-        inputCoercedToNumber.refine((amount) => amount > 0, 'ratePositive'),
-      ])
+    conversionRate: z.coerce
+      .number()
+      .refine((r) => !Number.isNaN(r), 'invalidNumber')
+      .refine((r) => r > 0, 'ratePositive')
       .optional(),
-    paidBy: z.string({ required_error: 'paidByRequired' }),
+    paidBySplitMode: paidBySplitModeSchema,
+    paidByList: z
+      .array(formPaidByRowSchema)
+      .min(1, 'paidByMin1')
+      .superRefine((paidByList, ctx) => {
+        for (const { shares } of paidByList) {
+          // Same negative-share rule the previous commit locked in:
+          // allow negatives for negative-income expenses, reject only 0.
+          if (shares === 0) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'noZeroShares',
+            })
+          }
+        }
+        paidByDuplicateGuard(paidByList, ctx)
+      }),
     paidFor: z
-      .array(
-        z.object({
-          participant: z.string(),
-          originalAmount: z.string().optional(), // For converting shares by amounts in original currency, not saved.
-          shares: z.union([
-            z.number(),
-            z.string().transform((value, ctx) => {
-              const normalizedValue = value.replace(/,/g, '.')
-              const valueAsNumber = Number(normalizedValue)
-              if (Number.isNaN(valueAsNumber))
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: 'invalidNumber',
-                })
-              return value
-            }),
-          ]),
-        }),
-      )
+      .array(formPaidForRowSchema)
       .min(1, 'paidForMin1')
       .superRefine((paidFor, ctx) => {
         for (const { shares } of paidFor) {
-          const shareNumber = Number(shares)
-          if (shareNumber <= 0) {
+          if (shares <= 0) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: 'noZeroShares',
@@ -119,48 +174,24 @@ export const expenseFormSchema = z
           }
         }
       }),
-    splitMode: z
-      .enum<
-        SplitMode,
-        [SplitMode, ...SplitMode[]]
-      >(Object.values(SplitMode) as any)
-      .default('EVENLY'),
+    isMultiPayer: z.boolean().default(false),
+    splitMode: splitModeSchema,
     saveDefaultSplittingOptions: z.boolean(),
     isReimbursement: z.boolean(),
-    documents: z
-      .array(
-        z.object({
-          id: z.string(),
-          url: z.string().url(),
-          width: z.number().int().min(1),
-          height: z.number().int().min(1),
-        }),
-      )
-      .default([]),
+    documents: documentsSchema,
     notes: z.string().optional(),
-    recurrenceRule: z
-      .enum<
-        RecurrenceRule,
-        [RecurrenceRule, ...RecurrenceRule[]]
-      >(Object.values(RecurrenceRule) as any)
-      .default('NONE'),
+    recurrenceRule: recurrenceRuleSchema,
   })
   .superRefine((expense, ctx) => {
     switch (expense.splitMode) {
       case 'EVENLY':
-        break // noop
+        break
       case 'BY_SHARES':
-        break // noop
+        break
       case 'BY_AMOUNT': {
-        const sum = expense.paidFor.reduce(
-          (sum, { shares }) => new Decimal(shares).add(sum),
-          new Decimal(0),
-        )
-        if (!sum.equals(new Decimal(expense.amount))) {
-          // const detail =
-          //   sum < expense.amount
-          //     ? `${((expense.amount - sum) / 100).toFixed(2)} missing`
-          //     : `${((sum - expense.amount) / 100).toFixed(2)} surplus`
+        const sum = expense.paidFor.reduce((sum, { shares }) => sum + shares, 0)
+        // Two-decimal currencies can drift by ±0.01 due to rounding.
+        if (Math.abs(sum - expense.amount) > 0.01) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'amountSum',
@@ -170,19 +201,8 @@ export const expenseFormSchema = z
         break
       }
       case 'BY_PERCENTAGE': {
-        const sum = expense.paidFor.reduce(
-          (sum, { shares }) =>
-            sum +
-            (typeof shares === 'string'
-              ? Math.round(Number(shares) * 100)
-              : Number(shares)),
-          0,
-        )
-        if (sum !== 10000) {
-          const detail =
-            sum < 10000
-              ? `${((10000 - sum) / 100).toFixed(0)}% missing`
-              : `${((sum - 10000) / 100).toFixed(0)}% surplus`
+        const sum = expense.paidFor.reduce((sum, { shares }) => sum + shares, 0)
+        if (Math.abs(sum - 100) > 0.01) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'percentageSum',
@@ -192,33 +212,182 @@ export const expenseFormSchema = z
         break
       }
     }
-  })
-  .transform((expense) => {
-    // Format the share split as a number (if from form submission)
-    return {
-      ...expense,
-      paidFor: expense.paidFor.map((paidFor) => {
-        const shares = paidFor.shares
-        if (typeof shares === 'string' && expense.splitMode !== 'BY_AMOUNT') {
-          // For splitting not by amount, preserve the previous behaviour of multiplying the share by 100
-          return {
-            ...paidFor,
-            shares: Math.round(Number(shares) * 100),
-          }
+    switch (expense.paidBySplitMode) {
+      case 'EVENLY':
+        break
+      case 'BY_SHARES':
+        break
+      case 'BY_AMOUNT': {
+        const target = expense.originalCurrency
+          ? (expense.originalAmount ?? expense.amount)
+          : expense.amount
+        const sum = expense.paidByList.reduce(
+          (sum, { shares }) => sum + shares,
+          0,
+        )
+        if (Math.abs(sum - target) > 0.01) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'paidByAmountSum',
+            path: ['paidByList'],
+          })
         }
-        // Otherwise, no need as the number will have been formatted according to currency.
-        return {
-          ...paidFor,
-          shares: Number(shares),
+        break
+      }
+      case 'BY_PERCENTAGE': {
+        const sum = expense.paidByList.reduce(
+          (sum, { shares }) => sum + shares,
+          0,
+        )
+        if (Math.abs(sum - 100) > 0.01) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'paidByPercentageSum',
+            path: ['paidByList'],
+          })
         }
-      }),
+        break
+      }
     }
   })
 
-export type ExpenseFormValues = z.infer<typeof expenseFormSchema>
+export type ExpenseFormInputValues = z.infer<typeof expenseFormInputSchema>
+
+// `expenseApiSchema` validates the API/domain payload: amounts in
+// integer minor units, BY_PERCENTAGE shares in basis points summing to
+// 10000, BY_AMOUNT shares summing to amount in minor units. Used by
+// the create/update/import tRPC procedures and the API helpers.
+export const expenseApiSchema = z
+  .object({
+    expenseDate: z.coerce.date(),
+    title: z.string().min(2, 'min2'),
+    category: categoryIdSchema,
+    amount: z
+      .number()
+      .int()
+      .refine((amount) => amount != 0, 'amountNotZero')
+      // 1,000,000,000 minor units = $10,000,000 (decimal_digits=2).
+      // Same error key as the form schema's `amountTenMillion`.
+      .refine((amount) => amount <= 1_000_000_000, 'amountTenMillion'),
+    originalAmount: z
+      .number()
+      .int()
+      .refine((amount) => amount != 0, 'amountNotZero')
+      .refine((amount) => amount <= 1_000_000_000, 'amountTenMillion')
+      .optional(),
+    originalCurrency: z.union([z.string().length(3).nullish(), z.literal('')]),
+    conversionRate: z
+      .number()
+      .refine((r) => r > 0, 'ratePositive')
+      .optional(),
+    paidBySplitMode: paidBySplitModeSchema,
+    paidByList: z
+      .array(apiPaidByRowSchema)
+      .min(1, 'paidByMin1')
+      .superRefine((paidByList, ctx) => {
+        for (const { shares } of paidByList) {
+          if (shares === 0) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'noZeroShares',
+            })
+          }
+        }
+        paidByDuplicateGuard(paidByList, ctx)
+      }),
+    paidFor: z
+      .array(apiPaidForRowSchema)
+      .min(1, 'paidForMin1')
+      .superRefine((paidFor, ctx) => {
+        for (const { shares } of paidFor) {
+          if (shares <= 0) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'noZeroShares',
+            })
+          }
+        }
+      }),
+    isMultiPayer: z.boolean().default(false),
+    splitMode: splitModeSchema,
+    saveDefaultSplittingOptions: z.boolean(),
+    isReimbursement: z.boolean(),
+    documents: documentsSchema,
+    notes: z.string().optional(),
+    recurrenceRule: recurrenceRuleSchema,
+  })
+  .superRefine((expense, ctx) => {
+    switch (expense.splitMode) {
+      case 'EVENLY':
+        break
+      case 'BY_SHARES':
+        break
+      case 'BY_AMOUNT': {
+        const sum = expense.paidFor.reduce(
+          (sum, { shares }) => new Decimal(shares).add(sum),
+          new Decimal(0),
+        )
+        if (!sum.equals(new Decimal(expense.amount))) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'amountSum',
+            path: ['paidFor'],
+          })
+        }
+        break
+      }
+      case 'BY_PERCENTAGE': {
+        const sum = expense.paidFor.reduce((s, { shares }) => s + shares, 0)
+        if (sum !== 10000) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'percentageSum',
+            path: ['paidFor'],
+          })
+        }
+        break
+      }
+    }
+    switch (expense.paidBySplitMode) {
+      case 'EVENLY':
+        break
+      case 'BY_SHARES':
+        break
+      case 'BY_AMOUNT': {
+        const target = expense.originalCurrency
+          ? (expense.originalAmount ?? expense.amount)
+          : expense.amount
+        const sum = expense.paidByList.reduce(
+          (sum, { shares }) => new Decimal(shares).add(sum),
+          new Decimal(0),
+        )
+        if (!paidByAmountSumOk(sum, target)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'paidByAmountSum',
+            path: ['paidByList'],
+          })
+        }
+        break
+      }
+      case 'BY_PERCENTAGE': {
+        const sum = expense.paidByList.reduce((s, { shares }) => s + shares, 0)
+        if (sum !== 10000) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'paidByPercentageSum',
+            path: ['paidByList'],
+          })
+        }
+        break
+      }
+    }
+  })
+
+export type Expense = z.infer<typeof expenseApiSchema>
 
 export type SplittingOptions = {
   // Used for saving default splitting options in localStorage
   splitMode: SplitMode
-  paidFor: ExpenseFormValues['paidFor'] | null
+  paidFor: ExpenseFormInputValues['paidFor'] | null
 }

@@ -650,9 +650,9 @@ export async function reconcileMemberLedgerParticipant(
     ) {
       // Reassign any pre-accept expenses from the placeholder to the
       // member's existing participant, then drop the placeholder.
-      await tx.expense.updateMany({
-        where: { paidById: pendingParticipantId },
-        data: { paidById: existingParticipant.id },
+      await tx.expensePaidBy.updateMany({
+        where: { ledgerParticipantId: pendingParticipantId },
+        data: { ledgerParticipantId: existingParticipant.id },
       })
       await tx.expensePaidFor.updateMany({
         where: { ledgerParticipantId: pendingParticipantId },

@@ -425,7 +425,6 @@
     "selectNone": "선택 안 함",
     "selectAll": "모두 선택",
     "shares": "몫",
-    "advancedOptions": "고급 분할 옵션…",
     "participant": {
       "pending": "(초대됨)"
     },
@@ -434,7 +433,43 @@
     "creating": "만드는 중…",
     "save": "저장",
     "saving": "저장 중…",
-    "readOnlyNotice": "이 그룹은 보관되었습니다. 지출이 읽기 전용으로 표시됩니다."
+    "readOnlyNotice": "이 그룹은 보관되었습니다. 지출이 읽기 전용으로 표시됩니다.",
+    "PaidBySplitModeField": {
+      "label": "결제자"
+    },
+    "ParticipantDistribution": {
+      "missing": "{total} 중 {missing} 부족",
+      "surplus": "{total} 중 {extra} 초과",
+      "matches": "✓ {total}과 일치",
+      "evenlySplit": "균등 분할: {amount} × {count}",
+      "sharesTotal": "총 가중치: {sum} shares",
+      "percentageMatches": "✓ 100% 일치",
+      "percentageMissing": "{pct}% 부족",
+      "percentageSurplus": "{pct}% 초과"
+    },
+    "splittingOptions": "분할 옵션",
+    "multiplePayers": "여러 명이 납부",
+    "paidByOptionSinglePayer": "1명이 납부",
+    "paidByOptionEvenly": "똑같이",
+    "paidByOptionByShares": "지분별로",
+    "paidByOptionByPercentage": "비율로",
+    "paidByOptionByAmount": "금액별로",
+    "paidForOptionEvenly": "똑같이",
+    "paidForOptionByShares": "지분별로",
+    "paidForOptionByPercentage": "비율로",
+    "paidForOptionByAmount": "금액별로",
+    "paidBySectionSingle": "1명",
+    "paidBySectionMultiple": "여러 명이 납부",
+    "paidForSection": "참여자 간 분할",
+    "paidByOptionSinglePayerHelper": "1명이 전체 비용을 부담합니다",
+    "paidByOptionEvenlyHelper": "각자 같은 금액을 지불합니다",
+    "paidByOptionBySharesHelper": "각자 가중된 지분을 지불합니다",
+    "paidByOptionByPercentageHelper": "각자 비율을 지불합니다",
+    "paidByOptionByAmountHelper": "각자 고정 금액을 지불합니다",
+    "paidForOptionEvenlyHelper": "모든 사람 간에 똑같이 분할합니다",
+    "paidForOptionBySharesHelper": "각 사람에게 지분을 지정합니다",
+    "paidForOptionByPercentageHelper": "각 사람에게 비율을 지정합니다",
+    "paidForOptionByAmountHelper": "각 사람에게 정확한 금액을 지정합니다"
   },
   "Balances": {
     "title": "잔액",
@@ -496,7 +531,11 @@
     "min2": "최소 두 글자 이상 입력해 주세요.",
     "titleRequired": "제목을 입력해 주세요.",
     "max5": "최대 5자까지 입력하세요.",
-    "max50": "최대 50자까지 입력하세요."
+    "max50": "최대 50자까지 입력하세요.",
+    "paidByMin1": "적어도",
+    "paidByAmountSum": "결제자",
+    "paidByPercentageSum": "결제자",
+    "duplicateParticipant": "다른"
   },
   "Categories": {
     "search": "카테고리 선택...",
@@ -627,7 +666,9 @@
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>가 <paidFor></paidFor>를 위해 결제함",
+    "paidByMultiple": "<paidByNames></paidByNames>가 <paidFor></paidFor>를 위해 결제함",
     "everyone": "모두",
+    "receivedByMultiple": "<paidByNames></paidByNames>님이 <paidFor></paidFor>를 위해 받음",
     "yourBalance": "내 잔액:",
     "notInvolved": "당신은 관련이 없어요",
     "receivedBy": "<strong>{paidBy}</strong>님이 <paidFor></paidFor>를 위해 받음",
