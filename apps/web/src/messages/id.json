@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Masuk ke Spliit Cloud",
       "createAccount": "Buat akun",
-      "createGroup": "Buat grup"
+      "createGroup": "Buat grup",
+      "importGroup": "Impor grup dari layanan lain"
     },
     "features": {
       "groupsSync": {
@@ -1040,9 +1041,14 @@
       }
     },
     "changeRoleAria": "Ubah peran",
+    "remove": "Hapus",
+    "removed": "Anggota dihapus.",
     "roleUpdated": "Peran diperbarui menjadi {role}.",
     "removeDialog": {
-      "description": "Hapus {name} dari grup ini? Pengeluaran masa lalunya tetap tersimpan di buku besar tetapi mereka tidak lagi memiliki akses.",
+      "title": "Hapus anggota?",
+      "description": "Hapus {name} dari grup ini? Pengeluaran masa lalu mereka tetap di buku besar tetapi mereka tidak akan lagi memiliki akses.",
+      "cancel": "Batal",
+      "confirm": "Hapus",
       "unsettled": {
         "title": "Hapus anggota dengan saldo belum diselesaikan?",
         "toast": "Anggota dihapus, saldo diselesaikan.",
@@ -1055,30 +1061,62 @@
       }
     },
     "leave": {
+      "cancel": "Batal",
       "confirm": "Tinggalkan grup",
       "confirmDelete": "Hapus dan tinggalkan",
+      "button": "Tinggalkan grup",
+      "title": "Tinggalkan grup?",
+      "description": "Anda akan kehilangan akses ke pengeluaran, saldo, dan aktivitas grup ini. Data masa lalu tetap disimpan di buku besar sehingga anggota lain masih dapat melihatnya.",
       "body": {
+        "otherAdmins": "Para admin ini akan tetap memegang kendali setelah Anda pergi: {names}.",
         "unsettled": {
+          "title": "Anda memiliki saldo yang belum diselesaikan",
           "description": "Meninggalkan secara paksa akan membuat pengeluaran penggantian secara otomatis untuk bagian yang melibatkan Anda agar buku besar tetap sinkron. Saldo lainnya dibiarkan apa adanya."
         },
         "lastMember": {
           "title": "Ini akan menghapus grup",
+          "description": "Anda adalah satu-satunya anggota aktif grup ini. Meninggalkan grup akan menghapus secara permanen grup, semua pengeluaran, dan seluruh riwayatnya.",
+          "checkbox": "Saya mengerti bahwa ini akan menghapus secara permanen grup dan semua datanya.",
+          "suggestion": "Tip: jika Anda ingin menyimpan grup ini sebagai catatan, Anda dapat mengarsipkannya.",
           "unsettledInfo": "Anda memiliki saldo yang belum diselesaikan di grup ini. Saldo tersebut akan hilang secara permanen saat grup dihapus."
+        },
+        "lastAdmin": {
+          "title": "Pilih admin baru",
+          "description": "Anda adalah admin terakhir grup ini. Pilih anggota aktif untuk mengambil alih sebelum Anda pergi, jika tidak, tidak ada yang bisa mengelola grup.",
+          "placeholder": "Pilih anggota"
         }
       },
+      "confirmWithForce": "Selesaikan dan tinggalkan",
       "toast": {
-        "deleted": "Grup dihapus."
+        "left": "Anda telah meninggalkan grup.",
+        "deleted": "Grup dihapus.",
+        "archived": "Grup diarsipkan."
       },
       "error": {
-        "lastAdmin": "Pilih anggota untuk dijadikan admin sebelum pergi."
+        "lastAdmin": "Pilih anggota untuk dijadikan admin sebelum pergi.",
+        "lastMember": "Konfirmasi penghapusan permanen untuk melanjutkan.",
+        "unsettled": "Selesaikan saldo Anda atau konfirmasi penyelesaian paksa untuk pergi."
       }
     },
     "unlinked": {
+      "title": "Peserta yang belum ditautkan",
+      "description": "Orang-orang ini memiliki nama di grup tetapi belum memiliki akun aplikasi. Tautkan masing-masing ke akun yang ada untuk mengaitkan pengeluaran mereka dengan pengguna tersebut.",
       "emailPlaceholder": "akun@contoh.com",
       "linkButton": "Tautkan",
+      "link": "Tautkan ke akun",
+      "linkSuccess": "Peserta ditautkan ke akun",
+      "idHint": "ID peserta buku besar: {id}",
       "linkDialog": {
+        "title": "Tautkan peserta yang belum ditautkan",
+        "description": "Pilih anggota yang ada yang harus ditautkan dengan {displayName}. Tujuan tidak boleh sudah berada di sisi yang berlawanan dari transaksi dengan peserta ini.",
+        "membersGroup": "Anggota",
+        "cancel": "Batal",
+        "confirm": "Tautkan",
+        "noCandidates": "Tidak ada anggota yang kompatibel ditemukan. Ini biasanya berarti peserta yang belum ditautkan ini berada di kedua sisi transaksi dengan setiap anggota lainnya — impor perlu diulang atau pengeluaran disesuaikan terlebih dahulu.",
         "pendingLabel": "tertunda",
         "pendingHint": "Menautkan ke undangan tertunda akan menggabungkan entri yang hanya berupa nama ini ke dalam akun yang diundang. Yang diundang tetap memiliki barisnya sendiri; referensi yang digabungkan sekarang akan diselesaikan melaluinya saat mereka menerima.",
+        "membersGroupWithPending": "Anggota dan undangan tertunda",
+        "pendingGroup": "Undangan tertunda",
         "pendingSuffix": "(tertunda)"
       }
     }

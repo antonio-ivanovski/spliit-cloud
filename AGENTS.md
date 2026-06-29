@@ -75,4 +75,7 @@ More focused notes: [.agent/architecture.md](.agent/architecture.md), [.agent/da
 
 ## Translations
 
-`apps/web/src/messages/en-US.json` is the source of truth; other locales fall back to it at runtime. **Never hand-edit** any file in `apps/web/src/messages/` — use the `bun i18n` CLI. For the full workflow (adding strings, translating into other locales, listing what a git change introduces), load the `translate-strings` skill at `.agents/skills/translate-strings/SKILL.md`.
+`apps/web/src/messages/en-US.json` is the source of truth; other locales fall back to it at runtime. **Never hand-edit** any file in `apps/web/src/messages/` — use the `bun i18n` CLI.
+
+- **Audit (canonical CI gate)**: `bun i18n check` exits 1 if any non-English locale is missing any key present in en-US, or if there are orphan keys. Use `bun i18n check --changes-only` for PR-scoped audits (only flag keys introduced by the current diff vs `HEAD`).
+- **Translate**: load the `translate-strings` skill at `.agents/skills/translate-strings/SKILL.md`. When many locales are behind, dispatch **parallel subagents grouped by language family** (Romance, Germanic+Nordic, Slavic, East Asian, Other) — each subagent owns one language family, runs the skill, and finishes by confirming `bun i18n check --locale <own-locale>` exits 0.

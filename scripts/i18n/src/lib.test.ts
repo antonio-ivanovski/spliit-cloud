@@ -6,11 +6,13 @@ import { locales } from '../../../packages/domain/src/i18n.ts'
 import {
   LOCALE_TO_FILE,
   addString,
+  auditMessages,
   diffMessages,
   flattenKeys,
   getAt,
   getMessagesDir,
   missingKeys,
+  missingKeysByLocale,
   removeAt,
   removeString,
   reorderSiblings,
@@ -333,5 +335,129 @@ describe('getMessagesDir / setMessagesDir', () => {
   it('returns the currently configured dir', () => {
     setMessagesDir('/tmp/example')
     expect(getMessagesDir()).toBe('/tmp/example')
+  })
+})
+
+describe('missingKeysByLocale', () => {
+  it('reports missing keys for every non-en-US locale', async () => {
+    await seedFile('en-US', { a: 'a', b: 'b', c: { d: 'd' } })
+    await seedFile('fr-FR', { a: 'A', c: { d: 'D' } })
+    await seedFile('de-DE', { a: 'A' })
+    const result = await missingKeysByLocale()
+    expect(result['fr-FR']).toEqual(['b'])
+    expect(result['de-DE']).toEqual(['b', 'c.d'])
+    for (const locale of Object.keys(result)) {
+      expect(locale).not.toBe('en-US')
+    }
+  })
+})
+
+async function seedNonEnLocales(data: Record<string, unknown>) {
+  for (const locale of Object.keys(LOCALE_TO_FILE) as Array<
+    keyof typeof LOCALE_TO_FILE
+  >) {
+    if (locale === 'en-US') continue
+    await seedFile(locale, data)
+  }
+}
+
+describe('auditMessages', () => {
+  it('reports per-locale coverage and counts total keys from en-US', async () => {
+    await seedFile('en-US', { a: 'a', b: 'b', c: 'c' })
+    await seedNonEnLocales({ a: 'A', b: 'B', c: 'C' })
+    await seedFile('fr-FR', { a: 'A', b: 'B' })
+    await seedFile('de-DE', { a: 'A', b: 'B', c: 'C' })
+    const result = await auditMessages()
+    expect(result.totalKeys).toBe(3)
+    expect(result.valid).toBe(true)
+    expect(result.summary.localesAudited).toBe(23)
+    expect(result.summary.localesComplete).toBe(22)
+    expect(result.summary.localesWithMissing).toBe(1)
+    expect(result.summary.totalMissing).toBe(1)
+    expect(result.locales['fr-FR']).toMatchObject({
+      total: 3,
+      present: 2,
+      missing: 1,
+      missingKeys: ['c'],
+      coverage: 2 / 3,
+    })
+    expect(result.locales['de-DE']).toMatchObject({
+      total: 3,
+      present: 3,
+      missing: 0,
+      missingKeys: [],
+      coverage: 1,
+    })
+  })
+
+  it('excludes en-US from the audit', async () => {
+    await seedFile('en-US', { a: 'a' })
+    await seedNonEnLocales({ a: 'A' })
+    const result = await auditMessages()
+    expect(result.locales['en-US']).toBeUndefined()
+  })
+
+  it('restricts to --locale when provided', async () => {
+    await seedFile('en-US', { a: 'a', b: 'b' })
+    await seedNonEnLocales({ a: 'A' })
+    await seedFile('fr-FR', { a: 'A' })
+    await seedFile('de-DE', { a: 'A' })
+    const result = await auditMessages({ locale: 'fr-FR' })
+    expect(result.summary.localesAudited).toBe(1)
+    expect(Object.keys(result.locales)).toEqual(['fr-FR'])
+    expect(result.locales['fr-FR'].missing).toBe(1)
+  })
+
+  it('reports orphan keys via the embedded validation result', async () => {
+    await seedFile('en-US', { a: 'a' })
+    await seedNonEnLocales({ a: 'A' })
+    await seedFile('fr-FR', { a: 'A', orphan: 'O' })
+    const result = await auditMessages()
+    expect(result.valid).toBe(false)
+    expect(result.errors).toHaveLength(1)
+    expect(result.errors[0]).toContain('orphan')
+  })
+
+  it('changesOnly mode: only flags keys the diff introduced', async () => {
+    await seedFile('en-US', { kept: 'k', pre: 'p', brandNew: 'b' })
+    await seedNonEnLocales({ kept: 'K', pre: 'P' })
+    await seedFile('fr-FR', { kept: 'K' })
+    const result = await auditMessages({
+      changesOnly: true,
+      readOldEn: async () => ({ kept: 'k', pre: 'p' }),
+    })
+    expect(result.changesOnly).toBe(true)
+    expect(result.introducedKeys).toEqual(['brandNew'])
+    // fr-FR has no "brandNew" but is missing the unchanged "pre" — that
+    // is legacy debt and must not appear in changesOnly output.
+    expect(result.locales['fr-FR'].missingKeys).toEqual(['brandNew'])
+    expect(result.locales['fr-FR'].missing).toBe(1)
+    // Every locale that lacks the introduced key is flagged once for it;
+    // no locale should be flagged for legacy debt ("pre", "kept").
+    for (const audit of Object.values(result.locales)) {
+      expect(audit.missingKeys).toEqual(['brandNew'])
+    }
+  })
+
+  it('changesOnly with no diff: all locales are clean even if behind', async () => {
+    await seedFile('en-US', { kept: 'k', brandNew: 'b' })
+    await seedFile('fr-FR', {})
+    const result = await auditMessages({
+      changesOnly: true,
+      readOldEn: async () => ({ kept: 'k', brandNew: 'b' }),
+    })
+    expect(result.introducedKeys).toEqual([])
+    expect(result.summary.totalMissing).toBe(0)
+    expect(result.locales['fr-FR'].missing).toBe(0)
+  })
+
+  it('handles empty en-US as fully covered', async () => {
+    await seedFile('en-US', {})
+    const result = await auditMessages()
+    expect(result.totalKeys).toBe(0)
+    expect(result.summary.totalMissing).toBe(0)
+    for (const audit of Object.values(result.locales)) {
+      expect(audit.coverage).toBe(1)
+    }
   })
 })

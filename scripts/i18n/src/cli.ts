@@ -1,15 +1,18 @@
 import { readFileSync } from 'node:fs'
 import {
   addString,
+  auditMessages,
   diffMessages,
   flattenKeys,
   getAt,
   missingKeys,
+  missingKeysByLocale,
   readMessagesFile,
   removeString,
   setString,
   validateAllMessages,
 } from './lib'
+import type { AuditResult } from './lib.ts'
 import { locales, type Locale } from './lib.ts'
 
 type ParsedArgs = {
@@ -110,6 +113,70 @@ function formatDiffHuman(result: Awaited<ReturnType<typeof diffMessages>>) {
   return lines.join('\n')
 }
 
+function formatPercent(n: number): string {
+  return `${(n * 100).toFixed(1)}%`
+}
+
+function printCheckHuman(result: AuditResult) {
+  const { totalKeys, locales, summary, errors, valid, changesOnly, ref } =
+    result
+
+  console.log(`i18n audit${changesOnly ? ` (changes vs ${ref})` : ''}`)
+  console.log(`  en-US source: ${totalKeys} keys`)
+  console.log(
+    `  locales: ${summary.localesAudited} audited, ${summary.localesComplete} complete, ${summary.localesWithMissing} with gaps`,
+  )
+  console.log(`  total missing keys: ${summary.totalMissing}`)
+  if (errors.length > 0) {
+    console.log(`  structural errors: ${errors.length}`)
+  }
+
+  const audited = Object.values(locales).sort((a, b) => {
+    if (a.missing !== b.missing) return b.missing - a.missing
+    return a.locale.localeCompare(b.locale)
+  })
+
+  const localeCol = Math.max(
+    'locale'.length,
+    ...audited.map((a) => a.locale.length),
+  )
+
+  if (audited.length > 0) {
+    console.log('')
+    console.log(
+      `  ${'locale'.padEnd(localeCol)}  ${'present'.padStart(7)}  ${'missing'.padStart(7)}  ${'coverage'.padStart(9)}`,
+    )
+    for (const a of audited) {
+      console.log(
+        `  ${a.locale.padEnd(localeCol)}  ${String(a.present).padStart(7)}  ${String(a.missing).padStart(7)}  ${formatPercent(a.coverage).padStart(9)}`,
+      )
+    }
+  }
+
+  const incomplete = audited.filter((a) => a.missing > 0)
+  if (incomplete.length > 0) {
+    console.log('')
+    for (const a of incomplete) {
+      console.log(`  ${a.locale} (${a.missing} missing):`)
+      for (const k of a.missingKeys) console.log(`    - ${k}`)
+    }
+  }
+
+  if (errors.length > 0) {
+    console.log('')
+    console.log('  structural errors:')
+    for (const e of errors) console.log(`    ${e}`)
+  }
+
+  if (valid && summary.totalMissing === 0) {
+    console.log('')
+    console.log('  OK — all locales in sync with en-US.')
+  } else {
+    console.log('')
+    console.log('  FAIL — see above.')
+  }
+}
+
 function help() {
   return [
     'Usage: bun i18n <command> [args]',
@@ -121,16 +188,28 @@ function help() {
     '  remove <path>                   Remove a key from en-US and all other locales (cleanup).',
     '  get <locale> <path>             Print the current value at a path.',
     '  list [locale]                   Print flat dotted keys (defaults to en-US).',
-    '  missing [--locale <l>] [--json] List keys missing in a locale (vs en-US).',
+    '  missing [--locale <l>] [--all] [--json]',
+    '                                  List keys missing in a locale (vs en-US).',
+    '                                  With --all, list missing keys for every non-en-US locale.',
     '  diff [--staged] [--ref <r>] [--locale <l>] [--json]',
     '                                  Show changes vs git, partitioned by translation work.',
+    '  check [--changes-only] [--locale <l>] [--ref <r>] [--json]',
+    '                                  Audit all locales. Exits 1 on orphan keys or missing keys.',
+    '                                  --changes-only: only flag missing keys introduced by the diff vs ref.',
     '  validate                        JSON-parse and check for orphan keys.',
     '  help                            Show this help.',
+    '',
+    'Exit codes:',
+    '  0  clean',
+    '  1  issues found (orphan keys or missing keys for `check` / `validate`)',
+    '  2  usage error or unknown locale / key',
     '',
     'Notes:',
     '  - `add` and `remove` only touch en-US.json.',
     '  - Use `set` to fill in a translation in another locale.',
     '  - Use `diff` to see what new translations a change introduces.',
+    '  - Use `check` as the canonical CI gate: `bun i18n check` exits 1 if any',
+    '    non-en-US locale is missing any key present in en-US.',
   ].join('\n')
 }
 
@@ -221,8 +300,26 @@ async function main() {
     }
 
     case 'missing': {
-      const locale = kvFlags.locale as Locale | undefined
       const json = flags.has('json')
+      if (flags.has('all')) {
+        if (kvFlags.locale) {
+          die('--all and --locale are mutually exclusive')
+        }
+        const allMissing = await missingKeysByLocale()
+        if (json) {
+          console.log(JSON.stringify(allMissing, null, 2))
+        } else {
+          let total = 0
+          for (const locale of locales.filter((l) => l !== 'en-US')) {
+            const missing = allMissing[locale]
+            total += missing.length
+            console.log(`${locale}: ${missing.length} missing`)
+          }
+          console.log(`Total: ${total} missing across all locales.`)
+        }
+        return
+      }
+      const locale = kvFlags.locale as Locale | undefined
       const target = locale ?? 'en-US'
       if (!isLocale(target)) die(`unknown locale: ${target}`)
       if (target === 'en-US') {
@@ -262,6 +359,30 @@ async function main() {
       console.error(`Found ${result.errors.length} error(s):`)
       for (const e of result.errors) console.error(`  ${e}`)
       process.exit(1)
+    }
+
+    case 'check': {
+      const json = flags.has('json')
+      const changesOnly = flags.has('changes-only')
+      const locale = kvFlags.locale as Locale | undefined
+      const ref = kvFlags.ref
+      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`)
+      if (locale === 'en-US') {
+        die('check is not meaningful for en-US (it is the source of truth)')
+      }
+
+      const result = await auditMessages({ changesOnly, locale, ref })
+
+      if (json) {
+        console.log(JSON.stringify(result, null, 2))
+      } else {
+        printCheckHuman(result)
+      }
+
+      if (!result.valid || result.summary.totalMissing > 0) {
+        process.exit(1)
+      }
+      return
     }
 
     default:

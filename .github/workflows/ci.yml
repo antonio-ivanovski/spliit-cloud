@@ -53,6 +53,9 @@ jobs:
       - name: Check Prettier formatting
         run: bun run check-formatting
 
+      - name: Audit translations
+        run: bun i18n check
+
       - name: Run Prisma migrations
         run: bun run prisma-migrate
 
