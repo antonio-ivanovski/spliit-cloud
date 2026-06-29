@@ -394,6 +394,182 @@ describe('expenseFormSchema', () => {
   })
 })
 
+describe('expenseFormSchema paidByList signed and migrated shapes', () => {
+  it('negative income expense with signed payer shares validates', () => {
+    // Negative-income flow: amount is negative, and each paidBy share is
+    // also negative. The sum (-700 + -300 = -1000) must equal amount.
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Refund',
+      category: 'general',
+      amount: -1000,
+      originalAmount: -1000,
+      originalCurrency: '',
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: 'p0', shares: -700 },
+        { participant: 'p1', shares: -300 },
+      ],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('positive expense with negative payer shares fails the sum check', () => {
+    // Same negative shares as above, but amount is positive, so the sum
+    // (-1000) cannot equal amount (1000). The inner per-share sign check
+    // must no longer reject this; the outer sum check should.
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      originalCurrency: '',
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: 'p0', shares: -700 },
+        { participant: 'p1', shares: -300 },
+      ],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some((i) => i.message === 'paidByAmountSum'),
+    ).toBe(true)
+  })
+
+  it('same-currency migrated shape: originalAmount set, originalCurrency null, validates against amount', () => {
+    // Migrated single-currency shape: originalAmount is populated by the
+    // migration but originalCurrency is null, so the BY_AMOUNT sum must be
+    // checked against amount, not originalAmount.
+    const ok = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      originalAmount: 1000,
+      originalCurrency: null,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 1000 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(ok.success).toBe(true)
+
+    // Same shape with originalCurrency '' (string) instead of null.
+    const okEmpty = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      originalAmount: 1000,
+      originalCurrency: '',
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 1000 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(okEmpty.success).toBe(true)
+  })
+
+  it('same-currency migrated shape: originalAmount differs from amount and sum tracks amount', () => {
+    // originalAmount is 2000 but originalCurrency is null, so we should
+    // validate against amount (1000). A sum of 1000 matches amount and
+    // is accepted even though it does not match originalAmount.
+    const matchesAmount = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      originalAmount: 2000,
+      originalCurrency: null,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 1000 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(matchesAmount.success).toBe(true)
+
+    // A sum of 1000 matches amount but not originalAmount (2000); with
+    // originalCurrency null the schema should accept the amount match.
+    // Now a sum that matches neither amount nor originalAmount fails.
+    const mismatchesBoth = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      originalAmount: 2000,
+      originalCurrency: null,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 1500 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(mismatchesBoth.success).toBe(false)
+    if (mismatchesBoth.success) return
+    expect(
+      mismatchesBoth.error.issues.some((i) => i.message === 'paidByAmountSum'),
+    ).toBe(true)
+  })
+
+  it('cross-currency: sum matching amount but not originalAmount is invalid', () => {
+    // Locks in that, when originalCurrency is set, the BY_AMOUNT sum is
+    // checked against originalAmount (not amount).
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 9200,
+      originalAmount: 10000,
+      originalCurrency: 'USD',
+      conversionRate: 0.92,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 9200 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some((i) => i.message === 'paidByAmountSum'),
+    ).toBe(true)
+  })
+})
+
 describe('expenseFormSchema cross-currency paidByList BY_AMOUNT', () => {
   it('paidByList BY_AMOUNT with originalCurrency EUR and shares summing to originalAmount is valid', () => {
     const result = expenseFormSchema.safeParse({

@@ -115,7 +115,7 @@ export const expenseFormSchema = z
       .superRefine((paidByList, ctx) => {
         for (const { shares } of paidByList) {
           const shareNumber = Number(shares)
-          if (shareNumber <= 0) {
+          if (shareNumber === 0) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: 'noZeroShares',
@@ -249,7 +249,9 @@ export const expenseFormSchema = z
       case 'BY_AMOUNT': {
         // Shares are in original currency when originalCurrency is set,
         // so the sum is checked against originalAmount instead of amount.
-        const target = new Decimal(expense.originalAmount ?? expense.amount)
+        const target = new Decimal(
+          expense.originalCurrency ? expense.originalAmount ?? expense.amount : expense.amount,
+        )
         const sum = expense.paidByList.reduce(
           (sum, { shares }) => new Decimal(shares).add(sum),
           new Decimal(0),
