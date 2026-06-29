@@ -82,7 +82,7 @@ describe('Expense CRUD — real DB', () => {
 
     const result = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Even Split',
         amount: 4000,
         paidByList: [{ participant: participantId, shares: 4000 }],
@@ -116,7 +116,7 @@ describe('Expense CRUD — real DB', () => {
 
     const result = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'By Amount Split',
         amount: 3000,
         paidByList: [{ participant: participantId, shares: 3000 }],
@@ -151,7 +151,7 @@ describe('Expense CRUD — real DB', () => {
 
     const result = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Percent Split',
         amount: 5000,
         paidByList: [{ participant: participantId, shares: 5000 }],
@@ -186,7 +186,7 @@ describe('Expense CRUD — real DB', () => {
 
     const result = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Shares Split',
         amount: 6000,
         paidByList: [{ participant: participantId, shares: 6000 }],
@@ -222,7 +222,7 @@ describe('Expense CRUD — real DB', () => {
     // Create expense
     const { expenseId } = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Original Title',
         amount: 1000,
         paidByList: [{ participant: participantId, shares: 1000 }],
@@ -243,7 +243,7 @@ describe('Expense CRUD — real DB', () => {
     await caller.expenses.update({
       groupId,
       expenseId,
-      expenseFormValues: {
+      expense: {
         title: 'Updated Title',
         amount: 1000,
         paidByList: [{ participant: participantId, shares: 1000 }],
@@ -275,7 +275,7 @@ describe('Expense CRUD — real DB', () => {
 
     const { expenseId } = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'To Delete',
         amount: 2000,
         paidByList: [{ participant: participantId, shares: 2000 }],
@@ -313,7 +313,7 @@ describe('Expense CRUD — real DB', () => {
 
     const result = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'No Documents',
         amount: 1500,
         paidByList: [{ participant: participantId, shares: 1500 }],

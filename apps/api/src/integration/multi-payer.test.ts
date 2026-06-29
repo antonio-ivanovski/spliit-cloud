@@ -1,6 +1,6 @@
 import { Parser } from '@json2csv/plainjs'
 import { prisma } from '@spliit/db'
-import { getBalances, type ExpenseApiPayload } from '@spliit/domain'
+import { getBalances, type Expense } from '@spliit/domain'
 import { parseSpliitExport } from '@spliit/domain/import'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
@@ -155,7 +155,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const result = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Trip',
         amount: 12000,
         expenseDate: new Date().toISOString(),
@@ -219,7 +219,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const result = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Split 50/50',
         amount: 10000,
         expenseDate: new Date().toISOString(),
@@ -255,7 +255,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const result = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Even Pay',
         amount: 10000,
         expenseDate: new Date().toISOString(),
@@ -297,7 +297,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const result = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'NYC trip',
         amount: 9200, // 10000 USD cents × 0.92 = 9200 EUR cents
         expenseDate: new Date().toISOString(),
@@ -378,7 +378,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const result = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'XC BY_AMOUNT',
         amount: 1090,
         expenseDate: new Date().toISOString(),
@@ -414,7 +414,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const create = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'XC Update',
         amount: 1090,
         expenseDate: new Date().toISOString(),
@@ -436,7 +436,7 @@ describe('Multi-payer expenses — real DB', () => {
     await makeCaller().expenses.update({
       groupId,
       expenseId: create.expenseId,
-      expenseFormValues: {
+      expense: {
         title: 'XC Update',
         amount: 1090,
         expenseDate: new Date().toISOString(),
@@ -471,7 +471,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const result = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'XC Get',
         amount: 1090,
         expenseDate: new Date().toISOString(),
@@ -506,7 +506,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const create = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Multi',
         amount: 10000,
         expenseDate: new Date().toISOString(),
@@ -528,7 +528,7 @@ describe('Multi-payer expenses — real DB', () => {
     await makeCaller().expenses.update({
       groupId,
       expenseId: create.expenseId,
-      expenseFormValues: {
+      expense: {
         title: 'Multi',
         amount: 10000,
         expenseDate: new Date().toISOString(),
@@ -557,7 +557,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const create = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Single',
         amount: 10000,
         expenseDate: new Date().toISOString(),
@@ -576,7 +576,7 @@ describe('Multi-payer expenses — real DB', () => {
     await makeCaller().expenses.update({
       groupId,
       expenseId: create.expenseId,
-      expenseFormValues: {
+      expense: {
         title: 'Single',
         amount: 10000,
         expenseDate: new Date().toISOString(),
@@ -615,7 +615,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     const result = await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Weekly groceries',
         amount: 6000,
         expenseDate: past.toISOString(),
@@ -680,7 +680,7 @@ describe('Multi-payer expenses — real DB', () => {
     // to settle.
     await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Lunch',
         amount: 3000,
         expenseDate: new Date().toISOString(),
@@ -773,7 +773,7 @@ describe('Multi-payer expenses — real DB', () => {
     // Multi-payer expense producing a non-zero balance.
     await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Beer run',
         amount: 4000,
         expenseDate: new Date().toISOString(),
@@ -826,7 +826,7 @@ describe('Multi-payer expenses — real DB', () => {
     // Both share the cost evenly (50% each).
     await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'CSV row',
         amount: 10000,
         expenseDate: new Date('2026-06-01T00:00:00.000Z'),
@@ -880,7 +880,7 @@ describe('Multi-payer expenses — real DB', () => {
 
     await makeCaller().expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'JSON row',
         amount: 4000,
         expenseDate: new Date().toISOString(),
@@ -1007,7 +1007,7 @@ describe('Multi-payer expenses — real DB', () => {
       documents: [],
       notes: undefined,
       recurrenceRule: e.recurrenceRule,
-    })) as unknown as ExpenseApiPayload[]
+    })) as unknown as Expense[]
 
     const result = await makeCaller().import({
       targetGroupId: groupId,

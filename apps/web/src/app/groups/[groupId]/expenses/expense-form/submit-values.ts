@@ -1,6 +1,6 @@
 import type {
   Currency,
-  ExpenseApiPayload,
+  Expense,
   ExpenseFormInputValues,
 } from '@spliit/domain'
 import { amountAsMinorUnits, getCurrency } from '@spliit/domain'
@@ -15,7 +15,7 @@ export function buildSubmitValues(
     groupCurrency: Currency
     conversionRequired: boolean
   },
-): ExpenseApiPayload {
+): Expense {
   const { groupCurrency, conversionRequired } = args
 
   const amount = amountAsMinorUnits(values.amount, groupCurrency)
@@ -75,12 +75,13 @@ export function buildSubmitValues(
   }
 
   // Currency should be blank if same as group currency.
-  if (!conversionRequired) {
-    return base as ExpenseApiPayload
-  }
-  return {
+  // Explicit construction avoids `as Expense` casts that paper
+  // over loose optional-field inference from the `base` object spread.
+  const payload: Expense = {
     ...base,
-    originalAmount,
-    originalCurrency: values.originalCurrency ?? undefined,
-  } as ExpenseApiPayload
+    ...(conversionRequired
+      ? { originalAmount, originalCurrency: values.originalCurrency ?? undefined }
+      : {}),
+  }
+  return payload
 }

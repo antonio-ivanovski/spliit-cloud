@@ -86,12 +86,12 @@ export function EditExpenseForm({
       expense={expense}
       currentLedgerParticipantId={currentLedgerParticipantId}
       readOnly={readOnly}
-      onSubmit={async (expenseFormValues) => {
+      onSubmit={async (expense) => {
         if (readOnly) return
         await updateExpenseMutateAsync({
           expenseId,
           groupId,
-          expenseFormValues,
+          expense,
         })
         await utils.groups.expenses.list.reset({
           groupId,

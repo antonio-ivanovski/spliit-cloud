@@ -191,7 +191,7 @@ describe('Group CRUD via existing API', () => {
         'groups.expenses.create',
         {
           groupId: testGroup.id,
-          expenseFormValues: {
+          expense: {
             title: 'Integration Dinner',
             amount: 2500,
             paidByList: [{ participant: participantId, shares: 2500 }],

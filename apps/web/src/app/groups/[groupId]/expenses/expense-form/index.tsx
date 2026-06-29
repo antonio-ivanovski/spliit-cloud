@@ -3,7 +3,7 @@ import { getCurrency } from '@/lib/currency'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import {
   expenseFormInputSchema,
-  type ExpenseApiPayload,
+  type Expense,
   type ExpenseFormInputValues,
 } from '@/lib/schemas'
 import { getCurrencyFromGroup } from '@/lib/utils'
@@ -32,7 +32,7 @@ export function ExpenseForm(props: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
   searchParams?: CreateExpenseSearch
-  onSubmit: (value: ExpenseApiPayload) => Promise<void>
+  onSubmit: (value: Expense) => Promise<void>
   onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
   currentLedgerParticipantId?: string | null

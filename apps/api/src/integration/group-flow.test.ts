@@ -128,7 +128,7 @@ describe('Group flow — real DB', () => {
     // Create expense
     const expResult = await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Groceries',
         amount: 2500, // €25.00 in cents
         paidByList: [{ participant: adminParticipant.id, shares: 2500 }],
@@ -249,7 +249,7 @@ describe('Group flow — real DB', () => {
     // Expense 1: admin paid $30, split EVENLY among 3 → $10 each
     await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Dinner',
         amount: 3000,
         paidByList: [{ participant: adminParticipant.id, shares: 3000 }],
@@ -273,7 +273,7 @@ describe('Group flow — real DB', () => {
     // Expense 2: member1 paid $15, split EVENLY among 3 → $5 each
     await caller.expenses.create({
       groupId,
-      expenseFormValues: {
+      expense: {
         title: 'Lunch',
         amount: 1500,
         paidByList: [{ participant: lp1.id, shares: 1500 }],

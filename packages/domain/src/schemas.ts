@@ -384,7 +384,7 @@ export const expenseApiSchema = z
     }
   })
 
-export type ExpenseApiPayload = z.infer<typeof expenseApiSchema>
+export type Expense = z.infer<typeof expenseApiSchema>
 
 export type SplittingOptions = {
   // Used for saving default splitting options in localStorage

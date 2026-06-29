@@ -1,6 +1,6 @@
 import {
   ActivityType,
-  Expense,
+  Expense as DbExpense,
   GroupInvitationStatus,
   GroupMemberStatus,
   GroupRole,
@@ -24,7 +24,7 @@ import {
   type Balances,
   type Category,
   type CategoryId,
-  type ExpenseApiPayload,
+  type Expense,
   type GroupFormValues,
   type Reimbursement,
 } from '@spliit/domain'
@@ -125,10 +125,10 @@ export async function createGroup(
 }
 
 export async function createExpense(
-  expenseFormValues: ExpenseApiPayload,
+  expense: Expense,
   groupId: string,
   actor: { accountId: string },
-): Promise<Expense> {
+): Promise<DbExpense> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
     include: { ledger: true },
@@ -162,8 +162,8 @@ export async function createExpense(
   const participantIds = new Set(participants.map((p) => p.id))
 
   for (const participantId of [
-    ...expenseFormValues.paidByList.map((p) => p.participant),
-    ...expenseFormValues.paidFor.map((p) => p.participant),
+    ...expense.paidByList.map((p) => p.participant),
+    ...expense.paidFor.map((p) => p.participant),
   ]) {
     if (!participantIds.has(participantId)) {
       throw new Error(`Invalid participant ID: ${participantId}`)
@@ -175,44 +175,44 @@ export async function createExpense(
     accountId: actor.accountId,
     ledgerParticipantId: actorLedgerParticipantId,
     expenseId,
-    data: expenseFormValues.title,
+    data: expense.title,
   })
 
   const isCreateRecurrence =
-    expenseFormValues.recurrenceRule !== RecurrenceRule.NONE
+    expense.recurrenceRule !== RecurrenceRule.NONE
   const recurringExpenseLinkPayload = isCreateRecurrence
     ? {
         id: randomId(),
         ledgerId,
         nextExpenseDate: calculateNextDate(
-          expenseFormValues.recurrenceRule as RecurrenceRule,
-          expenseFormValues.expenseDate,
+          expense.recurrenceRule as RecurrenceRule,
+          expense.expenseDate,
         ),
       }
     : undefined
 
-  const expense = await prisma.expense.create({
+  const createdExpense = await prisma.expense.create({
     data: {
       id: expenseId,
       ledgerId,
-      expenseDate: expenseFormValues.expenseDate,
-      categoryId: expenseFormValues.category,
-      amount: expenseFormValues.amount,
-      originalAmount: expenseFormValues.originalAmount,
-      originalCurrency: expenseFormValues.originalCurrency,
-      conversionRate: expenseFormValues.conversionRate,
-      title: expenseFormValues.title,
-      paidBySplitMode: expenseFormValues.paidBySplitMode,
+      expenseDate: expense.expenseDate,
+      categoryId: expense.category,
+      amount: expense.amount,
+      originalAmount: expense.originalAmount,
+      originalCurrency: expense.originalCurrency,
+      conversionRate: expense.conversionRate,
+      title: expense.title,
+      paidBySplitMode: expense.paidBySplitMode,
       paidByList: {
         createMany: {
-          data: expenseFormValues.paidByList.map((paidBy) => ({
+          data: expense.paidByList.map((paidBy) => ({
             ledgerParticipantId: paidBy.participant,
             shares: paidBy.shares,
           })),
         },
       },
-      splitMode: expenseFormValues.splitMode,
-      recurrenceRule: expenseFormValues.recurrenceRule,
+      splitMode: expense.splitMode,
+      recurrenceRule: expense.recurrenceRule,
       ...(recurringExpenseLinkPayload
         ? {
             recurringExpenseLink: {
@@ -222,16 +222,16 @@ export async function createExpense(
         : {}),
       paidFor: {
         createMany: {
-          data: expenseFormValues.paidFor.map((paidFor) => ({
+          data: expense.paidFor.map((paidFor) => ({
             ledgerParticipantId: paidFor.participant,
             shares: paidFor.shares,
           })),
         },
       },
-      isReimbursement: expenseFormValues.isReimbursement,
+      isReimbursement: expense.isReimbursement,
       documents: {
         createMany: {
-          data: expenseFormValues.documents.map((doc) => ({
+          data: expense.documents.map((doc) => ({
             id: randomId(),
             url: doc.url,
             width: doc.width,
@@ -239,15 +239,15 @@ export async function createExpense(
           })),
         },
       },
-      notes: expenseFormValues.notes,
+      notes: expense.notes,
     },
   })
 
-  for (const doc of expenseFormValues.documents) {
+  for (const doc of expense.documents) {
     await markS3ObjectAsOwned(doc.url)
   }
 
-  return expense
+  return createdExpense
 }
 
 export async function deleteExpense(
@@ -309,7 +309,7 @@ export async function getGroups(groupIds: string[]) {
 export async function updateExpense(
   groupId: string,
   expenseId: string,
-  expenseFormValues: ExpenseApiPayload,
+  expense: Expense,
   actor: { accountId: string },
 ) {
   const group = await prisma.group.findUnique({
@@ -343,8 +343,8 @@ export async function updateExpense(
   })
   const participantIds = new Set(participants.map((p) => p.id))
   for (const participantId of [
-    ...expenseFormValues.paidByList.map((p) => p.participant),
-    ...expenseFormValues.paidFor.map((p) => p.participant),
+    ...expense.paidByList.map((p) => p.participant),
+    ...expense.paidFor.map((p) => p.participant),
   ]) {
     if (!participantIds.has(participantId)) {
       throw new Error(`Invalid participant ID: ${participantId}`)
@@ -355,12 +355,12 @@ export async function updateExpense(
     accountId: actor.accountId,
     ledgerParticipantId: actorLedgerParticipantId,
     expenseId,
-    data: expenseFormValues.title,
+    data: expense.title,
   })
 
   const removedDocuments = existingExpense.documents.filter(
     (existingDoc) =>
-      !expenseFormValues.documents.some((doc) => doc.id === existingDoc.id),
+      !expense.documents.some((doc) => doc.id === existingDoc.id),
   )
   for (const doc of removedDocuments) {
     await deleteS3Object(doc.url)
@@ -368,49 +368,49 @@ export async function updateExpense(
 
   const isDeleteRecurrenceExpenseLink =
     existingExpense.recurrenceRule !== RecurrenceRule.NONE &&
-    expenseFormValues.recurrenceRule === RecurrenceRule.NONE &&
+    expense.recurrenceRule === RecurrenceRule.NONE &&
     existingExpense.recurringExpenseLink?.nextExpenseCreatedAt === null
 
   const isUpdateRecurrenceExpenseLink =
-    existingExpense.recurrenceRule !== expenseFormValues.recurrenceRule &&
+    existingExpense.recurrenceRule !== expense.recurrenceRule &&
     existingExpense.recurringExpenseLink?.nextExpenseCreatedAt === null
   const isCreateRecurrenceExpenseLink =
     existingExpense.recurrenceRule === RecurrenceRule.NONE &&
-    expenseFormValues.recurrenceRule !== RecurrenceRule.NONE &&
+    expense.recurrenceRule !== RecurrenceRule.NONE &&
     existingExpense.recurringExpenseLink === null
 
   const newRecurringExpenseLink = {
     id: randomId(),
     ledgerId: group.ledgerId,
     nextExpenseDate: calculateNextDate(
-      expenseFormValues.recurrenceRule as RecurrenceRule,
-      expenseFormValues.expenseDate,
+      expense.recurrenceRule as RecurrenceRule,
+      expense.expenseDate,
     ),
   }
 
   const updatedRecurrenceExpenseLinkNextExpenseDate = calculateNextDate(
-    expenseFormValues.recurrenceRule as RecurrenceRule,
+    expense.recurrenceRule as RecurrenceRule,
     existingExpense.expenseDate,
   )
 
-  const expense = await prisma.expense.update({
+  const createdExpense = await prisma.expense.update({
     where: { id: expenseId },
     data: {
-      expenseDate: expenseFormValues.expenseDate,
-      amount: expenseFormValues.amount,
-      originalAmount: expenseFormValues.originalAmount,
-      originalCurrency: expenseFormValues.originalCurrency,
-      conversionRate: expenseFormValues.conversionRate,
-      title: expenseFormValues.title,
-      categoryId: expenseFormValues.category,
-      paidBySplitMode: expenseFormValues.paidBySplitMode,
+      expenseDate: expense.expenseDate,
+      amount: expense.amount,
+      originalAmount: expense.originalAmount,
+      originalCurrency: expense.originalCurrency,
+      conversionRate: expense.conversionRate,
+      title: expense.title,
+      categoryId: expense.category,
+      paidBySplitMode: expense.paidBySplitMode,
       // Defensive: if the form somehow sends no paidBy rows, leave the
       // existing rows untouched rather than wiping them. The form schema
       // enforces a minimum of 1, so this branch is only a safety net.
-      ...(expenseFormValues.paidByList.length > 0
+      ...(expense.paidByList.length > 0
         ? {
             paidByList: {
-              create: expenseFormValues.paidByList
+              create: expense.paidByList
                 .filter(
                   (p) =>
                     !existingExpense.paidByList.some(
@@ -421,7 +421,7 @@ export async function updateExpense(
                   ledgerParticipantId: paidBy.participant,
                   shares: paidBy.shares,
                 })),
-              update: expenseFormValues.paidByList.map((paidBy) => ({
+              update: expense.paidByList.map((paidBy) => ({
                 where: {
                   expenseId_ledgerParticipantId: {
                     expenseId,
@@ -435,7 +435,7 @@ export async function updateExpense(
               deleteMany: existingExpense.paidByList
                 .filter(
                   (paidBy) =>
-                    !expenseFormValues.paidByList.some(
+                    !expense.paidByList.some(
                       (p) => p.participant === paidBy.ledgerParticipantId,
                     ),
                 )
@@ -446,10 +446,10 @@ export async function updateExpense(
             },
           }
         : {}),
-      splitMode: expenseFormValues.splitMode,
-      recurrenceRule: expenseFormValues.recurrenceRule,
+      splitMode: expense.splitMode,
+      recurrenceRule: expense.recurrenceRule,
       paidFor: {
-        create: expenseFormValues.paidFor
+        create: expense.paidFor
           .filter(
             (p) =>
               !existingExpense.paidFor.some(
@@ -460,7 +460,7 @@ export async function updateExpense(
             ledgerParticipantId: paidFor.participant,
             shares: paidFor.shares,
           })),
-        update: expenseFormValues.paidFor.map((paidFor) => ({
+        update: expense.paidFor.map((paidFor) => ({
           where: {
             expenseId_ledgerParticipantId: {
               expenseId,
@@ -473,7 +473,7 @@ export async function updateExpense(
         })),
         deleteMany: existingExpense.paidFor.filter(
           (paidFor) =>
-            !expenseFormValues.paidFor.some(
+            !expense.paidFor.some(
               (pf) => pf.participant === paidFor.ledgerParticipantId,
             ),
         ),
@@ -493,16 +493,16 @@ export async function updateExpense(
           : {}),
         delete: isDeleteRecurrenceExpenseLink,
       },
-      isReimbursement: expenseFormValues.isReimbursement,
+      isReimbursement: expense.isReimbursement,
       documents: {
-        connectOrCreate: expenseFormValues.documents.map((doc) => ({
+        connectOrCreate: expense.documents.map((doc) => ({
           create: doc,
           where: { id: doc.id },
         })),
         deleteMany: existingExpense.documents
           .filter(
             (existingDoc) =>
-              !expenseFormValues.documents.some(
+              !expense.documents.some(
                 (doc) => doc.id === existingDoc.id,
               ),
           )
@@ -510,15 +510,15 @@ export async function updateExpense(
             id: doc.id,
           })),
       },
-      notes: expenseFormValues.notes,
+      notes: expense.notes,
     },
   })
 
-  for (const doc of expenseFormValues.documents) {
+  for (const doc of expense.documents) {
     await markS3ObjectAsOwned(doc.url)
   }
 
-  return expense
+  return createdExpense
 }
 
 export async function updateGroup(
@@ -2011,7 +2011,7 @@ export type ImportInput = {
   targetGroupId?: string
   groupFormValues?: GroupFormValues
   participants: ImportParticipantMapping[]
-  expenses: ExpenseApiPayload[]
+  expenses: Expense[]
   sourceMeta?: ImportSourceMeta
 }
 

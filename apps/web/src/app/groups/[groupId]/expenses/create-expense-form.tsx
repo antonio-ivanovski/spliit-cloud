@@ -101,10 +101,10 @@ export function CreateExpenseForm({
       group={group}
       searchParams={searchParams}
       currentLedgerParticipantId={currentLedgerParticipantId}
-      onSubmit={async (expenseFormValues) => {
+      onSubmit={async (expense) => {
         await createExpenseMutateAsync({
           groupId,
-          expenseFormValues,
+          expense,
         })
         await utils.groups.expenses.list.reset({
           groupId,

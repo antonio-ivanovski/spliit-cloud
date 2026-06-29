@@ -9,11 +9,11 @@ export const updateGroupExpenseProcedure = protectedProcedure
     z.object({
       expenseId: z.string().min(1),
       groupId: z.string().min(1),
-      expenseFormValues: expenseApiSchema,
+      expense: expenseApiSchema,
     }),
   )
   .mutation(
-    async ({ input: { expenseId, groupId, expenseFormValues }, ctx }) => {
+    async ({ input: { expenseId, groupId, expense }, ctx }) => {
       const { group } = await loadGroupContext({
         groupId,
         accountId: ctx.auth.user.id,
@@ -24,12 +24,12 @@ export const updateGroupExpenseProcedure = protectedProcedure
           message: 'This group is archived and expenses cannot be modified',
         })
       }
-      const expense = await updateExpense(
+      const { id } = await updateExpense(
         groupId,
         expenseId,
-        expenseFormValues,
+        expense,
         { accountId: ctx.auth.user.id },
       )
-      return { expenseId: expense.id }
+      return { expenseId: id }
     },
   )

@@ -9,11 +9,28 @@ import {
   DEFAULT_CATEGORY_ID,
   PAYMENT_CATEGORY_ID,
   RecurrenceRule,
+  SplitMode as SplitModeEnum,
   amountAsDecimal,
   categoryIdSchema,
   getCurrency,
   randomId,
 } from '@spliit/domain'
+import { z } from 'zod'
+
+// Zod schema for the localStorage contract so pre-refactor string shares
+// ("60", "1") are caught and rejected instead of silently passing through
+// the JSON.parse cast.
+const storedSplittingOptionsSchema = z.object({
+  splitMode: z.nativeEnum(SplitModeEnum).default('EVENLY'),
+  paidFor: z
+    .array(
+      z.object({
+        participant: z.string(),
+        shares: z.number().finite(),
+      }),
+    )
+    .optional(),
+})
 
 export type GroupShape = NonNullable<AppRouterOutput['groups']['get']['group']>
 export type LoadedExpense = NonNullable<
@@ -43,13 +60,11 @@ export const getDefaultSplittingOptions = (
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY)
       if (!raw) return null
-      const parsed = JSON.parse(raw) as {
-        splitMode?: SplitMode
-        paidFor?: Array<{ participant: string; shares: number }>
-      }
+      const parsed = storedSplittingOptionsSchema.safeParse(JSON.parse(raw))
+      if (!parsed.success) return null
       const validIds = new Set(group.participants.map((p) => p.id))
-      const splitMode = parsed.splitMode ?? ('EVENLY' as const)
-      const paidFor = (parsed.paidFor ?? []).filter((row) =>
+      const splitMode = parsed.data.splitMode
+      const paidFor = (parsed.data.paidFor ?? []).filter((row) =>
         validIds.has(row.participant),
       )
       if (!paidFor.length) return null
@@ -74,16 +89,18 @@ export const getDefaultSplittingOptions = (
 
 export async function persistDefaultSplittingOptions(
   _groupId: string,
-  expenseFormValues: ExpenseFormInputValues,
+    formValues: ExpenseFormInputValues,
 ) {
-  if (!expenseFormValues.saveDefaultSplittingOptions) return
+  if (!formValues.saveDefaultSplittingOptions) return
   if (typeof window === 'undefined') return
   try {
     window.localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
-        splitMode: expenseFormValues.splitMode,
-        paidFor: expenseFormValues.paidFor.map(({ participant, shares }) => ({
+        splitMode: formValues.splitMode,
+        paidFor: formValues.paidFor.map(({ participant, shares }) => ({
+
+
           participant,
           shares,
         })),

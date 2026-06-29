@@ -280,6 +280,41 @@ describe('getDefaultSplittingOptions', () => {
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toHaveLength(2)
   })
+
+  it('rejects payloads where shares are strings (pre-refactor legacy) and falls back to EVENLY', () => {
+    localStorageMock.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        splitMode: 'BY_AMOUNT',
+        paidFor: [
+          { participant: 'lp-1', shares: '60' },
+          { participant: 'lp-2', shares: '40' },
+        ],
+      }),
+    )
+
+    const result = getDefaultSplittingOptions(mockGroup as any)
+    expect(result.splitMode).toBe('EVENLY')
+    expect(result.paidFor).toHaveLength(2)
+  })
+
+  it('rejects payloads where shares is null/undefined/missing and falls back to EVENLY', () => {
+    localStorageMock.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        splitMode: 'BY_PERCENTAGE',
+        paidFor: [
+          { participant: 'lp-1', shares: null },
+          { participant: 'lp-2', shares: undefined },
+          { participant: 'lp-1' }, // missing shares entirely
+        ],
+      }),
+    )
+
+    const result = getDefaultSplittingOptions(mockGroup as any)
+    expect(result.splitMode).toBe('EVENLY')
+    expect(result.paidFor).toHaveLength(2)
+  })
 })
 
 describe('buildExpenseFormDefaults (reimbursement branch)', () => {
