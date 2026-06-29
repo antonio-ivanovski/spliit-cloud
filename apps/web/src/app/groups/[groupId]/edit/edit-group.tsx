@@ -1,5 +1,3 @@
-'use client'
-
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { GroupForm } from '@/components/group-form'
 import Link from '@/components/link'

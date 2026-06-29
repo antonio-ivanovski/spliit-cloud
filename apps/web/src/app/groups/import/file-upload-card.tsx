@@ -1,5 +1,3 @@
-'use client'
-
 import { Card, CardContent } from '@/components/ui/card'
 import { FileUp } from 'lucide-react'
 import type { ChangeEvent, DragEvent } from 'react'

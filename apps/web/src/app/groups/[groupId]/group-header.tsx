@@ -1,5 +1,3 @@
-'use client'
-
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
 import Link from '@/components/link'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'

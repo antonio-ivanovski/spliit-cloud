@@ -1,5 +1,3 @@
-'use client'
-
 import GroupMembers from './members'
 
 export default function GroupMembersPage() {

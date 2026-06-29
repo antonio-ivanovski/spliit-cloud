@@ -1,5 +1,3 @@
-'use client'
-
 import { AuthPanel } from '@/components/auth/auth-panel'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'

@@ -1,5 +1,3 @@
-'use client'
-
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import Image from '@/components/app-image'
 import { Badge } from '@/components/ui/badge'

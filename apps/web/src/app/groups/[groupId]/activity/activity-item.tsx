@@ -1,4 +1,3 @@
-'use client'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'

@@ -1,5 +1,3 @@
-'use client'
-
 import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
 import {

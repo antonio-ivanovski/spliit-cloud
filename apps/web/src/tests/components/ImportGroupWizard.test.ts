@@ -1,4 +1,4 @@
-import { buildImportExpenses } from '@/app/groups/import/import-group-wizard'
+import { buildImportExpenses } from '@/app/groups/import/import-wizard-state'
 import { describe, expect, it } from 'vitest'
 
 describe('buildImportExpenses', () => {

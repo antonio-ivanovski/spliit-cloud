@@ -1,12 +1,10 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { NormalizedSource } from '@spliit/domain/import'
 import { AlertCircle, ArrowRightLeft, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { ParticipantMappingState } from './import-group-wizard'
+import type { ParticipantMappingState } from './import-wizard-state'
 
 type ImportInvite = NonNullable<
   AppRouterOutput['groups']['import']

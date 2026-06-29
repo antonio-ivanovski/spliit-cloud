@@ -1,4 +1,3 @@
-'use client'
 import { trpc } from '@/trpc/client'
 import { useEffect } from 'react'
 import { useCurrentGroup } from './current-group-context'

@@ -1,4 +1,3 @@
-'use client'
 import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'

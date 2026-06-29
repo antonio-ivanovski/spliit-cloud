@@ -1,5 +1,3 @@
-'use client'
-
 import { GroupForm } from '@/components/group-form'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from '@/lib/navigation'

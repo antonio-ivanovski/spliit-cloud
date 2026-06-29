@@ -1,5 +1,3 @@
-'use client'
-
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useCurrentAccount } from '@/lib/use-current-account'

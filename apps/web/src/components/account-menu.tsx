@@ -1,5 +1,3 @@
-'use client'
-
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,

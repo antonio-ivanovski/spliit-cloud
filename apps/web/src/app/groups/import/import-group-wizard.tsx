@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
@@ -9,7 +7,7 @@ import { trpc } from '@/trpc/client'
 import type {
   NormalizedSource,
   NormalizedSourceExpense,
-  NormalizedSourceParticipant,
+  ParticipantMappingState,
 } from '@spliit/domain/import'
 import {
   applyAutoMatch,
@@ -25,94 +23,18 @@ import { useTranslation } from 'react-i18next'
 import { ConfirmStep } from './confirm-step'
 import { DestinationStep } from './destination-step'
 import { DoneStep } from './done-step'
+import {
+  buildImportExpenses,
+  initialGroupFormValues,
+  type ImportMode,
+  type ImportStep,
+  type WizardState,
+} from './import-wizard-state'
 import { MappingStep } from './mapping-step'
 import { SourceStep } from './source-step'
 import { useImportSource } from './use-import-source'
 
 const importRoute = getRouteApi('/groups/import')
-
-export type ImportStep =
-  | 'source'
-  | 'destination'
-  | 'mapping'
-  | 'confirm'
-  | 'done'
-
-export type ImportMode = 'NEW_GROUP' | 'EXISTING_GROUP'
-
-export type ParticipantMappingMode =
-  | 'LINK_ACCOUNT'
-  | 'INVITE_BY_EMAIL'
-  | 'INVITE_BY_LINK'
-  | 'UNLINKED_PARTICIPANT'
-  | 'LINK_EXISTING_PARTICIPANT'
-
-export type ParticipantMappingState = {
-  key: string
-  source: NormalizedSourceParticipant
-  mode: ParticipantMappingMode
-  linkedAccountId?: string
-  inviteEmail?: string
-  /** Existing destination `LedgerParticipant.id` when mode === 'LINK_EXISTING_PARTICIPANT'. */
-  existingLedgerParticipantId?: string
-}
-
-type WizardState = {
-  step: ImportStep
-  source: NormalizedSource | null
-  prefillSourceUrl: string | null
-  mode: ImportMode | null
-  targetGroupId: string | null
-  groupFormValues: {
-    name: string
-    information: string
-    currency: string
-    currencyCode: string
-  }
-  participants: ParticipantMappingState[]
-  sourceIdToDestId: Record<string, string>
-  destIds: Record<string, string>
-  resolvedExpenses: NormalizedSourceExpense[]
-  /**
-   * Exchange rates pre-fetched for cross-currency expenses, keyed by
-   * `makeRateKey(date, base, target)`. Empty when no conversion is
-   * needed; `undefined` while the rates are still being fetched.
-   */
-  rates: ImportRatesByKey | null | undefined
-}
-
-const initialGroupFormValues = (source: NormalizedSource | null) => ({
-  name: source?.name ?? '',
-  information: '',
-  currency: source?.currency ?? '€',
-  currencyCode: source?.currencyCode ?? '',
-})
-
-/**
- * Map the batched expenses into the shape the import mutation expects.
- * The single-payer paidBy list uses `originalAmount` when `originalCurrency`
- * is set, so the cross-currency paidBy BY_AMOUNT sum check (which the
- * domain schema runs against `originalAmount`) passes. Otherwise the
- * ledger-currency `amount` is used.
- */
-export function buildImportExpenses<
-  T extends { paidBy: string; amount: number; originalAmount?: number },
->(
-  expenses: T[],
-): Array<
-  Omit<T, 'paidBy'> & {
-    paidByList: Array<{ participant: string; shares: number }>
-    paidBySplitMode: 'BY_AMOUNT'
-  }
-> {
-  return expenses.map(({ paidBy, ...rest }) => ({
-    ...rest,
-    paidByList: [
-      { participant: paidBy, shares: rest.originalAmount ?? rest.amount },
-    ],
-    paidBySplitMode: 'BY_AMOUNT' as const,
-  }))
-}
 
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
@@ -121,7 +43,6 @@ export function ImportGroupWizard() {
   const { toast } = useToast()
   const utils = trpc.useUtils()
   const prefillSourceUrl = search.source ?? null
-
   const { t } = useTranslation()
 
   const [state, setState] = useState<WizardState>(() => ({
@@ -153,12 +74,10 @@ export function ImportGroupWizard() {
     if (!sourceGroupId) return
     const key = `${sourceGroupId}::${state.targetGroupId}`
     if (autoMatchKeyRef.current === key) return
-
     setState((s) => ({
       ...s,
       participants: applyAutoMatch(s.participants, destinationParticipants),
     }))
-
     autoMatchKeyRef.current = key
   }, [
     state.mode,
@@ -167,6 +86,7 @@ export function ImportGroupWizard() {
     destinationParticipants,
   ])
 
+  // Import mutation
   const importMutation = trpc.groups.import.useMutation({
     onSuccess: async (data) => {
       await Promise.all([
@@ -182,15 +102,11 @@ export function ImportGroupWizard() {
       setState((s) => ({ ...s, step: 'done' }))
     },
     onError: (err) => {
-      toast({
-        description: err.message,
-        variant: 'destructive',
-      })
+      toast({ description: err.message, variant: 'destructive' })
     },
   })
 
-  // Push sentinel entries so the mobile back button walks the wizard
-  // steps in reverse instead of leaving the page.
+  // Navigation history
   useEffect(() => {
     if (typeof window === 'undefined') return
     window.history.pushState({ importWizard: true }, '')
@@ -234,7 +150,7 @@ export function ImportGroupWizard() {
     [account?.id],
   )
 
-  // ?source=<url> handoff — delegate to the same hook SourceStep uses.
+  // Source URL prefill
   const {
     data: sourcePreview,
     error: sourcePreviewError,
@@ -258,20 +174,14 @@ export function ImportGroupWizard() {
         variant: 'destructive',
       })
     } else {
-      toast({
-        description: sourcePreview.message,
-        variant: 'destructive',
-      })
+      toast({ description: sourcePreview.message, variant: 'destructive' })
     }
     setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
   }, [sourcePreview, state.source, handleSourceLoaded, toast, t])
   useEffect(() => {
     if (state.source) return
     if (!sourcePreviewError) return
-    toast({
-      description: sourcePreviewError.message,
-      variant: 'destructive',
-    })
+    toast({ description: sourcePreviewError.message, variant: 'destructive' })
     setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
   }, [sourcePreviewError, state.source, toast])
 
@@ -314,9 +224,6 @@ export function ImportGroupWizard() {
       resolvedExpenses: NormalizedSourceExpense[]
     }) => {
       window.history.pushState({ importWizard: true }, '')
-      // `rates: undefined` triggers the tRPC batched fetch on the
-      // confirm step; an empty object means "no conversion needed"
-      // (source and destination currencies match).
       setState((s) => ({
         ...s,
         sourceIdToDestId: resolved.sourceIdToDestId,
@@ -329,19 +236,13 @@ export function ImportGroupWizard() {
     [],
   )
 
-  // Resolve the destination ledger's currency code. For existing groups
-  // we wait for `destinationGroupData` so we never fetch a rate against
-  // a stale or empty target.
+  // Rate computation
   const destinationCurrencyCode =
     state.mode === 'EXISTING_GROUP'
       ? (destinationGroupData?.group?.currencyCode ?? '')
       : state.groupFormValues.currencyCode
   const sourceCurrencyCode = state.source?.currencyCode ?? ''
 
-  // The unique rate lookups required for this import, computed from the
-  // resolved expenses + source/destination currencies. An empty array
-  // means the source and destination currencies match and no fetch is
-  // needed.
   const rateKeyItems = useMemo(() => {
     if (state.step !== 'confirm') return []
     return computeImportRateKeys(
@@ -368,10 +269,6 @@ export function ImportGroupWizard() {
     },
   )
 
-  // Reconcile the tRPC response into a rates map keyed by
-  // `makeRateKey(date, base, target)`. Any per-item failure collapses
-  // the whole batch into `null` so the import is blocked with a clear
-  // message instead of silently using a half-complete rate set.
   const ratesFromQuery: ImportRatesByKey | null | undefined = useMemo(() => {
     if (rateKeyItems.length === 0) return {}
     if (ratesQuery.isLoading || ratesQuery.isFetching) return undefined
@@ -392,8 +289,6 @@ export function ImportGroupWizard() {
     ratesQuery.isFetching,
   ])
 
-  // Persist the resolved rates back into wizard state so the submit
-  // handler reads a stable value rather than re-querying.
   useEffect(() => {
     if (state.step !== 'confirm') return
     if (state.rates === ratesFromQuery) return
@@ -402,9 +297,6 @@ export function ImportGroupWizard() {
     )
   }, [state.step, state.rates, ratesFromQuery])
 
-  // Surface a friendly status object to the confirm step. `idle` means
-  // no cross-currency conversion is needed; `loading` and `error`
-  // reflect the tRPC batched rate fetch.
   const confirmRatesStatus = useMemo<
     | { kind: 'idle' }
     | { kind: 'loading' }
@@ -418,12 +310,6 @@ export function ImportGroupWizard() {
     return { kind: 'ready' }
   }, [state.step, rateKeyItems.length, ratesFromQuery])
 
-  // Displayable currency conversion entries: one row per
-  // `(date, base, target)` triple, paired with the rate the provider
-  // returned. The list is built in input order so the confirm step can
-  // show rates alongside the dates they apply to. We only emit entries
-  // when the tRPC batch succeeded — the error / loading banners already
-  // handle the other states.
   const currencyConversions = useMemo<
     Array<{
       date: string
@@ -453,9 +339,6 @@ export function ImportGroupWizard() {
     if (!state.source) return
     if (!state.mode) return
     if (!account) return
-    // Cross-currency imports must wait until the rates are ready and
-    // must block when the fetch failed — silently falling back would
-    // store source-currency amounts in the destination ledger.
     if (rateKeyItems.length > 0) {
       if (state.rates === undefined || state.rates === null) {
         toast({
