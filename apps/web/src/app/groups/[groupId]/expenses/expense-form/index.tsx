@@ -79,7 +79,7 @@ export function ExpenseForm(props: {
 
   const submit = async (values: ExpenseFormValues) => {
     if (props.readOnly) return
-    await persistDefaultSplittingOptions(props.group.id, values)
+    await persistDefaultSplittingOptions(props.group.id, form.getValues())
     return props.onSubmit(
       buildSubmitValues(values, {
         groupCurrency,

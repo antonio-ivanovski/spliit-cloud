@@ -22,11 +22,39 @@ export const parseCategoryIdFromUrl = (raw: string | null | undefined) => {
   return parsed.success ? parsed.data : DEFAULT_CATEGORY_ID
 }
 
+const STORAGE_KEY = 'spliit.defaultSplittingOptions'
+
 export const getDefaultSplittingOptions = (group: GroupShape) => {
-  // Default splitting: all ledger participants (active members + pending
-  // invitations), evenly. We no longer read per-device splitting defaults
-  // from localStorage; server-backed account preferences can replace this in
-  // a future pass.
+  const fromStorage = (() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY)
+      if (!raw) return null
+      const parsed = JSON.parse(raw) as {
+        splitMode?: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
+        paidFor?: Array<{ participant: string; shares: string | number }>
+      }
+      const validIds = new Set(group.participants.map((p) => p.id))
+      const paidFor = (parsed.paidFor ?? [])
+        .filter((row) => validIds.has(row.participant))
+        .map((row) => ({
+          participant: row.participant,
+          shares: Number(row.shares) as any,
+        }))
+      if (!paidFor.length) return null
+      return {
+        splitMode: parsed.splitMode ?? ('EVENLY' as const),
+        paidFor,
+      }
+    } catch {
+      return null
+    }
+  })()
+
+  if (fromStorage) {
+    return fromStorage
+  }
+
   return {
     splitMode: 'EVENLY' as const,
     paidFor: group.participants.map(({ id }) => ({
@@ -38,11 +66,21 @@ export const getDefaultSplittingOptions = (group: GroupShape) => {
 
 export async function persistDefaultSplittingOptions(
   _groupId: string,
-  _expenseFormValues: ExpenseFormValues,
+  expenseFormValues: ExpenseFormValues,
 ) {
-  // No-op: per-device splitting defaults were stored in localStorage before
-  // the account-backed product. Server-backed account preferences can replace
-  // this in a future pass.
+  if (!expenseFormValues.saveDefaultSplittingOptions) return
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        splitMode: expenseFormValues.splitMode,
+        paidFor: expenseFormValues.paidFor,
+      }),
+    )
+  } catch {
+    // localStorage may be unavailable (private mode, quota); fail silently.
+  }
 }
 
 export function buildExpenseFormDefaults(args: {

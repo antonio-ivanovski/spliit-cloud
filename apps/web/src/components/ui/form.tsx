@@ -157,7 +157,7 @@ const FormMessage = React.forwardRef<
     // The Zod schema codes (e.g. "min1", "duplicateParticipantName") map
     // 1:1 to keys under `SchemaErrors`. If the key exists, translate it;
     // otherwise fall back to the raw message text.
-    const translated = i18n.exists(raw) ? t(raw as never) : raw
+    const translated = i18n.exists(`SchemaErrors.${raw}`) ? t(raw as never) : raw
     body = translated
   } else {
     body = children
