@@ -90,6 +90,7 @@ Spliit Cloud may be useful if you want:
 - [x] Upload and attach images to expenses
 - [x] Create expense by scanning a receipt
 - [x] Cloud accounts and group synchronization
+- [x] Multi-payer expenses — split the cost paid by several members with per-payer shares
 
 ## Roadmap
 
