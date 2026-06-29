@@ -162,7 +162,7 @@ export async function createExpense(
   const participantIds = new Set(participants.map((p) => p.id))
 
   for (const participantId of [
-    expenseFormValues.paidBy,
+    ...expenseFormValues.paidByList.map((p) => p.participant),
     ...expenseFormValues.paidFor.map((p) => p.participant),
   ]) {
     if (!participantIds.has(participantId)) {
@@ -202,7 +202,15 @@ export async function createExpense(
       originalCurrency: expenseFormValues.originalCurrency,
       conversionRate: expenseFormValues.conversionRate,
       title: expenseFormValues.title,
-      paidById: expenseFormValues.paidBy,
+      paidBySplitMode: expenseFormValues.paidBySplitMode,
+      paidByList: {
+        createMany: {
+          data: expenseFormValues.paidByList.map((paidBy) => ({
+            ledgerParticipantId: paidBy.participant,
+            shares: paidBy.shares,
+          })),
+        },
+      },
       splitMode: expenseFormValues.splitMode,
       recurrenceRule: expenseFormValues.recurrenceRule,
       ...(recurringExpenseLinkPayload
@@ -276,7 +284,7 @@ export async function getGroupExpensesParticipants(groupId: string) {
   return Array.from(
     new Set(
       expenses.flatMap((e) => [
-        e.paidBy.id,
+        ...e.paidByList.map((pb) => pb.ledgerParticipant.id),
         ...e.paidFor.map((pf) => pf.ledgerParticipant.id),
       ]),
     ),
@@ -335,7 +343,7 @@ export async function updateExpense(
   })
   const participantIds = new Set(participants.map((p) => p.id))
   for (const participantId of [
-    expenseFormValues.paidBy,
+    ...expenseFormValues.paidByList.map((p) => p.participant),
     ...expenseFormValues.paidFor.map((p) => p.participant),
   ]) {
     if (!participantIds.has(participantId)) {
@@ -395,7 +403,49 @@ export async function updateExpense(
       conversionRate: expenseFormValues.conversionRate,
       title: expenseFormValues.title,
       categoryId: expenseFormValues.category,
-      paidById: expenseFormValues.paidBy,
+      paidBySplitMode: expenseFormValues.paidBySplitMode,
+      // Defensive: if the form somehow sends no paidBy rows, leave the
+      // existing rows untouched rather than wiping them. The form schema
+      // enforces a minimum of 1, so this branch is only a safety net.
+      ...(expenseFormValues.paidByList.length > 0
+        ? {
+            paidByList: {
+              create: expenseFormValues.paidByList
+                .filter(
+                  (p) =>
+                    !existingExpense.paidByList.some(
+                      (pb) => pb.ledgerParticipantId === p.participant,
+                    ),
+                )
+                .map((paidBy) => ({
+                  ledgerParticipantId: paidBy.participant,
+                  shares: paidBy.shares,
+                })),
+              update: expenseFormValues.paidByList.map((paidBy) => ({
+                where: {
+                  expenseId_ledgerParticipantId: {
+                    expenseId,
+                    ledgerParticipantId: paidBy.participant,
+                  },
+                },
+                data: {
+                  shares: paidBy.shares,
+                },
+              })),
+              deleteMany: existingExpense.paidByList
+                .filter(
+                  (paidBy) =>
+                    !expenseFormValues.paidByList.some(
+                      (p) => p.participant === paidBy.ledgerParticipantId,
+                    ),
+                )
+                .map(({ ledgerParticipantId, shares }) => ({
+                  ledgerParticipantId,
+                  shares,
+                })),
+            },
+          }
+        : {}),
       splitMode: expenseFormValues.splitMode,
       recurrenceRule: expenseFormValues.recurrenceRule,
       paidFor: {
@@ -706,15 +756,21 @@ export async function getGroupExpenses(
       expenseDate: true,
       id: true,
       isReimbursement: true,
-      paidBy: {
+      paidBySplitMode: true,
+      paidByList: {
         select: {
-          id: true,
-          groupMember: { select: { account: { select: { name: true } } } },
-          invitations: {
-            select: { email: true, temporaryName: true },
-            take: 1,
-            orderBy: { createdAt: 'desc' },
+          ledgerParticipant: {
+            select: {
+              id: true,
+              groupMember: { select: { account: { select: { name: true } } } },
+              invitations: {
+                select: { email: true, temporaryName: true },
+                take: 1,
+                orderBy: { createdAt: 'desc' },
+              },
+            },
           },
+          shares: true,
         },
       },
       paidFor: {
@@ -749,15 +805,18 @@ export async function getGroupExpenses(
     take: options && options.length,
   })
 
-  // Flatten paidBy and paidFor.ledgerParticipant to the { id, name } shape
-  // the rest of the app expects. The display name is resolved at read time
-  // through `resolveParticipantDisplayName`.
+  // Flatten paidByList.ledgerParticipant and paidFor.ledgerParticipant to the
+  // { id, name } shape the rest of the app expects. The display name is
+  // resolved at read time through `resolveParticipantDisplayName`.
   return rows.map((row) => ({
     ...row,
-    paidBy: {
-      id: row.paidBy.id,
-      name: resolveParticipantDisplayName(row.paidBy),
-    },
+    paidByList: row.paidByList.map((pb) => ({
+      ledgerParticipant: {
+        id: pb.ledgerParticipant.id,
+        name: resolveParticipantDisplayName(pb.ledgerParticipant),
+      },
+      shares: pb.shares,
+    })),
     paidFor: row.paidFor.map((pf) => ({
       ledgerParticipant: {
         id: pf.ledgerParticipant.id,
@@ -788,7 +847,7 @@ export async function getExpense(groupId: string, expenseId: string) {
   const expense = await prisma.expense.findFirst({
     where: { id: expenseId, ledgerId: group.ledgerId },
     include: {
-      paidBy: true,
+      paidByList: { include: { ledgerParticipant: true } },
       paidFor: true,
       documents: true,
       recurringExpenseLink: true,
@@ -918,10 +977,30 @@ export async function createRecurringExpenses() {
           },
         },
       },
-      include: {
+      select: {
+        id: true,
+        ledgerId: true,
+        nextExpenseCreatedAt: true,
+        nextExpenseDate: true,
         currentFrameExpense: {
-          include: {
-            paidBy: { select: { id: true } },
+          select: {
+            id: true,
+            ledgerId: true,
+            expenseDate: true,
+            title: true,
+            categoryId: true,
+            amount: true,
+            originalAmount: true,
+            originalCurrency: true,
+            conversionRate: true,
+            splitMode: true,
+            recurrenceRule: true,
+            isReimbursement: true,
+            notes: true,
+            paidBySplitMode: true,
+            paidByList: {
+              select: { ledgerParticipantId: true, shares: true },
+            },
             paidFor: { select: { ledgerParticipantId: true, shares: true } },
             documents: {
               select: { id: true, url: true, width: true, height: true },
@@ -947,7 +1026,7 @@ export async function createRecurringExpenses() {
       )
 
       const {
-        paidBy,
+        paidByList,
         paidFor,
         documents,
         ...destructeredCurrentExpenseRecord
@@ -959,7 +1038,15 @@ export async function createRecurringExpenses() {
             data: {
               ...destructeredCurrentExpenseRecord,
               categoryId: currentExpenseRecord.categoryId,
-              paidById: currentExpenseRecord.paidById,
+              paidBySplitMode: currentExpenseRecord.paidBySplitMode,
+              paidByList: {
+                createMany: {
+                  data: currentExpenseRecord.paidByList.map((pb) => ({
+                    ledgerParticipantId: pb.ledgerParticipantId,
+                    shares: pb.shares,
+                  })),
+                },
+              },
               paidFor: {
                 createMany: {
                   data: currentExpenseRecord.paidFor.map((paidFor) => ({
@@ -988,7 +1075,7 @@ export async function createRecurringExpenses() {
             include: {
               paidFor: true,
               documents: true,
-              paidBy: true,
+              paidByList: true,
             },
           })
 
@@ -1056,6 +1143,10 @@ export async function getGroupBalances(groupId: string): Promise<Balances> {
   const rows = await getGroupExpenses(groupId)
   const expenses: BalanceExpense[] = rows.map((row) => ({
     ...row,
+    paidByList: row.paidByList.map((pb) => ({
+      shares: pb.shares,
+      participant: pb.ledgerParticipant,
+    })),
     paidFor: row.paidFor.map((pf) => ({
       shares: pf.shares,
       participant: pf.ledgerParticipant,
@@ -1163,7 +1254,12 @@ export async function createSettlementExpensesForArchive(
         // the manual reimbursement form (see `ExpenseForm` defaults).
         categoryId: PAYMENT_CATEGORY_ID,
         amount: leg.amount,
-        paidById: leg.from,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: {
+          createMany: {
+            data: [{ ledgerParticipantId: leg.from, shares: leg.amount }],
+          },
+        },
         splitMode: 'EVENLY',
         recurrenceRule: RecurrenceRule.NONE,
         isReimbursement: true,
@@ -1449,7 +1545,12 @@ export async function createSettlementExpensesForLeave(
         title: SETTLEMENT_ON_LEAVE_TITLE,
         categoryId: PAYMENT_CATEGORY_ID,
         amount: leg.amount,
-        paidById: leg.from,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: {
+          createMany: {
+            data: [{ ledgerParticipantId: leg.from, shares: leg.amount }],
+          },
+        },
         splitMode: 'EVENLY',
         recurrenceRule: RecurrenceRule.NONE,
         isReimbursement: true,
@@ -2164,14 +2265,35 @@ export async function importGroup(
       )
       // The web-supplied participant ids may have been discarded
       // (LINK_ACCOUNT reuses the existing member's participant id
-      // instead of creating a new row). Rewrite the paidBy /
+      // instead of creating a new row). Rewrite the paidByList /
       // paidFor references through the actual destination ids we
       // computed above.
-      const resolvedPaidBy = destIdByClientKey.get(expense.paidBy)
-      if (!resolvedPaidBy) {
-        throw new Error(
-          `Missing destination id for paidBy participant ${expense.paidBy}`,
+      const resolvedPaidByList = expense.paidByList
+        .map((paidBy) => {
+          const resolved = destIdByClientKey.get(paidBy.participant)
+          if (!resolved) return null
+          return {
+            ledgerParticipantId: resolved,
+            shares: paidBy.shares,
+          }
+        })
+        .filter(
+          (row): row is { ledgerParticipantId: string; shares: number } =>
+            row !== null,
         )
+      if (resolvedPaidByList.length === 0) {
+        throw new Error(
+          `Expense "${expense.title}" has no remaining paidBy participants after import resolution`,
+        )
+      }
+      const seenPaidByIds = new Set<string>()
+      for (const row of resolvedPaidByList) {
+        if (seenPaidByIds.has(row.ledgerParticipantId)) {
+          throw new Error(
+            `Expense "${expense.title}" has two paidBy entries for the same LedgerParticipant (${row.ledgerParticipantId}). Each source participant must map to a unique destination.`,
+          )
+        }
+        seenPaidByIds.add(row.ledgerParticipantId)
       }
       const resolvedPaidFor: Array<{
         ledgerParticipantId: string
@@ -2216,7 +2338,12 @@ export async function importGroup(
           originalAmount: expense.originalAmount,
           originalCurrency: expense.originalCurrency,
           conversionRate: expense.conversionRate,
-          paidById: resolvedPaidBy,
+          paidBySplitMode: expense.paidBySplitMode,
+          paidByList: {
+            createMany: {
+              data: resolvedPaidByList,
+            },
+          },
           splitMode: expense.splitMode,
           recurrenceRule: expense.recurrenceRule,
           isReimbursement: expense.isReimbursement,
@@ -2507,21 +2634,19 @@ export async function linkUnlinkedParticipantToAccount(opts: {
 }
 
 /**
- * Rewrite all `Expense.paidById` and `ExpensePaidFor.ledgerParticipantId`
- * references from one `LedgerParticipant` id to another, then delete the
- * source row. Used by the unlinked-LP merge paths (into an existing
- * account-backed LP, or into a pending invitation's materialized LP).
- * Caller is responsible for confirming the source row is no longer
- * referenced before deletion.
+ * Rewrite all `ExpensePaidBy.ledgerParticipantId` and
+ * `ExpensePaidFor.ledgerParticipantId` references from one
+ * `LedgerParticipant` id to another. Caller is responsible for confirming
+ * the source row is no longer referenced before deletion.
  */
 export async function mergeLedgerParticipantReferences(
   tx: Prisma.TransactionClient,
   opts: { sourceId: string; targetId: string },
 ): Promise<void> {
   const { sourceId, targetId } = opts
-  await tx.expense.updateMany({
-    where: { paidById: sourceId },
-    data: { paidById: targetId },
+  await tx.expensePaidBy.updateMany({
+    where: { ledgerParticipantId: sourceId },
+    data: { ledgerParticipantId: targetId },
   })
   await tx.expensePaidFor.updateMany({
     where: { ledgerParticipantId: sourceId },

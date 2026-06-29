@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",
     "receivedBy": "Отримано <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "receivedByMultiple": "Отримано <paidByNames></paidByNames> за <paidFor></paidFor>",
     "yourBalance": "Ваш баланс:",
+    "paidByMultiple": "Сплачено <paidByNames></paidByNames> за <paidFor></paidFor>",
     "everyone": "всі",
     "notInvolved": "Ви не берете участі",
     "settlementBadge": "Розрахунок"
@@ -477,6 +479,7 @@
       "byAmount": "Нерівномірно – за сумами",
       "saveAsDefault": "Зберегти як параметри поділу за замовчуванням"
     },
+    "paidByAdvancedOptions": "Розширені опції платника…",
     "DeletePopup": {
       "label": "Видалити",
       "title": "Видалити цю витрату?",
@@ -491,7 +494,20 @@
     "saving": "Збереження..",
     "cancel": "Скасувати",
     "reimbursement": "Відшкодування",
-    "readOnlyNotice": "Цю групу заархівовано. Витрата відображається лише для читання."
+    "readOnlyNotice": "Цю групу заархівовано. Витрата відображається лише для читання.",
+    "PaidBySplitModeField": {
+      "label": "Режим поділу платника"
+    },
+    "ParticipantDistribution": {
+      "missing": "Бракує {missing} з {total}",
+      "surplus": "Надлишок: {extra} з {total}",
+      "matches": "✓ Збігається з {total}",
+      "evenlySplit": "Поділено порівну: {amount} × {count}",
+      "sharesTotal": "Загальна вага: {sum} часток",
+      "percentageMatches": "✓ Збігається 100%",
+      "percentageMissing": "Бракує {pct}%",
+      "percentageSurplus": "Надлишок: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "paidForMin1": "Витрата повинна бути сплачена принаймні для одного учасника",
     "noZeroShares": "Усі частки повинні бути більшими за 0",
     "amountSum": "Сума повинна відповідати витраті",
-    "percentageSum": "Сума відсотків повинна дорівнювати 100"
+    "percentageSum": "Сума відсотків повинна дорівнювати 100",
+    "paidByMin1": "Повинен бути обраний щонайменше один платник.",
+    "paidByAmountSum": "Сума платників має дорівнювати сумі витрати.",
+    "paidByPercentageSum": "Сума відсотків платників має становити 100.",
+    "duplicateParticipant": "Інший платник уже обраний."
   },
   "Categories": {
     "search": "Шукати категорію..",

@@ -74,7 +74,8 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       originalAmount: true,
       originalCurrency: true,
       conversionRate: true,
-      paidById: true,
+      paidBySplitMode: true,
+      paidByList: { select: { ledgerParticipantId: true, shares: true } },
       paidFor: { select: { ledgerParticipantId: true, shares: true } },
       isReimbursement: true,
       splitMode: true,
@@ -88,7 +89,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       m.ledgerParticipant ? [m.ledgerParticipant.id] : [],
     ),
     ...expenses.flatMap((expense) => [
-      expense.paidById,
+      ...expense.paidByList.map((pb) => pb.ledgerParticipantId),
       ...expense.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
     ]),
   ])
@@ -165,7 +166,14 @@ export async function exportGroupCsv(request: Request, groupId: string) {
           { totalShares: 0, participantShare: 0 },
         )
 
-        const isPaidByParticipant = expense.paidById === participant.id
+        const totalPaidByShares =
+          expense.paidByList.reduce((s, pb) => s + pb.shares, 0) || 1
+        const payerShare =
+          expense.paidByList.find(
+            (pb) => pb.ledgerParticipantId === participant.id,
+          )?.shares ?? 0
+        const payerAmount = (expense.amount * payerShare) / totalPaidByShares
+
         const participantAmountShare = +formatAmountAsDecimal(
           (expense.amount / totalShares) * participantShare,
           currency,
@@ -173,7 +181,10 @@ export async function exportGroupCsv(request: Request, groupId: string) {
 
         return [
           participant.id,
-          participantAmountShare * (isPaidByParticipant ? 1 : -1),
+          +formatAmountAsDecimal(
+            payerAmount - participantAmountShare,
+            currency,
+          ),
         ]
       }),
     ),

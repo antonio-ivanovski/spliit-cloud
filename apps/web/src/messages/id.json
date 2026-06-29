@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
+    "paidByMultiple": "Dibayar oleh <paidByNames></paidByNames> untuk <paidFor></paidFor>",
     "everyone": "semua orang",
     "receivedBy": "Diterima oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
+    "receivedByMultiple": "Diterima oleh <paidByNames></paidByNames> untuk <paidFor></paidFor>",
     "yourBalance": "Saldo Anda:",
     "notInvolved": "Anda tidak terlibat",
     "settlementBadge": "Penyelesaian"
@@ -474,6 +476,7 @@
       "byAmount": "Tidak merata – Berdasarkan jumlah",
       "saveAsDefault": "Simpan sebagai opsi pembagian default"
     },
+    "paidByAdvancedOptions": "Opsi lanjutan pembayaran…",
     "DeletePopup": {
       "label": "Hapus",
       "title": "Hapus pengeluaran?",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "(diundang)"
     },
-    "readOnlyNotice": "Grup ini diarsipkan. Pengeluaran ditampilkan hanya-baca."
+    "readOnlyNotice": "Grup ini diarsipkan. Pengeluaran ditampilkan hanya-baca.",
+    "PaidBySplitModeField": {
+      "label": "Mode pembagian pembayaran"
+    },
+    "ParticipantDistribution": {
+      "missing": "Kurang {missing} dari {total}",
+      "surplus": "Lebih: {extra} dari {total}",
+      "matches": "✓ Sesuai {total}",
+      "evenlySplit": "Dibagi rata: {amount} × {count}",
+      "sharesTotal": "Bobot total: {sum} bagian",
+      "percentageMatches": "✓ Sesuai 100%",
+      "percentageMissing": "Kurang {pct}%",
+      "percentageSurplus": "Lebih: {pct}%"
+    }
   },
   "Currencies": {
     "custom": {
@@ -795,7 +811,11 @@
     "paidForMin1": "Pengeluaran harus dibayarkan untuk setidaknya satu peserta.",
     "noZeroShares": "Semua porsi harus lebih tinggi dari 0.",
     "amountSum": "Total harus sama dengan jumlah pengeluaran.",
-    "percentageSum": "Total persentase harus sama dengan 100."
+    "percentageSum": "Total persentase harus sama dengan 100.",
+    "paidByMin1": "Setidaknya satu pembayar harus dipilih.",
+    "paidByAmountSum": "Total jumlah pembayaran harus sama dengan jumlah pengeluaran.",
+    "paidByPercentageSum": "Total persentase pembayaran harus sama dengan 100.",
+    "duplicateParticipant": "Pembayar lain sudah dipilih."
   },
   "Categories": {
     "search": "Cari kategori...",

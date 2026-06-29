@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Pagada per <strong>{paidBy}</strong> per a <paidFor></paidFor>",
     "receivedBy": "Debuda per <strong>{paidBy}</strong> para <paidFor></paidFor>",
+    "receivedByMultiple": "Rebut per <paidByNames></paidByNames> per a <paidFor></paidFor>",
     "yourBalance": "El teu balanç: balance:",
+    "paidByMultiple": "Pagat per <paidByNames></paidByNames> per a <paidFor></paidFor>",
     "everyone": "totes",
     "notInvolved": "No ets implicat o implicada",
     "settlementBadge": "Liquidació"
@@ -453,6 +455,7 @@
       "byAmount": "Desigual: Per quantitat",
       "saveAsDefault": "Desa com a mode preferit"
     },
+    "paidByAdvancedOptions": "Opcions avançades de pagador…",
     "DeletePopup": {
       "label": "Esborrar",
       "title": "Esborrar la despesa?",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "(convidat)"
     },
-    "readOnlyNotice": "Aquest grup està arxivat. La despesa es mostra només de lectura."
+    "readOnlyNotice": "Aquest grup està arxivat. La despesa es mostra només de lectura.",
+    "PaidBySplitModeField": {
+      "label": "Mode de divisió del pagador"
+    },
+    "ParticipantDistribution": {
+      "missing": "Falta {missing} de {total}",
+      "surplus": "Excés: {extra} de {total}",
+      "matches": "✓ Coincideix {total}",
+      "evenlySplit": "Dividit equitativament: {amount} × {count}",
+      "sharesTotal": "Pes total: {sum} parts",
+      "percentageMatches": "✓ Coincideix 100%",
+      "percentageMissing": "Falta {pct}%",
+      "percentageSurplus": "Excés: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "Totes les participacions han de ser superiors a 0",
     "amountSum": "La suma dels imports ha de ser igual a la suma de la despesa",
     "percentageSum": "La suma dels percentatges ha de ser igual a 100",
-    "ratePositive": "La taxa ha de ser estrictament major que zero."
+    "ratePositive": "La taxa ha de ser estrictament major que zero.",
+    "paidByMin1": "Cal seleccionar almenys un pagador.",
+    "paidByAmountSum": "La suma dels imports dels pagadors ha de ser igual a l'import de la despesa.",
+    "paidByPercentageSum": "La suma dels percentatges dels pagadors ha de ser 100.",
+    "duplicateParticipant": "Un altre pagador ja està seleccionat."
   },
   "Categories": {
     "search": "Cercar categoria...",

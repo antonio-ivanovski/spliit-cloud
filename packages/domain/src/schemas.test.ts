@@ -10,7 +10,8 @@ describe('expenseFormSchema', () => {
       originalAmount: undefined,
       originalCurrency: '',
       conversionRate: undefined,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [{ participant: 'p0', shares: 1 }],
       splitMode: 'EVENLY',
       saveDefaultSplittingOptions: false,
@@ -32,7 +33,8 @@ describe('expenseFormSchema', () => {
       originalAmount: undefined,
       originalCurrency: '',
       conversionRate: undefined,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [{ participant: 'p0', shares: 1 }],
       splitMode: 'EVENLY',
       saveDefaultSplittingOptions: false,
@@ -51,7 +53,8 @@ describe('expenseFormSchema', () => {
       category: 'general',
       amount: 1000,
       originalCurrency: '',
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [{ participant: 'p0', shares: 1 }],
       splitMode: 'EVENLY',
       saveDefaultSplittingOptions: false,
@@ -69,7 +72,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [{ participant: 'p0', shares: 1 }],
       splitMode: 'INVALID_MODE',
       saveDefaultSplittingOptions: false,
@@ -110,7 +114,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: 2500 },
         { participant: 'p1', shares: 3000 },
@@ -130,7 +135,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: 6000 },
         { participant: 'p1', shares: 5000 },
@@ -150,7 +156,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: 7000 },
         { participant: 'p1', shares: 3000 },
@@ -175,7 +182,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: '7000' },
         { participant: 'p1', shares: '3000' },
@@ -200,7 +208,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: 7000 },
         { participant: 'p1', shares: 3000 },
@@ -222,7 +231,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: 300 },
         { participant: 'p1', shares: 400 },
@@ -242,7 +252,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: 600 },
         { participant: 'p1', shares: 700 },
@@ -262,7 +273,8 @@ describe('expenseFormSchema', () => {
       title: 'Dinner',
       category: 'general',
       amount: 1000,
-      paidBy: 'p0',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p0', shares: 1 }],
       paidFor: [
         { participant: 'p0', shares: 600 },
         { participant: 'p1', shares: 400 },
@@ -275,6 +287,110 @@ describe('expenseFormSchema', () => {
     })
 
     expect(resultValid.success).toBe(true)
+  })
+
+  // ---------------------------------------------------------------------------
+  // Phase 1b: paidByList shares are in originalCurrency when set; the
+  // BY_AMOUNT sum must therefore be validated against originalAmount
+  // (falling back to amount when originalCurrency is absent).
+  // ---------------------------------------------------------------------------
+
+  it('paidByList BY_AMOUNT rejects mismatched sum against originalAmount', () => {
+    // Group EUR, paid USD $100 (10000 USD cents). Shares 7000 + 2000 = 9000 ≠ 10000.
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 9200,
+      originalAmount: 10000,
+      originalCurrency: 'USD',
+      conversionRate: 0.92,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: 'p0', shares: 7000 },
+        { participant: 'p1', shares: 2000 },
+      ],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some((i) => i.message === 'paidByAmountSum'),
+    ).toBe(true)
+  })
+
+  it('paidByList BY_AMOUNT accepts sum equal to originalAmount', () => {
+    // Group EUR, paid USD $100 (10000 USD cents). Shares 7000 + 3000 = 10000 ✓.
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 9200,
+      originalAmount: 10000,
+      originalCurrency: 'USD',
+      conversionRate: 0.92,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: 'p0', shares: 7000 },
+        { participant: 'p1', shares: 3000 },
+      ],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('paidByList BY_AMOUNT validates against amount when originalAmount is null', () => {
+    // Single-currency path: no originalCurrency set, so the sum is
+    // checked against amount (existing Phase 1 behavior preserved).
+    const mismatch = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: 'p0', shares: 700 },
+        { participant: 'p1', shares: 200 },
+      ],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(mismatch.success).toBe(false)
+
+    const matches = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: 'p0', shares: 700 },
+        { participant: 'p1', shares: 300 },
+      ],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(matches.success).toBe(true)
   })
 })
 

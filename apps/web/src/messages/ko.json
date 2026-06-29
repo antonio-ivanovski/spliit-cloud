@@ -381,6 +381,7 @@
       "byAmount": "균등하지 않게 – 금액별로 나누기",
       "saveAsDefault": "기본 분할 방식으로 저장하기"
     },
+    "paidByAdvancedOptions": "결제자",
     "DeletePopup": {
       "description": "정말 이 지출을 삭제할까요? 한 번 삭제하면 되돌릴 수 없어요.",
       "yes": "네",
@@ -434,7 +435,20 @@
     "creating": "만드는 중…",
     "save": "저장",
     "saving": "저장 중…",
-    "readOnlyNotice": "이 그룹은 보관되었습니다. 지출이 읽기 전용으로 표시됩니다."
+    "readOnlyNotice": "이 그룹은 보관되었습니다. 지출이 읽기 전용으로 표시됩니다.",
+    "PaidBySplitModeField": {
+      "label": "결제자"
+    },
+    "ParticipantDistribution": {
+      "missing": "{total} 중 {missing} 부족",
+      "surplus": "{total} 중 {extra} 초과",
+      "matches": "✓ {total}과 일치",
+      "evenlySplit": "균등 분할: {amount} × {count}",
+      "sharesTotal": "총 가중치: {sum} shares",
+      "percentageMatches": "✓ 100% 일치",
+      "percentageMissing": "{pct}% 부족",
+      "percentageSurplus": "{pct}% 초과"
+    }
   },
   "Balances": {
     "title": "잔액",
@@ -496,7 +510,11 @@
     "min2": "최소 두 글자 이상 입력해 주세요.",
     "titleRequired": "제목을 입력해 주세요.",
     "max5": "최대 5자까지 입력하세요.",
-    "max50": "최대 50자까지 입력하세요."
+    "max50": "최대 50자까지 입력하세요.",
+    "paidByMin1": "적어도",
+    "paidByAmountSum": "결제자",
+    "paidByPercentageSum": "결제자",
+    "duplicateParticipant": "다른"
   },
   "Categories": {
     "search": "카테고리 선택...",
@@ -627,7 +645,9 @@
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>가 <paidFor></paidFor>를 위해 결제함",
+    "paidByMultiple": "<paidByNames></paidByNames>가 <paidFor></paidFor>를 위해 결제함",
     "everyone": "모두",
+    "receivedByMultiple": "<paidByNames></paidByNames>님이 <paidFor></paidFor>를 위해 받음",
     "yourBalance": "내 잔액:",
     "notInvolved": "당신은 관련이 없어요",
     "receivedBy": "<strong>{paidBy}</strong>님이 <paidFor></paidFor>를 위해 받음",

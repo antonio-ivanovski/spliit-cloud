@@ -191,11 +191,17 @@ function makeExpenseRow(args: {
     isReimbursement: false,
     recurrenceRule: 'NONE',
     splitMode: args.splitMode ?? 'EVENLY',
-    paidBy: {
-      id: args.paidById,
-      groupMember: { account: { name: paidByName } },
-      invitations: [],
-    },
+    paidBySplitMode: 'BY_AMOUNT',
+    paidByList: [
+      {
+        shares: args.amount,
+        ledgerParticipant: {
+          id: args.paidById,
+          groupMember: { account: { name: paidByName } },
+          invitations: [],
+        },
+      },
+    ],
     paidFor: args.paidFor.map((pf) => {
       const participantName = pf.participantName ?? pf.participantId
       return {
@@ -350,7 +356,12 @@ describe('groupsRouter.archive — unsettled balances', () => {
       data: {
         title: string
         amount: number
-        paidById: string
+        paidBySplitMode: string
+        paidByList: {
+          createMany: {
+            data: Array<{ ledgerParticipantId: string; shares: number }>
+          }
+        }
         isReimbursement: boolean
         categoryId: string
         paidFor: { createMany: { data: Array<{ shares: number }> } }
@@ -358,7 +369,10 @@ describe('groupsRouter.archive — unsettled balances', () => {
     }
     expect(createCall.data.title).toBe('Settlement on archive')
     expect(createCall.data.amount).toBe(50)
-    expect(createCall.data.paidById).toBe('lp-bob')
+    expect(createCall.data.paidBySplitMode).toBe('BY_AMOUNT')
+    expect(createCall.data.paidByList.createMany.data).toEqual([
+      { ledgerParticipantId: 'lp-bob', shares: 50 },
+    ])
     expect(createCall.data.isReimbursement).toBe(true)
     expect(createCall.data.categoryId).toBe('payment')
     expect(createCall.data.paidFor.createMany.data).toEqual([
@@ -666,7 +680,11 @@ describe('groupsRouter.archive — unsettled balances', () => {
           c[0] as {
             data: {
               amount: number
-              paidById: string
+              paidByList: {
+                createMany: {
+                  data: Array<{ ledgerParticipantId: string; shares: number }>
+                }
+              }
               isReimbursement: boolean
               categoryId: string
             }
@@ -678,7 +696,9 @@ describe('groupsRouter.archive — unsettled balances', () => {
     for (const leg of legs) {
       expect(leg.isReimbursement).toBe(true)
       expect(leg.categoryId).toBe('payment')
-      expect(['lp-bob', 'lp-carol']).toContain(leg.paidById)
+      expect(['lp-bob', 'lp-carol']).toContain(
+        leg.paidByList.createMany.data[0].ledgerParticipantId,
+      )
     }
   })
 })

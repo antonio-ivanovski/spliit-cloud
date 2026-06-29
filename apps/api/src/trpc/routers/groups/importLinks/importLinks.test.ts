@@ -298,9 +298,9 @@ describe('importLinksRouter.link — email-based lookup', () => {
       where: { ledgerParticipantId: 'lp-jane' },
       data: { ledgerParticipantId: 'lp-carla-pending' },
     })
-    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-jane' },
-      data: { paidById: 'lp-carla-pending' },
+    expect(prismaMock.expensePaidBy.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-jane' },
+      data: { ledgerParticipantId: 'lp-carla-pending' },
     })
     expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
       where: { id: 'lp-jane' },
@@ -396,9 +396,9 @@ describe('importLinksRouter.link — email-based lookup', () => {
       where: { ledgerParticipantId: 'lp-jane' },
       data: { ledgerParticipantId: 'lp-link-jane-pending' },
     })
-    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-jane' },
-      data: { paidById: 'lp-link-jane-pending' },
+    expect(prismaMock.expensePaidBy.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-jane' },
+      data: { ledgerParticipantId: 'lp-link-jane-pending' },
     })
     expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
       where: { id: 'lp-jane' },
@@ -469,7 +469,7 @@ describe('importLinksRouter.candidates', () => {
     // Bob's LP would put the same person on both sides of the leg.
     prismaMock.expense.findMany.mockResolvedValue([
       {
-        paidById: 'lp-unlinked',
+        paidByList: [{ ledgerParticipantId: 'lp-unlinked' }],
         paidFor: [{ ledgerParticipantId: 'lp-bob' }],
       },
     ] as never)
@@ -562,7 +562,7 @@ describe('importLinksRouter.candidates', () => {
     // set.
     prismaMock.expense.findMany.mockResolvedValue([
       {
-        paidById: 'lp-unlinked',
+        paidByList: [{ ledgerParticipantId: 'lp-unlinked' }],
         paidFor: [{ ledgerParticipantId: 'lp-bob' }],
       },
     ] as never)
@@ -752,7 +752,7 @@ describe('importLinksRouter.candidates', () => {
     // sides of the leg.
     prismaMock.expense.findMany.mockResolvedValue([
       {
-        paidById: 'lp-unlinked',
+        paidByList: [{ ledgerParticipantId: 'lp-unlinked' }],
         paidFor: [{ ledgerParticipantId: 'lp-carla-pending' }],
       },
     ] as never)

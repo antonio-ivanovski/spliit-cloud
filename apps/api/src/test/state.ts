@@ -78,6 +78,14 @@ const hoisted = vi.hoisted(() => {
       'deleteMany',
       'updateMany',
     ]),
+    expensePaidBy: makeMethodStubs([
+      'findMany',
+      'create',
+      'createMany',
+      'count',
+      'deleteMany',
+      'updateMany',
+    ]),
     recurringExpenseLink: makeMethodStubs([
       'findUnique',
       'findFirst',

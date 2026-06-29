@@ -89,7 +89,10 @@ function makeExpense(overrides: Record<string, unknown> = {}) {
     category: 'food',
     expenseDate: today,
     createdAt: today,
-    paidBy: { id: 'p1', name: 'Alice' },
+    paidBySplitMode: 'BY_AMOUNT',
+    paidByList: [
+      { ledgerParticipant: { id: 'p1', name: 'Alice' }, shares: 4500 },
+    ],
     paidFor: [{ ledgerParticipant: { id: 'lp2', name: 'Bob' }, shares: null }],
     isReimbursement: false,
     splitMode: 'EVENLY',

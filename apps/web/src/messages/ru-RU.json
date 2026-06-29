@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",
     "receivedBy": "Получил <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "receivedByMultiple": "Получили <paidByNames></paidByNames> за <paidFor></paidFor>",
     "yourBalance": "Изменение баланса участника:",
+    "paidByMultiple": "Потратили <paidByNames></paidByNames> за <paidFor></paidFor>",
     "everyone": "все",
     "notInvolved": "Вы не участвуете",
     "settlementBadge": "Расчет"
@@ -477,6 +479,7 @@
       "byAmount": "Неравный – По суммам",
       "saveAsDefault": "Сделать режимом по умолчанию"
     },
+    "paidByAdvancedOptions": "Расширенные настройки плательщика…",
     "DeletePopup": {
       "label": "Удалить",
       "title": "Удалить этот расход?",
@@ -491,7 +494,20 @@
     "saving": "Сохранение…",
     "cancel": "Отмена",
     "reimbursement": "Возмещение",
-    "readOnlyNotice": "Эта группа архивирована. Расход отображается только для чтения."
+    "readOnlyNotice": "Эта группа архивирована. Расход отображается только для чтения.",
+    "PaidBySplitModeField": {
+      "label": "Режим разделения плательщика"
+    },
+    "ParticipantDistribution": {
+      "missing": "Не хватает {missing} из {total}",
+      "surplus": "Избыток: {extra} из {total}",
+      "matches": "✓ Совпадает с {total}",
+      "evenlySplit": "Поровну: {amount} × {count}",
+      "sharesTotal": "Общий вес: {sum} долей",
+      "percentageMatches": "✓ Совпадает 100%",
+      "percentageMissing": "Не хватает {pct}%",
+      "percentageSurplus": "Избыток: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "paidForMin1": "За этот расход должен заплатить как минимум один участник.",
     "noZeroShares": "Все доли должны быть больше 0.",
     "amountSum": "Сумма расхода должна быть равна сумме значений, распределенных между участниками.",
-    "percentageSum": "Сумма процентов должна быть равна 100."
+    "percentageSum": "Сумма процентов должна быть равна 100.",
+    "paidByMin1": "Должен быть выбран хотя бы один плательщик.",
+    "paidByAmountSum": "Сумма долей плательщиков должна равняться сумме расхода.",
+    "paidByPercentageSum": "Сумма процентных долей плательщиков должна быть 100.",
+    "duplicateParticipant": "Другой плательщик уже выбран."
   },
   "Categories": {
     "search": "Поиск категорий...",

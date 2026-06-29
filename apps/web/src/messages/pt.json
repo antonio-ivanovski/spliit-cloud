@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> para <paidFor></paidFor>",
+    "paidByMultiple": "Pago por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "everyone": "todos",
     "receivedBy": "Recebido por <strong>{paidBy}</strong> para <paidFor></paidFor>",
+    "receivedByMultiple": "Recebido por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "yourBalance": "O teu saldo:",
     "notInvolved": "Não participaste",
     "settlementBadge": "Acerto"
@@ -578,6 +580,7 @@
       "byAmount": "Desigualmente – Por montante",
       "saveAsDefault": "Guardar como opções de divisão padrão"
     },
+    "paidByAdvancedOptions": "Opções avançadas do pagador…",
     "DeletePopup": {
       "label": "Eliminar",
       "title": "Eliminar esta despesa?",
@@ -592,7 +595,20 @@
     "saving": "A guardar…",
     "cancel": "Cancelar",
     "reimbursement": "Reembolso",
-    "readOnlyNotice": "Este grupo está arquivado. A despesa é exibida apenas como leitura."
+    "readOnlyNotice": "Este grupo está arquivado. A despesa é exibida apenas como leitura.",
+    "PaidBySplitModeField": {
+      "label": "Modo de divisão do pagador"
+    },
+    "ParticipantDistribution": {
+      "missing": "Falta {missing} de {total}",
+      "surplus": "Excedente: {extra} de {total}",
+      "matches": "✓ Corresponde a {total}",
+      "evenlySplit": "Dividido equitativamente: {amount} × {count}",
+      "sharesTotal": "Peso total: {sum} partes",
+      "percentageMatches": "✓ Corresponde a 100%",
+      "percentageMissing": "Falta {pct}%",
+      "percentageSurplus": "Excedente: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -704,7 +720,11 @@
     "paidForMin1": "A despesa deve ser paga por pelo menos um participante.",
     "noZeroShares": "Todas as partes devem ser superiores a 0.",
     "amountSum": "A soma dos montantes deve igualar o montante da despesa.",
-    "percentageSum": "A soma das percentagens deve igualar 100."
+    "percentageSum": "A soma das percentagens deve igualar 100.",
+    "paidByMin1": "Tens de selecionar pelo menos um pagador.",
+    "paidByAmountSum": "A soma dos valores dos pagadores deve ser igual ao valor da despesa.",
+    "paidByPercentageSum": "A soma das percentagens dos pagadores deve ser 100.",
+    "duplicateParticipant": "Outro pagador já está selecionado."
   },
   "Categories": {
     "search": "Pesquisar categoria...",

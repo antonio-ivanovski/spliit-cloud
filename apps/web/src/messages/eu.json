@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>-k ordaindua <paidFor></paidFor>-rentzat",
+    "paidByMultiple": "<paidByNames></paidByNames>-(e)k ordaindua <paidFor></paidFor>-rentzat",
     "everyone": "denak",
     "receivedBy": "<strong>{paidBy}</strong>-k jasota <paidFor></paidFor>-rentzat",
+    "receivedByMultiple": "<paidByNames></paidByNames>-ek jasota <paidFor></paidFor>-rentzat",
     "yourBalance": "Zure saldoa:",
     "notInvolved": "Ez duzu parte hartzen",
     "settlementBadge": "Kitzea"
@@ -474,6 +476,7 @@
       "byAmount": "Zati desberdinetan - zenbatekoen bidez",
       "saveAsDefault": "Gorde gogoko zatitze modu gisa"
     },
+    "paidByAdvancedOptions": "Ordaintzailearen aukera aurreratuak…",
     "DeletePopup": {
       "label": "Ezabatu",
       "title": "Ezabatu gastu hau?",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "(gonbidatua)"
     },
-    "readOnlyNotice": "Talde hau artxibatuta dago. Gastua irakurtzeko soilik erakusten da."
+    "readOnlyNotice": "Talde hau artxibatuta dago. Gastua irakurtzeko soilik erakusten da.",
+    "PaidBySplitModeField": {
+      "label": "Ordaintzailearen zatiketa modua"
+    },
+    "ParticipantDistribution": {
+      "missing": "{missing} falta {total}-tik",
+      "surplus": "Soberan: {extra} {total}-tik",
+      "matches": "✓ Bat dator {total}-rekin",
+      "evenlySplit": "Berdin banatuta: {amount} × {count}",
+      "sharesTotal": "Pisu osoa: {sum} parteketa",
+      "percentageMatches": "✓ Bat dator %100ekin",
+      "percentageMissing": "%{pct} falta da",
+      "percentageSurplus": "%{pct} soberan"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "paidForMin1": "Gastua gutxienez kide batek ordaindu behar du.",
     "noZeroShares": "Parte guztiek zero baino handiagoak izan behar dute.",
     "amountSum": "Zenbatekoen baturak gastuaren zenbatekoa berdindu behar du.",
-    "percentageSum": "Ehunekoen baturak 100 izan behar du."
+    "percentageSum": "Ehunekoen baturak 100 izan behar du.",
+    "paidByMin1": "Gutxienez ordaintzaile bat hautatu behar da.",
+    "paidByAmountSum": "Ordaintzaileen zenbatekoen baturak gastuaren zenbatekoa berdindu behar du.",
+    "paidByPercentageSum": "Ordaintzaileen ehunekoen baturak 100 izan behar du.",
+    "duplicateParticipant": "Beste ordaintzaile bat dago jada hautatuta."
   },
   "Categories": {
     "search": "Bilatu kategoria...",

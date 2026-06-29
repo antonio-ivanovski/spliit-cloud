@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> maksoi {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
     "receivedBy": "<strong>{paidBy}</strong> sai rahaa {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
+    "receivedByMultiple": "Sai rahaa <paidByNames></paidByNames> <paidFor></paidFor> puolesta",
     "yourBalance": "Saldosi:",
+    "paidByMultiple": "Maksoi <paidByNames></paidByNames> <paidFor></paidFor> puolesta",
     "everyone": "kaikki",
     "notInvolved": "Et ole osallisena",
     "settlementBadge": "Tasaus"
@@ -477,6 +479,7 @@
       "byAmount": "Epätasan – summan mukaan",
       "saveAsDefault": "Tallenna oletustavaksi"
     },
+    "paidByAdvancedOptions": "Maksajan lisäasetukset…",
     "DeletePopup": {
       "label": "Poista",
       "title": "Poistetaanko tämä kulu?",
@@ -491,7 +494,20 @@
     "saving": "Tallennetaan…",
     "cancel": "Peruuta",
     "reimbursement": "Velanmaksu",
-    "readOnlyNotice": "Tämä ryhmä on arkistoitu. Kulu näytetään vain luku -tilassa."
+    "readOnlyNotice": "Tämä ryhmä on arkistoitu. Kulu näytetään vain luku -tilassa.",
+    "PaidBySplitModeField": {
+      "label": "Maksajan jakamistapa"
+    },
+    "ParticipantDistribution": {
+      "missing": "Puuttuu {missing}/{total}",
+      "surplus": "Ylijäämä: {extra}/{total}",
+      "matches": "✓ Vastaa {total}",
+      "evenlySplit": "Jaettu tasan: {amount} × {count}",
+      "sharesTotal": "Kokonaispaino: {sum} osuutta",
+      "percentageMatches": "✓ Vastaa 100 %",
+      "percentageMissing": "Puuttuu {pct}%",
+      "percentageSurplus": "Ylijäämä: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "Jokaisen osuuden täytyy olla suurempi kuin 0.",
     "amountSum": "Osuuksien summan täytyy vastata kulun summaa.",
     "percentageSum": "Prosenttiosuuksien summan täytyy olla 100.",
-    "ratePositive": "Kurssin täytyy olla ehdottomasti suurempi kuin nolla."
+    "ratePositive": "Kurssin täytyy olla ehdottomasti suurempi kuin nolla.",
+    "paidByMin1": "Vähintään yksi maksaja on valittava.",
+    "paidByAmountSum": "Maksajien summan on oltava sama kuin kulun määrä.",
+    "paidByPercentageSum": "Maksajien prosenttiosuuksien summan on oltava 100.",
+    "duplicateParticipant": "Toinen maksaja on jo valittu."
   },
   "Categories": {
     "search": "Etsi kategoriaa...",

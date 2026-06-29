@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Pagado por <strong>{paidBy}</strong> para <paidFor></paidFor>",
     "receivedBy": "Recibido por <strong>{paidBy}</strong> para <paidFor></paidFor>",
+    "receivedByMultiple": "Recibido por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "yourBalance": "Tu balance:",
+    "paidByMultiple": "Pagado por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "everyone": "todos",
     "notInvolved": "No estás incluido",
     "settlementBadge": "Liquidación"
@@ -453,6 +455,7 @@
       "byAmount": "Desigualmente – por cantidad",
       "saveAsDefault": "Guardar como modo preferido"
     },
+    "paidByAdvancedOptions": "Opciones avanzadas de pagador…",
     "DeletePopup": {
       "label": "Borrar",
       "title": "Borrar gasto?",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "(invitado)"
     },
-    "readOnlyNotice": "Este grupo está archivado. El gasto se muestra en modo de solo lectura."
+    "readOnlyNotice": "Este grupo está archivado. El gasto se muestra en modo de solo lectura.",
+    "PaidBySplitModeField": {
+      "label": "Modo de división del pagador"
+    },
+    "ParticipantDistribution": {
+      "missing": "Falta {missing} de {total}",
+      "surplus": "Exceso: {extra} de {total}",
+      "matches": "✓ Coincide con {total}",
+      "evenlySplit": "Dividido equitativamente: {amount} × {count}",
+      "sharesTotal": "Peso total: {sum} partes",
+      "percentageMatches": "✓ Coincide al 100%",
+      "percentageMissing": "Falta {pct}%",
+      "percentageSurplus": "Exceso: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "Todas las partes deben ser mayor que 0.",
     "amountSum": "La suma de los importes debe ser igual al importe del gasto total.",
     "percentageSum": "Suma de porcentajes debe ser igual a 100.",
-    "ratePositive": "La tasa debe ser mayor a cero."
+    "ratePositive": "La tasa debe ser mayor a cero.",
+    "paidByMin1": "Debe seleccionar al menos un pagador.",
+    "paidByAmountSum": "La suma de los importes de los pagadores debe ser igual al importe del gasto.",
+    "paidByPercentageSum": "La suma de los porcentajes de los pagadores debe ser 100.",
+    "duplicateParticipant": "Ya hay otro pagador seleccionado."
   },
   "Categories": {
     "search": "Buscar categoría...",

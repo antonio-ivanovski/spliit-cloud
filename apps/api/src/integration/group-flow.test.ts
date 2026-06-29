@@ -131,7 +131,9 @@ describe('Group flow — real DB', () => {
       expenseFormValues: {
         title: 'Groceries',
         amount: 2500, // €25.00 in cents
-        paidBy: adminParticipant.id,
+        paidByList: [{ participant: adminParticipant.id, shares: 2500 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [{ participant: adminParticipant.id, shares: 1 }],
         category: 'general',
         splitMode: 'EVENLY',
@@ -147,13 +149,15 @@ describe('Group flow — real DB', () => {
     // Verify in DB
     const expense = await prisma.expense.findUnique({
       where: { id: expResult.expenseId },
-      include: { paidFor: true },
+      include: { paidByList: true, paidFor: true },
     })
     expect(expense).not.toBeNull()
     expect(expense!.title).toBe('Groceries')
     expect(expense!.amount).toBe(2500)
     expect(expense!.ledgerId).toBe(ledger.id)
-    expect(expense!.paidById).toBe(adminParticipant.id)
+    expect(expense!.paidByList).toHaveLength(1)
+    expect(expense!.paidByList[0].ledgerParticipantId).toBe(adminParticipant.id)
+    expect(expense!.paidByList[0].shares).toBe(2500)
     expect(expense!.paidFor).toHaveLength(1)
     expect(expense!.paidFor[0].ledgerParticipantId).toBe(adminParticipant.id)
   })
@@ -248,7 +252,9 @@ describe('Group flow — real DB', () => {
       expenseFormValues: {
         title: 'Dinner',
         amount: 3000,
-        paidBy: adminParticipant.id,
+        paidByList: [{ participant: adminParticipant.id, shares: 3000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [
           { participant: adminParticipant.id, shares: 1 },
           { participant: lp1.id, shares: 1 },
@@ -270,7 +276,9 @@ describe('Group flow — real DB', () => {
       expenseFormValues: {
         title: 'Lunch',
         amount: 1500,
-        paidBy: lp1.id,
+        paidByList: [{ participant: lp1.id, shares: 1500 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [
           { participant: adminParticipant.id, shares: 1 },
           { participant: lp1.id, shares: 1 },

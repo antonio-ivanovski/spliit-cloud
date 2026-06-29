@@ -69,6 +69,16 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - [ ] **CSV export 500 on group names with umlauts** — upstream [#458](https://github.com/spliit-app/spliit/issues/458), fix PR [#377](https://github.com/spliit-app/spliit/pull/377)
 - [ ] **Postgres volume mount in modern images** — upstream [#463](https://github.com/spliit-app/spliit/issues/463), fix PR [#464](https://github.com/spliit-app/spliit/pull/464)
 
+## Phase 5: Account customization & settings — planned
+
+### Headline features
+
+- [ ] **Profile photos** — upload and manage profile avatars, displayed in group member lists and expense participants
+- [ ] **App theme** — light, dark, and system theme preference persisted per account and synced across devices
+- [ ] **Favourite currencies** — user-curated list of preferred currencies that replaces the hardcoded "common currencies" in the expense creation flow. Addresses the steady stream of currency addition PRs by making the selector personal.
+- [ ] **Bring-your-own AI key (per-user)** — per-user API key configuration for receipt scanning and category extraction, allowing users to bring their own OpenAI-compatible endpoint and model. Complements the server-level BYOK from Phase 4.
+- [ ] **Settings sync across devices** — preferences, favourite currencies, theme, and AI configuration are stored server-side and synced across all sessions. Builds on the account system from Phase 1.
+
 ## Cross-cutting
 
 - Server-authoritative currency conversion ([design](./openspec/changes/server-authoritative-currency-conversion)) — addresses upstream [#513](https://github.com/spliit-app/spliit/issues/513) / [#425](https://github.com/spliit-app/spliit/pull/425) and [#514](https://github.com/spliit-app/spliit/issues/514) / [#515](https://github.com/spliit-app/spliit/pull/515)

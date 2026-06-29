@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> tarafından ödendi, <paidFor></paidFor> için",
     "receivedBy": "<strong>{paidBy}</strong> tarafından alındı, <paidFor></paidFor> için",
+    "receivedByMultiple": "<paidByNames></paidByNames> tarafından alındı, <paidFor></paidFor> için",
     "yourBalance": "Bakiyeniz:",
+    "paidByMultiple": "<paidByNames></paidByNames> tarafından ödendi, <paidFor></paidFor> için",
     "everyone": "herkes",
     "notInvolved": "Dahil değilsiniz",
     "settlementBadge": "Mutabakat"
@@ -453,6 +455,7 @@
       "byAmount": "Eşit olmayan – Tutar bazında",
       "saveAsDefault": "Varsayılan paylaşım ayarları olarak kaydet"
     },
+    "paidByAdvancedOptions": "Gelişmiş ödeyen seçenekleri…",
     "DeletePopup": {
       "label": "Sil",
       "title": "Bu masraf silinsin mi?",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "(davet edildi)"
     },
-    "readOnlyNotice": "Bu grup arşivlendi. Gider salt okunur olarak gösteriliyor."
+    "readOnlyNotice": "Bu grup arşivlendi. Gider salt okunur olarak gösteriliyor.",
+    "PaidBySplitModeField": {
+      "label": "Ödeyen paylaşım modu"
+    },
+    "ParticipantDistribution": {
+      "missing": "Eksik: {missing} / {total}",
+      "surplus": "Fazla: {extra} / {total}",
+      "matches": "✓ {total} ile eşleşiyor",
+      "evenlySplit": "Eşit bölünmüş: {amount} × {count}",
+      "sharesTotal": "Toplam ağırlık: {sum} pay",
+      "percentageMatches": "✓ %100 eşleşiyor",
+      "percentageMissing": "Eksik: %{pct}",
+      "percentageSurplus": "Fazla: %{pct}"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "Tüm paylar 0'dan büyük olmalıdır.",
     "amountSum": "Tutarların toplamı masraf tutarına eşit olmalıdır.",
     "percentageSum": "Yüzdelerin toplamı 100 olmalıdır.",
-    "ratePositive": "Kur kesinlikle sıfırdan büyük olmalıdır."
+    "ratePositive": "Kur kesinlikle sıfırdan büyük olmalıdır.",
+    "paidByMin1": "En az bir ödeyen seçilmelidir.",
+    "paidByAmountSum": "Ödeyen tutarlarının toplamı masraf tutarına eşit olmalıdır.",
+    "paidByPercentageSum": "Ödeyen yüzdelerinin toplamı 100 olmalıdır.",
+    "duplicateParticipant": "Başka bir ödeyen zaten seçili."
   },
   "Categories": {
     "search": "Kategori ara...",

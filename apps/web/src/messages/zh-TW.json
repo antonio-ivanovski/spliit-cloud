@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "由 <strong>{paidBy}</strong> 支付 <paidFor></paidFor>。",
     "receivedBy": "由 <strong>{paidBy}</strong> 收取 <paidFor></paidFor>。",
+    "receivedByMultiple": "由 <paidByNames></paidByNames> 為 <paidFor></paidFor> 收取",
     "yourBalance": "你的餘額：",
+    "paidByMultiple": "由 <paidByNames></paidByNames> 為 <paidFor></paidFor> 支付",
     "everyone": "所有人",
     "notInvolved": "您未參與其中",
     "settlementBadge": "結算"
@@ -453,6 +455,7 @@
       "byAmount": "自訂金額",
       "saveAsDefault": "儲存為預設分帳方式"
     },
+    "paidByAdvancedOptions": "付款人進階選項…",
     "DeletePopup": {
       "label": "刪除",
       "title": "要刪除這筆消費嗎？",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "（已邀請）"
     },
-    "readOnlyNotice": "此群組已封存。支出以唯讀方式顯示。"
+    "readOnlyNotice": "此群組已封存。支出以唯讀方式顯示。",
+    "PaidBySplitModeField": {
+      "label": "付款人分帳方式"
+    },
+    "ParticipantDistribution": {
+      "missing": "缺少 {missing}，共 {total}",
+      "surplus": "超出 {extra}，共 {total}",
+      "matches": "✓ 符合 {total}",
+      "evenlySplit": "均分: {amount} × {count}",
+      "sharesTotal": "總權重: {sum} 份",
+      "percentageMatches": "✓ 符合 100%",
+      "percentageMissing": "缺少 {pct}%",
+      "percentageSurplus": "超出 {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "份額需大於 0。",
     "amountSum": "金額總計必須等於消費金額。",
     "percentageSum": "百分比加總必須等於 100。",
-    "ratePositive": "匯率必須嚴格大於零。"
+    "ratePositive": "匯率必須嚴格大於零。",
+    "paidByMin1": "至少需要選取一位付款人。",
+    "paidByAmountSum": "付款人金額之和必須等於支出金額。",
+    "paidByPercentageSum": "付款人百分比之和必須為100。",
+    "duplicateParticipant": "另一位付款人已經被選取。"
   },
   "Categories": {
     "search": "搜尋類別……",

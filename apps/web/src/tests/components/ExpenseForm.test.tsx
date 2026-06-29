@@ -1,4 +1,5 @@
 import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form'
+import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
 import { render, screen } from '@/test/test-utils'
@@ -137,7 +138,8 @@ const mockExpense = {
   originalAmount: null,
   conversionRate: null,
   categoryId: 'food-and-drink',
-  paidById: 'lp-1',
+  paidBySplitMode: 'BY_AMOUNT',
+  paidByList: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
   paidFor: [
     { ledgerParticipantId: 'lp-1', shares: 2500 },
     { ledgerParticipantId: 'lp-2', shares: 2500 },
@@ -148,7 +150,6 @@ const mockExpense = {
   notes: 'Great dinner',
   recurrenceRule: 'NONE',
   isPayer: true,
-  paidBy: { id: 'lp-1', name: 'Alice' },
   expense: null,
 }
 
@@ -483,5 +484,553 @@ describe('ExpenseForm', () => {
     // Both participants should appear
     expect(screen.getAllByText('Alice').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('Bob').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('create mode opens with a single-payer dropdown by default', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // The single-payer trigger placeholder is rendered when no value is
+    // selected (no currentLedgerParticipantId provided).
+    expect(screen.getByText('Select a participant')).toBeInTheDocument()
+
+    // The Advanced toggle should be unchecked.
+    const advancedCheckbox = screen.getByRole('checkbox', {
+      name: /advanced payer options/i,
+    })
+    expect(advancedCheckbox).not.toBeChecked()
+
+    // No per-row "shares" inputs should be rendered for paid-by in
+    // single-payer mode. The paid-for breakdown is independent and still
+    // renders per-row inputs; check that the paid-by card's per-row
+    // wrappers (data-id starts with `<id>/BY_AMOUNT/USD`) contain no inputs.
+    const paidByPerRowInputs = document.querySelectorAll(
+      '[data-id$="/BY_AMOUNT/USD"] input',
+    )
+    expect(paidByPerRowInputs.length).toBe(0)
+  })
+
+  it('toggling Advanced payer options reveals the multi-payer breakdown', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    // Find the Advanced payer options checkbox
+    const advancedCheckbox = screen.getByRole('checkbox', {
+      name: /advanced payer options/i,
+    })
+    expect(advancedCheckbox).not.toBeChecked()
+
+    // Click the advanced toggle
+    await user.click(advancedCheckbox)
+
+    // Now the multi-payer breakdown should appear with checkboxes for each
+    // participant. The "Paid by" header should also now have the "Select all"
+    // / "Select none" button rendered alongside the title.
+    expect(advancedCheckbox).toBeChecked()
+    expect(screen.getByText('Select all')).toBeInTheDocument()
+
+    // Each participant row should have a checkbox in the multi-payer view
+    const participantCheckboxes = screen.getAllByRole('checkbox')
+    // At least 2 payer checkboxes (Alice + Bob) + the advanced toggle = 3
+    expect(participantCheckboxes.length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('edit mode of a single-payer expense shows the single-payer dropdown', () => {
+    const singlePayerExpense = {
+      ...mockExpense,
+      paidByList: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={singlePayerExpense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // The single-payer placeholder should NOT be visible — we have a
+    // preselected payer ("lp-1" → Alice) in the dropdown.
+    expect(screen.queryByText('Select a participant')).not.toBeInTheDocument()
+
+    // Alice's name should be displayed in the SelectTrigger (the dropdown's
+    // current value).
+    expect(screen.getAllByText('Alice').length).toBeGreaterThanOrEqual(1)
+
+    // The Advanced payer options checkbox should be unchecked.
+    const advancedCheckbox = screen.getByRole('checkbox', {
+      name: /advanced payer options/i,
+    })
+    expect(advancedCheckbox).not.toBeChecked()
+  })
+
+  it('edit mode of a multi-payer expense shows the multi-payer breakdown', () => {
+    const multiPayerExpense = {
+      ...mockExpense,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 2500 },
+        { ledgerParticipantId: 'lp-2', shares: 2500 },
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={multiPayerExpense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // The Advanced payer options checkbox should be checked.
+    const advancedCheckbox = screen.getByRole('checkbox', {
+      name: /advanced payer options/i,
+    })
+    expect(advancedCheckbox).toBeChecked()
+
+    // The single-payer placeholder should NOT be visible.
+    expect(screen.queryByText('Select a participant')).not.toBeInTheDocument()
+
+    // The multi-payer breakdown should render the per-row data-id wrapper
+    // for each participant (one row per participant).
+    const paidByRows = document.querySelectorAll('[data-id]')
+    expect(paidByRows.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('multi-payer with EVENLY split mode hides the per-row input', () => {
+    // Edit a multi-payer expense that was saved with EVENLY split mode.
+    // The per-row Input should be omitted; the row should only contain
+    // the checkbox + name label.
+    const multiPayerEvenlyExpense = {
+      ...mockExpense,
+      paidBySplitMode: 'EVENLY',
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 2500 },
+        { ledgerParticipantId: 'lp-2', shares: 2500 },
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={multiPayerEvenlyExpense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // Sanity check: the form should have rendered multi-payer breakdown.
+    const dataIdWrappers = document.querySelectorAll('[data-id]')
+    expect(dataIdWrappers.length).toBeGreaterThan(0)
+
+    // The legacy code rendered a disabled <Input class="...w-[80px]...">
+    // per row in EVENLY mode. After this change, no such input should be
+    // rendered inside the per-row wrappers.
+    const paidByPerRowShareInputs = document.querySelectorAll(
+      '[data-id] input.w-\\[80px\\]',
+    )
+    expect(paidByPerRowShareInputs.length).toBe(0)
+  })
+})
+
+// ── ParticipantDistributionFooter tests ────────────────────────────────
+//
+// All these tests render the form in edit mode with deterministic expense
+// data so the share values are predictable. `paidFor` and `paidByList`
+// share values come from the storage unit (cents / basis points) and the
+// form's `defaultValues` converts them to decimal/percent for the input.
+// The footer call site re-converts them to the unit the component expects.
+
+const groupCurrency = {
+  code: 'USD',
+  symbol: '$',
+  rounding: 0,
+  decimal_digits: 2,
+}
+
+describe('ExpenseForm Total/Missing footer (paid by)', () => {
+  it('BY_AMOUNT: shows "✓ Matches" in green when shares sum to the target', () => {
+    const expense = {
+      ...mockExpense,
+      // Empty originalCurrency prevents the form from treating the group
+      // currency as a foreign one and falling back to originalAmount (0).
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('✓ Matches $100.00')
+    expect(footer.className).toContain('text-emerald-600')
+  })
+
+  it('BY_AMOUNT: shows "Missing X of Y" in red when shares under-sum', () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 5000 }, // $50.00 → total $90
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('BY_AMOUNT: shows "Surplus X of Y" in red when shares over-sum', () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 6000 }, // $60.00
+        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00 → total $120
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('Surplus $20.00 of $100.00')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('BY_PERCENTAGE: shows "✓ Matches 100%" in green when shares sum to 100', () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      paidBySplitMode: 'BY_PERCENTAGE' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // 40%
+        { ledgerParticipantId: 'lp-2', shares: 6000 }, // 60%
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('✓ Matches 100%')
+    expect(footer.className).toContain('text-emerald-600')
+  })
+
+  it('BY_PERCENTAGE: shows "Missing X%" in red when shares under-sum', () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      paidBySplitMode: 'BY_PERCENTAGE' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // 40%
+        { ledgerParticipantId: 'lp-2', shares: 5000 }, // 50% → total 90%
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('Missing 10%')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('EVENLY: shows "Evenly split: amount × count" in muted color', () => {
+    const groupWith3 = {
+      ...mockGroup,
+      participants: [
+        ...mockGroup.participants,
+        { id: 'lp-3', name: 'Carol', pending: false, unlinked: false },
+      ],
+    }
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      paidBySplitMode: 'EVENLY' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 1 },
+        { ledgerParticipantId: 'lp-2', shares: 1 },
+        { ledgerParticipantId: 'lp-3', shares: 1 },
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={groupWith3 as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('Evenly split: $33.33 × 3')
+    expect(footer.className).toContain('text-muted-foreground')
+  })
+
+  it('BY_SHARES: shows "Total weight: <sum> shares" in muted color', () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      paidBySplitMode: 'BY_SHARES' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 100 },
+        { ledgerParticipantId: 'lp-2', shares: 200 },
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('Total weight: 3 shares')
+    expect(footer.className).toContain('text-muted-foreground')
+  })
+})
+
+describe('ExpenseForm Total/Missing footer (paid for)', () => {
+  it('BY_AMOUNT: shows "Missing X of Y" in red when shares under-sum', () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      splitMode: 'BY_AMOUNT' as const,
+      paidFor: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 5000 }, // $50.00 → total $90
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-for-distribution-footer')
+    expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('BY_AMOUNT: shows "✓ Matches" in green when shares sum to the target', () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      splitMode: 'BY_AMOUNT' as const,
+      paidFor: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={expense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = screen.getByTestId('paid-for-distribution-footer')
+    expect(footer).toHaveTextContent('✓ Matches $100.00')
+    expect(footer.className).toContain('text-emerald-600')
+  })
+})
+
+// ── Component-only test ────────────────────────────────────────────────
+//
+// Render the footer in isolation so the message/colour logic is exercised
+// without depending on the full form wiring.
+
+describe('ParticipantDistributionFooter (isolated)', () => {
+  it('BY_AMOUNT: shows "✓ Matches" in green when sum equals target', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="BY_AMOUNT"
+        targetAmount={10000}
+        shares={[4000, 6000]}
+        currency={groupCurrency}
+        paidByCount={2}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('✓ Matches $100.00')
+    expect(footer.className).toContain('text-emerald-600')
+  })
+
+  it('BY_AMOUNT: shows "Missing X of Y" in red when sum is below target', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="BY_AMOUNT"
+        targetAmount={10000}
+        shares={[4000, 5000]}
+        currency={groupCurrency}
+        paidByCount={2}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('BY_AMOUNT: shows "Surplus X of Y" in red when sum exceeds target', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="BY_AMOUNT"
+        targetAmount={10000}
+        shares={[6000, 6000]}
+        currency={groupCurrency}
+        paidByCount={2}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('Surplus $20.00 of $100.00')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('BY_PERCENTAGE: shows "✓ Matches 100%" in green when shares sum to 100', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="BY_PERCENTAGE"
+        targetAmount={100}
+        shares={[40, 60]}
+        currency={groupCurrency}
+        paidByCount={2}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('✓ Matches 100%')
+    expect(footer.className).toContain('text-emerald-600')
+  })
+
+  it('BY_PERCENTAGE: shows "Missing X%" in red when shares under-sum', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="BY_PERCENTAGE"
+        targetAmount={100}
+        shares={[40, 50]}
+        currency={groupCurrency}
+        paidByCount={2}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('Missing 10%')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('BY_PERCENTAGE: shows "Surplus X%" in red when shares over-sum', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="BY_PERCENTAGE"
+        targetAmount={100}
+        shares={[60, 60]}
+        currency={groupCurrency}
+        paidByCount={2}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('Surplus 20%')
+    expect(footer.className).toContain('text-red-600')
+  })
+
+  it('EVENLY: shows "Evenly split: amount × count" in muted color', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="EVENLY"
+        targetAmount={10000}
+        shares={[]}
+        currency={groupCurrency}
+        paidByCount={3}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('Evenly split: $33.33 × 3')
+    expect(footer.className).toContain('text-muted-foreground')
+  })
+
+  it('BY_SHARES: shows "Total weight: <sum> shares" in muted color', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        splitMode="BY_SHARES"
+        targetAmount={0}
+        shares={[1, 2]}
+        currency={groupCurrency}
+        paidByCount={2}
+      />,
+    )
+    const footer = container.firstChild as HTMLElement
+    expect(footer).toHaveTextContent('Total weight: 3 shares')
+    expect(footer.className).toContain('text-muted-foreground')
+  })
+
+  it('renders nothing when splitMode is unknown', () => {
+    const { container } = render(
+      <ParticipantDistributionFooter
+        // @ts-expect-error: testing defensive behaviour
+        splitMode="UNKNOWN"
+        targetAmount={0}
+        shares={[]}
+        currency={groupCurrency}
+        paidByCount={0}
+      />,
+    )
+    expect(container.firstChild).toBeNull()
   })
 })

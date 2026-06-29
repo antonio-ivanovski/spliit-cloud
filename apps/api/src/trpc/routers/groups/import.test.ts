@@ -72,10 +72,11 @@ const baseExpense = {
   category: 'transportation',
   amount: 23000,
   // The web wizard supplies destination LedgerParticipant ids in
-  // `paidBy` / `paidFor[].participant`; the server rewrites them
-  // through the mapping table in case a LINK_ACCOUNT row reuses an
-  // existing member's participant.
-  paidBy: 'dest-lp-1',
+  // `paidByList[].participant` / `paidFor[].participant`; the server
+  // rewrites them through the mapping table in case a LINK_ACCOUNT row
+  // reuses an existing member's participant.
+  paidBySplitMode: 'BY_AMOUNT',
+  paidByList: [{ participant: 'dest-lp-1', shares: 23000 }],
   paidFor: [
     { participant: 'dest-lp-1', shares: 13800 },
     { participant: 'dest-lp-2', shares: 9200 },
@@ -209,15 +210,21 @@ describe('importGroup', () => {
     )
     expect(expenseCreates).toHaveLength(1)
     const data = expenseCreates[0].data as {
-      paidById: string
+      paidBySplitMode: string
+      paidByList: {
+        createMany: { data: Array<{ ledgerParticipantId: string }> }
+      }
       paidFor: { createMany: { data: Array<{ ledgerParticipantId: string }> } }
     }
-    // The paidById on the expense must be one of the
+    // The paidByList on the expense must point at one of the
     // destLedgerParticipantId values we sent in. The pre-fix bug
     // surfaced here as a 500 (foreign-key violation) because the
     // web-supplied id was being passed straight to the database
     // without any resolve step.
-    expect(data.paidById).toBe('dest-lp-1')
+    expect(data.paidBySplitMode).toBe('BY_AMOUNT')
+    expect(
+      data.paidByList.createMany.data.map((d) => d.ledgerParticipantId),
+    ).toEqual(['dest-lp-1'])
     const paidForIds = data.paidFor.createMany.data.map(
       (d) => d.ledgerParticipantId,
     )
@@ -300,7 +307,8 @@ describe('importGroup', () => {
             title: 'Dinner',
             category: 'general',
             amount: 10000,
-            paidBy: 'web-supplied-lp',
+            paidBySplitMode: 'BY_AMOUNT',
+            paidByList: [{ participant: 'web-supplied-lp', shares: 10000 }],
             paidFor: [{ participant: 'dest-lp-2', shares: 5000 }],
             splitMode: 'BY_AMOUNT',
             saveDefaultSplittingOptions: false,
@@ -314,15 +322,19 @@ describe('importGroup', () => {
     )
     expect(expenseCreates).toHaveLength(1)
     const data = expenseCreates[0].data as {
-      paidById: string
+      paidByList: {
+        createMany: { data: Array<{ ledgerParticipantId: string }> }
+      }
       paidFor: { createMany: { data: Array<{ ledgerParticipantId: string }> } }
     }
     // The LINK_ACCOUNT branch created a fresh LP with the
     // web-supplied `destLedgerParticipantId` for John, linked to
-    // the existing admin GroupMember. The expense's paidById
+    // the existing admin GroupMember. The expense's paidByList
     // points at this fresh id (not at a server-generated LP for
     // the admin).
-    expect(data.paidById).toBe('web-supplied-lp')
+    expect(
+      data.paidByList.createMany.data.map((d) => d.ledgerParticipantId),
+    ).toEqual(['web-supplied-lp'])
   })
 
   it('does not create a LedgerParticipant for the admin when no source row maps to it', async () => {
@@ -462,7 +474,8 @@ describe('importGroup', () => {
               title: 'Dinner',
               category: 'general',
               amount: 6000,
-              paidBy: 'dest-lp-1',
+              paidBySplitMode: 'BY_AMOUNT',
+              paidByList: [{ participant: 'dest-lp-1', shares: 6000 }],
               paidFor: [
                 { participant: 'dest-lp-1', shares: 4000 },
                 { participant: 'dest-lp-2', shares: 2000 },
@@ -1107,7 +1120,7 @@ describe('importGroup — LINK_EXISTING_PARTICIPANT', () => {
         expenses: [
           {
             ...baseExpense,
-            paidBy: 'fresh-lp-importer',
+            paidByList: [{ participant: 'fresh-lp-importer', shares: 23000 }],
             paidFor: [
               { participant: 'fresh-lp-importer', shares: 500 },
               { participant: 'existing-lp-1', shares: 500 },

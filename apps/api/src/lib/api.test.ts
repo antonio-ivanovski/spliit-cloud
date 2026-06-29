@@ -732,7 +732,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
     prismaMock.expensePaidFor.updateMany.mockResolvedValue({
       count: 2,
     } as never)
-    prismaMock.expense.updateMany.mockResolvedValue({ count: 1 } as never)
+    prismaMock.expensePaidBy.updateMany.mockResolvedValue({ count: 1 } as never)
     prismaMock.ledgerParticipant.delete.mockResolvedValue({} as never)
     prismaMock.activity.create.mockResolvedValue({} as never)
 
@@ -752,10 +752,11 @@ describe('linkUnlinkedParticipantToAccount', () => {
       where: { ledgerParticipantId: 'lp-jane' },
       data: { ledgerParticipantId: 'lp-alice' },
     })
-    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-jane' },
-      data: { paidById: 'lp-alice' },
+    expect(prismaMock.expensePaidBy.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-jane' },
+      data: { ledgerParticipantId: 'lp-alice' },
     })
+    expect(prismaMock.expense.updateMany).not.toHaveBeenCalled()
     expect(prismaMock.ledgerParticipant.delete).toHaveBeenCalledWith({
       where: { id: 'lp-jane' },
     })
@@ -833,7 +834,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
     prismaMock.expensePaidFor.updateMany.mockResolvedValue({
       count: 0,
     } as never)
-    prismaMock.expense.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.expensePaidBy.updateMany.mockResolvedValue({ count: 0 } as never)
     prismaMock.ledgerParticipant.delete.mockResolvedValue({} as never)
     prismaMock.activity.create.mockResolvedValue({} as never)
 
@@ -906,8 +907,10 @@ describe('linkUnlinkedParticipantToAccount', () => {
 })
 
 describe('mergeLedgerParticipantReferences', () => {
-  it('updates expense and expensePaidFor references from source to target', async () => {
-    prismaMock.expense.updateMany.mockResolvedValue({ count: 1 } as never)
+  it('updates expensePaidBy and expensePaidFor references from source to target', async () => {
+    prismaMock.expensePaidBy.updateMany.mockResolvedValue({
+      count: 1,
+    } as never)
     prismaMock.expensePaidFor.updateMany.mockResolvedValue({
       count: 2,
     } as never)
@@ -917,9 +920,9 @@ describe('mergeLedgerParticipantReferences', () => {
       targetId: 'lp-target',
     })
 
-    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-source' },
-      data: { paidById: 'lp-target' },
+    expect(prismaMock.expensePaidBy.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-source' },
+      data: { ledgerParticipantId: 'lp-target' },
     })
     expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
       where: { ledgerParticipantId: 'lp-source' },
@@ -1179,7 +1182,9 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
         groupMemberId: null,
       },
     } as never)
-    prismaMock.expense.updateMany.mockResolvedValue({ count: 1 } as never)
+    prismaMock.expensePaidBy.updateMany.mockResolvedValue({
+      count: 1,
+    } as never)
     prismaMock.expensePaidFor.updateMany.mockResolvedValue({
       count: 2,
     } as never)
@@ -1201,9 +1206,9 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
       groupMemberId: null,
       ledgerParticipantId: 'lp-target',
     })
-    expect(prismaMock.expense.updateMany).toHaveBeenCalledWith({
-      where: { paidById: 'lp-unlinked' },
-      data: { paidById: 'lp-target' },
+    expect(prismaMock.expensePaidBy.updateMany).toHaveBeenCalledWith({
+      where: { ledgerParticipantId: 'lp-unlinked' },
+      data: { ledgerParticipantId: 'lp-target' },
     })
     expect(prismaMock.expensePaidFor.updateMany).toHaveBeenCalledWith({
       where: { ledgerParticipantId: 'lp-unlinked' },
@@ -1240,7 +1245,7 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
         groupMemberId: null,
       },
     } as never)
-    prismaMock.expense.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.expensePaidBy.updateMany.mockResolvedValue({ count: 0 } as never)
     prismaMock.expensePaidFor.updateMany.mockResolvedValue({
       count: 0,
     } as never)

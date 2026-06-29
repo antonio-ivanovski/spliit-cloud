@@ -85,7 +85,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'Even Split',
         amount: 4000,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 4000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [{ participant: participantId, shares: 1 }],
         category: 'general',
         splitMode: 'EVENLY',
@@ -117,7 +119,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'By Amount Split',
         amount: 3000,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 3000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [{ participant: participantId, shares: 3000 }],
         category: 'general',
         splitMode: 'BY_AMOUNT',
@@ -150,7 +154,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'Percent Split',
         amount: 5000,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 5000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [
           { participant: participantId, shares: 10000 }, // 100%
         ],
@@ -183,7 +189,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'Shares Split',
         amount: 6000,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 6000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [
           { participant: participantId, shares: 500 }, // 500 shares (number*100 after transform)
         ],
@@ -217,7 +225,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'Original Title',
         amount: 1000,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 1000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [{ participant: participantId, shares: 1 }],
         category: 'general',
         splitMode: 'EVENLY',
@@ -236,7 +246,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'Updated Title',
         amount: 1000,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 1000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [{ participant: participantId, shares: 1 }],
         category: 'general',
         splitMode: 'EVENLY',
@@ -266,7 +278,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'To Delete',
         amount: 2000,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 2000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [{ participant: participantId, shares: 1 }],
         category: 'general',
         splitMode: 'EVENLY',
@@ -302,7 +316,9 @@ describe('Expense CRUD — real DB', () => {
       expenseFormValues: {
         title: 'No Documents',
         amount: 1500,
-        paidBy: participantId,
+        paidByList: [{ participant: participantId, shares: 1500 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
         paidFor: [{ participant: participantId, shares: 1 }],
         category: 'general',
         splitMode: 'EVENLY',

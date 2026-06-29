@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
+    "paidByMultiple": "שולם על ידי <paidByNames></paidByNames> עבור <paidFor></paidFor>",
     "everyone": "כולם",
     "receivedBy": "התקבל על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
+    "receivedByMultiple": "התקבל על ידי <paidByNames></paidByNames> עבור <paidFor></paidFor>",
     "yourBalance": "היתרה שלך:",
     "notInvolved": "אתה לא מעורב",
     "settlementBadge": "הסדר"
@@ -474,6 +476,7 @@
       "byAmount": "לא שווה – לפי סכום",
       "saveAsDefault": "שמור כברירת מחדל עבור אפשרויות פיצול"
     },
+    "paidByAdvancedOptions": "אפשרויות מתקדמות למשלם…",
     "DeletePopup": {
       "label": "מחק",
       "title": "למחוק הוצאה זו?",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "(הוזמן)"
     },
-    "readOnlyNotice": "קבוצה זו בארכיון. ההוצאה מוצגת לקריאה בלבד."
+    "readOnlyNotice": "קבוצה זו בארכיון. ההוצאה מוצגת לקריאה בלבד.",
+    "PaidBySplitModeField": {
+      "label": "מצב פיצול לפי משלם"
+    },
+    "ParticipantDistribution": {
+      "missing": "חסר {missing} מתוך {total}",
+      "surplus": "עודף: {extra} מתוך {total}",
+      "matches": "✓ תואם {total}",
+      "evenlySplit": "חלוקה שווה: {amount} × {count}",
+      "sharesTotal": "משקל כולל: {sum} חלקים",
+      "percentageMatches": "✓ תואם 100%",
+      "percentageMissing": "חסר {pct}%",
+      "percentageSurplus": "עודף: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "paidForMin1": "ההוצאה חייבת להיות משולמת עבור לפחות משתתף אחד.",
     "noZeroShares": "כל חלקי ההשתתפות חייבים להיות גבוהים מ-0.",
     "amountSum": "סיכום הסכומים חייב להיות שווה לסכום ההוצאה.",
-    "percentageSum": "סיכום האחוזים חייב להיות שווה ל-100."
+    "percentageSum": "סיכום האחוזים חייב להיות שווה ל-100.",
+    "paidByMin1": "עליך לבחור לפחות משלם אחד.",
+    "paidByAmountSum": "סיכום סכומי המשלמים חייב להיות שווה לסכום ההוצאה.",
+    "paidByPercentageSum": "סיכום אחוזי המשלמים חייב להיות שווה ל-100.",
+    "duplicateParticipant": "משלם אחר כבר נבחר."
   },
   "Categories": {
     "search": "חפש קטגוריה...",

@@ -450,7 +450,12 @@ export function ImportGroupWizard() {
         destinationCurrencyCode,
         state.rates === undefined ? undefined : (state.rates ?? undefined),
       )
-      await importMutation.mutateAsync({ ...batch, sourceMeta })
+      const expenses = batch.expenses.map(({ paidBy, ...rest }) => ({
+        ...rest,
+        paidByList: [{ participant: paidBy, shares: rest.amount }],
+        paidBySplitMode: 'BY_AMOUNT' as const,
+      }))
+      await importMutation.mutateAsync({ ...batch, expenses, sourceMeta })
     } catch {
       // Error surfaced via onError.
     }

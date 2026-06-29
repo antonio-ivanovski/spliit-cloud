@@ -32,6 +32,10 @@ export const listGroupBalancesProcedure = protectedProcedure
     // domain balance functions expect, keeping the math untouched.
     const expenses: BalanceExpense[] = rows.map((row) => ({
       ...row,
+      paidByList: row.paidByList.map((pb) => ({
+        shares: pb.shares,
+        participant: pb.ledgerParticipant,
+      })),
       paidFor: row.paidFor.map((pf) => ({
         shares: pf.shares,
         participant: pf.ledgerParticipant,

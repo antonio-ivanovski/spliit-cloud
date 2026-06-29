@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> 为 <paidFor></paidFor> 支付。",
     "receivedBy": "<strong>{paidBy}</strong> 为 <paidFor></paidFor> 接收。",
+    "receivedByMultiple": "<paidByNames></paidByNames> 为 <paidFor></paidFor> 接收",
     "yourBalance": "你的余额：",
+    "paidByMultiple": "<paidByNames></paidByNames> 为 <paidFor></paidFor> 支付",
     "everyone": "所有人",
     "notInvolved": "您无需支付",
     "settlementBadge": "结算"
@@ -453,6 +455,7 @@
       "byAmount": "按金额分配",
       "saveAsDefault": "保存为默认分账设置"
     },
+    "paidByAdvancedOptions": "付款人高级选项…",
     "DeletePopup": {
       "label": "删除",
       "title": "要删除这项消费吗？",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "（已邀请）"
     },
-    "readOnlyNotice": "此群组已归档。支出以只读方式显示。"
+    "readOnlyNotice": "此群组已归档。支出以只读方式显示。",
+    "PaidBySplitModeField": {
+      "label": "付款人分账模式"
+    },
+    "ParticipantDistribution": {
+      "missing": "缺少 {missing}，共 {total}",
+      "surplus": "超出 {extra}，共 {total}",
+      "matches": "✓ 匹配 {total}",
+      "evenlySplit": "均分: {amount} × {count}",
+      "sharesTotal": "总权重: {sum} 份",
+      "percentageMatches": "✓ 匹配 100%",
+      "percentageMissing": "缺少 {pct}%",
+      "percentageSurplus": "超出 {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "所有份额必须大于0。",
     "amountSum": "金额之和必须等于消费的金额。",
     "percentageSum": "百分比之和必须等于100。",
-    "ratePositive": "汇率必须为正数（大于0）。"
+    "ratePositive": "汇率必须为正数（大于0）。",
+    "paidByMin1": "至少需要选择一位付款人。",
+    "paidByAmountSum": "付款人金额之和必须等于支出金额。",
+    "paidByPercentageSum": "付款人百分比之和必须为100。",
+    "duplicateParticipant": "另一位付款人已经选择。"
   },
   "Categories": {
     "search": "搜寻类别……",

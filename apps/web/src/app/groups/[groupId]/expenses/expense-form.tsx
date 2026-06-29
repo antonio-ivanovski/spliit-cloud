@@ -2,6 +2,8 @@ import { CategorySelector } from '@/components/category-selector'
 import { CurrencySelector } from '@/components/currency-selector'
 import { ExpenseDocumentsInput } from '@/components/expense-documents-input'
 import Link from '@/components/link'
+import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
+import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
 import {
@@ -41,12 +43,11 @@ import { getCurrency, useCurrencies } from '@/lib/currency'
 import { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate } from '@/lib/hooks'
 import { expenseFormSchema, ExpenseFormValues } from '@/lib/schemas'
-import { calculateShare } from '@/lib/totals'
+import { calculatePaidByShare, calculateShare } from '@/lib/totals'
 import {
   amountAsDecimal,
   amountAsMinorUnits,
   cn,
-  formatCurrency,
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import type { CreateExpenseSearch } from '@/router/schemas'
@@ -143,21 +144,24 @@ export function ExpenseForm({
   // without any search params (e.g. a bare `/expenses/create` link).
   const createSearch = searchParams ?? {}
 
-  const getSelectedPayer = (field?: { value: string }) => {
-    if (isCreate && field?.value === undefined) {
-      // Default the payer to the signed-in account's ledger participant.
-      if (currentLedgerParticipantId) {
-        return currentLedgerParticipantId
-      }
-    }
-    return field?.value
-  }
-
   const getSelectedRecurrenceRule = (field?: { value: string }) => {
     return field?.value as RecurrenceRule
   }
   const defaultSplittingOptions = getDefaultSplittingOptions(group)
   const groupCurrency = getCurrencyFromGroup(group)
+
+  // Default paidByList for the create path: a single row assigning the
+  // full amount to the signed-in user's ledger participant. The amount
+  // is in major units (same convention as the `amount` field).
+  const defaultPaidByList = currentLedgerParticipantId
+    ? [
+        {
+          participant: currentLedgerParticipantId,
+          shares: (Number(createSearch.amount) || 0) as any,
+        },
+      ]
+    : []
+
   const form = useForm<ExpenseFormValues, any, ExpenseFormValues>({
     resolver: zodResolver(expenseFormSchema) as Resolver<ExpenseFormValues>,
     defaultValues: expense
@@ -177,12 +181,29 @@ export function ExpenseForm({
               : undefined,
           conversionRate: expense.conversionRate?.toNumber(),
           category: expense.categoryId,
-          paidBy: expense.paidById,
+          paidBySplitMode: expense.paidBySplitMode,
+          paidByList: expense.paidByList.map(
+            ({ ledgerParticipantId, shares }) => {
+              // shares are stored in originalCurrency minor units when
+              // expense.originalCurrency is set; convert them to the matching
+              // currency's decimal value for the form input.
+              const rowCurrency = expense.originalCurrency
+                ? (getCurrency(expense.originalCurrency) ?? groupCurrency)
+                : groupCurrency
+              return {
+                participant: ledgerParticipantId,
+                shares: (expense.paidBySplitMode === 'BY_AMOUNT'
+                  ? amountAsDecimal(shares, rowCurrency)
+                  : (shares / 100).toString()) as any,
+              }
+            },
+          ),
+          isMultiPayer: expense.paidByList.length > 1,
           paidFor: expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
             participant: ledgerParticipantId,
             shares: (expense.splitMode === 'BY_AMOUNT'
               ? amountAsDecimal(shares, groupCurrency)
-              : (shares / 100).toString()) as any, // Convert to string to ensure consistent handling
+              : (shares / 100).toString()) as any,
           })),
           splitMode: expense.splitMode,
           saveDefaultSplittingOptions: false,
@@ -203,12 +224,24 @@ export function ExpenseForm({
             originalAmount: undefined,
             conversionRate: undefined,
             category: PAYMENT_CATEGORY_ID,
-            paidBy: createSearch.from ?? undefined,
+            paidBySplitMode: 'BY_AMOUNT' as const,
+            paidByList: createSearch.from
+              ? [
+                  {
+                    participant: createSearch.from,
+                    shares: amountAsDecimal(
+                      Number(createSearch.amount) || 0,
+                      groupCurrency,
+                    ) as any,
+                  },
+                ]
+              : [],
+            isMultiPayer: false,
             paidFor: [
               createSearch.to
                 ? {
                     participant: createSearch.to,
-                    shares: '1' as any, // String for consistent form handling
+                    shares: '1' as any,
                   }
                 : undefined,
             ],
@@ -229,9 +262,10 @@ export function ExpenseForm({
             originalAmount: undefined,
             conversionRate: undefined,
             category: parseCategoryIdFromUrl(createSearch.categoryId),
-            // paid for all, split evenly
+            paidBySplitMode: 'BY_AMOUNT' as const,
+            paidByList: defaultPaidByList as any,
+            isMultiPayer: false,
             paidFor: defaultSplittingOptions.paidFor,
-            paidBy: getSelectedPayer(),
             isReimbursement: false,
             splitMode: defaultSplittingOptions.splitMode,
             saveDefaultSplittingOptions: false,
@@ -264,6 +298,23 @@ export function ExpenseForm({
           ? amountAsMinorUnits(shares, groupCurrency)
           : shares,
     }))
+    values.paidByList = values.paidByList.map(({ participant, shares }) => {
+      // paidByList.shares are entered in originalCurrency when set, so
+      // the minor-units conversion must use that currency, not the group
+      // currency — otherwise a EUR-group expense paid in USD would be
+      // stored as cents-of-EUR-denominated-dollars.
+      const payerCurrency =
+        values.originalCurrency && getCurrency(values.originalCurrency)
+          ? getCurrency(values.originalCurrency)!
+          : groupCurrency
+      return {
+        participant,
+        shares:
+          values.paidBySplitMode === 'BY_AMOUNT'
+            ? amountAsMinorUnits(shares, payerCurrency)
+            : shares,
+      }
+    })
 
     // Convert originalAmount back to minor units for storage
     if (values.originalAmount != null && values.originalCurrency) {
@@ -286,6 +337,9 @@ export function ExpenseForm({
   const [manuallyEditedParticipants, setManuallyEditedParticipants] = useState<
     Set<string>
   >(new Set())
+  const [manuallyEditedPayers, setManuallyEditedPayers] = useState<Set<string>>(
+    new Set(),
+  )
 
   const sExpense = isIncome ? 'Income' : 'Expense'
 
@@ -314,6 +368,10 @@ export function ExpenseForm({
   useEffect(() => {
     setManuallyEditedParticipants(new Set())
   }, [form.watch('splitMode'), form.watch('amount')])
+
+  useEffect(() => {
+    setManuallyEditedPayers(new Set())
+  }, [form.watch('paidBySplitMode'), form.watch('amount')])
 
   useEffect(() => {
     const splitMode = form.getValues().splitMode
@@ -367,6 +425,66 @@ export function ExpenseForm({
     manuallyEditedParticipants,
     form.watch('amount'),
     form.watch('splitMode'),
+  ])
+
+  useEffect(() => {
+    const splitMode = form.getValues().paidBySplitMode
+
+    if (
+      splitMode === 'BY_AMOUNT' &&
+      (form.getFieldState('paidByList').isDirty ||
+        form.getFieldState('amount').isDirty)
+    ) {
+      // Distribute against originalAmount (in originalCurrency) when set,
+      // else against amount (group currency), so shares stay consistent
+      // with the schema sum-check and the Total footer.
+      const originalCurrencyCode = form.getValues('originalCurrency')
+      const payerCurrency = originalCurrencyCode
+        ? (getCurrency(originalCurrencyCode) ?? groupCurrency)
+        : groupCurrency
+      const totalAmount =
+        originalCurrencyCode && form.getValues('originalAmount') != null
+          ? Number(form.getValues('originalAmount')) || 0
+          : Number(form.getValues().amount) || 0
+
+      const paidByList = form.getValues().paidByList
+      let newPaidByList = [...paidByList]
+
+      const editedPayers = Array.from(manuallyEditedPayers)
+      let remainingAmount = totalAmount
+      let remainingPayers = newPaidByList.length - editedPayers.length
+
+      newPaidByList = newPaidByList.map((payer) => {
+        if (editedPayers.includes(payer.participant)) {
+          const payerShare = Number(payer.shares) || 0
+          remainingAmount -= payerShare
+          return payer
+        }
+        return payer
+      })
+
+      if (remainingPayers > 0) {
+        const amountPerRemaining = remainingAmount / remainingPayers
+        newPaidByList = newPaidByList.map((payer) => {
+          if (!editedPayers.includes(payer.participant)) {
+            return {
+              ...payer,
+              shares: amountPerRemaining.toFixed(
+                payerCurrency.decimal_digits,
+              ) as any,
+            }
+          }
+          return payer
+        })
+      }
+      form.setValue('paidByList', newPaidByList, { shouldValidate: true })
+    }
+  }, [
+    manuallyEditedPayers,
+    form.watch('amount'),
+    form.watch('paidBySplitMode'),
+    form.watch('originalCurrency'),
+    form.watch('originalAmount'),
   ])
 
   const [usingCustomConversionRate, setUsingCustomConversionRate] = useState(
@@ -749,42 +867,6 @@ export function ExpenseForm({
 
             <FormField
               control={form.control}
-              name="paidBy"
-              render={({ field }) => (
-                <FormItem className="sm:order-5">
-                  <FormLabel>{t(`${sExpense}.paidByField.label`)}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={getSelectedPayer(field)}
-                    disabled={readOnly}
-                  >
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder={t('Expense.paidByField.placeholder')}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {group.participants.map((participant) => (
-                        <SelectItem key={participant.id} value={participant.id}>
-                          {participant.name}
-                          {participant.pending && (
-                            <span className="ml-2 text-xs text-muted-foreground">
-                              {t('participant.pending')}
-                            </span>
-                          )}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    {t(`${sExpense}.paidByField.description`)}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="notes"
               render={({ field }) => (
                 <FormItem className="sm:order-6">
@@ -834,6 +916,508 @@ export function ExpenseForm({
                     {t('Expense.recurrenceRule.description')}
                   </FormDescription>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle className="flex justify-between">
+              <span>{t(`${sExpense}.paidByField.label`)}</span>
+              {form.watch('isMultiPayer') && (
+                <Button
+                  variant="link"
+                  type="button"
+                  className="-my-2 -mx-4"
+                  disabled={readOnly}
+                  onClick={() => {
+                    const paidByList = form.getValues().paidByList
+                    const allSelected =
+                      paidByList.length === group.participants.length
+                    const newPaidByList = allSelected
+                      ? []
+                      : group.participants.map((p) => ({
+                          participant: p.id,
+                          shares: (paidByList.find(
+                            (pb) => pb.participant === p.id,
+                          )?.shares ?? '1') as any,
+                        }))
+                    form.setValue('paidByList', newPaidByList as any, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    })
+                  }}
+                >
+                  {form.getValues().paidByList.length ===
+                  group.participants.length ? (
+                    <>{t('selectNone')}</>
+                  ) : (
+                    <>{t('selectAll')}</>
+                  )}
+                </Button>
+              )}
+            </CardTitle>
+            <CardDescription>
+              {t(`${sExpense}.paidByField.description`)}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {form.watch('isMultiPayer') ? (
+              (() => {
+                // When a non-group originalCurrency is set, payer shares are
+                // entered in that currency (matching `originalAmount`); the
+                // Total footer and per-row label use `payerCurrency` instead
+                // of `groupCurrency` so the form stays in one currency at a
+                // time. Falls back to the group currency when no conversion
+                // is set.
+                const originalCurrencyCode = form.watch('originalCurrency')
+                const originalPayerCurrency = originalCurrencyCode
+                  ? getCurrency(originalCurrencyCode)
+                  : undefined
+                const payerCurrency = originalPayerCurrency ?? groupCurrency
+                const isOriginalPayer = !!originalPayerCurrency
+                const targetAmount = isOriginalPayer
+                  ? Number(form.watch('originalAmount')) || 0
+                  : Number(form.watch('amount')) || 0
+                // Build a synthetic TotalsExpense so calculatePaidByShare
+                // returns each row's resolved share in payerCurrency cents.
+                // Shares are in major units in the form; BY_AMOUNT is
+                // converted to minor units, BY_PERCENTAGE to basis points.
+                // No originalCurrency/conversionRate is passed so the result
+                // stays in the input unit (payerCurrency) regardless of
+                // whether the ledger has a different currency.
+                const pbSplitMode = form.watch('paidBySplitMode')
+                const pbList = form.watch('paidByList')
+                const paidByListForCalc = pbList.map((p) => {
+                  const rawShares = Number(p.shares) || 0
+                  const shares =
+                    pbSplitMode === 'BY_PERCENTAGE'
+                      ? rawShares * 100
+                      : pbSplitMode === 'BY_AMOUNT'
+                        ? amountAsMinorUnits(rawShares, payerCurrency)
+                        : rawShares
+                  return { participant: { id: p.participant }, shares }
+                })
+                const paidByExpenseForCalc = {
+                  amount: amountAsMinorUnits(targetAmount, payerCurrency),
+                  paidByList: paidByListForCalc,
+                  paidBySplitMode: pbSplitMode,
+                  isReimbursement: false,
+                }
+                return (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="paidByList"
+                      render={() => (
+                        <FormItem className="sm:order-4 row-span-2 space-y-0">
+                          {group.participants.map((participant) => (
+                            <FormField
+                              key={participant.id}
+                              control={form.control}
+                              name="paidByList"
+                              render={({ field }) => {
+                                const { id, name, pending } = participant
+                                return (
+                                  <div
+                                    data-id={`${id}/${form.getValues().paidBySplitMode}/${payerCurrency.code}`}
+                                    className="flex flex-wrap gap-y-4 items-center border-t last-of-type:border-b last-of-type:!mb-4 -mx-6 px-6 py-3"
+                                  >
+                                    <FormItem className="flex-1 flex flex-row items-start space-x-3 space-y-0">
+                                      <FormControl>
+                                        <Checkbox
+                                          checked={field.value?.some(
+                                            ({ participant }) =>
+                                              participant === id,
+                                          )}
+                                          onCheckedChange={(checked) => {
+                                            if (readOnly) return
+                                            const options = {
+                                              shouldDirty: true,
+                                              shouldTouch: true,
+                                              shouldValidate: true,
+                                            }
+                                            checked
+                                              ? form.setValue(
+                                                  'paidByList',
+                                                  [
+                                                    ...field.value,
+                                                    {
+                                                      participant: id,
+                                                      shares: '1',
+                                                    },
+                                                  ] as any,
+                                                  options,
+                                                )
+                                              : form.setValue(
+                                                  'paidByList',
+                                                  field.value?.filter(
+                                                    (value) =>
+                                                      value.participant !== id,
+                                                  ),
+                                                  options,
+                                                )
+                                          }}
+                                          disabled={readOnly}
+                                        />
+                                      </FormControl>
+                                      <FormLabel className="text-sm font-normal flex-1">
+                                        {name}
+                                        {pending && (
+                                          <span className="ml-2 text-xs text-muted-foreground">
+                                            {t('participant.pending')}
+                                          </span>
+                                        )}
+                                        {field.value?.some(
+                                          ({ participant }) =>
+                                            participant === id,
+                                        ) &&
+                                          !form.watch('isReimbursement') && (
+                                            <ParticipantRowAmountPreview
+                                              amount={calculatePaidByShare(
+                                                id,
+                                                paidByExpenseForCalc,
+                                              )}
+                                              currency={payerCurrency}
+                                            />
+                                          )}
+                                      </FormLabel>
+                                    </FormItem>
+                                    <div className="flex">
+                                      {form.getValues().paidBySplitMode !==
+                                        'EVENLY' && (
+                                        <FormField
+                                          name={`paidByList[${field.value.findIndex(({ participant }) => participant === id)}].shares`}
+                                          render={() => {
+                                            const sharesLabel = (
+                                              <span
+                                                className={cn('text-sm', {
+                                                  'text-muted':
+                                                    !field.value?.some(
+                                                      ({ participant }) =>
+                                                        participant === id,
+                                                    ),
+                                                })}
+                                              >
+                                                {match(
+                                                  form.getValues()
+                                                    .paidBySplitMode,
+                                                )
+                                                  .with('BY_SHARES', () => (
+                                                    <>{t('shares')}</>
+                                                  ))
+                                                  .with('BY_PERCENTAGE', () => (
+                                                    <>%</>
+                                                  ))
+                                                  .with('BY_AMOUNT', () => (
+                                                    <>{payerCurrency.symbol}</>
+                                                  ))
+                                                  .otherwise(() => (
+                                                    <></>
+                                                  ))}
+                                              </span>
+                                            )
+                                            return (
+                                              <div>
+                                                <div className="flex gap-1 items-center">
+                                                  {form.getValues()
+                                                    .paidBySplitMode ===
+                                                    'BY_AMOUNT' && sharesLabel}
+                                                  <FormControl>
+                                                    <Input
+                                                      key={String(
+                                                        !field.value?.some(
+                                                          ({ participant }) =>
+                                                            participant === id,
+                                                        ),
+                                                      )}
+                                                      className="text-base w-[80px] -my-2"
+                                                      type="text"
+                                                      disabled={
+                                                        readOnly ||
+                                                        !field.value?.some(
+                                                          ({ participant }) =>
+                                                            participant === id,
+                                                        )
+                                                      }
+                                                      value={
+                                                        field.value?.find(
+                                                          ({ participant }) =>
+                                                            participant === id,
+                                                        )?.shares
+                                                      }
+                                                      onChange={(event) => {
+                                                        field.onChange(
+                                                          field.value.map(
+                                                            (p) =>
+                                                              p.participant ===
+                                                              id
+                                                                ? {
+                                                                    participant:
+                                                                      id,
+                                                                    shares:
+                                                                      enforceCurrencyPattern(
+                                                                        event
+                                                                          .target
+                                                                          .value,
+                                                                      ),
+                                                                  }
+                                                                : p,
+                                                          ),
+                                                        )
+                                                        setManuallyEditedPayers(
+                                                          (prev) =>
+                                                            new Set(prev).add(
+                                                              id,
+                                                            ),
+                                                        )
+                                                      }}
+                                                      inputMode={
+                                                        form.getValues()
+                                                          .paidBySplitMode ===
+                                                        'BY_AMOUNT'
+                                                          ? 'decimal'
+                                                          : 'numeric'
+                                                      }
+                                                      step={
+                                                        form.getValues()
+                                                          .paidBySplitMode ===
+                                                        'BY_AMOUNT'
+                                                          ? 10 **
+                                                            -payerCurrency.decimal_digits
+                                                          : 1
+                                                      }
+                                                    />
+                                                  </FormControl>
+                                                  {[
+                                                    'BY_SHARES',
+                                                    'BY_PERCENTAGE',
+                                                  ].includes(
+                                                    form.getValues()
+                                                      .paidBySplitMode,
+                                                  ) && sharesLabel}
+                                                </div>
+                                                <FormMessage className="float-right" />
+                                              </div>
+                                            )
+                                          }}
+                                        />
+                                      )}
+                                    </div>
+                                  </div>
+                                )
+                              }}
+                            />
+                          ))}
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {(() => {
+                      const pbSplitMode = form.watch('paidBySplitMode')
+                      const pbList = form.watch('paidByList')
+                      const paidByCount = pbList.length
+                      const sharesForFooter =
+                        pbSplitMode === 'BY_AMOUNT'
+                          ? pbList.map((p) =>
+                              amountAsMinorUnits(
+                                Number(p.shares) || 0,
+                                payerCurrency,
+                              ),
+                            )
+                          : pbSplitMode === 'BY_PERCENTAGE'
+                            ? pbList.map((p) => Number(p.shares) || 0)
+                            : pbList.map((p) => Number(p.shares) || 0)
+                      const targetForFooter =
+                        pbSplitMode === 'BY_PERCENTAGE'
+                          ? 100
+                          : amountAsMinorUnits(
+                              Number(targetAmount) || 0,
+                              payerCurrency,
+                            )
+                      return (
+                        <ParticipantDistributionFooter
+                          splitMode={pbSplitMode}
+                          targetAmount={targetForFooter}
+                          shares={sharesForFooter}
+                          currency={payerCurrency}
+                          paidByCount={paidByCount}
+                          dataTestId="paid-by-distribution-footer"
+                        />
+                      )
+                    })()}
+
+                    <Collapsible
+                      className="mt-5"
+                      defaultOpen={
+                        form.getValues().paidBySplitMode !== 'EVENLY'
+                      }
+                    >
+                      <CollapsibleTrigger asChild>
+                        <Button
+                          variant="link"
+                          className="-mx-4"
+                          disabled={readOnly}
+                        >
+                          {t('paidByAdvancedOptions')}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <div className="grid sm:grid-cols-2 gap-6 pt-3">
+                          <FormField
+                            control={form.control}
+                            name="paidBySplitMode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  {t('PaidBySplitModeField.label')}
+                                </FormLabel>
+                                <FormControl>
+                                  <Select
+                                    onValueChange={(value) => {
+                                      form.setValue(
+                                        'paidBySplitMode',
+                                        value as any,
+                                        {
+                                          shouldDirty: true,
+                                          shouldTouch: true,
+                                          shouldValidate: true,
+                                        },
+                                      )
+                                    }}
+                                    defaultValue={field.value}
+                                    disabled={readOnly}
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="EVENLY">
+                                        {t('SplitModeField.evenly')}
+                                      </SelectItem>
+                                      <SelectItem value="BY_SHARES">
+                                        {t('SplitModeField.byShares')}
+                                      </SelectItem>
+                                      <SelectItem value="BY_PERCENTAGE">
+                                        {t('SplitModeField.byPercentage')}
+                                      </SelectItem>
+                                      <SelectItem value="BY_AMOUNT">
+                                        {t('SplitModeField.byAmount')}
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </FormControl>
+                                <FormDescription>
+                                  {t(`${sExpense}.splitModeDescription`)}
+                                </FormDescription>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </>
+                )
+              })()
+            ) : (
+              <FormField
+                control={form.control}
+                name="paidByList"
+                render={() => {
+                  const paidByList = form.watch('paidByList')
+                  const selectedPayer = paidByList[0]?.participant ?? ''
+                  const amount = String(Number(form.watch('amount')) || 0)
+                  return (
+                    <FormItem>
+                      <Select
+                        value={selectedPayer}
+                        onValueChange={(value) => {
+                          form.setValue(
+                            'paidByList',
+                            [{ participant: value, shares: amount }] as any,
+                            {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            },
+                          )
+                        }}
+                        disabled={readOnly}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={
+                              t('Expense.paidByField.placeholder') as string
+                            }
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {group.participants.map(({ id, name, pending }) => (
+                            <SelectItem key={id} value={id}>
+                              {name}
+                              {pending && (
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  {t('participant.pending')}
+                                </span>
+                              )}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
+              />
+            )}
+
+            <FormField
+              control={form.control}
+              name="isMultiPayer"
+              render={({ field }) => (
+                <FormItem className="flex flex-row gap-2 items-center space-y-0 pt-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        // Mirror Save-as-default style: settle on a single
+                        // payer row (shares = amount) when toggling either
+                        // direction so the multi-payer view shows the
+                        // current single selection already checked, and
+                        // collapsing back to single-payer keeps the first
+                        // selected row.
+                        const currentList = form.getValues().paidByList
+                        const amount = String(Number(form.watch('amount')) || 0)
+                        const firstParticipant =
+                          currentList[0]?.participant ??
+                          group.participants[0]?.id
+                        if (firstParticipant) {
+                          form.setValue(
+                            'paidByList',
+                            [
+                              {
+                                participant: firstParticipant,
+                                shares: amount,
+                              },
+                            ] as any,
+                            {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            },
+                          )
+                        }
+                        field.onChange(checked)
+                      }}
+                      disabled={readOnly}
+                    />
+                  </FormControl>
+                  <div>
+                    <FormLabel>{t('paidByAdvancedOptions')}</FormLabel>
+                  </div>
                 </FormItem>
               )}
             />
@@ -947,45 +1531,40 @@ export function ExpenseForm({
                                   ({ participant }) => participant === id,
                                 ) &&
                                   !form.watch('isReimbursement') && (
-                                    <span className="text-muted-foreground ml-2">
-                                      (
-                                      {formatCurrency(
-                                        groupCurrency,
-                                        calculateShare(id, {
-                                          amount: amountAsMinorUnits(
-                                            Number(form.watch('amount')),
-                                            groupCurrency,
-                                          ), // Convert to cents
-                                          paidFor: field.value.map(
-                                            ({ participant, shares }) => ({
-                                              participant: {
-                                                id: participant,
-                                                name: '',
-                                                groupId: '',
-                                              },
-                                              shares:
-                                                form.watch('splitMode') ===
-                                                'BY_PERCENTAGE'
-                                                  ? Number(shares) * 100 // Convert percentage to basis points (e.g., 50% -> 5000)
-                                                  : form.watch('splitMode') ===
-                                                      'BY_AMOUNT'
-                                                    ? amountAsMinorUnits(
-                                                        shares,
-                                                        groupCurrency,
-                                                      )
-                                                    : shares,
-                                              expenseId: '',
-                                              participantId: '',
-                                            }),
-                                          ),
-                                          splitMode: form.watch('splitMode'),
-                                          isReimbursement:
-                                            form.watch('isReimbursement'),
-                                        }),
-                                        locale,
-                                      )}
-                                      )
-                                    </span>
+                                    <ParticipantRowAmountPreview
+                                      amount={calculateShare(id, {
+                                        amount: amountAsMinorUnits(
+                                          Number(form.watch('amount')),
+                                          groupCurrency,
+                                        ), // Convert to cents
+                                        paidFor: field.value.map(
+                                          ({ participant, shares }) => ({
+                                            participant: {
+                                              id: participant,
+                                              name: '',
+                                              groupId: '',
+                                            },
+                                            shares:
+                                              form.watch('splitMode') ===
+                                              'BY_PERCENTAGE'
+                                                ? Number(shares) * 100 // Convert percentage to basis points (e.g., 50% -> 5000)
+                                                : form.watch('splitMode') ===
+                                                    'BY_AMOUNT'
+                                                  ? amountAsMinorUnits(
+                                                      shares,
+                                                      groupCurrency,
+                                                    )
+                                                  : shares,
+                                            expenseId: '',
+                                            participantId: '',
+                                          }),
+                                        ),
+                                        splitMode: form.watch('splitMode'),
+                                        isReimbursement:
+                                          form.watch('isReimbursement'),
+                                      })}
+                                      currency={groupCurrency}
+                                    />
                                   )}
                               </FormLabel>
                             </FormItem>
@@ -1202,6 +1781,33 @@ export function ExpenseForm({
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <ParticipantDistributionFooter
+              splitMode={form.watch('splitMode')}
+              targetAmount={
+                form.watch('splitMode') === 'BY_PERCENTAGE'
+                  ? 100
+                  : amountAsMinorUnits(
+                      Number(form.watch('amount')) || 0,
+                      groupCurrency,
+                    )
+              }
+              shares={
+                form.watch('splitMode') === 'BY_AMOUNT'
+                  ? form
+                      .watch('paidFor')
+                      .map((p) =>
+                        amountAsMinorUnits(
+                          Number(p.shares) || 0,
+                          groupCurrency,
+                        ),
+                      )
+                  : form.watch('paidFor').map((p) => Number(p.shares) || 0)
+              }
+              currency={groupCurrency}
+              paidByCount={form.watch('paidFor').length}
+              dataTestId="paid-for-distribution-footer"
             />
 
             <Collapsible

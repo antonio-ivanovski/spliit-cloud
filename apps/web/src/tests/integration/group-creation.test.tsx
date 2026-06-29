@@ -194,7 +194,9 @@ describe('Group CRUD via existing API', () => {
           expenseFormValues: {
             title: 'Integration Dinner',
             amount: 2500,
-            paidBy: participantId,
+            paidByList: [{ participant: participantId, shares: 2500 }],
+            paidBySplitMode: 'BY_AMOUNT',
+            isMultiPayer: false,
             paidFor: [{ participant: participantId, shares: 1 }],
             splitMode: 'EVENLY',
             expenseDate: new Date().toISOString(),

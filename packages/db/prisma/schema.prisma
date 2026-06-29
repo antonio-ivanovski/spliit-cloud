@@ -147,7 +147,7 @@ model LedgerParticipant {
   // rows (the display name is resolved through `groupMember.account.name`).
   displayName   String?
 
-  expensesPaidBy  Expense[]
+  expensesPaidByList ExpensePaidBy[]
   expensesPaidFor ExpensePaidFor[]
   activities      Activity[]
   // Pending invitations that materialized this ledger participant to allow
@@ -351,8 +351,8 @@ model Expense {
   originalAmount   Int?
   originalCurrency String?
   conversionRate   Decimal?
-  paidBy           LedgerParticipant @relation(fields: [paidById], references: [id], onDelete: Restrict)
-  paidById         String
+  paidBySplitMode  SplitMode         @default(BY_AMOUNT)
+  paidByList       ExpensePaidBy[]
   paidFor          ExpensePaidFor[]
   isReimbursement  Boolean           @default(false)
   splitMode        SplitMode         @default(EVENLY)
@@ -417,6 +417,17 @@ model ExpensePaidFor {
   shares              Int               @default(1)
 
   @@id([expenseId, ledgerParticipantId])
+}
+
+model ExpensePaidBy {
+  expense             Expense           @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  ledgerParticipant   LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Restrict)
+  expenseId           String
+  ledgerParticipantId String
+  shares              Int               @default(1)
+
+  @@id([expenseId, ledgerParticipantId])
+  @@index([ledgerParticipantId])
 }
 
 model Activity {

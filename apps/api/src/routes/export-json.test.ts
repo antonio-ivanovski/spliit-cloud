@@ -169,7 +169,17 @@ describe('exportGroupJson', () => {
         originalAmount: null,
         originalCurrency: null,
         conversionRate: null,
-        paidById: 'lp-1',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [
+          {
+            ledgerParticipant: {
+              id: 'lp-1',
+              groupMember: { account: { name: 'Alice' } },
+              invitations: [],
+            },
+            shares: 3000,
+          },
+        ],
         paidFor: [
           { ledgerParticipantId: 'lp-1', shares: 1 },
           { ledgerParticipantId: 'lp-pending', shares: 1 },

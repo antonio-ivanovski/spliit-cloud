@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Платил <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "paidByMultiple": "Платиле <paidByNames></paidByNames> за <paidFor></paidFor>",
     "everyone": "сите",
     "receivedBy": "Примил <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "receivedByMultiple": "Примиле <paidByNames></paidByNames> за <paidFor></paidFor>",
     "yourBalance": "Вашето салдо:",
     "notInvolved": "Не сте вклучени",
     "settlementBadge": "Пресметка"
@@ -597,6 +599,7 @@
       "byAmount": "Неравномерно – По износ",
       "saveAsDefault": "Зачувај како стандардни опции за делење"
     },
+    "paidByAdvancedOptions": "Напредни опции за плаќач…",
     "DeletePopup": {
       "label": "Избриши",
       "title": "Да се избрише овој трошок?",
@@ -611,7 +614,20 @@
     "saving": "Се зачувува…",
     "cancel": "Откажи",
     "reimbursement": "Раздолжување",
-    "readOnlyNotice": "Оваа група е архивирана. Трошокот се прикажува само за читање."
+    "readOnlyNotice": "Оваа група е архивирана. Трошокот се прикажува само за читање.",
+    "PaidBySplitModeField": {
+      "label": "Начин на делење за плаќач"
+    },
+    "ParticipantDistribution": {
+      "missing": "Недостига {missing} од {total}",
+      "surplus": "Вишок: {extra} од {total}",
+      "matches": "✓ Се совпаѓа со {total}",
+      "evenlySplit": "Подеднакво поделено: {amount} × {count}",
+      "sharesTotal": "Вкупна тежина: {sum} удели",
+      "percentageMatches": "✓ Се совпаѓа 100%",
+      "percentageMissing": "Недостига {pct}%",
+      "percentageSurplus": "Вишок: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +739,11 @@
     "paidForMin1": "Трошокот мора да биде платен за барем еден учесник.",
     "noZeroShares": "Сите удели мора да бидат поголеми од 0.",
     "amountSum": "Збирот на износите мора да биде еднаков на износот на трошокот.",
-    "percentageSum": "Збирот на процентите мора да биде 100."
+    "percentageSum": "Збирот на процентите мора да биде 100.",
+    "paidByMin1": "Мора да се избере најмалку еден плаќач.",
+    "paidByAmountSum": "Збирот на износите на плаќачите мора да биде еднаков на износот на трошокот.",
+    "paidByPercentageSum": "Збирот на процентите на плаќачите мора да биде 100.",
+    "duplicateParticipant": "Друг плаќач је већ изабран."
   },
   "Categories": {
     "search": "Пребарај категорија...",

@@ -77,8 +77,10 @@
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
+    "paidByMultiple": "Betaald door <paidByNames></paidByNames> voor <paidFor></paidFor>",
     "everyone": "iedereen",
     "receivedBy": "Ontvangen door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
+    "receivedByMultiple": "Ontvangen door <paidByNames></paidByNames> voor <paidFor></paidFor>",
     "yourBalance": "Jouw balans:",
     "notInvolved": "Je bent hier niet bij betrokken",
     "settlementBadge": "Verrekening"
@@ -477,6 +479,7 @@
       "byAmount": "Ongelijk – Met bedrag",
       "saveAsDefault": "Opslaan als standaard-optie"
     },
+    "paidByAdvancedOptions": "Geavanceerde betalersopties…",
     "DeletePopup": {
       "label": "Verwijderen",
       "title": "Deze uitgave verwijderen?",
@@ -491,7 +494,20 @@
     "saving": "Aan het opslaan…",
     "cancel": "Annuleren",
     "reimbursement": "Terugbetaling",
-    "readOnlyNotice": "Deze groep is gearchiveerd. De uitgave wordt alleen-lezen weergegeven."
+    "readOnlyNotice": "Deze groep is gearchiveerd. De uitgave wordt alleen-lezen weergegeven.",
+    "PaidBySplitModeField": {
+      "label": "Splitsingssoort betaler"
+    },
+    "ParticipantDistribution": {
+      "missing": "Ontbreekt {missing} van {total}",
+      "surplus": "Overschot: {extra} van {total}",
+      "matches": "✓ Komt overeen met {total}",
+      "evenlySplit": "Gelijk verdeeld: {amount} × {count}",
+      "sharesTotal": "Totaal gewicht: {sum} delen",
+      "percentageMatches": "✓ Komt overeen met 100%",
+      "percentageMissing": "Ontbreekt {pct}%",
+      "percentageSurplus": "Overschot: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "Een deel mag niet 0 zijn.",
     "amountSum": "Het totaalbedrag moet gelijk zijn aan het uitgavebedrag.",
     "percentageSum": "Het totaalpercentage moet gelijk zijn aan 100%.",
-    "ratePositive": "De koers moet groter dan nul zijn."
+    "ratePositive": "De koers moet groter dan nul zijn.",
+    "paidByMin1": "Selecteer ten minste één betaler.",
+    "paidByAmountSum": "Het totaal van de betalers moet gelijk zijn aan het uitgavenbedrag.",
+    "paidByPercentageSum": "Het totaal van de percentages van de betalers moet 100 zijn.",
+    "duplicateParticipant": "Er is al een andere betaler geselecteerd."
   },
   "Categories": {
     "search": "Categorie zoeken…",

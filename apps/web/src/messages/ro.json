@@ -78,7 +78,9 @@
   "ExpenseCard": {
     "paidBy": "Plătit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
+    "receivedByMultiple": "Primit de <paidByNames></paidByNames> pentru <paidFor></paidFor>",
     "yourBalance": "Soldul tău:",
+    "paidByMultiple": "Plătit de <paidByNames></paidByNames> pentru <paidFor></paidFor>",
     "everyone": "toată lumea",
     "notInvolved": "Nu ești implicat",
     "settlementBadge": "Decontare"
@@ -453,6 +455,7 @@
       "byAmount": "Inegal – În funcție de sumă",
       "saveAsDefault": "Salvează ca și implicite opțiunile de împărțire"
     },
+    "paidByAdvancedOptions": "Opțiuni avansate de plătitor…",
     "DeletePopup": {
       "label": "Șterge",
       "title": "Ștergi această cheltuială?",
@@ -491,7 +494,20 @@
     "participant": {
       "pending": "(invitat)"
     },
-    "readOnlyNotice": "Acest grup este arhivat. Cheltuiala este afișată doar în citire."
+    "readOnlyNotice": "Acest grup este arhivat. Cheltuiala este afișată doar în citire.",
+    "PaidBySplitModeField": {
+      "label": "Mod de împărțire plătitor"
+    },
+    "ParticipantDistribution": {
+      "missing": "Lipsă {missing} din {total}",
+      "surplus": "Excedent: {extra} din {total}",
+      "matches": "✓ Se potrivește {total}",
+      "evenlySplit": "Împărțit egal: {amount} × {count}",
+      "sharesTotal": "Greutate totală: {sum} părți",
+      "percentageMatches": "✓ Se potrivește 100%",
+      "percentageMissing": "Lipsă {pct}%",
+      "percentageSurplus": "Excedent: {pct}%"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -603,7 +619,11 @@
     "noZeroShares": "Toate părțile trebuie să fie mai mari de 0.",
     "amountSum": "Suma valorilor trebuie să fie egală cu suma cheltuielii.",
     "percentageSum": "Suma procentajelor trebuie să fie egală cu 100.",
-    "ratePositive": "Rata trebuie să fie strict mai mare decât zero."
+    "ratePositive": "Rata trebuie să fie strict mai mare decât zero.",
+    "paidByMin1": "Trebuie selectat cel puțin un plătitor.",
+    "paidByAmountSum": "Suma plătitorilor trebuie să fie egală cu suma cheltuielii.",
+    "paidByPercentageSum": "Suma procentelor plătitorilor trebuie să fie 100.",
+    "duplicateParticipant": "Un alt plătitor este deja selectat."
   },
   "Categories": {
     "search": "Căutați categorie…",
