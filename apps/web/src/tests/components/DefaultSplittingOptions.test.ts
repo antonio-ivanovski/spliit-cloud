@@ -4,7 +4,11 @@ import {
   persistDefaultSplittingOptions,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import type { ExpenseFormValues } from '@spliit/domain'
-import { getCurrency, PAYMENT_CATEGORY_ID, RecurrenceRule } from '@spliit/domain'
+import {
+  getCurrency,
+  PAYMENT_CATEGORY_ID,
+  RecurrenceRule,
+} from '@spliit/domain'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const STORAGE_KEY = 'spliit.defaultSplittingOptions'

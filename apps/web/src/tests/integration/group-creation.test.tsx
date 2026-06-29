@@ -327,7 +327,15 @@ describe('Group CRUD via existing API', () => {
       },
       expenseDate: new Date(),
       createdAt: new Date(),
-      paidBy: { id: participantId ?? 'lp-dummy', name: participantName },
+      paidByList: [
+        {
+          ledgerParticipant: {
+            id: participantId ?? 'lp-dummy',
+            name: participantName,
+          },
+          shares: 2500,
+        },
+      ],
       paidFor: [
         {
           ledgerParticipant: {
@@ -338,6 +346,7 @@ describe('Group CRUD via existing API', () => {
         },
       ],
       isReimbursement: false,
+      paidBySplitMode: 'BY_AMOUNT' as const,
       splitMode: 'EVENLY' as const,
       recurrenceRule: 'NONE' as const,
       _count: { documents: 0 },

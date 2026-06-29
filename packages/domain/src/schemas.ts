@@ -250,7 +250,9 @@ export const expenseFormSchema = z
         // Shares are in original currency when originalCurrency is set,
         // so the sum is checked against originalAmount instead of amount.
         const target = new Decimal(
-          expense.originalCurrency ? expense.originalAmount ?? expense.amount : expense.amount,
+          expense.originalCurrency
+            ? (expense.originalAmount ?? expense.amount)
+            : expense.amount,
         )
         const sum = expense.paidByList.reduce(
           (sum, { shares }) => new Decimal(shares).add(sum),

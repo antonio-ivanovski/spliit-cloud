@@ -97,7 +97,14 @@ const initialGroupFormValues = (source: NormalizedSource | null) => ({
  */
 export function buildImportExpenses<
   T extends { paidBy: string; amount: number; originalAmount?: number },
->(expenses: T[]): Array<Omit<T, 'paidBy'> & { paidByList: Array<{ participant: string; shares: number }>; paidBySplitMode: 'BY_AMOUNT' }> {
+>(
+  expenses: T[],
+): Array<
+  Omit<T, 'paidBy'> & {
+    paidByList: Array<{ participant: string; shares: number }>
+    paidBySplitMode: 'BY_AMOUNT'
+  }
+> {
   return expenses.map(({ paidBy, ...rest }) => ({
     ...rest,
     paidByList: [

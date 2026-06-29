@@ -2636,14 +2636,25 @@ export async function linkUnlinkedParticipantToAccount(opts: {
 /**
  * Rewrite all `ExpensePaidBy.ledgerParticipantId` and
  * `ExpensePaidFor.ledgerParticipantId` references from one
- * `LedgerParticipant` id to another. Caller is responsible for confirming
- * the source row is no longer referenced before deletion.
+ * `LedgerParticipant` id to another. Both tables use the composite
+ * primary key `(expenseId, ledgerParticipantId)`, so when the source and
+ * target LP already share an expense the rows are coalesced (shares are
+ * summed onto the target row and the source row is deleted) before the
+ * remaining non-conflicting rows are rewritten. Shares are summed for all
+ * split modes — `BY_AMOUNT` carries money, while `BY_SHARES` and
+ * `BY_PERCENTAGE` (basis points) carry weights; in both cases the sum is
+ * the correct combined weight. Caller is responsible for confirming the
+ * source row is no longer referenced before deletion.
  */
 export async function mergeLedgerParticipantReferences(
   tx: Prisma.TransactionClient,
   opts: { sourceId: string; targetId: string },
 ): Promise<void> {
   const { sourceId, targetId } = opts
+
+  await coalesceExpenseReferences(tx.expensePaidBy, sourceId, targetId)
+  await coalesceExpenseReferences(tx.expensePaidFor, sourceId, targetId)
+
   await tx.expensePaidBy.updateMany({
     where: { ledgerParticipantId: sourceId },
     data: { ledgerParticipantId: targetId },
@@ -2652,6 +2663,78 @@ export async function mergeLedgerParticipantReferences(
     where: { ledgerParticipantId: sourceId },
     data: { ledgerParticipantId: targetId },
   })
+}
+
+/**
+ * For each `(expenseId, sourceId)` row in the given expense-reference
+ * table, fold it into a matching `(expenseId, targetId)` row when one
+ * exists. Used by `mergeLedgerParticipantReferences` to handle the case
+ * where source and target LP already share an expense — the composite
+ * primary key would otherwise reject the subsequent rewrite.
+ */
+async function coalesceExpenseReferences<
+  T extends {
+    findMany: (args: {
+      where: { ledgerParticipantId: string }
+    }) => Promise<Array<{ expenseId: string; shares: number }>>
+    findUnique: (args: {
+      where: {
+        expenseId_ledgerParticipantId: {
+          expenseId: string
+          ledgerParticipantId: string
+        }
+      }
+    }) => Promise<{ expenseId: string; shares: number } | null>
+    update: (args: {
+      where: {
+        expenseId_ledgerParticipantId: {
+          expenseId: string
+          ledgerParticipantId: string
+        }
+      }
+      data: { shares: number }
+    }) => Promise<unknown>
+    delete: (args: {
+      where: {
+        expenseId_ledgerParticipantId: {
+          expenseId: string
+          ledgerParticipantId: string
+        }
+      }
+    }) => Promise<unknown>
+  },
+>(table: T, sourceId: string, targetId: string): Promise<void> {
+  const sourceRows = await table.findMany({
+    where: { ledgerParticipantId: sourceId },
+  })
+  for (const row of sourceRows) {
+    const target = await table.findUnique({
+      where: {
+        expenseId_ledgerParticipantId: {
+          expenseId: row.expenseId,
+          ledgerParticipantId: targetId,
+        },
+      },
+    })
+    if (!target) continue
+    await table.update({
+      where: {
+        expenseId_ledgerParticipantId: {
+          expenseId: target.expenseId,
+          ledgerParticipantId: targetId,
+        },
+      },
+      data: { shares: target.shares + row.shares },
+    })
+    await table.delete({
+      where: {
+        expenseId_ledgerParticipantId: {
+          expenseId: row.expenseId,
+          ledgerParticipantId: sourceId,
+        },
+      },
+    })
+  }
 }
 
 /**

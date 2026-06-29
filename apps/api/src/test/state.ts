@@ -72,19 +72,25 @@ const hoisted = vi.hoisted(() => {
     ]),
     expensePaidFor: makeMethodStubs([
       'findMany',
+      'findUnique',
       'create',
       'createMany',
       'count',
       'deleteMany',
       'updateMany',
+      'update',
+      'delete',
     ]),
     expensePaidBy: makeMethodStubs([
       'findMany',
+      'findUnique',
       'create',
       'createMany',
       'count',
       'deleteMany',
       'updateMany',
+      'update',
+      'delete',
     ]),
     recurringExpenseLink: makeMethodStubs([
       'findUnique',
@@ -135,6 +141,11 @@ const hoisted = vi.hoisted(() => {
         fn.mockResolvedValue(null)
       }
     }
+    // `findMany` on the per-expense reference tables defaults to `[]`
+    // so the merge path (which walks source rows before rewriting) does
+    // not crash when a fixture forgets to stub it.
+    prismaMock.expensePaidBy.findMany.mockResolvedValue([] as never)
+    prismaMock.expensePaidFor.findMany.mockResolvedValue([] as never)
     $transaction.mockReset()
     $transaction.mockImplementation(async (input: unknown) => {
       if (typeof input === 'function') {
