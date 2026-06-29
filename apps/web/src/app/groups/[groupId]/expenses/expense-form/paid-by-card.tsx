@@ -58,11 +58,20 @@ export function PaidByCard(props: {
     name: 'isReimbursement',
   })
 
+  const isOriginalPayer = payerCurrency.code !== groupCurrency.code
+  const singlePayerTargetAmount = isOriginalPayer
+    ? Number(originalAmount) || 0
+    : Number(amount) || 0
+  const singlePayerPaidByList = (
+    participant: string,
+  ): ExpenseFormValues['paidByList'] => [
+    { participant, shares: singlePayerTargetAmount },
+  ]
+
   const handlePaidBySplitModeChange = (nextMode: SplitMode) => {
     const currentMode = form.getValues('paidBySplitMode')
     if (currentMode === nextMode) return
     const currentPaidByList = form.getValues('paidByList')
-    const isOriginalPayer = payerCurrency.code !== groupCurrency.code
     const targetAmount = isOriginalPayer
       ? Number(form.getValues('originalAmount')) || 0
       : Number(form.getValues('amount')) || 0
@@ -85,19 +94,16 @@ export function PaidByCard(props: {
     })
   }
 
-  // Keep the single-payer share in sync when the amount is edited.
+  // Single-payer BY_AMOUNT shares are entered in payer currency.
   useEffect(() => {
     if (isMultiPayer) return
     const list = form.getValues('paidByList')
     if (list.length !== 1 || !list[0]?.participant) return
-    const activeAmount = String(Number(amount) || '0')
-    if (String(list[0].shares) === activeAmount) return
-    form.setValue(
-      'paidByList',
-      [{ participant: list[0].participant, shares: activeAmount }] as any,
-      { shouldValidate: true },
-    )
-  }, [amount, isMultiPayer])
+    if (Number(list[0].shares) === singlePayerTargetAmount) return
+    form.setValue('paidByList', singlePayerPaidByList(list[0].participant), {
+      shouldValidate: true,
+    })
+  }, [singlePayerTargetAmount, isMultiPayer])
 
   return (
     <Card className="mt-4">
@@ -118,8 +124,9 @@ export function PaidByCard(props: {
                   ? []
                   : group.participants.map((p) => ({
                       participant: p.id,
-                      shares: (paidByList.find((pb) => pb.participant === p.id)
-                        ?.shares ?? '1') as any,
+                      shares:
+                        paidByList.find((pb) => pb.participant === p.id)
+                          ?.shares ?? 1,
                     }))
                 form.setValue('paidByList', newPaidByList as any, {
                   shouldDirty: true,
@@ -150,7 +157,6 @@ export function PaidByCard(props: {
             }}
             onChange={(next) => {
               const currentIsMultiPayer = form.getValues('isMultiPayer')
-              const amount = String(Number(form.getValues('amount')) || 0)
 
               if (next.isMultiPayer && currentIsMultiPayer) {
                 handlePaidBySplitModeChange(next.splitMode)
@@ -165,7 +171,7 @@ export function PaidByCard(props: {
                   ''
                 form.setValue(
                   'paidByList',
-                  [{ participant: firstSelected, shares: amount }] as any,
+                  singlePayerPaidByList(firstSelected),
                   {
                     shouldDirty: true,
                     shouldValidate: true,
@@ -186,7 +192,7 @@ export function PaidByCard(props: {
                 if (firstParticipant) {
                   form.setValue(
                     'paidByList',
-                    [{ participant: firstParticipant, shares: amount }] as any,
+                    singlePayerPaidByList(firstParticipant),
                     {
                       shouldDirty: true,
                       shouldValidate: true,
@@ -265,7 +271,6 @@ export function PaidByCard(props: {
             name="paidByList"
             render={() => {
               const selectedPayer = paidByList[0]?.participant ?? ''
-              const amountStr = String(Number(amount) || 0)
               return (
                 <FormItem>
                   <Select
@@ -273,7 +278,7 @@ export function PaidByCard(props: {
                     onValueChange={(value) => {
                       form.setValue(
                         'paidByList',
-                        [{ participant: value, shares: amountStr }] as any,
+                        singlePayerPaidByList(value),
                         {
                           shouldDirty: true,
                           shouldTouch: true,

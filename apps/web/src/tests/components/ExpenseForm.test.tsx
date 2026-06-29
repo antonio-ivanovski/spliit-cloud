@@ -642,6 +642,49 @@ describe('ExpenseForm', () => {
     )
     expect(paidByPerRowShareInputs.length).toBe(0)
   })
+
+  it('keeps single-payer paid-by amount in original currency during create', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      refresh: vi.fn(),
+    })
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(screen.getByLabelText(/expense title/i), 'Dinner')
+
+    const currencySelector = screen.getAllByRole('combobox')[0]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    const originalAmountInput = await screen.findByRole('textbox', {
+      name: /amount to convert/i,
+    })
+    await user.type(originalAmountInput, '100')
+    await user.clear(screen.getByRole('textbox', { name: /^amount$/i }))
+    await user.type(screen.getByRole('textbox', { name: /^amount$/i }), '110')
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    expect(
+      screen.queryByText('Sum of payer amounts must equal the expense amount.'),
+    ).not.toBeInTheDocument()
+    expect(onSubmit.mock.calls[0][0].paidByList).toEqual([
+      { participant: 'lp-1', shares: 10000 },
+    ])
+  })
 })
 
 // ── ParticipantDistributionFooter tests ────────────────────────────────
