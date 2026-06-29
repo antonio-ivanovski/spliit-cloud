@@ -59,6 +59,7 @@ export function BasicDetailsCard(props: {
   convertedAmountPreview: number | undefined
   exchangeRate: {
     data: number | undefined
+    error: Error | null
     isLoading: boolean
     refresh: () => void
   }
@@ -268,16 +269,18 @@ export function BasicDetailsCard(props: {
                       !props.usingCustomConversionRate ? (
                       <>
                         {props.conversionRateMessage}
-                        {!props.exchangeRate.isLoading && (
-                          <Button
-                            className="h-auto py-0"
-                            variant="link"
-                            onClick={() => props.exchangeRate.refresh()}
-                            disabled={readOnly}
-                          >
-                            {t('conversionRateState.refresh')}
-                          </Button>
-                        )}
+                        {!props.exchangeRate.isLoading &&
+                          props.exchangeRate.error && (
+                            <Button
+                              type="button"
+                              className="h-auto py-0"
+                              variant="link"
+                              onClick={() => props.exchangeRate.refresh()}
+                              disabled={readOnly}
+                            >
+                              {t('conversionRateState.refresh')}
+                            </Button>
+                          )}
                       </>
                     ) : (
                       t('conversionRateState.customRate')
@@ -289,6 +292,7 @@ export function BasicDetailsCard(props: {
                   >
                     <CollapsibleTrigger asChild>
                       <Button
+                        type="button"
                         variant="link"
                         className="-mx-4 h-auto py-0"
                         disabled={readOnly}

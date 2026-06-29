@@ -460,6 +460,63 @@ describe('ExpenseForm', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('does not render the refresh button when the conversion rate loaded successfully', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      refresh: vi.fn(),
+    })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const currencySelector = screen.getAllByRole('combobox')[0]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    await screen.findByTestId('converted-amount-preview')
+
+    expect(
+      screen.queryByRole('button', { name: /refresh/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows the refresh button on conversion rate error and clicking it does not submit the form', async () => {
+    const refresh = vi.fn()
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: undefined,
+      error: new Error('Could not fetch rate'),
+      isLoading: false,
+      refresh,
+    })
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const currencySelector = screen.getAllByRole('combobox')[0]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    const retryButton = await screen.findByRole('button', { name: /refresh/i })
+    expect(retryButton).toBeInTheDocument()
+
+    await user.click(retryButton)
+    expect(refresh).toHaveBeenCalledTimes(1)
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
   it('submits the typed amount as originalAmount when a different currency is selected', async () => {
     vi.mocked(useCurrencyRate).mockReturnValue({
       data: 1.1,
