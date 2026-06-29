@@ -18,6 +18,9 @@ Copy `container.env.example` to `container.env`, set the required values (see th
 - `SMTP_HOST`, `EMAIL_FROM` — required for magic-link sign-in and invitations
 - `S3_UPLOAD_*` — only if `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true`
 - `OPENAI_API_KEY` — only if `PUBLIC_ENABLE_RECEIPT_EXTRACT=true` or `PUBLIC_ENABLE_CATEGORY_EXTRACT=true`
+- `OPENAI_BASE_URL` — optional, for OpenAI-compatible providers (e.g. `https://openrouter.ai/api/v1`)
+- `OPENAI_RECEIPT_MODEL` — optional, defaults to `gpt-5-nano`
+- `OPENAI_CATEGORY_MODEL` — optional, defaults to `gpt-3.5-turbo`
 
 The web app is a Vite SPA. Build with `bun run build`, serve `apps/web/dist` from any static host, and set `VITE_API_URL` to your API origin.
 

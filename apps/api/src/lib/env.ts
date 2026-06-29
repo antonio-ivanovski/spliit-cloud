@@ -31,6 +31,9 @@ const envSchema = z
       z.boolean().default(false),
     ),
     OPENAI_API_KEY: z.string().optional(),
+    OPENAI_BASE_URL: z.string().url().optional(),
+    OPENAI_RECEIPT_MODEL: z.string().optional().default('gpt-5-nano'),
+    OPENAI_CATEGORY_MODEL: z.string().optional().default('gpt-3.5-turbo'),
 
     // better-auth
     BETTER_AUTH_SECRET: z.string().optional(),

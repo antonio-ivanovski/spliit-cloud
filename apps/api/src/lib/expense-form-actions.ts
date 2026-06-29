@@ -3,11 +3,9 @@ import {
   DEFAULT_CATEGORY_ID,
   formatCategoryForAIPrompt,
 } from '@spliit/domain'
-import OpenAI from 'openai'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
 import { env } from './env'
-
-let openai: OpenAI
+import { getOpenAIClient } from './openai'
 
 /** Limit of characters to be evaluated. May help avoiding abuse when using AI. */
 const limit = 40 // ~10 tokens
@@ -17,14 +15,12 @@ const limit = 40 // ~10 tokens
  * @param description Expense title or description. Only the first characters as defined in {@link limit} will be used.
  */
 export async function extractCategoryFromTitle(description: string) {
-  if (!openai) {
-    openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
-  }
+  const openai = getOpenAIClient()
 
   const categories = DEFAULT_CATEGORIES
 
   const body: ChatCompletionCreateParamsNonStreaming = {
-    model: 'gpt-3.5-turbo',
+    model: env.OPENAI_CATEGORY_MODEL,
     temperature: 0.1, // try to be highly deterministic so that each distinct title may lead to the same category every time
     // Category ids are now string slugs (e.g. `tv-phone-internet`,
     // `food-and-drink`); the previous cap of 1 token silently truncated

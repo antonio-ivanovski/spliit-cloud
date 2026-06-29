@@ -207,12 +207,12 @@ is not configured, documents use the default AWS S3 public URL format.
 
 ### Create expense from receipt
 
-You can offer users to create expense by uploading a receipt. This feature relies on [OpenAI GPT-4 with Vision](https://platform.openai.com/docs/guides/vision) and a public S3 storage endpoint.
+You can offer users to create expense by uploading a receipt. This feature relies on an OpenAI-compatible API and a public S3 storage endpoint.
 
 To enable the feature:
 
 - You must enable expense documents feature as well (see section above). That might change in the future, but for now we need to store images to make receipt scanning work.
-- Subscribe to OpenAI API and get access to GPT 4 with Vision (you might need to buy credits in advance).
+- Subscribe to an OpenAI-compatible provider and get an API key.
 - Update your environment variables with appropriate values:
 
 ```.env
@@ -220,14 +220,30 @@ PUBLIC_ENABLE_RECEIPT_EXTRACT=true
 OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
+The model used for receipt extraction defaults to `gpt-5-nano`. Override it with `OPENAI_RECEIPT_MODEL`.
+
 ### Deduce category from title
 
-You can offer users to automatically deduce the expense category from the title. Since this feature relies on a OpenAI subscription, follow the signup instructions above and configure the following environment variables:
+You can offer users to automatically deduce the expense category from the title. This feature relies on an OpenAI-compatible API, follow the signup instructions above and configure the following environment variables:
 
 ```.env
 PUBLIC_ENABLE_CATEGORY_EXTRACT=true
 OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
+
+The model used for category extraction defaults to `gpt-3.5-turbo`. Override it with `OPENAI_CATEGORY_MODEL`.
+
+### Using an OpenAI-compatible provider
+
+Both AI features can use any OpenAI-compatible provider by setting a custom base URL:
+
+```.env
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+OPENAI_RECEIPT_MODEL=openai/gpt-4o-mini
+OPENAI_CATEGORY_MODEL=openai/gpt-4o-mini
+```
+
+`OPENAI_BASE_URL` is optional. When unset, the official OpenAI endpoint is used.
 
 ## Stack
 

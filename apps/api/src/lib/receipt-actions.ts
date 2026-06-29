@@ -1,18 +1,14 @@
 import { DEFAULT_CATEGORIES, formatCategoryForAIPrompt } from '@spliit/domain'
-import OpenAI from 'openai'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
 import { env } from './env'
-
-let openai: OpenAI
+import { getOpenAIClient } from './openai'
 
 export async function extractExpenseInformationFromImage(imageUrl: string) {
-  if (!openai) {
-    openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
-  }
+  const openai = getOpenAIClient()
   const categories = DEFAULT_CATEGORIES
 
   const body: ChatCompletionCreateParamsNonStreaming = {
-    model: 'gpt-5-nano',
+    model: env.OPENAI_RECEIPT_MODEL,
     messages: [
       {
         role: 'user',
