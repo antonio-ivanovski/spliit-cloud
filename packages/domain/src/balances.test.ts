@@ -756,6 +756,85 @@ describe('getBalances', () => {
     expect(balances.p0.paid).toBe(40)
     expect(balances.p1.paid).toBe(60)
   })
+
+  it('cross-currency single-payer BY_AMOUNT: MKD group, EUR 10, single row with shares=1000 converts payer amount to MKD', () => {
+    const mkdConversionRate = 61
+    const mkdAmount = Math.round(1000 * mkdConversionRate)
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: mkdAmount,
+        originalAmount: 1000,
+        originalCurrency: 'EUR',
+        conversionRate: mkdConversionRate,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: { id: 'p0', name: 'P0' }, shares: 1000 }],
+        paidFor: [{ participant: { id: 'p0', name: 'P0' }, shares: mkdAmount }],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances.p0.paid).toBe(mkdAmount)
+    expect(balances.p0.paidFor).toBe(mkdAmount)
+    expect(balances.p0.total).toBe(0)
+  })
+
+  it('cross-currency 2-payer BY_AMOUNT: MKD group, EUR 10, 50/50 split', () => {
+    const mkdConversionRate = 61
+    const mkdAmount = Math.round(1000 * mkdConversionRate)
+    const eachMkd = mkdAmount / 2
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: mkdAmount,
+        originalAmount: 1000,
+        originalCurrency: 'EUR',
+        conversionRate: mkdConversionRate,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 500 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 500 },
+        ],
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: eachMkd },
+          { participant: { id: 'p1', name: 'P1' }, shares: eachMkd },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances.p0.paid).toBe(Math.round(500 * mkdConversionRate))
+    expect(balances.p1.paid).toBe(Math.round(500 * mkdConversionRate))
+    expect(balances.p0.paidFor).toBe(eachMkd)
+    expect(balances.p1.paidFor).toBe(eachMkd)
+    expect(balances.p0.total + balances.p1.total).toBe(0)
+  })
+
+  it('multi-payer cross-currency BY_PERCENTAGE: 50/50 of EUR 10 on MKD group', () => {
+    const mkdConversionRate = 61
+    const mkdAmount = Math.round(1000 * mkdConversionRate)
+    const eachMkd = mkdAmount / 2
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: mkdAmount,
+        originalAmount: 1000,
+        originalCurrency: 'EUR',
+        conversionRate: mkdConversionRate,
+        paidBySplitMode: 'BY_PERCENTAGE',
+        paidByList: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 5000 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 5000 },
+        ],
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: eachMkd },
+          { participant: { id: 'p1', name: 'P1' }, shares: eachMkd },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances.p0.paid).toBe(Math.round((5000 / 10000) * mkdAmount))
+    expect(balances.p1.paid).toBe(Math.round((5000 / 10000) * mkdAmount))
+    expect(balances.p0.total + balances.p1.total).toBe(0)
+  })
 })
 
 describe('getSuggestedReimbursements', () => {

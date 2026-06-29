@@ -6,13 +6,17 @@
 -- `BY_AMOUNT` so existing data is consistent — the single payer is
 -- distributed as the full amount).
 --
--- Backfill: every existing Expense becomes a single-row `ExpensePaidBy`
--- with `shares = GREATEST(amount, 1)`. The `GREATEST` guard avoids the
--- zero-share constraint that the domain layer enforces on payer rows;
--- zero-amount reimbursements still need a non-zero shares value to
--- participate in distributions. The single backfilled row is then
--- indistinguishable from today's single-payer shape, so callers that
--- haven't migrated yet still see one payer per expense at read time.
+-- Backfill: every existing Expense becomes a single-row `ExpensePaidBy`.
+-- The single backfilled row is indistinguishable from today's single-payer
+-- shape, so callers that haven't migrated yet still see one payer per
+-- expense at read time.
+--
+-- Cross-currency invariant: paid-by `BY_AMOUNT` shares are in the original
+-- currency when `originalCurrency` is set. The backfill therefore uses
+-- `originalAmount` for cross-currency expenses and `amount` for same-currency
+-- expenses. The `GREATEST` guard avoids the zero-share constraint that the
+-- domain layer enforces on payer rows; zero-amount reimbursements still need
+-- a non-zero shares value to participate in distributions.
 
 -- CreateTable
 CREATE TABLE "ExpensePaidBy" (
@@ -35,10 +39,26 @@ ALTER TABLE "ExpensePaidBy" ADD CONSTRAINT "ExpensePaidBy_ledgerParticipantId_fk
 -- AlterTable
 ALTER TABLE "Expense" ADD COLUMN "paidBySplitMode" "SplitMode" NOT NULL DEFAULT 'BY_AMOUNT';
 
--- Backfill: one row per Expense, shares = the expense amount (or 1 if amount=0).
+-- Backfill: one row per Expense, shares = originalAmount for cross-currency
+-- expenses, amount otherwise (GREATEST guard for zero amounts).
 -- Done in a single statement so the migration stays in one transaction.
 INSERT INTO "ExpensePaidBy" ("expenseId", "ledgerParticipantId", "shares")
-SELECT "id", "paidById", GREATEST("amount", 1)
+SELECT
+  "id",
+  "paidById",
+  GREATEST(
+    COALESCE(
+      CASE
+        WHEN "originalAmount" IS NOT NULL
+          AND "originalCurrency" IS NOT NULL
+          AND "originalCurrency" <> ''
+        THEN "originalAmount"
+        ELSE "amount"
+      END,
+      "amount"
+    ),
+    1
+  )
 FROM "Expense";
 
 -- DropForeignKey

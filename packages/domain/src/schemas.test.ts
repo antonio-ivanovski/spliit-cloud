@@ -394,6 +394,95 @@ describe('expenseFormSchema', () => {
   })
 })
 
+describe('expenseFormSchema cross-currency paidByList BY_AMOUNT', () => {
+  it('paidByList BY_AMOUNT with originalCurrency EUR and shares summing to originalAmount is valid', () => {
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 61000,
+      originalAmount: 1000,
+      originalCurrency: 'EUR',
+      conversionRate: 61,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 1000 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('paidByList BY_AMOUNT with originalCurrency and shares not summing to originalAmount is invalid', () => {
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 61000,
+      originalAmount: 1000,
+      originalCurrency: 'EUR',
+      conversionRate: 61,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 100 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some((i) => i.message === 'paidByAmountSum'),
+    ).toBe(true)
+  })
+
+  it('paidByList BY_AMOUNT with NO originalCurrency validates against amount', () => {
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 1000,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: 1000 }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('cross-currency paidByList BY_AMOUNT transform returns correct minor units', () => {
+    const result = expenseFormSchema.safeParse({
+      expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+      title: 'Dinner',
+      category: 'general',
+      amount: 61000,
+      originalAmount: 1000,
+      originalCurrency: 'EUR',
+      conversionRate: 61,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'p0', shares: '1000' }],
+      paidFor: [{ participant: 'p0', shares: 1 }],
+      splitMode: 'EVENLY',
+      saveDefaultSplittingOptions: false,
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE',
+    })
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    expect(result.data.paidByList[0].shares).toBe(1000)
+  })
+})
+
 describe('groupFormSchema', () => {
   it('validates group creation', () => {
     const result = groupFormSchema.safeParse({
