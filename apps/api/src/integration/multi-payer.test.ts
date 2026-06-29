@@ -363,7 +363,142 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 5. Update toggles multi-payer off (downgrade)
+  // 5. Cross-currency single-payer BY_AMOUNT creates correct shares
+  // ────────────────────────────────────────────────────────────────────────
+
+  it('cross-currency: createExpense with EUR original and BY_AMOUNT stores shares in original currency', async () => {
+    const { groupId, participants, ledgerId } = await createUsdGroup(
+      `MP-XC-ByAmt-${runId}`,
+    )
+    // Switch ledger to EUR so the cross-currency path is exercised.
+    await prisma.ledger.update({
+      where: { id: ledgerId },
+      data: { currency: '\u20ac', currencyCode: 'EUR' },
+    })
+
+    const result = await makeCaller().expenses.create({
+      groupId,
+      expenseFormValues: {
+        title: 'XC BY_AMOUNT',
+        amount: 1090,
+        expenseDate: new Date().toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        originalAmount: 1000,
+        originalCurrency: 'USD',
+        conversionRate: 1.09,
+        paidByList: [{ participant: participants['Admin'], shares: 1000 }],
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    const expense = await readExpense(result.expenseId)
+    expect(expense!.paidBySplitMode).toBe('BY_AMOUNT')
+    expect(expense!.paidByList).toHaveLength(1)
+    expect(expense!.paidByList[0].shares).toBe(1000)
+  })
+
+  it('cross-currency: updateExpense preserves shares in original currency', async () => {
+    const { groupId, participants, ledgerId } = await createUsdGroup(
+      `MP-XC-Upd-${runId}`,
+    )
+    await prisma.ledger.update({
+      where: { id: ledgerId },
+      data: { currency: '\u20ac', currencyCode: 'EUR' },
+    })
+
+    const create = await makeCaller().expenses.create({
+      groupId,
+      expenseFormValues: {
+        title: 'XC Update',
+        amount: 1090,
+        expenseDate: new Date().toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        originalAmount: 1000,
+        originalCurrency: 'USD',
+        conversionRate: 1.09,
+        paidByList: [{ participant: participants['Admin'], shares: 1000 }],
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    await makeCaller().expenses.update({
+      groupId,
+      expenseId: create.expenseId,
+      expenseFormValues: {
+        title: 'XC Update',
+        amount: 1090,
+        expenseDate: new Date().toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        originalAmount: 1000,
+        originalCurrency: 'USD',
+        conversionRate: 1.09,
+        paidByList: [{ participant: participants['Admin'], shares: 1000 }],
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    const expense = await readExpense(create.expenseId)
+    expect(expense!.paidByList).toHaveLength(1)
+    expect(expense!.paidByList[0].shares).toBe(1000)
+  })
+
+  it('cross-currency: getExpense returns correct paidByList with original-currency shares', async () => {
+    const { groupId, participants, ledgerId } = await createUsdGroup(
+      `MP-XC-Get-${runId}`,
+    )
+    await prisma.ledger.update({
+      where: { id: ledgerId },
+      data: { currency: '\u20ac', currencyCode: 'EUR' },
+    })
+
+    const result = await makeCaller().expenses.create({
+      groupId,
+      expenseFormValues: {
+        title: 'XC Get',
+        amount: 1090,
+        expenseDate: new Date().toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        originalAmount: 1000,
+        originalCurrency: 'USD',
+        conversionRate: 1.09,
+        paidByList: [{ participant: participants['Admin'], shares: 1000 }],
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    const expense = await readExpense(result.expenseId)
+    expect(expense!.paidByList).toHaveLength(1)
+    expect(expense!.paidByList[0].shares).toBe(1000)
+    expect(expense!.originalAmount).toBe(1000)
+    expect(expense!.originalCurrency).toBe('USD')
+  })
+
+  // ────────────────────────────────────────────────────────────────────────
+  // 7. Update toggles multi-payer off (downgrade)
   // ────────────────────────────────────────────────────────────────────────
 
   it('downgrades an expense from multi-payer to single-payer on update', async () => {
@@ -414,7 +549,7 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 6. Update toggles multi-payer on (upgrade)
+  // 8. Update toggles multi-payer on (upgrade)
   // ────────────────────────────────────────────────────────────────────────
 
   it('upgrades an expense to multi-payer on update', async () => {
@@ -466,7 +601,7 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 7. Recurrence cloning preserves paidByList
+  // 9. Recurrence cloning preserves paidByList
   // ────────────────────────────────────────────────────────────────────────
 
   it('a recurring multi-payer expense materializes with the same paidByList', async () => {
@@ -533,7 +668,7 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 8. Settlement archive writes single-row paidByList
+  // 10. Settlement archive writes single-row paidByList
   // ────────────────────────────────────────────────────────────────────────
 
   it('archive settlement writes Settlement expenses with a single-row paidByList', async () => {
@@ -583,7 +718,7 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 9. Settlement on leave writes single-row paidByList
+  // 11. Settlement on leave writes single-row paidByList
   // ────────────────────────────────────────────────────────────────────────
 
   it('leave-group settlement writes Settlement expenses with a single-row paidByList', async () => {
@@ -677,7 +812,7 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 10. CSV export — multi-payer row formula
+  // 12. CSV export — multi-payer row formula
   // ────────────────────────────────────────────────────────────────────────
   //
   // The CSV route (`exportGroupCsv`) needs a real better-auth session
@@ -737,7 +872,7 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 11. JSON export shape
+  // 13. JSON export shape
   // ────────────────────────────────────────────────────────────────────────
 
   it('JSON export shape includes paidByList + paidBySplitMode and omits paidById', async () => {
@@ -788,7 +923,7 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 12. Spliit import: legacy {paidById} wraps to a 1-row paidByList
+  // 14. Spliit import: legacy {paidById} wraps to a 1-row paidByList
   // ────────────────────────────────────────────────────────────────────────
 
   it('importing a legacy Spliit export wraps {paidById} into a 1-row paidByList', async () => {

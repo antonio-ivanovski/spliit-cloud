@@ -14,7 +14,9 @@ import { trpc } from '@/trpc/client'
 import { getRouteApi } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
+import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form'
+import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 
 const createExpenseRouteApi = getRouteApi('/groups/$groupId/expenses/create')
 
@@ -33,6 +35,7 @@ export function CreateExpenseForm({
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
   const isPendingInvitee = useIsPendingInvitee()
+  const linkInviteToken = useLinkInviteToken()
 
   const { mutateAsync: createExpenseMutateAsync } =
     trpc.groups.expenses.create.useMutation()
@@ -103,16 +106,21 @@ export function CreateExpenseForm({
           groupId,
           expenseFormValues,
         })
-        utils.groups.expenses.invalidate()
-        utils.groups.activities.invalidate()
-        utils.groups.leavePreview.invalidate({ groupId })
+        await utils.groups.expenses.list.reset({
+          groupId,
+          limit: EXPENSE_LIST_PAGE_SIZE,
+          filter: '',
+          linkInviteToken,
+        })
+        await utils.groups.activities.invalidate()
+        await utils.groups.leavePreview.invalidate({ groupId })
         // A manual settlement expense (reimbursement) can clear the
         // invitee's balance; drop the cached `revokePreview` so the
         // revoke dialog re-reads `hasUnsettledBalance` instead of
         // showing the stale warning.
-        utils.invitations.revokePreview.invalidate()
+        await utils.invitations.revokePreview.invalidate()
         router.push({
-          to: '/groups/$groupId',
+          to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
         })
       }}
