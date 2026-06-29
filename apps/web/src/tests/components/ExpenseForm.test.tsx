@@ -685,6 +685,43 @@ describe('ExpenseForm', () => {
       { participant: 'lp-1', shares: 10000 },
     ])
   })
+
+  it('clears paid-by zero-share error after amount is entered in evenly mode', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*evenly/i }),
+    )
+    await user.type(screen.getByRole('textbox', { name: /^amount$/i }), '10')
+
+    await vi.waitFor(() => {
+      expect(
+        screen.queryByText('All shares must be higher than 0.'),
+      ).not.toBeInTheDocument()
+    })
+    expect(screen.getByText(/Evenly split: \$10\.00 × 1/)).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by shares/i }),
+    )
+    expect(
+      screen.queryByText('All shares must be higher than 0.'),
+    ).not.toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*evenly/i }),
+    )
+    expect(
+      screen.queryByText('All shares must be higher than 0.'),
+    ).not.toBeInTheDocument()
+  })
 })
 
 // ── ParticipantDistributionFooter tests ────────────────────────────────

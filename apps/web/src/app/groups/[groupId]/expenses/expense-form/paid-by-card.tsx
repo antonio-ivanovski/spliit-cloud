@@ -67,6 +67,8 @@ export function PaidByCard(props: {
   ): ExpenseFormValues['paidByList'] => [
     { participant, shares: singlePayerTargetAmount },
   ]
+  const initialMultiPayerShare = (splitMode: SplitMode) =>
+    splitMode === 'BY_AMOUNT' ? singlePayerTargetAmount : 1
 
   const handlePaidBySplitModeChange = (nextMode: SplitMode) => {
     const currentMode = form.getValues('paidBySplitMode')
@@ -192,7 +194,12 @@ export function PaidByCard(props: {
                 if (firstParticipant) {
                   form.setValue(
                     'paidByList',
-                    singlePayerPaidByList(firstParticipant),
+                    [
+                      {
+                        participant: firstParticipant,
+                        shares: initialMultiPayerShare(next.splitMode),
+                      },
+                    ],
                     {
                       shouldDirty: true,
                       shouldValidate: true,
