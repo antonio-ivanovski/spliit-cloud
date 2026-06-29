@@ -1,8 +1,4 @@
-import type {
-  Currency,
-  Expense,
-  ExpenseFormInputValues,
-} from '@spliit/domain'
+import type { Currency, Expense, ExpenseFormInputValues } from '@spliit/domain'
 import { amountAsMinorUnits, getCurrency } from '@spliit/domain'
 
 // Convert user-facing form values (decimal major units, display
@@ -80,7 +76,10 @@ export function buildSubmitValues(
   const payload: Expense = {
     ...base,
     ...(conversionRequired
-      ? { originalAmount, originalCurrency: values.originalCurrency ?? undefined }
+      ? {
+          originalAmount,
+          originalCurrency: values.originalCurrency ?? undefined,
+        }
       : {}),
   }
   return payload

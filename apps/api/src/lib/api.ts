@@ -178,8 +178,7 @@ export async function createExpense(
     data: expense.title,
   })
 
-  const isCreateRecurrence =
-    expense.recurrenceRule !== RecurrenceRule.NONE
+  const isCreateRecurrence = expense.recurrenceRule !== RecurrenceRule.NONE
   const recurringExpenseLinkPayload = isCreateRecurrence
     ? {
         id: randomId(),
@@ -502,9 +501,7 @@ export async function updateExpense(
         deleteMany: existingExpense.documents
           .filter(
             (existingDoc) =>
-              !expense.documents.some(
-                (doc) => doc.id === existingDoc.id,
-              ),
+              !expense.documents.some((doc) => doc.id === existingDoc.id),
           )
           .map((doc) => ({
             id: doc.id,

@@ -89,7 +89,7 @@ export const getDefaultSplittingOptions = (
 
 export async function persistDefaultSplittingOptions(
   _groupId: string,
-    formValues: ExpenseFormInputValues,
+  formValues: ExpenseFormInputValues,
 ) {
   if (!formValues.saveDefaultSplittingOptions) return
   if (typeof window === 'undefined') return
@@ -99,8 +99,6 @@ export async function persistDefaultSplittingOptions(
       JSON.stringify({
         splitMode: formValues.splitMode,
         paidFor: formValues.paidFor.map(({ participant, shares }) => ({
-
-
           participant,
           shares,
         })),

@@ -12,24 +12,19 @@ export const updateGroupExpenseProcedure = protectedProcedure
       expense: expenseApiSchema,
     }),
   )
-  .mutation(
-    async ({ input: { expenseId, groupId, expense }, ctx }) => {
-      const { group } = await loadGroupContext({
-        groupId,
-        accountId: ctx.auth.user.id,
+  .mutation(async ({ input: { expenseId, groupId, expense }, ctx }) => {
+    const { group } = await loadGroupContext({
+      groupId,
+      accountId: ctx.auth.user.id,
+    })
+    if (group.archived) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'This group is archived and expenses cannot be modified',
       })
-      if (group.archived) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'This group is archived and expenses cannot be modified',
-        })
-      }
-      const { id } = await updateExpense(
-        groupId,
-        expenseId,
-        expense,
-        { accountId: ctx.auth.user.id },
-      )
-      return { expenseId: id }
-    },
-  )
+    }
+    const { id } = await updateExpense(groupId, expenseId, expense, {
+      accountId: ctx.auth.user.id,
+    })
+    return { expenseId: id }
+  })
