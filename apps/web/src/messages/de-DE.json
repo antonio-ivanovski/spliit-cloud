@@ -467,7 +467,6 @@
     "selectNone": "Keine auswählen",
     "selectAll": "Alle auswählen",
     "shares": "Anteil(e)",
-    "advancedOptions": "Fortgeschrittene Aufteilungsoptionen…",
     "participant": {
       "pending": "(eingeladen)"
     },
@@ -479,7 +478,6 @@
       "byAmount": "Ungleich – Nach Betrag",
       "saveAsDefault": "Als Standardoptionen zur Aufteilung speichern"
     },
-    "paidByAdvancedOptions": "Erweiterte Zahlungsoptionen…",
     "DeletePopup": {
       "label": "Löschen",
       "title": "Diese Ausgabe löschen?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Entspricht 100%",
       "percentageMissing": "Fehlt {pct}%",
       "percentageSurplus": "Überschuss: {pct}%"
-    }
+    },
+    "splittingOptions": "Aufteilungsoptionen",
+    "multiplePayers": "Mehrere Zahlende"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

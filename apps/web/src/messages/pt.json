@@ -568,7 +568,6 @@
     "selectNone": "Selecionar nenhum",
     "selectAll": "Selecionar todos",
     "shares": "parte(s)",
-    "advancedOptions": "Opções avançadas de divisão…",
     "participant": {
       "pending": "(convidado)"
     },
@@ -580,7 +579,6 @@
       "byAmount": "Desigualmente – Por montante",
       "saveAsDefault": "Guardar como opções de divisão padrão"
     },
-    "paidByAdvancedOptions": "Opções avançadas do pagador…",
     "DeletePopup": {
       "label": "Eliminar",
       "title": "Eliminar esta despesa?",
@@ -608,7 +606,9 @@
       "percentageMatches": "✓ Corresponde a 100%",
       "percentageMissing": "Falta {pct}%",
       "percentageSurplus": "Excedente: {pct}%"
-    }
+    },
+    "splittingOptions": "Opções de divisão",
+    "multiplePayers": "Vários pagadores"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

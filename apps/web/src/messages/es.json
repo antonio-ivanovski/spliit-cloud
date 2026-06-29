@@ -446,7 +446,6 @@
     "selectNone": "Seleccionar ninguno",
     "selectAll": "Seleccionar todos",
     "shares": "partes",
-    "advancedOptions": "Opciones avanzadas de división…",
     "SplitModeField": {
       "label": "Modo de división",
       "evenly": "Uniformemente",
@@ -455,7 +454,6 @@
       "byAmount": "Desigualmente – por cantidad",
       "saveAsDefault": "Guardar como modo preferido"
     },
-    "paidByAdvancedOptions": "Opciones avanzadas de pagador…",
     "DeletePopup": {
       "label": "Borrar",
       "title": "Borrar gasto?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Coincide al 100%",
       "percentageMissing": "Falta {pct}%",
       "percentageSurplus": "Exceso: {pct}%"
-    }
+    },
+    "splittingOptions": "Opciones de división",
+    "multiplePayers": "Varios pagadores"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

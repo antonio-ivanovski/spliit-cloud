@@ -467,7 +467,6 @@
     "selectNone": "Selecteer niemand",
     "selectAll": "Selecteer iedereen",
     "shares": "deel/delen",
-    "advancedOptions": "Andere split-opties…",
     "participant": {
       "pending": "(uitgenodigd)"
     },
@@ -479,7 +478,6 @@
       "byAmount": "Ongelijk – Met bedrag",
       "saveAsDefault": "Opslaan als standaard-optie"
     },
-    "paidByAdvancedOptions": "Geavanceerde betalersopties…",
     "DeletePopup": {
       "label": "Verwijderen",
       "title": "Deze uitgave verwijderen?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Komt overeen met 100%",
       "percentageMissing": "Ontbreekt {pct}%",
       "percentageSurplus": "Overschot: {pct}%"
-    }
+    },
+    "splittingOptions": "Splitsingsopties",
+    "multiplePayers": "Meerdere betalers"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -467,7 +467,6 @@
     "selectNone": "Nevybrat nic",
     "selectAll": "Vybrat vše",
     "shares": "podíl(y)",
-    "advancedOptions": "Pokročilé možnosti rozdělení…",
     "participant": {
       "pending": "(pozván/a)"
     },
@@ -479,7 +478,6 @@
       "byAmount": "Nerovnoměrně – podle částky",
       "saveAsDefault": "Uložit jako výchozí možnosti rozdělení"
     },
-    "paidByAdvancedOptions": "Pokročilé možnosti plátce…",
     "DeletePopup": {
       "label": "Smazat",
       "title": "Smazat tento výdaj?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Odpovídá 100 %",
       "percentageMissing": "Chybí {pct}%",
       "percentageSurplus": "Přebytek: {pct}%"
-    }
+    },
+    "splittingOptions": "Možnosti dělení",
+    "multiplePayers": "Více plátců"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

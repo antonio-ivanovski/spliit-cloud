@@ -467,7 +467,6 @@
     "selectNone": "Pilih tidak ada",
     "selectAll": "Pilih semua",
     "shares": "porsi",
-    "advancedOptions": "Opsi lanjutan pembagian…",
     "SplitModeField": {
       "label": "Mode pembagian",
       "evenly": "Bagi merata",
@@ -476,7 +475,6 @@
       "byAmount": "Tidak merata – Berdasarkan jumlah",
       "saveAsDefault": "Simpan sebagai opsi pembagian default"
     },
-    "paidByAdvancedOptions": "Opsi lanjutan pembayaran…",
     "DeletePopup": {
       "label": "Hapus",
       "title": "Hapus pengeluaran?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Sesuai 100%",
       "percentageMissing": "Kurang {pct}%",
       "percentageSurplus": "Lebih: {pct}%"
-    }
+    },
+    "splittingOptions": "Opsi pembagian",
+    "multiplePayers": "Beberapa pembayar"
   },
   "Currencies": {
     "custom": {

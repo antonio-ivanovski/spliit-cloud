@@ -467,7 +467,6 @@
     "selectNone": "Выбрать никого",
     "selectAll": "Выбрать всех",
     "shares": "доля(и)",
-    "advancedOptions": "Дополнительные настройки распределения…",
     "participant": {
       "pending": "(приглашен)"
     },
@@ -479,7 +478,6 @@
       "byAmount": "Неравный – По суммам",
       "saveAsDefault": "Сделать режимом по умолчанию"
     },
-    "paidByAdvancedOptions": "Расширенные настройки плательщика…",
     "DeletePopup": {
       "label": "Удалить",
       "title": "Удалить этот расход?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Совпадает 100%",
       "percentageMissing": "Не хватает {pct}%",
       "percentageSurplus": "Избыток: {pct}%"
-    }
+    },
+    "splittingOptions": "Настройки разделения",
+    "multiplePayers": "Несколько плательщиков"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

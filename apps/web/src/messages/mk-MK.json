@@ -587,7 +587,6 @@
     "selectNone": "Избери никој",
     "selectAll": "Избери ги сите",
     "shares": "удел(и)",
-    "advancedOptions": "Напредни опции за делење…",
     "participant": {
       "pending": "(поканет)"
     },
@@ -599,7 +598,6 @@
       "byAmount": "Неравномерно – По износ",
       "saveAsDefault": "Зачувај како стандардни опции за делење"
     },
-    "paidByAdvancedOptions": "Напредни опции за плаќач…",
     "DeletePopup": {
       "label": "Избриши",
       "title": "Да се избрише овој трошок?",
@@ -627,7 +625,9 @@
       "percentageMatches": "✓ Се совпаѓа 100%",
       "percentageMissing": "Недостига {pct}%",
       "percentageSurplus": "Вишок: {pct}%"
-    }
+    },
+    "splittingOptions": "Опции за поделба",
+    "multiplePayers": "Повеќе плаќачи"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -446,7 +446,6 @@
     "selectNone": "No en seleccionis cap",
     "selectAll": "Selecciona'ls tots",
     "shares": "parts",
-    "advancedOptions": "Opcions avançades",
     "SplitModeField": {
       "label": "Mode de divisió",
       "evenly": "Uniforme",
@@ -455,7 +454,6 @@
       "byAmount": "Desigual: Per quantitat",
       "saveAsDefault": "Desa com a mode preferit"
     },
-    "paidByAdvancedOptions": "Opcions avançades de pagador…",
     "DeletePopup": {
       "label": "Esborrar",
       "title": "Esborrar la despesa?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Coincideix 100%",
       "percentageMissing": "Falta {pct}%",
       "percentageSurplus": "Excés: {pct}%"
-    }
+    },
+    "splittingOptions": "Opcions de divisió",
+    "multiplePayers": "Múltiples pagadors"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

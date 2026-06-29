@@ -446,7 +446,6 @@
     "selectNone": "Remover seleção",
     "selectAll": "Selecionar todos(as)",
     "shares": "parte(s)",
-    "advancedOptions": "Opções avançadas de divisão…",
     "SplitModeField": {
       "label": "Modo de divisão",
       "evenly": "Igualmente",
@@ -455,7 +454,6 @@
       "byAmount": "Desigualmente - Por valor",
       "saveAsDefault": "Salvar como opções de divisão padrão"
     },
-    "paidByAdvancedOptions": "Opções avançadas do pagador…",
     "DeletePopup": {
       "label": "Excluir",
       "title": "Excluir esta despesa?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Corresponde a 100%",
       "percentageMissing": "Falta {pct}%",
       "percentageSurplus": "Excedente: {pct}%"
-    }
+    },
+    "splittingOptions": "Opções de divisão",
+    "multiplePayers": "Vários pagadores"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

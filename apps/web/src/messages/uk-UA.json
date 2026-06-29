@@ -467,7 +467,6 @@
     "selectNone": "Обрати жодного",
     "selectAll": "Обрати всіх",
     "shares": "частка(и)",
-    "advancedOptions": "Розширені опції поділу..",
     "participant": {
       "pending": "(запрошений)"
     },
@@ -479,7 +478,6 @@
       "byAmount": "Нерівномірно – за сумами",
       "saveAsDefault": "Зберегти як параметри поділу за замовчуванням"
     },
-    "paidByAdvancedOptions": "Розширені опції платника…",
     "DeletePopup": {
       "label": "Видалити",
       "title": "Видалити цю витрату?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Збігається 100%",
       "percentageMissing": "Бракує {pct}%",
       "percentageSurplus": "Надлишок: {pct}%"
-    }
+    },
+    "splittingOptions": "Опції розподілу",
+    "multiplePayers": "Кілька платників"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

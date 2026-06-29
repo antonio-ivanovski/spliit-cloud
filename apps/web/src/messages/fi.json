@@ -467,7 +467,6 @@
     "selectNone": "Tyhjennä valinnat",
     "selectAll": "Valitse kaikki",
     "shares": "osuutta",
-    "advancedOptions": "Lisäasetuksia jakamiseen…",
     "participant": {
       "pending": "(kutsuttu)"
     },
@@ -479,7 +478,6 @@
       "byAmount": "Epätasan – summan mukaan",
       "saveAsDefault": "Tallenna oletustavaksi"
     },
-    "paidByAdvancedOptions": "Maksajan lisäasetukset…",
     "DeletePopup": {
       "label": "Poista",
       "title": "Poistetaanko tämä kulu?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Vastaa 100 %",
       "percentageMissing": "Puuttuu {pct}%",
       "percentageSurplus": "Ylijäämä: {pct}%"
-    }
+    },
+    "splittingOptions": "Jakovaihtoehdot",
+    "multiplePayers": "Useita maksajia"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

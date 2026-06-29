@@ -446,7 +446,6 @@
     "selectNone": "Hiçbirini seçme",
     "selectAll": "Hepsini seç",
     "shares": "pay",
-    "advancedOptions": "Gelişmiş paylaşım seçenekleri…",
     "SplitModeField": {
       "label": "Paylaşım modu",
       "evenly": "Eşit pay",
@@ -455,7 +454,6 @@
       "byAmount": "Eşit olmayan – Tutar bazında",
       "saveAsDefault": "Varsayılan paylaşım ayarları olarak kaydet"
     },
-    "paidByAdvancedOptions": "Gelişmiş ödeyen seçenekleri…",
     "DeletePopup": {
       "label": "Sil",
       "title": "Bu masraf silinsin mi?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ %100 eşleşiyor",
       "percentageMissing": "Eksik: %{pct}",
       "percentageSurplus": "Fazla: %{pct}"
-    }
+    },
+    "splittingOptions": "Bölme seçenekleri",
+    "multiplePayers": "Birden çok ödeyici"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

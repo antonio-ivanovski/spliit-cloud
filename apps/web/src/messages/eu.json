@@ -467,7 +467,6 @@
     "selectNone": "Hautatu bat ere ez",
     "selectAll": "Hautatu denak",
     "shares": "partekatzea(k)",
-    "advancedOptions": "Zatitzeko aukera aurreratuak…",
     "SplitModeField": {
       "label": "Zatitzeko modua",
       "evenly": "Zati berdinetan",
@@ -476,7 +475,6 @@
       "byAmount": "Zati desberdinetan - zenbatekoen bidez",
       "saveAsDefault": "Gorde gogoko zatitze modu gisa"
     },
-    "paidByAdvancedOptions": "Ordaintzailearen aukera aurreratuak…",
     "DeletePopup": {
       "label": "Ezabatu",
       "title": "Ezabatu gastu hau?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Bat dator %100ekin",
       "percentageMissing": "%{pct} falta da",
       "percentageSurplus": "%{pct} soberan"
-    }
+    },
+    "splittingOptions": "Zatiketa aukerak",
+    "multiplePayers": "Ordaintzaile anitz"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

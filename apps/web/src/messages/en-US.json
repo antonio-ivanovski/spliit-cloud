@@ -587,7 +587,6 @@
     "selectNone": "Select none",
     "selectAll": "Select all",
     "shares": "share(s)",
-    "advancedOptions": "Advanced splitting options…",
     "participant": {
       "pending": "(invited)"
     },
@@ -602,7 +601,6 @@
     "PaidBySplitModeField": {
       "label": "Payer split mode"
     },
-    "paidByAdvancedOptions": "Advanced payer options…",
     "DeletePopup": {
       "label": "Delete",
       "title": "Delete this expense?",
@@ -627,7 +625,30 @@
       "percentageMatches": "✓ Matches 100%",
       "percentageMissing": "Missing {pct}%",
       "percentageSurplus": "Surplus {pct}%"
-    }
+    },
+    "splittingOptions": "Splitting options",
+    "multiplePayers": "Multiple payers",
+    "paidByOptionSinglePayer": "Single payer",
+    "paidByOptionEvenly": "Evenly",
+    "paidByOptionByShares": "By shares",
+    "paidByOptionByPercentage": "By percentage",
+    "paidByOptionByAmount": "By amount",
+    "paidForOptionEvenly": "Evenly",
+    "paidForOptionByShares": "By shares",
+    "paidForOptionByPercentage": "By percentage",
+    "paidForOptionByAmount": "By amount",
+    "paidBySectionSingle": "Single",
+    "paidBySectionMultiple": "Multiple payers",
+    "paidForSection": "Split between participants",
+    "paidByOptionSinglePayerHelper": "One person covers the full expense",
+    "paidByOptionEvenlyHelper": "Each pays an equal share",
+    "paidByOptionBySharesHelper": "Each pays a weighted share",
+    "paidByOptionByPercentageHelper": "Each pays a percentage",
+    "paidByOptionByAmountHelper": "Each pays a fixed amount",
+    "paidForOptionEvenlyHelper": "Split evenly between everyone",
+    "paidForOptionBySharesHelper": "Assign a share to each person",
+    "paidForOptionByPercentageHelper": "Assign a percentage to each person",
+    "paidForOptionByAmountHelper": "Assign an exact amount to each person"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

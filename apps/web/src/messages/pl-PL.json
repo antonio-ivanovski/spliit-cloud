@@ -467,7 +467,6 @@
     "selectNone": "Nie wybieraj nikogo",
     "selectAll": "Wybierz wszystkich",
     "shares": "udział(y)",
-    "advancedOptions": "Zaawansowane opcje podziału…",
     "participant": {
       "pending": "(zaproszony)"
     },
@@ -479,7 +478,6 @@
       "byAmount": "Nierówny – Na konkretne sumy",
       "saveAsDefault": "Wybierz jako domyślny typ podziału"
     },
-    "paidByAdvancedOptions": "Zaawansowane opcje płatnika…",
     "DeletePopup": {
       "label": "Usuń",
       "title": "Usunąć ten wydatek?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Zgodne w 100%",
       "percentageMissing": "Brakuje {pct}%",
       "percentageSurplus": "Nadwyżka: {pct}%"
-    }
+    },
+    "splittingOptions": "Opcje podziału",
+    "multiplePayers": "Wielu płatników"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -446,7 +446,6 @@
     "selectNone": "取消全選",
     "selectAll": "全選",
     "shares": "份額",
-    "advancedOptions": "進階分帳選項……",
     "SplitModeField": {
       "label": "分帳方式",
       "evenly": "平均分配",
@@ -455,7 +454,6 @@
       "byAmount": "自訂金額",
       "saveAsDefault": "儲存為預設分帳方式"
     },
-    "paidByAdvancedOptions": "付款人進階選項…",
     "DeletePopup": {
       "label": "刪除",
       "title": "要刪除這筆消費嗎？",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ 符合 100%",
       "percentageMissing": "缺少 {pct}%",
       "percentageSurplus": "超出 {pct}%"
-    }
+    },
+    "splittingOptions": "分攤選項",
+    "multiplePayers": "多個付款人"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -381,7 +381,6 @@
       "byAmount": "균등하지 않게 – 금액별로 나누기",
       "saveAsDefault": "기본 분할 방식으로 저장하기"
     },
-    "paidByAdvancedOptions": "결제자",
     "DeletePopup": {
       "description": "정말 이 지출을 삭제할까요? 한 번 삭제하면 되돌릴 수 없어요.",
       "yes": "네",
@@ -426,7 +425,6 @@
     "selectNone": "선택 안 함",
     "selectAll": "모두 선택",
     "shares": "몫",
-    "advancedOptions": "고급 분할 옵션…",
     "participant": {
       "pending": "(초대됨)"
     },
@@ -448,7 +446,9 @@
       "percentageMatches": "✓ 100% 일치",
       "percentageMissing": "{pct}% 부족",
       "percentageSurplus": "{pct}% 초과"
-    }
+    },
+    "splittingOptions": "분할 옵션",
+    "multiplePayers": "여러 명이 납부"
   },
   "Balances": {
     "title": "잔액",

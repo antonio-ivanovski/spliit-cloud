@@ -446,7 +446,6 @@
     "selectNone": "選択解除",
     "selectAll": "すべて選択",
     "shares": "シェア",
-    "advancedOptions": "詳細な分割オプション…",
     "SplitModeField": {
       "label": "分割モード",
       "evenly": "均等に",
@@ -455,7 +454,6 @@
       "byAmount": "不均等に - 金額で",
       "saveAsDefault": "デフォルトの分割オプションとして保存"
     },
-    "paidByAdvancedOptions": "詳細な支払いオプション…",
     "DeletePopup": {
       "label": "削除",
       "title": "この支出を削除しますか？",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ 100% に一致",
       "percentageMissing": "{pct}% 不足",
       "percentageSurplus": "{pct}% 超過"
-    }
+    },
+    "splittingOptions": "分割オプション",
+    "multiplePayers": "複数の支払い者"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

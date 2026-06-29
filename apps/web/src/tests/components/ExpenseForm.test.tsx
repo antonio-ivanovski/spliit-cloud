@@ -2,7 +2,7 @@ import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
-import { render, screen } from '@/test/test-utils'
+import { fireEvent, render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -333,8 +333,8 @@ describe('ExpenseForm', () => {
     expect(submittedValues).not.toHaveProperty('originalCurrency')
   })
 
-  it('split mode toggle changes UI (advanced options)', async () => {
-    const { user } = render(
+  it('split mode selector is visible by default', () => {
+    render(
       <ExpenseForm
         group={mockGroup as any}
         onSubmit={vi.fn()}
@@ -342,12 +342,10 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    // Click advanced splitting options to reveal split mode
-    const advancedButton = screen.getByText(/advanced splitting options/i)
-    await user.click(advancedButton)
-
-    // Split mode selector should be visible
-    expect(screen.getByText('Split mode')).toBeInTheDocument()
+    // Split mode option cards should be visible without clicking anything
+    expect(
+      screen.getByRole('radio', { name: /split evenly/i }),
+    ).toBeInTheDocument()
   })
 
   it('delete button renders for edit mode', () => {
@@ -499,11 +497,11 @@ describe('ExpenseForm', () => {
     // selected (no currentLedgerParticipantId provided).
     expect(screen.getByText('Select a participant')).toBeInTheDocument()
 
-    // The Advanced toggle should be unchecked.
-    const advancedCheckbox = screen.getByRole('checkbox', {
-      name: /advanced payer options/i,
+    // The single payer option card should be selected.
+    const singlePayerRadio = screen.getByRole('radio', {
+      name: /single payer/i,
     })
-    expect(advancedCheckbox).not.toBeChecked()
+    expect(singlePayerRadio).toBeChecked()
 
     // No per-row "shares" inputs should be rendered for paid-by in
     // single-payer mode. The paid-for breakdown is independent and still
@@ -515,7 +513,7 @@ describe('ExpenseForm', () => {
     expect(paidByPerRowInputs.length).toBe(0)
   })
 
-  it('toggling Advanced payer options reveals the multi-payer breakdown', async () => {
+  it('toggling multi-payer options reveals the multi-payer breakdown', async () => {
     const { user } = render(
       <ExpenseForm
         group={mockGroup as any}
@@ -525,24 +523,27 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    // Find the Advanced payer options checkbox
-    const advancedCheckbox = screen.getByRole('checkbox', {
-      name: /advanced payer options/i,
+    // Find the single payer option card — should be selected by default
+    const singlePayerRadio = screen.getByRole('radio', {
+      name: /single payer/i,
     })
-    expect(advancedCheckbox).not.toBeChecked()
+    expect(singlePayerRadio).toBeChecked()
 
-    // Click the advanced toggle
-    await user.click(advancedCheckbox)
+    // Click the "Multiple payers — evenly" option
+    const evenlyRadio = screen.getByRole('radio', {
+      name: /multiple payers — evenly/i,
+    })
+    await user.click(evenlyRadio)
 
     // Now the multi-payer breakdown should appear with checkboxes for each
     // participant. The "Paid by" header should also now have the "Select all"
     // / "Select none" button rendered alongside the title.
-    expect(advancedCheckbox).toBeChecked()
+    expect(evenlyRadio).toBeChecked()
     expect(screen.getByText('Select all')).toBeInTheDocument()
 
     // Each participant row should have a checkbox in the multi-payer view
     const participantCheckboxes = screen.getAllByRole('checkbox')
-    // At least 2 payer checkboxes (Alice + Bob) + the advanced toggle = 3
+    // At least 2 payer checkboxes (Alice + Bob) + the Save as default checkbox = 3
     expect(participantCheckboxes.length).toBeGreaterThanOrEqual(3)
   })
 
@@ -568,11 +569,11 @@ describe('ExpenseForm', () => {
     // current value).
     expect(screen.getAllByText('Alice').length).toBeGreaterThanOrEqual(1)
 
-    // The Advanced payer options checkbox should be unchecked.
-    const advancedCheckbox = screen.getByRole('checkbox', {
-      name: /advanced payer options/i,
+    // The single payer option card should be selected.
+    const singlePayerRadio = screen.getByRole('radio', {
+      name: /single payer/i,
     })
-    expect(advancedCheckbox).not.toBeChecked()
+    expect(singlePayerRadio).toBeChecked()
   })
 
   it('edit mode of a multi-payer expense shows the multi-payer breakdown', () => {
@@ -593,11 +594,11 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    // The Advanced payer options checkbox should be checked.
-    const advancedCheckbox = screen.getByRole('checkbox', {
-      name: /advanced payer options/i,
+    // The "Multiple payers — by amount" option card should be selected.
+    const byAmountRadio = screen.getByRole('radio', {
+      name: /multiple payers — by amount/i,
     })
-    expect(advancedCheckbox).toBeChecked()
+    expect(byAmountRadio).toBeChecked()
 
     // The single-payer placeholder should NOT be visible.
     expect(screen.queryByText('Select a participant')).not.toBeInTheDocument()
@@ -1032,5 +1033,317 @@ describe('ParticipantDistributionFooter (isolated)', () => {
       />,
     )
     expect(container.firstChild).toBeNull()
+  })
+})
+
+// ── Option-card transition tests ────────────────────────────────────────
+
+describe('ExpenseForm option-card transitions', () => {
+  it('paid-by: single payer \u2192 multiple by percentage', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const singlePayerRadio = screen.getByRole('radio', {
+      name: /single payer/i,
+    })
+    expect(singlePayerRadio).toBeChecked()
+
+    const percentageRadio = screen.getByRole('radio', {
+      name: /multiple payers.*by percentage/i,
+    })
+    await user.click(percentageRadio)
+
+    expect(percentageRadio).toBeChecked()
+    expect(screen.getByText('Select all')).toBeInTheDocument()
+  })
+
+  it('paid-by: multiple by amount \u2192 by shares produces integer shares', async () => {
+    const multiPayerExpense = {
+      ...mockExpense,
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 2500 },
+        { ledgerParticipantId: 'lp-2', shares: 2500 },
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={multiPayerExpense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const sharesRadio = screen.getByRole('radio', {
+      name: /multiple payers.*by shares/i,
+    })
+    await user.click(sharesRadio)
+
+    expect(sharesRadio).toBeChecked()
+
+    const shareInputs = document.querySelectorAll(
+      '[data-id$="/BY_SHARES/USD"] input[type="text"]',
+    )
+    expect(shareInputs.length).toBeGreaterThan(0)
+    shareInputs.forEach((input) => {
+      const val = (input as HTMLInputElement).value
+      expect(val).toMatch(/^\d+$/)
+    })
+  })
+
+  it('paid-for: evenly \u2192 by amount shows per-participant amount inputs', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={
+          {
+            ...mockExpense,
+            amount: 10000,
+            splitMode: 'EVENLY' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 1 },
+              { ledgerParticipantId: 'lp-2', shares: 1 },
+            ],
+          } as any
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const amountRadio = screen.getByRole('radio', {
+      name: /split by amount/i,
+    })
+    await user.click(amountRadio)
+
+    expect(amountRadio).toBeChecked()
+    const paidForInputs = document.querySelectorAll(
+      '[data-testid="paid-for-distribution-footer"]',
+    )
+    expect(paidForInputs.length).toBeGreaterThan(0)
+  })
+})
+
+// ── Single→multi option-card default share tests ─────────────────────────
+
+describe('BY_SHARES default shares on transition', () => {
+  const singlePayerExpense = {
+    ...mockExpense,
+    paidBySplitMode: 'BY_AMOUNT' as const,
+    paidByList: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
+  }
+
+  it('single → multi-by-shares: shares = 1', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={singlePayerExpense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const sharesRadio = screen.getByRole('radio', {
+      name: /multiple payers.*by shares/i,
+    })
+    await user.click(sharesRadio)
+
+    const shareInput = document.querySelector<HTMLInputElement>(
+      '[data-id="lp-1/BY_SHARES/USD"] input[type="text"]',
+    )
+    expect(shareInput).toBeTruthy()
+    expect(shareInput!.value).toBe('1')
+  })
+
+  it('single → multi-by-percentage: percentages sum to 100', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={singlePayerExpense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const percentageRadio = screen.getByRole('radio', {
+      name: /multiple payers.*by percentage/i,
+    })
+    await user.click(percentageRadio)
+
+    const shareInput = document.querySelector<HTMLInputElement>(
+      '[data-id="lp-1/BY_PERCENTAGE/USD"] input[type="text"]',
+    )
+    expect(shareInput).toBeTruthy()
+    expect(Number(shareInput!.value)).toBe(100)
+  })
+
+  it('single → multi-by-amount: shares split evenly', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={singlePayerExpense as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const amountRadio = screen.getByRole('radio', {
+      name: /multiple payers.*by amount/i,
+    })
+    await user.click(amountRadio)
+
+    const shareInput = document.querySelector<HTMLInputElement>(
+      '[data-id="lp-1/BY_AMOUNT/USD"] input[type="text"]',
+    )
+    expect(shareInput).toBeTruthy()
+    expect(Number(shareInput!.value)).toBe(50)
+  })
+})
+
+// ── Participant row click behavior tests ─────────────────────────────────
+
+describe('ParticipantShareRow click behavior', () => {
+  it('clicking a participant row (name text) toggles the selection', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_AMOUNT' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 2500 },
+              { ledgerParticipantId: 'lp-2', shares: 2500 },
+            ],
+          } as any
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // Both checkboxes should be checked initially (both in paidFor)
+    const checkboxes = screen.getAllByRole('checkbox')
+    const paidForCheckboxes = checkboxes.filter(
+      (cb) => cb.getAttribute('data-state') !== undefined,
+    )
+    const initiallyChecked = paidForCheckboxes.filter(
+      (cb) => cb.getAttribute('data-state') === 'checked',
+    )
+    expect(initiallyChecked.length).toBeGreaterThanOrEqual(2)
+
+    // Click directly on the row div (non-interactive padding area)
+    const row = document.querySelector<HTMLElement>(
+      '[data-id="lp-1/BY_AMOUNT/USD"]',
+    )
+    expect(row).toBeTruthy()
+    fireEvent.click(row!)
+
+    // After clicking Alice's row, she should be toggled off
+    const checkboxesAfter = screen.getAllByRole('checkbox')
+    const checkedAfter = checkboxesAfter.filter(
+      (cb) => cb.getAttribute('data-state') === 'checked',
+    )
+    expect(checkedAfter.length).toBe(initiallyChecked.length - 1)
+  })
+
+  it('clicking the share input does NOT toggle the checkbox', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_AMOUNT' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 2500 },
+              { ledgerParticipantId: 'lp-2', shares: 2500 },
+            ],
+          } as any
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // Find a share input inside a participant row
+    const rowInput = document.querySelector<HTMLInputElement>(
+      '[data-id="lp-1/BY_AMOUNT/USD"] input[type="text"]',
+    )
+    expect(rowInput).toBeTruthy()
+    const initialChecked = rowInput!
+      .closest('[data-id]')
+      ?.querySelector('button[data-state]')
+      ?.getAttribute('data-state')
+
+    // Click on the input to focus it (should NOT toggle checkbox)
+    await user.click(rowInput!)
+
+    // Verify the input has focus
+    expect(document.activeElement).toBe(rowInput)
+
+    // Verify checkbox state has NOT changed
+    const checkboxAfter = rowInput!
+      .closest('[data-id]')
+      ?.querySelector('button[data-state]')
+      ?.getAttribute('data-state')
+    expect(checkboxAfter).toBe(initialChecked)
+  })
+
+  it('participant row applies cursor-pointer to the wrapper when enabled', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_AMOUNT' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 2500 },
+              { ledgerParticipantId: 'lp-2', shares: 2500 },
+            ],
+          } as any
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const row = document.querySelector<HTMLElement>(
+      '[data-id="lp-1/BY_AMOUNT/USD"]',
+    )
+    expect(row).toHaveClass('cursor-pointer')
+  })
+
+  it('participant row applies cursor-default to the wrapper when read-only', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_AMOUNT' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 2500 },
+              { ledgerParticipantId: 'lp-2', shares: 2500 },
+            ],
+          } as any
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        readOnly
+      />,
+    )
+
+    const row = document.querySelector<HTMLElement>(
+      '[data-id="lp-1/BY_AMOUNT/USD"]',
+    )
+    expect(row).toHaveClass('cursor-default')
   })
 })

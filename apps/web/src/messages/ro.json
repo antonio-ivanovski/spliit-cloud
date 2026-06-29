@@ -446,7 +446,6 @@
     "selectNone": "Nu selectez nimic",
     "selectAll": "Selectez tot",
     "shares": "părți",
-    "advancedOptions": "Opțiuni avansate de împărțire…",
     "SplitModeField": {
       "label": "Împărțire",
       "evenly": "Egal",
@@ -455,7 +454,6 @@
       "byAmount": "Inegal – În funcție de sumă",
       "saveAsDefault": "Salvează ca și implicite opțiunile de împărțire"
     },
-    "paidByAdvancedOptions": "Opțiuni avansate de plătitor…",
     "DeletePopup": {
       "label": "Șterge",
       "title": "Ștergi această cheltuială?",
@@ -507,7 +505,9 @@
       "percentageMatches": "✓ Se potrivește 100%",
       "percentageMissing": "Lipsă {pct}%",
       "percentageSurplus": "Excedent: {pct}%"
-    }
+    },
+    "splittingOptions": "Opțiuni de împărțire",
+    "multiplePayers": "Mai mulți plătitori"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
