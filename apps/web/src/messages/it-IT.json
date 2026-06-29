@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Accedi a Spliit Cloud",
       "createAccount": "Crea un account",
-      "createGroup": "Crea un gruppo"
+      "createGroup": "Crea un gruppo",
+      "importGroup": "Importa gruppo da un altro servizio"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "Gruppi recenti",
     "starred": "Gruppi speciali",
     "archived": "Gruppi archiviati",
+    "backToGroups": "Torna ai gruppi",
     "removeRecent": "Rimuovi dai gruppi recenti",
     "RecentRemovedToast": {
       "title": "Il gruppo è stato rimosso",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Link di invito"
       }
     },
+    "changeRoleAria": "Cambia ruolo",
+    "remove": "Rimuovi",
+    "removed": "Membro rimosso.",
+    "roleUpdated": "Ruolo aggiornato a {role}.",
     "removeDialog": {
+      "title": "Rimuovere il membro?",
+      "description": "Rimuovere {name} da questo gruppo? Le sue spese passate rimangono nella contabilità, ma non avrà più accesso.",
+      "cancel": "Annulla",
+      "confirm": "Rimuovi",
       "unsettled": {
         "title": "Rimuovere il membro con saldo in sospeso?",
         "toast": "Membro rimosso, saldi saldati.",
@@ -1048,6 +1058,66 @@
           "description": "Rimuovere senza saldare lascerà i saldi nella contabilità a tempo indeterminato. Spunta la casella qui sotto per creare una spesa di rimborso per ogni quota che coinvolge questo membro prima di rimuoverlo, o rimuovi senza saldare e gestisci i saldi manualmente."
         },
         "checkbox": "Crea rimborso di saldo prima di rimuovere"
+      }
+    },
+    "leave": {
+      "button": "Lascia il gruppo",
+      "title": "Lasciare il gruppo?",
+      "description": "Perderai l'accesso alle spese, ai saldi e alle attività di questo gruppo. I dati passati rimangono nella contabilità in modo che gli altri membri possano ancora vederli.",
+      "cancel": "Annulla",
+      "confirm": "Lascia il gruppo",
+      "confirmWithForce": "Salda e lascia",
+      "confirmDelete": "Elimina e lascia",
+      "body": {
+        "otherAdmins": "Questi amministratori manterranno il controllo dopo la tua partenza: {names}.",
+        "lastAdmin": {
+          "title": "Scegli un nuovo amministratore",
+          "description": "Sei l'ultimo amministratore di questo gruppo. Scegli un membro attivo a cui affidare il gruppo prima di andartene, altrimenti nessuno potrà gestirlo.",
+          "placeholder": "Seleziona un membro"
+        },
+        "unsettled": {
+          "title": "Hai saldi in sospeso",
+          "description": "Lasciare forzatamente creerà automaticamente delle spese di rimborso per le transazioni che ti coinvolgono, mantenendo la contabilità sincronizzata. Gli altri saldi rimangono invariati."
+        },
+        "lastMember": {
+          "title": "Questo eliminerà il gruppo",
+          "description": "Sei l'unico membro attivo di questo gruppo. Lasciando, il gruppo, tutte le sue spese e tutta la sua cronologia verranno eliminati definitivamente.",
+          "checkbox": "Comprendo che questo eliminerà definitivamente il gruppo e tutti i suoi dati.",
+          "suggestion": "Consiglio: se vuoi conservare questo gruppo come archivio, puoi invece archiviarlo.",
+          "unsettledInfo": "Hai saldi in sospeso in questo gruppo. Andranno persi definitivamente quando il gruppo verrà eliminato."
+        }
+      },
+      "toast": {
+        "left": "Hai lasciato il gruppo.",
+        "deleted": "Gruppo eliminato.",
+        "archived": "Gruppo archiviato."
+      },
+      "error": {
+        "lastAdmin": "Scegli un membro da promuovere ad amministratore prima di andartene.",
+        "lastMember": "Conferma l'eliminazione definitiva per continuare.",
+        "unsettled": "Salda il tuo saldo o conferma la liquidazione forzata per andartene."
+      }
+    },
+    "unlinked": {
+      "title": "Partecipanti non collegati",
+      "description": "Queste persone hanno un nome nel gruppo ma non hanno ancora un account nell'app. Collega ciascuno a un account esistente per associare le sue spese a quell'utente.",
+      "emailPlaceholder": "account@esempio.com",
+      "link": "Collega all'account",
+      "linkSuccess": "Partecipante collegato all'account",
+      "idHint": "ID partecipante nella contabilità: {id}",
+      "linkButton": "Collega",
+      "linkDialog": {
+        "title": "Collega partecipante non collegato",
+        "description": "Scegli il membro esistente a cui {displayName} dovrebbe essere collegato. La destinazione non deve trovarsi già sul lato opposto di una transazione con questo partecipante.",
+        "membersGroup": "Membri",
+        "cancel": "Annulla",
+        "confirm": "Collega",
+        "noCandidates": "Nessun membro compatibile trovato. Di solito significa che questo partecipante non collegato si trova su entrambi i lati di una transazione con ogni altro membro: è necessario reimportare o modificare prima le spese.",
+        "pendingLabel": "in sospeso",
+        "pendingHint": "Collegare a un invito in sospeso unisce questa voce senza account nell'invitato. L'invitato mantiene la propria riga; i riferimenti uniti ora vengono risolti attraverso di essa quando accetta.",
+        "membersGroupWithPending": "Membri e inviti in sospeso",
+        "pendingGroup": "Inviti in sospeso",
+        "pendingSuffix": "(in sospeso)"
       }
     }
   },

@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Hasi saioa Spliit Cloud-en",
       "createAccount": "Sortu kontua",
-      "createGroup": "Talde bat sortu"
+      "createGroup": "Talde bat sortu",
+      "importGroup": "Inportatu taldea beste zerbitzu batetik"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "Azken taldeak",
     "starred": "Gogoko taldeak",
     "archived": "Gordetako taldeak",
+    "backToGroups": "Itzuli taldeetara",
     "removeRecent": "Kendu azken taldeetatik",
     "RecentRemovedToast": {
       "title": "Taldea ezabatu da",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Gonbidapen-esteka"
       }
     },
+    "changeRoleAria": "Aldatu rola",
+    "remove": "Kendu",
+    "removed": "Kidea kendu da.",
+    "roleUpdated": "Rola eguneratu da: {role}.",
     "removeDialog": {
+      "title": "Kidea kendu?",
+      "description": "Kendu {name} talde honetatik? Bere aurreko gastuak kontabilitatean geratzen dira, baina jada ez du sarbiderik izango.",
+      "cancel": "Utzi",
+      "confirm": "Kendu",
       "unsettled": {
         "title": "Kitatu gabeko saldoa duen kidea kendu?",
         "toast": "Kidea kenduta, saldoak kitatuta.",
@@ -1048,6 +1058,66 @@
           "description": "Kitatu gabe kentzeak saldoak liburuan mugarik gabe utziko ditu. Markatu beheko laukia kide hau inplikatzen duen hanka bakoitzeko itzultze-gastu bat sortzeko kendu aurretik, edo kitatu gabe kendu eta saldoak eskuz kudeatu."
         },
         "checkbox": "Sortu kitatze-itzultzea kendu aurretik"
+      }
+    },
+    "leave": {
+      "button": "Irten taldetik",
+      "title": "Irten taldetik?",
+      "description": "Talde honetako gastu, saldo eta jarduerarako sarbidea galduko duzu. Datu zaharrak kontabilitatean gordetzen dira, beste kideek ikusten jarrai dezaten.",
+      "cancel": "Utzi",
+      "confirm": "Irten taldetik",
+      "confirmWithForce": "Kitatu eta irten",
+      "confirmDelete": "Ezabatu eta irten",
+      "body": {
+        "otherAdmins": "Administratzaile hauek kontrola izango dute irten ondoren: {names}.",
+        "lastAdmin": {
+          "title": "Aukeratu administratzaile berri bat",
+          "description": "Zu zara talde honetako azken administratzailea. Hautatu kide aktibo bat zure tokia hartzeko irten aurretik, bestela inork ezin izango du taldea kudeatu.",
+          "placeholder": "Hautatu kide bat"
+        },
+        "unsettled": {
+          "title": "Kitatu gabeko saldoak dituzu",
+          "description": "Behartuta irtenez gero, zuk parte hartzen duzun hanka bakoitzerako kitatze-gastuak sortuko dira kontabilitatea sinkronizatuta mantentzeko. Beste saldoak utziko dira dauden bezala."
+        },
+        "lastMember": {
+          "title": "Honek taldea ezabatuko du",
+          "description": "Zu zara talde honetako kide aktibo bakarra. Irteteak betiko ezabatuko du taldea, gastu guztiak eta historia osoa.",
+          "checkbox": "Ulertzen dut honek betiko ezabatuko duela taldea eta datu guztiak.",
+          "suggestion": "Aholkua: taldea erregistro gisa gorde nahi baduzu, artxibatu dezakezu ordez.",
+          "unsettledInfo": "Kitatu gabeko saldoak dituzu talde honetan. Betiko galduko dira taldea ezabatzen denean."
+        }
+      },
+      "toast": {
+        "left": "Taldetik irten zara.",
+        "deleted": "Taldea ezabatu da.",
+        "archived": "Taldea artxibatu da."
+      },
+      "error": {
+        "lastAdmin": "Hautatu kide bat administratzaile izendatzeko irten aurretik.",
+        "lastMember": "Berretsi behin betiko ezabaketa jarraitzeko.",
+        "unsettled": "Kitatu zure saldoa edo berretsi behartutako kitatzea irteteko."
+      }
+    },
+    "unlinked": {
+      "title": "Lotu gabeko parte-hartzaileak",
+      "description": "Pertsona hauek taldean izen bat dute baina oraindik ez dute aplikazioko konturik. Lotu bakoitza lehendik dagoen kontu batera bere gastuak erabiltzaile horrekin lotzeko.",
+      "emailPlaceholder": "kontua@adibidea.eus",
+      "link": "Lotu kontuarekin",
+      "linkSuccess": "Parte-hartzailea kontuarekin lotu da",
+      "idHint": "Kontabilitateko parte-hartzailearen id-a: {id}",
+      "linkButton": "Lotu",
+      "linkDialog": {
+        "title": "Lotu lotu gabeko parte-hartzailea",
+        "description": "Hautatu {displayName}-rekin lotu beharreko kidea. Helmuga ezin da dagoeneko egon parte-hartzaile honekin batera gastu-hanka baten kontrako aldean.",
+        "membersGroup": "Kideak",
+        "cancel": "Utzi",
+        "confirm": "Lotu",
+        "noCandidates": "Ez da kide bateragarririk aurkitu. Honek normalean esan nahi du lotu gabeko parte-hartzaile hau gastu-hanka baten bi aldeetan dagoela beste kide guztiekin — inportazioa berriro egin behar da edo gastuak egokitu lehenik.",
+        "pendingLabel": "zain",
+        "pendingHint": "Gonbidapen zain batera lotzean, izena duen sarrera hau gonbidatuarekin fusionatzen da. Gonbidatuak bere errenkada mantentzen du; erreferentzia fusionatuak haren bidez ebazten dira onartzean.",
+        "membersGroupWithPending": "Kideak eta gonbidapen zainak",
+        "pendingGroup": "Gonbidapen zainak",
+        "pendingSuffix": "(zain)"
       }
     }
   },

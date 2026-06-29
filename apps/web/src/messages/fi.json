@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Kirjaudu Spliit Cloudiin",
       "createAccount": "Luo tili",
-      "createGroup": "Luo ryhmä"
+      "createGroup": "Luo ryhmä",
+      "importGroup": "Tuo ryhmä toisesta palvelusta"
     },
     "features": {
       "groupsSync": {
@@ -138,6 +139,7 @@
     "pendingInviteeExpenseDescription": "Hyväksy yllä oleva kutsu aloittaaksesi kulujen lisäämisen tai muokkaamisen. Siihen asti ryhmän olemassa olevat tiedot ovat näkyvillä mutta niitä ei voi muokata.",
     "archivedReadOnly": "Tämä ryhmä on arkistoitu. Kuluja ei voida enää lisätä tai muokata.",
     "backToExpenses": "Takaisin kuluihin",
+    "backToGroups": "Takaisin ryhmiin",
     "removeRecent": "Poista äskettäisistä",
     "RecentRemovedToast": {
       "title": "Ryhmä poistettu",
@@ -1038,7 +1040,11 @@
         "fallbackLabel": "Kutsulinkki"
       }
     },
+    "changeRoleAria": "Vaihda roolia",
+    "removed": "Jäsen poistettu.",
     "removeDialog": {
+      "description": "Poistetaanko {name} tästä ryhmästä? Hänen menneet kulunsa säilyvät kirjanpidossa, mutta hän ei enää pääse niihin käsiksi.",
+      "confirm": "Poista",
       "unsettled": {
         "title": "Poistetaanko jäsen, jolla on tasaussaatavia?",
         "toast": "Jäsen poistettu, saatavat tasattu.",
@@ -1048,8 +1054,72 @@
           "description": "Poistaminen ilman tasausta jättää saatavat kirjanpitoon toistaiseksi. Valitse alla oleva valintaruutu luodaksesi yksi korvauskulu tähän jäseneen liittyvää osuutta kohden ennen poistoa, tai poista ilman tasausta ja hoida saatavat manuaalisesti."
         },
         "checkbox": "Luo tasauskorvaus ennen poistoa"
-      }
-    }
+      },
+      "title": "Poistetaanko jäsen?",
+      "cancel": "Peruuta"
+    },
+    "leave": {
+      "button": "Poistu ryhmästä",
+      "title": "Poistutko ryhmästä?",
+      "cancel": "Peruuta",
+      "body": {
+        "lastMember": {
+          "description": "Olet tämän ryhmän ainoa aktiivinen jäsen. Poistuminen poistaa pysyvästi ryhmän, kaikki sen kulut ja koko historian.",
+          "checkbox": "Ymmärrän, että tämä poistaa pysyvästi ryhmän ja kaikki sen tiedot.",
+          "suggestion": "Vinkki: jos haluat säilyttää tämän ryhmän tallenteena, voit arkistoida sen sen sijaan.",
+          "title": "Tämä poistaa ryhmän",
+          "unsettledInfo": "Sinulla on tasaamattomia saldoja tässä ryhmässä. Ne menetetään pysyvästi, kun ryhmä poistetaan."
+        },
+        "lastAdmin": {
+          "title": "Valitse uusi ylläpitäjä",
+          "description": "Olet tämän ryhmän viimeinen ylläpitäjä. Valitse aktiivinen jäsen ottamaan vastuu ennen poistumistasi, muuten kukaan ei voi hallinnoida ryhmää.",
+          "placeholder": "Valitse jäsen"
+        },
+        "otherAdmins": "Nämä ylläpitäjät säilyttävät hallinnan, kun poistut: {names}.",
+        "unsettled": {
+          "title": "Sinulla on tasaamattomia saldoja",
+          "description": "Poistuminen pakotettuna luo automaattisesti korvauskulut sinua koskeville osuuksille, jotta kirjanpito pysyy ajan tasalla. Muut saldot jäävät ennalleen."
+        }
+      },
+      "toast": {
+        "left": "Poistuit ryhmästä.",
+        "deleted": "Ryhmä poistettu.",
+        "archived": "Ryhmä arkistoitu."
+      },
+      "error": {
+        "unsettled": "Tasaa saldosi tai vahvista pakotettu tasaus poistuaksesi.",
+        "lastAdmin": "Valitse jäsen ylennettäväksi ylläpitäjäksi ennen poistumista.",
+        "lastMember": "Vahvista pysyvä poisto jatkaaksesi."
+      },
+      "description": "Menetät pääsyn tämän ryhmän kuluihin, saldoihin ja toimintaan. Menneet tiedot säilyvät kirjanpidossa, jotta muut jäsenet voivat edelleen nähdä ne.",
+      "confirm": "Poistu ryhmästä",
+      "confirmDelete": "Poista ja poistu",
+      "confirmWithForce": "Tasaa ja poistu"
+    },
+    "unlinked": {
+      "description": "Näillä henkilöillä on nimi ryhmässä, mutta ei vielä sovellustiliä. Linkitä kukin olemassa olevaan tiliin yhdistääksesi heidän kulunsa kyseiseen käyttäjään.",
+      "linkSuccess": "Osallistuja linkitetty tiliin",
+      "linkDialog": {
+        "description": "Valitse olemassa oleva jäsen, johon {displayName} tulisi linkittää. Kohde ei voi olla jo saman kulun vastakkaisella puolella tämän osallistujan kanssa.",
+        "membersGroup": "Jäsenet",
+        "confirm": "Linkitä",
+        "noCandidates": "Yhteensopivia jäseniä ei löytynyt. Tämä johtuu yleensä siitä, että tämä linkittämätön osallistuja on molemmilla puolilla kulua jokaisen muun jäsenen kanssa — tuonti täytyy tehdä uudelleen tai kuluja muokata ensin.",
+        "pendingHint": "Linkittäminen odottavaan kutsuun yhdistää tämän vain nimen sisältävän merkinnän kutsuttuun. Kutsuttu säilyttää oman rivinsä; yhdistetyt viittaukset kulkevat nyt hänen kauttaan, kun hän hyväksyy kutsun.",
+        "membersGroupWithPending": "Jäsenet ja odottavat kutsut",
+        "title": "Linkitä linkittämätön osallistuja",
+        "cancel": "Peruuta",
+        "pendingGroup": "Odottavat kutsut",
+        "pendingLabel": "odottaa",
+        "pendingSuffix": "(odottaa)"
+      },
+      "linkButton": "Linkitä",
+      "title": "Linkittämättömät osallistujat",
+      "idHint": "Kirjanpidon osallistujan tunnus: {id}",
+      "emailPlaceholder": "tili@esimerkki.com",
+      "link": "Linkitä tiliin"
+    },
+    "remove": "Poista",
+    "roleUpdated": "Rooli päivitetty rooliin {role}."
   },
   "AccountSettings": {
     "title": "Tilin asetukset",

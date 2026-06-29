@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Iniciar sesión en Spliit Cloud",
       "createAccount": "Crear una cuenta",
-      "createGroup": "Crear un grupo"
+      "createGroup": "Crear un grupo",
+      "importGroup": "Importar grupo desde otro servicio"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "Grupos recientes",
     "starred": "Grupos favoritos",
     "archived": "Grupos archivados",
+    "backToGroups": "Volver a grupos",
     "removeRecent": "Eliminar de grupos recientes",
     "RecentRemovedToast": {
       "title": "El grupo ha sido eliminado",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Enlace de invitación"
       }
     },
+    "changeRoleAria": "Cambiar rol",
+    "remove": "Eliminar",
+    "removed": "Miembro eliminado.",
+    "roleUpdated": "Rol actualizado a {role}.",
     "removeDialog": {
+      "title": "¿Eliminar miembro?",
+      "description": "¿Eliminar a {name} de este grupo? Sus gastos anteriores se quedan en el libro de cuentas, pero ya no tendrán acceso.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
       "unsettled": {
         "title": "¿Eliminar miembro con saldo pendiente?",
         "toast": "Miembro eliminado, saldos liquidados.",
@@ -1048,6 +1058,66 @@
           "description": "Eliminar sin liquidar dejará los saldos en el libro de cuentas indefinidamente. Marca la casilla a continuación para crear un gasto de reembolso por cada participación que involucre a este miembro antes de eliminarlo, o elimina sin liquidar y gestiona los saldos manualmente."
         },
         "checkbox": "Crear reembolso de liquidación antes de eliminar"
+      }
+    },
+    "leave": {
+      "button": "Abandonar grupo",
+      "title": "¿Abandonar grupo?",
+      "description": "Perderás el acceso a los gastos, saldos y actividad de este grupo. Los datos anteriores se conservan en el libro de cuentas para que otros miembros puedan verlos.",
+      "cancel": "Cancelar",
+      "confirm": "Abandonar grupo",
+      "confirmWithForce": "Liquidar y salir",
+      "confirmDelete": "Eliminar y salir",
+      "body": {
+        "otherAdmins": "Estos administradores mantendrán el control después de que te vayas: {names}.",
+        "lastAdmin": {
+          "title": "Elige un nuevo administrador",
+          "description": "Eres el último administrador de este grupo. Elige un miembro activo para que tome el control antes de irte, de lo contrario nadie podrá gestionar el grupo.",
+          "placeholder": "Selecciona un miembro"
+        },
+        "unsettled": {
+          "title": "Tienes saldos pendientes",
+          "description": "Abandonar con liquidación forzosa creará automáticamente gastos de reembolso para las partes en las que participas, manteniendo el libro de cuentas sincronizado. El resto de saldos se quedan como están."
+        },
+        "lastMember": {
+          "title": "Esto eliminará el grupo",
+          "description": "Eres el único miembro activo de este grupo. Si te vas, el grupo, todos sus gastos y todo su historial se eliminarán permanentemente.",
+          "checkbox": "Entiendo que esto eliminará permanentemente el grupo y todos sus datos.",
+          "suggestion": "Consejo: si quieres conservar este grupo como registro, puedes archivarlo en su lugar.",
+          "unsettledInfo": "Tienes saldos pendientes en este grupo. Se perderán permanentemente cuando se elimine el grupo."
+        }
+      },
+      "toast": {
+        "left": "Has abandonado el grupo.",
+        "deleted": "Grupo eliminado.",
+        "archived": "Grupo archivado."
+      },
+      "error": {
+        "lastAdmin": "Elige un miembro para ascender a administrador antes de irte.",
+        "lastMember": "Confirma la eliminación permanente para continuar.",
+        "unsettled": "Liquida tu saldo o confirma la liquidación forzosa para irte."
+      }
+    },
+    "unlinked": {
+      "title": "Participantes no vinculados",
+      "description": "Estas personas tienen un nombre en el grupo pero aún no tienen cuenta en la app. Vincula cada una a una cuenta existente para asociar sus gastos con ese usuario.",
+      "emailPlaceholder": "cuenta@ejemplo.com",
+      "link": "Vincular a cuenta",
+      "linkSuccess": "Participante vinculado a la cuenta",
+      "idHint": "ID del participante en el libro: {id}",
+      "linkButton": "Vincular",
+      "linkDialog": {
+        "title": "Vincular participante no vinculado",
+        "description": "Elige el miembro existente al que {displayName} debería vincularse. El destino no debe estar ya en el lado opuesto de una partida de gasto con este participante.",
+        "membersGroup": "Miembros",
+        "cancel": "Cancelar",
+        "confirm": "Vincular",
+        "noCandidates": "No se encontraron miembros compatibles. Esto suele significar que este participante no vinculado está en ambos lados de una partida de gasto con todos los demás miembros: la importación debe rehacerse o los gastos deben ajustarse primero.",
+        "pendingLabel": "pendiente",
+        "pendingHint": "Vincular a una invitación pendiente fusiona esta entrada sin cuenta en el invitado. El invitado conserva su propia fila; las referencias fusionadas ahora se resuelven a través de ella cuando acepte.",
+        "membersGroupWithPending": "Miembros e invitaciones pendientes",
+        "pendingGroup": "Invitaciones pendientes",
+        "pendingSuffix": "(pendiente)"
       }
     }
   },

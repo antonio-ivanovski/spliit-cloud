@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Bei Spliit Cloud anmelden",
       "createAccount": "Konto erstellen",
-      "createGroup": "Gruppe erstellen"
+      "createGroup": "Gruppe erstellen",
+      "importGroup": "Gruppe von einem anderen Dienst importieren"
     },
     "features": {
       "groupsSync": {
@@ -306,7 +307,8 @@
       "description": "„{name}“ ist auf spliit.app erreichbar. Möchtest du sie in Spliit Cloud importieren?",
       "cta": "Diese Gruppe importieren",
       "backToHome": "Zur Startseite"
-    }
+    },
+    "backToGroups": "Zurück zu den Gruppen"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -1048,6 +1050,74 @@
           "description": "Das Entfernen ohne Ausgleich belässt die Salden dauerhaft im Hauptbuch. Aktiviere das Kontrollkästchen unten, um vor dem Entfernen eine Ausgleichsausgabe pro Bein zu erstellen, an dem dieses Mitglied beteiligt ist, oder entferne ohne Ausgleich und bearbeite die Salden manuell."
         },
         "checkbox": "Ausgleichsausgabe vor dem Entfernen erstellen"
+      },
+      "title": "Mitglied entfernen?",
+      "description": "{name} aus dieser Gruppe entfernen? Die bisherigen Ausgaben bleiben im Hauptbuch erhalten, aber {name} hat dann keinen Zugriff mehr.",
+      "cancel": "Abbrechen",
+      "confirm": "Entfernen"
+    },
+    "changeRoleAria": "Rolle ändern",
+    "leave": {
+      "button": "Gruppe verlassen",
+      "title": "Gruppe verlassen?",
+      "description": "Sie verlieren den Zugriff auf die Ausgaben, Salden und Aktivitäten dieser Gruppe. Bisherige Daten bleiben im Hauptbuch erhalten, damit andere Mitglieder sie weiterhin sehen können.",
+      "cancel": "Abbrechen",
+      "confirm": "Gruppe verlassen",
+      "confirmDelete": "Löschen und verlassen",
+      "confirmWithForce": "Ausgleichen und verlassen",
+      "body": {
+        "otherAdmins": "Diese Admins behalten nach Ihrem Austritt die Kontrolle: {names}.",
+        "lastAdmin": {
+          "title": "Neuen Admin auswählen",
+          "description": "Sie sind der letzte Admin dieser Gruppe. Wählen Sie vor Ihrem Austritt ein aktives Mitglied als Nachfolger aus, sonst kann niemand mehr die Gruppe verwalten.",
+          "placeholder": "Mitglied auswählen"
+        },
+        "unsettled": {
+          "title": "Sie haben nicht ausgeglichene Salden",
+          "description": "Beim Verlassen mit Ausgleich werden automatisch Ausgleichsausgaben für die Beine erstellt, an denen Sie beteiligt sind, damit das Hauptbuch synchron bleibt. Andere Salden bleiben unverändert."
+        },
+        "lastMember": {
+          "title": "Die Gruppe wird gelöscht",
+          "description": "Sie sind das einzige aktive Mitglied dieser Gruppe. Beim Verlassen wird die Gruppe mitsamt aller Ausgaben und des gesamten Verlaufs endgültig gelöscht.",
+          "checkbox": "Ich verstehe, dass die Gruppe und alle ihre Daten dadurch endgültig gelöscht werden.",
+          "suggestion": "Tipp: Wenn Sie die Gruppe als Aufzeichnung behalten möchten, können Sie sie stattdessen archivieren.",
+          "unsettledInfo": "Sie haben nicht ausgeglichene Salden in dieser Gruppe. Diese gehen beim Löschen der Gruppe endgültig verloren."
+        }
+      },
+      "toast": {
+        "archived": "Gruppe archiviert.",
+        "deleted": "Gruppe gelöscht.",
+        "left": "Sie haben die Gruppe verlassen."
+      },
+      "error": {
+        "lastAdmin": "Wählen Sie ein Mitglied aus, das vor Ihrem Austritt zum Admin befördert werden soll.",
+        "lastMember": "Bestätigen Sie die endgültige Löschung, um fortzufahren.",
+        "unsettled": "Gleichen Sie Ihre Salden aus oder bestätigen Sie den Zwangsausgleich, um zu verlassen."
+      }
+    },
+    "remove": "Entfernen",
+    "removed": "Mitglied entfernt.",
+    "roleUpdated": "Rolle auf {role} aktualisiert.",
+    "unlinked": {
+      "title": "Nicht verknüpfte Teilnehmer",
+      "description": "Diese Personen haben einen Namen in der Gruppe, aber noch kein App-Konto. Verknüpfen Sie jede mit einem vorhandenen Konto, um ihre Ausgaben diesem Benutzer zuzuordnen.",
+      "idHint": "Hauptbuch-Teilnehmer-ID: {id}",
+      "linkButton": "Verknüpfen",
+      "linkSuccess": "Teilnehmer mit Konto verknüpft",
+      "emailPlaceholder": "konto@example.com",
+      "link": "Mit Konto verknüpfen",
+      "linkDialog": {
+        "title": "Nicht verknüpften Teilnehmer verknüpfen",
+        "description": "Wählen Sie das vorhandene Mitglied aus, mit dem {displayName} verknüpft werden soll. Das Ziel darf nicht bereits auf der gegenüberliegenden Seite eines Ausgabenbeins mit diesem Teilnehmer stehen.",
+        "cancel": "Abbrechen",
+        "confirm": "Verknüpfen",
+        "membersGroup": "Mitglieder",
+        "membersGroupWithPending": "Mitglieder und ausstehende Einladungen",
+        "pendingGroup": "Ausstehende Einladungen",
+        "pendingLabel": "ausstehend",
+        "pendingSuffix": "(ausstehend)",
+        "pendingHint": "Die Verknüpfung mit einer ausstehenden Einladung führt dazu, dass dieser namensbasierte Eintrag mit dem Eingeladenen zusammengeführt wird. Der Eingeladene behält seine eigene Zeile; die zusammengeführten Verweise werden nach der Annahme über ihn aufgelöst.",
+        "noCandidates": "Keine kompatiblen Mitglieder gefunden. Das bedeutet in der Regel, dass dieser nicht verknüpfte Teilnehmer bei jedem anderen Mitglied auf beiden Seiten eines Ausgabenbeins steht — der Import muss wiederholt oder die Ausgaben müssen zuerst angepasst werden."
       }
     }
   },

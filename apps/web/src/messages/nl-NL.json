@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Inloggen op Spliit Cloud",
       "createAccount": "Account aanmaken",
-      "createGroup": "Groep aanmaken"
+      "createGroup": "Groep aanmaken",
+      "importGroup": "Importeer groep van een andere dienst"
     },
     "features": {
       "groupsSync": {
@@ -138,6 +139,7 @@
     "pendingInviteeExpenseDescription": "Accepteer de bovenstaande uitnodiging om uitgaven toe te voegen of te bewerken. Tot die tijd zijn de bestaande gegevens zichtbaar maar kunnen niet worden gewijzigd.",
     "archivedReadOnly": "Deze groep is gearchiveerd. Er kunnen geen uitgaven meer worden toegevoegd of gewijzigd.",
     "backToExpenses": "Terug naar uitgaven",
+    "backToGroups": "Terug naar groepen",
     "removeRecent": "Verwijder uit recente groepen",
     "RecentRemovedToast": {
       "title": "Groep verwijderd",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Uitnodigingslink"
       }
     },
+    "changeRoleAria": "Rol wijzigen",
+    "remove": "Verwijderen",
+    "removed": "Lid verwijderd.",
+    "roleUpdated": "Rol bijgewerkt naar {role}.",
     "removeDialog": {
+      "title": "Lid verwijderen?",
+      "description": "{name} uit deze groep verwijderen? Hun eerdere uitgaven blijven in het grootboek staan, maar ze hebben geen toegang meer.",
+      "cancel": "Annuleren",
+      "confirm": "Verwijderen",
       "unsettled": {
         "title": "Lid met niet-vereffend saldo verwijderen?",
         "toast": "Lid verwijderd, saldi vereffend.",
@@ -1048,6 +1058,66 @@
           "description": "Verwijderen zonder vereffenen laat de saldi voor onbepaalde tijd in het grootboek staan. Vink het vakje hieronder aan om één verrekeningsuitgave per been aan te maken waar dit lid bij betrokken is vóór het verwijderen, of verwijder zonder vereffenen en handel de saldi handmatig af."
         },
         "checkbox": "Verrekeningsuitgave aanmaken vóór verwijderen"
+      }
+    },
+    "leave": {
+      "button": "Groep verlaten",
+      "title": "Groep verlaten?",
+      "description": "Je verliest de toegang tot deze groep, haar uitgaven, saldi en activiteit. Eerdere gegevens blijven in het grootboek staan, zodat andere leden ze nog kunnen inzien.",
+      "cancel": "Annuleren",
+      "confirm": "Groep verlaten",
+      "body": {
+        "otherAdmins": "Deze beheerders behouden het beheer nadat je vertrekt: {names}.",
+        "lastAdmin": {
+          "title": "Kies een nieuwe beheerder",
+          "description": "Je bent de laatste beheerder van deze groep. Kies een actief lid dat het overneemt voordat je vertrekt, anders kan niemand de groep meer beheren.",
+          "placeholder": "Selecteer een lid"
+        },
+        "lastMember": {
+          "title": "Hiermee wordt de groep verwijderd",
+          "description": "Je bent het enige actieve lid van deze groep. Vertrekken verwijdert de groep, al haar uitgaven en geschiedenis permanent.",
+          "checkbox": "Ik begrijp dat de groep en alle gegevens permanent worden verwijderd.",
+          "suggestion": "Tip: als je de groep wilt bewaren, kun je haar in plaats daarvan archiveren.",
+          "unsettledInfo": "Je hebt niet-vereffende saldi in deze groep. Ze gaan permanent verloren wanneer de groep wordt verwijderd."
+        },
+        "unsettled": {
+          "title": "Je hebt niet-vereffende saldi",
+          "description": "Geforceerd verlaten maakt automatisch verrekeningsuitgaven aan voor de betalingen waarbij jij betrokken bent, zodat het grootboek synchroon blijft. Overige saldi blijven zoals ze zijn."
+        }
+      },
+      "error": {
+        "lastAdmin": "Kies een lid om tot beheerder te promoveren voordat je vertrekt.",
+        "lastMember": "Bevestig de permanente verwijdering om door te gaan.",
+        "unsettled": "Vereffen je saldo of bevestig geforceerde vereffening om te vertrekken."
+      },
+      "confirmDelete": "Verwijder en verlaat",
+      "confirmWithForce": "Vereffen en verlaat",
+      "toast": {
+        "left": "Je hebt de groep verlaten.",
+        "deleted": "Groep verwijderd.",
+        "archived": "Groep gearchiveerd."
+      }
+    },
+    "unlinked": {
+      "title": "Niet-gekoppelde deelnemers",
+      "description": "Deze personen hebben een naam in de groep maar nog geen app-account. Koppel ze aan een bestaand account om hun uitgaven aan die gebruiker te koppelen.",
+      "emailPlaceholder": "account@voorbeeld.nl",
+      "linkButton": "Koppelen",
+      "link": "Koppelen aan account",
+      "linkSuccess": "Deelnemer gekoppeld aan account",
+      "idHint": "Grootboekdeelnemer-id: {id}",
+      "linkDialog": {
+        "title": "Niet-gekoppelde deelnemer koppelen",
+        "description": "Kies het bestaande lid waaraan {displayName} moet worden gekoppeld. De bestemming mag niet al aan de andere kant van een uitgavenpost met deze deelnemer staan.",
+        "membersGroup": "Leden",
+        "cancel": "Annuleren",
+        "confirm": "Koppelen",
+        "noCandidates": "Geen compatibele leden gevonden. Dit betekent meestal dat deze niet-gekoppelde deelnemer aan beide kanten van een uitgavenpost staat met elk ander lid — de import moet opnieuw worden gedaan of er moeten eerst uitgaven worden aangepast.",
+        "pendingLabel": "openstaand",
+        "pendingHint": "Koppelen aan een openstaande uitnodiging voegt deze alleen-naam vermelding samen met de genodigde. De genodigde behoudt hun eigen rij; de samengevoegde verwijzingen lopen via hen zodra ze accepteren.",
+        "membersGroupWithPending": "Leden en openstaande uitnodigingen",
+        "pendingGroup": "Openstaande uitnodigingen",
+        "pendingSuffix": "(openstaand)"
       }
     }
   },

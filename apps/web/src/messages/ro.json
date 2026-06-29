@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Autentifică-te pe Spliit Cloud",
       "createAccount": "Creează un cont",
-      "createGroup": "Creează un grup"
+      "createGroup": "Creează un grup",
+      "importGroup": "Importă grup dintr-un alt serviciu"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "Ultimele grupuri",
     "starred": "Grupuri favorite",
     "archived": "Grupuri arhivate",
+    "backToGroups": "Înapoi la grupuri",
     "removeRecent": "Șterge din ultimele grupuri",
     "RecentRemovedToast": {
       "title": "Grupul a fost șters.",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Link de invitație"
       }
     },
+    "changeRoleAria": "Schimbă rolul",
+    "remove": "Elimină",
+    "removed": "Membru eliminat.",
+    "roleUpdated": "Rol actualizat la {role}.",
     "removeDialog": {
+      "title": "Elimini membru?",
+      "description": "Elimini pe {name} din acest grup? Cheltuielile sale anterioare rămân în registru, dar nu va mai avea acces.",
+      "cancel": "Anulează",
+      "confirm": "Elimină",
       "unsettled": {
         "title": "Elimini membrul cu sold nedecontat?",
         "toast": "Membru eliminat, solduri decontate.",
@@ -1048,6 +1058,66 @@
           "description": "Eliminarea fără decontare va lăsa soldurile în registru pe termen nelimitat. Bifează căsuța de mai jos pentru a crea o cheltuială de rambursare pentru fiecare parte care implică acest membru înainte de a-l elimina, sau elimină fără decontare și gestionează soldurile manual."
         },
         "checkbox": "Creează rambursare de decontare înainte de eliminare"
+      }
+    },
+    "leave": {
+      "button": "Părăsește grupul",
+      "title": "Părăsești grupul?",
+      "description": "Vei pierde accesul la cheltuielile, soldurile și activitatea acestui grup. Datele anterioare sunt păstrate în registru, astfel încât ceilalți membri să le poată vedea.",
+      "cancel": "Anulează",
+      "confirm": "Părăsește grupul",
+      "confirmWithForce": "Regularizează și pleacă",
+      "confirmDelete": "Șterge și pleacă",
+      "body": {
+        "otherAdmins": "Acești administratori vor păstra controlul după plecarea ta: {names}.",
+        "lastAdmin": {
+          "title": "Alege un nou administrator",
+          "description": "Ești ultimul administrator al acestui grup. Alege un membru activ care să preia controlul înainte să pleci, altfel nimeni nu va putea gestiona grupul.",
+          "placeholder": "Selectează un membru"
+        },
+        "unsettled": {
+          "title": "Ai solduri neregularizate",
+          "description": "Plecarea cu regularizare forțată va crea automat cheltuieli de rambursare pentru tranzacțiile care te implică, menținând registrul sincronizat. Celelalte solduri rămân neschimbate."
+        },
+        "lastMember": {
+          "title": "Aceasta va șterge grupul",
+          "description": "Ești singurul membru activ al acestui grup. Plecarea va șterge permanent grupul, toate cheltuielile și tot istoricul.",
+          "checkbox": "Înțeleg că aceasta va șterge permanent grupul și toate datele sale.",
+          "suggestion": "Sfaturi: dacă dorești să păstrezi acest grup ca arhivă, poți să îl arhivezi.",
+          "unsettledInfo": "Ai solduri neregularizate în acest grup. Acestea se vor pierde permanent când grupul va fi șters."
+        }
+      },
+      "toast": {
+        "left": "Ai părăsit grupul.",
+        "deleted": "Grup șters.",
+        "archived": "Grup arhivat."
+      },
+      "error": {
+        "lastAdmin": "Alege un membru de promovat la administrator înainte de a pleca.",
+        "lastMember": "Confirmă ștergerea permanentă pentru a continua.",
+        "unsettled": "Regularizează-ți soldul sau confirmă regularizarea forțată pentru a pleca."
+      }
+    },
+    "unlinked": {
+      "title": "Participanți nelegați",
+      "description": "Aceste persoane au un nume în grup dar încă nu au un cont în aplicație. Leagă fiecare de un cont existent pentru a asocia cheltuielile lor cu acel utilizator.",
+      "emailPlaceholder": "cont@exemplu.com",
+      "link": "Leagă de cont",
+      "linkSuccess": "Participant legat de cont",
+      "idHint": "ID participant în registru: {id}",
+      "linkButton": "Leagă",
+      "linkDialog": {
+        "title": "Leagă participantul nelegat",
+        "description": "Alege membrul existent de care {displayName} ar trebui legat. Destinația nu trebuie să fie deja pe partea opusă a unei tranzacții cu acest participant.",
+        "membersGroup": "Membri",
+        "cancel": "Anulează",
+        "confirm": "Leagă",
+        "noCandidates": "Nu s-au găsit membri compatibili. De obicei, asta înseamnă că acest participant nelegat este de ambele părți ale unei tranzacții cu fiecare alt membru — importul trebuie refăcut sau cheltuielile ajustate mai întâi.",
+        "pendingLabel": "în așteptare",
+        "pendingHint": "Legarea de o invitație în așteptare îmbină această intrare fără cont în persoana invitată. Invitatul își păstrează propriul rând; referințele îmbinate se rezolvă acum prin acesta când acceptă.",
+        "membersGroupWithPending": "Membri și invitații în așteptare",
+        "pendingGroup": "Invitații în așteptare",
+        "pendingSuffix": "(în așteptare)"
       }
     }
   },

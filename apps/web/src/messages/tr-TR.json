@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Spliit Cloud'da oturum açın",
       "createAccount": "Hesap oluşturun",
-      "createGroup": "Grup oluştur"
+      "createGroup": "Grup oluştur",
+      "importGroup": "Grubu başka bir servisten içe aktar"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "Son gruplar",
     "starred": "Yıldızlı gruplar",
     "archived": "Arşivlenmiş gruplar",
+    "backToGroups": "Gruplara dön",
     "removeRecent": "Son gruplardan kaldır",
     "RecentRemovedToast": {
       "title": "Grup kaldırıldı",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Davet bağlantısı"
       }
     },
+    "changeRoleAria": "Rolü değiştir",
+    "remove": "Çıkar",
+    "removed": "Üye çıkarıldı.",
+    "roleUpdated": "Rol {role} olarak güncellendi.",
     "removeDialog": {
+      "title": "Üye çıkarılsın mı?",
+      "description": "{name} bu gruptan çıkarılsın mı? Geçmiş masrafları defterde kalır ancak artık erişemezler.",
+      "cancel": "İptal",
+      "confirm": "Çıkar",
       "unsettled": {
         "title": "Kapatılmamış bakiyesi olan üye çıkarılsın mı?",
         "toast": "Üye çıkarıldı, bakiyeler kapatıldı.",
@@ -1049,6 +1059,66 @@
         },
         "checkbox": "Çıkarmadan önce kapatma geri ödemesi oluştur"
       }
+    },
+    "leave": {
+      "button": "Gruptan ayrıl",
+      "title": "Gruptan ayrılınacak mı?",
+      "description": "Bu grubun masraflarına, bakiyelerine ve etkinliğine erişiminizi kaybedeceksiniz. Geçmiş veriler defterde kalır, böylece diğer üyeler görmeye devam edebilir.",
+      "body": {
+        "otherAdmins": "Bu yöneticiler siz ayrıldıktan sonra kontrolü elinde tutacak: {names}.",
+        "lastAdmin": {
+          "title": "Yeni bir yönetici seçin",
+          "description": "Bu grubun son yöneticisisiniz. Ayrılmadan önce aktif bir üyeyi yönetici olarak seçin, aksi takdirde grubu kimse yönetemez.",
+          "placeholder": "Bir üye seçin"
+        },
+        "lastMember": {
+          "title": "Bu grubu silecek",
+          "description": "Bu grubun tek aktif üyesisiniz. Ayrılmak, grubu, tüm masraflarını ve tüm geçmişini kalıcı olarak silecek.",
+          "checkbox": "Bunun grubu ve tüm verilerini kalıcı olarak sileceğini anlıyorum.",
+          "suggestion": "İpucu: bu grubu kayıt olarak tutmak isterseniz, arşivleyebilirsiniz.",
+          "unsettledInfo": "Bu grupta kapatılmamış bakiyeleriniz var. Grup silindiğinde kalıcı olarak kaybolacaklar."
+        },
+        "unsettled": {
+          "title": "Kapatılmamış bakiyeleriniz var",
+          "description": "Zorla ayrılmak, sizi ilgilendiren her ayak için otomatik olarak geri ödeme masrafı oluşturur, böylece defter dengede kalır. Diğer bakiyeler olduğu gibi kalır."
+        }
+      },
+      "cancel": "İptal",
+      "confirm": "Gruptan ayrıl",
+      "confirmWithForce": "Kapat ve ayrıl",
+      "confirmDelete": "Sil ve ayrıl",
+      "toast": {
+        "left": "Gruptan ayrıldınız.",
+        "deleted": "Grup silindi.",
+        "archived": "Grup arşivlendi."
+      },
+      "error": {
+        "lastAdmin": "Ayrılmadan önce yönetici yapılacak bir üye seçin.",
+        "lastMember": "Devam etmek için kalıcı silme işlemini onaylayın.",
+        "unsettled": "Ayrılmak için bakiyenizi kapatın veya zorla kapatmayı onaylayın."
+      }
+    },
+    "unlinked": {
+      "title": "Bağlanmamış katılımcılar",
+      "description": "Bu kişilerin grupta bir adı var ancak henüz bir uygulama hesabı yok. Her birini mevcut bir hesaba bağlayarak masraflarını o kullanıcıyla ilişkilendirin.",
+      "emailPlaceholder": "hesap@ornek.com",
+      "link": "Hesaba bağla",
+      "linkSuccess": "Katılımcı hesaba bağlandı",
+      "idHint": "Defter katılımcı kimliği: {id}",
+      "linkDialog": {
+        "title": "Bağlanmamış katılımcıyı bağla",
+        "description": "{displayName} kişisinin bağlanacağı mevcut üyeyi seçin. Hedef, bu katılımcıyla bir masraf ayağının karşı tarafında zaten bulunmamalıdır.",
+        "membersGroup": "Üyeler",
+        "cancel": "İptal",
+        "confirm": "Bağla",
+        "noCandidates": "Uyumlu üye bulunamadı. Bu genellikle bağlanmamış katılımcının her diğer üyeyle bir masraf ayağının her iki tarafında olduğu anlamına gelir — içe aktarmanın yeniden yapılması veya masrafların önce ayarlanması gerekir.",
+        "pendingLabel": "bekliyor",
+        "pendingHint": "Bekleyen bir davete bağlamak, bu yalnızca ad girişini davetliyle birleştirir. Davetli kendi satırını korur; birleştirilen referanslar, kabul ettiklerinde artık onun üzerinden çözümlenir.",
+        "membersGroupWithPending": "Üyeler ve bekleyen davetler",
+        "pendingGroup": "Bekleyen davetler",
+        "pendingSuffix": "(bekliyor)"
+      },
+      "linkButton": "Bağla"
     }
   },
   "AccountSettings": {

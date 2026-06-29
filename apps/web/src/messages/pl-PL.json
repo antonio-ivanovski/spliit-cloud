@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Zaloguj się do Spliit Cloud",
       "createAccount": "Utwórz konto",
-      "createGroup": "Utwórz grupę"
+      "createGroup": "Utwórz grupę",
+      "importGroup": "Importuj grupę z innej usługi"
     },
     "features": {
       "groupsSync": {
@@ -138,6 +139,7 @@
     "pendingInviteeExpenseDescription": "Zaakceptuj zaproszenie powyżej, aby zacząć dodawać lub edytować wydatki. Do tego czasu istniejące dane grupy są widoczne, ale nie można ich modyfikować.",
     "archivedReadOnly": "Ta grupa jest zarchiwizowana. Wydatki nie mogą być już dodawane ani modyfikowane.",
     "backToExpenses": "Powrót do wydatków",
+    "backToGroups": "Powrót do grup",
     "removeRecent": "Usuń z ostatnich grup",
     "RecentRemovedToast": {
       "title": "Grupa została usunięta",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Link zaproszenia"
       }
     },
+    "changeRoleAria": "Zmień rolę",
+    "remove": "Usuń",
+    "removed": "Członek usunięty.",
+    "roleUpdated": "Rola zaktualizowana na {role}.",
     "removeDialog": {
+      "title": "Usunąć członka?",
+      "description": "Usunąć {name} z tej grupy? Jego/jej wcześniejsze wydatki pozostaną w księdze, ale {name} utraci dostęp.",
+      "cancel": "Anuluj",
+      "confirm": "Usuń",
       "unsettled": {
         "title": "Usunąć członka z nierozliczonym saldem?",
         "toast": "Członek usunięty, salda rozliczone.",
@@ -1048,6 +1058,66 @@
           "description": "Usunięcie bez rozliczenia pozostawi salda w księdze na stałe. Zaznacz pole poniżej, aby utworzyć jeden wydatek rozliczeniowy na każdą nogę, w którą zaangażowany jest ten członek, przed usunięciem, lub usuń bez rozliczania i zajmij się saldami ręcznie."
         },
         "checkbox": "Utwórz wydatek rozliczeniowy przed usunięciem"
+      }
+    },
+    "leave": {
+      "button": "Opuść grupę",
+      "title": "Opuścić grupę?",
+      "description": "Utracisz dostęp do wydatków, sald i aktywności tej grupy. Dotychczasowe dane pozostaną w księdze, aby inni członkowie mogli je nadal przeglądać.",
+      "cancel": "Anuluj",
+      "confirm": "Opuść grupę",
+      "confirmWithForce": "Rozlicz i opuść",
+      "confirmDelete": "Usuń i opuść",
+      "body": {
+        "otherAdmins": "Ci administratorzy zachowają kontrolę po Twoim wyjściu: {names}.",
+        "lastAdmin": {
+          "title": "Wybierz nowego administratora",
+          "description": "Jesteś ostatnim administratorem tej grupy. Wybierz aktywnego członka, który przejmie rolę, zanim odejdziesz — w przeciwnym razie nikt nie będzie mógł zarządzać grupą.",
+          "placeholder": "Wybierz członka"
+        },
+        "unsettled": {
+          "title": "Masz nierozliczone salda",
+          "description": "Wymuszone opuszczenie grupy automatycznie utworzy wydatki rozliczeniowe dla nóg z Twoim udziałem, aby księga pozostała spójna. Pozostałe salda pozostaną bez zmian."
+        },
+        "lastMember": {
+          "title": "To spowoduje usunięcie grupy",
+          "description": "Jesteś jedynym aktywnym członkiem tej grupy. Opuszczenie jej spowoduje trwałe usunięcie grupy, wszystkich wydatków i całej historii.",
+          "checkbox": "Rozumiem, że spowoduje to trwałe usunięcie grupy i wszystkich jej danych.",
+          "suggestion": "Wskazówka: jeśli chcesz zachować tę grupę jako archiwum, możesz ją zarchiwizować.",
+          "unsettledInfo": "Masz nierozliczone salda w tej grupie. Zostaną trwale utracone po usunięciu grupy."
+        }
+      },
+      "toast": {
+        "left": "Opuściłeś grupę.",
+        "deleted": "Grupa usunięta.",
+        "archived": "Grupa zarchiwizowana."
+      },
+      "error": {
+        "lastAdmin": "Wybierz członka do awansu na administratora przed opuszczeniem grupy.",
+        "lastMember": "Potwierdź trwałe usunięcie, aby kontynuować.",
+        "unsettled": "Rozlicz saldo lub potwierdź wymuszone rozliczenie, aby opuścić grupę."
+      }
+    },
+    "unlinked": {
+      "title": "Niepowiązani uczestnicy",
+      "description": "Te osoby mają nazwę w grupie, ale nie mają jeszcze konta w aplikacji. Powiąż każdą z istniejącym kontem, aby przypisać ich wydatki do tego użytkownika.",
+      "emailPlaceholder": "konto@przyklad.pl",
+      "link": "Powiąż z kontem",
+      "linkSuccess": "Uczestnik powiązany z kontem",
+      "idHint": "Identyfikator uczestnika w księdze: {id}",
+      "linkButton": "Powiąż",
+      "linkDialog": {
+        "title": "Powiąż niepowiązanego uczestnika",
+        "description": "Wybierz istniejącego członka, z którym {displayName} ma zostać powiązany. Docelowy członek nie może już znajdować się po przeciwnej stronie nogi wydatku z tym uczestnikiem.",
+        "membersGroup": "Członkowie",
+        "cancel": "Anuluj",
+        "confirm": "Powiąż",
+        "noCandidates": "Nie znaleziono zgodnych członków. Zwykle oznacza to, że ten niepowiązany uczestnik znajduje się po obu stronach nogi wydatku z każdym innym członkiem — import należy powtórzyć lub najpierw dostosować wydatki.",
+        "pendingLabel": "oczekujące",
+        "pendingHint": "Powiązanie z oczekującym zaproszeniem łączy ten wpis tylko z nazwą z zaproszonym. Zaproszony zachowuje swój własny wiersz; połączone odniesienia będą rozwiązywane przez niego po akceptacji.",
+        "membersGroupWithPending": "Członkowie i oczekujące zaproszenia",
+        "pendingGroup": "Oczekujące zaproszenia",
+        "pendingSuffix": "(oczekujące)"
       }
     }
   },

@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Se connecter à Spliit Cloud",
       "createAccount": "Créer un compte",
-      "createGroup": "Créer un groupe"
+      "createGroup": "Créer un groupe",
+      "importGroup": "Importer un groupe depuis un autre service"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "Groupes récents",
     "starred": "Groupes favoris",
     "archived": "Groupes archivés",
+    "backToGroups": "Retour aux groupes",
     "removeRecent": "Supprimer des groupes récents",
     "RecentRemovedToast": {
       "title": "Le groupe a été supprimé",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Lien d'invitation"
       }
     },
+    "changeRoleAria": "Changer le rôle",
+    "remove": "Supprimer",
+    "removed": "Membre supprimé.",
+    "roleUpdated": "Rôle mis à jour en {role}.",
     "removeDialog": {
+      "title": "Supprimer le membre ?",
+      "description": "Supprimer {name} de ce groupe ? Ses dépenses passées restent dans le journal, mais il n'y aura plus accès.",
+      "cancel": "Annuler",
+      "confirm": "Supprimer",
       "unsettled": {
         "title": "Supprimer le membre avec un solde impayé ?",
         "toast": "Membre supprimé, soldes réglés.",
@@ -1048,6 +1058,66 @@
           "description": "Supprimer sans régler laissera les soldes dans le grand livre indéfiniment. Cochez la case ci-dessous pour créer une dépense de remboursement par part impliquant ce membre avant de le supprimer, ou supprimez sans régler et gérez les soldes manuellement."
         },
         "checkbox": "Créer un remboursement de régularisation avant de supprimer"
+      }
+    },
+    "leave": {
+      "button": "Quitter le groupe",
+      "title": "Quitter le groupe ?",
+      "description": "Vous perdrez l'accès aux dépenses, soldes et activités de ce groupe. Les données passées sont conservées dans le journal pour que les autres membres puissent toujours les consulter.",
+      "cancel": "Annuler",
+      "confirm": "Quitter le groupe",
+      "confirmWithForce": "Régler et quitter",
+      "confirmDelete": "Supprimer et quitter",
+      "body": {
+        "otherAdmins": "Ces administrateurs conserveront le contrôle après votre départ : {names}.",
+        "lastAdmin": {
+          "title": "Choisissez un nouvel administrateur",
+          "description": "Vous êtes le dernier administrateur de ce groupe. Choisissez un membre actif pour prendre la relève avant de partir, sinon personne ne pourra gérer le groupe.",
+          "placeholder": "Sélectionnez un membre"
+        },
+        "unsettled": {
+          "title": "Vous avez des soldes impayés",
+          "description": "Quitter avec règlement forcé créera automatiquement des dépenses de remboursement pour les lignes vous concernant afin que le journal reste synchronisé. Les autres soldes restent inchangés."
+        },
+        "lastMember": {
+          "title": "Cela supprimera le groupe",
+          "description": "Vous êtes le seul membre actif de ce groupe. En partant, le groupe, toutes ses dépenses et tout son historique seront définitivement supprimés.",
+          "checkbox": "Je comprends que cela supprimera définitivement le groupe et toutes ses données.",
+          "suggestion": "Astuce : si vous souhaitez conserver ce groupe comme archive, vous pouvez plutôt l'archiver.",
+          "unsettledInfo": "Vous avez des soldes impayés dans ce groupe. Ils seront définitivement perdus lorsque le groupe sera supprimé."
+        }
+      },
+      "toast": {
+        "left": "Vous avez quitté le groupe.",
+        "deleted": "Groupe supprimé.",
+        "archived": "Groupe archivé."
+      },
+      "error": {
+        "lastAdmin": "Choisissez un membre à promouvoir administrateur avant de partir.",
+        "lastMember": "Confirmez la suppression définitive pour continuer.",
+        "unsettled": "Réglez votre solde ou confirmez le règlement forcé pour partir."
+      }
+    },
+    "unlinked": {
+      "title": "Participants non liés",
+      "description": "Ces personnes ont un nom dans le groupe mais n'ont pas encore de compte dans l'application. Liez chacun à un compte existant pour associer ses dépenses à cet utilisateur.",
+      "emailPlaceholder": "compte@exemple.com",
+      "link": "Lier au compte",
+      "linkSuccess": "Participant lié au compte",
+      "idHint": "Identifiant du participant dans le journal : {id}",
+      "linkButton": "Lier",
+      "linkDialog": {
+        "title": "Lier le participant non lié",
+        "description": "Choisissez le membre existant auquel {displayName} doit être lié. La destination ne doit pas déjà se trouver du côté opposé d'une ligne de dépense avec ce participant.",
+        "membersGroup": "Membres",
+        "cancel": "Annuler",
+        "confirm": "Lier",
+        "noCandidates": "Aucun membre compatible trouvé. Cela signifie généralement que ce participant non lié se trouve des deux côtés d'une ligne de dépense avec chaque autre membre : l'importation doit être refaite ou les dépenses ajustées d'abord.",
+        "pendingLabel": "en attente",
+        "pendingHint": "Lier à une invitation en attente fusionne cette entrée sans compte dans l'invité. L'invité conserve sa propre ligne ; les références fusionnées sont désormais résolues via celle-ci lorsqu'il accepte.",
+        "membersGroupWithPending": "Membres et invitations en attente",
+        "pendingGroup": "Invitations en attente",
+        "pendingSuffix": "(en attente)"
       }
     }
   },

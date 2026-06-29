@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "登入 Spliit Cloud",
       "createAccount": "建立帳戶",
-      "createGroup": "建立群組"
+      "createGroup": "建立群組",
+      "importGroup": "從其他服務匯入群組"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "最近的群組",
     "starred": "已加星標的群組",
     "archived": "已封存的群組",
+    "backToGroups": "返回群組",
     "removeRecent": "從最近的群組中移除",
     "RecentRemovedToast": {
       "title": "群組已被移除",
@@ -1038,7 +1040,9 @@
         "fallbackLabel": "邀請連結"
       }
     },
+    "remove": "移除",
     "removeDialog": {
+      "description": "將 {name} 從此群組移除？其過往支出將保留在帳本中，但他們將不再有存取權限。",
       "unsettled": {
         "title": "刪除有未結算餘額的成員？",
         "toast": "成員已移除，餘額已結算。",
@@ -1048,8 +1052,74 @@
           "description": "不結算就移除將使這些餘額無限期留在帳本中。勾選下方核取方塊可在移除前對此成員涉及的每條交易建立一筆報銷支出，也可以不結算直接移除並手動處理這些餘額。"
         },
         "checkbox": "移除前建立結算報銷"
+      },
+      "title": "移除成員？",
+      "cancel": "取消",
+      "confirm": "移除"
+    },
+    "leave": {
+      "cancel": "取消",
+      "body": {
+        "unsettled": {
+          "title": "您有未結算的餘額",
+          "description": "強制退出將自動為涉及您的部分建立報銷支出，以保持帳本同步。其餘餘額將保持不變。"
+        },
+        "lastMember": {
+          "unsettledInfo": "您在此群組中有未結算的餘額。刪除群組後，這些餘額將永久遺失。",
+          "title": "此操作將刪除群組",
+          "description": "您是此群組唯一的活躍成員。退出將永久刪除群組及其所有支出和歷史記錄。",
+          "checkbox": "我了解這將永久刪除群組及其所有資料。",
+          "suggestion": "提示：若想保留此群組作為記錄，可以改為封存。"
+        },
+        "otherAdmins": "您退出後，以下管理員將繼續管理：{names}。",
+        "lastAdmin": {
+          "title": "選擇新的管理員",
+          "description": "您是最後一位管理員。退出前請指定一位活躍成員接替管理，否則將無人能管理此群組。",
+          "placeholder": "選擇成員"
+        }
+      },
+      "error": {
+        "lastAdmin": "退出前請先選擇一位成員晉升為管理員。",
+        "lastMember": "請確認永久刪除以繼續。",
+        "unsettled": "請結算餘額或確認強制結算以退出。"
+      },
+      "button": "退出群組",
+      "title": "退出群組？",
+      "description": "您將失去對此群組支出、餘額和活動的存取權限。過往資料會保留在帳本中，其他成員仍可查看。",
+      "confirm": "退出群組",
+      "confirmDelete": "刪除並退出",
+      "confirmWithForce": "結算並退出",
+      "toast": {
+        "archived": "群組已封存。",
+        "deleted": "群組已刪除。",
+        "left": "您已退出群組。"
       }
-    }
+    },
+    "unlinked": {
+      "emailPlaceholder": "account@example.com",
+      "linkDialog": {
+        "description": "選擇 {displayName} 應連結到的現有成員。目標成員不得已與此參與者位於同一筆支出的對立面。",
+        "membersGroup": "成員",
+        "noCandidates": "找不到可相容的成員。這通常表示此未連結的參與者與其他每位成員都存在於同一筆支出的對立面——需要重新進行匯入或先調整支出。",
+        "title": "連結未連結的參與者",
+        "cancel": "取消",
+        "confirm": "連結",
+        "membersGroupWithPending": "成員和待處理的邀請",
+        "pendingGroup": "待處理的邀請",
+        "pendingLabel": "待處理",
+        "pendingSuffix": "（待處理）",
+        "pendingHint": "連結到待處理的邀請會將此僅有名稱的項目合併到受邀者中。受邀者保留其自己的列；合併後的參照將在受邀者接受後透過該列解析。"
+      },
+      "title": "未連結的參與者",
+      "description": "這些人在群組中有名稱，但尚未關聯應用程式帳戶。將每個人連結到現有帳戶，以將其支出關聯到該使用者。",
+      "idHint": "帳本參與者編號：{id}",
+      "linkButton": "連結",
+      "linkSuccess": "參與者已連結到帳戶",
+      "link": "連結到帳戶"
+    },
+    "changeRoleAria": "變更角色",
+    "removed": "成員已移除。",
+    "roleUpdated": "角色已更新為 {role}。"
   },
   "AccountSettings": {
     "title": "帳戶設定",

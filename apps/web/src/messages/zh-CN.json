@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "登录到 Spliit Cloud",
       "createAccount": "创建账户",
-      "createGroup": "创建群组"
+      "createGroup": "创建群组",
+      "importGroup": "从其他服务导入群组"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "最近的群组",
     "starred": "已收藏的群组",
     "archived": "已归档的群组",
+    "backToGroups": "返回群组",
     "removeRecent": "从最近的群组中删除",
     "RecentRemovedToast": {
       "title": "群组已删除",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "邀请链接"
       }
     },
+    "changeRoleAria": "更改角色",
+    "remove": "移除",
+    "removed": "成员已移除。",
+    "roleUpdated": "角色已更新为 {role}。",
     "removeDialog": {
+      "title": "移除成员？",
+      "description": "将 {name} 从此群组中移除？他们过往的支出将保留在账本中，但将不再有访问权限。",
+      "cancel": "取消",
+      "confirm": "移除",
       "unsettled": {
         "title": "删除有未结算余额的成员？",
         "toast": "成员已删除，余额已结算。",
@@ -1049,6 +1059,66 @@
         },
         "checkbox": "删除前创建结算报销"
       }
+    },
+    "leave": {
+      "button": "离开群组",
+      "cancel": "取消",
+      "confirm": "离开群组",
+      "title": "离开群组?",
+      "description": "你将失去对此群组的支出、余额和活动的访问权限。过往数据仍保留在账本中，以便其他成员查看。",
+      "body": {
+        "otherAdmins": "你离开后，以下管理员将继续管理: {names}。",
+        "lastAdmin": {
+          "title": "选择新管理员",
+          "description": "你是此群组的最后一位管理员。请选一个活跃成员接替管理，否则将无人能够管理群组。",
+          "placeholder": "选择成员"
+        },
+        "unsettled": {
+          "title": "你有未结算的余额",
+          "description": "强制离开将自动为与你相关的部分创建报销支出，以保持账本平衡。其他余额保持不变。"
+        },
+        "lastMember": {
+          "title": "这将删除群组",
+          "description": "你是此群组中唯一的活跃成员。离开将永久删除该群组及其所有支出和历史记录。",
+          "checkbox": "我了解这将永久删除群组及其所有数据。",
+          "suggestion": "提示: 如果你想保留此群组作为记录，可以将其存档。",
+          "unsettledInfo": "你在此群组中有未结算的余额。群组被删除后，这些余额将永久丢失。"
+        }
+      },
+      "confirmDelete": "删除并离开",
+      "confirmWithForce": "结算并离开",
+      "toast": {
+        "left": "你已离开群组。",
+        "deleted": "群组已删除。",
+        "archived": "群组已存档。"
+      },
+      "error": {
+        "lastAdmin": "请选择一位成员提升为管理员后再离开。",
+        "lastMember": "请确认永久删除以继续。",
+        "unsettled": "请先结算余额或确认强制结算后再离开。"
+      }
+    },
+    "unlinked": {
+      "title": "未关联的参与者",
+      "description": "这些人在群组中有名称，但还没有应用账号。请将每个人关联到现有账号，以将其支出与对应用户关联。",
+      "emailPlaceholder": "account@example.com",
+      "link": "关联到账号",
+      "linkSuccess": "参与者已关联到账号",
+      "idHint": "账本参与者 ID：{id}",
+      "linkDialog": {
+        "title": "关联未关联的参与者",
+        "description": "选择 {displayName} 应关联到的现有成员。目标成员不能与当前参与者在同一笔支出中处于对立面。",
+        "membersGroup": "成员",
+        "cancel": "取消",
+        "confirm": "关联",
+        "noCandidates": "未找到兼容的成员。这通常意味着此未关联的参与者与每个其他成员都在某笔支出的对立面--需要重新导入或先调整支出。",
+        "pendingLabel": "待处理",
+        "pendingHint": "关联到待处理的邀请会将此仅有名称的条目合并到受邀者中。受邀者保留自己的行；合并后的引用在受邀者接受后通过其解析。",
+        "membersGroupWithPending": "成员和待处理的邀请",
+        "pendingGroup": "待处理的邀请",
+        "pendingSuffix": "(待处理)"
+      },
+      "linkButton": "关联"
     }
   },
   "AccountSettings": {

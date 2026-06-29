@@ -94,6 +94,7 @@
     "recent": "Grup terbaru",
     "starred": "Grup berbintang",
     "archived": "Grup terarsipkan",
+    "backToGroups": "Kembali ke grup",
     "removeRecent": "Hapus dari grup terbaru",
     "RecentRemovedToast": {
       "title": "Grup telah dihapus",
@@ -1038,7 +1039,10 @@
         "fallbackLabel": "Tautan undangan"
       }
     },
+    "changeRoleAria": "Ubah peran",
+    "roleUpdated": "Peran diperbarui menjadi {role}.",
     "removeDialog": {
+      "description": "Hapus {name} dari grup ini? Pengeluaran masa lalunya tetap tersimpan di buku besar tetapi mereka tidak lagi memiliki akses.",
       "unsettled": {
         "title": "Hapus anggota dengan saldo belum diselesaikan?",
         "toast": "Anggota dihapus, saldo diselesaikan.",
@@ -1048,6 +1052,34 @@
           "description": "Menghapus tanpa menyelesaikan akan meninggalkan saldo di buku besar tanpa batas waktu. Centang kotak di bawah untuk membuat satu pengeluaran penggantian per leg yang melibatkan anggota ini sebelum menghapus, atau hapus tanpa menyelesaikan dan urus saldonya secara manual."
         },
         "checkbox": "Buat penggantian biaya penyelesaian sebelum menghapus"
+      }
+    },
+    "leave": {
+      "confirm": "Tinggalkan grup",
+      "confirmDelete": "Hapus dan tinggalkan",
+      "body": {
+        "unsettled": {
+          "description": "Meninggalkan secara paksa akan membuat pengeluaran penggantian secara otomatis untuk bagian yang melibatkan Anda agar buku besar tetap sinkron. Saldo lainnya dibiarkan apa adanya."
+        },
+        "lastMember": {
+          "title": "Ini akan menghapus grup",
+          "unsettledInfo": "Anda memiliki saldo yang belum diselesaikan di grup ini. Saldo tersebut akan hilang secara permanen saat grup dihapus."
+        }
+      },
+      "toast": {
+        "deleted": "Grup dihapus."
+      },
+      "error": {
+        "lastAdmin": "Pilih anggota untuk dijadikan admin sebelum pergi."
+      }
+    },
+    "unlinked": {
+      "emailPlaceholder": "akun@contoh.com",
+      "linkButton": "Tautkan",
+      "linkDialog": {
+        "pendingLabel": "tertunda",
+        "pendingHint": "Menautkan ke undangan tertunda akan menggabungkan entri yang hanya berupa nama ini ke dalam akun yang diundang. Yang diundang tetap memiliki barisnya sendiri; referensi yang digabungkan sekarang akan diselesaikan melaluinya saat mereka menerima.",
+        "pendingSuffix": "(tertunda)"
       }
     }
   },

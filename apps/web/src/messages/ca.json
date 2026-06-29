@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Inicia sessió a Spliit Cloud",
       "createAccount": "Crea un compte",
-      "createGroup": "Crear un grup"
+      "createGroup": "Crear un grup",
+      "importGroup": "Importa un grup des d'un altre servei"
     },
     "features": {
       "groupsSync": {
@@ -94,6 +95,7 @@
     "recent": "Grups recents",
     "starred": "Grups preferits",
     "archived": "Grups arxivats",
+    "backToGroups": "Torna als grups",
     "removeRecent": "Suprimeix dels grups recents",
     "RecentRemovedToast": {
       "title": "El grup ha estat eliminat",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Enllaç d'invitació"
       }
     },
+    "changeRoleAria": "Canvia el rol",
+    "remove": "Elimina",
+    "removed": "Membre eliminat.",
+    "roleUpdated": "Rol actualitzat a {role}.",
     "removeDialog": {
+      "title": "Eliminar membre?",
+      "description": "Eliminar {name} d'aquest grup? Les seves despeses anteriors es queden al llibre de comptes, però ja no hi tindrà accés.",
+      "cancel": "Cancel·la",
+      "confirm": "Elimina",
       "unsettled": {
         "title": "Eliminar membre amb saldo pendent?",
         "toast": "Membre eliminat, saldos liquidats.",
@@ -1048,6 +1058,66 @@
           "description": "Eliminar sense liquidar deixarà els saldos al llibre de comptes indefinidament. Marca la casella de sota per crear una despesa de reemborsament per cada part que impliqui aquest membre abans d'eliminar-lo, o elimina sense liquidar i gestiona els saldos manualment."
         },
         "checkbox": "Crear reemborsament de liquidació abans d'eliminar"
+      }
+    },
+    "leave": {
+      "button": "Surt del grup",
+      "title": "Sortir del grup?",
+      "description": "Perdràs l'accés a les despeses, saldos i activitat d'aquest grup. Les dades anteriors es conserven al llibre de comptes perquè altres membres puguin veure-les.",
+      "cancel": "Cancel·la",
+      "confirm": "Surt del grup",
+      "confirmWithForce": "Liquida i surt",
+      "confirmDelete": "Elimina i surt",
+      "body": {
+        "otherAdmins": "Aquests administradors mantindran el control després que te'n vagis: {names}.",
+        "lastAdmin": {
+          "title": "Escull un administrador nou",
+          "description": "Ets l'últim administrador d'aquest grup. Escull un membre actiu perquè assumeixi el control abans de marxar, en cas contrari ningú podrà gestionar el grup.",
+          "placeholder": "Selecciona un membre"
+        },
+        "unsettled": {
+          "title": "Tens saldos pendents",
+          "description": "Sortir amb liquidació forçosa crearà automàticament despeses de reemborsament per a les partides que t'afecten, mantenint el llibre de comptes sincronitzat. Els altres saldos es deixen tal com estan."
+        },
+        "lastMember": {
+          "title": "Això eliminarà el grup",
+          "description": "Ets l'únic membre actiu d'aquest grup. Si marxar, el grup, totes les despeses i tot l'historial s'eliminaran permanentment.",
+          "checkbox": "Entenc que això eliminarà permanentment el grup i totes les seves dades.",
+          "suggestion": "Consell: si vols conservar aquest grup com a registre, pots arxivar-lo.",
+          "unsettledInfo": "Tens saldos pendents en aquest grup. Es perdran permanentment quan s'elimini el grup."
+        }
+      },
+      "toast": {
+        "left": "Has sortit del grup.",
+        "deleted": "Grup eliminat.",
+        "archived": "Grup arxivat."
+      },
+      "error": {
+        "lastAdmin": "Escull un membre per ascendir a administrador abans de marxar.",
+        "lastMember": "Confirma l'eliminació permanent per continuar.",
+        "unsettled": "Liquida el teu saldo o confirma la liquidació forçosa per marxar."
+      }
+    },
+    "unlinked": {
+      "title": "Participants no vinculats",
+      "description": "Aquestes persones tenen un nom al grup però encara no tenen un compte a l'aplicació. Vincula cadascuna a un compte existent per associar les seves despeses amb aquest usuari.",
+      "emailPlaceholder": "compte@exemple.com",
+      "link": "Vincula al compte",
+      "linkSuccess": "Participant vinculat al compte",
+      "idHint": "ID del participant al llibre de comptes: {id}",
+      "linkButton": "Vincula",
+      "linkDialog": {
+        "title": "Vincula participant no vinculat",
+        "description": "Escull el membre existent al qual {displayName} s'ha de vincular. El destí no ha d'estar ja al costat oposat d'una partida de despesa amb aquest participant.",
+        "membersGroup": "Membres",
+        "cancel": "Cancel·la",
+        "confirm": "Vincula",
+        "noCandidates": "No s'han trobat membres compatibles. Això normalment significa que aquest participant no vinculat està als dos costats d'una partida de despesa amb tots els altres membres: cal reimportar o ajustar les despeses primer.",
+        "pendingLabel": "pendent",
+        "pendingHint": "Vincular a una invitació pendent fusiona aquesta entrada sense compte a l'invitat. L'invitat manté la seva pròpia fila; les referències fusionades ara es resolen a través d'ella quan accepti.",
+        "membersGroupWithPending": "Membres i invitacions pendents",
+        "pendingGroup": "Invitacions pendents",
+        "pendingSuffix": "(pendent)"
       }
     }
   },

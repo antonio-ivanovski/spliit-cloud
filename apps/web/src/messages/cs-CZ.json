@@ -6,7 +6,8 @@
       "github": "GitHub",
       "signIn": "Přihlásit se do Spliit Cloud",
       "createAccount": "Vytvořit účet",
-      "createGroup": "Vytvořit skupinu"
+      "createGroup": "Vytvořit skupinu",
+      "importGroup": "Importovat skupinu z jiné služby"
     },
     "features": {
       "groupsSync": {
@@ -138,6 +139,7 @@
     "pendingInviteeExpenseDescription": "Přijměte pozvání výše a začněte přidávat nebo upravovat výdaje. Do té doby jsou stávající data viditelná, ale nelze je měnit.",
     "archivedReadOnly": "Tato skupina je archivována. Výdaje již nelze přidávat ani upravovat.",
     "backToExpenses": "Zpět na výdaje",
+    "backToGroups": "Zpět na skupiny",
     "removeRecent": "Odebrat z nedávných skupin",
     "RecentRemovedToast": {
       "title": "Skupina byla odebrána",
@@ -1038,7 +1040,15 @@
         "fallbackLabel": "Odkaz pozvánky"
       }
     },
+    "changeRoleAria": "Změnit roli",
+    "remove": "Odebrat",
+    "removed": "Člen odebrán.",
+    "roleUpdated": "Role změněna na {role}.",
     "removeDialog": {
+      "title": "Odebrat člena?",
+      "description": "Odebrat {name} z této skupiny? Jejich minulé výdaje zůstávají v účetním deníku, ale již k nim nebudou mít přístup.",
+      "cancel": "Zrušit",
+      "confirm": "Odebrat",
       "unsettled": {
         "title": "Odebrat člena s nevyrovnaným zůstatkem?",
         "toast": "Člen odebrán, zůstatky vyrovnány.",
@@ -1049,6 +1059,66 @@
         },
         "checkbox": "Vytvořit vyrovnávací výdaj před odebráním"
       }
+    },
+    "leave": {
+      "cancel": "Zrušit",
+      "confirm": "Opustit skupinu",
+      "button": "Opustit skupinu",
+      "title": "Opustit skupinu?",
+      "description": "Ztratíte přístup k výdajům, zůstatkům a aktivitě této skupiny. Minulá data zůstávají v účetním deníku, aby je ostatní členové stále viděli.",
+      "body": {
+        "otherAdmins": "Tito správci si po vašem odchodu udrží kontrolu: {names}.",
+        "unsettled": {
+          "title": "Máte nevyrovnané zůstatky",
+          "description": "Vynucený odchod automaticky vytvoří vyrovnávací výdaje za položky, které se vás týkají, aby účetní deník zůstal konzistentní. Ostatní zůstatky zůstávají beze změny."
+        },
+        "lastMember": {
+          "title": "Tím dojde ke smazání skupiny",
+          "description": "Jste jediný aktivní člen této skupiny. Odchodem trvale smažete skupinu, všechny její výdaje i celou historii.",
+          "checkbox": "Rozumím, že tím dojde k trvalému smazání skupiny a všech jejích dat.",
+          "suggestion": "Tip: Pokud si chcete skupinu ponechat jako záznam, můžete ji místo toho archivovat.",
+          "unsettledInfo": "V této skupině máte nevyrovnané zůstatky. Při smazání skupiny budou nenávratně ztraceny."
+        },
+        "lastAdmin": {
+          "title": "Vybrat nového správce",
+          "description": "Jste poslední správce této skupiny. Vyberte aktivního člena, který převezme vedení, než odejdete, jinak nebude moci skupinu nikdo spravovat.",
+          "placeholder": "Vyberte člena"
+        }
+      },
+      "confirmWithForce": "Vyrovnat a opustit",
+      "toast": {
+        "left": "Opustili jste skupinu.",
+        "deleted": "Skupina smazána.",
+        "archived": "Skupina archivována."
+      },
+      "error": {
+        "lastAdmin": "Před odchodem vyberte člena, kterého povýšíte na správce.",
+        "lastMember": "Pro pokračování potvrďte trvalé smazání.",
+        "unsettled": "Pro opuštění skupiny vyrovnejte svůj zůstatek nebo potvrďte vynucené vyrovnání."
+      },
+      "confirmDelete": "Smazat a opustit"
+    },
+    "unlinked": {
+      "title": "Nepropojení účastníci",
+      "description": "Tito lidé mají ve skupině jméno, ale zatím žádný účet v aplikaci. Každého propojte s existujícím účtem, aby se jejich výdaje přiřadily danému uživateli.",
+      "emailPlaceholder": "ucet@priklad.cz",
+      "link": "Propojit s účtem",
+      "linkSuccess": "Účastník propojen s účtem",
+      "idHint": "ID účastníka v účetním deníku: {id}",
+      "linkDialog": {
+        "title": "Propojit nepropojeného účastníka",
+        "description": "Vyberte existujícího člena, se kterým má být {displayName} propojen. Cílový člen nesmí být na opačné straně výdajové položky s tímto účastníkem.",
+        "membersGroup": "Členové",
+        "cancel": "Zrušit",
+        "confirm": "Propojit",
+        "noCandidates": "Nenalezeni žádní kompatibilní členové. To obvykle znamená, že tento nepropojený účastník je na obou stranách výdajové položky se všemi ostatními členy — import je třeba provést znovu nebo nejprve upravit výdaje.",
+        "pendingLabel": "čeká",
+        "pendingHint": "Propojení s čekající pozvánkou sloučí tento záznam pouze se jménem do pozvaného. Pozvaný si ponechá svůj vlastní řádek; sloučené reference se po přijetí pozvánky vyřeší přes něj.",
+        "membersGroupWithPending": "Členové a čekající pozvánky",
+        "pendingGroup": "Čekající pozvánky",
+        "pendingSuffix": "(čeká)"
+      },
+      "linkButton": "Propojit"
     }
   },
   "AccountSettings": {
