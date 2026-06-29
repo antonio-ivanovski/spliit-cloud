@@ -97,6 +97,7 @@ export const createExpenseSearchSchema = z.object({
   title: optionalString,
   date: dateString,
   categoryId: categoryIdSchema.optional().catch(undefined),
+  originalCurrency: optionalString,
   imageUrl: optionalString,
   imageWidth: integerString,
   imageHeight: integerString,

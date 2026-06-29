@@ -21,6 +21,7 @@ import {
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
+import { getCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { useRouter } from '@/lib/navigation'
 import { getImageData, maybeDecodeHeic, usePresignedUpload } from '@/lib/upload'
@@ -42,6 +43,7 @@ const MAX_FILE_SIZE = 5 * 1024 ** 2
 type ReceiptExtractedInfo = {
   amount: number
   categoryId: string | null
+  currencyCode: string | null
   date: string | null
   title: string | null
 }
@@ -118,10 +120,23 @@ function ReceiptDialogContent() {
         console.log('Uploading image…')
         let { url } = await uploadToS3(decoded)
         console.log('Extracting information from receipt…')
-        const { amount, categoryId, date, title } =
-          await extractReceiptMutation.mutateAsync({ imageUrl: url })
+        const { amount, categoryId, currencyCode, date, title } =
+          await extractReceiptMutation.mutateAsync({
+            imageUrl: url,
+            currency: group?.currency ?? '',
+            currencyCode: group?.currencyCode,
+          })
         const { width, height } = await getImageData(decoded)
-        setReceiptInfo({ amount, categoryId, date, title, url, width, height })
+        setReceiptInfo({
+          amount,
+          categoryId,
+          currencyCode,
+          date,
+          title,
+          url,
+          width,
+          height,
+        })
       } catch (err) {
         console.error(err)
         toast({
@@ -219,10 +234,12 @@ function ReceiptDialogContent() {
                 receiptInfo.amount ? (
                   <>
                     {formatCurrency(
-                      getCurrencyFromGroup(group),
+                      receiptInfo.currencyCode
+                        ? (getCurrency(receiptInfo.currencyCode) ??
+                            getCurrencyFromGroup(group))
+                        : getCurrencyFromGroup(group),
                       receiptInfo.amount,
                       locale,
-                      true,
                     )}
                   </>
                 ) : (
@@ -265,6 +282,7 @@ function ReceiptDialogContent() {
               search: {
                 amount: receiptInfo.amount.toString(),
                 categoryId: receiptInfo.categoryId ?? undefined,
+                originalCurrency: receiptInfo.currencyCode ?? undefined,
                 date: receiptInfo.date ?? undefined,
                 title: receiptInfo.title ?? undefined,
                 imageUrl: receiptInfo.url,

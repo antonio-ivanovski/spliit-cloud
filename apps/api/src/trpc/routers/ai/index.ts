@@ -8,8 +8,17 @@ export const aiRouter = createTRPCRouter({
     .input(z.object({ description: z.string() }))
     .mutation(({ input }) => extractCategoryFromTitle(input.description)),
   extractExpenseInformationFromImage: baseProcedure
-    .input(z.object({ imageUrl: z.string().url() }))
+    .input(
+      z.object({
+        imageUrl: z.string().url(),
+        currency: z.string(),
+        currencyCode: z.string().nullish(),
+      }),
+    )
     .mutation(({ input }) =>
-      extractExpenseInformationFromImage(input.imageUrl),
+      extractExpenseInformationFromImage(input.imageUrl, {
+        currency: input.currency,
+        currencyCode: input.currencyCode,
+      }),
     ),
 })

@@ -202,13 +202,19 @@ export function buildExpenseFormDefaults(args: {
   }
 
   const defaultSplittingOptions = getDefaultSplittingOptions(group)
+  const searchCurrency =
+    searchParams.originalCurrency && searchParams.originalCurrency.length
+      ? (getCurrency(searchParams.originalCurrency) ?? groupCurrency)
+      : groupCurrency
+  const searchOriginalCurrency =
+    searchParams.originalCurrency ?? group.currencyCode ?? undefined
   const defaultPaidByList = currentLedgerParticipantId
     ? [
         {
           participant: currentLedgerParticipantId,
           shares: amountAsDecimal(
             Number(searchParams.amount) || 0,
-            groupCurrency,
+            searchCurrency,
           ),
         },
       ]
@@ -255,8 +261,8 @@ export function buildExpenseFormDefaults(args: {
   return {
     title: searchParams.title ?? '',
     expenseDate: searchParams.date ? new Date(searchParams.date) : new Date(),
-    amount: amountAsDecimal(Number(searchParams.amount) || 0, groupCurrency),
-    originalCurrency: group.currencyCode ?? undefined,
+    amount: amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency),
+    originalCurrency: searchOriginalCurrency,
     conversionRate: undefined,
     category: parseCategoryIdFromUrl(searchParams.categoryId),
     paidBySplitMode: 'BY_AMOUNT' as const,
