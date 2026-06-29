@@ -507,7 +507,28 @@
       "percentageSurplus": "%{pct} soberan"
     },
     "splittingOptions": "Zatiketa aukerak",
-    "multiplePayers": "Ordaintzaile anitz"
+    "multiplePayers": "Ordaintzaile anitz",
+    "paidByOptionSinglePayer": "Ordaintzaile bakarra",
+    "paidByOptionEvenly": "Zati berdinetan",
+    "paidByOptionByShares": "Partekatzetan",
+    "paidByOptionByPercentage": "Ehunekoen bidez",
+    "paidByOptionByAmount": "Zenbatekoen bidez",
+    "paidForOptionEvenly": "Zati berdinetan",
+    "paidForOptionByShares": "Partekatzetan",
+    "paidForOptionByPercentage": "Ehunekoen bidez",
+    "paidForOptionByAmount": "Zenbatekoen bidez",
+    "paidBySectionSingle": "Bakarra",
+    "paidBySectionMultiple": "Ordaintzaile anitz",
+    "paidForSection": "Parte-hartzaileen artean banatu",
+    "paidByOptionSinglePayerHelper": "Pertsona batek gastu osoa estaltzen du",
+    "paidByOptionEvenlyHelper": "Bakoitzak zati berdina ordaintzen du",
+    "paidByOptionBySharesHelper": "Bakoitzak zati haztatua ordaintzen du",
+    "paidByOptionByPercentageHelper": "Bakoitzak ehuneko bat ordaintzen du",
+    "paidByOptionByAmountHelper": "Bakoitzak zenbateko finko bat ordaintzen du",
+    "paidForOptionEvenlyHelper": "Denen artean zati berdinetan banatzen da",
+    "paidForOptionBySharesHelper": "Esleitu parte bat pertsona bakoitzari",
+    "paidForOptionByPercentageHelper": "Esleitu ehuneko bat pertsona bakoitzari",
+    "paidForOptionByAmountHelper": "Esleitu zenbateko zehatz bat pertsona bakoitzari"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

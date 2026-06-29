@@ -507,7 +507,28 @@
       "percentageSurplus": "Избыток: {pct}%"
     },
     "splittingOptions": "Настройки разделения",
-    "multiplePayers": "Несколько плательщиков"
+    "multiplePayers": "Несколько плательщиков",
+    "paidByOptionSinglePayer": "Один плательщик",
+    "paidByOptionEvenly": "Равный",
+    "paidByOptionByShares": "По долям",
+    "paidByOptionByPercentage": "По процентам",
+    "paidByOptionByAmount": "По суммам",
+    "paidForOptionEvenly": "Равный",
+    "paidForOptionByShares": "По долям",
+    "paidForOptionByPercentage": "По процентам",
+    "paidForOptionByAmount": "По суммам",
+    "paidBySectionSingle": "Один",
+    "paidBySectionMultiple": "Несколько плательщиков",
+    "paidForSection": "Разделить между участниками",
+    "paidByOptionSinglePayerHelper": "Один человек оплачивает расход полностью",
+    "paidByOptionEvenlyHelper": "Каждый платит равную долю",
+    "paidByOptionBySharesHelper": "Каждый платит пропорциональную долю",
+    "paidByOptionByPercentageHelper": "Каждый платит процент",
+    "paidByOptionByAmountHelper": "Каждый платит фиксированную сумму",
+    "paidForOptionEvenlyHelper": "Разделить поровну между всеми",
+    "paidForOptionBySharesHelper": "Назначьте долю каждому",
+    "paidForOptionByPercentageHelper": "Назначьте процент каждому",
+    "paidForOptionByAmountHelper": "Назначьте точную сумму каждому"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

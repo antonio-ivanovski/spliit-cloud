@@ -507,7 +507,28 @@
       "percentageSurplus": "Fazla: %{pct}"
     },
     "splittingOptions": "Bölme seçenekleri",
-    "multiplePayers": "Birden çok ödeyici"
+    "multiplePayers": "Birden çok ödeyici",
+    "paidByOptionSinglePayer": "Tek ödeyici",
+    "paidByOptionEvenly": "Eşit olarak",
+    "paidByOptionByShares": "Pay adedine göre",
+    "paidByOptionByPercentage": "Yüzdeye göre",
+    "paidByOptionByAmount": "Tutar bazında",
+    "paidForOptionEvenly": "Eşit olarak",
+    "paidForOptionByShares": "Pay adedine göre",
+    "paidForOptionByPercentage": "Yüzdeye göre",
+    "paidForOptionByAmount": "Tutar bazında",
+    "paidBySectionSingle": "Tek",
+    "paidBySectionMultiple": "Birden çok ödeyici",
+    "paidForSection": "Katılımcılar arasında bölme",
+    "paidByOptionSinglePayerHelper": "Bir kişi tüm harcamayı karşılar",
+    "paidByOptionEvenlyHelper": "Herkes eşit pay öder",
+    "paidByOptionBySharesHelper": "Herkes ağırlıklı pay öder",
+    "paidByOptionByPercentageHelper": "Herkes bir yüzde öder",
+    "paidByOptionByAmountHelper": "Herkes sabit bir tutar öder",
+    "paidForOptionEvenlyHelper": "Herkes arasında eşit olarak bölünür",
+    "paidForOptionBySharesHelper": "Her kişiye bir pay atayın",
+    "paidForOptionByPercentageHelper": "Her kişiye bir yüzde atayın",
+    "paidForOptionByAmountHelper": "Her kişiye kesin bir tutar atayın"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

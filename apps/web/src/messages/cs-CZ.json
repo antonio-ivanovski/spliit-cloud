@@ -507,7 +507,28 @@
       "percentageSurplus": "Přebytek: {pct}%"
     },
     "splittingOptions": "Možnosti dělení",
-    "multiplePayers": "Více plátců"
+    "multiplePayers": "Více plátců",
+    "paidByOptionSinglePayer": "Jeden plátce",
+    "paidByOptionEvenly": "Rovnoměrně",
+    "paidByOptionByShares": "Podle podílů",
+    "paidByOptionByPercentage": "Podle procent",
+    "paidByOptionByAmount": "Podle částky",
+    "paidForOptionEvenly": "Rovnoměrně",
+    "paidForOptionByShares": "Podle podílů",
+    "paidForOptionByPercentage": "Podle procent",
+    "paidForOptionByAmount": "Podle částky",
+    "paidBySectionSingle": "Jeden",
+    "paidBySectionMultiple": "Více plátců",
+    "paidForSection": "Rozdělit mezi účastníky",
+    "paidByOptionSinglePayerHelper": "Jedna osoba hradí celý výdaj",
+    "paidByOptionEvenlyHelper": "Každý zaplatí stejný podíl",
+    "paidByOptionBySharesHelper": "Každý zaplatí vážený podíl",
+    "paidByOptionByPercentageHelper": "Každý zaplatí určité procento",
+    "paidByOptionByAmountHelper": "Každý zaplatí pevnou částku",
+    "paidForOptionEvenlyHelper": "Rovnoměrné rozdělení mezi všechny",
+    "paidForOptionBySharesHelper": "Přiřaďte podíl každé osobě",
+    "paidForOptionByPercentageHelper": "Přiřaďte procento každé osobě",
+    "paidForOptionByAmountHelper": "Přiřaďte přesnou částku každé osobě"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

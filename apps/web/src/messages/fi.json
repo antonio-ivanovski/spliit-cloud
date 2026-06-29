@@ -507,7 +507,28 @@
       "percentageSurplus": "Ylijäämä: {pct}%"
     },
     "splittingOptions": "Jakovaihtoehdot",
-    "multiplePayers": "Useita maksajia"
+    "multiplePayers": "Useita maksajia",
+    "paidByOptionSinglePayer": "Yksi maksaja",
+    "paidByOptionEvenly": "Tasan",
+    "paidByOptionByShares": "Osuuksien mukaan",
+    "paidByOptionByPercentage": "Prosenttien mukaan",
+    "paidByOptionByAmount": "Summan mukaan",
+    "paidForOptionEvenly": "Tasan",
+    "paidForOptionByShares": "Osuuksien mukaan",
+    "paidForOptionByPercentage": "Prosenttien mukaan",
+    "paidForOptionByAmount": "Summan mukaan",
+    "paidBySectionSingle": "Yksi",
+    "paidBySectionMultiple": "Useita maksajia",
+    "paidForSection": "Jaa osallistujien kesken",
+    "paidByOptionSinglePayerHelper": "Yksi henkilö maksaa koko kulun",
+    "paidByOptionEvenlyHelper": "Kukin maksaa saman osuuden",
+    "paidByOptionBySharesHelper": "Kukin maksaa painotetun osuuden",
+    "paidByOptionByPercentageHelper": "Kukin maksaa prosenttiosuuden",
+    "paidByOptionByAmountHelper": "Kukin maksaa kiinteän summan",
+    "paidForOptionEvenlyHelper": "Jaa tasan kaikkien kesken",
+    "paidForOptionBySharesHelper": "Anna kullekin henkilölle osuus",
+    "paidForOptionByPercentageHelper": "Anna kullekin henkilölle prosenttiosuus",
+    "paidForOptionByAmountHelper": "Anna kullekin henkilölle tarkka summa"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

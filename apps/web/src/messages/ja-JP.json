@@ -507,7 +507,28 @@
       "percentageSurplus": "{pct}% 超過"
     },
     "splittingOptions": "分割オプション",
-    "multiplePayers": "複数の支払い者"
+    "multiplePayers": "複数の支払い者",
+    "paidByOptionSinglePayer": "1人の支払い者",
+    "paidByOptionEvenly": "均等に",
+    "paidByOptionByShares": "シェアで",
+    "paidByOptionByPercentage": "パーセンテージで",
+    "paidByOptionByAmount": "金額で",
+    "paidForOptionEvenly": "均等に",
+    "paidForOptionByShares": "シェアで",
+    "paidForOptionByPercentage": "パーセンテージで",
+    "paidForOptionByAmount": "金額で",
+    "paidBySectionSingle": "単独",
+    "paidBySectionMultiple": "複数の支払い者",
+    "paidForSection": "参加者間で分割",
+    "paidByOptionSinglePayerHelper": "1人で全額を負担",
+    "paidByOptionEvenlyHelper": "全員が同じ額を支払う",
+    "paidByOptionBySharesHelper": "重み付けされたシェアを支払う",
+    "paidByOptionByPercentageHelper": "パーセンテージを支払う",
+    "paidByOptionByAmountHelper": "固定額を支払う",
+    "paidForOptionEvenlyHelper": "全員で均等に分割",
+    "paidForOptionBySharesHelper": "各メンバーにシェアを割り当て",
+    "paidForOptionByPercentageHelper": "各メンバーにパーセンテージを割り当て",
+    "paidForOptionByAmountHelper": "各メンバーに正確な金額を割り当て"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

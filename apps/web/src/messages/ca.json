@@ -507,7 +507,28 @@
       "percentageSurplus": "Excés: {pct}%"
     },
     "splittingOptions": "Opcions de divisió",
-    "multiplePayers": "Múltiples pagadors"
+    "multiplePayers": "Múltiples pagadors",
+    "paidByOptionSinglePayer": "Pagador únic",
+    "paidByOptionEvenly": "A parts iguals",
+    "paidByOptionByShares": "Per parts",
+    "paidByOptionByPercentage": "Per percentatge",
+    "paidByOptionByAmount": "Per quantitat",
+    "paidForOptionEvenly": "A parts iguals",
+    "paidForOptionByShares": "Per parts",
+    "paidForOptionByPercentage": "Per percentatge",
+    "paidForOptionByAmount": "Per quantitat",
+    "paidBySectionSingle": "Únic",
+    "paidBySectionMultiple": "Diversos pagadors",
+    "paidForSection": "Repartir entre participants",
+    "paidByOptionSinglePayerHelper": "Una persona cobreix tota la despesa",
+    "paidByOptionEvenlyHelper": "Cada u paga una part igual",
+    "paidByOptionBySharesHelper": "Cada u paga una part ponderada",
+    "paidByOptionByPercentageHelper": "Cada u paga un percentatge",
+    "paidByOptionByAmountHelper": "Cada u paga una quantitat fixa",
+    "paidForOptionEvenlyHelper": "Es reparteix a parts iguals entre tothom",
+    "paidForOptionBySharesHelper": "Assigna una part a cada persona",
+    "paidForOptionByPercentageHelper": "Assigna un percentatge a cada persona",
+    "paidForOptionByAmountHelper": "Assigna una quantitat exacta a cada persona"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

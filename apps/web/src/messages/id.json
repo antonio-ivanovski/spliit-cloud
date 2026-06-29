@@ -507,7 +507,28 @@
       "percentageSurplus": "Lebih: {pct}%"
     },
     "splittingOptions": "Opsi pembagian",
-    "multiplePayers": "Beberapa pembayar"
+    "multiplePayers": "Beberapa pembayar",
+    "paidByOptionSinglePayer": "Pembayar tunggal",
+    "paidByOptionEvenly": "Bagi merata",
+    "paidByOptionByShares": "Berdasarkan porsi",
+    "paidByOptionByPercentage": "Berdasarkan persenan",
+    "paidByOptionByAmount": "Berdasarkan jumlah",
+    "paidForOptionEvenly": "Bagi merata",
+    "paidForOptionByShares": "Berdasarkan porsi",
+    "paidForOptionByPercentage": "Berdasarkan persenan",
+    "paidForOptionByAmount": "Berdasarkan jumlah",
+    "paidBySectionSingle": "Tunggal",
+    "paidBySectionMultiple": "Beberapa pembayar",
+    "paidForSection": "Dibagi di antara peserta",
+    "paidByOptionSinglePayerHelper": "Satu orang menanggung seluruh pengeluaran",
+    "paidByOptionEvenlyHelper": "Setiap orang membayar bagian yang sama",
+    "paidByOptionBySharesHelper": "Setiap orang membayar bagian tertimbang",
+    "paidByOptionByPercentageHelper": "Setiap orang membayar persentase",
+    "paidByOptionByAmountHelper": "Setiap orang membayar jumlah tetap",
+    "paidForOptionEvenlyHelper": "Dibagi rata di antara semua orang",
+    "paidForOptionBySharesHelper": "Tetapkan porsi untuk setiap orang",
+    "paidForOptionByPercentageHelper": "Tetapkan persenan untuk setiap orang",
+    "paidForOptionByAmountHelper": "Tetapkan jumlah yang tepat untuk setiap orang"
   },
   "Currencies": {
     "custom": {

@@ -507,7 +507,28 @@
       "percentageSurplus": "עודף: {pct}%"
     },
     "splittingOptions": "אפשרויות חלוקה",
-    "multiplePayers": "מספר משלמים"
+    "multiplePayers": "מספר משלמים",
+    "paidByOptionSinglePayer": "משלם יחיד",
+    "paidByOptionEvenly": "באופן שווה",
+    "paidByOptionByShares": "לפי חלקי השתתפות",
+    "paidByOptionByPercentage": "לפי אחוזים",
+    "paidByOptionByAmount": "לפי סכום",
+    "paidForOptionEvenly": "באופן שווה",
+    "paidForOptionByShares": "לפי חלקי השתתפות",
+    "paidForOptionByPercentage": "לפי אחוזים",
+    "paidForOptionByAmount": "לפי סכום",
+    "paidBySectionSingle": "יחיד",
+    "paidBySectionMultiple": "מספר משלמים",
+    "paidForSection": "חלוקה בין משתתפים",
+    "paidByOptionSinglePayerHelper": "אדם אחד מכסה את ההוצאה במלואה",
+    "paidByOptionEvenlyHelper": "כל אחד משלם חלק שווה",
+    "paidByOptionBySharesHelper": "כל אחד משלם חלק משוקלל",
+    "paidByOptionByPercentageHelper": "כל אחד משלם אחוז",
+    "paidByOptionByAmountHelper": "כל אחד משלם סכום קבוע",
+    "paidForOptionEvenlyHelper": "חלוקה שווה בין כולם",
+    "paidForOptionBySharesHelper": "הקצה חלק לכל אדם",
+    "paidForOptionByPercentageHelper": "הקצה אחוז לכל אדם",
+    "paidForOptionByAmountHelper": "הקצה סכום מדויק לכל אדם"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

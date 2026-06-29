@@ -507,7 +507,28 @@
       "percentageSurplus": "Excedent: {pct}%"
     },
     "splittingOptions": "Opțiuni de împărțire",
-    "multiplePayers": "Mai mulți plătitori"
+    "multiplePayers": "Mai mulți plătitori",
+    "paidByOptionSinglePayer": "Plătitor unic",
+    "paidByOptionEvenly": "Egal",
+    "paidByOptionByShares": "În funcție de parte",
+    "paidByOptionByPercentage": "În funcție de procentaj",
+    "paidByOptionByAmount": "În funcție de sumă",
+    "paidForOptionEvenly": "Egal",
+    "paidForOptionByShares": "În funcție de parte",
+    "paidForOptionByPercentage": "În funcție de procentaj",
+    "paidForOptionByAmount": "În funcție de sumă",
+    "paidBySectionSingle": "Unic",
+    "paidBySectionMultiple": "Mai mulți plătitori",
+    "paidForSection": "Împărțire între participanți",
+    "paidByOptionSinglePayerHelper": "O singură persoană acoperă toată cheltuiala",
+    "paidByOptionEvenlyHelper": "Fiecare plătește o parte egală",
+    "paidByOptionBySharesHelper": "Fiecare plătește o parte ponderată",
+    "paidByOptionByPercentageHelper": "Fiecare plătește un procentaj",
+    "paidByOptionByAmountHelper": "Fiecare plătește o sumă fixă",
+    "paidForOptionEvenlyHelper": "Împărțit egal între toți",
+    "paidForOptionBySharesHelper": "Atribuie o parte fiecărei persoane",
+    "paidForOptionByPercentageHelper": "Atribuie un procentaj fiecărei persoane",
+    "paidForOptionByAmountHelper": "Atribuie o sumă exactă fiecărei persoane"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

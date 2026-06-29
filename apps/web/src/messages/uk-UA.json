@@ -507,7 +507,28 @@
       "percentageSurplus": "Надлишок: {pct}%"
     },
     "splittingOptions": "Опції розподілу",
-    "multiplePayers": "Кілька платників"
+    "multiplePayers": "Кілька платників",
+    "paidByOptionSinglePayer": "Один платник",
+    "paidByOptionEvenly": "Рівномірно",
+    "paidByOptionByShares": "За частками",
+    "paidByOptionByPercentage": "За відсотками",
+    "paidByOptionByAmount": "За сумами",
+    "paidForOptionEvenly": "Рівномірно",
+    "paidForOptionByShares": "За частками",
+    "paidForOptionByPercentage": "За відсотками",
+    "paidForOptionByAmount": "За сумами",
+    "paidBySectionSingle": "Один",
+    "paidBySectionMultiple": "Кілька платників",
+    "paidForSection": "Розділити між учасниками",
+    "paidByOptionSinglePayerHelper": "Одна особа покриває всю витрату",
+    "paidByOptionEvenlyHelper": "Кожен платить рівну частку",
+    "paidByOptionBySharesHelper": "Кожен платить зважену частку",
+    "paidByOptionByPercentageHelper": "Кожен платить відсоток",
+    "paidByOptionByAmountHelper": "Кожен платить фіксовану суму",
+    "paidForOptionEvenlyHelper": "Рівномірний розподіл між усіма",
+    "paidForOptionBySharesHelper": "Призначте частку кожній особі",
+    "paidForOptionByPercentageHelper": "Призначте відсоток кожній особі",
+    "paidForOptionByAmountHelper": "Призначте точну суму кожній особі"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

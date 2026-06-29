@@ -507,7 +507,28 @@
       "percentageSurplus": "超出 {pct}%"
     },
     "splittingOptions": "分攤選項",
-    "multiplePayers": "多個付款人"
+    "multiplePayers": "多個付款人",
+    "paidByOptionSinglePayer": "單一付款人",
+    "paidByOptionEvenly": "平均",
+    "paidByOptionByShares": "自訂份額",
+    "paidByOptionByPercentage": "自訂百分比",
+    "paidByOptionByAmount": "自訂金額",
+    "paidForOptionEvenly": "平均",
+    "paidForOptionByShares": "自訂份額",
+    "paidForOptionByPercentage": "自訂百分比",
+    "paidForOptionByAmount": "自訂金額",
+    "paidBySectionSingle": "單一",
+    "paidBySectionMultiple": "多個付款人",
+    "paidForSection": "在群組成員之間分攤",
+    "paidByOptionSinglePayerHelper": "由一人支付全部費用",
+    "paidByOptionEvenlyHelper": "每人支付相同份額",
+    "paidByOptionBySharesHelper": "每人按加權份額支付",
+    "paidByOptionByPercentageHelper": "每人按百分比支付",
+    "paidByOptionByAmountHelper": "每人支付固定金額",
+    "paidForOptionEvenlyHelper": "在所有人之間平均分攤",
+    "paidForOptionBySharesHelper": "為每個人指定份額",
+    "paidForOptionByPercentageHelper": "為每個人指定百分比",
+    "paidForOptionByAmountHelper": "為每個人指定具體金額"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

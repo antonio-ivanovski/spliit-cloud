@@ -507,7 +507,28 @@
       "percentageSurplus": "Overschot: {pct}%"
     },
     "splittingOptions": "Splitsingsopties",
-    "multiplePayers": "Meerdere betalers"
+    "multiplePayers": "Meerdere betalers",
+    "paidByOptionSinglePayer": "Enkele betaler",
+    "paidByOptionEvenly": "Gelijk verdeeld",
+    "paidByOptionByShares": "Met delen",
+    "paidByOptionByPercentage": "Met percentage",
+    "paidByOptionByAmount": "Met bedrag",
+    "paidForOptionEvenly": "Gelijk verdeeld",
+    "paidForOptionByShares": "Met delen",
+    "paidForOptionByPercentage": "Met percentage",
+    "paidForOptionByAmount": "Met bedrag",
+    "paidBySectionSingle": "Enkel",
+    "paidBySectionMultiple": "Meerdere betalers",
+    "paidForSection": "Verdelen tussen deelnemers",
+    "paidByOptionSinglePayerHelper": "Eén persoon betaalt de volledige uitgave",
+    "paidByOptionEvenlyHelper": "Iedereen betaalt een gelijk aandeel",
+    "paidByOptionBySharesHelper": "Iedereen betaalt een gewogen aandeel",
+    "paidByOptionByPercentageHelper": "Iedereen betaalt een percentage",
+    "paidByOptionByAmountHelper": "Iedereen betaalt een vast bedrag",
+    "paidForOptionEvenlyHelper": "Gelijkmatig verdelen tussen iedereen",
+    "paidForOptionBySharesHelper": "Wijs een aandeel toe aan elke persoon",
+    "paidForOptionByPercentageHelper": "Wijs een percentage toe aan elke persoon",
+    "paidForOptionByAmountHelper": "Wijs een exact bedrag toe aan elke persoon"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

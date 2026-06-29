@@ -627,7 +627,28 @@
       "percentageSurplus": "Вишок: {pct}%"
     },
     "splittingOptions": "Опции за поделба",
-    "multiplePayers": "Повеќе плаќачи"
+    "multiplePayers": "Повеќе плаќачи",
+    "paidByOptionSinglePayer": "Еден плаќач",
+    "paidByOptionEvenly": "Рамномерно",
+    "paidByOptionByShares": "По удели",
+    "paidByOptionByPercentage": "По процент",
+    "paidByOptionByAmount": "По износ",
+    "paidForOptionEvenly": "Рамномерно",
+    "paidForOptionByShares": "По удели",
+    "paidForOptionByPercentage": "По процент",
+    "paidForOptionByAmount": "По износ",
+    "paidBySectionSingle": "Еден",
+    "paidBySectionMultiple": "Повеќе плаќачи",
+    "paidForSection": "Поделено меѓу учесниците",
+    "paidByOptionSinglePayerHelper": "Едно лице го покрива целиот трошок",
+    "paidByOptionEvenlyHelper": "Секој плаќа еднаков удел",
+    "paidByOptionBySharesHelper": "Секој плаќа пондериран удел",
+    "paidByOptionByPercentageHelper": "Секој плаќа процент",
+    "paidByOptionByAmountHelper": "Секој плаќа фиксен износ",
+    "paidForOptionEvenlyHelper": "Рамномерно поделено меѓу сите",
+    "paidForOptionBySharesHelper": "Доделете удел на секое лице",
+    "paidForOptionByPercentageHelper": "Доделете процент на секое лице",
+    "paidForOptionByAmountHelper": "Доделете точен износ на секое лице"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
