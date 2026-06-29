@@ -35,15 +35,24 @@ export const getDefaultSplittingOptions = (group: GroupShape) => {
         paidFor?: Array<{ participant: string; shares: string | number }>
       }
       const validIds = new Set(group.participants.map((p) => p.id))
+      const splitMode = parsed.splitMode ?? ('EVENLY' as const)
+      // Non-BY_AMOUNT modes store shares in the form's pre-transform
+      // representation (e.g. "50" for 50%, "1" for one share). The form
+      // schema's .transform multiplies those by 100 to produce basis
+      // points only when the value is a string, so the loaded shape
+      // already needs to be in basis points for the BY_PERCENTAGE /
+      // BY_SHARES validation sum to pass.
       const paidFor = (parsed.paidFor ?? [])
         .filter((row) => validIds.has(row.participant))
         .map((row) => ({
           participant: row.participant,
-          shares: Number(row.shares) as any,
+          shares: (splitMode === 'BY_AMOUNT'
+            ? Number(row.shares)
+            : Number(row.shares) * 100) as any,
         }))
       if (!paidFor.length) return null
       return {
-        splitMode: parsed.splitMode ?? ('EVENLY' as const),
+        splitMode,
         paidFor,
       }
     } catch {
@@ -188,7 +197,7 @@ export function buildExpenseFormDefaults(args: {
           ]
         : [],
       isReimbursement: true,
-      splitMode: defaultSplittingOptions.splitMode,
+      splitMode: 'EVENLY' as const,
       saveDefaultSplittingOptions: false,
       documents: [],
       notes: '',

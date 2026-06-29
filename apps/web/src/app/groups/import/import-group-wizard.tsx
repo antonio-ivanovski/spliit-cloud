@@ -88,6 +88,25 @@ const initialGroupFormValues = (source: NormalizedSource | null) => ({
   currencyCode: source?.currencyCode ?? '',
 })
 
+/**
+ * Map the batched expenses into the shape the import mutation expects.
+ * The single-payer paidBy list uses `originalAmount` when `originalCurrency`
+ * is set, so the cross-currency paidBy BY_AMOUNT sum check (which the
+ * domain schema runs against `originalAmount`) passes. Otherwise the
+ * ledger-currency `amount` is used.
+ */
+export function buildImportExpenses<
+  T extends { paidBy: string; amount: number; originalAmount?: number },
+>(expenses: T[]): Array<Omit<T, 'paidBy'> & { paidByList: Array<{ participant: string; shares: number }>; paidBySplitMode: 'BY_AMOUNT' }> {
+  return expenses.map(({ paidBy, ...rest }) => ({
+    ...rest,
+    paidByList: [
+      { participant: paidBy, shares: rest.originalAmount ?? rest.amount },
+    ],
+    paidBySplitMode: 'BY_AMOUNT' as const,
+  }))
+}
+
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
   const router = useRouter()
@@ -450,11 +469,7 @@ export function ImportGroupWizard() {
         destinationCurrencyCode,
         state.rates === undefined ? undefined : (state.rates ?? undefined),
       )
-      const expenses = batch.expenses.map(({ paidBy, ...rest }) => ({
-        ...rest,
-        paidByList: [{ participant: paidBy, shares: rest.amount }],
-        paidBySplitMode: 'BY_AMOUNT' as const,
-      }))
+      const expenses = buildImportExpenses(batch.expenses)
       await importMutation.mutateAsync({ ...batch, expenses, sourceMeta })
     } catch {
       // Error surfaced via onError.

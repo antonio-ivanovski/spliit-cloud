@@ -1142,6 +1142,44 @@ describe('ExpenseForm option-card transitions', () => {
     expect(screen.getByText('Select all')).toBeInTheDocument()
   })
 
+  it('paid-by: multiple by percentage \u2192 single payer resets paidBySplitMode to BY_AMOUNT', async () => {
+    const multiPayerByPercentage = {
+      ...mockExpense,
+      paidBySplitMode: 'BY_PERCENTAGE' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 5000 },
+        { ledgerParticipantId: 'lp-2', shares: 5000 },
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        expense={multiPayerByPercentage as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const percentageRadio = screen.getByRole('radio', {
+      name: /multiple payers.*by percentage/i,
+    })
+    expect(percentageRadio).toBeChecked()
+
+    const singlePayerRadio = screen.getByRole('radio', {
+      name: /single payer/i,
+    })
+    await user.click(singlePayerRadio)
+
+    expect(singlePayerRadio).toBeChecked()
+    expect(percentageRadio).not.toBeChecked()
+    // After the transition the per-row BY_PERCENTAGE wrappers should be
+    // gone — the form is back in single-payer mode with a single dropdown.
+    const perRowByPercentageInputs = document.querySelectorAll(
+      '[data-id$="/BY_PERCENTAGE/USD"] input',
+    )
+    expect(perRowByPercentageInputs.length).toBe(0)
+  })
+
   it('paid-by: multiple by amount \u2192 by shares produces integer shares', async () => {
     const multiPayerExpense = {
       ...mockExpense,

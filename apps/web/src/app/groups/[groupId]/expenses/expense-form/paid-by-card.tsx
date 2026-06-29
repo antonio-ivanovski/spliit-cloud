@@ -179,6 +179,11 @@ export function PaidByCard(props: {
                     shouldValidate: true,
                   },
                 )
+                form.setValue('paidBySplitMode', 'BY_AMOUNT', {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                  shouldValidate: true,
+                })
                 form.setValue('isMultiPayer', false, {
                   shouldDirty: true,
                   shouldTouch: true,
