@@ -47,10 +47,6 @@ export function PaidByRow({
     name: 'isReimbursement',
   })
   const amount = useWatch({ control: form.control, name: 'amount' })
-  const originalAmount = useWatch({
-    control: form.control,
-    name: 'originalAmount',
-  })
   const paidByList = useWatch({ control: form.control, name: 'paidByList' })
   const conversionRate = useWatch({
     control: form.control,
@@ -59,9 +55,10 @@ export function PaidByRow({
 
   const { id } = participant
   const isOriginalPayer = payerCurrency.code !== groupCurrency.code
-  const targetAmount = isOriginalPayer
-    ? Number(originalAmount) || 0
-    : Number(amount) || 0
+  // paidBy shares are entered in the payer currency, which matches the
+  // typed `amount` (the selected expense currency). For non-converted
+  // expenses this equals the groupCurrency.
+  const targetAmount = Number(amount) || 0
 
   const paidByListForCalc = paidByList.map((p) => {
     const rawShares = p.shares || 0

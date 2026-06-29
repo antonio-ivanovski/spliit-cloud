@@ -49,19 +49,8 @@ export function PaidByCard(props: {
   })
   const paidByList = useWatch({ control: form.control, name: 'paidByList' })
   const amount = useWatch({ control: form.control, name: 'amount' })
-  const originalAmount = useWatch({
-    control: form.control,
-    name: 'originalAmount',
-  })
-  const isReimbursement = useWatch({
-    control: form.control,
-    name: 'isReimbursement',
-  })
 
-  const isOriginalPayer = payerCurrency.code !== groupCurrency.code
-  const singlePayerTargetAmount = isOriginalPayer
-    ? Number(originalAmount) || 0
-    : Number(amount) || 0
+  const singlePayerTargetAmount = Number(amount) || 0
   const singlePayerPaidByList = (
     participant: string,
   ): ExpenseFormInputValues['paidByList'] => [
@@ -74,9 +63,7 @@ export function PaidByCard(props: {
     const currentMode = form.getValues('paidBySplitMode')
     if (currentMode === nextMode) return
     const currentPaidByList = form.getValues('paidByList')
-    const targetAmount = isOriginalPayer
-      ? Number(form.getValues('originalAmount')) || 0
-      : Number(form.getValues('amount')) || 0
+    const targetAmount = Number(form.getValues('amount')) || 0
     const converted = convertParticipantShares({
       rows: currentPaidByList,
       fromMode: currentMode,
@@ -255,14 +242,10 @@ export function PaidByCard(props: {
                       amountAsMinorUnits(Number(p.shares) || 0, payerCurrency),
                     )
                   : paidByList.map((p) => Number(p.shares) || 0)
-              const isOriginalPayer = payerCurrency.code !== groupCurrency.code
-              const targetAmount = isOriginalPayer
-                ? Number(originalAmount) || 0
-                : Number(amount) || 0
               const targetForFooter =
                 paidBySplitMode === 'BY_PERCENTAGE'
                   ? 100
-                  : amountAsMinorUnits(Number(targetAmount) || 0, payerCurrency)
+                  : amountAsMinorUnits(Number(amount) || 0, payerCurrency)
               return (
                 <ParticipantDistributionFooter
                   splitMode={paidBySplitMode}

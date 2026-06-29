@@ -435,9 +435,6 @@
       "label": "Suma"
     },
     "conversionUnavailable": "Aby ustawić inną walutę dla wydatku i przeliczać kwoty, wybierz standardową walutę dla grupy.",
-    "originalAmountField": {
-      "label": "Kwota do przeliczenia"
-    },
     "conversionRateField": {
       "useApi": "Użyj kursów z Frankfurter",
       "useCustom": "Użyj własnego kursu",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Równy podział między wszystkimi",
     "paidForOptionBySharesHelper": "Przypisz udział każdej osobie",
     "paidForOptionByPercentageHelper": "Przypisz procent każdej osobie",
-    "paidForOptionByAmountHelper": "Przypisz dokładną kwotę każdej osobie"
+    "paidForOptionByAmountHelper": "Przypisz dokładną kwotę każdej osobie",
+    "convertedAmountField": {
+      "label": "Przeliczona kwota"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

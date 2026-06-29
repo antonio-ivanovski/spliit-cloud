@@ -536,9 +536,6 @@
       "label": "Montante"
     },
     "conversionUnavailable": "Para definir uma moeda diferente por despesa e converter montantes, seleciona uma moeda não personalizada para o grupo.",
-    "originalAmountField": {
-      "label": "Montante a converter"
-    },
     "conversionRateField": {
       "useApi": "Usar taxas do Frankfurter",
       "useCustom": "Usar taxa personalizada",
@@ -629,7 +626,10 @@
     "paidForOptionEvenlyHelper": "Dividido igualmente entre todos",
     "paidForOptionBySharesHelper": "Atribui uma parte a cada pessoa",
     "paidForOptionByPercentageHelper": "Atribui uma percentagem a cada pessoa",
-    "paidForOptionByAmountHelper": "Atribui um montante exato a cada pessoa"
+    "paidForOptionByAmountHelper": "Atribui um montante exato a cada pessoa",
+    "convertedAmountField": {
+      "label": "Montante convertido"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

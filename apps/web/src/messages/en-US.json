@@ -555,9 +555,6 @@
       "label": "Amount"
     },
     "conversionUnavailable": "To set a different currency per expense and convert amounts, select a non-custom currency for the group.",
-    "originalAmountField": {
-      "label": "Amount to convert"
-    },
     "conversionRateField": {
       "useApi": "Use rates from Frankfurter",
       "useCustom": "Use custom rate",
@@ -648,7 +645,10 @@
     "paidForOptionEvenlyHelper": "Split evenly between everyone",
     "paidForOptionBySharesHelper": "Assign a share to each person",
     "paidForOptionByPercentageHelper": "Assign a percentage to each person",
-    "paidForOptionByAmountHelper": "Assign an exact amount to each person"
+    "paidForOptionByAmountHelper": "Assign an exact amount to each person",
+    "convertedAmountField": {
+      "label": "Converted amount"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

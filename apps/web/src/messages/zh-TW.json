@@ -469,9 +469,6 @@
     "cancel": "取消",
     "reimbursement": "報銷",
     "conversionUnavailable": "若要為每筆支出設定不同貨幣並轉換金額，請為群組選擇非自訂貨幣。",
-    "originalAmountField": {
-      "label": "要轉換的金額"
-    },
     "conversionRateField": {
       "useApi": "使用 Frankfurter 的匯率",
       "useCustom": "使用自訂匯率",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "在所有人之間平均分攤",
     "paidForOptionBySharesHelper": "為每個人指定份額",
     "paidForOptionByPercentageHelper": "為每個人指定百分比",
-    "paidForOptionByAmountHelper": "為每個人指定具體金額"
+    "paidForOptionByAmountHelper": "為每個人指定具體金額",
+    "convertedAmountField": {
+      "label": "換算金額"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

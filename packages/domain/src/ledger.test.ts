@@ -294,31 +294,32 @@ describe('Ledger currency conversion rules', () => {
     expect(ledgerAmount).toBe(65)
   })
 
-  it('expenseFormInputSchema preserves conversion fields through parse', () => {
+  it('expenseFormInputSchema preserves conversion metadata through parse', () => {
+    // The form schema no longer carries `originalAmount` — the typed
+    // input amount lives in `amount`, and the conversion metadata is
+    // the audit/display pair (`originalCurrency` + `conversionRate`).
     const raw = {
       title: 'Test expense',
       expenseDate: new Date('2026-06-24'),
       category: 'general',
-      amount: 42.5,
+      amount: 50,
       isMultiPayer: false,
       paidBySplitMode: 'EVENLY' as const,
-      paidByList: [{ participant: 'lp-alice', shares: 1 }],
+      paidByList: [{ participant: 'lp-alice', shares: 50 }],
       paidFor: [
-        { participant: 'lp-alice', shares: 1 },
-        { participant: 'lp-bob', shares: 1 },
+        { participant: 'lp-alice', shares: 25 },
+        { participant: 'lp-bob', shares: 25 },
       ],
-      splitMode: 'EVENLY' as const,
+      splitMode: 'BY_AMOUNT' as const,
       saveDefaultSplittingOptions: false,
       isReimbursement: false,
-      originalAmount: 50,
       originalCurrency: 'EUR',
       conversionRate: 0.85,
     }
     const result = expenseFormInputSchema.parse(raw)
-    expect(result.originalAmount).toBe(50)
     expect(result.originalCurrency).toBe('EUR')
     expect(result.conversionRate).toBe(0.85)
-    expect(result.amount).toBe(42.5)
+    expect(result.amount).toBe(50)
   })
 
   it('getBalances is unaffected when extra conversion metadata is present', () => {

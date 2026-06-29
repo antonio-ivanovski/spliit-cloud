@@ -469,9 +469,6 @@
     "cancel": "Anulează",
     "reimbursement": "Rambursare",
     "conversionUnavailable": "Pentru a seta o monedă diferită per cheltuială și a converti sumele, selectează o monedă non-personalizată pentru grup.",
-    "originalAmountField": {
-      "label": "Suma de convertit"
-    },
     "conversionRateField": {
       "useApi": "Folosește rate de la Frankfurter",
       "useCustom": "Folosește rată personalizată",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Împărțit egal între toți",
     "paidForOptionBySharesHelper": "Atribuie o parte fiecărei persoane",
     "paidForOptionByPercentageHelper": "Atribuie un procentaj fiecărei persoane",
-    "paidForOptionByAmountHelper": "Atribuie o sumă exactă fiecărei persoane"
+    "paidForOptionByAmountHelper": "Atribuie o sumă exactă fiecărei persoane",
+    "convertedAmountField": {
+      "label": "Sumă convertită"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

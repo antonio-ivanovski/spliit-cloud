@@ -419,9 +419,6 @@
     "reimbursement": "정산",
     "cancel": "취소",
     "conversionUnavailable": "지출별로 다른 통화를 설정하고 금액을 변환하려면 그룹에 사용자 지정이 아닌 통화를 선택하세요.",
-    "originalAmountField": {
-      "label": "변환할 금액"
-    },
     "selectNone": "선택 안 함",
     "selectAll": "모두 선택",
     "shares": "몫",
@@ -469,7 +466,10 @@
     "paidForOptionEvenlyHelper": "모든 사람 간에 똑같이 분할합니다",
     "paidForOptionBySharesHelper": "각 사람에게 지분을 지정합니다",
     "paidForOptionByPercentageHelper": "각 사람에게 비율을 지정합니다",
-    "paidForOptionByAmountHelper": "각 사람에게 정확한 금액을 지정합니다"
+    "paidForOptionByAmountHelper": "각 사람에게 정확한 금액을 지정합니다",
+    "convertedAmountField": {
+      "label": "환산 금액"
+    }
   },
   "Balances": {
     "title": "잔액",

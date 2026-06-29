@@ -469,9 +469,6 @@
     "cancel": "İptal",
     "reimbursement": "Geri ödeme",
     "conversionUnavailable": "Gider başına farklı bir para birimi ayarlamak ve tutarları dönüştürmek için grup için özel olmayan bir para birimi seçin.",
-    "originalAmountField": {
-      "label": "Dönüştürülecek tutar"
-    },
     "conversionRateField": {
       "useApi": "Frankfurter'dan kurları kullan",
       "useCustom": "Özel kur kullan",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Herkes arasında eşit olarak bölünür",
     "paidForOptionBySharesHelper": "Her kişiye bir pay atayın",
     "paidForOptionByPercentageHelper": "Her kişiye bir yüzde atayın",
-    "paidForOptionByAmountHelper": "Her kişiye kesin bir tutar atayın"
+    "paidForOptionByAmountHelper": "Her kişiye kesin bir tutar atayın",
+    "convertedAmountField": {
+      "label": "Dönüştürülen tutar"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

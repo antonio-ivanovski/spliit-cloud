@@ -555,9 +555,6 @@
       "label": "Износ"
     },
     "conversionUnavailable": "За да поставите различна валута по трошок и да ги конвертирате износите, изберете нестандардна валута за групата.",
-    "originalAmountField": {
-      "label": "Износ за конверзија"
-    },
     "conversionRateField": {
       "useApi": "Користи курсеви од Frankfurter",
       "useCustom": "Користи прилагоден курс",
@@ -648,7 +645,10 @@
     "paidForOptionEvenlyHelper": "Рамномерно поделено меѓу сите",
     "paidForOptionBySharesHelper": "Доделете удел на секое лице",
     "paidForOptionByPercentageHelper": "Доделете процент на секое лице",
-    "paidForOptionByAmountHelper": "Доделете точен износ на секое лице"
+    "paidForOptionByAmountHelper": "Доделете точен износ на секое лице",
+    "convertedAmountField": {
+      "label": "Конвертиран износ"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

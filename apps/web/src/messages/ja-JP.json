@@ -469,9 +469,6 @@
     "cancel": "キャンセル",
     "reimbursement": "払い戻し",
     "conversionUnavailable": "支出ごとに異なる通貨を設定して金額を換算するには、グループの通貨をカスタム以外の通貨に設定してください。",
-    "originalAmountField": {
-      "label": "換算する金額"
-    },
     "conversionRateField": {
       "useApi": "Frankfurterのレートを使用する",
       "useCustom": "カスタムレートを使用する",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "全員で均等に分割",
     "paidForOptionBySharesHelper": "各メンバーにシェアを割り当て",
     "paidForOptionByPercentageHelper": "各メンバーにパーセンテージを割り当て",
-    "paidForOptionByAmountHelper": "各メンバーに正確な金額を割り当て"
+    "paidForOptionByAmountHelper": "各メンバーに正確な金額を割り当て",
+    "convertedAmountField": {
+      "label": "換算後の金額"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

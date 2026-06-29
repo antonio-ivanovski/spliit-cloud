@@ -469,9 +469,6 @@
     "cancel": "Cancelar",
     "reimbursement": "Reembolso",
     "conversionUnavailable": "Para establecer una moneda diferente por gasto y convertir los importes, seleccione una moneda no personalizada para el grupo.",
-    "originalAmountField": {
-      "label": "Monto a convertir"
-    },
     "conversionRateField": {
       "useApi": "Utilizar las tasas del Frankfurter",
       "useCustom": "Utilizar tasa personalizada",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Se reparte a partes iguales entre todos",
     "paidForOptionBySharesHelper": "Asigna una parte a cada persona",
     "paidForOptionByPercentageHelper": "Asigna un porcentaje a cada persona",
-    "paidForOptionByAmountHelper": "Asigna una cantidad exacta a cada persona"
+    "paidForOptionByAmountHelper": "Asigna una cantidad exacta a cada persona",
+    "convertedAmountField": {
+      "label": "Cantidad convertida"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

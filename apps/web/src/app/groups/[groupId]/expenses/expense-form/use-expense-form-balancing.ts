@@ -28,15 +28,9 @@ export function useExpenseFormBalancing(args: {
     control: args.form.control,
     name: 'paidBySplitMode',
   })
+  // `amount` is the typed value in the selected expense currency, which
+  // matches the units paidFor and paidBy BY_AMOUNT shares live in.
   const amount = useWatch({ control: args.form.control, name: 'amount' })
-  const originalCurrency = useWatch({
-    control: args.form.control,
-    name: 'originalCurrency',
-  })
-  const originalAmount = useWatch({
-    control: args.form.control,
-    name: 'originalAmount',
-  })
 
   useEffect(() => {
     setManuallyEditedParticipants(new Set())
@@ -103,11 +97,7 @@ export function useExpenseFormBalancing(args: {
       (args.form.getFieldState('paidByList').isDirty ||
         args.form.getFieldState('amount').isDirty)
     ) {
-      const originalCurrencyCode = args.form.getValues('originalCurrency')
-      const totalAmount =
-        originalCurrencyCode && args.form.getValues('originalAmount') != null
-          ? Number(args.form.getValues('originalAmount')) || 0
-          : Number(args.form.getValues().amount) || 0
+      const totalAmount = Number(args.form.getValues().amount) || 0
 
       const paidByList = args.form.getValues().paidByList
       let newPaidByList = [...paidByList]
@@ -141,13 +131,7 @@ export function useExpenseFormBalancing(args: {
       }
       args.form.setValue('paidByList', newPaidByList, { shouldValidate: true })
     }
-  }, [
-    manuallyEditedPayers,
-    amount,
-    paidBySplitMode,
-    originalCurrency,
-    originalAmount,
-  ])
+  }, [manuallyEditedPayers, amount, paidBySplitMode])
 
   return { setManuallyEditedParticipants, setManuallyEditedPayers }
 }

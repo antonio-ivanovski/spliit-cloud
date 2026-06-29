@@ -435,9 +435,6 @@
       "label": "Zenbatekoa"
     },
     "conversionUnavailable": "Gastu bakoitzeko moneta bat ezartzeko eta zenbatekoak bihurtzeko, hautatu taldearentzako moneta ez-pertsonalizatu bat.",
-    "originalAmountField": {
-      "label": "Bihurtzeko zenbatekoa"
-    },
     "conversionRateField": {
       "useApi": "Erabili Frankfurter-en tasak",
       "useCustom": "Erabili tasa pertsonalizatua",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Denen artean zati berdinetan banatzen da",
     "paidForOptionBySharesHelper": "Esleitu parte bat pertsona bakoitzari",
     "paidForOptionByPercentageHelper": "Esleitu ehuneko bat pertsona bakoitzari",
-    "paidForOptionByAmountHelper": "Esleitu zenbateko zehatz bat pertsona bakoitzari"
+    "paidForOptionByAmountHelper": "Esleitu zenbateko zehatz bat pertsona bakoitzari",
+    "convertedAmountField": {
+      "label": "Zenbateko bihurtua"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

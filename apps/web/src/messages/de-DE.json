@@ -435,9 +435,6 @@
       "label": "Betrag"
     },
     "conversionUnavailable": "Um für jede Ausgabe eine andere Währung festzulegen und Beträge umzurechnen, wählen Sie eine nicht benutzerdefinierte Währung für die Gruppe aus.",
-    "originalAmountField": {
-      "label": "Umzurechnender Betrag"
-    },
     "conversionRateField": {
       "useApi": "Benutze Zinssätze von Frankfurter",
       "useCustom": "Benutze individuelle Rate",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Gleichmäßig zwischen allen aufteilen",
     "paidForOptionBySharesHelper": "Jeder Person einen Anteil zuweisen",
     "paidForOptionByPercentageHelper": "Jeder Person einen Prozentsatz zuweisen",
-    "paidForOptionByAmountHelper": "Jeder Person einen genauen Betrag zuweisen"
+    "paidForOptionByAmountHelper": "Jeder Person einen genauen Betrag zuweisen",
+    "convertedAmountField": {
+      "label": "Umgerechneter Betrag"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

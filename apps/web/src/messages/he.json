@@ -435,9 +435,6 @@
       "label": "סכום"
     },
     "conversionUnavailable": "כדי להגדיר מטבע שונה לכל הוצאה ולהמיר סכומים, בחר מטבע לא מותאם אישית לקבוצה.",
-    "originalAmountField": {
-      "label": "סכום להמרה"
-    },
     "conversionRateField": {
       "useApi": "השתמש בשערים מ-Frankfurter",
       "useCustom": "השתמש בשער מותאם אישית",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "חלוקה שווה בין כולם",
     "paidForOptionBySharesHelper": "הקצה חלק לכל אדם",
     "paidForOptionByPercentageHelper": "הקצה אחוז לכל אדם",
-    "paidForOptionByAmountHelper": "הקצה סכום מדויק לכל אדם"
+    "paidForOptionByAmountHelper": "הקצה סכום מדויק לכל אדם",
+    "convertedAmountField": {
+      "label": "סכום מומר"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

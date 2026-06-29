@@ -435,9 +435,6 @@
       "label": "Summa"
     },
     "conversionUnavailable": "Asettaaksesi eri valuutan kullekin kululle ja muuntaaksesi summia, valitse ei-mukautettu valuutta ryhmälle.",
-    "originalAmountField": {
-      "label": "Muunnettava summa"
-    },
     "conversionRateField": {
       "useApi": "Käytä kursseja Frankfurterista",
       "useCustom": "Käytä mukautettua kurssia",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Jaa tasan kaikkien kesken",
     "paidForOptionBySharesHelper": "Anna kullekin henkilölle osuus",
     "paidForOptionByPercentageHelper": "Anna kullekin henkilölle prosenttiosuus",
-    "paidForOptionByAmountHelper": "Anna kullekin henkilölle tarkka summa"
+    "paidForOptionByAmountHelper": "Anna kullekin henkilölle tarkka summa",
+    "convertedAmountField": {
+      "label": "Muunnettu summa"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

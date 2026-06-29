@@ -486,9 +486,6 @@
       "customRate": "Usando taxa personalizada"
     },
     "conversionUnavailable": "Para definir uma moeda diferente por despesa e converter valores, selecione uma moeda não personalizada para o grupo.",
-    "originalAmountField": {
-      "label": "Valor a converter"
-    },
     "participant": {
       "pending": "(convidado)"
     },
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Dividido igualmente entre todos",
     "paidForOptionBySharesHelper": "Atribui uma parte a cada pessoa",
     "paidForOptionByPercentageHelper": "Atribui uma porcentagem a cada pessoa",
-    "paidForOptionByAmountHelper": "Atribui um valor exato a cada pessoa"
+    "paidForOptionByAmountHelper": "Atribui um valor exato a cada pessoa",
+    "convertedAmountField": {
+      "label": "Valor convertido"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

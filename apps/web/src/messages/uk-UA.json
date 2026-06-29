@@ -435,9 +435,6 @@
       "label": "Сума"
     },
     "conversionUnavailable": "Щоб встановити іншу валюту для кожної витрати та конвертувати суми, виберіть стандартну валюту для групи.",
-    "originalAmountField": {
-      "label": "Сума для конвертації"
-    },
     "conversionRateField": {
       "useApi": "Використати курси Frankfurter",
       "useCustom": "Використати власний курс",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Рівномірний розподіл між усіма",
     "paidForOptionBySharesHelper": "Призначте частку кожній особі",
     "paidForOptionByPercentageHelper": "Призначте відсоток кожній особі",
-    "paidForOptionByAmountHelper": "Призначте точну суму кожній особі"
+    "paidForOptionByAmountHelper": "Призначте точну суму кожній особі",
+    "convertedAmountField": {
+      "label": "Конвертована сума"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -468,9 +468,6 @@
     "saving": "保存中……",
     "cancel": "取消",
     "reimbursement": "报销",
-    "originalAmountField": {
-      "label": "需要转换的金额"
-    },
     "conversionRateField": {
       "useApi": "使用Frankfurter提供的汇率",
       "useCustom": "使用自定义汇率",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "在所有人之间平均分摊",
     "paidForOptionBySharesHelper": "为每个人指定份额",
     "paidForOptionByPercentageHelper": "为每个人指定百分比",
-    "paidForOptionByAmountHelper": "为每个人指定具体金额"
+    "paidForOptionByAmountHelper": "为每个人指定具体金额",
+    "convertedAmountField": {
+      "label": "换算金额"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

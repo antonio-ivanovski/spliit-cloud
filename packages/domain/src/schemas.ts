@@ -61,12 +61,10 @@ const documentsSchema = z
   )
   .default([])
 
-// Row shape used by the form schema. `paidFor[].originalAmount` is a
-// UI-only string used by the BY_AMOUNT cross-currency input — it is
-// never sent to the server. `shares` is a number in user-facing units.
+// Row shape used by the form schema. `shares` is a number in user-facing
+// units of the selected expense currency (the same currency as `amount`).
 const formPaidForRowSchema = z.object({
   participant: z.string(),
-  originalAmount: z.string().optional(),
   shares: z.number(),
 })
 
@@ -107,9 +105,7 @@ const paidByDuplicateGuard = (
 }
 
 // paidByList BY_AMOUNT sum check, shared by both schemas. `paidByList`
-// shares are in `originalCurrency` when `originalCurrency` is set, so
-// the sum is checked against `originalAmount` (falling back to amount
-// when originalCurrency is absent).
+// shares are in the selected expense currency (same units as `amount`).
 const paidByAmountSumOk = (sum: Decimal, target: number): boolean =>
   sum.equals(new Decimal(target))
 
@@ -132,12 +128,6 @@ export const expenseFormInputSchema = z
       // Major-unit ceiling: $10,000,000 equivalent (matches the prior
       // 10_000_000_00 minor-unit ceiling; same error key for i18n).
       .refine((amount) => amount <= 10_000_000, 'amountTenMillion'),
-    originalAmount: z.coerce
-      .number()
-      .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
-      .refine((amount) => amount != 0, 'amountNotZero')
-      .refine((amount) => amount <= 10_000_000, 'amountTenMillion')
-      .optional(),
     originalCurrency: z.union([z.string().length(3).nullish(), z.literal('')]),
     conversionRate: z.coerce
       .number()
@@ -218,14 +208,13 @@ export const expenseFormInputSchema = z
       case 'BY_SHARES':
         break
       case 'BY_AMOUNT': {
-        const target = expense.originalCurrency
-          ? (expense.originalAmount ?? expense.amount)
-          : expense.amount
+        // paidBy shares are entered in the same currency as `amount` (the
+        // selected expense currency), so the sum always compares to it.
         const sum = expense.paidByList.reduce(
           (sum, { shares }) => sum + shares,
           0,
         )
-        if (Math.abs(sum - target) > 0.01) {
+        if (Math.abs(sum - expense.amount) > 0.01) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'paidByAmountSum',

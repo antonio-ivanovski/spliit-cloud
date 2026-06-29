@@ -75,12 +75,13 @@ export function PaidForCard(props: {
     if (currentMode === nextMode) return
     const currentPaidFor = form.getValues('paidFor')
     const targetAmount = Number(form.getValues('amount')) || 0
+    const shareCurrency = conversionRequired ? originalCurrency : groupCurrency
     const converted = convertParticipantShares({
       rows: currentPaidFor,
       fromMode: currentMode,
       toMode: nextMode,
       targetAmount,
-      currency: groupCurrency,
+      currency: shareCurrency,
     })
     form.setValue('splitMode', nextMode, {
       shouldDirty: true,
@@ -185,16 +186,22 @@ export function PaidForCard(props: {
           targetAmount={
             splitMode === 'BY_PERCENTAGE'
               ? 100
-              : amountAsMinorUnits(Number(amount) || 0, groupCurrency)
+              : amountAsMinorUnits(
+                  Number(amount) || 0,
+                  conversionRequired ? originalCurrency : groupCurrency,
+                )
           }
           shares={
             splitMode === 'BY_AMOUNT'
               ? paidFor.map((p) =>
-                  amountAsMinorUnits(p.shares || 0, groupCurrency),
+                  amountAsMinorUnits(
+                    p.shares || 0,
+                    conversionRequired ? originalCurrency : groupCurrency,
+                  ),
                 )
               : paidFor.map((p) => p.shares || 0)
           }
-          currency={groupCurrency}
+          currency={conversionRequired ? originalCurrency : groupCurrency}
           paidByCount={paidFor.length}
           dataTestId="paid-for-distribution-footer"
         />

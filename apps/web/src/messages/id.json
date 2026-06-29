@@ -435,9 +435,6 @@
       "label": "Jumlah"
     },
     "conversionUnavailable": "Untuk menetapkan mata uang yang berbeda per pengeluaran dan mengonversi jumlahnya, pilih mata uang non-kustom untuk grup tersebut.",
-    "originalAmountField": {
-      "label": "Jumlah untuk dikonversi"
-    },
     "conversionRateField": {
       "useApi": "Gunakan kurs dari Frankfurter",
       "useCustom": "Gunakan kurs kustom",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Dibagi rata di antara semua orang",
     "paidForOptionBySharesHelper": "Tetapkan porsi untuk setiap orang",
     "paidForOptionByPercentageHelper": "Tetapkan persenan untuk setiap orang",
-    "paidForOptionByAmountHelper": "Tetapkan jumlah yang tepat untuk setiap orang"
+    "paidForOptionByAmountHelper": "Tetapkan jumlah yang tepat untuk setiap orang",
+    "convertedAmountField": {
+      "label": "Jumlah yang dikonversi"
+    }
   },
   "Currencies": {
     "custom": {

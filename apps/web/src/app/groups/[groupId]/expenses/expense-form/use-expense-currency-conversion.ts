@@ -30,6 +30,13 @@ export function useExpenseCurrencyConversion(args: {
   setUsingCustomConversionRate: Dispatch<SetStateAction<boolean>>
   conversionRateMessage: string
   exchangeRate: ReturnType<typeof useCurrencyRate>
+  /**
+   * Read-only preview of the typed `amount` after conversion into the
+   * group (Ledger) currency. Undefined when no conversion is needed or
+   * the rate is not yet known. Form state is never mutated from this
+   * value — it is purely for display.
+   */
+  convertedAmountPreview: number | undefined
 } {
   const watchedExpenseDate = useWatch({
     control: args.form.control,
@@ -39,9 +46,10 @@ export function useExpenseCurrencyConversion(args: {
     control: args.form.control,
     name: 'originalCurrency',
   })
-  const watchedOriginalAmount = useWatch({
+  // The single editable amount is in the selected expense currency.
+  const watchedAmount = useWatch({
     control: args.form.control,
-    name: 'originalAmount',
+    name: 'amount',
   })
   const watchedConversionRate = useWatch({
     control: args.form.control,
@@ -81,27 +89,29 @@ export function useExpenseCurrencyConversion(args: {
     }
   }, [exchangeRate.data, usingCustomConversionRate])
 
+  // Income detection tracks the typed amount directly (it is in the
+  // selected expense currency; signedness is currency-agnostic).
   useEffect(() => {
-    if (!args.form.getFieldState('originalAmount').isTouched) return
-    const originalAmount = args.form.getValues('originalAmount') ?? 0
-    const conversionRate = args.form.getValues('conversionRate')
+    const income = Number(watchedAmount) < 0
+    args.onAmountChanged?.(income)
+  }, [watchedAmount, args])
 
-    if (conversionRate && originalAmount) {
-      const rate = Number(conversionRate)
-      const convertedAmount = originalAmount * rate
-      if (!Number.isNaN(convertedAmount)) {
-        const v = enforceCurrencyPattern(
-          convertedAmount.toFixed(args.groupCurrency.decimal_digits),
-        )
-        args.onAmountChanged?.(Number(v) < 0)
-        args.form.setValue('amount', Number(v))
-      }
+  // Derive the converted Ledger amount as a non-stored preview. Form
+  // state stays untouched so the schema's `amount` invariant (which is
+  // the user input) remains the single source of truth.
+  const convertedAmountPreview = (() => {
+    if (!conversionRequired) return undefined
+    const amount = Number(watchedAmount) || 0
+    const rateSource =
+      usingCustomConversionRate && watchedConversionRate
+        ? Number(watchedConversionRate)
+        : exchangeRate.data
+    if (!rateSource || Number.isNaN(rateSource) || rateSource <= 0) {
+      return undefined
     }
-  }, [
-    watchedOriginalAmount,
-    watchedConversionRate,
-    args.form.getFieldState('originalAmount').isTouched,
-  ])
+    const converted = amount * rateSource
+    return Number.isNaN(converted) ? undefined : converted
+  })()
 
   let conversionRateMessage = ''
   if (exchangeRate.isLoading) {
@@ -141,5 +151,6 @@ export function useExpenseCurrencyConversion(args: {
     setUsingCustomConversionRate,
     conversionRateMessage,
     exchangeRate,
+    convertedAmountPreview,
   }
 }

@@ -29,6 +29,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { formatCurrency } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { DEFAULT_CATEGORIES, RecurrenceRule } from '@spliit/domain'
@@ -55,6 +56,7 @@ export function BasicDetailsCard(props: {
   runtimeFeatureFlags: RuntimeFeatureFlags
   originalCurrency: Currency
   conversionRequired: boolean
+  convertedAmountPreview: number | undefined
   exchangeRate: {
     data: number | undefined
     isLoading: boolean
@@ -89,6 +91,19 @@ export function BasicDetailsCard(props: {
   const getSelectedRecurrenceRule = (field?: { value: string }) => {
     return field?.value as RecurrenceRule
   }
+
+  // The single editable amount always lives in the selected expense
+  // currency. The converted preview (Ledger currency) is read-only.
+  const inputCurrency = props.originalCurrency
+  const previewFormatted =
+    props.convertedAmountPreview != null
+      ? formatCurrency(
+          groupCurrency,
+          props.convertedAmountPreview,
+          locale,
+          true,
+        )
+      : ''
 
   return (
     <Card>
@@ -200,147 +215,14 @@ export function BasicDetailsCard(props: {
           )}
         />
 
-        <div
-          className={`sm:order-4 ${
-            !props.conversionRequired ? 'max-sm:hidden sm:invisible' : ''
-          } col-span-2 md:col-span-1 space-y-2`}
-        >
-          <FormField
-            control={form.control}
-            name="originalAmount"
-            render={({ field: { onChange, ...field } }) => (
-              <FormItem>
-                <FormLabel>{t('originalAmountField.label')}</FormLabel>
-                <div className="flex items-baseline gap-2">
-                  <span>{props.originalCurrency.symbol}</span>
-                  <FormControl>
-                    <Input
-                      className="text-base max-w-[120px]"
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="0.00"
-                      disabled={readOnly}
-                      onChange={(event) => {
-                        const v = enforceCurrencyPattern(event.target.value)
-                        onChange(v)
-                      }}
-                      {...field}
-                      onFocus={(e) => {
-                        const target = e.currentTarget
-                        setTimeout(() => target.select(), 1)
-                      }}
-                    />
-                  </FormControl>
-                </div>
-                <FormDescription>
-                  {isNaN(form.getValues('expenseDate').getTime()) ? (
-                    t('conversionRateState.noDate')
-                  ) : form.getValues('expenseDate') &&
-                    !props.usingCustomConversionRate ? (
-                    <>
-                      {props.conversionRateMessage}
-                      {!props.exchangeRate.isLoading && (
-                        <Button
-                          className="h-auto py-0"
-                          variant="link"
-                          onClick={() => props.exchangeRate.refresh()}
-                          disabled={readOnly}
-                        >
-                          {t('conversionRateState.refresh')}
-                        </Button>
-                      )}
-                    </>
-                  ) : (
-                    t('conversionRateState.customRate')
-                  )}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Collapsible
-            open={props.usingCustomConversionRate}
-            onOpenChange={props.setUsingCustomConversionRate}
-          >
-            <CollapsibleTrigger asChild>
-              <Button variant="link" className="-mx-4" disabled={readOnly}>
-                {props.usingCustomConversionRate
-                  ? t('conversionRateField.useApi')
-                  : t('conversionRateField.useCustom')}
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <FormField
-                control={form.control}
-                name="conversionRate"
-                render={({ field: { onChange, ...field } }) => (
-                  <FormItem
-                    className={`sm:order-4 ${
-                      !props.conversionRequired
-                        ? 'max-sm:hidden sm:invisible'
-                        : ''
-                    }`}
-                  >
-                    <FormLabel>{t('conversionRateField.label')}</FormLabel>
-                    <div className="flex items-baseline gap-2">
-                      <span>
-                        {props.originalCurrency.symbol} 1 = {group.currency}
-                      </span>
-                      <FormControl>
-                        <Input
-                          className="text-base max-w-[120px]"
-                          type="text"
-                          inputMode="decimal"
-                          placeholder="0.00"
-                          disabled={readOnly}
-                          onChange={(event) => {
-                            const v = enforceCurrencyPattern(event.target.value)
-                            onChange(v)
-                          }}
-                          {...field}
-                          onFocus={(e) => {
-                            const target = e.currentTarget
-                            setTimeout(() => target.select(), 1)
-                          }}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem className="order-3 sm:order-2">
-              <FormLabel>{t('categoryField.label')}</FormLabel>
-              <CategorySelector
-                categories={DEFAULT_CATEGORIES}
-                defaultValue={form.watch(field.name)}
-                onValueChange={field.onChange}
-                isLoading={isCategoryLoading}
-                disabled={readOnly}
-              />
-              <FormDescription>
-                {t(`${sExpense}.categoryFieldDescription`)}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <FormField
           control={form.control}
           name="amount"
           render={({ field: { onChange, ...field } }) => (
-            <FormItem className="sm:order-5">
+            <FormItem className="sm:order-4 col-span-2 md:col-span-1 space-y-2">
               <FormLabel>{t('amountField.label')}</FormLabel>
               <div className="flex items-baseline gap-2">
-                <span>{group.currency}</span>
+                <span>{inputCurrency.symbol}</span>
                 <FormControl>
                   <Input
                     className="text-base max-w-[120px]"
@@ -365,25 +247,98 @@ export function BasicDetailsCard(props: {
               </div>
               <FormMessage />
 
-              {!isIncome && (
-                <FormField
-                  control={form.control}
-                  name="isReimbursement"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row gap-2 items-center space-y-0 pt-2">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          disabled={readOnly}
-                        />
-                      </FormControl>
-                      <div>
-                        <FormLabel>{t('isReimbursementField.label')}</FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              {props.conversionRequired && (
+                <div className="rounded-md border bg-muted/40 px-3 py-2 space-y-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-muted-foreground text-xs">
+                      {t('convertedAmountField.label')} ({group.currency})
+                    </span>
+                    <span
+                      className="text-sm font-medium tabular-nums"
+                      aria-readonly="true"
+                      data-testid="converted-amount-preview"
+                    >
+                      {previewFormatted || '—'}
+                    </span>
+                  </div>
+                  <FormDescription className="text-xs">
+                    {isNaN(form.getValues('expenseDate').getTime()) ? (
+                      t('conversionRateState.noDate')
+                    ) : form.getValues('expenseDate') &&
+                      !props.usingCustomConversionRate ? (
+                      <>
+                        {props.conversionRateMessage}
+                        {!props.exchangeRate.isLoading && (
+                          <Button
+                            className="h-auto py-0"
+                            variant="link"
+                            onClick={() => props.exchangeRate.refresh()}
+                            disabled={readOnly}
+                          >
+                            {t('conversionRateState.refresh')}
+                          </Button>
+                        )}
+                      </>
+                    ) : (
+                      t('conversionRateState.customRate')
+                    )}
+                  </FormDescription>
+                  <Collapsible
+                    open={props.usingCustomConversionRate}
+                    onOpenChange={props.setUsingCustomConversionRate}
+                  >
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="link"
+                        className="-mx-4 h-auto py-0"
+                        disabled={readOnly}
+                      >
+                        {props.usingCustomConversionRate
+                          ? t('conversionRateField.useApi')
+                          : t('conversionRateField.useCustom')}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <FormField
+                        control={form.control}
+                        name="conversionRate"
+                        render={({ field: { onChange, ...field } }) => (
+                          <FormItem className="pt-1">
+                            <FormLabel>
+                              {t('conversionRateField.label')}
+                            </FormLabel>
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-xs text-muted-foreground">
+                                {inputCurrency.symbol} 1 = {group.currency}
+                              </span>
+                              <FormControl>
+                                <Input
+                                  className="text-base max-w-[120px]"
+                                  type="text"
+                                  inputMode="decimal"
+                                  placeholder="0.00"
+                                  disabled={readOnly}
+                                  onChange={(event) => {
+                                    const v = enforceCurrencyPattern(
+                                      event.target.value,
+                                    )
+                                    onChange(v)
+                                  }}
+                                  {...field}
+                                  onFocus={(e) => {
+                                    const target = e.currentTarget
+                                    setTimeout(() => target.select(), 1)
+                                  }}
+                                />
+                              </FormControl>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
               )}
             </FormItem>
           )}
@@ -391,9 +346,53 @@ export function BasicDetailsCard(props: {
 
         <FormField
           control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem className="order-3 sm:order-2">
+              <FormLabel>{t('categoryField.label')}</FormLabel>
+              <CategorySelector
+                categories={DEFAULT_CATEGORIES}
+                defaultValue={form.watch(field.name)}
+                onValueChange={field.onChange}
+                isLoading={isCategoryLoading}
+                disabled={readOnly}
+              />
+              <FormDescription>
+                {t(`${sExpense}.categoryFieldDescription`)}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="sm:order-6">
+          {!isIncome && (
+            <FormField
+              control={form.control}
+              name="isReimbursement"
+              render={({ field }) => (
+                <FormItem className="flex flex-row gap-2 items-center space-y-0 pt-2">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={readOnly}
+                    />
+                  </FormControl>
+                  <div>
+                    <FormLabel>{t('isReimbursementField.label')}</FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+          )}
+        </div>
+
+        <FormField
+          control={form.control}
           name="notes"
           render={({ field }) => (
-            <FormItem className="sm:order-6">
+            <FormItem className="sm:order-7">
               <FormLabel>{t('notesField.label')}</FormLabel>
               <FormControl>
                 <Textarea
@@ -409,7 +408,7 @@ export function BasicDetailsCard(props: {
           control={form.control}
           name="recurrenceRule"
           render={({ field }) => (
-            <FormItem className="sm:order-5">
+            <FormItem className="sm:order-8">
               <FormLabel>{t('Expense.recurrenceRule.label')}</FormLabel>
               <Select
                 onValueChange={(value) => {

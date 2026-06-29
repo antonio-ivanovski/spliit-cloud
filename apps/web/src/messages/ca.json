@@ -469,9 +469,6 @@
     "cancel": "Cancel·lar",
     "reimbursement": "Reemborsament",
     "conversionUnavailable": "Per a seleccionar una moneda diferent per despesa i convertir quantitats, tria una moneda no personalitzada per al grup.",
-    "originalAmountField": {
-      "label": "Quantitat a convertir"
-    },
     "conversionRateField": {
       "useApi": "Emprar les tases de Frankfurter",
       "useCustom": "Utilitzar tasa personalitzada",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Es reparteix a parts iguals entre tothom",
     "paidForOptionBySharesHelper": "Assigna una part a cada persona",
     "paidForOptionByPercentageHelper": "Assigna un percentatge a cada persona",
-    "paidForOptionByAmountHelper": "Assigna una quantitat exacta a cada persona"
+    "paidForOptionByAmountHelper": "Assigna una quantitat exacta a cada persona",
+    "convertedAmountField": {
+      "label": "Quantitat convertida"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

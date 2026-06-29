@@ -233,7 +233,7 @@ describe('ExpenseForm', () => {
     expect(screen.getByDisplayValue('Great dinner')).toBeInTheDocument()
   })
 
-  it('edit mode pre-fills originalAmount as decimal (not cents) when currency conversion is active', () => {
+  it('edit mode of a converted expense loads the typed original amount as the single editable field', () => {
     const expenseWithConversion = {
       ...mockExpense,
       originalCurrency: 'EUR',
@@ -249,14 +249,18 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    // The conversion rate input should be visible (confirms conversion mode is active)
+    // The conversion rate input should still be visible (confirms
+    // conversion mode is active).
     expect(screen.getByDisplayValue('1.1')).toBeInTheDocument()
 
-    // The originalAmount input should show '50' (decimal), not '5000' (cents)
-    const originalAmountInput = screen.getByRole('textbox', {
-      name: /amount to convert/i,
-    })
-    expect(originalAmountInput).toHaveValue('50')
+    // The single editable Amount field carries the typed EUR value, not
+    // the converted USD ledger amount.
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    expect(amountInput).toHaveValue('50')
+
+    // The read-only converted preview renders the Ledger-currency amount.
+    const preview = screen.getByTestId('converted-amount-preview')
+    expect(preview).toHaveTextContent(/55\.00/)
   })
 
   it('submit converts originalAmount to minor units when currency conversion is active', async () => {
@@ -331,6 +335,178 @@ describe('ExpenseForm', () => {
     const submittedValues = onSubmit.mock.calls[0][0]
     expect(submittedValues).not.toHaveProperty('originalAmount')
     expect(submittedValues).not.toHaveProperty('originalCurrency')
+  })
+
+  it('renders a single editable Amount field (no separate "Amount to convert")', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: /^amount$/i }),
+    ).toBeInTheDocument()
+    // No second editable amount input is rendered.
+    expect(
+      screen.queryByRole('textbox', { name: /amount to convert/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows the converted-amount preview when the selected currency differs from the group currency', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      refresh: vi.fn(),
+    })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const currencySelector = screen.getAllByRole('combobox')[0]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    // The preview element appears once conversion is required.
+    await screen.findByTestId('converted-amount-preview')
+
+    // The preview is rendered read-only: it must not be a focusable input.
+    expect(
+      screen.queryByRole('textbox', { name: /converted amount/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('updates the converted preview as the typed Amount changes', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      refresh: vi.fn(),
+    })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const currencySelector = screen.getAllByRole('combobox')[0]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    await user.clear(amountInput)
+    await user.type(amountInput, '100')
+
+    expect(screen.getByTestId('converted-amount-preview')).toHaveTextContent(
+      /110\.00/,
+    )
+
+    await user.clear(amountInput)
+    await user.type(amountInput, '50')
+
+    expect(screen.getByTestId('converted-amount-preview')).toHaveTextContent(
+      /55\.00/,
+    )
+  })
+
+  it('changing currency keeps the numeric amount and recomputes the preview', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      refresh: vi.fn(),
+    })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as any}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    await user.clear(amountInput)
+    await user.type(amountInput, '100')
+
+    const currencySelector = screen.getAllByRole('combobox')[0]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    // 100 EUR → 110 USD with the stubbed rate.
+    expect(amountInput).toHaveValue('100')
+    expect(screen.getByTestId('converted-amount-preview')).toHaveTextContent(
+      /110\.00/,
+    )
+
+    // Switch back to USD — the numeric value stays, the preview disappears.
+    await user.click(currencySelector)
+    await user.click(screen.getByText('US Dollar (USD)'))
+
+    expect(amountInput).toHaveValue('100')
+    expect(
+      screen.queryByTestId('converted-amount-preview'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('submits the typed amount as originalAmount when a different currency is selected', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      refresh: vi.fn(),
+    })
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={
+          {
+            ...mockGroup,
+            participants: [
+              { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+            ],
+          } as any
+        }
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(screen.getByLabelText(/expense title/i), 'Dinner')
+
+    const currencySelector = screen.getAllByRole('combobox')[0]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    await user.clear(amountInput)
+    await user.type(amountInput, '100')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    const submitted = onSubmit.mock.calls[0][0]
+    // Typed EUR 100 → persisted originalAmount 10000 EUR minor units.
+    expect(submitted).toHaveProperty('originalAmount', 10000)
+    expect(submitted).toHaveProperty('originalCurrency', 'EUR')
+    // Ledger amount is the typed amount * rate, rounded to USD cents.
+    expect(submitted).toHaveProperty('amount', 11000)
+    expect(submitted).toHaveProperty('conversionRate', 1.1)
   })
 
   it('split mode selector is visible by default', () => {
@@ -666,12 +842,11 @@ describe('ExpenseForm', () => {
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 
-    const originalAmountInput = await screen.findByRole('textbox', {
-      name: /amount to convert/i,
-    })
-    await user.type(originalAmountInput, '100')
-    await user.clear(screen.getByRole('textbox', { name: /^amount$/i }))
-    await user.type(screen.getByRole('textbox', { name: /^amount$/i }), '110')
+    // With the new UX there is only one editable Amount field. Typing
+    // into it stores the value as the typed EUR amount.
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    await user.clear(amountInput)
+    await user.type(amountInput, '100')
     await user.click(screen.getByRole('button', { name: /create/i }))
 
     await vi.waitFor(() => {
@@ -681,6 +856,7 @@ describe('ExpenseForm', () => {
     expect(
       screen.queryByText('Sum of payer amounts must equal the expense amount.'),
     ).not.toBeInTheDocument()
+    // paidByList shares are persisted in originalCurrency minor units.
     expect(onSubmit.mock.calls[0][0].paidByList).toEqual([
       { participant: 'lp-1', shares: 10000 },
     ])

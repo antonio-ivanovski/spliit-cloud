@@ -1,10 +1,22 @@
 import type { Currency, Expense, ExpenseFormInputValues } from '@spliit/domain'
 import { amountAsMinorUnits, getCurrency } from '@spliit/domain'
 
-// Convert user-facing form values (decimal major units, display
-// percentages) to the storage units the API expects (integer minor
-// units, basis points). Mirrors the body of the previous submit()
-// handler in expense-form.tsx.
+// Convert user-facing form values (decimal major units in the selected
+// expense currency, display percentages) to the storage units the API
+// expects (integer minor units, basis points).
+//
+// Contract:
+// - `values.amount` is always the user-typed amount in the selected
+//   expense currency (`originalCurrency ?? groupCurrency`).
+// - When conversion is required, the persisted Ledger amount is computed
+//   client-side as `amount * conversionRate` (rounded to Ledger minor
+//   units), and `originalAmount` carries the typed amount in
+//   originalCurrency minor units. paidFor shares are converted the same
+//   way before being persisted as Ledger-currency minor units. paidBy
+//   shares are entered in originalCurrency display units and are
+//   persisted as originalCurrency minor units.
+// - When no conversion is required, `amount` and both share lists are
+//   treated as groupCurrency values.
 export function buildSubmitValues(
   values: ExpenseFormInputValues,
   args: {
@@ -14,49 +26,58 @@ export function buildSubmitValues(
 ): Expense {
   const { groupCurrency, conversionRequired } = args
 
-  const amount = amountAsMinorUnits(values.amount, groupCurrency)
+  const inputCurrency = values.originalCurrency
+    ? (getCurrency(values.originalCurrency) ?? groupCurrency)
+    : groupCurrency
+  const typedAmount = Number(values.amount) || 0
+  const rate =
+    conversionRequired && values.conversionRate
+      ? Number(values.conversionRate)
+      : undefined
+
+  // Persisted Ledger amount: same as typed amount when no conversion,
+  // otherwise `amount * rate` rounded to Ledger minor units.
+  const ledgerAmount = conversionRequired
+    ? amountAsMinorUnits(rate ? typedAmount * rate : typedAmount, groupCurrency)
+    : amountAsMinorUnits(typedAmount, groupCurrency)
+
+  // paidFor BY_AMOUNT shares are entered in the selected expense currency
+  // and persisted as Ledger-currency minor units. Converting per-share
+  // before persisting (with largest-remainder happening server-side)
+  // keeps the per-share semantics intuitive for cross-currency BY_AMOUNT.
   const paidFor = values.paidFor.map(({ participant, shares }) => ({
     participant,
     shares:
       values.splitMode === 'BY_AMOUNT'
-        ? amountAsMinorUnits(shares, groupCurrency)
+        ? amountAsMinorUnits(
+            conversionRequired && rate ? shares * rate : shares,
+            groupCurrency,
+          )
         : values.splitMode === 'BY_PERCENTAGE'
           ? Math.round(shares * 100)
           : Math.round(shares),
   }))
 
-  // paidByList.shares are entered in originalCurrency when set, so
-  // the minor-units conversion must use that currency, not the group
-  // currency — otherwise a EUR-group expense paid in USD would be
-  // stored as cents-of-EUR-denominated-dollars.
-  const payerCurrency =
-    values.originalCurrency && getCurrency(values.originalCurrency)
-      ? getCurrency(values.originalCurrency)!
-      : groupCurrency
+  // paidBy shares are entered in the input currency display units
+  // (which is `originalCurrency` when conversion is required,
+  // groupCurrency otherwise), and are persisted in their input
+  // currency's minor units. This keeps the API invariant that
+  // `Σ paidByList.shares == originalAmount` for converted expenses.
   const paidByList = values.paidByList.map(({ participant, shares }) => ({
     participant,
     shares:
       values.paidBySplitMode === 'BY_AMOUNT'
-        ? amountAsMinorUnits(shares, payerCurrency)
+        ? amountAsMinorUnits(shares, inputCurrency)
         : values.paidBySplitMode === 'BY_PERCENTAGE'
           ? Math.round(shares * 100)
           : Math.round(shares),
   }))
 
-  // Convert originalAmount back to minor units for storage.
-  const originalAmount =
-    values.originalAmount != null && values.originalCurrency
-      ? amountAsMinorUnits(
-          values.originalAmount,
-          getCurrency(values.originalCurrency) ?? groupCurrency,
-        )
-      : undefined
-
   const base = {
     expenseDate: values.expenseDate,
     title: values.title,
     category: values.category,
-    amount,
+    amount: ledgerAmount,
     paidBySplitMode: values.paidBySplitMode,
     paidByList,
     splitMode: values.splitMode,
@@ -70,14 +91,14 @@ export function buildSubmitValues(
     conversionRate: values.conversionRate,
   }
 
-  // Currency should be blank if same as group currency.
-  // Explicit construction avoids `as Expense` casts that paper
-  // over loose optional-field inference from the `base` object spread.
+  // Currency should be blank if same as group currency. The client only
+  // persists `originalAmount`/`originalCurrency` metadata when a
+  // conversion is genuinely required.
   const payload: Expense = {
     ...base,
     ...(conversionRequired
       ? {
-          originalAmount,
+          originalAmount: amountAsMinorUnits(typedAmount, inputCurrency),
           originalCurrency: values.originalCurrency ?? undefined,
         }
       : {}),

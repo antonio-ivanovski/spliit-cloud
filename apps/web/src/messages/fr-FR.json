@@ -469,9 +469,6 @@
     "cancel": "Annuler",
     "reimbursement": "Remboursement",
     "conversionUnavailable": "Pour définir une devise différente pour chaque dépense et convertir les montants, sélectionnez une devise non personnalisée pour le groupe.",
-    "originalAmountField": {
-      "label": "Montant à convertir"
-    },
     "conversionRateField": {
       "useCustom": "Utiliser un taux personnalisé",
       "label": "Taux de change",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Répartition équitable entre tous",
     "paidForOptionBySharesHelper": "Attribuez une part à chaque personne",
     "paidForOptionByPercentageHelper": "Attribuez un pourcentage à chaque personne",
-    "paidForOptionByAmountHelper": "Attribuez un montant exact à chaque personne"
+    "paidForOptionByAmountHelper": "Attribuez un montant exact à chaque personne",
+    "convertedAmountField": {
+      "label": "Montant converti"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

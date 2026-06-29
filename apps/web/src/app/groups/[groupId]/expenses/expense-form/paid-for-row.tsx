@@ -48,9 +48,10 @@ export function PaidForRow({
     name: 'isReimbursement',
   })
   const amount = useWatch({ control: form.control, name: 'amount' })
-  const paidFor = useWatch({ control: form.control, name: 'paidFor' })
 
   const { id } = participant
+
+  const inputCurrency = conversionRequired ? originalCurrency : groupCurrency
 
   return (
     <FormField
@@ -107,12 +108,10 @@ export function PaidForRow({
               !isReimbursement &&
               (splitMode === 'BY_AMOUNT' ? (
                 (() => {
-                  const previewInputValue = conversionRequired
-                    ? (row?.originalAmount ?? '')
-                    : String(row?.shares ?? '')
+                  const shareValue = Number(row?.shares ?? 0)
                   const previewConvertedAmount =
-                    conversionRequired && previewInputValue
-                      ? Number(previewInputValue) * Number(exchangeRate || 1)
+                    conversionRequired && shareValue
+                      ? shareValue * Number(exchangeRate || 1)
                       : null
                   return previewConvertedAmount != null ? (
                     <ParticipantRowAmountPreview
@@ -127,7 +126,7 @@ export function PaidForRow({
               ) : (
                 <ParticipantRowAmountPreview
                   amount={calculateShare(id, {
-                    amount: amountAsMinorUnits(Number(amount), groupCurrency),
+                    amount: amountAsMinorUnits(Number(amount), inputCurrency),
                     paidFor: field.value.map(
                       ({ participant: pid, shares }) => ({
                         participant: {
@@ -144,7 +143,7 @@ export function PaidForRow({
                     splitMode: splitMode,
                     isReimbursement: isReimbursement,
                   })}
-                  currency={groupCurrency}
+                  currency={inputCurrency}
                 />
               ))
             }
@@ -160,45 +159,6 @@ export function PaidForRow({
                     const isSelected = row != null
 
                     if (splitMode === 'BY_AMOUNT') {
-                      const inputValue = conversionRequired
-                        ? (row?.originalAmount ?? '')
-                        : String(row?.shares ?? '')
-
-                      const handleChange = (next: string) => {
-                        const rate = Number(exchangeRate)
-                        const converted =
-                          conversionRequired && !Number.isNaN(rate) && rate > 0
-                            ? enforceCurrencyPattern(
-                                (Number(next || '0') * rate).toFixed(
-                                  groupCurrency.decimal_digits,
-                                ),
-                              )
-                            : next
-                        field.onChange(
-                          field.value.map((p) =>
-                            p.participant === id
-                              ? conversionRequired
-                                ? {
-                                    participant: id,
-                                    shares: Number(converted) || 0,
-                                    originalAmount: next,
-                                  }
-                                : {
-                                    participant: id,
-                                    shares: Number(next) || 0,
-                                  }
-                              : p,
-                          ),
-                        )
-                        setManuallyEditedParticipants((prev) =>
-                          new Set(prev).add(id),
-                        )
-                      }
-
-                      const inputCurrency = conversionRequired
-                        ? originalCurrency
-                        : groupCurrency
-
                       return (
                         <div>
                           <div className="flex gap-1 items-center">
@@ -211,10 +171,27 @@ export function PaidForRow({
                                 className="text-base w-[80px] -my-2"
                                 type="text"
                                 disabled={readOnly || !isSelected}
-                                value={inputValue}
-                                onChange={(event) =>
-                                  handleChange(event.target.value)
-                                }
+                                value={String(row?.shares ?? '')}
+                                onChange={(event) => {
+                                  field.onChange(
+                                    field.value.map((p) =>
+                                      p.participant === id
+                                        ? {
+                                            participant: id,
+                                            shares:
+                                              Number(
+                                                enforceCurrencyPattern(
+                                                  event.target.value,
+                                                ),
+                                              ) || 0,
+                                          }
+                                        : p,
+                                    ),
+                                  )
+                                  setManuallyEditedParticipants((prev) =>
+                                    new Set(prev).add(id),
+                                  )
+                                }}
                                 inputMode="decimal"
                                 step={10 ** -inputCurrency.decimal_digits}
                               />

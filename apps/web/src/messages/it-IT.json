@@ -481,9 +481,6 @@
       "customRate": "Utilizzo tasso personalizzato"
     },
     "conversionUnavailable": "Per impostare una valuta diversa per ogni spesa e convertire gli importi, seleziona una valuta non personalizzata per il gruppo.",
-    "originalAmountField": {
-      "label": "Importo da convertire"
-    },
     "conversionRateField": {
       "useApi": "Usa tassi da Frankfurter",
       "useCustom": "Usa tasso personalizzato",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Diviso equamente tra tutti",
     "paidForOptionBySharesHelper": "Assegna una quota a ogni persona",
     "paidForOptionByPercentageHelper": "Assegna una percentuale a ogni persona",
-    "paidForOptionByAmountHelper": "Assegna un importo esatto a ogni persona"
+    "paidForOptionByAmountHelper": "Assegna un importo esatto a ogni persona",
+    "convertedAmountField": {
+      "label": "Importo convertito"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

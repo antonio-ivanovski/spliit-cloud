@@ -435,9 +435,6 @@
       "label": "Сумма"
     },
     "conversionUnavailable": "Чтобы установить другую валюту для каждого расхода и конвертировать суммы, выберите стандартную валюту для группы.",
-    "originalAmountField": {
-      "label": "Сумма для конвертации"
-    },
     "conversionRateField": {
       "useApi": "Использовать курсы Frankfurter",
       "useCustom": "Использовать свой курс",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Разделить поровну между всеми",
     "paidForOptionBySharesHelper": "Назначьте долю каждому",
     "paidForOptionByPercentageHelper": "Назначьте процент каждому",
-    "paidForOptionByAmountHelper": "Назначьте точную сумму каждому"
+    "paidForOptionByAmountHelper": "Назначьте точную сумму каждому",
+    "convertedAmountField": {
+      "label": "Конвертированная сумма"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

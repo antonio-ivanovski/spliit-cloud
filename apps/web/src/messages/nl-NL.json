@@ -435,9 +435,6 @@
       "label": "Bedrag"
     },
     "conversionUnavailable": "Om een andere munteenheid in te stellen voor een uitgave en bedragen om te rekenen, kies een standaard munteenheid voor de groep.",
-    "originalAmountField": {
-      "label": "Om te rekenen bedrag"
-    },
     "conversionRateField": {
       "useApi": "Gebruik koersen van Frankfurter",
       "useCustom": "Gebruik aangepaste koers",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Gelijkmatig verdelen tussen iedereen",
     "paidForOptionBySharesHelper": "Wijs een aandeel toe aan elke persoon",
     "paidForOptionByPercentageHelper": "Wijs een percentage toe aan elke persoon",
-    "paidForOptionByAmountHelper": "Wijs een exact bedrag toe aan elke persoon"
+    "paidForOptionByAmountHelper": "Wijs een exact bedrag toe aan elke persoon",
+    "convertedAmountField": {
+      "label": "Omgerekend bedrag"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

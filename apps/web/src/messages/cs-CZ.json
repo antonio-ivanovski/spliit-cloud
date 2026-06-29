@@ -435,9 +435,6 @@
       "label": "Částka"
     },
     "conversionUnavailable": "Chcete-li nastavit jinou měnu pro jednotlivé výdaje a přepočítávat částky, vyberte pro skupinu standardní měnu.",
-    "originalAmountField": {
-      "label": "Částka k přepočtu"
-    },
     "conversionRateField": {
       "useApi": "Použít kurzy z Frankfurter",
       "useCustom": "Použít vlastní kurz",
@@ -528,7 +525,10 @@
     "paidForOptionEvenlyHelper": "Rovnoměrné rozdělení mezi všechny",
     "paidForOptionBySharesHelper": "Přiřaďte podíl každé osobě",
     "paidForOptionByPercentageHelper": "Přiřaďte procento každé osobě",
-    "paidForOptionByAmountHelper": "Přiřaďte přesnou částku každé osobě"
+    "paidForOptionByAmountHelper": "Přiřaďte přesnou částku každé osobě",
+    "convertedAmountField": {
+      "label": "Přepočtená částka"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
