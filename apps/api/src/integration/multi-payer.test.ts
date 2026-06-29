@@ -1,13 +1,10 @@
-import { prisma } from '@spliit/db'
-import {
-  getBalances,
-  type ExpenseFormValues,
-} from '@spliit/domain'
-import { parseSpliitExport } from '@spliit/domain/import'
 import { Parser } from '@json2csv/plainjs'
+import { prisma } from '@spliit/db'
+import { getBalances, type ExpenseFormValues } from '@spliit/domain'
+import { parseSpliitExport } from '@spliit/domain/import'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { groupsRouter } from '../trpc/routers/groups'
 import { randomId } from '../lib/api'
+import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -152,7 +149,9 @@ describe('Multi-payer expenses — real DB', () => {
   // ────────────────────────────────────────────────────────────────────────
 
   it('creates a multi-payer BY_AMOUNT expense (3 payers, sum == amount)', async () => {
-    const { groupId, participants } = await createUsdGroup(`MP-ByAmount-${runId}`)
+    const { groupId, participants } = await createUsdGroup(
+      `MP-ByAmount-${runId}`,
+    )
 
     const result = await makeCaller().expenses.create({
       groupId,
@@ -288,10 +287,8 @@ describe('Multi-payer expenses — real DB', () => {
   // ────────────────────────────────────────────────────────────────────────
 
   it('cross-currency: ledger EUR / original USD 70/30 produces correct EUR-cent balances', async () => {
-    const { groupId, participants, ledgerId } = await createGroupWithParticipants(
-      `MP-XCcy-${runId}`,
-      ['Alice', 'Bob'],
-    )
+    const { groupId, participants, ledgerId } =
+      await createGroupWithParticipants(`MP-XCcy-${runId}`, ['Alice', 'Bob'])
     // Switch the ledger currency to EUR for this scenario.
     await prisma.ledger.update({
       where: { id: ledgerId },
@@ -526,7 +523,9 @@ describe('Multi-payer expenses — real DB', () => {
       // Sort alphabetically by ledgerParticipantId so the assertion is
       // independent of insertion order; the per-row map pins the
       // expected shares to the right id.
-      const byId = new Map(e.paidByList.map((p) => [p.ledgerParticipantId, p.shares]))
+      const byId = new Map(
+        e.paidByList.map((p) => [p.ledgerParticipantId, p.shares]),
+      )
       for (const [id, shares] of Object.entries(expectedById)) {
         expect(byId.get(id)).toBe(shares)
       }
@@ -553,9 +552,7 @@ describe('Multi-payer expenses — real DB', () => {
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
-        paidByList: [
-          { participant: participants['Admin'], shares: 3000 },
-        ],
+        paidByList: [{ participant: participants['Admin'], shares: 3000 }],
         paidFor: [
           { participant: participants['Admin'], shares: 1 },
           { participant: participants['Alice'], shares: 1 },
@@ -723,8 +720,8 @@ describe('Multi-payer expenses — real DB', () => {
     const aliceId = participants['Alice']
     const bobId = participants['Bob']
     const totalAmount = 10000
-    const alicePaid = 7000 / (7000 + 3000) * totalAmount
-    const bobPaid = 3000 / (7000 + 3000) * totalAmount
+    const alicePaid = (7000 / (7000 + 3000)) * totalAmount
+    const bobPaid = (3000 / (7000 + 3000)) * totalAmount
     const aliceFor = (totalAmount / 2) * 1
     const bobFor = (totalAmount / 2) * 1
     expect(alicePaid - aliceFor).toBe(2000)
