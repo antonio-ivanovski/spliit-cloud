@@ -5,6 +5,7 @@
 It keeps the simplicity of the original Spliit while moving toward cloud accounts, reliable group syncing, stronger tests, and a more maintainable stack.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![Status Spliit Cloud](https://status.spliit.cloud/api/badge/38/uptime)](https://status.spliit.cloud/)
 ![Status: Active Development](https://img.shields.io/badge/status-active%20development-blue)
 ![Open Source](https://img.shields.io/badge/open%20source-yes-brightgreen)
 ![GitHub stars](https://img.shields.io/github/stars/antonio-ivanovski/spliit-cloud)
