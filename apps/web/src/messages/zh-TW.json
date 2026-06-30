@@ -83,7 +83,12 @@
     "paidByMultiple": "由 <paidByNames></paidByNames> 為 <paidFor></paidFor> 支付",
     "everyone": "所有人",
     "notInvolved": "您未參與其中",
-    "settlementBadge": "結算"
+    "settlementBadge": "結算",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "我的群組",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "為每個人指定具體金額",
     "convertedAmountField": {
       "label": "換算金額"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "項目",
+      "columnCost": "費用",
+      "columnQuantity": "數量",
+      "columnParticipants": "參與者",
+      "columnTotal": "合計",
+      "setExpenseAmount": "設為支出金額",
+      "splitEvenlyLabel": "平均分攤",
+      "splitBySharesLabel": "按份額分攤",
+      "splitByPercentageLabel": "按百分比分攤",
+      "splitByAmountLabel": "按金額分攤",
+      "switchToItemizedTitle": "切換為逐項分攤？",
+      "switchToItemizedDescription": "編輯項目參與者會將「支付對象」改為「逐項」，並取代你已設定的支付對象分攤方式。",
+      "switchToItemizedConfirm": "切換為逐項"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "若要依明細項目計算「為誰支付」，請在項目列中編輯參與者。",
+    "paidForItemizedActiveHint": "已啟用依明細項目計算「為誰支付」。若要變更此分攤，請在「項目」卡片中編輯項目參與者。"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

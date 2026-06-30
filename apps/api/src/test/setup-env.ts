@@ -1,4 +1,4 @@
-process.env.DATABASE_URL ??= 'postgresql://test:test@localhost:5432/test'
+process.env.DATABASE_URL ??= 'postgresql://postgres:1234@localhost'
 process.env.BETTER_AUTH_SECRET ??= 'spliit-test-secret'
 process.env.BETTER_AUTH_URL ??= 'http://localhost:3001'
 process.env.NODE_ENV ??= 'test'

@@ -83,7 +83,12 @@
     "paidByMultiple": "Plătit de <paidByNames></paidByNames> pentru <paidFor></paidFor>",
     "everyone": "toată lumea",
     "notInvolved": "Nu ești implicat",
-    "settlementBadge": "Decontare"
+    "settlementBadge": "Decontare",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Grupurile mele",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Atribuie o sumă exactă fiecărei persoane",
     "convertedAmountField": {
       "label": "Sumă convertită"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Element",
+      "columnCost": "Cost",
+      "columnQuantity": "Cant.",
+      "columnParticipants": "Participanți",
+      "columnTotal": "Total",
+      "setExpenseAmount": "Setează suma cheltuielii",
+      "splitEvenlyLabel": "Împarte egal",
+      "splitBySharesLabel": "Împarte pe părți",
+      "splitByPercentageLabel": "Împarte procentual",
+      "splitByAmountLabel": "Împarte după sumă",
+      "switchToItemizedTitle": "Comutați la împărțirea pe articole?",
+      "switchToItemizedDescription": "Editarea participanților unui articol schimbă Plătit pentru în Pe articole și înlocuiește împărțirea Plătit pentru configurată.",
+      "switchToItemizedConfirm": "Comută la pe articole"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Pentru a folosi împărțirea „plătit pentru” pe articole, editează participanții dintr-un rând de articol.",
+    "paidForItemizedActiveHint": "Împărțirea „plătit pentru” pe articole este activă. Editează participanții articolelor din cardul Articole pentru a schimba această împărțire."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

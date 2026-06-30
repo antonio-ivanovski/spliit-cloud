@@ -83,7 +83,12 @@
     "paidByMultiple": "<paidByNames></paidByNames>が<paidFor></paidFor>のために支払いました",
     "everyone": "全員",
     "notInvolved": "あなたは関係していません",
-    "settlementBadge": "精算"
+    "settlementBadge": "精算",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "マイグループ",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "各メンバーに正確な金額を割り当て",
     "convertedAmountField": {
       "label": "換算後の金額"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "品目",
+      "columnCost": "金額",
+      "columnQuantity": "数量",
+      "columnParticipants": "参加者",
+      "columnTotal": "合計",
+      "setExpenseAmount": "支出金額に設定",
+      "splitEvenlyLabel": "均等に分割",
+      "splitBySharesLabel": "持分で分割",
+      "splitByPercentageLabel": "割合で分割",
+      "splitByAmountLabel": "金額で分割",
+      "switchToItemizedTitle": "項目別の分割に切り替えますか？",
+      "switchToItemizedDescription": "項目の参加者を編集すると、「支払い対象」が「項目別」に変更され、設定済みの支払い対象の分割が置き換えられます。",
+      "switchToItemizedConfirm": "項目別に切り替え"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "品目ごとの「対象者」計算を使うには、品目行から参加者を編集します。",
+    "paidForItemizedActiveHint": "品目ごとの「対象者」計算が有効です。この分割を変更するには、品目カードで品目の参加者を編集してください。"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

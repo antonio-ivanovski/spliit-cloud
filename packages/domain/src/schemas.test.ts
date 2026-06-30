@@ -459,6 +459,30 @@ describe('cross-currency paidByList BY_AMOUNT', () => {
     })
     expect(result.success).toBe(true)
   })
+
+  it('expenseApiSchema: validates converted itemized items against originalAmount', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 12,
+      originalAmount: 20100,
+      originalCurrency: 'ARS',
+      conversionRate: 0.00059,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 20100 }],
+      items: [
+        {
+          title: 'beer',
+          unitPrice: 1,
+          quantity: 100,
+          amount: 100,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+    })
+
+    expect(result.success).toBe(true)
+  })
 })
 
 describe('groupFormSchema', () => {

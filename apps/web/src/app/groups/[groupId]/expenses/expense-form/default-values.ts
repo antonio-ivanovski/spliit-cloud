@@ -3,6 +3,7 @@ import type { AppRouterOutput } from '@spliit/api/router'
 import type {
   Currency,
   ExpenseFormInputValues,
+  ExpenseFormItemValues,
   SplitMode,
 } from '@spliit/domain'
 import {
@@ -32,6 +33,32 @@ const storedSplittingOptionsSchema = z.object({
     .optional(),
 })
 
+const itemSplitModeSchema = z.enum([
+  'EVENLY',
+  'BY_SHARES',
+  'BY_PERCENTAGE',
+  'BY_AMOUNT',
+])
+
+const prefilledExpenseItemsSchema = z.array(
+  z.object({
+    id: z.string().optional(),
+    title: z.string().optional().catch(''),
+    unitPrice: z.coerce.number().finite().nonnegative().optional().catch(0),
+    quantity: z.coerce.number().int().positive().optional().catch(1),
+    splitMode: itemSplitModeSchema.optional().catch('EVENLY'),
+    paidFor: z
+      .array(
+        z.object({
+          participant: z.string(),
+          shares: z.coerce.number().finite().positive().catch(1),
+        }),
+      )
+      .optional()
+      .catch(undefined),
+  }),
+)
+
 export type GroupShape = NonNullable<AppRouterOutput['groups']['get']['group']>
 export type LoadedExpense = NonNullable<
   AppRouterOutput['groups']['expenses']['get']['expense']
@@ -46,6 +73,46 @@ export const parseCategoryIdFromUrl = (raw: string | null | undefined) => {
   if (!raw) return DEFAULT_CATEGORY_ID
   const parsed = categoryIdSchema.safeParse(raw)
   return parsed.success ? parsed.data : DEFAULT_CATEGORY_ID
+}
+
+const parsePrefilledItems = (
+  rawItems: string | undefined,
+  group: GroupShape,
+): ExpenseFormItemValues[] => {
+  if (!rawItems) return []
+  try {
+    const parsed = prefilledExpenseItemsSchema.safeParse(JSON.parse(rawItems))
+    if (!parsed.success) return []
+
+    const validParticipantIds = new Set(group.participants.map((p) => p.id))
+    const allParticipants = group.participants.map(({ id }) => ({
+      participant: id,
+      shares: 1,
+    }))
+
+    return parsed.data.map((item) => {
+      const seen = new Set<string>()
+      const paidFor = (item.paidFor ?? [])
+        .filter((row) => {
+          if (!validParticipantIds.has(row.participant)) return false
+          if (seen.has(row.participant)) return false
+          seen.add(row.participant)
+          return true
+        })
+        .map(({ participant, shares }) => ({ participant, shares }))
+
+      return {
+        id: item.id ?? randomId(),
+        title: item.title ?? '',
+        unitPrice: item.unitPrice ?? 0,
+        quantity: item.quantity ?? 1,
+        splitMode: item.splitMode ?? 'EVENLY',
+        paidFor: paidFor.length ? paidFor : allParticipants,
+      }
+    })
+  } catch {
+    return []
+  }
 }
 
 const STORAGE_KEY = 'spliit.defaultSplittingOptions'
@@ -92,6 +159,7 @@ export async function persistDefaultSplittingOptions(
   formValues: ExpenseFormInputValues,
 ) {
   if (!formValues.saveDefaultSplittingOptions) return
+  if (formValues.splitMode === 'ITEMIZED') return
   if (typeof window === 'undefined') return
   try {
     window.localStorage.setItem(
@@ -177,6 +245,65 @@ export function buildExpenseFormDefaults(args: {
             shares: shares / 100,
           }))
 
+    const itemAmountAsDisplay = (amount: number) =>
+      amountAsDecimal(amount, originalCurrency)
+
+    const itemShareAsDisplay = (
+      shares: number,
+      splitMode: ExpenseFormItemValues['splitMode'],
+    ) =>
+      splitMode === 'BY_AMOUNT'
+        ? itemAmountAsDisplay(shares)
+        : splitMode === 'BY_PERCENTAGE'
+          ? shares / 100
+          : shares
+
+    const items: ExpenseFormItemValues[] = (expense.items ?? []).map((item) => {
+      const splitMode = (item.splitMode ??
+        'EVENLY') as ExpenseFormItemValues['splitMode']
+      const unitPrice = itemAmountAsDisplay(item.unitPrice)
+      const paidFor = item.paidFor.map((pf) => ({
+        participant: (pf as any).ledgerParticipantId ?? (pf as any).participant,
+        shares: itemShareAsDisplay(pf.shares, splitMode),
+      }))
+      return {
+        id: item.id,
+        title: item.title,
+        unitPrice,
+        quantity: item.quantity,
+        paidFor,
+        splitMode,
+      }
+    })
+
+    const rawRemainder = (expense as any).itemizedRemainder
+    const itemizedRemainder = rawRemainder
+      ? {
+          splitMode: (rawRemainder.splitMode ??
+            'EVENLY') as ExpenseFormItemValues['splitMode'],
+          paidFor: rawRemainder.paidFor.map(
+            (pf: {
+              ledgerParticipantId?: string
+              participant?: string
+              shares: number
+            }) => ({
+              participant: pf.ledgerParticipantId ?? pf.participant ?? '',
+              shares: itemShareAsDisplay(
+                pf.shares,
+                (rawRemainder.splitMode ??
+                  'EVENLY') as ExpenseFormItemValues['splitMode'],
+              ),
+            }),
+          ),
+        }
+      : {
+          splitMode: 'EVENLY' as const,
+          paidFor: group.participants.map(({ id }) => ({
+            participant: id,
+            shares: 1,
+          })),
+        }
+
     return {
       title: expense.title,
       expenseDate: expense.expenseDate ?? new Date(),
@@ -198,10 +325,16 @@ export function buildExpenseFormDefaults(args: {
       documents: expense.documents,
       notes: expense.notes ?? '',
       recurrenceRule: expense.recurrenceRule ?? undefined,
+      items,
+      itemizedRemainder,
     }
   }
 
   const defaultSplittingOptions = getDefaultSplittingOptions(group)
+  const prefilledItems = parsePrefilledItems(searchParams.items, group)
+  const hasPrefilledItemSplits = prefilledItems.some(
+    (item) => item.paidFor.length > 0,
+  )
   const searchCurrency =
     searchParams.originalCurrency && searchParams.originalCurrency.length
       ? (getCurrency(searchParams.originalCurrency) ?? groupCurrency)
@@ -255,13 +388,26 @@ export function buildExpenseFormDefaults(args: {
       documents: [],
       notes: '',
       recurrenceRule: RecurrenceRule.NONE,
+      itemizedRemainder: {
+        splitMode: 'EVENLY' as const,
+        paidFor: group.participants.map(({ id }) => ({
+          participant: id,
+          shares: 1,
+        })),
+      },
     }
   }
 
   return {
     title: searchParams.title ?? '',
     expenseDate: searchParams.date ? new Date(searchParams.date) : new Date(),
-    amount: amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency),
+    amount:
+      searchParams.amount != null
+        ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)
+        : prefilledItems.reduce(
+            (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
+            0,
+          ),
     originalCurrency: searchOriginalCurrency,
     conversionRate: undefined,
     category: parseCategoryIdFromUrl(searchParams.categoryId),
@@ -270,7 +416,9 @@ export function buildExpenseFormDefaults(args: {
     isMultiPayer: false,
     paidFor: defaultSplittingOptions.paidFor,
     isReimbursement: false,
-    splitMode: defaultSplittingOptions.splitMode,
+    splitMode: hasPrefilledItemSplits
+      ? ('ITEMIZED' as const)
+      : defaultSplittingOptions.splitMode,
     saveDefaultSplittingOptions: false,
     documents: searchParams.imageUrl
       ? [
@@ -284,5 +432,13 @@ export function buildExpenseFormDefaults(args: {
       : [],
     notes: '',
     recurrenceRule: RecurrenceRule.NONE,
+    items: prefilledItems,
+    itemizedRemainder: {
+      splitMode: 'EVENLY' as const,
+      paidFor: group.participants.map(({ id }) => ({
+        participant: id,
+        shares: 1,
+      })),
+    },
   }
 }

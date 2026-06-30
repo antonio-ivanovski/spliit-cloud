@@ -83,7 +83,10 @@ export function buildSubmitValues(
     splitMode: values.splitMode,
     paidFor,
     isMultiPayer: values.isMultiPayer,
-    saveDefaultSplittingOptions: values.saveDefaultSplittingOptions,
+    saveDefaultSplittingOptions:
+      values.splitMode === 'ITEMIZED'
+        ? false
+        : values.saveDefaultSplittingOptions,
     isReimbursement: values.isReimbursement,
     documents: values.documents,
     notes: values.notes,
@@ -91,11 +94,55 @@ export function buildSubmitValues(
     conversionRate: values.conversionRate,
   }
 
+  const items: Expense['items'] = (values.items ?? []).map((item) => {
+    const quantity = Math.max(1, Math.round(item.quantity))
+    const unitPriceMinor = amountAsMinorUnits(item.unitPrice, inputCurrency)
+    const lineAmountMinor = unitPriceMinor * quantity
+    const paidFor = item.paidFor.map(({ participant, shares }) => ({
+      participant,
+      shares:
+        item.splitMode === 'BY_AMOUNT'
+          ? amountAsMinorUnits(shares, inputCurrency)
+          : item.splitMode === 'BY_PERCENTAGE'
+            ? Math.round(shares * 100)
+            : Math.round(shares),
+    }))
+    return {
+      id: item.id,
+      title: item.title,
+      unitPrice: unitPriceMinor,
+      quantity,
+      amount: lineAmountMinor,
+      paidFor,
+      splitMode: item.splitMode,
+    }
+  })
+
+  const itemizedRemainder: Expense['itemizedRemainder'] =
+    values.itemizedRemainder
+      ? {
+          splitMode: values.itemizedRemainder.splitMode,
+          paidFor: values.itemizedRemainder.paidFor.map(
+            ({ participant, shares }) => ({
+              participant,
+              shares:
+                values.itemizedRemainder?.splitMode === 'BY_AMOUNT'
+                  ? amountAsMinorUnits(shares, inputCurrency)
+                  : values.itemizedRemainder?.splitMode === 'BY_PERCENTAGE'
+                    ? Math.round(shares * 100)
+                    : Math.round(shares),
+            }),
+          ),
+        }
+      : undefined
+
   // Currency should be blank if same as group currency. The client only
   // persists `originalAmount`/`originalCurrency` metadata when a
   // conversion is genuinely required.
   const payload: Expense = {
     ...base,
+    ...(items.length > 0 ? { items } : {}),
+    ...(itemizedRemainder ? { itemizedRemainder } : {}),
     ...(conversionRequired
       ? {
           originalAmount: amountAsMinorUnits(typedAmount, inputCurrency),

@@ -22,7 +22,7 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 ### Headline features (community high-demand)
 
 - [x] **Multi-payer expenses** — a single expense paid by several members, with a share per payer. Closes the gap with Splitwise. — upstream **[#14](https://github.com/spliit-app/spliit/issues/14)** (PRs [#146](https://github.com/spliit-app/spliit/pull/146) / [#396](https://github.com/spliit-app/spliit/pull/396) open 1.5+ years)
-- [ ] **Itemized expenses** — split an expense by line items, with tax and tip, and per-person sub-totals. The most-asked "real Splitwise" feature after recurring. — upstream [#395](https://github.com/spliit-app/spliit/issues/395)
+- [x] **Itemized expenses** — split an expense by line items, with tax and tip, and per-person sub-totals. The most-asked "real Splitwise" feature after recurring. — upstream [#395](https://github.com/spliit-app/spliit/issues/395)
 - [ ] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
 - [ ] Recurring expenses — `calculateNextDate` and daily/weekly/monthly tests already in place
 - [ ] Account overview homepage ([design](./openspec/changes/add-overview-homepage)) — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)

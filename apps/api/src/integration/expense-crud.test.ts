@@ -336,4 +336,50 @@ describe('Expense CRUD — real DB', () => {
     expect(expense).not.toBeNull()
     expect(expense!.title).toBe('No Documents')
   })
+
+  // ------------------------------------------------------------------
+  // 8. Create expense with items in non-Itemized mode (documentation)
+  // ------------------------------------------------------------------
+  it('creates an EVENLY expense with items as documentation', async () => {
+    const caller = makeCaller()
+    const { groupId, participantId } = await createGroup(`EvenlyItems ${runId}`)
+
+    const result = await caller.expenses.create({
+      groupId,
+      expense: {
+        title: 'With Items',
+        amount: 5000,
+        paidByList: [{ participant: participantId, shares: 5000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participantId, shares: 1 }],
+        category: 'general',
+        splitMode: 'EVENLY',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+        items: [
+          {
+            title: 'Doc item',
+            unitPrice: 3000,
+            quantity: 1,
+            amount: 3000,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: participantId, shares: 1 }],
+          },
+        ],
+      },
+    })
+    expect(result).toHaveProperty('expenseId')
+
+    const expense = await prisma.expense.findUnique({
+      where: { id: result.expenseId },
+      include: { items: { include: { paidFor: true } } },
+    })
+    expect(expense!.items).toHaveLength(1)
+    expect(expense!.items[0].title).toBe('Doc item')
+    expect(expense!.items[0].paidFor).toHaveLength(1)
+  })
 })

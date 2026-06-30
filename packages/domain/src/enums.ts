@@ -3,6 +3,7 @@ export const SplitMode = {
   BY_SHARES: 'BY_SHARES',
   BY_PERCENTAGE: 'BY_PERCENTAGE',
   BY_AMOUNT: 'BY_AMOUNT',
+  ITEMIZED: 'ITEMIZED',
 } as const
 
 export type SplitMode = (typeof SplitMode)[keyof typeof SplitMode]

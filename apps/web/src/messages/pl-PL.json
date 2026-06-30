@@ -83,7 +83,12 @@
     "paidByMultiple": "Opłacone przez <paidByNames></paidByNames> dla <paidFor></paidFor>",
     "everyone": "wszyscy",
     "notInvolved": "Nie jesteś zaangażowany",
-    "settlementBadge": "Rozliczenie"
+    "settlementBadge": "Rozliczenie",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Moje grupy",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Przypisz dokładną kwotę każdej osobie",
     "convertedAmountField": {
       "label": "Przeliczona kwota"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Pozycja",
+      "columnCost": "Koszt",
+      "columnQuantity": "Ilość",
+      "columnParticipants": "Uczestnicy",
+      "columnTotal": "Razem",
+      "setExpenseAmount": "Ustaw kwotę wydatku",
+      "splitEvenlyLabel": "Podziel po równo",
+      "splitBySharesLabel": "Podziel według udziałów",
+      "splitByPercentageLabel": "Podziel według procentów",
+      "splitByAmountLabel": "Podziel według kwoty",
+      "switchToItemizedTitle": "Przełączyć na podział według pozycji?",
+      "switchToItemizedDescription": "Edycja uczestników pozycji zmieni Zapłacono za na Według pozycji i zastąpi skonfigurowany podział Zapłacono za.",
+      "switchToItemizedConfirm": "Przełącz na pozycje"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Aby użyć rozliczenia „zapłacono za” według pozycji, edytuj uczestników w wierszu pozycji.",
+    "paidForItemizedActiveHint": "Rozliczenie „zapłacono za” według pozycji jest aktywne. Edytuj uczestników pozycji w karcie Pozycje, aby zmienić ten podział."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

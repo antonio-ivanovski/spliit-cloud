@@ -83,7 +83,12 @@
     "paidByMultiple": "Payé par <paidByNames></paidByNames> pour <paidFor></paidFor>",
     "everyone": "tout le monde",
     "notInvolved": "Vous n'êtes pas concerné",
-    "settlementBadge": "Règlement"
+    "settlementBadge": "Règlement",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Mes groupes",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Attribuez un montant exact à chaque personne",
     "convertedAmountField": {
       "label": "Montant converti"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Article",
+      "columnCost": "Coût",
+      "columnQuantity": "Qté",
+      "columnParticipants": "Participants",
+      "columnTotal": "Total",
+      "setExpenseAmount": "Définir le montant de la dépense",
+      "splitEvenlyLabel": "Répartir équitablement",
+      "splitBySharesLabel": "Répartir par parts",
+      "splitByPercentageLabel": "Répartir par pourcentage",
+      "splitByAmountLabel": "Répartir par montant",
+      "switchToItemizedTitle": "Passer au partage par articles ?",
+      "switchToItemizedDescription": "Modifier les participants d'un article change Payé pour en Par articles et remplace la répartition Payé pour que vous aviez configurée.",
+      "switchToItemizedConfirm": "Passer aux articles"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Pour utiliser une répartition « payé pour » par article, modifiez les participants depuis une ligne d’article.",
+    "paidForItemizedActiveHint": "La répartition « payé pour » par article est active. Modifiez les participants des articles depuis la carte Articles pour changer cette répartition."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

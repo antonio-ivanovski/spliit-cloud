@@ -86,6 +86,126 @@ const apiPaidByRowSchema = z.object({
   shares: z.number().int(),
 })
 
+const itemSplitModeSchema = z
+  .enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT'] as const)
+  .default('EVENLY')
+
+const itemFormPaidForRowSchema = z.object({
+  participant: z.string(),
+  shares: z.number(),
+})
+
+const itemApiPaidForRowSchema = z.object({
+  participant: z.string(),
+  shares: z.number().int(),
+})
+
+const itemRowDuplicateGuard = (
+  rows: Array<{ participant: string }>,
+  ctx: z.RefinementCtx,
+) => {
+  const seen = new Set<string>()
+  rows.forEach((row, i) => {
+    if (seen.has(row.participant)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'duplicateParticipant',
+        path: [i, 'participant'],
+      })
+    } else {
+      seen.add(row.participant)
+    }
+  })
+}
+
+export const expenseItemFormInputSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1, 'itemTitleRequired'),
+  unitPrice: z.coerce
+    .number()
+    .refine((v) => !Number.isNaN(v), 'invalidNumber')
+    .refine((v) => v > 0, 'itemAmountPositive')
+    .refine((v) => v <= 10_000_000, 'amountTenMillion'),
+  quantity: z.coerce.number().int().min(1, 'itemQuantityMin1'),
+  paidFor: z
+    .array(itemFormPaidForRowSchema)
+    .min(0)
+    .superRefine((paidFor, ctx) => {
+      for (const { shares } of paidFor) {
+        if (shares <= 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'noZeroShares',
+          })
+        }
+      }
+      itemRowDuplicateGuard(paidFor, ctx)
+    }),
+  splitMode: itemSplitModeSchema,
+})
+
+export const expenseItemApiSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1, 'itemTitleRequired'),
+  unitPrice: z.number().int().positive('itemAmountPositive'),
+  quantity: z.number().int().min(1, 'itemQuantityMin1'),
+  amount: z.number().int().positive('itemAmountPositive'),
+  paidFor: z
+    .array(itemApiPaidForRowSchema)
+    .min(0)
+    .superRefine((paidFor, ctx) => {
+      for (const { shares } of paidFor) {
+        if (shares <= 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'noZeroShares',
+          })
+        }
+      }
+      itemRowDuplicateGuard(paidFor, ctx)
+    }),
+  splitMode: itemSplitModeSchema,
+})
+
+export type ExpenseFormItemValues = z.infer<typeof expenseItemFormInputSchema>
+export type ExpenseApiItem = z.infer<typeof expenseItemApiSchema>
+
+const itemizedRemainderFormSchema = z.object({
+  paidFor: z
+    .array(itemFormPaidForRowSchema)
+    .min(0)
+    .superRefine((paidFor, ctx) => {
+      for (const { shares } of paidFor) {
+        if (shares <= 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'noZeroShares',
+          })
+        }
+      }
+      itemRowDuplicateGuard(paidFor, ctx)
+    }),
+  splitMode: itemSplitModeSchema,
+})
+
+const itemizedRemainderApiSchema = z.object({
+  paidFor: z
+    .array(itemApiPaidForRowSchema)
+    .min(0)
+    .superRefine((paidFor, ctx) => {
+      for (const { shares } of paidFor) {
+        if (shares <= 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'noZeroShares',
+          })
+        }
+      }
+      itemRowDuplicateGuard(paidFor, ctx)
+    }),
+  splitMode: itemSplitModeSchema,
+})
+
 const paidByDuplicateGuard = (
   paidByList: Array<{ participant: string }>,
   ctx: z.RefinementCtx,
@@ -171,6 +291,8 @@ export const expenseFormInputSchema = z
     documents: documentsSchema,
     notes: z.string().optional(),
     recurrenceRule: recurrenceRuleSchema,
+    items: z.array(expenseItemFormInputSchema).optional(),
+    itemizedRemainder: itemizedRemainderFormSchema.optional(),
   })
   .superRefine((expense, ctx) => {
     switch (expense.splitMode) {
@@ -240,6 +362,46 @@ export const expenseFormInputSchema = z
     }
   })
 
+/**
+ * Shared cross-cutting item validations for both form and API schemas.
+ * Ensures ITEMIZED mode has at least one item, no item with empty paidFor
+ * in ITEMIZED mode, and items don't exceed the expense amount.
+ */
+export function validateExpenseItems(
+  items: ExpenseApiItem[],
+  amount: number,
+  splitMode: string,
+  ctx: z.RefinementCtx,
+): void {
+  if (splitMode === 'ITEMIZED' && items.length === 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'itemizedRequiresItems',
+      path: ['items'],
+    })
+    return
+  }
+
+  items.forEach((item, i) => {
+    if (splitMode === 'ITEMIZED' && item.paidFor.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'itemHasNoParticipants',
+        path: ['items', i, 'paidFor'],
+      })
+    }
+  })
+
+  const itemsSum = items.reduce((sum, item) => sum + item.amount, 0)
+  if (itemsSum > amount) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'itemsExceedAmount',
+      path: ['items'],
+    })
+  }
+}
+
 export type ExpenseFormInputValues = z.infer<typeof expenseFormInputSchema>
 
 // `expenseApiSchema` validates the API/domain payload: amounts in
@@ -304,6 +466,8 @@ export const expenseApiSchema = z
     documents: documentsSchema,
     notes: z.string().optional(),
     recurrenceRule: recurrenceRuleSchema,
+    items: z.array(expenseItemApiSchema).optional(),
+    itemizedRemainder: itemizedRemainderApiSchema.optional(),
   })
   .superRefine((expense, ctx) => {
     switch (expense.splitMode) {
@@ -371,6 +535,13 @@ export const expenseApiSchema = z
         break
       }
     }
+  })
+  .superRefine((expense, ctx) => {
+    const items = expense.items ?? []
+    const itemsAmountTarget = expense.originalCurrency
+      ? (expense.originalAmount ?? expense.amount)
+      : expense.amount
+    validateExpenseItems(items, itemsAmountTarget, expense.splitMode, ctx)
   })
 
 export type Expense = z.infer<typeof expenseApiSchema>

@@ -83,7 +83,12 @@
     "paidByMultiple": "Потратили <paidByNames></paidByNames> за <paidFor></paidFor>",
     "everyone": "все",
     "notInvolved": "Вы не участвуете",
-    "settlementBadge": "Расчет"
+    "settlementBadge": "Расчет",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Мои группы",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Назначьте точную сумму каждому",
     "convertedAmountField": {
       "label": "Конвертированная сумма"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Позиция",
+      "columnCost": "Стоимость",
+      "columnQuantity": "Кол-во",
+      "columnParticipants": "Участники",
+      "columnTotal": "Итого",
+      "setExpenseAmount": "Установить сумму расхода",
+      "splitEvenlyLabel": "Разделить поровну",
+      "splitBySharesLabel": "Разделить по долям",
+      "splitByPercentageLabel": "Разделить по процентам",
+      "splitByAmountLabel": "Разделить по сумме",
+      "switchToItemizedTitle": "Перейти к разделению по позициям?",
+      "switchToItemizedDescription": "Редактирование участников позиции изменит «Оплачено за» на «По позициям» и заменит настроенное вами распределение «Оплачено за».",
+      "switchToItemizedConfirm": "Перейти к позициям"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Чтобы использовать постатейное распределение «оплачено за», измените участников в строке позиции.",
+    "paidForItemizedActiveHint": "Постатейное распределение «оплачено за» включено. Измените участников позиций в карточке «Позиции», чтобы поменять это распределение."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

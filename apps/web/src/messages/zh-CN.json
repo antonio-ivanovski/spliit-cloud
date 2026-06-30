@@ -83,7 +83,12 @@
     "paidByMultiple": "<paidByNames></paidByNames> 为 <paidFor></paidFor> 支付",
     "everyone": "所有人",
     "notInvolved": "您无需支付",
-    "settlementBadge": "结算"
+    "settlementBadge": "结算",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "我的群组",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "为每个人指定具体金额",
     "convertedAmountField": {
       "label": "换算金额"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "项目",
+      "columnCost": "费用",
+      "columnQuantity": "数量",
+      "columnParticipants": "参与者",
+      "columnTotal": "合计",
+      "setExpenseAmount": "设为支出金额",
+      "splitEvenlyLabel": "平均分摊",
+      "splitBySharesLabel": "按份额分摊",
+      "splitByPercentageLabel": "按百分比分摊",
+      "splitByAmountLabel": "按金额分摊",
+      "switchToItemizedTitle": "切换为按项目分摊？",
+      "switchToItemizedDescription": "编辑项目参与者会将“支付对象”改为“按项目”，并替换你已配置的支付对象分摊方式。",
+      "switchToItemizedConfirm": "切换为按项目"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "要按明细项目计算“为谁支付”，请在项目行中编辑参与者。",
+    "paidForItemizedActiveHint": "已启用按明细项目计算“为谁支付”。如需更改此分摊，请在“项目”卡片中编辑项目参与者。"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

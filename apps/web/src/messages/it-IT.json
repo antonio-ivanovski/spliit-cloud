@@ -83,7 +83,12 @@
     "notInvolved": "Non sei coinvolto",
     "paidByMultiple": "Pagato da <paidByNames></paidByNames> per <paidFor></paidFor>",
     "everyone": "tutti",
-    "settlementBadge": "Pareggio"
+    "settlementBadge": "Pareggio",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "I miei gruppi",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Assegna un importo esatto a ogni persona",
     "convertedAmountField": {
       "label": "Importo convertito"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Voce",
+      "columnCost": "Costo",
+      "columnQuantity": "Qtà",
+      "columnParticipants": "Partecipanti",
+      "columnTotal": "Totale",
+      "setExpenseAmount": "Imposta importo della spesa",
+      "splitEvenlyLabel": "Dividi equamente",
+      "splitBySharesLabel": "Dividi per quote",
+      "splitByPercentageLabel": "Dividi per percentuale",
+      "splitByAmountLabel": "Dividi per importo",
+      "switchToItemizedTitle": "Passare alla suddivisione per voci?",
+      "switchToItemizedDescription": "Modificare i partecipanti della voce cambia Pagato per in Per voci e sostituisce la suddivisione Pagato per configurata.",
+      "switchToItemizedConfirm": "Passa a per voci"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Per usare la ripartizione “pagato per” per articoli, modifica i partecipanti da una riga articolo.",
+    "paidForItemizedActiveHint": "La ripartizione “pagato per” per articoli è attiva. Modifica i partecipanti degli articoli dalla scheda Articoli per cambiare questa ripartizione."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -70,6 +70,7 @@ function makeExpense(overrides: Record<string, unknown> = {}): any {
     ],
     category: { id: 'general', grouping: 'Food and Drink', name: 'Dining Out' },
     _count: { documents: 0 },
+    items: [],
     ...overrides,
   }
 }

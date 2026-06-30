@@ -83,7 +83,12 @@
     "receivedByMultiple": "התקבל על ידי <paidByNames></paidByNames> עבור <paidFor></paidFor>",
     "yourBalance": "היתרה שלך:",
     "notInvolved": "אתה לא מעורב",
-    "settlementBadge": "הסדר"
+    "settlementBadge": "הסדר",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "הקבוצות שלי",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "הקצה סכום מדויק לכל אדם",
     "convertedAmountField": {
       "label": "סכום מומר"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "פריט",
+      "columnCost": "עלות",
+      "columnQuantity": "כמות",
+      "columnParticipants": "משתתפים",
+      "columnTotal": "סה\"כ",
+      "setExpenseAmount": "הגדר את סכום ההוצאה",
+      "splitEvenlyLabel": "חלק שווה בשווה",
+      "splitBySharesLabel": "חלק לפי חלקים",
+      "splitByPercentageLabel": "חלק לפי אחוזים",
+      "splitByAmountLabel": "חלק לפי סכום",
+      "switchToItemizedTitle": "לעבור לפיצול לפי פריטים?",
+      "switchToItemizedDescription": "עריכת המשתתפים בפריט תשנה את שולם עבור ללפי פריטים ותחליף את פיצול שולם עבור שהגדרת.",
+      "switchToItemizedConfirm": "לעבור לפי פריטים"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "כדי להשתמש בחלוקת \"שולם עבור\" לפי פריטים, ערוך את המשתתפים משורת פריט.",
+    "paidForItemizedActiveHint": "חלוקת \"שולם עבור\" לפי פריטים פעילה. כדי לשנות את החלוקה, ערוך את משתתפי הפריטים מכרטיס הפריטים."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

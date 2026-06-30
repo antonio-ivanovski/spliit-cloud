@@ -274,6 +274,7 @@ export function PaidForSplitOptionCards(props: {
         {PAID_FOR_OPTIONS.map((opt) => {
           const selected = value === opt.id
           const title = t(opt.labelKey)
+          const disabled = readOnly
           return (
             <OptionCard
               key={opt.id}
@@ -281,9 +282,12 @@ export function PaidForSplitOptionCards(props: {
               title={title}
               helper={t(opt.helperKey)}
               selected={selected}
-              disabled={readOnly}
+              disabled={disabled}
               ariaLabel={`Split ${title}`}
-              onClick={() => onChange(opt.id)}
+              onClick={() => {
+                if (disabled) return
+                onChange(opt.id)
+              }}
             />
           )
         })}
