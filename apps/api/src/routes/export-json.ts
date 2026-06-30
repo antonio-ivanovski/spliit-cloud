@@ -92,7 +92,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
     ...expenses.flatMap((expense) => [
       ...expense.paidByList.map((pb) => pb.ledgerParticipant.id),
       ...expense.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
-      ...expense.items.flatMap((item) =>
+      ...(expense.items ?? []).flatMap((item) =>
         item.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
       ),
       ...(expense.itemizedRemainder?.paidFor.map(

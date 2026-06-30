@@ -655,4 +655,343 @@ describe('Expense items — real DB', () => {
     expect(listed.items).toHaveLength(1)
     expect(listed.items[0].title).toBe('List item')
   })
+
+  // ------------------------------------------------------------------
+  // 9. CREATE: item with quantity > 1 — amount = unitPrice * quantity
+  // ------------------------------------------------------------------
+  it('persists item with quantity > 1 and derives amount from unitPrice * quantity', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-Quantity-${runId}`,
+      ['Alice'],
+    )
+
+    const { expenseId } = await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title: 'Multi-quantity item',
+        amount: 3000,
+        paidByList: [{ participant: participants['Admin'], shares: 3000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        category: 'general',
+        splitMode: 'EVENLY',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+        items: [
+          {
+            title: 'Bulk item',
+            unitPrice: 1000,
+            quantity: 3,
+            amount: 3000,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { participant: participants['Admin'], shares: 1 },
+              { participant: participants['Alice'], shares: 1 },
+            ],
+          },
+        ],
+      },
+    })
+
+    const saved = await readExpenseItems(expenseId)
+    expect(saved).not.toBeNull()
+    expect(saved!.items).toHaveLength(1)
+    expect(saved!.items[0].quantity).toBe(3)
+    expect(saved!.items[0].unitPrice).toBe(1000)
+    expect(saved!.items[0].amount).toBe(3000)
+    expect(saved!.items[0].paidFor).toHaveLength(2)
+  })
+
+  // ------------------------------------------------------------------
+  // 10. CREATE: itemizedRemainder custom filler config is persisted
+  // ------------------------------------------------------------------
+  it('persists custom itemizedRemainder config when items sum < amount', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-Remainder-${runId}`,
+      ['Alice', 'Bob'],
+    )
+
+    const { expenseId } = await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title: 'Itemized with remainder',
+        amount: 10000,
+        paidByList: [{ participant: participants['Admin'], shares: 10000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        category: 'general',
+        splitMode: 'ITEMIZED',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+        items: [
+          {
+            title: 'Small item',
+            unitPrice: 4000,
+            quantity: 1,
+            amount: 4000,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { participant: participants['Admin'], shares: 1 },
+              { participant: participants['Alice'], shares: 1 },
+            ],
+          },
+        ],
+        // Configure the $60 unaccounted remainder as BY_AMOUNT to Alice only
+        itemizedRemainder: {
+          splitMode: 'BY_AMOUNT',
+          paidFor: [{ participant: participants['Alice'], shares: 6000 }],
+        },
+      },
+    })
+
+    const saved = await readExpenseItems(expenseId)
+    expect(saved).not.toBeNull()
+
+    // Items persisted
+    expect(saved!.items).toHaveLength(1)
+    expect(saved!.items[0].amount).toBe(4000)
+
+    // paidFor rows = participants covered by items + filler
+    // (Alice: 2000 from item + 6000 from remainder; Admin: 2000 from item)
+    const sharesSum = saved!.paidFor.reduce((s, p) => s + p.shares, 0)
+    expect(sharesSum).toBe(10000)
+
+    // Itemized remainder persisted with custom split config
+    const remainder = await prisma.expenseItemizedRemainder.findUnique({
+      where: { expenseId },
+      include: { paidFor: true },
+    })
+    expect(remainder).not.toBeNull()
+    expect(remainder!.splitMode).toBe('BY_AMOUNT')
+    expect(remainder!.paidFor).toHaveLength(1)
+    expect(remainder!.paidFor[0].shares).toBe(6000)
+  })
+
+  // ------------------------------------------------------------------
+  // 11. CREATE: item with BY_PERCENTAGE split mode
+  // ------------------------------------------------------------------
+  it('persists item with BY_PERCENTAGE split mode using basis points', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-ByPercent-${runId}`,
+      ['Alice', 'Bob'],
+    )
+
+    const { expenseId } = await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title: 'Itemized by percent',
+        amount: 10000,
+        paidByList: [{ participant: participants['Admin'], shares: 10000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        category: 'general',
+        splitMode: 'ITEMIZED',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+        items: [
+          {
+            title: 'Percentage item',
+            unitPrice: 10000,
+            quantity: 1,
+            amount: 10000,
+            splitMode: 'BY_PERCENTAGE',
+            // 7000 = 70%, 3000 = 30%
+            paidFor: [
+              { participant: participants['Admin'], shares: 7000 },
+              { participant: participants['Alice'], shares: 3000 },
+            ],
+          },
+        ],
+      },
+    })
+
+    const saved = await readExpenseItems(expenseId)
+    expect(saved!.items).toHaveLength(1)
+    expect(saved!.items[0].splitMode).toBe('BY_PERCENTAGE')
+
+    const itemPaidFor = saved!.items[0].paidFor
+    expect(itemPaidFor).toHaveLength(2)
+    expect(
+      itemPaidFor.find((pf) => pf.ledgerParticipantId === participants['Admin'])
+        ?.shares,
+    ).toBe(7000)
+    expect(
+      itemPaidFor.find((pf) => pf.ledgerParticipantId === participants['Alice'])
+        ?.shares,
+    ).toBe(3000)
+
+    // Expense-level paidFor is the derived single-item contribution
+    const sharesSum = saved!.paidFor.reduce((s, p) => s + p.shares, 0)
+    expect(sharesSum).toBe(10000)
+  })
+
+  // ------------------------------------------------------------------
+  // 12. DELETE: cascading delete removes items and item paidFor rows
+  // ------------------------------------------------------------------
+  it('cascades delete through ExpenseItem and ExpenseItemPaidFor', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-Cascade-${runId}`,
+      ['Alice', 'Bob'],
+    )
+
+    const { expenseId } = await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title: 'To delete with items',
+        amount: 6000,
+        paidByList: [{ participant: participants['Admin'], shares: 6000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        category: 'general',
+        splitMode: 'ITEMIZED',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+        items: [
+          {
+            title: 'Item with participants',
+            unitPrice: 6000,
+            quantity: 1,
+            amount: 6000,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { participant: participants['Admin'], shares: 1 },
+              { participant: participants['Alice'], shares: 1 },
+              { participant: participants['Bob'], shares: 1 },
+            ],
+          },
+        ],
+      },
+    })
+
+    // Sanity check: items and item paidFor rows exist
+    let saved = await readExpenseItems(expenseId)
+    expect(saved!.items).toHaveLength(1)
+    expect(saved!.items[0].paidFor).toHaveLength(3)
+
+    // Delete the expense
+    await makeCaller().expenses.delete({ groupId, expenseId })
+
+    // Expense gone
+    const deletedExpense = await prisma.expense.findUnique({
+      where: { id: expenseId },
+    })
+    expect(deletedExpense).toBeNull()
+
+    // Items cascaded
+    const remainingItems = await prisma.expenseItem.findMany({
+      where: { expenseId },
+    })
+    expect(remainingItems).toHaveLength(0)
+
+    // Item paidFor cascaded
+    const itemId = saved!.items[0].id
+    const remainingItemPaidFor = await prisma.expenseItemPaidFor.findMany({
+      where: { expenseItemId: itemId },
+    })
+    expect(remainingItemPaidFor).toHaveLength(0)
+  })
+
+  // ------------------------------------------------------------------
+  // 13. VALIDATION: item with zero shares in paidFor is rejected
+  // ------------------------------------------------------------------
+  it('rejects item with zero shares in paidFor', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-ZeroShares-${runId}`,
+      ['Alice'],
+    )
+
+    await expect(
+      makeCaller().expenses.create({
+        groupId,
+        expense: {
+          title: 'Bad shares',
+          amount: 1000,
+          paidByList: [{ participant: participants['Admin'], shares: 1000 }],
+          paidBySplitMode: 'BY_AMOUNT',
+          isMultiPayer: false,
+          paidFor: [{ participant: participants['Admin'], shares: 1 }],
+          category: 'general',
+          splitMode: 'EVENLY',
+          expenseDate: new Date().toISOString(),
+          isReimbursement: false,
+          saveDefaultSplittingOptions: false,
+          documents: [],
+          recurrenceRule: 'NONE',
+          items: [
+            {
+              title: 'Zero-share item',
+              unitPrice: 1000,
+              quantity: 1,
+              amount: 1000,
+              splitMode: 'EVENLY',
+              paidFor: [
+                { participant: participants['Admin'], shares: 0 },
+                { participant: participants['Alice'], shares: 1 },
+              ],
+            },
+          ],
+        },
+      }),
+    ).rejects.toThrow(/noZeroShares/i)
+  })
+
+  // ------------------------------------------------------------------
+  // 14. VALIDATION: item with duplicate participants in paidFor rejected
+  // ------------------------------------------------------------------
+  it('rejects item with duplicate participant in paidFor', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-Duplicate-${runId}`,
+      ['Alice'],
+    )
+
+    await expect(
+      makeCaller().expenses.create({
+        groupId,
+        expense: {
+          title: 'Duplicate participant',
+          amount: 1000,
+          paidByList: [{ participant: participants['Admin'], shares: 1000 }],
+          paidBySplitMode: 'BY_AMOUNT',
+          isMultiPayer: false,
+          paidFor: [{ participant: participants['Admin'], shares: 1 }],
+          category: 'general',
+          splitMode: 'EVENLY',
+          expenseDate: new Date().toISOString(),
+          isReimbursement: false,
+          saveDefaultSplittingOptions: false,
+          documents: [],
+          recurrenceRule: 'NONE',
+          items: [
+            {
+              title: 'Duplicate item',
+              unitPrice: 1000,
+              quantity: 1,
+              amount: 1000,
+              splitMode: 'EVENLY',
+              paidFor: [
+                { participant: participants['Admin'], shares: 1 },
+                { participant: participants['Admin'], shares: 1 },
+              ],
+            },
+          ],
+        },
+      }),
+    ).rejects.toThrow(/duplicateParticipant/i)
+  })
 })

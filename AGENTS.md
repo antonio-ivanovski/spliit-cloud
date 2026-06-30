@@ -33,7 +33,7 @@ bun run test:integration
 
 **Prerequisites:**
 
-- The test PostgreSQL database must be running (same connection as API dev: `postgresql://test:test@localhost:5432/test` or `DATABASE_URL` env var).
+- The test PostgreSQL database must be running (same connection as API dev: `postgresql://test:test@localhost:5432` or `DATABASE_URL` env var).
 - Migrations must be up to date (`bun prisma-migrate`).
 - For the **web integration tests**, the API server must be running on port 3001 (`bun dev` from project root or `bun --filter @spliit/api dev`).
 

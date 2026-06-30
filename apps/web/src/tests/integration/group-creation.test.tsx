@@ -350,6 +350,7 @@ describe('Group CRUD via existing API', () => {
       splitMode: 'EVENLY' as const,
       recurrenceRule: 'NONE' as const,
       _count: { documents: 0 },
+      items: [],
     }
 
     render(

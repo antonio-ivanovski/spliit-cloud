@@ -33,9 +33,7 @@ export function LeaveItemizedDialog(props: {
           <Button variant="ghost" onClick={onCancel}>
             {t('leaveItemized.cancel')}
           </Button>
-          <Button onClick={onConfirm}>
-            {t('leaveItemized.confirm')}
-          </Button>
+          <Button onClick={onConfirm}>{t('leaveItemized.confirm')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
