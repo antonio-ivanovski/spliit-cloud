@@ -11,7 +11,7 @@ export function AmountInput({
   currency: Currency
 }) {
   return (
-    <div className="relative">
+    <div className="relative w-fit">
       <Input
         {...props}
         className={cn('pr-10 text-right tabular-nums', className)}
