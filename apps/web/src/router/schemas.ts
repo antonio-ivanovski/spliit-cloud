@@ -101,6 +101,7 @@ export const createExpenseSearchSchema = z.object({
   imageUrl: optionalString,
   imageWidth: integerString,
   imageHeight: integerString,
+  items: optionalString,
 })
 
 export type CreateExpenseSearch = z.infer<typeof createExpenseSearchSchema>

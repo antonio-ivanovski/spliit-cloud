@@ -7,6 +7,7 @@ import {
 import {
   calculateNextDate,
   categoryIdSchema,
+  computePaidForFromItems,
   DEFAULT_CATEGORY_ID,
   getCategoryById,
   type Category,
@@ -77,6 +78,10 @@ export async function createExpense(
   for (const participantId of [
     ...expense.paidByList.map((p) => p.participant),
     ...expense.paidFor.map((p) => p.participant),
+    ...(expense.items ?? []).flatMap((item) =>
+      item.paidFor.map((p) => p.participant),
+    ),
+    ...(expense.itemizedRemainder?.paidFor ?? []).map((p) => p.participant),
   ]) {
     if (!participantIds.has(participantId)) {
       throw new Error(`Invalid participant ID: ${participantId}`)
@@ -134,12 +139,60 @@ export async function createExpense(
         : {}),
       paidFor: {
         createMany: {
-          data: expense.paidFor.map((paidFor) => ({
-            ledgerParticipantId: paidFor.participant,
-            shares: paidFor.shares,
-          })),
+          data:
+            expense.splitMode === 'ITEMIZED'
+              ? computePaidForFromItems(
+                  expense.items ?? [],
+                  [...participantIds],
+                  expense.originalCurrency
+                    ? (expense.originalAmount ?? expense.amount)
+                    : expense.amount,
+                  expense.itemizedRemainder,
+                ).paidFor.map((p) => ({
+                  ledgerParticipantId: p.participant,
+                  shares: p.shares,
+                }))
+              : expense.paidFor.map((paidFor) => ({
+                  ledgerParticipantId: paidFor.participant,
+                  shares: paidFor.shares,
+                })),
         },
       },
+      items: {
+        create: (expense.items ?? []).map((item) => ({
+          id: item.id ?? randomId(),
+          title: item.title,
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+          amount: item.amount,
+          splitMode: item.splitMode,
+          paidFor: {
+            createMany: {
+              data: item.paidFor.map((pf) => ({
+                ledgerParticipantId: pf.participant,
+                shares: pf.shares,
+              })),
+            },
+          },
+        })),
+      },
+      ...(expense.itemizedRemainder
+        ? {
+            itemizedRemainder: {
+              create: {
+                splitMode: expense.itemizedRemainder.splitMode,
+                paidFor: {
+                  createMany: {
+                    data: expense.itemizedRemainder.paidFor.map((pf) => ({
+                      ledgerParticipantId: pf.participant,
+                      shares: pf.shares,
+                    })),
+                  },
+                },
+              },
+            },
+          }
+        : {}),
       isReimbursement: expense.isReimbursement,
       documents: {
         createMany: {
@@ -226,6 +279,10 @@ export async function updateExpense(
   for (const participantId of [
     ...expense.paidByList.map((p) => p.participant),
     ...expense.paidFor.map((p) => p.participant),
+    ...(expense.items ?? []).flatMap((item) =>
+      item.paidFor.map((p) => p.participant),
+    ),
+    ...(expense.itemizedRemainder?.paidFor ?? []).map((p) => p.participant),
   ]) {
     if (!participantIds.has(participantId)) {
       throw new Error(`Invalid participant ID: ${participantId}`)
@@ -245,6 +302,85 @@ export async function updateExpense(
   )
   for (const doc of removedDocuments) {
     await deleteS3Object(doc.url)
+  }
+
+  // Handle items: delete stale, create/update incoming
+  const incomingItems = expense.items ?? []
+  const existingItems = existingExpense.items ?? []
+
+  const isLeavingItemized =
+    existingExpense.splitMode === 'ITEMIZED' &&
+    expense.splitMode !== 'ITEMIZED' &&
+    existingItems.some((i) => i.paidFor.length > 0)
+
+  if (isLeavingItemized) {
+    await prisma.expenseItemPaidFor.deleteMany({
+      where: { expenseItem: { expenseId } },
+    })
+  }
+
+  const incomingIds = new Set(
+    incomingItems.filter((i) => i.id).map((i) => i.id!),
+  )
+  const itemsToDelete = existingItems.filter((i) => !incomingIds.has(i.id))
+  if (itemsToDelete.length > 0) {
+    await prisma.expenseItem.deleteMany({
+      where: { id: { in: itemsToDelete.map((i) => i.id) } },
+    })
+  }
+
+  for (const item of incomingItems) {
+    if (item.id && incomingIds.has(item.id)) {
+      await prisma.expenseItem.update({
+        where: { id: item.id },
+        data: {
+          title: item.title,
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+          amount: item.amount,
+          splitMode: item.splitMode,
+        },
+      })
+      if (!isLeavingItemized) {
+        await prisma.expenseItemPaidFor.deleteMany({
+          where: { expenseItemId: item.id },
+        })
+        if (item.paidFor.length > 0) {
+          await prisma.expenseItemPaidFor.createMany({
+            data: item.paidFor.map((pf) => ({
+              expenseItemId: item.id!,
+              ledgerParticipantId: pf.participant,
+              shares: pf.shares,
+            })),
+          })
+        }
+      }
+    } else {
+      const itemId = item.id ?? randomId()
+      await prisma.expenseItem.create({
+        data: {
+          id: itemId,
+          expenseId,
+          title: item.title,
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+          amount: item.amount,
+          splitMode: item.splitMode,
+          ...(!isLeavingItemized && item.paidFor.length > 0
+            ? {
+                paidFor: {
+                  createMany: {
+                    data: item.paidFor.map((pf) => ({
+                      ledgerParticipantId: pf.participant,
+                      shares: pf.shares,
+                    })),
+                  },
+                },
+              }
+            : {}),
+        },
+      })
+    }
   }
 
   const isDeleteRecurrenceExpenseLink =
@@ -273,6 +409,38 @@ export async function updateExpense(
     expense.recurrenceRule as RecurrenceRule,
     existingExpense.expenseDate,
   )
+
+  const expensePaidFor =
+    expense.splitMode === 'ITEMIZED'
+      ? computePaidForFromItems(
+          expense.items ?? [],
+          [...participantIds],
+          expense.originalCurrency
+            ? (expense.originalAmount ?? expense.amount)
+            : expense.amount,
+          expense.itemizedRemainder,
+        ).paidFor
+      : expense.paidFor
+
+  await prisma.expenseItemizedRemainder.deleteMany({
+    where: { expenseId },
+  })
+  if (expense.itemizedRemainder) {
+    await prisma.expenseItemizedRemainder.create({
+      data: {
+        expenseId,
+        splitMode: expense.itemizedRemainder.splitMode,
+        paidFor: {
+          createMany: {
+            data: expense.itemizedRemainder.paidFor.map((pf) => ({
+              ledgerParticipantId: pf.participant,
+              shares: pf.shares,
+            })),
+          },
+        },
+      },
+    })
+  }
 
   const createdExpense = await prisma.expense.update({
     where: { id: expenseId },
@@ -327,7 +495,7 @@ export async function updateExpense(
       splitMode: expense.splitMode,
       recurrenceRule: expense.recurrenceRule,
       paidFor: {
-        create: expense.paidFor
+        create: expensePaidFor
           .filter(
             (p) =>
               !existingExpense.paidFor.some(
@@ -338,7 +506,7 @@ export async function updateExpense(
             ledgerParticipantId: paidFor.participant,
             shares: paidFor.shares,
           })),
-        update: expense.paidFor.map((paidFor) => ({
+        update: expensePaidFor.map((paidFor) => ({
           where: {
             expenseId_ledgerParticipantId: {
               expenseId,
@@ -351,7 +519,7 @@ export async function updateExpense(
         })),
         deleteMany: existingExpense.paidFor.filter(
           (paidFor) =>
-            !expense.paidFor.some(
+            !expensePaidFor.some(
               (pf) => pf.participant === paidFor.ledgerParticipantId,
             ),
         ),
@@ -466,6 +634,33 @@ export async function getGroupExpenses(
       recurrenceRule: true,
       title: true,
       _count: { select: { documents: true } },
+      items: {
+        select: {
+          id: true,
+          title: true,
+          unitPrice: true,
+          quantity: true,
+          amount: true,
+          splitMode: true,
+          paidFor: {
+            select: {
+              ledgerParticipantId: true,
+              shares: true,
+            },
+          },
+        },
+      },
+      itemizedRemainder: {
+        select: {
+          splitMode: true,
+          paidFor: {
+            select: {
+              ledgerParticipantId: true,
+              shares: true,
+            },
+          },
+        },
+      },
     },
     where: {
       ledgerId: group.ledgerId,
@@ -494,6 +689,27 @@ export async function getGroupExpenses(
       },
       shares: pf.shares,
     })),
+    items: (row.items ?? []).map((item) => ({
+      id: item.id,
+      title: item.title,
+      unitPrice: item.unitPrice,
+      quantity: item.quantity,
+      amount: item.amount,
+      splitMode: item.splitMode,
+      paidFor: item.paidFor.map((pf) => ({
+        participant: pf.ledgerParticipantId,
+        shares: pf.shares,
+      })),
+    })),
+    itemizedRemainder: row.itemizedRemainder
+      ? {
+          splitMode: row.itemizedRemainder.splitMode,
+          paidFor: row.itemizedRemainder.paidFor.map((pf) => ({
+            participant: pf.ledgerParticipantId,
+            shares: pf.shares,
+          })),
+        }
+      : undefined,
     categoryId: narrowCategoryId(row.categoryId),
     category: resolveCategory(row.categoryId),
   }))
@@ -521,6 +737,12 @@ export async function getExpense(groupId: string, expenseId: string) {
       paidFor: true,
       documents: true,
       recurringExpenseLink: true,
+      items: {
+        include: { paidFor: true },
+      },
+      itemizedRemainder: {
+        include: { paidFor: true },
+      },
     },
   })
   if (!expense) return null

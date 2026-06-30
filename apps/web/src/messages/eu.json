@@ -83,7 +83,12 @@
     "receivedByMultiple": "<paidByNames></paidByNames>-ek jasota <paidFor></paidFor>-rentzat",
     "yourBalance": "Zure saldoa:",
     "notInvolved": "Ez duzu parte hartzen",
-    "settlementBadge": "Kitzea"
+    "settlementBadge": "Kitzea",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Nire taldeak",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Esleitu zenbateko zehatz bat pertsona bakoitzari",
     "convertedAmountField": {
       "label": "Zenbateko bihurtua"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Elementua",
+      "columnCost": "Kostua",
+      "columnQuantity": "Kop.",
+      "columnParticipants": "Parte-hartzaileak",
+      "columnTotal": "Guztira",
+      "setExpenseAmount": "Ezarri gastuaren zenbatekoa",
+      "splitEvenlyLabel": "Banatu berdin",
+      "splitBySharesLabel": "Banatu zatien arabera",
+      "splitByPercentageLabel": "Banatu ehunekoaren arabera",
+      "splitByAmountLabel": "Banatu zenbatekoaren arabera",
+      "switchToItemizedTitle": "Aldatu elementukako banaketara?",
+      "switchToItemizedDescription": "Elementuaren parte-hartzaileak editatzeak Norentzat ordaindua Elementuka bihurtzen du eta konfiguratutako norentzat ordaindua banaketa ordezkatzen du.",
+      "switchToItemizedConfirm": "Aldatu elementukora"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Elementukako «paid for» kontabilitatea erabiltzeko, editatu parte-hartzaileak elementu baten errenkadatik.",
+    "paidForItemizedActiveHint": "Elementukako «paid for» kontabilitatea aktibo dago. Banaketa hau aldatzeko, editatu elementuen parte-hartzaileak Elementuak txarteletik."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -83,7 +83,12 @@
     "receivedByMultiple": "Ontvangen door <paidByNames></paidByNames> voor <paidFor></paidFor>",
     "yourBalance": "Jouw balans:",
     "notInvolved": "Je bent hier niet bij betrokken",
-    "settlementBadge": "Verrekening"
+    "settlementBadge": "Verrekening",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Mijn groepen",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Wijs een exact bedrag toe aan elke persoon",
     "convertedAmountField": {
       "label": "Omgerekend bedrag"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Item",
+      "columnCost": "Kosten",
+      "columnQuantity": "Aant.",
+      "columnParticipants": "Deelnemers",
+      "columnTotal": "Totaal",
+      "setExpenseAmount": "Uitgavenbedrag instellen",
+      "splitEvenlyLabel": "Gelijk verdelen",
+      "splitBySharesLabel": "Op aandelen verdelen",
+      "splitByPercentageLabel": "Op percentage verdelen",
+      "splitByAmountLabel": "Op bedrag verdelen",
+      "switchToItemizedTitle": "Overschakelen naar splitsen per item?",
+      "switchToItemizedDescription": "Als je itemdeelnemers bewerkt, wordt Betaald voor gewijzigd naar Per item en wordt de ingestelde Betaald voor-verdeling vervangen.",
+      "switchToItemizedConfirm": "Overschakelen naar per item"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Bewerk de deelnemers in een itemrij om itemgewijze betaald-voor-verdeling te gebruiken.",
+    "paidForItemizedActiveHint": "Itemgewijze betaald-voor-verdeling is actief. Bewerk itemdeelnemers op de kaart Items om deze verdeling te wijzigen."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

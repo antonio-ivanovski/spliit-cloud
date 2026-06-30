@@ -83,7 +83,12 @@
     "receivedByMultiple": "Примиле <paidByNames></paidByNames> за <paidFor></paidFor>",
     "yourBalance": "Вашето салдо:",
     "notInvolved": "Не сте вклучени",
-    "settlementBadge": "Пресметка"
+    "settlementBadge": "Пресметка",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Мои групи",
@@ -648,7 +653,47 @@
     "paidForOptionByAmountHelper": "Доделете точен износ на секое лице",
     "convertedAmountField": {
       "label": "Конвертиран износ"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Ставка",
+      "columnCost": "Цена",
+      "columnQuantity": "Кол.",
+      "columnParticipants": "Учесници",
+      "columnTotal": "Вкупно",
+      "setExpenseAmount": "Постави го износот на трошокот",
+      "splitEvenlyLabel": "Подели подеднакво",
+      "splitBySharesLabel": "Подели по удели",
+      "splitByPercentageLabel": "Подели по процент",
+      "splitByAmountLabel": "Подели по износ",
+      "switchToItemizedTitle": "Да се префрли на поделба по ставки?",
+      "switchToItemizedDescription": "Уредувањето на учесниците на ставката ќе го смени „Платено за“ во „По ставки“ и ќе ја замени поделбата „Платено за“ што ја конфигуриравте.",
+      "switchToItemizedConfirm": "Префрли на ставки"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "За да користите детална распределба „платено за“ по ставки, уредете ги учесниците од редот на ставка.",
+    "paidForItemizedActiveHint": "Деталната распределба „платено за“ по ставки е активна. Уредете ги учесниците на ставките од картичката Ставки за да ја смените оваа распределба."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

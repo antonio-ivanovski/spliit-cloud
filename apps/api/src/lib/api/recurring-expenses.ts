@@ -55,6 +55,27 @@ export async function createRecurringExpenses() {
             documents: {
               select: { id: true, url: true, width: true, height: true },
             },
+            items: {
+              select: {
+                id: true,
+                title: true,
+                unitPrice: true,
+                quantity: true,
+                amount: true,
+                splitMode: true,
+                paidFor: {
+                  select: { ledgerParticipantId: true, shares: true },
+                },
+              },
+            },
+            itemizedRemainder: {
+              select: {
+                splitMode: true,
+                paidFor: {
+                  select: { ledgerParticipantId: true, shares: true },
+                },
+              },
+            },
           },
         },
       },
@@ -79,6 +100,8 @@ export async function createRecurringExpenses() {
         paidByList,
         paidFor,
         documents,
+        items,
+        itemizedRemainder,
         ...destructeredCurrentExpenseRecord
       } = currentExpenseRecord
 
@@ -112,6 +135,41 @@ export async function createRecurringExpenses() {
                   }),
                 ),
               },
+              items: {
+                create: items.map((item) => ({
+                  id: randomId(),
+                  title: item.title,
+                  unitPrice: item.unitPrice,
+                  quantity: item.quantity,
+                  amount: item.amount,
+                  splitMode: item.splitMode,
+                  paidFor: {
+                    createMany: {
+                      data: item.paidFor.map((pf) => ({
+                        ledgerParticipantId: pf.ledgerParticipantId,
+                        shares: pf.shares,
+                      })),
+                    },
+                  },
+                })),
+              },
+              ...(itemizedRemainder
+                ? {
+                    itemizedRemainder: {
+                      create: {
+                        splitMode: itemizedRemainder.splitMode,
+                        paidFor: {
+                          createMany: {
+                            data: itemizedRemainder.paidFor.map((pf) => ({
+                              ledgerParticipantId: pf.ledgerParticipantId,
+                              shares: pf.shares,
+                            })),
+                          },
+                        },
+                      },
+                    },
+                  }
+                : {}),
               id: newExpenseId,
               expenseDate: newExpenseDate,
               recurringExpenseLink: {
@@ -126,6 +184,12 @@ export async function createRecurringExpenses() {
               paidFor: true,
               documents: true,
               paidByList: true,
+              items: {
+                include: { paidFor: true },
+              },
+              itemizedRemainder: {
+                include: { paidFor: true },
+              },
             },
           })
 

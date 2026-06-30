@@ -83,7 +83,12 @@
     "paidByMultiple": "Maksoi <paidByNames></paidByNames> <paidFor></paidFor> puolesta",
     "everyone": "kaikki",
     "notInvolved": "Et ole osallisena",
-    "settlementBadge": "Tasaus"
+    "settlementBadge": "Tasaus",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Omat ryhmät",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Anna kullekin henkilölle tarkka summa",
     "convertedAmountField": {
       "label": "Muunnettu summa"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Kohde",
+      "columnCost": "Hinta",
+      "columnQuantity": "Määrä",
+      "columnParticipants": "Osallistujat",
+      "columnTotal": "Yhteensä",
+      "setExpenseAmount": "Aseta kulun summa",
+      "splitEvenlyLabel": "Jaa tasan",
+      "splitBySharesLabel": "Jaa osuuksien mukaan",
+      "splitByPercentageLabel": "Jaa prosenttien mukaan",
+      "splitByAmountLabel": "Jaa summan mukaan",
+      "switchToItemizedTitle": "Vaihdetaanko erittelykohtaiseen jakoon?",
+      "switchToItemizedDescription": "Kohteen osallistujien muokkaaminen vaihtaa Maksettu kohteelle -jaon erittelykohtaiseksi ja korvaa määrittämäsi Maksettu kohteelle -jaon.",
+      "switchToItemizedConfirm": "Vaihda erittelykohtaiseksi"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Jos haluat käyttää eriteltyä maksettu puolesta -jakoa, muokkaa osallistujia tuoteriviltä.",
+    "paidForItemizedActiveHint": "Eritelty maksettu puolesta -jako on käytössä. Muuta jakoa muokkaamalla tuotteiden osallistujia Tuotteet-kortista."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

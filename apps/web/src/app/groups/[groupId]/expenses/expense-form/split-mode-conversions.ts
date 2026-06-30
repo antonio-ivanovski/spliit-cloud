@@ -53,6 +53,8 @@ function formatShare(
       return Math.round(value)
     case 'EVENLY':
       return 0
+    case 'ITEMIZED':
+      return 0
   }
 }
 

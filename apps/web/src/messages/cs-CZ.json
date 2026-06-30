@@ -83,7 +83,12 @@
     "paidByMultiple": "Zaplatil/a <paidByNames></paidByNames> za <paidFor></paidFor>",
     "everyone": "všechny",
     "notInvolved": "Nejste zapojeni",
-    "settlementBadge": "Vyrovnání"
+    "settlementBadge": "Vyrovnání",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Moje skupiny",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Přiřaďte přesnou částku každé osobě",
     "convertedAmountField": {
       "label": "Přepočtená částka"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Položka",
+      "columnCost": "Cena",
+      "columnQuantity": "Množ.",
+      "columnParticipants": "Účastníci",
+      "columnTotal": "Celkem",
+      "setExpenseAmount": "Nastavit částku výdaje",
+      "splitEvenlyLabel": "Rozdělit rovnoměrně",
+      "splitBySharesLabel": "Rozdělit podle podílů",
+      "splitByPercentageLabel": "Rozdělit podle procent",
+      "splitByAmountLabel": "Rozdělit podle částky",
+      "switchToItemizedTitle": "Přepnout na rozdělení podle položek?",
+      "switchToItemizedDescription": "Úprava účastníků položky změní Zaplaceno za na Podle položek a nahradí nastavené rozdělení zaplaceno za.",
+      "switchToItemizedConfirm": "Přepnout na položky"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Chcete-li použít položkové rozúčtování v části Zaplaceno za, upravte účastníky v řádku položky.",
+    "paidForItemizedActiveHint": "Položkové rozúčtování v části Zaplaceno za je aktivní. Tento podíl změníte úpravou účastníků položek na kartě Položky."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

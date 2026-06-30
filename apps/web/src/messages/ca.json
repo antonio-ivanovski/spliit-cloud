@@ -83,7 +83,12 @@
     "paidByMultiple": "Pagat per <paidByNames></paidByNames> per a <paidFor></paidFor>",
     "everyone": "totes",
     "notInvolved": "No ets implicat o implicada",
-    "settlementBadge": "Liquidació"
+    "settlementBadge": "Liquidació",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Els meus grups",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Assigna una quantitat exacta a cada persona",
     "convertedAmountField": {
       "label": "Quantitat convertida"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Article",
+      "columnCost": "Cost",
+      "columnQuantity": "Quant.",
+      "columnParticipants": "Participants",
+      "columnTotal": "Total",
+      "setExpenseAmount": "Defineix l'import de la despesa",
+      "splitEvenlyLabel": "Divideix a parts iguals",
+      "splitBySharesLabel": "Divideix per parts",
+      "splitByPercentageLabel": "Divideix per percentatge",
+      "splitByAmountLabel": "Divideix per import",
+      "switchToItemizedTitle": "Voleu canviar al repartiment per articles?",
+      "switchToItemizedDescription": "Editar els participants de l'article canvia Pagat per a a Per articles i substitueix el repartiment de pagat per a que havíeu configurat.",
+      "switchToItemizedConfirm": "Canvia a per articles"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Per utilitzar la comptabilitat detallada de «paid for», edita els participants des d'una fila d'article.",
+    "paidForItemizedActiveHint": "La comptabilitat detallada de «paid for» és activa. Edita els participants dels articles des de la targeta Articles per canviar aquest repartiment."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

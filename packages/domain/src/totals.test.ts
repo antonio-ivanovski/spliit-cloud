@@ -371,6 +371,60 @@ describe('calculateShare', () => {
     expect(calculateShare('u2', expense)).toBe(200)
     expect(calculateShare('u3', expense)).toBe(300)
   })
+
+  it('ITEMIZED returns exact share (cents) for each participant', () => {
+    const expense: ShareExpense = {
+      amount: 10000,
+      isReimbursement: false,
+      splitMode: 'ITEMIZED',
+      paidFor: [makePaidFor('alice', 7000), makePaidFor('bob', 3000)],
+    }
+
+    expect(calculateShare('alice', expense)).toBe(7000)
+    expect(calculateShare('bob', expense)).toBe(3000)
+  })
+
+  it('ITEMIZED cross-currency shares are weighted against the ledger amount', () => {
+    const expense: ShareExpense = {
+      amount: 12,
+      originalAmount: 20100,
+      originalCurrency: 'ARS',
+      conversionRate: 0.00059,
+      isReimbursement: false,
+      splitMode: 'ITEMIZED',
+      paidFor: [makePaidFor('alice', 6700), makePaidFor('bob', 13400)],
+    }
+
+    expect(calculateShare('alice', expense)).toBeCloseTo(4)
+    expect(calculateShare('bob', expense)).toBeCloseTo(8)
+  })
+
+  it('mixed EVENLY + ITEMIZED totals for calculateShare', () => {
+    const aliceShare1 = calculateShare('alice', {
+      amount: 600,
+      isReimbursement: false,
+      splitMode: 'EVENLY',
+      paidFor: [
+        makePaidFor('alice', 1),
+        makePaidFor('bob', 1),
+        makePaidFor('carol', 1),
+      ],
+    })
+    const aliceShare2 = calculateShare('alice', {
+      amount: 1000,
+      isReimbursement: false,
+      splitMode: 'ITEMIZED',
+      paidFor: [
+        makePaidFor('alice', 300),
+        makePaidFor('bob', 200),
+        makePaidFor('carol', 500),
+      ],
+    })
+
+    expect(aliceShare1).toBe(200)
+    expect(aliceShare2).toBe(300)
+    expect(aliceShare1 + aliceShare2).toBe(500)
+  })
 })
 
 describe('calculatePaidByShare', () => {

@@ -83,7 +83,12 @@
     "paidByMultiple": "<paidByNames></paidByNames> tarafından ödendi, <paidFor></paidFor> için",
     "everyone": "herkes",
     "notInvolved": "Dahil değilsiniz",
-    "settlementBadge": "Mutabakat"
+    "settlementBadge": "Mutabakat",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Gruplarım",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Her kişiye kesin bir tutar atayın",
     "convertedAmountField": {
       "label": "Dönüştürülen tutar"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Kalem",
+      "columnCost": "Tutar",
+      "columnQuantity": "Adet",
+      "columnParticipants": "Katılımcılar",
+      "columnTotal": "Toplam",
+      "setExpenseAmount": "Gider tutarını ayarla",
+      "splitEvenlyLabel": "Eşit böl",
+      "splitBySharesLabel": "Paylara göre böl",
+      "splitByPercentageLabel": "Yüzdeye göre böl",
+      "splitByAmountLabel": "Tutara göre böl",
+      "switchToItemizedTitle": "Kalemlere göre bölmeye geçilsin mi?",
+      "switchToItemizedDescription": "Kalem katılımcılarını düzenlemek Ödenen kişileri Kalemlere göre olarak değiştirir ve yapılandırdığınız ödenen kişiler bölüşümünü değiştirir.",
+      "switchToItemizedConfirm": "Kalemlere göre geç"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Kalem bazlı “adına ödendi” paylaşımını kullanmak için katılımcıları bir kalem satırından düzenleyin.",
+    "paidForItemizedActiveHint": "Kalem bazlı “adına ödendi” paylaşımı etkin. Bu paylaşımı değiştirmek için Kalemler kartından kalem katılımcılarını düzenleyin."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

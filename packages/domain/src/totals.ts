@@ -108,7 +108,13 @@ export function calculateShare(
   participantId: string | null,
   expense: Pick<
     TotalsExpense,
-    'amount' | 'paidFor' | 'splitMode' | 'isReimbursement'
+    | 'amount'
+    | 'paidFor'
+    | 'splitMode'
+    | 'isReimbursement'
+    | 'originalAmount'
+    | 'originalCurrency'
+    | 'conversionRate'
   >,
 ): number {
   if (expense.isReimbursement) return 0
@@ -129,6 +135,15 @@ export function calculateShare(
     case 'BY_AMOUNT':
       // Directly add the user's share if the split mode is BY_AMOUNT
       return shares
+    case 'ITEMIZED':
+      if (expense.originalCurrency && expense.conversionRate) {
+        const totalShares = paidFors.reduce(
+          (sum, paidFor) => sum + Number(paidFor.shares),
+          0,
+        )
+        return totalShares === 0 ? 0 : (expense.amount * shares) / totalShares
+      }
+      return shares // shares are minor units, derived from items
     case 'BY_PERCENTAGE':
       // Calculate the user's share based on their percentage of the total expense
       return (expense.amount * shares) / 10000 // Assuming shares are out of 10000 for percentage

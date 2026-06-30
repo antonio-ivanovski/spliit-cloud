@@ -13,6 +13,7 @@ export function ParticipantShareRow({
   className,
   disabled,
   dataId,
+  showCheckbox = true,
 }: {
   participant: {
     id: string
@@ -28,6 +29,7 @@ export function ParticipantShareRow({
   className?: string
   disabled?: boolean
   dataId?: string
+  showCheckbox?: boolean
 }) {
   const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (disabled) return
@@ -53,16 +55,18 @@ export function ParticipantShareRow({
       onClick={handleRowClick}
     >
       <FormItem className="flex-1 flex flex-row items-center space-x-3 space-y-0">
-        <FormControl>
-          <Checkbox
-            checked={checked}
-            onCheckedChange={(next) => {
-              if (disabled) return
-              onCheckedChange(next as boolean)
-            }}
-            disabled={disabled}
-          />
-        </FormControl>
+        {showCheckbox && (
+          <FormControl>
+            <Checkbox
+              checked={checked}
+              onCheckedChange={(next) => {
+                if (disabled) return
+                onCheckedChange(next as boolean)
+              }}
+              disabled={disabled}
+            />
+          </FormControl>
+        )}
         <FormLabel className="text-sm font-normal flex-1">
           {participant.name}
           {pendingLabel}

@@ -83,7 +83,12 @@
     "paidByMultiple": "Pagado por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "everyone": "todos",
     "notInvolved": "No estás incluido",
-    "settlementBadge": "Liquidación"
+    "settlementBadge": "Liquidación",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "Groups": {
     "myGroups": "Mis grupos",
@@ -528,7 +533,47 @@
     "paidForOptionByAmountHelper": "Asigna una cantidad exacta a cada persona",
     "convertedAmountField": {
       "label": "Cantidad convertida"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "Artículo",
+      "columnCost": "Coste",
+      "columnQuantity": "Cant.",
+      "columnParticipants": "Participantes",
+      "columnTotal": "Total",
+      "setExpenseAmount": "Ajustar importe del gasto",
+      "splitEvenlyLabel": "Dividir en partes iguales",
+      "splitBySharesLabel": "Dividir por partes",
+      "splitByPercentageLabel": "Dividir por porcentaje",
+      "splitByAmountLabel": "Dividir por importe",
+      "switchToItemizedTitle": "¿Cambiar a división por artículos?",
+      "switchToItemizedDescription": "Editar los participantes del artículo cambia Pagado para a Por artículos y sustituye la división de Pagado para que configuraste.",
+      "switchToItemizedConfirm": "Cambiar a por artículos"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "Para usar el reparto detallado por artículos en «Pagado para», edita los participantes desde una fila de artículo.",
+    "paidForItemizedActiveHint": "El reparto detallado por artículos está activo. Edita los participantes de los artículos desde la tarjeta Artículos para cambiar este reparto."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

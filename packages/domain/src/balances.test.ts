@@ -736,6 +736,73 @@ describe('getBalances', () => {
     expect(sumPaid).toBe(9200)
   })
 
+  // ---------------------------------------------------------------------------
+  // ITEMIZED split mode tests (Phase 2: shares are exact cents)
+  // ---------------------------------------------------------------------------
+
+  it('ITEMIZED expense produces correct per-participant balances', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 1000,
+        splitMode: 'ITEMIZED',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 300 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 200 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 500 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    expect(balances.p0).toEqual({ paid: 1000, paidFor: 300, total: 700 })
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 200, total: -200 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 500, total: -500 })
+    const net = Object.values(balances).reduce((s, b) => s + b.total, 0)
+    expect(net).toBe(0)
+  })
+
+  it('mixed EVENLY and ITEMIZED expenses sum correctly', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 600,
+        splitMode: 'EVENLY',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 1000,
+        splitMode: 'ITEMIZED',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 300 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 200 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 500 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // EVENLY: each owes 200; ITEMIZED: p0 owes 300, p1 owes 200, p2 owes 500
+    // p0 paid 1600, owes 200 + 300 = 500, total = 1100
+    // p1 paid 0, owes 200 + 200 = 400, total = -400
+    // p2 paid 0, owes 200 + 500 = 700, total = -700
+    expect(balances.p0).toEqual({ paid: 1600, paidFor: 500, total: 1100 })
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 400, total: -400 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 700, total: -700 })
+    const net = Object.values(balances).reduce((s, b) => s + b.total, 0)
+    expect(net).toBe(0)
+  })
+
   it('cross-currency leaves single-currency (no originalCurrency) behavior untouched', () => {
     // Regression guard: when originalCurrency is absent the payer
     // division must still operate on `amount` directly (no conversion).

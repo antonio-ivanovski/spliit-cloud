@@ -37,6 +37,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useState, type Dispatch, type SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { AmountInput } from './amount-input'
 import { enforceCurrencyPattern, formatDate } from './currency-utils'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -222,30 +223,28 @@ export function BasicDetailsCard(props: {
           render={({ field: { onChange, ...field } }) => (
             <FormItem className="sm:order-4 col-span-2 md:col-span-1 space-y-2">
               <FormLabel>{t('amountField.label')}</FormLabel>
-              <div className="flex items-baseline gap-2">
-                <span>{inputCurrency.symbol}</span>
-                <FormControl>
-                  <Input
-                    className="text-base max-w-[120px]"
-                    type="text"
-                    inputMode="decimal"
-                    placeholder="0.00"
-                    disabled={readOnly}
-                    onChange={(event) => {
-                      const v = enforceCurrencyPattern(event.target.value)
-                      const income = Number(v) < 0
-                      setIsIncome(income)
-                      if (income) form.setValue('isReimbursement', false)
-                      onChange(v)
-                    }}
-                    onFocus={(e) => {
-                      const target = e.currentTarget
-                      setTimeout(() => target.select(), 1)
-                    }}
-                    {...field}
-                  />
-                </FormControl>
-              </div>
+              <FormControl>
+                <AmountInput
+                  currency={inputCurrency}
+                  className="max-w-[132px] text-base"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  disabled={readOnly}
+                  onChange={(event) => {
+                    const v = enforceCurrencyPattern(event.target.value)
+                    const income = Number(v) < 0
+                    setIsIncome(income)
+                    if (income) form.setValue('isReimbursement', false)
+                    onChange(v)
+                  }}
+                  onFocus={(e) => {
+                    const target = e.currentTarget
+                    setTimeout(() => target.select(), 1)
+                  }}
+                  {...field}
+                />
+              </FormControl>
               <FormMessage />
 
               {props.conversionRequired && (

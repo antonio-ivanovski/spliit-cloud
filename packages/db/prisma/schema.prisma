@@ -133,12 +133,12 @@ enum LedgerParticipantKind {
 }
 
 model LedgerParticipant {
-  id            String       @id
-  ledger        Ledger       @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  id            String                @id
+  ledger        Ledger                @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   ledgerId      String
   // Backing group membership, if this participant is an account-backed group member.
-  groupMember   GroupMember? @relation(fields: [groupMemberId], references: [id])
-  groupMemberId String?      @unique
+  groupMember   GroupMember?          @relation(fields: [groupMemberId], references: [id])
+  groupMemberId String?               @unique
   // Discriminator between account-backed and name-only participants.
   // Default is ACCOUNT_MEMBER; UNLINKED_PARTICIPANT is only ever created
   // by the import path.
@@ -147,12 +147,14 @@ model LedgerParticipant {
   // rows (the display name is resolved through `groupMember.account.name`).
   displayName   String?
 
-  expensesPaidByList ExpensePaidBy[]
-  expensesPaidFor ExpensePaidFor[]
-  activities      Activity[]
+  expensesPaidByList              ExpensePaidBy[]
+  expensesPaidFor                 ExpensePaidFor[]
+  expenseItemPaidFor              ExpenseItemPaidFor[]
+  expenseItemizedRemainderPaidFor ExpenseItemizedRemainderPaidFor[]
+  activities                      Activity[]
   // Pending invitations that materialized this ledger participant to allow
   // pre-accept expenses. The link is cleared when the invitation is revoked.
-  invitations     GroupInvitation[]
+  invitations                     GroupInvitation[]
 
   @@index([ledgerId])
 }
@@ -208,8 +210,8 @@ model GroupMember {
   role      GroupRole         @default(MEMBER)
   status    GroupMemberStatus @default(ACTIVE)
 
-  joinedAt    DateTime?
-  leftAt      DateTime?
+  joinedAt DateTime?
+  leftAt   DateTime?
 
   // The ledger participant that represents this member in expenses/balances.
   // Null until a ledger participant has been materialized for this member.
@@ -312,7 +314,7 @@ model AccountGroupPreference {
   group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
 
-  starred Boolean @default(false)
+  starred  Boolean @default(false)
   // The column is named `archived` for migration simplicity but the API
   // surface exposes it as the per-account "hide" preference (it removes the
   // group from the signed-in user's list, not from everyone else's). The
@@ -360,8 +362,10 @@ model Expense {
   documents        ExpenseDocument[]
   notes            String?
 
-  recurrenceRule       RecurrenceRule        @default(NONE)
+  recurrenceRule       RecurrenceRule            @default(NONE)
   recurringExpenseLink RecurringExpenseLink?
+  items                ExpenseItem[]
+  itemizedRemainder    ExpenseItemizedRemainder?
 
   @@index([ledgerId])
 }
@@ -382,6 +386,7 @@ enum SplitMode {
   BY_SHARES
   BY_PERCENTAGE
   BY_AMOUNT
+  ITEMIZED
 }
 
 model RecurringExpenseLink {
@@ -428,6 +433,49 @@ model ExpensePaidBy {
 
   @@id([expenseId, ledgerParticipantId])
   @@index([ledgerParticipantId])
+}
+
+model ExpenseItem {
+  id        String               @id
+  expense   Expense              @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expenseId String
+  title     String
+  unitPrice Int
+  quantity  Int
+  amount    Int
+  splitMode SplitMode            @default(EVENLY)
+  notes     String?
+  paidFor   ExpenseItemPaidFor[]
+  createdAt DateTime             @default(now())
+
+  @@index([expenseId])
+}
+
+model ExpenseItemPaidFor {
+  expenseItem         ExpenseItem       @relation(fields: [expenseItemId], references: [id], onDelete: Cascade)
+  expenseItemId       String
+  ledgerParticipant   LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Restrict)
+  ledgerParticipantId String
+  shares              Int
+
+  @@id([expenseItemId, ledgerParticipantId])
+}
+
+model ExpenseItemizedRemainder {
+  expense   Expense                           @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expenseId String                            @id
+  splitMode SplitMode                         @default(EVENLY)
+  paidFor   ExpenseItemizedRemainderPaidFor[]
+}
+
+model ExpenseItemizedRemainderPaidFor {
+  remainder           ExpenseItemizedRemainder @relation(fields: [expenseId], references: [expenseId], onDelete: Cascade)
+  expenseId           String
+  ledgerParticipant   LedgerParticipant        @relation(fields: [ledgerParticipantId], references: [id], onDelete: Restrict)
+  ledgerParticipantId String
+  shares              Int
+
+  @@id([expenseId, ledgerParticipantId])
 }
 
 model Activity {

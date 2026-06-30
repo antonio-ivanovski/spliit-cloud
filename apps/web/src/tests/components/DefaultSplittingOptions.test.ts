@@ -467,3 +467,74 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     expect(result.recurrenceRule).toBe(RecurrenceRule.NONE)
   })
 })
+
+describe('buildExpenseFormDefaults (prefilled items)', () => {
+  const localStorageMock = (() => {
+    let store: Record<string, string> = {}
+    return {
+      getItem: vi.fn((key: string) => store[key] ?? null),
+      setItem: vi.fn((key: string, value: string) => {
+        store[key] = value
+      }),
+      removeItem: vi.fn((key: string) => {
+        delete store[key]
+      }),
+      clear: vi.fn(() => {
+        store = {}
+      }),
+    }
+  })()
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    setTestWindow(localStorageMock as unknown as Storage)
+    localStorageMock.clear()
+  })
+
+  afterEach(() => {
+    restoreTestWindow()
+  })
+
+  it('prefills create defaults with URL item rows and item participant splits', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {
+        title: 'Receipt',
+        originalCurrency: 'USD',
+        items: JSON.stringify([
+          {
+            title: 'Pizza',
+            unitPrice: 12.5,
+            quantity: 2,
+            splitMode: 'BY_SHARES',
+            paidFor: [
+              { participant: 'lp-1', shares: 2 },
+              { participant: 'lp-2', shares: 1 },
+              { participant: 'unknown', shares: 1 },
+            ],
+          },
+        ]),
+      },
+      group: mockGroup as any,
+      groupCurrency: getCurrency('USD')!,
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+    })
+
+    expect(result.amount).toBe(25)
+    expect(result.title).toBe('Receipt')
+    expect(result.splitMode).toBe('ITEMIZED')
+    expect(result.items).toEqual([
+      expect.objectContaining({
+        title: 'Pizza',
+        unitPrice: 12.5,
+        quantity: 2,
+        splitMode: 'BY_SHARES',
+        paidFor: [
+          { participant: 'lp-1', shares: 2 },
+          { participant: 'lp-2', shares: 1 },
+        ],
+      }),
+    ])
+  })
+})

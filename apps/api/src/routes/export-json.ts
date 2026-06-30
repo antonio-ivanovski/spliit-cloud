@@ -63,6 +63,23 @@ export async function exportGroupJson(request: Request, groupId: string) {
       isReimbursement: true,
       splitMode: true,
       recurrenceRule: true,
+      items: {
+        select: {
+          id: true,
+          title: true,
+          unitPrice: true,
+          quantity: true,
+          amount: true,
+          splitMode: true,
+          paidFor: { select: { ledgerParticipantId: true, shares: true } },
+        },
+      },
+      itemizedRemainder: {
+        select: {
+          splitMode: true,
+          paidFor: { select: { ledgerParticipantId: true, shares: true } },
+        },
+      },
     },
     where: { ledgerId },
     orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
@@ -75,6 +92,12 @@ export async function exportGroupJson(request: Request, groupId: string) {
     ...expenses.flatMap((expense) => [
       ...expense.paidByList.map((pb) => pb.ledgerParticipant.id),
       ...expense.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
+      ...expense.items.flatMap((item) =>
+        item.paidFor.map((paidFor) => paidFor.ledgerParticipantId),
+      ),
+      ...(expense.itemizedRemainder?.paidFor.map(
+        (paidFor) => paidFor.ledgerParticipantId,
+      ) ?? []),
     ]),
   ])
   const participants = await prisma.ledgerParticipant.findMany({

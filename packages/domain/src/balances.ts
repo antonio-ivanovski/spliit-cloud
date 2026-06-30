@@ -72,6 +72,7 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
           () => [paidBy.shares, totalPaidByShares] as const,
         )
         .with('BY_AMOUNT', () => [paidBy.shares, totalPaidByShares] as const)
+        .with('ITEMIZED', () => [paidBy.shares, totalPaidByShares] as const)
         .exhaustive()
 
       const dividedAmount = isLast
@@ -103,6 +104,8 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
           () => [paidFor.shares, totalPaidForShares] as const,
         )
         .with('BY_AMOUNT', () => [paidFor.shares, totalPaidForShares] as const)
+        // ITEMIZED uses BY_AMOUNT semantic (shares are exact cents per participant, derived from items)
+        .with('ITEMIZED', () => [paidFor.shares, totalPaidForShares] as const)
         .exhaustive()
 
       const dividedAmount = isLast

@@ -10,7 +10,6 @@ import { Currency } from '@/lib/currency'
 import { useRouter } from '@/lib/navigation'
 import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
-import { Fragment } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 
@@ -22,6 +21,37 @@ const participantsKey = {
   receivedBy: 'ExpenseCard.receivedBy',
   receivedByMultiple: 'ExpenseCard.receivedByMultiple',
 } as const
+
+function ItemsPreview({
+  items,
+  currency,
+  locale,
+}: {
+  items: Expense['items']
+  currency: Currency
+  locale: string
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
+  if (items.length === 0) return null
+
+  const maxPreview = 2
+  const previewItems = items.slice(0, maxPreview)
+  const remaining = items.length - maxPreview
+
+  return (
+    <div className="text-xs text-muted-foreground">
+      {previewItems.map((item) => (
+        <div key={item.id}>
+          {item.title} <span className="text-muted-foreground/50">·</span>{' '}
+          {formatCurrency(currency, item.amount, locale)}
+        </div>
+      ))}
+      {remaining > 0 && (
+        <div>{t('items.more' as any, { count: remaining }) as string}</div>
+      )}
+    </div>
+  )
+}
 
 function Participants({
   expense,
@@ -36,10 +66,10 @@ function Participants({
       <strong>{t('everyone')}</strong>
     ) : (
       expense.paidFor.map((paidFor, index) => (
-        <Fragment key={index}>
+        <span key={index}>
           {index !== 0 && <>, </>}
           <strong>{paidFor.ledgerParticipant.name}</strong>
-        </Fragment>
+        </span>
       ))
     )
 
@@ -55,18 +85,18 @@ function Participants({
       a.ledgerParticipant.name.localeCompare(b.ledgerParticipant.name),
     )
     const paidByNames = sortedPaidByList.map((pb, index) => (
-      <Fragment key={pb.ledgerParticipant.id}>
+      <span key={pb.ledgerParticipant.id}>
         {index !== 0 && <>, </>}
         <strong>{pb.ledgerParticipant.name}</strong>
-      </Fragment>
+      </span>
     ))
     return (
       <Trans
         i18nKey={i18nKey}
         values={{ forCount: expense.paidFor.length }}
         components={{
-          paidByNames: <>{paidByNames}</>,
-          paidFor: <>{paidFor}</>,
+          paidByNames: <span>{paidByNames}</span>,
+          paidFor: <span>{paidFor}</span>,
         }}
       />
     )
@@ -81,7 +111,7 @@ function Participants({
       }}
       components={{
         strong: <strong />,
-        paidFor: <>{paidFor}</>,
+        paidFor: <span>{paidFor}</span>,
       }}
     />
   )
@@ -147,6 +177,11 @@ export function ExpenseCard({
         <div className="text-xs text-muted-foreground">
           <Participants expense={expense} participantCount={participantCount} />
         </div>
+        <ItemsPreview
+          items={expense.items}
+          currency={currency}
+          locale={locale}
+        />
         <div className="text-xs text-muted-foreground">
           <ActiveUserBalance {...{ groupId, currency, expense }} />
         </div>

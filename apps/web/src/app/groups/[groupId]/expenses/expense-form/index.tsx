@@ -21,7 +21,9 @@ import {
   persistDefaultSplittingOptions,
 } from './default-values'
 import { DocumentsCard } from './documents-card'
+import { ExpenseItemsCard } from './expense-items-card'
 import { FormActions } from './form-actions'
+import { ItemParticipantsModal } from './item-participants-modal'
 import { PaidByCard } from './paid-by-card'
 import { PaidForCard } from './paid-for-card'
 import { buildSubmitValues } from './submit-values'
@@ -107,6 +109,31 @@ export function ExpenseForm(props: {
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
           {...conversion}
+        />
+        <ExpenseItemsCard
+          form={form}
+          group={props.group}
+          groupCurrency={payerCurrency}
+          readOnly={!!props.readOnly}
+          renderItemParticipantsModal={({
+            itemIndex,
+            item,
+            open,
+            onClose,
+            onSaveItem,
+          }) => (
+            <ItemParticipantsModal
+              open={open}
+              onOpenChange={(v) => !v && onClose()}
+              form={form}
+              itemIndex={itemIndex}
+              group={props.group}
+              groupCurrency={payerCurrency}
+              item={item}
+              onSaveItem={onSaveItem}
+              readOnly={!!props.readOnly}
+            />
+          )}
         />
         <PaidByCard
           form={form}

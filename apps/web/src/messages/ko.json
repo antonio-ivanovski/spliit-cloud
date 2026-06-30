@@ -469,7 +469,47 @@
     "paidForOptionByAmountHelper": "각 사람에게 정확한 금액을 지정합니다",
     "convertedAmountField": {
       "label": "환산 금액"
-    }
+    },
+    "paidForOptionItemized": "Itemized",
+    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "items": {
+      "title": "Items",
+      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
+      "addItem": "Add item",
+      "empty": "No items yet. Click \"Add item\" to start.",
+      "allMembers": "All members",
+      "noMembers": "No members",
+      "other": "Other (unaccounted)",
+      "derivedBadge": "Derived",
+      "errorExceedsAmount": "Items total exceeds the expense amount.",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete",
+      "total": "Items total",
+      "requiredForItemized": "Add at least one item to use Itemized split.",
+      "participantsSummary": "{count} participants",
+      "modalTitle": "Item participants",
+      "columnItem": "항목",
+      "columnCost": "비용",
+      "columnQuantity": "수량",
+      "columnParticipants": "참여자",
+      "columnTotal": "합계",
+      "setExpenseAmount": "지출 금액으로 설정",
+      "splitEvenlyLabel": "균등 분할",
+      "splitBySharesLabel": "지분별 분할",
+      "splitByPercentageLabel": "비율별 분할",
+      "splitByAmountLabel": "금액별 분할",
+      "switchToItemizedTitle": "항목별 분할로 전환할까요?",
+      "switchToItemizedDescription": "항목 참여자를 편집하면 지불 대상이 항목별로 변경되고 설정한 지불 대상 분할이 대체됩니다.",
+      "switchToItemizedConfirm": "항목별로 전환"
+    },
+    "leaveItemized": {
+      "title": "Switch split mode?",
+      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
+      "cancel": "Cancel",
+      "confirm": "Switch"
+    },
+    "paidForItemizedEntryHint": "항목별 정산 대상 계산을 사용하려면 항목 행에서 참가자를 편집하세요.",
+    "paidForItemizedActiveHint": "항목별 정산 대상 계산이 활성화되어 있습니다. 이 분할을 변경하려면 항목 카드에서 항목 참가자를 편집하세요."
   },
   "Balances": {
     "title": "잔액",
@@ -672,7 +712,12 @@
     "yourBalance": "내 잔액:",
     "notInvolved": "당신은 관련이 없어요",
     "receivedBy": "<strong>{paidBy}</strong>님이 <paidFor></paidFor>를 위해 받음",
-    "settlementBadge": "정산"
+    "settlementBadge": "정산",
+    "items": {
+      "more": "+{count} more",
+      "title": "Items",
+      "participants": "{names}"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -15,6 +15,7 @@ const splitModeLabel = {
   BY_SHARES: 'Unevenly - By shares',
   BY_PERCENTAGE: 'Unevenly - By percentage',
   BY_AMOUNT: 'Unevenly - By amount',
+  ITEMIZED: 'Itemized',
 } as const
 
 function formatDate(dateValue: Date): string {
