@@ -98,6 +98,7 @@ function makeExpense(overrides: Record<string, unknown> = {}) {
     splitMode: 'EVENLY',
     recurrenceRule: null,
     _count: { documents: 0 },
+    items: [],
     ...overrides,
   }
 }
