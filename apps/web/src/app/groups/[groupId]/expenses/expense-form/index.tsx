@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency } from '@spliit/domain'
 import { useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch, type Resolver } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BasicDetailsCard } from './basic-details-card'
 import {
@@ -42,7 +42,7 @@ export function ExpenseForm(props: {
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const form = useForm<ExpenseFormInputValues>({
-    resolver: zodResolver(expenseFormInputSchema),
+    resolver: zodResolver(expenseFormInputSchema) as Resolver<ExpenseFormInputValues>,
     defaultValues: buildExpenseFormDefaults({
       isCreate: props.expense === undefined,
       expense: props.expense,
