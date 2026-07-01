@@ -190,11 +190,13 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="flex w-full justify-between"
+        className="flex w-full"
         ref={ref}
         {...props}
       >
-        <CurrencyLabel currency={currency} />
+        <span className="flex-1 text-left">
+          <CurrencyLabel currency={currency} />
+        </span>
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />
         ) : (

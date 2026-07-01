@@ -199,11 +199,13 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="flex w-full justify-between"
+        className="flex w-full"
         ref={ref}
         {...props}
       >
-        <CategoryLabel category={category} />
+        <span className="flex-1 text-left">
+          <CategoryLabel category={category} />
+        </span>
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />
         ) : (
