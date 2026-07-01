@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "תאריך מבוקש {requested} · הספק השתמש ב־{asOf}",
         "currencyConversionTitle": "המרת מטבע",
         "currencyConversionDescription": "הוצאות יומרו ממטבע המקור למטבע החשבון הראשי באמצעות השערים שלהלן.",
-        "currencyRateForDateFormat": "הוחל על הוצאות מתאריך {date}"
+        "currencyRateForDateFormat": "הוחל על הוצאות מתאריך {date}",
+        "appliedExchangeRatesLabel": "שערי חליפין שהוחלו",
+        "conversionPerDate": "לפי תאריך",
+        "conversionFixed": "שער קבוע",
+        "importErrorTitle": "הייבוא נכשל",
+        "importErrorFallback": "אירעה שגיאה בלתי צפויה בעת ייבוא הקבוצה. אנא נסה שוב.",
+        "executeImport": "ייבא קבוצה"
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit לא מצא קבוצה זו",
       "fetchSourceError": "נכשלה הבאת המקור",
       "Source": {
-        "fromSpliit": "מ-Spliit",
-        "splitwise": "Splitwise (בקרוב)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (בקרוב)",
         "settleUp": "Settle Up (בקרוב)",
         "spliitDescription": "הבא קבוצה קיימת מ-spliit.app ל-Spliit Cloud. אנו קוראים את שם הקבוצה, המשתתפים וכל הוצאה.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "נכשלה הבאת המקור",
         "fileReadError": "נכשלה קריאת הקובץ",
         "appToCloudDescription": "שנה .app ל-.cloud בכל כתובת URL של קבוצת spliit.app כדי לייבא אותה ל-Spliit Cloud.",
-        "appToCloudTitle": "החלף .app ב-.cloud"
+        "appToCloudTitle": "החלף .app ב-.cloud",
+        "splitwiseDescription": "גרור קובץ CSV של ייצוא מ-Splitwise כדי לייבא את ההוצאות שלו ל-Spliit Cloud. הקובץ חייב להגיע מייצוא הקבוצה של Splitwise — ה-CSV לכל קבוצה הזמין בהגדרות הקבוצה.",
+        "receiptWarningTitleSplitwise": "תמונות קבלות לא מיובאות.",
+        "receiptWarningDescriptionSplitwise": "הייצוא של Splitwise אינו כולל תמונות קבלות. העלה אותן מחדש בקבוצת היעד אם אתה צריך אותן.",
+        "unsupportedFileType": "סוג קובץ לא נתמך. אנא גרור קובץ JSON או CSV.",
+        "dropFileSplitwise": "גרור קובץ CSV של Splitwise, או לחץ לבחירה",
+        "dropFileDescriptionSplitwise": "CSV הוא הפורמט היחיד ש-Splitwise מייצאת. אנו מנתחים את הערכים לכל משתתף כדי לשחזר את החלוקה."
       },
       "StepHeader": {
         "title": "ייבא קבוצה",
-        "source": "1. מקור",
-        "destination": "2. יעד",
-        "mapping": "3. מיפוי",
-        "confirm": "4. אישור",
-        "done": "5. בוצע",
-        "backAriaLabel": "חזרה"
+        "source": "מקור",
+        "destination": "יעד",
+        "mapping": "מיפוי",
+        "confirm": "אישור",
+        "done": "בוצע",
+        "backAriaLabel": "חזרה",
+        "currencyConversion": "Currency conversion",
+        "backTo": "חזרה אל {step}",
+        "continueTo": "המשך אל {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "שימוש בשער מותאם אישית",
+        "fetchingRates": "מתבצעת שליפה של שערי חליפין…",
+        "fixedDescription": "פחות מדויק, אך מבטיח שכל הסכומים ישתמשו באותו שער המרה, כך שיתרת הקבוצה תישאר מאוזנת לאחר הייבוא.",
+        "fixedTitle": "שער קבוע",
+        "noConversionNeeded": "כל ההוצאות במטבע ברירת המחדל של הקבוצה. אין צורך בהמרת מטבע.",
+        "perDateDescription": "מדויק יותר — משתמש בשער החליפין מהתאריך האמיתי של כל הוצאה.",
+        "perDateSelectedHint": "משתמש בשער ההיסטורי לתאריך של כל הוצאה.",
+        "perDateTitle": "המרה לפי תאריך",
+        "rateDateLabel": "תאריך השער",
+        "ratesError": "לא ניתן לשלוף שערי חליפין. בדוק את החיבור שלך ונסה שוב.",
+        "refresh": "רענן",
+        "viaFrankfurter": "דרך Frankfurter"
       }
     },
     "Importable": {

@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Solicitat {requested} · furnizorul a folosit {asOf}",
         "currencyConversionTitle": "Conversie valutară",
         "currencyConversionDescription": "Cheltuielile vor fi convertite din moneda sursă în moneda destinație a registrului folosind cursurile de mai jos.",
-        "currencyRateForDateFormat": "Aplicat pentru cheltuielile datate {date}"
+        "currencyRateForDateFormat": "Aplicat pentru cheltuielile datate {date}",
+        "appliedExchangeRatesLabel": "Cursuri de schimb aplicate",
+        "conversionPerDate": "Per dată",
+        "conversionFixed": "Curs fix",
+        "importErrorTitle": "Importul a eșuat",
+        "importErrorFallback": "A apărut o eroare neașteptată la importarea grupului. Încercați din nou.",
+        "executeImport": "Importați grupul"
       },
       "Destination": {
         "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit nu a găsit acest grup",
       "fetchSourceError": "Nu s-a putut prelua sursa",
       "Source": {
-        "fromSpliit": "Din Spliit",
-        "splitwise": "Splitwise (în curând)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (în curând)",
         "settleUp": "Settle Up (în curând)",
         "spliitDescription": "Aduceți un grup existent de pe spliit.app în Spliit Cloud. Citim numele grupului, participanții și fiecare cheltuială.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Nu s-a putut prelua sursa",
         "fileReadError": "Nu s-a putut citi fișierul",
         "appToCloudDescription": "Înlocuiți .app cu .cloud în orice URL de grup spliit.app pentru a-l importa în Spliit Cloud.",
-        "appToCloudTitle": "Înlocuiți .app cu .cloud"
+        "appToCloudTitle": "Înlocuiți .app cu .cloud",
+        "splitwiseDescription": "Plasați un export CSV din Splitwise pentru a-i importa cheltuielile în Spliit Cloud. Fișierul trebuie să provină din exportul de grup al Splitwise — CSV-ul per grup disponibil din setările grupului.",
+        "receiptWarningTitleSplitwise": "Imaginile chitanțelor nu sunt importate.",
+        "receiptWarningDescriptionSplitwise": "Exportul Splitwise nu include imaginile chitanțelor. Reîncărcați-le în grupul de destinație dacă aveți nevoie de ele.",
+        "unsupportedFileType": "Tip de fișier neacceptat. Lăsați un fișier JSON sau CSV.",
+        "dropFileSplitwise": "Lăsați un fișier CSV Splitwise, sau faceți clic pentru a selecta",
+        "dropFileDescriptionSplitwise": "CSV este singurul format pe care îl exportă Splitwise. Analizăm valorile per participant pentru a reconstrui împărțirea."
       },
       "StepHeader": {
         "title": "Importați un grup",
-        "source": "1. Sursă",
-        "destination": "2. Destinație",
-        "mapping": "3. Mapare",
-        "confirm": "4. Confirmare",
-        "done": "5. Gata",
-        "backAriaLabel": "Înapoi"
+        "source": "Sursă",
+        "destination": "Destinație",
+        "mapping": "Mapare",
+        "confirm": "Confirmare",
+        "done": "Gata",
+        "backAriaLabel": "Înapoi",
+        "currencyConversion": "Currency conversion",
+        "backTo": "Înapoi la {step}",
+        "continueTo": "Continuă la {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Folosește curs personalizat",
+        "fetchingRates": "Se preiau cursurile de schimb…",
+        "fixedDescription": "Mai puțin precis, dar asigură că toate sumele folosesc același curs de conversie, astfel încât soldul grupului rămâne zero după import.",
+        "fixedTitle": "Curs fix",
+        "noConversionNeeded": "Toate cheltuielile sunt în moneda implicită a grupului. Nu este necesară nicio conversie valutară.",
+        "perDateDescription": "Mai precis — folosește cursul de schimb din data reală a fiecărei cheltuieli.",
+        "perDateSelectedHint": "Folosește cursul istoric pentru data fiecărei cheltuieli.",
+        "perDateTitle": "Conversie per dată",
+        "rateDateLabel": "Data cursului",
+        "ratesError": "Nu s-au putut prelua cursurile de schimb. Verifică conexiunea și încearcă din nou.",
+        "refresh": "Reîmprospătează",
+        "viaFrankfurter": "prin Frankfurter"
       }
     },
     "Importable": {

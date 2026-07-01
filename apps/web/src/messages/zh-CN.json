@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "请求日期 {requested} · 提供方使用日期 {asOf}",
         "currencyConversionTitle": "货币换算",
         "currencyConversionDescription": "支出将使用以下汇率从源币种转换为目标账簿币种。",
-        "currencyRateForDateFormat": "适用于日期 {date} 的支出"
+        "currencyRateForDateFormat": "适用于日期 {date} 的支出",
+        "appliedExchangeRatesLabel": "已应用的汇率",
+        "conversionPerDate": "按日期",
+        "conversionFixed": "固定汇率",
+        "importErrorTitle": "导入失败",
+        "importErrorFallback": "导入群组时发生意外错误，请重试。",
+        "executeImport": "导入群组"
       },
       "Destination": {
         "heading": "您想将 <strong>{name}</strong> 导入到哪里？（{participantCount} 名参与者 · {expenseCount} 笔支出）",
@@ -272,7 +278,7 @@
       "notFound": "Spliit 未找到此群组",
       "fetchSourceError": "获取来源失败",
       "Source": {
-        "fromSpliit": "从 Spliit",
+        "fromSpliit": "Spliit",
         "splitwise": "Splitwise（即将推出）",
         "tricount": "Tricount（即将推出）",
         "settleUp": "Settle Up（即将推出）",
@@ -298,16 +304,41 @@
         "fetchUrlError": "获取来源失败",
         "fileReadError": "读取文件失败",
         "appToCloudDescription": "将任何 spliit.app 群组 URL 中的 .app 改为 .cloud，即可导入到 Spliit Cloud。",
-        "appToCloudTitle": "将 .app 换成 .cloud"
+        "appToCloudTitle": "将 .app 换成 .cloud",
+        "splitwiseDescription": "拖入 Splitwise 的 CSV 导出文件，将其支出导入 Spliit Cloud。文件必须来自 Splitwise 的群组导出（可在群组设置中获取的按群组的 CSV）。",
+        "receiptWarningTitleSplitwise": "收据图片不会被导入。",
+        "receiptWarningDescriptionSplitwise": "Splitwise 的导出不包含收据图片。如果需要，请在目标群组中重新上传。",
+        "unsupportedFileType": "不支持的文件类型，请拖放 JSON 或 CSV 文件。",
+        "dropFileSplitwise": "拖放 Splitwise CSV 文件，或点击选择",
+        "dropFileDescriptionSplitwise": "CSV 是 Splitwise 唯一支持导出的格式。我们会解析每位参与者的金额来重建分摊。"
       },
       "StepHeader": {
         "title": "导入群组",
-        "source": "1. 来源",
-        "destination": "2. 目标",
-        "mapping": "3. 映射",
-        "confirm": "4. 确认",
-        "done": "5. 完成",
-        "backAriaLabel": "返回"
+        "source": "来源",
+        "destination": "目标",
+        "mapping": "映射",
+        "confirm": "确认",
+        "done": "完成",
+        "backAriaLabel": "返回",
+        "currencyConversion": "Currency conversion",
+        "backTo": "返回{step}",
+        "continueTo": "继续到{step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "使用自定义汇率",
+        "fetchingRates": "正在获取汇率…",
+        "fixedDescription": "精度较低,但能确保所有金额使用相同的换算汇率,因此导入后群组余额保持为零。",
+        "fixedTitle": "固定汇率",
+        "noConversionNeeded": "所有支出都使用群组的默认货币。无需进行货币换算。",
+        "perDateDescription": "更准确——使用每笔支出实际日期的汇率。",
+        "perDateSelectedHint": "使用每笔支出日期的历史汇率。",
+        "perDateTitle": "按日期换算",
+        "rateDateLabel": "汇率日期",
+        "ratesError": "无法获取汇率。请检查网络连接后重试。",
+        "refresh": "刷新",
+        "viaFrankfurter": "由 Frankfurter 提供"
       }
     },
     "Importable": {

@@ -143,7 +143,13 @@
         "currencyRateAsOfFormat": "요청일 {requested} · 제공자 사용일 {asOf}",
         "currencyConversionTitle": "통화 변환",
         "currencyConversionDescription": "지출은 아래 환율을 사용하여 소스 통화에서 대상 원장 통화로 변환됩니다.",
-        "currencyRateForDateFormat": "{date} 날짜의 지출에 적용됨"
+        "currencyRateForDateFormat": "{date} 날짜의 지출에 적용됨",
+        "appliedExchangeRatesLabel": "적용된 환율",
+        "conversionPerDate": "날짜별",
+        "conversionFixed": "고정 환율",
+        "importErrorTitle": "가져오기 실패",
+        "importErrorFallback": "그룹을 가져오는 동안 예기치 못한 오류가 발생했습니다. 다시 시도해 주세요.",
+        "executeImport": "그룹 가져오기"
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
@@ -208,8 +214,8 @@
       "notFound": "Spliit에서 이 그룹을 찾을 수 없습니다",
       "fetchSourceError": "소스를 가져오지 못했습니다",
       "Source": {
-        "fromSpliit": "Spliit에서",
-        "splitwise": "Splitwise (출시 예정)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (출시 예정)",
         "settleUp": "Settle Up (출시 예정)",
         "spliitDescription": "기존 spliit.app 그룹을 Spliit Cloud로 가져옵니다. 그룹 이름, 참가자 및 모든 지출을 읽어 들입니다.",
@@ -234,16 +240,41 @@
         "fetchUrlError": "소스를 가져오지 못했습니다",
         "fileReadError": "파일을 읽지 못했습니다",
         "appToCloudDescription": "모든 spliit.app 그룹 URL의 .app을 .cloud로 변경하여 Spliit Cloud로 가져오세요。",
-        "appToCloudTitle": ".app을 .cloud로 바꾸기"
+        "appToCloudTitle": ".app을 .cloud로 바꾸기",
+        "splitwiseDescription": "Splitwise CSV 내보내기를 드롭하여 해당 지출을 Spliit Cloud로 가져옵니다. 파일은 Splitwise의 그룹 내보내기에서 가져와야 합니다. 그룹 설정에서 사용할 수 있는 그룹별 CSV입니다.",
+        "receiptWarningTitleSplitwise": "영수증 이미지는 가져오지 않습니다.",
+        "receiptWarningDescriptionSplitwise": "Splitwise 내보내기에는 영수증 이미지가 포함되지 않습니다. 필요한 경우 대상 그룹에 다시 업로드하세요.",
+        "unsupportedFileType": "지원하지 않는 파일 형식입니다. JSON 또는 CSV 파일을 드롭해 주세요.",
+        "dropFileSplitwise": "Splitwise CSV 파일을 드롭하거나 클릭하여 선택하세요",
+        "dropFileDescriptionSplitwise": "CSV는 Splitwise가 내보낼 수 있는 유일한 형식입니다. 참가자별 값을 분석하여 분담을 재구성합니다."
       },
       "StepHeader": {
         "title": "그룹 가져오기",
-        "source": "1. 소스",
-        "destination": "2. 대상",
-        "mapping": "3. 매핑",
-        "confirm": "4. 확인",
-        "done": "5. 완료",
-        "backAriaLabel": "뒤로"
+        "source": "소스",
+        "destination": "대상",
+        "mapping": "매핑",
+        "confirm": "확인",
+        "done": "완료",
+        "backAriaLabel": "뒤로",
+        "currencyConversion": "Currency conversion",
+        "backTo": "{step}(으)로 돌아가기",
+        "continueTo": "{step} 계속하기"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "맞춤 환율 사용",
+        "fetchingRates": "환율 정보를 가져오는 중…",
+        "fixedDescription": "정확도는 떨어지지만, 모든 금액이 동일한 환율을 사용하도록 보장하여 가져오기 후 그룹 잔액이 0으로 유지됩니다.",
+        "fixedTitle": "고정 환율",
+        "noConversionNeeded": "모든 지출이 그룹의 기본 통화입니다. 통화 변환이 필요하지 않습니다.",
+        "perDateDescription": "더 정확함 — 각 지출의 실제 날짜의 환율을 사용합니다.",
+        "perDateSelectedHint": "각 지출 날짜의 과거 환율을 사용합니다.",
+        "perDateTitle": "날짜별 변환",
+        "rateDateLabel": "환율 날짜",
+        "ratesError": "환율을 가져올 수 없습니다. 연결을 확인하고 다시 시도하세요.",
+        "refresh": "새로 고침",
+        "viaFrankfurter": "Frankfurter 제공"
       }
     },
     "Importable": {

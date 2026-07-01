@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Požadováno {requested} · poskytovatel použil {asOf}",
         "currencyConversionTitle": "Konverze měny",
         "currencyConversionDescription": "Výdaje budou převedeny z původní měny do cílové měny účtu pomocí níže uvedených kurzů.",
-        "currencyRateForDateFormat": "Použito pro výdaje s datem {date}"
+        "currencyRateForDateFormat": "Použito pro výdaje s datem {date}",
+        "appliedExchangeRatesLabel": "Použité směnné kurzy",
+        "conversionPerDate": "Podle data",
+        "conversionFixed": "Pevný kurz",
+        "importErrorTitle": "Import se nezdařil",
+        "importErrorFallback": "Při importu skupiny došlo k neočekávané chybě. Zkuste to prosím znovu.",
+        "executeImport": "Importovat skupinu"
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit tuto skupinu nenašel",
       "fetchSourceError": "Nepodařilo se načíst zdroj",
       "Source": {
-        "fromSpliit": "Ze Spliit",
-        "splitwise": "Splitwise (již brzy)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (již brzy)",
         "settleUp": "Settle Up (již brzy)",
         "spliitDescription": "Přeneste existující skupinu z spliit.app do Spliit Cloud. Načteme název skupiny, účastníky a každý výdaj.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Nepodařilo se načíst zdroj",
         "fileReadError": "Nepodařilo se přečíst soubor",
         "appToCloudDescription": "Nahraďte .app za .cloud v libovolné URL skupiny spliit.app a importujte ji do Spliit Cloud.",
-        "appToCloudTitle": "Nahraďte .app za .cloud"
+        "appToCloudTitle": "Nahraďte .app za .cloud",
+        "splitwiseDescription": "Přetáhněte CSV export ze Splitwise pro import jeho výdajů do Spliit Cloudu. Soubor musí pocházet ze skupinového exportu Splitwise — CSV pro konkrétní skupinu dostupného v nastavení skupiny.",
+        "receiptWarningTitleSplitwise": "Obrázky účtenek se neimportují.",
+        "receiptWarningDescriptionSplitwise": "Export ze Splitwise neobsahuje obrázky účtenek. V případě potřeby je nahrajte znovu do cílové skupiny.",
+        "unsupportedFileType": "Nepodporovaný typ souboru. Přetáhněte prosím soubor JSON nebo CSV.",
+        "dropFileSplitwise": "Přetáhněte CSV soubor Splitwise, nebo kliknutím vyberte",
+        "dropFileDescriptionSplitwise": "CSV je jediný formát, který Splitwise exportuje. Hodnoty za jednotlivé účastníky analyzujeme, abychom obnovili rozdělení."
       },
       "StepHeader": {
         "title": "Importovat skupinu",
-        "source": "1. Zdroj",
-        "destination": "2. Cíl",
-        "mapping": "3. Mapování",
-        "confirm": "4. Potvrdit",
-        "done": "5. Hotovo",
-        "backAriaLabel": "Zpět"
+        "source": "Zdroj",
+        "destination": "Cíl",
+        "mapping": "Mapování",
+        "confirm": "Potvrdit",
+        "done": "Hotovo",
+        "backAriaLabel": "Zpět",
+        "currencyConversion": "Currency conversion",
+        "backTo": "Zpět na {step}",
+        "continueTo": "Pokračovat na {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Použít vlastní kurz",
+        "fetchingRates": "Načítání směnných kurzů…",
+        "fixedDescription": "Méně přesné, ale zajišťuje, že všechny částky použijí stejný směnný kurz, takže zůstatek skupiny zůstane po importu na nule.",
+        "fixedTitle": "Pevný kurz",
+        "noConversionNeeded": "Všechny výdaje jsou ve výchozí měně skupiny. Není potřeba žádná konverze měn.",
+        "perDateDescription": "Přesnější — použije směnný kurz z data každého výdaje.",
+        "perDateSelectedHint": "Použije historický kurz pro datum každého výdaje.",
+        "perDateTitle": "Konverze podle data",
+        "rateDateLabel": "Datum kurzu",
+        "ratesError": "Směnné kurzy se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.",
+        "refresh": "Obnovit",
+        "viaFrankfurter": "přes Frankfurter"
       }
     },
     "Importable": {

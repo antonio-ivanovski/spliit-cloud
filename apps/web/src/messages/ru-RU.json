@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Запрошено {requested} · поставщик использовал {asOf}",
         "currencyConversionTitle": "Конвертация валюты",
         "currencyConversionDescription": "Расходы будут конвертированы из исходной валюты в целевую валюту книги по курсам ниже.",
-        "currencyRateForDateFormat": "Применено для расходов от {date}"
+        "currencyRateForDateFormat": "Применено для расходов от {date}",
+        "appliedExchangeRatesLabel": "Применённые курсы обмена",
+        "conversionPerDate": "По дате",
+        "conversionFixed": "Фиксированный курс",
+        "importErrorTitle": "Не удалось импортировать",
+        "importErrorFallback": "При импорте группы произошла непредвиденная ошибка. Повторите попытку.",
+        "executeImport": "Импортировать группу"
       },
       "Destination": {
         "heading": "Куда вы хотите импортировать <strong>{name}</strong>? ({participantCount} участников · {expenseCount} трат)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit не нашёл эту группу",
       "fetchSourceError": "Не удалось получить источник",
       "Source": {
-        "fromSpliit": "Из Spliit",
-        "splitwise": "Splitwise (скоро)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (скоро)",
         "settleUp": "Settle Up (скоро)",
         "spliitDescription": "Перенесите существующую группу из spliit.app в Spliit Cloud. Мы считываем название группы, участников и каждую трату.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Не удалось получить источник",
         "fileReadError": "Не удалось прочитать файл",
         "appToCloudDescription": "Замените .app на .cloud в любом URL группы spliit.app, чтобы импортировать её в Spliit Cloud.",
-        "appToCloudTitle": "Замените .app на .cloud"
+        "appToCloudTitle": "Замените .app на .cloud",
+        "splitwiseDescription": "Перетащите CSV-экспорт из Splitwise, чтобы импортировать его расходы в Spliit Cloud. Файл должен быть получен из группового экспорта Splitwise — CSV для конкретной группы, доступный в настройках группы.",
+        "receiptWarningTitleSplitwise": "Изображения чеков не импортируются.",
+        "receiptWarningDescriptionSplitwise": "Экспорт Splitwise не включает изображения чеков. Повторно загрузите их в группу назначения, если они вам нужны.",
+        "unsupportedFileType": "Неподдерживаемый тип файла. Перетащите файл JSON или CSV.",
+        "dropFileSplitwise": "Перетащите CSV-файл Splitwise или нажмите для выбора",
+        "dropFileDescriptionSplitwise": "CSV — единственный формат, который экспортирует Splitwise. Мы разбираем значения по участникам, чтобы восстановить разбивку."
       },
       "StepHeader": {
         "title": "Импортировать группу",
-        "source": "1. Источник",
-        "destination": "2. Назначение",
-        "mapping": "3. Сопоставление",
-        "confirm": "4. Подтвердить",
-        "done": "5. Готово",
-        "backAriaLabel": "Назад"
+        "source": "Источник",
+        "destination": "Назначение",
+        "mapping": "Сопоставление",
+        "confirm": "Подтвердить",
+        "done": "Готово",
+        "backAriaLabel": "Назад",
+        "currencyConversion": "Currency conversion",
+        "backTo": "Назад: {step}",
+        "continueTo": "Продолжить: {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Использовать свой курс",
+        "fetchingRates": "Получение курсов обмена…",
+        "fixedDescription": "Менее точно, но гарантирует, что для всех сумм используется один и тот же курс конвертации, поэтому баланс группы после импорта остаётся нулевым.",
+        "fixedTitle": "Фиксированный курс",
+        "noConversionNeeded": "Все расходы в валюте группы по умолчанию. Конвертация валюты не требуется.",
+        "perDateDescription": "Более точно — используется курс обмена на фактическую дату каждого расхода.",
+        "perDateSelectedHint": "Используется исторический курс на дату каждого расхода.",
+        "perDateTitle": "Конвертация по дате",
+        "rateDateLabel": "Дата курса",
+        "ratesError": "Не удалось получить курсы обмена. Проверьте подключение и попробуйте снова.",
+        "refresh": "Обновить",
+        "viaFrankfurter": "через Frankfurter"
       }
     },
     "Importable": {

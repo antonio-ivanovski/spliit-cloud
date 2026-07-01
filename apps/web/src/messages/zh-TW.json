@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "請求日期 {requested} · 提供方使用日期 {asOf}",
         "currencyConversionTitle": "貨幣換算",
         "currencyConversionDescription": "支出將使用以下匯率從來源幣種轉換為目標帳簿幣種。",
-        "currencyRateForDateFormat": "適用於日期 {date} 的支出"
+        "currencyRateForDateFormat": "適用於日期 {date} 的支出",
+        "appliedExchangeRatesLabel": "已套用的匯率",
+        "conversionPerDate": "依日期",
+        "conversionFixed": "固定匯率",
+        "importErrorTitle": "匯入失敗",
+        "importErrorFallback": "匯入群組時發生未預期的錯誤，請再試一次。",
+        "executeImport": "匯入群組"
       },
       "Destination": {
         "heading": "您想要將 <strong>{name}</strong> 匯入到哪裡？（{participantCount} 位參與者 · {expenseCount} 筆支出）",
@@ -272,7 +278,7 @@
       "notFound": "Spliit 找不到此群組",
       "fetchSourceError": "無法擷取來源",
       "Source": {
-        "fromSpliit": "從 Spliit",
+        "fromSpliit": "Spliit",
         "splitwise": "Splitwise（即將推出）",
         "tricount": "Tricount（即將推出）",
         "settleUp": "Settle Up（即將推出）",
@@ -298,16 +304,41 @@
         "fetchUrlError": "無法擷取來源",
         "fileReadError": "無法讀取檔案",
         "appToCloudDescription": "將任何 spliit.app 群組 URL 中的 .app 改為 .cloud，即可匯入到 Spliit Cloud。",
-        "appToCloudTitle": "將 .app 換成 .cloud"
+        "appToCloudTitle": "將 .app 換成 .cloud",
+        "splitwiseDescription": "拖入 Splitwise 的 CSV 匯出檔案，將其支出匯入 Spliit Cloud。檔案必須來自 Splitwise 的群組匯出（可在群組設定中取得的按群組 CSV）。",
+        "receiptWarningTitleSplitwise": "收據圖片不會被匯入。",
+        "receiptWarningDescriptionSplitwise": "Splitwise 的匯出不包含收據圖片。如有需要，請在目的地群組中重新上傳。",
+        "unsupportedFileType": "不支援的檔案類型，請拖放 JSON 或 CSV 檔案。",
+        "dropFileSplitwise": "拖放 Splitwise CSV 檔案，或按一下以選取",
+        "dropFileDescriptionSplitwise": "CSV 是 Splitwise 唯一匯出的格式。我們會解析每位參與者的金額來重建分攤。"
       },
       "StepHeader": {
         "title": "匯入群組",
-        "source": "1. 來源",
-        "destination": "2. 目的地",
-        "mapping": "3. 對應",
-        "confirm": "4. 確認",
-        "done": "5. 完成",
-        "backAriaLabel": "返回"
+        "source": "來源",
+        "destination": "目的地",
+        "mapping": "對應",
+        "confirm": "確認",
+        "done": "完成",
+        "backAriaLabel": "返回",
+        "currencyConversion": "Currency conversion",
+        "backTo": "返回{step}",
+        "continueTo": "繼續到{step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "使用自訂匯率",
+        "fetchingRates": "正在取得匯率…",
+        "fixedDescription": "精確度較低,但能確保所有金額使用相同的換算匯率,因此匯入後群組餘額保持為零。",
+        "fixedTitle": "固定匯率",
+        "noConversionNeeded": "所有支出皆使用群組的預設貨幣。無需進行貨幣換算。",
+        "perDateDescription": "更精確——使用每筆支出實際日期的匯率。",
+        "perDateSelectedHint": "使用每筆支出日期的歷史匯率。",
+        "perDateTitle": "依日期換算",
+        "rateDateLabel": "匯率日期",
+        "ratesError": "無法取得匯率。請檢查網路連線後重試。",
+        "refresh": "重新整理",
+        "viaFrankfurter": "由 Frankfurter 提供"
       }
     },
     "Importable": {

@@ -197,19 +197,22 @@
     "Import": {
       "StepHeader": {
         "title": "Увези група",
-        "source": "1. Извор",
-        "destination": "2. Дестинација",
-        "mapping": "3. Мапирање",
-        "confirm": "4. Потврда",
-        "done": "5. Готово",
-        "backAriaLabel": "Назад"
+        "source": "Извор",
+        "destination": "Дестинација",
+        "mapping": "Мапирање",
+        "confirm": "Потврда",
+        "done": "Готово",
+        "backAriaLabel": "Назад",
+        "currencyConversion": "Currency conversion",
+        "backTo": "Назад кон {step}",
+        "continueTo": "Продолжи кон {step}"
       },
       "fetchingGroup": "Се презема групата од spliit.app…",
       "notFound": "Spliit не ја пронајде оваа група",
       "fetchSourceError": "Неуспешно преземање на изворот",
       "Source": {
-        "fromSpliit": "Од Spliit",
-        "splitwise": "Splitwise (наскоро)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (наскоро)",
         "settleUp": "Settle Up (наскоро)",
         "spliitDescription": "Донесете постоечка spliit.app група во Spliit Cloud. Ги читаме името на групата, учесниците и сите трошоци.",
@@ -234,7 +237,13 @@
         "fetchUrlError": "Неуспешно преземање на изворот",
         "fileReadError": "Неуспешно читање на датотеката",
         "appToCloudDescription": "Сменете .app во .cloud во кое било spliit.app URL за да ја увезете групата во Spliit Cloud.",
-        "appToCloudTitle": "Замени .app со .cloud"
+        "appToCloudTitle": "Замени .app со .cloud",
+        "splitwiseDescription": "Пуштете CSV извоз од Splitwise за да ги увезете неговите трошоци во Spliit Cloud. Датотеката мора да доаѓа од групниот извоз на Splitwise — групниот CSV достапен од поставките на групата.",
+        "receiptWarningTitleSplitwise": "Сликите од сметки не се увезуваат.",
+        "receiptWarningDescriptionSplitwise": "Извозот од Splitwise не вклучува слики од сметки. Повторно поставете ги во групата-дестинација ако ви требаат.",
+        "unsupportedFileType": "Неподдржан тип на датотека. Пуштете JSON или CSV датотека.",
+        "dropFileSplitwise": "Пуштете CSV датотека од Splitwise, или кликнете за да изберете",
+        "dropFileDescriptionSplitwise": "CSV е единствениот формат што Splitwise го извезува. Ги анализираме вредностите по учесник за да ја обновиме распределбата."
       },
       "Destination": {
         "heading": "Каде сакате да го увезете <strong>{name}</strong>? ({participantCount} учесници · {expenseCount} трошоци)",
@@ -301,7 +310,13 @@
         "currencyRateAsOfFormat": "Побарано {requested} · сервисот користел {asOf}",
         "currencyConversionTitle": "Конверзија на валута",
         "currencyConversionDescription": "Трошоците ќе бидат конвертирани од изворната валута во валутата на дестинацијата користејќи ги курсевите подолу.",
-        "currencyRateForDateFormat": "Применето за трошоци со датум {date}"
+        "currencyRateForDateFormat": "Применето за трошоци со датум {date}",
+        "appliedExchangeRatesLabel": "Применети девизни курсеви",
+        "conversionPerDate": "По датум",
+        "conversionFixed": "Фиксен курс",
+        "importErrorTitle": "Увозот не успеа",
+        "importErrorFallback": "Се појави неочекувана грешка при увезување на групата. Обидете се повторно.",
+        "executeImport": "Увези група"
       },
       "Done": {
         "importComplete": "Увозот е завршен",
@@ -314,6 +329,22 @@
         "emailInvitesDescription": "Серверот им испрати е-пошта на следниве лица. Тие ќе видат банер за Прифаќање/Одбивање на страницата на групата кога ќе се најават.",
         "shareTitle": "Приклучете се на мојата Spliit група",
         "shareText": "Приклучете се на нашата група за трошоци на Spliit Cloud — {name}. Отворете го овој линк за да прифатите: {url}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Користи прилагоден курс",
+        "fetchingRates": "Земање девизни курсеви…",
+        "fixedDescription": "Помалку прецизно, но гарантира дека сите износи ќе го користат истиот конверзиски курс, така што салдото на групата ќе остане на нула по увозот.",
+        "fixedTitle": "Фиксен курс",
+        "noConversionNeeded": "Сите трошоци се во стандардната валута на групата. Не е потребна конверзија на валута.",
+        "perDateDescription": "Попрецизно — го користи девизниот курс од реалниот датум на секој трошок.",
+        "perDateSelectedHint": "Го користи историскиот курс за датумот на секој трошок.",
+        "perDateTitle": "Конверзија по датум",
+        "rateDateLabel": "Датум на курс",
+        "ratesError": "Не може да се земат девизните курсеви. Проверете ја вашата конекција и обидете се повторно.",
+        "refresh": "Освежи",
+        "viaFrankfurter": "преку Frankfurter"
       }
     }
   },

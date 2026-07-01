@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Richiesto il {requested} · fornitore usato il {asOf}",
         "currencyConversionTitle": "Conversione valuta",
         "currencyConversionDescription": "Le spese verranno convertite dalla valuta di origine alla valuta del registro di destinazione utilizzando i tassi seguenti.",
-        "currencyRateForDateFormat": "Applicato per spese datate {date}"
+        "currencyRateForDateFormat": "Applicato per spese datate {date}",
+        "appliedExchangeRatesLabel": "Tassi di cambio applicati",
+        "conversionPerDate": "Per data",
+        "conversionFixed": "Tasso fisso",
+        "importErrorTitle": "Importazione non riuscita",
+        "importErrorFallback": "Si è verificato un errore imprevisto durante l'importazione del gruppo. Riprova.",
+        "executeImport": "Importa gruppo"
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit non ha trovato questo gruppo",
       "fetchSourceError": "Impossibile recuperare l'origine",
       "Source": {
-        "fromSpliit": "Da Spliit",
-        "splitwise": "Splitwise (in arrivo)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (in arrivo)",
         "settleUp": "Settle Up (in arrivo)",
         "spliitDescription": "Porta un gruppo spliit.app esistente in Spliit Cloud. Leggiamo il nome del gruppo, i partecipanti e ogni spesa.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Impossibile recuperare l'origine",
         "fileReadError": "Impossibile leggere il file",
         "appToCloudDescription": "Sostituisci .app con .cloud in qualsiasi URL di gruppo spliit.app per importarlo in Spliit Cloud.",
-        "appToCloudTitle": "Sostituisci .app con .cloud"
+        "appToCloudTitle": "Sostituisci .app con .cloud",
+        "splitwiseDescription": "Trascina un'esportazione CSV di Splitwise per importarne le spese in Spliit Cloud. Il file deve provenire dall'esportazione di gruppo di Splitwise — il CSV per gruppo disponibile nelle impostazioni del gruppo.",
+        "receiptWarningTitleSplitwise": "Le immagini delle ricevute non vengono importate.",
+        "receiptWarningDescriptionSplitwise": "L'esportazione di Splitwise non include le immagini delle ricevute. Ricaricale nel gruppo di destinazione se ti servono.",
+        "unsupportedFileType": "Tipo di file non supportato. Trascina un file JSON o CSV.",
+        "dropFileSplitwise": "Trascina un file CSV di Splitwise, o clicca per selezionare",
+        "dropFileDescriptionSplitwise": "CSV è l'unico formato esportato da Splitwise. Analizziamo i valori per partecipante per ricostruire la divisione."
       },
       "StepHeader": {
         "title": "Importa un gruppo",
-        "source": "1. Origine",
-        "destination": "2. Destinazione",
-        "mapping": "3. Mappatura",
-        "confirm": "4. Conferma",
-        "done": "5. Fatto",
-        "backAriaLabel": "Indietro"
+        "source": "Origine",
+        "destination": "Destinazione",
+        "mapping": "Mappatura",
+        "confirm": "Conferma",
+        "done": "Fatto",
+        "backAriaLabel": "Indietro",
+        "currencyConversion": "Currency conversion",
+        "backTo": "Torna a {step}",
+        "continueTo": "Continua a {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Usa un tasso personalizzato",
+        "fetchingRates": "Recupero dei tassi di cambio…",
+        "fixedDescription": "Meno preciso, ma garantisce che tutti gli importi utilizzino lo stesso tasso di conversione, così il saldo del gruppo resta a zero dopo l'importazione.",
+        "fixedTitle": "Tasso fisso",
+        "noConversionNeeded": "Tutte le spese sono nella valuta predefinita del gruppo. Non è necessaria alcuna conversione di valuta.",
+        "perDateDescription": "Più preciso — usa il tasso di cambio della data effettiva di ogni spesa.",
+        "perDateSelectedHint": "Usa il tasso storico per la data di ogni spesa.",
+        "perDateTitle": "Conversione per data",
+        "rateDateLabel": "Data del tasso",
+        "ratesError": "Impossibile recuperare i tassi di cambio. Controlla la connessione e riprova.",
+        "refresh": "Aggiorna",
+        "viaFrankfurter": "tramite Frankfurter"
       }
     },
     "Importable": {

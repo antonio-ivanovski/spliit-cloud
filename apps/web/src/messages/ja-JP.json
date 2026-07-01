@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "要求日 {requested} · プロバイダー使用日 {asOf}",
         "currencyConversionTitle": "通貨換算",
         "currencyConversionDescription": "経費は以下のレートを使用してソース通貨から宛先の元帳通貨に換算されます。",
-        "currencyRateForDateFormat": "日付 {date} の経費に適用"
+        "currencyRateForDateFormat": "日付 {date} の経費に適用",
+        "appliedExchangeRatesLabel": "適用された為替レート",
+        "conversionPerDate": "日付ごと",
+        "conversionFixed": "固定レート",
+        "importErrorTitle": "インポートに失敗しました",
+        "importErrorFallback": "グループのインポート中に予期しないエラーが発生しました。もう一度お試しください。",
+        "executeImport": "グループをインポート"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",
@@ -272,7 +278,7 @@
       "notFound": "Spliit はこのグループを見つけられませんでした",
       "fetchSourceError": "ソースの取得に失敗しました",
       "Source": {
-        "fromSpliit": "Spliit から",
+        "fromSpliit": "Spliit",
         "splitwise": "Splitwise（近日対応予定）",
         "tricount": "Tricount（近日対応予定）",
         "settleUp": "Settle Up（近日対応予定）",
@@ -298,16 +304,41 @@
         "fetchUrlError": "ソースの取得に失敗しました",
         "fileReadError": "ファイルの読み取りに失敗しました",
         "appToCloudDescription": "spliit.app のグループ URL の .app を .cloud に変更して、Spliit Cloud にインポートしてください。",
-        "appToCloudTitle": ".app を .cloud に変更"
+        "appToCloudTitle": ".app を .cloud に変更",
+        "splitwiseDescription": "Splitwise の CSV エクスポートをドロップして、その支出を Spliit Cloud に取り込みます。ファイルは Splitwise のグループエクスポート(グループ設定から取得できるグループ単位の CSV)から取得する必要があります。",
+        "receiptWarningTitleSplitwise": "レシート画像はインポートされません。",
+        "receiptWarningDescriptionSplitwise": "Splitwise のエクスポートにはレシート画像は含まれません。必要な場合は、宛先グループに再アップロードしてください。",
+        "unsupportedFileType": "サポートされていないファイル形式です。JSON または CSV ファイルをドロップしてください。",
+        "dropFileSplitwise": "Splitwise の CSV ファイルをドロップするか、クリックして選択してください",
+        "dropFileDescriptionSplitwise": "CSV は Splitwise がエクスポートできる唯一の形式です。参加者ごとの値を解析して分割を再構成します。"
       },
       "StepHeader": {
         "title": "グループをインポート",
-        "source": "1. ソース",
-        "destination": "2. 宛先",
-        "mapping": "3. マッピング",
-        "confirm": "4. 確認",
-        "done": "5. 完了",
-        "backAriaLabel": "戻る"
+        "source": "ソース",
+        "destination": "宛先",
+        "mapping": "マッピング",
+        "confirm": "確認",
+        "done": "完了",
+        "backAriaLabel": "戻る",
+        "currencyConversion": "Currency conversion",
+        "backTo": "{step}に戻る",
+        "continueTo": "{step}に進む"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "カスタムレートを使用",
+        "fetchingRates": "為替レートを取得しています…",
+        "fixedDescription": "精度は劣りますが、すべての金額が同じ換算レートを使用するため、インポート後にグループの残高がちょうどゼロになります。",
+        "fixedTitle": "固定レート",
+        "noConversionNeeded": "すべての支出がグループのデフォルト通貨です。通貨換算の必要はありません。",
+        "perDateDescription": "より正確 — 各支出の実際の日付の為替レートを使用します。",
+        "perDateSelectedHint": "各支出の日付の履歴レートを使用します。",
+        "perDateTitle": "日付別換算",
+        "rateDateLabel": "レート日付",
+        "ratesError": "為替レートを取得できませんでした。接続を確認して再試行してください。",
+        "refresh": "再読み込み",
+        "viaFrankfurter": "Frankfurter 経由"
       }
     },
     "Importable": {

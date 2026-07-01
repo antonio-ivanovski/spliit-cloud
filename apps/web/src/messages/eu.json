@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Eskatua {requested} · erabilitakoa {asOf}",
         "currencyConversionTitle": "Moneta bihurketa",
         "currencyConversionDescription": "Gastuak iturburuko monetatik helburuko monetara bihurtuko dira azpiko tasak erabiliz.",
-        "currencyRateForDateFormat": "Aplikatua {date} datako gastuetarako"
+        "currencyRateForDateFormat": "Aplikatua {date} datako gastuetarako",
+        "appliedExchangeRatesLabel": "Aplikatutako truke-tasak",
+        "conversionPerDate": "Data arabera",
+        "conversionFixed": "Tasa finkoa",
+        "importErrorTitle": "Inportazioak huts egin du",
+        "importErrorFallback": "Ust ezusteko bat gertatu da taldea inportatzean. Saiatu berriro.",
+        "executeImport": "Inportatu taldea"
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit-ek ez du talde hau aurkitu",
       "fetchSourceError": "Ezin izan da iturburua eskuratu",
       "Source": {
-        "fromSpliit": "Spliit-etik",
-        "splitwise": "Splitwise (laster)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (laster)",
         "settleUp": "Settle Up (laster)",
         "spliitDescription": "Ekarri spliit.app-eko talde bat Spliit Cloud-era. Taldearen izena, parte-hartzaileak eta gastu guztiak irakurtzen ditugu.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Ezin izan da iturburua eskuratu",
         "fileReadError": "Ezin izan da fitxategia irakurri",
         "appToCloudDescription": "Ordeztu .app .cloud-ekin edozein spliit.app taldeko URL-an, Spliit Cloud-era inportatzeko.",
-        "appToCloudTitle": "Ordeztu .app .cloud-ekin"
+        "appToCloudTitle": "Ordeztu .app .cloud-ekin",
+        "splitwiseDescription": "Jarein Splitwise-ko CSV esportazio bat bere gastuak Spliit Cloud-era inportatzeko. Fitxategia Splitwise-ko talde-esportaziotik etorri behar da — taldearen ezarpenetan eskuragarri dagoen taldeko CSV-a.",
+        "receiptWarningTitleSplitwise": "Ordainagirien irudiak ez dira inportatzen.",
+        "receiptWarningDescriptionSplitwise": "Splitwise-ko esportazioak ez ditu ordainagirien irudiak barne hartzen. Berriro igo itzazu helburuko taldean behar badituzu.",
+        "unsupportedFileType": "Onartu gabeko fitxategi mota. Jaregin JSON edo CSV fitxategi bat.",
+        "dropFileSplitwise": "Jaregin Splitwise CSV fitxategi bat, edo egin klik hautatzeko",
+        "dropFileDescriptionSplitwise": "CSV da Splitwise-k esportatzen duen formatu bakarra. Parte-hartzaile bakoitzaren balioak aztertzen ditugu banaketa berreraikitzeko."
       },
       "StepHeader": {
         "title": "Talde bat inportatu",
-        "source": "1. Iturburua",
-        "destination": "2. Helburua",
-        "mapping": "3. Mapaketa",
-        "confirm": "4. Berretsi",
-        "done": "5. Eginda",
-        "backAriaLabel": "Atzera"
+        "source": "Iturburua",
+        "destination": "Helburua",
+        "mapping": "Mapaketa",
+        "confirm": "Berretsi",
+        "done": "Eginda",
+        "backAriaLabel": "Atzera",
+        "currencyConversion": "Currency conversion",
+        "backTo": "Itzuli {step}-era",
+        "continueTo": "Jarraitu {step}-era"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Erabili tasa pertsonalizatua",
+        "fetchingRates": "Trukatze-tasak eskuratzen…",
+        "fixedDescription": "Ez da zehatza, baina ziurtatzen du zenbateko guztiek truke-tasa bera erabiltzea, taldearen saldoa inportatu ondoren zero garbia izan dadin.",
+        "fixedTitle": "Tasa finkoa",
+        "noConversionNeeded": "Gastu guztiak taldearen lehenetsitako monetan daude. Ez da moneta-bihurketarik behar.",
+        "perDateDescription": "Zehatzagoa — gastu bakoitzaren benetako dataren truke-tasa erabiltzen du.",
+        "perDateSelectedHint": "Gastu bakoitzaren datarako tasa historikoa erabiltzen du.",
+        "perDateTitle": "Dataren araberako bihurketa",
+        "rateDateLabel": "Tasaren data",
+        "ratesError": "Ezin izan dira truke-tasak eskuratu. Egiaztatu zure konexioa eta saiatu berriro.",
+        "refresh": "Freskatu",
+        "viaFrankfurter": "Frankfurter bidez"
       }
     },
     "Importable": {
