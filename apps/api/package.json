@@ -23,14 +23,14 @@
     "@spliit/db": "workspace:*",
     "@spliit/domain": "workspace:*",
     "@trpc/server": "^11.18.0",
-    "better-auth": "^1.6.20",
-    "content-disposition": "^0.5.4",
-    "hono": "^4.12.26",
-    "nanoid": "^5.1.15",
-    "nodemailer": "^9.0.1",
+    "better-auth": "^1.6.23",
+    "content-disposition": "^2.0.1",
+    "hono": "^4.12.27",
+    "nanoid": "^5.1.16",
+    "nodemailer": "^9.0.3",
     "openai": "^6.45.0",
     "superjson": "^2.2.6",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@spliit/config": "workspace:*",

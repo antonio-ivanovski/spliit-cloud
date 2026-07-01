@@ -241,7 +241,7 @@ describe('cn', () => {
     expect(cn('base', false && 'hidden', 'active')).toBe('base active')
   })
 
-  it('joins all class names without deduplication', () => {
-    expect(cn('px-2', 'px-4')).toBe('px-2 px-4')
+  it('merges conflicting Tailwind classes so the last one wins', () => {
+    expect(cn('px-2', 'px-4')).toBe('px-4')
   })
 })

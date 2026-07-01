@@ -1,9 +1,10 @@
 import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 import type { Category } from './categories'
 import { Currency, getCurrencyFromGroup } from './currency'
 
 export function cn(...inputs: ClassValue[]) {
-  return clsx(inputs)
+  return twMerge(clsx(inputs))
 }
 
 export function randomId(size?: number) {
