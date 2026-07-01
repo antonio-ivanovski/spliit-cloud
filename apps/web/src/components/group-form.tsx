@@ -47,6 +47,19 @@ export type Props = {
    */
   hideInviteHint?: boolean
   /**
+   * When provided, applied as the `<form>` element's `id` so external
+   * buttons (e.g. a wizard-shell Continue) can submit the form via the
+   * native HTML `form` attribute without being nested inside it.
+   */
+  formId?: string
+  /**
+   * Hide the in-form Save / Cancel actions so a parent (e.g. the
+   * import wizard) can render its own Continue button at the shell
+   * level. The form is still validatable and submit-on-Enter still
+   * works.
+   */
+  hideActions?: boolean
+  /**
    * Optional initial values for a brand-new group. Only used when
    * `group` is unset — the import wizard pre-fills the name,
    * currency, and a default "imported from Spliit" note so the
@@ -80,6 +93,8 @@ export function GroupForm({
   archived = false,
   hideInviteHint = false,
   initialValues,
+  formId,
+  hideActions = false,
   onSubmit,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
@@ -122,6 +137,7 @@ export function GroupForm({
   return (
     <Form {...form}>
       <form
+        id={formId}
         onSubmit={form.handleSubmit(async (values) => {
           if (readOnly || isArchived) return
           await onSubmit(values)
@@ -263,7 +279,7 @@ export function GroupForm({
           </p>
         )}
 
-        {!readOnly && !isArchived && (
+        {!hideActions && !readOnly && !isArchived && (
           <div className="mt-4 flex flex-col gap-3">
             <div className="flex gap-2">
               <SubmitButton

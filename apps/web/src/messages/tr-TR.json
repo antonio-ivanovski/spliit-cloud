@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Talep {requested} · kullanılan {asOf}",
         "currencyConversionTitle": "Döviz dönüşümü",
         "currencyConversionDescription": "Harcamalar, aşağıdaki kurlar kullanılarak kaynak dövizden hedef döviz birimine dönüştürülecek.",
-        "currencyRateForDateFormat": "{date} tarihli harcamalar için uygulanan"
+        "currencyRateForDateFormat": "{date} tarihli harcamalar için uygulanan",
+        "appliedExchangeRatesLabel": "Uygulanan döviz kurları",
+        "conversionPerDate": "Tarihe göre",
+        "conversionFixed": "Sabit kur",
+        "importErrorTitle": "İçe aktarma başarısız",
+        "importErrorFallback": "Grubu içe aktarırken beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+        "executeImport": "Grubu içe aktar"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit bu grubu bulamadı",
       "fetchSourceError": "Kaynak getirilemedi",
       "Source": {
-        "fromSpliit": "Spliit'ten",
-        "splitwise": "Splitwise (çok yakında)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (çok yakında)",
         "settleUp": "Settle Up (çok yakında)",
         "spliitDescription": "Mevcut bir spliit.app grubunu Spliit Cloud'a taşıyın. Grup adını, katılımcıları ve her harcamayı okuyoruz.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Kaynak getirilemedi",
         "fileReadError": "Dosya okunamadı",
         "appToCloudDescription": "Herhangi bir spliit.app grup URL'sindeki .app'i .cloud olarak değiştirerek Spliit Cloud'a aktarın.",
-        "appToCloudTitle": ".app'i .cloud'la değiştirin"
+        "appToCloudTitle": ".app'i .cloud'la değiştirin",
+        "splitwiseDescription": "Splitwise'den bir CSV dışa aktarımı bırakarak harcamalarını Spliit Cloud'a aktarın. Dosya, Splitwise'in grup dışa aktarımından gelmelidir — grup ayarlarından erişilebilen gruba özel CSV.",
+        "receiptWarningTitleSplitwise": "Makbuz görüntüleri içe aktarılmaz.",
+        "receiptWarningDescriptionSplitwise": "Splitwise dışa aktarımı makbuz görüntülerini içermez. İhtiyacınız varsa bunları hedef grupta yeniden yükleyin.",
+        "unsupportedFileType": "Desteklenmeyen dosya türü. Lütfen bir JSON veya CSV dosyası bırakın.",
+        "dropFileSplitwise": "Bir Splitwise CSV dosyası bırakın veya seçmek için tıklayın",
+        "dropFileDescriptionSplitwise": "CSV, Splitwise'in dışa aktardığı tek formattır. Bölüşümü yeniden oluşturmak için katılımcı başına değerleri ayrıştırırız."
       },
       "StepHeader": {
         "title": "Bir grubu içe aktar",
-        "source": "1. Kaynak",
-        "destination": "2. Hedef",
-        "mapping": "3. Eşleme",
-        "confirm": "4. Onayla",
-        "done": "5. Tamam",
-        "backAriaLabel": "Geri"
+        "source": "Kaynak",
+        "destination": "Hedef",
+        "mapping": "Eşleme",
+        "confirm": "Onayla",
+        "done": "Tamam",
+        "backAriaLabel": "Geri",
+        "currencyConversion": "Döviz dönüşümü",
+        "backTo": "{step} adımına dön",
+        "continueTo": "{step} adımına devam et"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Özel kur",
+        "fetchingRates": "Döviz kurları alınıyor…",
+        "fixedDescription": "Daha az doğru, ancak tüm tutarların aynı dönüşüm kurunu kullanmasını sağlar, böylece grup bakiyesi içe aktarımdan sonra sıfırda kalır.",
+        "fixedTitle": "Sabit kur",
+        "noConversionNeeded": "Tüm harcamalar grubun varsayılan para biriminde. Para birimi dönüşümü gerekmez.",
+        "perDateDescription": "Daha doğru — her harcamanın gerçek tarihindeki döviz kurunu kullanır.",
+        "perDateSelectedHint": "Her harcamanın tarihi için geçmiş döviz kurunu kullanır (Frankfurter API).",
+        "perDateTitle": "Tarihe göre dönüşüm",
+        "rateDateLabel": "Kur tarihi",
+        "ratesError": "Döviz kurları alınamadı. Bağlantınızı kontrol edip tekrar deneyin.",
+        "refresh": "Yenile",
+        "viaFrankfurter": "Frankfurter aracılığıyla"
       }
     },
     "Importable": {

@@ -3,13 +3,16 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import type { AppRouterOutput } from '@spliit/api/router'
-import { CheckCircle2, Share2 } from 'lucide-react'
+import { CheckCircle2, ExternalLink, SearchCheck, Share2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type ImportInvite = NonNullable<
   AppRouterOutput['groups']['import']
 >['invites'][number]
+
+const IMPORT_ISSUES_URL =
+  'https://github.com/antonio-ivanovski/spliit-cloud/issues'
 
 type Props = {
   groupId: string | null
@@ -71,12 +74,29 @@ export function DoneStep({ groupId, invites, onContinue }: Props) {
           <h2 className="text-lg font-medium">
             {t('Groups.Import.Done.importComplete')}
           </h2>
-          <p className="text-sm text-muted-foreground">
-            {t('Groups.Import.Done.description')}
-          </p>
           <Button onClick={onContinue}>
             {t('Groups.Import.Done.openGroup')}
           </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="border-primary/35 bg-primary/[0.03]">
+        <CardContent className="flex gap-3 p-4">
+          <SearchCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+          <div className="flex flex-col gap-2">
+            <p className="text-sm leading-relaxed text-foreground">
+              {t('Groups.Import.Done.description')}
+            </p>
+            <a
+              href={IMPORT_ISSUES_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              {IMPORT_ISSUES_URL}
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
         </CardContent>
       </Card>
 

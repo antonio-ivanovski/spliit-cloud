@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Aangevraagd {requested} · gebruikt {asOf}",
         "currencyConversionTitle": "Valutaomrekening",
         "currencyConversionDescription": "Uitgaven worden omgerekend van de bronvaluta naar de doelvaluta met behulp van onderstaande koersen.",
-        "currencyRateForDateFormat": "Toegepast voor uitgaven van {date}"
+        "currencyRateForDateFormat": "Toegepast voor uitgaven van {date}",
+        "appliedExchangeRatesLabel": "Toegepaste wisselkoersen",
+        "conversionPerDate": "Per datum",
+        "conversionFixed": "Vaste koers",
+        "importErrorTitle": "Importeren mislukt",
+        "importErrorFallback": "Er is een onverwachte fout opgetreden bij het importeren van de groep. Probeer het opnieuw.",
+        "executeImport": "Importeer groep"
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit heeft deze groep niet gevonden",
       "fetchSourceError": "Bron ophalen mislukt",
       "Source": {
-        "fromSpliit": "Van Spliit",
-        "splitwise": "Splitwise (binnenkort)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (binnenkort)",
         "settleUp": "Settle Up (binnenkort)",
         "spliitDescription": "Breng een bestaande spliit.app-groep naar Spliit Cloud. We lezen de groepsnaam, deelnemers en elke uitgave.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Bron ophalen mislukt",
         "fileReadError": "Bestand lezen mislukt",
         "appToCloudDescription": "Vervang .app door .cloud in elke spliit.app-groeps-URL om deze te importeren in Spliit Cloud.",
-        "appToCloudTitle": "Vervang .app door .cloud"
+        "appToCloudTitle": "Vervang .app door .cloud",
+        "splitwiseDescription": "Sleep een Splitwise CSV-export hierheen om de uitgaven ervan te importeren in Spliit Cloud. Het bestand moet afkomstig zijn van de groepsexport van Splitwise — de CSV per groep die beschikbaar is in de groepsinstellingen.",
+        "receiptWarningTitleSplitwise": "Bonafbeeldingen worden niet geïmporteerd.",
+        "receiptWarningDescriptionSplitwise": "De Splitwise-export bevat geen bonafbeeldingen. Upload ze opnieuw in de doelgroep als je ze nodig hebt.",
+        "unsupportedFileType": "Niet-ondersteund bestandstype. Sleep een JSON- of CSV-bestand.",
+        "dropFileSplitwise": "Sleep een Splitwise CSV-bestand, of klik om te selecteren",
+        "dropFileDescriptionSplitwise": "CSV is het enige formaat dat Splitwise exporteert. We ontleden de waarden per deelnemer om de verdeling te reconstrueren."
       },
       "StepHeader": {
         "title": "Importeer een groep",
-        "source": "1. Bron",
-        "destination": "2. Bestemming",
-        "mapping": "3. Koppeling",
-        "confirm": "4. Bevestigen",
-        "done": "5. Gereed",
-        "backAriaLabel": "Terug"
+        "source": "Bron",
+        "destination": "Bestemming",
+        "mapping": "Koppeling",
+        "confirm": "Bevestigen",
+        "done": "Gereed",
+        "backAriaLabel": "Terug",
+        "currencyConversion": "Valutaconversie",
+        "backTo": "Terug naar {step}",
+        "continueTo": "Doorgaan naar {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Eigen tarief",
+        "fetchingRates": "Wisselkoersen ophalen…",
+        "fixedDescription": "Minder nauwkeurig, maar zorgt ervoor dat alle bedragen dezelfde wisselkoers gebruiken, zodat het groepssaldo na de import op nul uitkomt.",
+        "fixedTitle": "Vast tarief",
+        "noConversionNeeded": "Alle uitgaven zijn in de standaardvaluta van de groep. Valutaconversie is niet nodig.",
+        "perDateDescription": "Nauwkeuriger — gebruikt de wisselkoers van de werkelijke datum van elke uitgave.",
+        "perDateSelectedHint": "Gebruikt de historische wisselkoers voor de datum van elke uitgave (Frankfurter API).",
+        "perDateTitle": "Conversie per datum",
+        "rateDateLabel": "Koersdatum",
+        "ratesError": "Kan wisselkoersen niet ophalen. Controleer je verbinding en probeer het opnieuw.",
+        "refresh": "Vernieuwen",
+        "viaFrankfurter": "via Frankfurter"
       }
     },
     "Importable": {

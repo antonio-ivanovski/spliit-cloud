@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Solicitado {requested} · provedor usou {asOf}",
         "currencyConversionTitle": "Conversão de moeda",
         "currencyConversionDescription": "As despesas serão convertidas da moeda de origem para a moeda do livro de destino usando as taxas abaixo.",
-        "currencyRateForDateFormat": "Aplicado para despesas com data {date}"
+        "currencyRateForDateFormat": "Aplicado para despesas com data {date}",
+        "appliedExchangeRatesLabel": "Taxas de câmbio aplicadas",
+        "conversionPerDate": "Por data",
+        "conversionFixed": "Taxa fixa",
+        "importErrorTitle": "Falha na importação",
+        "importErrorFallback": "Ocorreu um erro inesperado ao importar o grupo. Tente novamente.",
+        "executeImport": "Importar grupo"
       },
       "Destination": {
         "heading": "Onde você gostaria de importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit não encontrou este grupo",
       "fetchSourceError": "Falha ao buscar a origem",
       "Source": {
-        "fromSpliit": "Do Spliit",
-        "splitwise": "Splitwise (em breve)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (em breve)",
         "settleUp": "Settle Up (em breve)",
         "spliitDescription": "Traga um grupo existente do spliit.app para o Spliit Cloud. Lemos o nome do grupo, participantes e cada despesa.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Falha ao buscar a origem",
         "fileReadError": "Falha ao ler o arquivo",
         "appToCloudDescription": "Substitua .app por .cloud em qualquer URL de grupo do spliit.app para importá-lo para o Spliit Cloud.",
-        "appToCloudTitle": "Substitua .app por .cloud"
+        "appToCloudTitle": "Substitua .app por .cloud",
+        "splitwiseDescription": "Solte um arquivo CSV exportado do Splitwise para importar suas despesas no Spliit Cloud. O arquivo deve vir da exportação de grupo do Splitwise — o CSV por grupo disponível nas configurações do grupo.",
+        "receiptWarningTitleSplitwise": "As imagens de recibos não são importadas.",
+        "receiptWarningDescriptionSplitwise": "A exportação do Splitwise não inclui imagens de recibos. Refaça o upload no grupo de destino se precisar delas.",
+        "unsupportedFileType": "Tipo de arquivo não suportado. Solte um arquivo JSON ou CSV.",
+        "dropFileSplitwise": "Solte um arquivo CSV do Splitwise, ou clique para selecionar",
+        "dropFileDescriptionSplitwise": "CSV é o único formato que o Splitwise exporta. Analisamos os valores por participante para reconstruir a divisão."
       },
       "StepHeader": {
         "title": "Importar um grupo",
-        "source": "1. Origem",
-        "destination": "2. Destino",
-        "mapping": "3. Mapeamento",
-        "confirm": "4. Confirmar",
-        "done": "5. Concluído",
-        "backAriaLabel": "Voltar"
+        "source": "Origem",
+        "destination": "Destino",
+        "mapping": "Mapeamento",
+        "confirm": "Confirmar",
+        "done": "Concluído",
+        "backAriaLabel": "Voltar",
+        "currencyConversion": "Conversão de moeda",
+        "backTo": "Voltar para {step}",
+        "continueTo": "Continuar para {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Taxa personalizada",
+        "fetchingRates": "Obtendo taxas de câmbio…",
+        "fixedDescription": "Menos preciso, mas garante que todos os valores usem a mesma taxa de conversão, para que o saldo do grupo fique zerado após a importação.",
+        "fixedTitle": "Taxa fixa",
+        "noConversionNeeded": "Todas as despesas estão na moeda padrão do grupo. Não é necessária nenhuma conversão de moeda.",
+        "perDateDescription": "Mais preciso — usa a taxa de câmbio da data real de cada despesa.",
+        "perDateSelectedHint": "Usa a taxa de câmbio histórica da data de cada despesa (Frankfurter API).",
+        "perDateTitle": "Conversão por data",
+        "rateDateLabel": "Data da taxa",
+        "ratesError": "Não foi possível obter as taxas de câmbio. Verifique sua conexão e tente novamente.",
+        "refresh": "Atualizar",
+        "viaFrankfurter": "via Frankfurter"
       }
     },
     "Importable": {

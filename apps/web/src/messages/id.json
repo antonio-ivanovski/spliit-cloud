@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Diminta {requested} · penyedia menggunakan {asOf}",
         "currencyConversionTitle": "Konversi mata uang",
         "currencyConversionDescription": "Pengeluaran akan dikonversi dari mata uang sumber ke mata uang buku besar tujuan menggunakan nilai tukar di bawah.",
-        "currencyRateForDateFormat": "Diterapkan untuk pengeluaran tanggal {date}"
+        "currencyRateForDateFormat": "Diterapkan untuk pengeluaran tanggal {date}",
+        "appliedExchangeRatesLabel": "Nilai tukar yang diterapkan",
+        "conversionPerDate": "Per tanggal",
+        "conversionFixed": "Kurs tetap",
+        "importErrorTitle": "Impor gagal",
+        "importErrorFallback": "Terjadi kesalahan tak terduga saat mengimpor grup. Silakan coba lagi.",
+        "executeImport": "Impor grup"
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit tidak menemukan grup ini",
       "fetchSourceError": "Gagal mengambil sumber",
       "Source": {
-        "fromSpliit": "Dari Spliit",
-        "splitwise": "Splitwise (segera hadir)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (segera hadir)",
         "settleUp": "Settle Up (segera hadir)",
         "spliitDescription": "Bawa grup spliit.app yang ada ke Spliit Cloud. Kami membaca nama grup, peserta, dan setiap pengeluaran.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Gagal mengambil sumber",
         "fileReadError": "Gagal membaca file",
         "appToCloudDescription": "Ubah .app menjadi .cloud di URL grup spliit.app mana pun untuk mengimpornya ke Spliit Cloud.",
-        "appToCloudTitle": "Ganti .app dengan .cloud"
+        "appToCloudTitle": "Ganti .app dengan .cloud",
+        "splitwiseDescription": "Jatuhkan ekspor CSV Splitwise untuk mengimpor pengeluarannya ke Spliit Cloud. File harus berasal dari ekspor grup Splitwise — CSV per grup yang tersedia dari pengaturan grup.",
+        "receiptWarningTitleSplitwise": "Gambar tanda terima tidak diimpor.",
+        "receiptWarningDescriptionSplitwise": "Ekspor Splitwise tidak menyertakan gambar tanda terima. Unggah ulang di grup tujuan jika Anda membutuhkannya.",
+        "unsupportedFileType": "Jenis file tidak didukung. Jatuhkan file JSON atau CSV.",
+        "dropFileSplitwise": "Jatuhkan file CSV Splitwise, atau klik untuk memilih",
+        "dropFileDescriptionSplitwise": "CSV adalah satu-satunya format yang diekspor Splitwise. Kami mengurai nilai per peserta untuk menyusun ulang pembagian."
       },
       "StepHeader": {
         "title": "Impor grup",
-        "source": "1. Sumber",
-        "destination": "2. Tujuan",
-        "mapping": "3. Pemetaan",
-        "confirm": "4. Konfirmasi",
-        "done": "5. Selesai",
-        "backAriaLabel": "Kembali"
+        "source": "Sumber",
+        "destination": "Tujuan",
+        "mapping": "Pemetaan",
+        "confirm": "Konfirmasi",
+        "done": "Selesai",
+        "backAriaLabel": "Kembali",
+        "currencyConversion": "Konversi mata uang",
+        "backTo": "Kembali ke {step}",
+        "continueTo": "Lanjut ke {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Kurs kustom",
+        "fetchingRates": "Mengambil kurs pertukaran…",
+        "fixedDescription": "Kurang akurat, tetapi memastikan semua jumlah menggunakan kurs konversi yang sama, sehingga saldo grup tetap nol bersih setelah impor.",
+        "fixedTitle": "Kurs tetap",
+        "noConversionNeeded": "Semua pengeluaran dalam mata uang default grup. Tidak diperlukan konversi mata uang.",
+        "perDateDescription": "Lebih akurat — menggunakan kurs pertukaran dari tanggal aktual setiap pengeluaran.",
+        "perDateSelectedHint": "Menggunakan kurs historis untuk tanggal setiap pengeluaran (Frankfurter API).",
+        "perDateTitle": "Konversi per tanggal",
+        "rateDateLabel": "Tanggal kurs",
+        "ratesError": "Tidak dapat mengambil kurs pertukaran. Periksa koneksi Anda dan coba lagi.",
+        "refresh": "Segarkan",
+        "viaFrankfurter": "melalui Frankfurter"
       }
     },
     "Importable": {

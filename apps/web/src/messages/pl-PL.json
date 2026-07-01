@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Żądano {requested} · dostawca użył {asOf}",
         "currencyConversionTitle": "Konwersja walut",
         "currencyConversionDescription": "Wydatki zostaną przeliczone z waluty źródłowej na docelową walutę księgi przy użyciu poniższych kursów.",
-        "currencyRateForDateFormat": "Zastosowano do wydatków z datą {date}"
+        "currencyRateForDateFormat": "Zastosowano do wydatków z datą {date}",
+        "appliedExchangeRatesLabel": "Zastosowane kursy wymiany",
+        "conversionPerDate": "Według daty",
+        "conversionFixed": "Stały kurs",
+        "importErrorTitle": "Import nie powiódł się",
+        "importErrorFallback": "Wystąpił nieoczekiwany błąd podczas importowania grupy. Spróbuj ponownie.",
+        "executeImport": "Importuj grupę"
       },
       "Destination": {
         "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit nie znalazł tej grupy",
       "fetchSourceError": "Nie udało się pobrać źródła",
       "Source": {
-        "fromSpliit": "Ze Spliit",
-        "splitwise": "Splitwise (wkrótce)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (wkrótce)",
         "settleUp": "Settle Up (wkrótce)",
         "spliitDescription": "Przenieś istniejącą grupę z spliit.app do Spliit Cloud. Odczytujemy nazwę grupy, uczestników i każdy wydatek.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Nie udało się pobrać źródła",
         "fileReadError": "Nie udało się odczytać pliku",
         "appToCloudDescription": "Zamień .app na .cloud w dowolnym URL-u grupy spliit.app, aby zaimportować ją do Spliit Cloud.",
-        "appToCloudTitle": "Zamień .app na .cloud"
+        "appToCloudTitle": "Zamień .app na .cloud",
+        "splitwiseDescription": "Upuść eksport CSV z Splitwise, aby zaimportować jego wydatki do Spliit Cloud. Plik musi pochodzić z eksportu grupy Splitwise — CSV dla konkretnej grupy dostępnego w ustawieniach grupy.",
+        "receiptWarningTitleSplitwise": "Obrazy paragonów nie są importowane.",
+        "receiptWarningDescriptionSplitwise": "Eksport Splitwise nie zawiera obrazów paragonów. Prześlij je ponownie w grupie docelowej, jeśli ich potrzebujesz.",
+        "unsupportedFileType": "Nieobsługiwany typ pliku. Upuść plik JSON lub CSV.",
+        "dropFileSplitwise": "Upuść plik CSV z Splitwise lub kliknij, aby wybrać",
+        "dropFileDescriptionSplitwise": "CSV to jedyny format, jaki eksportuje Splitwise. Analizujemy wartości na uczestnika, aby odtworzyć podział."
       },
       "StepHeader": {
         "title": "Importuj grupę",
-        "source": "1. Źródło",
-        "destination": "2. Miejsce docelowe",
-        "mapping": "3. Mapowanie",
-        "confirm": "4. Potwierdź",
-        "done": "5. Gotowe",
-        "backAriaLabel": "Wstecz"
+        "source": "Źródło",
+        "destination": "Miejsce docelowe",
+        "mapping": "Mapowanie",
+        "confirm": "Potwierdź",
+        "done": "Gotowe",
+        "backAriaLabel": "Wstecz",
+        "currencyConversion": "Konwersja walut",
+        "backTo": "Powrót do {step}",
+        "continueTo": "Przejdź do {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Własny kurs",
+        "fetchingRates": "Pobieranie kursów wymiany…",
+        "fixedDescription": "Mniej dokładne, ale zapewnia, że wszystkie kwoty używają tego samego kursu wymiany, dzięki czemu saldo grupy po imporcie wynosi zero.",
+        "fixedTitle": "Stały kurs",
+        "noConversionNeeded": "Wszystkie wydatki są w domyślnej walucie grupy. Konwersja walut nie jest potrzebna.",
+        "perDateDescription": "Bardziej dokładne — używa kursu wymiany z rzeczywistej daty każdego wydatku.",
+        "perDateSelectedHint": "Używa historycznego kursu wymiany dla daty każdego wydatku (Frankfurter API).",
+        "perDateTitle": "Konwersja wg daty",
+        "rateDateLabel": "Data kursu",
+        "ratesError": "Nie udało się pobrać kursów wymiany. Sprawdź połączenie i spróbuj ponownie.",
+        "refresh": "Odśwież",
+        "viaFrankfurter": "za pośrednictwem Frankfurter"
       }
     },
     "Importable": {

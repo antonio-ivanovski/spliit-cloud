@@ -1,34 +1,18 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { NormalizedSource } from '@spliit/domain/import'
-import { AlertCircle, ArrowRightLeft, Loader2 } from 'lucide-react'
+import { Calendar, Globe } from 'lucide-react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ParticipantMappingState } from './import-wizard-state'
+import type {
+  ConversionMode,
+  ParticipantMappingState,
+  StepNavRegistration,
+} from './import-wizard-state'
 
 type ImportInvite = NonNullable<
   AppRouterOutput['groups']['import']
 >['invites'][number]
-
-type RatesStatus =
-  | { kind: 'idle' }
-  | { kind: 'loading' }
-  | { kind: 'ready' }
-  | { kind: 'error' }
-
-export type CurrencyConversionEntry = {
-  date: string
-  source: string
-  target: string
-  rate: number
-  /**
-   * Date the rate provider actually returned. Differs from `date` for
-   * future expenses, weekends, and provider outages — the import still
-   * applies the returned rate but we surface the gap so the user knows
-   * the conversion isn't using the requested day.
-   */
-  asOfDate: string
-}
 
 type Props = {
   source: NormalizedSource
@@ -44,21 +28,20 @@ type Props = {
   resolvedExpenses: NormalizedSource['expenses']
   invites?: ImportInvite[]
   isSubmitting: boolean
-  /**
-   * Cross-currency rate readiness. `idle` means no conversion is
-   * needed; `loading`/`error` block the import button so the user
-   * can't submit until the rates are ready (or until they go back to
-   * fix something upstream).
-   */
-  ratesStatus: RatesStatus
-  /**
-   * One row per `(date, source, target)` triple the wizard pre-fetched
-   * a rate for. Rendered into the "Currency conversion" card so the
-   * user can audit the conversion before submitting.
-   */
-  currencyConversions: CurrencyConversionEntry[]
-  onBack: () => void
+  conversionModes: Record<string, ConversionMode>
+  rates: Record<string, number> | null | undefined
   onSubmit: () => void
+  registerStepNav: (
+    step: 'confirm',
+    nav: Pick<
+      StepNavRegistration,
+      'onContinue' | 'disabled' | 'customContinueLabel'
+    >,
+  ) => void
+}
+
+function formatRate(n: number): string {
+  return n.toFixed(4)
 }
 
 export function ConfirmStep({
@@ -69,55 +52,82 @@ export function ConfirmStep({
   participants,
   resolvedExpenses,
   isSubmitting,
-  ratesStatus,
-  currencyConversions,
-  onBack,
+  conversionModes,
+  rates,
   onSubmit,
+  registerStepNav,
 }: Props) {
   const { t } = useTranslation()
   const linkedCount = participants.filter(
     (p) => p.mode === 'LINK_ACCOUNT',
   ).length
+  const inviteLinkCount = participants.filter(
+    (p) => p.mode === 'INVITE_BY_LINK',
+  ).length
   const inviteEmailCount = participants.filter(
     (p) => p.mode === 'INVITE_BY_EMAIL',
   ).length
-  const inviteLinkCount = participants.filter(
-    (p) => p.mode === 'INVITE_BY_LINK',
+  const existingCount = participants.filter(
+    (p) => p.mode === 'LINK_EXISTING_PARTICIPANT',
   ).length
   const unlinkedCount = participants.filter(
     (p) => p.mode === 'UNLINKED_PARTICIPANT',
   ).length
 
-  const importBlocked = ratesStatus.kind === 'error' || isSubmitting
-  const importDisabled = importBlocked || ratesStatus.kind === 'loading'
+  // Group rates by pair ("BASE|TARGET") so the confirm card can render one
+  // block per pair with its mode + entries.
+  type RateRow = { date: string; rate: number }
+  const ratesByPair: Record<string, RateRow[]> = {}
+  if (rates) {
+    for (const key of Object.keys(rates)) {
+      const [date, base, target] = key.split('|')
+      const pairKey = `${base}|${target}`
+      const list = ratesByPair[pairKey] ?? (ratesByPair[pairKey] = [])
+      list.push({ date, rate: rates[key] })
+    }
+  }
+  // Stable order by date within each pair.
+  for (const key of Object.keys(ratesByPair)) {
+    ratesByPair[key].sort((a, b) => a.date.localeCompare(b.date))
+  }
+  const conversionPairs = Object.keys(conversionModes)
+
+  useEffect(() => {
+    registerStepNav('confirm', {
+      onContinue: onSubmit,
+      disabled: isSubmitting,
+      customContinueLabel: isSubmitting
+        ? 'Groups.Import.Confirm.importingButton'
+        : 'Groups.Import.Confirm.executeImport',
+    })
+  }, [onSubmit, isSubmitting, registerStepNav])
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      {/* Destination */}
       <Card>
-        <CardContent className="p-4 flex flex-col gap-1">
-          <p className="text-sm text-muted-foreground">
+        <CardContent className="flex flex-col gap-2 p-4">
+          <p className="text-sm font-medium">
             {t('Groups.Import.Confirm.destinationLabel')}
           </p>
-          <p className="text-lg font-medium">
-            {mode === 'NEW_GROUP' ? groupFormValues.name : targetGroupId}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {mode === 'NEW_GROUP'
-              ? t('Groups.Import.Confirm.newGroupFormat', {
-                  currency:
-                    groupFormValues.currencyCode || groupFormValues.currency,
-                })
-              : t('Groups.Import.Confirm.existingGroupFormat')}
+          <p className="text-sm text-muted-foreground">
+            {mode === 'EXISTING_GROUP'
+              ? t('Groups.Import.Confirm.existingGroupFormat')
+              : t('Groups.Import.Confirm.newGroupFormat', {
+                  name: groupFormValues.name,
+                  currency: groupFormValues.currencyCode,
+                })}
           </p>
         </CardContent>
       </Card>
 
+      {/* Summary */}
       <Card>
-        <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">
+        <CardContent className="flex flex-col gap-2 p-4">
+          <p className="text-sm font-medium">
             {t('Groups.Import.Confirm.summaryLabel')}
           </p>
-          <ul className="text-sm mt-1 space-y-1">
+          <ul className="space-y-2 text-sm">
             <li>
               {t('Groups.Import.Confirm.sourceParticipants', {
                 count: participants.length,
@@ -128,6 +138,7 @@ export function ConfirmStep({
                 linked: linkedCount,
                 email: inviteEmailCount,
                 link: inviteLinkCount,
+                existing: existingCount,
                 unlinked: unlinkedCount,
               })}
             </li>
@@ -143,46 +154,77 @@ export function ConfirmStep({
         </CardContent>
       </Card>
 
-      {currencyConversions.length > 0 && (
+      {/* Conversion summary */}
+      {conversionPairs.length > 0 && (
         <Card>
-          <CardContent className="p-4 flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <ArrowRightLeft
-                className="h-4 w-4 text-muted-foreground shrink-0"
-                aria-hidden
-              />
-              <p className="text-sm font-medium">
-                {t('Groups.Import.Confirm.currencyConversionTitle')}
-              </p>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {t('Groups.Import.Confirm.currencyConversionDescription')}
+          <CardContent className="flex flex-col gap-3 p-4">
+            <p className="text-sm font-medium">
+              {t('Groups.Import.Confirm.appliedExchangeRatesLabel')}
             </p>
-            <ul className="text-sm mt-1 space-y-1.5">
-              {currencyConversions.map((entry, idx) => {
-                const requestedAsOfMismatch = entry.asOfDate !== entry.date
+            <ul className="flex flex-col gap-3 text-sm">
+              {conversionPairs.map((pairKey) => {
+                const [base, target] = pairKey.split('|')
+                const pairMode = conversionModes[pairKey]
+                const isPerDate = pairMode === 'perDate'
+                const rows = ratesByPair[pairKey] ?? []
                 return (
-                  <li
-                    key={`${entry.date}-${entry.source}-${entry.target}-${idx}`}
-                    className="flex flex-col gap-0.5"
-                  >
-                    <span className="font-mono text-sm">
-                      {t('Groups.Import.Confirm.currencyRateFormat', {
-                        source: entry.source,
-                        rate: entry.rate,
-                        target: entry.target,
-                      })}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {requestedAsOfMismatch
-                        ? t('Groups.Import.Confirm.currencyRateAsOfFormat', {
-                            requested: entry.date,
-                            asOf: entry.asOfDate,
-                          })
-                        : t('Groups.Import.Confirm.currencyRateForDateFormat', {
-                            date: entry.date,
-                          })}
-                    </span>
+                  <li key={pairKey} className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2 text-foreground">
+                      {isPerDate ? (
+                        <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      ) : (
+                        <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      )}
+                      <span className="font-medium tracking-tight">
+                        {t('Groups.Import.CurrencyConversion.pairSection', {
+                          source: base,
+                          target,
+                        })}
+                      </span>
+                      <span className="ml-auto rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                        {isPerDate
+                          ? t('Groups.Import.Confirm.conversionPerDate')
+                          : t('Groups.Import.Confirm.conversionFixed')}
+                      </span>
+                    </div>
+                    {isPerDate ? (
+                      rows.length > 0 ? (
+                        <ul className="ml-6 flex flex-col gap-1 text-xs">
+                          {rows.map((row) => (
+                            <li
+                              key={row.date}
+                              className="flex items-baseline gap-3 text-muted-foreground"
+                            >
+                              <span className="font-mono tabular-nums">
+                                {row.date}
+                              </span>
+                              <span className="font-mono tabular-nums text-foreground">
+                                {t(
+                                  'Groups.Import.CurrencyConversion.fixedRateRow',
+                                  {
+                                    source: base,
+                                    rate: formatRate(row.rate),
+                                    target,
+                                  },
+                                )}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="ml-6 text-xs text-muted-foreground">—</p>
+                      )
+                    ) : rows.length > 0 ? (
+                      <p className="ml-6 font-mono text-xs tabular-nums text-foreground">
+                        {t('Groups.Import.CurrencyConversion.fixedRateRow', {
+                          source: base,
+                          rate: formatRate(rows[0].rate),
+                          target,
+                        })}
+                      </p>
+                    ) : (
+                      <p className="ml-6 text-xs text-muted-foreground">—</p>
+                    )}
                   </li>
                 )
               })}
@@ -191,31 +233,9 @@ export function ConfirmStep({
         </Card>
       )}
 
-      {ratesStatus.kind === 'loading' && (
-        <div className="flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin shrink-0" />
-          <p>{t('Groups.Import.Confirm.ratesLoading')}</p>
-        </div>
-      )}
-
-      {ratesStatus.kind === 'error' && (
-        <div className="flex items-start gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-          <p>{t('Groups.Import.Confirm.rateFetchError')}</p>
-        </div>
-      )}
-
       <p className="text-xs text-muted-foreground">
         {t('Groups.Import.Confirm.footer')}
       </p>
-
-      <div className="flex justify-end gap-2">
-        <Button onClick={onSubmit} disabled={importDisabled}>
-          {isSubmitting
-            ? t('Groups.Import.Confirm.importingButton')
-            : t('Groups.Import.Confirm.importButton')}
-        </Button>
-      </div>
     </div>
   )
 }

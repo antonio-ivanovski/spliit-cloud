@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Pyydetty {requested} · käytetty {asOf}",
         "currencyConversionTitle": "Valuuttamuunnos",
         "currencyConversionDescription": "Kulut muunnetaan lähdevaluutasta kohdevaluuttaan alla olevia kursseja käyttäen.",
-        "currencyRateForDateFormat": "Käytetty kuluille, joiden päivämäärä on {date}"
+        "currencyRateForDateFormat": "Käytetty kuluille, joiden päivämäärä on {date}",
+        "appliedExchangeRatesLabel": "Käytetyt vaihtokurssit",
+        "conversionPerDate": "Päivämäärän mukaan",
+        "conversionFixed": "Kiinteä kurssi",
+        "importErrorTitle": "Tuonti epäonnistui",
+        "importErrorFallback": "Ryhmän tuonnissa tapahtui odottamaton virhe. Yritä uudelleen.",
+        "executeImport": "Tuo ryhmä"
       },
       "Destination": {
         "heading": "Mihin haluat tuoda <strong>{name}</strong>? ({participantCount} osallistujaa · {expenseCount} kulua)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit ei löytänyt tätä ryhmää",
       "fetchSourceError": "Lähteen noutaminen epäonnistui",
       "Source": {
-        "fromSpliit": "Spliitistä",
-        "splitwise": "Splitwise (tulossa pian)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (tulossa pian)",
         "settleUp": "Settle Up (tulossa pian)",
         "spliitDescription": "Tuo olemassa oleva spliit.app-ryhmä Spliit Cloudiin. Luemme ryhmän nimen, osallistujat ja kaikki kulut.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Lähteen noutaminen epäonnistui",
         "fileReadError": "Tiedoston lukeminen epäonnistui",
         "appToCloudDescription": "Vaihda .app .cloudiksi missä tahansa spliit.app-ryhmän URL-osoitteessa tuodaksesi ryhmän Spliit Cloudiin.",
-        "appToCloudTitle": "Vaihda .app .cloudiksi"
+        "appToCloudTitle": "Vaihda .app .cloudiksi",
+        "splitwiseDescription": "Pudota Splitwise CSV-vienti tuodaksesi sen kulut Spliit Cloudiin. Tiedoston on tultava Splitwisen ryhmäviennistä — ryhmäkohtainen CSV, joka on saatavilla ryhmän asetuksista.",
+        "receiptWarningTitleSplitwise": "Kuittikuvia ei tuoda.",
+        "receiptWarningDescriptionSplitwise": "Splitwise-vienti ei sisällä kuittikuvia. Lataa ne uudelleen kohderyhmään, jos tarvitset niitä.",
+        "unsupportedFileType": "Ei tuettu tiedostotyyppi. Pudota JSON- tai CSV-tiedosto.",
+        "dropFileSplitwise": "Pudota Splitwise CSV -tiedosto tai napsauta valitaksesi",
+        "dropFileDescriptionSplitwise": "CSV on ainoa muoto, jonka Splitwise vie. Jäsentelemme osallistujakohtaiset arvot jaon rekonstruoimiseksi."
       },
       "StepHeader": {
         "title": "Tuo ryhmä",
-        "source": "1. Lähde",
-        "destination": "2. Kohde",
-        "mapping": "3. Yhdistäminen",
-        "confirm": "4. Vahvista",
-        "done": "5. Valmis",
-        "backAriaLabel": "Takaisin"
+        "source": "Lähde",
+        "destination": "Kohde",
+        "mapping": "Yhdistäminen",
+        "confirm": "Vahvista",
+        "done": "Valmis",
+        "backAriaLabel": "Takaisin",
+        "currencyConversion": "Valuuttamuunnos",
+        "backTo": "Takaisin kohtaan {step}",
+        "continueTo": "Jatka kohtaan {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Mukautettu kurssi",
+        "fetchingRates": "Haetaan valuuttakursseja…",
+        "fixedDescription": "Vähemmän tarkka, mutta varmistaa, että kaikki summat käyttävät samaa vaihtokurssia, joten ryhmän saldo pysyy nollassa tuonnin jälkeen.",
+        "fixedTitle": "Kiinteä kurssi",
+        "noConversionNeeded": "Kaikki kulut ovat ryhmän oletusvaluutassa. Valuutan muuntoa ei tarvita.",
+        "perDateDescription": "Tarkempi — käyttää kunkin kulun todellisen päivän valuuttakurssia.",
+        "perDateSelectedHint": "Käyttää kunkin kulun päivän historiallista valuuttakurssia (Frankfurter API).",
+        "perDateTitle": "Muunto päivämäärän mukaan",
+        "rateDateLabel": "Kurssipäivä",
+        "ratesError": "Valuuttakurssien hakeminen epäonnistui. Tarkista yhteytesi ja yritä uudelleen.",
+        "refresh": "Päivitä",
+        "viaFrankfurter": "Frankfurterin kautta"
       }
     },
     "Importable": {

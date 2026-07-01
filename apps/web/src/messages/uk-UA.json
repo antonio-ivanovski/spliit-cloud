@@ -207,7 +207,13 @@
         "currencyRateAsOfFormat": "Запитувано {requested} · постачальник використав {asOf}",
         "currencyConversionTitle": "Конвертація валюти",
         "currencyConversionDescription": "Витрати буде конвертовано з вихідної валюти у цільову валюту книги з використанням курсів нижче.",
-        "currencyRateForDateFormat": "Застосовано для витрат від {date}"
+        "currencyRateForDateFormat": "Застосовано для витрат від {date}",
+        "appliedExchangeRatesLabel": "Застосовані курси обміну",
+        "conversionPerDate": "За датою",
+        "conversionFixed": "Фіксований курс",
+        "importErrorTitle": "Не вдалося імпортувати",
+        "importErrorFallback": "Під час імпорту групи сталася неочікувана помилка. Спробуйте ще раз.",
+        "executeImport": "Імпортувати групу"
       },
       "Destination": {
         "heading": "Куди ви хочете імпортувати <strong>{name}</strong>? ({participantCount} учасників · {expenseCount} витрат)",
@@ -272,8 +278,8 @@
       "notFound": "Spliit не знайшов цю групу",
       "fetchSourceError": "Не вдалося отримати джерело",
       "Source": {
-        "fromSpliit": "З Spliit",
-        "splitwise": "Splitwise (незабаром)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (незабаром)",
         "settleUp": "Settle Up (незабаром)",
         "spliitDescription": "Перенесіть існуючу групу з spliit.app до Spliit Cloud. Ми зчитуємо назву групи, учасників і кожну витрату.",
@@ -298,16 +304,41 @@
         "fetchUrlError": "Не вдалося отримати джерело",
         "fileReadError": "Не вдалося прочитати файл",
         "appToCloudDescription": "Замініть .app на .cloud у будь-якому URL групи spliit.app, щоб імпортувати її до Spliit Cloud.",
-        "appToCloudTitle": "Замініть .app на .cloud"
+        "appToCloudTitle": "Замініть .app на .cloud",
+        "splitwiseDescription": "Перетягніть CSV-експорт із Splitwise, щоб імпортувати його витрати до Spliit Cloud. Файл має бути отриманий із групового експорту Splitwise — CSV для конкретної групи, доступний у налаштуваннях групи.",
+        "receiptWarningTitleSplitwise": "Зображення чеків не імпортуються.",
+        "receiptWarningDescriptionSplitwise": "Експорт Splitwise не включає зображення чеків. Повторно завантажте їх у групу призначення, якщо вони вам потрібні.",
+        "unsupportedFileType": "Непідтримуваний тип файлу. Перетягніть файл JSON або CSV.",
+        "dropFileSplitwise": "Перетягніть CSV-файл Splitwise або натисніть, щоб вибрати",
+        "dropFileDescriptionSplitwise": "CSV — це єдиний формат, який експортує Splitwise. Ми аналізуємо значення для кожного учасника, щоб відновити розподіл."
       },
       "StepHeader": {
         "title": "Імпортувати групу",
-        "source": "1. Джерело",
-        "destination": "2. Призначення",
-        "mapping": "3. Зіставлення",
-        "confirm": "4. Підтвердити",
-        "done": "5. Готово",
-        "backAriaLabel": "Назад"
+        "source": "Джерело",
+        "destination": "Призначення",
+        "mapping": "Зіставлення",
+        "confirm": "Підтвердити",
+        "done": "Готово",
+        "backAriaLabel": "Назад",
+        "currencyConversion": "Конвертація валюти",
+        "backTo": "Назад до {step}",
+        "continueTo": "Продовжити до {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Свій курс",
+        "fetchingRates": "Отримання курсів обміну…",
+        "fixedDescription": "Менш точно, але гарантує, що для всіх сум використовується однаковий курс конвертації, тож баланс групи після імпорту залишається нульовим.",
+        "fixedTitle": "Фіксований курс",
+        "noConversionNeeded": "Усі витрати в стандартній валюті групи. Конвертація валюти не потрібна.",
+        "perDateDescription": "Точніше — використовується курс обміну на фактичну дату кожної витрати.",
+        "perDateSelectedHint": "Використовується історичний обмінний курс на дату кожної витрати (Frankfurter API).",
+        "perDateTitle": "Конвертація за датою",
+        "rateDateLabel": "Дата курсу",
+        "ratesError": "Не вдалося отримати курси обміну. Перевірте з'єднання та спробуйте ще раз.",
+        "refresh": "Оновити",
+        "viaFrankfurter": "через Frankfurter"
       }
     },
     "Importable": {

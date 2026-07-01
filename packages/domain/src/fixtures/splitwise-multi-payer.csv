@@ -1,0 +1,12 @@
+Date,Description,Category,Cost,Currency,Antonio Ivanovski,m2,m3
+,,,,,,,
+2026-06-22,test,General,100.00,MKD,36.67,-3.33,-33.34
+2026-06-30,test2,General,100.00,USD,66.67,-33.33,-33.34
+2026-06-30,test3,General,200.00,MKD,100.00,-100.00,0.00
+2026-06-30,test4,General,10.00,CHF,6.67,-3.33,-3.34
+2026-07-01,multi players,General,200.00,MKD,33.33,33.33,-66.66
+,,,,,,,
+2026-07-01,Total balance, , ,MKD,170.00,-70.00,-100.00
+2026-07-01,Total balance, , ,USD,66.67,-33.33,-33.34
+2026-07-01,Total balance, , ,CHF,6.67,-3.33,-3.34
+,,,,,,,

@@ -127,11 +127,15 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
       title: e.title,
       expenseDate: e.expenseDate.slice(0, 10),
       category: resolveCategoryId(e.category ?? null),
+      amountCurrency: parsed.currencyCode ?? null,
       amount: e.amount,
       originalAmount: e.originalAmount ?? null,
       originalCurrency: e.originalCurrency ?? null,
       conversionRate: e.conversionRate ?? null,
       paidBySourceId,
+      paidBy: [
+        { sourceId: paidBySourceId, shares: e.originalAmount ?? e.amount },
+      ],
       paidFor,
       splitMode: e.splitMode,
       recurrenceRule: e.recurrenceRule,
@@ -141,6 +145,7 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
   })
 
   return {
+    provider: 'SPLIIT',
     sourceGroupId: parsed.id,
     sourceUrl: `https://spliit.app/groups/${parsed.id}`,
     name: parsed.name,

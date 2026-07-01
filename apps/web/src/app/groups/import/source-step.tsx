@@ -1,11 +1,16 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useRouter } from '@/lib/navigation'
 import {
   extractSpliitGroupIdFromUrl,
+  guessGroupNameFromFilename,
   tryParseSpliitCsv,
   tryParseSpliitExport,
+  tryParseSplitwiseCsv,
+  type ImportParseResult,
   type NormalizedSource,
 } from '@spliit/domain/import'
+import { getRouteApi } from '@tanstack/react-router'
 import { AlertTriangle, Clock } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,9 +26,71 @@ type Props = {
 
 type SourceMode = 'spliit' | 'splitwise' | 'tricount' | 'settleup'
 
+const importRoute = getRouteApi('/groups/import')
+
+type FileParser =
+  | ((text: string) => ImportParseResult)
+  | ((input: unknown) => ImportParseResult)
+
+type ProviderConfig = {
+  hasUrlPaste: boolean
+  hasDomainSwap: boolean
+  fileImport: { csv: FileParser; json: FileParser | null } | null
+  accept: string
+}
+
+const PROVIDERS: Record<SourceMode, ProviderConfig> = {
+  spliit: {
+    hasUrlPaste: true,
+    hasDomainSwap: true,
+    fileImport: { csv: tryParseSpliitCsv, json: tryParseSpliitExport },
+    accept: '.json,.csv,application/json,text/csv',
+  },
+  splitwise: {
+    hasUrlPaste: false,
+    hasDomainSwap: false,
+    fileImport: { csv: tryParseSplitwiseCsv, json: null },
+    accept: '.csv,text/csv',
+  },
+  tricount: {
+    hasUrlPaste: false,
+    hasDomainSwap: false,
+    fileImport: null,
+    accept: '',
+  },
+  settleup: {
+    hasUrlPaste: false,
+    hasDomainSwap: false,
+    fileImport: null,
+    accept: '',
+  },
+}
+
+export function pickParser(
+  provider: SourceMode,
+  fileName: string,
+):
+  | { format: 'csv'; parser: FileParser }
+  | { format: 'json'; parser: FileParser }
+  | { format: null } {
+  const cfg = PROVIDERS[provider]
+  if (!cfg.fileImport) return { format: null }
+  const lower = fileName.toLowerCase()
+  if (lower.endsWith('.csv')) {
+    return { format: 'csv', parser: cfg.fileImport.csv }
+  }
+  if (lower.endsWith('.json')) {
+    if (!cfg.fileImport.json) return { format: null }
+    return { format: 'json', parser: cfg.fileImport.json }
+  }
+  return { format: null }
+}
+
 export function SourceStep({ onLoaded, onError }: Props) {
   const { t } = useTranslation()
-  const [provider, setProvider] = useState<SourceMode>('spliit')
+  const router = useRouter()
+  const { source } = importRoute.useSearch()
+  const provider = source ?? 'spliit'
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -34,6 +101,8 @@ export function SourceStep({ onLoaded, onError }: Props) {
     submit: submitPreview,
     reset: resetPreview,
   } = useImportSource()
+
+  const cfg = PROVIDERS[provider]
 
   useEffect(() => {
     if (!sourcePreview) return
@@ -56,25 +125,23 @@ export function SourceStep({ onLoaded, onError }: Props) {
   const handleFile = useCallback(
     async (file: File) => {
       try {
+        const picked = pickParser(provider, file.name)
+        if (!picked.format) {
+          onError(t('Groups.Import.Source.unsupportedFileType'))
+          return
+        }
         const text = await file.text()
-        const lowerName = file.name.toLowerCase()
-        if (lowerName.endsWith('.csv')) {
-          const result = tryParseSpliitCsv(text)
-          if (!result.ok) {
-            onError(result.error)
-            return
-          }
-          onLoaded(result.source)
+        const parsed =
+          picked.format === 'json'
+            ? picked.parser(JSON.parse(text))
+            : picked.parser(text)
+        if (!parsed.ok) {
+          onError(parsed.error)
           return
         }
-        // Default: treat as JSON.
-        const body = JSON.parse(text)
-        const result = tryParseSpliitExport(body)
-        if (!result.ok) {
-          onError(result.error)
-          return
-        }
-        onLoaded(result.source)
+        const guessed = guessGroupNameFromFilename(file.name)
+        if (guessed) parsed.source.name = guessed
+        onLoaded(parsed.source)
       } catch (err) {
         const message =
           err instanceof Error
@@ -83,7 +150,7 @@ export function SourceStep({ onLoaded, onError }: Props) {
         onError(message)
       }
     },
-    [onError, onLoaded, t],
+    [provider, onError, onLoaded, t],
   )
 
   const handleFileChange = useCallback(
@@ -97,11 +164,11 @@ export function SourceStep({ onLoaded, onError }: Props) {
 
   const handleDragOver = useCallback(
     (e: React.DragEvent) => {
-      if (provider !== 'spliit') return
+      if (!cfg.fileImport) return
       e.preventDefault()
       setIsDragging(true)
     },
-    [provider],
+    [cfg.fileImport],
   )
 
   const handleDragLeave = useCallback(() => {
@@ -110,13 +177,13 @@ export function SourceStep({ onLoaded, onError }: Props) {
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
-      if (provider !== 'spliit') return
+      if (!cfg.fileImport) return
       e.preventDefault()
       setIsDragging(false)
       const file = e.dataTransfer.files?.[0]
       if (file) handleFile(file)
     },
-    [provider, handleFile],
+    [cfg.fileImport, handleFile],
   )
 
   const handleUrlSubmit = useCallback(() => {
@@ -141,7 +208,6 @@ export function SourceStep({ onLoaded, onError }: Props) {
   const tabsListRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Scroll the active tab into view on mount so "spliit" isn't clipped on mobile
     const activeTab = tabsListRef.current?.querySelector(
       '[data-state="active"]',
     )
@@ -150,13 +216,21 @@ export function SourceStep({ onLoaded, onError }: Props) {
     }
   }, [])
 
-  const spliitDisabled = provider !== 'spliit'
+  const showFileImport = cfg.fileImport !== null
+  const showDomainSwap = cfg.hasDomainSwap
+  const showUrlPaste = cfg.hasUrlPaste
+  const isSplitwise = provider === 'splitwise'
 
   return (
     <div className="flex flex-col gap-4">
       <Tabs
         value={provider}
-        onValueChange={(v) => setProvider(v as SourceMode)}
+        onValueChange={(v) =>
+          router.push({
+            to: '/groups/import',
+            search: { source: v as SourceMode },
+          })
+        }
       >
         <TabsList
           ref={tabsListRef}
@@ -177,111 +251,138 @@ export function SourceStep({ onLoaded, onError }: Props) {
         </TabsList>
 
         <TabsContent value="spliit">
-          <div className="flex flex-col gap-4">
-            <p className="text-sm text-muted-foreground">
-              {t('Groups.Import.Source.spliitDescription')}
-            </p>
-            <div className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-              <p>
-                <strong>{t('Groups.Import.Source.receiptWarningTitle')}</strong>{' '}
-                {t('Groups.Import.Source.receiptWarningDescription')}
-              </p>
-            </div>
-          </div>
+          <ProviderDescription
+            description={t('Groups.Import.Source.spliitDescription')}
+            receiptTitle={t('Groups.Import.Source.receiptWarningTitle')}
+            receiptDescription={t(
+              'Groups.Import.Source.receiptWarningDescription',
+            )}
+          />
         </TabsContent>
         <TabsContent value="splitwise">
-          <Card>
-            <CardContent className="flex items-start gap-3 p-4">
-              <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-              <div className="flex flex-col gap-1">
-                <p className="font-medium">
-                  {t('Groups.Import.Source.splitwiseComingTitle')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {t('Groups.Import.Source.splitwiseComingDescription')}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <ProviderDescription
+            description={t('Groups.Import.Source.splitwiseDescription')}
+            receiptTitle={t(
+              'Groups.Import.Source.receiptWarningTitleSplitwise',
+            )}
+            receiptDescription={t(
+              'Groups.Import.Source.receiptWarningDescriptionSplitwise',
+            )}
+          />
         </TabsContent>
         <TabsContent value="tricount">
-          <Card>
-            <CardContent className="flex items-start gap-3 p-4">
-              <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-              <div className="flex flex-col gap-1">
-                <p className="font-medium">
-                  {t('Groups.Import.Source.tricountComingTitle')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {t('Groups.Import.Source.tricountComingDescription')}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <ComingSoonCard
+            title={t('Groups.Import.Source.tricountComingTitle')}
+            description={t('Groups.Import.Source.tricountComingDescription')}
+          />
         </TabsContent>
         <TabsContent value="settleup">
-          <Card>
-            <CardContent className="flex items-start gap-3 p-4">
-              <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-              <div className="flex flex-col gap-1">
-                <p className="font-medium">
-                  {t('Groups.Import.Source.settleUpComingTitle')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {t('Groups.Import.Source.settleUpComingDescription')}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <ComingSoonCard
+            title={t('Groups.Import.Source.settleUpComingTitle')}
+            description={t('Groups.Import.Source.settleUpComingDescription')}
+          />
         </TabsContent>
       </Tabs>
 
-      {provider === 'spliit' && (
-        <>
-          <DomainSwapCard
-            title={t('Groups.Import.Source.appToCloudTitle')}
-            description={t('Groups.Import.Source.appToCloudDescription')}
-            disabled={spliitDisabled}
-          />
+      {showDomainSwap && (
+        <DomainSwapCard
+          title={t('Groups.Import.Source.appToCloudTitle')}
+          description={t('Groups.Import.Source.appToCloudDescription')}
+        />
+      )}
 
-          <OrDivider label={t('Groups.Import.Source.or')} />
+      {showDomainSwap && (showUrlPaste || showFileImport) && (
+        <OrDivider label={t('Groups.Import.Source.or')} />
+      )}
 
-          <PasteUrlCard
-            disabled={spliitDisabled}
-            isPending={isPreviewLoading}
-            url={url}
-            urlError={urlError}
-            onUrlChange={handleUrlChange}
-            onSubmit={handleUrlSubmit}
-            labels={{
-              pasteUrl: t('Groups.Import.Source.pasteUrl'),
-              urlDescription: t('Groups.Import.Source.urlDescription'),
-              urlPlaceholder: t('Groups.Import.Source.urlPlaceholder'),
-              fetchGroupButton: t('Groups.Import.Source.fetchGroupButton'),
-              fetchingButton: t('Groups.Import.Source.fetchingButton'),
-            }}
-          />
+      {showUrlPaste && (
+        <PasteUrlCard
+          disabled={false}
+          isPending={isPreviewLoading}
+          url={url}
+          urlError={urlError}
+          onUrlChange={handleUrlChange}
+          onSubmit={handleUrlSubmit}
+          labels={{
+            pasteUrl: t('Groups.Import.Source.pasteUrl'),
+            urlDescription: t('Groups.Import.Source.urlDescription'),
+            urlPlaceholder: t('Groups.Import.Source.urlPlaceholder'),
+            fetchGroupButton: t('Groups.Import.Source.fetchGroupButton'),
+            fetchingButton: t('Groups.Import.Source.fetchingButton'),
+          }}
+        />
+      )}
 
-          <OrDivider label={t('Groups.Import.Source.or')} />
+      {showUrlPaste && showFileImport && (
+        <OrDivider label={t('Groups.Import.Source.or')} />
+      )}
 
-          <FileUploadCard
-            disabled={spliitDisabled}
-            isDragging={isDragging}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onFileChange={handleFileChange}
-            labels={{
-              dropFile: t('Groups.Import.Source.dropFile'),
-              dropFileDescription: t(
-                'Groups.Import.Source.dropFileDescription',
-              ),
-            }}
-          />
-        </>
+      {showFileImport && cfg.fileImport && (
+        <FileUploadCard
+          disabled={false}
+          isDragging={isDragging}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onFileChange={handleFileChange}
+          accept={cfg.accept}
+          labels={{
+            dropFile: t(
+              isSplitwise
+                ? 'Groups.Import.Source.dropFileSplitwise'
+                : 'Groups.Import.Source.dropFile',
+            ),
+            dropFileDescription: t(
+              isSplitwise
+                ? 'Groups.Import.Source.dropFileDescriptionSplitwise'
+                : 'Groups.Import.Source.dropFileDescription',
+            ),
+          }}
+        />
       )}
     </div>
+  )
+}
+
+function ProviderDescription({
+  description,
+  receiptTitle,
+  receiptDescription,
+}: {
+  description: string
+  receiptTitle: string
+  receiptDescription: string
+}) {
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-sm text-muted-foreground">{description}</p>
+      <div className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+        <p>
+          <strong>{receiptTitle}</strong> {receiptDescription}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function ComingSoonCard({
+  title,
+  description,
+}: {
+  title: string
+  description: string
+}) {
+  return (
+    <Card>
+      <CardContent className="flex items-start gap-3 p-4">
+        <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+        <div className="flex flex-col gap-1">
+          <p className="font-medium">{title}</p>
+          <p className="text-sm text-muted-foreground">{description}</p>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 

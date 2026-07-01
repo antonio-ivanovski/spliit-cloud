@@ -9,25 +9,26 @@ import type {
   NormalizedSourceExpense,
   ParticipantMappingState,
 } from '@spliit/domain/import'
-import {
-  applyAutoMatch,
-  buildImportBatch,
-  computeImportRateKeys,
-  makeRateKey,
-  type ImportRatesByKey,
-} from '@spliit/domain/import'
+import { applyAutoMatch, buildImportBatch } from '@spliit/domain/import'
 import { getRouteApi } from '@tanstack/react-router'
-import { ChevronLeft, Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Loader2 } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ConfirmStep } from './confirm-step'
+import {
+  CurrencyConversionStep,
+  type ConversionResult,
+} from './currency-conversion-step'
 import { DestinationStep } from './destination-step'
 import { DoneStep } from './done-step'
 import {
   buildImportExpenses,
+  getStepNavigation,
   initialGroupFormValues,
+  type CustomContinueLabelKey,
   type ImportMode,
   type ImportStep,
+  type StepNavRegistration,
   type WizardState,
 } from './import-wizard-state'
 import { MappingStep } from './mapping-step'
@@ -36,13 +37,37 @@ import { useImportSource } from './use-import-source'
 
 const importRoute = getRouteApi('/groups/import')
 
+/**
+ * i18n key for the step's short label shown in the wizard header.
+ * Const-typed so `t(STEP_HEADER_LABEL_KEYS[step])` validates each
+ * literal against the strict key check without `as any`.
+ */
+const STEP_HEADER_LABEL_KEYS = {
+  source: 'Groups.Import.StepHeader.source',
+  destination: 'Groups.Import.StepHeader.destination',
+  mapping: 'Groups.Import.StepHeader.mapping',
+  currencyConversion: 'Groups.Import.StepHeader.currencyConversion',
+  confirm: 'Groups.Import.StepHeader.confirm',
+  done: 'Groups.Import.StepHeader.done',
+} as const satisfies Record<ImportStep, string>
+
+const EMPTY_NAV: StepNavRegistration = {}
+
+/**
+ * The wizard stores nav registrations keyed by the active step so
+ * that a stale handler from the previous step can't be invoked
+ * during the brief render between a step change and the new
+ * step's first registration.
+ */
+type NavByStep = { step: ImportStep; nav: StepNavRegistration }
+
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
   const router = useRouter()
   const { data: account } = useCurrentAccount()
   const { toast } = useToast()
   const utils = trpc.useUtils()
-  const prefillSourceUrl = search.source ?? null
+  const prefillSourceUrl = search.prefill ?? null
   const { t } = useTranslation()
 
   const [state, setState] = useState<WizardState>(() => ({
@@ -57,7 +82,15 @@ export function ImportGroupWizard() {
     destIds: {},
     resolvedExpenses: [],
     rates: undefined,
+    conversionModes: {},
+    fixedRateDates: {},
+    fixedRateOverrides: {},
   }))
+
+  const [navByStep, setNavByStep] = useState<NavByStep>({
+    step: state.step,
+    nav: EMPTY_NAV,
+  })
 
   const { data: destinationGroupData } = trpc.groups.get.useQuery(
     { groupId: state.targetGroupId! },
@@ -230,149 +263,61 @@ export function ImportGroupWizard() {
         destIds: resolved.destIds,
         resolvedExpenses: resolved.resolvedExpenses,
         rates: undefined,
+        step: 'currencyConversion',
+      }))
+    },
+    [],
+  )
+
+  const handleCurrencyConversionContinue = useCallback(
+    (result: ConversionResult) => {
+      window.history.pushState({ importWizard: true }, '')
+      setState((s) => ({
+        ...s,
+        conversionModes: result.modes,
+        fixedRateDates: result.fixedRateDates,
+        fixedRateOverrides: result.fixedRateOverrides,
+        rates: result.rates,
         step: 'confirm',
       }))
     },
     [],
   )
 
-  // Rate computation
   const destinationCurrencyCode =
     state.mode === 'EXISTING_GROUP'
       ? (destinationGroupData?.group?.currencyCode ?? '')
       : state.groupFormValues.currencyCode
   const sourceCurrencyCode = state.source?.currencyCode ?? ''
 
-  const rateKeyItems = useMemo(() => {
-    if (state.step !== 'confirm') return []
-    return computeImportRateKeys(
-      state.resolvedExpenses,
-      sourceCurrencyCode,
-      destinationCurrencyCode,
-    )
-  }, [
-    state.step,
-    state.resolvedExpenses,
-    sourceCurrencyCode,
-    destinationCurrencyCode,
-  ])
-
-  const ratesQuery = trpc.currency.getRates.useQuery(
-    { items: rateKeyItems },
-    {
-      enabled:
-        state.step === 'confirm' &&
-        rateKeyItems.length > 0 &&
-        destinationCurrencyCode.length > 0,
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  )
-
-  const ratesFromQuery: ImportRatesByKey | null | undefined = useMemo(() => {
-    if (rateKeyItems.length === 0) return {}
-    if (ratesQuery.isLoading || ratesQuery.isFetching) return undefined
-    if (ratesQuery.error || !ratesQuery.data) return null
-    const out: ImportRatesByKey = {}
-    for (const item of ratesQuery.data) {
-      if (!item.ok) return null
-      out[
-        makeRateKey(item.rate.requestedDate, item.rate.base, item.rate.target)
-      ] = item.rate.rate
-    }
-    return out
-  }, [
-    rateKeyItems,
-    ratesQuery.data,
-    ratesQuery.error,
-    ratesQuery.isLoading,
-    ratesQuery.isFetching,
-  ])
-
-  useEffect(() => {
-    if (state.step !== 'confirm') return
-    if (state.rates === ratesFromQuery) return
-    setState((s) =>
-      s.step === 'confirm' ? { ...s, rates: ratesFromQuery } : s,
-    )
-  }, [state.step, state.rates, ratesFromQuery])
-
-  const confirmRatesStatus = useMemo<
-    | { kind: 'idle' }
-    | { kind: 'loading' }
-    | { kind: 'ready' }
-    | { kind: 'error' }
-  >(() => {
-    if (state.step !== 'confirm') return { kind: 'idle' }
-    if (rateKeyItems.length === 0) return { kind: 'idle' }
-    if (ratesFromQuery === undefined) return { kind: 'loading' }
-    if (ratesFromQuery === null) return { kind: 'error' }
-    return { kind: 'ready' }
-  }, [state.step, rateKeyItems.length, ratesFromQuery])
-
-  const currencyConversions = useMemo<
-    Array<{
-      date: string
-      source: string
-      target: string
-      rate: number
-      asOfDate: string
-    }>
-  >(() => {
-    if (!ratesQuery.data) return []
-    return rateKeyItems
-      .map((item, idx) => {
-        const result = ratesQuery.data?.[idx]
-        if (!result || !result.ok) return null
-        return {
-          date: item.date,
-          source: item.base,
-          target: item.target,
-          rate: result.rate.rate,
-          asOfDate: result.rate.asOfDate,
-        }
-      })
-      .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
-  }, [rateKeyItems, ratesQuery.data])
-
   const handleSubmit = useCallback(async () => {
     if (!state.source) return
     if (!state.mode) return
     if (!account) return
-    if (rateKeyItems.length > 0) {
-      if (state.rates === undefined || state.rates === null) {
-        toast({
-          description: t('Groups.Import.Confirm.rateFetchError'),
-          variant: 'destructive',
-        })
-        return
-      }
-    }
     try {
       const sourceMeta = {
-        provider: 'SPLIIT',
+        provider: state.source.provider,
         sourceGroupId: state.source.sourceGroupId,
         sourceUrl: state.prefillSourceUrl ?? undefined,
       }
       const { batch } = buildImportBatch(
         state,
         destinationCurrencyCode,
-        state.rates === undefined ? undefined : (state.rates ?? undefined),
+        state.rates ?? undefined,
       )
       const expenses = buildImportExpenses(batch.expenses)
       await importMutation.mutateAsync({ ...batch, expenses, sourceMeta })
-    } catch {
-      // Error surfaced via onError.
+    } catch (err) {
+      toast({
+        title: t('Groups.Import.Confirm.importErrorTitle'),
+        description:
+          err instanceof Error
+            ? err.message
+            : t('Groups.Import.Confirm.importErrorFallback'),
+        variant: 'destructive',
+      })
     }
-  }, [
-    state,
-    importMutation,
-    account,
-    destinationCurrencyCode,
-    rateKeyItems.length,
-    toast,
-    t,
-  ])
+  }, [state, importMutation, account, destinationCurrencyCode, toast, t])
 
   const handleDoneNavigate = useCallback(() => {
     const groupId = importMutation.data?.groupId
@@ -383,25 +328,47 @@ export function ImportGroupWizard() {
     }
   }, [importMutation.data, router])
 
+  const handleBack = useCallback(() => {
+    setState((s) => {
+      if (s.step === 'source') return s
+      if (s.step === 'destination') return { ...s, step: 'source' }
+      if (s.step === 'mapping') return { ...s, step: 'destination' }
+      if (s.step === 'currencyConversion') {
+        return { ...s, step: 'mapping' }
+      }
+      if (s.step === 'confirm') {
+        return { ...s, step: 'currencyConversion' }
+      }
+      return s
+    })
+    window.history.pushState({ importWizard: true }, '')
+  }, [])
+
+  // Steps register their Continue handler / disabled state / label
+  // overrides under the step they belong to. The wizard only reads
+  // the entry for the active step so a stale handler from a
+  // previously-mounted step can't fire.
+  const registerStepNav = useCallback(
+    (step: ImportStep, nav: Partial<StepNavRegistration>) => {
+      setNavByStep((prev) => {
+        if (prev.step === step) {
+          return { step, nav: { ...prev.nav, ...nav } }
+        }
+        return { step, nav }
+      })
+    },
+    [],
+  )
+  const currentNav = navByStep.step === state.step ? navByStep.nav : EMPTY_NAV
+
   return (
     <div className="flex flex-col gap-6">
-      <StepHeader
-        step={state.step}
-        onBack={() => {
-          if (state.step === 'source') return
-          if (state.step === 'destination') {
-            setState((s) => ({ ...s, step: 'source' }))
-          } else if (state.step === 'mapping') {
-            setState((s) => ({ ...s, step: 'destination' }))
-          } else if (state.step === 'confirm') {
-            setState((s) => ({ ...s, step: 'mapping' }))
-          }
-          window.history.pushState({ importWizard: true }, '')
-        }}
-      />
+      <StepHeader step={state.step} />
+
       {state.step === 'source' && (
         <SourceStep onLoaded={handleSourceLoaded} onError={handleSourceError} />
       )}
+
       {state.step === 'destination' && !state.source && prefillSourceUrl && (
         <Card>
           <CardContent className="flex flex-col items-center gap-3 p-8 text-center text-sm text-muted-foreground">
@@ -410,13 +377,17 @@ export function ImportGroupWizard() {
           </CardContent>
         </Card>
       )}
+
       {state.step === 'destination' && state.source && (
         <DestinationStep
           source={state.source}
           initialGroupFormValues={state.groupFormValues}
+          mode={state.mode}
           onContinue={handleDestinationChosen}
+          registerStepNav={registerStepNav}
         />
       )}
+
       {state.step === 'mapping' && state.source && (
         <MappingStep
           source={state.source}
@@ -429,8 +400,25 @@ export function ImportGroupWizard() {
           }
           onChange={handleMappingChange}
           onContinue={handleMappingContinue}
+          registerStepNav={registerStepNav}
         />
       )}
+
+      {state.step === 'currencyConversion' && state.source && (
+        <CurrencyConversionStep
+          source={state.source}
+          resolvedExpenses={state.resolvedExpenses}
+          sourceCurrencyCode={sourceCurrencyCode}
+          destinationCurrencyCode={destinationCurrencyCode}
+          conversionModes={state.conversionModes}
+          fixedRateDates={state.fixedRateDates}
+          fixedRateOverrides={state.fixedRateOverrides}
+          initialRates={state.rates ?? {}}
+          onContinue={handleCurrencyConversionContinue}
+          registerStepNav={registerStepNav}
+        />
+      )}
+
       {state.step === 'confirm' && state.source && state.mode && (
         <ConfirmStep
           source={state.source}
@@ -438,15 +426,16 @@ export function ImportGroupWizard() {
           targetGroupId={state.targetGroupId}
           groupFormValues={state.groupFormValues}
           participants={state.participants}
+          rates={state.rates}
           resolvedExpenses={state.resolvedExpenses}
           invites={importMutation.data?.invites ?? []}
           isSubmitting={importMutation.isPending}
-          ratesStatus={confirmRatesStatus}
-          currencyConversions={currencyConversions}
-          onBack={() => setState((s) => ({ ...s, step: 'mapping' }))}
+          conversionModes={state.conversionModes}
           onSubmit={handleSubmit}
+          registerStepNav={registerStepNav}
         />
       )}
+
       {state.step === 'done' && (
         <DoneStep
           groupId={importMutation.data?.groupId ?? null}
@@ -454,39 +443,104 @@ export function ImportGroupWizard() {
           onContinue={handleDoneNavigate}
         />
       )}
+
+      <WizardNav
+        step={state.step}
+        onBack={handleBack}
+        onContinue={currentNav.onContinue}
+        continueAsFormId={currentNav.continueAsFormId}
+        continueDisabled={!!currentNav.disabled}
+        customContinueLabel={currentNav.customContinueLabel}
+      />
     </div>
   )
 }
 
-function StepHeader({
-  step,
-  onBack,
-}: {
+function StepHeader({ step }: { step: ImportStep }) {
+  const { t } = useTranslation()
+  const stepLabel = t(STEP_HEADER_LABEL_KEYS[step])
+  return (
+    <div className="flex flex-col gap-1">
+      <p className="text-sm uppercase tracking-wide text-muted-foreground">
+        {t('Groups.Import.StepHeader.title')}
+      </p>
+      <h1 className="text-2xl font-semibold leading-none">{stepLabel}</h1>
+    </div>
+  )
+}
+
+type WizardNavProps = {
   step: ImportStep
   onBack: () => void
-}) {
+  onContinue?: () => void
+  continueAsFormId?: string
+  continueDisabled?: boolean
+  customContinueLabel?: CustomContinueLabelKey
+}
+
+function WizardNav({
+  step,
+  onBack,
+  onContinue,
+  continueAsFormId,
+  continueDisabled,
+  customContinueLabel,
+}: WizardNavProps) {
   const { t } = useTranslation()
-  const stepLabel = t(`Groups.Import.StepHeader.${step}`)
-  const isFirstStep = step === 'source'
+  const nav = getStepNavigation(step)
+
+  // No nav for the first (source) or last (done) terminal steps.
+  // Done renders its own Open Group button; source transitions via
+  // its own file/URL inputs.
+  if (!nav.previousStepKey && !nav.nextStepKey) return null
+  if (step === 'done') return null
+
+  const previousStepLabel = nav.previousStepKey
+    ? t(STEP_HEADER_LABEL_KEYS[nav.previousStepKey])
+    : undefined
+  const nextStepLabel = nav.nextStepKey
+    ? t(STEP_HEADER_LABEL_KEYS[nav.nextStepKey])
+    : undefined
+
+  const backLabel = nav.previousStepKey
+    ? t('Groups.Import.StepHeader.backTo', { step: previousStepLabel })
+    : undefined
+  const continueLabel =
+    customContinueLabel !== undefined
+      ? t(customContinueLabel)
+      : nextStepLabel
+        ? t('Groups.Import.StepHeader.continueTo', { step: nextStepLabel })
+        : undefined
+
+  const showContinue = continueLabel !== undefined
+
   return (
-    <div className="flex items-center gap-2">
-      {!isFirstStep && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onBack}
-          aria-label={t('Groups.Import.StepHeader.backAriaLabel')}
-          className="shrink-0"
-        >
-          <ChevronLeft className="h-5 w-5" />
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      {nav.previousStepKey ? (
+        <Button variant="ghost" onClick={onBack} type="button">
+          {backLabel}
         </Button>
+      ) : (
+        <span />
       )}
-      <div className="flex flex-col gap-1">
-        <p className="text-sm uppercase tracking-wide text-muted-foreground">
-          {t('Groups.Import.StepHeader.title')}
-        </p>
-        <h1 className="text-2xl font-semibold leading-none">{stepLabel}</h1>
-      </div>
+      {showContinue &&
+        (continueAsFormId ? (
+          <Button
+            type="submit"
+            form={continueAsFormId}
+            disabled={continueDisabled}
+          >
+            {continueLabel}
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            onClick={onContinue}
+            disabled={continueDisabled || !onContinue}
+          >
+            {continueLabel}
+          </Button>
+        ))}
     </div>
   )
 }

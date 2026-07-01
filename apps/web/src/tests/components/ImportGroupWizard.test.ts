@@ -2,13 +2,17 @@ import { buildImportExpenses } from '@/app/groups/import/import-wizard-state'
 import { describe, expect, it } from 'vitest'
 
 describe('buildImportExpenses', () => {
-  it('uses ledger amount when originalAmount is not set (same-currency import)', () => {
-    const expenses = buildImportExpenses([
+  it('passes through expenses with paidByList and paidBySplitMode unchanged', () => {
+    const input = [
       {
-        paidBy: 'lp-1',
+        paidByList: [{ participant: 'lp-1', shares: 5000 }],
+        paidBySplitMode: 'BY_AMOUNT' as const,
         amount: 5000,
-      } as any,
-    ])
+        title: 'Dinner',
+        splitMode: 'EVENLY',
+      },
+    ]
+    const expenses = buildImportExpenses(input)
 
     expect(expenses[0].paidByList).toEqual([
       { participant: 'lp-1', shares: 5000 },
@@ -16,34 +20,41 @@ describe('buildImportExpenses', () => {
     expect(expenses[0].paidBySplitMode).toBe('BY_AMOUNT')
   })
 
-  it('uses originalAmount when originalCurrency is set (cross-currency import)', () => {
-    const expenses = buildImportExpenses([
+  it('passes through with originalAmount/originalCurrency when already set', () => {
+    const input = [
       {
-        paidBy: 'lp-1',
-        amount: 4600, // ledger-currency (EUR) cents
-        originalAmount: 5000, // original-currency (USD) cents
+        paidByList: [{ participant: 'lp-1', shares: 5000 }],
+        paidBySplitMode: 'BY_AMOUNT' as const,
+        amount: 4600,
+        originalAmount: 5000,
         originalCurrency: 'USD',
-      } as any,
-    ])
+        title: 'Dinner',
+      },
+    ]
+    const expenses = buildImportExpenses(input)
 
     expect(expenses[0].paidByList).toEqual([
       { participant: 'lp-1', shares: 5000 },
     ])
     expect(expenses[0].paidBySplitMode).toBe('BY_AMOUNT')
+    expect(expenses[0].originalAmount).toBe(5000)
+    expect(expenses[0].originalCurrency).toBe('USD')
   })
 
   it('preserves all other batch expense fields', () => {
-    const expenses = buildImportExpenses([
+    const input = [
       {
-        paidBy: 'lp-1',
+        paidByList: [{ participant: 'lp-1', shares: 5000 }],
+        paidBySplitMode: 'BY_AMOUNT' as const,
         amount: 5000,
         originalAmount: 5000,
         originalCurrency: 'USD',
         title: 'Dinner',
         splitMode: 'EVENLY',
         isReimbursement: false,
-      } as any,
-    ])
+      },
+    ]
+    const expenses = buildImportExpenses(input)
 
     expect(expenses[0]).toMatchObject({
       title: 'Dinner',

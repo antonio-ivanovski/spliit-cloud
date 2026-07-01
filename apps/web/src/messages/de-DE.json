@@ -206,7 +206,13 @@
         "currencyRateAsOfFormat": "Angefragt {requested} · verwendet {asOf}",
         "currencyConversionTitle": "Währungsumrechnung",
         "currencyConversionDescription": "Ausgaben werden von der Quellwährung mit den untenstehenden Kursen in die Zielwährung umgerechnet.",
-        "currencyRateForDateFormat": "Angewandt für Ausgaben vom {date}"
+        "currencyRateForDateFormat": "Angewandt für Ausgaben vom {date}",
+        "appliedExchangeRatesLabel": "Angewendete Wechselkurse",
+        "conversionPerDate": "Nach Datum",
+        "conversionFixed": "Fester Wechselkurs",
+        "importErrorTitle": "Import fehlgeschlagen",
+        "importErrorFallback": "Beim Importieren der Gruppe ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut.",
+        "executeImport": "Gruppe importieren"
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",
@@ -271,8 +277,8 @@
       "notFound": "Spliit hat diese Gruppe nicht gefunden",
       "fetchSourceError": "Quelle konnte nicht abgerufen werden",
       "Source": {
-        "fromSpliit": "Von Spliit",
-        "splitwise": "Splitwise (demnächst)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (demnächst)",
         "settleUp": "Settle Up (demnächst)",
         "spliitDescription": "Bringe eine bestehende spliit.app-Gruppe in Spliit Cloud. Wir lesen den Gruppennamen, die Teilnehmer und jede Ausgabe ein.",
@@ -297,16 +303,41 @@
         "fetchUrlError": "Quelle konnte nicht abgerufen werden",
         "fileReadError": "Datei konnte nicht gelesen werden",
         "appToCloudDescription": "Ändere .app zu .cloud in einer beliebigen spliit.app-Gruppen-URL, um sie in Spliit Cloud zu importieren.",
-        "appToCloudTitle": ".app durch .cloud ersetzen"
+        "appToCloudTitle": ".app durch .cloud ersetzen",
+        "splitwiseDescription": "Lege einen CSV-Export aus Splitwise ab, um dessen Ausgaben in Spliit Cloud zu importieren. Die Datei muss aus dem Gruppenexport von Splitwise stammen — die CSV pro Gruppe, die in den Gruppeneinstellungen verfügbar ist.",
+        "receiptWarningTitleSplitwise": "Belegbilder werden nicht importiert.",
+        "receiptWarningDescriptionSplitwise": "Der Splitwise-Export enthält keine Belegbilder. Lade sie bei Bedarf in der Zielgruppe erneut hoch.",
+        "unsupportedFileType": "Nicht unterstützter Dateityp. Bitte lege eine JSON- oder CSV-Datei ab.",
+        "dropFileSplitwise": "Lege eine Splitwise-CSV-Datei ab oder klicke zum Auswählen",
+        "dropFileDescriptionSplitwise": "CSV ist das einzige Format, das Splitwise exportiert. Wir analysieren die Beträge pro Teilnehmer, um die Aufteilung wiederherzustellen."
       },
       "StepHeader": {
         "title": "Gruppe importieren",
-        "source": "1. Quelle",
-        "destination": "2. Ziel",
-        "mapping": "3. Zuordnung",
-        "confirm": "4. Bestätigen",
-        "done": "5. Fertig",
-        "backAriaLabel": "Zurück"
+        "source": "Quelle",
+        "destination": "Ziel",
+        "mapping": "Zuordnung",
+        "confirm": "Bestätigen",
+        "done": "Fertig",
+        "backAriaLabel": "Zurück",
+        "currencyConversion": "Währungsumrechnung",
+        "backTo": "Zurück zu {step}",
+        "continueTo": "Weiter zu {step}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Eigener Kurs",
+        "fetchingRates": "Wechselkurse werden abgerufen…",
+        "fixedDescription": "Weniger genau, stellt aber sicher, dass alle Beträge denselben Wechselkurs verwenden, sodass der Gruppensaldo nach dem Import ausgeglichen ist.",
+        "fixedTitle": "Fester Kurs",
+        "noConversionNeeded": "Alle Ausgaben sind in der Standardwährung der Gruppe. Eine Währungsumrechnung ist nicht nötig.",
+        "perDateDescription": "Genauer — verwendet den Wechselkurs des tatsächlichen Datums jeder Ausgabe.",
+        "perDateSelectedHint": "Verwendet den historischen Wechselkurs für das Datum jeder Ausgabe (Frankfurter API).",
+        "perDateTitle": "Umrechnung nach Datum",
+        "rateDateLabel": "Kursdatum",
+        "ratesError": "Wechselkurse konnten nicht abgerufen werden. Überprüfe deine Verbindung und versuche es erneut.",
+        "refresh": "Aktualisieren",
+        "viaFrankfurter": "über Frankfurter"
       }
     },
     "Importable": {

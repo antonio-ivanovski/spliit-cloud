@@ -50,24 +50,28 @@ export function computeImportRateKeys(
   sourceCurrencyCode: string,
   destinationCurrencyCode: string,
 ): ImportRateKeyItem[] {
-  if (
-    !sourceCurrencyCode ||
-    !destinationCurrencyCode ||
-    sourceCurrencyCode === destinationCurrencyCode
-  ) {
-    return []
-  }
+  if (!destinationCurrencyCode) return []
 
   const seen = new Set<string>()
   const items: ImportRateKeyItem[] = []
   for (const expense of expenses) {
-    const base = (expense.originalCurrency ?? sourceCurrencyCode).toUpperCase()
-    if (base === destinationCurrencyCode.toUpperCase()) continue
+    const destination = destinationCurrencyCode.toUpperCase()
+    const amountCurrency = (
+      expense.amountCurrency ?? sourceCurrencyCode
+    ).toUpperCase()
+    if (!amountCurrency || amountCurrency === destination) continue
+    if (
+      expense.originalCurrency?.toUpperCase() === destination &&
+      expense.originalAmount !== null
+    ) {
+      continue
+    }
+    const base = amountCurrency
     const date = expense.expenseDate.slice(0, 10)
-    const key = makeRateKey(date, base, destinationCurrencyCode)
+    const key = makeRateKey(date, base, destination)
     if (seen.has(key)) continue
     seen.add(key)
-    items.push({ date, base, target: destinationCurrencyCode.toUpperCase() })
+    items.push({ date, base, target: destination })
   }
   return items
 }
@@ -109,7 +113,8 @@ export type ImportBatchExpense = {
   originalAmount: number | undefined
   originalCurrency: string | undefined
   conversionRate: number | undefined
-  paidBy: string
+  paidByList: Array<{ participant: string; shares: number }>
+  paidBySplitMode: 'BY_AMOUNT'
   paidFor: Array<{ participant: string; shares: number }>
   splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
   saveDefaultSplittingOptions: boolean
@@ -198,17 +203,21 @@ export function buildImportBatch(
   })
 
   const sourceCurrencyCode = state.source?.currencyCode ?? ''
-  const groupCurrencyMismatch =
-    !!sourceCurrencyCode &&
-    !!destinationCurrencyCode &&
-    sourceCurrencyCode !== destinationCurrencyCode
 
   const expenses: ImportBatchExpense[] = state.resolvedExpenses.map((e) => {
-    const paidBy = state.sourceIdToDestId[e.paidBySourceId]
-    if (!paidBy) {
-      throw new Error(
-        `Missing destination id for paidBy participant ${e.paidBySourceId}`,
-      )
+    const normalizedPaidBy =
+      e.paidBy.length > 0
+        ? e.paidBy
+        : [{ sourceId: e.paidBySourceId, shares: e.originalAmount ?? e.amount }]
+    const paidByList: Array<{ participant: string; shares: number }> = []
+    for (const p of normalizedPaidBy) {
+      const destId = state.sourceIdToDestId[p.sourceId]
+      if (!destId) {
+        throw new Error(
+          `Missing destination id for paidBy participant ${p.sourceId}`,
+        )
+      }
+      paidByList.push({ participant: destId, shares: p.shares })
     }
     const paidFor: Array<{ participant: string; shares: number }> = []
     for (const p of e.paidFor) {
@@ -221,42 +230,109 @@ export function buildImportBatch(
       paidFor.push({ participant: destId, shares: p.shares })
     }
 
-    const effectiveOriginalCurrency = e.originalCurrency ?? sourceCurrencyCode
+    const amountCurrency = e.amountCurrency ?? sourceCurrencyCode
+    const effectiveOriginalCurrency = e.originalCurrency ?? amountCurrency
     const effectiveOriginalAmount = e.originalAmount ?? e.amount
     const needsConversion =
-      groupCurrencyMismatch &&
       !!destinationCurrencyCode &&
-      !!effectiveOriginalCurrency &&
-      effectiveOriginalCurrency !== destinationCurrencyCode
+      !!amountCurrency &&
+      amountCurrency !== destinationCurrencyCode
 
     if (needsConversion) {
-      if (!rates) {
-        throw new Error(
-          `Cannot import "${e.title}": cross-currency conversion needs an exchange rate from ${effectiveOriginalCurrency} to ${destinationCurrencyCode}.`,
-        )
-      }
       const dateKey = e.expenseDate.slice(0, 10)
-      const rateKey = makeRateKey(
-        dateKey,
-        effectiveOriginalCurrency,
-        destinationCurrencyCode,
-      )
-      const rate = rates[rateKey]
-      if (typeof rate !== 'number') {
-        throw new Error(
-          `Cannot import "${e.title}": missing exchange rate for ${effectiveOriginalCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
+      let convertedAmount: number
+      let shareRate: number
+
+      if (
+        e.originalCurrency?.toUpperCase() ===
+          destinationCurrencyCode.toUpperCase() &&
+        e.originalAmount !== null
+      ) {
+        convertedAmount = e.originalAmount
+        shareRate = convertedAmount / e.amount
+      } else {
+        if (!rates) {
+          throw new Error(
+            `Cannot import "${e.title}": cross-currency conversion needs an exchange rate from ${amountCurrency} to ${destinationCurrencyCode}.`,
+          )
+        }
+        const rateKey = makeRateKey(
+          dateKey,
+          amountCurrency,
+          destinationCurrencyCode,
         )
+        const rate = rates[rateKey]
+        if (typeof rate !== 'number') {
+          throw new Error(
+            `Cannot import "${e.title}": missing exchange rate for ${amountCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
+          )
+        }
+        convertedAmount = Math.round(e.amount * rate)
+        shareRate = rate
       }
+
+      const convertedPaidFor =
+        e.splitMode === 'BY_AMOUNT'
+          ? paidFor.map((p) => ({
+              participant: p.participant,
+              shares: Math.round(p.shares * shareRate),
+            }))
+          : paidFor
+      if (e.splitMode === 'BY_AMOUNT') {
+        const sumConverted = convertedPaidFor.reduce((s, p) => s + p.shares, 0)
+        const drift = convertedAmount - sumConverted
+        if (drift !== 0 && convertedPaidFor.length > 0) {
+          let largestIdx = 0
+          for (let i = 1; i < convertedPaidFor.length; i++) {
+            if (
+              convertedPaidFor[i].shares > convertedPaidFor[largestIdx].shares
+            )
+              largestIdx = i
+          }
+          convertedPaidFor[largestIdx].shares += drift
+        }
+      }
+
+      const convertedPaidBy =
+        e.originalCurrency && e.originalAmount !== null
+          ? paidByList.length === 1
+            ? [{ ...paidByList[0], shares: e.originalAmount }]
+            : paidByList.map((p) => ({
+                participant: p.participant,
+                shares: Math.round(p.shares),
+              }))
+          : paidByList.map((p) => ({
+              participant: p.participant,
+              shares: Math.round(p.shares),
+            }))
+      const paidByTarget = effectiveOriginalAmount
+      const paidBySum = convertedPaidBy.reduce((s, p) => s + p.shares, 0)
+      const paidByDrift = paidByTarget - paidBySum
+      if (paidByDrift !== 0 && convertedPaidBy.length > 0) {
+        let largestIdx = 0
+        for (let i = 1; i < convertedPaidBy.length; i++) {
+          if (convertedPaidBy[i].shares > convertedPaidBy[largestIdx].shares)
+            largestIdx = i
+        }
+        convertedPaidBy[largestIdx].shares += paidByDrift
+      }
+
+      const conversionRate =
+        effectiveOriginalAmount !== 0
+          ? convertedAmount / effectiveOriginalAmount
+          : undefined
+
       return {
         expenseDate: new Date(e.expenseDate),
         title: e.title,
         category: e.category as never,
-        amount: Math.round(effectiveOriginalAmount * rate),
+        amount: convertedAmount,
         originalAmount: effectiveOriginalAmount,
         originalCurrency: effectiveOriginalCurrency,
-        conversionRate: rate,
-        paidBy,
-        paidFor,
+        conversionRate,
+        paidByList: convertedPaidBy,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidFor: convertedPaidFor,
         splitMode: e.splitMode,
         saveDefaultSplittingOptions: false,
         isReimbursement: e.isReimbursement,
@@ -274,7 +350,8 @@ export function buildImportBatch(
       originalAmount: e.originalAmount ?? undefined,
       originalCurrency: e.originalCurrency ?? undefined,
       conversionRate: e.conversionRate ?? undefined,
-      paidBy,
+      paidByList,
+      paidBySplitMode: 'BY_AMOUNT',
       paidFor,
       splitMode: e.splitMode,
       saveDefaultSplittingOptions: false,

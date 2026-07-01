@@ -77,5 +77,7 @@ More focused notes: [.agent/architecture.md](.agent/architecture.md), [.agent/da
 
 `apps/web/src/messages/en-US.json` is the source of truth; other locales fall back to it at runtime. **Never hand-edit** any file in `apps/web/src/messages/` — use the `bun i18n` CLI.
 
+- ALWAYS use the `react-i18next` functions directly, NEVER create hacky custom wrapper to get around the type system.
+- Translation texts use single `{` and `}` for interpolation, not double `{{` and `}}`.
 - **Audit (canonical CI gate)**: `bun i18n check` exits 1 if any non-English locale is missing any key present in en-US, or if there are orphan keys. Use `bun i18n check --changes-only` for PR-scoped audits (only flag keys introduced by the current diff vs `HEAD`).
 - **Translate**: load the `translate-strings` skill at `.agents/skills/translate-strings/SKILL.md`. When many locales are behind, dispatch **parallel subagents grouped by language family** (Romance, Germanic+Nordic, Slavic, East Asian, Other) — each subagent owns one language family, runs the skill, and finishes by confirming `bun i18n check --locale <own-locale>` exits 0.
