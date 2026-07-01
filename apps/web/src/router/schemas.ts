@@ -21,13 +21,15 @@ export const groupIdParamSchema = cuidLike
 export const expenseIdParamSchema = cuidLike
 
 /**
- * Search-param schema for the `/groups/import` wizard. The `source`
+ * Search-param schema for the `/groups/import` wizard. The `prefill`
  * field carries an encoded `spliit.app` group URL when the user
  * arrived from the not-found hand-off; the wizard opens on the
- * destination step when this is set.
+ * destination step when this is set. The `source` field selects
+ * the active import-source tab.
  */
 export const importGroupSearchSchema = z.object({
-  source: z.string().optional(),
+  prefill: z.string().optional(),
+  source: z.enum(['spliit', 'splitwise', 'tricount', 'settleup']).optional(),
 })
 
 /**

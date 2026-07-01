@@ -9,6 +9,7 @@ type FileUploadCardProps = {
   onDragLeave: () => void
   onDrop: (e: DragEvent) => void
   onFileChange: (e: ChangeEvent<HTMLInputElement>) => void
+  accept: string
   labels: {
     dropFile: string
     dropFileDescription: string
@@ -22,6 +23,7 @@ export function FileUploadCard({
   onDragLeave,
   onDrop,
   onFileChange,
+  accept,
   labels,
 }: FileUploadCardProps) {
   return (
@@ -44,7 +46,7 @@ export function FileUploadCard({
           </span>
           <input
             type="file"
-            accept=".json,.csv,application/json,text/csv"
+            accept={accept}
             className="hidden"
             disabled={disabled}
             onChange={onFileChange}

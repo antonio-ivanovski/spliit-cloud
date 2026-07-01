@@ -7,8 +7,10 @@ import {
   type NormalizedSource,
 } from '@spliit/domain/import'
 import { FolderPlus, Layers } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+
+const DESTINATION_FORM_ID = 'import-wizard-destination-form'
 
 type Props = {
   source: NormalizedSource
@@ -18,6 +20,7 @@ type Props = {
     currency: string
     currencyCode: string
   }
+  mode: 'NEW_GROUP' | 'EXISTING_GROUP' | null
   onContinue: (choice: {
     mode: 'NEW_GROUP' | 'EXISTING_GROUP'
     targetGroupId: string | null
@@ -28,14 +31,22 @@ type Props = {
       currencyCode: string
     }
   }) => void
+  registerStepNav: (
+    step: 'destination',
+    nav: { continueAsFormId?: string },
+  ) => void
 }
 
 export function DestinationStep({
   source,
   initialGroupFormValues,
+  mode,
   onContinue,
+  registerStepNav,
 }: Props) {
-  const [mode, setMode] = useState<'NEW_GROUP' | 'EXISTING_GROUP'>('NEW_GROUP')
+  const [currentMode, setCurrentMode] = useState<
+    'NEW_GROUP' | 'EXISTING_GROUP'
+  >(mode ?? 'NEW_GROUP')
   const { t } = useTranslation()
   const { data, isLoading } = trpc.account.groups.useQuery({
     includeArchived: false,
@@ -43,6 +54,20 @@ export function DestinationStep({
   const groups = (data?.groups ?? []).filter(
     (g) => g.currentMemberRole === 'ADMIN',
   )
+
+  // EXISTING_GROUP mode transitions via clicking a group card, so the
+  // wizard's Continue button is meaningless there. Hide it by
+  // reporting no `continueAsFormId`. NEW_GROUP mode submits via the
+  // form.
+  useEffect(() => {
+    if (currentMode === 'NEW_GROUP') {
+      registerStepNav('destination', {
+        continueAsFormId: DESTINATION_FORM_ID,
+      })
+    } else {
+      registerStepNav('destination', { continueAsFormId: undefined })
+    }
+  }, [currentMode, registerStepNav])
 
   return (
     <div className="flex flex-col gap-4">
@@ -59,8 +84,10 @@ export function DestinationStep({
       </p>
 
       <Tabs
-        value={mode}
-        onValueChange={(v) => setMode(v as 'NEW_GROUP' | 'EXISTING_GROUP')}
+        value={currentMode}
+        onValueChange={(v) =>
+          setCurrentMode(v as 'NEW_GROUP' | 'EXISTING_GROUP')
+        }
       >
         <TabsList className="w-full sm:w-auto">
           <TabsTrigger value="NEW_GROUP" className="gap-2">
@@ -77,6 +104,8 @@ export function DestinationStep({
           <Card>
             <CardContent className="p-4">
               <GroupForm
+                formId={DESTINATION_FORM_ID}
+                hideActions
                 initialValues={{
                   name: source.name,
                   information:

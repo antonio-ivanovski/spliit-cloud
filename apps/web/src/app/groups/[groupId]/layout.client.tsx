@@ -171,7 +171,7 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
           <div className="flex gap-2">
             <Button asChild>
               <Link
-                href={`/groups/import?source=${encodeURIComponent(sourceUrl)}`}
+                href={`/groups/import?prefill=${encodeURIComponent(sourceUrl)}`}
               >
                 {tImportable('cta')}
               </Link>

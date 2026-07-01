@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { randomId } from '@/lib/api'
 import type { AuthAccount } from '@/lib/auth'
 import type {
@@ -8,6 +7,7 @@ import type {
   ParticipantMappingState,
 } from '@spliit/domain/import'
 import { findImportConflicts } from '@spliit/domain/import'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MappingRow } from './mapping-row'
 import { useMappingValidation } from './mapping-validation'
@@ -23,6 +23,10 @@ type Props = {
     destIds: Record<string, string>
     resolvedExpenses: NormalizedSource['expenses']
   }) => void
+  registerStepNav: (
+    step: 'mapping',
+    nav: { onContinue?: () => void; disabled?: boolean },
+  ) => void
 }
 
 export function MappingStep({
@@ -32,6 +36,7 @@ export function MappingStep({
   destinationParticipants,
   onChange,
   onContinue,
+  registerStepNav,
 }: Props) {
   const { t } = useTranslation()
   const { translateConflictMessage, disabledReasonForCurrentMode } =
@@ -55,7 +60,7 @@ export function MappingStep({
     ]),
   )
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (conflictMap.size > 0) return
     for (const p of participants) {
       if (p.mode === 'INVITE_BY_EMAIL' && !p.inviteEmail?.trim()) {
@@ -83,38 +88,56 @@ export function MappingStep({
       paidFor: e.paidFor,
     }))
     onContinue({ sourceIdToDestId, destIds, resolvedExpenses })
-  }
+  }, [conflictMap, participants, source.expenses, onContinue])
 
   const linkAccountKey =
     participants.find((p) => p.mode === 'LINK_ACCOUNT')?.key ?? null
   const normalizedImporterEmail = account?.email?.toLowerCase().trim() ?? null
 
-  const hasConflict = participants.some(
-    (p) =>
-      disabledReasonForCurrentMode(
-        p,
-        conflictMap,
-        linkAccountKey,
-        normalizedImporterEmail,
-        participants,
-      ) !== null,
-  )
-  const existingLpIds = participants
-    .filter(
+  const ready = useMemo(() => {
+    const hasConflict = participants.some(
       (p) =>
-        p.mode === 'LINK_EXISTING_PARTICIPANT' && p.existingLedgerParticipantId,
+        disabledReasonForCurrentMode(
+          p,
+          conflictMap,
+          linkAccountKey,
+          normalizedImporterEmail,
+          participants,
+        ) !== null,
     )
-    .map((p) => p.existingLedgerParticipantId!)
-  const hasDuplicateDestId =
-    existingLpIds.length !== new Set(existingLpIds).size
-  const ready =
-    !hasConflict &&
-    !hasDuplicateDestId &&
-    conflictMap.size === 0 &&
-    participants.every(
-      (p) =>
-        p.mode !== 'INVITE_BY_EMAIL' || (p.inviteEmail?.trim().length ?? 0) > 0,
+    const existingLpIds = participants
+      .filter(
+        (p) =>
+          p.mode === 'LINK_EXISTING_PARTICIPANT' &&
+          p.existingLedgerParticipantId,
+      )
+      .map((p) => p.existingLedgerParticipantId!)
+    const hasDuplicateDestId =
+      existingLpIds.length !== new Set(existingLpIds).size
+    return (
+      !hasConflict &&
+      !hasDuplicateDestId &&
+      conflictMap.size === 0 &&
+      participants.every(
+        (p) =>
+          p.mode !== 'INVITE_BY_EMAIL' ||
+          (p.inviteEmail?.trim().length ?? 0) > 0,
+      )
     )
+  }, [
+    participants,
+    conflictMap,
+    linkAccountKey,
+    normalizedImporterEmail,
+    disabledReasonForCurrentMode,
+  ])
+
+  useEffect(() => {
+    registerStepNav('mapping', {
+      onContinue: handleContinue,
+      disabled: !ready,
+    })
+  }, [handleContinue, ready, registerStepNav])
 
   return (
     <div className="flex flex-col gap-4">
@@ -150,12 +173,6 @@ export function MappingStep({
             destinationParticipants={destinationParticipants}
           />
         ))}
-      </div>
-
-      <div className="flex justify-end gap-2">
-        <Button onClick={handleContinue} disabled={!ready}>
-          {t('Groups.Import.Mapping.continue')}
-        </Button>
       </div>
     </div>
   )

@@ -197,19 +197,22 @@
     "Import": {
       "StepHeader": {
         "title": "Import a group",
-        "source": "1. Source",
-        "destination": "2. Destination",
-        "mapping": "3. Mapping",
-        "confirm": "4. Confirm",
-        "done": "5. Done",
-        "backAriaLabel": "Back"
+        "source": "Source",
+        "destination": "Destination",
+        "mapping": "Mapping",
+        "confirm": "Confirm",
+        "done": "Done",
+        "backAriaLabel": "Back",
+        "currencyConversion": "Currency conversion",
+        "backTo": "Back to {step}",
+        "continueTo": "Continue to {step}"
       },
       "fetchingGroup": "Fetching the group from spliit.app…",
       "notFound": "Spliit did not find this group",
       "fetchSourceError": "Failed to fetch the source",
       "Source": {
-        "fromSpliit": "From Spliit",
-        "splitwise": "Splitwise (coming soon)",
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
         "tricount": "Tricount (coming soon)",
         "settleUp": "Settle Up (coming soon)",
         "spliitDescription": "Bring an existing spliit.app group into Spliit Cloud. We read the group name, participants, and every expense.",
@@ -234,7 +237,13 @@
         "fetchUrlError": "Failed to fetch the source",
         "fileReadError": "Failed to read the file",
         "appToCloudDescription": "Change .app to .cloud in any spliit.app group URL to import it into Spliit Cloud.",
-        "appToCloudTitle": "Swap .app for .cloud"
+        "appToCloudTitle": "Swap .app for .cloud",
+        "splitwiseDescription": "Drop a Splitwise CSV export to import its expenses into Spliit Cloud. The file must come from Splitwise's group export — the per-group CSV available from the group's settings.",
+        "receiptWarningTitleSplitwise": "Receipt images are not imported.",
+        "receiptWarningDescriptionSplitwise": "The Splitwise export does not include receipt images. Re-upload them in the destination group if you need them.",
+        "unsupportedFileType": "Unsupported file type. Please drop a JSON or CSV file.",
+        "dropFileSplitwise": "Drop a Splitwise CSV file, or click to select",
+        "dropFileDescriptionSplitwise": "CSV is the only format Splitwise exports. We parse the per-participant values to reconstruct the split."
       },
       "Destination": {
         "heading": "Where would you like to import <strong>{name}</strong>? ({participantCount} participants · {expenseCount} expenses)",
@@ -301,7 +310,13 @@
         "currencyRateAsOfFormat": "Requested {requested} · provider used {asOf}",
         "currencyConversionTitle": "Currency conversion",
         "currencyConversionDescription": "Expenses will be converted from the source currency to the destination ledger currency using the rates below.",
-        "currencyRateForDateFormat": "Applied for expenses dated {date}"
+        "currencyRateForDateFormat": "Applied for expenses dated {date}",
+        "appliedExchangeRatesLabel": "Applied exchange rates",
+        "conversionPerDate": "Per-date",
+        "conversionFixed": "Fixed rate",
+        "importErrorTitle": "Import failed",
+        "importErrorFallback": "An unexpected error occurred while importing the group. Please try again.",
+        "executeImport": "Import group"
       },
       "Done": {
         "importComplete": "Import complete",
@@ -314,6 +329,22 @@
         "emailInvitesDescription": "The server emailed the following people. They'll see an Accept/Decline banner in the group page when they sign in.",
         "shareTitle": "Join my Spliit group",
         "shareText": "Join our expense group on Spliit Cloud — {name}. Open this link to accept: {url}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Use custom rate",
+        "fetchingRates": "Fetching exchange rates…",
+        "fixedDescription": "Less accurate but ensures all amounts use the same conversion rate, so the group balance stays net-zero after import.",
+        "fixedTitle": "Fixed rate",
+        "noConversionNeeded": "All expenses are in the group's default currency. No currency conversion is needed.",
+        "perDateDescription": "More accurate — uses the exchange rate from each expense's actual date.",
+        "perDateSelectedHint": "Uses the historical rate for each expense's date.",
+        "perDateTitle": "Per-date conversion",
+        "rateDateLabel": "Rate date",
+        "ratesError": "Unable to fetch exchange rates. Check your connection and try again.",
+        "refresh": "Refresh",
+        "viaFrankfurter": "via Frankfurter"
       }
     }
   },
