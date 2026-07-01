@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import type { AppRouterOutput } from '@spliit/api/router'
-import { CheckCircle2, ExternalLink, SearchCheck, Share2 } from 'lucide-react'
+import { CheckCircle2, Share2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 

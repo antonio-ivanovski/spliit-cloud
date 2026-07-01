@@ -10,9 +10,9 @@ import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
 import { TRPCProvider } from '@/trpc/client'
 import { Outlet } from '@tanstack/react-router'
-import { Github } from 'lucide-react'
 import { Suspense } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import Github from './components/auth/github.svg?react'
 
 function Content() {
   const { t } = useTranslation()

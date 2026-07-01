@@ -36,6 +36,7 @@
     "prettier": "^3.8.4",
     "prettier-plugin-organize-imports": "^3.2.4",
     "turbo": "^2.9.18",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite-plugin-svgr": "^5.2.0"
   }
 }

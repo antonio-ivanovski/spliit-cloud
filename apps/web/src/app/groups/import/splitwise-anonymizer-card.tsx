@@ -62,7 +62,7 @@ export function SplitwiseAnonymizerCard() {
   )
 
   return (
-    <Card className="border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/30">
+    <Card className="border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/30 mt-2">
       <CardContent className="flex flex-col gap-3 p-4">
         <div className="flex items-start gap-2">
           <HatGlasses className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300" />
