@@ -271,20 +271,26 @@ export function buildImportBatch(
         shareRate = rate
       }
 
-      // Convert paidFor shares to the destination currency, preserving sum.
-      const convertedPaidFor = paidFor.map((p) => ({
-        participant: p.participant,
-        shares: Math.round(p.shares * shareRate),
-      }))
-      const sumConverted = convertedPaidFor.reduce((s, p) => s + p.shares, 0)
-      const drift = convertedAmount - sumConverted
-      if (drift !== 0 && convertedPaidFor.length > 0) {
-        let largestIdx = 0
-        for (let i = 1; i < convertedPaidFor.length; i++) {
-          if (convertedPaidFor[i].shares > convertedPaidFor[largestIdx].shares)
-            largestIdx = i
+      const convertedPaidFor =
+        e.splitMode === 'BY_AMOUNT'
+          ? paidFor.map((p) => ({
+              participant: p.participant,
+              shares: Math.round(p.shares * shareRate),
+            }))
+          : paidFor
+      if (e.splitMode === 'BY_AMOUNT') {
+        const sumConverted = convertedPaidFor.reduce((s, p) => s + p.shares, 0)
+        const drift = convertedAmount - sumConverted
+        if (drift !== 0 && convertedPaidFor.length > 0) {
+          let largestIdx = 0
+          for (let i = 1; i < convertedPaidFor.length; i++) {
+            if (
+              convertedPaidFor[i].shares > convertedPaidFor[largestIdx].shares
+            )
+              largestIdx = i
+          }
+          convertedPaidFor[largestIdx].shares += drift
         }
-        convertedPaidFor[largestIdx].shares += drift
       }
 
       const convertedPaidBy =

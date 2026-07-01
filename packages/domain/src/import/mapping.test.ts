@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { expenseApiSchema } from '../schemas'
 import {
   applyAutoMatch,
   buildImportBatch,
@@ -783,6 +784,55 @@ describe('buildImportBatch', () => {
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(Math.round(333 * 1.1234))
+    })
+
+    it('does not convert percentage paidFor shares during currency conversion', () => {
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+        mappingRow('p-1', 'Jane', 'INVITE_BY_LINK'),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        destIds: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        resolvedExpenses: [
+          baseExpense(
+            'p-0',
+            [
+              { sourceId: 'p-0', shares: 3333 },
+              { sourceId: 'p-1', shares: 6667 },
+            ],
+            { category: 'general', splitMode: 'BY_PERCENTAGE' },
+          ),
+        ],
+      }
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      expect(batch.expenses[0]).toMatchObject({
+        amount: 1100,
+        paidFor: [
+          { participant: 'dest-a', shares: 3333 },
+          { participant: 'dest-b', shares: 6667 },
+        ],
+        splitMode: 'BY_PERCENTAGE',
+      })
+      const parsed = expenseApiSchema.safeParse(batch.expenses[0])
+      expect(parsed.error?.issues).toBeUndefined()
     })
   })
 
