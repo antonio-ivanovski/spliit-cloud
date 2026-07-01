@@ -101,6 +101,8 @@ type FrankfurterResponse = {
   rates: Record<string, number>
 }
 
+export type { FrankfurterResponse }
+
 // v2 returns a flat array of one row per (date, base, quote) triple instead
 // of v1's `{ base, date, rates: Record<quote, rate> }` object. We translate
 // it back into the v1 shape here so the rest of the module is unchanged.

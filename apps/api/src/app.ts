@@ -4,6 +4,7 @@ import { cors } from 'hono/cors'
 import { auth } from './lib/auth'
 import { webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'
+import { postCurrencyRates } from './routes/currency-rates'
 import { exportGroupCsv } from './routes/export-csv'
 import { exportGroupJson } from './routes/export-json'
 import { createUploadUrl } from './routes/upload'
@@ -54,6 +55,10 @@ app.get('/groups/:groupId/expenses/export/json', (c) =>
 app.get('/groups/:groupId/expenses/export/csv', (c) =>
   exportGroupCsv(c.req.raw, c.req.param('groupId')),
 )
+
+// Bulk FX lookup. POST so a 500-item batch doesn't blow the URL length
+// limit (HTTP 431).
+app.post('/currency/rates', (c) => postCurrencyRates(c.req.raw))
 
 app.all('/trpc/*', (c) =>
   fetchRequestHandler({

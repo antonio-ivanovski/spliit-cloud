@@ -17,11 +17,6 @@ const singleRateInput = z.object({
   target: currencyCodeSchema,
 })
 
-const batchRateItem = singleRateInput
-const batchRateInput = z.object({
-  items: z.array(batchRateItem).min(1).max(500),
-})
-
 /**
  * Translate a `BatchRateResult` error into a tRPC error with a stable code
  * the client can switch on. The shape is preserved so the caller can
@@ -65,6 +60,11 @@ export const currencyRouter = createTRPCRouter({
    * Returns the rate and both the requested and as-of dates so the
    * client can show a warning when the as-of differs from the
    * requested date (e.g. weekend or future date fallback).
+   *
+   * Bulk lookups for the import wizard are handled by the POST
+   * `/currency/rates` endpoint rather than this tRPC procedure — the
+   * superjson-enveloped batch URL blew past 8 KB on large imports and
+   * tripped HTTP 431.
    */
   getRate: baseProcedure.input(singleRateInput).query(async ({ input }) => {
     const [result] = await getCurrencyRates([
@@ -81,31 +81,5 @@ export const currencyRouter = createTRPCRouter({
       return result?.rate
     }
     raiseBatchError(result.error)
-  }),
-
-  /**
-   * Batch variant of `getRate`. Returns the requested rate and as-of date
-   * for each item in the input order. Per-item failures are returned
-   * alongside successes so the caller can block the import with a clear
-   * message per offending expense rather than failing the whole batch.
-   *
-   * The underlying Frankfurter fetches are deduplicated by (date, base)
-   * in-process, so a batch of N expenses on the same date with the same
-   * source currency costs one upstream call.
-   */
-  getRates: baseProcedure.input(batchRateInput).query(async ({ input }) => {
-    const results = await getCurrencyRates(
-      input.items.map((item) => ({
-        date: item.date,
-        base: item.base.toUpperCase(),
-        target: item.target.toUpperCase(),
-      })),
-    )
-    return results.map((result) => {
-      if (result.ok) {
-        return { ok: true as const, rate: result.rate }
-      }
-      return { ok: false as const, error: result.error }
-    })
   }),
 })
