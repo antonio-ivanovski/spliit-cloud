@@ -70,7 +70,7 @@ describe('complex spliit.app export with all features', () => {
     // The spliit.app export has conversionRate as a string "0.9"
     const modifiedRaw = JSON.parse(JSON.stringify(raw))
     const expenseWithString = modifiedRaw.expenses.find(
-      (e: any) => e.originalAmount !== null,
+      (e: { originalAmount: unknown }) => e.originalAmount !== null,
     )
     if (expenseWithString) {
       expenseWithString.conversionRate = '0.9'

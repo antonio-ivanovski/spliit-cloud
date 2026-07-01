@@ -1,6 +1,7 @@
 import { ChevronDown, Loader2 } from 'lucide-react'
 
-import { Button, ButtonProps } from '@/components/ui/button'
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -16,7 +17,7 @@ import {
 } from '@/components/ui/popover'
 import { type DisplayCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -36,17 +37,10 @@ export function CurrencySelector({
   disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState<string>(defaultValue)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  // allow overwriting currently selected currency from outside
-  useEffect(() => {
-    setValue(defaultValue)
-    onValueChange(defaultValue)
-  }, [defaultValue])
-
   const selectedCurrency =
-    currencies.find((currency) => (currency.code ?? '') === value) ??
+    currencies.find((currency) => (currency.code ?? '') === defaultValue) ??
     currencies[0]
 
   if (isDesktop) {
@@ -64,7 +58,6 @@ export function CurrencySelector({
           <CurrencyCommand
             currencies={currencies}
             onValueChange={(code) => {
-              setValue(code)
               onValueChange(code)
               setOpen(false)
             }}
@@ -88,7 +81,6 @@ export function CurrencySelector({
         <CurrencyCommand
           currencies={currencies}
           onValueChange={(id) => {
-            setValue(id)
             onValueChange(id)
             setOpen(false)
           }}
@@ -190,11 +182,13 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="flex w-full justify-between"
+        className="flex w-full"
         ref={ref}
         {...props}
       >
-        <CurrencyLabel currency={currency} />
+        <span className="flex-1 text-left">
+          <CurrencyLabel currency={currency} />
+        </span>
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />
         ) : (

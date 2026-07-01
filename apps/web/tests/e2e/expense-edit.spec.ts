@@ -79,7 +79,7 @@ test.describe('Expense Editing', () => {
     await page.waitForURL(/\/groups\/[^/]+\/expenses$/)
 
     // Verify payer updated in list
-    const expenseCard = page.getByText('Payer Change Test').locator('..')
+    const _expenseCard = page.getByText('Payer Change Test').locator('..')
     await expect(page.getByText(/Bob/)).toBeVisible()
   })
 

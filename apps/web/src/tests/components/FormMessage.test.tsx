@@ -9,7 +9,7 @@ function TestForm({ message }: { message: string }) {
 
   useEffect(() => {
     form.setError('test', { type: 'custom', message })
-  }, [message])
+  }, [message, form])
 
   return (
     <Form {...form}>

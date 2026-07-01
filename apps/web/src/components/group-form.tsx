@@ -12,9 +12,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { getGroup } from '@/lib/api'
+import type { getGroup } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
-import { GroupFormValues, groupFormSchema } from '@/lib/schemas'
+import type { GroupFormValues } from '@/lib/schemas'
+import { groupFormSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save, UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -121,7 +122,14 @@ export function GroupForm({
       : {
           name: initialValues?.name ?? '',
           information: initialValues?.information ?? '',
-          currency: initialValues?.currency ?? '',
+          currency:
+            initialValues?.currency ??
+            getCurrency(
+              (initialValues?.currencyCode ??
+                import.meta.env.VITE_DEFAULT_CURRENCY_CODE) ||
+                'USD',
+            )?.symbol ??
+            '',
           currencyCode:
             initialValues?.currencyCode ??
             (import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'),

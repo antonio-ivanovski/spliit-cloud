@@ -1,11 +1,7 @@
 import type { Page } from '@playwright/test'
 import type { AppRouter } from '@spliit/api/router'
-import {
-  DEFAULT_CATEGORY_ID,
-  RecurrenceRule,
-  SplitMode,
-  type CategoryId,
-} from '@spliit/domain'
+import type { RecurrenceRule } from '@spliit/domain'
+import { DEFAULT_CATEGORY_ID, SplitMode, type CategoryId } from '@spliit/domain'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 
@@ -98,7 +94,7 @@ export async function createExpensesViaAPI(
         recurrenceRule?: RecurrenceRule | 'NONE'
       }>
     | number, // If number, creates that many expenses with default values
-  payerNames?: string[], // Only used when first param is a number
+  _payerNames?: string[], // Only used when first param is a number
 ): Promise<string[]> {
   const trpc = createTrpcClient(page)
 

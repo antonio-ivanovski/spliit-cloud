@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
-const { mockNavigate } = vi.hoisted(() => ({
+const { mockNavigate: _mockNavigate } = vi.hoisted(() => ({
   mockNavigate: vi.fn(),
 }))
 
@@ -97,7 +97,7 @@ describe('RequireAuth', () => {
     })
 
     // currentPathWithSearch uses window.location
-    const originalLocation = window.location
+    const _originalLocation = window.location
     // We can't easily stub window.location.pathname without losing the
     // reference, so we just check that Navigate is rendered with to="/"
     // and that a redirect parameter is present in search.

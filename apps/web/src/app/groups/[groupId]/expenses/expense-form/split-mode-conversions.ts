@@ -28,7 +28,7 @@ function isSelected(row: ParticipantRow): boolean {
   return row.shares !== 0
 }
 
-function countSelected(rows: ParticipantRow[]): number {
+function _countSelected(rows: ParticipantRow[]): number {
   return rows.filter(isSelected).length
 }
 
@@ -58,7 +58,7 @@ function formatShare(
   }
 }
 
-function isAmountMode(mode: SplitMode): boolean {
+function _isAmountMode(mode: SplitMode): boolean {
   return mode === 'BY_AMOUNT'
 }
 

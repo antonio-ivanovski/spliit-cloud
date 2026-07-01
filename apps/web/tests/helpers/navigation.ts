@@ -1,12 +1,7 @@
 import { expect, type Page } from '@playwright/test'
 
 export type GroupTab =
-  | 'Expenses'
-  | 'Balances'
-  | 'Stats'
-  | 'Settings'
-  | 'Information'
-  | 'Activity'
+  'Expenses' | 'Balances' | 'Stats' | 'Settings' | 'Information' | 'Activity'
 
 const TAB_URL_PATTERNS: Record<GroupTab, RegExp> = {
   Expenses: /\/groups\/[^/]+\/expenses$/,

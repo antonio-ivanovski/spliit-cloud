@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "test": "vitest run --globals src"
   },
@@ -26,15 +27,15 @@
     "dayjs": "^1.11.21",
     "decimal.js": "^10.6.0",
     "papaparse": "^5.4.1",
-    "tailwind-merge": "^1.14.0",
+    "tailwind-merge": "^3.6.0",
     "ts-pattern": "^5.9.0",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
     "@types/papaparse": "^5.3.14",
-    "typescript": "7.0.1-rc",
+    "typescript": "6.0.3",
     "vitest": "5.0.0-beta.5"
   }
 }

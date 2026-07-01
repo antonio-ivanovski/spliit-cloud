@@ -1,5 +1,5 @@
 import { useLocale } from '@/i18n/react'
-import { Currency } from '@/lib/currency'
+import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 
 export function ParticipantRowAmountPreview({

@@ -154,7 +154,10 @@ export default function GroupMembers() {
         revokeSettleChecked={revokeSettleChecked}
         revokeMutation={revokeMutation}
         onOpenChange={(open) => {
-          if (!open) setInvitationPendingRevoke(null)
+          if (!open) {
+            setInvitationPendingRevoke(null)
+            setRevokeSettleChecked(false)
+          }
         }}
         onConfirmRevoke={confirmRevoke}
         onSettleCheckedChange={setRevokeSettleChecked}
@@ -193,7 +196,13 @@ export default function GroupMembers() {
         confirmDeleteChecked={confirmDeleteChecked}
         canConfirmLeave={canConfirmLeave}
         preview={preview}
-        onOpenChange={setLeaveDialogOpen}
+        onOpenChange={(open) => {
+          setLeaveDialogOpen(open)
+          if (!open) {
+            setPromoteMemberId(null)
+            setConfirmDeleteChecked(false)
+          }
+        }}
         onPromoteMemberChange={setPromoteMemberId}
         onConfirmDeleteChange={setConfirmDeleteChecked}
         onConfirmLeave={handleConfirmLeave}

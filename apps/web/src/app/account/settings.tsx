@@ -14,7 +14,7 @@ import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { ArrowLeft, Loader2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 /**
@@ -40,7 +40,8 @@ function AccountSettingsContent() {
   const utils = trpc.useUtils()
   const { toast } = useToast()
 
-  const [name, setName] = useState('')
+  const [dirtyName, setDirtyName] = useState<string | null>(null)
+  const name = dirtyName ?? account?.name ?? ''
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -63,19 +64,13 @@ function AccountSettingsContent() {
     },
   })
 
-  // Seed the name input from the current account the first time the
-  // session resolves. The `name === ''` guard avoids overwriting the
-  // user's in-progress edits if `account` re-fetches (e.g. after the
-  // profile is updated).
-  useEffect(() => {
-    if (account?.name && name === '') {
-      setName(account.name)
-    }
-  }, [account?.name, name])
+  // `name` is derived from `dirtyName ?? account?.name` so the input
+  // automatically reflects the server-side value when the account loads
+  // and keeps local edits intact once the user starts typing.
 
   if (isPending || !account) {
     return (
-      <main className="flex-1 max-w-screen-md w-full mx-auto px-4 py-6 flex items-center justify-center">
+      <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-4 py-6 flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
       </main>
     )
@@ -121,7 +116,7 @@ function AccountSettingsContent() {
   const isDirty = name.trim() !== (account.name ?? '')
 
   return (
-    <main className="flex-1 max-w-screen-md w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-4 py-6 flex flex-col gap-6">
       <h1 className="text-2xl font-semibold flex items-center gap-2">
         <Button
           variant="ghost"
@@ -149,7 +144,7 @@ function AccountSettingsContent() {
                 type="text"
                 autoComplete="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setDirtyName(e.target.value)}
                 required
                 maxLength={50}
               />

@@ -1,5 +1,5 @@
-import googleSvg from '@/components/auth/google.svg'
 import githubSvg from '@/components/auth/github.svg'
+import googleSvg from '@/components/auth/google.svg'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 

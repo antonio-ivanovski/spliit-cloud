@@ -177,7 +177,7 @@ describe('expenseFormInputSchema', () => {
   it("rejects string shares outright (form-coercion is the form schema's job, not this one)", () => {
     const result = expenseFormInputSchema.safeParse({
       ...baseInput,
-      paidFor: [{ participant: 'p0', shares: '1' as any }],
+      paidFor: [{ participant: 'p0', shares: '1' as unknown as number }],
     })
     expect(result.success).toBe(false)
   })
@@ -328,7 +328,7 @@ describe('expenseApiSchema', () => {
   it('rejects string shares outright', () => {
     const result = expenseApiSchema.safeParse({
       ...baseApi,
-      paidFor: [{ participant: 'p0', shares: '1' as any }],
+      paidFor: [{ participant: 'p0', shares: '1' as unknown as number }],
     })
     expect(result.success).toBe(false)
   })

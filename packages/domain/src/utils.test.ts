@@ -1,4 +1,4 @@
-import { Currency } from './currency'
+import type { Currency } from './currency'
 import {
   cn,
   delay,
@@ -191,9 +191,11 @@ describe('formatCategoryForAIPrompt', () => {
       name: 'Groceries',
     }
 
-    expect(formatCategoryForAIPrompt(category as any)).toBe(
-      '"Food/Groceries" (ID: 5)',
-    )
+    expect(
+      formatCategoryForAIPrompt(
+        category as unknown as Parameters<typeof formatCategoryForAIPrompt>[0],
+      ),
+    ).toBe('"Food/Groceries" (ID: 5)')
   })
 })
 
@@ -238,11 +240,11 @@ describe('cn', () => {
   })
 
   it('handles conditional classes', () => {
-    expect(cn('base', false && 'hidden', 'active')).toBe('base active')
+    const showHidden = false
+    expect(cn('base', showHidden && 'hidden', 'active')).toBe('base active')
   })
 
-  it('deduplicates conflicting Tailwind classes', () => {
-    // tailwind-merge keeps the last conflicting class
+  it('merges conflicting Tailwind classes so the last one wins', () => {
     expect(cn('px-2', 'px-4')).toBe('px-4')
   })
 })

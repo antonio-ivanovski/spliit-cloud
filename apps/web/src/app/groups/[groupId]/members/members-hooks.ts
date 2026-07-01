@@ -2,7 +2,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useCurrentGroup } from '../current-group-context'
@@ -94,7 +94,7 @@ export function useMembersDialogs() {
   })
 
   const createLinkMutation = trpc.invitations.createLink.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: async (_data) => {
       toast({ description: t('invite.link.created') })
       await Promise.all([
         utils.invitations.list.invalidate({ groupId }),
@@ -178,9 +178,11 @@ export function useMembersDialogs() {
 
   const [removeSettleChecked, setRemoveSettleChecked] = useState(false)
 
-  useEffect(() => {
-    if (!memberPendingRemove) setRemoveSettleChecked(false)
-  }, [memberPendingRemove])
+  // Reset checkbox when dialog closes (inline during render to avoid
+  // set-state-in-effect from the old useEffect pattern).
+  if (!memberPendingRemove && removeSettleChecked) {
+    setRemoveSettleChecked(false)
+  }
 
   async function confirmRemove(settleBalances?: boolean) {
     if (!memberPendingRemove) return
@@ -205,10 +207,6 @@ export function useMembersDialogs() {
   )
 
   const [revokeSettleChecked, setRevokeSettleChecked] = useState(false)
-
-  useEffect(() => {
-    if (!invitationPendingRevoke) setRevokeSettleChecked(false)
-  }, [invitationPendingRevoke])
 
   async function confirmRevoke() {
     if (!invitationPendingRevoke) return
@@ -260,13 +258,6 @@ export function useMembersDialogs() {
     },
   })
 
-  useEffect(() => {
-    if (!leaveDialogOpen) {
-      setPromoteMemberId(null)
-      setConfirmDeleteChecked(false)
-    }
-  }, [leaveDialogOpen])
-
   const preview = leavePreviewQuery.data
   const isLastActiveMember = !!preview?.isLastActiveMember
   const isLastAdmin = !!preview?.isLastAdmin
@@ -276,23 +267,24 @@ export function useMembersDialogs() {
   const promotableMembers = preview?.promotableMembers ?? []
   const needsPromotion = isLastAdmin && !isLastActiveMember
 
+  // Derive the effective promote-member id: use the user-selected one when
+  // it points to a valid promotable member, otherwise fall back to the first
+  // promotable member (only when preview is loaded). This avoids a
+  // cascading-render effect by keeping the state for user interactions while
+  // computing the default fallback from derived data.
+  const effectivePromoteMemberId =
+    promoteMemberId !== null &&
+    promotableMembers.some((m) => m.id === promoteMemberId)
+      ? promoteMemberId
+      : preview
+        ? (promotableMembers[0]?.id ?? null)
+        : promoteMemberId
+
   const canConfirmLeave =
     !!preview &&
     !leaveMutation.isPending &&
-    (!needsPromotion || !!promoteMemberId) &&
+    (!needsPromotion || !!effectivePromoteMemberId) &&
     (!isLastActiveMember || confirmDeleteChecked)
-
-  useEffect(() => {
-    if (!preview) return
-    const oldest = promotableMembers[0]
-    const isCurrentValid =
-      !!promoteMemberId &&
-      promotableMembers.some((m) => m.id === promoteMemberId)
-    if (oldest && !isCurrentValid) {
-      setPromoteMemberId(oldest.id)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [preview])
 
   function handleConfirmLeave() {
     if (!preview) return
@@ -301,7 +293,7 @@ export function useMembersDialogs() {
       groupId,
       force: shouldForce ? true : undefined,
       promoteMemberId: needsPromotion
-        ? (promoteMemberId ?? undefined)
+        ? (effectivePromoteMemberId ?? undefined)
         : undefined,
       confirmDelete: isLastActiveMember ? confirmDeleteChecked : undefined,
     })

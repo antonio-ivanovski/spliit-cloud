@@ -7,6 +7,7 @@ import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 import {
   enforceCurrencyPattern,
@@ -23,7 +24,6 @@ export function PaidByRow({
   groupCurrency,
   readOnly,
   setManuallyEditedPayers,
-  t,
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
   participant: {
@@ -36,8 +36,8 @@ export function PaidByRow({
   groupCurrency: Currency
   readOnly: boolean
   setManuallyEditedPayers: Dispatch<SetStateAction<Set<string>>>
-  t: (key: string) => string
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const paidBySplitMode = useWatch({
     control: form.control,
     name: 'paidBySplitMode',

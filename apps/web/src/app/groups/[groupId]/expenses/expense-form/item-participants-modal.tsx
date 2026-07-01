@@ -19,7 +19,7 @@ import type {
   ExpenseFormItemValues,
   SplitMode,
 } from '@spliit/domain'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
@@ -61,13 +61,10 @@ export function ItemParticipantsModal(props: {
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
-  const [draft, setDraft] = useState<ExpenseFormItemValues>({ ...item })
-
-  useEffect(() => {
-    if (!open) return
+  const [draft, setDraft] = useState<ExpenseFormItemValues>(() => {
     const shouldPopulate =
       item.paidFor.length === 0 && item.splitMode === 'EVENLY'
-    setDraft({
+    return {
       ...item,
       paidFor: shouldPopulate
         ? group.participants.map((p) => ({
@@ -75,8 +72,8 @@ export function ItemParticipantsModal(props: {
             shares: 1,
           }))
         : item.paidFor,
-    })
-  }, [open])
+    }
+  })
 
   const itemTotal = draft.unitPrice * draft.quantity
 
@@ -177,7 +174,6 @@ export function ItemParticipantsModal(props: {
               value={draft.splitMode}
               onChange={handleSplitModeChange}
               readOnly={readOnly}
-              t={t}
             />
           </div>
 

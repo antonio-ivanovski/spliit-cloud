@@ -10,8 +10,9 @@ import type {
   SplitMode,
 } from '@spliit/domain'
 import { Hash, Trash2, UserPen } from 'lucide-react'
-import type { UseFormReturn } from 'react-hook-form'
+import type { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { AmountInput } from './amount-input'
 import { enforceCurrencyPattern, enforceIntegerPattern } from './currency-utils'
 
@@ -20,12 +21,19 @@ type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
 export const expenseItemGridClass =
   'md:grid-cols-[minmax(180px,1fr)_104px_82px_92px_64px]'
 
-const splitModeLabelKeys: Record<ItemSplitMode, string> = {
+function itemPath<K extends keyof ExpenseFormItemValues>(
+  index: number,
+  key: K,
+): FieldPath<ExpenseFormInputValues> {
+  return `items.${index}.${String(key)}` as FieldPath<ExpenseFormInputValues>
+}
+
+const splitModeLabelKeys = {
   EVENLY: 'items.splitEvenlyLabel',
   BY_SHARES: 'items.splitBySharesLabel',
   BY_PERCENTAGE: 'items.splitByPercentageLabel',
   BY_AMOUNT: 'items.splitByAmountLabel',
-}
+} as const
 
 export function ExpenseItemRow({
   form,
@@ -37,7 +45,6 @@ export function ExpenseItemRow({
   groupCurrency,
   onEdit,
   onDelete,
-  t,
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
   itemIndex: number
@@ -48,25 +55,25 @@ export function ExpenseItemRow({
   groupCurrency: Currency
   onEdit: () => void
   onDelete: () => void
-  t: (key: string) => string
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { control } = form
   const watchedTitle = useWatch({
     control,
-    name: `items.${itemIndex}.title` as any,
-  })
+    name: itemPath(itemIndex, 'title'),
+  }) as string | undefined
   const watchedUnitPrice = useWatch({
     control,
-    name: `items.${itemIndex}.unitPrice` as any,
-  })
+    name: itemPath(itemIndex, 'unitPrice'),
+  }) as number | undefined
   const watchedQuantity = useWatch({
     control,
-    name: `items.${itemIndex}.quantity` as any,
-  })
+    name: itemPath(itemIndex, 'quantity'),
+  }) as number | undefined
   const watchedPaidFor = useWatch({
     control,
-    name: `items.${itemIndex}.paidFor` as any,
-  })
+    name: itemPath(itemIndex, 'paidFor'),
+  }) as ExpenseFormItemValues['paidFor'] | undefined
 
   const title = isFiller ? item.title : watchedTitle
   const unitPrice = isFiller ? item.unitPrice : watchedUnitPrice
@@ -87,8 +94,8 @@ export function ExpenseItemRow({
       .filter(Boolean)
       .join(', ') ?? ''
   const participantsLabel = participantNames
-    ? `${t(splitModeLabelKeys[splitMode] as string)}: ${participantNames}`
-    : t('items.noMembers' as string)
+    ? `${t(splitModeLabelKeys[splitMode])}: ${participantNames}`
+    : t('items.noMembers')
 
   const priceDisplay = formatCurrency(
     groupCurrency,
@@ -98,13 +105,13 @@ export function ExpenseItemRow({
   )
   const totalDisplay = formatCurrency(groupCurrency, total, 'en-US', true)
 
-  const displayOther = t('items.other' as string)
-  const displayActionEdit = t('items.modalTitle' as string)
-  const displayActionDelete = t('items.actionDelete' as string)
-  const displayColumnItem = t('items.columnItem' as string)
-  const displayColumnCost = t('items.columnCost' as string)
-  const displayColumnQuantity = t('items.columnQuantity' as string)
-  const displayColumnTotal = t('items.columnTotal' as string)
+  const displayOther = t('items.other')
+  const displayActionEdit = t('items.modalTitle')
+  const displayActionDelete = t('items.actionDelete')
+  const displayColumnItem = t('items.columnItem')
+  const displayColumnCost = t('items.columnCost')
+  const displayColumnQuantity = t('items.columnQuantity')
+  const displayColumnTotal = t('items.columnTotal')
 
   return (
     <div className={cn('border-t py-3', isFiller && 'bg-muted/25')}>
@@ -127,7 +134,7 @@ export function ExpenseItemRow({
           ) : (
             <FormField
               control={control}
-              name={`items.${itemIndex}.title` as any}
+              name={itemPath(itemIndex, 'title')}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -137,7 +144,7 @@ export function ExpenseItemRow({
                       aria-label={displayColumnItem}
                       className="h-9"
                       disabled={readOnly}
-                      value={field.value ?? ''}
+                      value={(field.value as string) ?? ''}
                       autoComplete="off"
                     />
                   </FormControl>
@@ -158,7 +165,7 @@ export function ExpenseItemRow({
           ) : (
             <FormField
               control={control}
-              name={`items.${itemIndex}.unitPrice` as any}
+              name={itemPath(itemIndex, 'unitPrice')}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -196,7 +203,7 @@ export function ExpenseItemRow({
           ) : (
             <FormField
               control={control}
-              name={`items.${itemIndex}.quantity` as any}
+              name={itemPath(itemIndex, 'quantity')}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -210,7 +217,7 @@ export function ExpenseItemRow({
                         className="h-9 pl-7 pr-2 text-right tabular-nums"
                         type="text"
                         disabled={readOnly}
-                        value={String(field.value ?? '')}
+                        value={(field.value as number) ?? ''}
                         inputMode="numeric"
                         step={1}
                         onChange={(event) =>

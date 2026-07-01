@@ -24,11 +24,7 @@ import {
  *  - `EXPIRED`   — past the expiry timestamp
  */
 export type LinkInviteState =
-  | 'PENDING'
-  | 'ACCEPTED'
-  | 'REVOKED'
-  | 'DECLINED'
-  | 'EXPIRED'
+  'PENDING' | 'ACCEPTED' | 'REVOKED' | 'DECLINED' | 'EXPIRED'
 
 export const getGroupProcedure = protectedProcedure
   .input(

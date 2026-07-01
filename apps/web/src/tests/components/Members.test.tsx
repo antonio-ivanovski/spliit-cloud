@@ -1,5 +1,6 @@
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import GroupMembers from '@/app/groups/[groupId]/members/members'
+import type { Group } from '@/lib/api'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -10,7 +11,7 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
     children,
-    ...props
+    ..._props
   }: {
     to: string
     children: React.ReactNode
@@ -22,7 +23,7 @@ vi.mock('@/components/link', () => ({
   default: ({
     href,
     children,
-    ...props
+    ..._props
   }: {
     href: string
     children: React.ReactNode
@@ -31,7 +32,7 @@ vi.mock('@/components/link', () => ({
   Link: ({
     href,
     children,
-    ...props
+    ..._props
   }: {
     href: string
     children: React.ReactNode
@@ -49,12 +50,14 @@ const mockLeaveMutation = vi.fn()
 const mockArchiveForSelfMutation = vi.fn()
 
 // Shared mutable state so tests can override query results
-let mockMembersData: { members: any[] } = { members: [] }
-let mockInvitationsData: { invitations: any[] } = { invitations: [] }
+const mockMembersData: { members: Record<string, unknown>[] } = { members: [] }
+const mockInvitationsData: { invitations: Record<string, unknown>[] } = {
+  invitations: [],
+}
 
 // Track onSuccess callbacks so tests can trigger them
-let createMutationOnSuccess: ((data: any) => void) | null = null
-let createLinkMutationOnSuccess: ((data: any) => void) | null = null
+let _createMutationOnSuccess: ((data: unknown) => void) | null = null
+let createLinkMutationOnSuccess: ((data: unknown) => void) | null = null
 
 vi.mock('@/trpc/client', () => {
   return {
@@ -78,13 +81,13 @@ vi.mock('@/trpc/client', () => {
       }),
       invitations: {
         create: {
-          useMutation: (opts?: { onSuccess?: (data: any) => void }) => {
-            createMutationOnSuccess = opts?.onSuccess ?? null
+          useMutation: (opts?: { onSuccess?: (data: unknown) => void }) => {
+            _createMutationOnSuccess = opts?.onSuccess ?? null
             return { mutateAsync: mockCreateMutation, isPending: false }
           },
         },
         createLink: {
-          useMutation: (opts?: { onSuccess?: (data: any) => void }) => {
+          useMutation: (opts?: { onSuccess?: (data: unknown) => void }) => {
             createLinkMutationOnSuccess = opts?.onSuccess ?? null
             return { mutateAsync: mockCreateLinkMutation, isPending: false }
           },
@@ -184,7 +187,7 @@ const mockGroup = {
   members: [],
   invitations: [],
   participants: [],
-}
+} as unknown as Group
 
 const mockCurrentMember = {
   id: 'member-1',
@@ -210,7 +213,7 @@ beforeEach(() => {
   vi.mocked(useCurrentGroup).mockReturnValue({
     isLoading: false,
     groupId: 'group-1',
-    group: mockGroup as any,
+    group: mockGroup,
     currentLedgerParticipantId: 'lp-1',
     currentMember: mockCurrentMember,
     currentInvitation: null,
@@ -303,7 +306,7 @@ describe('GroupMembers', () => {
             ledgerParticipant: { id: 'lp-2' },
           },
         ],
-      } as any,
+      } as unknown as Group,
       currentLedgerParticipantId: 'lp-1',
       currentMember: { id: 'gm-1', role: 'ADMIN', status: 'ACTIVE' },
       currentInvitation: null,
@@ -350,7 +353,7 @@ describe('GroupMembers', () => {
             ledgerParticipant: { id: 'lp-1' },
           },
         ],
-      } as any,
+      } as unknown as Group,
       currentLedgerParticipantId: 'lp-1',
       currentMember: { id: 'gm-1', role: 'ADMIN', status: 'ACTIVE' },
       currentInvitation: null,
@@ -373,7 +376,7 @@ describe('GroupMembers', () => {
     vi.mocked(useCurrentGroup).mockReturnValue({
       isLoading: false,
       groupId: 'group-1',
-      group: mockGroup as any,
+      group: mockGroup,
       currentLedgerParticipantId: 'lp-1',
       currentMember: { id: 'gm-1', role: 'MEMBER', status: 'ACTIVE' },
       currentInvitation: null,

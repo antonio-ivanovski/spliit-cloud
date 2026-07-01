@@ -9,7 +9,7 @@ export function CopyButton({ text }: Props) {
 
   useEffect(() => {
     if (copied) {
-      let timeout = setTimeout(() => setCopied(false), 1000)
+      const timeout = setTimeout(() => setCopied(false), 1000)
       return () => {
         setCopied(false)
         clearTimeout(timeout)

@@ -94,7 +94,7 @@ export function PendingInvitations() {
                   {groupId ? (
                     <Link
                       href={`/groups/${groupId}`}
-                      className="font-medium text-foreground no-underline outline-none focus-visible:underline before:absolute before:inset-0 before:rounded-md before:content-['']"
+                      className="font-medium text-foreground no-underline outline-hidden focus-visible:underline before:absolute before:inset-0 before:rounded-md before:content-['']"
                       title={
                         invitation.group?.name ?? t('invitations.unknownGroup')
                       }

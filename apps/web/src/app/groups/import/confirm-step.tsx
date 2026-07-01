@@ -47,7 +47,6 @@ function formatRate(n: number): string {
 export function ConfirmStep({
   source,
   mode,
-  targetGroupId,
   groupFormValues,
   participants,
   resolvedExpenses,

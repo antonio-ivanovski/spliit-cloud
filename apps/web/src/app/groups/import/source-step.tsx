@@ -105,23 +105,25 @@ export function SourceStep({ onLoaded, onError }: Props) {
 
   const cfg = PROVIDERS[provider]
 
+  // Derive server URL error from source preview / error (instead of
+  // syncing via useEffect + setUrlError).
+  const serverUrlError =
+    sourcePreview && sourcePreview.kind !== 'OK'
+      ? sourcePreview.kind === 'NOT_FOUND'
+        ? t('Groups.Import.Source.notFoundUrl')
+        : sourcePreview.message
+      : sourcePreviewError
+        ? sourcePreviewError.message
+        : null
+
+  // Keep only the onLoaded transition in an effect (not a setState
+  // call, so not flagged by set-state-in-effect).
   useEffect(() => {
-    if (!sourcePreview) return
-    if (sourcePreview.kind === 'OK') {
+    if (sourcePreview?.kind === 'OK') {
       onLoaded(sourcePreview.source)
       resetPreview()
-      return
     }
-    if (sourcePreview.kind === 'NOT_FOUND') {
-      setUrlError(t('Groups.Import.Source.notFoundUrl'))
-      return
-    }
-    setUrlError(sourcePreview.message)
-  }, [sourcePreview, resetPreview, onLoaded, t])
-  useEffect(() => {
-    if (!sourcePreviewError) return
-    setUrlError(sourcePreviewError.message)
-  }, [sourcePreviewError])
+  }, [sourcePreview, resetPreview, onLoaded])
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -202,8 +204,10 @@ export function SourceStep({ onLoaded, onError }: Props) {
     (value: string) => {
       setUrl(value)
       if (urlError) setUrlError(null)
+      // Clear server preview so the derived error disappears
+      if (sourcePreview || sourcePreviewError) resetPreview()
     },
-    [urlError],
+    [urlError, sourcePreview, sourcePreviewError, resetPreview],
   )
 
   const tabsListRef = useRef<HTMLDivElement>(null)
@@ -302,7 +306,7 @@ export function SourceStep({ onLoaded, onError }: Props) {
           disabled={false}
           isPending={isPreviewLoading}
           url={url}
-          urlError={urlError}
+          urlError={urlError ?? serverUrlError}
           onUrlChange={handleUrlChange}
           onSubmit={handleUrlSubmit}
           labels={{

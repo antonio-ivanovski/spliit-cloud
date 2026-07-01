@@ -364,7 +364,7 @@ export async function getCurrencyRates(
 function classifyBatchError(
   err: unknown,
   date: string,
-  target: string,
+  _target: string,
 ): Extract<BatchRateResult, { ok: false }>['error'] {
   if (err instanceof UnsupportedCurrencyError) {
     return { code: 'UNSUPPORTED_CURRENCY', currency: err.code }

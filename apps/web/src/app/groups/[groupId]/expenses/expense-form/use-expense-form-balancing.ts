@@ -1,5 +1,5 @@
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 
@@ -13,13 +13,6 @@ export function useExpenseFormBalancing(args: {
   >
   setManuallyEditedPayers: React.Dispatch<React.SetStateAction<Set<string>>>
 } {
-  const [manuallyEditedParticipants, setManuallyEditedParticipants] = useState<
-    Set<string>
-  >(new Set())
-  const [manuallyEditedPayers, setManuallyEditedPayers] = useState<Set<string>>(
-    new Set(),
-  )
-
   const splitMode = useWatch({
     control: args.form.control,
     name: 'splitMode',
@@ -32,13 +25,64 @@ export function useExpenseFormBalancing(args: {
   // matches the units paidFor and paidBy BY_AMOUNT shares live in.
   const amount = useWatch({ control: args.form.control, name: 'amount' })
 
-  useEffect(() => {
-    setManuallyEditedParticipants(new Set())
-  }, [splitMode, amount])
+  // Instead of useEffect + setState to reset the sets when splitMode or
+  // amount changes, we store the edits together with an "epoch" derived
+  // from the watched values. When the epoch changes, the effective set
+  // is automatically empty — no effect needed.
+  const participantsEpoch = `${splitMode}-${amount}`
+  const payersEpoch = `${paidBySplitMode}-${amount}`
 
-  useEffect(() => {
-    setManuallyEditedPayers(new Set())
-  }, [paidBySplitMode, amount])
+  const [participantEdits, setParticipantEdits] = useState(() => ({
+    epoch: participantsEpoch,
+    set: new Set<string>(),
+  }))
+  const [payerEdits, setPayerEdits] = useState(() => ({
+    epoch: payersEpoch,
+    set: new Set<string>(),
+  }))
+
+  // Derived effective sets — empty when the epoch doesn't match.
+  // Wrapped in useMemo so the reference stays stable and downstream
+  // effects don't re-run on every render.
+  const manuallyEditedParticipants = useMemo(
+    () =>
+      participantEdits.epoch === participantsEpoch
+        ? participantEdits.set
+        : new Set<string>(),
+    [participantEdits.epoch, participantEdits.set, participantsEpoch],
+  )
+
+  const manuallyEditedPayers = useMemo(
+    () =>
+      payerEdits.epoch === payersEpoch ? payerEdits.set : new Set<string>(),
+    [payerEdits.epoch, payerEdits.set, payersEpoch],
+  )
+
+  const setManuallyEditedParticipants = useCallback(
+    (action: React.SetStateAction<Set<string>>) => {
+      setParticipantEdits((prev) => {
+        const currentEpoch = participantsEpoch
+        const baseSet =
+          prev.epoch !== currentEpoch ? new Set<string>() : prev.set
+        const nextSet = typeof action === 'function' ? action(baseSet) : action
+        return { epoch: currentEpoch, set: nextSet }
+      })
+    },
+    [participantsEpoch],
+  )
+
+  const setManuallyEditedPayers = useCallback(
+    (action: React.SetStateAction<Set<string>>) => {
+      setPayerEdits((prev) => {
+        const currentEpoch = payersEpoch
+        const baseSet =
+          prev.epoch !== currentEpoch ? new Set<string>() : prev.set
+        const nextSet = typeof action === 'function' ? action(baseSet) : action
+        return { epoch: currentEpoch, set: nextSet }
+      })
+    },
+    [payersEpoch],
+  )
 
   useEffect(() => {
     const splitMode = args.form.getValues().splitMode
@@ -54,7 +98,8 @@ export function useExpenseFormBalancing(args: {
 
       const editedParticipants = Array.from(manuallyEditedParticipants)
       let remainingAmount = totalAmount
-      let remainingParticipants = newPaidFor.length - editedParticipants.length
+      const remainingParticipants =
+        newPaidFor.length - editedParticipants.length
 
       newPaidFor = newPaidFor.map((participant) => {
         if (editedParticipants.includes(participant.participant)) {
@@ -87,7 +132,13 @@ export function useExpenseFormBalancing(args: {
       }
       args.form.setValue('paidFor', newPaidFor, { shouldValidate: true })
     }
-  }, [manuallyEditedParticipants, amount, splitMode])
+  }, [
+    manuallyEditedParticipants,
+    amount,
+    splitMode,
+    args.form,
+    args.groupCurrency.decimal_digits,
+  ])
 
   useEffect(() => {
     const splitMode = args.form.getValues().paidBySplitMode
@@ -104,7 +155,7 @@ export function useExpenseFormBalancing(args: {
 
       const editedPayers = Array.from(manuallyEditedPayers)
       let remainingAmount = totalAmount
-      let remainingPayers = newPaidByList.length - editedPayers.length
+      const remainingPayers = newPaidByList.length - editedPayers.length
 
       newPaidByList = newPaidByList.map((payer) => {
         if (editedPayers.includes(payer.participant)) {
@@ -131,7 +182,13 @@ export function useExpenseFormBalancing(args: {
       }
       args.form.setValue('paidByList', newPaidByList, { shouldValidate: true })
     }
-  }, [manuallyEditedPayers, amount, paidBySplitMode])
+  }, [
+    manuallyEditedPayers,
+    amount,
+    paidBySplitMode,
+    args.form,
+    args.payerCurrency.decimal_digits,
+  ])
 
   return { setManuallyEditedParticipants, setManuallyEditedPayers }
 }

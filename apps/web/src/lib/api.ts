@@ -10,13 +10,21 @@ export type GroupExpenses =
   AppRouterOutput['groups']['expenses']['list']['expenses']
 export type GroupExpense = GroupExpenses[number]
 
-export const getGroup = undefined as unknown as (
-  groupId: string,
-) => Promise<Group | null>
-export const getGroups = undefined as unknown as (
-  groupIds: string[],
-) => Promise<Groups>
-export const getGroupExpenses = undefined as unknown as (
-  groupId: string,
-  options?: { offset?: number; length?: number; filter?: string },
-) => Promise<GroupExpenses>
+export async function getGroup(_groupId: string): Promise<Group | null> {
+  throw new Error(
+    'getGroup is not available on the client; use trpc.groups.get',
+  )
+}
+export async function getGroups(_groupIds: string[]): Promise<Groups> {
+  throw new Error(
+    'getGroups is not available on the client; use trpc.groups.list',
+  )
+}
+export async function getGroupExpenses(
+  _groupId: string,
+  _options?: { offset?: number; length?: number; filter?: string },
+): Promise<GroupExpenses> {
+  throw new Error(
+    'getGroupExpenses is not available on the client; use trpc.groups.expenses.list',
+  )
+}

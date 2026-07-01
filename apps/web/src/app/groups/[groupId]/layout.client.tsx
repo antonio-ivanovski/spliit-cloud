@@ -5,7 +5,8 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { Navigate, Outlet, useSearch } from '@tanstack/react-router'
 import { Cloud, Loader2 } from 'lucide-react'
-import { PropsWithChildren, useEffect } from 'react'
+import type { PropsWithChildren } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrentGroupProvider } from './current-group-context'
 import { GroupHeader } from './group-header'
@@ -46,7 +47,7 @@ export function GroupLayoutClient({
         variant: 'destructive',
       })
     }
-  }, [data])
+  }, [data, tNotFound, toast])
 
   // Unauthenticated visitors carrying a link-invite token are bounced
   // through the home auth panel with a redirect back here, so the

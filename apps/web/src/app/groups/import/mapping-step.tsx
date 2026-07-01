@@ -49,16 +49,12 @@ export function MappingStep({
     onChange(participants.map((p) => (p.key === key ? { ...p, ...patch } : p)))
   }
 
-  const rawConflictMap = findImportConflicts(
-    participants,
-    destinationParticipants,
-  )
-  const conflictMap = new Map(
-    [...rawConflictMap.entries()].map(([k, v]) => [
-      k,
-      translateConflictMessage(v),
-    ]),
-  )
+  const conflictMap = useMemo(() => {
+    const raw = findImportConflicts(participants, destinationParticipants)
+    return new Map(
+      [...raw.entries()].map(([k, v]) => [k, translateConflictMessage(v)]),
+    )
+  }, [participants, destinationParticipants, translateConflictMessage])
 
   const handleContinue = useCallback(() => {
     if (conflictMap.size > 0) return

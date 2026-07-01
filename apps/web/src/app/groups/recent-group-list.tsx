@@ -77,7 +77,7 @@ export function RecentGroupList() {
     ? allGroups
     : allGroups.filter((g) => !g.preference.hidden)
 
-  let body: React.ReactNode = null
+  let body: React.ReactNode
   if (isGroupsLoading) {
     body = (
       <p>

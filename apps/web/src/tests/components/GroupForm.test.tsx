@@ -200,7 +200,7 @@ describe('GroupForm', () => {
 
   it('submit does NOT call onSubmit when readonly', async () => {
     const onSubmit = vi.fn()
-    const { user } = render(
+    const { user: _user } = render(
       <GroupForm
         group={mockGroup as Props['group']}
         currentMemberRole="MEMBER"

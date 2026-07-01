@@ -33,7 +33,7 @@ import {
 } from './members-hooks'
 
 export function InviteCard({
-  groupId,
+  groupId: _groupId,
   groupName,
   createMutation,
   createLinkMutation,
@@ -197,7 +197,7 @@ export function InviteCard({
                   )}
                 />
                 <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-                  <FormItem className="space-y-0 sm:w-[10rem]">
+                  <FormItem className="space-y-0 sm:w-40">
                     <FormLabel className="sm:sr-only">
                       {t('invite.role')}
                     </FormLabel>
@@ -260,7 +260,7 @@ export function InviteCard({
                   )}
                 />
                 <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-                  <FormItem className="space-y-0 sm:w-[10rem]">
+                  <FormItem className="space-y-0 sm:w-40">
                     <FormLabel className="sm:sr-only">
                       {t('invite.role')}
                     </FormLabel>

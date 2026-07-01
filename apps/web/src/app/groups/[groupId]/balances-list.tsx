@@ -1,6 +1,6 @@
 import { useLocale } from '@/i18n/react'
-import { Balances } from '@/lib/balances'
-import { Currency } from '@/lib/currency'
+import type { Balances } from '@/lib/balances'
+import type { Currency } from '@/lib/currency'
 import { cn, formatCurrency } from '@/lib/utils'
 
 type Participant = { id: string; name: string }

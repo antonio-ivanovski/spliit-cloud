@@ -1,4 +1,4 @@
-import { ZodIssueCode, z } from 'zod'
+import { z } from 'zod'
 
 const interpretEnvVarAsBool = (val: unknown): boolean => {
   if (typeof val !== 'string') return false
@@ -53,21 +53,21 @@ const envSchema = z
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
       ctx.addIssue({
-        code: ZodIssueCode.custom,
+        code: 'custom',
         path: ['BETTER_AUTH_SECRET'],
         message: 'BETTER_AUTH_SECRET is required in production',
       })
     }
     if (env.NODE_ENV === 'production' && !env.SMTP_HOST) {
       ctx.addIssue({
-        code: ZodIssueCode.custom,
+        code: 'custom',
         path: ['SMTP_HOST'],
         message: 'SMTP_HOST is required in production',
       })
     }
     if (env.NODE_ENV === 'production' && !env.EMAIL_FROM) {
       ctx.addIssue({
-        code: ZodIssueCode.custom,
+        code: 'custom',
         path: ['EMAIL_FROM'],
         message: 'EMAIL_FROM is required in production',
       })
@@ -83,7 +83,7 @@ const envSchema = z
       (!env.SMTP_USER || !env.SMTP_PASS)
     ) {
       ctx.addIssue({
-        code: ZodIssueCode.custom,
+        code: 'custom',
         message:
           'SMTP_USER and SMTP_PASS are required in production when SMTP_HOST is set',
       })
@@ -96,7 +96,7 @@ const envSchema = z
         !env.S3_UPLOAD_SECRET)
     ) {
       ctx.addIssue({
-        code: ZodIssueCode.custom,
+        code: 'custom',
         message:
           'If PUBLIC_ENABLE_EXPENSE_DOCUMENTS is specified, then S3_* must be specified too',
       })
@@ -107,7 +107,7 @@ const envSchema = z
       !env.OPENAI_API_KEY
     ) {
       ctx.addIssue({
-        code: ZodIssueCode.custom,
+        code: 'custom',
         message:
           'If PUBLIC_ENABLE_RECEIPT_EXTRACT or PUBLIC_ENABLE_CATEGORY_EXTRACT is specified, then OPENAI_API_KEY must be specified too',
       })

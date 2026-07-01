@@ -1,8 +1,8 @@
 import Image from '@/components/app-image'
 import { Button } from '@/components/ui/button'
+import type { CarouselApi } from '@/components/ui/carousel'
 import {
   Carousel,
-  CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
@@ -20,7 +20,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
-import { ExpenseFormInputValues } from '@/lib/schemas'
+import type { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import { formatFileSize } from '@/lib/utils'
 import { Loader2, Plus, Trash, X } from 'lucide-react'
@@ -97,7 +97,7 @@ export function ExpenseDocumentsInput({
         accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
       />
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 [&_*]:aspect-square">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 **:aspect-square">
         {documents.map((doc) => (
           <DocumentThumbnail
             key={doc.id}
@@ -176,7 +176,7 @@ export function DocumentThumbnail({
           />
         </Button>
       </DialogTrigger>
-      <DialogContent className="p-4 w-[100vw] max-w-[100vw] h-[100dvh] max-h-[100dvh] sm:max-w-[calc(100vw-32px)] sm:max-h-[calc(100dvh-32px)] [&>:last-child]:hidden">
+      <DialogContent className="p-4 w-screen max-w-[100vw] h-dvh max-h-dvh sm:max-w-[calc(100vw-32px)] sm:max-h-[calc(100dvh-32px)] *:last:hidden">
         <DialogTitle className="sr-only">Document</DialogTitle>
         <DialogDescription className="sr-only"></DialogDescription>
         <div className="flex flex-col gap-4">

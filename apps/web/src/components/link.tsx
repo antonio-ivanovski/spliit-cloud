@@ -2,7 +2,8 @@ import {
   Link as RouterLink,
   type LinkProps as RouterLinkProps,
 } from '@tanstack/react-router'
-import { AnchorHTMLAttributes, forwardRef } from 'react'
+import type { AnchorHTMLAttributes } from 'react'
+import { forwardRef } from 'react'
 
 type Props = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
   href: string

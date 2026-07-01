@@ -126,7 +126,7 @@ function OptionCard({
         'group relative overflow-hidden rounded-md border bg-card transition-colors duration-150',
         'focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-card',
         selected
-          ? 'cursor-default border-primary/60 bg-primary/[0.04]'
+          ? 'cursor-default border-primary/60 bg-primary/4'
           : 'cursor-pointer border-border bg-background hover:border-foreground/25 hover:bg-muted/30',
       )}
     >
@@ -138,7 +138,7 @@ function OptionCard({
         onClick={onClick}
         className={cn(
           'flex w-full items-start gap-3 p-3 text-left',
-          'focus-visible:outline-none',
+          'focus-visible:outline-hidden',
         )}
       >
         <span
@@ -177,7 +177,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <div className="flex items-baseline gap-2 px-1">
       <span
         aria-hidden="true"
-        className="inline-block size-1.5 translate-y-[-1px] rounded-full bg-primary/60"
+        className="inline-block size-1.5 -translate-y-px rounded-full bg-primary/60"
       />
       <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
         {children}
@@ -196,7 +196,7 @@ function PairConversionCard({
   override,
   fixedRate,
   onFixedRate,
-  perDateValues,
+  perDateValues: _perDateValues,
   perDateFetching,
   perDateError,
   onRefreshPerDate,
@@ -408,7 +408,7 @@ function PairConversionCard({
 // ----- main component -----
 
 export function CurrencyConversionStep({
-  source,
+  source: _source,
   resolvedExpenses,
   sourceCurrencyCode,
   destinationCurrencyCode,
@@ -439,7 +439,17 @@ export function CurrencyConversionStep({
     for (const pair of pairs) defaults[pairKey(pair)] = 'perDate'
     return { ...defaults, ...initialModes }
   })
-  const [dates, setDates] = useState<Record<string, string>>(initialDates)
+  // Initialise dates with defaults for every pair.  The per-pair entries
+  // are populated once so we can skip the cascading-render effect below.
+  const [dates, setDates] = useState<Record<string, string>>(() => {
+    const defaults: Record<string, string> = { ...initialDates }
+    const today = new Date().toISOString().slice(0, 10)
+    for (const pair of pairs) {
+      const key = pairKey(pair)
+      if (!(key in defaults)) defaults[key] = today
+    }
+    return defaults
+  })
   const [overrides, setOverrides] =
     useState<Record<string, number>>(initialOverrides)
   const [fixedRates, setFixedRates] = useState<Record<string, number>>(() => {
@@ -465,34 +475,29 @@ export function CurrencyConversionStep({
     )
   }, [])
 
-  useEffect(() => {
-    if (pairs.length === 0) return
-    const today = new Date().toISOString().slice(0, 10)
-    setModes((prev) => {
-      const next = { ...prev }
-      let changed = false
-      for (const pair of pairs) {
-        const key = `${pair.base}|${pair.target}`
-        if (!next[key]) {
-          next[key] = 'perDate'
-          changed = true
-        }
+  // Ensure every pair has a mode and date entry.  This runs during
+  // render (not in an effect) so it merges with the current React batch
+  // instead of triggering a cascading render.  Once a key is registered
+  // the guard short-circuits, so this does not loop.
+  if (pairs.length > 0) {
+    let needsModeUpdate = false
+    for (const pair of pairs) {
+      if (!(pairKey(pair) in modes)) {
+        needsModeUpdate = true
+        break
       }
-      return changed ? next : prev
-    })
-    setDates((prev) => {
-      const next = { ...prev }
-      let changed = false
-      for (const pair of pairs) {
-        const key = `${pair.base}|${pair.target}`
-        if (!next[key]) {
-          next[key] = today
-          changed = true
+    }
+    if (needsModeUpdate) {
+      setModes((prev) => {
+        const next = { ...prev }
+        for (const pair of pairs) {
+          const key = pairKey(pair)
+          if (!(key in next)) next[key] = 'perDate'
         }
-      }
-      return changed ? next : prev
-    })
-  }, [pairs])
+        return next
+      })
+    }
+  }
 
   // Pre-fetch per-date rates for the rate computation.
   const perDateQuery = useCurrencyRates(rateKeyItems, {

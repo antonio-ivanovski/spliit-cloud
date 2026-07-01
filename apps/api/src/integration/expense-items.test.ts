@@ -208,13 +208,6 @@ describe('Expense items — real DB', () => {
       ['Alice', 'Bob', 'Charlie'],
     )
 
-    const ids = [
-      participants['Admin'],
-      participants['Alice'],
-      participants['Bob'],
-      participants['Charlie'],
-    ]
-
     const expense = await makeCaller().expenses.create({
       groupId,
       expense: {
@@ -328,13 +321,6 @@ describe('Expense items — real DB', () => {
       ['Alice', 'Bob', 'Charlie'],
     )
 
-    const ids = [
-      participants['Admin'],
-      participants['Alice'],
-      participants['Bob'],
-      participants['Charlie'],
-    ]
-
     // Create in ITEMIZED with items having participants
     const { expenseId } = await makeCaller().expenses.create({
       groupId,
@@ -426,13 +412,6 @@ describe('Expense items — real DB', () => {
       `StayItemized-${runId}`,
       ['Alice', 'Bob', 'Charlie'],
     )
-
-    const ids = [
-      participants['Admin'],
-      participants['Alice'],
-      participants['Bob'],
-      participants['Charlie'],
-    ]
 
     // Create in ITEMIZED with 1 item
     const { expenseId } = await makeCaller().expenses.create({
@@ -880,7 +859,7 @@ describe('Expense items — real DB', () => {
     })
 
     // Sanity check: items and item paidFor rows exist
-    let saved = await readExpenseItems(expenseId)
+    const saved = await readExpenseItems(expenseId)
     expect(saved!.items).toHaveLength(1)
     expect(saved!.items[0].paidFor).toHaveLength(3)
 

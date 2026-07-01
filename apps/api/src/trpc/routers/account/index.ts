@@ -20,7 +20,11 @@ export const accountRouter = createTRPCRouter({
   updateProfile: protectedProcedure
     .input(
       z.object({
-        name: z.string().trim().min(2, 'nameTooShort').max(50, 'max50'),
+        name: z
+          .string()
+          .trim()
+          .min(2, { error: 'nameTooShort' })
+          .max(50, { error: 'max50' }),
       }),
     )
     .mutation(async ({ input, ctx }) => {

@@ -2,32 +2,17 @@ import { cn } from '@/lib/utils'
 import type { SplitMode } from '@spliit/domain'
 import { Coins, Hash, Percent, User, Users } from 'lucide-react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type IconType = ComponentType<
   SVGProps<SVGSVGElement> & { size?: number | string }
 >
 
-type PaidByOptionDef = {
-  id: string
-  isMultiPayer: boolean
-  splitMode: SplitMode
-  labelKey: string
-  helperKey: string
-  icon: IconType
-}
-
-type PaidForOptionDef = {
-  id: SplitMode
-  labelKey: string
-  helperKey: string
-  icon: IconType
-}
-
-const PAID_BY_OPTIONS: PaidByOptionDef[] = [
+const PAID_BY_OPTIONS = [
   {
     id: 'single',
     isMultiPayer: false,
-    splitMode: 'BY_AMOUNT',
+    splitMode: 'BY_AMOUNT' as const,
     labelKey: 'paidByOptionSinglePayer',
     helperKey: 'paidByOptionSinglePayerHelper',
     icon: User,
@@ -35,7 +20,7 @@ const PAID_BY_OPTIONS: PaidByOptionDef[] = [
   {
     id: 'multi-evenly',
     isMultiPayer: true,
-    splitMode: 'EVENLY',
+    splitMode: 'EVENLY' as const,
     labelKey: 'paidByOptionEvenly',
     helperKey: 'paidByOptionEvenlyHelper',
     icon: Users,
@@ -43,7 +28,7 @@ const PAID_BY_OPTIONS: PaidByOptionDef[] = [
   {
     id: 'multi-shares',
     isMultiPayer: true,
-    splitMode: 'BY_SHARES',
+    splitMode: 'BY_SHARES' as const,
     labelKey: 'paidByOptionByShares',
     helperKey: 'paidByOptionBySharesHelper',
     icon: Hash,
@@ -51,7 +36,7 @@ const PAID_BY_OPTIONS: PaidByOptionDef[] = [
   {
     id: 'multi-percentage',
     isMultiPayer: true,
-    splitMode: 'BY_PERCENTAGE',
+    splitMode: 'BY_PERCENTAGE' as const,
     labelKey: 'paidByOptionByPercentage',
     helperKey: 'paidByOptionByPercentageHelper',
     icon: Percent,
@@ -59,41 +44,39 @@ const PAID_BY_OPTIONS: PaidByOptionDef[] = [
   {
     id: 'multi-amount',
     isMultiPayer: true,
-    splitMode: 'BY_AMOUNT',
+    splitMode: 'BY_AMOUNT' as const,
     labelKey: 'paidByOptionByAmount',
     helperKey: 'paidByOptionByAmountHelper',
     icon: Coins,
   },
-]
+] as const
 
-const PAID_FOR_OPTIONS: PaidForOptionDef[] = [
+const PAID_FOR_OPTIONS = [
   {
-    id: 'EVENLY',
+    id: 'EVENLY' as const,
     labelKey: 'paidForOptionEvenly',
     helperKey: 'paidForOptionEvenlyHelper',
     icon: Users,
   },
   {
-    id: 'BY_SHARES',
+    id: 'BY_SHARES' as const,
     labelKey: 'paidForOptionByShares',
     helperKey: 'paidForOptionBySharesHelper',
     icon: Hash,
   },
   {
-    id: 'BY_PERCENTAGE',
+    id: 'BY_PERCENTAGE' as const,
     labelKey: 'paidForOptionByPercentage',
     helperKey: 'paidForOptionByPercentageHelper',
     icon: Percent,
   },
   {
-    id: 'BY_AMOUNT',
+    id: 'BY_AMOUNT' as const,
     labelKey: 'paidForOptionByAmount',
     helperKey: 'paidForOptionByAmountHelper',
     icon: Coins,
   },
-]
-
-type Translator = (key: string, opts?: Record<string, unknown>) => string
+] as const
 
 function SelectionDot({ selected }: { selected: boolean }) {
   return (
@@ -145,9 +128,9 @@ function OptionCard({
       onClick={onClick}
       className={cn(
         'group relative flex w-full items-start gap-3 rounded-lg border bg-card p-3 text-left transition-colors',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card',
+        'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card',
         selected
-          ? 'border-primary bg-primary/[0.04] shadow-[inset_0_0_0_1px_theme(colors.primary)]'
+          ? 'border-primary bg-primary/4 shadow-[inset_0_0_0_1px_var(--color-primary)]'
           : 'border-border hover:border-foreground/25 hover:bg-muted/40',
         disabled && 'cursor-not-allowed opacity-50',
       )}
@@ -186,11 +169,11 @@ export function PaidBySplitOptionCards(props: {
   value: { isMultiPayer: boolean; splitMode: SplitMode }
   onChange: (next: { isMultiPayer: boolean; splitMode: SplitMode }) => void
   readOnly?: boolean
-  t: Translator
 }) {
-  const { value, onChange, readOnly, t } = props
+  const { value, onChange, readOnly } = props
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
-  const isSelected = (opt: PaidByOptionDef) => {
+  const isSelected = (opt: (typeof PAID_BY_OPTIONS)[number]) => {
     if (opt.id === 'single') return !value.isMultiPayer
     return value.isMultiPayer && value.splitMode === opt.splitMode
   }
@@ -259,9 +242,9 @@ export function PaidForSplitOptionCards(props: {
   value: SplitMode
   onChange: (next: SplitMode) => void
   readOnly?: boolean
-  t: Translator
 }) {
-  const { value, onChange, readOnly, t } = props
+  const { value, onChange, readOnly } = props
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   return (
     <div

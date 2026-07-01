@@ -301,37 +301,3 @@ describe('CSV integration: Spliit CSV round-trips', () => {
     }
   })
 })
-
-function extractCell(row: string, index: number): string {
-  const cells: string[] = []
-  let cell = ''
-  let inQuotes = false
-  for (let i = 0; i < row.length; i++) {
-    const ch = row[i]
-    if (inQuotes) {
-      if (ch === '"') {
-        if (row[i + 1] === '"') {
-          cell += '"'
-          i++
-        } else {
-          inQuotes = false
-        }
-      } else {
-        cell += ch
-      }
-      continue
-    }
-    if (ch === '"') {
-      inQuotes = true
-      continue
-    }
-    if (ch === ',') {
-      cells.push(cell)
-      cell = ''
-      continue
-    }
-    cell += ch
-  }
-  cells.push(cell)
-  return cells[index] ?? ''
-}

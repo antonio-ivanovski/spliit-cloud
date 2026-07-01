@@ -2,6 +2,7 @@ import {
   buildExpenseFormDefaults,
   getDefaultSplittingOptions,
   persistDefaultSplittingOptions,
+  type GroupShape,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import type { ExpenseFormInputValues } from '@spliit/domain'
 import {
@@ -43,7 +44,7 @@ const mockGroup = {
   ledger: { id: 'ledger-1' },
   members: [],
   invitations: [],
-}
+} as unknown as GroupShape
 
 const baseFormValues: ExpenseFormInputValues = {
   title: 'Dinner',
@@ -188,13 +189,13 @@ describe('getDefaultSplittingOptions', () => {
       }),
     )
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('BY_AMOUNT')
     expect(result.paidFor).toEqual([{ participant: 'lp-1', shares: 25 }])
   })
 
   it('returns all-participants-evenly when localStorage is empty', () => {
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toEqual([
       { participant: 'lp-1', shares: 1 },
@@ -214,7 +215,7 @@ describe('getDefaultSplittingOptions', () => {
       }),
     )
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('BY_PERCENTAGE')
     expect(result.paidFor).toEqual([{ participant: 'lp-1', shares: 50 }])
   })
@@ -228,7 +229,7 @@ describe('getDefaultSplittingOptions', () => {
       }),
     )
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toHaveLength(2)
   })
@@ -245,7 +246,7 @@ describe('getDefaultSplittingOptions', () => {
       }),
     )
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.paidFor).toEqual([
       { participant: 'lp-1', shares: 80 },
       { participant: 'lp-2', shares: 20 },
@@ -265,7 +266,7 @@ describe('getDefaultSplittingOptions', () => {
       }),
     )
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('BY_SHARES')
     expect(result.paidFor).toEqual([
       { participant: 'lp-1', shares: 1 },
@@ -276,7 +277,7 @@ describe('getDefaultSplittingOptions', () => {
   it('falls back to default when saved data is unparseable', () => {
     localStorageMock.setItem(STORAGE_KEY, '{invalid json')
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toHaveLength(2)
   })
@@ -293,7 +294,7 @@ describe('getDefaultSplittingOptions', () => {
       }),
     )
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toHaveLength(2)
   })
@@ -311,7 +312,7 @@ describe('getDefaultSplittingOptions', () => {
       }),
     )
 
-    const result = getDefaultSplittingOptions(mockGroup as any)
+    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toHaveLength(2)
   })
@@ -353,7 +354,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         to: 'lp-2',
         amount: '50',
       },
-      group: mockGroup as any,
+      group: mockGroup,
       groupCurrency: getCurrency('USD')!,
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
@@ -389,7 +390,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         to: 'lp-2',
         amount: '50',
       },
-      group: mockGroup as any,
+      group: mockGroup,
       groupCurrency: getCurrency('USD')!,
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
@@ -419,7 +420,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         to: 'lp-2',
         amount: '50',
       },
-      group: mockGroup as any,
+      group: mockGroup,
       groupCurrency: getCurrency('USD')!,
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
@@ -438,7 +439,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         to: 'lp-2',
         amount: '25',
       },
-      group: mockGroup as any,
+      group: mockGroup,
       groupCurrency: getCurrency('USD')!,
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
@@ -457,7 +458,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         to: 'lp-2',
         amount: '0',
       },
-      group: mockGroup as any,
+      group: mockGroup,
       groupCurrency: getCurrency('USD')!,
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
@@ -515,7 +516,7 @@ describe('buildExpenseFormDefaults (prefilled items)', () => {
           },
         ]),
       },
-      group: mockGroup as any,
+      group: mockGroup,
       groupCurrency: getCurrency('USD')!,
       currentLedgerParticipantId: 'lp-1',
       reimbursementTitle: 'Reimbursement',

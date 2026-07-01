@@ -1,4 +1,4 @@
-import { ActivityType, prisma, type Prisma } from '@spliit/db'
+import { prisma, type ActivityType, type Prisma } from '@spliit/db'
 import { resolveParticipantDisplayName } from '../invitations'
 import { randomId } from './shared'
 

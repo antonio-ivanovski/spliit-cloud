@@ -27,6 +27,6 @@ export const enforceIntegerPattern = (value: string) =>
 
 // Convert a Date to an ISO date string suitable for <input type="date" defaultValue>.
 export function formatDate(date?: Date) {
-  if (!date || isNaN(date as any)) date = new Date()
-  return date.toISOString().substring(0, 10)
+  const validDate = date && !Number.isNaN(date.getTime()) ? date : new Date()
+  return validDate.toISOString().substring(0, 10)
 }

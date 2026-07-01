@@ -223,9 +223,8 @@ describe('groupsRouter.members.updateRole', () => {
     await authAs('acct-admin')
     mockGroupContext({ callerMemberId: 'gm-self', callerRole: 'ADMIN' })
     prismaMock.groupMember.findUnique.mockImplementation((async (
-      args: unknown,
+      _args: unknown,
     ) => {
-      const where = (args as { where: { id?: string } }).where
       // Caller lookup and target lookup both return the same row.
       return {
         id: 'gm-self',
@@ -364,9 +363,8 @@ describe('groupsRouter.members.remove', () => {
     await authAs('acct-admin')
     mockGroupContext({ callerMemberId: 'gm-self', callerRole: 'ADMIN' })
     prismaMock.groupMember.findUnique.mockImplementation((async (
-      args: unknown,
+      _args: unknown,
     ) => {
-      const where = (args as { where: { id?: string } }).where
       return {
         id: 'gm-self',
         groupId: 'grp-1',

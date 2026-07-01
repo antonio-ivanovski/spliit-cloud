@@ -2,19 +2,22 @@ import Decimal from 'decimal.js'
 
 import * as z from 'zod'
 import { categoryIdSchema } from './categories'
-import { RecurrenceRule, SplitMode } from './enums'
+import type { RecurrenceRule, SplitMode } from './enums'
 
 export const groupFormSchema = z
   .object({
-    name: z.string().min(2, 'min2').max(50, 'max50'),
+    name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
     information: z.string().optional(),
-    currency: z.string().min(1, 'min1').max(5, 'max5'),
+    currency: z.string().min(1, { error: 'min1' }).max(5, { error: 'max5' }),
     currencyCode: z.union([z.string().length(3).nullish(), z.literal('')]), // ISO-4217 currency code
     participants: z
       .array(
         z.object({
           id: z.string().optional(),
-          name: z.string().min(2, 'min2').max(50, 'max50'),
+          name: z
+            .string()
+            .min(2, { error: 'min2' })
+            .max(50, { error: 'max50' }),
         }),
       )
       .min(1),
@@ -35,20 +38,24 @@ export const groupFormSchema = z
 
 export type GroupFormValues = z.infer<typeof groupFormSchema>
 
-const splitModeSchema = z
-  .enum<SplitMode, [SplitMode, ...SplitMode[]]>(Object.values(SplitMode) as any)
-  .default('EVENLY')
+const splitModeValues = [
+  'EVENLY',
+  'BY_SHARES',
+  'BY_PERCENTAGE',
+  'BY_AMOUNT',
+  'ITEMIZED',
+] as const satisfies readonly [SplitMode, ...SplitMode[]]
+const splitModeSchema = z.enum(splitModeValues).default('EVENLY')
 
-const paidBySplitModeSchema = z
-  .enum<SplitMode, [SplitMode, ...SplitMode[]]>(Object.values(SplitMode) as any)
-  .default('BY_AMOUNT')
+const paidBySplitModeSchema = z.enum(splitModeValues).default('BY_AMOUNT')
 
-const recurrenceRuleSchema = z
-  .enum<
-    RecurrenceRule,
-    [RecurrenceRule, ...RecurrenceRule[]]
-  >(Object.values(RecurrenceRule) as any)
-  .default('NONE')
+const recurrenceRuleValues = [
+  'NONE',
+  'DAILY',
+  'WEEKLY',
+  'MONTHLY',
+] as const satisfies readonly [RecurrenceRule, ...RecurrenceRule[]]
+const recurrenceRuleSchema = z.enum(recurrenceRuleValues).default('NONE')
 
 const documentsSchema = z
   .array(
@@ -108,7 +115,7 @@ const itemRowDuplicateGuard = (
   rows.forEach((row, i) => {
     if (seen.has(row.participant)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'duplicateParticipant',
         path: [i, 'participant'],
       })
@@ -120,13 +127,13 @@ const itemRowDuplicateGuard = (
 
 export const expenseItemFormInputSchema = z.object({
   id: z.string().optional(),
-  title: z.string().min(1, 'itemTitleRequired'),
+  title: z.string().min(1, { error: 'itemTitleRequired' }),
   unitPrice: z.coerce
     .number()
     .refine((v) => !Number.isNaN(v), 'invalidNumber')
     .refine((v) => v > 0, 'itemAmountPositive')
     .refine((v) => v <= 10_000_000, 'amountTenMillion'),
-  quantity: z.coerce.number().int().min(1, 'itemQuantityMin1'),
+  quantity: z.coerce.number().int().min(1, { error: 'itemQuantityMin1' }),
   paidFor: z
     .array(itemFormPaidForRowSchema)
     .min(0)
@@ -134,7 +141,7 @@ export const expenseItemFormInputSchema = z.object({
       for (const { shares } of paidFor) {
         if (shares <= 0) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'noZeroShares',
           })
         }
@@ -146,9 +153,9 @@ export const expenseItemFormInputSchema = z.object({
 
 export const expenseItemApiSchema = z.object({
   id: z.string().optional(),
-  title: z.string().min(1, 'itemTitleRequired'),
+  title: z.string().min(1, { error: 'itemTitleRequired' }),
   unitPrice: z.number().int().positive('itemAmountPositive'),
-  quantity: z.number().int().min(1, 'itemQuantityMin1'),
+  quantity: z.number().int().min(1, { error: 'itemQuantityMin1' }),
   amount: z.number().int().positive('itemAmountPositive'),
   paidFor: z
     .array(itemApiPaidForRowSchema)
@@ -157,7 +164,7 @@ export const expenseItemApiSchema = z.object({
       for (const { shares } of paidFor) {
         if (shares <= 0) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'noZeroShares',
           })
         }
@@ -178,7 +185,7 @@ const itemizedRemainderFormSchema = z.object({
       for (const { shares } of paidFor) {
         if (shares <= 0) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'noZeroShares',
           })
         }
@@ -196,7 +203,7 @@ const itemizedRemainderApiSchema = z.object({
       for (const { shares } of paidFor) {
         if (shares <= 0) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'noZeroShares',
           })
         }
@@ -214,7 +221,7 @@ const paidByDuplicateGuard = (
   paidByList.forEach((row, i) => {
     if (seen.has(row.participant)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'duplicateParticipant',
         path: [i, 'participant'],
       })
@@ -236,7 +243,12 @@ const paidByAmountSumOk = (sum: Decimal, target: number): boolean =>
 export const expenseFormInputSchema = z
   .object({
     expenseDate: z.coerce.date(),
-    title: z.string({ required_error: 'titleRequired' }).min(2, 'min2'),
+    title: z
+      .string({
+        error: (issue) =>
+          issue.input === undefined ? 'titleRequired' : undefined,
+      })
+      .min(2, { error: 'min2' }),
     category: categoryIdSchema,
     // Text inputs feed raw strings into react-hook-form; coerce at the
     // schema boundary so empty / numeric strings round-trip to numbers
@@ -257,14 +269,14 @@ export const expenseFormInputSchema = z
     paidBySplitMode: paidBySplitModeSchema,
     paidByList: z
       .array(formPaidByRowSchema)
-      .min(1, 'paidByMin1')
+      .min(1, { error: 'paidByMin1' })
       .superRefine((paidByList, ctx) => {
         for (const { shares } of paidByList) {
           // Same negative-share rule the previous commit locked in:
           // allow negatives for negative-income expenses, reject only 0.
           if (shares === 0) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: 'custom',
               message: 'noZeroShares',
             })
           }
@@ -273,12 +285,12 @@ export const expenseFormInputSchema = z
       }),
     paidFor: z
       .array(formPaidForRowSchema)
-      .min(1, 'paidForMin1')
+      .min(1, { error: 'paidForMin1' })
       .superRefine((paidFor, ctx) => {
         for (const { shares } of paidFor) {
           if (shares <= 0) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: 'custom',
               message: 'noZeroShares',
             })
           }
@@ -305,7 +317,7 @@ export const expenseFormInputSchema = z
         // Two-decimal currencies can drift by ±0.01 due to rounding.
         if (Math.abs(sum - expense.amount) > 0.01) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'amountSum',
             path: ['paidFor'],
           })
@@ -316,7 +328,7 @@ export const expenseFormInputSchema = z
         const sum = expense.paidFor.reduce((sum, { shares }) => sum + shares, 0)
         if (Math.abs(sum - 100) > 0.01) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'percentageSum',
             path: ['paidFor'],
           })
@@ -338,7 +350,7 @@ export const expenseFormInputSchema = z
         )
         if (Math.abs(sum - expense.amount) > 0.01) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'paidByAmountSum',
             path: ['paidByList'],
           })
@@ -352,7 +364,7 @@ export const expenseFormInputSchema = z
         )
         if (Math.abs(sum - 100) > 0.01) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'paidByPercentageSum',
             path: ['paidByList'],
           })
@@ -375,7 +387,7 @@ export function validateExpenseItems(
 ): void {
   if (splitMode === 'ITEMIZED' && items.length === 0) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message: 'itemizedRequiresItems',
       path: ['items'],
     })
@@ -385,7 +397,7 @@ export function validateExpenseItems(
   items.forEach((item, i) => {
     if (splitMode === 'ITEMIZED' && item.paidFor.length === 0) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'itemHasNoParticipants',
         path: ['items', i, 'paidFor'],
       })
@@ -395,7 +407,7 @@ export function validateExpenseItems(
   const itemsSum = items.reduce((sum, item) => sum + item.amount, 0)
   if (itemsSum > amount) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message: 'itemsExceedAmount',
       path: ['items'],
     })
@@ -434,12 +446,12 @@ export const expenseApiSchema = z
     paidBySplitMode: paidBySplitModeSchema,
     paidByList: z
       .array(apiPaidByRowSchema)
-      .min(1, 'paidByMin1')
+      .min(1, { error: 'paidByMin1' })
       .superRefine((paidByList, ctx) => {
         for (const { shares } of paidByList) {
           if (shares === 0) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: 'custom',
               message: 'noZeroShares',
             })
           }
@@ -448,12 +460,12 @@ export const expenseApiSchema = z
       }),
     paidFor: z
       .array(apiPaidForRowSchema)
-      .min(1, 'paidForMin1')
+      .min(1, { error: 'paidForMin1' })
       .superRefine((paidFor, ctx) => {
         for (const { shares } of paidFor) {
           if (shares <= 0) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: 'custom',
               message: 'noZeroShares',
             })
           }
@@ -482,7 +494,7 @@ export const expenseApiSchema = z
         )
         if (!sum.equals(new Decimal(expense.amount))) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'amountSum',
             path: ['paidFor'],
           })
@@ -493,7 +505,7 @@ export const expenseApiSchema = z
         const sum = expense.paidFor.reduce((s, { shares }) => s + shares, 0)
         if (sum !== 10000) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'percentageSum',
             path: ['paidFor'],
           })
@@ -516,7 +528,7 @@ export const expenseApiSchema = z
         )
         if (!paidByAmountSumOk(sum, target)) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'paidByAmountSum',
             path: ['paidByList'],
           })
@@ -527,7 +539,7 @@ export const expenseApiSchema = z
         const sum = expense.paidByList.reduce((s, { shares }) => s + shares, 0)
         if (sum !== 10000) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: 'paidByPercentageSum',
             path: ['paidByList'],
           })

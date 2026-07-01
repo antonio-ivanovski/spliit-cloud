@@ -1,8 +1,8 @@
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
-import { Reimbursement } from '@/lib/balances'
-import { Currency } from '@/lib/currency'
+import type { Reimbursement } from '@/lib/balances'
+import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 import { Trans, useTranslation } from 'react-i18next'
 

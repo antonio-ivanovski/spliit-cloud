@@ -21,7 +21,6 @@ import type { AccountGroup } from './group-buckets'
 
 export function GroupCard({
   group,
-  variant,
   onToggleStar,
   onToggleHidden,
   onToggleArchived,
@@ -40,19 +39,19 @@ export function GroupCard({
 
   return (
     <li key={group.id}>
-      <div className="relative h-fit w-full py-3 pl-3 pr-1 rounded-lg border bg-card shadow-sm text-base">
+      <div className="relative h-fit w-full py-3 pl-3 pr-1 rounded-lg border bg-card shadow-xs text-base">
         <div className="w-full flex flex-col gap-1">
           <div className="text-base flex gap-2 justify-between items-center">
             <span className="flex-1 overflow-hidden text-ellipsis font-medium min-w-0">
               <Link
                 href={`/groups/${group.id}`}
-                className="text-foreground no-underline outline-none focus-visible:underline before:absolute before:inset-0 before:rounded-lg before:content-['']"
+                className="text-foreground no-underline outline-hidden focus-visible:underline before:absolute before:inset-0 before:rounded-lg before:content-['']"
                 title={group.name}
               >
                 {group.name}
               </Link>
             </span>
-            <span className="flex-shrink-0 relative z-10 flex items-center">
+            <span className="shrink-0 relative z-10 flex items-center">
               <Button
                 size="icon"
                 variant="ghost"

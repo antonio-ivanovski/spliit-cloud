@@ -1,12 +1,11 @@
 import { Money } from '@/components/money'
+import type { getGroupExpenses } from '@/lib/api'
 import { getBalances, type BalanceExpense } from '@/lib/balances'
-import { Currency } from '@/lib/currency'
+import type { Currency } from '@/lib/currency'
 import { useActiveUser } from '@/lib/hooks'
 import { useTranslation } from 'react-i18next'
 
-type GroupExpense = Awaited<
-  ReturnType<typeof import('@/lib/api').getGroupExpenses>
->[number]
+type GroupExpense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
 
 type Props = {
   groupId: string

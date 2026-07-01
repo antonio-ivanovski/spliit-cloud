@@ -1,3 +1,4 @@
+import type { GroupExpense } from '@/lib/api'
 import {
   cleanupTestAccount,
   createTestSession,
@@ -349,13 +350,14 @@ describe('Group CRUD via existing API', () => {
       paidBySplitMode: 'BY_AMOUNT' as const,
       splitMode: 'EVENLY' as const,
       recurrenceRule: 'NONE' as const,
+      itemizedRemainder: null,
       _count: { documents: 0 },
       items: [],
     }
 
     render(
       <ExpenseCard
-        expense={expenseData as any}
+        expense={expenseData as unknown as GroupExpense}
         currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
         groupId={testGroup.id}
         participantCount={1}

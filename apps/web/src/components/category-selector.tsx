@@ -1,7 +1,8 @@
 import { ChevronDown, Loader2 } from 'lucide-react'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
-import { Button, ButtonProps } from '@/components/ui/button'
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -16,12 +17,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useMediaQuery } from '@/lib/hooks'
-import {
-  DEFAULT_CATEGORIES,
-  type Category,
-  type CategoryId,
-} from '@spliit/domain'
-import { forwardRef, useEffect, useState } from 'react'
+import type { DEFAULT_CATEGORIES } from '@spliit/domain'
+import { type Category, type CategoryId } from '@spliit/domain'
+import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -41,17 +39,10 @@ export function CategorySelector({
   disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState<CategoryId>(defaultValue)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  // allow overwriting currently selected category from outside
-  useEffect(() => {
-    setValue(defaultValue)
-    onValueChange(defaultValue)
-  }, [defaultValue])
-
   const selectedCategory =
-    categories.find((category) => category.id === value) ?? categories[0]
+    categories.find((category) => category.id === defaultValue) ?? categories[0]
 
   if (isDesktop) {
     return (
@@ -68,7 +59,6 @@ export function CategorySelector({
           <CategoryCommand
             categories={categories}
             onValueChange={(id) => {
-              setValue(id)
               onValueChange(id)
               setOpen(false)
             }}
@@ -92,7 +82,6 @@ export function CategorySelector({
         <CategoryCommand
           categories={categories}
           onValueChange={(id) => {
-            setValue(id)
             onValueChange(id)
             setOpen(false)
           }}
@@ -199,11 +188,13 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="flex w-full justify-between"
+        className="flex w-full"
         ref={ref}
         {...props}
       >
-        <CategoryLabel category={category} />
+        <span className="flex-1 text-left">
+          <CategoryLabel category={category} />
+        </span>
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />
         ) : (

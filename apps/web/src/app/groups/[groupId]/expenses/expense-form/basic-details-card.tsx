@@ -30,9 +30,14 @@ import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { formatCurrency } from '@/lib/utils'
+import type { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
-import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
-import { DEFAULT_CATEGORIES, RecurrenceRule } from '@spliit/domain'
+import type {
+  Currency,
+  ExpenseFormInputValues,
+  RecurrenceRule,
+} from '@spliit/domain'
+import { DEFAULT_CATEGORIES } from '@spliit/domain'
 import { ArrowLeft } from 'lucide-react'
 import { useState, type Dispatch, type SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
@@ -52,7 +57,7 @@ export function BasicDetailsCard(props: {
   setIsIncome: Dispatch<SetStateAction<boolean>>
   isCreate: boolean
   extractCategoryMutation: ReturnType<
-    typeof import('@/trpc/client').trpc.ai.extractCategoryFromTitle.useMutation
+    typeof trpc.ai.extractCategoryFromTitle.useMutation
   >
   runtimeFeatureFlags: RuntimeFeatureFlags
   originalCurrency: Currency

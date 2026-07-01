@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest'
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 
-const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
 const USD = { code: 'USD', symbol: '$', decimal_digits: 2, rounding: 0 }
 
 function makeParticipant(id: string, name: string) {

@@ -1,6 +1,6 @@
 import { prisma } from '@spliit/db'
 import { getCategoryById } from '@spliit/domain'
-import contentDisposition from 'content-disposition'
+import { create as contentDisposition } from 'content-disposition'
 import { getAuthFromRequest } from '../lib/auth/session'
 import { resolveParticipantDisplayName } from '../lib/invitations'
 

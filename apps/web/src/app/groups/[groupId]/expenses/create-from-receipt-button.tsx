@@ -32,9 +32,14 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
-import { categoryIdSchema, getCategoryById } from '@spliit/domain'
+import {
+  type CategoryId,
+  categoryIdSchema,
+  getCategoryById,
+} from '@spliit/domain'
 import { ChevronRight, FileQuestion, Loader2, Receipt } from 'lucide-react'
-import { PropsWithChildren, ReactNode, useState } from 'react'
+import type { PropsWithChildren, ReactNode } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 
@@ -118,7 +123,7 @@ function ReceiptDialogContent() {
       try {
         setPending(true)
         console.log('Uploading image…')
-        let { url } = await uploadToS3(decoded)
+        const { url } = await uploadToS3(decoded)
         console.log('Extracting information from receipt…')
         const { amount, categoryId, currencyCode, date, title } =
           await extractReceiptMutation.mutateAsync({
@@ -281,7 +286,9 @@ function ReceiptDialogContent() {
               params: { groupId: group.id },
               search: {
                 amount: receiptInfo.amount.toString(),
-                categoryId: receiptInfo.categoryId ?? undefined,
+                categoryId:
+                  (receiptInfo.categoryId as CategoryId | undefined) ??
+                  undefined,
                 originalCurrency: receiptInfo.currencyCode ?? undefined,
                 date: receiptInfo.date ?? undefined,
                 title: receiptInfo.title ?? undefined,

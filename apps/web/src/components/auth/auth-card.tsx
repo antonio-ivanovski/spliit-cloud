@@ -18,7 +18,7 @@ export function AuthCard({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   return (
-    <Card className="w-full border-border/80 shadow-sm">
+    <Card className="w-full border-border/80 shadow-xs">
       <CardHeader className="space-y-2 text-center">
         <CardTitle className="text-2xl">
           {mode === 'sign-in' ? t('title') : t('signUpTitle')}

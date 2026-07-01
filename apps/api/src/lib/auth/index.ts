@@ -1,4 +1,4 @@
-import { Account, prisma } from '@spliit/db'
+import { prisma, type Account } from '@spliit/db'
 import { isStrongPassword } from '@spliit/domain/password'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'

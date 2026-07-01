@@ -5,8 +5,8 @@ import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
-import { getGroupExpenses } from '@/lib/api'
-import { Currency } from '@/lib/currency'
+import type { getGroupExpenses } from '@/lib/api'
+import type { Currency } from '@/lib/currency'
 import { useRouter } from '@/lib/navigation'
 import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
@@ -46,9 +46,7 @@ function ItemsPreview({
           {formatCurrency(currency, item.amount, locale)}
         </div>
       ))}
-      {remaining > 0 && (
-        <div>{t('items.more' as any, { count: remaining }) as string}</div>
-      )}
+      {remaining > 0 && <div>{t('items.more', { count: remaining })}</div>}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { prisma, RecurrenceRule } from '@spliit/db'
+import { prisma, type RecurrenceRule } from '@spliit/db'
 import { calculateNextDate } from '@spliit/domain'
 import { randomId } from './shared'
 
@@ -96,14 +96,8 @@ export async function createRecurringExpenses() {
         newExpenseDate,
       )
 
-      const {
-        paidByList,
-        paidFor,
-        documents,
-        items,
-        itemizedRemainder,
-        ...destructeredCurrentExpenseRecord
-      } = currentExpenseRecord
+      const { items, itemizedRemainder, ...destructeredCurrentExpenseRecord } =
+        currentExpenseRecord
 
       const newExpense = await prisma
         .$transaction(async (transaction) => {

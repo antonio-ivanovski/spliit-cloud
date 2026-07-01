@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { CheckCircle2, Share2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type ImportInvite = NonNullable<
@@ -32,7 +31,7 @@ type Props = {
  * same affordances keeps the import path consistent with the rest
  * of the app.
  */
-export function DoneStep({ groupId, invites, onContinue }: Props) {
+export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
   const { t } = useTranslation()
   const linkInvites = invites.filter((i) => i.kind === 'LINK' && i.inviteUrl)
   const emailInvites = invites.filter((i) => i.kind === 'EMAIL')
@@ -41,12 +40,8 @@ export function DoneStep({ groupId, invites, onContinue }: Props) {
   // the Members invite-link UI — iOS Safari, Android Chrome, and a
   // handful of desktop browsers expose `navigator.share`; on
   // unsupported platforms we only render the copy button.
-  const [canShare, setCanShare] = useState(false)
-  useEffect(() => {
-    setCanShare(
-      typeof navigator !== 'undefined' && typeof navigator.share === 'function',
-    )
-  }, [])
+  const canShare =
+    typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 
   async function handleShareLink(url: string, name: string) {
     if (!canShare) return

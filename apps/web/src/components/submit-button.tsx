@@ -1,7 +1,8 @@
-import { Button, ButtonProps } from '@/components/ui/button'
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { useFormState } from 'react-hook-form'
 
 type Props = {
@@ -19,7 +20,7 @@ export function SubmitButton({
     <Button
       type="submit"
       disabled={isSubmitting}
-      className={cn('min-w-[7rem]', className)}
+      className={cn('min-w-28', className)}
       {...props}
     >
       <span className="inline-flex items-center whitespace-nowrap">

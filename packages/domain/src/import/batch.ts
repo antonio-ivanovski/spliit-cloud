@@ -3,8 +3,7 @@ import type { NormalizedSource, NormalizedSourceExpense } from './types'
 
 export type ImportBatchState = {
   source:
-    | (Pick<NormalizedSource, 'currencyCode'> & Record<string, unknown>)
-    | null
+    (Pick<NormalizedSource, 'currencyCode'> & Record<string, unknown>) | null
   mode: 'NEW_GROUP' | 'EXISTING_GROUP' | null
   targetGroupId: string | null
   groupFormValues: {

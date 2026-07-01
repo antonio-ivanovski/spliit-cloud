@@ -16,9 +16,7 @@ export function LeaveItemizedDialog(props: {
   onConfirm: () => void
 }) {
   const { open, targetModeLabel, onCancel, onConfirm } = props
-  const { t: _t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
-  const t = (key: string, opts?: Record<string, unknown>) =>
-    _t(key as any, opts) as string
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onCancel()}>

@@ -6,21 +6,12 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
-
-const enforceCurrencyPattern = (value: string) =>
-  value
-    .replace(/^\s*-/, '_') // replace leading minus with _
-    .replace(/[.,]/, '#') // replace first comma with #
-    .replace(/[-.,]/g, '') // remove other minus and commas characters
-    .replace(/_/, '-') // change back _ to minus
-    .replace(/#/, '.') // change back # to dot
-    .replace(/[^-\d.]/g, '') // remove all non-numeric characters
+import { useTranslation } from 'react-i18next'
 
 export function useExpenseCurrencyConversion(args: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
-  t: (key: string, opts?: Record<string, unknown>) => string
   onAmountChanged?: (income: boolean) => void
 }): {
   originalCurrency: Currency
@@ -38,6 +29,7 @@ export function useExpenseCurrencyConversion(args: {
    */
   convertedAmountPreview: number | undefined
 } {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const watchedExpenseDate = useWatch({
     control: args.form.control,
     name: 'expenseDate',
@@ -87,7 +79,7 @@ export function useExpenseCurrencyConversion(args: {
     if (!usingCustomConversionRate && exchangeRate.data) {
       args.form.setValue('conversionRate', exchangeRate.data)
     }
-  }, [exchangeRate.data, usingCustomConversionRate])
+  }, [exchangeRate.data, usingCustomConversionRate, args.form])
 
   // Income detection tracks the typed amount directly (it is in the
   // selected expense currency; signedness is currency-agnostic).
@@ -113,9 +105,9 @@ export function useExpenseCurrencyConversion(args: {
     return Number.isNaN(converted) ? undefined : converted
   })()
 
-  let conversionRateMessage = ''
+  let conversionRateMessage
   if (exchangeRate.isLoading) {
-    conversionRateMessage = args.t('conversionRateState.loading')
+    conversionRateMessage = t('conversionRateState.loading')
   } else {
     let ratesDisplay = ''
     if (exchangeRate.data) {
@@ -125,21 +117,21 @@ export function useExpenseCurrencyConversion(args: {
     }
     if (exchangeRate.error) {
       if (exchangeRate.error instanceof RangeError && exchangeRate.data)
-        conversionRateMessage = args.t('conversionRateState.dateMismatch', {
+        conversionRateMessage = t('conversionRateState.dateMismatch', {
           date: exchangeRate.error.message,
         })
       else {
-        conversionRateMessage = args.t('conversionRateState.error')
+        conversionRateMessage = t('conversionRateState.error')
       }
       conversionRateMessage +=
         ' ' +
         (ratesDisplay.length
-          ? `${args.t('conversionRateState.staleRate')} ${ratesDisplay}`
-          : args.t('conversionRateState.noRate'))
+          ? `${t('conversionRateState.staleRate')} ${ratesDisplay}`
+          : t('conversionRateState.noRate'))
     } else {
       conversionRateMessage = ratesDisplay.length
-        ? `${args.t('conversionRateState.success')} ${ratesDisplay}`
-        : args.t('conversionRateState.currencyNotFound')
+        ? `${t('conversionRateState.success')} ${ratesDisplay}`
+        : t('conversionRateState.currencyNotFound')
     }
   }
 

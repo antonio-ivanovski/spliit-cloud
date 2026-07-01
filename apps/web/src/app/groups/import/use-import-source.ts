@@ -1,6 +1,6 @@
 import { trpc } from '@/trpc/client'
 import type { AppRouter, AppRouterOutput } from '@spliit/api/router'
-import { TRPCClientErrorLike } from '@trpc/client'
+import type { TRPCClientErrorLike } from '@trpc/client'
 import { useCallback, useState } from 'react'
 
 type PreviewFromUrlResult = AppRouterOutput['groups']['importPreview']

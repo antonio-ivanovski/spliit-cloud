@@ -1,6 +1,8 @@
-import { Button, ButtonProps } from '@/components/ui/button'
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
-import { ReactNode, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useState } from 'react'
 
 type Props = ButtonProps & {
   action?: () => Promise<void>
