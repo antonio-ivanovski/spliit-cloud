@@ -122,7 +122,14 @@ export function GroupForm({
       : {
           name: initialValues?.name ?? '',
           information: initialValues?.information ?? '',
-          currency: initialValues?.currency ?? '',
+          currency:
+            initialValues?.currency ??
+            getCurrency(
+              (initialValues?.currencyCode ??
+                import.meta.env.VITE_DEFAULT_CURRENCY_CODE) ||
+                'USD',
+            )?.symbol ??
+            '',
           currencyCode:
             initialValues?.currencyCode ??
             (import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'),
