@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Ekspor Splitwise tidak menyertakan gambar tanda terima. Unggah ulang di grup tujuan jika Anda membutuhkannya.",
         "unsupportedFileType": "Jenis file tidak didukung. Jatuhkan file JSON atau CSV.",
         "dropFileSplitwise": "Jatuhkan file CSV Splitwise, atau klik untuk memilih",
-        "dropFileDescriptionSplitwise": "CSV adalah satu-satunya format yang diekspor Splitwise. Kami mengurai nilai per peserta untuk menyusun ulang pembagian."
+        "dropFileDescriptionSplitwise": "CSV adalah satu-satunya format yang diekspor Splitwise. Kami mengurai nilai per peserta untuk menyusun ulang pembagian.",
+        "splitwiseAnonymizeTitle": "Mengalami masalah saat mengimpor CSV Splitwise Anda? Anonimkan sebelum membagikan.",
+        "splitwiseAnonymizeDescription": "Jika impor menolak CSV Anda, Anda dapat menghapus nama peserta dan deskripsi pengeluaran secara lokal dan melampirkan hasilnya ke issue GitHub. File Anda tetap di perangkat Anda — kami tidak pernah mengunggahnya.",
+        "splitwiseAnonymizeButton": "Anonimkan CSV",
+        "splitwiseAnonymizeIssuesLink": "Buka issue impor",
+        "splitwiseAnonymizeError": "Tidak dapat menganonimkan file ini. Pastikan itu adalah ekspor CSV Splitwise."
       },
       "StepHeader": {
         "title": "Impor grup",

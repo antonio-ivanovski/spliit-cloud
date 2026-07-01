@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Export ze Splitwise neobsahuje obrázky účtenek. V případě potřeby je nahrajte znovu do cílové skupiny.",
         "unsupportedFileType": "Nepodporovaný typ souboru. Přetáhněte prosím soubor JSON nebo CSV.",
         "dropFileSplitwise": "Přetáhněte CSV soubor Splitwise, nebo kliknutím vyberte",
-        "dropFileDescriptionSplitwise": "CSV je jediný formát, který Splitwise exportuje. Hodnoty za jednotlivé účastníky analyzujeme, abychom obnovili rozdělení."
+        "dropFileDescriptionSplitwise": "CSV je jediný formát, který Splitwise exportuje. Hodnoty za jednotlivé účastníky analyzujeme, abychom obnovili rozdělení.",
+        "splitwiseAnonymizeTitle": "Máte potíže s importem CSV ze Splitwise? Před sdílením ho anonymizujte.",
+        "splitwiseAnonymizeDescription": "Pokud importér odmítne vaše CSV, můžete lokálně odebrat jména účastníků a popisy výdajů a výsledek přiložit k GitHub issue. Soubor zůstává ve vašem zařízení — nikam ho nenahráváme.",
+        "splitwiseAnonymizeButton": "Anonymizovat CSV",
+        "splitwiseAnonymizeIssuesLink": "Otevřít issue s importem",
+        "splitwiseAnonymizeError": "Tento soubor se nepodařilo anonymizovat. Ujistěte se, že jde o CSV export ze Splitwise."
       },
       "StepHeader": {
         "title": "Importovat skupinu",

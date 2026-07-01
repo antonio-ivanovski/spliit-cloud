@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Експорт Splitwise не включає зображення чеків. Повторно завантажте їх у групу призначення, якщо вони вам потрібні.",
         "unsupportedFileType": "Непідтримуваний тип файлу. Перетягніть файл JSON або CSV.",
         "dropFileSplitwise": "Перетягніть CSV-файл Splitwise або натисніть, щоб вибрати",
-        "dropFileDescriptionSplitwise": "CSV — це єдиний формат, який експортує Splitwise. Ми аналізуємо значення для кожного учасника, щоб відновити розподіл."
+        "dropFileDescriptionSplitwise": "CSV — це єдиний формат, який експортує Splitwise. Ми аналізуємо значення для кожного учасника, щоб відновити розподіл.",
+        "splitwiseAnonymizeTitle": "Не вдається імпортувати CSV із Splitwise? Перед надсиланням анонімізуйте його.",
+        "splitwiseAnonymizeDescription": "Якщо імпортер відхиляє ваш CSV, ви можете локально видалити імена учасників та описи витрат і долучити результат до issue на GitHub. Файл залишається на вашому пристрої — ми його нікуди не завантажуємо.",
+        "splitwiseAnonymizeButton": "Анонімізувати CSV",
+        "splitwiseAnonymizeIssuesLink": "Створити issue щодо імпорту",
+        "splitwiseAnonymizeError": "Не вдалося анонімізувати цей файл. Переконайтеся, що це CSV-експорт із Splitwise."
       },
       "StepHeader": {
         "title": "Імпортувати групу",

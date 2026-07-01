@@ -243,7 +243,12 @@
         "receiptWarningDescriptionSplitwise": "The Splitwise export does not include receipt images. Re-upload them in the destination group if you need them.",
         "unsupportedFileType": "Unsupported file type. Please drop a JSON or CSV file.",
         "dropFileSplitwise": "Drop a Splitwise CSV file, or click to select",
-        "dropFileDescriptionSplitwise": "CSV is the only format Splitwise exports. We parse the per-participant values to reconstruct the split."
+        "dropFileDescriptionSplitwise": "CSV is the only format Splitwise exports. We parse the per-participant values to reconstruct the split.",
+        "splitwiseAnonymizeTitle": "Having trouble importing your Splitwise CSV? Anonymize it before sharing.",
+        "splitwiseAnonymizeDescription": "If the importer rejects your CSV, you can strip participant names and expense descriptions locally and attach the result to a GitHub issue. Your file stays on your device — we never upload it.",
+        "splitwiseAnonymizeButton": "Anonymize a CSV",
+        "splitwiseAnonymizeIssuesLink": "Open an import issue",
+        "splitwiseAnonymizeError": "Could not anonymize this file. Make sure it's a Splitwise CSV export."
       },
       "Destination": {
         "heading": "Where would you like to import <strong>{name}</strong>? ({participantCount} participants · {expenseCount} expenses)",

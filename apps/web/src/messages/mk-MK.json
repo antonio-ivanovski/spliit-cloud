@@ -243,7 +243,12 @@
         "receiptWarningDescriptionSplitwise": "Извозот од Splitwise не вклучува слики од сметки. Повторно поставете ги во групата-дестинација ако ви требаат.",
         "unsupportedFileType": "Неподдржан тип на датотека. Пуштете JSON или CSV датотека.",
         "dropFileSplitwise": "Пуштете CSV датотека од Splitwise, или кликнете за да изберете",
-        "dropFileDescriptionSplitwise": "CSV е единствениот формат што Splitwise го извезува. Ги анализираме вредностите по учесник за да ја обновиме распределбата."
+        "dropFileDescriptionSplitwise": "CSV е единствениот формат што Splitwise го извезува. Ги анализираме вредностите по учесник за да ја обновиме распределбата.",
+        "splitwiseAnonymizeTitle": "Имате проблем со увезување на вашиот CSV од Splitwise? Анонимизирајте го пред споделување.",
+        "splitwiseAnonymizeDescription": "Ако вчитувачот го одбие вашиот CSV, можете локално да ги отстраните имињата на учесниците и описите на трошоците и резултатот да го прикачите на GitHub issue. Вашата датотека останува на вашиот уред — никогаш не ја прикачуваме.",
+        "splitwiseAnonymizeButton": "Анонимизирај CSV",
+        "splitwiseAnonymizeIssuesLink": "Отвори issue за увоз",
+        "splitwiseAnonymizeError": "Оваа датотека не може да се анонимизира. Проверете дали е CSV извоз од Splitwise."
       },
       "Destination": {
         "heading": "Каде сакате да го увезете <strong>{name}</strong>? ({participantCount} учесници · {expenseCount} трошоци)",

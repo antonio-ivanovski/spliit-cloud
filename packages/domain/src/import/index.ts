@@ -1,3 +1,4 @@
+export * from './anonymize-splitwise-csv'
 export * from './filename'
 export * from './mapping'
 export * from './spliit'

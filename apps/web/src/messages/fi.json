@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Splitwise-vienti ei sisällä kuittikuvia. Lataa ne uudelleen kohderyhmään, jos tarvitset niitä.",
         "unsupportedFileType": "Ei tuettu tiedostotyyppi. Pudota JSON- tai CSV-tiedosto.",
         "dropFileSplitwise": "Pudota Splitwise CSV -tiedosto tai napsauta valitaksesi",
-        "dropFileDescriptionSplitwise": "CSV on ainoa muoto, jonka Splitwise vie. Jäsentelemme osallistujakohtaiset arvot jaon rekonstruoimiseksi."
+        "dropFileDescriptionSplitwise": "CSV on ainoa muoto, jonka Splitwise vie. Jäsentelemme osallistujakohtaiset arvot jaon rekonstruoimiseksi.",
+        "splitwiseAnonymizeTitle": "Ongelmia Splitwise-CSV:n tuonnissa? Anonymisoi se ennen jakamista.",
+        "splitwiseAnonymizeDescription": "Jos tuonti hylkää CSV-tiedostosi, voit poistaa osallistujien nimet ja kulujen kuvaukset paikallisesti ja liittää tuloksen GitHub-issueen. Tiedostosi pysyy laitteellasi — emme koskaan lataa sitä.",
+        "splitwiseAnonymizeButton": "Anonymisoi CSV",
+        "splitwiseAnonymizeIssuesLink": "Ilmoita tuontiongelmasta",
+        "splitwiseAnonymizeError": "Tätä tiedostoa ei voitu anonymisoida. Varmista, että se on Splitwise-CSV-vienti."
       },
       "StepHeader": {
         "title": "Tuo ryhmä",

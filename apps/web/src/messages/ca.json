@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "L'exportació de Splitwise no inclou imatges dels rebuts. Torneu a pujar-les al grup de destí si les necessiteu.",
         "unsupportedFileType": "Tipus de fitxer no admès. Deixa anar un fitxer JSON o CSV.",
         "dropFileSplitwise": "Deixa anar un fitxer CSV de Splitwise, o fes clic per seleccionar",
-        "dropFileDescriptionSplitwise": "CSV és l'únic format que exporta Splitwise. Analitzem els valors per participant per reconstruir el repartiment."
+        "dropFileDescriptionSplitwise": "CSV és l'únic format que exporta Splitwise. Analitzem els valors per participant per reconstruir el repartiment.",
+        "splitwiseAnonymizeTitle": "Problemes per importar el CSV de Splitwise? Anonimitza'l abans de compartir-lo.",
+        "splitwiseAnonymizeDescription": "Si l'importador rebutja el teu CSV, pots eliminar els noms dels participants i les descripcions de les despeses localment i adjuntar el resultat a un issue de GitHub. El teu fitxer es queda al dispositiu — mai no el pugem.",
+        "splitwiseAnonymizeButton": "Anonimitza un CSV",
+        "splitwiseAnonymizeIssuesLink": "Obre un issue d'importació",
+        "splitwiseAnonymizeError": "No s'ha pogut anonimitzar aquest fitxer. Assegura't que sigui una exportació CSV de Splitwise."
       },
       "StepHeader": {
         "title": "Importa un grup",

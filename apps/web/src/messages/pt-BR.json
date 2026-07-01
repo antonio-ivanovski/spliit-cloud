@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "A exportação do Splitwise não inclui imagens de recibos. Refaça o upload no grupo de destino se precisar delas.",
         "unsupportedFileType": "Tipo de arquivo não suportado. Solte um arquivo JSON ou CSV.",
         "dropFileSplitwise": "Solte um arquivo CSV do Splitwise, ou clique para selecionar",
-        "dropFileDescriptionSplitwise": "CSV é o único formato que o Splitwise exporta. Analisamos os valores por participante para reconstruir a divisão."
+        "dropFileDescriptionSplitwise": "CSV é o único formato que o Splitwise exporta. Analisamos os valores por participante para reconstruir a divisão.",
+        "splitwiseAnonymizeTitle": "Problemas para importar seu CSV do Splitwise? Anonimize-o antes de compartilhar.",
+        "splitwiseAnonymizeDescription": "Se o importador recusar seu CSV, você pode remover localmente os nomes dos participantes e as descrições das despesas e anexar o resultado a uma issue do GitHub. Seu arquivo fica no seu dispositivo — nunca o enviamos.",
+        "splitwiseAnonymizeButton": "Anonimizar um CSV",
+        "splitwiseAnonymizeIssuesLink": "Abrir uma issue de importação",
+        "splitwiseAnonymizeError": "Não foi possível anonimizar este arquivo. Verifique se é uma exportação CSV do Splitwise."
       },
       "StepHeader": {
         "title": "Importar um grupo",

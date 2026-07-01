@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Splitwise dışa aktarımı makbuz görüntülerini içermez. İhtiyacınız varsa bunları hedef grupta yeniden yükleyin.",
         "unsupportedFileType": "Desteklenmeyen dosya türü. Lütfen bir JSON veya CSV dosyası bırakın.",
         "dropFileSplitwise": "Bir Splitwise CSV dosyası bırakın veya seçmek için tıklayın",
-        "dropFileDescriptionSplitwise": "CSV, Splitwise'in dışa aktardığı tek formattır. Bölüşümü yeniden oluşturmak için katılımcı başına değerleri ayrıştırırız."
+        "dropFileDescriptionSplitwise": "CSV, Splitwise'in dışa aktardığı tek formattır. Bölüşümü yeniden oluşturmak için katılımcı başına değerleri ayrıştırırız.",
+        "splitwiseAnonymizeTitle": "Splitwise CSV'nizi içe aktarmakta sorun mu yaşıyorsunuz? Paylaşmadan önce anonimleştirin.",
+        "splitwiseAnonymizeDescription": "İçe aktarma CSV'nizi reddederse, katılımcı adlarını ve harcama açıklamalarını yerel olarak kaldırabilir ve sonucu bir GitHub issue'suna ekleyebilirsiniz. Dosyanız cihazınızda kalır — biz onu asla yüklemeyiz.",
+        "splitwiseAnonymizeButton": "CSV'yi anonimleştir",
+        "splitwiseAnonymizeIssuesLink": "İçe aktarma için issue aç",
+        "splitwiseAnonymizeError": "Bu dosya anonimleştirilemedi. Bunun bir Splitwise CSV dışa aktarımı olduğundan emin olun."
       },
       "StepHeader": {
         "title": "Bir grubu içe aktar",

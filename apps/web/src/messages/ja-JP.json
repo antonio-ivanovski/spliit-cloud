@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Splitwise のエクスポートにはレシート画像は含まれません。必要な場合は、宛先グループに再アップロードしてください。",
         "unsupportedFileType": "サポートされていないファイル形式です。JSON または CSV ファイルをドロップしてください。",
         "dropFileSplitwise": "Splitwise の CSV ファイルをドロップするか、クリックして選択してください",
-        "dropFileDescriptionSplitwise": "CSV は Splitwise がエクスポートできる唯一の形式です。参加者ごとの値を解析して分割を再構成します。"
+        "dropFileDescriptionSplitwise": "CSV は Splitwise がエクスポートできる唯一の形式です。参加者ごとの値を解析して分割を再構成します。",
+        "splitwiseAnonymizeTitle": "Splitwise の CSV インポートでお困りですか?共有する前に匿名化しましょう。",
+        "splitwiseAnonymizeDescription": "インポーターが CSV を拒否した場合は、参加者の名前と支出の説明をローカルで削除し、結果を GitHub issue に添付できます。ファイルはお使いのデバイスから外部に送信されず、当社がアップロードすることもありません。",
+        "splitwiseAnonymizeButton": "CSV を匿名化する",
+        "splitwiseAnonymizeIssuesLink": "インポートに関する issue を作成する",
+        "splitwiseAnonymizeError": "このファイルを匿名化できませんでした。Splitwise の CSV エクスポートであることを確認してください。"
       },
       "StepHeader": {
         "title": "グループをインポート",

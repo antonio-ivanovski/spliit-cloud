@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "הייצוא של Splitwise אינו כולל תמונות קבלות. העלה אותן מחדש בקבוצת היעד אם אתה צריך אותן.",
         "unsupportedFileType": "סוג קובץ לא נתמך. אנא גרור קובץ JSON או CSV.",
         "dropFileSplitwise": "גרור קובץ CSV של Splitwise, או לחץ לבחירה",
-        "dropFileDescriptionSplitwise": "CSV הוא הפורמט היחיד ש-Splitwise מייצאת. אנו מנתחים את הערכים לכל משתתף כדי לשחזר את החלוקה."
+        "dropFileDescriptionSplitwise": "CSV הוא הפורמט היחיד ש-Splitwise מייצאת. אנו מנתחים את הערכים לכל משתתף כדי לשחזר את החלוקה.",
+        "splitwiseAnonymizeTitle": "נתקלת בבעיות בייבוא קובץ ה-CSV של Splitwise? בצע אנונימיזציה לפני השיתוף.",
+        "splitwiseAnonymizeDescription": "אם הייבוא דוחה את קובץ ה-CSV שלך, תוכל להסיר את שמות המשתתפים ואת תיאורי ההוצאות באופן מקומי ולצרף את התוצאה ל-GitHub issue. הקובץ נשאר במכשיר שלך — אנו לעולם לא מעלים אותו.",
+        "splitwiseAnonymizeButton": "בצע אנונימיזציה ל-CSV",
+        "splitwiseAnonymizeIssuesLink": "פתח issue לייבוא",
+        "splitwiseAnonymizeError": "לא ניתן היה לבצע אנונימיזציה לקובץ זה. ודא שמדובר בייצוא CSV של Splitwise."
       },
       "StepHeader": {
         "title": "ייבא קבוצה",

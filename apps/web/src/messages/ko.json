@@ -246,7 +246,12 @@
         "receiptWarningDescriptionSplitwise": "Splitwise 내보내기에는 영수증 이미지가 포함되지 않습니다. 필요한 경우 대상 그룹에 다시 업로드하세요.",
         "unsupportedFileType": "지원하지 않는 파일 형식입니다. JSON 또는 CSV 파일을 드롭해 주세요.",
         "dropFileSplitwise": "Splitwise CSV 파일을 드롭하거나 클릭하여 선택하세요",
-        "dropFileDescriptionSplitwise": "CSV는 Splitwise가 내보낼 수 있는 유일한 형식입니다. 참가자별 값을 분석하여 분담을 재구성합니다."
+        "dropFileDescriptionSplitwise": "CSV는 Splitwise가 내보낼 수 있는 유일한 형식입니다. 참가자별 값을 분석하여 분담을 재구성합니다.",
+        "splitwiseAnonymizeTitle": "Splitwise CSV 가져오기에 문제가 있나요? 공유하기 전에 익명 처리하세요.",
+        "splitwiseAnonymizeDescription": "가져오기가 CSV를 거부하면 참여자 이름과 지출 설명을 로컬에서 제거하고 결과를 GitHub issue에 첨부할 수 있습니다. 파일은 사용자의 기기에만 머무르며 저희는 업로드하지 않습니다.",
+        "splitwiseAnonymizeButton": "CSV 익명 처리",
+        "splitwiseAnonymizeIssuesLink": "가져오기 문제 보고하기",
+        "splitwiseAnonymizeError": "이 파일을 익명 처리할 수 없습니다. Splitwise CSV 내보내기인지 확인해 주세요."
       },
       "StepHeader": {
         "title": "그룹 가져오기",

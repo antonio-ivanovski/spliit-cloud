@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Splitwise 的导出不包含收据图片。如果需要，请在目标群组中重新上传。",
         "unsupportedFileType": "不支持的文件类型，请拖放 JSON 或 CSV 文件。",
         "dropFileSplitwise": "拖放 Splitwise CSV 文件，或点击选择",
-        "dropFileDescriptionSplitwise": "CSV 是 Splitwise 唯一支持导出的格式。我们会解析每位参与者的金额来重建分摊。"
+        "dropFileDescriptionSplitwise": "CSV 是 Splitwise 唯一支持导出的格式。我们会解析每位参与者的金额来重建分摊。",
+        "splitwiseAnonymizeTitle": "Splitwise CSV 导入遇到问题?分享前请先进行匿名处理。",
+        "splitwiseAnonymizeDescription": "如果导入器拒绝您的 CSV，您可以在本地去除参与者姓名和支出说明，并将结果附到 GitHub issue 中。文件始终保留在您的设备上,我们不会上传。",
+        "splitwiseAnonymizeButton": "对 CSV 进行匿名处理",
+        "splitwiseAnonymizeIssuesLink": "提交导入问题",
+        "splitwiseAnonymizeError": "无法对该文件进行匿名处理。请确认它是一个 Splitwise CSV 导出文件。"
       },
       "StepHeader": {
         "title": "导入群组",

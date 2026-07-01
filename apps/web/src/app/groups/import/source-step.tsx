@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { DomainSwapCard } from './domain-swap-card'
 import { FileUploadCard } from './file-upload-card'
 import { PasteUrlCard } from './paste-url-card'
+import { SplitwiseAnonymizerCard } from './splitwise-anonymizer-card'
 import { useImportSource } from './use-import-source'
 
 type Props = {
@@ -269,6 +270,7 @@ export function SourceStep({ onLoaded, onError }: Props) {
               'Groups.Import.Source.receiptWarningDescriptionSplitwise',
             )}
           />
+          <SplitwiseAnonymizerCard />
         </TabsContent>
         <TabsContent value="tricount">
           <ComingSoonCard

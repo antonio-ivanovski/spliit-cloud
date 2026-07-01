@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Exportul Splitwise nu include imaginile chitanțelor. Reîncărcați-le în grupul de destinație dacă aveți nevoie de ele.",
         "unsupportedFileType": "Tip de fișier neacceptat. Lăsați un fișier JSON sau CSV.",
         "dropFileSplitwise": "Lăsați un fișier CSV Splitwise, sau faceți clic pentru a selecta",
-        "dropFileDescriptionSplitwise": "CSV este singurul format pe care îl exportă Splitwise. Analizăm valorile per participant pentru a reconstrui împărțirea."
+        "dropFileDescriptionSplitwise": "CSV este singurul format pe care îl exportă Splitwise. Analizăm valorile per participant pentru a reconstrui împărțirea.",
+        "splitwiseAnonymizeTitle": "Aveți probleme la importul CSV-ului Splitwise? Anonimizați-l înainte de a-l partaja.",
+        "splitwiseAnonymizeDescription": "Dacă importatorul respinge CSV-ul dvs., puteți elimina local numele participanților și descrierile cheltuielilor și puteți atașa rezultatul la un issue GitHub. Fișierul dvs. rămâne pe dispozitiv — nu îl încărcăm niciodată.",
+        "splitwiseAnonymizeButton": "Anonimizați un CSV",
+        "splitwiseAnonymizeIssuesLink": "Deschideți un issue de import",
+        "splitwiseAnonymizeError": "Nu s-a putut anonimiza acest fișier. Asigurați-vă că este un export CSV Splitwise."
       },
       "StepHeader": {
         "title": "Importați un grup",

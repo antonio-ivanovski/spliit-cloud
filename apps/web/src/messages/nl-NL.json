@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "De Splitwise-export bevat geen bonafbeeldingen. Upload ze opnieuw in de doelgroep als je ze nodig hebt.",
         "unsupportedFileType": "Niet-ondersteund bestandstype. Sleep een JSON- of CSV-bestand.",
         "dropFileSplitwise": "Sleep een Splitwise CSV-bestand, of klik om te selecteren",
-        "dropFileDescriptionSplitwise": "CSV is het enige formaat dat Splitwise exporteert. We ontleden de waarden per deelnemer om de verdeling te reconstrueren."
+        "dropFileDescriptionSplitwise": "CSV is het enige formaat dat Splitwise exporteert. We ontleden de waarden per deelnemer om de verdeling te reconstrueren.",
+        "splitwiseAnonymizeTitle": "Problemen met het importeren van je Splitwise-CSV? Anonimiseer het voor je het deelt.",
+        "splitwiseAnonymizeDescription": "Als de import je CSV weigert, kun je deelnemersnamen en uitgavebeschrijvingen lokaal verwijderen en het resultaat bij een GitHub-issue voegen. Je bestand blijft op je apparaat — we uploaden het nooit.",
+        "splitwiseAnonymizeButton": "CSV anonimiseren",
+        "splitwiseAnonymizeIssuesLink": "Importprobleem melden",
+        "splitwiseAnonymizeError": "Dit bestand kon niet worden geanonimiseerd. Zorg dat het een Splitwise-CSV-export is."
       },
       "StepHeader": {
         "title": "Importeer een groep",

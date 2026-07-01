@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Splitwise-ko esportazioak ez ditu ordainagirien irudiak barne hartzen. Berriro igo itzazu helburuko taldean behar badituzu.",
         "unsupportedFileType": "Onartu gabeko fitxategi mota. Jaregin JSON edo CSV fitxategi bat.",
         "dropFileSplitwise": "Jaregin Splitwise CSV fitxategi bat, edo egin klik hautatzeko",
-        "dropFileDescriptionSplitwise": "CSV da Splitwise-k esportatzen duen formatu bakarra. Parte-hartzaile bakoitzaren balioak aztertzen ditugu banaketa berreraikitzeko."
+        "dropFileDescriptionSplitwise": "CSV da Splitwise-k esportatzen duen formatu bakarra. Parte-hartzaile bakoitzaren balioak aztertzen ditugu banaketa berreraikitzeko.",
+        "splitwiseAnonymizeTitle": "Arazoak Splitwise CSV-a inportatzean? Anonimatu ezazu partekatu baino lehen.",
+        "splitwiseAnonymizeDescription": "Inportatzaileak zure CSV-a baztertzen badu, parte-hartzaileen izenak eta gastuen deskribapenak lokalki ken ditzakezu eta emaitza GitHub-ko issue batean erantsi. Zure fitxategia zure gailuan gelditzen da — ez dugu inoiz igoko.",
+        "splitwiseAnonymizeButton": "Anonimatu CSV bat",
+        "splitwiseAnonymizeIssuesLink": "Ireki inportazio-issue bat",
+        "splitwiseAnonymizeError": "Ezin izan da fitxategi hau anonimatu. Ziurtatu Splitwise-ren CSV-esportazio bat dela."
       },
       "StepHeader": {
         "title": "Talde bat inportatu",

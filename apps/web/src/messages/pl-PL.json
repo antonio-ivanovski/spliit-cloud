@@ -310,7 +310,12 @@
         "receiptWarningDescriptionSplitwise": "Eksport Splitwise nie zawiera obrazów paragonów. Prześlij je ponownie w grupie docelowej, jeśli ich potrzebujesz.",
         "unsupportedFileType": "Nieobsługiwany typ pliku. Upuść plik JSON lub CSV.",
         "dropFileSplitwise": "Upuść plik CSV z Splitwise lub kliknij, aby wybrać",
-        "dropFileDescriptionSplitwise": "CSV to jedyny format, jaki eksportuje Splitwise. Analizujemy wartości na uczestnika, aby odtworzyć podział."
+        "dropFileDescriptionSplitwise": "CSV to jedyny format, jaki eksportuje Splitwise. Analizujemy wartości na uczestnika, aby odtworzyć podział.",
+        "splitwiseAnonymizeTitle": "Masz problem z importem CSV ze Splitwise? Zanim udostępnisz, zanonimizuj go.",
+        "splitwiseAnonymizeDescription": "Jeśli importer odrzuci Twój CSV, możesz lokalnie usunąć imiona uczestników i opisy wydatków, a wynik dołączyć do zgłoszenia na GitHubie. Plik pozostaje na Twoim urządzeniu — nigdy go nie wysyłamy.",
+        "splitwiseAnonymizeButton": "Zanonimizuj CSV",
+        "splitwiseAnonymizeIssuesLink": "Otwórz zgłoszenie importu",
+        "splitwiseAnonymizeError": "Nie udało się zanonimizować tego pliku. Upewnij się, że to eksport CSV ze Splitwise."
       },
       "StepHeader": {
         "title": "Importuj grupę",
