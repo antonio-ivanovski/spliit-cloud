@@ -11,6 +11,7 @@ const MAX_ENTRIES = 256
 
 function makeSource(overrides?: Partial<NormalizedSource>): NormalizedSource {
   return {
+    provider: 'SPLIIT',
     sourceGroupId: 'test-group',
     sourceUrl: null,
     name: 'Test Source',

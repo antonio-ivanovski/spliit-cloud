@@ -7,11 +7,13 @@ export type NormalizedSourceExpense = {
   title: string
   expenseDate: string
   category: string
+  amountCurrency: string | null
   amount: number
   originalAmount: number | null
   originalCurrency: string | null
   conversionRate: number | null
   paidBySourceId: string
+  paidBy: Array<{ sourceId: string; shares: number }>
   paidFor: Array<{ sourceId: string; shares: number }>
   splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
   recurrenceRule: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
@@ -20,6 +22,7 @@ export type NormalizedSourceExpense = {
 }
 
 export type NormalizedSource = {
+  provider: 'SPLIIT' | 'SPLITWISE'
   sourceGroupId: string
   sourceUrl: string | null
   name: string
