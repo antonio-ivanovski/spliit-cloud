@@ -114,7 +114,10 @@ test.describe('Group Sharing', () => {
     }
   })
 
-  test('shared URL navigation works correctly', async ({ page, context }) => {
+  test('shared URL navigation works correctly', async ({
+    page,
+    context: _context,
+  }) => {
     const groupName = `share navigation ${randomId(4)}`
 
     await page.goto('/')
@@ -123,7 +126,7 @@ test.describe('Group Sharing', () => {
     await page.goto(`/groups/${groupId}/expenses`)
 
     const currentUrl = page.url()
-    const extractedGroupId = extractGroupId(currentUrl)
+    const _extractedGroupId = extractGroupId(currentUrl)
 
     // Simulate navigating via a shared URL
     const shareUrl = `${page.url()}?ref=share`

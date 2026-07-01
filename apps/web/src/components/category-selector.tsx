@@ -19,7 +19,7 @@ import {
 import { useMediaQuery } from '@/lib/hooks'
 import type { DEFAULT_CATEGORIES } from '@spliit/domain'
 import { type Category, type CategoryId } from '@spliit/domain'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -39,17 +39,10 @@ export function CategorySelector({
   disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState<CategoryId>(defaultValue)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  // allow overwriting currently selected category from outside
-  useEffect(() => {
-    setValue(defaultValue)
-    onValueChange(defaultValue)
-  }, [defaultValue])
-
   const selectedCategory =
-    categories.find((category) => category.id === value) ?? categories[0]
+    categories.find((category) => category.id === defaultValue) ?? categories[0]
 
   if (isDesktop) {
     return (
@@ -66,7 +59,6 @@ export function CategorySelector({
           <CategoryCommand
             categories={categories}
             onValueChange={(id) => {
-              setValue(id)
               onValueChange(id)
               setOpen(false)
             }}
@@ -90,7 +82,6 @@ export function CategorySelector({
         <CategoryCommand
           categories={categories}
           onValueChange={(id) => {
-            setValue(id)
             onValueChange(id)
             setOpen(false)
           }}

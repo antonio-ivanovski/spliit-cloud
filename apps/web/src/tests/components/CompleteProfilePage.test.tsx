@@ -17,8 +17,8 @@ vi.mock('@tanstack/react-router', () => ({
   }),
   useNavigate: () => mockNavigate,
   Navigate: ({
-    to,
-    search,
+    to: _to,
+    search: _search,
   }: {
     to: string
     search?: Record<string, unknown>

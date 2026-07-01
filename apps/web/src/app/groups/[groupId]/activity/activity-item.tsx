@@ -11,12 +11,8 @@ import { Trans, useTranslation } from 'react-i18next'
 export type Activity =
   AppRouterOutput['groups']['activities']['list']['activities'][number]
 
-const ActivityType = {
-  UPDATE_GROUP: 'UPDATE_GROUP',
-  CREATE_EXPENSE: 'CREATE_EXPENSE',
-  UPDATE_EXPENSE: 'UPDATE_EXPENSE',
-  DELETE_EXPENSE: 'DELETE_EXPENSE',
-} as const
+type ActivityType =
+  'UPDATE_GROUP' | 'CREATE_EXPENSE' | 'UPDATE_EXPENSE' | 'DELETE_EXPENSE'
 
 type ActivitySummaryKey =
   | 'Activity.settingsModified'
@@ -24,10 +20,7 @@ type ActivitySummaryKey =
   | 'Activity.expenseUpdated'
   | 'Activity.expenseDeleted'
 
-const summaryKeyByActivityType: Record<
-  (typeof ActivityType)[keyof typeof ActivityType],
-  ActivitySummaryKey
-> = {
+const summaryKeyByActivityType: Record<ActivityType, ActivitySummaryKey> = {
   UPDATE_GROUP: 'Activity.settingsModified',
   CREATE_EXPENSE: 'Activity.expenseCreated',
   UPDATE_EXPENSE: 'Activity.expenseUpdated',

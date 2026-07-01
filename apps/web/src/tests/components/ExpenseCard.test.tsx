@@ -1,3 +1,4 @@
+import type { GroupExpense } from '@/lib/api'
 import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -47,18 +48,18 @@ import { useActiveUser } from '@/lib/hooks'
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
 
-function makeExpense(overrides: Record<string, unknown> = {}): any {
+function makeExpense(overrides: Record<string, unknown> = {}): GroupExpense {
   return {
     id: 'exp-1',
     title: 'Dinner',
-    amount: 3000, // €30.00
+    amount: 3000,
     expenseDate: new Date('2025-06-15T00:00:00.000Z'),
     createdAt: new Date('2025-06-15T00:00:00.000Z'),
-    categoryId: 'general' as const,
-    recurrenceRule: 'NONE' as const,
+    categoryId: 'general',
+    recurrenceRule: 'NONE',
     isReimbursement: false,
-    splitMode: 'EVENLY' as const,
-    paidBySplitMode: 'BY_AMOUNT' as const,
+    splitMode: 'EVENLY',
+    paidBySplitMode: 'BY_AMOUNT',
     paidByList: [
       { ledgerParticipant: { id: 'user-alice', name: 'Alice' }, shares: 3000 },
     ],
@@ -71,8 +72,12 @@ function makeExpense(overrides: Record<string, unknown> = {}): any {
     category: { id: 'general', grouping: 'Food and Drink', name: 'Dining Out' },
     _count: { documents: 0 },
     items: [],
+    itemizedRemainder: {
+      splitMode: 'EVENLY',
+      paidFor: [{ participant: 'user-alice', shares: 1 }],
+    },
     ...overrides,
-  }
+  } as unknown as GroupExpense
 }
 
 // ── Tests ───────────────────────────────────────────────────────────────

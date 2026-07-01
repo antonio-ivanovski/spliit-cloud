@@ -30,6 +30,7 @@ import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { formatCurrency } from '@/lib/utils'
+import type { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
   Currency,
@@ -56,7 +57,7 @@ export function BasicDetailsCard(props: {
   setIsIncome: Dispatch<SetStateAction<boolean>>
   isCreate: boolean
   extractCategoryMutation: ReturnType<
-    typeof import('@/trpc/client').trpc.ai.extractCategoryFromTitle.useMutation
+    typeof trpc.ai.extractCategoryFromTitle.useMutation
   >
   runtimeFeatureFlags: RuntimeFeatureFlags
   originalCurrency: Currency

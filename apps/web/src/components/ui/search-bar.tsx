@@ -16,7 +16,7 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
 
     const setValue = (v: string) => {
       _setValue(v)
-      onValueChange && onValueChange(v)
+      onValueChange?.(v)
     }
 
     return (

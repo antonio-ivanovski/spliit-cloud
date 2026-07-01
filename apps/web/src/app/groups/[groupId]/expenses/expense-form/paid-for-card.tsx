@@ -58,8 +58,14 @@ export function PaidForCard(props: {
   sExpense: 'Expense' | 'Income'
   setManuallyEditedParticipants: Dispatch<SetStateAction<Set<string>>>
 }) {
-  const { form, group, groupCurrency, payerCurrency, readOnly, sExpense } =
-    props
+  const {
+    form,
+    group,
+    groupCurrency,
+    payerCurrency: _payerCurrency,
+    readOnly,
+    sExpense,
+  } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   const originalCurrencyCode = useWatch({
@@ -511,9 +517,7 @@ export function PaidForCard(props: {
       <LeaveItemizedDialog
         open={!!pendingModeChange}
         targetModeLabel={
-          pendingModeChange
-            ? t(paidForOptionKeys[pendingModeChange.to])
-            : ''
+          pendingModeChange ? t(paidForOptionKeys[pendingModeChange.to]) : ''
         }
         onCancel={() => setPendingModeChange(null)}
         onConfirm={() => {

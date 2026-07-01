@@ -163,9 +163,7 @@ describe('PaidForSplitOptionCards', () => {
   })
 
   it('selected option is aria-checked="true" with data-state="checked"', () => {
-    render(
-      <PaidForSplitOptionCards value="BY_SHARES" onChange={vi.fn()} />,
-    )
+    render(<PaidForSplitOptionCards value="BY_SHARES" onChange={vi.fn()} />)
     const selected = screen.getByRole('radio', { name: /by shares/i })
     expect(selected).toHaveAttribute('aria-checked', 'true')
     expect(selected).toHaveAttribute('data-state', 'checked')
@@ -176,11 +174,7 @@ describe('PaidForSplitOptionCards', () => {
 
   it('disabled when readOnly is true', () => {
     render(
-      <PaidForSplitOptionCards
-        value="EVENLY"
-        onChange={vi.fn()}
-        readOnly
-      />,
+      <PaidForSplitOptionCards value="EVENLY" onChange={vi.fn()} readOnly />,
     )
     screen.getAllByRole('radio').forEach((r) => expect(r).toBeDisabled())
   })

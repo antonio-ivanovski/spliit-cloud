@@ -65,7 +65,7 @@ const featureI18nKeys = {
 >
 
 export default function HomePage() {
-  const { t } = useTranslation()
+  const { t: _t } = useTranslation()
   const { data: account, isPending } = useCurrentAccount()
 
   if (!isPending && !account) {

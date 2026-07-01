@@ -33,7 +33,7 @@ import {
 } from './members-hooks'
 
 export function InviteCard({
-  groupId,
+  groupId: _groupId,
   groupName,
   createMutation,
   createLinkMutation,

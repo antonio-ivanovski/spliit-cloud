@@ -94,7 +94,7 @@ export async function createExpensesViaAPI(
         recurrenceRule?: RecurrenceRule | 'NONE'
       }>
     | number, // If number, creates that many expenses with default values
-  payerNames?: string[], // Only used when first param is a number
+  _payerNames?: string[], // Only used when first param is a number
 ): Promise<string[]> {
   const trpc = createTrpcClient(page)
 

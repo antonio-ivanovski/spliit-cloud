@@ -74,7 +74,7 @@ describe('ResetPasswordPage', () => {
 
   it('submission error shows alert', async () => {
     // Suppress the expected unhandled rejection from mutateAsync
-    const onUnhandled = (reason: unknown) => {
+    const onUnhandled = (_reason: unknown) => {
       // swallow — the mutation error is expected
     }
     process.on('unhandledRejection', onUnhandled)

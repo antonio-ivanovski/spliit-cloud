@@ -47,7 +47,7 @@ export function GroupLayoutClient({
         variant: 'destructive',
       })
     }
-  }, [data])
+  }, [data, tNotFound, toast])
 
   // Unauthenticated visitors carrying a link-invite token are bounced
   // through the home auth panel with a redirect back here, so the

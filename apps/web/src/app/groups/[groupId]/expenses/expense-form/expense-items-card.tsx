@@ -27,11 +27,7 @@ import type { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ExpenseItemRow, expenseItemGridClass } from './expense-item-row'
-import {
-  isFillerItem,
-  type ExpenseFormDisplayItem,
-  withAutoOtherFiller,
-} from './use-auto-other-filler'
+import { isFillerItem, withAutoOtherFiller } from './use-auto-other-filler'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 type EditingTarget = { kind: 'item'; index: number } | { kind: 'filler' }
@@ -254,10 +250,7 @@ export function ExpenseItemsCard({
                   </span>
                 </div>
                 <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                  <SummarizeParticipants
-                    item={fillerItem}
-                    group={group}
-                  />
+                  <SummarizeParticipants item={fillerItem} group={group} />
                 </p>
               </div>
               {!readOnly && (

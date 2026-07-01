@@ -8,15 +8,6 @@ import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-const enforceCurrencyPattern = (value: string) =>
-  value
-    .replace(/^\s*-/, '_') // replace leading minus with _
-    .replace(/[.,]/, '#') // replace first comma with #
-    .replace(/[-.,]/g, '') // remove other minus and commas characters
-    .replace(/_/, '-') // change back _ to minus
-    .replace(/#/, '.') // change back # to dot
-    .replace(/[^-\d.]/g, '') // remove all non-numeric characters
-
 export function useExpenseCurrencyConversion(args: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
@@ -88,7 +79,7 @@ export function useExpenseCurrencyConversion(args: {
     if (!usingCustomConversionRate && exchangeRate.data) {
       args.form.setValue('conversionRate', exchangeRate.data)
     }
-  }, [exchangeRate.data, usingCustomConversionRate])
+  }, [exchangeRate.data, usingCustomConversionRate, args.form])
 
   // Income detection tracks the typed amount directly (it is in the
   // selected expense currency; signedness is currency-agnostic).
@@ -114,7 +105,7 @@ export function useExpenseCurrencyConversion(args: {
     return Number.isNaN(converted) ? undefined : converted
   })()
 
-  let conversionRateMessage = ''
+  let conversionRateMessage
   if (exchangeRate.isLoading) {
     conversionRateMessage = t('conversionRateState.loading')
   } else {

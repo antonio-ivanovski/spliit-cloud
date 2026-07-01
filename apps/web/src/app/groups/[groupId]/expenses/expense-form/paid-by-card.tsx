@@ -20,7 +20,7 @@ import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { type SplitMode } from '@spliit/domain'
 import type { SetStateAction } from 'react'
-import { useEffect, type Dispatch } from 'react'
+import { useCallback, useEffect, type Dispatch } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -52,11 +52,12 @@ export function PaidByCard(props: {
   const amount = useWatch({ control: form.control, name: 'amount' })
 
   const singlePayerTargetAmount = Number(amount) || 0
-  const singlePayerPaidByList = (
-    participant: string,
-  ): ExpenseFormInputValues['paidByList'] => [
-    { participant, shares: singlePayerTargetAmount },
-  ]
+  const singlePayerPaidByList = useCallback(
+    (participant: string): ExpenseFormInputValues['paidByList'] => [
+      { participant, shares: singlePayerTargetAmount },
+    ],
+    [singlePayerTargetAmount],
+  )
   const initialMultiPayerShare = (splitMode: SplitMode) =>
     splitMode === 'BY_AMOUNT' ? singlePayerTargetAmount : 1
 
@@ -93,7 +94,7 @@ export function PaidByCard(props: {
     form.setValue('paidByList', singlePayerPaidByList(list[0].participant), {
       shouldValidate: true,
     })
-  }, [singlePayerTargetAmount, isMultiPayer])
+  }, [singlePayerTargetAmount, isMultiPayer, form, singlePayerPaidByList])
 
   return (
     <Card className="mt-4">
@@ -282,9 +283,7 @@ export function PaidByCard(props: {
                   >
                     <SelectTrigger>
                       <SelectValue
-                        placeholder={
-                          t('Expense.paidByField.placeholder')
-                        }
+                        placeholder={t('Expense.paidByField.placeholder')}
                       />
                     </SelectTrigger>
                     <SelectContent>

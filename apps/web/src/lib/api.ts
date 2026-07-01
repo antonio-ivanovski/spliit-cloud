@@ -11,7 +11,9 @@ export type GroupExpenses =
 export type GroupExpense = GroupExpenses[number]
 
 export async function getGroup(_groupId: string): Promise<Group | null> {
-  throw new Error('getGroup is not available on the client; use trpc.groups.get')
+  throw new Error(
+    'getGroup is not available on the client; use trpc.groups.get',
+  )
 }
 export async function getGroups(_groupIds: string[]): Promise<Groups> {
   throw new Error(

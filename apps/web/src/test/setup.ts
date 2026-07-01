@@ -78,7 +78,7 @@ if (!HTMLDialogElement.prototype.close) {
 
 // ── Suppress Radix UI "missing data-state" act() warnings ──────────────
 let rafHandle = 0
-vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+vi.stubGlobal('requestAnimationFrame', (_cb: FrameRequestCallback) => {
   rafHandle++
   return rafHandle
 })
@@ -89,7 +89,7 @@ vi.stubGlobal('cancelAnimationFrame', () => {})
 // from the prototype lets userEvent.setup() attach its own stub.
 const navProto = Object.getPrototypeOf(navigator)
 if (navProto && Object.getOwnPropertyDescriptor(navProto, 'clipboard')) {
-  delete (navProto as any).clipboard
+  delete (navProto as { clipboard?: PropertyDescriptor }).clipboard
 }
 Object.defineProperty(navigator, 'clipboard', {
   writable: true,

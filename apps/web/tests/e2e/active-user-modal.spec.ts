@@ -207,7 +207,7 @@ test.describe('Active User Modal', () => {
 
     // Verify localStorage was NOT set (because suppressActiveUserModal: false)
     // The modal should appear if we reload
-    await page.evaluate((gId) => {
+    await page.evaluate((_gId) => {
       localStorage.removeItem('newGroup-activeUser')
     }, groupId)
     await page.reload()

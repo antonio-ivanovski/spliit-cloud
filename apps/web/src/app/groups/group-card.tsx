@@ -21,7 +21,6 @@ import type { AccountGroup } from './group-buckets'
 
 export function GroupCard({
   group,
-  variant,
   onToggleStar,
   onToggleHidden,
   onToggleArchived,

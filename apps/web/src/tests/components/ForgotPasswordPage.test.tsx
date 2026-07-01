@@ -19,7 +19,12 @@ vi.mock('@tanstack/react-router', () => ({
   getRouteApi: () => ({
     useSearch: () => ({ email: undefined }),
   }),
-  Link: ({ to, children, search, ...props }: Record<string, unknown>) => (
+  Link: ({
+    to,
+    children,
+    search: _search,
+    ...props
+  }: Record<string, unknown>) => (
     <a href={to as string} {...props}>
       {children as React.ReactNode}
     </a>

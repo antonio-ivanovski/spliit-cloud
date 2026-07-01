@@ -18,7 +18,7 @@ export function GroupTabs({ groupId }: Props) {
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const pathname = usePathname()
   const value =
-    pathname.replace(/\/groups\/[^\/]+\/([^/]+).*/, '$1') || 'expenses'
+    pathname.replace(/\/groups\/[^/]+\/([^/]+).*/, '$1') || 'expenses'
   const router = useRouter()
   const utils = trpc.useUtils()
   const { toast } = useToast()

@@ -1,9 +1,19 @@
 import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form'
+import type {
+  GroupShape,
+  LoadedExpense,
+} from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
 import { fireEvent, render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+// ── Helper types ────────────────────────────────────────────────────────
+
+interface MockConversionRate {
+  toNumber(): number
+}
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -187,7 +197,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -203,7 +213,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -216,8 +226,8 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={mockExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -238,12 +248,12 @@ describe('ExpenseForm', () => {
       ...mockExpense,
       originalCurrency: 'EUR',
       originalAmount: 5000, // €50.00 in cents (stored as minor units)
-      conversionRate: { toNumber: () => 1.1 } as any,
+      conversionRate: { toNumber: () => 1.1 } as MockConversionRate,
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expenseWithConversion as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expenseWithConversion as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -273,16 +283,16 @@ describe('ExpenseForm', () => {
             participants: [
               { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
             ],
-          } as any
+          } as unknown as GroupShape
         }
         expense={
           {
             ...mockExpense,
             originalCurrency: 'EUR',
             originalAmount: 5000,
-            conversionRate: { toNumber: () => 1.1 } as any,
+            conversionRate: { toNumber: () => 1.1 } as MockConversionRate,
             paidFor: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
-          } as any
+          } as unknown as LoadedExpense
         }
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -310,16 +320,16 @@ describe('ExpenseForm', () => {
             participants: [
               { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
             ],
-          } as any
+          } as unknown as GroupShape
         }
         expense={
           {
             ...mockExpense,
             originalCurrency: 'USD',
             originalAmount: 5000,
-            conversionRate: { toNumber: () => 1 } as any,
+            conversionRate: { toNumber: () => 1 } as MockConversionRate,
             paidFor: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
-          } as any
+          } as unknown as LoadedExpense
         }
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -340,7 +350,7 @@ describe('ExpenseForm', () => {
   it('renders a single editable Amount field (no separate "Amount to convert")', () => {
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -364,7 +374,7 @@ describe('ExpenseForm', () => {
     })
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -393,7 +403,7 @@ describe('ExpenseForm', () => {
     })
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -429,7 +439,7 @@ describe('ExpenseForm', () => {
     })
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -469,7 +479,7 @@ describe('ExpenseForm', () => {
     })
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -498,7 +508,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -533,7 +543,7 @@ describe('ExpenseForm', () => {
             participants: [
               { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
             ],
-          } as any
+          } as unknown as GroupShape
         }
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -569,7 +579,7 @@ describe('ExpenseForm', () => {
   it('split mode selector is visible by default', () => {
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -586,8 +596,8 @@ describe('ExpenseForm', () => {
     const onDelete = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={mockExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
         onSubmit={onSubmit}
         onDelete={onDelete}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -602,7 +612,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -617,7 +627,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
         readOnly
@@ -642,7 +652,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -679,7 +689,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -692,7 +702,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -706,7 +716,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -720,7 +730,7 @@ describe('ExpenseForm', () => {
   it('create mode opens with a single-payer dropdown by default', () => {
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -749,7 +759,7 @@ describe('ExpenseForm', () => {
   it('toggling multi-payer options reveals the multi-payer breakdown', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -787,8 +797,8 @@ describe('ExpenseForm', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={singlePayerExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={singlePayerExpense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -820,8 +830,8 @@ describe('ExpenseForm', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={multiPayerExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={multiPayerExpense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -856,8 +866,8 @@ describe('ExpenseForm', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={multiPayerEvenlyExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={multiPayerEvenlyExpense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -886,7 +896,7 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -922,7 +932,7 @@ describe('ExpenseForm', () => {
   it('clears paid-by zero-share error after amount is entered in evenly mode', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn().mockResolvedValue(undefined)}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
@@ -988,8 +998,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1013,8 +1023,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1038,8 +1048,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1062,8 +1072,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1086,8 +1096,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1119,8 +1129,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     }
     render(
       <ExpenseForm
-        group={groupWith3 as any}
-        expense={expense as any}
+        group={groupWith3 as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1143,8 +1153,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1170,8 +1180,8 @@ describe('ExpenseForm Total/Missing footer (paid for)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1195,8 +1205,8 @@ describe('ExpenseForm Total/Missing footer (paid for)', () => {
     }
     render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={expense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1355,7 +1365,7 @@ describe('ExpenseForm option-card transitions', () => {
   it('paid-by: single payer \u2192 multiple by percentage', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1386,8 +1396,8 @@ describe('ExpenseForm option-card transitions', () => {
     }
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={multiPayerByPercentage as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={multiPayerByPercentage as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1424,8 +1434,8 @@ describe('ExpenseForm option-card transitions', () => {
     }
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={multiPayerExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={multiPayerExpense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1451,7 +1461,7 @@ describe('ExpenseForm option-card transitions', () => {
   it('paid-for: evenly \u2192 by amount shows per-participant amount inputs', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         expense={
           {
             ...mockExpense,
@@ -1461,7 +1471,7 @@ describe('ExpenseForm option-card transitions', () => {
               { ledgerParticipantId: 'lp-1', shares: 1 },
               { ledgerParticipantId: 'lp-2', shares: 1 },
             ],
-          } as any
+          } as unknown as LoadedExpense
         }
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -1493,8 +1503,8 @@ describe('BY_SHARES default shares on transition', () => {
   it('single → multi-by-shares: shares = 1', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={singlePayerExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={singlePayerExpense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1515,8 +1525,8 @@ describe('BY_SHARES default shares on transition', () => {
   it('single → multi-by-percentage: percentages sum to 100', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={singlePayerExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={singlePayerExpense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1537,8 +1547,8 @@ describe('BY_SHARES default shares on transition', () => {
   it('single → multi-by-amount: shares split evenly', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
-        expense={singlePayerExpense as any}
+        group={mockGroup as unknown as GroupShape}
+        expense={singlePayerExpense as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
@@ -1563,7 +1573,7 @@ describe('ParticipantShareRow click behavior', () => {
   it('clicking a participant row (name text) toggles the selection', () => {
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         expense={
           {
             ...mockExpense,
@@ -1572,7 +1582,7 @@ describe('ParticipantShareRow click behavior', () => {
               { ledgerParticipantId: 'lp-1', shares: 2500 },
               { ledgerParticipantId: 'lp-2', shares: 2500 },
             ],
-          } as any
+          } as unknown as LoadedExpense
         }
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -1607,7 +1617,7 @@ describe('ParticipantShareRow click behavior', () => {
   it('clicking the share input does NOT toggle the checkbox', async () => {
     const { user } = render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         expense={
           {
             ...mockExpense,
@@ -1616,7 +1626,7 @@ describe('ParticipantShareRow click behavior', () => {
               { ledgerParticipantId: 'lp-1', shares: 2500 },
               { ledgerParticipantId: 'lp-2', shares: 2500 },
             ],
-          } as any
+          } as unknown as LoadedExpense
         }
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -1650,7 +1660,7 @@ describe('ParticipantShareRow click behavior', () => {
   it('participant row applies cursor-pointer to the wrapper when enabled', () => {
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         expense={
           {
             ...mockExpense,
@@ -1659,7 +1669,7 @@ describe('ParticipantShareRow click behavior', () => {
               { ledgerParticipantId: 'lp-1', shares: 2500 },
               { ledgerParticipantId: 'lp-2', shares: 2500 },
             ],
-          } as any
+          } as unknown as LoadedExpense
         }
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
@@ -1675,7 +1685,7 @@ describe('ParticipantShareRow click behavior', () => {
   it('participant row applies cursor-default to the wrapper when read-only', () => {
     render(
       <ExpenseForm
-        group={mockGroup as any}
+        group={mockGroup as unknown as GroupShape}
         expense={
           {
             ...mockExpense,
@@ -1684,7 +1694,7 @@ describe('ParticipantShareRow click behavior', () => {
               { ledgerParticipantId: 'lp-1', shares: 2500 },
               { ledgerParticipantId: 'lp-2', shares: 2500 },
             ],
-          } as any
+          } as unknown as LoadedExpense
         }
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}

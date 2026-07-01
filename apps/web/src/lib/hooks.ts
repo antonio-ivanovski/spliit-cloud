@@ -5,51 +5,33 @@ import dayjs from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 
 export function useMediaQuery(query: string): boolean {
-  const getMatches = (query: string): boolean => {
+  const [matches, setMatches] = useState<boolean>(() => {
     // Prevents SSR issues
     if (typeof window !== 'undefined') {
       return window.matchMedia(query).matches
     }
     return false
-  }
-
-  const [matches, setMatches] = useState<boolean>(getMatches(query))
-
-  function handleChange() {
-    setMatches(getMatches(query))
-  }
+  })
 
   useEffect(() => {
     const matchMedia = window.matchMedia(query)
 
-    // Triggered at the first client-side load and if query changes
-    handleChange()
-
-    // Listen matchMedia
-    if (matchMedia.addListener) {
-      matchMedia.addListener(handleChange)
-    } else {
-      matchMedia.addEventListener('change', handleChange)
+    const handleChange = () => {
+      setMatches(matchMedia.matches)
     }
+
+    matchMedia.addEventListener('change', handleChange)
 
     return () => {
-      if (matchMedia.removeListener) {
-        matchMedia.removeListener(handleChange)
-      } else {
-        matchMedia.removeEventListener('change', handleChange)
-      }
+      matchMedia.removeEventListener('change', handleChange)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
 
   return matches
 }
 
 export function useBaseUrl() {
-  const [baseUrl, setBaseUrl] = useState<string | null>(null)
-  useEffect(() => {
-    setBaseUrl(window.location.origin)
-  }, [])
+  const [baseUrl] = useState(() => window.location.origin)
   return baseUrl
 }
 
@@ -62,23 +44,20 @@ export function useBaseUrl() {
  * `localStorage`. Callers that are not inside a group layout will get
  * `null`. Returns `null` while the group is still loading.
  */
-export function useActiveUser(groupId?: string) {
-  let ctx: ReturnType<typeof useCurrentGroup> | null = null
+function useCurrentGroupSafe(): ReturnType<typeof useCurrentGroup> | null {
   try {
-    ctx = useCurrentGroup()
+    return useCurrentGroup()
   } catch {
-    ctx = null
+    return null
   }
-  const [activeUser, setActiveUser] = useState<string | null>(null)
+}
 
-  useEffect(() => {
-    if (ctx && !ctx.isLoading && ctx.groupId === groupId) {
-      setActiveUser(ctx.currentLedgerParticipantId)
-    }
-  }, [ctx, groupId])
+export function useActiveUser(groupId?: string) {
+  const ctx = useCurrentGroupSafe()
 
   if (!ctx || ctx.groupId !== groupId) return null
-  return activeUser
+  if (ctx.isLoading) return null
+  return ctx.currentLedgerParticipantId
 }
 
 type UseCurrencyRateResult = {

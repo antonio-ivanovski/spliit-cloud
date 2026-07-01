@@ -12,7 +12,7 @@ import type {
 import { applyAutoMatch, buildImportBatch } from '@spliit/domain/import'
 import { getRouteApi } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ConfirmStep } from './confirm-step'
 import {
@@ -91,6 +91,27 @@ export function ImportGroupWizard() {
     step: state.step,
     nav: EMPTY_NAV,
   })
+
+  // Source URL prefill
+  const {
+    data: sourcePreview,
+    error: sourcePreviewError,
+    submit,
+  } = useImportSource()
+
+  // Derived pending toast message from prefill errors. Shown via a
+  // dedicated useEffect — no setState needed in the effect, so it
+  // avoids the set-state-in-effect lint rule.
+  const pendingToast = useMemo(() => {
+    if (state.source) return null
+    if (sourcePreview && sourcePreview.kind !== 'OK') {
+      return sourcePreview.kind === 'NOT_FOUND'
+        ? t('Groups.Import.notFound')
+        : sourcePreview.message
+    }
+    if (sourcePreviewError) return sourcePreviewError.message
+    return null
+  }, [sourcePreview, sourcePreviewError, state.source, t])
 
   const { data: destinationGroupData } = trpc.groups.get.useQuery(
     { groupId: state.targetGroupId! },
@@ -183,40 +204,58 @@ export function ImportGroupWizard() {
     [account?.id],
   )
 
-  // Source URL prefill
-  const {
-    data: sourcePreview,
-    error: sourcePreviewError,
-    submit,
-  } = useImportSource()
   useEffect(() => {
     if (prefillSourceUrl && !state.source) {
       submit(prefillSourceUrl)
     }
   }, [prefillSourceUrl, state.source, submit])
-  useEffect(() => {
-    if (state.source) return
-    if (!sourcePreview) return
+
+  // Process source preview results during render (setState during
+  // render with a functional updater that guards against re-processing
+  // is the documented React pattern — it avoids calling setState
+  // synchronously in an effect).
+  if (!state.source && sourcePreview) {
     if (sourcePreview.kind === 'OK') {
-      handleSourceLoaded(sourcePreview.source)
-      return
-    }
-    if (sourcePreview.kind === 'NOT_FOUND') {
-      toast({
-        description: t('Groups.Import.notFound'),
-        variant: 'destructive',
+      setState((s) => {
+        if (s.source) return s
+        const participants: ParticipantMappingState[] =
+          sourcePreview.source.participants.map((p, i) => ({
+            key: `${p.sourceId}-${i}`,
+            source: p,
+            mode: i === 0 ? 'LINK_ACCOUNT' : 'INVITE_BY_EMAIL',
+            linkedAccountId: i === 0 ? account?.id : undefined,
+            inviteEmail: i === 0 ? undefined : '',
+          }))
+        return {
+          ...s,
+          source: sourcePreview.source,
+          participants,
+          groupFormValues: initialGroupFormValues(sourcePreview.source),
+          step: 'destination',
+        }
       })
     } else {
-      toast({ description: sourcePreview.message, variant: 'destructive' })
+      setState((s) => {
+        if (s.source) return s
+        return { ...s, step: 'source', prefillSourceUrl: null }
+      })
     }
-    setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
-  }, [sourcePreview, state.source, handleSourceLoaded, toast, t])
+  }
+
+  if (!state.source && sourcePreviewError) {
+    setState((s) => {
+      if (s.source) return s
+      return { ...s, step: 'source', prefillSourceUrl: null }
+    })
+  }
+
+  // Toast side effect for prefill errors. Derived via useMemo so no
+  // setState call is needed inside the effect body.
   useEffect(() => {
-    if (state.source) return
-    if (!sourcePreviewError) return
-    toast({ description: sourcePreviewError.message, variant: 'destructive' })
-    setState((s) => ({ ...s, step: 'source', prefillSourceUrl: null }))
-  }, [sourcePreviewError, state.source, toast])
+    if (pendingToast) {
+      toast({ description: pendingToast, variant: 'destructive' })
+    }
+  }, [pendingToast, toast])
 
   const handleSourceError = useCallback(
     (message: string) => {

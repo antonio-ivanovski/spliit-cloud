@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/popover'
 import { type DisplayCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -37,17 +37,10 @@ export function CurrencySelector({
   disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState<string>(defaultValue)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  // allow overwriting currently selected currency from outside
-  useEffect(() => {
-    setValue(defaultValue)
-    onValueChange(defaultValue)
-  }, [defaultValue])
-
   const selectedCurrency =
-    currencies.find((currency) => (currency.code ?? '') === value) ??
+    currencies.find((currency) => (currency.code ?? '') === defaultValue) ??
     currencies[0]
 
   if (isDesktop) {
@@ -65,7 +58,6 @@ export function CurrencySelector({
           <CurrencyCommand
             currencies={currencies}
             onValueChange={(code) => {
-              setValue(code)
               onValueChange(code)
               setOpen(false)
             }}
@@ -89,7 +81,6 @@ export function CurrencySelector({
         <CurrencyCommand
           currencies={currencies}
           onValueChange={(id) => {
-            setValue(id)
             onValueChange(id)
             setOpen(false)
           }}

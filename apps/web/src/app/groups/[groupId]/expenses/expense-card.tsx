@@ -46,9 +46,7 @@ function ItemsPreview({
           {formatCurrency(currency, item.amount, locale)}
         </div>
       ))}
-      {remaining > 0 && (
-        <div>{t('items.more', { count: remaining })}</div>
-      )}
+      {remaining > 0 && <div>{t('items.more', { count: remaining })}</div>}
     </div>
   )
 }

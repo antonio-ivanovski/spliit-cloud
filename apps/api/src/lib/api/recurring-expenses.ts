@@ -96,11 +96,8 @@ export async function createRecurringExpenses() {
         newExpenseDate,
       )
 
-      const {
-        items,
-        itemizedRemainder,
-        ...destructeredCurrentExpenseRecord
-      } = currentExpenseRecord
+      const { items, itemizedRemainder, ...destructeredCurrentExpenseRecord } =
+        currentExpenseRecord
 
       const newExpense = await prisma
         .$transaction(async (transaction) => {

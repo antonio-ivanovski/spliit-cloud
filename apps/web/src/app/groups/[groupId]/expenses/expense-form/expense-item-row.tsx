@@ -212,21 +212,21 @@ export function ExpenseItemRow({
                         aria-hidden="true"
                         className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                       />
-                    <Input
-                      aria-label={displayColumnQuantity}
-                      className="h-9 pl-7 pr-2 text-right tabular-nums"
-                      type="text"
-                      disabled={readOnly}
-                      value={(field.value as number) ?? ''}
-                      inputMode="numeric"
-                      step={1}
-                      onChange={(event) =>
-                        field.onChange(
-                          Number(enforceIntegerPattern(event.target.value)) ||
-                            0,
-                        )
-                      }
-                    />
+                      <Input
+                        aria-label={displayColumnQuantity}
+                        className="h-9 pl-7 pr-2 text-right tabular-nums"
+                        type="text"
+                        disabled={readOnly}
+                        value={(field.value as number) ?? ''}
+                        inputMode="numeric"
+                        step={1}
+                        onChange={(event) =>
+                          field.onChange(
+                            Number(enforceIntegerPattern(event.target.value)) ||
+                              0,
+                          )
+                        }
+                      />
                     </div>
                   </FormControl>
                 </FormItem>

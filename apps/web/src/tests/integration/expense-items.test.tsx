@@ -1,3 +1,4 @@
+import type { GroupExpense } from '@/lib/api'
 import {
   cleanupTestAccount,
   createTestSession,
@@ -330,7 +331,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
             recurrenceRule: 'NONE',
             _count: { documents: 0 },
             items: [],
-          } as any
+          } as unknown as GroupExpense
         }
         currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
         groupId={testGroup.id}
@@ -373,11 +374,11 @@ describe('Expense items — ExpenseCard via existing API', () => {
     const listResult = await trpcCall<{
       expenses: Array<{
         id: string
-        items: Array<any>
+        items: Array<{ title: string; amount: number }>
         title: string
         amount: number
-        paidByList: any
-        paidFor: any
+        paidByList: unknown
+        paidFor: unknown
         expenseDate: string
         createdAt: string
       }>
@@ -406,7 +407,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
 
     render(
       <ExpenseCard
-        expense={renderable as any}
+        expense={renderable as unknown as GroupExpense}
         currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
         groupId={testGroup.id}
         participantCount={3}
@@ -454,11 +455,11 @@ describe('Expense items — ExpenseCard via existing API', () => {
     const listResult = await trpcCall<{
       expenses: Array<{
         id: string
-        items: Array<any>
+        items: Array<{ title: string; amount: number }>
         title: string
         amount: number
-        paidByList: any
-        paidFor: any
+        paidByList: unknown
+        paidFor: unknown
         expenseDate: string
         createdAt: string
       }>
@@ -480,7 +481,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
 
     render(
       <ExpenseCard
-        expense={renderable as any}
+        expense={renderable as unknown as GroupExpense}
         currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
         groupId={testGroup.id}
         participantCount={3}
@@ -535,11 +536,11 @@ describe('Expense items — ExpenseCard via existing API', () => {
     const listResult = await trpcCall<{
       expenses: Array<{
         id: string
-        items: Array<any>
+        items: Array<{ title: string; amount: number }>
         title: string
         amount: number
-        paidByList: any
-        paidFor: any
+        paidByList: unknown
+        paidFor: unknown
         expenseDate: string
         createdAt: string
       }>
@@ -562,7 +563,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
 
     render(
       <ExpenseCard
-        expense={renderable as any}
+        expense={renderable as unknown as GroupExpense}
         currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
         groupId={testGroup.id}
         participantCount={3}
