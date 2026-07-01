@@ -4,7 +4,7 @@ import { guessGroupNameFromFilename } from './filename'
 describe('guessGroupNameFromFilename', () => {
   it('derives a name from a personal Splitwise filename', () => {
     expect(
-      guessGroupNameFromFilename('antonio-i-and-dejan-i_2026-06-30_export.csv'),
+      guessGroupNameFromFilename('john-d-and-jane-d_2026-06-30_export.csv'),
     ).toBe('John D. and Jane D.')
   })
 
@@ -50,9 +50,7 @@ describe('guessGroupNameFromFilename', () => {
 
   it('strips the file extension before matching', () => {
     expect(
-      guessGroupNameFromFilename(
-        'antonio-i-and-dejan-i_2026-06-30_export.json',
-      ),
+      guessGroupNameFromFilename('john-d-and-jane-d_2026-06-30_export.json'),
     ).toBe('John D. and Jane D.')
   })
 })
