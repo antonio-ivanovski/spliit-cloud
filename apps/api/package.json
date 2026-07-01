@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "bun --env-file=../../.env --watch src/server.ts",
     "start": "bun --env-file=../../.env run src/server.ts",
+    "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "test": "vitest run --globals src",
     "test:integration": "vitest run --config vitest.integration.config.ts --reporter=verbose"
@@ -38,7 +39,7 @@
     "@types/node": "24.13.2",
     "@types/nodemailer": "^8.0.1",
     "nodemailer-mock": "^2.0.13",
-    "typescript": "7.0.1-rc",
+    "typescript": "6.0.3",
     "vitest": "5.0.0-beta.5"
   }
 }

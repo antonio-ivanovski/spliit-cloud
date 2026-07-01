@@ -49,8 +49,8 @@ const mockLeaveMutation = vi.fn()
 const mockArchiveForSelfMutation = vi.fn()
 
 // Shared mutable state so tests can override query results
-let mockMembersData: { members: any[] } = { members: [] }
-let mockInvitationsData: { invitations: any[] } = { invitations: [] }
+const mockMembersData: { members: any[] } = { members: [] }
+const mockInvitationsData: { invitations: any[] } = { invitations: [] }
 
 // Track onSuccess callbacks so tests can trigger them
 let createMutationOnSuccess: ((data: any) => void) | null = null

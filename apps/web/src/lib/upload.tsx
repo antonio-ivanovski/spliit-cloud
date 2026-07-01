@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
-import { ChangeEvent, InputHTMLAttributes, useRef } from 'react'
+import type { ChangeEvent, InputHTMLAttributes } from 'react'
+import { useRef } from 'react'
 
 const MAX_DIMENSION = 2560
 const JPEG_QUALITY = 0.8

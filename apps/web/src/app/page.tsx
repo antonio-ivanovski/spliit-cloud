@@ -2,9 +2,9 @@ import { AuthPanel } from '@/components/auth/auth-panel'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import type { Image } from 'lucide-react'
 import {
   Cloud,
-  Image,
   Loader2,
   Plus,
   Receipt,

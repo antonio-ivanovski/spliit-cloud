@@ -1,8 +1,8 @@
 import Image from '@/components/app-image'
 import { Button } from '@/components/ui/button'
+import type { CarouselApi } from '@/components/ui/carousel'
 import {
   Carousel,
-  CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
@@ -20,7 +20,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
-import { ExpenseFormInputValues } from '@/lib/schemas'
+import type { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import { formatFileSize } from '@/lib/utils'
 import { Loader2, Plus, Trash, X } from 'lucide-react'

@@ -1,4 +1,4 @@
-import { ImgHTMLAttributes } from 'react'
+import type { ImgHTMLAttributes } from 'react'
 
 type Props = ImgHTMLAttributes<HTMLImageElement> & {
   priority?: boolean

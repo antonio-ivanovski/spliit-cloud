@@ -160,7 +160,7 @@ const ExpenseListForSearch = ({
   return (
     <>
       {Object.values(EXPENSE_GROUPS).map((expenseGroup) => {
-        let groupExpenses = groupedExpensesByDate[expenseGroup]
+        const groupExpenses = groupedExpensesByDate[expenseGroup]
         if (!groupExpenses || groupExpenses.length === 0) return null
 
         return (

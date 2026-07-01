@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import { useTranslation } from 'react-i18next'

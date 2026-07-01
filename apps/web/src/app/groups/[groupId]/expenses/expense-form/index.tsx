@@ -42,7 +42,9 @@ export function ExpenseForm(props: {
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const form = useForm<ExpenseFormInputValues>({
-    resolver: zodResolver(expenseFormInputSchema) as Resolver<ExpenseFormInputValues>,
+    resolver: zodResolver(
+      expenseFormInputSchema,
+    ) as Resolver<ExpenseFormInputValues>,
     defaultValues: buildExpenseFormDefaults({
       isCreate: props.expense === undefined,
       expense: props.expense,

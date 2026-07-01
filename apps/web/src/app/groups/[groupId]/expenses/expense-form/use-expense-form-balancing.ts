@@ -54,7 +54,8 @@ export function useExpenseFormBalancing(args: {
 
       const editedParticipants = Array.from(manuallyEditedParticipants)
       let remainingAmount = totalAmount
-      let remainingParticipants = newPaidFor.length - editedParticipants.length
+      const remainingParticipants =
+        newPaidFor.length - editedParticipants.length
 
       newPaidFor = newPaidFor.map((participant) => {
         if (editedParticipants.includes(participant.participant)) {
@@ -104,7 +105,7 @@ export function useExpenseFormBalancing(args: {
 
       const editedPayers = Array.from(manuallyEditedPayers)
       let remainingAmount = totalAmount
-      let remainingPayers = newPaidByList.length - editedPayers.length
+      const remainingPayers = newPaidByList.length - editedPayers.length
 
       newPaidByList = newPaidByList.map((payer) => {
         if (editedPayers.includes(payer.participant)) {

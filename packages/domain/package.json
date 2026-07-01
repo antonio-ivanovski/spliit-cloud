@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "test": "vitest run --globals src"
   },
@@ -34,7 +35,7 @@
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
     "@types/papaparse": "^5.3.14",
-    "typescript": "7.0.1-rc",
+    "typescript": "6.0.3",
     "vitest": "5.0.0-beta.5"
   }
 }

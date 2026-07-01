@@ -1,7 +1,8 @@
 import { ChevronDown, Loader2 } from 'lucide-react'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
-import { Button, ButtonProps } from '@/components/ui/button'
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -16,11 +17,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useMediaQuery } from '@/lib/hooks'
-import {
-  DEFAULT_CATEGORIES,
-  type Category,
-  type CategoryId,
-} from '@spliit/domain'
+import type { DEFAULT_CATEGORIES } from '@spliit/domain'
+import { type Category, type CategoryId } from '@spliit/domain'
 import { forwardRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 

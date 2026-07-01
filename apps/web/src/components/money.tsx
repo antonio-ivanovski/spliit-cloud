@@ -1,5 +1,5 @@
 import { useLocale } from '@/i18n/react'
-import { Currency } from '@/lib/currency'
+import type { Currency } from '@/lib/currency'
 import { cn, formatCurrency } from '@/lib/utils'
 
 type Props = {

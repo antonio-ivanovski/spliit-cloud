@@ -6,7 +6,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { setUserLocale, useLocale } from '@/i18n/react'
-import { Locale, localeLabels } from '@/i18n/request'
+import type { Locale } from '@/i18n/request'
+import { localeLabels } from '@/i18n/request'
 
 export function LocaleSwitcher() {
   const locale = useLocale() as Locale

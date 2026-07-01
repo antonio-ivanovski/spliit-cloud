@@ -32,9 +32,14 @@
     "i18n": "bun scripts/i18n/src/cli.ts"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "24.13.2",
+    "eslint": "^10.6.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "^3.9.4",
+    "prettier-plugin-organize-imports": "^4.3.0",
     "turbo": "^2.10.2",
-    "typescript": "7.0.1-rc"
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.62.1"
   }
 }

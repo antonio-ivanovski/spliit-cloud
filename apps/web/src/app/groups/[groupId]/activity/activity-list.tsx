@@ -1,7 +1,5 @@
-import {
-  Activity,
-  ActivityItem,
-} from '@/app/groups/[groupId]/activity/activity-item'
+import type { Activity } from '@/app/groups/[groupId]/activity/activity-item'
+import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
 import { Skeleton } from '@/components/ui/skeleton'
 import { trpc } from '@/trpc/client'
 import dayjs, { type Dayjs } from 'dayjs'
@@ -127,7 +125,7 @@ export function ActivityList() {
   return activities.length > 0 ? (
     <div data-testid="activity-list">
       {Object.values(DATE_GROUPS).map((dateGroup) => {
-        let groupActivities = groupedActivitiesByDate[dateGroup]
+        const groupActivities = groupedActivitiesByDate[dateGroup]
         if (!groupActivities || groupActivities.length === 0) return null
         const dateStyle =
           dateGroup == DATE_GROUPS.TODAY || dateGroup == DATE_GROUPS.YESTERDAY

@@ -1,3 +1,4 @@
+import type { LucideIcon, LucideProps } from 'lucide-react'
 import {
   Armchair,
   Baby,
@@ -21,8 +22,6 @@ import {
   Lamp,
   Landmark,
   LibraryBig,
-  LucideIcon,
-  LucideProps,
   Martini,
   Music,
   ParkingMeter,

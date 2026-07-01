@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function currentPathWithSearch(): string {

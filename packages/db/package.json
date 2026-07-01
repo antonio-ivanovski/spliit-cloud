@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "prisma generate --schema prisma/schema.prisma && tsc",
+    "lint": "eslint .",
     "check-types": "prisma generate --schema prisma/schema.prisma && tsc --noEmit",
     "prisma-migrate": "prisma migrate deploy --schema prisma/schema.prisma",
     "prisma-generate": "prisma generate --schema prisma/schema.prisma"
@@ -22,6 +23,6 @@
   "devDependencies": {
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
-    "typescript": "7.0.1-rc"
+    "typescript": "6.0.3"
   }
 }

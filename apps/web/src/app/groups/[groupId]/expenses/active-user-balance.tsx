@@ -1,6 +1,6 @@
 import { Money } from '@/components/money'
 import { getBalances, type BalanceExpense } from '@/lib/balances'
-import { Currency } from '@/lib/currency'
+import type { Currency } from '@/lib/currency'
 import { useActiveUser } from '@/lib/hooks'
 import { useTranslation } from 'react-i18next'
 

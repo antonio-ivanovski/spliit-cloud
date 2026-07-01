@@ -12,9 +12,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { getGroup } from '@/lib/api'
+import type { getGroup } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
-import { GroupFormValues, groupFormSchema } from '@/lib/schemas'
+import type { GroupFormValues } from '@/lib/schemas'
+import { groupFormSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save, UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'

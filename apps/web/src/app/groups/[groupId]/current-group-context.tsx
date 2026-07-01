@@ -1,5 +1,6 @@
 import type { AppRouterOutput } from '@spliit/api/router'
-import { PropsWithChildren, createContext, useContext } from 'react'
+import type { PropsWithChildren } from 'react'
+import { createContext, useContext } from 'react'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 type CurrentMember = NonNullable<
