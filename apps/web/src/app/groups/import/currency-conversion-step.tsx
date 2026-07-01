@@ -278,9 +278,6 @@ function PairConversionCard({
               </span>
             )}
           </div>
-          <p className="mt-1 text-[10px] text-muted-foreground/50">
-            {t('Groups.Import.CurrencyConversion.viaFrankfurter')}
-          </p>
         </OptionCard>
 
         <OptionCard

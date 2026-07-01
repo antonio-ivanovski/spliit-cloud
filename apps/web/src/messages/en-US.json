@@ -320,7 +320,7 @@
       },
       "Done": {
         "importComplete": "Import complete",
-        "description": "Your imported group is ready. You can adjust participants, link unlinked entries to accounts, or edit any expense as usual.",
+        "description": "Your imported group is ready. Compare the imported expenses and balances with the original export. If anything looks wrong, open an import issue on GitHub; import problems are highest priority and will be looked into as soon as possible.",
         "openGroup": "Open group",
         "shareableLinksTitle": "Shareable invite links",
         "shareableLinksDescription": "Copy each link and send it to the matching person. The link is single-use; they join the group as soon as they open it.",
@@ -333,18 +333,18 @@
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
         "fixedRateRow": "1 {source} = {rate} {target}",
-        "customRateLabel": "Use custom rate",
+        "customRateLabel": "Custom rate",
         "fetchingRates": "Fetching exchange rates…",
-        "fixedDescription": "Less accurate but ensures all amounts use the same conversion rate, so the group balance stays net-zero after import.",
+        "fixedDescription": "Use one exchange rate for all expenses in this currency pair. By default, the rate is fetched from Frankfurter for the selected date; you can also enter a custom rate.",
         "fixedTitle": "Fixed rate",
         "noConversionNeeded": "All expenses are in the group's default currency. No currency conversion is needed.",
         "perDateDescription": "More accurate — uses the exchange rate from each expense's actual date.",
-        "perDateSelectedHint": "Uses the historical rate for each expense's date.",
+        "perDateSelectedHint": "Uses the historical exchange rate for each expense's date (Frankfurter API).",
         "perDateTitle": "Per-date conversion",
-        "rateDateLabel": "Rate date",
+        "rateDateLabel": "Frankfurter rate date",
         "ratesError": "Unable to fetch exchange rates. Check your connection and try again.",
         "refresh": "Refresh",
-        "viaFrankfurter": "via Frankfurter"
+        "viaFrankfurter": "Rate fetched from Frankfurter for the selected date."
       }
     }
   },

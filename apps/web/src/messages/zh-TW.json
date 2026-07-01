@@ -320,7 +320,7 @@
         "confirm": "確認",
         "done": "完成",
         "backAriaLabel": "返回",
-        "currencyConversion": "Currency conversion",
+        "currencyConversion": "貨幣轉換",
         "backTo": "返回{step}",
         "continueTo": "繼續到{step}"
       },
@@ -333,7 +333,7 @@
         "fixedTitle": "固定匯率",
         "noConversionNeeded": "所有支出皆使用群組的預設貨幣。無需進行貨幣換算。",
         "perDateDescription": "更精確——使用每筆支出實際日期的匯率。",
-        "perDateSelectedHint": "使用每筆支出日期的歷史匯率。",
+        "perDateSelectedHint": "使用每筆支出日期的歷史匯率（Frankfurter API）。",
         "perDateTitle": "依日期換算",
         "rateDateLabel": "匯率日期",
         "ratesError": "無法取得匯率。請檢查網路連線後重試。",

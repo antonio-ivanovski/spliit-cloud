@@ -320,7 +320,7 @@
         "confirm": "确认",
         "done": "完成",
         "backAriaLabel": "返回",
-        "currencyConversion": "Currency conversion",
+        "currencyConversion": "货币转换",
         "backTo": "返回{step}",
         "continueTo": "继续到{step}"
       },
@@ -333,7 +333,7 @@
         "fixedTitle": "固定汇率",
         "noConversionNeeded": "所有支出都使用群组的默认货币。无需进行货币换算。",
         "perDateDescription": "更准确——使用每笔支出实际日期的汇率。",
-        "perDateSelectedHint": "使用每笔支出日期的历史汇率。",
+        "perDateSelectedHint": "使用每笔支出日期的历史汇率（Frankfurter API）。",
         "perDateTitle": "按日期换算",
         "rateDateLabel": "汇率日期",
         "ratesError": "无法获取汇率。请检查网络连接后重试。",
