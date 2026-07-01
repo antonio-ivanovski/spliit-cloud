@@ -116,10 +116,15 @@ type FrankfurterV2Entry = {
 async function fetchFromProvider(
   date: string,
   base: string,
+  quotes?: string[],
 ): Promise<FrankfurterResponse> {
   let res: Response
   try {
-    res = await fetch(`${FRANKFURTER_BASE_URL}/rates?date=${date}&base=${base}`)
+    const params = new URLSearchParams({ date, base })
+    if (quotes?.length) {
+      params.set('quotes', Array.from(new Set(quotes)).join(','))
+    }
+    res = await fetch(`${FRANKFURTER_BASE_URL}/rates?${params.toString()}`)
   } catch (err) {
     throw new CurrencyRateProviderError(
       'Currency rate provider request failed',
@@ -164,7 +169,11 @@ export async function getCurrencyRate({
   base: string
   target: string
   ttlMs?: number
-  fetchImpl?: (date: string, base: string) => Promise<FrankfurterResponse>
+  fetchImpl?: (
+    date: string,
+    base: string,
+    quotes?: string[],
+  ) => Promise<FrankfurterResponse>
 }): Promise<CurrencyRate> {
   if (!ISO_DATE_RE.test(date)) {
     throw new CurrencyRateProviderError(`Invalid date: ${date}`)
@@ -176,7 +185,7 @@ export async function getCurrencyRate({
   const cached = readCache(key)
   if (cached) return cached
 
-  const payload = await fetchImpl(date, base)
+  const payload = await fetchImpl(date, base, [target])
   const rate = payload.rates[target]
   if (typeof rate !== 'number') {
     throw new CurrencyRateNotFoundError(target)
@@ -240,7 +249,11 @@ export type BatchRateResult =
 export async function getCurrencyRates(
   requests: BatchRateRequest[],
   options: {
-    fetchImpl?: (date: string, base: string) => Promise<FrankfurterResponse>
+    fetchImpl?: (
+      date: string,
+      base: string,
+      quotes?: string[],
+    ) => Promise<FrankfurterResponse>
   } = {},
 ): Promise<BatchRateResult[]> {
   const fetchImpl = options.fetchImpl ?? fetchFromProvider
@@ -299,7 +312,7 @@ export async function getCurrencyRates(
           throw new CurrencyRateProviderError(`Invalid date: ${group.date}`)
         }
 
-        const payload = await fetchImpl(group.date, group.base)
+        const payload = await fetchImpl(group.date, group.base, group.targets)
         for (const target of group.targets) {
           const rate = payload.rates[target]
           if (typeof rate !== 'number') {

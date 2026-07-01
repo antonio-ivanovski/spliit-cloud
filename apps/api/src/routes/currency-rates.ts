@@ -67,7 +67,11 @@ function toResponse(results: BatchRateResult[]): CurrencyRatesResponse {
 export async function postCurrencyRates(
   request: Request,
   options: {
-    fetchImpl?: (date: string, base: string) => Promise<FrankfurterResponse>
+    fetchImpl?: (
+      date: string,
+      base: string,
+      quotes?: string[],
+    ) => Promise<FrankfurterResponse>
   } = {},
 ) {
   let raw: unknown

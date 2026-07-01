@@ -25,12 +25,39 @@ function makePayload(
 }
 
 describe('getCurrencyRate', () => {
+  const originalFetch = globalThis.fetch
+
   beforeEach(() => {
     clearCurrencyRateCache()
   })
 
   afterEach(() => {
+    globalThis.fetch = originalFetch
     clearCurrencyRateCache()
+  })
+
+  it('requests only the target quote from Frankfurter', async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      json: async () => [
+        { date: '2026-06-28', base: 'EUR', quote: 'USD', rate: 1.1401 },
+      ],
+    }))
+    globalThis.fetch = fetchMock as never
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'EUR',
+      target: 'USD',
+    })
+
+    expect(result.rate).toBe(1.1401)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    const url = new URL(fetchMock.mock.calls[0][0] as string)
+    expect(url.pathname).toBe('/v2/rates')
+    expect(url.searchParams.get('date')).toBe('2026-06-28')
+    expect(url.searchParams.get('base')).toBe('EUR')
+    expect(url.searchParams.get('quotes')).toBe('USD')
   })
 
   it('fetches from the provider on cache miss and returns the rate', async () => {
@@ -51,7 +78,7 @@ describe('getCurrencyRate', () => {
       target: 'USD',
     })
     expect(fetchImpl).toHaveBeenCalledTimes(1)
-    expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR')
+    expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR', ['USD'])
   })
 
   it('returns the cached entry on a second call without hitting the provider', async () => {
@@ -240,6 +267,7 @@ describe('getCurrencyRates', () => {
     )
 
     expect(fetchImpl).toHaveBeenCalledTimes(1)
+    expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR', ['USD', 'GBP'])
     expect(currencyRateCacheSize()).toBe(2)
   })
 })

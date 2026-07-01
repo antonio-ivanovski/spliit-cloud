@@ -15,7 +15,11 @@ function makeRequest(body: unknown): Request {
 
 function providerFixture(
   payload: FrankfurterResponse,
-): (date: string, base: string) => Promise<FrankfurterResponse> {
+): (
+  date: string,
+  base: string,
+  quotes?: string[],
+) => Promise<FrankfurterResponse> {
   return vi.fn(async () => payload) as never
 }
 
@@ -120,7 +124,7 @@ describe('postCurrencyRates', () => {
         },
       },
     ])
-    expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR')
+    expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR', ['USD'])
   })
 
   it('surfaces a RATE_NOT_FOUND error for an item the provider omits', async () => {
