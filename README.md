@@ -77,21 +77,17 @@ Spliit Cloud may be useful if you want:
 
 ## Features
 
-- [x] Create a group and share it with friends
-- [x] Create expenses with description
-- [x] Display group balances
-- [x] Create reimbursement expenses
-- [x] Progressive Web App
-- [x] Select all/no participant for expenses
-- [x] Split expenses unevenly
-- [x] Mark a group as favorite
-- [x] Tell the application who you are when opening a group
-- [x] Assign a category to expenses
-- [x] Search for expenses in a group
-- [x] Upload and attach images to expenses
-- [x] Create expense by scanning a receipt
-- [x] Cloud accounts and group synchronization
-- [x] Multi-payer expenses — split the cost paid by several members with per-payer shares
+| Feature                    | Why it matters                                                                                    | Spliit Cloud | Original Spliit |
+| -------------------------- | ------------------------------------------------------------------------------------------------- | ------------ | --------------- |
+| Accounts                   | Your groups follow you across devices instead of living only behind shared links.                 | ✅           | ❌              |
+| Synced groups              | Shared groups stay available from your account, making collaboration more reliable.               | ✅           | ❌              |
+| Splitwise import           | Move existing Splitwise groups into Spliit Cloud without starting from scratch.                   | ✅           | ❌              |
+| Reliable currency handling | Better support for real-world trips and groups that use more than one currency.                   | ✅           | ❓              |
+| Multiple payers            | One expense can be paid by several people, with each payer's contribution tracked correctly.      | ✅           | ❌              |
+| Granular expense items     | Track item-level details inside an expense for more precise splitting.                            | ✅           | ❌              |
+| Improved everyday UI       | Focused papercut fixes make common flows smoother without changing the simple Spliit feel.        | ✅           | ❓              |
+| Active maintenance         | New features, fixes, and self-hosting improvements continue to move forward.                      | ✅           | ❓              |
+| Core Spliit features       | Groups, categories, receipts, balances, reimbursements, advanced splits, PWA support, and no ads. | ✅           | ✅              |
 
 ## Roadmap
 
