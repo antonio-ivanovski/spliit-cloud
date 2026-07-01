@@ -22,7 +22,7 @@ import { z } from 'zod'
 // ("60", "1") are caught and rejected instead of silently passing through
 // the JSON.parse cast.
 const storedSplittingOptionsSchema = z.object({
-  splitMode: z.nativeEnum(SplitModeEnum).default('EVENLY'),
+  splitMode: z.enum(SplitModeEnum).default('EVENLY'),
   paidFor: z
     .array(
       z.object({
