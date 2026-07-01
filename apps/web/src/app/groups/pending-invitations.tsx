@@ -26,13 +26,11 @@ export function PendingInvitations() {
   const invitationsQuery = trpc.invitations.listForAccount.useQuery()
 
   const acceptMutation = trpc.invitations.accept.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       toast({ description: t('invitations.accepted') })
-      await Promise.all([
-        utils.account.groups.invalidate(),
-        utils.invitations.listForAccount.invalidate(),
-      ])
       router.push({ to: '/groups/$groupId', params: { groupId: data.groupId } })
+      utils.account.groups.invalidate()
+      utils.invitations.listForAccount.invalidate()
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })
@@ -40,9 +38,9 @@ export function PendingInvitations() {
   })
 
   const declineMutation = trpc.invitations.decline.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       toast({ description: t('invitations.declined') })
-      await utils.invitations.listForAccount.invalidate()
+      utils.invitations.listForAccount.invalidate()
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })

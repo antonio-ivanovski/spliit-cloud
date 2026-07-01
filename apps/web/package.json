@@ -56,7 +56,6 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@hono/node-server": "^2.0.6",
     "@playwright/test": "^1.61.1",
     "@spliit/api": "workspace:*",
     "@spliit/config": "workspace:*",

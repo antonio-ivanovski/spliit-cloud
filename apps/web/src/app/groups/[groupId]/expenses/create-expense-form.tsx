@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form'
-import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
+import { useCreateExpenseMutation } from './expense-mutation-hooks'
 
 const createExpenseRouteApi = getRouteApi('/groups/$groupId/expenses/create')
 
@@ -36,10 +36,9 @@ export function CreateExpenseForm({
   const isPendingInvitee = useIsPendingInvitee()
   const linkInviteToken = useLinkInviteToken()
 
-  const { mutateAsync: createExpenseMutateAsync } =
-    trpc.groups.expenses.create.useMutation()
-
-  const utils = trpc.useUtils()
+  const { mutateAsync: createExpenseMutateAsync } = useCreateExpenseMutation({
+    linkInviteToken,
+  })
   const router = useRouter()
   // Read create-route search params here (we are guaranteed to be on the
   // create route). `ExpenseForm` is shared with the edit route, where
@@ -105,20 +104,7 @@ export function CreateExpenseForm({
           groupId,
           expense,
         })
-        await utils.groups.expenses.list.reset({
-          groupId,
-          limit: EXPENSE_LIST_PAGE_SIZE,
-          filter: '',
-          linkInviteToken,
-        })
-        await utils.groups.activities.invalidate()
-        await utils.groups.leavePreview.invalidate({ groupId })
-        // A manual settlement expense (reimbursement) can clear the
-        // invitee's balance; drop the cached `revokePreview` so the
-        // revoke dialog re-reads `hasUnsettledBalance` instead of
-        // showing the stale warning.
-        await utils.invitations.revokePreview.invalidate()
-        router.push({
+        router.replace({
           to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
         })

@@ -33,14 +33,8 @@ export const GroupHeader = () => {
   })
 
   const acceptLinkMutation = trpc.invitations.acceptLink.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       toast({ description: tGroups('invitationAccepted') })
-      await Promise.all([
-        utils.groups.get.invalidate({ groupId }),
-        utils.account.groups.invalidate(),
-        utils.invitations.listForAccount.invalidate(),
-        utils.invitations.list.invalidate({ groupId }),
-      ])
       // Strip the consumed `?invite=<token>` so the URL returns to the
       // plain group page — otherwise the "already a member" banner
       // would reappear on the next load.
@@ -49,6 +43,10 @@ export const GroupHeader = () => {
         params: { groupId },
         search: { invite: undefined },
       })
+      utils.groups.get.invalidate({ groupId })
+      utils.account.groups.invalidate()
+      utils.invitations.listForAccount.invalidate()
+      utils.invitations.list.invalidate({ groupId })
     },
     onError: (err) => {
       toast({
@@ -59,13 +57,12 @@ export const GroupHeader = () => {
   })
 
   const acceptMutation = trpc.invitations.accept.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       toast({ description: tGroups('invitationAccepted') })
-      await Promise.all([
-        utils.groups.get.invalidate({ groupId }),
-        utils.account.groups.invalidate(),
-        utils.invitations.listForAccount.invalidate(),
-      ])
+      utils.groups.get.invalidate({ groupId })
+      utils.account.groups.invalidate()
+      utils.invitations.listForAccount.invalidate()
+      // Full page reload to ensure everything is fresh after joining.
       router.refresh()
     },
     onError: (err) => {
@@ -77,12 +74,10 @@ export const GroupHeader = () => {
   })
 
   const declineMutation = trpc.invitations.decline.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       toast({ description: tGroups('invitationDeclined') })
-      await Promise.all([
-        utils.groups.get.invalidate({ groupId }),
-        utils.invitations.listForAccount.invalidate(),
-      ])
+      utils.groups.get.invalidate({ groupId })
+      utils.invitations.listForAccount.invalidate()
       router.refresh()
     },
     onError: (err) => {

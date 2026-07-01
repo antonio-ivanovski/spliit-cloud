@@ -6,8 +6,13 @@ import { useTranslation } from 'react-i18next'
 
 export const CreateGroup = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
-  const { mutateAsync: createGroup } = trpc.groups.create.useMutation()
   const utils = trpc.useUtils()
+  const { mutateAsync: createGroup } = trpc.groups.create.useMutation({
+    onSuccess: () => {
+      utils.account.groups.invalidate()
+      utils.invitations.listForAccount.invalidate()
+    },
+  })
   const router = useRouter()
   const { toast } = useToast()
 
@@ -15,10 +20,6 @@ export const CreateGroup = () => {
     <GroupForm
       onSubmit={async (groupFormValues) => {
         const { groupId } = await createGroup({ groupFormValues })
-        await Promise.all([
-          utils.account.groups.invalidate(),
-          utils.invitations.listForAccount.invalidate(),
-        ])
         // Invite happens in the Members tab once the group exists. Surface
         // a hint so the user knows to head there next.
         toast({ description: t('createdInviteHint') })

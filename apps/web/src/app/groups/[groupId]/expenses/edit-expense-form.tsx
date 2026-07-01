@@ -14,7 +14,10 @@ import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form'
-import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
+import {
+  useDeleteExpenseMutation,
+  useUpdateExpenseMutation,
+} from './expense-mutation-hooks'
 
 export function EditExpenseForm({
   groupId,
@@ -40,13 +43,14 @@ export function EditExpenseForm({
   })
   const expense = expenseData?.expense
 
-  const { mutateAsync: updateExpenseMutateAsync } =
-    trpc.groups.expenses.update.useMutation()
-  const { mutateAsync: deleteExpenseMutateAsync } =
-    trpc.groups.expenses.delete.useMutation()
-
-  const utils = trpc.useUtils()
   const router = useRouter()
+
+  const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
+    linkInviteToken,
+  })
+  const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
+    linkInviteToken,
+  })
 
   if (!group || !expense) return null
 
@@ -92,55 +96,14 @@ export function EditExpenseForm({
           groupId,
           expense,
         })
-        await utils.groups.expenses.list.reset({
-          groupId,
-          limit: EXPENSE_LIST_PAGE_SIZE,
-          filter: '',
-          linkInviteToken,
-        })
-        await utils.groups.expenses.get.invalidate({
-          groupId,
-          expenseId,
-          linkInviteToken,
-        })
-        await utils.groups.activities.invalidate()
-        await utils.groups.leavePreview.invalidate({ groupId })
-        // Updating an expense can change invitee balances; drop the
-        // cached `revokePreview` so the dialog re-reads the current
-        // `hasUnsettledBalance` instead of showing stale state.
-        await utils.invitations.revokePreview.invalidate()
-        router.push({
+        router.replace({
           to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
         })
       }}
       onDelete={async () => {
         if (readOnly) return
-        await deleteExpenseMutateAsync({
-          expenseId,
-          groupId,
-        })
-        await utils.groups.expenses.list.reset({
-          groupId,
-          limit: EXPENSE_LIST_PAGE_SIZE,
-          filter: '',
-          linkInviteToken,
-        })
-        await utils.groups.expenses.get.invalidate({
-          groupId,
-          expenseId,
-          linkInviteToken,
-        })
-        await utils.groups.activities.invalidate()
-        await utils.groups.leavePreview.invalidate({ groupId })
-        // Deleting an expense can resurrect an invitee balance; drop
-        // the cached `revokePreview` so the dialog re-reads the current
-        // `hasUnsettledBalance` instead of showing stale state.
-        await utils.invitations.revokePreview.invalidate()
-        router.push({
-          to: '/groups/$groupId/expenses',
-          params: { groupId: group.id },
-        })
+        await deleteExpenseMutateAsync({ expenseId, groupId })
       }}
       runtimeFeatureFlags={runtimeFeatureFlags}
     />
