@@ -404,6 +404,723 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses[0].category).toBe('general')
   })
 
+  describe('German locale categories', () => {
+    it('maps German flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Allgemein', 'general'],
+        ['Lebensmittel', 'groceries'],
+        ['Alkohol', 'liquor'],
+        ['Restaurant', 'dining-out'],
+        ['Elektronik', 'electronics'],
+        ['Miete', 'rent'],
+        ['Möbel', 'furniture'],
+        ['Treibstoff', 'gas-fuel'],
+        ['Kino', 'movies'],
+        ['Spiele', 'games'],
+        ['Sport', 'sports'],
+        ['Bildung', 'education'],
+        ['Kleidung', 'clothing'],
+        ['Versicherung', 'insurance'],
+        ['Steuern', 'taxes'],
+        ['Wasser', 'water'],
+        ['Elektrizität', 'electricity'],
+        ['Müll', 'trash'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${cat}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses).toHaveLength(categoryRows.length)
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles German "Parent - Sonstiges" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Essen Other',
+          'Essen und Trinken - Sonstiges',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+    })
+
+    it('handles German "Parent - Sonstiges" for other parent groups', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Home Other',
+          'Zuhause - Sonstiges',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+        [
+          '2026-01-16',
+          'Transport Other',
+          'Verkehrsmittel - Sonstiges',
+          '15.00',
+          'MKD',
+          '7.50',
+          '-7.50',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('home')
+      expect(result.source.expenses[1].category).toBe('transportation')
+    })
+
+    it('falls back standalone "Sonstiges" to general', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Other standalone',
+          'Sonstiges',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('general')
+    })
+  })
+
+  describe('Spanish locale categories', () => {
+    it('maps Spanish flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Alimentos', 'groceries'],
+        ['Licor', 'liquor'],
+        ['Restaurantes', 'dining-out'],
+        ['Gasolina', 'gas-fuel'],
+        ['Películas', 'movies'],
+        ['Juegos', 'games'],
+        ['Música', 'music'],
+        ['Deportes', 'sports'],
+        ['Impuestos', 'taxes'],
+        ['Seguro', 'insurance'],
+        ['Agua', 'water'],
+        ['Electricidad', 'electricity'],
+        ['Basura', 'trash'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${cat}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses).toHaveLength(categoryRows.length)
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Spanish "Parent - Otro" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Food Other',
+          'Comidas y bebidas - Otro',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+        [
+          '2026-01-16',
+          'Home Other',
+          'Casa - Otro',
+          '15.00',
+          'MKD',
+          '7.50',
+          '-7.50',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+      expect(result.source.expenses[1].category).toBe('home')
+    })
+  })
+
+  describe('French locale categories', () => {
+    it('maps French flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Alcool', 'liquor'],
+        ['Courses', 'groceries'],
+        ['Sorties', 'dining-out'],
+        ['Essence', 'gas-fuel'],
+        ['Cinéma', 'movies'],
+        ['Jeux', 'games'],
+        ['Musique', 'music'],
+        ['Vêtements', 'clothing'],
+        ['Eau', 'water'],
+        ['Électricité', 'electricity'],
+        ['Poubelles', 'trash'],
+        ['Scolarité', 'education'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${cat}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses).toHaveLength(categoryRows.length)
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles French "Parent - Autre" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Food Other',
+          'Nourriture et boissons - Autre',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+        [
+          '2026-01-16',
+          'Transport Other',
+          'Transport - Autre',
+          '15.00',
+          'MKD',
+          '7.50',
+          '-7.50',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+      expect(result.source.expenses[1].category).toBe('transportation')
+    })
+  })
+
+  describe('Indonesian locale categories', () => {
+    it('maps Indonesian flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Umum', 'general'],
+        ['BBM', 'gas-fuel'],
+        ['Mobil', 'car'],
+        ['Pesawat', 'plane'],
+        ['Listrik', 'electricity'],
+        ['Sampah', 'trash'],
+        ['Air', 'water'],
+        ['Pajak', 'taxes'],
+        ['Hadiah', 'gifts'],
+        ['Edukasi', 'education'],
+        ['Sewa', 'rent'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${cat}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses).toHaveLength(categoryRows.length)
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Indonesian "Parent - Lainnya" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Food Other',
+          'Makanan dan minuman - Lainnya',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+        [
+          '2026-01-16',
+          'Home Other',
+          'Rumah - Lainnya',
+          '15.00',
+          'MKD',
+          '7.50',
+          '-7.50',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+      expect(result.source.expenses[1].category).toBe('home')
+    })
+  })
+
+  describe('Italian locale categories', () => {
+    it('maps Italian flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Alimentari', 'groceries'],
+        ['Alcolici', 'liquor'],
+        ['Ristorante', 'dining-out'],
+        ['Carburante', 'gas-fuel'],
+        ['Cinema', 'movies'],
+        ['Giochi', 'games'],
+        ['Musica', 'music'],
+        ['Abbigliamento', 'clothing'],
+        ['Acqua', 'water'],
+        ['Spazzatura', 'trash'],
+        ['Pulizie', 'cleaning'],
+        ['Tasse', 'taxes'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${cat}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses).toHaveLength(categoryRows.length)
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Italian "Parent - Altro" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Food Other',
+          'Cibo e bevande - Altro',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+        [
+          '2026-01-16',
+          'Utility Other',
+          'Utenze - Altro',
+          '15.00',
+          'MKD',
+          '7.50',
+          '-7.50',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+      expect(result.source.expenses[1].category).toBe('utilities')
+    })
+  })
+
+  describe('Japanese locale categories', () => {
+    it('maps Japanese flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['食料品', 'groceries'],
+        ['お酒', 'liquor'],
+        ['外食', 'dining-out'],
+        ['電気', 'electricity'],
+        ['水道', 'water'],
+        ['映画', 'movies'],
+        ['音楽', 'music'],
+        ['税金', 'taxes'],
+        ['自転車', 'bicycle'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${i}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses).toHaveLength(categoryRows.length)
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Japanese "Parent - その他" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Food Other',
+          '飲食 - その他',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+        [
+          '2026-01-16',
+          'Home Other',
+          '自宅 - その他',
+          '15.00',
+          'MKD',
+          '7.50',
+          '-7.50',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+      expect(result.source.expenses[1].category).toBe('home')
+    })
+  })
+
+  describe('Dutch locale categories', () => {
+    it('maps Dutch flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Boodschappen', 'groceries'],
+        ['Drank', 'liquor'],
+        ['Uit eten', 'dining-out'],
+        ['Brandstof', 'gas-fuel'],
+        ['Elektriciteit', 'electricity'],
+        ['Belasting', 'taxes'],
+        ['Onderwijs', 'education'],
+        ['Huisdieren', 'pets'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${i}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Dutch "Parent - Andere" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Home Other',
+          'Huis - Andere',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('home')
+    })
+  })
+
+  describe('Polish locale categories', () => {
+    it('maps Polish flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Artykuły spożywcze', 'groceries'],
+        ['Jedzenie na mieście', 'dining-out'],
+        ['Paliwo', 'gas-fuel'],
+        ['Prąd', 'electricity'],
+        ['Podatki', 'taxes'],
+        ['Prezenty', 'gifts'],
+        ['Edukacja', 'education'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${i}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Polish "Parent - Inne" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Home Other',
+          'Dom - Inne',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('home')
+    })
+  })
+
+  describe('Portuguese (Brasil) locale categories', () => {
+    it('maps pt-BR flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Mercado', 'groceries'],
+        ['Bebidas alcoólicas', 'liquor'],
+        ['Jantar fora', 'dining-out'],
+        ['Combustível', 'gas-fuel'],
+        ['Aluguel', 'rent'],
+        ['Eletricidade', 'electricity'],
+        ['Impostos', 'taxes'],
+        ['Presentes', 'gifts'],
+        ['Creche', 'childcare'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${i}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles pt-BR "Parent - Outros" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Food Other',
+          'Comidas e bebidas - Outros',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+    })
+  })
+
+  describe('Portuguese (Portugal) locale categories', () => {
+    it('maps pt-PT flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Mercearia', 'groceries'],
+        ['Bebida', 'liquor'],
+        ['Jantar', 'dining-out'],
+        ['Combustível', 'gas-fuel'],
+        ['Desporto', 'sports'],
+        ['Ensino', 'education'],
+        ['Prendas', 'gifts'],
+        ['Puericultura', 'childcare'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${i}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles pt-PT "Parent - Outro" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Transport Other',
+          'Transportes - Outro',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('transportation')
+    })
+  })
+
+  describe('Thai locale categories', () => {
+    it('maps Thai flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['อาหารและเครื่องดื่ม', 'food-and-drink'],
+        ['ของชำ', 'groceries'],
+        ['สุรา', 'liquor'],
+        ['ไฟฟ้า', 'electricity'],
+        ['ขยะ', 'trash'],
+        ['ค่าใช้จ่ายทางการแพทย์', 'medical-expenses'],
+        ['การศึกษา', 'education'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${i}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Thai "Parent - อื่นๆ" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Food Other',
+          'อาหารและเครื่องดื่ม - อื่นๆ',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('food-and-drink')
+    })
+  })
+
+  describe('Swedish locale categories', () => {
+    it('maps Swedish flat category names correctly', () => {
+      const categoryRows: Array<[string, string]> = [
+        ['Livsmedel', 'groceries'],
+        ['Restaurangbesök', 'dining-out'],
+        ['Bensin/bränsle', 'gas-fuel'],
+        ['Hyra', 'rent'],
+        ['Försäkringar', 'insurance'],
+        ['Kläder', 'clothing'],
+        ['Utbildning', 'education'],
+        ['Hotell', 'hotel'],
+        ['Avfall', 'trash'],
+      ]
+      const rows: Array<Array<string>> = categoryRows.map(([cat], i) => [
+        `2026-01-${String(i + 15).padStart(2, '0')}`,
+        `Cat ${i}`,
+        cat,
+        '10.00',
+        'MKD',
+        '5.00',
+        '-5.00',
+      ])
+      const csv = splitwiseCsv(rows)
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      for (let i = 0; i < categoryRows.length; i++) {
+        expect(result.source.expenses[i].category).toBe(categoryRows[i][1])
+      }
+    })
+
+    it('handles Swedish "Parent - Övrigt" as fallback to parent group', () => {
+      const csv = splitwiseCsv([
+        [
+          '2026-01-15',
+          'Home Other',
+          'Hem - Övrigt',
+          '10.00',
+          'MKD',
+          '5.00',
+          '-5.00',
+        ],
+      ])
+      const result = tryParseSplitwiseCsv(csv)
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.source.expenses[0].category).toBe('home')
+    })
+  })
+
   it('rejects non-Splitwise CSV header (Spliit-shaped header)', () => {
     const spliitHeader =
       'Date,Description,Category,Currency,Cost,John Doe,Jane Doe'
