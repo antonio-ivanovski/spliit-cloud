@@ -355,7 +355,7 @@ describe('Expense items — real DB', () => {
     })
 
     // Verify items have paidFor
-    const saved = await readExpenseItems(expenseId)
+    let saved = await readExpenseItems(expenseId)
     expect(saved!.items[0].paidFor).toHaveLength(2)
 
     // Update to EVENLY (leaving ITEMIZED)

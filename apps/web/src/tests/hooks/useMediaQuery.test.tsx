@@ -40,7 +40,7 @@ describe('useMediaQuery', () => {
   it('listens for media query changes and updates the returned value', () => {
     // Use a mutable variable so the listener sees the new value
     let currentMatches = false
-    let changeHandler: (() => void) | undefined
+    const changeHandlers = new Map<string, () => void>()
 
     vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({
       get matches() {
@@ -48,11 +48,11 @@ describe('useMediaQuery', () => {
       },
       media: query,
       onchange: null,
-      addListener: vi.fn((cb: () => void) => {
-        changeHandler = cb
-      }),
+      addListener: vi.fn(),
       removeListener: vi.fn(),
-      addEventListener: vi.fn(),
+      addEventListener: vi.fn((_event: string, cb: () => void) => {
+        changeHandlers.set(query, cb)
+      }),
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(() => false),
     }))
@@ -63,27 +63,35 @@ describe('useMediaQuery', () => {
     // Simulate a media query change
     currentMatches = true
     act(() => {
-      changeHandler?.()
+      changeHandlers.get('(min-width: 768px)')?.()
     })
     expect(screen.getByTestId('result')).toHaveTextContent('true')
   })
 
   it('cleans up listener on unmount', () => {
-    const removeListener = vi.fn()
-    vi.spyOn(window, 'matchMedia').mockReturnValue({
-      matches: false,
-      media: '(min-width: 768px)',
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(() => false),
-    } as unknown as MediaQueryList)
+    const removeEventListeners = new Map<string, ReturnType<typeof vi.fn>>()
+
+    vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => {
+      const removeEventListener = vi.fn()
+      removeEventListeners.set(query, removeEventListener)
+      return {
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener,
+        dispatchEvent: vi.fn(() => false),
+      } as unknown as MediaQueryList
+    })
 
     const { unmount } = render(<TestComponent query="(min-width: 768px)" />)
     unmount()
-    expect(removeListener).toHaveBeenCalledWith(expect.any(Function))
+    expect(removeEventListeners.get('(min-width: 768px)')).toHaveBeenCalledWith(
+      'change',
+      expect.any(Function),
+    )
   })
 
   it('uses addEventListener when addListener is not available', () => {
