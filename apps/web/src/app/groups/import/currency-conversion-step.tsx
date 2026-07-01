@@ -55,6 +55,14 @@ type CurrencyPair = {
   dates: string[]
 }
 
+function rateItemKey(item: { date: string; base: string; target: string }) {
+  return `${item.date}|${item.base}|${item.target}`
+}
+
+function pairKey(pair: Pick<CurrencyPair, 'base' | 'target'>) {
+  return `${pair.base}|${pair.target}`
+}
+
 // ----- helpers -----
 
 function uniquePairs(
@@ -221,6 +229,7 @@ function PairConversionCard({
     enabled: mode === 'fixed',
   })
   const apiRate = fixedQuery.data?.[0]?.ok ? fixedQuery.data[0].rate.rate : null
+  const fixedResultError = fixedQuery.data?.[0]?.ok === false
   const prevApiRate = useRef(apiRate)
   useEffect(() => {
     if (apiRate !== null && apiRate !== prevApiRate.current) {
@@ -229,7 +238,7 @@ function PairConversionCard({
     }
   }, [apiRate, onFixedRate])
   const fixedFetching = fixedQuery.isLoading || fixedQuery.isFetching
-  const fixedError = !!fixedQuery.error
+  const fixedError = !!fixedQuery.error || fixedResultError
   const useCustomRate = override !== undefined
 
   return (
@@ -427,8 +436,7 @@ export function CurrencyConversionStep({
 
   const [modes, setModes] = useState<Record<string, ConversionMode>>(() => {
     const defaults: Record<string, ConversionMode> = {}
-    for (const pair of pairs)
-      defaults[`${pair.base}|${pair.target}`] = 'perDate'
+    for (const pair of pairs) defaults[pairKey(pair)] = 'perDate'
     return { ...defaults, ...initialModes }
   })
   const [dates, setDates] = useState<Record<string, string>>(initialDates)
@@ -438,10 +446,10 @@ export function CurrencyConversionStep({
     // Pre-populate from previously computed rates so navigating back
     // doesn't leave fixed-mode pairs waiting for a re-fetch.
     const out: Record<string, number> = {}
-    for (const key of Object.keys(initialRates)) {
-      const [, base, target] = key.split('|')
-      const pairKey = `${base}|${target}`
-      if (out[pairKey] === undefined) out[pairKey] = initialRates[key]
+    for (const rateKey of Object.keys(initialRates)) {
+      const [, base, target] = rateKey.split('|')
+      const key = `${base}|${target}`
+      if (out[key] === undefined) out[key] = initialRates[rateKey]
     }
     return out
   })
@@ -496,25 +504,31 @@ export function CurrencyConversionStep({
     for (let i = 0; i < rateKeyItems.length; i++) {
       const item = rateKeyItems[i]
       const result = perDateQuery.data[i]
-      if (result?.ok)
-        out[`${item.date}|${item.base}|${item.target}`] = result.rate.rate
+      if (result?.ok) out[rateItemKey(item)] = result.rate.rate
     }
     return out
   }, [perDateQuery.data, rateKeyItems])
 
+  const perDateFailedKeys = useMemo(() => {
+    if (!perDateQuery.data) return new Set<string>()
+    const failed = new Set<string>()
+    for (let i = 0; i < rateKeyItems.length; i++) {
+      const item = rateKeyItems[i]
+      const result = perDateQuery.data[i]
+      if (result?.ok === false) failed.add(rateItemKey(item))
+    }
+    return failed
+  }, [perDateQuery.data, rateKeyItems])
+
   // Track whether every needed rate is ready, so we can disable Continue.
   const perDateReady = useMemo(() => {
-    if (
-      pairs.some(
-        (p) => (modes[`${p.base}|${p.target}`] ?? 'perDate') === 'perDate',
-      )
-    ) {
+    if (pairs.some((p) => (modes[pairKey(p)] ?? 'perDate') === 'perDate')) {
       if (!perDateValues) return false
       for (const pair of pairs) {
-        const pairMode = modes[`${pair.base}|${pair.target}`] ?? 'perDate'
+        const pairMode = modes[pairKey(pair)] ?? 'perDate'
         if (pairMode !== 'perDate') continue
         for (const d of pair.dates) {
-          if (perDateValues[`${d}|${pair.base}|${pair.target}`] === undefined)
+          if (perDateValues[rateItemKey({ date: d, ...pair })] === undefined)
             return false
         }
       }
@@ -539,7 +553,7 @@ export function CurrencyConversionStep({
 
   const canContinue = noConversionNeeded || (perDateReady && fixedReady)
 
-  function handleContinue() {
+  const handleContinue = useCallback(() => {
     if (!canContinue) return
 
     if (noConversionNeeded) {
@@ -581,7 +595,18 @@ export function CurrencyConversionStep({
       fixedRateOverrides: overrides,
       rates,
     })
-  }
+  }, [
+    canContinue,
+    dates,
+    fixedRates,
+    modes,
+    noConversionNeeded,
+    onContinue,
+    overrides,
+    pairs,
+    perDateValues,
+    rateKeyItems,
+  ])
 
   useEffect(() => {
     registerStepNav('currencyConversion', {
@@ -604,6 +629,9 @@ export function CurrencyConversionStep({
       ) : (
         pairs.map((pair) => {
           const pairKey = `${pair.base}|${pair.target}`
+          const hasPerDateResultError = pair.dates.some((date) =>
+            perDateFailedKeys.has(rateItemKey({ date, ...pair })),
+          )
           return (
             <Card key={pairKey} className="overflow-hidden">
               <CardContent className="p-4">
@@ -621,15 +649,21 @@ export function CurrencyConversionStep({
                   perDateFetching={
                     perDateQuery.isLoading || perDateQuery.isFetching
                   }
-                  perDateError={!!perDateQuery.error}
+                  perDateError={!!perDateQuery.error || hasPerDateResultError}
                   onRefreshPerDate={() => perDateQuery.refetch()}
                   onModeChange={(m) => {
                     ensureMode(pairKey)
                     setModes((p) => ({ ...p, [pairKey]: m }))
                   }}
-                  onDateChange={(d) =>
+                  onDateChange={(d) => {
                     setDates((p) => ({ ...p, [pairKey]: d }))
-                  }
+                    setFixedRates((p) => {
+                      if (p[pairKey] === undefined) return p
+                      const next = { ...p }
+                      delete next[pairKey]
+                      return next
+                    })
+                  }}
                   onOverrideChange={(v) =>
                     setOverrides((p) => {
                       const next = { ...p }

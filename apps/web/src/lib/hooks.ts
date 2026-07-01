@@ -184,15 +184,8 @@ export function useCurrencyRates(
   options?: { enabled?: boolean },
 ) {
   const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
-  // Sort-then-join keeps the key stable when the caller hands back the
-  // same set of triples in a different order, so React Query doesn't
-  // refetch on every render.
   const itemsKey = useMemo(
-    () =>
-      items
-        .map((i) => `${i.date}|${i.base}|${i.target}`)
-        .sort()
-        .join(','),
+    () => items.map((i) => `${i.date}|${i.base}|${i.target}`).join(','),
     [items],
   )
   return useQuery<CurrencyRatesResponse>({

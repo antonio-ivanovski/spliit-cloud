@@ -1,5 +1,6 @@
 import Papa from 'papaparse'
 import { DEFAULT_CATEGORIES } from '../categories'
+import { getCurrency } from '../currency'
 import type { ImportParseResult, NormalizedSource } from './types'
 
 const PARTICIPANT_START_INDEX = 10
@@ -194,6 +195,10 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     }
   }
 
+  const currency = mostCommonCurrency
+    ? (getCurrency(mostCommonCurrency)?.symbol ?? mostCommonCurrency)
+    : ''
+
   return {
     ok: true,
     source: {
@@ -201,7 +206,7 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       sourceGroupId: 'csv-import',
       sourceUrl: null,
       name: 'Imported from CSV',
-      currency: '',
+      currency,
       currencyCode: mostCommonCurrency,
       participants,
       expenses,
