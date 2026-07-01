@@ -1,4 +1,4 @@
-import { GroupInvitationStatus, GroupRole, prisma } from '@spliit/db'
+import { GroupInvitationStatus, prisma, type GroupRole } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {

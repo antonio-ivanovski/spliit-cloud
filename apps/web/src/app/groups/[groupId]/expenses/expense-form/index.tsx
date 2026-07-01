@@ -64,7 +64,6 @@ export function ExpenseForm(props: {
     form,
     group: props.group,
     groupCurrency,
-    t,
     onAmountChanged: (income) => {
       setIsIncome(income)
       if (income) form.setValue('isReimbursement', false)

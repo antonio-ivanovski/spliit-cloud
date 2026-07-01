@@ -1,7 +1,7 @@
 import { prisma } from '@spliit/db'
 import { afterAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
-import { checkDbConnection, testRunId } from './setup'
+import { checkDbConnection } from './setup'
 
 await checkDbConnection()
 
@@ -18,8 +18,6 @@ await checkDbConnection()
  * expected invariant.
  */
 describe('Migrated shape — ExpensePaidBy backfill', () => {
-  const runId = testRunId()
-
   const ledgerIds: string[] = []
   const expenseIds: string[] = []
 

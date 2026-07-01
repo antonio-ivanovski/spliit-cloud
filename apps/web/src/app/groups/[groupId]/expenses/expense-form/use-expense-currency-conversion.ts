@@ -6,6 +6,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 const enforceCurrencyPattern = (value: string) =>
   value
@@ -20,7 +21,6 @@ export function useExpenseCurrencyConversion(args: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
-  t: (key: string, opts?: Record<string, unknown>) => string
   onAmountChanged?: (income: boolean) => void
 }): {
   originalCurrency: Currency
@@ -38,6 +38,7 @@ export function useExpenseCurrencyConversion(args: {
    */
   convertedAmountPreview: number | undefined
 } {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const watchedExpenseDate = useWatch({
     control: args.form.control,
     name: 'expenseDate',
@@ -115,7 +116,7 @@ export function useExpenseCurrencyConversion(args: {
 
   let conversionRateMessage = ''
   if (exchangeRate.isLoading) {
-    conversionRateMessage = args.t('conversionRateState.loading')
+    conversionRateMessage = t('conversionRateState.loading')
   } else {
     let ratesDisplay = ''
     if (exchangeRate.data) {
@@ -125,21 +126,21 @@ export function useExpenseCurrencyConversion(args: {
     }
     if (exchangeRate.error) {
       if (exchangeRate.error instanceof RangeError && exchangeRate.data)
-        conversionRateMessage = args.t('conversionRateState.dateMismatch', {
+        conversionRateMessage = t('conversionRateState.dateMismatch', {
           date: exchangeRate.error.message,
         })
       else {
-        conversionRateMessage = args.t('conversionRateState.error')
+        conversionRateMessage = t('conversionRateState.error')
       }
       conversionRateMessage +=
         ' ' +
         (ratesDisplay.length
-          ? `${args.t('conversionRateState.staleRate')} ${ratesDisplay}`
-          : args.t('conversionRateState.noRate'))
+          ? `${t('conversionRateState.staleRate')} ${ratesDisplay}`
+          : t('conversionRateState.noRate'))
     } else {
       conversionRateMessage = ratesDisplay.length
-        ? `${args.t('conversionRateState.success')} ${ratesDisplay}`
-        : args.t('conversionRateState.currencyNotFound')
+        ? `${t('conversionRateState.success')} ${ratesDisplay}`
+        : t('conversionRateState.currencyNotFound')
     }
   }
 

@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import type { Category } from './categories'
-import { Currency, getCurrencyFromGroup } from './currency'
+import { getCurrencyFromGroup, type Currency } from './currency'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

@@ -23,11 +23,15 @@ import type {
 } from '@spliit/domain'
 import { Plus, UserPen } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
+import type { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ExpenseItemRow, expenseItemGridClass } from './expense-item-row'
-import { withAutoOtherFiller } from './use-auto-other-filler'
+import {
+  isFillerItem,
+  type ExpenseFormDisplayItem,
+  withAutoOtherFiller,
+} from './use-auto-other-filler'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 type EditingTarget = { kind: 'item'; index: number } | { kind: 'filler' }
@@ -65,10 +69,7 @@ export function ExpenseItemsCard({
     onSaveItem?: (item: ExpenseFormItemValues) => void
   }) => ReactNode
 }) {
-  const { t: _tStrict } = useTranslation(undefined, {
-    keyPrefix: 'ExpenseForm',
-  })
-  const t = (key: string) => _tStrict(key as any) as string
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   const items = useWatch({ control: form.control, name: 'items' }) ?? []
   const amount = useWatch({ control: form.control, name: 'amount' })
@@ -90,7 +91,7 @@ export function ExpenseItemsCard({
     0,
   )
   const exceedsAmount = itemsSumMajor > amountMajor + 0.01
-  const fillerItem = itemsWithFiller.find((item) => (item as any).isFiller)
+  const fillerItem = itemsWithFiller.find(isFillerItem)
 
   const handleAddItem = () => {
     const currentItems = form.getValues('items') ?? []
@@ -98,7 +99,9 @@ export function ExpenseItemsCard({
       shouldDirty: true,
     })
     window.setTimeout(() => {
-      form.setFocus(`items.${currentItems.length}.title` as any)
+      form.setFocus(
+        `items.${currentItems.length}.title` as FieldPath<ExpenseFormInputValues>,
+      )
     }, 0)
   }
 
@@ -199,7 +202,7 @@ export function ExpenseItemsCard({
               {items.map((item, displayIndex) => {
                 return (
                   <ExpenseItemRow
-                    key={(item as any).id ?? displayIndex}
+                    key={item.id ?? displayIndex}
                     form={form}
                     item={item}
                     itemIndex={displayIndex}
@@ -212,7 +215,6 @@ export function ExpenseItemsCard({
                     onDelete={() => {
                       handleDeleteItem(displayIndex)
                     }}
-                    t={t}
                   />
                 )
               })}
@@ -252,11 +254,10 @@ export function ExpenseItemsCard({
                   </span>
                 </div>
                 <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                  {summarizeParticipants({
-                    item: fillerItem,
-                    group,
-                    t,
-                  })}
+                  <SummarizeParticipants
+                    item={fillerItem}
+                    group={group}
+                  />
                 </p>
               </div>
               {!readOnly && (
@@ -367,15 +368,14 @@ export function ExpenseItemsCard({
   )
 }
 
-function summarizeParticipants({
+function SummarizeParticipants({
   item,
   group,
-  t,
 }: {
   item: ExpenseFormItemValues
   group: Group
-  t: (key: string) => string
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const labelKeys = {
     EVENLY: 'items.splitEvenlyLabel',
     BY_SHARES: 'items.splitBySharesLabel',

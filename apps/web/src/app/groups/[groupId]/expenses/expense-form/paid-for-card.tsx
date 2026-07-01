@@ -39,20 +39,13 @@ import { PaidForSplitOptionCards } from './split-option-cards'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
-function splitModeLabel(mode: SplitMode): string {
-  switch (mode) {
-    case 'EVENLY':
-      return 'Evenly'
-    case 'BY_SHARES':
-      return 'ByShares'
-    case 'BY_PERCENTAGE':
-      return 'ByPercentage'
-    case 'BY_AMOUNT':
-      return 'ByAmount'
-    case 'ITEMIZED':
-      return 'Itemized'
-  }
-}
+const paidForOptionKeys = {
+  EVENLY: 'paidForOptionEvenly',
+  BY_SHARES: 'paidForOptionByShares',
+  BY_PERCENTAGE: 'paidForOptionByPercentage',
+  BY_AMOUNT: 'paidForOptionByAmount',
+  ITEMIZED: 'paidForOptionItemized',
+} as const satisfies Record<SplitMode, string>
 
 type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
 
@@ -67,9 +60,7 @@ export function PaidForCard(props: {
 }) {
   const { form, group, groupCurrency, payerCurrency, readOnly, sExpense } =
     props
-  const { t: _t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
-  const t = (key: string, opts?: Record<string, unknown>) =>
-    _t(key as any, opts) as string
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   const originalCurrencyCode = useWatch({
     control: form.control,
@@ -396,7 +387,6 @@ export function PaidForCard(props: {
             value={splitMode}
             onChange={handlePaidForSplitModeChange}
             readOnly={readOnly}
-            t={t}
           />
           <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
             {splitMode === 'ITEMIZED'
@@ -424,7 +414,6 @@ export function PaidForCard(props: {
                     setManuallyEditedParticipants={
                       props.setManuallyEditedParticipants
                     }
-                    t={t}
                   />
                 ))}
                 <FormMessage />
@@ -523,7 +512,7 @@ export function PaidForCard(props: {
         open={!!pendingModeChange}
         targetModeLabel={
           pendingModeChange
-            ? t(`paidForOption${splitModeLabel(pendingModeChange.to)}`)
+            ? t(paidForOptionKeys[pendingModeChange.to])
             : ''
         }
         onCancel={() => setPendingModeChange(null)}

@@ -12,7 +12,7 @@ import {
 import { prisma$Transaction, prismaMock } from '../../../test/state'
 import { groupsRouter } from './index'
 
-function makeCaller(authUserId: string) {
+function _makeCaller(authUserId: string) {
   return {
     auth: {
       session: { id: 'sess-1' },

@@ -88,13 +88,14 @@ export function calculatePaidByShare(
     case 'BY_PERCENTAGE':
       dividedAmount = (base * shares) / 10000
       break
-    case 'BY_SHARES':
+    case 'BY_SHARES': {
       const totalShares = paidBys.reduce(
         (sum, paidBy) => sum + Number(paidBy.shares),
         0,
       )
       dividedAmount = (base * shares) / totalShares
       break
+    }
     default:
       return 0
   }
@@ -147,13 +148,14 @@ export function calculateShare(
     case 'BY_PERCENTAGE':
       // Calculate the user's share based on their percentage of the total expense
       return (expense.amount * shares) / 10000 // Assuming shares are out of 10000 for percentage
-    case 'BY_SHARES':
+    case 'BY_SHARES': {
       // Calculate the user's share based on their shares relative to the total shares
       const totalShares = paidFors.reduce(
         (sum, paidFor) => sum + Number(paidFor.shares),
         0,
       )
       return (expense.amount * shares) / totalShares
+    }
     default:
       return 0
   }

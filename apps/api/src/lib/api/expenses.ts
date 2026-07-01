@@ -1,8 +1,8 @@
 import {
   ActivityType,
-  Expense as DbExpense,
   prisma,
   RecurrenceRule,
+  type Expense as DbExpense,
 } from '@spliit/db'
 import {
   calculateNextDate,

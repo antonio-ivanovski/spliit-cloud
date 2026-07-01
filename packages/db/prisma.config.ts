@@ -10,6 +10,7 @@ try {
 } catch (error) {
   console.warn(
     `DATABASE_URL environment variable is not set. Using dummy value for datasource URL.`,
+    error
   )
   datasourceUrl = 'postgresql://spliit:spliit@localhost:5432/spliit'
 }

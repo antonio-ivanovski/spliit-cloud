@@ -93,7 +93,7 @@ export async function checkLiveness(): Promise<Response> {
     }
 
     return createHealthResponse(healthStatus, true) // Always 200 for liveness
-  } catch (error) {
+  } catch {
     // This should rarely happen, but if it does, the app needs restart
     const errorStatus: HealthCheckStatus = {
       status: 'unhealthy',

@@ -3,7 +3,7 @@ import {
   DEFAULT_CATEGORY_ID,
   formatCategoryForAIPrompt,
 } from '@spliit/domain'
-import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
+import type { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
 import { extractAllowedIdFromAIResponse } from './ai-response'
 import { env } from './env'
 import { getOpenAIClient } from './openai'

@@ -64,6 +64,14 @@ export type LoadedExpense = NonNullable<
   AppRouterOutput['groups']['expenses']['get']['expense']
 >
 
+type ExpenseItemPaidForInput =
+  | { ledgerParticipantId: string; shares: number }
+  | { participant: string; shares: number }
+
+function getPaidForParticipantId(pf: ExpenseItemPaidForInput): string {
+  return 'ledgerParticipantId' in pf ? pf.ledgerParticipantId : pf.participant
+}
+
 export type DefaultSplittingOptions = {
   splitMode: SplitMode
   paidFor: ExpenseFormInputValues['paidFor']
@@ -263,7 +271,7 @@ export function buildExpenseFormDefaults(args: {
         'EVENLY') as ExpenseFormItemValues['splitMode']
       const unitPrice = itemAmountAsDisplay(item.unitPrice)
       const paidFor = item.paidFor.map((pf) => ({
-        participant: (pf as any).ledgerParticipantId ?? (pf as any).participant,
+        participant: getPaidForParticipantId(pf as ExpenseItemPaidForInput),
         shares: itemShareAsDisplay(pf.shares, splitMode),
       }))
       return {
@@ -276,25 +284,27 @@ export function buildExpenseFormDefaults(args: {
       }
     })
 
-    const rawRemainder = (expense as any).itemizedRemainder
+    type ItemizedRemainder = NonNullable<LoadedExpense['itemizedRemainder']>
+    type ItemizedRemainderWithParticipant = Omit<
+      ItemizedRemainder,
+      'paidFor'
+    > & {
+      paidFor: ExpenseItemPaidForInput[]
+    }
+    const rawRemainder = (expense as { itemizedRemainder?: unknown })
+      .itemizedRemainder as ItemizedRemainderWithParticipant | null | undefined
     const itemizedRemainder = rawRemainder
       ? {
           splitMode: (rawRemainder.splitMode ??
             'EVENLY') as ExpenseFormItemValues['splitMode'],
-          paidFor: rawRemainder.paidFor.map(
-            (pf: {
-              ledgerParticipantId?: string
-              participant?: string
-              shares: number
-            }) => ({
-              participant: pf.ledgerParticipantId ?? pf.participant ?? '',
-              shares: itemShareAsDisplay(
-                pf.shares,
-                (rawRemainder.splitMode ??
-                  'EVENLY') as ExpenseFormItemValues['splitMode'],
-              ),
-            }),
-          ),
+          paidFor: rawRemainder.paidFor.map((pf) => ({
+            participant: getPaidForParticipantId(pf),
+            shares: itemShareAsDisplay(
+              pf.shares,
+              (rawRemainder.splitMode ??
+                'EVENLY') as ExpenseFormItemValues['splitMode'],
+            ),
+          })),
         }
       : {
           splitMode: 'EVENLY' as const,

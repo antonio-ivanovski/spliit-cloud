@@ -1,5 +1,5 @@
 import {
-  Currency,
+  type Currency,
   currencyList,
   getCurrency,
   getCurrencyFromGroup,

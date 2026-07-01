@@ -119,7 +119,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       paidFor.push({ sourceId: e.sourceId, shares: e.cents })
       negativeTotal += e.cents
     }
-    let remainingShare = amountCents - negativeTotal
+    const remainingShare = amountCents - negativeTotal
     const positiveShares = positiveEntries.map((e) => ({
       sourceId: e.sourceId,
       shares: Math.max(0, Math.floor(remainingShare / positiveEntries.length)),

@@ -2,7 +2,7 @@ import Decimal from 'decimal.js'
 
 import * as z from 'zod'
 import { categoryIdSchema } from './categories'
-import { RecurrenceRule, SplitMode } from './enums'
+import type { RecurrenceRule, SplitMode } from './enums'
 
 export const groupFormSchema = z
   .object({
@@ -38,11 +38,24 @@ export const groupFormSchema = z
 
 export type GroupFormValues = z.infer<typeof groupFormSchema>
 
-const splitModeSchema = z.enum(SplitMode).default('EVENLY')
+const splitModeValues = [
+  'EVENLY',
+  'BY_SHARES',
+  'BY_PERCENTAGE',
+  'BY_AMOUNT',
+  'ITEMIZED',
+] as const satisfies readonly [SplitMode, ...SplitMode[]]
+const splitModeSchema = z.enum(splitModeValues).default('EVENLY')
 
-const paidBySplitModeSchema = z.enum(SplitMode).default('BY_AMOUNT')
+const paidBySplitModeSchema = z.enum(splitModeValues).default('BY_AMOUNT')
 
-const recurrenceRuleSchema = z.enum(RecurrenceRule).default('NONE')
+const recurrenceRuleValues = [
+  'NONE',
+  'DAILY',
+  'WEEKLY',
+  'MONTHLY',
+] as const satisfies readonly [RecurrenceRule, ...RecurrenceRule[]]
+const recurrenceRuleSchema = z.enum(recurrenceRuleValues).default('NONE')
 
 const documentsSchema = z
   .array(

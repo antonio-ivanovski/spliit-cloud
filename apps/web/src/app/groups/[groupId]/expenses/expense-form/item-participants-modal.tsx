@@ -177,7 +177,6 @@ export function ItemParticipantsModal(props: {
               value={draft.splitMode}
               onChange={handleSplitModeChange}
               readOnly={readOnly}
-              t={t}
             />
           </div>
 

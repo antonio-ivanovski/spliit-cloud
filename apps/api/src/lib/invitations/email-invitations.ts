@@ -1,8 +1,8 @@
 import {
   GroupInvitationStatus,
   GroupInvitationType,
-  GroupRole,
   prisma,
+  type GroupRole,
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import {

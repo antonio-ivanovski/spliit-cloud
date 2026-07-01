@@ -47,7 +47,7 @@ function ItemsPreview({
         </div>
       ))}
       {remaining > 0 && (
-        <div>{t('items.more' as any, { count: remaining }) as string}</div>
+        <div>{t('items.more', { count: remaining })}</div>
       )}
     </div>
   )

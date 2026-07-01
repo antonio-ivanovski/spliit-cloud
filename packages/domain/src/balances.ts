@@ -152,7 +152,10 @@ export function getPublicBalances(reimbursements: Reimbursement[]): Balances {
  * This ensures that a participant executing a suggested reimbursement
  * does not result in completely new repayment suggestions.
  */
-function compareBalancesForReimbursements(b1: any, b2: any): number {
+function compareBalancesForReimbursements(
+  b1: { participantId: string; total: number },
+  b2: { participantId: string; total: number },
+): number {
   // positive balances come before negative balances
   if (b1.total > 0 && 0 > b2.total) {
     return -1

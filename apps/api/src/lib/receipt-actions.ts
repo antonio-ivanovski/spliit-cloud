@@ -5,7 +5,7 @@ import {
   getCurrency,
   getCurrencyFromGroup,
 } from '@spliit/domain'
-import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
+import type { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
 import {
   extractAllowedIdFromAIResponse,
   getLastNonEmptyLine,

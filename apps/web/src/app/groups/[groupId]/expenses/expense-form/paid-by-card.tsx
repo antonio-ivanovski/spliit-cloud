@@ -208,7 +208,6 @@ export function PaidByCard(props: {
               }
             }}
             readOnly={readOnly}
-            t={t}
           />
         </div>
         {isMultiPayer ? (
@@ -227,7 +226,6 @@ export function PaidByCard(props: {
                       groupCurrency={groupCurrency}
                       readOnly={readOnly}
                       setManuallyEditedPayers={props.setManuallyEditedPayers}
-                      t={t}
                     />
                   ))}
                   <FormMessage />
@@ -285,7 +283,7 @@ export function PaidByCard(props: {
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
-                          t('Expense.paidByField.placeholder') as string
+                          t('Expense.paidByField.placeholder')
                         }
                       />
                     </SelectTrigger>
