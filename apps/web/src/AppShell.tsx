@@ -12,7 +12,7 @@ import { TRPCProvider } from '@/trpc/client'
 import { Outlet } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import Github from './components/auth/github.svg?react'
+import githubSvg from './components/auth/github.svg'
 
 function Content() {
   const { t } = useTranslation()
@@ -87,7 +87,7 @@ function Content() {
           </div>
           <Button asChild variant="secondary" size="sm">
             <Link href="https://github.com/antonio-ivanovski/spliit-cloud">
-              <Github className="w-4 h-4 mr-2" />
+              <img src={githubSvg} alt="" className="w-4 h-4 mr-2" />
               GitHub
             </Link>
           </Button>
