@@ -1,9 +1,5 @@
 export type PasswordRequirementId =
-  | 'minLength'
-  | 'uppercase'
-  | 'lowercase'
-  | 'number'
-  | 'symbol'
+  'minLength' | 'uppercase' | 'lowercase' | 'number' | 'symbol'
 
 export type PasswordRequirement = {
   id: PasswordRequirementId

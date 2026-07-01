@@ -45,7 +45,7 @@ export function ParticipantShareRow({
   return (
     <div
       className={cn(
-        'flex flex-wrap gap-y-4 items-center border-t last-of-type:border-b last-of-type:!mb-4 -mx-6 px-6 py-3',
+        'flex flex-wrap gap-y-4 items-center border-t last-of-type:border-b last-of-type:mb-4! -mx-6 px-6 py-3',
         disabled
           ? 'cursor-default [&_button]:cursor-default [&_label]:cursor-default'
           : 'cursor-pointer [&_button]:cursor-pointer [&_label]:cursor-pointer',

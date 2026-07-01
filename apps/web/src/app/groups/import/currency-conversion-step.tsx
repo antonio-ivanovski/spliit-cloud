@@ -126,7 +126,7 @@ function OptionCard({
         'group relative overflow-hidden rounded-md border bg-card transition-colors duration-150',
         'focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-card',
         selected
-          ? 'cursor-default border-primary/60 bg-primary/[0.04]'
+          ? 'cursor-default border-primary/60 bg-primary/4'
           : 'cursor-pointer border-border bg-background hover:border-foreground/25 hover:bg-muted/30',
       )}
     >
@@ -138,7 +138,7 @@ function OptionCard({
         onClick={onClick}
         className={cn(
           'flex w-full items-start gap-3 p-3 text-left',
-          'focus-visible:outline-none',
+          'focus-visible:outline-hidden',
         )}
       >
         <span
@@ -177,7 +177,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <div className="flex items-baseline gap-2 px-1">
       <span
         aria-hidden="true"
-        className="inline-block size-1.5 translate-y-[-1px] rounded-full bg-primary/60"
+        className="inline-block size-1.5 -translate-y-px rounded-full bg-primary/60"
       />
       <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
         {children}

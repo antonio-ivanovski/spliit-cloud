@@ -145,9 +145,9 @@ function OptionCard({
       onClick={onClick}
       className={cn(
         'group relative flex w-full items-start gap-3 rounded-lg border bg-card p-3 text-left transition-colors',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card',
+        'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card',
         selected
-          ? 'border-primary bg-primary/[0.04] shadow-[inset_0_0_0_1px_theme(colors.primary)]'
+          ? 'border-primary bg-primary/4 shadow-[inset_0_0_0_1px_var(--color-primary)]'
           : 'border-border hover:border-foreground/25 hover:bg-muted/40',
         disabled && 'cursor-not-allowed opacity-50',
       )}

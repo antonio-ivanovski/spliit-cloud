@@ -33,5 +33,4 @@ export type NormalizedSource = {
 }
 
 export type ImportParseResult =
-  | { ok: true; source: NormalizedSource }
-  | { ok: false; error: string }
+  { ok: true; source: NormalizedSource } | { ok: false; error: string }

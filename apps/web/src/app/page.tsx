@@ -71,7 +71,7 @@ export default function HomePage() {
   if (!isPending && !account) {
     return (
       <main className="flex-1 px-4 py-8 sm:py-12 lg:py-16">
-        <div className="container grid min-h-[calc(100vh-12rem)] max-w-screen-lg items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
+        <div className="container grid min-h-[calc(100vh-12rem)] max-w-(--breakpoint-lg) items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
           <LandingIntro />
           <AuthPanel />
         </div>
@@ -80,7 +80,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="flex-1 max-w-screen-md w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-4 py-6 flex flex-col gap-6">
       <SignedInHero />
       {isPending ? (
         <div className="flex items-center justify-center py-10">
@@ -104,7 +104,7 @@ function SignedInHero() {
           {t('Homepage.welcomeBack', { name: account.name })}
         </p>
       ) : null}
-      <h1 className="!leading-none font-bold text-2xl sm:text-3xl md:text-4xl landing-header py-2">
+      <h1 className="leading-none! font-bold text-2xl sm:text-3xl md:text-4xl landing-header py-2">
         <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
       </h1>
       <p className="leading-normal text-muted-foreground sm:text-lg sm:leading-7">
@@ -137,7 +137,7 @@ function LandingIntro() {
   return (
     <section className="mx-auto flex max-w-2xl flex-col gap-6 text-center lg:mx-0 lg:text-left">
       <div className="flex flex-col gap-4">
-        <h1 className="landing-header py-2 text-3xl font-bold !leading-none sm:text-4xl lg:text-5xl">
+        <h1 className="landing-header py-2 text-3xl font-bold leading-none! sm:text-4xl lg:text-5xl">
           <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
         </h1>
         <p className="text-base leading-7 text-muted-foreground sm:text-lg">

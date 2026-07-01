@@ -9,9 +9,7 @@ const SPLITWISE_ISSUES_URL =
   'https://github.com/antonio-ivanovski/spliit-cloud/issues'
 
 type Status =
-  | { kind: 'idle' }
-  | { kind: 'working' }
-  | { kind: 'error'; message: string }
+  { kind: 'idle' } | { kind: 'working' } | { kind: 'error'; message: string }
 
 /** Triggers a browser download for a blob URL and immediately revokes the
  *  handle. Keeping this server-side safe requires no upload — the file lives

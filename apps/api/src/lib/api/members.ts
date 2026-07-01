@@ -157,9 +157,7 @@ export async function removeMember(opts: {
 export class LeaveGroupPreconditionError extends Error {
   constructor(
     public readonly reason:
-      | 'confirmDeleteRequired'
-      | 'promotionRequired'
-      | 'unsettledBalance',
+      'confirmDeleteRequired' | 'promotionRequired' | 'unsettledBalance',
     message: string,
   ) {
     super(message)

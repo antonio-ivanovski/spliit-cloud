@@ -253,7 +253,7 @@ export function MappingRow({
                 className={`flex flex-col rounded-md border p-2 ${
                   disabled
                     ? 'cursor-not-allowed opacity-60'
-                    : 'cursor-pointer hover:bg-muted/50 has-[[data-state=checked]]:border-primary'
+                    : 'cursor-pointer hover:bg-muted/50 has-data-[state=checked]:border-primary'
                 }`}
               >
                 <div className="flex items-start gap-2">

@@ -44,10 +44,9 @@ const paidBySplitModeSchema = z
   .default('BY_AMOUNT')
 
 const recurrenceRuleSchema = z
-  .enum<
-    RecurrenceRule,
-    [RecurrenceRule, ...RecurrenceRule[]]
-  >(Object.values(RecurrenceRule) as any)
+  .enum<RecurrenceRule, [RecurrenceRule, ...RecurrenceRule[]]>(
+    Object.values(RecurrenceRule) as any,
+  )
   .default('NONE')
 
 const documentsSchema = z

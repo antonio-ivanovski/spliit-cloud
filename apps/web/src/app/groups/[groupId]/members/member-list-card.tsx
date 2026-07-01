@@ -117,7 +117,7 @@ export function MemberListCard({
                         }
                       >
                         <SelectTrigger
-                          className="w-[8rem]"
+                          className="w-32"
                           aria-label={t('changeRoleAria')}
                         >
                           <SelectValue />

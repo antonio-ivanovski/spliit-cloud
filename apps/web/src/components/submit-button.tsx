@@ -19,7 +19,7 @@ export function SubmitButton({
     <Button
       type="submit"
       disabled={isSubmitting}
-      className={cn('min-w-[7rem]', className)}
+      className={cn('min-w-28', className)}
       {...props}
     >
       <span className="inline-flex items-center whitespace-nowrap">
