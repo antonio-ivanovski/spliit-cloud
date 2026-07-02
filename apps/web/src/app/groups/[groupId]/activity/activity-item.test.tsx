@@ -61,15 +61,11 @@ describe('ActivityItem', () => {
         },
       }),
     )
-    expect(
-      screen.getByText(/Alice updated expense Dinner/),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Alice updated expense Dinner/)).toBeInTheDocument()
     // No "Changed:" summary anymore.
     expect(screen.queryByText(/Changed:/)).toBeNull()
     // No detail rows because there's no `changes` array.
-    expect(
-      screen.queryByTestId('activity-item-act-1-change-amount'),
-    ).toBeNull()
+    expect(screen.queryByTestId('activity-item-act-1-change-amount')).toBeNull()
   })
 
   it('renders expense updated without changed fields', () => {
@@ -79,9 +75,7 @@ describe('ActivityItem', () => {
         data: { kind: 'expense', title: 'Lunch' },
       }),
     )
-    expect(
-      screen.getByText(/Alice updated expense Lunch/),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Alice updated expense Lunch/)).toBeInTheDocument()
   })
 
   it('renders expense updated with change rows', () => {
@@ -99,9 +93,7 @@ describe('ActivityItem', () => {
         },
       }),
     )
-    expect(
-      screen.getByText(/Alice updated expense Dinner/),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Alice updated expense Dinner/)).toBeInTheDocument()
     // No "Changed:" summary.
     expect(screen.queryByText(/Changed:/)).toBeNull()
     // Field labels are capitalized display labels.
@@ -126,14 +118,10 @@ describe('ActivityItem', () => {
         },
       }),
     )
-    expect(
-      screen.getByText(/Alice updated expense Lunch/),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Alice updated expense Lunch/)).toBeInTheDocument()
     // No "Changed:" summary and no detail rows for legacy rows.
     expect(screen.queryByText(/Changed:/)).toBeNull()
-    expect(
-      screen.queryByTestId('activity-item-act-1-change-amount'),
-    ).toBeNull()
+    expect(screen.queryByTestId('activity-item-act-1-change-amount')).toBeNull()
   })
 
   it('renders expense deleted', () => {
@@ -168,9 +156,7 @@ describe('ActivityItem', () => {
         data: { kind: 'group' },
       }),
     )
-    expect(
-      screen.getByText(/Alice updated group settings/),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Alice updated group settings/)).toBeInTheDocument()
   })
 
   it('renders group archived', () => {
@@ -283,9 +269,7 @@ describe('ActivityItem', () => {
         data: null,
       }),
     )
-    expect(
-      screen.getByText('An activity was recorded'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('An activity was recorded')).toBeInTheDocument()
   })
 
   it('renders fallback for invalid data kind', () => {
@@ -295,9 +279,7 @@ describe('ActivityItem', () => {
         data: { kind: 'invalid' } as never,
       }),
     )
-    expect(
-      screen.getByText('An activity was recorded'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('An activity was recorded')).toBeInTheDocument()
   })
 
   it('renders fallback when actorName is null using unknownActor', () => {
@@ -308,7 +290,9 @@ describe('ActivityItem', () => {
         actorName: null,
       }),
     )
-    expect(screen.getByText(/Someone created expense Dinner/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/Someone created expense Dinner/),
+    ).toBeInTheDocument()
   })
 
   it('does not crash for unknown activity type with valid data', () => {
@@ -318,8 +302,6 @@ describe('ActivityItem', () => {
         data: { kind: 'expense', title: 'Test' },
       }),
     )
-    expect(
-      screen.getByText('An activity was recorded'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('An activity was recorded')).toBeInTheDocument()
   })
 })

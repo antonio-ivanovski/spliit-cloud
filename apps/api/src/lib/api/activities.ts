@@ -1,3 +1,4 @@
+import type { Activity } from '@spliit/db'
 import { prisma, type Prisma } from '@spliit/db'
 import {
   parseActivityData,
@@ -6,14 +7,13 @@ import {
   type ActivitySubjectType,
   type ActivityType,
 } from '@spliit/domain/activities'
-import type { Activity } from '@spliit/db'
 import { resolveParticipantDisplayName } from '../invitations'
 import { randomId } from './shared'
 export {
   buildExpenseActivityData,
   buildGroupActivityData,
-  buildMemberActivityData,
   buildInvitationActivityData,
+  buildMemberActivityData,
 } from './activity-payloads'
 
 type ActivityClient = Prisma.TransactionClient | typeof prisma
@@ -129,9 +129,7 @@ export async function getActivities(
   // common cases (account name lookup by id, ledger participant lookup
   // by id) so we don't N+1 over the whole activity list.
   const accountActorIds = activities
-    .filter(
-      (a) => a.actorType === 'ACCOUNT' && a.actorId !== null,
-    )
+    .filter((a) => a.actorType === 'ACCOUNT' && a.actorId !== null)
     .map((a) => a.actorId as string)
   const accountActors =
     accountActorIds.length === 0
@@ -140,14 +138,10 @@ export async function getActivities(
           where: { id: { in: accountActorIds } },
           select: { id: true, name: true },
         })
-  const accountActorName = new Map(
-    accountActors.map((a) => [a.id, a.name]),
-  )
+  const accountActorName = new Map(accountActors.map((a) => [a.id, a.name]))
 
   const lpActorIds = activities
-    .filter(
-      (a) => a.actorType === 'LEDGER_PARTICIPANT' && a.actorId !== null,
-    )
+    .filter((a) => a.actorType === 'LEDGER_PARTICIPANT' && a.actorId !== null)
     .map((a) => a.actorId as string)
   const lpActors =
     lpActorIds.length === 0

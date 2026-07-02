@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import '../../test/mocks'
 import { prismaMock, sendEmailMock } from '../../test/state'
 import { ExpenseEmailActivityNotificationDispatcher } from './expense-email-dispatcher'
@@ -13,7 +13,13 @@ function buildEvent(
     groupId: 'grp-1',
     actor: { type: 'ACCOUNT', id: 'acct-alice' },
     subject: { type: 'EXPENSE', id: 'exp-1' },
-    data: { kind: 'expense', title: 'Dinner', amount: 4500, currencyCode: 'EUR', date: '2026-07-02' },
+    data: {
+      kind: 'expense',
+      title: 'Dinner',
+      amount: 4500,
+      currencyCode: 'EUR',
+      date: '2026-07-02',
+    },
     occurredAt: new Date('2026-07-02T12:00:00Z'),
     ...overrides,
   }
@@ -22,7 +28,10 @@ function buildEvent(
 function makeExpenseRow(overrides?: Record<string, unknown>) {
   return {
     paidByList: [{ ledgerParticipantId: 'lp-alice', shares: 4500 }],
-    paidFor: [{ ledgerParticipantId: 'lp-alice', shares: 1 }, { ledgerParticipantId: 'lp-bob', shares: 1 }],
+    paidFor: [
+      { ledgerParticipantId: 'lp-alice', shares: 1 },
+      { ledgerParticipantId: 'lp-bob', shares: 1 },
+    ],
     items: [],
     itemizedRemainder: null,
     ...overrides,
@@ -43,7 +52,8 @@ function makeParticipant(
     status = 'ACTIVE',
     accountId = `acct-${lpId.replace('lp-', '')}`,
     email = `${lpId.replace('lp-', '')}@test.com`,
-    name = lpId.replace('lp-', '').charAt(0).toUpperCase() + lpId.replace('lp-', '').slice(1),
+    name = lpId.replace('lp-', '').charAt(0).toUpperCase() +
+      lpId.replace('lp-', '').slice(1),
     hasGroupMember = true,
   } = overrides ?? {}
   const base: Record<string, unknown> = { id: lpId }
@@ -63,7 +73,11 @@ function makeParticipant(
 const dispatcher = new ExpenseEmailActivityNotificationDispatcher()
 
 beforeEach(() => {
-  prismaMock.group.findUnique.mockResolvedValue({ id: 'grp-1', name: 'Test Group', ledgerId: 'ledger-1' } as never)
+  prismaMock.group.findUnique.mockResolvedValue({
+    id: 'grp-1',
+    name: 'Test Group',
+    ledgerId: 'ledger-1',
+  } as never)
 })
 
 describe('ExpenseEmailActivityNotificationDispatcher', () => {
@@ -74,7 +88,10 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice', { email: 'alice@test.com' }),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({ id: 'acct-alice', name: 'Alice' } as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
 
       await dispatcher.dispatch(buildEvent())
 
@@ -83,7 +100,9 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
       expect(sendEmailMock).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'bob@test.com',
-          subject: expect.stringContaining('[Spliit Cloud] Dinner was added in Test Group'),
+          subject: expect.stringContaining(
+            '[Spliit Cloud] Dinner was added in Test Group',
+          ),
         }),
       )
       const email = sendEmailMock.mock.calls[0][0]
@@ -100,7 +119,10 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({ id: 'acct-alice', name: 'Alice' } as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
 
       const event = buildEvent({
         type: 'EXPENSE_UPDATED',
@@ -132,7 +154,10 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
         makeParticipant('lp-carol', { email: 'carol@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({ id: 'acct-alice', name: 'Alice' } as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
 
       const event = buildEvent({
         type: 'EXPENSE_DELETED',
@@ -165,7 +190,10 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
     it('does not send email to the actor', async () => {
       prismaMock.expense.findUnique.mockResolvedValue(makeExpenseRow() as never)
       prismaMock.ledgerParticipant.findMany.mockResolvedValue([
-        makeParticipant('lp-alice', { accountId: 'acct-alice', email: 'alice@test.com' }),
+        makeParticipant('lp-alice', {
+          accountId: 'acct-alice',
+          email: 'alice@test.com',
+        }),
       ] as never)
 
       await dispatcher.dispatch(buildEvent())
@@ -176,9 +204,11 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
 
   describe('pending invitee skipped', () => {
     it('skips participant with no groupMember', async () => {
-      prismaMock.expense.findUnique.mockResolvedValue(makeExpenseRow({
-        paidFor: [{ ledgerParticipantId: 'lp-pending', shares: 1 }],
-      }) as never)
+      prismaMock.expense.findUnique.mockResolvedValue(
+        makeExpenseRow({
+          paidFor: [{ ledgerParticipantId: 'lp-pending', shares: 1 }],
+        }) as never,
+      )
       prismaMock.ledgerParticipant.findMany.mockResolvedValue([
         makeParticipant('lp-pending', { hasGroupMember: false }),
         makeParticipant('lp-alice'),
@@ -241,20 +271,25 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({ id: 'acct-alice', name: 'Alice' } as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
 
-      await dispatcher.dispatch(buildEvent({
-        type: 'EXPENSE_UPDATED',
-        data: {
-          kind: 'expense',
-          title: 'Dinner',
-          amount: 4500,
-          currencyCode: 'EUR',
-          date: '2026-07-02',
-          changedFields: ['split'],
-          affectedParticipants: ['lp-alice', 'lp-bob'],
-        },
-      }))
+      await dispatcher.dispatch(
+        buildEvent({
+          type: 'EXPENSE_UPDATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            amount: 4500,
+            currencyCode: 'EUR',
+            date: '2026-07-02',
+            changedFields: ['split'],
+            affectedParticipants: ['lp-alice', 'lp-bob'],
+          },
+        }),
+      )
 
       // Bob is in affectedParticipants (was in old expense) and is ACTIVE → gets email
       expect(sendEmailMock).toHaveBeenCalledTimes(1)
@@ -271,7 +306,10 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({ id: 'acct-alice', name: 'Alice' } as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
 
       sendEmailMock.mockRejectedValueOnce(new Error('SMTP down'))
 

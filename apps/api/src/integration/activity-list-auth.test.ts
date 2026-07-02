@@ -1,4 +1,4 @@
-import { prisma, GroupMemberStatus, GroupRole } from '@spliit/db'
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
@@ -147,7 +147,12 @@ describe('Activity list authorization — real DB', () => {
     const invCaller = invitationsRouter.createCaller({
       auth: {
         session: { id: 'sess-test' },
-        user: { id: adminId, email: adminEmail, emailVerified: true, name: 'Test Admin' },
+        user: {
+          id: adminId,
+          email: adminEmail,
+          emailVerified: true,
+          name: 'Test Admin',
+        },
       },
     } as never)
     await invCaller.create({ groupId, email: inviteeEmail, role: 'MEMBER' })
@@ -166,8 +171,13 @@ describe('Activity list authorization — real DB', () => {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
     const allIds = [
-      adminId, memberId, inviteeId, revokedId,
-      leftMemberId, removedMemberId, nonMemberId,
+      adminId,
+      memberId,
+      inviteeId,
+      revokedId,
+      leftMemberId,
+      removedMemberId,
+      nonMemberId,
     ]
     for (const id of allIds) {
       await prisma.account.delete({ where: { id } }).catch(() => {})
@@ -191,31 +201,37 @@ describe('Activity list authorization — real DB', () => {
 
   // 10.2 — Left, removed, revoked, non-member get FORBIDDEN
   it('rejects a left member with FORBIDDEN', async () => {
-    const caller = makeCaller({ accountId: leftMemberId, email: leftMemberEmail })
-    await expect(
-      caller.activities.list({ groupId }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    const caller = makeCaller({
+      accountId: leftMemberId,
+      email: leftMemberEmail,
+    })
+    await expect(caller.activities.list({ groupId })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 
   it('rejects a removed member with FORBIDDEN', async () => {
-    const caller = makeCaller({ accountId: removedMemberId, email: removedMemberEmail })
-    await expect(
-      caller.activities.list({ groupId }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    const caller = makeCaller({
+      accountId: removedMemberId,
+      email: removedMemberEmail,
+    })
+    await expect(caller.activities.list({ groupId })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 
   it('rejects a revoked invitee with FORBIDDEN', async () => {
     const caller = makeCaller({ accountId: revokedId, email: revokedEmail })
-    await expect(
-      caller.activities.list({ groupId }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    await expect(caller.activities.list({ groupId })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 
   it('rejects a non-member with FORBIDDEN', async () => {
     const caller = makeCaller({ accountId: nonMemberId, email: nonMemberEmail })
-    await expect(
-      caller.activities.list({ groupId }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    await expect(caller.activities.list({ groupId })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 
   // 10.4 — Archived group still returns activities

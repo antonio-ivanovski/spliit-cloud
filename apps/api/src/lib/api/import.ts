@@ -5,7 +5,11 @@ import {
   prisma,
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
-import { buildExpenseActivityData, buildGroupActivityData, logActivity } from './activities'
+import {
+  buildExpenseActivityData,
+  buildGroupActivityData,
+  logActivity,
+} from './activities'
 import { randomId } from './shared'
 
 export type ImportParticipantMapping =

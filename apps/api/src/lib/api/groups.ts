@@ -2,10 +2,7 @@ import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { type GroupFormValues } from '@spliit/domain'
 import { resolveParticipantDisplayName } from '../invitations'
 import { buildGroupActivityData, logActivity } from './activities'
-import {
-  loadGroupWithLedger,
-  randomId,
-} from './shared'
+import { loadGroupWithLedger, randomId } from './shared'
 
 /**
  * Create a cloud group with its accounting Ledger. The current account is
@@ -69,10 +66,14 @@ export async function updateGroup(
     throw new Error('Cannot modify settings of an archived group')
   }
 
-  const changedFields: Array<'name' | 'information' | 'currency' | 'currencyCode'> =
-    []
+  const changedFields: Array<
+    'name' | 'information' | 'currency' | 'currencyCode'
+  > = []
   if (existingGroup.name !== groupFormValues.name) changedFields.push('name')
-  if ((existingGroup.information ?? null) !== (groupFormValues.information ?? null)) {
+  if (
+    (existingGroup.information ?? null) !==
+    (groupFormValues.information ?? null)
+  ) {
     changedFields.push('information')
   }
   if (existingGroup.ledger.currency !== groupFormValues.currency) {

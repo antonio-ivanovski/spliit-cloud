@@ -1,12 +1,12 @@
-import { prisma, GroupMemberStatus, GroupRole } from '@spliit/db'
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { groupsRouter } from '../trpc/routers/groups'
-import { checkDbConnection, testRunId } from './setup'
 import {
   setDefaultActivityNotificationDispatchers,
   type ActivityNotificationDispatcher,
   type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
+import { groupsRouter } from '../trpc/routers/groups'
+import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
@@ -228,7 +228,9 @@ describe('Expense activity — real DB', () => {
     const data = activity!.data as Record<string, unknown>
     expect(data.kind).toBe('expense')
     expect(data.title).toBe('Updated Dinner')
-    expect(data.changedFields).toEqual(expect.arrayContaining(['title', 'amount']))
+    expect(data.changedFields).toEqual(
+      expect.arrayContaining(['title', 'amount']),
+    )
 
     // Assert dispatcher event
     await new Promise((resolve) => setTimeout(resolve, 20))

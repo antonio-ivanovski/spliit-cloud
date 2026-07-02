@@ -5,7 +5,7 @@ import {
   logActivity,
 } from './activities'
 import { createSettlementExpensesForLeave, getGroupBalances } from './balances'
-import { getMemberLedgerParticipantId, randomId } from './shared'
+import { randomId } from './shared'
 
 /**
  * Update a member's role inside a group.

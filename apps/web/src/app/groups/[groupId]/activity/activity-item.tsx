@@ -70,8 +70,7 @@ function useMessage(activity: Activity) {
           return { message: t('fallback'), changes: null }
       }
     case 'member': {
-      const targetName =
-        data.targetDisplayName ?? data.displayName ?? ''
+      const targetName = data.targetDisplayName ?? data.displayName ?? ''
       switch (activity.type) {
         case 'MEMBER_LEFT':
           return {

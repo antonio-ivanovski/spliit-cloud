@@ -21,16 +21,21 @@ function formatAmount(cents: number, currencyCode?: string | null): string {
   return currencyCode ? `${currencyCode} ${formatted}` : formatted
 }
 
-export class ExpenseEmailActivityNotificationDispatcher
-  implements ActivityNotificationDispatcher
-{
+export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   async dispatch(event: ActivityNotificationEvent): Promise<void> {
     if (!EXPENSE_EVENT_TYPES.has(event.type)) return
 
     const parsed = parseActivityData(event.data)
     if (!parsed || parsed.kind !== 'expense') return
 
-    const { title, amount, currencyCode, date, affectedParticipants, changedFields } = parsed
+    const {
+      title,
+      amount,
+      currencyCode,
+      date,
+      affectedParticipants,
+      changedFields,
+    } = parsed
     if (!title) return
 
     // Resolve affected participant IDs.
@@ -87,7 +92,9 @@ export class ExpenseEmailActivityNotificationDispatcher
             }
           : undefined,
       } as unknown as Expense
-      participantIds = [...getAffectedParticipantIds({ newExpense: expenseForDiff })]
+      participantIds = [
+        ...getAffectedParticipantIds({ newExpense: expenseForDiff }),
+      ]
     } else {
       participantIds = affectedParticipants ?? []
     }
@@ -162,7 +169,8 @@ export class ExpenseEmailActivityNotificationDispatcher
       const account = participant.groupMember.account
       if (!account?.email) continue
       if (isPlaceholderEmail(account.email)) continue
-      if (event.actor?.id === account.id && event.actor?.type === 'ACCOUNT') continue
+      if (event.actor?.id === account.id && event.actor?.type === 'ACCOUNT')
+        continue
 
       try {
         await sendEmail({ to: account.email, subject, text })

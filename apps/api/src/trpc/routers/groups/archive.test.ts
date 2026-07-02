@@ -389,7 +389,10 @@ describe('groupsRouter.archive — unsettled balances', () => {
         const d = call[0] as {
           data: { data?: { kind?: string; summary?: string } }
         }
-        return d.data?.data?.kind === 'expense' && d.data?.data?.summary === 'Settlement on archive'
+        return (
+          d.data?.data?.kind === 'expense' &&
+          d.data?.data?.summary === 'Settlement on archive'
+        )
       },
     )
     expect(settlementActivityCall).toBeDefined()

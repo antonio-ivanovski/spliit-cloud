@@ -570,18 +570,17 @@ describe('importGroup', () => {
       { accountId: 'acct-importer' },
     )
 
-    const importActivity = activityCreates.find(
-      (a) => {
-        const d = (a.data as { data?: { kind?: string; summary?: string } }).data
-        return d?.kind === 'group' && (d?.summary ?? '').startsWith('Imported from')
-      },
-    )
+    const importActivity = activityCreates.find((a) => {
+      const d = (a.data as { data?: { kind?: string; summary?: string } }).data
+      return (
+        d?.kind === 'group' && (d?.summary ?? '').startsWith('Imported from')
+      )
+    })
     expect(importActivity).toBeDefined()
-    const importData = (importActivity!.data as { data: { summary?: string } }).data
+    const importData = (importActivity!.data as { data: { summary?: string } })
+      .data
     expect(importData.summary).toContain('SPLIIT')
-    expect(importData.summary).toContain(
-      'src-original',
-    )
+    expect(importData.summary).toContain('src-original')
   })
 
   it('uses the $transaction wrapper so the commit is atomic', async () => {

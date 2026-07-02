@@ -458,7 +458,15 @@ describe('getActivities', () => {
       },
     ] as never)
     prismaMock.expense.findMany.mockResolvedValue([
-      { id: 'exp-1', title: 'Dinner', amount: 1000, expenseDate: new Date(), categoryId: 'general', splitMode: 'EVENLY', paidBySplitMode: 'EVENLY' },
+      {
+        id: 'exp-1',
+        title: 'Dinner',
+        amount: 1000,
+        expenseDate: new Date(),
+        categoryId: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+      },
     ] as never)
     prismaMock.account.findMany.mockResolvedValue([
       { id: 'acct-alice', name: 'Alice' },
@@ -1258,7 +1266,8 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
         data: expect.objectContaining({
           data: expect.objectContaining({
             kind: 'group',
-            summary: 'ledger-participant:merged-into-invitation:lp-unlinked:lp-target',
+            summary:
+              'ledger-participant:merged-into-invitation:lp-unlinked:lp-target',
           }),
         }),
       }),

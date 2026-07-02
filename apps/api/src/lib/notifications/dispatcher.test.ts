@@ -1,11 +1,11 @@
-import { describe, expect, it, vi } from 'vitest'
 import type { ActivityData } from '@spliit/domain/activities'
+import { describe, expect, it, vi } from 'vitest'
 import {
   CompositeActivityNotificationDispatcher,
-  scheduleNotificationDispatch,
-  setDefaultActivityNotificationDispatchers,
   getDefaultActivityNotificationDispatcher,
   scheduleDefaultNotificationDispatch,
+  scheduleNotificationDispatch,
+  setDefaultActivityNotificationDispatchers,
 } from './dispatcher'
 import type {
   ActivityNotificationDispatcher,
@@ -55,10 +55,7 @@ describe('CompositeActivityNotificationDispatcher', () => {
   it('continues dispatching when one implementation throws', async () => {
     const ok = new CapturingDispatcher()
     const broken = new ThrowingDispatcher()
-    const composite = new CompositeActivityNotificationDispatcher([
-      broken,
-      ok,
-    ])
+    const composite = new CompositeActivityNotificationDispatcher([broken, ok])
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     await composite.dispatch(buildEvent())
     expect(ok.events).toHaveLength(1)
@@ -100,7 +97,9 @@ describe('scheduleNotificationDispatch', () => {
   it('does not throw when the dispatcher rejects asynchronously', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const broken = new ThrowingDispatcher()
-    expect(() => scheduleNotificationDispatch(broken, buildEvent())).not.toThrow()
+    expect(() =>
+      scheduleNotificationDispatch(broken, buildEvent()),
+    ).not.toThrow()
     await new Promise((resolve) => setTimeout(resolve, 20))
     expect(warn).toHaveBeenCalled()
     warn.mockRestore()

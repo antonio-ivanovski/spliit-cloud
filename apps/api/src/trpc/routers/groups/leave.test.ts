@@ -700,7 +700,10 @@ describe('groupsRouter.leave — unsettled balances', () => {
         const d = call[0] as {
           data: { data?: { kind?: string; summary?: string } }
         }
-        return d.data?.data?.kind === 'expense' && d.data?.data?.summary === 'Settlement on leave'
+        return (
+          d.data?.data?.kind === 'expense' &&
+          d.data?.data?.summary === 'Settlement on leave'
+        )
       },
     )
     expect(settlementActivityCall).toBeDefined()
@@ -926,7 +929,10 @@ describe('groupsRouter.archiveForSelf', () => {
         const d = call[0] as {
           data: { data?: { kind?: string; summary?: string } }
         }
-        return d.data?.data?.kind === 'group' && d.data?.data?.summary === 'group:archived-on-leave'
+        return (
+          d.data?.data?.kind === 'group' &&
+          d.data?.data?.summary === 'group:archived-on-leave'
+        )
       },
     )
     expect(archiveActivityCall).toBeDefined()
