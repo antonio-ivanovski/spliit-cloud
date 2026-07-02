@@ -1,9 +1,8 @@
-import { ActivityType, GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { type GroupFormValues } from '@spliit/domain'
 import { resolveParticipantDisplayName } from '../invitations'
-import { logActivity } from './activities'
+import { buildGroupActivityData, logActivity } from './activities'
 import {
-  getMemberLedgerParticipantId,
   loadGroupWithLedger,
   randomId,
 } from './shared'
@@ -70,17 +69,36 @@ export async function updateGroup(
     throw new Error('Cannot modify settings of an archived group')
   }
 
-  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-    groupId,
-    actor.accountId,
-  )
-
-  await logActivity(groupId, ActivityType.UPDATE_GROUP, {
-    accountId: actor.accountId,
-    ledgerParticipantId: actorLedgerParticipantId,
-  })
+  const changedFields: Array<'name' | 'information' | 'currency' | 'currencyCode'> =
+    []
+  if (existingGroup.name !== groupFormValues.name) changedFields.push('name')
+  if ((existingGroup.information ?? null) !== (groupFormValues.information ?? null)) {
+    changedFields.push('information')
+  }
+  if (existingGroup.ledger.currency !== groupFormValues.currency) {
+    changedFields.push('currency')
+  }
+  if (
+    (existingGroup.ledger.currencyCode ?? null) !==
+    (groupFormValues.currencyCode || null)
+  ) {
+    changedFields.push('currencyCode')
+  }
 
   return prisma.$transaction(async (tx) => {
+    await logActivity(
+      groupId,
+      {
+        type: 'GROUP_UPDATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: groupFormValues.name,
+          ...(changedFields.length > 0 ? { changedFields } : {}),
+        }),
+      },
+      tx,
+    )
     const group = await tx.group.update({
       where: { id: groupId },
       data: {

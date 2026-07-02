@@ -1,5 +1,4 @@
 import {
-  ActivityType,
   GroupInvitationStatus,
   GroupMemberStatus,
   GroupRole,
@@ -7,8 +6,8 @@ import {
   prisma,
   type Prisma,
 } from '@spliit/db'
-import { logActivity } from './activities'
-import { getMemberLedgerParticipantId, randomId } from './shared'
+import { buildGroupActivityData, logActivity } from './activities'
+import { randomId } from './shared'
 
 /**
  * One-way admin migration of an unlinked `LedgerParticipant` to an
@@ -89,18 +88,15 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       })
       await tx.ledgerParticipant.delete({ where: { id: participant.id } })
 
-      const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-        groupId,
-        actor.accountId,
-        tx,
-      )
       await logActivity(
         groupId,
-        ActivityType.UPDATE_GROUP,
         {
-          accountId: actor.accountId,
-          ledgerParticipantId: actorLedgerParticipantId,
-          data: `ledger-participant:merged:${participant.id}:${existingLp.id}`,
+          type: 'GROUP_UPDATED',
+          actor: { type: 'ACCOUNT', id: actor.accountId },
+          subject: { type: 'GROUP', id: groupId },
+          data: buildGroupActivityData({
+            summary: `ledger-participant:merged:${participant.id}:${existingLp.id}`,
+          }),
         },
         tx,
       )
@@ -120,18 +116,15 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       },
     })
 
-    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-      groupId,
-      actor.accountId,
-      tx,
-    )
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: actorLedgerParticipantId,
-        data: `ledger-participant:linked:${participant.id}`,
+        type: 'GROUP_UPDATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: `ledger-participant:linked:${participant.id}`,
+        }),
       },
       tx,
     )
@@ -296,18 +289,15 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
     })
     await tx.ledgerParticipant.delete({ where: { id: participant.id } })
 
-    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-      groupId,
-      actor.accountId,
-      tx,
-    )
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: actorLedgerParticipantId,
-        data: `ledger-participant:merged-into-invitation:${participant.id}:${targetLp.id}`,
+        type: 'GROUP_UPDATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: `ledger-participant:merged-into-invitation:${participant.id}:${targetLp.id}`,
+        }),
       },
       tx,
     )
