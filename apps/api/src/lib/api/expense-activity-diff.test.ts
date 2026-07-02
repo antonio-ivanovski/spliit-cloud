@@ -563,7 +563,7 @@ describe('getExpenseChangeSummary', () => {
     expect(splitChange?.after).toBe('Custom split: Alice 70%, Bob 30%')
   })
 
-  it('produces document count change row', () => {
+  it('produces document count change row with friendly labels', () => {
     const old = makeExpense({
       documents: [{ id: 'doc-1', url: 'https://x/a.png', width: 1, height: 1 }],
     })
@@ -576,9 +576,122 @@ describe('getExpenseChangeSummary', () => {
     const result = getExpenseChangeSummary(old, updated, testCtx)
     expect(result).not.toBeNull()
     const docChange = result!.changes.find((c) => c.field === 'documents')
-    expect(docChange).toEqual({ field: 'documents', before: '1', after: '2' })
+    expect(docChange).toEqual({
+      field: 'documents',
+      before: '1 attachment',
+      after: '2 attachments',
+    })
   })
 
+  it('produces document count row with null for zero documents', () => {
+    const old = makeExpense({
+      documents: [{ id: 'doc-1', url: 'https://x/a.png', width: 1, height: 1 }],
+    })
+    const updated = makeExpense({ documents: [] })
+    const result = getExpenseChangeSummary(old, updated, testCtx)
+    expect(result).not.toBeNull()
+    const docChange = result!.changes.find((c) => c.field === 'documents')
+    expect(docChange).toEqual({
+      field: 'documents',
+      before: '1 attachment',
+      after: null,
+    })
+  })
+
+  it('uses semantic labels for notes (Added / Removed / Present)', () => {
+    // Notes added.
+    const added = getExpenseChangeSummary(
+      makeExpense({ notes: undefined }),
+      makeExpense({ notes: 'important note' }),
+      testCtx,
+    )
+    expect(added).not.toBeNull()
+    const addedChange = added!.changes.find((c) => c.field === 'notes')
+    expect(addedChange).toEqual({
+      field: 'notes',
+      before: null,
+      after: 'Added',
+    })
+
+    // Notes removed.
+    const removed = getExpenseChangeSummary(
+      makeExpense({ notes: 'old note' }),
+      makeExpense({ notes: undefined }),
+      testCtx,
+    )
+    expect(removed).not.toBeNull()
+    const removedChange = removed!.changes.find((c) => c.field === 'notes')
+    expect(removedChange).toEqual({
+      field: 'notes',
+      before: 'Removed',
+      after: null,
+    })
+
+    // Notes modified (content changed, both sides have notes).
+    const modified = getExpenseChangeSummary(
+      makeExpense({ notes: 'version 1' }),
+      makeExpense({ notes: 'version 2' }),
+      testCtx,
+    )
+    expect(modified).not.toBeNull()
+    const modChange = modified!.changes.find((c) => c.field === 'notes')
+    expect(modChange).toEqual({
+      field: 'notes',
+      before: 'Present',
+      after: 'Present',
+    })
+  })
+
+  it('shows item counts instead of generic Changed', () => {
+    // Items added (0 → 2).
+    const result = getExpenseChangeSummary(
+      makeExpense({ splitMode: 'ITEMIZED' }),
+      makeExpense({
+        items: [item({ id: 'i-1' }), item({ id: 'i-2' })],
+        splitMode: 'ITEMIZED',
+      }),
+      testCtx,
+    )
+    expect(result).not.toBeNull()
+    const itemsChange = result!.changes.find((c) => c.field === 'items')
+    expect(itemsChange).toEqual({
+      field: 'items',
+      before: null,
+      after: '2',
+    })
+
+    // Items removed (2 → 0).
+    const removed = getExpenseChangeSummary(
+      makeExpense({
+        items: [item({ id: 'i-1' }), item({ id: 'i-2' })],
+        splitMode: 'ITEMIZED',
+      }),
+      makeExpense({ splitMode: 'ITEMIZED' }),
+      testCtx,
+    )
+    expect(removed).not.toBeNull()
+    const removedChange = removed!.changes.find((c) => c.field === 'items')
+    expect(removedChange).toEqual({
+      field: 'items',
+      before: '2',
+      after: null,
+    })
+  })
+
+  it('produces friendly recurrence labels', () => {
+    const result = getExpenseChangeSummary(
+      makeExpense({ recurrenceRule: 'NONE' }),
+      makeExpense({ recurrenceRule: 'WEEKLY' }),
+      testCtx,
+    )
+    expect(result).not.toBeNull()
+    const recChange = result!.changes.find((c) => c.field === 'recurrence')
+    expect(recChange).toEqual({
+      field: 'recurrence',
+      before: 'Not recurring',
+      after: 'Weekly',
+    })
+  })
   it('returns null for no meaningful change', () => {
     const result = getExpenseChangeSummary(
       makeExpense(),

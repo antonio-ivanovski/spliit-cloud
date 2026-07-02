@@ -64,9 +64,12 @@ describe('ActivityItem', () => {
     expect(
       screen.getByText(/Alice updated expense Dinner/),
     ).toBeInTheDocument()
-    expect(screen.getByText(/Changed:/)).toBeInTheDocument()
-    expect(screen.getByText(/amount/)).toBeInTheDocument()
-    expect(screen.getByText(/date/)).toBeInTheDocument()
+    // No "Changed:" summary anymore.
+    expect(screen.queryByText(/Changed:/)).toBeNull()
+    // No detail rows because there's no `changes` array.
+    expect(
+      screen.queryByTestId('activity-item-act-1-change-amount'),
+    ).toBeNull()
   })
 
   it('renders expense updated without changed fields', () => {
@@ -99,8 +102,16 @@ describe('ActivityItem', () => {
     expect(
       screen.getByText(/Alice updated expense Dinner/),
     ).toBeInTheDocument()
-    expect(screen.getByText(/EUR 12.00.*EUR 15.00/)).toBeInTheDocument()
-    expect(screen.getByText(/Alice.*Alice, Bob/)).toBeInTheDocument()
+    // No "Changed:" summary.
+    expect(screen.queryByText(/Changed:/)).toBeNull()
+    // Field labels are capitalized display labels.
+    expect(screen.getByText('Amount')).toBeInTheDocument()
+    expect(screen.getByText('Paid by')).toBeInTheDocument()
+    // Before/after values render with arrow.
+    const changeAmount = screen.getByTestId('activity-item-act-1-change-amount')
+    expect(changeAmount.textContent).toMatch(/EUR 12.00.*→.*EUR 15.00/)
+    const changePayers = screen.getByTestId('activity-item-act-1-change-payers')
+    expect(changePayers.textContent).toMatch(/Alice.*→.*Alice, Bob/)
   })
 
   it('renders expense updated with changed fields but no changes (legacy compatibility)', () => {
@@ -118,7 +129,11 @@ describe('ActivityItem', () => {
     expect(
       screen.getByText(/Alice updated expense Lunch/),
     ).toBeInTheDocument()
-    expect(screen.getByText(/Changed:/)).toBeInTheDocument()
+    // No "Changed:" summary and no detail rows for legacy rows.
+    expect(screen.queryByText(/Changed:/)).toBeNull()
+    expect(
+      screen.queryByTestId('activity-item-act-1-change-amount'),
+    ).toBeNull()
   })
 
   it('renders expense deleted', () => {
