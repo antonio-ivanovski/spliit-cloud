@@ -1,5 +1,8 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from './generated/prisma/client/client'
+// Pull in prisma-json.d.ts global declarations so consumers see the
+// PrismaJson namespace and bare ActivityType aliases.
+import './prisma-json'
 
 export * from './generated/prisma/client/client'
 
