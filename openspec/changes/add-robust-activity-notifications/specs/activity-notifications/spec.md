@@ -59,7 +59,7 @@ The system SHALL route activity notifications through a dispatcher abstraction t
 
 #### Scenario: Dispatch has activity identity
 - **WHEN** the notification dispatcher receives an event
-- **THEN** the event includes the created activity identifier, activity type, group identifier, actor account identifier, and event-specific metadata
+- **THEN** the event includes the created activity identifier, activity type, group identifier, actor identity, subject identity, and event-specific metadata
 
 #### Scenario: No direct email coupling in mutation logic
 - **WHEN** an expense mutation completes

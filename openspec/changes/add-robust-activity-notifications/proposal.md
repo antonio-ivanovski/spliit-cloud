@@ -5,8 +5,9 @@ Spliit currently records only a small set of coarse activity events, so importan
 ## What Changes
 
 - Expand activity events into a richer, user-facing timeline for group settings, archive state, invitations, member lifecycle, role changes, and expense create/update/delete.
-- Store activity payloads as typed JSON with Zod-backed schemas and a discriminated union shared between API and web.
-- Migrate existing activity enum values to clearer event names:
+- Simplify the `Activity` table into a generic event-log shape with typed `type`, `actorType`/`actorId`, `subjectType`/`subjectId`, and typed JSON `data`.
+- Store activity type, actor type, and subject type as database strings typed in Prisma Client via externally provided `PrismaJson` types inferred from shared Zod schemas, and store activity payloads as typed JSON with a discriminated union shared between API and web.
+- Migrate existing activity type string values to clearer event names:
   - `CREATE_EXPENSE` -> `EXPENSE_CREATED`
   - `UPDATE_EXPENSE` -> `EXPENSE_UPDATED`
   - `DELETE_EXPENSE` -> `EXPENSE_DELETED`
@@ -31,7 +32,7 @@ Spliit currently records only a small set of coarse activity events, so importan
 
 ## Impact
 
-- Prisma schema and migration for `Activity.activityType` enum values and typed JSON `Activity.data`.
+- Prisma schema and migration for generic `Activity` event fields and typed JSON `Activity.data`, sacrificing existing activity FK compatibility for a simpler future-facing event model.
 - Shared domain schemas for activity payload validation and frontend-safe parsing.
 - API activity logging helpers, expense mutation services, member/invitation/group mutation services, and notification dispatch abstraction.
 - Web activity feed rendering and translations for new activity event types and lightweight changed-field summaries.
