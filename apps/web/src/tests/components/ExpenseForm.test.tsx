@@ -1147,8 +1147,8 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
       originalCurrency: '',
       paidBySplitMode: 'BY_SHARES' as const,
       paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 100 },
-        { ledgerParticipantId: 'lp-2', shares: 200 },
+        { ledgerParticipantId: 'lp-1', shares: 1 },
+        { ledgerParticipantId: 'lp-2', shares: 2 },
       ],
     }
     render(

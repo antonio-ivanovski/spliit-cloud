@@ -147,6 +147,87 @@ describe('mergeLedgerParticipantReferences — same-expense coalesce', () => {
     expect(remainingSourcePaidFor).toBe(0)
   })
 
+  it('coalesces item and itemized remainder paidFor rows when source and target share an itemized expense', async () => {
+    const ledgerId = await createLedger()
+    const sourceLpId = await createLp(ledgerId, 'Source')
+    const targetLpId = await createLp(ledgerId, 'Target')
+
+    const expenseId = `mpr-exp-item-${randomId()}`
+    const itemId = `mpr-item-${randomId()}`
+    trackExpense(expenseId)
+
+    await prisma.expense.create({
+      data: {
+        id: expenseId,
+        ledgerId,
+        title: 'Shared itemized expense',
+        amount: 1000,
+        expenseDate: new Date('2025-01-01'),
+        categoryId: 'general',
+        paidBySplitMode: SplitMode.BY_AMOUNT,
+        splitMode: SplitMode.ITEMIZED,
+        paidByList: {
+          create: [{ ledgerParticipantId: targetLpId, shares: 1000 }],
+        },
+        paidFor: {
+          create: [{ ledgerParticipantId: targetLpId, shares: 1000 }],
+        },
+        items: {
+          create: [
+            {
+              id: itemId,
+              title: 'Shared item',
+              unitPrice: 700,
+              quantity: 1,
+              amount: 700,
+              splitMode: SplitMode.BY_AMOUNT,
+              paidFor: {
+                create: [
+                  { ledgerParticipantId: sourceLpId, shares: 400 },
+                  { ledgerParticipantId: targetLpId, shares: 300 },
+                ],
+              },
+            },
+          ],
+        },
+        itemizedRemainder: {
+          create: {
+            splitMode: SplitMode.BY_AMOUNT,
+            paidFor: {
+              create: [
+                { ledgerParticipantId: sourceLpId, shares: 100 },
+                { ledgerParticipantId: targetLpId, shares: 200 },
+              ],
+            },
+          },
+        },
+      },
+    })
+
+    await prisma.$transaction(async (tx) => {
+      await mergeLedgerParticipantReferences(tx, {
+        sourceId: sourceLpId,
+        targetId: targetLpId,
+      })
+      await tx.ledgerParticipant.delete({ where: { id: sourceLpId } })
+    })
+
+    const itemPaidFor = await prisma.expenseItemPaidFor.findMany({
+      where: { expenseItemId: itemId },
+    })
+    expect(itemPaidFor).toHaveLength(1)
+    expect(itemPaidFor[0].ledgerParticipantId).toBe(targetLpId)
+    expect(itemPaidFor[0].shares).toBe(700)
+
+    const remainderPaidFor =
+      await prisma.expenseItemizedRemainderPaidFor.findMany({
+        where: { expenseId },
+      })
+    expect(remainderPaidFor).toHaveLength(1)
+    expect(remainderPaidFor[0].ledgerParticipantId).toBe(targetLpId)
+    expect(remainderPaidFor[0].shares).toBe(300)
+  })
+
   // ────────────────────────────────────────────────────────────────────
   // 2. Source on expense A, target on expense B: independent paths.
   // ────────────────────────────────────────────────────────────────────

@@ -1261,5 +1261,43 @@
       "nameTooLong": "El nombre debe tener como máximo 50 caracteres.",
       "generic": "Algo salió mal. Inténtalo de nuevo."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} creó el gasto {title}",
+      "updated": "{participant} actualizó el gasto {title}",
+      "deleted": "{participant} eliminó el gasto {title}",
+      "changeEmptyValue": "No establecido",
+      "changedFields": {
+        "title": "Título",
+        "amount": "Importe",
+        "date": "Fecha",
+        "category": "Categoría",
+        "notes": "Notas",
+        "payers": "Pagado por",
+        "split": "Reparto",
+        "items": "Líneas",
+        "documents": "Documentos",
+        "recurrence": "Recurrencia"
+      }
+    },
+    "group": {
+      "updated": "{participant} actualizó la configuración del grupo",
+      "archived": "{participant} archivó el grupo",
+      "unarchived": "{participant} desarchivó el grupo"
+    },
+    "member": {
+      "left": "{participant} abandonó el grupo",
+      "removed": "{participant} eliminó a {target} del grupo",
+      "roleChanged": "{participant} cambió el rol de {target} de {previousRole} a {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} invitó a {target}",
+      "revoked": "{participant} revocó la invitación a {target}",
+      "accepted": "{target} aceptó la invitación",
+      "declined": "{target} rechazó la invitación"
+    },
+    "fallback": "Se registró una actividad",
+    "unknownActor": "Alguien"
   }
 }

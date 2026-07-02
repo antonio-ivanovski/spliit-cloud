@@ -6,6 +6,10 @@ generator client {
   output   = "../src/generated/prisma/client"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "postgresql"
 }
@@ -37,7 +41,6 @@ model Account {
   sessions       Session[]
 
   groupMemberships    GroupMember[]
-  activities          Activity[]
   // Invitations this account has been the target of (accepted-by).
   receivedInvitations GroupInvitation[]        @relation("InvitationInviteeAccount")
   // Invitations this account has issued as an owner/admin.
@@ -151,7 +154,6 @@ model LedgerParticipant {
   expensesPaidFor                 ExpensePaidFor[]
   expenseItemPaidFor              ExpenseItemPaidFor[]
   expenseItemizedRemainderPaidFor ExpenseItemizedRemainderPaidFor[]
-  activities                      Activity[]
   // Pending invitations that materialized this ledger participant to allow
   // pre-accept expenses. The link is cleared when the invitation is revoked.
   invitations                     GroupInvitation[]
@@ -479,26 +481,26 @@ model ExpenseItemizedRemainderPaidFor {
 }
 
 model Activity {
-  id                  String             @id
-  ledger              Ledger             @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
-  ledgerId            String
-  time                DateTime           @default(now())
-  activityType        ActivityType
-  // Actor identifier: a ledger participant id (member-backed) when applicable.
-  ledgerParticipant   LedgerParticipant? @relation(fields: [ledgerParticipantId], references: [id], onDelete: SetNull)
-  ledgerParticipantId String?
-  // Optional: the account id of the actor (when known).
-  account             Account?           @relation(fields: [accountId], references: [id], onDelete: SetNull)
-  accountId           String?
-  expenseId           String?
-  data                String?
+  id     String   @id
+  ledger Ledger   @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId String
+  time   DateTime @default(now())
 
-  @@index([ledgerId])
-}
+  /// ![ActivityType]
+  type String
 
-enum ActivityType {
-  UPDATE_GROUP
-  CREATE_EXPENSE
-  UPDATE_EXPENSE
-  DELETE_EXPENSE
+  /// ![ActivityActorType]
+  actorType String?
+  actorId   String?
+
+  /// ![ActivitySubjectType]
+  subjectType String?
+  subjectId   String?
+
+  /// [ActivityData]
+  data Json?
+
+  @@index([ledgerId, time])
+  @@index([ledgerId, type, time])
+  @@index([subjectType, subjectId])
 }

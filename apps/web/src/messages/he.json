@@ -1261,5 +1261,43 @@
       "nameTooLong": "השם חייב להכיל לכל היותר 50 תווים.",
       "generic": "משהו השתבש. נסה שוב."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} יצר הוצאה {title}",
+      "updated": "{participant} עדכן הוצאה {title}",
+      "deleted": "{participant} מחק הוצאה {title}",
+      "changeEmptyValue": "לא הוגדר",
+      "changedFields": {
+        "title": "כותרת",
+        "amount": "סכום",
+        "date": "תאריך",
+        "category": "קטגוריה",
+        "notes": "הערות",
+        "payers": "שולם על ידי",
+        "split": "חלוקה",
+        "items": "פריטים",
+        "documents": "קבצים מצורפים",
+        "recurrence": "תדירות"
+      }
+    },
+    "group": {
+      "updated": "{participant} עדכן את הגדרות הקבוצה",
+      "archived": "{participant} ארכב את הקבוצה",
+      "unarchived": "{participant} ביטל ארכוב של הקבוצה"
+    },
+    "member": {
+      "left": "{participant} עזב את הקבוצה",
+      "removed": "{participant} הסיר את {target} מהקבוצה",
+      "roleChanged": "{participant} שינה את התפקיד של {target} מ-{previousRole} ל-{nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} הזמין את {target}",
+      "revoked": "{participant} ביטל את ההזמנה ל-{target}",
+      "accepted": "{target} קיבל/ה את ההזמנה",
+      "declined": "{target} דחה/ה את ההזמנה"
+    },
+    "fallback": "נרשמה פעילות",
+    "unknownActor": "מישהו"
   }
 }

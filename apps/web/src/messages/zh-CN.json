@@ -1261,5 +1261,43 @@
       "nameTooLong": "名称最多50个字符。",
       "generic": "出了点问题。请重试。"
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} 创建了支出 {title}",
+      "updated": "{participant} 更新了支出 {title}",
+      "deleted": "{participant} 删除了支出 {title}",
+      "changeEmptyValue": "未设置",
+      "changedFields": {
+        "title": "标题",
+        "amount": "金额",
+        "date": "日期",
+        "category": "类别",
+        "notes": "备注",
+        "payers": "付款人",
+        "split": "分摊",
+        "items": "明细",
+        "documents": "附件",
+        "recurrence": "重复"
+      }
+    },
+    "group": {
+      "updated": "{participant} 更新了群组设置",
+      "archived": "{participant} 归档了群组",
+      "unarchived": "{participant} 恢复了群组"
+    },
+    "member": {
+      "left": "{participant} 离开了群组",
+      "removed": "{participant} 将 {target} 移出了群组",
+      "roleChanged": "{participant} 将 {target} 的角色从 {previousRole} 更改为 {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} 邀请了 {target}",
+      "revoked": "{participant} 撤回了对 {target} 的邀请",
+      "accepted": "{target} 接受了邀请",
+      "declined": "{target} 拒绝了邀请"
+    },
+    "fallback": "已记录一条活动",
+    "unknownActor": "某人"
   }
 }

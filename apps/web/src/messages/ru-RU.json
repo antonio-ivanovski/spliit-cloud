@@ -1261,5 +1261,43 @@
       "nameTooLong": "Имя должно содержать не более 50 символов.",
       "generic": "Что-то пошло не так. Пожалуйста, попробуйте снова."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} создал(а) расход {title}",
+      "updated": "{participant} обновил(а) расход {title}",
+      "deleted": "{participant} удалил(а) расход {title}",
+      "changeEmptyValue": "Не задано",
+      "changedFields": {
+        "title": "Название",
+        "amount": "Сумма",
+        "date": "Дата",
+        "category": "Категория",
+        "notes": "Заметки",
+        "payers": "Плательщик",
+        "split": "Разделение",
+        "items": "Позиции",
+        "documents": "Вложения",
+        "recurrence": "Повторение"
+      }
+    },
+    "group": {
+      "updated": "{participant} обновил(а) настройки группы",
+      "archived": "{participant} архивировал(а) группу",
+      "unarchived": "{participant} разархивировал(а) группу"
+    },
+    "member": {
+      "left": "{participant} покинул(а) группу",
+      "removed": "{participant} удалил(а) {target} из группы",
+      "roleChanged": "{participant} изменил(а) роль {target} с {previousRole} на {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} пригласил(а) {target}",
+      "revoked": "{participant} отозвал(а) приглашение для {target}",
+      "accepted": "{target} принял(а) приглашение",
+      "declined": "{target} отклонил(а) приглашение"
+    },
+    "fallback": "Активность зарегистрирована",
+    "unknownActor": "Кто-то"
   }
 }

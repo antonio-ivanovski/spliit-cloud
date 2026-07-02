@@ -1261,5 +1261,43 @@
       },
       "linkButton": "Link"
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} created expense {title}",
+      "updated": "{participant} updated expense {title}",
+      "deleted": "{participant} deleted expense {title}",
+      "changedFields": {
+        "title": "Title",
+        "amount": "Amount",
+        "date": "Date",
+        "category": "Category",
+        "notes": "Notes",
+        "payers": "Paid by",
+        "split": "Split",
+        "items": "Line items",
+        "documents": "Attachments",
+        "recurrence": "Recurrence"
+      },
+      "changeEmptyValue": "Not set"
+    },
+    "group": {
+      "updated": "{participant} updated group settings",
+      "archived": "{participant} archived the group",
+      "unarchived": "{participant} unarchived the group"
+    },
+    "member": {
+      "left": "{participant} left the group",
+      "removed": "{participant} removed {target} from the group",
+      "roleChanged": "{participant} changed {target}'s role from {previousRole} to {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} invited {target}",
+      "revoked": "{participant} revoked invitation to {target}",
+      "accepted": "{target} accepted the invitation",
+      "declined": "{target} declined the invitation"
+    },
+    "fallback": "An activity was recorded",
+    "unknownActor": "Someone"
   }
 }

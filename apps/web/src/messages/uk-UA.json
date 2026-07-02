@@ -1261,5 +1261,43 @@
       "nameTooLong": "Ім'я повинно містити не більше 50 символів.",
       "generic": "Щось пішло не так. Спробуйте ще раз."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} створив витрату {title}",
+      "updated": "{participant} оновив витрату {title}",
+      "deleted": "{participant} видалив витрату {title}",
+      "changeEmptyValue": "Не встановлено",
+      "changedFields": {
+        "title": "Назва",
+        "amount": "Сума",
+        "date": "Дата",
+        "category": "Категорія",
+        "notes": "Нотатки",
+        "payers": "Платник",
+        "split": "Розподіл",
+        "items": "Позиції",
+        "documents": "Вкладення",
+        "recurrence": "Повторення"
+      }
+    },
+    "group": {
+      "updated": "{participant} оновив налаштування групи",
+      "archived": "{participant} заархівував групу",
+      "unarchived": "{participant} розархівував групу"
+    },
+    "member": {
+      "left": "{participant} покинув групу",
+      "removed": "{participant} видалив {target} з групи",
+      "roleChanged": "{participant} змінив роль {target} з {previousRole} на {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} запросив {target}",
+      "revoked": "{participant} відкликав запрошення для {target}",
+      "accepted": "{target} прийняв запрошення",
+      "declined": "{target} відхилив запрошення"
+    },
+    "fallback": "Активність зареєстровано",
+    "unknownActor": "Хтось"
   }
 }

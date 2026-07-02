@@ -1261,5 +1261,43 @@
       "nameTooLong": "Der Name darf höchstens 50 Zeichen lang sein.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} erstellte Ausgabe {title}",
+      "updated": "{participant} aktualisierte Ausgabe {title}",
+      "deleted": "{participant} löschte Ausgabe {title}",
+      "changeEmptyValue": "Nicht gesetzt",
+      "changedFields": {
+        "title": "Titel",
+        "amount": "Betrag",
+        "date": "Datum",
+        "category": "Kategorie",
+        "notes": "Notizen",
+        "payers": "Bezahlt von",
+        "split": "Aufteilung",
+        "items": "Positionen",
+        "documents": "Anhänge",
+        "recurrence": "Wiederholung"
+      }
+    },
+    "group": {
+      "updated": "{participant} aktualisierte die Gruppeneinstellungen",
+      "archived": "{participant} archivierte die Gruppe",
+      "unarchived": "{participant} entarchivierte die Gruppe"
+    },
+    "member": {
+      "left": "{participant} verließ die Gruppe",
+      "removed": "{participant} entfernte {target} aus der Gruppe",
+      "roleChanged": "{participant} änderte die Rolle von {target} von {previousRole} zu {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} lud {target} ein",
+      "revoked": "{participant} widerrief die Einladung für {target}",
+      "accepted": "{target} nahm die Einladung an",
+      "declined": "{target} lehnte die Einladung ab"
+    },
+    "fallback": "Eine Aktivität wurde aufgezeichnet",
+    "unknownActor": "Jemand"
   }
 }

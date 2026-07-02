@@ -1261,5 +1261,43 @@
       "nameTooLong": "名稱最多50個字元。",
       "generic": "出了點問題。請重試。"
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} 建立了支出 {title}",
+      "updated": "{participant} 更新了支出 {title}",
+      "deleted": "{participant} 刪除了支出 {title}",
+      "changeEmptyValue": "未設定",
+      "changedFields": {
+        "title": "標題",
+        "amount": "金額",
+        "date": "日期",
+        "category": "類別",
+        "notes": "備註",
+        "payers": "付款人",
+        "split": "分攤",
+        "items": "明細",
+        "documents": "附件",
+        "recurrence": "重複"
+      }
+    },
+    "group": {
+      "updated": "{participant} 更新了群組設定",
+      "archived": "{participant} 封存了群組",
+      "unarchived": "{participant} 還原了群組"
+    },
+    "member": {
+      "left": "{participant} 離開了群組",
+      "removed": "{participant} 將 {target} 移出了群組",
+      "roleChanged": "{participant} 將 {target} 的角色從 {previousRole} 變更為 {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} 邀請了 {target}",
+      "revoked": "{participant} 撤回了對 {target} 的邀請",
+      "accepted": "{target} 接受了邀請",
+      "declined": "{target} 拒絕了邀請"
+    },
+    "fallback": "已記錄一項活動",
+    "unknownActor": "某人"
   }
 }

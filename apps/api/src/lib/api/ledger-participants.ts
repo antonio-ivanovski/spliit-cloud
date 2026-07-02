@@ -1,5 +1,4 @@
 import {
-  ActivityType,
   GroupInvitationStatus,
   GroupMemberStatus,
   GroupRole,
@@ -7,8 +6,8 @@ import {
   prisma,
   type Prisma,
 } from '@spliit/db'
-import { logActivity } from './activities'
-import { getMemberLedgerParticipantId, randomId } from './shared'
+import { buildGroupActivityData, logActivity } from './activities'
+import { randomId } from './shared'
 
 /**
  * One-way admin migration of an unlinked `LedgerParticipant` to an
@@ -89,18 +88,15 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       })
       await tx.ledgerParticipant.delete({ where: { id: participant.id } })
 
-      const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-        groupId,
-        actor.accountId,
-        tx,
-      )
       await logActivity(
         groupId,
-        ActivityType.UPDATE_GROUP,
         {
-          accountId: actor.accountId,
-          ledgerParticipantId: actorLedgerParticipantId,
-          data: `ledger-participant:merged:${participant.id}:${existingLp.id}`,
+          type: 'GROUP_UPDATED',
+          actor: { type: 'ACCOUNT', id: actor.accountId },
+          subject: { type: 'GROUP', id: groupId },
+          data: buildGroupActivityData({
+            summary: `ledger-participant:merged:${participant.id}:${existingLp.id}`,
+          }),
         },
         tx,
       )
@@ -120,18 +116,15 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       },
     })
 
-    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-      groupId,
-      actor.accountId,
-      tx,
-    )
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: actorLedgerParticipantId,
-        data: `ledger-participant:linked:${participant.id}`,
+        type: 'GROUP_UPDATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: `ledger-participant:linked:${participant.id}`,
+        }),
       },
       tx,
     )
@@ -154,12 +147,26 @@ export async function mergeLedgerParticipantReferences(
 
   await coalesceExpenseReferences(tx.expensePaidBy, sourceId, targetId)
   await coalesceExpenseReferences(tx.expensePaidFor, sourceId, targetId)
+  await coalesceExpenseReferences(
+    tx.expenseItemizedRemainderPaidFor,
+    sourceId,
+    targetId,
+  )
+  await coalesceExpenseItemReferences(tx.expenseItemPaidFor, sourceId, targetId)
 
   await tx.expensePaidBy.updateMany({
     where: { ledgerParticipantId: sourceId },
     data: { ledgerParticipantId: targetId },
   })
   await tx.expensePaidFor.updateMany({
+    where: { ledgerParticipantId: sourceId },
+    data: { ledgerParticipantId: targetId },
+  })
+  await tx.expenseItemizedRemainderPaidFor.updateMany({
+    where: { ledgerParticipantId: sourceId },
+    data: { ledgerParticipantId: targetId },
+  })
+  await tx.expenseItemPaidFor.updateMany({
     where: { ledgerParticipantId: sourceId },
     data: { ledgerParticipantId: targetId },
   })
@@ -223,6 +230,71 @@ async function coalesceExpenseReferences<
       where: {
         expenseId_ledgerParticipantId: {
           expenseId: row.expenseId,
+          ledgerParticipantId: sourceId,
+        },
+      },
+    })
+  }
+}
+
+async function coalesceExpenseItemReferences<
+  T extends {
+    findMany: (args: {
+      where: { ledgerParticipantId: string }
+    }) => Promise<Array<{ expenseItemId: string; shares: number }>>
+    findUnique: (args: {
+      where: {
+        expenseItemId_ledgerParticipantId: {
+          expenseItemId: string
+          ledgerParticipantId: string
+        }
+      }
+    }) => Promise<{ expenseItemId: string; shares: number } | null>
+    update: (args: {
+      where: {
+        expenseItemId_ledgerParticipantId: {
+          expenseItemId: string
+          ledgerParticipantId: string
+        }
+      }
+      data: { shares: number }
+    }) => Promise<unknown>
+    delete: (args: {
+      where: {
+        expenseItemId_ledgerParticipantId: {
+          expenseItemId: string
+          ledgerParticipantId: string
+        }
+      }
+    }) => Promise<unknown>
+  },
+>(table: T, sourceId: string, targetId: string): Promise<void> {
+  const sourceRows = await table.findMany({
+    where: { ledgerParticipantId: sourceId },
+  })
+  for (const row of sourceRows) {
+    const target = await table.findUnique({
+      where: {
+        expenseItemId_ledgerParticipantId: {
+          expenseItemId: row.expenseItemId,
+          ledgerParticipantId: targetId,
+        },
+      },
+    })
+    if (!target) continue
+    await table.update({
+      where: {
+        expenseItemId_ledgerParticipantId: {
+          expenseItemId: target.expenseItemId,
+          ledgerParticipantId: targetId,
+        },
+      },
+      data: { shares: target.shares + row.shares },
+    })
+    await table.delete({
+      where: {
+        expenseItemId_ledgerParticipantId: {
+          expenseItemId: row.expenseItemId,
           ledgerParticipantId: sourceId,
         },
       },
@@ -296,18 +368,15 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
     })
     await tx.ledgerParticipant.delete({ where: { id: participant.id } })
 
-    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-      groupId,
-      actor.accountId,
-      tx,
-    )
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: actorLedgerParticipantId,
-        data: `ledger-participant:merged-into-invitation:${participant.id}:${targetLp.id}`,
+        type: 'GROUP_UPDATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: `ledger-participant:merged-into-invitation:${participant.id}:${targetLp.id}`,
+        }),
       },
       tx,
     )

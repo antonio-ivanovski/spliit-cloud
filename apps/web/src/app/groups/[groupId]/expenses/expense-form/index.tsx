@@ -79,12 +79,23 @@ export function ExpenseForm(props: {
     : groupCurrency
 
   const { setManuallyEditedParticipants, setManuallyEditedPayers } =
-    useExpenseFormBalancing({ form, groupCurrency, payerCurrency })
+    useExpenseFormBalancing({ form, payerCurrency })
 
   const sExpense = (isIncome ? 'Income' : 'Expense') as 'Expense' | 'Income'
 
   const submit = async (values: ExpenseFormInputValues) => {
     if (props.readOnly) return
+    const rate = Number(values.conversionRate)
+    if (
+      conversion.conversionRequired &&
+      (!rate || Number.isNaN(rate) || rate <= 0)
+    ) {
+      form.setError('conversionRate', {
+        type: 'manual',
+        message: 'ratePositive',
+      })
+      return
+    }
     await persistDefaultSplittingOptions(props.group.id, form.getValues())
     return props.onSubmit(
       buildSubmitValues(values, {

@@ -236,7 +236,8 @@ export function buildExpenseFormDefaults(args: {
           )
         : expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
             participant: ledgerParticipantId,
-            shares: shares / 100,
+            shares:
+              expense.splitMode === 'BY_PERCENTAGE' ? shares / 100 : shares,
           }))
 
     // paidBy shares are stored in originalCurrency minor units when
@@ -250,7 +251,10 @@ export function buildExpenseFormDefaults(args: {
           }))
         : expense.paidByList.map(({ ledgerParticipantId, shares }) => ({
             participant: ledgerParticipantId,
-            shares: shares / 100,
+            shares:
+              expense.paidBySplitMode === 'BY_PERCENTAGE'
+                ? shares / 100
+                : shares,
           }))
 
     const itemAmountAsDisplay = (amount: number) =>

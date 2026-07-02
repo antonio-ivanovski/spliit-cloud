@@ -2,9 +2,11 @@ import { prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
+  buildGroupActivityData,
   createSettlementExpensesForArchive,
   getGroupBalances,
   hasUnsettledBalances,
+  logActivity,
 } from '../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../init'
 
@@ -62,8 +64,6 @@ export const archiveGroupProcedure = protectedProcedure
 
     if (willArchive && force) {
       return prisma.$transaction(async (tx) => {
-        // Re-check inside the transaction in case balances changed
-        // between the optimistic read above and the write.
         const balances = await getGroupBalances(groupId)
         if (hasUnsettledBalances(balances)) {
           await createSettlementExpensesForArchive(
@@ -76,13 +76,37 @@ export const archiveGroupProcedure = protectedProcedure
           where: { id: groupId },
           data: { archived: true },
         })
+        await logActivity(
+          groupId,
+          {
+            type: 'GROUP_ARCHIVED',
+            actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+            subject: { type: 'GROUP', id: groupId },
+            data: buildGroupActivityData({ summary: updated.name }),
+          },
+          tx,
+        )
         return { group: updated }
       })
     }
+
+    const willUnarchive = archived === false && wasAlreadyArchived
 
     const updated = await prisma.group.update({
       where: { id: groupId },
       data: { archived },
     })
+
+    if (willArchive || willUnarchive) {
+      await logActivity(groupId, {
+        type: willArchive ? 'GROUP_ARCHIVED' : 'GROUP_UNARCHIVED',
+        actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: willArchive ? updated.name : updated.name,
+        }),
+      })
+    }
+
     return { group: updated }
   })

@@ -1261,5 +1261,43 @@
       "nameTooLong": "Numele trebuie să aibă cel mult 50 de caractere.",
       "generic": "Ceva a mers greșit. Încercați din nou."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} a creat cheltuiala {title}",
+      "updated": "{participant} a actualizat cheltuiala {title}",
+      "deleted": "{participant} a șters cheltuiala {title}",
+      "changeEmptyValue": "Nesetat",
+      "changedFields": {
+        "title": "Titlu",
+        "amount": "Suma",
+        "date": "Data",
+        "category": "Categorie",
+        "notes": "Note",
+        "payers": "Plătit de",
+        "split": "Împărțire",
+        "items": "Elemente",
+        "documents": "Documente",
+        "recurrence": "Recurență"
+      }
+    },
+    "group": {
+      "updated": "{participant} a actualizat setările grupului",
+      "archived": "{participant} a arhivat grupul",
+      "unarchived": "{participant} a dezarhivat grupul"
+    },
+    "member": {
+      "left": "{participant} a părăsit grupul",
+      "removed": "{participant} a eliminat pe {target} din grup",
+      "roleChanged": "{participant} a schimbat rolul lui {target} din {previousRole} în {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} a invitat pe {target}",
+      "revoked": "{participant} a revocat invitația pentru {target}",
+      "accepted": "{target} a acceptat invitația",
+      "declined": "{target} a respins invitația"
+    },
+    "fallback": "O activitate a fost înregistrată",
+    "unknownActor": "Cineva"
   }
 }

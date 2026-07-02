@@ -13,7 +13,12 @@ function useInvalidateExpenseDependencies(linkInviteToken: string | undefined) {
 
   return ({ groupId, expenseId }: { groupId: string; expenseId?: string }) =>
     Promise.all([
-      utils.groups.expenses.list.invalidate({ groupId }),
+      utils.groups.expenses.list.reset({
+        groupId,
+        limit: EXPENSE_LIST_PAGE_SIZE,
+        filter: '',
+        linkInviteToken,
+      }),
       expenseId
         ? utils.groups.expenses.get.invalidate({
             groupId,

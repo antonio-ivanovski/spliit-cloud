@@ -1261,5 +1261,43 @@
       "nameTooLong": "El nom ha de tenir com a màxim 50 caràcters.",
       "generic": "Alguna cosa ha anat malament. Torneu-ho a provar."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} ha creat la despesa {title}",
+      "updated": "{participant} ha actualitzat la despesa {title}",
+      "deleted": "{participant} ha eliminat la despesa {title}",
+      "changeEmptyValue": "No establert",
+      "changedFields": {
+        "title": "Títol",
+        "amount": "Import",
+        "date": "Data",
+        "category": "Categoria",
+        "notes": "Notes",
+        "payers": "Pagat per",
+        "split": "Repartiment",
+        "items": "Línies",
+        "documents": "Documents",
+        "recurrence": "Recurrència"
+      }
+    },
+    "group": {
+      "updated": "{participant} ha actualitzat la configuració del grup",
+      "archived": "{participant} ha arxivat el grup",
+      "unarchived": "{participant} ha desarxivat el grup"
+    },
+    "member": {
+      "left": "{participant} ha sortit del grup",
+      "removed": "{participant} ha eliminat {target} del grup",
+      "roleChanged": "{participant} ha canviat el rol de {target} de {previousRole} a {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} ha convidat {target}",
+      "revoked": "{participant} ha revocat la invitació a {target}",
+      "accepted": "{target} ha acceptat la invitació",
+      "declined": "{target} ha rebutjat la invitació"
+    },
+    "fallback": "S'ha registrat una activitat",
+    "unknownActor": "Algú"
   }
 }
