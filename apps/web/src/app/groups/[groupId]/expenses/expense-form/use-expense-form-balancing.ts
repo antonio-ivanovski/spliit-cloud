@@ -5,7 +5,6 @@ import { useWatch } from 'react-hook-form'
 
 export function useExpenseFormBalancing(args: {
   form: UseFormReturn<ExpenseFormInputValues>
-  groupCurrency: Currency
   payerCurrency: Currency
 }): {
   setManuallyEditedParticipants: React.Dispatch<
@@ -26,11 +25,11 @@ export function useExpenseFormBalancing(args: {
   const amount = useWatch({ control: args.form.control, name: 'amount' })
 
   // Instead of useEffect + setState to reset the sets when splitMode or
-  // amount changes, we store the edits together with an "epoch" derived
-  // from the watched values. When the epoch changes, the effective set
-  // is automatically empty — no effect needed.
-  const participantsEpoch = `${splitMode}-${amount}`
-  const payersEpoch = `${paidBySplitMode}-${amount}`
+  // amount/currency changes, we store the edits together with an "epoch"
+  // derived from the watched values. When the epoch changes, the effective
+  // set is automatically empty — no effect needed.
+  const participantsEpoch = `${splitMode}-${amount}-${args.payerCurrency.code}`
+  const payersEpoch = `${paidBySplitMode}-${amount}-${args.payerCurrency.code}`
 
   const [participantEdits, setParticipantEdits] = useState(() => ({
     epoch: participantsEpoch,
@@ -123,7 +122,7 @@ export function useExpenseFormBalancing(args: {
             return {
               ...participant,
               shares: Number(
-                amountPerRemaining.toFixed(args.groupCurrency.decimal_digits),
+                amountPerRemaining.toFixed(args.payerCurrency.decimal_digits),
               ),
             }
           }
@@ -137,7 +136,7 @@ export function useExpenseFormBalancing(args: {
     amount,
     splitMode,
     args.form,
-    args.groupCurrency.decimal_digits,
+    args.payerCurrency.decimal_digits,
   ])
 
   useEffect(() => {

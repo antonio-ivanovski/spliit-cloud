@@ -109,6 +109,56 @@ describe('ExpenseCard', () => {
     expect(screen.getByTestId('expense-date')).toBeInTheDocument()
   })
 
+  it('shows converted amount first and original amount second for cross-currency expenses', () => {
+    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const expense = makeExpense({
+      amount: 4140,
+      originalAmount: 4500,
+      originalCurrency: 'USD',
+      conversionRate: 0.92,
+    })
+
+    render(
+      <ExpenseCard
+        expense={expense}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(screen.getByTestId('expense-amount')).toHaveTextContent('€41.40')
+    expect(screen.getByTestId('expense-original-amount')).toHaveTextContent(
+      '$45.00',
+    )
+  })
+
+  it('does not show a secondary amount for same-currency expenses', () => {
+    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const expense = makeExpense({
+      amount: 4500,
+      originalAmount: 4500,
+      originalCurrency: 'EUR',
+      conversionRate: 1,
+    })
+
+    render(
+      <ExpenseCard
+        expense={expense}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(screen.getByTestId('expense-amount')).toHaveTextContent('€45.00')
+    expect(screen.queryByTestId('expense-original-amount')).toBeNull()
+  })
+
   it('shows reimbursement badge when isReimbursement', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)

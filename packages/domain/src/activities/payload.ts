@@ -15,6 +15,14 @@ export const expenseChangedFields = [
 export const expenseChangedFieldSchema = z.enum(expenseChangedFields)
 export type ExpenseChangedField = z.infer<typeof expenseChangedFieldSchema>
 
+/** A single human-readable before/after change row for the activity feed. */
+export const expenseActivityChangeSchema = z.object({
+  field: expenseChangedFieldSchema,
+  before: z.string().nullable().optional(),
+  after: z.string().nullable().optional(),
+})
+export type ExpenseActivityChange = z.infer<typeof expenseActivityChangeSchema>
+
 export const expenseActivityDataSchema = z.object({
   kind: z.literal('expense'),
   summary: z.string().optional(),
@@ -24,6 +32,8 @@ export const expenseActivityDataSchema = z.object({
   currencyCode: z.string().nullable().optional(),
   date: z.string().optional(),
   changedFields: z.array(expenseChangedFieldSchema).optional(),
+  // Per-field before/after change rows for the activity feed.
+  changes: z.array(expenseActivityChangeSchema).optional(),
   // Ledger participant IDs affected by the expense. Set for
   // EXPENSE_DELETED so the dispatcher can resolve recipients.
   affectedParticipants: z.array(z.string()).optional(),
