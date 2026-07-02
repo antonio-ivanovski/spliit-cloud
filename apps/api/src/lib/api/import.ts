@@ -1,13 +1,12 @@
 import {
-  ActivityType,
   GroupMemberStatus,
   GroupRole,
   LedgerParticipantKind,
   prisma,
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
-import { logActivity } from './activities'
-import { getMemberLedgerParticipantId, randomId } from './shared'
+import { buildExpenseActivityData, buildGroupActivityData, logActivity } from './activities'
+import { randomId } from './shared'
 
 export type ImportParticipantMapping =
   | {
@@ -241,22 +240,19 @@ export async function importGroup(
       destIdByClientKey.set(destId, destId)
     }
 
-    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-      groupId,
-      actor.accountId,
-      tx,
-    )
-
     for (const expense of input.expenses) {
       const expenseId = randomId()
       await logActivity(
         groupId,
-        ActivityType.CREATE_EXPENSE,
         {
-          accountId: actor.accountId,
-          ledgerParticipantId: actorLedgerParticipantId,
-          expenseId,
-          data: expense.title,
+          type: 'EXPENSE_CREATED',
+          actor: { type: 'ACCOUNT', id: actor.accountId },
+          subject: { type: 'EXPENSE', id: expenseId },
+          data: buildExpenseActivityData({
+            summary: expense.title,
+            title: expense.title,
+            amount: expense.amount,
+          }),
         },
         tx,
       )
@@ -355,11 +351,11 @@ export async function importGroup(
       const data = `Imported from ${input.sourceMeta.provider} group ${input.sourceMeta.sourceGroupId}`
       await logActivity(
         groupId,
-        ActivityType.UPDATE_GROUP,
         {
-          accountId: actor.accountId,
-          ledgerParticipantId: actorLedgerParticipantId,
-          data,
+          type: 'GROUP_UPDATED',
+          actor: { type: 'ACCOUNT', id: actor.accountId },
+          subject: { type: 'GROUP', id: groupId },
+          data: buildGroupActivityData({ summary: data }),
         },
         tx,
       )

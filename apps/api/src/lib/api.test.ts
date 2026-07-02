@@ -399,9 +399,23 @@ describe('deleteExpense', () => {
       id: 'exp-1',
       ledgerId: 'ledger-1',
       title: 'Dinner',
+      amount: 1000,
+      expenseDate: new Date(),
       categoryId: 'general',
+      paidBySplitMode: 'BY_AMOUNT',
+      splitMode: 'EVENLY',
+      recurrenceRule: 'NONE',
+      notes: null,
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+      isReimbursement: false,
+      paidByList: [],
       paidFor: [],
+      items: [],
+      itemizedRemainder: null,
       documents: [],
+      recurringExpenseLink: null,
     } as never)
     prismaMock.activity.create.mockResolvedValue({} as never)
     prismaMock.expense.deleteMany.mockResolvedValue({ count: 1 } as never)
@@ -424,33 +438,31 @@ describe('getActivities', () => {
         id: 'act-1',
         ledgerId: 'ledger-1',
         time: new Date(),
-        activityType: 'CREATE_EXPENSE',
-        ledgerParticipantId: 'lp-alice',
-        accountId: 'acct-alice',
-        expenseId: 'exp-1',
-        data: 'Dinner',
-        ledgerParticipant: {
-          groupMember: { account: { name: 'Alice' } },
-          invitations: [],
-        },
+        type: 'EXPENSE_CREATED',
+        actorType: 'ACCOUNT',
+        actorId: 'acct-alice',
+        subjectType: 'EXPENSE',
+        subjectId: 'exp-1',
+        data: { kind: 'expense', summary: 'Dinner' },
       },
       {
         id: 'act-2',
         ledgerId: 'ledger-1',
         time: new Date(),
-        activityType: 'UPDATE_GROUP',
-        ledgerParticipantId: 'lp-bob',
-        accountId: 'acct-bob',
-        expenseId: null,
-        data: 'group:settings',
-        ledgerParticipant: {
-          groupMember: { account: { name: 'Bob' } },
-          invitations: [],
-        },
+        type: 'GROUP_UPDATED',
+        actorType: 'ACCOUNT',
+        actorId: 'acct-bob',
+        subjectType: null,
+        subjectId: null,
+        data: { kind: 'group', summary: 'group:settings' },
       },
     ] as never)
     prismaMock.expense.findMany.mockResolvedValue([
-      { id: 'exp-1', ledgerId: 'ledger-1' },
+      { id: 'exp-1', title: 'Dinner', amount: 1000, expenseDate: new Date(), categoryId: 'general', splitMode: 'EVENLY', paidBySplitMode: 'EVENLY' },
+    ] as never)
+    prismaMock.account.findMany.mockResolvedValue([
+      { id: 'acct-alice', name: 'Alice' },
+      { id: 'acct-bob', name: 'Bob' },
     ] as never)
 
     const activities = await getActivities('grp-1')
@@ -480,18 +492,23 @@ describe('getActivities', () => {
         id: 'act-3',
         ledgerId: 'ledger-1',
         time: new Date(),
-        activityType: 'CREATE_EXPENSE',
-        ledgerParticipantId: 'lp-invitee',
-        accountId: null,
-        expenseId: 'exp-2',
-        data: 'Lunch',
-        ledgerParticipant: {
-          groupMember: null,
-          invitations: [{ email: 'carol@example.com' }],
-        },
+        type: 'EXPENSE_CREATED',
+        actorType: 'LEDGER_PARTICIPANT',
+        actorId: 'lp-invitee',
+        subjectType: 'EXPENSE',
+        subjectId: 'exp-2',
+        data: { kind: 'expense', summary: 'Lunch' },
       },
     ] as never)
     prismaMock.expense.findMany.mockResolvedValue([] as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      {
+        id: 'lp-invitee',
+        displayName: null,
+        groupMember: null,
+        invitations: [{ email: 'carol@example.com', temporaryName: null }],
+      },
+    ] as never)
 
     const activities = await getActivities('grp-1')
 
@@ -513,18 +530,23 @@ describe('getActivities', () => {
         id: 'act-revoked',
         ledgerId: 'ledger-1',
         time: new Date(),
-        activityType: 'CREATE_EXPENSE',
-        ledgerParticipantId: 'lp-revoked-invitee',
-        accountId: null,
-        expenseId: 'exp-3',
-        data: 'Dinner',
-        ledgerParticipant: {
-          groupMember: null,
-          invitations: [{ email: 'dave@example.com', temporaryName: null }],
-        },
+        type: 'EXPENSE_CREATED',
+        actorType: 'LEDGER_PARTICIPANT',
+        actorId: 'lp-revoked-invitee',
+        subjectType: 'EXPENSE',
+        subjectId: 'exp-3',
+        data: { kind: 'expense', summary: 'Dinner' },
       },
     ] as never)
     prismaMock.expense.findMany.mockResolvedValue([] as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      {
+        id: 'lp-revoked-invitee',
+        displayName: null,
+        groupMember: null,
+        invitations: [{ email: 'dave@example.com', temporaryName: null }],
+      },
+    ] as never)
 
     const activities = await getActivities('grp-1')
 
@@ -542,23 +564,28 @@ describe('getActivities', () => {
         id: 'act-5',
         ledgerId: 'ledger-1',
         time: new Date(),
-        activityType: 'CREATE_EXPENSE',
-        ledgerParticipantId: 'lp-invitee',
-        accountId: null,
-        expenseId: 'exp-5',
-        data: 'Lunch',
-        ledgerParticipant: {
-          groupMember: null,
-          invitations: [
-            {
-              email: 'erin@example.com',
-              temporaryName: 'Erin from the office',
-            },
-          ],
-        },
+        type: 'EXPENSE_CREATED',
+        actorType: 'LEDGER_PARTICIPANT',
+        actorId: 'lp-invitee',
+        subjectType: 'EXPENSE',
+        subjectId: 'exp-5',
+        data: { kind: 'expense', summary: 'Lunch' },
       },
     ] as never)
     prismaMock.expense.findMany.mockResolvedValue([] as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      {
+        id: 'lp-invitee',
+        displayName: null,
+        groupMember: null,
+        invitations: [
+          {
+            email: 'erin@example.com',
+            temporaryName: 'Erin from the office',
+          },
+        ],
+      },
+    ] as never)
 
     const activities = await getActivities('grp-1')
 
@@ -576,12 +603,12 @@ describe('getActivities', () => {
         id: 'act-4',
         ledgerId: 'ledger-1',
         time: new Date(),
-        activityType: 'UPDATE_GROUP',
-        ledgerParticipantId: null,
-        accountId: null,
-        expenseId: null,
+        type: 'GROUP_UPDATED',
+        actorType: null,
+        actorId: null,
+        subjectType: null,
+        subjectId: null,
         data: null,
-        ledgerParticipant: null,
       },
     ] as never)
     prismaMock.expense.findMany.mockResolvedValue([] as never)
@@ -667,7 +694,10 @@ describe('linkUnlinkedParticipantToAccount', () => {
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          data: 'ledger-participant:linked:lp-jane',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'ledger-participant:linked:lp-jane',
+          }),
         }),
       }),
     )
@@ -775,7 +805,10 @@ describe('linkUnlinkedParticipantToAccount', () => {
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          data: 'ledger-participant:merged:lp-jane:lp-alice',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'ledger-participant:merged:lp-jane:lp-alice',
+          }),
         }),
       }),
     )
@@ -858,7 +891,10 @@ describe('linkUnlinkedParticipantToAccount', () => {
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          data: 'ledger-participant:merged:lp-jane:lp-alice',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'ledger-participant:merged:lp-jane:lp-alice',
+          }),
         }),
       }),
     )
@@ -1220,7 +1256,10 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          data: 'ledger-participant:merged-into-invitation:lp-unlinked:lp-target',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'ledger-participant:merged-into-invitation:lp-unlinked:lp-target',
+          }),
         }),
       }),
     )

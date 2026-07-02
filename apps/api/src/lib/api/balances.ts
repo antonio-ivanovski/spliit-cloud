@@ -1,4 +1,4 @@
-import { ActivityType, prisma, RecurrenceRule, type Prisma } from '@spliit/db'
+import { prisma, RecurrenceRule, type Prisma } from '@spliit/db'
 import {
   getBalances,
   getPublicBalances,
@@ -8,9 +8,9 @@ import {
   type Balances,
   type Reimbursement,
 } from '@spliit/domain'
-import { logActivity } from './activities'
+import { buildExpenseActivityData, logActivity } from './activities'
 import { getGroupExpenses } from './expenses'
-import { getMemberLedgerParticipantId, randomId } from './shared'
+import { randomId } from './shared'
 
 /**
  * Compute the per-ledger-participant balance for every member of a group.
@@ -81,24 +81,20 @@ export async function createSettlementExpensesForArchive(
     return { createdExpenses: 0 }
   }
 
-  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-    groupId,
-    actor.accountId,
-    client,
-  )
-
   const now = new Date()
   for (const leg of legs) {
     if (leg.amount <= 0) continue
     const expenseId = randomId()
     await logActivity(
       groupId,
-      ActivityType.CREATE_EXPENSE,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: actorLedgerParticipantId,
-        expenseId,
-        data: SETTLEMENT_TITLE,
+        type: 'EXPENSE_CREATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'EXPENSE', id: expenseId },
+        data: buildExpenseActivityData({
+          summary: SETTLEMENT_TITLE,
+          title: SETTLEMENT_TITLE,
+        }),
       },
       client,
     )
@@ -175,12 +171,14 @@ export async function createSettlementExpensesForLeave(
     const expenseId = randomId()
     await logActivity(
       groupId,
-      ActivityType.CREATE_EXPENSE,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: participantId,
-        expenseId,
-        data: SETTLEMENT_ON_LEAVE_TITLE,
+        type: 'EXPENSE_CREATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'EXPENSE', id: expenseId },
+        data: buildExpenseActivityData({
+          summary: SETTLEMENT_ON_LEAVE_TITLE,
+          title: SETTLEMENT_ON_LEAVE_TITLE,
+        }),
       },
       client,
     )
