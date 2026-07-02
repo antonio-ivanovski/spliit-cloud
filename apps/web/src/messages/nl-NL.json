@@ -1261,5 +1261,43 @@
       "nameTooLong": "De naam mag maximaal 50 tekens bevatten.",
       "generic": "Er is iets misgegaan. Probeer het opnieuw."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} maakte uitgave {title}",
+      "updated": "{participant} werkte uitgave {title} bij {changes}",
+      "deleted": "{participant} verwijderde uitgave {title}",
+      "changedFields": {
+        "title": "titel",
+        "amount": "bedrag",
+        "date": "datum",
+        "category": "categorie",
+        "notes": "notities",
+        "payers": "betalers",
+        "split": "verdeling",
+        "items": "artikelen",
+        "documents": "documenten",
+        "recurrence": "herhaling"
+      },
+      "changedFieldsSummary": "Gewijzigd: {fields}"
+    },
+    "group": {
+      "updated": "{participant} werkte de groepsinstellingen bij",
+      "archived": "{participant} archiveerde de groep",
+      "unarchived": "{participant} dearchiveerde de groep"
+    },
+    "member": {
+      "left": "{participant} verliet de groep",
+      "removed": "{participant} verwijderde {target} uit de groep",
+      "roleChanged": "{participant} wijzigde de rol van {target} van {previousRole} naar {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} nodigde {target} uit",
+      "revoked": "{participant} trok de uitnodiging voor {target} in",
+      "accepted": "{target} accepteerde de uitnodiging",
+      "declined": "{target} wees de uitnodiging af"
+    },
+    "fallback": "Er is een activiteit geregistreerd",
+    "unknownActor": "Iemand"
   }
 }

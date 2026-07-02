@@ -1261,5 +1261,43 @@
       "nameTooLong": "Nazwa może mieć maksymalnie 50 znaków.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} utworzył wydatek {title}",
+      "updated": "{participant} zaktualizował wydatek {title} {changes}",
+      "deleted": "{participant} usunął wydatek {title}",
+      "changedFields": {
+        "title": "tytuł",
+        "amount": "kwota",
+        "date": "data",
+        "category": "kategoria",
+        "notes": "notatki",
+        "payers": "płacący",
+        "split": "podział",
+        "items": "pozycje",
+        "documents": "dokumenty",
+        "recurrence": "powtarzanie"
+      },
+      "changedFieldsSummary": "Zmieniono: {fields}"
+    },
+    "group": {
+      "updated": "{participant} zaktualizował ustawienia grupy",
+      "archived": "{participant} zarchiwizował grupę",
+      "unarchived": "{participant} przywrócił grupę z archiwum"
+    },
+    "member": {
+      "left": "{participant} opuścił grupę",
+      "removed": "{participant} usunął {target} z grupy",
+      "roleChanged": "{participant} zmienił rolę {target} z {previousRole} na {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} zaprosił {target}",
+      "revoked": "{participant} anulował zaproszenie dla {target}",
+      "accepted": "{target} przyjął zaproszenie",
+      "declined": "{target} odrzucił zaproszenie"
+    },
+    "fallback": "Aktywność została zarejestrowana",
+    "unknownActor": "Ktoś"
   }
 }

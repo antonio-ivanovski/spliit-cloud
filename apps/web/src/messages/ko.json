@@ -1261,5 +1261,43 @@
       "nameTooLong": "이름은 최대 50자까지 가능합니다.",
       "generic": "문제가 발생했습니다. 다시 시도해 주세요."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant}님이 {title} 지출을 생성했습니다",
+      "updated": "{participant}님이 {title} 지출을 업데이트했습니다 {changes}",
+      "deleted": "{participant}님이 {title} 지출을 삭제했습니다",
+      "changedFields": {
+        "title": "제목",
+        "amount": "금액",
+        "date": "날짜",
+        "category": "카테고리",
+        "notes": "메모",
+        "payers": "지불자",
+        "split": "분할",
+        "items": "항목",
+        "documents": "문서",
+        "recurrence": "반복"
+      },
+      "changedFieldsSummary": "변경됨: {fields}"
+    },
+    "group": {
+      "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
+      "archived": "{participant}님이 그룹을 보관했습니다",
+      "unarchived": "{participant}님이 그룹 보관을 해제했습니다"
+    },
+    "member": {
+      "left": "{participant}님이 그룹을 떠났습니다",
+      "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다",
+      "roleChanged": "{participant}님이 {target}의 역할을 {previousRole}에서 {nextRole}(으)로 변경했습니다"
+    },
+    "invitation": {
+      "created": "{participant}님이 {target}을(를) 초대했습니다",
+      "revoked": "{participant}님이 {target}에 대한 초대를 취소했습니다",
+      "accepted": "{target}님이 초대를 수락했습니다",
+      "declined": "{target}님이 초대를 거절했습니다"
+    },
+    "fallback": "활동이 기록되었습니다",
+    "unknownActor": "누군가"
   }
 }

@@ -1261,5 +1261,43 @@
       "nameTooLong": "Nimi voi olla enintään 50 merkkiä.",
       "generic": "Jotain meni pieleen. Yritä uudelleen."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} loi kulun {title}",
+      "updated": "{participant} päivitti kulua {title} {changes}",
+      "deleted": "{participant} poisti kulun {title}",
+      "changedFields": {
+        "title": "otsikko",
+        "amount": "summa",
+        "date": "päivämäärä",
+        "category": "luokka",
+        "notes": "muistiinpanot",
+        "payers": "maksajat",
+        "split": "jako",
+        "items": "rivit",
+        "documents": "asiakirjat",
+        "recurrence": "toistuvuus"
+      },
+      "changedFieldsSummary": "Muutettu: {fields}"
+    },
+    "group": {
+      "updated": "{participant} päivitti ryhmän asetuksia",
+      "archived": "{participant} arkistoi ryhmän",
+      "unarchived": "{participant} palautti ryhmän arkistosta"
+    },
+    "member": {
+      "left": "{participant} poistui ryhmästä",
+      "removed": "{participant} poisti {target} ryhmästä",
+      "roleChanged": "{participant} muutti {target} roolin {previousRole} → {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} kutsui {target}",
+      "revoked": "{participant} perui kutsun {target}",
+      "accepted": "{target} hyväksyi kutsun",
+      "declined": "{target} hylkäsi kutsun"
+    },
+    "fallback": "Toiminto on kirjattu",
+    "unknownActor": "Joku"
   }
 }

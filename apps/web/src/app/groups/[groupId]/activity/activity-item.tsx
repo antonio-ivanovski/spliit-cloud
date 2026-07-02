@@ -1,31 +1,15 @@
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import type { DateTimeStyle } from '@/lib/utils'
 import { cn, formatDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
+import { parseActivityData } from '@spliit/domain/activities'
 import { ChevronRight } from 'lucide-react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export type Activity =
   AppRouterOutput['groups']['activities']['list']['activities'][number]
-
-type ActivityType =
-  'UPDATE_GROUP' | 'CREATE_EXPENSE' | 'UPDATE_EXPENSE' | 'DELETE_EXPENSE'
-
-type ActivitySummaryKey =
-  | 'Activity.settingsModified'
-  | 'Activity.expenseCreated'
-  | 'Activity.expenseUpdated'
-  | 'Activity.expenseDeleted'
-
-const summaryKeyByActivityType: Record<ActivityType, ActivitySummaryKey> = {
-  UPDATE_GROUP: 'Activity.settingsModified',
-  CREATE_EXPENSE: 'Activity.expenseCreated',
-  UPDATE_EXPENSE: 'Activity.expenseUpdated',
-  DELETE_EXPENSE: 'Activity.expenseDeleted',
-}
 
 type Props = {
   groupId: string
@@ -33,30 +17,112 @@ type Props = {
   dateStyle: DateTimeStyle
 }
 
-function useSummary(activity: Activity) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
-  const participant = activity.actorName ?? t('someone')
-  const expense = activity.data ?? ''
-  const i18nKey = summaryKeyByActivityType[activity.activityType]
+function useMessage(activity: Activity) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
+  const actor = activity.actorName ?? t('unknownActor')
+  const data = parseActivityData(activity.data)
 
-  return (
-    <Trans
-      i18nKey={i18nKey}
-      values={{ expense, participant }}
-      components={{
-        em: <em />,
-        strong: <strong />,
-      }}
-    />
-  )
+  if (!data) {
+    return t('fallback')
+  }
+
+  switch (data.kind) {
+    case 'expense': {
+      const title = data.title ?? activity.expense?.title ?? ''
+      switch (activity.type) {
+        case 'EXPENSE_CREATED':
+          return t('expense.created', { participant: actor, title })
+        case 'EXPENSE_UPDATED': {
+          const changedFieldLabels =
+            data.changedFields?.map((f) =>
+              t(`expense.changedFields.${f}` as const),
+            ) ?? []
+          const changes =
+            changedFieldLabels.length > 0
+              ? t('expense.changedFieldsSummary', {
+                  fields: changedFieldLabels.join(', '),
+                })
+              : ''
+          return t('expense.updated', {
+            participant: actor,
+            title,
+            changes,
+          })
+        }
+        case 'EXPENSE_DELETED':
+          return t('expense.deleted', { participant: actor, title })
+        default:
+          return t('fallback')
+      }
+    }
+    case 'group':
+      switch (activity.type) {
+        case 'GROUP_UPDATED':
+          return t('group.updated', { participant: actor })
+        case 'GROUP_ARCHIVED':
+          return t('group.archived', { participant: actor })
+        case 'GROUP_UNARCHIVED':
+          return t('group.unarchived', { participant: actor })
+        default:
+          return t('fallback')
+      }
+    case 'member': {
+      const targetName =
+        data.targetDisplayName ?? data.displayName ?? ''
+      switch (activity.type) {
+        case 'MEMBER_LEFT':
+          return t('member.left', { participant: actor })
+        case 'MEMBER_REMOVED':
+          return t('member.removed', {
+            participant: actor,
+            target: targetName,
+          })
+        case 'MEMBER_ROLE_CHANGED':
+          return t('member.roleChanged', {
+            participant: actor,
+            target: targetName,
+            previousRole: data.previousRole,
+            nextRole: data.nextRole,
+          })
+        default:
+          return t('fallback')
+      }
+    }
+    case 'invitation': {
+      const displayLabel = data.displayLabel ?? ''
+      switch (activity.type) {
+        case 'INVITATION_CREATED':
+          return t('invitation.created', {
+            participant: actor,
+            target: displayLabel,
+          })
+        case 'INVITATION_REVOKED':
+          return t('invitation.revoked', {
+            participant: actor,
+            target: displayLabel,
+          })
+        case 'INVITATION_ACCEPTED':
+          return t('invitation.accepted', {
+            target: displayLabel,
+          })
+        case 'INVITATION_DECLINED':
+          return t('invitation.declined', {
+            target: displayLabel,
+          })
+        default:
+          return t('fallback')
+      }
+    }
+    default:
+      return t('fallback')
+  }
 }
 
 export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   const router = useRouter()
   const locale = useLocale()
-
-  const expenseExists = activity.expense !== undefined
-  const summary = useSummary(activity)
+  const expenseExists = activity.expense != null
+  const message = useMessage(activity)
 
   return (
     <div
@@ -67,7 +133,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       onClick={() => {
         if (expenseExists) {
           router.push({
-            href: `/groups/${groupId}/expenses/${activity.expenseId}/edit`,
+            href: `/groups/${groupId}/expenses/${activity.expense!.id}/edit`,
           })
         }
       }}
@@ -84,7 +150,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
         </div>
       </div>
       <div className="flex-1">
-        <div className="m-1">{summary}</div>
+        <div className="m-1">{message}</div>
       </div>
       {expenseExists && (
         <Button
@@ -93,9 +159,9 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
           className="self-center hidden sm:flex w-5 h-5"
           asChild
         >
-          <Link href={`/groups/${groupId}/expenses/${activity.expenseId}/edit`}>
+          <a href={`/groups/${groupId}/expenses/${activity.expense!.id}/edit`}>
             <ChevronRight className="w-4 h-4" />
-          </Link>
+          </a>
         </Button>
       )}
     </div>

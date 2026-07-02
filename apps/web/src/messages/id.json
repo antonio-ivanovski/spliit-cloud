@@ -1261,5 +1261,43 @@
       "nameTooLong": "Nama harus maksimal 50 karakter.",
       "generic": "Terjadi kesalahan. Silakan coba lagi."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} membuat pengeluaran {title}",
+      "updated": "{participant} memperbarui pengeluaran {title} {changes}",
+      "deleted": "{participant} menghapus pengeluaran {title}",
+      "changedFields": {
+        "title": "judul",
+        "amount": "jumlah",
+        "date": "tanggal",
+        "category": "kategori",
+        "notes": "catatan",
+        "payers": "pembayar",
+        "split": "pembagian",
+        "items": "item",
+        "documents": "dokumen",
+        "recurrence": "pengulangan"
+      },
+      "changedFieldsSummary": "Diubah: {fields}"
+    },
+    "group": {
+      "updated": "{participant} memperbarui pengaturan grup",
+      "archived": "{participant} mengarsipkan grup",
+      "unarchived": "{participant} membatalkan pengarsipan grup"
+    },
+    "member": {
+      "left": "{participant} meninggalkan grup",
+      "removed": "{participant} menghapus {target} dari grup",
+      "roleChanged": "{participant} mengubah peran {target} dari {previousRole} menjadi {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} mengundang {target}",
+      "revoked": "{participant} membatalkan undangan untuk {target}",
+      "accepted": "{target} menerima undangan",
+      "declined": "{target} menolak undangan"
+    },
+    "fallback": "Sebuah aktivitas telah dicatat",
+    "unknownActor": "Seseorang"
   }
 }

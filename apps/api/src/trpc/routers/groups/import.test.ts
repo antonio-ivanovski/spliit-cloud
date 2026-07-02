@@ -571,13 +571,15 @@ describe('importGroup', () => {
     )
 
     const importActivity = activityCreates.find(
-      (a) =>
-        typeof (a.data as { data?: string }).data === 'string' &&
-        ((a.data as { data?: string }).data ?? '').startsWith('Imported from'),
+      (a) => {
+        const d = (a.data as { data?: { kind?: string; summary?: string } }).data
+        return d?.kind === 'group' && (d?.summary ?? '').startsWith('Imported from')
+      },
     )
     expect(importActivity).toBeDefined()
-    expect((importActivity!.data as { data: string }).data).toContain('SPLIIT')
-    expect((importActivity!.data as { data: string }).data).toContain(
+    const importData = (importActivity!.data as { data: { summary?: string } }).data
+    expect(importData.summary).toContain('SPLIIT')
+    expect(importData.summary).toContain(
       'src-original',
     )
   })
@@ -660,6 +662,7 @@ describe('importGroup', () => {
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'dest-grp',
       name: 'Imported',
+      ledgerId: 'ledger-dest',
     } as never)
     prismaMock.groupInvitation.create.mockResolvedValue({
       id: 'inv-1',

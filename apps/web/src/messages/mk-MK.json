@@ -1261,5 +1261,43 @@
       },
       "linkButton": "Поврзи"
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} создаде трошок {title}",
+      "updated": "{participant} ажурираше трошок {title} {changes}",
+      "deleted": "{participant} избриша трошок {title}",
+      "changedFields": {
+        "title": "наслов",
+        "amount": "износ",
+        "date": "датум",
+        "category": "категорија",
+        "notes": "белешки",
+        "payers": "плаќачи",
+        "split": "поделба",
+        "items": "ставки",
+        "documents": "документи",
+        "recurrence": "повторување"
+      },
+      "changedFieldsSummary": "Променето: {fields}"
+    },
+    "group": {
+      "updated": "{participant} ажурираше поставки на групата",
+      "archived": "{participant} архивираше група",
+      "unarchived": "{participant} деархивираше група"
+    },
+    "member": {
+      "left": "{participant} ја напушти групата",
+      "removed": "{participant} го отстрани {target} од групата",
+      "roleChanged": "{participant} ја промени улогата на {target} од {previousRole} во {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} покани {target}",
+      "revoked": "{participant} отповика покана за {target}",
+      "accepted": "{target} ја прифати поканата",
+      "declined": "{target} ја одби поканата"
+    },
+    "fallback": "Активноста е забележана",
+    "unknownActor": "Некој"
   }
 }

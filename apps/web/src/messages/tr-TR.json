@@ -1261,5 +1261,43 @@
       "nameTooLong": "Ad en fazla 50 karakter olmalıdır.",
       "generic": "Bir şeyler ters gitti. Lütfen tekrar deneyin."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} {title} giderini oluşturdu",
+      "updated": "{participant} {title} giderini güncelledi {changes}",
+      "deleted": "{participant} {title} giderini sildi",
+      "changedFields": {
+        "title": "başlık",
+        "amount": "tutar",
+        "date": "tarih",
+        "category": "kategori",
+        "notes": "notlar",
+        "payers": "ödeyenler",
+        "split": "bölüşüm",
+        "items": "kalemler",
+        "documents": "belgeler",
+        "recurrence": "tekrarlama"
+      },
+      "changedFieldsSummary": "Değiştirildi: {fields}"
+    },
+    "group": {
+      "updated": "{participant} grup ayarlarını güncelledi",
+      "archived": "{participant} grubu arşivledi",
+      "unarchived": "{participant} grubu arşivden çıkardı"
+    },
+    "member": {
+      "left": "{participant} gruptan ayrıldı",
+      "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı",
+      "roleChanged": "{participant}, {target} rolünü {previousRole} olarak {nextRole} olarak değiştirdi"
+    },
+    "invitation": {
+      "created": "{participant}, {target} kullanıcısını davet etti",
+      "revoked": "{participant}, {target} için daveti iptal etti",
+      "accepted": "{target} daveti kabul etti",
+      "declined": "{target} daveti reddetti"
+    },
+    "fallback": "Bir aktivite kaydedildi",
+    "unknownActor": "Birisi"
   }
 }

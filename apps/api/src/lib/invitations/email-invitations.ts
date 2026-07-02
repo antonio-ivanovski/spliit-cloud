@@ -12,6 +12,10 @@ import {
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { sendEmail } from '../mail/send'
+import {
+  buildInvitationActivityData,
+  logActivity,
+} from '../api/activities'
 import { getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
 
@@ -108,7 +112,7 @@ export async function createEmailInvitation({
   await assertNotExistingMember(groupId, normalizedEmail)
   await assertNoConflictingEmailInvitation(groupId, normalizedEmail)
 
-  return prisma.groupInvitation.create({
+  const invitation = await prisma.groupInvitation.create({
     data: {
       id: randomId(),
       type: GroupInvitationType.EMAIL,
@@ -119,6 +123,19 @@ export async function createEmailInvitation({
       invitedById: inviterAccountId,
     },
   })
+
+  await logActivity(groupId, {
+    type: 'INVITATION_CREATED',
+    actor: { type: 'ACCOUNT', id: inviterAccountId },
+    subject: { type: 'INVITATION', id: invitation.id },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+      invitationType: 'EMAIL',
+      role,
+    }),
+  })
+
+  return invitation
 }
 
 export const createInvitation = createEmailInvitation
@@ -185,6 +202,19 @@ export async function revokeInvitation(opts: {
         revokedAt: new Date(),
       },
     })
+
+    await logActivity(
+      opts.groupId,
+      {
+        type: 'INVITATION_REVOKED',
+        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+        subject: { type: 'INVITATION', id: opts.invitationId },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+        }),
+      },
+      tx,
+    )
 
     if (
       invitation.ledgerParticipantId &&
@@ -275,6 +305,7 @@ export function assertCanDeclineEmailInvitation(
 export async function declineInvitation(opts: {
   invitationId: string
   accountEmail: string
+  accountId: string
 }) {
   const invitation = await prisma.groupInvitation.findUnique({
     where: { id: opts.invitationId },
@@ -286,12 +317,23 @@ export async function declineInvitation(opts: {
     throw new InvitationError('Invitation is no longer pending.')
   }
   assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
-  return prisma.groupInvitation.update({
+  const updated = await prisma.groupInvitation.update({
     where: { id: opts.invitationId },
     data: {
       status: GroupInvitationStatus.DECLINED,
     },
   })
+
+  await logActivity(invitation.groupId, {
+    type: 'INVITATION_DECLINED',
+    actor: { type: 'ACCOUNT', id: opts.accountId },
+    subject: { type: 'INVITATION', id: opts.invitationId },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+    }),
+  })
+
+  return updated
 }
 
 /**
@@ -411,6 +453,19 @@ export async function acceptInvitation(opts: {
         acceptedAt: new Date(),
       },
     })
+
+    await logActivity(
+      invitation.groupId,
+      {
+        type: 'INVITATION_ACCEPTED',
+        actor: { type: 'ACCOUNT', id: opts.accountId },
+        subject: { type: 'INVITATION', id: invitation.id },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+        }),
+      },
+      tx,
+    )
 
     return member
   })

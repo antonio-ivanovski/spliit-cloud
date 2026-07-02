@@ -1261,5 +1261,43 @@
       "nameTooLong": "Il nome deve contenere al massimo 50 caratteri.",
       "generic": "Qualcosa è andato storto. Riprova."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} ha creato la spesa {title}",
+      "updated": "{participant} ha aggiornato la spesa {title} {changes}",
+      "deleted": "{participant} ha eliminato la spesa {title}",
+      "changedFields": {
+        "title": "titolo",
+        "amount": "importo",
+        "date": "data",
+        "category": "categoria",
+        "notes": "note",
+        "payers": "paganti",
+        "split": "divisione",
+        "items": "articoli",
+        "documents": "documenti",
+        "recurrence": "ricorrenza"
+      },
+      "changedFieldsSummary": "Modificato: {fields}"
+    },
+    "group": {
+      "updated": "{participant} ha aggiornato le impostazioni del gruppo",
+      "archived": "{participant} ha archiviato il gruppo",
+      "unarchived": "{participant} ha ripristinato il gruppo"
+    },
+    "member": {
+      "left": "{participant} ha lasciato il gruppo",
+      "removed": "{participant} ha rimosso {target} dal gruppo",
+      "roleChanged": "{participant} ha cambiato il ruolo di {target} da {previousRole} a {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} ha invitato {target}",
+      "revoked": "{participant} ha revocato l'invito a {target}",
+      "accepted": "{target} ha accettato l'invito",
+      "declined": "{target} ha rifiutato l'invito"
+    },
+    "fallback": "È stata registrata un'attività",
+    "unknownActor": "Qualcuno"
   }
 }

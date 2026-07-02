@@ -1261,5 +1261,43 @@
       "nameTooLong": "Jméno může mít maximálně 50 znaků.",
       "generic": "Něco se pokazilo. Zkuste to znovu."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} vytvořil výdaj {title}",
+      "updated": "{participant} aktualizoval výdaj {title} {changes}",
+      "deleted": "{participant} smazal výdaj {title}",
+      "changedFields": {
+        "title": "název",
+        "amount": "částka",
+        "date": "datum",
+        "category": "kategorie",
+        "notes": "poznámky",
+        "payers": "plátci",
+        "split": "rozdělení",
+        "items": "položky",
+        "documents": "dokumenty",
+        "recurrence": "opakování"
+      },
+      "changedFieldsSummary": "Změněno: {fields}"
+    },
+    "group": {
+      "updated": "{participant} aktualizoval nastavení skupiny",
+      "archived": "{participant} archivoval skupinu",
+      "unarchived": "{participant} obnovil skupinu z archivu"
+    },
+    "member": {
+      "left": "{participant} opustil skupinu",
+      "removed": "{participant} odstranil {target} ze skupiny",
+      "roleChanged": "{participant} změnil roli {target} z {previousRole} na {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} pozval {target}",
+      "revoked": "{participant} zrušil pozvánku pro {target}",
+      "accepted": "{target} přijal pozvánku",
+      "declined": "{target} odmítl pozvánku"
+    },
+    "fallback": "Byla zaznamenána aktivita",
+    "unknownActor": "Někdo"
   }
 }

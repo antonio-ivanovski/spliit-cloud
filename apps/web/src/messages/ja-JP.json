@@ -1261,5 +1261,43 @@
       "nameTooLong": "名前は50文字以内で入力してください。",
       "generic": "エラーが発生しました。もう一度お試しください。"
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant}が支出{title}を作成しました",
+      "updated": "{participant}が支出{title}を更新しました {changes}",
+      "deleted": "{participant}が支出{title}を削除しました",
+      "changedFields": {
+        "title": "タイトル",
+        "amount": "金額",
+        "date": "日付",
+        "category": "カテゴリ",
+        "notes": "メモ",
+        "payers": "支払者",
+        "split": "分割",
+        "items": "項目",
+        "documents": "書類",
+        "recurrence": "繰り返し"
+      },
+      "changedFieldsSummary": "変更: {fields}"
+    },
+    "group": {
+      "updated": "{participant}がグループ設定を更新しました",
+      "archived": "{participant}がグループをアーカイブしました",
+      "unarchived": "{participant}がグループをアーカイブから復元しました"
+    },
+    "member": {
+      "left": "{participant}がグループを退出しました",
+      "removed": "{participant}が{target}をグループから削除しました",
+      "roleChanged": "{participant}が{target}の役割を{previousRole}から{nextRole}に変更しました"
+    },
+    "invitation": {
+      "created": "{participant}が{target}を招待しました",
+      "revoked": "{participant}が{target}への招待を取り消しました",
+      "accepted": "{target}が招待を承諾しました",
+      "declined": "{target}が招待を辞退しました"
+    },
+    "fallback": "アクティビティが記録されました",
+    "unknownActor": "誰か"
   }
 }

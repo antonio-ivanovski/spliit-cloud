@@ -564,24 +564,34 @@ describe('groupsRouter.members.remove', () => {
     )
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ data: 'member:removed:settled' }),
+        data: expect.objectContaining({
+          data: expect.objectContaining({
+            kind: 'member',
+            summary: 'member:removed:settled',
+          }),
+        }),
       }),
     )
     // The settlement-on-leave activity is logged with the leaving
     // member's participant id so the activity feed renders their name
     // instead of falling back to "someone".
     const settlementActivityCall = prismaMock.activity.create.mock.calls.find(
-      (call) =>
-        (call[0] as { data: { data?: string } }).data?.data ===
-        'Settlement on leave',
+      (call) => {
+        const d = call[0] as {
+          data: { data?: { kind?: string; summary?: string } }
+        }
+        return d.data?.data?.kind === 'expense' && d.data?.data?.summary === 'Settlement on leave'
+      },
     )
     expect(settlementActivityCall).toBeDefined()
     expect(settlementActivityCall![0]).toEqual(
       expect.objectContaining({
         data: expect.objectContaining({
-          activityType: 'CREATE_EXPENSE',
-          ledgerParticipantId: 'lp-target',
-          data: 'Settlement on leave',
+          type: 'EXPENSE_CREATED',
+          data: expect.objectContaining({
+            kind: 'expense',
+            summary: 'Settlement on leave',
+          }),
         }),
       }),
     )
@@ -645,7 +655,12 @@ describe('groupsRouter.members.remove', () => {
     )
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ data: 'member:removed' }),
+        data: expect.objectContaining({
+          data: expect.objectContaining({
+            kind: 'member',
+            summary: 'member:removed',
+          }),
+        }),
       }),
     )
   })

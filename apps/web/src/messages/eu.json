@@ -1261,5 +1261,43 @@
       "nameTooLong": "Izenak gehienez 50 karaktere izan ditzake.",
       "generic": "Zerbait gaizki joan da. Saiatu berriro."
     }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant}(e)k {title} gastua sortu du",
+      "updated": "{participant}(e)k {title} gastua eguneratu du {changes}",
+      "deleted": "{participant}(e)k {title} gastua ezabatu du",
+      "changedFields": {
+        "title": "izenburua",
+        "amount": "zenbatekoa",
+        "date": "data",
+        "category": "kategoria",
+        "notes": "oharrak",
+        "payers": "ordaintzaileak",
+        "split": "banaketa",
+        "items": "elementuak",
+        "documents": "dokumentuak",
+        "recurrence": "errepikapena"
+      },
+      "changedFieldsSummary": "Aldatuta: {fields}"
+    },
+    "group": {
+      "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
+      "archived": "{participant}(e)k taldea artxibatu du",
+      "unarchived": "{participant}(e)k taldea desartxibatu du"
+    },
+    "member": {
+      "left": "{participant} taldetik irten da",
+      "removed": "{participant}(e)k {target} taldetik kendu du",
+      "roleChanged": "{participant}(e)k {target}(r)en rola aldatu du {previousRole}(e)tik {nextRole}(e)ra"
+    },
+    "invitation": {
+      "created": "{participant}(e)k {target} gonbidatu du",
+      "revoked": "{participant}(e)k {target}(r)entzako gonbidapena baliogabetu du",
+      "accepted": "{target}(e)k gonbidapena onartu du",
+      "declined": "{target}(e)k gonbidapena baztertu du"
+    },
+    "fallback": "Jarduera bat erregistratu da",
+    "unknownActor": "Norbait"
   }
 }
