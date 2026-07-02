@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} создаде трошок {title}",
-      "updated": "{participant} ажурираше трошок {title} {changes}",
+      "updated": "{participant} ажурираше трошок {title}",
       "deleted": "{participant} избриша трошок {title}",
+      "changeEmptyValue": "Не е поставено",
       "changedFields": {
-        "title": "наслов",
-        "amount": "износ",
-        "date": "датум",
-        "category": "категорија",
-        "notes": "белешки",
-        "payers": "плаќачи",
-        "split": "поделба",
-        "items": "ставки",
-        "documents": "документи",
-        "recurrence": "повторување"
-      },
-      "changedFieldsSummary": "Променето: {fields}"
+        "title": "Наслов",
+        "amount": "Износ",
+        "date": "Датум",
+        "category": "Категорија",
+        "notes": "Белешки",
+        "payers": "Платил",
+        "split": "Поделба",
+        "items": "Ставки",
+        "documents": "Прилози",
+        "recurrence": "Повторување"
+      }
     },
     "group": {
       "updated": "{participant} ажурираше поставки на групата",

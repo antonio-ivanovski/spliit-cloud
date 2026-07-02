@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant}(e)k {title} gastua sortu du",
-      "updated": "{participant}(e)k {title} gastua eguneratu du {changes}",
+      "updated": "{participant}(e)k {title} gastua eguneratu du",
       "deleted": "{participant}(e)k {title} gastua ezabatu du",
+      "changeEmptyValue": "Ezarri gabe",
       "changedFields": {
-        "title": "izenburua",
-        "amount": "zenbatekoa",
-        "date": "data",
-        "category": "kategoria",
-        "notes": "oharrak",
-        "payers": "ordaintzaileak",
-        "split": "banaketa",
-        "items": "elementuak",
-        "documents": "dokumentuak",
-        "recurrence": "errepikapena"
-      },
-      "changedFieldsSummary": "Aldatuta: {fields}"
+        "title": "Izenburua",
+        "amount": "Zenbatekoa",
+        "date": "Data",
+        "category": "Kategoria",
+        "notes": "Oharrak",
+        "payers": "Ordaintzailea",
+        "split": "Banaketa",
+        "items": "Partidak",
+        "documents": "Erantsitakoak",
+        "recurrence": "Maiztasuna"
+      }
     },
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",

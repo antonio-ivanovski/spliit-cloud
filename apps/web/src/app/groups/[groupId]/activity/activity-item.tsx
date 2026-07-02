@@ -35,26 +35,11 @@ function useMessage(activity: Activity) {
             message: t('expense.created', { participant: actor, title }),
             changes: null,
           }
-        case 'EXPENSE_UPDATED': {
-          const changedFieldLabels =
-            data.changedFields?.map((f) =>
-              t(`expense.changedFields.${f}` as const),
-            ) ?? []
-          const changes =
-            changedFieldLabels.length > 0
-              ? t('expense.changedFieldsSummary', {
-                  fields: changedFieldLabels.join(', '),
-                })
-              : ''
+        case 'EXPENSE_UPDATED':
           return {
-            message: t('expense.updated', {
-              participant: actor,
-              title,
-              changes,
-            }),
+            message: t('expense.updated', { participant: actor, title }),
             changes: data.changes ?? null,
           }
-        }
         case 'EXPENSE_DELETED':
           return {
             message: t('expense.deleted', { participant: actor, title }),
@@ -163,6 +148,11 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
   const expenseExists = activity.expense != null
   const { message, changes } = useMessage(activity)
+  const emptyValue = t('expense.changeEmptyValue')
+
+  function formatChangeValue(value: string | null | undefined): string {
+    return value && value.trim().length > 0 ? value : emptyValue
+  }
 
   return (
     <div
@@ -192,19 +182,23 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       <div className="flex-1">
         <div className="m-1">{message}</div>
         {changes && changes.length > 0 && (
-          <div className="mx-1 mt-0.5 mb-1 space-y-0.5">
+          <div className="mx-1 mt-0.5 mb-1 border-l-2 border-muted-foreground/20 pl-2 space-y-0.5">
             {changes.map((change, i) => (
               <div
                 key={`${change.field}-${i}`}
-                className="text-xs text-muted-foreground"
+                className="grid grid-cols-[auto,1fr] gap-x-2 text-xs"
                 data-testid={`activity-item-${activity.id}-change-${change.field}`}
               >
-                <span className="font-medium">
-                  {t(`expense.changedFields.${change.field}` as const)}:{' '}
+                <span className="font-medium text-muted-foreground/80">
+                  {t(`expense.changedFields.${change.field}` as const)}
                 </span>
-                {change.before ?? '—'}
-                {' → '}
-                {change.after ?? '—'}
+                <span className="tabular-nums">
+                  <span className="text-muted-foreground/60">
+                    {formatChangeValue(change.before)}
+                  </span>
+                  <span className="text-muted-foreground/40">{' → '}</span>
+                  <span>{formatChangeValue(change.after)}</span>
+                </span>
               </div>
             ))}
           </div>

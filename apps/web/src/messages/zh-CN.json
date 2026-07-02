@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} 创建了支出 {title}",
-      "updated": "{participant} 更新了支出 {title} {changes}",
+      "updated": "{participant} 更新了支出 {title}",
       "deleted": "{participant} 删除了支出 {title}",
+      "changeEmptyValue": "未设置",
       "changedFields": {
         "title": "标题",
         "amount": "金额",
         "date": "日期",
-        "category": "分类",
+        "category": "类别",
         "notes": "备注",
         "payers": "付款人",
         "split": "分摊",
-        "items": "项目",
-        "documents": "文件",
+        "items": "明细",
+        "documents": "附件",
         "recurrence": "重复"
-      },
-      "changedFieldsSummary": "已更改: {fields}"
+      }
     },
     "group": {
       "updated": "{participant} 更新了群组设置",

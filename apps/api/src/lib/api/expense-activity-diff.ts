@@ -291,18 +291,44 @@ export function getExpenseChangeSummary(
         })
         break
       case 'notes': {
-        const oldNotes = oldExpense.notes ? '…' : null
-        const newNotes = newExpense.notes ? '…' : null
-        changes.push({ field: 'notes', before: oldNotes, after: newNotes })
+        // Semantic labels — hide note contents.
+        const hadNotes = !!oldExpense.notes
+        const hasNotes = !!newExpense.notes
+        let before: string | null = null
+        let after: string | null = null
+        if (!hadNotes && hasNotes) {
+          after = 'Added'
+        } else if (hadNotes && !hasNotes) {
+          before = 'Removed'
+        } else {
+          before = 'Present'
+          after = 'Present'
+        }
+        changes.push({ field: 'notes', before, after })
         break
       }
-      case 'recurrence':
+      case 'recurrence': {
+        const label = (r: string) => {
+          switch (r) {
+            case 'NONE':
+              return 'Not recurring'
+            case 'DAILY':
+              return 'Daily'
+            case 'WEEKLY':
+              return 'Weekly'
+            case 'MONTHLY':
+              return 'Monthly'
+            default:
+              return r
+          }
+        }
         changes.push({
           field: 'recurrence',
-          before: oldExpense.recurrenceRule,
-          after: newExpense.recurrenceRule,
+          before: label(oldExpense.recurrenceRule),
+          after: label(newExpense.recurrenceRule),
         })
         break
+      }
       case 'payers':
         changes.push({
           field: 'payers',
@@ -320,17 +346,29 @@ export function getExpenseChangeSummary(
       case 'documents': {
         const oldCount = oldExpense.documents.length
         const newCount = newExpense.documents.length
+        const fmt = (n: number) => {
+          if (n === 0) return null
+          return n === 1 ? '1 attachment' : `${n} attachments`
+        }
         changes.push({
           field: 'documents',
-          before: oldCount > 0 ? `${oldCount}` : null,
-          after: newCount > 0 ? `${newCount}` : null,
+          before: fmt(oldCount),
+          after: fmt(newCount),
         })
         break
       }
-      case 'items':
-        // Items are complex; keep a simple signal.
-        changes.push({ field: 'items', before: undefined, after: 'Changed' })
+      case 'items': {
+        // Show item counts rather than a vague "Changed".
+        const oldCount = (oldExpense.items ?? []).length
+        const newCount = (newExpense.items ?? []).length
+        const fmt = (n: number) => (n > 0 ? `${n}` : null)
+        changes.push({
+          field: 'items',
+          before: fmt(oldCount),
+          after: fmt(newCount),
+        })
         break
+      }
     }
   }
 

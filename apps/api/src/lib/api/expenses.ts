@@ -636,9 +636,9 @@ export async function updateExpense(
       data: {
         expenseDate: expense.expenseDate,
         amount: expense.amount,
-        originalAmount: expense.originalAmount,
-        originalCurrency: expense.originalCurrency,
-        conversionRate: expense.conversionRate,
+        originalAmount: expense.originalAmount ?? null,
+        originalCurrency: expense.originalCurrency ?? null,
+        conversionRate: expense.conversionRate ?? null,
         title: expense.title,
         categoryId: expense.category,
         paidBySplitMode: expense.paidBySplitMode,

@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} erstellte Ausgabe {title}",
-      "updated": "{participant} aktualisierte Ausgabe {title} {changes}",
+      "updated": "{participant} aktualisierte Ausgabe {title}",
       "deleted": "{participant} löschte Ausgabe {title}",
+      "changeEmptyValue": "Nicht gesetzt",
       "changedFields": {
         "title": "Titel",
         "amount": "Betrag",
         "date": "Datum",
         "category": "Kategorie",
         "notes": "Notizen",
-        "payers": "Zahler",
+        "payers": "Bezahlt von",
         "split": "Aufteilung",
         "items": "Positionen",
-        "documents": "Dokumente",
+        "documents": "Anhänge",
         "recurrence": "Wiederholung"
-      },
-      "changedFieldsSummary": "Geändert: {fields}"
+      }
     },
     "group": {
       "updated": "{participant} aktualisierte die Gruppeneinstellungen",

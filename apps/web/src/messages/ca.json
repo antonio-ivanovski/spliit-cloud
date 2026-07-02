@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} ha creat la despesa {title}",
-      "updated": "{participant} ha actualitzat la despesa {title} {changes}",
+      "updated": "{participant} ha actualitzat la despesa {title}",
       "deleted": "{participant} ha eliminat la despesa {title}",
+      "changeEmptyValue": "No establert",
       "changedFields": {
-        "title": "títol",
-        "amount": "import",
-        "date": "data",
-        "category": "categoria",
-        "notes": "notes",
-        "payers": "pagadors",
-        "split": "divisió",
-        "items": "articles",
-        "documents": "documents",
-        "recurrence": "recurrència"
-      },
-      "changedFieldsSummary": "S'ha canviat: {fields}"
+        "title": "Títol",
+        "amount": "Import",
+        "date": "Data",
+        "category": "Categoria",
+        "notes": "Notes",
+        "payers": "Pagat per",
+        "split": "Repartiment",
+        "items": "Línies",
+        "documents": "Documents",
+        "recurrence": "Recurrència"
+      }
     },
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",

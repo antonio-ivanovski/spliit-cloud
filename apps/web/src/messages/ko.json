@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant}님이 {title} 지출을 생성했습니다",
-      "updated": "{participant}님이 {title} 지출을 업데이트했습니다 {changes}",
+      "updated": "{participant}님이 {title} 지출을 업데이트했습니다",
       "deleted": "{participant}님이 {title} 지출을 삭제했습니다",
+      "changeEmptyValue": "설정되지 않음",
       "changedFields": {
         "title": "제목",
         "amount": "금액",
         "date": "날짜",
         "category": "카테고리",
         "notes": "메모",
-        "payers": "지불자",
+        "payers": "결제자",
         "split": "분할",
         "items": "항목",
-        "documents": "문서",
+        "documents": "첨부파일",
         "recurrence": "반복"
-      },
-      "changedFieldsSummary": "변경됨: {fields}"
+      }
     },
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",

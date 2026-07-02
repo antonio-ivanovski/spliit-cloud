@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} a creat cheltuiala {title}",
-      "updated": "{participant} a actualizat cheltuiala {title} {changes}",
+      "updated": "{participant} a actualizat cheltuiala {title}",
       "deleted": "{participant} a șters cheltuiala {title}",
+      "changeEmptyValue": "Nesetat",
       "changedFields": {
-        "title": "titlu",
-        "amount": "sumă",
-        "date": "dată",
-        "category": "categorie",
-        "notes": "note",
-        "payers": "plătitori",
-        "split": "împărțire",
-        "items": "articole",
-        "documents": "documente",
-        "recurrence": "recurență"
-      },
-      "changedFieldsSummary": "Modificat: {fields}"
+        "title": "Titlu",
+        "amount": "Suma",
+        "date": "Data",
+        "category": "Categorie",
+        "notes": "Note",
+        "payers": "Plătit de",
+        "split": "Împărțire",
+        "items": "Elemente",
+        "documents": "Documente",
+        "recurrence": "Recurență"
+      }
     },
     "group": {
       "updated": "{participant} a actualizat setările grupului",

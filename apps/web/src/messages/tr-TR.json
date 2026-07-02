@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} {title} giderini oluşturdu",
-      "updated": "{participant} {title} giderini güncelledi {changes}",
+      "updated": "{participant} {title} giderini güncelledi",
       "deleted": "{participant} {title} giderini sildi",
+      "changeEmptyValue": "Ayarlanmadı",
       "changedFields": {
-        "title": "başlık",
-        "amount": "tutar",
-        "date": "tarih",
-        "category": "kategori",
-        "notes": "notlar",
-        "payers": "ödeyenler",
-        "split": "bölüşüm",
-        "items": "kalemler",
-        "documents": "belgeler",
-        "recurrence": "tekrarlama"
-      },
-      "changedFieldsSummary": "Değiştirildi: {fields}"
+        "title": "Başlık",
+        "amount": "Tutar",
+        "date": "Tarih",
+        "category": "Kategori",
+        "notes": "Notlar",
+        "payers": "Ödeyen",
+        "split": "Bölüşüm",
+        "items": "Kalemler",
+        "documents": "Ekler",
+        "recurrence": "Tekrarlama"
+      }
     },
     "group": {
       "updated": "{participant} grup ayarlarını güncelledi",

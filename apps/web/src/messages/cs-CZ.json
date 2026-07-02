@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} vytvořil výdaj {title}",
-      "updated": "{participant} aktualizoval výdaj {title} {changes}",
+      "updated": "{participant} aktualizoval výdaj {title}",
       "deleted": "{participant} smazal výdaj {title}",
+      "changeEmptyValue": "Nenastaveno",
       "changedFields": {
-        "title": "název",
-        "amount": "částka",
-        "date": "datum",
-        "category": "kategorie",
-        "notes": "poznámky",
-        "payers": "plátci",
-        "split": "rozdělení",
-        "items": "položky",
-        "documents": "dokumenty",
-        "recurrence": "opakování"
-      },
-      "changedFieldsSummary": "Změněno: {fields}"
+        "title": "Název",
+        "amount": "Částka",
+        "date": "Datum",
+        "category": "Kategorie",
+        "notes": "Poznámky",
+        "payers": "Zaplatil(a)",
+        "split": "Rozdělení",
+        "items": "Položky",
+        "documents": "Přílohy",
+        "recurrence": "Opakování"
+      }
     },
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",

@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} создал(а) расход {title}",
-      "updated": "{participant} обновил(а) расход {title} {changes}",
+      "updated": "{participant} обновил(а) расход {title}",
       "deleted": "{participant} удалил(а) расход {title}",
+      "changeEmptyValue": "Не задано",
       "changedFields": {
-        "title": "название",
-        "amount": "сумма",
-        "date": "дата",
-        "category": "категория",
-        "notes": "заметки",
-        "payers": "плательщики",
-        "split": "разделение",
-        "items": "позиции",
-        "documents": "документы",
-        "recurrence": "повторение"
-      },
-      "changedFieldsSummary": "Изменено: {fields}"
+        "title": "Название",
+        "amount": "Сумма",
+        "date": "Дата",
+        "category": "Категория",
+        "notes": "Заметки",
+        "payers": "Плательщик",
+        "split": "Разделение",
+        "items": "Позиции",
+        "documents": "Вложения",
+        "recurrence": "Повторение"
+      }
     },
     "group": {
       "updated": "{participant} обновил(а) настройки группы",

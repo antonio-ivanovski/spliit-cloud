@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} loi kulun {title}",
-      "updated": "{participant} päivitti kulua {title} {changes}",
+      "updated": "{participant} päivitti kulua {title}",
       "deleted": "{participant} poisti kulun {title}",
+      "changeEmptyValue": "Ei asetettu",
       "changedFields": {
-        "title": "otsikko",
-        "amount": "summa",
-        "date": "päivämäärä",
-        "category": "luokka",
-        "notes": "muistiinpanot",
-        "payers": "maksajat",
-        "split": "jako",
-        "items": "rivit",
-        "documents": "asiakirjat",
-        "recurrence": "toistuvuus"
-      },
-      "changedFieldsSummary": "Muutettu: {fields}"
+        "title": "Otsikko",
+        "amount": "Summa",
+        "date": "Päivämäärä",
+        "category": "Luokka",
+        "notes": "Muistiinpanot",
+        "payers": "Maksaja",
+        "split": "Jako",
+        "items": "Rivit",
+        "documents": "Liitteet",
+        "recurrence": "Toistuminen"
+      }
     },
     "group": {
       "updated": "{participant} päivitti ryhmän asetuksia",

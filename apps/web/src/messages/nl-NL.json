@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} maakte uitgave {title}",
-      "updated": "{participant} werkte uitgave {title} bij {changes}",
+      "updated": "{participant} werkte uitgave {title} bij",
       "deleted": "{participant} verwijderde uitgave {title}",
+      "changeEmptyValue": "Niet ingesteld",
       "changedFields": {
-        "title": "titel",
-        "amount": "bedrag",
-        "date": "datum",
-        "category": "categorie",
-        "notes": "notities",
-        "payers": "betalers",
-        "split": "verdeling",
-        "items": "artikelen",
-        "documents": "documenten",
-        "recurrence": "herhaling"
-      },
-      "changedFieldsSummary": "Gewijzigd: {fields}"
+        "title": "Titel",
+        "amount": "Bedrag",
+        "date": "Datum",
+        "category": "Categorie",
+        "notes": "Notities",
+        "payers": "Betaald door",
+        "split": "Verdeling",
+        "items": "Regels",
+        "documents": "Bijlagen",
+        "recurrence": "Herhaling"
+      }
     },
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",

@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} creó el gasto {title}",
-      "updated": "{participant} actualizó el gasto {title} {changes}",
+      "updated": "{participant} actualizó el gasto {title}",
       "deleted": "{participant} eliminó el gasto {title}",
+      "changeEmptyValue": "No establecido",
       "changedFields": {
-        "title": "título",
-        "amount": "importe",
-        "date": "fecha",
-        "category": "categoría",
-        "notes": "notas",
-        "payers": "pagadores",
-        "split": "división",
-        "items": "artículos",
-        "documents": "documentos",
-        "recurrence": "recurrencia"
-      },
-      "changedFieldsSummary": "Cambiado: {fields}"
+        "title": "Título",
+        "amount": "Importe",
+        "date": "Fecha",
+        "category": "Categoría",
+        "notes": "Notas",
+        "payers": "Pagado por",
+        "split": "Reparto",
+        "items": "Líneas",
+        "documents": "Documentos",
+        "recurrence": "Recurrencia"
+      }
     },
     "group": {
       "updated": "{participant} actualizó la configuración del grupo",

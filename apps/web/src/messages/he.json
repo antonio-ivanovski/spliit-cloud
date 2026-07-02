@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} יצר הוצאה {title}",
-      "updated": "{participant} עדכן הוצאה {title} {changes}",
+      "updated": "{participant} עדכן הוצאה {title}",
       "deleted": "{participant} מחק הוצאה {title}",
+      "changeEmptyValue": "לא הוגדר",
       "changedFields": {
         "title": "כותרת",
         "amount": "סכום",
         "date": "תאריך",
         "category": "קטגוריה",
         "notes": "הערות",
-        "payers": "משלמים",
+        "payers": "שולם על ידי",
         "split": "חלוקה",
         "items": "פריטים",
-        "documents": "מסמכים",
-        "recurrence": "חזרה"
-      },
-      "changedFieldsSummary": "שונה: {fields}"
+        "documents": "קבצים מצורפים",
+        "recurrence": "תדירות"
+      }
     },
     "group": {
       "updated": "{participant} עדכן את הגדרות הקבוצה",

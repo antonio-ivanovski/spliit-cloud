@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant} створив витрату {title}",
-      "updated": "{participant} оновив витрату {title} {changes}",
+      "updated": "{participant} оновив витрату {title}",
       "deleted": "{participant} видалив витрату {title}",
+      "changeEmptyValue": "Не встановлено",
       "changedFields": {
-        "title": "назва",
-        "amount": "сума",
-        "date": "дата",
-        "category": "категорія",
-        "notes": "нотатки",
-        "payers": "платники",
-        "split": "розподіл",
-        "items": "позиції",
-        "documents": "документи",
-        "recurrence": "повторення"
-      },
-      "changedFieldsSummary": "Змінено: {fields}"
+        "title": "Назва",
+        "amount": "Сума",
+        "date": "Дата",
+        "category": "Категорія",
+        "notes": "Нотатки",
+        "payers": "Платник",
+        "split": "Розподіл",
+        "items": "Позиції",
+        "documents": "Вкладення",
+        "recurrence": "Повторення"
+      }
     },
     "group": {
       "updated": "{participant} оновив налаштування групи",

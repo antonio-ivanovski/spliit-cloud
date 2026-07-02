@@ -1265,21 +1265,21 @@
   "Activities": {
     "expense": {
       "created": "{participant}が支出{title}を作成しました",
-      "updated": "{participant}が支出{title}を更新しました {changes}",
+      "updated": "{participant}が支出{title}を更新しました",
       "deleted": "{participant}が支出{title}を削除しました",
+      "changeEmptyValue": "未設定",
       "changedFields": {
         "title": "タイトル",
         "amount": "金額",
         "date": "日付",
         "category": "カテゴリ",
         "notes": "メモ",
-        "payers": "支払者",
-        "split": "分割",
-        "items": "項目",
-        "documents": "書類",
+        "payers": "支払い者",
+        "split": "分割方法",
+        "items": "明細",
+        "documents": "添付ファイル",
         "recurrence": "繰り返し"
-      },
-      "changedFieldsSummary": "変更: {fields}"
+      }
     },
     "group": {
       "updated": "{participant}がグループ設定を更新しました",
