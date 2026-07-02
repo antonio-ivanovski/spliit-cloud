@@ -23,7 +23,7 @@ function useMessage(activity: Activity) {
   const data = parseActivityData(activity.data)
 
   if (!data) {
-    return t('fallback')
+    return { message: t('fallback'), changes: null }
   }
 
   switch (data.kind) {
@@ -31,7 +31,10 @@ function useMessage(activity: Activity) {
       const title = data.title ?? activity.expense?.title ?? ''
       switch (activity.type) {
         case 'EXPENSE_CREATED':
-          return t('expense.created', { participant: actor, title })
+          return {
+            message: t('expense.created', { participant: actor, title }),
+            changes: null,
+          }
         case 'EXPENSE_UPDATED': {
           const changedFieldLabels =
             data.changedFields?.map((f) =>
@@ -43,86 +46,123 @@ function useMessage(activity: Activity) {
                   fields: changedFieldLabels.join(', '),
                 })
               : ''
-          return t('expense.updated', {
-            participant: actor,
-            title,
-            changes,
-          })
+          return {
+            message: t('expense.updated', {
+              participant: actor,
+              title,
+              changes,
+            }),
+            changes: data.changes ?? null,
+          }
         }
         case 'EXPENSE_DELETED':
-          return t('expense.deleted', { participant: actor, title })
+          return {
+            message: t('expense.deleted', { participant: actor, title }),
+            changes: null,
+          }
         default:
-          return t('fallback')
+          return { message: t('fallback'), changes: null }
       }
     }
     case 'group':
       switch (activity.type) {
         case 'GROUP_UPDATED':
-          return t('group.updated', { participant: actor })
+          return {
+            message: t('group.updated', { participant: actor }),
+            changes: null,
+          }
         case 'GROUP_ARCHIVED':
-          return t('group.archived', { participant: actor })
+          return {
+            message: t('group.archived', { participant: actor }),
+            changes: null,
+          }
         case 'GROUP_UNARCHIVED':
-          return t('group.unarchived', { participant: actor })
+          return {
+            message: t('group.unarchived', { participant: actor }),
+            changes: null,
+          }
         default:
-          return t('fallback')
+          return { message: t('fallback'), changes: null }
       }
     case 'member': {
       const targetName =
         data.targetDisplayName ?? data.displayName ?? ''
       switch (activity.type) {
         case 'MEMBER_LEFT':
-          return t('member.left', { participant: actor })
+          return {
+            message: t('member.left', { participant: actor }),
+            changes: null,
+          }
         case 'MEMBER_REMOVED':
-          return t('member.removed', {
-            participant: actor,
-            target: targetName,
-          })
+          return {
+            message: t('member.removed', {
+              participant: actor,
+              target: targetName,
+            }),
+            changes: null,
+          }
         case 'MEMBER_ROLE_CHANGED':
-          return t('member.roleChanged', {
-            participant: actor,
-            target: targetName,
-            previousRole: data.previousRole,
-            nextRole: data.nextRole,
-          })
+          return {
+            message: t('member.roleChanged', {
+              participant: actor,
+              target: targetName,
+              previousRole: data.previousRole,
+              nextRole: data.nextRole,
+            }),
+            changes: null,
+          }
         default:
-          return t('fallback')
+          return { message: t('fallback'), changes: null }
       }
     }
     case 'invitation': {
       const displayLabel = data.displayLabel ?? ''
       switch (activity.type) {
         case 'INVITATION_CREATED':
-          return t('invitation.created', {
-            participant: actor,
-            target: displayLabel,
-          })
+          return {
+            message: t('invitation.created', {
+              participant: actor,
+              target: displayLabel,
+            }),
+            changes: null,
+          }
         case 'INVITATION_REVOKED':
-          return t('invitation.revoked', {
-            participant: actor,
-            target: displayLabel,
-          })
+          return {
+            message: t('invitation.revoked', {
+              participant: actor,
+              target: displayLabel,
+            }),
+            changes: null,
+          }
         case 'INVITATION_ACCEPTED':
-          return t('invitation.accepted', {
-            target: displayLabel,
-          })
+          return {
+            message: t('invitation.accepted', {
+              target: displayLabel,
+            }),
+            changes: null,
+          }
         case 'INVITATION_DECLINED':
-          return t('invitation.declined', {
-            target: displayLabel,
-          })
+          return {
+            message: t('invitation.declined', {
+              target: displayLabel,
+            }),
+            changes: null,
+          }
         default:
-          return t('fallback')
+          return { message: t('fallback'), changes: null }
       }
     }
     default:
-      return t('fallback')
+      return { message: t('fallback'), changes: null }
   }
 }
 
 export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   const router = useRouter()
   const locale = useLocale()
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
   const expenseExists = activity.expense != null
-  const message = useMessage(activity)
+  const { message, changes } = useMessage(activity)
 
   return (
     <div
@@ -151,6 +191,24 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       </div>
       <div className="flex-1">
         <div className="m-1">{message}</div>
+        {changes && changes.length > 0 && (
+          <div className="mx-1 mt-0.5 mb-1 space-y-0.5">
+            {changes.map((change, i) => (
+              <div
+                key={`${change.field}-${i}`}
+                className="text-xs text-muted-foreground"
+                data-testid={`activity-item-${activity.id}-change-${change.field}`}
+              >
+                <span className="font-medium">
+                  {t(`expense.changedFields.${change.field}` as const)}:{' '}
+                </span>
+                {change.before ?? '—'}
+                {' → '}
+                {change.after ?? '—'}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {expenseExists && (
         <Button

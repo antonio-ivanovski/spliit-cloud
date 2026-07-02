@@ -81,6 +81,46 @@ describe('ActivityItem', () => {
     ).toBeInTheDocument()
   })
 
+  it('renders expense updated with change rows', () => {
+    renderItem(
+      makeActivity({
+        type: 'EXPENSE_UPDATED',
+        data: {
+          kind: 'expense',
+          title: 'Dinner',
+          changedFields: ['amount', 'payers'],
+          changes: [
+            { field: 'amount', before: 'EUR 12.00', after: 'EUR 15.00' },
+            { field: 'payers', before: 'Alice', after: 'Alice, Bob' },
+          ],
+        },
+      }),
+    )
+    expect(
+      screen.getByText(/Alice updated expense Dinner/),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/EUR 12.00.*EUR 15.00/)).toBeInTheDocument()
+    expect(screen.getByText(/Alice.*Alice, Bob/)).toBeInTheDocument()
+  })
+
+  it('renders expense updated with changed fields but no changes (legacy compatibility)', () => {
+    renderItem(
+      makeActivity({
+        type: 'EXPENSE_UPDATED',
+        data: {
+          kind: 'expense',
+          title: 'Lunch',
+          changedFields: ['amount', 'date'],
+          // No `changes` array — legacy row
+        },
+      }),
+    )
+    expect(
+      screen.getByText(/Alice updated expense Lunch/),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/Changed:/)).toBeInTheDocument()
+  })
+
   it('renders expense deleted', () => {
     renderItem(
       makeActivity({

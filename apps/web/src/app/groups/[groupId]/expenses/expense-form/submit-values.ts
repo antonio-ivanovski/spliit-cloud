@@ -34,6 +34,9 @@ export function buildSubmitValues(
     conversionRequired && values.conversionRate
       ? Number(values.conversionRate)
       : undefined
+  if (conversionRequired && (!rate || Number.isNaN(rate) || rate <= 0)) {
+    throw new Error('A positive conversion rate is required.')
+  }
 
   // Persisted Ledger amount: same as typed amount when no conversion,
   // otherwise `amount * rate` rounded to Ledger minor units.
@@ -91,7 +94,7 @@ export function buildSubmitValues(
     documents: values.documents,
     notes: values.notes,
     recurrenceRule: values.recurrenceRule,
-    conversionRate: values.conversionRate,
+    conversionRate: conversionRequired ? rate : undefined,
   }
 
   const items: Expense['items'] = (values.items ?? []).map((item) => {

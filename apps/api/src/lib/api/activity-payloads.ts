@@ -1,4 +1,5 @@
 import type {
+  ExpenseActivityChange,
   ExpenseActivityData,
   ExpenseChangedField,
   GroupActivityData,
@@ -16,6 +17,7 @@ type BuildExpenseInput = {
   currencyCode?: string | null
   date?: string
   changedFields?: ExpenseChangedField[]
+  changes?: ExpenseActivityChange[]
   affectedParticipants?: string[]
 }
 
@@ -34,6 +36,7 @@ export function buildExpenseActivityData(
     ...(input.changedFields !== undefined
       ? { changedFields: input.changedFields }
       : {}),
+    ...(input.changes !== undefined ? { changes: input.changes } : {}),
     ...(input.affectedParticipants !== undefined
       ? { affectedParticipants: input.affectedParticipants }
       : {}),

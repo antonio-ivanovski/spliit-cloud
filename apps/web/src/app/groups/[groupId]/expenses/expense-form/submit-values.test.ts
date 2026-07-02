@@ -88,4 +88,27 @@ describe('buildSubmitValues', () => {
       result.originalAmount,
     )
   })
+
+  it('clears stale conversion metadata when conversion is not required', () => {
+    const result = buildSubmitValues(baseValues, {
+      groupCurrency: getCurrency('ARS')!,
+      conversionRequired: false,
+    })
+
+    expect(result.originalAmount).toBeUndefined()
+    expect(result.originalCurrency).toBeUndefined()
+    expect(result.conversionRate).toBeUndefined()
+  })
+
+  it('rejects converted expenses without a positive conversion rate', () => {
+    expect(() =>
+      buildSubmitValues(
+        { ...baseValues, conversionRate: undefined },
+        {
+          groupCurrency: getCurrency('USD')!,
+          conversionRequired: true,
+        },
+      ),
+    ).toThrow('A positive conversion rate is required.')
+  })
 })
