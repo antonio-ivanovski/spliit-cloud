@@ -14,9 +14,7 @@ import type {
  * mutation call sites only ever see one dispatcher, while every
  * concrete implementation can be added or removed at registration time.
  */
-export class CompositeActivityNotificationDispatcher
-  implements ActivityNotificationDispatcher
-{
+export class CompositeActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   constructor(
     private readonly dispatchers: ReadonlyArray<ActivityNotificationDispatcher>,
   ) {}

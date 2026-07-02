@@ -1,13 +1,13 @@
-import { prisma, GroupMemberStatus, GroupRole } from '@spliit/db'
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { groupsRouter } from '../trpc/routers/groups'
-import { invitationsRouter } from '../trpc/routers/invitations'
-import { checkDbConnection, testRunId } from './setup'
 import {
   setDefaultActivityNotificationDispatchers,
   type ActivityNotificationDispatcher,
   type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
+import { groupsRouter } from '../trpc/routers/groups'
+import { invitationsRouter } from '../trpc/routers/invitations'
+import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
@@ -50,9 +50,10 @@ describe('Group activity — real DB', () => {
     } as never)
   }
 
-  function makeInvitationCaller(
-    overrides?: { accountId?: string; email?: string },
-  ) {
+  function makeInvitationCaller(overrides?: {
+    accountId?: string
+    email?: string
+  }) {
     return invitationsRouter.createCaller({
       auth: {
         session: { id: 'sess-test' },
@@ -245,7 +246,10 @@ describe('Group activity — real DB', () => {
     })
 
     const activity = await prisma.activity.findFirst({
-      where: { ledger: { group: { id: groupId } }, type: 'MEMBER_ROLE_CHANGED' },
+      where: {
+        ledger: { group: { id: groupId } },
+        type: 'MEMBER_ROLE_CHANGED',
+      },
       orderBy: { time: 'desc' },
     })
     expect(activity).not.toBeNull()

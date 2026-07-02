@@ -25,9 +25,8 @@ export type {
  */
 const registered: ActivityNotificationDispatcher[] = []
 
-let singleton: ActivityNotificationDispatcher = new CompositeActivityNotificationDispatcher(
-  registered,
-)
+let singleton: ActivityNotificationDispatcher =
+  new CompositeActivityNotificationDispatcher(registered)
 
 /**
  * Read-only access to the singleton. Mutation call sites import this

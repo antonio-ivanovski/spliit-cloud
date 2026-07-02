@@ -4,10 +4,10 @@ import type {
   ExpenseChangedField,
   GroupActivityData,
   GroupChangedField,
+  GroupRole,
   InvitationActivityData,
   InvitationType,
   MemberActivityData,
-  GroupRole,
 } from '@spliit/domain/activities'
 
 type BuildExpenseInput = {
@@ -74,7 +74,9 @@ export function buildMemberActivityData(
   return {
     kind: 'member',
     ...(input.summary !== undefined ? { summary: input.summary } : {}),
-    ...(input.displayName !== undefined ? { displayName: input.displayName } : {}),
+    ...(input.displayName !== undefined
+      ? { displayName: input.displayName }
+      : {}),
     ...(input.previousRole !== undefined
       ? { previousRole: input.previousRole }
       : {}),

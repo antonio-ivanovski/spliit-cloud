@@ -6,12 +6,9 @@ import {
   type GroupRole,
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
+import { buildInvitationActivityData, logActivity } from '../api/activities'
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
-import {
-  buildInvitationActivityData,
-  logActivity,
-} from '../api/activities'
 import { buildLinkPlaceholderEmail, getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
 
