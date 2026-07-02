@@ -1,3 +1,4 @@
+export * from './activities'
 export * from './balances'
 export * from './categories'
 export * from './currency'

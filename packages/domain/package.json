@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./activities": "./src/activities/index.ts",
     "./balances": "./src/balances.ts",
     "./currency": "./src/currency.ts",
     "./i18n": "./src/i18n.ts",
