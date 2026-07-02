@@ -8,7 +8,11 @@ import {
 import { TRPCError } from '@trpc/server'
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
-import { buildLinkPlaceholderEmail } from './display'
+import {
+  buildInvitationActivityData,
+  logActivity,
+} from '../api/activities'
+import { buildLinkPlaceholderEmail, getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
 
 export class InvitationError extends TRPCError {
@@ -97,6 +101,17 @@ export async function createLinkInvitation(
         ? { ledgerParticipantId: input.ledgerParticipantId }
         : {}),
     },
+  })
+
+  await logActivity(invitation.groupId, {
+    type: 'INVITATION_CREATED',
+    actor: { type: 'ACCOUNT', id: input.inviterAccountId },
+    subject: { type: 'INVITATION', id: invitation.id },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+      invitationType: 'LINK',
+      role: input.role,
+    }),
   })
 
   return {
@@ -257,6 +272,19 @@ export async function acceptLinkInvitation(opts: {
       ledgerId: invitation.group.ledger.id,
       pendingParticipantId: invitation.ledgerParticipantId,
     })
+
+    await logActivity(
+      invitation.groupId,
+      {
+        type: 'INVITATION_ACCEPTED',
+        actor: { type: 'ACCOUNT', id: opts.accountId },
+        subject: { type: 'INVITATION', id: invitation.id },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+        }),
+      },
+      tx,
+    )
 
     return { groupId: invitation.groupId, role: invitation.role }
   })

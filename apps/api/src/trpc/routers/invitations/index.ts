@@ -277,6 +277,7 @@ export const invitationsRouter = createTRPCRouter({
       await declineInvitation({
         invitationId,
         accountEmail: ctx.auth.user.email,
+        accountId: ctx.auth.user.id,
       })
       return {}
     }),

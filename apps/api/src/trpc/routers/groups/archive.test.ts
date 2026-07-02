@@ -385,17 +385,22 @@ describe('groupsRouter.archive — unsettled balances', () => {
     // participant id so the activity feed renders their name instead of
     // falling back to "someone".
     const settlementActivityCall = prismaMock.activity.create.mock.calls.find(
-      (call) =>
-        (call[0] as { data: { data?: string } }).data?.data ===
-        'Settlement on archive',
+      (call) => {
+        const d = call[0] as {
+          data: { data?: { kind?: string; summary?: string } }
+        }
+        return d.data?.data?.kind === 'expense' && d.data?.data?.summary === 'Settlement on archive'
+      },
     )
     expect(settlementActivityCall).toBeDefined()
     expect(settlementActivityCall![0]).toEqual(
       expect.objectContaining({
         data: expect.objectContaining({
-          activityType: 'CREATE_EXPENSE',
-          ledgerParticipantId: 'lp-alice',
-          data: 'Settlement on archive',
+          type: 'EXPENSE_CREATED',
+          data: expect.objectContaining({
+            kind: 'expense',
+            summary: 'Settlement on archive',
+          }),
         }),
       }),
     )
