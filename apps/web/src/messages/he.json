@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} עדכן את הגדרות הקבוצה",
       "archived": "{participant} ארכב את הקבוצה",
-      "unarchived": "{participant} ביטל ארכוב של הקבוצה"
+      "unarchived": "{participant} ביטל ארכוב של הקבוצה",
+      "changedFields": {
+        "name": "שם",
+        "information": "תיאור",
+        "currency": "מטבע",
+        "currencyCode": "קוד מטבע",
+        "linkedParticipant": "משתתף מקושר"
+      }
     },
     "member": {
       "left": "{participant} עזב את הקבוצה",

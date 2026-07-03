@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} 更新了群組設定",
       "archived": "{participant} 封存了群組",
-      "unarchived": "{participant} 還原了群組"
+      "unarchived": "{participant} 還原了群組",
+      "changedFields": {
+        "name": "名稱",
+        "information": "描述",
+        "currency": "貨幣",
+        "currencyCode": "貨幣代碼",
+        "linkedParticipant": "關聯參與者"
+      }
     },
     "member": {
       "left": "{participant} 離開了群組",

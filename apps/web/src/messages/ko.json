@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
       "archived": "{participant}님이 그룹을 보관했습니다",
-      "unarchived": "{participant}님이 그룹 보관을 해제했습니다"
+      "unarchived": "{participant}님이 그룹 보관을 해제했습니다",
+      "changedFields": {
+        "name": "이름",
+        "information": "설명",
+        "currency": "통화",
+        "currencyCode": "통화 코드",
+        "linkedParticipant": "연결된 참가자"
+      }
     },
     "member": {
       "left": "{participant}님이 그룹을 떠났습니다",

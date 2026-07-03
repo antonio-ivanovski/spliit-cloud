@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} ажурираше поставки на групата",
       "archived": "{participant} архивираше група",
-      "unarchived": "{participant} деархивираше група"
+      "unarchived": "{participant} деархивираше група",
+      "changedFields": {
+        "name": "Име",
+        "information": "Опис",
+        "currency": "Валута",
+        "currencyCode": "Код на валута",
+        "linkedParticipant": "Поврзан учесник"
+      }
     },
     "member": {
       "left": "{participant} ја напушти групата",

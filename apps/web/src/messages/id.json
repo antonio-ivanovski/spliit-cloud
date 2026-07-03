@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} memperbarui pengaturan grup",
       "archived": "{participant} mengarsipkan grup",
-      "unarchived": "{participant} membatalkan pengarsipan grup"
+      "unarchived": "{participant} membatalkan pengarsipan grup",
+      "changedFields": {
+        "name": "Nama",
+        "information": "Deskripsi",
+        "currency": "Mata uang",
+        "currencyCode": "Kode mata uang",
+        "linkedParticipant": "Peserta terkait"
+      }
     },
     "member": {
       "left": "{participant} meninggalkan grup",

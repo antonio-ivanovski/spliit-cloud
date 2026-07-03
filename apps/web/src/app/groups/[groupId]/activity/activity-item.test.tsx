@@ -159,6 +159,72 @@ describe('ActivityItem', () => {
     expect(screen.getByText(/Alice updated group settings/)).toBeInTheDocument()
   })
 
+  it('renders group updated with change rows', () => {
+    renderItem(
+      makeActivity({
+        type: 'GROUP_UPDATED',
+        data: {
+          kind: 'group',
+          changedFields: ['name', 'currency'],
+          changes: [
+            { field: 'name', before: 'Old Name', after: 'New Name' },
+            { field: 'currency', before: 'USD ($)', after: 'EUR (€)' },
+          ],
+        },
+      }),
+    )
+    expect(screen.getByText(/Alice updated group settings/)).toBeInTheDocument()
+    expect(screen.getByText('Name')).toBeInTheDocument()
+    expect(screen.getByText('Currency')).toBeInTheDocument()
+    const changeName = screen.getByTestId('activity-item-act-1-change-name')
+    expect(changeName.textContent).toMatch(/Old Name.*→.*New Name/)
+    const changeCurrency = screen.getByTestId(
+      'activity-item-act-1-change-currency',
+    )
+    expect(changeCurrency.textContent).toMatch(/USD \(\$\).*→.*EUR \(€\)/)
+  })
+
+  it('renders group updated with linkedParticipant change', () => {
+    renderItem(
+      makeActivity({
+        type: 'GROUP_UPDATED',
+        data: {
+          kind: 'group',
+          changedFields: ['linkedParticipant'],
+          changes: [
+            {
+              field: 'linkedParticipant',
+              before: 'Guest User',
+              after: 'Alice',
+            },
+          ],
+        },
+      }),
+    )
+    expect(screen.getByText(/Alice updated group settings/)).toBeInTheDocument()
+    expect(screen.getByText('Linked participant')).toBeInTheDocument()
+    const change = screen.getByTestId(
+      'activity-item-act-1-change-linkedParticipant',
+    )
+    expect(change.textContent).toMatch(/Guest User.*→.*Alice/)
+  })
+
+  it('renders group updated with changes but no changedFields (backward compat)', () => {
+    renderItem(
+      makeActivity({
+        type: 'GROUP_UPDATED',
+        data: {
+          kind: 'group',
+          changes: [{ field: 'name', before: 'Old', after: 'New' }],
+        },
+      }),
+    )
+    expect(screen.getByText(/Alice updated group settings/)).toBeInTheDocument()
+    expect(screen.getByText('Name')).toBeInTheDocument()
+    const change = screen.getByTestId('activity-item-act-1-change-name')
+    expect(change.textContent).toMatch(/Old.*→.*New/)
+  })
+
   it('renders group archived', () => {
     renderItem(
       makeActivity({

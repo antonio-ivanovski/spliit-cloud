@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} päivitti ryhmän asetuksia",
       "archived": "{participant} arkistoi ryhmän",
-      "unarchived": "{participant} palautti ryhmän arkistosta"
+      "unarchived": "{participant} palautti ryhmän arkistosta",
+      "changedFields": {
+        "name": "Nimi",
+        "information": "Kuvaus",
+        "currency": "Valuutta",
+        "currencyCode": "Valuuttakoodi",
+        "linkedParticipant": "Linkitetty osallistuja"
+      }
     },
     "member": {
       "left": "{participant} poistui ryhmästä",

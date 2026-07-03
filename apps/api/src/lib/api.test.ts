@@ -662,6 +662,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
     } as never)
     prismaMock.account.findUnique.mockResolvedValue({
       id: 'acct-alice',
+      name: 'Alice',
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue(null as never)
     prismaMock.groupMember.create.mockResolvedValue({
@@ -704,7 +705,14 @@ describe('linkUnlinkedParticipantToAccount', () => {
         data: expect.objectContaining({
           data: expect.objectContaining({
             kind: 'group',
-            summary: 'ledger-participant:linked:lp-jane',
+            changedFields: ['linkedParticipant'],
+            changes: [
+              {
+                field: 'linkedParticipant',
+                before: 'Jane',
+                after: 'Alice',
+              },
+            ],
           }),
         }),
       }),

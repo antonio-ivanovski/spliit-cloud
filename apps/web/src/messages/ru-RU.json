@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} обновил(а) настройки группы",
       "archived": "{participant} архивировал(а) группу",
-      "unarchived": "{participant} разархивировал(а) группу"
+      "unarchived": "{participant} разархивировал(а) группу",
+      "changedFields": {
+        "name": "Название",
+        "information": "Описание",
+        "currency": "Валюта",
+        "currencyCode": "Код валюты",
+        "linkedParticipant": "Связанный участник"
+      }
     },
     "member": {
       "left": "{participant} покинул(а) группу",

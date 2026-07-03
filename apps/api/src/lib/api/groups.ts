@@ -2,6 +2,8 @@ import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { type GroupFormValues } from '@spliit/domain'
 import { resolveParticipantDisplayName } from '../invitations'
 import { buildGroupActivityData, logActivity } from './activities'
+import type { DiffableGroup } from './group-activity-diff'
+import { getGroupChangeSummary } from './group-activity-diff'
 import { loadGroupWithLedger, randomId } from './shared'
 
 /**
@@ -66,25 +68,19 @@ export async function updateGroup(
     throw new Error('Cannot modify settings of an archived group')
   }
 
-  const changedFields: Array<
-    'name' | 'information' | 'currency' | 'currencyCode'
-  > = []
-  if (existingGroup.name !== groupFormValues.name) changedFields.push('name')
-  if (
-    (existingGroup.information ?? null) !==
-    (groupFormValues.information ?? null)
-  ) {
-    changedFields.push('information')
+  const oldGroup: DiffableGroup = {
+    name: existingGroup.name,
+    information: existingGroup.information,
+    currency: existingGroup.ledger.currency,
+    currencyCode: existingGroup.ledger.currencyCode,
   }
-  if (existingGroup.ledger.currency !== groupFormValues.currency) {
-    changedFields.push('currency')
+  const newGroup: DiffableGroup = {
+    name: groupFormValues.name,
+    information: groupFormValues.information ?? null,
+    currency: groupFormValues.currency,
+    currencyCode: groupFormValues.currencyCode || null,
   }
-  if (
-    (existingGroup.ledger.currencyCode ?? null) !==
-    (groupFormValues.currencyCode || null)
-  ) {
-    changedFields.push('currencyCode')
-  }
+  const summary = getGroupChangeSummary(oldGroup, newGroup, {})
 
   return prisma.$transaction(async (tx) => {
     await logActivity(
@@ -95,7 +91,9 @@ export async function updateGroup(
         subject: { type: 'GROUP', id: groupId },
         data: buildGroupActivityData({
           summary: groupFormValues.name,
-          ...(changedFields.length > 0 ? { changedFields } : {}),
+          ...(summary
+            ? { changedFields: summary.changedFields, changes: summary.changes }
+            : {}),
         }),
       },
       tx,

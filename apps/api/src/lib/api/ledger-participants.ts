@@ -6,6 +6,7 @@ import {
   prisma,
   type Prisma,
 } from '@spliit/db'
+import type { GroupActivityChange } from '@spliit/domain/activities'
 import { buildGroupActivityData, logActivity } from './activities'
 import { randomId } from './shared'
 
@@ -43,7 +44,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
 
     const account = await tx.account.findUnique({
       where: { id: accountId },
-      select: { id: true },
+      select: { id: true, name: true },
     })
     if (!account) {
       throw new Error('Account not found')
@@ -88,6 +89,14 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       })
       await tx.ledgerParticipant.delete({ where: { id: participant.id } })
 
+      const mergedChanges: GroupActivityChange[] = [
+        {
+          field: 'linkedParticipant',
+          before: participant.displayName ?? 'Unknown participant',
+          after: `Merged with ${account.name ?? 'existing member'}`,
+        },
+      ]
+
       await logActivity(
         groupId,
         {
@@ -95,7 +104,9 @@ export async function linkUnlinkedParticipantToAccount(opts: {
           actor: { type: 'ACCOUNT', id: actor.accountId },
           subject: { type: 'GROUP', id: groupId },
           data: buildGroupActivityData({
-            summary: `ledger-participant:merged:${participant.id}:${existingLp.id}`,
+            summary: account.name ?? 'Participant merged',
+            changedFields: ['linkedParticipant'],
+            changes: mergedChanges,
           }),
         },
         tx,
@@ -116,6 +127,14 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       },
     })
 
+    const linkChanges: GroupActivityChange[] = [
+      {
+        field: 'linkedParticipant',
+        before: participant.displayName ?? 'Unknown participant',
+        after: account.name ?? 'Linked to account',
+      },
+    ]
+
     await logActivity(
       groupId,
       {
@@ -123,7 +142,9 @@ export async function linkUnlinkedParticipantToAccount(opts: {
         actor: { type: 'ACCOUNT', id: actor.accountId },
         subject: { type: 'GROUP', id: groupId },
         data: buildGroupActivityData({
-          summary: `ledger-participant:linked:${participant.id}`,
+          summary: account.name ?? 'Participant linked',
+          changedFields: ['linkedParticipant'],
+          changes: linkChanges,
         }),
       },
       tx,
@@ -368,6 +389,17 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
     })
     await tx.ledgerParticipant.delete({ where: { id: participant.id } })
 
+    const mergedInviteChanges: GroupActivityChange[] = [
+      {
+        field: 'linkedParticipant',
+        before: participant.displayName ?? 'Unknown participant',
+        after:
+          invitation.temporaryName ??
+          invitation.email ??
+          'Linked to invitation',
+      },
+    ]
+
     await logActivity(
       groupId,
       {
@@ -375,7 +407,9 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
         actor: { type: 'ACCOUNT', id: actor.accountId },
         subject: { type: 'GROUP', id: groupId },
         data: buildGroupActivityData({
-          summary: `ledger-participant:merged-into-invitation:${participant.id}:${targetLp.id}`,
+          summary: invitation.email ?? 'Participant linked to invitation',
+          changedFields: ['linkedParticipant'],
+          changes: mergedInviteChanges,
         }),
       },
       tx,

@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant}がグループ設定を更新しました",
       "archived": "{participant}がグループをアーカイブしました",
-      "unarchived": "{participant}がグループをアーカイブから復元しました"
+      "unarchived": "{participant}がグループをアーカイブから復元しました",
+      "changedFields": {
+        "name": "名前",
+        "information": "説明",
+        "currency": "通貨",
+        "currencyCode": "通貨コード",
+        "linkedParticipant": "リンクされた参加者"
+      }
     },
     "member": {
       "left": "{participant}がグループを退出しました",

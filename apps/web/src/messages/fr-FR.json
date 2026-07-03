@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} a modifié les paramètres du groupe",
       "archived": "{participant} a archivé le groupe",
-      "unarchived": "{participant} a désarchivé le groupe"
+      "unarchived": "{participant} a désarchivé le groupe",
+      "changedFields": {
+        "name": "Nom",
+        "information": "Description",
+        "currency": "Devise",
+        "currencyCode": "Code devise",
+        "linkedParticipant": "Participant lié"
+      }
     },
     "member": {
       "left": "{participant} a quitté le groupe",

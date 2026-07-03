@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
       "archived": "{participant}(e)k taldea artxibatu du",
-      "unarchived": "{participant}(e)k taldea desartxibatu du"
+      "unarchived": "{participant}(e)k taldea desartxibatu du",
+      "changedFields": {
+        "name": "Izena",
+        "information": "Deskribapena",
+        "currency": "Moneta",
+        "currencyCode": "Moneta-kodea",
+        "linkedParticipant": "Lotutako parte-hartzailea"
+      }
     },
     "member": {
       "left": "{participant} taldetik irten da",

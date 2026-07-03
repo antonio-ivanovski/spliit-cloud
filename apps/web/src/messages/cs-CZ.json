@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",
       "archived": "{participant} archivoval skupinu",
-      "unarchived": "{participant} obnovil skupinu z archivu"
+      "unarchived": "{participant} obnovil skupinu z archivu",
+      "changedFields": {
+        "name": "Název",
+        "information": "Popis",
+        "currency": "Měna",
+        "currencyCode": "Kód měny",
+        "linkedParticipant": "Propojený účastník"
+      }
     },
     "member": {
       "left": "{participant} opustil skupinu",

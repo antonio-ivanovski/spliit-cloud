@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",
       "archived": "{participant} ha arxivat el grup",
-      "unarchived": "{participant} ha desarxivat el grup"
+      "unarchived": "{participant} ha desarxivat el grup",
+      "changedFields": {
+        "name": "Nom",
+        "information": "Descripció",
+        "currency": "Moneda",
+        "currencyCode": "Codi de moneda",
+        "linkedParticipant": "Participant vinculat"
+      }
     },
     "member": {
       "left": "{participant} ha sortit del grup",

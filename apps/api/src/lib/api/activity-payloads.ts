@@ -2,6 +2,7 @@ import type {
   ExpenseActivityChange,
   ExpenseActivityData,
   ExpenseChangedField,
+  GroupActivityChange,
   GroupActivityData,
   GroupChangedField,
   GroupRole,
@@ -46,6 +47,7 @@ export function buildExpenseActivityData(
 type BuildGroupInput = {
   summary?: string
   changedFields?: GroupChangedField[]
+  changes?: GroupActivityChange[]
 }
 
 export function buildGroupActivityData(
@@ -57,6 +59,7 @@ export function buildGroupActivityData(
     ...(input.changedFields !== undefined
       ? { changedFields: input.changedFields }
       : {}),
+    ...(input.changes !== undefined ? { changes: input.changes } : {}),
   }
 }
 

@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",
       "archived": "{participant} archiveerde de groep",
-      "unarchived": "{participant} dearchiveerde de groep"
+      "unarchived": "{participant} dearchiveerde de groep",
+      "changedFields": {
+        "name": "Naam",
+        "information": "Beschrijving",
+        "currency": "Valuta",
+        "currencyCode": "Valutacode",
+        "linkedParticipant": "Gekoppelde deelnemer"
+      }
     },
     "member": {
       "left": "{participant} verliet de groep",

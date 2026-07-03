@@ -38,7 +38,13 @@ function useMessage(activity: Activity) {
         case 'EXPENSE_UPDATED':
           return {
             message: t('expense.updated', { participant: actor, title }),
-            changes: data.changes ?? null,
+            changes:
+              data.changes?.map((change) => ({
+                field: change.field,
+                label: t(`expense.changedFields.${change.field}` as const),
+                before: change.before ?? null,
+                after: change.after ?? null,
+              })) ?? null,
           }
         case 'EXPENSE_DELETED':
           return {
@@ -54,7 +60,13 @@ function useMessage(activity: Activity) {
         case 'GROUP_UPDATED':
           return {
             message: t('group.updated', { participant: actor }),
-            changes: null,
+            changes:
+              data.changes?.map((change) => ({
+                field: change.field,
+                label: t(`group.changedFields.${change.field}` as const),
+                before: change.before ?? null,
+                after: change.after ?? null,
+              })) ?? null,
           }
         case 'GROUP_ARCHIVED':
           return {
@@ -189,7 +201,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
                 data-testid={`activity-item-${activity.id}-change-${change.field}`}
               >
                 <span className="font-medium text-muted-foreground/80">
-                  {t(`expense.changedFields.${change.field}` as const)}
+                  {change.label}
                 </span>
                 <span className="tabular-nums">
                   <span className="text-muted-foreground/60">

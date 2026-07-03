@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} a actualizat setările grupului",
       "archived": "{participant} a arhivat grupul",
-      "unarchived": "{participant} a dezarhivat grupul"
+      "unarchived": "{participant} a dezarhivat grupul",
+      "changedFields": {
+        "name": "Nume",
+        "information": "Descriere",
+        "currency": "Monedă",
+        "currencyCode": "Cod monedă",
+        "linkedParticipant": "Participant legat"
+      }
     },
     "member": {
       "left": "{participant} a părăsit grupul",

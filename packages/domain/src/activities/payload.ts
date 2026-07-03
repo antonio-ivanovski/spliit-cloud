@@ -46,14 +46,23 @@ export const groupChangedFields = [
   'information',
   'currency',
   'currencyCode',
+  'linkedParticipant',
 ] as const
 export const groupChangedFieldSchema = z.enum(groupChangedFields)
 export type GroupChangedField = z.infer<typeof groupChangedFieldSchema>
+
+export const groupActivityChangeSchema = z.object({
+  field: groupChangedFieldSchema,
+  before: z.string().nullable().optional(),
+  after: z.string().nullable().optional(),
+})
+export type GroupActivityChange = z.infer<typeof groupActivityChangeSchema>
 
 export const groupActivityDataSchema = z.object({
   kind: z.literal('group'),
   summary: z.string().optional(),
   changedFields: z.array(groupChangedFieldSchema).optional(),
+  changes: z.array(groupActivityChangeSchema).optional(),
 })
 
 export type GroupActivityData = z.infer<typeof groupActivityDataSchema>

@@ -1303,7 +1303,14 @@
     "group": {
       "updated": "{participant} grup ayarlarını güncelledi",
       "archived": "{participant} grubu arşivledi",
-      "unarchived": "{participant} grubu arşivden çıkardı"
+      "unarchived": "{participant} grubu arşivden çıkardı",
+      "changedFields": {
+        "name": "İsim",
+        "information": "Açıklama",
+        "currency": "Para birimi",
+        "currencyCode": "Para birimi kodu",
+        "linkedParticipant": "Bağlı katılımcı"
+      }
     },
     "member": {
       "left": "{participant} gruptan ayrıldı",
