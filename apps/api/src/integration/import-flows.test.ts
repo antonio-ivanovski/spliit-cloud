@@ -187,6 +187,7 @@ describe('Import flow — email invitation context', () => {
 
     const mailContent = await readMailFile(inviteeEmail)
     expect(mailContent).not.toBeNull()
+    expect(mailContent).toContain('You will appear as "Invited Friend"')
     expect(mailContent).toContain(
       'This invitation is part of an import from a Spliit export.',
     )

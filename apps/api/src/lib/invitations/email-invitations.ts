@@ -370,6 +370,7 @@ export async function sendInvitationEmail(opts: {
   inviterRole: GroupRole
   recipientEmail: string
   recipientIsExistingUser: boolean
+  temporaryName?: string | null
   sourceProvider?: string
   sourceGroupName?: string
   expenseCount?: number
@@ -384,6 +385,7 @@ export async function sendInvitationEmail(opts: {
     inviterRole,
     recipientEmail,
     recipientIsExistingUser,
+    temporaryName,
     sourceProvider,
     sourceGroupName,
     expenseCount,
@@ -395,17 +397,25 @@ export async function sendInvitationEmail(opts: {
   const acceptUrl = `${webBase}/groups/${groupId}`
   const signInUrl = `${webBase}/?invitation=${invitationId}`
 
-  const subject = `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
+  const subject = temporaryName
+    ? `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud as ${temporaryName}`
+    : `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
 
   const lines: string[] = recipientIsExistingUser
     ? [
         `${inviterDisplayName} (${inviterRole.toLowerCase()}) invited you to join "${groupName}" on Spliit Cloud.`,
+        ...(temporaryName
+          ? [`You will appear as "${temporaryName}" in this group.`]
+          : []),
         '',
         `Open Spliit to accept or decline the invitation:`,
         acceptUrl,
       ]
     : [
         `${inviterDisplayName} invited you to join "${groupName}" on Spliit Cloud.`,
+        ...(temporaryName
+          ? [`You will appear as "${temporaryName}" in this group.`]
+          : []),
         '',
         `Create an account to join the group:`,
         signInUrl,

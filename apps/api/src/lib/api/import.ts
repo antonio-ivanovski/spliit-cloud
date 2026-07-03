@@ -479,6 +479,7 @@ export async function importGroup(
         inviterRole: GroupRole.ADMIN,
         recipientEmail: invitation.email,
         recipientIsExistingUser: !!existingAccount,
+        temporaryName: invite.sourceName,
         sourceProvider: input.sourceMeta?.provider,
         expenseCount: input.expenses.length,
         totalAmount: baseResult.summaryActivity.totalAmount,
