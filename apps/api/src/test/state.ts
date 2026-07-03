@@ -116,11 +116,7 @@ export const prismaMock = {
     'update',
     'delete',
   ]),
-  expenseDocument: makeMethodStubs([
-    'findMany',
-    'findUnique',
-    'findFirst',
-  ]),
+  expenseDocument: makeMethodStubs(['findMany', 'findUnique', 'findFirst']),
   recurringExpenseLink: makeMethodStubs([
     'findUnique',
     'findFirst',

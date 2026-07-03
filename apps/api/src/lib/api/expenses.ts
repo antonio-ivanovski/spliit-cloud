@@ -472,8 +472,7 @@ export async function updateExpense(
   ]
 
   const removedDocuments = existingExpense.documents.filter(
-    (existingDoc) =>
-      !documents.some((doc) => doc.id === existingDoc.id),
+    (existingDoc) => !documents.some((doc) => doc.id === existingDoc.id),
   )
   // S3 document deletions moved to post-transaction best-effort cleanup below
 
@@ -622,24 +621,31 @@ export async function updateExpense(
       }
     }
 
-    await tx.expenseItemizedRemainder.deleteMany({
-      where: { expenseId },
-    })
-    if (expense.itemizedRemainder) {
-      await tx.expenseItemizedRemainder.create({
-        data: {
-          expenseId,
-          splitMode: expense.itemizedRemainder.splitMode,
-          paidFor: {
-            createMany: {
-              data: expense.itemizedRemainder.paidFor.map((pf) => ({
-                ledgerParticipantId: pf.participant,
-                shares: pf.shares,
-              })),
+    // Only manage `ExpenseItemizedRemainder` rows for ITEMIZED expenses.
+    // The remainder is semantically meaningless otherwise, and we
+    // proactively delete any pre-existing rows so leftover artifacts from
+    // past (buggy) edits are cleaned up the next time the expense is
+    // updated.
+    if (expense.splitMode === 'ITEMIZED') {
+      await tx.expenseItemizedRemainder.deleteMany({
+        where: { expenseId },
+      })
+      if (expense.itemizedRemainder) {
+        await tx.expenseItemizedRemainder.create({
+          data: {
+            expenseId,
+            splitMode: expense.itemizedRemainder.splitMode,
+            paidFor: {
+              createMany: {
+                data: expense.itemizedRemainder.paidFor.map((pf) => ({
+                  ledgerParticipantId: pf.participant,
+                  shares: pf.shares,
+                })),
+              },
             },
           },
-        },
-      })
+        })
+      }
     }
 
     const updated = await tx.expense.update({
@@ -741,15 +747,15 @@ export async function updateExpense(
         },
         isReimbursement: expense.isReimbursement,
         documents: {
-            connectOrCreate: documents.map((doc) => ({
-              create: { ...doc, ledgerId: group.ledgerId },
-              where: { id: doc.id },
-            })),
-            deleteMany: existingExpense.documents
-              .filter(
-                (existingDoc) =>
-                  !documents.some((doc) => doc.id === existingDoc.id),
-              )
+          connectOrCreate: documents.map((doc) => ({
+            create: { ...doc, ledgerId: group.ledgerId },
+            where: { id: doc.id },
+          })),
+          deleteMany: existingExpense.documents
+            .filter(
+              (existingDoc) =>
+                !documents.some((doc) => doc.id === existingDoc.id),
+            )
             .map((doc) => ({
               id: doc.id,
             })),

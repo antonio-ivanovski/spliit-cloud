@@ -121,8 +121,12 @@ export function buildSubmitValues(
     }
   })
 
+  // Only persist `itemizedRemainder` for ITEMIZED expenses. For other
+  // split modes it is semantically meaningless and the form fabricates
+  // a default value, so sending it through would create orphan DB rows
+  // and trip a false-positive activity-log diff on the first edit.
   const itemizedRemainder: Expense['itemizedRemainder'] =
-    values.itemizedRemainder
+    values.splitMode === 'ITEMIZED' && values.itemizedRemainder
       ? {
           splitMode: values.itemizedRemainder.splitMode,
           paidFor: values.itemizedRemainder.paidFor.map(

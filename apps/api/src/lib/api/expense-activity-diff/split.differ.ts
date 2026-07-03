@@ -7,7 +7,10 @@ import type { ExpenseDiffer } from './types'
  * The split is considered changed if any of the following differ:
  * - paid-for row shares (order-independent)
  * - split mode
- * - itemized remainder configuration
+ * - itemized remainder configuration (only when both sides are ITEMIZED;
+ *   the remainder is semantically meaningless for non-itemized expenses
+ *   and the form fabricates a default value for them, so comparing it
+ *   here would produce false positives on otherwise no-op edits)
  *
  * Wraps {@link splitSemantics} for comparison and formatting logic.
  */
@@ -15,12 +18,22 @@ export const splitDiffer: ExpenseDiffer = {
   field: 'split',
 
   check(oldExpense, newExpense) {
-    return (
+    if (
       splitSemantics.paidForKey(oldExpense.paidFor) !==
         splitSemantics.paidForKey(newExpense.paidFor) ||
-      oldExpense.splitMode !== newExpense.splitMode ||
+      oldExpense.splitMode !== newExpense.splitMode
+    ) {
+      return true
+    }
+    if (
+      oldExpense.splitMode !== 'ITEMIZED' ||
+      newExpense.splitMode !== 'ITEMIZED'
+    ) {
+      return false
+    }
+    return (
       splitSemantics.remainderKey(oldExpense.itemizedRemainder) !==
-        splitSemantics.remainderKey(newExpense.itemizedRemainder)
+      splitSemantics.remainderKey(newExpense.itemizedRemainder)
     )
   },
 

@@ -70,6 +70,33 @@ describe('notesDiffer', () => {
         ),
       ).toBe(true)
     })
+
+    it('returns false when old is null and new is empty string', () => {
+      expect(
+        notesDiffer.check(
+          makeExpense({ notes: null as unknown as undefined }),
+          makeExpense({ notes: '' }),
+        ),
+      ).toBe(false)
+    })
+
+    it('returns false when old is undefined and new is whitespace', () => {
+      expect(
+        notesDiffer.check(
+          makeExpense({ notes: undefined }),
+          makeExpense({ notes: '   \n\t ' }),
+        ),
+      ).toBe(false)
+    })
+
+    it('returns false when old is whitespace and new is null', () => {
+      expect(
+        notesDiffer.check(
+          makeExpense({ notes: '   ' }),
+          makeExpense({ notes: null as unknown as undefined }),
+        ),
+      ).toBe(false)
+    })
   })
 
   describe('diff', () => {

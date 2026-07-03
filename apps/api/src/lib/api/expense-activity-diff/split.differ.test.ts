@@ -77,9 +77,13 @@ describe('splitDiffer', () => {
     ).toBe(true)
   })
 
-  it('check returns true when itemizedRemainder differs', () => {
-    const old = makeExpense({ itemizedRemainder: undefined })
+  it('check returns true when itemizedRemainder differs (ITEMIZED)', () => {
+    const old = makeExpense({
+      splitMode: 'ITEMIZED',
+      itemizedRemainder: undefined,
+    })
     const upd = makeExpense({
+      splitMode: 'ITEMIZED',
       itemizedRemainder: {
         splitMode: 'EVENLY',
         paidFor: [{ participant: 'lp-alice', shares: 1 }],
@@ -88,17 +92,66 @@ describe('splitDiffer', () => {
     expect(splitDiffer.check(old, upd)).toBe(true)
   })
 
-  it('check returns false when itemizedRemainder is identical', () => {
+  it('check returns false when itemizedRemainder is identical (ITEMIZED)', () => {
     const rem = {
       splitMode: 'EVENLY' as const,
       paidFor: [{ participant: 'lp-alice', shares: 1 }],
     }
     expect(
       splitDiffer.check(
-        makeExpense({ itemizedRemainder: rem }),
-        makeExpense({ itemizedRemainder: rem }),
+        makeExpense({ splitMode: 'ITEMIZED', itemizedRemainder: rem }),
+        makeExpense({ splitMode: 'ITEMIZED', itemizedRemainder: rem }),
       ),
     ).toBe(false)
+  })
+
+  // Regression: the form fabricates a default itemizedRemainder for every
+  // expense, so on a no-op edit the new side has a value while the old
+  // (DB) side has `undefined`. Without this guard it triggered a false
+  // positive on every first edit of a non-ITEMIZED expense.
+  it('check returns false when itemizedRemainder differs but splitMode is not ITEMIZED', () => {
+    const old = makeExpense({
+      splitMode: 'EVENLY',
+      itemizedRemainder: undefined,
+    })
+    const upd = makeExpense({
+      splitMode: 'EVENLY',
+      itemizedRemainder: {
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'lp-alice', shares: 1 }],
+      },
+    })
+    expect(splitDiffer.check(old, upd)).toBe(false)
+  })
+
+  it('check returns false when itemizedRemainder differs but only one side is ITEMIZED', () => {
+    const old = makeExpense({
+      splitMode: 'ITEMIZED',
+      itemizedRemainder: undefined,
+    })
+    const upd = makeExpense({
+      splitMode: 'EVENLY',
+      itemizedRemainder: {
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'lp-alice', shares: 1 }],
+      },
+    })
+    // splitMode change is itself a real change; this asserts that the
+    // remainder comparison does not double-count.
+    expect(splitDiffer.check(old, upd)).toBe(true)
+
+    const old2 = makeExpense({
+      splitMode: 'EVENLY',
+      itemizedRemainder: undefined,
+    })
+    const upd2 = makeExpense({
+      splitMode: 'ITEMIZED',
+      itemizedRemainder: {
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'lp-alice', shares: 1 }],
+      },
+    })
+    expect(splitDiffer.check(old2, upd2)).toBe(true)
   })
 
   it('diff returns null for identical splits', () => {
