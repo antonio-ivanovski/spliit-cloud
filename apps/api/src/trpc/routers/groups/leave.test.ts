@@ -514,6 +514,7 @@ describe('groupsRouter.leave — last active member', () => {
       otherMemberCount: 0,
       otherAdminCount: 0,
     })
+    prismaMock.expenseDocument.findMany.mockResolvedValue([] as never)
 
     const caller = makeCaller('acct-self')
     const result = await caller.leave({
@@ -540,6 +541,7 @@ describe('groupsRouter.leave — last active member', () => {
       otherMemberCount: 0,
       otherAdminCount: 0,
     })
+    prismaMock.expenseDocument.findMany.mockResolvedValue([] as never)
     // Alice paid 100 for herself only — balanced for her, but the
     // caller's ledger participant has a non-zero row to trip the
     // settlement check. We use a self-only expense so the balance is

@@ -12,13 +12,13 @@ Only the non-obvious project shape:
 
 Expense document uploads go client → R2 directly via presigned URLs (`apps/api/src/routes/upload.ts`). The server only vends the URL; the browser PUTs the file.
 
-**S3 tagging lifecycle** for orphan cleanup:
+**Temp-prefix lifecycle** for orphan cleanup (R2-compatible, no S3 object tags):
 
-1. **On presign (`apps/api/src/routes/upload.ts:137`)**: `PutObjectCommand` includes `Tagging: 'status=unowned'` so every fresh upload is tagged as unowned.
-2. **On expense commit (`apps/api/src/lib/api.ts`)**: `markS3ObjectAsOwned(doc.url)` flips the tag to `status=owned` — called in both `createExpense` (line 232) and `updateExpense` (line 458).
-3. **On delete (`apps/api/src/lib/api.ts:258`)**: `deleteS3Object(doc.url)` removes the object entirely — called in `deleteExpense` and also in `updateExpense` for documents removed from the form (line 352).
+1. **On presign (`apps/api/src/routes/upload.ts`)**: Key is prefixed with `tmp/` (e.g. `tmp/document-2024-...jpg`). No tagging is used.
+2. **On expense commit (`apps/api/src/lib/api/expenses.ts`)**: `promoteUploadedDocument(doc.url)` copies the object from `tmp/...` to `documents/...` and deletes the temp copy — called in both `createExpense` and `updateExpense` via `promoteExpenseDocuments()`.
+3. **On delete (`apps/api/src/lib/api/expenses.ts`)**: `deleteS3Object(doc.url)` removes the object entirely — called in `deleteExpense` and also in `updateExpense` for documents removed from the form.
 
-**Bucket lifecycle rule**: Configured via S3 API (not the R2 dashboard — it only supports prefix filters). Delete objects tagged `status=unowned` after 1 day:
+**R2 lifecycle rule**: Configure a prefix-based rule that deletes objects under `tmp/` after 1 day (no tag filter):
 
 ```bash
 aws s3api put-bucket-lifecycle-configuration \
@@ -26,15 +26,15 @@ aws s3api put-bucket-lifecycle-configuration \
   --bucket <bucket> \
   --lifecycle-configuration '{
     "Rules": [{
-      "ID": "delete-unowned-documents",
+      "ID": "delete-abandoned-uploads",
       "Status": "Enabled",
-      "Filter": { "Tag": { "Key": "status", "Value": "unowned" } },
+      "Filter": { "Prefix": "tmp/" },
       "Expiration": { "Days": 1 }
     }]
   }'
 ```
 
-This covers the gap where a user uploads a document in the expense form but never creates the expense (closes tab, refreshes, etc.).
+This covers the gap where a user uploads a document in the expense form but never creates the expense (closes tab, refreshes, etc.). Permanent documents live under `documents/` and are not affected by this rule.
 
 **Client-side resize pipeline** (`apps/web/src/lib/upload.tsx`):
 

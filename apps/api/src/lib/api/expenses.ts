@@ -14,7 +14,7 @@ import {
   type CategoryId,
   type Expense,
 } from '@spliit/domain'
-import { deleteS3Object, markS3ObjectAsOwned } from '../../routes/upload'
+import { deleteS3Object, promoteUploadedDocument } from '../../routes/upload'
 import { resolveParticipantDisplayName } from '../invitations'
 import { logActivity } from './activities'
 import { createRecurringExpenses } from './recurring-expenses'
@@ -43,6 +43,17 @@ function resolveCategory(categoryId: string): Category {
 function narrowCategoryId(categoryId: string): CategoryId {
   const parsed = categoryIdSchema.safeParse(categoryId)
   return parsed.success ? parsed.data : DEFAULT_CATEGORY_ID
+}
+
+async function promoteExpenseDocuments(
+  documents: Array<{ id: string; url: string; width: number; height: number }>,
+): Promise<Array<{ id: string; url: string; width: number; height: number }>> {
+  return Promise.all(
+    documents.map(async (doc) => ({
+      ...doc,
+      url: await promoteUploadedDocument(doc.url),
+    })),
+  )
 }
 
 export async function createExpense(
@@ -107,6 +118,8 @@ export async function createExpense(
         ),
       }
     : undefined
+
+  const documents = await promoteExpenseDocuments(expense.documents)
 
   const createdExpense = await prisma.expense.create({
     data: {
@@ -196,21 +209,18 @@ export async function createExpense(
       isReimbursement: expense.isReimbursement,
       documents: {
         createMany: {
-          data: expense.documents.map((doc) => ({
+          data: documents.map((doc) => ({
             id: randomId(),
             url: doc.url,
             width: doc.width,
             height: doc.height,
+            ledgerId,
           })),
         },
       },
       notes: expense.notes,
     },
   })
-
-  for (const doc of expense.documents) {
-    await markS3ObjectAsOwned(doc.url)
-  }
 
   return createdExpense
 }
@@ -296,9 +306,11 @@ export async function updateExpense(
     data: expense.title,
   })
 
+  // Promote new/updated temp documents to permanent storage before persisting
+  const documents = await promoteExpenseDocuments(expense.documents)
+
   const removedDocuments = existingExpense.documents.filter(
-    (existingDoc) =>
-      !expense.documents.some((doc) => doc.id === existingDoc.id),
+    (existingDoc) => !documents.some((doc) => doc.id === existingDoc.id),
   )
   for (const doc of removedDocuments) {
     await deleteS3Object(doc.url)
@@ -541,14 +553,14 @@ export async function updateExpense(
       },
       isReimbursement: expense.isReimbursement,
       documents: {
-        connectOrCreate: expense.documents.map((doc) => ({
-          create: doc,
+        connectOrCreate: documents.map((doc) => ({
+          create: { ...doc, ledgerId: group.ledgerId },
           where: { id: doc.id },
         })),
         deleteMany: existingExpense.documents
           .filter(
             (existingDoc) =>
-              !expense.documents.some((doc) => doc.id === existingDoc.id),
+              !documents.some((doc) => doc.id === existingDoc.id),
           )
           .map((doc) => ({
             id: doc.id,
@@ -557,10 +569,6 @@ export async function updateExpense(
       notes: expense.notes,
     },
   })
-
-  for (const doc of expense.documents) {
-    await markS3ObjectAsOwned(doc.url)
-  }
 
   return createdExpense
 }

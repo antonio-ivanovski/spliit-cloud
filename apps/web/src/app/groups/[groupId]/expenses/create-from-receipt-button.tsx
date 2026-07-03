@@ -24,7 +24,7 @@ import { useLocale } from '@/i18n/react'
 import { getCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { useRouter } from '@/lib/navigation'
-import { getImageData, maybeDecodeHeic, usePresignedUpload } from '@/lib/upload'
+import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import {
   formatCurrency,
   formatDate,
@@ -43,7 +43,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 
-const MAX_FILE_SIZE = 5 * 1024 ** 2
+const MAX_FILE_SIZE = 2 * 1024 ** 2
 
 type ReceiptExtractedInfo = {
   amount: number
@@ -106,13 +106,13 @@ function ReceiptDialogContent() {
   >(null)
 
   const handleFileChange = async (file: File) => {
-    const decoded = await maybeDecodeHeic(file)
-    if (decoded.size > MAX_FILE_SIZE) {
+    const { file: resizedFile, width, height } = await resizeImage(file)
+    if (resizedFile.size > MAX_FILE_SIZE) {
       toast({
         title: t('TooBigToast.title'),
         description: t('TooBigToast.description', {
           maxSize: formatFileSize(MAX_FILE_SIZE, locale),
-          size: formatFileSize(decoded.size, locale),
+          size: formatFileSize(resizedFile.size, locale),
         }),
         variant: 'destructive',
       })
@@ -123,7 +123,7 @@ function ReceiptDialogContent() {
       try {
         setPending(true)
         console.log('Uploading image…')
-        const { url } = await uploadToS3(decoded)
+        const { url } = await uploadToS3(resizedFile)
         console.log('Extracting information from receipt…')
         const { amount, categoryId, currencyCode, date, title } =
           await extractReceiptMutation.mutateAsync({
@@ -131,7 +131,6 @@ function ReceiptDialogContent() {
             currency: group?.currency ?? '',
             currencyCode: group?.currencyCode,
           })
-        const { width, height } = await getImageData(decoded)
         setReceiptInfo({
           amount,
           categoryId,

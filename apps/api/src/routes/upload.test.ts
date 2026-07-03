@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { env } from '../lib/env'
 import '../test/mocks'
 import { authState, prismaMock } from '../test/state'
-import { createUploadUrl } from './upload'
+import { createUploadUrl, promoteUploadedDocument } from './upload'
 
 function makeRequest(): Request {
   return new Request('http://localhost/uploads/presign', {
@@ -15,6 +15,22 @@ vi.mock('@aws-sdk/s3-request-presigner', () => ({
   getSignedUrl: vi.fn(
     async () => 'https://s3.example.com/presigned-upload-url',
   ),
+}))
+
+const mockS3Send = vi.hoisted(() => vi.fn().mockResolvedValue({}))
+vi.mock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn(function () {
+    return { send: mockS3Send }
+  }),
+  PutObjectCommand: vi.fn(function (input: unknown) {
+    return input
+  }),
+  CopyObjectCommand: vi.fn(function (input: unknown) {
+    return input
+  }),
+  DeleteObjectCommand: vi.fn(function (input: unknown) {
+    return input
+  }),
 }))
 
 describe('createUploadUrl', () => {
@@ -162,7 +178,8 @@ describe('createUploadUrl', () => {
     expect(body.uploadUrl).toBe('https://s3.example.com/presigned-upload-url')
     expect(typeof body.fileUrl).toBe('string')
     expect(body.fileUrl).toContain('spliit-test-bucket')
-    expect(body.fileUrl).toMatch(/\.pdf$/)
+    expect(body.fileUrl).toMatch(/\/tmp\/document-.*\.pdf$/)
+    expect(body.key).toMatch(/^tmp\/document-/)
   })
 
   it('uses S3_UPLOAD_PUBLIC_URL for browser-readable file URLs when configured', async () => {
@@ -196,8 +213,83 @@ describe('createUploadUrl', () => {
 
     expect(response.status).toBe(200)
     const body = await response.json()
-    expect(body.fileUrl).toMatch(/^https:\/\/uploads\.spliit\.cloud\/document-/)
+    expect(body.fileUrl).toMatch(
+      /^https:\/\/uploads\.spliit\.cloud\/tmp\/document-/,
+    )
     expect(body.fileUrl).toMatch(/\.pdf$/)
     env.S3_UPLOAD_PUBLIC_URL = undefined
+  })
+})
+
+describe('promoteUploadedDocument', () => {
+  beforeEach(() => {
+    mockS3Send.mockReset()
+    mockS3Send.mockResolvedValue({})
+  })
+
+  it('returns the original URL when uploads are not configured', async () => {
+    const originalBucket = env.S3_UPLOAD_BUCKET
+    env.S3_UPLOAD_BUCKET = ''
+    try {
+      const url = 'https://example.com/tmp/doc.jpg'
+      const result = await promoteUploadedDocument(url)
+      expect(result).toBe(url)
+      expect(mockS3Send).not.toHaveBeenCalled()
+    } finally {
+      env.S3_UPLOAD_BUCKET = originalBucket
+    }
+  })
+
+  it('returns the original URL when key is not under tmp/', async () => {
+    const url =
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/documents/doc.jpg'
+    const result = await promoteUploadedDocument(url)
+    expect(result).toBe(url)
+    expect(mockS3Send).not.toHaveBeenCalled()
+  })
+
+  it('copies tmp/... key to documents/... and deletes the temp object', async () => {
+    const url =
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg'
+
+    const result = await promoteUploadedDocument(url)
+
+    expect(mockS3Send).toHaveBeenCalledTimes(2)
+    const [copyInput, deleteInput] = mockS3Send.mock.calls.map((c) => c[0])
+
+    expect(copyInput).toMatchObject({
+      Bucket: 'spliit-test-bucket',
+      CopySource: expect.stringContaining('spliit-test-bucket/'),
+      Key: 'documents/document-test.jpg',
+    })
+    expect(deleteInput).toMatchObject({
+      Bucket: 'spliit-test-bucket',
+      Key: 'tmp/document-test.jpg',
+    })
+  })
+
+  it('returns permanent public URL after promotion', async () => {
+    const url =
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg'
+
+    const result = await promoteUploadedDocument(url)
+
+    expect(result).toContain('documents/document-test.jpg')
+    expect(result).not.toContain('tmp/')
+  })
+
+  it('uses S3_UPLOAD_PUBLIC_URL for the permanent URL when configured', async () => {
+    env.S3_UPLOAD_PUBLIC_URL = 'https://uploads.spliit.cloud/'
+    try {
+      const url = 'https://uploads.spliit.cloud/tmp/document-test.jpg'
+
+      const result = await promoteUploadedDocument(url)
+
+      expect(result).toBe(
+        'https://uploads.spliit.cloud/documents/document-test.jpg',
+      )
+    } finally {
+      env.S3_UPLOAD_PUBLIC_URL = undefined
+    }
   })
 })

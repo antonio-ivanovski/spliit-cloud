@@ -100,6 +100,7 @@ const hoisted = vi.hoisted(() => {
       'update',
       'delete',
     ]),
+    expenseDocument: makeMethodStubs(['findMany', 'findUnique', 'findFirst']),
     activity: makeMethodStubs(['findMany', 'create']),
     session: makeMethodStubs(['findUnique', 'findMany', 'create', 'delete']),
     accountGroupPreference: makeMethodStubs([

@@ -15,7 +15,7 @@ import {
 
 vi.mock('../routes/upload', () => ({
   deleteS3Object: vi.fn(),
-  markS3ObjectAsOwned: vi.fn(),
+  promoteUploadedDocument: vi.fn(),
 }))
 
 beforeEach(() => {

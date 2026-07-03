@@ -371,14 +371,16 @@ model Expense {
 }
 
 model ExpenseDocument {
-  id        String   @id
+  id        String  @id
   url       String
   width     Int
   height    Int
   Expense   Expense? @relation(fields: [expenseId], references: [id])
   expenseId String?
-  Ledger    Ledger?  @relation("LedgerDocuments", fields: [ledgerId], references: [id])
-  ledgerId  String?
+  Ledger    Ledger   @relation("LedgerDocuments", fields: [ledgerId], references: [id])
+  ledgerId  String
+
+  @@index([ledgerId])
 }
 
 enum SplitMode {

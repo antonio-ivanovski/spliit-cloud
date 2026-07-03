@@ -1,4 +1,5 @@
 import { ActivityType, GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+import { deleteS3Object } from '../../routes/upload'
 import { logActivity } from './activities'
 import { createSettlementExpensesForLeave, getGroupBalances } from './balances'
 import { getMemberLedgerParticipantId, randomId } from './shared'
@@ -228,6 +229,15 @@ export async function leaveGroup(opts: {
         'You are the last active member. Confirm deletion to continue.',
       )
     }
+
+    // Delete S3 objects for all expense documents in this group before
+    // cascading the DB delete, mirroring the same cleanup in deleteExpense.
+    const documents = await prisma.expenseDocument.findMany({
+      where: { ledgerId: group.ledgerId },
+      select: { url: true },
+    })
+    await Promise.all(documents.map((doc) => deleteS3Object(doc.url)))
+
     await prisma.group.delete({ where: { id: groupId } })
     return { deleted: true, promotedMemberId: null }
   }

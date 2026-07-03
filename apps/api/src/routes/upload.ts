@@ -1,7 +1,7 @@
 import {
+  CopyObjectCommand,
   DeleteObjectCommand,
   PutObjectCommand,
-  PutObjectTaggingCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
@@ -25,38 +25,64 @@ function getS3Client() {
   return s3Client
 }
 
-export async function deleteS3Object(fileUrl: string) {
-  if (
-    !env.S3_UPLOAD_BUCKET ||
-    !env.S3_UPLOAD_KEY ||
-    !env.S3_UPLOAD_REGION ||
-    !env.S3_UPLOAD_SECRET
+function uploadsConfigured() {
+  return !!(
+    env.S3_UPLOAD_BUCKET &&
+    env.S3_UPLOAD_KEY &&
+    env.S3_UPLOAD_REGION &&
+    env.S3_UPLOAD_SECRET
   )
-    return
+}
 
-  const key = new URL(fileUrl).pathname.replace(/^\//, '')
+function keyFromFileUrl(fileUrl: string): string {
+  return new URL(fileUrl).pathname.replace(/^\//, '')
+}
+
+function publicUrlForKey(key: string): string {
+  return env.S3_UPLOAD_PUBLIC_URL
+    ? `${env.S3_UPLOAD_PUBLIC_URL.replace(/\/$/, '')}/${key}`
+    : `https://${env.S3_UPLOAD_BUCKET}.s3.${env.S3_UPLOAD_REGION}.amazonaws.com/${key}`
+}
+
+export async function deleteS3Object(fileUrl: string) {
+  if (!uploadsConfigured()) return
+
+  const key = keyFromFileUrl(fileUrl)
   await getS3Client().send(
     new DeleteObjectCommand({ Bucket: env.S3_UPLOAD_BUCKET, Key: key }),
   )
 }
 
-export async function markS3ObjectAsOwned(fileUrl: string) {
-  if (
-    !env.S3_UPLOAD_BUCKET ||
-    !env.S3_UPLOAD_KEY ||
-    !env.S3_UPLOAD_REGION ||
-    !env.S3_UPLOAD_SECRET
-  )
-    return
+/**
+ * Promote an uploaded document from the temporary `tmp/` prefix to a
+ * permanent `documents/` prefix by copying and deleting the temp object.
+ */
+export async function promoteUploadedDocument(
+  fileUrl: string,
+): Promise<string> {
+  if (!uploadsConfigured()) return fileUrl
 
-  const key = new URL(fileUrl).pathname.replace(/^\//, '')
+  const key = keyFromFileUrl(fileUrl)
+  if (!key.startsWith('tmp/')) return fileUrl
+
+  const permanentKey = key.replace(/^tmp\//, 'documents/')
+
   await getS3Client().send(
-    new PutObjectTaggingCommand({
+    new CopyObjectCommand({
       Bucket: env.S3_UPLOAD_BUCKET,
-      Key: key,
-      Tagging: { TagSet: [{ Key: 'status', Value: 'owned' }] },
+      CopySource: `${env.S3_UPLOAD_BUCKET}/${encodeURIComponent(key)}`,
+      Key: permanentKey,
     }),
   )
+
+  await getS3Client().send(
+    new DeleteObjectCommand({
+      Bucket: env.S3_UPLOAD_BUCKET,
+      Key: key,
+    }),
+  )
+
+  return publicUrlForKey(permanentKey)
 }
 
 const MAX_UPLOAD_SIZE = 2 * 1024 ** 2
@@ -127,19 +153,16 @@ export async function createUploadUrl(
   }
 
   const [, extension = ''] = fileName.match(/(\.[^.]*)$/) ?? []
-  const key = `document-${new Date().toISOString()}-${randomId()}${extension.toLowerCase()}`
+  const key = `tmp/document-${new Date().toISOString()}-${randomId()}${extension.toLowerCase()}`
   const command = new PutObjectCommand({
     Bucket: env.S3_UPLOAD_BUCKET,
     Key: key,
     ContentType: contentType,
-    Tagging: 'status=unowned',
   })
   const uploadUrl = await getSignedUrl(getS3Client(), command, {
     expiresIn: 60,
   })
-  const fileUrl = env.S3_UPLOAD_PUBLIC_URL
-    ? `${env.S3_UPLOAD_PUBLIC_URL.replace(/\/$/, '')}/${key}`
-    : `https://${env.S3_UPLOAD_BUCKET}.s3.${env.S3_UPLOAD_REGION}.amazonaws.com/${key}`
+  const fileUrl = publicUrlForKey(key)
 
   return Response.json({ uploadUrl, fileUrl, key })
 }

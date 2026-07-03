@@ -344,6 +344,7 @@ export async function importGroup(
                 url: doc.url,
                 width: doc.width,
                 height: doc.height,
+                ledgerId,
               })),
             },
           },
