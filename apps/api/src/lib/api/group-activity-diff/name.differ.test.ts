@@ -28,7 +28,7 @@ describe('nameDiffer', () => {
       nameDiffer.diff(
         makeGroup({ name: 'Same' }),
         makeGroup({ name: 'Same' }),
-        {} as any,
+        {},
       ),
     ).toBeNull()
   })
@@ -36,7 +36,7 @@ describe('nameDiffer', () => {
     const result = nameDiffer.diff(
       makeGroup({ name: 'Old' }),
       makeGroup({ name: 'New' }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({ field: 'name', before: 'Old', after: 'New' })
   })

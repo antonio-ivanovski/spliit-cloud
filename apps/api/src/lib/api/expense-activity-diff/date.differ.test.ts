@@ -1,6 +1,7 @@
 import type { Expense } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
 import { dateDiffer } from './date.differ'
+import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
@@ -22,6 +23,12 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
     recurrenceRule: 'NONE',
     ...overrides,
   } as Expense
+}
+
+const ctx: ChangeContext = {
+  getParticipantName: (id) => id,
+  getCategoryName: (id) => id,
+  formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
 }
 
 describe('dateDiffer', () => {
@@ -64,14 +71,14 @@ describe('dateDiffer', () => {
   })
 
   it('diff returns null for identical dates', () => {
-    expect(dateDiffer.diff(makeExpense(), makeExpense(), {} as any)).toBeNull()
+    expect(dateDiffer.diff(makeExpense(), makeExpense(), ctx)).toBeNull()
   })
 
   it('diff formats before/after as ISO date strings', () => {
     const result = dateDiffer.diff(
       makeExpense({ expenseDate: new Date('2026-01-15T00:00:00Z') }),
       makeExpense({ expenseDate: new Date('2026-01-16T00:00:00Z') }),
-      {} as any,
+      ctx,
     )
     expect(result).toEqual({
       field: 'date',

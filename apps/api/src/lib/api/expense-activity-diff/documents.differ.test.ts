@@ -1,6 +1,7 @@
 import type { Expense } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
 import { documentsDiffer } from './documents.differ'
+import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
@@ -26,6 +27,12 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
 
 const doc1 = { id: 'doc-1', url: 'https://x/a.png', width: 1, height: 1 }
 const doc2 = { id: 'doc-2', url: 'https://x/b.png', width: 1, height: 1 }
+
+const ctx: ChangeContext = {
+  getParticipantName: (id) => id,
+  getCategoryName: (id) => id,
+  formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
+}
 
 describe('documentsDiffer', () => {
   it('check returns false for identical documents', () => {
@@ -69,7 +76,7 @@ describe('documentsDiffer', () => {
       documentsDiffer.diff(
         makeExpense({ documents: [] }),
         makeExpense({ documents: [] }),
-        {} as any,
+        ctx,
       ),
     ).toBeNull()
   })
@@ -78,7 +85,7 @@ describe('documentsDiffer', () => {
     const result = documentsDiffer.diff(
       makeExpense({ documents: [doc1] }),
       makeExpense({ documents: [doc1, doc2] }),
-      {} as any,
+      ctx,
     )
     expect(result).toEqual({
       field: 'documents',
@@ -91,7 +98,7 @@ describe('documentsDiffer', () => {
     const result = documentsDiffer.diff(
       makeExpense({ documents: [doc1] }),
       makeExpense({ documents: [] }),
-      {} as any,
+      ctx,
     )
     expect(result).toEqual({
       field: 'documents',

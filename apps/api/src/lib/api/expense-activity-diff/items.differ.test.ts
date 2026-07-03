@@ -1,6 +1,7 @@
 import type { Expense, ExpenseApiItem } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
 import { itemsDiffer } from './items.differ'
+import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
@@ -35,6 +36,12 @@ function item(overrides: Partial<ExpenseApiItem> = {}): ExpenseApiItem {
     paidFor: [{ participant: 'lp-alice', shares: 1 }],
     ...overrides,
   } as ExpenseApiItem
+}
+
+const ctx: ChangeContext = {
+  getParticipantName: (id) => id,
+  getCategoryName: (id) => id,
+  formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
 }
 
 describe('itemsDiffer', () => {
@@ -122,14 +129,14 @@ describe('itemsDiffer', () => {
   })
 
   it('diff returns null for identical items', () => {
-    expect(itemsDiffer.diff(makeExpense(), makeExpense(), {} as any)).toBeNull()
+    expect(itemsDiffer.diff(makeExpense(), makeExpense(), ctx)).toBeNull()
   })
 
   it('diff shows item counts (0 → 2)', () => {
     const result = itemsDiffer.diff(
       makeExpense(),
       makeExpense({ items: [item({ id: 'i-1' }), item({ id: 'i-2' })] }),
-      {} as any,
+      ctx,
     )
     expect(result).toEqual({ field: 'items', before: null, after: '2' })
   })
@@ -138,7 +145,7 @@ describe('itemsDiffer', () => {
     const result = itemsDiffer.diff(
       makeExpense({ items: [item({ id: 'i-1' }), item({ id: 'i-2' })] }),
       makeExpense(),
-      {} as any,
+      ctx,
     )
     expect(result).toEqual({ field: 'items', before: '2', after: null })
   })

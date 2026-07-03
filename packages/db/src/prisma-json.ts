@@ -28,6 +28,7 @@ import type {
 export {}
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace PrismaJson {
     type ActivityType = DomainActivityType
     type ActivityActorType = DomainActivityActorType

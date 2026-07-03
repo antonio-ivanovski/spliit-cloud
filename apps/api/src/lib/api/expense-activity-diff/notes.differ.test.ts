@@ -1,6 +1,7 @@
 import type { Expense } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
 import { notesDiffer } from './notes.differ'
+import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
@@ -22,6 +23,12 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
     recurrenceRule: 'NONE',
     ...overrides,
   } as Expense
+}
+
+const ctx: ChangeContext = {
+  getParticipantName: (id) => id,
+  getCategoryName: (id) => id,
+  formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
 }
 
 describe('notesDiffer', () => {
@@ -105,7 +112,7 @@ describe('notesDiffer', () => {
         notesDiffer.diff(
           makeExpense({ notes: undefined }),
           makeExpense({ notes: undefined }),
-          {} as any,
+          ctx,
         ),
       ).toBeNull()
     })
@@ -114,7 +121,7 @@ describe('notesDiffer', () => {
       const result = notesDiffer.diff(
         makeExpense({ notes: undefined }),
         makeExpense({ notes: 'important' }),
-        {} as any,
+        ctx,
       )
       expect(result).toEqual({ field: 'notes', before: null, after: 'Added' })
     })
@@ -123,7 +130,7 @@ describe('notesDiffer', () => {
       const result = notesDiffer.diff(
         makeExpense({ notes: 'old note' }),
         makeExpense({ notes: undefined }),
-        {} as any,
+        ctx,
       )
       expect(result).toEqual({ field: 'notes', before: 'Removed', after: null })
     })
@@ -132,7 +139,7 @@ describe('notesDiffer', () => {
       const result = notesDiffer.diff(
         makeExpense({ notes: 'version 1' }),
         makeExpense({ notes: 'version 2' }),
-        {} as any,
+        ctx,
       )
       expect(result).toEqual({
         field: 'notes',

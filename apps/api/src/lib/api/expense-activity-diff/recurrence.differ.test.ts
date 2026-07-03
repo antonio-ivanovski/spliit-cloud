@@ -1,6 +1,7 @@
 import type { Expense } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
 import { recurrenceDiffer } from './recurrence.differ'
+import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
@@ -22,6 +23,12 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
     recurrenceRule: 'NONE',
     ...overrides,
   } as Expense
+}
+
+const ctx: ChangeContext = {
+  getParticipantName: (id) => id,
+  getCategoryName: (id) => id,
+  formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
 }
 
 describe('recurrenceDiffer', () => {
@@ -48,7 +55,7 @@ describe('recurrenceDiffer', () => {
       recurrenceDiffer.diff(
         makeExpense({ recurrenceRule: 'NONE' }),
         makeExpense({ recurrenceRule: 'NONE' }),
-        {} as any,
+        ctx,
       ),
     ).toBeNull()
   })
@@ -57,7 +64,7 @@ describe('recurrenceDiffer', () => {
     const result = recurrenceDiffer.diff(
       makeExpense({ recurrenceRule: 'NONE' }),
       makeExpense({ recurrenceRule: 'WEEKLY' }),
-      {} as any,
+      ctx,
     )
     expect(result).toEqual({
       field: 'recurrence',
@@ -70,7 +77,7 @@ describe('recurrenceDiffer', () => {
     const result = recurrenceDiffer.diff(
       makeExpense({ recurrenceRule: 'NONE' }),
       makeExpense({ recurrenceRule: 'DAILY' }),
-      {} as any,
+      ctx,
     )
     expect(result!.after).toBe('Daily')
   })
@@ -79,7 +86,7 @@ describe('recurrenceDiffer', () => {
     const result = recurrenceDiffer.diff(
       makeExpense({ recurrenceRule: 'NONE' }),
       makeExpense({ recurrenceRule: 'MONTHLY' }),
-      {} as any,
+      ctx,
     )
     expect(result!.after).toBe('Monthly')
   })
@@ -88,7 +95,7 @@ describe('recurrenceDiffer', () => {
     const result = recurrenceDiffer.diff(
       makeExpense({ recurrenceRule: 'NONE' }),
       makeExpense({ recurrenceRule: 'HOURLY' }),
-      {} as any,
+      ctx,
     )
     expect(result!.after).toBe('HOURLY')
   })

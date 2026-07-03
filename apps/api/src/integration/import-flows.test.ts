@@ -567,7 +567,8 @@ describe('Import participant deduplication', () => {
     expect(result.group.participants).toHaveLength(2)
 
     const invitee = result.group.participants.find(
-      (p: any) => !p.unlinked && p.pending,
+      (p: { unlinked: boolean; pending: boolean }) =>
+        !p.unlinked && p.pending,
     )
     expect(invitee).toBeDefined()
 

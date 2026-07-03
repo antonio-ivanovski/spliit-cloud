@@ -33,7 +33,6 @@ describe('Group activity — real DB', () => {
   }
 
   let groupId: string
-  let adminAccountId: string
   let memberParticipantId: string
 
   function makeCaller(overrides?: { accountId?: string; email?: string }) {
@@ -117,8 +116,6 @@ describe('Group activity — real DB', () => {
       },
     })
     trackLedger(group!.ledger.id)
-    adminAccountId = group!.members[0].accountId
-    const adminLp = group!.members[0].ledgerParticipant!
 
     // Add a second active member via DB
     const gmId = `gm-ga-m-${runId}`

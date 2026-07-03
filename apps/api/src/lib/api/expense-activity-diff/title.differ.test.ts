@@ -1,6 +1,7 @@
 import type { Expense } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
 import { titleDiffer } from './title.differ'
+import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
@@ -22,6 +23,12 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
     recurrenceRule: 'NONE',
     ...overrides,
   } as Expense
+}
+
+const ctx: ChangeContext = {
+  getParticipantName: (id) => id,
+  getCategoryName: (id) => id,
+  formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
 }
 
 describe('titleDiffer', () => {
@@ -48,7 +55,7 @@ describe('titleDiffer', () => {
       titleDiffer.diff(
         makeExpense({ title: 'Same' }),
         makeExpense({ title: 'Same' }),
-        {} as any,
+        ctx,
       ),
     ).toBeNull()
   })
@@ -57,7 +64,7 @@ describe('titleDiffer', () => {
     const result = titleDiffer.diff(
       makeExpense({ title: 'Old' }),
       makeExpense({ title: 'New' }),
-      {} as any,
+      ctx,
     )
     expect(result).toEqual({ field: 'title', before: 'Old', after: 'New' })
   })

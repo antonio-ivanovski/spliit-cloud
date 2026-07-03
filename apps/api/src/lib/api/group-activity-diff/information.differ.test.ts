@@ -58,7 +58,7 @@ describe('informationDiffer', () => {
       informationDiffer.diff(
         makeGroup({ information: 'Desc' }),
         makeGroup({ information: 'Desc' }),
-        {} as any,
+        {},
       ),
     ).toBeNull()
   })
@@ -66,7 +66,7 @@ describe('informationDiffer', () => {
     const result = informationDiffer.diff(
       makeGroup({ information: null }),
       makeGroup({ information: 'Added desc' }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({
       field: 'information',
@@ -78,7 +78,7 @@ describe('informationDiffer', () => {
     const result = informationDiffer.diff(
       makeGroup({ information: 'Old desc' }),
       makeGroup({ information: null }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({
       field: 'information',
@@ -90,7 +90,7 @@ describe('informationDiffer', () => {
     const result = informationDiffer.diff(
       makeGroup({ information: 'Old' }),
       makeGroup({ information: 'New' }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({
       field: 'information',

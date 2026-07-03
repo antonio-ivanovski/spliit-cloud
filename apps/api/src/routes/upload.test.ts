@@ -297,7 +297,7 @@ describe('promoteUploadedDocument', () => {
     const url =
       'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg'
 
-    const result = await promoteUploadedDocument(url)
+    await promoteUploadedDocument(url)
 
     expect(mockS3Send).toHaveBeenCalledTimes(2)
     const [copyInput, deleteInput] = mockS3Send.mock.calls.map((c) => c[0])

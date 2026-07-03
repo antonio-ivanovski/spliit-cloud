@@ -41,13 +41,13 @@ describe('currencyDiffer', () => {
     ).toBe(true)
   })
   it('diff returns null when unchanged', () => {
-    expect(currencyDiffer.diff(makeGroup(), makeGroup(), {} as any)).toBeNull()
+    expect(currencyDiffer.diff(makeGroup(), makeGroup(), {})).toBeNull()
   })
   it('diff formats with code and symbol', () => {
     const result = currencyDiffer.diff(
       makeGroup({ currency: '$', currencyCode: 'USD' }),
       makeGroup({ currency: '€', currencyCode: 'EUR' }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({
       field: 'currency',
@@ -59,7 +59,7 @@ describe('currencyDiffer', () => {
     const result = currencyDiffer.diff(
       makeGroup({ currency: '£', currencyCode: null }),
       makeGroup({ currency: '€', currencyCode: 'EUR' }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({ field: 'currency', before: '£', after: 'EUR (€)' })
   })
@@ -67,7 +67,7 @@ describe('currencyDiffer', () => {
     const result = currencyDiffer.diff(
       makeGroup({ currency: '$', currencyCode: null }),
       makeGroup({ currency: '€', currencyCode: null }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({ field: 'currency', before: '$', after: '€' })
   })
@@ -75,7 +75,7 @@ describe('currencyDiffer', () => {
     const result = currencyDiffer.diff(
       makeGroup({ currency: '$', currencyCode: 'USD' }),
       makeGroup({ currency: 'US$', currencyCode: 'USD' }),
-      {} as any,
+      {},
     )
     expect(result).toEqual({
       field: 'currency',
