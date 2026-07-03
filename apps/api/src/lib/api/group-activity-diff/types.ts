@@ -1,4 +1,8 @@
 import type { GroupChangedField } from '@spliit/domain/activities'
+import type {
+  ActivityDiffer,
+  DiffEmission as GenericDiffEmission,
+} from '../activity-diff/types'
 
 export type DiffableGroup = {
   name: string
@@ -9,18 +13,11 @@ export type DiffableGroup = {
 
 export type GroupChangeContext = Record<string, never>
 
-export type GroupDiffEmission = {
-  field: GroupChangedField
-  before?: string | null
-  after?: string | null
-}
+export type GroupDiffEmission = GenericDiffEmission<GroupChangedField>
 
-export interface GroupDiffer {
-  readonly field: GroupChangedField
-  check(oldGroup: DiffableGroup, newGroup: DiffableGroup): boolean
-  diff(
-    oldGroup: DiffableGroup,
-    newGroup: DiffableGroup,
-    ctx: GroupChangeContext,
-  ): GroupDiffEmission | null
-}
+export type GroupDiffer = ActivityDiffer<
+  DiffableGroup,
+  GroupChangedField,
+  GroupChangeContext,
+  GroupDiffEmission
+>

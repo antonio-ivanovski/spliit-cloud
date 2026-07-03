@@ -1,16 +1,7 @@
+import { createStringFieldDiffer } from '../activity-diff/factories'
 import type { GroupDiffer } from './types'
 
-export const informationDiffer: GroupDiffer = {
+export const informationDiffer: GroupDiffer = createStringFieldDiffer({
   field: 'information',
-  check(oldGroup, newGroup) {
-    return (oldGroup.information ?? null) !== (newGroup.information ?? null)
-  },
-  diff(oldGroup, newGroup) {
-    if (!this.check(oldGroup, newGroup)) return null
-    return {
-      field: 'information',
-      before: oldGroup.information ?? null,
-      after: newGroup.information ?? null,
-    }
-  },
-}
+  getValue: (group) => group.information,
+})

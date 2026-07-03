@@ -1,3 +1,4 @@
+import { createFormattedValueDiffer } from '../activity-diff/factories'
 import { formatDisplayAmount } from './helpers'
 import type { ExpenseDiffer } from './types'
 
@@ -6,19 +7,8 @@ import type { ExpenseDiffer } from './types'
  * Amount is compared as raw integer cents; the before/after display uses
  * the original currency when present (e.g. for conversions).
  */
-export const amountDiffer: ExpenseDiffer = {
+export const amountDiffer: ExpenseDiffer = createFormattedValueDiffer({
   field: 'amount',
-
-  check(oldExpense, newExpense) {
-    return oldExpense.amount !== newExpense.amount
-  },
-
-  diff(oldExpense, newExpense, ctx) {
-    if (!this.check(oldExpense, newExpense)) return null
-    return {
-      field: 'amount',
-      before: formatDisplayAmount(oldExpense, ctx),
-      after: formatDisplayAmount(newExpense, ctx),
-    }
-  },
-}
+  equals: (oldExpense, newExpense) => oldExpense.amount === newExpense.amount,
+  format: (expense, ctx) => formatDisplayAmount(expense, ctx),
+})

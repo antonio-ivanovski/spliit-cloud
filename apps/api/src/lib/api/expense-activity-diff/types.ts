@@ -1,5 +1,9 @@
 import type { Expense } from '@spliit/domain'
 import type { ExpenseChangedField } from '@spliit/domain/activities'
+import type {
+  ActivityDiffer,
+  DiffEmission as GenericDiffEmission,
+} from '../activity-diff/types'
 
 // ---------------------------------------------------------------------------
 // Core types
@@ -18,11 +22,7 @@ export type ChangeContext = {
 }
 
 /** A single diff emission produced by one narrow-purpose differ. */
-export type DiffEmission = {
-  field: ExpenseChangedField
-  before?: string | null
-  after?: string | null
-}
+export type DiffEmission = GenericDiffEmission<ExpenseChangedField>
 
 /**
  * A self-contained differ that detects and formats changes for a single
@@ -31,23 +31,9 @@ export type DiffEmission = {
  * Differs are plain objects — no classes — that are composed by the
  * composite differ which iterates through them collecting emissions.
  */
-export interface ExpenseDiffer {
-  /** The field group this differ is responsible for. */
-  readonly field: ExpenseChangedField
-
-  /**
-   * Lightweight change detection — returns `true` when the field has
-   * semantically meaningful differences. No context needed.
-   */
-  check(oldExpense: Expense, newExpense: Expense): boolean
-
-  /**
-   * Full diff: returns a human-readable emission when the field changed,
-   * or `null` when it has not.
-   */
-  diff(
-    oldExpense: Expense,
-    newExpense: Expense,
-    ctx: ChangeContext,
-  ): DiffEmission | null
-}
+export type ExpenseDiffer = ActivityDiffer<
+  DifferenceableExpense,
+  ExpenseChangedField,
+  ChangeContext,
+  DiffEmission
+>
