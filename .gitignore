@@ -40,6 +40,16 @@ next-env.d.ts
 
 # db
 postgres-data
+storage/
+!storage/
+storage/*
+!storage/maxio/
+storage/maxio/*
+!storage/maxio/buckets/
+storage/maxio/buckets/*
+!storage/maxio/buckets/spliit-local/
+storage/maxio/buckets/spliit-local/*
+!storage/maxio/buckets/spliit-local/.bucket.json
 packages/db/src/generated
 
 # Playwright

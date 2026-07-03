@@ -16,7 +16,12 @@
     "prisma"
   ],
   "scripts": {
-    "dev": "turbo --ui=tui run dev",
+    "dev": "turbo --ui=tui run dev --filter=@spliit/api --filter=@spliit/web",
+    "dev:services:db:up": "bun --filter @spliit/dev-services dev:services:db:up",
+    "dev:services:db": "bun --filter @spliit/dev-services dev:services:db",
+    "dev:services:maxio": "bun --filter @spliit/dev-services dev:services:maxio",
+    "dev:services:maildev": "bun --filter @spliit/dev-services dev:services:maildev",
+    "dev:services:down": "bun --filter @spliit/dev-services dev:services:down",
     "build": "turbo --ui=tui run build",
     "start": "bun --filter @spliit/api start",
     "lint": "turbo --ui=tui run lint",

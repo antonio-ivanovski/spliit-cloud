@@ -6,8 +6,36 @@
       "outputs": ["dist/**", "build/**", ".vite/**"]
     },
     "dev": {
+      "dependsOn": ["@spliit/db#prisma-generate", "@spliit/db#prisma-migrate"],
+      "with": [
+        "@spliit/dev-services#dev:services:maxio",
+        "@spliit/dev-services#dev:services:maildev"
+      ],
       "cache": false,
       "persistent": true
+    },
+    "dev:services:db:up": {
+      "cache": false
+    },
+    "dev:services:db": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:services:maxio": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:services:maildev": {
+      "cache": false,
+      "persistent": true
+    },
+    "prisma-generate": {
+      "cache": false
+    },
+    "prisma-migrate": {
+      "dependsOn": ["@spliit/dev-services#dev:services:db:up"],
+      "cache": false,
+      "passThroughEnv": ["DATABASE_URL"]
     },
     "lint": {
       "dependsOn": ["^build"]

@@ -129,16 +129,31 @@ The current project focus is on the cloud account system and the public instance
 
 Spliit Cloud can be self-hosted with a web frontend, an API service, PostgreSQL, optional S3-compatible storage for expense documents, and optional OpenAI-compatible configuration for receipt scanning and category extraction.
 
-The simplest local setup uses the included scripts and a local PostgreSQL container.
+The simplest local setup uses local Docker containers for PostgreSQL, object storage, and email capture.
 
 ## Run locally
 
 1. Clone the repository (or fork it if you intend to contribute)
 2. Run `bun install` to install dependencies.
-3. Start a PostgreSQL server with `./scripts/start-local-db.sh`.
-4. Copy the file `.env.example` as `.env`
-5. Run prisma migrations and generate the client with `bun prisma-migrate` and `bun prisma-generate`
-6. Run `bun dev` to start the web app at http://localhost:3000 and API at http://localhost:3001
+3. Copy the file `.env.example` as `.env`
+4. Run `bun dev` to start local Docker services, run Prisma client generation
+   and migrations, then start the web app at http://localhost:3000 and the API
+   at http://localhost:3001.
+
+Local dev services started by `bun dev`:
+
+- PostgreSQL on `localhost:5432`
+- MaxIO object storage at http://localhost:9000/ui/
+- MailDev email inbox at http://localhost:1080
+
+The service containers write local state under `storage/` at the repository
+root. MaxIO creates the local bucket from `MAXIO_DEFAULT_BUCKETS`. Stop the
+local service containers with `bun dev:services:down`; remove `storage/` when
+you want a clean local service state.
+
+The MaxIO bucket CORS/public-read config lives at
+`storage/maxio/buckets/spliit-local/.bucket.json`; other local service state is
+ignored by Git.
 
 ## Run in a container
 
