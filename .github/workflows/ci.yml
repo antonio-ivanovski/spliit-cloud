@@ -13,6 +13,21 @@ jobs:
       DATABASE_URL: postgresql://postgres:1234@localhost
       NEXT_PUBLIC_DEFAULT_CURRENCY_CODE: USD
 
+      # SMTP (MailDev) — integration tests + API server need these to deliver mail
+      SMTP_HOST: localhost
+      SMTP_PORT: '1025'
+      SMTP_USER: ''
+      SMTP_PASS: ''
+      EMAIL_FROM: 'Spliit CI <no-reply@spliit.local>'
+
+      # S3 (MaxIO) — API server reads these on boot
+      S3_UPLOAD_BUCKET: spliit-local
+      S3_UPLOAD_KEY: maxioadmin
+      S3_UPLOAD_SECRET: maxioadmin
+      S3_UPLOAD_REGION: us-east-1
+      S3_UPLOAD_ENDPOINT: 'http://localhost:9000'
+      S3_UPLOAD_PUBLIC_URL: 'http://localhost:9000/spliit-local'
+
     services:
       postgres:
         image: postgres:18
@@ -25,6 +40,33 @@ jobs:
         # Wait for postgres to be ready
         options: >-
           --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      maildev:
+        image: maildev/maildev:2.2.1
+        ports:
+          - 1080:1080
+          - 1025:1025
+        # Wait for maildev's HTTP UI to start serving
+        options: >-
+          --health-cmd "wget -q --tries=1 --spider http://localhost:1080/email || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      maxio:
+        image: ghcr.io/coollabsio/maxio:0.4.2
+        env:
+          MAXIO_DEFAULT_BUCKETS: spliit-local
+          MAXIO_ALLOW_INSECURE_DEV: 'true'
+          MAXIO_SECURE_COOKIES: 'false'
+        ports:
+          - 9000:9000
+        # Wait for maxio's liveness probe
+        options: >-
+          --health-cmd "wget -q --tries=1 --spider http://localhost:9000/minio/health/live || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5

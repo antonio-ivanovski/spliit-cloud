@@ -1,47 +1,18 @@
 import { prisma } from '@spliit/db'
-import { promises as fs } from 'node:fs'
-import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
 import { invitationsRouter } from '../trpc/routers/invitations'
+import { findEmailForRecipient, probeMaildev } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
-const MAIL_DIR = join(process.cwd(), '.mail')
-
-/** Read the most recently written `.eml` file in the mail dir whose name
- * contains the recipient email. Returns the file content as a string. */
-async function readMailFile(recipientEmail: string): Promise<string | null> {
-  const dir = MAIL_DIR
-  const files = await fs.readdir(dir).catch(() => [])
-  const safeRecipient = recipientEmail.replace(/[^a-z0-9@._-]/gi, '_')
-  // Find the newest file matching the recipient; the timestamp prefix
-  // means sort descending by name = newest first.
-  const matching = files
-    .filter((f) => f.endsWith(`${safeRecipient}.eml`))
-    .sort()
-    .reverse()
-  if (matching.length === 0) return null
-  const content = await fs.readFile(join(dir, matching[0]), 'utf8')
-  return content
-}
-
-/** Delete all `.eml` files whose name contains a known test run id so
- * cleanup is scoped to this run. */
-async function deleteMailFilesForTest(runId: string): Promise<void> {
-  const dir = MAIL_DIR
-  const files = await fs.readdir(dir).catch(() => [])
-  const toRemove = files.filter((f) => f.includes(runId) && f.endsWith('.eml'))
-  await Promise.all(
-    toRemove.map((f) => fs.unlink(join(dir, f)).catch(() => {})),
-  )
-}
+const maildevReachable = await probeMaildev()
 
 // ---------------------------------------------------------------------------
 // Test 1: Email invitation flow
 // ---------------------------------------------------------------------------
-describe('Email invitation flow — real DB', () => {
+describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
   const runId = testRunId()
   const adminId = `admin-${runId}`
   const adminEmail = `admin-${runId}@test-invite.example`
@@ -146,9 +117,6 @@ describe('Email invitation flow — real DB', () => {
   })
 
   afterAll(async () => {
-    // Delete mail files created during this test
-    await deleteMailFilesForTest(runId)
-
     // Delete group + ledger (cascade handles members, participants, etc.)
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
@@ -187,10 +155,13 @@ describe('Email invitation flow — real DB', () => {
     expect(invitation!.type).toBe('EMAIL')
     expect(invitation!.invitedById).toBe(adminId)
 
-    // Check the .mail/ directory for the email
-    const mailContent = await readMailFile(inviteeEmail)
-    expect(mailContent).not.toBeNull()
-    expect(mailContent).toContain(inviteeEmail)
+    // Pull the invitation email out of MailDev's inbox. The lookup is
+    // recipient-scoped, so a non-null result already proves the email was
+    // delivered to `inviteeEmail`. The body assertions below check the
+    // template variant (existing-user link) and the target URL.
+    const captured = await findEmailForRecipient(inviteeEmail)
+    expect(captured).not.toBeNull()
+    const mailContent = captured!.text
     expect(mailContent).toContain(groupName)
     // Since invitee has an account, email should say "Open Spliit"
     // and link to the group page (not the sign-up page).
@@ -253,102 +224,104 @@ async function probeApiHealth(
 
 const apiReachable = await probeApiHealth()
 
-describe.skipIf(!apiReachable)('Magic link flow — real API', () => {
-  const runId = testRunId()
-  const testEmail = `magic-${runId}@test-magic-link.example`
-  const apiBase = 'http://localhost:3001'
+describe.skipIf(!apiReachable || !maildevReachable)(
+  'Magic link flow — real API',
+  () => {
+    const runId = testRunId()
+    const testEmail = `magic-${runId}@test-magic-link.example`
+    const apiBase = 'http://localhost:3001'
 
-  beforeAll(async () => {
-    // Clean any stale verification for this email before starting
-    await prisma.verification
-      .deleteMany({ where: { identifier: testEmail } })
-      .catch(() => {})
-  })
-
-  afterAll(async () => {
-    // Delete mail files
-    await deleteMailFilesForTest(runId)
-
-    // Clean up any verifications created for this email
-    await prisma.verification
-      .deleteMany({ where: { identifier: testEmail } })
-      .catch(() => {})
-
-    // Clean up the account if it was created
-    const account = await prisma.account
-      .findUnique({ where: { email: testEmail } })
-      .catch(() => null)
-    if (account) {
-      await prisma.account.delete({ where: { id: account.id } }).catch(() => {})
-    }
-  })
-
-  it('sends a magic link email and can verify the token', async () => {
-    // Request magic link
-    const sendRes = await fetch(`${apiBase}/auth/sign-in/magic-link`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: testEmail,
-        callbackURL: 'http://localhost:3000',
-      }),
-    })
-    expect(sendRes.status).toBe(200)
-
-    // Check .mail/ for the magic link email
-    const mailContent = await readMailFile(testEmail)
-    expect(mailContent).not.toBeNull()
-    expect(mailContent).toContain('sign-in link')
-    expect(mailContent).toContain('sign in to Spliit')
-
-    // Parse the email to extract the magic link URL
-    // The email body lines after the header contain the URL.
-    // Format:
-    //   Click the link below to sign in to Spliit.
-    //
-    //   http://localhost:3001/auth/magic-link/verify?token=xxx...
-    const urlMatch = mailContent!.match(
-      /(https?:\/\/[^\s]+\/auth\/magic-link\/verify\?[^\s]+)/,
-    )
-    expect(urlMatch).not.toBeNull()
-    const magicLinkUrl = urlMatch![1]
-
-    // The token is in the URL as a query parameter
-    const parsedUrl = new URL(magicLinkUrl)
-    const token = parsedUrl.searchParams.get('token')
-    expect(token).toBeTruthy()
-
-    // Call the magic link verify endpoint. This should create a session.
-    const verifyRes = await fetch(magicLinkUrl, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      redirect: 'manual', // better-auth may redirect to callbackURL
+    beforeAll(async () => {
+      // Clean any stale verification for this email before starting
+      await prisma.verification
+        .deleteMany({ where: { identifier: testEmail } })
+        .catch(() => {})
     })
 
-    // better-auth's magic link verify redirects to the callback URL on
-    // success (2xx or 3xx). We accept either a redirect or a 200.
-    expect([200, 302, 307, 308]).toContain(verifyRes.status)
+    afterAll(async () => {
+      // Clean up any verifications created for this email
+      await prisma.verification
+        .deleteMany({ where: { identifier: testEmail } })
+        .catch(() => {})
 
-    // A Verification record should exist in the database (or have been
-    // consumed — better-auth deletes it on use, so verifying existence
-    // is fragile). Instead, verify a session cookie was set.
-    const setCookieHeader = verifyRes.headers.get('set-cookie')
-    // better-auth may set a session cookie. We don't assert its
-    // presence because the API may be configured differently in the
-    // test environment (no secure cookies in dev), but we log it.
-    if (setCookieHeader) {
-      expect(setCookieHeader).toContain('session')
-    }
-
-    // Verify the session was actually created in the DB
-    const account = await prisma.account.findUnique({
-      where: { email: testEmail },
+      // Clean up the account if it was created
+      const account = await prisma.account
+        .findUnique({ where: { email: testEmail } })
+        .catch(() => null)
+      if (account) {
+        await prisma.account
+          .delete({ where: { id: account.id } })
+          .catch(() => {})
+      }
     })
-    if (account) {
-      const sessions = await prisma.session.findMany({
-        where: { userId: account.id },
+
+    it('sends a magic link email and can verify the token', async () => {
+      // Request magic link
+      const sendRes = await fetch(`${apiBase}/auth/sign-in/magic-link`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: testEmail,
+          callbackURL: 'http://localhost:3000',
+        }),
       })
-      expect(sessions.length).toBeGreaterThan(0)
-    }
-  })
-})
+      expect(sendRes.status).toBe(200)
+
+      // Pull the magic link email out of MailDev's inbox.
+      const captured = await findEmailForRecipient(testEmail)
+      expect(captured).not.toBeNull()
+      const mailContent = captured!.text
+      expect(mailContent).toContain('Click the link below to sign in to Spliit')
+
+      // Parse the email to extract the magic link URL
+      // The email body lines after the header contain the URL.
+      // Format:
+      //   Click the link below to sign in to Spliit.
+      //
+      //   http://localhost:3001/auth/magic-link/verify?token=xxx...
+      const urlMatch = mailContent.match(
+        /(https?:\/\/[^\s]+\/auth\/magic-link\/verify\?[^\s]+)/,
+      )
+      expect(urlMatch).not.toBeNull()
+      const magicLinkUrl = urlMatch![1]
+
+      // The token is in the URL as a query parameter
+      const parsedUrl = new URL(magicLinkUrl)
+      const token = parsedUrl.searchParams.get('token')
+      expect(token).toBeTruthy()
+
+      // Call the magic link verify endpoint. This should create a session.
+      const verifyRes = await fetch(magicLinkUrl, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        redirect: 'manual', // better-auth may redirect to callbackURL
+      })
+
+      // better-auth's magic link verify redirects to the callback URL on
+      // success (2xx or 3xx). We accept either a redirect or a 200.
+      expect([200, 302, 307, 308]).toContain(verifyRes.status)
+
+      // A Verification record should exist in the database (or have been
+      // consumed — better-auth deletes it on use, so verifying existence
+      // is fragile). Instead, verify a session cookie was set.
+      const setCookieHeader = verifyRes.headers.get('set-cookie')
+      // better-auth may set a session cookie. We don't assert its
+      // presence because the API may be configured differently in the
+      // test environment (no secure cookies in dev), but we log it.
+      if (setCookieHeader) {
+        expect(setCookieHeader).toContain('session')
+      }
+
+      // Verify the session was actually created in the DB
+      const account = await prisma.account.findUnique({
+        where: { email: testEmail },
+      })
+      if (account) {
+        const sessions = await prisma.session.findMany({
+          where: { userId: account.id },
+        })
+        expect(sessions.length).toBeGreaterThan(0)
+      }
+    })
+  },
+)
