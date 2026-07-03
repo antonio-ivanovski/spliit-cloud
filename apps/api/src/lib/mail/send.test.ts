@@ -1,7 +1,4 @@
-import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // Patch `nodemailer` with `nodemailer-mock` so the real `sendEmail` runs
 // against an in-process mock transport. We deliberately do NOT import
@@ -13,14 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 // which is exactly when each test imports `../mail/send`.
 vi.mock('nodemailer', async () => await import('nodemailer-mock'))
 
-const originalCwd = process.cwd()
-let tempDir: string | undefined
-
 beforeEach(async () => {
-  // Isolate the .mail/ fallback directory per test. Without this, the
-  // local-dev test would write into the real repo's .mail/ folder.
-  tempDir = mkdtempSync(join(tmpdir(), 'spliit-mail-'))
-  process.chdir(tempDir)
   // Clear mock state (sent mail cache, shouldFail flag, transporters) so
   // each test sees a clean slate even when vi.resetModules is not called.
   const mock = (await import('nodemailer-mock')).mocked
@@ -28,36 +18,20 @@ beforeEach(async () => {
 })
 
 afterEach(() => {
-  process.chdir(originalCwd)
-  if (tempDir) {
-    rmSync(tempDir, { recursive: true, force: true })
-    tempDir = undefined
-  }
   vi.restoreAllMocks()
   vi.unstubAllEnvs()
   vi.resetModules()
 })
 
 describe('sendEmail', () => {
-  it('writes a .eml file to <cwd>/.mail/ when SMTP_HOST is unset (local-dev fallback)', async () => {
+  it('throws when SMTP_HOST is unset', async () => {
     // SMTP_HOST is intentionally not stubbed — it stays undefined.
     vi.resetModules()
     const { sendEmail } = await import('./send')
 
-    await sendEmail({
-      to: 'dev@example.com',
-      subject: 'Hello from local dev',
-      text: 'This is a local dev email.',
-    })
-
-    const mailDir = join(tempDir!, '.mail')
-    const files = readdirSync(mailDir)
-    expect(files).toHaveLength(1)
-    expect(files[0]).toContain('dev@example.com')
-    const content = readFileSync(join(mailDir, files[0]), 'utf8')
-    expect(content).toContain('To: dev@example.com')
-    expect(content).toContain('Subject: Hello from local dev')
-    expect(content).toContain('This is a local dev email.')
+    await expect(
+      sendEmail({ to: 'dev@example.com', subject: 's', text: 't' }),
+    ).rejects.toThrow(/SMTP_HOST is not configured/)
   })
 
   it('sends through SMTP with full from/to/subject/text/html fields', async () => {

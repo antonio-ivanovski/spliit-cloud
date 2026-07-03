@@ -1,9 +1,5 @@
-import { promises as fs } from 'node:fs'
-import { join } from 'node:path'
 import nodemailer, { type Transporter } from 'nodemailer'
 import { env } from '../env'
-
-const MAIL_DIR = join(process.cwd(), '.mail')
 
 export type EmailMessage = {
   to: string
@@ -43,21 +39,11 @@ function getTransporter(): Transporter {
 
 export async function sendEmail(message: EmailMessage): Promise<void> {
   if (!env.SMTP_HOST) {
-    // Local development: drop the message into .mail/ for inspection.
-    await fs.mkdir(MAIL_DIR, { recursive: true })
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-    const safeRecipient = message.to.replace(/[^a-z0-9@._-]/gi, '_')
-    const file = join(MAIL_DIR, `${timestamp}-${safeRecipient}.eml`)
-    const body = [
-      `To: ${message.to}`,
-      `Subject: ${message.subject}`,
-      `Date: ${new Date().toUTCString()}`,
-      '',
-      message.text,
-    ].join('\n')
-    await fs.writeFile(file, body, 'utf8')
-    console.log(`[mail] wrote ${file}`)
-    return
+    throw new Error(
+      '[mail] SMTP_HOST is not configured. Set SMTP_HOST/SMTP_PORT ' +
+        '(and EMAIL_FROM in production) to deliver email. Local dev: ' +
+        'start MailDev with `bun dev:services:maildev`.',
+    )
   }
 
   await getTransporter().sendMail({

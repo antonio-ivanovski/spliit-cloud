@@ -21,11 +21,16 @@ bun check-types
 bun check-formatting
 bun run test             # Vitest unit tests
 bun test-e2e             # Playwright
-bun prisma-generate
-bun prisma-migrate
+bun prisma-generate      # also runs automatically before bun dev
+bun prisma-migrate       # also runs automatically before bun dev
 ```
 
-Local PostgreSQL: `./scripts/start-local-db.sh`. Copy `.env.example` to `.env`.
+Local services run as named Docker containers. Copy `.env.example` to `.env`.
+Normal `bun dev` starts local Postgres before migrations, starts MaxIO and
+MailDev as Turbo sidecars, generates the Prisma client, and applies migrations
+before the app servers start. Service state lives under `storage/` at the
+repository root. Stop local service containers with `bun dev:services:down`
+when you are done.
 
 ## Pull request workflow
 
