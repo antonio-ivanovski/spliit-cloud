@@ -96,7 +96,11 @@ export function ExpenseForm(props: {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(submit)} noValidate>
+      <form
+        onSubmit={form.handleSubmit(submit)}
+        noValidate
+        className="pb-24 sm:pb-20"
+      >
         {props.readOnly && <ReadOnlyNotice />}
         <BasicDetailsCard
           form={form}
