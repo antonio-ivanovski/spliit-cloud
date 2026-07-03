@@ -49,9 +49,8 @@ jobs:
         ports:
           - 1080:1080
           - 1025:1025
-        # Wait for maildev's HTTP UI to start serving
         options: >-
-          --health-cmd "wget -q --tries=1 --spider http://localhost:1080/email || exit 1"
+          --health-cmd "wget -q --tries=1 --spider http://localhost:1080/healthz || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -64,9 +63,8 @@ jobs:
           MAXIO_SECURE_COOKIES: 'false'
         ports:
           - 9000:9000
-        # Wait for maxio's liveness probe
         options: >-
-          --health-cmd "wget -q --tries=1 --spider http://localhost:9000/minio/health/live || exit 1"
+          --health-cmd "maxio healthcheck --url http://127.0.0.1:9000/healthz"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
