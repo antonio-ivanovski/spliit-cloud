@@ -35,7 +35,20 @@ function uploadsConfigured() {
 }
 
 function keyFromFileUrl(fileUrl: string): string {
-  return new URL(fileUrl).pathname.replace(/^\//, '')
+  let path = new URL(fileUrl).pathname.replace(/^\//, '')
+  // S3_UPLOAD_PUBLIC_URL may embed a path prefix (e.g. `<endpoint>/<bucket>`
+  // for local MinIO/MaxIO). Strip it so the remaining string is a real object
+  // key, not a URL path. CDN-style public URLs without a path prefix are
+  // unaffected because their parsed pathname is empty.
+  if (env.S3_UPLOAD_PUBLIC_URL) {
+    const prefix = new URL(env.S3_UPLOAD_PUBLIC_URL).pathname
+      .replace(/^\//, '')
+      .replace(/\/$/, '')
+    if (prefix && path.startsWith(`${prefix}/`)) {
+      path = path.slice(prefix.length + 1)
+    }
+  }
+  return path
 }
 
 function publicUrlForKey(key: string): string {

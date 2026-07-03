@@ -2,7 +2,11 @@ import { describe, expect, it, vi } from 'vitest'
 import { env } from '../lib/env'
 import '../test/mocks'
 import { authState, prismaMock } from '../test/state'
-import { createUploadUrl, promoteUploadedDocument } from './upload'
+import {
+  createUploadUrl,
+  deleteS3Object,
+  promoteUploadedDocument,
+} from './upload'
 
 function makeRequest(): Request {
   return new Request('http://localhost/uploads/presign', {
@@ -219,6 +223,47 @@ describe('createUploadUrl', () => {
     expect(body.fileUrl).toMatch(/\.pdf$/)
     env.S3_UPLOAD_PUBLIC_URL = undefined
   })
+
+  it('builds a path-style file URL when S3_UPLOAD_PUBLIC_URL embeds the bucket', async () => {
+    // Simulates a local MinIO/MaxIO setup where the public URL points at the
+    // object-store endpoint with the bucket as a path segment.
+    env.S3_UPLOAD_PUBLIC_URL = 'http://localhost:9000/spliit-test-bucket'
+    authState.session = {
+      user: { id: 'acct-1' },
+      session: { id: 'sess-1' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      email: 'alice@example.com',
+    })
+    prismaMock.ledger.findUnique.mockResolvedValue({
+      id: 'ledger-1',
+      group: {
+        members: [
+          {
+            accountId: 'acct-1',
+            status: 'ACTIVE',
+          },
+        ],
+      },
+    } as never)
+
+    const response = await createUploadUrl(
+      makeRequest(),
+      'ledger-1',
+      'receipt.pdf',
+      'application/pdf',
+    )
+
+    expect(response.status).toBe(200)
+    const body = await response.json()
+    expect(body.fileUrl).toMatch(
+      /^http:\/\/localhost:9000\/spliit-test-bucket\/tmp\/document-/,
+    )
+    expect(body.fileUrl).toMatch(/\.pdf$/)
+    expect(body.key).toMatch(/^tmp\/document-/)
+    env.S3_UPLOAD_PUBLIC_URL = undefined
+  })
 })
 
 describe('promoteUploadedDocument', () => {
@@ -291,5 +336,97 @@ describe('promoteUploadedDocument', () => {
     } finally {
       env.S3_UPLOAD_PUBLIC_URL = undefined
     }
+  })
+
+  it('promotes a path-style URL (MinIO/MaxIO) by stripping the bucket prefix', async () => {
+    // Mirrors the local dev setup where S3_UPLOAD_PUBLIC_URL embeds the
+    // bucket name as a path segment (e.g. http://localhost:9000/<bucket>).
+    env.S3_UPLOAD_PUBLIC_URL = 'http://localhost:9000/spliit-test-bucket'
+    try {
+      const url =
+        'http://localhost:9000/spliit-test-bucket/tmp/document-test.jpg'
+
+      const result = await promoteUploadedDocument(url)
+
+      expect(mockS3Send).toHaveBeenCalledTimes(2)
+      const [copyInput, deleteInput] = mockS3Send.mock.calls.map((c) => c[0])
+
+      expect(copyInput).toMatchObject({
+        Bucket: 'spliit-test-bucket',
+        CopySource: 'spliit-test-bucket/tmp%2Fdocument-test.jpg',
+        Key: 'documents/document-test.jpg',
+      })
+      expect(deleteInput).toMatchObject({
+        Bucket: 'spliit-test-bucket',
+        Key: 'tmp/document-test.jpg',
+      })
+      expect(result).toBe(
+        'http://localhost:9000/spliit-test-bucket/documents/document-test.jpg',
+      )
+    } finally {
+      env.S3_UPLOAD_PUBLIC_URL = undefined
+    }
+  })
+
+  it('treats a path-style URL not under tmp/ as already permanent', async () => {
+    env.S3_UPLOAD_PUBLIC_URL = 'http://localhost:9000/spliit-test-bucket'
+    try {
+      const url =
+        'http://localhost:9000/spliit-test-bucket/documents/document-test.jpg'
+
+      const result = await promoteUploadedDocument(url)
+
+      expect(result).toBe(url)
+      expect(mockS3Send).not.toHaveBeenCalled()
+    } finally {
+      env.S3_UPLOAD_PUBLIC_URL = undefined
+    }
+  })
+})
+
+describe('deleteS3Object', () => {
+  beforeEach(() => {
+    mockS3Send.mockReset()
+    mockS3Send.mockResolvedValue({})
+  })
+
+  it('is a no-op when uploads are not configured', async () => {
+    const originalBucket = env.S3_UPLOAD_BUCKET
+    env.S3_UPLOAD_BUCKET = ''
+    try {
+      await deleteS3Object('https://example.com/tmp/doc.jpg')
+      expect(mockS3Send).not.toHaveBeenCalled()
+    } finally {
+      env.S3_UPLOAD_BUCKET = originalBucket
+    }
+  })
+
+  it('strips the bucket prefix from a path-style URL before sending the delete', async () => {
+    env.S3_UPLOAD_PUBLIC_URL = 'http://localhost:9000/spliit-test-bucket'
+    try {
+      await deleteS3Object(
+        'http://localhost:9000/spliit-test-bucket/tmp/document-test.jpg',
+      )
+
+      expect(mockS3Send).toHaveBeenCalledTimes(1)
+      expect(mockS3Send.mock.calls[0][0]).toMatchObject({
+        Bucket: 'spliit-test-bucket',
+        Key: 'tmp/document-test.jpg',
+      })
+    } finally {
+      env.S3_UPLOAD_PUBLIC_URL = undefined
+    }
+  })
+
+  it('uses the URL path directly for a virtual-hosted-style URL', async () => {
+    await deleteS3Object(
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg',
+    )
+
+    expect(mockS3Send).toHaveBeenCalledTimes(1)
+    expect(mockS3Send.mock.calls[0][0]).toMatchObject({
+      Bucket: 'spliit-test-bucket',
+      Key: 'tmp/document-test.jpg',
+    })
   })
 })
