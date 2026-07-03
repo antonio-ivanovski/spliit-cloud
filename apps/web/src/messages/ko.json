@@ -1324,6 +1324,9 @@
       "declined": "{target}님이 초대를 거절했습니다"
     },
     "fallback": "활동이 기록되었습니다",
-    "unknownActor": "누군가"
+    "unknownActor": "누군가",
+    "import": {
+      "imported": "{participant}님이 {count}개의 지출을 가져왔습니다"
+    }
   }
 }

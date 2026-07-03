@@ -1324,6 +1324,9 @@
       "declined": "{target}(e)k gonbidapena baztertu du"
     },
     "fallback": "Jarduera bat erregistratu da",
-    "unknownActor": "Norbait"
+    "unknownActor": "Norbait",
+    "import": {
+      "imported": "{participant}(e)k {count} gastu inportatu ditu"
+    }
   }
 }

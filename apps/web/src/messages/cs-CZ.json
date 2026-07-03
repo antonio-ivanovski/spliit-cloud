@@ -1324,6 +1324,9 @@
       "declined": "{target} odmítl pozvánku"
     },
     "fallback": "Byla zaznamenána aktivita",
-    "unknownActor": "Někdo"
+    "unknownActor": "Někdo",
+    "import": {
+      "imported": "{participant} importoval {count} výdajů"
+    }
   }
 }

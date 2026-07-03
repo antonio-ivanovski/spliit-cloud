@@ -4,6 +4,7 @@ export const activityTypeSchema = z.enum([
   'EXPENSE_CREATED',
   'EXPENSE_UPDATED',
   'EXPENSE_DELETED',
+  'EXPENSES_IMPORTED',
   'GROUP_UPDATED',
   'GROUP_ARCHIVED',
   'GROUP_UNARCHIVED',

@@ -15,9 +15,11 @@ import type {
  * concrete implementation can be added or removed at registration time.
  */
 export class CompositeActivityNotificationDispatcher implements ActivityNotificationDispatcher {
-  constructor(
-    private readonly dispatchers: ReadonlyArray<ActivityNotificationDispatcher>,
-  ) {}
+  private readonly dispatchers: ReadonlyArray<ActivityNotificationDispatcher>
+
+  constructor(dispatchers: ReadonlyArray<ActivityNotificationDispatcher>) {
+    this.dispatchers = [...dispatchers]
+  }
 
   async dispatch(event: ActivityNotificationEvent): Promise<void> {
     await Promise.all(

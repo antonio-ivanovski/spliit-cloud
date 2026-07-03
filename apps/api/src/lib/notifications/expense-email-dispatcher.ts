@@ -15,6 +15,7 @@ const EXPENSE_EVENT_TYPES = new Set([
   'EXPENSE_UPDATED',
   'EXPENSE_DELETED',
 ])
+const IMPORT_EVENT_TYPES = new Set(['EXPENSES_IMPORTED'])
 
 function formatAmount(cents: number, currencyCode?: string | null): string {
   const formatted = (cents / 100).toFixed(2)
@@ -23,6 +24,10 @@ function formatAmount(cents: number, currencyCode?: string | null): string {
 
 export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   async dispatch(event: ActivityNotificationEvent): Promise<void> {
+    if (IMPORT_EVENT_TYPES.has(event.type)) {
+      await this.dispatchImportSummary(event)
+      return
+    }
     if (!EXPENSE_EVENT_TYPES.has(event.type)) return
 
     const parsed = parseActivityData(event.data)
@@ -163,20 +168,118 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
 
     const text = bodyLines.join('\n')
 
-    for (const participant of participants) {
-      if (!participant.groupMember) continue
-      if (participant.groupMember.status !== 'ACTIVE') continue
-      const account = participant.groupMember.account
+    await this.sendToActiveMembers({
+      participants,
+      actor: event.actor,
+      groupName: group.name,
+      subject,
+      text,
+      activityId: event.activityId,
+    })
+  }
+
+  /**
+   * Dispatch a single summary email for a bulk import. Instead of N
+   * per-expense emails, send one email to every active group member
+   * affected by any of the imported expenses.
+   */
+  private async dispatchImportSummary(
+    event: ActivityNotificationEvent,
+  ): Promise<void> {
+    const parsed = parseActivityData(event.data)
+    if (!parsed || parsed.kind !== 'import_summary') return
+
+    const { count, totalAmount, currencyCode, sourceProvider } = parsed
+    const participantIds = parsed.affectedParticipants ?? []
+    if (participantIds.length === 0) return
+
+    const [participants, group, actorAccount] = await Promise.all([
+      prisma.ledgerParticipant.findMany({
+        where: { id: { in: participantIds } },
+        include: {
+          groupMember: { include: { account: true } },
+        },
+      }),
+      prisma.group.findUnique({
+        where: { id: event.groupId },
+        select: { name: true },
+      }),
+      event.actor?.type === 'ACCOUNT'
+        ? prisma.account.findUnique({
+            where: { id: event.actor.id },
+            select: { name: true },
+          })
+        : Promise.resolve(null),
+    ])
+
+    if (!group) return
+
+    const actorName = actorAccount?.name ?? 'Someone'
+    const totalStr =
+      totalAmount != null ? formatAmount(totalAmount, currencyCode) : null
+
+    const subject = `[Spliit Cloud] ${count} ${
+      count === 1 ? 'expense' : 'expenses'
+    } imported in ${group.name}`
+
+    const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
+
+    const bodyLines: string[] = []
+    bodyLines.push(
+      `${actorName} imported ${count} ${
+        count === 1 ? 'expense' : 'expenses'
+      }${sourceProvider ? ` from ${sourceProvider}` : ''} in ${group.name}${
+        totalStr ? ` (total ${totalStr})` : ''
+      }.`,
+    )
+    bodyLines.push('')
+    bodyLines.push(`View the group here:`)
+    bodyLines.push(groupUrl)
+
+    const text = bodyLines.join('\n')
+
+    await this.sendToActiveMembers({
+      participants,
+      actor: event.actor,
+      groupName: group.name,
+      subject,
+      text,
+      activityId: event.activityId,
+    })
+  }
+
+  private async sendToActiveMembers(args: {
+    participants: Array<{
+      groupMember: {
+        status: string
+        account: { id: string; email: string } | null
+      } | null
+    }>
+    actor: ActivityNotificationEvent['actor']
+    groupName: string
+    subject: string
+    text: string
+    activityId: string
+  }): Promise<void> {
+    for (const participant of args.participants) {
+      const groupMember = participant.groupMember
+      if (!groupMember) continue
+      if (groupMember.status !== 'ACTIVE') continue
+      const account = groupMember.account
       if (!account?.email) continue
       if (isPlaceholderEmail(account.email)) continue
-      if (event.actor?.id === account.id && event.actor?.type === 'ACCOUNT')
+      if (args.actor?.id === account.id && args.actor?.type === 'ACCOUNT')
         continue
 
       try {
-        await sendEmail({ to: account.email, subject, text })
+        await sendEmail({
+          to: account.email,
+          subject: args.subject,
+          text: args.text,
+        })
       } catch (err) {
         console.warn(
-          `[notifications] failed to send expense email for activity ${event.activityId}:`,
+          `[notifications] failed to send expense email for activity ${args.activityId}:`,
           err,
         )
       }

@@ -338,4 +338,93 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
       expect(sendEmailMock).not.toHaveBeenCalled()
     })
   })
+
+  describe('EXPENSES_IMPORTED summary', () => {
+    it('sends one email per affected active member with the import summary', async () => {
+      prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+        makeParticipant('lp-alice'),
+        makeParticipant('lp-bob', { email: 'bob@test.com' }),
+        makeParticipant('lp-carol', { email: 'carol@test.com' }),
+      ] as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
+
+      const event = buildEvent({
+        type: 'EXPENSES_IMPORTED',
+        subject: { type: 'GROUP', id: 'grp-1' },
+        data: {
+          kind: 'import_summary',
+          summary: 'Imported from Splitwise',
+          count: 25,
+          totalAmount: 123450,
+          currencyCode: 'EUR',
+          sourceProvider: 'Splitwise',
+          affectedParticipants: ['lp-alice', 'lp-bob', 'lp-carol'],
+        },
+      })
+      await dispatcher.dispatch(event)
+
+      // Alice excluded as actor; Bob and Carol each get one email
+      expect(sendEmailMock).toHaveBeenCalledTimes(2)
+      const callArgs = sendEmailMock.mock.calls.map((c) => c[0])
+      for (const email of callArgs) {
+        expect(email.subject).toContain('25 expenses imported in Test Group')
+        expect(email.text).toContain(
+          'Alice imported 25 expenses from Splitwise',
+        )
+        expect(email.text).toContain('EUR 1234.50')
+      }
+      expect(callArgs.some((e) => e.to === 'bob@test.com')).toBe(true)
+      expect(callArgs.some((e) => e.to === 'carol@test.com')).toBe(true)
+    })
+
+    it('skips unlinked participants and actors', async () => {
+      prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+        makeParticipant('lp-alice'),
+        makeParticipant('lp-bob', { email: 'bob@test.com' }),
+        makeParticipant('lp-pending', {
+          email: 'pending@test.com',
+          hasGroupMember: false,
+        }),
+      ] as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
+
+      const event = buildEvent({
+        type: 'EXPENSES_IMPORTED',
+        subject: { type: 'GROUP', id: 'grp-1' },
+        data: {
+          kind: 'import_summary',
+          count: 1,
+          affectedParticipants: ['lp-alice', 'lp-bob', 'lp-pending'],
+        },
+      })
+      await dispatcher.dispatch(event)
+
+      // Only Bob gets the email — Alice is actor, pending has no groupMember
+      expect(sendEmailMock).toHaveBeenCalledTimes(1)
+      expect(sendEmailMock).toHaveBeenCalledWith(
+        expect.objectContaining({ to: 'bob@test.com' }),
+      )
+    })
+
+    it('does not send any email when affectedParticipants is empty', async () => {
+      const event = buildEvent({
+        type: 'EXPENSES_IMPORTED',
+        subject: { type: 'GROUP', id: 'grp-1' },
+        data: {
+          kind: 'import_summary',
+          count: 0,
+          affectedParticipants: [],
+        },
+      })
+      await dispatcher.dispatch(event)
+
+      expect(sendEmailMock).not.toHaveBeenCalled()
+    })
+  })
 })

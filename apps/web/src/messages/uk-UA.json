@@ -1324,6 +1324,9 @@
       "declined": "{target} відхилив запрошення"
     },
     "fallback": "Активність зареєстровано",
-    "unknownActor": "Хтось"
+    "unknownActor": "Хтось",
+    "import": {
+      "imported": "{participant} імпортував {count} витрат"
+    }
   }
 }

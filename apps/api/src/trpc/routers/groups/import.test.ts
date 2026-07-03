@@ -571,16 +571,22 @@ describe('importGroup', () => {
     )
 
     const importActivity = activityCreates.find((a) => {
+      const type = (a.data as { type?: string }).type
       const d = (a.data as { data?: { kind?: string; summary?: string } }).data
       return (
-        d?.kind === 'group' && (d?.summary ?? '').startsWith('Imported from')
+        type === 'EXPENSES_IMPORTED' &&
+        d?.kind === 'import_summary' &&
+        (d?.summary ?? '').startsWith('Imported from')
       )
     })
     expect(importActivity).toBeDefined()
-    const importData = (importActivity!.data as { data: { summary?: string } })
-      .data
+    const importData = (
+      importActivity!.data as {
+        data: { summary?: string; sourceProvider?: string }
+      }
+    ).data
     expect(importData.summary).toContain('SPLIIT')
-    expect(importData.summary).toContain('src-original')
+    expect(importData.sourceProvider).toBe('SPLIIT')
   })
 
   it('uses the $transaction wrapper so the commit is atomic', async () => {

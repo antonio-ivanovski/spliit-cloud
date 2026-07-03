@@ -1324,6 +1324,9 @@
       "declined": "{target} a refusé l'invitation"
     },
     "fallback": "Une activité a été enregistrée",
-    "unknownActor": "Quelqu'un"
+    "unknownActor": "Quelqu'un",
+    "import": {
+      "imported": "{participant} a importé {count} dépenses"
+    }
   }
 }

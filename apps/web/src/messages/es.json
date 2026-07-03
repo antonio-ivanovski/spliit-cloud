@@ -1324,6 +1324,9 @@
       "declined": "{target} rechazó la invitación"
     },
     "fallback": "Se registró una actividad",
-    "unknownActor": "Alguien"
+    "unknownActor": "Alguien",
+    "import": {
+      "imported": "{participant} importó {count} gastos"
+    }
   }
 }

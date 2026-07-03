@@ -1324,6 +1324,9 @@
       "declined": "{target} 拒絕了邀請"
     },
     "fallback": "已記錄一項活動",
-    "unknownActor": "某人"
+    "unknownActor": "某人",
+    "import": {
+      "imported": "{participant} 導入了 {count} 筆支出"
+    }
   }
 }

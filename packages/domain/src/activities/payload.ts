@@ -96,11 +96,35 @@ export type InvitationActivityData = z.infer<
   typeof invitationActivityDataSchema
 >
 
+/**
+ * Summary data for a bulk import of expenses (e.g. from Splitwise).
+ * The activity log records one such row per import so the feed can show
+ * "Alice imported 25 expenses from Splitwise" once instead of N rows,
+ * while a single notification fan-outs to all affected active members.
+ */
+export const importSummaryActivityDataSchema = z.object({
+  kind: z.literal('import_summary'),
+  summary: z.string().optional(),
+  count: z.number().int().nonnegative(),
+  totalAmount: z.number().int().nonnegative().optional(),
+  currencyCode: z.string().nullable().optional(),
+  sourceProvider: z.string().optional(),
+  // Ledger participant IDs affected by the imported expenses. Used by
+  // the notification dispatcher to resolve recipients without having
+  // to reload every expense from the DB.
+  affectedParticipants: z.array(z.string()).optional(),
+})
+
+export type ImportSummaryActivityData = z.infer<
+  typeof importSummaryActivityDataSchema
+>
+
 export const activityDataSchema = z.discriminatedUnion('kind', [
   expenseActivityDataSchema,
   groupActivityDataSchema,
   memberActivityDataSchema,
   invitationActivityDataSchema,
+  importSummaryActivityDataSchema,
 ])
 
 export type ActivityData = z.infer<typeof activityDataSchema>

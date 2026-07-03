@@ -1,11 +1,17 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { deleteS3Object } from '../../routes/upload'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import {
+  buildExpenseActivityData,
   buildGroupActivityData,
   buildMemberActivityData,
   logActivity,
 } from './activities'
-import { createSettlementExpensesForLeave, getGroupBalances } from './balances'
+import {
+  createSettlementExpensesForLeave,
+  getGroupBalances,
+  type SettlementActivityMeta,
+} from './balances'
 import { randomId } from './shared'
 
 /**
@@ -137,14 +143,20 @@ export async function removeMember(opts: {
     select: { name: true },
   })
 
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
+    let settlementActivities = undefined as
+      | Awaited<
+          ReturnType<typeof createSettlementExpensesForLeave>
+        >['activities']
+      | undefined
     if (settleBalances && target.ledgerParticipant?.id) {
-      await createSettlementExpensesForLeave(
+      const r = await createSettlementExpensesForLeave(
         groupId,
         target.ledgerParticipant.id,
         actor,
         tx,
       )
+      settlementActivities = r.activities
     }
 
     if (target.role === GroupRole.ADMIN) {
@@ -181,8 +193,28 @@ export async function removeMember(opts: {
       },
       tx,
     )
-    return updated
+    return { updated, settlementActivities }
   })
+  if (result.settlementActivities) {
+    for (const meta of result.settlementActivities) {
+      scheduleDefaultNotificationDispatch({
+        activityId: meta.activityId,
+        type: 'EXPENSE_CREATED',
+        groupId,
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'EXPENSE', id: meta.expenseId },
+        data: buildExpenseActivityData({
+          summary: meta.title,
+          title: meta.title,
+          amount: meta.amount,
+          currencyCode: meta.currencyCode,
+          date: meta.date,
+        }),
+        occurredAt: meta.time,
+      })
+    }
+  }
+  return result.updated
 }
 
 export class LeaveGroupPreconditionError extends Error {
@@ -235,8 +267,8 @@ export async function leaveGroup(opts: {
   force?: boolean
   promoteMemberId?: string
 }): Promise<{
-  deleted: false
   promotedMemberId: string | null
+  settlementActivities: Array<{ activityId: string; expenseId: string; title: string; amount: number; currencyCode: string | null; date: string; time: Date }>
 }> {
   const { groupId, actor, force = false, promoteMemberId } = opts
 
@@ -324,9 +356,16 @@ export async function leaveGroup(opts: {
     )
   }
 
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
+    let settlementActivities: SettlementActivityMeta[] = []
     if (needsSettlement && participantId) {
-      await createSettlementExpensesForLeave(groupId, participantId, actor, tx)
+      const settlement = await createSettlementExpensesForLeave(
+        groupId,
+        participantId,
+        actor,
+        tx,
+      )
+      settlementActivities = settlement.activities
     }
 
     if (isLastAdmin && promoteMemberId) {
@@ -360,10 +399,30 @@ export async function leaveGroup(opts: {
     )
 
     return {
-      deleted: false as const,
       promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
+      settlementActivities,
     }
   })
+
+  for (const meta of result.settlementActivities) {
+    scheduleDefaultNotificationDispatch({
+      activityId: meta.activityId,
+      type: 'EXPENSE_CREATED',
+      groupId,
+      actor: { type: 'ACCOUNT', id: actor.accountId },
+      subject: { type: 'EXPENSE', id: meta.expenseId },
+      data: buildExpenseActivityData({
+        summary: meta.title,
+        title: meta.title,
+        amount: meta.amount,
+        currencyCode: meta.currencyCode,
+        date: meta.date,
+      }),
+      occurredAt: meta.time,
+    })
+  }
+
+  return { deleted: false, promotedMemberId: result.promotedMemberId }
 }
 
 export async function archiveGroupForSelf(opts: {

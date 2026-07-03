@@ -91,6 +91,31 @@ export const prismaMock = {
     'update',
     'delete',
   ]),
+  // Per-item and itemized-remainder references are merged by
+  // `mergeLedgerParticipantReferences` alongside the per-expense
+  // references, so the mocks must include them too.
+  expenseItemPaidFor: makeMethodStubs([
+    'findMany',
+    'findUnique',
+    'create',
+    'createMany',
+    'count',
+    'deleteMany',
+    'updateMany',
+    'update',
+    'delete',
+  ]),
+  expenseItemizedRemainderPaidFor: makeMethodStubs([
+    'findMany',
+    'findUnique',
+    'create',
+    'createMany',
+    'count',
+    'deleteMany',
+    'updateMany',
+    'update',
+    'delete',
+  ]),
   recurringExpenseLink: makeMethodStubs([
     'findUnique',
     'findFirst',
@@ -145,12 +170,23 @@ export function resetPrisma() {
   // not crash when a fixture forgets to stub it.
   prismaMock.expensePaidBy.findMany.mockResolvedValue([] as never)
   prismaMock.expensePaidFor.findMany.mockResolvedValue([] as never)
+  prismaMock.expenseItemPaidFor.findMany.mockResolvedValue([] as never)
+  prismaMock.expenseItemizedRemainderPaidFor.findMany.mockResolvedValue(
+    [] as never,
+  )
   // Default for group.findUnique so logActivity's ledger lookup
   // (used by activity writes) does not throw in tests that don't
   // explicitly set up the mock.
   prismaMock.group.findUnique.mockResolvedValue({
     id: 'grp-default',
     ledgerId: 'ledger-default',
+    ledger: { currencyCode: null },
+  } as never)
+  // Default for activity.create so callers that use the return value
+  // (e.g. settlement helpers, recurring expenses) don't crash.
+  prismaMock.activity.create.mockResolvedValue({
+    id: 'act-default',
+    time: new Date(),
   } as never)
   prisma$Transaction.mockReset()
   prisma$Transaction.mockImplementation(async (input: unknown) => {

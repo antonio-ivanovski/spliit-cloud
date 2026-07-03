@@ -1324,6 +1324,9 @@
       "declined": "{target} отклонил(а) приглашение"
     },
     "fallback": "Активность зарегистрирована",
-    "unknownActor": "Кто-то"
+    "unknownActor": "Кто-то",
+    "import": {
+      "imported": "{participant} импортировал(а) {count} расходов"
+    }
   }
 }

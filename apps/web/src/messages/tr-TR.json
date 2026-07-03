@@ -1324,6 +1324,9 @@
       "declined": "{target} daveti reddetti"
     },
     "fallback": "Bir aktivite kaydedildi",
-    "unknownActor": "Birisi"
+    "unknownActor": "Birisi",
+    "import": {
+      "imported": "{participant} {count} gider içe aktardı"
+    }
   }
 }

@@ -1324,6 +1324,9 @@
       "declined": "{target} menolak undangan"
     },
     "fallback": "Sebuah aktivitas telah dicatat",
-    "unknownActor": "Seseorang"
+    "unknownActor": "Seseorang",
+    "import": {
+      "imported": "{participant} mengimpor {count} pengeluaran"
+    }
   }
 }

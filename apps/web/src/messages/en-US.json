@@ -1323,6 +1323,9 @@
       "accepted": "{target} accepted the invitation",
       "declined": "{target} declined the invitation"
     },
+    "import": {
+      "imported": "{participant} imported {count} expenses"
+    },
     "fallback": "An activity was recorded",
     "unknownActor": "Someone"
   }

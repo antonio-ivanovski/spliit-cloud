@@ -823,7 +823,13 @@ describe('linkUnlinkedParticipantToAccount', () => {
         data: expect.objectContaining({
           data: expect.objectContaining({
             kind: 'group',
-            summary: 'ledger-participant:merged:lp-jane:lp-alice',
+            changedFields: ['linkedParticipant'],
+            changes: expect.arrayContaining([
+              expect.objectContaining({
+                field: 'linkedParticipant',
+                before: 'Jane',
+              }),
+            ]),
           }),
         }),
       }),
@@ -909,7 +915,13 @@ describe('linkUnlinkedParticipantToAccount', () => {
         data: expect.objectContaining({
           data: expect.objectContaining({
             kind: 'group',
-            summary: 'ledger-participant:merged:lp-jane:lp-alice',
+            changedFields: ['linkedParticipant'],
+            changes: expect.arrayContaining([
+              expect.objectContaining({
+                field: 'linkedParticipant',
+                before: 'Jane',
+              }),
+            ]),
           }),
         }),
       }),
@@ -1274,8 +1286,14 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
         data: expect.objectContaining({
           data: expect.objectContaining({
             kind: 'group',
-            summary:
-              'ledger-participant:merged-into-invitation:lp-unlinked:lp-target',
+            changedFields: ['linkedParticipant'],
+            changes: expect.arrayContaining([
+              expect.objectContaining({
+                field: 'linkedParticipant',
+                before: 'Jane',
+                after: 'bob@example.com',
+              }),
+            ]),
           }),
         }),
       }),

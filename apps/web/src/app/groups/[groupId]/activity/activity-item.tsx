@@ -148,6 +148,20 @@ function useMessage(activity: Activity) {
           return { message: t('fallback'), changes: null }
       }
     }
+    case 'import_summary':
+      switch (activity.type) {
+        case 'EXPENSES_IMPORTED':
+          return {
+            message: t('import.imported', {
+              participant: actor,
+              count: data.count,
+              provider: data.sourceProvider ?? '',
+            }),
+            changes: null,
+          }
+        default:
+          return { message: t('fallback'), changes: null }
+      }
     default:
       return { message: t('fallback'), changes: null }
   }

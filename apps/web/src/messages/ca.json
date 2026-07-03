@@ -1324,6 +1324,9 @@
       "declined": "{target} ha rebutjat la invitació"
     },
     "fallback": "S'ha registrat una activitat",
-    "unknownActor": "Algú"
+    "unknownActor": "Algú",
+    "import": {
+      "imported": "{participant} ha importat {count} despeses"
+    }
   }
 }

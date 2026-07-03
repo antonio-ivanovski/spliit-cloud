@@ -1324,6 +1324,9 @@
       "declined": "{target}が招待を辞退しました"
     },
     "fallback": "アクティビティが記録されました",
-    "unknownActor": "誰か"
+    "unknownActor": "誰か",
+    "import": {
+      "imported": "{participant}が{count}件の支出をインポートしました"
+    }
   }
 }

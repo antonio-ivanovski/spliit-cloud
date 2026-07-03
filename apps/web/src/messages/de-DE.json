@@ -1324,6 +1324,9 @@
       "declined": "{target} lehnte die Einladung ab"
     },
     "fallback": "Eine Aktivität wurde aufgezeichnet",
-    "unknownActor": "Jemand"
+    "unknownActor": "Jemand",
+    "import": {
+      "imported": "{participant} importierte {count} Ausgaben"
+    }
   }
 }

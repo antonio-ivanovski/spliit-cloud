@@ -1,0 +1,454 @@
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { randomId } from '../lib/api'
+import {
+  setDefaultActivityNotificationDispatchers,
+  type ActivityNotificationDispatcher,
+  type ActivityNotificationEvent,
+} from '../lib/notifications/dispatcher'
+import { groupsRouter } from '../trpc/routers/groups'
+import { checkDbConnection, testRunId } from './setup'
+
+await checkDbConnection()
+
+class CapturingDispatcher implements ActivityNotificationDispatcher {
+  events: ActivityNotificationEvent[] = []
+  async dispatch(event: ActivityNotificationEvent): Promise<void> {
+    this.events.push(event)
+  }
+}
+
+describe('Silent expense creation — activity + notification', () => {
+  const runId = testRunId()
+  const adminId = `acct-sec-${runId}`
+  const adminEmail = `sec-${runId}@test.example`
+  const aliceId = `acct-sec-a-${runId}`
+  const aliceEmail = `sec-a-${runId}@test.example`
+
+  const ledgerIds: string[] = []
+  function trackLedger(id: string) {
+    ledgerIds.push(id)
+  }
+
+  let capture: CapturingDispatcher
+
+  function makeCaller(accountId = adminId, email = adminEmail) {
+    return groupsRouter.createCaller({
+      auth: {
+        session: { id: 'sess-test' },
+        user: {
+          id: accountId,
+          email,
+          emailVerified: true,
+          name: accountId === adminId ? 'Test Admin' : 'Alice',
+        },
+      },
+    } as never)
+  }
+
+  beforeAll(async () => {
+    await prisma.account.upsert({
+      where: { email: adminEmail },
+      update: {},
+      create: {
+        id: adminId,
+        email: adminEmail,
+        emailVerified: true,
+        name: 'Test Admin',
+      },
+    })
+    await prisma.account.upsert({
+      where: { email: aliceEmail },
+      update: {},
+      create: {
+        id: aliceId,
+        email: aliceEmail,
+        emailVerified: true,
+        name: 'Alice',
+      },
+    })
+  })
+
+  afterAll(async () => {
+    setDefaultActivityNotificationDispatchers([])
+    for (const lid of ledgerIds) {
+      await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
+    }
+    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.account.delete({ where: { id: aliceId } }).catch(() => {})
+  })
+
+  // -------------------------------------------------------------------
+  // Helper: create a group with admin + optional Alice member
+  // -------------------------------------------------------------------
+  async function createGroup(name: string, addAlice = false) {
+    capture = new CapturingDispatcher()
+    setDefaultActivityNotificationDispatchers([capture])
+
+    const caller = makeCaller()
+    const result = await caller.create({
+      groupFormValues: {
+        name,
+        currency: '$',
+        currencyCode: 'USD',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const group = await prisma.group.findUnique({
+      where: { id: result.groupId },
+      include: {
+        ledger: true,
+        members: { include: { ledgerParticipant: true } },
+      },
+    })
+    trackLedger(group!.ledger.id)
+    const adminLp = group!.members[0].ledgerParticipant!.id
+
+    let aliceLp: string | undefined
+    if (addAlice) {
+      const am = await prisma.groupMember.create({
+        data: {
+          id: randomId(),
+          groupId: result.groupId,
+          accountId: aliceId,
+          role: GroupRole.MEMBER,
+          status: GroupMemberStatus.ACTIVE,
+          joinedAt: new Date(),
+        },
+      })
+      aliceLp = (
+        await prisma.ledgerParticipant.create({
+          data: {
+            id: randomId(),
+            ledgerId: group!.ledger.id,
+            groupMemberId: am.id,
+          },
+        })
+      ).id
+    }
+
+    return {
+      groupId: result.groupId,
+      ledgerId: group!.ledger.id,
+      adminLp,
+      aliceLp,
+    }
+  }
+
+  // -------------------------------------------------------------------
+  // 1. Archive with force=true — one activity + notification per leg
+  // -------------------------------------------------------------------
+  it('archive force=true writes activity + notification per settlement leg', async () => {
+    const { groupId, adminLp, aliceLp } = await createGroup(
+      `Arc-Act-${runId}`,
+      true,
+    )
+
+    // Admin paid $40 for both → Alice owes Admin $20
+    await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title: 'Dinner',
+        amount: 4000,
+        expenseDate: new Date().toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: adminLp, shares: 4000 }],
+        paidFor: [
+          { participant: adminLp, shares: 1 },
+          { participant: aliceLp!, shares: 1 },
+        ],
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+    capture.events.length = 0
+
+    await makeCaller().archive({ groupId, archived: true, force: true })
+
+    const settlements = await prisma.expense.findMany({
+      where: { ledger: { group: { id: groupId } }, isReimbursement: true },
+    })
+
+    for (const s of settlements) {
+      const activity = await prisma.activity.findFirst({
+        where: { subjectId: s.id, type: 'EXPENSE_CREATED' },
+      })
+      expect(activity).not.toBeNull()
+      const data = activity!.data as Record<string, unknown>
+      expect(data.kind).toBe('expense')
+      expect(data.title).toBe('Settlement on archive')
+      expect(data.amount).toBe(s.amount)
+      expect(data.currencyCode).toBe('USD')
+      expect(data.date).toBe(s.expenseDate.toISOString().slice(0, 10))
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 20))
+    const settlementEvents = capture.events.filter(
+      (e) => e.type === 'EXPENSE_CREATED',
+    )
+    expect(settlementEvents.length).toBeGreaterThanOrEqual(settlements.length)
+  })
+
+  // -------------------------------------------------------------------
+  // 2. Leave with force=true — activity + notification for the member's leg
+  // -------------------------------------------------------------------
+  it('leave force=true writes activity + notification for leaving member leg', async () => {
+    const { groupId, ledgerId, adminLp, aliceLp } = await createGroup(
+      `Leave-Act-${runId}`,
+      true,
+    )
+
+    // Find Alice's member record for potential promotion
+    const aliceMember = await prisma.groupMember.findFirst({
+      where: { groupId, accountId: aliceId },
+    })
+
+    // Admin paid $40, split evenly → Alice owes Admin $20
+    await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title: 'Lunch',
+        amount: 4000,
+        expenseDate: new Date().toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: adminLp, shares: 4000 }],
+        paidFor: [
+          { participant: adminLp, shares: 1 },
+          { participant: aliceLp!, shares: 1 },
+        ],
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+    capture.events.length = 0
+
+    // Admin leaves with force=true → settlement expense for admin's leg.
+    // Promote Alice first since Admin is the last admin.
+    await makeCaller(adminId).leave({
+      groupId,
+      force: true,
+      promoteMemberId: aliceMember!.id,
+    })
+
+    // Also check if the member was marked as LEFT
+    const adminMemberAfter = await prisma.groupMember.findFirst({
+      where: { groupId, accountId: adminId },
+    })
+    expect(adminMemberAfter?.status).toBe('LEFT')
+
+    const settlements = await prisma.expense.findMany({
+      where: { ledgerId, isReimbursement: true },
+    })
+    // Should have at least one settlement expense
+    expect(settlements.length).toBeGreaterThanOrEqual(1)
+
+    for (const s of settlements) {
+      const activity = await prisma.activity.findFirst({
+        where: { subjectId: s.id, type: 'EXPENSE_CREATED' },
+      })
+      expect(activity).not.toBeNull()
+      const data = activity!.data as Record<string, unknown>
+      expect(data.kind).toBe('expense')
+      expect(data.title).toBe('Settlement on leave')
+      expect(data.amount).toBe(s.amount)
+      expect(data.currencyCode).toBe('USD')
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 20))
+    const settlementEvents = capture.events.filter(
+      (e) => e.type === 'EXPENSE_CREATED',
+    )
+    expect(settlementEvents.length).toBeGreaterThanOrEqual(settlements.length)
+  })
+
+  // -------------------------------------------------------------------
+  // 3. Recurring expense — activity + notification per installment
+  // -------------------------------------------------------------------
+  it('recurring expense materialization writes activity + notification', async () => {
+    const { groupId, ledgerId, adminLp } = await createGroup(
+      `Recur-Act-${runId}`,
+      false,
+    )
+
+    // Create a WEEKLY expense in the past
+    const pastDate = new Date()
+    pastDate.setUTCDate(pastDate.getUTCDate() - 14)
+
+    await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title: 'Weekly sub',
+        amount: 1000,
+        expenseDate: pastDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: adminLp, shares: 1000 }],
+        paidFor: [{ participant: adminLp, shares: 1 }],
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'WEEKLY',
+      },
+    })
+    capture.events.length = 0
+
+    const { createRecurringExpenses } = await import('../lib/api')
+    await createRecurringExpenses()
+
+    const cloned = await prisma.expense.findMany({
+      where: { ledgerId, title: 'Weekly sub' },
+      orderBy: { createdAt: 'asc' },
+    })
+    // Original + at least one clone
+    expect(cloned.length).toBeGreaterThanOrEqual(2)
+
+    const installments = cloned.slice(1)
+    for (const inst of installments) {
+      const activity = await prisma.activity.findFirst({
+        where: { subjectId: inst.id, type: 'EXPENSE_CREATED' },
+      })
+      expect(activity).not.toBeNull()
+      const data = activity!.data as Record<string, unknown>
+      expect(data.kind).toBe('expense')
+      expect(data.title).toBe('Weekly sub')
+      expect(data.amount).toBe(1000)
+      expect(data.currencyCode).toBe('USD')
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 20))
+    const installmentEvents = capture.events.filter(
+      (e) => e.type === 'EXPENSE_CREATED',
+    )
+    expect(installmentEvents.length).toBeGreaterThanOrEqual(installments.length)
+  })
+
+  // -------------------------------------------------------------------
+  // 4. Import — per-expense activity rows + single summary notification
+  // -------------------------------------------------------------------
+  it('import writes per-expense activities and a single summary notification', async () => {
+    const { groupId, ledgerId, adminLp, aliceLp } = await createGroup(
+      `Imp-Act-${runId}`,
+      true,
+    )
+
+    capture.events.length = 0
+
+    const result = await makeCaller().import({
+      targetGroupId: groupId,
+      participants: [
+        {
+          mode: 'LINK_EXISTING_PARTICIPANT',
+          sourceName: 'Admin',
+          destLedgerParticipantId: adminLp,
+        },
+        {
+          mode: 'LINK_EXISTING_PARTICIPANT',
+          sourceName: 'Alice',
+          destLedgerParticipantId: aliceLp!,
+        },
+      ],
+      expenses: [
+        {
+          title: 'Imported 1',
+          amount: 2000,
+          expenseDate: new Date('2026-06-01'),
+          category: 'general',
+          splitMode: 'EVENLY',
+          paidBySplitMode: 'BY_AMOUNT',
+          paidByList: [{ participant: adminLp, shares: 2000 }],
+          paidFor: [
+            { participant: adminLp, shares: 1 },
+            { participant: aliceLp!, shares: 1 },
+          ],
+          isReimbursement: false,
+          saveDefaultSplittingOptions: false,
+          documents: [],
+          recurrenceRule: 'NONE',
+        },
+        {
+          title: 'Imported 2',
+          amount: 1500,
+          expenseDate: new Date('2026-06-02'),
+          category: 'general',
+          splitMode: 'EVENLY',
+          paidBySplitMode: 'BY_AMOUNT',
+          paidByList: [{ participant: aliceLp!, shares: 1500 }],
+          paidFor: [
+            { participant: adminLp, shares: 1 },
+            { participant: aliceLp!, shares: 1 },
+          ],
+          isReimbursement: false,
+          saveDefaultSplittingOptions: false,
+          documents: [],
+          recurrenceRule: 'NONE',
+        },
+      ],
+      sourceMeta: {
+        provider: 'TEST',
+        sourceGroupId: 'src-1',
+      },
+    })
+    expect(result.importedExpenses).toBe(2)
+
+    // Per-expense EXPENSE_CREATED rows still appear (audit trail).
+    for (const title of ['Imported 1', 'Imported 2']) {
+      const expense = await prisma.expense.findFirst({
+        where: { ledgerId, title },
+      })
+      expect(expense).not.toBeNull()
+      const activity = await prisma.activity.findFirst({
+        where: { subjectId: expense!.id, type: 'EXPENSE_CREATED' },
+      })
+      expect(activity).not.toBeNull()
+      const data = activity!.data as Record<string, unknown>
+      expect(data.kind).toBe('expense')
+      expect(data.title).toBe(title)
+      expect(data.amount).toBe(expense!.amount)
+      expect(data.currencyCode).toBe('USD')
+    }
+
+    // A single EXPENSES_IMPORTED summary activity covers the whole import.
+    const summaryActivities = await prisma.activity.findMany({
+      where: { ledgerId, type: 'EXPENSES_IMPORTED' },
+    })
+    expect(summaryActivities).toHaveLength(1)
+    const summaryData = summaryActivities[0].data as Record<string, unknown>
+    expect(summaryData.kind).toBe('import_summary')
+    expect(summaryData.count).toBe(2)
+    expect(summaryData.totalAmount).toBe(3500)
+    expect(summaryData.currencyCode).toBe('USD')
+    expect(summaryData.sourceProvider).toBe('TEST')
+    expect(summaryData.affectedParticipants).toEqual(
+      expect.arrayContaining([adminLp, aliceLp!]),
+    )
+
+    await new Promise((resolve) => setTimeout(resolve, 20))
+    // No per-expense notifications; exactly one summary event.
+    const perExpenseEvents = capture.events.filter(
+      (e) => e.type === 'EXPENSE_CREATED',
+    )
+    const summaryEvents = capture.events.filter(
+      (e) => e.type === 'EXPENSES_IMPORTED',
+    )
+    expect(perExpenseEvents).toHaveLength(0)
+    expect(summaryEvents).toHaveLength(1)
+    const event = summaryEvents[0]
+    expect(event.groupId).toBe(groupId)
+    expect(event.subject).toEqual({ type: 'GROUP', id: groupId })
+    const eventData = event.data as Record<string, unknown>
+    expect(eventData.kind).toBe('import_summary')
+    expect(eventData.count).toBe(2)
+    expect(eventData.affectedParticipants).toEqual(
+      expect.arrayContaining([adminLp, aliceLp!]),
+    )
+  })
+})

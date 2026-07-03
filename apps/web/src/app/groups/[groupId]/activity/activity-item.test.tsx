@@ -328,6 +328,23 @@ describe('ActivityItem', () => {
     ).toBeInTheDocument()
   })
 
+  it('renders EXPENSES_IMPORTED with count', () => {
+    renderItem(
+      makeActivity({
+        type: 'EXPENSES_IMPORTED',
+        subjectType: 'GROUP',
+        subjectId: 'group-1',
+        data: {
+          kind: 'import_summary',
+          count: 25,
+          sourceProvider: 'Splitwise',
+          affectedParticipants: ['lp-alice', 'lp-bob'],
+        },
+      }),
+    )
+    expect(screen.getByText(/Alice imported 25 expenses/)).toBeInTheDocument()
+  })
+
   it('renders fallback for null data', () => {
     renderItem(
       makeActivity({

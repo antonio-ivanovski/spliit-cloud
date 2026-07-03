@@ -1324,6 +1324,9 @@
       "declined": "{target} a respins invitația"
     },
     "fallback": "O activitate a fost înregistrată",
-    "unknownActor": "Cineva"
+    "unknownActor": "Cineva",
+    "import": {
+      "imported": "{participant} a importat {count} cheltuieli"
+    }
   }
 }

@@ -1324,6 +1324,9 @@
       "declined": "{target} דחה/ה את ההזמנה"
     },
     "fallback": "נרשמה פעילות",
-    "unknownActor": "מישהו"
+    "unknownActor": "מישהו",
+    "import": {
+      "imported": "{participant} ייבא {count} הוצאות"
+    }
   }
 }

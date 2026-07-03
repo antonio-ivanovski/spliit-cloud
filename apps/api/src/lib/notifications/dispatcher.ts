@@ -47,7 +47,7 @@ export function setDefaultActivityNotificationDispatchers(
 ): void {
   while (registered.length > 0) registered.pop()
   for (const d of dispatchers) registered.push(d)
-  singleton = new CompositeActivityNotificationDispatcher(registered)
+  singleton = new CompositeActivityNotificationDispatcher([...registered])
 }
 
 /**

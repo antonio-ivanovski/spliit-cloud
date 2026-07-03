@@ -5,9 +5,10 @@ import {
   prisma,
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import {
   buildExpenseActivityData,
-  buildGroupActivityData,
+  buildImportSummaryActivityData,
   logActivity,
 } from './activities'
 import { randomId } from './shared'
@@ -244,8 +245,22 @@ export async function importGroup(
       destIdByClientKey.set(destId, destId)
     }
 
+    const ledgerCurrency = (
+      await tx.ledger.findUnique({
+        where: { id: ledgerId },
+        select: { currencyCode: true },
+      })
+    )?.currencyCode
+    // Union of LedgerParticipant IDs touched by any imported expense
+    // (paidBy ∪ paidFor). The post-commit notification dispatcher
+    // filters this down to active group members with a real email so
+    // one summary email fans out to everyone affected.
+    const affectedParticipantIds = new Set<string>()
+    let totalAmount = 0
+
     for (const expense of input.expenses) {
       const expenseId = randomId()
+      const dateStr = expense.expenseDate.toISOString().slice(0, 10)
       await logActivity(
         groupId,
         {
@@ -256,10 +271,13 @@ export async function importGroup(
             summary: expense.title,
             title: expense.title,
             amount: expense.amount,
+            currencyCode: ledgerCurrency ?? null,
+            date: dateStr,
           }),
         },
         tx,
       )
+      totalAmount += expense.amount
       const resolvedPaidByList = expense.paidByList
         .map((paidBy) => {
           const resolved = destIdByClientKey.get(paidBy.participant)
@@ -286,6 +304,7 @@ export async function importGroup(
           )
         }
         seenPaidByIds.add(row.ledgerParticipantId)
+        affectedParticipantIds.add(row.ledgerParticipantId)
       }
       const resolvedPaidFor: Array<{
         ledgerParticipantId: string
@@ -305,6 +324,7 @@ export async function importGroup(
           ledgerParticipantId: resolved,
           shares: paidFor.shares,
         })
+        affectedParticipantIds.add(resolved)
       }
       if (resolvedPaidFor.length === 0) {
         throw new Error(
@@ -352,19 +372,28 @@ export async function importGroup(
       })
     }
 
-    if (input.sourceMeta) {
-      const data = `Imported from ${input.sourceMeta.provider} group ${input.sourceMeta.sourceGroupId}`
-      await logActivity(
-        groupId,
-        {
-          type: 'GROUP_UPDATED',
-          actor: { type: 'ACCOUNT', id: actor.accountId },
-          subject: { type: 'GROUP', id: groupId },
-          data: buildGroupActivityData({ summary: data }),
-        },
-        tx,
-      )
-    }
+    // Single summary activity for the whole import so the feed shows
+    // "Alice imported N expenses from <provider>" once. Per-expense
+    // EXPENSE_CREATED rows above keep the detailed audit trail.
+    const summaryActivity = await logActivity(
+      groupId,
+      {
+        type: 'EXPENSES_IMPORTED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildImportSummaryActivityData({
+          summary: input.sourceMeta
+            ? `Imported from ${input.sourceMeta.provider}`
+            : 'Imported expenses',
+          count: input.expenses.length,
+          totalAmount,
+          currencyCode: ledgerCurrency ?? null,
+          sourceProvider: input.sourceMeta?.provider,
+          affectedParticipants: [...affectedParticipantIds],
+        }),
+      },
+      tx,
+    )
 
     return {
       groupId,
@@ -372,8 +401,42 @@ export async function importGroup(
       importedExpenses: input.expenses.length,
       sourceGroupId: input.sourceMeta?.sourceGroupId ?? null,
       inviteMappings,
+      summaryActivity: {
+        activityId: summaryActivity.id,
+        actorAccountId: actor.accountId,
+        time: summaryActivity.time,
+        count: input.expenses.length,
+        totalAmount,
+        currencyCode: ledgerCurrency ?? null,
+        sourceProvider: input.sourceMeta?.provider,
+        affectedParticipants: [...affectedParticipantIds],
+      },
     }
   })
+
+  if (baseResult.summaryActivity.affectedParticipants.length > 0) {
+    scheduleDefaultNotificationDispatch({
+      activityId: baseResult.summaryActivity.activityId,
+      type: 'EXPENSES_IMPORTED',
+      groupId: baseResult.groupId,
+      actor: {
+        type: 'ACCOUNT',
+        id: baseResult.summaryActivity.actorAccountId,
+      },
+      subject: { type: 'GROUP', id: baseResult.groupId },
+      data: buildImportSummaryActivityData({
+        summary: baseResult.summaryActivity.sourceProvider
+          ? `Imported from ${baseResult.summaryActivity.sourceProvider}`
+          : 'Imported expenses',
+        count: baseResult.summaryActivity.count,
+        totalAmount: baseResult.summaryActivity.totalAmount,
+        currencyCode: baseResult.summaryActivity.currencyCode,
+        sourceProvider: baseResult.summaryActivity.sourceProvider,
+        affectedParticipants: baseResult.summaryActivity.affectedParticipants,
+      }),
+      occurredAt: baseResult.summaryActivity.time,
+    })
+  }
 
   const { createEmailInvitation, createLinkInvitation, sendInvitationEmail } =
     await import('../invitations')

@@ -44,6 +44,16 @@ export function hasUnsettledBalances(balances: Balances): boolean {
   return false
 }
 
+export type SettlementActivityMeta = {
+  activityId: string
+  expenseId: string
+  title: string
+  amount: number
+  currencyCode: string | null
+  date: string
+  time: Date
+}
+
 const SETTLEMENT_TITLE = 'Settlement on archive'
 
 /**
@@ -62,15 +72,15 @@ export async function createSettlementExpensesForArchive(
   groupId: string,
   actor: { accountId: string },
   client: Prisma.TransactionClient | typeof prisma = prisma,
-): Promise<{ createdExpenses: number }> {
+): Promise<{ createdExpenses: number; activities: SettlementActivityMeta[] }> {
   const balances = await getGroupBalances(groupId)
   if (!hasUnsettledBalances(balances)) {
-    return { createdExpenses: 0 }
+    return { createdExpenses: 0, activities: [] }
   }
 
   const group = await client.group.findUnique({
     where: { id: groupId },
-    select: { ledgerId: true },
+    select: { ledgerId: true, ledger: { select: { currencyCode: true } } },
   })
   if (!group?.ledgerId) {
     throw new Error('Cannot settle balances: group has no ledger')
@@ -78,14 +88,15 @@ export async function createSettlementExpensesForArchive(
 
   const legs = buildSettlementLegs(balances)
   if (legs.length === 0) {
-    return { createdExpenses: 0 }
+    return { createdExpenses: 0, activities: [] }
   }
 
   const now = new Date()
+  const activities: SettlementActivityMeta[] = []
   for (const leg of legs) {
     if (leg.amount <= 0) continue
     const expenseId = randomId()
-    await logActivity(
+    const activity = await logActivity(
       groupId,
       {
         type: 'EXPENSE_CREATED',
@@ -94,10 +105,22 @@ export async function createSettlementExpensesForArchive(
         data: buildExpenseActivityData({
           summary: SETTLEMENT_TITLE,
           title: SETTLEMENT_TITLE,
+          amount: leg.amount,
+          currencyCode: group.ledger.currencyCode ?? null,
+          date: now.toISOString().slice(0, 10),
         }),
       },
       client,
     )
+    activities.push({
+      activityId: activity.id,
+      expenseId,
+      title: SETTLEMENT_TITLE,
+      amount: leg.amount,
+      currencyCode: group.ledger.currencyCode ?? null,
+      date: now.toISOString().slice(0, 10),
+      time: activity.time,
+    })
     await client.expense.create({
       data: {
         id: expenseId,
@@ -125,7 +148,7 @@ export async function createSettlementExpensesForArchive(
     })
   }
 
-  return { createdExpenses: legs.length }
+  return { createdExpenses: legs.length, activities }
 }
 
 const SETTLEMENT_ON_LEAVE_TITLE = 'Settlement on leave'
@@ -152,24 +175,25 @@ export async function createSettlementExpensesForLeave(
   participantId: string,
   actor: { accountId: string },
   client: Prisma.TransactionClient | typeof prisma = prisma,
-): Promise<{ createdExpenses: number }> {
+): Promise<{ createdExpenses: number; activities: SettlementActivityMeta[] }> {
   const balances = await getGroupBalances(groupId)
   const legs = getSettlementLegsForParticipant(balances, participantId)
-  if (legs.length === 0) return { createdExpenses: 0 }
+  if (legs.length === 0) return { createdExpenses: 0, activities: [] }
 
   const group = await client.group.findUnique({
     where: { id: groupId },
-    select: { ledgerId: true },
+    select: { ledgerId: true, ledger: { select: { currencyCode: true } } },
   })
   if (!group?.ledgerId) {
     throw new Error('Cannot settle balances: group has no ledger')
   }
 
   const now = new Date()
+  const activities: SettlementActivityMeta[] = []
   for (const leg of legs) {
     if (leg.amount <= 0) continue
     const expenseId = randomId()
-    await logActivity(
+    const activity = await logActivity(
       groupId,
       {
         type: 'EXPENSE_CREATED',
@@ -178,10 +202,22 @@ export async function createSettlementExpensesForLeave(
         data: buildExpenseActivityData({
           summary: SETTLEMENT_ON_LEAVE_TITLE,
           title: SETTLEMENT_ON_LEAVE_TITLE,
+          amount: leg.amount,
+          currencyCode: group.ledger.currencyCode ?? null,
+          date: now.toISOString().slice(0, 10),
         }),
       },
       client,
     )
+    activities.push({
+      activityId: activity.id,
+      expenseId,
+      title: SETTLEMENT_ON_LEAVE_TITLE,
+      amount: leg.amount,
+      currencyCode: group.ledger.currencyCode ?? null,
+      date: now.toISOString().slice(0, 10),
+      time: activity.time,
+    })
     await client.expense.create({
       data: {
         id: expenseId,
@@ -209,5 +245,5 @@ export async function createSettlementExpensesForLeave(
     })
   }
 
-  return { createdExpenses: legs.length }
+  return { createdExpenses: legs.length, activities }
 }

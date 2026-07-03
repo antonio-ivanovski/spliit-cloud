@@ -6,6 +6,7 @@ import type {
   GroupActivityData,
   GroupChangedField,
   GroupRole,
+  ImportSummaryActivityData,
   InvitationActivityData,
   InvitationType,
   MemberActivityData,
@@ -110,5 +111,36 @@ export function buildInvitationActivityData(
       ? { invitationType: input.invitationType }
       : {}),
     ...(input.role !== undefined ? { role: input.role } : {}),
+  }
+}
+
+type BuildImportSummaryInput = {
+  summary?: string
+  count: number
+  totalAmount?: number
+  currencyCode?: string | null
+  sourceProvider?: string
+  affectedParticipants?: string[]
+}
+
+export function buildImportSummaryActivityData(
+  input: BuildImportSummaryInput,
+): ImportSummaryActivityData {
+  return {
+    kind: 'import_summary',
+    ...(input.summary !== undefined ? { summary: input.summary } : {}),
+    count: input.count,
+    ...(input.totalAmount !== undefined
+      ? { totalAmount: input.totalAmount }
+      : {}),
+    ...(input.currencyCode !== undefined
+      ? { currencyCode: input.currencyCode }
+      : {}),
+    ...(input.sourceProvider !== undefined
+      ? { sourceProvider: input.sourceProvider }
+      : {}),
+    ...(input.affectedParticipants !== undefined
+      ? { affectedParticipants: input.affectedParticipants }
+      : {}),
   }
 }

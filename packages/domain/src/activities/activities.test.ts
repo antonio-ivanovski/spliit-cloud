@@ -3,6 +3,7 @@ import {
   activityDataSchema,
   expenseActivityDataSchema,
   groupActivityDataSchema,
+  importSummaryActivityDataSchema,
   invitationActivityDataSchema,
   memberActivityDataSchema,
   parseActivityData,
@@ -19,6 +20,7 @@ describe('activityTypeSchema', () => {
       'EXPENSE_CREATED',
       'EXPENSE_UPDATED',
       'EXPENSE_DELETED',
+      'EXPENSES_IMPORTED',
       'GROUP_UPDATED',
       'GROUP_ARCHIVED',
       'GROUP_UNARCHIVED',
@@ -152,6 +154,46 @@ describe('invitationActivityDataSchema', () => {
       role: 'MEMBER',
     })
     expect(result.success).toBe(true)
+  })
+})
+
+describe('importSummaryActivityDataSchema', () => {
+  it('accepts a minimal summary payload', () => {
+    const result = importSummaryActivityDataSchema.safeParse({
+      kind: 'import_summary',
+      count: 12,
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a full summary payload with affected participants', () => {
+    const result = importSummaryActivityDataSchema.safeParse({
+      kind: 'import_summary',
+      summary: 'Splitwise',
+      count: 12,
+      totalAmount: 123450,
+      currencyCode: 'USD',
+      sourceProvider: 'Splitwise',
+      affectedParticipants: ['lp-1', 'lp-2'],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects a negative count', () => {
+    const result = importSummaryActivityDataSchema.safeParse({
+      kind: 'import_summary',
+      count: -1,
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects a non-integer amount', () => {
+    const result = importSummaryActivityDataSchema.safeParse({
+      kind: 'import_summary',
+      count: 1,
+      totalAmount: 1.5,
+    })
+    expect(result.success).toBe(false)
   })
 })
 

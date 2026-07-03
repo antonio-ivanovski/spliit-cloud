@@ -1324,6 +1324,9 @@
       "declined": "{target} wees de uitnodiging af"
     },
     "fallback": "Er is een activiteit geregistreerd",
-    "unknownActor": "Iemand"
+    "unknownActor": "Iemand",
+    "import": {
+      "imported": "{participant} importeerde {count} uitgaven"
+    }
   }
 }
