@@ -30,10 +30,19 @@ The system SHALL grant group access only to authenticated accounts that have act
 ### Requirement: Membership activity recording
 The system SHALL record structured activity for member leave, member removal, and member role changes.
 
-#### Scenario: Member leaves
-- **WHEN** an active member leaves a group without deleting the group
+#### Scenario: Last member cannot leave — must delete or archive
+- **WHEN** the last active member attempts to leave a group
+- **THEN** the system rejects the leave with a PRECONDITION_FAILED error and `lastMemberMustDelete` reason, steering the caller to the dedicated delete flow on the settings page
+- **AND** the system provides an `archiveGroupForSelf` mutation as a non-destructive alternative that sets the group as archived (read-only) while preserving the membership, ledger, expenses, and activity history
+
+#### Scenario: Member leaves (not last member)
+- **WHEN** an active member who is not the last active member leaves a group
 - **THEN** the system records MEMBER_LEFT activity with actor identity and member display metadata
 - **AND** if settlement expenses are created during leave, the system dispatches EXPENSE_CREATED notifications for each settlement
+
+#### Scenario: Leave preview provides precondition state
+- **WHEN** a member opens the leave-group dialog
+- **THEN** the system returns a preview indicating whether the caller is the last active member, the last admin, or has unsettled balances, so the dialog can render the appropriate copy
 
 #### Scenario: Member removed
 - **WHEN** an admin removes an active member from a group
@@ -82,3 +91,19 @@ The system SHALL record structured activity for group settings and group archive
 #### Scenario: Group unarchived
 - **WHEN** an admin unarchives a group
 - **THEN** the system records GROUP_UNARCHIVED activity with actor identity
+
+### Requirement: Group deletion with document cleanup
+The system SHALL allow ADMIN members to permanently delete a group, its ledger, expenses, invitations, and attached S3 documents. The system SHALL reject deletion of archived groups.
+
+#### Scenario: Delete group cleans up S3 documents
+- **WHEN** an ADMIN permanently deletes a group
+- **THEN** the system first queries all expense documents for the group's ledger and deletes each S3 object
+- **AND** then permanently deletes the group, cascading to all ledger data including expenses, invitations, and activity history
+
+#### Scenario: Delete group rejected for archived groups
+- **WHEN** an ADMIN attempts to delete an already-archived group
+- **THEN** the system rejects the operation with FORBIDDEN (the group is already read-only)
+
+#### Scenario: Delete group restricted to ADMINS
+- **WHEN** a non-admin member attempts to delete the group
+- **THEN** the system rejects the operation with FORBIDDEN

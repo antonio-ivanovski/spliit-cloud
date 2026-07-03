@@ -19,6 +19,19 @@ The system SHALL record structured activity for expense create, update, and dele
 - **WHEN** an expense create, update, or delete mutation is committed
 - **THEN** the expense data change and its activity row are committed together
 
+### Requirement: Expense document S3 cleanup on deletion
+The system SHALL clean up S3 objects for expense documents when an expense is deleted or an expense update removes documents.
+
+#### Scenario: S3 cleanup after expense deletion
+- **WHEN** an expense is deleted and the deleted expense has S3 document attachments
+- **THEN** the system deletes each document's S3 object after the database transaction commits
+- **AND** S3 cleanup failures are logged but do not prevent the expense deletion from succeeding
+
+#### Scenario: S3 cleanup on expense update removing documents
+- **WHEN** an expense update removes previously attached documents
+- **THEN** the system deletes each removed document's S3 object after the database transaction commits
+- **AND** S3 cleanup failures are logged but do not prevent the expense update from succeeding
+
 ### Requirement: Expense changed-field summary with per-field detail
 The system SHALL compute a changed-field summary for expense updates using a generic differ framework. The summary includes both a field-name list and optional per-field before/after display strings.
 
