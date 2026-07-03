@@ -102,10 +102,37 @@
 - [x] 11.6 Do not run E2E tests for this change unless explicitly requested, because project guidance marks Playwright E2E as broken.
 - [x] 11.7 Do not start the dev server for integration tests without explicit user permission, because project guidance requires an existing API server for web integration tests.
 
-## 12. Final Review And Handoff
+## 12. Generic Differ Framework (added during implementation)
 
-- [x] 12.1 Review all activity write paths for transaction boundaries, because activities must be committed with domain changes while notifications dispatch after commit.
-- [x] 12.2 Review all email recipient paths for placeholder, pending, unlinked, left, removed, and actor exclusions, because recipient leakage is the highest-risk product/privacy failure.
-- [x] 12.3 Review dispatcher boundaries to ensure mutation call sites do not call email helpers directly, because the abstraction must remain compatible with future durable delivery and retry workers.
-- [x] 12.4 Review migration output and generated Prisma client changes together, because schema, generated code, and migration must be committed as one unit.
-- [x] 12.5 Produce a concise implementation summary mapping completed work back to the OpenSpec scenarios, because this change is likely to be split across subagents and needs an integration-oriented handoff.
+- [x] 12.1 Create `activity-diff` shared generic types (`ActivityDiffer<TEntity, TField, TContext>` interface, `DiffEmission`), because both expense and group change detection benefit from the same composable pattern.
+- [x] 12.2 Create generic differ factories (`createStringFieldDiffer`, `createFormattedValueDiffer`) and `createCompositeDiffer` factory in `activity-diff`, because the composite pattern reduces boilerplate across differ implementations.
+- [x] 12.3 Implement `expense-activity-diff` with 10 concrete differs (title, amount, date, category, notes, payers, split, items, documents, recurrence), because each field group is independently testable and the design calls for mode-aware comparison (e.g. BY_AMOUNT payer semantics).
+- [x] 12.4 Implement `group-activity-diff` with 3 concrete differs (name, information, currency), because group settings changes need the same before/after rendering as expense changes.
+- [x] 12.5 Add `linkedParticipant` to `groupChangedFields` domain schema and render it in the activity feed, because linking an unlinked participant is a user-facing group change that was previously invisible.
+- [x] 12.6 Add `ExpenseActivityChange` and `GroupActivityChange` domain schemas with before/after display strings, because per-field change detail is richer than the originally planned field-name list.
+- [x] 12.7 Add composite differ unit tests and individual differ unit tests, because the differ framework is the new code path for all change detection.
+
+## 13. Bulk Import Summary (added during implementation)
+
+- [x] 13.1 Add `EXPENSES_IMPORTED` activity type and `import_summary` payload kind (`ImportSummaryActivityData`) to domain schemas, because bulk imports need a single summary row and notification instead of N individual expense rows.
+- [x] 13.2 Add `buildImportSummaryActivityData` payload builder in API activity-payloads helpers, because the import flow needs a typed builder consistent with other activity payloads.
+- [x] 13.3 Wire import expense flow to write `EXPENSES_IMPORTED` activity and dispatch a single summary email to all affected active participants, because sending one email per imported expense is noisy and non-performant.
+- [x] 13.4 Add `ImportSummaryActivityData` and `EXPENSES_IMPORTED` rendering to the web activity feed, because the activity timeline must display import events.
+- [x] 13.5 Add i18n translation key `Activities.import.imported` for import summary messages, because import summary rendering needs user-facing text.
+- [x] 13.6 Add test coverage for import summary dispatch, recipient filtering, and activity feed rendering, because import summary is a new code path.
+
+## 14. Settlement Expense Notifications (added during implementation)
+
+- [x] 14.1 Wire member leave flow to dispatch `EXPENSE_CREATED` notifications for any settlement expenses created during leave, because participants need to know about auto-generated settlement expenses.
+- [x] 14.2 Wire member removal flow to dispatch `EXPENSE_CREATED` notifications for any settlement expenses created during removal, because the removed member and remaining participants need visibility into settlement expenses.
+- [x] 14.3 Wire group archive flow to dispatch `EXPENSE_CREATED` notifications for any settlement expenses created during force-archive settlement, because archive participants need to know about auto-generated settlement expenses.
+- [x] 14.4 Wire invitation revocation flow to dispatch `EXPENSE_CREATED` notifications for settlement expenses when a member is removed as part of revocation, because revocation may create settlement expenses.
+- [x] 14.5 Wire recurring-expense auto-creation to dispatch `EXPENSE_CREATED` notifications with `SYSTEM` actor type, because auto-generated expenses need to notify affected participants.
+
+## 15. Final Review And Handoff
+
+- [x] 15.1 Review all activity write paths for transaction boundaries, because activities must be committed with domain changes while notifications dispatch after commit.
+- [x] 15.2 Review all email recipient paths for placeholder, pending, unlinked, left, removed, and actor exclusions, because recipient leakage is the highest-risk product/privacy failure.
+- [x] 15.3 Review dispatcher boundaries to ensure mutation call sites do not call email helpers directly, because the abstraction must remain compatible with future durable delivery and retry workers.
+- [x] 15.4 Review migration output and generated Prisma client changes together, because schema, generated code, and migration must be committed as one unit.
+- [x] 15.5 Produce a concise implementation summary mapping completed work back to the OpenSpec scenarios, because this change is likely to be split across subagents and needs an integration-oriented handoff.

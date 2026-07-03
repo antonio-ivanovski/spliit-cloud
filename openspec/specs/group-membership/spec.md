@@ -1,7 +1,7 @@
-## ADDED Requirements
+## MODIFIED Requirements
 
 ### Requirement: Membership-based group access
-The system SHALL grant group access only to authenticated accounts that have group membership or a pending invitation that can be accepted.
+The system SHALL grant group access only to authenticated accounts that have active group membership or a pending invitation that can be accepted.
 
 #### Scenario: Member opens group
 - **WHEN** an authenticated account with active membership opens a group
@@ -14,72 +14,71 @@ The system SHALL grant group access only to authenticated accounts that have gro
 - **AND** the UI SHALL hide all edit affordances (create buttons, edit buttons, export, receipt upload) and SHALL surface an Accept/Decline banner
 
 #### Scenario: Non-member opens group URL
-- **WHEN** an authenticated account without membership opens a group URL
+- **WHEN** an authenticated account without active membership or a pending invitation opens a group URL
 - **THEN** the system denies access to the group
 
-### Requirement: Group roles
-The system SHALL support group roles for OWNER, ADMIN, and MEMBER.
+#### Scenario: Removed member opens group activity
+- **WHEN** an authenticated account whose membership status is LEFT or REMOVED opens group activity
+- **THEN** the system denies access to the group activity
 
-#### Scenario: Owner manages group
-- **WHEN** an OWNER updates group settings or manages members
-- **THEN** the system allows the operation
+#### Scenario: Revoked invitee opens group activity
+- **WHEN** an authenticated account whose invitation is revoked opens group activity
+- **THEN** the system denies access to the group activity
 
-#### Scenario: Member manages restricted settings
-- **WHEN** a MEMBER attempts an owner/admin-only operation
-- **THEN** the system rejects the operation
+## ADDED Requirements
 
-### Requirement: Email invitations
-The system SHALL support group invitations by email and SHALL accept invitations only for matching authenticated email identities unless an owner or admin changes the invite.
+### Requirement: Membership activity recording
+The system SHALL record structured activity for member leave, member removal, and member role changes.
 
-#### Scenario: Invited email accepts
-- **WHEN** a user authenticates with the invited email and accepts the invitation
-- **THEN** the system creates or activates group membership for that account
+#### Scenario: Member leaves
+- **WHEN** an active member leaves a group without deleting the group
+- **THEN** the system records MEMBER_LEFT activity with actor identity and member display metadata
+- **AND** if settlement expenses are created during leave, the system dispatches EXPENSE_CREATED notifications for each settlement
 
-#### Scenario: Different email attempts acceptance
-- **WHEN** a user authenticates with a different email than the invitation target
-- **THEN** the system does not automatically accept the invitation
+#### Scenario: Member removed
+- **WHEN** an admin removes an active member from a group
+- **THEN** the system records MEMBER_REMOVED activity with actor identity and removed member display metadata
+- **AND** if settlement expenses are created during removal, the system dispatches EXPENSE_CREATED notifications for each settlement
 
-#### Scenario: Click pending invitation in groups list
-- **WHEN** an authenticated account clicks a pending invitation row on the /groups page
-- **THEN** the system navigates to the group page with read-only access and the Accept/Decline banner
-- **AND** clicking the group name or any non-button area of the row SHALL navigate to the group
-- **AND** the Accept and Decline buttons SHALL still work without navigating
+#### Scenario: Member role changed
+- **WHEN** an admin changes another active member's role
+- **THEN** the system records MEMBER_ROLE_CHANGED activity with actor identity, target member display metadata, previous role, and new role
 
-### Requirement: Unlinked participants have no access
+### Requirement: Invitation activity recording
+The system SHALL record structured activity for invitation creation, revocation, acceptance, and decline.
 
-The system SHALL distinguish authenticated group members from unlinked LedgerParticipants and SHALL NOT grant group access to unlinked participants.
+#### Scenario: Invitation created
+- **WHEN** an admin creates an email or link invitation
+- **THEN** the system records INVITATION_CREATED activity with actor identity, invitation display label, invitation type, and invited role
 
-#### Scenario: Unlinked participant exists
+#### Scenario: Invitation revoked
+- **WHEN** an admin revokes a pending invitation
+- **THEN** the system records INVITATION_REVOKED activity with actor identity and invitation display label
 
-- **WHEN** an imported group contains an unlinked participant entry
-- **THEN** that entry can appear in expenses and balances but cannot sign in or access the group
+#### Scenario: Invitation accepted
+- **WHEN** an invitee accepts an email or link invitation
+- **THEN** the system records INVITATION_ACCEPTED activity with invitee actor identity and invitation display label
 
-### Requirement: Admin mapping correction
+#### Scenario: Invitation declined
+- **WHEN** an invitee declines an email invitation
+- **THEN** the system records INVITATION_DECLINED activity with invitee actor identity and invitation display label
 
-The system SHALL allow group owners or admins to correct participant mappings when needed.
+### Requirement: Group settings and archive activity recording
+The system SHALL record structured activity for group settings and group archive state changes. Group update activities MAY include per-field `before`/`after` display strings for changed fields (name, information, currency).
 
-#### Scenario: Admin maps unlinked participant
+#### Scenario: Group settings updated with before/after changes
+- **WHEN** an admin updates group settings
+- **THEN** the system records GROUP_UPDATED activity with actor identity, changed field names, and per-field `before`/`after` display strings
 
-- **WHEN** an owner or admin maps an unlinked participant entry to an account
-- **THEN** the system links the LedgerParticipant to that account and creates or activates group membership if needed
+#### Scenario: Linked participant change activity
+- **WHEN** an unlinked participant is linked to an account or a pending invitation
+- **THEN** the system records GROUP_UPDATED activity with `linkedParticipant` changed field and before/after participant name display strings
 
-### Requirement: Admin role is preserved on reactivation
+#### Scenario: Group archived
+- **WHEN** an admin archives a group
+- **THEN** the system records GROUP_ARCHIVED activity with actor identity
+- **AND** if settlement expenses are created during archive, the system dispatches EXPENSE_CREATED notifications for each settlement
 
-When an unlinked participant is linked to an account that was a prior member, the system SHALL preserve the account's previous role (ADMIN or MEMBER) rather than defaulting to MEMBER.
-
-#### Scenario: Rejoining admin retains admin role
-
-- **WHEN** an admin's membership is reactivated during the unlinked-participant link flow
-- **THEN** the `GroupMember.role` is preserved (not demoted to MEMBER)
-- **THEN** the admin retains their administrative privileges in the group
-
-### Requirement: Source group note and URL attribution
-
-The system SHALL compose an "Imported from:" attribution note using the `appendImportedFromNote` helper and pre-fill the destination group's information field with it.
-
-#### Scenario: New group gets source URL attribution
-
-- **WHEN** the user creates a new group from a Spliit URL import
-- **THEN** the destination step pre-fills the group information text area with `Imported from: <sourceUrl>`
-
-> **Note:** Expense-level source URL attribution is not yet implemented — each expense's `notes` field is imported as-is from the source without an appended attribution.
+#### Scenario: Group unarchived
+- **WHEN** an admin unarchives a group
+- **THEN** the system records GROUP_UNARCHIVED activity with actor identity

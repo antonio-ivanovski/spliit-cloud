@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Expense activity email notifications
-The system SHALL send immediate email notifications for expense create, update, and delete activity events to eligible affected participants after the expense mutation commits.
+The system SHALL send immediate email notifications for expense create, update, delete, and bulk-import-summary activity events to eligible affected participants after the expense mutation commits.
 
 #### Scenario: Expense created notification
 - **WHEN** an active group member creates an expense with other active accepted account-backed participants
@@ -14,6 +14,18 @@ The system SHALL send immediate email notifications for expense create, update, 
 #### Scenario: Expense deleted notification
 - **WHEN** an active group member deletes an expense
 - **THEN** the system sends an expense-deleted email to eligible participants affected by the deleted expense state other than the actor
+
+#### Scenario: Bulk import summary notification
+- **WHEN** expenses are imported in bulk from an external source
+- **THEN** the system sends a single summary email per eligible affected active member with the import count, total amount, and source provider
+
+#### Scenario: Settlement expense notification
+- **WHEN** a member leaves, is removed, or a group is archived and settlement expenses are created
+- **THEN** the system sends expense-created emails to eligible affected participants for each settlement expense
+
+#### Scenario: Recurring expense notification
+- **WHEN** a recurring expense is auto-created by the system
+- **THEN** the system sends an expense-created email with SYSTEM actor to eligible affected participants
 
 #### Scenario: Email includes relevant link
 - **WHEN** the system sends an expense notification email
@@ -68,6 +80,18 @@ The system SHALL route activity notifications through a dispatcher abstraction t
 #### Scenario: Future delivery compatibility
 - **WHEN** durable notification delivery is added later
 - **THEN** the dispatcher contract provides enough context to create per-recipient delivery records and retry failed deliveries without changing expense mutation call sites
+
+#### Scenario: Dispatcher supports multiple implementations
+- **WHEN** the notification dispatcher receives an event
+- **THEN** it routes to every registered dispatcher implementation in parallel, continuing when individual implementations fail
+
+#### Scenario: Dispatch composability
+- **WHEN** new notification channels are added
+- **THEN** the composite dispatcher forwards events to all registered implementations without requiring changes to mutation call sites
+
+#### Scenario: Dispatch for non-expense mutations
+- **WHEN** expense mutations are not involved (e.g. member leave that creates settlement expenses)
+- **THEN** the created settlement expenses still dispatch EXPENSE_CREATED notifications through the same dispatcher
 
 ### Requirement: Non-expense activity notification suppression
 The system SHALL NOT send email notifications for group, invitation, member, archive, or role-change activity events in the initial implementation.

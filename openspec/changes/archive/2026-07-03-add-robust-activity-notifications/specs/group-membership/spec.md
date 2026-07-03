@@ -33,10 +33,12 @@ The system SHALL record structured activity for member leave, member removal, an
 #### Scenario: Member leaves
 - **WHEN** an active member leaves a group without deleting the group
 - **THEN** the system records MEMBER_LEFT activity with actor identity and member display metadata
+- **AND** if settlement expenses are created during leave, the system dispatches EXPENSE_CREATED notifications for each settlement
 
 #### Scenario: Member removed
 - **WHEN** an admin removes an active member from a group
 - **THEN** the system records MEMBER_REMOVED activity with actor identity and removed member display metadata
+- **AND** if settlement expenses are created during removal, the system dispatches EXPENSE_CREATED notifications for each settlement
 
 #### Scenario: Member role changed
 - **WHEN** an admin changes another active member's role
@@ -62,15 +64,20 @@ The system SHALL record structured activity for invitation creation, revocation,
 - **THEN** the system records INVITATION_DECLINED activity with invitee actor identity and invitation display label
 
 ### Requirement: Group settings and archive activity recording
-The system SHALL record structured activity for group settings and group archive state changes.
+The system SHALL record structured activity for group settings and group archive state changes. Group update activities MAY include per-field `before`/`after` display strings for changed fields (name, information, currency).
 
-#### Scenario: Group settings updated
+#### Scenario: Group settings updated with before/after changes
 - **WHEN** an admin updates group settings
-- **THEN** the system records GROUP_UPDATED activity with actor identity and lightweight changed field metadata
+- **THEN** the system records GROUP_UPDATED activity with actor identity, changed field names, and per-field `before`/`after` display strings
+
+#### Scenario: Linked participant change activity
+- **WHEN** an unlinked participant is linked to an account or a pending invitation
+- **THEN** the system records GROUP_UPDATED activity with `linkedParticipant` changed field and before/after participant name display strings
 
 #### Scenario: Group archived
 - **WHEN** an admin archives a group
 - **THEN** the system records GROUP_ARCHIVED activity with actor identity
+- **AND** if settlement expenses are created during archive, the system dispatches EXPENSE_CREATED notifications for each settlement
 
 #### Scenario: Group unarchived
 - **WHEN** an admin unarchives a group

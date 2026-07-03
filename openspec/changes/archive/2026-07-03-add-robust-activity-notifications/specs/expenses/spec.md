@@ -19,8 +19,12 @@ The system SHALL record structured activity for expense create, update, and dele
 - **WHEN** an expense create, update, or delete mutation is committed
 - **THEN** the expense data change and its activity row are committed together
 
-### Requirement: Expense changed-field summary
-The system SHALL compute a lightweight changed-field summary for expense updates without requiring exact per-recipient value deltas.
+### Requirement: Expense changed-field summary with per-field detail
+The system SHALL compute a changed-field summary for expense updates using a generic differ framework. The summary includes both a field-name list and optional per-field before/after display strings.
+
+#### Scenario: All field differs registered
+- **WHEN** an expense update diff is computed
+- **THEN** the composite differ checks all 10 field differs (title, amount, date, category, notes, payers, split, items, documents, recurrence) in registration order
 
 #### Scenario: Amount changed
 - **WHEN** an expense update changes amount or currency metadata
@@ -29,6 +33,10 @@ The system SHALL compute a lightweight changed-field summary for expense updates
 #### Scenario: Split changed
 - **WHEN** an expense update changes paid-for, paid-by, item paid-for, itemized remainder, or split mode data
 - **THEN** the changed field summary includes split or payers as appropriate
+
+#### Scenario: BY_AMOUNT payer noise suppression
+- **WHEN** an expense update changes the amount while paidBySplitMode is BY_AMOUNT
+- **THEN** the payer differ does NOT flag a payer change (shares derive from amount)
 
 #### Scenario: Documents changed
 - **WHEN** an expense update adds or removes expense documents
@@ -41,6 +49,10 @@ The system SHALL compute a lightweight changed-field summary for expense updates
 #### Scenario: Simple metadata changed
 - **WHEN** an expense update changes title, date, category, notes, or recurrence
 - **THEN** the changed field summary includes the corresponding field names
+
+#### Scenario: Change summary includes before/after strings
+- **WHEN** an expense update diff is computed with a ChangeContext
+- **THEN** the change summary includes per-field `before` and `after` display strings for each changed field
 
 ### Requirement: Expense affected participant set
 The system SHALL determine affected expense participants from the union of old and new payer and split references.

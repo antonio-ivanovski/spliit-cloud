@@ -51,6 +51,7 @@ activityDataSchema = z.discriminatedUnion('kind', [
   groupActivityDataSchema,
   memberActivityDataSchema,
   invitationActivityDataSchema,
+  importSummaryActivityDataSchema,
 ])
 ```
 
@@ -58,10 +59,12 @@ The payload should stay render-oriented and compact:
 
 - `kind`
 - `summary`
-- `changedFields`
-- `expense` metadata: title, amount, currency code, date
-- `member` metadata: display name, previous role, next role
+- `changedFields` — list of changed field group names for coarse summary
+- `changes` — optional array of `{ field, before?, after? }` for per-field before/after display strings
+- `expense` metadata: title, amount, currency code, date, `affectedParticipants`
+- `member` metadata: display name, previous role, next role, target display name
 - `invitation` metadata: display label, type, role
+- `import_summary` metadata: count, total amount, currency code, source provider, affected participants
 
 Activity type values are code-defined string literals validated by a shared Zod schema, not a Prisma/database enum. The database stores them in a string column for lighter future additions/removals, while code keeps type safety and validation at read/write boundaries. The JSON payload provides details for display and notification copy.
 
@@ -103,6 +106,8 @@ model Activity {
 ```
 
 Use `prisma-json-types-generator` string-field support for each typed string. Prisma documents this advanced string-field typing with an AST comment such as `/// !['draft' | 'published']`; for Spliit, do not manually list values inline in the Prisma schema. Instead, expose externally provided `PrismaJson` types inferred from domain Zod schemas, similar to `ActivityData`, and link the string fields to those types.
+
+Actor types are `ACCOUNT`, `LEDGER_PARTICIPANT`, and `SYSTEM` (for auto-generated activities such as recurring-expense creation). Subject types are `EXPENSE`, `GROUP`, `MEMBER`, `INVITATION`, and `LEDGER_PARTICIPANT`.
 
 Define the supported values in `packages/domain` as Zod enums or literal unions and export inferred TypeScript types. In the Prisma JSON/string type declaration file, expose reusable types from the domain schemas:
 
@@ -146,6 +151,7 @@ Add new code-defined event values:
 - `MEMBER_LEFT`
 - `MEMBER_REMOVED`
 - `MEMBER_ROLE_CHANGED`
+- `EXPENSES_IMPORTED`
 
 Invitation acceptance should create `INVITATION_ACCEPTED`, not a separate `MEMBER_JOINED` event. A future direct-add/admin-add flow can introduce `MEMBER_JOINED` if it needs distinct semantics.
 
@@ -183,6 +189,8 @@ class ExpenseEmailActivityNotificationDispatcher
 
 The first implementation can schedule dispatch with a local fire-and-log helper, for example `queueMicrotask` plus an async wrapper or a `setTimeout(..., 0)` wrapper. It must catch errors and `console.warn`; mutation responses must not await successful delivery. The method boundary should pass the created activity event or a normalized event envelope containing `activityId`, `type`, `groupId`, actor, subject, and event-specific metadata so a later durable dispatcher can create `NotificationDelivery` rows before sending.
 
+**Dispatch call sites:** Expense create/update/delete mutations in `apps/api/src/lib/api/expenses.ts` call `scheduleDefaultNotificationDispatch` after transaction commit. Settlement expenses generated during member leave/removal (in `members.ts`), invitation revocation (in `email-invitations.ts`), and group archive (in `archive.procedure.ts`) also dispatch `EXPENSE_CREATED` notifications. Recurring-expense auto-creation dispatches `EXPENSE_CREATED` with a `SYSTEM` actor. The import flow (`import.ts`) dispatches `EXPENSES_IMPORTED` summary notifications.
+
 Alternative considered: directly call `sendEmail` from expense services. That is faster to implement but makes future retry/delivery persistence harder and couples mutation logic to email details.
 
 ### 6. Expense recipients are affected active accepted members only
@@ -209,22 +217,24 @@ Pending invitees do not receive email, even if the expense references their pend
 
 Alternative considered: notify every historical participant on the expense. That can email users who no longer have group access, which conflicts with the chosen access model.
 
-### 7. Keep expense diffs lightweight
+### 7. Generic differ framework and expense diffs
 
-Expense update activity and email copy should list changed field groups rather than exact value-level deltas. The supported changed-field keys are:
+The implementation builds a generic differ framework (`apps/api/src/lib/api/activity-diff/`) and concrete differs for both expense and group changes.
 
-- `title`
-- `amount`
-- `date`
-- `category`
-- `notes`
-- `payers`
-- `split`
-- `items`
-- `documents`
-- `recurrence`
+**Generic differ framework:** The `activity-diff` package defines a reusable `ActivityDiffer` interface with `check(old, new)` for lightweight change detection and `diff(old, new, ctx)` for producing human-readable `before`/`after` strings. Factory helpers (`createStringFieldDiffer`, `createFormattedValueDiffer`) simplify creating simple differs. A `createCompositeDiffer` factory composes multiple child differs and exposes both `changedFields()` (list of field names) and `changeSummary()` (full emission arrays with before/after values).
 
-Comparison should normalize simple structures before comparing, especially payer/split participant-share lists and documents. It does not need to calculate exact per-user share deltas.
+**Expense differs (10 fields):** Each field group has a standalone differ:
+- `title`, `amount`, `date`, `category`, `notes`, `recurrence` — simple string/primitive comparison
+- `payers` — payer-row comparison with `BY_AMOUNT` mode-aware semantics to avoid false positives when shares derive from amount
+- `split` — paid-for split rows with order-independent keys plus itemized remainder
+- `items` — itemized expense rows with normalized ID/title/price/quantity/split/payer comparison
+- `documents` — document ID/URL/dimension comparison
+
+**Group differs (4 fields):** `name`, `information`, `currency` — through the same generic framework using simple string differ. The `linkedParticipant` field is handled separately in ledger-participant linking code rather than through the composite differ.
+
+**Return types:** The `getExpenseChangeSummary` function returns both a backward-compatible `changedFields` list (`ExpenseChangedField[]`) and a per-field `changes` array (`ExpenseActivityChange[]`) with `before`/`after` display strings. The `changes` array is optional and can be omitted for legacy payload compat.
+
+Comparison normalizes simple structures before comparing, especially payer/split participant-share lists and documents. It does not calculate exact per-user share deltas.
 
 Expense emails include light metadata: group name, actor name, expense title, amount, date, changed fields for updates, and a relevant link. Subjects should be clearly branded, for example:
 
@@ -234,7 +244,7 @@ Expense emails include light metadata: group name, actor name, expense title, am
 
 Email bodies should always include the most relevant available link: expense link when the expense still exists, otherwise group link or app link for deleted expenses.
 
-Alternative considered: exact before/after diffs for every field. That is heavier to maintain and not required for a friendly user timeline.
+Alternative considered: exact before/after diffs for every field. The implementation chose before/after strings for the activity feed display but intentionally keeps them lightweight display-oriented values rather than machine-parseable deltas.
 
 ### 8. Keep activity visibility tied to current group access
 
@@ -246,7 +256,11 @@ This should be enforced by existing group/activity authorization paths rather th
 
 The web activity feed should render by `type`, using parsed `Activity.data` for display details. Known event types get explicit translated messages. If payload parsing fails or older rows have null payloads, render a safe generic message rather than failing the activity feed.
 
+Expense updates and group updates render per-field `before`/`after` change rows when the payload's `changes` array is present. Legacy rows that only have `changedFields` (field name list) without `changes` still render the message but without detail rows.
+
 Invitation activity should prefer `temporaryName` or a simple display label. Avoid showing raw email unless there is no better label.
+
+Import summary activity (`EXPENSES_IMPORTED`) renders as `"{actor} imported {count} expenses"` with an optional source provider name.
 
 ## Risks / Trade-offs
 
@@ -282,6 +296,16 @@ Invitation activity should prefer `temporaryName` or a simple display label. Avo
 
 Rollback strategy: because the generic event-log migration drops specialized columns, rollback would require reconstructing `accountId`, `ledgerParticipantId`, and `expenseId` from actor/subject/data where possible. This is intentionally lossy. Prefer forward-fixing rendering/dispatch issues over rolling back after writes in the new format.
 
-## Open Questions
+## Additional Implementation Details (post-spec)
 
-- None for the initial implementation scope.
+The following were implemented beyond the initial spec:
+
+- **`EXPENSES_IMPORTED` event type and `import_summary` payload kind** — bulk import summary that replaces N per-expense emails with one summary email per active affected member.
+- **`ExpenseActivityChange` schema** — per-field `before`/`after` strings for the activity feed, making change summaries richer than the initial `changedFields` list alone.
+- **`GroupActivityChange` schema** — analogous per-field before/after strings for group settings changes.
+- **Generic differ framework** (`activity-diff/*`) — reusable `ActivityDiffer<TEntity, TField, TContext>` interface, factory helpers (`createStringFieldDiffer`, `createFormattedValueDiffer`), and `createCompositeDiffer` factory. This was extracted because both expense and group change detection benefit from the same pattern.
+- **`expense-activity-diff`** — 10 concrete differs composing the composite expense differ.
+- **`group-activity-diff`** — 3 concrete differs (name, information, currency) composing the composite group differ, plus `linkedParticipant` handled manually in ledger-participant linking code.
+- **Settlement expense notifications** — member leave, member removal, and group archive flows generate settlement expenses that each dispatch `EXPENSE_CREATED` notifications to affected participants.
+- **`SYSTEM` actor type** — used by recurring-expense auto-creation.
+- **`linkedParticipant` group changed field** — tracked in `groupChangedFields` and rendered in the activity feed when an unlinked participant is linked to an account or pending invite.

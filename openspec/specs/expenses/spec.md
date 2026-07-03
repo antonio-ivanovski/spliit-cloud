@@ -1,49 +1,74 @@
 ## ADDED Requirements
 
-### Requirement: Account-backed native group expenses
-Native group expenses SHALL reference LedgerParticipants backed by authenticated group members.
+### Requirement: Expense activity recording
+The system SHALL record structured activity for expense create, update, and delete mutations.
 
-#### Scenario: Native expense participant validation
-- **WHEN** a native group expense references a payer or paid-for party
-- **THEN** the referenced party is an active LedgerParticipant backed by group membership
+#### Scenario: Create expense activity
+- **WHEN** an authenticated active group member creates an expense
+- **THEN** the system records EXPENSE_CREATED activity with actor identity, expense identity, and lightweight expense metadata
 
-#### Scenario: Removed member in history
-- **WHEN** a member is removed after participating in an expense
-- **THEN** the historical expense still references the LedgerParticipant for balance/history purposes
+#### Scenario: Update expense activity
+- **WHEN** an authenticated active group member updates an expense
+- **THEN** the system records EXPENSE_UPDATED activity with actor identity, expense identity, lightweight expense metadata, and changed field names
 
-### Requirement: Imported expenses preserve source participants
+#### Scenario: Delete expense activity
+- **WHEN** an authenticated active group member deletes an expense
+- **THEN** the system records EXPENSE_DELETED activity with actor identity, expense identity, and lightweight metadata from the deleted expense
 
-The system SHALL import expenses so paid-by and paid-for rows reference destination LedgerParticipants that correspond to source participants.
+#### Scenario: Activity committed atomically
+- **WHEN** an expense create, update, or delete mutation is committed
+- **THEN** the expense data change and its activity row are committed together
 
-#### Scenario: Imported expense with unlinked participant
+### Requirement: Expense changed-field summary with per-field detail
+The system SHALL compute a changed-field summary for expense updates using a generic differ framework. The summary includes both a field-name list and optional per-field before/after display strings.
 
-- **WHEN** an imported expense references a source participant mapped as unlinked
-- **THEN** the destination expense references the unlinked LedgerParticipant
+#### Scenario: All field differs registered
+- **WHEN** an expense update diff is computed
+- **THEN** the composite differ checks all 10 field differs (title, amount, date, category, notes, payers, split, items, documents, recurrence) in registration order
 
-### Requirement: Imported expenses remain editable
+#### Scenario: Amount changed
+- **WHEN** an expense update changes amount or currency metadata
+- **THEN** the changed field summary includes amount
 
-The system SHALL allow imported expenses to be edited using the same edit behavior as normal group expenses, including expenses involving unlinked participant entries.
+#### Scenario: Split changed
+- **WHEN** an expense update changes paid-for, paid-by, item paid-for, itemized remainder, or split mode data
+- **THEN** the changed field summary includes split or payers as appropriate
 
-#### Scenario: Edit imported split
+#### Scenario: BY_AMOUNT payer noise suppression
+- **WHEN** an expense update changes the amount while paidBySplitMode is BY_AMOUNT
+- **THEN** the payer differ does NOT flag a payer change (shares derive from amount)
 
-- **WHEN** a user edits an imported expense split involving an unlinked participant
-- **THEN** the system saves the updated split against the destination LedgerParticipants
+#### Scenario: Documents changed
+- **WHEN** an expense update adds or removes expense documents
+- **THEN** the changed field summary includes documents
 
-### Requirement: Imported currency preservation
+#### Scenario: Itemized data changed
+- **WHEN** an expense update changes itemized expense rows
+- **THEN** the changed field summary includes items
 
-The system SHALL normalize imported expense amounts to the destination Ledger base currency and SHALL preserve original amount, original currency, and conversion rate when available.
+#### Scenario: Simple metadata changed
+- **WHEN** an expense update changes title, date, category, notes, or recurrence
+- **THEN** the changed field summary includes the corresponding field names
 
-#### Scenario: Imported converted expense
+#### Scenario: Change summary includes before/after strings
+- **WHEN** an expense update diff is computed with a ChangeContext
+- **THEN** the change summary includes per-field `before` and `after` display strings for each changed field
 
-- **WHEN** an imported expense has original currency and conversion data in the source export
-- **THEN** the system stores the Ledger-currency amount and preserves the original conversion fields
+### Requirement: Expense affected participant set
+The system SHALL determine affected expense participants from the union of old and new payer and split references.
 
-#### Scenario: Cross-currency import auto-fills original fields
+#### Scenario: Create affected participants
+- **WHEN** an expense is created
+- **THEN** affected participants are all participants referenced by the created expense's paid-by, paid-for, item paid-for, and itemized remainder data
 
-- **WHEN** the source group's currency code differs from the destination ledger's currency code
-- **THEN** each imported expense has `originalAmount` set to the source `amount`, `originalCurrency` set to the source currency code, and `conversionRate` set to `1` regardless of whether the source export carried conversion data
+#### Scenario: Update affected participants
+- **WHEN** an expense is updated
+- **THEN** affected participants are all participants referenced by either the previous expense state or the updated expense state
 
-#### Scenario: Same-currency import passes original fields through
+#### Scenario: Delete affected participants
+- **WHEN** an expense is deleted
+- **THEN** affected participants are all participants referenced by the deleted expense's paid-by, paid-for, item paid-for, and itemized remainder data
 
-- **WHEN** the source and destination currency codes match
-- **THEN** the imported expenses preserve any `originalAmount`, `originalCurrency`, and `conversionRate` from the source export; absent fields remain absent
+#### Scenario: Removed from expense but still active
+- **WHEN** an active member was referenced by the previous expense state but not by the updated expense state
+- **THEN** that member remains part of the affected participant set for the update

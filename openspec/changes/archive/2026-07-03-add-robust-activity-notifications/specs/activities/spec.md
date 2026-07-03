@@ -22,11 +22,11 @@ The system SHALL store activity detail payloads as nullable typed JSON validated
 
 #### Scenario: Persist typed expense activity payload
 - **WHEN** an expense activity is recorded
-- **THEN** the activity JSON payload conforms to the shared expense activity schema
+- **THEN** the activity JSON payload conforms to the shared expense activity schema, which MAY include a `changes` array with per-field `before`/`after` display strings
 
 #### Scenario: Persist typed group activity payload
 - **WHEN** a group settings or archive activity is recorded
-- **THEN** the activity JSON payload conforms to the shared group activity schema
+- **THEN** the activity JSON payload conforms to the shared group activity schema, which MAY include a `changes` array with per-field `before`/`after` display strings
 
 #### Scenario: Persist typed member activity payload
 - **WHEN** a member lifecycle or role activity is recorded
@@ -36,12 +36,16 @@ The system SHALL store activity detail payloads as nullable typed JSON validated
 - **WHEN** an invitation lifecycle activity is recorded
 - **THEN** the activity JSON payload conforms to the shared invitation activity schema
 
+#### Scenario: Persist typed import summary activity payload
+- **WHEN** a bulk import of expenses is recorded
+- **THEN** the activity JSON payload conforms to the shared import summary activity schema, containing at minimum the count of imported expenses and optionally total amount, currency code, source provider, and affected participant IDs
+
 #### Scenario: Legacy nullable payload
 - **WHEN** an existing activity row has no JSON payload
 - **THEN** the system still returns and renders the activity using a safe fallback
 
 ### Requirement: Expanded activity event taxonomy
-The system SHALL use code-defined, Zod-validated string activity types for expense, group, invitation, and member lifecycle events, SHALL type the Prisma string field from an externally provided type inferred from the same Zod schema, and SHALL NOT require a Prisma or database enum for activity type values.
+The system SHALL use code-defined, Zod-validated string activity types for expense, group, invitation, member lifecycle, and import summary events, SHALL type the Prisma string field from an externally provided type inferred from the same Zod schema, and SHALL NOT require a Prisma or database enum for activity type values.
 
 #### Scenario: Prisma string field is typed
 - **WHEN** Prisma Client reads or writes Activity rows
@@ -97,12 +101,28 @@ The system SHALL migrate Activity rows to a generic event-log schema and SHALL r
 - **WHEN** a member leaves, is removed, or has their role changed
 - **THEN** the activity type is MEMBER_LEFT, MEMBER_REMOVED, or MEMBER_ROLE_CHANGED respectively
 
-### Requirement: Lightweight activity rendering
-The system SHALL render activity as a friendly user-facing timeline using event type and typed payload data.
+#### Scenario: Import summary event names
+- **WHEN** expenses are imported in bulk from an external source
+- **THEN** the activity type is EXPENSES_IMPORTED
 
-#### Scenario: Render changed expense fields
-- **WHEN** an expense update activity has changed field names in its payload
-- **THEN** the activity feed renders a lightweight summary of those changed fields
+### Requirement: Activity payload rendering with per-field detail
+The system SHALL render activity as a friendly user-facing timeline using event type and typed payload data. Expense and group update events MAY render per-field before/after detail rows when the payload contains a `changes` array.
+
+#### Scenario: Render changed expense fields with before/after detail
+- **WHEN** an expense update activity has a `changes` array in its payload
+- **THEN** the activity feed renders per-field before/after display strings alongside the message
+
+#### Scenario: Render changed expense fields (legacy backward compat)
+- **WHEN** an expense update activity has only `changedFields` (field name list) without a `changes` array
+- **THEN** the activity feed renders the message without per-field before/after detail rows
+
+#### Scenario: Render group changes with before/after detail
+- **WHEN** a group update activity has a `changes` array in its payload
+- **THEN** the activity feed renders per-field before/after display strings for changed group fields
+
+#### Scenario: Render import summary
+- **WHEN** a bulk import activity (EXPENSES_IMPORTED) contains import count metadata
+- **THEN** the activity feed renders a message indicating the actor, count, and optionally the source provider
 
 #### Scenario: Render invitation display label
 - **WHEN** an invitation activity has a temporary name or display label
@@ -111,6 +131,13 @@ The system SHALL render activity as a friendly user-facing timeline using event 
 #### Scenario: Fallback on invalid payload
 - **WHEN** an activity payload is missing or fails schema validation
 - **THEN** the activity feed renders a generic safe message rather than failing the page
+
+### Requirement: Generic actor types including SYSTEM
+The system SHALL support ACCOUNT, LEDGER_PARTICIPANT, and SYSTEM actor types for activity events.
+
+#### Scenario: SYSTEM actor for recurring expense
+- **WHEN** a recurring expense is auto-created by the system
+- **THEN** the activity actor type is SYSTEM
 
 ### Requirement: Activity data migration
 The system SHALL migrate existing activity rows to the new string activity type names and JSON payload shape pragmatically.
