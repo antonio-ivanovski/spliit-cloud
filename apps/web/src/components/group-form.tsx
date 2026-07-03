@@ -278,6 +278,26 @@ export function GroupForm({
               />
             </div>
           </CardContent>
+
+          {!hideActions && !readOnly && !isArchived && (
+            <CardContent className="flex flex-col gap-3 border-t pt-4">
+              <div className="flex gap-2">
+                <SubmitButton
+                  loadingContent={t(
+                    group ? 'Settings.saving' : 'Settings.creating',
+                  )}
+                >
+                  <Save className="w-4 h-4 mr-2" />{' '}
+                  {t(group ? 'Settings.save' : 'Settings.create')}
+                </SubmitButton>
+                {!group && (
+                  <Button variant="ghost" asChild>
+                    <Link href="/">{t('Settings.cancel')}</Link>
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          )}
         </Card>
 
         {!group && !hideInviteHint && (
@@ -285,26 +305,6 @@ export function GroupForm({
             <UserPlus className="mt-0.5 h-4 w-4 shrink-0" />
             <span>{t('Settings.inviteAfterCreate')}</span>
           </p>
-        )}
-
-        {!hideActions && !readOnly && !isArchived && (
-          <div className="mt-4 flex flex-col gap-3">
-            <div className="flex gap-2">
-              <SubmitButton
-                loadingContent={t(
-                  group ? 'Settings.saving' : 'Settings.creating',
-                )}
-              >
-                <Save className="w-4 h-4 mr-2" />{' '}
-                {t(group ? 'Settings.save' : 'Settings.create')}
-              </SubmitButton>
-              {!group && (
-                <Button variant="ghost" asChild>
-                  <Link href="/">{t('Settings.cancel')}</Link>
-                </Button>
-              )}
-            </div>
-          </div>
         )}
       </form>
     </Form>

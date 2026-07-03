@@ -351,6 +351,33 @@
       "description": "„{name}” este accesibil pe spliit.app. Doriți să-l importați în Spliit Cloud?",
       "cta": "Importați acest grup",
       "backToHome": "Mergi la pagina principală"
+    },
+    "delete": {
+      "sectionTitle": "Șterge grupul",
+      "sectionDescription": "Șterge definitiv acest grup, toate cheltuielile și întreaga istorie. Nu se poate anula — fă acest lucru doar dacă ești sigur că nimeni nu mai are nevoie de aceste date.",
+      "button": "Șterge grupul",
+      "dialog": {
+        "title": "Ștergi acest grup?",
+        "description": "Urmează să ștergi definitiv „{name}”. Fiecare cheltuială, bon, invitație și intrare de activitate va fi eliminată și nu poate fi recuperată.",
+        "warningTitle": "Această acțiune este ireversibilă",
+        "warningDescription": "Următoarele date vor fi șterse imediat:",
+        "checkbox": "Înțeleg că aceasta va șterge definitiv grupul și toate datele sale.",
+        "cancel": "Anulează",
+        "confirm": "Șterge grupul",
+        "deleting": "Se șterge…",
+        "warningList": {
+          "expenses": "Toate cheltuielile și soldurile",
+          "activity": "Istoria completă de activitate",
+          "invitations": "Invitații în așteptare",
+          "receipts": "Fișiere de bonuri încărcate"
+        }
+      },
+      "error": {
+        "generic": "Grupul nu a putut fi șters. Încearcă din nou."
+      },
+      "toast": {
+        "deleted": "Grup șters."
+      }
     }
   },
   "GroupForm": {
@@ -1189,7 +1216,9 @@
       "cancel": "Anulează",
       "confirm": "Părăsește grupul",
       "confirmWithForce": "Regularizează și pleacă",
-      "confirmDelete": "Șterge și pleacă",
+      "descriptionOnlyMember": "Ești singurul membru activ al acestui grup, așa că nu este posibil să părăsești grupul în acest mod. Pentru a elimina grupul complet, șterge-l din pagina de setări.",
+      "onlyMemberHint": "Ești singurul membru activ. Folosește opțiunea „Șterge grupul” din Setări pentru a elimina grupul.",
+      "lastMemberRedirect": "Nu poți părăsi un grup în care ești singurul membru activ. În schimb, șterge grupul din pagina de setări.",
       "body": {
         "otherAdmins": "Acești administratori vor păstra controlul după plecarea ta: {names}.",
         "lastAdmin": {
@@ -1200,23 +1229,13 @@
         "unsettled": {
           "title": "Ai solduri neregularizate",
           "description": "Plecarea cu regularizare forțată va crea automat cheltuieli de rambursare pentru tranzacțiile care te implică, menținând registrul sincronizat. Celelalte solduri rămân neschimbate."
-        },
-        "lastMember": {
-          "title": "Aceasta va șterge grupul",
-          "description": "Ești singurul membru activ al acestui grup. Plecarea va șterge permanent grupul, toate cheltuielile și tot istoricul.",
-          "checkbox": "Înțeleg că aceasta va șterge permanent grupul și toate datele sale.",
-          "suggestion": "Sfaturi: dacă dorești să păstrezi acest grup ca arhivă, poți să îl arhivezi.",
-          "unsettledInfo": "Ai solduri neregularizate în acest grup. Acestea se vor pierde permanent când grupul va fi șters."
         }
       },
       "toast": {
-        "left": "Ai părăsit grupul.",
-        "deleted": "Grup șters.",
-        "archived": "Grup arhivat."
+        "left": "Ai părăsit grupul."
       },
       "error": {
         "lastAdmin": "Alege un membru de promovat la administrator înainte de a pleca.",
-        "lastMember": "Confirmă ștergerea permanentă pentru a continua.",
         "unsettled": "Regularizează-ți soldul sau confirmă regularizarea forțată pentru a pleca."
       }
     },

@@ -43,8 +43,9 @@ export const leavePreviewProcedure = protectedProcedure
  * Business rules (enforced inside `leaveGroup`):
  *   - caller must be an active member,
  *   - the group must not be archived,
- *   - if the caller is the last active member, `confirmDelete: true` must be
- *     supplied (the group is deleted in a single transaction),
+ *   - if the caller is the last active member, the mutation throws
+ *     `PRECONDITION_FAILED` with the `lastMemberMustDelete` reason so the
+ *     caller is steered to the dedicated delete flow on the settings page,
  *   - if the caller is the last admin and other active members exist,
  *     `promoteMemberId` must point at another active member of the group,
  *   - if the caller has unsettled balances and `force` is not `true`, the
@@ -60,46 +61,39 @@ export const leaveGroupProcedure = protectedProcedure
       groupId: z.string().min(1),
       force: z.boolean().optional(),
       promoteMemberId: z.string().min(1).optional(),
-      confirmDelete: z.boolean().optional(),
     }),
   )
-  .mutation(
-    async ({
-      input: { groupId, force, promoteMemberId, confirmDelete },
-      ctx,
-    }) => {
-      // Authenticate the caller as an active member before we start
-      // counting admins / checking balances. `loadGroupContext` already
-      // throws `FORBIDDEN` for non-members, but the call also guarantees
-      // `group` is non-null so downstream helpers don't have to re-check.
-      await loadGroupContext({
-        groupId,
-        accountId: ctx.auth.user.id,
-      }).catch((err) => {
-        throw mapLeaveError(err)
-      })
+  .mutation(async ({ input: { groupId, force, promoteMemberId }, ctx }) => {
+    // Authenticate the caller as an active member before we start
+    // counting admins / checking balances. `loadGroupContext` already
+    // throws `FORBIDDEN` for non-members, but the call also guarantees
+    // `group` is non-null so downstream helpers don't have to re-check.
+    await loadGroupContext({
+      groupId,
+      accountId: ctx.auth.user.id,
+    }).catch((err) => {
+      throw mapLeaveError(err)
+    })
 
-      try {
-        const result = await leaveGroup({
-          groupId,
-          actor: { accountId: ctx.auth.user.id },
-          force,
-          promoteMemberId,
-          confirmDelete,
-        })
-        return result
-      } catch (err) {
-        throw mapLeaveError(err)
-      }
-    },
-  )
+    try {
+      const result = await leaveGroup({
+        groupId,
+        actor: { accountId: ctx.auth.user.id },
+        force,
+        promoteMemberId,
+      })
+      return result
+    } catch (err) {
+      throw mapLeaveError(err)
+    }
+  })
 
 /**
  * Translate the helper errors into TRPC errors. The web client uses
  * `PRECONDITION_FAILED` to decide whether to re-render the leave dialog
- * with the missing confirmation (e.g. unchecked "I understand" for
- * last-member delete, missing admin promotion target, or unsettled
- * balances without `force`).
+ * with the missing confirmation (e.g. missing admin promotion target or
+ * unsettled balances without `force`) or to redirect the caller to the
+ * delete flow on the settings page (last active member).
  */
 function mapLeaveError(err: unknown): TRPCError {
   if (err instanceof TRPCError) return err

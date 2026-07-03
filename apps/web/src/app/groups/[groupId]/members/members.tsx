@@ -52,8 +52,6 @@ export default function GroupMembers() {
     setLeaveDialogOpen,
     promoteMemberId,
     setPromoteMemberId,
-    confirmDeleteChecked,
-    setConfirmDeleteChecked,
     leavePreviewQuery,
     preview,
     isLastActiveMember,
@@ -65,13 +63,19 @@ export default function GroupMembers() {
     canConfirmLeave,
     handleConfirmLeave,
     leaveMutation,
-    archiveForSelfMutation,
   } = useMembersDialogs()
 
   const roleLabels = {
     ADMIN: t('role.admin'),
     MEMBER: t('role.member'),
   } as const
+
+  // When the caller is the only active member of the group, the
+  // dedicated delete flow on the settings page is the single entry
+  // point for getting out of the group. The "Leave group" card is
+  // still rendered so the section structure stays consistent, but
+  // the action is disabled with a note explaining the alternative.
+  const isOnlyActiveMember = !isArchived && listMembers.length <= 1
 
   return (
     <div className="flex flex-col gap-6">
@@ -167,13 +171,26 @@ export default function GroupMembers() {
         <Card>
           <CardHeader>
             <CardTitle>{t('leave.button')}</CardTitle>
-            <CardDescription>{t('leave.description')}</CardDescription>
+            <CardDescription>
+              {isOnlyActiveMember
+                ? t('leave.descriptionOnlyMember')
+                : t('leave.description')}
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col gap-2">
+            {isOnlyActiveMember && (
+              <p
+                className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive"
+                role="note"
+              >
+                {t('leave.onlyMemberHint')}
+              </p>
+            )}
             <Button
               variant="outline"
-              className="text-destructive border-destructive/40 hover:bg-destructive/10 hover:text-destructive"
+              className="text-destructive border-destructive/40 hover:bg-destructive/10 hover:text-destructive w-fit"
               onClick={() => setLeaveDialogOpen(true)}
+              disabled={isOnlyActiveMember}
             >
               {t('leave.button')}
             </Button>
@@ -185,7 +202,6 @@ export default function GroupMembers() {
         leaveDialogOpen={leaveDialogOpen}
         leavePreviewQuery={leavePreviewQuery}
         leaveMutation={leaveMutation}
-        archiveForSelfMutation={archiveForSelfMutation}
         isLastActiveMember={isLastActiveMember}
         isAdminLeaving={isAdminLeaving}
         hasUnsettledBalance={hasUnsettledBalance}
@@ -193,18 +209,13 @@ export default function GroupMembers() {
         otherAdmins={otherAdmins}
         promotableMembers={promotableMembers}
         promoteMemberId={promoteMemberId}
-        confirmDeleteChecked={confirmDeleteChecked}
         canConfirmLeave={canConfirmLeave}
         preview={preview}
         onOpenChange={(open) => {
           setLeaveDialogOpen(open)
-          if (!open) {
-            setPromoteMemberId(null)
-            setConfirmDeleteChecked(false)
-          }
+          if (!open) setPromoteMemberId(null)
         }}
         onPromoteMemberChange={setPromoteMemberId}
-        onConfirmDeleteChange={setConfirmDeleteChecked}
         onConfirmLeave={handleConfirmLeave}
       />
     </div>

@@ -158,7 +158,7 @@ export async function removeMember(opts: {
 export class LeaveGroupPreconditionError extends Error {
   constructor(
     public readonly reason:
-      'confirmDeleteRequired' | 'promotionRequired' | 'unsettledBalance',
+      'lastMemberMustDelete' | 'promotionRequired' | 'unsettledBalance',
     message: string,
   ) {
     super(message)
@@ -166,23 +166,49 @@ export class LeaveGroupPreconditionError extends Error {
   }
 }
 
+/**
+ * Permanently delete a group, its ledger, expenses, invitations, and
+ * attached S3 documents. Used by the admin "Delete group" affordance
+ * surfaced on the settings page. The caller must be an active member
+ * of the group; the admin-only authorization is enforced by the
+ * surrounding tRPC procedure so this helper stays reusable.
+ *
+ * The S3 cleanup mirrors `deleteExpense`: enumerate every document on
+ * the group's ledger and delete the remote object before the cascade
+ * removes the row, so we never leave orphans behind.
+ */
+export async function deleteGroup(opts: {
+  groupId: string
+  actor: { accountId: string }
+}): Promise<{ deleted: true }> {
+  const { groupId } = opts
+
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { archived: true, ledgerId: true },
+  })
+  if (!group) throw new Error('Invalid group ID')
+
+  const documents = await prisma.expenseDocument.findMany({
+    where: { ledgerId: group.ledgerId },
+    select: { url: true },
+  })
+  await Promise.all(documents.map((doc) => deleteS3Object(doc.url)))
+
+  await prisma.group.delete({ where: { id: groupId } })
+  return { deleted: true }
+}
+
 export async function leaveGroup(opts: {
   groupId: string
   actor: { accountId: string }
   force?: boolean
   promoteMemberId?: string
-  confirmDelete?: boolean
 }): Promise<{
-  deleted: boolean
+  deleted: false
   promotedMemberId: string | null
 }> {
-  const {
-    groupId,
-    actor,
-    force = false,
-    promoteMemberId,
-    confirmDelete = false,
-  } = opts
+  const { groupId, actor, force = false, promoteMemberId } = opts
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: actor.accountId } },
@@ -194,7 +220,7 @@ export async function leaveGroup(opts: {
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
-    select: { archived: true, ledgerId: true },
+    select: { archived: true },
   })
   if (!group) throw new Error('Invalid group ID')
   if (group.archived) {
@@ -223,23 +249,10 @@ export async function leaveGroup(opts: {
   const isLastAdmin = member.role === GroupRole.ADMIN && otherAdminsCount === 0
 
   if (isLastActiveMember) {
-    if (!confirmDelete) {
-      throw new LeaveGroupPreconditionError(
-        'confirmDeleteRequired',
-        'You are the last active member. Confirm deletion to continue.',
-      )
-    }
-
-    // Delete S3 objects for all expense documents in this group before
-    // cascading the DB delete, mirroring the same cleanup in deleteExpense.
-    const documents = await prisma.expenseDocument.findMany({
-      where: { ledgerId: group.ledgerId },
-      select: { url: true },
-    })
-    await Promise.all(documents.map((doc) => deleteS3Object(doc.url)))
-
-    await prisma.group.delete({ where: { id: groupId } })
-    return { deleted: true, promotedMemberId: null }
+    throw new LeaveGroupPreconditionError(
+      'lastMemberMustDelete',
+      'You are the last active member. Delete the group from the settings to continue.',
+    )
   }
 
   if (isLastAdmin) {
@@ -310,7 +323,7 @@ export async function leaveGroup(opts: {
     )
 
     return {
-      deleted: false,
+      deleted: false as const,
       promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
     }
   })

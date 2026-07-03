@@ -3,6 +3,7 @@ import { activitiesRouter } from './activities'
 import { archiveGroupProcedure } from './archive.procedure'
 import { groupBalancesRouter } from './balances'
 import { createGroupProcedure } from './create.procedure'
+import { deleteGroupProcedure } from './delete.procedure'
 import { groupExpensesRouter } from './expenses'
 import { getGroupProcedure } from './get.procedure'
 import { getGroupDetailsProcedure } from './getDetails.procedure'
@@ -34,6 +35,7 @@ export const groupsRouter = createTRPCRouter({
   create: createGroupProcedure,
   update: updateGroupProcedure,
   archive: archiveGroupProcedure,
+  delete: deleteGroupProcedure,
   leave: leaveGroupProcedure,
   leavePreview: leavePreviewProcedure,
   archiveForSelf: archiveGroupForSelfProcedure,

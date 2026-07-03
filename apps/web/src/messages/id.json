@@ -351,6 +351,33 @@
       "description": "\"{name}\" dapat dijangkau di spliit.app. Apakah Anda ingin mengimpornya ke Spliit Cloud?",
       "cta": "Impor grup ini",
       "backToHome": "Pergi ke beranda"
+    },
+    "delete": {
+      "sectionTitle": "Hapus grup",
+      "sectionDescription": "Hapus secara permanen grup ini, setiap pengeluaran, dan seluruh riwayatnya. Tindakan ini tidak dapat diurungkan — lakukan hanya jika Anda yakin tidak ada lagi yang memerlukan data ini.",
+      "button": "Hapus grup",
+      "dialog": {
+        "title": "Hapus grup ini?",
+        "description": "Anda akan menghapus secara permanen \"{name}\". Setiap pengeluaran, tanda terima, undangan, dan catatan aktivitas akan dihapus dan tidak dapat dipulihkan.",
+        "warningTitle": "Tindakan ini tidak dapat dibatalkan",
+        "warningDescription": "Data berikut akan dihapus segera:",
+        "checkbox": "Saya memahami bahwa tindakan ini akan menghapus grup secara permanen beserta seluruh datanya.",
+        "cancel": "Batal",
+        "confirm": "Hapus grup",
+        "deleting": "Menghapus…",
+        "warningList": {
+          "expenses": "Setiap pengeluaran dan saldo",
+          "activity": "Seluruh riwayat aktivitas",
+          "invitations": "Undangan yang belum direspons",
+          "receipts": "Berkas tanda terima yang diunggah"
+        }
+      },
+      "error": {
+        "generic": "Tidak dapat menghapus grup. Silakan coba lagi."
+      },
+      "toast": {
+        "deleted": "Grup dihapus."
+      }
     }
   },
   "GroupForm": {
@@ -1185,22 +1212,17 @@
     "leave": {
       "cancel": "Batal",
       "confirm": "Tinggalkan grup",
-      "confirmDelete": "Hapus dan tinggalkan",
       "button": "Tinggalkan grup",
       "title": "Tinggalkan grup?",
       "description": "Anda akan kehilangan akses ke pengeluaran, saldo, dan aktivitas grup ini. Data masa lalu tetap disimpan di buku besar sehingga anggota lain masih dapat melihatnya.",
+      "descriptionOnlyMember": "Anda adalah satu-satunya anggota aktif di grup ini, jadi meninggalkan grup dengan cara ini tidak memungkinkan. Untuk menghapus grup sepenuhnya, hapus dari halaman pengaturan.",
+      "onlyMemberHint": "Anda adalah satu-satunya anggota aktif. Gunakan opsi \"Hapus grup\" di Pengaturan untuk menghapus grup.",
+      "lastMemberRedirect": "Anda tidak dapat meninggalkan grup jika Anda adalah satu-satunya anggota aktif. Hapus grup dari halaman pengaturan sebagai gantinya.",
       "body": {
         "otherAdmins": "Para admin ini akan tetap memegang kendali setelah Anda pergi: {names}.",
         "unsettled": {
           "title": "Anda memiliki saldo yang belum diselesaikan",
           "description": "Meninggalkan secara paksa akan membuat pengeluaran penggantian secara otomatis untuk bagian yang melibatkan Anda agar buku besar tetap sinkron. Saldo lainnya dibiarkan apa adanya."
-        },
-        "lastMember": {
-          "title": "Ini akan menghapus grup",
-          "description": "Anda adalah satu-satunya anggota aktif grup ini. Meninggalkan grup akan menghapus secara permanen grup, semua pengeluaran, dan seluruh riwayatnya.",
-          "checkbox": "Saya mengerti bahwa ini akan menghapus secara permanen grup dan semua datanya.",
-          "suggestion": "Tip: jika Anda ingin menyimpan grup ini sebagai catatan, Anda dapat mengarsipkannya.",
-          "unsettledInfo": "Anda memiliki saldo yang belum diselesaikan di grup ini. Saldo tersebut akan hilang secara permanen saat grup dihapus."
         },
         "lastAdmin": {
           "title": "Pilih admin baru",
@@ -1210,13 +1232,10 @@
       },
       "confirmWithForce": "Selesaikan dan tinggalkan",
       "toast": {
-        "left": "Anda telah meninggalkan grup.",
-        "deleted": "Grup dihapus.",
-        "archived": "Grup diarsipkan."
+        "left": "Anda telah meninggalkan grup."
       },
       "error": {
         "lastAdmin": "Pilih anggota untuk dijadikan admin sebelum pergi.",
-        "lastMember": "Konfirmasi penghapusan permanen untuk melanjutkan.",
         "unsettled": "Selesaikan saldo Anda atau konfirmasi penyelesaian paksa untuk pergi."
       }
     },

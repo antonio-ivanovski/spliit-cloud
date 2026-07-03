@@ -351,6 +351,33 @@
       "description": "「{name}」可在 spliit.app 上存取。是否要將其匯入到 Spliit Cloud？",
       "cta": "匯入此群組",
       "backToHome": "返回首頁"
+    },
+    "delete": {
+      "sectionTitle": "刪除群組",
+      "sectionDescription": "永久刪除此群組、所有消費及所有歷史紀錄。此操作無法復原 — 僅在您確定不再需要這些資料時才執行。",
+      "button": "刪除群組",
+      "dialog": {
+        "title": "刪除此群組？",
+        "description": "您即將永久刪除「{name}」。所有消費、收據、邀請與活動紀錄都會被刪除，且無法復原。",
+        "warningTitle": "此操作無法復原",
+        "warningDescription": "以下資料將立即刪除：",
+        "checkbox": "我了解這將永久刪除此群組及其所有資料。",
+        "cancel": "取消",
+        "confirm": "刪除群組",
+        "deleting": "刪除中…",
+        "warningList": {
+          "expenses": "所有消費與餘額",
+          "activity": "所有活動紀錄",
+          "invitations": "待處理的邀請",
+          "receipts": "已上傳的收據檔案"
+        }
+      },
+      "error": {
+        "generic": "無法刪除群組。請再試一次。"
+      },
+      "toast": {
+        "deleted": "群組已刪除。"
+      }
     }
   },
   "GroupForm": {
@@ -1181,17 +1208,13 @@
     },
     "leave": {
       "cancel": "取消",
+      "descriptionOnlyMember": "您是此群組唯一的活躍成員，因此無法以此方式退出群組。若要徹底移除該群組，請從設定頁面將其刪除。",
+      "onlyMemberHint": "您是唯一的活躍成員。請使用設定中的「刪除群組」選項來移除該群組。",
+      "lastMemberRedirect": "您是群組中唯一的活躍成員，無法退出。請改從設定頁面刪除群組。",
       "body": {
         "unsettled": {
           "title": "您有未結算的餘額",
           "description": "強制退出將自動為涉及您的部分建立報銷支出，以保持帳本同步。其餘餘額將保持不變。"
-        },
-        "lastMember": {
-          "unsettledInfo": "您在此群組中有未結算的餘額。刪除群組後，這些餘額將永久遺失。",
-          "title": "此操作將刪除群組",
-          "description": "您是此群組唯一的活躍成員。退出將永久刪除群組及其所有支出和歷史記錄。",
-          "checkbox": "我了解這將永久刪除群組及其所有資料。",
-          "suggestion": "提示：若想保留此群組作為記錄，可以改為封存。"
         },
         "otherAdmins": "您退出後，以下管理員將繼續管理：{names}。",
         "lastAdmin": {
@@ -1202,18 +1225,14 @@
       },
       "error": {
         "lastAdmin": "退出前請先選擇一位成員晉升為管理員。",
-        "lastMember": "請確認永久刪除以繼續。",
         "unsettled": "請結算餘額或確認強制結算以退出。"
       },
       "button": "退出群組",
       "title": "退出群組？",
       "description": "您將失去對此群組支出、餘額和活動的存取權限。過往資料會保留在帳本中，其他成員仍可查看。",
       "confirm": "退出群組",
-      "confirmDelete": "刪除並退出",
       "confirmWithForce": "結算並退出",
       "toast": {
-        "archived": "群組已封存。",
-        "deleted": "群組已刪除。",
         "left": "您已退出群組。"
       }
     },

@@ -351,6 +351,33 @@
       "description": "\"{name}\" on tavoitettavissa spliit.app-palvelussa. Haluatko tuoda sen Spliit Cloudiin?",
       "cta": "Tuo tämä ryhmä",
       "backToHome": "Siirry etusivulle"
+    },
+    "delete": {
+      "sectionTitle": "Poista ryhmä",
+      "sectionDescription": "Poista tämä ryhmä, kaikki kulut ja koko historia pysyvästi. Tätä ei voi peruuttaa — tee tämä vain, jos olet varma, ettei kukaan tarvitse näitä tietoja enää.",
+      "button": "Poista ryhmä",
+      "dialog": {
+        "title": "Poistetaanko tämä ryhmä?",
+        "description": "Olet poistamassa pysyvästi ryhmää \"{name}\". Kaikki kulut, kuitit, kutsut ja aktiviteettimerkinnät poistetaan, eikä niitä voi palauttaa.",
+        "warningTitle": "Tätä toimintoa ei voi peruuttaa",
+        "warningDescription": "Seuraavat tiedot poistetaan välittömästi:",
+        "warningList": {
+          "expenses": "Kaikki kulut ja saldot",
+          "activity": "Koko toimintahistoria",
+          "invitations": "Odottavat kutsut",
+          "receipts": "Ladatut kuittitiedostot"
+        },
+        "checkbox": "Ymmärrän, että tämä poistaa pysyvästi ryhmän ja kaikki sen tiedot.",
+        "cancel": "Peruuta",
+        "confirm": "Poista ryhmä",
+        "deleting": "Poistetaan …"
+      },
+      "toast": {
+        "deleted": "Ryhmä poistettu."
+      },
+      "error": {
+        "generic": "Ryhmän poistaminen epäonnistui. Yritä uudelleen."
+      }
     }
   },
   "GroupForm": {
@@ -1184,14 +1211,10 @@
       "button": "Poistu ryhmästä",
       "title": "Poistutko ryhmästä?",
       "cancel": "Peruuta",
+      "descriptionOnlyMember": "Olet tämän ryhmän ainoa aktiivinen jäsen, joten ryhmää ei voi jättää tällä tavalla. Poista ryhmä kokonaan asetussivulta.",
+      "onlyMemberHint": "Olet ryhmän ainoa aktiivinen jäsen. Poista ryhmä valitsemalla Asetuksista \"Delete group\".",
+      "lastMemberRedirect": "Et voi poistua ryhmästä, jonka ainoa aktiivinen jäsen olet. Poista ryhmä sen sijaan asetussivulta.",
       "body": {
-        "lastMember": {
-          "description": "Olet tämän ryhmän ainoa aktiivinen jäsen. Poistuminen poistaa pysyvästi ryhmän, kaikki sen kulut ja koko historian.",
-          "checkbox": "Ymmärrän, että tämä poistaa pysyvästi ryhmän ja kaikki sen tiedot.",
-          "suggestion": "Vinkki: jos haluat säilyttää tämän ryhmän tallenteena, voit arkistoida sen sen sijaan.",
-          "title": "Tämä poistaa ryhmän",
-          "unsettledInfo": "Sinulla on tasaamattomia saldoja tässä ryhmässä. Ne menetetään pysyvästi, kun ryhmä poistetaan."
-        },
         "lastAdmin": {
           "title": "Valitse uusi ylläpitäjä",
           "description": "Olet tämän ryhmän viimeinen ylläpitäjä. Valitse aktiivinen jäsen ottamaan vastuu ennen poistumistasi, muuten kukaan ei voi hallinnoida ryhmää.",
@@ -1204,18 +1227,14 @@
         }
       },
       "toast": {
-        "left": "Poistuit ryhmästä.",
-        "deleted": "Ryhmä poistettu.",
-        "archived": "Ryhmä arkistoitu."
+        "left": "Poistuit ryhmästä."
       },
       "error": {
         "unsettled": "Tasaa saldosi tai vahvista pakotettu tasaus poistuaksesi.",
-        "lastAdmin": "Valitse jäsen ylennettäväksi ylläpitäjäksi ennen poistumista.",
-        "lastMember": "Vahvista pysyvä poisto jatkaaksesi."
+        "lastAdmin": "Valitse jäsen ylennettäväksi ylläpitäjäksi ennen poistumista."
       },
       "description": "Menetät pääsyn tämän ryhmän kuluihin, saldoihin ja toimintaan. Menneet tiedot säilyvät kirjanpidossa, jotta muut jäsenet voivat edelleen nähdä ne.",
       "confirm": "Poistu ryhmästä",
-      "confirmDelete": "Poista ja poistu",
       "confirmWithForce": "Tasaa ja poistu"
     },
     "unlinked": {

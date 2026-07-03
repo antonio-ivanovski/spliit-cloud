@@ -351,6 +351,33 @@
       "description": "„{name}” jest dostępna na spliit.app. Czy chcesz zaimportować ją do Spliit Cloud?",
       "cta": "Importuj tę grupę",
       "backToHome": "Przejdź do strony głównej"
+    },
+    "delete": {
+      "sectionTitle": "Usuń grupę",
+      "sectionDescription": "Trwale usuń tę grupę, wszystkie wydatki i całą historię. Nie można tego cofnąć — zrób to tylko wtedy, gdy masz pewność, że nikt już nie potrzebuje tych danych.",
+      "button": "Usuń grupę",
+      "dialog": {
+        "title": "Usunąć tę grupę?",
+        "description": "Zamierzasz trwale usunąć „{name}“. Każdy wydatek, paragon, zaproszenie i wpis aktywności zostaną usunięte i nie będzie można ich odzyskać.",
+        "warningTitle": "Tej operacji nie można cofnąć",
+        "warningDescription": "Następujące dane zostaną natychmiast usunięte:",
+        "checkbox": "Rozumiem, że trwale usunie to grupę i wszystkie jej dane.",
+        "cancel": "Anuluj",
+        "confirm": "Usuń grupę",
+        "deleting": "Usuwanie…",
+        "warningList": {
+          "expenses": "Wszystkie wydatki i salda",
+          "activity": "Pełna historia aktywności",
+          "invitations": "Oczekujące zaproszenia",
+          "receipts": "Przesłane pliki paragonów"
+        }
+      },
+      "toast": {
+        "deleted": "Grupa została usunięta."
+      },
+      "error": {
+        "generic": "Nie udało się usunąć grupy. Spróbuj ponownie."
+      }
     }
   },
   "GroupForm": {
@@ -1189,7 +1216,9 @@
       "cancel": "Anuluj",
       "confirm": "Opuść grupę",
       "confirmWithForce": "Rozlicz i opuść",
-      "confirmDelete": "Usuń i opuść",
+      "descriptionOnlyMember": "Jesteś jedynym aktywnym członkiem tej grupy, więc opuszczenie jej w ten sposób nie jest możliwe. Aby całkowicie pozbyć się grupy, usuń ją ze strony ustawień.",
+      "onlyMemberHint": "Jesteś jedynym aktywnym członkiem. Użyj opcji „Usuń grupę” w Ustawieniach, aby usunąć grupę.",
+      "lastMemberRedirect": "Nie możesz opuścić grupy, w której jesteś jedynym aktywnym członkiem. Zamiast tego usuń grupę ze strony ustawień.",
       "body": {
         "otherAdmins": "Ci administratorzy zachowają kontrolę po Twoim wyjściu: {names}.",
         "lastAdmin": {
@@ -1200,23 +1229,13 @@
         "unsettled": {
           "title": "Masz nierozliczone salda",
           "description": "Wymuszone opuszczenie grupy automatycznie utworzy wydatki rozliczeniowe dla nóg z Twoim udziałem, aby księga pozostała spójna. Pozostałe salda pozostaną bez zmian."
-        },
-        "lastMember": {
-          "title": "To spowoduje usunięcie grupy",
-          "description": "Jesteś jedynym aktywnym członkiem tej grupy. Opuszczenie jej spowoduje trwałe usunięcie grupy, wszystkich wydatków i całej historii.",
-          "checkbox": "Rozumiem, że spowoduje to trwałe usunięcie grupy i wszystkich jej danych.",
-          "suggestion": "Wskazówka: jeśli chcesz zachować tę grupę jako archiwum, możesz ją zarchiwizować.",
-          "unsettledInfo": "Masz nierozliczone salda w tej grupie. Zostaną trwale utracone po usunięciu grupy."
         }
       },
       "toast": {
-        "left": "Opuściłeś grupę.",
-        "deleted": "Grupa usunięta.",
-        "archived": "Grupa zarchiwizowana."
+        "left": "Opuściłeś grupę."
       },
       "error": {
         "lastAdmin": "Wybierz członka do awansu na administratora przed opuszczeniem grupy.",
-        "lastMember": "Potwierdź trwałe usunięcie, aby kontynuować.",
         "unsettled": "Rozlicz saldo lub potwierdź wymuszone rozliczenie, aby opuścić grupę."
       }
     },

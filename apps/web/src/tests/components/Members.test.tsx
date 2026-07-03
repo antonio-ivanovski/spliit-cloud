@@ -47,7 +47,6 @@ const mockRevokeMutation = vi.fn()
 const mockUpdateRoleMutation = vi.fn()
 const mockRemoveMemberMutation = vi.fn()
 const mockLeaveMutation = vi.fn()
-const mockArchiveForSelfMutation = vi.fn()
 
 // Shared mutable state so tests can override query results
 const mockMembersData: { members: Record<string, unknown>[] } = { members: [] }
@@ -135,12 +134,6 @@ vi.mock('@/trpc/client', () => {
         },
         leave: {
           useMutation: () => ({ mutate: mockLeaveMutation, isPending: false }),
-        },
-        archiveForSelf: {
-          useMutation: () => ({
-            mutateAsync: mockArchiveForSelfMutation,
-            isPending: false,
-          }),
         },
         leavePreview: {
           useQuery: () => ({ data: undefined, isLoading: false }),
@@ -443,5 +436,54 @@ describe('GroupMembers', () => {
         screen.getByDisplayValue('https://spliit.app/invite/abc123'),
       ).toBeInTheDocument()
     })
+  })
+
+  it('disables the Leave group button and shows a redirect hint when the caller is the only active member', () => {
+    // Empty members list means the caller (mocked as ADMIN/ACTIVE) is
+    // the only ACTIVE member — the new "delete from settings" affordance
+    // takes over the leave flow.
+    mockMembersData.members = []
+
+    render(<GroupMembers />)
+
+    const leaveButton = screen.getByRole('button', { name: /leave group/i })
+    expect(leaveButton).toBeDisabled()
+    // Both the card description and the destructive hint paragraph
+    // mention the redirect; match the note element to confirm the
+    // pointer is rendered next to the disabled button.
+    expect(screen.getByRole('note')).toBeInTheDocument()
+  })
+
+  it('keeps the Leave group button enabled when other members exist', () => {
+    mockMembersData.members = [
+      {
+        id: 'gm-1',
+        accountId: 'user-1',
+        groupId: 'group-1',
+        role: 'ADMIN',
+        status: 'ACTIVE',
+        joinedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        account: { id: 'user-1', name: 'Alice', email: 'alice@example.com' },
+        ledgerParticipant: { id: 'lp-1' },
+      },
+      {
+        id: 'gm-2',
+        accountId: 'user-2',
+        groupId: 'group-1',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        joinedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        account: { id: 'user-2', name: 'Bob', email: 'bob@example.com' },
+        ledgerParticipant: { id: 'lp-2' },
+      },
+    ]
+
+    render(<GroupMembers />)
+
+    const leaveButton = screen.getByRole('button', { name: /leave group/i })
+    expect(leaveButton).not.toBeDisabled()
+    expect(screen.queryByRole('note')).not.toBeInTheDocument()
   })
 })

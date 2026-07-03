@@ -351,6 +351,33 @@
       "description": "\"{name}\" is bereikbaar op spliit.app. Wil je deze importeren in Spliit Cloud?",
       "cta": "Importeer deze groep",
       "backToHome": "Naar home"
+    },
+    "delete": {
+      "sectionTitle": "Groep verwijderen",
+      "sectionDescription": "Verwijder deze groep, alle uitgaven en de volledige geschiedenis permanent. Dit kan niet ongedaan worden gemaakt — doe dit alleen als je zeker weet dat niemand deze gegevens meer nodig heeft.",
+      "button": "Groep verwijderen",
+      "dialog": {
+        "title": "Deze groep verwijderen?",
+        "description": "Je staat op het punt om \"{name}\" permanent te verwijderen. Elke uitgave, bon, uitnodiging en activiteitsvermelding wordt verwijderd en kan niet worden hersteld.",
+        "warningTitle": "Deze actie is onomkeerbaar",
+        "warningDescription": "De volgende gegevens worden onmiddellijk verwijderd:",
+        "warningList": {
+          "expenses": "Alle uitgaven en saldi",
+          "activity": "De volledige activiteitengeschiedenis",
+          "invitations": "Openstaande uitnodigingen",
+          "receipts": "Geüploade bonbestanden"
+        },
+        "checkbox": "Ik begrijp dat dit de groep en alle bijbehorende gegevens permanent verwijdert.",
+        "cancel": "Annuleren",
+        "confirm": "Groep verwijderen",
+        "deleting": "Verwijderen …"
+      },
+      "toast": {
+        "deleted": "Groep verwijderd."
+      },
+      "error": {
+        "generic": "De groep kon niet worden verwijderd. Probeer het opnieuw."
+      }
     }
   },
   "GroupForm": {
@@ -1188,19 +1215,15 @@
       "description": "Je verliest de toegang tot deze groep, haar uitgaven, saldi en activiteit. Eerdere gegevens blijven in het grootboek staan, zodat andere leden ze nog kunnen inzien.",
       "cancel": "Annuleren",
       "confirm": "Groep verlaten",
+      "descriptionOnlyMember": "Je bent het enige actieve lid van deze groep, dus je kunt de groep niet op deze manier verlaten. Verwijder de groep via de instellingenpagina als je er helemaal vanaf wilt.",
+      "onlyMemberHint": "Je bent het enige actieve lid. Gebruik de optie \"Delete group\" in de Instellingen om de groep te verwijderen.",
+      "lastMemberRedirect": "Je kunt een groep niet verlaten waarvan je het enige actieve lid bent. Verwijder de groep in plaats daarvan via de instellingenpagina.",
       "body": {
         "otherAdmins": "Deze beheerders behouden het beheer nadat je vertrekt: {names}.",
         "lastAdmin": {
           "title": "Kies een nieuwe beheerder",
           "description": "Je bent de laatste beheerder van deze groep. Kies een actief lid dat het overneemt voordat je vertrekt, anders kan niemand de groep meer beheren.",
           "placeholder": "Selecteer een lid"
-        },
-        "lastMember": {
-          "title": "Hiermee wordt de groep verwijderd",
-          "description": "Je bent het enige actieve lid van deze groep. Vertrekken verwijdert de groep, al haar uitgaven en geschiedenis permanent.",
-          "checkbox": "Ik begrijp dat de groep en alle gegevens permanent worden verwijderd.",
-          "suggestion": "Tip: als je de groep wilt bewaren, kun je haar in plaats daarvan archiveren.",
-          "unsettledInfo": "Je hebt niet-vereffende saldi in deze groep. Ze gaan permanent verloren wanneer de groep wordt verwijderd."
         },
         "unsettled": {
           "title": "Je hebt niet-vereffende saldi",
@@ -1209,15 +1232,11 @@
       },
       "error": {
         "lastAdmin": "Kies een lid om tot beheerder te promoveren voordat je vertrekt.",
-        "lastMember": "Bevestig de permanente verwijdering om door te gaan.",
         "unsettled": "Vereffen je saldo of bevestig geforceerde vereffening om te vertrekken."
       },
-      "confirmDelete": "Verwijder en verlaat",
       "confirmWithForce": "Vereffen en verlaat",
       "toast": {
-        "left": "Je hebt de groep verlaten.",
-        "deleted": "Groep verwijderd.",
-        "archived": "Groep gearchiveerd."
+        "left": "Je hebt de groep verlaten."
       }
     },
     "unlinked": {

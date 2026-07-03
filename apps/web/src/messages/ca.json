@@ -351,6 +351,33 @@
       "description": "«{name}» és accessible a spliit.app. Voleu importar-lo a Spliit Cloud?",
       "cta": "Importa aquest grup",
       "backToHome": "Ves a l'inici"
+    },
+    "delete": {
+      "sectionTitle": "Suprimeix el grup",
+      "sectionDescription": "Suprimeix permanentment aquest grup, totes les despeses i tot l'historial. No es pot desfer — feu-ho només si esteu segur que ningú no necessita aquestes dades.",
+      "button": "Suprimeix el grup",
+      "dialog": {
+        "title": "Suprimir aquest grup?",
+        "description": "Estàs a punt de suprimir permanentment \"{name}\". Totes les despeses, rebuts, invitacions i entrades d'activitat s'eliminaran i no es podran recuperar.",
+        "warningTitle": "Aquesta acció és irreversible",
+        "warningDescription": "Les dades següents se suprimiran immediatament:",
+        "checkbox": "Entenc que això suprimirà permanentment el grup i totes les seves dades.",
+        "cancel": "Cancel·la",
+        "confirm": "Suprimeix el grup",
+        "deleting": "Suprimint…",
+        "warningList": {
+          "expenses": "Totes les despeses i saldos",
+          "activity": "L'historial complet d'activitat",
+          "invitations": "Invitacions pendents",
+          "receipts": "Fitxers de rebuts pujats"
+        }
+      },
+      "error": {
+        "generic": "No s'ha pogut suprimir el grup. Torneu-ho a provar."
+      },
+      "toast": {
+        "deleted": "Grup suprimit."
+      }
     }
   },
   "GroupForm": {
@@ -1189,7 +1216,9 @@
       "cancel": "Cancel·la",
       "confirm": "Surt del grup",
       "confirmWithForce": "Liquida i surt",
-      "confirmDelete": "Elimina i surt",
+      "descriptionOnlyMember": "Ets l'únic membre actiu d'aquest grup, per la qual cosa no és possible sortir-ne d'aquesta manera. Per eliminar el grup completament, suprimeix-lo des de la pàgina de configuració.",
+      "onlyMemberHint": "Ets l'únic membre actiu. Utilitza l'opció \"Suprimeix el grup\" a Configuració per eliminar el grup.",
+      "lastMemberRedirect": "No pots sortir d'un grup on ets l'únic membre actiu. Suprimeix el grup des de la pàgina de configuració.",
       "body": {
         "otherAdmins": "Aquests administradors mantindran el control després que te'n vagis: {names}.",
         "lastAdmin": {
@@ -1200,23 +1229,13 @@
         "unsettled": {
           "title": "Tens saldos pendents",
           "description": "Sortir amb liquidació forçosa crearà automàticament despeses de reemborsament per a les partides que t'afecten, mantenint el llibre de comptes sincronitzat. Els altres saldos es deixen tal com estan."
-        },
-        "lastMember": {
-          "title": "Això eliminarà el grup",
-          "description": "Ets l'únic membre actiu d'aquest grup. Si marxar, el grup, totes les despeses i tot l'historial s'eliminaran permanentment.",
-          "checkbox": "Entenc que això eliminarà permanentment el grup i totes les seves dades.",
-          "suggestion": "Consell: si vols conservar aquest grup com a registre, pots arxivar-lo.",
-          "unsettledInfo": "Tens saldos pendents en aquest grup. Es perdran permanentment quan s'elimini el grup."
         }
       },
       "toast": {
-        "left": "Has sortit del grup.",
-        "deleted": "Grup eliminat.",
-        "archived": "Grup arxivat."
+        "left": "Has sortit del grup."
       },
       "error": {
         "lastAdmin": "Escull un membre per ascendir a administrador abans de marxar.",
-        "lastMember": "Confirma l'eliminació permanent per continuar.",
         "unsettled": "Liquida el teu saldo o confirma la liquidació forçosa per marxar."
       }
     },

@@ -351,6 +351,33 @@
       "description": "„{name}“ je dostupná na spliit.app. Chcete ji importovat do Spliit Cloud?",
       "cta": "Importovat tuto skupinu",
       "backToHome": "Přejít na úvod"
+    },
+    "delete": {
+      "sectionTitle": "Smazat skupinu",
+      "sectionDescription": "Trvale smažte tuto skupinu, všechny výdaje a celou historii. Toto nelze vrátit zpět — udělejte to pouze tehdy, pokud jste si jisti, že tato data už nikdo nepotřebuje.",
+      "button": "Smazat skupinu",
+      "dialog": {
+        "title": "Smazat tuto skupinu?",
+        "description": "Chystáte se trvale smazat „{name}“. Každý výdaj, účtenka, pozvánka i záznam aktivity budou odstraněny a nelze je obnovit.",
+        "warningTitle": "Tato akce je nevratná",
+        "warningDescription": "Následující data budou okamžitě smazána:",
+        "checkbox": "Rozumím, že tím trvale smažu skupinu a všechna její data.",
+        "cancel": "Zrušit",
+        "confirm": "Smazat skupinu",
+        "deleting": "Mazání…",
+        "warningList": {
+          "expenses": "Všechny výdaje a zůstatky",
+          "activity": "Kompletní historie aktivity",
+          "invitations": "Čekající pozvánky",
+          "receipts": "Nahrané soubory účtenek"
+        }
+      },
+      "toast": {
+        "deleted": "Skupina byla smazána."
+      },
+      "error": {
+        "generic": "Skupinu se nepodařilo smazat. Zkuste to prosím znovu."
+      }
     }
   },
   "GroupForm": {
@@ -1188,18 +1215,14 @@
       "button": "Opustit skupinu",
       "title": "Opustit skupinu?",
       "description": "Ztratíte přístup k výdajům, zůstatkům a aktivitě této skupiny. Minulá data zůstávají v účetním deníku, aby je ostatní členové stále viděli.",
+      "descriptionOnlyMember": "Jste jediným aktivním členem této skupiny, takže opuštění tímto způsobem není možné. Chcete-li se skupiny zcela zbavit, smažte ji ze stránky nastavení.",
+      "onlyMemberHint": "Jste jediným aktivním členem. Použijte možnost „Smazat skupinu“ v Nastavení pro odstranění skupiny.",
+      "lastMemberRedirect": "Nemůžete opustit skupinu, ve které jste jediným aktivním členem. Místo toho skupinu smažte ze stránky nastavení.",
       "body": {
         "otherAdmins": "Tito správci si po vašem odchodu udrží kontrolu: {names}.",
         "unsettled": {
           "title": "Máte nevyrovnané zůstatky",
           "description": "Vynucený odchod automaticky vytvoří vyrovnávací výdaje za položky, které se vás týkají, aby účetní deník zůstal konzistentní. Ostatní zůstatky zůstávají beze změny."
-        },
-        "lastMember": {
-          "title": "Tím dojde ke smazání skupiny",
-          "description": "Jste jediný aktivní člen této skupiny. Odchodem trvale smažete skupinu, všechny její výdaje i celou historii.",
-          "checkbox": "Rozumím, že tím dojde k trvalému smazání skupiny a všech jejích dat.",
-          "suggestion": "Tip: Pokud si chcete skupinu ponechat jako záznam, můžete ji místo toho archivovat.",
-          "unsettledInfo": "V této skupině máte nevyrovnané zůstatky. Při smazání skupiny budou nenávratně ztraceny."
         },
         "lastAdmin": {
           "title": "Vybrat nového správce",
@@ -1209,16 +1232,12 @@
       },
       "confirmWithForce": "Vyrovnat a opustit",
       "toast": {
-        "left": "Opustili jste skupinu.",
-        "deleted": "Skupina smazána.",
-        "archived": "Skupina archivována."
+        "left": "Opustili jste skupinu."
       },
       "error": {
         "lastAdmin": "Před odchodem vyberte člena, kterého povýšíte na správce.",
-        "lastMember": "Pro pokračování potvrďte trvalé smazání.",
         "unsettled": "Pro opuštění skupiny vyrovnejte svůj zůstatek nebo potvrďte vynucené vyrovnání."
-      },
-      "confirmDelete": "Smazat a opustit"
+      }
     },
     "unlinked": {
       "title": "Nepropojení účastníci",

@@ -351,6 +351,33 @@
       "description": "«{name}» è raggiungibile su spliit.app. Vuoi importarlo in Spliit Cloud?",
       "cta": "Importa questo gruppo",
       "backToHome": "Vai alla home"
+    },
+    "delete": {
+      "sectionTitle": "Elimina il gruppo",
+      "sectionDescription": "Elimina definitivamente questo gruppo, ogni spesa e tutta la cronologia. Non è reversibile: fallo solo se sei sicuro che nessuno ha più bisogno di questi dati.",
+      "button": "Elimina il gruppo",
+      "dialog": {
+        "title": "Eliminare questo gruppo?",
+        "description": "Stai per eliminare definitivamente \"{name}\". Ogni spesa, ricevuta, invito e voce di attività verrà rimosso e non potrà essere recuperato.",
+        "warningTitle": "Questa azione è irreversibile",
+        "warningDescription": "I seguenti dati verranno eliminati immediatamente:",
+        "checkbox": "Capisco che questa operazione eliminerà definitivamente il gruppo e tutti i suoi dati.",
+        "cancel": "Annulla",
+        "confirm": "Elimina il gruppo",
+        "deleting": "Eliminazione…",
+        "warningList": {
+          "expenses": "Tutte le spese e i saldi",
+          "activity": "L'intera cronologia delle attività",
+          "invitations": "Inviti in sospeso",
+          "receipts": "File delle ricevute caricati"
+        }
+      },
+      "error": {
+        "generic": "Impossibile eliminare il gruppo. Riprova."
+      },
+      "toast": {
+        "deleted": "Gruppo eliminato."
+      }
     }
   },
   "GroupForm": {
@@ -1189,7 +1216,9 @@
       "cancel": "Annulla",
       "confirm": "Lascia il gruppo",
       "confirmWithForce": "Salda e lascia",
-      "confirmDelete": "Elimina e lascia",
+      "descriptionOnlyMember": "Sei l'unico membro attivo di questo gruppo, quindi non è possibile lasciarlo in questo modo. Per eliminare completamente il gruppo, cancellalo dalla pagina delle impostazioni.",
+      "onlyMemberHint": "Sei l'unico membro attivo. Usa l'opzione \"Elimina il gruppo\" nelle Impostazioni per rimuovere il gruppo.",
+      "lastMemberRedirect": "Non puoi lasciare un gruppo di cui sei l'unico membro attivo. Elimina invece il gruppo dalla pagina delle impostazioni.",
       "body": {
         "otherAdmins": "Questi amministratori manterranno il controllo dopo la tua partenza: {names}.",
         "lastAdmin": {
@@ -1200,23 +1229,13 @@
         "unsettled": {
           "title": "Hai saldi in sospeso",
           "description": "Lasciare forzatamente creerà automaticamente delle spese di rimborso per le transazioni che ti coinvolgono, mantenendo la contabilità sincronizzata. Gli altri saldi rimangono invariati."
-        },
-        "lastMember": {
-          "title": "Questo eliminerà il gruppo",
-          "description": "Sei l'unico membro attivo di questo gruppo. Lasciando, il gruppo, tutte le sue spese e tutta la sua cronologia verranno eliminati definitivamente.",
-          "checkbox": "Comprendo che questo eliminerà definitivamente il gruppo e tutti i suoi dati.",
-          "suggestion": "Consiglio: se vuoi conservare questo gruppo come archivio, puoi invece archiviarlo.",
-          "unsettledInfo": "Hai saldi in sospeso in questo gruppo. Andranno persi definitivamente quando il gruppo verrà eliminato."
         }
       },
       "toast": {
-        "left": "Hai lasciato il gruppo.",
-        "deleted": "Gruppo eliminato.",
-        "archived": "Gruppo archiviato."
+        "left": "Hai lasciato il gruppo."
       },
       "error": {
         "lastAdmin": "Scegli un membro da promuovere ad amministratore prima di andartene.",
-        "lastMember": "Conferma l'eliminazione definitiva per continuare.",
         "unsettled": "Salda il tuo saldo o conferma la liquidazione forzata per andartene."
       }
     },

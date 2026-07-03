@@ -36,6 +36,7 @@ export {
   LeaveGroupPreconditionError,
   RemoveMemberPreconditionError,
   archiveGroupForSelf,
+  deleteGroup,
   getLeavePreview,
   getRemoveMemberPreview,
   leaveGroup,

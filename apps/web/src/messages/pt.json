@@ -351,6 +351,33 @@
       "description": "«{name}» está acessível no spliit.app. Gostaria de importá-lo para o Spliit Cloud?",
       "cta": "Importar este grupo",
       "backToHome": "Ir para o início"
+    },
+    "delete": {
+      "sectionTitle": "Eliminar grupo",
+      "sectionDescription": "Elimina permanentemente este grupo, todas as despesas e todo o histórico. Não é possível desfazer — faz isto só se tiveres a certeza de que ninguém precisa destes dados.",
+      "button": "Eliminar grupo",
+      "dialog": {
+        "title": "Eliminar este grupo?",
+        "description": "Está prestes a eliminar permanentemente \"{name}\". Cada despesa, recibo, convite e entrada de atividade será removido e não poderá ser recuperado.",
+        "warningTitle": "Esta ação é irreversível",
+        "warningDescription": "Os seguintes dados serão eliminados de imediato:",
+        "checkbox": "Compreendo que isto eliminará permanentemente o grupo e todos os seus dados.",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar grupo",
+        "deleting": "A eliminar…",
+        "warningList": {
+          "expenses": "Todas as despesas e saldos",
+          "activity": "O histórico completo de atividade",
+          "invitations": "Convites pendentes",
+          "receipts": "Ficheiros de recibos carregados"
+        }
+      },
+      "error": {
+        "generic": "Não foi possível eliminar o grupo. Tente novamente."
+      },
+      "toast": {
+        "deleted": "Grupo eliminado."
+      }
     }
   },
   "GroupForm": {
@@ -1189,7 +1216,9 @@
       "cancel": "Cancelar",
       "confirm": "Sair do grupo",
       "confirmWithForce": "Liquidar e sair",
-      "confirmDelete": "Eliminar e sair",
+      "descriptionOnlyMember": "És o único membro ativo deste grupo, por isso não é possível sair do grupo desta forma. Para te livrares do grupo por completo, elimina-o a partir da página de definições.",
+      "onlyMemberHint": "És o único membro ativo. Utiliza a opção \"Eliminar grupo\" em Definições para remover o grupo.",
+      "lastMemberRedirect": "Não podes sair de um grupo do qual és o único membro ativo. Em vez disso, elimina o grupo a partir da página de definições.",
       "body": {
         "otherAdmins": "Estes administradores manterão o controlo após a sua saída: {names}.",
         "lastAdmin": {
@@ -1200,23 +1229,13 @@
         "unsettled": {
           "title": "Tem saldos pendentes",
           "description": "Sair com liquidação forçada criará automaticamente despesas de reembolso para as transações que o envolvem, mantendo o livro-razão sincronizado. Outros saldos permanecem inalterados."
-        },
-        "lastMember": {
-          "title": "Isto eliminará o grupo",
-          "description": "É o único membro ativo deste grupo. Sair eliminará permanentemente o grupo, todas as suas despesas e todo o seu histórico.",
-          "checkbox": "Compreendo que isto eliminará permanentemente o grupo e todos os seus dados.",
-          "suggestion": "Dica: se quiser manter este grupo como registo, pode arquivá-lo.",
-          "unsettledInfo": "Tem saldos pendentes neste grupo. Serão perdidos permanentemente quando o grupo for eliminado."
         }
       },
       "toast": {
-        "left": "Saiu do grupo.",
-        "deleted": "Grupo eliminado.",
-        "archived": "Grupo arquivado."
+        "left": "Saiu do grupo."
       },
       "error": {
         "lastAdmin": "Escolha um membro para promover a administrador antes de sair.",
-        "lastMember": "Confirme a eliminação permanente para continuar.",
         "unsettled": "Liquide o seu saldo ou confirme a liquidação forçada para sair."
       }
     },

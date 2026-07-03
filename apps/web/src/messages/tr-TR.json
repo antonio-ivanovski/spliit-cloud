@@ -351,6 +351,33 @@
       "description": "\"{name}\" spliit.app üzerinden erişilebilir. Spliit Cloud'a aktarmak ister misiniz?",
       "cta": "Bu grubu içe aktar",
       "backToHome": "Ana sayfaya git"
+    },
+    "delete": {
+      "sectionTitle": "Grubu sil",
+      "sectionDescription": "Bu grubu, tüm harcamaları ve geçmişi kalıcı olarak siler. Bu işlem geri alınamaz — artık kimsenin bu verilere ihtiyacı olmadığından eminseniz yapın.",
+      "button": "Grubu sil",
+      "dialog": {
+        "title": "Bu grup silinsin mi?",
+        "description": "\"{name}\" grubunu kalıcı olarak silmek üzeresiniz. Tüm harcama, fiş, davet ve etkinlik kayıtları silinecek ve kurtarılamayacak.",
+        "warningTitle": "Bu işlem geri alınamaz",
+        "warningDescription": "Aşağıdaki veriler hemen silinecek:",
+        "checkbox": "Bu işlemin grubu ve tüm verilerini kalıcı olarak sileceğini anlıyorum.",
+        "cancel": "İptal",
+        "confirm": "Grubu sil",
+        "deleting": "Siliniyor…",
+        "warningList": {
+          "expenses": "Tüm harcamalar ve bakiyeler",
+          "activity": "Etkinlik geçmişinin tamamı",
+          "invitations": "Bekleyen davetler",
+          "receipts": "Yüklenen fiş dosyaları"
+        }
+      },
+      "error": {
+        "generic": "Grup silinemedi. Lütfen tekrar deneyin."
+      },
+      "toast": {
+        "deleted": "Grup silindi."
+      }
     }
   },
   "GroupForm": {
@@ -1186,19 +1213,15 @@
       "button": "Gruptan ayrıl",
       "title": "Gruptan ayrılınacak mı?",
       "description": "Bu grubun masraflarına, bakiyelerine ve etkinliğine erişiminizi kaybedeceksiniz. Geçmiş veriler defterde kalır, böylece diğer üyeler görmeye devam edebilir.",
+      "descriptionOnlyMember": "Bu grubun tek aktif üyesisiniz, bu yüzden gruptan bu şekilde ayrılmak mümkün değil. Grubu tamamen kaldırmak için ayarlar sayfasından silin.",
+      "onlyMemberHint": "Tek aktif üye sizsiniz. Grubu kaldırmak için Ayarlar'daki \"Grubu sil\" seçeneğini kullanın.",
+      "lastMemberRedirect": "Tek aktif üyesi olduğunuz bir gruptan ayrılamazsınız. Bunun yerine grubu ayarlar sayfasından silin.",
       "body": {
         "otherAdmins": "Bu yöneticiler siz ayrıldıktan sonra kontrolü elinde tutacak: {names}.",
         "lastAdmin": {
           "title": "Yeni bir yönetici seçin",
           "description": "Bu grubun son yöneticisisiniz. Ayrılmadan önce aktif bir üyeyi yönetici olarak seçin, aksi takdirde grubu kimse yönetemez.",
           "placeholder": "Bir üye seçin"
-        },
-        "lastMember": {
-          "title": "Bu grubu silecek",
-          "description": "Bu grubun tek aktif üyesisiniz. Ayrılmak, grubu, tüm masraflarını ve tüm geçmişini kalıcı olarak silecek.",
-          "checkbox": "Bunun grubu ve tüm verilerini kalıcı olarak sileceğini anlıyorum.",
-          "suggestion": "İpucu: bu grubu kayıt olarak tutmak isterseniz, arşivleyebilirsiniz.",
-          "unsettledInfo": "Bu grupta kapatılmamış bakiyeleriniz var. Grup silindiğinde kalıcı olarak kaybolacaklar."
         },
         "unsettled": {
           "title": "Kapatılmamış bakiyeleriniz var",
@@ -1208,15 +1231,11 @@
       "cancel": "İptal",
       "confirm": "Gruptan ayrıl",
       "confirmWithForce": "Kapat ve ayrıl",
-      "confirmDelete": "Sil ve ayrıl",
       "toast": {
-        "left": "Gruptan ayrıldınız.",
-        "deleted": "Grup silindi.",
-        "archived": "Grup arşivlendi."
+        "left": "Gruptan ayrıldınız."
       },
       "error": {
         "lastAdmin": "Ayrılmadan önce yönetici yapılacak bir üye seçin.",
-        "lastMember": "Devam etmek için kalıcı silme işlemini onaylayın.",
         "unsettled": "Ayrılmak için bakiyenizi kapatın veya zorla kapatmayı onaylayın."
       }
     },

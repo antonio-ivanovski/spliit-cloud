@@ -126,6 +126,33 @@
     "archiveWithBalancesView": "View balances",
     "archiveSectionTitle": "Archive group",
     "archiveSectionDescription": "Archiving freezes the group. No new expenses can be added or modified, but the existing data stays visible. You can unarchive the group at any time.",
+    "delete": {
+      "sectionTitle": "Delete group",
+      "sectionDescription": "Permanently delete this group, every expense, and all history. This cannot be undone — only do this if you are sure no one needs this data anymore.",
+      "button": "Delete group",
+      "toast": {
+        "deleted": "Group deleted."
+      },
+      "error": {
+        "generic": "Could not delete the group. Please try again."
+      },
+      "dialog": {
+        "title": "Delete this group?",
+        "description": "You are about to permanently delete \"{name}\". Every expense, receipt, invitation, and activity entry will be removed and cannot be recovered.",
+        "warningTitle": "This action is irreversible",
+        "warningDescription": "The following data will be deleted immediately:",
+        "warningList": {
+          "expenses": "Every expense and balance",
+          "activity": "The full activity history",
+          "invitations": "Pending invitations",
+          "receipts": "Uploaded receipt files"
+        },
+        "checkbox": "I understand that this will permanently delete the group and all its data.",
+        "cancel": "Cancel",
+        "confirm": "Delete group",
+        "deleting": "Deleting…"
+      }
+    },
     "archivedBadge": "Archived",
     "bannerArchivedTitle": "This group is archived",
     "bannerArchivedDescription": "No new expenses or invitations can be added while the group is archived. Existing data stays visible.",
@@ -1205,6 +1232,9 @@
       "button": "Leave group",
       "title": "Leave group?",
       "description": "You will lose access to this group's expenses, balances, and activity. Past data is kept in the ledger so other members can still see it.",
+      "descriptionOnlyMember": "You are the only active member of this group, so leaving the group this way isn't possible. To get rid of the group entirely, delete it from the settings page.",
+      "onlyMemberHint": "You are the only active member. Use the “Delete group” option in Settings to remove the group.",
+      "lastMemberRedirect": "You can't leave a group where you're the only active member. Delete the group from the settings page instead.",
       "body": {
         "otherAdmins": "These admins will keep control after you leave: {names}.",
         "lastAdmin": {
@@ -1215,29 +1245,18 @@
         "unsettled": {
           "title": "You have unsettled balances",
           "description": "Leaving with force will auto-create reimbursement expenses for the legs involving you so the ledger stays in sync. Other balances are left as-is."
-        },
-        "lastMember": {
-          "title": "This will delete the group",
-          "description": "You are the only active member of this group. Leaving will permanently delete the group, all its expenses, and all its history.",
-          "checkbox": "I understand that this will permanently delete the group and all its data.",
-          "suggestion": "Tip: if you want to keep this group as a record, you can archive it instead.",
-          "unsettledInfo": "You have unsettled balances in this group. They will be lost permanently when the group is deleted."
         }
       },
       "cancel": "Cancel",
       "confirm": "Leave group",
       "confirmWithForce": "Settle and leave",
       "toast": {
-        "left": "You left the group.",
-        "deleted": "Group deleted.",
-        "archived": "Group archived."
+        "left": "You left the group."
       },
       "error": {
         "lastAdmin": "Choose a member to promote to admin before leaving.",
-        "lastMember": "Confirm the permanent deletion to continue.",
         "unsettled": "Settle your balance or confirm forced settlement to leave."
-      },
-      "confirmDelete": "Delete and leave"
+      }
     },
     "unlinked": {
       "title": "Unlinked participants",

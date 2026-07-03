@@ -351,6 +351,33 @@
       "description": "「{name}」可在 spliit.app 上访问。是否要将其导入 Spliit Cloud？",
       "cta": "导入此群组",
       "backToHome": "返回首页"
+    },
+    "delete": {
+      "sectionTitle": "删除群组",
+      "sectionDescription": "永久删除此群组、所有消费和所有历史记录。此操作无法撤销 — 仅在你确信不再需要这些数据时才执行。",
+      "button": "删除群组",
+      "dialog": {
+        "title": "删除此群组？",
+        "description": "你即将永久删除 \"{name}\"。所有消费、收据、邀请和活动记录都将被删除，且无法恢复。",
+        "warningTitle": "此操作不可撤销",
+        "warningDescription": "以下数据将立即被删除：",
+        "checkbox": "我了解此操作将永久删除该群组及其所有数据。",
+        "cancel": "取消",
+        "confirm": "删除群组",
+        "deleting": "删除中…",
+        "warningList": {
+          "expenses": "所有消费和余额",
+          "activity": "所有活动记录",
+          "invitations": "待处理的邀请",
+          "receipts": "已上传的收据文件"
+        }
+      },
+      "error": {
+        "generic": "无法删除群组。请重试。"
+      },
+      "toast": {
+        "deleted": "群组已删除。"
+      }
     }
   },
   "GroupForm": {
@@ -1188,6 +1215,9 @@
       "confirm": "离开群组",
       "title": "离开群组?",
       "description": "你将失去对此群组的支出、余额和活动的访问权限。过往数据仍保留在账本中，以便其他成员查看。",
+      "descriptionOnlyMember": "你是此群组唯一的活跃成员，因此无法以此方式退出群组。若要彻底移除该群组，请在设置页面中将其删除。",
+      "onlyMemberHint": "你是唯一的活跃成员。请使用设置中的“删除群组”选项来移除该群组。",
+      "lastMemberRedirect": "你是群组中唯一的活跃成员，无法退出。请改为在设置页面删除群组。",
       "body": {
         "otherAdmins": "你离开后，以下管理员将继续管理: {names}。",
         "lastAdmin": {
@@ -1198,25 +1228,14 @@
         "unsettled": {
           "title": "你有未结算的余额",
           "description": "强制离开将自动为与你相关的部分创建报销支出，以保持账本平衡。其他余额保持不变。"
-        },
-        "lastMember": {
-          "title": "这将删除群组",
-          "description": "你是此群组中唯一的活跃成员。离开将永久删除该群组及其所有支出和历史记录。",
-          "checkbox": "我了解这将永久删除群组及其所有数据。",
-          "suggestion": "提示: 如果你想保留此群组作为记录，可以将其存档。",
-          "unsettledInfo": "你在此群组中有未结算的余额。群组被删除后，这些余额将永久丢失。"
         }
       },
-      "confirmDelete": "删除并离开",
       "confirmWithForce": "结算并离开",
       "toast": {
-        "left": "你已离开群组。",
-        "deleted": "群组已删除。",
-        "archived": "群组已存档。"
+        "left": "你已离开群组。"
       },
       "error": {
         "lastAdmin": "请选择一位成员提升为管理员后再离开。",
-        "lastMember": "请确认永久删除以继续。",
         "unsettled": "请先结算余额或确认强制结算后再离开。"
       }
     },

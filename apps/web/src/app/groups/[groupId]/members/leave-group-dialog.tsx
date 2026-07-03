@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -19,11 +18,21 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * Leave-group dialog. Renders one of three shapes:
+ *   - last-admin promotion picker when the caller is the last admin
+ *     and other members exist,
+ *   - unsettled-balance warning when the caller has non-zero balances,
+ *   - the simple confirm otherwise.
+ *
+ * The "last active member" branch is intentionally absent: the dedicated
+ * delete flow on the settings page is now the only way to leave a group
+ * with a single member, so the leave dialog never renders for that case.
+ */
 export function LeaveGroupDialog({
   leaveDialogOpen,
   leavePreviewQuery,
   leaveMutation,
-  archiveForSelfMutation,
   isLastActiveMember,
   isAdminLeaving,
   hasUnsettledBalance,
@@ -31,12 +40,10 @@ export function LeaveGroupDialog({
   otherAdmins,
   promotableMembers,
   promoteMemberId,
-  confirmDeleteChecked,
   canConfirmLeave,
   preview,
   onOpenChange,
   onPromoteMemberChange,
-  onConfirmDeleteChange,
   onConfirmLeave,
 }: {
   leaveDialogOpen: boolean
@@ -44,7 +51,6 @@ export function LeaveGroupDialog({
     isLoading: boolean
   }
   leaveMutation: { isPending: boolean }
-  archiveForSelfMutation: { isPending: boolean }
   isLastActiveMember: boolean
   isAdminLeaving: boolean
   hasUnsettledBalance: boolean
@@ -52,12 +58,10 @@ export function LeaveGroupDialog({
   otherAdmins: Array<{ id: string; name: string }>
   promotableMembers: Array<{ id: string; name: string }>
   promoteMemberId: string | null
-  confirmDeleteChecked: boolean
   canConfirmLeave: boolean
   preview: unknown
   onOpenChange: (open: boolean) => void
   onPromoteMemberChange: (id: string) => void
-  onConfirmDeleteChange: (checked: boolean) => void
   onConfirmLeave: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
@@ -84,89 +88,71 @@ export function LeaveGroupDialog({
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {isAdminLeaving && otherAdmins.length > 0 && (
+            {/* Last-active-member is blocked at the API level and the
+                Leave button is disabled, but keep this guard so the
+                dialog can't render a misleading copy if it ever opens
+                with stale preview data. */}
+            {isLastActiveMember ? (
               <p className="text-sm text-muted-foreground">
-                {t('leave.body.otherAdmins', {
-                  names: otherAdmins
-                    .map((admin) => admin.name || '—')
-                    .join(', '),
-                })}
+                {t('leave.lastMemberRedirect')}
               </p>
-            )}
-
-            {needsPromotion && (
-              <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
-                <p className="text-sm font-medium">
-                  {t('leave.body.lastAdmin.title')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {t('leave.body.lastAdmin.description')}
-                </p>
-                <div className="flex flex-col gap-1.5 pt-1">
-                  <Label htmlFor="promote-member">
-                    {t('leave.body.lastAdmin.title')}
-                  </Label>
-                  <Select
-                    value={promoteMemberId ?? ''}
-                    onValueChange={(value) => onPromoteMemberChange(value)}
-                    disabled={leaveMutation.isPending}
-                  >
-                    <SelectTrigger id="promote-member">
-                      <SelectValue
-                        placeholder={t('leave.body.lastAdmin.placeholder')}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {promotableMembers.map((member) => (
-                        <SelectItem key={member.id} value={member.id}>
-                          {member.name || '—'}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
-
-            {hasUnsettledBalance && !isLastActiveMember && (
-              <div className="flex flex-col gap-1 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
-                <p className="text-sm font-medium">
-                  {t('leave.body.unsettled.title')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {t('leave.body.unsettled.description')}
-                </p>
-              </div>
-            )}
-
-            {isLastActiveMember && (
-              <div className="flex flex-col gap-2 rounded-md border border-destructive/50 bg-destructive/5 p-3">
-                <p className="text-sm font-medium text-destructive">
-                  {t('leave.body.lastMember.title')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {t('leave.body.lastMember.description')}
-                </p>
-                {hasUnsettledBalance && (
+            ) : (
+              <>
+                {isAdminLeaving && otherAdmins.length > 0 && (
                   <p className="text-sm text-muted-foreground">
-                    {t('leave.body.lastMember.unsettledInfo')}
+                    {t('leave.body.otherAdmins', {
+                      names: otherAdmins
+                        .map((admin) => admin.name || '—')
+                        .join(', '),
+                    })}
                   </p>
                 )}
-                <label className="flex items-start gap-2 pt-1 text-sm cursor-pointer">
-                  <Checkbox
-                    checked={confirmDeleteChecked}
-                    onCheckedChange={(checked) =>
-                      onConfirmDeleteChange(checked === true)
-                    }
-                    disabled={leaveMutation.isPending}
-                    className="mt-0.5"
-                  />
-                  <span>{t('leave.body.lastMember.checkbox')}</span>
-                </label>
-                <p className="text-xs text-muted-foreground pt-2 border-t border-destructive/20">
-                  {t('leave.body.lastMember.suggestion')}
-                </p>
-              </div>
+
+                {needsPromotion && (
+                  <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                    <p className="text-sm font-medium">
+                      {t('leave.body.lastAdmin.title')}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('leave.body.lastAdmin.description')}
+                    </p>
+                    <div className="flex flex-col gap-1.5 pt-1">
+                      <Label htmlFor="promote-member">
+                        {t('leave.body.lastAdmin.title')}
+                      </Label>
+                      <Select
+                        value={promoteMemberId ?? ''}
+                        onValueChange={(value) => onPromoteMemberChange(value)}
+                        disabled={leaveMutation.isPending}
+                      >
+                        <SelectTrigger id="promote-member">
+                          <SelectValue
+                            placeholder={t('leave.body.lastAdmin.placeholder')}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {promotableMembers.map((member) => (
+                            <SelectItem key={member.id} value={member.id}>
+                              {member.name || '—'}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
+
+                {hasUnsettledBalance && (
+                  <div className="flex flex-col gap-1 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                    <p className="text-sm font-medium">
+                      {t('leave.body.unsettled.title')}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('leave.body.unsettled.description')}
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
@@ -175,22 +161,18 @@ export function LeaveGroupDialog({
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            disabled={
-              leaveMutation.isPending || archiveForSelfMutation.isPending
-            }
+            disabled={leaveMutation.isPending}
           >
             {t('leave.cancel')}
           </Button>
           <Button
             variant="destructive"
             onClick={onConfirmLeave}
-            disabled={!canConfirmLeave}
+            disabled={!canConfirmLeave || isLastActiveMember}
           >
-            {isLastActiveMember && preview
-              ? t('leave.confirmDelete')
-              : hasUnsettledBalance && preview
-                ? t('leave.confirmWithForce')
-                : t('leave.confirm')}
+            {hasUnsettledBalance && preview
+              ? t('leave.confirmWithForce')
+              : t('leave.confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

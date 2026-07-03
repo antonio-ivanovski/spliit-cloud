@@ -223,7 +223,6 @@ export function useMembersDialogs() {
   // -- Leave dialog state --
   const [leaveDialogOpen, setLeaveDialogOpen] = useState(false)
   const [promoteMemberId, setPromoteMemberId] = useState<string | null>(null)
-  const [confirmDeleteChecked, setConfirmDeleteChecked] = useState(false)
 
   const leavePreviewQuery = trpc.groups.leavePreview.useQuery(
     { groupId },
@@ -231,24 +230,8 @@ export function useMembersDialogs() {
   )
 
   const leaveMutation = trpc.groups.leave.useMutation({
-    onSuccess: async (result) => {
-      toast({
-        description: result.deleted
-          ? t('leave.toast.deleted')
-          : t('leave.toast.left'),
-      })
-      setLeaveDialogOpen(false)
-      router.push({ href: '/' })
-      utils.account.groups.invalidate()
-    },
-    onError: (error) => {
-      toast({ description: error.message, variant: 'destructive' })
-    },
-  })
-
-  const archiveForSelfMutation = trpc.groups.archiveForSelf.useMutation({
     onSuccess: async () => {
-      toast({ description: t('leave.toast.archived') })
+      toast({ description: t('leave.toast.left') })
       setLeaveDialogOpen(false)
       router.push({ href: '/' })
       utils.account.groups.invalidate()
@@ -283,19 +266,18 @@ export function useMembersDialogs() {
   const canConfirmLeave =
     !!preview &&
     !leaveMutation.isPending &&
-    (!needsPromotion || !!effectivePromoteMemberId) &&
-    (!isLastActiveMember || confirmDeleteChecked)
+    !isLastActiveMember &&
+    (!needsPromotion || !!effectivePromoteMemberId)
 
   function handleConfirmLeave() {
     if (!preview) return
-    const shouldForce = !isLastActiveMember && preview.hasUnsettledBalance
+    const shouldForce = preview.hasUnsettledBalance
     leaveMutation.mutate({
       groupId,
       force: shouldForce ? true : undefined,
       promoteMemberId: needsPromotion
         ? (effectivePromoteMemberId ?? undefined)
         : undefined,
-      confirmDelete: isLastActiveMember ? confirmDeleteChecked : undefined,
     })
   }
 
@@ -349,8 +331,6 @@ export function useMembersDialogs() {
     setLeaveDialogOpen,
     promoteMemberId,
     setPromoteMemberId,
-    confirmDeleteChecked,
-    setConfirmDeleteChecked,
     leavePreviewQuery,
     preview,
     isLastActiveMember,
@@ -363,6 +343,5 @@ export function useMembersDialogs() {
     canConfirmLeave,
     handleConfirmLeave,
     leaveMutation,
-    archiveForSelfMutation,
   }
 }

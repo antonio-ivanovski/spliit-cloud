@@ -351,7 +351,34 @@
       "cta": "Diese Gruppe importieren",
       "backToHome": "Zur Startseite"
     },
-    "backToGroups": "Zurück zu den Gruppen"
+    "backToGroups": "Zurück zu den Gruppen",
+    "delete": {
+      "sectionTitle": "Gruppe löschen",
+      "sectionDescription": "Löschen Sie diese Gruppe, alle Ausgaben und die gesamte Historie dauerhaft. Dies kann nicht rückgängig gemacht werden — tun Sie dies nur, wenn Sie sicher sind, dass niemand diese Daten mehr benötigt.",
+      "button": "Gruppe löschen",
+      "dialog": {
+        "title": "Diese Gruppe löschen?",
+        "description": "Sie sind im Begriff, \"{name}\" dauerhaft zu löschen. Jede Ausgabe, jeder Beleg, jede Einladung und jeder Aktivitätseintrag wird entfernt und kann nicht wiederhergestellt werden.",
+        "warningTitle": "Diese Aktion ist nicht umkehrbar",
+        "warningDescription": "Die folgenden Daten werden sofort gelöscht:",
+        "warningList": {
+          "expenses": "Alle Ausgaben und Salden",
+          "activity": "Die gesamte Aktivitätshistorie",
+          "invitations": "Ausstehende Einladungen",
+          "receipts": "Hochgeladene Belegdateien"
+        },
+        "checkbox": "Mir ist bewusst, dass die Gruppe und alle ihre Daten dauerhaft gelöscht werden.",
+        "cancel": "Abbrechen",
+        "confirm": "Gruppe löschen",
+        "deleting": "Wird gelöscht …"
+      },
+      "toast": {
+        "deleted": "Gruppe gelöscht."
+      },
+      "error": {
+        "generic": "Die Gruppe konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+      }
+    }
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -1185,8 +1212,10 @@
       "description": "Sie verlieren den Zugriff auf die Ausgaben, Salden und Aktivitäten dieser Gruppe. Bisherige Daten bleiben im Hauptbuch erhalten, damit andere Mitglieder sie weiterhin sehen können.",
       "cancel": "Abbrechen",
       "confirm": "Gruppe verlassen",
-      "confirmDelete": "Löschen und verlassen",
       "confirmWithForce": "Ausgleichen und verlassen",
+      "descriptionOnlyMember": "Sie sind das einzige aktive Mitglied dieser Gruppe, sodass ein Verlassen auf diese Weise nicht möglich ist. Um die Gruppe vollständig zu entfernen, löschen Sie sie auf der Einstellungsseite.",
+      "onlyMemberHint": "Sie sind das einzige aktive Mitglied. Verwenden Sie die Option \"Delete group\" in den Einstellungen, um die Gruppe zu entfernen.",
+      "lastMemberRedirect": "Sie können eine Gruppe nicht verlassen, deren einziges aktives Mitglied Sie sind. Löschen Sie die Gruppe stattdessen auf der Einstellungsseite.",
       "body": {
         "otherAdmins": "Diese Admins behalten nach Ihrem Austritt die Kontrolle: {names}.",
         "lastAdmin": {
@@ -1197,23 +1226,13 @@
         "unsettled": {
           "title": "Sie haben nicht ausgeglichene Salden",
           "description": "Beim Verlassen mit Ausgleich werden automatisch Ausgleichsausgaben für die Beine erstellt, an denen Sie beteiligt sind, damit das Hauptbuch synchron bleibt. Andere Salden bleiben unverändert."
-        },
-        "lastMember": {
-          "title": "Die Gruppe wird gelöscht",
-          "description": "Sie sind das einzige aktive Mitglied dieser Gruppe. Beim Verlassen wird die Gruppe mitsamt aller Ausgaben und des gesamten Verlaufs endgültig gelöscht.",
-          "checkbox": "Ich verstehe, dass die Gruppe und alle ihre Daten dadurch endgültig gelöscht werden.",
-          "suggestion": "Tipp: Wenn Sie die Gruppe als Aufzeichnung behalten möchten, können Sie sie stattdessen archivieren.",
-          "unsettledInfo": "Sie haben nicht ausgeglichene Salden in dieser Gruppe. Diese gehen beim Löschen der Gruppe endgültig verloren."
         }
       },
       "toast": {
-        "archived": "Gruppe archiviert.",
-        "deleted": "Gruppe gelöscht.",
         "left": "Sie haben die Gruppe verlassen."
       },
       "error": {
         "lastAdmin": "Wählen Sie ein Mitglied aus, das vor Ihrem Austritt zum Admin befördert werden soll.",
-        "lastMember": "Bestätigen Sie die endgültige Löschung, um fortzufahren.",
         "unsettled": "Gleichen Sie Ihre Salden aus oder bestätigen Sie den Zwangsausgleich, um zu verlassen."
       }
     },

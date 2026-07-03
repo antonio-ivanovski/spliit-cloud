@@ -351,6 +351,33 @@
       "description": "«{name}» est accessible sur spliit.app. Souhaitez-vous l'importer dans Spliit Cloud?",
       "cta": "Importer ce groupe",
       "backToHome": "Aller à l'accueil"
+    },
+    "delete": {
+      "sectionTitle": "Supprimer le groupe",
+      "sectionDescription": "Supprime définitivement ce groupe, toutes les dépenses et tout l'historique. Cette action est irréversible — faites-le uniquement si vous êtes sûr que personne n'a plus besoin de ces données.",
+      "button": "Supprimer le groupe",
+      "dialog": {
+        "title": "Supprimer ce groupe ?",
+        "description": "Vous allez supprimer définitivement «{name} ». Chaque dépense, reçu, invitation et entrée d'activité sera supprimé et ne pourra pas être récupéré.",
+        "warningTitle": "Cette action est irréversible",
+        "warningDescription": "Les données suivantes seront supprimées immédiatement :",
+        "checkbox": "Je comprends que cela supprimera définitivement le groupe et toutes ses données.",
+        "cancel": "Annuler",
+        "confirm": "Supprimer le groupe",
+        "deleting": "Suppression…",
+        "warningList": {
+          "expenses": "Toutes les dépenses et soldes",
+          "activity": "L'historique complet d'activité",
+          "invitations": "Les invitations en attente",
+          "receipts": "Les fichiers de justificatifs téléversés"
+        }
+      },
+      "error": {
+        "generic": "Impossible de supprimer le groupe. Veuillez réessayer."
+      },
+      "toast": {
+        "deleted": "Groupe supprimé."
+      }
     }
   },
   "GroupForm": {
@@ -1189,7 +1216,9 @@
       "cancel": "Annuler",
       "confirm": "Quitter le groupe",
       "confirmWithForce": "Régler et quitter",
-      "confirmDelete": "Supprimer et quitter",
+      "descriptionOnlyMember": "Vous êtes le seul membre actif de ce groupe, donc quitter le groupe de cette manière n'est pas possible. Pour supprimer entièrement le groupe, supprimez-le depuis la page des paramètres.",
+      "onlyMemberHint": "Vous êtes le seul membre actif. Utilisez l'option « Supprimer le groupe » dans Paramètres pour supprimer le groupe.",
+      "lastMemberRedirect": "Vous ne pouvez pas quitter un groupe dont vous êtes le seul membre actif. Supprimez plutôt le groupe depuis la page des paramètres.",
       "body": {
         "otherAdmins": "Ces administrateurs conserveront le contrôle après votre départ : {names}.",
         "lastAdmin": {
@@ -1200,23 +1229,13 @@
         "unsettled": {
           "title": "Vous avez des soldes impayés",
           "description": "Quitter avec règlement forcé créera automatiquement des dépenses de remboursement pour les lignes vous concernant afin que le journal reste synchronisé. Les autres soldes restent inchangés."
-        },
-        "lastMember": {
-          "title": "Cela supprimera le groupe",
-          "description": "Vous êtes le seul membre actif de ce groupe. En partant, le groupe, toutes ses dépenses et tout son historique seront définitivement supprimés.",
-          "checkbox": "Je comprends que cela supprimera définitivement le groupe et toutes ses données.",
-          "suggestion": "Astuce : si vous souhaitez conserver ce groupe comme archive, vous pouvez plutôt l'archiver.",
-          "unsettledInfo": "Vous avez des soldes impayés dans ce groupe. Ils seront définitivement perdus lorsque le groupe sera supprimé."
         }
       },
       "toast": {
-        "left": "Vous avez quitté le groupe.",
-        "deleted": "Groupe supprimé.",
-        "archived": "Groupe archivé."
+        "left": "Vous avez quitté le groupe."
       },
       "error": {
         "lastAdmin": "Choisissez un membre à promouvoir administrateur avant de partir.",
-        "lastMember": "Confirmez la suppression définitive pour continuer.",
         "unsettled": "Réglez votre solde ou confirmez le règlement forcé pour partir."
       }
     },

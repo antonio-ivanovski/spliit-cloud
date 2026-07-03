@@ -492,7 +492,7 @@ describe('groupsRouter.leave — last admin', () => {
 })
 
 describe('groupsRouter.leave — last active member', () => {
-  it('rejects without confirmDelete with PRECONDITION_FAILED', async () => {
+  it('rejects last-member leaves with PRECONDITION_FAILED (use the dedicated delete flow instead)', async () => {
     await authAs('acct-self')
     seedLeaveContext({
       callerRole: 'ADMIN',
@@ -505,73 +505,24 @@ describe('groupsRouter.leave — last active member', () => {
       code: 'PRECONDITION_FAILED',
     })
     expect(prismaMock.group.delete).not.toHaveBeenCalled()
-  })
-
-  it('deletes the group when confirmDelete=true', async () => {
-    await authAs('acct-self')
-    seedLeaveContext({
-      callerRole: 'ADMIN',
-      otherMemberCount: 0,
-      otherAdminCount: 0,
-    })
-    prismaMock.expenseDocument.findMany.mockResolvedValue([] as never)
-
-    const caller = makeCaller('acct-self')
-    const result = await caller.leave({
-      groupId: 'grp-1',
-      confirmDelete: true,
-    })
-
-    expect(result).toEqual({ deleted: true, promotedMemberId: null })
-    expect(prismaMock.group.delete).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { id: 'grp-1' } }),
-    )
-    // No membership flip and no promotion: the cascade handles it.
     expect(prismaMock.groupMember.update).not.toHaveBeenCalled()
   })
 
-  it('does not create settlement expenses when the caller has an unsettled balance and the group will be deleted', async () => {
-    // The group is about to be cascade-deleted, so any settlement
-    // expense we wrote would be removed along with everything else.
-    // The caller is informed in the UI that the unsettled amount will
-    // be lost, and the API silently skips the force-settlement step.
+  it('still rejects last-member leaves when force=true is supplied', async () => {
     await authAs('acct-self')
     seedLeaveContext({
       callerRole: 'ADMIN',
       otherMemberCount: 0,
       otherAdminCount: 0,
     })
-    prismaMock.expenseDocument.findMany.mockResolvedValue([] as never)
-    // Alice paid 100 for herself only — balanced for her, but the
-    // caller's ledger participant has a non-zero row to trip the
-    // settlement check. We use a self-only expense so the balance is
-    // effectively zero for the algorithm but the participant row is
-    // populated, which is enough to keep the early-return path intact.
-    // To actually exercise the unsettled branch we use a real two-leg
-    // expense below.
-    prismaMock.expense.findMany.mockResolvedValue([
-      makeExpenseRow({
-        id: 'exp-1',
-        amount: 100,
-        paidById: 'lp-self',
-        paidFor: [
-          { participantId: 'lp-self', shares: 1 },
-          { participantId: 'lp-orphan', shares: 1 },
-        ],
-      }),
-    ] as never)
 
     const caller = makeCaller('acct-self')
-    const result = await caller.leave({
-      groupId: 'grp-1',
-      confirmDelete: true,
-      force: true,
+    await expect(
+      caller.leave({ groupId: 'grp-1', force: true }),
+    ).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
     })
-
-    expect(result).toEqual({ deleted: true, promotedMemberId: null })
-    expect(prismaMock.group.delete).toHaveBeenCalled()
-    // Force-settlement is a no-op when the group is being deleted.
-    expect(prismaMock.expense.create).not.toHaveBeenCalled()
+    expect(prismaMock.group.delete).not.toHaveBeenCalled()
   })
 })
 
