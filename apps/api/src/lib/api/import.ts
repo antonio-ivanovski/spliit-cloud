@@ -277,7 +277,9 @@ export async function importGroup(
         },
         tx,
       )
-      totalAmount += expense.amount
+      if (!expense.isReimbursement) {
+        totalAmount += expense.amount
+      }
       const resolvedPaidByList = expense.paidByList
         .map((paidBy) => {
           const resolved = destIdByClientKey.get(paidBy.participant)
@@ -463,6 +465,7 @@ export async function importGroup(
         role: GroupRole.MEMBER,
         inviterAccountId: actor.accountId,
         temporaryName: invite.sourceName,
+        ledgerParticipantId: invite.destLedgerParticipantId,
       })
       const existingAccount = await prisma.account.findFirst({
         where: { email: { equals: email.toLowerCase(), mode: 'insensitive' } },
@@ -476,6 +479,10 @@ export async function importGroup(
         inviterRole: GroupRole.ADMIN,
         recipientEmail: invitation.email,
         recipientIsExistingUser: !!existingAccount,
+        sourceProvider: input.sourceMeta?.provider,
+        expenseCount: input.expenses.length,
+        totalAmount: baseResult.summaryActivity.totalAmount,
+        currencyCode: baseResult.summaryActivity.currencyCode,
       })
       inviteResults.push({
         sourceName: invite.sourceName,

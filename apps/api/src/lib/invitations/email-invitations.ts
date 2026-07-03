@@ -29,6 +29,7 @@ export type CreateInvitationInput = {
   inviterAccountId: string
   /** Pending-only label. Ignored after acceptance. */
   temporaryName?: string | null
+  ledgerParticipantId?: string | null
 }
 
 export class InvitationError extends TRPCError {
@@ -97,6 +98,7 @@ export async function createEmailInvitation({
   role,
   inviterAccountId,
   temporaryName,
+  ledgerParticipantId,
 }: CreateInvitationInput) {
   const normalizedEmail = email.toLowerCase()
 
@@ -113,6 +115,9 @@ export async function createEmailInvitation({
       role,
       temporaryName: temporaryName ?? null,
       invitedById: inviterAccountId,
+      ...(ledgerParticipantId
+        ? { ledgerParticipantId: ledgerParticipantId }
+        : {}),
     },
   })
 
@@ -365,6 +370,11 @@ export async function sendInvitationEmail(opts: {
   inviterRole: GroupRole
   recipientEmail: string
   recipientIsExistingUser: boolean
+  sourceProvider?: string
+  sourceGroupName?: string
+  expenseCount?: number
+  totalAmount?: number
+  currencyCode?: string | null
 }) {
   const {
     invitationId,
@@ -374,6 +384,11 @@ export async function sendInvitationEmail(opts: {
     inviterRole,
     recipientEmail,
     recipientIsExistingUser,
+    sourceProvider,
+    sourceGroupName,
+    expenseCount,
+    totalAmount,
+    currencyCode,
   } = opts
 
   const webBase = getWebBaseUrl()
@@ -382,23 +397,54 @@ export async function sendInvitationEmail(opts: {
 
   const subject = `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
 
-  const text = recipientIsExistingUser
+  const lines: string[] = recipientIsExistingUser
     ? [
         `${inviterDisplayName} (${inviterRole.toLowerCase()}) invited you to join "${groupName}" on Spliit Cloud.`,
         '',
         `Open Spliit to accept or decline the invitation:`,
         acceptUrl,
-        '',
-        `If you don't recognize this group, you can safely ignore this email.`,
-      ].join('\n')
+      ]
     : [
         `${inviterDisplayName} invited you to join "${groupName}" on Spliit Cloud.`,
         '',
         `Create an account to join the group:`,
         signInUrl,
-        '',
-        `If you don't want to join, you can safely ignore this email.`,
-      ].join('\n')
+      ]
+
+  if (sourceProvider) {
+    const PROVIDER_LABELS: Record<string, string> = {
+      SPLIIT: 'a Spliit export',
+      SPLITWISE: 'a Splitwise export',
+    }
+    const fromProvider =
+      PROVIDER_LABELS[sourceProvider] ??
+      `a ${sourceProvider.toLowerCase()} export`
+
+    lines.push('', '---', '')
+    lines.push(`This invitation is part of an import from ${fromProvider}.`)
+    if (sourceGroupName) {
+      lines.push(`Source group: ${sourceGroupName}`)
+    }
+    let expenseLine = ''
+    if (expenseCount != null) {
+      expenseLine += `The group contains ${expenseCount} expense${expenseCount === 1 ? '' : 's'} from the import`
+    }
+    if (totalAmount != null && currencyCode) {
+      const formattedTotal = `${currencyCode} ${(totalAmount / 100).toFixed(2)}`
+      expenseLine += ` (total ${formattedTotal})`
+    }
+    if (expenseLine) {
+      expenseLine += '.'
+      lines.push(expenseLine)
+    }
+  }
+
+  lines.push(
+    '',
+    `If you don't recognize this group, you can safely ignore this email.`,
+  )
+
+  const text = lines.join('\n')
 
   try {
     await sendEmail({ to: recipientEmail, subject, text })

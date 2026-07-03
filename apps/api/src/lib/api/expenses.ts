@@ -742,7 +742,7 @@ export async function updateExpense(
         isReimbursement: expense.isReimbursement,
         documents: {
             connectOrCreate: documents.map((doc) => ({
-              create: doc,
+              create: { ...doc, ledgerId: group.ledgerId },
               where: { id: doc.id },
             })),
             deleteMany: existingExpense.documents

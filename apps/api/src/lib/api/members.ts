@@ -268,7 +268,6 @@ export async function leaveGroup(opts: {
   promoteMemberId?: string
 }): Promise<{
   promotedMemberId: string | null
-  settlementActivities: Array<{ activityId: string; expenseId: string; title: string; amount: number; currencyCode: string | null; date: string; time: Date }>
 }> {
   const { groupId, actor, force = false, promoteMemberId } = opts
 
@@ -422,7 +421,7 @@ export async function leaveGroup(opts: {
     })
   }
 
-  return { deleted: false, promotedMemberId: result.promotedMemberId }
+  return { promotedMemberId: result.promotedMemberId }
 }
 
 export async function archiveGroupForSelf(opts: {

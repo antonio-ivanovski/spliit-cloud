@@ -328,8 +328,8 @@ describe('groupsRouter.leave — happy path', () => {
 
     const caller = makeCaller('acct-self')
     const result = await caller.leave({ groupId: 'grp-1' })
+    expect(result).toEqual({ promotedMemberId: null })
 
-    expect(result).toEqual({ deleted: false, promotedMemberId: null })
     expect(prismaMock.groupMember.update).toHaveBeenCalledWith(
       expect.objectContaining({
         where: { id: 'gm-self' },
@@ -362,7 +362,7 @@ describe('groupsRouter.leave — happy path', () => {
     const caller = makeCaller('acct-self')
     const result = await caller.leave({ groupId: 'grp-1' })
 
-    expect(result).toEqual({ deleted: false, promotedMemberId: null })
+    expect(result).toEqual({ promotedMemberId: null })
     // The caller is flipped to LEFT but no promotion occurs.
     expect(prismaMock.groupMember.update).toHaveBeenCalledTimes(1)
   })
@@ -417,7 +417,6 @@ describe('groupsRouter.leave — last admin', () => {
     })
 
     expect(result).toEqual({
-      deleted: false,
       promotedMemberId: 'gm-other-member',
     })
     // First update promotes Bob, second flips the caller to LEFT.
