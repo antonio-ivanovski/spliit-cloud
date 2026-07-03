@@ -221,4 +221,183 @@ describe('Invitation flow — real DB', () => {
     })
     expect(member).toBeNull()
   })
+
+  // ------------------------------------------------------------------
+  // 4. Remove member → re-invite → accept
+  // ------------------------------------------------------------------
+  it('re-invites a removed member by email and restores active status', async () => {
+    const groupCaller = adminCaller()
+
+    // Create group
+    const { groupId } = await groupCaller.create({
+      groupFormValues: {
+        name: `Remove-Reinvite Group ${runId}`,
+        currency: '$',
+        currencyCode: 'USD',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+      select: { ledgerId: true },
+    })
+    trackLedger(group!.ledgerId)
+
+    // Invite the invitee
+    const { invitationId } = await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+
+    // Invitee accepts
+    await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).accept({ invitationId })
+
+    // Verify both members exist
+    const adminMember = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: adminId } },
+    })
+    expect(adminMember).not.toBeNull()
+    expect(adminMember!.status).toBe('ACTIVE')
+
+    const inviteeMemberBefore = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(inviteeMemberBefore).not.toBeNull()
+    expect(inviteeMemberBefore!.status).toBe('ACTIVE')
+
+    // Admin removes the invitee
+    await groupCaller.members.remove({
+      groupId,
+      memberId: inviteeMemberBefore!.id,
+    })
+
+    // Verify member is now REMOVED
+    const inviteeMemberRemoved = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(inviteeMemberRemoved!.status).toBe('REMOVED')
+    expect(inviteeMemberRemoved!.leftAt).not.toBeNull()
+
+    // Admin re-invites the same email — should succeed after the fix
+    const reInvite = await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+    expect(reInvite).toHaveProperty('invitationId')
+
+    const newInvitation = await prisma.groupInvitation.findUnique({
+      where: { id: reInvite.invitationId },
+    })
+    expect(newInvitation).not.toBeNull()
+    expect(newInvitation!.status).toBe('PENDING')
+    // Stale ACCEPTED invitation from the previous membership still exists
+    const acceptedInvitations = await prisma.groupInvitation.findMany({
+      where: { groupId, email: inviteeEmail.toLowerCase(), status: 'ACCEPTED' },
+    })
+    expect(acceptedInvitations.length).toBeGreaterThanOrEqual(1)
+
+    // Invitee accepts the new invitation
+    const acceptResult = await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).accept({ invitationId: reInvite.invitationId })
+    expect(acceptResult.groupId).toBe(groupId)
+
+    // Verify member is ACTIVE again with leftAt cleared
+    const inviteeMemberRestored = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(inviteeMemberRestored!.status).toBe('ACTIVE')
+    expect(inviteeMemberRestored!.leftAt).toBeNull()
+    expect(inviteeMemberRestored!.joinedAt).not.toBeNull()
+  })
+
+  // ------------------------------------------------------------------
+  // 5. Leave → re-invite → accept
+  // ------------------------------------------------------------------
+  it('re-invites a member who left the group by email and restores active status', async () => {
+    const groupCaller = adminCaller()
+
+    // Create group
+    const { groupId } = await groupCaller.create({
+      groupFormValues: {
+        name: `Leave-Reinvite Group ${runId}`,
+        currency: '$',
+        currencyCode: 'USD',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+      select: { ledgerId: true },
+    })
+    trackLedger(group!.ledgerId)
+
+    // Invite the invitee
+    const { invitationId } = await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+
+    // Invitee accepts
+    await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).accept({ invitationId })
+
+    // Verify both are active
+    const inviteeMemberBefore = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(inviteeMemberBefore!.status).toBe('ACTIVE')
+
+    // Invitee leaves the group (call the leave mutation as the invitee)
+    const inviteeGroupCaller = groupsRouter.createCaller({
+      auth: {
+        session: { id: 'sess-test' },
+        user: {
+          id: inviteeId,
+          email: inviteeEmail,
+          emailVerified: true,
+          name: 'Test User',
+        },
+      },
+    } as never)
+    await inviteeGroupCaller.leave({ groupId })
+
+    // Verify member is now LEFT
+    const inviteeMemberLeft = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(inviteeMemberLeft!.status).toBe('LEFT')
+    expect(inviteeMemberLeft!.leftAt).not.toBeNull()
+
+    // Admin re-invites the same email — should succeed
+    const reInvite = await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+    expect(reInvite).toHaveProperty('invitationId')
+
+    // Invitee accepts the new invitation
+    const acceptResult = await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).accept({ invitationId: reInvite.invitationId })
+    expect(acceptResult.groupId).toBe(groupId)
+
+    // Verify member is ACTIVE again with leftAt cleared
+    const inviteeMemberRestored = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(inviteeMemberRestored!.status).toBe('ACTIVE')
+    expect(inviteeMemberRestored!.leftAt).toBeNull()
+  })
 })

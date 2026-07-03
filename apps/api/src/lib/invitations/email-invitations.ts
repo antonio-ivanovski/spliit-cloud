@@ -1,11 +1,16 @@
 import {
   GroupInvitationStatus,
   GroupInvitationType,
+  GroupMemberStatus,
   prisma,
   type GroupRole,
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
-import { buildInvitationActivityData, logActivity } from '../api/activities'
+import {
+  buildExpenseActivityData,
+  buildInvitationActivityData,
+  logActivity,
+} from '../api/activities'
 import {
   createSettlementExpensesForLeave,
   getGroupBalances,
@@ -13,6 +18,7 @@ import {
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { sendEmail } from '../mail/send'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
 
@@ -53,6 +59,7 @@ async function assertNotExistingMember(
     where: {
       groupId,
       account: { email: { equals: normalizedEmail, mode: 'insensitive' } },
+      status: GroupMemberStatus.ACTIVE,
     },
     select: { id: true },
   })
@@ -78,18 +85,6 @@ async function assertNoConflictingEmailInvitation(
     throw new InvitationError(
       'An invitation is already pending for this email. Revoke the existing one below and try again.',
     )
-  }
-  const existingAccepted = await prisma.groupInvitation.findFirst({
-    where: {
-      groupId,
-      type: GroupInvitationType.EMAIL,
-      email: { equals: normalizedEmail, mode: 'insensitive' },
-      status: GroupInvitationStatus.ACCEPTED,
-    },
-    select: { id: true },
-  })
-  if (existingAccepted) {
-    throw new InvitationError('This email is already a member of the group.')
   }
 }
 
@@ -178,18 +173,24 @@ export async function revokeInvitation(opts: {
     )
   }
 
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
+    let settlementActivities = undefined as
+      | Awaited<
+          ReturnType<typeof createSettlementExpensesForLeave>
+        >['activities']
+      | undefined
     if (
       opts.settleBalances &&
       invitation.ledgerParticipantId &&
       invitation.status === GroupInvitationStatus.PENDING
     ) {
-      await createSettlementExpensesForLeave(
+      const r = await createSettlementExpensesForLeave(
         opts.groupId,
         invitation.ledgerParticipantId,
         opts.actor,
         tx,
       )
+      settlementActivities = r.activities
     }
 
     const updated = await tx.groupInvitation.update({
@@ -229,8 +230,28 @@ export async function revokeInvitation(opts: {
       }
     }
 
-    return updated
+    return { updated, settlementActivities }
   })
+  if (result.settlementActivities) {
+    for (const meta of result.settlementActivities) {
+      scheduleDefaultNotificationDispatch({
+        activityId: meta.activityId,
+        type: 'EXPENSE_CREATED',
+        groupId: opts.groupId,
+        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+        subject: { type: 'EXPENSE', id: meta.expenseId },
+        data: buildExpenseActivityData({
+          summary: meta.title,
+          title: meta.title,
+          amount: meta.amount,
+          currencyCode: meta.currencyCode,
+          date: meta.date,
+        }),
+        occurredAt: meta.time,
+      })
+    }
+  }
+  return result.updated
 }
 
 export async function getRevokeInvitationPreview(opts: {

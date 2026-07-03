@@ -524,7 +524,7 @@ describe('invitationsRouter.create — guards and email', () => {
     expect(prismaMock.groupInvitation.create).not.toHaveBeenCalled()
   })
 
-  it('rejects an invitation when the same email has already been accepted', async () => {
+  it('allows re-inviting an email with a previously accepted invitation when the member is no longer active', async () => {
     await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
@@ -538,28 +538,19 @@ describe('invitationsRouter.create — guards and email', () => {
       status: 'ACTIVE',
     } as never)
     prismaMock.groupMember.findFirst.mockResolvedValue(null)
-    prismaMock.groupInvitation.findFirst.mockImplementation((async (
-      args: unknown,
-    ) => {
-      const a = args as { where?: { status?: string } }
-      if (a.where?.status === 'ACCEPTED') {
-        return { id: 'inv-accepted' } as never
-      }
-      return null
-    }) as never)
+    prismaMock.groupInvitation.create.mockResolvedValue({
+      id: 'inv-new-1',
+      email: 'bob@example.com',
+    } as never)
 
     const caller = makeCaller('acct-admin')
-    await expect(
-      caller.create({
-        groupId: 'grp-1',
-        email: 'bob@example.com',
-        role: 'MEMBER',
-      }),
-    ).rejects.toMatchObject({
-      code: 'BAD_REQUEST',
-      message: expect.stringMatching(/already a member/i),
+    const result = await caller.create({
+      groupId: 'grp-1',
+      email: 'bob@example.com',
+      role: 'MEMBER',
     })
-    expect(prismaMock.groupInvitation.create).not.toHaveBeenCalled()
+    expect(result).toMatchObject({ invitationId: 'inv-new-1' })
+    expect(prismaMock.groupInvitation.create).toHaveBeenCalled()
   })
 
   it('sends an "in-app" invitation email when the recipient already has an account', async () => {
