@@ -26,7 +26,10 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 - [ ] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
 - [ ] Recurring expenses — `calculateNextDate` and daily/weekly/monthly tests already in place
 - [ ] Account overview homepage ([design](./openspec/changes/add-overview-homepage)) — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)
-- [ ] Notifications — feature flag already in place; the implementation includes a Telegram channel (see Cross-cutting)
+- [ ] Notifications
+      — [x] Email
+      — [ ] Telegram
+      — [ ] Push
 
 ### Quality-of-life additions (small, high-trust, ship in batches)
 
@@ -84,7 +87,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - Server-authoritative currency conversion ([design](./openspec/changes/server-authoritative-currency-conversion)) — addresses upstream [#513](https://github.com/spliit-app/spliit/issues/513) / [#425](https://github.com/spliit-app/spliit/pull/425) and [#514](https://github.com/spliit-app/spliit/issues/514) / [#515](https://github.com/spliit-app/spliit/pull/515)
 - **Migrations & imports** — every frustrated Splitwise / Tricount user is a potential customer
   - [ ] Tricount import — PR [#526](https://github.com/spliit-app/spliit/pull/526)
-  - [ ] Splitwise (CSV) import — upstream [#22](https://github.com/spliit-app/spliit/issues/22), PR [#483](https://github.com/spliit-app/spliit/pull/483)
+  - [x] Splitwise (CSV) import — upstream [#22](https://github.com/spliit-app/spliit/issues/22), PR [#483](https://github.com/spliit-app/spliit/pull/483)
 - **Self-hosting polish** — turn the README's "self-hosting is supported" into "self-hosting is easy"
   - [ ] Docker Hub published image (CI on tag) — upstream [#60](https://github.com/spliit-app/spliit/issues/60)
   - [ ] `basePath` support for reverse-proxy subpath hosting — upstream [#444](https://github.com/spliit-app/spliit/issues/444)
@@ -96,6 +99,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
   - [ ] Currency framework to absorb the steady stream of "add NPR / MOP / VND / COP / MYR / MKD" PRs — supersedes [#418](https://github.com/spliit-app/spliit/issues/418), [#431](https://github.com/spliit-app/spliit/issues/431), [#438](https://github.com/spliit-app/spliit/issues/438)
 - **Integrations / channels**
   - [ ] Telegram notification channel — PR [#252](https://github.com/spliit-app/spliit/pull/252)
+  - [x] Email notification channel — granular per-expense change alerts delivered to group members
   - [ ] Activity feed RSS / Atom export — upstream [#381](https://github.com/spliit-app/spliit/issues/381)
 - **Analytics** — turn Spliit from "log splitter" into "money insights"
   - [ ] Pie chart by category — PR [#163](https://github.com/spliit-app/spliit/pull/163)
