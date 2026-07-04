@@ -15,12 +15,17 @@ describe('classifyExpenseItemUpdate', () => {
   })
 
   it('returns "create" when item has no id', () => {
-    expect(classifyExpenseItemUpdate({ id: undefined }, new Set())).toBe('create')
+    expect(classifyExpenseItemUpdate({ id: undefined }, new Set())).toBe(
+      'create',
+    )
   })
 
   it('returns "create" when item id is not in existingItemIds (client-generated)', () => {
     expect(
-      classifyExpenseItemUpdate({ id: 'new-client-uuid' }, new Set(['existing-1'])),
+      classifyExpenseItemUpdate(
+        { id: 'new-client-uuid' },
+        new Set(['existing-1']),
+      ),
     ).toBe('create')
   })
 

@@ -17,164 +17,167 @@ await checkDbConnection()
 // stays useful in environments where only the DB is running.
 const maildevReachable = await probeMaildev()
 
-describe.skipIf(!maildevReachable)('Import flow — email invitation context', () => {
-  const runId = testRunId()
-  const adminId = `admin-${runId}`
-  const adminEmail = `admin-${runId}@test-import.example`
-  const inviteeEmail = `invitee-${runId}@test-import.example`
+describe.skipIf(!maildevReachable)(
+  'Import flow — email invitation context',
+  () => {
+    const runId = testRunId()
+    const adminId = `admin-${runId}`
+    const adminEmail = `admin-${runId}@test-import.example`
+    const inviteeEmail = `invitee-${runId}@test-import.example`
 
-  const accountIds: string[] = [adminId]
-  const ledgerIds: string[] = []
+    const accountIds: string[] = [adminId]
+    const ledgerIds: string[] = []
 
-  let groupId: string
-  let adminLpId: string
+    let groupId: string
+    let adminLpId: string
 
-  function makeCaller() {
-    return groupsRouter.createCaller({
-      auth: {
-        session: { id: 'sess-test' },
-        user: {
+    function makeCaller() {
+      return groupsRouter.createCaller({
+        auth: {
+          session: { id: 'sess-test' },
+          user: {
+            id: adminId,
+            email: adminEmail,
+            emailVerified: true,
+            name: 'Test Admin',
+          },
+        },
+      } as never)
+    }
+
+    beforeAll(async () => {
+      await prisma.account.upsert({
+        where: { email: adminEmail },
+        update: {},
+        create: {
           id: adminId,
           email: adminEmail,
           emailVerified: true,
           name: 'Test Admin',
         },
-      },
-    } as never)
-  }
+      })
 
-  beforeAll(async () => {
-    await prisma.account.upsert({
-      where: { email: adminEmail },
-      update: {},
-      create: {
-        id: adminId,
-        email: adminEmail,
-        emailVerified: true,
-        name: 'Test Admin',
-      },
-    })
+      const ledger = await prisma.ledger.create({
+        data: { id: randomId(), currency: '$', currencyCode: 'USD' },
+      })
+      ledgerIds.push(ledger.id)
 
-    const ledger = await prisma.ledger.create({
-      data: { id: randomId(), currency: '$', currencyCode: 'USD' },
-    })
-    ledgerIds.push(ledger.id)
-
-    const group = await prisma.group.create({
-      data: {
-        id: randomId(),
-        name: `Import-Test-${runId}`,
-        ledgerId: ledger.id,
-      },
-    })
-    groupId = group.id
-
-    const adminMember = await prisma.groupMember.create({
-      data: {
-        id: randomId(),
-        groupId,
-        accountId: adminId,
-        role: GroupRole.ADMIN,
-        status: GroupMemberStatus.ACTIVE,
-        joinedAt: new Date(),
-      },
-    })
-
-    const adminLp = await prisma.ledgerParticipant.create({
-      data: {
-        id: randomId(),
-        ledgerId: ledger.id,
-        groupMemberId: adminMember.id,
-      },
-    })
-    adminLpId = adminLp.id
-  })
-
-  afterAll(async () => {
-    for (const lid of ledgerIds) {
-      await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
-    }
-    for (const aid of accountIds) {
-      await prisma.account.delete({ where: { id: aid } }).catch(() => {})
-    }
-  })
-
-  it('sends an invitation email with import context when importing from SPLIIT', async () => {
-    const destLpNew = randomId()
-
-    const result = await makeCaller().import({
-      targetGroupId: groupId,
-      participants: [
-        {
-          mode: 'LINK_EXISTING_PARTICIPANT',
-          sourceName: 'Admin',
-          destLedgerParticipantId: adminLpId,
+      const group = await prisma.group.create({
+        data: {
+          id: randomId(),
+          name: `Import-Test-${runId}`,
+          ledgerId: ledger.id,
         },
-        {
-          mode: 'INVITE_BY_EMAIL',
-          sourceName: 'Invited Friend',
-          email: inviteeEmail,
-          destLedgerParticipantId: destLpNew,
+      })
+      groupId = group.id
+
+      const adminMember = await prisma.groupMember.create({
+        data: {
+          id: randomId(),
+          groupId,
+          accountId: adminId,
+          role: GroupRole.ADMIN,
+          status: GroupMemberStatus.ACTIVE,
+          joinedAt: new Date(),
         },
-      ],
-      expenses: [
-        {
-          title: 'Dinner',
-          amount: 2000,
-          expenseDate: new Date('2026-06-01'),
-          category: 'general',
-          splitMode: 'EVENLY',
-          paidBySplitMode: 'BY_AMOUNT',
-          paidByList: [{ participant: destLpNew, shares: 2000 }],
-          paidFor: [
-            { participant: destLpNew, shares: 1 },
-            { participant: adminLpId, shares: 1 },
-          ],
-          isReimbursement: false,
-          saveDefaultSplittingOptions: false,
-          documents: [],
-          recurrenceRule: 'NONE',
+      })
+
+      const adminLp = await prisma.ledgerParticipant.create({
+        data: {
+          id: randomId(),
+          ledgerId: ledger.id,
+          groupMemberId: adminMember.id,
         },
-        {
-          title: 'Lunch',
-          amount: 1500,
-          expenseDate: new Date('2026-06-02'),
-          category: 'general',
-          splitMode: 'EVENLY',
-          paidBySplitMode: 'BY_AMOUNT',
-          paidByList: [{ participant: adminLpId, shares: 1500 }],
-          paidFor: [
-            { participant: destLpNew, shares: 1 },
-            { participant: adminLpId, shares: 1 },
-          ],
-          isReimbursement: false,
-          saveDefaultSplittingOptions: false,
-          documents: [],
-          recurrenceRule: 'NONE',
-        },
-      ],
-      sourceMeta: {
-        provider: 'SPLIIT',
-        sourceGroupId: 'src-1',
-      },
+      })
+      adminLpId = adminLp.id
     })
 
-    expect(result.importedExpenses).toBe(2)
-    expect(result.invites).toHaveLength(1)
-    expect(result.invites[0].kind).toBe('EMAIL')
-    expect(result.invites[0].email).toBe(inviteeEmail.toLowerCase())
+    afterAll(async () => {
+      for (const lid of ledgerIds) {
+        await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
+      }
+      for (const aid of accountIds) {
+        await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+      }
+    })
 
-    const captured = await findEmailForRecipient(inviteeEmail)
-    expect(captured).not.toBeNull()
-    expect(captured!.text).toContain('You will appear as "Invited Friend"')
-    expect(captured!.text).toContain(
-      'This invitation is part of an import from a Spliit export.',
-    )
-    expect(captured!.text).toContain(
-      'The group contains 2 expenses from the import (total USD 35.00)',
-    )
-  })
-})
+    it('sends an invitation email with import context when importing from SPLIIT', async () => {
+      const destLpNew = randomId()
+
+      const result = await makeCaller().import({
+        targetGroupId: groupId,
+        participants: [
+          {
+            mode: 'LINK_EXISTING_PARTICIPANT',
+            sourceName: 'Admin',
+            destLedgerParticipantId: adminLpId,
+          },
+          {
+            mode: 'INVITE_BY_EMAIL',
+            sourceName: 'Invited Friend',
+            email: inviteeEmail,
+            destLedgerParticipantId: destLpNew,
+          },
+        ],
+        expenses: [
+          {
+            title: 'Dinner',
+            amount: 2000,
+            expenseDate: new Date('2026-06-01'),
+            category: 'general',
+            splitMode: 'EVENLY',
+            paidBySplitMode: 'BY_AMOUNT',
+            paidByList: [{ participant: destLpNew, shares: 2000 }],
+            paidFor: [
+              { participant: destLpNew, shares: 1 },
+              { participant: adminLpId, shares: 1 },
+            ],
+            isReimbursement: false,
+            saveDefaultSplittingOptions: false,
+            documents: [],
+            recurrenceRule: 'NONE',
+          },
+          {
+            title: 'Lunch',
+            amount: 1500,
+            expenseDate: new Date('2026-06-02'),
+            category: 'general',
+            splitMode: 'EVENLY',
+            paidBySplitMode: 'BY_AMOUNT',
+            paidByList: [{ participant: adminLpId, shares: 1500 }],
+            paidFor: [
+              { participant: destLpNew, shares: 1 },
+              { participant: adminLpId, shares: 1 },
+            ],
+            isReimbursement: false,
+            saveDefaultSplittingOptions: false,
+            documents: [],
+            recurrenceRule: 'NONE',
+          },
+        ],
+        sourceMeta: {
+          provider: 'SPLIIT',
+          sourceGroupId: 'src-1',
+        },
+      })
+
+      expect(result.importedExpenses).toBe(2)
+      expect(result.invites).toHaveLength(1)
+      expect(result.invites[0].kind).toBe('EMAIL')
+      expect(result.invites[0].email).toBe(inviteeEmail.toLowerCase())
+
+      const captured = await findEmailForRecipient(inviteeEmail)
+      expect(captured).not.toBeNull()
+      expect(captured!.text).toContain('You will appear as "Invited Friend"')
+      expect(captured!.text).toContain(
+        'This invitation is part of an import from a Spliit export.',
+      )
+      expect(captured!.text).toContain(
+        'The group contains 2 expenses from the import (total USD 35.00)',
+      )
+    })
+  },
+)
 
 describe('import summary notification', () => {
   const runId2 = testRunId()
