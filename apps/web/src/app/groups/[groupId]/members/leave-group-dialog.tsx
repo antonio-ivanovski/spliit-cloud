@@ -1,13 +1,14 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import {
   Select,
   SelectContent,
@@ -67,97 +68,105 @@ export function LeaveGroupDialog({
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
 
   return (
-    <Dialog
+    <ResponsiveDialog
       open={leaveDialogOpen}
       onOpenChange={(open) => {
         if (!open && leaveMutation.isPending) return
         onOpenChange(open)
       }}
     >
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{t('leave.title')}</DialogTitle>
-          <DialogDescription>{t('leave.description')}</DialogDescription>
-        </DialogHeader>
+      <ResponsiveDialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{t('leave.title')}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
+            {t('leave.description')}
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        {leavePreviewQuery.isLoading || !preview ? (
-          <div className="flex flex-col gap-3 py-2">
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {/* Last-active-member is blocked at the API level and the
-                Leave button is disabled, but keep this guard so the
-                dialog can't render a misleading copy if it ever opens
-                with stale preview data. */}
-            {isLastActiveMember ? (
-              <p className="text-sm text-muted-foreground">
-                {t('leave.lastMemberRedirect')}
-              </p>
-            ) : (
-              <>
-                {isAdminLeaving && otherAdmins.length > 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    {t('leave.body.otherAdmins', {
-                      names: otherAdmins
-                        .map((admin) => admin.name || '—')
-                        .join(', '),
-                    })}
-                  </p>
-                )}
-
-                {needsPromotion && (
-                  <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
-                    <p className="text-sm font-medium">
-                      {t('leave.body.lastAdmin.title')}
-                    </p>
+        <ResponsiveDialogBody>
+          {leavePreviewQuery.isLoading || !preview ? (
+            <div className="flex flex-col gap-3 py-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {/* Last-active-member is blocked at the API level and the
+                  Leave button is disabled, but keep this guard so the
+                  dialog can't render a misleading copy if it ever opens
+                  with stale preview data. */}
+              {isLastActiveMember ? (
+                <p className="text-sm text-muted-foreground">
+                  {t('leave.lastMemberRedirect')}
+                </p>
+              ) : (
+                <>
+                  {isAdminLeaving && otherAdmins.length > 0 && (
                     <p className="text-sm text-muted-foreground">
-                      {t('leave.body.lastAdmin.description')}
+                      {t('leave.body.otherAdmins', {
+                        names: otherAdmins
+                          .map((admin) => admin.name || '—')
+                          .join(', '),
+                      })}
                     </p>
-                    <div className="flex flex-col gap-1.5 pt-1">
-                      <Label htmlFor="promote-member">
+                  )}
+
+                  {needsPromotion && (
+                    <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                      <p className="text-sm font-medium">
                         {t('leave.body.lastAdmin.title')}
-                      </Label>
-                      <Select
-                        value={promoteMemberId ?? ''}
-                        onValueChange={(value) => onPromoteMemberChange(value)}
-                        disabled={leaveMutation.isPending}
-                      >
-                        <SelectTrigger id="promote-member">
-                          <SelectValue
-                            placeholder={t('leave.body.lastAdmin.placeholder')}
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {promotableMembers.map((member) => (
-                            <SelectItem key={member.id} value={member.id}>
-                              {member.name || '—'}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {t('leave.body.lastAdmin.description')}
+                      </p>
+                      <div className="flex flex-col gap-1.5 pt-1">
+                        <Label htmlFor="promote-member">
+                          {t('leave.body.lastAdmin.title')}
+                        </Label>
+                        <Select
+                          value={promoteMemberId ?? ''}
+                          onValueChange={(value) =>
+                            onPromoteMemberChange(value)
+                          }
+                          disabled={leaveMutation.isPending}
+                        >
+                          <SelectTrigger id="promote-member">
+                            <SelectValue
+                              placeholder={t(
+                                'leave.body.lastAdmin.placeholder',
+                              )}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {promotableMembers.map((member) => (
+                              <SelectItem key={member.id} value={member.id}>
+                                {member.name || '—'}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {hasUnsettledBalance && (
-                  <div className="flex flex-col gap-1 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
-                    <p className="text-sm font-medium">
-                      {t('leave.body.unsettled.title')}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {t('leave.body.unsettled.description')}
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        )}
+                  {hasUnsettledBalance && (
+                    <div className="flex flex-col gap-1 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                      <p className="text-sm font-medium">
+                        {t('leave.body.unsettled.title')}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {t('leave.body.unsettled.description')}
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </ResponsiveDialogBody>
 
-        <DialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:gap-2">
+        <ResponsiveDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:gap-2">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
@@ -174,8 +183,8 @@ export function LeaveGroupDialog({
               ? t('leave.confirmWithForce')
               : t('leave.confirm')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

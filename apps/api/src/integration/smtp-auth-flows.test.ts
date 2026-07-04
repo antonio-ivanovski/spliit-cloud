@@ -24,7 +24,7 @@ await checkDbConnection()
 const maildevReachable = await probeMaildev()
 
 vi.mock('../lib/mail/send', async (importOriginal) => {
-  const mod = await importOriginal<typeof import('../lib/mail/send')>()
+  const mod = (await importOriginal()) as typeof import('../lib/mail/send')
   return { ...mod, sendEmail: vi.fn(mod.sendEmail) }
 })
 

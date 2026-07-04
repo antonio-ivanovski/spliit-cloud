@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
@@ -78,20 +78,22 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
   }
 
   return (
-    <Dialog
+    <ResponsiveDialog
       open={!!groupId}
       onOpenChange={(open) => {
         if (!open) onClose()
       }}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('archiveWithBalancesTitle')}</DialogTitle>
-          <DialogDescription>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
+            {t('archiveWithBalancesTitle')}
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             {t('archiveWithBalancesDescription')}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
           <Button
             type="button"
             variant="secondary"
@@ -112,8 +114,8 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
             {pending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             {t('archiveWithBalancesForce')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

@@ -358,7 +358,7 @@ async function main() {
       }
       console.error(`Found ${result.errors.length} error(s):`)
       for (const e of result.errors) console.error(`  ${e}`)
-      process.exit(1)
+      return process.exit(1)
     }
 
     case 'check': {

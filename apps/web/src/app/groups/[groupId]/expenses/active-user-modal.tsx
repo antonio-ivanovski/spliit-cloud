@@ -1,22 +1,15 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useMediaQuery } from '@/lib/hooks'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -29,7 +22,6 @@ export function ActiveUserModal({ groupId }: { groupId: string }) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'Expenses.ActiveUserModal',
   })
-  const isDesktop = useMediaQuery('(min-width: 768px)')
   const isPendingInvitee = useIsPendingInvitee()
 
   const [open, setOpen] = useState(() => {
@@ -54,44 +46,25 @@ export function ActiveUserModal({ groupId }: { groupId: string }) {
     setOpen(nextOpen)
   }
 
-  if (isDesktop) {
-    return (
-      <Dialog open={open} onOpenChange={updateOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{t('title')}</DialogTitle>
-            <DialogDescription>{t('description')}</DialogDescription>
-          </DialogHeader>
-          <ActiveUserForm group={group} close={() => setOpen(false)} />
-          <DialogFooter className="sm:justify-center">
-            <p className="text-sm text-center text-muted-foreground">
-              {t('footer')}
-            </p>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-
   return (
-    <Drawer open={open} onOpenChange={updateOpen}>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>{t('title')}</DrawerTitle>
-          <DialogDescription>{t('description')}</DialogDescription>
-        </DrawerHeader>
-        <ActiveUserForm
-          className="px-4"
-          group={group}
-          close={() => setOpen(false)}
-        />
-        <DrawerFooter className="pt-2">
+    <ResponsiveDialog open={open} onOpenChange={updateOpen}>
+      <ResponsiveDialogContent className="sm:max-w-[425px]">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
+            {t('description')}
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody>
+          <ActiveUserForm group={group} close={() => setOpen(false)} />
+        </ResponsiveDialogBody>
+        <ResponsiveDialogFooter className="sm:justify-center pt-2">
           <p className="text-sm text-center text-muted-foreground">
             {t('footer')}
           </p>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }
 

@@ -1,15 +1,16 @@
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { calculateShare } from '@/lib/totals'
 import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -155,156 +156,162 @@ export function ItemParticipantsModal(props: {
   const distributionShares = draft.paidFor.map((p) => p.shares || 0)
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{item.title || '(unnamed item)'}</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="sm:max-w-lg">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
+            {item.title || '(unnamed item)'}
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             {itemTotal.toFixed(2)}
             {' · '}
             {draft.quantity}
             {' × '}
             {draft.unitPrice.toFixed(2)}
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        <div>
-          <div className="mb-4">
-            <PaidForSplitOptionCards
-              value={draft.splitMode}
-              onChange={handleSplitModeChange}
-              readOnly={readOnly}
+        <ResponsiveDialogBody>
+          <div>
+            <div className="mb-4">
+              <PaidForSplitOptionCards
+                value={draft.splitMode}
+                onChange={handleSplitModeChange}
+                readOnly={readOnly}
+              />
+            </div>
+
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-sm font-medium">Participants</span>
+              <Button
+                variant="link"
+                type="button"
+                className="-my-2 -mx-4"
+                disabled={readOnly}
+                onClick={handleSelectAll}
+              >
+                {selectLabel}
+              </Button>
+            </div>
+
+            {group.participants.map((participant) => {
+              const checked = draft.paidFor.some(
+                (p) => p.participant === participant.id,
+              )
+              const row = draft.paidFor.find(
+                (p) => p.participant === participant.id,
+              )
+
+              const previewAmount =
+                checked && draft.splitMode !== 'BY_AMOUNT'
+                  ? calculateShare(participant.id, {
+                      amount: amountAsMinorUnits(itemTotal, groupCurrency),
+                      paidFor: draft.paidFor.map((p) => ({
+                        participant: {
+                          id: p.participant,
+                          name: '',
+                          groupId: '',
+                        },
+                        shares:
+                          draft.splitMode === 'BY_PERCENTAGE'
+                            ? p.shares * 100
+                            : p.shares,
+                        expenseId: '',
+                        participantId: '',
+                      })),
+                      splitMode: draft.splitMode,
+                      isReimbursement: false,
+                    })
+                  : null
+
+              return (
+                <ParticipantShareRow
+                  key={participant.id}
+                  dataId={`${participant.id}/${draft.splitMode}/${groupCurrency.code}`}
+                  participant={participant}
+                  checked={checked}
+                  onCheckedChange={(next) =>
+                    handleCheckedChange(participant.id, next)
+                  }
+                  disabled={readOnly}
+                  pendingLabel={
+                    participant.pending ? (
+                      <ParticipantPendingLabel
+                        text={t('participant.pending')}
+                      />
+                    ) : undefined
+                  }
+                  preview={
+                    previewAmount != null ? (
+                      <ParticipantRowAmountPreview
+                        amount={previewAmount}
+                        currency={groupCurrency}
+                      />
+                    ) : undefined
+                  }
+                  shareInput={
+                    draft.splitMode !== 'EVENLY' && checked ? (
+                      <div>
+                        <div className="flex gap-1 items-center">
+                          <span className="text-sm">
+                            {draft.splitMode === 'BY_AMOUNT' &&
+                              groupCurrency.symbol}
+                          </span>
+                          <Input
+                            className="text-base w-[80px] -my-2"
+                            type="text"
+                            disabled={readOnly}
+                            value={String(row?.shares ?? '')}
+                            onChange={(e) =>
+                              handleShareChange(participant.id, e.target.value)
+                            }
+                            inputMode={match(draft.splitMode)
+                              .with('BY_PERCENTAGE', () => 'decimal' as const)
+                              .with('BY_SHARES', () => 'numeric' as const)
+                              .otherwise(() => 'decimal' as const)}
+                            step={match(draft.splitMode)
+                              .with('BY_PERCENTAGE', () => 0.01)
+                              .with('BY_SHARES', () => 1)
+                              .otherwise(
+                                () => 10 ** -groupCurrency.decimal_digits,
+                              )}
+                          />
+                          <span className="text-sm">
+                            {match(draft.splitMode)
+                              .with('BY_SHARES', () => t('shares'))
+                              .with('BY_PERCENTAGE', () => '%')
+                              .otherwise(() => '')}
+                          </span>
+                        </div>
+                      </div>
+                    ) : undefined
+                  }
+                />
+              )
+            })}
+
+            <ParticipantDistributionFooter
+              splitMode={draft.splitMode}
+              targetAmount={
+                draft.splitMode === 'BY_PERCENTAGE'
+                  ? 100
+                  : amountAsMinorUnits(itemTotal, groupCurrency)
+              }
+              shares={
+                draft.splitMode === 'BY_AMOUNT'
+                  ? distributionShares.map((s) =>
+                      amountAsMinorUnits(s, groupCurrency),
+                    )
+                  : distributionShares
+              }
+              currency={groupCurrency}
+              paidByCount={draft.paidFor.length}
+              dataTestId="item-participants-distribution-footer"
             />
           </div>
+        </ResponsiveDialogBody>
 
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-sm font-medium">Participants</span>
-            <Button
-              variant="link"
-              type="button"
-              className="-my-2 -mx-4"
-              disabled={readOnly}
-              onClick={handleSelectAll}
-            >
-              {selectLabel}
-            </Button>
-          </div>
-
-          {group.participants.map((participant) => {
-            const checked = draft.paidFor.some(
-              (p) => p.participant === participant.id,
-            )
-            const row = draft.paidFor.find(
-              (p) => p.participant === participant.id,
-            )
-
-            const previewAmount =
-              checked && draft.splitMode !== 'BY_AMOUNT'
-                ? calculateShare(participant.id, {
-                    amount: amountAsMinorUnits(itemTotal, groupCurrency),
-                    paidFor: draft.paidFor.map((p) => ({
-                      participant: {
-                        id: p.participant,
-                        name: '',
-                        groupId: '',
-                      },
-                      shares:
-                        draft.splitMode === 'BY_PERCENTAGE'
-                          ? p.shares * 100
-                          : p.shares,
-                      expenseId: '',
-                      participantId: '',
-                    })),
-                    splitMode: draft.splitMode,
-                    isReimbursement: false,
-                  })
-                : null
-
-            return (
-              <ParticipantShareRow
-                key={participant.id}
-                dataId={`${participant.id}/${draft.splitMode}/${groupCurrency.code}`}
-                participant={participant}
-                checked={checked}
-                onCheckedChange={(next) =>
-                  handleCheckedChange(participant.id, next)
-                }
-                disabled={readOnly}
-                pendingLabel={
-                  participant.pending ? (
-                    <ParticipantPendingLabel text={t('participant.pending')} />
-                  ) : undefined
-                }
-                preview={
-                  previewAmount != null ? (
-                    <ParticipantRowAmountPreview
-                      amount={previewAmount}
-                      currency={groupCurrency}
-                    />
-                  ) : undefined
-                }
-                shareInput={
-                  draft.splitMode !== 'EVENLY' && checked ? (
-                    <div>
-                      <div className="flex gap-1 items-center">
-                        <span className="text-sm">
-                          {draft.splitMode === 'BY_AMOUNT' &&
-                            groupCurrency.symbol}
-                        </span>
-                        <Input
-                          className="text-base w-[80px] -my-2"
-                          type="text"
-                          disabled={readOnly}
-                          value={String(row?.shares ?? '')}
-                          onChange={(e) =>
-                            handleShareChange(participant.id, e.target.value)
-                          }
-                          inputMode={match(draft.splitMode)
-                            .with('BY_PERCENTAGE', () => 'decimal' as const)
-                            .with('BY_SHARES', () => 'numeric' as const)
-                            .otherwise(() => 'decimal' as const)}
-                          step={match(draft.splitMode)
-                            .with('BY_PERCENTAGE', () => 0.01)
-                            .with('BY_SHARES', () => 1)
-                            .otherwise(
-                              () => 10 ** -groupCurrency.decimal_digits,
-                            )}
-                        />
-                        <span className="text-sm">
-                          {match(draft.splitMode)
-                            .with('BY_SHARES', () => t('shares'))
-                            .with('BY_PERCENTAGE', () => '%')
-                            .otherwise(() => '')}
-                        </span>
-                      </div>
-                    </div>
-                  ) : undefined
-                }
-              />
-            )
-          })}
-
-          <ParticipantDistributionFooter
-            splitMode={draft.splitMode}
-            targetAmount={
-              draft.splitMode === 'BY_PERCENTAGE'
-                ? 100
-                : amountAsMinorUnits(itemTotal, groupCurrency)
-            }
-            shares={
-              draft.splitMode === 'BY_AMOUNT'
-                ? distributionShares.map((s) =>
-                    amountAsMinorUnits(s, groupCurrency),
-                  )
-                : distributionShares
-            }
-            currency={groupCurrency}
-            paidByCount={draft.paidFor.length}
-            dataTestId="item-participants-distribution-footer"
-          />
-        </div>
-
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           {!readOnly && (
             <>
               <Button variant="outline" type="button" onClick={handleCancel}>
@@ -315,8 +322,8 @@ export function ItemParticipantsModal(props: {
               </Button>
             </>
           )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

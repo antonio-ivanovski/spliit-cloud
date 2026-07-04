@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
@@ -87,113 +88,117 @@ export function LinkUnlinkedParticipantDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{t('unlinked.linkDialog.title')}</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
+      <ResponsiveDialogContent className="max-w-lg">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
+            {t('unlinked.linkDialog.title')}
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             {t('unlinked.linkDialog.description', { displayName })}
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        {candidatesQuery.isLoading ? (
-          <div className="flex flex-col gap-2 py-2">
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        ) : candidates.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-2">
-            {t('unlinked.linkDialog.noCandidates')}
-          </p>
-        ) : (
-          <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
-            {members.length > 0 && (
-              <div className="flex flex-col gap-2">
-                <p className="text-xs font-medium text-muted-foreground">
-                  {t('unlinked.linkDialog.membersGroup')}
-                </p>
-                <div className="flex flex-col divide-y rounded-md border">
-                  {members.map((candidate) => {
-                    const checked = selected === candidate.id
-                    return (
-                      <label
-                        key={candidate.id}
-                        className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/40 disabled:cursor-not-allowed"
-                      >
-                        <input
-                          type="radio"
-                          name="link-unlinked-candidate"
-                          value={candidate.id}
-                          checked={checked}
-                          disabled={linkMutation.isPending}
-                          onChange={() => setSelected(candidate.id)}
-                          className="h-4 w-4 shrink-0 accent-primary"
-                        />
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-sm font-medium truncate">
-                            {candidate.name}
-                          </span>
-                          <span className="block text-xs text-muted-foreground truncate">
-                            {candidate.email}
-                          </span>
-                        </span>
-                      </label>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-            {pending.length > 0 && (
-              <div className="flex flex-col gap-2">
-                <p className="text-xs font-medium text-muted-foreground">
-                  {t('unlinked.linkDialog.pendingGroup')}
-                </p>
-                <div className="flex flex-col divide-y rounded-md border">
-                  {pending.map((candidate) => {
-                    const checked = selected === candidate.id
-                    return (
-                      <label
-                        key={candidate.id}
-                        className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/40 disabled:cursor-not-allowed"
-                      >
-                        <input
-                          type="radio"
-                          name="link-unlinked-candidate"
-                          value={candidate.id}
-                          checked={checked}
-                          disabled={linkMutation.isPending}
-                          onChange={() => setSelected(candidate.id)}
-                          className="h-4 w-4 shrink-0 accent-primary"
-                        />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex items-center gap-2">
+        <ResponsiveDialogBody>
+          {candidatesQuery.isLoading ? (
+            <div className="flex flex-col gap-2 py-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : candidates.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">
+              {t('unlinked.linkDialog.noCandidates')}
+            </p>
+          ) : (
+            <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
+              {members.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    {t('unlinked.linkDialog.membersGroup')}
+                  </p>
+                  <div className="flex flex-col divide-y rounded-md border">
+                    {members.map((candidate) => {
+                      const checked = selected === candidate.id
+                      return (
+                        <label
+                          key={candidate.id}
+                          className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/40 disabled:cursor-not-allowed"
+                        >
+                          <input
+                            type="radio"
+                            name="link-unlinked-candidate"
+                            value={candidate.id}
+                            checked={checked}
+                            disabled={linkMutation.isPending}
+                            onChange={() => setSelected(candidate.id)}
+                            className="h-4 w-4 shrink-0 accent-primary"
+                          />
+                          <span className="min-w-0 flex-1">
                             <span className="block text-sm font-medium truncate">
                               {candidate.name}
                             </span>
-                            <span className="inline-flex shrink-0 items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                              {t('unlinked.linkDialog.pendingSuffix')}
+                            <span className="block text-xs text-muted-foreground truncate">
+                              {candidate.email}
                             </span>
                           </span>
-                          <span className="block text-xs text-muted-foreground truncate">
-                            {candidate.email}
-                          </span>
-                        </span>
-                      </label>
-                    )
-                  })}
+                        </label>
+                      )
+                    })}
+                  </div>
                 </div>
-                {selectedCandidate?.kind === 'PENDING' && (
-                  <p className="text-xs text-muted-foreground">
-                    {t('unlinked.linkDialog.pendingHint')}
+              )}
+              {pending.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    {t('unlinked.linkDialog.pendingGroup')}
                   </p>
-                )}
-              </div>
-            )}
-          </div>
-        )}
+                  <div className="flex flex-col divide-y rounded-md border">
+                    {pending.map((candidate) => {
+                      const checked = selected === candidate.id
+                      return (
+                        <label
+                          key={candidate.id}
+                          className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/40 disabled:cursor-not-allowed"
+                        >
+                          <input
+                            type="radio"
+                            name="link-unlinked-candidate"
+                            value={candidate.id}
+                            checked={checked}
+                            disabled={linkMutation.isPending}
+                            onChange={() => setSelected(candidate.id)}
+                            className="h-4 w-4 shrink-0 accent-primary"
+                          />
+                          <span className="min-w-0 flex-1">
+                            <span className="flex items-center gap-2">
+                              <span className="block text-sm font-medium truncate">
+                                {candidate.name}
+                              </span>
+                              <span className="inline-flex shrink-0 items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                                {t('unlinked.linkDialog.pendingSuffix')}
+                              </span>
+                            </span>
+                            <span className="block text-xs text-muted-foreground truncate">
+                              {candidate.email}
+                            </span>
+                          </span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                  {selectedCandidate?.kind === 'PENDING' && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('unlinked.linkDialog.pendingHint')}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </ResponsiveDialogBody>
 
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           <Button
             variant="ghost"
             onClick={() => handleOpenChange(false)}
@@ -211,8 +216,8 @@ export function LinkUnlinkedParticipantDialog({
           >
             {t('unlinked.linkDialog.confirm')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

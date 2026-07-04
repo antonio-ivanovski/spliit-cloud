@@ -7,13 +7,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { cn, formatCurrency } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
@@ -331,20 +331,22 @@ export function ExpenseItemsCard({
           onClose: closeEditDialog,
           onSaveItem: handleSaveFiller,
         })}
-      <Dialog
+      <ResponsiveDialog
         open={!!pendingItemizedEdit}
         onOpenChange={(open) => {
           if (!open) setPendingItemizedEdit(null)
         }}
       >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('items.switchToItemizedTitle')}</DialogTitle>
-            <DialogDescription>
+        <ResponsiveDialogContent>
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {t('items.switchToItemizedTitle')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
               {t('items.switchToItemizedDescription')}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogFooter>
             <Button
               variant="ghost"
               onClick={() => setPendingItemizedEdit(null)}
@@ -354,9 +356,9 @@ export function ExpenseItemsCard({
             <Button onClick={confirmItemizedEdit}>
               {t('items.switchToItemizedConfirm')}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </>
   )
 }

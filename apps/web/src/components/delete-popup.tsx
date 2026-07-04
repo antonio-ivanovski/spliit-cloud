@@ -4,14 +4,15 @@ import { useTranslation } from 'react-i18next'
 import { AsyncButton } from './async-button'
 import { Button } from './ui/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from './ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from './ui/responsive-dialog'
 
 export function DeletePopup({
   onDelete,
@@ -24,8 +25,8 @@ export function DeletePopup({
     keyPrefix: 'ExpenseForm.DeletePopup',
   })
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <ResponsiveDialog>
+      <ResponsiveDialogTrigger asChild>
         <Button
           variant="outline"
           className={cn(
@@ -36,11 +37,15 @@ export function DeletePopup({
           <Trash2 className="w-4 h-4 min-[420px]:mr-2" />
           <span className="hidden min-[420px]:inline">{t('label')}</span>
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogTitle>{t('title')}</DialogTitle>
-        <DialogDescription>{t('description')}</DialogDescription>
-        <DialogFooter className="flex flex-col gap-2">
+      </ResponsiveDialogTrigger>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
+            {t('description')}
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogFooter className="flex flex-col gap-2">
           <AsyncButton
             type="button"
             variant="destructive"
@@ -49,11 +54,11 @@ export function DeletePopup({
           >
             {t('yes')}
           </AsyncButton>
-          <DialogClose asChild>
+          <ResponsiveDialogClose asChild>
             <Button variant={'secondary'}>{t('cancel')}</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </ResponsiveDialogClose>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

@@ -64,6 +64,24 @@ if (!globalThis.PointerEvent) {
   })
 }
 
+// ── Polyfill pointer-capture methods (vaul) ──────────────────────────────
+// vaul's drawer calls setPointerCapture / releasePointerCapture on
+// pointer events to track drag gestures. jsdom does not implement
+// these on Element.prototype, so stub them to no-ops.
+if (typeof Element !== 'undefined') {
+  if (!Element.prototype.setPointerCapture) {
+    Element.prototype.setPointerCapture = function () {}
+  }
+  if (!Element.prototype.releasePointerCapture) {
+    Element.prototype.releasePointerCapture = function () {}
+  }
+  if (!Element.prototype.hasPointerCapture) {
+    Element.prototype.hasPointerCapture = function () {
+      return false
+    }
+  }
+}
+
 // ── Polyfill HTMLDialogElement (used by some Radix dialog internals) ───
 if (!HTMLDialogElement.prototype.showModal) {
   HTMLDialogElement.prototype.showModal = function () {

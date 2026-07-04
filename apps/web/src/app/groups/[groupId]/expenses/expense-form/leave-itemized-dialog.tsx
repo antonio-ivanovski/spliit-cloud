@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { useTranslation } from 'react-i18next'
 
 export function LeaveItemizedDialog(props: {
@@ -19,21 +19,23 @@ export function LeaveItemizedDialog(props: {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onCancel()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('leaveItemized.title')}</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={(v) => !v && onCancel()}>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
+            {t('leaveItemized.title')}
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             {t('leaveItemized.description', { mode: targetModeLabel })}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogFooter>
           <Button variant="ghost" onClick={onCancel}>
             {t('leaveItemized.cancel')}
           </Button>
           <Button onClick={onConfirm}>{t('leaveItemized.confirm')}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

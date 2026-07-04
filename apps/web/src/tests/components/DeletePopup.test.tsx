@@ -1,15 +1,40 @@
 import { DeletePopup } from '@/components/delete-popup'
 import { render, screen, waitFor } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
+// The component now uses the responsive primitive, which switches between
+// Radix Dialog (desktop) and vaul Drawer (mobile) based on matchMedia.
+// The vaul Drawer keeps the dialog element in the DOM during its close
+// animation, so we drive these tests in desktop mode to assert Radix's
+// mount/unmount behaviour. The mobile path is covered by the primitive
+// test in src/components/tests/responsive-dialog.test.tsx.
+function mockDesktopMediaQuery() {
+  vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({
+    matches: true,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(() => false),
+  }))
+}
 
 describe('DeletePopup', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders a trigger button with the label text', () => {
+    mockDesktopMediaQuery()
     render(<DeletePopup onDelete={vi.fn()} />)
     // The trigger button is rendered with the translated "Delete" label
     expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument()
   })
 
   it('clicking the trigger opens a dialog with title and description', async () => {
+    mockDesktopMediaQuery()
     const { user } = render(<DeletePopup onDelete={vi.fn()} />)
 
     await user.click(screen.getByRole('button', { name: /delete/i }))
@@ -25,6 +50,7 @@ describe('DeletePopup', () => {
   })
 
   it('clicking the "yes" button calls onDelete (async)', async () => {
+    mockDesktopMediaQuery()
     const onDelete = vi.fn().mockResolvedValue(undefined)
     const { user } = render(<DeletePopup onDelete={onDelete} />)
 
@@ -39,6 +65,7 @@ describe('DeletePopup', () => {
   })
 
   it('clicking "cancel" closes the dialog', async () => {
+    mockDesktopMediaQuery()
     const { user } = render(<DeletePopup onDelete={vi.fn()} />)
 
     // Open the dialog

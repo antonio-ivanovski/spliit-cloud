@@ -3,26 +3,18 @@ import Image from '@/components/app-image'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@/components/ui/responsive-dialog'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { getCurrency } from '@/lib/currency'
-import { useMediaQuery } from '@/lib/hooks'
 import { useRouter } from '@/lib/navigation'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import {
@@ -38,7 +30,6 @@ import {
   getCategoryById,
 } from '@spliit/domain'
 import { ChevronRight, FileQuestion, Loader2, Receipt } from 'lucide-react'
-import type { PropsWithChildren, ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
@@ -55,15 +46,10 @@ type ReceiptExtractedInfo = {
 
 export function CreateFromReceiptButton() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
-  const isDesktop = useMediaQuery('(min-width: 640px)')
-
-  const DialogOrDrawer = isDesktop
-    ? CreateFromReceiptDialog
-    : CreateFromReceiptDrawer
 
   return (
-    <DialogOrDrawer
-      trigger={
+    <ResponsiveDialog>
+      <ResponsiveDialogTrigger asChild>
         <Button
           size="icon"
           variant="secondary"
@@ -71,19 +57,24 @@ export function CreateFromReceiptButton() {
         >
           <Receipt className="w-4 h-4" />
         </Button>
-      }
-      title={
-        <>
-          <span>{t('Dialog.title')}</span>
-          <Badge className="bg-pink-700 hover:bg-pink-600 dark:bg-pink-500 dark:hover:bg-pink-600">
-            Beta
-          </Badge>
-        </>
-      }
-      description={<>{t('Dialog.description')}</>}
-    >
-      <ReceiptDialogContent />
-    </DialogOrDrawer>
+      </ResponsiveDialogTrigger>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle className="flex items-center gap-2">
+            <span>{t('Dialog.title')}</span>
+            <Badge className="bg-pink-700 hover:bg-pink-600 dark:bg-pink-500 dark:hover:bg-pink-600">
+              Beta
+            </Badge>
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription className="text-left">
+            {t('Dialog.description')}
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody>
+          <ReceiptDialogContent />
+        </ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }
 
@@ -318,57 +309,5 @@ function Unknown() {
       <FileQuestion className="w-4 h-4" />
       <em>{t('unknown')}</em>
     </div>
-  )
-}
-
-function CreateFromReceiptDialog({
-  trigger,
-  title,
-  description,
-  children,
-}: PropsWithChildren<{
-  trigger: ReactNode
-  title: ReactNode
-  description: ReactNode
-}>) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">{title}</DialogTitle>
-          <DialogDescription className="text-left">
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-        {children}
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function CreateFromReceiptDrawer({
-  trigger,
-  title,
-  description,
-  children,
-}: PropsWithChildren<{
-  trigger: ReactNode
-  title: ReactNode
-  description: ReactNode
-}>) {
-  return (
-    <Drawer>
-      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle className="flex items-center gap-2">{title}</DrawerTitle>
-          <DrawerDescription className="text-left">
-            {description}
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className="px-4 pb-4">{children}</div>
-      </DrawerContent>
-    </Drawer>
   )
 }

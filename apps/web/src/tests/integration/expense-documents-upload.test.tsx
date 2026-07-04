@@ -31,7 +31,7 @@ const tanstackMocks = vi.hoisted(() => ({
 // ── Module mocks (hoisted to top) ────────────────────────────────────────
 
 vi.mock('@/lib/upload', async (importOriginal) => {
-  const mod = await importOriginal<typeof import('@/lib/upload')>()
+  const mod = (await importOriginal()) as typeof import('@/lib/upload')
   return {
     ...mod,
     resizeImage: async (file: File) => ({
@@ -204,7 +204,9 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
           .delete({ where: { id: testGroup.id } })
           .catch(() => {})
       }
-    } catch {}
+    } catch {
+      // ignore — best-effort cleanup
+    }
     await cleanupTestAccount(testEmail)
   }, 10000)
 

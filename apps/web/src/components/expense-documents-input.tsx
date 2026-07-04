@@ -9,6 +9,9 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import {
+  // Intentionally bypasses `ResponsiveDialog`: this is a full-screen
+  // document viewer that fills the viewport (carousel of receipts).
+  // Pulling it into a mobile bottom-drawer would defeat its purpose.
   Dialog,
   DialogClose,
   DialogContent,

@@ -5,6 +5,9 @@ import { Command as CommandPrimitive } from 'cmdk'
 import { Search } from 'lucide-react'
 import * as React from 'react'
 
+// CommandDialog wraps the cmdk palette inside a Radix Dialog. This is
+// infrastructure for the command-palette primitive, not an app-level
+// action dialog, so it intentionally bypasses `ResponsiveDialog`.
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
