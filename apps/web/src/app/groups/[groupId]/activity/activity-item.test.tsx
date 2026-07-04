@@ -387,4 +387,162 @@ describe('ActivityItem', () => {
     )
     expect(screen.getByText('An activity was recorded')).toBeInTheDocument()
   })
+
+  describe('items diff rendering', () => {
+    it('renders modified items with before → after on the same line', () => {
+      renderItem(
+        makeActivity({
+          type: 'EXPENSE_UPDATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            changes: [
+              {
+                field: 'items',
+                before:
+                  'Beer 2 × EUR 10.00 = EUR 20.00 → Radler 2 × EUR 9.00 = EUR 18.00',
+                after: null,
+              },
+            ],
+          },
+        }),
+      )
+      const change = screen.getByTestId('activity-item-act-1-change-items')
+      expect(change.textContent).toContain('Beer 2 × EUR 10.00 = EUR 20.00')
+      expect(change.textContent).toContain('Radler 2 × EUR 9.00 = EUR 18.00')
+      expect(change.textContent).toContain(' → ')
+    })
+
+    it('renders added items with "+" prefix and applies emphasis styling', () => {
+      renderItem(
+        makeActivity({
+          type: 'EXPENSE_UPDATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            changes: [
+              {
+                field: 'items',
+                before: '+ Tip 1 × EUR 10.00 = EUR 10.00',
+                after: null,
+              },
+            ],
+          },
+        }),
+      )
+      const change = screen.getByTestId('activity-item-act-1-change-items')
+      // Prefix is stripped from display; only the content remains.
+      expect(change.textContent).toContain('Tip 1 × EUR 10.00 = EUR 10.00')
+      expect(change.textContent).not.toContain('+ Tip')
+    })
+
+    it('renders removed items with "-" prefix and applies strikethrough', () => {
+      renderItem(
+        makeActivity({
+          type: 'EXPENSE_UPDATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            changes: [
+              {
+                field: 'items',
+                before: '- Water 1 × EUR 5.00 = EUR 5.00',
+                after: null,
+              },
+            ],
+          },
+        }),
+      )
+      const change = screen.getByTestId('activity-item-act-1-change-items')
+      expect(change.textContent).toContain('Water 1 × EUR 5.00 = EUR 5.00')
+      expect(change.textContent).not.toContain('- Water')
+      // The removed line should have line-through class.
+      const removedLine = change.querySelector('.line-through')
+      expect(removedLine).not.toBeNull()
+      expect(removedLine!.textContent).toBe('Water 1 × EUR 5.00 = EUR 5.00')
+    })
+
+    it('renders mixed modified/added/removed lines independently', () => {
+      renderItem(
+        makeActivity({
+          type: 'EXPENSE_UPDATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            changes: [
+              {
+                field: 'items',
+                before:
+                  'Pizza 2 × EUR 14.00 = EUR 28.00 → Pizza 2 × EUR 15.00 = EUR 30.00\n' +
+                  '+ Tip 1 × EUR 10.00 = EUR 10.00\n' +
+                  '- Water 1 × EUR 5.00 = EUR 5.00',
+                after: null,
+              },
+            ],
+          },
+        }),
+      )
+      const change = screen.getByTestId('activity-item-act-1-change-items')
+      // Modified line
+      expect(change.textContent).toContain('Pizza 2 × EUR 14.00 = EUR 28.00')
+      expect(change.textContent).toContain('Pizza 2 × EUR 15.00 = EUR 30.00')
+      // Added line
+      expect(change.textContent).toContain('Tip 1 × EUR 10.00 = EUR 10.00')
+      // Removed line — same text, but with line-through styling
+      expect(change.textContent).toContain('Water 1 × EUR 5.00 = EUR 5.00')
+      const removedLine = change.querySelector('.line-through')
+      expect(removedLine!.textContent).toBe('Water 1 × EUR 5.00 = EUR 5.00')
+    })
+
+    it('does not render the "→" arrow for items changes (after is null)', () => {
+      renderItem(
+        makeActivity({
+          type: 'EXPENSE_UPDATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            changes: [
+              {
+                field: 'items',
+                before: '+ Tip 1 × EUR 10.00 = EUR 10.00',
+                after: null,
+              },
+            ],
+          },
+        }),
+      )
+      const change = screen.getByTestId('activity-item-act-1-change-items')
+      // Only the in-content arrow (within modified lines) should appear, not
+      // the before→after wrapper arrow used by other differs.
+      const arrows = change.querySelectorAll('span')
+      const wrapperArrow = Array.from(arrows).find(
+        (el) => el.textContent === ' → ',
+      )
+      expect(wrapperArrow).toBeUndefined()
+    })
+
+    it('still renders before → after for non-items fields', () => {
+      renderItem(
+        makeActivity({
+          type: 'EXPENSE_UPDATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            changes: [
+              {
+                field: 'items',
+                before: '+ Tip 1 × EUR 10.00 = EUR 10.00',
+                after: null,
+              },
+              { field: 'amount', before: 'EUR 12.00', after: 'EUR 15.00' },
+            ],
+          },
+        }),
+      )
+      const amountChange = screen.getByTestId(
+        'activity-item-act-1-change-amount',
+      )
+      expect(amountChange.textContent).toMatch(/EUR 12\.00.*→.*EUR 15\.00/)
+    })
+  })
 })

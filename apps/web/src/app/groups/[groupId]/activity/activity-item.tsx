@@ -6,6 +6,7 @@ import { cn, formatDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { parseActivityData } from '@spliit/domain/activities'
 import { ChevronRight } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export type Activity =
@@ -167,6 +168,46 @@ function useMessage(activity: Activity) {
   }
 }
 
+function renderItemsDiff(before: string | null): ReactNode {
+  if (!before) return null
+  const lines = before.split('\n').filter((l) => l.length > 0)
+  if (lines.length === 0) return null
+  return (
+    <div className="space-y-0.5 tabular-nums">
+      {lines.map((line, i) => {
+        if (line.startsWith('- ')) {
+          return (
+            <div key={i} className="text-muted-foreground/60 line-through">
+              {line.slice(2)}
+            </div>
+          )
+        }
+        if (line.startsWith('+ ')) {
+          return (
+            <div key={i} className="text-emerald-600 dark:text-emerald-400">
+              {line.slice(2)}
+            </div>
+          )
+        }
+        // Modified line: "before → after" — render with the "before" half muted.
+        const arrowIdx = line.lastIndexOf(' → ')
+        if (arrowIdx > 0) {
+          const beforeHalf = line.slice(0, arrowIdx)
+          const afterHalf = line.slice(arrowIdx + 3)
+          return (
+            <div key={i}>
+              <span className="text-muted-foreground/60">{beforeHalf}</span>
+              <span className="text-muted-foreground/40">{' → '}</span>
+              <span>{afterHalf}</span>
+            </div>
+          )
+        }
+        return <div key={i}>{line}</div>
+      })}
+    </div>
+  )
+}
+
 export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   const router = useRouter()
   const locale = useLocale()
@@ -217,13 +258,17 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
                 <span className="font-medium text-muted-foreground/80">
                   {change.label}
                 </span>
-                <span className="tabular-nums">
-                  <span className="text-muted-foreground/60">
-                    {formatChangeValue(change.before)}
+                {change.field === 'items' ? (
+                  <span>{renderItemsDiff(change.before)}</span>
+                ) : (
+                  <span className="tabular-nums">
+                    <span className="text-muted-foreground/60">
+                      {formatChangeValue(change.before)}
+                    </span>
+                    <span className="text-muted-foreground/40">{' → '}</span>
+                    <span>{formatChangeValue(change.after)}</span>
                   </span>
-                  <span className="text-muted-foreground/40">{' → '}</span>
-                  <span>{formatChangeValue(change.after)}</span>
-                </span>
+                )}
               </div>
             ))}
           </div>

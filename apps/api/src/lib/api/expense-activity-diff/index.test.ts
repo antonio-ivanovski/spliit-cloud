@@ -532,7 +532,7 @@ describe('getExpenseChangeSummary (backward-compat)', () => {
     })
   })
 
-  it('shows item counts', () => {
+  it('shows added items as "+" lines', () => {
     const result = getExpenseChangeSummary(
       makeExpense({ splitMode: 'ITEMIZED' }),
       makeExpense({
@@ -544,8 +544,9 @@ describe('getExpenseChangeSummary (backward-compat)', () => {
     expect(result).not.toBeNull()
     expect(result!.changes.find((c) => c.field === 'items')).toEqual({
       field: 'items',
-      before: null,
-      after: '2',
+      before:
+        '+ Pizza 1 × EUR 15.00 = EUR 15.00\n+ Pizza 1 × EUR 15.00 = EUR 15.00',
+      after: null,
     })
   })
 
