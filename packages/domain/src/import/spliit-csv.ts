@@ -1,6 +1,7 @@
 import Papa from 'papaparse'
 import { DEFAULT_CATEGORIES } from '../categories'
 import { getCurrency } from '../currency'
+import { guessSplitMode } from './split-guess'
 import type { ImportParseResult, NormalizedSource } from './types'
 
 const PARTICIPANT_START_INDEX = 10
@@ -148,6 +149,15 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
 
     if (paidFor.length === 0) continue
 
+    const involvedCount = new Set([
+      paidBySourceId,
+      ...paidFor.map((p) => p.sourceId),
+    ]).size
+
+    const splitMode = guessSplitMode(paidFor, amountCents, {
+      involvedParticipantCount: involvedCount,
+    })
+
     const originalCost = toNumberOrNull(row[5])
     const originalCurrencyRaw = (row[6] ?? '').trim()
     const hasOriginalCurrency = originalCurrencyRaw.length === 3
@@ -175,7 +185,7 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
         },
       ],
       paidFor,
-      splitMode: 'BY_AMOUNT',
+      splitMode,
       recurrenceRule: 'NONE',
       isReimbursement,
       notes: null,

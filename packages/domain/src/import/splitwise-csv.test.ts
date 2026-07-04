@@ -1261,14 +1261,21 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses[0].splitMode).toBe('EVENLY')
   })
 
-  it('uses BY_AMOUNT for uneven splits', () => {
+  it('suggests BY_SHARES when a clean ratio is detected', () => {
+    // 60/40 → GCD(6000, 4000) = 2000; shares stay as cents.
+    // paidFor order: negative-entry participants first, then positives.
     const csv = splitwiseCsv([
       ['2026-01-15', 'Uneven', 'General', '100.00', 'MKD', '60.00', '-40.00'],
     ])
     const result = tryParseSplitwiseCsv(csv)
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.source.expenses[0].splitMode).toBe('BY_AMOUNT')
+    const e = result.source.expenses[0]
+    expect(e.splitMode).toBe('BY_SHARES')
+    expect(e.paidFor).toEqual([
+      pf(aid(result.source, 1), 4000),
+      pf(aid(result.source, 0), 6000),
+    ])
   })
 
   it('sets sourceUrl to null and detects the most common currency', () => {
@@ -1360,5 +1367,33 @@ describe('tryParseSplitwiseCsv with fixtures', () => {
     expect(result.ok).toBe(true)
     if (!result.ok) return
     expect(result.source.currencyCode).toBe('MKD')
+  })
+
+  it('splitwise-drift fixture: literal balances net to zero (no drift regression)', () => {
+    // Ensures that imperfectly-divisible 7-person EVENLY-type splits
+    // (e.g. 9400 / 7, 5000 / 7) are emitted as BY_AMOUNT (not EVENLY)
+    // so getBalances honours the exact cents distribution and produces
+    // zero balance drift per participant.
+    const result = tryParseSplitwiseCsv(readFixture('splitwise-drift.csv'))
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+
+    // Verify every expense has paidFor.shares summing exactly to amount.
+    for (const e of result.source.expenses) {
+      const sum = e.paidFor.reduce((s, p) => s + p.shares, 0)
+      expect(sum, `"${e.title}" paidFor sum`).toBe(e.amount)
+    }
+
+    // Literal balances (sum of paidBy.shares − paidFor.shares) must
+    // all net to zero — the parser's cents distribution is internally
+    // consistent and each row's drift correction guarantees this.
+    const computed = computeBalancesByCurrency(result.source)
+    for (const [currency, balances] of computed) {
+      for (const [sourceId, balance] of Object.entries(balances)) {
+        expect(balance, `${sourceId} balance in ${currency} must be zero`).toBe(
+          0,
+        )
+      }
+    }
   })
 })

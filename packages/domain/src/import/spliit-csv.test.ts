@@ -43,7 +43,8 @@ describe('tryParseSpliitCsv', () => {
     const first = result.source.expenses[0]
     expect(first.title).toBe('Kafe plazha')
     expect(first.amount).toBe(360)
-    expect(first.splitMode).toBe('BY_AMOUNT')
+    // 216 / 144 → GCD 72 → BY_SHARES; shares stay as cents.
+    expect(first.splitMode).toBe('BY_SHARES')
     expect(first.paidBySourceId).toBe(result.source.participants[1].sourceId)
     expect(first.paidFor).toEqual([
       { sourceId: result.source.participants[0].sourceId, shares: 216 },
@@ -140,7 +141,7 @@ describe('tryParseSpliitCsv', () => {
     expect(result.ok).toBe(false)
   })
 
-  it('absorbs per-row rounding drift so the paidFor sum equals the amount (BY_AMOUNT)', () => {
+  it('absorbs per-row rounding drift so the paidFor sum equals the amount', () => {
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-25","Podaroci","General","EUR","10.75",,,,"No","Evenly",5.38,5.38`
     const result = tryParseSpliitCsv(csv)

@@ -1,4 +1,5 @@
 import Papa from 'papaparse'
+import { guessSplitMode } from './split-guess'
 import { splitwiseCategoryToId } from './splitwise-categories'
 import type { ImportParseResult, NormalizedSource } from './types'
 
@@ -156,14 +157,19 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       paidBy[largestIdx].shares += paidDrift
     }
 
-    // Equal split when at least two participants consume the same amount.
-    let splitMode: 'EVENLY' | 'BY_AMOUNT' = 'BY_AMOUNT'
-    if (paidFor.length >= 2) {
-      const first = paidFor[0].shares
-      if (paidFor.every((s) => Math.abs(s.shares - first) <= 1)) {
-        splitMode = 'EVENLY'
-      }
-    }
+    // Best-effort split-mode guess (EVENLY / BY_SHARES / BY_AMOUNT).
+    // The parser guarantees sum(paidFor.shares) === amountCents, so
+    // EVENLY is only chosen when all shares are identical (implying
+    // amountCents / N is integral — no drift from getBalances).
+    // BY_SHARES is chosen when the cents share a clean GCD ratio.
+    // Shares stay as literal cents — only the mode label changes.
+    const involvedCount = new Set([
+      ...paidBy.map((p) => p.sourceId),
+      ...paidFor.map((p) => p.sourceId),
+    ]).size
+    const splitMode = guessSplitMode(paidFor, amountCents, {
+      involvedParticipantCount: involvedCount,
+    })
 
     expenses.push({
       title,
