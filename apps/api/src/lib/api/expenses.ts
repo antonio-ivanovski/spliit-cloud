@@ -450,6 +450,7 @@ export async function updateExpense(
       const sign = cents < 0 ? '-' : ''
       return `${sign}${code} ${whole}.${frac.toString().padStart(2, '0')}`
     },
+    ledgerCurrencyCode: group.ledger.currencyCode ?? group.ledger.currency,
   }
 
   const expenseDateStr = expense.expenseDate.toISOString().slice(0, 10)
@@ -488,6 +489,7 @@ export async function updateExpense(
   const incomingIds = new Set(
     incomingItems.filter((i) => i.id).map((i) => i.id!),
   )
+  const existingItemIds = new Set(existingItems.map((i) => i.id))
   const itemsToDelete = existingItems.filter((i) => !incomingIds.has(i.id))
 
   const isDeleteRecurrenceExpenseLink =
@@ -568,7 +570,7 @@ export async function updateExpense(
     }
 
     for (const item of incomingItems) {
-      if (item.id && incomingIds.has(item.id)) {
+      if (item.id && existingItemIds.has(item.id)) {
         await tx.expenseItem.update({
           where: { id: item.id },
           data: {

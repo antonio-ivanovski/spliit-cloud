@@ -35,6 +35,7 @@ const ctx: ChangeContext = {
     return cats[id] ?? id
   },
   formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
+  ledgerCurrencyCode: 'EUR',
 }
 
 describe('categoryDiffer', () => {

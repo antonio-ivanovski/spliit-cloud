@@ -1297,7 +1297,8 @@
         "split": "Поделба",
         "items": "Ставки",
         "documents": "Прилози",
-        "recurrence": "Повторување"
+        "recurrence": "Повторување",
+        "reimbursement": "Раздолжување"
       }
     },
     "group": {

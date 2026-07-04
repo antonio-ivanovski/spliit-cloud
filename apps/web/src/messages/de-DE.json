@@ -1297,7 +1297,8 @@
         "split": "Aufteilung",
         "items": "Positionen",
         "documents": "Anhänge",
-        "recurrence": "Wiederholung"
+        "recurrence": "Wiederholung",
+        "reimbursement": "Rückzahlung"
       }
     },
     "group": {

@@ -1297,7 +1297,8 @@
         "split": "Розподіл",
         "items": "Позиції",
         "documents": "Вкладення",
-        "recurrence": "Повторення"
+        "recurrence": "Повторення",
+        "reimbursement": "Відшкодування"
       }
     },
     "group": {

@@ -24,6 +24,17 @@ export function formatDisplayAmount(
   expense: DifferenceableExpense,
   ctx: ChangeContext,
 ): string {
+  if (expense.originalAmount != null && expense.originalCurrency) {
+    const original = ctx.formatCurrencyCents(
+      expense.originalAmount,
+      expense.originalCurrency,
+    )
+    const converted = ctx.formatCurrencyCents(
+      expense.amount,
+      ctx.ledgerCurrencyCode,
+    )
+    return `${original} (${converted})`
+  }
   return ctx.formatCurrencyCents(
     expense.originalAmount ?? expense.amount,
     expense.originalCurrency ?? null,

@@ -42,6 +42,7 @@ const ctx: ChangeContext = {
   getParticipantName: (id) => id,
   getCategoryName: (id) => id,
   formatCurrencyCents: (c, cur) => `${cur ?? 'EUR'} ${c / 100}`,
+  ledgerCurrencyCode: 'EUR',
 }
 
 describe('itemsDiffer', () => {

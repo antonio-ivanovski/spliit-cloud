@@ -1297,7 +1297,8 @@
         "split": "Verdeling",
         "items": "Regels",
         "documents": "Bijlagen",
-        "recurrence": "Herhaling"
+        "recurrence": "Herhaling",
+        "reimbursement": "Terugbetaling"
       }
     },
     "group": {

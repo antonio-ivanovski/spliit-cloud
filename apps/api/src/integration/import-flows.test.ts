@@ -1,6 +1,4 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
-import { promises as fs } from 'node:fs'
-import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
 import {
@@ -9,35 +7,17 @@ import {
   type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
+import { findEmailForRecipient, probeMaildev } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
-const MAIL_DIR = join(process.cwd(), '.mail')
+// All describe blocks in this file depend on MailDev running locally.
+// If the inbox isn't reachable, skip the test (don't fail) so the suite
+// stays useful in environments where only the DB is running.
+const maildevReachable = await probeMaildev()
 
-async function readMailFile(recipientEmail: string): Promise<string | null> {
-  const dir = MAIL_DIR
-  const files = await fs.readdir(dir).catch(() => [])
-  const safeRecipient = recipientEmail.replace(/[^a-z0-9@._-]/gi, '_')
-  const matching = files
-    .filter((f) => f.endsWith(`${safeRecipient}.eml`))
-    .sort()
-    .reverse()
-  if (matching.length === 0) return null
-  const content = await fs.readFile(join(dir, matching[0]), 'utf8')
-  return content
-}
-
-async function deleteMailFilesForTest(runId: string): Promise<void> {
-  const dir = MAIL_DIR
-  const files = await fs.readdir(dir).catch(() => [])
-  const toRemove = files.filter((f) => f.includes(runId) && f.endsWith('.eml'))
-  await Promise.all(
-    toRemove.map((f) => fs.unlink(join(dir, f)).catch(() => {})),
-  )
-}
-
-describe('Import flow — email invitation context', () => {
+describe.skipIf(!maildevReachable)('Import flow — email invitation context', () => {
   const runId = testRunId()
   const adminId = `admin-${runId}`
   const adminEmail = `admin-${runId}@test-import.example`
@@ -111,7 +91,6 @@ describe('Import flow — email invitation context', () => {
   })
 
   afterAll(async () => {
-    await deleteMailFilesForTest(runId)
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
@@ -185,13 +164,13 @@ describe('Import flow — email invitation context', () => {
     expect(result.invites[0].kind).toBe('EMAIL')
     expect(result.invites[0].email).toBe(inviteeEmail.toLowerCase())
 
-    const mailContent = await readMailFile(inviteeEmail)
-    expect(mailContent).not.toBeNull()
-    expect(mailContent).toContain('You will appear as "Invited Friend"')
-    expect(mailContent).toContain(
+    const captured = await findEmailForRecipient(inviteeEmail)
+    expect(captured).not.toBeNull()
+    expect(captured!.text).toContain('You will appear as "Invited Friend"')
+    expect(captured!.text).toContain(
       'This invitation is part of an import from a Spliit export.',
     )
-    expect(mailContent).toContain(
+    expect(captured!.text).toContain(
       'The group contains 2 expenses from the import (total USD 35.00)',
     )
   })

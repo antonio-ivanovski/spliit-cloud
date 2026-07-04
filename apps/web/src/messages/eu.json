@@ -1297,7 +1297,8 @@
         "split": "Banaketa",
         "items": "Partidak",
         "documents": "Erantsitakoak",
-        "recurrence": "Maiztasuna"
+        "recurrence": "Maiztasuna",
+        "reimbursement": "Diru-itzultzea"
       }
     },
     "group": {

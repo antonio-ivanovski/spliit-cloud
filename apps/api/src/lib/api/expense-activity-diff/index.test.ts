@@ -70,6 +70,7 @@ const ctx: ChangeContext = {
     const sign = cents < 0 ? '-' : ''
     return `${sign}${code} ${whole}.${frac.toString().padStart(2, '0')}`
   },
+  ledgerCurrencyCode: 'EUR',
 }
 
 // ---------------------------------------------------------------------------
@@ -365,7 +366,7 @@ describe('getExpenseChangeSummary (backward-compat)', () => {
     })
   })
 
-  it('formats amount with each side currency', () => {
+  it('formats amount with dual currency when originalCurrency is set', () => {
     const result = getExpenseChangeSummary(
       makeExpense({
         amount: 4500,
@@ -384,7 +385,7 @@ describe('getExpenseChangeSummary (backward-compat)', () => {
     expect(result!.changes[0]).toEqual({
       field: 'amount',
       before: 'EUR 45.00',
-      after: 'USD 45.00',
+      after: 'USD 45.00 (EUR 41.40)',
     })
   })
 

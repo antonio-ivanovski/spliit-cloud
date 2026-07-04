@@ -1297,7 +1297,8 @@
         "split": "분할",
         "items": "항목",
         "documents": "첨부파일",
-        "recurrence": "반복"
+        "recurrence": "반복",
+        "reimbursement": "정산"
       }
     },
     "group": {

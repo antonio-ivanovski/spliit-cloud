@@ -1297,7 +1297,8 @@
         "split": "分割方法",
         "items": "明細",
         "documents": "添付ファイル",
-        "recurrence": "繰り返し"
+        "recurrence": "繰り返し",
+        "reimbursement": "払い戻し"
       }
     },
     "group": {

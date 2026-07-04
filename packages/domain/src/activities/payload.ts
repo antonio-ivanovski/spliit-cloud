@@ -11,6 +11,7 @@ export const expenseChangedFields = [
   'items',
   'documents',
   'recurrence',
+  'reimbursement',
 ] as const
 export const expenseChangedFieldSchema = z.enum(expenseChangedFields)
 export type ExpenseChangedField = z.infer<typeof expenseChangedFieldSchema>

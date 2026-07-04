@@ -1297,7 +1297,8 @@
         "split": "Reparto",
         "items": "Líneas",
         "documents": "Documentos",
-        "recurrence": "Recurrencia"
+        "recurrence": "Recurrencia",
+        "reimbursement": "Reembolso"
       }
     },
     "group": {

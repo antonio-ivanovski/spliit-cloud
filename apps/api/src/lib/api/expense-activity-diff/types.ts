@@ -19,6 +19,8 @@ export type ChangeContext = {
   getCategoryName: (id: string) => string
   /** Format an integer minor-unit amount with its currency code. */
   formatCurrencyCents: (cents: number, currency: string | null) => string
+  /** Ledger currency for the group, used to show converted amounts. */
+  ledgerCurrencyCode: string | null
 }
 
 /** A single diff emission produced by one narrow-purpose differ. */

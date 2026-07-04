@@ -1297,7 +1297,8 @@
         "split": "分摊",
         "items": "明细",
         "documents": "附件",
-        "recurrence": "重复"
+        "recurrence": "重复",
+        "reimbursement": "报销"
       }
     },
     "group": {

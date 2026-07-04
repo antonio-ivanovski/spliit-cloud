@@ -35,6 +35,7 @@ const ctx: ChangeContext = {
     const sign = cents < 0 ? '-' : ''
     return `${sign}${code} ${whole}.${frac.toString().padStart(2, '0')}`
   },
+  ledgerCurrencyCode: 'EUR',
 }
 
 describe('amountDiffer', () => {
@@ -88,7 +89,7 @@ describe('amountDiffer', () => {
     })
   })
 
-  it('diff uses each side originalCurrency independently', () => {
+  it('diff shows dual-currency format when originalAmount is set', () => {
     const result = amountDiffer.diff(
       makeExpense({
         amount: 4500,
@@ -106,7 +107,7 @@ describe('amountDiffer', () => {
     expect(result).toEqual({
       field: 'amount',
       before: 'EUR 45.00',
-      after: 'USD 45.00',
+      after: 'USD 45.00 (EUR 41.40)',
     })
   })
 
@@ -131,5 +132,64 @@ describe('amountDiffer', () => {
 
   it('field is "amount"', () => {
     expect(amountDiffer.field).toBe('amount')
+  })
+
+  it('dual format: shows original + converted when originalAmount is set', () => {
+    const result = amountDiffer.diff(
+      makeExpense({
+        amount: 1642,
+        originalAmount: 12300,
+        originalCurrency: 'CNY',
+        conversionRate: 0.1335,
+      }),
+      makeExpense({
+        amount: 1805,
+        originalAmount: 12300,
+        originalCurrency: 'CNY',
+        conversionRate: 0.1467,
+      }),
+      ctx,
+    )
+    expect(result).toEqual({
+      field: 'amount',
+      before: 'CNY 123.00 (EUR 16.42)',
+      after: 'CNY 123.00 (EUR 18.05)',
+    })
+  })
+
+  it('dual format: conversion rate change shows in converted portion only', () => {
+    const result = amountDiffer.diff(
+      makeExpense({
+        amount: 1000,
+        originalAmount: 5000,
+        originalCurrency: 'JPY',
+        conversionRate: 0.2,
+      }),
+      makeExpense({
+        amount: 1500,
+        originalAmount: 5000,
+        originalCurrency: 'JPY',
+        conversionRate: 0.3,
+      }),
+      ctx,
+    )
+    expect(result).toEqual({
+      field: 'amount',
+      before: 'JPY 50.00 (EUR 10.00)',
+      after: 'JPY 50.00 (EUR 15.00)',
+    })
+  })
+
+  it('dual format: no originalAmount falls back to single-currency display', () => {
+    const result = amountDiffer.diff(
+      makeExpense({ amount: 1200 }),
+      makeExpense({ amount: 1500 }),
+      ctx,
+    )
+    expect(result).toEqual({
+      field: 'amount',
+      before: 'EUR 12.00',
+      after: 'EUR 15.00',
+    })
   })
 })

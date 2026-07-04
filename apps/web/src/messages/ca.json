@@ -1297,7 +1297,8 @@
         "split": "Repartiment",
         "items": "Línies",
         "documents": "Documents",
-        "recurrence": "Recurrència"
+        "recurrence": "Recurrència",
+        "reimbursement": "Reemborsament"
       }
     },
     "group": {

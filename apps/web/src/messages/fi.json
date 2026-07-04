@@ -1297,7 +1297,8 @@
         "split": "Jako",
         "items": "Rivit",
         "documents": "Liitteet",
-        "recurrence": "Toistuminen"
+        "recurrence": "Toistuminen",
+        "reimbursement": "Velanmaksu"
       }
     },
     "group": {

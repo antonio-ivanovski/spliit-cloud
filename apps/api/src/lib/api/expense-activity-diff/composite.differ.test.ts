@@ -55,6 +55,7 @@ const ctx: ChangeContext = {
     const code = cur ?? 'EUR'
     return `${code} ${(c / 100).toFixed(2)}`
   },
+  ledgerCurrencyCode: 'EUR',
 }
 
 function fullDiffer() {
