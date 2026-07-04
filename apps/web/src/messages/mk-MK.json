@@ -208,7 +208,6 @@
         "continueTo": "Продолжи кон {step}"
       },
       "fetchingGroup": "Се презема групата од spliit.app…",
-      "notFound": "Spliit не ја пронајде оваа група",
       "fetchSourceError": "Неуспешно преземање на изворот",
       "Source": {
         "fromSpliit": "Spliit",

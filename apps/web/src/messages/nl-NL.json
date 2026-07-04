@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "Groep ophalen van spliit.app…",
-      "notFound": "Spliit heeft deze groep niet gevonden",
       "fetchSourceError": "Bron ophalen mislukt",
       "Source": {
         "fromSpliit": "Spliit",

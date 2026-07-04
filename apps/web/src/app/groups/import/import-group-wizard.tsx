@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from '@/lib/navigation'
@@ -9,10 +8,10 @@ import type {
   NormalizedSourceExpense,
   ParticipantMappingState,
 } from '@spliit/domain/import'
-import { applyAutoMatch, buildImportBatch } from '@spliit/domain/import'
+import { buildImportBatch } from '@spliit/domain/import'
 import { getRouteApi } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ConfirmStep } from './confirm-step'
 import {
@@ -22,44 +21,17 @@ import {
 import { DestinationStep } from './destination-step'
 import { DoneStep } from './done-step'
 import {
-  buildImportExpenses,
-  getStepNavigation,
-  initialGroupFormValues,
-  type CustomContinueLabelKey,
-  type ImportMode,
-  type ImportStep,
-  type StepNavRegistration,
-  type WizardState,
-} from './import-wizard-state'
+  importWizardReducer,
+  initialWizardState,
+} from './import-wizard-reducer'
+import type { ImportStep } from './import-wizard-state'
+import { buildImportExpenses } from './import-wizard-state'
 import { MappingStep } from './mapping-step'
 import { SourceStep } from './source-step'
 import { useImportSource } from './use-import-source'
+import { STEP_HEADER_LABEL_KEYS, StepHeader } from './wizard-nav'
 
 const importRoute = getRouteApi('/groups/import')
-
-/**
- * i18n key for the step's short label shown in the wizard header.
- * Const-typed so `t(STEP_HEADER_LABEL_KEYS[step])` validates each
- * literal against the strict key check without `as any`.
- */
-const STEP_HEADER_LABEL_KEYS = {
-  source: 'Groups.Import.StepHeader.source',
-  destination: 'Groups.Import.StepHeader.destination',
-  mapping: 'Groups.Import.StepHeader.mapping',
-  currencyConversion: 'Groups.Import.StepHeader.currencyConversion',
-  confirm: 'Groups.Import.StepHeader.confirm',
-  done: 'Groups.Import.StepHeader.done',
-} as const satisfies Record<ImportStep, string>
-
-const EMPTY_NAV: StepNavRegistration = {}
-
-/**
- * The wizard stores nav registrations keyed by the active step so
- * that a stale handler from the previous step can't be invoked
- * during the brief render between a step change and the new
- * step's first registration.
- */
-type NavByStep = { step: ImportStep; nav: StepNavRegistration }
 
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
@@ -70,48 +42,17 @@ export function ImportGroupWizard() {
   const prefillSourceUrl = search.prefill ?? null
   const { t } = useTranslation()
 
-  const [state, setState] = useState<WizardState>(() => ({
-    step: prefillSourceUrl ? 'destination' : 'source',
-    source: null,
+  const [state, dispatch] = useReducer(
+    importWizardReducer,
     prefillSourceUrl,
-    mode: null,
-    targetGroupId: null,
-    groupFormValues: initialGroupFormValues(null),
-    participants: [],
-    sourceIdToDestId: {},
-    destIds: {},
-    resolvedExpenses: [],
-    rates: undefined,
-    conversionModes: {},
-    fixedRateDates: {},
-    fixedRateOverrides: {},
-  }))
+    (pp) => initialWizardState(pp),
+  )
 
-  const [navByStep, setNavByStep] = useState<NavByStep>({
-    step: state.step,
-    nav: EMPTY_NAV,
-  })
-
-  // Source URL prefill
   const {
     data: sourcePreview,
     error: sourcePreviewError,
     submit,
   } = useImportSource()
-
-  // Derived pending toast message from prefill errors. Shown via a
-  // dedicated useEffect — no setState needed in the effect, so it
-  // avoids the set-state-in-effect lint rule.
-  const pendingToast = useMemo(() => {
-    if (state.source) return null
-    if (sourcePreview && sourcePreview.kind !== 'OK') {
-      return sourcePreview.kind === 'NOT_FOUND'
-        ? t('Groups.Import.notFound')
-        : sourcePreview.message
-    }
-    if (sourcePreviewError) return sourcePreviewError.message
-    return null
-  }, [sourcePreview, sourcePreviewError, state.source, t])
 
   const { data: destinationGroupData } = trpc.groups.get.useQuery(
     { groupId: state.targetGroupId! },
@@ -121,6 +62,9 @@ export function ImportGroupWizard() {
 
   const autoMatchKeyRef = useRef<string | null>(null)
 
+  // Existing-group auto-match: applied once per (source group,
+  // target group) pair. If destination data is still loading, the
+  // effect re-runs and the key guard keeps it idempotent.
   useEffect(() => {
     if (state.mode !== 'EXISTING_GROUP' || !state.targetGroupId) return
     if (!destinationParticipants || destinationParticipants.length === 0) return
@@ -128,10 +72,10 @@ export function ImportGroupWizard() {
     if (!sourceGroupId) return
     const key = `${sourceGroupId}::${state.targetGroupId}`
     if (autoMatchKeyRef.current === key) return
-    setState((s) => ({
-      ...s,
-      participants: applyAutoMatch(s.participants, destinationParticipants),
-    }))
+    dispatch({
+      type: 'AUTO_MATCH',
+      destinationParticipants,
+    })
     autoMatchKeyRef.current = key
   }, [
     state.mode,
@@ -140,7 +84,6 @@ export function ImportGroupWizard() {
     destinationParticipants,
   ])
 
-  // Import mutation
   const importMutation = trpc.groups.import.useMutation({
     onSuccess: async (data) => {
       await Promise.all([
@@ -153,109 +96,80 @@ export function ImportGroupWizard() {
         utils.groups.balances.list.invalidate({ groupId: data.groupId }),
         utils.groups.getDetails.invalidate({ groupId: data.groupId }),
       ])
-      setState((s) => ({ ...s, step: 'done' }))
+      dispatch({
+        type: 'IMPORT_SUCCEEDED',
+        groupId: data.groupId,
+        invites: data.invites ?? [],
+      })
     },
     onError: (err) => {
       toast({ description: err.message, variant: 'destructive' })
     },
   })
 
-  // Navigation history
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    window.history.pushState({ importWizard: true }, '')
-    const onPopState = () => {
-      setState((s) => {
-        if (s.step === 'source') return s
-        if (s.step === 'destination') return { ...s, step: 'source' }
-        if (s.step === 'mapping') return { ...s, step: 'destination' }
-        if (s.step === 'confirm') return { ...s, step: 'mapping' }
-        return s
-      })
-      window.history.pushState({ importWizard: true }, '')
+  // Treat the mutation result as a render result: destructure into
+  // primitives so callback deps stay stable. Depending on the full
+  // mutation object would yield a fresh ref each render and re-fire
+  // every effect that touches it.
+  const {
+    mutateAsync: importGroup,
+    isPending: isImportPending,
+    data: importResult,
+  } = importMutation
+  const importResultGroupId = importResult?.groupId ?? null
+  const importResultInvites = importResult?.invites ?? []
+
+  // Prefill error message for the source step's inline error display.
+  // Derived (not stored) because the wizard's `useImportSource`
+  // instance and the source step's `useImportSource` instance don't
+  // share their `submittedUrl` state — the wizard knows about the
+  // prefill, the source step doesn't, so we hand the message down.
+  const prefillErrorMessage = useMemo(() => {
+    if (state.source) return null
+    if (sourcePreview && sourcePreview.kind !== 'OK') {
+      return sourcePreview.kind === 'NOT_FOUND'
+        ? t('Groups.Import.Source.notFoundUrl')
+        : sourcePreview.message
     }
-    window.addEventListener('popstate', onPopState)
-    return () => window.removeEventListener('popstate', onPopState)
-  }, [])
+    if (sourcePreviewError) return sourcePreviewError.message
+    return null
+  }, [sourcePreview, sourcePreviewError, state.source, t])
 
-  const handleSourceLoaded = useCallback(
-    (source: NormalizedSource) => {
-      autoMatchKeyRef.current = null
-      const participants: ParticipantMappingState[] = source.participants.map(
-        (p, i) => ({
-          key: `${p.sourceId}-${i}`,
-          source: p,
-          mode: i === 0 ? 'LINK_ACCOUNT' : 'INVITE_BY_EMAIL',
-          linkedAccountId: i === 0 ? account?.id : undefined,
-          inviteEmail: i === 0 ? undefined : '',
-        }),
-      )
-      setState((s) => ({
-        ...s,
-        source,
-        participants,
-        groupFormValues: initialGroupFormValues(source),
-        step: 'destination',
-      }))
-      if (typeof window !== 'undefined') {
-        window.history.pushState({ importWizard: true }, '')
-      }
-    },
-    [account?.id],
-  )
-
+  // Source URL prefill: trigger the fetch when arriving with a URL.
   useEffect(() => {
     if (prefillSourceUrl && !state.source) {
       submit(prefillSourceUrl)
     }
   }, [prefillSourceUrl, state.source, submit])
 
-  // Process source preview results during render (setState during
-  // render with a functional updater that guards against re-processing
-  // is the documented React pattern — it avoids calling setState
-  // synchronously in an effect).
-  if (!state.source && sourcePreview) {
-    if (sourcePreview.kind === 'OK') {
-      setState((s) => {
-        if (s.source) return s
-        const participants: ParticipantMappingState[] =
-          sourcePreview.source.participants.map((p, i) => ({
-            key: `${p.sourceId}-${i}`,
-            source: p,
-            mode: i === 0 ? 'LINK_ACCOUNT' : 'INVITE_BY_EMAIL',
-            linkedAccountId: i === 0 ? account?.id : undefined,
-            inviteEmail: i === 0 ? undefined : '',
-          }))
-        return {
-          ...s,
-          source: sourcePreview.source,
-          participants,
-          groupFormValues: initialGroupFormValues(sourcePreview.source),
-          step: 'destination',
-        }
-      })
-    } else {
-      setState((s) => {
-        if (s.source) return s
-        return { ...s, step: 'source', prefillSourceUrl: null }
-      })
-    }
-  }
-
-  if (!state.source && sourcePreviewError) {
-    setState((s) => {
-      if (s.source) return s
-      return { ...s, step: 'source', prefillSourceUrl: null }
-    })
-  }
-
-  // Toast side effect for prefill errors. Derived via useMemo so no
-  // setState call is needed inside the effect body.
+  // Bridge server-state completion into the wizard reducer. Treats
+  // both NOT_FOUND (a successful response with a non-OK kind) and
+  // transport errors as SOURCE_FAILED. The reducer rejects duplicates
+  // so a second tick after `state.source` is set is a no-op.
   useEffect(() => {
-    if (pendingToast) {
-      toast({ description: pendingToast, variant: 'destructive' })
+    if (state.source) return
+    if (sourcePreview?.kind === 'OK') {
+      dispatch({
+        type: 'SOURCE_LOADED',
+        source: sourcePreview.source,
+        accountId: account?.id,
+      })
+    } else if (sourcePreview || sourcePreviewError) {
+      dispatch({ type: 'SOURCE_FAILED' })
     }
-  }, [pendingToast, toast])
+  }, [sourcePreview, sourcePreviewError, state.source, account?.id])
+
+  const handleSourceLoaded = useCallback(
+    (source: NormalizedSource) => {
+      autoMatchKeyRef.current = null
+      dispatch({
+        type: 'SOURCE_LOADED',
+        source,
+        accountId: account?.id,
+      })
+    },
+    [account?.id],
+  )
 
   const handleSourceError = useCallback(
     (message: string) => {
@@ -266,25 +180,28 @@ export function ImportGroupWizard() {
 
   const handleDestinationChosen = useCallback(
     (choice: {
-      mode: ImportMode
+      mode: 'NEW_GROUP' | 'EXISTING_GROUP'
       targetGroupId: string | null
-      groupFormValues: WizardState['groupFormValues']
+      groupFormValues: {
+        name: string
+        information: string
+        currency: string
+        currencyCode: string
+      }
     }) => {
-      window.history.pushState({ importWizard: true }, '')
-      setState((s) => ({
-        ...s,
+      dispatch({
+        type: 'DESTINATION_CHOSEN',
         mode: choice.mode,
         targetGroupId: choice.targetGroupId,
         groupFormValues: choice.groupFormValues,
-        step: 'mapping',
-      }))
+      })
     },
     [],
   )
 
   const handleMappingChange = useCallback(
     (participants: ParticipantMappingState[]) => {
-      setState((s) => ({ ...s, participants }))
+      dispatch({ type: 'MAPPING_CHANGED', participants })
     },
     [],
   )
@@ -295,30 +212,14 @@ export function ImportGroupWizard() {
       destIds: Record<string, string>
       resolvedExpenses: NormalizedSourceExpense[]
     }) => {
-      window.history.pushState({ importWizard: true }, '')
-      setState((s) => ({
-        ...s,
-        sourceIdToDestId: resolved.sourceIdToDestId,
-        destIds: resolved.destIds,
-        resolvedExpenses: resolved.resolvedExpenses,
-        rates: undefined,
-        step: 'currencyConversion',
-      }))
+      dispatch({ type: 'MAPPING_CONFIRMED', ...resolved })
     },
     [],
   )
 
   const handleCurrencyConversionContinue = useCallback(
     (result: ConversionResult) => {
-      window.history.pushState({ importWizard: true }, '')
-      setState((s) => ({
-        ...s,
-        conversionModes: result.modes,
-        fixedRateDates: result.fixedRateDates,
-        fixedRateOverrides: result.fixedRateOverrides,
-        rates: result.rates,
-        step: 'confirm',
-      }))
+      dispatch({ type: 'CONVERSION_CONFIRMED', ...result })
     },
     [],
   )
@@ -332,7 +233,7 @@ export function ImportGroupWizard() {
   const handleSubmit = useCallback(async () => {
     if (!state.source) return
     if (!state.mode) return
-    if (!account) return
+    if (!account?.id) return
     try {
       const sourceMeta = {
         provider: state.source.provider,
@@ -345,7 +246,7 @@ export function ImportGroupWizard() {
         state.rates ?? undefined,
       )
       const expenses = buildImportExpenses(batch.expenses)
-      await importMutation.mutateAsync({ ...batch, expenses, sourceMeta })
+      await importGroup({ ...batch, expenses, sourceMeta })
     } catch (err) {
       toast({
         title: t('Groups.Import.Confirm.importErrorTitle'),
@@ -356,56 +257,35 @@ export function ImportGroupWizard() {
         variant: 'destructive',
       })
     }
-  }, [state, importMutation, account, destinationCurrencyCode, toast, t])
+    // Destructure fields used so the callback deps don't include the
+    // mutable tRPC result object.
+  }, [state, importGroup, account?.id, destinationCurrencyCode, toast, t])
 
   const handleDoneNavigate = useCallback(() => {
-    const groupId = importMutation.data?.groupId
-    if (groupId) {
-      router.push({ to: '/groups/$groupId', params: { groupId } })
+    if (importResultGroupId) {
+      router.push({
+        to: '/groups/$groupId',
+        params: { groupId: importResultGroupId },
+      })
     } else {
       router.push({ to: '/' })
     }
-  }, [importMutation.data, router])
+  }, [importResultGroupId, router])
 
   const handleBack = useCallback(() => {
-    setState((s) => {
-      if (s.step === 'source') return s
-      if (s.step === 'destination') return { ...s, step: 'source' }
-      if (s.step === 'mapping') return { ...s, step: 'destination' }
-      if (s.step === 'currencyConversion') {
-        return { ...s, step: 'mapping' }
-      }
-      if (s.step === 'confirm') {
-        return { ...s, step: 'currencyConversion' }
-      }
-      return s
-    })
-    window.history.pushState({ importWizard: true }, '')
+    dispatch({ type: 'BACK' })
   }, [])
-
-  // Steps register their Continue handler / disabled state / label
-  // overrides under the step they belong to. The wizard only reads
-  // the entry for the active step so a stale handler from a
-  // previously-mounted step can't fire.
-  const registerStepNav = useCallback(
-    (step: ImportStep, nav: Partial<StepNavRegistration>) => {
-      setNavByStep((prev) => {
-        if (prev.step === step) {
-          return { step, nav: { ...prev.nav, ...nav } }
-        }
-        return { step, nav }
-      })
-    },
-    [],
-  )
-  const currentNav = navByStep.step === state.step ? navByStep.nav : EMPTY_NAV
 
   return (
     <div className="flex flex-col gap-6">
       <StepHeader step={state.step} />
 
       {state.step === 'source' && (
-        <SourceStep onLoaded={handleSourceLoaded} onError={handleSourceError} />
+        <SourceStep
+          onLoaded={handleSourceLoaded}
+          onError={handleSourceError}
+          initialError={prefillErrorMessage}
+        />
       )}
 
       {state.step === 'destination' && !state.source && prefillSourceUrl && (
@@ -422,8 +302,8 @@ export function ImportGroupWizard() {
           source={state.source}
           initialGroupFormValues={state.groupFormValues}
           mode={state.mode}
+          onBack={handleBack}
           onContinue={handleDestinationChosen}
-          registerStepNav={registerStepNav}
         />
       )}
 
@@ -437,9 +317,9 @@ export function ImportGroupWizard() {
               ? destinationParticipants
               : undefined
           }
+          onBack={handleBack}
           onChange={handleMappingChange}
           onContinue={handleMappingContinue}
-          registerStepNav={registerStepNav}
         />
       )}
 
@@ -453,8 +333,8 @@ export function ImportGroupWizard() {
           fixedRateDates={state.fixedRateDates}
           fixedRateOverrides={state.fixedRateOverrides}
           initialRates={state.rates ?? {}}
+          onBack={handleBack}
           onContinue={handleCurrencyConversionContinue}
-          registerStepNav={registerStepNav}
         />
       )}
 
@@ -467,119 +347,24 @@ export function ImportGroupWizard() {
           participants={state.participants}
           rates={state.rates}
           resolvedExpenses={state.resolvedExpenses}
-          invites={importMutation.data?.invites ?? []}
-          isSubmitting={importMutation.isPending}
+          invites={importResultInvites}
+          isSubmitting={isImportPending}
           conversionModes={state.conversionModes}
+          onBack={handleBack}
           onSubmit={handleSubmit}
-          registerStepNav={registerStepNav}
         />
       )}
 
       {state.step === 'done' && (
         <DoneStep
-          groupId={importMutation.data?.groupId ?? null}
-          invites={importMutation.data?.invites ?? []}
+          groupId={importResultGroupId}
+          invites={importResultInvites}
           onContinue={handleDoneNavigate}
         />
       )}
-
-      <WizardNav
-        step={state.step}
-        onBack={handleBack}
-        onContinue={currentNav.onContinue}
-        continueAsFormId={currentNav.continueAsFormId}
-        continueDisabled={!!currentNav.disabled}
-        customContinueLabel={currentNav.customContinueLabel}
-      />
     </div>
   )
 }
 
-function StepHeader({ step }: { step: ImportStep }) {
-  const { t } = useTranslation()
-  const stepLabel = t(STEP_HEADER_LABEL_KEYS[step])
-  return (
-    <div className="flex flex-col gap-1">
-      <p className="text-sm uppercase tracking-wide text-muted-foreground">
-        {t('Groups.Import.StepHeader.title')}
-      </p>
-      <h1 className="text-2xl font-semibold leading-none">{stepLabel}</h1>
-    </div>
-  )
-}
-
-type WizardNavProps = {
-  step: ImportStep
-  onBack: () => void
-  onContinue?: () => void
-  continueAsFormId?: string
-  continueDisabled?: boolean
-  customContinueLabel?: CustomContinueLabelKey
-}
-
-function WizardNav({
-  step,
-  onBack,
-  onContinue,
-  continueAsFormId,
-  continueDisabled,
-  customContinueLabel,
-}: WizardNavProps) {
-  const { t } = useTranslation()
-  const nav = getStepNavigation(step)
-
-  // No nav for the first (source) or last (done) terminal steps.
-  // Done renders its own Open Group button; source transitions via
-  // its own file/URL inputs.
-  if (!nav.previousStepKey && !nav.nextStepKey) return null
-  if (step === 'done') return null
-
-  const previousStepLabel = nav.previousStepKey
-    ? t(STEP_HEADER_LABEL_KEYS[nav.previousStepKey])
-    : undefined
-  const nextStepLabel = nav.nextStepKey
-    ? t(STEP_HEADER_LABEL_KEYS[nav.nextStepKey])
-    : undefined
-
-  const backLabel = nav.previousStepKey
-    ? t('Groups.Import.StepHeader.backTo', { step: previousStepLabel })
-    : undefined
-  const continueLabel =
-    customContinueLabel !== undefined
-      ? t(customContinueLabel)
-      : nextStepLabel
-        ? t('Groups.Import.StepHeader.continueTo', { step: nextStepLabel })
-        : undefined
-
-  const showContinue = continueLabel !== undefined
-
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      {nav.previousStepKey ? (
-        <Button variant="ghost" onClick={onBack} type="button">
-          {backLabel}
-        </Button>
-      ) : (
-        <span />
-      )}
-      {showContinue &&
-        (continueAsFormId ? (
-          <Button
-            type="submit"
-            form={continueAsFormId}
-            disabled={continueDisabled}
-          >
-            {continueLabel}
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            onClick={onContinue}
-            disabled={continueDisabled || !onContinue}
-          >
-            {continueLabel}
-          </Button>
-        ))}
-    </div>
-  )
-}
+export { STEP_HEADER_LABEL_KEYS }
+export type { ImportStep }

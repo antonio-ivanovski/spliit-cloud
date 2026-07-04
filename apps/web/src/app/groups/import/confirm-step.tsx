@@ -2,13 +2,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { NormalizedSource } from '@spliit/domain/import'
 import { Calendar, Globe } from 'lucide-react'
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type {
   ConversionMode,
   ParticipantMappingState,
-  StepNavRegistration,
 } from './import-wizard-state'
+import { WizardNav } from './wizard-nav'
 
 type ImportInvite = NonNullable<
   AppRouterOutput['groups']['import']
@@ -30,14 +29,8 @@ type Props = {
   isSubmitting: boolean
   conversionModes: Record<string, ConversionMode>
   rates: Record<string, number> | null | undefined
+  onBack: () => void
   onSubmit: () => void
-  registerStepNav: (
-    step: 'confirm',
-    nav: Pick<
-      StepNavRegistration,
-      'onContinue' | 'disabled' | 'customContinueLabel'
-    >,
-  ) => void
 }
 
 function formatRate(n: number): string {
@@ -53,8 +46,8 @@ export function ConfirmStep({
   isSubmitting,
   conversionModes,
   rates,
+  onBack,
   onSubmit,
-  registerStepNav,
 }: Props) {
   const { t } = useTranslation()
   const linkedCount = participants.filter(
@@ -90,16 +83,6 @@ export function ConfirmStep({
     ratesByPair[key].sort((a, b) => a.date.localeCompare(b.date))
   }
   const conversionPairs = Object.keys(conversionModes)
-
-  useEffect(() => {
-    registerStepNav('confirm', {
-      onContinue: onSubmit,
-      disabled: isSubmitting,
-      customContinueLabel: isSubmitting
-        ? 'Groups.Import.Confirm.importingButton'
-        : 'Groups.Import.Confirm.executeImport',
-    })
-  }, [onSubmit, isSubmitting, registerStepNav])
 
   return (
     <div className="flex flex-col gap-6">
@@ -235,6 +218,18 @@ export function ConfirmStep({
       <p className="text-xs text-muted-foreground">
         {t('Groups.Import.Confirm.footer')}
       </p>
+
+      <WizardNav
+        step="confirm"
+        onBack={onBack}
+        onContinue={onSubmit}
+        continueDisabled={isSubmitting}
+        customContinueLabel={
+          isSubmitting
+            ? 'Groups.Import.Confirm.importingButton'
+            : 'Groups.Import.Confirm.executeImport'
+        }
+      />
     </div>
   )
 }

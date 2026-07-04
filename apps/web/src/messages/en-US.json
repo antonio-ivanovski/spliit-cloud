@@ -235,7 +235,6 @@
         "continueTo": "Continue to {step}"
       },
       "fetchingGroup": "Fetching the group from spliit.app…",
-      "notFound": "Spliit did not find this group",
       "fetchSourceError": "Failed to fetch the source",
       "Source": {
         "fromSpliit": "Spliit",

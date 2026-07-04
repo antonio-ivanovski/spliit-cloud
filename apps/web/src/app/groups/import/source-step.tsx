@@ -23,6 +23,14 @@ import { useImportSource } from './use-import-source'
 type Props = {
   onLoaded: (source: NormalizedSource) => void
   onError: (message: string) => void
+  /**
+   * Error message from a wizard-level prefill that failed before the
+   * source step mounted (the wizard's `useImportSource` and the
+   * source step's `useImportSource` don't share their `submittedUrl`,
+   * so we hand the message down). Shown inline next to the URL
+   * input until the user starts interacting.
+   */
+  initialError?: string | null
 }
 
 type SourceMode = 'spliit' | 'splitwise' | 'tricount' | 'settleup'
@@ -87,13 +95,16 @@ export function pickParser(
   return { format: null }
 }
 
-export function SourceStep({ onLoaded, onError }: Props) {
+export function SourceStep({ onLoaded, onError, initialError = null }: Props) {
   const { t } = useTranslation()
   const router = useRouter()
   const { source } = importRoute.useSearch()
   const provider = source ?? 'spliit'
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState<string | null>(null)
+  // Once the user has typed or selected a file, the prefill error no
+  // longer applies — the URL they're now typing is unrelated to it.
+  const [hasInteracted, setHasInteracted] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const {
     data: sourcePreview,
@@ -106,7 +117,8 @@ export function SourceStep({ onLoaded, onError }: Props) {
   const cfg = PROVIDERS[provider]
 
   // Derive server URL error from source preview / error (instead of
-  // syncing via useEffect + setUrlError).
+  // syncing via useEffect + setUrlError). Falls back to the prop so
+  // a wizard-level prefill failure is visible inline.
   const serverUrlError =
     sourcePreview && sourcePreview.kind !== 'OK'
       ? sourcePreview.kind === 'NOT_FOUND'
@@ -115,6 +127,10 @@ export function SourceStep({ onLoaded, onError }: Props) {
       : sourcePreviewError
         ? sourcePreviewError.message
         : null
+  const displayedUrlError =
+    urlError ??
+    serverUrlError ??
+    (initialError && !hasInteracted ? initialError : null)
 
   // Keep only the onLoaded transition in an effect (not a setState
   // call, so not flagged by set-state-in-effect).
@@ -127,6 +143,7 @@ export function SourceStep({ onLoaded, onError }: Props) {
 
   const handleFile = useCallback(
     async (file: File) => {
+      setHasInteracted(true)
       try {
         const picked = pickParser(provider, file.name)
         if (!picked.format) {
@@ -190,6 +207,7 @@ export function SourceStep({ onLoaded, onError }: Props) {
   )
 
   const handleUrlSubmit = useCallback(() => {
+    setHasInteracted(true)
     setUrlError(null)
     const trimmed = url.trim()
     const sourceGroupId = extractSpliitGroupIdFromUrl(trimmed)
@@ -203,6 +221,7 @@ export function SourceStep({ onLoaded, onError }: Props) {
   const handleUrlChange = useCallback(
     (value: string) => {
       setUrl(value)
+      setHasInteracted(true)
       if (urlError) setUrlError(null)
       // Clear server preview so the derived error disappears
       if (sourcePreview || sourcePreviewError) resetPreview()
@@ -306,7 +325,7 @@ export function SourceStep({ onLoaded, onError }: Props) {
           disabled={false}
           isPending={isPreviewLoading}
           url={url}
-          urlError={urlError ?? serverUrlError}
+          urlError={displayedUrlError}
           onUrlChange={handleUrlChange}
           onSubmit={handleUrlSubmit}
           labels={{

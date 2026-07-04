@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "Grup spliit.app'ten getiriliyor…",
-      "notFound": "Spliit bu grubu bulamadı",
       "fetchSourceError": "Kaynak getirilemedi",
       "Source": {
         "fromSpliit": "Spliit",

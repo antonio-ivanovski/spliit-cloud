@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "A obter o grupo do spliit.app…",
-      "notFound": "O Spliit não encontrou este grupo",
       "fetchSourceError": "Falha ao obter a origem",
       "Source": {
         "fromSpliit": "Spliit",

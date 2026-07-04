@@ -274,7 +274,6 @@
         }
       },
       "fetchingGroup": "Gruppe wird von spliit.app abgerufen…",
-      "notFound": "Spliit hat diese Gruppe nicht gefunden",
       "fetchSourceError": "Quelle konnte nicht abgerufen werden",
       "Source": {
         "fromSpliit": "Spliit",

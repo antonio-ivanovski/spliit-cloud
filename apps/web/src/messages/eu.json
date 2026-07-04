@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "Taldea spliit.app-etik eskuratzen…",
-      "notFound": "Spliit-ek ez du talde hau aurkitu",
       "fetchSourceError": "Ezin izan da iturburua eskuratu",
       "Source": {
         "fromSpliit": "Spliit",

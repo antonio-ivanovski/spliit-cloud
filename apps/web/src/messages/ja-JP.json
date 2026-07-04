@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "spliit.app からグループを取得中…",
-      "notFound": "Spliit はこのグループを見つけられませんでした",
       "fetchSourceError": "ソースの取得に失敗しました",
       "Source": {
         "fromSpliit": "Spliit",

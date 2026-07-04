@@ -1,6 +1,16 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
+    "ci-checks": {
+      "dependsOn": [
+        "check-formatting",
+        "check-types",
+        "lint",
+        "build",
+        "test",
+        "test:integration"
+      ]
+    },
     "build": {
       "dependsOn": ["^build", "check-types"],
       "outputs": ["dist/**", "build/**", ".vite/**"]
@@ -36,6 +46,9 @@
       "dependsOn": ["@spliit/dev-services#dev:services:db:up"],
       "cache": false,
       "passThroughEnv": ["DATABASE_URL"]
+    },
+    "check-formatting": {
+      "cache": false
     },
     "lint": {
       "dependsOn": ["^build"]

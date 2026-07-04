@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "正在从 spliit.app 获取群组…",
-      "notFound": "Spliit 未找到此群组",
       "fetchSourceError": "获取来源失败",
       "Source": {
         "fromSpliit": "Spliit",

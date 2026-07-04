@@ -7,26 +7,24 @@ import type {
   ParticipantMappingState,
 } from '@spliit/domain/import'
 import { findImportConflicts } from '@spliit/domain/import'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MappingRow } from './mapping-row'
 import { useMappingValidation } from './mapping-validation'
+import { WizardNav } from './wizard-nav'
 
 type Props = {
   source: NormalizedSource
   participants: ParticipantMappingState[]
   account: AuthAccount | null | undefined
   destinationParticipants?: DestinationParticipant[]
+  onBack: () => void
   onChange: (participants: ParticipantMappingState[]) => void
   onContinue: (resolved: {
     sourceIdToDestId: Record<string, string>
     destIds: Record<string, string>
     resolvedExpenses: NormalizedSource['expenses']
   }) => void
-  registerStepNav: (
-    step: 'mapping',
-    nav: { onContinue?: () => void; disabled?: boolean },
-  ) => void
 }
 
 export function MappingStep({
@@ -34,9 +32,9 @@ export function MappingStep({
   participants,
   account,
   destinationParticipants,
+  onBack,
   onChange,
   onContinue,
-  registerStepNav,
 }: Props) {
   const { t } = useTranslation()
   const { translateConflictMessage, disabledReasonForCurrentMode } =
@@ -128,13 +126,6 @@ export function MappingStep({
     disabledReasonForCurrentMode,
   ])
 
-  useEffect(() => {
-    registerStepNav('mapping', {
-      onContinue: handleContinue,
-      disabled: !ready,
-    })
-  }, [handleContinue, ready, registerStepNav])
-
   return (
     <div className="flex flex-col gap-4">
       {!participants.some((p) => p.mode === 'LINK_ACCOUNT') && (
@@ -170,6 +161,13 @@ export function MappingStep({
           />
         ))}
       </div>
+
+      <WizardNav
+        step="mapping"
+        onBack={onBack}
+        onContinue={handleContinue}
+        continueDisabled={!ready}
+      />
     </div>
   )
 }

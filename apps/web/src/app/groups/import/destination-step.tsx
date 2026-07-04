@@ -7,8 +7,9 @@ import {
   type NormalizedSource,
 } from '@spliit/domain/import'
 import { FolderPlus, Layers } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { WizardNav } from './wizard-nav'
 
 const DESTINATION_FORM_ID = 'import-wizard-destination-form'
 
@@ -21,6 +22,7 @@ type Props = {
     currencyCode: string
   }
   mode: 'NEW_GROUP' | 'EXISTING_GROUP' | null
+  onBack: () => void
   onContinue: (choice: {
     mode: 'NEW_GROUP' | 'EXISTING_GROUP'
     targetGroupId: string | null
@@ -31,18 +33,14 @@ type Props = {
       currencyCode: string
     }
   }) => void
-  registerStepNav: (
-    step: 'destination',
-    nav: { continueAsFormId?: string },
-  ) => void
 }
 
 export function DestinationStep({
   source,
   initialGroupFormValues,
   mode,
+  onBack,
   onContinue,
-  registerStepNav,
 }: Props) {
   const [currentMode, setCurrentMode] = useState<
     'NEW_GROUP' | 'EXISTING_GROUP'
@@ -56,18 +54,10 @@ export function DestinationStep({
   )
 
   // EXISTING_GROUP mode transitions via clicking a group card, so the
-  // wizard's Continue button is meaningless there. Hide it by
-  // reporting no `continueAsFormId`. NEW_GROUP mode submits via the
-  // form.
-  useEffect(() => {
-    if (currentMode === 'NEW_GROUP') {
-      registerStepNav('destination', {
-        continueAsFormId: DESTINATION_FORM_ID,
-      })
-    } else {
-      registerStepNav('destination', { continueAsFormId: undefined })
-    }
-  }, [currentMode, registerStepNav])
+  // wizard's Continue button is meaningless there. NEW_GROUP mode
+  // submits via the form below.
+  const continueAsFormId =
+    currentMode === 'NEW_GROUP' ? DESTINATION_FORM_ID : undefined
 
   return (
     <div className="flex flex-col gap-4">
@@ -168,6 +158,12 @@ export function DestinationStep({
           )}
         </TabsContent>
       </Tabs>
+
+      <WizardNav
+        step="destination"
+        onBack={onBack}
+        continueAsFormId={continueAsFormId}
+      />
     </div>
   )
 }

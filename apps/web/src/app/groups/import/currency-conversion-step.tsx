@@ -21,6 +21,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ConversionMode } from './import-wizard-state'
+import { WizardNav } from './wizard-nav'
 
 // ----- types -----
 
@@ -42,11 +43,8 @@ type Props = {
   /** Previously computed rates (date|base|target -> rate). Used to
    *  pre-populate fixed-rate values when the user navigates back. */
   initialRates: Record<string, number>
+  onBack: () => void
   onContinue: (result: ConversionResult) => void
-  registerStepNav: (
-    step: 'currencyConversion',
-    nav: { onContinue?: () => void; disabled?: boolean },
-  ) => void
 }
 
 type CurrencyPair = {
@@ -416,8 +414,8 @@ export function CurrencyConversionStep({
   fixedRateDates: initialDates,
   fixedRateOverrides: initialOverrides,
   initialRates,
+  onBack,
   onContinue,
-  registerStepNav,
 }: Props) {
   const { t } = useTranslation()
 
@@ -613,13 +611,6 @@ export function CurrencyConversionStep({
     rateKeyItems,
   ])
 
-  useEffect(() => {
-    registerStepNav('currencyConversion', {
-      onContinue: handleContinue,
-      disabled: !canContinue,
-    })
-  }, [canContinue, registerStepNav, handleContinue])
-
   return (
     <div className="flex flex-col gap-6">
       {noConversionNeeded ? (
@@ -683,6 +674,13 @@ export function CurrencyConversionStep({
           )
         })
       )}
+
+      <WizardNav
+        step="currencyConversion"
+        onBack={onBack}
+        onContinue={handleContinue}
+        continueDisabled={!canContinue}
+      />
     </div>
   )
 }

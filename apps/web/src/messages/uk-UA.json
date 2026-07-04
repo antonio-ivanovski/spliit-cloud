@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "Отримання групи з spliit.app…",
-      "notFound": "Spliit не знайшов цю групу",
       "fetchSourceError": "Не вдалося отримати джерело",
       "Source": {
         "fromSpliit": "Spliit",

@@ -275,7 +275,6 @@
         }
       },
       "fetchingGroup": "מביא את הקבוצה מ-spliit.app…",
-      "notFound": "Spliit לא מצא קבוצה זו",
       "fetchSourceError": "נכשלה הבאת המקור",
       "Source": {
         "fromSpliit": "Spliit",
