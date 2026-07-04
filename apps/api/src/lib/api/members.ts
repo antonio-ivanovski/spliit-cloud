@@ -1,8 +1,18 @@
-import { ActivityType, GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { deleteS3Object } from '../../routes/upload'
-import { logActivity } from './activities'
-import { createSettlementExpensesForLeave, getGroupBalances } from './balances'
-import { getMemberLedgerParticipantId, randomId } from './shared'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
+import {
+  buildExpenseActivityData,
+  buildGroupActivityData,
+  buildMemberActivityData,
+  logActivity,
+} from './activities'
+import {
+  createSettlementExpensesForLeave,
+  getGroupBalances,
+  type SettlementActivityMeta,
+} from './balances'
+import { randomId } from './shared'
 
 /**
  * Update a member's role inside a group.
@@ -32,6 +42,15 @@ export async function updateMemberRole(opts: {
     return target
   }
 
+  const targetAccount = await prisma.account.findUnique({
+    where: { id: target.accountId },
+    select: { name: true },
+  })
+  const actorAccount = await prisma.account.findUnique({
+    where: { id: actor.accountId },
+    select: { name: true },
+  })
+
   return prisma.$transaction(async (tx) => {
     if (role !== GroupRole.ADMIN && target.role === GroupRole.ADMIN) {
       const remainingAdmins = await tx.groupMember.count({
@@ -52,11 +71,16 @@ export async function updateMemberRole(opts: {
     })
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: target.ledgerParticipant?.id ?? null,
-        data: `role:${role}`,
+        type: 'MEMBER_ROLE_CHANGED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'MEMBER', id: memberId },
+        data: buildMemberActivityData({
+          displayName: actorAccount?.name ?? undefined,
+          targetDisplayName: targetAccount?.name ?? undefined,
+          previousRole: target.role,
+          nextRole: role,
+        }),
       },
       tx,
     )
@@ -84,7 +108,10 @@ export async function removeMember(opts: {
 
   const target = await prisma.groupMember.findUnique({
     where: { id: memberId },
-    include: { ledgerParticipant: { select: { id: true } } },
+    include: {
+      ledgerParticipant: { select: { id: true } },
+      account: { select: { name: true } },
+    },
   })
   if (!target || target.groupId !== groupId) {
     throw new Error('Member not found in this group')
@@ -111,14 +138,25 @@ export async function removeMember(opts: {
     )
   }
 
-  return prisma.$transaction(async (tx) => {
+  const actorAccount = await prisma.account.findUnique({
+    where: { id: actor.accountId },
+    select: { name: true },
+  })
+
+  const result = await prisma.$transaction(async (tx) => {
+    let settlementActivities = undefined as
+      | Awaited<
+          ReturnType<typeof createSettlementExpensesForLeave>
+        >['activities']
+      | undefined
     if (settleBalances && target.ledgerParticipant?.id) {
-      await createSettlementExpensesForLeave(
+      const r = await createSettlementExpensesForLeave(
         groupId,
         target.ledgerParticipant.id,
         actor,
         tx,
       )
+      settlementActivities = r.activities
     }
 
     if (target.role === GroupRole.ADMIN) {
@@ -143,16 +181,40 @@ export async function removeMember(opts: {
     })
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: target.ledgerParticipant?.id ?? null,
-        data: settleBalances ? 'member:removed:settled' : 'member:removed',
+        type: 'MEMBER_REMOVED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'MEMBER', id: memberId },
+        data: buildMemberActivityData({
+          displayName: actorAccount?.name ?? undefined,
+          targetDisplayName: target.account?.name ?? undefined,
+          summary: settleBalances ? 'member:removed:settled' : 'member:removed',
+        }),
       },
       tx,
     )
-    return updated
+    return { updated, settlementActivities }
   })
+  if (result.settlementActivities) {
+    for (const meta of result.settlementActivities) {
+      scheduleDefaultNotificationDispatch({
+        activityId: meta.activityId,
+        type: 'EXPENSE_CREATED',
+        groupId,
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'EXPENSE', id: meta.expenseId },
+        data: buildExpenseActivityData({
+          summary: meta.title,
+          title: meta.title,
+          amount: meta.amount,
+          currencyCode: meta.currencyCode,
+          date: meta.date,
+        }),
+        occurredAt: meta.time,
+      })
+    }
+  }
+  return result.updated
 }
 
 export class LeaveGroupPreconditionError extends Error {
@@ -205,14 +267,16 @@ export async function leaveGroup(opts: {
   force?: boolean
   promoteMemberId?: string
 }): Promise<{
-  deleted: false
   promotedMemberId: string | null
 }> {
   const { groupId, actor, force = false, promoteMemberId } = opts
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: actor.accountId } },
-    include: { ledgerParticipant: { select: { id: true } } },
+    include: {
+      ledgerParticipant: { select: { id: true } },
+      account: { select: { name: true } },
+    },
   })
   if (!member || member.status !== GroupMemberStatus.ACTIVE) {
     throw new Error('You are not an active member of this group')
@@ -291,9 +355,16 @@ export async function leaveGroup(opts: {
     )
   }
 
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
+    let settlementActivities: SettlementActivityMeta[] = []
     if (needsSettlement && participantId) {
-      await createSettlementExpensesForLeave(groupId, participantId, actor, tx)
+      const settlement = await createSettlementExpensesForLeave(
+        groupId,
+        participantId,
+        actor,
+        tx,
+      )
+      settlementActivities = settlement.activities
     }
 
     if (isLastAdmin && promoteMemberId) {
@@ -313,20 +384,44 @@ export async function leaveGroup(opts: {
 
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId: actor.accountId,
-        ledgerParticipantId: participantId,
-        data: 'member:left',
+        type: 'MEMBER_LEFT',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'MEMBER', id: member.id },
+        data: buildMemberActivityData({
+          displayName: member.account?.name ?? undefined,
+          targetDisplayName: member.account?.name ?? undefined,
+          summary: 'member:left',
+        }),
       },
       tx,
     )
 
     return {
-      deleted: false as const,
       promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
+      settlementActivities,
     }
   })
+
+  for (const meta of result.settlementActivities) {
+    scheduleDefaultNotificationDispatch({
+      activityId: meta.activityId,
+      type: 'EXPENSE_CREATED',
+      groupId,
+      actor: { type: 'ACCOUNT', id: actor.accountId },
+      subject: { type: 'EXPENSE', id: meta.expenseId },
+      data: buildExpenseActivityData({
+        summary: meta.title,
+        title: meta.title,
+        amount: meta.amount,
+        currencyCode: meta.currencyCode,
+        date: meta.date,
+      }),
+      occurredAt: meta.time,
+    })
+  }
+
+  return { promotedMemberId: result.promotedMemberId }
 }
 
 export async function archiveGroupForSelf(opts: {
@@ -374,19 +469,13 @@ export async function archiveGroupForSelf(opts: {
       },
     })
 
-    const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-      groupId,
-      accountId,
-      tx,
-    )
-
     await logActivity(
       groupId,
-      ActivityType.UPDATE_GROUP,
       {
-        accountId,
-        ledgerParticipantId: actorLedgerParticipantId,
-        data: 'group:archived-on-leave',
+        type: 'GROUP_ARCHIVED',
+        actor: { type: 'ACCOUNT', id: accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({ summary: 'group:archived-on-leave' }),
       },
       tx,
     )

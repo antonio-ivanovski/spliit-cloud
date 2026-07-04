@@ -1,12 +1,10 @@
-import { ActivityType, GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { type GroupFormValues } from '@spliit/domain'
 import { resolveParticipantDisplayName } from '../invitations'
-import { logActivity } from './activities'
-import {
-  getMemberLedgerParticipantId,
-  loadGroupWithLedger,
-  randomId,
-} from './shared'
+import { buildGroupActivityData, logActivity } from './activities'
+import type { DiffableGroup } from './group-activity-diff'
+import { getGroupChangeSummary } from './group-activity-diff'
+import { loadGroupWithLedger, randomId } from './shared'
 
 /**
  * Create a cloud group with its accounting Ledger. The current account is
@@ -70,17 +68,36 @@ export async function updateGroup(
     throw new Error('Cannot modify settings of an archived group')
   }
 
-  const actorLedgerParticipantId = await getMemberLedgerParticipantId(
-    groupId,
-    actor.accountId,
-  )
-
-  await logActivity(groupId, ActivityType.UPDATE_GROUP, {
-    accountId: actor.accountId,
-    ledgerParticipantId: actorLedgerParticipantId,
-  })
+  const oldGroup: DiffableGroup = {
+    name: existingGroup.name,
+    information: existingGroup.information,
+    currency: existingGroup.ledger.currency,
+    currencyCode: existingGroup.ledger.currencyCode,
+  }
+  const newGroup: DiffableGroup = {
+    name: groupFormValues.name,
+    information: groupFormValues.information ?? null,
+    currency: groupFormValues.currency,
+    currencyCode: groupFormValues.currencyCode || null,
+  }
+  const summary = getGroupChangeSummary(oldGroup, newGroup, {})
 
   return prisma.$transaction(async (tx) => {
+    await logActivity(
+      groupId,
+      {
+        type: 'GROUP_UPDATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: groupFormValues.name,
+          ...(summary
+            ? { changedFields: summary.changedFields, changes: summary.changes }
+            : {}),
+        }),
+      },
+      tx,
+    )
     const group = await tx.group.update({
       where: { id: groupId },
       data: {

@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
-import type { Currency } from '@/lib/currency'
+import { getCurrency, type Currency } from '@/lib/currency'
 import { useRouter } from '@/lib/navigation'
 import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
@@ -135,6 +135,13 @@ export function ExpenseCard({
   // Pending invitees can browse the expense list but cannot edit; the
   // server rejects `groups.expenses.update`/`delete` for them anyway.
   const canEdit = !isPendingInvitee
+  const originalCurrency =
+    expense.originalCurrency && expense.originalCurrency !== currency.code
+      ? getCurrency(expense.originalCurrency)
+      : undefined
+  const originalAmount = expense.originalAmount ?? undefined
+  const showOriginalAmount =
+    originalCurrency !== undefined && originalAmount !== undefined
 
   return (
     <div
@@ -194,6 +201,16 @@ export function ExpenseCard({
         >
           {formatCurrency(currency, expense.amount, locale)}
         </div>
+        {showOriginalAmount && (
+          <div
+            className="mt-0.5 flex items-center gap-1 whitespace-nowrap text-xs tabular-nums text-muted-foreground"
+            data-testid="expense-original-amount"
+          >
+            <span>
+              {formatCurrency(originalCurrency, originalAmount, locale)}
+            </span>
+          </div>
+        )}
         <div className="text-xs text-muted-foreground">
           <DocumentsCount count={expense._count.documents} />
         </div>

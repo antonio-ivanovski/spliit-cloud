@@ -34,6 +34,9 @@ export function buildSubmitValues(
     conversionRequired && values.conversionRate
       ? Number(values.conversionRate)
       : undefined
+  if (conversionRequired && (!rate || Number.isNaN(rate) || rate <= 0)) {
+    throw new Error('A positive conversion rate is required.')
+  }
 
   // Persisted Ledger amount: same as typed amount when no conversion,
   // otherwise `amount * rate` rounded to Ledger minor units.
@@ -91,7 +94,7 @@ export function buildSubmitValues(
     documents: values.documents,
     notes: values.notes,
     recurrenceRule: values.recurrenceRule,
-    conversionRate: values.conversionRate,
+    conversionRate: conversionRequired ? rate : undefined,
   }
 
   const items: Expense['items'] = (values.items ?? []).map((item) => {
@@ -118,8 +121,12 @@ export function buildSubmitValues(
     }
   })
 
+  // Only persist `itemizedRemainder` for ITEMIZED expenses. For other
+  // split modes it is semantically meaningless and the form fabricates
+  // a default value, so sending it through would create orphan DB rows
+  // and trip a false-positive activity-log diff on the first edit.
   const itemizedRemainder: Expense['itemizedRemainder'] =
-    values.itemizedRemainder
+    values.splitMode === 'ITEMIZED' && values.itemizedRemainder
       ? {
           splitMode: values.itemizedRemainder.splitMode,
           paidFor: values.itemizedRemainder.paidFor.map(

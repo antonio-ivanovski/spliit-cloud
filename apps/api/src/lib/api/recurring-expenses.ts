@@ -1,5 +1,7 @@
 import { prisma, type RecurrenceRule } from '@spliit/db'
 import { calculateNextDate } from '@spliit/domain'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
+import { buildExpenseActivityData, logActivity } from './activities'
 import { randomId } from './shared'
 
 export async function createRecurringExpenses() {
@@ -208,6 +210,42 @@ export async function createRecurringExpenses() {
         })
 
       if (newExpense === null) break
+
+      const ledgerInfo = await prisma.ledger.findUnique({
+        where: { id: newExpense.ledgerId },
+        select: {
+          currencyCode: true,
+          group: { select: { id: true } },
+        },
+      })
+      const expenseDateStr = newExpense.expenseDate.toISOString().slice(0, 10)
+      const activity = await logActivity(ledgerInfo!.group!.id, {
+        type: 'EXPENSE_CREATED',
+        actor: { type: 'SYSTEM', id: 'system' },
+        subject: { type: 'EXPENSE', id: newExpense.id },
+        data: buildExpenseActivityData({
+          summary: newExpense.title,
+          title: newExpense.title,
+          amount: newExpense.amount,
+          currencyCode: ledgerInfo?.currencyCode ?? null,
+          date: expenseDateStr,
+        }),
+      })
+      scheduleDefaultNotificationDispatch({
+        activityId: activity.id,
+        type: 'EXPENSE_CREATED',
+        groupId: ledgerInfo!.group!.id,
+        actor: { type: 'SYSTEM', id: 'system' },
+        subject: { type: 'EXPENSE', id: newExpense.id },
+        data: buildExpenseActivityData({
+          summary: newExpense.title,
+          title: newExpense.title,
+          amount: newExpense.amount,
+          currencyCode: ledgerInfo?.currencyCode ?? null,
+          date: expenseDateStr,
+        }),
+        occurredAt: activity.time,
+      })
 
       currentExpenseRecord = newExpense
       currentReccuringExpenseLinkId = newRecurringExpenseLinkId

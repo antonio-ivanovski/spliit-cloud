@@ -2,10 +2,14 @@ import { prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
+  buildExpenseActivityData,
+  buildGroupActivityData,
   createSettlementExpensesForArchive,
   getGroupBalances,
   hasUnsettledBalances,
+  logActivity,
 } from '../../../lib/api'
+import { scheduleDefaultNotificationDispatch } from '../../../lib/notifications/dispatcher'
 import { loadGroupContext, protectedProcedure } from '../../init'
 
 /**
@@ -61,28 +65,76 @@ export const archiveGroupProcedure = protectedProcedure
     }
 
     if (willArchive && force) {
-      return prisma.$transaction(async (tx) => {
-        // Re-check inside the transaction in case balances changed
-        // between the optimistic read above and the write.
+      const result = await prisma.$transaction(async (tx) => {
         const balances = await getGroupBalances(groupId)
+        let settlementActivities = undefined as
+          | Awaited<
+              ReturnType<typeof createSettlementExpensesForArchive>
+            >['activities']
+          | undefined
         if (hasUnsettledBalances(balances)) {
-          await createSettlementExpensesForArchive(
+          const r = await createSettlementExpensesForArchive(
             groupId,
             { accountId: ctx.auth.user.id },
             tx,
           )
+          settlementActivities = r.activities
         }
         const updated = await tx.group.update({
           where: { id: groupId },
           data: { archived: true },
         })
-        return { group: updated }
+        await logActivity(
+          groupId,
+          {
+            type: 'GROUP_ARCHIVED',
+            actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+            subject: { type: 'GROUP', id: groupId },
+            data: buildGroupActivityData({ summary: updated.name }),
+          },
+          tx,
+        )
+        return { group: updated, settlementActivities }
       })
+      if (result.settlementActivities) {
+        for (const meta of result.settlementActivities) {
+          scheduleDefaultNotificationDispatch({
+            activityId: meta.activityId,
+            type: 'EXPENSE_CREATED',
+            groupId,
+            actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+            subject: { type: 'EXPENSE', id: meta.expenseId },
+            data: buildExpenseActivityData({
+              summary: meta.title,
+              title: meta.title,
+              amount: meta.amount,
+              currencyCode: meta.currencyCode,
+              date: meta.date,
+            }),
+            occurredAt: meta.time,
+          })
+        }
+      }
+      return { group: result.group }
     }
+
+    const willUnarchive = archived === false && wasAlreadyArchived
 
     const updated = await prisma.group.update({
       where: { id: groupId },
       data: { archived },
     })
+
+    if (willArchive || willUnarchive) {
+      await logActivity(groupId, {
+        type: willArchive ? 'GROUP_ARCHIVED' : 'GROUP_UNARCHIVED',
+        actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: willArchive ? updated.name : updated.name,
+        }),
+      })
+    }
+
     return { group: updated }
   })

@@ -52,13 +52,14 @@ describe('Expense CRUD — real DB', () => {
   /** Helper: create a group and return its id + the admin's ledger participant id. */
   async function createGroup(
     name: string,
+    currency: { symbol: string; code: string } = { symbol: '$', code: 'USD' },
   ): Promise<{ groupId: string; participantId: string }> {
     const caller = makeCaller()
     const { groupId } = await caller.create({
       groupFormValues: {
         name,
-        currency: '$',
-        currencyCode: 'USD',
+        currency: currency.symbol,
+        currencyCode: currency.code,
         participants: [{ name: 'Admin' }],
       },
     })
@@ -264,6 +265,93 @@ describe('Expense CRUD — real DB', () => {
       where: { id: expenseId },
     })
     expect(expense!.title).toBe('Updated Title')
+  })
+
+  it('clears original currency metadata when updating back to group currency', async () => {
+    const caller = makeCaller()
+    const { groupId, participantId } = await createGroup(`Currency ${runId}`, {
+      symbol: '€',
+      code: 'EUR',
+    })
+
+    const { expenseId } = await caller.expenses.create({
+      groupId,
+      expense: {
+        title: 'Dinner',
+        amount: 1000,
+        paidByList: [{ participant: participantId, shares: 1000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participantId, shares: 1 }],
+        category: 'general',
+        splitMode: 'EVENLY',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    await caller.expenses.update({
+      groupId,
+      expenseId,
+      expense: {
+        title: 'Dinner',
+        amount: 920,
+        originalAmount: 1000,
+        originalCurrency: 'USD',
+        conversionRate: 0.92,
+        paidByList: [{ participant: participantId, shares: 1000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participantId, shares: 1 }],
+        category: 'general',
+        splitMode: 'EVENLY',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    await caller.expenses.update({
+      groupId,
+      expenseId,
+      expense: {
+        title: 'Dinner',
+        amount: 1200,
+        paidByList: [{ participant: participantId, shares: 1200 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participantId, shares: 1 }],
+        category: 'general',
+        splitMode: 'EVENLY',
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        saveDefaultSplittingOptions: false,
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    const expense = await prisma.expense.findUnique({
+      where: { id: expenseId },
+      select: {
+        amount: true,
+        originalAmount: true,
+        originalCurrency: true,
+        conversionRate: true,
+      },
+    })
+
+    expect(expense).toEqual({
+      amount: 1200,
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+    })
   })
 
   // ------------------------------------------------------------------

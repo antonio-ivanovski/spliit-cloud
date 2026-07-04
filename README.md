@@ -85,6 +85,8 @@ Spliit Cloud may be useful if you want:
 | Reliable currency handling | Better support for real-world trips and groups that use more than one currency.                   | ✅           | ❓              |
 | Multiple payers            | One expense can be paid by several people, with each payer's contribution tracked correctly.      | ✅           | ❌              |
 | Granular expense items     | Track item-level details inside an expense for more precise splitting.                            | ✅           | ❌              |
+| Detailed activity audit    | Granular per-expense change history so members can see who changed what, and when.                | ✅           | ❓              |
+| Email notifications        | Group changes push to members' inboxes so they stay in sync without opening the app.              | ✅           | ❌              |
 | Improved everyday UI       | Focused papercut fixes make common flows smoother without changing the simple Spliit feel.        | ✅           | ❓              |
 | Active maintenance         | New features, fixes, and self-hosting improvements continue to move forward.                      | ✅           | ❓              |
 | Core Spliit features       | Groups, categories, receipts, balances, reimbursements, advanced splits, PWA support, and no ads. | ✅           | ✅              |

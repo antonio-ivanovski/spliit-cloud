@@ -162,7 +162,7 @@ export function GroupForm({
           </p>
         )}
 
-        <Card className="mb-4">
+        <Card className="mb-2">
           <CardHeader>
             <CardTitle>{t('title')}</CardTitle>
           </CardHeader>
@@ -280,7 +280,7 @@ export function GroupForm({
           </CardContent>
 
           {!hideActions && !readOnly && !isArchived && (
-            <CardContent className="flex flex-col gap-3 border-t pt-4">
+            <CardContent className="flex flex-col gap-3">
               <div className="flex gap-2">
                 <SubmitButton
                   loadingContent={t(

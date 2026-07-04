@@ -93,7 +93,7 @@ export const EditGroup = () => {
       />
 
       {canArchive && (
-        <Card className="mb-4">
+        <Card className="mb-2">
           <CardHeader>
             <CardTitle>{tGroups('archiveSectionTitle')}</CardTitle>
             <CardDescription>
@@ -129,7 +129,7 @@ export const EditGroup = () => {
       )}
 
       {canDelete && (
-        <Card className="mb-4 border-destructive/40 bg-destructive/5">
+        <Card className="mb-2 border-destructive/40 bg-destructive/5">
           <CardHeader>
             <CardTitle className="text-destructive">
               {tGroups('delete.sectionTitle')}

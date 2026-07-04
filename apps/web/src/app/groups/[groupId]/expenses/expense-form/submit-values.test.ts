@@ -88,4 +88,56 @@ describe('buildSubmitValues', () => {
       result.originalAmount,
     )
   })
+
+  it('clears stale conversion metadata when conversion is not required', () => {
+    const result = buildSubmitValues(baseValues, {
+      groupCurrency: getCurrency('ARS')!,
+      conversionRequired: false,
+    })
+
+    expect(result.originalAmount).toBeUndefined()
+    expect(result.originalCurrency).toBeUndefined()
+    expect(result.conversionRate).toBeUndefined()
+  })
+
+  it('rejects converted expenses without a positive conversion rate', () => {
+    expect(() =>
+      buildSubmitValues(
+        { ...baseValues, conversionRate: undefined },
+        {
+          groupCurrency: getCurrency('USD')!,
+          conversionRequired: true,
+        },
+      ),
+    ).toThrow('A positive conversion rate is required.')
+  })
+
+  // Regression: the form always builds a default `itemizedRemainder`
+  // value, but the remainder is only meaningful for ITEMIZED expenses.
+  // Sending it through for other split modes used to create orphan DB
+  // rows and trip a false-positive activity-log diff on the first edit.
+  it('omits itemizedRemainder from the payload for non-ITEMIZED split modes', () => {
+    const result = buildSubmitValues(
+      { ...baseValues, splitMode: 'EVENLY' as const },
+      {
+        groupCurrency: getCurrency('USD')!,
+        conversionRequired: false,
+      },
+    )
+    expect(result.itemizedRemainder).toBeUndefined()
+  })
+
+  it('includes itemizedRemainder in the payload for ITEMIZED split modes', () => {
+    const result = buildSubmitValues(baseValues, {
+      groupCurrency: getCurrency('USD')!,
+      conversionRequired: false,
+    })
+    expect(result.itemizedRemainder).toEqual({
+      splitMode: 'BY_SHARES',
+      paidFor: [
+        { participant: 'p1', shares: 1 },
+        { participant: 'p2', shares: 2 },
+      ],
+    })
+  })
 })

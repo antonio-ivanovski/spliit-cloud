@@ -570,16 +570,23 @@ describe('importGroup', () => {
       { accountId: 'acct-importer' },
     )
 
-    const importActivity = activityCreates.find(
-      (a) =>
-        typeof (a.data as { data?: string }).data === 'string' &&
-        ((a.data as { data?: string }).data ?? '').startsWith('Imported from'),
-    )
+    const importActivity = activityCreates.find((a) => {
+      const type = (a.data as { type?: string }).type
+      const d = (a.data as { data?: { kind?: string; summary?: string } }).data
+      return (
+        type === 'EXPENSES_IMPORTED' &&
+        d?.kind === 'import_summary' &&
+        (d?.summary ?? '').startsWith('Imported from')
+      )
+    })
     expect(importActivity).toBeDefined()
-    expect((importActivity!.data as { data: string }).data).toContain('SPLIIT')
-    expect((importActivity!.data as { data: string }).data).toContain(
-      'src-original',
-    )
+    const importData = (
+      importActivity!.data as {
+        data: { summary?: string; sourceProvider?: string }
+      }
+    ).data
+    expect(importData.summary).toContain('SPLIIT')
+    expect(importData.sourceProvider).toBe('SPLIIT')
   })
 
   it('uses the $transaction wrapper so the commit is atomic', async () => {
@@ -660,6 +667,7 @@ describe('importGroup', () => {
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'dest-grp',
       name: 'Imported',
+      ledgerId: 'ledger-dest',
     } as never)
     prismaMock.groupInvitation.create.mockResolvedValue({
       id: 'inv-1',

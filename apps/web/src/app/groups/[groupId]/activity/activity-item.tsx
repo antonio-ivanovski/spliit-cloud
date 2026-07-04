@@ -1,31 +1,16 @@
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import { useRouter } from '@/lib/navigation'
 import type { DateTimeStyle } from '@/lib/utils'
 import { cn, formatDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
+import { parseActivityData } from '@spliit/domain/activities'
 import { ChevronRight } from 'lucide-react'
-import { Trans, useTranslation } from 'react-i18next'
+import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type Activity =
   AppRouterOutput['groups']['activities']['list']['activities'][number]
-
-type ActivityType =
-  'UPDATE_GROUP' | 'CREATE_EXPENSE' | 'UPDATE_EXPENSE' | 'DELETE_EXPENSE'
-
-type ActivitySummaryKey =
-  | 'Activity.settingsModified'
-  | 'Activity.expenseCreated'
-  | 'Activity.expenseUpdated'
-  | 'Activity.expenseDeleted'
-
-const summaryKeyByActivityType: Record<ActivityType, ActivitySummaryKey> = {
-  UPDATE_GROUP: 'Activity.settingsModified',
-  CREATE_EXPENSE: 'Activity.expenseCreated',
-  UPDATE_EXPENSE: 'Activity.expenseUpdated',
-  DELETE_EXPENSE: 'Activity.expenseDeleted',
-}
 
 type Props = {
   groupId: string
@@ -33,30 +18,207 @@ type Props = {
   dateStyle: DateTimeStyle
 }
 
-function useSummary(activity: Activity) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
-  const participant = activity.actorName ?? t('someone')
-  const expense = activity.data ?? ''
-  const i18nKey = summaryKeyByActivityType[activity.activityType]
+function useMessage(activity: Activity) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
+  const actor = activity.actorName ?? t('unknownActor')
+  const data = parseActivityData(activity.data)
 
+  if (!data) {
+    return { message: t('fallback'), changes: null }
+  }
+
+  switch (data.kind) {
+    case 'expense': {
+      const title = data.title ?? activity.expense?.title ?? ''
+      switch (activity.type) {
+        case 'EXPENSE_CREATED':
+          return {
+            message: t('expense.created', { participant: actor, title }),
+            changes: null,
+          }
+        case 'EXPENSE_UPDATED':
+          return {
+            message: t('expense.updated', { participant: actor, title }),
+            changes:
+              data.changes?.map((change) => ({
+                field: change.field,
+                label: t(`expense.changedFields.${change.field}` as const),
+                before: change.before ?? null,
+                after: change.after ?? null,
+              })) ?? null,
+          }
+        case 'EXPENSE_DELETED':
+          return {
+            message: t('expense.deleted', { participant: actor, title }),
+            changes: null,
+          }
+        default:
+          return { message: t('fallback'), changes: null }
+      }
+    }
+    case 'group':
+      switch (activity.type) {
+        case 'GROUP_UPDATED':
+          return {
+            message: t('group.updated', { participant: actor }),
+            changes:
+              data.changes?.map((change) => ({
+                field: change.field,
+                label: t(`group.changedFields.${change.field}` as const),
+                before: change.before ?? null,
+                after: change.after ?? null,
+              })) ?? null,
+          }
+        case 'GROUP_ARCHIVED':
+          return {
+            message: t('group.archived', { participant: actor }),
+            changes: null,
+          }
+        case 'GROUP_UNARCHIVED':
+          return {
+            message: t('group.unarchived', { participant: actor }),
+            changes: null,
+          }
+        default:
+          return { message: t('fallback'), changes: null }
+      }
+    case 'member': {
+      const targetName = data.targetDisplayName ?? data.displayName ?? ''
+      switch (activity.type) {
+        case 'MEMBER_LEFT':
+          return {
+            message: t('member.left', { participant: actor }),
+            changes: null,
+          }
+        case 'MEMBER_REMOVED':
+          return {
+            message: t('member.removed', {
+              participant: actor,
+              target: targetName,
+            }),
+            changes: null,
+          }
+        case 'MEMBER_ROLE_CHANGED':
+          return {
+            message: t('member.roleChanged', {
+              participant: actor,
+              target: targetName,
+              previousRole: data.previousRole,
+              nextRole: data.nextRole,
+            }),
+            changes: null,
+          }
+        default:
+          return { message: t('fallback'), changes: null }
+      }
+    }
+    case 'invitation': {
+      const displayLabel = data.displayLabel ?? ''
+      switch (activity.type) {
+        case 'INVITATION_CREATED':
+          return {
+            message: t('invitation.created', {
+              participant: actor,
+              target: displayLabel,
+            }),
+            changes: null,
+          }
+        case 'INVITATION_REVOKED':
+          return {
+            message: t('invitation.revoked', {
+              participant: actor,
+              target: displayLabel,
+            }),
+            changes: null,
+          }
+        case 'INVITATION_ACCEPTED':
+          return {
+            message: t('invitation.accepted', {
+              target: displayLabel,
+            }),
+            changes: null,
+          }
+        case 'INVITATION_DECLINED':
+          return {
+            message: t('invitation.declined', {
+              target: displayLabel,
+            }),
+            changes: null,
+          }
+        default:
+          return { message: t('fallback'), changes: null }
+      }
+    }
+    case 'import_summary':
+      switch (activity.type) {
+        case 'EXPENSES_IMPORTED':
+          return {
+            message: t('import.imported', {
+              participant: actor,
+              count: data.count,
+              provider: data.sourceProvider ?? '',
+            }),
+            changes: null,
+          }
+        default:
+          return { message: t('fallback'), changes: null }
+      }
+    default:
+      return { message: t('fallback'), changes: null }
+  }
+}
+
+function renderItemsDiff(before: string | null): ReactNode {
+  if (!before) return null
+  const lines = before.split('\n').filter((l) => l.length > 0)
+  if (lines.length === 0) return null
   return (
-    <Trans
-      i18nKey={i18nKey}
-      values={{ expense, participant }}
-      components={{
-        em: <em />,
-        strong: <strong />,
-      }}
-    />
+    <div className="space-y-0.5 tabular-nums">
+      {lines.map((line, i) => {
+        if (line.startsWith('- ')) {
+          return (
+            <div key={i} className="text-muted-foreground/60 line-through">
+              {line.slice(2)}
+            </div>
+          )
+        }
+        if (line.startsWith('+ ')) {
+          return (
+            <div key={i} className="text-emerald-600 dark:text-emerald-400">
+              {line.slice(2)}
+            </div>
+          )
+        }
+        // Modified line: "before → after" — render with the "before" half muted.
+        const arrowIdx = line.lastIndexOf(' → ')
+        if (arrowIdx > 0) {
+          const beforeHalf = line.slice(0, arrowIdx)
+          const afterHalf = line.slice(arrowIdx + 3)
+          return (
+            <div key={i}>
+              <span className="text-muted-foreground/60">{beforeHalf}</span>
+              <span className="text-muted-foreground/40">{' → '}</span>
+              <span>{afterHalf}</span>
+            </div>
+          )
+        }
+        return <div key={i}>{line}</div>
+      })}
+    </div>
   )
 }
 
 export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   const router = useRouter()
   const locale = useLocale()
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
+  const expenseExists = activity.expense != null
+  const { message, changes } = useMessage(activity)
+  const emptyValue = t('expense.changeEmptyValue')
 
-  const expenseExists = activity.expense !== undefined
-  const summary = useSummary(activity)
+  function formatChangeValue(value: string | null | undefined): string {
+    return value && value.trim().length > 0 ? value : emptyValue
+  }
 
   return (
     <div
@@ -67,7 +229,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       onClick={() => {
         if (expenseExists) {
           router.push({
-            href: `/groups/${groupId}/expenses/${activity.expenseId}/edit`,
+            href: `/groups/${groupId}/expenses/${activity.expense!.id}/edit`,
           })
         }
       }}
@@ -84,7 +246,33 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
         </div>
       </div>
       <div className="flex-1">
-        <div className="m-1">{summary}</div>
+        <div className="m-1">{message}</div>
+        {changes && changes.length > 0 && (
+          <div className="mx-1 mt-0.5 mb-1 border-l-2 border-muted-foreground/20 pl-2 space-y-0.5">
+            {changes.map((change, i) => (
+              <div
+                key={`${change.field}-${i}`}
+                className="grid grid-cols-[auto,1fr] gap-x-2 text-xs"
+                data-testid={`activity-item-${activity.id}-change-${change.field}`}
+              >
+                <span className="font-medium text-muted-foreground/80">
+                  {change.label}
+                </span>
+                {change.field === 'items' ? (
+                  <span>{renderItemsDiff(change.before)}</span>
+                ) : (
+                  <span className="tabular-nums">
+                    <span className="text-muted-foreground/60">
+                      {formatChangeValue(change.before)}
+                    </span>
+                    <span className="text-muted-foreground/40">{' → '}</span>
+                    <span>{formatChangeValue(change.after)}</span>
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {expenseExists && (
         <Button
@@ -93,9 +281,9 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
           className="self-center hidden sm:flex w-5 h-5"
           asChild
         >
-          <Link href={`/groups/${groupId}/expenses/${activity.expenseId}/edit`}>
+          <a href={`/groups/${groupId}/expenses/${activity.expense!.id}/edit`}>
             <ChevronRight className="w-4 h-4" />
-          </Link>
+          </a>
         </Button>
       )}
     </div>

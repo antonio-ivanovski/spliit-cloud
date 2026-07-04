@@ -328,8 +328,8 @@ describe('groupsRouter.leave — happy path', () => {
 
     const caller = makeCaller('acct-self')
     const result = await caller.leave({ groupId: 'grp-1' })
+    expect(result).toEqual({ promotedMemberId: null })
 
-    expect(result).toEqual({ deleted: false, promotedMemberId: null })
     expect(prismaMock.groupMember.update).toHaveBeenCalledWith(
       expect.objectContaining({
         where: { id: 'gm-self' },
@@ -362,7 +362,7 @@ describe('groupsRouter.leave — happy path', () => {
     const caller = makeCaller('acct-self')
     const result = await caller.leave({ groupId: 'grp-1' })
 
-    expect(result).toEqual({ deleted: false, promotedMemberId: null })
+    expect(result).toEqual({ promotedMemberId: null })
     // The caller is flipped to LEFT but no promotion occurs.
     expect(prismaMock.groupMember.update).toHaveBeenCalledTimes(1)
   })
@@ -417,7 +417,6 @@ describe('groupsRouter.leave — last admin', () => {
     })
 
     expect(result).toEqual({
-      deleted: false,
       promotedMemberId: 'gm-other-member',
     })
     // First update promotes Bob, second flips the caller to LEFT.
@@ -649,17 +648,25 @@ describe('groupsRouter.leave — unsettled balances', () => {
     // participant id so the activity feed renders their name instead of
     // falling back to "someone".
     const settlementActivityCall = prismaMock.activity.create.mock.calls.find(
-      (call) =>
-        (call[0] as { data: { data?: string } }).data?.data ===
-        'Settlement on leave',
+      (call) => {
+        const d = call[0] as {
+          data: { data?: { kind?: string; summary?: string } }
+        }
+        return (
+          d.data?.data?.kind === 'expense' &&
+          d.data?.data?.summary === 'Settlement on leave'
+        )
+      },
     )
     expect(settlementActivityCall).toBeDefined()
     expect(settlementActivityCall![0]).toEqual(
       expect.objectContaining({
         data: expect.objectContaining({
-          activityType: 'CREATE_EXPENSE',
-          ledgerParticipantId: 'lp-self',
-          data: 'Settlement on leave',
+          type: 'EXPENSE_CREATED',
+          data: expect.objectContaining({
+            kind: 'expense',
+            summary: 'Settlement on leave',
+          }),
         }),
       }),
     )
@@ -870,17 +877,25 @@ describe('groupsRouter.archiveForSelf', () => {
     // participant id so the activity feed renders their name instead of
     // falling back to "someone".
     const archiveActivityCall = prismaMock.activity.create.mock.calls.find(
-      (call) =>
-        (call[0] as { data: { data?: string } }).data?.data ===
-        'group:archived-on-leave',
+      (call) => {
+        const d = call[0] as {
+          data: { data?: { kind?: string; summary?: string } }
+        }
+        return (
+          d.data?.data?.kind === 'group' &&
+          d.data?.data?.summary === 'group:archived-on-leave'
+        )
+      },
     )
     expect(archiveActivityCall).toBeDefined()
     expect(archiveActivityCall![0]).toEqual(
       expect.objectContaining({
         data: expect.objectContaining({
-          activityType: 'UPDATE_GROUP',
-          ledgerParticipantId: 'lp-self',
-          data: 'group:archived-on-leave',
+          type: 'GROUP_ARCHIVED',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'group:archived-on-leave',
+          }),
         }),
       }),
     )

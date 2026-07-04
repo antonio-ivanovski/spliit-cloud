@@ -1,5 +1,12 @@
 export type { Ledger, LedgerParticipant } from '@spliit/db'
-export { getActivities, logActivity } from './activities'
+export {
+  buildExpenseActivityData,
+  buildGroupActivityData,
+  buildInvitationActivityData,
+  buildMemberActivityData,
+  getActivities,
+  logActivity,
+} from './activities'
 export {
   buildSettlementLegs,
   createSettlementExpensesForArchive,

@@ -1,10 +1,16 @@
 import {
   GroupInvitationStatus,
   GroupInvitationType,
+  GroupMemberStatus,
   prisma,
   type GroupRole,
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
+import {
+  buildExpenseActivityData,
+  buildInvitationActivityData,
+  logActivity,
+} from '../api/activities'
 import {
   createSettlementExpensesForLeave,
   getGroupBalances,
@@ -12,6 +18,7 @@ import {
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { sendEmail } from '../mail/send'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
 
@@ -22,6 +29,7 @@ export type CreateInvitationInput = {
   inviterAccountId: string
   /** Pending-only label. Ignored after acceptance. */
   temporaryName?: string | null
+  ledgerParticipantId?: string | null
 }
 
 export class InvitationError extends TRPCError {
@@ -52,6 +60,7 @@ async function assertNotExistingMember(
     where: {
       groupId,
       account: { email: { equals: normalizedEmail, mode: 'insensitive' } },
+      status: GroupMemberStatus.ACTIVE,
     },
     select: { id: true },
   })
@@ -78,18 +87,6 @@ async function assertNoConflictingEmailInvitation(
       'An invitation is already pending for this email. Revoke the existing one below and try again.',
     )
   }
-  const existingAccepted = await prisma.groupInvitation.findFirst({
-    where: {
-      groupId,
-      type: GroupInvitationType.EMAIL,
-      email: { equals: normalizedEmail, mode: 'insensitive' },
-      status: GroupInvitationStatus.ACCEPTED,
-    },
-    select: { id: true },
-  })
-  if (existingAccepted) {
-    throw new InvitationError('This email is already a member of the group.')
-  }
 }
 
 /**
@@ -101,6 +98,7 @@ export async function createEmailInvitation({
   role,
   inviterAccountId,
   temporaryName,
+  ledgerParticipantId,
 }: CreateInvitationInput) {
   const normalizedEmail = email.toLowerCase()
 
@@ -108,7 +106,7 @@ export async function createEmailInvitation({
   await assertNotExistingMember(groupId, normalizedEmail)
   await assertNoConflictingEmailInvitation(groupId, normalizedEmail)
 
-  return prisma.groupInvitation.create({
+  const invitation = await prisma.groupInvitation.create({
     data: {
       id: randomId(),
       type: GroupInvitationType.EMAIL,
@@ -117,8 +115,24 @@ export async function createEmailInvitation({
       role,
       temporaryName: temporaryName ?? null,
       invitedById: inviterAccountId,
+      ...(ledgerParticipantId
+        ? { ledgerParticipantId: ledgerParticipantId }
+        : {}),
     },
   })
+
+  await logActivity(groupId, {
+    type: 'INVITATION_CREATED',
+    actor: { type: 'ACCOUNT', id: inviterAccountId },
+    subject: { type: 'INVITATION', id: invitation.id },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+      invitationType: 'EMAIL',
+      role,
+    }),
+  })
+
+  return invitation
 }
 
 export const createInvitation = createEmailInvitation
@@ -164,18 +178,24 @@ export async function revokeInvitation(opts: {
     )
   }
 
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
+    let settlementActivities = undefined as
+      | Awaited<
+          ReturnType<typeof createSettlementExpensesForLeave>
+        >['activities']
+      | undefined
     if (
       opts.settleBalances &&
       invitation.ledgerParticipantId &&
       invitation.status === GroupInvitationStatus.PENDING
     ) {
-      await createSettlementExpensesForLeave(
+      const r = await createSettlementExpensesForLeave(
         opts.groupId,
         invitation.ledgerParticipantId,
         opts.actor,
         tx,
       )
+      settlementActivities = r.activities
     }
 
     const updated = await tx.groupInvitation.update({
@@ -185,6 +205,19 @@ export async function revokeInvitation(opts: {
         revokedAt: new Date(),
       },
     })
+
+    await logActivity(
+      opts.groupId,
+      {
+        type: 'INVITATION_REVOKED',
+        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+        subject: { type: 'INVITATION', id: opts.invitationId },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+        }),
+      },
+      tx,
+    )
 
     if (
       invitation.ledgerParticipantId &&
@@ -202,8 +235,28 @@ export async function revokeInvitation(opts: {
       }
     }
 
-    return updated
+    return { updated, settlementActivities }
   })
+  if (result.settlementActivities) {
+    for (const meta of result.settlementActivities) {
+      scheduleDefaultNotificationDispatch({
+        activityId: meta.activityId,
+        type: 'EXPENSE_CREATED',
+        groupId: opts.groupId,
+        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+        subject: { type: 'EXPENSE', id: meta.expenseId },
+        data: buildExpenseActivityData({
+          summary: meta.title,
+          title: meta.title,
+          amount: meta.amount,
+          currencyCode: meta.currencyCode,
+          date: meta.date,
+        }),
+        occurredAt: meta.time,
+      })
+    }
+  }
+  return result.updated
 }
 
 export async function getRevokeInvitationPreview(opts: {
@@ -275,6 +328,7 @@ export function assertCanDeclineEmailInvitation(
 export async function declineInvitation(opts: {
   invitationId: string
   accountEmail: string
+  accountId: string
 }) {
   const invitation = await prisma.groupInvitation.findUnique({
     where: { id: opts.invitationId },
@@ -286,12 +340,23 @@ export async function declineInvitation(opts: {
     throw new InvitationError('Invitation is no longer pending.')
   }
   assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
-  return prisma.groupInvitation.update({
+  const updated = await prisma.groupInvitation.update({
     where: { id: opts.invitationId },
     data: {
       status: GroupInvitationStatus.DECLINED,
     },
   })
+
+  await logActivity(invitation.groupId, {
+    type: 'INVITATION_DECLINED',
+    actor: { type: 'ACCOUNT', id: opts.accountId },
+    subject: { type: 'INVITATION', id: opts.invitationId },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+    }),
+  })
+
+  return updated
 }
 
 /**
@@ -305,6 +370,12 @@ export async function sendInvitationEmail(opts: {
   inviterRole: GroupRole
   recipientEmail: string
   recipientIsExistingUser: boolean
+  temporaryName?: string | null
+  sourceProvider?: string
+  sourceGroupName?: string
+  expenseCount?: number
+  totalAmount?: number
+  currencyCode?: string | null
 }) {
   const {
     invitationId,
@@ -314,31 +385,76 @@ export async function sendInvitationEmail(opts: {
     inviterRole,
     recipientEmail,
     recipientIsExistingUser,
+    temporaryName,
+    sourceProvider,
+    sourceGroupName,
+    expenseCount,
+    totalAmount,
+    currencyCode,
   } = opts
 
   const webBase = getWebBaseUrl()
   const acceptUrl = `${webBase}/groups/${groupId}`
   const signInUrl = `${webBase}/?invitation=${invitationId}`
 
-  const subject = `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
+  const subject = temporaryName
+    ? `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud as ${temporaryName}`
+    : `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
 
-  const text = recipientIsExistingUser
+  const lines: string[] = recipientIsExistingUser
     ? [
         `${inviterDisplayName} (${inviterRole.toLowerCase()}) invited you to join "${groupName}" on Spliit Cloud.`,
+        ...(temporaryName
+          ? [`You will appear as "${temporaryName}" in this group.`]
+          : []),
         '',
         `Open Spliit to accept or decline the invitation:`,
         acceptUrl,
-        '',
-        `If you don't recognize this group, you can safely ignore this email.`,
-      ].join('\n')
+      ]
     : [
         `${inviterDisplayName} invited you to join "${groupName}" on Spliit Cloud.`,
+        ...(temporaryName
+          ? [`You will appear as "${temporaryName}" in this group.`]
+          : []),
         '',
         `Create an account to join the group:`,
         signInUrl,
-        '',
-        `If you don't want to join, you can safely ignore this email.`,
-      ].join('\n')
+      ]
+
+  if (sourceProvider) {
+    const PROVIDER_LABELS: Record<string, string> = {
+      SPLIIT: 'a Spliit export',
+      SPLITWISE: 'a Splitwise export',
+    }
+    const fromProvider =
+      PROVIDER_LABELS[sourceProvider] ??
+      `a ${sourceProvider.toLowerCase()} export`
+
+    lines.push('', '---', '')
+    lines.push(`This invitation is part of an import from ${fromProvider}.`)
+    if (sourceGroupName) {
+      lines.push(`Source group: ${sourceGroupName}`)
+    }
+    let expenseLine = ''
+    if (expenseCount != null) {
+      expenseLine += `The group contains ${expenseCount} expense${expenseCount === 1 ? '' : 's'} from the import`
+    }
+    if (totalAmount != null && currencyCode) {
+      const formattedTotal = `${currencyCode} ${(totalAmount / 100).toFixed(2)}`
+      expenseLine += ` (total ${formattedTotal})`
+    }
+    if (expenseLine) {
+      expenseLine += '.'
+      lines.push(expenseLine)
+    }
+  }
+
+  lines.push(
+    '',
+    `If you don't recognize this group, you can safely ignore this email.`,
+  )
+
+  const text = lines.join('\n')
 
   try {
     await sendEmail({ to: recipientEmail, subject, text })
@@ -411,6 +527,19 @@ export async function acceptInvitation(opts: {
         acceptedAt: new Date(),
       },
     })
+
+    await logActivity(
+      invitation.groupId,
+      {
+        type: 'INVITATION_ACCEPTED',
+        actor: { type: 'ACCOUNT', id: opts.accountId },
+        subject: { type: 'INVITATION', id: invitation.id },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+        }),
+      },
+      tx,
+    )
 
     return member
   })

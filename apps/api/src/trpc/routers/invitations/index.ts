@@ -168,6 +168,7 @@ export const invitationsRouter = createTRPCRouter({
         inviterRole: member.role,
         recipientEmail: invitation.email,
         recipientIsExistingUser: !!existingAccount,
+        temporaryName: invitation.temporaryName,
       })
 
       return { invitationId: invitation.id }
@@ -277,6 +278,7 @@ export const invitationsRouter = createTRPCRouter({
       await declineInvitation({
         invitationId,
         accountEmail: ctx.auth.user.email,
+        accountId: ctx.auth.user.id,
       })
       return {}
     }),
