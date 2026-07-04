@@ -1,8 +1,8 @@
 /**
  * Tiny MailDev HTTP client used by integration tests to inspect and clear
- * the local MailDev inbox. MailDev runs as part of `bun dev` via the
- * `@spliit/dev-services` package on http://localhost:1080 (web UI) +
- * 1025 (SMTP). SMTP delivery is asynchronous, so callers must poll.
+ * the local MailDev inbox. MailDev runs as part of `bun dev:up` via
+ * `compose.dev.yaml` on http://localhost:1080 (web UI) + 1025 (SMTP).
+ * SMTP delivery is asynchronous, so callers must poll.
  *
  * Reference: https://github.com/maildev/maildev/blob/master/docs/http.md
  */

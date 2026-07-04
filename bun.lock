@@ -136,10 +136,6 @@
         "typescript": "6.0.3",
       },
     },
-    "packages/dev-services": {
-      "name": "@spliit/dev-services",
-      "version": "0.1.0",
-    },
     "packages/domain": {
       "name": "@spliit/domain",
       "version": "0.1.0",
@@ -662,8 +658,6 @@
     "@spliit/config": ["@spliit/config@workspace:packages/config"],
 
     "@spliit/db": ["@spliit/db@workspace:packages/db"],
-
-    "@spliit/dev-services": ["@spliit/dev-services@workspace:packages/dev-services"],
 
     "@spliit/domain": ["@spliit/domain@workspace:packages/domain"],
 

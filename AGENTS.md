@@ -6,16 +6,30 @@ Spliit is a Bun monorepo: React/Vite web app, Hono+tRPC API, Prisma/PostgreSQL D
 
 Use Bun, not npm/yarn.
 
+Local dev is three explicit steps. DO NOT START dev server/services automatically unless explicitly asked by the user.:
+
 ```bash
 bun install
-bun dev                  # web :3000, api :3001
+bun dev:up                       # postgres, maxio, maildev via compose.dev.yaml
+bun prisma-migrate
+bun dev                          # web :3000, api :3001
+bun dev:down                     # stop local services
+```
+
+`bun dev` regenerates the Prisma client as a turbo dep, so `prisma-generate`
+is not a manual step. Run `bun prisma-generate` directly only when you need
+to regenerate without running any consumer task (rare).
+
+Other commands:
+
+```bash
 bun check-types
 bun check-formatting
-bun run test             # Vitest unit tests through turbo
-bun test-e2e             # Playwright; starts web/API via config
-bun test:integration     # Real-DB integration tests (API + web)
-bun prisma-generate
-bun prisma-migrate       # deploy migrations for local/container DB
+bun run test                     # Vitest unit tests through turbo
+bun test-e2e                     # Playwright; starts web/API via config
+bun test:integration             # Real-DB integration tests (API + web)
+bun prisma-generate              # regenerate the Prisma client only
+bun prisma-migrate               # deploy migrations for local/container DB
 ```
 
 ## Integration tests

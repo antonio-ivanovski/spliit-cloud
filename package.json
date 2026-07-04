@@ -17,11 +17,8 @@
   ],
   "scripts": {
     "dev": "turbo --ui=tui run dev --filter=@spliit/api --filter=@spliit/web",
-    "dev:services:db:up": "bun --filter @spliit/dev-services dev:services:db:up",
-    "dev:services:db": "bun --filter @spliit/dev-services dev:services:db",
-    "dev:services:maxio": "bun --filter @spliit/dev-services dev:services:maxio",
-    "dev:services:maildev": "bun --filter @spliit/dev-services dev:services:maildev",
-    "dev:services:down": "bun --filter @spliit/dev-services dev:services:down",
+    "dev:up": "docker compose -f compose.dev.yaml up -d --wait",
+    "dev:down": "docker compose -f compose.dev.yaml down",
     "build": "turbo --ui=tui run build",
     "start": "bun --filter @spliit/api start",
     "lint": "turbo --ui=tui run lint",
@@ -34,8 +31,7 @@
     "test": "turbo --ui=tui run test",
     "test:integration": "turbo run test:integration",
     "test-e2e": "bun --filter @spliit/web test-e2e",
-    "i18n": "bun scripts/i18n/src/cli.ts",
-    "ci-checks": "turbo --ui=tui watch ci-checks"
+    "i18n": "bun scripts/i18n/src/cli.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -12,25 +12,30 @@ For project rules, see [AGENTS.md](./AGENTS.md). For behavior, see [CODE_OF_COND
 
 ## Development setup
 
-Bun monorepo. All commands through Bun:
+Bun monorepo. All commands through Bun.
+
+Local dev runs in three explicit steps:
 
 ```bash
 bun install
-bun dev                  # web :3000, api :3001
+cp .env.example .env
+bun dev:up                       # starts postgres, maxio, maildev (compose.dev.yaml)
+bun prisma-migrate
+bun dev                          # web :3000, api :3001
+```
+
+Service state lives under `storage/` at the repository root. Stop local
+service containers with `bun dev:down` when you are done; remove `storage/`
+for a clean reset.
+
+Other useful commands:
+
+```bash
 bun check-types
 bun check-formatting
 bun run test             # Vitest unit tests
 bun test-e2e             # Playwright
-bun prisma-generate      # also runs automatically before bun dev
-bun prisma-migrate       # also runs automatically before bun dev
 ```
-
-Local services run as named Docker containers. Copy `.env.example` to `.env`.
-Normal `bun dev` starts local Postgres before migrations, starts MaxIO and
-MailDev as Turbo sidecars, generates the Prisma client, and applies migrations
-before the app servers start. Service state lives under `storage/` at the
-repository root. Stop local service containers with `bun dev:services:down`
-when you are done.
 
 ## Pull request workflow
 

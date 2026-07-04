@@ -42,7 +42,7 @@ export async function sendEmail(message: EmailMessage): Promise<void> {
     throw new Error(
       '[mail] SMTP_HOST is not configured. Set SMTP_HOST/SMTP_PORT ' +
         '(and EMAIL_FROM in production) to deliver email. Local dev: ' +
-        'start MailDev with `bun dev:services:maildev`.',
+        'run `bun dev:up` to start MailDev via compose.dev.yaml.',
     )
   }
 

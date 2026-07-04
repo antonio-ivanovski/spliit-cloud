@@ -1,41 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
-    "ci-checks": {
-      "dependsOn": [
-        "check-formatting",
-        "check-types",
-        "lint",
-        "build",
-        "test",
-        "test:integration"
-      ]
-    },
     "build": {
-      "dependsOn": ["^build", "check-types"],
+      "dependsOn": ["^build", "check-types", "@spliit/db#prisma-generate"],
       "outputs": ["dist/**", "build/**", ".vite/**"]
     },
     "dev": {
-      "dependsOn": ["@spliit/db#prisma-generate", "@spliit/db#prisma-migrate"],
-      "with": [
-        "@spliit/dev-services#dev:services:maxio",
-        "@spliit/dev-services#dev:services:maildev"
-      ],
-      "cache": false,
-      "persistent": true
-    },
-    "dev:services:db:up": {
-      "cache": false
-    },
-    "dev:services:db": {
-      "cache": false,
-      "persistent": true
-    },
-    "dev:services:maxio": {
-      "cache": false,
-      "persistent": true
-    },
-    "dev:services:maildev": {
+      "dependsOn": ["@spliit/db#prisma-generate"],
       "cache": false,
       "persistent": true
     },
@@ -43,21 +14,17 @@
       "cache": false
     },
     "prisma-migrate": {
-      "dependsOn": ["@spliit/dev-services#dev:services:db:up"],
       "cache": false,
       "passThroughEnv": ["DATABASE_URL"]
     },
-    "check-formatting": {
-      "cache": false
-    },
     "lint": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "@spliit/db#prisma-generate"]
     },
     "check-types": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "@spliit/db#prisma-generate"]
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@spliit/db#prisma-generate"],
       "outputs": ["coverage/**"]
     },
     "test-e2e": {
@@ -65,7 +32,7 @@
       "cache": false
     },
     "test:integration": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@spliit/db#prisma-generate"],
       "cache": false,
       "passThroughEnv": ["DATABASE_URL"]
     }

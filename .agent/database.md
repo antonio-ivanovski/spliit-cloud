@@ -10,8 +10,9 @@
 
 1. Edit `packages/db/prisma/schema.prisma`.
 2. Create/commit the migration with the schema change.
-3. Run `bun prisma-generate`.
-4. Run `bun check-types`.
+3. Run `bun check-types` — turbo regenerates the Prisma client as a dep.
+   `bun prisma-generate` is the manual fallback if you need to regenerate
+   without running any consumer task.
 
 ## Query Rules
 

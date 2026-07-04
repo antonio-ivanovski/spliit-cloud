@@ -1,0 +1,55 @@
+services:
+  # Start with `bun dev:up`, stop with `bun dev:down`, reset data with `rm -rf storage/`.
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: spliit-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    volumes:
+      - ./storage/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - spliit-dev
+
+  maxio:
+    image: ghcr.io/coollabsio/maxio:0.4.2
+    container_name: spliit-maxio
+    restart: unless-stopped
+    environment:
+      MAXIO_DEFAULT_BUCKETS: spliit-local
+      MAXIO_ALLOW_INSECURE_DEV: 'true'
+      MAXIO_SECURE_COOKIES: 'false'
+    ports:
+      - 9000:9000
+    volumes:
+      - ./storage/maxio:/data
+    networks:
+      - spliit-dev
+
+  maildev:
+    image: maildev/maildev:2.2.1
+    container_name: spliit-maildev
+    restart: unless-stopped
+    ports:
+      - 1080:1080
+      - 1025:1025
+    volumes:
+      - ./storage/maildev:/data
+    command: ['--mail-directory', '/data']
+    networks:
+      - spliit-dev
+
+networks:
+  spliit-dev:
+    driver: bridge

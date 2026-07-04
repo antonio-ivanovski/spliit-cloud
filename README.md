@@ -135,25 +135,28 @@ The simplest local setup uses local Docker containers for PostgreSQL, object sto
 
 ## Run locally
 
-1. Clone the repository (or fork it if you intend to contribute)
+1. Clone the repository (or your fork if you intend to contribute).
 2. Run `bun install` to install dependencies.
-3. Copy the file `.env.example` as `.env`
-4. Run `bun dev` to start local Docker services, run Prisma client generation
-   and migrations, then start the web app at http://localhost:3000 and the API
-   at http://localhost:3001.
+3. Copy `.env.example` to `.env` (`cp .env.example .env`).
+4. Start local services, run Prisma operations, and start the app servers:
 
-Local dev services started by `bun dev`:
+   ```bash
+   bun dev:up                       # postgres, maxio, maildev via compose.dev.yaml
+   bun prisma-migrate
+   bun dev                          # web on :3000, api on :3001
+   ```
+
+   `bun dev:down` stops the local service containers. Remove `storage/` for a
+   clean reset of all local service state.
+
+Local services exposed by `bun dev:up`:
 
 - PostgreSQL on `localhost:5432`
 - MaxIO object storage at http://localhost:9000/ui/
 - MailDev email inbox at http://localhost:1080
 
-The service containers write local state under `storage/` at the repository
-root. MaxIO creates the local bucket from `MAXIO_DEFAULT_BUCKETS`. Stop the
-local service containers with `bun dev:services:down`; remove `storage/` when
-you want a clean local service state.
-
-The MaxIO bucket CORS/public-read config lives at
+State for the local services lives under `storage/` at the repo root. The
+MaxIO bucket CORS/public-read config lives at
 `storage/maxio/buckets/spliit-local/.bucket.json`; other local service state is
 ignored by Git.
 
