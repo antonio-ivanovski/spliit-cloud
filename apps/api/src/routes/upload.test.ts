@@ -21,10 +21,12 @@ vi.mock('@aws-sdk/s3-request-presigner', () => ({
   ),
 }))
 
-const mockS3Send = vi.hoisted(() => vi.fn().mockResolvedValue({}))
+const mockS3Client = vi.hoisted(() => ({
+  send: vi.fn().mockResolvedValue({}),
+}))
 vi.mock('@aws-sdk/client-s3', () => ({
   S3Client: vi.fn(function () {
-    return { send: mockS3Send }
+    return mockS3Client
   }),
   PutObjectCommand: vi.fn(function (input: unknown) {
     return input
@@ -268,8 +270,8 @@ describe('createUploadUrl', () => {
 
 describe('promoteUploadedDocument', () => {
   beforeEach(() => {
-    mockS3Send.mockReset()
-    mockS3Send.mockResolvedValue({})
+    mockS3Client.send.mockReset()
+    mockS3Client.send.mockResolvedValue({})
   })
 
   it('returns the original URL when uploads are not configured', async () => {
@@ -279,7 +281,7 @@ describe('promoteUploadedDocument', () => {
       const url = 'https://example.com/tmp/doc.jpg'
       const result = await promoteUploadedDocument(url)
       expect(result).toBe(url)
-      expect(mockS3Send).not.toHaveBeenCalled()
+      expect(mockS3Client.send).not.toHaveBeenCalled()
     } finally {
       env.S3_UPLOAD_BUCKET = originalBucket
     }
@@ -290,7 +292,7 @@ describe('promoteUploadedDocument', () => {
       'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/documents/doc.jpg'
     const result = await promoteUploadedDocument(url)
     expect(result).toBe(url)
-    expect(mockS3Send).not.toHaveBeenCalled()
+    expect(mockS3Client.send).not.toHaveBeenCalled()
   })
 
   it('copies tmp/... key to documents/... and deletes the temp object', async () => {
@@ -299,8 +301,10 @@ describe('promoteUploadedDocument', () => {
 
     await promoteUploadedDocument(url)
 
-    expect(mockS3Send).toHaveBeenCalledTimes(2)
-    const [copyInput, deleteInput] = mockS3Send.mock.calls.map((c) => c[0])
+    expect(mockS3Client.send).toHaveBeenCalledTimes(2)
+    const [copyInput, deleteInput] = mockS3Client.send.mock.calls.map(
+      (c) => c[0],
+    )
 
     expect(copyInput).toMatchObject({
       Bucket: 'spliit-test-bucket',
@@ -348,8 +352,10 @@ describe('promoteUploadedDocument', () => {
 
       const result = await promoteUploadedDocument(url)
 
-      expect(mockS3Send).toHaveBeenCalledTimes(2)
-      const [copyInput, deleteInput] = mockS3Send.mock.calls.map((c) => c[0])
+      expect(mockS3Client.send).toHaveBeenCalledTimes(2)
+      const [copyInput, deleteInput] = mockS3Client.send.mock.calls.map(
+        (c) => c[0],
+      )
 
       expect(copyInput).toMatchObject({
         Bucket: 'spliit-test-bucket',
@@ -377,7 +383,7 @@ describe('promoteUploadedDocument', () => {
       const result = await promoteUploadedDocument(url)
 
       expect(result).toBe(url)
-      expect(mockS3Send).not.toHaveBeenCalled()
+      expect(mockS3Client.send).not.toHaveBeenCalled()
     } finally {
       env.S3_UPLOAD_PUBLIC_URL = undefined
     }
@@ -386,8 +392,8 @@ describe('promoteUploadedDocument', () => {
 
 describe('deleteS3Object', () => {
   beforeEach(() => {
-    mockS3Send.mockReset()
-    mockS3Send.mockResolvedValue({})
+    mockS3Client.send.mockReset()
+    mockS3Client.send.mockResolvedValue({})
   })
 
   it('is a no-op when uploads are not configured', async () => {
@@ -395,7 +401,7 @@ describe('deleteS3Object', () => {
     env.S3_UPLOAD_BUCKET = ''
     try {
       await deleteS3Object('https://example.com/tmp/doc.jpg')
-      expect(mockS3Send).not.toHaveBeenCalled()
+      expect(mockS3Client.send).not.toHaveBeenCalled()
     } finally {
       env.S3_UPLOAD_BUCKET = originalBucket
     }
@@ -408,8 +414,8 @@ describe('deleteS3Object', () => {
         'http://localhost:9000/spliit-test-bucket/tmp/document-test.jpg',
       )
 
-      expect(mockS3Send).toHaveBeenCalledTimes(1)
-      expect(mockS3Send.mock.calls[0][0]).toMatchObject({
+      expect(mockS3Client.send).toHaveBeenCalledTimes(1)
+      expect(mockS3Client.send.mock.calls[0][0]).toMatchObject({
         Bucket: 'spliit-test-bucket',
         Key: 'tmp/document-test.jpg',
       })
@@ -423,8 +429,8 @@ describe('deleteS3Object', () => {
       'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg',
     )
 
-    expect(mockS3Send).toHaveBeenCalledTimes(1)
-    expect(mockS3Send.mock.calls[0][0]).toMatchObject({
+    expect(mockS3Client.send).toHaveBeenCalledTimes(1)
+    expect(mockS3Client.send.mock.calls[0][0]).toMatchObject({
       Bucket: 'spliit-test-bucket',
       Key: 'tmp/document-test.jpg',
     })

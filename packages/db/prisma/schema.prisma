@@ -10,6 +10,11 @@ generator json {
   provider = "prisma-json-types-generator"
 }
 
+generator dmmf {
+  provider = "prisma-mock"
+  output   = "../src/generated/prisma/dmmf.ts"
+}
+
 datasource db {
   provider = "postgresql"
 }

@@ -30,8 +30,8 @@ const tanstackMocks = vi.hoisted(() => ({
 
 // ── Module mocks (hoisted to top) ────────────────────────────────────────
 
-vi.mock('@/lib/upload', async (importOriginal) => {
-  const mod = (await importOriginal()) as typeof import('@/lib/upload')
+vi.mock(import('@/lib/upload'), async (importOriginal) => {
+  const mod = await importOriginal()
   return {
     ...mod,
     resizeImage: async (file: File) => ({

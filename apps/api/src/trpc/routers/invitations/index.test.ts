@@ -1151,24 +1151,21 @@ describe('invitationsRouter.createLink', () => {
 describe('invitationsRouter.previewLink', () => {
   it('returns a usable preview for a pending link token', async () => {
     const token = 'aGVsbG8td29ybGQtdG9rZW4tMTIzNDU2'
-    prismaMock.groupInvitation.findFirst.mockImplementation(
-      async (args: unknown) => {
-        const where = (args as { where: { tokenHash: string } }).where
-        // The helper hashes the token before querying. We don't pin the
-        // exact hash here — just verify the call ran with a non-empty
-        // hash.
-        expect(where.tokenHash).toBeTruthy()
-        return {
-          id: 'inv-link-1',
-          status: 'PENDING',
-          role: 'MEMBER',
-          temporaryName: 'Alex',
-          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
-          group: { id: 'grp-1', name: 'Trip' },
-          invitedBy: { name: 'Alice' },
-        } as never
-      },
-    )
+    prismaMock.groupInvitation.findFirst
+      .calledWith(
+        expect.objectContaining({
+          where: { tokenHash: expect.any(String) as string },
+        }) as never,
+      )
+      .mockResolvedValue({
+        id: 'inv-link-1',
+        status: 'PENDING',
+        role: 'MEMBER',
+        temporaryName: 'Alex',
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        group: { id: 'grp-1', name: 'Trip' },
+        invitedBy: { name: 'Alice' },
+      } as never)
 
     const caller = invitationsRouter.createCaller({
       auth: null,

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockFn } from 'vitest-mock-extended'
 import {
   clearCurrencyRateCache,
   currencyRateCacheSize,
@@ -7,7 +8,14 @@ import {
   getCurrencyRate,
   getCurrencyRates,
   UnsupportedCurrencyError,
+  type FrankfurterResponse,
 } from '../currency-rates'
+
+type FetchRatesFn = (
+  date: string,
+  base: string,
+  quotes?: string[],
+) => Promise<FrankfurterResponse>
 
 function makePayload(
   overrides?: Partial<{
@@ -61,13 +69,13 @@ describe('getCurrencyRate', () => {
   })
 
   it('fetches from the provider on cache miss and returns the rate', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(makePayload())
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(makePayload())
 
     const result = await getCurrencyRate({
       date: '2026-06-28',
       base: 'EUR',
       target: 'USD',
-      fetchImpl: fetchImpl as never,
+      fetchImpl,
     })
 
     expect(result).toEqual({
@@ -82,19 +90,19 @@ describe('getCurrencyRate', () => {
   })
 
   it('returns the cached entry on a second call without hitting the provider', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(makePayload())
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(makePayload())
 
     const first = await getCurrencyRate({
       date: '2026-06-28',
       base: 'EUR',
       target: 'USD',
-      fetchImpl: fetchImpl as never,
+      fetchImpl,
     })
     const second = await getCurrencyRate({
       date: '2026-06-28',
       base: 'EUR',
       target: 'USD',
-      fetchImpl: fetchImpl as never,
+      fetchImpl,
     })
 
     expect(first).toEqual(second)
@@ -103,15 +111,15 @@ describe('getCurrencyRate', () => {
   })
 
   it('falls back to the provider latest-available rate for future dates and records the as-of date', async () => {
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValue(makePayload({ date: '2026-06-26' }))
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ date: '2026-06-26' }),
+    )
 
     const result = await getCurrencyRate({
       date: '2026-12-31',
       base: 'EUR',
       target: 'USD',
-      fetchImpl: fetchImpl as never,
+      fetchImpl,
     })
 
     expect(result.rate).toBe(1.1401)
@@ -120,82 +128,82 @@ describe('getCurrencyRate', () => {
   })
 
   it('throws UnsupportedCurrencyError for an unsupported base', async () => {
-    const fetchImpl = vi.fn()
+    const fetchImpl = mockFn<FetchRatesFn>()
 
     await expect(
       getCurrencyRate({
         date: '2026-06-28',
         base: 'ZZZ',
         target: 'USD',
-        fetchImpl: fetchImpl as never,
+        fetchImpl,
       }),
     ).rejects.toBeInstanceOf(UnsupportedCurrencyError)
     expect(fetchImpl).not.toHaveBeenCalled()
   })
 
   it('throws UnsupportedCurrencyError for an unsupported target', async () => {
-    const fetchImpl = vi.fn()
+    const fetchImpl = mockFn<FetchRatesFn>()
 
     await expect(
       getCurrencyRate({
         date: '2026-06-28',
         base: 'EUR',
         target: 'ZZZ',
-        fetchImpl: fetchImpl as never,
+        fetchImpl,
       }),
     ).rejects.toBeInstanceOf(UnsupportedCurrencyError)
     expect(fetchImpl).not.toHaveBeenCalled()
   })
 
   it('throws CurrencyRateNotFoundError when the target is missing from the response', async () => {
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValue(makePayload({ rates: { GBP: 0.86253 } }))
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { GBP: 0.86253 } }),
+    )
 
     await expect(
       getCurrencyRate({
         date: '2026-06-28',
         base: 'EUR',
         target: 'USD',
-        fetchImpl: fetchImpl as never,
+        fetchImpl,
       }),
     ).rejects.toBeInstanceOf(CurrencyRateNotFoundError)
   })
 
   it('throws CurrencyRateProviderError on an invalid date string', async () => {
-    const fetchImpl = vi.fn()
+    const fetchImpl = mockFn<FetchRatesFn>()
 
     await expect(
       getCurrencyRate({
         date: 'not-a-date',
         base: 'EUR',
         target: 'USD',
-        fetchImpl: fetchImpl as never,
+        fetchImpl,
       }),
     ).rejects.toBeInstanceOf(CurrencyRateProviderError)
     expect(fetchImpl).not.toHaveBeenCalled()
   })
 
   it('caches different (base, target, date) triples independently', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(makePayload())
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(makePayload())
 
     await getCurrencyRate({
       date: '2026-06-28',
       base: 'EUR',
       target: 'USD',
-      fetchImpl: fetchImpl as never,
+      fetchImpl,
     })
     await getCurrencyRate({
       date: '2026-06-28',
       base: 'EUR',
       target: 'GBP',
-      fetchImpl: fetchImpl as never,
+      fetchImpl,
     })
     await getCurrencyRate({
       date: '2026-06-29',
       base: 'EUR',
       target: 'USD',
-      fetchImpl: fetchImpl as never,
+      fetchImpl,
     })
 
     expect(fetchImpl).toHaveBeenCalledTimes(3)
@@ -213,11 +221,10 @@ describe('getCurrencyRates', () => {
   })
 
   it('resolves each item in the input order, even when some fail', async () => {
-    const fetchImpl = vi
-      .fn()
-      .mockImplementation(async (date: string, base: string) =>
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string) =>
         makePayload({ base, date, rates: { USD: 1.1, GBP: 0.85 } }),
-      )
+    )
 
     const results = await getCurrencyRates(
       [
@@ -225,7 +232,7 @@ describe('getCurrencyRates', () => {
         { date: '2026-06-28', base: 'ZZZ', target: 'USD' },
         { date: '2026-06-28', base: 'EUR', target: 'GBP' },
       ],
-      { fetchImpl: fetchImpl as never },
+      { fetchImpl },
     )
 
     expect(results).toHaveLength(3)
@@ -238,13 +245,13 @@ describe('getCurrencyRates', () => {
   })
 
   it('surfaces a RATE_NOT_FOUND error when the provider omits the target', async () => {
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValue(makePayload({ rates: { GBP: 0.85 } }))
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { GBP: 0.85 } }),
+    )
 
     const results = await getCurrencyRates(
       [{ date: '2026-06-28', base: 'EUR', target: 'USD' }],
-      { fetchImpl: fetchImpl as never },
+      { fetchImpl },
     )
 
     expect(results[0]).toMatchObject({
@@ -254,16 +261,16 @@ describe('getCurrencyRates', () => {
   })
 
   it('shares the underlying fetch across targets on the same (date, base) pair', async () => {
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValue(makePayload({ rates: { USD: 1.1, GBP: 0.85 } }))
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { USD: 1.1, GBP: 0.85 } }),
+    )
 
     await getCurrencyRates(
       [
         { date: '2026-06-28', base: 'EUR', target: 'USD' },
         { date: '2026-06-28', base: 'EUR', target: 'GBP' },
       ],
-      { fetchImpl: fetchImpl as never },
+      { fetchImpl },
     )
 
     expect(fetchImpl).toHaveBeenCalledTimes(1)

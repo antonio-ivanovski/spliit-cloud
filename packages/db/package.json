@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./dmmf": "./src/dmmf.ts"
   },
   "scripts": {
     "build": "tsc",
@@ -25,6 +26,7 @@
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
     "prisma-json-types-generator": "^5.1.0",
+    "prisma-mock": "^1.1.0",
     "typescript": "6.0.3"
   }
 }

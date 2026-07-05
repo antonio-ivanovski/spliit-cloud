@@ -1,153 +1,13 @@
-import { vi } from 'vitest'
+import type { PrismaClient } from '@spliit/db'
+import { vi, type Mock } from 'vitest'
+import { mockDeep, mockReset, type DeepMockProxy } from 'vitest-mock-extended'
 
-function makeMethodStubs(methods: readonly string[]) {
-  const stubs: Record<string, ReturnType<typeof vi.fn>> = {}
-  for (const m of methods) stubs[m] = vi.fn(async () => null)
-  return stubs
-}
+export type PrismaMock = DeepMockProxy<PrismaClient>
 
-export const prismaMock = {
-  account: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-    'upsert',
-  ]),
-  authIdentity: makeMethodStubs(['findMany']),
-  group: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-    'delete',
-  ]),
-  groupMember: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'count',
-    'update',
-    'upsert',
-    'delete',
-  ]),
-  groupInvitation: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-    'updateMany',
-    'delete',
-  ]),
-  ledger: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-  ]),
-  ledgerParticipant: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-    'upsert',
-    'delete',
-  ]),
-  expense: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-    'updateMany',
-    'delete',
-    'deleteMany',
-  ]),
-  expensePaidFor: makeMethodStubs([
-    'findMany',
-    'findUnique',
-    'create',
-    'createMany',
-    'count',
-    'deleteMany',
-    'updateMany',
-    'update',
-    'delete',
-  ]),
-  expensePaidBy: makeMethodStubs([
-    'findMany',
-    'findUnique',
-    'create',
-    'createMany',
-    'count',
-    'deleteMany',
-    'updateMany',
-    'update',
-    'delete',
-  ]),
-  // Per-item and itemized-remainder references are merged by
-  // `mergeLedgerParticipantReferences` alongside the per-expense
-  // references, so the mocks must include them too.
-  expenseItemPaidFor: makeMethodStubs([
-    'findMany',
-    'findUnique',
-    'create',
-    'createMany',
-    'count',
-    'deleteMany',
-    'updateMany',
-    'update',
-    'delete',
-  ]),
-  expenseItemizedRemainderPaidFor: makeMethodStubs([
-    'findMany',
-    'findUnique',
-    'create',
-    'createMany',
-    'count',
-    'deleteMany',
-    'updateMany',
-    'update',
-    'delete',
-  ]),
-  expenseDocument: makeMethodStubs(['findMany', 'findUnique', 'findFirst']),
-  recurringExpenseLink: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-    'delete',
-  ]),
-  activity: makeMethodStubs(['findMany', 'create']),
-  session: makeMethodStubs(['findUnique', 'findMany', 'create', 'delete']),
-  accountGroupPreference: makeMethodStubs([
-    'findUnique',
-    'findFirst',
-    'findMany',
-    'create',
-    'update',
-    'upsert',
-  ]),
-}
+export const prismaMock = mockDeep<PrismaClient>()
 
-export const prisma$Transaction = vi.fn(async (input: unknown) => {
-  if (typeof input === 'function') {
-    return (input as (tx: unknown) => unknown)(prismaMock)
-  }
-  if (Array.isArray(input)) {
-    return Promise.all(input)
-  }
-  return undefined
-})
-
-export const prisma$QueryRaw = vi.fn(async () => [])
+export const prisma$Transaction = prismaMock.$transaction as unknown as Mock
+export const prisma$QueryRaw = prismaMock.$queryRaw as unknown as Mock
 
 export const authState: {
   session: { user: { id: string }; session: { id: string } } | null
@@ -160,36 +20,23 @@ export const authState: {
 export const sendEmailMock = vi.fn(async () => undefined)
 
 export function resetPrisma() {
-  for (const model of Object.values(prismaMock)) {
-    for (const fn of Object.values(model)) {
-      fn.mockReset()
-      fn.mockResolvedValue(null)
-    }
-  }
-  // `findMany` on the per-expense reference tables defaults to `[]`
-  // so the merge path (which walks source rows before rewriting) does
-  // not crash when a fixture forgets to stub it.
+  mockReset(prismaMock)
+
   prismaMock.expensePaidBy.findMany.mockResolvedValue([] as never)
   prismaMock.expensePaidFor.findMany.mockResolvedValue([] as never)
   prismaMock.expenseItemPaidFor.findMany.mockResolvedValue([] as never)
   prismaMock.expenseItemizedRemainderPaidFor.findMany.mockResolvedValue(
     [] as never,
   )
-  // Default for group.findUnique so logActivity's ledger lookup
-  // (used by activity writes) does not throw in tests that don't
-  // explicitly set up the mock.
   prismaMock.group.findUnique.mockResolvedValue({
     id: 'grp-default',
     ledgerId: 'ledger-default',
     ledger: { currencyCode: null },
   } as never)
-  // Default for activity.create so callers that use the return value
-  // (e.g. settlement helpers, recurring expenses) don't crash.
   prismaMock.activity.create.mockResolvedValue({
     id: 'act-default',
     time: new Date(),
   } as never)
-  prisma$Transaction.mockReset()
   prisma$Transaction.mockImplementation(async (input: unknown) => {
     if (typeof input === 'function') {
       return (input as (tx: unknown) => unknown)(prismaMock)
@@ -199,7 +46,6 @@ export function resetPrisma() {
     }
     return undefined
   })
-  prisma$QueryRaw.mockReset()
   prisma$QueryRaw.mockResolvedValue([])
 }
 

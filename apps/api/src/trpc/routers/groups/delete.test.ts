@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import '../../../test/mocks'
+import { usePrismaMemoryStore } from '../../../test/prisma-memory-store'
 import { authState, prismaMock } from '../../../test/state'
 import { createTRPCContext } from '../../init'
 import { groupsRouter } from './index'
@@ -62,9 +63,21 @@ function seedGroupContext(args: {
 
 describe('groupsRouter.delete', () => {
   it('deletes the group when the caller is an ADMIN', async () => {
-    await authAs('acct-self')
-    seedGroupContext({ callerRole: 'ADMIN' })
-    prismaMock.expenseDocument.findMany.mockResolvedValue([] as never)
+    usePrismaMemoryStore({
+      group: [
+        { id: 'grp-1', name: 'Test', ledgerId: 'ledger-1', archived: false },
+      ],
+      ledger: [{ id: 'ledger-1', currency: '$', currencyCode: 'USD' }],
+      groupMember: [
+        {
+          id: 'gm-self',
+          groupId: 'grp-1',
+          accountId: 'acct-self',
+          role: 'ADMIN',
+          status: 'ACTIVE',
+        },
+      ],
+    })
 
     const caller = makeCaller('acct-self')
     const result = await caller.delete({ groupId: 'grp-1' })
