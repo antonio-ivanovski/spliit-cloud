@@ -1,8 +1,9 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
 import {
   setDefaultActivityNotificationDispatchers,
+  waitForScheduledNotificationDispatchesForTest,
   type ActivityNotificationDispatcher,
   type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
@@ -237,6 +238,11 @@ describe('import summary notification', () => {
     })
   })
 
+  afterEach(async () => {
+    await waitForScheduledNotificationDispatchesForTest()
+    setDefaultActivityNotificationDispatchers([])
+  })
+
   afterAll(async () => {
     setDefaultActivityNotificationDispatchers([])
     for (const lid of ledgerIds2) {
@@ -395,7 +401,7 @@ describe('import summary notification', () => {
       expect.arrayContaining([adminLp, aliceLp!]),
     )
 
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     const perExpenseEvents = capture.events.filter(
       (e) => e.type === 'EXPENSE_CREATED',
     )

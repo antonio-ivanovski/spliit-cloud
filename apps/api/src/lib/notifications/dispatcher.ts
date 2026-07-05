@@ -1,5 +1,8 @@
 import { CompositeActivityNotificationDispatcher } from './composite'
-import { scheduleNotificationDispatch } from './schedule'
+import {
+  scheduleNotificationDispatch,
+  waitForScheduledNotificationDispatchesForTest,
+} from './schedule'
 import type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
@@ -11,6 +14,7 @@ export type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
 } from './types'
+export { waitForScheduledNotificationDispatchesForTest }
 
 /**
  * Process-wide dispatcher used by expense create/update/delete

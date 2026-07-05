@@ -6,6 +6,7 @@ import {
   scheduleDefaultNotificationDispatch,
   scheduleNotificationDispatch,
   setDefaultActivityNotificationDispatchers,
+  waitForScheduledNotificationDispatchesForTest,
 } from './dispatcher'
 import type {
   ActivityNotificationDispatcher,
@@ -78,7 +79,7 @@ describe('scheduleNotificationDispatch', () => {
     // Wait long enough for the microtask to fire (queueMicrotask + a
     // single .then chain is on the order of microseconds, but a real
     // timer avoids flakiness on slow CI).
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     expect(capture.events).toHaveLength(1)
     expect(Date.now() - start).toBeLessThan(200)
   })
@@ -86,7 +87,7 @@ describe('scheduleNotificationDispatch', () => {
   it('catches dispatcher errors and logs them with console.warn', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     scheduleNotificationDispatch(new ThrowingDispatcher(), buildEvent())
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     expect(warn).toHaveBeenCalled()
     const message = warn.mock.calls[0].join(' ')
     expect(message).toContain('act-1')
@@ -100,7 +101,7 @@ describe('scheduleNotificationDispatch', () => {
     expect(() =>
       scheduleNotificationDispatch(broken, buildEvent()),
     ).not.toThrow()
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     expect(warn).toHaveBeenCalled()
     warn.mockRestore()
   })
@@ -133,7 +134,7 @@ describe('default singleton dispatcher', () => {
     setDefaultActivityNotificationDispatchers([capture])
     try {
       scheduleDefaultNotificationDispatch(buildEvent({ activityId: 'sd-1' }))
-      await new Promise((resolve) => setTimeout(resolve, 20))
+      await waitForScheduledNotificationDispatchesForTest()
       expect(capture.events.map((e) => e.activityId)).toEqual(['sd-1'])
     } finally {
       setDefaultActivityNotificationDispatchers([])
@@ -147,7 +148,7 @@ describe('default singleton dispatcher', () => {
       'dispatch',
     )
     scheduleDefaultNotificationDispatch(buildEvent())
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     expect(dispatch).toHaveBeenCalled()
     // No events landed anywhere because the registry is empty.
     dispatch.mockRestore()

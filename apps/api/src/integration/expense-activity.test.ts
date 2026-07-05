@@ -1,7 +1,16 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'vitest'
 import {
   setDefaultActivityNotificationDispatchers,
+  waitForScheduledNotificationDispatchesForTest,
   type ActivityNotificationDispatcher,
   type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
@@ -114,6 +123,15 @@ describe('Expense activity — real DB', () => {
     })
   })
 
+  beforeEach(() => {
+    setDefaultActivityNotificationDispatchers([])
+  })
+
+  afterEach(async () => {
+    await waitForScheduledNotificationDispatchesForTest()
+    setDefaultActivityNotificationDispatchers([])
+  })
+
   afterAll(async () => {
     setDefaultActivityNotificationDispatchers([])
     for (const lid of ledgerIds) {
@@ -172,7 +190,7 @@ describe('Expense activity — real DB', () => {
     expect(data.amount).toBe(3000)
 
     // Assert dispatcher event
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     expect(capture.events.length).toBeGreaterThanOrEqual(1)
     const event = capture.events.find((e) => e.activityId === activity!.id)
     expect(event).toBeDefined()
@@ -233,7 +251,7 @@ describe('Expense activity — real DB', () => {
     )
 
     // Assert dispatcher event
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     expect(capture.events.length).toBeGreaterThanOrEqual(1)
     const event = capture.events.find((e) => e.activityId === activity!.id)
     expect(event).toBeDefined()
@@ -284,7 +302,7 @@ describe('Expense activity — real DB', () => {
     expect(afterCount).toBe(beforeCount)
 
     // No new dispatcher events
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     const updateEvents = capture.events.filter(
       (e) => e.type === 'EXPENSE_UPDATED',
     )
@@ -317,7 +335,7 @@ describe('Expense activity — real DB', () => {
     )
 
     // Assert dispatcher event
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     expect(capture.events.length).toBeGreaterThanOrEqual(1)
     const event = capture.events.find((e) => e.activityId === activity!.id)
     expect(event).toBeDefined()

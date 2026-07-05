@@ -1,8 +1,9 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
 import {
   setDefaultActivityNotificationDispatchers,
+  waitForScheduledNotificationDispatchesForTest,
   type ActivityNotificationDispatcher,
   type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
@@ -67,6 +68,11 @@ describe('Silent expense creation — activity + notification', () => {
         name: 'Alice',
       },
     })
+  })
+
+  afterEach(async () => {
+    await waitForScheduledNotificationDispatchesForTest()
+    setDefaultActivityNotificationDispatchers([])
   })
 
   afterAll(async () => {
@@ -186,7 +192,7 @@ describe('Silent expense creation — activity + notification', () => {
       expect(data.date).toBe(s.expenseDate.toISOString().slice(0, 10))
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     const settlementEvents = capture.events.filter(
       (e) => e.type === 'EXPENSE_CREATED',
     )
@@ -262,7 +268,7 @@ describe('Silent expense creation — activity + notification', () => {
       expect(data.currencyCode).toBe('USD')
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     const settlementEvents = capture.events.filter(
       (e) => e.type === 'EXPENSE_CREATED',
     )
@@ -324,7 +330,7 @@ describe('Silent expense creation — activity + notification', () => {
       expect(data.currencyCode).toBe('USD')
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 20))
+    await waitForScheduledNotificationDispatchesForTest()
     const installmentEvents = capture.events.filter(
       (e) => e.type === 'EXPENSE_CREATED',
     )

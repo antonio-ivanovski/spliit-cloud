@@ -15,7 +15,8 @@ import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
 import {
   clearMaildevInbox,
-  findEmailForRecipient,
+  expectEmailEventually,
+  getEmailForRecipient,
   probeMaildev,
 } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
@@ -69,8 +70,10 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       })
       expect(signUpRes.status).toBe(200)
 
-      const ve = await findEmailForRecipient(email)
-      expect(ve).not.toBeNull()
+      const ve = await expectEmailEventually({
+        recipient: email,
+        subject: 'Verify your Spliit account',
+      })
 
       await prisma.account.update({
         where: { email },
@@ -105,9 +108,10 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       })
       expect(forgotRes.status).toBe(200)
 
-      const captured = await findEmailForRecipient(email)
-      expect(captured).not.toBeNull()
-      expect(captured!.subject).toBe('Reset your Spliit password')
+      const captured = await expectEmailEventually({
+        recipient: email,
+        subject: 'Reset your Spliit password',
+      })
       expect(captured!.text).toContain('/auth/reset-password')
 
       const urlMatch = captured!.text.match(
@@ -167,9 +171,10 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       })
       expect(forgotRes.status).toBe(200)
 
-      const captured = await findEmailForRecipient(mlEmail)
-      expect(captured).not.toBeNull()
-      expect(captured!.subject).toBe('Sign in to Spliit')
+      const captured = await expectEmailEventually({
+        recipient: mlEmail,
+        subject: 'Sign in to Spliit',
+      })
       expect(captured!.text).toContain('email sign-in link')
     })
   })
@@ -202,9 +207,10 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       expect(acct).not.toBeNull()
       accountIds.push(acct!.id)
 
-      const captured = await findEmailForRecipient(verifyEmail)
-      expect(captured).not.toBeNull()
-      expect(captured!.subject).toBe('Verify your Spliit account')
+      const captured = await expectEmailEventually({
+        recipient: verifyEmail,
+        subject: 'Verify your Spliit account',
+      })
       expect(captured!.text).toContain('/auth/verify-email')
 
       expect(acct!.emailVerified).toBe(false)
@@ -358,8 +364,9 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       expect(result.invites).toHaveLength(2)
 
       for (const email of [invitee1Email, invitee2Email]) {
-        const captured = await findEmailForRecipient(email)
-        expect(captured).not.toBeNull()
+        const captured = await expectEmailEventually({
+          recipient: email,
+        })
         expect(captured!.text).toContain(`Import-Group-${impRunId}`)
         expect(captured!.text).toContain(
           'This invitation is part of an import from a Spliit export.',
@@ -474,9 +481,14 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
     expect(invitation!.email).toBe(inviteeEmail.toLowerCase())
     expect(invitation!.groupId).toBe(groupId)
 
-    const email = await findEmailForRecipient(inviteeEmail, {
-      timeoutMs: 2000,
-    })
+    // Short retry loop to account for async SMTP delivery,
+    // but quickly conclude no email was sent (SMTP is mocked to fail).
+    let email = null
+    for (let i = 0; i < 3; i++) {
+      email = await getEmailForRecipient({ recipient: inviteeEmail })
+      if (email) break
+      await new Promise((r) => setTimeout(r, 100))
+    }
     expect(email).toBeNull()
   })
 })
