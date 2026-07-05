@@ -4,9 +4,9 @@ import { app } from '../app'
 import { randomId } from '../lib/api'
 import { groupsRouter } from '../trpc/routers/groups'
 import {
-  clearBucket,
   getObjectBody,
   listObjects,
+  objectExists,
   probeMaxIO,
 } from './maxio-client'
 import { checkDbConnection, testRunId } from './setup'
@@ -140,13 +140,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     }
   }
 
-  beforeEach(async () => {
-    await clearBucket()
-  })
-
   afterAll(async () => {
-    await clearBucket()
-
     for (const aid of trackedAccountIds) {
       await prisma.session
         .deleteMany({ where: { userId: aid } })
@@ -250,8 +244,8 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     const docKeys = await listObjects('documents/')
     expect(docKeys).toContain(promotedKey)
 
-    const tmpKeys = await listObjects('tmp/')
-    expect(tmpKeys.length).toBe(0)
+    // Promotion should have removed the tmp/ source
+    expect(await objectExists(presignData.key)).toBe(false)
 
     // 1c — Read back bytes match
     const body = await getObjectBody(promotedKey)
@@ -260,8 +254,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     // 1d — Delete expense & verify cleanup
     await caller.expenses.delete({ groupId, expenseId })
 
-    const afterDelete = await listObjects('documents/')
-    expect(afterDelete.length).toBe(0)
+    expect(await objectExists(promotedKey)).toBe(false)
 
     const dbDocAfterDelete = await prisma.expenseDocument.findFirst({
       where: { expenseId },
@@ -286,6 +279,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     )
     const caller = makeCaller(accountId, email)
 
+    const promotedKeys: string[] = []
     for (let i = 0; i < 3; i++) {
       const presignRes = await app.request('/uploads/presign', {
         method: 'POST',
@@ -297,7 +291,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
           fileSize: 512,
         }),
       })
-      const { uploadUrl, fileUrl } = (await presignRes.json()) as {
+      const { uploadUrl, fileUrl, key } = (await presignRes.json()) as {
         uploadUrl: string
         fileUrl: string
         key: string
@@ -307,6 +301,8 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         headers: { 'Content-Type': 'image/jpeg' },
         body: Buffer.from(`doc-${i}-content`),
       })
+
+      promotedKeys.push(key.replace(/^tmp\//, 'documents/'))
 
       await caller.expenses.create({
         groupId,
@@ -330,15 +326,19 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
       })
     }
 
-    const docKeys = await listObjects('documents/')
-    expect(docKeys.length).toBe(3)
+    // Verify each document exists rather than asserting the total count
+    // to avoid flaky failures when other tests write to the same bucket.
+    for (const key of promotedKeys) {
+      expect(await objectExists(key)).toBe(true)
+    }
 
     // Delete the group — deleteGroup enumerates ledger documents and
     // deletes each S3 object, then deletes the group row.
     await caller.delete({ groupId })
 
-    const allKeys = await listObjects()
-    expect(allKeys.length).toBe(0)
+    for (const key of promotedKeys) {
+      expect(await objectExists(key)).toBe(false)
+    }
   })
 
   // -------------------------------------------------------------------
@@ -369,12 +369,15 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         fileSize: 512,
       }),
     })
-    const { uploadUrl: uploadUrlA, fileUrl: fileUrlA } =
-      (await presignA.json()) as {
-        uploadUrl: string
-        fileUrl: string
-        key: string
-      }
+    const {
+      uploadUrl: uploadUrlA,
+      fileUrl: fileUrlA,
+      key: tmpKeyA,
+    } = (await presignA.json()) as {
+      uploadUrl: string
+      fileUrl: string
+      key: string
+    }
     await fetch(uploadUrlA, {
       method: 'PUT',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -392,12 +395,15 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         fileSize: 512,
       }),
     })
-    const { uploadUrl: uploadUrlB, fileUrl: fileUrlB } =
-      (await presignB.json()) as {
-        uploadUrl: string
-        fileUrl: string
-        key: string
-      }
+    const {
+      uploadUrl: uploadUrlB,
+      fileUrl: fileUrlB,
+      key: tmpKeyB,
+    } = (await presignB.json()) as {
+      uploadUrl: string
+      fileUrl: string
+      key: string
+    }
     await fetch(uploadUrlB, {
       method: 'PUT',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -429,8 +435,13 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
       },
     })
 
-    expect((await listObjects('documents/')).length).toBe(2)
-    expect((await listObjects('tmp/')).length).toBe(0)
+    const docKeyA = tmpKeyA.replace(/^tmp\//, 'documents/')
+    const docKeyB = tmpKeyB.replace(/^tmp\//, 'documents/')
+    expect(await objectExists(docKeyA)).toBe(true)
+    expect(await objectExists(docKeyB)).toBe(true)
+    // Promotion removed tmp/ sources
+    expect(await objectExists(tmpKeyA)).toBe(false)
+    expect(await objectExists(tmpKeyB)).toBe(false)
 
     // Upload A' (replacement for A)
     const presignAprime = await app.request('/uploads/presign', {
@@ -443,12 +454,15 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         fileSize: 512,
       }),
     })
-    const { uploadUrl: uploadUrlAprime, fileUrl: fileUrlAprime } =
-      (await presignAprime.json()) as {
-        uploadUrl: string
-        fileUrl: string
-        key: string
-      }
+    const {
+      uploadUrl: uploadUrlAprime,
+      fileUrl: fileUrlAprime,
+      key: tmpKeyAprime,
+    } = (await presignAprime.json()) as {
+      uploadUrl: string
+      fileUrl: string
+      key: string
+    }
     await fetch(uploadUrlAprime, {
       method: 'PUT',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -479,9 +493,14 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
       },
     })
 
+    const docKeyAprime = tmpKeyAprime.replace(/^tmp\//, 'documents/')
     const docKeysAfterUpdate = await listObjects('documents/')
-    expect(docKeysAfterUpdate.length).toBe(1)
-    expect((await listObjects('tmp/')).length).toBe(0)
+    expect(docKeysAfterUpdate).toContain(docKeyAprime)
+    // Old documents A and B should be gone after the swap
+    expect(await objectExists(docKeyA)).toBe(false)
+    expect(await objectExists(docKeyB)).toBe(false)
+    // Promotion removed tmp/ source
+    expect(await objectExists(tmpKeyAprime)).toBe(false)
 
     const docsAfterUpdate = await prisma.expenseDocument.findMany({
       where: { expenseId },
@@ -624,8 +643,6 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     })
     expect(putRes.ok).toBe(true)
 
-    const tmpKeys = await listObjects('tmp/')
-    expect(tmpKeys.length).toBe(1)
-    expect(tmpKeys[0]).toBe(data.key)
+    expect(await objectExists(data.key)).toBe(true)
   })
 })
