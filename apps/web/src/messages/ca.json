@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} ha importat {count} despeses"
     }
+  },
+  "OfflineBanner": {
+    "message": "No tens connexió. Els canvis que facis ara no es desaran fins que et tornis a connectar."
+  },
+  "InstallPromotion": {
+    "title": "Instal·la Spliit Cloud",
+    "description": "Afegeix Spliit Cloud a la pantalla d'inici: s'obre com una aplicació nativa per afegir despeses més ràpidament i accedir-hi de manera més senzilla.",
+    "install": "Instal·la",
+    "remindLater": "Recorda-m'ho més tard",
+    "dismiss": "No ho tornis a mostrar",
+    "chrome": {
+      "title": "Instal·la Spliit Cloud",
+      "description": "Afegeix Spliit Cloud a la pantalla d'inici: s'obre com una aplicació nativa per afegir despeses més ràpidament i accedir-hi de manera més senzilla."
+    },
+    "ios": {
+      "title": "Instal·la Spliit Cloud",
+      "description": "Afegeix Spliit a la pantalla d'inici per accedir-hi amb un sol toc.",
+      "step1": "Toca el botó Compartir",
+      "step2": "Desplaça't cap avall i toca Afegeix a la pantalla d'inici",
+      "step3": "Toca Afegeix a la cantonada superior dreta"
+    },
+    "firefox": {
+      "title": "Instal·la Spliit Cloud",
+      "description": "Afegeix Spliit a la pantalla d'inici des del menú del navegador.",
+      "step1": "Toca el botó de menú (⋮) a la part superior dreta",
+      "step2": "Toca Instal·la"
+    }
   }
 }

@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} 導入了 {count} 筆支出"
     }
+  },
+  "OfflineBanner": {
+    "message": "目前處於離線狀態。在重新連線之前，您所做的變更不會被儲存。"
+  },
+  "InstallPromotion": {
+    "title": "安裝 Spliit Cloud",
+    "description": "將 Spliit Cloud 加入主畫面 — 像原生應用程式一樣啟動，讓新增支出更快速、存取更簡便。",
+    "install": "安裝",
+    "remindLater": "稍後再提醒我",
+    "dismiss": "不再顯示",
+    "chrome": {
+      "title": "安裝 Spliit Cloud",
+      "description": "將 Spliit Cloud 加入主畫面 — 像原生應用程式一樣啟動，讓新增支出更快速、存取更簡便。"
+    },
+    "ios": {
+      "title": "安裝 Spliit Cloud",
+      "description": "將 Spliit 加入主畫面，一鍵即可取用。",
+      "step1": "點一下分享按鈕",
+      "step2": "向下捲動並點一下「加入主畫面」",
+      "step3": "點一下右上角的「加入」"
+    },
+    "firefox": {
+      "title": "安裝 Spliit Cloud",
+      "description": "從瀏覽器選單將 Spliit 加入主畫面。",
+      "step1": "點一下右上角的選單按鈕（⋮）",
+      "step2": "點一下「安裝」"
+    }
   }
 }

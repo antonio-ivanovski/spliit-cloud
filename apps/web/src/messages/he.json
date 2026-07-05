@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} ייבא {count} הוצאות"
     }
+  },
+  "OfflineBanner": {
+    "message": "אתה לא מחובר לרשת. השינויים שתבצע כעת לא יישמרו עד שתתחבר מחדש."
+  },
+  "InstallPromotion": {
+    "title": "התקן את Spliit Cloud",
+    "description": "הוסף את Spliit Cloud למסך הבית — נפתח כמו אפליקציה מקורית, להוספת הוצאות מהירה יותר וגישה נוחה יותר.",
+    "install": "התקן",
+    "remindLater": "הזכר לי מאוחר יותר",
+    "dismiss": "אל תציג שוב",
+    "chrome": {
+      "title": "התקן את Spliit Cloud",
+      "description": "הוסף את Spliit Cloud למסך הבית — נפתח כמו אפליקציה מקורית, להוספת הוצאות מהירה יותר וגישה נוחה יותר."
+    },
+    "ios": {
+      "title": "התקן את Spliit Cloud",
+      "description": "הוסף את Spliit למסך הבית לגישה בהקשה אחת.",
+      "step1": "הקש על כפתור השיתוף",
+      "step2": "גלול למטה והקש על הוסף למסך הבית",
+      "step3": "הקש על הוסף בפינה הימנית העליונה"
+    },
+    "firefox": {
+      "title": "התקן את Spliit Cloud",
+      "description": "הוסף את Spliit למסך הבית מתפריט הדפדפן.",
+      "step1": "הקש על כפתור התפריט (⋮) בפינה הימנית העליונה",
+      "step2": "הקש על התקן"
+    }
   }
 }

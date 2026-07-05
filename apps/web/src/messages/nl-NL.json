@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} importeerde {count} uitgaven"
     }
+  },
+  "OfflineBanner": {
+    "message": "Je bent offline. Wijzigingen die je nu maakt, worden pas opgeslagen als je weer verbinding hebt."
+  },
+  "InstallPromotion": {
+    "title": "Spliit Cloud installeren",
+    "description": "Voeg Spliit Cloud toe aan je startscherm — opent als een native app voor sneller uitgaven toevoegen en eenvoudigere toegang.",
+    "install": "Installeren",
+    "remindLater": "Herinner me later",
+    "dismiss": "Niet opnieuw tonen",
+    "chrome": {
+      "title": "Spliit Cloud installeren",
+      "description": "Voeg Spliit Cloud toe aan je startscherm — opent als een native app voor sneller uitgaven toevoegen en eenvoudigere toegang."
+    },
+    "ios": {
+      "title": "Spliit Cloud installeren",
+      "description": "Voeg Spliit toe aan je startscherm voor snelle toegang met één tik.",
+      "step1": "Tik op de Deel-knop",
+      "step2": "Scroll naar beneden en tik op Zet op beginscherm",
+      "step3": "Tik rechtsboven op Voeg toe"
+    },
+    "firefox": {
+      "title": "Spliit Cloud installeren",
+      "description": "Voeg Spliit toe aan je startscherm vanuit het browsermenu.",
+      "step1": "Tik rechtsboven op de menuknop (⋮)",
+      "step2": "Tik op Installeren"
+    }
   }
 }

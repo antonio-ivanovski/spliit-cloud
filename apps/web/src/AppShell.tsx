@@ -1,7 +1,9 @@
 import { AccountMenu } from '@/components/account-menu'
 import Image from '@/components/app-image'
+import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
+import { OfflineBanner } from '@/components/offline-banner'
 import { ProgressBar } from '@/components/progress-bar'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -49,6 +51,9 @@ function Content() {
             </ul>
           </div>
         </header>
+
+        <OfflineBanner />
+        <InstallPromotionDialog />
 
         <div className="pt-16 flex-1 flex flex-col">
           <Outlet />

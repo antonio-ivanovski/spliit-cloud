@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} importou {count} despesas"
     }
+  },
+  "OfflineBanner": {
+    "message": "Você está offline. As alterações que fizer agora não serão salvas até que você se reconecte."
+  },
+  "InstallPromotion": {
+    "title": "Instalar Spliit Cloud",
+    "description": "Adicione o Spliit Cloud à sua tela inicial — abre como um app nativo para adicionar despesas mais rapidamente e acessar de forma mais simples.",
+    "install": "Instalar",
+    "remindLater": "Lembrar mais tarde",
+    "dismiss": "Não mostrar novamente",
+    "chrome": {
+      "title": "Instalar Spliit Cloud",
+      "description": "Adicione o Spliit Cloud à sua tela inicial — abre como um app nativo para adicionar despesas mais rapidamente e acessar de forma mais simples."
+    },
+    "ios": {
+      "title": "Instalar Spliit Cloud",
+      "description": "Adicione o Spliit à sua tela inicial para acesso com um toque.",
+      "step1": "Toque no botão Compartilhar",
+      "step2": "Role para baixo e toque em Adicionar à Tela de Início",
+      "step3": "Toque em Adicionar no canto superior direito"
+    },
+    "firefox": {
+      "title": "Instalar Spliit Cloud",
+      "description": "Adicione o Spliit à sua tela inicial pelo menu do navegador.",
+      "step1": "Toque no botão de menu (⋮) no canto superior direito",
+      "step2": "Toque em Instalar"
+    }
   }
 }

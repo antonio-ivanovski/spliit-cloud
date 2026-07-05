@@ -1332,5 +1332,32 @@
     },
     "fallback": "An activity was recorded",
     "unknownActor": "Someone"
+  },
+  "OfflineBanner": {
+    "message": "You're offline. Changes you make now won't be saved until you reconnect."
+  },
+  "InstallPromotion": {
+    "title": "Install Spliit Cloud",
+    "description": "Add Spliit Cloud to your home screen — launches like a native app for quicker expense adding and simpler access.",
+    "install": "Install",
+    "remindLater": "Remind me later",
+    "dismiss": "Don't show again",
+    "chrome": {
+      "title": "Install Spliit Cloud",
+      "description": "Add Spliit Cloud to your home screen — launches like a native app for quicker expense adding and simpler access."
+    },
+    "ios": {
+      "title": "Install Spliit Cloud",
+      "description": "Add Spliit to your home screen for one-tap access.",
+      "step1": "Tap the Share button",
+      "step2": "Scroll down and tap Add to Home Screen",
+      "step3": "Tap Add in the top-right corner"
+    },
+    "firefox": {
+      "title": "Install Spliit Cloud",
+      "description": "Add Spliit to your home screen from the browser menu.",
+      "step1": "Tap the menu button (⋮) at the top right",
+      "step2": "Tap Install"
+    }
   }
 }

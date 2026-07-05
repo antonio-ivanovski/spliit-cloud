@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant}님이 {count}개의 지출을 가져왔습니다"
     }
+  },
+  "OfflineBanner": {
+    "message": "현재 오프라인 상태입니다. 변경 내용은 다시 연결될 때까지 저장되지 않습니다."
+  },
+  "InstallPromotion": {
+    "title": "Spliit Cloud 설치",
+    "description": "Spliit Cloud를 홈 화면에 추가하면 네이티브 앱처럼 실행되어 지출 추가가 더 빠르고 접근이 더 간편해집니다.",
+    "install": "설치",
+    "remindLater": "나중에 알림",
+    "dismiss": "다시 표시하지 않기",
+    "chrome": {
+      "title": "Spliit Cloud 설치",
+      "description": "Spliit Cloud를 홈 화면에 추가하면 네이티브 앱처럼 실행되어 지출 추가가 더 빠르고 접근이 더 간편해집니다."
+    },
+    "ios": {
+      "title": "Spliit Cloud 설치",
+      "description": "홈 화면에 Spliit을 추가하여 한 번의 탭으로 접근하세요.",
+      "step1": "공유 버튼을 탭하세요",
+      "step2": "아래로 스크롤하여 '홈 화면에 추가'를 탭하세요",
+      "step3": "오른쪽 상단의 '추가'를 탭하세요"
+    },
+    "firefox": {
+      "title": "Spliit Cloud 설치",
+      "description": "브라우저 메뉴에서 홈 화면으로 Spliit을 추가하세요.",
+      "step1": "오른쪽 상단의 메뉴 버튼(⋮)을 탭하세요",
+      "step2": "'설치'를 탭하세요"
+    }
   }
 }

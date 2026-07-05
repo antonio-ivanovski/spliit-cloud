@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} a importat {count} cheltuieli"
     }
+  },
+  "OfflineBanner": {
+    "message": "Ești offline. Modificările pe care le faci acum nu vor fi salvate până nu te reconectezi."
+  },
+  "InstallPromotion": {
+    "title": "Instalează Spliit Cloud",
+    "description": "Adaugă Spliit Cloud pe ecranul principal — se lansează ca o aplicație nativă pentru a adăuga cheltuieli mai rapid și un acces mai simplu.",
+    "install": "Instalează",
+    "remindLater": "Amintește-mi mai târziu",
+    "dismiss": "Nu mai afișa",
+    "chrome": {
+      "title": "Instalează Spliit Cloud",
+      "description": "Adaugă Spliit Cloud pe ecranul principal — se lansează ca o aplicație nativă pentru a adăuga cheltuieli mai rapid și un acces mai simplu."
+    },
+    "ios": {
+      "title": "Instalează Spliit Cloud",
+      "description": "Adaugă Spliit pe ecranul principal pentru acces cu o singură atingere.",
+      "step1": "Apasă pe butonul Partajare",
+      "step2": "Derulează în jos și apasă pe Adaugă pe ecranul principal",
+      "step3": "Apasă pe Adaugă în colțul din dreapta sus"
+    },
+    "firefox": {
+      "title": "Instalează Spliit Cloud",
+      "description": "Adaugă Spliit pe ecranul principal din meniul browserului.",
+      "step1": "Apasă pe butonul de meniu (⋮) din dreapta sus",
+      "step2": "Apasă pe Instalează"
+    }
   }
 }

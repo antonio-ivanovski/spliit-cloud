@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} {count} gider içe aktardı"
     }
+  },
+  "OfflineBanner": {
+    "message": "Çevrimdışısınız. Şu an yapacağınız değişiklikler yeniden bağlanana kadar kaydedilmeyecek."
+  },
+  "InstallPromotion": {
+    "title": "Spliit Cloud'ı Yükle",
+    "description": "Spliit Cloud'u ana ekranınıza ekleyin — yerel bir uygulama gibi açılır, daha hızlı harcama ekleme ve daha basit erişim sağlar.",
+    "install": "Yükle",
+    "remindLater": "Daha sonra hatırlat",
+    "dismiss": "Bir daha gösterme",
+    "chrome": {
+      "title": "Spliit Cloud'ı Yükle",
+      "description": "Spliit Cloud'u ana ekranınıza ekleyin — yerel bir uygulama gibi açılır, daha hızlı harcama ekleme ve daha basit erişim sağlar."
+    },
+    "ios": {
+      "title": "Spliit Cloud'ı Yükle",
+      "description": "Tek dokunuşla erişim için Spliit'i ana ekranınıza ekleyin.",
+      "step1": "Paylaş düğmesine dokunun",
+      "step2": "Aşağı kaydırın ve Ana Ekrana Ekle'ye dokunun",
+      "step3": "Sağ üst köşedeki Ekle'ye dokunun"
+    },
+    "firefox": {
+      "title": "Spliit Cloud'ı Yükle",
+      "description": "Tarayıcı menüsünden Spliit'i ana ekranınıza ekleyin.",
+      "step1": "Sağ üst köşedeki menü düğmesine (⋮) dokunun",
+      "step2": "Yükle'ye dokunun"
+    }
   }
 }

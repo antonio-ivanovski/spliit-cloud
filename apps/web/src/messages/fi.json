@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} toi {count} kulua"
     }
+  },
+  "OfflineBanner": {
+    "message": "Et ole yhteydessä internetiin. Nyt tekemiäsi muutoksia ei tallenneta, ennen kuin muodostat yhteyden uudelleen."
+  },
+  "InstallPromotion": {
+    "title": "Asenna Spliit Cloud",
+    "description": "Lisää Spliit Cloud aloitusnäytölle — avautuu kuin natiivisovellus nopeampaa kulujen lisäämistä ja yksinkertaisempaa käyttöä varten.",
+    "install": "Asenna",
+    "remindLater": "Muistuta myöhemmin",
+    "dismiss": "Älä näytä uudelleen",
+    "chrome": {
+      "title": "Asenna Spliit Cloud",
+      "description": "Lisää Spliit Cloud aloitusnäytölle — avautuu kuin natiivisovellus nopeampaa kulujen lisäämistä ja yksinkertaisempaa käyttöä varten."
+    },
+    "ios": {
+      "title": "Asenna Spliit Cloud",
+      "description": "Lisää Spliit aloitusnäytölle, jotta se avautuu yhdellä napautuksella.",
+      "step1": "Napauta Jaa-painiketta",
+      "step2": "Vieritä alas ja napauta Lisää aloitusnäytölle",
+      "step3": "Napauta oikeasta yläkulmasta Lisää"
+    },
+    "firefox": {
+      "title": "Asenna Spliit Cloud",
+      "description": "Lisää Spliit aloitusnäytölle selaimen valikosta.",
+      "step1": "Napauta valikkopainiketta (⋮) oikeasta yläkulmasta",
+      "step2": "Napauta Asenna"
+    }
   }
 }

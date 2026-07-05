@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant}(e)k {count} gastu inportatu ditu"
     }
+  },
+  "OfflineBanner": {
+    "message": "Lineaz kanpo zaude. Oraingoz egiten dituzun aldaketak ez dira gordeko berriro konektatu arte."
+  },
+  "InstallPromotion": {
+    "title": "Instalatu Spliit Cloud",
+    "description": "Gehitu Spliit Cloud zure hasierako pantailan: aplikazio natibo bat bezala irekitzen da, gastuak azkarrago gehitzeko eta sarbide errazagoa izateko.",
+    "install": "Instalatu",
+    "remindLater": "Gogorarazi beranduago",
+    "dismiss": "Ez erakutsi berriro",
+    "chrome": {
+      "title": "Instalatu Spliit Cloud",
+      "description": "Gehitu Spliit Cloud zure hasierako pantailan: aplikazio natibo bat bezala irekitzen da, gastuak azkarrago gehitzeko eta sarbide errazagoa izateko."
+    },
+    "ios": {
+      "title": "Instalatu Spliit Cloud",
+      "description": "Gehitu Spliit zure hasierako pantailan ukipen bakar batekin sartzeko.",
+      "step1": "Sakatu Partekatu botoia",
+      "step2": "Korritu behera eta sakatu Gehitu hasierako pantailan",
+      "step3": "Sakatu Gehitu goi-eskuineko izkinan"
+    },
+    "firefox": {
+      "title": "Instalatu Spliit Cloud",
+      "description": "Gehitu Spliit zure hasierako pantailan nabigatzailearen menutik.",
+      "step1": "Sakatu menu-botoia (⋮) goi-eskuinean",
+      "step2": "Sakatu Instalatu"
+    }
   }
 }

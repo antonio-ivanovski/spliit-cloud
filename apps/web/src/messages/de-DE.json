@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} importierte {count} Ausgaben"
     }
+  },
+  "OfflineBanner": {
+    "message": "Du bist offline. Änderungen, die du jetzt machst, werden erst gespeichert, wenn du wieder online bist."
+  },
+  "InstallPromotion": {
+    "title": "Spliit Cloud installieren",
+    "description": "Füge Spliit Cloud deinem Startbildschirm hinzu — startet wie eine native App für schnelleres Hinzufügen von Ausgaben und einfacheren Zugriff.",
+    "install": "Installieren",
+    "remindLater": "Später erneut erinnern",
+    "dismiss": "Nicht mehr anzeigen",
+    "chrome": {
+      "title": "Spliit Cloud installieren",
+      "description": "Füge Spliit Cloud deinem Startbildschirm hinzu — startet wie eine native App für schnelleres Hinzufügen von Ausgaben und einfacheren Zugriff."
+    },
+    "ios": {
+      "title": "Spliit Cloud installieren",
+      "description": "Füge Spliit deinem Startbildschirm hinzu, um es mit einem Tipp zu öffnen.",
+      "step1": "Tippe auf den Teilen-Button",
+      "step2": "Scrolle nach unten und tippe auf Zum Home-Bildschirm hinzufügen",
+      "step3": "Tippe oben rechts auf Hinzufügen"
+    },
+    "firefox": {
+      "title": "Spliit Cloud installieren",
+      "description": "Füge Spliit über das Browser-Menü zu deinem Startbildschirm hinzu.",
+      "step1": "Tippe oben rechts auf die Menü-Schaltfläche (⋮)",
+      "step2": "Tippe auf Installieren"
+    }
   }
 }

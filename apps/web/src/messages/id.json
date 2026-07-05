@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} mengimpor {count} pengeluaran"
     }
+  },
+  "OfflineBanner": {
+    "message": "Anda sedang offline. Perubahan yang Anda buat sekarang tidak akan disimpan sampai Anda tersambung kembali."
+  },
+  "InstallPromotion": {
+    "title": "Pasang Spliit Cloud",
+    "description": "Tambahkan Spliit Cloud ke layar utama — terbuka seperti aplikasi asli untuk penambahan pengeluaran yang lebih cepat dan akses yang lebih sederhana.",
+    "install": "Pasang",
+    "remindLater": "Ingatkan saya nanti",
+    "dismiss": "Jangan tampilkan lagi",
+    "chrome": {
+      "title": "Pasang Spliit Cloud",
+      "description": "Tambahkan Spliit Cloud ke layar utama — terbuka seperti aplikasi asli untuk penambahan pengeluaran yang lebih cepat dan akses yang lebih sederhana."
+    },
+    "ios": {
+      "title": "Pasang Spliit Cloud",
+      "description": "Tambahkan Spliit ke layar utama untuk akses satu ketukan.",
+      "step1": "Ketuk tombol Bagikan",
+      "step2": "Gulir ke bawah dan ketuk Tambahkan ke Layar Utama",
+      "step3": "Ketuk Tambahkan di pojok kanan atas"
+    },
+    "firefox": {
+      "title": "Pasang Spliit Cloud",
+      "description": "Tambahkan Spliit ke layar utama dari menu browser.",
+      "step1": "Ketuk tombol menu (⋮) di kanan atas",
+      "step2": "Ketuk Pasang"
+    }
   }
 }

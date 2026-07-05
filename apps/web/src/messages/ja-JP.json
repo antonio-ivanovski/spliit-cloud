@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant}が{count}件の支出をインポートしました"
     }
+  },
+  "OfflineBanner": {
+    "message": "現在オフラインです。行った変更は再接続するまで保存されません。"
+  },
+  "InstallPromotion": {
+    "title": "Spliit Cloudをインストール",
+    "description": "Spliit Cloudをホーム画面に追加 — ネイティブアプリのように起動し、経費の追加がより素早く、アクセスもより簡単になります。",
+    "install": "インストール",
+    "remindLater": "後で通知する",
+    "dismiss": "次回から表示しない",
+    "chrome": {
+      "title": "Spliit Cloudをインストール",
+      "description": "Spliit Cloudをホーム画面に追加 — ネイティブアプリのように起動し、経費の追加がより素早く、アクセスもより簡単になります。"
+    },
+    "ios": {
+      "title": "Spliit Cloudをインストール",
+      "description": "Spliitをホーム画面に追加して、ワンタップでアクセス。",
+      "step1": "共有ボタンをタップ",
+      "step2": "下にスクロールして「ホーム画面に追加」をタップ",
+      "step3": "右上の「追加」をタップ"
+    },
+    "firefox": {
+      "title": "Spliit Cloudをインストール",
+      "description": "ブラウザのメニューからSpliitをホーム画面に追加できます。",
+      "step1": "右上のメニューボタン（⋮）をタップ",
+      "step2": "「インストール」をタップ"
+    }
   }
 }

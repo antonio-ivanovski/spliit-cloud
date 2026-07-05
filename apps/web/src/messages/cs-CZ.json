@@ -1332,5 +1332,32 @@
     "import": {
       "imported": "{participant} importoval {count} výdajů"
     }
+  },
+  "OfflineBanner": {
+    "message": "Jste offline. Změny, které nyní provedete, nebudou uloženy, dokud se znovu nepřipojíte."
+  },
+  "InstallPromotion": {
+    "title": "Nainstalovat Spliit Cloud",
+    "description": "Přidejte si Spliit Cloud na domovskou obrazovku — spouští se jako nativní aplikace pro rychlejší přidávání výdajů a jednodušší přístup.",
+    "install": "Nainstalovat",
+    "remindLater": "Připomenout později",
+    "dismiss": "Znovu nezobrazovat",
+    "chrome": {
+      "title": "Nainstalovat Spliit Cloud",
+      "description": "Přidejte si Spliit Cloud na domovskou obrazovku — spouští se jako nativní aplikace pro rychlejší přidávání výdajů a jednodušší přístup."
+    },
+    "ios": {
+      "title": "Nainstalovat Spliit Cloud",
+      "description": "Přidejte si Spliit na domovskou obrazovku pro přístup jedním klepnutím.",
+      "step1": "Klepněte na tlačítko Sdílet",
+      "step2": "Přejděte dolů a klepněte na Přidat na plochu",
+      "step3": "Klepněte na Přidat v pravém horním rohu"
+    },
+    "firefox": {
+      "title": "Nainstalovat Spliit Cloud",
+      "description": "Přidejte si Spliit na domovskou obrazovku z nabídky prohlížeče.",
+      "step1": "Klepněte na tlačítko nabídky (⋮) v pravém horním rohu",
+      "step2": "Klepněte na Instalovat"
+    }
   }
 }
