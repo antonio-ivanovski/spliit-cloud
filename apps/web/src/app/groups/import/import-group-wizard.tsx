@@ -60,6 +60,12 @@ export function ImportGroupWizard() {
   )
   const destinationParticipants = destinationGroupData?.group?.participants
 
+  const { data: contactsData } = trpc.account.contacts.useQuery(
+    { groupId: state.targetGroupId ?? undefined },
+    { enabled: true },
+  )
+  const contacts = contactsData?.contacts ?? []
+
   const autoMatchKeyRef = useRef<string | null>(null)
 
   // Existing-group auto-match: applied once per (source group,
@@ -95,6 +101,7 @@ export function ImportGroupWizard() {
         }),
         utils.groups.balances.list.invalidate({ groupId: data.groupId }),
         utils.groups.getDetails.invalidate({ groupId: data.groupId }),
+        utils.account.contacts.invalidate(),
       ])
       dispatch({
         type: 'IMPORT_SUCCEEDED',
@@ -317,6 +324,7 @@ export function ImportGroupWizard() {
               ? destinationParticipants
               : undefined
           }
+          contacts={contacts}
           onBack={handleBack}
           onChange={handleMappingChange}
           onContinue={handleMappingContinue}

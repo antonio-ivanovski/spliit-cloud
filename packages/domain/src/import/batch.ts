@@ -103,6 +103,12 @@ export type ImportBatchParticipant =
       sourceName: string
       destLedgerParticipantId: string
     }
+  | {
+      mode: 'INVITE_CONTACT'
+      sourceName: string
+      email: string
+      destLedgerParticipantId: string
+    }
 
 export type ImportBatchExpense = {
   expenseDate: Date
@@ -163,12 +169,12 @@ export function buildImportBatch(
         destLedgerParticipantId,
       }
     }
-    if (p.mode === 'INVITE_BY_EMAIL') {
+    if (p.mode === 'INVITE_BY_EMAIL' || p.mode === 'INVITE_CONTACT') {
       if (!p.inviteEmail?.trim()) {
         throw new Error(`Missing email for invitee "${p.source.sourceName}"`)
       }
       return {
-        mode: 'INVITE_BY_EMAIL' as const,
+        mode: p.mode as 'INVITE_BY_EMAIL' | 'INVITE_CONTACT',
         sourceName: p.source.sourceName,
         email: p.inviteEmail.trim(),
         destLedgerParticipantId,

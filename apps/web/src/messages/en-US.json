@@ -310,7 +310,13 @@
           "pendingSuffix": "(pending)",
           "leaveUnlinked": "Leave unlinked",
           "leaveUnlinkedDescription": "Keeps the name only — link later from Members.",
-          "leaveUnlinkedFollowUp": "{name} will appear as a name-only entry with no app access. You can link them to an account later from the Members tab."
+          "leaveUnlinkedFollowUp": "{name} will appear as a name-only entry with no app access. You can link them to an account later from the Members tab.",
+          "inviteContact": "From your contacts",
+          "inviteContactDescription": "Invite a contact from groups you have shared before.",
+          "selectContactLabel": "Contact",
+          "selectContactPlaceholder": "Select a contact…",
+          "contactAlreadyMember": "Already a member",
+          "contactPendingInvite": "Already invited"
         },
         "Errors": {
           "duplicateExistingMember": "Two source rows are mapped to the same existing member.",
@@ -1180,7 +1186,8 @@
       "invalidEmail": "Enter a valid email address.",
       "tab": {
         "email": "Email",
-        "link": "Invite link"
+        "link": "Invite link",
+        "contacts": "Contacts"
       },
       "link": {
         "generate": "Generate invite link",
@@ -1199,7 +1206,12 @@
       "emailDescription": "Send an invitation by email. The invitee joins once they accept from a matching account.",
       "linkDescription": "Generate a single-use link anyone can use to join. The link stops working after the first accept.",
       "temporaryName": "Temporary name (optional)",
-      "temporaryNamePlaceholder": "e.g. Alex's roommate"
+      "temporaryNamePlaceholder": "e.g. Alex's roommate",
+      "contactsDescription": "Invite someone from groups you have shared.",
+      "selectContactPlaceholder": "Select a person…",
+      "contactAlreadyMember": "Already a member",
+      "noContacts": "No contacts yet. Invite from the Email tab.",
+      "contactAlreadyInvited": "Already invited"
     },
     "invitations": {
       "title": "Pending invitations",

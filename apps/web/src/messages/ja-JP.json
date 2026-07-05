@@ -272,7 +272,13 @@
           "pendingSuffix": "（保留中）",
           "leaveUnlinked": "リンクしない",
           "leaveUnlinkedDescription": "名前のみ保持 — 後でメンバーからリンク。",
-          "leaveUnlinkedFollowUp": "{name} はアプリにアクセスできない名前のみのエントリとして表示されます。後でメンバータブからアカウントにリンクできます。"
+          "leaveUnlinkedFollowUp": "{name} はアプリにアクセスできない名前のみのエントリとして表示されます。後でメンバータブからアカウントにリンクできます。",
+          "inviteContact": "連絡先から招待",
+          "inviteContactDescription": "過去に共有したグループから連絡先を招待します。",
+          "selectContactLabel": "連絡先",
+          "selectContactPlaceholder": "連絡先を選択…",
+          "contactAlreadyMember": "既にメンバー",
+          "contactPendingInvite": "既に招待済み"
         }
       },
       "fetchingGroup": "spliit.app からグループを取得中…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "有効なメールアドレスを入力してください。",
       "tab": {
         "email": "メールアドレス",
-        "link": "招待リンク"
+        "link": "招待リンク",
+        "contacts": "連絡先"
       },
       "emailDescription": "メールで招待を送信します。招待を受けた人が対応するアカウントから承認すると参加できます。",
       "linkDescription": "誰でも参加できる一回限りのリンクを生成します。最初の承認後、リンクは無効になります。",
@@ -1160,7 +1167,12 @@
         "shareTitle": "Spliit Cloudの{groupName}に参加",
         "shareText": "Spliit Cloudで共同の出費のために{groupName}を作成しました。一回限りの招待リンクはこちらです — 開いて参加してください：\n{inviteUrl}",
         "generateNew": "新しいリンクを生成"
-      }
+      },
+      "contactsDescription": "過去に共有したグループから連絡先を招待できます。",
+      "selectContactPlaceholder": "連絡先を選択…",
+      "contactAlreadyMember": "既にメンバーです",
+      "noContacts": "連絡先がまだありません。メールタブから招待してください。",
+      "contactAlreadyInvited": "既に招待済み"
     },
     "invitations": {
       "title": "保留中の招待",

@@ -272,7 +272,13 @@
           "pendingSuffix": "(pendente)",
           "leaveUnlinked": "Deixar desvinculado",
           "leaveUnlinkedDescription": "Mantém apenas o nome — vincule depois em Membros.",
-          "leaveUnlinkedFollowUp": "{name} aparecerá como uma entrada apenas com nome, sem acesso ao aplicativo. Você pode vinculá-lo a uma conta mais tarde na guia Membros."
+          "leaveUnlinkedFollowUp": "{name} aparecerá como uma entrada apenas com nome, sem acesso ao aplicativo. Você pode vinculá-lo a uma conta mais tarde na guia Membros.",
+          "inviteContact": "Dos seus contatos",
+          "inviteContactDescription": "Convide um contato de grupos dos quais você já participou.",
+          "selectContactLabel": "Contato",
+          "selectContactPlaceholder": "Selecione um contato…",
+          "contactAlreadyMember": "Já é membro",
+          "contactPendingInvite": "Já convidado"
         }
       },
       "fetchingGroup": "Buscando o grupo do spliit.app…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "Insira um endereço de e-mail válido.",
       "tab": {
         "email": "E-mail",
-        "link": "Link de convite"
+        "link": "Link de convite",
+        "contacts": "Contatos"
       },
       "emailDescription": "Envie um convite por e-mail. O convidado entra assim que aceitar a partir de uma conta compatível.",
       "linkDescription": "Gere um link de uso único para que qualquer pessoa possa entrar. O link deixa de funcionar após o primeiro aceite.",
@@ -1160,7 +1167,12 @@
         "generateNew": "Gerar novo link"
       },
       "temporaryName": "Nome temporário (opcional)",
-      "temporaryNamePlaceholder": "ex.: colega de quarto do Alex"
+      "temporaryNamePlaceholder": "ex.: colega de quarto do Alex",
+      "contactsDescription": "Convide alguém de grupos dos quais você já participou.",
+      "selectContactPlaceholder": "Selecione uma pessoa…",
+      "contactAlreadyMember": "Já é membro",
+      "noContacts": "Ainda não há contatos. Convide pela aba E-mail.",
+      "contactAlreadyInvited": "Já convidado"
     },
     "invitations": {
       "title": "Convites pendentes",

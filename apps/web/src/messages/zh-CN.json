@@ -272,7 +272,13 @@
           "pendingSuffix": "（待处理）",
           "leaveUnlinked": "保持未关联",
           "leaveUnlinkedDescription": "仅保留名称——稍后从「成员」关联。",
-          "leaveUnlinkedFollowUp": "{name} 将显示为仅名称条目，无法访问应用程序。您可以稍后从「成员」选项卡将其关联到帐户。"
+          "leaveUnlinkedFollowUp": "{name} 将显示为仅名称条目，无法访问应用程序。您可以稍后从「成员」选项卡将其关联到帐户。",
+          "inviteContact": "从联系人邀请",
+          "inviteContactDescription": "从之前共享过的群组中邀请联系人。",
+          "selectContactLabel": "联系人",
+          "selectContactPlaceholder": "选择联系人…",
+          "contactAlreadyMember": "已是成员",
+          "contactPendingInvite": "已邀请"
         }
       },
       "fetchingGroup": "正在从 spliit.app 获取群组…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "请输入有效的邮箱地址。",
       "tab": {
         "email": "电子邮件",
-        "link": "邀请链接"
+        "link": "邀请链接",
+        "contacts": "联系人"
       },
       "emailDescription": "通过电子邮件发送邀请。受邀者在匹配的账号上接受后即可加入。",
       "linkDescription": "生成一个一次性链接，任何人都可使用该链接加入。在首次接受后，链接将失效。",
@@ -1160,7 +1167,12 @@
         "shareTitle": "在 Spliit Cloud 上加入 {groupName}",
         "shareText": "我刚在 Spliit Cloud 上为我们的共同支出创建了 {groupName}。这是一个一次性邀请链接——打开即可加入：\n{inviteUrl}",
         "generateNew": "生成新链接"
-      }
+      },
+      "contactsDescription": "从共享过的群组中邀请联系人。",
+      "selectContactPlaceholder": "选择联系人…",
+      "contactAlreadyMember": "已是成员",
+      "noContacts": "暂无联系人。请从电子邮件标签页邀请。",
+      "contactAlreadyInvited": "已邀请"
     },
     "invitations": {
       "title": "待处理的邀请",

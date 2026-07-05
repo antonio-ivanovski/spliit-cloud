@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import {
+  CONTACT_VALUE,
   EMAIL_VALUE,
   LINK_EXISTING_VALUE,
   SELF_VALUE,
@@ -61,7 +62,7 @@ export function useMappingValidation() {
         return t('Groups.Import.Mapping.Errors.missingExistingMember')
       }
     }
-    if (currentValue === EMAIL_VALUE) {
+    if (currentValue === EMAIL_VALUE || currentValue === CONTACT_VALUE) {
       if (!row.inviteEmail?.trim()) {
         return t('Groups.Import.Mapping.Errors.missingEmail')
       }
@@ -74,7 +75,8 @@ export function useMappingValidation() {
       const duplicateEmail = participants.some(
         (other) =>
           other.key !== row.key &&
-          other.mode === 'INVITE_BY_EMAIL' &&
+          (other.mode === 'INVITE_BY_EMAIL' ||
+            other.mode === 'INVITE_CONTACT') &&
           other.inviteEmail?.trim().toLowerCase() ===
             row.inviteEmail?.trim().toLowerCase(),
       )

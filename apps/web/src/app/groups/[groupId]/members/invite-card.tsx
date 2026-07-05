@@ -1,31 +1,15 @@
-import { CopyButton } from '@/components/copy-button'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link2, Share2, UserPlus } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { InviteContactsTab } from './invite-contacts-tab'
+import { InviteEmailTab } from './invite-email-tab'
+import { InviteLinkTab } from './invite-link-tab'
 import {
   emailFormSchema,
-  formatDate,
   type EmailFormValues,
   type GeneratedLink,
   type InvitableRole,
@@ -33,7 +17,7 @@ import {
 } from './members-hooks'
 
 export function InviteCard({
-  groupId: _groupId,
+  groupId,
   groupName,
   createMutation,
   createLinkMutation,
@@ -42,12 +26,8 @@ export function InviteCard({
 }: {
   groupId: string
   groupName: string
-  createMutation: {
-    isPending: boolean
-  }
-  createLinkMutation: {
-    isPending: boolean
-  }
+  createMutation: { isPending: boolean }
+  createLinkMutation: { isPending: boolean }
   onInvite: (values: {
     email: string
     role: InvitableRole
@@ -66,15 +46,37 @@ export function InviteCard({
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const [roleValue, setRoleValue] = useState<InvitableRole>('MEMBER')
   const [linkRoleValue, setLinkRoleValue] = useState<InvitableRole>('MEMBER')
+  const [contactRoleValue, setContactRoleValue] =
+    useState<InvitableRole>('MEMBER')
   const [generatedLink, setGeneratedLink] = useState<GeneratedLink | null>(null)
-  const [inviteTab, setInviteTab] = useState<'email' | 'link'>('email')
+  const [inviteTab, setInviteTab] = useState<'contacts' | 'email' | 'link'>(
+    'email',
+  )
   const [canShare, setCanShare] = useState(false)
+  const [selectedContactAccountId, setSelectedContactAccountId] =
+    useState<string>('')
 
   useEffect(() => {
     setCanShare(
       typeof navigator !== 'undefined' && typeof navigator.share === 'function',
     )
   }, [])
+
+  const contactsQuery = trpc.account.contacts.useQuery({ groupId })
+  const contacts = contactsQuery.data?.contacts ?? []
+  const selectedContact = contacts.find(
+    (c) => c.accountId === selectedContactAccountId,
+  )
+
+  // Default to contacts tab when at least one non-member contact exists.
+  const defaultTabApplied = useRef(false)
+  useEffect(() => {
+    if (defaultTabApplied.current) return
+    if (!contactsQuery.isLoading && contacts.some((c) => !c.isMember)) {
+      setInviteTab('contacts')
+      defaultTabApplied.current = true
+    }
+  }, [contactsQuery.isLoading, contacts])
 
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(emailFormSchema),
@@ -114,6 +116,16 @@ export function InviteCard({
     linkForm.reset({ temporaryName: '' })
   })
 
+  const handleContactSubmit = () => {
+    if (!selectedContact) return
+    onInvite({
+      email: selectedContact.email,
+      role: contactRoleValue,
+      temporaryName: selectedContact.name,
+    })
+    setSelectedContactAccountId('')
+  }
+
   async function handleShareLink() {
     if (!generatedLink || !canShare) return
     try {
@@ -139,202 +151,55 @@ export function InviteCard({
       <CardContent>
         <Tabs
           value={inviteTab}
-          onValueChange={(value) => setInviteTab(value as 'email' | 'link')}
+          onValueChange={(value) =>
+            setInviteTab(value as 'contacts' | 'email' | 'link')
+          }
           className="flex flex-col gap-4"
         >
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="contacts">
+              {t('invite.tab.contacts')}
+            </TabsTrigger>
             <TabsTrigger value="email">{t('invite.tab.email')}</TabsTrigger>
             <TabsTrigger value="link">{t('invite.tab.link')}</TabsTrigger>
           </TabsList>
 
+          <TabsContent value="contacts" className="mt-0 flex flex-col gap-4">
+            <InviteContactsTab
+              contacts={contacts}
+              isLoading={contactsQuery.isLoading}
+              selectedContactAccountId={selectedContactAccountId}
+              onSelectContact={setSelectedContactAccountId}
+              contactRoleValue={contactRoleValue}
+              onRoleChange={setContactRoleValue}
+              isPending={createMutation.isPending}
+              onSubmit={handleContactSubmit}
+            />
+          </TabsContent>
+
           <TabsContent value="email" className="mt-0 flex flex-col gap-4">
-            <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
-              {t('invite.emailDescription')}
-            </p>
-            <Form {...form}>
-              <form
-                onSubmit={handleEmailSubmit}
-                className="flex flex-col gap-3"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('invite.email')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="text-base"
-                          type="email"
-                          inputMode="email"
-                          autoComplete="email"
-                          spellCheck={false}
-                          placeholder={t('invite.emailPlaceholder')}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="temporaryName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('invite.temporaryName')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="text-base"
-                          type="text"
-                          spellCheck={false}
-                          autoComplete="off"
-                          placeholder={t('invite.temporaryNamePlaceholder')}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-                  <FormItem className="space-y-0 sm:w-40">
-                    <FormLabel className="sm:sr-only">
-                      {t('invite.role')}
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        value={roleValue}
-                        onValueChange={(value) =>
-                          setRoleValue(value as InvitableRole)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="MEMBER">
-                            {t('role.member')}
-                          </SelectItem>
-                          <SelectItem value="ADMIN">
-                            {t('role.admin')}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                  <Button
-                    type="submit"
-                    disabled={createMutation.isPending || !email}
-                  >
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    {t('invite.send')}
-                  </Button>
-                </div>
-              </form>
-            </Form>
+            <InviteEmailTab
+              form={form}
+              onSubmit={handleEmailSubmit}
+              roleValue={roleValue}
+              onRoleChange={setRoleValue}
+              isPending={createMutation.isPending}
+              email={email}
+            />
           </TabsContent>
 
           <TabsContent value="link" className="mt-0 flex flex-col gap-4">
-            <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
-              {t('invite.linkDescription')}
-            </p>
-            <Form {...linkForm}>
-              <form onSubmit={handleLinkSubmit} className="flex flex-col gap-3">
-                <FormField
-                  control={linkForm.control}
-                  name="temporaryName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('invite.temporaryName')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="text-base"
-                          type="text"
-                          spellCheck={false}
-                          autoComplete="off"
-                          placeholder={t('invite.temporaryNamePlaceholder')}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-                  <FormItem className="space-y-0 sm:w-40">
-                    <FormLabel className="sm:sr-only">
-                      {t('invite.role')}
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        value={linkRoleValue}
-                        onValueChange={(value) =>
-                          setLinkRoleValue(value as InvitableRole)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="MEMBER">
-                            {t('role.member')}
-                          </SelectItem>
-                          <SelectItem value="ADMIN">
-                            {t('role.admin')}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                  <Button type="submit" disabled={createLinkMutation.isPending}>
-                    <Link2 className="w-4 h-4 mr-2" />
-                    {createLinkMutation.isPending
-                      ? t('invite.link.generating')
-                      : generatedLink
-                        ? t('invite.link.generateNew')
-                        : t('invite.link.generate')}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-
-            {generatedLink && (
-              <div
-                className="mt-4 flex flex-col gap-3"
-                data-testid="generated-invite-link"
-              >
-                <p className="text-sm text-muted-foreground">
-                  {t('invite.link.intro', { groupName })}
-                </p>
-                <p className="border-l-2 border-amber-500/50 pl-3 text-sm text-amber-900 dark:text-amber-200">
-                  {t('invite.link.singleUse')}
-                </p>
-                <div className="flex items-center gap-2">
-                  <Input
-                    readOnly
-                    value={generatedLink.inviteUrl}
-                    className="font-mono text-xs"
-                    onFocus={(event) => event.currentTarget.select()}
-                  />
-                  <CopyButton text={generatedLink.inviteUrl} />
-                  {canShare && (
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      type="button"
-                      onClick={handleShareLink}
-                      aria-label={t('invite.link.share')}
-                    >
-                      <Share2 className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {t('invite.link.expiresOn', {
-                    date: formatDate(generatedLink.expiresAt, 'en'),
-                  })}
-                </p>
-              </div>
-            )}
+            <InviteLinkTab
+              linkForm={linkForm}
+              onSubmit={handleLinkSubmit}
+              linkRoleValue={linkRoleValue}
+              onRoleChange={setLinkRoleValue}
+              isPending={createLinkMutation.isPending}
+              generatedLink={generatedLink}
+              canShare={canShare}
+              groupName={groupName}
+              onShare={handleShareLink}
+            />
           </TabsContent>
         </Tabs>
       </CardContent>

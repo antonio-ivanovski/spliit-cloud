@@ -13,6 +13,7 @@ export type ParticipantMappingMode =
   | 'INVITE_BY_LINK'
   | 'UNLINKED_PARTICIPANT'
   | 'LINK_EXISTING_PARTICIPANT'
+  | 'INVITE_CONTACT'
 
 export type ParticipantMappingState = {
   key: string
@@ -21,6 +22,7 @@ export type ParticipantMappingState = {
   linkedAccountId?: string
   inviteEmail?: string
   existingLedgerParticipantId?: string
+  contactAccountId?: string
 }
 
 export function substringsOverlap(a: string, b: string): boolean {
@@ -113,7 +115,8 @@ export function findImportConflicts(
     const destById = new Map(destinationParticipants.map((d) => [d.id, d]))
 
     for (const row of participants) {
-      if (row.mode !== 'INVITE_BY_EMAIL') continue
+      if (row.mode !== 'INVITE_BY_EMAIL' && row.mode !== 'INVITE_CONTACT')
+        continue
       const emailRaw = row.inviteEmail?.trim()
       if (!emailRaw) continue
       const email = emailRaw.toLowerCase()

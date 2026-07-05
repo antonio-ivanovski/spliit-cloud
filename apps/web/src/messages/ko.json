@@ -207,7 +207,13 @@
           "pendingSuffix": "(보류 중)",
           "leaveUnlinked": "연결하지 않음",
           "leaveUnlinkedDescription": "이름만 유지 — 나중에 멤버에서 연결합니다.",
-          "leaveUnlinkedFollowUp": "{name}은(는) 앱 접근 권한이 없는 이름만의 항목으로 표시됩니다. 나중에 멤버 탭에서 계정에 연결할 수 있습니다."
+          "leaveUnlinkedFollowUp": "{name}은(는) 앱 접근 권한이 없는 이름만의 항목으로 표시됩니다. 나중에 멤버 탭에서 계정에 연결할 수 있습니다.",
+          "inviteContact": "연락처에서 초대",
+          "inviteContactDescription": "이전에 함께한 그룹에서 연락처를 초대합니다.",
+          "selectContactLabel": "연락처",
+          "selectContactPlaceholder": "연락처 선택…",
+          "contactAlreadyMember": "이미 멤버",
+          "contactPendingInvite": "이미 초대됨"
         }
       },
       "fetchingGroup": "spliit.app에서 그룹을 가져오는 중…",
@@ -1155,12 +1161,18 @@
       },
       "tab": {
         "email": "이메일",
-        "link": "초대 링크"
+        "link": "초대 링크",
+        "contacts": "연락처"
       },
       "emailDescription": "이메일로 초대를 보냅니다. 초대받은 사람이 일치하는 계정에서 수락하면 참여됩니다.",
       "linkDescription": "누구나 참여할 수 있는 1회용 링크를 생성합니다. 첫 번째 사람이 수락하면 링크는 더 이상 작동하지 않습니다.",
       "temporaryName": "임시 이름 (선택 사항)",
-      "temporaryNamePlaceholder": "예: Alex의 룸메이트"
+      "temporaryNamePlaceholder": "예: Alex의 룸메이트",
+      "contactsDescription": "함께한 그룹에서 연락처를 초대합니다.",
+      "selectContactPlaceholder": "연락처 선택…",
+      "contactAlreadyMember": "이미 멤버",
+      "noContacts": "아직 연락처가 없습니다. 이메일 탭에서 초대하세요.",
+      "contactAlreadyInvited": "이미 초대됨"
     },
     "invitations": {
       "title": "대기 중인 초대",

@@ -272,7 +272,13 @@
           "pendingSuffix": "(openstaand)",
           "leaveUnlinked": "Niet koppelen",
           "leaveUnlinkedDescription": "Houdt alleen de naam — koppel later via Leden.",
-          "leaveUnlinkedFollowUp": "{name} verschijnt als een alleen-naam vermelding zonder app-toegang. Je kunt ze later koppelen aan een account via het tabblad Leden."
+          "leaveUnlinkedFollowUp": "{name} verschijnt als een alleen-naam vermelding zonder app-toegang. Je kunt ze later koppelen aan een account via het tabblad Leden.",
+          "inviteContact": "Uit je contacten",
+          "inviteContactDescription": "Nodig een contact uit van groepen waarmee je eerder hebt gedeeld.",
+          "selectContactLabel": "Contactpersoon",
+          "selectContactPlaceholder": "Selecteer een contact…",
+          "contactAlreadyMember": "Al lid",
+          "contactPendingInvite": "Al uitgenodigd"
         }
       },
       "fetchingGroup": "Groep ophalen van spliit.app…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "Voer een geldig e-mailadres in.",
       "tab": {
         "email": "E-mail",
-        "link": "Uitnodigingslink"
+        "link": "Uitnodigingslink",
+        "contacts": "Contacten"
       },
       "emailDescription": "Stuur een uitnodiging via e-mail. De genodigde wordt lid zodra hij vanuit een overeenkomend account accepteert.",
       "linkDescription": "Genereer een link die één keer gebruikt kan worden om lid te worden. De link werkt niet meer zodra iemand hem accepteert.",
@@ -1160,7 +1167,12 @@
         "shareText": "Ik heb {groupName} aangemaakt voor onze gedeelde uitgaven op Spliit Cloud. Hier is een eenmalige uitnodigingslink — open hem om lid te worden:\n{inviteUrl}",
         "generateNew": "Nieuwe link genereren"
       },
-      "temporaryNamePlaceholder": "bijv. Alex' huisgenoot"
+      "temporaryNamePlaceholder": "bijv. Alex' huisgenoot",
+      "contactsDescription": "Nodig iemand uit van groepen waarmee je hebt gedeeld.",
+      "selectContactPlaceholder": "Selecteer een persoon…",
+      "contactAlreadyMember": "Al lid",
+      "noContacts": "Nog geen contacten. Nodig uit via het e-mailtabblad.",
+      "contactAlreadyInvited": "Al uitgenodigd"
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",

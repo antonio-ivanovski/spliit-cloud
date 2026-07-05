@@ -272,7 +272,13 @@
           "pendingSuffix": "(oczekujące)",
           "leaveUnlinked": "Pozostaw niepołączone",
           "leaveUnlinkedDescription": "Zachowuje tylko nazwę — połącz później z Członkowie.",
-          "leaveUnlinkedFollowUp": "{name} pojawi się jako wpis tylko z nazwą bez dostępu do aplikacji. Możesz połączyć go z kontem później z zakładki Członkowie."
+          "leaveUnlinkedFollowUp": "{name} pojawi się jako wpis tylko z nazwą bez dostępu do aplikacji. Możesz połączyć go z kontem później z zakładki Członkowie.",
+          "inviteContact": "Z kontaktów",
+          "inviteContactDescription": "Zaproś kontakt z grup, które współdzieliłeś.",
+          "selectContactLabel": "Kontakt",
+          "selectContactPlaceholder": "Wybierz kontakt…",
+          "contactAlreadyMember": "Już członek",
+          "contactPendingInvite": "Już zaproszony"
         }
       },
       "fetchingGroup": "Pobieranie grupy z spliit.app…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "Wprowadź prawidłowy adres e-mail.",
       "tab": {
         "email": "E-mail",
-        "link": "Link zaproszenia"
+        "link": "Link zaproszenia",
+        "contacts": "Kontakty"
       },
       "link": {
         "generate": "Wygeneruj link zaproszenia",
@@ -1160,7 +1167,12 @@
       "emailDescription": "Wyślij zaproszenie e-mailem. Zaproszona osoba dołączy po zaakceptowaniu z pasującego konta.",
       "linkDescription": "Wygeneruj jednorazowy link, za pomocą którego można dołączyć do grupy. Link przestanie działać po pierwszym zaakceptowaniu.",
       "temporaryName": "Tymczasowa nazwa (opcjonalnie)",
-      "temporaryNamePlaceholder": "np. współlokator Alexa"
+      "temporaryNamePlaceholder": "np. współlokator Alexa",
+      "contactsDescription": "Zaproś kogoś z grup, które współdzieliłeś.",
+      "selectContactPlaceholder": "Wybierz osobę…",
+      "contactAlreadyMember": "Już członek",
+      "noContacts": "Brak kontaktów. Zaproś z karty E-mail.",
+      "contactAlreadyInvited": "Już zaproszony"
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",

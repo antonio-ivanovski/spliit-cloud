@@ -272,7 +272,13 @@
           "pendingSuffix": "(în așteptare)",
           "leaveUnlinked": "Lăsați nelegat",
           "leaveUnlinkedDescription": "Păstrează doar numele — legați mai târziu din Membri.",
-          "leaveUnlinkedFollowUp": "{name} va apărea ca o intrare doar cu nume, fără acces la aplicație. Îl puteți lega de un cont mai târziu din fila Membri."
+          "leaveUnlinkedFollowUp": "{name} va apărea ca o intrare doar cu nume, fără acces la aplicație. Îl puteți lega de un cont mai târziu din fila Membri.",
+          "inviteContact": "Din contactele tale",
+          "inviteContactDescription": "Invită un contact din grupuri la care ai mai participat.",
+          "selectContactLabel": "Contact",
+          "selectContactPlaceholder": "Selectează un contact…",
+          "contactAlreadyMember": "Deja membru",
+          "contactPendingInvite": "Deja invitat"
         }
       },
       "fetchingGroup": "Se preia grupul de pe spliit.app…",
@@ -1155,12 +1161,18 @@
       },
       "tab": {
         "email": "E-mail",
-        "link": "Link de invitație"
+        "link": "Link de invitație",
+        "contacts": "Contacte"
       },
       "emailDescription": "Trimite o invitație prin e-mail. Persoana invitată se alătură după ce acceptă de pe un cont corespunzător.",
       "linkDescription": "Generează un link de unică folosință pe care oricine îl poate folosi pentru a se alătura. Link-ul nu mai funcționează după prima acceptare.",
       "temporaryName": "Nume temporar (opțional)",
-      "temporaryNamePlaceholder": "ex. colegul de apartament al lui Alex"
+      "temporaryNamePlaceholder": "ex. colegul de apartament al lui Alex",
+      "contactsDescription": "Invită pe cineva din grupuri la care ai participat.",
+      "selectContactPlaceholder": "Selectează o persoană…",
+      "contactAlreadyMember": "Deja membru",
+      "noContacts": "Încă nu ai contacte. Invită din fila E-mail.",
+      "contactAlreadyInvited": "Deja invitat"
     },
     "invitations": {
       "title": "Invitații în așteptare",

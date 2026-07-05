@@ -272,7 +272,13 @@
           "pendingSuffix": "(pendiente)",
           "leaveUnlinked": "Dejar sin vincular",
           "leaveUnlinkedDescription": "Mantiene solo el nombre — vincúlalo después desde Miembros.",
-          "leaveUnlinkedFollowUp": "{name} aparecerá como una entrada solo con nombre sin acceso a la aplicación. Puedes vincularlo a una cuenta más tarde desde la pestaña Miembros."
+          "leaveUnlinkedFollowUp": "{name} aparecerá como una entrada solo con nombre sin acceso a la aplicación. Puedes vincularlo a una cuenta más tarde desde la pestaña Miembros.",
+          "inviteContact": "De tus contactos",
+          "inviteContactDescription": "Invita a un contacto de grupos en los que hayas compartido antes.",
+          "selectContactLabel": "Contacto",
+          "selectContactPlaceholder": "Selecciona un contacto…",
+          "contactAlreadyMember": "Ya es miembro",
+          "contactPendingInvite": "Ya invitado"
         }
       },
       "fetchingGroup": "Obteniendo el grupo de spliit.app…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "Introduce una dirección de correo electrónico válida.",
       "tab": {
         "email": "Correo electrónico",
-        "link": "Enlace de invitación"
+        "link": "Enlace de invitación",
+        "contacts": "Contactos"
       },
       "emailDescription": "Envía una invitación por correo electrónico. La persona invitada se unirá cuando la acepte desde una cuenta que coincida.",
       "linkDescription": "Genera un enlace de un solo uso que cualquiera puede usar para unirse. El enlace deja de funcionar tras la primera aceptación.",
@@ -1160,7 +1167,12 @@
         "shareText": "Acabo de crear {groupName} para nuestros gastos compartidos en Spliit Cloud. Aquí tienes un enlace de invitación de un solo uso — ábrelo para unirte:\n{inviteUrl}",
         "generateNew": "Generar nuevo enlace"
       },
-      "temporaryNamePlaceholder": "p. ej. el compañero de piso de Alex"
+      "temporaryNamePlaceholder": "p. ej. el compañero de piso de Alex",
+      "contactsDescription": "Invita a alguien de grupos en los que hayas compartido.",
+      "selectContactPlaceholder": "Selecciona una persona…",
+      "contactAlreadyMember": "Ya es miembro",
+      "noContacts": "Aún no hay contactos. Invita desde la pestaña Correo electrónico.",
+      "contactAlreadyInvited": "Ya invitado"
     },
     "invitations": {
       "title": "Invitaciones pendientes",

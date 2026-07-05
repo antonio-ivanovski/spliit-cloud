@@ -86,6 +86,7 @@ export function useMembersDialogs() {
         utils.groups.getDetails.invalidate({ groupId }),
         utils.account.members.invalidate({ groupId }),
         utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
+        utils.account.contacts.invalidate(),
       ])
     },
     onError: (error) => {
@@ -102,6 +103,7 @@ export function useMembersDialogs() {
         utils.groups.getDetails.invalidate({ groupId }),
         utils.account.members.invalidate({ groupId }),
         utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
+        utils.account.contacts.invalidate(),
       ])
     },
     onError: (error) => {
@@ -121,6 +123,7 @@ export function useMembersDialogs() {
         utils.account.members.invalidate({ groupId }),
         utils.groups.get.invalidate({ groupId }),
         utils.groups.getDetails.invalidate({ groupId }),
+        utils.account.contacts.invalidate(),
       ])
     },
     onError: (error) => {

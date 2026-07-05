@@ -272,7 +272,13 @@
           "pendingSuffix": "(en attente)",
           "leaveUnlinked": "Laisser non lié",
           "leaveUnlinkedDescription": "Conserve uniquement le nom — liez plus tard depuis Membres.",
-          "leaveUnlinkedFollowUp": "{name} apparaîtra comme une entrée avec seulement le nom, sans accès à l'application. Vous pouvez le lier à un compte plus tard depuis l'onglet Membres."
+          "leaveUnlinkedFollowUp": "{name} apparaîtra comme une entrée avec seulement le nom, sans accès à l'application. Vous pouvez le lier à un compte plus tard depuis l'onglet Membres.",
+          "inviteContact": "Depuis vos contacts",
+          "inviteContactDescription": "Invitez un contact issu de groupes auxquels vous avez déjà participé.",
+          "selectContactLabel": "Contact",
+          "selectContactPlaceholder": "Sélectionnez un contact…",
+          "contactAlreadyMember": "Déjà membre",
+          "contactPendingInvite": "Déjà invité"
         }
       },
       "fetchingGroup": "Récupération du groupe depuis spliit.app…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "Saisissez une adresse e-mail valide.",
       "tab": {
         "email": "E-mail",
-        "link": "Lien d'invitation"
+        "link": "Lien d'invitation",
+        "contacts": "Contacts"
       },
       "emailDescription": "Envoyez une invitation par e-mail. L'invité rejoint le groupe dès qu'il l'accepte depuis un compte correspondant.",
       "linkDescription": "Générez un lien à usage unique que n'importe qui peut utiliser pour rejoindre le groupe. Le lien cesse de fonctionner après la première acceptation.",
@@ -1160,7 +1167,12 @@
         "shareTitle": "Rejoindre {groupName} sur Spliit Cloud",
         "shareText": "Je viens de créer {groupName} pour nos dépenses partagées sur Spliit Cloud. Voici un lien d'invitation à usage unique — ouvrez-le pour nous rejoindre :\n{inviteUrl}",
         "generateNew": "Générer un nouveau lien"
-      }
+      },
+      "contactsDescription": "Invitez quelqu'un de groupes auxquels vous avez participé.",
+      "selectContactPlaceholder": "Sélectionnez une personne…",
+      "contactAlreadyMember": "Déjà membre",
+      "noContacts": "Pas encore de contacts. Invitez depuis l'onglet E-mail.",
+      "contactAlreadyInvited": "Déjà invité"
     },
     "invitations": {
       "title": "Invitations en attente",

@@ -33,6 +33,12 @@ const importParticipantMappingSchema = z.discriminatedUnion('mode', [
     sourceName: z.string().min(1),
     destLedgerParticipantId: z.string().min(1),
   }),
+  z.object({
+    mode: z.literal('INVITE_CONTACT'),
+    sourceName: z.string().min(1),
+    email: z.string().email(),
+    destLedgerParticipantId: z.string().min(1),
+  }),
 ])
 
 const importSourceMetaSchema = z.object({

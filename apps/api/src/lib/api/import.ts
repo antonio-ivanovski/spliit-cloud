@@ -41,6 +41,12 @@ export type ImportParticipantMapping =
       sourceName: string
       destLedgerParticipantId: string
     }
+  | {
+      mode: 'INVITE_CONTACT'
+      sourceName: string
+      email: string
+      destLedgerParticipantId: string
+    }
 
 export type ImportSourceMeta = {
   provider: string
@@ -165,7 +171,8 @@ export async function importGroup(
       }
       if (
         mapping.mode === 'INVITE_BY_EMAIL' ||
-        mapping.mode === 'INVITE_BY_LINK'
+        mapping.mode === 'INVITE_BY_LINK' ||
+        mapping.mode === 'INVITE_CONTACT'
       ) {
         await tx.ledgerParticipant.create({
           data: {
@@ -177,10 +184,17 @@ export async function importGroup(
         })
         destIdByClientKey.set(destId, destId)
         inviteMappings.push({
-          mode: mapping.mode,
+          mode:
+            mapping.mode === 'INVITE_CONTACT'
+              ? 'INVITE_BY_EMAIL'
+              : mapping.mode,
           sourceName: mapping.sourceName,
           destLedgerParticipantId: destId,
-          email: mapping.mode === 'INVITE_BY_EMAIL' ? mapping.email : undefined,
+          email:
+            mapping.mode === 'INVITE_BY_EMAIL' ||
+            mapping.mode === 'INVITE_CONTACT'
+              ? mapping.email
+              : undefined,
         })
         continue
       }

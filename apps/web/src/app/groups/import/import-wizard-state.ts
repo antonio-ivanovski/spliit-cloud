@@ -77,6 +77,7 @@ export type ParticipantMappingMode =
   | 'INVITE_BY_LINK'
   | 'UNLINKED_PARTICIPANT'
   | 'LINK_EXISTING_PARTICIPANT'
+  | 'INVITE_CONTACT'
 
 export type ParticipantMappingState = {
   key: string
@@ -85,6 +86,7 @@ export type ParticipantMappingState = {
   linkedAccountId?: string
   inviteEmail?: string
   existingLedgerParticipantId?: string
+  contactAccountId?: string
 }
 
 export const initialGroupFormValues = (source: NormalizedSource | null) => ({

@@ -1,6 +1,7 @@
-import { GroupMemberStatus, prisma } from '@spliit/db'
+import { GroupInvitationStatus, GroupMemberStatus, prisma } from '@spliit/db'
 import { z } from 'zod'
 import { randomId } from '../../../lib/api'
+import { isPlaceholderEmail } from '../../../lib/invitations'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 
 /**
@@ -205,5 +206,120 @@ export const accountRouter = createTRPCRouter({
         orderBy: [{ joinedAt: 'asc' }, { createdAt: 'asc' }],
       })
       return { members }
+    }),
+
+  // Contacts: accounts the current user has shared groups with,
+  // ordered by number of shared groups descending. Excludes accounts
+  // whose only email is a synthetic placeholder (cannot be invited
+  // via email). When `groupId` is provided, each contact also carries
+  // an `isMember` flag for "already a member" marking in the UI.
+  contacts: protectedProcedure
+    .input(
+      z
+        .object({
+          groupId: z.string().min(1).optional(),
+        })
+        .default({}),
+    )
+    .query(async ({ input: { groupId }, ctx }) => {
+      const currentId = ctx.auth.user.id
+
+      // All groups the current account has ever joined (excludes
+      // PENDING invitations that never materialised).
+      const myMemberships = await prisma.groupMember.findMany({
+        where: {
+          accountId: currentId,
+          status: {
+            in: [
+              GroupMemberStatus.ACTIVE,
+              GroupMemberStatus.LEFT,
+              GroupMemberStatus.REMOVED,
+            ],
+          },
+        },
+        select: { groupId: true },
+      })
+      const myGroupIds = myMemberships.map((m) => m.groupId)
+
+      if (myGroupIds.length === 0) {
+        return { contacts: [] }
+      }
+
+      // Other accounts that have also joined those groups.
+      const coMembers = await prisma.groupMember.groupBy({
+        by: ['accountId'],
+        where: {
+          groupId: { in: myGroupIds },
+          accountId: { not: currentId },
+          status: {
+            in: [
+              GroupMemberStatus.ACTIVE,
+              GroupMemberStatus.LEFT,
+              GroupMemberStatus.REMOVED,
+            ],
+          },
+        },
+        _count: { groupId: true },
+        orderBy: { _count: { groupId: 'desc' } },
+      })
+
+      const accountIds = coMembers.map((c) => c.accountId)
+      const accounts = await prisma.account.findMany({
+        where: { id: { in: accountIds } },
+        select: { id: true, name: true, email: true },
+      })
+      const accountMap = new Map(accounts.map((a) => [a.id, a]))
+
+      // Already-member lookup (ACTIVE memberships in the target group).
+      let memberAccountIds = new Set<string>()
+      // Pending invitations for contacts in the target group.
+      let pendingInviteEmails = new Set<string>()
+      if (groupId) {
+        const existingMembers = await prisma.groupMember.findMany({
+          where: {
+            groupId,
+            accountId: { in: accountIds },
+            status: GroupMemberStatus.ACTIVE,
+          },
+          select: { accountId: true },
+        })
+        memberAccountIds = new Set(existingMembers.map((m) => m.accountId))
+
+        const contactEmails = accounts
+          .filter((a) => !isPlaceholderEmail(a.email))
+          .map((a) => a.email.toLowerCase())
+        if (contactEmails.length > 0) {
+          const pendingInvites = await prisma.groupInvitation.findMany({
+            where: {
+              groupId,
+              status: GroupInvitationStatus.PENDING,
+              email: { in: contactEmails, mode: 'insensitive' },
+            },
+            select: { email: true },
+          })
+          pendingInviteEmails = new Set(
+            pendingInvites.map((i) => i.email.toLowerCase()),
+          )
+        }
+      }
+
+      const contacts = coMembers
+        .map((c) => {
+          const account = accountMap.get(c.accountId)
+          if (!account || isPlaceholderEmail(account.email)) return null
+          return {
+            accountId: account.id,
+            name: account.name,
+            email: account.email,
+            sharedGroupCount: c._count.groupId,
+            isMember: memberAccountIds.has(account.id),
+            isPendingInvite: pendingInviteEmails.has(
+              account.email.toLowerCase(),
+            ),
+          }
+        })
+        .filter((c): c is NonNullable<typeof c> => c !== null)
+
+      return { contacts }
     }),
 })

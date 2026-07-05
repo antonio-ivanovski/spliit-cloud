@@ -76,6 +76,7 @@ vi.mock('@/trpc/client', () => {
         account: {
           members: { invalidate: vi.fn().mockResolvedValue(undefined) },
           groups: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          contacts: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
       }),
       invitations: {
@@ -107,6 +108,9 @@ vi.mock('@/trpc/client', () => {
       account: {
         members: {
           useQuery: () => ({ data: mockMembersData, isLoading: false }),
+        },
+        contacts: {
+          useQuery: () => ({ data: { contacts: [] }, isLoading: false }),
         },
       },
       groups: {
@@ -234,13 +238,14 @@ describe('GroupMembers', () => {
   it('renders invite by email form when user is admin', () => {
     render(<GroupMembers />)
 
-    // Should render the invite tabs
+    // Should render the invite tabs (Contacts, Email, Invite link)
     const tabs = screen.getAllByRole('tab')
-    expect(tabs.length).toBe(2)
-    expect(tabs[0]).toHaveTextContent('Email')
-    expect(tabs[1]).toHaveTextContent('Invite link')
+    expect(tabs.length).toBe(3)
+    expect(tabs[0]).toHaveTextContent('Contacts')
+    expect(tabs[1]).toHaveTextContent('Email')
+    expect(tabs[2]).toHaveTextContent('Invite link')
 
-    // Email field should be visible (input with accessible name 'Email')
+    // Email field should be visible (default tab when no contacts exist)
     const emailInput = screen.getByRole('textbox', { name: 'Email' })
     expect(emailInput).toBeInTheDocument()
     expect(emailInput).toHaveAttribute('type', 'email')

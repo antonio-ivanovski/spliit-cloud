@@ -18,6 +18,14 @@ type Props = {
   participants: ParticipantMappingState[]
   account: AuthAccount | null | undefined
   destinationParticipants?: DestinationParticipant[]
+  contacts: Array<{
+    accountId: string
+    name: string
+    email: string
+    sharedGroupCount: number
+    isMember: boolean
+    isPendingInvite: boolean
+  }>
   onBack: () => void
   onChange: (participants: ParticipantMappingState[]) => void
   onContinue: (resolved: {
@@ -32,6 +40,7 @@ export function MappingStep({
   participants,
   account,
   destinationParticipants,
+  contacts,
   onBack,
   onChange,
   onContinue,
@@ -58,6 +67,9 @@ export function MappingStep({
     if (conflictMap.size > 0) return
     for (const p of participants) {
       if (p.mode === 'INVITE_BY_EMAIL' && !p.inviteEmail?.trim()) {
+        return
+      }
+      if (p.mode === 'INVITE_CONTACT' && !p.inviteEmail?.trim()) {
         return
       }
       if (
@@ -114,7 +126,7 @@ export function MappingStep({
       conflictMap.size === 0 &&
       participants.every(
         (p) =>
-          p.mode !== 'INVITE_BY_EMAIL' ||
+          (p.mode !== 'INVITE_BY_EMAIL' && p.mode !== 'INVITE_CONTACT') ||
           (p.inviteEmail?.trim().length ?? 0) > 0,
       )
     )
@@ -145,6 +157,7 @@ export function MappingStep({
             account={account}
             inviteEmail={p.inviteEmail}
             existingLedgerParticipantId={p.existingLedgerParticipantId}
+            contactAccountId={p.contactAccountId}
             linkAccountTakenByOtherRow={
               linkAccountKey !== null && p.key !== linkAccountKey
             }
@@ -158,6 +171,7 @@ export function MappingStep({
             onChange={(patch) => updateParticipant(p.key, patch)}
             name={p.source.sourceName}
             destinationParticipants={destinationParticipants}
+            contacts={contacts}
           />
         ))}
       </div>

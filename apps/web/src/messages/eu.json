@@ -272,7 +272,13 @@
           "pendingSuffix": "(zain)",
           "leaveUnlinked": "Utzi lotu gabe",
           "leaveUnlinkedDescription": "Izena bakarrik gordetzen du — lotu geroago Kideak ataletik.",
-          "leaveUnlinkedFollowUp": "{name} izena bakarrik duen sarrera gisa agertuko da, aplikaziorako sarbiderik gabe. Kontu batekin lotu dezakezu geroago Kideak fitxatik."
+          "leaveUnlinkedFollowUp": "{name} izena bakarrik duen sarrera gisa agertuko da, aplikaziorako sarbiderik gabe. Kontu batekin lotu dezakezu geroago Kideak fitxatik.",
+          "inviteContact": "Zure kontaktuetatik",
+          "inviteContactDescription": "Gonbidatu aurrez partekatu duzun talde bateko kontaktua.",
+          "selectContactLabel": "Kontaktua",
+          "selectContactPlaceholder": "Hautatu kontaktu bat…",
+          "contactAlreadyMember": "Dagoeneko kidea",
+          "contactPendingInvite": "Dagoeneko gonbidatua"
         }
       },
       "fetchingGroup": "Taldea spliit.app-etik eskuratzen…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "Sartu helbide elektroniko baliozko bat.",
       "tab": {
         "email": "E-maila",
-        "link": "Gonbidapen-esteka"
+        "link": "Gonbidapen-esteka",
+        "contacts": "Kontaktuak"
       },
       "emailDescription": "Bidali gonbidapen bat e-mail bidez. Gonbidatua batuko da bat datorren kontu batetik onartzen duenean.",
       "linkDescription": "Sortu behin erabil daitekeen esteka edonork batzeko erabil dezakeena. Lehen onarpenaren ondoren estekak ez du funtzionatuko.",
@@ -1160,7 +1167,12 @@
         "shareText": "Berriki sortu dut {groupName} gure gastu partekatuetarako Spliit Cloud-en. Hona hemen behin erabil daitekeen gonbidapen-esteka — ireki batzeko:\n{inviteUrl}",
         "generateNew": "Sortu esteka berria"
       },
-      "temporaryNamePlaceholder": "adib. Alex-en gelakidea"
+      "temporaryNamePlaceholder": "adib. Alex-en gelakidea",
+      "contactsDescription": "Gonbidatu partekatu dituzun taldeetako norbait.",
+      "selectContactPlaceholder": "Hautatu pertsona bat…",
+      "contactAlreadyMember": "Dagoeneko kidea",
+      "noContacts": "Oraindik kontakturik ez. Gonbidatu E-maila fitxatik.",
+      "contactAlreadyInvited": "Dagoeneko gonbidatua"
     },
     "invitations": {
       "title": "Gonbidapen zain",

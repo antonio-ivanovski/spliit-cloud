@@ -1,20 +1,16 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import type { AuthAccount } from '@/lib/auth'
 import type { ParticipantMappingState } from '@spliit/domain/import'
 import { useTranslation } from 'react-i18next'
+import { ContactFollowUp } from './mapping-followup-contact'
+import { EmailFollowUp } from './mapping-followup-email'
+import { LinkFollowUp } from './mapping-followup-link'
+import { LinkExistingFollowUp } from './mapping-followup-link-existing'
+import { SelfFollowUp } from './mapping-followup-self'
+import { UnlinkedFollowUp } from './mapping-followup-unlinked'
 import {
+  CONTACT_VALUE,
   EMAIL_VALUE,
   LINK_EXISTING_VALUE,
   LINK_VALUE,
@@ -24,21 +20,33 @@ import {
   modeFromValue,
 } from './mapping-mode-select'
 
+type Contact = {
+  accountId: string
+  name: string
+  email: string
+  sharedGroupCount: number
+  isMember: boolean
+  isPendingInvite: boolean
+}
+
 export function MappingRow({
   mode,
   account,
   inviteEmail,
   existingLedgerParticipantId,
+  contactAccountId,
   linkAccountTakenByOtherRow,
   disabledReasonForCurrentMode,
   onChange,
   name,
   destinationParticipants,
+  contacts,
 }: {
   mode: ParticipantMappingState['mode']
   account: AuthAccount | null | undefined
   inviteEmail?: string
   existingLedgerParticipantId?: string
+  contactAccountId?: string
   linkAccountTakenByOtherRow: boolean
   disabledReasonForCurrentMode: string | null
   onChange: (patch: Partial<ParticipantMappingState>) => void
@@ -49,6 +57,7 @@ export function MappingRow({
     pending: boolean
     unlinked: boolean
   }>
+  contacts: Contact[]
 }) {
   const { t } = useTranslation()
   const normalizedImporterEmail = account?.email?.toLowerCase().trim() ?? null
@@ -65,70 +74,40 @@ export function MappingRow({
       label: t('Groups.Import.Mapping.Row.linkToMe'),
       description: t('Groups.Import.Mapping.Row.linkToMeDescription'),
       disabled: linkAccountTakenByOtherRow,
+      followUp: () => <SelfFollowUp name={name} />,
+    },
+    {
+      value: CONTACT_VALUE,
+      label: t('Groups.Import.Mapping.Row.inviteContact'),
+      description: t('Groups.Import.Mapping.Row.inviteContactDescription'),
       followUp: () => (
-        <p className="mt-2 text-xs text-muted-foreground">
-          {t('Groups.Import.Mapping.Row.linkToMeFollowUp', { name })}
-        </p>
+        <ContactFollowUp
+          contacts={contacts}
+          contactAccountId={contactAccountId}
+          account={account}
+          onChange={onChange}
+        />
       ),
     },
     {
       value: EMAIL_VALUE,
       label: t('Groups.Import.Mapping.Row.inviteByEmail'),
       description: t('Groups.Import.Mapping.Row.inviteByEmailDescription'),
-      followUp: () => {
-        const isImporterEmail =
-          !!normalizedImporterEmail &&
-          !!inviteEmail?.trim() &&
-          inviteEmail.trim().toLowerCase() === normalizedImporterEmail
-        return (
-          <div className="mt-2 grid gap-1.5">
-            <Label htmlFor={`${name}-email`}>
-              {t('Groups.Import.Mapping.Row.inviteeEmailLabel')}
-            </Label>
-            <Input
-              id={`${name}-email`}
-              type="email"
-              placeholder={t(
-                'Groups.Import.Mapping.Row.inviteeEmailPlaceholder',
-              )}
-              value={inviteEmail ?? ''}
-              onChange={(e) => {
-                const value = e.target.value
-                const normalized = value.trim().toLowerCase()
-                if (
-                  normalized &&
-                  normalizedImporterEmail &&
-                  normalized === normalizedImporterEmail
-                ) {
-                  onChange({
-                    mode: 'LINK_ACCOUNT' as const,
-                    linkedAccountId: account?.id,
-                    inviteEmail: undefined,
-                  })
-                  return
-                }
-                onChange({ inviteEmail: value })
-              }}
-              aria-invalid={isImporterEmail}
-            />
-            {isImporterEmail && (
-              <p className="text-xs text-muted-foreground">
-                {t('Groups.Import.Mapping.Row.selfEmailDetected')}
-              </p>
-            )}
-          </div>
-        )
-      },
+      followUp: () => (
+        <EmailFollowUp
+          id={name}
+          inviteEmail={inviteEmail}
+          normalizedImporterEmail={normalizedImporterEmail}
+          account={account}
+          onChange={onChange}
+        />
+      ),
     },
     {
       value: LINK_VALUE,
       label: t('Groups.Import.Mapping.Row.inviteByLink'),
       description: t('Groups.Import.Mapping.Row.inviteByLinkDescription'),
-      followUp: () => (
-        <p className="mt-2 text-xs text-muted-foreground">
-          {t('Groups.Import.Mapping.Row.inviteByLinkFollowUp', { name })}
-        </p>
-      ),
+      followUp: () => <LinkFollowUp name={name} />,
     },
     ...(destinationParticipants && destinationParticipants.length > 0
       ? [
@@ -138,58 +117,13 @@ export function MappingRow({
             description: t(
               'Groups.Import.Mapping.Row.linkToExistingDescription',
             ),
-            followUp: () => {
-              const members = destinationParticipants.filter((p) => !p.pending)
-              const pending = destinationParticipants.filter((p) => p.pending)
-              return (
-                <div className="mt-2 grid gap-1.5">
-                  <Label>
-                    {t('Groups.Import.Mapping.Row.selectExistingMember')}
-                  </Label>
-                  <Select
-                    value={existingLedgerParticipantId ?? ''}
-                    onValueChange={(value) =>
-                      onChange({ existingLedgerParticipantId: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder={t(
-                          'Groups.Import.Mapping.Row.selectExistingPlaceholder',
-                        )}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {members.length > 0 && (
-                        <SelectGroup>
-                          <SelectLabel>
-                            {t('Groups.Import.Mapping.Row.membersLabel')}
-                          </SelectLabel>
-                          {members.map((m) => (
-                            <SelectItem key={m.id} value={m.id}>
-                              {m.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      )}
-                      {pending.length > 0 && (
-                        <SelectGroup>
-                          <SelectLabel>
-                            {t('Groups.Import.Mapping.Row.pendingInvitesLabel')}
-                          </SelectLabel>
-                          {pending.map((p) => (
-                            <SelectItem key={p.id} value={p.id}>
-                              {p.name}{' '}
-                              {t('Groups.Import.Mapping.Row.pendingSuffix')}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      )}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )
-            },
+            followUp: () => (
+              <LinkExistingFollowUp
+                destinationParticipants={destinationParticipants}
+                existingLedgerParticipantId={existingLedgerParticipantId}
+                onChange={onChange}
+              />
+            ),
           },
         ]
       : []),
@@ -197,11 +131,7 @@ export function MappingRow({
       value: UNLINKED_VALUE,
       label: t('Groups.Import.Mapping.Row.leaveUnlinked'),
       description: t('Groups.Import.Mapping.Row.leaveUnlinkedDescription'),
-      followUp: () => (
-        <p className="mt-2 text-xs text-muted-foreground">
-          {t('Groups.Import.Mapping.Row.leaveUnlinkedFollowUp', { name })}
-        </p>
-      ),
+      followUp: () => <UnlinkedFollowUp name={name} />,
     },
   ]
 
@@ -232,6 +162,12 @@ export function MappingRow({
                 mode: newMode,
                 linkedAccountId: undefined,
                 inviteEmail: undefined,
+              })
+            } else if (newMode === 'INVITE_CONTACT') {
+              onChange({
+                mode: newMode,
+                linkedAccountId: account?.id,
+                existingLedgerParticipantId: undefined,
               })
             } else {
               onChange({

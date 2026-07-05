@@ -272,7 +272,13 @@
           "pendingSuffix": "(tertunda)",
           "leaveUnlinked": "Biarkan tidak ditautkan",
           "leaveUnlinkedDescription": "Menyimpan nama saja — tautkan nanti dari Anggota.",
-          "leaveUnlinkedFollowUp": "{name} akan muncul sebagai entri hanya nama tanpa akses aplikasi. Anda dapat menautkannya ke akun nanti dari tab Anggota."
+          "leaveUnlinkedFollowUp": "{name} akan muncul sebagai entri hanya nama tanpa akses aplikasi. Anda dapat menautkannya ke akun nanti dari tab Anggota.",
+          "inviteContact": "Dari kontak Anda",
+          "inviteContactDescription": "Undang kontak dari grup yang pernah Anda bagikan sebelumnya.",
+          "selectContactLabel": "Kontak",
+          "selectContactPlaceholder": "Pilih kontak…",
+          "contactAlreadyMember": "Sudah menjadi anggota",
+          "contactPendingInvite": "Sudah diundang"
         }
       },
       "fetchingGroup": "Mengambil grup dari spliit.app…",
@@ -1141,7 +1147,8 @@
       "invalidEmail": "Masukkan alamat email yang valid.",
       "tab": {
         "email": "Email",
-        "link": "Tautan undangan"
+        "link": "Tautan undangan",
+        "contacts": "Kontak"
       },
       "emailDescription": "Kirim undangan melalui email. Yang diundang akan bergabung setelah menerimanya dari akun yang cocok.",
       "linkDescription": "Buat tautan sekali pakai yang dapat digunakan siapa saja untuk bergabung. Tautan akan berhenti berfungsi setelah penerimaan pertama.",
@@ -1160,7 +1167,12 @@
         "shareTitle": "Bergabung ke {groupName} di Spliit Cloud",
         "shareText": "Saya baru saja membuat {groupName} untuk pengeluaran bersama kita di Spliit Cloud. Berikut adalah tautan undangan sekali pakai — buka untuk bergabung:\n{inviteUrl}",
         "generateNew": "Buat tautan baru"
-      }
+      },
+      "contactsDescription": "Undang seseorang dari grup yang pernah Anda bagikan.",
+      "selectContactPlaceholder": "Pilih orang…",
+      "contactAlreadyMember": "Sudah menjadi anggota",
+      "noContacts": "Belum ada kontak. Undang dari tab Email.",
+      "contactAlreadyInvited": "Sudah diundang"
     },
     "invitations": {
       "title": "Undangan tertunda",
