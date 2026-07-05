@@ -1,1 +1,1 @@
-export * from "./generated/prisma/dmmf";
+export * from './generated/prisma/dmmf'
