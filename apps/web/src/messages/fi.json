@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Kulun kopiointi aloitettu. Olemassa olevia kulun tietoja käytetään uuden kulun luomiseen."
   },
   "Groups": {
     "myGroups": "Omat ryhmät",
@@ -496,7 +497,9 @@
         "description": "Valitse ketkä osallistuvat kuluun."
       },
       "splitModeDescription": "Valitse miten kulu jaetaan osallistujien kesken.",
-      "attachDescription": "Katso ja liitä kuluun liittyviä kuitteja."
+      "attachDescription": "Katso ja liitä kuluun liittyviä kuitteja.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Summa"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Jos haluat käyttää eriteltyä maksettu puolesta -jakoa, muokkaa osallistujia tuoteriviltä.",
-    "paidForItemizedActiveHint": "Eritelty maksettu puolesta -jako on käytössä. Muuta jakoa muokkaamalla tuotteiden osallistujia Tuotteet-kortista."
+    "paidForItemizedActiveHint": "Eritelty maksettu puolesta -jako on käytössä. Muuta jakoa muokkaamalla tuotteiden osallistujia Tuotteet-kortista.",
+    "makeCopy": "Tee kopio"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

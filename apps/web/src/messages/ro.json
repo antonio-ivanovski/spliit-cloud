@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Copierea cheltuielii a fost inițiată. Detaliile cheltuielii existente vor fi folosite pentru a crea una nouă."
   },
   "Groups": {
     "myGroups": "Grupurile mele",
@@ -496,7 +497,9 @@
         "daily": "Zilnic",
         "weekly": "Săptămânal",
         "monthly": "Lunar"
-      }
+      },
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Sumă"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Pentru a folosi împărțirea „plătit pentru” pe articole, editează participanții dintr-un rând de articol.",
-    "paidForItemizedActiveHint": "Împărțirea „plătit pentru” pe articole este activă. Editează participanții articolelor din cardul Articole pentru a schimba această împărțire."
+    "paidForItemizedActiveHint": "Împărțirea „plătit pentru” pe articole este activă. Editează participanții articolelor din cardul Articole pentru a schimba această împărțire.",
+    "makeCopy": "Fă o copie"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

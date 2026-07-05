@@ -591,24 +591,26 @@ describe('ExpenseForm', () => {
     ).toBeInTheDocument()
   })
 
-  it('delete button renders for edit mode', () => {
+  it('"Make a copy" button renders in the header for edit mode', () => {
     const onSubmit = vi.fn()
     const onDelete = vi.fn()
     render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
         expense={mockExpense as unknown as LoadedExpense}
+        onMakeCopy={vi.fn()}
         onSubmit={onSubmit}
         onDelete={onDelete}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
     )
 
-    // Delete button should be present
+    expect(screen.getByTestId('expense-make-copy')).toBeInTheDocument()
+    // The Delete button is back in the sticky actions bar.
     expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument()
   })
 
-  it('no delete button in create mode', () => {
+  it('no "Make a copy" button in create mode', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
@@ -618,9 +620,70 @@ describe('ExpenseForm', () => {
       />,
     )
 
+    expect(screen.queryByTestId('expense-make-copy')).not.toBeInTheDocument()
+  })
+
+  it('clicking "Make a copy" calls onMakeCopy (toast + navigation owned by caller)', async () => {
+    const onSubmit = vi.fn()
+    const onMakeCopy = vi.fn()
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onMakeCopy={onMakeCopy}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    await user.click(screen.getByTestId('expense-make-copy'))
+
+    expect(onMakeCopy).toHaveBeenCalledTimes(1)
+  })
+
+  it('copy mode prefills the form from the source expense with today as the date', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-07-15T12:00:00.000Z'))
+    try {
+      const onSubmit = vi.fn()
+      render(
+        <ExpenseForm
+          group={mockGroup as unknown as GroupShape}
+          expense={mockExpense as unknown as LoadedExpense}
+          isCopy
+          // Pre-translated heading supplied by CreateExpenseForm.
+          heading={`Create copy: ${mockExpense.title}`}
+          onSubmit={onSubmit}
+          runtimeFeatureFlags={runtimeFeatureFlags}
+        />,
+      )
+
+      expect(
+        screen.getByRole('heading', { name: /create copy: dinner/i }),
+      ).toBeInTheDocument()
+      // Copy destination has no source expense of its own to copy from.
+      expect(screen.queryByTestId('expense-make-copy')).not.toBeInTheDocument()
+      expect(screen.getByDisplayValue('2025-07-15')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('edit mode renders the resolved "{title}" heading when supplied', () => {
+    const onSubmit = vi.fn()
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        heading={`Edit: ${mockExpense.title}`}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
     expect(
-      screen.queryByRole('button', { name: /delete/i }),
-    ).not.toBeInTheDocument()
+      screen.getByRole('heading', { name: /edit: dinner/i }),
+    ).toBeInTheDocument()
   })
 
   it('read-only disables inputs', () => {

@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Gastuaren kopia hasi da. Lehendik dagoen gastuaren datuak erabiliko dira berri bat sortzeko."
   },
   "Groups": {
     "myGroups": "Nire taldeak",
@@ -496,7 +497,9 @@
         "description": "Hautatu gastua norentzat ordaindu den."
       },
       "splitModeDescription": "Hautatu nola zatitu gastua.",
-      "attachDescription": "Ikusi eta erantsi gastuaren ordainagiriak."
+      "attachDescription": "Ikusi eta erantsi gastuaren ordainagiriak.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Zenbatekoa"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Elementukako «paid for» kontabilitatea erabiltzeko, editatu parte-hartzaileak elementu baten errenkadatik.",
-    "paidForItemizedActiveHint": "Elementukako «paid for» kontabilitatea aktibo dago. Banaketa hau aldatzeko, editatu elementuen parte-hartzaileak Elementuak txarteletik."
+    "paidForItemizedActiveHint": "Elementukako «paid for» kontabilitatea aktibo dago. Banaketa hau aldatzeko, editatu elementuen parte-hartzaileak Elementuak txarteletik.",
+    "makeCopy": "Egin kopia bat"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

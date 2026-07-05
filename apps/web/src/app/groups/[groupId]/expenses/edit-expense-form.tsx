@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { useToast } from '@/components/ui/use-toast'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
@@ -29,6 +30,10 @@ export function EditExpenseForm({
   runtimeFeatureFlags: RuntimeFeatureFlags
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tExpenseForm } = useTranslation(undefined, {
+    keyPrefix: 'ExpenseForm',
+  })
+  const { t: tCard } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const { data: groupData } = trpc.groups.get.useQuery({ groupId })
   const group = groupData?.group
   const currentLedgerParticipantId =
@@ -44,6 +49,7 @@ export function EditExpenseForm({
   const expense = expenseData?.expense
 
   const router = useRouter()
+  const { toast } = useToast()
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
     linkInviteToken,
@@ -56,8 +62,7 @@ export function EditExpenseForm({
 
   // The expense form is read-only when the group is archived or when the
   // viewer is a PENDING invitee. The server enforces the same rule on
-  // `groups.expenses.update` and `groups.expenses.delete`; hiding the
-  // form controls keeps the UI consistent with the backend.
+  // `groups.expenses.update` and `groups.expenses.delete`.
   const readOnly = !!group.archived || isPendingInvitee
 
   if (isPendingInvitee) {
@@ -89,6 +94,15 @@ export function EditExpenseForm({
       expense={expense}
       currentLedgerParticipantId={currentLedgerParticipantId}
       readOnly={readOnly}
+      heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
+      onMakeCopy={() => {
+        toast({ description: tCard('copyToast') })
+        router.push({
+          to: '/groups/$groupId/expenses/create',
+          params: { groupId },
+          search: { fromExpenseId: expenseId },
+        })
+      }}
       onSubmit={async (expense) => {
         if (readOnly) return
         await updateExpenseMutateAsync({

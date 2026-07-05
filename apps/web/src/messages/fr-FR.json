@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Copie de la dépense initiée. Les détails de la dépense existante seront utilisés pour en créer une nouvelle."
   },
   "Groups": {
     "myGroups": "Mes groupes",
@@ -496,7 +497,9 @@
       "currencyField": {
         "label": "Devise de la dépense",
         "description": "La devise dans laquelle la dépense a été payée."
-      }
+      },
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Montant"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Pour utiliser une répartition « payé pour » par article, modifiez les participants depuis une ligne d’article.",
-    "paidForItemizedActiveHint": "La répartition « payé pour » par article est active. Modifiez les participants des articles depuis la carte Articles pour changer cette répartition."
+    "paidForItemizedActiveHint": "La répartition « payé pour » par article est active. Modifiez les participants des articles depuis la carte Articles pour changer cette répartition.",
+    "makeCopy": "Faire une copie"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

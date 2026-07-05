@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Kopiëren gestart. De bestaande uitgavedetails worden gebruikt om een nieuwe aan te maken."
   },
   "Groups": {
     "myGroups": "Mijn groepen",
@@ -496,7 +497,9 @@
         "description": "Selecteer voor wie de uitgave is gedaan."
       },
       "splitModeDescription": "Selecteer hoe de uitgave verdeeld moet worden.",
-      "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave."
+      "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Bedrag"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Bewerk de deelnemers in een itemrij om itemgewijze betaald-voor-verdeling te gebruiken.",
-    "paidForItemizedActiveHint": "Itemgewijze betaald-voor-verdeling is actief. Bewerk itemdeelnemers op de kaart Items om deze verdeling te wijzigen."
+    "paidForItemizedActiveHint": "Itemgewijze betaald-voor-verdeling is actief. Bewerk itemdeelnemers op de kaart Items om deze verdeling te wijzigen.",
+    "makeCopy": "Kopie maken"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "העתקת ההוצאה הותחלה. פרטי ההוצאה הקיימים ישמשו ליצירת הוצאה חדשה."
   },
   "Groups": {
     "myGroups": "הקבוצות שלי",
@@ -496,7 +497,9 @@
         "description": "בחר עבור מי שולמה ההוצאה."
       },
       "splitModeDescription": "בחר כיצד לפצל את ההוצאה.",
-      "attachDescription": "ראה וצרף קבלות להוצאה."
+      "attachDescription": "ראה וצרף קבלות להוצאה.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "סכום"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "כדי להשתמש בחלוקת \"שולם עבור\" לפי פריטים, ערוך את המשתתפים משורת פריט.",
-    "paidForItemizedActiveHint": "חלוקת \"שולם עבור\" לפי פריטים פעילה. כדי לשנות את החלוקה, ערוך את משתתפי הפריטים מכרטיס הפריטים."
+    "paidForItemizedActiveHint": "חלוקת \"שולם עבור\" לפי פריטים פעילה. כדי לשנות את החלוקה, ערוך את משתתפי הפריטים מכרטיס הפריטים.",
+    "makeCopy": "צור עותק"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

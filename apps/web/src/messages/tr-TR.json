@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Masraf kopyalama başlatıldı. Mevcut masraf ayrıntıları yeni bir tane oluşturmak için kullanılacak."
   },
   "Groups": {
     "myGroups": "Gruplarım",
@@ -496,7 +497,9 @@
         "daily": "Günlük",
         "weekly": "Haftalık",
         "monthly": "Aylık"
-      }
+      },
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Tutar"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Kalem bazlı “adına ödendi” paylaşımını kullanmak için katılımcıları bir kalem satırından düzenleyin.",
-    "paidForItemizedActiveHint": "Kalem bazlı “adına ödendi” paylaşımı etkin. Bu paylaşımı değiştirmek için Kalemler kartından kalem katılımcılarını düzenleyin."
+    "paidForItemizedActiveHint": "Kalem bazlı “adına ödendi” paylaşımı etkin. Bu paylaşımı değiştirmek için Kalemler kartından kalem katılımcılarını düzenleyin.",
+    "makeCopy": "Bir kopya oluştur"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -3,6 +3,7 @@ import {
   getDefaultSplittingOptions,
   persistDefaultSplittingOptions,
   type GroupShape,
+  type LoadedExpense,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import type { ExpenseFormInputValues } from '@spliit/domain'
 import {
@@ -537,5 +538,117 @@ describe('buildExpenseFormDefaults (prefilled items)', () => {
         ],
       }),
     ])
+  })
+})
+
+describe('buildExpenseFormDefaults (copy branch)', () => {
+  // Loaded expense shape — mirrors what the API returns. The function
+  // only reads a subset, so the rest can be omitted here.
+  const loadedExpense: LoadedExpense = {
+    id: 'expense-1',
+    title: 'Groceries',
+    expenseDate: new Date('2024-12-01T00:00:00.000Z'),
+    amount: 5000, // $50.00 in cents
+    originalCurrency: null,
+    originalAmount: null,
+    conversionRate: null,
+    categoryId: 'food-and-drink',
+    paidBySplitMode: 'BY_AMOUNT',
+    paidByList: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
+    paidFor: [
+      { ledgerParticipantId: 'lp-1', shares: 2500 },
+      { ledgerParticipantId: 'lp-2', shares: 2500 },
+    ],
+    splitMode: 'EVENLY',
+    isReimbursement: false,
+    documents: [],
+    notes: 'Weekly groceries',
+    recurrenceRule: 'NONE',
+    items: [],
+    itemizedRemainder: null,
+  } as unknown as LoadedExpense
+
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-07-15T12:00:00.000Z'))
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('prefills every field from the source expense', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true, // simulate the call shape used by CreateExpenseForm
+      expense: loadedExpense,
+      isCopy: true,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: getCurrency('USD')!,
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+    })
+
+    expect(result.title).toBe('Groceries')
+    expect(result.notes).toBe('Weekly groceries')
+    expect(result.category).toBe('food-and-drink')
+    expect(result.amount).toBe(50)
+    // paidBy BY_AMOUNT shares convert from storage minor units to the
+    // selected currency's major units via `amountAsDecimal`.
+    expect(result.paidByList).toEqual([{ participant: 'lp-1', shares: 50 }])
+    // paidFor is EVENLY, so the stored share counts pass through
+    // untouched (the form schema treats them as weights).
+    expect(result.paidFor).toEqual([
+      { participant: 'lp-1', shares: 2500 },
+      { participant: 'lp-2', shares: 2500 },
+    ])
+    expect(result.splitMode).toBe('EVENLY')
+  })
+
+  it('overrides expenseDate to today even when the source was older', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      expense: loadedExpense,
+      isCopy: true,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: getCurrency('USD')!,
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+    })
+
+    expect(result.expenseDate).toEqual(new Date('2025-07-15T12:00:00.000Z'))
+    expect(result.expenseDate).not.toEqual(loadedExpense.expenseDate)
+  })
+
+  it('does not touch other fields when not in copy mode', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: false,
+      expense: loadedExpense,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: getCurrency('USD')!,
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+    })
+
+    expect(result.expenseDate).toEqual(loadedExpense.expenseDate)
+    expect(result.title).toBe('Groceries')
+  })
+
+  it('keeps the original title verbatim (no "(copy)" suffix)', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      expense: loadedExpense,
+      isCopy: true,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: getCurrency('USD')!,
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+    })
+
+    expect(result.title).toBe('Groceries')
+    expect(result.title).not.toMatch(/copy/i)
   })
 })

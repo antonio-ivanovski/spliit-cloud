@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "支出のコピーを開始しました。既存の支出の詳細を使用して新しい支出を作成します。"
   },
   "Groups": {
     "myGroups": "マイグループ",
@@ -496,7 +497,9 @@
       "currencyField": {
         "label": "支出の通貨",
         "description": "支出が支払われた通貨。"
-      }
+      },
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "金額"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "品目ごとの「対象者」計算を使うには、品目行から参加者を編集します。",
-    "paidForItemizedActiveHint": "品目ごとの「対象者」計算が有効です。この分割を変更するには、品目カードで品目の参加者を編集してください。"
+    "paidForItemizedActiveHint": "品目ごとの「対象者」計算が有効です。この分割を変更するには、品目カードで品目の参加者を編集してください。",
+    "makeCopy": "コピーを作成"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

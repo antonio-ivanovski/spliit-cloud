@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Copia della spesa avviata. I dettagli della spesa esistente verranno usati per crearne una nuova."
   },
   "Groups": {
     "myGroups": "I miei gruppi",
@@ -496,7 +497,9 @@
       "currencyField": {
         "label": "Valuta della spesa",
         "description": "La valuta in cui è stata pagata la spesa."
-      }
+      },
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Importo"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Per usare la ripartizione “pagato per” per articoli, modifica i partecipanti da una riga articolo.",
-    "paidForItemizedActiveHint": "La ripartizione “pagato per” per articoli è attiva. Modifica i partecipanti degli articoli dalla scheda Articoli per cambiare questa ripartizione."
+    "paidForItemizedActiveHint": "La ripartizione “pagato per” per articoli è attiva. Modifica i partecipanti degli articoli dalla scheda Articoli per cambiare questa ripartizione.",
+    "makeCopy": "Fai una copia"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

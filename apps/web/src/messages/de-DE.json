@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Ausgabe wird kopiert. Die bestehenden Ausgabedetails werden zum Erstellen einer neuen Ausgabe verwendet."
   },
   "Groups": {
     "myGroups": "Meine Gruppen",
@@ -496,7 +497,9 @@
         "description": "Wähle für wen die Ausgabe gezahlt wurde."
       },
       "splitModeDescription": "Wähle, wie die Ausgabe aufgeteilt werden soll.",
-      "attachDescription": "Füge der Ausgabe einen Beleg hinzu."
+      "attachDescription": "Füge der Ausgabe einen Beleg hinzu.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Betrag"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Um die Aufteilung unter „Bezahlt für“ nach Artikeln zu verwenden, bearbeite die Teilnehmenden in einer Artikelzeile.",
-    "paidForItemizedActiveHint": "Die artikelbasierte Aufteilung unter „Bezahlt für“ ist aktiv. Bearbeite die Teilnehmenden in der Karte „Artikel“, um diese Aufteilung zu ändern."
+    "paidForItemizedActiveHint": "Die artikelbasierte Aufteilung unter „Bezahlt für“ ist aktiv. Bearbeite die Teilnehmenden in der Karte „Artikel“, um diese Aufteilung zu ändern.",
+    "makeCopy": "Kopie erstellen"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

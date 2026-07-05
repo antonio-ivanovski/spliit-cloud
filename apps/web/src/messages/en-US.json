@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one."
   },
   "Groups": {
     "myGroups": "My groups",
@@ -616,7 +617,9 @@
         "description": "Select who the expense was paid for."
       },
       "splitModeDescription": "Select how to split the expense.",
-      "attachDescription": "See and attach receipts to the expense."
+      "attachDescription": "See and attach receipts to the expense.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Amount"
@@ -755,7 +758,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "To use itemized paid-for accounting, edit participants from an item row.",
-    "paidForItemizedActiveHint": "Itemized paid-for accounting is active. Edit item participants from the Items card to change this split."
+    "paidForItemizedActiveHint": "Itemized paid-for accounting is active. Edit item participants from the Items card to change this split.",
+    "makeCopy": "Make a copy"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

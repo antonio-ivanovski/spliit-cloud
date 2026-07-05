@@ -404,7 +404,9 @@
         "description": "비용 부담자들을 선택해 주세요."
       },
       "splitModeDescription": "지출을 어떻게 나눌지 선택해 주세요.",
-      "attachDescription": "영수증을 확인하고 지출에 첨부합니다."
+      "attachDescription": "영수증을 확인하고 지출에 첨부합니다.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "금액"
@@ -571,7 +573,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "항목별 정산 대상 계산을 사용하려면 항목 행에서 참가자를 편집하세요.",
-    "paidForItemizedActiveHint": "항목별 정산 대상 계산이 활성화되어 있습니다. 이 분할을 변경하려면 항목 카드에서 항목 참가자를 편집하세요."
+    "paidForItemizedActiveHint": "항목별 정산 대상 계산이 활성화되어 있습니다. 이 분할을 변경하려면 항목 카드에서 항목 참가자를 편집하세요.",
+    "makeCopy": "복사하기"
   },
   "Balances": {
     "title": "잔액",
@@ -779,7 +782,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "지출 복사가 시작되었습니다. 기존 지출 정보를 사용해 새 지출이 생성됩니다."
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

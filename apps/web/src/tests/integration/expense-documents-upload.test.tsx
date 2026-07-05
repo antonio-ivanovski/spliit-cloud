@@ -217,23 +217,35 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
     // vitest, so credentials:'include' won't send the session cookie.
     // Override fetch to add the auth cookie for API requests instead.
     const originalFetch = globalThis.fetch
-    globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    // jsdom's Blob/File lacks `.stream()`; Node 20's bundled undici throws
+    // `TypeError: object.stream is not a function` when fetch tries to
+    // serialize such a body (undici v7 is more lenient and falls through).
+    // Read blob bodies into raw bytes so the body type is always something
+    // undici can serialize without consulting the prototype.
+    globalThis.fetch = (async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ) => {
       const url =
         typeof input === 'string'
           ? input
           : input instanceof URL
             ? input.href
             : (input as Request).url
+      const finalInit =
+        init?.body instanceof Blob
+          ? { ...init, body: await init.body.arrayBuffer() }
+          : init
       if (url && url.includes('localhost:3001')) {
-        const h = new Headers(init?.headers)
+        const h = new Headers(finalInit?.headers)
         h.set('Cookie', sessionCookie)
         return originalFetch(input, {
-          ...init,
+          ...finalInit,
           credentials: 'same-origin',
           headers: h,
         })
       }
-      return originalFetch(input, init)
+      return originalFetch(input, finalInit)
     }) as typeof globalThis.fetch
 
     try {

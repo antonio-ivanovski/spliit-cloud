@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Iniciada a cópia da despesa. Os detalhes da despesa existente serão usados para criar uma nova."
   },
   "Groups": {
     "myGroups": "Os meus grupos",
@@ -597,7 +598,9 @@
         "description": "Seleciona para quem a despesa foi paga."
       },
       "splitModeDescription": "Seleciona como dividir a despesa.",
-      "attachDescription": "Ver e anexar recibos à despesa."
+      "attachDescription": "Ver e anexar recibos à despesa.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Montante"
@@ -736,7 +739,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Para usar a divisão detalhada por itens em “pago por”, edita os participantes numa linha de item.",
-    "paidForItemizedActiveHint": "A divisão detalhada por itens em “pago por” está ativa. Edita os participantes dos itens no cartão Itens para alterar esta divisão."
+    "paidForItemizedActiveHint": "A divisão detalhada por itens em “pago por” está ativa. Edita os participantes dos itens no cartão Itens para alterar esta divisão.",
+    "makeCopy": "Fazer uma cópia"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

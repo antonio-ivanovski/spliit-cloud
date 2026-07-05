@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "已啟動複製支出。將使用現有的支出詳細資料來建立新的支出。"
   },
   "Groups": {
     "myGroups": "我的群組",
@@ -496,7 +497,9 @@
         "weekly": "每週",
         "monthly": "每月"
       },
-      "attachDescription": "查看／附上此筆消費的收據。"
+      "attachDescription": "查看／附上此筆消費的收據。",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "金額"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "若要依明細項目計算「為誰支付」，請在項目列中編輯參與者。",
-    "paidForItemizedActiveHint": "已啟用依明細項目計算「為誰支付」。若要變更此分攤，請在「項目」卡片中編輯項目參與者。"
+    "paidForItemizedActiveHint": "已啟用依明細項目計算「為誰支付」。若要變更此分攤，請在「項目」卡片中編輯項目參與者。",
+    "makeCopy": "建立副本"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

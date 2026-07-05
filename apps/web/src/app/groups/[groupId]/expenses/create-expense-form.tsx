@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
@@ -29,6 +30,9 @@ export function CreateExpenseForm({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tExpenseForm } = useTranslation(undefined, {
+    keyPrefix: 'ExpenseForm',
+  })
   const { data: groupData } = trpc.groups.get.useQuery({ groupId })
   const group = groupData?.group
   const currentLedgerParticipantId =
@@ -40,11 +44,22 @@ export function CreateExpenseForm({
     linkInviteToken,
   })
   const router = useRouter()
-  // Read create-route search params here (we are guaranteed to be on the
-  // create route). `ExpenseForm` is shared with the edit route, where
-  // calling `useSearch` against the create route would throw "Could not
-  // find an active match".
+  // `ExpenseForm` is shared with the edit route, where calling
+  // `useSearch` against the create route would throw.
   const searchParams = createExpenseRouteApi.useSearch()
+  // `?fromExpenseId=<id>` arrives from the "Make a copy" button on
+  // the edit page; we prefill the form and force today's date.
+  const sourceExpenseId = searchParams.fromExpenseId ?? ''
+  const { data: sourceExpenseData, isFetching: isFetchingSource } =
+    trpc.groups.expenses.get.useQuery(
+      {
+        groupId,
+        expenseId: sourceExpenseId,
+        linkInviteToken,
+      },
+      { enabled: !!sourceExpenseId },
+    )
+  const sourceExpense = sourceExpenseData?.expense
 
   if (!group) return null
 
@@ -94,11 +109,33 @@ export function CreateExpenseForm({
     )
   }
 
+  // Hold the form render until the source expense resolves; `useForm`
+  // locks in `defaultValues` on first render.
+  if (sourceExpenseId && (isFetchingSource || !sourceExpense)) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('create')}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-20 w-full" />
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <ExpenseForm
       group={group}
+      {...(sourceExpense ? { expense: sourceExpense, isCopy: true } : {})}
       searchParams={searchParams}
       currentLedgerParticipantId={currentLedgerParticipantId}
+      heading={
+        sourceExpense
+          ? tExpenseForm('Expense.createCopy', { title: sourceExpense.title })
+          : undefined
+      }
       onSubmit={async (expense) => {
         await createExpenseMutateAsync({
           groupId,

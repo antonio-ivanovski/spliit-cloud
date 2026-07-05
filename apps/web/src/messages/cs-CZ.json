@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Vytvoření kopie výdaje zahájeno. Stávající údaje výdaje budou použity k vytvoření nového."
   },
   "Groups": {
     "myGroups": "Moje skupiny",
@@ -496,7 +497,9 @@
         "description": "Vyberte, pro koho byl výdaj zaplacen."
       },
       "splitModeDescription": "Vyberte, jak rozdělit výdaj.",
-      "attachDescription": "Zobrazit a připojit účtenky k výdaji."
+      "attachDescription": "Zobrazit a připojit účtenky k výdaji.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Částka"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Chcete-li použít položkové rozúčtování v části Zaplaceno za, upravte účastníky v řádku položky.",
-    "paidForItemizedActiveHint": "Položkové rozúčtování v části Zaplaceno za je aktivní. Tento podíl změníte úpravou účastníků položek na kartě Položky."
+    "paidForItemizedActiveHint": "Položkové rozúčtování v části Zaplaceno za je aktivní. Tento podíl změníte úpravou účastníků položek na kartě Položky.",
+    "makeCopy": "Vytvořit kopii"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

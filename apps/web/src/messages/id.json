@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Penyalinan pengeluaran dimulai. Detail pengeluaran yang ada akan digunakan untuk membuat pengeluaran baru."
   },
   "Groups": {
     "myGroups": "Grup saya",
@@ -496,7 +497,9 @@
         "description": "Pilih untuk siapa biaya tersebut dibayarkan."
       },
       "splitModeDescription": "Pilih cara membagi pengeluaran.",
-      "attachDescription": "Lihat dan lampirkan tanda terima pada pengeluaran."
+      "attachDescription": "Lihat dan lampirkan tanda terima pada pengeluaran.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Jumlah"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Untuk memakai pembagian Dibayar untuk berbasis item, edit peserta dari baris item.",
-    "paidForItemizedActiveHint": "Pembagian Dibayar untuk berbasis item sedang aktif. Edit peserta item dari kartu Item untuk mengubah pembagian ini."
+    "paidForItemizedActiveHint": "Pembagian Dibayar untuk berbasis item sedang aktif. Edit peserta item dari kartu Item untuk mengubah pembagian ini.",
+    "makeCopy": "Buat salinan"
   },
   "Currencies": {
     "custom": {

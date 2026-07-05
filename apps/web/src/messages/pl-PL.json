@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "Kopiowanie wydatku rozpoczęte. Istniejące szczegóły wydatku zostaną użyte do utworzenia nowego."
   },
   "Groups": {
     "myGroups": "Moje grupy",
@@ -496,7 +497,9 @@
         "description": "Wybierz kogo dotyczył wydatek."
       },
       "splitModeDescription": "Wybierz jak podzielić wydatek.",
-      "attachDescription": "Zobacz i załącz rachunki do wydatku."
+      "attachDescription": "Zobacz i załącz rachunki do wydatku.",
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Suma"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Aby użyć rozliczenia „zapłacono za” według pozycji, edytuj uczestników w wierszu pozycji.",
-    "paidForItemizedActiveHint": "Rozliczenie „zapłacono za” według pozycji jest aktywne. Edytuj uczestników pozycji w karcie Pozycje, aby zmienić ten podział."
+    "paidForItemizedActiveHint": "Rozliczenie „zapłacono za” według pozycji jest aktywne. Edytuj uczestników pozycji w karcie Pozycje, aby zmienić ten podział.",
+    "makeCopy": "Utwórz kopię"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

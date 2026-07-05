@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "S'ha iniciat la còpia de la despesa. Les dades de la despesa existent s'utilitzaran per crear-ne una de nova."
   },
   "Groups": {
     "myGroups": "Els meus grups",
@@ -496,7 +497,9 @@
         "daily": "Diàriament",
         "weekly": "Setmanalment",
         "monthly": "Mensualment"
-      }
+      },
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "Quantitat"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "Per utilitzar la comptabilitat detallada de «paid for», edita els participants des d'una fila d'article.",
-    "paidForItemizedActiveHint": "La comptabilitat detallada de «paid for» és activa. Edita els participants dels articles des de la targeta Articles per canviar aquest repartiment."
+    "paidForItemizedActiveHint": "La comptabilitat detallada de «paid for» és activa. Edita els participants dels articles des de la targeta Articles per canviar aquest repartiment.",
+    "makeCopy": "Fer una còpia"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

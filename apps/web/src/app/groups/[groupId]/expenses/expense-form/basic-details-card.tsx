@@ -38,7 +38,7 @@ import type {
   RecurrenceRule,
 } from '@spliit/domain'
 import { DEFAULT_CATEGORIES } from '@spliit/domain'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, FileInput } from 'lucide-react'
 import { useState, type Dispatch, type SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -56,6 +56,8 @@ export function BasicDetailsCard(props: {
   isIncome: boolean
   setIsIncome: Dispatch<SetStateAction<boolean>>
   isCreate: boolean
+  heading?: string
+  onMakeCopy?: () => void
   extractCategoryMutation: ReturnType<
     typeof trpc.ai.extractCategoryFromTitle.useMutation
   >
@@ -89,6 +91,8 @@ export function BasicDetailsCard(props: {
     isIncome,
     setIsIncome,
     isCreate,
+    heading,
+    onMakeCopy,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -99,8 +103,6 @@ export function BasicDetailsCard(props: {
     return field?.value as RecurrenceRule
   }
 
-  // The single editable amount always lives in the selected expense
-  // currency. The converted preview (Ledger currency) is read-only.
   const inputCurrency = props.originalCurrency
   const previewFormatted =
     props.convertedAmountPreview != null
@@ -123,9 +125,22 @@ export function BasicDetailsCard(props: {
             <ArrowLeft className="w-4 h-4" />
           </Link>
         </Button>
-        <CardTitle>
-          {t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
+        <CardTitle className="flex-1">
+          {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
         </CardTitle>
+        {onMakeCopy && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onMakeCopy}
+            disabled={readOnly}
+            data-testid="expense-make-copy"
+          >
+            <FileInput className="w-4 h-4 min-[420px]:mr-2" />
+            <span className="hidden min-[420px]:inline">{t('makeCopy')}</span>
+          </Button>
+        )}
       </CardHeader>
       <CardContent className="grid sm:grid-cols-2 gap-6">
         <FormField

@@ -88,7 +88,8 @@
       "more": "+{count} more",
       "title": "Items",
       "participants": "{names}"
-    }
+    },
+    "copyToast": "已启动复制支出。将使用现有支出详情创建新的支出。"
   },
   "Groups": {
     "myGroups": "我的群组",
@@ -496,7 +497,9 @@
         "daily": "每天",
         "weekly": "每周",
         "monthly": "每月"
-      }
+      },
+      "createCopy": "Create copy: {title}",
+      "editTitle": "Edit: {title}"
     },
     "amountField": {
       "label": "金额"
@@ -635,7 +638,8 @@
       "confirm": "Switch"
     },
     "paidForItemizedEntryHint": "要按明细项目计算“为谁支付”，请在项目行中编辑参与者。",
-    "paidForItemizedActiveHint": "已启用按明细项目计算“为谁支付”。如需更改此分摊，请在“项目”卡片中编辑项目参与者。"
+    "paidForItemizedActiveHint": "已启用按明细项目计算“为谁支付”。如需更改此分摊，请在“项目”卡片中编辑项目参与者。",
+    "makeCopy": "创建副本"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

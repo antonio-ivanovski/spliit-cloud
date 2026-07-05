@@ -188,6 +188,7 @@ export async function persistDefaultSplittingOptions(
 export function buildExpenseFormDefaults(args: {
   isCreate: boolean
   expense?: LoadedExpense
+  isCopy?: boolean
   searchParams: CreateExpenseSearch
   group: GroupShape
   groupCurrency: Currency
@@ -197,12 +198,29 @@ export function buildExpenseFormDefaults(args: {
   const {
     isCreate,
     expense,
+    isCopy,
     searchParams,
     group,
     groupCurrency,
     currentLedgerParticipantId,
     reimbursementTitle,
   } = args
+
+  // Copy: prefill like edit, but force today's date.
+  if (isCopy && expense) {
+    return {
+      ...buildExpenseFormDefaults({
+        isCreate: false,
+        expense,
+        searchParams,
+        group,
+        groupCurrency,
+        currentLedgerParticipantId,
+        reimbursementTitle,
+      }),
+      expenseDate: new Date(),
+    }
+  }
 
   if (!isCreate && expense) {
     // Storage units (cents / basis points) → display units (decimal /

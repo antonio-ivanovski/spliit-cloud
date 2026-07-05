@@ -33,7 +33,10 @@ import { useExpenseFormBalancing } from './use-expense-form-balancing'
 export function ExpenseForm(props: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
+  isCopy?: boolean
   searchParams?: CreateExpenseSearch
+  heading?: string
+  onMakeCopy?: () => void
   onSubmit: (value: Expense) => Promise<void>
   onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
@@ -41,13 +44,17 @@ export function ExpenseForm(props: {
   readOnly?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  // Copy and fresh-create both surface as a Create flow even though
+  // props.expense is set in copy mode (for field prefill).
+  const isCreate = props.expense === undefined || props.isCopy === true
   const form = useForm<ExpenseFormInputValues>({
     resolver: zodResolver(
       expenseFormInputSchema,
     ) as Resolver<ExpenseFormInputValues>,
     defaultValues: buildExpenseFormDefaults({
-      isCreate: props.expense === undefined,
+      isCreate,
       expense: props.expense,
+      isCopy: props.isCopy,
       searchParams: props.searchParams ?? {},
       group: props.group,
       groupCurrency: getCurrencyFromGroup(props.group),
@@ -57,7 +64,6 @@ export function ExpenseForm(props: {
   })
 
   const [isIncome, setIsIncome] = useState(Number(form.getValues().amount) < 0)
-  const isCreate = props.expense === undefined
 
   const groupCurrency = getCurrencyFromGroup(props.group)
   const conversion = useExpenseCurrencyConversion({
@@ -124,6 +130,8 @@ export function ExpenseForm(props: {
           isCreate={isCreate}
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
+          heading={props.heading}
+          onMakeCopy={props.onMakeCopy}
           {...conversion}
         />
         <ExpenseItemsCard
