@@ -95,11 +95,6 @@
     "myGroups": "Els meus grups",
     "create": "Crear",
     "loadingRecent": "Arregant els grups recents…",
-    "NoRecent": {
-      "description": "Encara no tens cap grup.",
-      "create": "Crea'n un",
-      "orAsk": "o demana a un amic que et convidi al seu grup."
-    },
     "starred": "Grups preferits",
     "archived": "Grups arxivats",
     "backToGroups": "Torna als grups",
@@ -115,10 +110,6 @@
       "link": "Anar a l'inici"
     },
     "createdInviteHint": "Grup creat. Convida membres per començar.",
-    "NoRecentAllHidden": {
-      "description": "Has amagat tots els teus grups.",
-      "showHidden": "Mostra grups amagats"
-    },
     "hidden": "Grups amagats",
     "showHidden": "Mostra grups amagats",
     "hide": "Amaga el grup",

@@ -96,15 +96,6 @@
     "create": "Luo ryhmä",
     "createdInviteHint": "Ryhmä luotu. Kutsu jäseniä aloittaaksesi.",
     "loadingRecent": "Ladataan äskettäisiä ryhmiä…",
-    "NoRecent": {
-      "description": "Sinulla ei ole vielä yhtään ryhmää.",
-      "create": "Luo uusi ryhmä",
-      "orAsk": "tai pyydä ystävää kutsumaan sinut ryhmäänsä."
-    },
-    "NoRecentAllHidden": {
-      "description": "Olet piilottanut kaikki ryhmäsi.",
-      "showHidden": "Näytä piilotetut ryhmät"
-    },
     "starred": "Suosikit",
     "archived": "Arkistoidut",
     "hidden": "Piilotetut ryhmät",

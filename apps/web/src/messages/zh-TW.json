@@ -95,11 +95,6 @@
     "myGroups": "我的群組",
     "create": "建立",
     "loadingRecent": "讀取最近的群組……",
-    "NoRecent": {
-      "description": "你還沒有任何群組。",
-      "create": "建立一個新群組",
-      "orAsk": "或請朋友邀請你加入他們的群組。"
-    },
     "starred": "已加星標的群組",
     "archived": "已封存的群組",
     "backToGroups": "返回群組",
@@ -115,10 +110,6 @@
       "link": "前往首頁"
     },
     "createdInviteHint": "群組已建立。邀請成員開始使用。",
-    "NoRecentAllHidden": {
-      "description": "您已隱藏所有群組。",
-      "showHidden": "顯示已隱藏的群組"
-    },
     "hidden": "已隱藏的群組",
     "showHidden": "顯示已隱藏的群組",
     "hide": "隱藏群組",

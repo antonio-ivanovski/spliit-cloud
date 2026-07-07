@@ -95,11 +95,6 @@
     "myGroups": "我的群组",
     "create": "创建",
     "loadingRecent": "加载最近的群组……",
-    "NoRecent": {
-      "description": "你还没有任何群组。",
-      "create": "创建一个群组",
-      "orAsk": "或者让你的朋友邀请你加入他们的群组。"
-    },
     "starred": "已收藏的群组",
     "archived": "已归档的群组",
     "backToGroups": "返回群组",
@@ -115,10 +110,6 @@
       "link": "前往首页"
     },
     "createdInviteHint": "群组已创建。邀请成员开始使用。",
-    "NoRecentAllHidden": {
-      "description": "您已隐藏所有群组。",
-      "showHidden": "显示已隐藏的群组"
-    },
     "hidden": "隐藏的群组",
     "showHidden": "显示已隐藏的群组",
     "hide": "隐藏群组",

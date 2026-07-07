@@ -95,11 +95,6 @@
     "myGroups": "Gruplarım",
     "create": "Oluştur",
     "loadingRecent": "Son gruplar yükleniyor…",
-    "NoRecent": {
-      "description": "Henüz hiçbir grubunuz yok.",
-      "create": "Bir tane oluştur",
-      "orAsk": "ya da bir arkadaşınızdan sizi grubuna davet etmesini isteyin."
-    },
     "starred": "Yıldızlı gruplar",
     "archived": "Arşivlenmiş gruplar",
     "backToGroups": "Gruplara dön",
@@ -115,10 +110,6 @@
       "link": "Ana sayfaya git"
     },
     "createdInviteHint": "Grup oluşturuldu. Başlamak için üyeleri davet edin.",
-    "NoRecentAllHidden": {
-      "description": "Tüm gruplarınızı gizlediniz.",
-      "showHidden": "Gizli grupları göster"
-    },
     "hidden": "Gizli gruplar",
     "showHidden": "Gizli grupları göster",
     "hide": "Grubu gizle",

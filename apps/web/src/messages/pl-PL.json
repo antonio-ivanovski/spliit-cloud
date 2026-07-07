@@ -96,15 +96,6 @@
     "create": "Stwórz",
     "createdInviteHint": "Grupa utworzona. Zaproś członków, aby rozpocząć.",
     "loadingRecent": "Wczytywanie ostatnich grup…",
-    "NoRecent": {
-      "description": "Nie masz jeszcze żadnej grupy.",
-      "create": "Stwórz",
-      "orAsk": "albo poproś znajomego, aby zaprosił Cię do swojej grupy."
-    },
-    "NoRecentAllHidden": {
-      "description": "Ukryłeś wszystkie swoje grupy.",
-      "showHidden": "Pokaż ukryte grupy"
-    },
     "starred": "Ulubione grupy",
     "archived": "Zarchiwizowane grupy",
     "hidden": "Ukryte grupy",

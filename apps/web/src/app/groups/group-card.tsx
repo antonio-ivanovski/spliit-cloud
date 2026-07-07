@@ -76,7 +76,15 @@ export function GroupCard({
                   event.stopPropagation()
                   onToggleStar()
                 }}
-                aria-label={isStarred ? t('unstarGroup') : t('starGroup')}
+                aria-label={
+                  isStarred
+                    ? isFriend
+                      ? t('unstarFriend')
+                      : t('unstarGroup')
+                    : isFriend
+                      ? t('starFriend')
+                      : t('starGroup')
+                }
               >
                 {isStarred ? (
                   <Star
@@ -94,7 +102,7 @@ export function GroupCard({
                     variant="ghost"
                     className="-my-3 -mr-2 -ml-1.5"
                     onClick={(event) => event.stopPropagation()}
-                    aria-label={t('groupActions')}
+                    aria-label={isFriend ? t('friendActions') : t('groupActions')}
                   >
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>
@@ -109,12 +117,12 @@ export function GroupCard({
                     {isHidden ? (
                       <>
                         <Eye className="w-4 h-4 mr-2" />
-                        {t('unhide')}
+                        {isFriend ? t('unhideFriend') : t('unhide')}
                       </>
                     ) : (
                       <>
                         <EyeOff className="w-4 h-4 mr-2" />
-                        {t('hide')}
+                        {isFriend ? t('hideFriend') : t('hide')}
                       </>
                     )}
                   </DropdownMenuItem>

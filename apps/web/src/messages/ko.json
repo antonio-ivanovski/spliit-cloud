@@ -30,11 +30,6 @@
     "myGroups": "내 그룹",
     "create": "만들기",
     "loadingRecent": "최신 그룹 불러오는 중…",
-    "NoRecent": {
-      "description": "아직 그룹이 없습니다.",
-      "orAsk": "또는 친구에게 자신의 그룹에 초대해 달라고 요청하세요.",
-      "create": "그룹 만들기"
-    },
     "starred": "즐겨찾기 그룹",
     "archived": "아카이브된 그룹",
     "RecentRemovedToast": {
@@ -50,10 +45,6 @@
     "backToGroups": "그룹으로 돌아가기",
     "removeRecent": "최근 그룹 목록에서 삭제하기",
     "createdInviteHint": "그룹이 생성되었습니다. 멤버를 초대해 시작하세요.",
-    "NoRecentAllHidden": {
-      "description": "모든 그룹을 숨겼습니다.",
-      "showHidden": "숨긴 그룹 보기"
-    },
     "hidden": "숨긴 그룹",
     "showHidden": "숨긴 그룹 보기",
     "hide": "그룹 숨기기",

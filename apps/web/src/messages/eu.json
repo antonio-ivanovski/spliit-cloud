@@ -95,11 +95,6 @@
     "myGroups": "Nire taldeak",
     "create": "Sortu",
     "loadingRecent": "Azken taldeak kargatzen…",
-    "NoRecent": {
-      "description": "Oraindik ez duzu talderik.",
-      "create": "Sortu bat",
-      "orAsk": "edo eskatu lagun bati bere taldera gonbidatzeko."
-    },
     "starred": "Gogoko taldeak",
     "archived": "Gordetako taldeak",
     "backToGroups": "Itzuli taldeetara",
@@ -115,10 +110,6 @@
       "link": "Joan hasierara"
     },
     "createdInviteHint": "Taldea sortuta. Gonbidatu kideak hasteko.",
-    "NoRecentAllHidden": {
-      "description": "Zure talde guztiak ezkutatu dituzu.",
-      "showHidden": "Erakutsi ezkutuko taldeak"
-    },
     "hidden": "Ezkutuko taldeak",
     "showHidden": "Erakutsi ezkutuko taldeak",
     "hide": "Ezkutatu taldea",

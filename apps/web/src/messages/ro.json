@@ -95,11 +95,6 @@
     "myGroups": "Grupurile mele",
     "create": "Adaugă",
     "loadingRecent": "Se încarcă ultimele tale grupuri…",
-    "NoRecent": {
-      "description": "Nu ai încă niciun grup.",
-      "create": "Adaugă unul",
-      "orAsk": "sau roagă un prieten să te invite în grupul lui."
-    },
     "starred": "Grupuri favorite",
     "archived": "Grupuri arhivate",
     "backToGroups": "Înapoi la grupuri",
@@ -115,10 +110,6 @@
       "link": "Mergi la pagina principală"
     },
     "createdInviteHint": "Grup creat. Invită membri pentru a începe.",
-    "NoRecentAllHidden": {
-      "description": "Ai ascuns toate grupurile tale.",
-      "showHidden": "Arată grupurile ascunse"
-    },
     "hidden": "Grupuri ascunse",
     "showHidden": "Arată grupurile ascunse",
     "hide": "Ascunde grupul",

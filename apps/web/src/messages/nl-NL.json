@@ -96,15 +96,6 @@
     "create": "Maak",
     "createdInviteHint": "Groep aangemaakt. Nodig leden uit om te beginnen.",
     "loadingRecent": "Recente groepen laden…",
-    "NoRecent": {
-      "description": "Je hebt nog geen groep.",
-      "create": "Maak er één",
-      "orAsk": "of vraag een vriend om je uit te nodigen voor hun groep."
-    },
-    "NoRecentAllHidden": {
-      "description": "Je hebt al je groepen verborgen.",
-      "showHidden": "Verborgen groepen tonen"
-    },
     "starred": "Favoriete groepen",
     "archived": "Gearchiveerde groepen",
     "hidden": "Verborgen groepen",

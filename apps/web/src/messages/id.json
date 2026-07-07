@@ -95,11 +95,6 @@
     "myGroups": "Grup saya",
     "create": "Buat",
     "loadingRecent": "Memuat grup terbaru…",
-    "NoRecent": {
-      "description": "Anda belum memiliki grup apa pun.",
-      "create": "Buat",
-      "orAsk": "atau minta teman untuk mengundang Anda ke grup mereka."
-    },
     "starred": "Grup berbintang",
     "archived": "Grup terarsipkan",
     "backToGroups": "Kembali ke grup",
@@ -115,10 +110,6 @@
       "link": "Buka beranda"
     },
     "createdInviteHint": "Grup dibuat. Undang anggota untuk memulai.",
-    "NoRecentAllHidden": {
-      "description": "Anda telah menyembunyikan semua grup Anda.",
-      "showHidden": "Tampilkan grup yang disembunyikan"
-    },
     "hidden": "Grup tersembunyi",
     "showHidden": "Tampilkan grup tersembunyi",
     "hide": "Sembunyikan grup",

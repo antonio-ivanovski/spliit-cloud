@@ -1,8 +1,9 @@
+import { EmptyState } from '@/components/empty-state'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Plus, Users } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ForceArchiveDialogSection } from './force-archive-dialog-section'
@@ -13,11 +14,13 @@ import { PendingInvitations } from './pending-invitations'
 
 export function RecentGroupList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tEmpty } = useTranslation(undefined, { keyPrefix: 'EmptyState' })
   const utils = trpc.useUtils()
   const { data, isLoading } = trpc.account.groups.useQuery({
     includeArchived: true,
   })
   const [showHidden, setShowHidden] = useState(false)
+  const [showArchived, setShowArchived] = useState(false)
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
   const { mutateAsync: setPreference } =
@@ -77,6 +80,35 @@ export function RecentGroupList() {
     ? allGroups
     : allGroups.filter((g) => !g.preference.hidden)
 
+  const groupsEmptyAction = (
+    <Button asChild>
+      <Link href="/groups/create">
+        <Plus className="w-4 h-4 mr-2" />
+        {tEmpty('actions.createGroup')}
+      </Link>
+    </Button>
+  )
+
+  const friendsEmptyAction = (
+    <Button asChild>
+      <Link href="/friends/create">
+        <Users className="w-4 h-4 mr-2" />
+        {tEmpty('actions.createFriendLedger')}
+      </Link>
+    </Button>
+  )
+
+  const groupsFilteredAction = (
+    <Button
+      variant="outline"
+      onClick={() => setShowHidden(true)}
+      disabled={showHidden}
+    >
+      <Eye className="w-4 h-4 mr-2" />
+      {tEmpty('actions.showHidden')}
+    </Button>
+  )
+
   let body: React.ReactNode
   if (isGroupsLoading) {
     body = (
@@ -86,33 +118,33 @@ export function RecentGroupList() {
       </p>
     )
   } else if (groups.length === 0) {
-    const hasHiddenGroups = allGroups.some((g) => g.preference.hidden)
-    body = (
-      <div className="text-sm space-y-2">
-        {hasHiddenGroups ? (
-          <>
-            <p>{t('NoRecentAllHidden.description')}</p>
-            <Button
-              variant="link"
-              className="-m-4"
-              onClick={() => setShowHidden(true)}
-            >
-              {t('NoRecentAllHidden.showHidden')}
-            </Button>
-          </>
-        ) : (
-          <>
-            <p>{t('NoRecent.description')}</p>
-            <p>
-              <Button variant="link" asChild className="-m-4">
-                <Link href={`/groups/create`}>{t('NoRecent.create')}</Link>
-              </Button>{' '}
-              {t('NoRecent.orAsk')}
-            </p>
-          </>
-        )}
-      </div>
-    )
+    if (allGroups.length === 0) {
+      body = (
+        <EmptyState
+          variant="empty"
+          itemLabel={tEmpty('labels.group')}
+          itemLabelPlural={tEmpty('labels.groupPlural')}
+          action={groupsEmptyAction}
+        />
+      )
+    } else {
+      body = (
+        <div className="space-y-4">
+          <EmptyState
+            variant="filtered"
+            itemLabel={tEmpty('labels.group')}
+            itemLabelPlural={tEmpty('labels.groupPlural')}
+            action={groupsFilteredAction}
+          />
+          <EmptyState
+            variant="empty"
+            itemLabel={tEmpty('labels.friendLedger')}
+            itemLabelPlural={tEmpty('labels.friendLedgerPlural')}
+            action={friendsEmptyAction}
+          />
+        </div>
+      )
+    }
   } else {
     const {
       groups: sectionGroups,
@@ -175,12 +207,30 @@ export function RecentGroupList() {
 
         {friends.length > 0 && (
           <>
-            <h2 className="mt-6 mb-2">{t('friends')}</h2>
+            <div className="mt-6 mb-2 flex items-center justify-between">
+              <h2>{t('friends')}</h2>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/friends/create" aria-label={t('friends')}>
+                  <Plus className="w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
             {renderList(friends, 'friends')}
           </>
         )}
 
-        {archived.length > 0 && (
+        {friends.length === 0 && (
+          <div className="mt-6">
+            <EmptyState
+              variant="empty"
+              itemLabel={tEmpty('labels.friendLedger')}
+              itemLabelPlural={tEmpty('labels.friendLedgerPlural')}
+              action={friendsEmptyAction}
+            />
+          </div>
+        )}
+
+        {archived.length > 0 && showArchived && (
           <>
             <h2 className="mt-6 mb-2">{t('archived')}</h2>
             {renderList(archived, 'archived')}
@@ -216,6 +266,27 @@ export function RecentGroupList() {
           </div>
         )}
 
+        {archived.length > 0 && (
+          <div className="mt-4">
+            <Button
+              variant="link"
+              className="-m-4"
+              onClick={() => setShowArchived((prev) => !prev)}
+            >
+              {showArchived ? (
+                <>
+                  <EyeOff className="w-4 h-4 mr-1" />
+                  {t('hide')}
+                </>
+              ) : (
+                <>
+                  <Eye className="w-4 h-4 mr-1" />
+                  {t('showArchived')}
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </>
     )
   }

@@ -96,15 +96,6 @@
     "create": "Vytvořit",
     "createdInviteHint": "Skupina vytvořena. Pozvěte členy, abyste mohli začít.",
     "loadingRecent": "Načítání nedávných skupin…",
-    "NoRecent": {
-      "description": "Zatím nemáte žádnou skupinu.",
-      "create": "Vytvořit skupinu",
-      "orAsk": "nebo požádejte přítele, aby vás pozval do své skupiny."
-    },
-    "NoRecentAllHidden": {
-      "description": "Skryli jste všechny své skupiny.",
-      "showHidden": "Zobrazit skryté skupiny"
-    },
     "starred": "Oblíbené skupiny",
     "archived": "Archivované skupiny",
     "hidden": "Skryté skupiny",

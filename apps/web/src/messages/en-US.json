@@ -97,24 +97,21 @@
     "create": "Create",
     "createdInviteHint": "Group created. Invite members to get started.",
     "loadingRecent": "Loading recent groups…",
-    "NoRecent": {
-      "description": "You don't have any group yet.",
-      "create": "Create one",
-      "orAsk": "or ask a friend to invite you to their group."
-    },
-    "NoRecentAllHidden": {
-      "description": "You have hidden all of your groups.",
-      "showHidden": "Show hidden groups"
-    },
     "starred": "Starred groups",
     "archived": "Archived groups",
     "hidden": "Hidden groups",
     "showHidden": "Show hidden groups",
+    "showArchived": "Show archived groups",
     "hide": "Hide group",
     "unhide": "Unhide group",
+    "hideFriend": "Hide friend ledger",
+    "unhideFriend": "Unhide friend ledger",
     "starGroup": "Star group",
     "unstarGroup": "Unstar group",
+    "starFriend": "Star friend ledger",
+    "unstarFriend": "Unstar friend ledger",
     "groupActions": "Group actions",
+    "friendActions": "Friend ledger actions",
     "archiveGroup": "Archive group",
     "unarchiveGroup": "Unarchive group",
     "archiveSuccess": "Group archived.",
@@ -386,7 +383,7 @@
       }
     },
     "groups": "Groups",
-    "friends": "Friends",
+    "friends": "Friends ledgers",
     "createExpense": "Create expense",
     "pending": "Pending",
     "scopePickerGroups": "Choose a group",
@@ -1403,5 +1400,25 @@
     "friendsEmpty": "Add a friend by entering their email or share a link to invite them.",
     "infoLabel": "Information (optional)",
     "infoPlaceholder": "Add context like 'Roommate expenses'"
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "No {itemLabelPlural} yet",
+      "filtered": "All your {itemLabelPlural} are hidden"
+    },
+    "description": {
+      "empty": "Create your first {itemLabel} to get started."
+    },
+    "labels": {
+      "group": "group",
+      "groupPlural": "groups",
+      "friendLedger": "friend ledger",
+      "friendLedgerPlural": "friend ledgers"
+    },
+    "actions": {
+      "createGroup": "Create a group",
+      "createFriendLedger": "Create a friend ledger",
+      "showHidden": "Show hidden groups"
+    }
   }
 }

@@ -222,10 +222,10 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    expect(screen.getByText(/don't have any group/i)).toBeInTheDocument()
-    expect(screen.getByText(/create one/i)).toBeInTheDocument()
-    // The "create one" text is wrapped in a link pointing to /groups/create
-    const createLink = screen.getByRole('link', { name: /create one/i })
+    expect(screen.getByText(/no groups yet/i)).toBeInTheDocument()
+    expect(screen.getByText(/create your first group/i)).toBeInTheDocument()
+    // The "Create a group" button is a link to /groups/create
+    const createLink = screen.getByRole('link', { name: /create a group/i })
     expect(createLink).toHaveAttribute('href', '/groups/create')
   })
 
@@ -242,7 +242,7 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    expect(screen.getByText(/hidden all of your groups/i)).toBeInTheDocument()
+    expect(screen.getByText(/all your groups are hidden/i)).toBeInTheDocument()
     const showHiddenBtn = screen.getByRole('button', {
       name: /show hidden groups/i,
     })
@@ -309,9 +309,13 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    // Archived section heading
-    expect(screen.getByText('Archived groups')).toBeInTheDocument()
-    expect(screen.getByText('Old Trip')).toBeInTheDocument()
+    // Archived section is hidden behind the "Show archived groups" toggle
+    expect(screen.queryByText('Archived groups')).not.toBeInTheDocument()
+    expect(screen.queryByText('Old Trip')).not.toBeInTheDocument()
+    const showArchivedBtn = screen.getByRole('button', {
+      name: /show archived groups/i,
+    })
+    expect(showArchivedBtn).toBeInTheDocument()
   })
 
   // ── Star toggle ─────────────────────────────────────────────────────

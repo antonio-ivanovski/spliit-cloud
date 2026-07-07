@@ -96,15 +96,6 @@
     "create": "Erstellen",
     "createdInviteHint": "Gruppe erstellt. Lade Mitglieder ein, um loszulegen.",
     "loadingRecent": "Lade letzte Gruppen…",
-    "NoRecent": {
-      "description": "Du hast noch keine Gruppe.",
-      "create": "Erstelle eine",
-      "orAsk": "oder bitte einen Freund, dich zu seiner Gruppe einzuladen."
-    },
-    "NoRecentAllHidden": {
-      "description": "Du hast alle Gruppen ausgeblendet.",
-      "showHidden": "Ausgeblendete Gruppen anzeigen"
-    },
     "starred": "Favorisierte Gruppen",
     "archived": "Archivierte Gruppen",
     "hidden": "Ausgeblendete Gruppen",

@@ -95,11 +95,6 @@
     "myGroups": "マイグループ",
     "create": "作成",
     "loadingRecent": "最近のグループをロード中…",
-    "NoRecent": {
-      "description": "まだグループがありません。",
-      "create": "グループを作成する",
-      "orAsk": "または友達に自分のグループに招待してもらいましょう。"
-    },
     "starred": "スター付きグループ",
     "archived": "アーカイブ済みグループ",
     "backToGroups": "グループ一覧に戻る",
@@ -115,10 +110,6 @@
       "link": "ホームへ移動"
     },
     "createdInviteHint": "グループを作成しました。メンバーを招待して始めましょう。",
-    "NoRecentAllHidden": {
-      "description": "すべてのグループを非表示にしました。",
-      "showHidden": "非表示のグループを表示"
-    },
     "hidden": "非表示のグループ",
     "showHidden": "非表示のグループを表示",
     "hide": "グループを非表示",

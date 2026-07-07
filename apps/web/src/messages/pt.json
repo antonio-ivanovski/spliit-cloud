@@ -95,11 +95,6 @@
     "myGroups": "Os meus grupos",
     "create": "Criar",
     "loadingRecent": "A carregar grupos recentes…",
-    "NoRecent": {
-      "description": "Ainda não tens nenhum grupo.",
-      "create": "Criar um",
-      "orAsk": "ou pede a um amigo para te convidar para o grupo dele."
-    },
     "starred": "Grupos favoritos",
     "archived": "Grupos arquivados",
     "backToGroups": "Voltar para grupos",
@@ -115,10 +110,6 @@
       "link": "Ir para o início"
     },
     "createdInviteHint": "Grupo criado. Convida membros para começar.",
-    "NoRecentAllHidden": {
-      "description": "Ocultaste todos os teus grupos.",
-      "showHidden": "Mostrar grupos ocultos"
-    },
     "hidden": "Grupos ocultos",
     "showHidden": "Mostrar grupos ocultos",
     "hide": "Ocultar grupo",
