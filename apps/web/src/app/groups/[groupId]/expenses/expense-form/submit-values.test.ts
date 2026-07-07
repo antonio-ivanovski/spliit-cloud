@@ -18,7 +18,6 @@ const baseValues: ExpenseFormInputValues = {
     { participant: 'p2', shares: 1 },
   ],
   isMultiPayer: false,
-  saveDefaultSplittingOptions: true,
   isReimbursement: false,
   documents: [],
   notes: '',
@@ -76,7 +75,6 @@ describe('buildSubmitValues', () => {
 
     expect(result.amount).toBe(9)
     expect(result.originalAmount).toBe(15000)
-    expect(result.saveDefaultSplittingOptions).toBe(false)
     expect(result.items?.map((item) => item.amount)).toEqual([
       10000, 2000, 3000,
     ])

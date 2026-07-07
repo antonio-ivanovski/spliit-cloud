@@ -325,7 +325,6 @@ describe('Group activity — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
       },

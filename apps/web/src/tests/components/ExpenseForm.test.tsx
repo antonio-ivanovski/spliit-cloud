@@ -21,16 +21,71 @@ vi.mock('@trpc/react-query', () => ({
   createTRPCReact: () => {},
 }))
 
-const mockUseMutation = vi.fn(() => ({
-  mutateAsync: vi.fn().mockResolvedValue({ categoryId: 'general' }),
-}))
+// All tRPC mocks are hoisted alongside each other so the `@/trpc/client`
+// mock factory (which is physically lifted to the top of the file by
+// vitest) can reference the same fn instances that tests later assert
+// against. Without `vi.hoisted` the factory would close over undefined.
+const {
+  mockUseMutation,
+  mockCurrencyGetRate,
+  mockAccountDefaultSplit,
+  mockInvalidateDefaultSplit,
+} = vi.hoisted(() => {
+  // Shape returned by tRPC `useQuery` mocks. `data` is `unknown` here so
+  // per-test overrides (e.g. `{ defaultSplit: { splitMode, paidFor } }`)
+  // stay assignable without the mock fn literal narrowing the type.
+  type MockQueryResult = {
+    data: unknown
+    error: null
+    isLoading: boolean
+    refetch: ReturnType<typeof vi.fn>
+  }
 
-const mockUseQuery = vi.fn((_opts?: unknown) => ({
-  data: undefined,
-  error: null,
-  isLoading: false,
-  refetch: vi.fn(),
-}))
+  // Mirrors tRPC's `useMutation({ onSuccess })` shape: `.mutate`
+  // invokes the configured `onSuccess` (e.g. invalidating caches)
+  // plus any per-call `onSuccess` passed as the second argument.
+  // `.mutateAsync` resolves to a small stub so existing submit-helpers
+  // keep working.
+  const mockUseMutation = vi.fn((opts?: { onSuccess?: () => void }) => {
+    const mutate = (
+      _payload: unknown,
+      callOpts?: { onSuccess?: () => void },
+    ) => {
+      opts?.onSuccess?.()
+      callOpts?.onSuccess?.()
+    }
+    return {
+      mutate,
+      mutateAsync: vi.fn().mockResolvedValue({ categoryId: 'general' }),
+      isPending: false,
+    }
+  })
+
+  const mockCurrencyGetRate = vi.fn((_opts?: unknown): MockQueryResult => ({
+    data: undefined,
+    error: null,
+    isLoading: false,
+    refetch: vi.fn(),
+  }))
+
+  // Defaults to `data: undefined` (no saved default) — individual
+  // tests override per-call to exercise the Load/Save buttons.
+  const mockAccountDefaultSplit = vi.fn((_opts?: unknown): MockQueryResult => ({
+    data: undefined,
+    error: null,
+    isLoading: false,
+    refetch: vi.fn(),
+  }))
+
+  const mockInvalidateDefaultSplit = vi.fn()
+
+  return {
+    mockUseMutation,
+    mockCurrencyGetRate,
+    mockAccountDefaultSplit,
+    mockInvalidateDefaultSplit,
+  }
+})
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
@@ -41,9 +96,28 @@ vi.mock('@/trpc/client', () => ({
     },
     currency: {
       getRate: {
-        useQuery: (opts: unknown) => mockUseQuery(opts),
+        useQuery: (opts: unknown) => mockCurrencyGetRate(opts),
       },
     },
+    account: {
+      defaultSplit: {
+        useQuery: (opts: unknown) => mockAccountDefaultSplit(opts),
+      },
+      setDefaultSplit: {
+        // Forward opts to the mock factory so the configured `onSuccess`
+        // (e.g. invalidating caches) is captured when the component
+        // calls `trpc.account.setDefaultSplit.useMutation({ onSuccess })`.
+        useMutation: (opts?: { onSuccess?: () => void }) =>
+          mockUseMutation(opts),
+      },
+    },
+    useUtils: () => ({
+      account: {
+        defaultSplit: {
+          invalidate: (input: unknown) => mockInvalidateDefaultSplit(input),
+        },
+      },
+    }),
   },
 }))
 
@@ -171,7 +245,36 @@ const runtimeFeatureFlags = {
 
 // ── Setup ───────────────────────────────────────────────────────────────
 
+// Mirror of the type declared inside the `vi.hoisted` block above.
+// Tests use this to type-annotate `mockImplementation` callbacks.
+type MockQueryResult = {
+  data: unknown
+  error: null
+  isLoading: boolean
+  refetch: ReturnType<typeof vi.fn>
+}
+
 beforeEach(() => {
+  mockAccountDefaultSplit.mockReset()
+  mockAccountDefaultSplit.mockImplementation(
+    (_opts?: unknown): MockQueryResult => ({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      refetch: vi.fn(),
+    }),
+  )
+  mockCurrencyGetRate.mockReset()
+  mockCurrencyGetRate.mockImplementation(
+    (_opts?: unknown): MockQueryResult => ({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      refetch: vi.fn(),
+    }),
+  )
+  mockInvalidateDefaultSplit.mockReset()
+
   vi.mocked(useCurrencies).mockReturnValue(defaultCurrencies)
   vi.mocked(getCurrency).mockImplementation(
     (code: string) =>
@@ -299,7 +402,9 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    const saveButton = screen.getByRole('button', { name: /save/i })
+    const saveButton = screen
+      .getAllByRole('button', { name: /^Save$/ })
+      .find((b) => (b as HTMLButtonElement).type === 'submit')!
     await user.click(saveButton)
     await vi.waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
@@ -336,7 +441,9 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    const saveButton = screen.getByRole('button', { name: /save/i })
+    const saveButton = screen
+      .getAllByRole('button', { name: /^Save$/ })
+      .find((b) => (b as HTMLButtonElement).type === 'submit')!
     await user.click(saveButton)
     await vi.waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
@@ -1771,3 +1878,206 @@ describe('ParticipantShareRow click behavior', () => {
     expect(row).toHaveClass('cursor-default')
   })
 })
+
+// ── Default-split Load/Save button tests ──────────────────────────────────
+//
+// Bug history: the Load button used to be gated by `{ enabled: isCreate }`
+// on the `trpc.account.defaultSplit` query, which meant it was hidden on
+// edit (Bug 1) and stayed hidden after a Save mutation because the
+// invalidate() target was disabled (Bug 2). These tests pin both flows so
+// the regression cannot come back.
+
+describe('ExpenseForm default-split buttons', () => {
+  // Inputs:
+  // - group with two participants lp-1 (Alice) and lp-2 (Bob)
+  // - mockExpense defaults to `splitMode: 'EVENLY'`, paidFor weighted
+  //   equally — by changing paidFor to BY_PERCENTAGE 50/50 we can
+  //   exercise the "live matches saved" and "live diverges from saved"
+  //   states without touching real DB data.
+  const savedEvenly: NonNullable<
+    ReturnType<typeof mockAccountDefaultSplit>
+  >['data'] = {
+    defaultSplit: {
+      splitMode: 'EVENLY',
+      paidFor: [
+        { participant: 'lp-1', shares: 1 },
+        { participant: 'lp-2', shares: 1 },
+      ],
+    },
+  }
+
+  it('edit mode with a saved default shows the Load button (Bug 1 regression)', () => {
+    mockAccountDefaultSplit.mockReturnValue({
+      data: savedEvenly,
+      error: null,
+      isLoading: false,
+      refetch: vi.fn(),
+    })
+
+    // Edit an expense whose live split is BY_PERCENTAGE 50/50 so it
+    // diverges from the EVENLY saved default. Pre-fix this rendered
+    // no Load button (query was gated on `isCreate`).
+    const divergentEdit = {
+      ...mockExpense,
+      splitMode: 'BY_PERCENTAGE' as const,
+      paidFor: [
+        { ledgerParticipantId: 'lp-1', shares: 5000 },
+        { ledgerParticipantId: 'lp-2', shares: 5000 },
+      ],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={divergentEdit as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: /^load$/i })).toBeInTheDocument()
+    expect(getDefaultSplitSaveButton()).toBeInTheDocument()
+  })
+
+  it('edit mode with no saved default still surfaces Save but hides Load', () => {
+    // Default mock behaviour — `data: undefined`.
+    mockAccountDefaultSplit.mockReturnValue({
+      data: { defaultSplit: null },
+      error: null,
+      isLoading: false,
+      refetch: vi.fn(),
+    })
+
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_PERCENTAGE' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 8000 },
+              { ledgerParticipantId: 'lp-2', shares: 2000 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(getDefaultSplitSaveButton()).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /^load$/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('edit mode: Save → invalidate refetches → Load reappears (Bug 2 regression)', async () => {
+    // First query hit returns null (pre-save). Subsequent hits return a
+    // saved EVENLY default — the same shape the server would persist
+    // after Save succeeds, so the live BY_PERCENTAGE form diverges and
+    // the Load button becomes available. Pre-fix this sequence left
+    // Load hidden because the query was disabled on edit.
+    mockAccountDefaultSplit
+      .mockReturnValueOnce({
+        data: { defaultSplit: null },
+        error: null,
+        isLoading: false,
+        refetch: vi.fn(),
+      })
+      .mockReturnValue({
+        data: {
+          defaultSplit: {
+            splitMode: 'EVENLY',
+            paidFor: [
+              { participant: 'lp-1', shares: 1 },
+              { participant: 'lp-2', shares: 1 },
+            ],
+          },
+        },
+        error: null,
+        isLoading: false,
+        refetch: vi.fn(),
+      })
+
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_PERCENTAGE' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 7000 },
+              { ledgerParticipantId: 'lp-2', shares: 3000 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // Click the DefaultSplit "Save" link button (the form's submit
+    // button labelled "Save" is filtered out by `getDefaultSplitSaveButton`).
+    const saveLink = getDefaultSplitSaveButton()
+    expect(saveLink).toBeEnabled()
+    await user.click(saveLink)
+
+    // 1) The mutation's configured onSuccess fires the cache invalidation.
+    expect(mockInvalidateDefaultSplit).toHaveBeenCalledWith({
+      groupId: 'group-1',
+    })
+
+    // 2) The Save button swaps to a "Saved as default" confirmation.
+    expect(await screen.findByText(/saved as default/i)).toBeInTheDocument()
+
+    // 3) The refetched defaultSplit diverges from the live form, so Load
+    //    is now offered — proving that the gate which used to suppress
+    //    the query on edit would have prevented reaching this state.
+    expect(
+      await screen.findByRole('button', { name: /^load$/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('read-only mode hides both Load and Save regardless of saved default', () => {
+    mockAccountDefaultSplit.mockReturnValue({
+      data: savedEvenly,
+      error: null,
+      isLoading: false,
+      refetch: vi.fn(),
+    })
+
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        readOnly
+      />,
+    )
+
+    expect(
+      screen.queryByRole('button', { name: /^load$/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /^save$/i }),
+    ).not.toBeInTheDocument()
+  })
+})
+
+// Resolve the "Save" link button inside DefaultSplitActions. The form's
+// submit button shares the same accessible name ("Save" / "Create");
+// disambiguate by `type !== 'submit'` since the DefaultSplit button
+// uses `type="button"` on a `variant="link"`.
+function getDefaultSplitSaveButton(): HTMLButtonElement {
+  const candidates = screen
+    .getAllByRole('button', { name: /^save$/i })
+    .filter((b) => (b as HTMLButtonElement).type !== 'submit')
+  if (candidates.length !== 1) {
+    throw new Error(
+      `Expected exactly 1 DefaultSplit "Save" button, got ${candidates.length}`,
+    )
+  }
+  return candidates[0] as HTMLButtonElement
+}

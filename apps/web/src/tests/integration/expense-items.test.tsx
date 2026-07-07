@@ -220,7 +220,6 @@ function buildExpensePayload(args: {
       expenseDate: new Date().toISOString(),
       category: 'general',
       isReimbursement: false,
-      saveDefaultSplittingOptions: false,
       recurrenceRule: 'NONE' as const,
       items: args.items,
       ...(args.itemizedRemainder
@@ -705,7 +704,6 @@ describe('Expense items — ExpenseCard via existing API', () => {
         expenseDate: new Date().toISOString(),
         category: 'general',
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         recurrenceRule: 'NONE',
         items: [
           {

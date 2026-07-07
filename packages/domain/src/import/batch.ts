@@ -122,7 +122,6 @@ export type ImportBatchExpense = {
   paidBySplitMode: 'BY_AMOUNT'
   paidFor: Array<{ participant: string; shares: number }>
   splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
-  saveDefaultSplittingOptions: boolean
   isReimbursement: boolean
   documents: never[]
   notes: string | undefined
@@ -339,7 +338,6 @@ export function buildImportBatch(
         paidBySplitMode: 'BY_AMOUNT',
         paidFor: convertedPaidFor,
         splitMode: e.splitMode,
-        saveDefaultSplittingOptions: false,
         isReimbursement: e.isReimbursement,
         documents: [],
         notes: e.notes ?? undefined,
@@ -359,7 +357,6 @@ export function buildImportBatch(
       paidBySplitMode: 'BY_AMOUNT',
       paidFor,
       splitMode: e.splitMode,
-      saveDefaultSplittingOptions: false,
       isReimbursement: e.isReimbursement,
       documents: [],
       notes: e.notes ?? undefined,

@@ -527,8 +527,7 @@
       "evenly": "Également",
       "byShares": "Inégalement – Par parts",
       "byPercentage": "Inégalement – Par pourcentage",
-      "byAmount": "Inégalement – Par montant",
-      "saveAsDefault": "Enregistrer comme options de répartition par défaut"
+      "byAmount": "Inégalement – Par montant"
     },
     "DeletePopup": {
       "label": "Supprimer",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Pour utiliser une répartition « payé pour » par article, modifiez les participants depuis une ligne d’article.",
     "paidForItemizedActiveHint": "La répartition « payé pour » par article est active. Modifiez les participants des articles depuis la carte Articles pour changer cette répartition.",
-    "makeCopy": "Faire une copie"
+    "makeCopy": "Faire une copie",
+    "DefaultSplit": {
+      "savedAsDefault": "Enregistré comme par défaut",
+      "heading": "Répartition par défaut",
+      "load": "Charger",
+      "save": "Sauvegarder"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

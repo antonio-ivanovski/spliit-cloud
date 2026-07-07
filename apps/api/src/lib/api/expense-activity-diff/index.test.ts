@@ -25,7 +25,6 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
     ],
     isMultiPayer: false,
     splitMode: 'EVENLY',
-    saveDefaultSplittingOptions: false,
     isReimbursement: false,
     documents: [],
     recurrenceRule: 'NONE',

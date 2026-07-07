@@ -545,8 +545,7 @@
       "evenly": "באופן שווה",
       "byShares": "לא שווה – לפי חלקי השתתפות",
       "byPercentage": "לא שווה – לפי אחוזים",
-      "byAmount": "לא שווה – לפי סכום",
-      "saveAsDefault": "שמור כברירת מחדל עבור אפשרויות פיצול"
+      "byAmount": "לא שווה – לפי סכום"
     },
     "DeletePopup": {
       "label": "מחק",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "כדי להשתמש בחלוקת \"שולם עבור\" לפי פריטים, ערוך את המשתתפים משורת פריט.",
     "paidForItemizedActiveHint": "חלוקת \"שולם עבור\" לפי פריטים פעילה. כדי לשנות את החלוקה, ערוך את משתתפי הפריטים מכרטיס הפריטים.",
-    "makeCopy": "צור עותק"
+    "makeCopy": "צור עותק",
+    "DefaultSplit": {
+      "savedAsDefault": "נשמר כברירת מחדל",
+      "heading": "חלוקה כברירת מחדל",
+      "load": "טען",
+      "save": "שמור"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

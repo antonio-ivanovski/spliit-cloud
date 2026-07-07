@@ -527,8 +527,7 @@
       "evenly": "均等に",
       "byShares": "不均等に - シェアで",
       "byPercentage": "不均等に - パーセンテージで",
-      "byAmount": "不均等に - 金額で",
-      "saveAsDefault": "デフォルトの分割オプションとして保存"
+      "byAmount": "不均等に - 金額で"
     },
     "DeletePopup": {
       "label": "削除",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "品目ごとの「対象者」計算を使うには、品目行から参加者を編集します。",
     "paidForItemizedActiveHint": "品目ごとの「対象者」計算が有効です。この分割を変更するには、品目カードで品目の参加者を編集してください。",
-    "makeCopy": "コピーを作成"
+    "makeCopy": "コピーを作成",
+    "DefaultSplit": {
+      "savedAsDefault": "デフォルトに保存しました",
+      "heading": "デフォルトの分割",
+      "load": "読込",
+      "save": "保存"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -527,8 +527,7 @@
       "evenly": "Uniforme",
       "byShares": "Non uniforme – Per quote",
       "byPercentage": "Non uniforme – Per percentuale",
-      "byAmount": "Non uniforme – Per importo",
-      "saveAsDefault": "Salva come opzione di suddivisione predefinita"
+      "byAmount": "Non uniforme – Per importo"
     },
     "DeletePopup": {
       "label": "Rimuovi",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Per usare la ripartizione “pagato per” per articoli, modifica i partecipanti da una riga articolo.",
     "paidForItemizedActiveHint": "La ripartizione “pagato per” per articoli è attiva. Modifica i partecipanti degli articoli dalla scheda Articoli per cambiare questa ripartizione.",
-    "makeCopy": "Fai una copia"
+    "makeCopy": "Fai una copia",
+    "DefaultSplit": {
+      "savedAsDefault": "Salvato come predefinito",
+      "heading": "Divisione predefinita",
+      "load": "Carica",
+      "save": "Salva"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

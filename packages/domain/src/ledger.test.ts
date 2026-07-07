@@ -311,7 +311,6 @@ describe('Ledger currency conversion rules', () => {
         { participant: 'lp-bob', shares: 25 },
       ],
       splitMode: 'BY_AMOUNT' as const,
-      saveDefaultSplittingOptions: false,
       isReimbursement: false,
       originalCurrency: 'EUR',
       conversionRate: 0.85,
@@ -377,7 +376,6 @@ describe('Split unit preservation edge cases', () => {
         { participant: 'lp-c', shares: 30 },
       ],
       splitMode: 'BY_AMOUNT' as const,
-      saveDefaultSplittingOptions: false,
       isReimbursement: false,
     }
     expect(() => expenseFormInputSchema.parse(raw)).toThrow()

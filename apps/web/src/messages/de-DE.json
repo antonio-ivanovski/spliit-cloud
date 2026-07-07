@@ -548,8 +548,7 @@
       "evenly": "Gleich verteilt",
       "byShares": "Ungleich – Nach Anteilen",
       "byPercentage": "Ungleich – Prozentual",
-      "byAmount": "Ungleich – Nach Betrag",
-      "saveAsDefault": "Als Standardoptionen zur Aufteilung speichern"
+      "byAmount": "Ungleich – Nach Betrag"
     },
     "DeletePopup": {
       "label": "Löschen",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Um die Aufteilung unter „Bezahlt für“ nach Artikeln zu verwenden, bearbeite die Teilnehmenden in einer Artikelzeile.",
     "paidForItemizedActiveHint": "Die artikelbasierte Aufteilung unter „Bezahlt für“ ist aktiv. Bearbeite die Teilnehmenden in der Karte „Artikel“, um diese Aufteilung zu ändern.",
-    "makeCopy": "Kopie erstellen"
+    "makeCopy": "Kopie erstellen",
+    "DefaultSplit": {
+      "savedAsDefault": "Als Standard gespeichert",
+      "heading": "Standardaufteilung",
+      "load": "Laden",
+      "save": "Speichern"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

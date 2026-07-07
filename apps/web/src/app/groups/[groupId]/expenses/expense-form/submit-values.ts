@@ -86,10 +86,6 @@ export function buildSubmitValues(
     splitMode: values.splitMode,
     paidFor,
     isMultiPayer: values.isMultiPayer,
-    saveDefaultSplittingOptions:
-      values.splitMode === 'ITEMIZED'
-        ? false
-        : values.saveDefaultSplittingOptions,
     isReimbursement: values.isReimbursement,
     documents: values.documents,
     notes: values.notes,

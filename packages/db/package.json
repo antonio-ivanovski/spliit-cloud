@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "prisma-migrate": "prisma migrate deploy --schema prisma/schema.prisma",
+    "prisma-create-migration": "prisma migrate dev",
     "prisma-generate": "prisma generate --schema prisma/schema.prisma"
   },
   "dependencies": {

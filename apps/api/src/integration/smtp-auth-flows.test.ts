@@ -350,7 +350,6 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
               { participant: adminLpId, shares: 1 },
             ],
             isReimbursement: false,
-            saveDefaultSplittingOptions: false,
             documents: [],
             recurrenceRule: 'NONE',
           },

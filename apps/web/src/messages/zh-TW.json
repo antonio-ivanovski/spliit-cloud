@@ -527,8 +527,7 @@
       "evenly": "平均分配",
       "byShares": "自訂份額",
       "byPercentage": "自訂百分比",
-      "byAmount": "自訂金額",
-      "saveAsDefault": "儲存為預設分帳方式"
+      "byAmount": "自訂金額"
     },
     "DeletePopup": {
       "label": "刪除",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "若要依明細項目計算「為誰支付」，請在項目列中編輯參與者。",
     "paidForItemizedActiveHint": "已啟用依明細項目計算「為誰支付」。若要變更此分攤，請在「項目」卡片中編輯項目參與者。",
-    "makeCopy": "建立副本"
+    "makeCopy": "建立副本",
+    "DefaultSplit": {
+      "savedAsDefault": "已儲存為預設",
+      "heading": "預設分攤",
+      "load": "載入",
+      "save": "儲存"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

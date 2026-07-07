@@ -545,8 +545,7 @@
       "evenly": "Zati berdinetan",
       "byShares": "Zati ezberdinetan - Partekatzetan",
       "byPercentage": "Zati ezberdinetan - ehunekoen bidez",
-      "byAmount": "Zati desberdinetan - zenbatekoen bidez",
-      "saveAsDefault": "Gorde gogoko zatitze modu gisa"
+      "byAmount": "Zati desberdinetan - zenbatekoen bidez"
     },
     "DeletePopup": {
       "label": "Ezabatu",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Elementukako «paid for» kontabilitatea erabiltzeko, editatu parte-hartzaileak elementu baten errenkadatik.",
     "paidForItemizedActiveHint": "Elementukako «paid for» kontabilitatea aktibo dago. Banaketa hau aldatzeko, editatu elementuen parte-hartzaileak Elementuak txarteletik.",
-    "makeCopy": "Egin kopia bat"
+    "makeCopy": "Egin kopia bat",
+    "DefaultSplit": {
+      "savedAsDefault": "Lehenetsi gisa gordea",
+      "heading": "Lehenetsitako banaketa",
+      "load": "Kargatu",
+      "save": "Gorde"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

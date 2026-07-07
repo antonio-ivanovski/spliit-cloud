@@ -668,8 +668,7 @@
       "evenly": "Evenly",
       "byShares": "Unevenly – By shares",
       "byPercentage": "Unevenly – By percentage",
-      "byAmount": "Unevenly – By amount",
-      "saveAsDefault": "Save as default splitting options"
+      "byAmount": "Unevenly – By amount"
     },
     "PaidBySplitModeField": {
       "label": "Payer split mode"
@@ -765,7 +764,13 @@
     },
     "paidForItemizedEntryHint": "To use itemized paid-for accounting, edit participants from an item row.",
     "paidForItemizedActiveHint": "Itemized paid-for accounting is active. Edit item participants from the Items card to change this split.",
-    "makeCopy": "Make a copy"
+    "makeCopy": "Make a copy",
+    "DefaultSplit": {
+      "savedAsDefault": "Saved as default",
+      "heading": "Default split",
+      "load": "Load",
+      "save": "Save"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

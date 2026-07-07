@@ -545,8 +545,7 @@
       "evenly": "Bagi merata",
       "byShares": "Tidak merata – Berdasarkan porsi",
       "byPercentage": "Tidak merata – Berdasarkan persenan",
-      "byAmount": "Tidak merata – Berdasarkan jumlah",
-      "saveAsDefault": "Simpan sebagai opsi pembagian default"
+      "byAmount": "Tidak merata – Berdasarkan jumlah"
     },
     "DeletePopup": {
       "label": "Hapus",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Untuk memakai pembagian Dibayar untuk berbasis item, edit peserta dari baris item.",
     "paidForItemizedActiveHint": "Pembagian Dibayar untuk berbasis item sedang aktif. Edit peserta item dari kartu Item untuk mengubah pembagian ini.",
-    "makeCopy": "Buat salinan"
+    "makeCopy": "Buat salinan",
+    "DefaultSplit": {
+      "savedAsDefault": "Tersimpan sebagai default",
+      "heading": "Pembagian default",
+      "load": "Muat",
+      "save": "Simpan"
+    }
   },
   "Currencies": {
     "custom": {

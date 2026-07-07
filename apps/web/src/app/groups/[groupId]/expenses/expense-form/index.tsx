@@ -16,10 +16,7 @@ import { useState } from 'react'
 import { useForm, useWatch, type Resolver } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BasicDetailsCard } from './basic-details-card'
-import {
-  buildExpenseFormDefaults,
-  persistDefaultSplittingOptions,
-} from './default-values'
+import { buildExpenseFormDefaults } from './default-values'
 import { DocumentsCard } from './documents-card'
 import { ExpenseItemsCard } from './expense-items-card'
 import { FormActions } from './form-actions'
@@ -47,6 +44,19 @@ export function ExpenseForm(props: {
   // Copy and fresh-create both surface as a Create flow even though
   // props.expense is set in copy mode (for field prefill).
   const isCreate = props.expense === undefined || props.isCopy === true
+
+  // The persisted per-user-per-group default split is the source of
+  // truth for the Load/Save buttons in the PaidFor header on every
+  // flow (create / copy / edit / read-only). Form defaults below
+  // consume it only in the create branch — `buildExpenseFormDefaults`
+  // keeps edit and copy aligned with the loaded expense — but the
+  // buttons need to know whether a saved default exists regardless
+  // of how the form was opened, so the query runs unconditionally.
+  const savedDefaultQuery = trpc.account.defaultSplit.useQuery({
+    groupId: props.group.id,
+  })
+  const savedDefault = savedDefaultQuery.data?.defaultSplit ?? null
+
   const form = useForm<ExpenseFormInputValues>({
     resolver: zodResolver(
       expenseFormInputSchema,
@@ -60,6 +70,7 @@ export function ExpenseForm(props: {
       groupCurrency: getCurrencyFromGroup(props.group),
       currentLedgerParticipantId: props.currentLedgerParticipantId,
       reimbursementTitle: t('reimbursement'),
+      savedDefault,
     }),
   })
 
@@ -102,7 +113,6 @@ export function ExpenseForm(props: {
       })
       return
     }
-    await persistDefaultSplittingOptions(props.group.id, form.getValues())
     return props.onSubmit(
       buildSubmitValues(values, {
         groupCurrency,
@@ -176,6 +186,8 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           setManuallyEditedParticipants={setManuallyEditedParticipants}
+          savedDefault={savedDefault}
+          isCreate={isCreate}
         />
         {props.runtimeFeatureFlags.enableExpenseDocuments && (
           <DocumentsCard

@@ -177,7 +177,6 @@ export async function createExpensesViaAPI(
       splitMode: expense.splitMode || SplitMode.EVENLY,
       isReimbursement: expense.isReimbursement || false,
       recurrenceRule: expense.recurrenceRule || 'NONE',
-      saveDefaultSplittingOptions: true,
       notes: expense.notes,
     }
 

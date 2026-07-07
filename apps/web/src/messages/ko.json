@@ -448,8 +448,7 @@
       "evenly": "똑같이 나누기",
       "byShares": "균등하지 않게 – 지분별로 나누기",
       "byPercentage": "균등하지 않게 – 비율로 나누기",
-      "byAmount": "균등하지 않게 – 금액별로 나누기",
-      "saveAsDefault": "기본 분할 방식으로 저장하기"
+      "byAmount": "균등하지 않게 – 금액별로 나누기"
     },
     "DeletePopup": {
       "description": "정말 이 지출을 삭제할까요? 한 번 삭제하면 되돌릴 수 없어요.",
@@ -580,7 +579,13 @@
     },
     "paidForItemizedEntryHint": "항목별 정산 대상 계산을 사용하려면 항목 행에서 참가자를 편집하세요.",
     "paidForItemizedActiveHint": "항목별 정산 대상 계산이 활성화되어 있습니다. 이 분할을 변경하려면 항목 카드에서 항목 참가자를 편집하세요.",
-    "makeCopy": "복사하기"
+    "makeCopy": "복사하기",
+    "DefaultSplit": {
+      "savedAsDefault": "기본값으로 저장됨",
+      "heading": "기본 분할",
+      "load": "불러오기",
+      "save": "저장"
+    }
   },
   "Balances": {
     "title": "잔액",

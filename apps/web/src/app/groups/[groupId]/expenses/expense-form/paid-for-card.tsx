@@ -8,14 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { getCurrency } from '@/lib/currency'
 import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -30,6 +23,8 @@ import { useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { DefaultSplitActions } from './default-split/default-split-actions'
+import type { SavedSplit } from './default-split/split-equal'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
 import { PaidForRow } from './paid-for-row'
 import { ParticipantPendingLabel } from './participant-pending-label'
@@ -57,6 +52,10 @@ export function PaidForCard(props: {
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
   setManuallyEditedParticipants: Dispatch<SetStateAction<Set<string>>>
+  /** Persisted default split for this user+group, if any. */
+  savedDefault: SavedSplit | null
+  /** True for fresh-create + copy flows; false for editing an existing expense. */
+  isCreate: boolean
 }) {
   const {
     form,
@@ -65,6 +64,8 @@ export function PaidForCard(props: {
     payerCurrency: _payerCurrency,
     readOnly,
     sExpense,
+    savedDefault,
+    isCreate: _isCreate,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
@@ -349,7 +350,7 @@ export function PaidForCard(props: {
   return (
     <Card className="mt-4">
       <CardHeader>
-        <CardTitle className="flex justify-between">
+        <CardTitle className="flex justify-between gap-2">
           <span>{t(`${sExpense}.paidFor.title`)}</span>
           {splitMode !== 'ITEMIZED' && (
             <Button
@@ -383,6 +384,23 @@ export function PaidForCard(props: {
             </Button>
           )}
         </CardTitle>
+        {splitMode !== 'ITEMIZED' && (
+          // Default-split actions live in their own row, visually
+          // separated from the title's "Select all/None" toggle by a
+          // top border. The same row is reused when the saved default
+          // differs from the live split (Save) or matches it but the
+          // user diverged (Load). Hidden in ITEMIZED / read-only modes
+          // — see `DefaultSplitActions` for the full visibility rules.
+          <div className="mt-2 flex items-center justify-end gap-1 border-t pt-3">
+            <DefaultSplitActions
+              form={form}
+              group={group}
+              groupCurrency={groupCurrency}
+              savedDefault={savedDefault}
+              readOnly={readOnly}
+            />
+          </div>
+        )}
         <CardDescription>
           {t(`${sExpense}.paidFor.description`)}
         </CardDescription>
@@ -489,27 +507,6 @@ export function PaidForCard(props: {
             currency={conversionRequired ? originalCurrency : groupCurrency}
             paidByCount={paidFor.length}
             dataTestId="paid-for-distribution-footer"
-          />
-        )}
-
-        {splitMode !== 'ITEMIZED' && (
-          <FormField
-            control={form.control}
-            name="saveDefaultSplittingOptions"
-            render={({ field }) => (
-              <FormItem className="flex flex-row gap-2 items-center space-y-0 pt-2">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={readOnly}
-                  />
-                </FormControl>
-                <div>
-                  <FormLabel>{t('SplitModeField.saveAsDefault')}</FormLabel>
-                </div>
-              </FormItem>
-            )}
           />
         )}
       </CardContent>

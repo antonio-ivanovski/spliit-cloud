@@ -203,7 +203,6 @@ describe('Group CRUD via existing API', () => {
             expenseDate: new Date().toISOString(),
             category: 'dining-out',
             isReimbursement: false,
-            saveDefaultSplittingOptions: false,
             recurrenceRule: 'NONE',
           },
         },

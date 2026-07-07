@@ -125,6 +125,56 @@ const itemRowDuplicateGuard = (
   })
 }
 
+// `defaultSplitSchema` is the persisted shape of a user's per-group
+// default split. It captures the same data as an expense's `paidFor` +
+// `splitMode`, expressed in the same units (BY_PERCENTAGE basis points,
+// BY_AMOUNT minor units, BY_SHARES / EVENLY raw counts). ITEMIZED is
+// not allowed — itemized splits involve an items array that is too
+// shape-heavy to be a useful "default". The API rejects ITEMIZED writes
+// and the UI hides the save action when the current split is itemized.
+export const defaultSplitSchema = z
+  .object({
+    splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
+    paidFor: z
+      .array(
+        z.object({
+          participant: z.string(),
+          shares: z.number().int(),
+        }),
+      )
+      .min(1),
+  })
+  .superRefine((split, ctx) => {
+    if (split.splitMode === 'BY_PERCENTAGE') {
+      const sum = split.paidFor.reduce((s, { shares }) => s + shares, 0)
+      if (sum !== 10000) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'percentageSum',
+          path: ['paidFor'],
+        })
+      }
+    } else if (split.splitMode === 'BY_AMOUNT') {
+      // BY_AMOUNT sums to the expense amount (minor units). We cannot
+      // validate the sum here without the amount — the API enforces it
+      // post-merge by checking against the persisted group base amount.
+    }
+    const seen = new Set<string>()
+    split.paidFor.forEach((row, i) => {
+      if (seen.has(row.participant)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'duplicateParticipant',
+          path: ['paidFor', i, 'participant'],
+        })
+      } else {
+        seen.add(row.participant)
+      }
+    })
+  })
+
+export type SavedDefaultSplit = z.infer<typeof defaultSplitSchema>
+
 export const expenseItemFormInputSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, { error: 'itemTitleRequired' }),
@@ -298,7 +348,6 @@ export const expenseFormInputSchema = z
       }),
     isMultiPayer: z.boolean().default(false),
     splitMode: splitModeSchema,
-    saveDefaultSplittingOptions: z.boolean(),
     isReimbursement: z.boolean(),
     documents: documentsSchema,
     notes: z.string().optional(),
@@ -473,7 +522,6 @@ export const expenseApiSchema = z
       }),
     isMultiPayer: z.boolean().default(false),
     splitMode: splitModeSchema,
-    saveDefaultSplittingOptions: z.boolean(),
     isReimbursement: z.boolean(),
     documents: documentsSchema,
     notes: z.string().optional(),

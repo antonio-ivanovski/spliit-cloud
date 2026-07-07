@@ -227,7 +227,6 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [
           { id: docId, url: presignData.fileUrl, width: 100, height: 100 },
         ],
@@ -317,7 +316,6 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
           splitMode: 'EVENLY',
           expenseDate: new Date().toISOString(),
           isReimbursement: false,
-          saveDefaultSplittingOptions: false,
           documents: [
             { id: randomId(), url: fileUrl, width: 200, height: 200 },
           ],
@@ -426,7 +424,6 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [
           { id: docIdA, url: fileUrlA, width: 100, height: 100 },
           { id: docIdB, url: fileUrlB, width: 200, height: 200 },
@@ -485,7 +482,6 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [
           { id: docIdAprime, url: fileUrlAprime, width: 150, height: 150 },
         ],

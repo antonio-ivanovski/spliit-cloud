@@ -527,8 +527,7 @@
       "evenly": "Igualmente",
       "byShares": "Desigualmente - Por partes",
       "byPercentage": "Desigualmente - Por porcentagem",
-      "byAmount": "Desigualmente - Por valor",
-      "saveAsDefault": "Salvar como opções de divisão padrão"
+      "byAmount": "Desigualmente - Por valor"
     },
     "DeletePopup": {
       "label": "Excluir",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Para usar a divisão detalhada por itens em “pago por”, edite os participantes em uma linha de item.",
     "paidForItemizedActiveHint": "A divisão detalhada por itens em “pago por” está ativa. Edite os participantes dos itens no cartão Itens para alterar essa divisão.",
-    "makeCopy": "Fazer uma cópia"
+    "makeCopy": "Fazer uma cópia",
+    "DefaultSplit": {
+      "savedAsDefault": "Salvo como padrão",
+      "heading": "Divisão padrão",
+      "load": "Carregar",
+      "save": "Salvar"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

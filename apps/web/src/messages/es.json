@@ -527,8 +527,7 @@
       "evenly": "Uniformemente",
       "byShares": "Desigualmente – Por partes",
       "byPercentage": "Desigualmente – por porcentaje",
-      "byAmount": "Desigualmente – por cantidad",
-      "saveAsDefault": "Guardar como modo preferido"
+      "byAmount": "Desigualmente – por cantidad"
     },
     "DeletePopup": {
       "label": "Borrar",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Para usar el reparto detallado por artículos en «Pagado para», edita los participantes desde una fila de artículo.",
     "paidForItemizedActiveHint": "El reparto detallado por artículos está activo. Edita los participantes de los artículos desde la tarjeta Artículos para cambiar este reparto.",
-    "makeCopy": "Hacer una copia"
+    "makeCopy": "Hacer una copia",
+    "DefaultSplit": {
+      "savedAsDefault": "Guardado como predeterminado",
+      "heading": "División predeterminada",
+      "load": "Cargar",
+      "save": "Guardar"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -548,8 +548,7 @@
       "evenly": "Gelijk verdeeld",
       "byShares": "Ongelijk – Met delen",
       "byPercentage": "Ongelijk – Met percentage",
-      "byAmount": "Ongelijk – Met bedrag",
-      "saveAsDefault": "Opslaan als standaard-optie"
+      "byAmount": "Ongelijk – Met bedrag"
     },
     "DeletePopup": {
       "label": "Verwijderen",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Bewerk de deelnemers in een itemrij om itemgewijze betaald-voor-verdeling te gebruiken.",
     "paidForItemizedActiveHint": "Itemgewijze betaald-voor-verdeling is actief. Bewerk itemdeelnemers op de kaart Items om deze verdeling te wijzigen.",
-    "makeCopy": "Kopie maken"
+    "makeCopy": "Kopie maken",
+    "DefaultSplit": {
+      "savedAsDefault": "Opgeslagen als standaard",
+      "heading": "Standaardverdeling",
+      "load": "Laden",
+      "save": "Opslaan"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

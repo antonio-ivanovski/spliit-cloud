@@ -548,8 +548,7 @@
       "evenly": "Tasan",
       "byShares": "Epätasan – osuuksien mukaan",
       "byPercentage": "Epätasan – prosenttien mukaan",
-      "byAmount": "Epätasan – summan mukaan",
-      "saveAsDefault": "Tallenna oletustavaksi"
+      "byAmount": "Epätasan – summan mukaan"
     },
     "DeletePopup": {
       "label": "Poista",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Jos haluat käyttää eriteltyä maksettu puolesta -jakoa, muokkaa osallistujia tuoteriviltä.",
     "paidForItemizedActiveHint": "Eritelty maksettu puolesta -jako on käytössä. Muuta jakoa muokkaamalla tuotteiden osallistujia Tuotteet-kortista.",
-    "makeCopy": "Tee kopio"
+    "makeCopy": "Tee kopio",
+    "DefaultSplit": {
+      "savedAsDefault": "Tallennettu oletukseksi",
+      "heading": "Oletusjako",
+      "load": "Lataa",
+      "save": "Tallenna"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

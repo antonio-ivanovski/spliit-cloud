@@ -527,8 +527,7 @@
       "evenly": "Egal",
       "byShares": "Inegal – În funcție de parte",
       "byPercentage": "Inegal – În funcție de procentaj",
-      "byAmount": "Inegal – În funcție de sumă",
-      "saveAsDefault": "Salvează ca și implicite opțiunile de împărțire"
+      "byAmount": "Inegal – În funcție de sumă"
     },
     "DeletePopup": {
       "label": "Șterge",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Pentru a folosi împărțirea „plătit pentru” pe articole, editează participanții dintr-un rând de articol.",
     "paidForItemizedActiveHint": "Împărțirea „plătit pentru” pe articole este activă. Editează participanții articolelor din cardul Articole pentru a schimba această împărțire.",
-    "makeCopy": "Fă o copie"
+    "makeCopy": "Fă o copie",
+    "DefaultSplit": {
+      "savedAsDefault": "Salvat ca implicit",
+      "heading": "Împărțire implicită",
+      "load": "Încarcă",
+      "save": "Salvează"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

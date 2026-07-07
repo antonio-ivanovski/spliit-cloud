@@ -51,6 +51,7 @@ model Account {
   // Invitations this account has issued as an owner/admin.
   sentInvitations     GroupInvitation[]        @relation("InvitationInviter")
   groupPreferences    AccountGroupPreference[]
+  defaultSplits       AccountGroupDefaultSplit[]
 }
 
 model AuthIdentity {
@@ -159,6 +160,7 @@ model LedgerParticipant {
   expensesPaidFor                 ExpensePaidFor[]
   expenseItemPaidFor              ExpenseItemPaidFor[]
   expenseItemizedRemainderPaidFor ExpenseItemizedRemainderPaidFor[]
+  defaultSplitShares              AccountGroupDefaultSplitPaidFor[]
   // Pending invitations that materialized this ledger participant to allow
   // pre-accept expenses. The link is cleared when the invitation is revoked.
   invitations                     GroupInvitation[]
@@ -190,6 +192,7 @@ model Group {
   members            GroupMember[]
   invitations        GroupInvitation[]
   accountPreferences AccountGroupPreference[]
+  defaultSplits      AccountGroupDefaultSplit[]
 }
 
 enum GroupRole {
@@ -332,6 +335,32 @@ model AccountGroupPreference {
   hidden   Boolean @default(false)
 
   @@unique([accountId, groupId])
+}
+
+model AccountGroupDefaultSplit {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  splitMode SplitMode
+  paidFor AccountGroupDefaultSplitPaidFor[]
+
+  @@unique([accountId, groupId])
+  @@index([groupId])
+}
+
+model AccountGroupDefaultSplitPaidFor {
+  defaultSplit   AccountGroupDefaultSplit @relation(fields: [defaultSplitId], references: [id], onDelete: Cascade)
+  defaultSplitId String
+  participant   LedgerParticipant @relation(fields: [participantId], references: [id], onDelete: Restrict)
+  participantId String
+  shares Int
+  @@id([defaultSplitId, participantId])
+  @@index([participantId])
 }
 
 // ---------------------------------------------------------------------------

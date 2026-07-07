@@ -131,7 +131,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -221,7 +220,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -281,7 +279,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -335,7 +332,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -378,7 +374,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -427,7 +422,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -461,7 +455,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -522,7 +515,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'ITEMIZED',
           expenseDate: new Date().toISOString(),
           isReimbursement: false,
-          saveDefaultSplittingOptions: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [
@@ -563,7 +555,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'ITEMIZED',
           expenseDate: new Date().toISOString(),
           isReimbursement: false,
-          saveDefaultSplittingOptions: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [],
@@ -594,7 +585,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -657,7 +647,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -707,7 +696,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -776,7 +764,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -838,7 +825,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         isReimbursement: false,
-        saveDefaultSplittingOptions: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -909,7 +895,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'EVENLY',
           expenseDate: new Date().toISOString(),
           isReimbursement: false,
-          saveDefaultSplittingOptions: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [
@@ -953,7 +938,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'EVENLY',
           expenseDate: new Date().toISOString(),
           isReimbursement: false,
-          saveDefaultSplittingOptions: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [

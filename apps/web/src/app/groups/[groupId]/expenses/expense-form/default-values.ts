@@ -10,7 +10,6 @@ import {
   DEFAULT_CATEGORY_ID,
   PAYMENT_CATEGORY_ID,
   RecurrenceRule,
-  SplitMode as SplitModeEnum,
   amountAsDecimal,
   categoryIdSchema,
   getCurrency,
@@ -18,20 +17,20 @@ import {
 } from '@spliit/domain'
 import { z } from 'zod'
 
-// Zod schema for the localStorage contract so pre-refactor string shares
-// ("60", "1") are caught and rejected instead of silently passing through
-// the JSON.parse cast.
-const storedSplittingOptionsSchema = z.object({
-  splitMode: z.enum(SplitModeEnum).default('EVENLY'),
-  paidFor: z
-    .array(
-      z.object({
-        participant: z.string(),
-        shares: z.number().finite(),
-      }),
-    )
-    .optional(),
+// Storage-units shape returned by `trpc.account.defaultSplit`. Matches
+// `defaultSplitSchema` in packages/domain: shares in basis points for
+// BY_PERCENTAGE, minor units for BY_AMOUNT, raw counts otherwise.
+const savedDefaultSplitSchema = z.object({
+  splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
+  paidFor: z.array(
+    z.object({
+      participant: z.string(),
+      shares: z.number().int(),
+    }),
+  ),
 })
+
+export type SavedDefaultSplit = z.infer<typeof savedDefaultSplitSchema>
 
 const itemSplitModeSchema = z.enum([
   'EVENLY',
@@ -123,38 +122,16 @@ const parsePrefilledItems = (
   }
 }
 
-const STORAGE_KEY = 'spliit.defaultSplittingOptions'
-
-// Form values are persisted verbatim in localStorage: shares in
-// display units (decimal major units / display %), splitMode as-is.
-export const getDefaultSplittingOptions = (
+/**
+ * Resolve the "neutral" default split for a group (no per-user override):
+ * `EVENLY` over all participants. The form later applies the saved
+ * default when present (see `buildExpenseFormDefaults`).
+ */
+export function getNeutralDefaultSplit(
   group: GroupShape,
-): DefaultSplittingOptions => {
-  const fromStorage = (() => {
-    if (typeof window === 'undefined') return null
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY)
-      if (!raw) return null
-      const parsed = storedSplittingOptionsSchema.safeParse(JSON.parse(raw))
-      if (!parsed.success) return null
-      const validIds = new Set(group.participants.map((p) => p.id))
-      const splitMode = parsed.data.splitMode
-      const paidFor = (parsed.data.paidFor ?? []).filter((row) =>
-        validIds.has(row.participant),
-      )
-      if (!paidFor.length) return null
-      return { splitMode, paidFor }
-    } catch {
-      return null
-    }
-  })()
-
-  if (fromStorage) {
-    return fromStorage
-  }
-
+): DefaultSplittingOptions {
   return {
-    splitMode: 'EVENLY' as const,
+    splitMode: 'EVENLY',
     paidFor: group.participants.map(({ id }) => ({
       participant: id,
       shares: 1,
@@ -162,27 +139,34 @@ export const getDefaultSplittingOptions = (
   }
 }
 
-export async function persistDefaultSplittingOptions(
-  _groupId: string,
-  formValues: ExpenseFormInputValues,
-) {
-  if (!formValues.saveDefaultSplittingOptions) return
-  if (formValues.splitMode === 'ITEMIZED') return
-  if (typeof window === 'undefined') return
-  try {
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: formValues.splitMode,
-        paidFor: formValues.paidFor.map(({ participant, shares }) => ({
-          participant,
-          shares,
-        })),
-      }),
-    )
-  } catch {
-    // localStorage may be unavailable (private mode, quota); fail silently.
-  }
+/**
+ * Convert a persisted default split (storage units: basis points,
+ * minor units, raw counts) into the form's display units, filtering
+ * out any participant ids that are no longer in the group. Returns
+ * null when nothing remains after filtering, so the caller can fall
+ * back to the neutral default.
+ */
+export function savedDefaultToFormValues(
+  raw: unknown,
+  group: GroupShape,
+  groupCurrency: Currency,
+): DefaultSplittingOptions | null {
+  const parsed = savedDefaultSplitSchema.safeParse(raw)
+  if (!parsed.success) return null
+  const validIds = new Set(group.participants.map((p) => p.id))
+  const paidFor = parsed.data.paidFor
+    .filter((row) => validIds.has(row.participant))
+    .map(({ participant, shares }) => ({
+      participant,
+      shares:
+        parsed.data.splitMode === 'BY_PERCENTAGE'
+          ? shares / 100
+          : parsed.data.splitMode === 'BY_AMOUNT'
+            ? amountAsDecimal(shares, groupCurrency)
+            : shares,
+    }))
+  if (!paidFor.length) return null
+  return { splitMode: parsed.data.splitMode, paidFor }
 }
 
 export function buildExpenseFormDefaults(args: {
@@ -194,6 +178,8 @@ export function buildExpenseFormDefaults(args: {
   groupCurrency: Currency
   currentLedgerParticipantId: string | null | undefined
   reimbursementTitle: string
+  /** Persisted default for this user+group, if any. */
+  savedDefault?: unknown
 }): ExpenseFormInputValues {
   const {
     isCreate,
@@ -204,6 +190,7 @@ export function buildExpenseFormDefaults(args: {
     groupCurrency,
     currentLedgerParticipantId,
     reimbursementTitle,
+    savedDefault,
   } = args
 
   // Copy: prefill like edit, but force today's date.
@@ -352,7 +339,6 @@ export function buildExpenseFormDefaults(args: {
       isMultiPayer: expense.paidByList.length > 1,
       paidFor,
       splitMode: expense.splitMode,
-      saveDefaultSplittingOptions: false,
       isReimbursement: expense.isReimbursement,
       documents: expense.documents,
       notes: expense.notes ?? '',
@@ -362,7 +348,13 @@ export function buildExpenseFormDefaults(args: {
     }
   }
 
-  const defaultSplittingOptions = getDefaultSplittingOptions(group)
+  // Create flow: apply the persisted default if present, else fall
+  // back to the neutral (EVENLY) split. The form's "Load default" button
+  // can later re-apply `savedDefaultToFormValues(savedDefault, ...)` if
+  // the user diverges and wants to come back to the saved shape.
+  const defaultSplittingOptions =
+    savedDefaultToFormValues(savedDefault, group, groupCurrency) ??
+    getNeutralDefaultSplit(group)
   const prefilledItems = parsePrefilledItems(searchParams.items, group)
   const hasPrefilledItemSplits = prefilledItems.some(
     (item) => item.paidFor.length > 0,
@@ -416,7 +408,6 @@ export function buildExpenseFormDefaults(args: {
         : [],
       isReimbursement: true,
       splitMode: 'EVENLY' as const,
-      saveDefaultSplittingOptions: false,
       documents: [],
       notes: '',
       recurrenceRule: RecurrenceRule.NONE,
@@ -451,7 +442,6 @@ export function buildExpenseFormDefaults(args: {
     splitMode: hasPrefilledItemSplits
       ? ('ITEMIZED' as const)
       : defaultSplittingOptions.splitMode,
-    saveDefaultSplittingOptions: false,
     documents: searchParams.imageUrl
       ? [
           {

@@ -1,7 +1,8 @@
+import { splitEqual } from '@/app/groups/[groupId]/expenses/expense-form/default-split/split-equal'
 import {
   buildExpenseFormDefaults,
-  getDefaultSplittingOptions,
-  persistDefaultSplittingOptions,
+  getNeutralDefaultSplit,
+  savedDefaultToFormValues,
   type GroupShape,
   type LoadedExpense,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
@@ -12,27 +13,6 @@ import {
   RecurrenceRule,
 } from '@spliit/domain'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-
-const STORAGE_KEY = 'spliit.defaultSplittingOptions'
-const originalWindowDescriptor = Object.getOwnPropertyDescriptor(
-  globalThis,
-  'window',
-)
-
-function setTestWindow(localStorage: Storage) {
-  Object.defineProperty(globalThis, 'window', {
-    value: { localStorage },
-    configurable: true,
-  })
-}
-
-function restoreTestWindow() {
-  if (originalWindowDescriptor) {
-    Object.defineProperty(globalThis, 'window', originalWindowDescriptor)
-  } else {
-    Reflect.deleteProperty(globalThis, 'window')
-  }
-}
 
 const mockGroup = {
   id: 'group-1',
@@ -59,7 +39,6 @@ const baseFormValues: ExpenseFormInputValues = {
   paidByList: [{ participant: 'lp-1', shares: 50 }],
   isMultiPayer: false,
   isReimbursement: false,
-  saveDefaultSplittingOptions: true,
   expenseDate: new Date(),
   category: 'general',
   recurrenceRule: 'NONE',
@@ -67,285 +46,327 @@ const baseFormValues: ExpenseFormInputValues = {
   notes: '',
 }
 
-describe('persistDefaultSplittingOptions', () => {
-  const localStorageMock = (() => {
-    let store: Record<string, string> = {}
-    return {
-      getItem: vi.fn((key: string) => store[key] ?? null),
-      setItem: vi.fn((key: string, value: string) => {
-        store[key] = value
-      }),
-      removeItem: vi.fn((key: string) => {
-        delete store[key]
-      }),
-      clear: vi.fn(() => {
-        store = {}
-      }),
-    }
-  })()
+const usd = () => getCurrency('USD')!
 
-  beforeEach(() => {
-    vi.clearAllMocks()
-    setTestWindow(localStorageMock as unknown as Storage)
-    localStorageMock.clear()
+describe('splitEqual', () => {
+  it('returns false when saved is null', () => {
+    expect(
+      splitEqual('EVENLY', [{ participant: 'lp-1', shares: 1 }], null, usd()),
+    ).toBe(false)
   })
 
-  afterEach(() => {
-    restoreTestWindow()
+  it('returns false when current mode is ITEMIZED', () => {
+    expect(
+      splitEqual(
+        'ITEMIZED',
+        [],
+        { splitMode: 'EVENLY', paidFor: [{ participant: 'lp-1', shares: 1 }] },
+        usd(),
+      ),
+    ).toBe(false)
   })
 
-  it('writes the form values verbatim to localStorage', async () => {
-    await persistDefaultSplittingOptions('group-1', {
-      ...baseFormValues,
-      saveDefaultSplittingOptions: true,
+  it('returns false when splitMode differs', () => {
+    expect(
+      splitEqual(
+        'BY_AMOUNT',
+        [{ participant: 'lp-1', shares: 25 }],
+        {
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'lp-1', shares: 1 }],
+        },
+        usd(),
+      ),
+    ).toBe(false)
+  })
+
+  describe('EVENLY', () => {
+    it('returns true when included participants match', () => {
+      expect(
+        splitEqual(
+          'EVENLY',
+          [
+            { participant: 'lp-1', shares: 1 },
+            { participant: 'lp-2', shares: 1 },
+          ],
+          {
+            splitMode: 'EVENLY',
+            paidFor: [
+              { participant: 'lp-2', shares: 1 },
+              { participant: 'lp-1', shares: 1 },
+            ],
+          },
+          usd(),
+        ),
+      ).toBe(true)
     })
 
-    expect(localStorageMock.setItem).toHaveBeenCalledWith(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_AMOUNT',
-        paidFor: [
-          { participant: 'lp-1', shares: 25 },
-          { participant: 'lp-2', shares: 25 },
-        ],
-      }),
-    )
+    it('returns false when an extra participant is included on either side', () => {
+      expect(
+        splitEqual(
+          'EVENLY',
+          [
+            { participant: 'lp-1', shares: 1 },
+            { participant: 'lp-2', shares: 1 },
+          ],
+          {
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: 'lp-1', shares: 1 }],
+          },
+          usd(),
+        ),
+      ).toBe(false)
+    })
   })
 
-  it('persists BY_PERCENTAGE display percentages verbatim (60, not 6000)', async () => {
-    await persistDefaultSplittingOptions('group-1', {
-      ...baseFormValues,
-      splitMode: 'BY_PERCENTAGE',
-      paidFor: [
-        { participant: 'lp-1', shares: 60 },
-        { participant: 'lp-2', shares: 40 },
-      ],
-      saveDefaultSplittingOptions: true,
+  describe('BY_SHARES', () => {
+    it('returns true when each participant share matches within tolerance', () => {
+      expect(
+        splitEqual(
+          'BY_SHARES',
+          [
+            { participant: 'lp-1', shares: 2 },
+            { participant: 'lp-2', shares: 1 },
+          ],
+          {
+            splitMode: 'BY_SHARES',
+            paidFor: [
+              { participant: 'lp-1', shares: 2 },
+              { participant: 'lp-2', shares: 1 },
+            ],
+          },
+          usd(),
+        ),
+      ).toBe(true)
     })
 
-    expect(localStorageMock.setItem).toHaveBeenCalledWith(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_PERCENTAGE',
-        paidFor: [
-          { participant: 'lp-1', shares: 60 },
-          { participant: 'lp-2', shares: 40 },
-        ],
-      }),
-    )
+    it('returns false when a share differs beyond tolerance', () => {
+      expect(
+        splitEqual(
+          'BY_SHARES',
+          [
+            { participant: 'lp-1', shares: 2 },
+            { participant: 'lp-2', shares: 1 },
+          ],
+          {
+            splitMode: 'BY_SHARES',
+            paidFor: [
+              { participant: 'lp-1', shares: 3 },
+              { participant: 'lp-2', shares: 1 },
+            ],
+          },
+          usd(),
+        ),
+      ).toBe(false)
+    })
   })
 
-  it('does nothing when saveDefaultSplittingOptions is false', async () => {
-    await persistDefaultSplittingOptions('group-1', {
-      ...baseFormValues,
-      saveDefaultSplittingOptions: false,
+  describe('BY_PERCENTAGE', () => {
+    it('converts stored basis points to display percentages before comparing', () => {
+      // 25% in form units (25) must equal 2500 basis points stored.
+      expect(
+        splitEqual(
+          'BY_PERCENTAGE',
+          [
+            { participant: 'lp-1', shares: 25 },
+            { participant: 'lp-2', shares: 75 },
+          ],
+          {
+            splitMode: 'BY_PERCENTAGE',
+            paidFor: [
+              { participant: 'lp-1', shares: 2500 },
+              { participant: 'lp-2', shares: 7500 },
+            ],
+          },
+          usd(),
+        ),
+      ).toBe(true)
     })
-
-    expect(localStorageMock.setItem).not.toHaveBeenCalled()
   })
 
-  it('does nothing when saveDefaultSplittingOptions is undefined', async () => {
-    await persistDefaultSplittingOptions('group-1', {
-      ...baseFormValues,
-      saveDefaultSplittingOptions: undefined as unknown as false,
+  describe('BY_AMOUNT', () => {
+    it('converts stored minor units to display units before comparing', () => {
+      // $25.00 in form units (25) must equal 2500 cents stored.
+      expect(
+        splitEqual(
+          'BY_AMOUNT',
+          [
+            { participant: 'lp-1', shares: 25 },
+            { participant: 'lp-2', shares: 25 },
+          ],
+          {
+            splitMode: 'BY_AMOUNT',
+            paidFor: [
+              { participant: 'lp-1', shares: 2500 },
+              { participant: 'lp-2', shares: 2500 },
+            ],
+          },
+          usd(),
+        ),
+      ).toBe(true)
     })
-
-    expect(localStorageMock.setItem).not.toHaveBeenCalled()
   })
 })
 
-describe('getDefaultSplittingOptions', () => {
-  const localStorageMock = (() => {
-    let store: Record<string, string> = {}
-    return {
-      getItem: vi.fn((key: string) => store[key] ?? null),
-      setItem: vi.fn((key: string, value: string) => {
-        store[key] = value
-      }),
-      removeItem: vi.fn((key: string) => {
-        delete store[key]
-      }),
-      clear: vi.fn(() => {
-        store = {}
-      }),
-    }
-  })()
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-    setTestWindow(localStorageMock as unknown as Storage)
-    localStorageMock.clear()
+describe('savedDefaultToFormValues', () => {
+  it('returns null when the saved payload is invalid', () => {
+    expect(
+      savedDefaultToFormValues(
+        { splitMode: 'BY_AMOUNT', paidFor: 'not-an-array' },
+        mockGroup,
+        usd(),
+      ),
+    ).toBeNull()
   })
 
-  afterEach(() => {
-    restoreTestWindow()
-  })
-
-  it('returns saved defaults when localStorage has valid data', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_AMOUNT',
-        paidFor: [{ participant: 'lp-1', shares: 25 }],
-      }),
+  it('filters out stale participant ids that no longer exist', () => {
+    const result = savedDefaultToFormValues(
+      {
+        splitMode: 'BY_PERCENTAGE',
+        paidFor: [
+          { participant: 'lp-1', shares: 5000 },
+          { participant: 'lp-999', shares: 5000 },
+        ],
+      },
+      mockGroup,
+      usd(),
     )
-
-    const result = getDefaultSplittingOptions(mockGroup)
-    expect(result.splitMode).toBe('BY_AMOUNT')
-    expect(result.paidFor).toEqual([{ participant: 'lp-1', shares: 25 }])
+    expect(result?.paidFor).toEqual([{ participant: 'lp-1', shares: 50 }])
   })
 
-  it('returns all-participants-evenly when localStorage is empty', () => {
-    const result = getDefaultSplittingOptions(mockGroup)
+  it('returns null when no participants remain after filtering', () => {
+    const result = savedDefaultToFormValues(
+      {
+        splitMode: 'BY_SHARES',
+        paidFor: [{ participant: 'lp-999', shares: 3 }],
+      },
+      mockGroup,
+      usd(),
+    )
+    expect(result).toBeNull()
+  })
+
+  it('converts BY_AMOUNT minor units to display units', () => {
+    const result = savedDefaultToFormValues(
+      {
+        splitMode: 'BY_AMOUNT',
+        paidFor: [{ participant: 'lp-1', shares: 2500 }],
+      },
+      mockGroup,
+      usd(),
+    )
+    expect(result?.paidFor).toEqual([{ participant: 'lp-1', shares: 25 }])
+  })
+
+  it('converts BY_PERCENTAGE basis points to display percentages', () => {
+    const result = savedDefaultToFormValues(
+      {
+        splitMode: 'BY_PERCENTAGE',
+        paidFor: [
+          { participant: 'lp-1', shares: 8000 },
+          { participant: 'lp-2', shares: 2000 },
+        ],
+      },
+      mockGroup,
+      usd(),
+    )
+    expect(result?.paidFor).toEqual([
+      { participant: 'lp-1', shares: 80 },
+      { participant: 'lp-2', shares: 20 },
+    ])
+  })
+
+  it('passes BY_SHARES / EVENLY shares through unchanged', () => {
+    const result = savedDefaultToFormValues(
+      {
+        splitMode: 'BY_SHARES',
+        paidFor: [
+          { participant: 'lp-1', shares: 2 },
+          { participant: 'lp-2', shares: 1 },
+        ],
+      },
+      mockGroup,
+      usd(),
+    )
+    expect(result?.paidFor).toEqual([
+      { participant: 'lp-1', shares: 2 },
+      { participant: 'lp-2', shares: 1 },
+    ])
+  })
+})
+
+describe('getNeutralDefaultSplit', () => {
+  it('returns EVENLY over all participants', () => {
+    const result = getNeutralDefaultSplit(mockGroup)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toEqual([
       { participant: 'lp-1', shares: 1 },
       { participant: 'lp-2', shares: 1 },
     ])
   })
+})
 
-  it('filters out stale participant IDs that no longer exist in the group', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
+describe('buildExpenseFormDefaults (saved default)', () => {
+  it('applies the saved default on the create flow when present', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: usd(),
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+      savedDefault: {
         splitMode: 'BY_PERCENTAGE',
         paidFor: [
-          { participant: 'lp-1', shares: 50 },
-          { participant: 'lp-999', shares: 50 },
+          { participant: 'lp-1', shares: 8000 },
+          { participant: 'lp-2', shares: 2000 },
         ],
-      }),
-    )
+      },
+    })
 
-    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('BY_PERCENTAGE')
-    expect(result.paidFor).toEqual([{ participant: 'lp-1', shares: 50 }])
-  })
-
-  it('falls back to default when no saved participants remain in the group', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_SHARES',
-        paidFor: [{ participant: 'lp-999', shares: 3 }],
-      }),
-    )
-
-    const result = getDefaultSplittingOptions(mockGroup)
-    expect(result.splitMode).toBe('EVENLY')
-    expect(result.paidFor).toHaveLength(2)
-  })
-
-  it('returns shares unmodified on load (no x100)', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_PERCENTAGE',
-        paidFor: [
-          { participant: 'lp-1', shares: 80 },
-          { participant: 'lp-2', shares: 20 },
-        ],
-      }),
-    )
-
-    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.paidFor).toEqual([
       { participant: 'lp-1', shares: 80 },
       { participant: 'lp-2', shares: 20 },
     ])
   })
 
-  it('roundtrips BY_SHARES without scaling', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
+  it('falls back to neutral EVENLY when savedDefault is null', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: usd(),
+      currentLedgerParticipantId: null,
+      reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
+    })
+
+    expect(result.splitMode).toBe('EVENLY')
+    expect(result.paidFor).toHaveLength(2)
+    expect(result.paidFor.every((r) => r.shares === 1)).toBe(true)
+  })
+
+  it('falls back to neutral EVENLY when savedDefault references only stale participants', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: usd(),
+      currentLedgerParticipantId: null,
+      reimbursementTitle: 'Reimbursement',
+      savedDefault: {
         splitMode: 'BY_SHARES',
-        paidFor: [
-          { participant: 'lp-1', shares: 1 },
-          { participant: 'lp-2', shares: 2 },
-          { participant: 'lp-3', shares: 3 },
-        ],
-      }),
-    )
+        paidFor: [{ participant: 'lp-removed', shares: 3 }],
+      },
+    })
 
-    const result = getDefaultSplittingOptions(mockGroup)
-    expect(result.splitMode).toBe('BY_SHARES')
-    expect(result.paidFor).toEqual([
-      { participant: 'lp-1', shares: 1 },
-      { participant: 'lp-2', shares: 2 },
-    ])
-  })
-
-  it('falls back to default when saved data is unparseable', () => {
-    localStorageMock.setItem(STORAGE_KEY, '{invalid json')
-
-    const result = getDefaultSplittingOptions(mockGroup)
-    expect(result.splitMode).toBe('EVENLY')
-    expect(result.paidFor).toHaveLength(2)
-  })
-
-  it('rejects payloads where shares are strings (pre-refactor legacy) and falls back to EVENLY', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_AMOUNT',
-        paidFor: [
-          { participant: 'lp-1', shares: '60' },
-          { participant: 'lp-2', shares: '40' },
-        ],
-      }),
-    )
-
-    const result = getDefaultSplittingOptions(mockGroup)
-    expect(result.splitMode).toBe('EVENLY')
-    expect(result.paidFor).toHaveLength(2)
-  })
-
-  it('rejects payloads where shares is null/undefined/missing and falls back to EVENLY', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_PERCENTAGE',
-        paidFor: [
-          { participant: 'lp-1', shares: null },
-          { participant: 'lp-2', shares: undefined },
-          { participant: 'lp-1' }, // missing shares entirely
-        ],
-      }),
-    )
-
-    const result = getDefaultSplittingOptions(mockGroup)
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toHaveLength(2)
   })
 })
 
 describe('buildExpenseFormDefaults (reimbursement branch)', () => {
-  const localStorageMock = (() => {
-    let store: Record<string, string> = {}
-    return {
-      getItem: vi.fn((key: string) => store[key] ?? null),
-      setItem: vi.fn((key: string, value: string) => {
-        store[key] = value
-      }),
-      removeItem: vi.fn((key: string) => {
-        delete store[key]
-      }),
-      clear: vi.fn(() => {
-        store = {}
-      }),
-    }
-  })()
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-    setTestWindow(localStorageMock as unknown as Storage)
-    localStorageMock.clear()
-  })
-
-  afterEach(() => {
-    restoreTestWindow()
-  })
-
   it('forces splitMode to EVENLY when no saved defaults exist', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
@@ -356,9 +377,10 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         amount: '50',
       },
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.splitMode).toBe('EVENLY')
@@ -372,17 +394,6 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
   })
 
   it('forces splitMode to EVENLY even when saved defaults are BY_AMOUNT', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_AMOUNT',
-        paidFor: [
-          { participant: 'lp-1', shares: 30 },
-          { participant: 'lp-2', shares: 70 },
-        ],
-      }),
-    )
-
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
@@ -392,9 +403,16 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         amount: '50',
       },
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
+      savedDefault: {
+        splitMode: 'BY_AMOUNT',
+        paidFor: [
+          { participant: 'lp-1', shares: 30 },
+          { participant: 'lp-2', shares: 70 },
+        ],
+      },
     })
 
     expect(result.splitMode).toBe('EVENLY')
@@ -402,17 +420,6 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
   })
 
   it('forces splitMode to EVENLY even when saved defaults are BY_PERCENTAGE', () => {
-    localStorageMock.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        splitMode: 'BY_PERCENTAGE',
-        paidFor: [
-          { participant: 'lp-1', shares: 80 },
-          { participant: 'lp-2', shares: 20 },
-        ],
-      }),
-    )
-
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
@@ -422,9 +429,16 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         amount: '50',
       },
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
+      savedDefault: {
+        splitMode: 'BY_PERCENTAGE',
+        paidFor: [
+          { participant: 'lp-1', shares: 8000 },
+          { participant: 'lp-2', shares: 2000 },
+        ],
+      },
     })
 
     expect(result.splitMode).toBe('EVENLY')
@@ -441,9 +455,10 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         amount: '25',
       },
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.paidFor).toHaveLength(1)
@@ -460,9 +475,10 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
         amount: '0',
       },
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: null,
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.category).toBe(PAYMENT_CATEGORY_ID)
@@ -471,32 +487,6 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
 })
 
 describe('buildExpenseFormDefaults (prefilled items)', () => {
-  const localStorageMock = (() => {
-    let store: Record<string, string> = {}
-    return {
-      getItem: vi.fn((key: string) => store[key] ?? null),
-      setItem: vi.fn((key: string, value: string) => {
-        store[key] = value
-      }),
-      removeItem: vi.fn((key: string) => {
-        delete store[key]
-      }),
-      clear: vi.fn(() => {
-        store = {}
-      }),
-    }
-  })()
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-    setTestWindow(localStorageMock as unknown as Storage)
-    localStorageMock.clear()
-  })
-
-  afterEach(() => {
-    restoreTestWindow()
-  })
-
   it('prefills create defaults with URL item rows and item participant splits', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
@@ -518,9 +508,10 @@ describe('buildExpenseFormDefaults (prefilled items)', () => {
         ]),
       },
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.amount).toBe(25)
@@ -584,9 +575,10 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       isCopy: true,
       searchParams: {},
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.title).toBe('Groceries')
@@ -612,9 +604,10 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       isCopy: true,
       searchParams: {},
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.expenseDate).toEqual(new Date('2025-07-15T12:00:00.000Z'))
@@ -627,9 +620,10 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       expense: loadedExpense,
       searchParams: {},
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.expenseDate).toEqual(loadedExpense.expenseDate)
@@ -643,9 +637,10 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       isCopy: true,
       searchParams: {},
       group: mockGroup,
-      groupCurrency: getCurrency('USD')!,
+      groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
       reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
     })
 
     expect(result.title).toBe('Groceries')

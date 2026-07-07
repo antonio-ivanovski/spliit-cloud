@@ -527,8 +527,7 @@
       "evenly": "Uniforme",
       "byShares": "Desigual: per parts",
       "byPercentage": "Desigual: per percentatge",
-      "byAmount": "Desigual: Per quantitat",
-      "saveAsDefault": "Desa com a mode preferit"
+      "byAmount": "Desigual: Per quantitat"
     },
     "DeletePopup": {
       "label": "Esborrar",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Per utilitzar la comptabilitat detallada de «paid for», edita els participants des d'una fila d'article.",
     "paidForItemizedActiveHint": "La comptabilitat detallada de «paid for» és activa. Edita els participants dels articles des de la targeta Articles per canviar aquest repartiment.",
-    "makeCopy": "Fer una còpia"
+    "makeCopy": "Fer una còpia",
+    "DefaultSplit": {
+      "savedAsDefault": "Desat com a opcions per defecte",
+      "heading": "Divisió per defecte",
+      "load": "Carregar",
+      "save": "Desar"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

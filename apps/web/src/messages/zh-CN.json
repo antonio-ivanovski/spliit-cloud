@@ -527,8 +527,7 @@
       "evenly": "平均分配",
       "byShares": "按份额分配",
       "byPercentage": "按百分比分配",
-      "byAmount": "按金额分配",
-      "saveAsDefault": "保存为默认分账设置"
+      "byAmount": "按金额分配"
     },
     "DeletePopup": {
       "label": "删除",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "要按明细项目计算“为谁支付”，请在项目行中编辑参与者。",
     "paidForItemizedActiveHint": "已启用按明细项目计算“为谁支付”。如需更改此分摊，请在“项目”卡片中编辑项目参与者。",
-    "makeCopy": "创建副本"
+    "makeCopy": "创建副本",
+    "DefaultSplit": {
+      "savedAsDefault": "已保存为默认",
+      "heading": "默认分摊",
+      "load": "载入",
+      "save": "保存"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

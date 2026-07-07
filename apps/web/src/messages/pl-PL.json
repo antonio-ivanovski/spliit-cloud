@@ -548,8 +548,7 @@
       "evenly": "Równy",
       "byShares": "Nierówny – Poprzez udziały",
       "byPercentage": "Nierówny – Procentowo",
-      "byAmount": "Nierówny – Na konkretne sumy",
-      "saveAsDefault": "Wybierz jako domyślny typ podziału"
+      "byAmount": "Nierówny – Na konkretne sumy"
     },
     "DeletePopup": {
       "label": "Usuń",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Aby użyć rozliczenia „zapłacono za” według pozycji, edytuj uczestników w wierszu pozycji.",
     "paidForItemizedActiveHint": "Rozliczenie „zapłacono za” według pozycji jest aktywne. Edytuj uczestników pozycji w karcie Pozycje, aby zmienić ten podział.",
-    "makeCopy": "Utwórz kopię"
+    "makeCopy": "Utwórz kopię",
+    "DefaultSplit": {
+      "savedAsDefault": "Zapisano jako domyślne",
+      "heading": "Domyślny podział",
+      "load": "Wczytaj",
+      "save": "Zapisz"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

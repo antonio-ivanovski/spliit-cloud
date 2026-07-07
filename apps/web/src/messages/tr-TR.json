@@ -527,8 +527,7 @@
       "evenly": "Eşit pay",
       "byShares": "Eşit olmayan – Pay adedine göre",
       "byPercentage": "Eşit olmayan – Yüzdeye göre",
-      "byAmount": "Eşit olmayan – Tutar bazında",
-      "saveAsDefault": "Varsayılan paylaşım ayarları olarak kaydet"
+      "byAmount": "Eşit olmayan – Tutar bazında"
     },
     "DeletePopup": {
       "label": "Sil",
@@ -645,7 +644,13 @@
     },
     "paidForItemizedEntryHint": "Kalem bazlı “adına ödendi” paylaşımını kullanmak için katılımcıları bir kalem satırından düzenleyin.",
     "paidForItemizedActiveHint": "Kalem bazlı “adına ödendi” paylaşımı etkin. Bu paylaşımı değiştirmek için Kalemler kartından kalem katılımcılarını düzenleyin.",
-    "makeCopy": "Bir kopya oluştur"
+    "makeCopy": "Bir kopya oluştur",
+    "DefaultSplit": {
+      "savedAsDefault": "Varsayılan olarak kaydedildi",
+      "heading": "Varsayılan bölünme",
+      "load": "Yükle",
+      "save": "Kaydet"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
