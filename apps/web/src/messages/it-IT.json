@@ -100,7 +100,6 @@
       "create": "Creane uno",
       "orAsk": "oppure chiedi a un amico di invitarti nel suo gruppo."
     },
-    "recent": "Gruppi recenti",
     "starred": "Gruppi speciali",
     "archived": "Gruppi archiviati",
     "backToGroups": "Torna ai gruppi",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(in sospeso)",
           "leaveUnlinked": "Lascia non collegato",
           "leaveUnlinkedDescription": "Mantiene solo il nome — collega dopo da Membri.",
-          "leaveUnlinkedFollowUp": "{name} apparirà come una voce con solo il nome senza accesso all'app. Puoi collegarlo a un account più tardi dalla scheda Membri.",
-          "inviteContact": "Dai tuoi contatti",
-          "inviteContactDescription": "Invita un contatto da gruppi a cui hai già partecipato.",
-          "selectContactLabel": "Contatto",
-          "selectContactPlaceholder": "Seleziona un contatto…",
-          "contactAlreadyMember": "Già membro",
-          "contactPendingInvite": "Già invitato"
+          "leaveUnlinkedFollowUp": "{name} apparirà come una voce con solo il nome senza accesso all'app. Puoi collegarlo a un account più tardi dalla scheda Membri."
         }
       },
       "fetchingGroup": "Recupero del gruppo da spliit.app…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "Inserisci un indirizzo email valido.",
       "tab": {
         "email": "Email",
-        "link": "Link di invito",
-        "contacts": "Contatti"
+        "link": "Link di invito"
       },
       "emailDescription": "Invia un invito tramite email. L'invitato si unisce dopo averlo accettato da un account corrispondente.",
       "linkDescription": "Genera un link monouso che chiunque può usare per unirsi. Il link smette di funzionare dopo la prima accettazione.",
@@ -1172,12 +1164,7 @@
         "shareTitle": "Unisciti a {groupName} su Spliit Cloud",
         "shareText": "Ho appena creato {groupName} per le nostre spese condivise su Spliit Cloud. Ecco un link di invito monouso — aprilo per unirti:\n{inviteUrl}",
         "generateNew": "Genera nuovo link"
-      },
-      "contactsDescription": "Invita qualcuno da gruppi a cui hai partecipato.",
-      "selectContactPlaceholder": "Seleziona una persona…",
-      "contactAlreadyMember": "Già membro",
-      "noContacts": "Ancora nessun contatto. Invita dalla scheda Email.",
-      "contactAlreadyInvited": "Già invitato"
+      }
     },
     "invitations": {
       "title": "Inviti in sospeso",

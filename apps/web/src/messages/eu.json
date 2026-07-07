@@ -100,7 +100,6 @@
       "create": "Sortu bat",
       "orAsk": "edo eskatu lagun bati bere taldera gonbidatzeko."
     },
-    "recent": "Azken taldeak",
     "starred": "Gogoko taldeak",
     "archived": "Gordetako taldeak",
     "backToGroups": "Itzuli taldeetara",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(zain)",
           "leaveUnlinked": "Utzi lotu gabe",
           "leaveUnlinkedDescription": "Izena bakarrik gordetzen du — lotu geroago Kideak ataletik.",
-          "leaveUnlinkedFollowUp": "{name} izena bakarrik duen sarrera gisa agertuko da, aplikaziorako sarbiderik gabe. Kontu batekin lotu dezakezu geroago Kideak fitxatik.",
-          "inviteContact": "Zure kontaktuetatik",
-          "inviteContactDescription": "Gonbidatu aurrez partekatu duzun talde bateko kontaktua.",
-          "selectContactLabel": "Kontaktua",
-          "selectContactPlaceholder": "Hautatu kontaktu bat…",
-          "contactAlreadyMember": "Dagoeneko kidea",
-          "contactPendingInvite": "Dagoeneko gonbidatua"
+          "leaveUnlinkedFollowUp": "{name} izena bakarrik duen sarrera gisa agertuko da, aplikaziorako sarbiderik gabe. Kontu batekin lotu dezakezu geroago Kideak fitxatik."
         }
       },
       "fetchingGroup": "Taldea spliit.app-etik eskuratzen…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "Sartu helbide elektroniko baliozko bat.",
       "tab": {
         "email": "E-maila",
-        "link": "Gonbidapen-esteka",
-        "contacts": "Kontaktuak"
+        "link": "Gonbidapen-esteka"
       },
       "emailDescription": "Bidali gonbidapen bat e-mail bidez. Gonbidatua batuko da bat datorren kontu batetik onartzen duenean.",
       "linkDescription": "Sortu behin erabil daitekeen esteka edonork batzeko erabil dezakeena. Lehen onarpenaren ondoren estekak ez du funtzionatuko.",
@@ -1172,12 +1164,7 @@
         "shareText": "Berriki sortu dut {groupName} gure gastu partekatuetarako Spliit Cloud-en. Hona hemen behin erabil daitekeen gonbidapen-esteka — ireki batzeko:\n{inviteUrl}",
         "generateNew": "Sortu esteka berria"
       },
-      "temporaryNamePlaceholder": "adib. Alex-en gelakidea",
-      "contactsDescription": "Gonbidatu partekatu dituzun taldeetako norbait.",
-      "selectContactPlaceholder": "Hautatu pertsona bat…",
-      "contactAlreadyMember": "Dagoeneko kidea",
-      "noContacts": "Oraindik kontakturik ez. Gonbidatu E-maila fitxatik.",
-      "contactAlreadyInvited": "Dagoeneko gonbidatua"
+      "temporaryNamePlaceholder": "adib. Alex-en gelakidea"
     },
     "invitations": {
       "title": "Gonbidapen zain",

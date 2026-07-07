@@ -105,7 +105,6 @@
       "description": "Du hast alle Gruppen ausgeblendet.",
       "showHidden": "Ausgeblendete Gruppen anzeigen"
     },
-    "recent": "Letzte Gruppen",
     "starred": "Favorisierte Gruppen",
     "archived": "Archivierte Gruppen",
     "hidden": "Ausgeblendete Gruppen",
@@ -271,13 +270,7 @@
           "pendingSuffix": "(ausstehend)",
           "leaveUnlinked": "Nicht verknüpfen",
           "leaveUnlinkedDescription": "Behält nur den Namen — später über Mitglieder verknüpfen.",
-          "leaveUnlinkedFollowUp": "{name} wird als nur-name-Eintrag ohne App-Zugriff angezeigt. Du kannst ihn später über den Reiter „Mitglieder“ mit einem Konto verknüpfen.",
-          "inviteContact": "Aus deinen Kontakten",
-          "inviteContactDescription": "Einen Kontakt aus früheren gemeinsamen Gruppen einladen.",
-          "selectContactLabel": "Kontakt",
-          "selectContactPlaceholder": "Kontakt auswählen…",
-          "contactAlreadyMember": "Bereits Mitglied",
-          "contactPendingInvite": "Bereits eingeladen"
+          "leaveUnlinkedFollowUp": "{name} wird als nur-name-Eintrag ohne App-Zugriff angezeigt. Du kannst ihn später über den Reiter „Mitglieder“ mit einem Konto verknüpfen."
         }
       },
       "fetchingGroup": "Gruppe wird von spliit.app abgerufen…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein.",
       "tab": {
         "email": "E-Mail",
-        "link": "Einladungslink",
-        "contacts": "Kontakte"
+        "link": "Einladungslink"
       },
       "emailDescription": "Sende eine Einladung per E-Mail. Die eingeladene Person tritt bei, sobald sie von einem passenden Konto aus annimmt.",
       "linkDescription": "Erstelle einen Einmal-Link, mit dem jeder beitreten kann. Nach der ersten Annahme funktioniert der Link nicht mehr.",
@@ -1172,12 +1164,7 @@
         "shareText": "Ich habe gerade {groupName} für unsere gemeinsamen Ausgaben auf Spliit Cloud erstellt. Hier ist ein Einmal-Einladungslink — öffne ihn, um beizutreten:\n{inviteUrl}",
         "generateNew": "Neuen Link erstellen"
       },
-      "temporaryNamePlaceholder": "z. B. Alex' Mitbewohner",
-      "contactsDescription": "Lade jemanden aus gemeinsamen Gruppen ein.",
-      "selectContactPlaceholder": "Person auswählen…",
-      "contactAlreadyMember": "Bereits Mitglied",
-      "noContacts": "Noch keine Kontakte. Lade über den E-Mail-Reiter ein.",
-      "contactAlreadyInvited": "Bereits eingeladen"
+      "temporaryNamePlaceholder": "z. B. Alex' Mitbewohner"
     },
     "invitations": {
       "title": "Ausstehende Einladungen",

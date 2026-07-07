@@ -26,7 +26,7 @@ export function GroupCard({
   onToggleArchived,
 }: {
   group: AccountGroup
-  variant: 'active' | 'archived' | 'hidden'
+  variant?: 'groups' | 'friends' | 'starred' | 'archived' | 'hidden'
   onToggleStar: () => void
   onToggleHidden: () => void
   onToggleArchived?: () => void
@@ -36,20 +36,36 @@ export function GroupCard({
   const isStarred = group.preference.starred
   const isHidden = group.preference.hidden
   const isArchived = group.archived
+  const isFriend = group.groupType === 'FRIEND'
+  const isPending = isFriend && group._count.members === 1
+  const initials = (group.displayName || '?').trim().charAt(0).toUpperCase()
 
   return (
     <li key={group.id}>
       <div className="relative h-fit w-full py-3 pl-3 pr-1 rounded-lg border bg-card shadow-xs text-base">
         <div className="w-full flex flex-col gap-1">
           <div className="text-base flex gap-2 justify-between items-center">
-            <span className="flex-1 overflow-hidden text-ellipsis font-medium min-w-0">
+            <span className="flex-1 overflow-hidden text-ellipsis font-medium min-w-0 flex items-center gap-2">
+              {isFriend && (
+                <span
+                  aria-hidden
+                  className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary text-sm font-semibold"
+                >
+                  {initials}
+                </span>
+              )}
               <Link
                 href={`/groups/${group.id}`}
-                className="text-foreground no-underline outline-hidden focus-visible:underline before:absolute before:inset-0 before:rounded-lg before:content-['']"
-                title={group.name}
+                className="text-foreground no-underline outline-hidden focus-visible:underline before:absolute before:inset-0 before:rounded-lg before:content-[''] min-w-0 truncate"
+                title={group.displayName}
               >
-                {group.name}
+                {group.displayName}
               </Link>
+              {isPending && (
+                <span className="ml-1 inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground opacity-70">
+                  {t('pending')}
+                </span>
+              )}
             </span>
             <span className="shrink-0 relative z-10 flex items-center">
               <Button
@@ -102,7 +118,7 @@ export function GroupCard({
                       </>
                     )}
                   </DropdownMenuItem>
-                  {onToggleArchived && (
+                  {onToggleArchived && !isFriend && (
                     <DropdownMenuItem
                       onClick={(event) => {
                         event.stopPropagation()

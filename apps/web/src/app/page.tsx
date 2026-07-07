@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Split,
   Tags,
+  Users,
 } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 import { RecentGroupList } from './groups/recent-group-list'
@@ -117,6 +118,12 @@ function SignedInHero() {
           <Link href="/groups/create">
             <Plus className="w-4 h-4 mr-2" />
             {t('Homepage.button.createGroup')}
+          </Link>
+        </Button>
+        <Button asChild size="lg" variant="outline">
+          <Link href="/friends/create">
+            <Users className="w-4 h-4 mr-2" />
+            {t('Homepage.button.createFriendLedger')}
           </Link>
         </Button>
         <Button asChild size="lg" variant="outline">

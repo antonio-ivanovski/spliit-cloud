@@ -46,8 +46,6 @@ function mockGroupWithMembership(
     members: number
     preferences?: Partial<{
       starred: boolean
-      archived: boolean
-      pinned: boolean
       hidden: boolean
     }>
   }>,
@@ -74,8 +72,6 @@ function mockGroupWithMembership(
     .map((g) => ({
       groupId: g.id,
       starred: false,
-      archived: false,
-      pinned: false,
       hidden: false,
       ...g.preferences,
     }))
@@ -83,16 +79,14 @@ function mockGroupWithMembership(
 }
 
 describe('accountRouter.setPreference — hide API', () => {
-  it('maps `hidden` to the underlying `archived` column', async () => {
+  it('writes `hidden` directly to the `hidden` column', async () => {
     await authAs('acct-1')
     prismaMock.accountGroupPreference.upsert.mockResolvedValue({
       id: 'pref-1',
       groupId: 'grp-1',
       accountId: 'acct-1',
       starred: false,
-      archived: true,
-      pinned: false,
-      hidden: false,
+      hidden: true,
     } as never)
 
     const caller = makeCaller('acct-1')
@@ -104,47 +98,43 @@ describe('accountRouter.setPreference — hide API', () => {
     expect(result.preferences).toMatchObject({ hidden: true })
     expect(prismaMock.accountGroupPreference.upsert).toHaveBeenCalledWith(
       expect.objectContaining({
-        create: expect.objectContaining({ archived: true }),
-        update: { archived: true },
+        create: expect.objectContaining({ hidden: true }),
+        update: { hidden: true },
       }),
     )
   })
 
-  it('returns the preference with `hidden` (not `archived`) in the response', async () => {
+  it('returns the preference shape with `hidden` only', async () => {
     await authAs('acct-1')
     prismaMock.accountGroupPreference.upsert.mockResolvedValue({
       id: 'pref-1',
-      starred: false,
-      archived: false,
-      pinned: true,
-      hidden: false,
+      starred: true,
+      hidden: true,
     } as never)
 
     const caller = makeCaller('acct-1')
     const result = await caller.setPreference({
       groupId: 'grp-1',
-      pinned: true,
+      starred: true,
+      hidden: true,
     })
 
     expect(result.preferences).toEqual({
-      starred: false,
-      hidden: false,
-      pinned: true,
+      starred: true,
+      hidden: true,
     })
   })
 })
 
 describe('accountRouter.preferences — hide API', () => {
-  it('maps the `archived` column to `hidden` in the response', async () => {
+  it('returns the row mapped to `hidden`', async () => {
     await authAs('acct-1')
     prismaMock.accountGroupPreference.findUnique.mockResolvedValue({
       id: 'pref-1',
       accountId: 'acct-1',
       groupId: 'grp-1',
       starred: true,
-      archived: true,
-      pinned: false,
-      hidden: false,
+      hidden: true,
     } as never)
 
     const caller = makeCaller('acct-1')
@@ -153,11 +143,10 @@ describe('accountRouter.preferences — hide API', () => {
     expect(result.preferences).toEqual({
       starred: true,
       hidden: true,
-      pinned: false,
     })
   })
 
-  it('returns the default preference (no archived column) when no row exists', async () => {
+  it('returns the default preference when no row exists', async () => {
     await authAs('acct-1')
     prismaMock.accountGroupPreference.findUnique.mockResolvedValue(null)
 
@@ -167,7 +156,6 @@ describe('accountRouter.preferences — hide API', () => {
     expect(result.preferences).toEqual({
       starred: false,
       hidden: false,
-      pinned: false,
     })
   })
 })
@@ -183,7 +171,7 @@ describe('accountRouter.groups — archive + hide filters', () => {
         archived: false,
         role: 'ADMIN',
         members: 2,
-        preferences: { archived: true }, // user "hide" preference
+        preferences: { hidden: true },
       },
     ])
 
@@ -203,7 +191,7 @@ describe('accountRouter.groups — archive + hide filters', () => {
         archived: false,
         role: 'ADMIN',
         members: 2,
-        preferences: { archived: true },
+        preferences: { hidden: true },
       },
     ])
 
@@ -215,11 +203,8 @@ describe('accountRouter.groups — archive + hide filters', () => {
       'g-archived',
       'g-hidden',
     ])
-    // The API exposes the per-account hide preference as `preference.hidden`,
-    // not `preference.archived`.
     const hidden = result.groups.find((g) => g.id === 'g-hidden')!
     expect(hidden.preference).toMatchObject({ hidden: true })
-    expect(hidden.preference).not.toHaveProperty('archived')
   })
 
   it('includes the caller role for each group in the response', async () => {

@@ -61,6 +61,13 @@ export type Props = {
    */
   hideActions?: boolean
   /**
+   * When `true`, the name input is rendered as disabled (read-only) so
+   * the field cannot be edited. Used for FRIEND-typed ledgers, where
+   * the server rejects name changes but the rest of the form remains
+   * editable.
+   */
+  nameReadOnly?: boolean
+  /**
    * Optional initial values for a brand-new group. Only used when
    * `group` is unset — the import wizard pre-fills the name,
    * currency, and a default "imported from Spliit" note so the
@@ -96,6 +103,7 @@ export function GroupForm({
   initialValues,
   formId,
   hideActions = false,
+  nameReadOnly = false,
   onSubmit,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
@@ -177,7 +185,7 @@ export function GroupForm({
                     <Input
                       className="text-base"
                       placeholder={t('NameField.placeholder')}
-                      disabled={readOnly || isArchived}
+                      disabled={readOnly || isArchived || nameReadOnly}
                       {...field}
                     />
                   </FormControl>

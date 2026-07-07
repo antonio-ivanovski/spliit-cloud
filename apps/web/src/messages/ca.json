@@ -100,7 +100,6 @@
       "create": "Crea'n un",
       "orAsk": "o demana a un amic que et convidi al seu grup."
     },
-    "recent": "Grups recents",
     "starred": "Grups preferits",
     "archived": "Grups arxivats",
     "backToGroups": "Torna als grups",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(pendent)",
           "leaveUnlinked": "Deixa desenllaçat",
           "leaveUnlinkedDescription": "Manté només el nom — enllaça-ho després des de Membres.",
-          "leaveUnlinkedFollowUp": "{name} apareixerà com una entrada amb només el nom sense accés a l'aplicació. Podeu enllaçar-lo a un compte més tard des de la pestanya Membres.",
-          "inviteContact": "Dels teus contactes",
-          "inviteContactDescription": "Convida un contacte de grups on hagis compartit anteriorment.",
-          "selectContactLabel": "Contacte",
-          "selectContactPlaceholder": "Selecciona un contacte…",
-          "contactAlreadyMember": "Ja és membre",
-          "contactPendingInvite": "Ja convidat"
+          "leaveUnlinkedFollowUp": "{name} apareixerà com una entrada amb només el nom sense accés a l'aplicació. Podeu enllaçar-lo a un compte més tard des de la pestanya Membres."
         }
       },
       "fetchingGroup": "S'està recuperant el grup de spliit.app…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "Introdueix una adreça de correu electrònic vàlida.",
       "tab": {
         "email": "Correu electrònic",
-        "link": "Enllaç d'invitació",
-        "contacts": "Contactes"
+        "link": "Enllaç d'invitació"
       },
       "emailDescription": "Envia una invitació per correu electrònic. La persona convidada s'hi unirà quan l'accepti des d'un compte que coincideixi.",
       "linkDescription": "Genera un enllaç d'un sol ús que qualsevol pot fer servir per unir-se. L'enllaç deixa de funcionar després de la primera acceptació.",
@@ -1172,12 +1164,7 @@
         "shareText": "Acabo de crear {groupName} per a les nostres despeses compartides a Spliit Cloud. Aquí tens un enllaç d'invitació d'un sol ús — obre'l per unir-te:\n{inviteUrl}",
         "generateNew": "Genera un enllaç nou"
       },
-      "temporaryNamePlaceholder": "p. ex. el company de pis de l'Alex",
-      "contactsDescription": "Convida algú de grups on hagis compartit.",
-      "selectContactPlaceholder": "Selecciona una persona…",
-      "contactAlreadyMember": "Ja és membre",
-      "noContacts": "Encara no tens contactes. Convida des de la pestanya Correu electrònic.",
-      "contactAlreadyInvited": "Ja convidat"
+      "temporaryNamePlaceholder": "p. ex. el company de pis de l'Alex"
     },
     "invitations": {
       "title": "Invitacions pendents",

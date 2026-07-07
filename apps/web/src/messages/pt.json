@@ -100,7 +100,6 @@
       "create": "Criar um",
       "orAsk": "ou pede a um amigo para te convidar para o grupo dele."
     },
-    "recent": "Grupos recentes",
     "starred": "Grupos favoritos",
     "archived": "Grupos arquivados",
     "backToGroups": "Voltar para grupos",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(pendente)",
           "leaveUnlinked": "Deixar desvinculado",
           "leaveUnlinkedDescription": "Mantém apenas o nome — vincule depois em Membros.",
-          "leaveUnlinkedFollowUp": "{name} aparecerá como uma entrada apenas com nome, sem acesso à aplicação. Pode vinculá-lo a uma conta mais tarde no separador Membros.",
-          "inviteContact": "Dos teus contactos",
-          "inviteContactDescription": "Convida um contacto de grupos onde já partilhaste.",
-          "selectContactLabel": "Contacto",
-          "selectContactPlaceholder": "Seleciona um contacto…",
-          "contactAlreadyMember": "Já é membro",
-          "contactPendingInvite": "Já convidado"
+          "leaveUnlinkedFollowUp": "{name} aparecerá como uma entrada apenas com nome, sem acesso à aplicação. Pode vinculá-lo a uma conta mais tarde no separador Membros."
         }
       },
       "fetchingGroup": "A obter o grupo do spliit.app…",
@@ -1169,15 +1162,9 @@
       },
       "tab": {
         "email": "E-mail",
-        "link": "Ligação de convite",
-        "contacts": "Contactos"
+        "link": "Ligação de convite"
       },
-      "temporaryNamePlaceholder": "ex.: colega de quarto do Alex",
-      "contactsDescription": "Convida alguém de grupos onde já partilhaste.",
-      "selectContactPlaceholder": "Seleciona uma pessoa…",
-      "contactAlreadyMember": "Já é membro",
-      "noContacts": "Ainda não há contactos. Convida a partir do separador E-mail.",
-      "contactAlreadyInvited": "Já convidado"
+      "temporaryNamePlaceholder": "ex.: colega de quarto do Alex"
     },
     "invitations": {
       "title": "Convites pendentes",

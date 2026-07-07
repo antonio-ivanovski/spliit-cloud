@@ -1,3 +1,4 @@
+import { GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
@@ -68,12 +69,19 @@ export const leaveGroupProcedure = protectedProcedure
     // counting admins / checking balances. `loadGroupContext` already
     // throws `FORBIDDEN` for non-members, but the call also guarantees
     // `group` is non-null so downstream helpers don't have to re-check.
-    await loadGroupContext({
+    const { group } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
     }).catch((err) => {
       throw mapLeaveError(err)
     })
+
+    if (group.groupType === GroupType.FRIEND) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'friendLedgerNotLeavable',
+      })
+    }
 
     try {
       const result = await leaveGroup({

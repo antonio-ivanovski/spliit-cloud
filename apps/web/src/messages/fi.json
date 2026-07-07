@@ -105,7 +105,6 @@
       "description": "Olet piilottanut kaikki ryhmäsi.",
       "showHidden": "Näytä piilotetut ryhmät"
     },
-    "recent": "Äskettäiset",
     "starred": "Suosikit",
     "archived": "Arkistoidut",
     "hidden": "Piilotetut ryhmät",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(odottaa)",
           "leaveUnlinked": "Jätä linkittämättä",
           "leaveUnlinkedDescription": "Säilyttää vain nimen — linkitä myöhemmin Jäsenet-välilehdeltä.",
-          "leaveUnlinkedFollowUp": "{name} näkyy vain nimen sisältävänä merkintänä ilman sovelluspääsyä. Voit linkittää heidät tiliin myöhemmin Jäsenet-välilehdeltä.",
-          "inviteContact": "Yhteystiedoistasi",
-          "inviteContactDescription": "Kutsu yhteyshenkilö ryhmistä, joiden kanssa olet jakanut aiemmin.",
-          "selectContactLabel": "Yhteyshenkilö",
-          "selectContactPlaceholder": "Valitse yhteyshenkilö…",
-          "contactAlreadyMember": "On jo jäsen",
-          "contactPendingInvite": "Kutsuttu jo"
+          "leaveUnlinkedFollowUp": "{name} näkyy vain nimen sisältävänä merkintänä ilman sovelluspääsyä. Voit linkittää heidät tiliin myöhemmin Jäsenet-välilehdeltä."
         }
       },
       "fetchingGroup": "Noudetaan ryhmää spliit.app-palvelusta…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "Syötä kelvollinen sähköpostiosoite.",
       "tab": {
         "email": "Sähköposti",
-        "link": "Kutsulinkki",
-        "contacts": "Yhteystiedot"
+        "link": "Kutsulinkki"
       },
       "emailDescription": "Lähetä kutsu sähköpostilla. Kutsuttu liittyy, kun hän hyväksyy sen vastaavalta tililtä.",
       "linkDescription": "Luo kertakäyttöinen linkki, jota kuka tahansa voi käyttää liittyäkseen. Linkki lakkaa toimimasta ensimmäisen hyväksymisen jälkeen.",
@@ -1172,12 +1164,7 @@
         "shareText": "Loin juuri ryhmän {groupName} yhteisiä kuluja varten Spliit Cloudissa. Tässä on kertakäyttöinen kutsulinkki — avaa se liittyäksesi:\n{inviteUrl}",
         "generateNew": "Luo uusi linkki"
       },
-      "temporaryNamePlaceholder": "esim. Alexin kämppäkaveri",
-      "contactsDescription": "Kutsu joku ryhmistä, joiden kanssa olet jakanut.",
-      "selectContactPlaceholder": "Valitse henkilö…",
-      "contactAlreadyMember": "On jo jäsen",
-      "noContacts": "Ei vielä yhteystietoja. Kutsu sähköposti-välilehdeltä.",
-      "contactAlreadyInvited": "Kutsuttu jo"
+      "temporaryNamePlaceholder": "esim. Alexin kämppäkaveri"
     },
     "invitations": {
       "title": "Odottavat kutsut",

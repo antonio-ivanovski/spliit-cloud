@@ -2,6 +2,8 @@ import {
   GroupInvitationStatus,
   GroupInvitationType,
   GroupMemberStatus,
+  GroupType,
+  Prisma,
   prisma,
   type GroupRole,
 } from '@spliit/db'
@@ -144,7 +146,7 @@ export async function getLinkInvitationPreview(
   const invitation = await prisma.groupInvitation.findFirst({
     where: { tokenHash },
     include: {
-      group: { select: { id: true, name: true } },
+      group: { select: { id: true, name: true, groupType: true } },
       invitedBy: { select: { name: true } },
     },
   })
@@ -164,9 +166,15 @@ export async function getLinkInvitationPreview(
     reason = 'expired'
   }
 
+  const inviterName = invitation.invitedBy?.name ?? ''
+  const groupName =
+    invitation.group.groupType === GroupType.FRIEND
+      ? `Friend ledger with ${inviterName || 'someone'}`
+      : invitation.group.name
+
   return {
-    group: { id: invitation.group.id, name: invitation.group.name },
-    inviter: { name: invitation.invitedBy?.name ?? '' },
+    group: { id: invitation.group.id, name: groupName },
+    inviter: { name: inviterName },
     temporaryName: invitation.temporaryName,
     role: invitation.role,
     usable,
@@ -263,6 +271,25 @@ export async function acceptLinkInvitation(opts: {
         leftAt: null,
       },
     })
+
+    if (invitation.group.groupType === GroupType.FRIEND) {
+      const pairKey = [opts.accountId, invitation.invitedById].sort().join(':')
+      try {
+        await tx.group.update({
+          where: { id: invitation.groupId },
+          data: { friendPairKey: pairKey },
+        })
+      } catch (err) {
+        if (
+          err instanceof Prisma.PrismaClientKnownRequestError &&
+          err.code === 'P2002'
+        ) {
+          // Pair key already set; concurrent accept won the race.
+        } else {
+          throw err
+        }
+      }
+    }
 
     await reconcileMemberLedgerParticipant(tx, {
       memberId: member.id,

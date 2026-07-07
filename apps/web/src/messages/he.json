@@ -100,7 +100,6 @@
       "create": "צור אחת",
       "orAsk": "או בקש מחבר להזמין אותך לקבוצה שלו."
     },
-    "recent": "קבוצות אחרונות",
     "starred": "קבוצות מסומנות בכוכב",
     "archived": "קבוצות בארכיון",
     "backToGroups": "חזרה לקבוצות",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(ממתין)",
           "leaveUnlinked": "השאר לא מקושר",
           "leaveUnlinkedDescription": "שומר רק את השם — קשר מאוחר יותר מחברים.",
-          "leaveUnlinkedFollowUp": "{name} יופיע כרשומה עם שם בלבד ללא גישה לאפליקציה. תוכל לקשר אותו לחשבון מאוחר יותר מכרטיסיית החברים.",
-          "inviteContact": "מאנשי הקשר שלך",
-          "inviteContactDescription": "הזמן איש קשר מקבוצות ששיתפת איתן בעבר.",
-          "selectContactLabel": "איש קשר",
-          "selectContactPlaceholder": "בחר איש קשר…",
-          "contactAlreadyMember": "כבר חבר בקבוצה",
-          "contactPendingInvite": "כבר הוזמן"
+          "leaveUnlinkedFollowUp": "{name} יופיע כרשומה עם שם בלבד ללא גישה לאפליקציה. תוכל לקשר אותו לחשבון מאוחר יותר מכרטיסיית החברים."
         }
       },
       "fetchingGroup": "מביא את הקבוצה מ-spliit.app…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "הזן כתובת אימייל חוקית.",
       "tab": {
         "email": "דוא״ל",
-        "link": "קישור הזמנה",
-        "contacts": "אנשי קשר"
+        "link": "קישור הזמנה"
       },
       "emailDescription": "שלחו הזמנה בדוא״ל. המוזמן יצטרף לאחר שיאשר אותה מחשבון תואם.",
       "linkDescription": "צרו קישור חד-פעמי שכל אחד יכול להשתמש בו כדי להצטרף. הקישור יפסיק לפעול לאחר האישור הראשון.",
@@ -1172,12 +1164,7 @@
         "shareTitle": "הצטרפות ל-{groupName} ב-Spliit Cloud",
         "shareText": "יצרתי את {groupName} עבור ההוצאות המשותפות שלנו ב-Spliit Cloud. הנה קישור הזמנה חד-פעמי — פתחו אותו כדי להצטרף:\n{inviteUrl}",
         "generateNew": "יצירת קישור חדש"
-      },
-      "contactsDescription": "הזמן מישהו מקבוצות ששיתפת איתן.",
-      "selectContactPlaceholder": "בחר אדם…",
-      "contactAlreadyMember": "כבר חבר בקבוצה",
-      "noContacts": "אין אנשי קשר עדיין. הזמן מלשונית הדוא״ל.",
-      "contactAlreadyInvited": "כבר הוזמן"
+      }
     },
     "invitations": {
       "title": "הזמנות ממתינות",

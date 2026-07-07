@@ -114,15 +114,21 @@ export function RecentGroupList() {
       </div>
     )
   } else {
-    const { starred, active, archived, hidden } = partitionGroups(groups)
+    const {
+      groups: sectionGroups,
+      friends,
+      starred,
+      archived,
+      hidden,
+    } = partitionGroups(groups)
 
     const renderList = (
       list: AccountGroup[],
-      variant: 'active' | 'archived' | 'hidden',
+      variant: 'groups' | 'archived' | 'hidden' | 'friends' | 'starred',
     ) => (
       <ul
         className={`grid gap-2 sm:grid-cols-2 ${
-          variant !== 'active' ? 'opacity-50' : ''
+          variant === 'archived' || variant === 'hidden' ? 'opacity-50' : ''
         }`}
       >
         {list.map((group) => (
@@ -141,7 +147,8 @@ export function RecentGroupList() {
               })
             }
             onToggleArchived={
-              group.currentMemberRole === 'ADMIN'
+              group.currentMemberRole === 'ADMIN' &&
+              group.groupType !== 'FRIEND'
                 ? () => toggleArchived(group)
                 : undefined
             }
@@ -155,15 +162,21 @@ export function RecentGroupList() {
         {starred.length > 0 && (
           <>
             <h2 className="mb-2">{t('starred')}</h2>
-            {renderList(starred, 'active')}
+            {renderList(starred, 'starred')}
           </>
         )}
 
-        {active.length > 0 && (
+        {sectionGroups.length > 0 && (
           <>
-            {starred.length > 0 && <h2 className="mt-6 mb-2">{t('recent')}</h2>}
-            {starred.length === 0 && <h2 className="mb-2">{t('recent')}</h2>}
-            {renderList(active, 'active')}
+            <h2 className="mt-6 mb-2">{t('groups')}</h2>
+            {renderList(sectionGroups, 'groups')}
+          </>
+        )}
+
+        {friends.length > 0 && (
+          <>
+            <h2 className="mt-6 mb-2">{t('friends')}</h2>
+            {renderList(friends, 'friends')}
           </>
         )}
 
@@ -202,6 +215,7 @@ export function RecentGroupList() {
             </Button>
           </div>
         )}
+
       </>
     )
   }

@@ -144,13 +144,16 @@ import { RecentGroupList } from '@/app/groups/recent-group-list'
 // ── Helpers ─────────────────────────────────────────────────────────────
 
 function makeGroup(overrides: Record<string, unknown> = {}) {
+  const name = (overrides.name as string | undefined) ?? 'Test Group'
   return {
     id: 'group-1',
-    name: 'Test Group',
+    name,
     archived: false,
+    groupType: 'GROUP' as const,
+    displayName: name,
     _count: { members: 4 },
     currentMemberRole: 'ADMIN' as const,
-    preference: { starred: false, hidden: false, pinned: false },
+    preference: { starred: false, hidden: false },
     createdAt: '2026-06-01T00:00:00Z',
     ...overrides,
   }
@@ -230,7 +233,7 @@ describe('RecentGroupList', () => {
 
   it('shows empty with show-hidden link when all groups are hidden', () => {
     const hiddenGroup = makeGroup({
-      preference: { starred: false, hidden: true, pinned: false },
+      preference: { starred: false, hidden: true },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [hiddenGroup] },
@@ -252,7 +255,8 @@ describe('RecentGroupList', () => {
     const starredGroup = makeGroup({
       id: 'g-star',
       name: 'Starred Trip',
-      preference: { starred: true, hidden: false, pinned: false },
+      displayName: 'Starred Trip',
+      preference: { starred: true, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [starredGroup] },
@@ -263,17 +267,18 @@ describe('RecentGroupList', () => {
 
     // Starred section heading
     expect(screen.getByText('Starred groups')).toBeInTheDocument()
-    // Group name is rendered as a link
+    // Group displayName is rendered as a link
     expect(screen.getByText('Starred Trip')).toBeInTheDocument()
   })
 
   // ── Active / Recent section ─────────────────────────────────────────
 
-  it('renders active groups in recent section', () => {
+  it('renders active groups in Groups section', () => {
     const activeGroup = makeGroup({
       id: 'g-active',
       name: 'Active Trip',
-      preference: { starred: false, hidden: false, pinned: false },
+      displayName: 'Active Trip',
+      preference: { starred: false, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [activeGroup] },
@@ -282,8 +287,8 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    // "Recent groups" heading appears when there are active (non-starred) groups
-    expect(screen.getByText('Recent groups')).toBeInTheDocument()
+    // "Groups" heading appears when there are non-starred groups
+    expect(screen.getByText('Groups')).toBeInTheDocument()
     expect(screen.getByText('Active Trip')).toBeInTheDocument()
   })
 
@@ -293,8 +298,9 @@ describe('RecentGroupList', () => {
     const archivedGroup = makeGroup({
       id: 'g-arch',
       name: 'Old Trip',
+      displayName: 'Old Trip',
       archived: true,
-      preference: { starred: false, hidden: false, pinned: false },
+      preference: { starred: false, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [archivedGroup] },
@@ -306,9 +312,6 @@ describe('RecentGroupList', () => {
     // Archived section heading
     expect(screen.getByText('Archived groups')).toBeInTheDocument()
     expect(screen.getByText('Old Trip')).toBeInTheDocument()
-    // Archived list has opacity styling (opacity-50 class on the <ul>)
-    // We verify the card is rendered and archived badge is not shown on the
-    // RecentGroupList — the heading text alone confirms it's in the right section.
   })
 
   // ── Star toggle ─────────────────────────────────────────────────────
@@ -338,7 +341,7 @@ describe('RecentGroupList', () => {
   it('un-star toggles starred off', async () => {
     const group = makeGroup({
       id: 'g-unstar',
-      preference: { starred: true, hidden: false, pinned: false },
+      preference: { starred: true, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [group] },

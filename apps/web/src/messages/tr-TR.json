@@ -100,7 +100,6 @@
       "create": "Bir tane oluştur",
       "orAsk": "ya da bir arkadaşınızdan sizi grubuna davet etmesini isteyin."
     },
-    "recent": "Son gruplar",
     "starred": "Yıldızlı gruplar",
     "archived": "Arşivlenmiş gruplar",
     "backToGroups": "Gruplara dön",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(bekliyor)",
           "leaveUnlinked": "Bağlanmamış bırak",
           "leaveUnlinkedDescription": "Yalnızca adı korur — daha sonra Üyeler'den bağlayın.",
-          "leaveUnlinkedFollowUp": "{name}, uygulama erişimi olmayan yalnızca ad girişi olarak görünecektir. Daha sonra Üyeler sekmesinden bir hesaba bağlayabilirsiniz.",
-          "inviteContact": "Kişilerinizden",
-          "inviteContactDescription": "Daha önce paylaştığınız gruplardan bir kişiyi davet edin.",
-          "selectContactLabel": "Kişi",
-          "selectContactPlaceholder": "Bir kişi seçin…",
-          "contactAlreadyMember": "Zaten üye",
-          "contactPendingInvite": "Zaten davet edildi"
+          "leaveUnlinkedFollowUp": "{name}, uygulama erişimi olmayan yalnızca ad girişi olarak görünecektir. Daha sonra Üyeler sekmesinden bir hesaba bağlayabilirsiniz."
         }
       },
       "fetchingGroup": "Grup spliit.app'ten getiriliyor…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "Geçerli bir e-posta adresi girin.",
       "tab": {
         "email": "E-posta",
-        "link": "Davet bağlantısı",
-        "contacts": "Kişiler"
+        "link": "Davet bağlantısı"
       },
       "emailDescription": "E-postayla davet gönderin. Davetli, eşleşen bir hesaptan kabul ettiğinde katılır.",
       "linkDescription": "Katılmak için herkesin kullanabileceği tek kullanımlık bir bağlantı oluşturun. İlk kabulden sonra bağlantı çalışmayı durdurur.",
@@ -1172,12 +1164,7 @@
         "shareTitle": "Spliit Cloud'da {groupName} grubuna katıl",
         "shareText": "Spliit Cloud'da ortak harcamalarımız için az önce {groupName} grubunu oluşturdum. İşte tek kullanımlık bir davet bağlantısı — katılmak için açın:\n{inviteUrl}",
         "generateNew": "Yeni bağlantı oluştur"
-      },
-      "contactsDescription": "Paylaştığınız gruplardan birini davet edin.",
-      "selectContactPlaceholder": "Bir kişi seçin…",
-      "contactAlreadyMember": "Zaten üye",
-      "noContacts": "Henüz kişi yok. E-posta sekmesinden davet edin.",
-      "contactAlreadyInvited": "Zaten davet edildi"
+      }
     },
     "invitations": {
       "title": "Bekleyen davetler",

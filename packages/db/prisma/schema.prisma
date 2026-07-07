@@ -52,6 +52,7 @@ model Account {
   sentInvitations     GroupInvitation[]        @relation("InvitationInviter")
   groupPreferences    AccountGroupPreference[]
   defaultSplits       AccountGroupDefaultSplit[]
+
 }
 
 model AuthIdentity {
@@ -172,6 +173,16 @@ model LedgerParticipant {
 // Groups, memberships, invitations
 // ---------------------------------------------------------------------------
 
+enum GroupType {
+  // Regular multi-member group with a user-supplied name. The default for
+  // groups created via `groups.create`.
+  GROUP
+  // Two-person friend ledger. The group's `name` is empty; the UI surfaces
+  // a per-viewer `displayName` resolved from the other member's account.
+  // Friend ledgers carry additional server-side restrictions.
+  FRIEND
+}
+
 model Group {
   id          String   @id
   name        String
@@ -184,6 +195,11 @@ model Group {
   // — see that model for the rename history.
   archived    Boolean  @default(false)
   createdAt   DateTime @default(now())
+  // Discriminates regular multi-member groups (`GROUP`) from two-person
+  // friend ledgers (`FRIEND`). Friend ledgers carry additional server-side
+  // restrictions (no rename, no archive, no leave, etc.) and feed the
+  // separate Friends homepage section.
+  groupType   GroupType @default(GROUP)
 
   // One group has exactly one ledger that holds its accounting core.
   ledger   Ledger @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
@@ -193,6 +209,11 @@ model Group {
   invitations        GroupInvitation[]
   accountPreferences AccountGroupPreference[]
   defaultSplits      AccountGroupDefaultSplit[]
+  // Two-person friend ledgers: the unordered account pair key stored as
+  // "accountAId:accountBId" where accountAId < accountBId. Null during the
+  // pending-invitation window (peer hasn't joined yet), populated on accept.
+  // A partial unique index guarantees at most one FRIEND group per pair.
+  friendPairKey      String?
 }
 
 enum GroupRole {
@@ -324,15 +345,11 @@ model AccountGroupPreference {
   group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
 
-  starred  Boolean @default(false)
-  // The column is named `archived` for migration simplicity but the API
-  // surface exposes it as the per-account "hide" preference (it removes the
-  // group from the signed-in user's list, not from everyone else's). The
-  // group-level archive flag lives on `Group.archived` and is set by
-  // OWNER/ADMIN through the `groups.archive` mutation.
-  archived Boolean @default(false)
-  pinned   Boolean @default(false)
-  hidden   Boolean @default(false)
+  starred Boolean @default(false)
+  // Per-account "hide" preference: removes the group from this user's list
+  // without affecting other members. Distinct from `Group.archived`, the
+  // group-level flag set by ADMIN/OWNER through the `groups.archive` mutation.
+  hidden  Boolean @default(false)
 
   @@unique([accountId, groupId])
 }

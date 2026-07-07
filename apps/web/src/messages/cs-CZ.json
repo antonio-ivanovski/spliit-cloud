@@ -105,7 +105,6 @@
       "description": "Skryli jste všechny své skupiny.",
       "showHidden": "Zobrazit skryté skupiny"
     },
-    "recent": "Nedávné skupiny",
     "starred": "Oblíbené skupiny",
     "archived": "Archivované skupiny",
     "hidden": "Skryté skupiny",
@@ -272,13 +271,7 @@
           "pendingSuffix": "(čeká)",
           "leaveUnlinked": "Nechat nepropojené",
           "leaveUnlinkedDescription": "Ponechá pouze jméno — propojte později ze záložky Členové.",
-          "leaveUnlinkedFollowUp": "{name} se zobrazí jako položka pouze se jménem bez přístupu do aplikace. Můžete ji propojit s účtem později ze záložky Členové.",
-          "inviteContact": "Z kontaktů",
-          "inviteContactDescription": "Pozvat kontakt ze skupin, které jste dříve sdíleli.",
-          "selectContactLabel": "Kontakt",
-          "selectContactPlaceholder": "Vyberte kontakt…",
-          "contactAlreadyMember": "Již členem",
-          "contactPendingInvite": "Již pozván"
+          "leaveUnlinkedFollowUp": "{name} se zobrazí jako položka pouze se jménem bez přístupu do aplikace. Můžete ji propojit s účtem později ze záložky Členové."
         }
       },
       "fetchingGroup": "Načítám skupinu z spliit.app…",
@@ -1152,8 +1145,7 @@
       "invalidEmail": "Zadejte platnou e-mailovou adresu.",
       "tab": {
         "email": "E-mail",
-        "link": "Odkaz pozvánky",
-        "contacts": "Kontakty"
+        "link": "Odkaz pozvánky"
       },
       "emailDescription": "Pošlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
       "linkDescription": "Vygenerujte jednorázový odkaz, pomocí kterého se může kdokoli připojit. Po prvním přijetí přestane fungovat.",
@@ -1172,12 +1164,7 @@
         "shareText": "Právě jsem vytvořil(a) skupinu {groupName} pro naše sdílené výdaje na Spliit Cloud. Zde je jednorázový odkaz pozvánky — otevřete ho a připojte se:\n{inviteUrl}",
         "generateNew": "Vygenerovat nový odkaz"
       },
-      "temporaryNamePlaceholder": "např. Alexův spolubydlící",
-      "contactsDescription": "Pozvat někoho ze skupin, které jste sdíleli.",
-      "selectContactPlaceholder": "Vyberte osobu…",
-      "contactAlreadyMember": "Již členem",
-      "noContacts": "Zatím žádné kontakty. Pozvěte z karty E-mail.",
-      "contactAlreadyInvited": "Již pozván"
+      "temporaryNamePlaceholder": "např. Alexův spolubydlící"
     },
     "invitations": {
       "title": "Čekající pozvánky",

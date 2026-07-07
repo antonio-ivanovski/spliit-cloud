@@ -77,8 +77,9 @@ export const EditGroup = () => {
     )
   }
 
-  const canArchive = currentMember?.role === 'ADMIN'
-  const canDelete = canArchive && !group?.archived
+  const isFriendLedger = group?.groupType === 'FRIEND'
+  const canArchive = currentMember?.role === 'ADMIN' && !isFriendLedger
+  const canDelete = canArchive && !group?.archived && !isFriendLedger
   const isArchived = !!group?.archived
 
   return (
@@ -87,6 +88,7 @@ export const EditGroup = () => {
         group={data?.group}
         currentMemberRole={currentMember?.role}
         archived={!!group?.archived}
+        nameReadOnly={isFriendLedger}
         onSubmit={(groupFormValues) =>
           updateMutation.mutateAsync({ groupId, groupFormValues })
         }

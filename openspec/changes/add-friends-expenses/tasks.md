@@ -4,14 +4,14 @@
 >
 > **Design reference**: Decision 8 — drop `pinned` (dormant, never read or toggled), merge per-account `archived` into `hidden`, keep `starred` unchanged.
 
-- [ ] 1.1 Create a Prisma migration that: (a) runs `UPDATE account_group_preference SET hidden = hidden OR archived;` to merge the per-account `archived` data into `hidden`, (b) drops the `archived` column, (c) drops the `pinned` column. Verify the migration is reversible by backing up the table first.
-- [ ] 1.2 Update the `AccountGroupPreference` model in `packages/db/prisma/schema.prisma`: remove `starred`'s sibling `archived` and `pinned` columns. Keep `starred Boolean @default(false)` and `hidden Boolean @default(false)`. Update the inline comment to reflect the new 2-column shape.
-- [ ] 1.3 Run `bun prisma-generate` to regenerate the Prisma client with the new schema.
-- [ ] 1.4 Update `account.groups` procedure in `apps/api/src/trpc/routers/account/index.ts`: remove `pinned` from the `prefRecords` select, the `prefByGroupId` map, and the `defaultPref` object. The `preference` response shape changes from `{ starred, hidden, pinned }` to `{ starred, hidden }`. Remove the `archived`→`hidden` rename mapping (the column IS `hidden` now).
-- [ ] 1.5 Update `account.preferences` procedure: remove `pinned` from the response. The response becomes `{ starred, hidden }`.
-- [ ] 1.6 Update `account.setPreference` procedure: remove `pinned` from the Zod input schema. The input becomes `{ groupId, starred?, hidden? }`. Remove the `archived`→`hidden` mapping in the mutation body (write `hidden` directly to the `hidden` column).
-- [ ] 1.7 Update the web `AccountGroup` type in `apps/web/src/app/groups/group-buckets.ts` (which infers from `AppRouterOutput['account']['groups']`) — the `preference` type now infers automatically from the API change. Verify no web code references `preference.pinned` (grep for `pinned` in `apps/web/src/`).
-- [ ] 1.8 Run `bun check-types` and fix any type errors from the preference shape change.
+- [x] 1.1 Create a Prisma migration that: (a) runs `UPDATE account_group_preference SET hidden = hidden OR archived;` to merge the per-account `archived` data into `hidden`, (b) drops the `archived` column, (c) drops the `pinned` column. Verify the migration is reversible by backing up the table first.
+- [x] 1.2 Update the `AccountGroupPreference` model in `packages/db/prisma/schema.prisma`: remove `starred`'s sibling `archived` and `pinned` columns. Keep `starred Boolean @default(false)` and `hidden Boolean @default(false)`. Update the inline comment to reflect the new 2-column shape.
+- [x] 1.3 Run `bun prisma-generate` to regenerate the Prisma client with the new schema.
+- [x] 1.4 Update `account.groups` procedure in `apps/api/src/trpc/routers/account/index.ts`: remove `pinned` from the `prefRecords` select, the `prefByGroupId` map, and the `defaultPref` object. The `preference` response shape changes from `{ starred, hidden, pinned }` to `{ starred, hidden }`. Remove the `archived`→`hidden` rename mapping (the column IS `hidden` now).
+- [x] 1.5 Update `account.preferences` procedure: remove `pinned` from the response. The response becomes `{ starred, hidden }`.
+- [x] 1.6 Update `account.setPreference` procedure: remove `pinned` from the Zod input schema. The input becomes `{ groupId, starred?, hidden? }`. Remove the `archived`→`hidden` mapping in the mutation body (write `hidden` directly to the `hidden` column).
+- [x] 1.7 Update the web `AccountGroup` type in `apps/web/src/app/groups/group-buckets.ts` (which infers from `AppRouterOutput['account']['groups']`) — the `preference` type now infers automatically from the API change. Verify no web code references `preference.pinned` (grep for `pinned` in `apps/web/src/`).
+- [x] 1.8 Run `bun check-types` and fix any type errors from the preference shape change.
 
 ## 2. Cleanup: Rename "contacts" to "friends"
 
@@ -19,26 +19,24 @@
 >
 > **Design reference**: Decision 9 — `account.contacts` becomes `account.friends`, "Contacts" tab becomes "Friends", all copy/types updated. Semantics unchanged (computed from shared group memberships).
 
-- [ ] 2.1 Rename the `contacts` procedure to `friends` in `apps/api/src/trpc/routers/account/index.ts`. Update the procedure name, the exported key, and any internal comments. The response shape is unchanged for now (friend-ledger metadata enrichment comes in task 5.3).
-- [ ] 2.2 Update all web code that calls `trpc.account.contacts` to call `trpc.account.friends` instead. Grep for `account.contacts` and `account\.contacts` in `apps/web/src/`.
-- [ ] 2.3 Rename the "Contacts" tab to "Friends" in the invite UI (`apps/web/src/app/groups/[groupId]/members/invite-contacts-tab.tsx` → rename file or update content). Update the tab label and any references.
-- [ ] 2.4 Add the "Friends" translation key to `en-US.json` via `bun i18n` CLI (never hand-edit). The old "Contacts" key can be removed or kept as an orphan (the `bun i18n check` will flag orphans — remove it to stay clean).
+- [x] 2.1 Rename the `contacts` procedure to `friends` in `apps/api/src/trpc/routers/account/index.ts`. Update the procedure name, the exported key, and any internal comments. The response shape is unchanged for now (friend-ledger metadata enrichment comes in task 5.3).
+- [x] 2.2 Update all web code that calls `trpc.account.contacts` to call `trpc.account.friends` instead. Grep for `account.contacts` and `account\.contacts` in `apps/web/src/`.
+- [x] 2.3 Rename the "Contacts" tab to "Friends" in the invite UI (`apps/web/src/app/groups/[groupId]/members/invite-contacts-tab.tsx` → rename file or update content). Update the tab label and any references.
+- [x] 2.4 Add the "Friends" translation key to `en-US.json` via `bun i18n` CLI (never hand-edit). The old "Contacts" key can be removed or kept as an orphan (the `bun i18n check` will flag orphans — remove it to stay clean).
 - [ ] 2.5 Run `bun i18n check` to verify no orphan keys. Dispatch parallel subagents for other locales using the translate-strings skill if needed.
-- [ ] 2.6 Run `bun check-types` and `bun run test` to verify the rename doesn't break anything.
+- [x] 2.6 Run `bun check-types` and `bun run test` to verify the rename doesn't break anything.
 
-## 3. Schema: Add GroupType enum and FriendLink junction table
+## 3. Schema: Add GroupType enum and Group.friendPairKey
 
-> **Why this is the schema foundation**: All friend-ledger logic depends on the `groupType` discriminator and the `FriendLink` uniqueness table. This must be in place before any API or web work.
+> **Why this is the schema foundation**: All friend-ledger logic depends on the `groupType` discriminator and the `friendPairKey` uniqueness column. This must be in place before any API or web work.
 >
-> **Design reference**: Decision 1 (GroupType enum), Decision 2 (FriendLink junction table with `accountAId`/`accountBId` smaller-id-first convention, `@@unique([accountAId, accountBId])`, `Account.friendLinksAsA`/`friendLinksAsB` relations).
+> **Design reference**: Decision 1 (GroupType enum), Decision 2 (`friendPairKey` column on Group with partial unique index, smaller-id-first convention).
 
-- [ ] 3.1 Add `GroupType` enum to `packages/db/prisma/schema.prisma`: `enum GroupType { GROUP, FRIEND }`.
-- [ ] 3.2 Add `groupType GroupType @default(GROUP)` column to the `Group` model.
-- [ ] 3.3 Add `FriendLink` model to the schema: `id String @id`, `createdAt DateTime @default(now())`, `accountAId String`, `accountBId String`, `groupId String @unique`, relations to `Account` ("FriendLinksA" and "FriendLinksB"), relation to `Group` (nullable back-ref `friendLink FriendLink?` on `Group`), `@@unique([accountAId, accountBId])`, `@@index([accountBId])`. Document the smaller-id-first convention in a comment.
-- [ ] 3.4 Add `friendLinksAsA FriendLink[] @relation("FriendLinksA")` and `friendLinksAsB FriendLink[] @relation("FriendLinksB")` to the `Account` model.
-- [ ] 3.5 Add `friendLink FriendLink?` relation to the `Group` model.
-- [ ] 3.6 Create the Prisma migration for these changes. The migration adds the enum, the `groupType` column with default `GROUP` (all existing groups backfill automatically), and the `friend_link` table with its indexes and constraints.
-- [ ] 3.7 Run `bun prisma-generate` to regenerate the Prisma client.
+- [x] 3.1 Add `GroupType` enum to `packages/db/prisma/schema.prisma`: `enum GroupType { GROUP, FRIEND }`.
+- [x] 3.2 Add `groupType GroupType @default(GROUP)` column to the `Group` model.
+- [x] 3.3 Add `friendPairKey String?` column to the `Group` model with a comment documenting the format (`"accountAId:accountBId"` where `accountAId < accountBId`) and that it's null during the pending-invitation window. Create the partial unique index via raw SQL in the migration: `CREATE UNIQUE INDEX "Group_friendPairKey_key" ON "Group"("friendPairKey") WHERE "friendPairKey" IS NOT NULL AND "groupType" = 'FRIEND'`.
+- [x] 3.4 Create the Prisma migration for these changes. The migration adds the enum, the `groupType` column with default `GROUP` (all existing groups backfill automatically), the `friendPairKey` column, and the partial unique index.
+- [x] 3.5 Run `bun prisma-generate` to regenerate the Prisma client.
 
 ## 4. API: Friend ledger creation (friends.create procedure)
 
@@ -46,15 +44,15 @@
 >
 > **Design reference**: Decision 3 (direct-accept: both ADMIN/ACTIVE immediately), Decision 4 (pending: auto-accept invitation, no user-facing Accept/Decline), Decision 5 (name = empty string), Decision 13 (separate `friends` router + `lib/api/friends.ts`).
 
-- [ ] 4.1 Create `apps/api/src/lib/api/friends.ts` with a `createFriendLedger` function. It accepts: `callerAccountId`, `peer` (either `{ accountId }` for direct-accept, or `{ email, temporaryName? }` for pending email, or `{ link: true, temporaryName? }` for link), `currency`, `currencyCode`, and `information?`. It runs inside a `prisma.$transaction`.
-- [ ] 4.2 In `createFriendLedger`, implement the **direct-accept path**: when `peer.accountId` is known (either passed directly OR resolved from an email lookup via `Account.findUnique({ where: { email } })`), create the `Group` (type `FRIEND`, name `""`), `Ledger`, two `GroupMember` rows (both ADMIN/ACTIVE), two `LedgerParticipant` rows, and the `FriendLink` row (with smaller-id-first convention). No `GroupInvitation`.
-- [ ] 4.3 In `createFriendLedger`, implement the **pending email path**: when the email does not resolve to an account, create the `Group` (type `FRIEND`, name `""`), `Ledger`, one `GroupMember` (caller, ADMIN/ACTIVE), one `LedgerParticipant` (caller), and a `PENDING` `GroupInvitation` of type `EMAIL` with `role: ADMIN` and the optional `temporaryName`. Do NOT create a `FriendLink` (created on auto-accept).
-- [ ] 4.4 In `createFriendLedger`, implement the **link path**: same as pending email but the invitation is type `LINK`. Generate the token via the existing `createLinkInvitation` helper, return the `inviteUrl`.
-- [ ] 4.5 Implement **lookup-or-create** logic before creating: (a) direct-accept path — compute the `FriendLink` pair key and query for an existing `FriendLink`; if found, return its group with `existed: true`. (b) pending email path — query for an existing `FRIEND` group where the caller is ACTIVE and there's a PENDING invitation to the target email; if found, return it with `existed: true`. (c) link path — no pre-creation lookup (peer unknown).
-- [ ] 4.6 Create `apps/api/src/trpc/routers/friends/` directory with `index.ts` exporting a `friendsRouter` and `create.procedure.ts` with the `create` procedure. The procedure uses `protectedProcedure`, validates input with `friendFormSchema` (from domain, see task 4.7), resolves the caller from `ctx.auth.user`, calls `createFriendLedger`, and returns `{ groupId, existed }`.
-- [ ] 4.7 Create `friendFormSchema` in `packages/domain/src/schemas.ts`: a discriminated union or flexible object accepting `peerAccountId?`, `peerEmail?`, `temporaryName?`, `useLink?`, `currency` (required), `currencyCode?`, `information?`. Add superRefine validation to ensure exactly one peer selection mode is provided.
-- [ ] 4.8 Register the `friendsRouter` in `apps/api/src/trpc/routers/_app.ts`.
-- [ ] 4.9 Export the `friendsRouter` type from `apps/api/src/router.ts` (or wherever `AppRouter` is exported) so the web client can infer types.
+- [x] 4.1 Create `apps/api/src/lib/api/friends.ts` with a `createFriendLedger` function. It accepts: `callerAccountId`, `peer` (either `{ accountId }` for direct-accept, or `{ email, temporaryName? }` for pending email, or `{ link: true, temporaryName? }` for link), `currency`, `currencyCode`, and `information?`. It runs inside a `prisma.$transaction`.
+- [x] 4.2 In `createFriendLedger`, implement the **direct-accept path**: when `peer.accountId` is known (either passed directly OR resolved from an email lookup via `Account.findUnique({ where: { email } })`), create the `Group` (type `FRIEND`, name `""`), `Ledger`, two `GroupMember` rows (both ADMIN/ACTIVE), two `LedgerParticipant` rows, and set `friendPairKey` on the Group (with smaller-id-first convention). No `GroupInvitation`.
+- [x] 4.3 In `createFriendLedger`, implement the **pending email path**: when the email does not resolve to an account, create the `Group` (type `FRIEND`, name `""`), `Ledger`, one `GroupMember` (caller, ADMIN/ACTIVE), one `LedgerParticipant` (caller), and a `PENDING` `GroupInvitation` of type `EMAIL` with `role: ADMIN` and the optional `temporaryName`. Leave `friendPairKey` as `null` (set on auto-accept). The `friends.create` procedure does NOT send an invitation email — the peer will see the friend ledger automatically on next login via the auto-accept hook in Better Auth's `databaseHooks.user.create.after`.
+- [x] 4.4 In `createFriendLedger`, implement the **link path**: same as pending email but the invitation is type `LINK`. Generate the token via the existing `createLinkInvitation` helper, return the `inviteUrl`.
+- [x] 4.5 Implement **lookup-or-create** logic before creating: (a) direct-accept path — compute the `friendPairKey` and query for an existing FRIEND group with that key; if found, return its group with `existed: true`. (b) pending email path — query for an existing `FRIEND` group where the caller is ACTIVE and there's a PENDING invitation to the target email; if found, return it with `existed: true`. (c) link path — no pre-creation lookup (peer unknown).
+- [x] 4.6 Create `apps/api/src/trpc/routers/friends/` directory with `index.ts` exporting a `friendsRouter` and `create.procedure.ts` with the `create` procedure. The procedure uses `protectedProcedure`, validates input with `friendFormSchema` (from domain, see task 4.7), resolves the caller from `ctx.auth.user`, calls `createFriendLedger`, and returns `{ groupId, existed }`.
+- [x] 4.7 Create `friendFormSchema` in `packages/domain/src/schemas.ts`: a discriminated union or flexible object accepting `peerAccountId?`, `peerEmail?`, `temporaryName?`, `useLink?`, `currency` (required), `currencyCode?`, `information?`. Add superRefine validation to ensure exactly one peer selection mode is provided.
+- [x] 4.8 Register the `friendsRouter` in `apps/api/src/trpc/routers/_app.ts`.
+- [x] 4.9 Export the `friendsRouter` type from `apps/api/src/router.ts` (or wherever `AppRouter` is exported) so the web client can infer types.
 
 ## 5. API: Auto-accept for friend invitations
 
@@ -62,10 +60,10 @@
 >
 > **Design reference**: Decision 4 — pending invitations are auto-accepted when the peer's account becomes available. On signup with matching email, or on link-open by an authenticated user.
 
-- [ ] 5.1 Implement the **auto-accept on signup** hook: after a new `Account` is created (in the better-auth signup flow or a post-signup handler), query for all `PENDING` `EMAIL` invitations on `FRIEND`-typed groups targeting the new account's email. For each, auto-accept: create the `GroupMember` (ADMIN/ACTIVE), create the `FriendLink`, flip the invitation to `ACCEPTED`, reconcile the `LedgerParticipant`. Run in a transaction.
-- [ ] 5.2 Implement the **auto-accept on link-open**: when an authenticated account opens a link invite URL for a `FRIEND`-typed group (detected in the group route's `use-link-invite-token` hook or the server-side `loadGroupViewer`), auto-accept immediately instead of showing the Accept/Decline banner. Reuse the existing `acceptLinkInvitation` logic but skip the user-confirmation step.
-- [ ] 5.3 Filter friend invitations out of `invitations.listForAccount`: add a `where` clause excluding invitations where `group.groupType = FRIEND`. This ensures the homepage Pending Invitations card never shows friend invitations.
-- [ ] 5.4 Handle the **`FriendLink` race on auto-accept**: inside the auto-accept transaction, catch unique constraint violations on `FriendLink` insert. If a `FriendLink` already exists for this pair (another concurrent auto-accept won), skip creating a second membership and instead join the existing group (upsert the `GroupMember`).
+- [x] 5.1 Implement the **auto-accept on signup** hook: in the Better Auth `databaseHooks.user.create.after` config (registered in `apps/api/src/lib/auth/index.ts`), query for all `PENDING` `EMAIL` invitations on `FRIEND`-typed groups targeting the new account's email. For each, auto-accept: create the `GroupMember` (ADMIN/ACTIVE), set `friendPairKey` on the Group, flip the invitation to `ACCEPTED`, reconcile the `LedgerParticipant`. Run each in its own transaction so one failure doesn't block the rest. The hook fires after the account row is committed to the database — no client-side dependency or race conditions.
+- [x] 5.2 Implement the **auto-accept on link-open** in `groups.get`: when an authenticated account opens a link invite URL for a `FRIEND`-typed group with a valid PENDING token, the `getGroupProcedure` calls `acceptLinkInvitation` server-side before returning the payload. The user lands directly in the group as an active member — no Accept/Decline banner. A try-catch handles races (concurrent accept). Falls through to the regular banner flow if the group is not FRIEND or the token is no longer PENDING.
+- [x] 5.3 Filter friend invitations out of `invitations.listForAccount`: add a `where` clause excluding invitations where `group.groupType = FRIEND`. This ensures the homepage Pending Invitations card never shows friend invitations.
+- [x] 5.4 Handle the **race on auto-accept**: inside the auto-accept transaction, catch unique constraint violations on the `Group.friendPairKey` partial unique index. If the pair key is already set for this group (another concurrent auto-accept won), skip creating a second membership and instead join the existing group (upsert the `GroupMember`).
 
 ## 6. API: Restricted actions for FRIEND-typed groups
 
@@ -73,12 +71,12 @@
 >
 > **Design reference**: Decision 6 — reject rename/delete/archive/leave/invite-more for FRIEND. Decision 7 — both members ADMIN.
 
-- [ ] 6.1 Add a `groupType` check to `groups.update` procedure (or `updateGroup` in `lib/api/groups.ts`): if `group.groupType === FRIEND`, reject `name` field changes with `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotRenamable' })`. Allow `information` and `currency`/`currencyCode` changes — these remain editable for friend ledgers (see grill-me answers #2, #6, #11).
-- [ ] 6.2 Add a `groupType` check to `groups.archive` procedure: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotArchivable' })`.
-- [ ] 6.3 Add a `groupType` check to `groups.delete` procedure: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotDeletable' })`.
-- [ ] 6.4 Add a `groupType` check to the leave-group procedure (`members.leave` or `groups.leave`): if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotLeavable' })`.
-- [ ] 6.5 Add a `groupType` check to `invitations.create` and `invitations.createLink` procedures: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerFull' })`. (Friend ledgers are strictly 2 people — no additional invitations.)
-- [ ] 6.6 Add a `groupType` check to `invitations.revoke` procedure: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotRevocable' })`. This prevents a stuck ledger (one member, no re-invite path). The caller can hide the ledger instead. (See grill-me answer #1.)
+- [x] 6.1 Add a `groupType` check to `groups.update` procedure (or `updateGroup` in `lib/api/groups.ts`): if `group.groupType === FRIEND`, reject `name` field changes with `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotRenamable' })`. Allow `information` and `currency`/`currencyCode` changes — these remain editable for friend ledgers (see grill-me answers #2, #6, #11).
+- [x] 6.2 Add a `groupType` check to `groups.archive` procedure: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotArchivable' })`.
+- [x] 6.3 Add a `groupType` check to `groups.delete` procedure: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotDeletable' })`.
+- [x] 6.4 Add a `groupType` check to the leave-group procedure (`members.leave` or `groups.leave`): if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotLeavable' })`.
+- [x] 6.5 Add a `groupType` check to `invitations.create` and `invitations.createLink` procedures: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerFull' })`. (Friend ledgers are strictly 2 people — no additional invitations.)
+- [x] 6.6 Add a `groupType` check to `invitations.revoke` procedure: if `group.groupType === FRIEND`, throw `TRPCError({ code: FORBIDDEN, message: 'friendLedgerNotRevocable' })`. This prevents a stuck ledger (one member, no re-invite path). The caller can hide the ledger instead. (See grill-me answer #1.)
 
 ## 7. API: Enrich account.groups with groupType and displayName
 
@@ -86,10 +84,10 @@
 >
 > **Design reference**: Decision 5 — per-viewer `displayName` computed via `resolveParticipantDisplayName` for FRIEND, `Group.name` for GROUP. Decision 10 — homepage splits into Groups and Friends sections.
 
-- [ ] 7.1 Extend the `account.groups` procedure in `apps/api/src/trpc/routers/account/index.ts`: include `groupType` in the group select (it's a column on `Group`, so it comes through automatically — verify it's in the response).
-- [ ] 7.2 For each group returned by `account.groups`, compute `displayName`: if `groupType === GROUP`, set `displayName = group.name`. If `groupType === FRIEND`, find the OTHER member's display name by querying the group's members (excluding the caller's accountId) and applying `resolveParticipantDisplayName`. For pending invitations (where the peer hasn't joined yet), query the `GroupInvitation` for the peer's `temporaryName`/`email`.
-- [ ] 7.3 Enrich the `account.friends` query (renamed in task 2.1) with friend-ledger metadata: for each friend, check whether a `FriendLink` exists between the caller and that account, OR whether a pending `FRIEND` invitation exists targeting that account's email. Return this as a `hasFriendLedger` boolean on each friend entry.
-- [ ] 7.4 Update `invitations.previewLink` procedure to compute a FRIEND-aware display name: for `FRIEND`-typed groups where `Group.name` is `""`, return "Friend ledger with {inviter's Account.name}" (resolved via `invitedById`). For `GROUP`-typed groups, return `Group.name` unchanged. (See grill-me answer #3 — without this, the public link preview shows an empty string.)
+- [x] 7.1 Extend the `account.groups` procedure in `apps/api/src/trpc/routers/account/index.ts`: include `groupType` in the group select (it's a column on `Group`, so it comes through automatically — verify it's in the response).
+- [x] 7.2 For each group returned by `account.groups`, compute `displayName`: if `groupType === GROUP`, set `displayName = group.name`. If `groupType === FRIEND`, find the OTHER member's display name by querying the group's members (excluding the caller's accountId) and applying `resolveParticipantDisplayName`. For pending invitations (where the peer hasn't joined yet), query the `GroupInvitation` for the peer's `temporaryName`/`email`.
+- [x] 7.3 Enrich the `account.friends` query (renamed in task 2.1) with friend-ledger metadata: for each friend, check whether a FRIEND-typed group with a matching `friendPairKey` exists between the caller and that account, OR whether a pending `FRIEND` invitation exists targeting that account's email. Return this as a `hasFriendLedger` boolean on each friend entry.
+- [x] 7.4 Update `invitations.previewLink` procedure to compute a FRIEND-aware display name: for `FRIEND`-typed groups where `Group.name` is `""`, return "Friend ledger with {inviter's Account.name}" (resolved via `invitedById`). For `GROUP`-typed groups, return `Group.name` unchanged. (See grill-me answer #3 — without this, the public link preview shows an empty string.)
 
 ## 8. Web: Friend ledger create route (/friends/create)
 
@@ -97,13 +95,13 @@
 >
 > **Design reference**: Decision 12 — `/friends/create` with peer picker (3 tabs: Friends/Email/Link), currency selector, optional info textarea, optional temporary name. Link path navigates to group page with dialog showing the link.
 
-- [ ] 8.1 Add `/friends/create` route to `apps/web/src/router.tsx` (and the corresponding route file under `apps/web/src/routes/friends/create.tsx` and `create.lazy.tsx`).
-- [ ] 8.2 Create the page component at `apps/web/src/app/friends/create/create-friend.tsx`. Use `react-hook-form` with `zodResolver` and the `friendFormSchema` from domain.
-- [ ] 8.3 Build the **peer picker** with three tabs (reusing the tab pattern from the existing `invite-card.tsx`): (a) Friends tab — dropdown of `account.friends` with "already has a friend ledger" indicator for friends where `hasFriendLedger` is true. (b) Email tab — email input + optional temporary name. (c) Link tab — just the currency selector and info field; the link is generated on submit.
-- [ ] 8.4 Add the `CurrencySelector` component (reuse from `apps/web/src/components/currency-selector.tsx`).
-- [ ] 8.5 Add an optional `Textarea` for the `information` field (friends might want to add context like "Flatmate expenses").
-- [ ] 8.6 On submit, call `trpc.friends.create.useMutation`. Handle the response: (a) direct-accept path — navigate to `/groups/$groupId/expenses`. (b) pending email path — navigate to `/groups/$groupId/members` with a toast. (c) link path — navigate to `/groups/$groupId` and open a `ResponsiveDialog` showing the invite URL. (d) if `existed === true` — navigate directly to the existing ledger, no toast. (See grill-me answer #13.)
-- [ ] 8.7 Add a "Create friend ledger" entry point on the homepage (next to or near the "Create a group" button in `SignedInHero`).
+- [x] 8.1 Add `/friends/create` route to `apps/web/src/router.tsx` (and the corresponding route file under `apps/web/src/routes/friends/create.tsx` and `create.lazy.tsx`).
+- [x] 8.2 Create the page component at `apps/web/src/app/friends/create/create-friend.tsx`. Use `react-hook-form` with `zodResolver` and the `friendFormSchema` from domain.
+- [x] 8.3 Build the **peer picker** with three tabs (reusing the tab pattern from the existing `invite-card.tsx`): (a) Friends tab — dropdown of `account.friends` with "already has a friend ledger" indicator for friends where `hasFriendLedger` is true. (b) Email tab — email input + optional temporary name. (c) Link tab — just the currency selector and info field; the link is generated on submit.
+- [x] 8.4 Add the `CurrencySelector` component (reuse from `apps/web/src/components/currency-selector.tsx`).
+- [x] 8.5 Add an optional `Textarea` for the `information` field (friends might want to add context like "Flatmate expenses").
+- [x] 8.6 On submit, call `trpc.friends.create.useMutation`. Handle the response: (a) direct-accept path — navigate to `/groups/$groupId/expenses`. (b) pending email path — navigate to `/groups/$groupId/members` with a toast. (c) link path — navigate to `/groups/$groupId` and open a `ResponsiveDialog` showing the invite URL. (d) if `existed === true` — navigate directly to the existing ledger, no toast. (See grill-me answer #13.)
+- [x] 8.7 Add a "Create friend ledger" entry point on the homepage (next to or near the "Create a group" button in `SignedInHero`).
 
 ## 9. Web: Homepage restructure (separate Groups and Friends sections + scope-picker buttons)
 
@@ -111,14 +109,14 @@
 >
 > **Design reference**: Decision 10 — Starred (mixed) → Groups (all active groups) → Friends (all friend ledgers) → Archived (groups only) → Hidden (mixed). Decision 11 — section-level "Create expense" buttons with scope-picker dialogs (one for Groups, one for Friends). Grill-me answer #7 — "no 'create expense' per group. the create expense is global for the entire group section. same is for the entire friends section. when clicking this, it opens up the scope picker."
 
-- [ ] 9.1 Update `partitionGroups` in `apps/web/src/app/groups/group-buckets.ts`: replace the single `active` array with separate `groups` and `friends` arrays. Partition by `groupType`: `GROUP`-type non-starred non-archived non-hidden → `groups`; `FRIEND`-type non-starred non-hidden → `friends`. Update the return type.
-- [ ] 9.2 Update `bucketFor` in the same file: `FRIEND`-type groups SHALL skip the `archived` bucket (defense-in-depth, even if `Group.archived` were somehow true).
-- [ ] 9.3 Update `RecentGroupList` in `apps/web/src/app/groups/recent-group-list.tsx`: replace the "Recent" section with two sections — "Groups" (heading from translation key `groups`) and "Friends" (heading from translation key `friends`). Starred section stays mixed at the top. Archived section stays groups-only. Hidden section stays mixed.
-- [ ] 9.4 Add a "Create expense" button next to the "Groups" section heading. On click, open a `ResponsiveDialog` scope-picker listing all the user's active groups (filtered to `groupType === GROUP`, non-starred, non-archived, non-hidden). Each item shows `displayName`, member count, and currency. Selecting one navigates to `/groups/$groupId/expenses/create`.
-- [ ] 9.5 Add a "Create expense" button next to the "Friends" section heading. On click, open a `ResponsiveDialog` scope-picker listing all the user's friend ledgers (filtered to `groupType === FRIEND`, non-starred, non-hidden). Each item shows `displayName`, pending indicator, and currency. Selecting one navigates to `/groups/$groupId/expenses/create`.
-- [ ] 9.6 Create the scope-picker dialog component (reusing `ResponsiveDialog` from `apps/web/src/components/ui/responsive-dialog.tsx`). The dialog accepts a list of items and an `onSelect` callback. It renders a scrollable list with each item's name/displayName and metadata.
-- [ ] 9.7 Add the "Groups" and "Friends" translation keys to `en-US.json` via `bun i18n` CLI. Remove or repurpose the "recent" key.
-- [ ] 9.8 Run `bun i18n check` to verify no orphan keys.
+- [x] 9.1 Update `partitionGroups` in `apps/web/src/app/groups/group-buckets.ts`: replace the single `active` array with separate `groups` and `friends` arrays. Partition by `groupType`: `GROUP`-type non-starred non-archived non-hidden → `groups`; `FRIEND`-type non-starred non-hidden → `friends`. Update the return type.
+- [x] 9.2 Update `bucketFor` in the same file: `FRIEND`-type groups SHALL skip the `archived` bucket (defense-in-depth, even if `Group.archived` were somehow true).
+- [x] 9.3 Update `RecentGroupList` in `apps/web/src/app/groups/recent-group-list.tsx`: replace the "Recent" section with two sections — "Groups" (heading from translation key `groups`) and "Friends" (heading from translation key `friends`). Starred section stays mixed at the top. Archived section stays groups-only. Hidden section stays mixed.
+- [x] 9.4 Add a "Create expense" button next to the "Groups" section heading. On click, open a `ResponsiveDialog` scope-picker listing all the user's active groups (filtered to `groupType === GROUP`, non-starred, non-archived, non-hidden). Each item shows `displayName`, member count, and currency. Selecting one navigates to `/groups/$groupId/expenses/create`.
+- [x] 9.5 Add a "Create expense" button next to the "Friends" section heading. On click, open a `ResponsiveDialog` scope-picker listing all the user's friend ledgers (filtered to `groupType === FRIEND`, non-starred, non-hidden). Each item shows `displayName`, pending indicator, and currency. Selecting one navigates to `/groups/$groupId/expenses/create`.
+- [x] 9.6 Create the scope-picker dialog component (reusing `ResponsiveDialog` from `apps/web/src/components/ui/responsive-dialog.tsx`). The dialog accepts a list of items and an `onSelect` callback. It renders a scrollable list with each item's name/displayName and metadata.
+- [x] 9.7 Add the "Groups" and "Friends" translation keys to `en-US.json` via `bun i18n` CLI. Remove or repurpose the "recent" key.
+- [x] 9.8 Run `bun i18n check` to verify no orphan keys.
 
 ## 10. Web: Group card and detail page updates (FRIEND-aware UI)
 
@@ -126,13 +124,13 @@
 >
 > **Design reference**: Decision 5 (render `displayName`), Decision 6 (hide Members tab, disable name in Settings, keep currency/information editable). Grill-me answers #6 (drop Members tab, keep Settings with name disabled), #8 (show avatar with initials fallback), #9 (subtle pending indicator), #10 (reuse existing pages, only hide elements).
 
-- [ ] 10.1 Update `GroupCard` in `apps/web/src/app/groups/group-card.tsx`: render `group.displayName` instead of `group.name` as the card title. The `displayName` field comes from the updated `account.groups` response (task 7.2).
-- [ ] 10.2 Add an avatar to the left of the `displayName` for `FRIEND`-typed cards only. Use `Account.image` if set, fall back to initials (first letter of the peer's display name). GROUP cards show no avatar (unchanged). (See grill-me answer #8 — `Account.image` is not widely set today; initials are the primary fallback.)
-- [ ] 10.3 Add a subtle "Pending" badge to `FRIEND`-typed cards when the peer has a PENDING invitation (only one ACTIVE member). The badge should be consistent with the app's existing pending-state styling. (See grill-me answer #9.)
-- [ ] 10.4 Hide the archive action in the card dropdown menu for `FRIEND`-typed groups: conditionally render the `onToggleArchived` dropdown item only when `group.groupType === GROUP`.
-- [ ] 10.5 On the group detail page, hide the Members tab for `FRIEND`-typed groups. The tab navigation should skip Members when `groupType === FRIEND`. (See grill-me answer #6 — it's just 2 people, shown on the card already.)
-- [ ] 10.6 On the group Settings tab (`apps/web/src/app/groups/[groupId]/edit/`), for `FRIEND`-typed groups: hide or disable the name input field (read-only). Keep the currency selector and information textarea editable. (See grill-me answers #2, #6, #11 — currency and information remain editable; only name is locked.)
-- [ ] 10.7 On the group Settings tab, for `FRIEND`-typed groups: hide the delete group button and the leave group button (these actions are server-rejected, but the UI should not offer them).
+- [x] 10.1 Update `GroupCard` in `apps/web/src/app/groups/group-card.tsx`: render `group.displayName` instead of `group.name` as the card title. The `displayName` field comes from the updated `account.groups` response (task 7.2).
+- [x] 10.2 Add an avatar to the left of the `displayName` for `FRIEND`-typed cards only. Use `Account.image` if set, fall back to initials (first letter of the peer's display name). GROUP cards show no avatar (unchanged). (See grill-me answer #8 — `Account.image` is not widely set today; initials are the primary fallback.)
+- [x] 10.3 Add a subtle "Pending" badge to `FRIEND`-typed cards when the peer has a PENDING invitation (only one ACTIVE member). The badge should be consistent with the app's existing pending-state styling. (See grill-me answer #9.)
+- [x] 10.4 Hide the archive action in the card dropdown menu for `FRIEND`-typed groups: conditionally render the `onToggleArchived` dropdown item only when `group.groupType === GROUP`.
+- [x] 10.5 On the group detail page, hide the Members tab for `FRIEND`-typed groups. The tab navigation should skip Members when `groupType === FRIEND`. (See grill-me answer #6 — it's just 2 people, shown on the card already.)
+- [x] 10.6 On the group Settings tab (`apps/web/src/app/groups/[groupId]/edit/`), for `FRIEND`-typed groups: hide or disable the name input field (read-only). Keep the currency selector and information textarea editable. (See grill-me answers #2, #6, #11 — currency and information remain editable; only name is locked.)
+- [x] 10.7 On the group Settings tab, for `FRIEND`-typed groups: hide the delete group button and the leave group button (these actions are server-rejected, but the UI should not offer them).
 
 ## 11. Web: Link-path dialog on group page
 
@@ -140,8 +138,8 @@
 >
 > **Design reference**: Decision 12 — link path navigates to `/groups/$groupId` immediately, invite link shown in a `ResponsiveDialog` on the group page.
 
-- [ ] 11.1 On the group page (`apps/web/src/app/groups/[groupId]/`), detect when the user arrived from a friend-ledger link-path creation (e.g. via a search param like `?linkInvite=...` or a router state flag). Open a `ResponsiveDialog` showing the invite URL with a copy button and `navigator.share` button.
-- [ ] 11.2 The dialog should explain that the link can be shared with the friend to let them join the ledger automatically.
+- [x] 11.1 On the group page (`apps/web/src/app/groups/[groupId]/`), detect when the user arrived from a friend-ledger link-path creation (e.g. via a search param like `?linkInvite=...` or a router state flag). Open a `ResponsiveDialog` showing the invite URL with a copy button and `navigator.share` button.
+- [x] 11.2 The dialog should explain that the link can be shared with the friend to let them join the ledger automatically.
 
 ## 12. Translations
 
@@ -149,8 +147,8 @@
 >
 > **AGENTS.md rule**: `en-US.json` is the source of truth; other locales fall back to it at runtime. Use the `bun i18n` CLI. Audit with `bun i18n check`.
 
-- [ ] 12.1 Add all new translation keys to `en-US.json` via `bun i18n` CLI: "Friends" (section heading, tab label), "Groups" (section heading), "Create friend ledger" (button), "Create expense" (card button), "Friend ledger already exists" (toast), "Invite link" (dialog title), "Share this link with your friend to add them to the ledger" (dialog description), and any other new copy.
-- [ ] 12.2 Remove orphaned keys: "Contacts" (renamed to "Friends"), "recent"/"Recent" (renamed to "Groups" for the homepage section). Run `bun i18n check` to identify orphans.
+- [x] 12.1 Add all new translation keys to `en-US.json` via `bun i18n` CLI: "Friends" (section heading, tab label), "Groups" (section heading), "Create friend ledger" (button), "Create expense" (card button), "Friend ledger already exists" (toast), "Invite link" (dialog title), "Share this link with your friend to add them to the ledger" (dialog description), and any other new copy.
+- [x] 12.2 Remove orphaned keys: "Contacts" (renamed to "Friends"), "recent"/"Recent" (renamed to "Groups" for the homepage section). Run `bun i18n check` to identify orphans.
 - [ ] 12.3 Dispatch parallel subagents grouped by language family (Romance, Germanic+Nordic, Slavic, East Asian, Other) to translate the new keys into all non-English locales using the translate-strings skill. Each subagent confirms `bun i18n check --locale <own-locale>` exits 0.
 - [ ] 12.4 Run `bun i18n check` to verify all locales are in sync with `en-US`.
 
@@ -160,17 +158,17 @@
 >
 > **AGENTS.md rule**: Never start the dev server for integration tests. API integration tests use `createCaller` (no server needed, only DB). Web integration tests need the API server on port 3001 — ask the user if it's not running.
 
-- [ ] 13.1 API integration test: `friends.create` direct-accept path with a contact — verify both members are ADMIN/ACTIVE, `FriendLink` is created, no invitation exists, ledger appears for both accounts.
+- [ ] 13.1 API integration test: `friends.create` direct-accept path with a contact — verify both members are ADMIN/ACTIVE, `friendPairKey` is set on the Group, no invitation exists, ledger appears for both accounts.
 - [ ] 13.2 API integration test: `friends.create` direct-accept path with an email that belongs to an existing account — verify the email is resolved to an accountId and the direct-accept path fires (no invitation).
-- [ ] 13.3 API integration test: `friends.create` pending email path — verify the group is created with only the caller, a PENDING EMAIL invitation exists with role ADMIN, `FriendLink` is NOT created.
+- [ ] 13.3 API integration test: `friends.create` pending email path — verify the group is created with only the caller, a PENDING EMAIL invitation exists with role ADMIN, `friendPairKey` is NOT set (null).
 - [ ] 13.4 API integration test: `friends.create` link path — verify the group is created with only the caller, a PENDING LINK invitation exists, the invite URL is returned.
 - [ ] 13.5 API integration test: lookup-or-create idempotency — creating a friend ledger with the same pair twice returns the same group with `existed: true` the second time.
-- [ ] 13.6 API integration test: auto-accept on signup — create a pending email friend invitation, then create a new account with the matching email, verify the invitation is auto-accepted and the `FriendLink` is created.
+- [ ] 13.6 API integration test: auto-accept on signup — create a pending email friend invitation, then create a new account with the matching email, verify the invitation is auto-accepted and `friendPairKey` is set on the Group.
 - [ ] 13.7 API integration test: auto-accept on link-open — create a pending link friend invitation, then simulate an authenticated account opening the link, verify auto-accept.
 - [ ] 13.8 API integration test: friend invitations excluded from `invitations.listForAccount` — verify the query returns no friend invitations.
 - [ ] 13.9 API integration test: restricted actions — for a FRIEND group, verify: `groups.update` with `name` change is rejected (FORBIDDEN), `groups.update` with `information`/`currency` change is ALLOWED, `groups.archive` is rejected, `groups.delete` is rejected, `groups.leave` is rejected, `invitations.create` is rejected, `invitations.createLink` is rejected, `invitations.revoke` is rejected.
 - [ ] 13.10 API integration test: `account.groups` returns `groupType` and `displayName` — for a FRIEND group, verify `displayName` is the other member's name; for a GROUP group, verify `displayName` equals `Group.name`.
-- [ ] 13.11 API integration test: `account.friends` returns `hasFriendLedger` metadata — verify the flag is true when a FriendLink exists and false otherwise.
+- [ ] 13.11 API integration test: `account.friends` returns `hasFriendLedger` metadata — verify the flag is true when a matching `friendPairKey` group exists and false otherwise.
 - [ ] 13.12 API integration test: `invitations.previewLink` for a FRIEND-typed group returns "Friend ledger with {inviter name}" instead of an empty string.
 - [ ] 13.13 Migration test: verify per-account `archived` data is preserved in `hidden` after the column merge, and that dropping `pinned` loses no live data (all `pinned` values were `false`).
 - [ ] 13.14 Web test: homepage renders separate "Groups" and "Friends" sections — verify groups and friend ledgers are partitioned correctly.

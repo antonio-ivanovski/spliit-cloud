@@ -18,7 +18,7 @@ type Props = {
   participants: ParticipantMappingState[]
   account: AuthAccount | null | undefined
   destinationParticipants?: DestinationParticipant[]
-  contacts: Array<{
+  friends: Array<{
     accountId: string
     name: string
     email: string
@@ -40,7 +40,7 @@ export function MappingStep({
   participants,
   account,
   destinationParticipants,
-  contacts,
+  friends,
   onBack,
   onChange,
   onContinue,
@@ -171,7 +171,7 @@ export function MappingStep({
             onChange={(patch) => updateParticipant(p.key, patch)}
             name={p.source.sourceName}
             destinationParticipants={destinationParticipants}
-            contacts={contacts}
+            friends={friends}
           />
         ))}
       </div>

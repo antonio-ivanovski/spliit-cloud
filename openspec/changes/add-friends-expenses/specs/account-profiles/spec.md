@@ -10,7 +10,7 @@ The system SHALL provide an `account.friends` query that returns the authenticat
 
 #### Scenario: Friend list enriched with friend-ledger metadata
 - **WHEN** an authenticated account queries `account.friends`
-- **THEN** each friend entry SHALL include a flag indicating whether a `FriendLink` (or pending `FRIEND` invitation) already exists between the caller and that account
+- **THEN** each friend entry SHALL include a flag indicating whether a FRIEND-typed group with a matching `friendPairKey` (or pending `FRIEND` email invitation) already exists between the caller and that account
 
 ### Requirement: Per-account group preferences
 The system SHALL store per-account group preferences in `AccountGroupPreference` with two boolean columns: `starred` and `hidden`. The `starred` column backs the "Starred" homepage section. The `hidden` column backs the per-account "hide" preference (removing the group from the account's default homepage view). The system SHALL NOT maintain a `pinned` or per-account `archived` column.

@@ -14,8 +14,9 @@ The system SHALL grant group access only to authenticated accounts that have act
 - **AND** the UI SHALL hide all edit affordances (create buttons, edit buttons, export, receipt upload) and SHALL surface an Accept/Decline banner
 
 #### Scenario: Pending invitee opens friend ledger (FRIEND-typed)
-- **WHEN** an authenticated account with a pending invitation on a `FRIEND`-typed group opens the group via a link invite URL
-- **THEN** the system SHALL auto-accept the invitation immediately (create the second ADMIN/ACTIVE member, create the `FriendLink`, flip invitation to `ACCEPTED`)
+- **WHEN** an authenticated account with a pending `LINK` invitation on a `FRIEND`-typed group opens the group via a link invite URL
+- **THEN** the `groups.get` procedure SHALL detect the FRIEND group type and call `acceptLinkInvitation` server-side before returning the payload (no Accept/Decline UI)
+- **AND** the system SHALL create the second ADMIN/ACTIVE member, set the `friendPairKey` on the Group, flip invitation to `ACCEPTED`
 - **AND** the system SHALL NOT present any Accept or Decline banner
 - **AND** the account SHALL gain full member access (not read-only)
 

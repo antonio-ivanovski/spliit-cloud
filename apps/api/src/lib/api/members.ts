@@ -462,10 +462,10 @@ export async function archiveGroupForSelf(opts: {
         id: randomId(),
         accountId,
         groupId,
-        archived: true,
+        hidden: true,
       },
       update: {
-        archived: true,
+        hidden: true,
       },
     })
 

@@ -1,12 +1,22 @@
+import { CopyButton } from '@/components/copy-button'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { Navigate, Outlet, useSearch } from '@tanstack/react-router'
-import { Cloud, Loader2 } from 'lucide-react'
+import { Cloud, Loader2, Share2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrentGroupProvider } from './current-group-context'
 import { GroupHeader } from './group-header'
@@ -20,10 +30,31 @@ export function GroupLayoutClient({
   // `/groups/<id>?invite=<token>`. The route search schema captures
   // any non-empty value so the server can decide whether the token is
   // valid. The token is forwarded to `groups.get` as the credential.
-  const { invite: linkInviteToken } = useSearch({
-    from: '/groups/$groupId',
-  })
+  const { invite: linkInviteToken, friendLinkInvite: friendLinkInviteUrl } =
+    useSearch({
+      from: '/groups/$groupId',
+    })
   const hasInviteInUrl = linkInviteToken !== undefined
+  const [friendLinkDialogUrl, setFriendLinkDialogUrl] = useState<string | null>(
+    null,
+  )
+  const [canShare, setCanShare] = useState(false)
+
+  useEffect(() => {
+    setCanShare(
+      typeof navigator !== 'undefined' && typeof navigator.share === 'function',
+    )
+  }, [])
+
+  // Friend-ledger link-path creation navigates here with the invite URL
+  // in the `friendLinkInvite` search param. Open a one-time dialog so the
+  // user can copy or share the link before continuing.
+  useEffect(() => {
+    if (friendLinkInviteUrl) {
+      setFriendLinkDialogUrl(friendLinkInviteUrl)
+    }
+  }, [friendLinkInviteUrl])
+
   const { data, isLoading, error } = trpc.groups.get.useQuery(
     { groupId, linkInviteToken },
     { retry: false },
@@ -36,6 +67,9 @@ export function GroupLayoutClient({
   })
   const { t: tForbidden } = useTranslation(undefined, {
     keyPrefix: 'Groups',
+  })
+  const { t: tFriends } = useTranslation(undefined, {
+    keyPrefix: 'Friends',
   })
   const { toast } = useToast()
   const { isPending: accountPending } = useCurrentAccount()
@@ -115,6 +149,7 @@ export function GroupLayoutClient({
           isLoading: true as const,
           groupId,
           group: undefined,
+          displayName: undefined,
           currentLedgerParticipantId: undefined,
           currentMember: undefined,
           currentInvitation: undefined,
@@ -124,6 +159,7 @@ export function GroupLayoutClient({
           isLoading: false as const,
           groupId,
           group: data.group,
+          displayName: data.displayName ?? '',
           currentLedgerParticipantId: data.currentLedgerParticipantId ?? null,
           currentMember: data.currentMember,
           currentInvitation: data.currentInvitation ?? null,
@@ -137,6 +173,56 @@ export function GroupLayoutClient({
         {children ?? <Outlet />}
       </div>
       <SaveGroupLocally />
+      <ResponsiveDialog
+        open={!!friendLinkDialogUrl}
+        onOpenChange={(open) => {
+          if (!open) setFriendLinkDialogUrl(null)
+        }}
+      >
+        <ResponsiveDialogContent>
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {tFriends('inviteLinkTitle')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {tFriends('inviteLinkDescription')}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogBody>
+            <div className="flex items-center gap-2">
+              <Input
+                readOnly
+                value={friendLinkDialogUrl ?? ''}
+                className="font-mono text-xs"
+                onFocus={(event) => event.currentTarget.select()}
+              />
+              {friendLinkDialogUrl && <CopyButton text={friendLinkDialogUrl} />}
+              {canShare && friendLinkDialogUrl && (
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await navigator.share({
+                        title: tFriends('inviteLinkTitle'),
+                        text: `${tFriends('inviteLinkDescription')} ${friendLinkDialogUrl}`,
+                      })
+                    } catch (err) {
+                      if (err instanceof Error && err.name !== 'AbortError') {
+                        console.warn('[group-layout] share failed:', err)
+                      }
+                    }
+                  }}
+                  aria-label={tFriends('share')}
+                >
+                  <Share2 className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+          </ResponsiveDialogBody>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </CurrentGroupProvider>
   )
 }

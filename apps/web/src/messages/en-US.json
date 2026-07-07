@@ -33,7 +33,8 @@
       "signIn": "Sign in to Spliit Cloud",
       "createAccount": "Create an account",
       "createGroup": "Create a group",
-      "importGroup": "Import group from another service"
+      "importGroup": "Import group from another service",
+      "createFriendLedger": "Create friend ledger"
     },
     "welcomeBack": "Welcome back, {name}."
   },
@@ -105,7 +106,6 @@
       "description": "You have hidden all of your groups.",
       "showHidden": "Show hidden groups"
     },
-    "recent": "Recent groups",
     "starred": "Starred groups",
     "archived": "Archived groups",
     "hidden": "Hidden groups",
@@ -311,12 +311,12 @@
           "leaveUnlinked": "Leave unlinked",
           "leaveUnlinkedDescription": "Keeps the name only — link later from Members.",
           "leaveUnlinkedFollowUp": "{name} will appear as a name-only entry with no app access. You can link them to an account later from the Members tab.",
-          "inviteContact": "From your contacts",
-          "inviteContactDescription": "Invite a contact from groups you have shared before.",
-          "selectContactLabel": "Contact",
-          "selectContactPlaceholder": "Select a contact…",
-          "contactAlreadyMember": "Already a member",
-          "contactPendingInvite": "Already invited"
+          "inviteFriend": "From your friends",
+          "inviteFriendDescription": "Invite a friend from groups you have shared before.",
+          "selectFriendLabel": "Friend",
+          "selectFriendPlaceholder": "Select a friend…",
+          "friendAlreadyMember": "Already a member",
+          "friendPendingInvite": "Already invited"
         },
         "Errors": {
           "duplicateExistingMember": "Two source rows are mapped to the same existing member.",
@@ -384,7 +384,15 @@
         "refresh": "Refresh",
         "viaFrankfurter": "Rate fetched from Frankfurter for the selected date."
       }
-    }
+    },
+    "groups": "Groups",
+    "friends": "Friends",
+    "createExpense": "Create expense",
+    "pending": "Pending",
+    "scopePickerGroups": "Choose a group",
+    "scopePickerFriends": "Choose a friend ledger",
+    "scopePickerEmpty": "No groups yet",
+    "scopePickerMembers": "{count} member(s)"
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -1192,7 +1200,7 @@
       "tab": {
         "email": "Email",
         "link": "Invite link",
-        "contacts": "Contacts"
+        "friends": "Friends"
       },
       "link": {
         "generate": "Generate invite link",
@@ -1212,11 +1220,11 @@
       "linkDescription": "Generate a single-use link anyone can use to join. The link stops working after the first accept.",
       "temporaryName": "Temporary name (optional)",
       "temporaryNamePlaceholder": "e.g. Alex's roommate",
-      "contactsDescription": "Invite someone from groups you have shared.",
-      "selectContactPlaceholder": "Select a person…",
-      "contactAlreadyMember": "Already a member",
-      "noContacts": "No contacts yet. Invite from the Email tab.",
-      "contactAlreadyInvited": "Already invited"
+      "friendsDescription": "Invite someone from groups you have shared.",
+      "selectFriendPlaceholder": "Select a friend…",
+      "friendAlreadyMember": "Already a member",
+      "noFriends": "No friends yet. Invite from the Email tab.",
+      "friendAlreadyInvited": "Already invited"
     },
     "invitations": {
       "title": "Pending invitations",
@@ -1376,5 +1384,24 @@
       "step1": "Tap the menu button (⋮) at the top right",
       "step2": "Tap Install"
     }
+  },
+  "Friends": {
+    "title": "Create a friend ledger",
+    "peerFriendsTab": "Friends list",
+    "peerEmailTab": "Email",
+    "peerLinkTab": "Shareable link",
+    "alreadyHasLedger": "already has a friend ledger",
+    "inviteSent": "Invitation sent. Your friend will be added when they join Spliit.",
+    "inviteLinkTitle": "Share this link",
+    "inviteLinkDescription": "Share this link with your friend to add them to the ledger.",
+    "copy": "Copy",
+    "share": "Share",
+    "linkHelp": "Generate a shareable link that your friend can use to join this ledger.",
+    "emailLabel": "Friend's email",
+    "temporaryNameLabel": "Display name (optional)",
+    "temporaryNameHelp": "Used until your friend joins and claims their account.",
+    "friendsEmpty": "Add a friend by entering their email or share a link to invite them.",
+    "infoLabel": "Information (optional)",
+    "infoPlaceholder": "Add context like 'Roommate expenses'"
   }
 }

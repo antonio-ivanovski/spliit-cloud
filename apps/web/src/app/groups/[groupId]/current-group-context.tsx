@@ -18,6 +18,12 @@ type GroupContext =
       isLoading: false
       groupId: string
       group: Group
+      // Human-readable display name. For regular groups this is the
+      // stored name; for FRIEND-typed groups (whose name is always
+      // empty) this is resolved server-side from the peer member's
+      // account name, a pending invitation's temporary name, or the
+      // invitation email.
+      displayName: string
       // Server-backed ledger participant id for the signed-in account in
       // this group. Replaces the localStorage "activeUser" selection.
       // Null for pending invitees who have not yet accepted.
@@ -39,10 +45,11 @@ type GroupContext =
       // no token (or it didn't match anything).
       linkInviteState: LinkInviteState | null
     }
-  | {
+    | {
       isLoading: true
       groupId: string
       group: undefined
+      displayName: undefined
       currentLedgerParticipantId: undefined
       currentMember: undefined
       currentInvitation: undefined

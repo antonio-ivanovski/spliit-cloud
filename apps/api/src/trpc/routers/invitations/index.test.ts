@@ -765,6 +765,7 @@ function seedRevokeContext(args: {
     role: 'MEMBER',
     status: invitationStatus,
     ledgerParticipantId: participantId,
+    group: { groupType: 'GROUP' },
   } as never)
   prismaMock.groupInvitation.update.mockResolvedValue({
     id: invitationId,

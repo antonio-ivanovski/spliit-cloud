@@ -12,7 +12,7 @@ Two related cleanups ride along:
 **Goals:**
 
 - Let a user create a 1-on-1 expense ledger with one other person, reusing the full group machinery.
-- Enforce at most one friend ledger per unordered account pair (lookup-or-create via `FriendLink` junction table).
+- Enforce at most one friend ledger per unordered account pair (lookup-or-create via `friendPairKey` on Group).
 - For any peer that can be resolved to a known `accountId` — whether picked from the friends list OR entered by email that belongs to an existing `Account` — create the ledger with both members as ACTIVE `ADMIN` immediately, no invitation step.
 - For peers that cannot be resolved to an `accountId` (email without an account, or link invite), create a pending invitation that is **auto-accepted** (no user-facing accept/deny) when the peer's account becomes available.
 - Show the friend ledger on each viewer's home screen with the OTHER member's display name as the card title.
@@ -43,88 +43,54 @@ Alternatives considered:
 - Separate `FriendLedger` table: duplicates all relations, doubles maintenance, and forces a parallel expense pipeline. Rejected — this was the failed approach.
 - Use `Group.name` as the discriminator (e.g. prefix `__FRIEND__`): fragile, leaks intent into a user-facing field, no DB-level guarantee.
 
-### 2. Per-pair uniqueness via a `FriendLink` junction table
+### 2. Per-pair uniqueness via a `friendPairKey` on Group
 
-Add a new `FriendLink` junction table that records the unordered account pair and points to the friend-ledger `Group`:
-
-```prisma
-model FriendLink {
-  id        String   @id
-  createdAt DateTime @default(now())
-
-  // The "smaller" accountId (by string comparison) always goes in
-  // accountAId, the "larger" in accountBId. This convention ensures a
-  // single row per unordered pair without computed string keys.
-  accountA   Account @relation("FriendLinksA", fields: [accountAId], references: [id], onDelete: Cascade)
-  accountAId String
-  accountB   Account @relation("FriendLinksB", fields: [accountBId], references: [id], onDelete: Cascade)
-  accountBId String
-
-  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId   String  @unique
-
-  @@unique([accountAId, accountBId])
-  @@index([accountBId])
-}
-```
-
-And on `Account`:
-
-```prisma
-model Account {
-  // ... existing fields ...
-  friendLinksAsA   FriendLink[] @relation("FriendLinksA")
-  friendLinksAsB   FriendLink[] @relation("FriendLinksB")
-}
-```
-
-And on `Group`:
+Add a nullable `friendPairKey` column on `Group` with a partial unique index:
 
 ```prisma
 model Group {
   // ... existing fields ...
-  friendLink   FriendLink?
+  // Unordered account pair key, e.g. "abc123:def456" where abc123 < def456.
+  // Null during the pending-invitation window (peer hasn't joined yet),
+  // populated when both members join (direct-accept or auto-accept).
+  friendPairKey String?
 }
 ```
 
-The `FriendLink` row is created only when **both** accountIds are known. For the pending window (email without account, or link not yet opened), `Group.friendLink` is `null` — the group exists with the caller as the only member, but no `FriendLink` yet. When the peer joins (auto-accept), the `FriendLink` is created inside the join transaction.
+The uniqueness constraint is a partial unique index (raw SQL in the migration since Prisma doesn't support partial unique indexes):
+
+```sql
+CREATE UNIQUE INDEX "Group_friendPairKey_key"
+  ON "Group"("friendPairKey")
+  WHERE "friendPairKey" IS NOT NULL AND "groupType" = 'FRIEND';
+```
+
+The `friendPairKey` format is `"accountAId:accountBId"` where `accountAId` is always the lexicographically smaller of the two — a `friendPairKey(a, b)` helper returns `a < b ? \`${a}:${b}\` : \`${b}:${a}\``.
+
+During the pending-invitation window (email without account, or link not yet opened), `friendPairKey` is `null` — the group exists with the caller as the only member. When the peer joins (auto-accept), `friendPairKey` is populated inside the join transaction.
 
 Lookup-or-create logic in `friends.create`:
 
-1. **Contact path (peer accountId known):** compute `(accountAId, accountBId)` with the smaller-id-first convention. Query `FriendLink` for that pair. If found, return its group. Otherwise create.
-2. **Email-with-existing-account path:** lookup `Account` by email. If found, treat as contact path (above). This covers emails that belong to accounts the caller hasn't interacted with before (not in `account.friends`).
-3. **Email-without-account path:** before creating, check for an existing `FRIEND` group where the caller is an ACTIVE member AND there is a PENDING invitation to the target email. If found, return it. Otherwise create with `Group.friendLink = null`.
+1. **Contact path (peer accountId known):** compute `friendPairKey(callerId, peerId)`. Query `Group.findFirst({ where: { friendPairKey, groupType: 'FRIEND' } })`. If found, return its id. Otherwise create.
+2. **Email-with-existing-account path:** lookup `Account` by email. If found, treat as contact path (above).
+3. **Email-without-account path:** before creating, check for an existing `FRIEND` group where the caller is an ACTIVE member AND there is a PENDING invitation to the target email. If found, return it. Otherwise create with `friendPairKey = null`.
 4. **Link path:** the peer is unknown at create time, so there's no pre-creation lookup. If the caller later tries to create another friend ledger via any path that resolves to the same account, the lookups above will find the existing one.
 
-Race safety: the `@@unique([accountAId, accountBId])` on `FriendLink` is the hard guard. If two concurrent creates for the same pair slip past the soft lookup, the second `FriendLink` insert fails with a unique violation and the caller returns the existing group. For the email/link path, the hard guard fires when the peer joins and the `FriendLink` is created; the join transaction must catch the unique violation and, if a `FriendLink` already exists, join the existing group instead.
+Race safety: the partial unique index on `Group.friendPairKey` is the hard guard. If two concurrent creates for the same pair slip past the soft lookup, the second `group.update` that sets `friendPairKey` fails with a unique violation and the caller returns the existing group. For the email/link path, the guard fires when the peer joins and `friendPairKey` is set; the join transaction catches the unique violation and, if the key is already set, joins the existing group instead.
 
-#### Why `FriendLink` over `friendPairKey` on `Group`
+#### Why `friendPairKey` over a `FriendLink` junction table
 
-Two approaches were considered:
-
-| | **`FriendLink` junction table** | **`friendPairKey` on `Group`** |
-|---|---|---|
-| Schema | New table, two `Account` relations, one `Group` relation | One nullable column + partial unique index on `Group` |
-| Uniqueness | `@@unique([accountAId, accountBId])` — natural foreign keys | Partial unique index on a computed string (`least#greatest`) — Prisma doesn't support partial uniques, so raw SQL in migration |
-| Account relations | `friendLinksAsA` / `friendLinksAsB` — query "all my friends" directly via the junction, similar to `groupMemberships` | No Account relation; must scan `Group` rows and parse keys |
-| Lookup | `FriendLink.findUnique({ where: { accountAId_accountBId } })` — indexed direct lookup | `Group.findFirst({ where: { friendPairKey } })` — also indexed, but on a computed string |
-| Pending window | `Group.friendLink = null`; `FriendLink` created on join | `Group.friendPairKey = null`; key populated on accept |
-| Normalization | The friend relationship is its own entity — the `Group` is the ledger, the `FriendLink` is the pair bond | The pair bond is denormalized onto the ledger as a string property |
-| Migration complexity | `CREATE TABLE friend_link` + `ALTER TABLE account` + `ALTER TABLE "group"` | `ALTER TABLE "group" ADD COLUMN friend_pair_key` + `CREATE UNIQUE INDEX ... WHERE ...` (raw SQL) |
-| Querying "is X friends with Y?" | `FriendLink.findUnique` — clean | `Group.findFirst({ where: { friendPairKey, groupType: 'FRIEND' } })` — works but less natural |
-| Orphan cleanup | `onDelete: Cascade` from both `Account` and `Group` handles it automatically | If the group is deleted, the key goes with it (same table) — no orphan risk, but also no explicit relationship |
-
-**Recommendation: `FriendLink` junction table.** It gives `Account` a natural `friendLinksAsA`/`friendLinksAsB` relation (matching the user's suggestion of "something like `groupMemberships`"), the uniqueness constraint is on real foreign keys instead of a computed string, and the data model is more normalized. The cost is one extra table and one extra join on friend-ledger lookups — both negligible.
+A separate `FriendLink` junction table was considered but adds unnecessary complexity for a simple 1-on-1 invariant. The pair key is a single string column on `Group`, the partial unique index provides the same DB-level uniqueness guarantee, and the lookup is equally indexed. No extra table, no extra Account relations (`friendLinksAsA`/`friendLinksAsB`), no FK cascade propagation to manage — just one nullable column on the existing `Group` model.
 
 Alternatives considered:
 
-- **`friendPairKey` on `Group`** (the original approach): fewer tables, but puts a computed-string pair key on the ledger model, requires a raw-SQL partial unique index (Prisma can't express it), and gives `Account` no direct relation to its friend pairs.
+- **`FriendLink` junction table:** an earlier version of this design chose this approach for normalization and natural `Account` relations. Rejected in favor of `friendPairKey` for simplicity — one fewer table, one fewer entity to reason about.
 - **Uniqueness on `GroupMember` pairs:** cannot express "two rows in the same group form a unique pair" as a single DB constraint.
 - **Application-level-only check (no DB constraint):** race conditions silently create duplicates.
 
 ### 3. Direct-accept path: both members ACTIVE + ADMIN immediately, no invitation
 
-When the peer can be resolved to a known `accountId` — either by picking from the friends list OR by entering an email that belongs to an existing `Account` — `friends.create` creates the `Group` (type `FRIEND`), the `Ledger`, TWO `GroupMember` rows (both `ADMIN`/`ACTIVE`), a `LedgerParticipant` for each, and a `FriendLink` row. No `GroupInvitation` is created. The ledger appears on the peer's home screen on their next load.
+When the peer can be resolved to a known `accountId` — either by picking from the friends list OR by entering an email that belongs to an existing `Account` — `friends.create` creates the `Group` (type `FRIEND`), the `Ledger`, TWO `GroupMember` rows (both `ADMIN`/`ACTIVE`), a `LedgerParticipant` for each, and sets `friendPairKey` on the Group. No `GroupInvitation` is created. The ledger appears on the peer's home screen on their next load.
 
 The email lookup is a server-side `Account.findUnique({ where: { email } })` inside `friends.create`. If the email resolves to an account, the direct-accept path fires regardless of whether the caller picked from the friends list or typed the email manually. This means the caller can start a friend ledger with anyone who has a Spliit account, not just people they've previously shared groups with.
 
@@ -138,12 +104,12 @@ Alternatives considered:
 
 ### 4. Pending path: email-without-account and link — auto-accept, no user-facing accept/deny
 
-When the peer cannot be resolved to a known `accountId` (the email has no Spliit account, or a link invite is generated for someone whose identity is unknown), `friends.create` creates the `Group` (type `FRIEND`), the `Ledger`, ONE `GroupMember` (the caller, `ADMIN`/`ACTIVE`), and a `GroupInvitation` with `role: ADMIN`. `Group.friendLink` is `null` at this point — the `FriendLink` is created when the peer joins.
+When the peer cannot be resolved to a known `accountId` (the email has no Spliit account, or a link invite is generated for someone whose identity is unknown), `friends.create` creates the `Group` (type `FRIEND`), the `Ledger`, ONE `GroupMember` (the caller, `ADMIN`/`ACTIVE`), and a `GroupInvitation` with `role: ADMIN`. `Group.friendPairKey` is `null` at this point — the pair key is set when the peer joins.
 
 The invitation is **auto-accepted**, not user-accepted. There is no Accept or Decline button for friend invitations. The peer is added automatically when their account becomes available:
 
-- **Email without account:** when someone signs up with the invitation's email, the system auto-accepts the invitation (creates the second `GroupMember` as `ADMIN`/`ACTIVE`, creates the `FriendLink`, flips the invitation to `ACCEPTED`). This happens as a post-signup hook, not a user action.
-- **Link invite:** when someone opens the link and is signed in (or signs in/up), the system auto-accepts — no preview-with-accept-decline UI. The peer is added immediately as the second `ADMIN`/`ACTIVE` member, the `FriendLink` is created, and the invitation is flipped to `ACCEPTED`.
+- **Email without account:** when someone signs up with the invitation's email, the system auto-accepts the invitation (creates the second `GroupMember` as `ADMIN`/`ACTIVE`, sets the `friendPairKey` on the Group, flips the invitation to `ACCEPTED`). This happens as a post-signup hook, not a user action.
+- **Link invite:** when someone opens the link and is signed in (or signs in/up), the system auto-accepts — no preview-with-accept-decline UI. The peer is added immediately as the second `ADMIN`/`ACTIVE` member, the `friendPairKey` is set on the Group, and the invitation is flipped to `ACCEPTED`.
 
 Friend invitations do NOT appear in the `PendingInvitations` card on the homepage (the `invitations.listForAccount` query filters out invitations on `FRIEND`-type groups). The peer sees the friend ledger appear on their home screen directly — no accept step, no notification card.
 
@@ -320,10 +286,10 @@ A new `friends` router with a `create` procedure. The procedure:
 1. Validates input with a new `friendFormSchema` (peer selection + currency + optional info/temporaryName).
 2. Resolves the peer: contact (`accountId`), email, or link.
 3. Runs lookup-or-create logic (see Decision 2).
-4. Calls a new `createFriendLedger` function in `lib/api/friends.ts` that wraps the existing `createGroup` transaction, adding the second member (direct-accept path) or the invitation (pending path), setting `groupType: FRIEND`, and creating the `FriendLink` (direct-accept path) or leaving `Group.friendLink = null` (pending path).
+4. Calls a new `createFriendLedger` function in `lib/api/friends.ts` that wraps the existing `createGroup` transaction, adding the second member (direct-accept path) or the invitation (pending path), setting `groupType: FRIEND`, and setting `friendPairKey` (direct-accept path) or leaving `friendPairKey = null` (pending path).
 5. Returns `{ groupId, existed: boolean }`.
 
-`groups.create` does NOT gain a `groupType` input. All friend ledgers are created exclusively via `friends.create`, which contains the friend-specific logic (peer resolution, lookup-or-create, both-admin, FriendLink). `groups.create` always creates `GROUP`-typed groups. The underlying `createGroup` transaction primitives (Ledger creation, GroupMember creation, LedgerParticipant creation) are shared/reused between the two paths — `createFriendLedger` calls the same low-level helpers as `createGroup`, with friend-specific additions layered on top. A few branches in the shared code are acceptable and preferable to a completely new concept.
+`groups.create` does NOT gain a `groupType` input. All friend ledgers are created exclusively via `friends.create`, which contains the friend-specific logic (peer resolution, lookup-or-create, both-admin, friendPairKey). `groups.create` always creates `GROUP`-typed groups. The underlying `createGroup` transaction primitives (Ledger creation, GroupMember creation, LedgerParticipant creation) are shared/reused between the two paths — `createFriendLedger` calls the same low-level helpers as `createGroup`, with friend-specific additions layered on top. A few branches in the shared code are acceptable and preferable to a completely new concept.
 
 Rationale: keeping friend-creation logic in a separate procedure and `lib/api/friends.ts` module avoids polluting `groups.ts` with type-conditional branching. The shared primitives (`createGroup`'s transaction body) can be extracted into a helper if needed, but the public API is split.
 
@@ -333,7 +299,7 @@ Alternatives considered:
 
 ## Risks / Trade-offs
 
-- **[Risk] `FriendLink` race on auto-accept (email/link path).** Two concurrent auto-accepts for the same account pair could both try to create a `FriendLink`. **Mitigation:** the `@@unique([accountAId, accountBId])` constraint on `FriendLink` makes the second insert fail; the auto-accept transaction catches the unique violation and, since the first accept already created the peer's membership in the existing group, the second accept can either join the same group (if not already a member) or return "already a member."
+- **[Risk] Race on auto-accept (email/link path).** Two concurrent auto-accepts for the same account pair could both try to set `friendPairKey` on the Group. **Mitigation:** the partial unique index on `Group.friendPairKey` makes the second update fail; the auto-accept transaction catches the unique violation and, since the first accept already created the peer's membership in the existing group, the second accept can either join the same group (if not already a member) or return "already a member."
 - **[Risk] Pending friend invite to an email that belongs to an existing account.** Jack invites jane@example.com by email (Jane has an account but isn't in Jack's friends list). Later Jack picks Jane from friends. **Mitigation:** the direct-accept path looks up `Account` by email first — if the email resolves to an account, both members are added immediately and no invitation is created, so there's no pending duplicate. If Jack already created a pending invite (because the email lookup happened before Jane's account existed), the friends-list lookup also checks for any existing `FRIEND` group with a PENDING invitation to the contact's email; if found, return it instead of creating a duplicate.
 - **[Risk] Auto-accept bypasses user consent.** A friend ledger appears on the peer's home screen without them clicking "Accept." **Mitigation:** this is by design — the user explicitly wants friend ledgers to be "accepted by default." The ledger is harmless (no expenses exist until someone creates one). The peer sees the friend ledger in their Friends section on the homepage. The peer can hide it if they don't want it visible.
 - **[Risk] Dropping `pinned` column loses data.** **Mitigation:** `pinned` is never read or toggled anywhere in the app (verified by grep). The column is always `false` for all rows. No live data is lost.
@@ -346,15 +312,13 @@ Alternatives considered:
 1. **Schema migration** (single Prisma migration):
    - Add `GroupType` enum (`GROUP`, `FRIEND`).
    - Add `Group.groupType` column with `@default(GROUP)`.
-   - Add `FriendLink` model (junction table) with `accountAId`/`accountBId` (smaller-id-first convention), `groupId` (`@unique`), `@@unique([accountAId, accountBId])`, and `@@index([accountBId])`.
-   - Add `Account.friendLinksAsA` and `Account.friendLinksAsB` relations.
-   - Add `Group.friendLink` relation (nullable, `FriendLink?`).
+   - Add `Group.friendPairKey` column (nullable String) with a partial unique index for FRIEND-type groups.
    - `UPDATE account_group_preference SET hidden = hidden OR archived;`
    - Drop `AccountGroupPreference.archived` column.
    - Drop `AccountGroupPreference.pinned` column.
 2. **Regenerate Prisma client** (`bun prisma-generate`).
 3. **API changes:**
-   - Add `lib/api/friends.ts` with `createFriendLedger` (direct-accept + pending branches, lookup-or-create, `FriendLink` creation).
+   - Add `lib/api/friends.ts` with `createFriendLedger` (direct-accept + pending branches, lookup-or-create, `friendPairKey` management).
    - Add `friends` router with `create` procedure.
    - Extend `account.groups` to return `groupType` and per-viewer `displayName`.
    - Branch group mutation procedures (`groups.update` (name field only), `groups.archive`, `groups.delete`, `groups.leave`/`members.leave`, `invitations.create`, `invitations.createLink`, `invitations.revoke`) on `groupType` and reject `FRIEND` where applicable. `groups.update` for `FRIEND` allows `information` and `currency`/`currencyCode` changes but rejects `name` changes.
@@ -374,11 +338,11 @@ Alternatives considered:
 6. **Translations:** use `bun i18n` CLI to add friend-ledger copy and rename contacts→friends in `en-US.json`; dispatch parallel subagents for other locales.
 7. **Tests:** API integration tests for `friends.create` (direct-accept with contact, direct-accept with email-that-has-account, pending with email-without-account, link path, lookup-or-create idempotency, both-admin membership, restricted actions); auto-accept tests (email signup triggers auto-accept, link-open triggers auto-accept); `previewLink` FRIEND-aware display name test; web tests for homepage section splitting (Groups vs Friends), friend card rendering (displayName, avatar, pending badge), section-level "Create expense" scope-picker dialogs, and the migration data-preservation check.
 
-Rollback strategy: the `GroupType` default and `FriendLink` nullability make the schema changes backward-compatible — existing code that doesn't know about `groupType` treats everything as `GROUP`, and `FriendLink` rows are only created for `FRIEND` groups. The `AccountGroupPreference` column drops are the only irreversible part; back up the table before the migration. If the feature needs to be rolled back after migration, friend-ledger groups and their `FriendLink` rows can be deleted (they have no unique data not derivable from the pair) and the code reverted.
+Rollback strategy: the `GroupType` default and `friendPairKey` nullability make the schema changes backward-compatible — existing code that doesn't know about `groupType` treats everything as `GROUP`, and `friendPairKey` is only set for `FRIEND` groups. The `AccountGroupPreference` column drops are the only irreversible part; back up the table before the migration. If the feature needs to be rolled back after migration, friend-ledger groups can be deleted (they have no unique data not derivable from the pair) and the code reverted.
 
 ## Resolved Questions
 
-- **`account.friends` enrichment**: the query returns `hasFriendLedger` metadata for each friend, indicating whether a `FriendLink` (or pending `FRIEND` invitation) already exists between the caller and that account.
+- **`account.friends` enrichment**: the query returns `hasFriendLedger` metadata for each friend, indicating whether a FRIEND-typed group with a matching `friendPairKey` (or a pending `FRIEND` email invitation) already exists between the caller and that account.
 - **Friend card pending indicator**: friend ledger cards with a PENDING invitation (peer hasn't joined yet) SHALL show a subtle "Pending" badge, consistent with the app's existing styling for pending states.
 - **Friend card avatar**: FRIEND cards SHALL show the peer's avatar (using `Account.image` if set, falling back to initials) to the left of the `displayName`. GROUP cards show no avatar (unchanged). `Account.image` is not widely set today; initials are the primary fallback.
 - **Friend ledger detail page tabs**: FRIEND groups hide the Members tab (just 2 people, shown on the card). Settings tab is shown with the name field hidden/disabled but currency and information editable. Expenses, Balances, Activity tabs are shown unchanged.

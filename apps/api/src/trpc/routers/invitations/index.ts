@@ -1,4 +1,9 @@
-import { GroupInvitationStatus, prisma, type GroupRole } from '@spliit/db'
+import {
+  GroupInvitationStatus,
+  GroupType,
+  prisma,
+  type GroupRole,
+} from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
@@ -72,12 +77,18 @@ export const invitationsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { member } = await loadGroupContext({
+      const { group, member } = await loadGroupContext({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
       if (member.role !== 'ADMIN') {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
+      }
+      if (group.groupType === GroupType.FRIEND) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'friendLedgerFull',
+        })
       }
       const result = await createLinkInvitation({
         groupId: input.groupId,
@@ -141,6 +152,12 @@ export const invitationsRouter = createTRPCRouter({
       })
       if (member.role !== 'ADMIN') {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
+      }
+      if (group.groupType === GroupType.FRIEND) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'friendLedgerFull',
+        })
       }
       const invitation = await createEmailInvitation({
         groupId: input.groupId,
@@ -229,11 +246,18 @@ export const invitationsRouter = createTRPCRouter({
     .mutation(async ({ input: { invitationId, settleBalances }, ctx }) => {
       const existing = await prisma.groupInvitation.findUnique({
         where: { id: invitationId },
+        include: { group: { select: { groupType: true } } },
       })
       if (!existing) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Invitation not found',
+        })
+      }
+      if (existing.group.groupType === GroupType.FRIEND) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'friendLedgerNotRevocable',
         })
       }
       const { member } = await loadGroupContext({

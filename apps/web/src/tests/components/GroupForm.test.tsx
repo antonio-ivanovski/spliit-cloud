@@ -63,6 +63,8 @@ const mockGroup = {
   ledgerId: 'ledger-1',
   currency: '$',
   currencyCode: 'USD',
+  groupType: 'GROUP' as const,
+  friendPairKey: null,
   ledger: {
     id: 'ledger-1',
     currency: '$',

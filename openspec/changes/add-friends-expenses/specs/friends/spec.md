@@ -7,7 +7,7 @@ The system SHALL allow an authenticated account to create a 1-on-1 friend expens
 - **WHEN** an authenticated account selects a friend from the friends list and creates a friend ledger
 - **THEN** the system creates a `FRIEND`-typed group with a `Ledger` using the selected currency
 - **AND** the system creates two `GroupMember` rows, both with role `ADMIN` and status `ACTIVE`
-- **AND** the system creates a `FriendLink` junction row keyed by the unordered account pair
+- **AND** the system sets `friendPairKey` on the Group keyed by the unordered account pair
 - **AND** the system creates a `LedgerParticipant` for each member
 - **AND** the system SHALL NOT create any `GroupInvitation`
 - **AND** the ledger SHALL appear on both accounts' home screens on their next load
@@ -22,7 +22,8 @@ The system SHALL allow an authenticated account to create a 1-on-1 friend expens
 - **WHEN** an authenticated account attempts to create a friend ledger with a peer that already has a friend ledger with the caller
 - **THEN** the system SHALL return the existing friend ledger instead of creating a new one
 - **AND** the response SHALL indicate that the ledger already existed
-- **AND** the system SHALL NOT create any duplicate groups, members, or `FriendLink` rows
+- **AND** the system SHALL NOT create any duplicate groups, members, or `friendPairKey` collisions
+- **AND** the system SHALL check for existing groups in both directions: (a) by `friendPairKey` match, (b) by the caller's pending invitations, and (c) by the peer's pending invitations (cross-direction lookup — handles the case where the peer created a group with a PENDING EMAIL invite for the caller's email before the caller's account existed)
 
 #### Scenario: Friend ledger name is empty and never shown
 - **WHEN** the system creates a `FRIEND`-typed group
@@ -36,8 +37,16 @@ The system SHALL allow an authenticated account to create a friend ledger with a
 - **WHEN** an authenticated account enters an email that does not match any existing `Account` and creates a friend ledger
 - **THEN** the system creates a `FRIEND`-typed group with the caller as ADMIN/ACTIVE
 - **AND** the system creates a `PENDING` `GroupInvitation` of type `EMAIL` with role `ADMIN` targeting the entered email
-- **AND** the system SHALL NOT create a `FriendLink` (it is created when the peer joins)
+- **AND** the system SHALL leave `friendPairKey` as `null` (it is set when the peer joins)
 - **AND** the optional `temporaryName` provided in the form SHALL be stored on the invitation and used as the display name while pending
+- **AND** the system SHALL send a notification email (NOT an invitation with an accept link) to the peer's email encouraging them to create an account
+- **AND** the caller SHALL be navigated to the group page with a confirmation toast
+
+#### Scenario: Create friend ledger with email that resolves to existing account also sends notification
+- **WHEN** an authenticated account enters an email that belongs to an existing `Account` and creates a friend ledger
+- **THEN** the system SHALL proceed with the direct-accept path (both members added immediately)
+- **AND** the system SHALL send a notification email (NOT an invitation) to the peer's account email informing them of the new friend ledger
+- **AND** the caller SHALL be navigated to the group expenses page (direct-accept, no pending state)
 
 #### Scenario: Create friend ledger via link invite
 - **WHEN** an authenticated account chooses the link path to create a friend ledger
@@ -48,13 +57,14 @@ The system SHALL allow an authenticated account to create a friend ledger with a
 
 #### Scenario: Auto-accept on signup with matching email
 - **WHEN** a new account signs up with an email that matches a `PENDING` `EMAIL` invitation on a `FRIEND`-typed group
-- **THEN** the system SHALL auto-accept the invitation: create the second `GroupMember` as ADMIN/ACTIVE, create the `FriendLink` junction row, flip the invitation to `ACCEPTED`
+- **THEN** the system SHALL auto-accept the invitation: create the second `GroupMember` as ADMIN/ACTIVE, set the `friendPairKey` on the Group, flip the invitation to `ACCEPTED`
 - **AND** the system SHALL NOT present any Accept or Decline UI to the peer
 - **AND** the friend ledger SHALL appear on the peer's home screen on their next load
 
 #### Scenario: Auto-accept on link open
-- **WHEN** an authenticated account opens a link invite URL for a `FRIEND`-typed group
-- **THEN** the system SHALL auto-accept the invitation: create the second `GroupMember` as ADMIN/ACTIVE, create the `FriendLink` junction row, flip the invitation to `ACCEPTED`
+- **WHEN** an authenticated account opens a link invite URL for a `FRIEND`-typed group with a valid PENDING link token
+- **THEN** the `groups.get` procedure SHALL detect the FRIEND group type, auto-accept the invitation server-side, and return the user as an active member (no Accept/Decline banner)
+- **AND** the system SHALL create the second `GroupMember` as ADMIN/ACTIVE, set the `friendPairKey` on the Group, flip the invitation to `ACCEPTED`
 - **AND** the system SHALL NOT present any Accept or Decline UI to the peer
 - **AND** the friend ledger SHALL appear on the peer's home screen
 
@@ -64,24 +74,24 @@ The system SHALL allow an authenticated account to create a friend ledger with a
 - **AND** the peer SHALL NOT see a pending invitation card on their home screen for friend ledgers
 
 ### Requirement: Per-pair friend ledger uniqueness
-The system SHALL enforce at most one `FRIEND`-typed group per unordered account pair via a `FriendLink` junction table with a unique constraint on `(accountAId, accountBId)` where `accountAId` is always the lexicographically smaller account ID.
+The system SHALL enforce at most one `FRIEND`-typed group per unordered account pair via a `friendPairKey` column on `Group` with a partial unique index (`WHERE "friendPairKey" IS NOT NULL AND "groupType" = 'FRIEND'`). The key format is `"accountAId:accountBId"` where `accountAId` is always the lexicographically smaller account ID.
 
-#### Scenario: FriendLink created when both members are known
+#### Scenario: friendPairKey set when both members join
 - **WHEN** the system creates a friend ledger via the direct-accept path
-- **THEN** the system SHALL create a `FriendLink` row with `accountAId` set to the smaller account ID and `accountBId` set to the larger account ID
-- **AND** the `FriendLink.groupId` SHALL be unique (one friend link per group)
+- **THEN** the system SHALL set `friendPairKey` on the Group using the smaller-id-first convention
+- **AND** the partial unique index SHALL prevent inserting a duplicate pair key
 
-#### Scenario: FriendLink created on auto-accept
+#### Scenario: friendPairKey set on auto-accept
 - **WHEN** the system auto-accepts a pending friend invitation
-- **THEN** the system SHALL create the `FriendLink` row inside the accept transaction using the caller's and peer's account IDs
+- **THEN** the system SHALL set `friendPairKey` on the Group inside the accept transaction
 
 #### Scenario: Duplicate friend ledger creation is rejected by the database
 - **WHEN** two concurrent friend ledger creations for the same account pair slip past the application-level lookup
-- **THEN** the `FriendLink` unique constraint SHALL cause the second insert to fail
+- **THEN** the partial unique index on `Group.friendPairKey` SHALL cause the second write to fail
 - **AND** the system SHALL return the existing friend ledger to the failed caller
 
 ### Requirement: Friend ledger display name resolution
-The system SHALL compute a per-viewer `displayName` for each `FRIEND`-typed group returned by the `account.groups` query. The display name SHALL be the OTHER member's display name, resolved via the priority chain: `Account.name` (if the peer is an active member) → `Invitation.temporaryName` (if pending) → `Invitation.email` (if pending and no temp name).
+The system SHALL compute a per-viewer `displayName` for each `FRIEND`-typed group returned by the `account.groups` query. The display name SHALL be the OTHER member's display name, resolved via the priority chain using truthiness fallback (`||`): the peer's `Account.name` (if truthy) → `Invitation.temporaryName` (if truthy) → `Invitation.email`. The use of `||` (rather than `??`) ensures that empty strings and `null` both fall through, consistent with the group page's `resolveDisplayName`.
 
 #### Scenario: Both members active — display name is the other's account name
 - **WHEN** the system returns a `FRIEND`-typed group where both members are ACTIVE
