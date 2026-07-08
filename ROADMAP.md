@@ -23,7 +23,7 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 
 - [x] **Multi-payer expenses** — a single expense paid by several members, with a share per payer. Closes the gap with Splitwise. — upstream **[#14](https://github.com/spliit-app/spliit/issues/14)** (PRs [#146](https://github.com/spliit-app/spliit/pull/146) / [#396](https://github.com/spliit-app/spliit/pull/396) open 1.5+ years)
 - [x] **Itemized expenses** — split an expense by line items, with tax and tip, and per-person sub-totals. The most-asked "real Splitwise" feature after recurring. — upstream [#395](https://github.com/spliit-app/spliit/issues/395)
-- [ ] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
+- [x] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
 - [ ] Recurring expenses — `calculateNextDate` and daily/weekly/monthly tests already in place
 - [ ] Account overview homepage ([design](./openspec/changes/add-overview-homepage)) — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)
 - [ ] Notifications
@@ -36,7 +36,7 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 - [ ] **Expense comments / notes on an expense** — upstream [#165](https://github.com/spliit-app/spliit/pull/165)
 - [x] **Copy an expense** — open the last one, click copy, save with today's date — upstream [#527](https://github.com/spliit-app/spliit/issues/527) (PRs [#394](https://github.com/spliit-app/spliit/pull/394), [#201](https://github.com/spliit-app/spliit/pull/201))
 - [ ] **Math expressions in the amount field** (e.g. `12+4.50`) — upstream [#184](https://github.com/spliit-app/spliit/pull/184)
-- [ ] **Default split mode persisted on group** — upstream [#366](https://github.com/spliit-app/spliit/pull/366)
+- [x] **Default split mode persisted on group** — upstream [#366](https://github.com/spliit-app/spliit/pull/366)
 - [ ] **Reorder participants** — upstream [#416](https://github.com/spliit-app/spliit/pull/416)
 - [ ] **One-line quick entry** (SplittyPie style) — upstream [#384](https://github.com/spliit-app/spliit/issues/384)
 - [ ] **Payment method field on an expense** — upstream [#451](https://github.com/spliit-app/spliit/pull/451)
@@ -67,7 +67,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - [ ] **`originalAmount` stored as cents** (breaks foreign-currency display & export) — upstream [#513](https://github.com/spliit-app/spliit/issues/513), fix PR [#425](https://github.com/spliit-app/spliit/pull/425)
 - [ ] **iOS / German comma-decimal input** — upstream [#528](https://github.com/spliit-app/spliit/issues/528), [#439](https://github.com/spliit-app/spliit/issues/439), fix PR [#531](https://github.com/spliit-app/spliit/pull/531)
 - [ ] **"All amounts must be > 0" when editing a category** — upstream [#436](https://github.com/spliit-app/spliit/issues/436)
-- [ ] **Exchange rate API redirect strips CORS** — upstream [#514](https://github.com/spliit-app/spliit/issues/514), fix PR [#515](https://github.com/spliit-app/spliit/pull/515)
+- [x] **Exchange rate API redirect strips CORS** — upstream [#514](https://github.com/spliit-app/spliit/issues/514), fix PR [#515](https://github.com/spliit-app/spliit/pull/515)
 - [ ] **Keyboard navigation broken in category / currency selectors** — upstream [#491](https://github.com/spliit-app/spliit/pull/491)
 - [ ] **CSV export 500 on group names with umlauts** — upstream [#458](https://github.com/spliit-app/spliit/issues/458), fix PR [#377](https://github.com/spliit-app/spliit/pull/377)
 - [ ] **Postgres volume mount in modern images** — upstream [#463](https://github.com/spliit-app/spliit/issues/463), fix PR [#464](https://github.com/spliit-app/spliit/pull/464)
@@ -96,7 +96,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
   - [ ] `npm`-free Docker image — PR [#219](https://github.com/spliit-app/spliit/pull/219)
 - **Currencies**
   - [ ] Support currencies not in the Frankfurter API (BYO rate or alternate source) — upstream [#449](https://github.com/spliit-app/spliit/issues/449)
-  - [ ] Currency framework to absorb the steady stream of "add NPR / MOP / VND / COP / MYR / MKD" PRs — supersedes [#418](https://github.com/spliit-app/spliit/issues/418), [#431](https://github.com/spliit-app/spliit/issues/431), [#438](https://github.com/spliit-app/spliit/issues/438)
+  - [x] Currency framework to absorb the steady stream of "add NPR / MOP / VND / COP / MYR / MKD" PRs — supersedes [#418](https://github.com/spliit-app/spliit/issues/418), [#431](https://github.com/spliit-app/spliit/issues/431), [#438](https://github.com/spliit-app/spliit/issues/438)
 - **Integrations / channels**
   - [ ] Telegram notification channel — PR [#252](https://github.com/spliit-app/spliit/pull/252)
   - [x] Email notification channel — granular per-expense change alerts delivered to group members
