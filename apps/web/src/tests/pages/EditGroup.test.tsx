@@ -32,11 +32,12 @@ vi.mock('@/app/groups/[groupId]/edit/edit-group-mutations', () => ({
 }))
 
 vi.mock('@/components/group-form', () => ({
-  GroupForm: (props: { nameReadOnly?: boolean }) => (
+  GroupForm: (props: { hideNameField?: boolean; nameReadOnly?: boolean }) => (
     <div
       data-testid="group-form"
-      data-name-readonly={String(props.nameReadOnly)}
+      data-hide-name-field={String(props.hideNameField)}
     >
+      {props.hideNameField ? null : <input aria-label="Group name" />}
       GroupForm
     </div>
   ),
@@ -112,11 +113,12 @@ describe('EditGroup', () => {
     expect(screen.queryByText('Delete group')).not.toBeInTheDocument()
   })
 
-  it('renders GroupForm with nameReadOnly={true} for FRIEND groups', () => {
+  it('hides the group name field for FRIEND groups', () => {
     render(<EditGroup />)
 
-    const groupForm = screen.getByTestId('group-form')
-    expect(groupForm).toHaveAttribute('data-name-readonly', 'true')
+    expect(screen.queryByLabelText('Group name')).not.toBeInTheDocument()
+    // Group form should still be rendered
+    expect(screen.getByTestId('group-form')).toBeInTheDocument()
   })
 
   it('renders the settings card (GroupForm) for FRIEND groups', () => {
@@ -169,12 +171,11 @@ describe('EditGroup', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders GroupForm with nameReadOnly=false for GROUP groups', () => {
+  it('renders the group name field for GROUP groups', () => {
     setGroupGroup()
     render(<EditGroup />)
 
-    const groupForm = screen.getByTestId('group-form')
-    expect(groupForm).toHaveAttribute('data-name-readonly', 'false')
+    expect(screen.getByLabelText('Group name')).toBeInTheDocument()
   })
 
   // GroupTabs Members tab is tested in apps/web/src/tests/components/GroupTabs.test.tsx

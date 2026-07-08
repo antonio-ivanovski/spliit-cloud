@@ -48,7 +48,6 @@ export function InstallPromotionDialog() {
     readyToShow,
     isOpen,
     open,
-    close,
     remindLater,
     dismiss,
     install,

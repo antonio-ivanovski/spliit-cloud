@@ -133,7 +133,14 @@ describe('CreateFriend', () => {
   it('submits Friends tab — selects a friend, submits, calls mutateAsync with peerAccountId, navigates to /groups/$id/expenses', async () => {
     mocks.mockFriendsQuery.mockReturnValue({
       data: {
-        friends: [{ accountId: 'peer-1', name: 'Alice', email: 'a@b.com' }],
+        friends: [
+          {
+            accountId: 'peer-1',
+            name: 'Alice',
+            email: 'a@b.com',
+            friendLedgerStatus: 'NONE',
+          },
+        ],
       },
       isLoading: false,
     })
@@ -170,7 +177,7 @@ describe('CreateFriend', () => {
     )
   })
 
-  it('submits Email tab — enters email, submits, calls mutateAsync with peerEmail', async () => {
+  it('submits Email tab — enters email, submits, calls mutateAsync with peerEmail and temporaryName set to email', async () => {
     const { user } = render(<CreateFriend />)
 
     await user.click(screen.getByRole('tab', { name: 'Email' }))
@@ -190,12 +197,20 @@ describe('CreateFriend', () => {
     expect(
       mocks.mockCreateFriend.mock.calls[0][0].friendFormValues.peerEmail,
     ).toBe('friend@example.com')
+    expect(
+      mocks.mockCreateFriend.mock.calls[0][0].friendFormValues.temporaryName,
+    ).toBe('friend@example.com')
   })
 
-  it('submits Link tab — submits, calls mutateAsync with useLink:true', async () => {
+  it('submits Link tab — enters name, submits, calls mutateAsync with useLink:true and temporaryName', async () => {
     const { user } = render(<CreateFriend />)
 
     await user.click(screen.getByRole('tab', { name: 'Shareable link' }))
+
+    await user.type(
+      screen.getByRole('textbox', { name: /display name/i }),
+      'Bob',
+    )
 
     await user.click(
       screen.getByRole('button', { name: 'Create a friend ledger' }),
@@ -207,12 +222,22 @@ describe('CreateFriend', () => {
     expect(
       mocks.mockCreateFriend.mock.calls[0][0].friendFormValues.useLink,
     ).toBe(true)
+    expect(
+      mocks.mockCreateFriend.mock.calls[0][0].friendFormValues.temporaryName,
+    ).toBe('Bob')
   })
 
   it('clears inactive peer mode fields when switching tabs before submit', async () => {
     mocks.mockFriendsQuery.mockReturnValue({
       data: {
-        friends: [{ accountId: 'peer-1', name: 'Alice', email: 'a@b.com' }],
+        friends: [
+          {
+            accountId: 'peer-1',
+            name: 'Alice',
+            email: 'a@b.com',
+            friendLedgerStatus: 'NONE',
+          },
+        ],
       },
       isLoading: false,
     })
@@ -248,13 +273,21 @@ describe('CreateFriend', () => {
       peerAccountId: undefined,
       peerEmail: 'friend@example.com',
       useLink: undefined,
+      temporaryName: 'friend@example.com',
     })
   })
 
   it('navigates to existing ledger when result.existed is true', async () => {
     mocks.mockFriendsQuery.mockReturnValue({
       data: {
-        friends: [{ accountId: 'peer-1', name: 'Alice', email: 'a@b.com' }],
+        friends: [
+          {
+            accountId: 'peer-1',
+            name: 'Alice',
+            email: 'a@b.com',
+            friendLedgerStatus: 'NONE',
+          },
+        ],
       },
       isLoading: false,
     })
@@ -289,7 +322,14 @@ describe('CreateFriend', () => {
   it('navigates with friendLinkInvite param when result.inviteUrl is returned', async () => {
     mocks.mockFriendsQuery.mockReturnValue({
       data: {
-        friends: [{ accountId: 'peer-1', name: 'Alice', email: 'a@b.com' }],
+        friends: [
+          {
+            accountId: 'peer-1',
+            name: 'Alice',
+            email: 'a@b.com',
+            friendLedgerStatus: 'NONE',
+          },
+        ],
       },
       isLoading: false,
     })
@@ -325,7 +365,14 @@ describe('CreateFriend', () => {
   it('shows error toast when mutation fails', async () => {
     mocks.mockFriendsQuery.mockReturnValue({
       data: {
-        friends: [{ accountId: 'peer-1', name: 'Alice', email: 'a@b.com' }],
+        friends: [
+          {
+            accountId: 'peer-1',
+            name: 'Alice',
+            email: 'a@b.com',
+            friendLedgerStatus: 'NONE',
+          },
+        ],
       },
       isLoading: false,
     })
@@ -353,6 +400,43 @@ describe('CreateFriend', () => {
     })
   })
 
+  // ── Temporary name field tests ─────────────────────────────────────────
+
+  it('renders temporary name field in Link tab', async () => {
+    const { user } = render(<CreateFriend />)
+
+    await user.click(screen.getByRole('tab', { name: 'Shareable link' }))
+
+    expect(screen.getByText('Display name')).toBeInTheDocument()
+    expect(screen.getByText(/Enter a name for the person/)).toBeInTheDocument()
+  })
+
+  it('requires temporary name before submitting Link tab', async () => {
+    const { user } = render(<CreateFriend />)
+
+    await user.click(screen.getByRole('tab', { name: 'Shareable link' }))
+
+    await user.click(
+      screen.getByRole('button', { name: 'Create a friend ledger' }),
+    )
+
+    await vi.waitFor(() => {
+      expect(
+        screen.getByText('temporaryName is required for link invites'),
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('does not render temporary name field in Email tab', async () => {
+    const { user } = render(<CreateFriend />)
+
+    await user.click(screen.getByRole('tab', { name: 'Email' }))
+
+    expect(
+      screen.queryByRole('textbox', { name: /display name/i }),
+    ).not.toBeInTheDocument()
+  })
+
   it('shows empty friends state', () => {
     render(<CreateFriend />)
 
@@ -370,6 +454,7 @@ describe('CreateFriend', () => {
             name: 'Alice',
             email: 'a@b.com',
             hasFriendLedger: true,
+            friendLedgerStatus: 'ACTIVE',
             sharedGroupCount: 1,
           },
         ],

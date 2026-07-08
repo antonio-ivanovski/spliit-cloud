@@ -70,7 +70,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       })
       expect(signUpRes.status).toBe(200)
 
-      const ve = await expectEmailEventually({
+      await expectEmailEventually({
         recipient: email,
         subject: 'Verify your Spliit account',
       })

@@ -394,7 +394,10 @@ describe('deleteExpense', () => {
   it('deletes an expense only within the scoped ledger', async () => {
     prismaMock.group.findUnique
       .mockResolvedValueOnce({ ledgerId: 'ledger-1' } as never)
-      .mockResolvedValueOnce({ ledgerId: 'ledger-1' } as never)
+      .mockResolvedValueOnce({
+        ledgerId: 'ledger-1',
+        ledger: { currencyCode: null },
+      } as never)
     prismaMock.expense.findFirst.mockResolvedValue({
       id: 'exp-1',
       ledgerId: 'ledger-1',

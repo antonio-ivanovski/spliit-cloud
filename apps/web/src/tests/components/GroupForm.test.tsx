@@ -243,25 +243,27 @@ describe('GroupForm', () => {
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
   })
 
-  it('disables name input when nameReadOnly is true with a group', () => {
+  it('hides the name input when hideNameField is true', () => {
     const onSubmit = vi.fn()
     render(
       <GroupForm
         group={mockGroup as Props['group']}
-        nameReadOnly
+        hideNameField
         onSubmit={onSubmit}
       />,
     )
 
-    expect(screen.getByRole('textbox', { name: /name/i })).toBeDisabled()
+    expect(
+      screen.queryByRole('textbox', { name: /name/i }),
+    ).not.toBeInTheDocument()
   })
 
-  it('renders submit button when nameReadOnly is true (unlike MEMBER role)', () => {
+  it('renders submit button when hideNameField is true (unlike MEMBER role)', () => {
     const onSubmit = vi.fn()
     render(
       <GroupForm
         group={mockGroup as Props['group']}
-        nameReadOnly
+        hideNameField
         onSubmit={onSubmit}
       />,
     )
@@ -269,14 +271,14 @@ describe('GroupForm', () => {
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
   })
 
-  // ── nameReadOnly fields still editable (task 13.29) ─────────────
+  // ── hideNameField fields still editable ────────────────────────
 
-  it('currency selector is enabled when nameReadOnly is true', () => {
+  it('currency selector is enabled when hideNameField is true', () => {
     const onSubmit = vi.fn()
     render(
       <GroupForm
         group={mockGroup as Props['group']}
-        nameReadOnly
+        hideNameField
         onSubmit={onSubmit}
       />,
     )
@@ -284,12 +286,12 @@ describe('GroupForm', () => {
     expect(screen.getByRole('combobox')).not.toBeDisabled()
   })
 
-  it('information textarea is enabled when nameReadOnly is true', () => {
+  it('information textarea is enabled when hideNameField is true', () => {
     const onSubmit = vi.fn()
     render(
       <GroupForm
         group={mockGroup as Props['group']}
-        nameReadOnly
+        hideNameField
         onSubmit={onSubmit}
       />,
     )
@@ -299,12 +301,12 @@ describe('GroupForm', () => {
     ).not.toBeDisabled()
   })
 
-  it('form submit includes currency and information changes when nameReadOnly is true', async () => {
+  it('form submit includes currency and information changes when hideNameField is true', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
     const { user } = render(
       <GroupForm
         group={mockGroup as Props['group']}
-        nameReadOnly
+        hideNameField
         onSubmit={onSubmit}
       />,
     )

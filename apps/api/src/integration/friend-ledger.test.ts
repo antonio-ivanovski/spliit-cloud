@@ -792,10 +792,12 @@ describe('Friend ledger — real DB', () => {
     const peerEntry = result.friends.find((f) => f.accountId === peerId)
     expect(peerEntry).toBeDefined()
     expect(peerEntry!.hasFriendLedger).toBe(true)
+    expect(peerEntry!.friendLedgerStatus).toBe('ACTIVE')
 
     const thirdEntry = result.friends.find((f) => f.accountId === thirdId)
     expect(thirdEntry).toBeDefined()
     expect(thirdEntry!.hasFriendLedger).toBe(true)
+    expect(thirdEntry!.friendLedgerStatus).toBe('ACTIVE')
   })
 
   // ───────────────────────────────────────────────────────────────────
