@@ -55,7 +55,7 @@ export function GroupCard({
   return (
     <li key={group.id} className="min-w-0">
       <div
-        className={`relative w-full h-full ${CARD_MIN_HEIGHT} py-3 pl-3 pr-1 rounded-lg border bg-card shadow-xs text-base overflow-hidden`}
+        className={`relative w-full h-full ${CARD_MIN_HEIGHT} cursor-pointer py-3 pl-3 pr-1 rounded-lg border bg-card shadow-xs text-base overflow-hidden transition-[border-color,box-shadow,background-color,transform] duration-150 hover:-translate-y-0.5 hover:border-primary/25 hover:bg-muted/20 hover:shadow-sm`}
       >
         <div className="w-full flex flex-col gap-1">
           <div className="text-base flex gap-2 justify-between items-center">

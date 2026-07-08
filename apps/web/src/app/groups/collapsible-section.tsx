@@ -86,7 +86,7 @@ export function CollapsibleSection({
     >
       <CollapsibleTrigger
         className={cn(
-          'group flex w-full items-center justify-between gap-2 py-1 text-left transition-colors hover:text-foreground/80',
+          'group flex w-full cursor-pointer items-center justify-between gap-2 rounded-md -mx-2 px-2 py-1 text-left transition-colors hover:bg-muted/40 hover:text-foreground/80',
           triggerClassName,
         )}
       >
