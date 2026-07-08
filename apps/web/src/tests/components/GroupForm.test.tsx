@@ -238,4 +238,30 @@ describe('GroupForm', () => {
     // Save button should be present (not Create)
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
   })
+
+  it('disables name input when nameReadOnly is true with a group', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        nameReadOnly
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(screen.getByRole('textbox', { name: /name/i })).toBeDisabled()
+  })
+
+  it('renders submit button when nameReadOnly is true (unlike MEMBER role)', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        nameReadOnly
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
+  })
 })
