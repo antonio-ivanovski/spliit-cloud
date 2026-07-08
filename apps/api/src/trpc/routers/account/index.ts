@@ -8,9 +8,7 @@ import {
 import { defaultSplitSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
-import {
-  randomId,
-} from '../../../lib/api'
+import { randomId } from '../../../lib/api'
 import { isPlaceholderEmail } from '../../../lib/invitations'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 
@@ -155,10 +153,10 @@ export const accountRouter = createTRPCRouter({
       const entries = memberships.map((m) => {
         const isFriend = m.group.groupType === GroupType.FRIEND
         const displayName = isFriend
-          ? (friendMemberByGroupId.get(m.groupId)?.name ||
+          ? friendMemberByGroupId.get(m.groupId)?.name ||
             friendPendingByGroupId.get(m.groupId)?.name ||
             friendPendingByGroupId.get(m.groupId)?.email ||
-            '')
+            ''
           : m.group.name
         return {
           ...m.group,
@@ -477,9 +475,7 @@ export const accountRouter = createTRPCRouter({
         .filter((a) => !isPlaceholderEmail(a.email))
         .map((a) => {
           const key =
-            currentId < a.id
-              ? `${currentId}:${a.id}`
-              : `${a.id}:${currentId}`
+            currentId < a.id ? `${currentId}:${a.id}` : `${a.id}:${currentId}`
           return { accountId: a.id, pairKey: key, email: a.email.toLowerCase() }
         })
       const ledgeredByAccountId = new Map<string, boolean>()

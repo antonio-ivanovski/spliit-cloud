@@ -1,4 +1,9 @@
-import { GroupInvitationStatus, GroupInvitationType, GroupType, prisma } from '@spliit/db'
+import {
+  GroupInvitationStatus,
+  GroupInvitationType,
+  GroupType,
+  prisma,
+} from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { getGroup } from '../../../lib/api'
@@ -132,10 +137,7 @@ export const getGroupProcedure = protectedProcedure
             },
             include: { ledgerParticipant: true },
           })
-          if (
-            memberLookupRetry &&
-            memberLookupRetry.status === 'ACTIVE'
-          ) {
+          if (memberLookupRetry && memberLookupRetry.status === 'ACTIVE') {
             const { member } = await loadGroupContext({
               groupId,
               accountId: account.id,
@@ -147,8 +149,7 @@ export const getGroupProcedure = protectedProcedure
             return {
               group,
               displayName,
-              currentLedgerParticipantId:
-                member.ledgerParticipant?.id ?? null,
+              currentLedgerParticipantId: member.ledgerParticipant?.id ?? null,
               currentMember: {
                 id: member.id,
                 role: member.role,
@@ -235,9 +236,7 @@ function resolveDisplayName(
   viewerAccountId: string,
 ): string {
   if (group.groupType !== GroupType.FRIEND) return group.name
-  const peerMember = group.members.find(
-    (m) => m.accountId !== viewerAccountId,
-  )
+  const peerMember = group.members.find((m) => m.accountId !== viewerAccountId)
   if (peerMember?.account.name) return peerMember.account.name
   const pendingInv = group.invitations[0]
   if (pendingInv?.temporaryName) return pendingInv.temporaryName
