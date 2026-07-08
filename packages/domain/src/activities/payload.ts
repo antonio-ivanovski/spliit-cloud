@@ -38,6 +38,12 @@ export const expenseActivityDataSchema = z.object({
   // Ledger participant IDs affected by the expense. Set for
   // EXPENSE_DELETED so the dispatcher can resolve recipients.
   affectedParticipants: z.array(z.string()).optional(),
+  // Original currency amount (before conversion), if the expense was
+  // entered in a different currency than the ledger's base currency.
+  originalAmount: z.number().int().optional(),
+  conversionRate: z.number().optional(),
+  // The ledger's base currency code.
+  ledgerCurrencyCode: z.string().nullable().optional(),
 })
 
 export type ExpenseActivityData = z.infer<typeof expenseActivityDataSchema>
