@@ -8,6 +8,11 @@ import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
 import { env, webOrigins } from '../env'
 import { buildProviderPlaceholderEmail } from '../invitations'
 import { sendEmail } from '../mail/send'
+import {
+  renderMagicLinkEmail,
+  renderPasswordRecoveryEmail,
+  renderVerificationEmail,
+} from '../mail/templates'
 import { getApiBaseUrl } from './urls'
 
 const authMethodLabels: Record<string, string> = {
@@ -38,35 +43,7 @@ function buildPasswordRecoveryEmail(opts: {
   resetUrl: string
   methodLabels: string[]
 }) {
-  const hasPassword = opts.methodLabels.includes(authMethodLabels.credential)
-  const otherMethods = opts.methodLabels.filter(
-    (method) => method !== authMethodLabels.credential,
-  )
-
-  if (hasPassword) {
-    const extra =
-      otherMethods.length > 0
-        ? `\n\nThis account can also sign in with: ${otherMethods.join(', ')}.`
-        : ''
-    return {
-      subject: 'Reset your Spliit password',
-      text:
-        `Click the link below to reset your Spliit password.\n\n${opts.resetUrl}` +
-        extra +
-        `\n\nIf you did not request a password reset, you can safely ignore this email.`,
-    }
-  }
-
-  const methods =
-    otherMethods.length > 0 ? otherMethods.join(', ') : 'an email sign-in link'
-
-  return {
-    subject: 'Sign in to Spliit',
-    text:
-      `We received a password reset request for this Spliit account, but it does not have a password sign-in method.\n\n` +
-      `Use one of these sign-in methods instead: ${methods}.\n\n` +
-      `If you did not request this email, you can safely ignore it.`,
-  }
+  return renderPasswordRecoveryEmail(opts)
 }
 
 const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
@@ -203,7 +180,7 @@ export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
  * library's `accountLinking` behaviour for that.
  */
 export const auth = betterAuth({
-  appName: 'Spliit',
+  appName: 'Spliit Cloud',
   baseURL: getApiBaseUrl(),
   // The Hono mount point is `/auth/*`; tell better-auth so its internal
   // router strips the prefix when matching request paths. Without this,
@@ -292,7 +269,7 @@ export const auth = betterAuth({
       // used for verification emails and magic links above.
       try {
         const methodLabels = await getAuthMethodLabels(user.id)
-        const email = buildPasswordRecoveryEmail({
+        const email = await buildPasswordRecoveryEmail({
           resetUrl: url,
           methodLabels,
         })
@@ -319,12 +296,12 @@ export const auth = betterAuth({
       // user can retry from the sign-in page and a fresh token will be issued.
       // Mirrors the swallow-and-warn pattern used for magic links.
       try {
+        const rendered = await renderVerificationEmail({
+          verificationUrl: url,
+        })
         await sendEmail({
           to: user.email,
-          subject: 'Verify your Spliit account',
-          text:
-            `Click the link below to verify your email address and sign in to Spliit.\n\n${url}\n\n` +
-            `If you did not create a Spliit account, you can safely ignore this email.`,
+          ...rendered,
         })
       } catch (err) {
         console.warn(
@@ -370,12 +347,12 @@ export const auth = betterAuth({
         // be issued on the next request. Mirrors the swallow-and-warn pattern
         // used in lib/invitations.ts.
         try {
+          const rendered = await renderMagicLinkEmail({
+            signInUrl: url,
+          })
           await sendEmail({
             to: email,
-            subject: 'Your Spliit sign-in link',
-            text:
-              `Click the link below to sign in to Spliit.\n\n${url}\n\n` +
-              `If you did not request this email, you can safely ignore it.`,
+            ...rendered,
           })
         } catch (err) {
           console.warn(

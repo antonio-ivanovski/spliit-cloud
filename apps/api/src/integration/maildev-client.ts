@@ -31,6 +31,8 @@ export interface CapturedEmail {
   id: string
   subject: string
   text: string
+  /** HTML body of the email, if any. Empty string when the message has no HTML body. */
+  html: string
 }
 
 /** Probe MailDev's web UI. Returns true if the inbox responds. */
@@ -125,6 +127,7 @@ export async function getEmailForRecipient({
     id: summary.id,
     subject: summary.subject,
     text: detail.text ?? '',
+    html: detail.html ?? '',
   }
 }
 

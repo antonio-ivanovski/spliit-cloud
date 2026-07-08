@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "Pilih kata sandi baru",
-    "subtitle": "Masukkan kata sandi baru untuk akun Spliit Anda.",
+    "subtitle": "Masukkan kata sandi baru untuk akun Spliit Cloud Anda.",
     "newPassword": "Kata sandi baru",
     "confirmPassword": "Konfirmasi kata sandi baru",
     "passwordMismatch": "Kata sandi tidak cocok.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Pasang Spliit Cloud",
-      "description": "Tambahkan Spliit ke layar utama untuk akses satu ketukan.",
+      "description": "Tambahkan Spliit Cloud ke layar utama untuk akses satu ketukan.",
       "step1": "Ketuk tombol Bagikan",
       "step2": "Gulir ke bawah dan ketuk Tambahkan ke Layar Utama",
       "step3": "Ketuk Tambahkan di pojok kanan atas"
     },
     "firefox": {
       "title": "Pasang Spliit Cloud",
-      "description": "Tambahkan Spliit ke layar utama dari menu browser.",
+      "description": "Tambahkan Spliit Cloud ke layar utama dari menu browser.",
       "step1": "Ketuk tombol menu (⋮) di kanan atas",
       "step2": "Ketuk Pasang"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "Email",
     "peerLinkTab": "Tautan yang dapat dibagikan",
     "alreadyHasLedger": "sudah memiliki buku besar teman",
-    "inviteSent": "Undangan terkirim. Teman Anda akan ditambahkan saat mereka bergabung ke Spliit.",
+    "inviteSent": "Undangan terkirim. Teman Anda akan ditambahkan saat mereka bergabung ke Spliit Cloud.",
     "inviteLinkTitle": "Bagikan tautan ini",
     "inviteLinkDescription": "Bagikan tautan ini kepada teman Anda untuk menambahkan mereka ke buku besar.",
     "copy": "Salin",

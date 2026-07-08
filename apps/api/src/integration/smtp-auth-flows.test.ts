@@ -59,7 +59,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
     const email = `auth-${runId}@test-auth.example`
     const password = 'StrongP@ss123'
 
-    it('sends "Reset your Spliit password" email and the reset link redirects', async () => {
+    it('sends "Reset your Spliit Cloud password" email and the reset link redirects', async () => {
       const signUpRes = await app.request('/auth/sign-up/email', {
         method: 'POST',
         headers: {
@@ -72,7 +72,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
 
       await expectEmailEventually({
         recipient: email,
-        subject: 'Verify your Spliit account',
+        subject: 'Verify your Spliit Cloud account',
       })
 
       await prisma.account.update({
@@ -110,7 +110,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
 
       const captured = await expectEmailEventually({
         recipient: email,
-        subject: 'Reset your Spliit password',
+        subject: 'Reset your Spliit Cloud password',
       })
       expect(captured!.text).toContain('/auth/reset-password')
 
@@ -155,7 +155,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       })
     })
 
-    it('sends "Sign in to Spliit" email for users with only magic-link identity', async () => {
+    it('sends "Sign in to Spliit Cloud" email for users with only magic-link identity', async () => {
       await clearMaildevInbox()
 
       const forgotRes = await app.request('/auth/request-password-reset', {
@@ -173,7 +173,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
 
       const captured = await expectEmailEventually({
         recipient: mlEmail,
-        subject: 'Sign in to Spliit',
+        subject: 'Sign in to Spliit Cloud',
       })
       expect(captured!.text).toContain('email sign-in link')
     })
@@ -209,7 +209,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
 
       const captured = await expectEmailEventually({
         recipient: verifyEmail,
-        subject: 'Verify your Spliit account',
+        subject: 'Verify your Spliit Cloud account',
       })
       expect(captured!.text).toContain('/auth/verify-email')
 

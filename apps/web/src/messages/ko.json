@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "새 비밀번호 선택",
-    "subtitle": "Spliit 계정의 새 비밀번호를 입력하세요.",
+    "subtitle": "Spliit Cloud 계정의 새 비밀번호를 입력하세요.",
     "newPassword": "새 비밀번호",
     "confirmPassword": "새 비밀번호 확인",
     "passwordMismatch": "비밀번호가 일치하지 않습니다.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Spliit Cloud 설치",
-      "description": "홈 화면에 Spliit을 추가하여 한 번의 탭으로 접근하세요.",
+      "description": "홈 화면에 Spliit Cloud을 추가하여 한 번의 탭으로 접근하세요.",
       "step1": "공유 버튼을 탭하세요",
       "step2": "아래로 스크롤하여 '홈 화면에 추가'를 탭하세요",
       "step3": "오른쪽 상단의 '추가'를 탭하세요"
     },
     "firefox": {
       "title": "Spliit Cloud 설치",
-      "description": "브라우저 메뉴에서 홈 화면으로 Spliit을 추가하세요.",
+      "description": "브라우저 메뉴에서 홈 화면으로 Spliit Cloud을 추가하세요.",
       "step1": "오른쪽 상단의 메뉴 버튼(⋮)을 탭하세요",
       "step2": "'설치'를 탭하세요"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "이메일",
     "peerLinkTab": "공유 링크",
     "alreadyHasLedger": "이미 친구 장부가 있습니다",
-    "inviteSent": "초대를 보냈습니다. 친구가 Spliit에 가입하면 장부에 추가됩니다.",
+    "inviteSent": "초대를 보냈습니다. 친구가 Spliit Cloud에 가입하면 장부에 추가됩니다.",
     "inviteLinkTitle": "이 링크 공유",
     "inviteLinkDescription": "이 링크를 친구와 공유하여 장부에 추가하세요.",
     "copy": "복사",

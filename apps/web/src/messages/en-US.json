@@ -206,7 +206,7 @@
       "unknownGroup": "Unknown group",
       "sentOn": "Sent {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} invited you to join {groupName} on Spliit.",
+    "linkInvitationBannerDescription": "{inviter} invited you to join {groupName} on Spliit Cloud.",
     "linkInvitationSingleUse": "This link can only be used once. After you accept, it will stop working.",
     "linkInvitationTemporaryName": "You'll join as {name}.",
     "linkInvitationAlreadyMemberTitle": "You're already in {groupName}",
@@ -247,7 +247,7 @@
         "settleUpComingTitle": "Settle Up import is on the way",
         "settleUpComingDescription": "Settle Up CSV export support is on the roadmap.",
         "dropFile": "Drop a JSON or CSV file, or click to select",
-        "dropFileDescription": "JSON preserves every amount and payer exactly. CSV is a fallback — Spliit rounds each per-participant amount to 2 decimals.",
+        "dropFileDescription": "JSON preserves every amount and payer exactly. CSV is a fallback — Spliit Cloud rounds each per-participant amount to 2 decimals.",
         "or": "or",
         "pasteUrl": "Paste a spliit.app URL",
         "urlDescription": "Our server fetches the group through the spliit.app public export endpoint on your behalf.",
@@ -257,7 +257,7 @@
         "receiptWarningTitle": "Receipt images are not imported.",
         "receiptWarningDescription": "The spliit.app export does not include receipt images. Re-upload them in the destination group if you need them.",
         "invalidUrl": "Please paste a valid spliit.app group URL",
-        "notFoundUrl": "Spliit did not find this group",
+        "notFoundUrl": "Spliit Cloud did not find this group",
         "fetchUrlError": "Failed to fetch the source",
         "fileReadError": "Failed to read the file",
         "appToCloudDescription": "Change .app to .cloud in any spliit.app group URL to import it into Spliit Cloud.",
@@ -362,7 +362,7 @@
         "shareAriaLabel": "Share invite link",
         "emailInvitesTitle": "Email invites sent",
         "emailInvitesDescription": "The server emailed the following people. They'll see an Accept/Decline banner in the group page when they sign in.",
-        "shareTitle": "Join my Spliit group",
+        "shareTitle": "Join my group on Spliit Cloud",
         "shareText": "Join our expense group on Spliit Cloud — {name}. Open this link to accept: {url}"
       },
       "CurrencyConversion": {
@@ -500,7 +500,7 @@
   },
   "ResetPassword": {
     "title": "Choose a new password",
-    "subtitle": "Enter the new password for your Spliit account.",
+    "subtitle": "Enter the new password for your Spliit Cloud account.",
     "newPassword": "New password",
     "confirmPassword": "Confirm new password",
     "passwordMismatch": "Passwords don't match.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Install Spliit Cloud",
-      "description": "Add Spliit to your home screen for one-tap access.",
+      "description": "Add Spliit Cloud to your home screen for one-tap access.",
       "step1": "Tap the Share button",
       "step2": "Scroll down and tap Add to Home Screen",
       "step3": "Tap Add in the top-right corner"
     },
     "firefox": {
       "title": "Install Spliit Cloud",
-      "description": "Add Spliit to your home screen from the browser menu.",
+      "description": "Add Spliit Cloud to your home screen from the browser menu.",
       "step1": "Tap the menu button (⋮) at the top right",
       "step2": "Tap Install"
     }
@@ -1397,7 +1397,7 @@
     "peerEmailTab": "Email",
     "peerLinkTab": "Shareable link",
     "alreadyHasLedger": "already has a friend ledger",
-    "inviteSent": "Invitation sent. Your friend will be added when they join Spliit.",
+    "inviteSent": "Invitation sent. Your friend will be added when they join Spliit Cloud.",
     "inviteLinkTitle": "Share this link",
     "inviteLinkDescription": "Share this link with your friend to add them to the ledger.",
     "copy": "Copy",

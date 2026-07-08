@@ -111,7 +111,7 @@ describe('better-auth emailAndPassword config', () => {
     expect(sendEmailMock).toHaveBeenCalledWith(
       expect.objectContaining({
         to: 'alice@example.com',
-        subject: 'Reset your Spliit password',
+        subject: 'Reset your Spliit Cloud password',
         text: expect.stringContaining(
           'This account can also sign in with: Google, email sign-in link.',
         ),
@@ -133,7 +133,7 @@ describe('better-auth emailAndPassword config', () => {
     expect(sendEmailMock).toHaveBeenCalledWith(
       expect.objectContaining({
         to: 'alice@example.com',
-        subject: 'Sign in to Spliit',
+        subject: 'Sign in to Spliit Cloud',
         text: expect.stringContaining(
           'Use one of these sign-in methods instead: Google, email sign-in link.',
         ),

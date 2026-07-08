@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "新しいパスワードを選択",
-    "subtitle": "Spliitアカウントの新しいパスワードを入力してください。",
+    "subtitle": "Spliit Cloudアカウントの新しいパスワードを入力してください。",
     "newPassword": "新しいパスワード",
     "confirmPassword": "新しいパスワードを確認",
     "passwordMismatch": "パスワードが一致しません。",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Spliit Cloudをインストール",
-      "description": "Spliitをホーム画面に追加して、ワンタップでアクセス。",
+      "description": "Spliit Cloudをホーム画面に追加して、ワンタップでアクセス。",
       "step1": "共有ボタンをタップ",
       "step2": "下にスクロールして「ホーム画面に追加」をタップ",
       "step3": "右上の「追加」をタップ"
     },
     "firefox": {
       "title": "Spliit Cloudをインストール",
-      "description": "ブラウザのメニューからSpliitをホーム画面に追加できます。",
+      "description": "ブラウザのメニューからSpliit Cloudをホーム画面に追加できます。",
       "step1": "右上のメニューボタン（⋮）をタップ",
       "step2": "「インストール」をタップ"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "メールアドレス",
     "peerLinkTab": "共有リンク",
     "alreadyHasLedger": "すでにフレンド台帳があります",
-    "inviteSent": "招待を送信しました。友達がSpliitに参加すると、台帳に追加されます。",
+    "inviteSent": "招待を送信しました。友達がSpliit Cloudに参加すると、台帳に追加されます。",
     "inviteLinkTitle": "このリンクを共有",
     "inviteLinkDescription": "このリンクを友達と共有して、台帳に追加しましょう。",
     "copy": "コピー",

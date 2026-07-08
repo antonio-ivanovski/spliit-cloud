@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "Valitse uusi salasana",
-    "subtitle": "Anna uusi salasana Spliit-tilillesi.",
+    "subtitle": "Anna uusi salasana Spliit Cloud-tilillesi.",
     "newPassword": "Uusi salasana",
     "confirmPassword": "Vahvista uusi salasana",
     "passwordMismatch": "Salasanat eivät täsmää.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Asenna Spliit Cloud",
-      "description": "Lisää Spliit aloitusnäytölle, jotta se avautuu yhdellä napautuksella.",
+      "description": "Lisää Spliit Cloud aloitusnäytölle, jotta se avautuu yhdellä napautuksella.",
       "step1": "Napauta Jaa-painiketta",
       "step2": "Vieritä alas ja napauta Lisää aloitusnäytölle",
       "step3": "Napauta oikeasta yläkulmasta Lisää"
     },
     "firefox": {
       "title": "Asenna Spliit Cloud",
-      "description": "Lisää Spliit aloitusnäytölle selaimen valikosta.",
+      "description": "Lisää Spliit Cloud aloitusnäytölle selaimen valikosta.",
       "step1": "Napauta valikkopainiketta (⋮) oikeasta yläkulmasta",
       "step2": "Napauta Asenna"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "Sähköposti",
     "peerLinkTab": "Jaettava linkki",
     "alreadyHasLedger": "on jo ystäväkirjanpito",
-    "inviteSent": "Kutsu lähetetty. Kaverisi lisätään, kun hän liittyy Spliittiin.",
+    "inviteSent": "Kutsu lähetetty. Kaverisi lisätään, kun hän liittyy Spliit Cloudtiin.",
     "inviteLinkTitle": "Jaa tämä linkki",
     "inviteLinkDescription": "Jaa tämä linkki kaverillesi lisätäksesi hänet kirjanpitoon.",
     "copy": "Kopioi",

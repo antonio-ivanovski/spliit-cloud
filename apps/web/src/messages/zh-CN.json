@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "选择新密码",
-    "subtitle": "为您的 Spliit 账户输入新密码。",
+    "subtitle": "为您的 Spliit Cloud 账户输入新密码。",
     "newPassword": "新密码",
     "confirmPassword": "确认新密码",
     "passwordMismatch": "密码不匹配。",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "安装 Spliit Cloud",
-      "description": "将 Spliit 添加到主屏幕，一键即可访问。",
+      "description": "将 Spliit Cloud 添加到主屏幕，一键即可访问。",
       "step1": "点击分享按钮",
       "step2": "向下滚动并点击「添加到主屏幕」",
       "step3": "点击右上角的「添加」"
     },
     "firefox": {
       "title": "安装 Spliit Cloud",
-      "description": "通过浏览器菜单将 Spliit 添加到主屏幕。",
+      "description": "通过浏览器菜单将 Spliit Cloud 添加到主屏幕。",
       "step1": "点击右上角的菜单按钮（⋮）",
       "step2": "点击「安装」"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "电子邮件",
     "peerLinkTab": "可分享链接",
     "alreadyHasLedger": "已经有朋友账本",
-    "inviteSent": "邀请已发送。当朋友加入 Spliit 后，他们将被添加到账本。",
+    "inviteSent": "邀请已发送。当朋友加入 Spliit Cloud 后，他们将被添加到账本。",
     "inviteLinkTitle": "分享此链接",
     "inviteLinkDescription": "与朋友分享此链接，将其添加到账本。",
     "copy": "复制",
