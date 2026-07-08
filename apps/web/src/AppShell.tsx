@@ -4,6 +4,7 @@ import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { OfflineBanner } from '@/components/offline-banner'
+import { ProfileGate } from '@/components/profile-gate'
 import { ProgressBar } from '@/components/progress-bar'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -56,7 +57,9 @@ function Content() {
         <InstallPromotionDialog />
 
         <div className="pt-16 flex-1 flex flex-col">
-          <Outlet />
+          <ProfileGate>
+            <Outlet />
+          </ProfileGate>
         </div>
 
         <footer className="sm:p-8 md:p-16 sm:mt-16 sm:text-sm md:text-base md:mt-32 bg-slate-50 dark:bg-card border-t p-6 mt-8 flex flex-col sm:flex-row sm:justify-between gap-4 text-xs [&_a]:underline">

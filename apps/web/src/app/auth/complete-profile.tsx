@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { needsDisplayName } from '@/lib/account'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { getRouteApi, Navigate, useNavigate } from '@tanstack/react-router'
@@ -39,8 +40,7 @@ export function CompleteProfilePage() {
 
   const updateProfile = trpc.account.updateProfile.useMutation()
 
-  const needsProfile =
-    !!account && (!account.name || account.name === account.email)
+  const needsProfile = !!account && needsDisplayName(account)
 
   if (isPending) {
     return (

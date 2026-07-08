@@ -1,5 +1,6 @@
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
+import { needsDisplayName } from '@/lib/account'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
@@ -36,7 +37,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
   // Authenticated but missing a display name (e.g. right after a magic-link
   // sign-up). Send them to the profile-completion flow, preserving the
   // original destination so they land back here once they've set a name.
-  if (!account.name || account.name === account.email) {
+  if (needsDisplayName(account)) {
     const target = currentPathWithSearch()
     return (
       <Navigate

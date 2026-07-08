@@ -1,3 +1,4 @@
+import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { isStrongPassword } from '@spliit/domain/password'
 import { useMutation } from '@tanstack/react-query'
@@ -19,10 +20,6 @@ export function getErrorMessage(error: unknown): string {
 export function isFeatureFlagEnabled(name: string): boolean {
   const value = import.meta.env[name as keyof ImportMetaEnv]
   return value === 'true' || value === '1'
-}
-
-function needsDisplayName(account: { name?: string | null; email?: string }) {
-  return !account.name || account.name === account.email
 }
 
 export function useAuthPanel() {
@@ -120,6 +117,7 @@ export function useAuthPanel() {
       const result = await authClient.signIn.magicLink({
         email: vars.email.trim(),
         callbackURL: vars.callbackURL,
+        newUserCallbackURL: completeProfileCallbackURL,
       })
       if (result.error) {
         throw new Error(t('errors.magicLinkFailed'))
