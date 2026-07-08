@@ -45,6 +45,38 @@ function friendPairKey(a: string, b: string): string {
   return a < b ? `${a}:${b}` : `${b}:${a}`
 }
 
+class DuplicateFriendLedgerError extends Error {
+  constructor(
+    readonly invitationId: string,
+    readonly groupId: string,
+    readonly pairKey: string,
+  ) {
+    super('Duplicate friend ledger')
+  }
+}
+
+function isUniqueConstraintError(err: unknown): boolean {
+  return (
+    err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002'
+  )
+}
+
+async function removeDuplicatePendingFriendLedger(
+  err: DuplicateFriendLedgerError,
+): Promise<void> {
+  await prisma.group
+    .delete({ where: { id: err.groupId } })
+    .catch(async (deleteErr) => {
+      await prisma.groupInvitation
+        .delete({ where: { id: err.invitationId } })
+        .catch(() => {})
+      console.warn(
+        `[friends] failed to remove duplicate friend ledger group ${err.groupId} for pair ${err.pairKey}.`,
+        deleteErr,
+      )
+    })
+}
+
 async function findExistingFriendGroupByPair(
   callerAccountId: string,
   peerAccountId: string,
@@ -425,17 +457,24 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
             data: { friendPairKey: pairKey },
           })
         } catch (err) {
-          if (
-            err instanceof Prisma.PrismaClientKnownRequestError &&
-            err.code === 'P2002'
-          ) {
-            // Pair key already set; concurrent accept won the race.
-          } else {
-            throw err
+          if (isUniqueConstraintError(err)) {
+            throw new DuplicateFriendLedgerError(
+              invitation.id,
+              invitation.groupId,
+              pairKey,
+            )
           }
+          throw err
         }
       })
       .catch((err) => {
+        if (err instanceof DuplicateFriendLedgerError) {
+          console.warn(
+            `[friends] duplicate friend ledger detected while auto-accepting invitation ${err.invitationId}; removing stale group ${err.groupId}.`,
+            err,
+          )
+          return removeDuplicatePendingFriendLedger(err)
+        }
         console.error(
           `[friends] failed to auto-accept pending friend invitation ${invitation.id} for account ${accountId}. ` +
             `Group: ${invitation.groupId}, InvitedBy: ${invitation.invitedById}.`,

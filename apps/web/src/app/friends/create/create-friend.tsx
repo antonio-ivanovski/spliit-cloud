@@ -190,10 +190,16 @@ export function CreateFriend() {
               <Tabs
                 value={peerTab}
                 onValueChange={(value) => {
-                  setPeerTab(value as PeerTab)
-                  if (value === 'link') {
-                    form.setValue('useLink', true, { shouldDirty: true })
-                  }
+                  const nextTab = value as PeerTab
+                  setPeerTab(nextTab)
+                  form.setValue('peerAccountId', undefined, {
+                    shouldDirty: true,
+                  })
+                  form.setValue('peerEmail', undefined, { shouldDirty: true })
+                  form.setValue('useLink', nextTab === 'link' || undefined, {
+                    shouldDirty: true,
+                  })
+                  form.clearErrors(['peerAccountId', 'peerEmail', 'useLink'])
                 }}
                 className="flex flex-col gap-4"
               >

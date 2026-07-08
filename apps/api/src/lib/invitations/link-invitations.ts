@@ -20,6 +20,38 @@ export class InvitationError extends TRPCError {
   }
 }
 
+class DuplicateFriendLedgerError extends Error {
+  constructor(
+    readonly invitationId: string,
+    readonly groupId: string,
+    readonly pairKey: string,
+  ) {
+    super('Duplicate friend ledger')
+  }
+}
+
+function isUniqueConstraintError(err: unknown): boolean {
+  return (
+    err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002'
+  )
+}
+
+async function removeDuplicateFriendLinkInvitation(
+  err: DuplicateFriendLedgerError,
+): Promise<void> {
+  await prisma.group
+    .delete({ where: { id: err.groupId } })
+    .catch(async (deleteErr) => {
+      await prisma.groupInvitation
+        .delete({ where: { id: err.invitationId } })
+        .catch(() => {})
+      console.warn(
+        `[friends] failed to remove duplicate friend link group ${err.groupId} for pair ${err.pairKey}.`,
+        deleteErr,
+      )
+    })
+}
+
 /** Default expiry for link invitations. 30 days. */
 export const LINK_INVITATION_DEFAULT_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
@@ -224,94 +256,108 @@ export async function acceptLinkInvitation(opts: {
     )
   }
 
-  const result = await prisma.$transaction(async (tx) => {
-    const flipped = await tx.groupInvitation.updateMany({
-      where: {
-        tokenHash,
-        status: GroupInvitationStatus.PENDING,
-        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-      },
-      data: {
-        status: GroupInvitationStatus.ACCEPTED,
-        acceptedById: opts.accountId,
-        acceptedAt: new Date(),
-      },
-    })
-    if (flipped.count === 0) {
-      throw new InvitationError('This invitation link is no longer valid.')
-    }
+  const result = await prisma
+    .$transaction(async (tx) => {
+      const flipped = await tx.groupInvitation.updateMany({
+        where: {
+          tokenHash,
+          status: GroupInvitationStatus.PENDING,
+          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        },
+        data: {
+          status: GroupInvitationStatus.ACCEPTED,
+          acceptedById: opts.accountId,
+          acceptedAt: new Date(),
+        },
+      })
+      if (flipped.count === 0) {
+        throw new InvitationError('This invitation link is no longer valid.')
+      }
 
-    const invitation = await tx.groupInvitation.findUnique({
-      where: { tokenHash },
-      include: { group: { include: { ledger: true } } },
-    })
-    if (!invitation || !invitation.group.ledger) {
-      throw new InvitationError('Invitation is missing its group ledger.')
-    }
+      const invitation = await tx.groupInvitation.findUnique({
+        where: { tokenHash },
+        include: { group: { include: { ledger: true } } },
+      })
+      if (!invitation || !invitation.group.ledger) {
+        throw new InvitationError('Invitation is missing its group ledger.')
+      }
 
-    const member = await tx.groupMember.upsert({
-      where: {
-        groupId_accountId: {
+      const member = await tx.groupMember.upsert({
+        where: {
+          groupId_accountId: {
+            groupId: invitation.groupId,
+            accountId: opts.accountId,
+          },
+        },
+        create: {
+          id: randomId(),
           groupId: invitation.groupId,
           accountId: opts.accountId,
+          role: invitation.role,
+          status: 'ACTIVE',
+          joinedAt: new Date(),
         },
-      },
-      create: {
-        id: randomId(),
-        groupId: invitation.groupId,
-        accountId: opts.accountId,
-        role: invitation.role,
-        status: 'ACTIVE',
-        joinedAt: new Date(),
-      },
-      update: {
-        role: invitation.role,
-        status: 'ACTIVE',
-        joinedAt: new Date(),
-        leftAt: null,
-      },
-    })
+        update: {
+          role: invitation.role,
+          status: 'ACTIVE',
+          joinedAt: new Date(),
+          leftAt: null,
+        },
+      })
 
-    if (invitation.group.groupType === GroupType.FRIEND) {
-      const pairKey = [opts.accountId, invitation.invitedById].sort().join(':')
-      try {
-        await tx.group.update({
-          where: { id: invitation.groupId },
-          data: { friendPairKey: pairKey },
-        })
-      } catch (err) {
-        if (
-          err instanceof Prisma.PrismaClientKnownRequestError &&
-          err.code === 'P2002'
-        ) {
-          // Pair key already set; concurrent accept won the race.
-        } else {
+      if (invitation.group.groupType === GroupType.FRIEND) {
+        const pairKey = [opts.accountId, invitation.invitedById]
+          .sort()
+          .join(':')
+        try {
+          await tx.group.update({
+            where: { id: invitation.groupId },
+            data: { friendPairKey: pairKey },
+          })
+        } catch (err) {
+          if (isUniqueConstraintError(err)) {
+            throw new DuplicateFriendLedgerError(
+              invitation.id,
+              invitation.groupId,
+              pairKey,
+            )
+          }
           throw err
         }
       }
-    }
 
-    await reconcileMemberLedgerParticipant(tx, {
-      memberId: member.id,
-      ledgerId: invitation.group.ledger.id,
-      pendingParticipantId: invitation.ledgerParticipantId,
+      await reconcileMemberLedgerParticipant(tx, {
+        memberId: member.id,
+        ledgerId: invitation.group.ledger.id,
+        pendingParticipantId: invitation.ledgerParticipantId,
+      })
+
+      await logActivity(
+        invitation.groupId,
+        {
+          type: 'INVITATION_ACCEPTED',
+          actor: { type: 'ACCOUNT', id: opts.accountId },
+          subject: { type: 'INVITATION', id: invitation.id },
+          data: buildInvitationActivityData({
+            displayLabel: getInvitationDisplayName(invitation),
+          }),
+        },
+        tx,
+      )
+
+      return { groupId: invitation.groupId, role: invitation.role }
     })
-
-    await logActivity(
-      invitation.groupId,
-      {
-        type: 'INVITATION_ACCEPTED',
-        actor: { type: 'ACCOUNT', id: opts.accountId },
-        subject: { type: 'INVITATION', id: invitation.id },
-        data: buildInvitationActivityData({
-          displayLabel: getInvitationDisplayName(invitation),
-        }),
-      },
-      tx,
-    )
-
-    return { groupId: invitation.groupId, role: invitation.role }
-  })
+    .catch(async (err) => {
+      if (err instanceof DuplicateFriendLedgerError) {
+        console.warn(
+          `[friends] duplicate friend ledger detected while accepting link invitation ${err.invitationId}; removing stale group ${err.groupId}.`,
+          err,
+        )
+        await removeDuplicateFriendLinkInvitation(err)
+        throw new InvitationError('A friend ledger already exists.')
+      }
+      throw err
+    })
 
   return result
 }

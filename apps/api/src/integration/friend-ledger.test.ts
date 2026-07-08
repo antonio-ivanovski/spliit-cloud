@@ -6,7 +6,7 @@ import {
   GroupType,
   prisma,
 } from '@spliit/db'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { autoAcceptPendingFriendInvitationsForAccount } from '../lib/api/friends'
 import { accountRouter } from '../trpc/routers/account'
 import { friendsRouter } from '../trpc/routers/friends'
@@ -1114,6 +1114,117 @@ describe('Friend ledger — real DB', () => {
       await prisma.account
         .delete({ where: { id: newAccountId } })
         .catch(() => {})
+    }
+  })
+
+  it('duplicate auto-accept cleanup: removes stale pending friend invite when pair key already exists', async () => {
+    const aId = `acct-dup-a-${runId}`
+    const aEmail = `dup-a-${runId}@test.example`
+    const bId = `acct-dup-b-${runId}`
+    const bEmail = `dup-b-${runId}@test.example`
+    await prisma.account.createMany({
+      data: [
+        { id: aId, email: aEmail, emailVerified: true, name: 'Dup A' },
+        { id: bId, email: bEmail, emailVerified: true, name: 'Dup B' },
+      ],
+    })
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    try {
+      const existing = await makeCaller({
+        accountId: aId,
+        email: aEmail,
+        name: 'Dup A',
+      }).create({
+        friendFormValues: {
+          peerAccountId: bId,
+          currency: '$',
+          currencyCode: 'USD',
+        },
+      })
+      trackGroup(existing.groupId)
+
+      const staleLedger = await prisma.ledger.create({
+        data: {
+          id: `ldg-dup-stale-${runId}`,
+          currency: '$',
+          currencyCode: 'USD',
+        },
+      })
+      const staleGroup = await prisma.group.create({
+        data: {
+          id: `grp-dup-stale-${runId}`,
+          name: `stale-${runId}`,
+          groupType: GroupType.FRIEND,
+          ledgerId: staleLedger.id,
+        },
+      })
+      const staleMember = await prisma.groupMember.create({
+        data: {
+          id: `mbr-dup-stale-${runId}`,
+          groupId: staleGroup.id,
+          accountId: aId,
+          role: GroupRole.ADMIN,
+          status: GroupMemberStatus.ACTIVE,
+          joinedAt: new Date(),
+        },
+      })
+      await prisma.ledgerParticipant.create({
+        data: {
+          id: `lp-dup-a-${runId}`,
+          ledgerId: staleLedger.id,
+          groupMemberId: staleMember.id,
+        },
+      })
+      const pendingParticipant = await prisma.ledgerParticipant.create({
+        data: {
+          id: `lp-dup-b-pending-${runId}`,
+          ledgerId: staleLedger.id,
+        },
+      })
+      const staleInvitation = await prisma.groupInvitation.create({
+        data: {
+          id: `inv-dup-stale-${runId}`,
+          type: GroupInvitationType.EMAIL,
+          groupId: staleGroup.id,
+          email: bEmail,
+          role: GroupRole.ADMIN,
+          invitedById: aId,
+          ledgerParticipantId: pendingParticipant.id,
+        },
+      })
+
+      await expect(
+        autoAcceptPendingFriendInvitationsForAccount({
+          accountId: bId,
+          accountEmail: bEmail,
+        }),
+      ).resolves.toBeUndefined()
+
+      expect(warnSpy).toHaveBeenCalled()
+      const removedInvitation = await prisma.groupInvitation.findUnique({
+        where: { id: staleInvitation.id },
+      })
+      const removedGroup = await prisma.group.findUnique({
+        where: { id: staleGroup.id },
+      })
+      expect(removedInvitation).toBeNull()
+      expect(removedGroup).toBeNull()
+      const existingGroup = await prisma.group.findUnique({
+        where: { id: existing.groupId },
+      })
+      expect(existingGroup?.friendPairKey).toBe([aId, bId].sort().join(':'))
+    } finally {
+      warnSpy.mockRestore()
+      await prisma.group
+        .delete({ where: { id: `grp-dup-stale-${runId}` } })
+        .catch(() => {})
+      await prisma.ledger
+        .delete({ where: { id: `ldg-dup-stale-${runId}` } })
+        .catch(() => {})
+      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.account.delete({ where: { id: bId } }).catch(() => {})
     }
   })
 

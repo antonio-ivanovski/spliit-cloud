@@ -209,6 +209,48 @@ describe('CreateFriend', () => {
     ).toBe(true)
   })
 
+  it('clears inactive peer mode fields when switching tabs before submit', async () => {
+    mocks.mockFriendsQuery.mockReturnValue({
+      data: {
+        friends: [{ accountId: 'peer-1', name: 'Alice', email: 'a@b.com' }],
+      },
+      isLoading: false,
+    })
+    mocks.mockCreateFriend.mockResolvedValue({
+      groupId: 'new-group',
+      existed: false,
+    })
+
+    const { user } = render(<CreateFriend />)
+
+    const combobox = within(
+      screen.getByRole('tabpanel', { name: 'Friends list' }),
+    ).getByRole('combobox')
+    await user.click(combobox)
+    await user.click(await screen.findByRole('option', { name: /Alice/ }))
+
+    await user.click(screen.getByRole('tab', { name: 'Email' }))
+    await user.type(
+      screen.getByRole('textbox', { name: /friend's email/i }),
+      'friend@example.com',
+    )
+
+    await user.click(
+      screen.getByRole('button', { name: 'Create a friend ledger' }),
+    )
+
+    await vi.waitFor(() => {
+      expect(mocks.mockCreateFriend).toHaveBeenCalled()
+    })
+    expect(
+      mocks.mockCreateFriend.mock.calls[0][0].friendFormValues,
+    ).toMatchObject({
+      peerAccountId: undefined,
+      peerEmail: 'friend@example.com',
+      useLink: undefined,
+    })
+  })
+
   it('navigates to existing ledger when result.existed is true', async () => {
     mocks.mockFriendsQuery.mockReturnValue({
       data: {
