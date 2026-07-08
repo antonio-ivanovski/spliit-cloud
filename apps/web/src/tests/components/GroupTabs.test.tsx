@@ -34,9 +34,11 @@ vi.mock('@/trpc/client', () => ({
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
-  useLocation: ({ select } = {}) => {
+  useLocation: (opts?: {
+    select?: (location: { pathname: string }) => unknown
+  }) => {
     const location = { pathname: '/groups/group-1/expenses' }
-    return select ? select(location) : location
+    return opts?.select ? opts.select(location) : location
   },
 }))
 
