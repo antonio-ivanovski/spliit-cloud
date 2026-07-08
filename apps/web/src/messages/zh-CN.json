@@ -7,7 +7,8 @@
       "signIn": "登录到 Spliit Cloud",
       "createAccount": "创建账户",
       "createGroup": "创建群组",
-      "importGroup": "从其他服务导入群组"
+      "importGroup": "从其他服务导入群组",
+      "createFriendLedger": "创建朋友账本"
     },
     "features": {
       "groupsSync": {
@@ -112,11 +113,17 @@
     "createdInviteHint": "群组已创建。邀请成员开始使用。",
     "hidden": "已隐藏",
     "showHidden": "显示已隐藏的群组",
+    "showArchived": "显示已归档的群组",
     "hide": "隐藏群组",
     "unhide": "取消隐藏群组",
+    "hideFriend": "隐藏朋友账本",
+    "unhideFriend": "取消隐藏朋友账本",
     "starGroup": "收藏群组",
     "unstarGroup": "取消收藏群组",
+    "starFriend": "收藏朋友账本",
+    "unstarFriend": "取消收藏朋友账本",
     "groupActions": "群组操作",
+    "friendActions": "朋友账本操作",
     "archiveGroup": "归档群组",
     "unarchiveGroup": "取消归档群组",
     "archiveSuccess": "群组已归档。",
@@ -262,7 +269,13 @@
           "pendingSuffix": "（待处理）",
           "leaveUnlinked": "保持未关联",
           "leaveUnlinkedDescription": "仅保留名称——稍后从「成员」关联。",
-          "leaveUnlinkedFollowUp": "{name} 将显示为仅名称条目，无法访问应用程序。您可以稍后从「成员」选项卡将其关联到帐户。"
+          "leaveUnlinkedFollowUp": "{name} 将显示为仅名称条目，无法访问应用程序。您可以稍后从「成员」选项卡将其关联到帐户。",
+          "inviteFriend": "从您的朋友中",
+          "inviteFriendDescription": "从您以前共享过的群组中邀请朋友。",
+          "selectFriendLabel": "朋友",
+          "selectFriendPlaceholder": "选择一位朋友…",
+          "friendAlreadyMember": "已是成员",
+          "friendPendingInvite": "已邀请"
         }
       },
       "fetchingGroup": "正在从 spliit.app 获取群组…",
@@ -373,6 +386,14 @@
       "title": "创建群组",
       "description": "与朋友、家人或室友一起记录共同开支。"
     },
+    "groups": "群组",
+    "friends": "朋友账本",
+    "createExpense": "创建支出",
+    "pending": "待处理",
+    "scopePickerGroups": "选择群组",
+    "scopePickerFriends": "选择朋友账本",
+    "scopePickerEmpty": "还没有群组",
+    "scopePickerMembers": "{count} 位成员",
     "createFriendLedgerCard": {
       "description": "与某位特定朋友一对一结算。",
       "title": "创建朋友账本"
@@ -1145,7 +1166,8 @@
       "invalidEmail": "请输入有效的邮箱地址。",
       "tab": {
         "email": "电子邮件",
-        "link": "邀请链接"
+        "link": "邀请链接",
+        "friends": "朋友"
       },
       "emailDescription": "通过电子邮件发送邀请。受邀者在匹配的账号上接受后即可加入。",
       "linkDescription": "生成一个一次性链接，任何人都可使用该链接加入。在首次接受后，链接将失效。",
@@ -1164,7 +1186,12 @@
         "shareTitle": "在 Spliit Cloud 上加入 {groupName}",
         "shareText": "我刚在 Spliit Cloud 上为我们的共同支出创建了 {groupName}。这是一个一次性邀请链接——打开即可加入：\n{inviteUrl}",
         "generateNew": "生成新链接"
-      }
+      },
+      "friendsDescription": "从您以前共享过的群组中邀请朋友。",
+      "selectFriendPlaceholder": "选择一位朋友…",
+      "friendAlreadyMember": "已是成员",
+      "noFriends": "还没有朋友。请从「电子邮件」标签页邀请。",
+      "friendAlreadyInvited": "已邀请"
     },
     "invitations": {
       "title": "待处理的邀请",
@@ -1363,5 +1390,44 @@
       "step1": "点击右上角的菜单按钮（⋮）",
       "step2": "点击「安装」"
     }
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "还没有任何{itemLabelPlural}",
+      "filtered": "所有{itemLabelPlural}都已隐藏"
+    },
+    "description": {
+      "empty": "创建您的第一个{itemLabel}开始使用。"
+    },
+    "labels": {
+      "group": "群组",
+      "groupPlural": "群组",
+      "friendLedger": "朋友账本",
+      "friendLedgerPlural": "朋友账本"
+    },
+    "actions": {
+      "createGroup": "创建群组",
+      "createFriendLedger": "创建朋友账本",
+      "showHidden": "显示已隐藏的群组"
+    }
+  },
+  "Friends": {
+    "title": "创建朋友账本",
+    "peerFriendsTab": "朋友列表",
+    "peerEmailTab": "电子邮件",
+    "peerLinkTab": "可分享链接",
+    "alreadyHasLedger": "已经有朋友账本",
+    "inviteSent": "邀请已发送。当朋友加入 Spliit 后，他们将被添加到账本。",
+    "inviteLinkTitle": "分享此链接",
+    "inviteLinkDescription": "与朋友分享此链接，将其添加到账本。",
+    "copy": "复制",
+    "share": "分享",
+    "linkHelp": "生成一个朋友可以用来加入此账本的可分享链接。",
+    "emailLabel": "朋友的电子邮件",
+    "temporaryNameLabel": "显示名称（可选）",
+    "temporaryNameHelp": "在朋友加入并认领其账户之前使用。",
+    "friendsEmpty": "输入朋友的电子邮件或分享链接以邀请他们。",
+    "infoLabel": "信息（可选）",
+    "infoPlaceholder": "添加说明，例如「室友费用」"
   }
 }

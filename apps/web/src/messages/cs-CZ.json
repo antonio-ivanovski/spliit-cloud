@@ -7,7 +7,8 @@
       "signIn": "Přihlásit se do Spliit Cloud",
       "createAccount": "Vytvořit účet",
       "createGroup": "Vytvořit skupinu",
-      "importGroup": "Importovat skupinu z jiné služby"
+      "importGroup": "Importovat skupinu z jiné služby",
+      "createFriendLedger": "Vytvořit účet s přítelem"
     },
     "features": {
       "groupsSync": {
@@ -100,11 +101,17 @@
     "archived": "Archivované skupiny",
     "hidden": "Skryté",
     "showHidden": "Zobrazit skryté skupiny",
+    "showArchived": "Zobrazit archivované skupiny",
     "hide": "Skrýt skupinu",
     "unhide": "Zobrazit skupinu",
+    "hideFriend": "Skrýt účet s přítelem",
+    "unhideFriend": "Zobrazit účet s přítelem",
     "starGroup": "Označit hvězdičkou",
     "unstarGroup": "Odznačit hvězdičku",
+    "starFriend": "Označit hvězdičkou účet s přítelem",
+    "unstarFriend": "Odznačit hvězdičkou účet s přítelem",
     "groupActions": "Akce skupiny",
+    "friendActions": "Akce účtu s přítelem",
     "archiveGroup": "Archivovat skupinu",
     "unarchiveGroup": "Obnovit skupinu",
     "archiveSuccess": "Skupina archivována.",
@@ -262,7 +269,13 @@
           "pendingSuffix": "(čeká)",
           "leaveUnlinked": "Nechat nepropojené",
           "leaveUnlinkedDescription": "Ponechá pouze jméno — propojte později ze záložky Členové.",
-          "leaveUnlinkedFollowUp": "{name} se zobrazí jako položka pouze se jménem bez přístupu do aplikace. Můžete ji propojit s účtem později ze záložky Členové."
+          "leaveUnlinkedFollowUp": "{name} se zobrazí jako položka pouze se jménem bez přístupu do aplikace. Můžete ji propojit s účtem později ze záložky Členové.",
+          "inviteFriend": "Z vašich přátel",
+          "inviteFriendDescription": "Pozvěte přítele ze skupin, které jste dříve sdíleli.",
+          "selectFriendLabel": "Přítel",
+          "selectFriendPlaceholder": "Vyberte přítele…",
+          "friendAlreadyMember": "Již je členem",
+          "friendPendingInvite": "Již pozván"
         }
       },
       "fetchingGroup": "Načítám skupinu z spliit.app…",
@@ -373,6 +386,14 @@
       "title": "Vytvořit skupinu",
       "description": "Sledujte sdílené výdaje s přáteli, rodinou nebo spolubydlícími."
     },
+    "groups": "Skupiny",
+    "friends": "Účty s přáteli",
+    "createExpense": "Vytvořit výdaj",
+    "pending": "Čeká na vyřízení",
+    "scopePickerGroups": "Vyberte skupinu",
+    "scopePickerFriends": "Vyberte účet s přítelem",
+    "scopePickerEmpty": "Zatím žádné skupiny",
+    "scopePickerMembers": "{count} člen(ů)",
     "createFriendLedgerCard": {
       "description": "Vyrovnejte se jeden na jednoho s konkrétní osobou.",
       "title": "Vytvořit účet s přítelem"
@@ -1145,7 +1166,8 @@
       "invalidEmail": "Zadejte platnou e-mailovou adresu.",
       "tab": {
         "email": "E-mail",
-        "link": "Odkaz pozvánky"
+        "link": "Odkaz pozvánky",
+        "friends": "Přátelé"
       },
       "emailDescription": "Pošlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
       "linkDescription": "Vygenerujte jednorázový odkaz, pomocí kterého se může kdokoli připojit. Po prvním přijetí přestane fungovat.",
@@ -1164,7 +1186,12 @@
         "shareText": "Právě jsem vytvořil(a) skupinu {groupName} pro naše sdílené výdaje na Spliit Cloud. Zde je jednorázový odkaz pozvánky — otevřete ho a připojte se:\n{inviteUrl}",
         "generateNew": "Vygenerovat nový odkaz"
       },
-      "temporaryNamePlaceholder": "např. Alexův spolubydlící"
+      "temporaryNamePlaceholder": "např. Alexův spolubydlící",
+      "friendsDescription": "Pozvěte někoho ze skupin, které jste sdíleli.",
+      "selectFriendPlaceholder": "Vyberte přítele…",
+      "friendAlreadyMember": "Již je členem",
+      "noFriends": "Zatím žádní přátelé. Pozvěte je na kartě E-mail.",
+      "friendAlreadyInvited": "Již pozván"
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -1363,5 +1390,44 @@
       "step1": "Klepněte na tlačítko nabídky (⋮) v pravém horním rohu",
       "step2": "Klepněte na Instalovat"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Vytvořit skupinu",
+      "createFriendLedger": "Vytvořit účet s přítelem",
+      "showHidden": "Zobrazit skryté skupiny"
+    },
+    "description": {
+      "empty": "Začněte vytvořením první {itemLabel}."
+    },
+    "labels": {
+      "group": "skupina",
+      "groupPlural": "skupiny",
+      "friendLedger": "účet s přítelem",
+      "friendLedgerPlural": "účty s přáteli"
+    },
+    "title": {
+      "empty": "Zatím nemáte žádné {itemLabelPlural}",
+      "filtered": "Všechny vaše {itemLabelPlural} jsou skryté"
+    }
+  },
+  "Friends": {
+    "title": "Vytvořit účet s přítelem",
+    "peerFriendsTab": "Seznam přátel",
+    "peerEmailTab": "E-mail",
+    "peerLinkTab": "Sdílitelný odkaz",
+    "alreadyHasLedger": "již má účet s přítelem",
+    "inviteSent": "Pozvánka odeslána. Váš přítel bude přidán, jakmile se připojí ke Spliit.",
+    "inviteLinkTitle": "Sdílejte tento odkaz",
+    "inviteLinkDescription": "Sdílejte tento odkaz s přítelem a přidejte ho do účtu.",
+    "copy": "Kopírovat",
+    "share": "Sdílet",
+    "linkHelp": "Vygenerujte sdílitelný odkaz, pomocí kterého se váš přítel může připojit k tomuto účtu.",
+    "emailLabel": "E-mail přítele",
+    "temporaryNameLabel": "Zobrazované jméno (volitelné)",
+    "temporaryNameHelp": "Používá se, dokud se váš přítel nepřipojí a nepřevezme svůj účet.",
+    "friendsEmpty": "Přidejte přítele zadáním e-mailu nebo sdílejte odkaz a pozvěte ho.",
+    "infoLabel": "Informace (volitelné)",
+    "infoPlaceholder": "Přidejte kontext, například „Výdaje se spolubydlícím“"
   }
 }

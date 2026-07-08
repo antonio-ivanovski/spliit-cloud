@@ -7,7 +7,8 @@
       "signIn": "Hasi saioa Spliit Cloud-en",
       "createAccount": "Sortu kontua",
       "createGroup": "Talde bat sortu",
-      "importGroup": "Inportatu taldea beste zerbitzu batetik"
+      "importGroup": "Inportatu taldea beste zerbitzu batetik",
+      "createFriendLedger": "Sortu lagun-liburua"
     },
     "features": {
       "groupsSync": {
@@ -112,11 +113,17 @@
     "createdInviteHint": "Taldea sortuta. Gonbidatu kideak hasteko.",
     "hidden": "Ezkutukoak",
     "showHidden": "Erakutsi ezkutuko taldeak",
+    "showArchived": "Erakutsi artxibatutako taldeak",
     "hide": "Ezkutatu taldea",
     "unhide": "Ikusi taldea berriro",
+    "hideFriend": "Ezkutatu lagun-liburua",
+    "unhideFriend": "Erakutsi lagun-liburua",
     "starGroup": "Gogoko taldea",
     "unstarGroup": "Kendu gogokoenetatik",
+    "starFriend": "Markatu lagun-liburua",
+    "unstarFriend": "Kendu marka lagun-liburutik",
     "groupActions": "Taldearen ekintzak",
+    "friendActions": "Lagun-liburuaren ekintzak",
     "archiveGroup": "Artxibatu taldea",
     "unarchiveGroup": "Desartxibatu taldea",
     "archiveSuccess": "Taldea artxibatu da.",
@@ -262,7 +269,13 @@
           "pendingSuffix": "(zain)",
           "leaveUnlinked": "Utzi lotu gabe",
           "leaveUnlinkedDescription": "Izena bakarrik gordetzen du — lotu geroago Kideak ataletik.",
-          "leaveUnlinkedFollowUp": "{name} izena bakarrik duen sarrera gisa agertuko da, aplikaziorako sarbiderik gabe. Kontu batekin lotu dezakezu geroago Kideak fitxatik."
+          "leaveUnlinkedFollowUp": "{name} izena bakarrik duen sarrera gisa agertuko da, aplikaziorako sarbiderik gabe. Kontu batekin lotu dezakezu geroago Kideak fitxatik.",
+          "inviteFriend": "Zure lagunetatik",
+          "inviteFriendDescription": "Gonbidatu lehenago partekatutako taldeetako lagun bat.",
+          "selectFriendLabel": "Laguna",
+          "selectFriendPlaceholder": "Aukeratu lagun bat…",
+          "friendAlreadyMember": "Dagoeneko kidea da",
+          "friendPendingInvite": "Dagoeneko gonbidatua"
         }
       },
       "fetchingGroup": "Taldea spliit.app-etik eskuratzen…",
@@ -373,6 +386,14 @@
       "title": "Talde bat sortu",
       "description": "Lagunekin, familiarekin edo bizikideekin egindako gastuak jarraitu."
     },
+    "groups": "Taldeak",
+    "friends": "Lagun-liburuak",
+    "createExpense": "Gastu bat sortu",
+    "pending": "Zain",
+    "scopePickerGroups": "Aukeratu talde bat",
+    "scopePickerFriends": "Aukeratu lagun-liburu bat",
+    "scopePickerEmpty": "Ez dago oraindik talderik",
+    "scopePickerMembers": "{count} kide",
     "createFriendLedgerCard": {
       "description": "Pertsona zehatz batekin zorrak banan-banan kitatu.",
       "title": "Lagun-liburu bat sortu"
@@ -1145,7 +1166,8 @@
       "invalidEmail": "Sartu helbide elektroniko baliozko bat.",
       "tab": {
         "email": "E-maila",
-        "link": "Gonbidapen-esteka"
+        "link": "Gonbidapen-esteka",
+        "friends": "Lagunak"
       },
       "emailDescription": "Bidali gonbidapen bat e-mail bidez. Gonbidatua batuko da bat datorren kontu batetik onartzen duenean.",
       "linkDescription": "Sortu behin erabil daitekeen esteka edonork batzeko erabil dezakeena. Lehen onarpenaren ondoren estekak ez du funtzionatuko.",
@@ -1164,7 +1186,12 @@
         "shareText": "Berriki sortu dut {groupName} gure gastu partekatuetarako Spliit Cloud-en. Hona hemen behin erabil daitekeen gonbidapen-esteka — ireki batzeko:\n{inviteUrl}",
         "generateNew": "Sortu esteka berria"
       },
-      "temporaryNamePlaceholder": "adib. Alex-en gelakidea"
+      "temporaryNamePlaceholder": "adib. Alex-en gelakidea",
+      "friendsDescription": "Gonbidatu norbait partekatutako taldeetatik.",
+      "selectFriendPlaceholder": "Aukeratu lagun bat…",
+      "friendAlreadyMember": "Dagoeneko kidea da",
+      "noFriends": "Ez dago oraindik lagunik. Gonbidatu Posta elektronikoko fitxatik.",
+      "friendAlreadyInvited": "Dagoeneko gonbidatua"
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -1363,5 +1390,44 @@
       "step1": "Sakatu menu-botoia (⋮) goi-eskuinean",
       "step2": "Sakatu Instalatu"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Talde bat sortu",
+      "createFriendLedger": "Lagun-liburu bat sortu",
+      "showHidden": "Erakutsi ezkutatutako taldeak"
+    },
+    "description": {
+      "empty": "Sortu zure lehen {itemLabel}a hasteko."
+    },
+    "labels": {
+      "group": "talde",
+      "groupPlural": "taldeak",
+      "friendLedger": "lagun-liburu",
+      "friendLedgerPlural": "lagun-liburuak"
+    },
+    "title": {
+      "empty": "Ez dago oraindik {itemLabelPlural}rik",
+      "filtered": "Zure {itemLabelPlural} guztiak ezkutatuta daude"
+    }
+  },
+  "Friends": {
+    "title": "Lagun-liburu bat sortu",
+    "peerFriendsTab": "Lagunen zerrenda",
+    "peerEmailTab": "Posta elektronikoa",
+    "peerLinkTab": "Partekatzeko esteka",
+    "alreadyHasLedger": "badu lagun-liburu bat",
+    "inviteSent": "Gonbidapena bidali da. Zure laguna gehituko da Spliit-era batzen denean.",
+    "inviteLinkTitle": "Partekatu esteka hau",
+    "inviteLinkDescription": "Partekatu esteka hau zure lagunarekin kontura gehitzeko.",
+    "copy": "Kopiatu",
+    "share": "Partekatu",
+    "linkHelp": "Sortu partekatzeko esteka bat, zure lagunak kontu honetara batzeko erabil dezan.",
+    "emailLabel": "Lagunaren posta elektronikoa",
+    "temporaryNameLabel": "Ikusgai dagoen izena (aukerakoa)",
+    "temporaryNameHelp": "Zure laguna batu eta bere kontua eskatu arte erabiltzen da.",
+    "friendsEmpty": "Gehitu lagun bat bere posta elektronikoa idatziz, edo partekatu esteka bat gonbidapena bidaltzeko.",
+    "infoLabel": "Informazioa (aukerakoa)",
+    "infoPlaceholder": "Gehitu testuingurua, adibidez 'Bizikidearen gastuak'"
   }
 }

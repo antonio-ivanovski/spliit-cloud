@@ -7,7 +7,8 @@
       "signIn": "Inicia sessió a Spliit Cloud",
       "createAccount": "Crea un compte",
       "createGroup": "Crear un grup",
-      "importGroup": "Importa un grup des d'un altre servei"
+      "importGroup": "Importa un grup des d'un altre servei",
+      "createFriendLedger": "Crea un compte amb un amic"
     },
     "features": {
       "groupsSync": {
@@ -112,11 +113,17 @@
     "createdInviteHint": "Grup creat. Convida membres per començar.",
     "hidden": "Amagats",
     "showHidden": "Mostra grups amagats",
+    "showArchived": "Mostra els grups arxivats",
     "hide": "Amaga el grup",
     "unhide": "Mostra el grup",
+    "hideFriend": "Amaga el compte entre amics",
+    "unhideFriend": "Mostra el compte entre amics",
     "starGroup": "Afegeix als preferits",
     "unstarGroup": "Treu dels preferits",
+    "starFriend": "Marca el compte entre amics",
+    "unstarFriend": "Desmarca el compte entre amics",
     "groupActions": "Accions del grup",
+    "friendActions": "Accions del compte entre amics",
     "archiveGroup": "Arxiva el grup",
     "unarchiveGroup": "Desarxivar el grup",
     "archiveSuccess": "Grup arxivat.",
@@ -262,7 +269,13 @@
           "pendingSuffix": "(pendent)",
           "leaveUnlinked": "Deixa desenllaçat",
           "leaveUnlinkedDescription": "Manté només el nom — enllaça-ho després des de Membres.",
-          "leaveUnlinkedFollowUp": "{name} apareixerà com una entrada amb només el nom sense accés a l'aplicació. Podeu enllaçar-lo a un compte més tard des de la pestanya Membres."
+          "leaveUnlinkedFollowUp": "{name} apareixerà com una entrada amb només el nom sense accés a l'aplicació. Podeu enllaçar-lo a un compte més tard des de la pestanya Membres.",
+          "inviteFriend": "Des dels teus amics",
+          "inviteFriendDescription": "Convida un amic dels grups que heu compartit abans.",
+          "selectFriendLabel": "Amic",
+          "selectFriendPlaceholder": "Selecciona un amic…",
+          "friendAlreadyMember": "Ja és membre",
+          "friendPendingInvite": "Ja convidat"
         }
       },
       "fetchingGroup": "S'està recuperant el grup de spliit.app…",
@@ -373,6 +386,14 @@
       "title": "Crea un grup",
       "description": "Fes el seguiment de les despeses compartides amb amics, família o companys de pis."
     },
+    "groups": "Grups",
+    "friends": "Comptes entre amics",
+    "createExpense": "Crea una despesa",
+    "pending": "Pendent",
+    "scopePickerGroups": "Tria un grup",
+    "scopePickerFriends": "Tria un compte entre amics",
+    "scopePickerEmpty": "Encara no hi ha grups",
+    "scopePickerMembers": "{count} membre(s)",
     "createFriendLedgerCard": {
       "description": "Liquida els deutes un a un amb una persona concreta.",
       "title": "Crea un compte amb un amic"
@@ -1145,7 +1166,8 @@
       "invalidEmail": "Introdueix una adreça de correu electrònic vàlida.",
       "tab": {
         "email": "Correu electrònic",
-        "link": "Enllaç d'invitació"
+        "link": "Enllaç d'invitació",
+        "friends": "Amics"
       },
       "emailDescription": "Envia una invitació per correu electrònic. La persona convidada s'hi unirà quan l'accepti des d'un compte que coincideixi.",
       "linkDescription": "Genera un enllaç d'un sol ús que qualsevol pot fer servir per unir-se. L'enllaç deixa de funcionar després de la primera acceptació.",
@@ -1164,7 +1186,12 @@
         "shareText": "Acabo de crear {groupName} per a les nostres despeses compartides a Spliit Cloud. Aquí tens un enllaç d'invitació d'un sol ús — obre'l per unir-te:\n{inviteUrl}",
         "generateNew": "Genera un enllaç nou"
       },
-      "temporaryNamePlaceholder": "p. ex. el company de pis de l'Alex"
+      "temporaryNamePlaceholder": "p. ex. el company de pis de l'Alex",
+      "friendsDescription": "Convida algú dels grups que has compartit.",
+      "selectFriendPlaceholder": "Selecciona un amic…",
+      "friendAlreadyMember": "Ja és membre",
+      "noFriends": "Encara no tens amics. Convida'ls des de la pestanya Correu.",
+      "friendAlreadyInvited": "Ja convidat"
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -1363,5 +1390,44 @@
       "step1": "Toca el botó de menú (⋮) a la part superior dreta",
       "step2": "Toca Instal·la"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Crea un grup",
+      "createFriendLedger": "Crea un compte amb un amic",
+      "showHidden": "Mostra els grups ocults"
+    },
+    "description": {
+      "empty": "Crea el teu primer {itemLabel} per començar."
+    },
+    "labels": {
+      "group": "grup",
+      "groupPlural": "grups",
+      "friendLedger": "compte entre amics",
+      "friendLedgerPlural": "comptes entre amics"
+    },
+    "title": {
+      "empty": "Encara no tens cap {itemLabelPlural}",
+      "filtered": "Tots els teus {itemLabelPlural} estan ocults"
+    }
+  },
+  "Friends": {
+    "title": "Crea un compte amb un amic",
+    "peerFriendsTab": "Llista d'amics",
+    "peerEmailTab": "Correu electrònic",
+    "peerLinkTab": "Enllaç per compartir",
+    "alreadyHasLedger": "ja té un compte entre amics",
+    "inviteSent": "S'ha enviat la invitació. El teu amic s'afegirà quan s'uneixi a Spliit.",
+    "inviteLinkTitle": "Comparteix aquest enllaç",
+    "inviteLinkDescription": "Comparteix aquest enllaç amb el teu amic per afegir-lo al compte.",
+    "copy": "Copia",
+    "share": "Comparteix",
+    "linkHelp": "Genera un enllaç per compartir que el teu amic pugui fer servir per unir-se a aquest compte.",
+    "emailLabel": "Correu de l'amic",
+    "temporaryNameLabel": "Nom visible (opcional)",
+    "temporaryNameHelp": "S'utilitza fins que el teu amic s'uneixi i reclami el seu compte.",
+    "friendsEmpty": "Afegeix un amic introduint el seu correu o comparteix un enllaç per convidar-lo.",
+    "infoLabel": "Informació (opcional)",
+    "infoPlaceholder": "Afegeix context com «Despeses de pis»"
   }
 }

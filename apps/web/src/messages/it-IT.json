@@ -7,7 +7,8 @@
       "signIn": "Accedi a Spliit Cloud",
       "createAccount": "Crea un account",
       "createGroup": "Crea un gruppo",
-      "importGroup": "Importa gruppo da un altro servizio"
+      "importGroup": "Importa gruppo da un altro servizio",
+      "createFriendLedger": "Crea registro con un amico"
     },
     "features": {
       "groupsSync": {
@@ -112,11 +113,17 @@
     "createdInviteHint": "Gruppo creato. Invita i membri per iniziare.",
     "hidden": "Nascosti",
     "showHidden": "Mostra gruppi nascosti",
+    "showArchived": "Mostra i gruppi archiviati",
     "hide": "Nascondi gruppo",
     "unhide": "Mostra gruppo",
+    "hideFriend": "Nascondi registro con un amico",
+    "unhideFriend": "Mostra registro con un amico",
     "starGroup": "Aggiungi ai preferiti",
     "unstarGroup": "Rimuovi dai preferiti",
+    "starFriend": "Aggiungi ai preferiti il registro con un amico",
+    "unstarFriend": "Rimuovi dai preferiti il registro con un amico",
     "groupActions": "Azioni del gruppo",
+    "friendActions": "Azioni del registro con un amico",
     "archiveGroup": "Archivia gruppo",
     "unarchiveGroup": "Ripristina gruppo",
     "archiveSuccess": "Gruppo archiviato.",
@@ -262,7 +269,13 @@
           "pendingSuffix": "(in sospeso)",
           "leaveUnlinked": "Lascia non collegato",
           "leaveUnlinkedDescription": "Mantiene solo il nome — collega dopo da Membri.",
-          "leaveUnlinkedFollowUp": "{name} apparirà come una voce con solo il nome senza accesso all'app. Puoi collegarlo a un account più tardi dalla scheda Membri."
+          "leaveUnlinkedFollowUp": "{name} apparirà come una voce con solo il nome senza accesso all'app. Puoi collegarlo a un account più tardi dalla scheda Membri.",
+          "inviteFriend": "Dai tuoi amici",
+          "inviteFriendDescription": "Invita un amico da gruppi che avete già condiviso.",
+          "selectFriendLabel": "Amico",
+          "selectFriendPlaceholder": "Seleziona un amico…",
+          "friendAlreadyMember": "Già membro",
+          "friendPendingInvite": "Già invitato"
         }
       },
       "fetchingGroup": "Recupero del gruppo da spliit.app…",
@@ -373,6 +386,14 @@
       "title": "Crea un gruppo",
       "description": "Tieni traccia delle spese condivise con amici, familiari o coinquilini."
     },
+    "groups": "Gruppi",
+    "friends": "Registri con un amico",
+    "createExpense": "Crea una spesa",
+    "pending": "In attesa",
+    "scopePickerGroups": "Scegli un gruppo",
+    "scopePickerFriends": "Scegli un registro con un amico",
+    "scopePickerEmpty": "Nessun gruppo per ora",
+    "scopePickerMembers": "{count} membro/i",
     "createFriendLedgerCard": {
       "description": "Salda i conti individualmente con una persona specifica.",
       "title": "Crea un registro con un amico"
@@ -1145,7 +1166,8 @@
       "invalidEmail": "Inserisci un indirizzo email valido.",
       "tab": {
         "email": "Email",
-        "link": "Link di invito"
+        "link": "Link di invito",
+        "friends": "Amici"
       },
       "emailDescription": "Invia un invito tramite email. L'invitato si unisce dopo averlo accettato da un account corrispondente.",
       "linkDescription": "Genera un link monouso che chiunque può usare per unirsi. Il link smette di funzionare dopo la prima accettazione.",
@@ -1164,7 +1186,12 @@
         "shareTitle": "Unisciti a {groupName} su Spliit Cloud",
         "shareText": "Ho appena creato {groupName} per le nostre spese condivise su Spliit Cloud. Ecco un link di invito monouso — aprilo per unirti:\n{inviteUrl}",
         "generateNew": "Genera nuovo link"
-      }
+      },
+      "friendsDescription": "Invita qualcuno dai gruppi che hai già condiviso.",
+      "selectFriendPlaceholder": "Seleziona un amico…",
+      "friendAlreadyMember": "Già membro",
+      "noFriends": "Nessun amico per ora. Invita dalla scheda Email.",
+      "friendAlreadyInvited": "Già invitato"
     },
     "invitations": {
       "title": "Inviti in sospeso",
@@ -1363,5 +1390,44 @@
       "step1": "Tocca il pulsante del menu (⋮) in alto a destra",
       "step2": "Tocca Installa"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Crea un gruppo",
+      "createFriendLedger": "Crea un registro con un amico",
+      "showHidden": "Mostra i gruppi nascosti"
+    },
+    "description": {
+      "empty": "Crea il tuo primo {itemLabel} per iniziare."
+    },
+    "labels": {
+      "group": "gruppo",
+      "groupPlural": "gruppi",
+      "friendLedger": "registro con un amico",
+      "friendLedgerPlural": "registri con un amico"
+    },
+    "title": {
+      "empty": "Nessun {itemLabelPlural} per ora",
+      "filtered": "Tutti i tuoi {itemLabelPlural} sono nascosti"
+    }
+  },
+  "Friends": {
+    "title": "Crea un registro con un amico",
+    "peerFriendsTab": "Lista amici",
+    "peerEmailTab": "Email",
+    "peerLinkTab": "Link condivisibile",
+    "alreadyHasLedger": "ha già un registro con un amico",
+    "inviteSent": "Invito inviato. Il tuo amico verrà aggiunto quando entrerà in Spliit.",
+    "inviteLinkTitle": "Condividi questo link",
+    "inviteLinkDescription": "Condividi questo link con il tuo amico per aggiungerlo al registro.",
+    "copy": "Copia",
+    "share": "Condividi",
+    "linkHelp": "Genera un link condivisibile che il tuo amico può usare per unirsi a questo registro.",
+    "emailLabel": "Email dell'amico",
+    "temporaryNameLabel": "Nome visualizzato (facoltativo)",
+    "temporaryNameHelp": "Usato finché il tuo amico non si unisce e rivendica il suo account.",
+    "friendsEmpty": "Aggiungi un amico inserendo la sua email o condividi un link per invitarlo.",
+    "infoLabel": "Informazioni (facoltative)",
+    "infoPlaceholder": "Aggiungi un contesto, ad esempio «Spese della convivenza»"
   }
 }
