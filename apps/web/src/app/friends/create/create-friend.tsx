@@ -193,12 +193,17 @@ export function CreateFriend() {
                 className="flex flex-col gap-4"
               >
                 <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="friends">{t('peerFriendsTab')}</TabsTrigger>
+                  <TabsTrigger value="friends">
+                    {t('peerFriendsTab')}
+                  </TabsTrigger>
                   <TabsTrigger value="email">{t('peerEmailTab')}</TabsTrigger>
                   <TabsTrigger value="link">{t('peerLinkTab')}</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="friends" className="mt-0 flex flex-col gap-3">
+                <TabsContent
+                  value="friends"
+                  className="mt-0 flex flex-col gap-3"
+                >
                   {friendsQuery.isLoading ? (
                     <p className="text-sm text-muted-foreground">…</p>
                   ) : !hasInvitableFriend ? (
@@ -223,7 +228,10 @@ export function CreateFriend() {
                             </SelectTrigger>
                             <SelectContent>
                               {friends.map((f) => (
-                                <SelectItem key={f.accountId} value={f.accountId}>
+                                <SelectItem
+                                  key={f.accountId}
+                                  value={f.accountId}
+                                >
                                   <span className="flex items-center gap-2">
                                     <span>{f.name}</span>
                                     <span className="text-xs text-muted-foreground">
@@ -284,7 +292,9 @@ export function CreateFriend() {
                             value={field.value ?? ''}
                           />
                         </FormControl>
-                        <FormDescription>{t('temporaryNameHelp')}</FormDescription>
+                        <FormDescription>
+                          {t('temporaryNameHelp')}
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -292,7 +302,9 @@ export function CreateFriend() {
                 </TabsContent>
 
                 <TabsContent value="link" className="mt-0 flex flex-col gap-3">
-                  <p className="text-sm text-muted-foreground">{t('linkHelp')}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('linkHelp')}
+                  </p>
                 </TabsContent>
               </Tabs>
 
