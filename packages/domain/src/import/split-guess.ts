@@ -1,16 +1,22 @@
 /**
- * Best-effort split-mode guess from pre-computed paidFor shares.
+ * Best-effort split-mode resolution from pre-computed paidFor shares.
  *
- * The parsers always produce paidFor.shares as exact integer cents summing
- * to amountCents (with drift correction applied).  Each guesser inspects the
- * distribution and returns a `splitMode` label — or `null` to let the next
- * guesser in the chain have a go.
+ * The parsers produce paidFor.shares as exact integer cents summing to
+ * amountCents (with drift correction applied).  `guessSplitMode` inspects
+ * the distribution and returns both the detected `splitMode` and the
+ * **normalised** `paidFor` entries:
  *
- * All guessers are **read-only**: they never modify the shares.  The caller
- * is responsible for setting `splitMode` on the expense.
+ *  - `EVENLY`  — shares are passed through unchanged (ignored by the
+ *    balance engine; the parsers keep them as their cent values).
+ *  - `BY_SHARES` — cents are reduced by their GCD so that the stored
+ *    shares are the true ratio weights (e.g. `[200, 300]` → `[2, 3]`).
+ *  - `BY_AMOUNT` — shares are passed through as literal cents.
  *
- * Each guesser accepts its own configuration so that the behaviour can be
- * tuned (e.g. by a future import-wizard step) without touching the parsers.
+ * `guessByShares` is the only guesser that modifies shares; `guessEvenly`
+ * remains read-only and returns a label.
+ *
+ * Config can be tuned per guesser (e.g. by a future import-wizard step)
+ * without touching the parsers.
  */
 
 export type PaidForEntry = { sourceId: string; shares: number }
@@ -126,36 +132,49 @@ export type GuessBySharesConfig = {
 const DEFAULT_MAX_WEIGHT = 25
 
 /**
- * Detect a clean integer-ratio split (BY_SHARES).
+ * Detect a clean integer-ratio split (BY_SHARES) and return the
+ * normalised ratio weights.
  *
- * Normalises the cents via their GCD and checks that the resulting
- * weights are "sane" (max weight ≤ `maxWeight`, default 25).
+ * Divides the cent values by their GCD so the result carries the true
+ * ratio — e.g. shares `[200, 300]` → `[{ shares: 2 }, { shares: 3 }]`.
+ *
+ * Returns `null` when the ratio isn't clean (GCD ≤ 1) or when the
+ * largest normalised weight exceeds `maxWeight` (default 25).
  */
 export function guessByShares(
   paidFor: readonly PaidForEntry[],
   _amountCents: number,
   config?: GuessBySharesConfig,
-): 'BY_SHARES' | null {
+): PaidForEntry[] | null {
   if (paidFor.length < 2) return null
 
   const shares = paidFor.map((p) => p.shares)
   const g = gcdOf(shares)
   if (g <= 1) return null
 
-  const maxWeight = Math.max(...shares.map((s) => s / g))
+  const weights = shares.map((s) => s / g)
+  const maxWeight = Math.max(...weights)
   const cap = config?.maxWeight ?? DEFAULT_MAX_WEIGHT
   if (maxWeight > cap) return null
 
-  return 'BY_SHARES'
+  return paidFor.map((p, i) => ({ sourceId: p.sourceId, shares: weights[i] }))
 }
 
 // ── Composite guesser ─────────────────────────────────────────────────────
 
 export type GuessSplitModeConfig = GuessEvenlyConfig & GuessBySharesConfig
 
+export type GuessResult = {
+  splitMode: SplitMode
+  paidFor: PaidForEntry[]
+}
+
 /**
  * Best-effort split-mode guess — chains `guessEvenly` and `guessByShares`,
- * falling back to `'BY_AMOUNT'` when neither rule matches.
+ * falling back to `'BY_AMOUNT'` when neither rule matches.  When
+ * `BY_SHARES` is chosen the returned `paidFor` carries the GCD-reduced
+ * ratio weights (e.g. `[200, 300]` → `[2, 3]`); for `EVENLY` and
+ * `BY_AMOUNT` the shares are passed through unchanged.
  *
  * Accepts combined configuration for all guessers:
  *
@@ -168,10 +187,17 @@ export function guessSplitMode(
   paidFor: readonly PaidForEntry[],
   amountCents: number,
   config?: GuessSplitModeConfig,
-): SplitMode {
-  return (
-    guessEvenly(paidFor, amountCents, config) ??
-    guessByShares(paidFor, amountCents, config) ??
-    'BY_AMOUNT'
-  )
+): GuessResult {
+  const evenLabel = guessEvenly(paidFor, amountCents, config)
+  if (evenLabel)
+    return { splitMode: evenLabel, paidFor: paidFor.map((p) => ({ ...p })) }
+
+  const bySharesPaidFor = guessByShares(paidFor, amountCents, config)
+  if (bySharesPaidFor)
+    return { splitMode: 'BY_SHARES', paidFor: bySharesPaidFor }
+
+  return {
+    splitMode: 'BY_AMOUNT',
+    paidFor: paidFor.map((p) => ({ ...p })),
+  }
 }

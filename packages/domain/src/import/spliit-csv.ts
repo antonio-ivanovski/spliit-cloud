@@ -1,6 +1,7 @@
 import Papa from 'papaparse'
 import { DEFAULT_CATEGORIES } from '../categories'
 import { getCurrency } from '../currency'
+import { amountAsMinorUnitsByCode } from '../utils'
 import { guessSplitMode } from './split-guess'
 import type { ImportParseResult, NormalizedSource } from './types'
 
@@ -73,7 +74,10 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     if (!/^\d{4}-\d{2}-\d{2}/.test(date)) continue
     if (title.length === 0) continue
     if (costMajor === null) continue
-    const amountCents = Math.round(costMajor * 100)
+    const amountCents = amountAsMinorUnitsByCode(
+      costMajor,
+      rowCurrency.length === 3 ? rowCurrency : '',
+    )
 
     if (rowCurrency.length === 3) {
       currencyCounts.set(
@@ -103,7 +107,10 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
         entries.push({
           sourceId,
           raw,
-          cents: Math.round(Math.abs(raw) * 100),
+          cents: amountAsMinorUnitsByCode(
+            Math.abs(raw),
+            rowCurrency.length === 3 ? rowCurrency : '',
+          ),
         })
       }
     }
@@ -154,9 +161,13 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       ...paidFor.map((p) => p.sourceId),
     ]).size
 
-    const splitMode = guessSplitMode(paidFor, amountCents, {
-      involvedParticipantCount: involvedCount,
-    })
+    const { splitMode, paidFor: resolvedPaidFor } = guessSplitMode(
+      paidFor,
+      amountCents,
+      {
+        involvedParticipantCount: involvedCount,
+      },
+    )
 
     const originalCost = toNumberOrNull(row[5])
     const originalCurrencyRaw = (row[6] ?? '').trim()
@@ -171,7 +182,7 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       amountCurrency: rowCurrency.length === 3 ? rowCurrency : null,
       amount: amountCents,
       originalAmount: hasPriorConversion
-        ? Math.round(originalCost * 100)
+        ? amountAsMinorUnitsByCode(originalCost, originalCurrencyRaw)
         : null,
       originalCurrency: hasPriorConversion ? originalCurrencyRaw : null,
       conversionRate: hasPriorConversion ? conversionRate : null,
@@ -180,11 +191,11 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
         {
           sourceId: paidBySourceId,
           shares: hasPriorConversion
-            ? Math.round(originalCost * 100)
+            ? amountAsMinorUnitsByCode(originalCost, originalCurrencyRaw)
             : amountCents,
         },
       ],
-      paidFor,
+      paidFor: resolvedPaidFor,
       splitMode,
       recurrenceRule: 'NONE',
       isReimbursement,

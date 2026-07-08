@@ -208,6 +208,10 @@ describe('CSV integration: Spliit CSV round-trips', () => {
 
     const drift: string[] = []
     for (const csvE of result.source.expenses) {
+      // BY_SHARES / BY_PERCENTAGE carry ratio weights or basis points,
+      // not cents, so their shares don't sum to the amount.
+      if (csvE.splitMode === 'BY_SHARES' || csvE.splitMode === 'BY_PERCENTAGE')
+        continue
       const sum = csvE.paidFor.reduce((s, p) => s + p.shares, 0)
       const diff = Math.abs(sum - csvE.amount)
       if (diff > 1) {

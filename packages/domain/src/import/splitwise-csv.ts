@@ -1,4 +1,5 @@
 import Papa from 'papaparse'
+import { amountAsMinorUnitsByCode } from '../utils'
 import { guessSplitMode } from './split-guess'
 import { splitwiseCategoryToId } from './splitwise-categories'
 import type { ImportParseResult, NormalizedSource } from './types'
@@ -102,7 +103,11 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       if (idx === undefined) continue
       const sourceId = participants[idx].sourceId
       if (raw !== 0) {
-        entries.push({ sourceId, raw, cents: Math.round(Math.abs(raw) * 100) })
+        entries.push({
+          sourceId,
+          raw,
+          cents: amountAsMinorUnitsByCode(Math.abs(raw), currency),
+        })
       }
       if (raw > maxRaw) {
         maxRaw = raw
@@ -111,7 +116,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     }
     if (entries.length === 0 || maxRaw <= 0 || !payerSourceId) continue
 
-    const amountCents = Math.round(cost * 100)
+    const amountCents = amountAsMinorUnitsByCode(cost, currency)
     const positiveEntries = entries.filter((e) => e.raw > 0)
     const negativeEntries = entries.filter((e) => e.raw < 0)
     const paidFor: Array<{ sourceId: string; shares: number }> = []
@@ -158,18 +163,19 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     }
 
     // Best-effort split-mode guess (EVENLY / BY_SHARES / BY_AMOUNT).
-    // The parser guarantees sum(paidFor.shares) === amountCents, so
-    // EVENLY is only chosen when all shares are identical (implying
-    // amountCents / N is integral — no drift from getBalances).
-    // BY_SHARES is chosen when the cents share a clean GCD ratio.
-    // Shares stay as literal cents — only the mode label changes.
+    // guessSplitMode returns both the detected mode and the resolved
+    // paidFor array — BY_SHARES shares are GCD-reduced to ratio weights.
     const involvedCount = new Set([
       ...paidBy.map((p) => p.sourceId),
       ...paidFor.map((p) => p.sourceId),
     ]).size
-    const splitMode = guessSplitMode(paidFor, amountCents, {
-      involvedParticipantCount: involvedCount,
-    })
+    const { splitMode, paidFor: resolvedPaidFor } = guessSplitMode(
+      paidFor,
+      amountCents,
+      {
+        involvedParticipantCount: involvedCount,
+      },
+    )
 
     expenses.push({
       title,
@@ -182,7 +188,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       conversionRate: null,
       paidBySourceId: payerSourceId,
       paidBy,
-      paidFor,
+      paidFor: resolvedPaidFor,
       splitMode,
       recurrenceRule: 'NONE',
       isReimbursement,

@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import type { Category } from './categories'
-import { getCurrencyFromGroup, type Currency } from './currency'
+import { getCurrency, getCurrencyFromGroup, type Currency } from './currency'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -123,6 +123,21 @@ export function amountAsDecimal(
  */
 export function amountAsMinorUnits(amount: number, currency: Currency) {
   return Math.round(amount * 10 ** currency.decimal_digits)
+}
+
+/**
+ * Converts a decimal major-unit amount to minor units using the currency's
+ * decimal digits, resolved from an ISO 4217 code.  Unknown codes fall back
+ * to 2 decimal digits (preserving the legacy behaviour).
+ */
+export function amountAsMinorUnitsByCode(amount: number, currencyCode: string) {
+  const c = getCurrency(currencyCode) ?? {
+    code: currencyCode,
+    symbol: currencyCode,
+    rounding: 0,
+    decimal_digits: 2,
+  }
+  return amountAsMinorUnits(amount, c)
 }
 
 /**

@@ -178,7 +178,7 @@ describe('guessEvenly', () => {
 // ── guessByShares ─────────────────────────────────────────────────────────
 
 describe('guessByShares', () => {
-  it('returns BY_SHARES for 2:1 ratio (gcd=50)', () => {
+  it('returns normalised weights for 2:1 ratio (gcd=50)', () => {
     expect(
       guessByShares(
         pf([
@@ -187,10 +187,15 @@ describe('guessByShares', () => {
         ]),
         150,
       ),
-    ).toBe('BY_SHARES')
+    ).toEqual(
+      pf([
+        ['a', 2],
+        ['b', 1],
+      ]),
+    )
   })
 
-  it('returns BY_SHARES for 3:2:1 ratio (gcd=33)', () => {
+  it('returns normalised weights for 3:2:1 ratio (gcd=33)', () => {
     expect(
       guessByShares(
         pf([
@@ -200,10 +205,16 @@ describe('guessByShares', () => {
         ]),
         198,
       ),
-    ).toBe('BY_SHARES')
+    ).toEqual(
+      pf([
+        ['a', 3],
+        ['b', 2],
+        ['c', 1],
+      ]),
+    )
   })
 
-  it('returns BY_SHARES for 4:3:1 ratio (gcd=25)', () => {
+  it('returns normalised weights for 4:3:1 ratio (gcd=25)', () => {
     expect(
       guessByShares(
         pf([
@@ -213,10 +224,16 @@ describe('guessByShares', () => {
         ]),
         200,
       ),
-    ).toBe('BY_SHARES')
+    ).toEqual(
+      pf([
+        ['a', 4],
+        ['b', 3],
+        ['c', 1],
+      ]),
+    )
   })
 
-  it('returns BY_SHARES for 3:2 with gcd=20', () => {
+  it('returns normalised weights for 3:2 with gcd=20', () => {
     expect(
       guessByShares(
         pf([
@@ -225,7 +242,12 @@ describe('guessByShares', () => {
         ]),
         100,
       ),
-    ).toBe('BY_SHARES')
+    ).toEqual(
+      pf([
+        ['a', 3],
+        ['b', 2],
+      ]),
+    )
   })
 
   it('returns null when GCD is 1 (no clean ratio)', () => {
@@ -264,7 +286,7 @@ describe('guessByShares', () => {
 
   // ── maxWeight ──────────────────────────────────────────────────────
 
-  it('maxWeight: returns BY_SHARES when weights are within the cap', () => {
+  it('maxWeight: returns normalised weights when weights are within the cap', () => {
     // GCD = 100 → weights [3, 2, 1], maxWeight = 3, well under default 25.
     const result = guessByShares(
       pf([
@@ -275,7 +297,13 @@ describe('guessByShares', () => {
       600,
       { maxWeight: 25 },
     )
-    expect(result).toBe('BY_SHARES')
+    expect(result).toEqual(
+      pf([
+        ['a', 3],
+        ['b', 2],
+        ['c', 1],
+      ]),
+    )
   })
 
   it('maxWeight: returns null when the largest normalized weight exceeds the cap', () => {
@@ -302,7 +330,12 @@ describe('guessByShares', () => {
       2900,
       { maxWeight: 30 },
     )
-    expect(result).toBe('BY_SHARES')
+    expect(result).toEqual(
+      pf([
+        ['a', 28],
+        ['b', 1],
+      ]),
+    )
   })
 
   it('default maxWeight is 25 (implicit)', () => {
@@ -315,7 +348,12 @@ describe('guessByShares', () => {
         ]),
         1250,
       ),
-    ).toBe('BY_SHARES')
+    ).toEqual(
+      pf([
+        ['a', 24],
+        ['b', 1],
+      ]),
+    )
     // GCD=10 → weights [26, 1], max=26 > default 25 → null.
     expect(
       guessByShares(
@@ -338,7 +376,12 @@ describe('guessByShares', () => {
       300000,
       { maxWeight: 25 },
     )
-    expect(result).toBe('BY_SHARES')
+    expect(result).toEqual(
+      pf([
+        ['a', 2],
+        ['b', 1],
+      ]),
+    )
   })
 })
 
@@ -354,7 +397,13 @@ describe('guessSplitMode', () => {
         ]),
         100,
       ),
-    ).toBe('EVENLY')
+    ).toEqual({
+      splitMode: 'EVENLY',
+      paidFor: pf([
+        ['a', 50],
+        ['b', 50],
+      ]),
+    })
   })
 
   it('returns BY_SHARES for a clean integer ratio', () => {
@@ -366,7 +415,13 @@ describe('guessSplitMode', () => {
         ]),
         150,
       ),
-    ).toBe('BY_SHARES')
+    ).toEqual({
+      splitMode: 'BY_SHARES',
+      paidFor: pf([
+        ['a', 2],
+        ['b', 1],
+      ]),
+    })
   })
 
   it('returns BY_AMOUNT for unequal shares with GCD=1', () => {
@@ -378,7 +433,13 @@ describe('guessSplitMode', () => {
         ]),
         12,
       ),
-    ).toBe('BY_AMOUNT')
+    ).toEqual({
+      splitMode: 'BY_AMOUNT',
+      paidFor: pf([
+        ['a', 7],
+        ['b', 5],
+      ]),
+    })
   })
 
   it('returns BY_AMOUNT for drift-prone near-equal shares (strict EVENLY off)', () => {
@@ -395,15 +456,32 @@ describe('guessSplitMode', () => {
         ]),
         940000,
       ),
-    ).toBe('BY_AMOUNT')
+    ).toEqual({
+      splitMode: 'BY_AMOUNT',
+      paidFor: pf([
+        ['p0', 134286],
+        ['p1', 134285],
+        ['p2', 134286],
+        ['p3', 134285],
+        ['p4', 134286],
+        ['p5', 134286],
+        ['p6', 134286],
+      ]),
+    })
   })
 
   it('returns BY_AMOUNT for empty paidFor', () => {
-    expect(guessSplitMode([], 0)).toBe('BY_AMOUNT')
+    expect(guessSplitMode([], 0)).toEqual({
+      splitMode: 'BY_AMOUNT',
+      paidFor: [],
+    })
   })
 
   it('returns BY_AMOUNT for a single participant', () => {
-    expect(guessSplitMode(pf([['a', 100]]), 100)).toBe('BY_AMOUNT')
+    expect(guessSplitMode(pf([['a', 100]]), 100)).toEqual({
+      splitMode: 'BY_AMOUNT',
+      paidFor: pf([['a', 100]]),
+    })
   })
 
   it('passes config through to inner guessers', () => {
@@ -417,7 +495,14 @@ describe('guessSplitMode', () => {
         ]),
         100,
       ),
-    ).toBe('BY_AMOUNT')
+    ).toEqual({
+      splitMode: 'BY_AMOUNT',
+      paidFor: pf([
+        ['a', 33],
+        ['b', 33],
+        ['c', 34],
+      ]),
+    })
     // With drift: near-equal shares → EVENLY
     expect(
       guessSplitMode(
@@ -429,20 +514,67 @@ describe('guessSplitMode', () => {
         100,
         { allowOneCentDrift: true },
       ),
-    ).toBe('EVENLY')
+    ).toEqual({
+      splitMode: 'EVENLY',
+      paidFor: pf([
+        ['a', 33],
+        ['b', 33],
+        ['c', 34],
+      ]),
+    })
   })
 
   it('detects 1-to-1 payment as EVENLY via involvedParticipantCount', () => {
     const result = guessSplitMode(pf([['receiver', 2500]]), 2500, {
       involvedParticipantCount: 2,
     })
-    expect(result).toBe('EVENLY')
+    expect(result).toEqual({
+      splitMode: 'EVENLY',
+      paidFor: pf([['receiver', 2500]]),
+    })
   })
 
   it('falls through to BY_AMOUNT for a solo expense even with involved hint', () => {
     const result = guessSplitMode(pf([['solo', 100]]), 100, {
       involvedParticipantCount: 1,
     })
-    expect(result).toBe('BY_AMOUNT')
+    expect(result).toEqual({
+      splitMode: 'BY_AMOUNT',
+      paidFor: pf([['solo', 100]]),
+    })
+  })
+
+  it('normalises [1152000, 768000] → BY_SHARES [3, 2] (reported bug)', () => {
+    const result = guessSplitMode(
+      pf([
+        ['a', 1152000],
+        ['b', 768000],
+      ]),
+      1920000,
+    )
+    expect(result).toEqual({
+      splitMode: 'BY_SHARES',
+      paidFor: pf([
+        ['a', 3],
+        ['b', 2],
+      ]),
+    })
+  })
+
+  it('normalises [200, 300] → BY_SHARES [2, 3] (reported bug)', () => {
+    const result = guessSplitMode(
+      pf([
+        ['a', 200],
+        ['b', 300],
+      ]),
+      500,
+    )
+    expect(result).toEqual({
+      splitMode: 'BY_SHARES',
+      paidFor: pf([
+        ['a', 2],
+        ['b', 3],
+      ]),
+    })
   })
 })

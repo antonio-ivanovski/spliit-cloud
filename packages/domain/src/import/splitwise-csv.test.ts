@@ -1262,7 +1262,7 @@ describe('tryParseSplitwiseCsv', () => {
   })
 
   it('suggests BY_SHARES when a clean ratio is detected', () => {
-    // 60/40 → GCD(6000, 4000) = 2000; shares stay as cents.
+    // 60/40 → GCD(6000, 4000) = 2000; shares normalised to ratio weights.
     // paidFor order: negative-entry participants first, then positives.
     const csv = splitwiseCsv([
       ['2026-01-15', 'Uneven', 'General', '100.00', 'MKD', '60.00', '-40.00'],
@@ -1273,8 +1273,8 @@ describe('tryParseSplitwiseCsv', () => {
     const e = result.source.expenses[0]
     expect(e.splitMode).toBe('BY_SHARES')
     expect(e.paidFor).toEqual([
-      pf(aid(result.source, 1), 4000),
-      pf(aid(result.source, 0), 6000),
+      pf(aid(result.source, 1), 2),
+      pf(aid(result.source, 0), 3),
     ])
   })
 
@@ -1378,8 +1378,11 @@ describe('tryParseSplitwiseCsv with fixtures', () => {
     expect(result.ok).toBe(true)
     if (!result.ok) return
 
-    // Verify every expense has paidFor.shares summing exactly to amount.
+    // Verify every non-BYP_SHARES expense has paidFor.shares summing
+    // exactly to amount (BY_SHARES uses ratio weights, not cents).
     for (const e of result.source.expenses) {
+      if (e.splitMode === 'BY_SHARES' || e.splitMode === 'BY_PERCENTAGE')
+        continue
       const sum = e.paidFor.reduce((s, p) => s + p.shares, 0)
       expect(sum, `"${e.title}" paidFor sum`).toBe(e.amount)
     }
@@ -1395,5 +1398,43 @@ describe('tryParseSplitwiseCsv with fixtures', () => {
         )
       }
     }
+  })
+
+  it('falls back to BY_AMOUNT when normalised weights exceed the cap (> 25)', () => {
+    // 2800 / 100 → GCD 100 → weights [28, 1], maxWeight 28 > 25.
+    // Shares should stay as cents [2800, 100] with BY_AMOUNT.
+    const csv = splitwiseCsv([
+      ['2026-01-15', 'Lumpy', 'General', '29.00', 'MKD', '28.00', '-1.00'],
+    ])
+    const result = tryParseSplitwiseCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const e = result.source.expenses[0]
+    expect(e.splitMode).toBe('BY_AMOUNT')
+    expect(e.paidFor).toEqual([
+      pf(aid(result.source, 1), 100),
+      pf(aid(result.source, 0), 2800),
+    ])
+  })
+
+  it('handles 0-decimal currency (JPY) without 100× inflation', () => {
+    // JPY has 0 decimal digits. 11520 ¥ should stay 11520 minor units.
+    const csv = splitwiseCsv([
+      [
+        '2026-01-15',
+        'Sushi',
+        'General',
+        '11520',
+        'JPY',
+        '11520.00',
+        '-11520.00',
+      ],
+    ])
+    const result = tryParseSplitwiseCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const e = result.source.expenses[0]
+    expect(e.amount).toBe(11520)
+    expect(e.paidFor[0].shares).toBe(11520)
   })
 })

@@ -43,12 +43,12 @@ describe('tryParseSpliitCsv', () => {
     const first = result.source.expenses[0]
     expect(first.title).toBe('Kafe plazha')
     expect(first.amount).toBe(360)
-    // 216 / 144 → GCD 72 → BY_SHARES; shares stay as cents.
+    // 216 / 144 → GCD 72 → BY_SHARES; shares normalised to ratio weights.
     expect(first.splitMode).toBe('BY_SHARES')
     expect(first.paidBySourceId).toBe(result.source.participants[1].sourceId)
     expect(first.paidFor).toEqual([
-      { sourceId: result.source.participants[0].sourceId, shares: 216 },
-      { sourceId: result.source.participants[1].sourceId, shares: 144 },
+      { sourceId: result.source.participants[0].sourceId, shares: 3 },
+      { sourceId: result.source.participants[1].sourceId, shares: 2 },
     ])
   })
 
@@ -155,5 +155,17 @@ describe('tryParseSpliitCsv', () => {
       { sourceId: e.paidFor[0].sourceId, shares: 537 },
       { sourceId: e.paidFor[1].sourceId, shares: 538 },
     ])
+  })
+
+  it('handles 0-decimal currency (JPY) without 100× inflation', () => {
+    // JPY has 0 decimal digits. 5000 ¥ should stay 5000 minor units.
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
+"2026-03-15","Ramen","Dining Out","JPY","5000",,,,"No","Evenly",5000.00`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const e = result.source.expenses[0]
+    expect(e.amount).toBe(5000)
+    expect(e.paidFor[0].shares).toBe(5000)
   })
 })
