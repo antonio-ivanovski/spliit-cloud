@@ -804,7 +804,7 @@ describe('Multi-payer expenses — real DB', () => {
   // header. Mock that at the route-call level instead of going through
   // an HTTP request so this test stays runnable from a fresh checkout.
 
-  it('CSV export uses the multi-payer formula: net = payerShare × ratio − paidForShare', async () => {
+  it('CSV export multi-payer net = paidByShare − paidForShare (unified calculateShares)', async () => {
     const { groupId, participants } = await createUsdGroup(`MP-CSV-${runId}`)
 
     // Multi-payer 2-row expense: Alice paid 70% of $100, Bob paid 30%.
@@ -832,15 +832,13 @@ describe('Multi-payer expenses — real DB', () => {
       },
     })
 
-    // Re-derive the per-row numbers as `export-csv.ts` does:
-    //   payerAmount  = amount × payerShare / totalPaidByShares
-    //   paidForShare = (amount / totalShares) × paidForRow.shares
-    //   cell         = payerAmount − paidForShare
+    // Unified export formula: net = calculatePaidByShares − calculateShares
+    // BY_AMOUNT paidBy: 7000/3000; EVENLY paidFor: 5000/5000 → nets 2000/-2000
     const totalAmount = 10000
-    const alicePaid = (7000 / (7000 + 3000)) * totalAmount
-    const bobPaid = (3000 / (7000 + 3000)) * totalAmount
-    const aliceFor = (totalAmount / 2) * 1
-    const bobFor = (totalAmount / 2) * 1
+    const alicePaid = 7000
+    const bobPaid = 3000
+    const aliceFor = totalAmount / 2
+    const bobFor = totalAmount / 2
     expect(alicePaid - aliceFor).toBe(2000)
     expect(bobPaid - bobFor).toBe(-2000)
 

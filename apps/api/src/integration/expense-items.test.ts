@@ -184,14 +184,13 @@ describe('Expense items — real DB', () => {
     // Verify paidFor rows (3 participants covered by items, shares = exact cents)
     const sharesSum = saved!.paidFor.reduce((s, p) => s + p.shares, 0)
     expect(sharesSum).toBe(10000)
-    // Admin: 1000 (Item A EVENLY) + 4666 (Item B BY_SHARES 2/3) = 5666
-    // Alice: 1000 (Item A) + 2334 (Item B last) = 3334
-    // Bob: 1000 (Item A)
+    // Global-across-items: Item A 3000 EVENLY/3 + Item B 7000 BY_SHARES 2:1
+    // exact Admin 5666.66…, Alice 3333.33…, Bob 1000 → remainder to Admin
     expect(saved!.paidFor.sort()).toContainEqual(
-      expect.objectContaining({ shares: 5666 }),
+      expect.objectContaining({ shares: 5667 }),
     )
     expect(saved!.paidFor.sort()).toContainEqual(
-      expect.objectContaining({ shares: 3334 }),
+      expect.objectContaining({ shares: 3333 }),
     )
     expect(saved!.paidFor.sort()).toContainEqual(
       expect.objectContaining({ shares: 1000 }),
