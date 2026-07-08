@@ -11,10 +11,14 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
-import { Navigate, Outlet, useSearch } from '@tanstack/react-router'
+import {
+  Navigate,
+  Outlet,
+  useNavigate,
+  useSearch,
+} from '@tanstack/react-router'
 import { Cloud, Loader2, Share2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 import { useEffect, useState } from 'react'
@@ -40,7 +44,7 @@ export function GroupLayoutClient({
     null,
   )
   const [canShare, setCanShare] = useState(false)
-  const router = useRouter()
+  const navigate = useNavigate({ from: '/groups/$groupId' })
 
   useEffect(() => {
     setCanShare(
@@ -55,14 +59,14 @@ export function GroupLayoutClient({
   useEffect(() => {
     if (friendLinkInviteUrl) {
       setFriendLinkDialogUrl(friendLinkInviteUrl)
-      router.navigate({
+      navigate({
         to: '/groups/$groupId',
         params: { groupId },
         search: { friendLinkInvite: undefined },
         replace: true,
       })
     }
-  }, [friendLinkInviteUrl, groupId, router])
+  }, [friendLinkInviteUrl, groupId, navigate])
 
   const { data, isLoading, error } = trpc.groups.get.useQuery(
     { groupId, linkInviteToken },
