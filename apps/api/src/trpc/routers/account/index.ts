@@ -152,10 +152,13 @@ export const accountRouter = createTRPCRouter({
 
       const entries = memberships.map((m) => {
         const isFriend = m.group.groupType === GroupType.FRIEND
+        const pendingInv = friendPendingByGroupId.get(m.groupId)
         const displayName = isFriend
           ? friendMemberByGroupId.get(m.groupId)?.name ||
-            friendPendingByGroupId.get(m.groupId)?.name ||
-            friendPendingByGroupId.get(m.groupId)?.email ||
+            pendingInv?.name ||
+            (pendingInv?.email && !isPlaceholderEmail(pendingInv.email)
+              ? pendingInv.email
+              : undefined) ||
             ''
           : m.group.name
         return {
