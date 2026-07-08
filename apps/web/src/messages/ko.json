@@ -30,7 +30,7 @@
     "myGroups": "내 그룹",
     "create": "만들기",
     "loadingRecent": "최신 그룹 불러오는 중…",
-    "starred": "즐겨찾기 그룹",
+    "starred": "즐겨찾기",
     "archived": "아카이브된 그룹",
     "RecentRemovedToast": {
       "title": "그룹이 삭제되었습니다",
@@ -1424,8 +1424,8 @@
     "share": "공유",
     "linkHelp": "친구가 이 장부에 참여할 수 있는 공유 가능한 링크를 생성하세요.",
     "emailLabel": "친구의 이메일",
-    "temporaryNameLabel": "표시 이름 (선택)",
-    "temporaryNameHelp": "친구가 가입하고 계정을 소유할 때까지 사용됩니다.",
+    "temporaryNameLabel": "표시 이름",
+    "temporaryNameHelp": "초대하는 사람의 이름을 입력하세요.",
     "friendsEmpty": "이메일을 입력하거나 링크를 공유하여 친구를 추가하세요.",
     "infoLabel": "정보 (선택)",
     "infoPlaceholder": "'룸메이트 비용' 같은 설명 추가"

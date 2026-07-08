@@ -1424,8 +1424,8 @@
     "share": "Jaa",
     "linkHelp": "Luo jaettava linkki, jota kaverisi voi käyttää liittyäkseen tähän kirjanpitoon.",
     "emailLabel": "Kaverin sähköposti",
-    "temporaryNameLabel": "Näyttönimi (valinnainen)",
-    "temporaryNameHelp": "Käytetään, kunnes kaverisi liittyy ja lunastaa tilinsä.",
+    "temporaryNameLabel": "Näyttönimi",
+    "temporaryNameHelp": "Anna nimi henkilölle, jota kutsut.",
     "friendsEmpty": "Lisää kaveri syöttämällä hänen sähköpostinsa tai jaa linkki kutsua varten.",
     "infoLabel": "Tiedot (valinnainen)",
     "infoPlaceholder": "Lisää kontekstia, esim. 'Kämppäkaverin kulut'"
