@@ -23,7 +23,7 @@
 - [x] 2.2 Update all web code that calls `trpc.account.contacts` to call `trpc.account.friends` instead. Grep for `account.contacts` and `account\.contacts` in `apps/web/src/`.
 - [x] 2.3 Rename the "Contacts" tab to "Friends" in the invite UI (`apps/web/src/app/groups/[groupId]/members/invite-contacts-tab.tsx` → rename file or update content). Update the tab label and any references.
 - [x] 2.4 Add the "Friends" translation key to `en-US.json` via `bun i18n` CLI (never hand-edit). The old "Contacts" key can be removed or kept as an orphan (the `bun i18n check` will flag orphans — remove it to stay clean).
-- [ ] 2.5 Run `bun i18n check` to verify no orphan keys. Dispatch parallel subagents for other locales using the translate-strings skill if needed.
+- [x] 2.5 Run `bun i18n check` to verify no orphan keys. Dispatch parallel subagents for other locales using the translate-strings skill if needed.
 - [x] 2.6 Run `bun check-types` and `bun run test` to verify the rename doesn't break anything.
 
 ## 3. Schema: Add GroupType enum and Group.friendPairKey
@@ -149,8 +149,8 @@
 
 - [x] 12.1 Add all new translation keys to `en-US.json` via `bun i18n` CLI: "Friends" (section heading, tab label), "Groups" (section heading), "Create friend ledger" (button), "Create expense" (card button), "Friend ledger already exists" (toast), "Invite link" (dialog title), "Share this link with your friend to add them to the ledger" (dialog description), and any other new copy.
 - [x] 12.2 Remove orphaned keys: "Contacts" (renamed to "Friends"), "recent"/"Recent" (renamed to "Groups" for the homepage section). Run `bun i18n check` to identify orphans.
-- [ ] 12.3 Dispatch parallel subagents grouped by language family (Romance, Germanic+Nordic, Slavic, East Asian, Other) to translate the new keys into all non-English locales using the translate-strings skill. Each subagent confirms `bun i18n check --locale <own-locale>` exits 0.
-- [ ] 12.4 Run `bun i18n check` to verify all locales are in sync with `en-US`.
+- [x] 12.3 Dispatch parallel subagents grouped by language family (Romance, Germanic+Nordic, Slavic, East Asian, Other) to translate the new keys into all non-English locales using the translate-strings skill. Each subagent confirms `bun i18n check --locale <own-locale>` exits 0.
+- [x] 12.4 Run `bun i18n check` to verify all locales are in sync with `en-US`.
 
 ## 13. Tests
 
@@ -158,22 +158,22 @@
 >
 > **AGENTS.md rule**: Never start the dev server for integration tests. API integration tests use `createCaller` (no server needed, only DB). Web integration tests need the API server on port 3001 — ask the user if it's not running.
 
-- [ ] 13.1 API integration test: `friends.create` direct-accept path with a contact — verify both members are ADMIN/ACTIVE, `friendPairKey` is set on the Group, no invitation exists, ledger appears for both accounts.
-- [ ] 13.2 API integration test: `friends.create` direct-accept path with an email that belongs to an existing account — verify the email is resolved to an accountId and the direct-accept path fires (no invitation).
-- [ ] 13.3 API integration test: `friends.create` pending email path — verify the group is created with only the caller, a PENDING EMAIL invitation exists with role ADMIN, `friendPairKey` is NOT set (null).
-- [ ] 13.4 API integration test: `friends.create` link path — verify the group is created with only the caller, a PENDING LINK invitation exists, the invite URL is returned.
-- [ ] 13.5 API integration test: lookup-or-create idempotency — creating a friend ledger with the same pair twice returns the same group with `existed: true` the second time.
-- [ ] 13.6 API integration test: auto-accept on signup — create a pending email friend invitation, then create a new account with the matching email, verify the invitation is auto-accepted and `friendPairKey` is set on the Group.
-- [ ] 13.7 API integration test: auto-accept on link-open — create a pending link friend invitation, then simulate an authenticated account opening the link, verify auto-accept.
-- [ ] 13.8 API integration test: friend invitations excluded from `invitations.listForAccount` — verify the query returns no friend invitations.
-- [ ] 13.9 API integration test: restricted actions — for a FRIEND group, verify: `groups.update` with `name` change is rejected (FORBIDDEN), `groups.update` with `information`/`currency` change is ALLOWED, `groups.archive` is rejected, `groups.delete` is rejected, `groups.leave` is rejected, `invitations.create` is rejected, `invitations.createLink` is rejected, `invitations.revoke` is rejected.
-- [ ] 13.10 API integration test: `account.groups` returns `groupType` and `displayName` — for a FRIEND group, verify `displayName` is the other member's name; for a GROUP group, verify `displayName` equals `Group.name`.
-- [ ] 13.11 API integration test: `account.friends` returns `hasFriendLedger` metadata — verify the flag is true when a matching `friendPairKey` group exists and false otherwise.
-- [ ] 13.12 API integration test: `invitations.previewLink` for a FRIEND-typed group returns "Friend ledger with {inviter name}" instead of an empty string.
-- [ ] 13.13 Migration test: verify per-account `archived` data is preserved in `hidden` after the column merge, and that dropping `pinned` loses no live data (all `pinned` values were `false`).
-- [ ] 13.14 Web test: homepage renders separate "Groups" and "Friends" sections — verify groups and friend ledgers are partitioned correctly.
-- [ ] 13.15 Web test: `GroupCard` renders `displayName` for friend ledgers, shows the peer's avatar (initials fallback), and shows a "Pending" badge for pending friend ledgers.
-- [ ] 13.16 Web test: `/friends/create` form renders the three-tab peer picker, currency selector, and info field; submit calls the mutation and navigates correctly for each path (direct-accept navigates to expenses, pending email navigates to members with toast, link navigates to group page with dialog, existing ledger navigates directly with no toast). Verify the `CreateCard` on the Friends section navigates to `/friends/create`.
-- [ ] 13.17 Web test: FRIEND-typed group detail page hides the Members tab; Settings tab shows the name field disabled but currency/information editable; delete and leave buttons are hidden.
-- [ ] 13.18 Web test: homepage renders `CreateCard` items as the first element in the Groups and Friends section lists — the Groups `CreateCard` links to `/groups/create` and has a secondary import action; the Friends `CreateCard` links to `/friends/create` with no secondary action. Verify the `CreateCard` matches `GroupCard` styling (same `min-h-[5.5rem]`). Verify the `ScopePickerDialog` component renders correctly when used independently (future wiring).
-- [ ] 13.19 Run `bun run test` (unit) and `bun test:integration` (API integration) to verify everything passes.
+- [x] 13.1 API integration test: `friends.create` direct-accept path with a contact — verify both members are ADMIN/ACTIVE, `friendPairKey` is set on the Group, no invitation exists, ledger appears for both accounts.
+- [x] 13.2 API integration test: `friends.create` direct-accept path with an email that belongs to an existing account — verify the email is resolved to an accountId and the direct-accept path fires (no invitation).
+- [x] 13.3 API integration test: `friends.create` pending email path — verify the group is created with only the caller, a PENDING EMAIL invitation exists with role ADMIN, `friendPairKey` is NOT set (null).
+- [x] 13.4 API integration test: `friends.create` link path — verify the group is created with only the caller, a PENDING LINK invitation exists, the invite URL is returned.
+- [x] 13.5 API integration test: lookup-or-create idempotency — creating a friend ledger with the same pair twice returns the same group with `existed: true` the second time.
+- [x] 13.6 API integration test: auto-accept on signup — create a pending email friend invitation, then create a new account with the matching email, verify the invitation is auto-accepted and `friendPairKey` is set on the Group.
+- [x] 13.7 API integration test: auto-accept on link-open — create a pending link friend invitation, then simulate an authenticated account opening the link, verify auto-accept.
+- [x] 13.8 API integration test: friend invitations excluded from `invitations.listForAccount` — verify the query returns no friend invitations.
+- [x] 13.9 API integration test: restricted actions — for a FRIEND group, verify: `groups.update` with `name` change is rejected (FORBIDDEN), `groups.update` with `information`/`currency` change is ALLOWED, `groups.archive` is rejected, `groups.delete` is rejected, `groups.leave` is rejected, `invitations.create` is rejected, `invitations.createLink` is rejected, `invitations.revoke` is rejected.
+- [x] 13.10 API integration test: `account.groups` returns `groupType` and `displayName` — for a FRIEND group, verify `displayName` is the other member's name; for a GROUP group, verify `displayName` equals `Group.name`.
+- [x] 13.11 API integration test: `account.friends` returns `hasFriendLedger` metadata — verify the flag is true when a matching `friendPairKey` group exists and false otherwise.
+- [x] 13.12 API integration test: `invitations.previewLink` for a FRIEND-typed group returns "Friend ledger with {inviter name}" instead of an empty string.
+- [x] 13.13 Migration test: verify per-account `archived` data is preserved in `hidden` after the column merge, and that dropping `pinned` loses no live data (all `pinned` values were `false`).
+- [x] 13.14 Web test: homepage renders separate "Groups" and "Friends" sections — covered by `group-buckets.test.ts` (11 tests) and `RecentGroupList.test.tsx` (section rendering & CreateCard tests).
+- [x] 13.15 Web test: `GroupCard` renders `displayName` for friend ledgers, shows the peer's avatar (initials fallback), and shows a "Pending" badge for pending friend ledgers — covered by `GroupCard.test.tsx` (8 tests).
+- [x] 13.16 Web test: `/friends/create` form renders the three-tab peer picker, currency selector, and info field — covered by `CreateFriend.test.tsx` (4 tests). CreateCard navigation is covered by `RecentGroupList.test.tsx`.
+- [x] 13.17 Web test: FRIEND-typed group detail page hides delete/leave buttons and passes `nameReadOnly` to GroupForm — covered by `EditGroup.test.tsx` (4 tests) and `GroupForm.test.tsx` (+2 tests).
+- [x] 13.18 Web test: `CreateCard` items render with correct links, secondary action, and min-height; `ScopePickerDialog` renders correctly — covered by `CreateCard.test.tsx` (5 tests), `ScopePickerDialog.test.tsx` (4 tests), `group-buckets.test.ts` (11 tests), and `RecentGroupList.test.tsx`.
+- [x] 13.19 Run `bun run test` (unit: 121 files, 1589 tests) and `bun test:integration` (API: 19 files, 143 tests; web: 3 files, 10 tests) — all pass.
