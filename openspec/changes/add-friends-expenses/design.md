@@ -20,7 +20,7 @@ Two related cleanups ride along:
 - Collapse `AccountGroupPreference` to two live columns (`starred`, `hidden`).
 - Rename "contacts" → "friends" throughout.
 - Split the homepage into separate "Groups" and "Friends" sections (drop "Recent"); keep "Starred" mixed; keep "Archived" groups-only; keep "Hidden" mixed.
-- Add section-level "Create expense" buttons (one for the Groups section, one for the Friends section) that open a scope-picker dialog; keep direct navigation when scope is already known.
+- Add inline `CreateCard` action cards as the first item in each section list (Groups → `/groups/create` with import secondary action, Friends → `/friends/create`); keep direct navigation when scope is already known. (The initially-planned section-level scope-picker dialog approach was reversed during implementation — see Decision 11.)
 
 **Non-Goals:**
 
@@ -217,37 +217,45 @@ Alternatives considered:
 
 The homepage's `partitionGroups` function and section rendering are restructured so that:
 
-- **Starred** section: groups and friend ledgers with `preference.starred === true`, intermixed. Section heading unchanged ("Starred"). Starred items are pulled out of the Groups and Friends sections below (same as today's behavior for starred groups in Recent).
-- **Groups** section: all active `GROUP`-type groups that are not starred, not archived, and not hidden. Section heading "Groups" (replaces "Recent"). Shows every group the user is an active member of.
-- **Friends** section: all `FRIEND`-type groups that are not starred and not hidden. Section heading "Friends". Shows every friend ledger the user has, even if fully settled — a friend ledger with a zero balance is still a valid running relationship the user may want to add expenses to.
-- **Archived** section: `GROUP`-type groups with `Group.archived === true` only. `FRIEND` groups never appear here (archive is not a friend concept).
-- **Hidden** section: groups and friend ledgers with `preference.hidden === true`, intermixed (toggled via "Show hidden").
+- **Starred** section: groups and friend ledgers with `preference.starred === true`, intermixed. Section heading unchanged ("Starred"). Starred items are pulled out of the Groups and Friends sections below (same as today's behavior for starred groups in Recent). Only rendered when there are starred items.
+- **Groups** section: all active `GROUP`-type groups that are not starred, not archived, and not hidden. Section heading "Groups" (replaces "Recent"). Shows every group the user is an active member of. The first item in the section list is a `CreateCard` linking to `/groups/create` (with a secondary import action). Always rendered (even if empty, showing just the CreateCard).
+- **Friends** section: all `FRIEND`-type groups that are not starred and not hidden. Section heading "Friends". Shows every friend ledger the user has, even if fully settled — a friend ledger with a zero balance is still a valid running relationship the user may want to add expenses to. The first item in the section list is a `CreateCard` linking to `/friends/create`. Always rendered (even if empty, showing just the CreateCard).
+- **Archived** section: `GROUP`-type groups with `Group.archived === true` only. `FRIEND` groups never appear here (archive is not a friend concept). Default closed, rendered with `opacity-60` styling. Only rendered when there are archived groups.
+- **Hidden** section: groups and friend ledgers with `preference.hidden === true`, intermixed. Default closed, rendered with `opacity-60` styling. Only rendered when there are hidden groups.
+
+Each section uses a `CollapsibleSection` component with `localStorage` persistence for open/closed state (keys like `spliit:home:section:starred`, etc.). This means the user's section toggle state persists across sessions.
+
+The `PendingInvitations` component sits above all sections. The `ForceArchiveDialogSection` is rendered at the bottom of the section list, triggered when an archive attempt fails due to unsettled balances.
 
 `bucketFor` in `group-buckets.ts` gains a `groupType` check: `FRIEND` groups skip the `archived` bucket even if `Group.archived` were somehow true (defense-in-depth). The partition function gains separate `groups` and `friends` arrays instead of the single `active` array.
 
-Rationale: the user wants groups and friend ledgers to be visually distinct on the homepage — not mixed into a single "Recent" list. Separate "Groups" and "Friends" sections make it immediately clear what type of ledger each card is. Dropping the "Recent" label in favor of "Groups" is more descriptive (the section shows all groups, not just recent ones). The Starred section stays mixed because starring is a cross-type "favorites" concept.
+Rationale: the user wants groups and friend ledgers to be visually distinct on the homepage — not mixed into a single "Recent" list. Separate "Groups" and "Friends" sections make it immediately clear what type of ledger each card is. Dropping the "Recent" label in favor of "Groups" is more descriptive (the section shows all groups, not just recent ones). The Starred section stays mixed because starring is a cross-type "favorites" concept. Collapsible sections with localStorage persistence keep the homepage compact and respect the user's organization preferences. The `CreateCard` as the first item provides an always-visible entry point for creation without relying on section-heading buttons (see Decision 11).
 
-### 11. Create-expense entry: section-level "Create expense" buttons with scope-picker dialogs
+### 11. Create-expense entry: `CreateCard` as the first item in each section list
 
-The homepage has two section-level "Create expense" buttons — one next to the "Groups" section heading and one next to the "Friends" section heading. Each button opens a `ResponsiveDialog` scope-picker listing only that section's items:
+Instead of section-level buttons with scope-picker dialogs, each section list starts with a `CreateCard` — a primary-tinted action card that reads as an action surface rather than an existing ledger. The card matches `GroupCard`'s `min-h-[5.5rem]` so the two-column grid renders tidy rows.
 
-- **Groups section "Create expense" button**: opens a scope-picker dialog listing all the user's active groups (with `displayName`, member count, and currency). Selecting one navigates to `/groups/$groupId/expenses/create`.
-- **Friends section "Create expense" button**: opens a scope-picker dialog listing all the user's friend ledgers (with `displayName`, pending indicator, and currency). Selecting one navigates to `/groups/$groupId/expenses/create`.
+- **Groups section**: the first item is a `CreateCard` linking to `/groups/create` (title: "Create a group", description: "Add friends and split expenses"). A secondary action zone on the right navigates to `/groups/import` (import from another service). No scope-picker dialog.
+- **Friends section**: the first item is a `CreateCard` linking to `/friends/create` (title: "Create a friend ledger", description: "Track 1-on-1 expenses with someone"). No secondary action and no scope-picker dialog.
 
-There are NO per-card "Create expense" buttons. The create-expense action is global per section, not per card.
+The `ScopePickerDialog` component exists in the codebase and reuses `ResponsiveDialog`, but it is NOT wired into the homepage sections. It is available for future use-cases where scoped item selection is needed (e.g. a future quick-expense flow).
 
 When the user is already inside a group or friend ledger (the scope is known), the existing `+` button on the expense list page continues to navigate straight to the create-expense form — unchanged.
 
-The scope-picker dialog reuses `ResponsiveDialog` (the app's standard dialog abstraction, desktop modal + mobile drawer). The list inside reuses `account.groups` data already fetched by the homepage, filtered by `groupType`.
+Rationale: during implementation the inline `CreateCard` approach was preferred over scope-picker dialogs because:
+1. It keeps creation and navigation in a single visual flow — the user sees "create" alongside their existing groups as a permanent entry point, not hidden behind a button that opens a dialog.
+2. It naturally supports secondary actions (e.g. **import** for the Groups section) without cluttering the section heading.
+3. The `CreateCard` is visually distinct from `GroupCard` (primary gradient background, decorative blur element, different iconography) so it does not read as "another group" — it reads as an action.
+4. Section-level heading buttons would add visual noise above every section and compete with the collapsible toggle already on the heading.
 
-Rationale: the user wants the create-expense action to be explicit and section-scoped, not duplicated on every card. A section-level button with a scope-picker keeps the cards compact while providing a clear entry point. The picker is scoped to one type at a time (groups or friends) so the user isn't choosing across a mixed list — the section context already tells them which type they're picking from.
+Alternatives considered (had been explored in the spec, reversed during implementation):
 
-Alternatives considered:
-
+- Section-level "Create expense" buttons with scope-picker dialogs: the initial spec planned these. Implementation chose `CreateCard` because it integrates more naturally into the grid layout, supports secondary actions, and avoids the cognitive overhead of a dialog for simply navigating to a creation page.
 - Per-card "Create expense" buttons: the user explicitly reversed this — "no 'create expense' per group. the create expense is global for the entire group section."
-- A single global "Create expense" button with a mixed scope-picker: the user wants it per-section, not global.
-- `+` icon only (no text): less discoverable; the user wants the action to be explicit.
-- In-dialog expense entry (form inside a modal): the existing expense form is large and complex; cramming it into a dialog would be a worse UX and a large refactor.
+
+### 11a. Scope-picker dialog (built but not wired to homepage)
+
+The `ScopePickerDialog` component is built and available in the codebase (`apps/web/src/app/groups/scope-picker-dialog.tsx`) but is NOT wired into the homepage sections. It accepts a list of `ScopePickerItem[]` (each with `id`, `displayName`, optional `meta`, optional `badge`, and `onClick`) and an `emptyLabel` for when the list is empty. It renders a scrollable list inside `ResponsiveDialog`. It can be used in future UIs where the user needs to pick from a scoped list — e.g. a quick "add expense to any group" button elsewhere in the app, or as the section-level button approach if reverted.
 
 ### 12. New `/friends/create` route with a bespoke form
 
@@ -336,7 +344,7 @@ Alternatives considered:
    - Rename "Contacts" → "Friends" in the invite UI and all copy.
    - Update `AccountGroup` type to reflect the new `preference` shape.
 6. **Translations:** use `bun i18n` CLI to add friend-ledger copy and rename contacts→friends in `en-US.json`; dispatch parallel subagents for other locales.
-7. **Tests:** API integration tests for `friends.create` (direct-accept with contact, direct-accept with email-that-has-account, pending with email-without-account, link path, lookup-or-create idempotency, both-admin membership, restricted actions); auto-accept tests (email signup triggers auto-accept, link-open triggers auto-accept); `previewLink` FRIEND-aware display name test; web tests for homepage section splitting (Groups vs Friends), friend card rendering (displayName, avatar, pending badge), section-level "Create expense" scope-picker dialogs, and the migration data-preservation check.
+7. **Tests:** API integration tests for `friends.create` (direct-accept with contact, direct-accept with email-that-has-account, pending with email-without-account, link path, lookup-or-create idempotency, both-admin membership, restricted actions); auto-accept tests (email signup triggers auto-accept, link-open triggers auto-accept); `previewLink` FRIEND-aware display name test; web tests for homepage section splitting (Groups vs Friends), friend card rendering (displayName, avatar, pending badge), `CreateCard` rendering in each section, and the migration data-preservation check.
 
 Rollback strategy: the `GroupType` default and `friendPairKey` nullability make the schema changes backward-compatible — existing code that doesn't know about `groupType` treats everything as `GROUP`, and `friendPairKey` is only set for `FRIEND` groups. The `AccountGroupPreference` column drops are the only irreversible part; back up the table before the migration. If the feature needs to be rolled back after migration, friend-ledger groups can be deleted (they have no unique data not derivable from the pair) and the code reverted.
 
