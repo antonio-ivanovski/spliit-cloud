@@ -1,26 +1,30 @@
-import { EmptyState } from '@/components/empty-state'
-import Link from '@/components/link'
-import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
-import { Eye, EyeOff, Loader2, Plus, Users } from 'lucide-react'
+import { Cloud, Loader2, Plus, Users } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CollapsibleSection } from './collapsible-section'
+import { CreateCard } from './create-card'
 import { ForceArchiveDialogSection } from './force-archive-dialog-section'
 import type { AccountGroup } from './group-buckets'
 import { partitionGroups } from './group-buckets'
 import { GroupCard } from './group-card'
 import { PendingInvitations } from './pending-invitations'
 
+const STORAGE_KEYS = {
+  starred: 'spliit:home:section:starred',
+  groups: 'spliit:home:section:groups',
+  friends: 'spliit:home:section:friends',
+  archived: 'spliit:home:section:archived',
+  hidden: 'spliit:home:section:hidden',
+} as const
+
 export function RecentGroupList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
-  const { t: tEmpty } = useTranslation(undefined, { keyPrefix: 'EmptyState' })
   const utils = trpc.useUtils()
   const { data, isLoading } = trpc.account.groups.useQuery({
     includeArchived: true,
   })
-  const [showHidden, setShowHidden] = useState(false)
-  const [showArchived, setShowArchived] = useState(false)
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
   const { mutateAsync: setPreference } =
@@ -76,93 +80,13 @@ export function RecentGroupList() {
 
   const isGroupsLoading = isLoading || !data
   const allGroups = data?.groups ?? []
-  const groups = showHidden
-    ? allGroups
-    : allGroups.filter((g) => !g.preference.hidden)
 
-  const groupsEmptyAction = (
-    <Button asChild>
-      <Link href="/groups/create">
-        <Plus className="w-4 h-4 mr-2" />
-        {tEmpty('actions.createGroup')}
-      </Link>
-    </Button>
-  )
-
-  const friendsEmptyAction = (
-    <Button asChild>
-      <Link href="/friends/create">
-        <Users className="w-4 h-4 mr-2" />
-        {tEmpty('actions.createFriendLedger')}
-      </Link>
-    </Button>
-  )
-
-  const groupsFilteredAction = (
-    <Button
-      variant="outline"
-      onClick={() => setShowHidden(true)}
-      disabled={showHidden}
-    >
-      <Eye className="w-4 h-4 mr-2" />
-      {tEmpty('actions.showHidden')}
-    </Button>
-  )
-
-  let body: React.ReactNode
-  if (isGroupsLoading) {
-    body = (
-      <p>
-        <Loader2 className="w-4 m-4 mr-2 inline animate-spin" />{' '}
-        {t('loadingRecent')}
-      </p>
-    )
-  } else if (groups.length === 0) {
-    if (allGroups.length === 0) {
-      body = (
-        <EmptyState
-          variant="empty"
-          itemLabel={tEmpty('labels.group')}
-          itemLabelPlural={tEmpty('labels.groupPlural')}
-          action={groupsEmptyAction}
-        />
-      )
-    } else {
-      body = (
-        <div className="space-y-4">
-          <EmptyState
-            variant="filtered"
-            itemLabel={tEmpty('labels.group')}
-            itemLabelPlural={tEmpty('labels.groupPlural')}
-            action={groupsFilteredAction}
-          />
-          <EmptyState
-            variant="empty"
-            itemLabel={tEmpty('labels.friendLedger')}
-            itemLabelPlural={tEmpty('labels.friendLedgerPlural')}
-            action={friendsEmptyAction}
-          />
-        </div>
-      )
-    }
-  } else {
-    const {
-      groups: sectionGroups,
-      friends,
-      starred,
-      archived,
-      hidden,
-    } = partitionGroups(groups)
-
-    const renderList = (
-      list: AccountGroup[],
-      variant: 'groups' | 'archived' | 'hidden' | 'friends' | 'starred',
-    ) => (
-      <ul
-        className={`grid gap-2 sm:grid-cols-2 ${
-          variant === 'archived' || variant === 'hidden' ? 'opacity-50' : ''
-        }`}
-      >
+  function renderGroupItems(
+    list: AccountGroup[],
+    variant: 'groups' | 'archived' | 'hidden' | 'friends' | 'starred',
+  ) {
+    return (
+      <>
         {list.map((group) => (
           <GroupCard
             key={group.id}
@@ -179,6 +103,8 @@ export function RecentGroupList() {
               })
             }
             onToggleArchived={
+              variant !== 'friends' &&
+              variant !== 'hidden' &&
               group.currentMemberRole === 'ADMIN' &&
               group.groupType !== 'FRIEND'
                 ? () => toggleArchived(group)
@@ -186,108 +112,109 @@ export function RecentGroupList() {
             }
           />
         ))}
-      </ul>
+      </>
     )
+  }
+
+  let body: React.ReactNode
+  if (isGroupsLoading) {
+    body = (
+      <p>
+        <Loader2 className="w-4 m-4 mr-2 inline animate-spin" />{' '}
+        {t('loadingRecent')}
+      </p>
+    )
+  } else {
+    const {
+      groups: sectionGroups,
+      friends,
+      starred,
+      archived,
+      hidden,
+    } = partitionGroups(allGroups)
 
     body = (
-      <>
+      <div className="flex flex-col gap-5">
         {starred.length > 0 && (
-          <>
-            <h2 className="mb-2">{t('starred')}</h2>
-            {renderList(starred, 'starred')}
-          </>
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.starred}
+            defaultOpen
+            title={t('starred')}
+          >
+            <ul className="grid gap-3 sm:grid-cols-2 items-stretch">
+              {renderGroupItems(starred, 'starred')}
+            </ul>
+          </CollapsibleSection>
         )}
 
-        {sectionGroups.length > 0 && (
-          <>
-            <h2 className="mt-6 mb-2">{t('groups')}</h2>
-            {renderList(sectionGroups, 'groups')}
-          </>
-        )}
-
-        {friends.length > 0 && (
-          <>
-            <div className="mt-6 mb-2 flex items-center justify-between">
-              <h2>{t('friends')}</h2>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="/friends/create" aria-label={t('friends')}>
-                  <Plus className="w-4 h-4" />
-                </Link>
-              </Button>
-            </div>
-            {renderList(friends, 'friends')}
-          </>
-        )}
-
-        {friends.length === 0 && (
-          <div className="mt-6">
-            <EmptyState
-              variant="empty"
-              itemLabel={tEmpty('labels.friendLedger')}
-              itemLabelPlural={tEmpty('labels.friendLedgerPlural')}
-              action={friendsEmptyAction}
+        <CollapsibleSection
+          storageKey={STORAGE_KEYS.groups}
+          defaultOpen
+          title={t('groups')}
+        >
+          <ul className="grid gap-3 sm:grid-cols-2 items-stretch">
+            <CreateCard
+              href="/groups/create"
+              icon={<Plus className="h-4 w-4" />}
+              title={t('createGroupCard.title')}
+              description={t('createGroupCard.description')}
+              data-testid="create-group-card"
+              secondaryAction={{
+                href: '/groups/import',
+                icon: <Cloud className="h-4 w-4" />,
+                label: t('importGroup'),
+                'data-testid': 'import-group-action',
+              }}
             />
-          </div>
-        )}
+            {renderGroupItems(sectionGroups, 'groups')}
+          </ul>
+        </CollapsibleSection>
 
-        {archived.length > 0 && showArchived && (
-          <>
-            <h2 className="mt-6 mb-2">{t('archived')}</h2>
-            {renderList(archived, 'archived')}
-          </>
-        )}
-
-        {hidden.length > 0 && showHidden && (
-          <>
-            <h2 className="mt-6 mb-2">{t('hidden')}</h2>
-            {renderList(hidden, 'hidden')}
-          </>
-        )}
-
-        {allGroups.some((g) => g.preference.hidden) && (
-          <div className="mt-4">
-            <Button
-              variant="link"
-              className="-m-4"
-              onClick={() => setShowHidden((prev) => !prev)}
-            >
-              {showHidden ? (
-                <>
-                  <EyeOff className="w-4 h-4 mr-1" />
-                  {t('hide')}
-                </>
-              ) : (
-                <>
-                  <Eye className="w-4 h-4 mr-1" />
-                  {t('showHidden')}
-                </>
-              )}
-            </Button>
-          </div>
-        )}
+        <CollapsibleSection
+          storageKey={STORAGE_KEYS.friends}
+          defaultOpen
+          title={t('friends')}
+        >
+          <ul className="grid gap-3 sm:grid-cols-2 items-stretch">
+            <CreateCard
+              href="/friends/create"
+              icon={<Users className="h-4 w-4" />}
+              title={t('createFriendLedgerCard.title')}
+              description={t('createFriendLedgerCard.description')}
+              data-testid="create-friend-ledger-card"
+            />
+            {renderGroupItems(friends, 'friends')}
+          </ul>
+        </CollapsibleSection>
 
         {archived.length > 0 && (
-          <div className="mt-4">
-            <Button
-              variant="link"
-              className="-m-4"
-              onClick={() => setShowArchived((prev) => !prev)}
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.archived}
+            defaultOpen={false}
+            title={t('archived')}
+          >
+            <ul
+              className={`grid gap-3 sm:grid-cols-2 items-stretch opacity-60`}
             >
-              {showArchived ? (
-                <>
-                  <EyeOff className="w-4 h-4 mr-1" />
-                  {t('hide')}
-                </>
-              ) : (
-                <>
-                  <Eye className="w-4 h-4 mr-1" />
-                  {t('showArchived')}
-                </>
-              )}
-            </Button>
-          </div>
+              {renderGroupItems(archived, 'archived')}
+            </ul>
+          </CollapsibleSection>
         )}
-      </>
+
+        {hidden.length > 0 && (
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.hidden}
+            defaultOpen={false}
+            title={t('hidden')}
+          >
+            <ul
+              className={`grid gap-3 sm:grid-cols-2 items-stretch opacity-60`}
+            >
+              {renderGroupItems(hidden, 'hidden')}
+            </ul>
+          </CollapsibleSection>
+        )}
+      </div>
     )
   }
 

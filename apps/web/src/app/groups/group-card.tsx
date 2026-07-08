@@ -19,6 +19,15 @@ import {
 import { useTranslation } from 'react-i18next'
 import type { AccountGroup } from './group-buckets'
 
+/**
+ * Per-card minimum height shared with `CreateCard`. Both are designed to
+ * match so the two-column grid renders tidy rows on `sm+` and a uniform
+ * stack on mobile. Friend ledgers always have 2 participants, so the count
+ * row is hidden on those and replaced by a placeholder that keeps the
+ * card height constant.
+ */
+const CARD_MIN_HEIGHT = 'min-h-[5.5rem]'
+
 export function GroupCard({
   group,
   onToggleStar,
@@ -39,10 +48,15 @@ export function GroupCard({
   const isFriend = group.groupType === 'FRIEND'
   const isPending = isFriend && group._count.members === 1
   const initials = (group.displayName || '?').trim().charAt(0).toUpperCase()
+  const formattedDate = new Date(group.createdAt).toLocaleDateString(locale, {
+    dateStyle: 'medium',
+  })
 
   return (
-    <li key={group.id}>
-      <div className="relative h-fit w-full py-3 pl-3 pr-1 rounded-lg border bg-card shadow-xs text-base">
+    <li key={group.id} className="min-w-0">
+      <div
+        className={`relative w-full h-full ${CARD_MIN_HEIGHT} py-3 pl-3 pr-1 rounded-lg border bg-card shadow-xs text-base overflow-hidden`}
+      >
         <div className="w-full flex flex-col gap-1">
           <div className="text-base flex gap-2 justify-between items-center">
             <span className="flex-1 overflow-hidden text-ellipsis font-medium min-w-0 flex items-center gap-2">
@@ -102,7 +116,9 @@ export function GroupCard({
                     variant="ghost"
                     className="-my-3 -mr-2 -ml-1.5"
                     onClick={(event) => event.stopPropagation()}
-                    aria-label={isFriend ? t('friendActions') : t('groupActions')}
+                    aria-label={
+                      isFriend ? t('friendActions') : t('groupActions')
+                    }
                   >
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>
@@ -151,17 +167,21 @@ export function GroupCard({
             </span>
           </div>
           <div className="text-muted-foreground font-normal text-xs">
-            <div className="w-full flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <Users className="w-3 h-3 inline" />
-                <span>{group._count.members}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span>
-                  {new Date(group.createdAt).toLocaleDateString(locale, {
-                    dateStyle: 'medium',
-                  })}
+            <div className="w-full flex items-center justify-between gap-2">
+              {isFriend ? (
+                // Friend ledgers always have two participants; reserve the
+                // row height so the card matches sibling group cards.
+                <span aria-hidden className="invisible">
+                  <Users className="w-3 h-3 inline" />
                 </span>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <Users className="w-3 h-3 inline" />
+                  <span>{group._count.members}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5 truncate">
+                <span className="truncate">{formattedDate}</span>
               </div>
             </div>
           </div>

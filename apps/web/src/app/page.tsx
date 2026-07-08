@@ -1,12 +1,9 @@
 import { AuthPanel } from '@/components/auth/auth-panel'
-import Link from '@/components/link'
-import { Button } from '@/components/ui/button'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import type { Image } from 'lucide-react'
 import {
   Cloud,
   Loader2,
-  Plus,
   Receipt,
   Scale,
   ShieldCheck,
@@ -112,20 +109,6 @@ function SignedInHero() {
           components={{ strong: <strong /> }}
         />
       </p>
-      <div className="flex flex-wrap gap-2 sm:justify-start justify-center">
-        <Button asChild size="lg">
-          <Link href="/groups/create">
-            <Plus className="w-4 h-4 mr-2" />
-            {t('Homepage.button.createGroup')}
-          </Link>
-        </Button>
-        <Button asChild size="lg" variant="outline">
-          <Link href="/groups/import">
-            <Cloud className="w-4 h-4 mr-2" />
-            {t('Homepage.button.importGroup')}
-          </Link>
-        </Button>
-      </div>
     </section>
   )
 }
