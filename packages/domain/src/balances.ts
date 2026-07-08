@@ -1,11 +1,24 @@
-import { match } from 'ts-pattern'
+import Decimal from 'decimal.js'
 import type { SplitMode } from './enums'
+import { computeExactSharesFromItems } from './itemized-expenses'
+import { calculateExactShares, distributeRemainder } from './totals'
 
 type ParticipantLike = { id: string; name?: string }
 
 type PayerShare = {
   shares: number
   participant: ParticipantLike
+}
+
+type BalanceItem = {
+  amount: number
+  splitMode: SplitMode
+  paidFor: Array<{ participant: string; shares: number }>
+}
+
+type BalanceItemizedRemainder = {
+  splitMode: SplitMode
+  paidFor: Array<{ participant: string; shares: number }>
 }
 
 export type BalanceExpense = {
@@ -18,6 +31,9 @@ export type BalanceExpense = {
   originalAmount?: number | null
   originalCurrency?: string | null
   conversionRate?: number | string | null
+  /** Present on balance-read paths; enables precise ITEMIZED accumulation. */
+  items?: BalanceItem[]
+  itemizedRemainder?: BalanceItemizedRemainder | null
   [key: string]: unknown
 }
 
@@ -32,100 +48,158 @@ export type Reimbursement = {
   amount: number
 }
 
-function isOriginalCurrency(expense: BalanceExpense): boolean {
+function isCrossCurrency(expense: BalanceExpense): boolean {
   return Boolean(expense.originalCurrency && expense.conversionRate)
 }
 
+function addExact(
+  target: Record<string, Decimal>,
+  shares: Record<string, Decimal>,
+): void {
+  for (const [id, value] of Object.entries(shares)) {
+    target[id] = (target[id] ?? new Decimal(0)).plus(value)
+  }
+}
+
+/** For literal modes, give amount−Σshares residual to the primary payer. */
+function applyLiteralResidual(
+  exact: Record<string, Decimal>,
+  amount: number,
+  payerId: string | undefined,
+): Record<string, Decimal> {
+  if (payerId == null) return exact
+  let sum = new Decimal(0)
+  for (const value of Object.values(exact)) sum = sum.plus(value)
+  const diff = new Decimal(amount).minus(sum)
+  if (diff.isZero()) return exact
+  const next = { ...exact }
+  next[payerId] = (next[payerId] ?? new Decimal(0)).plus(diff)
+  return next
+}
+
 export function getBalances(expenses: BalanceExpense[]): Balances {
-  const balances: Balances = {}
+  const globalPaid: Record<string, Decimal> = {}
+  const globalPaidFor: Record<string, Decimal> = {}
+  let totalAmount = 0
 
   for (const expense of expenses) {
-    const paidBys = expense.paidByList
-    const paidFors = expense.paidFor
-    const useOriginal = isOriginalCurrency(expense)
-    // When the expense was paid in a foreign currency, paidByList.shares
-    // are in original currency, summing to originalAmount. Dividing by
-    // expense.amount (ledger cents) would mix currencies, so we divide
-    // against originalAmount and convert to ledger at the end.
-    const payerBase = useOriginal
+    totalAmount += expense.amount
+    const crossCurrency = isCrossCurrency(expense)
+    const primaryPayerId = expense.paidByList[0]?.participant.id
+
+    // PaidBy side (may be cross-currency)
+    const payerBase = crossCurrency
       ? (expense.originalAmount ?? expense.amount)
       : expense.amount
-    const conversionRate = useOriginal ? Number(expense.conversionRate) : 1
+    const paidBySplitMode: SplitMode =
+      expense.paidBySplitMode === 'ITEMIZED'
+        ? 'BY_AMOUNT'
+        : expense.paidBySplitMode
 
-    const totalPaidByShares = paidBys.reduce(
-      (sum, paidBy) => sum + paidBy.shares,
-      0,
-    )
-    let remaining = payerBase
-    paidBys.forEach((paidBy, index) => {
-      const paidById = paidBy.participant.id
-      if (!balances[paidById])
-        balances[paidById] = { paid: 0, paidFor: 0, total: 0 }
-
-      const isLast = index === paidBys.length - 1
-
-      const [shares, totalShares] = match(expense.paidBySplitMode)
-        .with('EVENLY', () => [1, paidBys.length] as const)
-        .with('BY_SHARES', () => [paidBy.shares, totalPaidByShares] as const)
-        .with(
-          'BY_PERCENTAGE',
-          () => [paidBy.shares, totalPaidByShares] as const,
-        )
-        .with('BY_AMOUNT', () => [paidBy.shares, totalPaidByShares] as const)
-        .with('ITEMIZED', () => [paidBy.shares, totalPaidByShares] as const)
-        .exhaustive()
-
-      const dividedAmount = isLast
-        ? remaining
-        : (payerBase * shares) / totalShares
-      remaining -= dividedAmount
-      const ledgerCurrencyPaid = useOriginal
-        ? Math.round(dividedAmount * conversionRate)
-        : dividedAmount
-      balances[paidById].paid += ledgerCurrencyPaid
+    let exactPaidBy = calculateExactShares({
+      amount: payerBase,
+      splitMode: paidBySplitMode,
+      participants: expense.paidByList.map((p) => ({
+        id: p.participant.id,
+        shares: Number(p.shares),
+      })),
     })
 
-    const totalPaidForShares = paidFors.reduce(
-      (sum, paidFor) => sum + paidFor.shares,
-      0,
-    )
-    remaining = expense.amount
-    paidFors.forEach((paidFor, index) => {
-      if (!balances[paidFor.participant.id])
-        balances[paidFor.participant.id] = { paid: 0, paidFor: 0, total: 0 }
+    if (crossCurrency) {
+      const rate = new Decimal(expense.conversionRate as number | string)
+      const converted: Record<string, Decimal> = {}
+      for (const [id, share] of Object.entries(exactPaidBy)) {
+        converted[id] = share.mul(rate)
+      }
+      exactPaidBy = converted
+    } else if (
+      paidBySplitMode === 'BY_AMOUNT' ||
+      expense.paidBySplitMode === 'ITEMIZED'
+    ) {
+      // Literal cents: residual vs ledger amount goes to primary payer
+      exactPaidBy = applyLiteralResidual(
+        exactPaidBy,
+        expense.amount,
+        primaryPayerId,
+      )
+    }
 
-      const isLast = index === paidFors.length - 1
+    // PaidFor side (always ledger currency)
+    let exactPaidFor: Record<string, Decimal>
 
-      const [shares, totalShares] = match(expense.splitMode)
-        .with('EVENLY', () => [1, paidFors.length] as const)
-        .with('BY_SHARES', () => [paidFor.shares, totalPaidForShares] as const)
-        .with(
-          'BY_PERCENTAGE',
-          () => [paidFor.shares, totalPaidForShares] as const,
+    // ITEMIZED with items: accumulate exact Decimals from items so
+    // per-expense remainder tie-breaks don't leak into group totals.
+    // Fall back to stored paidFor when items are absent (tests, totals).
+    if (
+      expense.splitMode === 'ITEMIZED' &&
+      !crossCurrency &&
+      Array.isArray(expense.items) &&
+      expense.items.length > 0
+    ) {
+      const memberIds = [
+        ...new Set([
+          ...expense.paidFor.map((p) => p.participant.id),
+          ...expense.paidByList.map((p) => p.participant.id),
+          ...expense.items.flatMap((i) => i.paidFor.map((p) => p.participant)),
+          ...(expense.itemizedRemainder?.paidFor.map((p) => p.participant) ??
+            []),
+        ]),
+      ]
+      exactPaidFor = computeExactSharesFromItems(
+        expense.items,
+        memberIds,
+        expense.amount,
+        expense.itemizedRemainder ?? undefined,
+      )
+    } else {
+      const paidForSplitMode: SplitMode =
+        expense.splitMode === 'ITEMIZED' && crossCurrency
+          ? 'BY_SHARES'
+          : expense.splitMode
+
+      exactPaidFor = calculateExactShares({
+        amount: expense.amount,
+        splitMode: paidForSplitMode,
+        participants: expense.paidFor.map((p) => ({
+          id: p.participant.id,
+          shares: Number(p.shares),
+        })),
+      })
+
+      if (
+        (expense.splitMode === 'BY_AMOUNT' ||
+          (expense.splitMode === 'ITEMIZED' && !crossCurrency)) &&
+        !crossCurrency
+      ) {
+        exactPaidFor = applyLiteralResidual(
+          exactPaidFor,
+          expense.amount,
+          primaryPayerId,
         )
-        .with('BY_AMOUNT', () => [paidFor.shares, totalPaidForShares] as const)
-        // ITEMIZED uses BY_AMOUNT semantic (shares are exact cents per participant, derived from items)
-        .with('ITEMIZED', () => [paidFor.shares, totalPaidForShares] as const)
-        .exhaustive()
+      }
+    }
 
-      const dividedAmount = isLast
-        ? remaining
-        : (expense.amount * shares) / totalShares
-      remaining -= dividedAmount
-      balances[paidFor.participant.id].paidFor += dividedAmount
-    })
+    addExact(globalPaid, exactPaidBy)
+    addExact(globalPaidFor, exactPaidFor)
   }
 
-  // rounding and add total
-  for (const participantId in balances) {
-    // add +0 to avoid negative zeros
-    balances[participantId].paidFor =
-      Math.round(balances[participantId].paidFor) + 0
-    balances[participantId].paid = Math.round(balances[participantId].paid) + 0
+  const paid = distributeRemainder(globalPaid, totalAmount, { seed: 0 })
+  const paidFor = distributeRemainder(globalPaidFor, totalAmount, { seed: 0 })
 
-    balances[participantId].total =
-      balances[participantId].paid - balances[participantId].paidFor
+  const balances: Balances = {}
+  const ids = new Set([
+    ...Object.keys(globalPaid),
+    ...Object.keys(globalPaidFor),
+    ...Object.keys(paid),
+    ...Object.keys(paidFor),
+  ])
+
+  for (const id of ids) {
+    const p = (paid[id] ?? 0) + 0
+    const pf = (paidFor[id] ?? 0) + 0
+    balances[id] = { paid: p, paidFor: pf, total: p - pf + 0 }
   }
+
   return balances
 }
 
