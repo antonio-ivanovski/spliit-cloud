@@ -61,10 +61,14 @@ export type Props = {
    */
   hideActions?: boolean
   /**
+   * When `true`, the name input is hidden entirely. Used for FRIEND-typed
+   * ledgers, where the name is fixed by the system and should not be shown
+   * in the settings form.
+   */
+  hideNameField?: boolean
+  /**
    * When `true`, the name input is rendered as disabled (read-only) so
-   * the field cannot be edited. Used for FRIEND-typed ledgers, where
-   * the server rejects name changes but the rest of the form remains
-   * editable.
+   * the field cannot be edited.
    */
   nameReadOnly?: boolean
   /**
@@ -103,6 +107,7 @@ export function GroupForm({
   initialValues,
   formId,
   hideActions = false,
+  hideNameField = false,
   nameReadOnly = false,
   onSubmit,
 }: Props) {
@@ -175,27 +180,29 @@ export function GroupForm({
             <CardTitle>{t('title')}</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('NameField.label')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="text-base"
-                      placeholder={t('NameField.placeholder')}
-                      disabled={readOnly || isArchived || nameReadOnly}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    {t('NameField.description')}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!hideNameField && (
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('NameField.label')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="text-base"
+                        placeholder={t('NameField.placeholder')}
+                        disabled={readOnly || isArchived || nameReadOnly}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('NameField.description')}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
