@@ -699,6 +699,39 @@ describe('Friend ledger — real DB', () => {
         }),
       ).rejects.toMatchObject({ code: 'FORBIDDEN' })
     })
+
+    it('members.remove is rejected (FORBIDDEN)', async () => {
+      const members = await prisma.groupMember.findMany({
+        where: { groupId, status: GroupMemberStatus.ACTIVE },
+        select: { id: true, accountId: true },
+      })
+      const peerMember = members.find((m) => m.accountId !== callerId)
+      expect(peerMember).toBeDefined()
+
+      await expect(
+        makeGroupsCaller().members.remove({
+          groupId,
+          memberId: peerMember!.id,
+        }),
+      ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    })
+
+    it('members.updateRole is rejected (FORBIDDEN)', async () => {
+      const members = await prisma.groupMember.findMany({
+        where: { groupId, status: GroupMemberStatus.ACTIVE },
+        select: { id: true, accountId: true },
+      })
+      const peerMember = members.find((m) => m.accountId !== callerId)
+      expect(peerMember).toBeDefined()
+
+      await expect(
+        makeGroupsCaller().members.updateRole({
+          groupId,
+          memberId: peerMember!.id,
+          role: 'MEMBER' as const,
+        }),
+      ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    })
   })
 
   // ───────────────────────────────────────────────────────────────────

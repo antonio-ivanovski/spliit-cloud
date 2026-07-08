@@ -1,3 +1,4 @@
+import { GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { updateMemberRole } from '../../../../lib/api'
@@ -21,7 +22,7 @@ export const updateMemberRoleProcedure = protectedProcedure
     }),
   )
   .mutation(async ({ input: { groupId, memberId, role }, ctx }) => {
-    const { member } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
     })
@@ -29,6 +30,12 @@ export const updateMemberRoleProcedure = protectedProcedure
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Only admins can change member roles',
+      })
+    }
+    if (group.groupType === GroupType.FRIEND) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'Friend ledger member management is not allowed',
       })
     }
     if (member.id === memberId) {
