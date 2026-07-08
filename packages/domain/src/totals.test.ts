@@ -1,9 +1,17 @@
+import Decimal from 'decimal.js'
+import { getCurrency } from './currency'
 import {
+  calculateExactShares,
   calculatePaidByShare,
+  calculatePaidByShares,
   calculateShare,
+  calculateShares,
+  distributeRemainder,
   getTotalActiveUserPaidFor,
   getTotalActiveUserShare,
   getTotalGroupSpending,
+  serializePaidBy,
+  serializePaidFor,
 } from './totals'
 
 type TotalsExpense = Parameters<typeof getTotalActiveUserPaidFor>[1][number]
@@ -47,6 +55,9 @@ const makePaidBy = (participantId: string, shares: number) => ({
   participant: { id: participantId, name: participantId },
   shares,
 })
+
+const sumValues = (map: Record<string, number>) =>
+  Object.values(map).reduce((s, n) => s + n, 0)
 
 describe('getTotalGroupSpending', () => {
   it('sums all non-reimbursement expenses', () => {
@@ -124,13 +135,9 @@ describe('getTotalActiveUserPaidFor', () => {
     expect(getTotalActiveUserPaidFor(null, expenses)).toBe(0)
   })
 
-  // ---------------------------------------------------------------------------
-  // Multi-payer tests (Phase 1: getTotalActiveUserPaidFor walks paidByList)
-  // ---------------------------------------------------------------------------
-
   it("multi-payer EVENLY splits each payer's contribution among themselves", () => {
-    // 100-cent expense split evenly among u1 and u2 as payers.
-    // u1's share is 50 cents per expense, summed across two expenses.
+    // getBalances still uses old float + last-absorbs; totals delegate to it.
+    // e1: 100/2 → 50 each; e2: 200/3 with last absorbs → 66.67/66.67/66.66 rounded.
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -150,15 +157,12 @@ describe('getTotalActiveUserPaidFor', () => {
       }),
     ]
 
-    // e1: u1 pays 100/2 = 50; e2: u1 pays 200/3 ≈ 66.67 → ≈ 116.67
-    expect(getTotalActiveUserPaidFor('u1', expenses)).toBeCloseTo(
-      50 + 200 / 3,
-      2,
-    )
+    const total = getTotalActiveUserPaidFor('u1', expenses)
+    expect(total).toBe(Math.round(50 + 200 / 3))
   })
 
-  it("multi-payer BY_AMOUNT records each payer's literal share contribution", () => {
-    // u1's contribution is exactly the shares value when BY_AMOUNT.
+  it("multi-payer BY_AMOUNT records each payer's contribution via getBalances", () => {
+    // Old getBalances treats BY_AMOUNT as weights; 40+60=100 → exact.
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -178,8 +182,6 @@ describe('getTotalActiveUserPaidFor', () => {
   })
 
   it('multi-payer BY_SHARES weights each payer by share ratio', () => {
-    // e1: total shares = 3, u1 has 1 → u1 pays 100 * 1/3 ≈ 33.33
-    // e2: total shares = 5, u1 has 2 → u1 pays 200 * 2/5 = 80
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -195,15 +197,12 @@ describe('getTotalActiveUserPaidFor', () => {
       }),
     ]
 
-    expect(getTotalActiveUserPaidFor('u1', expenses)).toBeCloseTo(
-      100 * (1 / 3) + 80,
-      2,
-    )
+    // e1 last-absorbs: u1 gets floor path then Math.round on total
+    const total = getTotalActiveUserPaidFor('u1', expenses)
+    expect(total).toBe(Math.round(100 * (1 / 3) + 80))
   })
 
   it('multi-payer BY_PERCENTAGE returns amount × shares / 10000 for each payer', () => {
-    // e1: u1 has 3000bp = 30% → 1000 * 0.30 = 300
-    // e2: u1 has 5000bp = 50% → 2000 * 0.50 = 1000
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -219,12 +218,12 @@ describe('getTotalActiveUserPaidFor', () => {
       }),
     ]
 
-    expect(getTotalActiveUserPaidFor('u1', expenses)).toBeCloseTo(300 + 1000, 2)
+    expect(getTotalActiveUserPaidFor('u1', expenses)).toBe(300 + 1000)
   })
 })
 
 describe('getTotalActiveUserShare', () => {
-  it('sums active user shares across expenses', () => {
+  it('sums active user shares across expenses via getBalances', () => {
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -253,13 +252,12 @@ describe('getTotalActiveUserShare', () => {
       }),
     ]
 
-    expect(getTotalActiveUserShare('u1', expenses)).toBeCloseTo(
-      100 / 3 + 30 + 25,
-      2,
-    )
+    // Global getBalances: exact u1 = 100/3 + 30 + 25 ≈ 88.333 → 89 after remainder
+    const total = getTotalActiveUserShare('u1', expenses)
+    expect(total).toBe(89)
   })
 
-  it('rounds total share to 2 decimals', () => {
+  it('returns integer cents (no parseFloat toFixed)', () => {
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -284,9 +282,360 @@ describe('getTotalActiveUserShare', () => {
     ]
 
     const total = getTotalActiveUserShare('u1', expenses)
+    expect(Number.isInteger(total)).toBe(true)
+  })
+})
 
-    expect(total).toBe(33.67)
-    expect(total.toFixed(2)).toBe('33.67')
+describe('calculateExactShares', () => {
+  it('EVENLY divides amount by N as Decimals', () => {
+    const result = calculateExactShares({
+      amount: 100,
+      splitMode: 'EVENLY',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 1 },
+        { id: 'c', shares: 1 },
+      ],
+    })
+    expect(result.a.toString()).toBe(new Decimal(100).div(3).toString())
+    expect(result.b.toString()).toBe(new Decimal(100).div(3).toString())
+    expect(result.c.toString()).toBe(new Decimal(100).div(3).toString())
+  })
+
+  it('BY_SHARES weights by shares / Σshares', () => {
+    const result = calculateExactShares({
+      amount: 600,
+      splitMode: 'BY_SHARES',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 2 },
+        { id: 'c', shares: 3 },
+      ],
+    })
+    expect(result.a.toNumber()).toBe(100)
+    expect(result.b.toNumber()).toBe(200)
+    expect(result.c.toNumber()).toBe(300)
+  })
+
+  it('BY_PERCENTAGE uses shares / 10000', () => {
+    const result = calculateExactShares({
+      amount: 1000,
+      splitMode: 'BY_PERCENTAGE',
+      participants: [
+        { id: 'a', shares: 2500 },
+        { id: 'b', shares: 7500 },
+      ],
+    })
+    expect(result.a.toNumber()).toBe(250)
+    expect(result.b.toNumber()).toBe(750)
+  })
+
+  it('BY_AMOUNT returns literal shares', () => {
+    const result = calculateExactShares({
+      amount: 999,
+      splitMode: 'BY_AMOUNT',
+      participants: [
+        { id: 'a', shares: 123 },
+        { id: 'b', shares: 456 },
+      ],
+    })
+    expect(result.a.toNumber()).toBe(123)
+    expect(result.b.toNumber()).toBe(456)
+  })
+
+  it('ITEMIZED returns literal shares (same as BY_AMOUNT)', () => {
+    const result = calculateExactShares({
+      amount: 10000,
+      splitMode: 'ITEMIZED',
+      participants: [
+        { id: 'alice', shares: 7000 },
+        { id: 'bob', shares: 3000 },
+      ],
+    })
+    expect(result.alice.toNumber()).toBe(7000)
+    expect(result.bob.toNumber()).toBe(3000)
+  })
+
+  it('0 amount yields all zeros', () => {
+    const result = calculateExactShares({
+      amount: 0,
+      splitMode: 'EVENLY',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 1 },
+      ],
+    })
+    expect(result.a.toNumber()).toBe(0)
+    expect(result.b.toNumber()).toBe(0)
+  })
+
+  it('empty participants yields empty record', () => {
+    expect(
+      calculateExactShares({
+        amount: 100,
+        splitMode: 'EVENLY',
+        participants: [],
+      }),
+    ).toEqual({})
+  })
+
+  it('BY_SHARES with 0 total shares yields zeros', () => {
+    const result = calculateExactShares({
+      amount: 100,
+      splitMode: 'BY_SHARES',
+      participants: [
+        { id: 'a', shares: 0 },
+        { id: 'b', shares: 0 },
+      ],
+    })
+    expect(result.a.toNumber()).toBe(0)
+    expect(result.b.toNumber()).toBe(0)
+  })
+})
+
+describe('distributeRemainder', () => {
+  it('exact division produces no remainder', () => {
+    const exact = calculateExactShares({
+      amount: 100,
+      splitMode: 'EVENLY',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 1 },
+      ],
+    })
+    const result = distributeRemainder(exact, 100)
+    expect(result).toEqual({ a: 50, b: 50 })
+  })
+
+  it('positive remainder: 100/3 → 33/33/34', () => {
+    const exact = calculateExactShares({
+      amount: 100,
+      splitMode: 'EVENLY',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 1 },
+        { id: 'c', shares: 1 },
+      ],
+    })
+    const result = distributeRemainder(exact, 100, { seed: 0 })
+    expect(sumValues(result)).toBe(100)
+    expect(Object.values(result).sort((x, y) => x - y)).toEqual([33, 33, 34])
+  })
+
+  it('negative amount (refund) truncates toward zero', () => {
+    const exact = calculateExactShares({
+      amount: -101,
+      splitMode: 'EVENLY',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 1 },
+        { id: 'c', shares: 1 },
+      ],
+    })
+    const result = distributeRemainder(exact, -101, { seed: 0 })
+    expect(sumValues(result)).toBe(-101)
+    expect(Object.values(result).every((n) => n <= 0)).toBe(true)
+  })
+
+  it('tie-break with seed is deterministic and seed-dependent', () => {
+    const exact = calculateExactShares({
+      amount: 100,
+      splitMode: 'EVENLY',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 1 },
+        { id: 'c', shares: 1 },
+      ],
+    })
+    const r0 = distributeRemainder(exact, 100, { seed: 0 })
+    const r1 = distributeRemainder(exact, 100, { seed: 1 })
+    const r0b = distributeRemainder(exact, 100, { seed: 0 })
+
+    expect(r0).toEqual(r0b)
+    expect(sumValues(r0)).toBe(100)
+    expect(sumValues(r1)).toBe(100)
+    // Same frac for all → seed rotates who gets the extra cent
+    expect(r0).not.toEqual(r1)
+  })
+
+  it('BY_AMOUNT payer fallback gives entire diff to payerId', () => {
+    const exact = calculateExactShares({
+      amount: 100,
+      splitMode: 'BY_AMOUNT',
+      participants: [
+        { id: 'a', shares: 30 },
+        { id: 'b', shares: 30 },
+      ],
+    })
+    const result = distributeRemainder(exact, 100, { payerId: 'payer' })
+    expect(result.a).toBe(30)
+    expect(result.b).toBe(30)
+    expect(result.payer).toBe(40)
+    expect(sumValues(result)).toBe(100)
+  })
+
+  it('empty participants with payerId assigns full amount to payer', () => {
+    expect(distributeRemainder({}, 50, { payerId: 'payer' })).toEqual({
+      payer: 50,
+    })
+  })
+
+  it('empty participants without payerId returns empty', () => {
+    expect(distributeRemainder({}, 50)).toEqual({})
+  })
+})
+
+describe('calculateShares', () => {
+  it('sums to expense.amount exactly for EVENLY', () => {
+    const expense = makeExpense({
+      amount: 100,
+      splitMode: 'EVENLY',
+      paidFor: [
+        makePaidFor('u1', 1),
+        makePaidFor('u2', 1),
+        makePaidFor('u3', 1),
+      ],
+    })
+    const shares = calculateShares(expense)
+    expect(sumValues(shares)).toBe(100)
+    expect(Object.values(shares).sort((a, b) => a - b)).toEqual([33, 33, 34])
+  })
+
+  it('BY_AMOUNT mismatch gives residual to first payer', () => {
+    const expense = makeExpense({
+      amount: 100,
+      splitMode: 'BY_AMOUNT',
+      paidByList: [makePaidBy('payer', 1)],
+      paidFor: [makePaidFor('u1', 30), makePaidFor('u2', 30)],
+    })
+    const shares = calculateShares(expense)
+    expect(shares.u1).toBe(30)
+    expect(shares.u2).toBe(30)
+    expect(shares.payer).toBe(40)
+    expect(sumValues(shares)).toBe(100)
+  })
+
+  it('payer-not-in-paidFor still receives residual for BY_AMOUNT', () => {
+    const expense = makeExpense({
+      amount: 101,
+      splitMode: 'BY_AMOUNT',
+      paidByList: [makePaidBy('payer', 1)],
+      paidFor: [
+        makePaidFor('u1', 10),
+        makePaidFor('u2', 10),
+        makePaidFor('u3', 10),
+      ],
+    })
+    const shares = calculateShares(expense)
+    expect(shares.payer).toBe(71)
+    expect(shares.u1).toBe(10)
+    expect(sumValues(shares)).toBe(101)
+  })
+
+  it('negative amounts distribute with toward-zero truncation', () => {
+    const expense = makeExpense({
+      amount: -101,
+      splitMode: 'EVENLY',
+      paidFor: [
+        makePaidFor('u1', 1),
+        makePaidFor('u2', 1),
+        makePaidFor('u3', 1),
+      ],
+    })
+    const shares = calculateShares(expense)
+    expect(sumValues(shares)).toBe(-101)
+  })
+
+  it('tie-break depends on expenseDate seed', () => {
+    const base = {
+      amount: 100,
+      splitMode: 'EVENLY' as const,
+      paidFor: [
+        makePaidFor('u1', 1),
+        makePaidFor('u2', 1),
+        makePaidFor('u3', 1),
+      ],
+    }
+    // Pick seeds with different offsets mod 3 so the rotated winner differs.
+    const a = calculateShares(
+      makeExpense({ ...base, expenseDate: new Date(0) }),
+    )
+    const b = calculateShares(
+      makeExpense({ ...base, expenseDate: new Date(1) }),
+    )
+    expect(sumValues(a)).toBe(100)
+    expect(sumValues(b)).toBe(100)
+    expect(a).not.toEqual(b)
+  })
+
+  it('ITEMIZED cross-currency treats shares as BY_SHARES weights', () => {
+    const expense = makeExpense({
+      amount: 12,
+      originalAmount: 20100,
+      originalCurrency: 'ARS',
+      conversionRate: 0.00059,
+      splitMode: 'ITEMIZED',
+      paidFor: [makePaidFor('alice', 6700), makePaidFor('bob', 13400)],
+      paidByList: [makePaidBy('alice', 1)],
+    })
+    const shares = calculateShares(expense)
+    expect(sumValues(shares)).toBe(12)
+    expect(shares.alice + shares.bob).toBe(12)
+  })
+})
+
+describe('calculatePaidByShares', () => {
+  it('sums to expense.amount for EVENLY', () => {
+    const expense = makeExpense({
+      amount: 100,
+      paidBySplitMode: 'EVENLY',
+      paidByList: [
+        makePaidBy('u1', 1),
+        makePaidBy('u2', 1),
+        makePaidBy('u3', 1),
+      ],
+    })
+    const shares = calculatePaidByShares(expense)
+    expect(sumValues(shares)).toBe(100)
+  })
+
+  it('cross-currency converts then distributes against ledger amount', () => {
+    const expense = makeExpense({
+      amount: 9200,
+      originalAmount: 10000,
+      originalCurrency: 'USD',
+      conversionRate: 0.92,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [makePaidBy('u1', 7000), makePaidBy('u2', 3000)],
+    })
+    const shares = calculatePaidByShares(expense)
+    expect(sumValues(shares)).toBe(9200)
+    // 7000*0.92=6440, 3000*0.92=2760 exact
+    expect(shares.u1).toBe(6440)
+    expect(shares.u2).toBe(2760)
+  })
+
+  it('BY_AMOUNT mismatch residual goes to first payer', () => {
+    const expense = makeExpense({
+      amount: 100,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [makePaidBy('u1', 40), makePaidBy('u2', 40)],
+    })
+    const shares = calculatePaidByShares(expense)
+    expect(shares.u1).toBe(60) // 40 + residual 20
+    expect(shares.u2).toBe(40)
+    expect(sumValues(shares)).toBe(100)
+  })
+
+  it('ITEMIZED paidBySplitMode treated as BY_AMOUNT', () => {
+    const expense = makeExpense({
+      amount: 100,
+      paidBySplitMode: 'ITEMIZED',
+      paidByList: [makePaidBy('u1', 60), makePaidBy('u2', 40)],
+    })
+    const shares = calculatePaidByShares(expense)
+    expect(shares.u1).toBe(60)
+    expect(shares.u2).toBe(40)
   })
 })
 
@@ -314,7 +663,7 @@ describe('calculateShare', () => {
     expect(calculateShare('u3', expense)).toBe(0)
   })
 
-  it('EVENLY divides expense amount by participants', () => {
+  it('EVENLY returns integer cents summing to amount', () => {
     const expense: ShareExpense = {
       amount: 100,
       isReimbursement: false,
@@ -326,9 +675,11 @@ describe('calculateShare', () => {
       ],
     }
 
-    expect(calculateShare('u1', expense)).toBeCloseTo(100 / 3)
-    expect(calculateShare('u2', expense)).toBeCloseTo(100 / 3)
-    expect(calculateShare('u3', expense)).toBeCloseTo(100 / 3)
+    const s1 = calculateShare('u1', expense)
+    const s2 = calculateShare('u2', expense)
+    const s3 = calculateShare('u3', expense)
+    expect(s1 + s2 + s3).toBe(100)
+    expect([s1, s2, s3].sort((a, b) => a - b)).toEqual([33, 33, 34])
   })
 
   it('BY_AMOUNT returns exact share amount', () => {
@@ -337,8 +688,10 @@ describe('calculateShare', () => {
       isReimbursement: false,
       splitMode: 'BY_AMOUNT',
       paidFor: [makePaidFor('u1', 123), makePaidFor('u2', 456)],
+      paidByList: [makePaidBy('payer', 1)],
     }
 
+    // residual 999-123-456=420 goes to payer; participants keep literals
     expect(calculateShare('u1', expense)).toBe(123)
     expect(calculateShare('u2', expense)).toBe(456)
   })
@@ -378,6 +731,7 @@ describe('calculateShare', () => {
       isReimbursement: false,
       splitMode: 'ITEMIZED',
       paidFor: [makePaidFor('alice', 7000), makePaidFor('bob', 3000)],
+      paidByList: [makePaidBy('alice', 1)],
     }
 
     expect(calculateShare('alice', expense)).toBe(7000)
@@ -393,10 +747,12 @@ describe('calculateShare', () => {
       isReimbursement: false,
       splitMode: 'ITEMIZED',
       paidFor: [makePaidFor('alice', 6700), makePaidFor('bob', 13400)],
+      paidByList: [makePaidBy('alice', 1)],
     }
 
-    expect(calculateShare('alice', expense)).toBeCloseTo(4)
-    expect(calculateShare('bob', expense)).toBeCloseTo(8)
+    const alice = calculateShare('alice', expense)
+    const bob = calculateShare('bob', expense)
+    expect(alice + bob).toBe(12)
   })
 
   it('mixed EVENLY + ITEMIZED totals for calculateShare', () => {
@@ -419,11 +775,27 @@ describe('calculateShare', () => {
         makePaidFor('bob', 200),
         makePaidFor('carol', 500),
       ],
+      paidByList: [makePaidBy('alice', 1)],
     })
 
     expect(aliceShare1).toBe(200)
     expect(aliceShare2).toBe(300)
     expect(aliceShare1 + aliceShare2).toBe(500)
+  })
+
+  it('delegates to calculateShares', () => {
+    const expense = makeExpense({
+      amount: 100,
+      splitMode: 'EVENLY',
+      paidFor: [
+        makePaidFor('u1', 1),
+        makePaidFor('u2', 1),
+        makePaidFor('u3', 1),
+      ],
+    })
+    const all = calculateShares(expense)
+    expect(calculateShare('u1', expense)).toBe(all.u1)
+    expect(calculateShare('u2', expense)).toBe(all.u2)
   })
 })
 
@@ -451,7 +823,7 @@ describe('calculatePaidByShare', () => {
     expect(calculatePaidByShare('u3', expense)).toBe(0)
   })
 
-  it('EVENLY divides expense amount by payer count', () => {
+  it('EVENLY divides expense amount by payer count as integer cents', () => {
     const expense: PaidByShareExpense = {
       amount: 100,
       isReimbursement: false,
@@ -463,14 +835,15 @@ describe('calculatePaidByShare', () => {
       ],
     }
 
-    expect(calculatePaidByShare('u1', expense)).toBeCloseTo(100 / 3)
-    expect(calculatePaidByShare('u2', expense)).toBeCloseTo(100 / 3)
-    expect(calculatePaidByShare('u3', expense)).toBeCloseTo(100 / 3)
+    const s1 = calculatePaidByShare('u1', expense)
+    const s2 = calculatePaidByShare('u2', expense)
+    const s3 = calculatePaidByShare('u3', expense)
+    expect(s1 + s2 + s3).toBe(100)
   })
 
-  it('BY_AMOUNT returns the literal share', () => {
+  it('BY_AMOUNT returns the literal share when sums match', () => {
     const expense: PaidByShareExpense = {
-      amount: 999,
+      amount: 579,
       isReimbursement: false,
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [makePaidBy('u1', 123), makePaidBy('u2', 456)],
@@ -509,9 +882,6 @@ describe('calculatePaidByShare', () => {
     expect(calculatePaidByShare('u3', expense)).toBe(300)
   })
 
-  // Symmetric coverage vs calculateShare: same mode math on the payer side
-  // mirrors the same mode math on the paidFor side. Both are regression
-  // guards for the symmetry claim in the design notes.
   it('mirrors calculateShare for each split mode', () => {
     const baseExpense = {
       amount: 600,
@@ -527,9 +897,6 @@ describe('calculatePaidByShare', () => {
         { participant: { id: 'u1' }, shares: 1 },
         { participant: { id: 'u2' }, shares: 2 },
       ]
-      // shares for BY_PERCENTAGE / BY_SHARES must match: 1 vs 2 out of 3.
-      // For BY_PERCENTAGE we encode that as 3333 / 6667 ≈ 33.33% / 66.67%
-      // (we use the BPS-as-shares convention, not raw percentages).
       const sharesForMode = (
         mode === 'BY_PERCENTAGE' ? [3333, 6667] : [1, 2]
       ) as [number, number]
@@ -562,20 +929,12 @@ describe('calculatePaidByShare', () => {
       const paidByU1 = calculatePaidByShare('u1', paidByExpense)
       const paidByU2 = calculatePaidByShare('u2', paidByExpense)
 
-      expect(paidByU1).toBeCloseTo(shareU1, 5)
-      expect(paidByU2).toBeCloseTo(shareU2, 5)
+      expect(paidByU1).toBe(shareU1)
+      expect(paidByU2).toBe(shareU2)
     }
   })
 
-  // ---------------------------------------------------------------------------
-  // Phase 1b: when originalCurrency + conversionRate are set, shares are
-  // in original currency cents and the returned paid amount is converted
-  // to ledger currency.
-  // ---------------------------------------------------------------------------
-
   it('cross-currency BY_AMOUNT returns the share converted to ledger currency', () => {
-    // Group EUR, paid USD. originalAmount=10000 USD cents, conversionRate=0.92.
-    // u1's share of 7000 USD cents → round(7000 * 0.92) = 6440 EUR cents.
     const expense: PaidByShareExpense = {
       amount: 9200,
       isReimbursement: false,
@@ -586,12 +945,11 @@ describe('calculatePaidByShare', () => {
       paidByList: [makePaidBy('u1', 7000), makePaidBy('u2', 3000)],
     }
 
-    expect(calculatePaidByShare('u1', expense)).toBe(Math.round(7000 * 0.92))
-    expect(calculatePaidByShare('u2', expense)).toBe(Math.round(3000 * 0.92))
+    expect(calculatePaidByShare('u1', expense)).toBe(6440)
+    expect(calculatePaidByShare('u2', expense)).toBe(2760)
   })
 
-  it('cross-currency BY_PERCENTAGE returns base × shares/10000 × conversionRate', () => {
-    // 50% of 10000 USD cents = 5000 USD cents, converted at 0.92 = 4600 EUR.
+  it('cross-currency BY_PERCENTAGE converts after percentage of original', () => {
     const expense: PaidByShareExpense = {
       amount: 9200,
       isReimbursement: false,
@@ -602,12 +960,11 @@ describe('calculatePaidByShare', () => {
       paidByList: [makePaidBy('u1', 5000), makePaidBy('u2', 5000)],
     }
 
-    expect(calculatePaidByShare('u1', expense)).toBe(Math.round(5000 * 0.92))
-    expect(calculatePaidByShare('u2', expense)).toBe(Math.round(5000 * 0.92))
+    expect(calculatePaidByShare('u1', expense)).toBe(4600)
+    expect(calculatePaidByShare('u2', expense)).toBe(4600)
   })
 
   it('cross-currency getTotalActiveUserPaidFor converts each expense independently', () => {
-    // Two cross-currency expenses; only one names u1 as payer.
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -629,8 +986,156 @@ describe('calculatePaidByShare', () => {
       }),
     ]
 
-    expect(getTotalActiveUserPaidFor('u1', expenses)).toBe(
-      Math.round(7000 * 0.92),
-    )
+    // Old getBalances: Math.round(7000*0.92) = 6440
+    expect(getTotalActiveUserPaidFor('u1', expenses)).toBe(6440)
+  })
+})
+
+describe('serializePaidFor', () => {
+  const usd = getCurrency('USD')!
+
+  it('BY_AMOUNT converts major units to minor units', () => {
+    const result = serializePaidFor({
+      splitMode: 'BY_AMOUNT',
+      amount: 100,
+      currency: usd,
+      paidFor: [
+        { participant: { id: 'a' }, shares: 10.5 },
+        { participant: { id: 'b' }, shares: 20 },
+      ],
+    })
+    expect(result.map((p) => p.shares)).toEqual([1050, 2000])
+  })
+
+  it('BY_AMOUNT with conversionRate converts original → ledger', () => {
+    const result = serializePaidFor({
+      splitMode: 'BY_AMOUNT',
+      amount: 92,
+      currency: usd,
+      conversionRate: 0.92,
+      paidFor: [
+        { participant: { id: 'a' }, shares: 70 },
+        { participant: { id: 'b' }, shares: 30 },
+      ],
+    })
+    // amountAsMinorUnits(70*0.92, USD) = round(64.4 * 100) = 6440
+    expect(result.map((p) => p.shares)).toEqual([6440, 2760])
+  })
+
+  it('BY_PERCENTAGE converts to basis points', () => {
+    const result = serializePaidFor({
+      splitMode: 'BY_PERCENTAGE',
+      amount: 100,
+      currency: usd,
+      paidFor: [
+        { participant: { id: 'a' }, shares: 25 },
+        { participant: { id: 'b' }, shares: 75 },
+      ],
+    })
+    expect(result.map((p) => p.shares)).toEqual([2500, 7500])
+  })
+
+  it('EVENLY/BY_SHARES round weights', () => {
+    const evenly = serializePaidFor({
+      splitMode: 'EVENLY',
+      amount: 100,
+      currency: usd,
+      paidFor: [
+        { participant: { id: 'a' }, shares: 1.2 },
+        { participant: { id: 'b' }, shares: 1.8 },
+      ],
+    })
+    expect(evenly.map((p) => p.shares)).toEqual([1, 2])
+
+    const byShares = serializePaidFor({
+      splitMode: 'BY_SHARES',
+      amount: 100,
+      currency: usd,
+      paidFor: [
+        { participant: { id: 'a' }, shares: 1.4 },
+        { participant: { id: 'b' }, shares: 2.6 },
+      ],
+    })
+    expect(byShares.map((p) => p.shares)).toEqual([1, 3])
+  })
+
+  it('does not convert unitless modes with conversionRate', () => {
+    const result = serializePaidFor({
+      splitMode: 'BY_PERCENTAGE',
+      amount: 100,
+      currency: usd,
+      conversionRate: 0.92,
+      paidFor: [
+        { participant: { id: 'a' }, shares: 50 },
+        { participant: { id: 'b' }, shares: 50 },
+      ],
+    })
+    expect(result.map((p) => p.shares)).toEqual([5000, 5000])
+  })
+
+  it('ITEMIZED same as BY_AMOUNT', () => {
+    const result = serializePaidFor({
+      splitMode: 'ITEMIZED',
+      amount: 100,
+      currency: usd,
+      paidFor: [{ participant: { id: 'a' }, shares: 12.34 }],
+    })
+    expect(result[0].shares).toBe(1234)
+  })
+})
+
+describe('serializePaidBy', () => {
+  const usd = getCurrency('USD')!
+  const eur = getCurrency('EUR')!
+
+  it('BY_AMOUNT always stores original/input currency minor units', () => {
+    const result = serializePaidBy({
+      paidBySplitMode: 'BY_AMOUNT',
+      amount: 100,
+      inputCurrency: usd,
+      conversionRate: 0.92,
+      paidByList: [
+        { participant: { id: 'a' }, shares: 70 },
+        { participant: { id: 'b' }, shares: 30 },
+      ],
+    })
+    // NOT multiplied by conversionRate
+    expect(result.map((p) => p.shares)).toEqual([7000, 3000])
+  })
+
+  it('BY_PERCENTAGE converts to BPS', () => {
+    const result = serializePaidBy({
+      paidBySplitMode: 'BY_PERCENTAGE',
+      amount: 100,
+      inputCurrency: eur,
+      paidByList: [
+        { participant: { id: 'a' }, shares: 33.33 },
+        { participant: { id: 'b' }, shares: 66.67 },
+      ],
+    })
+    expect(result.map((p) => p.shares)).toEqual([3333, 6667])
+  })
+
+  it('EVENLY/BY_SHARES round weights', () => {
+    const result = serializePaidBy({
+      paidBySplitMode: 'EVENLY',
+      amount: 100,
+      inputCurrency: usd,
+      paidByList: [
+        { participant: { id: 'a' }, shares: 1 },
+        { participant: { id: 'b' }, shares: 1 },
+      ],
+    })
+    expect(result.map((p) => p.shares)).toEqual([1, 1])
+  })
+
+  it('ITEMIZED paidBy treated as BY_AMOUNT', () => {
+    const result = serializePaidBy({
+      paidBySplitMode: 'ITEMIZED',
+      amount: 100,
+      inputCurrency: usd,
+      paidByList: [{ participant: { id: 'a' }, shares: 5.5 }],
+    })
+    expect(result[0].shares).toBe(550)
   })
 })

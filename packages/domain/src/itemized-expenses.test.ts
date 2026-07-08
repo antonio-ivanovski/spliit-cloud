@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import Decimal from 'decimal.js'
 import {
   buildDefaultPaidForForSplitMode,
+  computeExactSharesFromItems,
   computePaidForFromItems,
 } from './itemized-expenses'
 import type { ExpenseApiItem } from './schemas'
@@ -29,7 +31,7 @@ describe('computePaidForFromItems', () => {
     expect(result.effectiveAmount).toBe(1000)
   })
 
-  it('single item, multiple participants, EVENLY with cents absorption', () => {
+  it('single item, multiple participants, EVENLY with remainder distribution', () => {
     const items = [
       makeItem({
         amount: 100,
@@ -42,11 +44,13 @@ describe('computePaidForFromItems', () => {
       }),
     ]
     const result = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 100)
-    // 100/3 = 33.33 each → floor = 33, last gets 34
-    expect(result.paidFor.sort()).toEqual([
-      { participant: 'p1', shares: 33 },
-      { participant: 'p2', shares: 33 },
-      { participant: 'p3', shares: 34 },
+    // 100/3 → seed 0: p1 gets extra cent
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId.p1 + byId.p2 + byId.p3).toBe(100)
+    expect([byId.p1, byId.p2, byId.p3].sort((a, b) => a - b)).toEqual([
+      33, 33, 34,
     ])
     expect(result.effectiveAmount).toBe(100)
   })
@@ -119,8 +123,7 @@ describe('computePaidForFromItems', () => {
       }),
     ]
     const result = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 1000)
-    // Item: p1 gets 600. Filler: 400 across 3 members = 133/133/134
-    // p1 total = 600 + 133 = 733, p2 = 133, p3 = 134
+    // Global: p1=733.33…, p2=p3=133.33… → seed 0: 734/133/133
     expect(result.paidFor).toHaveLength(3)
     expect(result.paidFor.map((p) => p.participant).sort()).toEqual([
       'p1',
@@ -130,11 +133,10 @@ describe('computePaidForFromItems', () => {
     const sum = result.paidFor.reduce((s, p) => s + p.shares, 0)
     expect(sum).toBe(1000)
     expect(result.effectiveAmount).toBe(1000)
-    expect(result.paidFor.sort()).toEqual([
-      { participant: 'p1', shares: 733 },
-      { participant: 'p2', shares: 133 },
-      { participant: 'p3', shares: 134 },
-    ])
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId).toEqual({ p1: 734, p2: 133, p3: 133 })
   })
 
   it('items sum < amount: filler can use a custom participant split', () => {
@@ -183,16 +185,16 @@ describe('computePaidForFromItems', () => {
       }),
     ]
     const result = computePaidForFromItems(items, ['p1', 'p2'], 1000)
-    // Item contributes nothing because no participants. Items sum = 500.
-    // Filler = 500 across 2 = 250 each
+    // Empty paidFor contributes no shares; its amount is absorbed into filler
+    // so Σ paidFor === expenseAmount (1000 EVENLY → 500 each)
     expect(result.paidFor).toHaveLength(2)
     expect(result.paidFor.map((p) => p.participant).sort()).toEqual([
       'p1',
       'p2',
     ])
     expect(result.paidFor.sort()).toEqual([
-      { participant: 'p1', shares: 250 },
-      { participant: 'p2', shares: 250 },
+      { participant: 'p1', shares: 500 },
+      { participant: 'p2', shares: 500 },
     ])
     expect(result.effectiveAmount).toBe(1000)
   })
@@ -264,10 +266,9 @@ describe('computePaidForFromItems', () => {
       }),
     ]
     const result = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 1000)
-    // Item 1: 600 EVENLY [p1,p2] → [300, 300]
-    // Item 2: 400 BY_SHARES [p2:3,p3:1] → distributeWeighted(400,[3,1],4) = [300, 100]
-    // p1: 300, p2: 300+300=600, p3: 100
-    // Sum = 1000
+    // Item 1: 600 EVENLY [p1,p2] → 300/300
+    // Item 2: 400 BY_SHARES [p2:3,p3:1] → 300/100
+    // p1: 300, p2: 600, p3: 100
     const sum = result.paidFor.reduce((s, p) => s + p.shares, 0)
     expect(sum).toBe(1000)
     expect(result.paidFor.sort()).toEqual([
@@ -275,6 +276,93 @@ describe('computePaidForFromItems', () => {
       { participant: 'p2', shares: 600 },
       { participant: 'p3', shares: 100 },
     ])
+  })
+
+  it('two $50 EVENLY/3 items → aggregated 3333/3333/3334 (global-across-items)', () => {
+    const items = [
+      makeItem({
+        amount: 5000,
+        paidFor: [
+          { participant: 'p1', shares: 1 },
+          { participant: 'p2', shares: 1 },
+          { participant: 'p3', shares: 1 },
+        ],
+        splitMode: 'EVENLY',
+      }),
+      makeItem({
+        amount: 5000,
+        paidFor: [
+          { participant: 'p1', shares: 1 },
+          { participant: 'p2', shares: 1 },
+          { participant: 'p3', shares: 1 },
+        ],
+        splitMode: 'EVENLY',
+      }),
+    ]
+    const result = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 10000)
+    // Global: 10000/3 each → not 3332/3334/3334 from per-item last-absorbs
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId.p1 + byId.p2 + byId.p3).toBe(10000)
+    expect([byId.p1, byId.p2, byId.p3].sort((a, b) => a - b)).toEqual([
+      3333, 3333, 3334,
+    ])
+  })
+
+  it('filler participates in global accumulation (items sum < amount)', () => {
+    const items = [
+      makeItem({
+        amount: 100,
+        paidFor: [
+          { participant: 'p1', shares: 1 },
+          { participant: 'p2', shares: 1 },
+          { participant: 'p3', shares: 1 },
+        ],
+        splitMode: 'EVENLY',
+      }),
+    ]
+    // expense 200 → filler 100 EVENLY across 3; total exact 200/3 each
+    const result = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 200)
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId.p1 + byId.p2 + byId.p3).toBe(200)
+    expect([byId.p1, byId.p2, byId.p3].sort((a, b) => a - b)).toEqual([
+      66, 67, 67,
+    ])
+  })
+
+  it('computeExactSharesFromItems returns non-truncated Decimals', () => {
+    const items = [
+      makeItem({
+        amount: 5000,
+        paidFor: [
+          { participant: 'p1', shares: 1 },
+          { participant: 'p2', shares: 1 },
+          { participant: 'p3', shares: 1 },
+        ],
+        splitMode: 'EVENLY',
+      }),
+      makeItem({
+        amount: 5000,
+        paidFor: [
+          { participant: 'p1', shares: 1 },
+          { participant: 'p2', shares: 1 },
+          { participant: 'p3', shares: 1 },
+        ],
+        splitMode: 'EVENLY',
+      }),
+    ]
+    const exact = computeExactSharesFromItems(items, ['p1', 'p2', 'p3'], 10000)
+    // Two × (5000/3) each — fractional, not yet distributed
+    const perItem = new Decimal(5000).div(3)
+    expect(exact.p1.equals(perItem.mul(2))).toBe(true)
+    expect(exact.p2.equals(perItem.mul(2))).toBe(true)
+    expect(exact.p3.equals(perItem.mul(2))).toBe(true)
+    // Sum equals expense amount exactly (no truncation yet)
+    const sum = exact.p1.plus(exact.p2).plus(exact.p3)
+    expect(sum.equals(10000)).toBe(true)
   })
 })
 
@@ -296,34 +384,30 @@ describe('buildDefaultPaidForForSplitMode', () => {
     ])
   })
 
-  it('BY_PERCENTAGE: distributes 10000 basis points evenly', () => {
+  it('BY_PERCENTAGE: canonical floor BPS (no last-absorbs)', () => {
     const result = buildDefaultPaidForForSplitMode(
       'BY_PERCENTAGE',
       ['a', 'b', 'c'],
       0,
     )
     expect(result).toHaveLength(3)
-    const sum = result.reduce((s, r) => s + r.shares, 0)
-    expect(sum).toBe(10000)
-    // 10000 / 3 = 3333 each, last gets 3334
+    // Math.floor(10000 / 3) = 3333 each (sum may be < 10000; read-side distributes)
     expect(result[0].shares).toBe(3333)
     expect(result[1].shares).toBe(3333)
-    expect(result[2].shares).toBe(3334)
+    expect(result[2].shares).toBe(3333)
   })
 
-  it('BY_AMOUNT: distributes expenseAmount evenly in minor units', () => {
+  it('BY_AMOUNT: canonical floor minor units (no last-absorbs)', () => {
     const result = buildDefaultPaidForForSplitMode(
       'BY_AMOUNT',
       ['a', 'b', 'c'],
       100,
     )
     expect(result).toHaveLength(3)
-    const sum = result.reduce((s, r) => s + r.shares, 0)
-    expect(sum).toBe(100)
-    // 100 / 3 = 33 each, last gets 34
+    // Math.floor(100 / 3) = 33 each
     expect(result[0].shares).toBe(33)
     expect(result[1].shares).toBe(33)
-    expect(result[2].shares).toBe(34)
+    expect(result[2].shares).toBe(33)
   })
 
   it('BY_AMOUNT works with odd amounts and single member', () => {
