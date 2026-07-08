@@ -153,11 +153,10 @@ export async function createFriendLedger(
     // PENDING EMAIL invite targeting the caller's email. Check that
     // cross-direction path so we don't create a duplicate.
     if (!existing) {
-      existing =
-        await findExistingFriendGroupByPendingEmailViaAccount(
-          callerAccountId,
-          resolvedPeer.accountId,
-        )
+      existing = await findExistingFriendGroupByPendingEmailViaAccount(
+        callerAccountId,
+        resolvedPeer.accountId,
+      )
       if (existing) return { groupId: existing, existed: true }
     }
     if (!existing) {
@@ -222,7 +221,7 @@ export async function createFriendLedger(
     const group = await tx.group.create({
       data: {
         id: randomId(),
-        name: '',
+        name: randomId(),
         information: information ?? null,
         groupType: GroupType.FRIEND,
         ledgerId: ledger.id,
@@ -439,7 +438,7 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
       .catch((err) => {
         console.error(
           `[friends] failed to auto-accept pending friend invitation ${invitation.id} for account ${accountId}. ` +
-          `Group: ${invitation.groupId}, InvitedBy: ${invitation.invitedById}.`,
+            `Group: ${invitation.groupId}, InvitedBy: ${invitation.invitedById}.`,
           err instanceof Error ? err.stack : err,
         )
       })
