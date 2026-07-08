@@ -214,7 +214,7 @@ describe('RecentGroupList', () => {
 
   // ── Empty state (no groups at all) ──────────────────────────────────
 
-  it('shows empty state with create group link when no groups', () => {
+  it('shows inline create cards when no groups at all', () => {
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [] },
       isLoading: false,
@@ -222,16 +222,31 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    expect(screen.getByText(/no groups yet/i)).toBeInTheDocument()
-    expect(screen.getByText(/create your first group/i)).toBeInTheDocument()
-    // The "Create a group" button is a link to /groups/create
-    const createLink = screen.getByRole('link', { name: /create a group/i })
-    expect(createLink).toHaveAttribute('href', '/groups/create')
+    // The Groups and Friends sections are always shown with their
+    // inline create cards as the first card.
+    expect(screen.getByTestId('create-group-card')).toBeInTheDocument()
+    expect(screen.getByTestId('create-friend-ledger-card')).toBeInTheDocument()
+    expect(screen.getByTestId('create-group-card')).toHaveAttribute(
+      'href',
+      '/groups/create',
+    )
+    expect(screen.getByTestId('create-friend-ledger-card')).toHaveAttribute(
+      'href',
+      '/friends/create',
+    )
+    // Import is now an action inside the create group card.
+    const importLink = screen.getByTestId('import-group-action')
+    expect(importLink).toHaveAttribute('href', '/groups/import')
+    // No standalone EmptyState copy remains for the "zero items" case.
+    expect(screen.queryByText(/no groups yet/i)).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(/create your first group/i),
+    ).not.toBeInTheDocument()
   })
 
   // ── Empty state with hidden groups ──────────────────────────────────
 
-  it('shows empty with show-hidden link when all groups are hidden', () => {
+  it('keeps the Groups section visible and shows the Hidden section collapsed when only hidden groups exist', () => {
     const hiddenGroup = makeGroup({
       preference: { starred: false, hidden: true },
     })
@@ -242,11 +257,16 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    expect(screen.getByText(/all your groups are hidden/i)).toBeInTheDocument()
-    const showHiddenBtn = screen.getByRole('button', {
-      name: /show hidden groups/i,
-    })
-    expect(showHiddenBtn).toBeInTheDocument()
+    // Groups section heading is always visible even when Groups is empty.
+    expect(screen.getByText('Groups')).toBeInTheDocument()
+    // The Hidden section exists with its heading trigger collapsed.
+    const hiddenHeading = screen.getByText('Hidden')
+    const hiddenTrigger = hiddenHeading.closest('button')!
+    expect(hiddenTrigger).toHaveAttribute('aria-expanded', 'false')
+    // No "all your groups are hidden" empty-state banner.
+    expect(
+      screen.queryByText(/all your groups are hidden/i),
+    ).not.toBeInTheDocument()
   })
 
   // ── Starred section ─────────────────────────────────────────────────
@@ -294,7 +314,7 @@ describe('RecentGroupList', () => {
 
   // ── Archived section ────────────────────────────────────────────────
 
-  it('renders archived groups separately', () => {
+  it('renders archived groups in a collapsed section with a chevron toggle', () => {
     const archivedGroup = makeGroup({
       id: 'g-arch',
       name: 'Old Trip',
@@ -309,13 +329,11 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    // Archived section is hidden behind the "Show archived groups" toggle
-    expect(screen.queryByText('Archived groups')).not.toBeInTheDocument()
-    expect(screen.queryByText('Old Trip')).not.toBeInTheDocument()
-    const showArchivedBtn = screen.getByRole('button', {
-      name: /show archived groups/i,
-    })
-    expect(showArchivedBtn).toBeInTheDocument()
+    // Archived heading is rendered; the trigger button is collapsed.
+    const archivedHeading = screen.getByText('Archived groups')
+    expect(archivedHeading).toBeInTheDocument()
+    const trigger = archivedHeading.closest('button')!
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })
 
   // ── Star toggle ─────────────────────────────────────────────────────

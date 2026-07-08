@@ -130,8 +130,7 @@ describe('HomePage (signed-out)', () => {
     expect(screen.getByText('Categories')).toBeInTheDocument()
   })
 
-  it('shows Create Group and Import Group buttons in signed-in view', () => {
-    // These buttons are only in SignedInHero (signed-in path)
+  it('does not render hero create/import buttons (they live in RecentGroupList now)', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: {
         id: 'user-1',
@@ -150,10 +149,8 @@ describe('HomePage (signed-out)', () => {
 
     render(<HomePage />)
 
-    expect(screen.getByText('Create a group')).toBeInTheDocument()
-    expect(
-      screen.getByText('Import group from another service'),
-    ).toBeInTheDocument()
+    // RecentGroupList is mocked; the hero no longer ships create/import buttons.
+    expect(screen.getByText('Welcome back, Alice.')).toBeInTheDocument()
   })
 })
 
@@ -182,28 +179,6 @@ describe('HomePage (signed-in)', () => {
     render(<HomePage />)
 
     expect(screen.getByText('Welcome back, Alice.')).toBeInTheDocument()
-  })
-
-  it('shows create group button', () => {
-    vi.mocked(useCurrentAccount).mockReturnValue({
-      data: {
-        id: 'user-1',
-        name: 'Alice',
-        email: 'alice@example.com',
-        image: null,
-        emailVerified: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      isPending: false,
-      isRefetching: false,
-      error: null,
-      refetch: vi.fn(),
-    })
-
-    render(<HomePage />)
-
-    expect(screen.getByText('Create a group')).toBeInTheDocument()
   })
 
   it('shows RecentGroupList container', () => {
