@@ -286,7 +286,7 @@ describe('RecentGroupList', () => {
     render(<RecentGroupList />)
 
     // Starred section heading
-    expect(screen.getByText('Starred groups')).toBeInTheDocument()
+    expect(screen.getByText('Starred')).toBeInTheDocument()
     // Group displayName is rendered as a link
     expect(screen.getByText('Starred Trip')).toBeInTheDocument()
   })
