@@ -17,8 +17,8 @@ import {
   getGroupBalances,
 } from '../api/balances'
 import { randomId } from '../api/shared'
-import { getWebBaseUrl } from '../auth/urls'
 import { sendEmail } from '../mail/send'
+import { renderInvitationEmail } from '../mail/templates'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
@@ -362,6 +362,11 @@ export async function declineInvitation(opts: {
 
 /**
  * Send the invitation email to the recipient.
+ *
+ * Body is rendered by `renderInvitationEmail` (which produces both
+ * a styled HTML body and the historical plain-text body). The HTML
+ * version matches the Spliit Cloud brand; the plain-text version is
+ * kept stable so existing inbox search filters keep matching.
  */
 export async function sendInvitationEmail(opts: {
   invitationId: string
@@ -378,90 +383,12 @@ export async function sendInvitationEmail(opts: {
   totalAmount?: number
   currencyCode?: string | null
 }) {
-  const {
-    invitationId,
-    groupId,
-    groupName,
-    inviterDisplayName,
-    inviterRole,
-    recipientEmail,
-    recipientIsExistingUser,
-    temporaryName,
-    sourceProvider,
-    sourceGroupName,
-    expenseCount,
-    totalAmount,
-    currencyCode,
-  } = opts
-
-  const webBase = getWebBaseUrl()
-  const acceptUrl = `${webBase}/groups/${groupId}`
-  const signInUrl = `${webBase}/?invitation=${invitationId}`
-
-  const subject = temporaryName
-    ? `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud as ${temporaryName}`
-    : `${inviterDisplayName} invited you to ${groupName} on Spliit Cloud`
-
-  const lines: string[] = recipientIsExistingUser
-    ? [
-        `${inviterDisplayName} (${inviterRole.toLowerCase()}) invited you to join "${groupName}" on Spliit Cloud.`,
-        ...(temporaryName
-          ? [`You will appear as "${temporaryName}" in this group.`]
-          : []),
-        '',
-        `Open Spliit to accept or decline the invitation:`,
-        acceptUrl,
-      ]
-    : [
-        `${inviterDisplayName} invited you to join "${groupName}" on Spliit Cloud.`,
-        ...(temporaryName
-          ? [`You will appear as "${temporaryName}" in this group.`]
-          : []),
-        '',
-        `Create an account to join the group:`,
-        signInUrl,
-      ]
-
-  if (sourceProvider) {
-    const PROVIDER_LABELS: Record<string, string> = {
-      SPLIIT: 'a Spliit export',
-      SPLITWISE: 'a Splitwise export',
-    }
-    const fromProvider =
-      PROVIDER_LABELS[sourceProvider] ??
-      `a ${sourceProvider.toLowerCase()} export`
-
-    lines.push('', '---', '')
-    lines.push(`This invitation is part of an import from ${fromProvider}.`)
-    if (sourceGroupName) {
-      lines.push(`Source group: ${sourceGroupName}`)
-    }
-    let expenseLine = ''
-    if (expenseCount != null) {
-      expenseLine += `The group contains ${expenseCount} expense${expenseCount === 1 ? '' : 's'} from the import`
-    }
-    if (totalAmount != null && currencyCode) {
-      const formattedTotal = `${currencyCode} ${(totalAmount / 100).toFixed(2)}`
-      expenseLine += ` (total ${formattedTotal})`
-    }
-    if (expenseLine) {
-      expenseLine += '.'
-      lines.push(expenseLine)
-    }
-  }
-
-  lines.push(
-    '',
-    `If you don't recognize this group, you can safely ignore this email.`,
-  )
-
-  const text = lines.join('\n')
-
   try {
-    await sendEmail({ to: recipientEmail, subject, text })
+    const rendered = await renderInvitationEmail(opts)
+    await sendEmail({ to: opts.recipientEmail, ...rendered })
   } catch (err) {
     console.warn(
-      `[invitations] failed to send invitation email for ${invitationId}:`,
+      `[invitations] failed to send invitation email for ${opts.invitationId}:`,
       err,
     )
   }

@@ -6,6 +6,10 @@ import { getAffectedParticipantIds } from '../api/expense-activity-diff'
 import { getWebBaseUrl } from '../auth/urls'
 import { isPlaceholderEmail } from '../invitations/display'
 import { sendEmail } from '../mail/send'
+import {
+  renderExpenseActivityEmail,
+  type ExpenseActivityInputAny,
+} from '../mail/templates'
 import type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
@@ -82,6 +86,19 @@ const GROUP_SELECT = {
     orderBy: { createdAt: 'desc' as const },
   },
 } as const
+
+type Participant = {
+  groupMember: {
+    status: string
+    account: { id: string; email: string } | null
+  } | null
+}
+type Group = {
+  groupType: string
+  name: string
+  members: Array<{ account: { id: string; name: string } | null }>
+  invitations: Array<{ temporaryName: string | null }>
+}
 
 export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   async dispatch(event: ActivityNotificationEvent): Promise<void> {
@@ -223,6 +240,46 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         `[Spliit Cloud] Expense "${title}" was removed by ${actorName} from ${dn}`,
     }
     const buildSubject = subjectForType[event.type]
+    const buildText = (displayName: string) => {
+      const lines: string[] = []
+      if (event.type === 'EXPENSE_UPDATED') {
+        lines.push(`${preamble} ${displayName}.`)
+        if (amountStr) lines.push(`Amount: ${amountStr}`)
+        if (date) lines.push(`Date: ${date}`)
+        if (changedFields?.length) {
+          lines.push(`Changed: ${changedFields.join(', ')}`)
+        }
+      } else {
+        lines.push(`${preamble} ${displayName}${date ? ` on ${date}` : ''}.`)
+      }
+      lines.push('')
+      lines.push('View it here:')
+      lines.push(expenseUrl)
+      return lines.join('\n')
+    }
+
+    // Event type narrowing for the React Email template input.
+    // Subject and text come from the legacy buildSubject/buildText; we
+    // only add the HTML body here so the HTML rendering stays out of
+    // the per-recipient filtering loop.
+    const eventType: 'EXPENSE_CREATED' | 'EXPENSE_UPDATED' | 'EXPENSE_DELETED' =
+      event.type === 'EXPENSE_UPDATED'
+        ? 'EXPENSE_UPDATED'
+        : event.type === 'EXPENSE_DELETED'
+          ? 'EXPENSE_DELETED'
+          : 'EXPENSE_CREATED'
+
+    const baseTemplate = {
+      eventType,
+      brandBaseUrl: getWebBaseUrl(),
+      actorName,
+      title,
+      amountStr,
+      date: date ?? null,
+      expenseUrl,
+    } as const
+    const changedFieldsForTemplate =
+      event.type === 'EXPENSE_UPDATED' ? changedFields : undefined
 
     await this.sendToActiveMembers({
       participants,
@@ -230,23 +287,21 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       activityId: event.activityId,
       group,
       buildSubject,
-      buildText: (displayName: string) => {
-        const lines: string[] = []
-        if (event.type === 'EXPENSE_UPDATED') {
-          lines.push(`${preamble} ${displayName}.`)
-          if (amountStr) lines.push(`Amount: ${amountStr}`)
-          if (date) lines.push(`Date: ${date}`)
-          if (changedFields?.length) {
-            lines.push(`Changed: ${changedFields.join(', ')}`)
-          }
-        } else {
-          lines.push(`${preamble} ${displayName}${date ? ` on ${date}` : ''}.`)
-        }
-        lines.push('')
-        lines.push('View it here:')
-        lines.push(expenseUrl)
-        return lines.join('\n')
-      },
+      buildText,
+      templateFor: (displayName: string): ExpenseActivityInputAny => ({
+        kind: 'expense',
+        subject: buildSubject(displayName),
+        text: buildText(displayName),
+        brandBaseUrl: baseTemplate.brandBaseUrl,
+        groupDisplayName: displayName,
+        eventType: baseTemplate.eventType,
+        actorName: baseTemplate.actorName,
+        title: baseTemplate.title,
+        amountStr: baseTemplate.amountStr,
+        date: baseTemplate.date,
+        changedFields: changedFieldsForTemplate,
+        expenseUrl: baseTemplate.expenseUrl,
+      }),
     })
   }
 
@@ -291,6 +346,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       totalAmount != null ? formatAmount(totalAmount, currencyCode) : null
 
     const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
+    const brandBaseUrl = getWebBaseUrl()
 
     await this.sendToActiveMembers({
       participants,
@@ -315,26 +371,31 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         lines.push(groupUrl)
         return lines.join('\n')
       },
+      templateFor: (displayName: string): ExpenseActivityInputAny => ({
+        kind: 'import_summary',
+        subject: `[Spliit Cloud] ${count} ${
+          count === 1 ? 'expense' : 'expenses'
+        } imported in ${displayName}`,
+        text: '',
+        brandBaseUrl,
+        groupDisplayName: displayName,
+        actorName,
+        count,
+        sourceProvider: sourceProvider ?? null,
+        totalStr,
+        groupUrl,
+      }),
     })
   }
 
   private async sendToActiveMembers(args: {
-    participants: Array<{
-      groupMember: {
-        status: string
-        account: { id: string; email: string } | null
-      } | null
-    }>
+    participants: Array<Participant>
     actor: ActivityNotificationEvent['actor']
     activityId: string
-    group: {
-      groupType: string
-      name: string
-      members: Array<{ account: { id: string; name: string } | null }>
-      invitations: Array<{ temporaryName: string | null }>
-    }
+    group: Group
     buildSubject: (displayName: string) => string
     buildText: (displayName: string) => string
+    templateFor: (displayName: string) => ExpenseActivityInputAny
   }): Promise<void> {
     for (const participant of args.participants) {
       const groupMember = participant.groupMember
@@ -356,12 +417,16 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
 
       const subject = args.buildSubject(displayName)
       const text = args.buildText(displayName)
+      const templateInput = args.templateFor(displayName)
+      // Pass the canonical subject/text computed by the dispatcher so
+      // the rendered email matches the test contract.
+      const finalInput = { ...templateInput, subject, text }
+      const rendered = await renderExpenseActivityEmail(finalInput)
 
       try {
         await sendEmail({
           to: account.email,
-          subject,
-          text,
+          ...rendered,
         })
       } catch (err) {
         console.warn(

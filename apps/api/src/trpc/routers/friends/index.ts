@@ -5,8 +5,8 @@ import {
   createFriendLedger,
   type CreateFriendLedgerPeer,
 } from '../../../lib/api/friends'
-import { getWebBaseUrl } from '../../../lib/auth/urls'
 import { sendEmail } from '../../../lib/mail/send'
+import { renderFriendLedgerEmail } from '../../../lib/mail/templates'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 
 /**
@@ -19,40 +19,18 @@ async function sendFriendLedgerNotification(opts: {
   inviterName: string
   isNewUser: boolean
 }): Promise<void> {
-  const { recipientEmail, inviterName, isNewUser } = opts
-  const webBase = getWebBaseUrl()
-
-  const subject = `${inviterName} added you as a friend on Spliit`
-
-  const lines = isNewUser
-    ? [
-        `${inviterName} would like to track shared expenses with you.`,
-        '',
-        `Create a free Spliit account to get started:`,
-        webBase,
-      ]
-    : [
-        `${inviterName} would like to track shared expenses with you.`,
-        '',
-        `Open Spliit to see your new friend ledger:`,
-        webBase,
-      ]
-
-  lines.push('')
-  lines.push(
-    `If you don't recognize this request, you can safely ignore this email.`,
-  )
-
-  await sendEmail({
-    to: recipientEmail,
-    subject,
-    text: lines.join('\n'),
-  }).catch((err: unknown) => {
+  try {
+    const rendered = await renderFriendLedgerEmail({
+      inviterName: opts.inviterName,
+      isNewUser: opts.isNewUser,
+    })
+    await sendEmail({ to: opts.recipientEmail, ...rendered })
+  } catch (err) {
     console.warn(
-      `[friends] failed to send friend ledger notification to ${recipientEmail}:`,
+      `[friends] failed to send friend ledger notification to ${opts.recipientEmail}:`,
       err,
     )
-  })
+  }
 }
 
 export const friendsRouter = createTRPCRouter({
