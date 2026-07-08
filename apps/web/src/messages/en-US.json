@@ -99,7 +99,7 @@
     "loadingRecent": "Loading recent groups…",
     "starred": "Starred groups",
     "archived": "Archived groups",
-    "hidden": "Hidden groups",
+    "hidden": "Hidden",
     "showHidden": "Show hidden groups",
     "showArchived": "Show archived groups",
     "hide": "Hide group",
@@ -389,7 +389,16 @@
     "scopePickerGroups": "Choose a group",
     "scopePickerFriends": "Choose a friend ledger",
     "scopePickerEmpty": "No groups yet",
-    "scopePickerMembers": "{count} member(s)"
+    "scopePickerMembers": "{count} member(s)",
+    "createFriendLedgerCard": {
+      "description": "Settle up one-on-one with a specific person.",
+      "title": "Create friend ledger"
+    },
+    "createGroupCard": {
+      "title": "Create a group",
+      "description": "Track shared expenses with friends, family, or roommates."
+    },
+    "importGroup": "Import group"
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",

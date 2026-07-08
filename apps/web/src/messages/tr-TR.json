@@ -110,7 +110,7 @@
       "link": "Ana sayfaya git"
     },
     "createdInviteHint": "Grup oluşturuldu. Başlamak için üyeleri davet edin.",
-    "hidden": "Gizli gruplar",
+    "hidden": "Gizli",
     "showHidden": "Gizli grupları göster",
     "hide": "Grubu gizle",
     "unhide": "Grubu göster",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "Grup silindi."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Grup oluştur",
+      "description": "Arkadaşlar, aile veya oda arkadaşlarıyla paylaşılan harcamaları takip edin."
+    },
+    "createFriendLedgerCard": {
+      "description": "Belirli bir kişiyle birebir hesaplaşın.",
+      "title": "Arkadaş defteri oluştur"
+    },
+    "importGroup": "Grubu içe aktar"
   },
   "GroupForm": {
     "title": "Grup bilgileri",

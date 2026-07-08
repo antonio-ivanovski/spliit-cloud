@@ -110,7 +110,7 @@
       "link": "Anar a l'inici"
     },
     "createdInviteHint": "Grup creat. Convida membres per començar.",
-    "hidden": "Grups amagats",
+    "hidden": "Amagats",
     "showHidden": "Mostra grups amagats",
     "hide": "Amaga el grup",
     "unhide": "Mostra el grup",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "Grup suprimit."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Crea un grup",
+      "description": "Fes el seguiment de les despeses compartides amb amics, família o companys de pis."
+    },
+    "createFriendLedgerCard": {
+      "description": "Liquida els deutes un a un amb una persona concreta.",
+      "title": "Crea un compte amb un amic"
+    },
+    "importGroup": "Importa un grup"
   },
   "GroupForm": {
     "title": "Informació del grup",

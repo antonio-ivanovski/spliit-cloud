@@ -110,7 +110,7 @@
       "link": "ホームへ移動"
     },
     "createdInviteHint": "グループを作成しました。メンバーを招待して始めましょう。",
-    "hidden": "非表示のグループ",
+    "hidden": "非表示",
     "showHidden": "非表示のグループを表示",
     "hide": "グループを非表示",
     "unhide": "グループの非表示を解除",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "グループを削除しました。"
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "グループを作成",
+      "description": "友達や家族、ルームメイトとの共有支出を記録しましょう。"
+    },
+    "createFriendLedgerCard": {
+      "description": "特定の人と1対1で精算しましょう。",
+      "title": "フレンド台帳を作成"
+    },
+    "importGroup": "グループをインポート"
   },
   "GroupForm": {
     "title": "グループ情報",

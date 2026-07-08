@@ -98,7 +98,7 @@
     "loadingRecent": "Načítání nedávných skupin…",
     "starred": "Oblíbené skupiny",
     "archived": "Archivované skupiny",
-    "hidden": "Skryté skupiny",
+    "hidden": "Skryté",
     "showHidden": "Zobrazit skryté skupiny",
     "hide": "Skrýt skupinu",
     "unhide": "Zobrazit skupinu",
@@ -368,7 +368,16 @@
       "error": {
         "generic": "Skupinu se nepodařilo smazat. Zkuste to prosím znovu."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Vytvořit skupinu",
+      "description": "Sledujte sdílené výdaje s přáteli, rodinou nebo spolubydlícími."
+    },
+    "createFriendLedgerCard": {
+      "description": "Vyrovnejte se jeden na jednoho s konkrétní osobou.",
+      "title": "Vytvořit účet s přítelem"
+    },
+    "importGroup": "Importovat skupinu"
   },
   "GroupForm": {
     "title": "Informace o skupině",

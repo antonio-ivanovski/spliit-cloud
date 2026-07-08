@@ -45,7 +45,7 @@
     "backToGroups": "그룹으로 돌아가기",
     "removeRecent": "최근 그룹 목록에서 삭제하기",
     "createdInviteHint": "그룹이 생성되었습니다. 멤버를 초대해 시작하세요.",
-    "hidden": "숨긴 그룹",
+    "hidden": "숨김",
     "showHidden": "숨긴 그룹 보기",
     "hide": "그룹 숨기기",
     "unhide": "그룹 숨기기 취소",
@@ -303,7 +303,16 @@
       "toast": {
         "deleted": "그룹이 삭제되었습니다."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "그룹 만들기",
+      "description": "친구, 가족, 룸메이트와의 공유 지출을 기록하세요."
+    },
+    "createFriendLedgerCard": {
+      "description": "특정 친구와 1대1로 정산하세요.",
+      "title": "친구 장부 만들기"
+    },
+    "importGroup": "그룹 가져오기"
   },
   "GroupForm": {
     "title": "그룹 정보",

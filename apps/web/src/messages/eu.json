@@ -110,7 +110,7 @@
       "link": "Joan hasierara"
     },
     "createdInviteHint": "Taldea sortuta. Gonbidatu kideak hasteko.",
-    "hidden": "Ezkutuko taldeak",
+    "hidden": "Ezkutukoak",
     "showHidden": "Erakutsi ezkutuko taldeak",
     "hide": "Ezkutatu taldea",
     "unhide": "Ikusi taldea berriro",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "Taldea ezabatu da."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Talde bat sortu",
+      "description": "Lagunekin, familiarekin edo bizikideekin egindako gastuak jarraitu."
+    },
+    "createFriendLedgerCard": {
+      "description": "Pertsona zehatz batekin zorrak banan-banan kitatu.",
+      "title": "Lagun-liburu bat sortu"
+    },
+    "importGroup": "Inportatu taldea"
   },
   "GroupForm": {
     "title": "Taldeko informazioa",

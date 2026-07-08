@@ -110,7 +110,7 @@
       "link": "Buka beranda"
     },
     "createdInviteHint": "Grup dibuat. Undang anggota untuk memulai.",
-    "hidden": "Grup tersembunyi",
+    "hidden": "Tersembunyi",
     "showHidden": "Tampilkan grup tersembunyi",
     "hide": "Sembunyikan grup",
     "unhide": "Tampilkan grup",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "Grup dihapus."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Buat grup",
+      "description": "Lacak pengeluaran bersama dengan teman, keluarga, atau teman sekamar."
+    },
+    "createFriendLedgerCard": {
+      "description": "Selesaikan satu lawan satu dengan orang tertentu.",
+      "title": "Buat buku besar teman"
+    },
+    "importGroup": "Impor grup"
   },
   "GroupForm": {
     "title": "Informasi grup",

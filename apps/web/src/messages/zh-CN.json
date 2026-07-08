@@ -110,7 +110,7 @@
       "link": "前往首页"
     },
     "createdInviteHint": "群组已创建。邀请成员开始使用。",
-    "hidden": "隐藏的群组",
+    "hidden": "已隐藏",
     "showHidden": "显示已隐藏的群组",
     "hide": "隐藏群组",
     "unhide": "取消隐藏群组",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "群组已删除。"
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "创建群组",
+      "description": "与朋友、家人或室友一起记录共同开支。"
+    },
+    "createFriendLedgerCard": {
+      "description": "与某位特定朋友一对一结算。",
+      "title": "创建朋友账本"
+    },
+    "importGroup": "导入群组"
   },
   "GroupForm": {
     "title": "群组信息",

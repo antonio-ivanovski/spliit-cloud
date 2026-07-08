@@ -98,7 +98,7 @@
     "loadingRecent": "Recente groepen laden…",
     "starred": "Favoriete groepen",
     "archived": "Gearchiveerde groepen",
-    "hidden": "Verborgen groepen",
+    "hidden": "Verborgen",
     "showHidden": "Verborgen groepen tonen",
     "hide": "Groep verbergen",
     "unhide": "Groep zichtbaar maken",
@@ -368,7 +368,16 @@
       "error": {
         "generic": "De groep kon niet worden verwijderd. Probeer het opnieuw."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Groep aanmaken",
+      "description": "Houd gedeelde uitgaven bij met vrienden, familie of huisgenoten."
+    },
+    "createFriendLedgerCard": {
+      "description": "Vereffen één-op-één met een specifiek persoon.",
+      "title": "Vriendenadministratie aanmaken"
+    },
+    "importGroup": "Groep importeren"
   },
   "GroupForm": {
     "title": "Groepsinformatie",

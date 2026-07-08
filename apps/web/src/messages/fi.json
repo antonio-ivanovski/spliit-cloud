@@ -98,7 +98,7 @@
     "loadingRecent": "Ladataan äskettäisiä ryhmiä…",
     "starred": "Suosikit",
     "archived": "Arkistoidut",
-    "hidden": "Piilotetut ryhmät",
+    "hidden": "Piilotettu",
     "showHidden": "Näytä piilotetut ryhmät",
     "hide": "Piilota ryhmä",
     "unhide": "Paljasta ryhmä",
@@ -368,7 +368,16 @@
       "error": {
         "generic": "Ryhmän poistaminen epäonnistui. Yritä uudelleen."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Luo ryhmä",
+      "description": "Seuraa yhteisiä kuluja ystävien, perheen tai kämppäkavereiden kanssa."
+    },
+    "createFriendLedgerCard": {
+      "description": "Tasaa velat suoraan tietyn henkilön kanssa.",
+      "title": "Luo ystäväkirjanpito"
+    },
+    "importGroup": "Tuo ryhmä"
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",

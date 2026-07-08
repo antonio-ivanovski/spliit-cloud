@@ -110,7 +110,7 @@
       "link": "Aller à l'accueil"
     },
     "createdInviteHint": "Groupe créé. Invitez des membres pour commencer.",
-    "hidden": "Groupes masqués",
+    "hidden": "Masqués",
     "showHidden": "Afficher les groupes masqués",
     "hide": "Masquer le groupe",
     "unhide": "Afficher le groupe",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "Groupe supprimé."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Créer un groupe",
+      "description": "Suivez les dépenses partagées avec vos amis, votre famille ou vos colocataires."
+    },
+    "createFriendLedgerCard": {
+      "description": "Réglez vos comptes en tête-à-tête avec une personne précise.",
+      "title": "Créer un compte entre amis"
+    },
+    "importGroup": "Importer un groupe"
   },
   "GroupForm": {
     "title": "Informations sur le groupe",

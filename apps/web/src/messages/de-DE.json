@@ -98,7 +98,7 @@
     "loadingRecent": "Lade letzte Gruppen…",
     "starred": "Favorisierte Gruppen",
     "archived": "Archivierte Gruppen",
-    "hidden": "Ausgeblendete Gruppen",
+    "hidden": "Ausgeblendet",
     "showHidden": "Ausgeblendete Gruppen anzeigen",
     "hide": "Gruppe ausblenden",
     "unhide": "Gruppe einblenden",
@@ -368,7 +368,16 @@
       "error": {
         "generic": "Die Gruppe konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Gruppe erstellen",
+      "description": "Gemeinsame Ausgaben mit Freunden, Familie oder Mitbewohnern verfolgen."
+    },
+    "createFriendLedgerCard": {
+      "description": "Direkt mit einer bestimmten Person abrechnen.",
+      "title": "Freund-Haushaltsbuch erstellen"
+    },
+    "importGroup": "Gruppe importieren"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",

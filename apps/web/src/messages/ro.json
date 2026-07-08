@@ -110,7 +110,7 @@
       "link": "Mergi la pagina principală"
     },
     "createdInviteHint": "Grup creat. Invită membri pentru a începe.",
-    "hidden": "Grupuri ascunse",
+    "hidden": "Ascunse",
     "showHidden": "Arată grupurile ascunse",
     "hide": "Ascunde grupul",
     "unhide": "Arată grupul",
@@ -368,7 +368,16 @@
       "toast": {
         "deleted": "Grup șters."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Creează un grup",
+      "description": "Urmărește cheltuielile comune cu prietenii, familia sau colegii de apartament."
+    },
+    "createFriendLedgerCard": {
+      "description": "Echilibrează socotelile unu-la-unu cu o anumită persoană.",
+      "title": "Creează registru de prieten"
+    },
+    "importGroup": "Importă grup"
   },
   "GroupForm": {
     "title": "Informații despre grup",

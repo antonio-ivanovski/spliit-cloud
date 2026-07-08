@@ -98,7 +98,7 @@
     "loadingRecent": "Wczytywanie ostatnich grup…",
     "starred": "Ulubione grupy",
     "archived": "Zarchiwizowane grupy",
-    "hidden": "Ukryte grupy",
+    "hidden": "Ukryte",
     "showHidden": "Pokaż ukryte grupy",
     "hide": "Ukryj grupę",
     "unhide": "Odkryj grupę",
@@ -368,7 +368,16 @@
       "error": {
         "generic": "Nie udało się usunąć grupy. Spróbuj ponownie."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Utwórz grupę",
+      "description": "Śledź wspólne wydatki z przyjaciółmi, rodziną lub współlokatorami."
+    },
+    "createFriendLedgerCard": {
+      "description": "Rozlicz się jeden na jeden z konkretną osobą.",
+      "title": "Utwórz rozliczenie z przyjacielem"
+    },
+    "importGroup": "Importuj grupę"
   },
   "GroupForm": {
     "title": "Informacje o grupie",
