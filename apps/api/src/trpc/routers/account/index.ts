@@ -1,4 +1,10 @@
-import { GroupInvitationStatus, GroupMemberStatus, prisma } from '@spliit/db'
+import {
+  GroupInvitationStatus,
+  GroupInvitationType,
+  GroupMemberStatus,
+  GroupType,
+  prisma,
+} from '@spliit/db'
 import { defaultSplitSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
@@ -66,9 +72,6 @@ export const accountRouter = createTRPCRouter({
       })
 
       const groupIds = memberships.map((m) => m.groupId)
-      // `archived` in the API response is the per-account "hide" preference
-      // — the underlying column is named `archived` for migration simplicity
-      // (see the schema comment on `AccountGroupPreference`).
       const prefRecords = await prisma.accountGroupPreference.findMany({
         where: {
           accountId: ctx.auth.user.id,
@@ -77,8 +80,6 @@ export const accountRouter = createTRPCRouter({
         select: {
           groupId: true,
           starred: true,
-          archived: true,
-          pinned: true,
           hidden: true,
         },
       })
@@ -87,29 +88,89 @@ export const accountRouter = createTRPCRouter({
           p.groupId,
           {
             starred: p.starred,
-            // The API exposes the per-account "hide" preference under
-            // `preference.hidden`. The DB column is still `archived` — we
-            // keep the rename at the boundary so callers see "hide" and the
-            // "archived" label is reserved for the group-level flag.
-            hidden: p.archived,
-            pinned: p.pinned,
+            hidden: p.hidden,
           },
         ]),
       )
       const defaultPref = {
         starred: false,
         hidden: false,
-        pinned: false,
       }
 
-      const entries = memberships.map((m) => ({
-        ...m.group,
-        createdAt: m.group.createdAt.toISOString(),
-        // The caller's role on this group. The web client uses it to gate
-        // the group-level archive action (ADMIN only).
-        currentMemberRole: m.role,
-        preference: prefByGroupId.get(m.groupId) ?? defaultPref,
-      }))
+      const friendGroupIds = memberships
+        .filter((m) => m.group.groupType === GroupType.FRIEND)
+        .map((m) => m.groupId)
+      const friendMemberByGroupId = new Map<
+        string,
+        { name: string; id: string } | null
+      >()
+      const friendPendingByGroupId = new Map<
+        string,
+        { name: string | null; email: string } | null
+      >()
+      if (friendGroupIds.length > 0) {
+        const friendMembers = await prisma.groupMember.findMany({
+          where: {
+            groupId: { in: friendGroupIds },
+            accountId: { not: ctx.auth.user.id },
+            status: GroupMemberStatus.ACTIVE,
+          },
+          select: {
+            groupId: true,
+            account: { select: { id: true, name: true } },
+          },
+        })
+        for (const m of friendMembers) {
+          if (!friendMemberByGroupId.has(m.groupId)) {
+            friendMemberByGroupId.set(m.groupId, {
+              id: m.account.id,
+              name: m.account.name,
+            })
+          }
+        }
+        const friendInvitations = await prisma.groupInvitation.findMany({
+          where: {
+            groupId: { in: friendGroupIds },
+            status: GroupInvitationStatus.PENDING,
+          },
+          orderBy: { createdAt: 'desc' },
+          select: {
+            groupId: true,
+            temporaryName: true,
+            email: true,
+          },
+        })
+        for (const inv of friendInvitations) {
+          if (!friendPendingByGroupId.has(inv.groupId)) {
+            friendPendingByGroupId.set(inv.groupId, {
+              name: inv.temporaryName,
+              email: inv.email,
+            })
+          }
+        }
+      }
+
+      const entries = memberships.map((m) => {
+        const isFriend = m.group.groupType === GroupType.FRIEND
+        const pendingInv = friendPendingByGroupId.get(m.groupId)
+        const displayName = isFriend
+          ? friendMemberByGroupId.get(m.groupId)?.name ||
+            pendingInv?.name ||
+            (pendingInv?.email && !isPlaceholderEmail(pendingInv.email)
+              ? pendingInv.email
+              : undefined) ||
+            ''
+          : m.group.name
+        return {
+          ...m.group,
+          createdAt: m.group.createdAt.toISOString(),
+          // The caller's role on this group. The web client uses it to gate
+          // the group-level archive action (ADMIN only).
+          currentMemberRole: m.role,
+          preference: prefByGroupId.get(m.groupId) ?? defaultPref,
+          displayName,
+        }
+      })
 
       // Default view: only non-archived groups that the user has not hidden.
       // When `includeArchived` is true, also return group-archived groups
@@ -125,9 +186,9 @@ export const accountRouter = createTRPCRouter({
       return { groups: visible }
     }),
 
-  // Server-backed preferences for a single group. The API response uses
-  // `hidden` for the per-account "hide" preference (the underlying column
-  // is `AccountGroupPreference.archived`).
+  // Server-backed preferences for a single group. The response uses `hidden`
+  // for the per-account "hide" preference, which lives on the same-named
+  // `AccountGroupPreference.hidden` column.
   preferences: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
     .query(async ({ input: { groupId }, ctx }) => {
@@ -140,10 +201,9 @@ export const accountRouter = createTRPCRouter({
         preferences: pref
           ? {
               starred: pref.starred,
-              hidden: pref.archived,
-              pinned: pref.pinned,
+              hidden: pref.hidden,
             }
-          : { starred: false, hidden: false, pinned: false },
+          : { starred: false, hidden: false },
       }
     }),
 
@@ -153,25 +213,23 @@ export const accountRouter = createTRPCRouter({
         groupId: z.string().min(1),
         starred: z.boolean().optional(),
         hidden: z.boolean().optional(),
-        pinned: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ input: { groupId, hidden, ...prefs }, ctx }) => {
-      // `hidden` (per-account "hide") maps to the `archived` column.
-      const data: {
-        starred?: boolean
-        archived?: boolean
-        pinned?: boolean
-      } = { ...prefs }
-      if (hidden !== undefined) data.archived = hidden
+    .mutation(async ({ input, ctx }) => {
+      const data: { starred?: boolean; hidden?: boolean } = {}
+      if (input.starred !== undefined) data.starred = input.starred
+      if (input.hidden !== undefined) data.hidden = input.hidden
       const preference = await prisma.accountGroupPreference.upsert({
         where: {
-          accountId_groupId: { accountId: ctx.auth.user.id, groupId },
+          accountId_groupId: {
+            accountId: ctx.auth.user.id,
+            groupId: input.groupId,
+          },
         },
         create: {
           id: randomId(),
           accountId: ctx.auth.user.id,
-          groupId,
+          groupId: input.groupId,
           ...data,
         },
         update: data,
@@ -179,8 +237,7 @@ export const accountRouter = createTRPCRouter({
       return {
         preferences: {
           starred: preference.starred,
-          hidden: preference.archived,
-          pinned: preference.pinned,
+          hidden: preference.hidden,
         },
       }
     }),
@@ -318,12 +375,12 @@ export const accountRouter = createTRPCRouter({
       return { members }
     }),
 
-  // Contacts: accounts the current user has shared groups with,
+  // Friends: accounts the current user has shared groups with,
   // ordered by number of shared groups descending. Excludes accounts
   // whose only email is a synthetic placeholder (cannot be invited
-  // via email). When `groupId` is provided, each contact also carries
+  // via email). When `groupId` is provided, each friend also carries
   // an `isMember` flag for "already a member" marking in the UI.
-  contacts: protectedProcedure
+  friends: protectedProcedure
     .input(
       z
         .object({
@@ -352,7 +409,7 @@ export const accountRouter = createTRPCRouter({
       const myGroupIds = myMemberships.map((m) => m.groupId)
 
       if (myGroupIds.length === 0) {
-        return { contacts: [] }
+        return { friends: [] }
       }
 
       // Other accounts that have also joined those groups.
@@ -413,10 +470,74 @@ export const accountRouter = createTRPCRouter({
         }
       }
 
-      const contacts = coMembers
+      // Friend-ledger lookup. A friend is considered "ledgered" if there
+      // is either a FRIEND-typed group whose friendPairKey matches the
+      // caller+friend pair, or a PENDING FRIEND email invitation from the
+      // caller targeting the friend's email.
+      const friendEmailPairs = accounts
+        .filter((a) => !isPlaceholderEmail(a.email))
+        .map((a) => {
+          const key =
+            currentId < a.id ? `${currentId}:${a.id}` : `${a.id}:${currentId}`
+          return { accountId: a.id, pairKey: key, email: a.email.toLowerCase() }
+        })
+      const activeLedgerByAccountId = new Map<string, boolean>()
+      const pendingLedgerByAccountId = new Map<string, boolean>()
+      if (friendEmailPairs.length > 0) {
+        const pairKeys = friendEmailPairs.map((p) => p.pairKey)
+        const friendGroups = await prisma.group.findMany({
+          where: {
+            groupType: GroupType.FRIEND,
+            friendPairKey: { in: pairKeys },
+          },
+          select: { friendPairKey: true },
+        })
+        const linkedPairKeys = new Set(
+          friendGroups.map((g) => g.friendPairKey!).filter(Boolean),
+        )
+        for (const pair of friendEmailPairs) {
+          if (linkedPairKeys.has(pair.pairKey)) {
+            activeLedgerByAccountId.set(pair.accountId, true)
+          }
+        }
+        const emailsToCheck = friendEmailPairs.filter(
+          (p) => !activeLedgerByAccountId.has(p.accountId),
+        )
+        if (emailsToCheck.length > 0) {
+          const pendingFriendInvites = await prisma.groupInvitation.findMany({
+            where: {
+              type: GroupInvitationType.EMAIL,
+              status: GroupInvitationStatus.PENDING,
+              invitedById: currentId,
+              group: { groupType: GroupType.FRIEND },
+              email: {
+                in: emailsToCheck.map((p) => p.email),
+                mode: 'insensitive',
+              },
+            },
+            select: { email: true },
+          })
+          const pendingEmails = new Set(
+            pendingFriendInvites.map((i) => i.email.toLowerCase()),
+          )
+          for (const pair of emailsToCheck) {
+            if (pendingEmails.has(pair.email)) {
+              pendingLedgerByAccountId.set(pair.accountId, true)
+            }
+          }
+        }
+      }
+
+      const friends = coMembers
         .map((c) => {
           const account = accountMap.get(c.accountId)
           if (!account || isPlaceholderEmail(account.email)) return null
+          let friendLedgerStatus: 'NONE' | 'INVITED' | 'ACTIVE' = 'NONE'
+          if (activeLedgerByAccountId.has(account.id)) {
+            friendLedgerStatus = 'ACTIVE'
+          } else if (pendingLedgerByAccountId.has(account.id)) {
+            friendLedgerStatus = 'INVITED'
+          }
           return {
             accountId: account.id,
             name: account.name,
@@ -426,10 +547,14 @@ export const accountRouter = createTRPCRouter({
             isPendingInvite: pendingInviteEmails.has(
               account.email.toLowerCase(),
             ),
+            hasFriendLedger:
+              activeLedgerByAccountId.has(account.id) ||
+              pendingLedgerByAccountId.has(account.id),
+            friendLedgerStatus,
           }
         })
         .filter((c): c is NonNullable<typeof c> => c !== null)
 
-      return { contacts }
+      return { friends }
     }),
 })

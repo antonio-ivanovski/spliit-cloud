@@ -2,6 +2,7 @@ import {
   GroupInvitationStatus,
   GroupInvitationType,
   GroupMemberStatus,
+  GroupType,
   prisma,
   type GroupRole,
 } from '@spliit/db'
@@ -556,6 +557,11 @@ export async function listPendingEmailInvitationsForAccount(
       type: GroupInvitationType.EMAIL,
       status: GroupInvitationStatus.PENDING,
       email: accountEmail.toLowerCase(),
+      // Friend-typed group invitations are reconciled via the friend
+      // ledger auto-accept flow (`autoAcceptPendingFriendInvitationsForAccount`)
+      // so they never surface through the general "pending invitations"
+      // panel.
+      group: { groupType: GroupType.GROUP },
     },
     orderBy: [{ createdAt: 'desc' }],
     include: {

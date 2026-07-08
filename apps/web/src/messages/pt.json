@@ -7,7 +7,8 @@
       "signIn": "Iniciar sessão no Spliit Cloud",
       "createAccount": "Criar uma conta",
       "createGroup": "Criar um grupo",
-      "importGroup": "Importar grupo de outro serviço"
+      "importGroup": "Importar grupo de outro serviço",
+      "createFriendLedger": "Criar registo com um amigo"
     },
     "features": {
       "groupsSync": {
@@ -95,13 +96,7 @@
     "myGroups": "Os meus grupos",
     "create": "Criar",
     "loadingRecent": "A carregar grupos recentes…",
-    "NoRecent": {
-      "description": "Ainda não tens nenhum grupo.",
-      "create": "Criar um",
-      "orAsk": "ou pede a um amigo para te convidar para o grupo dele."
-    },
-    "recent": "Grupos recentes",
-    "starred": "Grupos favoritos",
+    "starred": "Favoritos",
     "archived": "Grupos arquivados",
     "backToGroups": "Voltar para grupos",
     "removeRecent": "Remover dos grupos recentes",
@@ -116,17 +111,19 @@
       "link": "Ir para o início"
     },
     "createdInviteHint": "Grupo criado. Convida membros para começar.",
-    "NoRecentAllHidden": {
-      "description": "Ocultaste todos os teus grupos.",
-      "showHidden": "Mostrar grupos ocultos"
-    },
-    "hidden": "Grupos ocultos",
+    "hidden": "Ocultos",
     "showHidden": "Mostrar grupos ocultos",
+    "showArchived": "Mostrar grupos arquivados",
     "hide": "Ocultar grupo",
     "unhide": "Mostrar grupo",
+    "hideFriend": "Ocultar registo com um amigo",
+    "unhideFriend": "Mostrar registo com um amigo",
     "starGroup": "Favoritar grupo",
     "unstarGroup": "Desfavoritar grupo",
+    "starFriend": "Marcar registo com um amigo como favorito",
+    "unstarFriend": "Desmarcar registo com um amigo como favorito",
     "groupActions": "Ações do grupo",
+    "friendActions": "Ações do registo com um amigo",
     "archiveGroup": "Arquivar grupo",
     "unarchiveGroup": "Desarquivar grupo",
     "archiveSuccess": "Grupo arquivado.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Deixar desvinculado",
           "leaveUnlinkedDescription": "Mantém apenas o nome — vincule depois em Membros.",
           "leaveUnlinkedFollowUp": "{name} aparecerá como uma entrada apenas com nome, sem acesso à aplicação. Pode vinculá-lo a uma conta mais tarde no separador Membros.",
-          "inviteContact": "Dos teus contactos",
-          "inviteContactDescription": "Convida um contacto de grupos onde já partilhaste.",
-          "selectContactLabel": "Contacto",
-          "selectContactPlaceholder": "Seleciona um contacto…",
-          "contactAlreadyMember": "Já é membro",
-          "contactPendingInvite": "Já convidado"
+          "inviteFriend": "Dos teus amigos",
+          "inviteFriendDescription": "Convida um amigo de grupos que já partilhaste.",
+          "selectFriendLabel": "Amigo",
+          "selectFriendPlaceholder": "Seleciona um amigo…",
+          "friendAlreadyMember": "Já é membro",
+          "friendPendingInvite": "Já convidado"
         }
       },
       "fetchingGroup": "A obter o grupo do spliit.app…",
@@ -384,7 +381,24 @@
       "toast": {
         "deleted": "Grupo eliminado."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Criar um grupo",
+      "description": "Acompanhe as despesas partilhadas com amigos, família ou companheiros de casa."
+    },
+    "groups": "Grupos",
+    "friends": "Registos com um amigo",
+    "createExpense": "Criar uma despesa",
+    "pending": "Pendente",
+    "scopePickerGroups": "Escolhe um grupo",
+    "scopePickerFriends": "Escolhe um registo com um amigo",
+    "scopePickerEmpty": "Ainda não há grupos",
+    "scopePickerMembers": "{count} membro(s)",
+    "createFriendLedgerCard": {
+      "description": "Acertar contas individualmente com uma pessoa específica.",
+      "title": "Criar registo com um amigo"
+    },
+    "importGroup": "Importar grupo"
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -1170,14 +1184,14 @@
       "tab": {
         "email": "E-mail",
         "link": "Ligação de convite",
-        "contacts": "Contactos"
+        "friends": "Amigos"
       },
       "temporaryNamePlaceholder": "ex.: colega de quarto do Alex",
-      "contactsDescription": "Convida alguém de grupos onde já partilhaste.",
-      "selectContactPlaceholder": "Seleciona uma pessoa…",
-      "contactAlreadyMember": "Já é membro",
-      "noContacts": "Ainda não há contactos. Convida a partir do separador E-mail.",
-      "contactAlreadyInvited": "Já convidado"
+      "friendsDescription": "Convida alguém dos grupos que já partilhaste.",
+      "selectFriendPlaceholder": "Seleciona um amigo…",
+      "friendAlreadyMember": "Já é membro",
+      "noFriends": "Ainda não tens amigos. Convida a partir do separador E-mail.",
+      "friendAlreadyInvited": "Já convidado"
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -1376,5 +1390,44 @@
       "step1": "Toque no botão de menu (⋮) no canto superior direito",
       "step2": "Toque em Instalar"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Criar um grupo",
+      "createFriendLedger": "Criar um registo com um amigo",
+      "showHidden": "Mostrar grupos ocultos"
+    },
+    "description": {
+      "empty": "Cria o teu primeiro {itemLabel} para começar."
+    },
+    "labels": {
+      "group": "grupo",
+      "groupPlural": "grupos",
+      "friendLedger": "registo com um amigo",
+      "friendLedgerPlural": "registos com um amigo"
+    },
+    "title": {
+      "empty": "Ainda não tens {itemLabelPlural}",
+      "filtered": "Todos os teus {itemLabelPlural} estão ocultos"
+    }
+  },
+  "Friends": {
+    "title": "Criar um registo com um amigo",
+    "peerFriendsTab": "Lista de amigos",
+    "peerEmailTab": "E-mail",
+    "peerLinkTab": "Ligação partilhável",
+    "alreadyHasLedger": "já tem um registo com um amigo",
+    "inviteSent": "Convite enviado. O teu amigo será adicionado quando se juntar ao Spliit.",
+    "inviteLinkTitle": "Partilha esta ligação",
+    "inviteLinkDescription": "Partilha esta ligação com o teu amigo para o adicionares ao registo.",
+    "copy": "Copiar",
+    "share": "Partilhar",
+    "linkHelp": "Gera uma ligação partilhável que o teu amigo pode usar para se juntar a este registo.",
+    "emailLabel": "E-mail do amigo",
+    "temporaryNameLabel": "Nome visível",
+    "temporaryNameHelp": "Insere um nome para a pessoa que estás a convidar.",
+    "friendsEmpty": "Adiciona um amigo introduzindo o e-mail dele ou partilha uma ligação para o convidar.",
+    "infoLabel": "Informação (opcional)",
+    "infoPlaceholder": "Adiciona contexto, por exemplo «Despesas de casa»"
   }
 }

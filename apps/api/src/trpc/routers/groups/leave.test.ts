@@ -856,9 +856,9 @@ describe('groupsRouter.archiveForSelf', () => {
         where: {
           accountId_groupId: { accountId: 'acct-self', groupId: 'grp-1' },
         },
-        update: { archived: true },
+        update: { hidden: true },
         create: expect.objectContaining({
-          archived: true,
+          hidden: true,
           accountId: 'acct-self',
           groupId: 'grp-1',
         }),

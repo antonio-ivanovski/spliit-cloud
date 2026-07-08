@@ -32,6 +32,9 @@ export function GroupTabs({ groupId }: Props) {
   const canEditSettings = currentMember?.role === 'ADMIN'
   const canUnarchive = !!group?.archived && currentMember?.role === 'ADMIN'
   const isArchived = !!group?.archived
+  // FRIEND-typed ledgers are strictly 2 people, so the Members tab is
+  // redundant (the peer is shown on the card already) and is hidden.
+  const isFriendLedger = group?.groupType === 'FRIEND'
 
   async function handleUnarchive() {
     try {
@@ -82,17 +85,19 @@ export function GroupTabs({ groupId }: Props) {
           </TabsTrigger>
           <TabsTrigger value="stats">{t('Stats.title')}</TabsTrigger>
           <TabsTrigger value="activity">{t('Activity.title')}</TabsTrigger>
-          <TabsTrigger value="members" className="flex items-center gap-2">
-            <span>{t('Members.title')}</span>
-            {memberCount > 0 && (
-              <Badge
-                variant="outline"
-                className="px-1.5 py-0 text-current border-current"
-              >
-                {memberCount}
-              </Badge>
-            )}
-          </TabsTrigger>
+          {!isFriendLedger && (
+            <TabsTrigger value="members" className="flex items-center gap-2">
+              <span>{t('Members.title')}</span>
+              {memberCount > 0 && (
+                <Badge
+                  variant="outline"
+                  className="px-1.5 py-0 text-current border-current"
+                >
+                  {memberCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+          )}
           {canEditSettings && (
             <TabsTrigger value="edit">{t('Settings.title')}</TabsTrigger>
           )}

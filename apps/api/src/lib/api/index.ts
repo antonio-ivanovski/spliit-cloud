@@ -24,6 +24,13 @@ export {
   getGroupExpensesParticipants,
   updateExpense,
 } from './expenses'
+export {
+  autoAcceptPendingFriendInvitationsForAccount,
+  createFriendLedger,
+  type CreateFriendLedgerArgs,
+  type CreateFriendLedgerPeer,
+  type CreateFriendLedgerResult,
+} from './friends'
 export { createGroup, getGroup, getGroups, updateGroup } from './groups'
 export {
   importGroup,

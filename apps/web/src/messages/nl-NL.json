@@ -7,7 +7,8 @@
       "signIn": "Inloggen op Spliit Cloud",
       "createAccount": "Account aanmaken",
       "createGroup": "Groep aanmaken",
-      "importGroup": "Importeer groep van een andere dienst"
+      "importGroup": "Importeer groep van een andere dienst",
+      "createFriendLedger": "Vriendenadministratie aanmaken"
     },
     "features": {
       "groupsSync": {
@@ -96,25 +97,21 @@
     "create": "Maak",
     "createdInviteHint": "Groep aangemaakt. Nodig leden uit om te beginnen.",
     "loadingRecent": "Recente groepen laden…",
-    "NoRecent": {
-      "description": "Je hebt nog geen groep.",
-      "create": "Maak er één",
-      "orAsk": "of vraag een vriend om je uit te nodigen voor hun groep."
-    },
-    "NoRecentAllHidden": {
-      "description": "Je hebt al je groepen verborgen.",
-      "showHidden": "Verborgen groepen tonen"
-    },
-    "recent": "Recente groepen",
-    "starred": "Favoriete groepen",
+    "starred": "Favoriete",
     "archived": "Gearchiveerde groepen",
-    "hidden": "Verborgen groepen",
+    "hidden": "Verborgen",
     "showHidden": "Verborgen groepen tonen",
+    "showArchived": "Gearchiveerde groepen tonen",
     "hide": "Groep verbergen",
     "unhide": "Groep zichtbaar maken",
+    "hideFriend": "Vriendenadministratie verbergen",
+    "unhideFriend": "Vriendenadministratie zichtbaar maken",
     "starGroup": "Groep als favoriet markeren",
     "unstarGroup": "Favoriet verwijderen",
+    "starFriend": "Vriendenadministratie als favoriet markeren",
+    "unstarFriend": "Favoriet verwijderen",
     "groupActions": "Groepsacties",
+    "friendActions": "Vriendenadministratie-acties",
     "archiveGroup": "Groep archiveren",
     "unarchiveGroup": "Groep uit archief halen",
     "archiveSuccess": "Groep gearchiveerd.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Niet koppelen",
           "leaveUnlinkedDescription": "Houdt alleen de naam — koppel later via Leden.",
           "leaveUnlinkedFollowUp": "{name} verschijnt als een alleen-naam vermelding zonder app-toegang. Je kunt ze later koppelen aan een account via het tabblad Leden.",
-          "inviteContact": "Uit je contacten",
-          "inviteContactDescription": "Nodig een contact uit van groepen waarmee je eerder hebt gedeeld.",
-          "selectContactLabel": "Contactpersoon",
-          "selectContactPlaceholder": "Selecteer een contact…",
-          "contactAlreadyMember": "Al lid",
-          "contactPendingInvite": "Al uitgenodigd"
+          "inviteFriend": "Van je vrienden",
+          "inviteFriendDescription": "Nodig een vriend uit uit groepen die je eerder hebt gedeeld.",
+          "selectFriendLabel": "Vriend",
+          "selectFriendPlaceholder": "Selecteer een vriend…",
+          "friendAlreadyMember": "Al lid",
+          "friendPendingInvite": "Al uitgenodigd"
         }
       },
       "fetchingGroup": "Groep ophalen van spliit.app…",
@@ -384,7 +381,24 @@
       "error": {
         "generic": "De groep kon niet worden verwijderd. Probeer het opnieuw."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Groep aanmaken",
+      "description": "Houd gedeelde uitgaven bij met vrienden, familie of huisgenoten."
+    },
+    "groups": "Groepen",
+    "friends": "Vriendenadministraties",
+    "createExpense": "Maak uitgave",
+    "pending": "In afwachting",
+    "scopePickerGroups": "Kies een groep",
+    "scopePickerFriends": "Kies een vriendenadministratie",
+    "scopePickerEmpty": "Nog geen groepen",
+    "scopePickerMembers": "{count} lid/leden",
+    "createFriendLedgerCard": {
+      "description": "Vereffen één-op-één met een specifiek persoon.",
+      "title": "Vriendenadministratie aanmaken"
+    },
+    "importGroup": "Groep importeren"
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "E-mail",
         "link": "Uitnodigingslink",
-        "contacts": "Contacten"
+        "friends": "Vrienden"
       },
       "emailDescription": "Stuur een uitnodiging via e-mail. De genodigde wordt lid zodra hij vanuit een overeenkomend account accepteert.",
       "linkDescription": "Genereer een link die één keer gebruikt kan worden om lid te worden. De link werkt niet meer zodra iemand hem accepteert.",
@@ -1173,11 +1187,11 @@
         "generateNew": "Nieuwe link genereren"
       },
       "temporaryNamePlaceholder": "bijv. Alex' huisgenoot",
-      "contactsDescription": "Nodig iemand uit van groepen waarmee je hebt gedeeld.",
-      "selectContactPlaceholder": "Selecteer een persoon…",
-      "contactAlreadyMember": "Al lid",
-      "noContacts": "Nog geen contacten. Nodig uit via het e-mailtabblad.",
-      "contactAlreadyInvited": "Al uitgenodigd"
+      "friendsDescription": "Nodig iemand uit uit groepen die je hebt gedeeld.",
+      "selectFriendPlaceholder": "Selecteer een vriend…",
+      "friendAlreadyMember": "Al lid",
+      "noFriends": "Nog geen vrienden. Nodig iemand uit via het tabblad E-mail.",
+      "friendAlreadyInvited": "Al uitgenodigd"
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -1376,5 +1390,44 @@
       "step1": "Tik rechtsboven op de menuknop (⋮)",
       "step2": "Tik op Installeren"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Groep aanmaken",
+      "createFriendLedger": "Vriendenadministratie aanmaken",
+      "showHidden": "Verborgen groepen tonen"
+    },
+    "description": {
+      "empty": "Maak je eerste {itemLabel} om te beginnen."
+    },
+    "labels": {
+      "group": "groep",
+      "groupPlural": "groepen",
+      "friendLedger": "vriendenadministratie",
+      "friendLedgerPlural": "vriendenadministraties"
+    },
+    "title": {
+      "empty": "Nog geen {itemLabelPlural}",
+      "filtered": "Al je {itemLabelPlural} zijn verborgen"
+    }
+  },
+  "Friends": {
+    "title": "Vriendenadministratie aanmaken",
+    "peerFriendsTab": "Vriendenlijst",
+    "peerEmailTab": "E-mail",
+    "peerLinkTab": "Deelbare link",
+    "alreadyHasLedger": "heeft al een vriendenadministratie",
+    "inviteSent": "Uitnodiging verstuurd. Je vriend wordt toegevoegd zodra hij of zij lid wordt van Spliit.",
+    "inviteLinkTitle": "Deel deze link",
+    "inviteLinkDescription": "Deel deze link met je vriend om hem of haar toe te voegen aan de administratie.",
+    "copy": "Kopiëren",
+    "share": "Delen",
+    "linkHelp": "Genereer een deelbare link die je vriend kan gebruiken om lid te worden van deze administratie.",
+    "emailLabel": "E-mail van vriend",
+    "temporaryNameLabel": "Weergavenaam",
+    "temporaryNameHelp": "Voer een naam in voor de persoon die je uitnodigt.",
+    "friendsEmpty": "Voeg een vriend toe door zijn of haar e-mail in te vullen, of deel een link om hem of haar uit te nodigen.",
+    "infoLabel": "Informatie (optioneel)",
+    "infoPlaceholder": "Voeg context toe, bijv. 'Huisgenotenuitgaven'"
   }
 }

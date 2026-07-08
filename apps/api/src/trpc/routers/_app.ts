@@ -4,6 +4,7 @@ import { accountRouter } from './account'
 import { aiRouter } from './ai'
 import { currencyRouter } from './currency'
 import { featuresRouter } from './features'
+import { friendsRouter } from './friends'
 import { groupsRouter } from './groups'
 import { invitationsRouter } from './invitations'
 
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   currency: currencyRouter,
   groups: groupsRouter,
   features: featuresRouter,
+  friends: friendsRouter,
   invitations: invitationsRouter,
 })
 

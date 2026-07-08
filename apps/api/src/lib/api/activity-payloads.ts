@@ -21,6 +21,9 @@ type BuildExpenseInput = {
   changedFields?: ExpenseChangedField[]
   changes?: ExpenseActivityChange[]
   affectedParticipants?: string[]
+  originalAmount?: number
+  conversionRate?: number
+  ledgerCurrencyCode?: string | null
 }
 
 export function buildExpenseActivityData(
@@ -41,6 +44,15 @@ export function buildExpenseActivityData(
     ...(input.changes !== undefined ? { changes: input.changes } : {}),
     ...(input.affectedParticipants !== undefined
       ? { affectedParticipants: input.affectedParticipants }
+      : {}),
+    ...(input.originalAmount !== undefined
+      ? { originalAmount: input.originalAmount }
+      : {}),
+    ...(input.conversionRate !== undefined
+      ? { conversionRate: input.conversionRate }
+      : {}),
+    ...(input.ledgerCurrencyCode !== undefined
+      ? { ledgerCurrencyCode: input.ledgerCurrencyCode }
       : {}),
   }
 }

@@ -7,7 +7,8 @@
       "signIn": "התחבר ל-Spliit Cloud",
       "createAccount": "צור חשבון",
       "createGroup": "צור קבוצה",
-      "importGroup": "ייבא קבוצה משירות אחר"
+      "importGroup": "ייבא קבוצה משירות אחר",
+      "createFriendLedger": "צור פנקס חבר"
     },
     "features": {
       "groupsSync": {
@@ -95,13 +96,7 @@
     "myGroups": "הקבוצות שלי",
     "create": "צור",
     "loadingRecent": "טוען קבוצות אחרונות…",
-    "NoRecent": {
-      "description": "אין לך עדיין אף קבוצה.",
-      "create": "צור אחת",
-      "orAsk": "או בקש מחבר להזמין אותך לקבוצה שלו."
-    },
-    "recent": "קבוצות אחרונות",
-    "starred": "קבוצות מסומנות בכוכב",
+    "starred": "מסומנות בכוכב",
     "archived": "קבוצות בארכיון",
     "backToGroups": "חזרה לקבוצות",
     "removeRecent": "הסר מקבוצות אחרונות",
@@ -116,17 +111,19 @@
       "link": "עבור לדף הבית"
     },
     "createdInviteHint": "קבוצה נוצרה. הזמן חברים כדי להתחיל.",
-    "NoRecentAllHidden": {
-      "description": "הסתרת את כל הקבוצות שלך.",
-      "showHidden": "הצג קבוצות מוסתרות"
-    },
-    "hidden": "קבוצות מוסתרות",
+    "hidden": "מוסתרים",
     "showHidden": "הצג קבוצות מוסתרות",
+    "showArchived": "הצג קבוצות בארכיון",
     "hide": "הסתר קבוצה",
     "unhide": "בטל הסתרה",
+    "hideFriend": "הסתר פנקס חבר",
+    "unhideFriend": "בטל הסתרת פנקס חבר",
     "starGroup": "סמן בכוכב",
     "unstarGroup": "בטל סימון כוכב",
+    "starFriend": "סמן פנקס חבר בכוכב",
+    "unstarFriend": "בטל סימון פנקס חבר בכוכב",
     "groupActions": "פעולות קבוצה",
+    "friendActions": "פעולות פנקס חבר",
     "archiveGroup": "ארכב קבוצה",
     "unarchiveGroup": "בטל ארכוב",
     "archiveSuccess": "הקבוצה אורכבה.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "השאר לא מקושר",
           "leaveUnlinkedDescription": "שומר רק את השם — קשר מאוחר יותר מחברים.",
           "leaveUnlinkedFollowUp": "{name} יופיע כרשומה עם שם בלבד ללא גישה לאפליקציה. תוכל לקשר אותו לחשבון מאוחר יותר מכרטיסיית החברים.",
-          "inviteContact": "מאנשי הקשר שלך",
-          "inviteContactDescription": "הזמן איש קשר מקבוצות ששיתפת איתן בעבר.",
-          "selectContactLabel": "איש קשר",
-          "selectContactPlaceholder": "בחר איש קשר…",
-          "contactAlreadyMember": "כבר חבר בקבוצה",
-          "contactPendingInvite": "כבר הוזמן"
+          "inviteFriend": "מהחברים שלכם",
+          "inviteFriendDescription": "הזמינו חבר מקבוצות ששיתפתם בעבר.",
+          "selectFriendLabel": "חבר",
+          "selectFriendPlaceholder": "בחרו חבר…",
+          "friendAlreadyMember": "כבר חבר",
+          "friendPendingInvite": "כבר הוזמן"
         }
       },
       "fetchingGroup": "מביא את הקבוצה מ-spliit.app…",
@@ -384,7 +381,24 @@
       "toast": {
         "deleted": "הקבוצה נמחקה."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "צור קבוצה",
+      "description": "עקוב אחר הוצאות משותפות עם חברים, משפחה או שותפי דירה."
+    },
+    "groups": "קבוצות",
+    "friends": "פנקסי חברים",
+    "createExpense": "צרו הוצאה",
+    "pending": "ממתינים",
+    "scopePickerGroups": "בחרו קבוצה",
+    "scopePickerFriends": "בחרו פנקס חבר",
+    "scopePickerEmpty": "עוד אין קבוצות",
+    "scopePickerMembers": "{count} חברים",
+    "createFriendLedgerCard": {
+      "description": "סגור חשבון אחד-על-אחד עם אדם מסוים.",
+      "title": "צור פנקס חבר"
+    },
+    "importGroup": "ייבא קבוצה"
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "דוא״ל",
         "link": "קישור הזמנה",
-        "contacts": "אנשי קשר"
+        "friends": "חברים"
       },
       "emailDescription": "שלחו הזמנה בדוא״ל. המוזמן יצטרף לאחר שיאשר אותה מחשבון תואם.",
       "linkDescription": "צרו קישור חד-פעמי שכל אחד יכול להשתמש בו כדי להצטרף. הקישור יפסיק לפעול לאחר האישור הראשון.",
@@ -1173,11 +1187,11 @@
         "shareText": "יצרתי את {groupName} עבור ההוצאות המשותפות שלנו ב-Spliit Cloud. הנה קישור הזמנה חד-פעמי — פתחו אותו כדי להצטרף:\n{inviteUrl}",
         "generateNew": "יצירת קישור חדש"
       },
-      "contactsDescription": "הזמן מישהו מקבוצות ששיתפת איתן.",
-      "selectContactPlaceholder": "בחר אדם…",
-      "contactAlreadyMember": "כבר חבר בקבוצה",
-      "noContacts": "אין אנשי קשר עדיין. הזמן מלשונית הדוא״ל.",
-      "contactAlreadyInvited": "כבר הוזמן"
+      "friendsDescription": "הזמינו מישהו מקבוצות ששיתפתם.",
+      "selectFriendPlaceholder": "בחרו חבר…",
+      "friendAlreadyMember": "כבר חבר",
+      "noFriends": "אין עדיין חברים. הזמינו מהכרטיסייה 'דוא״ל'.",
+      "friendAlreadyInvited": "כבר הוזמן"
     },
     "invitations": {
       "title": "הזמנות ממתינות",
@@ -1376,5 +1390,44 @@
       "step1": "הקש על כפתור התפריט (⋮) בפינה הימנית העליונה",
       "step2": "הקש על התקן"
     }
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "עוד אין {itemLabelPlural}",
+      "filtered": "כל {itemLabelPlural} שלך מוסתרים"
+    },
+    "description": {
+      "empty": "צרו את ה-{itemLabel} הראשון שלכם כדי להתחיל."
+    },
+    "labels": {
+      "group": "קבוצה",
+      "groupPlural": "קבוצות",
+      "friendLedger": "פנקס חבר",
+      "friendLedgerPlural": "פנקסי חברים"
+    },
+    "actions": {
+      "createGroup": "צרו קבוצה",
+      "createFriendLedger": "צרו פנקס חבר",
+      "showHidden": "הצג קבוצות מוסתרות"
+    }
+  },
+  "Friends": {
+    "title": "צור פנקס חבר",
+    "peerFriendsTab": "רשימת חברים",
+    "peerEmailTab": "דוא״ל",
+    "peerLinkTab": "קישור לשיתוף",
+    "alreadyHasLedger": "כבר יש לו פנקס חבר",
+    "inviteSent": "ההזמנה נשלחה. החבר שלכם יתווסף כשיצטרף ל-Spliit.",
+    "inviteLinkTitle": "שתפו קישור זה",
+    "inviteLinkDescription": "שתפו קישור זה עם החבר שלכם כדי להוסיף אותם לפנקס.",
+    "copy": "העתק",
+    "share": "שתף",
+    "linkHelp": "צרו קישור לשיתוף שהחבר שלכם יוכל להשתמש בו כדי להצטרף לפנקס זה.",
+    "emailLabel": "דוא״ל של החבר",
+    "temporaryNameLabel": "שם תצוגה",
+    "temporaryNameHelp": "הזן שם עבור האדם שאתה מזמין.",
+    "friendsEmpty": "הוסיפו חבר על-ידי הזנת הדוא״ל שלו או שיתוף קישור להזמנתם.",
+    "infoLabel": "מידע (לא חובה)",
+    "infoPlaceholder": "הוסיפו הקשר כמו 'הוצאות שותף לדירה'"
   }
 }

@@ -38,6 +38,45 @@ export const groupFormSchema = z
 
 export type GroupFormValues = z.infer<typeof groupFormSchema>
 
+// Friend-ledger creation form. The caller picks exactly one of three modes:
+// known peer account, email (which may resolve to an existing account or a
+// pending email invitation), or a shareable link. The exact-one invariant is
+// enforced with a superRefine because Zod discriminated unions don't compose
+// cleanly with `optional()` fields across all three paths.
+export const friendFormSchema = z
+  .object({
+    peerAccountId: z.string().min(1).optional(),
+    peerEmail: z.string().email().optional(),
+    temporaryName: z.string().trim().min(1).max(120).optional(),
+    useLink: z.boolean().optional(),
+    currency: z.string().min(1),
+    currencyCode: z.string().optional(),
+    information: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const modes = [
+      !!data.peerAccountId,
+      !!data.peerEmail,
+      !!data.useLink,
+    ].filter(Boolean).length
+    if (modes !== 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Select exactly one: a friend, an email, or a shareable link.',
+        path: ['peerAccountId'],
+      })
+    }
+    if (data.useLink && !data.temporaryName?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'temporaryName is required for link invites',
+        path: ['temporaryName'],
+      })
+    }
+  })
+
+export type FriendFormValues = z.infer<typeof friendFormSchema>
+
 const splitModeValues = [
   'EVENLY',
   'BY_SHARES',

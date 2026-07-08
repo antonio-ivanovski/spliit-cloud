@@ -7,7 +7,8 @@
       "signIn": "Bei Spliit Cloud anmelden",
       "createAccount": "Konto erstellen",
       "createGroup": "Gruppe erstellen",
-      "importGroup": "Gruppe von einem anderen Dienst importieren"
+      "importGroup": "Gruppe von einem anderen Dienst importieren",
+      "createFriendLedger": "Freund-Haushaltsbuch erstellen"
     },
     "features": {
       "groupsSync": {
@@ -96,25 +97,21 @@
     "create": "Erstellen",
     "createdInviteHint": "Gruppe erstellt. Lade Mitglieder ein, um loszulegen.",
     "loadingRecent": "Lade letzte Gruppen…",
-    "NoRecent": {
-      "description": "Du hast noch keine Gruppe.",
-      "create": "Erstelle eine",
-      "orAsk": "oder bitte einen Freund, dich zu seiner Gruppe einzuladen."
-    },
-    "NoRecentAllHidden": {
-      "description": "Du hast alle Gruppen ausgeblendet.",
-      "showHidden": "Ausgeblendete Gruppen anzeigen"
-    },
-    "recent": "Letzte Gruppen",
-    "starred": "Favorisierte Gruppen",
+    "starred": "Favorisierte",
     "archived": "Archivierte Gruppen",
-    "hidden": "Ausgeblendete Gruppen",
+    "hidden": "Ausgeblendet",
     "showHidden": "Ausgeblendete Gruppen anzeigen",
+    "showArchived": "Archivierte Gruppen anzeigen",
     "hide": "Gruppe ausblenden",
     "unhide": "Gruppe einblenden",
+    "hideFriend": "Freund-Haushaltsbuch ausblenden",
+    "unhideFriend": "Freund-Haushaltsbuch einblenden",
     "starGroup": "Gruppe mit Stern markieren",
     "unstarGroup": "Sternmarkierung entfernen",
+    "starFriend": "Freund-Haushaltsbuch mit Stern markieren",
+    "unstarFriend": "Sternmarkierung für Freund-Haushaltsbuch entfernen",
     "groupActions": "Gruppenaktionen",
+    "friendActions": "Freund-Haushaltsbuch-Aktionen",
     "archiveGroup": "Gruppe archivieren",
     "unarchiveGroup": "Gruppe wiederherstellen",
     "archiveSuccess": "Gruppe archiviert.",
@@ -272,12 +269,12 @@
           "leaveUnlinked": "Nicht verknüpfen",
           "leaveUnlinkedDescription": "Behält nur den Namen — später über Mitglieder verknüpfen.",
           "leaveUnlinkedFollowUp": "{name} wird als nur-name-Eintrag ohne App-Zugriff angezeigt. Du kannst ihn später über den Reiter „Mitglieder“ mit einem Konto verknüpfen.",
-          "inviteContact": "Aus deinen Kontakten",
-          "inviteContactDescription": "Einen Kontakt aus früheren gemeinsamen Gruppen einladen.",
-          "selectContactLabel": "Kontakt",
-          "selectContactPlaceholder": "Kontakt auswählen…",
-          "contactAlreadyMember": "Bereits Mitglied",
-          "contactPendingInvite": "Bereits eingeladen"
+          "inviteFriend": "Aus deinen Freunden",
+          "inviteFriendDescription": "Lade einen Freund aus Gruppen ein, die du zuvor geteilt hast.",
+          "selectFriendLabel": "Freund",
+          "selectFriendPlaceholder": "Wähle einen Freund…",
+          "friendAlreadyMember": "Bereits Mitglied",
+          "friendPendingInvite": "Bereits eingeladen"
         }
       },
       "fetchingGroup": "Gruppe wird von spliit.app abgerufen…",
@@ -384,7 +381,24 @@
       "error": {
         "generic": "Die Gruppe konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Gruppe erstellen",
+      "description": "Gemeinsame Ausgaben mit Freunden, Familie oder Mitbewohnern verfolgen."
+    },
+    "groups": "Gruppen",
+    "friends": "Freund-Haushaltsbücher",
+    "createExpense": "Ausgabe erstellen",
+    "pending": "Ausstehend",
+    "scopePickerGroups": "Wähle eine Gruppe",
+    "scopePickerFriends": "Wähle ein Freund-Haushaltsbuch",
+    "scopePickerEmpty": "Noch keine Gruppen",
+    "scopePickerMembers": "{count} Mitglied(er)",
+    "createFriendLedgerCard": {
+      "description": "Direkt mit einer bestimmten Person abrechnen.",
+      "title": "Freund-Haushaltsbuch erstellen"
+    },
+    "importGroup": "Gruppe importieren"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "E-Mail",
         "link": "Einladungslink",
-        "contacts": "Kontakte"
+        "friends": "Freunde"
       },
       "emailDescription": "Sende eine Einladung per E-Mail. Die eingeladene Person tritt bei, sobald sie von einem passenden Konto aus annimmt.",
       "linkDescription": "Erstelle einen Einmal-Link, mit dem jeder beitreten kann. Nach der ersten Annahme funktioniert der Link nicht mehr.",
@@ -1173,11 +1187,11 @@
         "generateNew": "Neuen Link erstellen"
       },
       "temporaryNamePlaceholder": "z. B. Alex' Mitbewohner",
-      "contactsDescription": "Lade jemanden aus gemeinsamen Gruppen ein.",
-      "selectContactPlaceholder": "Person auswählen…",
-      "contactAlreadyMember": "Bereits Mitglied",
-      "noContacts": "Noch keine Kontakte. Lade über den E-Mail-Reiter ein.",
-      "contactAlreadyInvited": "Bereits eingeladen"
+      "friendsDescription": "Lade jemanden aus Gruppen ein, die du geteilt hast.",
+      "selectFriendPlaceholder": "Wähle einen Freund…",
+      "friendAlreadyMember": "Bereits Mitglied",
+      "noFriends": "Noch keine Freunde. Lade über den E-Mail-Tab ein.",
+      "friendAlreadyInvited": "Bereits eingeladen"
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -1376,5 +1390,44 @@
       "step1": "Tippe oben rechts auf die Menü-Schaltfläche (⋮)",
       "step2": "Tippe auf Installieren"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Gruppe erstellen",
+      "createFriendLedger": "Freund-Haushaltsbuch erstellen",
+      "showHidden": "Ausgeblendete Gruppen anzeigen"
+    },
+    "description": {
+      "empty": "Erstelle dein erstes {itemLabel}, um loszulegen."
+    },
+    "labels": {
+      "group": "Gruppe",
+      "groupPlural": "Gruppen",
+      "friendLedger": "Freund-Haushaltsbuch",
+      "friendLedgerPlural": "Freund-Haushaltsbücher"
+    },
+    "title": {
+      "empty": "Noch keine {itemLabelPlural}",
+      "filtered": "Alle deine {itemLabelPlural} sind ausgeblendet"
+    }
+  },
+  "Friends": {
+    "title": "Freund-Haushaltsbuch erstellen",
+    "peerFriendsTab": "Freundesliste",
+    "peerEmailTab": "E-Mail",
+    "peerLinkTab": "Teilbarer Link",
+    "alreadyHasLedger": "hat bereits ein Freund-Haushaltsbuch",
+    "inviteSent": "Einladung gesendet. Dein Freund wird hinzugefügt, sobald er Spliit beitritt.",
+    "inviteLinkTitle": "Diesen Link teilen",
+    "inviteLinkDescription": "Teile diesen Link mit deinem Freund, um ihn zum Haushaltsbuch hinzuzufügen.",
+    "copy": "Kopieren",
+    "share": "Teilen",
+    "linkHelp": "Erzeuge einen teilbaren Link, mit dem dein Freund diesem Haushaltsbuch beitreten kann.",
+    "emailLabel": "E-Mail des Freundes",
+    "temporaryNameLabel": "Anzeigename",
+    "temporaryNameHelp": "Gib einen Namen für die Person ein, die du einlädst.",
+    "friendsEmpty": "Füge einen Freund hinzu, indem du seine E-Mail eingibst, oder teile einen Link, um ihn einzuladen.",
+    "infoLabel": "Informationen (optional)",
+    "infoPlaceholder": "Füge einen Kontext hinzu, z. B. „Mitbewohner-Ausgaben\""
   }
 }

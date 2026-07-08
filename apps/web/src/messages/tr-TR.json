@@ -7,7 +7,8 @@
       "signIn": "Spliit Cloud'da oturum açın",
       "createAccount": "Hesap oluşturun",
       "createGroup": "Grup oluştur",
-      "importGroup": "Grubu başka bir servisten içe aktar"
+      "importGroup": "Grubu başka bir servisten içe aktar",
+      "createFriendLedger": "Arkadaş defteri oluştur"
     },
     "features": {
       "groupsSync": {
@@ -95,13 +96,7 @@
     "myGroups": "Gruplarım",
     "create": "Oluştur",
     "loadingRecent": "Son gruplar yükleniyor…",
-    "NoRecent": {
-      "description": "Henüz hiçbir grubunuz yok.",
-      "create": "Bir tane oluştur",
-      "orAsk": "ya da bir arkadaşınızdan sizi grubuna davet etmesini isteyin."
-    },
-    "recent": "Son gruplar",
-    "starred": "Yıldızlı gruplar",
+    "starred": "Yıldızlı",
     "archived": "Arşivlenmiş gruplar",
     "backToGroups": "Gruplara dön",
     "removeRecent": "Son gruplardan kaldır",
@@ -116,17 +111,19 @@
       "link": "Ana sayfaya git"
     },
     "createdInviteHint": "Grup oluşturuldu. Başlamak için üyeleri davet edin.",
-    "NoRecentAllHidden": {
-      "description": "Tüm gruplarınızı gizlediniz.",
-      "showHidden": "Gizli grupları göster"
-    },
-    "hidden": "Gizli gruplar",
+    "hidden": "Gizli",
     "showHidden": "Gizli grupları göster",
+    "showArchived": "Arşivlenmiş grupları göster",
     "hide": "Grubu gizle",
     "unhide": "Grubu göster",
+    "hideFriend": "Arkadaş defterini gizle",
+    "unhideFriend": "Arkadaş defterini göster",
     "starGroup": "Yıldızla",
     "unstarGroup": "Yıldızı kaldır",
+    "starFriend": "Arkadaş defterini yıldızla",
+    "unstarFriend": "Arkadaş defterinin yıldızını kaldır",
     "groupActions": "Grup işlemleri",
+    "friendActions": "Arkadaş defteri işlemleri",
     "archiveGroup": "Grubu arşivle",
     "unarchiveGroup": "Arşivden çıkar",
     "archiveSuccess": "Grup arşivlendi.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Bağlanmamış bırak",
           "leaveUnlinkedDescription": "Yalnızca adı korur — daha sonra Üyeler'den bağlayın.",
           "leaveUnlinkedFollowUp": "{name}, uygulama erişimi olmayan yalnızca ad girişi olarak görünecektir. Daha sonra Üyeler sekmesinden bir hesaba bağlayabilirsiniz.",
-          "inviteContact": "Kişilerinizden",
-          "inviteContactDescription": "Daha önce paylaştığınız gruplardan bir kişiyi davet edin.",
-          "selectContactLabel": "Kişi",
-          "selectContactPlaceholder": "Bir kişi seçin…",
-          "contactAlreadyMember": "Zaten üye",
-          "contactPendingInvite": "Zaten davet edildi"
+          "inviteFriend": "Arkadaşlarınızdan",
+          "inviteFriendDescription": "Daha önce paylaştığınız gruplardan bir arkadaş davet edin.",
+          "selectFriendLabel": "Arkadaş",
+          "selectFriendPlaceholder": "Bir arkadaş seçin…",
+          "friendAlreadyMember": "Zaten üye",
+          "friendPendingInvite": "Zaten davet edildi"
         }
       },
       "fetchingGroup": "Grup spliit.app'ten getiriliyor…",
@@ -384,7 +381,24 @@
       "toast": {
         "deleted": "Grup silindi."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Grup oluştur",
+      "description": "Arkadaşlar, aile veya oda arkadaşlarıyla paylaşılan harcamaları takip edin."
+    },
+    "groups": "Gruplar",
+    "friends": "Arkadaş defterleri",
+    "createExpense": "Masraf oluştur",
+    "pending": "Beklemede",
+    "scopePickerGroups": "Bir grup seçin",
+    "scopePickerFriends": "Bir arkadaş defteri seçin",
+    "scopePickerEmpty": "Henüz grup yok",
+    "scopePickerMembers": "{count} üye",
+    "createFriendLedgerCard": {
+      "description": "Belirli bir kişiyle birebir hesaplaşın.",
+      "title": "Arkadaş defteri oluştur"
+    },
+    "importGroup": "Grubu içe aktar"
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "E-posta",
         "link": "Davet bağlantısı",
-        "contacts": "Kişiler"
+        "friends": "Arkadaşlar"
       },
       "emailDescription": "E-postayla davet gönderin. Davetli, eşleşen bir hesaptan kabul ettiğinde katılır.",
       "linkDescription": "Katılmak için herkesin kullanabileceği tek kullanımlık bir bağlantı oluşturun. İlk kabulden sonra bağlantı çalışmayı durdurur.",
@@ -1173,11 +1187,11 @@
         "shareText": "Spliit Cloud'da ortak harcamalarımız için az önce {groupName} grubunu oluşturdum. İşte tek kullanımlık bir davet bağlantısı — katılmak için açın:\n{inviteUrl}",
         "generateNew": "Yeni bağlantı oluştur"
       },
-      "contactsDescription": "Paylaştığınız gruplardan birini davet edin.",
-      "selectContactPlaceholder": "Bir kişi seçin…",
-      "contactAlreadyMember": "Zaten üye",
-      "noContacts": "Henüz kişi yok. E-posta sekmesinden davet edin.",
-      "contactAlreadyInvited": "Zaten davet edildi"
+      "friendsDescription": "Paylaştığınız gruplardan birini davet edin.",
+      "selectFriendPlaceholder": "Bir arkadaş seçin…",
+      "friendAlreadyMember": "Zaten üye",
+      "noFriends": "Henüz arkadaş yok. E-posta sekmesinden davet edin.",
+      "friendAlreadyInvited": "Zaten davet edildi"
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -1376,5 +1390,44 @@
       "step1": "Sağ üst köşedeki menü düğmesine (⋮) dokunun",
       "step2": "Yükle'ye dokunun"
     }
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "Henüz {itemLabelPlural} yok",
+      "filtered": "Tüm {itemLabelPlural} gizli"
+    },
+    "description": {
+      "empty": "Başlamak için ilk {itemLabel} oluşturun."
+    },
+    "labels": {
+      "group": "grup",
+      "groupPlural": "grup",
+      "friendLedger": "arkadaş defteri",
+      "friendLedgerPlural": "arkadaş defteri"
+    },
+    "actions": {
+      "createGroup": "Grup oluştur",
+      "createFriendLedger": "Arkadaş defteri oluştur",
+      "showHidden": "Gizli grupları göster"
+    }
+  },
+  "Friends": {
+    "title": "Arkadaş defteri oluştur",
+    "peerFriendsTab": "Arkadaş listesi",
+    "peerEmailTab": "E-posta",
+    "peerLinkTab": "Paylaşılabilir bağlantı",
+    "alreadyHasLedger": "zaten bir arkadaş defteri var",
+    "inviteSent": "Davet gönderildi. Arkadaşınız Spliit'e katıldığında eklenecek.",
+    "inviteLinkTitle": "Bu bağlantıyı paylaş",
+    "inviteLinkDescription": "Onları deftere eklemek için bu bağlantıyı arkadaşınızla paylaşın.",
+    "copy": "Kopyala",
+    "share": "Paylaş",
+    "linkHelp": "Arkadaşınızın bu deftere katılmak için kullanabileceği paylaşılabilir bir bağlantı oluşturun.",
+    "emailLabel": "Arkadaşın e-postası",
+    "temporaryNameLabel": "Görünen ad",
+    "temporaryNameHelp": "Davet ettiğiniz kişi için bir ad girin.",
+    "friendsEmpty": "E-postalarını girerek bir arkadaş ekleyin veya davet etmek için bir bağlantı paylaşın.",
+    "infoLabel": "Bilgi (isteğe bağlı)",
+    "infoPlaceholder": "'Oda arkadaşı harcamaları' gibi bağlam ekleyin"
   }
 }

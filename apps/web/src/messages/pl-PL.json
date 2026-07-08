@@ -7,7 +7,8 @@
       "signIn": "Zaloguj się do Spliit Cloud",
       "createAccount": "Utwórz konto",
       "createGroup": "Utwórz grupę",
-      "importGroup": "Importuj grupę z innej usługi"
+      "importGroup": "Importuj grupę z innej usługi",
+      "createFriendLedger": "Utwórz rejestr ze znajomym"
     },
     "features": {
       "groupsSync": {
@@ -96,25 +97,21 @@
     "create": "Stwórz",
     "createdInviteHint": "Grupa utworzona. Zaproś członków, aby rozpocząć.",
     "loadingRecent": "Wczytywanie ostatnich grup…",
-    "NoRecent": {
-      "description": "Nie masz jeszcze żadnej grupy.",
-      "create": "Stwórz",
-      "orAsk": "albo poproś znajomego, aby zaprosił Cię do swojej grupy."
-    },
-    "NoRecentAllHidden": {
-      "description": "Ukryłeś wszystkie swoje grupy.",
-      "showHidden": "Pokaż ukryte grupy"
-    },
-    "recent": "Ostatnie grupy",
-    "starred": "Ulubione grupy",
+    "starred": "Ulubione",
     "archived": "Zarchiwizowane grupy",
-    "hidden": "Ukryte grupy",
+    "hidden": "Ukryte",
     "showHidden": "Pokaż ukryte grupy",
+    "showArchived": "Pokaż zarchiwizowane grupy",
     "hide": "Ukryj grupę",
     "unhide": "Odkryj grupę",
+    "hideFriend": "Ukryj rejestr ze znajomym",
+    "unhideFriend": "Odkryj rejestr ze znajomym",
     "starGroup": "Oznacz gwiazdką",
     "unstarGroup": "Usuń gwiazdkę",
+    "starFriend": "Oznacz rejestr ze znajomym gwiazdką",
+    "unstarFriend": "Usuń oznaczenie rejestru ze znajomym",
     "groupActions": "Akcje grupy",
+    "friendActions": "Akcje rejestru ze znajomym",
     "archiveGroup": "Archiwizuj grupę",
     "unarchiveGroup": "Przywróć grupę",
     "archiveSuccess": "Grupa zarchiwizowana.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Pozostaw niepołączone",
           "leaveUnlinkedDescription": "Zachowuje tylko nazwę — połącz później z Członkowie.",
           "leaveUnlinkedFollowUp": "{name} pojawi się jako wpis tylko z nazwą bez dostępu do aplikacji. Możesz połączyć go z kontem później z zakładki Członkowie.",
-          "inviteContact": "Z kontaktów",
-          "inviteContactDescription": "Zaproś kontakt z grup, które współdzieliłeś.",
-          "selectContactLabel": "Kontakt",
-          "selectContactPlaceholder": "Wybierz kontakt…",
-          "contactAlreadyMember": "Już członek",
-          "contactPendingInvite": "Już zaproszony"
+          "inviteFriend": "Z twoich znajomych",
+          "inviteFriendDescription": "Zaproś znajomego z grup, które wcześniej współdzieliliście.",
+          "selectFriendLabel": "Znajomy",
+          "selectFriendPlaceholder": "Wybierz znajomego…",
+          "friendAlreadyMember": "Już jest członkiem",
+          "friendPendingInvite": "Już zaproszony"
         }
       },
       "fetchingGroup": "Pobieranie grupy z spliit.app…",
@@ -384,7 +381,24 @@
       "error": {
         "generic": "Nie udało się usunąć grupy. Spróbuj ponownie."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Utwórz grupę",
+      "description": "Śledź wspólne wydatki z przyjaciółmi, rodziną lub współlokatorami."
+    },
+    "groups": "Grupy",
+    "friends": "Rejestry ze znajomymi",
+    "createExpense": "Dodaj wydatek",
+    "pending": "Oczekujące",
+    "scopePickerGroups": "Wybierz grupę",
+    "scopePickerFriends": "Wybierz rejestr ze znajomym",
+    "scopePickerEmpty": "Nie masz jeszcze grup",
+    "scopePickerMembers": "{count} członk(ów)",
+    "createFriendLedgerCard": {
+      "description": "Rozlicz się jeden na jeden z konkretną osobą.",
+      "title": "Utwórz rozliczenie z przyjacielem"
+    },
+    "importGroup": "Importuj grupę"
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "E-mail",
         "link": "Link zaproszenia",
-        "contacts": "Kontakty"
+        "friends": "Znajomi"
       },
       "link": {
         "generate": "Wygeneruj link zaproszenia",
@@ -1173,11 +1187,11 @@
       "linkDescription": "Wygeneruj jednorazowy link, za pomocą którego można dołączyć do grupy. Link przestanie działać po pierwszym zaakceptowaniu.",
       "temporaryName": "Tymczasowa nazwa (opcjonalnie)",
       "temporaryNamePlaceholder": "np. współlokator Alexa",
-      "contactsDescription": "Zaproś kogoś z grup, które współdzieliłeś.",
-      "selectContactPlaceholder": "Wybierz osobę…",
-      "contactAlreadyMember": "Już członek",
-      "noContacts": "Brak kontaktów. Zaproś z karty E-mail.",
-      "contactAlreadyInvited": "Już zaproszony"
+      "friendsDescription": "Zaproś kogoś z grup, które współdzielisz.",
+      "selectFriendPlaceholder": "Wybierz znajomego…",
+      "friendAlreadyMember": "Już jest członkiem",
+      "noFriends": "Nie masz jeszcze znajomych. Zaproś ich z karty E-mail.",
+      "friendAlreadyInvited": "Już zaproszony"
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",
@@ -1376,5 +1390,44 @@
       "step1": "Stuknij przycisk menu (⋮) w prawym górnym rogu",
       "step2": "Stuknij Zainstaluj"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Utwórz grupę",
+      "createFriendLedger": "Utwórz rejestr ze znajomym",
+      "showHidden": "Pokaż ukryte grupy"
+    },
+    "description": {
+      "empty": "Zacznij od utworzenia pierwszego {itemLabel}."
+    },
+    "labels": {
+      "group": "grupa",
+      "groupPlural": "grupy",
+      "friendLedger": "rejestr ze znajomym",
+      "friendLedgerPlural": "rejestry ze znajomymi"
+    },
+    "title": {
+      "empty": "Nie masz jeszcze żadnych {itemLabelPlural}",
+      "filtered": "Wszystkie twoje {itemLabelPlural} są ukryte"
+    }
+  },
+  "Friends": {
+    "title": "Utwórz rejestr ze znajomym",
+    "peerFriendsTab": "Lista znajomych",
+    "peerEmailTab": "E-mail",
+    "peerLinkTab": "Link do udostępnienia",
+    "alreadyHasLedger": "ma już rejestr ze znajomym",
+    "inviteSent": "Zaproszenie wysłane. Twój znajomy zostanie dodany po dołączeniu do Spliit.",
+    "inviteLinkTitle": "Udostępnij ten link",
+    "inviteLinkDescription": "Udostępnij ten link znajomemu, aby dodać go do rejestru.",
+    "copy": "Kopiuj",
+    "share": "Udostępnij",
+    "linkHelp": "Wygeneruj link do udostępnienia, za pomocą którego znajomy dołączy do tego rejestru.",
+    "emailLabel": "E-mail znajomego",
+    "temporaryNameLabel": "Wyświetlana nazwa",
+    "temporaryNameHelp": "Wprowadź nazwę dla osoby, którą zapraszasz.",
+    "friendsEmpty": "Dodaj znajomego, wpisując jego adres e-mail, lub udostępnij link z zaproszeniem.",
+    "infoLabel": "Informacje (opcjonalnie)",
+    "infoPlaceholder": "Dodaj kontekst, np. „Wydatki ze współlokatorem“"
   }
 }

@@ -60,11 +60,11 @@ export function ImportGroupWizard() {
   )
   const destinationParticipants = destinationGroupData?.group?.participants
 
-  const { data: contactsData } = trpc.account.contacts.useQuery(
+  const { data: friendsData } = trpc.account.friends.useQuery(
     { groupId: state.targetGroupId ?? undefined },
     { enabled: true },
   )
-  const contacts = contactsData?.contacts ?? []
+  const friends = friendsData?.friends ?? []
 
   const autoMatchKeyRef = useRef<string | null>(null)
 
@@ -101,7 +101,7 @@ export function ImportGroupWizard() {
         }),
         utils.groups.balances.list.invalidate({ groupId: data.groupId }),
         utils.groups.getDetails.invalidate({ groupId: data.groupId }),
-        utils.account.contacts.invalidate(),
+        utils.account.friends.invalidate(),
       ])
       dispatch({
         type: 'IMPORT_SUCCEEDED',
@@ -324,7 +324,7 @@ export function ImportGroupWizard() {
               ? destinationParticipants
               : undefined
           }
-          contacts={contacts}
+          friends={friends}
           onBack={handleBack}
           onChange={handleMappingChange}
           onContinue={handleMappingContinue}

@@ -144,13 +144,16 @@ import { RecentGroupList } from '@/app/groups/recent-group-list'
 // ── Helpers ─────────────────────────────────────────────────────────────
 
 function makeGroup(overrides: Record<string, unknown> = {}) {
+  const name = (overrides.name as string | undefined) ?? 'Test Group'
   return {
     id: 'group-1',
-    name: 'Test Group',
+    name,
     archived: false,
+    groupType: 'GROUP' as const,
+    displayName: name,
     _count: { members: 4 },
     currentMemberRole: 'ADMIN' as const,
-    preference: { starred: false, hidden: false, pinned: false },
+    preference: { starred: false, hidden: false },
     createdAt: '2026-06-01T00:00:00Z',
     ...overrides,
   }
@@ -211,7 +214,7 @@ describe('RecentGroupList', () => {
 
   // ── Empty state (no groups at all) ──────────────────────────────────
 
-  it('shows empty state with create group link when no groups', () => {
+  it('shows inline create cards when no groups at all', () => {
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [] },
       isLoading: false,
@@ -219,18 +222,33 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    expect(screen.getByText(/don't have any group/i)).toBeInTheDocument()
-    expect(screen.getByText(/create one/i)).toBeInTheDocument()
-    // The "create one" text is wrapped in a link pointing to /groups/create
-    const createLink = screen.getByRole('link', { name: /create one/i })
-    expect(createLink).toHaveAttribute('href', '/groups/create')
+    // The Groups and Friends sections are always shown with their
+    // inline create cards as the first card.
+    expect(screen.getByTestId('create-group-card')).toBeInTheDocument()
+    expect(screen.getByTestId('create-friend-ledger-card')).toBeInTheDocument()
+    expect(screen.getByTestId('create-group-card')).toHaveAttribute(
+      'href',
+      '/groups/create',
+    )
+    expect(screen.getByTestId('create-friend-ledger-card')).toHaveAttribute(
+      'href',
+      '/friends/create',
+    )
+    // Import is now an action inside the create group card.
+    const importLink = screen.getByTestId('import-group-action')
+    expect(importLink).toHaveAttribute('href', '/groups/import')
+    // No standalone EmptyState copy remains for the "zero items" case.
+    expect(screen.queryByText(/no groups yet/i)).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(/create your first group/i),
+    ).not.toBeInTheDocument()
   })
 
   // ── Empty state with hidden groups ──────────────────────────────────
 
-  it('shows empty with show-hidden link when all groups are hidden', () => {
+  it('keeps the Groups section visible and shows the Hidden section collapsed when only hidden groups exist', () => {
     const hiddenGroup = makeGroup({
-      preference: { starred: false, hidden: true, pinned: false },
+      preference: { starred: false, hidden: true },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [hiddenGroup] },
@@ -239,11 +257,16 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    expect(screen.getByText(/hidden all of your groups/i)).toBeInTheDocument()
-    const showHiddenBtn = screen.getByRole('button', {
-      name: /show hidden groups/i,
-    })
-    expect(showHiddenBtn).toBeInTheDocument()
+    // Groups section heading is always visible even when Groups is empty.
+    expect(screen.getByText('Groups')).toBeInTheDocument()
+    // The Hidden section exists with its heading trigger collapsed.
+    const hiddenHeading = screen.getByText('Hidden')
+    const hiddenTrigger = hiddenHeading.closest('button')!
+    expect(hiddenTrigger).toHaveAttribute('aria-expanded', 'false')
+    // No "all your groups are hidden" empty-state banner.
+    expect(
+      screen.queryByText(/all your groups are hidden/i),
+    ).not.toBeInTheDocument()
   })
 
   // ── Starred section ─────────────────────────────────────────────────
@@ -252,7 +275,8 @@ describe('RecentGroupList', () => {
     const starredGroup = makeGroup({
       id: 'g-star',
       name: 'Starred Trip',
-      preference: { starred: true, hidden: false, pinned: false },
+      displayName: 'Starred Trip',
+      preference: { starred: true, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [starredGroup] },
@@ -262,18 +286,19 @@ describe('RecentGroupList', () => {
     render(<RecentGroupList />)
 
     // Starred section heading
-    expect(screen.getByText('Starred groups')).toBeInTheDocument()
-    // Group name is rendered as a link
+    expect(screen.getByText('Starred')).toBeInTheDocument()
+    // Group displayName is rendered as a link
     expect(screen.getByText('Starred Trip')).toBeInTheDocument()
   })
 
   // ── Active / Recent section ─────────────────────────────────────────
 
-  it('renders active groups in recent section', () => {
+  it('renders active groups in Groups section', () => {
     const activeGroup = makeGroup({
       id: 'g-active',
       name: 'Active Trip',
-      preference: { starred: false, hidden: false, pinned: false },
+      displayName: 'Active Trip',
+      preference: { starred: false, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [activeGroup] },
@@ -282,19 +307,20 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    // "Recent groups" heading appears when there are active (non-starred) groups
-    expect(screen.getByText('Recent groups')).toBeInTheDocument()
+    // "Groups" heading appears when there are non-starred groups
+    expect(screen.getByText('Groups')).toBeInTheDocument()
     expect(screen.getByText('Active Trip')).toBeInTheDocument()
   })
 
   // ── Archived section ────────────────────────────────────────────────
 
-  it('renders archived groups separately', () => {
+  it('renders archived groups in a collapsed section with a chevron toggle', () => {
     const archivedGroup = makeGroup({
       id: 'g-arch',
       name: 'Old Trip',
+      displayName: 'Old Trip',
       archived: true,
-      preference: { starred: false, hidden: false, pinned: false },
+      preference: { starred: false, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [archivedGroup] },
@@ -303,12 +329,11 @@ describe('RecentGroupList', () => {
 
     render(<RecentGroupList />)
 
-    // Archived section heading
-    expect(screen.getByText('Archived groups')).toBeInTheDocument()
-    expect(screen.getByText('Old Trip')).toBeInTheDocument()
-    // Archived list has opacity styling (opacity-50 class on the <ul>)
-    // We verify the card is rendered and archived badge is not shown on the
-    // RecentGroupList — the heading text alone confirms it's in the right section.
+    // Archived heading is rendered; the trigger button is collapsed.
+    const archivedHeading = screen.getByText('Archived groups')
+    expect(archivedHeading).toBeInTheDocument()
+    const trigger = archivedHeading.closest('button')!
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })
 
   // ── Star toggle ─────────────────────────────────────────────────────
@@ -338,7 +363,7 @@ describe('RecentGroupList', () => {
   it('un-star toggles starred off', async () => {
     const group = makeGroup({
       id: 'g-unstar',
-      preference: { starred: true, hidden: false, pinned: false },
+      preference: { starred: true, hidden: false },
     })
     mocks.mockUseGroupsQuery.mockReturnValue({
       data: { groups: [group] },

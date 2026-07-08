@@ -7,7 +7,8 @@
       "signIn": "Spliit Cloudにサインイン",
       "createAccount": "アカウントを作成",
       "createGroup": "グループを作成",
-      "importGroup": "他のサービスからグループをインポート"
+      "importGroup": "他のサービスからグループをインポート",
+      "createFriendLedger": "フレンド台帳を作成"
     },
     "features": {
       "groupsSync": {
@@ -95,13 +96,7 @@
     "myGroups": "マイグループ",
     "create": "作成",
     "loadingRecent": "最近のグループをロード中…",
-    "NoRecent": {
-      "description": "まだグループがありません。",
-      "create": "グループを作成する",
-      "orAsk": "または友達に自分のグループに招待してもらいましょう。"
-    },
-    "recent": "最近のグループ",
-    "starred": "スター付きグループ",
+    "starred": "スター付き",
     "archived": "アーカイブ済みグループ",
     "backToGroups": "グループ一覧に戻る",
     "removeRecent": "最近のグループから削除",
@@ -116,17 +111,19 @@
       "link": "ホームへ移動"
     },
     "createdInviteHint": "グループを作成しました。メンバーを招待して始めましょう。",
-    "NoRecentAllHidden": {
-      "description": "すべてのグループを非表示にしました。",
-      "showHidden": "非表示のグループを表示"
-    },
-    "hidden": "非表示のグループ",
+    "hidden": "非表示",
     "showHidden": "非表示のグループを表示",
+    "showArchived": "アーカイブ済みのグループを表示",
     "hide": "グループを非表示",
     "unhide": "グループの非表示を解除",
+    "hideFriend": "フレンド台帳を非表示",
+    "unhideFriend": "フレンド台帳の非表示を解除",
     "starGroup": "グループにスターを付ける",
     "unstarGroup": "グループのスターを外す",
+    "starFriend": "フレンド台帳にスターを付ける",
+    "unstarFriend": "フレンド台帳のスターを外す",
     "groupActions": "グループ操作",
+    "friendActions": "フレンド台帳の操作",
     "archiveGroup": "グループをアーカイブ",
     "unarchiveGroup": "グループのアーカイブを解除",
     "archiveSuccess": "グループをアーカイブしました。",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "リンクしない",
           "leaveUnlinkedDescription": "名前のみ保持 — 後でメンバーからリンク。",
           "leaveUnlinkedFollowUp": "{name} はアプリにアクセスできない名前のみのエントリとして表示されます。後でメンバータブからアカウントにリンクできます。",
-          "inviteContact": "連絡先から招待",
-          "inviteContactDescription": "過去に共有したグループから連絡先を招待します。",
-          "selectContactLabel": "連絡先",
-          "selectContactPlaceholder": "連絡先を選択…",
-          "contactAlreadyMember": "既にメンバー",
-          "contactPendingInvite": "既に招待済み"
+          "inviteFriend": "友達から",
+          "inviteFriendDescription": "以前に共有したグループから友達を招待します。",
+          "selectFriendLabel": "友達",
+          "selectFriendPlaceholder": "友達を選択…",
+          "friendAlreadyMember": "すでにメンバーです",
+          "friendPendingInvite": "すでに招待済み"
         }
       },
       "fetchingGroup": "spliit.app からグループを取得中…",
@@ -384,7 +381,24 @@
       "toast": {
         "deleted": "グループを削除しました。"
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "グループを作成",
+      "description": "友達や家族、ルームメイトとの共有支出を記録しましょう。"
+    },
+    "groups": "グループ",
+    "friends": "フレンド台帳",
+    "createExpense": "支出を作成",
+    "pending": "保留中",
+    "scopePickerGroups": "グループを選択",
+    "scopePickerFriends": "フレンド台帳を選択",
+    "scopePickerEmpty": "まだグループがありません",
+    "scopePickerMembers": "{count}名のメンバー",
+    "createFriendLedgerCard": {
+      "description": "特定の人と1対1で精算しましょう。",
+      "title": "フレンド台帳を作成"
+    },
+    "importGroup": "グループをインポート"
   },
   "GroupForm": {
     "title": "グループ情報",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "メールアドレス",
         "link": "招待リンク",
-        "contacts": "連絡先"
+        "friends": "友達"
       },
       "emailDescription": "メールで招待を送信します。招待を受けた人が対応するアカウントから承認すると参加できます。",
       "linkDescription": "誰でも参加できる一回限りのリンクを生成します。最初の承認後、リンクは無効になります。",
@@ -1173,11 +1187,11 @@
         "shareText": "Spliit Cloudで共同の出費のために{groupName}を作成しました。一回限りの招待リンクはこちらです — 開いて参加してください：\n{inviteUrl}",
         "generateNew": "新しいリンクを生成"
       },
-      "contactsDescription": "過去に共有したグループから連絡先を招待できます。",
-      "selectContactPlaceholder": "連絡先を選択…",
-      "contactAlreadyMember": "既にメンバーです",
-      "noContacts": "連絡先がまだありません。メールタブから招待してください。",
-      "contactAlreadyInvited": "既に招待済み"
+      "friendsDescription": "以前に共有したグループから友達を招待します。",
+      "selectFriendPlaceholder": "友達を選択…",
+      "friendAlreadyMember": "すでにメンバーです",
+      "noFriends": "まだ友達がいません。メールタブから招待してください。",
+      "friendAlreadyInvited": "すでに招待済み"
     },
     "invitations": {
       "title": "保留中の招待",
@@ -1376,5 +1390,44 @@
       "step1": "右上のメニューボタン（⋮）をタップ",
       "step2": "「インストール」をタップ"
     }
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "{itemLabelPlural}はまだありません",
+      "filtered": "すべての{itemLabelPlural}が非表示です"
+    },
+    "description": {
+      "empty": "最初の{itemLabel}を作成して始めましょう。"
+    },
+    "labels": {
+      "group": "グループ",
+      "groupPlural": "グループ",
+      "friendLedger": "フレンド台帳",
+      "friendLedgerPlural": "フレンド台帳"
+    },
+    "actions": {
+      "createGroup": "グループを作成",
+      "createFriendLedger": "フレンド台帳を作成",
+      "showHidden": "非表示のグループを表示"
+    }
+  },
+  "Friends": {
+    "title": "フレンド台帳を作成",
+    "peerFriendsTab": "友達リスト",
+    "peerEmailTab": "メールアドレス",
+    "peerLinkTab": "共有リンク",
+    "alreadyHasLedger": "すでにフレンド台帳があります",
+    "inviteSent": "招待を送信しました。友達がSpliitに参加すると、台帳に追加されます。",
+    "inviteLinkTitle": "このリンクを共有",
+    "inviteLinkDescription": "このリンクを友達と共有して、台帳に追加しましょう。",
+    "copy": "コピー",
+    "share": "共有",
+    "linkHelp": "友達が台帳に参加するための共有可能なリンクを生成します。",
+    "emailLabel": "友達のメールアドレス",
+    "temporaryNameLabel": "表示名",
+    "temporaryNameHelp": "招待する相手の名前を入力してください。",
+    "friendsEmpty": "メールアドレスを入力するか、リンクを共有して友達を追加しましょう。",
+    "infoLabel": "情報（任意）",
+    "infoPlaceholder": "「ルームメイトの費用」など、説明を追加"
   }
 }

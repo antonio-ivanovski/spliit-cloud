@@ -6,7 +6,6 @@ import {
   type GroupShape,
   type LoadedExpense,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
-import type { ExpenseFormInputValues } from '@spliit/domain'
 import {
   getCurrency,
   PAYMENT_CATEGORY_ID,
@@ -26,25 +25,6 @@ const mockGroup = {
   members: [],
   invitations: [],
 } as unknown as GroupShape
-
-const baseFormValues: ExpenseFormInputValues = {
-  title: 'Dinner',
-  amount: 50, // $50.00 in major units
-  splitMode: 'BY_AMOUNT',
-  paidFor: [
-    { participant: 'lp-1', shares: 25 },
-    { participant: 'lp-2', shares: 25 },
-  ],
-  paidBySplitMode: 'BY_AMOUNT',
-  paidByList: [{ participant: 'lp-1', shares: 50 }],
-  isMultiPayer: false,
-  isReimbursement: false,
-  expenseDate: new Date(),
-  category: 'general',
-  recurrenceRule: 'NONE',
-  documents: [],
-  notes: '',
-}
 
 const usd = () => getCurrency('USD')!
 

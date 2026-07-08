@@ -176,6 +176,9 @@ export async function createExpense(
           amount: expense.amount,
           currencyCode: expense.originalCurrency ?? null,
           date: expenseDateStr,
+          originalAmount: expense.originalAmount,
+          conversionRate: expense.conversionRate,
+          ledgerCurrencyCode: group.ledger.currencyCode ?? null,
         }),
       },
       tx,
@@ -308,6 +311,9 @@ export async function createExpense(
       amount: expense.amount,
       currencyCode: expense.originalCurrency ?? null,
       date: expenseDateStr,
+      originalAmount: expense.originalAmount,
+      conversionRate: expense.conversionRate,
+      ledgerCurrencyCode: group.ledger.currencyCode ?? null,
     }),
     occurredAt: activity.time,
   })
@@ -322,6 +328,11 @@ export async function deleteExpense(
 ) {
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
+
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { ledger: { select: { currencyCode: true } } },
+  })
 
   const affectedParticipantIds = [
     ...getAffectedParticipantIds({
@@ -345,6 +356,11 @@ export async function deleteExpense(
           currencyCode: existingExpense.originalCurrency ?? null,
           date: expenseDateStr,
           affectedParticipants: affectedParticipantIds,
+          originalAmount: existingExpense.originalAmount ?? undefined,
+          conversionRate: existingExpense.conversionRate
+            ? Number(existingExpense.conversionRate)
+            : undefined,
+          ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
         }),
       },
       tx,
@@ -379,6 +395,11 @@ export async function deleteExpense(
       currencyCode: existingExpense.originalCurrency ?? null,
       date: expenseDateStr,
       affectedParticipants: affectedParticipantIds,
+      originalAmount: existingExpense.originalAmount ?? undefined,
+      conversionRate: existingExpense.conversionRate
+        ? Number(existingExpense.conversionRate)
+        : undefined,
+      ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
     }),
     occurredAt: activity.time,
   })
@@ -551,6 +572,9 @@ export async function updateExpense(
             changedFields: changeSummary.changedFields,
             changes: changeSummary.changes,
             affectedParticipants: affectedParticipantIds,
+            originalAmount: expense.originalAmount,
+            conversionRate: expense.conversionRate,
+            ledgerCurrencyCode: group.ledger.currencyCode ?? null,
           }),
         },
         tx,
@@ -794,6 +818,9 @@ export async function updateExpense(
         changedFields: changeSummary.changedFields,
         changes: changeSummary.changes,
         affectedParticipants: affectedParticipantIds,
+        originalAmount: expense.originalAmount,
+        conversionRate: expense.conversionRate,
+        ledgerCurrencyCode: group.ledger.currencyCode ?? null,
       }),
       occurredAt: activity.time,
     })

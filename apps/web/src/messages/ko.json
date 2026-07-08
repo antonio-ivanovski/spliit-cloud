@@ -30,13 +30,7 @@
     "myGroups": "내 그룹",
     "create": "만들기",
     "loadingRecent": "최신 그룹 불러오는 중…",
-    "NoRecent": {
-      "description": "아직 그룹이 없습니다.",
-      "orAsk": "또는 친구에게 자신의 그룹에 초대해 달라고 요청하세요.",
-      "create": "그룹 만들기"
-    },
-    "recent": "최근 그룹",
-    "starred": "즐겨찾기 그룹",
+    "starred": "즐겨찾기",
     "archived": "아카이브된 그룹",
     "RecentRemovedToast": {
       "title": "그룹이 삭제되었습니다",
@@ -51,17 +45,19 @@
     "backToGroups": "그룹으로 돌아가기",
     "removeRecent": "최근 그룹 목록에서 삭제하기",
     "createdInviteHint": "그룹이 생성되었습니다. 멤버를 초대해 시작하세요.",
-    "NoRecentAllHidden": {
-      "description": "모든 그룹을 숨겼습니다.",
-      "showHidden": "숨긴 그룹 보기"
-    },
-    "hidden": "숨긴 그룹",
+    "hidden": "숨김",
     "showHidden": "숨긴 그룹 보기",
+    "showArchived": "보관된 그룹 보기",
     "hide": "그룹 숨기기",
     "unhide": "그룹 숨기기 취소",
+    "hideFriend": "친구 장부 숨기기",
+    "unhideFriend": "친구 장부 숨기기 취소",
     "starGroup": "그룹 즐겨찾기",
     "unstarGroup": "그룹 즐겨찾기 취소",
+    "starFriend": "친구 장부 즐겨찾기",
+    "unstarFriend": "친구 장부 즐겨찾기 취소",
     "groupActions": "그룹 작업",
+    "friendActions": "친구 장부 작업",
     "archiveGroup": "그룹 보관",
     "unarchiveGroup": "그룹 보관 해제",
     "archiveSuccess": "그룹이 보관되었습니다.",
@@ -208,12 +204,12 @@
           "leaveUnlinked": "연결하지 않음",
           "leaveUnlinkedDescription": "이름만 유지 — 나중에 멤버에서 연결합니다.",
           "leaveUnlinkedFollowUp": "{name}은(는) 앱 접근 권한이 없는 이름만의 항목으로 표시됩니다. 나중에 멤버 탭에서 계정에 연결할 수 있습니다.",
-          "inviteContact": "연락처에서 초대",
-          "inviteContactDescription": "이전에 함께한 그룹에서 연락처를 초대합니다.",
-          "selectContactLabel": "연락처",
-          "selectContactPlaceholder": "연락처 선택…",
-          "contactAlreadyMember": "이미 멤버",
-          "contactPendingInvite": "이미 초대됨"
+          "inviteFriend": "내 친구에서",
+          "inviteFriendDescription": "이전에 공유한 그룹에서 친구를 초대하세요.",
+          "selectFriendLabel": "친구",
+          "selectFriendPlaceholder": "친구 선택…",
+          "friendAlreadyMember": "이미 멤버입니다",
+          "friendPendingInvite": "이미 초대됨"
         }
       },
       "fetchingGroup": "spliit.app에서 그룹을 가져오는 중…",
@@ -319,7 +315,24 @@
       "toast": {
         "deleted": "그룹이 삭제되었습니다."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "그룹 만들기",
+      "description": "친구, 가족, 룸메이트와의 공유 지출을 기록하세요."
+    },
+    "groups": "그룹",
+    "friends": "친구 장부",
+    "createExpense": "지출 만들기",
+    "pending": "대기 중",
+    "scopePickerGroups": "그룹 선택",
+    "scopePickerFriends": "친구 장부 선택",
+    "scopePickerEmpty": "아직 그룹이 없습니다",
+    "scopePickerMembers": "멤버 {count}명",
+    "createFriendLedgerCard": {
+      "description": "특정 친구와 1대1로 정산하세요.",
+      "title": "친구 장부 만들기"
+    },
+    "importGroup": "그룹 가져오기"
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -728,7 +741,8 @@
       "signIn": "Spliit Cloud에 로그인",
       "createAccount": "계정 만들기",
       "createGroup": "그룹 만들기",
-      "importGroup": "다른 서비스에서 그룹 가져오기"
+      "importGroup": "다른 서비스에서 그룹 가져오기",
+      "createFriendLedger": "친구 장부 만들기"
     },
     "title": "<strong>친구 & 가족</strong>과 <strong>지출</strong>을 함께 관리해요",
     "description": "공유 지출을 추적하고 정산하세요. 무료 오픈 소스, <strong>내 계정으로 동기화 및 보호</strong>됩니다.",
@@ -1167,17 +1181,17 @@
       "tab": {
         "email": "이메일",
         "link": "초대 링크",
-        "contacts": "연락처"
+        "friends": "친구"
       },
       "emailDescription": "이메일로 초대를 보냅니다. 초대받은 사람이 일치하는 계정에서 수락하면 참여됩니다.",
       "linkDescription": "누구나 참여할 수 있는 1회용 링크를 생성합니다. 첫 번째 사람이 수락하면 링크는 더 이상 작동하지 않습니다.",
       "temporaryName": "임시 이름 (선택 사항)",
       "temporaryNamePlaceholder": "예: Alex의 룸메이트",
-      "contactsDescription": "함께한 그룹에서 연락처를 초대합니다.",
-      "selectContactPlaceholder": "연락처 선택…",
-      "contactAlreadyMember": "이미 멤버",
-      "noContacts": "아직 연락처가 없습니다. 이메일 탭에서 초대하세요.",
-      "contactAlreadyInvited": "이미 초대됨"
+      "friendsDescription": "이전에 공유한 그룹에서 친구를 초대하세요.",
+      "selectFriendPlaceholder": "친구 선택…",
+      "friendAlreadyMember": "이미 멤버입니다",
+      "noFriends": "아직 친구가 없습니다. 이메일 탭에서 초대하세요.",
+      "friendAlreadyInvited": "이미 초대됨"
     },
     "invitations": {
       "title": "대기 중인 초대",
@@ -1376,5 +1390,44 @@
       "step1": "오른쪽 상단의 메뉴 버튼(⋮)을 탭하세요",
       "step2": "'설치'를 탭하세요"
     }
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "아직 {itemLabelPlural}이(가) 없습니다",
+      "filtered": "모든 {itemLabelPlural}이(가) 숨겨져 있습니다"
+    },
+    "labels": {
+      "group": "그룹",
+      "groupPlural": "그룹",
+      "friendLedger": "친구 장부",
+      "friendLedgerPlural": "친구 장부"
+    },
+    "actions": {
+      "createGroup": "그룹 만들기",
+      "createFriendLedger": "친구 장부 만들기",
+      "showHidden": "숨긴 그룹 보기"
+    },
+    "description": {
+      "empty": "첫 번째 {itemLabel}을(를) 만들어 시작하세요."
+    }
+  },
+  "Friends": {
+    "title": "친구 장부 만들기",
+    "peerFriendsTab": "친구 목록",
+    "peerEmailTab": "이메일",
+    "peerLinkTab": "공유 링크",
+    "alreadyHasLedger": "이미 친구 장부가 있습니다",
+    "inviteSent": "초대를 보냈습니다. 친구가 Spliit에 가입하면 장부에 추가됩니다.",
+    "inviteLinkTitle": "이 링크 공유",
+    "inviteLinkDescription": "이 링크를 친구와 공유하여 장부에 추가하세요.",
+    "copy": "복사",
+    "share": "공유",
+    "linkHelp": "친구가 이 장부에 참여할 수 있는 공유 가능한 링크를 생성하세요.",
+    "emailLabel": "친구의 이메일",
+    "temporaryNameLabel": "표시 이름",
+    "temporaryNameHelp": "초대하는 사람의 이름을 입력하세요.",
+    "friendsEmpty": "이메일을 입력하거나 링크를 공유하여 친구를 추가하세요.",
+    "infoLabel": "정보 (선택)",
+    "infoPlaceholder": "'룸메이트 비용' 같은 설명 추가"
   }
 }

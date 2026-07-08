@@ -7,7 +7,8 @@
       "signIn": "Войти в Spliit Cloud",
       "createAccount": "Создать аккаунт",
       "createGroup": "Создать группу",
-      "importGroup": "Импортировать группу из другого сервиса"
+      "importGroup": "Импортировать группу из другого сервиса",
+      "createFriendLedger": "Создать книгу с другом"
     },
     "features": {
       "groupsSync": {
@@ -96,25 +97,21 @@
     "create": "Создать",
     "createdInviteHint": "Группа создана. Пригласите участников, чтобы начать работу.",
     "loadingRecent": "Загрузка недавних групп…",
-    "NoRecent": {
-      "description": "У вас пока нет ни одной группы.",
-      "create": "Вы можете создать группу",
-      "orAsk": "или попросите друга пригласить вас в его группу."
-    },
-    "NoRecentAllHidden": {
-      "description": "Вы скрыли все свои группы.",
-      "showHidden": "Показать скрытые группы"
-    },
-    "recent": "Недавние группы",
-    "starred": "Избранные",
+    "starred": "Избранное",
     "archived": "Архивированные группы",
-    "hidden": "Скрытые группы",
+    "hidden": "Скрытые",
     "showHidden": "Показать скрытые группы",
+    "showArchived": "Показать архивированные группы",
     "hide": "Скрыть группу",
     "unhide": "Показать группу",
+    "hideFriend": "Скрыть книгу с другом",
+    "unhideFriend": "Показать книгу с другом",
     "starGroup": "Добавить в избранное",
     "unstarGroup": "Убрать из избранного",
+    "starFriend": "Добавить книгу с другом в избранное",
+    "unstarFriend": "Убрать книгу с другом из избранного",
     "groupActions": "Действия с группой",
+    "friendActions": "Действия с книгой друга",
     "archiveGroup": "Архивировать группу",
     "unarchiveGroup": "Разархивировать группу",
     "archiveSuccess": "Группа архивирована.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Оставить непривязанным",
           "leaveUnlinkedDescription": "Сохраняет только имя — привяжите позже из раздела «Участники».",
           "leaveUnlinkedFollowUp": "{name} будет отображаться как запись только с именем без доступа к приложению. Вы можете привязать его к аккаунту позже на вкладке «Участники».",
-          "inviteContact": "Из контактов",
-          "inviteContactDescription": "Пригласить контакт из групп, в которых вы участвовали ранее.",
-          "selectContactLabel": "Контакт",
-          "selectContactPlaceholder": "Выберите контакт…",
-          "contactAlreadyMember": "Уже участник",
-          "contactPendingInvite": "Уже приглашён"
+          "inviteFriend": "Из ваших друзей",
+          "inviteFriendDescription": "Пригласите друга из групп, в которых вы уже вместе участвовали.",
+          "selectFriendLabel": "Друг",
+          "selectFriendPlaceholder": "Выберите друга…",
+          "friendAlreadyMember": "Уже участник",
+          "friendPendingInvite": "Уже приглашён"
         }
       },
       "fetchingGroup": "Получение группы с spliit.app…",
@@ -384,7 +381,24 @@
       "error": {
         "generic": "Не удалось удалить группу. Попробуйте ещё раз."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Создать группу",
+      "description": "Отслеживайте общие расходы с друзьями, семьёй или соседями по комнате."
+    },
+    "groups": "Группы",
+    "friends": "Книги с друзьями",
+    "createExpense": "Добавить расход",
+    "pending": "В ожидании",
+    "scopePickerGroups": "Выберите группу",
+    "scopePickerFriends": "Выберите книгу с другом",
+    "scopePickerEmpty": "Пока нет групп",
+    "scopePickerMembers": "{count} участник(ов)",
+    "createFriendLedgerCard": {
+      "description": "Рассчитайтесь один на один с конкретным человеком.",
+      "title": "Создать расчёт с другом"
+    },
+    "importGroup": "Импортировать группу"
   },
   "GroupForm": {
     "title": "Сведения о группе",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "Эл. почта",
         "link": "Ссылка-приглашение",
-        "contacts": "Контакты"
+        "friends": "Друзья"
       },
       "emailDescription": "Отправьте приглашение по электронной почте. Приглашённый присоединится, приняв его с подходящей учётной записи.",
       "linkDescription": "Создайте одноразовую ссылку, по которой любой может присоединиться. После первого принятия ссылка перестанет работать.",
@@ -1173,11 +1187,11 @@
         "shareText": "Я только что создал(а) группу «{groupName}» для общих расходов в Spliit Cloud. Вот одноразовая ссылка-приглашение — откройте её, чтобы присоединиться:\n{inviteUrl}",
         "generateNew": "Создать новую ссылку"
       },
-      "contactsDescription": "Пригласить участника из групп, которые вы делили.",
-      "selectContactPlaceholder": "Выберите человека…",
-      "contactAlreadyMember": "Уже участник",
-      "noContacts": "Пока нет контактов. Пригласите через вкладку «Эл. почта».",
-      "contactAlreadyInvited": "Уже приглашён"
+      "friendsDescription": "Пригласите кого-нибудь из групп, в которых вы участвуете вместе.",
+      "selectFriendPlaceholder": "Выберите друга…",
+      "friendAlreadyMember": "Уже участник",
+      "noFriends": "Пока нет друзей. Пригласите их на вкладке «Email».",
+      "friendAlreadyInvited": "Уже приглашён"
     },
     "invitations": {
       "title": "Ожидающие приглашения",
@@ -1376,5 +1390,44 @@
       "step1": "Нажмите кнопку меню (⋮) в правом верхнем углу",
       "step2": "Нажмите «Установить»"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Создать группу",
+      "createFriendLedger": "Создать книгу с другом",
+      "showHidden": "Показать скрытые группы"
+    },
+    "description": {
+      "empty": "Начните с создания первой {itemLabel}."
+    },
+    "labels": {
+      "group": "группа",
+      "groupPlural": "группы",
+      "friendLedger": "книга с другом",
+      "friendLedgerPlural": "книги с друзьями"
+    },
+    "title": {
+      "empty": "У вас пока нет {itemLabelPlural}",
+      "filtered": "Все ваши {itemLabelPlural} скрыты"
+    }
+  },
+  "Friends": {
+    "title": "Создать книгу с другом",
+    "peerFriendsTab": "Список друзей",
+    "peerEmailTab": "Email",
+    "peerLinkTab": "Ссылка для отправки",
+    "alreadyHasLedger": "уже есть книга с другом",
+    "inviteSent": "Приглашение отправлено. Друг будет добавлен, как только зарегистрируется в Spliit.",
+    "inviteLinkTitle": "Поделитесь этой ссылкой",
+    "inviteLinkDescription": "Поделитесь этой ссылкой с другом, чтобы добавить его в книгу.",
+    "copy": "Копировать",
+    "share": "Поделиться",
+    "linkHelp": "Создайте общую ссылку, с помощью которой друг сможет присоединиться к этой книге.",
+    "emailLabel": "Email друга",
+    "temporaryNameLabel": "Отображаемое имя",
+    "temporaryNameHelp": "Введите имя человека, которого вы приглашаете.",
+    "friendsEmpty": "Добавьте друга, указав его email, или отправьте ссылку-приглашение.",
+    "infoLabel": "Информация (необязательно)",
+    "infoPlaceholder": "Добавьте контекст, например «Расходы на съёмную квартиру»"
   }
 }

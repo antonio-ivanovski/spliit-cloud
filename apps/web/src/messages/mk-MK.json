@@ -33,7 +33,8 @@
       "signIn": "Најавете се на Spliit Cloud",
       "createAccount": "Креирајте профил",
       "createGroup": "Креирајте група",
-      "importGroup": "Увезете група од друг сервис"
+      "importGroup": "Увезете група од друг сервис",
+      "createFriendLedger": "Креирај сметка со пријател"
     },
     "welcomeBack": "Добредојдовте назад, {name}."
   },
@@ -96,25 +97,21 @@
     "create": "Креирај",
     "createdInviteHint": "Групата е креирана. Поканете членови за да започнете.",
     "loadingRecent": "Се вчитуваат неодамнешни групи…",
-    "NoRecent": {
-      "description": "Сè уште немате ниту една група.",
-      "create": "Креирајте една",
-      "orAsk": "или побарајте пријател да ве покани во неговата група."
-    },
-    "NoRecentAllHidden": {
-      "description": "Ги сокривте сите ваши групи.",
-      "showHidden": "Покажи скриени групи"
-    },
-    "recent": "Неодамнешни групи",
-    "starred": "Означени групи",
+    "starred": "Означени",
     "archived": "Архивирани групи",
-    "hidden": "Скриени групи",
+    "hidden": "Скриени",
     "showHidden": "Покажи скриени групи",
+    "showArchived": "Покажи архивирани групи",
     "hide": "Скриј група",
     "unhide": "Откриј група",
+    "hideFriend": "Скриј сметка со пријател",
+    "unhideFriend": "Откриј сметка со пријател",
     "starGroup": "Означи група",
     "unstarGroup": "Отстрани ознака",
+    "starFriend": "Означи сметка со пријател",
+    "unstarFriend": "Отстрани ознака од сметка со пријател",
     "groupActions": "Акции на групата",
+    "friendActions": "Акции за сметка со пријател",
     "archiveGroup": "Архивирај група",
     "unarchiveGroup": "Одархивирај група",
     "archiveSuccess": "Групата е архивирана.",
@@ -284,12 +281,12 @@
           "leaveUnlinked": "Остави неповрзано",
           "leaveUnlinkedDescription": "Го задржува само името — поврзете подоцна од Членови.",
           "leaveUnlinkedFollowUp": "{name} ќе се прикажува како запис само со име без пристап до апликацијата. Можете да го поврзете со профил подоцна од табот Членови.",
-          "inviteContact": "Од контакти",
-          "inviteContactDescription": "Покани контакт од групи што сте ги споделувале.",
-          "selectContactLabel": "Контакт",
-          "selectContactPlaceholder": "Изберете контакт…",
-          "contactAlreadyMember": "Веќе член",
-          "contactPendingInvite": "Веќе поканет"
+          "inviteFriend": "Од вашите пријатели",
+          "inviteFriendDescription": "Поканете пријател од групите што претходно сте ги споделувале.",
+          "selectFriendLabel": "Пријател",
+          "selectFriendPlaceholder": "Избери пријател…",
+          "friendAlreadyMember": "Веќе е член",
+          "friendPendingInvite": "Веќе поканет"
         },
         "Errors": {
           "duplicateExistingMember": "Два изворни реда се мапираат на ист постоечки член.",
@@ -384,7 +381,24 @@
       "error": {
         "generic": "Не може да се избрише групата. Обидете се повторно."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Креирајте група",
+      "description": "Следете ги заедничките трошоци со пријатели, семејство или цимери."
+    },
+    "groups": "Групи",
+    "friends": "Сметки со пријатели",
+    "createExpense": "Креирај трошок",
+    "pending": "Во тек",
+    "scopePickerGroups": "Избери група",
+    "scopePickerFriends": "Избери сметка со пријател",
+    "scopePickerEmpty": "Сè уште нема групи",
+    "scopePickerMembers": "{count} член(ови)",
+    "createFriendLedgerCard": {
+      "description": "Расчистете сметка еден на еден со одредена личност.",
+      "title": "Креирајте сметка со пријател"
+    },
+    "importGroup": "Увезете група"
   },
   "Auth": {
     "title": "Најавете се на Spliit Cloud",
@@ -1192,7 +1206,7 @@
       "tab": {
         "email": "Е-пошта",
         "link": "Линк за покана",
-        "contacts": "Контакти"
+        "friends": "Пријатели"
       },
       "link": {
         "generate": "Генерирај линк за покана",
@@ -1212,11 +1226,11 @@
       "linkDescription": "Генерирајте линк за еднократна употреба што секој може да го искористи за да се приклучи. Линкот престанува да работи по првото прифаќање.",
       "temporaryName": "Привремено име (опционално)",
       "temporaryNamePlaceholder": "на пр. цимерката на Алекс",
-      "contactsDescription": "Покани некој од групи што сте ги споделувале.",
-      "selectContactPlaceholder": "Изберете лице…",
-      "contactAlreadyMember": "Веќе член",
-      "noContacts": "Сè уште нема контакти. Поканете од картичката Е-пошта.",
-      "contactAlreadyInvited": "Веќе поканет"
+      "friendsDescription": "Поканете некој од групите што сте ги споделувале.",
+      "selectFriendPlaceholder": "Избери пријател…",
+      "friendAlreadyMember": "Веќе е член",
+      "noFriends": "Сè уште нема пријатели. Поканете ги преку јазичето Е-пошта.",
+      "friendAlreadyInvited": "Веќе поканет"
     },
     "invitations": {
       "title": "Покани во тек",
@@ -1376,5 +1390,44 @@
       "step1": "Допрете го копчето мени (⋮) во горниот десен агол",
       "step2": "Допрете Инсталирај"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Креирај група",
+      "createFriendLedger": "Креирај сметка со пријател",
+      "showHidden": "Покажи скриени групи"
+    },
+    "description": {
+      "empty": "Започнете со креирање на вашата прва {itemLabel}."
+    },
+    "labels": {
+      "group": "група",
+      "groupPlural": "групи",
+      "friendLedger": "сметка со пријател",
+      "friendLedgerPlural": "сметки со пријатели"
+    },
+    "title": {
+      "empty": "Сè уште немате {itemLabelPlural}",
+      "filtered": "Сите ваши {itemLabelPlural} се скриени"
+    }
+  },
+  "Friends": {
+    "title": "Креирај сметка со пријател",
+    "peerFriendsTab": "Листа на пријатели",
+    "peerEmailTab": "Е-пошта",
+    "peerLinkTab": "Споделив линк",
+    "alreadyHasLedger": "веќе има сметка со пријател",
+    "inviteSent": "Поканата е испратена. Вашиот пријател ќе биде додаден кога ќе се приклучи на Spliit.",
+    "inviteLinkTitle": "Споделете го овој линк",
+    "inviteLinkDescription": "Споделете го овој линк со вашиот пријател за да го додадете во сметката.",
+    "copy": "Копирај",
+    "share": "Сподели",
+    "linkHelp": "Генерирајте споделив линк кој вашиот пријател може да го искористи за да се приклучи на оваа сметка.",
+    "emailLabel": "Е-пошта на пријателот",
+    "temporaryNameLabel": "Прикажано име",
+    "temporaryNameHelp": "Внесете име за лицето што го поканувате.",
+    "friendsEmpty": "Додајте пријател со внесување на неговата е-пошта или споделете линк за да го поканите.",
+    "infoLabel": "Информации (незадолжително)",
+    "infoPlaceholder": "Додајте контекст, на пр. „Трошоци за стан“"
   }
 }

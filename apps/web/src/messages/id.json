@@ -7,7 +7,8 @@
       "signIn": "Masuk ke Spliit Cloud",
       "createAccount": "Buat akun",
       "createGroup": "Buat grup",
-      "importGroup": "Impor grup dari layanan lain"
+      "importGroup": "Impor grup dari layanan lain",
+      "createFriendLedger": "Buat buku besar teman"
     },
     "features": {
       "groupsSync": {
@@ -95,13 +96,7 @@
     "myGroups": "Grup saya",
     "create": "Buat",
     "loadingRecent": "Memuat grup terbaru…",
-    "NoRecent": {
-      "description": "Anda belum memiliki grup apa pun.",
-      "create": "Buat",
-      "orAsk": "atau minta teman untuk mengundang Anda ke grup mereka."
-    },
-    "recent": "Grup terbaru",
-    "starred": "Grup berbintang",
+    "starred": "Berbintang",
     "archived": "Grup terarsipkan",
     "backToGroups": "Kembali ke grup",
     "removeRecent": "Hapus dari grup terbaru",
@@ -116,17 +111,19 @@
       "link": "Buka beranda"
     },
     "createdInviteHint": "Grup dibuat. Undang anggota untuk memulai.",
-    "NoRecentAllHidden": {
-      "description": "Anda telah menyembunyikan semua grup Anda.",
-      "showHidden": "Tampilkan grup yang disembunyikan"
-    },
-    "hidden": "Grup tersembunyi",
+    "hidden": "Tersembunyi",
     "showHidden": "Tampilkan grup tersembunyi",
+    "showArchived": "Tampilkan grup yang diarsipkan",
     "hide": "Sembunyikan grup",
     "unhide": "Tampilkan grup",
+    "hideFriend": "Sembunyikan buku besar teman",
+    "unhideFriend": "Tampilkan buku besar teman",
     "starGroup": "Bintangi grup",
     "unstarGroup": "Hapus bintang grup",
+    "starFriend": "Bintangi buku besar teman",
+    "unstarFriend": "Hapus bintang buku besar teman",
     "groupActions": "Tindakan grup",
+    "friendActions": "Tindakan buku besar teman",
     "archiveGroup": "Arsipkan grup",
     "unarchiveGroup": "Batalkan pengarsipan grup",
     "archiveSuccess": "Grup diarsipkan.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Biarkan tidak ditautkan",
           "leaveUnlinkedDescription": "Menyimpan nama saja — tautkan nanti dari Anggota.",
           "leaveUnlinkedFollowUp": "{name} akan muncul sebagai entri hanya nama tanpa akses aplikasi. Anda dapat menautkannya ke akun nanti dari tab Anggota.",
-          "inviteContact": "Dari kontak Anda",
-          "inviteContactDescription": "Undang kontak dari grup yang pernah Anda bagikan sebelumnya.",
-          "selectContactLabel": "Kontak",
-          "selectContactPlaceholder": "Pilih kontak…",
-          "contactAlreadyMember": "Sudah menjadi anggota",
-          "contactPendingInvite": "Sudah diundang"
+          "inviteFriend": "Dari teman Anda",
+          "inviteFriendDescription": "Undang teman dari grup yang pernah Anda gunakan bersama.",
+          "selectFriendLabel": "Teman",
+          "selectFriendPlaceholder": "Pilih teman…",
+          "friendAlreadyMember": "Sudah menjadi anggota",
+          "friendPendingInvite": "Sudah diundang"
         }
       },
       "fetchingGroup": "Mengambil grup dari spliit.app…",
@@ -384,7 +381,24 @@
       "toast": {
         "deleted": "Grup dihapus."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Buat grup",
+      "description": "Lacak pengeluaran bersama dengan teman, keluarga, atau teman sekamar."
+    },
+    "groups": "Grup",
+    "friends": "Buku besar teman",
+    "createExpense": "Buat pengeluaran",
+    "pending": "Tertunda",
+    "scopePickerGroups": "Pilih grup",
+    "scopePickerFriends": "Pilih buku besar teman",
+    "scopePickerEmpty": "Belum ada grup",
+    "scopePickerMembers": "{count} anggota",
+    "createFriendLedgerCard": {
+      "description": "Selesaikan satu lawan satu dengan orang tertentu.",
+      "title": "Buat buku besar teman"
+    },
+    "importGroup": "Impor grup"
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "Email",
         "link": "Tautan undangan",
-        "contacts": "Kontak"
+        "friends": "Teman"
       },
       "emailDescription": "Kirim undangan melalui email. Yang diundang akan bergabung setelah menerimanya dari akun yang cocok.",
       "linkDescription": "Buat tautan sekali pakai yang dapat digunakan siapa saja untuk bergabung. Tautan akan berhenti berfungsi setelah penerimaan pertama.",
@@ -1173,11 +1187,11 @@
         "shareText": "Saya baru saja membuat {groupName} untuk pengeluaran bersama kita di Spliit Cloud. Berikut adalah tautan undangan sekali pakai — buka untuk bergabung:\n{inviteUrl}",
         "generateNew": "Buat tautan baru"
       },
-      "contactsDescription": "Undang seseorang dari grup yang pernah Anda bagikan.",
-      "selectContactPlaceholder": "Pilih orang…",
-      "contactAlreadyMember": "Sudah menjadi anggota",
-      "noContacts": "Belum ada kontak. Undang dari tab Email.",
-      "contactAlreadyInvited": "Sudah diundang"
+      "friendsDescription": "Undang seseorang dari grup yang pernah Anda gunakan bersama.",
+      "selectFriendPlaceholder": "Pilih teman…",
+      "friendAlreadyMember": "Sudah menjadi anggota",
+      "noFriends": "Belum ada teman. Undang dari tab Email.",
+      "friendAlreadyInvited": "Sudah diundang"
     },
     "invitations": {
       "title": "Undangan tertunda",
@@ -1376,5 +1390,44 @@
       "step1": "Ketuk tombol menu (⋮) di kanan atas",
       "step2": "Ketuk Pasang"
     }
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "Belum ada {itemLabelPlural}",
+      "filtered": "Semua {itemLabelPlural} Anda disembunyikan"
+    },
+    "description": {
+      "empty": "Buat {itemLabel} pertama Anda untuk memulai."
+    },
+    "labels": {
+      "group": "grup",
+      "groupPlural": "grup",
+      "friendLedger": "buku besar teman",
+      "friendLedgerPlural": "buku besar teman"
+    },
+    "actions": {
+      "createGroup": "Buat grup",
+      "createFriendLedger": "Buat buku besar teman",
+      "showHidden": "Tampilkan grup tersembunyi"
+    }
+  },
+  "Friends": {
+    "title": "Buat buku besar teman",
+    "peerFriendsTab": "Daftar teman",
+    "peerEmailTab": "Email",
+    "peerLinkTab": "Tautan yang dapat dibagikan",
+    "alreadyHasLedger": "sudah memiliki buku besar teman",
+    "inviteSent": "Undangan terkirim. Teman Anda akan ditambahkan saat mereka bergabung ke Spliit.",
+    "inviteLinkTitle": "Bagikan tautan ini",
+    "inviteLinkDescription": "Bagikan tautan ini kepada teman Anda untuk menambahkan mereka ke buku besar.",
+    "copy": "Salin",
+    "share": "Bagikan",
+    "linkHelp": "Buat tautan yang dapat dibagikan yang dapat digunakan teman Anda untuk bergabung ke buku besar ini.",
+    "emailLabel": "Email teman",
+    "temporaryNameLabel": "Nama tampilan",
+    "temporaryNameHelp": "Masukkan nama untuk orang yang Anda undang.",
+    "friendsEmpty": "Tambahkan teman dengan memasukkan email mereka atau bagikan tautan untuk mengundang mereka.",
+    "infoLabel": "Informasi (opsional)",
+    "infoPlaceholder": "Tambahkan konteks seperti 'Pengeluaran teman sekamar'"
   }
 }

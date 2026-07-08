@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
+import { Navigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 import { InviteCard } from './invite-card'
@@ -22,6 +23,12 @@ export default function GroupMembers() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const locale = useLocale()
   const { groupId, group, currentMember } = useCurrentGroup()
+
+  if (group?.groupType === 'FRIEND') {
+    return (
+      <Navigate to="/groups/$groupId/expenses" params={{ groupId }} replace />
+    )
+  }
 
   const {
     account,

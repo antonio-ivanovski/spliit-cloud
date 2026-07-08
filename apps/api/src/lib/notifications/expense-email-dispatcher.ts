@@ -1,5 +1,6 @@
 import { prisma } from '@spliit/db'
 import type { Expense } from '@spliit/domain'
+import { getCurrency } from '@spliit/domain'
 import { parseActivityData } from '@spliit/domain/activities'
 import { getAffectedParticipantIds } from '../api/expense-activity-diff'
 import { getWebBaseUrl } from '../auth/urls'
@@ -18,9 +19,69 @@ const EXPENSE_EVENT_TYPES = new Set([
 const IMPORT_EVENT_TYPES = new Set(['EXPENSES_IMPORTED'])
 
 function formatAmount(cents: number, currencyCode?: string | null): string {
-  const formatted = (cents / 100).toFixed(2)
+  const currency = currencyCode ? getCurrency(currencyCode) : undefined
+  const digits = currency?.decimal_digits ?? 2
+  const formatted = (cents / 100).toFixed(digits)
   return currencyCode ? `${currencyCode} ${formatted}` : formatted
 }
+
+function formatDualAmount(
+  amount: number,
+  currencyCode: string | null | undefined,
+  originalAmount: number | undefined,
+  ledgerCurrencyCode: string | null | undefined,
+): string {
+  if (
+    originalAmount != null &&
+    currencyCode &&
+    ledgerCurrencyCode &&
+    ledgerCurrencyCode !== currencyCode
+  ) {
+    const original = formatAmount(originalAmount, currencyCode)
+    const converted = formatAmount(amount, ledgerCurrencyCode)
+    return `${original} (${converted})`
+  }
+  // When currencyCode is absent (same-currency expense where
+  // originalCurrency is null), fall back to ledgerCurrencyCode so the
+  // email shows "EUR 102.22" instead of bare "10222.00".
+  return formatAmount(amount, currencyCode ?? ledgerCurrencyCode)
+}
+
+function resolveGroupDisplayName(
+  groupType: string,
+  groupName: string,
+  members: Array<{ account: { id: string; name: string } | null }>,
+  recipientAccountId: string | undefined,
+  pendingTemporaryName: string | undefined,
+): string {
+  if (groupType !== 'FRIEND') return groupName
+  if (recipientAccountId) {
+    const peer = members.find(
+      (m) => m.account && m.account.id !== recipientAccountId,
+    )
+    if (peer?.account?.name)
+      return `your friend ledger with ${peer.account.name}`
+  }
+  if (pendingTemporaryName)
+    return `your friend ledger with ${pendingTemporaryName}`
+  return 'your friend ledger'
+}
+
+const GROUP_SELECT = {
+  name: true,
+  groupType: true,
+  members: {
+    where: { status: 'ACTIVE' },
+    select: { account: { select: { id: true, name: true } } },
+    take: 2,
+  },
+  invitations: {
+    where: { status: 'PENDING' },
+    select: { temporaryName: true },
+    take: 1,
+    orderBy: { createdAt: 'desc' as const },
+  },
+} as const
 
 export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   async dispatch(event: ActivityNotificationEvent): Promise<void> {
@@ -40,6 +101,8 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       date,
       affectedParticipants,
       changedFields,
+      originalAmount,
+      ledgerCurrencyCode,
     } = parsed
     if (!title) return
 
@@ -115,7 +178,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       }),
       prisma.group.findUnique({
         where: { id: event.groupId },
-        select: { name: true },
+        select: GROUP_SELECT,
       }),
       event.actor?.type === 'ACCOUNT'
         ? prisma.account.findUnique({
@@ -129,52 +192,61 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
 
     const actorName = actorAccount?.name ?? 'Someone'
 
-    const verb =
-      event.type === 'EXPENSE_CREATED'
-        ? 'added'
-        : event.type === 'EXPENSE_UPDATED'
-          ? 'updated'
-          : 'removed'
-
-    const subject = `[Spliit Cloud] ${title} was ${verb} in ${group.name}`
-
     const expenseUrl =
       event.type !== 'EXPENSE_DELETED' && event.subject?.id
         ? `${getWebBaseUrl()}/groups/${event.groupId}/expenses/${event.subject.id}`
         : `${getWebBaseUrl()}/groups/${event.groupId}`
 
-    const amountStr = amount != null ? formatAmount(amount, currencyCode) : null
+    const amountStr =
+      amount != null
+        ? formatDualAmount(
+            amount,
+            currencyCode,
+            originalAmount,
+            ledgerCurrencyCode,
+          )
+        : null
 
-    const bodyLines: string[] = []
-    if (event.type === 'EXPENSE_CREATED') {
-      bodyLines.push(
-        `${actorName} added "${title}"${amountStr ? ` (${amountStr})` : ''} in ${group.name}${date ? ` on ${date}` : ''}.`,
-      )
-    } else if (event.type === 'EXPENSE_UPDATED') {
-      bodyLines.push(`${actorName} updated "${title}" in ${group.name}.`)
-      if (amountStr) bodyLines.push(`Amount: ${amountStr}`)
-      if (date) bodyLines.push(`Date: ${date}`)
-      if (changedFields?.length) {
-        bodyLines.push(`Changed: ${changedFields.join(', ')}`)
-      }
-    } else {
-      bodyLines.push(
-        `${actorName} removed "${title}"${amountStr ? ` (${amountStr})` : ''} from ${group.name}${date ? ` on ${date}` : ''}.`,
-      )
+    const preambles: Record<string, string> = {
+      EXPENSE_CREATED: `Expense "${title}"${amountStr ? ` (${amountStr})` : ''} was added by ${actorName} to`,
+      EXPENSE_UPDATED: `Expense "${title}" was updated by ${actorName} in`,
+      EXPENSE_DELETED: `Expense "${title}"${amountStr ? ` (${amountStr})` : ''} was removed by ${actorName} from`,
     }
-    bodyLines.push('')
-    bodyLines.push(`View it here:`)
-    bodyLines.push(expenseUrl)
+    const preamble = preambles[event.type]
 
-    const text = bodyLines.join('\n')
+    const subjectForType: Record<string, (dn: string) => string> = {
+      EXPENSE_CREATED: (dn) =>
+        `[Spliit Cloud] Expense "${title}" was added by ${actorName} to ${dn}`,
+      EXPENSE_UPDATED: (dn) =>
+        `[Spliit Cloud] Expense "${title}" was updated by ${actorName} in ${dn}`,
+      EXPENSE_DELETED: (dn) =>
+        `[Spliit Cloud] Expense "${title}" was removed by ${actorName} from ${dn}`,
+    }
+    const buildSubject = subjectForType[event.type]
 
     await this.sendToActiveMembers({
       participants,
       actor: event.actor,
-      groupName: group.name,
-      subject,
-      text,
       activityId: event.activityId,
+      group,
+      buildSubject,
+      buildText: (displayName: string) => {
+        const lines: string[] = []
+        if (event.type === 'EXPENSE_UPDATED') {
+          lines.push(`${preamble} ${displayName}.`)
+          if (amountStr) lines.push(`Amount: ${amountStr}`)
+          if (date) lines.push(`Date: ${date}`)
+          if (changedFields?.length) {
+            lines.push(`Changed: ${changedFields.join(', ')}`)
+          }
+        } else {
+          lines.push(`${preamble} ${displayName}${date ? ` on ${date}` : ''}.`)
+        }
+        lines.push('')
+        lines.push('View it here:')
+        lines.push(expenseUrl)
+        return lines.join('\n')
+      },
     })
   }
 
@@ -202,7 +274,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       }),
       prisma.group.findUnique({
         where: { id: event.groupId },
-        select: { name: true },
+        select: GROUP_SELECT,
       }),
       event.actor?.type === 'ACCOUNT'
         ? prisma.account.findUnique({
@@ -218,33 +290,31 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     const totalStr =
       totalAmount != null ? formatAmount(totalAmount, currencyCode) : null
 
-    const subject = `[Spliit Cloud] ${count} ${
-      count === 1 ? 'expense' : 'expenses'
-    } imported in ${group.name}`
-
     const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
-
-    const bodyLines: string[] = []
-    bodyLines.push(
-      `${actorName} imported ${count} ${
-        count === 1 ? 'expense' : 'expenses'
-      }${sourceProvider ? ` from ${sourceProvider}` : ''} in ${group.name}${
-        totalStr ? ` (total ${totalStr})` : ''
-      }.`,
-    )
-    bodyLines.push('')
-    bodyLines.push(`View the group here:`)
-    bodyLines.push(groupUrl)
-
-    const text = bodyLines.join('\n')
 
     await this.sendToActiveMembers({
       participants,
       actor: event.actor,
-      groupName: group.name,
-      subject,
-      text,
       activityId: event.activityId,
+      group,
+      buildSubject: (displayName: string) =>
+        `[Spliit Cloud] ${count} ${
+          count === 1 ? 'expense' : 'expenses'
+        } imported in ${displayName}`,
+      buildText: (displayName: string) => {
+        const lines: string[] = []
+        lines.push(
+          `${actorName} imported ${count} ${
+            count === 1 ? 'expense' : 'expenses'
+          }${sourceProvider ? ` from ${sourceProvider}` : ''} in ${displayName}${
+            totalStr ? ` (total ${totalStr})` : ''
+          }.`,
+        )
+        lines.push('')
+        lines.push('View the group here:')
+        lines.push(groupUrl)
+        return lines.join('\n')
+      },
     })
   }
 
@@ -256,10 +326,15 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       } | null
     }>
     actor: ActivityNotificationEvent['actor']
-    groupName: string
-    subject: string
-    text: string
     activityId: string
+    group: {
+      groupType: string
+      name: string
+      members: Array<{ account: { id: string; name: string } | null }>
+      invitations: Array<{ temporaryName: string | null }>
+    }
+    buildSubject: (displayName: string) => string
+    buildText: (displayName: string) => string
   }): Promise<void> {
     for (const participant of args.participants) {
       const groupMember = participant.groupMember
@@ -271,11 +346,22 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       if (args.actor?.id === account.id && args.actor?.type === 'ACCOUNT')
         continue
 
+      const displayName = resolveGroupDisplayName(
+        args.group.groupType,
+        args.group.name,
+        args.group.members ?? [],
+        account.id,
+        args.group.invitations?.[0]?.temporaryName ?? undefined,
+      )
+
+      const subject = args.buildSubject(displayName)
+      const text = args.buildText(displayName)
+
       try {
         await sendEmail({
           to: account.email,
-          subject: args.subject,
-          text: args.text,
+          subject,
+          text,
         })
       } catch (err) {
         console.warn(

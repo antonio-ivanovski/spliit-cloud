@@ -3,6 +3,10 @@ import { getCurrency, useCurrencies } from '@/lib/currency'
 import { render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('@/lib/hooks', () => ({
+  useMediaQuery: vi.fn(() => true),
+}))
+
 // ── Module mocks ────────────────────────────────────────────────────────
 
 vi.mock('@/components/link', () => ({
@@ -63,6 +67,8 @@ const mockGroup = {
   ledgerId: 'ledger-1',
   currency: '$',
   currencyCode: 'USD',
+  groupType: 'GROUP' as const,
+  friendPairKey: null,
   ledger: {
     id: 'ledger-1',
     currency: '$',
@@ -235,5 +241,94 @@ describe('GroupForm', () => {
 
     // Save button should be present (not Create)
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
+  })
+
+  it('hides the name input when hideNameField is true', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        hideNameField
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(
+      screen.queryByRole('textbox', { name: /name/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('renders submit button when hideNameField is true (unlike MEMBER role)', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        hideNameField
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
+  })
+
+  // ── hideNameField fields still editable ────────────────────────
+
+  it('currency selector is enabled when hideNameField is true', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        hideNameField
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(screen.getByRole('combobox')).not.toBeDisabled()
+  })
+
+  it('information textarea is enabled when hideNameField is true', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        hideNameField
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: /group information/i }),
+    ).not.toBeDisabled()
+  })
+
+  it('form submit includes currency and information changes when hideNameField is true', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        hideNameField
+        onSubmit={onSubmit}
+      />,
+    )
+
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+
+    const euroOption = await screen.findByRole('option', { name: /Euro/ })
+    await user.click(euroOption)
+
+    const textarea = screen.getByRole('textbox', { name: /group information/i })
+    await user.clear(textarea)
+    await user.type(textarea, 'Updated info text')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    const values = onSubmit.mock.calls[0][0]
+    expect(values).toHaveProperty('currencyCode', 'EUR')
+    expect(values).toHaveProperty('information', 'Updated info text')
   })
 })

@@ -1,3 +1,4 @@
+import { GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { deleteGroup } from '../../../lib/api'
@@ -39,6 +40,12 @@ export const deleteGroupProcedure = protectedProcedure
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'This group is already archived',
+      })
+    }
+    if (group.groupType === GroupType.FRIEND) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'friendLedgerNotDeletable',
       })
     }
 

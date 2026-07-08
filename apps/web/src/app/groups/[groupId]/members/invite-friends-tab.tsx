@@ -11,7 +11,7 @@ import { Loader2, UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { InvitableRole } from './members-hooks'
 
-type Contact = {
+type Friend = {
   accountId: string
   name: string
   email: string
@@ -20,21 +20,21 @@ type Contact = {
   isPendingInvite: boolean
 }
 
-export function InviteContactsTab({
-  contacts,
+export function InviteFriendsTab({
+  friends,
   isLoading,
-  selectedContactAccountId,
-  onSelectContact,
-  contactRoleValue,
+  selectedFriendAccountId,
+  onSelectFriend,
+  friendRoleValue,
   onRoleChange,
   isPending,
   onSubmit,
 }: {
-  contacts: Contact[]
+  friends: Friend[]
   isLoading: boolean
-  selectedContactAccountId: string
-  onSelectContact: (value: string) => void
-  contactRoleValue: InvitableRole
+  selectedFriendAccountId: string
+  onSelectFriend: (value: string) => void
+  friendRoleValue: InvitableRole
   onRoleChange: (value: InvitableRole) => void
   isPending: boolean
   onSubmit: () => void
@@ -44,48 +44,46 @@ export function InviteContactsTab({
   return (
     <>
       <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
-        {t('invite.contactsDescription')}
+        {t('invite.friendsDescription')}
       </p>
       {isLoading ? (
         <div className="flex items-center justify-center py-4">
           <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
         </div>
-      ) : contacts.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          {t('invite.noContacts')}
-        </p>
+      ) : friends.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{t('invite.noFriends')}</p>
       ) : (
         <div className="flex flex-col gap-3">
           <div className="grid gap-1.5">
             <Select
-              value={selectedContactAccountId}
-              onValueChange={onSelectContact}
+              value={selectedFriendAccountId}
+              onValueChange={onSelectFriend}
             >
               <SelectTrigger>
                 <SelectValue
-                  placeholder={t('invite.selectContactPlaceholder')}
+                  placeholder={t('invite.selectFriendPlaceholder')}
                 />
               </SelectTrigger>
               <SelectContent>
-                {contacts.map((c) => (
+                {friends.map((f) => (
                   <SelectItem
-                    key={c.accountId}
-                    value={c.accountId}
-                    disabled={c.isMember || c.isPendingInvite}
+                    key={f.accountId}
+                    value={f.accountId}
+                    disabled={f.isMember || f.isPendingInvite}
                   >
                     <span className="flex items-center gap-2">
-                      <span>{c.name}</span>
+                      <span>{f.name}</span>
                       <span className="text-xs text-muted-foreground">
-                        {c.email}
+                        {f.email}
                       </span>
-                      {c.isMember && (
+                      {f.isMember && (
                         <span className="text-xs text-muted-foreground">
-                          ({t('invite.contactAlreadyMember')})
+                          ({t('invite.friendAlreadyMember')})
                         </span>
                       )}
-                      {c.isPendingInvite && !c.isMember && (
+                      {f.isPendingInvite && !f.isMember && (
                         <span className="text-xs text-muted-foreground">
-                          ({t('invite.contactAlreadyInvited')})
+                          ({t('invite.friendAlreadyInvited')})
                         </span>
                       )}
                     </span>
@@ -98,7 +96,7 @@ export function InviteContactsTab({
             <div className="sm:w-40">
               <Label className="sm:sr-only">{t('invite.role')}</Label>
               <Select
-                value={contactRoleValue}
+                value={friendRoleValue}
                 onValueChange={(value) => onRoleChange(value as InvitableRole)}
               >
                 <SelectTrigger>
@@ -112,7 +110,7 @@ export function InviteContactsTab({
             </div>
             <Button
               type="button"
-              disabled={isPending || !selectedContactAccountId}
+              disabled={isPending || !selectedFriendAccountId}
               onClick={onSubmit}
             >
               <UserPlus className="w-4 h-4 mr-2" />

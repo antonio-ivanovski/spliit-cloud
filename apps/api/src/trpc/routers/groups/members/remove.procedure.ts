@@ -1,3 +1,4 @@
+import { GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
@@ -17,7 +18,7 @@ import { loadGroupContext, protectedProcedure } from '../../../init'
 export const removeMemberPreviewProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1), memberId: z.string().min(1) }))
   .query(async ({ input: { groupId, memberId }, ctx }) => {
-    const { member } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
     }).catch(() => {
@@ -30,6 +31,12 @@ export const removeMemberPreviewProcedure = protectedProcedure
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Only admins can remove members',
+      })
+    }
+    if (group.groupType === GroupType.FRIEND) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'Friend ledger member management is not allowed',
       })
     }
     try {
@@ -76,6 +83,12 @@ export const removeMemberProcedure = protectedProcedure
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Only admins can remove members',
+      })
+    }
+    if (group.groupType === GroupType.FRIEND) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'Friend ledger member management is not allowed',
       })
     }
     if (group.archived) {

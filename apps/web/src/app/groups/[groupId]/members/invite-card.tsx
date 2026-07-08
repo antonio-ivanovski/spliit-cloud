@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { InviteContactsTab } from './invite-contacts-tab'
 import { InviteEmailTab } from './invite-email-tab'
+import { InviteFriendsTab } from './invite-friends-tab'
 import { InviteLinkTab } from './invite-link-tab'
 import {
   emailFormSchema,
@@ -46,14 +46,14 @@ export function InviteCard({
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const [roleValue, setRoleValue] = useState<InvitableRole>('MEMBER')
   const [linkRoleValue, setLinkRoleValue] = useState<InvitableRole>('MEMBER')
-  const [contactRoleValue, setContactRoleValue] =
+  const [friendRoleValue, setFriendRoleValue] =
     useState<InvitableRole>('MEMBER')
   const [generatedLink, setGeneratedLink] = useState<GeneratedLink | null>(null)
-  const [inviteTab, setInviteTab] = useState<'contacts' | 'email' | 'link'>(
+  const [inviteTab, setInviteTab] = useState<'friends' | 'email' | 'link'>(
     'email',
   )
   const [canShare, setCanShare] = useState(false)
-  const [selectedContactAccountId, setSelectedContactAccountId] =
+  const [selectedFriendAccountId, setSelectedFriendAccountId] =
     useState<string>('')
 
   useEffect(() => {
@@ -62,21 +62,21 @@ export function InviteCard({
     )
   }, [])
 
-  const contactsQuery = trpc.account.contacts.useQuery({ groupId })
-  const contacts = contactsQuery.data?.contacts ?? []
-  const selectedContact = contacts.find(
-    (c) => c.accountId === selectedContactAccountId,
+  const friendsQuery = trpc.account.friends.useQuery({ groupId })
+  const friends = friendsQuery.data?.friends ?? []
+  const selectedFriend = friends.find(
+    (f) => f.accountId === selectedFriendAccountId,
   )
 
-  // Default to contacts tab when at least one non-member contact exists.
+  // Default to friends tab when at least one non-member friend exists.
   const defaultTabApplied = useRef(false)
   useEffect(() => {
     if (defaultTabApplied.current) return
-    if (!contactsQuery.isLoading && contacts.some((c) => !c.isMember)) {
-      setInviteTab('contacts')
+    if (!friendsQuery.isLoading && friends.some((f) => !f.isMember)) {
+      setInviteTab('friends')
       defaultTabApplied.current = true
     }
-  }, [contactsQuery.isLoading, contacts])
+  }, [friendsQuery.isLoading, friends])
 
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(emailFormSchema),
@@ -116,14 +116,14 @@ export function InviteCard({
     linkForm.reset({ temporaryName: '' })
   })
 
-  const handleContactSubmit = () => {
-    if (!selectedContact) return
+  const handleFriendSubmit = () => {
+    if (!selectedFriend) return
     onInvite({
-      email: selectedContact.email,
-      role: contactRoleValue,
-      temporaryName: selectedContact.name,
+      email: selectedFriend.email,
+      role: friendRoleValue,
+      temporaryName: selectedFriend.name,
     })
-    setSelectedContactAccountId('')
+    setSelectedFriendAccountId('')
   }
 
   async function handleShareLink() {
@@ -152,28 +152,26 @@ export function InviteCard({
         <Tabs
           value={inviteTab}
           onValueChange={(value) =>
-            setInviteTab(value as 'contacts' | 'email' | 'link')
+            setInviteTab(value as 'friends' | 'email' | 'link')
           }
           className="flex flex-col gap-4"
         >
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="contacts">
-              {t('invite.tab.contacts')}
-            </TabsTrigger>
+            <TabsTrigger value="friends">{t('invite.tab.friends')}</TabsTrigger>
             <TabsTrigger value="email">{t('invite.tab.email')}</TabsTrigger>
             <TabsTrigger value="link">{t('invite.tab.link')}</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="contacts" className="mt-0 flex flex-col gap-4">
-            <InviteContactsTab
-              contacts={contacts}
-              isLoading={contactsQuery.isLoading}
-              selectedContactAccountId={selectedContactAccountId}
-              onSelectContact={setSelectedContactAccountId}
-              contactRoleValue={contactRoleValue}
-              onRoleChange={setContactRoleValue}
+          <TabsContent value="friends" className="mt-0 flex flex-col gap-4">
+            <InviteFriendsTab
+              friends={friends}
+              isLoading={friendsQuery.isLoading}
+              selectedFriendAccountId={selectedFriendAccountId}
+              onSelectFriend={setSelectedFriendAccountId}
+              friendRoleValue={friendRoleValue}
+              onRoleChange={setFriendRoleValue}
               isPending={createMutation.isPending}
-              onSubmit={handleContactSubmit}
+              onSubmit={handleFriendSubmit}
             />
           </TabsContent>
 

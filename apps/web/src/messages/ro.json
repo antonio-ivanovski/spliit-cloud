@@ -7,7 +7,8 @@
       "signIn": "Autentifică-te pe Spliit Cloud",
       "createAccount": "Creează un cont",
       "createGroup": "Creează un grup",
-      "importGroup": "Importă grup dintr-un alt serviciu"
+      "importGroup": "Importă grup dintr-un alt serviciu",
+      "createFriendLedger": "Creează registru de prieten"
     },
     "features": {
       "groupsSync": {
@@ -95,13 +96,7 @@
     "myGroups": "Grupurile mele",
     "create": "Adaugă",
     "loadingRecent": "Se încarcă ultimele tale grupuri…",
-    "NoRecent": {
-      "description": "Nu ai încă niciun grup.",
-      "create": "Adaugă unul",
-      "orAsk": "sau roagă un prieten să te invite în grupul lui."
-    },
-    "recent": "Ultimele grupuri",
-    "starred": "Grupuri favorite",
+    "starred": "Favorite",
     "archived": "Grupuri arhivate",
     "backToGroups": "Înapoi la grupuri",
     "removeRecent": "Șterge din ultimele grupuri",
@@ -116,17 +111,19 @@
       "link": "Mergi la pagina principală"
     },
     "createdInviteHint": "Grup creat. Invită membri pentru a începe.",
-    "NoRecentAllHidden": {
-      "description": "Ai ascuns toate grupurile tale.",
-      "showHidden": "Arată grupurile ascunse"
-    },
-    "hidden": "Grupuri ascunse",
+    "hidden": "Ascunse",
     "showHidden": "Arată grupurile ascunse",
+    "showArchived": "Afișează grupurile arhivate",
     "hide": "Ascunde grupul",
     "unhide": "Arată grupul",
+    "hideFriend": "Ascunde registrul de prieten",
+    "unhideFriend": "Afișează registrul de prieten",
     "starGroup": "Adaugă la favorite",
     "unstarGroup": "Elimină din favorite",
+    "starFriend": "Marchează ca favorit registrul de prieten",
+    "unstarFriend": "Elimină din favorite registrul de prieten",
     "groupActions": "Acțiuni asupra grupului",
+    "friendActions": "Acțiuni pentru registrul de prieten",
     "archiveGroup": "Arhivează grupul",
     "unarchiveGroup": "Dezarhivează grupul",
     "archiveSuccess": "Grup arhivat.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Lăsați nelegat",
           "leaveUnlinkedDescription": "Păstrează doar numele — legați mai târziu din Membri.",
           "leaveUnlinkedFollowUp": "{name} va apărea ca o intrare doar cu nume, fără acces la aplicație. Îl puteți lega de un cont mai târziu din fila Membri.",
-          "inviteContact": "Din contactele tale",
-          "inviteContactDescription": "Invită un contact din grupuri la care ai mai participat.",
-          "selectContactLabel": "Contact",
-          "selectContactPlaceholder": "Selectează un contact…",
-          "contactAlreadyMember": "Deja membru",
-          "contactPendingInvite": "Deja invitat"
+          "inviteFriend": "Dintre prietenii tăi",
+          "inviteFriendDescription": "Invită un prieten din grupuri pe care le-ați împărțit înainte.",
+          "selectFriendLabel": "Prieten",
+          "selectFriendPlaceholder": "Selectează un prieten…",
+          "friendAlreadyMember": "Deja membru",
+          "friendPendingInvite": "Deja invitat"
         }
       },
       "fetchingGroup": "Se preia grupul de pe spliit.app…",
@@ -384,7 +381,24 @@
       "toast": {
         "deleted": "Grup șters."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Creează un grup",
+      "description": "Urmărește cheltuielile comune cu prietenii, familia sau colegii de apartament."
+    },
+    "groups": "Grupuri",
+    "friends": "Registre de prieten",
+    "createExpense": "Creează o cheltuială",
+    "pending": "În așteptare",
+    "scopePickerGroups": "Alege un grup",
+    "scopePickerFriends": "Alege un registru de prieten",
+    "scopePickerEmpty": "Nu există încă grupuri",
+    "scopePickerMembers": "{count} membru/membri",
+    "createFriendLedgerCard": {
+      "description": "Echilibrează socotelile unu-la-unu cu o anumită persoană.",
+      "title": "Creează registru de prieten"
+    },
+    "importGroup": "Importă grup"
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -1167,17 +1181,17 @@
       "tab": {
         "email": "E-mail",
         "link": "Link de invitație",
-        "contacts": "Contacte"
+        "friends": "Prieteni"
       },
       "emailDescription": "Trimite o invitație prin e-mail. Persoana invitată se alătură după ce acceptă de pe un cont corespunzător.",
       "linkDescription": "Generează un link de unică folosință pe care oricine îl poate folosi pentru a se alătura. Link-ul nu mai funcționează după prima acceptare.",
       "temporaryName": "Nume temporar (opțional)",
       "temporaryNamePlaceholder": "ex. colegul de apartament al lui Alex",
-      "contactsDescription": "Invită pe cineva din grupuri la care ai participat.",
-      "selectContactPlaceholder": "Selectează o persoană…",
-      "contactAlreadyMember": "Deja membru",
-      "noContacts": "Încă nu ai contacte. Invită din fila E-mail.",
-      "contactAlreadyInvited": "Deja invitat"
+      "friendsDescription": "Invită pe cineva din grupurile pe care le-ai împărțit.",
+      "selectFriendPlaceholder": "Selectează un prieten…",
+      "friendAlreadyMember": "Deja membru",
+      "noFriends": "Nu ai încă prieteni. Invită din fila E-mail.",
+      "friendAlreadyInvited": "Deja invitat"
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -1376,5 +1390,44 @@
       "step1": "Apasă pe butonul de meniu (⋮) din dreapta sus",
       "step2": "Apasă pe Instalează"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Creează un grup",
+      "createFriendLedger": "Creează un registru de prieten",
+      "showHidden": "Afișează grupurile ascunse"
+    },
+    "description": {
+      "empty": "Creează primul tău {itemLabel} pentru a începe."
+    },
+    "labels": {
+      "group": "grup",
+      "groupPlural": "grupuri",
+      "friendLedger": "registru de prieten",
+      "friendLedgerPlural": "registre de prieten"
+    },
+    "title": {
+      "empty": "Nu ai încă {itemLabelPlural}",
+      "filtered": "Toate {itemLabelPlural} tale sunt ascunse"
+    }
+  },
+  "Friends": {
+    "title": "Creează un registru de prieten",
+    "peerFriendsTab": "Lista de prieteni",
+    "peerEmailTab": "E-mail",
+    "peerLinkTab": "Link partajabil",
+    "alreadyHasLedger": "are deja un registru de prieten",
+    "inviteSent": "Invitație trimisă. Prietenul tău va fi adăugat când se alătură Spliit.",
+    "inviteLinkTitle": "Partajează acest link",
+    "inviteLinkDescription": "Partajează acest link cu prietenul tău pentru a-l adăuga la registru.",
+    "copy": "Copiază",
+    "share": "Partajează",
+    "linkHelp": "Generează un link partajabil pe care prietenul tău îl poate folosi pentru a se alătura acestui registru.",
+    "emailLabel": "E-mailul prietenului",
+    "temporaryNameLabel": "Nume afișat",
+    "temporaryNameHelp": "Introduceți un nume pentru persoana pe care o invitați.",
+    "friendsEmpty": "Adaugă un prieten introducând e-mailul lui sau partajează un link pentru a-l invita.",
+    "infoLabel": "Informații (opțional)",
+    "infoPlaceholder": "Adaugă un context, de exemplu «Cheltuieli de colocatar»"
   }
 }

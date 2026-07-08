@@ -1,8 +1,13 @@
-import { GroupInvitationStatus, GroupInvitationType, prisma } from '@spliit/db'
+import {
+  GroupInvitationStatus,
+  GroupInvitationType,
+  GroupType,
+  prisma,
+} from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { getGroup } from '../../../lib/api'
-import { hashLinkToken } from '../../../lib/invitations'
+import { acceptLinkInvitation, hashLinkToken } from '../../../lib/invitations'
 import {
   linkInviteTokenInput,
   loadGroupContext,
@@ -67,11 +72,13 @@ export const getGroupProcedure = protectedProcedure
         accountId: account.id,
       })
       const group = await getGroup(groupId)
+      const displayName = group ? resolveDisplayName(group, account.id) : ''
       const linkInviteState = linkInviteToken
         ? await resolveLinkInviteState(groupId, linkInviteToken)
         : null
       return {
         group,
+        displayName,
         currentLedgerParticipantId: member.ledgerParticipant?.id ?? null,
         currentMember: {
           id: member.id,
@@ -100,7 +107,62 @@ export const getGroupProcedure = protectedProcedure
           message: 'This invite link is not valid for this group.',
         })
       }
+
+      // For FRIEND groups with a valid PENDING link token, auto-accept
+      // the invitation immediately — no Accept/Decline banner. This
+      // way the link owner shares it off-channel and the recipient
+      // lands directly in the group.
+      if (linkInviteState === 'PENDING') {
+        const groupTypeResult = await prisma.group.findUnique({
+          where: { id: groupId },
+          select: { groupType: true },
+        })
+        if (groupTypeResult?.groupType === GroupType.FRIEND) {
+          try {
+            await acceptLinkInvitation({
+              token: linkInviteToken,
+              accountId: account.id,
+            })
+          } catch {
+            // Race: another request accepted first or the invitation
+            // state changed underneath us. Fall through to the normal
+            // flow which surfaces the current state via the banner.
+          }
+          // Re-check membership after auto-accept. If the user is now
+          // a member, return the full group context like the
+          // isActiveMember branch.
+          const memberLookupRetry = await prisma.groupMember.findUnique({
+            where: {
+              groupId_accountId: { groupId, accountId: account.id },
+            },
+            include: { ledgerParticipant: true },
+          })
+          if (memberLookupRetry && memberLookupRetry.status === 'ACTIVE') {
+            const { member } = await loadGroupContext({
+              groupId,
+              accountId: account.id,
+            })
+            const group = await getGroup(groupId)
+            const displayName = group
+              ? resolveDisplayName(group, account.id)
+              : ''
+            return {
+              group,
+              displayName,
+              currentLedgerParticipantId: member.ledgerParticipant?.id ?? null,
+              currentMember: {
+                id: member.id,
+                role: member.role,
+                status: member.status,
+              },
+              currentInvitation: null,
+              linkInviteState: 'ACCEPTED' as const,
+            }
+          }
+        }
+      }
       const group = await getGroup(groupId)
+      const displayName = group ? resolveDisplayName(group, account.id) : ''
       const linkRow = await prisma.groupInvitation.findFirst({
         where: {
           groupId,
@@ -111,6 +173,7 @@ export const getGroupProcedure = protectedProcedure
       })
       return {
         group,
+        displayName,
         currentLedgerParticipantId: null,
         currentMember: null,
         currentInvitation:
@@ -140,8 +203,10 @@ export const getGroupProcedure = protectedProcedure
       })
       if (invitation) {
         const group = await getGroup(groupId)
+        const displayName = group ? resolveDisplayName(group, account.id) : ''
         return {
           group,
+          displayName,
           currentLedgerParticipantId: null,
           currentMember: null,
           currentInvitation: {
@@ -159,6 +224,25 @@ export const getGroupProcedure = protectedProcedure
       message: 'You are not an active member of this group',
     })
   })
+
+/**
+ * Compute a human-readable display name for the group. For FRIEND-typed
+ * groups whose `name` is always empty, resolve the name from the peer
+ * active member's account, a pending invitation's temporary name, or the
+ * invitation email. For regular groups, returns the stored name.
+ */
+function resolveDisplayName(
+  group: NonNullable<Awaited<ReturnType<typeof getGroup>>>,
+  viewerAccountId: string,
+): string {
+  if (group.groupType !== GroupType.FRIEND) return group.name
+  const peerMember = group.members.find((m) => m.accountId !== viewerAccountId)
+  if (peerMember?.account.name) return peerMember.account.name
+  const pendingInv = group.invitations[0]
+  if (pendingInv?.temporaryName) return pendingInv.temporaryName
+  if (pendingInv?.email) return pendingInv.email
+  return ''
+}
 
 /**
  * Resolve a link-invite token to its current state. Returns `null`

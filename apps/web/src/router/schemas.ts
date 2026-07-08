@@ -20,6 +20,8 @@ const cuidLike = z.string().min(1).catch('')
 export const groupIdParamSchema = cuidLike
 export const expenseIdParamSchema = cuidLike
 
+const optionalString = z.string().optional().catch(undefined)
+
 /**
  * Search-param schema for the `/groups/import` wizard. The `prefill`
  * field carries an encoded `spliit.app` group URL when the user
@@ -38,9 +40,14 @@ export const importGroupSearchSchema = z.object({
  * captured and forwarded to the server, which is the source of truth
  * for token validity — malformed or empty tokens are rejected with
  * FORBIDDEN, rendered as the "invalid link" page by the layout.
+ *
+ * `friendLinkInvite` carries the invite URL returned by
+ * `friends.create` on the link path. The layout surfaces it as a
+ * one-time dialog so the user can copy/share it before continuing.
  */
 export const groupSearchSchema = z.object({
   invite: z.string().optional(),
+  friendLinkInvite: optionalString,
 })
 
 export const groupParamsSchema = z.object({
@@ -51,8 +58,6 @@ export const expenseParamsSchema = z.object({
   groupId: groupIdParamSchema,
   expenseId: expenseIdParamSchema,
 })
-
-const optionalString = z.string().optional().catch(undefined)
 
 export const homeSearchSchema = z.object({
   redirect: optionalString,

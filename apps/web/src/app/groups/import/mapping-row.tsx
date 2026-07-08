@@ -3,8 +3,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import type { AuthAccount } from '@/lib/auth'
 import type { ParticipantMappingState } from '@spliit/domain/import'
 import { useTranslation } from 'react-i18next'
-import { ContactFollowUp } from './mapping-followup-contact'
 import { EmailFollowUp } from './mapping-followup-email'
+import { FriendFollowUp } from './mapping-followup-friend'
 import { LinkFollowUp } from './mapping-followup-link'
 import { LinkExistingFollowUp } from './mapping-followup-link-existing'
 import { SelfFollowUp } from './mapping-followup-self'
@@ -20,7 +20,7 @@ import {
   modeFromValue,
 } from './mapping-mode-select'
 
-type Contact = {
+type Friend = {
   accountId: string
   name: string
   email: string
@@ -40,7 +40,7 @@ export function MappingRow({
   onChange,
   name,
   destinationParticipants,
-  contacts,
+  friends,
 }: {
   mode: ParticipantMappingState['mode']
   account: AuthAccount | null | undefined
@@ -57,7 +57,7 @@ export function MappingRow({
     pending: boolean
     unlinked: boolean
   }>
-  contacts: Contact[]
+  friends: Friend[]
 }) {
   const { t } = useTranslation()
   const normalizedImporterEmail = account?.email?.toLowerCase().trim() ?? null
@@ -78,12 +78,12 @@ export function MappingRow({
     },
     {
       value: CONTACT_VALUE,
-      label: t('Groups.Import.Mapping.Row.inviteContact'),
-      description: t('Groups.Import.Mapping.Row.inviteContactDescription'),
+      label: t('Groups.Import.Mapping.Row.inviteFriend'),
+      description: t('Groups.Import.Mapping.Row.inviteFriendDescription'),
       followUp: () => (
-        <ContactFollowUp
-          contacts={contacts}
-          contactAccountId={contactAccountId}
+        <FriendFollowUp
+          friends={friends}
+          friendAccountId={contactAccountId}
           account={account}
           onChange={onChange}
         />

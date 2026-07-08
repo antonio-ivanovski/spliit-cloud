@@ -1,3 +1,4 @@
+import { GroupType } from '@spliit/db'
 import { groupFormSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
@@ -26,6 +27,15 @@ export const updateGroupProcedure = protectedProcedure
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'This group is archived and its settings cannot be modified',
+      })
+    }
+    if (
+      group.groupType === GroupType.FRIEND &&
+      groupFormValues.name !== group.name
+    ) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'friendLedgerNotRenamable',
       })
     }
     await updateGroup(groupId, groupFormValues, {

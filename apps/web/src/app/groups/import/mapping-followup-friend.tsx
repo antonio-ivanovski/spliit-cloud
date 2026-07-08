@@ -10,7 +10,7 @@ import type { AuthAccount } from '@/lib/auth'
 import type { ParticipantMappingState } from '@spliit/domain/import'
 import { useTranslation } from 'react-i18next'
 
-type Contact = {
+type Friend = {
   accountId: string
   name: string
   email: string
@@ -19,14 +19,14 @@ type Contact = {
   isPendingInvite: boolean
 }
 
-export function ContactFollowUp({
-  contacts,
-  contactAccountId,
+export function FriendFollowUp({
+  friends,
+  friendAccountId,
   account,
   onChange,
 }: {
-  contacts: Contact[]
-  contactAccountId?: string
+  friends: Friend[]
+  friendAccountId?: string
   account: AuthAccount | null | undefined
   onChange: (patch: Partial<ParticipantMappingState>) => void
 }) {
@@ -34,16 +34,16 @@ export function ContactFollowUp({
 
   return (
     <div className="mt-2 grid gap-1.5">
-      <Label>{t('Groups.Import.Mapping.Row.selectContactLabel')}</Label>
+      <Label>{t('Groups.Import.Mapping.Row.selectFriendLabel')}</Label>
       <Select
-        value={contactAccountId ?? ''}
+        value={friendAccountId ?? ''}
         onValueChange={(value) => {
-          const contact = contacts.find((c) => c.accountId === value)
-          if (contact) {
+          const friend = friends.find((f) => f.accountId === value)
+          if (friend) {
             onChange({
               mode: 'INVITE_CONTACT',
-              contactAccountId: contact.accountId,
-              inviteEmail: contact.email,
+              contactAccountId: friend.accountId,
+              inviteEmail: friend.email,
               linkedAccountId: account?.id,
               existingLedgerParticipantId: undefined,
             })
@@ -52,29 +52,27 @@ export function ContactFollowUp({
       >
         <SelectTrigger>
           <SelectValue
-            placeholder={t(
-              'Groups.Import.Mapping.Row.selectContactPlaceholder',
-            )}
+            placeholder={t('Groups.Import.Mapping.Row.selectFriendPlaceholder')}
           />
         </SelectTrigger>
         <SelectContent>
-          {contacts.map((c) => (
+          {friends.map((f) => (
             <SelectItem
-              key={c.accountId}
-              value={c.accountId}
-              disabled={c.isMember || c.isPendingInvite}
+              key={f.accountId}
+              value={f.accountId}
+              disabled={f.isMember || f.isPendingInvite}
             >
               <span className="flex items-center gap-2">
-                <span>{c.name}</span>
-                <span className="text-xs text-muted-foreground">{c.email}</span>
-                {c.isMember && (
+                <span>{f.name}</span>
+                <span className="text-xs text-muted-foreground">{f.email}</span>
+                {f.isMember && (
                   <span className="text-xs text-muted-foreground">
-                    ({t('Groups.Import.Mapping.Row.contactAlreadyMember')})
+                    ({t('Groups.Import.Mapping.Row.friendAlreadyMember')})
                   </span>
                 )}
-                {c.isPendingInvite && !c.isMember && (
+                {f.isPendingInvite && !f.isMember && (
                   <span className="text-xs text-muted-foreground">
-                    ({t('Groups.Import.Mapping.Row.contactPendingInvite')})
+                    ({t('Groups.Import.Mapping.Row.friendPendingInvite')})
                   </span>
                 )}
               </span>

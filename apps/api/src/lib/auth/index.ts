@@ -4,6 +4,7 @@ import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { magicLink } from 'better-auth/plugins'
+import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
 import { env, webOrigins } from '../env'
 import { buildProviderPlaceholderEmail } from '../invitations'
 import { sendEmail } from '../mail/send'
@@ -247,6 +248,27 @@ export const auth = betterAuth({
 
   hooks: {
     before: passwordPolicyMiddleware,
+  },
+
+  // Reconcile pending friend-ledger invitations that target this
+  // account's email immediately after the account row is created.
+  // This is a one-time initialization — the hook fires on sign-up
+  // (email/password, magic link, OAuth) and on programmatic account
+  // creation. The function is idempotent: subsequent calls are no-ops
+  // because all matching invitations are already flipped to ACCEPTED.
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          if (user.email) {
+            await autoAcceptPendingFriendInvitationsForAccount({
+              accountId: user.id,
+              accountEmail: user.email,
+            })
+          }
+        },
+      },
+    },
   },
 
   emailAndPassword: {

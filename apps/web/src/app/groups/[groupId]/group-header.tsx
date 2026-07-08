@@ -16,6 +16,7 @@ export const GroupHeader = () => {
     isLoading,
     groupId,
     group,
+    displayName,
     currentMember,
     currentInvitation,
     linkInviteState,
@@ -101,7 +102,11 @@ export const GroupHeader = () => {
   // by `groups.get` when a token is in the URL). `null` means the
   // URL has no token — we fall back to the regular email-invite
   // banner.
-  const showLinkAlreadyMember = !!inviteToken && !!currentMember && !isLoading
+  const showLinkAlreadyMember =
+    !!inviteToken &&
+    !!currentMember &&
+    !isLoading &&
+    linkInviteState !== 'ACCEPTED'
 
   const showLinkExpiredOrInvalid =
     !!inviteToken &&
@@ -141,7 +146,7 @@ export const GroupHeader = () => {
           {isLoading ? (
             <Skeleton className="mt-1.5 mb-1.5 h-5 w-32" />
           ) : (
-            <div className="flex">{group.name}</div>
+            <div className="flex">{displayName || group.name}</div>
           )}
         </Link>
       </h1>

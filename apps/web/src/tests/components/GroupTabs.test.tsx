@@ -1,0 +1,72 @@
+import { render, screen } from '@/test/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+const mocks = vi.hoisted(() => ({
+  mockUseCurrentGroup: vi.fn(),
+}))
+
+vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
+  useCurrentGroup: mocks.mockUseCurrentGroup,
+  useIsPendingInvitee: () => false,
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    account: {
+      members: {
+        useQuery: vi.fn(() => ({ data: { members: [] }, isLoading: false })),
+      },
+    },
+    groups: {
+      archive: {
+        useMutation: vi.fn(() => ({ mutateAsync: vi.fn() })),
+      },
+      get: {
+        useQuery: vi.fn(() => ({ data: null })),
+      },
+    },
+    useUtils: () => ({
+      account: { groups: { invalidate: vi.fn() } },
+      groups: { get: { invalidate: vi.fn() } },
+    }),
+  },
+}))
+
+vi.mock('@/lib/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+  usePathname: () => '/groups/group-1/expenses',
+}))
+
+vi.mock('@/components/ui/use-toast', () => ({
+  useToast: () => ({ toast: vi.fn() }),
+}))
+
+import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
+
+describe('GroupTabs', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      group: { id: 'group-1', groupType: 'GROUP' },
+      currentMember: { role: 'ADMIN' },
+    })
+  })
+
+  it('renders Members tab when groupType is GROUP', () => {
+    render(<GroupTabs groupId="group-1" />)
+    expect(screen.getByRole('tab', { name: /Members/i })).toBeInTheDocument()
+  })
+
+  it('hides Members tab when groupType is FRIEND', () => {
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      group: { id: 'group-1', groupType: 'FRIEND' },
+      currentMember: { role: 'ADMIN' },
+    })
+    render(<GroupTabs groupId="group-1" />)
+    expect(
+      screen.queryByRole('tab', { name: /Members/i }),
+    ).not.toBeInTheDocument()
+  })
+})

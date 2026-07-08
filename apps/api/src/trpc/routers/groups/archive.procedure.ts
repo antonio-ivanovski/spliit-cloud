@@ -1,4 +1,4 @@
-import { prisma } from '@spliit/db'
+import { GroupType, prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
@@ -33,7 +33,7 @@ export const archiveGroupProcedure = protectedProcedure
     }),
   )
   .mutation(async ({ input: { groupId, archived, force = false }, ctx }) => {
-    const { member } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
     })
@@ -43,14 +43,20 @@ export const archiveGroupProcedure = protectedProcedure
         message: 'Only admins can archive a group',
       })
     }
+    if (group.groupType === GroupType.FRIEND) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'friendLedgerNotArchivable',
+      })
+    }
 
     // Re-archive (unarchive then archive) is always allowed because the
     // existing state already cleared any previous settlement expenses.
-    const group = await prisma.group.findUnique({
+    const archivedRow = await prisma.group.findUnique({
       where: { id: groupId },
       select: { archived: true },
     })
-    const wasAlreadyArchived = !!group?.archived
+    const wasAlreadyArchived = !!archivedRow?.archived
     const willArchive = archived && !wasAlreadyArchived
 
     if (willArchive && !force) {

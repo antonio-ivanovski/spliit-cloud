@@ -7,7 +7,8 @@
       "signIn": "Kirjaudu Spliit Cloudiin",
       "createAccount": "Luo tili",
       "createGroup": "Luo ryhmä",
-      "importGroup": "Tuo ryhmä toisesta palvelusta"
+      "importGroup": "Tuo ryhmä toisesta palvelusta",
+      "createFriendLedger": "Luo ystäväkirjanpito"
     },
     "features": {
       "groupsSync": {
@@ -96,25 +97,21 @@
     "create": "Luo ryhmä",
     "createdInviteHint": "Ryhmä luotu. Kutsu jäseniä aloittaaksesi.",
     "loadingRecent": "Ladataan äskettäisiä ryhmiä…",
-    "NoRecent": {
-      "description": "Sinulla ei ole vielä yhtään ryhmää.",
-      "create": "Luo uusi ryhmä",
-      "orAsk": "tai pyydä ystävää kutsumaan sinut ryhmäänsä."
-    },
-    "NoRecentAllHidden": {
-      "description": "Olet piilottanut kaikki ryhmäsi.",
-      "showHidden": "Näytä piilotetut ryhmät"
-    },
-    "recent": "Äskettäiset",
     "starred": "Suosikit",
     "archived": "Arkistoidut",
-    "hidden": "Piilotetut ryhmät",
+    "hidden": "Piilotettu",
     "showHidden": "Näytä piilotetut ryhmät",
+    "showArchived": "Näytä arkistoidut ryhmät",
     "hide": "Piilota ryhmä",
     "unhide": "Paljasta ryhmä",
+    "hideFriend": "Piilota ystäväkirjanpito",
+    "unhideFriend": "Paljasta ystäväkirjanpito",
     "starGroup": "Merkitse suosikiksi",
     "unstarGroup": "Poista suosikki",
+    "starFriend": "Merkitse ystäväkirjanpito suosikiksi",
+    "unstarFriend": "Poista ystäväkirjanpito suosikeista",
     "groupActions": "Ryhmän toiminnot",
+    "friendActions": "Ystäväkirjanpidon toiminnot",
     "archiveGroup": "Arkistoi ryhmä",
     "unarchiveGroup": "Palauta arkistosta",
     "archiveSuccess": "Ryhmä arkistoitu.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Jätä linkittämättä",
           "leaveUnlinkedDescription": "Säilyttää vain nimen — linkitä myöhemmin Jäsenet-välilehdeltä.",
           "leaveUnlinkedFollowUp": "{name} näkyy vain nimen sisältävänä merkintänä ilman sovelluspääsyä. Voit linkittää heidät tiliin myöhemmin Jäsenet-välilehdeltä.",
-          "inviteContact": "Yhteystiedoistasi",
-          "inviteContactDescription": "Kutsu yhteyshenkilö ryhmistä, joiden kanssa olet jakanut aiemmin.",
-          "selectContactLabel": "Yhteyshenkilö",
-          "selectContactPlaceholder": "Valitse yhteyshenkilö…",
-          "contactAlreadyMember": "On jo jäsen",
-          "contactPendingInvite": "Kutsuttu jo"
+          "inviteFriend": "Kaverilistaltasi",
+          "inviteFriendDescription": "Kutsu kaveri aiemmin jakamiltasi ryhmistä.",
+          "selectFriendLabel": "Kaveri",
+          "selectFriendPlaceholder": "Valitse kaveri…",
+          "friendAlreadyMember": "Jo jäsen",
+          "friendPendingInvite": "Jo kutsuttu"
         }
       },
       "fetchingGroup": "Noudetaan ryhmää spliit.app-palvelusta…",
@@ -384,7 +381,24 @@
       "error": {
         "generic": "Ryhmän poistaminen epäonnistui. Yritä uudelleen."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Luo ryhmä",
+      "description": "Seuraa yhteisiä kuluja ystävien, perheen tai kämppäkavereiden kanssa."
+    },
+    "groups": "Ryhmät",
+    "friends": "Ystäväkirjanpidot",
+    "createExpense": "Lisää kulu",
+    "pending": "Odottaa",
+    "scopePickerGroups": "Valitse ryhmä",
+    "scopePickerFriends": "Valitse ystäväkirjanpito",
+    "scopePickerEmpty": "Ei vielä ryhmiä",
+    "scopePickerMembers": "{count} jäsentä",
+    "createFriendLedgerCard": {
+      "description": "Tasaa velat suoraan tietyn henkilön kanssa.",
+      "title": "Luo ystäväkirjanpito"
+    },
+    "importGroup": "Tuo ryhmä"
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "Sähköposti",
         "link": "Kutsulinkki",
-        "contacts": "Yhteystiedot"
+        "friends": "Kaverit"
       },
       "emailDescription": "Lähetä kutsu sähköpostilla. Kutsuttu liittyy, kun hän hyväksyy sen vastaavalta tililtä.",
       "linkDescription": "Luo kertakäyttöinen linkki, jota kuka tahansa voi käyttää liittyäkseen. Linkki lakkaa toimimasta ensimmäisen hyväksymisen jälkeen.",
@@ -1173,11 +1187,11 @@
         "generateNew": "Luo uusi linkki"
       },
       "temporaryNamePlaceholder": "esim. Alexin kämppäkaveri",
-      "contactsDescription": "Kutsu joku ryhmistä, joiden kanssa olet jakanut.",
-      "selectContactPlaceholder": "Valitse henkilö…",
-      "contactAlreadyMember": "On jo jäsen",
-      "noContacts": "Ei vielä yhteystietoja. Kutsu sähköposti-välilehdeltä.",
-      "contactAlreadyInvited": "Kutsuttu jo"
+      "friendsDescription": "Kutsu joku jakamiltasi ryhmistä.",
+      "selectFriendPlaceholder": "Valitse kaveri…",
+      "friendAlreadyMember": "Jo jäsen",
+      "noFriends": "Ei vielä kavereita. Kutsu Sähköposti-välilehdeltä.",
+      "friendAlreadyInvited": "Jo kutsuttu"
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -1376,5 +1390,44 @@
       "step1": "Napauta valikkopainiketta (⋮) oikeasta yläkulmasta",
       "step2": "Napauta Asenna"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Luo ryhmä",
+      "createFriendLedger": "Luo ystäväkirjanpito",
+      "showHidden": "Näytä piilotetut ryhmät"
+    },
+    "labels": {
+      "group": "ryhmä",
+      "groupPlural": "ryhmät",
+      "friendLedger": "ystäväkirjanpito",
+      "friendLedgerPlural": "ystäväkirjanpidot"
+    },
+    "description": {
+      "empty": "Luo ensimmäinen {itemLabel} aloittaaksesi."
+    },
+    "title": {
+      "empty": "Ei vielä yhtään {itemLabelPlural}",
+      "filtered": "Kaikki {itemLabelPlural} on piilotettu"
+    }
+  },
+  "Friends": {
+    "title": "Luo ystäväkirjanpito",
+    "peerFriendsTab": "Kaverilista",
+    "peerEmailTab": "Sähköposti",
+    "peerLinkTab": "Jaettava linkki",
+    "alreadyHasLedger": "on jo ystäväkirjanpito",
+    "inviteSent": "Kutsu lähetetty. Kaverisi lisätään, kun hän liittyy Spliittiin.",
+    "inviteLinkTitle": "Jaa tämä linkki",
+    "inviteLinkDescription": "Jaa tämä linkki kaverillesi lisätäksesi hänet kirjanpitoon.",
+    "copy": "Kopioi",
+    "share": "Jaa",
+    "linkHelp": "Luo jaettava linkki, jota kaverisi voi käyttää liittyäkseen tähän kirjanpitoon.",
+    "emailLabel": "Kaverin sähköposti",
+    "temporaryNameLabel": "Näyttönimi",
+    "temporaryNameHelp": "Anna nimi henkilölle, jota kutsut.",
+    "friendsEmpty": "Lisää kaveri syöttämällä hänen sähköpostinsa tai jaa linkki kutsua varten.",
+    "infoLabel": "Tiedot (valinnainen)",
+    "infoPlaceholder": "Lisää kontekstia, esim. 'Kämppäkaverin kulut'"
   }
 }

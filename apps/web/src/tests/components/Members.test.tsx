@@ -76,7 +76,7 @@ vi.mock('@/trpc/client', () => {
         account: {
           members: { invalidate: vi.fn().mockResolvedValue(undefined) },
           groups: { invalidate: vi.fn().mockResolvedValue(undefined) },
-          contacts: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          friends: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
       }),
       invitations: {
@@ -109,8 +109,8 @@ vi.mock('@/trpc/client', () => {
         members: {
           useQuery: () => ({ data: mockMembersData, isLoading: false }),
         },
-        contacts: {
-          useQuery: () => ({ data: { contacts: [] }, isLoading: false }),
+        friends: {
+          useQuery: () => ({ data: { friends: [] }, isLoading: false }),
         },
       },
       groups: {
@@ -211,6 +211,7 @@ beforeEach(() => {
     isLoading: false,
     groupId: 'group-1',
     group: mockGroup,
+    displayName: mockGroup.name,
     currentLedgerParticipantId: 'lp-1',
     currentMember: mockCurrentMember,
     currentInvitation: null,
@@ -238,14 +239,14 @@ describe('GroupMembers', () => {
   it('renders invite by email form when user is admin', () => {
     render(<GroupMembers />)
 
-    // Should render the invite tabs (Contacts, Email, Invite link)
+    // Should render the invite tabs (Friends, Email, Invite link)
     const tabs = screen.getAllByRole('tab')
     expect(tabs.length).toBe(3)
-    expect(tabs[0]).toHaveTextContent('Contacts')
+    expect(tabs[0]).toHaveTextContent('Friends')
     expect(tabs[1]).toHaveTextContent('Email')
     expect(tabs[2]).toHaveTextContent('Invite link')
 
-    // Email field should be visible (default tab when no contacts exist)
+    // Email field should be visible (default tab when no friends exist)
     const emailInput = screen.getByRole('textbox', { name: 'Email' })
     expect(emailInput).toBeInTheDocument()
     expect(emailInput).toHaveAttribute('type', 'email')
@@ -305,6 +306,7 @@ describe('GroupMembers', () => {
           },
         ],
       } as unknown as Group,
+      displayName: mockGroup.name,
       currentLedgerParticipantId: 'lp-1',
       currentMember: { id: 'gm-1', role: 'ADMIN', status: 'ACTIVE' },
       currentInvitation: null,
@@ -352,6 +354,7 @@ describe('GroupMembers', () => {
           },
         ],
       } as unknown as Group,
+      displayName: mockGroup.name,
       currentLedgerParticipantId: 'lp-1',
       currentMember: { id: 'gm-1', role: 'ADMIN', status: 'ACTIVE' },
       currentInvitation: null,
@@ -375,6 +378,7 @@ describe('GroupMembers', () => {
       isLoading: false,
       groupId: 'group-1',
       group: mockGroup,
+      displayName: mockGroup.name,
       currentLedgerParticipantId: 'lp-1',
       currentMember: { id: 'gm-1', role: 'MEMBER', status: 'ACTIVE' },
       currentInvitation: null,

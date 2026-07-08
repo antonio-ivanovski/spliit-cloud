@@ -7,7 +7,8 @@
       "signIn": "Se connecter à Spliit Cloud",
       "createAccount": "Créer un compte",
       "createGroup": "Créer un groupe",
-      "importGroup": "Importer un groupe depuis un autre service"
+      "importGroup": "Importer un groupe depuis un autre service",
+      "createFriendLedger": "Créer un compte entre amis"
     },
     "features": {
       "groupsSync": {
@@ -95,13 +96,7 @@
     "myGroups": "Mes groupes",
     "create": "Créer",
     "loadingRecent": "Chargement des groupes récents…",
-    "NoRecent": {
-      "description": "Vous n'avez pas encore de groupe.",
-      "create": "Créer un groupe",
-      "orAsk": "ou demandez à un ami de vous inviter dans son groupe."
-    },
-    "recent": "Groupes récents",
-    "starred": "Groupes favoris",
+    "starred": "Favoris",
     "archived": "Groupes archivés",
     "backToGroups": "Retour aux groupes",
     "removeRecent": "Supprimer des groupes récents",
@@ -116,17 +111,19 @@
       "link": "Aller à l'accueil"
     },
     "createdInviteHint": "Groupe créé. Invitez des membres pour commencer.",
-    "NoRecentAllHidden": {
-      "description": "Vous avez masqué tous vos groupes.",
-      "showHidden": "Afficher les groupes masqués"
-    },
-    "hidden": "Groupes masqués",
+    "hidden": "Masqués",
     "showHidden": "Afficher les groupes masqués",
+    "showArchived": "Afficher les groupes archivés",
     "hide": "Masquer le groupe",
     "unhide": "Afficher le groupe",
+    "hideFriend": "Masquer le compte entre amis",
+    "unhideFriend": "Afficher le compte entre amis",
     "starGroup": "Ajouter aux favoris",
     "unstarGroup": "Retirer des favoris",
+    "starFriend": "Mettre en favori le compte entre amis",
+    "unstarFriend": "Retirer le favori du compte entre amis",
     "groupActions": "Actions du groupe",
+    "friendActions": "Actions du compte entre amis",
     "archiveGroup": "Archiver le groupe",
     "unarchiveGroup": "Désarchiver le groupe",
     "archiveSuccess": "Groupe archivé.",
@@ -273,12 +270,12 @@
           "leaveUnlinked": "Laisser non lié",
           "leaveUnlinkedDescription": "Conserve uniquement le nom — liez plus tard depuis Membres.",
           "leaveUnlinkedFollowUp": "{name} apparaîtra comme une entrée avec seulement le nom, sans accès à l'application. Vous pouvez le lier à un compte plus tard depuis l'onglet Membres.",
-          "inviteContact": "Depuis vos contacts",
-          "inviteContactDescription": "Invitez un contact issu de groupes auxquels vous avez déjà participé.",
-          "selectContactLabel": "Contact",
-          "selectContactPlaceholder": "Sélectionnez un contact…",
-          "contactAlreadyMember": "Déjà membre",
-          "contactPendingInvite": "Déjà invité"
+          "inviteFriend": "Parmi vos amis",
+          "inviteFriendDescription": "Invitez un ami à partir de groupes que vous avez déjà partagés.",
+          "selectFriendLabel": "Ami",
+          "selectFriendPlaceholder": "Sélectionnez un ami…",
+          "friendAlreadyMember": "Déjà membre",
+          "friendPendingInvite": "Déjà invité"
         }
       },
       "fetchingGroup": "Récupération du groupe depuis spliit.app…",
@@ -384,7 +381,24 @@
       "toast": {
         "deleted": "Groupe supprimé."
       }
-    }
+    },
+    "createGroupCard": {
+      "title": "Créer un groupe",
+      "description": "Suivez les dépenses partagées avec vos amis, votre famille ou vos colocataires."
+    },
+    "groups": "Groupes",
+    "friends": "Comptes entre amis",
+    "createExpense": "Créer une dépense",
+    "pending": "En attente",
+    "scopePickerGroups": "Choisir un groupe",
+    "scopePickerFriends": "Choisir un compte entre amis",
+    "scopePickerEmpty": "Aucun groupe pour le moment",
+    "scopePickerMembers": "{count} membre(s)",
+    "createFriendLedgerCard": {
+      "description": "Réglez vos comptes en tête-à-tête avec une personne précise.",
+      "title": "Créer un compte entre amis"
+    },
+    "importGroup": "Importer un groupe"
   },
   "GroupForm": {
     "title": "Informations sur le groupe",
@@ -1153,7 +1167,7 @@
       "tab": {
         "email": "E-mail",
         "link": "Lien d'invitation",
-        "contacts": "Contacts"
+        "friends": "Amis"
       },
       "emailDescription": "Envoyez une invitation par e-mail. L'invité rejoint le groupe dès qu'il l'accepte depuis un compte correspondant.",
       "linkDescription": "Générez un lien à usage unique que n'importe qui peut utiliser pour rejoindre le groupe. Le lien cesse de fonctionner après la première acceptation.",
@@ -1173,11 +1187,11 @@
         "shareText": "Je viens de créer {groupName} pour nos dépenses partagées sur Spliit Cloud. Voici un lien d'invitation à usage unique — ouvrez-le pour nous rejoindre :\n{inviteUrl}",
         "generateNew": "Générer un nouveau lien"
       },
-      "contactsDescription": "Invitez quelqu'un de groupes auxquels vous avez participé.",
-      "selectContactPlaceholder": "Sélectionnez une personne…",
-      "contactAlreadyMember": "Déjà membre",
-      "noContacts": "Pas encore de contacts. Invitez depuis l'onglet E-mail.",
-      "contactAlreadyInvited": "Déjà invité"
+      "friendsDescription": "Invitez quelqu'un à partir des groupes que vous avez partagés.",
+      "selectFriendPlaceholder": "Sélectionnez un ami…",
+      "friendAlreadyMember": "Déjà membre",
+      "noFriends": "Aucun ami pour le moment. Invitez-en depuis l'onglet E-mail.",
+      "friendAlreadyInvited": "Déjà invité"
     },
     "invitations": {
       "title": "Invitations en attente",
@@ -1376,5 +1390,44 @@
       "step1": "Appuyez sur le bouton de menu (⋮) en haut à droite",
       "step2": "Appuyez sur Installer"
     }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Créer un groupe",
+      "createFriendLedger": "Créer un compte entre amis",
+      "showHidden": "Afficher les groupes masqués"
+    },
+    "description": {
+      "empty": "Créez votre premier {itemLabel} pour commencer."
+    },
+    "labels": {
+      "group": "groupe",
+      "groupPlural": "groupes",
+      "friendLedger": "compte entre amis",
+      "friendLedgerPlural": "comptes entre amis"
+    },
+    "title": {
+      "empty": "Aucun {itemLabelPlural} pour le moment",
+      "filtered": "Tous vos {itemLabelPlural} sont masqués"
+    }
+  },
+  "Friends": {
+    "title": "Créer un compte entre amis",
+    "peerFriendsTab": "Liste d'amis",
+    "peerEmailTab": "E-mail",
+    "peerLinkTab": "Lien partageable",
+    "alreadyHasLedger": "a déjà un compte entre amis",
+    "inviteSent": "Invitation envoyée. Votre ami sera ajouté lorsqu'il rejoindra Spliit.",
+    "inviteLinkTitle": "Partagez ce lien",
+    "inviteLinkDescription": "Partagez ce lien avec votre ami pour l'ajouter au compte.",
+    "copy": "Copier",
+    "share": "Partager",
+    "linkHelp": "Générez un lien partageable que votre ami peut utiliser pour rejoindre ce compte.",
+    "emailLabel": "E-mail de l'ami",
+    "temporaryNameLabel": "Nom affiché",
+    "temporaryNameHelp": "Saisissez un nom pour la personne que vous invitez.",
+    "friendsEmpty": "Ajoutez un ami en saisissant son e-mail ou partagez un lien pour l'inviter.",
+    "infoLabel": "Informations (facultatif)",
+    "infoPlaceholder": "Ajoutez un contexte, par exemple « Dépenses de colocation »"
   }
 }

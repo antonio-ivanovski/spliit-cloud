@@ -6,26 +6,35 @@ The system SHALL send immediate email notifications for expense create, update, 
 #### Scenario: Expense created notification
 - **WHEN** an active group member creates an expense with other active accepted account-backed participants
 - **THEN** the system sends an expense-created email to eligible affected participants other than the actor
+- **AND** the email subject SHALL use the passive format: `[Spliit Cloud] Expense "title" was added by actorName to groupName`
+- **AND** the email body SHALL use the passive format: `Expense "title" (amount) was added by actorName to groupName on date.`
 
 #### Scenario: Expense updated notification
 - **WHEN** an active group member updates an expense
 - **THEN** the system sends an expense-updated email to eligible participants affected by either the previous expense state or the updated expense state other than the actor
+- **AND** the email subject SHALL use the passive format: `[Spliit Cloud] Expense "title" was updated by actorName in groupName`
+- **AND** the email body SHALL include the changed fields section
 
 #### Scenario: Expense deleted notification
 - **WHEN** an active group member deletes an expense
 - **THEN** the system sends an expense-deleted email to eligible participants affected by the deleted expense state other than the actor
+- **AND** the email subject SHALL use the passive format: `[Spliit Cloud] Expense "title" was removed by actorName from groupName`
+- **AND** the email body SHALL use the passive format: `Expense "title" (amount) was removed by actorName from groupName on date.`
 
 #### Scenario: Bulk import summary notification
 - **WHEN** expenses are imported in bulk from an external source
 - **THEN** the system sends a single summary email per eligible affected active member with the import count, total amount, and source provider
+- **AND** the email subject SHALL use the format: `[Spliit Cloud] N expenses imported in groupName`
 
 #### Scenario: Settlement expense notification
 - **WHEN** a member leaves, is removed, or a group is archived and settlement expenses are created
 - **THEN** the system sends expense-created emails to eligible affected participants for each settlement expense
+- **AND** these notifications follow the same expense-created format
 
 #### Scenario: Recurring expense notification
 - **WHEN** a recurring expense is auto-created by the system
 - **THEN** the system sends an expense-created email with SYSTEM actor to eligible affected participants
+- **AND** these notifications follow the same expense-created format
 
 #### Scenario: Email includes relevant link
 - **WHEN** the system sends an expense notification email
@@ -34,6 +43,40 @@ The system SHALL send immediate email notifications for expense create, update, 
 #### Scenario: Notification failure is non-blocking
 - **WHEN** an expense notification email fails to send
 - **THEN** the system logs the failure and the original expense mutation remains successful
+
+### Requirement: Per-recipient friend-ledger display name in email notifications
+The system SHALL resolve friend-ledger display names per recipient when sending expense notification emails. The display name SHALL reflect the OTHER member's perspective relative to each individual recipient, not the actor's perspective. This ensures each recipient sees "your friend ledger with {peerName}" where the peer is the member opposite the recipient.
+
+#### Scenario: Recipient sees peer name, not self
+- **WHEN** the system sends an expense notification email for a `FRIEND`-typed group
+- **THEN** the group display name SHALL be computed using the recipient's account ID to find the peer (the other active member)
+- **AND** the email SHALL show `your friend ledger with {peerName}` where peerName is the OTHER member's name
+- **AND** the email SHALL NOT show the recipient's own name in the ledger reference
+
+#### Scenario: No active peer — use pending invitation name
+- **WHEN** the system sends an expense notification email for a `FRIEND`-typed group and the peer has only a pending invitation (no active membership)
+- **THEN** the group display name SHALL fall back to `your friend ledger with {temporaryName}` if a pending invitation exists
+
+#### Scenario: No peer information — generic fallback
+- **WHEN** the system sends an expense notification email for a `FRIEND`-typed group and neither an active peer nor a pending invitation can be resolved
+- **THEN** the group display name SHALL use the generic `your friend ledger`
+
+### Requirement: Currency formatting in expense notification emails
+The system SHALL format monetary amounts in expense notification emails with the ISO currency code prefix and the correct number of decimal places per the currency's definition. For expenses with a foreign currency, the email SHALL display both the original amount and the ledger-converted amount.
+
+#### Scenario: Amount formatted with currency code
+- **WHEN** the system sends an expense notification email with a known currency code
+- **THEN** the amount SHALL be formatted as `{currencyCode} {amount}` (e.g. `EUR 45.00`, `JPY 1000`)
+- **AND** decimal digits SHALL be determined by the currency's `decimal_digits` metadata (0 for JPY, 2 for EUR/USD)
+
+#### Scenario: Dual-currency display for cross-currency expenses
+- **WHEN** the system sends an expense notification email and the expense has a `originalCurrency` that differs from the ledger's currency
+- **THEN** the amount SHALL be displayed as `{originalAmount} ({convertedAmount})` (e.g. `JPY 5000 (EUR 6.70)`)
+
+#### Scenario: Same-currency expense uses ledger currency
+- **WHEN** the system sends an expense notification email and the expense has no `originalCurrency` (same-currency expense)
+- **THEN** the amount SHALL be formatted using the ledger's currency code
+- **AND** the email SHALL NOT show a bare numeric amount without a currency prefix
 
 ### Requirement: Expense notification recipient eligibility
 The system SHALL deliver expense notification emails only to affected active, accepted, account-backed group members with non-placeholder email addresses.
