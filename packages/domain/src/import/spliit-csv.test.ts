@@ -141,7 +141,9 @@ describe('tryParseSpliitCsv', () => {
     expect(result.ok).toBe(false)
   })
 
-  it('absorbs per-row rounding drift so the paidFor sum equals the amount', () => {
+  it('serializes BY_AMOUNT paidFor via domain helper (drift deferred to calculateShares)', () => {
+    // 5.38 + 5.38 = 10.76 major → 538+538 minor; Cost is 10.75 → 1075.
+    // Serializer does unit conversion only; read-side calculateShares absorbs residual.
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-25","Podaroci","General","EUR","10.75",,,,"No","Evenly",5.38,5.38`
     const result = tryParseSpliitCsv(csv)
@@ -149,10 +151,8 @@ describe('tryParseSpliitCsv', () => {
     if (!result.ok) return
     const e = result.source.expenses[0]
     expect(e.amount).toBe(1075)
-    const sum = e.paidFor.reduce((s, p) => s + p.shares, 0)
-    expect(sum).toBe(1075)
     expect(e.paidFor).toEqual([
-      { sourceId: e.paidFor[0].sourceId, shares: 537 },
+      { sourceId: e.paidFor[0].sourceId, shares: 538 },
       { sourceId: e.paidFor[1].sourceId, shares: 538 },
     ])
   })

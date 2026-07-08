@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { getBalances } from '../balances'
 import { expenseApiSchema } from '../schemas'
 import {
   applyAutoMatch,
@@ -756,7 +757,7 @@ describe('buildImportBatch', () => {
       )
     })
 
-    it('rounds the converted amount to the nearest minor unit', () => {
+    it('converts amount via Decimal precision (nearest minor unit)', () => {
       const participants: ParticipantMappingState[] = [
         mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
@@ -783,7 +784,11 @@ describe('buildImportBatch', () => {
       const { batch } = buildImportBatch(state, 'USD', rates)
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
-      expect(batch.expenses[0].amount).toBe(Math.round(333 * 1.1234))
+      // Decimal(333).mul(1.1234) → nearest integer via distributeRemainder
+      expect(batch.expenses[0].amount).toBe(374)
+      expect(batch.expenses[0].paidByList[0].shares).toBe(333)
+      expect(batch.expenses[0].originalAmount).toBe(333)
+      expect(batch.expenses[0].originalCurrency).toBe('EUR')
     })
 
     it('does not convert percentage paidFor shares during currency conversion', () => {
@@ -833,6 +838,140 @@ describe('buildImportBatch', () => {
       })
       const parsed = expenseApiSchema.safeParse(batch.expenses[0])
       expect(parsed.error?.issues).toBeUndefined()
+    })
+
+    it('converts BY_AMOUNT paidFor to ledger currency and keeps paidBy in original', () => {
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+        mappingRow('p-1', 'Jane', 'INVITE_BY_LINK'),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        destIds: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        resolvedExpenses: [
+          baseExpense(
+            'p-0',
+            [
+              { sourceId: 'p-0', shares: 7000 },
+              { sourceId: 'p-1', shares: 3000 },
+            ],
+            {
+              amount: 10000,
+              splitMode: 'BY_AMOUNT',
+              paidBy: [{ sourceId: 'p-0', shares: 10000 }],
+            },
+          ),
+        ],
+      }
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 0.92,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      const exp = batch.expenses[0]
+      // Decimal(10000).mul(0.92) = 9200
+      expect(exp.amount).toBe(9200)
+      expect(exp.originalAmount).toBe(10000)
+      expect(exp.originalCurrency).toBe('EUR')
+      // paidBy stays original-currency cents
+      expect(exp.paidByList).toEqual([{ participant: 'dest-a', shares: 10000 }])
+      // paidFor BY_AMOUNT converted: amountAsMinorUnits((cents/100)*0.92, USD)
+      expect(exp.paidFor).toEqual([
+        { participant: 'dest-a', shares: 6440 },
+        { participant: 'dest-b', shares: 2760 },
+      ])
+      expect(exp.paidFor.reduce((s, p) => s + p.shares, 0)).toBe(9200)
+    })
+
+    it('cross-currency import produces zero net via getBalances', () => {
+      // Imported expense: paid EUR 100, converted to USD at 0.92 → 92 USD.
+      // paidBy original EUR 100; paidFor BY_AMOUNT converted to ledger USD.
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+        mappingRow('p-1', 'Jane', 'INVITE_BY_LINK'),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        destIds: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        resolvedExpenses: [
+          baseExpense(
+            'p-0',
+            [
+              { sourceId: 'p-0', shares: 5000 },
+              { sourceId: 'p-1', shares: 5000 },
+            ],
+            {
+              amount: 10000,
+              splitMode: 'BY_AMOUNT',
+              paidBy: [{ sourceId: 'p-0', shares: 10000 }],
+            },
+          ),
+        ],
+      }
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 0.92,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      const exp = batch.expenses[0]
+      expect(exp.amount).toBe(9200)
+      expect(exp.paidByList[0].shares).toBe(10000)
+      expect(exp.paidFor.map((p) => p.shares)).toEqual([4600, 4600])
+
+      const balances = getBalances([
+        {
+          amount: exp.amount,
+          splitMode: exp.splitMode,
+          paidBySplitMode: exp.paidBySplitMode,
+          isReimbursement: exp.isReimbursement,
+          originalAmount: exp.originalAmount,
+          originalCurrency: exp.originalCurrency,
+          conversionRate: exp.conversionRate,
+          paidByList: exp.paidByList.map((p) => ({
+            shares: p.shares,
+            participant: { id: p.participant },
+          })),
+          paidFor: exp.paidFor.map((p) => ({
+            shares: p.shares,
+            participant: { id: p.participant },
+          })),
+        },
+      ])
+      const totalPaid = Object.values(balances).reduce((s, b) => s + b.paid, 0)
+      const totalPaidFor = Object.values(balances).reduce(
+        (s, b) => s + b.paidFor,
+        0,
+      )
+      expect(totalPaid).toBe(exp.amount)
+      expect(totalPaidFor).toBe(exp.amount)
+      const net = Object.values(balances).reduce((s, b) => s + b.total, 0)
+      expect(net).toBe(0)
     })
   })
 

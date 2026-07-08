@@ -1,10 +1,25 @@
 import Papa from 'papaparse'
+import type { Currency } from '../currency'
+import { getCurrency } from '../currency'
+import {
+  calculateExactShares,
+  distributeRemainder,
+  serializePaidBy,
+  serializePaidFor,
+} from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
 import { guessSplitMode } from './split-guess'
 import { splitwiseCategoryToId } from './splitwise-categories'
 import type { ImportParseResult, NormalizedSource } from './types'
 
 const PARTICIPANT_START_INDEX = 5
+
+const FALLBACK_CURRENCY: Currency = {
+  code: '',
+  symbol: '',
+  rounding: 0,
+  decimal_digits: 2,
+}
 
 function toNumberOrNull(value: string | undefined): number | null {
   if (value === undefined) return null
@@ -78,14 +93,17 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     const title = (row[1] ?? '').trim()
     const category = (row[2] ?? '').trim()
     const cost = toNumberOrNull(row[3])
-    const currency = (row[4] ?? '').trim().toUpperCase()
+    const currencyCode = (row[4] ?? '').trim().toUpperCase()
     if (!/^\d{4}-\d{2}-\d{2}/.test(date)) continue
     if (!title) continue
     if (cost === null) continue
-    if (currency.length !== 3) continue
+    if (currencyCode.length !== 3) continue
     if (title.toLowerCase() === 'total balance') continue
 
-    currencyCounts.set(currency, (currencyCounts.get(currency) ?? 0) + 1)
+    currencyCounts.set(
+      currencyCode,
+      (currencyCounts.get(currencyCode) ?? 0) + 1,
+    )
 
     const isReimbursement =
       category.toLowerCase() === 'payment' || /^.+ paid .+ /.test(title)
@@ -93,7 +111,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     // Per Splitwise convention each cell is `Paid - Owe`.
     let payerSourceId: string | null = null
     let maxRaw = -Infinity
-    const entries: Array<{ sourceId: string; raw: number; cents: number }> = []
+    const entries: Array<{ sourceId: string; raw: number }> = []
     for (let i = PARTICIPANT_START_INDEX; i < header.length; i++) {
       const name = (header[i] ?? '').trim()
       if (!name) continue
@@ -103,11 +121,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       if (idx === undefined) continue
       const sourceId = participants[idx].sourceId
       if (raw !== 0) {
-        entries.push({
-          sourceId,
-          raw,
-          cents: amountAsMinorUnitsByCode(Math.abs(raw), currency),
-        })
+        entries.push({ sourceId, raw })
       }
       if (raw > maxRaw) {
         maxRaw = raw
@@ -116,55 +130,84 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     }
     if (entries.length === 0 || maxRaw <= 0 || !payerSourceId) continue
 
-    const amountCents = amountAsMinorUnitsByCode(cost, currency)
+    const currency = getCurrency(currencyCode) ?? {
+      ...FALLBACK_CURRENCY,
+      code: currencyCode,
+      symbol: currencyCode,
+    }
+    const amountCents = amountAsMinorUnitsByCode(cost, currencyCode)
     const positiveEntries = entries.filter((e) => e.raw > 0)
     const negativeEntries = entries.filter((e) => e.raw < 0)
-    const paidFor: Array<{ sourceId: string; shares: number }> = []
-    let negativeTotal = 0
-    for (const e of negativeEntries) {
-      paidFor.push({ sourceId: e.sourceId, shares: e.cents })
-      negativeTotal += e.cents
-    }
+
+    // Negative cells are consumed shares (major units → minor via serializer).
+    const negativeSerialized = serializePaidFor({
+      splitMode: 'BY_AMOUNT',
+      amount: amountCents,
+      currency,
+      paidFor: negativeEntries.map((e) => ({
+        participant: { id: e.sourceId },
+        shares: Math.abs(e.raw),
+      })),
+    })
+    const negativeTotal = negativeSerialized.reduce((s, p) => s + p.shares, 0)
     const remainingShare = amountCents - negativeTotal
-    const positiveShares = positiveEntries.map((e) => ({
-      sourceId: e.sourceId,
-      shares: Math.max(0, Math.floor(remainingShare / positiveEntries.length)),
-    }))
-    let allocatedPositiveShares = positiveShares.reduce(
-      (sum, p) => sum + p.shares,
-      0,
-    )
-    for (
-      let i = 0;
-      allocatedPositiveShares < remainingShare && i < positiveShares.length;
-      i++
-    ) {
-      positiveShares[i].shares += 1
-      allocatedPositiveShares += 1
+
+    // Positive participants share the remainder evenly via domain core.
+    const positiveExact = calculateExactShares({
+      amount: remainingShare,
+      splitMode: 'EVENLY',
+      participants: positiveEntries.map((e) => ({
+        id: e.sourceId,
+        shares: 1,
+      })),
+    })
+    const positiveAllocated = distributeRemainder(positiveExact, remainingShare)
+
+    const paidFor: Array<{ sourceId: string; shares: number }> = []
+    for (const p of negativeSerialized) {
+      if (p.shares > 0) {
+        paidFor.push({ sourceId: p.participant.id, shares: p.shares })
+      }
     }
-    for (const p of positiveShares) {
-      if (p.shares > 0) paidFor.push(p)
+    for (const e of positiveEntries) {
+      const shares = positiveAllocated[e.sourceId] ?? 0
+      if (shares > 0) paidFor.push({ sourceId: e.sourceId, shares })
     }
     if (paidFor.length === 0) continue
 
-    const paidBy = positiveEntries.map((e) => {
-      const consumed =
-        positiveShares.find((p) => p.sourceId === e.sourceId)?.shares ?? 0
-      return { sourceId: e.sourceId, shares: e.cents + consumed }
-    })
-    const paidTotal = paidBy.reduce((sum, p) => sum + p.shares, 0)
-    const paidDrift = amountCents - paidTotal
-    if (paidDrift !== 0 && paidBy.length > 0) {
-      let largestIdx = 0
-      for (let i = 1; i < paidBy.length; i++) {
-        if (paidBy[i].shares > paidBy[largestIdx].shares) largestIdx = i
+    // paidBy = positive raw (paid) + consumed share, in major units then serialize.
+    const paidByMajor = positiveEntries.map((e) => {
+      const consumed = positiveAllocated[e.sourceId] ?? 0
+      const scale = 10 ** currency.decimal_digits
+      return {
+        participant: { id: e.sourceId },
+        shares: Math.abs(e.raw) + consumed / scale,
       }
-      paidBy[largestIdx].shares += paidDrift
-    }
+    })
+    const paidBySerialized = serializePaidBy({
+      paidBySplitMode: 'BY_AMOUNT',
+      amount: amountCents,
+      inputCurrency: currency,
+      paidByList: paidByMajor,
+    })
+    // Ensure Σ paidBy === amount (integer residual → first positive / payer).
+    const paidByExact = calculateExactShares({
+      amount: amountCents,
+      splitMode: 'BY_AMOUNT',
+      participants: paidBySerialized.map((p) => ({
+        id: p.participant.id,
+        shares: p.shares,
+      })),
+    })
+    const paidByFixed = distributeRemainder(paidByExact, amountCents, {
+      payerId: payerSourceId,
+    })
+    const paidBy = Object.entries(paidByFixed).map(([sourceId, shares]) => ({
+      sourceId,
+      shares,
+    }))
 
     // Best-effort split-mode guess (EVENLY / BY_SHARES / BY_AMOUNT).
-    // guessSplitMode returns both the detected mode and the resolved
-    // paidFor array — BY_SHARES shares are GCD-reduced to ratio weights.
     const involvedCount = new Set([
       ...paidBy.map((p) => p.sourceId),
       ...paidFor.map((p) => p.sourceId),
@@ -181,7 +224,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       title,
       expenseDate: date.slice(0, 10),
       category: splitwiseCategoryToId(category),
-      amountCurrency: currency,
+      amountCurrency: currencyCode,
       amount: amountCents,
       originalAmount: null,
       originalCurrency: null,
