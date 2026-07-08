@@ -541,9 +541,10 @@ describe('friendFormSchema', () => {
     expect(result.success).toBe(true)
   })
 
-  it('accepts exactly useLink mode — only useLink + currency set, validates successfully', () => {
+  it('accepts exactly useLink mode — useLink + temporaryName + currency set, validates successfully', () => {
     const result = friendFormSchema.safeParse({
       useLink: true,
+      temporaryName: 'Bob',
       currency: '$',
     })
     expect(result.success).toBe(true)
@@ -665,6 +666,41 @@ describe('friendFormSchema', () => {
       peerAccountId: 'some-account-id',
       currency: '$',
       temporaryName: 'Roommate',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('useLink without temporaryName fails validation', () => {
+    const result = friendFormSchema.safeParse({
+      useLink: true,
+      currency: '$',
+      temporaryName: '',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(
+        result.error.issues.some(
+          (i) =>
+            i.path.includes('temporaryName') &&
+            i.message === 'temporaryName is required for link invites',
+        ),
+      ).toBe(true)
+    }
+  })
+
+  it('useLink with valid temporaryName passes validation', () => {
+    const result = friendFormSchema.safeParse({
+      useLink: true,
+      currency: '$',
+      temporaryName: 'Bob',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('peerEmail without temporaryName passes validation (email is auto-used as temp name)', () => {
+    const result = friendFormSchema.safeParse({
+      peerEmail: 'friend@example.com',
+      currency: '$',
     })
     expect(result.success).toBe(true)
   })

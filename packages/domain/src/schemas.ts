@@ -66,6 +66,13 @@ export const friendFormSchema = z
         path: ['peerAccountId'],
       })
     }
+    if (data.useLink && !data.temporaryName?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'temporaryName is required for link invites',
+        path: ['temporaryName'],
+      })
+    }
   })
 
 export type FriendFormValues = z.infer<typeof friendFormSchema>

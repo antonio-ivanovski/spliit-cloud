@@ -481,7 +481,8 @@ export const accountRouter = createTRPCRouter({
             currentId < a.id ? `${currentId}:${a.id}` : `${a.id}:${currentId}`
           return { accountId: a.id, pairKey: key, email: a.email.toLowerCase() }
         })
-      const ledgeredByAccountId = new Map<string, boolean>()
+      const activeLedgerByAccountId = new Map<string, boolean>()
+      const pendingLedgerByAccountId = new Map<string, boolean>()
       if (friendEmailPairs.length > 0) {
         const pairKeys = friendEmailPairs.map((p) => p.pairKey)
         const friendGroups = await prisma.group.findMany({
@@ -496,29 +497,32 @@ export const accountRouter = createTRPCRouter({
         )
         for (const pair of friendEmailPairs) {
           if (linkedPairKeys.has(pair.pairKey)) {
-            ledgeredByAccountId.set(pair.accountId, true)
+            activeLedgerByAccountId.set(pair.accountId, true)
           }
         }
-        const pendingEmails = friendEmailPairs
-          .filter((p) => !ledgeredByAccountId.has(p.accountId))
-          .map((p) => p.email)
-        if (pendingEmails.length > 0) {
+        const emailsToCheck = friendEmailPairs.filter(
+          (p) => !activeLedgerByAccountId.has(p.accountId),
+        )
+        if (emailsToCheck.length > 0) {
           const pendingFriendInvites = await prisma.groupInvitation.findMany({
             where: {
               type: GroupInvitationType.EMAIL,
               status: GroupInvitationStatus.PENDING,
               invitedById: currentId,
               group: { groupType: GroupType.FRIEND },
-              email: { in: pendingEmails, mode: 'insensitive' },
+              email: {
+                in: emailsToCheck.map((p) => p.email),
+                mode: 'insensitive',
+              },
             },
             select: { email: true },
           })
-          const pendingSet = new Set(
+          const pendingEmails = new Set(
             pendingFriendInvites.map((i) => i.email.toLowerCase()),
           )
-          for (const pair of friendEmailPairs) {
-            if (pendingSet.has(pair.email)) {
-              ledgeredByAccountId.set(pair.accountId, true)
+          for (const pair of emailsToCheck) {
+            if (pendingEmails.has(pair.email)) {
+              pendingLedgerByAccountId.set(pair.accountId, true)
             }
           }
         }
@@ -528,6 +532,12 @@ export const accountRouter = createTRPCRouter({
         .map((c) => {
           const account = accountMap.get(c.accountId)
           if (!account || isPlaceholderEmail(account.email)) return null
+          let friendLedgerStatus: 'NONE' | 'INVITED' | 'ACTIVE' = 'NONE'
+          if (activeLedgerByAccountId.has(account.id)) {
+            friendLedgerStatus = 'ACTIVE'
+          } else if (pendingLedgerByAccountId.has(account.id)) {
+            friendLedgerStatus = 'INVITED'
+          }
           return {
             accountId: account.id,
             name: account.name,
@@ -537,7 +547,10 @@ export const accountRouter = createTRPCRouter({
             isPendingInvite: pendingInviteEmails.has(
               account.email.toLowerCase(),
             ),
-            hasFriendLedger: ledgeredByAccountId.has(account.id),
+            hasFriendLedger:
+              activeLedgerByAccountId.has(account.id) ||
+              pendingLedgerByAccountId.has(account.id),
+            friendLedgerStatus,
           }
         })
         .filter((c): c is NonNullable<typeof c> => c !== null)

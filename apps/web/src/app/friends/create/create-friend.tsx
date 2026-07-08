@@ -22,7 +22,9 @@ import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
@@ -103,6 +105,12 @@ export function CreateFriend() {
       peerAccountId: peerTab === 'friends' ? values.peerAccountId : undefined,
       peerEmail: peerTab === 'email' ? values.peerEmail : undefined,
       useLink: peerTab === 'link' ? true : undefined,
+      temporaryName:
+        peerTab === 'email'
+          ? values.peerEmail
+          : peerTab === 'link'
+            ? values.temporaryName
+            : undefined,
     }
 
     let result: CreateFriendResponse
@@ -196,10 +204,18 @@ export function CreateFriend() {
                     shouldDirty: true,
                   })
                   form.setValue('peerEmail', undefined, { shouldDirty: true })
+                  form.setValue('temporaryName', undefined, {
+                    shouldDirty: true,
+                  })
                   form.setValue('useLink', nextTab === 'link' || undefined, {
                     shouldDirty: true,
                   })
-                  form.clearErrors(['peerAccountId', 'peerEmail', 'useLink'])
+                  form.clearErrors([
+                    'peerAccountId',
+                    'peerEmail',
+                    'temporaryName',
+                    'useLink',
+                  ])
                 }}
                 className="flex flex-col gap-4"
               >
@@ -238,24 +254,86 @@ export function CreateFriend() {
                               <SelectValue placeholder={t('peerFriendsTab')} />
                             </SelectTrigger>
                             <SelectContent>
-                              {friends.map((f) => (
-                                <SelectItem
-                                  key={f.accountId}
-                                  value={f.accountId}
-                                >
-                                  <span className="flex items-center gap-2">
-                                    <span>{f.name}</span>
-                                    <span className="text-xs text-muted-foreground">
-                                      {f.email}
-                                    </span>
-                                    {f.hasFriendLedger && (
-                                      <span className="text-xs text-muted-foreground">
-                                        ({t('alreadyHasLedger')})
-                                      </span>
+                              {(() => {
+                                const noLedger = friends.filter(
+                                  (f) => f.friendLedgerStatus === 'NONE',
+                                )
+                                const invited = friends.filter(
+                                  (f) => f.friendLedgerStatus === 'INVITED',
+                                )
+                                const active = friends.filter(
+                                  (f) => f.friendLedgerStatus === 'ACTIVE',
+                                )
+                                return (
+                                  <>
+                                    {noLedger.length > 0 && (
+                                      <SelectGroup>
+                                        <SelectLabel>Friends</SelectLabel>
+                                        {noLedger.map((f) => (
+                                          <SelectItem
+                                            key={f.accountId}
+                                            value={f.accountId}
+                                          >
+                                            <span className="flex items-center gap-2">
+                                              <span>{f.name}</span>
+                                              <span className="text-xs text-muted-foreground">
+                                                {f.email}
+                                              </span>
+                                            </span>
+                                          </SelectItem>
+                                        ))}
+                                      </SelectGroup>
                                     )}
-                                  </span>
-                                </SelectItem>
-                              ))}
+                                    {invited.length > 0 && (
+                                      <SelectGroup>
+                                        <SelectLabel>
+                                          Pending invitations
+                                        </SelectLabel>
+                                        {invited.map((f) => (
+                                          <SelectItem
+                                            key={f.accountId}
+                                            value={f.accountId}
+                                          >
+                                            <span className="flex items-center gap-2">
+                                              <span>{f.name}</span>
+                                              <span className="text-xs text-muted-foreground">
+                                                {f.email}
+                                              </span>
+                                              <span className="text-xs text-muted-foreground">
+                                                (already invited)
+                                              </span>
+                                            </span>
+                                          </SelectItem>
+                                        ))}
+                                      </SelectGroup>
+                                    )}
+                                    {active.length > 0 && (
+                                      <SelectGroup>
+                                        <SelectLabel>
+                                          Active friend ledgers
+                                        </SelectLabel>
+                                        {active.map((f) => (
+                                          <SelectItem
+                                            key={f.accountId}
+                                            value={f.accountId}
+                                            disabled
+                                          >
+                                            <span className="flex items-center gap-2">
+                                              <span>{f.name}</span>
+                                              <span className="text-xs text-muted-foreground">
+                                                {f.email}
+                                              </span>
+                                              <span className="text-xs text-muted-foreground">
+                                                (already has a friend ledger)
+                                              </span>
+                                            </span>
+                                          </SelectItem>
+                                        ))}
+                                      </SelectGroup>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -287,6 +365,12 @@ export function CreateFriend() {
                       </FormItem>
                     )}
                   />
+                </TabsContent>
+
+                <TabsContent value="link" className="mt-0 flex flex-col gap-3">
+                  <p className="text-sm text-muted-foreground">
+                    {t('linkHelp')}
+                  </p>
                   <FormField
                     control={form.control}
                     name="temporaryName"
@@ -310,12 +394,6 @@ export function CreateFriend() {
                       </FormItem>
                     )}
                   />
-                </TabsContent>
-
-                <TabsContent value="link" className="mt-0 flex flex-col gap-3">
-                  <p className="text-sm text-muted-foreground">
-                    {t('linkHelp')}
-                  </p>
                 </TabsContent>
               </Tabs>
 
