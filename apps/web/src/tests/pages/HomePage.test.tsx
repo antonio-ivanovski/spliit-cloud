@@ -8,17 +8,6 @@ vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
 }))
 
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    back: vi.fn(),
-    refresh: vi.fn(),
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
-}))
-
 // Mock @tanstack/react-router for Link and navigation
 vi.mock('@tanstack/react-router', () => ({
   Link: ({

@@ -11,8 +11,8 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
-import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Check, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { formatDate } from './group-buckets'
@@ -20,7 +20,7 @@ import { formatDate } from './group-buckets'
 export function PendingInvitations() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale()
-  const router = useRouter()
+  const navigate = useNavigate()
   const { toast } = useToast()
   const utils = trpc.useUtils()
   const invitationsQuery = trpc.invitations.listForAccount.useQuery()
@@ -28,7 +28,7 @@ export function PendingInvitations() {
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: (data) => {
       toast({ description: t('invitations.accepted') })
-      router.push({ to: '/groups/$groupId', params: { groupId: data.groupId } })
+      navigate({ to: '/groups/$groupId', params: { groupId: data.groupId } })
       utils.account.groups.invalidate()
       utils.invitations.listForAccount.invalidate()
     },

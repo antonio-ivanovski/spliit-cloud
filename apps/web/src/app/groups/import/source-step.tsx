@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useRouter } from '@/lib/navigation'
 import {
   extractSpliitGroupIdFromUrl,
   guessGroupNameFromFilename,
@@ -10,7 +9,7 @@ import {
   type ImportParseResult,
   type NormalizedSource,
 } from '@spliit/domain/import'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { AlertTriangle, Clock } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -97,7 +96,7 @@ export function pickParser(
 
 export function SourceStep({ onLoaded, onError, initialError = null }: Props) {
   const { t } = useTranslation()
-  const router = useRouter()
+  const navigate = useNavigate()
   const { source } = importRoute.useSearch()
   const provider = source ?? 'spliit'
   const [url, setUrl] = useState('')
@@ -250,7 +249,7 @@ export function SourceStep({ onLoaded, onError, initialError = null }: Props) {
       <Tabs
         value={provider}
         onValueChange={(v) =>
-          router.push({
+          navigate({
             to: '/groups/import',
             search: { source: v as SourceMode },
           })

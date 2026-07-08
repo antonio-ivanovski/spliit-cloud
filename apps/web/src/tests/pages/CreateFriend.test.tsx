@@ -5,10 +5,7 @@ const mocks = vi.hoisted(() => ({
   mockFriendsQuery: vi.fn(),
   mockCreateFriend: vi.fn(),
   mockToast: vi.fn(),
-  mockRouterPush: vi.fn(),
-  mockRouterReplace: vi.fn(),
-  mockRouterBack: vi.fn(),
-  mockRouterRefresh: vi.fn(),
+  mockNavigate: vi.fn(),
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -34,15 +31,6 @@ vi.mock('@/trpc/client', () => ({
   },
 }))
 
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: mocks.mockRouterPush,
-    replace: mocks.mockRouterReplace,
-    back: mocks.mockRouterBack,
-    refresh: mocks.mockRouterRefresh,
-  }),
-}))
-
 vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: mocks.mockToast }),
 }))
@@ -61,6 +49,7 @@ vi.mock('@tanstack/react-router', () => ({
       {children}
     </a>
   ),
+  useNavigate: () => mocks.mockNavigate,
 }))
 
 vi.mock('@/lib/currency', () => ({
@@ -169,7 +158,7 @@ describe('CreateFriend', () => {
     expect(
       mocks.mockCreateFriend.mock.calls[0][0].friendFormValues.peerAccountId,
     ).toBe('peer-1')
-    expect(mocks.mockRouterPush).toHaveBeenCalledWith(
+    expect(mocks.mockNavigate).toHaveBeenCalledWith(
       expect.objectContaining({
         to: '/groups/$groupId/expenses',
         params: { groupId: 'new-group' },
@@ -309,9 +298,9 @@ describe('CreateFriend', () => {
     )
 
     await vi.waitFor(() => {
-      expect(mocks.mockRouterPush).toHaveBeenCalled()
+      expect(mocks.mockNavigate).toHaveBeenCalled()
     })
-    expect(mocks.mockRouterPush).toHaveBeenCalledWith(
+    expect(mocks.mockNavigate).toHaveBeenCalledWith(
       expect.objectContaining({
         to: '/groups/$groupId',
         params: { groupId: 'existing' },
@@ -351,9 +340,9 @@ describe('CreateFriend', () => {
     )
 
     await vi.waitFor(() => {
-      expect(mocks.mockRouterPush).toHaveBeenCalled()
+      expect(mocks.mockNavigate).toHaveBeenCalled()
     })
-    expect(mocks.mockRouterPush).toHaveBeenCalledWith(
+    expect(mocks.mockNavigate).toHaveBeenCalledWith(
       expect.objectContaining({
         to: '/groups/$groupId',
         params: { groupId: 'new-group' },

@@ -8,7 +8,7 @@ const mockMutateAsync = vi.fn()
 const mockInvalidateAccountGroups = vi.fn()
 const mockInvalidateGroupsGet = vi.fn()
 const mockToast = vi.fn()
-const mockPush = vi.fn()
+const mockNavigate = vi.fn()
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
@@ -40,13 +40,8 @@ vi.mock('@/components/ui/use-toast', () => ({
   }),
 }))
 
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: mockPush,
-    replace: vi.fn(),
-    back: vi.fn(),
-    refresh: vi.fn(),
-  }),
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => mockNavigate,
 }))
 
 // ── Tests ───────────────────────────────────────────────────────────────
@@ -160,7 +155,7 @@ describe('ForceArchiveDialog', () => {
     await user.click(screen.getByRole('button', { name: /view balances/i }))
 
     expect(onClose).toHaveBeenCalledTimes(1)
-    expect(mockPush).toHaveBeenCalledWith({
+    expect(mockNavigate).toHaveBeenCalledWith({
       to: '/groups/$groupId/balances',
       params: { groupId: 'group-1' },
     })

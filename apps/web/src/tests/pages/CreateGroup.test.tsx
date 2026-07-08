@@ -4,9 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   mockCreateGroup: vi.fn(),
   mockToast: vi.fn(),
-  mockRouterPush: vi.fn(),
-  mockRouterReplace: vi.fn(),
-  mockRouterBack: vi.fn(),
+  mockNavigate: vi.fn(),
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -29,14 +27,6 @@ vi.mock('@/trpc/client', () => ({
   },
 }))
 
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: mocks.mockRouterPush,
-    replace: mocks.mockRouterReplace,
-    back: mocks.mockRouterBack,
-  }),
-}))
-
 vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: mocks.mockToast }),
 }))
@@ -55,6 +45,7 @@ vi.mock('@tanstack/react-router', () => ({
       {children}
     </a>
   ),
+  useNavigate: () => mocks.mockNavigate,
 }))
 
 vi.mock('@/lib/currency', () => ({

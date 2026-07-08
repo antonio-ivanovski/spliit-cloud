@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
-import { useRouter } from '@/lib/navigation'
 import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
+import { useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
@@ -129,7 +129,7 @@ export function ExpenseCard({
   participantCount,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
-  const router = useRouter()
+  const navigate = useNavigate()
   const locale = useLocale()
   const isPendingInvitee = useIsPendingInvitee()
   // Pending invitees can browse the expense list but cannot edit; the
@@ -154,7 +154,7 @@ export function ExpenseCard({
       )}
       onClick={() => {
         if (!canEdit) return
-        router.push({
+        navigate({
           to: '/groups/$groupId/expenses/$expenseId/edit',
           params: { groupId, expenseId: expense.id },
         })

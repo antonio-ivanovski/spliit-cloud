@@ -10,9 +10,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
+import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -36,7 +36,7 @@ function AccountSettingsContent() {
   const { t } = useTranslation(undefined, { keyPrefix: 'AccountSettings' })
   const { t: tCommon } = useTranslation(undefined, { keyPrefix: 'Header' })
   const { data: account, isPending, refetch } = useCurrentAccount()
-  const router = useRouter()
+  const navigate = useNavigate()
   const utils = trpc.useUtils()
   const { toast } = useToast()
 
@@ -81,9 +81,9 @@ function AccountSettingsContent() {
     // account menu); fall back to the home page when the user landed
     // here directly (deep link, new tab, ...).
     if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back()
+      window.history.back()
     } else {
-      router.replace({ href: '/' })
+      navigate({ to: '/', replace: true })
     }
   }
 

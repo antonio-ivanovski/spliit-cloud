@@ -8,8 +8,8 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +30,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
   const utils = trpc.useUtils()
   const { toast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate()
   const [pending, setPending] = useState(false)
 
   if (!groupId) return null
@@ -71,7 +71,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
   function handleViewBalances() {
     if (!openGroupId) return
     onClose()
-    router.push({
+    navigate({
       to: '/groups/$groupId/balances',
       params: { groupId: openGroupId },
     })

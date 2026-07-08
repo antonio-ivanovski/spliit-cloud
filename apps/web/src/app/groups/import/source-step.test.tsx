@@ -26,15 +26,7 @@ vi.mock('@tanstack/react-router', () => ({
     children: React.ReactNode
     [key: string]: unknown
   }) => <a href={to}>{children}</a>,
-}))
-
-// SourceStep uses `useRouter` only for tab switching, which the
-// prefill-error tests don't exercise.
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-  }),
+  useNavigate: () => vi.fn(),
 }))
 
 // `useImportSource` always returns empty data so the inline error

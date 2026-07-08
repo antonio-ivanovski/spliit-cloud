@@ -15,7 +15,6 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { getCurrency } from '@/lib/currency'
-import { useRouter } from '@/lib/navigation'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import {
   formatCurrency,
@@ -29,6 +28,7 @@ import {
   categoryIdSchema,
   getCategoryById,
 } from '@spliit/domain'
+import { useNavigate } from '@tanstack/react-router'
 import { ChevronRight, FileQuestion, Loader2, Receipt } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -88,7 +88,7 @@ function ReceiptDialogContent() {
     group?.ledgerId,
   )
   const { toast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate()
   const extractReceiptMutation =
     trpc.ai.extractExpenseInformationFromImage.useMutation()
   const [receiptInfo, setReceiptInfo] = useState<
@@ -271,7 +271,7 @@ function ReceiptDialogContent() {
           disabled={pending || !receiptInfo}
           onClick={() => {
             if (!receiptInfo || !group) return
-            router.push({
+            navigate({
               to: '/groups/$groupId/expenses/create',
               params: { groupId: group.id },
               search: {

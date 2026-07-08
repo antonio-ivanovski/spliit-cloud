@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
-import { useRouter } from '@/lib/navigation'
 import type { DateTimeStyle } from '@/lib/utils'
 import { cn, formatDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { parseActivityData } from '@spliit/domain/activities'
+import { useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -209,7 +209,7 @@ function renderItemsDiff(before: string | null): ReactNode {
 }
 
 export function ActivityItem({ groupId, activity, dateStyle }: Props) {
-  const router = useRouter()
+  const navigate = useNavigate()
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
   const expenseExists = activity.expense != null
@@ -228,7 +228,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       )}
       onClick={() => {
         if (expenseExists) {
-          router.push({
+          navigate({
             href: `/groups/${groupId}/expenses/${activity.expense!.id}/edit`,
           })
         }
