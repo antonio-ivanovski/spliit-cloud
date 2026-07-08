@@ -84,7 +84,10 @@ describe('GroupCard — friend-ledger behavior', () => {
   it('renders displayName (not group.name) for a FRIEND card', () => {
     render(
       <GroupCard
-        group={makeFriendGroup({ name: 'fri-ledger-abc', displayName: 'Alice' })}
+        group={makeFriendGroup({
+          name: 'fri-ledger-abc',
+          displayName: 'Alice',
+        })}
         onToggleStar={() => {}}
         onToggleHidden={() => {}}
       />,

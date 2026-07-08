@@ -585,7 +585,9 @@ describe('Friend ledger — real DB', () => {
       })
       groupId = result.groupId
       trackGroup(groupId)
-      const group = await prisma.group.findUnique({ where: { id: result.groupId } })
+      const group = await prisma.group.findUnique({
+        where: { id: result.groupId },
+      })
       groupName = group!.name
     })
 
