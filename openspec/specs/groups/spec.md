@@ -40,3 +40,23 @@ The system SHALL expose `groupType` on all group-related API responses. The `acc
 #### Scenario: FRIEND-typed group displayName
 - **WHEN** a `FRIEND`-typed group is returned by `account.groups`
 - **THEN** the `displayName` SHALL be the other member's display name resolved via `resolveParticipantDisplayName`
+
+### Requirement: Group creation page layout
+The system SHALL display a consistent group creation page with a navigation heading and a form for creating the group.
+
+#### Scenario: Create group page shows heading and back button
+- **WHEN** an authenticated account navigates to the create group page
+- **THEN** the page SHALL display a back arrow button (top-left) and a title heading "Create a group"
+- **AND** the page SHALL require authentication (redirects to sign-in for unauthenticated visitors)
+- **AND** the page SHALL render the group form component below the heading
+
+### Requirement: Group form name field visibility by group type
+The system SHALL conditionally show or hide the group name field in the group settings form based on the group's type. For `FRIEND`-typed groups, the name field SHALL be fully omitted (not rendered) because the `Group.name` is a random-id filler never displayed to users.
+
+#### Scenario: GROUP-typed group shows name field
+- **WHEN** the group settings form is rendered for a `GROUP`-typed group
+- **THEN** the form SHALL include an editable group name input field
+
+#### Scenario: FRIEND-typed group hides name field
+- **WHEN** the group settings form is rendered for a `FRIEND`-typed group
+- **THEN** the form SHALL NOT include a group name input field (it is hidden, not merely disabled or read-only)

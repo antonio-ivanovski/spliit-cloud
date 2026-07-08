@@ -38,7 +38,7 @@ The system SHALL allow an authenticated account to create a friend ledger with a
 - **THEN** the system creates a `FRIEND`-typed group with the caller as ADMIN/ACTIVE
 - **AND** the system creates a `PENDING` `GroupInvitation` of type `EMAIL` with role `ADMIN` targeting the entered email
 - **AND** the system SHALL leave `friendPairKey` as `null` (it is set when the peer joins)
-- **AND** the optional `temporaryName` provided in the form SHALL be stored on the invitation and used as the display name while pending
+- **AND** the system SHALL set the invitation's `temporaryName` to the entered email automatically (the email tab does not expose a separate name field)
 - **AND** the system SHALL send a notification email (NOT an invitation with an accept link) to the peer's email encouraging them to create an account
 - **AND** the caller SHALL be navigated to the group page with a confirmation toast
 
@@ -52,8 +52,10 @@ The system SHALL allow an authenticated account to create a friend ledger with a
 - **WHEN** an authenticated account chooses the link path to create a friend ledger
 - **THEN** the system creates a `FRIEND`-typed group with the caller as ADMIN/ACTIVE
 - **AND** the system creates a `PENDING` `GroupInvitation` of type `LINK` with role `ADMIN`
+- **AND** a `temporaryName` SHALL be required (the link tab exposes a display-name input field — it is not optional for link invitations)
 - **AND** the system generates a link token and returns the invite URL to the caller
 - **AND** the caller SHALL be navigated to the group page immediately, with the invite link shown in a dialog on the group page
+- **AND** the `friendLinkInvite` search param SHALL be stripped from the URL after the dialog is first shown, so a page refresh does not reopen the dialog
 
 #### Scenario: Auto-accept on signup with matching email
 - **WHEN** a new account signs up with an email that matches a `PENDING` `EMAIL` invitation on a `FRIEND`-typed group
