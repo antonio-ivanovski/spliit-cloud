@@ -156,7 +156,7 @@ export const getGroupProcedure = protectedProcedure
                 status: member.status,
               },
               currentInvitation: null,
-              linkInviteState,
+              linkInviteState: 'ACCEPTED' as const,
             }
           }
         }

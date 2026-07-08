@@ -102,7 +102,11 @@ export const GroupHeader = () => {
   // by `groups.get` when a token is in the URL). `null` means the
   // URL has no token — we fall back to the regular email-invite
   // banner.
-  const showLinkAlreadyMember = !!inviteToken && !!currentMember && !isLoading
+  const showLinkAlreadyMember =
+    !!inviteToken &&
+    !!currentMember &&
+    !isLoading &&
+    linkInviteState !== 'ACCEPTED'
 
   const showLinkExpiredOrInvalid =
     !!inviteToken &&
