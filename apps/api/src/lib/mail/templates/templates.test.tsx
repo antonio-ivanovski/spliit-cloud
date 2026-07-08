@@ -1,0 +1,263 @@
+import { describe, expect, it } from 'vitest'
+import {
+  renderExpenseActivityEmail,
+  renderFriendLedgerEmail,
+  renderInvitationEmail,
+  renderMagicLinkEmail,
+  renderPasswordRecoveryEmail,
+  renderVerificationEmail,
+} from './index'
+
+describe('email templates', () => {
+  describe('renderPasswordRecoveryEmail', () => {
+    it('keeps the legacy credentials copy in the plain-text body', async () => {
+      const r = await renderPasswordRecoveryEmail({
+        resetUrl: 'https://spliit.test/reset?token=abc',
+        methodLabels: ['email and password'],
+      })
+      expect(r.subject).toBe('Reset your Spliit Cloud password')
+      expect(r.text).toContain(
+        'Click the link below to reset your Spliit Cloud password.',
+      )
+      expect(r.text).toContain('https://spliit.test/reset?token=abc')
+      expect(r.text).toContain(
+        'If you did not request a password reset, you can safely ignore this email.',
+      )
+      expect(r.html).toContain('Reset your Spliit Cloud password')
+      expect(r.html).toContain('https://spliit.test/reset?token=abc')
+    })
+
+    it('lists linked sign-in methods for credential users with multiple identities', async () => {
+      const r = await renderPasswordRecoveryEmail({
+        resetUrl: 'https://spliit.test/reset?token=abc',
+        methodLabels: ['email and password', 'Google', 'email sign-in link'],
+      })
+      expect(r.text).toContain(
+        'This account can also sign in with: Google, email sign-in link.',
+      )
+      expect(r.html).toContain('Google, email sign-in link')
+    })
+
+    it('routes social-only accounts to the sign-in guidance body', async () => {
+      const r = await renderPasswordRecoveryEmail({
+        resetUrl: 'https://spliit.test/reset?token=abc',
+        methodLabels: ['Google', 'email sign-in link'],
+      })
+      expect(r.subject).toBe('Sign in to Spliit Cloud')
+      expect(r.text).toContain(
+        'Use one of these sign-in methods instead: Google, email sign-in link.',
+      )
+      expect(r.html).toContain('Sign in to Spliit Cloud')
+    })
+  })
+
+  describe('renderVerificationEmail', () => {
+    it('keeps the historical verification body', async () => {
+      const r = await renderVerificationEmail({
+        verificationUrl: 'https://spliit.test/verify?token=abc',
+      })
+      expect(r.subject).toBe('Verify your Spliit Cloud account')
+      expect(r.text).toContain(
+        'Click the link below to verify your email address and sign in to Spliit Cloud.',
+      )
+      expect(r.text).toContain('If you did not create a Spliit Cloud account')
+      expect(r.html).toContain('Verify your Spliit Cloud account')
+    })
+  })
+
+  describe('renderMagicLinkEmail', () => {
+    it('keeps the historical sign-in body', async () => {
+      const r = await renderMagicLinkEmail({
+        signInUrl: 'https://spliit.test/auth/verify?token=abc',
+      })
+      expect(r.subject).toBe('Your Spliit Cloud sign-in link')
+      expect(r.text).toContain(
+        'Click the link below to sign in to Spliit Cloud.',
+      )
+      expect(r.text).toContain(
+        'If you did not request this email, you can safely ignore it.',
+      )
+      expect(r.html).toContain('Your Spliit Cloud sign-in link')
+    })
+  })
+
+  describe('renderInvitationEmail', () => {
+    it('produces the existing-user body and CTA label', async () => {
+      const r = await renderInvitationEmail({
+        invitationId: 'inv-new',
+        groupId: 'grp-1',
+        groupName: 'Roadtrip 2026',
+        inviterDisplayName: 'Alice',
+        inviterRole: 'ADMIN',
+        recipientEmail: 'bob@example.com',
+        recipientIsExistingUser: true,
+      })
+      expect(r.subject).toBe(
+        'Alice invited you to Roadtrip 2026 on Spliit Cloud',
+      )
+      expect(r.text.toLowerCase()).toContain('open spliit cloud')
+      expect(r.text).toContain('/groups/grp-1')
+      expect(r.html).toContain('Open Spliit Cloud')
+      expect(r.html).toContain('/groups/grp-1')
+    })
+
+    it('produces the new-user body with sign-up CTA', async () => {
+      const r = await renderInvitationEmail({
+        invitationId: 'inv-new',
+        groupId: 'grp-1',
+        groupName: 'Roadtrip 2026',
+        inviterDisplayName: 'Alice',
+        inviterRole: 'ADMIN',
+        recipientEmail: 'newuser@example.com',
+        recipientIsExistingUser: false,
+      })
+      expect(r.subject).toBe(
+        'Alice invited you to Roadtrip 2026 on Spliit Cloud',
+      )
+      expect(r.text.toLowerCase()).toContain('create an account')
+      expect(r.text).toContain('/?invitation=inv-new')
+      expect(r.html).toContain('Create an account')
+    })
+
+    it('renders the import context block when sourceProvider is set', async () => {
+      const r = await renderInvitationEmail({
+        invitationId: 'inv-imp',
+        groupId: 'grp-imp',
+        groupName: 'Imported Trip',
+        inviterDisplayName: 'Alice',
+        inviterRole: 'ADMIN',
+        recipientEmail: 'friend@example.com',
+        recipientIsExistingUser: false,
+        temporaryName: 'Friend One',
+        sourceProvider: 'SPLIIT',
+        sourceGroupName: 'Old Trip',
+        expenseCount: 2,
+        totalAmount: 3500,
+        currencyCode: 'USD',
+      })
+      expect(r.subject).toBe(
+        'Alice invited you to Imported Trip on Spliit Cloud as Friend One',
+      )
+      expect(r.text).toContain(
+        'This invitation is part of an import from a Spliit export.',
+      )
+      expect(r.text).toContain(
+        'The group contains 2 expenses from the import (total USD 35.00)',
+      )
+      expect(r.html).toContain('Import context')
+      expect(r.html).toContain('Source group')
+      expect(r.html).toContain('Old Trip')
+    })
+  })
+
+  describe('renderFriendLedgerEmail', () => {
+    it('uses the open-ledger CTA for an existing user', async () => {
+      const r = await renderFriendLedgerEmail({
+        inviterName: 'Alice',
+        isNewUser: false,
+      })
+      expect(r.subject).toBe('Alice added you as a friend on Spliit Cloud')
+      expect(r.text).toContain(
+        'Open Spliit Cloud to see your new friend ledger',
+      )
+      expect(r.html).toContain('Open Spliit Cloud')
+    })
+
+    it('uses the sign-up CTA for a new user', async () => {
+      const r = await renderFriendLedgerEmail({
+        inviterName: 'Alice',
+        isNewUser: true,
+      })
+      expect(r.text).toContain(
+        'Create a free Spliit Cloud account to get started',
+      )
+      expect(r.html).toContain('Create a free account')
+    })
+  })
+
+  describe('renderExpenseActivityEmail', () => {
+    it('produces expense-created email with subject and styled html', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'expense',
+        subject:
+          '[Spliit Cloud] Expense "Dinner" was added by Alice to Test Group',
+        text:
+          'Expense "Dinner" (EUR 45.00) was added by Alice to Test Group on 2026-07-02.\n\n' +
+          'View it here:\nhttps://spliit.app/groups/grp-1/expenses/exp-1',
+        eventType: 'EXPENSE_CREATED',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        title: 'Dinner',
+        amountStr: 'EUR 45.00',
+        date: '2026-07-02',
+        expenseUrl: 'https://spliit.app/groups/grp-1/expenses/exp-1',
+      })
+      expect(r.subject).toContain('Expense "Dinner" was added by Alice')
+      expect(r.text).toContain('EUR 45.00')
+      expect(r.text).toContain('2026-07-02')
+      expect(r.html).toContain('Dinner')
+      expect(r.html).toContain('EUR 45.00')
+      expect(r.html).toContain('View expense')
+    })
+
+    it('produces expense-updated email with changed fields', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'expense',
+        subject:
+          '[Spliit Cloud] Expense "Dinner" was updated by Alice in Test Group',
+        text: 'Expense "Dinner" was updated by Alice in Test Group.\nAmount: EUR 50.00\nDate: 2026-07-02\nChanged: amount, title',
+        eventType: 'EXPENSE_UPDATED',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        title: 'Dinner',
+        amountStr: 'EUR 50.00',
+        date: '2026-07-02',
+        changedFields: ['amount', 'title'],
+        expenseUrl: 'https://spliit.app/groups/grp-1/expenses/exp-1',
+      })
+      expect(r.html).toContain('amount, title')
+    })
+
+    it('produces expense-deleted email pointing to the group', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'expense',
+        subject:
+          '[Spliit Cloud] Expense "Dinner" was removed by Alice from Test Group',
+        text: 'Expense "Dinner" was removed by Alice from Test Group.',
+        eventType: 'EXPENSE_DELETED',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        title: 'Dinner',
+        amountStr: 'EUR 45.00',
+        date: '2026-07-02',
+        expenseUrl: 'https://spliit.app/groups/grp-1',
+      })
+      expect(r.html).toContain('Dinner')
+      expect(r.html).toContain('Open group')
+    })
+
+    it('produces import-summary email with the count and total', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'import_summary',
+        subject: '[Spliit Cloud] 25 expenses imported in Test Group',
+        text: 'Alice imported 25 expenses from Splitwise in Test Group (total EUR 1234.50).',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        count: 25,
+        sourceProvider: 'Splitwise',
+        totalStr: 'EUR 1234.50',
+        groupUrl: 'https://spliit.app/groups/grp-1',
+      })
+      expect(r.subject).toContain('25 expenses imported')
+      expect(r.text).toContain('Alice imported 25 expenses from Splitwise')
+      expect(r.html).toContain('Alice')
+      expect(r.html).toContain('25 expenses')
+      expect(r.html).toContain('Splitwise')
+      expect(r.html).toContain('EUR 1234.50')
+    })
+  })
+})
