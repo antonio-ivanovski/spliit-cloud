@@ -189,7 +189,9 @@ describe('Friend ledger — real DB', () => {
     })
     expect(group).not.toBeNull()
     expect(group!.groupType).toBe(GroupType.FRIEND)
-    expect(group!.name).toBeTruthy()
+    // Group.name for FRIEND is randomId() (hex string, no dashes). Never
+    // shown to users — displayName is computed per-viewer instead.
+    expect(group!.name).toMatch(/^[a-f0-9]{32}$/)
     expect(group!.friendPairKey).not.toBeNull()
     // Friend pair key is normalized smaller-id-first
     const [smaller, larger] = [callerId, peerId].sort()
@@ -783,6 +785,400 @@ describe('Friend ledger — real DB', () => {
     expect(preview.preview!.group.name).toMatch(/Friend ledger with /)
     expect(preview.preview!.group.name).toContain('Test Caller')
     expect(preview.preview!.temporaryName).toBe('Preview Friend')
+  })
+
+  // ───────────────────────────────────────────────────────────────────
+  // TODO: Additional test coverage needed (unimplemented)
+  //
+  // These stub tests document gaps identified in code review. They
+  // validate important edge cases that are currently uncovered. A
+  // follow-up agent should implement them by replacing this section
+  // with fully-implemented tests.
+  // ───────────────────────────────────────────────────────────────────
+
+  // TODO (task 13.21): friendFormSchema domain validation is tested in
+  // packages/domain/src/schemas.test.ts — not here.
+
+  // ───────────────────────────────────────────────────────────────────
+  // 13.22: Self-ledger rejection
+  // ───────────────────────────────────────────────────────────────────
+  it('self-ledger rejection: peerAccountId === callerAccountId throws BAD_REQUEST', async () => {
+    await expect(
+      makeCaller().create({
+        friendFormValues: {
+          peerAccountId: callerId,
+          currency: '$',
+          currencyCode: 'USD',
+        },
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+  })
+
+  it('self-ledger rejection: peerEmail resolves to caller own account throws BAD_REQUEST', async () => {
+    await expect(
+      makeCaller().create({
+        friendFormValues: {
+          peerEmail: callerEmail,
+          currency: '$',
+          currencyCode: 'USD',
+        },
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+  })
+
+  // ───────────────────────────────────────────────────────────────────
+  // 13.23: Expense CRUD on FRIEND group
+  // ───────────────────────────────────────────────────────────────────
+  it('expense CRUD: create, list, get, update, delete on a FRIEND group', async () => {
+    const aId = `acct-crud-a-${runId}`
+    const aEmail = `crud-a-${runId}@test.example`
+    const bId = `acct-crud-b-${runId}`
+    const bEmail = `crud-b-${runId}@test.example`
+    await prisma.account.createMany({
+      data: [
+        { id: aId, email: aEmail, emailVerified: true, name: 'CRUD A' },
+        { id: bId, email: bEmail, emailVerified: true, name: 'CRUD B' },
+      ],
+    })
+
+    try {
+      const result = await makeCaller({
+        accountId: aId,
+        email: aEmail,
+        name: 'CRUD A',
+      }).create({
+        friendFormValues: {
+          peerAccountId: bId,
+          currency: '$',
+          currencyCode: 'USD',
+        },
+      })
+      expect(result.existed).toBe(false)
+      trackGroup(result.groupId)
+
+      const participants = await prisma.ledgerParticipant.findMany({
+        where: { ledger: { group: { id: result.groupId } } },
+        include: { groupMember: { select: { accountId: true } } },
+      })
+      expect(participants).toHaveLength(2)
+      const aP = participants.find((p) => p.groupMember.accountId === aId)!
+      const bP = participants.find((p) => p.groupMember.accountId === bId)!
+
+      const gc = makeGroupsCaller({
+        accountId: aId,
+        email: aEmail,
+        name: 'CRUD A',
+      })
+      const baseExpense = {
+        paidByList: [{ participant: aP.id, shares: 5000 }],
+        paidBySplitMode: 'BY_AMOUNT' as const,
+        isMultiPayer: false,
+        paidFor: [
+          { participant: aP.id, shares: 1 },
+          { participant: bP.id, shares: 1 },
+        ],
+        category: 'general' as const,
+        splitMode: 'EVENLY' as const,
+        expenseDate: new Date().toISOString(),
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'NONE' as const,
+      }
+
+      // Create
+      const { expenseId } = await gc.expenses.create({
+        groupId: result.groupId,
+        expense: { ...baseExpense, title: 'Dinner', amount: 5000 },
+      })
+      expect(expenseId).toBeTruthy()
+
+      // List
+      const listResult = await gc.expenses.list({ groupId: result.groupId })
+      expect(listResult.expenses).toHaveLength(1)
+      expect(listResult.expenses[0].id).toBe(expenseId)
+
+      // Get
+      const getResult = await gc.expenses.get({
+        groupId: result.groupId,
+        expenseId,
+      })
+      expect(getResult.expense.title).toBe('Dinner')
+      expect(getResult.expense.amount).toBe(5000)
+
+      // Update
+      await gc.expenses.update({
+        groupId: result.groupId,
+        expenseId,
+        expense: { ...baseExpense, title: 'Dinner Updated', amount: 5000 },
+      })
+
+      const updated = await gc.expenses.get({
+        groupId: result.groupId,
+        expenseId,
+      })
+      expect(updated.expense.title).toBe('Dinner Updated')
+
+      // Delete
+      await gc.expenses.delete({ groupId: result.groupId, expenseId })
+      const afterDelete = await gc.expenses.list({ groupId: result.groupId })
+      expect(afterDelete.expenses).toHaveLength(0)
+    } finally {
+      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+    }
+  })
+
+  // ───────────────────────────────────────────────────────────────────
+  // 13.24: Balance calculation on FRIEND group
+  // ───────────────────────────────────────────────────────────────────
+  it('balance calculation: create expense, verify balances return correct owed amounts', async () => {
+    const aId = `acct-bal-a-${runId}`
+    const aEmail = `bal-a-${runId}@test.example`
+    const bId = `acct-bal-b-${runId}`
+    const bEmail = `bal-b-${runId}@test.example`
+    await prisma.account.createMany({
+      data: [
+        { id: aId, email: aEmail, emailVerified: true, name: 'Bal A' },
+        { id: bId, email: bEmail, emailVerified: true, name: 'Bal B' },
+      ],
+    })
+
+    try {
+      const result = await makeCaller({
+        accountId: aId,
+        email: aEmail,
+        name: 'Bal A',
+      }).create({
+        friendFormValues: {
+          peerAccountId: bId,
+          currency: '$',
+          currencyCode: 'USD',
+        },
+      })
+      trackGroup(result.groupId)
+
+      const participants = await prisma.ledgerParticipant.findMany({
+        where: { ledger: { group: { id: result.groupId } } },
+        include: { groupMember: { select: { accountId: true } } },
+      })
+      const aP = participants.find((p) => p.groupMember.accountId === aId)!
+      const bP = participants.find((p) => p.groupMember.accountId === bId)!
+
+      const gc = makeGroupsCaller({
+        accountId: aId,
+        email: aEmail,
+        name: 'Bal A',
+      })
+      await gc.expenses.create({
+        groupId: result.groupId,
+        expense: {
+          title: 'Dinner',
+          amount: 5000,
+          paidByList: [{ participant: aP.id, shares: 5000 }],
+          paidBySplitMode: 'BY_AMOUNT',
+          isMultiPayer: false,
+          paidFor: [
+            { participant: aP.id, shares: 1 },
+            { participant: bP.id, shares: 1 },
+          ],
+          category: 'general',
+          splitMode: 'EVENLY',
+          expenseDate: new Date().toISOString(),
+          isReimbursement: false,
+          documents: [],
+          recurrenceRule: 'NONE',
+        },
+      })
+
+      const balancesResult = await gc.balances.list({
+        groupId: result.groupId,
+      })
+
+      // B owes A $25 (half of $50). Result is a map of participantId → { paid, paidFor, total }
+      expect(balancesResult.balances[aP.id]).toBeDefined()
+      expect(balancesResult.balances[bP.id]).toBeDefined()
+      expect(balancesResult.balances[aP.id].paid).toBe(2500)
+      expect(balancesResult.balances[aP.id].paidFor).toBe(0)
+      expect(balancesResult.balances[aP.id].total).toBe(2500)
+      expect(balancesResult.balances[bP.id].paid).toBe(0)
+      expect(balancesResult.balances[bP.id].paidFor).toBe(2500)
+      expect(balancesResult.balances[bP.id].total).toBe(-2500)
+    } finally {
+      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+    }
+  })
+
+  // ───────────────────────────────────────────────────────────────────
+  // 13.25: Cross-direction lookup-or-create
+  // ───────────────────────────────────────────────────────────────────
+  it('cross-direction lookup-or-create: pending email from A→B, then B creates friend ledger with A by accountId returns existed:true', async () => {
+    const aId = `acct-cd-a-${runId}`
+    const aEmail = `cd-a-${runId}@test.example`
+    const newEmail = `cd-new-${runId}@test.example`
+
+    await prisma.account.create({
+      data: { id: aId, email: aEmail, emailVerified: true, name: 'Cross A' },
+    })
+
+    try {
+      const aResult = await makeCaller({
+        accountId: aId,
+        email: aEmail,
+        name: 'Cross A',
+      }).create({
+        friendFormValues: {
+          peerEmail: newEmail,
+          currency: '$',
+          currencyCode: 'USD',
+        },
+      })
+      expect(aResult.existed).toBe(false)
+      trackGroup(aResult.groupId)
+
+      const bId = `acct-cd-b-${runId}`
+      await prisma.account.create({
+        data: {
+          id: bId,
+          email: newEmail,
+          emailVerified: true,
+          name: 'Cross B',
+        },
+      })
+
+      try {
+        const bResult = await makeCaller({
+          accountId: bId,
+          email: newEmail,
+          name: 'Cross B',
+        }).create({
+          friendFormValues: {
+            peerAccountId: aId,
+            currency: '$',
+            currencyCode: 'USD',
+          },
+        })
+        expect(bResult.existed).toBe(true)
+        expect(bResult.groupId).toBe(aResult.groupId)
+      } finally {
+        await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+      }
+    } finally {
+      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
+    }
+  })
+
+  // ───────────────────────────────────────────────────────────────────
+  // 13.26: friendPairKey race safety
+  // ───────────────────────────────────────────────────────────────────
+  it('friendPairKey race safety: P2002 catch handles concurrent auto-accept gracefully', async () => {
+    const newEmail = `race-${runId}@test.example`
+
+    const created = await makeCaller().create({
+      friendFormValues: {
+        peerEmail: newEmail,
+        currency: '$',
+        currencyCode: 'USD',
+      },
+    })
+    trackGroup(created.groupId)
+
+    const newAccountId = `acct-race-${runId}`
+    await prisma.account.create({
+      data: {
+        id: newAccountId,
+        email: newEmail,
+        emailVerified: true,
+        name: 'Race Target',
+      },
+    })
+
+    try {
+      // Manually set friendPairKey to simulate a concurrent auto-accept
+      const pairKey =
+        callerId < newAccountId
+          ? `${callerId}:${newAccountId}`
+          : `${newAccountId}:${callerId}`
+      await prisma.group.update({
+        where: { id: created.groupId },
+        data: { friendPairKey: pairKey },
+      })
+
+      await expect(
+        autoAcceptPendingFriendInvitationsForAccount({
+          accountId: newAccountId,
+          accountEmail: newEmail,
+        }),
+      ).resolves.toBeUndefined()
+    } finally {
+      await prisma.account
+        .delete({ where: { id: newAccountId } })
+        .catch(() => {})
+    }
+  })
+
+  // ───────────────────────────────────────────────────────────────────
+  // 13.27 + 13.32: displayName fallback priority + specific peer name
+  // ───────────────────────────────────────────────────────────────────
+  it('displayName: direct-accept peer name → invitation temporaryName → invitation email, and equals specific peer name', async () => {
+    // Level 1: Direct-accept — displayName equals the peer's Account.name
+    // Uses the existing direct-accept group from test 13.1 (caller + peer)
+    const result13_1 = await makeCaller().create({
+      friendFormValues: {
+        peerAccountId: peerId,
+        currency: '$',
+        currencyCode: 'USD',
+      },
+    })
+    expect(result13_1.existed).toBe(true) // already created by test 13.1
+
+    // Level 2: Pending email with temporaryName
+    const pendingNameEmail = `pending-dn-${runId}@test.example`
+    const pendingNameResult = await makeCaller().create({
+      friendFormValues: {
+        peerEmail: pendingNameEmail,
+        temporaryName: 'Temp Named Friend',
+        currency: '$',
+        currencyCode: 'USD',
+      },
+    })
+    trackGroup(pendingNameResult.groupId)
+
+    // Level 3: Pending email without temporaryName
+    const pendingNoNameEmail = `pending-dn2-${runId}@test.example`
+    const pendingNoNameResult = await makeCaller().create({
+      friendFormValues: {
+        peerEmail: pendingNoNameEmail,
+        currency: '$',
+        currencyCode: 'USD',
+      },
+    })
+    trackGroup(pendingNoNameResult.groupId)
+
+    const groupsResult = await makeAccountCaller().groups({
+      includeArchived: false,
+    })
+
+    // Level 1 + 13.32: verify displayName is the peer's specific account name
+    const directGroup = groupsResult.groups.find(
+      (g) => g.id === result13_1.groupId,
+    )
+    expect(directGroup).toBeDefined()
+    expect(directGroup!.displayName).toBe('Test Peer')
+
+    // Level 2: verify displayName is the temporaryName
+    const withName = groupsResult.groups.find(
+      (g) => g.id === pendingNameResult.groupId,
+    )
+    expect(withName).toBeDefined()
+    expect(withName!.displayName).toBe('Temp Named Friend')
+
+    // Level 3: verify displayName is the invitation email
+    const noName = groupsResult.groups.find(
+      (g) => g.id === pendingNoNameResult.groupId,
+    )
+    expect(noName).toBeDefined()
+    expect(noName!.displayName).toBe(pendingNoNameEmail)
   })
 })
 

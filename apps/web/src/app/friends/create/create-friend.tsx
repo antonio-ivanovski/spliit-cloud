@@ -189,7 +189,12 @@ export function CreateFriend() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <Tabs
                 value={peerTab}
-                onValueChange={(value) => setPeerTab(value as PeerTab)}
+                onValueChange={(value) => {
+                  setPeerTab(value as PeerTab)
+                  if (value === 'link') {
+                    form.setValue('useLink', true, { shouldDirty: true })
+                  }
+                }}
                 className="flex flex-col gap-4"
               >
                 <TabsList className="grid w-full grid-cols-3">

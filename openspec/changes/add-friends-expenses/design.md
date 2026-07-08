@@ -123,9 +123,9 @@ Alternatives considered:
 - Build a separate "pending friend" mechanism instead of reusing `GroupInvitation`: duplicates working infrastructure (email matching, link tokens, `LedgerParticipant` pre-materialization) for no benefit.
 - Disallow email/link for friends entirely (direct-accept only): loses the "I just met this person" use case where the peer doesn't have a Spliit account yet.
 
-### 5. Server-derived `Group.name` (empty string), per-viewer `displayName`
+### 5. Server-derived `Group.name` (random ID), per-viewer `displayName`
 
-The `Group.name` column is `NOT NULL` in the schema. For `FRIEND` groups, `friends.create` sets `name` to an empty string `""` — the simplest possible value. The name is never shown to users; the `account.groups` procedure computes a per-viewer `displayName` field for each returned group:
+The `Group.name` column is `NOT NULL` in the schema. For `FRIEND` groups, `friends.create` sets `name` to a `randomId()` value (a UUID without dashes) — a non-empty filler that satisfies the DB constraint while keeping consistency with GROUP-typed groups (which use `Group.name` as a human-readable label). The name is never shown to users; the `account.groups` procedure computes a per-viewer `displayName` field for each returned group:
 
 - For `FRIEND` groups: find the OTHER member's display name using the existing `resolveParticipantDisplayName` priority chain: `Account.name` (if the peer is an active member) → `Invitation.temporaryName` (if pending) → `Invitation.email` (if pending and no temp name).
 - For `GROUP` groups: `displayName = group.name` (unchanged).
@@ -134,12 +134,12 @@ The web `GroupCard` renders `displayName` for both types.
 
 The public `invitations.previewLink` procedure (used when an unauthenticated person opens a link invite URL) also needs a FRIEND-aware display name. For `FRIEND` groups, `Group.name` is `""`, so the preview SHALL show "Friend ledger with {inviter name}" instead of `Group.name`. The inviter's name is resolved from the inviter's `Account.name` (via `invitedById`), with the invitation's `temporaryName` as a fallback label for the ledger itself.
 
-Rationale: the user wants the simplest approach. `Group.name` is `NOT NULL` so a value is required, but an empty string satisfies the constraint. The `groupFormSchema`'s `.min(2)` validation only applies to the group-create form, not to the friend-create path (which uses a separate `friendFormSchema` and `createFriendLedger` function). Since all API responses for `FRIEND` groups include the computed `displayName`, no code path reads `Group.name` directly for display. The `previewLink` procedure is the one public endpoint that currently reads `Group.name` directly — it must be updated to compute a FRIEND-aware display name.
+Rationale: the user wants a consistent schema. `Group.name` is `NOT NULL` so a value is required, and `randomId()` provides a non-empty, collision-safe filler without leaking any intention into the column. The `groupFormSchema`'s `.min(2)` validation only applies to the group-create form, not to the friend-create path (which uses a separate `friendFormSchema` and `createFriendLedger` function). Since all API responses for `FRIEND` groups include the computed `displayName`, no code path reads `Group.name` directly for display. The `previewLink` procedure is the one public endpoint that currently reads `Group.name` directly — it must be updated to compute a FRIEND-aware display name.
 
 Alternatives considered:
 
-- Opaque structured string (e.g. `FRIEND::{accountIdA}::{accountIdB}`): more information in the DB but meaningless to humans and never read by code. Empty string is simpler.
-- Random string (e.g. a UUID): also works but adds noise in raw DB queries for no benefit.
+- Empty string: simpler but inconsistent with GROUP groups; `randomId()` keeps the schema pattern uniform.
+- Opaque structured string (e.g. `FRIEND::{accountIdA}::{accountIdB}`): more information in the DB but meaningless to humans and never read by code.
 - Allow a user-set name: the user explicitly rejected this ("shall not have a direct name").
 
 ### 6. Restricted actions for `FRIEND` groups, enforced server-side
@@ -267,7 +267,7 @@ A new web route `/friends/create` renders a form with:
   - **Link tab**: on submit, the group is created (caller only) and a link invite is generated. The user is navigated to the group page immediately, and the invite link is shown in a `ResponsiveDialog` on the group page itself.
 - **Currency selector**: reuses the existing `CurrencySelector` component.
 - **Optional info field**: an optional `Textarea` for notes about the friend ledger. Friends might want to add context (e.g. "Flatmate expenses" or "Trip to Lisbon"). Stored in `Group.information`.
-- **No name field**: the name is server-derived (empty string; see Decision 5).
+- **No name field**: the name is server-derived (random ID; see Decision 5).
 
 Submit calls a new `friends.create` tRPC mutation. On success:
 
@@ -313,7 +313,7 @@ Alternatives considered:
 - **[Risk] Dropping `pinned` column loses data.** **Mitigation:** `pinned` is never read or toggled anywhere in the app (verified by grep). The column is always `false` for all rows. No live data is lost.
 - **[Risk] "Friends" rename causes confusion for existing users.** **Mitigation:** the "Contacts" tab was only visible on the group members invite page. The rename is a label change; no behavior changes. Translation updates via `bun i18n` CLI.
 - **[Risk] Friend ledgers accumulate for users who interact with many people.** Since leaving is disallowed and creation is idempotent, a user with 50 contacts could have 50 friend ledgers. **Mitigation:** the Hidden preference lets users hide inactive friend ledgers. The lookup-or-create means re-interacting with a hidden friend reuses the hidden ledger (which can be unhidden).
-- **[Trade-off] `Group.name` for friend ledgers is an empty string.** This is fine because it's never shown to users (`displayName` is computed for all API responses). Raw DB queries that read `Group.name` will see `""` for friend ledgers — acceptable since no code path relies on `name` being non-empty for `FRIEND` groups.
+- **[Trade-off] `Group.name` for friend ledgers is a random ID.** This is fine because it's never shown to users (`displayName` is computed for all API responses). Raw DB queries that read `Group.name` will see opaque hex strings for `FRIEND` groups — acceptable since no code path relies on `name` being meaningful for `FRIEND` groups.
 
 ## Migration Plan
 

@@ -124,4 +124,58 @@ describe('EditGroup', () => {
 
     expect(screen.getByTestId('group-form')).toBeInTheDocument()
   })
+
+  // ── GROUP-type control tests (tasks 13.30, 13.31) ────────────────
+
+  function setGroupGroup() {
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      isLoading: false,
+      groupId: 'group-2',
+      group: {
+        id: 'group-2',
+        name: 'Regular Group',
+        archived: false,
+        currency: '$',
+        currencyCode: 'USD',
+        groupType: 'GROUP',
+        friendPairKey: null,
+        participants: [
+          { id: 'lp1', name: 'Alice', pending: false, unlinked: false },
+        ],
+      },
+      displayName: 'Regular Group',
+      currentLedgerParticipantId: 'lp1',
+      currentMember: { id: 'cm-1', role: 'ADMIN', status: 'ACTIVE' },
+      currentInvitation: null,
+      linkInviteState: null,
+    })
+  }
+
+  it('renders archive section for GROUP groups (opposite of FRIEND assertion)', () => {
+    setGroupGroup()
+    render(<EditGroup />)
+
+    expect(
+      screen.getByRole('heading', { name: 'Archive group' }),
+    ).toBeInTheDocument()
+  })
+
+  it('renders delete section for GROUP groups (opposite of FRIEND assertion)', () => {
+    setGroupGroup()
+    render(<EditGroup />)
+
+    expect(
+      screen.getByRole('heading', { name: 'Delete group' }),
+    ).toBeInTheDocument()
+  })
+
+  it('renders GroupForm with nameReadOnly=false for GROUP groups', () => {
+    setGroupGroup()
+    render(<EditGroup />)
+
+    const groupForm = screen.getByTestId('group-form')
+    expect(groupForm).toHaveAttribute('data-name-readonly', 'false')
+  })
+
+  // GroupTabs Members tab is tested in apps/web/src/tests/components/GroupTabs.test.tsx
 })

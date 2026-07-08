@@ -9,7 +9,7 @@ The system SHALL create groups as cloud resources owned and accessed through aut
 
 #### Scenario: Authenticated friend ledger creation
 - **WHEN** an authenticated account creates a friend ledger (via `friends.create`, not `groups.create`)
-- **THEN** the system creates the group with `groupType = FRIEND` and the name set to an empty string
+- **THEN** the system creates the group with `groupType = FRIEND` and the name set to a `randomId()` value (a namespace filler; never shown to users)
 - **AND** the `friends.create` procedure SHALL be the sole way to create FRIEND-typed groups; `groups.create` SHALL always create `GROUP`-typed groups and SHALL NOT accept a `groupType` input
 
 #### Scenario: Unauthenticated group creation

@@ -25,9 +25,9 @@ The system SHALL allow an authenticated account to create a 1-on-1 friend expens
 - **AND** the system SHALL NOT create any duplicate groups, members, or `friendPairKey` collisions
 - **AND** the system SHALL check for existing groups in both directions: (a) by `friendPairKey` match, (b) by the caller's pending invitations, and (c) by the peer's pending invitations (cross-direction lookup — handles the case where the peer created a group with a PENDING EMAIL invite for the caller's email before the caller's account existed)
 
-#### Scenario: Friend ledger name is empty and never shown
+#### Scenario: Friend ledger name is a random ID (namespace filler)
 - **WHEN** the system creates a `FRIEND`-typed group
-- **THEN** the system SHALL set the `Group.name` column to an empty string
+- **THEN** the system SHALL set the `Group.name` column to a `randomId()` value (used as a namespace filler for schema consistency — kept consistent with GROUP-typed groups which use `Group.name` as a human-readable label)
 - **AND** the system SHALL compute a per-viewer `displayName` for all API responses instead of using `Group.name`
 
 ### Requirement: Friend ledger creation via pending path with auto-accept
@@ -110,7 +110,7 @@ The system SHALL compute a per-viewer `displayName` for each `FRIEND`-typed grou
 - **THEN** the `displayName` SHALL equal `Group.name` (unchanged behavior)
 
 ### Requirement: Friend ledger link preview display name
-The system SHALL compute a FRIEND-aware display name for the public `invitations.previewLink` procedure when the invitation belongs to a `FRIEND`-typed group. Since `Group.name` is an empty string for friend ledgers, the preview SHALL show "Friend ledger with {inviter name}" where the inviter name is resolved from the inviter's `Account.name` via `invitedById`.
+The system SHALL compute a FRIEND-aware display name for the public `invitations.previewLink` procedure when the invitation belongs to a `FRIEND`-typed group. Since `Group.name` is a random ID (not a displayable name) for friend ledgers, the preview SHALL show "Friend ledger with {inviter name}" where the inviter name is resolved from the inviter's `Account.name` via `invitedById`.
 
 #### Scenario: Unauthenticated user opens a friend ledger link invite
 - **WHEN** an unauthenticated user opens a link invite URL for a `FRIEND`-typed group and the system processes `invitations.previewLink`

@@ -94,6 +94,11 @@ if (!HTMLDialogElement.prototype.close) {
   }
 }
 
+// ── Polyfill Element.scrollIntoView (Radix UI Select depends on it) ────
+if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = function () {}
+}
+
 // ── Suppress Radix UI "missing data-state" act() warnings ──────────────
 let rafHandle = 0
 vi.stubGlobal('requestAnimationFrame', (_cb: FrameRequestCallback) => {

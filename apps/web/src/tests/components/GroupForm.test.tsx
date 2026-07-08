@@ -3,6 +3,10 @@ import { getCurrency, useCurrencies } from '@/lib/currency'
 import { render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('@/lib/hooks', () => ({
+  useMediaQuery: vi.fn(() => true),
+}))
+
 // ── Module mocks ────────────────────────────────────────────────────────
 
 vi.mock('@/components/link', () => ({
@@ -263,5 +267,66 @@ describe('GroupForm', () => {
     )
 
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
+  })
+
+  // ── nameReadOnly fields still editable (task 13.29) ─────────────
+
+  it('currency selector is enabled when nameReadOnly is true', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        nameReadOnly
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(screen.getByRole('combobox')).not.toBeDisabled()
+  })
+
+  it('information textarea is enabled when nameReadOnly is true', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        nameReadOnly
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: /group information/i }),
+    ).not.toBeDisabled()
+  })
+
+  it('form submit includes currency and information changes when nameReadOnly is true', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        nameReadOnly
+        onSubmit={onSubmit}
+      />,
+    )
+
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+
+    const euroOption = await screen.findByRole('option', { name: /Euro/ })
+    await user.click(euroOption)
+
+    const textarea = screen.getByRole('textbox', { name: /group information/i })
+    await user.clear(textarea)
+    await user.type(textarea, 'Updated info text')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    const values = onSubmit.mock.calls[0][0]
+    expect(values).toHaveProperty('currencyCode', 'EUR')
+    expect(values).toHaveProperty('information', 'Updated info text')
   })
 })

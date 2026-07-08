@@ -1,6 +1,7 @@
 import {
   expenseApiSchema,
   expenseFormInputSchema,
+  friendFormSchema,
   groupFormSchema,
 } from './schemas'
 
@@ -519,5 +520,169 @@ describe('groupFormSchema', () => {
 
     // Note: Business logic should enforce 2+ participants
     // This test documents current schema behavior
+  })
+})
+
+// ── friendFormSchema tests ─────────────────────────────────────────
+describe('friendFormSchema', () => {
+  it('accepts exactly peerAccountId mode — only peerAccountId + currency set, validates successfully', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      currency: '$',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts exactly peerEmail mode — only peerEmail + currency set, validates successfully', () => {
+    const result = friendFormSchema.safeParse({
+      peerEmail: 'friend@example.com',
+      currency: '$',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts exactly useLink mode — only useLink + currency set, validates successfully', () => {
+    const result = friendFormSchema.safeParse({
+      useLink: true,
+      currency: '$',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects 0 modes — none of peerAccountId/peerEmail/useLink set, fails superRefine', () => {
+    const result = friendFormSchema.safeParse({
+      currency: '$',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe(
+        'Select exactly one: a friend, an email, or a shareable link.',
+      )
+    }
+  })
+
+  it('rejects 2+ modes — peerAccountId and peerEmail both set, fails superRefine', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      peerEmail: 'friend@example.com',
+      currency: '$',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe(
+        'Select exactly one: a friend, an email, or a shareable link.',
+      )
+    }
+  })
+
+  it('rejects 2+ modes — peerAccountId and useLink both set, fails superRefine', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      useLink: true,
+      currency: '$',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe(
+        'Select exactly one: a friend, an email, or a shareable link.',
+      )
+    }
+  })
+
+  it('rejects 2+ modes — peerEmail and useLink both set, fails superRefine', () => {
+    const result = friendFormSchema.safeParse({
+      peerEmail: 'friend@example.com',
+      useLink: true,
+      currency: '$',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe(
+        'Select exactly one: a friend, an email, or a shareable link.',
+      )
+    }
+  })
+
+  it('rejects 3 modes — all three set, fails superRefine', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      peerEmail: 'friend@example.com',
+      useLink: true,
+      currency: '$',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe(
+        'Select exactly one: a friend, an email, or a shareable link.',
+      )
+    }
+  })
+
+  it('rejects invalid email format in peerEmail', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      peerEmail: 'not-an-email',
+      currency: '$',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts valid email format in peerEmail', () => {
+    const result = friendFormSchema.safeParse({
+      peerEmail: 'user@example.com',
+      currency: '$',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects empty temporaryName (min 1)', () => {
+    const empty = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      currency: '$',
+      temporaryName: '',
+    })
+    expect(empty.success).toBe(false)
+
+    const whitespace = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      currency: '$',
+      temporaryName: '   ',
+    })
+    expect(whitespace.success).toBe(false)
+  })
+
+  it('rejects temporaryName > 120 chars', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      currency: '$',
+      temporaryName: 'a'.repeat(121),
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts temporaryName within limits', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      currency: '$',
+      temporaryName: 'Roommate',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects missing currency (required field)', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts optional currencyCode and information', () => {
+    const result = friendFormSchema.safeParse({
+      peerAccountId: 'some-account-id',
+      currency: '$',
+      currencyCode: 'USD',
+      information: 'Notes',
+    })
+    expect(result.success).toBe(true)
   })
 })
