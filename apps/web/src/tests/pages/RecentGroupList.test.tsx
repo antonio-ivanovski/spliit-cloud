@@ -26,7 +26,7 @@ const mocks = vi.hoisted(() => ({
   mockInvalidateAccountGroups: vi.fn(),
   mockInvalidateGroupsGet: vi.fn(),
   mockInvalidateInvitationsList: vi.fn(),
-  // Toast + navigation
+  // Toast
   mockToast: vi.fn(),
   mockRouterPush: vi.fn(),
   // Stored mutation callbacks (set by useMutation during render)
@@ -112,15 +112,6 @@ vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: mocks.mockToast }),
 }))
 
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: mocks.mockRouterPush,
-    replace: vi.fn(),
-    back: vi.fn(),
-    refresh: vi.fn(),
-  }),
-}))
-
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
@@ -135,6 +126,7 @@ vi.mock('@tanstack/react-router', () => ({
       {children}
     </a>
   ),
+  useNavigate: () => mocks.mockRouterPush,
 }))
 
 // ── SUT (imported after mocks) ──────────────────────────────────────────

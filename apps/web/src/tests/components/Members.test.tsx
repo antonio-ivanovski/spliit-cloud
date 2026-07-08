@@ -17,6 +17,7 @@ vi.mock('@tanstack/react-router', () => ({
     children: React.ReactNode
     [key: string]: unknown
   }) => <a href={to}>{children}</a>,
+  useNavigate: () => vi.fn(),
 }))
 
 vi.mock('@/components/link', () => ({
@@ -153,13 +154,6 @@ vi.mock('@/lib/use-current-account', () => ({
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
-}))
-
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-  }),
 }))
 
 // ── Fixtures ────────────────────────────────────────────────────────────

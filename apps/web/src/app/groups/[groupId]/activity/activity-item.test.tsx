@@ -3,13 +3,8 @@ import { describe, expect, it, vi } from 'vitest'
 import type { Activity } from './activity-item'
 import { ActivityItem } from './activity-item'
 
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    back: vi.fn(),
-    refresh: vi.fn(),
-  }),
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => vi.fn(),
 }))
 
 function makeActivity(

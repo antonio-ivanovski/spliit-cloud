@@ -7,8 +7,8 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
-const { mockReplace, mockSignOut } = vi.hoisted(() => ({
-  mockReplace: vi.fn(),
+const { mockNavigate, mockSignOut } = vi.hoisted(() => ({
+  mockNavigate: vi.fn(),
   mockSignOut: vi.fn().mockResolvedValue(undefined),
 }))
 
@@ -21,19 +21,13 @@ vi.mock('@tanstack/react-router', () => ({
     children: React.ReactNode
     [key: string]: unknown
   }) => <a href={to}>{children}</a>,
+  useNavigate: () => mockNavigate,
 }))
 
 vi.mock('@/lib/auth', () => ({
   authClient: {
     signOut: mockSignOut,
   },
-}))
-
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    replace: mockReplace,
-    push: vi.fn(),
-  }),
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
@@ -166,6 +160,6 @@ describe('AccountMenu', () => {
     await user.click(signOutItem)
 
     expect(mockSignOut).toHaveBeenCalledOnce()
-    expect(mockReplace).toHaveBeenCalledWith({ href: '/' })
+    expect(mockNavigate).toHaveBeenCalledWith({ to: '/', replace: true })
   })
 })

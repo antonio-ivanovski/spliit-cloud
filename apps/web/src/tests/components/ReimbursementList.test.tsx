@@ -34,17 +34,8 @@ vi.mock('@tanstack/react-router', () => {
       </a>
     )
   }
-  return { Link: MockLink }
+  return { Link: MockLink, useNavigate: () => vi.fn() }
 })
-
-vi.mock('@/lib/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    back: vi.fn(),
-    refresh: vi.fn(),
-  }),
-}))
 
 import { ReimbursementList } from '@/app/groups/[groupId]/reimbursement-list'
 
