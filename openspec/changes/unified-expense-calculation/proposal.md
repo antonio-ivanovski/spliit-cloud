@@ -5,20 +5,20 @@ Expense share calculation is fragmented across four independent implementations 
 ## What Changes
 
 - Introduce `calculateExactShares(input)` as the single `decimal.js`-based core that computes exact (non-truncated) per-participant shares. It accepts a shape-based input (`{ amount, splitMode, participants }`) that works identically for expenses, expense items, and the payer side — no duplication.
-- Introduce `distributeRemainder(exactShares, amount, opts)` as the single truncation + remainder distribution algorithm. Truncates toward zero, distributes leftover cents by descending fractional-part magnitude, ties broken by an expense-date-seeded offset (fair over time, deterministic per expense). Works at any granularity: per-item, per-expense, or globally across all expenses.
+- Introduce `distributeRemainder(exactShares, amount, opts)` as the single truncation + remainder distribution algorithm. Truncates toward zero, distributes leftover cents by descending fractional-part magnitude, ties broken by an expense-id-seeded offset (stable hash of expense id; fair across expenses, deterministic per expense; seed 0 when id missing). Works at any granularity: per-item, per-expense, or globally across all expenses.
 - Rewrite `getBalances(expenses)` to accumulate exact Decimal shares across ALL expenses per direction (paid/paidFor), apply cross-currency conversion at Decimal precision per-expense, then truncate + distribute the single global leftover once. Guarantees `Σ paidFor === Σ amount` exactly.
 - Rewrite `computePaidForFromItems` to accumulate exact Decimal shares across all items + the "Other" filler, then truncate + distribute once — eliminating cross-item drift. Per-item modal preview keeps per-item rounding (each item independently balances to its own amount for display).
 - Introduce `serializePaidFor`/`serializePaidBy` domain helpers that replace all inline cent math in the form (`submit-values.ts`) and importers (`spliit-csv.ts`, `splitwise-csv.ts`, `batch.ts`).
 - Make `calculateShare`/`calculatePaidByShare` thin delegates to `calculateShares`/`calculatePaidByShares`. Make `getTotalActiveUserShare`/`getTotalActiveUserPaidFor` delegate to `getBalances` so displayed totals exactly match the balance sheet.
 - Rewrite CSV export (`apps/api/src/routes/export-csv.ts`) to use `calculateShares` per expense.
 - **BREAKING**: Drop `distributeEvenly`, `distributeWeighted`, `parseFloat(toFixed(2))`, `Math.round` on balance accumulators, the `isLast = remaining` idiom, and all inline drift correctors in importers. BY_AMOUNT shares are treated as literal cents (not weights) in `getBalances`, aligning with `calculateShare` and `itemized-expenses.ts`. Cumulative balances will shift by ≤2¢ for groups with multiple fractional-split expenses — the intended accuracy fix.
-- The tie-break strategy is designed as a configurable interface (strategy enum + seed) with `EXPENSE_DATE_SEEDED` as the default. Per-group/instance configuration is deferred.
+- The tie-break strategy is designed as a configurable interface (strategy enum + seed) with `EXPENSE_ID_SEEDED` as the default. Per-group/instance configuration is deferred.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `share-calculation`: Unified per-participant share math core (`calculateExactShares`, `distributeRemainder`, `calculateShares`, `serializePaidFor`/`serializePaidBy`) covering all split modes (EVENLY, BY_SHARES, BY_PERCENTAGE, BY_AMOUNT, ITEMIZED), cross-currency conversion, and expense-date-seeded remainder tie-break. Applies to expenses, expense items, and global balance accumulation.
+- `share-calculation`: Unified per-participant share math core (`calculateExactShares`, `distributeRemainder`, `calculateShares`, `serializePaidFor`/`serializePaidBy`) covering all split modes (EVENLY, BY_SHARES, BY_PERCENTAGE, BY_AMOUNT, ITEMIZED), cross-currency conversion, and expense-id-seeded remainder tie-break. Applies to expenses, expense items, and global balance accumulation.
 
 ### Modified Capabilities
 
@@ -35,4 +35,4 @@ Expense share calculation is fragmented across four independent implementations 
 - **API** (`apps/api/src/`): CSV export route uses `calculateShares`; settlement unchanged (already flows through `getBalances`); expense persistence unchanged (serializers are the gate).
 - **Tests**: update ~8 existing assertions to new distribution rule; add global-accumulation, tie-break, per-expense, cross-item, write-side, and import-drift coverage.
 - **Dependencies**: `decimal.js` already in `packages/domain` and `apps/web` — no new deps.
-- **Behavioral change**: cumulative balances shift ≤2¢ for groups with multiple fractional-split expenses. Per-expense display shares use expense-date-seeded tie-break instead of last-participant absorption.
+- **Behavioral change**: cumulative balances shift ≤2¢ for groups with multiple fractional-split expenses. Per-expense display shares use expense-id-seeded tie-break instead of last-participant absorption.

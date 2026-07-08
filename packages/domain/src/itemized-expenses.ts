@@ -2,6 +2,7 @@ import Decimal from 'decimal.js'
 import type { SplitMode } from './enums'
 import type { ExpenseApiItem } from './schemas'
 import { calculateExactShares, distributeRemainder } from './totals'
+import { expenseIdSeed } from './utils'
 
 type ItemPaidFor = Array<{ participant: string; shares: number }>
 
@@ -92,7 +93,8 @@ export function computePaidForFromItems(
     paidFor: ExpenseApiItem['paidFor']
     splitMode: ExpenseApiItem['splitMode']
   },
-  expenseDate?: Date | string | number | null,
+  /** Expense id for remainder tie-break; omit / empty → seed 0 (create preview). */
+  expenseId?: string | null,
 ): {
   paidFor: Array<{ participant: string; shares: number }>
   effectiveAmount: number
@@ -104,18 +106,7 @@ export function computePaidForFromItems(
     itemizedRemainder,
   )
 
-  const seed =
-    expenseDate == null
-      ? 0
-      : expenseDate instanceof Date
-        ? expenseDate.getTime()
-        : typeof expenseDate === 'number'
-          ? expenseDate
-          : (() => {
-              const t = new Date(expenseDate).getTime()
-              return Number.isFinite(t) ? t : 0
-            })()
-
+  const seed = expenseIdSeed(expenseId)
   const distributed = distributeRemainder(exact, expenseAmount, { seed })
 
   const paidFor = Object.entries(distributed).map(([participant, shares]) => ({

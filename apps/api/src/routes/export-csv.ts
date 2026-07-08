@@ -70,6 +70,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
 
   const expenses = await prisma.expense.findMany({
     select: {
+      id: true,
       expenseDate: true,
       title: true,
       categoryId: true,
@@ -140,11 +141,11 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     // Ledger-currency nets via unified share calculation.
     // Multi-payer generalization: net = paidByShare - paidForShare.
     const shareExpense = {
+      id: expense.id,
       amount: expense.amount,
       splitMode: expense.splitMode,
       paidBySplitMode: expense.paidBySplitMode,
       isReimbursement: expense.isReimbursement,
-      expenseDate: expense.expenseDate,
       originalAmount: expense.originalAmount,
       originalCurrency: expense.originalCurrency,
       conversionRate:

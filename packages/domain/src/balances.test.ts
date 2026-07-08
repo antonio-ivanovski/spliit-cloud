@@ -1261,9 +1261,9 @@ describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
     const balances = getBalances(expenses)
 
     // Exact: 10000/3 each → 3333/3333/3334 after one global distribution
-    expect(balances.p0.paidFor + balances.p1.paidFor + balances.p2.paidFor).toBe(
-      10000,
-    )
+    expect(
+      balances.p0.paidFor + balances.p1.paidFor + balances.p2.paidFor,
+    ).toBe(10000)
     expect(
       [balances.p0.paidFor, balances.p1.paidFor, balances.p2.paidFor].sort(
         (a, b) => a - b,

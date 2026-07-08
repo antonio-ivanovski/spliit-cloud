@@ -19,7 +19,7 @@ The fork has three features upstream PR #462 does not address: multi-payer (`pai
 - One `distributeRemainder` function that works at any granularity (per-item, per-expense, global across all expenses).
 - `getBalances` accumulates exact Decimal shares across all expenses, truncates + distributes once. Guarantees `Σ paidFor === Σ amount` exactly.
 - `computePaidForFromItems` accumulates exact Decimal across all items + filler, truncates once. Eliminates cross-item drift.
-- Expense-date-seeded tie-break for remainder distribution (fair over time, deterministic per expense, configurable interface for future per-group config).
+- Expense-id-seeded tie-break for remainder distribution (fair across expenses, deterministic per expense, configurable interface for future per-group config).
 - All write-side paths (form, import) route through domain serializers. No inline cent math.
 - Trust stored `amount` as the ledger-currency source of truth.
 
@@ -96,7 +96,7 @@ For ITEMIZED cross-currency, the persisted `paidFor.shares` are in original curr
 
 Alternative considered: per-expense `distributeRemainder` then sum integers. Rejected — this is the current approach and causes cross-expense drift. The global approach guarantees `Σ paidFor === Σ amount` exactly.
 
-### Expense-date-seeded tie-break
+### Expense-id-seeded tie-break
 
 When fractional parts tie, the seed determines which tied participant gets the leftover cent first:
 
@@ -106,23 +106,25 @@ offset = seed % tiedParticipants.length
 distribute cents starting from tiedParticipants[offset], wrapping around
 ```
 
-For per-expense `calculateShares`, `seed = expenseDate.getTime()`. Different expense dates → different participants absorb the cent → fair over time. Same date → same result → deterministic.
+For per-expense `calculateShares` / `calculatePaidByShares` / `computePaidForFromItems`, `seed = expenseIdSeed(expense.id)` — a stable FNV-1a hash of the expense id. Missing/empty id → `0` (create/preview). Different expense ids → different participants absorb the cent → fair across expenses. Same id → same result → deterministic.
+
+`expenseDate` is `@db.Date` (UTC midnight only). Using `expenseDate.getTime()` as seed was rejected: day steps are multiples of 86_400_000 ms, so `seed % 3` (and other common group sizes) never rotated.
 
 For global `getBalances`, `seed = 0` (global accumulation already minimizes ties since most fractional parts cancel across expenses).
-
-For item-level distribution in `computePaidForFromItems`, `seed = expenseDate.getTime()` (items share one expense date).
 
 The tie-break strategy is designed as a configurable interface:
 
 ```
-type TieBreakStrategy = 'EXPENSE_DATE_SEEDED' | 'PARTICIPANT_ID_DESC' | 'ROUND_ROBIN' | 'RANDOM_SEEDED'
+type TieBreakStrategy = 'EXPENSE_ID_SEEDED' | 'PARTICIPANT_ID_DESC' | 'ROUND_ROBIN' | 'RANDOM_SEEDED'
 ```
 
-`EXPENSE_DATE_SEEDED` is the default. Per-group/instance configuration is deferred but the interface is ready.
+`EXPENSE_ID_SEEDED` is the default. Per-group/instance configuration is deferred but the interface is ready.
 
-Alternative considered: always use participant ID descending (simplest). Rejected — biases the same participant on every expense with a tie. The expense-date-seeded approach distributes the bias fairly over time.
+Alternative considered: always use participant ID descending (simplest). Rejected — biases the same participant on every expense with a tie. The expense-id-seeded approach distributes the bias fairly across expenses.
 
-Alternative considered: `ROUND_ROBIN` with a global counter. Rejected — requires stateful tracking across expenses; the date-based seed is stateless and deterministic.
+Alternative considered: expense-date ms seed. Rejected — `@db.Date` makes timestamps day-aligned, so common `seed % N` offsets are stuck at 0.
+
+Alternative considered: `ROUND_ROBIN` with a global counter. Rejected — requires stateful tracking across expenses; the id-based seed is stateless and deterministic.
 
 ### BY_AMOUNT literal semantic
 

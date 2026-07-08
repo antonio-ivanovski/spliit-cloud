@@ -546,7 +546,7 @@ describe('calculateShares', () => {
     expect(sumValues(shares)).toBe(-101)
   })
 
-  it('tie-break depends on expenseDate seed', () => {
+  it('tie-break depends on expense id seed', () => {
     const base = {
       amount: 100,
       splitMode: 'EVENLY' as const,
@@ -556,16 +556,37 @@ describe('calculateShares', () => {
         makePaidFor('u3', 1),
       ],
     }
-    // Pick seeds with different offsets mod 3 so the rotated winner differs.
-    const a = calculateShares(
-      makeExpense({ ...base, expenseDate: new Date(0) }),
-    )
-    const b = calculateShares(
-      makeExpense({ ...base, expenseDate: new Date(1) }),
-    )
+    // id-0/1/2 hash to distinct seed % 3 → different remainder winners.
+    const a = calculateShares(makeExpense({ ...base, id: 'id-0' }))
+    const b = calculateShares(makeExpense({ ...base, id: 'id-1' }))
+    const c = calculateShares(makeExpense({ ...base, id: 'id-2' }))
+    const aAgain = calculateShares(makeExpense({ ...base, id: 'id-0' }))
     expect(sumValues(a)).toBe(100)
     expect(sumValues(b)).toBe(100)
-    expect(a).not.toEqual(b)
+    expect(sumValues(c)).toBe(100)
+    expect(a).toEqual(aAgain)
+    expect(a).toEqual({ u1: 34, u2: 33, u3: 33 })
+    expect(b).toEqual({ u1: 33, u2: 34, u3: 33 })
+    expect(c).toEqual({ u1: 33, u2: 33, u3: 34 })
+  })
+
+  it('missing expense id falls back to seed 0', () => {
+    const base = {
+      amount: 100,
+      splitMode: 'EVENLY' as const,
+      paidFor: [
+        makePaidFor('u1', 1),
+        makePaidFor('u2', 1),
+        makePaidFor('u3', 1),
+      ],
+    }
+    const withMissingId = calculateShares(
+      makeExpense({ ...base, id: undefined }),
+    )
+    const withEmptyId = calculateShares(makeExpense({ ...base, id: '' }))
+    // seed 0: equal fracs → first by participant id ascending (u1)
+    expect(withMissingId).toEqual({ u1: 34, u2: 33, u3: 33 })
+    expect(withEmptyId).toEqual(withMissingId)
   })
 
   it('ITEMIZED cross-currency treats shares as BY_SHARES weights', () => {

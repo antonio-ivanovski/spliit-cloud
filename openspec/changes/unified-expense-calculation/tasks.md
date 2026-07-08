@@ -2,14 +2,14 @@
 
 - [x] 1.1 Define `SplitInput` type (`{ amount, splitMode, participants: Array<{ id, shares }> }`) in `packages/domain/src/totals.ts`
 - [x] 1.2 Implement `calculateExactShares(input: SplitInput): Record<string, Decimal>` — exact (non-truncated) per-participant Decimal shares for all 5 split modes (EVENLY, BY_SHARES, BY_PERCENTAGE, BY_AMOUNT, ITEMIZED)
-- [x] 1.3 Implement `distributeRemainder(exactShares, amount, opts?: { seed?, payerId? }): Record<string, number>` — truncate toward zero, distribute leftover by descending fractional part, expense-date-seeded tie-break, BY_AMOUNT payer fallback
-- [x] 1.4 Define `TieBreakStrategy` type and the `EXPENSE_DATE_SEEDED` strategy implementation (configurable interface for future strategies)
+- [x] 1.3 Implement `distributeRemainder(exactShares, amount, opts?: { seed?, payerId? }): Record<string, number>` — truncate toward zero, distribute leftover by descending fractional part, expense-id-seeded tie-break, BY_AMOUNT payer fallback
+- [x] 1.4 Define `TieBreakStrategy` type and the `EXPENSE_ID_SEEDED` strategy implementation (configurable interface for future strategies)
 - [x] 1.5 Add unit tests for `calculateExactShares` covering all 5 split modes, 0 amount, 0 total shares, empty participants
 - [x] 1.6 Add unit tests for `distributeRemainder` covering: exact division, positive remainder, negative amount (refund), tie-break with seed, BY_AMOUNT payer fallback, empty participants fallback
 
 ## 2. Core: Per-expense wrappers and serializers
 
-- [x] 2.1 Implement `calculateShares(expense): Record<string, number>` — delegates to `calculateExactShares` + `distributeRemainder` with expense-date seed and BY_AMOUNT/ITEMIZED payerId
+- [x] 2.1 Implement `calculateShares(expense): Record<string, number>` — delegates to `calculateExactShares` + `distributeRemainder` with expense-id seed (0 if missing) and BY_AMOUNT/ITEMIZED payerId
 - [x] 2.2 Implement `calculatePaidByShares(expense): Record<string, number>` — symmetric for paidBy side with cross-currency conversion via `Decimal.mul(rate)`
 - [x] 2.3 Refactor `calculateShare(participantId, expense)` and `calculatePaidByShare(participantId, expense)` to thin delegates
 - [x] 2.4 Implement `serializePaidFor({ splitMode, paidFor, amount, currency, conversionRate? })` — BY_AMOUNT via `amountAsMinorUnits`, BY_PERCENTAGE via BPS, ELSE via `Math.round`

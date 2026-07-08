@@ -2,7 +2,7 @@ import Decimal from 'decimal.js'
 import { getBalances } from './balances'
 import type { Currency } from './currency'
 import type { SplitMode } from './enums'
-import { amountAsMinorUnits } from './utils'
+import { amountAsMinorUnits, expenseIdSeed } from './utils'
 
 export type TotalsExpense = {
   id?: string
@@ -32,10 +32,7 @@ export type SplitInput = {
 }
 
 export type TieBreakStrategy =
-  | 'EXPENSE_DATE_SEEDED'
-  | 'PARTICIPANT_ID_DESC'
-  | 'ROUND_ROBIN'
-  | 'RANDOM_SEEDED'
+  'EXPENSE_ID_SEEDED' | 'PARTICIPANT_ID_DESC' | 'ROUND_ROBIN' | 'RANDOM_SEEDED'
 
 export type DistributeRemainderOpts = {
   seed?: number
@@ -45,16 +42,6 @@ export type DistributeRemainderOpts = {
 
 type ParticipantShare = {
   shares: number
-}
-
-function expenseDateSeed(
-  expenseDate: Date | string | number | null | undefined,
-): number {
-  if (expenseDate == null) return 0
-  if (expenseDate instanceof Date) return expenseDate.getTime()
-  if (typeof expenseDate === 'number') return expenseDate
-  const t = new Date(expenseDate).getTime()
-  return Number.isFinite(t) ? t : 0
 }
 
 function isCrossCurrency(
@@ -124,7 +111,7 @@ export function calculateExactShares(
 
 /**
  * Truncate toward zero and distribute leftover cents by descending fractional
- * part; EXPENSE_DATE_SEEDED rotates within equal-frac groups via seed.
+ * part; EXPENSE_ID_SEEDED rotates within equal-frac groups via seed.
  */
 export function distributeRemainder(
   exactShares: Record<string, Decimal>,
@@ -159,7 +146,7 @@ export function distributeRemainder(
     return result
   }
 
-  const strategy = opts?.strategy ?? 'EXPENSE_DATE_SEEDED'
+  const strategy = opts?.strategy ?? 'EXPENSE_ID_SEEDED'
   const seed = opts?.seed ?? 0
   const order = orderForRemainder(entries, seed, strategy)
   const step = diff > 0 ? 1 : -1
@@ -191,7 +178,7 @@ function orderForRemainder(
     return a.id < b.id ? -1 : a.id > b.id ? 1 : 0
   })
 
-  if (strategy !== 'EXPENSE_DATE_SEEDED' && strategy !== 'RANDOM_SEEDED') {
+  if (strategy !== 'EXPENSE_ID_SEEDED' && strategy !== 'RANDOM_SEEDED') {
     return sorted.map((e) => e.id)
   }
 
@@ -225,8 +212,8 @@ type SharesExpense = Pick<
   | 'originalAmount'
   | 'originalCurrency'
   | 'conversionRate'
-  | 'expenseDate'
 > & {
+  id?: string | null
   paidByList?: TotalsExpense['paidByList']
 }
 
@@ -253,7 +240,7 @@ export function calculateShares(
     })),
   })
 
-  const seed = expenseDateSeed(expense.expenseDate)
+  const seed = expenseIdSeed(expense.id)
   const payerId =
     expense.splitMode === 'BY_AMOUNT' || expense.splitMode === 'ITEMIZED'
       ? expense.paidByList?.[0]?.participant.id
@@ -271,8 +258,9 @@ type PaidBySharesExpense = Pick<
   | 'originalAmount'
   | 'originalCurrency'
   | 'conversionRate'
-  | 'expenseDate'
->
+> & {
+  id?: string | null
+}
 
 /** Per-expense integer paidBy shares in ledger currency; sum === expense.amount. */
 export function calculatePaidByShares(
@@ -310,7 +298,7 @@ export function calculatePaidByShares(
     exact = converted
   }
 
-  const seed = expenseDateSeed(expense.expenseDate)
+  const seed = expenseIdSeed(expense.id)
   const payerId =
     expense.paidBySplitMode === 'BY_AMOUNT' ||
     expense.paidBySplitMode === 'ITEMIZED'

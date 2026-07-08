@@ -34,23 +34,27 @@ The system SHALL provide a single `distributeRemainder(exactShares, amount, opts
 - **WHEN** BY_AMOUNT shares sum to less than the amount and `opts.payerId` is set
 - **THEN** `distributeRemainder` gives the entire difference to the payer
 
-### Requirement: Expense-date-seeded tie-break
-The system SHALL break ties in remainder distribution using an expense-date-seeded offset. When multiple participants have equal fractional parts, they SHALL be sorted by fractional part descending then by participant ID ascending, and the starting offset SHALL be `seed % tiedCount`. For per-expense distribution, `seed` SHALL be `expenseDate.getTime()`. For global balance distribution, `seed` SHALL be 0. The tie-break strategy SHALL be designed as a configurable interface supporting future strategies (`PARTICIPANT_ID_DESC`, `ROUND_ROBIN`, `RANDOM_SEEDED`).
+### Requirement: Expense-id-seeded tie-break
+The system SHALL break ties in remainder distribution using an expense-id-seeded offset. When multiple participants have equal fractional parts, they SHALL be sorted by fractional part descending then by participant ID ascending, and the starting offset SHALL be `seed % tiedCount`. For per-expense distribution, `seed` SHALL be a stable hash of `expense.id` (FNV-1a), or `0` when `id` is missing/empty (create/preview paths). For global balance distribution, `seed` SHALL be 0. The tie-break strategy SHALL be designed as a configurable interface supporting future strategies (`PARTICIPANT_ID_DESC`, `ROUND_ROBIN`, `RANDOM_SEEDED`). Default strategy is `EXPENSE_ID_SEEDED`.
 
-#### Scenario: Same fractional parts on different dates
-- **WHEN** two expenses with different dates each have a 1-cent tie among the same 3 participants
-- **THEN** the participant absorbing the extra cent differs between the two expenses based on the date-derived seed
+#### Scenario: Same fractional parts on different expense ids
+- **WHEN** two expenses with different ids each have a 1-cent tie among the same 3 participants
+- **THEN** the participant absorbing the extra cent may differ based on the id-derived seed
 
-#### Scenario: Same expense date produces deterministic result
+#### Scenario: Same expense id produces deterministic result
 - **WHEN** the same expense is processed multiple times
 - **THEN** the same participant absorbs the extra cent every time
+
+#### Scenario: Missing expense id falls back to seed 0
+- **WHEN** `calculateShares` or `computePaidForFromItems` is called without an expense id
+- **THEN** the seed is 0 (same as global balance distribution)
 
 #### Scenario: Global balance distribution uses seed 0
 - **WHEN** `getBalances` distributes the global leftover across all expenses
 - **THEN** the seed is 0 and ties are broken by participant ID ascending
 
 ### Requirement: Per-expense integer share calculation
-The system SHALL provide `calculateShares(expense)` that returns `Record<participantId, number>` (integer cents) by calling `distributeRemainder(calculateExactShares(input), expense.amount, { seed: expenseDate, payerId })`. The `payerId` SHALL be set only when `splitMode` is BY_AMOUNT or ITEMIZED. The sum of returned shares SHALL equal `expense.amount` exactly.
+The system SHALL provide `calculateShares(expense)` that returns `Record<participantId, number>` (integer cents) by calling `distributeRemainder(calculateExactShares(input), expense.amount, { seed: expenseIdSeed(expense.id), payerId })`. The `payerId` SHALL be set only when `splitMode` is BY_AMOUNT or ITEMIZED. The sum of returned shares SHALL equal `expense.amount` exactly.
 
 #### Scenario: Per-expense shares sum to amount
 - **WHEN** `calculateShares` is called for any expense
