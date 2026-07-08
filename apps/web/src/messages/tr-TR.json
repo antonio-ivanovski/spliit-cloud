@@ -932,7 +932,7 @@
   },
   "ResetPassword": {
     "title": "Yeni bir şifre seçin",
-    "subtitle": "Spliit hesabınız için yeni şifreyi girin.",
+    "subtitle": "Spliit Cloud hesabınız için yeni şifreyi girin.",
     "newPassword": "Yeni şifre",
     "confirmPassword": "Yeni şifreyi onayla",
     "passwordMismatch": "Şifreler eşleşmiyor.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Spliit Cloud'ı Yükle",
-      "description": "Tek dokunuşla erişim için Spliit'i ana ekranınıza ekleyin.",
+      "description": "Tek dokunuşla erişim için Spliit Cloud'i ana ekranınıza ekleyin.",
       "step1": "Paylaş düğmesine dokunun",
       "step2": "Aşağı kaydırın ve Ana Ekrana Ekle'ye dokunun",
       "step3": "Sağ üst köşedeki Ekle'ye dokunun"
     },
     "firefox": {
       "title": "Spliit Cloud'ı Yükle",
-      "description": "Tarayıcı menüsünden Spliit'i ana ekranınıza ekleyin.",
+      "description": "Tarayıcı menüsünden Spliit Cloud'i ana ekranınıza ekleyin.",
       "step1": "Sağ üst köşedeki menü düğmesine (⋮) dokunun",
       "step2": "Yükle'ye dokunun"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "E-posta",
     "peerLinkTab": "Paylaşılabilir bağlantı",
     "alreadyHasLedger": "zaten bir arkadaş defteri var",
-    "inviteSent": "Davet gönderildi. Arkadaşınız Spliit'e katıldığında eklenecek.",
+    "inviteSent": "Davet gönderildi. Arkadaşınız Spliit Cloud'e katıldığında eklenecek.",
     "inviteLinkTitle": "Bu bağlantıyı paylaş",
     "inviteLinkDescription": "Onları deftere eklemek için bu bağlantıyı arkadaşınızla paylaşın.",
     "copy": "Kopyala",

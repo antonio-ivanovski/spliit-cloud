@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "Tria una nova contrasenya",
-    "subtitle": "Introdueix la nova contrasenya per al teu compte de Spliit.",
+    "subtitle": "Introdueix la nova contrasenya per al teu compte de Spliit Cloud.",
     "newPassword": "Nova contrasenya",
     "confirmPassword": "Confirma la nova contrasenya",
     "passwordMismatch": "Les contrasenyes no coincideixen.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Instal·la Spliit Cloud",
-      "description": "Afegeix Spliit a la pantalla d'inici per accedir-hi amb un sol toc.",
+      "description": "Afegeix Spliit Cloud a la pantalla d'inici per accedir-hi amb un sol toc.",
       "step1": "Toca el botó Compartir",
       "step2": "Desplaça't cap avall i toca Afegeix a la pantalla d'inici",
       "step3": "Toca Afegeix a la cantonada superior dreta"
     },
     "firefox": {
       "title": "Instal·la Spliit Cloud",
-      "description": "Afegeix Spliit a la pantalla d'inici des del menú del navegador.",
+      "description": "Afegeix Spliit Cloud a la pantalla d'inici des del menú del navegador.",
       "step1": "Toca el botó de menú (⋮) a la part superior dreta",
       "step2": "Toca Instal·la"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "Correu electrònic",
     "peerLinkTab": "Enllaç per compartir",
     "alreadyHasLedger": "ja té un compte entre amics",
-    "inviteSent": "S'ha enviat la invitació. El teu amic s'afegirà quan s'uneixi a Spliit.",
+    "inviteSent": "S'ha enviat la invitació. El teu amic s'afegirà quan s'uneixi a Spliit Cloud.",
     "inviteLinkTitle": "Comparteix aquest enllaç",
     "inviteLinkDescription": "Comparteix aquest enllaç amb el teu amic per afegir-lo al compte.",
     "copy": "Copia",

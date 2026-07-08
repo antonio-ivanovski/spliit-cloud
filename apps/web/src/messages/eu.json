@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "Aukeratu pasahitz berri bat",
-    "subtitle": "Sartu pasahitz berria zure Spliit konturako.",
+    "subtitle": "Sartu pasahitz berria zure Spliit Cloud konturako.",
     "newPassword": "Pasahitz berria",
     "confirmPassword": "Berretsi pasahitz berria",
     "passwordMismatch": "Pasahitzak ez datoz bat.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Instalatu Spliit Cloud",
-      "description": "Gehitu Spliit zure hasierako pantailan ukipen bakar batekin sartzeko.",
+      "description": "Gehitu Spliit Cloud zure hasierako pantailan ukipen bakar batekin sartzeko.",
       "step1": "Sakatu Partekatu botoia",
       "step2": "Korritu behera eta sakatu Gehitu hasierako pantailan",
       "step3": "Sakatu Gehitu goi-eskuineko izkinan"
     },
     "firefox": {
       "title": "Instalatu Spliit Cloud",
-      "description": "Gehitu Spliit zure hasierako pantailan nabigatzailearen menutik.",
+      "description": "Gehitu Spliit Cloud zure hasierako pantailan nabigatzailearen menutik.",
       "step1": "Sakatu menu-botoia (⋮) goi-eskuinean",
       "step2": "Sakatu Instalatu"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "Posta elektronikoa",
     "peerLinkTab": "Partekatzeko esteka",
     "alreadyHasLedger": "badu lagun-liburu bat",
-    "inviteSent": "Gonbidapena bidali da. Zure laguna gehituko da Spliit-era batzen denean.",
+    "inviteSent": "Gonbidapena bidali da. Zure laguna gehituko da Spliit Cloud-era batzen denean.",
     "inviteLinkTitle": "Partekatu esteka hau",
     "inviteLinkDescription": "Partekatu esteka hau zure lagunarekin kontura gehitzeko.",
     "copy": "Kopiatu",

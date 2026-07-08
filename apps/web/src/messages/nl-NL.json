@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "Kies een nieuw wachtwoord",
-    "subtitle": "Voer het nieuwe wachtwoord voor je Spliit-account in.",
+    "subtitle": "Voer het nieuwe wachtwoord voor je Spliit Cloud-account in.",
     "newPassword": "Nieuw wachtwoord",
     "confirmPassword": "Bevestig nieuw wachtwoord",
     "passwordMismatch": "Wachtwoorden komen niet overeen.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Spliit Cloud installeren",
-      "description": "Voeg Spliit toe aan je startscherm voor snelle toegang met één tik.",
+      "description": "Voeg Spliit Cloud toe aan je startscherm voor snelle toegang met één tik.",
       "step1": "Tik op de Deel-knop",
       "step2": "Scroll naar beneden en tik op Zet op beginscherm",
       "step3": "Tik rechtsboven op Voeg toe"
     },
     "firefox": {
       "title": "Spliit Cloud installeren",
-      "description": "Voeg Spliit toe aan je startscherm vanuit het browsermenu.",
+      "description": "Voeg Spliit Cloud toe aan je startscherm vanuit het browsermenu.",
       "step1": "Tik rechtsboven op de menuknop (⋮)",
       "step2": "Tik op Installeren"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Deelbare link",
     "alreadyHasLedger": "heeft al een vriendenadministratie",
-    "inviteSent": "Uitnodiging verstuurd. Je vriend wordt toegevoegd zodra hij of zij lid wordt van Spliit.",
+    "inviteSent": "Uitnodiging verstuurd. Je vriend wordt toegevoegd zodra hij of zij lid wordt van Spliit Cloud.",
     "inviteLinkTitle": "Deel deze link",
     "inviteLinkDescription": "Deel deze link met je vriend om hem of haar toe te voegen aan de administratie.",
     "copy": "Kopiëren",

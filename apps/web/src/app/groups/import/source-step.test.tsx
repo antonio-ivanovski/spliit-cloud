@@ -50,11 +50,11 @@ describe('SourceStep — initialError (prefill) handling', () => {
       <SourceStep
         onLoaded={vi.fn()}
         onError={vi.fn()}
-        initialError="Spliit did not find this group"
+        initialError="Spliit Cloud did not find this group"
       />,
     )
     expect(
-      screen.getByText('Spliit did not find this group'),
+      screen.getByText('Spliit Cloud did not find this group'),
     ).toBeInTheDocument()
   })
 
@@ -64,7 +64,7 @@ describe('SourceStep — initialError (prefill) handling', () => {
       <SourceStep
         onLoaded={vi.fn()}
         onError={vi.fn()}
-        initialError="Spliit did not find this group"
+        initialError="Spliit Cloud did not find this group"
       />,
     )
 
@@ -72,7 +72,7 @@ describe('SourceStep — initialError (prefill) handling', () => {
     await user.type(urlInput, 'a')
 
     expect(
-      screen.queryByText('Spliit did not find this group'),
+      screen.queryByText('Spliit Cloud did not find this group'),
     ).not.toBeInTheDocument()
   })
 

@@ -932,7 +932,7 @@
   },
   "ResetPassword": {
     "title": "Zvolte si nové heslo",
-    "subtitle": "Zadejte nové heslo pro svůj Spliit účet.",
+    "subtitle": "Zadejte nové heslo pro svůj Spliit Cloud účet.",
     "newPassword": "Nové heslo",
     "confirmPassword": "Potvrďte nové heslo",
     "passwordMismatch": "Hesla se neshodují.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Nainstalovat Spliit Cloud",
-      "description": "Přidejte si Spliit na domovskou obrazovku pro přístup jedním klepnutím.",
+      "description": "Přidejte si Spliit Cloud na domovskou obrazovku pro přístup jedním klepnutím.",
       "step1": "Klepněte na tlačítko Sdílet",
       "step2": "Přejděte dolů a klepněte na Přidat na plochu",
       "step3": "Klepněte na Přidat v pravém horním rohu"
     },
     "firefox": {
       "title": "Nainstalovat Spliit Cloud",
-      "description": "Přidejte si Spliit na domovskou obrazovku z nabídky prohlížeče.",
+      "description": "Přidejte si Spliit Cloud na domovskou obrazovku z nabídky prohlížeče.",
       "step1": "Klepněte na tlačítko nabídky (⋮) v pravém horním rohu",
       "step2": "Klepněte na Instalovat"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Sdílitelný odkaz",
     "alreadyHasLedger": "již má účet s přítelem",
-    "inviteSent": "Pozvánka odeslána. Váš přítel bude přidán, jakmile se připojí ke Spliit.",
+    "inviteSent": "Pozvánka odeslána. Váš přítel bude přidán, jakmile se připojí ke Spliit Cloud.",
     "inviteLinkTitle": "Sdílejte tento odkaz",
     "inviteLinkDescription": "Sdílejte tento odkaz s přítelem a přidejte ho do účtu.",
     "copy": "Kopírovat",

@@ -164,9 +164,9 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
     const mailContent = captured!.text
     expect(mailContent).toContain(groupName)
     expect(mailContent).toContain('You will appear as "Invited User"')
-    // Since invitee has an account, email should say "Open Spliit"
+    // Since invitee has an account, email should say "Open Spliit Cloud"
     // and link to the group page (not the sign-up page).
-    expect(mailContent).toContain('Open Spliit')
+    expect(mailContent).toContain('Open Spliit Cloud')
     expect(mailContent).toContain(`/groups/${groupId}`)
   })
 

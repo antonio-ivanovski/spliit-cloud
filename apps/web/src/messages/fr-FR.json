@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "Choisissez un nouveau mot de passe",
-    "subtitle": "Saisissez le nouveau mot de passe pour votre compte Spliit.",
+    "subtitle": "Saisissez le nouveau mot de passe pour votre compte Spliit Cloud.",
     "newPassword": "Nouveau mot de passe",
     "confirmPassword": "Confirmer le nouveau mot de passe",
     "passwordMismatch": "Les mots de passe ne correspondent pas.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Installer Spliit Cloud",
-      "description": "Ajoutez Spliit à votre écran d'accueil pour y accéder en un seul geste.",
+      "description": "Ajoutez Spliit Cloud à votre écran d'accueil pour y accéder en un seul geste.",
       "step1": "Appuyez sur le bouton Partager",
       "step2": "Faites défiler vers le bas et appuyez sur Sur l'écran d'accueil",
       "step3": "Appuyez sur Ajouter en haut à droite"
     },
     "firefox": {
       "title": "Installer Spliit Cloud",
-      "description": "Ajoutez Spliit à votre écran d'accueil depuis le menu du navigateur.",
+      "description": "Ajoutez Spliit Cloud à votre écran d'accueil depuis le menu du navigateur.",
       "step1": "Appuyez sur le bouton de menu (⋮) en haut à droite",
       "step2": "Appuyez sur Installer"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Lien partageable",
     "alreadyHasLedger": "a déjà un compte entre amis",
-    "inviteSent": "Invitation envoyée. Votre ami sera ajouté lorsqu'il rejoindra Spliit.",
+    "inviteSent": "Invitation envoyée. Votre ami sera ajouté lorsqu'il rejoindra Spliit Cloud.",
     "inviteLinkTitle": "Partagez ce lien",
     "inviteLinkDescription": "Partagez ce lien avec votre ami pour l'ajouter au compte.",
     "copy": "Copier",

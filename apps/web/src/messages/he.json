@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "בחר סיסמה חדשה",
-    "subtitle": "הכנס את הסיסמה החדשה עבור חשבון Spliit שלך.",
+    "subtitle": "הכנס את הסיסמה החדשה עבור חשבון Spliit Cloud שלך.",
     "newPassword": "סיסמה חדשה",
     "confirmPassword": "אשר סיסמה חדשה",
     "passwordMismatch": "הסיסמאות אינן תואמות.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "התקן את Spliit Cloud",
-      "description": "הוסף את Spliit למסך הבית לגישה בהקשה אחת.",
+      "description": "הוסף את Spliit Cloud למסך הבית לגישה בהקשה אחת.",
       "step1": "הקש על כפתור השיתוף",
       "step2": "גלול למטה והקש על הוסף למסך הבית",
       "step3": "הקש על הוסף בפינה הימנית העליונה"
     },
     "firefox": {
       "title": "התקן את Spliit Cloud",
-      "description": "הוסף את Spliit למסך הבית מתפריט הדפדפן.",
+      "description": "הוסף את Spliit Cloud למסך הבית מתפריט הדפדפן.",
       "step1": "הקש על כפתור התפריט (⋮) בפינה הימנית העליונה",
       "step2": "הקש על התקן"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "דוא״ל",
     "peerLinkTab": "קישור לשיתוף",
     "alreadyHasLedger": "כבר יש לו פנקס חבר",
-    "inviteSent": "ההזמנה נשלחה. החבר שלכם יתווסף כשיצטרף ל-Spliit.",
+    "inviteSent": "ההזמנה נשלחה. החבר שלכם יתווסף כשיצטרף ל-Spliit Cloud.",
     "inviteLinkTitle": "שתפו קישור זה",
     "inviteLinkDescription": "שתפו קישור זה עם החבר שלכם כדי להוסיף אותם לפנקס.",
     "copy": "העתק",

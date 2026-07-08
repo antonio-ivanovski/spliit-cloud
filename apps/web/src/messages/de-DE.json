@@ -1124,7 +1124,7 @@
   },
   "ResetPassword": {
     "title": "Wählen Sie ein neues Passwort",
-    "subtitle": "Geben Sie das neue Passwort für Ihr Spliit-Konto ein.",
+    "subtitle": "Geben Sie das neue Passwort für Ihr Spliit Cloud-Konto ein.",
     "newPassword": "Neues Passwort",
     "confirmPassword": "Neues Passwort bestätigen",
     "passwordMismatch": "Passwörter stimmen nicht überein.",
@@ -1379,14 +1379,14 @@
     },
     "ios": {
       "title": "Spliit Cloud installieren",
-      "description": "Füge Spliit deinem Startbildschirm hinzu, um es mit einem Tipp zu öffnen.",
+      "description": "Füge Spliit Cloud deinem Startbildschirm hinzu, um es mit einem Tipp zu öffnen.",
       "step1": "Tippe auf den Teilen-Button",
       "step2": "Scrolle nach unten und tippe auf Zum Home-Bildschirm hinzufügen",
       "step3": "Tippe oben rechts auf Hinzufügen"
     },
     "firefox": {
       "title": "Spliit Cloud installieren",
-      "description": "Füge Spliit über das Browser-Menü zu deinem Startbildschirm hinzu.",
+      "description": "Füge Spliit Cloud über das Browser-Menü zu deinem Startbildschirm hinzu.",
       "step1": "Tippe oben rechts auf die Menü-Schaltfläche (⋮)",
       "step2": "Tippe auf Installieren"
     }
@@ -1417,7 +1417,7 @@
     "peerEmailTab": "E-Mail",
     "peerLinkTab": "Teilbarer Link",
     "alreadyHasLedger": "hat bereits ein Freund-Haushaltsbuch",
-    "inviteSent": "Einladung gesendet. Dein Freund wird hinzugefügt, sobald er Spliit beitritt.",
+    "inviteSent": "Einladung gesendet. Dein Freund wird hinzugefügt, sobald er Spliit Cloud beitritt.",
     "inviteLinkTitle": "Diesen Link teilen",
     "inviteLinkDescription": "Teile diesen Link mit deinem Freund, um ihn zum Haushaltsbuch hinzuzufügen.",
     "copy": "Kopieren",

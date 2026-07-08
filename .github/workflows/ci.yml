@@ -18,7 +18,7 @@ jobs:
       SMTP_PORT: '1025'
       SMTP_USER: ''
       SMTP_PASS: ''
-      EMAIL_FROM: 'Spliit CI <no-reply@spliit.local>'
+      EMAIL_FROM: 'Spliit Cloud CI <no-reply@spliit.local>'
 
       # S3 (MaxIO) — API server reads these on boot
       S3_UPLOAD_BUCKET: spliit-local
