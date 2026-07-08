@@ -11,6 +11,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { Navigate, Outlet, useSearch } from '@tanstack/react-router'
@@ -39,6 +40,7 @@ export function GroupLayoutClient({
     null,
   )
   const [canShare, setCanShare] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     setCanShare(
@@ -48,12 +50,19 @@ export function GroupLayoutClient({
 
   // Friend-ledger link-path creation navigates here with the invite URL
   // in the `friendLinkInvite` search param. Open a one-time dialog so the
-  // user can copy or share the link before continuing.
+  // user can copy or share the link before continuing. Strip the param
+  // from the URL immediately so a page refresh won't reopen the dialog.
   useEffect(() => {
     if (friendLinkInviteUrl) {
       setFriendLinkDialogUrl(friendLinkInviteUrl)
+      router.navigate({
+        to: '/groups/$groupId',
+        params: { groupId },
+        search: { friendLinkInvite: undefined },
+        replace: true,
+      })
     }
-  }, [friendLinkInviteUrl])
+  }, [friendLinkInviteUrl, groupId, router])
 
   const { data, isLoading, error } = trpc.groups.get.useQuery(
     { groupId, linkInviteToken },
