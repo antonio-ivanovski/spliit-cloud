@@ -8,9 +8,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/lib/auth'
-import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   LogOut,
   Settings as SettingsIcon,
@@ -20,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 
 export function AccountMenu() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
-  const router = useRouter()
+  const navigate = useNavigate()
   const { data: account, isPending } = useCurrentAccount()
 
   if (isPending) {
@@ -67,7 +66,7 @@ export function AccountMenu() {
           onSelect={async (event) => {
             event.preventDefault()
             await authClient.signOut()
-            router.replace({ href: '/' })
+            navigate({ to: '/', replace: true })
           }}
         >
           <LogOut className="w-4 h-4 mr-2" />

@@ -1,8 +1,8 @@
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { InfiniteData } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 
 type ExpenseListPage = AppRouterOutput['groups']['expenses']['list']
@@ -90,7 +90,7 @@ export function useDeleteExpenseMutation({
   linkInviteToken: string | undefined
 }) {
   const utils = trpc.useUtils()
-  const router = useRouter()
+  const navigate = useNavigate()
   const { toast } = useToast()
   const invalidateExpenseSideEffects = useInvalidateExpenseSideEffects()
 
@@ -123,9 +123,10 @@ export function useDeleteExpenseMutation({
       return { listInput, previousList }
     },
     onSuccess: (_data, variables) => {
-      router.replace({
+      navigate({
         to: '/groups/$groupId/expenses',
         params: { groupId: variables.groupId },
+        replace: true,
       })
 
       void invalidateExpenseSideEffects({ groupId: variables.groupId })

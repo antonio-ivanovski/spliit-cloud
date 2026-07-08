@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
-import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -48,7 +48,7 @@ export function EditExpenseForm({
   })
   const expense = expenseData?.expense
 
-  const router = useRouter()
+  const navigate = useNavigate()
   const { toast } = useToast()
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
@@ -97,7 +97,7 @@ export function EditExpenseForm({
       heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
       onMakeCopy={() => {
         toast({ description: tCard('copyToast') })
-        router.push({
+        navigate({
           to: '/groups/$groupId/expenses/create',
           params: { groupId },
           search: { fromExpenseId: expenseId },
@@ -110,9 +110,10 @@ export function EditExpenseForm({
           groupId,
           expense,
         })
-        router.replace({
+        navigate({
           to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
+          replace: true,
         })
       }}
       onDelete={async () => {

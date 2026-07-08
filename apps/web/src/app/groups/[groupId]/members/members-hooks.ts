@@ -1,7 +1,7 @@
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
+import { useNavigate } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -63,7 +63,7 @@ export function useMembersDialogs() {
   const { data: account } = useCurrentAccount()
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const { toast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const membersQuery = trpc.account.members.useQuery({ groupId })
   const invitationsQuery = trpc.invitations.list.useQuery({ groupId })
@@ -236,7 +236,7 @@ export function useMembersDialogs() {
     onSuccess: async () => {
       toast({ description: t('leave.toast.left') })
       setLeaveDialogOpen(false)
-      router.push({ href: '/' })
+      navigate({ to: '/' })
       utils.account.groups.invalidate()
     },
     onError: (error) => {

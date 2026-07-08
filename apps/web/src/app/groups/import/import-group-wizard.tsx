@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from '@/lib/navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import type {
@@ -9,7 +8,7 @@ import type {
   ParticipantMappingState,
 } from '@spliit/domain/import'
 import { buildImportBatch } from '@spliit/domain/import'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,7 +34,7 @@ const importRoute = getRouteApi('/groups/import')
 
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
-  const router = useRouter()
+  const navigate = useNavigate()
   const { data: account } = useCurrentAccount()
   const { toast } = useToast()
   const utils = trpc.useUtils()
@@ -270,14 +269,14 @@ export function ImportGroupWizard() {
 
   const handleDoneNavigate = useCallback(() => {
     if (importResultGroupId) {
-      router.push({
+      navigate({
         to: '/groups/$groupId',
         params: { groupId: importResultGroupId },
       })
     } else {
-      router.push({ to: '/' })
+      navigate({ to: '/' })
     }
-  }, [importResultGroupId, router])
+  }, [importResultGroupId, navigate])
 
   const handleBack = useCallback(() => {
     dispatch({ type: 'BACK' })

@@ -32,10 +32,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { getCurrency, useCurrencies } from '@/lib/currency'
-import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { friendFormSchema, type FriendFormValues } from '@spliit/domain/schemas'
+import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -56,7 +56,7 @@ export function CreateFriend() {
     keyPrefix: 'GroupForm',
   })
   const { t: tCommon } = useTranslation(undefined, { keyPrefix: 'Header' })
-  const router = useRouter()
+  const navigate = useNavigate()
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const [peerTab, setPeerTab] = useState<PeerTab>('friends')
@@ -132,7 +132,7 @@ export function CreateFriend() {
     if (!result) return
 
     if (result.existed) {
-      router.push({
+      navigate({
         to: '/groups/$groupId',
         params: { groupId: result.groupId },
       })
@@ -140,7 +140,7 @@ export function CreateFriend() {
     }
 
     if (result.inviteUrl) {
-      router.push({
+      navigate({
         to: '/groups/$groupId',
         params: { groupId: result.groupId },
         search: { friendLinkInvite: result.inviteUrl },
@@ -150,14 +150,14 @@ export function CreateFriend() {
 
     if (result.invitationId) {
       toast({ description: t('inviteSent') })
-      router.push({
+      navigate({
         to: '/groups/$groupId',
         params: { groupId: result.groupId },
       })
       return
     }
 
-    router.push({
+    navigate({
       to: '/groups/$groupId/expenses',
       params: { groupId: result.groupId },
     })
@@ -165,9 +165,9 @@ export function CreateFriend() {
 
   function handleBack() {
     if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back()
+      window.history.back()
     } else {
-      router.replace({ href: '/' })
+      navigate({ to: '/', replace: true })
     }
   }
 

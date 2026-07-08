@@ -3,8 +3,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
-import { usePathname, useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { Archive as ArchiveIcon, ArchiveRestore } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from './current-group-context'
@@ -16,10 +16,10 @@ type Props = {
 export function GroupTabs({ groupId }: Props) {
   const { t } = useTranslation()
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
-  const pathname = usePathname()
+  const pathname = useLocation({ select: (location) => location.pathname })
   const value =
     pathname.replace(/\/groups\/[^/]+\/([^/]+).*/, '$1') || 'expenses'
-  const router = useRouter()
+  const navigate = useNavigate()
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
@@ -74,7 +74,7 @@ export function GroupTabs({ groupId }: Props) {
         value={value}
         className="*:border overflow-x-auto"
         onValueChange={(value) => {
-          router.push({ href: `/groups/${groupId}/${value}` })
+          navigate({ href: `/groups/${groupId}/${value}` })
         }}
       >
         <TabsList>

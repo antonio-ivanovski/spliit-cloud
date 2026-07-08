@@ -4,9 +4,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
-import { useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ArrowLeft, Check, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from './current-group-context'
@@ -23,7 +22,7 @@ export const GroupHeader = () => {
   } = useCurrentGroup()
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { toast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate()
   const utils = trpc.useUtils()
 
   // The `?invite=<token>` search param is the single source of truth
@@ -39,7 +38,7 @@ export const GroupHeader = () => {
       // Strip the consumed `?invite=<token>` so the URL returns to the
       // plain group page — otherwise the "already a member" banner
       // would reappear on the next load.
-      router.push({
+      navigate({
         to: '/groups/$groupId',
         params: { groupId },
         search: { invite: undefined },
@@ -64,7 +63,7 @@ export const GroupHeader = () => {
       utils.account.groups.invalidate()
       utils.invitations.listForAccount.invalidate()
       // Full page reload to ensure everything is fresh after joining.
-      router.refresh()
+      window.location.reload()
     },
     onError: (err) => {
       toast({
@@ -79,7 +78,7 @@ export const GroupHeader = () => {
       toast({ description: tGroups('invitationDeclined') })
       utils.groups.get.invalidate({ groupId })
       utils.invitations.listForAccount.invalidate()
-      router.refresh()
+      window.location.reload()
     },
     onError: (err) => {
       toast({
@@ -121,7 +120,7 @@ export const GroupHeader = () => {
   // Strip the `?invite=<token>` from the URL. Used by the "already a
   // member" banner, where the viewer can stay on the group page.
   const stripInviteFromUrl = () =>
-    router.push({
+    navigate({
       to: '/groups/$groupId',
       params: { groupId },
       search: { invite: undefined },
@@ -130,7 +129,7 @@ export const GroupHeader = () => {
   // Leave the group page entirely. Used by the "no longer valid"
   // banner, where the viewer is not a member and the bare group URL
   // would surface the "you don't have access" page.
-  const leaveToGroupsList = () => router.push({ to: '/' })
+  const leaveToGroupsList = () => navigate({ to: '/' })
 
   const isLinkBanner = currentInvitation?.type === 'LINK'
 

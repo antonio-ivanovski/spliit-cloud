@@ -9,9 +9,8 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
-import { useRouter } from '@/lib/navigation'
 import { trpc } from '@/trpc/client'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -43,7 +42,7 @@ export function CreateExpenseForm({
   const { mutateAsync: createExpenseMutateAsync } = useCreateExpenseMutation({
     linkInviteToken,
   })
-  const router = useRouter()
+  const navigate = useNavigate()
   // `ExpenseForm` is shared with the edit route, where calling
   // `useSearch` against the create route would throw.
   const searchParams = createExpenseRouteApi.useSearch()
@@ -141,9 +140,10 @@ export function CreateExpenseForm({
           groupId,
           expense,
         })
-        router.replace({
+        navigate({
           to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
+          replace: true,
         })
       }}
       runtimeFeatureFlags={runtimeFeatureFlags}
