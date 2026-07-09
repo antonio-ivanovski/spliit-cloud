@@ -424,7 +424,8 @@
       "label": "Główna waluta",
       "createDescription": "Wszystkie kwoty i salda będą w tej walucie.",
       "editDescription": "Wszystkie kwoty i salda będą w tej walucie. Zmiana NIE przeliczy już wprowadzonych wydatków, z wyjątkiem sytuacji, gdy waluta ma inne \"jednostki pomocnicze\" niż obecna (np. zmiana z dolara amerykańskiego na jena japońskiego).",
-      "customOption": "Niestandardowa"
+      "customOption": "Niestandardowa",
+      "lockedAfterExpenses": "Waluta jest zablokowana, ponieważ ta grupa ma już wydatki."
     },
     "Participants": {
       "title": "Członkowie",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "Użyj kursów z Frankfurter",
       "useCustom": "Użyj własnego kursu",
-      "label": "Kurs wymiany"
+      "label": "Kurs wymiany",
+      "providerNote": "Kursy są dostarczane przez https://frankfurter.dev/ i ich API.",
+      "futureDateUsesToday": "Ten wydatek jest w przyszłości, zostanie użyty dzisiejszy kurs wymiany."
     },
     "conversionRateState": {
       "loading": "Pobieranie kursów walut…",
@@ -1332,7 +1335,9 @@
         "items": "Pozycje",
         "documents": "Załączniki",
         "recurrence": "Powtarzanie",
-        "reimbursement": "Zwrot środków"
+        "reimbursement": "Zwrot środków",
+        "conversionSource": "Źródło konwersji",
+        "conversionRate": "Kurs wymiany"
       }
     },
     "group": {

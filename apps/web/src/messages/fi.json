@@ -424,7 +424,8 @@
       "label": "Päävaluutta",
       "createDescription": "Kaikki summat ja saldot näytetään tässä valuutassa.",
       "editDescription": "Kaikki summat ja saldot näytetään tässä valuutassa. Tämän muuttaminen EI muunna jo syötettyjä kuluja, paitsi jos valuutalla on eri \"pienemmät yksiköt\" kuin nykyisellä (esim. vaihdettaessa Yhdysvaltain dollarista Japanin jeniin)",
-      "customOption": "Mukautettu"
+      "customOption": "Mukautettu",
+      "lockedAfterExpenses": "Valuutta on lukittu, koska tällä ryhmällä on jo kuluja."
     },
     "Participants": {
       "title": "Osallistujat",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "Käytä kursseja Frankfurterista",
       "useCustom": "Käytä mukautettua kurssia",
-      "label": "Vaihtokurssi"
+      "label": "Vaihtokurssi",
+      "providerNote": "Kurssit tarjoaa https://frankfurter.dev/ ja sen API.",
+      "futureDateUsesToday": "Tämä kulu on tulevaisuudessa ja tämän päivän vaihtokurssia käytetään."
     },
     "conversionRateState": {
       "loading": "Haetaan vaihtokursseja…",
@@ -1332,7 +1335,9 @@
         "items": "Rivit",
         "documents": "Liitteet",
         "recurrence": "Toistuminen",
-        "reimbursement": "Velanmaksu"
+        "reimbursement": "Velanmaksu",
+        "conversionSource": "Muunnoslähde",
+        "conversionRate": "Muunnoskurssi"
       }
     },
     "group": {

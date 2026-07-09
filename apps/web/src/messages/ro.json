@@ -450,7 +450,8 @@
       "label": "Moneda principală",
       "createDescription": "Toate sumele și soldurile vor fi în această monedă.",
       "editDescription": "Toate sumele și soldurile vor fi în această monedă. Modificarea aceasta NU va converti cheltuielile deja introduse, cu excepția cazului în care moneda are \"unități minore\" diferite de cea curentă (de exemplu, schimbarea din Dolar American în Yen Japonez)",
-      "customOption": "Personalizat"
+      "customOption": "Personalizat",
+      "lockedAfterExpenses": "Moneda este blocată deoarece acest grup are deja cheltuieli."
     }
   },
   "ExpenseForm": {
@@ -561,7 +562,9 @@
     "conversionRateField": {
       "useApi": "Folosește rate de la Frankfurter",
       "useCustom": "Folosește rată personalizată",
-      "label": "Curs de schimb"
+      "label": "Curs de schimb",
+      "providerNote": "Ratele sunt furnizate de https://frankfurter.dev/ și API-ul lor.",
+      "futureDateUsesToday": "Această cheltuială este în viitor și se va folosi cursul de schimb de astăzi."
     },
     "conversionRateState": {
       "loading": "Se obțin cursurile de schimb…",
@@ -1332,7 +1335,9 @@
         "items": "Elemente",
         "documents": "Documente",
         "recurrence": "Recurență",
-        "reimbursement": "Rambursare"
+        "reimbursement": "Rambursare",
+        "conversionSource": "Sursa conversiei",
+        "conversionRate": "Curs de conversie"
       }
     },
     "group": {

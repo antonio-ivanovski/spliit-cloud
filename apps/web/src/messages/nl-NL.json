@@ -424,7 +424,8 @@
       "label": "Hoofdvaluta",
       "createDescription": "Alle hoeveelheden en saldi worden in deze valuta weergegeven.",
       "editDescription": "Alle bedragen en saldi worden in deze valuta weergegeven. Als je dit wijzigt, worden reeds ingevoerde uitgaven NIET omgerekend, behalve wanneer de valuta andere \"kleinste eenheden\" heeft dan de huidige (bijvoorbeeld bij een wijziging van Amerikaanse dollar naar Japanse yen)",
-      "customOption": "Aangepast"
+      "customOption": "Aangepast",
+      "lockedAfterExpenses": "De valuta is vergrendeld omdat deze groep al uitgaven heeft."
     },
     "Participants": {
       "title": "Deelnemers",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "Gebruik koersen van Frankfurter",
       "useCustom": "Gebruik aangepaste koers",
-      "label": "Wisselkoers"
+      "label": "Wisselkoers",
+      "providerNote": "Koersen worden verstrekt door https://frankfurter.dev/ en hun API.",
+      "futureDateUsesToday": "Deze uitgave ligt in de toekomst en de huidige wisselkoers wordt gebruikt."
     },
     "conversionRateState": {
       "loading": "Wisselkoers aan het ophalen…",
@@ -1332,7 +1335,9 @@
         "items": "Regels",
         "documents": "Bijlagen",
         "recurrence": "Herhaling",
-        "reimbursement": "Terugbetaling"
+        "reimbursement": "Terugbetaling",
+        "conversionSource": "Conversiebron",
+        "conversionRate": "Conversiekoers"
       }
     },
     "group": {

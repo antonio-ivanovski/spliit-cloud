@@ -424,7 +424,8 @@
       "label": "Hauptwährung",
       "createDescription": "Alle Beträge und Salden werden in dieser Währung angegeben.",
       "editDescription": "Alle Beträge und Salden werden in dieser Währung angegeben. Bei Änderung dieser, werden bereits eingegebene Ausgaben NICHT umgerechnet, es sei denn, die Währung hat andere \"kleinere Einheiten\" als die aktuelle (z. B. Wechsel von US-Dollar zu Japanischem Yen)",
-      "customOption": "benutzerdefiniert"
+      "customOption": "benutzerdefiniert",
+      "lockedAfterExpenses": "Die Währung ist gesperrt, da diese Gruppe bereits Ausgaben hat."
     },
     "Participants": {
       "title": "Mitglieder",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "Benutze Zinssätze von Frankfurter",
       "useCustom": "Benutze individuelle Rate",
-      "label": "Wechselkurs"
+      "label": "Wechselkurs",
+      "providerNote": "Kurse werden von https://frankfurter.dev/ und deren API bereitgestellt.",
+      "futureDateUsesToday": "Diese Ausgabe liegt in der Zukunft und der heutige Wechselkurs wird verwendet."
     },
     "conversionRateState": {
       "loading": "Wechselkurse abrufen…",
@@ -1332,7 +1335,9 @@
         "items": "Positionen",
         "documents": "Anhänge",
         "recurrence": "Wiederholung",
-        "reimbursement": "Rückzahlung"
+        "reimbursement": "Rückzahlung",
+        "conversionSource": "Umrechnungsquelle",
+        "conversionRate": "Umrechnungskurs"
       }
     },
     "group": {

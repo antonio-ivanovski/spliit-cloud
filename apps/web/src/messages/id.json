@@ -420,7 +420,8 @@
       "label": "Mata uang utama",
       "createDescription": "Semua jumlah dan saldo akan dalam mata uang ini.",
       "editDescription": "Semua jumlah dan saldo akan menggunakan mata uang ini. Mengubah mata uang ini TIDAK akan mengonversi pengeluaran yang sudah dimasukkan, kecuali jika mata uang tersebut memiliki \"unit minor\" yang berbeda dari mata uang saat ini (misalnya, berubah dari Dolar AS ke Yen Jepang)",
-      "customOption": "Kustom"
+      "customOption": "Kustom",
+      "lockedAfterExpenses": "Mata uang terkunci karena grup ini sudah memiliki pengeluaran."
     },
     "Participants": {
       "title": "Peserta",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "Gunakan kurs dari Frankfurter",
       "useCustom": "Gunakan kurs kustom",
-      "label": "Kurs"
+      "label": "Kurs",
+      "providerNote": "Kurs disediakan oleh https://frankfurter.dev/ dan API mereka.",
+      "futureDateUsesToday": "Pengeluaran ini di masa mendatang dan kurs hari ini akan digunakan."
     },
     "conversionRateState": {
       "loading": "Mendapatkan kurs…",
@@ -1332,7 +1335,9 @@
         "items": "Item baris",
         "documents": "Lampiran",
         "recurrence": "Pengulangan",
-        "reimbursement": "Reimburse"
+        "reimbursement": "Reimburse",
+        "conversionSource": "Sumber konversi",
+        "conversionRate": "Kurs"
       }
     },
     "group": {

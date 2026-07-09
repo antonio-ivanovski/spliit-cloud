@@ -450,7 +450,8 @@
       "label": "Ana para birimi",
       "createDescription": "Tüm tutarlar ve bakiyeler bu para biriminde olacaktır.",
       "editDescription": "Tüm tutarlar ve bakiyeler bu para biriminde olacaktır. Bunu değiştirmek, önceden girilen giderleri DÖNÜŞTÜRMEZ, ancak para biriminin mevcut olandan farklı \"alt birimleri\" varsa dönüştürür (ör. ABD Doları'ndan Japon Yeni'ne değiştirme).",
-      "customOption": "Özel"
+      "customOption": "Özel",
+      "lockedAfterExpenses": "Para birimi kilitli çünkü bu grupta zaten harcamalar var."
     }
   },
   "ExpenseForm": {
@@ -561,7 +562,9 @@
     "conversionRateField": {
       "useApi": "Frankfurter'dan kurları kullan",
       "useCustom": "Özel kur kullan",
-      "label": "Döviz kuru"
+      "label": "Döviz kuru",
+      "providerNote": "Kurlar https://frankfurter.dev/ ve API'leri tarafından sağlanmaktadır.",
+      "futureDateUsesToday": "Bu harcama gelecekte olduğundan bugünkü döviz kuru kullanılacak."
     },
     "conversionRateState": {
       "loading": "Döviz kurları alınıyor…",
@@ -1332,7 +1335,9 @@
         "items": "Kalemler",
         "documents": "Ekler",
         "recurrence": "Tekrarlama",
-        "reimbursement": "Geri ödeme"
+        "reimbursement": "Geri ödeme",
+        "conversionSource": "Dönüşüm kaynağı",
+        "conversionRate": "Döviz kuru"
       }
     },
     "group": {
