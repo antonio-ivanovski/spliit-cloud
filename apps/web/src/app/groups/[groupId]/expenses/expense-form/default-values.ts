@@ -221,7 +221,7 @@ export function buildExpenseFormDefaults(args: {
     const originalCurrency = conversionRequired
       ? (getCurrency(expense.originalCurrency ?? '') ?? groupCurrency)
       : groupCurrency
-    const conversionRate = expense.conversionRate?.toNumber() ?? 1
+    const conversionRate = expense.conversionRate ?? 1
 
     // paidFor shares are stored in Ledger currency minor units and the
     // form schema expects them in the selected expense currency. Convert
@@ -332,7 +332,7 @@ export function buildExpenseFormDefaults(args: {
           : amountAsDecimal(expense.amount, groupCurrency) / conversionRate
         : amountAsDecimal(expense.amount, groupCurrency),
       originalCurrency: expense.originalCurrency ?? group.currencyCode,
-      conversionRate: expense.conversionRate?.toNumber(),
+      conversionRate: expense.conversionRate ?? undefined,
       category: expense.categoryId,
       paidBySplitMode: expense.paidBySplitMode,
       paidByList,

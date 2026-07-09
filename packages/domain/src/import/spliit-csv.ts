@@ -1,9 +1,8 @@
-import Decimal from 'decimal.js'
 import Papa from 'papaparse'
 import { DEFAULT_CATEGORIES } from '../categories'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
-import { distributeRemainder } from '../totals'
+import { distributeRemainder } from '../remainder-distribution'
 import { amountAsMinorUnitsByCode } from '../utils'
 import { guessSplitMode } from './split-guess'
 import type { ImportParseResult, NormalizedSource } from './types'
@@ -151,18 +150,22 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
         .filter((n) => n.net < 0)
         .reduce((s, n) => s - n.net, 0)
 
-      const exact: Record<string, Decimal> = {}
+      const exact: Record<string, { numerator: bigint; denominator: bigint }> =
+        {}
       for (const n of nets) {
         if (n.net < 0) {
-          exact[n.sourceId] = new Decimal(-n.net)
+          exact[n.sourceId] = { numerator: BigInt(-n.net), denominator: 1n }
         }
       }
       // Payer's share (and any multi-payer residual) so Σ paidFor === Cost.
       const payerShare = amountCents - debtorSum
       if (payerShare !== 0 || Object.keys(exact).length === 0) {
-        exact[paidBySourceId] = new Decimal(
-          Math.max(0, payerShare) + (exact[paidBySourceId]?.toNumber() ?? 0),
-        )
+        exact[paidBySourceId] = {
+          numerator:
+            BigInt(Math.max(0, payerShare)) +
+            (exact[paidBySourceId]?.numerator ?? 0n),
+          denominator: 1n,
+        }
       }
 
       const reconciled = distributeRemainder(exact, amountCents, {

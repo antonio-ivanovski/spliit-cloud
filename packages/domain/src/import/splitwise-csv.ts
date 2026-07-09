@@ -1,9 +1,9 @@
 import Papa from 'papaparse'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
+import { distributeRemainder } from '../remainder-distribution'
 import {
   calculateExactShares,
-  distributeRemainder,
   serializePaidBy,
   serializePaidFor,
 } from '../totals'

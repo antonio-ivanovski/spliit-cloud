@@ -1,7 +1,17 @@
-import Decimal from 'decimal.js'
 import { getBalances } from './balances'
 import type { Currency } from './currency'
 import type { SplitMode } from './enums'
+import {
+  addExactAmount,
+  convertByRate,
+  exactFromFraction,
+  exactFromInteger,
+  exactZero,
+  isCrossCurrency,
+  type ExactAmount,
+  type ParticipantShare,
+} from './exact-math'
+import { distributeRemainder } from './remainder-distribution'
 import { amountAsMinorUnits, expenseIdSeed } from './utils'
 
 export type TotalsExpense = {
@@ -31,178 +41,6 @@ export type SplitInput = {
   participants: Array<{ id: string; shares: number }>
 }
 
-export type TieBreakStrategy =
-  'EXPENSE_ID_SEEDED' | 'PARTICIPANT_ID_DESC' | 'ROUND_ROBIN' | 'RANDOM_SEEDED'
-
-export type DistributeRemainderOpts = {
-  seed?: number
-  payerId?: string
-  strategy?: TieBreakStrategy
-}
-
-type ParticipantShare = {
-  shares: number
-}
-
-function isCrossCurrency(
-  expense: Pick<TotalsExpense, 'originalCurrency' | 'conversionRate'>,
-): boolean {
-  return Boolean(expense.originalCurrency && expense.conversionRate)
-}
-
-/** Exact (non-truncated) per-participant Decimal shares for all split modes. */
-export function calculateExactShares(
-  input: SplitInput,
-): Record<string, Decimal> {
-  const { amount, splitMode, participants } = input
-  if (participants.length === 0) return {}
-
-  const result: Record<string, Decimal> = {}
-  if (amount === 0) {
-    for (const p of participants) result[p.id] = new Decimal(0)
-    return result
-  }
-
-  const amountD = new Decimal(amount)
-
-  switch (splitMode) {
-    case 'EVENLY': {
-      const share = amountD.div(participants.length)
-      for (const p of participants) {
-        result[p.id] = (result[p.id] ?? new Decimal(0)).plus(share)
-      }
-      break
-    }
-    case 'BY_SHARES': {
-      const totalShares = participants.reduce((sum, p) => sum + p.shares, 0)
-      if (totalShares === 0) {
-        for (const p of participants) {
-          result[p.id] = result[p.id] ?? new Decimal(0)
-        }
-        break
-      }
-      const totalD = new Decimal(totalShares)
-      for (const p of participants) {
-        result[p.id] = (result[p.id] ?? new Decimal(0)).plus(
-          amountD.mul(p.shares).div(totalD),
-        )
-      }
-      break
-    }
-    case 'BY_PERCENTAGE': {
-      for (const p of participants) {
-        result[p.id] = (result[p.id] ?? new Decimal(0)).plus(
-          amountD.mul(p.shares).div(10000),
-        )
-      }
-      break
-    }
-    case 'BY_AMOUNT':
-    case 'ITEMIZED': {
-      for (const p of participants) {
-        result[p.id] = (result[p.id] ?? new Decimal(0)).plus(p.shares)
-      }
-      break
-    }
-  }
-
-  return result
-}
-
-/**
- * Truncate toward zero and distribute leftover cents by descending fractional
- * part; EXPENSE_ID_SEEDED rotates within equal-frac groups via seed.
- */
-export function distributeRemainder(
-  exactShares: Record<string, Decimal>,
-  amount: number,
-  opts?: DistributeRemainderOpts,
-): Record<string, number> {
-  const ids = Object.keys(exactShares)
-  if (ids.length === 0) {
-    if (opts?.payerId != null && amount !== 0) {
-      return { [opts.payerId]: amount }
-    }
-    return {}
-  }
-
-  const result: Record<string, number> = {}
-  type Entry = { id: string; frac: Decimal }
-  const entries: Entry[] = []
-
-  for (const id of ids) {
-    const exact = exactShares[id]
-    const truncated = exact.trunc().toNumber()
-    result[id] = truncated
-    entries.push({ id, frac: exact.minus(truncated).abs() })
-  }
-
-  const sumTruncated = Object.values(result).reduce((sum, n) => sum + n, 0)
-  const diff = amount - sumTruncated
-  if (diff === 0) return result
-
-  if (opts?.payerId != null) {
-    result[opts.payerId] = (result[opts.payerId] ?? 0) + diff
-    return result
-  }
-
-  const strategy = opts?.strategy ?? 'EXPENSE_ID_SEEDED'
-  const seed = opts?.seed ?? 0
-  const order = orderForRemainder(entries, seed, strategy)
-  const step = diff > 0 ? 1 : -1
-  let remaining = Math.abs(diff)
-
-  let i = 0
-  while (remaining > 0 && order.length > 0) {
-    const id = order[i % order.length]
-    result[id] = (result[id] ?? 0) + step
-    remaining -= 1
-    i += 1
-  }
-
-  return result
-}
-
-/** Build participant order: frac desc, id asc; seed rotates within equal-frac ties. */
-function orderForRemainder(
-  entries: Array<{ id: string; frac: Decimal }>,
-  seed: number,
-  strategy: TieBreakStrategy,
-): string[] {
-  const sorted = [...entries].sort((a, b) => {
-    const fracCmp = b.frac.cmp(a.frac)
-    if (fracCmp !== 0) return fracCmp
-    if (strategy === 'PARTICIPANT_ID_DESC') {
-      return a.id > b.id ? -1 : a.id < b.id ? 1 : 0
-    }
-    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0
-  })
-
-  if (strategy !== 'EXPENSE_ID_SEEDED' && strategy !== 'RANDOM_SEEDED') {
-    return sorted.map((e) => e.id)
-  }
-
-  // Rotate within consecutive equal-frac groups so largest remainder is preserved
-  // while seed fairly breaks ties across expenses.
-  const ordered: string[] = []
-  let i = 0
-  while (i < sorted.length) {
-    let j = i + 1
-    while (j < sorted.length && sorted[j].frac.equals(sorted[i].frac)) j += 1
-    const group = sorted.slice(i, j)
-    if (group.length > 1) {
-      const offset = ((seed % group.length) + group.length) % group.length
-      for (let k = 0; k < group.length; k++) {
-        ordered.push(group[(k + offset) % group.length].id)
-      }
-    } else {
-      ordered.push(group[0].id)
-    }
-    i = j
-  }
-  return ordered
-}
-
 type SharesExpense = Pick<
   TotalsExpense,
   | 'amount'
@@ -215,6 +53,86 @@ type SharesExpense = Pick<
 > & {
   id?: string | null
   paidByList?: TotalsExpense['paidByList']
+}
+
+type PaidBySharesExpense = Pick<
+  TotalsExpense,
+  | 'amount'
+  | 'paidByList'
+  | 'paidBySplitMode'
+  | 'isReimbursement'
+  | 'originalAmount'
+  | 'originalCurrency'
+  | 'conversionRate'
+> & {
+  id?: string | null
+}
+
+/** Exact rational per-participant shares for all split modes. */
+export function calculateExactShares(
+  input: SplitInput,
+): Record<string, ExactAmount> {
+  const { amount, splitMode, participants } = input
+  if (participants.length === 0) return {}
+
+  const result: Record<string, ExactAmount> = {}
+  if (amount === 0) {
+    for (const p of participants) result[p.id] = exactZero()
+    return result
+  }
+
+  switch (splitMode) {
+    case 'EVENLY': {
+      const share = exactFromFraction(
+        BigInt(amount),
+        BigInt(participants.length),
+      )
+      for (const p of participants) {
+        result[p.id] = addExactAmount(result[p.id] ?? exactZero(), share)
+      }
+      break
+    }
+    case 'BY_SHARES': {
+      const totalShares = participants.reduce((sum, p) => sum + p.shares, 0)
+      if (totalShares === 0) {
+        for (const p of participants) {
+          result[p.id] = result[p.id] ?? exactZero()
+        }
+        break
+      }
+      for (const p of participants) {
+        result[p.id] = addExactAmount(
+          result[p.id] ?? exactZero(),
+          exactFromFraction(
+            BigInt(amount) * BigInt(p.shares),
+            BigInt(totalShares),
+          ),
+        )
+      }
+      break
+    }
+    case 'BY_PERCENTAGE': {
+      for (const p of participants) {
+        result[p.id] = addExactAmount(
+          result[p.id] ?? exactZero(),
+          exactFromFraction(BigInt(amount) * BigInt(p.shares), 10000n),
+        )
+      }
+      break
+    }
+    case 'BY_AMOUNT':
+    case 'ITEMIZED': {
+      for (const p of participants) {
+        result[p.id] = addExactAmount(
+          result[p.id] ?? exactZero(),
+          exactFromInteger(p.shares),
+        )
+      }
+      break
+    }
+  }
+
+  return result
 }
 
 /** Per-expense integer paidFor shares; sum === expense.amount. */
@@ -252,19 +170,6 @@ export function calculateShares(
   return distributeRemainder(exact, expense.amount, { seed, payerId })
 }
 
-type PaidBySharesExpense = Pick<
-  TotalsExpense,
-  | 'amount'
-  | 'paidByList'
-  | 'paidBySplitMode'
-  | 'isReimbursement'
-  | 'originalAmount'
-  | 'originalCurrency'
-  | 'conversionRate'
-> & {
-  id?: string | null
-}
-
 /** Per-expense integer paidBy shares in ledger currency; sum === expense.amount. */
 export function calculatePaidByShares(
   expense: PaidBySharesExpense,
@@ -293,10 +198,12 @@ export function calculatePaidByShares(
   })
 
   if (crossCurrency) {
-    const rate = new Decimal(expense.conversionRate as number | string)
-    const converted: Record<string, Decimal> = {}
+    const converted: Record<string, ExactAmount> = {}
     for (const [id, share] of Object.entries(exact)) {
-      converted[id] = share.mul(rate)
+      converted[id] = convertByRate(
+        share,
+        expense.conversionRate as number | string,
+      )
     }
     exact = converted
   }

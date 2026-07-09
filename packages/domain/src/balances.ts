@@ -1,7 +1,12 @@
-import Decimal from 'decimal.js'
 import type { SplitMode } from './enums'
+import {
+  addExactAmount,
+  exactAmountToNumber,
+  type ExactAmount,
+} from './exact-math'
 import { computeExactSharesFromItems } from './itemized-expenses'
-import { calculateExactShares, distributeRemainder } from './totals'
+import { distributeRemainder } from './remainder-distribution'
+import { calculateExactShares } from './totals'
 
 type ParticipantLike = { id: string; name?: string }
 
@@ -53,33 +58,39 @@ function isCrossCurrency(expense: BalanceExpense): boolean {
 }
 
 function addExact(
-  target: Record<string, Decimal>,
-  shares: Record<string, Decimal>,
+  target: Record<string, ExactAmount>,
+  shares: Record<string, ExactAmount>,
 ): void {
   for (const [id, value] of Object.entries(shares)) {
-    target[id] = (target[id] ?? new Decimal(0)).plus(value)
+    const current = target[id]
+    target[id] = current ? addExactAmount(current, value) : value
   }
 }
 
 /** For literal modes, give amount−Σshares residual to the primary payer. */
 function applyLiteralResidual(
-  exact: Record<string, Decimal>,
+  exact: Record<string, ExactAmount>,
   amount: number,
   payerId: string | undefined,
-): Record<string, Decimal> {
+): Record<string, ExactAmount> {
   if (payerId == null) return exact
-  let sum = new Decimal(0)
-  for (const value of Object.values(exact)) sum = sum.plus(value)
-  const diff = new Decimal(amount).minus(sum)
-  if (diff.isZero()) return exact
+  const sum = Object.values(exact).reduce(
+    (total, value) => total + exactAmountToNumber(value),
+    0,
+  )
+  const diff = amount - Math.round(sum)
+  if (diff === 0) return exact
   const next = { ...exact }
-  next[payerId] = (next[payerId] ?? new Decimal(0)).plus(diff)
+  const current = next[payerId]
+  next[payerId] = current
+    ? addExactAmount(current, { numerator: BigInt(diff), denominator: 1n })
+    : { numerator: BigInt(diff), denominator: 1n }
   return next
 }
 
 export function getBalances(expenses: BalanceExpense[]): Balances {
-  const globalPaid: Record<string, Decimal> = {}
-  const globalPaidFor: Record<string, Decimal> = {}
+  const globalPaid: Record<string, ExactAmount> = {}
+  const globalPaidFor: Record<string, ExactAmount> = {}
   let totalAmount = 0
 
   for (const expense of expenses) {
@@ -106,10 +117,13 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
     })
 
     if (crossCurrency) {
-      const rate = new Decimal(expense.conversionRate as number | string)
-      const converted: Record<string, Decimal> = {}
+      const rate = Number(expense.conversionRate)
+      const converted: Record<string, ExactAmount> = {}
       for (const [id, share] of Object.entries(exactPaidBy)) {
-        converted[id] = share.mul(rate)
+        converted[id] = {
+          numerator: BigInt(Math.round(exactAmountToNumber(share) * rate)),
+          denominator: 1n,
+        }
       }
       exactPaidBy = converted
     } else if (
@@ -125,9 +139,9 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
     }
 
     // PaidFor side (always ledger currency)
-    let exactPaidFor: Record<string, Decimal>
+    let exactPaidFor: Record<string, ExactAmount>
 
-    // ITEMIZED with items: accumulate exact Decimals from items so
+    // ITEMIZED with items: accumulate exact rational shares from items so
     // per-expense remainder tie-breaks don't leak into group totals.
     // Fall back to stored paidFor when items are absent (tests, totals).
     if (

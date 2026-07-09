@@ -38,7 +38,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "dayjs": "^1.11.21",
-    "decimal.js": "^10.6.0",
     "embla-carousel-react": "^8.6.0",
     "heic-to": "^1.5.2",
     "i18next": "^26.3.4",

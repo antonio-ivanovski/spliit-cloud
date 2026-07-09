@@ -1,4 +1,3 @@
-import Decimal from 'decimal.js'
 import { describe, expect, it } from 'vitest'
 import {
   buildDefaultPaidForForSplitMode,
@@ -333,7 +332,7 @@ describe('computePaidForFromItems', () => {
     ])
   })
 
-  it('computeExactSharesFromItems returns non-truncated Decimals', () => {
+  it('computeExactSharesFromItems returns non-truncated rationals', () => {
     const items = [
       makeItem({
         amount: 5000,
@@ -356,13 +355,14 @@ describe('computePaidForFromItems', () => {
     ]
     const exact = computeExactSharesFromItems(items, ['p1', 'p2', 'p3'], 10000)
     // Two × (5000/3) each — fractional, not yet distributed
-    const perItem = new Decimal(5000).div(3)
-    expect(exact.p1.equals(perItem.mul(2))).toBe(true)
-    expect(exact.p2.equals(perItem.mul(2))).toBe(true)
-    expect(exact.p3.equals(perItem.mul(2))).toBe(true)
+    expect(exact.p1).toEqual({ numerator: 10000n, denominator: 3n })
+    expect(exact.p2).toEqual({ numerator: 10000n, denominator: 3n })
+    expect(exact.p3).toEqual({ numerator: 10000n, denominator: 3n })
     // Sum equals expense amount exactly (no truncation yet)
-    const sum = exact.p1.plus(exact.p2).plus(exact.p3)
-    expect(sum.equals(10000)).toBe(true)
+    expect(exact.p1.numerator + exact.p2.numerator + exact.p3.numerator).toBe(
+      30000n,
+    )
+    expect(exact.p1.denominator).toBe(3n)
   })
 })
 
