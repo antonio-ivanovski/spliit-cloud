@@ -11,10 +11,12 @@ export {
 export {
   buildImportBatch,
   computeImportRateKeys,
+  importConversionSourceForPair,
   makeRateKey,
   type ImportBatchExpense,
   type ImportBatchParticipant,
   type ImportBatchState,
+  type ImportConversionMode,
   type ImportRateKeyItem,
   type ImportRatesByKey,
 } from './batch'

@@ -1,3 +1,4 @@
+import type { ExpenseConversionInput } from '../conversion'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
@@ -8,6 +9,8 @@ import {
 } from '../totals'
 import type { ParticipantMappingState } from './matching'
 import type { NormalizedSource, NormalizedSourceExpense } from './types'
+
+export type ImportConversionMode = 'perDate' | 'fixed'
 
 export type ImportBatchState = {
   source:
@@ -24,6 +27,11 @@ export type ImportBatchState = {
   sourceIdToDestId: Record<string, string>
   destIds: Record<string, string>
   resolvedExpenses: NormalizedSourceExpense[]
+  /**
+   * Optional wizard conversion modes keyed by `BASE|TARGET` (e.g. `EUR|USD`).
+   * `perDate` → EXCHANGE, `fixed` → CUSTOM (locked rate, API or override).
+   */
+  conversionModes?: Record<string, ImportConversionMode>
 }
 
 /**
@@ -123,9 +131,8 @@ export type ImportBatchExpense = {
   title: string
   category: never
   amount: number
-  originalAmount: number | undefined
-  originalCurrency: string | undefined
-  conversionRate: number | undefined
+  /** Present only when expense currency differs from the destination. */
+  conversion?: ExpenseConversionInput
   paidByList: Array<{ participant: string; shares: number }>
   paidBySplitMode: 'BY_AMOUNT'
   paidFor: Array<{ participant: string; shares: number }>
@@ -134,6 +141,47 @@ export type ImportBatchExpense = {
   documents: never[]
   notes: string | undefined
   recurrenceRule: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
+}
+
+/**
+ * Map wizard conversion mode for a currency pair to a conversion discriminant.
+ * Missing mode defaults to exchange (historical rates from the provider).
+ */
+export function importConversionForPair(
+  amountCurrency: string,
+  destinationCurrencyCode: string,
+  rate: number | undefined,
+  conversionModes?: Record<string, ImportConversionMode>,
+): ExpenseConversionInput {
+  if (!conversionModes) {
+    return { type: 'exchange', currency: amountCurrency }
+  }
+  const pairKey = `${amountCurrency}|${destinationCurrencyCode}`
+  const upperKey = `${amountCurrency.toUpperCase()}|${destinationCurrencyCode.toUpperCase()}`
+  const mode = conversionModes[pairKey] ?? conversionModes[upperKey]
+  if (mode === 'fixed') {
+    return {
+      type: 'custom',
+      currency: amountCurrency,
+      rate: rate && rate > 0 ? rate : 1,
+    }
+  }
+  return { type: 'exchange', currency: amountCurrency }
+}
+
+/** @deprecated use importConversionForPair */
+export function importConversionSourceForPair(
+  amountCurrency: string,
+  destinationCurrencyCode: string,
+  conversionModes?: Record<string, ImportConversionMode>,
+): 'EXCHANGE' | 'CUSTOM' {
+  const c = importConversionForPair(
+    amountCurrency,
+    destinationCurrencyCode,
+    undefined,
+    conversionModes,
+  )
+  return c.type === 'custom' ? 'CUSTOM' : 'EXCHANGE'
 }
 
 const FALLBACK_CURRENCY: Currency = {
@@ -369,56 +417,33 @@ export function buildImportBatch(
         shareRate = rate
       }
 
-      const sourceCurrency = currencyOrFallback(amountCurrency)
-
-      // BY_AMOUNT → ledger currency via serializePaidFor; unitless modes untouched.
-      const convertedPaidFor =
-        e.splitMode === 'BY_AMOUNT'
-          ? convertPaidForByAmount(
-              paidFor,
-              sourceCurrency,
-              ledgerCurrency,
-              shareRate,
-              convertedAmount,
-            )
-          : paidFor.map((p) => ({
-              participant: p.participant,
-              shares: Math.round(p.shares),
-            }))
-
-      // paidByList.shares stay in original currency (not rate-multiplied).
-      const originalCurrency = currencyOrFallback(effectiveOriginalCurrency)
-      let convertedPaidBy: Array<{ participant: string; shares: number }>
-      if (
-        e.originalCurrency &&
-        e.originalAmount !== null &&
-        paidByList.length === 1
-      ) {
-        convertedPaidBy = [{ ...paidByList[0], shares: e.originalAmount }]
-      } else {
-        convertedPaidBy = normalizePaidByOriginal(
-          paidByList,
-          originalCurrency,
-          effectiveOriginalAmount,
-        )
-      }
-
-      const conversionRate =
-        effectiveOriginalAmount !== 0
-          ? convertedAmount / effectiveOriginalAmount
-          : undefined
+      // API contract: amount + shares are expense-currency; server converts.
+      const expenseCurrency = currencyOrFallback(amountCurrency)
+      const inputAmount = e.amount
+      const inputPaidFor = paidFor.map((p) => ({
+        participant: p.participant,
+        shares: Math.round(p.shares),
+      }))
+      const inputPaidBy = normalizePaidByOriginal(
+        paidByList,
+        expenseCurrency,
+        inputAmount,
+      )
 
       return {
         expenseDate: new Date(e.expenseDate),
         title: e.title,
         category: e.category as never,
-        amount: convertedAmount,
-        originalAmount: effectiveOriginalAmount,
-        originalCurrency: effectiveOriginalCurrency,
-        conversionRate,
-        paidByList: convertedPaidBy,
+        amount: inputAmount,
+        conversion: importConversionForPair(
+          amountCurrency,
+          destinationCurrencyCode,
+          shareRate,
+          state.conversionModes,
+        ),
+        paidByList: inputPaidBy,
         paidBySplitMode: 'BY_AMOUNT',
-        paidFor: convertedPaidFor,
+        paidFor: inputPaidFor,
         splitMode: e.splitMode,
         isReimbursement: e.isReimbursement,
         documents: [],
@@ -427,14 +452,12 @@ export function buildImportBatch(
       }
     }
 
+    // Same currency as destination: no conversion field (group currency).
     return {
       expenseDate: new Date(e.expenseDate),
       title: e.title,
       category: e.category as never,
       amount: e.amount,
-      originalAmount: e.originalAmount ?? undefined,
-      originalCurrency: e.originalCurrency ?? undefined,
-      conversionRate: e.conversionRate ?? undefined,
       paidByList,
       paidBySplitMode: 'BY_AMOUNT',
       paidFor,
