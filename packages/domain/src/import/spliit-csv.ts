@@ -4,6 +4,10 @@ import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
 import { amountAsMinorUnitsByCode } from '../utils'
+import {
+  recoverSpliitOriginalAmount,
+  shouldRecoverSpliitOriginal,
+} from './spliit-original-amount'
 import { guessSplitMode } from './split-guess'
 import type { ImportParseResult, NormalizedSource } from './types'
 
@@ -191,30 +195,38 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       },
     )
 
-    const originalCost = toNumberOrNull(row[5])
+    // Cost is the source-group ledger total (reliable). Original cost is not
+    // trusted — recover expense amount from ledger ÷ rate (upstream #513).
+    // Once per parse only; no caching.
     const originalCurrencyRaw = (row[6] ?? '').trim()
-    const hasOriginalCurrency = originalCurrencyRaw.length === 3
     const conversionRate = toNumberOrNull(row[7])
-    const hasPriorConversion =
-      hasOriginalCurrency && originalCost !== null && conversionRate !== null
+    const shouldRecover = shouldRecoverSpliitOriginal({
+      originalCurrency:
+        originalCurrencyRaw.length === 3 ? originalCurrencyRaw : null,
+      conversionRate,
+    })
+    const expenseAmount = shouldRecover
+      ? recoverSpliitOriginalAmount(amountCents, conversionRate!)
+      : amountCents
+    const expenseCurrency = shouldRecover
+      ? originalCurrencyRaw
+      : rowCurrency.length === 3
+        ? rowCurrency
+        : null
     expenses.push({
       title,
       expenseDate: date.slice(0, 10),
       category: categoryToId(category),
-      amountCurrency: rowCurrency.length === 3 ? rowCurrency : null,
-      amount: amountCents,
-      originalAmount: hasPriorConversion
-        ? amountAsMinorUnitsByCode(originalCost, originalCurrencyRaw)
-        : null,
-      originalCurrency: hasPriorConversion ? originalCurrencyRaw : null,
-      conversionRate: hasPriorConversion ? conversionRate : null,
+      amountCurrency: expenseCurrency,
+      amount: expenseAmount,
+      originalAmount: shouldRecover ? expenseAmount : null,
+      originalCurrency: shouldRecover ? originalCurrencyRaw : null,
+      conversionRate: shouldRecover ? conversionRate : null,
       paidBySourceId,
       paidBy: [
         {
           sourceId: paidBySourceId,
-          shares: hasPriorConversion
-            ? amountAsMinorUnitsByCode(originalCost, originalCurrencyRaw)
-            : amountCents,
+          shares: expenseAmount,
         },
       ],
       paidFor: resolvedPaidFor,

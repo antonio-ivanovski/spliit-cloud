@@ -302,7 +302,9 @@ export async function importGroup(
             summary: expense.title,
             title: expense.title,
             amount: ledgerAmount,
-            currencyCode: conversion.originalCurrency,
+            // Expense currency when converted; ledger currency for same-currency
+            // (originalCurrency is null and amount is already ledger minor units).
+            currencyCode: conversion.originalCurrency ?? ledgerCurrency ?? null,
             date: dateStr,
             originalAmount: conversion.originalAmount ?? undefined,
             conversionRate: conversion.conversionRate ?? undefined,

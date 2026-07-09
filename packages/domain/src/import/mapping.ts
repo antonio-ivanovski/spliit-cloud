@@ -13,6 +13,7 @@ export {
   computeImportRateKeys,
   importConversionSourceForPair,
   makeRateKey,
+  resolveImportExpenseMoney,
   type ImportBatchExpense,
   type ImportBatchParticipant,
   type ImportBatchState,

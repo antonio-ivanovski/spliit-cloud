@@ -85,6 +85,22 @@ describe('tryParseSpliitCsv', () => {
     ])
   })
 
+  it('recovers original amount from Cost ÷ rate (ignores Original cost; upstream #513)', () => {
+    // Ledger Cost 1.23 USD; broken Original cost 0.01 BGN; rate 1 → recover 123 minor units.
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+"2026-07-09","asdasd","General","USD","1.23","0.01","BGN","1","No","Evenly",0.82,0.41`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const exp = result.source.expenses[0]
+    expect(exp.amount).toBe(123)
+    expect(exp.originalAmount).toBe(123)
+    expect(exp.amountCurrency).toBe('BGN')
+    expect(exp.originalCurrency).toBe('BGN')
+    expect(exp.conversionRate).toBe(1)
+    expect(exp.paidBy[0].shares).toBe(123)
+  })
+
   it('maps category names to in-code category ids', () => {
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
 "2025-12-23","Gas","Gas/Fuel","EUR","70.00",,,,"No","Evenly",46.67`
