@@ -186,9 +186,9 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
         ref={ref}
         {...props}
       >
-        <span className="flex-1 text-left">
+        <div className="flex-1 text-left">
           <CurrencyLabel currency={currency} />
-        </span>
+        </div>
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />
         ) : (
@@ -200,15 +200,20 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
 )
 CurrencyButton.displayName = 'CurrencyButton'
 
-function CurrencyLabel({ currency }: { currency: DisplayCurrency }) {
+export function CurrencyLabel({ currency }: { currency: DisplayCurrency }) {
   const flagUrl = `https://flagcdn.com/h24/${
     currency?.code.length ? currency.code.slice(0, 2).toLowerCase() : 'un'
   }.png`
   return (
-    <div className="flex items-center gap-3">
+    <span className="flex items-center gap-3">
       <img src={flagUrl} className="w-4" alt="" />
-      {currency.name}
-      {currency.code ? ` (${currency.code})` : ''}
-    </div>
+      <span>
+        {currency.name}
+        {currency.code ? ` (${currency.code})` : ''}
+      </span>
+      {currency.symbol && currency.symbol !== currency.code ? (
+        <span className="font-medium text-foreground">{currency.symbol}</span>
+      ) : null}
+    </span>
   )
 }

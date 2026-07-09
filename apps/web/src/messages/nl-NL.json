@@ -398,7 +398,43 @@
       "description": "Vereffen één-op-één met een specifiek persoon.",
       "title": "Vriendenadministratie aanmaken"
     },
-    "importGroup": "Groep importeren"
+    "importGroup": "Groep importeren",
+    "CurrencyConversion": {
+      "perDateTitle": "Per expense date",
+      "perDateDescription": "Use the provider rate for each expense date.",
+      "fixedProviderTitle": "Fixed provider rate",
+      "fixedProviderDescription": "Use one provider rate for every expense in this pair.",
+      "fixedCustomTitle": "Fixed custom rate",
+      "fixedCustomDescription": "Enter one rate to use for every expense in this pair.",
+      "rateDateLabel": "Rate date",
+      "customRateLabel": "Custom rate",
+      "fetchingRates": "Fetching rates…",
+      "ratesError": "Could not load the currency rate.",
+      "perDateSelectedHint": "Rates are resolved for each expense date.",
+      "refresh": "Refresh",
+      "affectedDates": "{count} expense dates",
+      "continue": "Continue"
+    },
+    "CurrencyMigration": {
+      "title": "Change group currency",
+      "description": "Choose a new ledger currency and review the direct conversions before applying the change.",
+      "destinationLabel": "New currency",
+      "currentCurrency": "Current currency: {currency}",
+      "unsupportedTitle": "Currency migration is unavailable",
+      "unsupportedDescription": "This group contains a currency that is not supported by the application. Correct or export the affected expenses before migrating.",
+      "unsupportedCode": "{code} ({count} expenses)",
+      "customWarning": "{count} expense(s) use an existing custom currency rate. Those rates will be discarded and totals may change.",
+      "serverWarning": "Provider rates are checked again on the server when you confirm. The final amounts may differ from this preview.",
+      "confirmationTitle": "Review currency migration",
+      "acknowledgement": "I understand that this change is irreversible and may change totals.",
+      "migrate": "Migrate currency",
+      "migrating": "Migrating…",
+      "success": "The group currency was changed successfully.",
+      "back": "Back",
+      "changeAction": "Migrate currency",
+      "noDestination": "Select a different supported currency to continue.",
+      "review": "Review migration"
+    }
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -423,9 +459,9 @@
     "CurrencyCodeField": {
       "label": "Hoofdvaluta",
       "createDescription": "Alle hoeveelheden en saldi worden in deze valuta weergegeven.",
-      "editDescription": "Alle bedragen en saldi worden in deze valuta weergegeven. Als je dit wijzigt, worden reeds ingevoerde uitgaven NIET omgerekend, behalve wanneer de valuta andere \"kleinste eenheden\" heeft dan de huidige (bijvoorbeeld bij een wijziging van Amerikaanse dollar naar Japanse yen)",
       "customOption": "Aangepast",
-      "lockedAfterExpenses": "De valuta is vergrendeld omdat deze groep al uitgaven heeft."
+      "changeAction": "Change currency",
+      "cancelChange": "Cancel"
     },
     "Participants": {
       "title": "Deelnemers",
@@ -1350,7 +1386,8 @@
         "currency": "Valuta",
         "currencyCode": "Valutacode",
         "linkedParticipant": "Gekoppelde deelnemer"
-      }
+      },
+      "currencyMigrated": "{participant} changed the group currency from {oldCurrency} to {newCurrency}."
     },
     "member": {
       "left": "{participant} verliet de groep",

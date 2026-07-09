@@ -1,7 +1,7 @@
+import { AppliedExchangeRates } from '@/components/applied-exchange-rates'
 import { Card, CardContent } from '@/components/ui/card'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { NormalizedSource } from '@spliit/domain/import'
-import { Calendar, Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type {
   ConversionMode,
@@ -33,10 +33,6 @@ type Props = {
   onSubmit: () => void
 }
 
-function formatRate(n: number): string {
-  return n.toFixed(4)
-}
-
 export function ConfirmStep({
   source,
   mode,
@@ -66,22 +62,6 @@ export function ConfirmStep({
     (p) => p.mode === 'UNLINKED_PARTICIPANT',
   ).length
 
-  // Group rates by pair ("BASE|TARGET") so the confirm card can render one
-  // block per pair with its mode + entries.
-  type RateRow = { date: string; rate: number }
-  const ratesByPair: Record<string, RateRow[]> = {}
-  if (rates) {
-    for (const key of Object.keys(rates)) {
-      const [date, base, target] = key.split('|')
-      const pairKey = `${base}|${target}`
-      const list = ratesByPair[pairKey] ?? (ratesByPair[pairKey] = [])
-      list.push({ date, rate: rates[key] })
-    }
-  }
-  // Stable order by date within each pair.
-  for (const key of Object.keys(ratesByPair)) {
-    ratesByPair[key].sort((a, b) => a.date.localeCompare(b.date))
-  }
   const conversionPairs = Object.keys(conversionModes)
 
   return (
@@ -138,81 +118,7 @@ export function ConfirmStep({
 
       {/* Conversion summary */}
       {conversionPairs.length > 0 && (
-        <Card>
-          <CardContent className="flex flex-col gap-3 p-4">
-            <p className="text-sm font-medium">
-              {t('Groups.Import.Confirm.appliedExchangeRatesLabel')}
-            </p>
-            <ul className="flex flex-col gap-3 text-sm">
-              {conversionPairs.map((pairKey) => {
-                const [base, target] = pairKey.split('|')
-                const pairMode = conversionModes[pairKey]
-                const isPerDate = pairMode === 'perDate'
-                const rows = ratesByPair[pairKey] ?? []
-                return (
-                  <li key={pairKey} className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2 text-foreground">
-                      {isPerDate ? (
-                        <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      ) : (
-                        <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      )}
-                      <span className="font-medium tracking-tight">
-                        {t('Groups.Import.CurrencyConversion.pairSection', {
-                          source: base,
-                          target,
-                        })}
-                      </span>
-                      <span className="ml-auto rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                        {isPerDate
-                          ? t('Groups.Import.Confirm.conversionPerDate')
-                          : t('Groups.Import.Confirm.conversionFixed')}
-                      </span>
-                    </div>
-                    {isPerDate ? (
-                      rows.length > 0 ? (
-                        <ul className="ml-6 flex flex-col gap-1 text-xs">
-                          {rows.map((row) => (
-                            <li
-                              key={row.date}
-                              className="flex items-baseline gap-3 text-muted-foreground"
-                            >
-                              <span className="font-mono tabular-nums">
-                                {row.date}
-                              </span>
-                              <span className="font-mono tabular-nums text-foreground">
-                                {t(
-                                  'Groups.Import.CurrencyConversion.fixedRateRow',
-                                  {
-                                    source: base,
-                                    rate: formatRate(row.rate),
-                                    target,
-                                  },
-                                )}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="ml-6 text-xs text-muted-foreground">—</p>
-                      )
-                    ) : rows.length > 0 ? (
-                      <p className="ml-6 font-mono text-xs tabular-nums text-foreground">
-                        {t('Groups.Import.CurrencyConversion.fixedRateRow', {
-                          source: base,
-                          rate: formatRate(rows[0].rate),
-                          target,
-                        })}
-                      </p>
-                    ) : (
-                      <p className="ml-6 text-xs text-muted-foreground">—</p>
-                    )}
-                  </li>
-                )
-              })}
-            </ul>
-          </CardContent>
-        </Card>
+        <AppliedExchangeRates modes={conversionModes} rates={rates} />
       )}
 
       <p className="text-xs text-muted-foreground">

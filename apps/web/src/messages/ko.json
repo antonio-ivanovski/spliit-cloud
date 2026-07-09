@@ -332,7 +332,43 @@
       "description": "특정 친구와 1대1로 정산하세요.",
       "title": "친구 장부 만들기"
     },
-    "importGroup": "그룹 가져오기"
+    "importGroup": "그룹 가져오기",
+    "CurrencyConversion": {
+      "perDateTitle": "Per expense date",
+      "perDateDescription": "Use the provider rate for each expense date.",
+      "fixedProviderTitle": "Fixed provider rate",
+      "fixedProviderDescription": "Use one provider rate for every expense in this pair.",
+      "fixedCustomTitle": "Fixed custom rate",
+      "fixedCustomDescription": "Enter one rate to use for every expense in this pair.",
+      "rateDateLabel": "Rate date",
+      "customRateLabel": "Custom rate",
+      "fetchingRates": "Fetching rates…",
+      "ratesError": "Could not load the currency rate.",
+      "perDateSelectedHint": "Rates are resolved for each expense date.",
+      "refresh": "Refresh",
+      "affectedDates": "{count} expense dates",
+      "continue": "Continue"
+    },
+    "CurrencyMigration": {
+      "title": "Change group currency",
+      "description": "Choose a new ledger currency and review the direct conversions before applying the change.",
+      "destinationLabel": "New currency",
+      "currentCurrency": "Current currency: {currency}",
+      "unsupportedTitle": "Currency migration is unavailable",
+      "unsupportedDescription": "This group contains a currency that is not supported by the application. Correct or export the affected expenses before migrating.",
+      "unsupportedCode": "{code} ({count} expenses)",
+      "customWarning": "{count} expense(s) use an existing custom currency rate. Those rates will be discarded and totals may change.",
+      "serverWarning": "Provider rates are checked again on the server when you confirm. The final amounts may differ from this preview.",
+      "confirmationTitle": "Review currency migration",
+      "acknowledgement": "I understand that this change is irreversible and may change totals.",
+      "migrate": "Migrate currency",
+      "migrating": "Migrating…",
+      "success": "The group currency was changed successfully.",
+      "back": "Back",
+      "changeAction": "Migrate currency",
+      "noDestination": "Select a different supported currency to continue.",
+      "review": "Review migration"
+    }
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -353,9 +389,9 @@
     "CurrencyCodeField": {
       "label": "기본 통화",
       "createDescription": "금액, 잔액 전부 이 통화로 표시돼요.",
-      "editDescription": "모든 금액이랑 잔액은 이 통화로 보여요. 통화를 바꿔도 이미 입력한 지출은 바뀌지 않아요. 단, (예: 미국 달러에서 일본 엔으로 바꿀 때처럼) 통화의 소수점 단위가 다를 경우에는 예외가 있을 수 있어요.",
       "customOption": "사용자 지정",
-      "lockedAfterExpenses": "이 그룹에 이미 지출이 있으므로 통화가 잠겨 있습니다."
+      "changeAction": "Change currency",
+      "cancelChange": "Cancel"
     },
     "Participants": {
       "title": "참여자",
@@ -1350,7 +1386,8 @@
         "currency": "통화",
         "currencyCode": "통화 코드",
         "linkedParticipant": "연결된 참가자"
-      }
+      },
+      "currencyMigrated": "{participant} changed the group currency from {oldCurrency} to {newCurrency}."
     },
     "member": {
       "left": "{participant}님이 그룹을 떠났습니다",
