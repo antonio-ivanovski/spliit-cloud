@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "חפש מטבע...",
     "noCurrency": "לא נמצאו מטבעות.",
-    "custom": {
-      "heading": "מותאם אישית"
-    },
-    "common": {
-      "heading": "הנפוצים ביותר"
-    },
-    "other": {
-      "heading": "מטבעות אחרים"
-    },
     "byCode": {
       "AED": {
         "name": "דירהם של איחוד האמירויות"

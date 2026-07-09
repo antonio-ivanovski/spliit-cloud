@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "Caută monedă…",
     "noCurrency": "Nicio monedă găsită.",
-    "custom": {
-      "heading": "Personalizat"
-    },
-    "common": {
-      "heading": "Cele mai comune"
-    },
-    "other": {
-      "heading": "Alte monede"
-    },
     "byCode": {
       "EUR": {
         "name": "Euro"

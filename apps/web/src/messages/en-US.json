@@ -977,15 +977,6 @@
   "Currencies": {
     "search": "Search currency...",
     "noCurrency": "No currencies found.",
-    "custom": {
-      "heading": "Custom"
-    },
-    "common": {
-      "heading": "Most common"
-    },
-    "other": {
-      "heading": "Other currencies"
-    },
     "byCode": {
       "AED": {
         "name": "United Arab Emirates Dirham"

@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "Etsi valuuttaa...",
     "noCurrency": "Valuuttoja ei löytynyt.",
-    "custom": {
-      "heading": "Mukautettu"
-    },
-    "common": {
-      "heading": "Yleisimmät"
-    },
-    "other": {
-      "heading": "Muut valuutat"
-    },
     "byCode": {
       "EUR": {
         "name": "euro"

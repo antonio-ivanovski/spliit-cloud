@@ -958,15 +958,6 @@
   "Currencies": {
     "search": "Пошук валюти...",
     "noCurrency": "Валют не знайдено.",
-    "custom": {
-      "heading": "Інша"
-    },
-    "common": {
-      "heading": "Найпоширеніші"
-    },
-    "other": {
-      "heading": "Інші валюти"
-    },
     "byCode": {
       "AED": {
         "name": "Дирхам ОАЕ"

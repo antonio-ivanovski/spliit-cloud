@@ -958,15 +958,6 @@
   "Currencies": {
     "search": "Pesquisar moeda...",
     "noCurrency": "Nenhuma moeda encontrada.",
-    "custom": {
-      "heading": "Personalizado"
-    },
-    "common": {
-      "heading": "Mais comuns"
-    },
-    "other": {
-      "heading": "Outras moedas"
-    },
     "byCode": {
       "AED": {
         "name": "Dirham dos Emirados Árabes Unidos"

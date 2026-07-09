@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "Valuta zoeken...",
     "noCurrency": "Geen valuta gevonden.",
-    "custom": {
-      "heading": "Aangepast"
-    },
-    "common": {
-      "heading": "Meest voorkomend"
-    },
-    "other": {
-      "heading": "Andere valuta"
-    },
     "byCode": {
       "AED": {
         "name": "Verenigde Arabische Emiraten-dirham"

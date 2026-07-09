@@ -130,6 +130,7 @@ export function CreateExpenseForm({
       {...(sourceExpense ? { expense: sourceExpense, isCopy: true } : {})}
       searchParams={searchParams}
       currentLedgerParticipantId={currentLedgerParticipantId}
+      linkInviteToken={linkInviteToken}
       heading={
         sourceExpense
           ? tExpenseForm('Expense.createCopy', { title: sourceExpense.title })

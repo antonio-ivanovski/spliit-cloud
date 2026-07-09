@@ -87,3 +87,14 @@ The `getBalances` function SHALL use `calculateExactShares` from the `share-calc
 #### Scenario: No Math.round on accumulators
 - **WHEN** `getBalances` finalizes balances
 - **THEN** no `Math.round` is applied to accumulated values because `distributeRemainder` already returns exact integers
+
+### Requirement: Effective expense currency resolves to ledger base when no original currency
+The system SHALL resolve an expense's effective currency to `originalCurrency` when present and otherwise to the group Ledger base currency, so cross-currency recommendation ranking aligns with the Ledger base currency. (The full common-currency ranking algorithm lives in the expenses spec.)
+
+#### Scenario: Expense with original currency
+- **WHEN** an expense stores an `originalCurrency`
+- **THEN** its effective currency is that `originalCurrency`
+
+#### Scenario: Expense in ledger currency only
+- **WHEN** an expense has no `originalCurrency`
+- **THEN** its effective currency is the Ledger base currency

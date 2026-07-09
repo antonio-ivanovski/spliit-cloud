@@ -429,7 +429,9 @@ model Expense {
   items                ExpenseItem[]
   itemizedRemainder    ExpenseItemizedRemainder?
 
-  @@index([ledgerId])
+  // ledgerId prefix covers group-scoped scans; expenseDate supports
+  // recency-bounded currency recommendation queries.
+  @@index([ledgerId, expenseDate])
 }
 
 model ExpenseDocument {

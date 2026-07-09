@@ -26,17 +26,25 @@ function useInvalidateExpenseDependencies(linkInviteToken: string | undefined) {
             linkInviteToken,
           })
         : Promise.resolve(),
+      utils.groups.expenses.commonCurrencies.invalidate({
+        groupId,
+        linkInviteToken,
+      }),
       utils.groups.activities.invalidate(),
       utils.groups.leavePreview.invalidate({ groupId }),
       utils.invitations.revokePreview.invalidate(),
     ])
 }
 
-function useInvalidateExpenseSideEffects() {
+function useInvalidateExpenseSideEffects(linkInviteToken: string | undefined) {
   const utils = trpc.useUtils()
 
   return ({ groupId }: { groupId: string }) =>
     Promise.all([
+      utils.groups.expenses.commonCurrencies.invalidate({
+        groupId,
+        linkInviteToken,
+      }),
       utils.groups.activities.invalidate(),
       utils.groups.leavePreview.invalidate({ groupId }),
       utils.invitations.revokePreview.invalidate(),
@@ -67,7 +75,8 @@ export function useCreateExpenseMutation({
   linkInviteToken: string | undefined
 }) {
   const utils = trpc.useUtils()
-  const invalidateExpenseSideEffects = useInvalidateExpenseSideEffects()
+  const invalidateExpenseSideEffects =
+    useInvalidateExpenseSideEffects(linkInviteToken)
 
   return trpc.groups.expenses.create.useMutation({
     onSuccess: (_data, variables) => {
@@ -92,7 +101,8 @@ export function useDeleteExpenseMutation({
   const utils = trpc.useUtils()
   const navigate = useNavigate()
   const { toast } = useToast()
-  const invalidateExpenseSideEffects = useInvalidateExpenseSideEffects()
+  const invalidateExpenseSideEffects =
+    useInvalidateExpenseSideEffects(linkInviteToken)
 
   return trpc.groups.expenses.delete.useMutation({
     onMutate: async (variables) => {

@@ -1,6 +1,7 @@
 export * from './activities'
 export * from './balances'
 export * from './categories'
+export * from './common-currencies'
 export * from './conversion'
 export * from './currency'
 export * from './enums'

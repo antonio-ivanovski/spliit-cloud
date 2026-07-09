@@ -19,6 +19,7 @@ export {
   createExpense,
   deleteExpense,
   getExpense,
+  getGroupCommonCurrencies,
   getGroupExpenseCount,
   getGroupExpenses,
   getGroupExpensesParticipants,

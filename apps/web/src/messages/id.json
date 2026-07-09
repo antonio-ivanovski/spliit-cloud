@@ -670,17 +670,8 @@
     }
   },
   "Currencies": {
-    "custom": {
-      "heading": "Kustom"
-    },
     "search": "Cari mata uang...",
     "noCurrency": "Tidak ada mata uang yang ditemukan.",
-    "common": {
-      "heading": "Paling umum"
-    },
-    "other": {
-      "heading": "Mata uang lainnya"
-    },
     "byCode": {
       "AED": {
         "name": "Dirham Uni Emirat Arab"

@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "Cercar moneda...",
     "noCurrency": "No s'han trobat monedes.",
-    "custom": {
-      "heading": "Personalitzat"
-    },
-    "common": {
-      "heading": "Més comunes"
-    },
-    "other": {
-      "heading": "Altres monedes"
-    },
     "byCode": {
       "AED": {
         "name": "Dírham dels Emirats Àrabs Units"

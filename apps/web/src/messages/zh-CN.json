@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "搜索币种...",
     "noCurrency": "无法找到此货币。",
-    "custom": {
-      "heading": "自定义"
-    },
-    "common": {
-      "heading": "最常用"
-    },
-    "other": {
-      "heading": "其他币种"
-    },
     "byCode": {
       "AED": {
         "name": "阿联酋迪拉姆"

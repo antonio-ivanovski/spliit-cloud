@@ -81,6 +81,8 @@ export function BasicDetailsCard(props: {
     decimal_digits: number
     name: string
   }[]
+  pinnedCurrencyCode?: string
+  recommendedCurrencyCodes?: string[]
 }) {
   const {
     form,
@@ -218,6 +220,8 @@ export function BasicDetailsCard(props: {
                     isLoading={false}
                     disabled={readOnly}
                     onValueChange={(v) => onChange(v)}
+                    pinnedCurrencyCode={props.pinnedCurrencyCode}
+                    recommendedCurrencyCodes={props.recommendedCurrencyCodes}
                   />
                 ) : (
                   <Input

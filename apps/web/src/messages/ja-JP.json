@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "通貨を検索…",
     "noCurrency": "通貨が見つかりませんでした。",
-    "custom": {
-      "heading": "カスタム"
-    },
-    "common": {
-      "heading": "一般的なもの"
-    },
-    "other": {
-      "heading": "その他の通貨"
-    },
     "byCode": {
       "AED": {
         "name": "UAEディルハム"

@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "Währung suchen...",
     "noCurrency": "Keine Währungen gefunden.",
-    "custom": {
-      "heading": "Benutzerdefinierte"
-    },
-    "common": {
-      "heading": "Geläufigste"
-    },
-    "other": {
-      "heading": "Andere Währungen"
-    },
     "byCode": {
       "AED": {
         "name": "VAE-Dirham"

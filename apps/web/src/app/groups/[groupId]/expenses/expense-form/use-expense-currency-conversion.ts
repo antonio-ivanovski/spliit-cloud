@@ -1,6 +1,7 @@
 import type { Group } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
+import { trpc } from '@/trpc/client'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { utcTodayIso } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
@@ -13,6 +14,8 @@ export function useExpenseCurrencyConversion(args: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
+  /** Forwarded so link-invite viewers get the same recommendations. */
+  linkInviteToken?: string
   onAmountChanged?: (income: boolean) => void
 }): {
   originalCurrency: Currency
@@ -29,6 +32,13 @@ export function useExpenseCurrencyConversion(args: {
    * value — it is purely for display.
    */
   convertedAmountPreview: number | undefined
+  /** Group ledger currency code to pin first in the expense selector. */
+  pinnedCurrencyCode: string | undefined
+  /**
+   * Ranked recommendation codes once the query succeeds. `undefined`
+   * while loading/on error so the selector keeps its static fallback.
+   */
+  recommendedCurrencyCodes: string[] | undefined
 } {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const watchedExpenseDate = useWatch({
@@ -64,6 +74,16 @@ export function useExpenseCurrencyConversion(args: {
     watchedOriginalCurrency ?? '',
     args.groupCurrency.code,
   )
+
+  const commonCurrenciesQuery = trpc.groups.expenses.commonCurrencies.useQuery({
+    groupId: args.group.id,
+    linkInviteToken: args.linkInviteToken,
+  })
+  const pinnedCurrencyCode = args.group.currencyCode || undefined
+  // Only swap the static common list after a successful response.
+  const recommendedCurrencyCodes = commonCurrenciesQuery.isSuccess
+    ? commonCurrenciesQuery.data.currencies
+    : undefined
 
   const conversionRequired = !!(
     args.group.currencyCode &&
@@ -185,5 +205,7 @@ export function useExpenseCurrencyConversion(args: {
     conversionRateMessage,
     exchangeRate,
     convertedAmountPreview,
+    pinnedCurrencyCode,
+    recommendedCurrencyCodes,
   }
 }

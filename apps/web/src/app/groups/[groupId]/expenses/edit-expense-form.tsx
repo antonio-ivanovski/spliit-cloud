@@ -93,6 +93,7 @@ export function EditExpenseForm({
       group={group}
       expense={expense}
       currentLedgerParticipantId={currentLedgerParticipantId}
+      linkInviteToken={linkInviteToken}
       readOnly={readOnly}
       heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
       onMakeCopy={() => {

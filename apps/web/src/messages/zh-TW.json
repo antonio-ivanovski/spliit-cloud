@@ -958,15 +958,6 @@
   "Currencies": {
     "search": "搜尋貨幣...",
     "noCurrency": "找不到貨幣。",
-    "custom": {
-      "heading": "自訂"
-    },
-    "common": {
-      "heading": "最常用"
-    },
-    "other": {
-      "heading": "其他貨幣"
-    },
     "byCode": {
       "AED": {
         "name": "阿聯酋迪爾汗"

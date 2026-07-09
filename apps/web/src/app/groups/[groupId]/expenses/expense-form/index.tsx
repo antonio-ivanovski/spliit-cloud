@@ -39,6 +39,8 @@ export function ExpenseForm(props: {
   runtimeFeatureFlags: RuntimeFeatureFlags
   currentLedgerParticipantId?: string | null
   readOnly?: boolean
+  /** Link-invite token for pending invitees (currency recommendations). */
+  linkInviteToken?: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   // Copy and fresh-create both surface as a Create flow even though
@@ -81,6 +83,7 @@ export function ExpenseForm(props: {
     form,
     group: props.group,
     groupCurrency,
+    linkInviteToken: props.linkInviteToken,
     onAmountChanged: (income) => {
       setIsIncome(income)
       if (income) form.setValue('isReimbursement', false)

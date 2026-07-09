@@ -857,15 +857,6 @@
   "Currencies": {
     "search": "Buscar moneda...",
     "noCurrency": "No se han podido encontrar monedas.",
-    "custom": {
-      "heading": "Personalizado"
-    },
-    "common": {
-      "heading": "Más común"
-    },
-    "other": {
-      "heading": "Otras monedas"
-    },
     "byCode": {
       "USD": {
         "name": "Dólar estadounidense"

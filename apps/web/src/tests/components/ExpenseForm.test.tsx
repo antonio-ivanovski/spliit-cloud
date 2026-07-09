@@ -24,6 +24,7 @@ const {
   mockCurrencyGetRate,
   mockAccountDefaultSplit,
   mockInvalidateDefaultSplit,
+  mockCommonCurrencies,
 } = vi.hoisted(() => {
   // Shape returned by tRPC `useQuery` mocks. `data` is `unknown` here so
   // per-test overrides (e.g. `{ defaultSplit: { splitMode, paidFor } }`)
@@ -32,6 +33,7 @@ const {
     data: unknown
     error: null
     isLoading: boolean
+    isSuccess?: boolean
     refetch: ReturnType<typeof vi.fn>
   }
 
@@ -59,6 +61,7 @@ const {
     data: undefined,
     error: null,
     isLoading: false,
+    isSuccess: false,
     refetch: vi.fn(),
   }))
 
@@ -68,6 +71,17 @@ const {
     data: undefined,
     error: null,
     isLoading: false,
+    isSuccess: false,
+    refetch: vi.fn(),
+  }))
+
+  // No group history by default; selector keeps static common fallback
+  // while `isSuccess` is false.
+  const mockCommonCurrencies = vi.fn((_opts?: unknown): MockQueryResult => ({
+    data: undefined,
+    error: null,
+    isLoading: false,
+    isSuccess: false,
     refetch: vi.fn(),
   }))
 
@@ -78,6 +92,7 @@ const {
     mockCurrencyGetRate,
     mockAccountDefaultSplit,
     mockInvalidateDefaultSplit,
+    mockCommonCurrencies,
   }
 })
 
@@ -91,6 +106,13 @@ vi.mock('@/trpc/client', () => ({
     currency: {
       getRate: {
         useQuery: (opts: unknown) => mockCurrencyGetRate(opts),
+      },
+    },
+    groups: {
+      expenses: {
+        commonCurrencies: {
+          useQuery: (opts: unknown) => mockCommonCurrencies(opts),
+        },
       },
     },
     account: {
@@ -245,6 +267,7 @@ type MockQueryResult = {
   data: unknown
   error: null
   isLoading: boolean
+  isSuccess?: boolean
   refetch: ReturnType<typeof vi.fn>
 }
 
@@ -255,6 +278,7 @@ beforeEach(() => {
       data: undefined,
       error: null,
       isLoading: false,
+      isSuccess: false,
       refetch: vi.fn(),
     }),
   )
@@ -264,6 +288,17 @@ beforeEach(() => {
       data: undefined,
       error: null,
       isLoading: false,
+      isSuccess: false,
+      refetch: vi.fn(),
+    }),
+  )
+  mockCommonCurrencies.mockReset()
+  mockCommonCurrencies.mockImplementation(
+    (_opts?: unknown): MockQueryResult => ({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      isSuccess: false,
       refetch: vi.fn(),
     }),
   )

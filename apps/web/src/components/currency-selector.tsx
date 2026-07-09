@@ -8,6 +8,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandSeparator,
 } from '@/components/ui/command'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
 import {
@@ -17,8 +18,17 @@ import {
 } from '@/components/ui/popover'
 import { type DisplayCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+/** Static fallback for non-expense selectors and failed recommendation queries. */
+const STATIC_COMMON_CURRENCY_CODES = [
+  'USD',
+  'EUR',
+  'JPY',
+  'GBP',
+  'CNY',
+] as const
 
 type Props = {
   currencies: DisplayCurrency[]
@@ -27,6 +37,17 @@ type Props = {
   defaultValue: DisplayCurrency['code']
   isLoading: boolean
   disabled?: boolean
+  /**
+   * When set, rendered first in the pinned section and excluded from
+   * the rest of the catalog.
+   */
+  pinnedCurrencyCode?: string
+  /**
+   * Group-specific recommendations in server rank order. When provided
+   * (including an empty array), replaces the static USD/EUR/JPY/GBP/CNY
+   * common list. Omit / leave undefined to keep the static fallback.
+   */
+  recommendedCurrencyCodes?: string[]
 }
 
 export function CurrencySelector({
@@ -35,6 +56,8 @@ export function CurrencySelector({
   defaultValue,
   isLoading,
   disabled = false,
+  pinnedCurrencyCode,
+  recommendedCurrencyCodes,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -42,6 +65,18 @@ export function CurrencySelector({
   const selectedCurrency =
     currencies.find((currency) => (currency.code ?? '') === defaultValue) ??
     currencies[0]
+
+  const command = (
+    <CurrencyCommand
+      currencies={currencies}
+      pinnedCurrencyCode={pinnedCurrencyCode}
+      recommendedCurrencyCodes={recommendedCurrencyCodes}
+      onValueChange={(code) => {
+        onValueChange(code)
+        setOpen(false)
+      }}
+    />
+  )
 
   if (isDesktop) {
     return (
@@ -55,13 +90,7 @@ export function CurrencySelector({
           />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
-          <CurrencyCommand
-            currencies={currencies}
-            onValueChange={(code) => {
-              onValueChange(code)
-              setOpen(false)
-            }}
-          />
+          {command}
         </PopoverContent>
       </Popover>
     )
@@ -77,89 +106,87 @@ export function CurrencySelector({
           disabled={disabled}
         />
       </DrawerTrigger>
-      <DrawerContent className="p-0">
-        <CurrencyCommand
-          currencies={currencies}
-          onValueChange={(id) => {
-            onValueChange(id)
-            setOpen(false)
-          }}
-        />
-      </DrawerContent>
+      <DrawerContent className="p-0">{command}</DrawerContent>
     </Drawer>
   )
 }
 
-type CurrencyGrouping = 'common' | 'custom' | 'other'
-
-// Fixed display order: most-common codes first, custom second, everything
-// else last. Defining this as a tuple (not an object) keeps the iteration
-// order stable regardless of the input list's insertion order.
-const CURRENCY_GROUPING_ORDER = ['common', 'custom', 'other'] as const
-
-const CURRENCY_GROUPING_HEADINGS = {
-  common: 'common.heading',
-  custom: 'custom.heading',
-  other: 'other.heading',
-} as const satisfies Record<CurrencyGrouping, string>
-
 function CurrencyCommand({
   currencies,
   onValueChange,
+  pinnedCurrencyCode,
+  recommendedCurrencyCodes,
 }: {
   currencies: DisplayCurrency[]
   onValueChange: (currencyId: DisplayCurrency['code']) => void
+  pinnedCurrencyCode?: string
+  recommendedCurrencyCodes?: string[]
 }) {
-  const currencyGroup = (currency: DisplayCurrency): CurrencyGrouping => {
-    switch (currency.code) {
-      case 'USD':
-      case 'EUR':
-      case 'JPY':
-      case 'GBP':
-      case 'CNY':
-        return 'common'
-      default:
-        if (currency.code === '') return 'custom'
-        return 'other'
-    }
-  }
   const { t } = useTranslation(undefined, { keyPrefix: 'Currencies' })
-  const currenciesByGroup = currencies.reduce<
-    Record<CurrencyGrouping, DisplayCurrency[]>
-  >(
-    (acc, currency) => {
-      const group = currencyGroup(currency)
-      acc[group].push(currency)
-      return acc
-    },
-    { common: [], custom: [], other: [] },
-  )
+
+  const { priority, rest } = useMemo(() => {
+    const byCode = new Map(
+      currencies.map((currency) => [currency.code, currency]),
+    )
+    const assigned = new Set<string>()
+    const priority: DisplayCurrency[] = []
+    const rest: DisplayCurrency[] = []
+
+    const pin =
+      pinnedCurrencyCode && pinnedCurrencyCode.length > 0
+        ? pinnedCurrencyCode
+        : undefined
+    if (pin) {
+      const pinned = byCode.get(pin)
+      if (pinned) {
+        priority.push(pinned)
+        assigned.add(pin)
+      }
+    }
+
+    // Prefer server ranking when provided; otherwise static common list.
+    const commonCodes =
+      recommendedCurrencyCodes !== undefined
+        ? recommendedCurrencyCodes
+        : STATIC_COMMON_CURRENCY_CODES
+
+    for (const code of commonCodes) {
+      if (!code || assigned.has(code)) continue
+      const currency = byCode.get(code)
+      if (!currency) continue
+      priority.push(currency)
+      assigned.add(code)
+    }
+
+    for (const currency of currencies) {
+      if (assigned.has(currency.code)) continue
+      rest.push(currency)
+    }
+
+    return { priority, rest }
+  }, [currencies, pinnedCurrencyCode, recommendedCurrencyCodes])
+
+  const renderItems = (items: DisplayCurrency[]) =>
+    items.map((currency) => (
+      <CommandItem
+        key={currency.code || currency.symbol || currency.name}
+        value={`${currency.code} ${currency.name} ${currency.symbol}`}
+        onSelect={() => onValueChange(currency.code)}
+      >
+        <CurrencyLabel currency={currency} />
+      </CommandItem>
+    ))
 
   return (
     <Command>
       <CommandInput placeholder={t('search')} className="text-base" />
       <CommandEmpty>{t('noCurrency')}</CommandEmpty>
       <div className="w-full max-h-[300px] overflow-y-auto">
-        {CURRENCY_GROUPING_ORDER.map((group) => {
-          const groupCurrencies = currenciesByGroup[group]
-          if (groupCurrencies.length === 0) return null
-          return (
-            <CommandGroup
-              key={group}
-              heading={t(CURRENCY_GROUPING_HEADINGS[group])}
-            >
-              {groupCurrencies.map((currency) => (
-                <CommandItem
-                  key={currency.code || currency.symbol || currency.name}
-                  value={`${currency.code} ${currency.name} ${currency.symbol}`}
-                  onSelect={() => onValueChange(currency.code)}
-                >
-                  <CurrencyLabel currency={currency} />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          )
-        })}
+        {priority.length > 0 && (
+          <CommandGroup>{renderItems(priority)}</CommandGroup>
+        )}
+        {priority.length > 0 && rest.length > 0 && <CommandSeparator />}
+        {rest.length > 0 && <CommandGroup>{renderItems(rest)}</CommandGroup>}
       </div>
     </Command>
   )

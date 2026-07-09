@@ -2,10 +2,12 @@ import { prisma, RecurrenceRule, type Expense as DbExpense } from '@spliit/db'
 import {
   calculateNextDate,
   categoryIdSchema,
+  commonCurrencyLookbackDate,
   computePaidForFromItems,
   conversionFromStored,
   DEFAULT_CATEGORY_ID,
   getCategoryById,
+  rankCommonCurrencies,
   type Category,
   type CategoryId,
   type Expense,
@@ -1059,6 +1061,39 @@ export async function getGroupExpenseCount(groupId: string) {
   })
   if (!group?.ledgerId) return 0
   return prisma.expense.count({ where: { ledgerId: group.ledgerId } })
+}
+
+/**
+ * Rank currencies previously used in the group (excluding the pinned group
+ * ledger currency). Loads only `originalCurrency` + `expenseDate` within a
+ * recency lookback so large ledgers stay cheap; scoring uses a 90-day
+ * half-life (see `@spliit/domain` `rankCommonCurrencies`).
+ */
+export async function getGroupCommonCurrencies(groupId: string) {
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: {
+      ledgerId: true,
+      ledger: { select: { currencyCode: true } },
+    },
+  })
+  if (!group?.ledgerId) return [] as string[]
+
+  const since = commonCurrencyLookbackDate()
+  const rows = await prisma.expense.findMany({
+    where: {
+      ledgerId: group.ledgerId,
+      expenseDate: { gte: since },
+    },
+    select: {
+      originalCurrency: true,
+      expenseDate: true,
+    },
+  })
+
+  return rankCommonCurrencies(rows, {
+    groupCurrency: group.ledger.currencyCode,
+  })
 }
 
 export async function getExpense(groupId: string, expenseId: string) {
