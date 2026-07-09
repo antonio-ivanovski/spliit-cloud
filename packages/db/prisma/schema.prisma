@@ -392,6 +392,12 @@ model AccountGroupDefaultSplitPaidFor {
 // categories land, a new `Category` table will be re-introduced and a
 // migration will restore the constraint.
 
+// Null conversionSource on Expense = same currency (no conversion).
+enum ConversionSource {
+  EXCHANGE
+  CUSTOM
+}
+
 model Expense {
   id               String            @id
   ledger           Ledger            @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
@@ -403,9 +409,12 @@ model Expense {
   categoryId       String            @default("general")
   // Normalized amount in ledger base-currency minor units.
   amount           Int
+  // Present when conversionSource is set: input amount + currency + rate.
   originalAmount   Int?
   originalCurrency String?
   conversionRate   Float?
+  // EXCHANGE (provider) or CUSTOM (user rate). Null = same currency.
+  conversionSource ConversionSource?
   paidBySplitMode  SplitMode         @default(BY_AMOUNT)
   paidByList       ExpensePaidBy[]
   paidFor          ExpensePaidFor[]
