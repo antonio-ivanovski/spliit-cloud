@@ -1,3 +1,4 @@
+import { prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { getGroup, getGroupExpensesParticipants } from '../../../lib/api'
@@ -31,5 +32,9 @@ export const getGroupDetailsProcedure = protectedProcedure
     }
 
     const participantsWithExpenses = await getGroupExpensesParticipants(groupId)
-    return { group, participantsWithExpenses }
+    const hasExpenses = group.ledgerId
+      ? (await prisma.expense.count({ where: { ledgerId: group.ledgerId } })) >
+        0
+      : false
+    return { group, participantsWithExpenses, hasExpenses }
   })

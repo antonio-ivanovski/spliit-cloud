@@ -5,6 +5,10 @@ import type {
 import { amountDiffer } from './amount.differ'
 import { categoryDiffer } from './category.differ'
 import { compositeExpenseDiffer } from './composite.differ'
+import {
+  conversionRateDiffer,
+  conversionSourceDiffer,
+} from './conversion.differ'
 import { dateDiffer } from './date.differ'
 import { documentsDiffer } from './documents.differ'
 import { itemsDiffer } from './items.differ'
@@ -28,6 +32,10 @@ export type { ChangeContext, DiffEmission, ExpenseDiffer } from './types'
 // Individual differs
 export { amountDiffer } from './amount.differ'
 export { categoryDiffer } from './category.differ'
+export {
+  conversionRateDiffer,
+  conversionSourceDiffer,
+} from './conversion.differ'
 export { dateDiffer } from './date.differ'
 export { documentsDiffer } from './documents.differ'
 export { itemsDiffer } from './items.differ'
@@ -52,6 +60,8 @@ const defaultDiffer = compositeExpenseDiffer([
   splitDiffer,
   itemsDiffer,
   documentsDiffer,
+  conversionSourceDiffer,
+  conversionRateDiffer,
 ])
 
 // ---------------------------------------------------------------------------

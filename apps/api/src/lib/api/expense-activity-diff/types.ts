@@ -11,7 +11,13 @@ import type {
 
 export type ShareRow = { participant: string; shares: number }
 export type ItemizedRemainderLike = NonNullable<Expense['itemizedRemainder']>
-export type DifferenceableExpense = Expense
+/** Expense plus optional flat conversion meta used by amount/conversion differs. */
+export type DifferenceableExpense = Expense & {
+  originalAmount?: number | null
+  originalCurrency?: string | null
+  conversionRate?: number | null
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+}
 
 /** Context for formatting human-readable before/after strings. */
 export type ChangeContext = {

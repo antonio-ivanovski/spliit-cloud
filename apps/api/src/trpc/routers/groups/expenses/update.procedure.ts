@@ -2,6 +2,7 @@ import { expenseApiSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { updateExpense } from '../../../../lib/api'
+import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 
 export const updateGroupExpenseProcedure = protectedProcedure
@@ -23,8 +24,19 @@ export const updateGroupExpenseProcedure = protectedProcedure
         message: 'This group is archived and expenses cannot be modified',
       })
     }
-    const { id } = await updateExpense(groupId, expenseId, expense, {
-      accountId: ctx.auth.user.id,
-    })
-    return { expenseId: id }
+    try {
+      const { id } = await updateExpense(groupId, expenseId, expense, {
+        accountId: ctx.auth.user.id,
+      })
+      return { expenseId: id }
+    } catch (err) {
+      if (err instanceof ConversionError) {
+        throw new TRPCError({
+          code:
+            err.code === 'PROVIDER_UNAVAILABLE' ? 'BAD_GATEWAY' : 'BAD_REQUEST',
+          message: err.message,
+        })
+      }
+      throw err
+    }
   })
