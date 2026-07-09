@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Betrag"
+      "label": "Betrag",
+      "calculator": {
+        "buttonLabel": "Rechner öffnen",
+        "title": "Rechner",
+        "description": "Betrag berechnen oder Ausgabeartikel erstellen.",
+        "clear": "Löschen",
+        "backspace": "Rückschritt",
+        "equals": "Gleich",
+        "plus": "Plus",
+        "minus": "Minus",
+        "multiply": "Mal",
+        "divide": "Teilen",
+        "openBracket": "Klammer öffnen",
+        "closeBracket": "Klammer schließen",
+        "decimal": "Dezimalpunkt",
+        "invalid": "Ungültiger Ausdruck",
+        "replaceItemsTitle": "Ausgabeartikel ersetzen?",
+        "replaceItemsDescription": "Dadurch werden die vorhandenen Ausgabeartikel durch die berechneten Artikel ersetzt.",
+        "replaceItemsConfirm": "Artikel ersetzen",
+        "splitIntoItems_zero": "Erstelle {count} Ausgabenposten",
+        "splitIntoItems_one": "Erstelle {count} Ausgabenposten",
+        "splitIntoItems_two": "Erstelle {count} Ausgabenposten",
+        "splitIntoItems_few": "Erstelle {count} Ausgabenposten",
+        "splitIntoItems_many": "Erstelle {count} Ausgabenposten",
+        "splitIntoItems_other": "Erstelle {count} Ausgabenposten",
+        "replaceItems": "Ausgabenposten ersetzen",
+        "createItems": "Ausgabenposten erstellen",
+        "itemTransferInvalid": "Schließe die Berechnung ab",
+        "itemTransferUnsupported": "Verwende nur +, × und Klammern",
+        "itemTransferEmpty": "Gib eine Berechnung ein",
+        "createItemsHint": "Berechnete Posten hinzufügen",
+        "replaceItemsHint": "Aktuelle Posten ersetzen"
+      }
     },
     "conversionUnavailable": "Um für jede Ausgabe eine andere Währung festzulegen und Beträge umzurechnen, wählen Sie eine nicht benutzerdefinierte Währung für die Gruppe aus.",
     "conversionRateField": {

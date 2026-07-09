@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Bedrag"
+      "label": "Bedrag",
+      "calculator": {
+        "buttonLabel": "Rekenmachine openen",
+        "title": "Rekenmachine",
+        "description": "Bereken een bedrag of maak uitgave-onderdelen aan.",
+        "clear": "Wissen",
+        "backspace": "Backspace",
+        "equals": "Is gelijk aan",
+        "plus": "Plus",
+        "minus": "Min",
+        "multiply": "Vermenigvuldigen",
+        "divide": "Delen",
+        "openBracket": "Haakje openen",
+        "closeBracket": "Haakje sluiten",
+        "decimal": "Decimaalteken",
+        "invalid": "Ongeldige uitdrukking",
+        "replaceItemsTitle": "Uitgave-onderdelen vervangen?",
+        "replaceItemsDescription": "Dit vervangt je bestaande uitgave-onderdelen door de berekende onderdelen.",
+        "replaceItemsConfirm": "Onderdelen vervangen",
+        "splitIntoItems_zero": "Maak {count} uitgaveposten aan",
+        "splitIntoItems_one": "Maak {count} uitgavepost aan",
+        "splitIntoItems_two": "Maak {count} uitgaveposten aan",
+        "splitIntoItems_few": "Maak {count} uitgaveposten aan",
+        "splitIntoItems_many": "Maak {count} uitgaveposten aan",
+        "splitIntoItems_other": "Maak {count} uitgaveposten aan",
+        "replaceItems": "Uitgaveposten vervangen",
+        "createItems": "Uitgaveposten aanmaken",
+        "itemTransferInvalid": "Voltooi de berekening",
+        "itemTransferUnsupported": "Alleen +, × en haakjes",
+        "itemTransferEmpty": "Voer een berekening in",
+        "createItemsHint": "Voeg berekende posten toe",
+        "replaceItemsHint": "Huidige posten vervangen"
+      }
     },
     "conversionUnavailable": "Om een andere munteenheid in te stellen voor een uitgave en bedragen om te rekenen, kies een standaard munteenheid voor de groep.",
     "conversionRateField": {

@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Сумма"
+      "label": "Сумма",
+      "calculator": {
+        "buttonLabel": "Открыть калькулятор",
+        "title": "Калькулятор",
+        "description": "Рассчитайте сумму или создайте позиции расхода.",
+        "clear": "Очистить",
+        "backspace": "Стереть",
+        "equals": "Равно",
+        "plus": "Плюс",
+        "minus": "Минус",
+        "multiply": "Умножение",
+        "divide": "Деление",
+        "openBracket": "Открывающая скобка",
+        "closeBracket": "Закрывающая скобка",
+        "decimal": "Десятичная точка",
+        "invalid": "Неверное выражение",
+        "replaceItemsTitle": "Заменить позиции расхода?",
+        "replaceItemsDescription": "Это заменит существующие позиции расхода вычисленными позициями.",
+        "replaceItemsConfirm": "Заменить позиции",
+        "splitIntoItems_zero": "Создать {count} позиций расходов",
+        "splitIntoItems_one": "Создать {count} позицию расхода",
+        "splitIntoItems_two": "Создать {count} позиции расхода",
+        "splitIntoItems_few": "Создать {count} позиции расхода",
+        "splitIntoItems_many": "Создать {count} позиций расходов",
+        "splitIntoItems_other": "Создать {count} позиции расходов",
+        "replaceItems": "Заменить позиции расхода",
+        "createItems": "Создать позиции расхода",
+        "itemTransferInvalid": "Завершите расчёт",
+        "itemTransferUnsupported": "Только +, × и скобки",
+        "itemTransferEmpty": "Введите расчёт",
+        "createItemsHint": "Добавить вычисленные строки",
+        "replaceItemsHint": "Заменить текущие строки"
+      }
     },
     "conversionUnavailable": "Чтобы установить другую валюту для каждого расхода и конвертировать суммы, выберите стандартную валюту для группы.",
     "conversionRateField": {

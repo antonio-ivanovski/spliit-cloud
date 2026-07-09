@@ -643,7 +643,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Amount"
+      "label": "Amount",
+      "calculator": {
+        "buttonLabel": "Open calculator",
+        "title": "Calculator",
+        "description": "Calculate an amount or create expense items.",
+        "clear": "Clear",
+        "backspace": "Backspace",
+        "equals": "Equals",
+        "plus": "Plus",
+        "minus": "Minus",
+        "multiply": "Multiply",
+        "divide": "Divide",
+        "openBracket": "Open bracket",
+        "closeBracket": "Close bracket",
+        "decimal": "Decimal point",
+        "invalid": "Invalid expression",
+        "replaceItemsTitle": "Replace expense items?",
+        "replaceItemsDescription": "This will replace your existing expense items with the calculated items.",
+        "replaceItemsConfirm": "Replace items",
+        "splitIntoItems_zero": "Create {count} expense items",
+        "splitIntoItems_one": "Create {count} expense item",
+        "splitIntoItems_two": "Create {count} expense items",
+        "splitIntoItems_few": "Create {count} expense items",
+        "splitIntoItems_many": "Create {count} expense items",
+        "splitIntoItems_other": "Create {count} expense items",
+        "replaceItems": "Replace expense items",
+        "createItems": "Create expense items",
+        "itemTransferInvalid": "Finish the calculation",
+        "itemTransferUnsupported": "Use +, ×, and brackets only",
+        "itemTransferEmpty": "Enter a calculation",
+        "createItemsHint": "Add calculated rows",
+        "replaceItemsHint": "Replace current rows"
+      }
     },
     "conversionUnavailable": "To set a different currency per expense and convert amounts, select a non-custom currency for the group.",
     "conversionRateField": {

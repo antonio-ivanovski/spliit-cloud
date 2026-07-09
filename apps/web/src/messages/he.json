@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "סכום"
+      "label": "סכום",
+      "calculator": {
+        "buttonLabel": "פתיחת מחשבון",
+        "title": "מחשבון",
+        "description": "חישוב סכום או יצירת פריטי הוצאה.",
+        "clear": "ניקוי",
+        "backspace": "מחיקה",
+        "equals": "שווה",
+        "plus": "חיבור",
+        "minus": "חיסור",
+        "multiply": "כפל",
+        "divide": "חילוק",
+        "openBracket": "פתיחת סוגריים",
+        "closeBracket": "סגירת סוגריים",
+        "decimal": "נקודה עשרונית",
+        "invalid": "ביטוי לא חוקי",
+        "replaceItemsTitle": "להחליף את פריטי ההוצאה?",
+        "replaceItemsDescription": "פעולה זו תחליף את פריטי ההוצאה הקיימים בפריטים המחושבים.",
+        "replaceItemsConfirm": "החלף פריטים",
+        "splitIntoItems_zero": "צור {count} פריט הוצאה",
+        "splitIntoItems_one": "צור {count} פריט הוצאה",
+        "splitIntoItems_two": "צור {count} פריטי הוצאה",
+        "splitIntoItems_few": "צור {count} פריטי הוצאה",
+        "splitIntoItems_many": "צור {count} פריטי הוצאה",
+        "splitIntoItems_other": "צור {count} פריטי הוצאה",
+        "replaceItems": "החלף פריטי הוצאה",
+        "createItems": "צור פריטי הוצאה",
+        "itemTransferInvalid": "יש להשלים את החישוב",
+        "itemTransferUnsupported": "שימוש ב-+, × ובסוגריים בלבד",
+        "itemTransferEmpty": "יש להזין חישוב",
+        "createItemsHint": "הוספת שורות מחושבות",
+        "replaceItemsHint": "החלפת שורות קיימות"
+      }
     },
     "conversionUnavailable": "כדי להגדיר מטבע שונה לכל הוצאה ולהמיר סכומים, בחר מטבע לא מותאם אישית לקבוצה.",
     "conversionRateField": {

@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Cantidad"
+      "label": "Cantidad",
+      "calculator": {
+        "buttonLabel": "Abrir calculadora",
+        "title": "Calculadora",
+        "description": "Calcula una cantidad o crea partidas de gasto.",
+        "clear": "Borrar",
+        "backspace": "Retroceso",
+        "equals": "Igual",
+        "plus": "Más",
+        "minus": "Menos",
+        "multiply": "Multiplicar",
+        "divide": "Dividir",
+        "openBracket": "Abrir paréntesis",
+        "closeBracket": "Cerrar paréntesis",
+        "decimal": "Punto decimal",
+        "invalid": "Expresión no válida",
+        "replaceItemsTitle": "¿Reemplazar las partidas de gasto?",
+        "replaceItemsDescription": "Esto reemplazará tus partidas de gasto existentes por las calculadas.",
+        "replaceItemsConfirm": "Reemplazar partidas",
+        "splitIntoItems_zero": "Crear {count} partidas de gasto",
+        "splitIntoItems_one": "Crear {count} partida de gasto",
+        "splitIntoItems_two": "Crear {count} partidas de gasto",
+        "splitIntoItems_few": "Crear {count} partidas de gasto",
+        "splitIntoItems_many": "Crear {count} partidas de gasto",
+        "splitIntoItems_other": "Crear {count} partidas de gasto",
+        "replaceItems": "Reemplazar las partidas de gasto",
+        "createItems": "Crear partidas de gasto",
+        "itemTransferInvalid": "Termina el cálculo",
+        "itemTransferUnsupported": "Solo +, × y paréntesis",
+        "itemTransferEmpty": "Introduce un cálculo",
+        "createItemsHint": "Añade partidas calculadas",
+        "replaceItemsHint": "Sustituye las partidas actuales"
+      }
     },
     "isReimbursementField": {
       "label": "Esto es un reembolso"

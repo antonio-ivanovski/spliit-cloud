@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "金额"
+      "label": "金额",
+      "calculator": {
+        "buttonLabel": "打开计算器",
+        "title": "计算器",
+        "description": "计算金额或创建支出项目。",
+        "clear": "清除",
+        "backspace": "退格",
+        "equals": "等号",
+        "plus": "加",
+        "minus": "减",
+        "multiply": "乘",
+        "divide": "除",
+        "openBracket": "左括号",
+        "closeBracket": "右括号",
+        "decimal": "小数点",
+        "invalid": "表达式无效",
+        "replaceItemsTitle": "替换支出项目吗？",
+        "replaceItemsDescription": "这将用计算出的项目替换你现有的支出项目。",
+        "replaceItemsConfirm": "替换项目",
+        "splitIntoItems_zero": "创建 {count} 个支出项目",
+        "splitIntoItems_one": "创建 {count} 个支出项目",
+        "splitIntoItems_two": "创建 {count} 个支出项目",
+        "splitIntoItems_few": "创建 {count} 个支出项目",
+        "splitIntoItems_many": "创建 {count} 个支出项目",
+        "splitIntoItems_other": "创建 {count} 个支出项目",
+        "replaceItems": "替换支出项目",
+        "createItems": "创建支出项目",
+        "itemTransferInvalid": "完成计算",
+        "itemTransferUnsupported": "仅可使用 +、×、()",
+        "itemTransferEmpty": "输入计算",
+        "createItemsHint": "添加计算行",
+        "replaceItemsHint": "替换当前行"
+      }
     },
     "isReimbursementField": {
       "label": "这是一笔报销款"

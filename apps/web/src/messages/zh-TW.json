@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "金額"
+      "label": "金額",
+      "calculator": {
+        "buttonLabel": "開啟計算機",
+        "title": "計算機",
+        "description": "計算金額或建立支出項目。",
+        "clear": "清除",
+        "backspace": "退格",
+        "equals": "等號",
+        "plus": "加",
+        "minus": "減",
+        "multiply": "乘",
+        "divide": "除",
+        "openBracket": "左括號",
+        "closeBracket": "右括號",
+        "decimal": "小數點",
+        "invalid": "算式無效",
+        "replaceItemsTitle": "取代現有的支出項目？",
+        "replaceItemsDescription": "這會用計算結果的項目，取代你目前的支出項目。",
+        "replaceItemsConfirm": "取代項目",
+        "splitIntoItems_zero": "建立 {count} 個支出項目",
+        "splitIntoItems_one": "建立 {count} 個支出項目",
+        "splitIntoItems_two": "建立 {count} 個支出項目",
+        "splitIntoItems_few": "建立 {count} 個支出項目",
+        "splitIntoItems_many": "建立 {count} 個支出項目",
+        "splitIntoItems_other": "建立 {count} 個支出項目",
+        "replaceItems": "取代支出項目",
+        "createItems": "建立支出項目",
+        "itemTransferInvalid": "完成計算",
+        "itemTransferUnsupported": "僅可使用 +、×、()",
+        "itemTransferEmpty": "輸入計算",
+        "createItemsHint": "新增計算列",
+        "replaceItemsHint": "取代目前列"
+      }
     },
     "isReimbursementField": {
       "label": "這是一筆報銷款"

@@ -19,6 +19,14 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -35,13 +43,19 @@ import type { AppRouterOutput } from '@spliit/api/router'
 import type {
   Currency,
   ExpenseFormInputValues,
+  ExpenseFormItemValues,
   RecurrenceRule,
 } from '@spliit/domain'
 import { DEFAULT_CATEGORIES } from '@spliit/domain'
-import { ArrowLeft, FileInput } from 'lucide-react'
+import {
+  formatCalculatorAmount,
+  type CalculatorItem,
+} from '@spliit/domain/calculator'
+import { ArrowLeft, Calculator, FileInput } from 'lucide-react'
 import { useState, type Dispatch, type SetStateAction } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
+import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { AmountCalculatorDialog } from './amount-calculator-dialog'
 import { AmountInput } from './amount-input'
 import { enforceCurrencyPattern, formatDate } from './currency-utils'
 
@@ -100,12 +114,26 @@ export function BasicDetailsCard(props: {
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale() as Locale
   const [isCategoryLoading, setCategoryLoading] = useState(false)
+  const [calculatorOpen, setCalculatorOpen] = useState(false)
+  const [calculatorExpression, setCalculatorExpression] = useState<
+    string | null
+  >(null)
+  const [pendingCalculatorItems, setPendingCalculatorItems] = useState<
+    CalculatorItem[] | null
+  >(null)
+  const watchedItems = useWatch({ control: form.control, name: 'items' }) ?? []
 
   const getSelectedRecurrenceRule = (field?: { value: string }) => {
     return field?.value as RecurrenceRule
   }
 
   const inputCurrency = props.originalCurrency
+  const hasExistingItems = watchedItems.some(
+    (item) =>
+      item.title.trim().length > 0 ||
+      Number(item.unitPrice) > 0 ||
+      Number(item.quantity) > 1,
+  )
   const previewFormatted =
     props.convertedAmountPreview != null
       ? formatCurrency(
@@ -115,6 +143,55 @@ export function BasicDetailsCard(props: {
           true,
         )
       : ''
+
+  const applyCalculatorItems = (items: CalculatorItem[]) => {
+    const formItems: ExpenseFormItemValues[] = items.map((item) => ({
+      id: crypto.randomUUID(),
+      title: '',
+      unitPrice: Number(formatCalculatorAmount(item.unitPrice, inputCurrency)),
+      quantity: item.quantity,
+      paidFor: group.participants.map((participant) => ({
+        participant: participant.id,
+        shares: 1,
+      })),
+      splitMode: 'EVENLY',
+    }))
+    const total = formItems.reduce(
+      (sum, item) => sum + Number(item.quantity) * Number(item.unitPrice),
+      0,
+    )
+
+    form.setValue('splitMode', 'ITEMIZED', {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('items', formItems, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue(
+      'amount',
+      Number(formatCalculatorAmount(total, inputCurrency)),
+      {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      },
+    )
+    setIsIncome(false)
+    window.setTimeout(() => form.setFocus('items.0.title'), 0)
+  }
+
+  const handleCalculatorItems = (items: CalculatorItem[]) => {
+    if (hasExistingItems) {
+      setPendingCalculatorItems(items)
+      return
+    }
+
+    applyCalculatorItems(items)
+  }
 
   return (
     <Card>
@@ -247,28 +324,64 @@ export function BasicDetailsCard(props: {
           render={({ field: { onChange, ...field } }) => (
             <FormItem className="sm:order-4 col-span-2 md:col-span-1 space-y-2">
               <FormLabel>{t('amountField.label')}</FormLabel>
-              <FormControl>
-                <AmountInput
-                  currency={inputCurrency}
-                  className="max-w-[132px] text-base"
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  disabled={readOnly}
-                  onChange={(event) => {
-                    const v = enforceCurrencyPattern(event.target.value)
-                    const income = Number(v) < 0
-                    setIsIncome(income)
-                    if (income) form.setValue('isReimbursement', false)
-                    onChange(v)
-                  }}
-                  onFocus={(e) => {
-                    const target = e.currentTarget
-                    setTimeout(() => target.select(), 1)
-                  }}
-                  {...field}
-                />
-              </FormControl>
+              <div className="flex items-center gap-1">
+                <FormControl>
+                  <AmountInput
+                    currency={inputCurrency}
+                    className="max-w-[132px] text-base"
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    disabled={readOnly}
+                    onChange={(event) => {
+                      const v = enforceCurrencyPattern(event.target.value)
+                      setCalculatorExpression(v)
+                      const income = Number(v) < 0
+                      setIsIncome(income)
+                      if (income) form.setValue('isReimbursement', false)
+                      onChange(v)
+                    }}
+                    onFocus={(e) => {
+                      const target = e.currentTarget
+                      setTimeout(() => target.select(), 1)
+                    }}
+                    {...field}
+                  />
+                </FormControl>
+                {!readOnly && (
+                  <Button
+                    aria-label={t('amountField.calculator.buttonLabel')}
+                    size="icon"
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setCalculatorExpression(
+                        (expression) =>
+                          expression ?? String(form.getValues('amount') ?? ''),
+                      )
+                      setCalculatorOpen(true)
+                    }}
+                  >
+                    <Calculator className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+              <AmountCalculatorDialog
+                currency={inputCurrency}
+                expression={calculatorExpression ?? String(field.value ?? '')}
+                hasExistingItems={hasExistingItems}
+                open={calculatorOpen}
+                onOpenChange={setCalculatorOpen}
+                onExpressionChange={setCalculatorExpression}
+                onTransferAmount={(value) => {
+                  const sanitizedValue = enforceCurrencyPattern(value)
+                  const income = Number(sanitizedValue) < 0
+                  setIsIncome(income)
+                  if (income) form.setValue('isReimbursement', false)
+                  onChange(sanitizedValue)
+                }}
+                onTransferItems={handleCalculatorItems}
+              />
               <FormMessage />
 
               {props.conversionRequired && (
@@ -475,6 +588,43 @@ export function BasicDetailsCard(props: {
           )}
         />
       </CardContent>
+      <ResponsiveDialog
+        open={!!pendingCalculatorItems}
+        onOpenChange={(open) => {
+          if (!open) setPendingCalculatorItems(null)
+        }}
+      >
+        <ResponsiveDialogContent>
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {t('amountField.calculator.replaceItemsTitle')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {t('amountField.calculator.replaceItemsDescription')}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setPendingCalculatorItems(null)}
+            >
+              {t('cancel')}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                if (pendingCalculatorItems) {
+                  applyCalculatorItems(pendingCalculatorItems)
+                }
+                setPendingCalculatorItems(null)
+              }}
+            >
+              {t('amountField.calculator.replaceItemsConfirm')}
+            </Button>
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </Card>
   )
 }

@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Sumă"
+      "label": "Sumă",
+      "calculator": {
+        "buttonLabel": "Deschide calculatorul",
+        "title": "Calculator",
+        "description": "Calculează o sumă sau creează articole de cheltuială.",
+        "clear": "Șterge",
+        "backspace": "Backspace",
+        "equals": "Egal",
+        "plus": "Plus",
+        "minus": "Minus",
+        "multiply": "Înmulțește",
+        "divide": "Împarte",
+        "openBracket": "Deschide paranteza",
+        "closeBracket": "Închide paranteza",
+        "decimal": "Punct zecimal",
+        "invalid": "Expresie invalidă",
+        "replaceItemsTitle": "Înlocuiești articolele de cheltuială?",
+        "replaceItemsDescription": "Aceasta va înlocui articolele tale de cheltuială existente cu cele calculate.",
+        "replaceItemsConfirm": "Înlocuiește articolele",
+        "splitIntoItems_zero": "Creează {count} de articole de cheltuială",
+        "splitIntoItems_one": "Creează {count} articol de cheltuială",
+        "splitIntoItems_two": "Creează {count} articole de cheltuială",
+        "splitIntoItems_few": "Creează {count} articole de cheltuială",
+        "splitIntoItems_many": "Creează {count} de articole de cheltuială",
+        "splitIntoItems_other": "Creează {count} de articole de cheltuială",
+        "replaceItems": "Înlocuiește articolele de cheltuială",
+        "createItems": "Creează articole de cheltuială",
+        "itemTransferInvalid": "Finalizează calculul",
+        "itemTransferUnsupported": "Doar +, × și paranteze",
+        "itemTransferEmpty": "Introdu un calcul",
+        "createItemsHint": "Adaugă articole calculate",
+        "replaceItemsHint": "Înlocuiește articolele curente"
+      }
     },
     "isReimbursementField": {
       "label": "Aceasta este o rambursare"

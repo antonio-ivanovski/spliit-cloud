@@ -35,6 +35,13 @@ import {
  */
 const DESKTOP_BREAKPOINT = '(min-width: 640px)'
 
+/**
+ * Shared media-query result propagated through context so every sub-component
+ * renders the same primitive (Dialog vs Drawer) in the same render cycle.
+ * Prevents "DialogPortal must be used within Dialog" crashes on resize.
+ */
+const ResponsiveDialogContext = React.createContext<boolean>(true)
+
 type ResponsiveDialogProps = React.ComponentProps<typeof Dialog> & {
   /** vaul-only: scales the page behind the drawer. Ignored on desktop. */
   shouldScaleBackground?: boolean
@@ -45,10 +52,15 @@ function ResponsiveDialog({
   ...props
 }: ResponsiveDialogProps) {
   const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
-  if (isDesktop) {
-    return <Dialog {...props} />
-  }
-  return <Drawer shouldScaleBackground={shouldScaleBackground} {...props} />
+  return (
+    <ResponsiveDialogContext.Provider value={isDesktop}>
+      {isDesktop ? (
+        <Dialog {...props} />
+      ) : (
+        <Drawer shouldScaleBackground={shouldScaleBackground} {...props} />
+      )}
+    </ResponsiveDialogContext.Provider>
+  )
 }
 
 // ── Trigger ─────────────────────────────────────────────────────────────
@@ -56,7 +68,7 @@ function ResponsiveDialog({
 const ResponsiveDialogTrigger = (
   props: React.ComponentProps<typeof DialogTrigger>,
 ) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return <DialogTrigger {...props} />
   }
@@ -69,7 +81,7 @@ ResponsiveDialogTrigger.displayName = 'ResponsiveDialogTrigger'
 const ResponsiveDialogClose = (
   props: React.ComponentProps<typeof DialogClose>,
 ) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return <DialogClose {...props} />
   }
@@ -82,7 +94,7 @@ ResponsiveDialogClose.displayName = 'ResponsiveDialogClose'
 const ResponsiveDialogContent = (
   props: React.ComponentProps<typeof DialogContent>,
 ) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return <DialogContent {...props} />
   }
@@ -95,7 +107,7 @@ ResponsiveDialogContent.displayName = 'ResponsiveDialogContent'
 const ResponsiveDialogHeader = (
   props: React.ComponentProps<typeof DialogHeader>,
 ) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return <DialogHeader {...props} />
   }
@@ -108,7 +120,7 @@ ResponsiveDialogHeader.displayName = 'ResponsiveDialogHeader'
 const ResponsiveDialogFooter = (
   props: React.ComponentProps<typeof DialogFooter>,
 ) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return <DialogFooter {...props} />
   }
@@ -121,7 +133,7 @@ ResponsiveDialogFooter.displayName = 'ResponsiveDialogFooter'
 const ResponsiveDialogTitle = (
   props: React.ComponentProps<typeof DialogTitle>,
 ) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return <DialogTitle {...props} />
   }
@@ -132,7 +144,7 @@ ResponsiveDialogTitle.displayName = 'ResponsiveDialogTitle'
 const ResponsiveDialogDescription = (
   props: React.ComponentProps<typeof DialogDescription>,
 ) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return <DialogDescription {...props} />
   }
@@ -151,7 +163,7 @@ const ResponsiveDialogBody = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
+  const isDesktop = React.useContext(ResponsiveDialogContext)
   return (
     <div
       className={cn(isDesktop ? undefined : 'px-4 pb-4', className)}

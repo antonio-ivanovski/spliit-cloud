@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Summa"
+      "label": "Summa",
+      "calculator": {
+        "buttonLabel": "Avaa laskin",
+        "title": "Laskin",
+        "description": "Laske summa tai luo kuluja.",
+        "clear": "Tyhjennä",
+        "backspace": "Askelpalautin",
+        "equals": "Yhtä kuin",
+        "plus": "Plus",
+        "minus": "Miinus",
+        "multiply": "Kerro",
+        "divide": "Jaa",
+        "openBracket": "Avaa sulku",
+        "closeBracket": "Sulje sulku",
+        "decimal": "Desimaalipiste",
+        "invalid": "Virheellinen lauseke",
+        "replaceItemsTitle": "Korvataanko kulukohdat?",
+        "replaceItemsDescription": "Tämä korvaa olemassa olevat kulukohdat lasketuilla kohteilla.",
+        "replaceItemsConfirm": "Korvaa kohdat",
+        "splitIntoItems_zero": "Luo {count} kulukohdetta",
+        "splitIntoItems_one": "Luo {count} kulukohde",
+        "splitIntoItems_two": "Luo {count} kulukohdetta",
+        "splitIntoItems_few": "Luo {count} kulukohdetta",
+        "splitIntoItems_many": "Luo {count} kulukohdetta",
+        "splitIntoItems_other": "Luo {count} kulukohdetta",
+        "replaceItems": "Korvaa kulukohteet",
+        "createItems": "Luo kulukohteet",
+        "itemTransferInvalid": "Viimeistele laskenta",
+        "itemTransferUnsupported": "Vain +, × ja sulut",
+        "itemTransferEmpty": "Anna laskenta",
+        "createItemsHint": "Lisää lasketut rivit",
+        "replaceItemsHint": "Korvaa nykyiset rivit"
+      }
     },
     "conversionUnavailable": "Asettaaksesi eri valuutan kullekin kululle ja muuntaaksesi summia, valitse ei-mukautettu valuutta ryhmälle.",
     "conversionRateField": {

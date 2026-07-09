@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "金額"
+      "label": "金額",
+      "calculator": {
+        "buttonLabel": "計算機を開く",
+        "title": "電卓",
+        "description": "金額を計算するか、支出項目を作成します。",
+        "clear": "クリア",
+        "backspace": "バックスペース",
+        "equals": "イコール",
+        "plus": "足し算",
+        "minus": "引き算",
+        "multiply": "掛け算",
+        "divide": "割り算",
+        "openBracket": "開き括弧",
+        "closeBracket": "閉じ括弧",
+        "decimal": "小数点",
+        "invalid": "無効な式",
+        "replaceItemsTitle": "支出項目を置き換えますか？",
+        "replaceItemsDescription": "既存の支出項目が、計算された項目に置き換えられます。",
+        "replaceItemsConfirm": "項目を置き換える",
+        "splitIntoItems_zero": "支出項目を {count} 個作成",
+        "splitIntoItems_one": "支出項目を {count} 個作成",
+        "splitIntoItems_two": "支出項目を {count} 個作成",
+        "splitIntoItems_few": "支出項目を {count} 個作成",
+        "splitIntoItems_many": "支出項目を {count} 個作成",
+        "splitIntoItems_other": "支出項目を {count} 個作成",
+        "replaceItems": "支出項目を置き換え",
+        "createItems": "支出項目を作成",
+        "itemTransferInvalid": "計算を完了",
+        "itemTransferUnsupported": "+ × ( ) のみ可",
+        "itemTransferEmpty": "計算を入力",
+        "createItemsHint": "計算した行を追加",
+        "replaceItemsHint": "現在の行を置換"
+      }
     },
     "isReimbursementField": {
       "label": "これは払い戻しです"

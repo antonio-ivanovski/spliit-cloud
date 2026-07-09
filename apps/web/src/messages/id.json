@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Jumlah"
+      "label": "Jumlah",
+      "calculator": {
+        "buttonLabel": "Buka kalkulator",
+        "title": "Kalkulator",
+        "description": "Hitung jumlah atau buat item pengeluaran.",
+        "clear": "Bersihkan",
+        "backspace": "Hapus mundur",
+        "equals": "Sama dengan",
+        "plus": "Tambah",
+        "minus": "Kurang",
+        "multiply": "Kali",
+        "divide": "Bagi",
+        "openBracket": "Buka kurung",
+        "closeBracket": "Tutup kurung",
+        "decimal": "Titik desimal",
+        "invalid": "Ekspresi tidak valid",
+        "replaceItemsTitle": "Ganti item pengeluaran?",
+        "replaceItemsDescription": "Tindakan ini akan mengganti item pengeluaran yang ada dengan item yang dihitung.",
+        "replaceItemsConfirm": "Ganti item",
+        "splitIntoItems_zero": "Buat {count} item pengeluaran",
+        "splitIntoItems_one": "Buat {count} item pengeluaran",
+        "splitIntoItems_two": "Buat {count} item pengeluaran",
+        "splitIntoItems_few": "Buat {count} item pengeluaran",
+        "splitIntoItems_many": "Buat {count} item pengeluaran",
+        "splitIntoItems_other": "Buat {count} item pengeluaran",
+        "replaceItems": "Ganti item pengeluaran",
+        "createItems": "Buat item pengeluaran",
+        "itemTransferInvalid": "Selesaikan perhitungan",
+        "itemTransferUnsupported": "Hanya +, ×, dan tanda kurung",
+        "itemTransferEmpty": "Masukkan perhitungan",
+        "createItemsHint": "Tambahkan baris hasil hitungan",
+        "replaceItemsHint": "Ganti baris yang ada"
+      }
     },
     "conversionUnavailable": "Untuk menetapkan mata uang yang berbeda per pengeluaran dan mengonversi jumlahnya, pilih mata uang non-kustom untuk grup tersebut.",
     "conversionRateField": {

@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Сума"
+      "label": "Сума",
+      "calculator": {
+        "buttonLabel": "Відкрити калькулятор",
+        "title": "Калькулятор",
+        "description": "Розрахуйте суму або створіть позиції витрати.",
+        "clear": "Очистити",
+        "backspace": "Стерти",
+        "equals": "Дорівнює",
+        "plus": "Плюс",
+        "minus": "Мінус",
+        "multiply": "Множення",
+        "divide": "Ділення",
+        "openBracket": "Відкривна дужка",
+        "closeBracket": "Закривна дужка",
+        "decimal": "Десяткова точка",
+        "invalid": "Неправильний вираз",
+        "replaceItemsTitle": "Замінити позиції витрати?",
+        "replaceItemsDescription": "Це замінить наявні позиції витрати на розраховані позиції.",
+        "replaceItemsConfirm": "Замінити позиції",
+        "splitIntoItems_zero": "Створити {count} позицій витрат",
+        "splitIntoItems_one": "Створити {count} позицію витрати",
+        "splitIntoItems_two": "Створити {count} позиції витрати",
+        "splitIntoItems_few": "Створити {count} позиції витрати",
+        "splitIntoItems_many": "Створити {count} позицій витрат",
+        "splitIntoItems_other": "Створити {count} позиції витрат",
+        "replaceItems": "Замінити позиції витрати",
+        "createItems": "Створити позиції витрати",
+        "itemTransferInvalid": "Завершіть розрахунок",
+        "itemTransferUnsupported": "Тільки +, × і дужки",
+        "itemTransferEmpty": "Введіть розрахунок",
+        "createItemsHint": "Додати обчислені рядки",
+        "replaceItemsHint": "Замінити поточні рядки"
+      }
     },
     "conversionUnavailable": "Щоб встановити іншу валюту для кожної витрати та конвертувати суми, виберіть стандартну валюту для групи.",
     "conversionRateField": {

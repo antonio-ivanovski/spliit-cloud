@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Zenbatekoa"
+      "label": "Zenbatekoa",
+      "calculator": {
+        "buttonLabel": "Ireki kalkulagailua",
+        "title": "Kalkulagailua",
+        "description": "Kalkulatu zenbateko bat edo sortu gastu-elementuak.",
+        "clear": "Garbitu",
+        "backspace": "Atzera tekla",
+        "equals": "Berdin",
+        "plus": "Gehi",
+        "minus": "Ken",
+        "multiply": "Biderkatu",
+        "divide": "Zatitu",
+        "openBracket": "Ireki parentesia",
+        "closeBracket": "Itxi parentesia",
+        "decimal": "Koma",
+        "invalid": "Adierazpen baliogabea",
+        "replaceItemsTitle": "Ordezkatu gastu-elementuak?",
+        "replaceItemsDescription": "Honek zure dauden gastu-elementuak kalkulatutakoekin ordezkatuko ditu.",
+        "replaceItemsConfirm": "Ordezkatu elementuak",
+        "splitIntoItems_zero": "Sortu {count} gastu-elementu",
+        "splitIntoItems_one": "Sortu {count} gastu-elementu",
+        "splitIntoItems_two": "Sortu {count} gastu-elementu",
+        "splitIntoItems_few": "Sortu {count} gastu-elementu",
+        "splitIntoItems_many": "Sortu {count} gastu-elementu",
+        "splitIntoItems_other": "Sortu {count} gastu-elementu",
+        "replaceItems": "Ordezkatu gastu-elementuak",
+        "createItems": "Sortu gastu-elementuak",
+        "itemTransferInvalid": "Bukatu kalkulua",
+        "itemTransferUnsupported": "+, × eta parentesiak bakarrik",
+        "itemTransferEmpty": "Sartu kalkulu bat",
+        "createItemsHint": "Gehitu kalkulatutako elementuak",
+        "replaceItemsHint": "Ordezkatu uneko elementuak"
+      }
     },
     "conversionUnavailable": "Gastu bakoitzeko moneta bat ezartzeko eta zenbatekoak bihurtzeko, hautatu taldearentzako moneta ez-pertsonalizatu bat.",
     "conversionRateField": {

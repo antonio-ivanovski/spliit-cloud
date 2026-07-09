@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Tutar"
+      "label": "Tutar",
+      "calculator": {
+        "buttonLabel": "Hesap makinesini aç",
+        "title": "Hesap makinesi",
+        "description": "Bir tutarı hesaplayın veya harcama öğeleri oluşturun.",
+        "clear": "Temizle",
+        "backspace": "Geri al",
+        "equals": "Eşittir",
+        "plus": "Toplama",
+        "minus": "Çıkarma",
+        "multiply": "Çarpma",
+        "divide": "Bölme",
+        "openBracket": "Açılış parantezi",
+        "closeBracket": "Kapanış parantezi",
+        "decimal": "Ondalık nokta",
+        "invalid": "Geçersiz ifade",
+        "replaceItemsTitle": "Harcama öğeleri değiştirilsin mi?",
+        "replaceItemsDescription": "Bu işlem, mevcut harcama öğelerini hesaplanan öğelerle değiştirecektir.",
+        "replaceItemsConfirm": "Öğeleri değiştir",
+        "splitIntoItems_zero": "{count} harcama öğeleri oluştur",
+        "splitIntoItems_one": "{count} harcama öğesi oluştur",
+        "splitIntoItems_two": "{count} harcama öğeleri oluştur",
+        "splitIntoItems_few": "{count} harcama öğeleri oluştur",
+        "splitIntoItems_many": "{count} harcama öğeleri oluştur",
+        "splitIntoItems_other": "{count} harcama öğeleri oluştur",
+        "replaceItems": "Harcama öğelerini değiştir",
+        "createItems": "Harcama öğeleri oluştur",
+        "itemTransferInvalid": "Hesaplamayı tamamlayın",
+        "itemTransferUnsupported": "Yalnızca +, × ve parantez kullanın",
+        "itemTransferEmpty": "Bir hesaplama girin",
+        "createItemsHint": "Hesaplanan satırları ekle",
+        "replaceItemsHint": "Mevcut satırları değiştir"
+      }
     },
     "isReimbursementField": {
       "label": "Bu bir geri ödeme"

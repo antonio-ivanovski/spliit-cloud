@@ -429,7 +429,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "금액"
+      "label": "금액",
+      "calculator": {
+        "buttonLabel": "계산기 열기",
+        "title": "계산기",
+        "description": "금액을 계산하거나 지출 항목을 만듭니다.",
+        "clear": "클리어",
+        "backspace": "백스페이스",
+        "equals": "이콜",
+        "plus": "더하기",
+        "minus": "빼기",
+        "multiply": "곱하기",
+        "divide": "나누기",
+        "openBracket": "여는 괄호",
+        "closeBracket": "닫는 괄호",
+        "decimal": "소수점",
+        "invalid": "잘못된 식",
+        "replaceItemsTitle": "지출 항목을 교체하시겠어요?",
+        "replaceItemsDescription": "기존 지출 항목이 계산된 항목으로 교체됩니다.",
+        "replaceItemsConfirm": "항목 교체",
+        "splitIntoItems_zero": "지출 항목 {count}개 만들기",
+        "splitIntoItems_one": "지출 항목 {count}개 만들기",
+        "splitIntoItems_two": "지출 항목 {count}개 만들기",
+        "splitIntoItems_few": "지출 항목 {count}개 만들기",
+        "splitIntoItems_many": "지출 항목 {count}개 만들기",
+        "splitIntoItems_other": "지출 항목 {count}개 만들기",
+        "replaceItems": "지출 항목 교체하기",
+        "createItems": "지출 항목 만들기",
+        "itemTransferInvalid": "계산 완성",
+        "itemTransferUnsupported": "+, ×, ( )만 사용",
+        "itemTransferEmpty": "계산 입력",
+        "createItemsHint": "계산된 행 추가",
+        "replaceItemsHint": "현재 행 교체"
+      }
     },
     "conversionRateField": {
       "useApi": "Frankfurter의 환율을 사용해요",

@@ -643,7 +643,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Износ"
+      "label": "Износ",
+      "calculator": {
+        "buttonLabel": "Отвори калкулатор",
+        "title": "Калкулатор",
+        "description": "Пресметете износ или создадете ставки за трошоци.",
+        "clear": "Избриши",
+        "backspace": "Бриши",
+        "equals": "Еднакво",
+        "plus": "Плус",
+        "minus": "Минус",
+        "multiply": "Множење",
+        "divide": "Делење",
+        "openBracket": "Отворена заграда",
+        "closeBracket": "Затворена заграда",
+        "decimal": "Десетна точка",
+        "invalid": "Невалиден израз",
+        "replaceItemsTitle": "Да се заменат ставките за трошоци?",
+        "replaceItemsDescription": "Ова ќе ги замени постојните ставки за трошоци со пресметаните ставки.",
+        "replaceItemsConfirm": "Замени ставки",
+        "splitIntoItems_zero": "Создади {count} ставки за трошоци",
+        "splitIntoItems_one": "Создади {count} ставка за трошок",
+        "splitIntoItems_two": "Создади {count} ставки за трошок",
+        "splitIntoItems_few": "Создади {count} ставки за трошоци",
+        "splitIntoItems_many": "Создади {count} ставки за трошоци",
+        "splitIntoItems_other": "Создади {count} ставка за трошок",
+        "replaceItems": "Замени ставки за трошоци",
+        "createItems": "Создади ставки за трошоци",
+        "itemTransferInvalid": "Завршете ја пресметката",
+        "itemTransferUnsupported": "Само +, × и загради",
+        "itemTransferEmpty": "Внесете пресметка",
+        "createItemsHint": "Додај пресметани редови",
+        "replaceItemsHint": "Замени ги тековните редови"
+      }
     },
     "conversionUnavailable": "За да поставите различна валута по трошок и да ги конвертирате износите, изберете нестандардна валута за групата.",
     "conversionRateField": {

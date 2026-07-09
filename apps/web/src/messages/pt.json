@@ -624,7 +624,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Montante"
+      "label": "Montante",
+      "calculator": {
+        "buttonLabel": "Abrir calculadora",
+        "title": "Calculadora",
+        "description": "Calcula um montante ou cria itens de despesa.",
+        "clear": "Limpar",
+        "backspace": "Retrocesso",
+        "equals": "Igual",
+        "plus": "Mais",
+        "minus": "Menos",
+        "multiply": "Multiplicar",
+        "divide": "Dividir",
+        "openBracket": "Abrir parêntesis",
+        "closeBracket": "Fechar parêntesis",
+        "decimal": "Ponto decimal",
+        "invalid": "Expressão inválida",
+        "replaceItemsTitle": "Substituir os itens de despesa?",
+        "replaceItemsDescription": "Isto vai substituir os teus itens de despesa existentes pelos itens calculados.",
+        "replaceItemsConfirm": "Substituir itens",
+        "splitIntoItems_zero": "Criar {count} itens de despesa",
+        "splitIntoItems_one": "Criar {count} item de despesa",
+        "splitIntoItems_two": "Criar {count} itens de despesa",
+        "splitIntoItems_few": "Criar {count} itens de despesa",
+        "splitIntoItems_many": "Criar {count} itens de despesa",
+        "splitIntoItems_other": "Criar {count} itens de despesa",
+        "replaceItems": "Substituir os itens de despesa",
+        "createItems": "Criar itens de despesa",
+        "itemTransferInvalid": "Termina o cálculo",
+        "itemTransferUnsupported": "Apenas +, × e parêntesis",
+        "itemTransferEmpty": "Introduz um cálculo",
+        "createItemsHint": "Adiciona itens calculados",
+        "replaceItemsHint": "Substitui os itens atuais"
+      }
     },
     "conversionUnavailable": "Para definir uma moeda diferente por despesa e converter montantes, seleciona uma moeda não personalizada para o grupo.",
     "conversionRateField": {

@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Montant"
+      "label": "Montant",
+      "calculator": {
+        "buttonLabel": "Ouvrir la calculatrice",
+        "title": "Calculatrice",
+        "description": "Calculez un montant ou créez des lignes de dépense.",
+        "clear": "Effacer",
+        "backspace": "Retour arrière",
+        "equals": "Égal",
+        "plus": "Plus",
+        "minus": "Moins",
+        "multiply": "Multiplier",
+        "divide": "Diviser",
+        "openBracket": "Ouvrir la parenthèse",
+        "closeBracket": "Fermer la parenthèse",
+        "decimal": "Point décimal",
+        "invalid": "Expression invalide",
+        "replaceItemsTitle": "Remplacer les lignes de dépense ?",
+        "replaceItemsDescription": "Cela remplacera vos lignes de dépense existantes par les lignes calculées.",
+        "replaceItemsConfirm": "Remplacer les lignes",
+        "splitIntoItems_zero": "Créer {count} lignes de dépense",
+        "splitIntoItems_one": "Créer {count} ligne de dépense",
+        "splitIntoItems_two": "Créer {count} lignes de dépense",
+        "splitIntoItems_few": "Créer {count} lignes de dépense",
+        "splitIntoItems_many": "Créer {count} lignes de dépense",
+        "splitIntoItems_other": "Créer {count} lignes de dépense",
+        "replaceItems": "Remplacer les lignes de dépense",
+        "createItems": "Créer des lignes de dépense",
+        "itemTransferInvalid": "Terminez le calcul",
+        "itemTransferUnsupported": "Uniquement +, × et parenthèses",
+        "itemTransferEmpty": "Saisissez un calcul",
+        "createItemsHint": "Ajoutez des lignes calculées",
+        "replaceItemsHint": "Remplacez les lignes actuelles"
+      }
     },
     "isReimbursementField": {
       "label": "C'est un remboursement"

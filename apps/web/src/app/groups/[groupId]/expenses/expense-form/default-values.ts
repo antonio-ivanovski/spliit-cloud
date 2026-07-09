@@ -409,7 +409,10 @@ export function buildExpenseFormDefaults(args: {
     return {
       title: reimbursementTitle,
       expenseDate: new Date(),
-      amount: amountAsDecimal(Number(searchParams.amount) || 0, groupCurrency),
+      amount:
+        searchParams.amount != null
+          ? amountAsDecimal(Number(searchParams.amount) || 0, groupCurrency)
+          : ('' as unknown as number),
       originalCurrency: group.currencyCode,
       conversionRate: undefined,
       conversionType: undefined,
@@ -456,10 +459,13 @@ export function buildExpenseFormDefaults(args: {
     amount:
       searchParams.amount != null
         ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)
-        : prefilledItems.reduce(
-            (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
-            0,
-          ),
+        : prefilledItems.length
+          ? prefilledItems.reduce(
+              (sum, item) =>
+                sum + Number(item.unitPrice) * Number(item.quantity),
+              0,
+            )
+          : ('' as unknown as number),
     originalCurrency: searchOriginalCurrency,
     conversionRate: undefined,
     conversionType: undefined,

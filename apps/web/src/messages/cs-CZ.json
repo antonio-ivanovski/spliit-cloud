@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Částka"
+      "label": "Částka",
+      "calculator": {
+        "buttonLabel": "Otevřít kalkulačku",
+        "title": "Kalkulačka",
+        "description": "Vypočítejte částku nebo vytvořte položky výdaje.",
+        "clear": "Vymazat",
+        "backspace": "Smazat",
+        "equals": "Vypočítat",
+        "plus": "Plus",
+        "minus": "Mínus",
+        "multiply": "Násobit",
+        "divide": "Dělit",
+        "openBracket": "Otevřít závorku",
+        "closeBracket": "Zavřít závorku",
+        "decimal": "Desetinná tečka",
+        "invalid": "Neplatný výraz",
+        "replaceItemsTitle": "Nahradit položky výdaje?",
+        "replaceItemsDescription": "Tím nahradíte stávající položky výdaje vypočítanými položkami.",
+        "replaceItemsConfirm": "Nahradit položky",
+        "splitIntoItems_zero": "Vytvořit {count} položek výdajů",
+        "splitIntoItems_one": "Vytvořit {count} položku výdaje",
+        "splitIntoItems_two": "Vytvořit {count} položky výdaje",
+        "splitIntoItems_few": "Vytvořit {count} položky výdaje",
+        "splitIntoItems_many": "Vytvořit {count} položek výdajů",
+        "splitIntoItems_other": "Vytvořit {count} položky výdaje",
+        "replaceItems": "Nahradit položky výdaje",
+        "createItems": "Vytvořit položky výdaje",
+        "itemTransferInvalid": "Dokončete výpočet",
+        "itemTransferUnsupported": "Pouze +, × a závorky",
+        "itemTransferEmpty": "Zadejte výpočet",
+        "createItemsHint": "Přidat vypočtené řádky",
+        "replaceItemsHint": "Nahradit aktuální řádky"
+      }
     },
     "conversionUnavailable": "Chcete-li nastavit jinou měnu pro jednotlivé výdaje a přepočítávat částky, vyberte pro skupinu standardní měnu.",
     "conversionRateField": {

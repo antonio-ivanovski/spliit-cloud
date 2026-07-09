@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Importo"
+      "label": "Importo",
+      "calculator": {
+        "buttonLabel": "Apri calcolatrice",
+        "title": "Calcolatrice",
+        "description": "Calcola un importo o crea voci di spesa.",
+        "clear": "Cancella",
+        "backspace": "Backspace",
+        "equals": "Uguale",
+        "plus": "Più",
+        "minus": "Meno",
+        "multiply": "Moltiplica",
+        "divide": "Dividi",
+        "openBracket": "Apri parentesi",
+        "closeBracket": "Chiudi parentesi",
+        "decimal": "Punto decimale",
+        "invalid": "Espressione non valida",
+        "replaceItemsTitle": "Sostituire le voci di spesa?",
+        "replaceItemsDescription": "Questo sostituirà le voci di spesa esistenti con quelle calcolate.",
+        "replaceItemsConfirm": "Sostituisci voci",
+        "splitIntoItems_zero": "Crea {count} voci di spesa",
+        "splitIntoItems_one": "Crea {count} voce di spesa",
+        "splitIntoItems_two": "Crea {count} voci di spesa",
+        "splitIntoItems_few": "Crea {count} voci di spesa",
+        "splitIntoItems_many": "Crea {count} voci di spesa",
+        "splitIntoItems_other": "Crea {count} voci di spesa",
+        "replaceItems": "Sostituisci le voci di spesa",
+        "createItems": "Crea voci di spesa",
+        "itemTransferInvalid": "Completa il calcolo",
+        "itemTransferUnsupported": "Solo +, × e parentesi",
+        "itemTransferEmpty": "Inserisci un calcolo",
+        "createItemsHint": "Aggiungi voci calcolate",
+        "replaceItemsHint": "Sostituisci le voci attuali"
+      }
     },
     "isReimbursementField": {
       "label": "Questo è un rimborso"

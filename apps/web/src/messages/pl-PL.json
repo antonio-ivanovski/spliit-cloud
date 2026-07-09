@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Suma"
+      "label": "Suma",
+      "calculator": {
+        "buttonLabel": "Otwórz kalkulator",
+        "title": "Kalkulator",
+        "description": "Oblicz kwotę lub utwórz pozycje wydatku.",
+        "clear": "Wyczyść",
+        "backspace": "Usuń znak",
+        "equals": "Równa się",
+        "plus": "Plus",
+        "minus": "Minus",
+        "multiply": "Raz",
+        "divide": "Dziel",
+        "openBracket": "Otwórz nawias",
+        "closeBracket": "Zamknij nawias",
+        "decimal": "Przecinek dziesiętny",
+        "invalid": "Nieprawidłowe wyrażenie",
+        "replaceItemsTitle": "Zastąpić pozycje wydatku?",
+        "replaceItemsDescription": "Spowoduje to zastąpienie istniejących pozycji wydatku pozycjami obliczonymi.",
+        "replaceItemsConfirm": "Zastąp pozycje",
+        "splitIntoItems_zero": "Utwórz {count} pozycji wydatków",
+        "splitIntoItems_one": "Utwórz {count} pozycję wydatku",
+        "splitIntoItems_two": "Utwórz {count} pozycje wydatku",
+        "splitIntoItems_few": "Utwórz {count} pozycje wydatku",
+        "splitIntoItems_many": "Utwórz {count} pozycji wydatków",
+        "splitIntoItems_other": "Utwórz {count} pozycji wydatków",
+        "replaceItems": "Zastąp pozycje wydatku",
+        "createItems": "Utwórz pozycje wydatku",
+        "itemTransferInvalid": "Dokończ obliczenie",
+        "itemTransferUnsupported": "Tylko +, × i nawiasy",
+        "itemTransferEmpty": "Wprowadź obliczenie",
+        "createItemsHint": "Dodaj obliczone wiersze",
+        "replaceItemsHint": "Zastąp bieżące wiersze"
+      }
     },
     "conversionUnavailable": "Aby ustawić inną walutę dla wydatku i przeliczać kwoty, wybierz standardową walutę dla grupy.",
     "conversionRateField": {

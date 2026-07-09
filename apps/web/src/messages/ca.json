@@ -523,7 +523,39 @@
       "editTitle": "Edit: {title}"
     },
     "amountField": {
-      "label": "Quantitat"
+      "label": "Quantitat",
+      "calculator": {
+        "buttonLabel": "Obrir la calculadora",
+        "title": "Calculadora",
+        "description": "Calcula una quantitat o crea articles de despesa.",
+        "clear": "Esborrar",
+        "backspace": "Retrocés",
+        "equals": "Igual",
+        "plus": "Més",
+        "minus": "Menys",
+        "multiply": "Multiplicar",
+        "divide": "Dividir",
+        "openBracket": "Obrir parèntesi",
+        "closeBracket": "Tancar parèntesi",
+        "decimal": "Punt decimal",
+        "invalid": "Expressió no vàlida",
+        "replaceItemsTitle": "Substituir els articles de despesa?",
+        "replaceItemsDescription": "Això substituirà els teus articles de despesa existents pels calculats.",
+        "replaceItemsConfirm": "Substituir els articles",
+        "splitIntoItems_zero": "Crea {count} articles de despesa",
+        "splitIntoItems_one": "Crea {count} article de despesa",
+        "splitIntoItems_two": "Crea {count} articles de despesa",
+        "splitIntoItems_few": "Crea {count} articles de despesa",
+        "splitIntoItems_many": "Crea {count} articles de despesa",
+        "splitIntoItems_other": "Crea {count} articles de despesa",
+        "replaceItems": "Substitueix els articles de despesa",
+        "createItems": "Crea articles de despesa",
+        "itemTransferInvalid": "Acaba el càlcul",
+        "itemTransferUnsupported": "Només +, × i parèntesis",
+        "itemTransferEmpty": "Introdueix un càlcul",
+        "createItemsHint": "Afegeix articles calculats",
+        "replaceItemsHint": "Substitueix els articles actuals"
+      }
     },
     "isReimbursementField": {
       "label": "Això és un reemborsament"
