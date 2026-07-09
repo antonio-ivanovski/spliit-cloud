@@ -2,14 +2,35 @@ import type { Currency } from './currency'
 import {
   cn,
   delay,
+  expenseIdSeed,
   formatAmountAsDecimal,
   formatCategoryForAIPrompt,
   formatCurrency,
   formatDate,
   formatDateOnly,
   formatFileSize,
+  hashStringToSeed,
   normalizeString,
 } from './utils'
+
+describe('hashStringToSeed / expenseIdSeed', () => {
+  it('is deterministic and non-zero for non-empty strings', () => {
+    const a = hashStringToSeed('expense-a')
+    const b = hashStringToSeed('expense-b')
+    expect(a).toBe(hashStringToSeed('expense-a'))
+    expect(a).not.toBe(b)
+    expect(Number.isInteger(a)).toBe(true)
+    expect(a).toBeGreaterThanOrEqual(0)
+    expect(a).toBeLessThan(2 ** 32)
+  })
+
+  it('expenseIdSeed falls back to 0 when id is missing', () => {
+    expect(expenseIdSeed(undefined)).toBe(0)
+    expect(expenseIdSeed(null)).toBe(0)
+    expect(expenseIdSeed('')).toBe(0)
+    expect(expenseIdSeed('e1')).toBe(hashStringToSeed('e1'))
+  })
+})
 
 describe('formatCurrency', () => {
   it('supports custom currency symbol when currency code is empty', () => {

@@ -238,4 +238,94 @@ describe('exportGroupCsv', () => {
 
     expect(response.status).toBe(404)
   })
+
+  it('cross-currency CSV: net columns are ledger currency and sum to Cost; original columns informational', async () => {
+    authState.session = {
+      user: { id: 'acct-1' },
+      session: { id: 'sess-1' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      email: 'alice@example.com',
+    })
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-1',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    })
+    // Ledger EUR; expense paid in USD
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      name: 'Euro Trip',
+      information: null,
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currency: '€', currencyCode: 'EUR' },
+      members: [
+        {
+          id: 'gm-1',
+          groupId: 'grp-1',
+          accountId: 'acct-1',
+          role: 'ADMIN',
+          status: 'ACTIVE',
+          ledgerParticipant: { id: 'lp-1' },
+        },
+        {
+          id: 'gm-2',
+          groupId: 'grp-1',
+          accountId: 'acct-2',
+          role: 'MEMBER',
+          status: 'ACTIVE',
+          ledgerParticipant: { id: 'lp-2' },
+        },
+      ],
+    })
+    prismaMock.expense.findMany.mockResolvedValue([
+      {
+        id: 'exp-1',
+        expenseDate: new Date('2024-06-01T00:00:00Z'),
+        title: 'USD Dinner',
+        categoryId: 'dining-out',
+        amount: 9200, // EUR ledger
+        originalAmount: 10000, // USD
+        originalCurrency: 'USD',
+        conversionRate: 0.92,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ ledgerParticipantId: 'lp-1', shares: 10000 }], // original USD
+        paidFor: [
+          { ledgerParticipantId: 'lp-1', shares: 1 },
+          { ledgerParticipantId: 'lp-2', shares: 1 },
+        ],
+        isReimbursement: false,
+        splitMode: 'EVENLY',
+        recurrenceRule: 'NONE',
+      },
+    ])
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      {
+        id: 'lp-1',
+        groupMember: { account: { name: 'Alice' } },
+        invitations: [],
+      },
+      {
+        id: 'lp-2',
+        groupMember: { account: { name: 'Bob' } },
+        invitations: [],
+      },
+    ] as never)
+
+    const response = await exportGroupCsv(makeRequest(), 'grp-1')
+    expect(response.status).toBe(200)
+    const buf = new Uint8Array(await response.arrayBuffer())
+    const text = new TextDecoder('utf-8').decode(buf.slice(3))
+    // Cost is ledger EUR
+    expect(text).toContain('92.00')
+    // Original cost is USD informational
+    expect(text).toContain('100.00')
+    expect(text).toContain('USD')
+    expect(text).toContain('0.92')
+    // EVENLY 9200 → 4600 each: Alice net = 9200-4600 = 46.00, Bob = -46.00
+    expect(text).toContain('46.00')
+    expect(text).toContain('-46.00')
+  })
 })

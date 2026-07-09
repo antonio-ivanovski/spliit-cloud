@@ -1,5 +1,10 @@
 import type { Currency, Expense, ExpenseFormInputValues } from '@spliit/domain'
-import { amountAsMinorUnits, getCurrency } from '@spliit/domain'
+import {
+  amountAsMinorUnits,
+  getCurrency,
+  serializePaidBy,
+  serializePaidFor,
+} from '@spliit/domain'
 
 // Convert user-facing form values (decimal major units in the selected
 // expense currency, display percentages) to the storage units the API
@@ -45,36 +50,25 @@ export function buildSubmitValues(
     : amountAsMinorUnits(typedAmount, groupCurrency)
 
   // paidFor BY_AMOUNT shares are entered in the selected expense currency
-  // and persisted as Ledger-currency minor units. Converting per-share
-  // before persisting (with largest-remainder happening server-side)
-  // keeps the per-share semantics intuitive for cross-currency BY_AMOUNT.
-  const paidFor = values.paidFor.map(({ participant, shares }) => ({
-    participant,
-    shares:
-      values.splitMode === 'BY_AMOUNT'
-        ? amountAsMinorUnits(
-            conversionRequired && rate ? shares * rate : shares,
-            groupCurrency,
-          )
-        : values.splitMode === 'BY_PERCENTAGE'
-          ? Math.round(shares * 100)
-          : Math.round(shares),
-  }))
+  // and persisted as Ledger-currency minor units.
+  const paidFor = serializePaidFor({
+    splitMode: values.splitMode,
+    amount: ledgerAmount,
+    currency: groupCurrency,
+    conversionRate: conversionRequired ? rate : undefined,
+    paidFor: values.paidFor,
+  })
 
-  // paidBy shares are entered in the input currency display units
-  // (which is `originalCurrency` when conversion is required,
-  // groupCurrency otherwise), and are persisted in their input
-  // currency's minor units. This keeps the API invariant that
-  // `Σ paidByList.shares == originalAmount` for converted expenses.
-  const paidByList = values.paidByList.map(({ participant, shares }) => ({
-    participant,
-    shares:
-      values.paidBySplitMode === 'BY_AMOUNT'
-        ? amountAsMinorUnits(shares, inputCurrency)
-        : values.paidBySplitMode === 'BY_PERCENTAGE'
-          ? Math.round(shares * 100)
-          : Math.round(shares),
-  }))
+  // paidBy shares stay in input-currency minor units (original when converted).
+  const paidByList = serializePaidBy({
+    paidBySplitMode: values.paidBySplitMode,
+    amount: conversionRequired
+      ? amountAsMinorUnits(typedAmount, inputCurrency)
+      : ledgerAmount,
+    inputCurrency,
+    conversionRate: conversionRequired ? rate : undefined,
+    paidByList: values.paidByList,
+  })
 
   const base = {
     expenseDate: values.expenseDate,
@@ -97,15 +91,12 @@ export function buildSubmitValues(
     const quantity = Math.max(1, Math.round(item.quantity))
     const unitPriceMinor = amountAsMinorUnits(item.unitPrice, inputCurrency)
     const lineAmountMinor = unitPriceMinor * quantity
-    const paidFor = item.paidFor.map(({ participant, shares }) => ({
-      participant,
-      shares:
-        item.splitMode === 'BY_AMOUNT'
-          ? amountAsMinorUnits(shares, inputCurrency)
-          : item.splitMode === 'BY_PERCENTAGE'
-            ? Math.round(shares * 100)
-            : Math.round(shares),
-    }))
+    const paidFor = serializePaidFor({
+      splitMode: item.splitMode,
+      amount: lineAmountMinor,
+      currency: inputCurrency,
+      paidFor: item.paidFor,
+    })
     return {
       id: item.id,
       title: item.title,
@@ -125,17 +116,12 @@ export function buildSubmitValues(
     values.splitMode === 'ITEMIZED' && values.itemizedRemainder
       ? {
           splitMode: values.itemizedRemainder.splitMode,
-          paidFor: values.itemizedRemainder.paidFor.map(
-            ({ participant, shares }) => ({
-              participant,
-              shares:
-                values.itemizedRemainder?.splitMode === 'BY_AMOUNT'
-                  ? amountAsMinorUnits(shares, inputCurrency)
-                  : values.itemizedRemainder?.splitMode === 'BY_PERCENTAGE'
-                    ? Math.round(shares * 100)
-                    : Math.round(shares),
-            }),
-          ),
+          paidFor: serializePaidFor({
+            splitMode: values.itemizedRemainder.splitMode,
+            amount: 0,
+            currency: inputCurrency,
+            paidFor: values.itemizedRemainder.paidFor,
+          }),
         }
       : undefined
 

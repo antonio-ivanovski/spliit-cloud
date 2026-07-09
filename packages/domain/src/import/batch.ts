@@ -1,3 +1,12 @@
+import Decimal from 'decimal.js'
+import type { Currency } from '../currency'
+import { getCurrency } from '../currency'
+import {
+  calculateExactShares,
+  distributeRemainder,
+  serializePaidBy,
+  serializePaidFor,
+} from '../totals'
 import type { ParticipantMappingState } from './matching'
 import type { NormalizedSource, NormalizedSourceExpense } from './types'
 
@@ -128,6 +137,92 @@ export type ImportBatchExpense = {
   recurrenceRule: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
 }
 
+const FALLBACK_CURRENCY: Currency = {
+  code: '',
+  symbol: '',
+  rounding: 0,
+  decimal_digits: 2,
+}
+
+function currencyOrFallback(code: string | null | undefined): Currency {
+  if (!code) return FALLBACK_CURRENCY
+  return getCurrency(code) ?? { ...FALLBACK_CURRENCY, code, symbol: code }
+}
+
+/** Convert minor-unit amount by rate via Decimal + distributeRemainder (not Math.round). */
+function convertAmountByRate(amountMinor: number, rate: number): number {
+  const exact = new Decimal(amountMinor).mul(rate)
+  // Target nearest integer so Σ converted amounts stay close to bank FX; remainder
+  // distribution is identity for a single bucket.
+  const target = exact.round().toNumber()
+  return distributeRemainder({ _a: exact }, target)._a
+}
+
+/** paidFor already in source minor units → ledger minor units via serializePaidFor. */
+function convertPaidForByAmount(
+  paidFor: Array<{ participant: string; shares: number }>,
+  sourceCurrency: Currency,
+  ledgerCurrency: Currency,
+  conversionRate: number,
+  convertedAmount: number,
+): Array<{ participant: string; shares: number }> {
+  const sourceScale = 10 ** sourceCurrency.decimal_digits
+  const serialized = serializePaidFor({
+    splitMode: 'BY_AMOUNT',
+    amount: convertedAmount,
+    currency: ledgerCurrency,
+    conversionRate,
+    paidFor: paidFor.map((p) => ({
+      participant: { id: p.participant },
+      shares: p.shares / sourceScale,
+    })),
+  })
+  // Per-row Math.round can drift from convertedAmount; reconcile so schema sum check passes.
+  const exact = Object.fromEntries(
+    serialized.map((p) => [p.participant.id, new Decimal(p.shares)]),
+  )
+  const reconciled = distributeRemainder(exact, convertedAmount, {
+    payerId: serialized[0]?.participant.id,
+  })
+  return serialized.map((p) => ({
+    participant: p.participant.id,
+    shares: reconciled[p.participant.id] ?? 0,
+  }))
+}
+
+/** paidBy stays in original currency minor units. */
+function normalizePaidByOriginal(
+  paidByList: Array<{ participant: string; shares: number }>,
+  originalCurrency: Currency,
+  targetOriginalAmount: number,
+): Array<{ participant: string; shares: number }> {
+  const scale = 10 ** originalCurrency.decimal_digits
+  const serialized = serializePaidBy({
+    paidBySplitMode: 'BY_AMOUNT',
+    amount: targetOriginalAmount,
+    inputCurrency: originalCurrency,
+    paidByList: paidByList.map((p) => ({
+      participant: { id: p.participant },
+      shares: p.shares / scale,
+    })),
+  })
+  const exact = calculateExactShares({
+    amount: targetOriginalAmount,
+    splitMode: 'BY_AMOUNT',
+    participants: serialized.map((p) => ({
+      id: p.participant.id,
+      shares: p.shares,
+    })),
+  })
+  const fixed = distributeRemainder(exact, targetOriginalAmount, {
+    payerId: serialized[0]?.participant.id,
+  })
+  return Object.entries(fixed).map(([participant, shares]) => ({
+    participant,
+    shares,
+  }))
+}
+
 export function buildImportBatch(
   state: ImportBatchState,
   destinationCurrencyCode: string,
@@ -207,6 +302,7 @@ export function buildImportBatch(
   })
 
   const sourceCurrencyCode = state.source?.currencyCode ?? ''
+  const ledgerCurrency = currencyOrFallback(destinationCurrencyCode)
 
   const expenses: ImportBatchExpense[] = state.resolvedExpenses.map((e) => {
     const normalizedPaidBy =
@@ -253,7 +349,7 @@ export function buildImportBatch(
         e.originalAmount !== null
       ) {
         convertedAmount = e.originalAmount
-        shareRate = convertedAmount / e.amount
+        shareRate = e.amount !== 0 ? convertedAmount / e.amount : 1
       } else {
         if (!rates) {
           throw new Error(
@@ -271,54 +367,42 @@ export function buildImportBatch(
             `Cannot import "${e.title}": missing exchange rate for ${amountCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
           )
         }
-        convertedAmount = Math.round(e.amount * rate)
+        convertedAmount = convertAmountByRate(e.amount, rate)
         shareRate = rate
       }
 
+      const sourceCurrency = currencyOrFallback(amountCurrency)
+
+      // BY_AMOUNT → ledger currency via serializePaidFor; unitless modes untouched.
       const convertedPaidFor =
         e.splitMode === 'BY_AMOUNT'
-          ? paidFor.map((p) => ({
-              participant: p.participant,
-              shares: Math.round(p.shares * shareRate),
-            }))
-          : paidFor
-      if (e.splitMode === 'BY_AMOUNT') {
-        const sumConverted = convertedPaidFor.reduce((s, p) => s + p.shares, 0)
-        const drift = convertedAmount - sumConverted
-        if (drift !== 0 && convertedPaidFor.length > 0) {
-          let largestIdx = 0
-          for (let i = 1; i < convertedPaidFor.length; i++) {
-            if (
-              convertedPaidFor[i].shares > convertedPaidFor[largestIdx].shares
+          ? convertPaidForByAmount(
+              paidFor,
+              sourceCurrency,
+              ledgerCurrency,
+              shareRate,
+              convertedAmount,
             )
-              largestIdx = i
-          }
-          convertedPaidFor[largestIdx].shares += drift
-        }
-      }
-
-      const convertedPaidBy =
-        e.originalCurrency && e.originalAmount !== null
-          ? paidByList.length === 1
-            ? [{ ...paidByList[0], shares: e.originalAmount }]
-            : paidByList.map((p) => ({
-                participant: p.participant,
-                shares: Math.round(p.shares),
-              }))
-          : paidByList.map((p) => ({
+          : paidFor.map((p) => ({
               participant: p.participant,
               shares: Math.round(p.shares),
             }))
-      const paidByTarget = effectiveOriginalAmount
-      const paidBySum = convertedPaidBy.reduce((s, p) => s + p.shares, 0)
-      const paidByDrift = paidByTarget - paidBySum
-      if (paidByDrift !== 0 && convertedPaidBy.length > 0) {
-        let largestIdx = 0
-        for (let i = 1; i < convertedPaidBy.length; i++) {
-          if (convertedPaidBy[i].shares > convertedPaidBy[largestIdx].shares)
-            largestIdx = i
-        }
-        convertedPaidBy[largestIdx].shares += paidByDrift
+
+      // paidByList.shares stay in original currency (not rate-multiplied).
+      const originalCurrency = currencyOrFallback(effectiveOriginalCurrency)
+      let convertedPaidBy: Array<{ participant: string; shares: number }>
+      if (
+        e.originalCurrency &&
+        e.originalAmount !== null &&
+        paidByList.length === 1
+      ) {
+        convertedPaidBy = [{ ...paidByList[0], shares: e.originalAmount }]
+      } else {
+        convertedPaidBy = normalizePaidByOriginal(
+          paidByList,
+          originalCurrency,
+          effectiveOriginalAmount,
+        )
       }
 
       const conversionRate =

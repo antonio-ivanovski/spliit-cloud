@@ -76,7 +76,7 @@ export function ItemParticipantsModal(props: {
     }
   })
 
-  const itemTotal = draft.unitPrice * draft.quantity
+  const itemTotal = Number(draft.unitPrice) * Number(draft.quantity)
 
   const handleSplitModeChange = (nextMode: SplitMode) => {
     if (nextMode === 'ITEMIZED' || draft.splitMode === nextMode) return
@@ -167,7 +167,7 @@ export function ItemParticipantsModal(props: {
             {' · '}
             {draft.quantity}
             {' × '}
-            {draft.unitPrice.toFixed(2)}
+            {Number(draft.unitPrice).toFixed(2)}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
 

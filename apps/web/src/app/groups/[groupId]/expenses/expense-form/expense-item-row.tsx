@@ -175,13 +175,17 @@ export function ExpenseItemRow({
                       className="h-9"
                       type="text"
                       disabled={readOnly}
-                      value={String(field.value ?? '')}
+                      // Keep raw string (incl. trailing ".") like expense amount
+                      value={
+                        field.value == null || field.value === ''
+                          ? ''
+                          : String(field.value)
+                      }
                       inputMode="decimal"
                       step={10 ** -groupCurrency.decimal_digits}
                       onChange={(event) =>
                         field.onChange(
-                          Number(enforceCurrencyPattern(event.target.value)) ||
-                            0,
+                          enforceCurrencyPattern(event.target.value),
                         )
                       }
                     />

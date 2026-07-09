@@ -86,12 +86,13 @@ describe('getBalances', () => {
 
     const balances = getBalances(expenses)
 
-    expect(balances.p0).toEqual({ paid: 100, paidFor: 33, total: 67 })
+    // Global distributeRemainder seed=0: equal fracs → p0 first by id
+    expect(balances.p0).toEqual({ paid: 100, paidFor: 34, total: 66 })
     expect(balances.p1).toEqual({ paid: 0, paidFor: 33, total: -33 })
     expect(balances.p2).toEqual({ paid: 0, paidFor: 33, total: -33 })
 
     const net = Object.values(balances).reduce((sum, b) => sum + b.total, 0)
-    expect(net).toBe(expenses[0].amount % expenses[0].paidFor.length)
+    expect(net).toBe(0)
   })
 
   it('splits BY_SHARES proportionally', () => {
@@ -138,7 +139,7 @@ describe('getBalances', () => {
     expect(balances.p2).toEqual({ paid: 0, paidFor: 125, total: -125 })
   })
 
-  it('splits BY_AMOUNT and assigns remainder to last participant', () => {
+  it('splits BY_AMOUNT literally and assigns residual to payer', () => {
     const expenses: BalancesExpense[] = [
       makeExpense({
         id: 'e1',
@@ -155,11 +156,10 @@ describe('getBalances', () => {
 
     const balances = getBalances(expenses)
 
-    // Note: implementation treats `shares` as weights (not absolute amounts)
-    // and assigns the remainder to the last participant.
-    expect(balances.p0).toEqual({ paid: 101, paidFor: 34, total: 67 })
-    expect(balances.p1).toEqual({ paid: 0, paidFor: 34, total: -34 })
-    expect(balances.p2).toEqual({ paid: 0, paidFor: 34, total: -34 })
+    // BY_AMOUNT is literal cents; residual 71 goes to primary payer p0
+    expect(balances.p0).toEqual({ paid: 101, paidFor: 81, total: 20 })
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 10, total: -10 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 10, total: -10 })
   })
 
   it('handles rounding correctly', () => {
@@ -212,12 +212,12 @@ describe('getBalances', () => {
     expect(Number.isInteger(balances.p2.paidFor)).toBe(true)
     expect(Number.isInteger(balances.p2.total)).toBe(true)
 
-    // Verify totals balance (sum ~= 0, within rounding tolerance)
+    // Global accumulation: Σ total === 0 exactly
     const netTotal = Object.values(balances).reduce(
       (sum, b) => sum + b.total,
       0,
     )
-    expect(Math.abs(netTotal)).toBeLessThan(3) // Tolerance for rounding remainder
+    expect(netTotal).toBe(0)
 
     // Verify no negative zeros
     expect(Object.is(balances.p0.paid, -0)).toBe(false)
@@ -279,12 +279,12 @@ describe('getBalances', () => {
     expect(balances.p2.paidFor).toBe(380)
     expect(balances.p2.total).toBe(-180)
 
-    // Verify sum of totals = 0 (within rounding tolerance)
+    // Verify sum of totals = 0 exactly
     const netTotal = Object.values(balances).reduce(
       (sum, b) => sum + b.total,
       0,
     )
-    expect(Math.abs(netTotal)).toBeLessThan(3)
+    expect(netTotal).toBe(0)
   })
 
   it('handles BY_AMOUNT with one participant having 0 shares', () => {
@@ -304,14 +304,13 @@ describe('getBalances', () => {
 
     const balances = getBalances(expenses)
 
-    // p0 paid 100 but has 0 shares, so owes 0
-    expect(balances.p0).toEqual({ paid: 100, paidFor: 0, total: 100 })
-    // p1 and p2 split the remaining 100 (50 each)
-    expect(balances.p1).toEqual({ paid: 0, paidFor: 50, total: -50 })
-    expect(balances.p2).toEqual({ paid: 0, paidFor: 50, total: -50 })
+    // Literal 0/10/10; residual 80 goes to primary payer p0
+    expect(balances.p0).toEqual({ paid: 100, paidFor: 80, total: 20 })
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 10, total: -10 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 10, total: -10 })
   })
 
-  it('handles BY_PERCENTAGE where percentages do not sum to 10000 (remainder assigned to last)', () => {
+  it('handles BY_PERCENTAGE where percentages do not sum to 10000 (fractional-part distribution)', () => {
     const expenses: BalancesExpense[] = [
       makeExpense({
         id: 'e1',
@@ -321,20 +320,20 @@ describe('getBalances', () => {
         paidFor: [
           { participant: { id: 'p0', name: 'P0' }, shares: 2000 }, // 20%
           { participant: { id: 'p1', name: 'P1' }, shares: 3000 }, // 30%
-          // Missing 5000 basis points - should be assigned to last participant
-          { participant: { id: 'p2', name: 'P2' }, shares: 3000 }, // Only 30% specified, gets remainder
+          { participant: { id: 'p2', name: 'P2' }, shares: 3000 }, // 30%
         ],
       }),
     ]
 
     const balances = getBalances(expenses)
 
-    // p0: paid 10000, owes (20/80)% = 2500 (remainder goes to last)
-    expect(balances.p0).toEqual({ paid: 10000, paidFor: 2500, total: 7500 })
-    // p1: paid 0, owes (30/80)% = 3750
-    expect(balances.p1).toEqual({ paid: 0, paidFor: 3750, total: -3750 })
-    // p2: paid 0, gets remainder = 3750 (30/80)% + remainder
-    expect(balances.p2).toEqual({ paid: 0, paidFor: 3750, total: -3750 })
+    // Exact: 2000/3000/3000; residual 2000 distributed by fractional-part (all 0)
+    // seed 0 → id order p0,p1,p2 → 2667/3667/3666
+    expect(balances.p0).toEqual({ paid: 10000, paidFor: 2667, total: 7333 })
+    expect(balances.p1).toEqual({ paid: 0, paidFor: 3667, total: -3667 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 3666, total: -3666 })
+    const net = Object.values(balances).reduce((s, b) => s + b.total, 0)
+    expect(net).toBe(0)
   })
 
   it('handles expense where payer is not in paidFor', () => {
@@ -422,12 +421,12 @@ describe('getBalances', () => {
 
     const balances = getBalances(expenses)
 
-    // p0 appears twice in paidFor, so should owe double
-    // Total shares = 3, p0 has 2 shares, p1 has 1 share
+    // p0 appears twice → accumulates 2×(100/3); remainder seed 0
     expect(balances.p0.paid).toBe(100)
-    expect(balances.p0.paidFor).toBeCloseTo(67, -1) // ~66.67
+    expect(balances.p0.paidFor + balances.p1.paidFor).toBe(100)
+    expect(balances.p0.paidFor).toBe(67)
     expect(balances.p1.paid).toBe(0)
-    expect(balances.p1.paidFor).toBeCloseTo(33, -1) // ~33.33
+    expect(balances.p1.paidFor).toBe(33)
   })
 
   // ---------------------------------------------------------------------------
@@ -454,11 +453,10 @@ describe('getBalances', () => {
 
     const balances = getBalances(expenses)
 
-    // p0 and p1 each paid 100 (even split), each owes 67 (200/3)
+    // p0 and p1 each paid 100; paidFor 67/67/66 (seed 0)
     expect(balances.p0).toEqual({ paid: 100, paidFor: 67, total: 33 })
     expect(balances.p1).toEqual({ paid: 100, paidFor: 67, total: 33 })
-    // p2 owes 67, gets nothing
-    expect(balances.p2).toEqual({ paid: 0, paidFor: 67, total: -67 })
+    expect(balances.p2).toEqual({ paid: 0, paidFor: 66, total: -66 })
   })
 
   it('multi-payer 3-payer EVENLY assigns equal portions and full group nets to zero', () => {
@@ -544,14 +542,14 @@ describe('getBalances', () => {
     expect(balances.p2).toEqual({ paid: 0, paidFor: 5000, total: -5000 })
   })
 
-  it('multi-payer BY_AMOUNT distributes the literal amount and assigns any rounding residual to the last payer', () => {
-    // 101 split as 10 / 10 / 10 with 3 payers — last-row absorbs the residual,
-    // mirroring the existing paidFor rounding behavior.
+  it('multi-payer BY_AMOUNT distributes the literal amount and assigns residual to primary payer', () => {
+    // 101 split as 10/10/10 — residual 71 goes to primary payer p0 on both sides
     const expenses: BalancesExpense[] = [
       makeExpense({
         id: 'e1',
         amount: 101,
         paidBySplitMode: 'BY_AMOUNT',
+        splitMode: 'BY_AMOUNT',
         paidByList: [
           { participant: { id: 'p0', name: 'P0' }, shares: 10 },
           { participant: { id: 'p1', name: 'P1' }, shares: 10 },
@@ -567,9 +565,9 @@ describe('getBalances', () => {
 
     const balances = getBalances(expenses)
 
-    expect(balances.p0).toEqual({ paid: 34, paidFor: 34, total: 0 })
-    expect(balances.p1).toEqual({ paid: 34, paidFor: 34, total: 0 })
-    expect(balances.p2).toEqual({ paid: 34, paidFor: 34, total: 0 })
+    expect(balances.p0).toEqual({ paid: 81, paidFor: 81, total: 0 })
+    expect(balances.p1).toEqual({ paid: 10, paidFor: 10, total: 0 })
+    expect(balances.p2).toEqual({ paid: 10, paidFor: 10, total: 0 })
   })
 
   it("multi-payer single-payer migration: legacy shape (paidBySplitMode=BY_AMOUNT with shares=amount) collapses to today's formula", () => {
@@ -631,10 +629,7 @@ describe('getBalances', () => {
     const reimbursements = getSuggestedReimbursements(balances)
     const publicBalances = getPublicBalances(reimbursements)
 
-    // Raw balance math (each gets Math.round()'d at the end):
-    //   p0 paid 100, owes 67 (e1) + 22 (e2) = 89, total = +11
-    //   p1 paid 100, owes 67 (e1) + 22 (e2) = 89, total = +11
-    //   p2 paid 67 (e2), owes 67 (e1) + 22 (e2) = 89, total = -22
+    // Global accumulation: paidFor exact 200/3 + 67/3 each → 89 each
     expect(balances.p0.paid).toBe(100)
     expect(balances.p0.paidFor).toBe(89)
     expect(balances.p1.paid).toBe(100)
@@ -642,13 +637,11 @@ describe('getBalances', () => {
     expect(balances.p2.paid).toBe(67)
     expect(balances.p2.paidFor).toBe(89)
 
-    // Public balances must net to zero (the UI's reimbursement pipeline
-    // collapses the rounding leftovers within the group).
     const publicNet = Object.values(publicBalances).reduce(
       (sum, b) => sum + b.total,
       0,
     )
-    expect(Math.abs(publicNet)).toBeLessThan(3)
+    expect(publicNet).toBe(0)
   })
 
   // ---------------------------------------------------------------------------
@@ -902,6 +895,185 @@ describe('getBalances', () => {
     expect(balances.p1.paid).toBe(Math.round((5000 / 10000) * mkdAmount))
     expect(balances.p0.total + balances.p1.total).toBe(0)
   })
+
+  // ---------------------------------------------------------------------------
+  // Global accumulation: zero cross-expense drift
+  // ---------------------------------------------------------------------------
+
+  it('3 × $1 EVENLY/3 → cumulative 100/100/100 (zero cross-expense drift)', () => {
+    const paidFor = [
+      { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+      { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+      { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+    ]
+    const expenses: BalancesExpense[] = [1, 2, 3].map((i) =>
+      makeExpense({
+        id: `e${i}`,
+        amount: 100,
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor,
+      }),
+    )
+
+    const balances = getBalances(expenses)
+    expect(balances.p0.paidFor).toBe(100)
+    expect(balances.p1.paidFor).toBe(100)
+    expect(balances.p2.paidFor).toBe(100)
+    expect(
+      balances.p0.paidFor + balances.p1.paidFor + balances.p2.paidFor,
+    ).toBe(300)
+  })
+
+  it('$100 + $20 EVENLY/3 → cumulative 4000/4000/4000', () => {
+    const paidFor = [
+      { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+      { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+      { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+    ]
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 10000,
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor,
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 2000,
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor,
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    expect(balances.p0.paidFor).toBe(4000)
+    expect(balances.p1.paidFor).toBe(4000)
+    expect(balances.p2.paidFor).toBe(4000)
+  })
+
+  it('10 × $1 EVENLY/3 → single global distribution, not 10× per-expense', () => {
+    const paidFor = [
+      { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+      { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+      { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+    ]
+    const expenses: BalancesExpense[] = Array.from({ length: 10 }, (_, i) =>
+      makeExpense({
+        id: `e${i}`,
+        amount: 100,
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor,
+      }),
+    )
+
+    const balances = getBalances(expenses)
+    // 10 × 100/3 = 333.333… each → 333/333/334 or similar, sum 1000
+    // Not 10 × per-expense (which would bias one participant by +10¢)
+    expect(
+      balances.p0.paidFor + balances.p1.paidFor + balances.p2.paidFor,
+    ).toBe(1000)
+    const paidFors = [
+      balances.p0.paidFor,
+      balances.p1.paidFor,
+      balances.p2.paidFor,
+    ].sort((a, b) => a - b)
+    // Max spread is 1¢ under global distribution
+    expect(paidFors[2] - paidFors[0]).toBeLessThanOrEqual(1)
+    expect(paidFors).toEqual([333, 333, 334])
+  })
+
+  it('cross-currency multi-expense → Σ paid === Σ amount exactly', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 9200,
+        originalAmount: 10000,
+        originalCurrency: 'USD',
+        conversionRate: 0.92,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 7000 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 3000 },
+        ],
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 4600 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 4600 },
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 4600,
+        originalAmount: 5000,
+        originalCurrency: 'USD',
+        conversionRate: 0.92,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 2500 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 2500 },
+        ],
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 2300 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 2300 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    const totalAmount = expenses.reduce((s, e) => s + e.amount, 0)
+    const sumPaid = Object.values(balances).reduce((s, b) => s + b.paid, 0)
+    const sumPaidFor = Object.values(balances).reduce(
+      (s, b) => s + b.paidFor,
+      0,
+    )
+    expect(sumPaid).toBe(totalAmount)
+    expect(sumPaidFor).toBe(totalAmount)
+  })
+
+  it('balance sum invariant — Σ paidFor === Σ amount and Σ paid === Σ amount', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100,
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 77,
+        splitMode: 'BY_SHARES',
+        paidByList: defaultPaidByList('p1', 'P1'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 2 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 3 },
+        ],
+      }),
+      makeExpense({
+        id: 'e3',
+        amount: 50,
+        splitMode: 'BY_AMOUNT',
+        paidByList: defaultPaidByList('p2', 'P2'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 20 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 30 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    const totalAmount = expenses.reduce((s, e) => s + e.amount, 0)
+    const sumPaid = Object.values(balances).reduce((s, b) => s + b.paid, 0)
+    const sumPaidFor = Object.values(balances).reduce(
+      (s, b) => s + b.paidFor,
+      0,
+    )
+    expect(sumPaid).toBe(totalAmount)
+    expect(sumPaidFor).toBe(totalAmount)
+    expect(Object.values(balances).reduce((s, b) => s + b.total, 0)).toBe(0)
+  })
 })
 
 describe('getSuggestedReimbursements', () => {
@@ -981,14 +1153,9 @@ describe('getSuggestedReimbursements', () => {
 })
 
 describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
-  it('cancels fractional-cent rounding residuals so the UI shows zero balances', () => {
-    // 1 cent split evenly among 3 participants: each gets 0.333…,
-    // which `Math.round`s to 0 in `getBalances`. The payer is left
-    // with a 1-cent residual in the raw output, but the UI's
-    // `getPublicBalances(getSuggestedReimbursements(...))` pipeline
-    // drops the residual: `getSuggestedReimbursements` filters out the
-    // 0-total non-payers (loop doesn't execute with length 1), and
-    // `getPublicBalances` has no reimbursements to project.
+  it('distributes 1¢ EVENLY/3 so net is zero (no residual to mask)', () => {
+    // Global distributeRemainder assigns the single cent to p0 (seed 0).
+    // Payer p0 paid 1 and paidFor 1 → total 0; no residual for the UI pipeline.
     const expenses: BalancesExpense[] = [
       makeExpense({
         id: 'e1',
@@ -1004,19 +1171,14 @@ describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
     ]
 
     const rawBalances = getBalances(expenses)
-    // Raw balances retain the 1-cent residual.
-    expect(rawBalances.p0).toEqual({ paid: 1, paidFor: 0, total: 1 })
+    expect(rawBalances.p0).toEqual({ paid: 1, paidFor: 1, total: 0 })
     expect(rawBalances.p1).toEqual({ paid: 0, paidFor: 0, total: 0 })
     expect(rawBalances.p2).toEqual({ paid: 0, paidFor: 0, total: 0 })
 
     const reimbursements = getSuggestedReimbursements(rawBalances)
-    // Only the payer is non-zero, so the loop exits without generating
-    // any legs and the filter drops nothing.
     expect(reimbursements).toEqual([])
 
     const publicBalances = getPublicBalances(reimbursements)
-    // The UI sees an empty balance map, so the archive check based on
-    // `hasUnsettledBalances(publicBalances)` returns false.
     expect(Object.values(publicBalances).every((b) => b.total === 0)).toBe(true)
     expect(Object.keys(publicBalances)).toHaveLength(0)
   })
@@ -1051,5 +1213,98 @@ describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
     expect(publicBalances.p0.total).toBe(rawBalances.p0.total)
     expect(publicBalances.p1.total).toBe(rawBalances.p1.total)
     expect(publicBalances.p2.total).toBe(rawBalances.p2.total)
+  })
+
+  it('ITEMIZED with items: multi-expense totals ignore per-expense remainder tie-breaks', () => {
+    // Two $50 EVENLY/3 itemized expenses. Stored paidFor may already be
+    // per-expense rounded (e.g. 1667/1667/1666 each), which would unfairly
+    // stack if used as literals. With items present, getBalances recomputes
+    // exact Decimals → single global distributeRemainder.
+    const evenItem = (amount: number) => ({
+      amount,
+      splitMode: 'EVENLY' as const,
+      paidFor: [
+        { participant: 'p0', shares: 1 },
+        { participant: 'p1', shares: 1 },
+        { participant: 'p2', shares: 1 },
+      ],
+    })
+
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 5000,
+        splitMode: 'ITEMIZED',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        // Deliberately unfair stored cents (would bias p0 if used as literals)
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1668 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1666 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1666 },
+        ],
+        items: [evenItem(5000)],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 5000,
+        splitMode: 'ITEMIZED',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1668 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1666 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1666 },
+        ],
+        items: [evenItem(5000)],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    // Exact: 10000/3 each → 3333/3333/3334 after one global distribution
+    expect(
+      balances.p0.paidFor + balances.p1.paidFor + balances.p2.paidFor,
+    ).toBe(10000)
+    expect(
+      [balances.p0.paidFor, balances.p1.paidFor, balances.p2.paidFor].sort(
+        (a, b) => a - b,
+      ),
+    ).toEqual([3333, 3333, 3334])
+    // Must NOT be the stacked stored bias 3336/3332/3332
+    expect(balances.p0.paidFor).not.toBe(3336)
+    const net = Object.values(balances).reduce((s, b) => s + b.total, 0)
+    expect(net).toBe(0)
+  })
+
+  it('ITEMIZED without items falls back to stored paidFor literals', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 5000,
+        splitMode: 'ITEMIZED',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1668 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1666 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1666 },
+        ],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 5000,
+        splitMode: 'ITEMIZED',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1668 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 1666 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1666 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    // Without items: stacked stored cents
+    expect(balances.p0.paidFor).toBe(3336)
+    expect(balances.p1.paidFor).toBe(3332)
+    expect(balances.p2.paidFor).toBe(3332)
   })
 })

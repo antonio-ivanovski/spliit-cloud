@@ -12,6 +12,26 @@ export function randomId(size?: number) {
   return size ? id.slice(0, size) : id
 }
 
+/**
+ * Stable 32-bit seed from a string (FNV-1a). Used for remainder tie-break.
+ * Returns unsigned 0..2^32-1 so `seed % n` is well-defined.
+ */
+export function hashStringToSeed(value: string): number {
+  let hash = 0x811c9dc5
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i)
+    // FNV prime 16777619; keep as uint32
+    hash = Math.imul(hash, 0x01000193) >>> 0
+  }
+  return hash >>> 0
+}
+
+/** Remainder-distribution seed from expense id; 0 when id is missing (create/preview). */
+export function expenseIdSeed(expenseId: string | null | undefined): number {
+  if (expenseId == null || expenseId === '') return 0
+  return hashStringToSeed(expenseId)
+}
+
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }

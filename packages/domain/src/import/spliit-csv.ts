@@ -1,11 +1,21 @@
+import Decimal from 'decimal.js'
 import Papa from 'papaparse'
 import { DEFAULT_CATEGORIES } from '../categories'
+import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
+import { distributeRemainder } from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
 import { guessSplitMode } from './split-guess'
 import type { ImportParseResult, NormalizedSource } from './types'
 
 const PARTICIPANT_START_INDEX = 10
+
+const FALLBACK_CURRENCY: Currency = {
+  code: '',
+  symbol: '',
+  rounding: 0,
+  decimal_digits: 2,
+}
 
 function toNumberOrNull(value: string | undefined): number | null {
   if (value === undefined) return null
@@ -74,10 +84,9 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     if (!/^\d{4}-\d{2}-\d{2}/.test(date)) continue
     if (title.length === 0) continue
     if (costMajor === null) continue
-    const amountCents = amountAsMinorUnitsByCode(
-      costMajor,
-      rowCurrency.length === 3 ? rowCurrency : '',
-    )
+    const currencyCode = rowCurrency.length === 3 ? rowCurrency : ''
+    const currency = getCurrency(currencyCode) ?? FALLBACK_CURRENCY
+    const amountCents = amountAsMinorUnitsByCode(costMajor, currencyCode)
 
     if (rowCurrency.length === 3) {
       currencyCounts.set(
@@ -86,7 +95,7 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       )
     }
 
-    type Entry = { sourceId: string; raw: number; cents: number }
+    type Entry = { sourceId: string; raw: number }
     const entries: Entry[] = []
     let paidBySourceId: string | null = null
     let firstZeroSourceId: string | null = null
@@ -104,14 +113,7 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
         firstZeroSourceId = sourceId
       }
       if (raw !== 0) {
-        entries.push({
-          sourceId,
-          raw,
-          cents: amountAsMinorUnitsByCode(
-            Math.abs(raw),
-            rowCurrency.length === 3 ? rowCurrency : '',
-          ),
-        })
+        entries.push({ sourceId, raw })
       }
     }
     if (!paidBySourceId) paidBySourceId = firstZeroSourceId
@@ -137,21 +139,38 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
         }
       }
     } else {
-      const shares: Array<{ sourceId: string; cents: number }> = entries.map(
-        (e) => ({ sourceId: e.sourceId, cents: e.cents }),
-      )
-      const sumShares = shares.reduce((s, p) => s + p.cents, 0)
-      const drift = sumShares - amountCents
-      if (drift !== 0 && shares.length > 0) {
-        let largestIdx = 0
-        for (let i = 1; i < shares.length; i++) {
-          if (shares[i].cents > shares[largestIdx].cents) largestIdx = i
+      // Participant cells are NET balances (paidBy − paidFor) from export-csv.
+      // Reconstruct owed paidFor: debtors owe −net; payer owes cost − Σ(debtor).
+      // Multi-payer uneven exports are underdetermined — remainder goes to paidBy.
+      const scale = 10 ** currency.decimal_digits
+      const nets = entries.map((e) => ({
+        sourceId: e.sourceId,
+        net: Math.round(e.raw * scale),
+      }))
+      const debtorSum = nets
+        .filter((n) => n.net < 0)
+        .reduce((s, n) => s - n.net, 0)
+
+      const exact: Record<string, Decimal> = {}
+      for (const n of nets) {
+        if (n.net < 0) {
+          exact[n.sourceId] = new Decimal(-n.net)
         }
-        shares[largestIdx].cents -= drift
       }
-      paidFor = shares
-        .filter((p) => p.cents > 0)
-        .map((p) => ({ sourceId: p.sourceId, shares: p.cents }))
+      // Payer's share (and any multi-payer residual) so Σ paidFor === Cost.
+      const payerShare = amountCents - debtorSum
+      if (payerShare !== 0 || Object.keys(exact).length === 0) {
+        exact[paidBySourceId] = new Decimal(
+          Math.max(0, payerShare) + (exact[paidBySourceId]?.toNumber() ?? 0),
+        )
+      }
+
+      const reconciled = distributeRemainder(exact, amountCents, {
+        payerId: paidBySourceId,
+      })
+      paidFor = Object.entries(reconciled)
+        .filter(([, shares]) => shares > 0)
+        .map(([sourceId, shares]) => ({ sourceId, shares }))
     }
 
     if (paidFor.length === 0) continue

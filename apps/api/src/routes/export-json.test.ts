@@ -244,4 +244,87 @@ describe('exportGroupJson', () => {
     const body = await response.json()
     expect(body.error).toBe('Invalid group ID')
   })
+
+  it('cross-currency JSON: amount is ledger, originalAmount original, paidByList original currency', async () => {
+    authState.session = {
+      user: { id: 'acct-1' },
+      session: { id: 'sess-1' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      email: 'alice@example.com',
+    })
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-1',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    })
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      name: 'Euro Trip',
+      information: null,
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currency: '€', currencyCode: 'EUR' },
+      members: [
+        {
+          id: 'gm-1',
+          groupId: 'grp-1',
+          accountId: 'acct-1',
+          role: 'ADMIN',
+          status: 'ACTIVE',
+          ledgerParticipant: { id: 'lp-1' },
+        },
+      ],
+    })
+    prismaMock.expense.findMany.mockResolvedValue([
+      {
+        id: 'exp-1',
+        createdAt: new Date('2024-06-01T00:00:00Z'),
+        expenseDate: new Date('2024-06-01T00:00:00Z'),
+        title: 'USD Dinner',
+        categoryId: 'dining-out',
+        amount: 9200,
+        originalAmount: 10000,
+        originalCurrency: 'USD',
+        conversionRate: 0.92,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [
+          {
+            ledgerParticipant: {
+              id: 'lp-1',
+              groupMember: { account: { name: 'Alice' } },
+              invitations: [],
+            },
+            shares: 10000,
+          },
+        ],
+        paidFor: [{ ledgerParticipantId: 'lp-1', shares: 9200 }],
+        isReimbursement: false,
+        splitMode: 'BY_AMOUNT',
+        recurrenceRule: 'NONE',
+        items: [],
+        itemizedRemainder: null,
+      },
+    ])
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      {
+        id: 'lp-1',
+        groupMember: { account: { name: 'Alice' } },
+        invitations: [],
+      },
+    ] as never)
+
+    const response = await exportGroupJson(makeRequest(), 'grp-1')
+    expect(response.status).toBe(200)
+    const body = await response.json()
+    expect(body.currencyCode).toBe('EUR')
+    expect(body.expenses).toHaveLength(1)
+    const exp = body.expenses[0]
+    expect(exp.amount).toBe(9200)
+    expect(exp.originalAmount).toBe(10000)
+    expect(exp.originalCurrency).toBe('USD')
+    expect(exp.paidByList[0].shares).toBe(10000)
+    expect(exp.paidFor[0].shares).toBe(9200)
+  })
 })

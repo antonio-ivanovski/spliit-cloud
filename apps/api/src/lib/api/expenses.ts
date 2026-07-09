@@ -235,6 +235,7 @@ export async function createExpense(
                       ? (expense.originalAmount ?? expense.amount)
                       : expense.amount,
                     expense.itemizedRemainder,
+                    expenseId,
                   ).paidFor.map((p) => ({
                     ledgerParticipantId: p.participant,
                     shares: p.shares,
@@ -549,6 +550,7 @@ export async function updateExpense(
             ? (expense.originalAmount ?? expense.amount)
             : expense.amount,
           expense.itemizedRemainder,
+          expenseId,
         ).paidFor
       : expense.paidFor
 

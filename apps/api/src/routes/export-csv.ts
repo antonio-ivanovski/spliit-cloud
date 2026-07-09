@@ -1,6 +1,8 @@
 import { Parser } from '@json2csv/plainjs'
 import { prisma } from '@spliit/db'
 import {
+  calculatePaidByShares,
+  calculateShares,
   formatAmountAsDecimal,
   getCategoryById,
   getCurrency,
@@ -68,6 +70,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
 
   const expenses = await prisma.expense.findMany({
     select: {
+      id: true,
       expenseDate: true,
       title: true,
       categoryId: true,
@@ -134,62 +137,61 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     })),
   ]
 
-  const rows = expenses.map((expense) => ({
-    date: formatDate(expense.expenseDate),
-    title: expense.title,
-    categoryName: getCategoryById(expense.categoryId as never)?.name ?? '',
-    currency: group.ledger?.currencyCode ?? group.ledger?.currency ?? '',
-    amount: formatAmountAsDecimal(expense.amount, currency),
-    originalAmount: expense.originalAmount
-      ? formatAmountAsDecimal(
-          expense.originalAmount,
-          expense.originalCurrency
-            ? (getCurrency(expense.originalCurrency) ?? currency)
-            : currency,
-        )
-      : null,
-    originalCurrency: expense.originalCurrency,
-    conversionRate: expense.conversionRate
-      ? expense.conversionRate.toString()
-      : null,
-    isReimbursement: expense.isReimbursement ? 'Yes' : 'No',
-    splitMode: splitModeLabel[expense.splitMode],
-    ...Object.fromEntries(
-      participants.map((participant) => {
-        const { totalShares, participantShare } = expense.paidFor.reduce(
-          (acc, { ledgerParticipantId, shares }) => {
-            acc.totalShares += shares
-            if (ledgerParticipantId === participant.id) {
-              acc.participantShare = shares
-            }
-            return acc
-          },
-          { totalShares: 0, participantShare: 0 },
-        )
+  const rows = expenses.map((expense) => {
+    // Ledger-currency nets via unified share calculation.
+    // Multi-payer generalization: net = paidByShare - paidForShare.
+    const shareExpense = {
+      id: expense.id,
+      amount: expense.amount,
+      splitMode: expense.splitMode,
+      paidBySplitMode: expense.paidBySplitMode,
+      isReimbursement: expense.isReimbursement,
+      originalAmount: expense.originalAmount,
+      originalCurrency: expense.originalCurrency,
+      conversionRate:
+        expense.conversionRate == null ? null : Number(expense.conversionRate),
+      paidFor: expense.paidFor.map((pf) => ({
+        shares: pf.shares,
+        participant: { id: pf.ledgerParticipantId },
+      })),
+      paidByList: expense.paidByList.map((pb) => ({
+        shares: pb.shares,
+        participant: { id: pb.ledgerParticipantId },
+      })),
+    }
+    const paidForShares = calculateShares(shareExpense)
+    const paidByShares = calculatePaidByShares(shareExpense)
 
-        const totalPaidByShares =
-          expense.paidByList.reduce((s, pb) => s + pb.shares, 0) || 1
-        const payerShare =
-          expense.paidByList.find(
-            (pb) => pb.ledgerParticipantId === participant.id,
-          )?.shares ?? 0
-        const payerAmount = (expense.amount * payerShare) / totalPaidByShares
-
-        const participantAmountShare = +formatAmountAsDecimal(
-          (expense.amount / totalShares) * participantShare,
-          currency,
-        )
-
-        return [
-          participant.id,
-          +formatAmountAsDecimal(
-            payerAmount - participantAmountShare,
-            currency,
-          ),
-        ]
-      }),
-    ),
-  }))
+    return {
+      date: formatDate(expense.expenseDate),
+      title: expense.title,
+      categoryName: getCategoryById(expense.categoryId as never)?.name ?? '',
+      currency: group.ledger?.currencyCode ?? group.ledger?.currency ?? '',
+      amount: formatAmountAsDecimal(expense.amount, currency),
+      originalAmount: expense.originalAmount
+        ? formatAmountAsDecimal(
+            expense.originalAmount,
+            expense.originalCurrency
+              ? (getCurrency(expense.originalCurrency) ?? currency)
+              : currency,
+          )
+        : null,
+      originalCurrency: expense.originalCurrency,
+      conversionRate: expense.conversionRate
+        ? expense.conversionRate.toString()
+        : null,
+      isReimbursement: expense.isReimbursement ? 'Yes' : 'No',
+      splitMode: splitModeLabel[expense.splitMode],
+      ...Object.fromEntries(
+        participants.map((participant) => {
+          const netAmount =
+            (paidByShares[participant.id] ?? 0) -
+            (paidForShares[participant.id] ?? 0)
+          return [participant.id, formatAmountAsDecimal(netAmount, currency)]
+        }),
+      ),
+    }
+  })
 
   const csv = new Parser({ fields }).parse(rows)
   const date = new Date().toISOString().split('T')[0]

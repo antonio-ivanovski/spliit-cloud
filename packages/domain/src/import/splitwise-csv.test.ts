@@ -1238,7 +1238,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses[0].title).toBe('Pazarenje')
   })
 
-  it('paidFor shares sum exactly to the cost (no drift)', () => {
+  it('paidFor shares sum exactly to the cost via domain serializers', () => {
     const csv = splitwiseCsv([
       ['2026-01-15', 'Drift', 'General', '100.00', 'MKD', '66.67', '-66.67'],
     ])
@@ -1249,6 +1249,9 @@ describe('tryParseSplitwiseCsv', () => {
     expect(e.amount).toBe(10000)
     const sum = e.paidFor.reduce((s, p) => s + p.shares, 0)
     expect(sum).toBe(10000)
+    // paidBy reconstruction also balances
+    const paidSum = e.paidBy.reduce((s, p) => s + p.shares, 0)
+    expect(paidSum).toBe(10000)
   })
 
   it('detects even splits', () => {

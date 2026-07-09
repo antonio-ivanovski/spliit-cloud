@@ -1,16 +1,5 @@
 ## ADDED Requirements
 
-### Requirement: Membership-authorized exports
-The system SHALL authorize exports by authenticated account access to the requested Ledger.
-
-#### Scenario: Member exports group ledger
-- **WHEN** an authenticated group member requests an export for the group Ledger
-- **THEN** the system returns the export
-
-#### Scenario: Non-member exports group ledger
-- **WHEN** a non-member requests an export for the group Ledger
-- **THEN** the system rejects the request
-
 ### Requirement: CSV export uses unified share calculation
 The CSV export SHALL compute per-participant shares using `calculateShares` from the `share-calculation` core instead of inline `payerAmount - participantAmountShare` math. Each participant's net amount SHALL be `expense.amount - shares[participantId]` for the payer and `-shares[participantId]` for non-payers.
 
