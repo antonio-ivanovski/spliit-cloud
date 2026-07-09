@@ -305,6 +305,11 @@ export function BasicDetailsCard(props: {
                       t('conversionRateState.customRate')
                     )}
                   </FormDescription>
+                  {!props.usingCustomConversionRate && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('conversionRateField.providerNote')}
+                    </p>
+                  )}
                   <Collapsible
                     open={props.usingCustomConversionRate}
                     onOpenChange={props.setUsingCustomConversionRate}

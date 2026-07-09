@@ -223,22 +223,34 @@ export function buildExpenseFormDefaults(args: {
       : groupCurrency
     const conversionRate = expense.conversionRate ?? 1
 
-    // paidFor shares are stored in Ledger currency minor units and the
-    // form schema expects them in the selected expense currency. Convert
-    // cents → display units in the Ledger currency first, then divide
-    // by the rate when conversion is required so the stored sum still
-    // matches `amount` in the form schema's units.
+    // paidFor shares are stored in the expense-currency minor units
+    // (original currency when conversion is required, group currency
+    // otherwise). Legacy rows that pre-date the server-authoritative
+    // conversion model stored shares in the ledger currency, so we
+    // fall back to that when the stored sum matches `amount`.
+    const paidForCurrency = conversionRequired
+      ? originalCurrency
+      : groupCurrency
+    const legacyPaidForCurrency = conversionRequired
+      ? groupCurrency
+      : groupCurrency
+    const storedSharesSum = expense.paidFor.reduce(
+      (sum, { shares }) => sum + shares,
+      0,
+    )
+    const paidForInOriginal =
+      conversionRequired &&
+      expense.originalAmount != null &&
+      storedSharesSum === expense.originalAmount
+    const paidForCurrencyForRead = paidForInOriginal
+      ? paidForCurrency
+      : legacyPaidForCurrency
     const paidFor =
       expense.splitMode === 'BY_AMOUNT'
-        ? expense.paidFor.map(
-            ({ ledgerParticipantId, shares: ledgerShares }) => {
-              const ledgerDisplay = amountAsDecimal(ledgerShares, groupCurrency)
-              const formDisplay = conversionRequired
-                ? ledgerDisplay / conversionRate
-                : ledgerDisplay
-              return { participant: ledgerParticipantId, shares: formDisplay }
-            },
-          )
+        ? expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
+            participant: ledgerParticipantId,
+            shares: amountAsDecimal(shares, paidForCurrencyForRead),
+          }))
         : expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
             participant: ledgerParticipantId,
             shares:
@@ -333,6 +345,13 @@ export function buildExpenseFormDefaults(args: {
         : amountAsDecimal(expense.amount, groupCurrency),
       originalCurrency: expense.originalCurrency ?? group.currencyCode,
       conversionRate: expense.conversionRate ?? undefined,
+      conversionType:
+        expense.conversionSource === 'CUSTOM' ||
+        expense.conversionSource === 'EXCHANGE'
+          ? expense.conversionSource
+          : expense.originalCurrency && expense.conversionRate
+            ? ('CUSTOM' as const)
+            : undefined,
       category: expense.categoryId,
       paidBySplitMode: expense.paidBySplitMode,
       paidByList,
@@ -384,6 +403,7 @@ export function buildExpenseFormDefaults(args: {
       amount: amountAsDecimal(Number(searchParams.amount) || 0, groupCurrency),
       originalCurrency: group.currencyCode,
       conversionRate: undefined,
+      conversionType: undefined,
       category: PAYMENT_CATEGORY_ID,
       paidBySplitMode: 'BY_AMOUNT' as const,
       paidByList: searchParams.from
@@ -433,6 +453,7 @@ export function buildExpenseFormDefaults(args: {
           ),
     originalCurrency: searchOriginalCurrency,
     conversionRate: undefined,
+    conversionType: undefined,
     category: parseCategoryIdFromUrl(searchParams.categoryId),
     paidBySplitMode: 'BY_AMOUNT' as const,
     paidByList: defaultPaidByList,

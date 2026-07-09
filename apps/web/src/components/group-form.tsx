@@ -48,7 +48,7 @@ export type Props = {
    */
   hideInviteHint?: boolean
   /**
-   * When provided, applied as the `<form>` element's `id` so external
+   * When provided, applied to the `<form>` element's `id` so external
    * buttons (e.g. a wizard-shell Continue) can submit the form via the
    * native HTML `form` attribute without being nested inside it.
    */
@@ -71,6 +71,12 @@ export type Props = {
    * the field cannot be edited.
    */
   nameReadOnly?: boolean
+  /**
+   * When `true`, the group already contains expenses and the currency
+   * selector is disabled with a small note. The backend rejects any
+   * currency change after expenses exist; this surfaces that on the UI.
+   */
+  currencyLocked?: boolean
   /**
    * Optional initial values for a brand-new group. Only used when
    * `group` is unset — the import wizard pre-fills the name,
@@ -109,6 +115,7 @@ export function GroupForm({
   hideActions = false,
   hideNameField = false,
   nameReadOnly = false,
+  currencyLocked = false,
   onSubmit,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
@@ -213,7 +220,7 @@ export function GroupForm({
                   <CurrencySelector
                     currencies={currencies}
                     defaultValue={form.watch(field.name) ?? ''}
-                    disabled={readOnly || isArchived}
+                    disabled={readOnly || isArchived || currencyLocked}
                     onValueChange={(newCurrency) => {
                       field.onChange(newCurrency)
                       const currency =
@@ -237,11 +244,13 @@ export function GroupForm({
                     isLoading={false}
                   />
                   <FormDescription>
-                    {t(
-                      group
-                        ? 'CurrencyCodeField.editDescription'
-                        : 'CurrencyCodeField.createDescription',
-                    )}
+                    {currencyLocked
+                      ? t('CurrencyCodeField.lockedAfterExpenses')
+                      : t(
+                          group
+                            ? 'CurrencyCodeField.editDescription'
+                            : 'CurrencyCodeField.createDescription',
+                        )}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

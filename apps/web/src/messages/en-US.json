@@ -544,7 +544,8 @@
       "label": "Main currency",
       "createDescription": "All amounts and balances will be in this currency.",
       "editDescription": "All amounts and balances will be in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from US Dollar to Japanese Yen)",
-      "customOption": "Custom"
+      "customOption": "Custom",
+      "lockedAfterExpenses": "The currency is locked because this group already has expenses."
     },
     "Participants": {
       "title": "Participants",
@@ -646,9 +647,11 @@
     },
     "conversionUnavailable": "To set a different currency per expense and convert amounts, select a non-custom currency for the group.",
     "conversionRateField": {
-      "useApi": "Use rates from Frankfurter",
+      "useApi": "Use exchange rate",
       "useCustom": "Use custom rate",
-      "label": "Exchange rate"
+      "label": "Exchange rate",
+      "providerNote": "Rates are provided by https://frankfurter.dev/ and their API.",
+      "futureDateUsesToday": "This expense is in the future and todays exchange rate will be used."
     },
     "conversionRateState": {
       "loading": "Getting exchange rates…",
@@ -1331,7 +1334,9 @@
         "items": "Line items",
         "documents": "Attachments",
         "recurrence": "Recurrence",
-        "reimbursement": "Reimbursement"
+        "reimbursement": "Reimbursement",
+        "conversionSource": "Conversion source",
+        "conversionRate": "Conversion rate"
       },
       "changeEmptyValue": "Not set"
     },

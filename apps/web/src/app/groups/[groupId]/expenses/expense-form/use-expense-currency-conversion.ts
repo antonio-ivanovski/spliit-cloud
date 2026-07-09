@@ -71,15 +71,39 @@ export function useExpenseCurrencyConversion(args: {
     originalCurrency.code !== args.group.currencyCode
   )
 
+  // Prefer conversionType over a bare rate: both EXCHANGE and CUSTOM
+  // store a rate, so `!!conversionRate` alone always opens the custom UI.
+  const initialType = args.form.formState.defaultValues?.conversionType ?? null
   const [usingCustomConversionRate, setUsingCustomConversionRate] = useState(
-    !!args.form.formState.defaultValues?.conversionRate,
+    () => {
+      if (initialType === 'EXCHANGE') return false
+      if (initialType === 'CUSTOM') return true
+      // Missing / legacy: a stored rate means the custom path.
+      return !!args.form.formState.defaultValues?.conversionRate
+    },
   )
 
   useEffect(() => {
-    if (!usingCustomConversionRate && exchangeRate.data) {
+    if (!conversionRequired) {
+      args.form.setValue('conversionType', undefined)
+      return
+    }
+    if (usingCustomConversionRate) {
+      args.form.setValue('conversionType', 'CUSTOM')
+      return
+    }
+    // Keep EXCHANGE intent while the preview rate is loading so a save
+    // before the fetch completes still persists the exchange source.
+    args.form.setValue('conversionType', 'EXCHANGE')
+    if (exchangeRate.data) {
       args.form.setValue('conversionRate', exchangeRate.data)
     }
-  }, [exchangeRate.data, usingCustomConversionRate, args.form])
+  }, [
+    conversionRequired,
+    exchangeRate.data,
+    usingCustomConversionRate,
+    args.form,
+  ])
 
   // Income detection tracks the typed amount directly (it is in the
   // selected expense currency; signedness is currency-agnostic).

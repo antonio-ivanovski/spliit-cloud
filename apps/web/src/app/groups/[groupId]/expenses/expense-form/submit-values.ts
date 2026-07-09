@@ -10,18 +10,12 @@ import {
 // expense currency, display percentages) to the storage units the API
 // expects (integer minor units, basis points).
 //
-// Contract:
+// Contract (server-authoritative conversion):
 // - `values.amount` is always the user-typed amount in the selected
 //   expense currency (`originalCurrency ?? groupCurrency`).
-// - When conversion is required, the persisted Ledger amount is computed
-//   client-side as `amount * conversionRate` (rounded to Ledger minor
-//   units), and `originalAmount` carries the typed amount in
-//   originalCurrency minor units. paidFor shares are converted the same
-//   way before being persisted as Ledger-currency minor units. paidBy
-//   shares are entered in originalCurrency display units and are
-//   persisted as originalCurrency minor units.
-// - When no conversion is required, `amount` and both share lists are
-//   treated as groupCurrency values.
+// - Shares/items are in that same expense currency.
+// - `conversion` is a discriminated union (`none` | `custom` | `exchange`).
+//   The server resolves rates and computes the ledger total.
 export function buildSubmitValues(
   values: ExpenseFormInputValues,
   args: {
@@ -35,38 +29,48 @@ export function buildSubmitValues(
     ? (getCurrency(values.originalCurrency) ?? groupCurrency)
     : groupCurrency
   const typedAmount = Number(values.amount) || 0
+
   const rate =
-    conversionRequired && values.conversionRate
+    values.conversionType === 'CUSTOM' && values.conversionRate
       ? Number(values.conversionRate)
       : undefined
-  if (conversionRequired && (!rate || Number.isNaN(rate) || rate <= 0)) {
+  if (
+    conversionRequired &&
+    values.conversionType === 'CUSTOM' &&
+    (!rate || Number.isNaN(rate) || rate <= 0)
+  ) {
     throw new Error('A positive conversion rate is required.')
   }
 
-  // Persisted Ledger amount: same as typed amount when no conversion,
-  // otherwise `amount * rate` rounded to Ledger minor units.
-  const ledgerAmount = conversionRequired
-    ? amountAsMinorUnits(rate ? typedAmount * rate : typedAmount, groupCurrency)
-    : amountAsMinorUnits(typedAmount, groupCurrency)
+  const amountInExpenseCurrency = amountAsMinorUnits(typedAmount, inputCurrency)
 
-  // paidFor BY_AMOUNT shares are entered in the selected expense currency
-  // and persisted as Ledger-currency minor units.
+  // Absent conversion = same currency as the group (matches nullable DB).
+  const conversion: Expense['conversion'] = !conversionRequired
+    ? undefined
+    : values.conversionType === 'CUSTOM' && rate
+      ? {
+          type: 'custom',
+          currency: values.originalCurrency || inputCurrency.code,
+          rate,
+        }
+      : {
+          type: 'exchange',
+          currency: values.originalCurrency || inputCurrency.code,
+        }
+
   const paidFor = serializePaidFor({
     splitMode: values.splitMode,
-    amount: ledgerAmount,
-    currency: groupCurrency,
-    conversionRate: conversionRequired ? rate : undefined,
+    amount: amountInExpenseCurrency,
+    currency: inputCurrency,
+    conversionRate: undefined,
     paidFor: values.paidFor,
   })
 
-  // paidBy shares stay in input-currency minor units (original when converted).
   const paidByList = serializePaidBy({
     paidBySplitMode: values.paidBySplitMode,
-    amount: conversionRequired
-      ? amountAsMinorUnits(typedAmount, inputCurrency)
-      : ledgerAmount,
+    amount: amountInExpenseCurrency,
     inputCurrency,
-    conversionRate: conversionRequired ? rate : undefined,
+    conversionRate: undefined,
     paidByList: values.paidByList,
   })
 
@@ -74,7 +78,8 @@ export function buildSubmitValues(
     expenseDate: values.expenseDate,
     title: values.title,
     category: values.category,
-    amount: ledgerAmount,
+    amount: amountInExpenseCurrency,
+    ...(conversion ? { conversion } : {}),
     paidBySplitMode: values.paidBySplitMode,
     paidByList,
     splitMode: values.splitMode,
@@ -84,7 +89,6 @@ export function buildSubmitValues(
     documents: values.documents,
     notes: values.notes,
     recurrenceRule: values.recurrenceRule,
-    conversionRate: conversionRequired ? rate : undefined,
   }
 
   const items: Expense['items'] = (values.items ?? []).map((item) => {
@@ -108,10 +112,6 @@ export function buildSubmitValues(
     }
   })
 
-  // Only persist `itemizedRemainder` for ITEMIZED expenses. For other
-  // split modes it is semantically meaningless and the form fabricates
-  // a default value, so sending it through would create orphan DB rows
-  // and trip a false-positive activity-log diff on the first edit.
   const itemizedRemainder: Expense['itemizedRemainder'] =
     values.splitMode === 'ITEMIZED' && values.itemizedRemainder
       ? {
@@ -125,19 +125,9 @@ export function buildSubmitValues(
         }
       : undefined
 
-  // Currency should be blank if same as group currency. The client only
-  // persists `originalAmount`/`originalCurrency` metadata when a
-  // conversion is genuinely required.
-  const payload: Expense = {
+  return {
     ...base,
     ...(items.length > 0 ? { items } : {}),
     ...(itemizedRemainder ? { itemizedRemainder } : {}),
-    ...(conversionRequired
-      ? {
-          originalAmount: amountAsMinorUnits(typedAmount, inputCurrency),
-          originalCurrency: values.originalCurrency ?? undefined,
-        }
-      : {}),
   }
-  return payload
 }
