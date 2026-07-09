@@ -3,6 +3,10 @@ import { activitiesRouter } from './activities'
 import { archiveGroupProcedure } from './archive.procedure'
 import { groupBalancesRouter } from './balances'
 import { createGroupProcedure } from './create.procedure'
+import {
+  migrateCurrencyPreviewProcedure,
+  migrateCurrencyProcedure,
+} from './currencyMigration.procedure'
 import { deleteGroupProcedure } from './delete.procedure'
 import { groupExpensesRouter } from './expenses'
 import { getGroupProcedure } from './get.procedure'
@@ -42,4 +46,6 @@ export const groupsRouter = createTRPCRouter({
   import: importGroupProcedure,
   importPreview: previewFromUrlProcedure,
   lookup: lookupGroupProcedure,
+  migrateCurrencyPreview: migrateCurrencyPreviewProcedure,
+  migrateCurrency: migrateCurrencyProcedure,
 })

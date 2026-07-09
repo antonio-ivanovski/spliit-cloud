@@ -16,6 +16,11 @@ export {
   hasUnsettledBalances,
 } from './balances'
 export {
+  getCurrencyMigrationPreview,
+  migrateGroupCurrency,
+  type MigrateGroupCurrencyInput,
+} from './currency-migration'
+export {
   createExpense,
   deleteExpense,
   getExpense,

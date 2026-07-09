@@ -63,6 +63,8 @@ export function buildExpenseActivityData(
 
 type BuildGroupInput = {
   summary?: string
+  oldCurrencyCode?: string
+  newCurrencyCode?: string
   changedFields?: GroupChangedField[]
   changes?: GroupActivityChange[]
 }
@@ -73,6 +75,12 @@ export function buildGroupActivityData(
   return {
     kind: 'group',
     ...(input.summary !== undefined ? { summary: input.summary } : {}),
+    ...(input.oldCurrencyCode !== undefined
+      ? { oldCurrencyCode: input.oldCurrencyCode }
+      : {}),
+    ...(input.newCurrencyCode !== undefined
+      ? { newCurrencyCode: input.newCurrencyCode }
+      : {}),
     ...(input.changedFields !== undefined
       ? { changedFields: input.changedFields }
       : {}),
