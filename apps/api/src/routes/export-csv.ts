@@ -78,6 +78,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       originalAmount: true,
       originalCurrency: true,
       conversionRate: true,
+      conversionSource: true,
       paidBySplitMode: true,
       paidByList: { select: { ledgerParticipantId: true, shares: true } },
       paidFor: { select: { ledgerParticipantId: true, shares: true } },
@@ -129,6 +130,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     { label: 'Original cost', value: 'originalAmount' },
     { label: 'Original currency', value: 'originalCurrency' },
     { label: 'Conversion rate', value: 'conversionRate' },
+    { label: 'Conversion source', value: 'conversionSource' },
     { label: 'Is Reimbursement', value: 'isReimbursement' },
     { label: 'Split mode', value: 'splitMode' },
     ...participants.map((participant) => ({
@@ -180,6 +182,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       conversionRate: expense.conversionRate
         ? expense.conversionRate.toString()
         : null,
+      conversionSource: expense.conversionSource,
       isReimbursement: expense.isReimbursement ? 'Yes' : 'No',
       splitMode: splitModeLabel[expense.splitMode],
       ...Object.fromEntries(

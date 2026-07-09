@@ -23,6 +23,7 @@ type BuildExpenseInput = {
   affectedParticipants?: string[]
   originalAmount?: number
   conversionRate?: number
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
   ledgerCurrencyCode?: string | null
 }
 
@@ -50,6 +51,9 @@ export function buildExpenseActivityData(
       : {}),
     ...(input.conversionRate !== undefined
       ? { conversionRate: input.conversionRate }
+      : {}),
+    ...(input.conversionSource !== undefined && input.conversionSource !== null
+      ? { conversionSource: input.conversionSource }
       : {}),
     ...(input.ledgerCurrencyCode !== undefined
       ? { ledgerCurrencyCode: input.ledgerCurrencyCode }

@@ -80,6 +80,22 @@ export async function updateGroup(
     currency: groupFormValues.currency,
     currencyCode: groupFormValues.currencyCode || null,
   }
+
+  const currencyChanged =
+    oldGroup.currency !== newGroup.currency ||
+    (oldGroup.currencyCode ?? null) !== (newGroup.currencyCode ?? null)
+
+  if (currencyChanged) {
+    const expenseCount = await prisma.expense.count({
+      where: { ledgerId: existingGroup.ledgerId },
+    })
+    if (expenseCount > 0) {
+      throw new Error(
+        'Cannot change the group currency after expenses exist. Ledger amounts would no longer match.',
+      )
+    }
+  }
+
   const summary = getGroupChangeSummary(oldGroup, newGroup, {})
 
   return prisma.$transaction(async (tx) => {

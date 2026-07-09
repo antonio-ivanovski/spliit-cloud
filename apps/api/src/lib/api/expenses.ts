@@ -3,6 +3,7 @@ import {
   calculateNextDate,
   categoryIdSchema,
   computePaidForFromItems,
+  conversionFromStored,
   DEFAULT_CATEGORY_ID,
   getCategoryById,
   type Category,
@@ -10,6 +11,7 @@ import {
   type Expense,
 } from '@spliit/domain'
 import { deleteS3Object, promoteUploadedDocument } from '../../routes/upload'
+import { resolveConversion } from '../expense-conversion'
 import { resolveParticipantDisplayName } from '../invitations'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { buildExpenseActivityData, logActivity } from './activities'
@@ -52,14 +54,24 @@ function narrowCategoryId(categoryId: string): CategoryId {
  * The Prisma model stores `ledgerParticipantId` while the domain uses
  * `participant` for payer / split / item references.
  */
+/**
+ * Map a stored expense into the shape used by activity diffs.
+ * `amount` is the ledger total; flat conversion fields are attached for
+ * amount/conversion differs (in addition to the `conversion` discriminant).
+ */
 function toExpenseDomainShape(
   existing: NonNullable<Awaited<ReturnType<typeof getExpense>>>,
-): Expense {
+): Expense & {
+  originalAmount?: number
+  originalCurrency?: string
+  conversionRate?: number
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+} {
   return {
     title: existing.title,
     amount: existing.amount,
     expenseDate: existing.expenseDate,
-    category: existing.categoryId,
+    category: existing.categoryId as Expense['category'],
     notes: existing.notes ?? undefined,
     recurrenceRule: existing.recurrenceRule,
     splitMode: existing.splitMode,
@@ -99,11 +111,22 @@ function toExpenseDomainShape(
       width: d.width,
       height: d.height,
     })),
+    conversion: conversionFromStored({
+      conversionSource: existing.conversionSource,
+      originalCurrency: existing.originalCurrency,
+      conversionRate: existing.conversionRate,
+    }),
     originalAmount: existing.originalAmount ?? undefined,
     originalCurrency: existing.originalCurrency ?? undefined,
     conversionRate: existing.conversionRate ?? undefined,
+    conversionSource: existing.conversionSource,
     isReimbursement: existing.isReimbursement,
-  } as unknown as Expense
+  } as Expense & {
+    originalAmount?: number
+    originalCurrency?: string
+    conversionRate?: number
+    conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+  }
 }
 
 async function promoteExpenseDocuments(
@@ -129,6 +152,14 @@ export async function createExpense(
   if (!group || !group.ledgerId) throw new Error(`Invalid group ID: ${groupId}`)
 
   const ledgerId = group.ledgerId
+
+  const conversion = await resolveConversion(expense, {
+    ledgerCurrency: group.ledger.currencyCode ?? null,
+    expenseDate: expense.expenseDate,
+  })
+
+  const expenseAmount = conversion.ledgerAmountMinor
+
   const participants = await prisma.ledgerParticipant.findMany({
     where: {
       ledgerId,
@@ -173,11 +204,12 @@ export async function createExpense(
         data: buildExpenseActivityData({
           summary: expense.title,
           title: expense.title,
-          amount: expense.amount,
-          currencyCode: expense.originalCurrency ?? null,
+          amount: expenseAmount,
+          currencyCode: conversion.originalCurrency,
           date: expenseDateStr,
-          originalAmount: expense.originalAmount,
-          conversionRate: expense.conversionRate,
+          originalAmount: conversion.originalAmount ?? undefined,
+          conversionRate: conversion.conversionRate ?? undefined,
+          conversionSource: conversion.conversionSource,
           ledgerCurrencyCode: group.ledger.currencyCode ?? null,
         }),
       },
@@ -201,10 +233,11 @@ export async function createExpense(
         ledgerId,
         expenseDate: expense.expenseDate,
         categoryId: expense.category,
-        amount: expense.amount,
-        originalAmount: expense.originalAmount,
-        originalCurrency: expense.originalCurrency,
-        conversionRate: expense.conversionRate,
+        amount: expenseAmount,
+        originalAmount: conversion.originalAmount,
+        originalCurrency: conversion.originalCurrency,
+        conversionRate: conversion.conversionRate,
+        conversionSource: conversion.conversionSource,
         title: expense.title,
         paidBySplitMode: expense.paidBySplitMode,
         paidByList: {
@@ -231,9 +264,7 @@ export async function createExpense(
                 ? computePaidForFromItems(
                     expense.items ?? [],
                     [...participantIds],
-                    expense.originalCurrency
-                      ? (expense.originalAmount ?? expense.amount)
-                      : expense.amount,
+                    conversion.originalAmount ?? expenseAmount,
                     expense.itemizedRemainder,
                     expenseId,
                   ).paidFor.map((p) => ({
@@ -309,11 +340,12 @@ export async function createExpense(
     data: buildExpenseActivityData({
       summary: expense.title,
       title: expense.title,
-      amount: expense.amount,
-      currencyCode: expense.originalCurrency ?? null,
+      amount: expenseAmount,
+      currencyCode: conversion.originalCurrency,
       date: expenseDateStr,
-      originalAmount: expense.originalAmount,
-      conversionRate: expense.conversionRate,
+      originalAmount: conversion.originalAmount ?? undefined,
+      conversionRate: conversion.conversionRate ?? undefined,
+      conversionSource: conversion.conversionSource,
       ledgerCurrencyCode: group.ledger.currencyCode ?? null,
     }),
     occurredAt: activity.time,
@@ -361,6 +393,7 @@ export async function deleteExpense(
           conversionRate: existingExpense.conversionRate
             ? Number(existingExpense.conversionRate)
             : undefined,
+          conversionSource: existingExpense.conversionSource,
           ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
         }),
       },
@@ -400,6 +433,7 @@ export async function deleteExpense(
       conversionRate: existingExpense.conversionRate
         ? Number(existingExpense.conversionRate)
         : undefined,
+      conversionSource: existingExpense.conversionSource,
       ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
     }),
     occurredAt: activity.time,
@@ -420,6 +454,13 @@ export async function updateExpense(
 
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
+
+  const conversion = await resolveConversion(expense, {
+    ledgerCurrency: group.ledger.currencyCode ?? null,
+    expenseDate: expense.expenseDate,
+  })
+
+  const expenseAmount = conversion.ledgerAmountMinor
 
   const participants = await prisma.ledgerParticipant.findMany({
     where: {
@@ -479,9 +520,32 @@ export async function updateExpense(
 
   const documents = await promoteExpenseDocuments(expense.documents)
 
+  // Diff against the post-resolution shape so ledger `amount` and
+  // conversion fields are compared in the same units as the stored row.
+  const resolvedExpense = {
+    ...expense,
+    amount: expenseAmount,
+    conversion: conversion.conversionSource
+      ? conversion.conversionSource === 'CUSTOM'
+        ? ({
+            type: 'custom' as const,
+            currency: conversion.originalCurrency ?? '',
+            rate: conversion.conversionRate ?? 1,
+          } as const)
+        : ({
+            type: 'exchange' as const,
+            currency: conversion.originalCurrency ?? '',
+          } as const)
+      : undefined,
+    originalAmount: conversion.originalAmount ?? undefined,
+    originalCurrency: conversion.originalCurrency ?? undefined,
+    conversionRate: conversion.conversionRate ?? undefined,
+    conversionSource: conversion.conversionSource,
+  }
+
   const changeSummary = getExpenseChangeSummary(
     toExpenseDomainShape(existingExpense),
-    expense,
+    resolvedExpense,
     changeCtx,
   )
 
@@ -546,9 +610,7 @@ export async function updateExpense(
       ? computePaidForFromItems(
           expense.items ?? [],
           [...participantIds],
-          expense.originalCurrency
-            ? (expense.originalAmount ?? expense.amount)
-            : expense.amount,
+          conversion.originalAmount ?? expenseAmount,
           expense.itemizedRemainder,
           expenseId,
         ).paidFor
@@ -568,14 +630,15 @@ export async function updateExpense(
           data: buildExpenseActivityData({
             summary: expense.title,
             title: expense.title,
-            amount: expense.amount,
-            currencyCode: expense.originalCurrency ?? null,
+            amount: expenseAmount,
+            currencyCode: conversion.originalCurrency,
             date: expenseDateStr,
             changedFields: changeSummary.changedFields,
             changes: changeSummary.changes,
             affectedParticipants: affectedParticipantIds,
-            originalAmount: expense.originalAmount,
-            conversionRate: expense.conversionRate,
+            originalAmount: conversion.originalAmount ?? undefined,
+            conversionRate: conversion.conversionRate ?? undefined,
+            conversionSource: conversion.conversionSource,
             ledgerCurrencyCode: group.ledger.currencyCode ?? null,
           }),
         },
@@ -680,10 +743,11 @@ export async function updateExpense(
       where: { id: expenseId },
       data: {
         expenseDate: expense.expenseDate,
-        amount: expense.amount,
-        originalAmount: expense.originalAmount ?? null,
-        originalCurrency: expense.originalCurrency ?? null,
-        conversionRate: expense.conversionRate ?? null,
+        amount: expenseAmount,
+        originalAmount: conversion.originalAmount,
+        originalCurrency: conversion.originalCurrency,
+        conversionRate: conversion.conversionRate,
+        conversionSource: conversion.conversionSource,
         title: expense.title,
         categoryId: expense.category,
         paidBySplitMode: expense.paidBySplitMode,
@@ -814,14 +878,15 @@ export async function updateExpense(
       data: buildExpenseActivityData({
         summary: expense.title,
         title: expense.title,
-        amount: expense.amount,
-        currencyCode: expense.originalCurrency ?? null,
+        amount: expenseAmount,
+        currencyCode: conversion.originalCurrency,
         date: expenseDateStr,
         changedFields: changeSummary.changedFields,
         changes: changeSummary.changes,
         affectedParticipants: affectedParticipantIds,
-        originalAmount: expense.originalAmount,
-        conversionRate: expense.conversionRate,
+        originalAmount: conversion.originalAmount ?? undefined,
+        conversionRate: conversion.conversionRate ?? undefined,
+        conversionSource: conversion.conversionSource,
         ledgerCurrencyCode: group.ledger.currencyCode ?? null,
       }),
       occurredAt: activity.time,
@@ -859,6 +924,7 @@ export async function getGroupExpenses(
     select: {
       amount: true,
       conversionRate: true,
+      conversionSource: true,
       categoryId: true,
       createdAt: true,
       expenseDate: true,
@@ -982,6 +1048,7 @@ export async function getGroupExpenses(
     categoryId: narrowCategoryId(row.categoryId),
     category: resolveCategory(row.categoryId),
     conversionRate: row.conversionRate ?? null,
+    conversionSource: row.conversionSource,
   }))
 }
 
