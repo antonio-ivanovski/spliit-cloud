@@ -446,7 +446,8 @@
       "label": "主な通貨",
       "createDescription": "すべての金額および残高はこの通貨で表示されます。",
       "editDescription": "すべての金額および残高はこの通貨で表示されます。これを変更しても、既に入力された支出は変換されません。ただし、現在の通貨と変更先の通貨で小数単位（例：米ドルから日本円へ）の扱いが異なる場合は例外です",
-      "customOption": "カスタム"
+      "customOption": "カスタム",
+      "lockedAfterExpenses": "このグループには既に支出があるため、通貨はロックされています。"
     },
     "readOnlyNote": "オーナーと管理者のみがグループ設定を変更できます。",
     "readOnlyTitle": "グループ設定",
@@ -561,7 +562,9 @@
     "conversionRateField": {
       "useApi": "Frankfurterのレートを使用する",
       "useCustom": "カスタムレートを使用する",
-      "label": "為替レート"
+      "label": "為替レート",
+      "providerNote": "レートは https://frankfurter.dev/ とそのAPIによって提供されています。",
+      "futureDateUsesToday": "この支出は未来日付のため、本日の為替レートが使用されます。"
     },
     "conversionRateState": {
       "loading": "為替レートを取得しています…",
@@ -1332,7 +1335,9 @@
         "items": "明細",
         "documents": "添付ファイル",
         "recurrence": "繰り返し",
-        "reimbursement": "払い戻し"
+        "reimbursement": "払い戻し",
+        "conversionSource": "換算元",
+        "conversionRate": "換算レート"
       }
     },
     "group": {

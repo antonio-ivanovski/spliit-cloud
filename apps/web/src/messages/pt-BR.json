@@ -446,7 +446,8 @@
       "label": "Moeda principal",
       "createDescription": "Todos os valores e saldos estarão nesta moeda.",
       "editDescription": "Todos os valores e saldos estarão nesta moeda. A sua alteração NÃO irá converter despesas já registradas, exceto quando a moeda possuir \"unidades menores\" que a atual (ex. Alterar de Dólar Americano para Yen Japonês)",
-      "customOption": "Customizado"
+      "customOption": "Customizado",
+      "lockedAfterExpenses": "A moeda está bloqueada porque este grupo já tem despesas."
     },
     "readOnlyNote": "Apenas proprietários e administradores podem alterar as configurações do grupo.",
     "readOnlyTitle": "Configurações do grupo",
@@ -560,7 +561,9 @@
     "conversionRateField": {
       "label": "Taxa de câmbio",
       "useApi": "Usar taxas do Frankfurter",
-      "useCustom": "Usar taxa personalizada"
+      "useCustom": "Usar taxa personalizada",
+      "providerNote": "As taxas são fornecidas por https://frankfurter.dev/ e pela sua API.",
+      "futureDateUsesToday": "Esta despesa está no futuro e será usada a taxa de câmbio de hoje."
     },
     "conversionRateState": {
       "success": "Taxas obtidas:",
@@ -1332,7 +1335,9 @@
         "items": "Itens",
         "documents": "Documentos",
         "recurrence": "Recorrência",
-        "reimbursement": "Reembolso"
+        "reimbursement": "Reembolso",
+        "conversionSource": "Fonte de conversão",
+        "conversionRate": "Taxa de conversão"
       }
     },
     "group": {

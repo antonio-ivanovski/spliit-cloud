@@ -420,7 +420,8 @@
       "label": "מטבע ראשי",
       "createDescription": "כל הסכומים והיתרות יהיו במטבע זה.",
       "editDescription": "כל הסכומים והיתרות יהיו במטבע זה. שינוי של זה לא ימיר הוצאות שכבר הוזנו, אלא אם כן למטבע יש \"יחידות משנה\" שונות מהנוכחיות (למשל, שינוי מדולר אמריקאי לין יפני)",
-      "customOption": "מותאם אישית"
+      "customOption": "מותאם אישית",
+      "lockedAfterExpenses": "המטבע נעול מכיוון שלקבוצה זו כבר יש הוצאות."
     },
     "Participants": {
       "title": "משתתפים",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "השתמש בשערים מ-Frankfurter",
       "useCustom": "השתמש בשער מותאם אישית",
-      "label": "שער חליפין"
+      "label": "שער חליפין",
+      "providerNote": "שערים מסופקים על ידי https://frankfurter.dev/ וה-API שלהם.",
+      "futureDateUsesToday": "הוצאה זו היא בעתיד ושער החליפין של היום ישמש."
     },
     "conversionRateState": {
       "loading": "משיג שערי חליפין…",
@@ -1332,7 +1335,9 @@
         "items": "פריטים",
         "documents": "קבצים מצורפים",
         "recurrence": "תדירות",
-        "reimbursement": "החזר"
+        "reimbursement": "החזר",
+        "conversionSource": "מקור ההמרה",
+        "conversionRate": "שער המרה"
       }
     },
     "group": {

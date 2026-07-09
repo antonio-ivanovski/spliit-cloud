@@ -2,6 +2,7 @@ import { expenseApiSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createExpense } from '../../../../lib/api'
+import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 
 export const createGroupExpenseProcedure = protectedProcedure
@@ -23,8 +24,19 @@ export const createGroupExpenseProcedure = protectedProcedure
       })
     }
     const account = ctx.auth.user
-    const { id: expenseId } = await createExpense(expense, groupId, {
-      accountId: account.id,
-    })
-    return { expenseId }
+    try {
+      const { id: expenseId } = await createExpense(expense, groupId, {
+        accountId: account.id,
+      })
+      return { expenseId }
+    } catch (err) {
+      if (err instanceof ConversionError) {
+        throw new TRPCError({
+          code:
+            err.code === 'PROVIDER_UNAVAILABLE' ? 'BAD_GATEWAY' : 'BAD_REQUEST',
+          message: err.message,
+        })
+      }
+      throw err
+    }
   })

@@ -420,7 +420,8 @@
       "label": "Moneta nagusia",
       "createDescription": "Zenbatekoak eta saldoak monetan honetan adieraziko dira.",
       "editDescription": "Zenbateko eta saldo guztiak moneta honetan adieraziko dira. Hori aldatuz gero, EZ dira bihurtuko lehendik sartutako gastuak, dibisak egungoaren \"unitate txiki\" desberdinak dituenean izan ezik (adib. AEBko dolarretik Japoniako yenera aldatuz)",
-      "customOption": "Pertsonalizatua"
+      "customOption": "Pertsonalizatua",
+      "lockedAfterExpenses": "Moneta blokeatuta dago talde honek jada gastuak dituelako."
     },
     "Participants": {
       "title": "Kideak",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "Erabili Frankfurter-en tasak",
       "useCustom": "Erabili tasa pertsonalizatua",
-      "label": "Kanbio-tasa"
+      "label": "Kanbio-tasa",
+      "providerNote": "Tasak https://frankfurter.dev/-k eta bere APIak ematen dituzte.",
+      "futureDateUsesToday": "Gastu hau etorkizunekoa da eta gaurko kanbio-tasa erabiliko da."
     },
     "conversionRateState": {
       "loading": "Kanbio-tasak eskuratzen…",
@@ -1332,7 +1335,9 @@
         "items": "Partidak",
         "documents": "Erantsitakoak",
         "recurrence": "Maiztasuna",
-        "reimbursement": "Diru-itzultzea"
+        "reimbursement": "Diru-itzultzea",
+        "conversionSource": "Bihurketa-iturria",
+        "conversionRate": "Bihurketa-tasa"
       }
     },
     "group": {

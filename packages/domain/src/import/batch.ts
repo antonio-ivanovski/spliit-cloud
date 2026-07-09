@@ -1,13 +1,12 @@
+import type { ExpenseConversionInput } from '../conversion'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
-import {
-  calculateExactShares,
-  serializePaidBy,
-  serializePaidFor,
-} from '../totals'
+import { calculateExactShares, serializePaidBy } from '../totals'
 import type { ParticipantMappingState } from './matching'
 import type { NormalizedSource, NormalizedSourceExpense } from './types'
+
+export type ImportConversionMode = 'perDate' | 'fixed'
 
 export type ImportBatchState = {
   source:
@@ -24,6 +23,11 @@ export type ImportBatchState = {
   sourceIdToDestId: Record<string, string>
   destIds: Record<string, string>
   resolvedExpenses: NormalizedSourceExpense[]
+  /**
+   * Optional wizard conversion modes keyed by `BASE|TARGET` (e.g. `EUR|USD`).
+   * `perDate` → EXCHANGE, `fixed` → CUSTOM (locked rate, API or override).
+   */
+  conversionModes?: Record<string, ImportConversionMode>
 }
 
 /**
@@ -49,6 +53,37 @@ export type ImportRateKeyItem = {
 }
 
 /**
+ * Resolve the expense-currency amount to import from a normalized expense.
+ *
+ * After Spliit parse, `amount`/`originalAmount` are already recovered expense
+ * money (ledger÷rate). This only picks which fields to use — no second recovery
+ * and no caching.
+ */
+export function resolveImportExpenseMoney(
+  e: Pick<
+    NormalizedSourceExpense,
+    'amount' | 'amountCurrency' | 'originalAmount' | 'originalCurrency'
+  >,
+  sourceCurrencyCode: string,
+): {
+  expenseCurrency: string
+  expenseAmount: number
+} {
+  const usesOriginalCurrency =
+    e.originalCurrency != null &&
+    e.originalCurrency !== '' &&
+    e.originalAmount != null
+
+  const expenseCurrency = usesOriginalCurrency
+    ? e.originalCurrency!
+    : (e.amountCurrency ?? sourceCurrencyCode)
+
+  const expenseAmount = usesOriginalCurrency ? e.originalAmount! : e.amount
+
+  return { expenseCurrency, expenseAmount }
+}
+
+/**
  * Compute the unique exchange-rate lookups required to import a set of
  * resolved expenses into a destination ledger.
  */
@@ -63,17 +98,12 @@ export function computeImportRateKeys(
   const items: ImportRateKeyItem[] = []
   for (const expense of expenses) {
     const destination = destinationCurrencyCode.toUpperCase()
-    const amountCurrency = (
-      expense.amountCurrency ?? sourceCurrencyCode
-    ).toUpperCase()
-    if (!amountCurrency || amountCurrency === destination) continue
-    if (
-      expense.originalCurrency?.toUpperCase() === destination &&
-      expense.originalAmount !== null
-    ) {
-      continue
-    }
-    const base = amountCurrency
+    const { expenseCurrency } = resolveImportExpenseMoney(
+      expense,
+      sourceCurrencyCode,
+    )
+    const base = expenseCurrency.toUpperCase()
+    if (!base || base === destination) continue
     const date = expense.expenseDate.slice(0, 10)
     const key = makeRateKey(date, base, destination)
     if (seen.has(key)) continue
@@ -123,9 +153,8 @@ export type ImportBatchExpense = {
   title: string
   category: never
   amount: number
-  originalAmount: number | undefined
-  originalCurrency: string | undefined
-  conversionRate: number | undefined
+  /** Present only when expense currency differs from the destination. */
+  conversion?: ExpenseConversionInput
   paidByList: Array<{ participant: string; shares: number }>
   paidBySplitMode: 'BY_AMOUNT'
   paidFor: Array<{ participant: string; shares: number }>
@@ -134,6 +163,49 @@ export type ImportBatchExpense = {
   documents: never[]
   notes: string | undefined
   recurrenceRule: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
+}
+
+/**
+ * Map wizard conversion mode for a currency pair to a conversion discriminant.
+ * Missing mode defaults to exchange (historical rates from the provider).
+ */
+export function importConversionForPair(
+  amountCurrency: string,
+  destinationCurrencyCode: string,
+  rate: number | undefined,
+  conversionModes?: Record<string, ImportConversionMode>,
+): ExpenseConversionInput {
+  if (!conversionModes) {
+    return { type: 'exchange', currency: amountCurrency }
+  }
+  const pairKey = `${amountCurrency}|${destinationCurrencyCode}`
+  const upperKey = `${amountCurrency.toUpperCase()}|${destinationCurrencyCode.toUpperCase()}`
+  const mode = conversionModes[pairKey] ?? conversionModes[upperKey]
+  if (mode === 'fixed') {
+    // Propagate invalid/missing rates so server RATE_NOT_POSITIVE rejects the
+    // batch instead of silently converting at 1:1.
+    return {
+      type: 'custom',
+      currency: amountCurrency,
+      rate: typeof rate === 'number' ? rate : 0,
+    }
+  }
+  return { type: 'exchange', currency: amountCurrency }
+}
+
+/** @deprecated use importConversionForPair */
+export function importConversionSourceForPair(
+  amountCurrency: string,
+  destinationCurrencyCode: string,
+  conversionModes?: Record<string, ImportConversionMode>,
+): 'EXCHANGE' | 'CUSTOM' {
+  const c = importConversionForPair(
+    amountCurrency,
+    destinationCurrencyCode,
+    undefined,
+    conversionModes,
+  )
+  return c.type === 'custom' ? 'CUSTOM' : 'EXCHANGE'
 }
 
 const FALLBACK_CURRENCY: Currency = {
@@ -148,47 +220,7 @@ function currencyOrFallback(code: string | null | undefined): Currency {
   return getCurrency(code) ?? { ...FALLBACK_CURRENCY, code, symbol: code }
 }
 
-/** Convert minor-unit amount by rate; FX is a convenience estimate. */
-function convertAmountByRate(amountMinor: number, rate: number): number {
-  return Math.round(amountMinor * rate)
-}
-
-/** paidFor already in source minor units → ledger minor units via serializePaidFor. */
-function convertPaidForByAmount(
-  paidFor: Array<{ participant: string; shares: number }>,
-  sourceCurrency: Currency,
-  ledgerCurrency: Currency,
-  conversionRate: number,
-  convertedAmount: number,
-): Array<{ participant: string; shares: number }> {
-  const sourceScale = 10 ** sourceCurrency.decimal_digits
-  const serialized = serializePaidFor({
-    splitMode: 'BY_AMOUNT',
-    amount: convertedAmount,
-    currency: ledgerCurrency,
-    conversionRate,
-    paidFor: paidFor.map((p) => ({
-      participant: { id: p.participant },
-      shares: p.shares / sourceScale,
-    })),
-  })
-  // Per-row Math.round can drift from convertedAmount; reconcile so schema sum check passes.
-  const exact = Object.fromEntries(
-    serialized.map((p) => [
-      p.participant.id,
-      { numerator: BigInt(p.shares), denominator: 1n },
-    ]),
-  )
-  const reconciled = distributeRemainder(exact, convertedAmount, {
-    payerId: serialized[0]?.participant.id,
-  })
-  return serialized.map((p) => ({
-    participant: p.participant.id,
-    shares: reconciled[p.participant.id] ?? 0,
-  }))
-}
-
-/** paidBy stays in original currency minor units. */
+/** paidBy stays in expense currency minor units. */
 function normalizePaidByOriginal(
   paidByList: Array<{ participant: string; shares: number }>,
   originalCurrency: Currency,
@@ -218,6 +250,45 @@ function normalizePaidByOriginal(
   return Object.entries(fixed).map(([participant, shares]) => ({
     participant,
     shares,
+  }))
+}
+
+/**
+ * Scale BY_AMOUNT paidFor shares so they sum to `targetAmount`.
+ * Converted Spliit sources often store paidFor in ledger units while the
+ * import amount is the original-currency expense amount.
+ */
+function normalizePaidForByAmount(
+  paidFor: Array<{ participant: string; shares: number }>,
+  targetAmount: number,
+): Array<{ participant: string; shares: number }> {
+  if (paidFor.length === 0) return paidFor
+  const sum = paidFor.reduce((s, p) => s + p.shares, 0)
+  if (sum === targetAmount) {
+    return paidFor.map((p) => ({
+      participant: p.participant,
+      shares: Math.round(p.shares),
+    }))
+  }
+  if (sum === 0) {
+    return paidFor.map((p, i) => ({
+      participant: p.participant,
+      shares: i === 0 ? targetAmount : 0,
+    }))
+  }
+  const exact: Record<string, { numerator: bigint; denominator: bigint }> = {}
+  for (const p of paidFor) {
+    exact[p.participant] = {
+      numerator: BigInt(p.shares) * BigInt(targetAmount),
+      denominator: BigInt(sum),
+    }
+  }
+  const reconciled = distributeRemainder(exact, targetAmount, {
+    payerId: paidFor[0]?.participant,
+  })
+  return paidFor.map((p) => ({
+    participant: p.participant,
+    shares: reconciled[p.participant] ?? 0,
   }))
 }
 
@@ -300,13 +371,17 @@ export function buildImportBatch(
   })
 
   const sourceCurrencyCode = state.source?.currencyCode ?? ''
-  const ledgerCurrency = currencyOrFallback(destinationCurrencyCode)
 
   const expenses: ImportBatchExpense[] = state.resolvedExpenses.map((e) => {
+    const { expenseCurrency, expenseAmount } = resolveImportExpenseMoney(
+      e,
+      sourceCurrencyCode,
+    )
+
     const normalizedPaidBy =
       e.paidBy.length > 0
         ? e.paidBy
-        : [{ sourceId: e.paidBySourceId, shares: e.originalAmount ?? e.amount }]
+        : [{ sourceId: e.paidBySourceId, shares: expenseAmount }]
     const paidByList: Array<{ participant: string; shares: number }> = []
     for (const p of normalizedPaidBy) {
       const destId = state.sourceIdToDestId[p.sourceId]
@@ -328,97 +403,60 @@ export function buildImportBatch(
       paidFor.push({ participant: destId, shares: p.shares })
     }
 
-    const amountCurrency = e.amountCurrency ?? sourceCurrencyCode
-    const effectiveOriginalCurrency = e.originalCurrency ?? amountCurrency
-    const effectiveOriginalAmount = e.originalAmount ?? e.amount
+    const expenseCurrencyObj = currencyOrFallback(expenseCurrency)
+    const inputPaidBy = normalizePaidByOriginal(
+      paidByList,
+      expenseCurrencyObj,
+      expenseAmount,
+    )
+    let inputPaidFor = paidFor.map((p) => ({
+      participant: p.participant,
+      shares: Math.round(p.shares),
+    }))
+    if (e.splitMode === 'BY_AMOUNT') {
+      inputPaidFor = normalizePaidForByAmount(inputPaidFor, expenseAmount)
+    }
+
+    const destUpper = destinationCurrencyCode.toUpperCase()
+    const expenseUpper = expenseCurrency.toUpperCase()
     const needsConversion =
       !!destinationCurrencyCode &&
-      !!amountCurrency &&
-      amountCurrency !== destinationCurrencyCode
+      !!expenseCurrency &&
+      expenseUpper !== destUpper
 
     if (needsConversion) {
       const dateKey = e.expenseDate.slice(0, 10)
-      let convertedAmount: number
-      let shareRate: number
-
-      if (
-        e.originalCurrency?.toUpperCase() ===
-          destinationCurrencyCode.toUpperCase() &&
-        e.originalAmount !== null
-      ) {
-        convertedAmount = e.originalAmount
-        shareRate = e.amount !== 0 ? convertedAmount / e.amount : 1
-      } else {
-        if (!rates) {
-          throw new Error(
-            `Cannot import "${e.title}": cross-currency conversion needs an exchange rate from ${amountCurrency} to ${destinationCurrencyCode}.`,
-          )
-        }
-        const rateKey = makeRateKey(
-          dateKey,
-          amountCurrency,
-          destinationCurrencyCode,
-        )
-        const rate = rates[rateKey]
-        if (typeof rate !== 'number') {
-          throw new Error(
-            `Cannot import "${e.title}": missing exchange rate for ${amountCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
-          )
-        }
-        convertedAmount = convertAmountByRate(e.amount, rate)
-        shareRate = rate
-      }
-
-      const sourceCurrency = currencyOrFallback(amountCurrency)
-
-      // BY_AMOUNT → ledger currency via serializePaidFor; unitless modes untouched.
-      const convertedPaidFor =
-        e.splitMode === 'BY_AMOUNT'
-          ? convertPaidForByAmount(
-              paidFor,
-              sourceCurrency,
-              ledgerCurrency,
-              shareRate,
-              convertedAmount,
-            )
-          : paidFor.map((p) => ({
-              participant: p.participant,
-              shares: Math.round(p.shares),
-            }))
-
-      // paidByList.shares stay in original currency (not rate-multiplied).
-      const originalCurrency = currencyOrFallback(effectiveOriginalCurrency)
-      let convertedPaidBy: Array<{ participant: string; shares: number }>
-      if (
-        e.originalCurrency &&
-        e.originalAmount !== null &&
-        paidByList.length === 1
-      ) {
-        convertedPaidBy = [{ ...paidByList[0], shares: e.originalAmount }]
-      } else {
-        convertedPaidBy = normalizePaidByOriginal(
-          paidByList,
-          originalCurrency,
-          effectiveOriginalAmount,
+      if (!rates) {
+        throw new Error(
+          `Cannot import "${e.title}": cross-currency conversion needs an exchange rate from ${expenseCurrency} to ${destinationCurrencyCode}.`,
         )
       }
-
-      const conversionRate =
-        effectiveOriginalAmount !== 0
-          ? convertedAmount / effectiveOriginalAmount
-          : undefined
+      const rateKey = makeRateKey(
+        dateKey,
+        expenseCurrency,
+        destinationCurrencyCode,
+      )
+      const rate = rates[rateKey]
+      if (typeof rate !== 'number') {
+        throw new Error(
+          `Cannot import "${e.title}": missing exchange rate for ${expenseCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
+        )
+      }
 
       return {
         expenseDate: new Date(e.expenseDate),
         title: e.title,
         category: e.category as never,
-        amount: convertedAmount,
-        originalAmount: effectiveOriginalAmount,
-        originalCurrency: effectiveOriginalCurrency,
-        conversionRate,
-        paidByList: convertedPaidBy,
+        amount: expenseAmount,
+        conversion: importConversionForPair(
+          expenseCurrency,
+          destinationCurrencyCode,
+          rate,
+          state.conversionModes,
+        ),
+        paidByList: inputPaidBy,
         paidBySplitMode: 'BY_AMOUNT',
-        paidFor: convertedPaidFor,
+        paidFor: inputPaidFor,
         splitMode: e.splitMode,
         isReimbursement: e.isReimbursement,
         documents: [],
@@ -431,13 +469,10 @@ export function buildImportBatch(
       expenseDate: new Date(e.expenseDate),
       title: e.title,
       category: e.category as never,
-      amount: e.amount,
-      originalAmount: e.originalAmount ?? undefined,
-      originalCurrency: e.originalCurrency ?? undefined,
-      conversionRate: e.conversionRate ?? undefined,
-      paidByList,
+      amount: expenseAmount,
+      paidByList: inputPaidBy,
       paidBySplitMode: 'BY_AMOUNT',
-      paidFor,
+      paidFor: inputPaidFor,
       splitMode: e.splitMode,
       isReimbursement: e.isReimbursement,
       documents: [],

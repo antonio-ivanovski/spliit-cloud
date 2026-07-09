@@ -1,4 +1,5 @@
 import { getBalances } from './balances'
+import type { ConversionSource } from './conversion'
 import type { Currency } from './currency'
 import type { SplitMode } from './enums'
 import {
@@ -7,7 +8,6 @@ import {
   exactFromFraction,
   exactFromInteger,
   exactZero,
-  isCrossCurrency,
   type ExactAmount,
   type ParticipantShare,
 } from './exact-math'
@@ -31,6 +31,7 @@ export type TotalsExpense = {
   originalAmount?: number | null
   originalCurrency?: string | null
   conversionRate?: number | string | null
+  conversionSource?: ConversionSource | null
   expenseDate?: Date | string | number | null
   [key: string]: unknown
 }
@@ -39,6 +40,21 @@ export type SplitInput = {
   amount: number
   splitMode: SplitMode
   participants: Array<{ id: string; shares: number }>
+}
+
+function isConverted(expense: {
+  conversionSource?: ConversionSource | null
+  originalCurrency?: string | null
+  conversionRate?: number | string | null
+}): boolean {
+  // EXCHANGE | CUSTOM means converted; null/undefined means same currency.
+  if (
+    expense.conversionSource === 'EXCHANGE' ||
+    expense.conversionSource === 'CUSTOM'
+  ) {
+    return true
+  }
+  return Boolean(expense.originalCurrency && expense.conversionRate)
 }
 
 type SharesExpense = Pick<
@@ -50,6 +66,7 @@ type SharesExpense = Pick<
   | 'originalAmount'
   | 'originalCurrency'
   | 'conversionRate'
+  | 'conversionSource'
 > & {
   id?: string | null
   paidByList?: TotalsExpense['paidByList']
@@ -64,6 +81,7 @@ type PaidBySharesExpense = Pick<
   | 'originalAmount'
   | 'originalCurrency'
   | 'conversionRate'
+  | 'conversionSource'
 > & {
   id?: string | null
 }
@@ -142,15 +160,29 @@ export function calculateShares(
   const paidFor = expense.paidFor
   if (paidFor.length === 0) return {}
 
-  const crossCurrency = isCrossCurrency(expense)
-  // ITEMIZED cross-currency shares are original-currency weights against ledger amount
-  const splitMode: SplitMode =
-    expense.splitMode === 'ITEMIZED' && crossCurrency
+  const converted = isConverted(expense)
+  const hasRate = Boolean(expense.conversionRate)
+  // BY_AMOUNT cross-currency: paidFor shares are original-currency minor
+  // units (sum === originalAmount). EVENLY/PERCENTAGE/SHARES are computed
+  // from the ledger total directly and are unaffected. ITEMIZED treats
+  // original-currency weights as BY_SHARES against the ledger total.
+  let splitMode: SplitMode =
+    expense.splitMode === 'ITEMIZED' && converted && hasRate
       ? 'BY_SHARES'
       : expense.splitMode
 
+  let sharesAmount = expense.amount
+  if (converted && hasRate && expense.splitMode === 'BY_AMOUNT') {
+    // shares are in original-currency minor units; normalize them as a
+    // fractional sum against the originalAmount so the per-participant
+    // fractions can be re-multiplied against the ledger total.
+    const originalAmount = expense.originalAmount ?? expense.amount
+    sharesAmount = originalAmount
+    splitMode = 'BY_AMOUNT'
+  }
+
   const exact = calculateExactShares({
-    amount: expense.amount,
+    amount: sharesAmount,
     splitMode,
     participants: paidFor.map((p) => ({
       id: p.participant.id,
@@ -158,16 +190,30 @@ export function calculateShares(
     })),
   })
 
+  let distributable: Record<string, ExactAmount> = exact
+  if (converted && hasRate && expense.splitMode === 'BY_AMOUNT') {
+    // Scale original-currency minor units to ledger minor units. Prefer
+    // amount/originalAmount so decimal_digits differences match the stored
+    // ledger total (major-unit FX rate alone is wrong for e.g. USD→JPY).
+    const originalAmount = expense.originalAmount ?? expense.amount
+    const scale =
+      originalAmount !== 0
+        ? expense.amount / originalAmount
+        : Number(expense.conversionRate)
+    distributable = {}
+    for (const [id, share] of Object.entries(exact)) {
+      distributable[id] = convertByRate(share, scale)
+    }
+  }
+
   const seed = expenseIdSeed(expense.id)
-  // payerId only for same-currency literal cents; FX conversion residual
-  // must use fractional-part distribution (matches getBalances).
   const payerId =
-    !crossCurrency &&
+    !converted &&
     (expense.splitMode === 'BY_AMOUNT' || expense.splitMode === 'ITEMIZED')
       ? expense.paidByList?.[0]?.participant.id
       : undefined
 
-  return distributeRemainder(exact, expense.amount, { seed, payerId })
+  return distributeRemainder(distributable, expense.amount, { seed, payerId })
 }
 
 /** Per-expense integer paidBy shares in ledger currency; sum === expense.amount. */
@@ -177,8 +223,9 @@ export function calculatePaidByShares(
   const paidBys = expense.paidByList
   if (paidBys.length === 0) return {}
 
-  const crossCurrency = isCrossCurrency(expense)
-  const payerBase = crossCurrency
+  const converted = isConverted(expense)
+  const hasRate = Boolean(expense.conversionRate)
+  const payerBase = converted
     ? (expense.originalAmount ?? expense.amount)
     : expense.amount
 
@@ -197,22 +244,22 @@ export function calculatePaidByShares(
     })),
   })
 
-  if (crossCurrency) {
-    const converted: Record<string, ExactAmount> = {}
+  if (converted && hasRate) {
+    const originalAmount = expense.originalAmount ?? expense.amount
+    const scale =
+      originalAmount !== 0
+        ? expense.amount / originalAmount
+        : Number(expense.conversionRate)
+    const convertedExact: Record<string, ExactAmount> = {}
     for (const [id, share] of Object.entries(exact)) {
-      converted[id] = convertByRate(
-        share,
-        expense.conversionRate as number | string,
-      )
+      convertedExact[id] = convertByRate(share, scale)
     }
-    exact = converted
+    exact = convertedExact
   }
 
   const seed = expenseIdSeed(expense.id)
-  // payerId only for same-currency literal cents; FX conversion residual
-  // must use fractional-part distribution (matches getBalances).
   const payerId =
-    !crossCurrency &&
+    !converted &&
     (expense.paidBySplitMode === 'BY_AMOUNT' ||
       expense.paidBySplitMode === 'ITEMIZED')
       ? paidBys[0]?.participant.id

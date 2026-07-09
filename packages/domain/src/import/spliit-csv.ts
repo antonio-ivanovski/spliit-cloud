@@ -4,16 +4,25 @@ import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
 import { amountAsMinorUnitsByCode } from '../utils'
+import {
+  recoverSpliitOriginalAmount,
+  shouldRecoverSpliitOriginal,
+} from './spliit-original-amount'
 import { guessSplitMode } from './split-guess'
 import type { ImportParseResult, NormalizedSource } from './types'
-
-const PARTICIPANT_START_INDEX = 10
 
 const FALLBACK_CURRENCY: Currency = {
   code: '',
   symbol: '',
   rounding: 0,
   decimal_digits: 2,
+}
+
+/** Column indices for a validated Spliit CSV header (old or with Conversion source). */
+type CsvLayout = {
+  isReimbursement: number
+  splitMode: number
+  participantStart: number
 }
 
 function toNumberOrNull(value: string | undefined): number | null {
@@ -42,12 +51,13 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     }
   }
   const header = rows[0]
-  if (!validateHeader(header)) {
+  const layout = detectCsvLayout(header)
+  if (!layout) {
     return { ok: false, error: 'CSV header is not a Spliit export' }
   }
 
   const participantHeaders = header
-    .slice(PARTICIPANT_START_INDEX)
+    .slice(layout.participantStart)
     .map((h: string) => h.trim())
     .filter((h: string) => h.length > 0)
 
@@ -78,7 +88,8 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     const category = (row[2] ?? '').trim()
     const rowCurrency = (row[3] ?? '').trim().toUpperCase()
     const costMajor = toNumberOrNull(row[4])
-    const isReimbursement = (row[8] ?? '').trim().toLowerCase() === 'yes'
+    const isReimbursement =
+      (row[layout.isReimbursement] ?? '').trim().toLowerCase() === 'yes'
 
     if (!/^\d{4}-\d{2}-\d{2}/.test(date)) continue
     if (title.length === 0) continue
@@ -98,7 +109,7 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     const entries: Entry[] = []
     let paidBySourceId: string | null = null
     let firstZeroSourceId: string | null = null
-    for (let i = PARTICIPANT_START_INDEX; i < header.length; i++) {
+    for (let i = layout.participantStart; i < header.length; i++) {
       const name = (header[i] ?? '').trim()
       if (!name) continue
       const raw = toNumberOrNull(row[i])
@@ -191,30 +202,41 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       },
     )
 
-    const originalCost = toNumberOrNull(row[5])
+    // Cost is the source-group ledger total (reliable). Original cost is not
+    // trusted — recover expense amount from ledger ÷ rate (upstream #513).
+    // Once per parse only; no caching.
     const originalCurrencyRaw = (row[6] ?? '').trim()
-    const hasOriginalCurrency = originalCurrencyRaw.length === 3
     const conversionRate = toNumberOrNull(row[7])
-    const hasPriorConversion =
-      hasOriginalCurrency && originalCost !== null && conversionRate !== null
+    const shouldRecover = shouldRecoverSpliitOriginal({
+      originalCurrency:
+        originalCurrencyRaw.length === 3 ? originalCurrencyRaw : null,
+      conversionRate,
+    })
+    const expenseAmount = shouldRecover
+      ? recoverSpliitOriginalAmount(amountCents, conversionRate!, {
+          originalCurrency: originalCurrencyRaw,
+          ledgerCurrency: currencyCode || null,
+        })
+      : amountCents
+    const expenseCurrency = shouldRecover
+      ? originalCurrencyRaw
+      : rowCurrency.length === 3
+        ? rowCurrency
+        : null
     expenses.push({
       title,
       expenseDate: date.slice(0, 10),
       category: categoryToId(category),
-      amountCurrency: rowCurrency.length === 3 ? rowCurrency : null,
-      amount: amountCents,
-      originalAmount: hasPriorConversion
-        ? amountAsMinorUnitsByCode(originalCost, originalCurrencyRaw)
-        : null,
-      originalCurrency: hasPriorConversion ? originalCurrencyRaw : null,
-      conversionRate: hasPriorConversion ? conversionRate : null,
+      amountCurrency: expenseCurrency,
+      amount: expenseAmount,
+      originalAmount: shouldRecover ? expenseAmount : null,
+      originalCurrency: shouldRecover ? originalCurrencyRaw : null,
+      conversionRate: shouldRecover ? conversionRate : null,
       paidBySourceId,
       paidBy: [
         {
           sourceId: paidBySourceId,
-          shares: hasPriorConversion
-            ? amountAsMinorUnitsByCode(originalCost, originalCurrencyRaw)
-            : amountCents,
+          shares: expenseAmount,
         },
       ],
       paidFor: resolvedPaidFor,
@@ -257,8 +279,12 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
   }
 }
 
-function validateHeader(header: string[]): boolean {
-  return (
+/**
+ * Accept both legacy exports and exports that include `Conversion source`
+ * after `Conversion rate`. Participant columns always follow `Split mode`.
+ */
+function detectCsvLayout(header: string[]): CsvLayout | null {
+  const baseOk =
     header[0] === 'Date' &&
     header[1] === 'Description' &&
     header[2] === 'Category' &&
@@ -266,10 +292,20 @@ function validateHeader(header: string[]): boolean {
     header[4] === 'Cost' &&
     header[5] === 'Original cost' &&
     header[6] === 'Original currency' &&
-    header[7] === 'Conversion rate' &&
-    header[8] === 'Is Reimbursement' &&
-    header[9] === 'Split mode'
-  )
+    header[7] === 'Conversion rate'
+  if (!baseOk) return null
+
+  if (
+    header[8] === 'Conversion source' &&
+    header[9] === 'Is Reimbursement' &&
+    header[10] === 'Split mode'
+  ) {
+    return { isReimbursement: 9, splitMode: 10, participantStart: 11 }
+  }
+  if (header[8] === 'Is Reimbursement' && header[9] === 'Split mode') {
+    return { isReimbursement: 8, splitMode: 9, participantStart: 10 }
+  }
+  return null
 }
 
 function categoryToId(name: string): string {

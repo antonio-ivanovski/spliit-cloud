@@ -3,6 +3,7 @@ import { expenseApiSchema, groupFormSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { importGroup } from '../../../lib/api'
+import { ConversionError } from '../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../init'
 
 const importParticipantMappingSchema = z.discriminatedUnion('mode', [
@@ -99,6 +100,13 @@ export const importGroupProcedure = protectedProcedure
       })
       return result
     } catch (err) {
+      if (err instanceof ConversionError) {
+        throw new TRPCError({
+          code:
+            err.code === 'PROVIDER_UNAVAILABLE' ? 'BAD_GATEWAY' : 'BAD_REQUEST',
+          message: err.message,
+        })
+      }
       const message = err instanceof Error ? err.message : 'Import failed'
       if (/archived/i.test(message)) {
         throw new TRPCError({ code: 'BAD_REQUEST', message })

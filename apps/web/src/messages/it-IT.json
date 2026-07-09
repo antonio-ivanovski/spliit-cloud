@@ -450,7 +450,8 @@
       "label": "Valuta principale",
       "createDescription": "Tutti gli importi e i saldi saranno in questa valuta.",
       "editDescription": "Tutti gli importi e i saldi saranno in questa valuta. La modifica NON convertirà le spese già inserite, eccetto quando la valuta ha \"unità minori\" diverse da quella corrente (es. passaggio da Dollaro USA a Yen Giapponese)",
-      "customOption": "Personalizzata"
+      "customOption": "Personalizzata",
+      "lockedAfterExpenses": "La valuta è bloccata perché questo gruppo ha già delle spese."
     }
   },
   "ExpenseForm": {
@@ -573,7 +574,9 @@
     "conversionRateField": {
       "useApi": "Usa tassi da Frankfurter",
       "useCustom": "Usa tasso personalizzato",
-      "label": "Tasso di cambio"
+      "label": "Tasso di cambio",
+      "providerNote": "I tassi sono forniti da https://frankfurter.dev/ e dalla loro API.",
+      "futureDateUsesToday": "Questa spesa è futura e verrà utilizzato il tasso di cambio di oggi."
     },
     "participant": {
       "pending": "(invitato)"
@@ -1332,7 +1335,9 @@
         "items": "Voci",
         "documents": "Documenti",
         "recurrence": "Ricorrenza",
-        "reimbursement": "Rimborso"
+        "reimbursement": "Rimborso",
+        "conversionSource": "Fonte di conversione",
+        "conversionRate": "Tasso di conversione"
       }
     },
     "group": {

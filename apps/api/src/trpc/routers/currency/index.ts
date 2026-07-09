@@ -59,7 +59,7 @@ export const currencyRouter = createTRPCRouter({
    *
    * Returns the rate and both the requested and as-of dates so the
    * client can show a warning when the as-of differs from the
-   * requested date (e.g. weekend or future date fallback).
+   * requested date (e.g. weekend / holiday market fallback).
    *
    * Bulk lookups for the import wizard are handled by the POST
    * `/currency/rates` endpoint rather than this tRPC procedure — the

@@ -1,5 +1,9 @@
 import * as z from 'zod'
 import { categoryIdSchema } from './categories'
+import {
+  conversionSourceSchema,
+  optionalExpenseConversionSchema,
+} from './conversion'
 import type { RecurrenceRule, SplitMode } from './enums'
 
 export const groupFormSchema = z
@@ -353,6 +357,9 @@ export const expenseFormInputSchema = z
       .refine((r) => !Number.isNaN(r), 'invalidNumber')
       .refine((r) => r > 0, 'ratePositive')
       .optional(),
+    // Form-local toggle: EXCHANGE | CUSTOM | undefined (undefined = group currency).
+    // Mapped to the API `conversion` discriminant in submit-values.
+    conversionType: conversionSourceSchema.optional(),
     paidBySplitMode: paidBySplitModeSchema,
     paidByList: z
       .array(formPaidByRowSchema)
@@ -503,14 +510,17 @@ export function validateExpenseItems(
 export type ExpenseFormInputValues = z.infer<typeof expenseFormInputSchema>
 
 // `expenseApiSchema` validates the API/domain payload: amounts in
-// integer minor units, BY_PERCENTAGE shares in basis points summing to
-// 10000, BY_AMOUNT shares summing to amount in minor units. Used by
-// the create/update/import tRPC procedures and the API helpers.
+// integer minor units (expense currency), BY_PERCENTAGE shares in basis
+// points summing to 10000, BY_AMOUNT shares summing to amount. Conversion
+// is optional — absent means same currency as the group/ledger base.
+// Used by create/update/import tRPC procedures and the API helpers.
 export const expenseApiSchema = z
   .object({
     expenseDate: z.coerce.date(),
     title: z.string().min(2, 'min2'),
     category: categoryIdSchema,
+    // Expense-currency minor units (what the user typed). Server computes
+    // the ledger-currency total from `conversion` when present.
     amount: z
       .number()
       .int()
@@ -518,17 +528,7 @@ export const expenseApiSchema = z
       // 1,000,000,000 minor units = $10,000,000 (decimal_digits=2).
       // Same error key as the form schema's `amountTenMillion`.
       .refine((amount) => amount <= 1_000_000_000, 'amountTenMillion'),
-    originalAmount: z
-      .number()
-      .int()
-      .refine((amount) => amount != 0, 'amountNotZero')
-      .refine((amount) => amount <= 1_000_000_000, 'amountTenMillion')
-      .optional(),
-    originalCurrency: z.union([z.string().length(3).nullish(), z.literal('')]),
-    conversionRate: z
-      .number()
-      .refine((r) => r > 0, 'ratePositive')
-      .optional(),
+    conversion: optionalExpenseConversionSchema,
     paidBySplitMode: paidBySplitModeSchema,
     paidByList: z
       .array(apiPaidByRowSchema)
@@ -601,14 +601,12 @@ export const expenseApiSchema = z
       case 'BY_SHARES':
         break
       case 'BY_AMOUNT': {
-        const target = expense.originalCurrency
-          ? (expense.originalAmount ?? expense.amount)
-          : expense.amount
+        // Shares are always in expense currency (= `amount`).
         const sum = expense.paidByList.reduce(
           (sum, { shares }) => sum + shares,
           0,
         )
-        if (!paidByAmountSumOk(sum, target)) {
+        if (!paidByAmountSumOk(sum, expense.amount)) {
           ctx.addIssue({
             code: 'custom',
             message: 'paidByAmountSum',
@@ -632,10 +630,19 @@ export const expenseApiSchema = z
   })
   .superRefine((expense, ctx) => {
     const items = expense.items ?? []
-    const itemsAmountTarget = expense.originalCurrency
-      ? (expense.originalAmount ?? expense.amount)
-      : expense.amount
-    validateExpenseItems(items, itemsAmountTarget, expense.splitMode, ctx)
+    // Items are always in expense currency (= `amount`).
+    validateExpenseItems(items, expense.amount, expense.splitMode, ctx)
+    // Exchange cannot price empty/custom codes — only ISO-ish codes.
+    if (
+      expense.conversion?.type === 'exchange' &&
+      expense.conversion.currency.length !== 3
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'exchangeRequiresIsoCurrency',
+        path: ['conversion', 'currency'],
+      })
+    }
   })
 
 export type Expense = z.infer<typeof expenseApiSchema>

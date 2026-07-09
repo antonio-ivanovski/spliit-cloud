@@ -450,7 +450,8 @@
       "label": "主要貨幣",
       "createDescription": "所有金額和餘額將以此貨幣顯示。",
       "editDescription": "所有金額和餘額將以此貨幣顯示。更改此項不會轉換已輸入的支出，除非該貨幣與目前貨幣具有不同的「輔幣單位」（例如從美元變更為日圓）",
-      "customOption": "自訂"
+      "customOption": "自訂",
+      "lockedAfterExpenses": "此群組已有支出，因此貨幣已鎖定。"
     }
   },
   "ExpenseForm": {
@@ -561,7 +562,9 @@
     "conversionRateField": {
       "useApi": "使用 Frankfurter 的匯率",
       "useCustom": "使用自訂匯率",
-      "label": "匯率"
+      "label": "匯率",
+      "providerNote": "匯率由 https://frankfurter.dev/ 及其API提供。",
+      "futureDateUsesToday": "此支出為未來日期，將使用今日匯率。"
     },
     "conversionRateState": {
       "loading": "正在取得匯率……",
@@ -1332,7 +1335,9 @@
         "items": "明細",
         "documents": "附件",
         "recurrence": "重複",
-        "reimbursement": "報銷"
+        "reimbursement": "報銷",
+        "conversionSource": "轉換來源",
+        "conversionRate": "轉換匯率"
       }
     },
     "group": {

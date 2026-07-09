@@ -424,7 +424,8 @@
       "label": "Hlavní měna",
       "createDescription": "Všechny částky a zůstatky budou v této měně.",
       "editDescription": "Všechny částky a zůstatky budou v této měně. Změna NEPŘEPOČÍTÁ již zadané výdaje, s výjimkou případů, kdy má měna jiné \"vedlejší jednotky\" než stávající (např. změna z amerického dolaru na japonský jen).",
-      "customOption": "Vlastní"
+      "customOption": "Vlastní",
+      "lockedAfterExpenses": "Měna je uzamčena, protože tato skupina již má výdaje."
     },
     "Participants": {
       "title": "Účastníci",
@@ -528,7 +529,9 @@
     "conversionRateField": {
       "useApi": "Použít kurzy z Frankfurter",
       "useCustom": "Použít vlastní kurz",
-      "label": "Směnný kurz"
+      "label": "Směnný kurz",
+      "providerNote": "Kurzy poskytuje https://frankfurter.dev/ a jejich API.",
+      "futureDateUsesToday": "Tento výdaj je v budoucnosti, bude použit dnešní směnný kurz."
     },
     "conversionRateState": {
       "loading": "Získávání směnných kurzů…",
@@ -1332,7 +1335,9 @@
         "items": "Položky",
         "documents": "Přílohy",
         "recurrence": "Opakování",
-        "reimbursement": "Proplacení"
+        "reimbursement": "Proplacení",
+        "conversionSource": "Zdroj konverze",
+        "conversionRate": "Směnný kurz"
       }
     },
     "group": {

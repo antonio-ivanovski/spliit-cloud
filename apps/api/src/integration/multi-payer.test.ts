@@ -296,14 +296,12 @@ describe('Multi-payer expenses — real DB', () => {
       groupId,
       expense: {
         title: 'NYC trip',
-        amount: 9200, // 10000 USD cents × 0.92 = 9200 EUR cents
+        amount: 10000, // original USD cents; server computes ledger = 10000 × 0.92 = 9200 EUR cents
         expenseDate: new Date().toISOString(),
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
-        originalAmount: 10000,
-        originalCurrency: 'USD',
-        conversionRate: 0.92,
+        conversion: { type: 'custom', currency: 'USD', rate: 0.92 },
         paidByList: [
           { participant: participants['Alice'], shares: 7000 },
           { participant: participants['Bob'], shares: 3000 },
@@ -321,6 +319,9 @@ describe('Multi-payer expenses — real DB', () => {
     const expense = await readExpense(result.expenseId)
     expect(expense!.originalCurrency).toBe('USD')
     expect(Number(expense!.conversionRate)).toBeCloseTo(0.92)
+    expect(expense!.conversionSource).toBe('CUSTOM')
+    expect(expense!.amount).toBe(9200)
+    expect(expense!.originalAmount).toBe(10000)
 
     const balances = getBalances([
       {
@@ -338,6 +339,7 @@ describe('Multi-payer expenses — real DB', () => {
         originalAmount: 10000,
         originalCurrency: 'USD',
         conversionRate: 0.92,
+        conversionSource: 'CUSTOM',
       },
     ])
 
@@ -376,14 +378,12 @@ describe('Multi-payer expenses — real DB', () => {
       groupId,
       expense: {
         title: 'XC BY_AMOUNT',
-        amount: 1090,
+        amount: 1000,
         expenseDate: new Date().toISOString(),
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
-        originalAmount: 1000,
-        originalCurrency: 'USD',
-        conversionRate: 1.09,
+        conversion: { type: 'custom', currency: 'USD', rate: 1.09 },
         paidByList: [{ participant: participants['Admin'], shares: 1000 }],
         paidFor: [{ participant: participants['Admin'], shares: 1 }],
         isReimbursement: false,
@@ -411,14 +411,12 @@ describe('Multi-payer expenses — real DB', () => {
       groupId,
       expense: {
         title: 'XC Update',
-        amount: 1090,
+        amount: 1000,
         expenseDate: new Date().toISOString(),
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
-        originalAmount: 1000,
-        originalCurrency: 'USD',
-        conversionRate: 1.09,
+        conversion: { type: 'custom', currency: 'USD', rate: 1.09 },
         paidByList: [{ participant: participants['Admin'], shares: 1000 }],
         paidFor: [{ participant: participants['Admin'], shares: 1 }],
         isReimbursement: false,
@@ -432,14 +430,12 @@ describe('Multi-payer expenses — real DB', () => {
       expenseId: create.expenseId,
       expense: {
         title: 'XC Update',
-        amount: 1090,
+        amount: 1000,
         expenseDate: new Date().toISOString(),
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
-        originalAmount: 1000,
-        originalCurrency: 'USD',
-        conversionRate: 1.09,
+        conversion: { type: 'custom', currency: 'USD', rate: 1.09 },
         paidByList: [{ participant: participants['Admin'], shares: 1000 }],
         paidFor: [{ participant: participants['Admin'], shares: 1 }],
         isReimbursement: false,
@@ -466,14 +462,12 @@ describe('Multi-payer expenses — real DB', () => {
       groupId,
       expense: {
         title: 'XC Get',
-        amount: 1090,
+        amount: 1000,
         expenseDate: new Date().toISOString(),
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
-        originalAmount: 1000,
-        originalCurrency: 'USD',
-        conversionRate: 1.09,
+        conversion: { type: 'custom', currency: 'USD', rate: 1.09 },
         paidByList: [{ participant: participants['Admin'], shares: 1000 }],
         paidFor: [{ participant: participants['Admin'], shares: 1 }],
         isReimbursement: false,

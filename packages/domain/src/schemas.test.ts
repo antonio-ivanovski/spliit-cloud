@@ -10,9 +10,9 @@ const baseInput = {
   title: 'Dinner',
   category: 'general',
   amount: 10,
-  originalAmount: undefined,
   originalCurrency: '',
   conversionRate: undefined,
+  conversionType: undefined,
   paidBySplitMode: 'EVENLY',
   paidByList: [{ participant: 'p0', shares: 1 }],
   paidFor: [{ participant: 'p0', shares: 1 }],
@@ -29,9 +29,6 @@ const baseApi = {
   title: 'Dinner',
   category: 'general',
   amount: 1000,
-  originalAmount: undefined,
-  originalCurrency: '',
-  conversionRate: undefined,
   paidBySplitMode: 'EVENLY',
   paidByList: [{ participant: 'p0', shares: 1 }],
   paidFor: [{ participant: 'p0', shares: 1 }],
@@ -348,7 +345,6 @@ describe('paidByList signed and migrated shapes', () => {
     const result = expenseFormInputSchema.safeParse({
       ...baseInput,
       amount: -10,
-      originalAmount: -10,
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [
         { participant: 'p0', shares: -7 },
@@ -375,38 +371,22 @@ describe('paidByList signed and migrated shapes', () => {
     ).toBe(true)
   })
 
-  it('same-currency migrated shape: originalAmount set, originalCurrency null, validates against amount', () => {
-    // Both `null` and `''` originalCurrency are valid single-currency paths.
+  it('same-currency: absent conversion validates paidBy against amount', () => {
     const ok = expenseApiSchema.safeParse({
       ...baseApi,
       amount: 1000,
-      originalAmount: 1000,
-      originalCurrency: null,
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [{ participant: 'p0', shares: 1000 }],
     })
     expect(ok.success).toBe(true)
-
-    const okEmpty = expenseApiSchema.safeParse({
-      ...baseApi,
-      amount: 1000,
-      originalAmount: 1000,
-      originalCurrency: '',
-      paidBySplitMode: 'BY_AMOUNT',
-      paidByList: [{ participant: 'p0', shares: 1000 }],
-    })
-    expect(okEmpty.success).toBe(true)
   })
 
-  it('cross-currency: sum matching amount but not originalAmount is invalid', () => {
-    // Locks in that, when originalCurrency is set, the BY_AMOUNT sum is
-    // checked against originalAmount (not amount).
+  it('cross-currency: paidBy shares must sum to expense-currency amount', () => {
+    // amount is expense-currency input; shares must match amount (not ledger).
     const result = expenseApiSchema.safeParse({
       ...baseApi,
-      amount: 9200,
-      originalAmount: 10000,
-      originalCurrency: 'USD',
-      conversionRate: 0.92,
+      amount: 10000,
+      conversion: { type: 'custom', currency: 'USD', rate: 0.92 },
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [{ participant: 'p0', shares: 9200 }],
     })
@@ -419,26 +399,22 @@ describe('paidByList signed and migrated shapes', () => {
 })
 
 describe('cross-currency paidByList BY_AMOUNT', () => {
-  it('expenseApiSchema: with originalCurrency and shares summing to originalAmount is valid', () => {
+  it('expenseApiSchema: custom conversion with shares summing to amount is valid', () => {
     const result = expenseApiSchema.safeParse({
       ...baseApi,
-      amount: 61000,
-      originalAmount: 1000,
-      originalCurrency: 'EUR',
-      conversionRate: 61,
+      amount: 1000,
+      conversion: { type: 'custom', currency: 'EUR', rate: 61 },
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [{ participant: 'p0', shares: 1000 }],
     })
     expect(result.success).toBe(true)
   })
 
-  it('expenseApiSchema: with originalCurrency and shares not summing to originalAmount is invalid', () => {
+  it('expenseApiSchema: custom conversion with shares not summing to amount is invalid', () => {
     const result = expenseApiSchema.safeParse({
       ...baseApi,
-      amount: 61000,
-      originalAmount: 1000,
-      originalCurrency: 'EUR',
-      conversionRate: 61,
+      amount: 1000,
+      conversion: { type: 'custom', currency: 'EUR', rate: 61 },
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [{ participant: 'p0', shares: 100 }],
     })
@@ -449,7 +425,7 @@ describe('cross-currency paidByList BY_AMOUNT', () => {
     ).toBe(true)
   })
 
-  it('expenseApiSchema: with NO originalCurrency validates against amount', () => {
+  it('expenseApiSchema: absent conversion validates against amount', () => {
     const result = expenseApiSchema.safeParse({
       ...baseApi,
       amount: 1000,
@@ -459,13 +435,11 @@ describe('cross-currency paidByList BY_AMOUNT', () => {
     expect(result.success).toBe(true)
   })
 
-  it('expenseApiSchema: validates converted itemized items against originalAmount', () => {
+  it('expenseApiSchema: validates converted itemized items against amount', () => {
     const result = expenseApiSchema.safeParse({
       ...baseApi,
-      amount: 12,
-      originalAmount: 20100,
-      originalCurrency: 'ARS',
-      conversionRate: 0.00059,
+      amount: 20100,
+      conversion: { type: 'custom', currency: 'ARS', rate: 0.00059 },
       splitMode: 'ITEMIZED',
       paidFor: [{ participant: 'p0', shares: 20100 }],
       items: [

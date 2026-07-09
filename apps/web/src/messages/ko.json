@@ -354,7 +354,8 @@
       "label": "기본 통화",
       "createDescription": "금액, 잔액 전부 이 통화로 표시돼요.",
       "editDescription": "모든 금액이랑 잔액은 이 통화로 보여요. 통화를 바꿔도 이미 입력한 지출은 바뀌지 않아요. 단, (예: 미국 달러에서 일본 엔으로 바꿀 때처럼) 통화의 소수점 단위가 다를 경우에는 예외가 있을 수 있어요.",
-      "customOption": "사용자 지정"
+      "customOption": "사용자 지정",
+      "lockedAfterExpenses": "이 그룹에 이미 지출이 있으므로 통화가 잠겨 있습니다."
     },
     "Participants": {
       "title": "참여자",
@@ -433,7 +434,9 @@
     "conversionRateField": {
       "useApi": "Frankfurter의 환율을 사용해요",
       "useCustom": "직접 설정한 환율 사용하기",
-      "label": "환율"
+      "label": "환율",
+      "providerNote": "환율은 https://frankfurter.dev/ 와 해당 API에서 제공됩니다.",
+      "futureDateUsesToday": "이 지출은 미래 날짜이므로 오늘의 환율이 사용됩니다."
     },
     "conversionRateState": {
       "loading": "환율 가져오는 중…",
@@ -1332,7 +1335,9 @@
         "items": "항목",
         "documents": "첨부파일",
         "recurrence": "반복",
-        "reimbursement": "정산"
+        "reimbursement": "정산",
+        "conversionSource": "변환 출처",
+        "conversionRate": "변환 환율"
       }
     },
     "group": {

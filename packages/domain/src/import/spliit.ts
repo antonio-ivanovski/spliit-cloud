@@ -1,5 +1,9 @@
 import * as z from 'zod'
 import { DEFAULT_CATEGORIES } from '../categories'
+import {
+  recoverSpliitOriginalAmount,
+  shouldRecoverSpliitOriginal,
+} from './spliit-original-amount'
 import type {
   ImportParseResult,
   NormalizedSource,
@@ -123,19 +127,30 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
     if (!Number.isInteger(e.amount) || e.amount < 0) {
       throw new ImportError(`Expense "${e.title}" has an invalid amount.`)
     }
+    // Export `amount` is always the source-group ledger total (reliable).
+    // Do not trust export `originalAmount` — recover from ledger ÷ rate
+    // (upstream #513: originalAmount often drops cents). Once per parse only.
+    const shouldRecover = shouldRecoverSpliitOriginal({
+      originalCurrency: e.originalCurrency,
+      conversionRate: e.conversionRate,
+    })
+    const expenseAmount = shouldRecover
+      ? recoverSpliitOriginalAmount(e.amount, e.conversionRate!)
+      : e.amount
+    const expenseCurrency = shouldRecover
+      ? e.originalCurrency!
+      : (parsed.currencyCode ?? null)
     return {
       title: e.title,
       expenseDate: e.expenseDate.slice(0, 10),
       category: resolveCategoryId(e.category ?? null),
-      amountCurrency: parsed.currencyCode ?? null,
-      amount: e.amount,
-      originalAmount: e.originalAmount ?? null,
-      originalCurrency: e.originalCurrency ?? null,
-      conversionRate: e.conversionRate ?? null,
+      amountCurrency: expenseCurrency,
+      amount: expenseAmount,
+      originalAmount: shouldRecover ? expenseAmount : null,
+      originalCurrency: shouldRecover ? e.originalCurrency! : null,
+      conversionRate: shouldRecover ? e.conversionRate! : null,
       paidBySourceId,
-      paidBy: [
-        { sourceId: paidBySourceId, shares: e.originalAmount ?? e.amount },
-      ],
+      paidBy: [{ sourceId: paidBySourceId, shares: expenseAmount }],
       paidFor,
       splitMode: e.splitMode,
       recurrenceRule: e.recurrenceRule,

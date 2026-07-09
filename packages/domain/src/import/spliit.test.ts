@@ -170,21 +170,47 @@ describe('parseSpliitExport', () => {
     expect(result.expenses[0].category).toBe('general')
   })
 
-  it('preserves original currency and conversion fields', () => {
+  it('recovers original amount from ledger ÷ rate (ignores export originalAmount)', () => {
     const result = parseSpliitExport({
       ...validExport,
       expenses: [
         {
           ...validExport.expenses[0],
+          amount: 11000,
           originalAmount: 10000,
           originalCurrency: 'USD',
           conversionRate: 1.1,
         },
       ],
     })
+    // round(11000 / 1.1) = 10000
     expect(result.expenses[0].originalAmount).toBe(10000)
     expect(result.expenses[0].originalCurrency).toBe('USD')
     expect(result.expenses[0].conversionRate).toBe(1.1)
+    expect(result.expenses[0].amount).toBe(10000)
+    expect(result.expenses[0].amountCurrency).toBe('USD')
+    expect(result.expenses[0].paidBy[0].shares).toBe(10000)
+  })
+
+  it('recovers cents when export originalAmount dropped them (upstream #513)', () => {
+    // User typed 1.23 BGN; upstream stored originalAmount=1, ledger amount=123, rate=1.
+    const result = parseSpliitExport({
+      ...validExport,
+      expenses: [
+        {
+          ...validExport.expenses[0],
+          amount: 123,
+          originalAmount: 1,
+          originalCurrency: 'BGN',
+          conversionRate: 1,
+        },
+      ],
+    })
+    expect(result.expenses[0].amount).toBe(123)
+    expect(result.expenses[0].originalAmount).toBe(123)
+    expect(result.expenses[0].amountCurrency).toBe('BGN')
+    expect(result.expenses[0].originalCurrency).toBe('BGN')
+    expect(result.expenses[0].paidBy[0].shares).toBe(123)
   })
 
   it('accepts a minimal valid export with no optional fields', () => {

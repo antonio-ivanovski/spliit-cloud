@@ -59,6 +59,22 @@ describe('tryParseSpliitCsv', () => {
     expect(result.error).toMatch(/CSV header is not a Spliit export/i)
   })
 
+  it('parses exports that include Conversion source', () => {
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Conversion source","Is Reimbursement","Split mode","John ","Jane"
+"2026-01-12","Dinner","Dining Out","EUR","10.00","9.00","USD","1.1","EXCHANGE","No","Evenly",5.00,-5.00`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.participants).toHaveLength(2)
+    expect(result.source.expenses).toHaveLength(1)
+    const expense = result.source.expenses[0]
+    // Cost is ledger EUR 10.00; recover original USD minor units via rate
+    expect(expense.amount).toBe(Math.round(1000 / 1.1))
+    expect(expense.originalCurrency).toBe('USD')
+    expect(expense.conversionRate).toBe(1.1)
+    expect(expense.isReimbursement).toBe(false)
+  })
+
   it('skips rows with unparseable amounts and returns no expenses', () => {
     const result = tryParseSpliitCsv(
       `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
@@ -83,6 +99,22 @@ describe('tryParseSpliitCsv', () => {
     expect(result.source.expenses[0].paidFor).toEqual([
       { sourceId: result.source.participants[1].sourceId, shares: 5192 },
     ])
+  })
+
+  it('recovers original amount from Cost ÷ rate (ignores Original cost; upstream #513)', () => {
+    // Ledger Cost 1.23 USD; broken Original cost 0.01 BGN; rate 1 → recover 123 minor units.
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+"2026-07-09","asdasd","General","USD","1.23","0.01","BGN","1","No","Evenly",0.82,0.41`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const exp = result.source.expenses[0]
+    expect(exp.amount).toBe(123)
+    expect(exp.originalAmount).toBe(123)
+    expect(exp.amountCurrency).toBe('BGN')
+    expect(exp.originalCurrency).toBe('BGN')
+    expect(exp.conversionRate).toBe(1)
+    expect(exp.paidBy[0].shares).toBe(123)
   })
 
   it('maps category names to in-code category ids', () => {

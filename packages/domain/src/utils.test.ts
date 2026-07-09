@@ -1,6 +1,8 @@
 import type { Currency } from './currency'
 import {
   cn,
+  conversionMinorScale,
+  convertMinorUnitsByRate,
   delay,
   expenseIdSeed,
   formatAmountAsDecimal,
@@ -252,6 +254,22 @@ describe('formatAmountAsDecimal', () => {
     }
 
     expect(formatAmountAsDecimal(1000, jpy)).toBe('1000')
+  })
+})
+
+describe('convertMinorUnitsByRate', () => {
+  it('is a no-op scale when decimal_digits match', () => {
+    expect(conversionMinorScale(1.1, 'EUR', 'USD')).toBe(1.1)
+    expect(convertMinorUnitsByRate(10000, 1.1, 'EUR', 'USD')).toBe(11000)
+  })
+
+  it('scales USD cents → JPY yen for major-unit rates', () => {
+    // $100.00 at 150 JPY/USD → 15_000 yen
+    expect(convertMinorUnitsByRate(10000, 150, 'USD', 'JPY')).toBe(15_000)
+  })
+
+  it('scales JPY yen → USD cents for major-unit rates', () => {
+    expect(convertMinorUnitsByRate(15_000, 1 / 150, 'JPY', 'USD')).toBe(10000)
   })
 })
 

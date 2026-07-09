@@ -110,9 +110,10 @@ describe('amountDiffer', () => {
     })
   })
 
-  it('diff uses amount directly when originalAmount is not set (amount must differ)', () => {
-    // Currency-only change without amount cents difference is NOT an amount
-    // change — check() returns false, diff() returns null.
+  it('diff detects originalCurrency change even when ledger cents match', () => {
+    // Currency provenance is part of the amount identity after
+    // server-authoritative conversion; a currency-only change is an
+    // amount change for the activity feed.
     const result = amountDiffer.diff(
       makeExpense({
         amount: 4500,
@@ -126,7 +127,11 @@ describe('amountDiffer', () => {
       }),
       ctx,
     )
-    expect(result).toBeNull()
+    expect(result).toEqual({
+      field: 'amount',
+      before: 'EUR 45.00',
+      after: 'USD 45.00',
+    })
   })
 
   it('field is "amount"', () => {

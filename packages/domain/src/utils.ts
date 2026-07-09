@@ -160,6 +160,44 @@ export function amountAsMinorUnitsByCode(amount: number, currencyCode: string) {
   return amountAsMinorUnits(amount, c)
 }
 
+function decimalDigitsForCode(code: string | null | undefined): number {
+  if (!code) return 2
+  return getCurrency(code)?.decimal_digits ?? 2
+}
+
+/**
+ * Scale factor that converts source-currency minor units to target-currency
+ * minor units for a major-unit FX rate (1 source major = `rate` target major).
+ *
+ * When currencies share the same `decimal_digits` this equals `rate`. When
+ * they differ (e.g. USD→JPY), it adjusts so $100 (10000¢) at 150 JPY/USD
+ * becomes 15_000 yen, not 1_500_000.
+ */
+export function conversionMinorScale(
+  rate: number,
+  fromCurrencyCode: string | null | undefined,
+  toCurrencyCode: string | null | undefined,
+): number {
+  const fromDigits = decimalDigitsForCode(fromCurrencyCode)
+  const toDigits = decimalDigitsForCode(toCurrencyCode)
+  return rate * 10 ** (toDigits - fromDigits)
+}
+
+/**
+ * Apply a major-unit FX rate to an amount in source minor units, producing
+ * target minor units (rounded to nearest integer).
+ */
+export function convertMinorUnitsByRate(
+  amountMinor: number,
+  rate: number,
+  fromCurrencyCode: string | null | undefined,
+  toCurrencyCode: string | null | undefined,
+): number {
+  return Math.round(
+    amountMinor * conversionMinorScale(rate, fromCurrencyCode, toCurrencyCode),
+  )
+}
+
 /**
  * Formats monetary amounts in minor units to the corresponding amount in major units in the given currency,
  * as a string, with correct rounding.

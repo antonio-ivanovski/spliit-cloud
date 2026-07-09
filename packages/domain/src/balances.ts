@@ -1,6 +1,8 @@
+import type { ConversionSource } from './conversion'
 import type { SplitMode } from './enums'
 import {
   addExactAmount,
+  convertByRate,
   exactAmountToNumber,
   type ExactAmount,
 } from './exact-math'
@@ -36,6 +38,7 @@ export type BalanceExpense = {
   originalAmount?: number | null
   originalCurrency?: string | null
   conversionRate?: number | string | null
+  conversionSource?: ConversionSource | null
   /** Present on balance-read paths; enables precise ITEMIZED accumulation. */
   items?: BalanceItem[]
   itemizedRemainder?: BalanceItemizedRemainder | null
@@ -117,11 +120,17 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
     })
 
     if (crossCurrency) {
-      const rate = Number(expense.conversionRate)
+      // Prefer amount/originalAmount so minor-unit scale matches the stored
+      // ledger total when currencies have different decimal_digits.
+      const originalAmount = expense.originalAmount ?? expense.amount
+      const scale =
+        originalAmount !== 0
+          ? expense.amount / originalAmount
+          : Number(expense.conversionRate)
       const converted: Record<string, ExactAmount> = {}
       for (const [id, share] of Object.entries(exactPaidBy)) {
         converted[id] = {
-          numerator: BigInt(Math.round(exactAmountToNumber(share) * rate)),
+          numerator: BigInt(Math.round(exactAmountToNumber(share) * scale)),
           denominator: 1n,
         }
       }
@@ -171,8 +180,17 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
           ? 'BY_SHARES'
           : expense.splitMode
 
+      let paidForBase = expense.amount
+      if (
+        crossCurrency &&
+        expense.conversionRate != null &&
+        expense.splitMode === 'BY_AMOUNT'
+      ) {
+        paidForBase = expense.originalAmount ?? expense.amount
+      }
+
       exactPaidFor = calculateExactShares({
-        amount: expense.amount,
+        amount: paidForBase,
         splitMode: paidForSplitMode,
         participants: expense.paidFor.map((p) => ({
           id: p.participant.id,
@@ -181,6 +199,21 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
       })
 
       if (
+        crossCurrency &&
+        expense.conversionRate != null &&
+        expense.splitMode === 'BY_AMOUNT'
+      ) {
+        const originalAmount = expense.originalAmount ?? expense.amount
+        const scale =
+          originalAmount !== 0
+            ? expense.amount / originalAmount
+            : Number(expense.conversionRate)
+        const converted: Record<string, ExactAmount> = {}
+        for (const [id, share] of Object.entries(exactPaidFor)) {
+          converted[id] = convertByRate(share, scale)
+        }
+        exactPaidFor = converted
+      } else if (
         (expense.splitMode === 'BY_AMOUNT' ||
           (expense.splitMode === 'ITEMIZED' && !crossCurrency)) &&
         !crossCurrency

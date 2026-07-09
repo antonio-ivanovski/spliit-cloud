@@ -446,7 +446,8 @@
       "label": "Devise principale",
       "createDescription": "Tous les montants et soldes seront dans cette devise.",
       "editDescription": "Tous les montants et soldes seront exprimés dans cette devise. La modification de cette option n'entraînera PAS la conversion des dépenses déjà saisies, sauf si la devise a des « unités mineures » différentes de celles de la devise actuelle (par exemple, passage du dollar américain au yen japonais)",
-      "customOption": "Personnalisée"
+      "customOption": "Personnalisée",
+      "lockedAfterExpenses": "La devise est verrouillée car ce groupe a déjà des dépenses."
     },
     "readOnlyNote": "Seuls les propriétaires et les administrateurs peuvent modifier les paramètres du groupe.",
     "readOnlyTitle": "Paramètres du groupe",
@@ -561,7 +562,9 @@
     "conversionRateField": {
       "useCustom": "Utiliser un taux personnalisé",
       "label": "Taux de change",
-      "useApi": "Utiliser les taux de change de Frankfurter"
+      "useApi": "Utiliser les taux de change de Frankfurter",
+      "providerNote": "Les taux sont fournis par https://frankfurter.dev/ et leur API.",
+      "futureDateUsesToday": "Cette dépense est dans le futur et le taux de change d'aujourd'hui sera utilisé."
     },
     "conversionRateState": {
       "loading": "Obtention des taux de change…",
@@ -1332,7 +1335,9 @@
         "items": "Lignes",
         "documents": "Documents",
         "recurrence": "Récurrence",
-        "reimbursement": "Remboursement"
+        "reimbursement": "Remboursement",
+        "conversionSource": "Source de conversion",
+        "conversionRate": "Taux de conversion"
       }
     },
     "group": {

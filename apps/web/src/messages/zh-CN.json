@@ -446,7 +446,8 @@
       "label": "首选货币",
       "createDescription": "所有的交易将使用此币种。",
       "customOption": "自定义",
-      "editDescription": "所有金额和余额都将以此货币显示。更改此项不会转换已输入的支出，除非该货币与当前货币具有不同的\"辅币单位\"（例如从美元更改为日元）"
+      "editDescription": "所有金额和余额都将以此货币显示。更改此项不会转换已输入的支出，除非该货币与当前货币具有不同的\"辅币单位\"（例如从美元更改为日元）",
+      "lockedAfterExpenses": "该组已有支出，因此货币已锁定。"
     },
     "readOnlyNote": "只有所有者和管理员可以更改群组设置。",
     "readOnlyTitle": "群组设置",
@@ -560,7 +561,9 @@
     "conversionRateField": {
       "useApi": "使用Frankfurter提供的汇率",
       "useCustom": "使用自定义汇率",
-      "label": "汇率"
+      "label": "汇率",
+      "providerNote": "汇率由 https://frankfurter.dev/ 及其API提供。",
+      "futureDateUsesToday": "该支出为未来日期，将使用今日汇率。"
     },
     "conversionRateState": {
       "error": "抱歉，我们无法获取最新的汇率信息。",
@@ -1332,7 +1335,9 @@
         "items": "明细",
         "documents": "附件",
         "recurrence": "重复",
-        "reimbursement": "报销"
+        "reimbursement": "报销",
+        "conversionSource": "转换来源",
+        "conversionRate": "转换汇率"
       }
     },
     "group": {

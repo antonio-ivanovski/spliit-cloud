@@ -2,6 +2,7 @@ import type { Group } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
+import { utcTodayIso } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
@@ -71,15 +72,39 @@ export function useExpenseCurrencyConversion(args: {
     originalCurrency.code !== args.group.currencyCode
   )
 
+  // Prefer conversionType over a bare rate: both EXCHANGE and CUSTOM
+  // store a rate, so `!!conversionRate` alone always opens the custom UI.
+  const initialType = args.form.formState.defaultValues?.conversionType ?? null
   const [usingCustomConversionRate, setUsingCustomConversionRate] = useState(
-    !!args.form.formState.defaultValues?.conversionRate,
+    () => {
+      if (initialType === 'EXCHANGE') return false
+      if (initialType === 'CUSTOM') return true
+      // Missing / legacy: a stored rate means the custom path.
+      return !!args.form.formState.defaultValues?.conversionRate
+    },
   )
 
   useEffect(() => {
-    if (!usingCustomConversionRate && exchangeRate.data) {
+    if (!conversionRequired) {
+      args.form.setValue('conversionType', undefined)
+      return
+    }
+    if (usingCustomConversionRate) {
+      args.form.setValue('conversionType', 'CUSTOM')
+      return
+    }
+    // Keep EXCHANGE intent while the preview rate is loading so a save
+    // before the fetch completes still persists the exchange source.
+    args.form.setValue('conversionType', 'EXCHANGE')
+    if (exchangeRate.data) {
       args.form.setValue('conversionRate', exchangeRate.data)
     }
-  }, [exchangeRate.data, usingCustomConversionRate, args.form])
+  }, [
+    conversionRequired,
+    exchangeRate.data,
+    usingCustomConversionRate,
+    args.form,
+  ])
 
   // Income detection tracks the typed amount directly (it is in the
   // selected expense currency; signedness is currency-agnostic).
@@ -105,7 +130,15 @@ export function useExpenseCurrencyConversion(args: {
     return Number.isNaN(converted) ? undefined : converted
   })()
 
-  let conversionRateMessage
+  const expenseDate = watchedExpenseDate
+  const expenseDateIso =
+    expenseDate instanceof Date && !Number.isNaN(expenseDate.getTime())
+      ? `${expenseDate.getUTCFullYear()}-${String(expenseDate.getUTCMonth() + 1).padStart(2, '0')}-${String(expenseDate.getUTCDate()).padStart(2, '0')}`
+      : ''
+  const isFutureExpenseDate =
+    expenseDateIso.length > 0 && expenseDateIso > utcTodayIso()
+
+  let conversionRateMessage: string
   if (exchangeRate.isLoading) {
     conversionRateMessage = t('conversionRateState.loading')
   } else {
@@ -115,24 +148,32 @@ export function useExpenseCurrencyConversion(args: {
         args.group.currencyCode
       }\xa0${exchangeRate.data}`
     }
-    if (exchangeRate.error) {
-      if (exchangeRate.error instanceof RangeError && exchangeRate.data)
-        conversionRateMessage = t('conversionRateState.dateMismatch', {
-          date: exchangeRate.error.message,
-        })
-      else {
-        conversionRateMessage = t('conversionRateState.error')
-      }
-      conversionRateMessage +=
-        ' ' +
-        (ratesDisplay.length
-          ? `${t('conversionRateState.staleRate')} ${ratesDisplay}`
-          : t('conversionRateState.noRate'))
-    } else {
-      conversionRateMessage = ratesDisplay.length
-        ? `${t('conversionRateState.success')} ${ratesDisplay}`
-        : t('conversionRateState.currencyNotFound')
+    const parts: string[] = []
+    // Future expense dates always use today's rate (shared client/server rule).
+    if (isFutureExpenseDate) {
+      parts.push(t('conversionRateField.futureDateUsesToday'))
     }
+    if (exchangeRate.error) {
+      if (exchangeRate.error instanceof RangeError && exchangeRate.data) {
+        parts.push(
+          t('conversionRateState.dateMismatch', {
+            date: exchangeRate.error.message,
+          }),
+        )
+      } else {
+        parts.push(t('conversionRateState.error'))
+      }
+      parts.push(
+        ratesDisplay.length
+          ? `${t('conversionRateState.staleRate')} ${ratesDisplay}`
+          : t('conversionRateState.noRate'),
+      )
+    } else if (ratesDisplay.length) {
+      parts.push(`${t('conversionRateState.success')} ${ratesDisplay}`)
+    } else if (!isFutureExpenseDate) {
+      parts.push(t('conversionRateState.currencyNotFound'))
+    }
+    conversionRateMessage = parts.join(' ')
   }
 
   return {

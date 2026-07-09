@@ -1,4 +1,5 @@
 import * as z from 'zod'
+import { conversionSourceSchema } from '../conversion'
 
 export const expenseChangedFields = [
   'title',
@@ -12,6 +13,8 @@ export const expenseChangedFields = [
   'documents',
   'recurrence',
   'reimbursement',
+  'conversionSource',
+  'conversionRate',
 ] as const
 export const expenseChangedFieldSchema = z.enum(expenseChangedFields)
 export type ExpenseChangedField = z.infer<typeof expenseChangedFieldSchema>
@@ -42,6 +45,8 @@ export const expenseActivityDataSchema = z.object({
   // entered in a different currency than the ledger's base currency.
   originalAmount: z.number().int().optional(),
   conversionRate: z.number().optional(),
+  // EXCHANGE | CUSTOM — how the ledger amount was derived (absent = same currency).
+  conversionSource: conversionSourceSchema.optional(),
   // The ledger's base currency code.
   ledgerCurrencyCode: z.string().nullable().optional(),
 })

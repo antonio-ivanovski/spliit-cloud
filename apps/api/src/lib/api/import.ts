@@ -5,6 +5,7 @@ import {
   prisma,
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
+import { resolveConversion } from '../expense-conversion'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import {
   buildExpenseActivityData,
@@ -272,8 +273,27 @@ export async function importGroup(
     const affectedParticipantIds = new Set<string>()
     let totalAmount = 0
 
+    // Resolve per expense by index — titles are not unique in imports.
+    const resolvedConversions: Awaited<ReturnType<typeof resolveConversion>>[] =
+      []
     for (const expense of input.expenses) {
+      resolvedConversions.push(
+        await resolveConversion(expense, {
+          ledgerCurrency: ledgerCurrency ?? null,
+          expenseDate: expense.expenseDate,
+        }),
+      )
+    }
+
+    for (
+      let expenseIndex = 0;
+      expenseIndex < input.expenses.length;
+      expenseIndex++
+    ) {
+      const expense = input.expenses[expenseIndex]!
       const expenseId = randomId()
+      const conversion = resolvedConversions[expenseIndex]!
+      const ledgerAmount = conversion.ledgerAmountMinor
       const dateStr = expense.expenseDate.toISOString().slice(0, 10)
       await logActivity(
         groupId,
@@ -284,15 +304,21 @@ export async function importGroup(
           data: buildExpenseActivityData({
             summary: expense.title,
             title: expense.title,
-            amount: expense.amount,
-            currencyCode: ledgerCurrency ?? null,
+            amount: ledgerAmount,
+            // Expense currency when converted; ledger currency for same-currency
+            // (originalCurrency is null and amount is already ledger minor units).
+            currencyCode: conversion.originalCurrency ?? ledgerCurrency ?? null,
             date: dateStr,
+            originalAmount: conversion.originalAmount ?? undefined,
+            conversionRate: conversion.conversionRate ?? undefined,
+            conversionSource: conversion.conversionSource,
+            ledgerCurrencyCode: ledgerCurrency ?? null,
           }),
         },
         tx,
       )
       if (!expense.isReimbursement) {
-        totalAmount += expense.amount
+        totalAmount += ledgerAmount
       }
       const resolvedPaidByList = expense.paidByList
         .map((paidBy) => {
@@ -354,10 +380,11 @@ export async function importGroup(
           expenseDate: expense.expenseDate,
           title: expense.title,
           categoryId: expense.category,
-          amount: expense.amount,
-          originalAmount: expense.originalAmount,
-          originalCurrency: expense.originalCurrency,
-          conversionRate: expense.conversionRate,
+          amount: ledgerAmount,
+          originalAmount: conversion.originalAmount,
+          originalCurrency: conversion.originalCurrency,
+          conversionRate: conversion.conversionRate,
+          conversionSource: conversion.conversionSource,
           paidBySplitMode: expense.paidBySplitMode,
           paidByList: {
             createMany: {

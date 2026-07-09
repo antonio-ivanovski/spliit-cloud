@@ -446,7 +446,8 @@
       "label": "Divisa principal",
       "createDescription": "Totes les quantitats i els balanços es mostraràn en aquesta moneda.",
       "editDescription": "Totes les quantitas i balanços es mostraràn en aquesta moneda. Canviar açò NO convertirà despeses ja enregistrades, excepte quan la moneda tinga \"unitats menors\" diferents que la actual (per exemple, canviar de Dólars estadounidencs a Yens japonesos)",
-      "customOption": "Personalitzat"
+      "customOption": "Personalitzat",
+      "lockedAfterExpenses": "La moneda està bloquejada perquè aquest grup ja té despeses."
     },
     "readOnlyNote": "Només els propietaris i administradors poden canviar la configuració del grup.",
     "readOnlyTitle": "Configuració del grup",
@@ -561,7 +562,9 @@
     "conversionRateField": {
       "useApi": "Emprar les tases de Frankfurter",
       "useCustom": "Utilitzar tasa personalitzada",
-      "label": "Tasa de conversió"
+      "label": "Tasa de conversió",
+      "providerNote": "Les taxes les proporciona https://frankfurter.dev/ i la seva API.",
+      "futureDateUsesToday": "Aquesta despesa és en el futur i s'utilitzarà la taxa de canvi d'avui."
     },
     "conversionRateState": {
       "loading": "Aconseguint tases d'intercanvi…",
@@ -1332,7 +1335,9 @@
         "items": "Línies",
         "documents": "Documents",
         "recurrence": "Recurrència",
-        "reimbursement": "Reemborsament"
+        "reimbursement": "Reemborsament",
+        "conversionSource": "Font de conversió",
+        "conversionRate": "Tasa de conversió"
       }
     },
     "group": {

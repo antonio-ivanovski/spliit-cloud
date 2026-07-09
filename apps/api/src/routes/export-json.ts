@@ -42,6 +42,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
       originalAmount: true,
       originalCurrency: true,
       conversionRate: true,
+      conversionSource: true,
       paidBySplitMode: true,
       paidByList: {
         select: {
