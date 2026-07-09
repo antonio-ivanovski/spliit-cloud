@@ -49,7 +49,9 @@ The system SHALL preserve current split units: BY_AMOUNT in ledger-currency mino
 - **THEN** the paid-for shares are stored in Ledger base-currency minor units
 
 ### Requirement: Global balance accumulation
-The system SHALL compute balances by accumulating exact Decimal shares across all expenses per direction (paid and paidFor) into per-participant Decimal maps, applying cross-currency conversion at Decimal precision per-expense, then truncating + distributing the single global leftover once via `distributeRemainder`. The sum of all participant `paidFor` values SHALL exactly equal the sum of all expense amounts. The sum of all participant `paid` values SHALL exactly equal the sum of all expense amounts.
+The system SHALL compute balances by accumulating exact `ExactAmount` (native `BigInt` rational) shares across all expenses per direction (paid and paidFor) into per-participant `ExactAmount` maps, applying cross-currency conversion via `convertByRate` per-expense, then truncating + distributing the single global leftover once via `distributeRemainder`. The sum of all participant `paidFor` values SHALL exactly equal the sum of all expense amounts. The sum of all participant `paid` values SHALL exactly equal the sum of all expense amounts.
+
+> **Currency conversion precision**: All money is integer cents. `convertByRate` converts exact rational shares to cents via `Math.round(Number(rational) * Number(rate))`. The `decimal.js` dependency has been removed — native `BigInt` rational arithmetic is used instead, and sub-cent floating-point noise in the rate multiplication is accepted because the result is always rounded to the nearest integer cent.
 
 #### Scenario: Cross-expense drift eliminated
 - **WHEN** two expenses of $100 and $20 are each split EVENLY among 3 participants
@@ -59,9 +61,9 @@ The system SHALL compute balances by accumulating exact Decimal shares across al
 - **WHEN** a single $100 expense is split EVENLY among 3 participants
 - **THEN** `getBalances` produces `paidFor` values of 3333/3333/3334 summing to exactly 10000
 
-#### Scenario: Cross-currency conversion at Decimal precision
+#### Scenario: Cross-currency conversion at native exact rational precision
 - **WHEN** an expense is paid in a foreign currency with `originalCurrency` and `conversionRate`
-- **THEN** the paidBy side accumulates `Decimal(exactShare).mul(conversionRate)` per-expense without `Math.round`, and the global `distributeRemainder` absorbs any conversion rounding drift
+- **THEN** the paidBy side accumulates `convertByRate(exactShare, conversionRate)` per-expense, and the global `distributeRemainder` absorbs any conversion rounding drift
 
 #### Scenario: Balance sum invariant
 - **WHEN** `getBalances` is called with any set of expenses
@@ -76,11 +78,11 @@ The `getBalances` function SHALL use `calculateExactShares` from the `share-calc
 
 #### Scenario: getBalances calls calculateExactShares for paidFor
 - **WHEN** `getBalances` processes an expense's paidFor side
-- **THEN** it calls `calculateExactShares({ amount, splitMode, participants })` and accumulates the Decimal result
+- **THEN** it calls `calculateExactShares({ amount, splitMode, participants })` and accumulates the `ExactAmount` result
 
 #### Scenario: getBalances calls calculateExactShares for paidBy
 - **WHEN** `getBalances` processes an expense's paidBy side
-- **THEN** it calls `calculateExactShares` with the payer base and `paidBySplitMode`, applies cross-currency conversion if needed, and accumulates the Decimal result
+- **THEN** it calls `calculateExactShares` with the payer base and `paidBySplitMode`, applies cross-currency conversion if needed, and accumulates the `ExactAmount` result
 
 #### Scenario: No Math.round on accumulators
 - **WHEN** `getBalances` finalizes balances

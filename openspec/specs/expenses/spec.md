@@ -87,7 +87,9 @@ The system SHALL determine affected expense participants from the union of old a
 - **THEN** that member remains part of the affected participant set for the update
 
 ### Requirement: Expense calculation uses unified core
-All expense-side share calculation — form preview, CSV export, and totals — SHALL route through the `share-calculation` core (`calculateShares` / `calculatePaidByShares`). The form `submit-values.ts` SHALL use `serializePaidFor` / `serializePaidBy` from the `share-calculation` core instead of inline per-mode conversion math.
+All expense-side share calculation — form preview, CSV export, and totals — SHALL route through the `share-calculation` core (`calculateShares` / `calculatePaidByShares`). The form `submit-values.ts` SHALL use `serializePaidFor` / `serializePaidBy` from the `share-calculation` core instead of inline per-mode conversion math. The core uses native `BigInt`-based rational arithmetic (`ExactAmount`) rather than `decimal.js`.
+
+> **Note**: The `decimal.js` dependency has been removed. All exact arithmetic uses native `BigInt` rationals (`{ numerator, denominator }`) from the `exact-math` module. Currency conversion accepts IEEE-754 double precision for rate multiplication since the result is always rounded to the nearest integer cent.
 
 #### Scenario: Form preview uses calculateShares
 - **WHEN** the expense form renders per-participant share previews in `paid-for-row.tsx` or `paid-by-row.tsx`
@@ -102,11 +104,11 @@ All expense-side share calculation — form preview, CSV export, and totals — 
 - **THEN** it delegates to `getBalances(expenses.filter(e => !e.isReimbursement))` and returns the named participant's `paidFor` or `paid` value respectively
 
 ### Requirement: ITEMIZED aggregation uses global-across-items accumulation
-The system SHALL compute ITEMIZED expense `paidFor` shares by accumulating exact Decimal shares across all items and the "Other" filler, then truncating + distributing the single leftover once via `distributeRemainder`. This eliminates cross-item cent drift. Per-item modal preview SHALL retain per-item rounding (each item independently balances to its own amount for display).
+The system SHALL compute ITEMIZED expense `paidFor` shares by accumulating exact `ExactAmount` (native `BigInt` rational) shares across all items and the "Other" filler, then truncating + distributing the single leftover once via `distributeRemainder`. This eliminates cross-item cent drift. Per-item modal preview SHALL retain per-item rounding (each item independently balances to its own amount for display).
 
 #### Scenario: Multiple items with fractional remainders aggregate globally
 - **WHEN** an ITEMIZED expense has two $50 items each split EVENLY among 3 participants
-- **THEN** the aggregated `paidFor` shares are computed by accumulating exact Decimal shares across both items and distributing the single leftover once (e.g., 3333/3333/3334 rather than 3332/3334/3334)
+- **THEN** the aggregated `paidFor` shares are computed by accumulating exact `ExactAmount` shares across both items and distributing the single leftover once (e.g., 3333/3333/3334 rather than 3332/3334/3334)
 
 #### Scenario: Per-item modal preview retains per-item rounding
 - **WHEN** the item participants modal shows per-participant shares for a single item
@@ -114,4 +116,4 @@ The system SHALL compute ITEMIZED expense `paidFor` shares by accumulating exact
 
 #### Scenario: Filler participates in global accumulation
 - **WHEN** items sum to less than the expense amount and a synthetic "Other" filler is created
-- **THEN** the filler's exact Decimal shares are accumulated into the same per-participant map before the single global distribution
+- **THEN** the filler's exact `ExactAmount` shares are accumulated into the same per-participant map before the single global distribution

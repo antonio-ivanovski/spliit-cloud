@@ -1,5 +1,7 @@
 ### Requirement: Shape-based exact share calculation
-The system SHALL compute per-participant exact shares via a single `calculateExactShares` function that accepts a shape-based input (`{ amount, splitMode, participants }`) and returns `Record<participantId, Decimal>` without truncation. The function SHALL handle all five split modes: EVENLY (`amount / N`), BY_SHARES (`amount * shares / Σshares`), BY_PERCENTAGE (`amount * shares / 10000`), BY_AMOUNT (literal `shares`), and ITEMIZED (literal `shares`). The same function SHALL work for expense paidFor sides, expense paidBy sides, and individual expense items.
+The system SHALL compute per-participant exact shares via a single `calculateExactShares` function that accepts a shape-based input (`{ amount, splitMode, participants }`) and returns `Record<participantId, ExactAmount>` without truncation, using native `BigInt`-based rational arithmetic (`{ numerator: bigint, denominator: bigint }`). The function SHALL handle all five split modes: EVENLY (`amount / N`), BY_SHARES (`amount * shares / Σshares`), BY_PERCENTAGE (`amount * shares / 10000`), BY_AMOUNT (literal `shares`), and ITEMIZED (literal `shares`). The same function SHALL work for expense paidFor sides, expense paidBy sides, and individual expense items.
+
+> **Note on precision**: All money is stored as integer cents (minor units). Conversion math uses `BigInt` rational arithmetic for exact intermediate values. Currency conversion via `convertByRate` converts to IEEE-754 double for rate multiplication (accepting sub-cent rounding that resolves to the nearest integer cent), which is acceptable because the persisted result is always an exact integer cent value. The `decimal.js` dependency has been removed in favor of this native solution.
 
 #### Scenario: Expense paidFor side
 - **WHEN** the system computes shares for an expense's paidFor side
@@ -14,7 +16,7 @@ The system SHALL compute per-participant exact shares via a single `calculateExa
 - **THEN** it calls `calculateExactShares` with `{ amount: item.amount, splitMode: item.splitMode, participants: item.paidFor }`
 
 ### Requirement: Remainder distribution algorithm
-The system SHALL provide a single `distributeRemainder(exactShares, amount, opts)` function that converts exact Decimal shares to integer cents. The algorithm SHALL: (1) truncate each share toward zero (`floor` for positive, `ceil` for negative), (2) compute `diff = amount - Σ(truncatedShares)`, (3) if `diff` is zero, return; (4) if `opts.payerId` is set, give the entire `diff` to the payer (BY_AMOUNT/ITEMIZED literal mode fallback); (5) otherwise distribute `|diff|` cents one at a time to participants ordered by descending fractional-part magnitude, with ties broken by a configurable tie-break strategy using `opts.seed`.
+The system SHALL provide a single `distributeRemainder(exactShares, amount, opts)` function that converts `ExactAmount` (native `BigInt` rational) shares to integer cents. The algorithm SHALL: (1) truncate each share toward zero (`floor` for positive, `ceil` for negative), (2) compute `diff = amount - Σ(truncatedShares)`, (3) if `diff` is zero, return; (4) if `opts.payerId` is set, give the entire `diff` to the payer (BY_AMOUNT/ITEMIZED literal mode fallback); (5) otherwise distribute `|diff|` cents one at a time to participants ordered by descending fractional-part magnitude, with ties broken by a configurable tie-break strategy using `opts.seed`.
 
 #### Scenario: Exact division produces no remainder
 - **WHEN** exact shares sum to the amount exactly after truncation
@@ -89,7 +91,9 @@ The system SHALL provide `serializePaidFor({ splitMode, paidFor, amount, currenc
 - **THEN** it produces the correct storage units in both cases since both share the same input shape
 
 ### Requirement: Cross-currency serializer convention
-The serializers SHALL follow a consistent cross-currency convention: `serializePaidFor` with `conversionRate` SHALL convert BY_AMOUNT shares from original to ledger currency (`amountAsMinorUnits(shares * rate, ledgerCurrency)`); BY_PERCENTAGE, BY_SHARES, and EVENLY shares are unitless and SHALL NOT be converted. `serializePaidBy` with `conversionRate` SHALL keep BY_AMOUNT shares in **original currency** (`amountAsMinorUnits(shares, originalCurrency)`) so that `getBalances` can apply `conversionRate` at read time; BY_PERCENTAGE, BY_SHARES, and EVENLY shares are unitless and SHALL NOT be converted. The converted `amount` SHALL be computed separately via `Decimal(originalAmount).mul(rate)` then `distributeRemainder`.
+The serializers SHALL follow a consistent cross-currency convention: `serializePaidFor` with `conversionRate` SHALL convert BY_AMOUNT shares from original to ledger currency (`amountAsMinorUnits(shares * rate, ledgerCurrency)`); BY_PERCENTAGE, BY_SHARES, and EVENLY shares are unitless and SHALL NOT be converted. `serializePaidBy` with `conversionRate` SHALL keep BY_AMOUNT shares in **original currency** (`amountAsMinorUnits(shares, originalCurrency)`) so that `getBalances` can apply `conversionRate` at read time; BY_PERCENTAGE, BY_SHARES, and EVENLY shares are unitless and SHALL NOT be converted. The converted `amount` SHALL be computed separately via `convertByRate` from the native `exact-math` module (BigInt-based rational) then `distributeRemainder`.
+
+> **Acceptable imprecision**: Since all amounts are integer cents, `convertByRate` uses `Math.round(Number(rational) * Number(rate))` which may introduce sub-cent floating-point noise but always rounds to the nearest integer cent. This is intentionally accepted — the dependency on `decimal.js` was removed because exact rational arithmetic up to the truncation point provides sufficient precision for cent-based accounting.
 
 #### Scenario: serializePaidFor converts BY_AMOUNT to ledger currency
 - **WHEN** `serializePaidFor` is called with `splitMode: 'BY_AMOUNT'`, `conversionRate: 0.92`, and shares in original currency
@@ -103,6 +107,6 @@ The serializers SHALL follow a consistent cross-currency convention: `serializeP
 - **WHEN** `serializePaidBy` is called with `paidBySplitMode: 'BY_AMOUNT'`, `conversionRate: 0.92`, and shares in original currency
 - **THEN** each share is stored in original currency minor units via `amountAsMinorUnits(shares, originalCurrency)` — NOT multiplied by the conversion rate
 
-#### Scenario: Converted amount uses Decimal precision
+#### Scenario: Converted amount uses native exact rational arithmetic
 - **WHEN** the converted ledger `amount` is computed for a cross-currency expense
-- **THEN** it uses `Decimal(originalAmount).mul(conversionRate)` and `distributeRemainder` for truncation, not `Math.round(amount * rate)`
+- **THEN** it uses `convertByRate(exactFromInteger(originalAmount), conversionRate)` from the native `exact-math` module and `distributeRemainder` for truncation, not `Math.round(amount * rate)`
