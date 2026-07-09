@@ -24,4 +24,4 @@ The system SHALL allow supported ISO currency codes and custom currencies for ne
 
 #### Scenario: Create group with custom currency
 - **WHEN** a user creates a group with a custom currency
-- **THEN** the system stores the custom currency representation and allows later expenses in that base with `conversionSource` `NONE` or in other currencies with `conversionSource` `CUSTOM`
+- **THEN** the system stores the custom currency representation and allows later expenses in that base with null `conversionSource` (same currency) or in other currencies with `conversionSource` `CUSTOM`
