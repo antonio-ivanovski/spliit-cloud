@@ -10,6 +10,7 @@ const baseValues: ExpenseFormInputValues = {
   amount: 150,
   originalCurrency: 'ARS',
   conversionRate: 0.00059,
+  conversionType: 'CUSTOM',
   paidBySplitMode: 'BY_AMOUNT',
   paidByList: [{ participant: 'p1', shares: 15000 }],
   splitMode: 'ITEMIZED',
@@ -73,8 +74,12 @@ describe('buildSubmitValues', () => {
       conversionRequired: true,
     })
 
-    expect(result.amount).toBe(9)
-    expect(result.originalAmount).toBe(15000)
+    expect(result.amount).toBe(15000)
+    expect(result.conversion).toEqual({
+      type: 'custom',
+      currency: 'ARS',
+      rate: 0.00059,
+    })
     expect(result.items?.map((item) => item.amount)).toEqual([
       10000, 2000, 3000,
     ])
@@ -83,19 +88,17 @@ describe('buildSubmitValues', () => {
     ])
     expect(result.items?.every((item) => item.unitPrice > 0)).toBe(true)
     expect(result.items?.reduce((sum, item) => sum + item.amount, 0)).toBe(
-      result.originalAmount,
+      result.amount,
     )
   })
 
-  it('clears stale conversion metadata when conversion is not required', () => {
+  it('clears conversion when conversion is not required', () => {
     const result = buildSubmitValues(baseValues, {
       groupCurrency: getCurrency('ARS')!,
       conversionRequired: false,
     })
 
-    expect(result.originalAmount).toBeUndefined()
-    expect(result.originalCurrency).toBeUndefined()
-    expect(result.conversionRate).toBeUndefined()
+    expect(result.conversion).toBeUndefined()
   })
 
   it('rejects converted expenses without a positive conversion rate', () => {

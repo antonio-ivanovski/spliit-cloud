@@ -291,10 +291,8 @@ describe('Expense CRUD — real DB', () => {
       expenseId,
       expense: {
         title: 'Dinner',
-        amount: 920,
-        originalAmount: 1000,
-        originalCurrency: 'USD',
-        conversionRate: 0.92,
+        amount: 1000,
+        conversion: { type: 'custom', currency: 'USD', rate: 0.92 },
         paidByList: [{ participant: participantId, shares: 1000 }],
         paidBySplitMode: 'BY_AMOUNT',
         isMultiPayer: false,

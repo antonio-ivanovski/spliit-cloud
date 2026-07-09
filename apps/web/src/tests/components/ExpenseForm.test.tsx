@@ -346,6 +346,7 @@ describe('ExpenseForm', () => {
       originalCurrency: 'EUR',
       originalAmount: 5000, // €50.00 in cents (stored as minor units)
       conversionRate: 1.1,
+      conversionType: 'CUSTOM' as const,
     }
     render(
       <ExpenseForm
@@ -356,8 +357,7 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    // The conversion rate input should still be visible (confirms
-    // conversion mode is active).
+    // CUSTOM source restores the custom rate input.
     expect(screen.getByDisplayValue('1.1')).toBeInTheDocument()
 
     // The single editable Amount field carries the typed EUR value, not
@@ -368,6 +368,30 @@ describe('ExpenseForm', () => {
     // The read-only converted preview renders the Ledger-currency amount.
     const preview = screen.getByTestId('converted-amount-preview')
     expect(preview).toHaveTextContent(/55\.00/)
+  })
+
+  it('edit mode of an EXCHANGE expense keeps the exchange-rate UI (not custom rate input)', () => {
+    const expenseWithExchange = {
+      ...mockExpense,
+      originalCurrency: 'EUR',
+      originalAmount: 5000,
+      conversionRate: 1.1,
+      conversionSource: 'EXCHANGE' as const,
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={expenseWithExchange as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    // EXCHANGE must not open the custom rate input.
+    expect(screen.queryByDisplayValue('1.1')).not.toBeInTheDocument()
+
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    expect(amountInput).toHaveValue('50')
   })
 
   it('submit converts originalAmount to minor units when currency conversion is active', async () => {
@@ -405,11 +429,14 @@ describe('ExpenseForm', () => {
     })
 
     const submittedValues = onSubmit.mock.calls[0][0]
-    expect(submittedValues).toHaveProperty('originalAmount', 5000)
-    expect(submittedValues).toHaveProperty('originalCurrency', 'EUR')
+    expect(submittedValues.conversion).toMatchObject({
+      type: 'custom',
+      currency: 'EUR',
+    })
+    expect(submittedValues.amount).toBe(5000)
   })
 
-  it('deletes originalAmount and originalCurrency when currencies match', async () => {
+  it('submits conversion none when currencies match', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
     const { user } = render(
       <ExpenseForm
@@ -444,8 +471,7 @@ describe('ExpenseForm', () => {
     })
 
     const submittedValues = onSubmit.mock.calls[0][0]
-    expect(submittedValues).not.toHaveProperty('originalAmount')
-    expect(submittedValues).not.toHaveProperty('originalCurrency')
+    expect(submittedValues.conversion).toBeUndefined()
   })
 
   it('renders a single editable Amount field (no separate "Amount to convert")', () => {
@@ -669,12 +695,9 @@ describe('ExpenseForm', () => {
     })
 
     const submitted = onSubmit.mock.calls[0][0]
-    // Typed EUR 100 → persisted originalAmount 10000 EUR minor units.
-    expect(submitted).toHaveProperty('originalAmount', 10000)
-    expect(submitted).toHaveProperty('originalCurrency', 'EUR')
-    // Ledger amount is the typed amount * rate, rounded to USD cents.
-    expect(submitted).toHaveProperty('amount', 11000)
-    expect(submitted).toHaveProperty('conversionRate', 1.1)
+    // Typed EUR 100 → amount 10000 EUR minor units + exchange conversion.
+    expect(submitted).toHaveProperty('amount', 10000)
+    expect(submitted.conversion).toEqual({ type: 'exchange', currency: 'EUR' })
   })
 
   it('split mode selector is visible by default', () => {

@@ -565,12 +565,12 @@ describe('buildImportBatch', () => {
       const { batch } = buildImportBatch(state, 'EUR')
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
-      expect(batch.expenses[0].originalAmount).toBe(500)
-      expect(batch.expenses[0].originalCurrency).toBe('JPY')
-      expect(batch.expenses[0].conversionRate).toBe(0.85)
+      // Same destination currency as source group: no conversion on import.
+      expect(batch.expenses[0].conversion).toBeUndefined()
+      expect(batch.expenses[0].amount).toBe(1000)
     })
 
-    it('sets original fields when source EUR and destination USD differ', () => {
+    it('sets conversion when source EUR and destination USD differ', () => {
       const participants: ParticipantMappingState[] = [
         mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
@@ -597,10 +597,75 @@ describe('buildImportBatch', () => {
       const { batch } = buildImportBatch(state, 'USD', rates)
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
-      expect(batch.expenses[0].originalAmount).toBe(1000)
-      expect(batch.expenses[0].originalCurrency).toBe('EUR')
-      expect(batch.expenses[0].conversionRate).toBe(1.1)
-      expect(batch.expenses[0].amount).toBe(1100)
+      // amount stays in expense currency; server converts on import.
+      expect(batch.expenses[0].amount).toBe(1000)
+      expect(batch.expenses[0].conversion).toEqual({
+        type: 'exchange',
+        currency: 'EUR',
+      })
+    })
+
+    it('tags fixed-mode pairs as CUSTOM conversionSource', () => {
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a' },
+        destIds: { 'p-0': 'dest-a' },
+        resolvedExpenses: [baseExpense('p-0', [])],
+        conversionModes: { 'EUR|USD': 'fixed' },
+      }
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      expect(batch.expenses[0].conversion?.type).toBe('custom')
+      expect(batch.expenses[0].amount).toBe(1000)
+    })
+
+    it('tags perDate-mode pairs as EXCHANGE conversionSource', () => {
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a' },
+        destIds: { 'p-0': 'dest-a' },
+        resolvedExpenses: [baseExpense('p-0', [])],
+        conversionModes: { 'EUR|USD': 'perDate' },
+      }
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      expect(batch.expenses[0].conversion?.type).toBe('exchange')
     })
 
     it('does not override when both currencies are EUR (same)', () => {
@@ -633,9 +698,8 @@ describe('buildImportBatch', () => {
       const { batch } = buildImportBatch(state, 'EUR')
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
-      expect(batch.expenses[0].originalAmount).toBeUndefined()
-      expect(batch.expenses[0].originalCurrency).toBeUndefined()
-      expect(batch.expenses[0].conversionRate).toBeUndefined()
+      expect(batch.expenses[0].conversion).toBeUndefined()
+      expect(batch.expenses[0].amount).toBe(1000)
     })
 
     it('converts from the expense amount currency when the source already had a prior conversion and destination differs', () => {
@@ -677,17 +741,17 @@ describe('buildImportBatch', () => {
       const { batch } = buildImportBatch(state, 'USD', rates)
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
-      expect(batch.expenses[0].originalAmount).toBe(1500)
-      expect(batch.expenses[0].originalCurrency).toBe('JPY')
-      expect(batch.expenses[0].conversionRate).toBeCloseTo(2200 / 1500)
-      expect(batch.expenses[0].amount).toBe(2200)
+      // Convert source ledger amount (EUR) to destination; amount stays EUR.
+      expect(batch.expenses[0].amount).toBe(2000)
+      expect(batch.expenses[0].conversion).toEqual({
+        type: 'exchange',
+        currency: 'EUR',
+      })
     })
 
-    it('preserves the source expense originalAmount when destination matches the source group currency', () => {
+    it('does not re-convert when destination matches the source group currency', () => {
       // The source expense already has a USD->EUR prior conversion. The
-      // destination is also EUR, so the wizard should NOT redo the
-      // conversion; the source expense's audit fields pass through and
-      // the converted `amount` is left alone.
+      // destination is also EUR, so the wizard should NOT redo conversion.
       const participants: ParticipantMappingState[] = [
         mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
@@ -719,9 +783,7 @@ describe('buildImportBatch', () => {
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(2000)
-      expect(batch.expenses[0].originalAmount).toBe(1500)
-      expect(batch.expenses[0].originalCurrency).toBe('USD')
-      expect(batch.expenses[0].conversionRate).toBe(0.75)
+      expect(batch.expenses[0].conversion).toBeUndefined()
     })
 
     it('throws when a cross-currency expense is missing the required rate', () => {
@@ -785,10 +847,9 @@ describe('buildImportBatch', () => {
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       // 333 * 1.1234 → nearest integer
-      expect(batch.expenses[0].amount).toBe(374)
+      expect(batch.expenses[0].amount).toBe(333)
       expect(batch.expenses[0].paidByList[0].shares).toBe(333)
-      expect(batch.expenses[0].originalAmount).toBe(333)
-      expect(batch.expenses[0].originalCurrency).toBe('EUR')
+      expect(batch.expenses[0].conversion?.type).toBe('exchange')
     })
 
     it('does not convert percentage paidFor shares during currency conversion', () => {
@@ -829,7 +890,7 @@ describe('buildImportBatch', () => {
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0]).toMatchObject({
-        amount: 1100,
+        amount: 1000,
         paidFor: [
           { participant: 'dest-a', shares: 3333 },
           { participant: 'dest-b', shares: 6667 },
@@ -883,22 +944,20 @@ describe('buildImportBatch', () => {
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
       // 10000 * 0.92 = 9200
-      expect(exp.amount).toBe(9200)
-      expect(exp.originalAmount).toBe(10000)
-      expect(exp.originalCurrency).toBe('EUR')
-      // paidBy stays original-currency cents
+      expect(exp.amount).toBe(10000)
+      expect(exp.conversion?.type).toBe('exchange')
+      // paidBy and paidFor stay expense-currency cents
       expect(exp.paidByList).toEqual([{ participant: 'dest-a', shares: 10000 }])
-      // paidFor BY_AMOUNT converted: amountAsMinorUnits((cents/100)*0.92, USD)
       expect(exp.paidFor).toEqual([
-        { participant: 'dest-a', shares: 6440 },
-        { participant: 'dest-b', shares: 2760 },
+        { participant: 'dest-a', shares: 7000 },
+        { participant: 'dest-b', shares: 3000 },
       ])
-      expect(exp.paidFor.reduce((s, p) => s + p.shares, 0)).toBe(9200)
+      expect(exp.paidFor.reduce((s, p) => s + p.shares, 0)).toBe(10000)
     })
 
     it('cross-currency import produces zero net via getBalances', () => {
-      // Imported expense: paid EUR 100, converted to USD at 0.92 → 92 USD.
-      // paidBy original EUR 100; paidFor BY_AMOUNT converted to ledger USD.
+      // Imported expense payload keeps expense-currency amounts; balances
+      // after server conversion use ledger amounts.
       const participants: ParticipantMappingState[] = [
         mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
@@ -940,27 +999,30 @@ describe('buildImportBatch', () => {
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
-      expect(exp.amount).toBe(9200)
+      expect(exp.amount).toBe(10000)
       expect(exp.paidByList[0].shares).toBe(10000)
-      expect(exp.paidFor.map((p) => p.shares)).toEqual([4600, 4600])
+      expect(exp.paidFor.map((p) => p.shares)).toEqual([5000, 5000])
 
+      // Batch keeps expense-currency amounts; balances use ledger after server convert.
+      // Here we simulate post-resolution ledger amounts for the zero-net check.
       const balances = getBalances([
         {
-          amount: exp.amount,
+          amount: 9200,
           splitMode: exp.splitMode,
           paidBySplitMode: exp.paidBySplitMode,
           isReimbursement: exp.isReimbursement,
-          originalAmount: exp.originalAmount,
-          originalCurrency: exp.originalCurrency,
-          conversionRate: exp.conversionRate,
+          originalAmount: 10000,
+          originalCurrency: 'EUR',
+          conversionRate: 0.92,
+          conversionSource: 'EXCHANGE',
           paidByList: exp.paidByList.map((p) => ({
             shares: p.shares,
             participant: { id: p.participant },
           })),
-          paidFor: exp.paidFor.map((p) => ({
-            shares: p.shares,
-            participant: { id: p.participant },
-          })),
+          paidFor: [
+            { shares: 4600, participant: { id: exp.paidFor[0].participant } },
+            { shares: 4600, participant: { id: exp.paidFor[1].participant } },
+          ],
         },
       ])
       const totalPaid = Object.values(balances).reduce((s, b) => s + b.paid, 0)
@@ -968,8 +1030,8 @@ describe('buildImportBatch', () => {
         (s, b) => s + b.paidFor,
         0,
       )
-      expect(totalPaid).toBe(exp.amount)
-      expect(totalPaidFor).toBe(exp.amount)
+      expect(totalPaid).toBe(9200)
+      expect(totalPaidFor).toBe(9200)
       const net = Object.values(balances).reduce((s, b) => s + b.total, 0)
       expect(net).toBe(0)
     })
@@ -1018,11 +1080,11 @@ describe('buildImportBatch', () => {
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
-      expect(exp.amount).toBe(3333)
-      expect(exp.paidFor.reduce((s, p) => s + p.shares, 0)).toBe(3333)
-      // Without reconcile, independent rounds would be 1667+1667=3334
+      expect(exp.amount).toBe(10000)
+      expect(exp.paidFor.reduce((s, p) => s + p.shares, 0)).toBe(10000)
+      // Shares stay in expense currency (no client-side FX rounding).
       expect(exp.paidFor.map((p) => p.shares).sort((a, b) => a - b)).toEqual([
-        1666, 1667,
+        5000, 5000,
       ])
       const parsed = expenseApiSchema.safeParse(exp)
       expect(parsed.error?.issues).toBeUndefined()
