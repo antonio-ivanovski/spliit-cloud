@@ -141,20 +141,60 @@ describe('tryParseSpliitCsv', () => {
     expect(result.ok).toBe(false)
   })
 
-  it('serializes BY_AMOUNT paidFor via domain helper (drift deferred to calculateShares)', () => {
-    // 5.38 + 5.38 = 10.76 major → 538+538 minor; Cost is 10.75 → 1075.
-    // Serializer does unit conversion only; read-side calculateShares absorbs residual.
+  it('reconstructs paidFor from export nets (not abs of nets as shares)', () => {
+    // Export nets: paidBy − paidFor. $100 paid by John, owes $30 / Jane owes $70
+    // → nets +70 / −70. Must NOT become 70/70 EVENLY.
+    // guessSplitMode reduces 3000:7000 → BY_SHARES 3:7.
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
-"2025-12-25","Podaroci","General","EUR","10.75",,,,"No","Evenly",5.38,5.38`
+"2025-12-25","Uneven dinner","General","EUR","100.00",,,,"No","Unevenly – By amount",70.00,-70.00`
     const result = tryParseSpliitCsv(csv)
     expect(result.ok).toBe(true)
     if (!result.ok) return
     const e = result.source.expenses[0]
-    expect(e.amount).toBe(1075)
-    expect(e.paidFor).toEqual([
-      { sourceId: e.paidFor[0].sourceId, shares: 538 },
-      { sourceId: e.paidFor[1].sourceId, shares: 538 },
+    const john = result.source.participants[0].sourceId
+    const jane = result.source.participants[1].sourceId
+    expect(e.amount).toBe(10000)
+    expect(e.paidBySourceId).toBe(john)
+    const byId = Object.fromEntries(
+      e.paidFor.map((p) => [p.sourceId, p.shares]),
+    )
+    expect(byId[john]).toBe(3)
+    expect(byId[jane]).toBe(7)
+    expect(e.splitMode).toBe('BY_SHARES')
+  })
+
+  it('reconstructs even-split nets to equal paidFor shares', () => {
+    // John paid $10.76, split evenly → nets +5.38 / −5.38
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+"2025-12-25","Podaroci","General","EUR","10.76",,,,"No","Evenly",5.38,-5.38`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const e = result.source.expenses[0]
+    expect(e.amount).toBe(1076)
+    expect(e.splitMode).toBe('EVENLY')
+    expect(e.paidFor.map((p) => p.shares).sort((a, b) => a - b)).toEqual([
+      538, 538,
     ])
+  })
+
+  it('reconstructs 3-participant single-payer nets', () => {
+    // Cost $100; John paid, owes $10; Jane $30; Bob $60 → nets +90,−30,−60
+    // 1000:3000:6000 → BY_SHARES 1:3:6
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane ","Bob"
+"2025-12-25","Trip","General","EUR","100.00",,,,"No","Unevenly – By amount",90.00,-30.00,-60.00`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const e = result.source.expenses[0]
+    const [john, jane, bob] = result.source.participants.map((p) => p.sourceId)
+    const byId = Object.fromEntries(
+      e.paidFor.map((p) => [p.sourceId, p.shares]),
+    )
+    expect(byId[john]).toBe(1)
+    expect(byId[jane]).toBe(3)
+    expect(byId[bob]).toBe(6)
+    expect(e.splitMode).toBe('BY_SHARES')
   })
 
   it('handles 0-decimal currency (JPY) without 100× inflation', () => {

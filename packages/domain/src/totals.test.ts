@@ -636,6 +636,24 @@ describe('calculatePaidByShares', () => {
     expect(shares.u2).toBe(2760)
   })
 
+  it('cross-currency fractional remainder uses frac distribution (not first payer)', () => {
+    // 7000*0.3333=2333.1, 3000*0.3333=999.9 → fracs 0.1 / 0.9 → u2 gets +1¢
+    // (matches getBalances; old payerId dump would give u1 the cent).
+    const expense = makeExpense({
+      id: 'fx-paidby',
+      amount: 3333,
+      originalAmount: 10000,
+      originalCurrency: 'EUR',
+      conversionRate: 0.3333,
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [makePaidBy('u1', 7000), makePaidBy('u2', 3000)],
+    })
+    const shares = calculatePaidByShares(expense)
+    expect(sumValues(shares)).toBe(3333)
+    expect(shares.u1).toBe(2333)
+    expect(shares.u2).toBe(1000)
+  })
+
   it('BY_AMOUNT mismatch residual goes to first payer', () => {
     const expense = makeExpense({
       amount: 100,

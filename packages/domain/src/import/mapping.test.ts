@@ -973,6 +973,61 @@ describe('buildImportBatch', () => {
       const net = Object.values(balances).reduce((s, b) => s + b.total, 0)
       expect(net).toBe(0)
     })
+
+    it('reconciles BY_AMOUNT paidFor when per-row FX rounding drifts from convertedAmount', () => {
+      // €100 @ 0.3333 → 3333¢; 50/50 independent rounds → 1667+1667=3334 without reconcile.
+      const participants: ParticipantMappingState[] = [
+        mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
+          linkedAccountId: 'acc-1',
+        }),
+        mappingRow('p-1', 'Jane', 'INVITE_BY_LINK'),
+      ]
+      const state: ImportBatchState = {
+        source: { ...baseSource, currency: '€', currencyCode: 'EUR' },
+        mode: 'EXISTING_GROUP',
+        targetGroupId: 'grp-9',
+        groupFormValues: {
+          name: '',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+        },
+        participants,
+        sourceIdToDestId: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        destIds: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
+        resolvedExpenses: [
+          baseExpense(
+            'p-0',
+            [
+              { sourceId: 'p-0', shares: 5000 },
+              { sourceId: 'p-1', shares: 5000 },
+            ],
+            {
+              amount: 10000,
+              category: 'general',
+              splitMode: 'BY_AMOUNT',
+              paidBy: [{ sourceId: 'p-0', shares: 10000 }],
+            },
+          ),
+        ],
+      }
+      const rates = {
+        [makeRateKey('2025-11-15', 'EUR', 'USD')]: 0.3333,
+      }
+      const { batch } = buildImportBatch(state, 'USD', rates)
+      if (!('targetGroupId' in batch))
+        throw new Error('expected existing-group shape')
+      const exp = batch.expenses[0]
+      expect(exp.amount).toBe(3333)
+      expect(exp.paidFor.reduce((s, p) => s + p.shares, 0)).toBe(3333)
+      // Without reconcile, independent rounds would be 1667+1667=3334
+      expect(exp.paidFor.map((p) => p.shares).sort((a, b) => a - b)).toEqual([
+        1666, 1667,
+      ])
+      const parsed = expenseApiSchema.safeParse(exp)
+      expect(parsed.error?.issues).toBeUndefined()
+      expect(parsed.success).toBe(true)
+    })
   })
 
   describe('computeImportRateKeys', () => {

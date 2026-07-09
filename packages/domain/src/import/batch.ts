@@ -167,7 +167,7 @@ function convertPaidForByAmount(
   convertedAmount: number,
 ): Array<{ participant: string; shares: number }> {
   const sourceScale = 10 ** sourceCurrency.decimal_digits
-  return serializePaidFor({
+  const serialized = serializePaidFor({
     splitMode: 'BY_AMOUNT',
     amount: convertedAmount,
     currency: ledgerCurrency,
@@ -176,9 +176,17 @@ function convertPaidForByAmount(
       participant: { id: p.participant },
       shares: p.shares / sourceScale,
     })),
-  }).map((p) => ({
+  })
+  // Per-row Math.round can drift from convertedAmount; reconcile so schema sum check passes.
+  const exact = Object.fromEntries(
+    serialized.map((p) => [p.participant.id, new Decimal(p.shares)]),
+  )
+  const reconciled = distributeRemainder(exact, convertedAmount, {
+    payerId: serialized[0]?.participant.id,
+  })
+  return serialized.map((p) => ({
     participant: p.participant.id,
-    shares: p.shares,
+    shares: reconciled[p.participant.id] ?? 0,
   }))
 }
 

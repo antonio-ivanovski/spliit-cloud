@@ -241,8 +241,11 @@ export function calculateShares(
   })
 
   const seed = expenseIdSeed(expense.id)
+  // payerId only for same-currency literal cents; FX conversion residual
+  // must use fractional-part distribution (matches getBalances).
   const payerId =
-    expense.splitMode === 'BY_AMOUNT' || expense.splitMode === 'ITEMIZED'
+    !crossCurrency &&
+    (expense.splitMode === 'BY_AMOUNT' || expense.splitMode === 'ITEMIZED')
       ? expense.paidByList?.[0]?.participant.id
       : undefined
 
@@ -299,9 +302,12 @@ export function calculatePaidByShares(
   }
 
   const seed = expenseIdSeed(expense.id)
+  // payerId only for same-currency literal cents; FX conversion residual
+  // must use fractional-part distribution (matches getBalances).
   const payerId =
-    expense.paidBySplitMode === 'BY_AMOUNT' ||
-    expense.paidBySplitMode === 'ITEMIZED'
+    !crossCurrency &&
+    (expense.paidBySplitMode === 'BY_AMOUNT' ||
+      expense.paidBySplitMode === 'ITEMIZED')
       ? paidBys[0]?.participant.id
       : undefined
 

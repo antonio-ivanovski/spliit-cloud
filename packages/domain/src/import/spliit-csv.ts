@@ -1,8 +1,9 @@
+import Decimal from 'decimal.js'
 import Papa from 'papaparse'
 import { DEFAULT_CATEGORIES } from '../categories'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
-import { serializePaidFor } from '../totals'
+import { distributeRemainder } from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
 import { guessSplitMode } from './split-guess'
 import type { ImportParseResult, NormalizedSource } from './types'
@@ -138,20 +139,38 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
         }
       }
     } else {
-      // CSV participant cells are major units; serialize to minor units.
-      // Drift is deferred to read-side calculateShares (no largest-absorbs loop).
-      const serialized = serializePaidFor({
-        splitMode: 'BY_AMOUNT',
-        amount: amountCents,
-        currency,
-        paidFor: entries.map((e) => ({
-          participant: { id: e.sourceId },
-          shares: Math.abs(e.raw),
-        })),
+      // Participant cells are NET balances (paidBy − paidFor) from export-csv.
+      // Reconstruct owed paidFor: debtors owe −net; payer owes cost − Σ(debtor).
+      // Multi-payer uneven exports are underdetermined — remainder goes to paidBy.
+      const scale = 10 ** currency.decimal_digits
+      const nets = entries.map((e) => ({
+        sourceId: e.sourceId,
+        net: Math.round(e.raw * scale),
+      }))
+      const debtorSum = nets
+        .filter((n) => n.net < 0)
+        .reduce((s, n) => s - n.net, 0)
+
+      const exact: Record<string, Decimal> = {}
+      for (const n of nets) {
+        if (n.net < 0) {
+          exact[n.sourceId] = new Decimal(-n.net)
+        }
+      }
+      // Payer's share (and any multi-payer residual) so Σ paidFor === Cost.
+      const payerShare = amountCents - debtorSum
+      if (payerShare !== 0 || Object.keys(exact).length === 0) {
+        exact[paidBySourceId] = new Decimal(
+          Math.max(0, payerShare) + (exact[paidBySourceId]?.toNumber() ?? 0),
+        )
+      }
+
+      const reconciled = distributeRemainder(exact, amountCents, {
+        payerId: paidBySourceId,
       })
-      paidFor = serialized
-        .filter((p) => p.shares > 0)
-        .map((p) => ({ sourceId: p.participant.id, shares: p.shares }))
+      paidFor = Object.entries(reconciled)
+        .filter(([, shares]) => shares > 0)
+        .map(([sourceId, shares]) => ({ sourceId, shares }))
     }
 
     if (paidFor.length === 0) continue
