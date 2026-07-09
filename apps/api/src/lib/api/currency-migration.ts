@@ -108,9 +108,9 @@ export async function getCurrencyMigrationPreview(args: {
     destinationCurrency: destinationCurrencyCode,
     expenses: state.expenses,
   })
-  const destinationDiffers =
-    destinationCurrencyCode !==
-    (state.group.ledger.currencyCode ?? '').toUpperCase()
+  const oldCurrencyCode =
+    state.group.ledger.currencyCode?.trim().toUpperCase() ?? ''
+  const destinationDiffers = destinationCurrencyCode !== oldCurrencyCode
   const effectiveExpenses = state.expenses.map((expense) => ({
     id: expense.id,
     date: expense.expenseDate.toISOString().slice(0, 10),
@@ -130,7 +130,8 @@ export async function getCurrencyMigrationPreview(args: {
     hasExpenses: state.expenses.length > 0,
     expenses: effectiveExpenses,
     ...eligibility,
-    eligible: eligibility.eligible && destinationDiffers,
+    eligible:
+      state.expenses.length > 0 && eligibility.eligible && destinationDiffers,
   }
 }
 
@@ -290,7 +291,9 @@ export async function migrateGroupCurrency(
       `Unsupported destination currency: ${destination}`,
     )
   }
-  if (destination === state.group.ledger.currencyCode) {
+  const oldCurrency =
+    state.group.ledger.currencyCode?.trim().toUpperCase() ?? ''
+  if (destination === oldCurrency) {
     throw new CurrencyMigrationError(
       'The destination currency must be different',
     )
@@ -321,7 +324,7 @@ export async function migrateGroupCurrency(
         effectiveOriginalCurrency:
           expense.originalAmount != null && expense.originalCurrency
             ? expense.originalCurrency.toUpperCase()
-            : state.group.ledger.currencyCode!.toUpperCase(),
+            : oldCurrency,
         existingConversionSource: expense.conversionSource,
       }),
     ),
@@ -341,7 +344,7 @@ export async function migrateGroupCurrency(
       effectiveOriginalCurrency:
         expense.originalAmount != null && expense.originalCurrency
           ? expense.originalCurrency.toUpperCase()
-          : state.group.ledger.currencyCode!.toUpperCase(),
+          : oldCurrency,
       existingConversionSource: expense.conversionSource,
     }
     const pair = eligibility.pairs.find(
@@ -356,7 +359,7 @@ export async function migrateGroupCurrency(
       id: expense.id,
       rewrite: calculateMigrationRewrite({
         expense: effective,
-        oldLedgerCurrency: state.group.ledger.currencyCode!,
+        oldLedgerCurrency: oldCurrency,
         destinationCurrency: destination,
         policy,
         ratesByDate,

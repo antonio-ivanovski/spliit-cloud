@@ -36,7 +36,13 @@ export {
   type CreateFriendLedgerPeer,
   type CreateFriendLedgerResult,
 } from './friends'
-export { createGroup, getGroup, getGroups, updateGroup } from './groups'
+export {
+  GroupCurrencyChangeError,
+  createGroup,
+  getGroup,
+  getGroups,
+  updateGroup,
+} from './groups'
 export {
   importGroup,
   type ImportInput,

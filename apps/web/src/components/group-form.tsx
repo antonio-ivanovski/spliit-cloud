@@ -187,6 +187,7 @@ export function GroupForm({
         onSubmit={form.handleSubmit(async (values) => {
           if (readOnly || isArchived) return
           await onSubmit(values)
+          if (group) setCurrencyEditing(false)
         })}
       >
         {isArchived && (

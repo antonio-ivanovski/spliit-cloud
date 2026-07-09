@@ -261,6 +261,24 @@ describe('GroupForm', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
+  it('returns to the read-only currency view after saving a currency change', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <GroupForm group={mockGroup as Props['group']} onSubmit={onSubmit} />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /change currency/i }))
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /change currency/i }),
+    ).toBeInTheDocument()
+  })
+
   it('shows the migration action for a locked currency', () => {
     const onSubmit = vi.fn()
     render(

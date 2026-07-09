@@ -38,6 +38,7 @@ function useInvalidateExpenseSideEffects() {
   return ({ groupId }: { groupId: string }) =>
     Promise.all([
       utils.groups.activities.invalidate(),
+      utils.groups.getDetails.invalidate({ groupId }),
       utils.groups.leavePreview.invalidate({ groupId }),
       utils.invitations.revokePreview.invalidate(),
     ])
@@ -122,14 +123,13 @@ export function useDeleteExpenseMutation({
 
       return { listInput, previousList }
     },
-    onSuccess: (_data, variables) => {
+    onSuccess: async (_data, variables) => {
+      await invalidateExpenseSideEffects({ groupId: variables.groupId })
       navigate({
         to: '/groups/$groupId/expenses',
         params: { groupId: variables.groupId },
         replace: true,
       })
-
-      void invalidateExpenseSideEffects({ groupId: variables.groupId })
     },
     onError: (error, _variables, context) => {
       if (context?.previousList) {

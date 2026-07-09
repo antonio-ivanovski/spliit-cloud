@@ -26,6 +26,41 @@ function stubGroup() {
 }
 
 describe('currency migration API logic', () => {
+  it('marks a group with no expenses as ineligible', async () => {
+    stubGroup()
+    prismaMock.expense.findMany.mockResolvedValue([] as never)
+
+    const result = await getCurrencyMigrationPreview({
+      groupId: 'group-1',
+      destinationCurrencyCode: 'GBP',
+    })
+
+    expect(result.hasExpenses).toBe(false)
+    expect(result.eligible).toBe(false)
+  })
+
+  it('rejects committing a migration after the last expense was deleted', async () => {
+    stubGroup()
+    prismaMock.expense.findMany.mockResolvedValue([] as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+
+    await expect(
+      migrateGroupCurrency(
+        {
+          groupId: 'group-1',
+          destinationCurrencyCode: 'GBP',
+          pairChoices: {},
+        },
+        { accountId: 'account-1' },
+      ),
+    ).rejects.toThrow(
+      'Groups without expenses do not need a currency migration',
+    )
+  })
+
   it('reports unsupported effective original currencies before rate choices', async () => {
     stubGroup()
     prismaMock.expense.findMany.mockResolvedValue([

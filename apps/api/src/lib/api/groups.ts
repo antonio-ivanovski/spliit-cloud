@@ -6,6 +6,13 @@ import type { DiffableGroup } from './group-activity-diff'
 import { getGroupChangeSummary } from './group-activity-diff'
 import { loadGroupWithLedger, randomId } from './shared'
 
+export class GroupCurrencyChangeError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'GroupCurrencyChangeError'
+  }
+}
+
 /**
  * Create a cloud group with its accounting Ledger. The current account is
  * added as an ADMIN/ACTIVE member and a matching LedgerParticipant is created
@@ -85,20 +92,20 @@ export async function updateGroup(
     oldGroup.currency !== newGroup.currency ||
     (oldGroup.currencyCode ?? null) !== (newGroup.currencyCode ?? null)
 
-  if (currencyChanged) {
-    const expenseCount = await prisma.expense.count({
-      where: { ledgerId: existingGroup.ledgerId },
-    })
-    if (expenseCount > 0) {
-      throw new Error(
-        'Cannot change the group currency after expenses exist. Ledger amounts would no longer match.',
-      )
-    }
-  }
-
   const summary = getGroupChangeSummary(oldGroup, newGroup, {})
 
   return prisma.$transaction(async (tx) => {
+    if (currencyChanged) {
+      const expenseCount = await tx.expense.count({
+        where: { ledgerId: existingGroup.ledgerId },
+      })
+      if (expenseCount > 0) {
+        throw new GroupCurrencyChangeError(
+          'Cannot change the group currency after expenses exist. Ledger amounts would no longer match.',
+        )
+      }
+    }
+
     await logActivity(
       groupId,
       {

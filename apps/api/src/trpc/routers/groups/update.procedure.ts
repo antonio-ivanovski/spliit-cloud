@@ -2,7 +2,7 @@ import { GroupType } from '@spliit/db'
 import { groupFormSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
-import { updateGroup } from '../../../lib/api'
+import { GroupCurrencyChangeError, updateGroup } from '../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../init'
 
 export const updateGroupProcedure = protectedProcedure
@@ -38,7 +38,14 @@ export const updateGroupProcedure = protectedProcedure
         message: 'friendLedgerNotRenamable',
       })
     }
-    await updateGroup(groupId, groupFormValues, {
-      accountId: ctx.auth.user.id,
-    })
+    try {
+      await updateGroup(groupId, groupFormValues, {
+        accountId: ctx.auth.user.id,
+      })
+    } catch (err) {
+      if (err instanceof GroupCurrencyChangeError) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: err.message })
+      }
+      throw err
+    }
   })
