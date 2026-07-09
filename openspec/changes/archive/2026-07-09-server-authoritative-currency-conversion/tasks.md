@@ -40,6 +40,9 @@
 - [x] 5.3 perDate → exchange; fixed → custom
 - [x] 5.4 Custom currencies require custom rates
 - [x] 5.5 Import batch sends expense-currency amounts + conversion discriminant
+- [x] 5.6 Spliit parsers always recover original amount from ledger ÷ rate (upstream #513 — broken originalAmount drops cents)
+- [x] 5.7 resolveImportExpenseMoney selects original fields over ledger; normalizePaidForByAmount scales BY_AMOUNT shares
+- [x] 5.8 Activity currencyCode falls back to ledger currency for same-currency imports
 
 ## 6. Group Currency Blocking
 

@@ -81,6 +81,24 @@ Form keeps local fields (`originalCurrency`, `conversionRate`, `conversionType: 
 `buildImportBatch` sends expense-currency amounts + `conversion` discriminant.
 Import persistence uses the same `resolveConversion` as create.
 
+#### Spliit original-amount recovery
+
+Upstream Spliit export `originalAmount` often drops fractional major units
+(e.g. typed 1.23 → exported as 1) — [spliit-app/spliit#513](https://github.com/spliit-app/spliit/issues/513).
+
+Both JSON and CSV parsers always recompute the expense amount from the
+reliable ledger total via `Math.round(ledger / rate)` when conversion
+metadata (currency + positive rate) is present. The export `originalAmount`
+/ "Original cost" column is **not trusted**.
+
+Shared helpers in `spliit-original-amount.ts`: `shouldRecoverSpliitOriginal`
+(pure predicate) and `recoverSpliitOriginalAmount` (pure math). No caching.
+
+`resolveImportExpenseMoney` (batch.ts) picks original fields over ledger
+fields for the expense currency and amount. `normalizePaidForByAmount` scales
+BY_AMOUNT paidFor shares to sum to the expense amount when the source had
+ledger-unit shares.
+
 ## Risks / Trade-offs
 
 - Import EXCHANGE re-fetches rates (preview may differ slightly from final) — by design for server authority.
