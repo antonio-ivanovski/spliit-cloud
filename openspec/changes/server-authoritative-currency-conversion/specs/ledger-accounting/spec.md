@@ -1,93 +1,112 @@
 ## MODIFIED Requirements
 
 ### Requirement: Ledger base currency
-The system SHALL store base currency on the Ledger and SHALL store expense amounts in ledger-currency minor units. For converted expenses, the system SHALL compute persisted ledger-currency amounts server-side from original/input currency values and the server-resolved exchange rate.
+The system SHALL store base currency on the Ledger and SHALL store a ledger-currency expense total in minor units for accounting. For converted expenses, the system SHALL compute that ledger-currency total server-side from original/input currency values and the source-resolved conversion rate. Original amount, shares, and items SHALL remain in the expense original/input currency.
 
 #### Scenario: Expense in ledger currency
 - **WHEN** an expense is entered in the Ledger base currency
-- **THEN** the system stores the amount in Ledger base-currency minor units without original-currency conversion fields
+- **THEN** the system stores `conversionSource` `NONE`, stores the amount in Ledger base-currency minor units, and does not require exchange or custom conversion metadata
 
-#### Scenario: Expense in different currency
-- **WHEN** an expense is entered in a currency different from the Ledger base currency
-- **THEN** the system stores the server-normalized amount in Ledger base-currency minor units and preserves original amount, original currency, server-used conversion rate, and provider rate date/as-of metadata
+#### Scenario: Expense in different currency with exchange rate
+- **WHEN** an expense is entered in a different supported ISO currency than the Ledger base and `conversionSource` is `EXCHANGE`
+- **THEN** the system resolves the rate server-side, stores the server-normalized ledger-currency total, and preserves original amount, original currency, `conversionSource`, conversion rate, and provider as-of metadata when available
+
+#### Scenario: Expense in different currency with custom rate
+- **WHEN** an expense is entered in a currency different from the Ledger base and `conversionSource` is `CUSTOM`
+- **THEN** the system accepts a positive user-supplied rate, computes the ledger-currency total server-side, and preserves original amount, original currency, `conversionSource`, and conversion rate
 
 #### Scenario: Client conversion is preview-only
-- **WHEN** the client submits a converted expense
-- **THEN** the system ignores any client-provided converted amount or conversion rate for persistence and computes the persisted values on the server
+- **WHEN** the client submits an expense that requires conversion
+- **THEN** the system does not treat client-provided ledger totals as authoritative and computes persisted ledger values on the server from original/input values and the source-resolved rate
 
 #### Scenario: Direct ledger base currency
 - **WHEN** a user creates a direct Ledger
-- **THEN** the system suggests a base currency from account preference or locale and allows the user to choose a different base currency
+- **THEN** the system suggests a base currency from account preference or locale and allows the user to choose a different base currency (supported ISO or custom)
 
 ### Requirement: Existing split units
-The system SHALL preserve current split units: BY_AMOUNT is stored in ledger-currency minor units, BY_PERCENTAGE in basis points out of 10000, EVENLY as equal participation, and BY_SHARES as relative shares. For converted expenses, BY_AMOUNT split inputs SHALL be interpreted in the expense original/input currency and normalized server-side into Ledger base-currency minor units before persistence.
+The system SHALL preserve current split units: `BY_PERCENTAGE` in basis points out of 10000, `EVENLY` as equal participation, and `BY_SHARES` as relative shares. For `BY_AMOUNT` and itemized line amounts, the system SHALL store values in the expense original/input currency. Accounting paths SHALL convert those original-currency values into Ledger base-currency minor units using the expense's persisted conversion rate when the expense is converted.
 
 #### Scenario: Percentage split
 - **WHEN** a percentage split is saved
 - **THEN** the paid-for shares sum to 10000 basis points
 
 #### Scenario: Amount split in ledger currency
-- **WHEN** an amount split is saved for an expense entered in the Ledger base currency
-- **THEN** the paid-for shares are stored in Ledger base-currency minor units
+- **WHEN** an amount split is saved for an expense with `conversionSource` `NONE`
+- **THEN** the paid-for share amounts are stored in Ledger base-currency minor units (which equal the original/input currency)
 
 #### Scenario: Amount split in original currency
-- **WHEN** an amount split is saved for an expense entered in a different currency than the Ledger base currency
-- **THEN** the system interprets the paid-for share amounts in the expense original/input currency, preserves the original paid-for share amounts for edit-form replay, and stores normalized Ledger base-currency minor-unit shares
+- **WHEN** an amount split is saved for a converted expense (`EXCHANGE` or `CUSTOM`)
+- **THEN** the system stores paid-for share amounts in the expense original/input currency summing to the original expense amount, and balance calculations convert them to Ledger base-currency minor units using the persisted rate with deterministic remainder distribution
 
-#### Scenario: Converted amount split uses largest remainder rounding
-- **WHEN** the system normalizes amount-based shares for a converted expense
-- **THEN** the system uses largest-remainder deterministic minor-unit rounding so the persisted Ledger-currency shares sum to the persisted Ledger-currency expense amount
+#### Scenario: Itemized amounts in original currency
+- **WHEN** an itemized expense is saved
+- **THEN** item unit prices and line amounts are stored in the expense original/input currency
 
 #### Scenario: Non-amount split modes on converted expenses
-- **WHEN** an expense entered in a different currency than the Ledger base currency uses EVENLY, BY_PERCENTAGE, or BY_SHARES
-- **THEN** the system converts the expense total to Ledger base-currency minor units and applies the existing split semantics to the converted total
+- **WHEN** a converted expense uses `EVENLY`, `BY_PERCENTAGE`, or `BY_SHARES`
+- **THEN** the system stores the original total and conversion metadata, computes the ledger-currency total server-side, and applies the existing split semantics for accounting against that ledger total
+
+#### Scenario: Single currency per expense
+- **WHEN** an expense is created or updated
+- **THEN** amount, paid-by amount shares, paid-for amount shares, and items all use the same expense currency (never mixed currencies within one expense)
 
 ## ADDED Requirements
 
+### Requirement: Conversion source
+The system SHALL persist `conversionSource` on each expense: `NONE`, `EXCHANGE`, or `CUSTOM`. Users SHALL be able to choose and later change the source when the expense currency differs from the ledger base (subject to currency/provider constraints), using the existing exchange/custom rate actions in the expense form. The exchange option SHALL be labeled with localized “exchange rate” wording and SHALL show a small note that rates come from https://frankfurter.dev/ and their API.
+
+#### Scenario: Same-currency forces none
+- **WHEN** the selected expense currency equals the Ledger base currency
+- **THEN** the system stores `conversionSource` `NONE` and does not store a conversion rate
+
+#### Scenario: Exchange source requires supported pair
+- **WHEN** `conversionSource` is `EXCHANGE`
+- **THEN** both expense currency and Ledger base currency are supported ISO codes the provider can price; otherwise the system rejects the save
+
+#### Scenario: Custom currency requires custom rate when converted
+- **WHEN** an expense currency or Ledger base currency is custom/unsupported for exchange and the two differ
+- **THEN** the system requires `conversionSource` `CUSTOM` and a positive custom rate
+
+#### Scenario: Edit conversion source
+- **WHEN** a user edits a converted expense and switches between `EXCHANGE` and `CUSTOM`
+- **THEN** the system re-resolves or re-applies the rate per the new source and recomputes the ledger-currency total
+
 ### Requirement: Currency rate lookup cache
-The system SHALL fetch exchange rates through the API and SHALL cache provider responses temporarily in memory to avoid repeated external currency-provider calls for the same currency pair and requested date.
+The system SHALL fetch exchange rates through the existing API rate service and SHALL cache provider responses in memory for the same currency pair and requested date. Cache entries for historical dates are stable and reusable. The bulk rate endpoint remains available for previews; persistence paths use the same service server-side.
 
 #### Scenario: Cache miss
 - **WHEN** a conversion rate is requested for a supported pair and date that is not in the cache
 - **THEN** the system fetches the rate from the provider, stores it in the in-memory cache, and returns the rate with provider date/as-of metadata
 
 #### Scenario: Cache hit
-- **WHEN** a conversion rate is requested for a supported pair and date that is already cached and fresh
+- **WHEN** a conversion rate is requested for a supported pair and date that is already cached
 - **THEN** the system returns the cached rate without calling the external provider
 
-#### Scenario: Unsupported conversion
-- **WHEN** a conversion rate is requested for an unsupported currency pair
-- **THEN** the system rejects the request with a validation error and does not create or update the converted expense
+#### Scenario: Unsupported conversion under exchange source
+- **WHEN** `conversionSource` is `EXCHANGE` and the pair is unsupported
+- **THEN** the system rejects the request with a validation error and does not create or update the expense under `EXCHANGE`
 
-#### Scenario: Provider unavailable with recent cached fallback
-- **WHEN** a conversion rate is requested, the provider is unavailable, the exact requested date is not cached, and a cached rate for the same pair exists within 7 days of the requested expense date
-- **THEN** the system may use the cached rate and persists the normal conversion rate and as-of metadata
+#### Scenario: Provider unavailable under exchange source
+- **WHEN** `conversionSource` is `EXCHANGE` and the provider is unavailable and the rate is not cached
+- **THEN** the system rejects the converted expense save with a user-facing error while still allowing `NONE` and `CUSTOM` saves
 
-#### Scenario: Provider unavailable without sane cached fallback
-- **WHEN** a conversion rate is requested, the provider is unavailable, and no cached rate for the same pair exists within 7 days of the requested expense date
-- **THEN** the system rejects the converted expense save with a user-facing error
+### Requirement: Exchange rate date selection
+For `conversionSource` `EXCHANGE`, the system SHALL resolve rates using the expense date for past and current dates, and SHALL use today's date when the expense date is in the future.
 
-### Requirement: Supported currency enforcement
-The system SHALL allow only supported ISO currency codes for Ledger base currencies and expense selected currencies.
+#### Scenario: Past expense date
+- **WHEN** an `EXCHANGE` expense has an expense date on or before today
+- **THEN** the system requests the rate for that expense date
 
-#### Scenario: Select group currency
-- **WHEN** a user creates or updates a group currency
-- **THEN** the system accepts only a supported ISO currency code
-
-#### Scenario: Select expense currency
-- **WHEN** a user creates or updates an expense currency
-- **THEN** the system accepts only a supported ISO currency code
-
-#### Scenario: Existing custom currency group
-- **WHEN** an existing group has a custom or empty currency value
-- **THEN** the system remains able to read the group but requires a supported ISO currency for future currency changes subject to the existing expense-count restriction
+#### Scenario: Future expense date
+- **WHEN** an `EXCHANGE` expense has an expense date after today
+- **THEN** the system requests today's rate, persists that rate and as-of metadata, and the expense UI indicates that today's rate is used because the expense date is in the future
 
 ### Requirement: Ledger-currency accounting invariant
-The system SHALL calculate balances, reimbursements, settlements, summaries, and statistics only from Ledger base-currency amounts and shares.
+The system SHALL calculate balances, reimbursements, settlements, summaries, and statistics only from Ledger base-currency amounts derived via each expense's persisted conversion data.
 
 #### Scenario: Converted expense affects balances
 - **WHEN** balances are calculated for a Ledger containing converted expenses
-- **THEN** the calculation uses the persisted Ledger-currency expense amounts and paid-for shares, not original-currency metadata
+- **THEN** the calculation converts original-currency amounts and amount-based shares using each expense's persisted rate so that paid and paid-for sides reconcile in Ledger currency
 
 #### Scenario: Balance display
 - **WHEN** a user views balances or settlement suggestions

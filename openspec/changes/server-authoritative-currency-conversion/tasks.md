@@ -1,86 +1,84 @@
-## 1. Model And Contract Decisions
+## 1. Model And Contract
 
-- [ ] 1.1 Confirm nullable original-share fields are added for converted `BY_AMOUNT` paid-for rows.
-- [ ] 1.2 Implement largest-remainder deterministic rounding for converted totals and converted `BY_AMOUNT` shares.
-- [ ] 1.3 Expose the preview rate API as a tRPC procedure.
+- [ ] 1.1 Add persisted `conversionSource` enum: `NONE` | `EXCHANGE` | `CUSTOM` on expenses (Prisma + domain).
+- [ ] 1.2 Add `conversionAsOf` (provider as-of date) when source is `EXCHANGE` and as-of is known.
+- [ ] 1.3 Define create/update input contract: submitted amount, `BY_AMOUNT` shares, paid-by amount shares, and items are always original/input currency; server computes ledger `amount`.
+- [ ] 1.4 Validate source vs currencies: same currency → `NONE`; custom/unsupported pair → not `EXCHANGE`; `CUSTOM` requires positive rate; `EXCHANGE` rejects client rate as authority (server resolves).
+- [ ] 1.5 Single-currency-per-expense invariant: amount, paidBy, paidFor, items share one currency.
+- [ ] 1.6 Migration/backfill: existing rows without original currency/rate → `NONE`; rows with original + rate → `CUSTOM` (unknown provenance).
+- [ ] 1.7 Update Prisma migration and generated client.
 
-## 2. Database And Domain Schemas
+## 2. Domain And Balance Math
 
-- [ ] 2.1 Add any required conversion metadata columns, such as requested rate date and provider rate as-of date, to expenses.
-- [ ] 2.2 Add nullable original-share storage to paid-for rows for converted `BY_AMOUNT` edit-form replay.
-- [ ] 2.3 Update Prisma migration and generated client.
-- [ ] 2.4 Update domain schemas so expense create/update payloads treat submitted `amount` as the user-entered amount in the selected expense currency.
-- [ ] 2.5 Validate supported original and ledger currency codes before attempting conversion.
-- [ ] 2.6 Remove custom currency choices from group and expense schemas for new/update inputs while preserving read compatibility for existing custom-currency rows.
-- [ ] 2.7 Ensure amount parsing uses selected/input currency decimal digits and persisted ledger amounts use Ledger currency decimal digits.
+- [ ] 2.1 Treat stored `BY_AMOUNT` paid-for shares as original-currency minor units when source is not `NONE`.
+- [ ] 2.2 Ensure itemized item amounts remain original-currency (already true) and balance paths convert consistently.
+- [ ] 2.3 Update balance / share helpers so original-currency paidFor (and paidBy) convert via persisted rate with `convertByRate` + `distributeRemainder`, preserving Σ paid / Σ paidFor = Σ ledger amount.
+- [ ] 2.4 Keep `NONE` path identical to current same-currency behavior.
+- [ ] 2.5 Update domain Zod schemas and types for `conversionSource` + input-currency contract.
 
-## 3. Server Currency Conversion
+## 3. Rate Resolution (reuse existing service)
 
-- [ ] 3.1 Implement a server-side currency-rate provider client for the existing external provider.
-- [ ] 3.2 Add an in-memory rate cache keyed by currency pair and requested date.
-- [ ] 3.3 Return rate, requested date, provider as-of date, and cache/provider error details from the rate service.
-- [ ] 3.4 Implement server-side conversion helpers for expense totals and amount-based paid-for shares.
-- [ ] 3.5 Ensure converted `BY_AMOUNT` shares sum to the persisted converted expense amount after rounding.
-- [ ] 3.6 Add pair-level latest cached-rate lookup with a 7-day sanity limit for provider-unavailable fallback.
+- [ ] 3.1 Reuse `apps/api/src/lib/currency-rates.ts` for `EXCHANGE` resolution (no new provider client).
+- [ ] 3.2 Past/today expense dates: resolve rate for expense date.
+- [ ] 3.3 Future expense dates: resolve rate for **today**; surface as-of/today messaging to callers.
+- [ ] 3.4 Keep in-memory cache behavior simple (hit serves, miss fetches; no multi-day stale-fallback policy).
+- [ ] 3.5 Keep tRPC `currency.getRate` and Hono bulk `POST /currency/rates` for **preview** only.
+- [ ] 3.6 On provider failure / uncached miss for `EXCHANGE`, fail the save with a clear error; allow `NONE` and `CUSTOM`.
 
 ## 4. Expense Persistence
 
-- [ ] 4.1 Update expense create logic to compute converted amounts, shares, and conversion metadata server-side.
-- [ ] 4.2 Update expense update logic to recompute converted amounts, shares, and conversion metadata when original/input conversion fields change.
-- [ ] 4.3 Reject client-submitted authoritative converted amount/rate fields outside the input amount/currency contract.
-- [ ] 4.4 Preserve existing same-currency expense behavior without original-currency conversion metadata.
-- [ ] 4.5 Preserve existing converted expenses without retroactive recomputation during deployment.
-- [ ] 4.6 Apply the same server-authoritative conversion behavior to converted reimbursement expenses.
-- [ ] 4.7 Ignore silently any out-of-contract client conversion fields while ensuring persistence reads only the input amount/currency contract and server-resolved rate.
+- [ ] 4.1 Create expense: resolve source/rate server-side; persist original inputs; compute ledger `amount`.
+- [ ] 4.2 Update expense: recompute when amount, currency, source, custom rate, date, or amount splits/items change.
+- [ ] 4.3 Ignore or reject client-submitted authoritative ledger totals outside the input contract.
+- [ ] 4.4 Apply the same rules to reimbursement expenses.
+- [ ] 4.5 Persist `conversionSource`, rate, and as-of (when exchange) for audit/edit/export.
 
-## 5. Group Currency Blocking
+## 5. Import
 
-- [ ] 5.1 Update group update validation so base currency can change only while the Ledger has no expenses.
-- [ ] 5.2 Return a user-facing error when a currency change is rejected because expenses exist.
-- [ ] 5.3 Allow non-currency group updates after expenses exist without changing base currency.
+- [ ] 5.1 Keep bulk rate API for import **preview** UI only.
+- [ ] 5.2 Perform conversion inside the import persistence path server-side (same source/date rules as create).
+- [ ] 5.3 ISO destination + ISO source without custom override → `EXCHANGE`.
+- [ ] 5.4 Custom/unsupported currencies → require custom rates, source `CUSTOM`; never call exchange for those pairs.
+- [ ] 5.5 Do not trust client-preconverted ledger amounts as authoritative on import.
 
-## 6. Web UI
+## 6. Group Currency Blocking
 
-- [ ] 6.1 Replace direct browser calls to the external currency API with the server preview rate API.
-- [ ] 6.2 Treat preview conversion as illustrative and submit the entered amount plus selected expense currency for all expenses.
-- [ ] 6.3 Enter `BY_AMOUNT` split shares in the expense original/input currency when conversion is required.
-- [ ] 6.4 Display both original/input and converted Ledger-currency amounts on expense creation/edit/detail surfaces where useful.
-- [ ] 6.5 Display only Ledger base-currency amounts in balances, reimbursements, settlements, summaries, and statistics.
-- [ ] 6.6 Disable or block group currency editing in the UI once expenses exist.
-- [ ] 6.7 Allow expense currency changes during edit while keeping the entered numeric amount unchanged by default and recomputing preview conversion.
-- [ ] 6.8 For edited converted `BY_AMOUNT` expenses, keep numeric paid-for share amounts unchanged by default when currency changes and allow the user to rebalance before saving.
-- [ ] 6.9 Remove custom currency options from group and expense currency selectors.
+- [ ] 6.1 Reject ledger base currency changes when any expenses exist.
+- [ ] 6.2 Return a user-facing error on rejected currency change.
+- [ ] 6.3 Allow non-currency group updates after expenses exist.
+- [ ] 6.4 Continue allowing custom and ISO currencies on create/update when the ledger has no expenses.
 
-## 7. Exports
+## 7. Web UI
 
-- [ ] 7.1 Include server-used conversion metadata and provider as-of date in JSON exports where available.
-- [ ] 7.2 Include server-used conversion metadata and provider as-of date in CSV exports where available.
-- [ ] 7.3 Keep exported accounting totals in Ledger base currency.
-- [ ] 7.4 Keep converted `BY_AMOUNT` original split-share metadata internal and out of initial CSV/JSON exports.
+- [ ] 7.1 Submit original/input amount, currency, `conversionSource`, and (when custom) rate; stop client-side ledger conversion in `submit-values.ts`.
+- [ ] 7.2 Wire existing exchange/custom rate form actions to persist and restore `conversionSource` (no new conversion UX redesign).
+- [ ] 7.2a Update exchange option copy to localized “exchange rate” wording (not “API rate” / Frankfurter-first label).
+- [ ] 7.2b When the exchange option is shown, display a small note that rates come from https://frankfurter.dev/ and their API (via `bun i18n` for locale strings).
+- [ ] 7.3 Enter `BY_AMOUNT` shares and items in expense currency only.
+- [ ] 7.4 Show original amount, source, rate/as-of, and converted ledger amount on expense create/edit/detail where useful.
+- [ ] 7.5 Show only ledger amounts in balances, reimbursements, settlements, summaries, and statistics.
+- [ ] 7.6 When expense date is in the future and source is `EXCHANGE`, show that today's rate will be used.
+- [ ] 7.7 Disable group currency editing once expenses exist.
+- [ ] 7.8 Keep custom currency options; when conversion is required for unsupported pairs, force custom rate action (no exchange option).
+- [ ] 7.9 Import wizard: preview rates via bulk API; rely on server for final conversion.
 
-## 8. Tests And Verification
+## 8. Exports
 
-- [ ] 8.1 Add unit tests for rate cache miss fetching from the provider and storing rate/as-of metadata.
-- [ ] 8.2 Add unit tests for rate cache hit returning cached data without calling the provider.
-- [ ] 8.3 Add unit tests for unsupported pair, provider non-OK response, missing target rate, and provider date fallback behavior including future-date fallback.
-- [ ] 8.4 Add unit tests for provider-unavailable cached fallback using latest pair rate within 7 days and rejecting fallback older than 7 days.
-- [ ] 8.5 Add unit tests for same-currency expenses proving no conversion fields are required and amounts remain unchanged.
-- [ ] 8.6 Add unit tests for converted total calculation in minor units using server-resolved rates.
-- [ ] 8.7 Add unit tests for converted `BY_AMOUNT` shares entered in original currency and persisted in Ledger currency.
-- [ ] 8.8 Add unit tests for largest-remainder rounding when converted shares would otherwise under-sum or over-sum the converted total.
-- [ ] 8.9 Add unit tests proving converted `BY_AMOUNT` original-share metadata reloads exact original split inputs.
-- [ ] 8.10 Add tests proving `BY_PERCENTAGE`, `EVENLY`, and `BY_SHARES` converted expenses compute Ledger-currency totals while preserving their existing split semantics.
-- [ ] 8.11 Add conversion tests for zero-decimal currencies such as JPY/KRW/IDR as original currency, Ledger currency, and split input currency.
-- [ ] 8.12 Add conversion tests for negative/income converted expenses so sign and rounding remain correct.
-- [ ] 8.13 Add API tests proving submitted `amount` is interpreted as input-currency amount for both same-currency and converted expenses.
-- [ ] 8.14 Add API tests proving expense create silently ignores client-authoritative converted amount/rate fields outside the input amount/currency contract.
-- [ ] 8.15 Add API tests proving expense update recomputes conversion when entered amount, selected currency, split inputs, or existing expense date changes.
-- [ ] 8.16 Add API tests proving converted reimbursement expenses follow the same conversion and accounting rules.
-- [ ] 8.17 Add API tests proving balance calculations use only persisted Ledger-currency amounts and shares for mixed same-currency and converted expenses.
-- [ ] 8.18 Add API tests proving base currency changes are allowed before expenses exist and rejected after expenses exist.
-- [ ] 8.19 Add API and UI tests proving custom/empty/unsupported currencies cannot be selected or submitted for new/update group and expense flows.
-- [ ] 8.20 Add web/component tests for tRPC preview conversion, original-currency `BY_AMOUNT` split input, and original-plus-converted expense display.
-- [ ] 8.21 Add web/component tests proving editing an expense from one currency to another keeps numeric amount and amount-based split shares unchanged by default while recomputing preview conversion.
-- [ ] 8.22 Add web/component tests proving balances, reimbursements, summaries, and statistics show only Ledger base-currency values.
-- [ ] 8.23 Add export tests for converted and same-currency expenses, including expense-level conversion metadata where available and excluding original split-share metadata.
-- [ ] 8.24 Run `bun check-types`, `bun check-formatting`, and `bun run test`.
+- [ ] 8.1 Include `conversionSource`, rate, and as-of (when available) in JSON exports.
+- [ ] 8.2 Include the same metadata in CSV exports where columns exist or are added.
+- [ ] 8.3 Keep exported accounting totals in ledger base currency.
+- [ ] 8.4 Label custom vs exchange provenance so exports do not imply provider rates for `CUSTOM`.
+
+## 9. Tests And Verification
+
+- [ ] 9.1 Unit: `NONE` / `EXCHANGE` / `CUSTOM` create and update paths.
+- [ ] 9.2 Unit: future expense date uses today for `EXCHANGE`; past uses expense date.
+- [ ] 9.3 Unit: balances convert original-currency paidFor/paidBy and preserve sum invariants.
+- [ ] 9.4 Unit: custom currency cannot use `EXCHANGE`; requires `CUSTOM`.
+- [ ] 9.5 Unit: rate cache hit/miss and provider failure behavior for `EXCHANGE`.
+- [ ] 9.6 API: client ledger totals are not authoritative; server computes amount.
+- [ ] 9.7 API: group currency change blocked after expenses exist.
+- [ ] 9.8 API/import: server-side conversion; custom currency import rates; preview vs persist separation.
+- [ ] 9.9 Web: existing rate actions set `conversionSource`, “exchange rate” wording + Frankfurter attribution note, future-date messaging, original-currency share input, ledger-only balances.
+- [ ] 9.10 Export: source + metadata for converted and same-currency expenses.
+- [ ] 9.11 Run `bun check-types`, `bun check-formatting`, and `bun run test`.

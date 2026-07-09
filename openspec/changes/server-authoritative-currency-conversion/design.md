@@ -1,139 +1,175 @@
 ## Context
 
-Spliit currently fetches exchange rates directly from the browser and submits converted amounts to the API. The API stores `amount`, `originalAmount`, `originalCurrency`, and `conversionRate`, but it does not verify that `amount` matches the original value and rate. Balance calculations already assume that `Expense.amount` and `ExpensePaidFor.shares` are stored in Ledger base-currency minor units.
+Spliit already proxies exchange-rate lookup through the API:
 
-This change keeps that accounting invariant but moves the conversion authority to the server. The client may still show an illustrative preview, but persisted ledger-currency values are computed by the API from original/input currency values and a server-resolved rate.
+- tRPC `currency.getRate` for expense-form preview
+- Hono `POST /currency/rates` for bulk/import preview
+- `apps/api/src/lib/currency-rates.ts` — Frankfurter client, in-memory cache (`requestedDate` + `asOfDate`), tests
+
+The browser does **not** call the FX provider directly. What remains client-authoritative is **conversion application**: `submit-values.ts` multiplies by the rate and submits ledger-currency `amount` and (for `BY_AMOUNT`) ledger-currency paid-for shares. The API stores those fields without verifying or recomputing them.
+
+Domain primitives from `unified-expense-calculation` already exist and should be reused: `ExactAmount` / `convertByRate`, `distributeRemainder`, `serializePaidFor` / `serializePaidBy`, balance engine cross-currency paths.
+
+The expense form already has exchange vs custom rate actions. Only `conversionRate` is stored today — there is no persisted flag for exchange vs custom. Copy should present the exchange option as a localized **exchange rate** action (not “API rate”), with a small attribution note that rates come from [Frankfurter](https://frankfurter.dev/) and their API.
 
 ## Goals / Non-Goals
 
 **Goals:**
 
-- Make the API authoritative for exchange-rate lookup and conversion math.
-- Preserve the user-entered original amount, original currency, rate used, and provider rate date/as-of metadata.
-- Keep all balances, reimbursements, settlements, summaries, and statistics based on Ledger base-currency minor units.
-- Allow `BY_AMOUNT` splits to be entered in the original/input currency while storing normalized Ledger-currency shares.
-- Prevent accidental accounting corruption by blocking Ledger/group base-currency changes after expenses exist.
-- Avoid spamming the external currency-rate provider by adding a temporary in-memory cache.
-- Support converted reimbursement expenses through the same server-authoritative conversion path as normal expenses.
-- Remove custom currency selection so groups and expenses use only supported ISO currency codes.
+- Make the API authoritative for conversion math on expense create/update and import.
+- Persist `conversionSource`: `NONE` | `EXCHANGE` | `CUSTOM`.
+- Keep user-entered amount, shares, and items in a single original/input currency per expense.
+- Derive ledger-currency values for accounting from original inputs + the source-resolved rate.
+- Resolve `EXCHANGE` rates by expense date for past/present dates; use **today's** rate for future-dated expenses.
+- Keep balances, reimbursements, settlements, summaries, and statistics in ledger base-currency minor units.
+- Allow custom (non-ISO) currencies on write; force `CUSTOM` when exchange cannot price the pair.
+- Reuse the existing rate service and cache; keep bulk rate endpoint for previews; run import conversion on the server.
+- Reuse existing create/edit rate UI actions; persist the user's choice as `conversionSource`.
+- Block ledger base-currency changes after expenses exist.
 
 **Non-Goals:**
 
-- Implement full ledger rebasing from one base currency to another.
-- Add Redis or another distributed cache dependency.
-- Become a complete FX provider or support currencies unavailable from the selected provider.
-- Change percentage, shares, or evenly split semantics beyond conversion normalization for amount-based splits.
-- Recalculate historical expense amounts automatically after they are saved.
-- Export per-participant original split-share metadata in the first implementation; keep that metadata internal for edit-form replay unless a later export requirement needs it.
+- Full ledger rebasing from one base currency to another.
+- Redis or other distributed cache.
+- Becoming a complete FX provider or supporting pairs the provider cannot price under `EXCHANGE`.
+- Changing percentage / shares / evenly semantics beyond conversion of the original-currency total into ledger units for accounting.
+- Recalculating historical expenses after save.
+- Special recurring-instance exchange re-resolution (out of scope for now; instances keep copying conversion fields from the current frame as today).
+- Removing custom currencies (deferred expansion; this change only constrains how they convert).
+- Mixing currencies inside one expense (paidBy / paidFor / items always share the expense currency).
+- Redesigning the rate UI from scratch when existing exchange/custom actions already cover the interaction.
 
 ## Decisions
 
-### Server computes persisted conversion values
+### `conversionSource` is first-class
 
-The client submits original/input values for converted expenses and treats preview conversion as illustrative only. The API resolves the rate, computes `Expense.amount`, normalizes amount-based `ExpensePaidFor.shares`, and persists the server-used rate metadata.
+Each expense persists `conversionSource`:
 
-Alternative considered: continue accepting converted amount from the client and only validate it server-side. That reduces API churn but still makes client rounding and stale rates part of the persistence path. Server computation gives a single source of truth.
+| Source | When | Rate |
+|--------|------|------|
+| `NONE` | Expense currency equals ledger base currency (ISO or same custom) | No rate; ledger amount equals original amount |
+| `EXCHANGE` | Different **supported ISO** currency than ledger | Server resolves rate via existing provider/cache |
+| `CUSTOM` | User override, or any case exchange cannot price (including custom currencies) | Client-submitted positive rate; server validates and applies it |
 
-### Submitted amount is always input-currency amount
+The existing form actions map directly to `EXCHANGE` / `CUSTOM` and become durable state, editable later, and visible on detail/export.
 
-The expense API keeps a simple input model: `amount` is always the amount the user typed, and the selected expense currency tells the server how to interpret it. If selected currency equals the Ledger base currency, the server stores `amount` directly as Ledger-currency minor units and does not set conversion metadata. If selected currency differs, the server treats `amount` as the original/input amount, fetches the rate using the existing `expenseDate`, and stores the converted Ledger-currency amount in `Expense.amount` plus original/conversion metadata.
+Wording for the exchange option:
 
-Example: in a USD Ledger, submitting `amount = 10.00` with currency `USD` stores 10.00 USD and no conversion metadata. Submitting `amount = 10.00` with currency `EUR` stores original 10.00 EUR, resolves EUR->USD for the expense date, and persists the converted USD `Expense.amount`.
+- Action label: localized “exchange rate” phrasing (e.g. en-US: “Use exchange rate”), not “API rate” or a Frankfurter-first label.
+- Companion note (small, secondary text) when that option is shown/selected: rates are provided by [Frankfurter](https://frankfurter.dev/) via their API.
+- Custom option keeps localized “custom rate” phrasing.
 
-When editing an expense, changing the selected expense currency is allowed. The form keeps the entered numeric amount unchanged by default and reinterprets it in the new selected currency; the user can then edit the amount if needed. Example: an existing `10.00 EUR` expense in a USD Ledger changed to `GBP` becomes an input of `10.00 GBP` by default, and the server recomputes the persisted USD amount using GBP->USD for the existing expense date.
+Alternative considered: infer source from whether the rate matches the provider. Ambiguous after rate changes and impossible for audit. Explicit `conversionSource` is clearer.
 
-### Expense date drives historical rate lookup
+### Submitted monetary fields are always original/input currency
 
-Rates are requested for the expense date, not the current timestamp. If the provider returns the closest available date, the API stores that provider-returned date as conversion as-of metadata.
+For every expense:
 
-Alternative considered: use the rate at creation time. That is simpler to explain technically but less aligned with expense accounting expectations and makes old expense entry depend on when the user records it.
+- Submitted `amount` is what the user typed in the selected expense currency.
+- `BY_AMOUNT` paid-for shares, paid-by amount shares, and itemized item amounts are entered and **stored** in that same original currency.
+- One expense has exactly one currency for amount, paidBy, paidFor, and items — never mixed.
 
-For future dates, keep the behavior simple: accept the provider's latest available fallback rate, persist the returned as-of date, and show that as-of date in preview/detail metadata when available. Do not block future-dated converted expenses solely because the provider cannot return a future rate.
+The server:
 
-If the provider request fails and the exact `(inputCurrency, ledgerCurrency, expenseDate)` rate is not cached, the server may use the latest cached rate for that currency pair if its as-of date is within 7 days of the requested expense date. No separate cache-source metadata is persisted; the normal `conversionRate` and `conversionAsOf` fields explain the rate used. If no sane cached fallback exists, converted expense saves are blocked.
+1. Validates `conversionSource` vs currencies (e.g. custom currency → not `EXCHANGE`).
+2. Resolves rate for `EXCHANGE`, or accepts rate for `CUSTOM`, or clears rate for `NONE`.
+3. Computes and persists ledger-currency `Expense.amount` for accounting.
+4. Persists original amount, original currency, `conversionSource`, rate, and exchange as-of when applicable.
+5. Persists shares/items in original currency without client-side conversion.
 
-### In-memory cache first
+Balances and settlements convert original-currency shares into ledger units using the persisted rate (reuse `convertByRate` + `distributeRemainder` so shares sum to the ledger total).
 
-The API keeps an in-memory cache keyed by `(baseCurrency, targetCurrency, requestedDate)` or equivalent normalized pair/date. Cache values include the rate, requested date, provider-returned as-of date, and fetched timestamp.
+No separate `originalShare` column: the stored share **is** the original input.
 
-The cache also keeps enough pair-level indexing to find the latest cached rate for a pair when the provider is unavailable and the exact date is missing. This fallback is bounded by the 7-day sanity limit.
+### Server owns ledger conversion; client preview is illustrative
 
-Alternative considered: DB-backed cache. That would survive restarts and make historical lookups deterministic even after process restarts, but it is more schema and operational scope. This proposal keeps DB persistence on the actual expense and uses in-memory cache only to reduce provider traffic.
+Preview continues to use tRPC `currency.getRate` and bulk `POST /currency/rates`. Persisted values always come from server resolution + server math. Client-submitted ledger amounts or "authoritative" rates outside the source contract are ignored or rejected.
 
-### Persist normalized values plus original metadata
+For `CUSTOM`, the submitted rate **is** the authority (user intent), but the server still multiplies and rounds — the client does not submit pre-converted ledger amounts.
 
-The existing `Expense.amount` remains the value used for accounting. `originalAmount`, `originalCurrency`, and `conversionRate` remain audit/display metadata, with additional metadata for requested/as-of rate dates if needed. For `BY_AMOUNT` splits, persisted shares remain Ledger base-currency minor units.
+### Rate date rules
 
-The edit form needs the original values the user typed. If amount-based split rows need to reload exactly in original currency, add nullable original-share metadata to paid-for rows. Without that, the edit form would need to reverse-convert from stored Ledger-currency shares, which can introduce rounding drift.
+```
+                 expenseDate ≤ today              expenseDate > today
+EXCHANGE         rate for expense date            rate for **today**
+                 (historical when available)      (UI discloses this)
+CUSTOM           use submitted rate
+NONE             no rate
+```
 
-Example: a USD Ledger has a 100 EUR expense at EUR->USD 1.0832, split by amount as Alice 33.33 EUR and Bob 66.67 EUR. The persisted Ledger-currency shares might be Alice 36.10 USD and Bob 72.22 USD after rounding. If the edit form later tries to reconstruct EUR inputs from USD shares, it may show 33.33 EUR and 66.66 EUR or similar drift. Persisting `originalShare` on paid-for rows lets the edit form reload exactly Alice 33.33 EUR and Bob 66.67 EUR.
+Rationale for future-dated `EXCHANGE`: providers often cannot return a true future rate; using today's rate avoids save failures and is honest if the UI states it.
 
-Decision: persist nullable original paid-for share metadata for `BY_AMOUNT` splits on converted expenses. For same-currency expenses and non-amount split modes, the existing persisted share semantics remain sufficient.
+### Existing rate service and simple cache
 
-To keep the export surface small, this original-share metadata is internal for edit-form replay in the initial implementation. Exports include expense-level original amount/currency/rate metadata, but not per-participant original share columns unless a later export-focused change explicitly adds them.
+Keep `currency-rates.ts` as-is in spirit:
 
-When editing an expense and changing its selected currency, amount-based split inputs keep their numeric values by default and are reinterpreted in the new selected currency, matching the total amount behavior. The form can still rebalance or let the user edit shares before saving. Non-amount split modes do not need per-participant currency reinterpretation because they divide the server-converted total by percentage, equal participation, or relative shares.
+- In-memory cache keyed by date + pair.
+- Historical rates are stable once fetched; keep it simple: cache hit serves; miss fetches; provider failure blocks `EXCHANGE` saves (`NONE` and `CUSTOM` still work).
 
-Split mode handling by currency:
+Bulk `POST /currency/rates` stays for **preview** (import wizard, multi-date UI). Import **persistence** converts on the server inside the import path using the same resolution rules as expense create.
 
-- `EVENLY`: the input amount is converted to Ledger currency server-side, then split evenly using existing rounding behavior.
-- `BY_PERCENTAGE`: the input amount is converted to Ledger currency server-side, then percentages apply to the converted Ledger-currency total.
-- `BY_SHARES`: the input amount is converted to Ledger currency server-side, then relative shares apply to the converted Ledger-currency total.
-- `BY_AMOUNT`: the total amount and paid-for share amounts are entered in the selected expense currency, validated in that currency, preserved for edit replay, and normalized to Ledger-currency shares server-side.
+### Custom currencies
 
-Input amounts and amount-based shares are parsed using the selected/input currency decimal precision. Persisted `Expense.amount` and amount-based paid-for shares are stored using the Ledger currency decimal precision. Example: a JPY expense in a USD Ledger accepts whole-yen input, converts with JPY->USD, then stores the USD result in cents.
+Custom / empty / non-provider currencies remain writable for groups and expenses.
 
-> **Precision note**: The `decimal.js` dependency has been removed. All exact arithmetic uses native `BigInt` rationals (`ExactAmount` from `exact-math` module) for the share-calculation core. Currency conversion via `convertByRate` uses `Math.round(Number(rational) * Number(rate))`, accepting potential sub-cent floating-point noise because the result is always rounded to the nearest integer cent. This imprecision is acceptable since all persisted amounts are integer cents.
+Rules:
 
-### Only supported ISO currencies are selectable
+- Ledger base may be custom.
+- Expense may use custom currency.
+- If expense currency equals ledger base (including both custom with the same representation), source is `NONE`.
+- If they differ and either side is not a supported ISO pair for the provider, source must be `CUSTOM` with a user rate.
+- Import must not call the exchange provider for custom-currency pairs; it requires custom rates in the import config or rejects conversion for those rows with a clear error.
 
-Custom currencies are removed from new and updated group/expense flows. A Ledger base currency and an expense selected currency must be one of the supported ISO currency codes. This avoids conversion ambiguity and removes custom-currency branches from the multi-currency model.
+### Split modes under conversion
 
-Existing groups with custom/empty currency values are not rebased by this change. They can remain readable, but updating their currency requires selecting a supported currency and still obeys the rule that base currency cannot change once expenses exist.
+- `EVENLY` / `BY_PERCENTAGE` / `BY_SHARES`: original total stored; ledger total computed server-side; split semantics apply against the accounting total via existing domain helpers.
+- `BY_AMOUNT`: shares stored in original currency and must sum to the original amount; conversion to ledger happens in the balance/settlement path.
+- `ITEMIZED`: item amounts already original currency; keep that; do not convert item rows at write.
 
-### Converted amount-split rounding uses largest remainder
-
-Converted totals and amount-based shares are converted into integer minor units. The server first converts the expense total and each original-currency amount share using native `BigInt`-based rational arithmetic (via `convertByRate` from the `exact-math` module). It floors converted shares to minor units, then distributes remaining minor units to the shares with the largest fractional remainders, using submitted paid-for order as a deterministic tie-breaker.
-
-Example: a 10.00 EUR expense converts to 10.01 USD, split equally as three amount shares of 3.33 EUR, 3.33 EUR, and 3.34 EUR. Independent rounding can produce shares that sum to 10.00 USD or 10.02 USD. Largest-remainder normalization guarantees the persisted shares sum exactly to the persisted 10.01 USD total while minimizing rounding distortion.
-
-Recommendation: use largest remainder rather than assigning all remainder to the last participant. It is deterministic, fairer for uneven splits, and easier to test because the fractional remainders explain which participant receives each extra minor unit.
-
-### Preview rate API uses tRPC
-
-The preview rate API is exposed as a tRPC procedure to match the current application API style. No separate public Hono route is introduced for rate preview in this change.
+Precision: parse inputs with the expense currency's decimal digits; ledger `amount` uses ledger currency decimal digits via integer minor units.
 
 ### Block base-currency changes after expenses exist
 
-Changing the Ledger base currency after expenses exist would make persisted amounts semantically wrong unless every existing expense and paid-for share is rebased. This proposal blocks normal group currency updates after any expenses exist.
+Changing the ledger base after expenses exist would invalidate all persisted ledger amounts unless a full rebase exists. Block currency changes when any expense exists. Non-currency group updates remain allowed.
 
-Alternative considered: explicit rebase operation. That is valid future work, but it needs a dedicated migration flow, historical rate handling, confirmation UI, and rounding policy.
+### UI: reuse existing rate actions
 
-### UI separates audit display from accounting display
+Create/edit already exposes easy actions for exchange vs custom rate. This change:
 
-Expense creation/edit/detail surfaces can show both original and converted amounts. Balance, reimbursement, settlement, summary, and statistics surfaces show Ledger base-currency values only.
+- Persists that choice as `conversionSource`
+- Keeps the interaction familiar (no new conversion UX redesign)
+- Labels the exchange action as localized **exchange rate** copy
+- Shows a small note that the exchange source is https://frankfurter.dev/ and their API
+- Adds future-date copy when `EXCHANGE` uses today's rate
+- Shows source + rate/as-of on expense surfaces where useful
 
-Converted reimbursements use the same rules as other converted expenses: the user-entered amount/currency are converted server-side into Ledger base-currency values, and accounting surfaces use only the persisted Ledger-currency amount.
+Balances / reimbursements / settlements / stats remain ledger base currency only.
+
+### Recurring expenses
+
+Out of scope for special rate handling in this change. Recurring materialization may continue to copy conversion fields from the current frame. A later change can revisit re-resolving `EXCHANGE` per instance if needed.
 
 ## Risks / Trade-offs
 
-- Provider outage blocks new converted expense and converted reimbursement saves -> show a clear validation error and allow same-currency expenses to continue.
-- In-memory cache is lost on restart -> acceptable because the saved expense stores the rate used; subsequent new lookups can refetch.
-- Provider returns unsupported pairs -> validate against supported currencies and return a user-facing unsupported conversion error.
-- Cached fallback rate is too stale -> block converted save rather than silently using a rate older than 7 days from the requested expense date.
-- Amount-split rounding can leave one minor unit unallocated -> define deterministic remainder assignment during normalization.
-- Existing production data is expected to contain only Ledger-currency expenses for this feature scope -> preserve existing rows as-is and do not run any recomputation migration.
-- Concurrent group currency update versus expense creation could race -> enforce the currency-change block transactionally or with a server-side existence check immediately before update.
+- Provider outage blocks new `EXCHANGE` saves → clear error; `NONE` and `CUSTOM` continue.
+- In-memory cache lost on restart → acceptable; expenses store the rate used; next lookup refetches.
+- Balance path must convert original-currency `BY_AMOUNT` paidFor (not only paidBy) → requires careful updates to share/balance helpers and tests so Σ paidFor still equals Σ ledger amount.
+- Existing rows lack `conversionSource` → migration default: if no original currency/rate → `NONE`; if original + rate present → `CUSTOM` (cannot prove exchange provenance).
+- Concurrent group currency update vs first expense → enforce existence check in the same transaction as currency update.
+- Deferred recurring re-resolution means long-lived recurring `EXCHANGE` series may keep an older rate on new instances until a follow-up change → accepted for v1 simplicity.
 
 ## Migration Plan
 
-- Add the server-side rate lookup/cache service and tRPC preview procedure without changing persistence behavior.
-- Update expense create/update validation so converted expenses are normalized server-side.
-- Add nullable conversion metadata columns if needed, and nullable original-share columns for faithful edit forms on converted `BY_AMOUNT` splits.
-- Update the web form to call the server for preview, remove custom currency choices, and submit input amount/currency values.
-- Add the base-currency change block in the group update path.
-- Preserve all existing expense rows without recomputation; current data is expected to contain no expenses in a different currency from the group base currency, and existing `amount` and shares remain Ledger-currency values.
+1. Document existing rate service as the exchange backend; no greenfield rate client.
+2. Add `conversionSource` (and `conversionAsOf` if missing) via Prisma migration.
+3. Backfill source for existing expenses (`NONE` vs `CUSTOM` as above).
+4. Update domain schemas and balance math for original-currency share storage + server conversion.
+5. Update expense create/update and import to resolve rates and compute ledger amount server-side.
+6. Update web form to submit `conversionSource` + original inputs; wire existing rate actions with “exchange rate” wording + Frankfurter attribution note; add future-date messaging.
+7. Block group currency changes after expenses exist.
+8. Extend exports with `conversionSource` + as-of; keep accounting columns ledger-based.
+9. Do not recompute historical ledger amounts except via normal edit.
 
 ## Open Questions
 
-- None for the initial implementation scope.
+- None for initial implementation scope. Recurring exchange re-resolution and broader custom-currency product work are deferred.
