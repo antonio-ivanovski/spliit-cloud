@@ -15,6 +15,16 @@ describe('recoverSpliitOriginalAmount', () => {
     expect(recoverSpliitOriginalAmount(123, 1)).toBe(123)
     expect(recoverSpliitOriginalAmount(123, 0.456)).toBe(270)
   })
+
+  it('scales when ledger and original currencies have different decimal_digits', () => {
+    // 15_000 JPY ledger at 150 JPY/USD → 10000 USD cents
+    expect(
+      recoverSpliitOriginalAmount(15_000, 150, {
+        originalCurrency: 'USD',
+        ledgerCurrency: 'JPY',
+      }),
+    ).toBe(10000)
+  })
 })
 
 describe('shouldRecoverSpliitOriginal', () => {

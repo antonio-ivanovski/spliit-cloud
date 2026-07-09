@@ -226,14 +226,10 @@ export function buildExpenseFormDefaults(args: {
     // paidFor shares are stored in the expense-currency minor units
     // (original currency when conversion is required, group currency
     // otherwise). Legacy rows that pre-date the server-authoritative
-    // conversion model stored shares in the ledger currency, so we
-    // fall back to that when the stored sum matches `amount`.
-    const paidForCurrency = conversionRequired
-      ? originalCurrency
-      : groupCurrency
-    const legacyPaidForCurrency = conversionRequired
-      ? groupCurrency
-      : groupCurrency
+    // conversion model stored BY_AMOUNT shares in the ledger currency;
+    // detect that when the stored sum matches ledger `amount` rather
+    // than `originalAmount`, then convert back to expense-currency
+    // display units via the stored rate (major ÷ rate).
     const storedSharesSum = expense.paidFor.reduce(
       (sum, { shares }) => sum + shares,
       0,
@@ -242,15 +238,28 @@ export function buildExpenseFormDefaults(args: {
       conversionRequired &&
       expense.originalAmount != null &&
       storedSharesSum === expense.originalAmount
-    const paidForCurrencyForRead = paidForInOriginal
-      ? paidForCurrency
-      : legacyPaidForCurrency
     const paidFor =
       expense.splitMode === 'BY_AMOUNT'
-        ? expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
-            participant: ledgerParticipantId,
-            shares: amountAsDecimal(shares, paidForCurrencyForRead),
-          }))
+        ? expense.paidFor.map(({ ledgerParticipantId, shares }) => {
+            if (paidForInOriginal) {
+              return {
+                participant: ledgerParticipantId,
+                shares: amountAsDecimal(shares, originalCurrency),
+              }
+            }
+            if (conversionRequired) {
+              // Legacy ledger-currency minor units → expense major units.
+              const ledgerDisplay = amountAsDecimal(shares, groupCurrency)
+              return {
+                participant: ledgerParticipantId,
+                shares: ledgerDisplay / conversionRate,
+              }
+            }
+            return {
+              participant: ledgerParticipantId,
+              shares: amountAsDecimal(shares, groupCurrency),
+            }
+          })
         : expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
             participant: ledgerParticipantId,
             shares:

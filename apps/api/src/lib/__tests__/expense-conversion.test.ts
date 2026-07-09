@@ -70,6 +70,37 @@ describe('resolveConversion', () => {
     expect(result.conversionRate).toBe(1.1)
   })
 
+  it('custom: scales minor units when decimal_digits differ (USD→JPY)', async () => {
+    // $100.00 = 10000¢; 1 USD = 150 JPY → 15_000 yen (not 1_500_000)
+    const result = await resolveConversion(
+      {
+        amount: 10000,
+        conversion: { type: 'custom', currency: 'USD', rate: 150 },
+      },
+      {
+        ledgerCurrency: 'JPY',
+        expenseDate: isoDate(pastDateIso(1)),
+      },
+    )
+    expect(result.ledgerAmountMinor).toBe(15_000)
+    expect(result.originalAmount).toBe(10000)
+  })
+
+  it('custom: scales minor units when decimal_digits differ (JPY→USD)', async () => {
+    // 15_000 yen; 1 JPY = 1/150 USD → $100.00 = 10000¢
+    const result = await resolveConversion(
+      {
+        amount: 15_000,
+        conversion: { type: 'custom', currency: 'JPY', rate: 1 / 150 },
+      },
+      {
+        ledgerCurrency: 'USD',
+        expenseDate: isoDate(pastDateIso(1)),
+      },
+    )
+    expect(result.ledgerAmountMinor).toBe(10000)
+  })
+
   it('custom: rejects non-positive rate', async () => {
     await expect(
       resolveConversion(
@@ -113,6 +144,29 @@ describe('resolveConversion', () => {
     expect(result.conversionSource).toBe('EXCHANGE')
     expect(result.ledgerAmountMinor).toBe(10800)
     expect(result.conversionRate).toBe(1.08)
+  })
+
+  it('exchange: scales minor units when decimal_digits differ', async () => {
+    const date = pastDateIso(2)
+    const fetchImpl = makeFetch(() => ({
+      rate: 150,
+      requestedDate: date,
+      asOfDate: date,
+      base: 'USD',
+      target: 'JPY',
+    }))
+    const result = await resolveConversion(
+      {
+        amount: 10000,
+        conversion: { type: 'exchange', currency: 'USD' },
+      },
+      {
+        ledgerCurrency: 'JPY',
+        expenseDate: isoDate(date),
+      },
+      { fetchImpl },
+    )
+    expect(result.ledgerAmountMinor).toBe(15_000)
   })
 
   it('exchange: future date uses today', async () => {

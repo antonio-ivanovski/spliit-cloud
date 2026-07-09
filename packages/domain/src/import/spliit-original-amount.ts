@@ -1,3 +1,5 @@
+import { conversionMinorScale } from '../utils'
+
 /**
  * Recover expense-currency minor units from a Spliit export ledger amount.
  *
@@ -5,14 +7,24 @@
  * fractional major units (e.g. typed 1.23 → stored/exported as 1). See:
  * https://github.com/spliit-app/spliit/issues/513
  *
- * Always recompute from the reliable ledger total: round(ledger / rate).
+ * Always recompute from the reliable ledger total using the major-unit FX
+ * rate (and optional currency codes when decimal digits differ).
  * No caching — pure math, one call per expense at parse time only.
  */
 export function recoverSpliitOriginalAmount(
   ledgerAmountMinor: number,
   conversionRate: number,
+  currencies?: {
+    originalCurrency?: string | null
+    ledgerCurrency?: string | null
+  },
 ): number {
-  return Math.round(ledgerAmountMinor / conversionRate)
+  const scale = conversionMinorScale(
+    conversionRate,
+    currencies?.originalCurrency,
+    currencies?.ledgerCurrency,
+  )
+  return Math.round(ledgerAmountMinor / scale)
 }
 
 /**

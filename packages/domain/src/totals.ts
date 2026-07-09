@@ -192,12 +192,17 @@ export function calculateShares(
 
   let distributable: Record<string, ExactAmount> = exact
   if (converted && hasRate && expense.splitMode === 'BY_AMOUNT') {
+    // Scale original-currency minor units to ledger minor units. Prefer
+    // amount/originalAmount so decimal_digits differences match the stored
+    // ledger total (major-unit FX rate alone is wrong for e.g. USD→JPY).
+    const originalAmount = expense.originalAmount ?? expense.amount
+    const scale =
+      originalAmount !== 0
+        ? expense.amount / originalAmount
+        : Number(expense.conversionRate)
     distributable = {}
     for (const [id, share] of Object.entries(exact)) {
-      distributable[id] = convertByRate(
-        share,
-        expense.conversionRate as number | string,
-      )
+      distributable[id] = convertByRate(share, scale)
     }
   }
 
@@ -240,12 +245,14 @@ export function calculatePaidByShares(
   })
 
   if (converted && hasRate) {
+    const originalAmount = expense.originalAmount ?? expense.amount
+    const scale =
+      originalAmount !== 0
+        ? expense.amount / originalAmount
+        : Number(expense.conversionRate)
     const convertedExact: Record<string, ExactAmount> = {}
     for (const [id, share] of Object.entries(exact)) {
-      convertedExact[id] = convertByRate(
-        share,
-        expense.conversionRate as number | string,
-      )
+      convertedExact[id] = convertByRate(share, scale)
     }
     exact = convertedExact
   }

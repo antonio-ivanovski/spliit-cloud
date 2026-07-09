@@ -59,6 +59,22 @@ describe('tryParseSpliitCsv', () => {
     expect(result.error).toMatch(/CSV header is not a Spliit export/i)
   })
 
+  it('parses exports that include Conversion source', () => {
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Conversion source","Is Reimbursement","Split mode","John ","Jane"
+"2026-01-12","Dinner","Dining Out","EUR","10.00","9.00","USD","1.1","EXCHANGE","No","Evenly",5.00,-5.00`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.participants).toHaveLength(2)
+    expect(result.source.expenses).toHaveLength(1)
+    const expense = result.source.expenses[0]
+    // Cost is ledger EUR 10.00; recover original USD minor units via rate
+    expect(expense.amount).toBe(Math.round(1000 / 1.1))
+    expect(expense.originalCurrency).toBe('USD')
+    expect(expense.conversionRate).toBe(1.1)
+    expect(expense.isReimbursement).toBe(false)
+  })
+
   it('skips rows with unparseable amounts and returns no expenses', () => {
     const result = tryParseSpliitCsv(
       `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "

@@ -182,10 +182,12 @@ export function importConversionForPair(
   const upperKey = `${amountCurrency.toUpperCase()}|${destinationCurrencyCode.toUpperCase()}`
   const mode = conversionModes[pairKey] ?? conversionModes[upperKey]
   if (mode === 'fixed') {
+    // Propagate invalid/missing rates so server RATE_NOT_POSITIVE rejects the
+    // batch instead of silently converting at 1:1.
     return {
       type: 'custom',
       currency: amountCurrency,
-      rate: rate && rate > 0 ? rate : 1,
+      rate: typeof rate === 'number' ? rate : 0,
     }
   }
   return { type: 'exchange', currency: amountCurrency }

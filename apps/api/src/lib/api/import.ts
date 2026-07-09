@@ -273,13 +273,11 @@ export async function importGroup(
     const affectedParticipantIds = new Set<string>()
     let totalAmount = 0
 
-    const resolvedConversions = new Map<
-      string,
-      Awaited<ReturnType<typeof resolveConversion>>
-    >()
+    // Resolve per expense by index — titles are not unique in imports.
+    const resolvedConversions: Awaited<ReturnType<typeof resolveConversion>>[] =
+      []
     for (const expense of input.expenses) {
-      resolvedConversions.set(
-        expense.title,
+      resolvedConversions.push(
         await resolveConversion(expense, {
           ledgerCurrency: ledgerCurrency ?? null,
           expenseDate: expense.expenseDate,
@@ -287,9 +285,14 @@ export async function importGroup(
       )
     }
 
-    for (const expense of input.expenses) {
+    for (
+      let expenseIndex = 0;
+      expenseIndex < input.expenses.length;
+      expenseIndex++
+    ) {
+      const expense = input.expenses[expenseIndex]!
       const expenseId = randomId()
-      const conversion = resolvedConversions.get(expense.title)!
+      const conversion = resolvedConversions[expenseIndex]!
       const ledgerAmount = conversion.ledgerAmountMinor
       const dateStr = expense.expenseDate.toISOString().slice(0, 10)
       await logActivity(

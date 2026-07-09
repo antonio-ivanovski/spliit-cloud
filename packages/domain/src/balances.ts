@@ -120,11 +120,17 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
     })
 
     if (crossCurrency) {
-      const rate = Number(expense.conversionRate)
+      // Prefer amount/originalAmount so minor-unit scale matches the stored
+      // ledger total when currencies have different decimal_digits.
+      const originalAmount = expense.originalAmount ?? expense.amount
+      const scale =
+        originalAmount !== 0
+          ? expense.amount / originalAmount
+          : Number(expense.conversionRate)
       const converted: Record<string, ExactAmount> = {}
       for (const [id, share] of Object.entries(exactPaidBy)) {
         converted[id] = {
-          numerator: BigInt(Math.round(exactAmountToNumber(share) * rate)),
+          numerator: BigInt(Math.round(exactAmountToNumber(share) * scale)),
           denominator: 1n,
         }
       }
@@ -197,10 +203,14 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
         expense.conversionRate != null &&
         expense.splitMode === 'BY_AMOUNT'
       ) {
-        const rate = Number(expense.conversionRate)
+        const originalAmount = expense.originalAmount ?? expense.amount
+        const scale =
+          originalAmount !== 0
+            ? expense.amount / originalAmount
+            : Number(expense.conversionRate)
         const converted: Record<string, ExactAmount> = {}
         for (const [id, share] of Object.entries(exactPaidFor)) {
-          converted[id] = convertByRate(share, rate)
+          converted[id] = convertByRate(share, scale)
         }
         exactPaidFor = converted
       } else if (

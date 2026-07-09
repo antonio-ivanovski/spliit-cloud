@@ -1,4 +1,5 @@
 import {
+  convertMinorUnitsByRate,
   exchangeRateLookupDate,
   type ConversionSource,
   type Expense,
@@ -134,7 +135,12 @@ export async function resolveConversion(
     conversionRate: rate,
     originalAmount: amountMinor,
     originalCurrency: expenseCurrency,
-    ledgerAmountMinor: Math.round(amountMinor * rate),
+    ledgerAmountMinor: convertMinorUnitsByRate(
+      amountMinor,
+      rate,
+      expenseCurrency,
+      ctx.ledgerCurrency,
+    ),
     inputAmountMinor: amountMinor,
   }
 }
@@ -184,7 +190,12 @@ async function resolveExchange(args: {
     conversionRate: rate.rate,
     originalAmount: args.amountMinor,
     originalCurrency: args.expenseCurrency,
-    ledgerAmountMinor: Math.round(args.amountMinor * rate.rate),
+    ledgerAmountMinor: convertMinorUnitsByRate(
+      args.amountMinor,
+      rate.rate,
+      args.expenseCurrency,
+      args.ledgerCurrency,
+    ),
     inputAmountMinor: args.amountMinor,
   }
 }
