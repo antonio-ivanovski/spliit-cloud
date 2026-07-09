@@ -37,7 +37,10 @@ export const migrateCurrencyPreviewProcedure = protectedProcedure
       accountId: ctx.auth.user.id,
     })
     assertMigrationAdmin(member, group.archived)
-    return getCurrencyMigrationPreview(input)
+    return getCurrencyMigrationPreview({
+      ...input,
+      ledger: { id: group.ledgerId, currencyCode: group.ledger.currencyCode },
+    })
   })
 
 export const migrateCurrencyProcedure = protectedProcedure
@@ -52,11 +55,13 @@ export const migrateCurrencyProcedure = protectedProcedure
     } catch (err) {
       if (err instanceof TRPCError) throw err
       if (err instanceof CurrencyMigrationError) {
-        throw new TRPCError({
-          code:
-            err.kind === 'PROVIDER_UNAVAILABLE' ? 'BAD_GATEWAY' : 'BAD_REQUEST',
-          message: err.message,
-        })
+        const code =
+          err.kind === 'PROVIDER_UNAVAILABLE'
+            ? 'BAD_GATEWAY'
+            : err.kind === 'NOT_FOUND'
+              ? 'NOT_FOUND'
+              : 'BAD_REQUEST'
+        throw new TRPCError({ code, message: err.message })
       }
       throw new TRPCError({
         code: 'BAD_REQUEST',

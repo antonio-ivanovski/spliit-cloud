@@ -1,13 +1,13 @@
-import { GroupRole, prisma } from '@spliit/db'
+import { GroupRole, prisma, type Prisma } from '@spliit/db'
 import {
   calculateMigrationRewrite,
+  classifyMigrationExpenses,
   exchangeRateLookupDate,
   getCurrency,
   getMigrationEligibility,
   isSupportedMigrationCurrency,
   migrationPairPolicySchema,
   migrationRateKey,
-  type EffectiveOriginalExpense,
   type MigrationExpenseInput,
 } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
@@ -32,48 +32,63 @@ export class CurrencyMigrationError extends Error {
   }
 }
 
+function normalizeCode(code: string | null | undefined): string {
+  return (code ?? '').trim().toUpperCase()
+}
+
 type StoredMigrationExpense = MigrationExpenseInput & {
   expenseDate: Date
   conversionSource: 'EXCHANGE' | 'CUSTOM' | null
 }
 
-type MigrationLoadedState = {
-  group: {
-    id: string
-    ledgerId: string
-    archived: boolean
-    ledger: { currency: string; currencyCode: string | null }
-  }
-  expenses: StoredMigrationExpense[]
+type MigrationGroupInfo = {
+  id: string
+  ledgerId: string
+  archived: boolean
+  currencyCode: string | null
 }
 
-async function loadMigrationState(
+async function loadMigrationGroup(
   groupId: string,
-): Promise<MigrationLoadedState> {
+): Promise<MigrationGroupInfo> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
     select: {
       id: true,
       ledgerId: true,
       archived: true,
-      ledger: { select: { currency: true, currencyCode: true } },
+      ledger: { select: { currencyCode: true } },
     },
   })
   if (!group) throw new CurrencyMigrationError('Group not found', 'NOT_FOUND')
+  return {
+    id: group.id,
+    ledgerId: group.ledgerId,
+    archived: group.archived,
+    currencyCode: group.ledger.currencyCode,
+  }
+}
 
-  const expenses = await prisma.expense.findMany({
-    where: { ledgerId: group.ledgerId },
-    select: {
-      id: true,
-      expenseDate: true,
-      amount: true,
-      originalAmount: true,
-      originalCurrency: true,
-      conversionSource: true,
-    },
+function selectExpenseFields() {
+  return {
+    id: true,
+    expenseDate: true,
+    amount: true,
+    originalAmount: true,
+    originalCurrency: true,
+    conversionSource: true,
+  } as const
+}
+
+function loadMigrationExpenses(
+  client: Pick<Prisma.TransactionClient, 'expense'> | typeof prisma,
+  ledgerId: string,
+) {
+  return client.expense.findMany({
+    where: { ledgerId },
+    select: selectExpenseFields(),
     orderBy: { id: 'asc' },
   })
-  return { group, expenses }
 }
 
 export type CurrencyMigrationPreview = {
@@ -95,43 +110,60 @@ export type CurrencyMigrationPreview = {
   }>
 }
 
+/**
+ * Build a preview of a currency migration for a group. The caller (a tRPC
+ * procedure) is expected to have already loaded the group's ledger — pass it
+ * via {@link args.ledger} so we don't re-read the group just to fetch the
+ * ledger id and current currency code. When {@link args.ledger} is omitted
+ * the group is loaded from the database, which is convenient for direct
+ * callers (tests, scripts).
+ */
 export async function getCurrencyMigrationPreview(args: {
   groupId: string
   destinationCurrencyCode: string
+  ledger?: { id: string; currencyCode: string | null }
 }): Promise<CurrencyMigrationPreview> {
-  const state = await loadMigrationState(args.groupId)
-  const destinationCurrencyCode = args.destinationCurrencyCode
-    .trim()
-    .toUpperCase()
+  const ledgerId = args.ledger?.id
+  const oldCurrencyCode = args.ledger?.currencyCode ?? null
+  if (!ledgerId) {
+    const group = await loadMigrationGroup(args.groupId)
+    return getCurrencyMigrationPreview({
+      groupId: args.groupId,
+      destinationCurrencyCode: args.destinationCurrencyCode,
+      ledger: { id: group.ledgerId, currencyCode: group.currencyCode },
+    })
+  }
+
+  const destinationCurrencyCode = normalizeCode(args.destinationCurrencyCode)
+  const expenses = await loadMigrationExpenses(prisma, ledgerId)
+  const migrationInputs = migrationInputFromExpenses(expenses)
   const eligibility = getMigrationEligibility({
-    oldLedgerCurrency: state.group.ledger.currencyCode,
+    oldLedgerCurrency: oldCurrencyCode,
     destinationCurrency: destinationCurrencyCode,
-    expenses: state.expenses,
+    expenses: migrationInputs,
   })
-  const oldCurrencyCode =
-    state.group.ledger.currencyCode?.trim().toUpperCase() ?? ''
-  const destinationDiffers = destinationCurrencyCode !== oldCurrencyCode
-  const effectiveExpenses = state.expenses.map((expense) => ({
-    id: expense.id,
-    date: expense.expenseDate.toISOString().slice(0, 10),
-    base:
-      expense.originalAmount != null && expense.originalCurrency
-        ? expense.originalCurrency.trim().toUpperCase()
-        : (state.group.ledger.currencyCode ?? '').trim().toUpperCase(),
-    amount:
-      expense.originalAmount != null && expense.originalCurrency
-        ? expense.originalAmount
-        : expense.amount,
+  const normalizedOldCurrency = normalizeCode(oldCurrencyCode)
+  const destinationDiffers = destinationCurrencyCode !== normalizedOldCurrency
+  const effectiveExpenses = classifyMigrationExpenses(
+    migrationInputs,
+    normalizedOldCurrency,
+  ).map((eff) => ({
+    id: eff.id,
+    date:
+      eff.expenseDate instanceof Date
+        ? eff.expenseDate.toISOString().slice(0, 10)
+        : String(eff.expenseDate).slice(0, 10),
+    base: eff.effectiveOriginalCurrency,
+    amount: eff.effectiveOriginalAmount,
   }))
   return {
     groupId: args.groupId,
-    oldCurrencyCode: state.group.ledger.currencyCode,
+    oldCurrencyCode,
     destinationCurrencyCode,
-    hasExpenses: state.expenses.length > 0,
+    hasExpenses: expenses.length > 0,
     expenses: effectiveExpenses,
     ...eligibility,
-    eligible:
-      state.expenses.length > 0 && eligibility.eligible && destinationDiffers,
+    eligible: expenses.length > 0 && eligibility.eligible && destinationDiffers,
   }
 }
 
@@ -153,69 +185,77 @@ function ensurePolicyCoverage(
   }
 }
 
-function addRate(
-  ratesByDate: Record<string, number>,
-  date: string,
-  base: string,
-  target: string,
-  rate: number,
-) {
-  ratesByDate[migrationRateKey(date, base, target)] = rate
+type RateRequestMeta = {
+  base: string
+  target: string
+  expenseDates: string[]
 }
 
 async function resolveMigrationRates(args: {
-  effective: EffectiveOriginalExpense[]
   destinationCurrency: string
   pairs: ReturnType<typeof getMigrationEligibility>['pairs']
   choices: MigrationPairChoices
-}) {
+}): Promise<Map<string, number>> {
+  // Build the rate requests alongside a parallel `requestMeta` so each
+  // upstream result is unambiguously paired with the expense dates it
+  // applies to. Iterating by shared index avoids the manual
+  // `resultIndex++` counter, which would silently misalign if request
+  // ordering or dedup ever changes.
   const requests: BatchRateRequest[] = []
+  const requestMeta: RateRequestMeta[] = []
   for (const pair of args.pairs) {
     const policy = args.choices[`${pair.base}|${pair.target}`]!
     if (policy.type === 'fixedCustom') continue
-    const dates =
-      policy.type === 'fixedProvider'
-        ? [policy.date]
-        : pair.dates.map((date) => exchangeRateLookupDate(date))
-    for (const date of new Set(dates)) {
-      requests.push({ date, base: pair.base, target: pair.target })
+
+    if (policy.type === 'fixedProvider') {
+      requests.push({
+        date: policy.date,
+        base: pair.base,
+        target: pair.target,
+      })
+      requestMeta.push({
+        base: pair.base,
+        target: pair.target,
+        expenseDates: [policy.date],
+      })
+      continue
+    }
+
+    // perDate: collapse lookup dates so each (date, base, target) hits the
+    // upstream provider at most once, but remember every expense date that
+    // resolves to that lookup so the rate is recorded under each.
+    const expenseDatesByLookupDate = new Map<string, string[]>()
+    for (const expenseDate of pair.dates) {
+      const lookupDate = exchangeRateLookupDate(expenseDate)
+      const list = expenseDatesByLookupDate.get(lookupDate) ?? []
+      list.push(expenseDate)
+      expenseDatesByLookupDate.set(lookupDate, list)
+    }
+    for (const [lookupDate, expenseDates] of expenseDatesByLookupDate) {
+      requests.push({
+        date: lookupDate,
+        base: pair.base,
+        target: pair.target,
+      })
+      requestMeta.push({
+        base: pair.base,
+        target: pair.target,
+        expenseDates,
+      })
     }
   }
 
   const results = await getCurrencyRates(requests)
-  const ratesByDate: Record<string, number> = {}
-  let resultIndex = 0
-  for (const pair of args.pairs) {
-    const policy = args.choices[`${pair.base}|${pair.target}`]!
-    if (policy.type === 'fixedCustom') continue
-    if (policy.type === 'fixedProvider') {
-      const result = results[resultIndex++]
-      if (!result?.ok) throw providerFailure(result?.error)
-      addRate(
-        ratesByDate,
-        policy.date,
-        pair.base,
-        pair.target,
+  const ratesByDate = new Map<string, number>()
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i]
+    const meta = requestMeta[i]
+    if (!result?.ok) throw providerFailure(result?.error)
+    for (const expenseDate of meta.expenseDates) {
+      ratesByDate.set(
+        migrationRateKey(expenseDate, meta.base, meta.target),
         result.rate.rate,
       )
-      continue
-    }
-    for (const date of new Set(
-      pair.dates.map((d) => exchangeRateLookupDate(d)),
-    )) {
-      const result = results[resultIndex++]
-      if (!result?.ok) throw providerFailure(result?.error)
-      for (const expenseDate of pair.dates) {
-        if (exchangeRateLookupDate(expenseDate) === date) {
-          addRate(
-            ratesByDate,
-            expenseDate,
-            pair.base,
-            pair.target,
-            result.rate.rate,
-          )
-        }
-      }
     }
   }
   return ratesByDate
@@ -236,7 +276,7 @@ function providerFailure(
   )
 }
 
-function migrationInputFromState(expenses: StoredMigrationExpense[]) {
+function migrationInputFromExpenses(expenses: StoredMigrationExpense[]) {
   return expenses.map((expense) => ({
     id: expense.id,
     expenseDate: expense.expenseDate,
@@ -257,8 +297,12 @@ export async function migrateGroupCurrency(
   input: MigrateGroupCurrencyInput,
   actor: { accountId: string },
 ) {
-  const state = await loadMigrationState(input.groupId)
-  if (state.group.archived) {
+  // Precondition reads — cheap and stable enough to leave outside the
+  // transaction. The expense list, eligibility, rate resolution, and all
+  // writes happen inside the transaction so the rewrite values reflect a
+  // consistent snapshot of the ledger at commit time.
+  const group = await loadMigrationGroup(input.groupId)
+  if (group.archived) {
     throw new CurrencyMigrationError(
       'This group is archived and cannot be migrated',
     )
@@ -279,97 +323,74 @@ export async function migrateGroupCurrency(
       message: 'Only active group admins can migrate the group currency',
     })
   }
-  if (state.expenses.length === 0) {
-    throw new CurrencyMigrationError(
-      'Groups without expenses do not need a currency migration',
-    )
-  }
 
-  const destination = input.destinationCurrencyCode.trim().toUpperCase()
+  const destination = normalizeCode(input.destinationCurrencyCode)
   if (!isSupportedMigrationCurrency(destination)) {
     throw new CurrencyMigrationError(
       `Unsupported destination currency: ${destination}`,
     )
   }
-  const oldCurrency =
-    state.group.ledger.currencyCode?.trim().toUpperCase() ?? ''
+  const oldCurrency = normalizeCode(group.currencyCode)
   if (destination === oldCurrency) {
     throw new CurrencyMigrationError(
       'The destination currency must be different',
     )
   }
-  const eligibility = getMigrationEligibility({
-    oldLedgerCurrency: state.group.ledger.currencyCode,
-    destinationCurrency: destination,
-    expenses: migrationInputFromState(state.expenses),
-  })
-  if (!eligibility.eligible) {
-    throw new CurrencyMigrationError(
-      'The group contains unsupported currencies',
-    )
-  }
-  ensurePolicyCoverage(eligibility.pairs, input.pairChoices)
-
-  const ratesByDate = await resolveMigrationRates({
-    effective: state.expenses.map((expense) =>
-      // The eligibility helper applies the same effective-original rules.
-      // Reuse its public result to keep preview and commit identical.
-      ({
-        id: expense.id,
-        expenseDate: expense.expenseDate,
-        effectiveOriginalAmount:
-          expense.originalAmount != null && expense.originalCurrency
-            ? expense.originalAmount
-            : expense.amount,
-        effectiveOriginalCurrency:
-          expense.originalAmount != null && expense.originalCurrency
-            ? expense.originalCurrency.toUpperCase()
-            : oldCurrency,
-        existingConversionSource: expense.conversionSource,
-      }),
-    ),
-    destinationCurrency: destination,
-    pairs: eligibility.pairs,
-    choices: input.pairChoices,
-  })
-
-  const rewrites = state.expenses.map((expense) => {
-    const effective: EffectiveOriginalExpense = {
-      id: expense.id,
-      expenseDate: expense.expenseDate,
-      effectiveOriginalAmount:
-        expense.originalAmount != null && expense.originalCurrency
-          ? expense.originalAmount
-          : expense.amount,
-      effectiveOriginalCurrency:
-        expense.originalAmount != null && expense.originalCurrency
-          ? expense.originalCurrency.toUpperCase()
-          : oldCurrency,
-      existingConversionSource: expense.conversionSource,
-    }
-    const pair = eligibility.pairs.find(
-      (candidate) =>
-        candidate.base === effective.effectiveOriginalCurrency &&
-        candidate.target === destination,
-    )
-    const policy = pair
-      ? input.pairChoices[`${pair.base}|${pair.target}`]!
-      : ({ type: 'perDate' } as const)
-    return {
-      id: expense.id,
-      rewrite: calculateMigrationRewrite({
-        expense: effective,
-        oldLedgerCurrency: oldCurrency,
-        destinationCurrency: destination,
-        policy,
-        ratesByDate,
-      }),
-    }
-  })
 
   const result = await prisma.$transaction(async (tx) => {
+    const expenses = await loadMigrationExpenses(tx, group.ledgerId)
+    if (expenses.length === 0) {
+      throw new CurrencyMigrationError(
+        'Groups without expenses do not need a currency migration',
+      )
+    }
+
+    const eligibility = getMigrationEligibility({
+      oldLedgerCurrency: group.currencyCode,
+      destinationCurrency: destination,
+      expenses: migrationInputFromExpenses(expenses),
+    })
+    if (!eligibility.eligible) {
+      throw new CurrencyMigrationError(
+        'The group contains unsupported currencies',
+      )
+    }
+    ensurePolicyCoverage(eligibility.pairs, input.pairChoices)
+
+    const effective = classifyMigrationExpenses(
+      migrationInputFromExpenses(expenses),
+      oldCurrency,
+    )
+    const ratesByDate = await resolveMigrationRates({
+      destinationCurrency: destination,
+      pairs: eligibility.pairs,
+      choices: input.pairChoices,
+    })
+    const ratesByDateRecord = Object.fromEntries(ratesByDate)
+
+    const rewrites = effective.map((effectiveExpense) => {
+      const pair = eligibility.pairs.find(
+        (candidate) =>
+          candidate.base === effectiveExpense.effectiveOriginalCurrency &&
+          candidate.target === destination,
+      )
+      const policy = pair
+        ? input.pairChoices[`${pair.base}|${pair.target}`]!
+        : ({ type: 'perDate' } as const)
+      return {
+        id: effectiveExpense.id,
+        rewrite: calculateMigrationRewrite({
+          expense: effectiveExpense,
+          oldLedgerCurrency: oldCurrency,
+          destinationCurrency: destination,
+          policy,
+          ratesByDate: ratesByDateRecord,
+        }),
+      }
+    })
+
     await tx.ledger.update({
-      where: { id: state.group.ledgerId },
+      where: { id: group.ledgerId },
       data: {
         currencyCode: destination,
         currency: getCurrency(destination)?.symbol ?? destination,
@@ -388,20 +409,21 @@ export async function migrateGroupCurrency(
         actor: { type: 'ACCOUNT', id: actor.accountId },
         subject: { type: 'GROUP', id: input.groupId },
         data: buildGroupActivityData({
-          summary: `Currency changed from ${state.group.ledger.currencyCode} to ${destination}`,
-          oldCurrencyCode: state.group.ledger.currencyCode ?? undefined,
+          summary: `Currency changed from ${group.currencyCode} to ${destination}`,
+          oldCurrencyCode: group.currencyCode ?? undefined,
           newCurrencyCode: destination,
         }),
       },
       tx,
     )
-    return { activityId: activity.id }
+    return { activityId: activity.id, migratedExpenses: rewrites.length }
   })
+
   return {
     groupId: input.groupId,
-    oldCurrencyCode: state.group.ledger.currencyCode,
+    oldCurrencyCode: group.currencyCode,
     newCurrencyCode: destination,
-    migratedExpenses: rewrites.length,
+    migratedExpenses: result.migratedExpenses,
     activityId: result.activityId,
   }
 }

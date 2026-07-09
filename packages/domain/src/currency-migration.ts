@@ -220,7 +220,3 @@ export function calculateMigrationRewrite(args: {
         : ConversionSource.CUSTOM,
   }
 }
-
-export function migrationDateForExpense(expenseDate: Date | string): string {
-  return dateOnly(expenseDate)
-}
