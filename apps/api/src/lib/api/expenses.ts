@@ -981,7 +981,7 @@ export async function getGroupExpenses(
       : undefined,
     categoryId: narrowCategoryId(row.categoryId),
     category: resolveCategory(row.categoryId),
-    conversionRate: row.conversionRate?.toNumber() ?? null,
+    conversionRate: row.conversionRate ?? null,
   }))
 }
 

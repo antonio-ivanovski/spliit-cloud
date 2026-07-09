@@ -757,7 +757,7 @@ describe('buildImportBatch', () => {
       )
     })
 
-    it('converts amount via Decimal precision (nearest minor unit)', () => {
+    it('converts amount to nearest minor unit', () => {
       const participants: ParticipantMappingState[] = [
         mappingRow('p-0', 'John', 'LINK_ACCOUNT', {
           linkedAccountId: 'acc-1',
@@ -784,7 +784,7 @@ describe('buildImportBatch', () => {
       const { batch } = buildImportBatch(state, 'USD', rates)
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
-      // Decimal(333).mul(1.1234) → nearest integer via distributeRemainder
+      // 333 * 1.1234 → nearest integer
       expect(batch.expenses[0].amount).toBe(374)
       expect(batch.expenses[0].paidByList[0].shares).toBe(333)
       expect(batch.expenses[0].originalAmount).toBe(333)
@@ -882,7 +882,7 @@ describe('buildImportBatch', () => {
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
-      // Decimal(10000).mul(0.92) = 9200
+      // 10000 * 0.92 = 9200
       expect(exp.amount).toBe(9200)
       expect(exp.originalAmount).toBe(10000)
       expect(exp.originalCurrency).toBe('EUR')

@@ -1,7 +1,8 @@
-import Decimal from 'decimal.js'
 import type { SplitMode } from './enums'
+import { addExactAmount, type ExactAmount } from './exact-math'
+import { distributeRemainder } from './remainder-distribution'
 import type { ExpenseApiItem } from './schemas'
-import { calculateExactShares, distributeRemainder } from './totals'
+import { calculateExactShares } from './totals'
 import { expenseIdSeed } from './utils'
 
 type ItemPaidFor = Array<{ participant: string; shares: number }>
@@ -27,14 +28,14 @@ export function computeExactSharesFromItems(
   groupMemberIds: string[],
   expenseAmount: number,
   itemizedRemainder?: ItemizedRemainderLike,
-): Record<string, Decimal> {
+): Record<string, ExactAmount> {
   const itemsSum = items.reduce((s, i) => s + i.amount, 0)
 
   if (itemsSum > expenseAmount) {
     throw new Error('ITEMS_EXCEED_AMOUNT')
   }
 
-  const exact: Record<string, Decimal> = {}
+  const exact: Record<string, ExactAmount> = {}
 
   const accumulate = (
     amount: number,
@@ -51,7 +52,8 @@ export function computeExactSharesFromItems(
       })),
     })
     for (const [id, value] of Object.entries(shares)) {
-      exact[id] = (exact[id] ?? new Decimal(0)).plus(value)
+      const current = exact[id]
+      exact[id] = current ? addExactAmount(current, value) : value
     }
   }
 
@@ -78,7 +80,7 @@ export function computeExactSharesFromItems(
 /**
  * Pure: given items + group members + expense amount, derive paidFor rows.
  *
- * Accumulates exact Decimal shares across all items (and optional filler),
+ * Accumulates exact rational shares across all items (and optional filler),
  * then truncates once via distributeRemainder so cross-item drift is zero.
  *
  * If sum(item.amount) < expenseAmount, a synthetic "Other (unaccounted)"

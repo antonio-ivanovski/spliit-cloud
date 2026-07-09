@@ -1,5 +1,3 @@
-import Decimal from 'decimal.js'
-
 import * as z from 'zod'
 import { categoryIdSchema } from './categories'
 import type { RecurrenceRule, SplitMode } from './enums'
@@ -322,8 +320,8 @@ const paidByDuplicateGuard = (
 
 // paidByList BY_AMOUNT sum check, shared by both schemas. `paidByList`
 // shares are in the selected expense currency (same units as `amount`).
-const paidByAmountSumOk = (sum: Decimal, target: number): boolean =>
-  sum.equals(new Decimal(target))
+const paidByAmountSumOk = (sum: number, target: number): boolean =>
+  sum === target
 
 // `expenseFormInputSchema` validates the user-facing form values:
 // numbers in display units (decimal major units for amounts,
@@ -575,11 +573,8 @@ export const expenseApiSchema = z
       case 'BY_SHARES':
         break
       case 'BY_AMOUNT': {
-        const sum = expense.paidFor.reduce(
-          (sum, { shares }) => new Decimal(shares).add(sum),
-          new Decimal(0),
-        )
-        if (!sum.equals(new Decimal(expense.amount))) {
+        const sum = expense.paidFor.reduce((sum, { shares }) => sum + shares, 0)
+        if (sum !== expense.amount) {
           ctx.addIssue({
             code: 'custom',
             message: 'amountSum',
@@ -610,8 +605,8 @@ export const expenseApiSchema = z
           ? (expense.originalAmount ?? expense.amount)
           : expense.amount
         const sum = expense.paidByList.reduce(
-          (sum, { shares }) => new Decimal(shares).add(sum),
-          new Decimal(0),
+          (sum, { shares }) => sum + shares,
+          0,
         )
         if (!paidByAmountSumOk(sum, target)) {
           ctx.addIssue({

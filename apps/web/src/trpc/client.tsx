@@ -3,19 +3,9 @@ import type { QueryClient } from '@tanstack/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
-import Decimal from 'decimal.js'
 import { useState } from 'react'
 import superjson from 'superjson'
 import { makeQueryClient } from './query-client'
-
-superjson.registerCustom<Decimal, string>(
-  {
-    isApplicable: (v): v is Decimal => Decimal.isDecimal(v),
-    serialize: (v) => v.toJSON(),
-    deserialize: (v) => new Decimal(v),
-  },
-  'decimal.js',
-)
 
 export const trpc = createTRPCReact<AppRouter>()
 

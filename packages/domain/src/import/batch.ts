@@ -1,9 +1,8 @@
-import Decimal from 'decimal.js'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
+import { distributeRemainder } from '../remainder-distribution'
 import {
   calculateExactShares,
-  distributeRemainder,
   serializePaidBy,
   serializePaidFor,
 } from '../totals'
@@ -149,13 +148,9 @@ function currencyOrFallback(code: string | null | undefined): Currency {
   return getCurrency(code) ?? { ...FALLBACK_CURRENCY, code, symbol: code }
 }
 
-/** Convert minor-unit amount by rate via Decimal + distributeRemainder (not Math.round). */
+/** Convert minor-unit amount by rate; FX is a convenience estimate. */
 function convertAmountByRate(amountMinor: number, rate: number): number {
-  const exact = new Decimal(amountMinor).mul(rate)
-  // Target nearest integer so Σ converted amounts stay close to bank FX; remainder
-  // distribution is identity for a single bucket.
-  const target = exact.round().toNumber()
-  return distributeRemainder({ _a: exact }, target)._a
+  return Math.round(amountMinor * rate)
 }
 
 /** paidFor already in source minor units → ledger minor units via serializePaidFor. */
@@ -179,7 +174,10 @@ function convertPaidForByAmount(
   })
   // Per-row Math.round can drift from convertedAmount; reconcile so schema sum check passes.
   const exact = Object.fromEntries(
-    serialized.map((p) => [p.participant.id, new Decimal(p.shares)]),
+    serialized.map((p) => [
+      p.participant.id,
+      { numerator: BigInt(p.shares), denominator: 1n },
+    ]),
   )
   const reconciled = distributeRemainder(exact, convertedAmount, {
     payerId: serialized[0]?.participant.id,

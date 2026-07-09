@@ -309,15 +309,17 @@ The Spliit CSV parser SHALL use `serializePaidFor` from the `share-calculation` 
 - **THEN** the parser does not contain an inline `drift` variable or largest-entry-absorbs-drift loop; drift handling is deferred to the read-side `calculateShares`
 
 ### Requirement: Spliit CSV import cross-currency normalization
-The Spliit CSV parser SHALL preserve the prior-convention quirk where `paidBy` shares are sourced from the Original-cost column (original-currency cents) while `paidFor` shares are in row-currency cents. The `buildImportBatch` function SHALL normalize these via `serializePaidBy` and `serializePaidFor` with `conversionRate`, following the cross-currency serializer convention: `paidByList.shares` stay in original currency, `paidFor` BY_AMOUNT shares convert to ledger currency, and unitless shares (EVENLY/BY_SHARES/BY_PERCENTAGE) are not converted. The converted `amount` SHALL use `Decimal(originalAmount).mul(rate)` and `distributeRemainder` instead of `Math.round(amount * rate)`.
+The Spliit CSV parser SHALL preserve the prior-convention quirk where `paidBy` shares are sourced from the Original-cost column (original-currency cents) while `paidFor` shares are in row-currency cents. The `buildImportBatch` function SHALL normalize these via `serializePaidBy` and `serializePaidFor` with `conversionRate`, following the cross-currency serializer convention: `paidByList.shares` stay in original currency, `paidFor` BY_AMOUNT shares convert to ledger currency, and unitless shares (EVENLY/BY_SHARES/BY_PERCENTAGE) are not converted. The converted `amount` SHALL use `convertByRate` from the native `exact-math` module (BigInt-based rational) and `distributeRemainder` instead of `Math.round(amount * rate)`.
+
+> **Note**: All amounts are integer cents. The `decimal.js` dependency has been removed in favor of native `BigInt` rational arithmetic. Sub-cent floating-point noise from rate multiplication is accepted because the result is always rounded to the nearest integer cent.
 
 #### Scenario: Spliit CSV prior-conversion expense
 - **WHEN** a Spliit CSV row has Original cost, Original currency, and Conversion rate columns populated
 - **THEN** the parser sets `originalAmount`, `originalCurrency`, and `conversionRate` and sources `paidBy` shares from the original-cost cents
 
-#### Scenario: Cross-currency import conversion uses Decimal precision
+#### Scenario: Cross-currency import conversion uses native exact rational arithmetic
 - **WHEN** `buildImportBatch` converts a cross-currency Spliit CSV expense to the destination ledger currency
-- **THEN** it uses `Decimal(originalAmount).mul(rate)` and `distributeRemainder` for the converted amount, not `Math.round(amount * rate)`
+- **THEN** it uses `convertByRate(exactFromInteger(originalAmount), rate)` and `distributeRemainder` for the converted amount, not `Math.round(amount * rate)`
 
 #### Scenario: Cross-currency import paidBy stays in original currency
 - **WHEN** a cross-currency Spliit CSV expense is converted by `buildImportBatch`

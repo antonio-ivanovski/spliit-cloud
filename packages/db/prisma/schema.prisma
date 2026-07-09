@@ -405,7 +405,7 @@ model Expense {
   amount           Int
   originalAmount   Int?
   originalCurrency String?
-  conversionRate   Decimal?
+  conversionRate   Float?
   paidBySplitMode  SplitMode         @default(BY_AMOUNT)
   paidByList       ExpensePaidBy[]
   paidFor          ExpensePaidFor[]

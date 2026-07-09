@@ -1,12 +1,11 @@
-import Decimal from 'decimal.js'
 import { getCurrency } from './currency'
+import { exactAmountToNumber } from './exact-math'
 import {
   calculateExactShares,
   calculatePaidByShare,
   calculatePaidByShares,
   calculateShare,
   calculateShares,
-  distributeRemainder,
   getTotalActiveUserPaidFor,
   getTotalActiveUserShare,
   getTotalGroupSpending,
@@ -287,7 +286,7 @@ describe('getTotalActiveUserShare', () => {
 })
 
 describe('calculateExactShares', () => {
-  it('EVENLY divides amount by N as Decimals', () => {
+  it('EVENLY divides amount by N as exact rationals', () => {
     const result = calculateExactShares({
       amount: 100,
       splitMode: 'EVENLY',
@@ -297,9 +296,9 @@ describe('calculateExactShares', () => {
         { id: 'c', shares: 1 },
       ],
     })
-    expect(result.a.toString()).toBe(new Decimal(100).div(3).toString())
-    expect(result.b.toString()).toBe(new Decimal(100).div(3).toString())
-    expect(result.c.toString()).toBe(new Decimal(100).div(3).toString())
+    expect(result.a).toEqual({ numerator: 100n, denominator: 3n })
+    expect(result.b).toEqual({ numerator: 100n, denominator: 3n })
+    expect(result.c).toEqual({ numerator: 100n, denominator: 3n })
   })
 
   it('BY_SHARES weights by shares / Σshares', () => {
@@ -312,9 +311,9 @@ describe('calculateExactShares', () => {
         { id: 'c', shares: 3 },
       ],
     })
-    expect(result.a.toNumber()).toBe(100)
-    expect(result.b.toNumber()).toBe(200)
-    expect(result.c.toNumber()).toBe(300)
+    expect(exactAmountToNumber(result.a)).toBe(100)
+    expect(exactAmountToNumber(result.b)).toBe(200)
+    expect(exactAmountToNumber(result.c)).toBe(300)
   })
 
   it('BY_PERCENTAGE uses shares / 10000', () => {
@@ -326,8 +325,8 @@ describe('calculateExactShares', () => {
         { id: 'b', shares: 7500 },
       ],
     })
-    expect(result.a.toNumber()).toBe(250)
-    expect(result.b.toNumber()).toBe(750)
+    expect(exactAmountToNumber(result.a)).toBe(250)
+    expect(exactAmountToNumber(result.b)).toBe(750)
   })
 
   it('BY_AMOUNT returns literal shares', () => {
@@ -339,8 +338,8 @@ describe('calculateExactShares', () => {
         { id: 'b', shares: 456 },
       ],
     })
-    expect(result.a.toNumber()).toBe(123)
-    expect(result.b.toNumber()).toBe(456)
+    expect(exactAmountToNumber(result.a)).toBe(123)
+    expect(exactAmountToNumber(result.b)).toBe(456)
   })
 
   it('ITEMIZED returns literal shares (same as BY_AMOUNT)', () => {
@@ -352,8 +351,8 @@ describe('calculateExactShares', () => {
         { id: 'bob', shares: 3000 },
       ],
     })
-    expect(result.alice.toNumber()).toBe(7000)
-    expect(result.bob.toNumber()).toBe(3000)
+    expect(exactAmountToNumber(result.alice)).toBe(7000)
+    expect(exactAmountToNumber(result.bob)).toBe(3000)
   })
 
   it('0 amount yields all zeros', () => {
@@ -365,8 +364,8 @@ describe('calculateExactShares', () => {
         { id: 'b', shares: 1 },
       ],
     })
-    expect(result.a.toNumber()).toBe(0)
-    expect(result.b.toNumber()).toBe(0)
+    expect(exactAmountToNumber(result.a)).toBe(0)
+    expect(exactAmountToNumber(result.b)).toBe(0)
   })
 
   it('empty participants yields empty record', () => {
@@ -388,100 +387,8 @@ describe('calculateExactShares', () => {
         { id: 'b', shares: 0 },
       ],
     })
-    expect(result.a.toNumber()).toBe(0)
-    expect(result.b.toNumber()).toBe(0)
-  })
-})
-
-describe('distributeRemainder', () => {
-  it('exact division produces no remainder', () => {
-    const exact = calculateExactShares({
-      amount: 100,
-      splitMode: 'EVENLY',
-      participants: [
-        { id: 'a', shares: 1 },
-        { id: 'b', shares: 1 },
-      ],
-    })
-    const result = distributeRemainder(exact, 100)
-    expect(result).toEqual({ a: 50, b: 50 })
-  })
-
-  it('positive remainder: 100/3 → 33/33/34', () => {
-    const exact = calculateExactShares({
-      amount: 100,
-      splitMode: 'EVENLY',
-      participants: [
-        { id: 'a', shares: 1 },
-        { id: 'b', shares: 1 },
-        { id: 'c', shares: 1 },
-      ],
-    })
-    const result = distributeRemainder(exact, 100, { seed: 0 })
-    expect(sumValues(result)).toBe(100)
-    expect(Object.values(result).sort((x, y) => x - y)).toEqual([33, 33, 34])
-  })
-
-  it('negative amount (refund) truncates toward zero', () => {
-    const exact = calculateExactShares({
-      amount: -101,
-      splitMode: 'EVENLY',
-      participants: [
-        { id: 'a', shares: 1 },
-        { id: 'b', shares: 1 },
-        { id: 'c', shares: 1 },
-      ],
-    })
-    const result = distributeRemainder(exact, -101, { seed: 0 })
-    expect(sumValues(result)).toBe(-101)
-    expect(Object.values(result).every((n) => n <= 0)).toBe(true)
-  })
-
-  it('tie-break with seed is deterministic and seed-dependent', () => {
-    const exact = calculateExactShares({
-      amount: 100,
-      splitMode: 'EVENLY',
-      participants: [
-        { id: 'a', shares: 1 },
-        { id: 'b', shares: 1 },
-        { id: 'c', shares: 1 },
-      ],
-    })
-    const r0 = distributeRemainder(exact, 100, { seed: 0 })
-    const r1 = distributeRemainder(exact, 100, { seed: 1 })
-    const r0b = distributeRemainder(exact, 100, { seed: 0 })
-
-    expect(r0).toEqual(r0b)
-    expect(sumValues(r0)).toBe(100)
-    expect(sumValues(r1)).toBe(100)
-    // Same frac for all → seed rotates who gets the extra cent
-    expect(r0).not.toEqual(r1)
-  })
-
-  it('BY_AMOUNT payer fallback gives entire diff to payerId', () => {
-    const exact = calculateExactShares({
-      amount: 100,
-      splitMode: 'BY_AMOUNT',
-      participants: [
-        { id: 'a', shares: 30 },
-        { id: 'b', shares: 30 },
-      ],
-    })
-    const result = distributeRemainder(exact, 100, { payerId: 'payer' })
-    expect(result.a).toBe(30)
-    expect(result.b).toBe(30)
-    expect(result.payer).toBe(40)
-    expect(sumValues(result)).toBe(100)
-  })
-
-  it('empty participants with payerId assigns full amount to payer', () => {
-    expect(distributeRemainder({}, 50, { payerId: 'payer' })).toEqual({
-      payer: 50,
-    })
-  })
-
-  it('empty participants without payerId returns empty', () => {
-    expect(distributeRemainder({}, 50)).toEqual({})
+    expect(exactAmountToNumber(result.a)).toBe(0)
+    expect(exactAmountToNumber(result.b)).toBe(0)
   })
 })
 

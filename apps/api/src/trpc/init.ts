@@ -1,24 +1,10 @@
-import {
-  GroupInvitationStatus,
-  GroupInvitationType,
-  Prisma,
-  prisma,
-} from '@spliit/db'
+import { GroupInvitationStatus, GroupInvitationType, prisma } from '@spliit/db'
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { z } from 'zod'
 import type { ResolvedAuth } from '../lib/auth/session'
 import { getAuthFromRequest } from '../lib/auth/session'
 import { hashLinkToken } from '../lib/invitations'
-
-superjson.registerCustom<Prisma.Decimal, string>(
-  {
-    isApplicable: (v): v is Prisma.Decimal => Prisma.Decimal.isDecimal(v),
-    serialize: (v) => v.toJSON(),
-    deserialize: (v) => new Prisma.Decimal(v),
-  },
-  'decimal.js',
-)
 
 export type AuthContext = {
   /** Authenticated account + better-auth session, or null. */

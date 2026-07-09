@@ -1219,7 +1219,7 @@ describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
     // Two $50 EVENLY/3 itemized expenses. Stored paidFor may already be
     // per-expense rounded (e.g. 1667/1667/1666 each), which would unfairly
     // stack if used as literals. With items present, getBalances recomputes
-    // exact Decimals → single global distributeRemainder.
+    // exact rationals → single global distributeRemainder.
     const evenItem = (amount: number) => ({
       amount,
       splitMode: 'EVENLY' as const,

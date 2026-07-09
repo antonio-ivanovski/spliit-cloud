@@ -32,5 +32,5 @@ Currency conversion is currently performed in the browser and trusted by the API
 - API: add a currency-rate lookup/cache service, validate supported currencies, compute converted expense totals and amount-based shares server-side, and reject post-expense base-currency changes.
 - Web: route conversion previews through the API, submit input amount/currency values for expenses, remove custom currency choices, display original and converted amounts on expense views, and prevent group currency edits when expenses exist.
 - Database: likely add conversion metadata such as requested rate date and provider-returned `conversionAsOf`; consider original share storage for amount-based splits to support faithful edit forms.
-- Domain: update expense schemas so converted expense payloads distinguish original/input amounts from persisted ledger-currency values.
+- Domain: update expense schemas so converted expense payloads distinguish original/input amounts from persisted ledger-currency values. The domain already uses native `BigInt`-based rational arithmetic (`exact-math` module) instead of `decimal.js` — all amounts are integer cents and sub-cent conversion imprecision is accepted.
 - Testing: cover FX cache behavior, conversion rounding, amount-split normalization, base-currency change blocking, and balance invariants.

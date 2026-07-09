@@ -83,6 +83,8 @@ Split mode handling by currency:
 
 Input amounts and amount-based shares are parsed using the selected/input currency decimal precision. Persisted `Expense.amount` and amount-based paid-for shares are stored using the Ledger currency decimal precision. Example: a JPY expense in a USD Ledger accepts whole-yen input, converts with JPY->USD, then stores the USD result in cents.
 
+> **Precision note**: The `decimal.js` dependency has been removed. All exact arithmetic uses native `BigInt` rationals (`ExactAmount` from `exact-math` module) for the share-calculation core. Currency conversion via `convertByRate` uses `Math.round(Number(rational) * Number(rate))`, accepting potential sub-cent floating-point noise because the result is always rounded to the nearest integer cent. This imprecision is acceptable since all persisted amounts are integer cents.
+
 ### Only supported ISO currencies are selectable
 
 Custom currencies are removed from new and updated group/expense flows. A Ledger base currency and an expense selected currency must be one of the supported ISO currency codes. This avoids conversion ambiguity and removes custom-currency branches from the multi-currency model.
@@ -91,7 +93,7 @@ Existing groups with custom/empty currency values are not rebased by this change
 
 ### Converted amount-split rounding uses largest remainder
 
-Converted totals and amount-based shares are converted into integer minor units. The server first converts the expense total and each original-currency amount share using precise decimal arithmetic. It floors converted shares to minor units, then distributes remaining minor units to the shares with the largest fractional remainders, using submitted paid-for order as a deterministic tie-breaker.
+Converted totals and amount-based shares are converted into integer minor units. The server first converts the expense total and each original-currency amount share using native `BigInt`-based rational arithmetic (via `convertByRate` from the `exact-math` module). It floors converted shares to minor units, then distributes remaining minor units to the shares with the largest fractional remainders, using submitted paid-for order as a deterministic tie-breaker.
 
 Example: a 10.00 EUR expense converts to 10.01 USD, split equally as three amount shares of 3.33 EUR, 3.33 EUR, and 3.34 EUR. Independent rounding can produce shares that sum to 10.00 USD or 10.02 USD. Largest-remainder normalization guarantees the persisted shares sum exactly to the persisted 10.01 USD total while minimizing rounding distortion.
 

@@ -277,12 +277,14 @@ The parser SHALL use `serializePaidFor` and `serializePaidBy` from the `share-ca
 - **THEN** it calls `serializePaidFor` and `serializePaidBy` from the `share-calculation` core and does not contain inline `Math.floor` + `+= 1` distribution loops
 
 ### Requirement: Splitwise cross-currency import conversion
-The Splitwise CSV parser always produces expenses in the row currency with `originalAmount`, `originalCurrency`, and `conversionRate` set to `null`. Cross-currency conversion SHALL be handled by `buildImportBatch` using the unified `share-calculation` core: the converted `amount` SHALL use `Decimal(originalAmount).mul(rate)` and `distributeRemainder` instead of `Math.round(amount * rate)`. `paidByList.shares` SHALL stay in the source (row) currency; `paidFor` BY_AMOUNT shares SHALL convert to ledger currency via `serializePaidFor` with `conversionRate`; unitless shares (EVENLY/BY_SHARES/BY_PERCENTAGE) SHALL NOT be converted. The inline largest-magnitude drift correctors in `buildImportBatch` SHALL be removed and replaced by `distributeRemainder`.
+The Splitwise CSV parser always produces expenses in the row currency with `originalAmount`, `originalCurrency`, and `conversionRate` set to `null`. Cross-currency conversion SHALL be handled by `buildImportBatch` using the unified `share-calculation` core: the converted `amount` SHALL use `convertByRate` from the native `exact-math` module (BigInt-based rational) and `distributeRemainder` instead of `Math.round(amount * rate)`. `paidByList.shares` SHALL stay in the source (row) currency; `paidFor` BY_AMOUNT shares SHALL convert to ledger currency via `serializePaidFor` with `conversionRate`; unitless shares (EVENLY/BY_SHARES/BY_PERCENTAGE) SHALL NOT be converted. The inline largest-magnitude drift correctors in `buildImportBatch` SHALL be removed and replaced by `distributeRemainder`.
 
-#### Scenario: Splitwise cross-currency conversion uses Decimal precision
+> **Note**: All amounts are integer cents. The `decimal.js` dependency has been removed in favor of native `BigInt` rational arithmetic. Sub-cent floating-point noise from rate multiplication is accepted because the result is always rounded to the nearest integer cent.
+
+#### Scenario: Splitwise cross-currency conversion uses native exact rational arithmetic
 
 - **WHEN** `buildImportBatch` converts a Splitwise expense from a foreign currency to the destination ledger currency
-- **THEN** the converted `amount` uses `Decimal(originalAmount).mul(rate)` and `distributeRemainder`, not `Math.round(amount * rate)`
+- **THEN** the converted `amount` uses `convertByRate(exactFromInteger(originalAmount), rate)` and `distributeRemainder`, not `Math.round(amount * rate)`
 
 #### Scenario: Splitwise cross-currency paidBy stays in source currency
 

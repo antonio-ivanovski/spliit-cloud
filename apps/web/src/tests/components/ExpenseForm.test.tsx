@@ -9,12 +9,6 @@ import { useCurrencyRate } from '@/lib/hooks'
 import { fireEvent, render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// ── Helper types ────────────────────────────────────────────────────────
-
-interface MockConversionRate {
-  toNumber(): number
-}
-
 // ── Module mocks ────────────────────────────────────────────────────────
 
 vi.mock('@trpc/react-query', () => ({
@@ -351,7 +345,7 @@ describe('ExpenseForm', () => {
       ...mockExpense,
       originalCurrency: 'EUR',
       originalAmount: 5000, // €50.00 in cents (stored as minor units)
-      conversionRate: { toNumber: () => 1.1 } as MockConversionRate,
+      conversionRate: 1.1,
     }
     render(
       <ExpenseForm
@@ -393,7 +387,7 @@ describe('ExpenseForm', () => {
             ...mockExpense,
             originalCurrency: 'EUR',
             originalAmount: 5000,
-            conversionRate: { toNumber: () => 1.1 } as MockConversionRate,
+            conversionRate: 1.1,
             paidFor: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
           } as unknown as LoadedExpense
         }
@@ -432,7 +426,7 @@ describe('ExpenseForm', () => {
             ...mockExpense,
             originalCurrency: 'USD',
             originalAmount: 5000,
-            conversionRate: { toNumber: () => 1 } as MockConversionRate,
+            conversionRate: 1,
             paidFor: [{ ledgerParticipantId: 'lp-1', shares: 5000 }],
           } as unknown as LoadedExpense
         }

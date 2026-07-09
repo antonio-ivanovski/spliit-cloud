@@ -22,4 +22,4 @@ appRouter
 
 ## Serialization
 
-SuperJSON is configured on both API and web. The web client additionally registers `decimal.js`; do not manually stringify `Date`, `Decimal`, or similar values unless an external route requires plain JSON.
+SuperJSON is configured on both API and web. The domain uses native `BigInt`-based rational arithmetic (`exact-math` module) rather than `decimal.js`. No custom class serializers are needed — amounts are plain `number` (integer cents). Do not manually stringify `Date` or similar values unless an external route requires plain JSON.
