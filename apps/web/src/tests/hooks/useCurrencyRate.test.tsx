@@ -105,6 +105,10 @@ describe('useCurrencyRate', () => {
       <TestComponent date={date} baseCurrency="EUR" targetCurrency="USD" />,
     )
 
+    expect(mockUseQuery).toHaveBeenCalledWith(
+      { date: '2026-06-28', base: 'EUR', target: 'USD' },
+      expect.objectContaining({ enabled: true }),
+    )
     expect(screen.getByTestId('data')).toHaveTextContent('1.0923')
     expect(screen.getByTestId('error')).toHaveTextContent('null')
   })
@@ -126,10 +130,35 @@ describe('useCurrencyRate', () => {
     expect(screen.getByTestId('error')).toHaveTextContent('BAD_REQUEST')
   })
 
-  it('returns RangeError when asOfDate does not match requested date', () => {
-    const date = new Date('2026-07-01') // future date
+  it('requests today when the expense date is in the future', () => {
+    const today = new Date().toISOString().slice(0, 10)
+    const future = new Date()
+    future.setUTCDate(future.getUTCDate() + 10)
     mockUseQuery.mockReturnValue({
-      data: { rate: 1.0923, asOfDate: '2026-06-28' }, // API fell back to latest available
+      data: { rate: 1.0923, asOfDate: today },
+      error: null,
+      isLoading: false,
+      refetch: vi.fn(),
+    })
+
+    render(
+      <TestComponent date={future} baseCurrency="EUR" targetCurrency="USD" />,
+    )
+
+    expect(mockUseQuery).toHaveBeenCalledWith(
+      { date: today, base: 'EUR', target: 'USD' },
+      expect.objectContaining({ enabled: true }),
+    )
+    expect(screen.getByTestId('data')).toHaveTextContent('1.0923')
+    expect(screen.getByTestId('error')).toHaveTextContent('null')
+  })
+
+  it('returns RangeError when asOfDate does not match lookup date', () => {
+    // Weekend/holiday: lookup date is today (or a past weekday), provider
+    // returned an earlier market day.
+    const date = new Date('2026-06-28')
+    mockUseQuery.mockReturnValue({
+      data: { rate: 1.0923, asOfDate: '2026-06-26' },
       error: null,
       isLoading: false,
       refetch: vi.fn(),
@@ -141,7 +170,7 @@ describe('useCurrencyRate', () => {
 
     expect(screen.getByTestId('data')).toHaveTextContent('1.0923')
     expect(screen.getByTestId('error-type')).toHaveTextContent('RangeError')
-    expect(screen.getByTestId('error')).toHaveTextContent('2026-06-28')
+    expect(screen.getByTestId('error')).toHaveTextContent('2026-06-26')
   })
 
   it('returns exchange rate from response and refresh triggers refetch', async () => {

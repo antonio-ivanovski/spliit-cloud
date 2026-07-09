@@ -113,7 +113,6 @@ describe('resolveConversion', () => {
     expect(result.conversionSource).toBe('EXCHANGE')
     expect(result.ledgerAmountMinor).toBe(10800)
     expect(result.conversionRate).toBe(1.08)
-    expect(result.futureDateUsedTodayRate).toBe(false)
   })
 
   it('exchange: future date uses today', async () => {
@@ -140,7 +139,7 @@ describe('resolveConversion', () => {
       },
       { fetchImpl },
     )
-    expect(result.futureDateUsedTodayRate).toBe(true)
+    expect(result.conversionSource).toBe('EXCHANGE')
     expect(result.ledgerAmountMinor).toBe(1200)
   })
 

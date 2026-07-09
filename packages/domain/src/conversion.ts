@@ -101,3 +101,23 @@ export type StoredConversionFields = {
   conversionRate: number | null
   conversionSource: ConversionSource | null
 }
+
+/** UTC calendar date as `YYYY-MM-DD`. */
+export function utcTodayIso(now: Date = new Date()): string {
+  const yyyy = now.getUTCFullYear()
+  const mm = String(now.getUTCMonth() + 1).padStart(2, '0')
+  const dd = String(now.getUTCDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
+/**
+ * EXCHANGE rate lookup date: expense date for past/today, today when the
+ * expense date is in the future. Client preview and server persistence
+ * both use this rule so they request the same provider date.
+ */
+export function exchangeRateLookupDate(
+  expenseDateIso: string,
+  todayIso: string = utcTodayIso(),
+): string {
+  return expenseDateIso > todayIso ? todayIso : expenseDateIso
+}

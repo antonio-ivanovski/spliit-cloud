@@ -1,7 +1,7 @@
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { trpc } from '@/trpc/client'
+import { exchangeRateLookupDate, utcTodayIso } from '@spliit/domain'
 import { useQuery } from '@tanstack/react-query'
-import dayjs from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 
 export function useMediaQuery(query: string): boolean {
@@ -76,17 +76,22 @@ type UseCurrencyRateResult = {
  * `Access-Control-Allow-Origin` headers, so the redirect itself is
  * blocked. The server-side fetch has no such restriction.
  *
- * Returns the rate as `data` and a `RangeError` in `error` when the
- * provider's as-of date doesn't match the requested date (e.g. the
- * user picked a future date or a weekend and the API fell back to the
- * latest available rate).
+ * Future expense dates request today's rate (same rule as server
+ * persistence). Returns a `RangeError` when the provider's as-of date
+ * still differs from the lookup date (weekend / holiday fallback).
  */
 export function useCurrencyRate(
   date: Date,
   baseCurrency: string,
   targetCurrency: string,
 ): UseCurrencyRateResult {
-  const dateString = dayjs(date).format('YYYY-MM-DD')
+  // Match server date serialization (UTC calendar day).
+  const expenseDateIso = Number.isNaN(date.getTime())
+    ? ''
+    : `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
+  const lookupDate = expenseDateIso
+    ? exchangeRateLookupDate(expenseDateIso)
+    : expenseDateIso
 
   const enabled =
     !isNaN(date.getTime()) &&
@@ -95,7 +100,7 @@ export function useCurrencyRate(
     baseCurrency !== targetCurrency
 
   const { data, error, isLoading, refetch } = trpc.currency.getRate.useQuery(
-    { date: dateString, base: baseCurrency, target: targetCurrency },
+    { date: lookupDate, base: baseCurrency, target: targetCurrency },
     { enabled, retry: false, refetchOnWindowFocus: false },
   )
 
@@ -109,8 +114,8 @@ export function useCurrencyRate(
   }
 
   let sentError: Error | null = error ? new Error(error.message) : null
-  if (!error && data.asOfDate !== dateString) {
-    // this happens if for example, the requested date is in the future.
+  if (!error && data.asOfDate !== lookupDate) {
+    // Provider fell back to an earlier market day (weekend / holiday).
     sentError = new RangeError(data.asOfDate)
   }
 
@@ -173,11 +178,17 @@ export function useCurrencyRates(
     retry: false,
     refetchOnWindowFocus: false,
     queryFn: async ({ signal }) => {
+      // Same future→today rule as single-rate preview and server save.
+      const today = utcTodayIso()
+      const lookupItems = items.map((item) => ({
+        ...item,
+        date: exchangeRateLookupDate(item.date, today),
+      }))
       const res = await fetch(`${apiBaseUrl}/currency/rates`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items: lookupItems }),
         signal,
       })
       if (!res.ok) {

@@ -2,6 +2,7 @@ import type { Group } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
+import { utcTodayIso } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
@@ -129,7 +130,15 @@ export function useExpenseCurrencyConversion(args: {
     return Number.isNaN(converted) ? undefined : converted
   })()
 
-  let conversionRateMessage
+  const expenseDate = watchedExpenseDate
+  const expenseDateIso =
+    expenseDate instanceof Date && !Number.isNaN(expenseDate.getTime())
+      ? `${expenseDate.getUTCFullYear()}-${String(expenseDate.getUTCMonth() + 1).padStart(2, '0')}-${String(expenseDate.getUTCDate()).padStart(2, '0')}`
+      : ''
+  const isFutureExpenseDate =
+    expenseDateIso.length > 0 && expenseDateIso > utcTodayIso()
+
+  let conversionRateMessage: string
   if (exchangeRate.isLoading) {
     conversionRateMessage = t('conversionRateState.loading')
   } else {
@@ -139,24 +148,32 @@ export function useExpenseCurrencyConversion(args: {
         args.group.currencyCode
       }\xa0${exchangeRate.data}`
     }
-    if (exchangeRate.error) {
-      if (exchangeRate.error instanceof RangeError && exchangeRate.data)
-        conversionRateMessage = t('conversionRateState.dateMismatch', {
-          date: exchangeRate.error.message,
-        })
-      else {
-        conversionRateMessage = t('conversionRateState.error')
-      }
-      conversionRateMessage +=
-        ' ' +
-        (ratesDisplay.length
-          ? `${t('conversionRateState.staleRate')} ${ratesDisplay}`
-          : t('conversionRateState.noRate'))
-    } else {
-      conversionRateMessage = ratesDisplay.length
-        ? `${t('conversionRateState.success')} ${ratesDisplay}`
-        : t('conversionRateState.currencyNotFound')
+    const parts: string[] = []
+    // Future expense dates always use today's rate (shared client/server rule).
+    if (isFutureExpenseDate) {
+      parts.push(t('conversionRateField.futureDateUsesToday'))
     }
+    if (exchangeRate.error) {
+      if (exchangeRate.error instanceof RangeError && exchangeRate.data) {
+        parts.push(
+          t('conversionRateState.dateMismatch', {
+            date: exchangeRate.error.message,
+          }),
+        )
+      } else {
+        parts.push(t('conversionRateState.error'))
+      }
+      parts.push(
+        ratesDisplay.length
+          ? `${t('conversionRateState.staleRate')} ${ratesDisplay}`
+          : t('conversionRateState.noRate'),
+      )
+    } else if (ratesDisplay.length) {
+      parts.push(`${t('conversionRateState.success')} ${ratesDisplay}`)
+    } else if (!isFutureExpenseDate) {
+      parts.push(t('conversionRateState.currencyNotFound'))
+    }
+    conversionRateMessage = parts.join(' ')
   }
 
   return {

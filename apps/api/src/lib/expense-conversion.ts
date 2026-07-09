@@ -1,8 +1,9 @@
-import type {
-  ConversionSource,
-  Expense,
-  ExpenseConversionInput,
-  StoredConversionFields,
+import {
+  exchangeRateLookupDate,
+  type ConversionSource,
+  type Expense,
+  type ExpenseConversionInput,
+  type StoredConversionFields,
 } from '@spliit/domain'
 import { supportedCurrencyCodes } from '@spliit/domain/currency'
 import {
@@ -27,14 +28,6 @@ export class ConversionError extends Error {
 }
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
-
-function todayUtcDateString(): string {
-  const now = new Date()
-  const yyyy = now.getUTCFullYear()
-  const mm = String(now.getUTCMonth() + 1).padStart(2, '0')
-  const dd = String(now.getUTCDate()).padStart(2, '0')
-  return `${yyyy}-${mm}-${dd}`
-}
 
 function toIsoDate(value: Date | string): string {
   if (typeof value === 'string') {
@@ -61,7 +54,6 @@ export type ConversionResolution = StoredConversionFields & {
   ledgerAmountMinor: number
   /** Expense-currency minor units (input amount). */
   inputAmountMinor: number
-  futureDateUsedTodayRate: boolean
 }
 
 export type ConversionResolverOptions = {
@@ -144,7 +136,6 @@ export async function resolveConversion(
     originalCurrency: expenseCurrency,
     ledgerAmountMinor: Math.round(amountMinor * rate),
     inputAmountMinor: amountMinor,
-    futureDateUsedTodayRate: false,
   }
 }
 
@@ -156,7 +147,6 @@ function sameCurrencyResolution(amountMinor: number): ConversionResolution {
     originalCurrency: null,
     ledgerAmountMinor: amountMinor,
     inputAmountMinor: amountMinor,
-    futureDateUsedTodayRate: false,
   }
 }
 
@@ -167,9 +157,8 @@ async function resolveExchange(args: {
   amountMinor: number
   fetchImpl?: typeof getCurrencyRate
 }): Promise<ConversionResolution> {
-  const todayIso = todayUtcDateString()
-  const futureDateUsedTodayRate = args.requestedDateIso > todayIso
-  const lookupDate = futureDateUsedTodayRate ? todayIso : args.requestedDateIso
+  // Future expense dates use today's rate (shared domain rule).
+  const lookupDate = exchangeRateLookupDate(args.requestedDateIso)
   const fetchImpl = args.fetchImpl ?? getCurrencyRate
   let rate: CurrencyRate
   try {
@@ -197,6 +186,5 @@ async function resolveExchange(args: {
     originalCurrency: args.expenseCurrency,
     ledgerAmountMinor: Math.round(args.amountMinor * rate.rate),
     inputAmountMinor: args.amountMinor,
-    futureDateUsedTodayRate,
   }
 }
