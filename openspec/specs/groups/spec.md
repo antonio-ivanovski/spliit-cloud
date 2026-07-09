@@ -1,4 +1,8 @@
-## MODIFIED Requirements
+## Purpose
+
+Define cloud group creation, type-specific display behavior, settings, and currency-editing rules.
+
+## Requirements
 
 ### Requirement: Account-owned cloud groups
 The system SHALL create groups as cloud resources owned and accessed through authenticated account membership. The system SHALL discriminate between regular groups (`GROUP` type) and friend ledgers (`FRIEND` type) via a `groupType` column on the `Group` model. Existing groups SHALL backfill to `GROUP`.
@@ -19,8 +23,6 @@ The system SHALL create groups as cloud resources owned and accessed through aut
 #### Scenario: Existing groups backfill to GROUP type
 - **WHEN** the migration adds the `groupType` column
 - **THEN** all existing groups SHALL have `groupType = GROUP` via the column default
-
-## ADDED Requirements
 
 ### Requirement: Group type discriminator
 The system SHALL expose `groupType` on all group-related API responses. The `account.groups` query SHALL return `groupType` and a per-viewer `displayName` for each group. The `displayName` for `GROUP`-typed groups SHALL equal `Group.name`; the `displayName` for `FRIEND`-typed groups SHALL be the other member's resolved display name.
@@ -60,3 +62,25 @@ The system SHALL conditionally show or hide the group name field in the group se
 #### Scenario: FRIEND-typed group hides name field
 - **WHEN** the group settings form is rendered for a `FRIEND`-typed group
 - **THEN** the form SHALL NOT include a group name input field (it is hidden, not merely disabled or read-only)
+
+### Requirement: Existing-group currency editing is conditional
+
+The group settings form SHALL show Group information as vertical details. For a group with no expenses, it SHALL initially show a read-only current-currency identity and reveal the editable `CurrencySelector` only after an inline “Change currency” action. For a group with expenses, it SHALL show currency as read-only with a “Migrate currency” action to `/groups/$groupId/edit/currency-migration`, and SHALL remove the prior helper text that claimed changing currency would not convert expenses.
+
+#### Scenario: No-expense group can change currency in settings
+
+- **WHEN** the group settings form is rendered for an existing group with no expenses
+- **THEN** the form SHALL render the current currency as read-only
+- **AND** selecting “Change currency” SHALL render the editable `CurrencySelector`
+
+#### Scenario: Group with expenses uses migration action
+
+- **WHEN** the group settings form is rendered for an existing group with expenses
+- **THEN** the form SHALL NOT render an editable `CurrencySelector`
+- **AND** it SHALL show the current currency identity and the Migrate currency action
+
+#### Scenario: Direct update remains guarded
+
+- **WHEN** a client submits `groups.update` with a changed currency for a ledger that has expenses
+- **THEN** the mutation SHALL reject the direct change
+- **AND** it SHALL not modify the ledger or expenses
