@@ -45,7 +45,7 @@ export function ParticipantShareRow({
   return (
     <div
       className={cn(
-        'flex flex-wrap gap-y-4 items-center border-t last-of-type:border-b last-of-type:mb-4! -mx-6 px-6 py-3',
+        'flex min-w-0 w-full flex-wrap gap-y-4 items-center border-t last-of-type:border-b last-of-type:mb-4! -mx-6 px-6 py-3',
         disabled
           ? 'cursor-default [&_button]:cursor-default [&_label]:cursor-default'
           : 'cursor-pointer [&_button]:cursor-pointer [&_label]:cursor-pointer',
@@ -54,7 +54,7 @@ export function ParticipantShareRow({
       data-id={dataId}
       onClick={handleRowClick}
     >
-      <FormItem className="flex-1 flex flex-row items-center space-x-3 space-y-0">
+      <FormItem className="min-w-0 flex-1 flex flex-row items-center space-x-3 space-y-0">
         {showCheckbox && (
           <FormControl>
             <Checkbox
@@ -67,13 +67,15 @@ export function ParticipantShareRow({
             />
           </FormControl>
         )}
-        <FormLabel className="text-sm font-normal flex-1">
-          {participant.name}
-          {pendingLabel}
-          {preview}
+        <FormLabel className="text-sm font-normal min-w-0 flex-1 flex items-center">
+          <span className="min-w-0 truncate">{participant.name}</span>
+          {pendingLabel != null && (
+            <span className="shrink-0">{pendingLabel}</span>
+          )}
+          {preview != null && <span className="shrink-0">{preview}</span>}
         </FormLabel>
       </FormItem>
-      {shareInput && <div className="flex">{shareInput}</div>}
+      {shareInput && <div className="flex shrink-0">{shareInput}</div>}
     </div>
   )
 }

@@ -126,7 +126,7 @@ export function ExpenseForm(props: {
       <form
         onSubmit={form.handleSubmit(submit)}
         noValidate
-        className="pb-24 sm:pb-20"
+        className="min-w-0 overflow-x-hidden pb-24 sm:pb-20"
       >
         {props.readOnly && <ReadOnlyNotice />}
         <BasicDetailsCard

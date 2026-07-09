@@ -223,7 +223,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   return (
     <div
       className={cn(
-        'flex justify-between sm:rounded-lg px-2 sm:pr-1 sm:pl-2 py-2 text-sm hover:bg-accent gap-1 items-stretch',
+        'flex min-w-0 justify-between sm:rounded-lg px-2 sm:pr-1 sm:pl-2 py-2 text-sm hover:bg-accent gap-1 items-stretch',
         expenseExists && 'cursor-pointer',
       )}
       onClick={() => {
@@ -235,7 +235,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       }}
       data-testid={`activity-item-${activity.id}`}
     >
-      <div className="flex flex-col justify-between items-start">
+      <div className="flex shrink-0 flex-col justify-between items-start">
         {dateStyle !== undefined && (
           <div className="mt-1 text-xs/5 text-muted-foreground">
             {formatDate(activity.time, locale, { dateStyle })}
@@ -245,23 +245,25 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
           {formatDate(activity.time, locale, { timeStyle: 'short' })}
         </div>
       </div>
-      <div className="flex-1">
-        <div className="m-1">{message}</div>
+      <div className="min-w-0 flex-1">
+        <div className="m-1 break-words">{message}</div>
         {changes && changes.length > 0 && (
-          <div className="mx-1 mt-0.5 mb-1 border-l-2 border-muted-foreground/20 pl-2 space-y-0.5">
+          <div className="mx-1 mt-0.5 mb-1 min-w-0 border-l-2 border-muted-foreground/20 pl-2 space-y-0.5">
             {changes.map((change, i) => (
               <div
                 key={`${change.field}-${i}`}
-                className="grid grid-cols-[auto,1fr] gap-x-2 text-xs"
+                className="grid min-w-0 grid-cols-[auto,minmax(0,1fr)] gap-x-2 text-xs"
                 data-testid={`activity-item-${activity.id}-change-${change.field}`}
               >
                 <span className="font-medium text-muted-foreground/80">
                   {change.label}
                 </span>
                 {change.field === 'items' ? (
-                  <span>{renderItemsDiff(change.before)}</span>
+                  <span className="min-w-0 break-words">
+                    {renderItemsDiff(change.before)}
+                  </span>
                 ) : (
-                  <span className="tabular-nums">
+                  <span className="min-w-0 break-words tabular-nums">
                     <span className="text-muted-foreground/60">
                       {formatChangeValue(change.before)}
                     </span>

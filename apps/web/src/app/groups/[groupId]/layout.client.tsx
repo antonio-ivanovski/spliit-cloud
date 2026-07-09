@@ -181,7 +181,7 @@ export function GroupLayoutClient({
 
   return (
     <CurrentGroupProvider {...props}>
-      <div className="flex flex-col gap-3">
+      <div className="flex min-w-0 flex-col gap-3">
         <GroupHeader />
         {children ?? <Outlet />}
       </div>

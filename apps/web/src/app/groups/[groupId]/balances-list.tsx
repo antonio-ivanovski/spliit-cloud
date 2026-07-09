@@ -25,13 +25,15 @@ export function BalancesList({ balances, participants, currency }: Props) {
         return (
           <div
             key={participant.id}
-            className={cn('flex', isLeft || 'flex-row-reverse')}
+            className={cn('flex min-w-0', isLeft || 'flex-row-reverse')}
             data-testid={`balance-row-${participant.name}`}
           >
-            <div className={cn('w-1/2 p-2', isLeft && 'text-right')}>
-              {participant.name}
+            <div className={cn('w-1/2 min-w-0 p-2', isLeft && 'text-right')}>
+              <span className="block truncate">{participant.name}</span>
             </div>
-            <div className={cn('w-1/2 relative', isLeft || 'text-right')}>
+            <div
+              className={cn('w-1/2 min-w-0 relative', isLeft || 'text-right')}
+            >
               <div className="absolute inset-0 p-2 z-20">
                 {formatCurrency(currency, balance, locale)}
               </div>

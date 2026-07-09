@@ -41,19 +41,21 @@ export function ReimbursementList({
         const toName = getParticipant(reimbursement.to)?.name ?? ''
         return (
           <div
-            className="py-4 flex justify-between"
+            className="py-4 flex min-w-0 justify-between gap-2"
             key={`${reimbursement.from}-${reimbursement.to}`}
             data-testid={`reimbursement-row-${fromName}-${toName}`}
           >
-            <div className="flex flex-col gap-1 items-start sm:flex-row sm:items-baseline sm:gap-4">
-              <div>
+            <div className="flex min-w-0 flex-1 flex-col gap-1 items-start sm:flex-row sm:items-baseline sm:gap-4">
+              <div className="min-w-0 break-words">
                 <Trans
                   i18nKey="Balances.Reimbursements.owes"
                   values={{ from: fromName, to: toName }}
-                  components={{ strong: <strong /> }}
+                  components={{
+                    strong: <strong className="break-all" />,
+                  }}
                 />
               </div>
-              <Button variant="link" asChild className="-mx-4 -my-3">
+              <Button variant="link" asChild className="-mx-4 -my-3 shrink-0">
                 <Link
                   href="/groups/$groupId/expenses/create"
                   params={{ groupId }}
@@ -68,7 +70,9 @@ export function ReimbursementList({
                 </Link>
               </Button>
             </div>
-            <div>{formatCurrency(currency, reimbursement.amount, locale)}</div>
+            <div className="shrink-0">
+              {formatCurrency(currency, reimbursement.amount, locale)}
+            </div>
           </div>
         )
       })}

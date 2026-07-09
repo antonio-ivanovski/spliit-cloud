@@ -16,16 +16,16 @@ export function FormActions(props: {
 
   if (props.readOnly) {
     return (
-      <StickyBar>
+      <FixedBar>
         <Button variant="ghost" asChild>
           <Link href={props.cancelHref}>{t('cancel')}</Link>
         </Button>
-      </StickyBar>
+      </FixedBar>
     )
   }
 
   return (
-    <StickyBar>
+    <FixedBar>
       {!props.isCreate && props.onDelete && (
         <DeletePopup onDelete={() => props.onDelete!()} className="mr-auto" />
       )}
@@ -36,16 +36,16 @@ export function FormActions(props: {
         <Save className="w-4 h-4 mr-2" />
         {t(props.isCreate ? 'create' : 'save')}
       </SubmitButton>
-    </StickyBar>
+    </FixedBar>
   )
 }
 
-// Lives inside the form so Enter-to-submit and validation still work;
-// `-mx-4` bleeds past the route's px-4 to reach viewport edges on mobile.
-function StickyBar({ children }: { children: ReactNode }) {
+// Fixed to the viewport so actions stay visible without scrolling.
+// Still inside the form so Enter-to-submit and validation work.
+function FixedBar({ children }: { children: ReactNode }) {
   return (
-    <div className="sticky bottom-0 z-20 -mx-4 mt-6 border-t bg-background/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:mx-0 sm:rounded-b-md">
-      <div className="flex flex-row items-center justify-end gap-2">
+    <div className="fixed inset-x-0 bottom-0 z-20 border-t bg-background/95 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <div className="mx-auto flex w-full max-w-(--breakpoint-md) flex-row items-center justify-end gap-2 px-4">
         {children}
       </div>
     </div>
