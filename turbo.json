@@ -6,6 +6,7 @@
         "check-formatting",
         "lint",
         "check-types",
+        "i18n",
         "build",
         "test",
         "test:integration"
@@ -34,6 +35,7 @@
     "check-types": {
       "dependsOn": ["^build", "@spliit/db#prisma-generate"]
     },
+    "i18n": {},
     "test": {
       "dependsOn": ["^build", "@spliit/db#prisma-generate"],
       "outputs": ["coverage/**"]
