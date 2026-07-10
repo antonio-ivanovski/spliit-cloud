@@ -18,9 +18,10 @@ import type { GroupFormValues } from '@/lib/schemas'
 import { groupFormSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save, UserPlus } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { CurrencySelector } from './currency-selector'
+import { CurrencyLabel, CurrencySelector } from './currency-selector'
 import { Textarea } from './ui/textarea'
 
 export type Props = {
@@ -72,11 +73,15 @@ export type Props = {
    */
   nameReadOnly?: boolean
   /**
-   * When `true`, the group already contains expenses and the currency
-   * selector is disabled with a small note. The backend rejects any
-   * currency change after expenses exist; this surfaces that on the UI.
+   * When `true`, the group already contains expenses and the currency is
+   * only shown as read-only. The migration action is supplied separately.
    */
   currencyLocked?: boolean
+  /**
+   * Link rendered beside a locked currency, allowing an admin to start the
+   * guided migration flow.
+   */
+  currencyMigrationHref?: string
   /**
    * Optional initial values for a brand-new group. Only used when
    * `group` is unset — the import wizard pre-fills the name,
@@ -116,11 +121,14 @@ export function GroupForm({
   hideNameField = false,
   nameReadOnly = false,
   currencyLocked = false,
+  currencyMigrationHref,
   onSubmit,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const readOnly = !!group && currentMemberRole === 'MEMBER'
   const isArchived = !!group && archived
+  const [currencyEditing, setCurrencyEditing] = useState(!group)
 
   const form = useForm<GroupFormValues>({
     resolver: zodResolver(groupFormSchema),
@@ -161,6 +169,16 @@ export function GroupForm({
     t('CurrencyCodeField.customOption'),
     form.watch('currency') || undefined,
   )
+  const currencyCode = form.watch('currencyCode')
+  const currencyValue = form.watch('currency')
+  const selectedCurrency =
+    currencies.find((currency) => currency.code === currencyCode) ??
+    currencies.find(
+      (currency) => !currency.code && currency.symbol === currencyValue,
+    ) ??
+    currencies[0]
+  const showCurrencyReadOnly = !!group && !currencyEditing
+  const canEditCurrency = !!group && !readOnly && !isArchived && !currencyLocked
 
   return (
     <Form {...form}>
@@ -169,6 +187,7 @@ export function GroupForm({
         onSubmit={form.handleSubmit(async (values) => {
           if (readOnly || isArchived) return
           await onSubmit(values)
+          if (group) setCurrencyEditing(false)
         })}
       >
         {isArchived && (
@@ -182,105 +201,151 @@ export function GroupForm({
           </p>
         )}
 
-        <Card className="mb-2">
-          <CardHeader>
-            <CardTitle>{t('title')}</CardTitle>
+        <Card className="mb-3">
+          <CardHeader className="px-5 pb-2 pt-5">
+            <CardTitle className="text-lg">{t('title')}</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <CardContent className="flex flex-col gap-5 px-5 pb-5 pt-3">
             {!hideNameField && (
+              <div>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('NameField.label')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="text-base"
+                          placeholder={t('NameField.placeholder')}
+                          disabled={readOnly || isArchived || nameReadOnly}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        {t('NameField.description')}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+
+            <div className="rounded-lg bg-muted/[0.35] px-4 py-3">
               <FormField
                 control={form.control}
-                name="name"
+                name="currencyCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('NameField.label')}</FormLabel>
+                    <FormLabel>{t('CurrencyCodeField.label')}</FormLabel>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                      <div className="min-w-0 flex-1">
+                        {showCurrencyReadOnly ? (
+                          <div className="flex min-h-10 items-center px-1 text-sm">
+                            {selectedCurrency ? (
+                              <CurrencyLabel currency={selectedCurrency} />
+                            ) : (
+                              <span>{currencyValue}</span>
+                            )}
+                          </div>
+                        ) : (
+                          <CurrencySelector
+                            currencies={currencies}
+                            defaultValue={form.watch(field.name) ?? ''}
+                            disabled={readOnly || isArchived}
+                            onValueChange={(newCurrency) => {
+                              field.onChange(newCurrency)
+                              const currency =
+                                getCurrency(newCurrency) ??
+                                ({
+                                  code: '',
+                                  symbol: '',
+                                  rounding: 0,
+                                  decimal_digits: 2,
+                                } as const)
+                              if (
+                                currency.code.length ||
+                                form.getFieldState('currency').isTouched
+                              )
+                                form.setValue('currency', currency.symbol, {
+                                  shouldValidate: true,
+                                  shouldTouch: true,
+                                  shouldDirty: true,
+                                })
+                            }}
+                            isLoading={false}
+                          />
+                        )}
+                      </div>
+                      {canEditCurrency && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            if (currencyEditing) {
+                              form.resetField('currencyCode')
+                              form.resetField('currency')
+                            }
+                            setCurrencyEditing(!currencyEditing)
+                          }}
+                        >
+                          {currencyEditing
+                            ? t('CurrencyCodeField.cancelChange')
+                            : t('CurrencyCodeField.changeAction')}
+                        </Button>
+                      )}
+                      {showCurrencyReadOnly && currencyMigrationHref && (
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          asChild
+                        >
+                          <Link href={currencyMigrationHref}>
+                            {tGroups('CurrencyMigration.changeAction')}
+                          </Link>
+                        </Button>
+                      )}
+                    </div>
+                    {!group && (
+                      <FormDescription>
+                        {t('CurrencyCodeField.createDescription')}
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div hidden={!!form.watch('currencyCode')?.length}>
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('CurrencyField.label')}</FormLabel>
                     <FormControl>
                       <Input
                         className="text-base"
-                        placeholder={t('NameField.placeholder')}
-                        disabled={readOnly || isArchived || nameReadOnly}
+                        placeholder={t('CurrencyField.placeholder')}
+                        max={5}
+                        disabled={readOnly || isArchived || currencyLocked}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('NameField.description')}
+                      {t('CurrencyField.description')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            )}
+            </div>
 
-            <FormField
-              control={form.control}
-              name="currencyCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('CurrencyCodeField.label')}</FormLabel>
-                  <CurrencySelector
-                    currencies={currencies}
-                    defaultValue={form.watch(field.name) ?? ''}
-                    disabled={readOnly || isArchived || currencyLocked}
-                    onValueChange={(newCurrency) => {
-                      field.onChange(newCurrency)
-                      const currency =
-                        getCurrency(newCurrency) ??
-                        ({
-                          code: '',
-                          symbol: '',
-                          rounding: 0,
-                          decimal_digits: 2,
-                        } as const)
-                      if (
-                        currency.code.length ||
-                        form.getFieldState('currency').isTouched
-                      )
-                        form.setValue('currency', currency.symbol, {
-                          shouldValidate: true,
-                          shouldTouch: true,
-                          shouldDirty: true,
-                        })
-                    }}
-                    isLoading={false}
-                  />
-                  <FormDescription>
-                    {currencyLocked
-                      ? t('CurrencyCodeField.lockedAfterExpenses')
-                      : t(
-                          group
-                            ? 'CurrencyCodeField.editDescription'
-                            : 'CurrencyCodeField.createDescription',
-                        )}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="currency"
-              render={({ field }) => (
-                <FormItem hidden={!!form.watch('currencyCode')?.length}>
-                  <FormLabel>{t('CurrencyField.label')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="text-base"
-                      placeholder={t('CurrencyField.placeholder')}
-                      max={5}
-                      disabled={readOnly || isArchived}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    {t('CurrencyField.description')}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="col-span-2">
+            <div>
               <FormField
                 control={form.control}
                 name="information"
@@ -304,7 +369,7 @@ export function GroupForm({
           </CardContent>
 
           {!hideActions && !readOnly && !isArchived && (
-            <CardContent className="flex flex-col gap-3">
+            <CardContent className="flex flex-col gap-3 border-t bg-muted/[0.04] px-5 py-4">
               <div className="flex gap-2">
                 <SubmitButton
                   loadingContent={t(

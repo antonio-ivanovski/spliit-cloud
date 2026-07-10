@@ -398,7 +398,43 @@
       "description": "與某位特定朋友一對一結算。",
       "title": "建立朋友帳本"
     },
-    "importGroup": "匯入群組"
+    "importGroup": "匯入群組",
+    "CurrencyConversion": {
+      "perDateTitle": "Per expense date",
+      "perDateDescription": "Use the provider rate for each expense date.",
+      "fixedProviderTitle": "Fixed provider rate",
+      "fixedProviderDescription": "Use one provider rate for every expense in this pair.",
+      "fixedCustomTitle": "Fixed custom rate",
+      "fixedCustomDescription": "Enter one rate to use for every expense in this pair.",
+      "rateDateLabel": "Rate date",
+      "customRateLabel": "Custom rate",
+      "fetchingRates": "Fetching rates…",
+      "ratesError": "Could not load the currency rate.",
+      "perDateSelectedHint": "Rates are resolved for each expense date.",
+      "refresh": "Refresh",
+      "affectedDates": "{count} expense dates",
+      "continue": "Continue"
+    },
+    "CurrencyMigration": {
+      "title": "Change group currency",
+      "description": "Choose a new ledger currency and review the direct conversions before applying the change.",
+      "destinationLabel": "New currency",
+      "currentCurrency": "Current currency: {currency}",
+      "unsupportedTitle": "Currency migration is unavailable",
+      "unsupportedDescription": "This group contains a currency that is not supported by the application. Correct or export the affected expenses before migrating.",
+      "unsupportedCode": "{code} ({count} expenses)",
+      "customWarning": "{count} expense(s) use an existing custom currency rate. Those rates will be discarded and totals may change.",
+      "serverWarning": "Provider rates are checked again on the server when you confirm. The final amounts may differ from this preview.",
+      "confirmationTitle": "Review currency migration",
+      "acknowledgement": "I understand that this change is irreversible and may change totals.",
+      "migrate": "Migrate currency",
+      "migrating": "Migrating…",
+      "success": "The group currency was changed successfully.",
+      "back": "Back",
+      "changeAction": "Migrate currency",
+      "noDestination": "Select a different supported currency to continue.",
+      "review": "Review migration"
+    }
   },
   "GroupForm": {
     "title": "群組資訊",
@@ -449,9 +485,9 @@
     "CurrencyCodeField": {
       "label": "主要貨幣",
       "createDescription": "所有金額和餘額將以此貨幣顯示。",
-      "editDescription": "所有金額和餘額將以此貨幣顯示。更改此項不會轉換已輸入的支出，除非該貨幣與目前貨幣具有不同的「輔幣單位」（例如從美元變更為日圓）",
       "customOption": "自訂",
-      "lockedAfterExpenses": "此群組已有支出，因此貨幣已鎖定。"
+      "changeAction": "Change currency",
+      "cancelChange": "Cancel"
     }
   },
   "ExpenseForm": {
@@ -1381,7 +1417,8 @@
         "currency": "貨幣",
         "currencyCode": "貨幣代碼",
         "linkedParticipant": "關聯參與者"
-      }
+      },
+      "currencyMigrated": "{participant} changed the group currency from {oldCurrency} to {newCurrency}."
     },
     "member": {
       "left": "{participant} 離開了群組",

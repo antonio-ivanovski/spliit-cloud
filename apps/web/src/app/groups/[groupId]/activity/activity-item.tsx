@@ -58,6 +58,15 @@ function useMessage(activity: Activity) {
     }
     case 'group':
       switch (activity.type) {
+        case 'GROUP_CURRENCY_MIGRATED':
+          return {
+            message: t('group.currencyMigrated', {
+              participant: actor,
+              oldCurrency: data.oldCurrencyCode ?? '',
+              newCurrency: data.newCurrencyCode ?? '',
+            }),
+            changes: null,
+          }
         case 'GROUP_UPDATED':
           return {
             message: t('group.updated', { participant: actor }),

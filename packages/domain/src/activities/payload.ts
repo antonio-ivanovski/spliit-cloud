@@ -73,6 +73,8 @@ export type GroupActivityChange = z.infer<typeof groupActivityChangeSchema>
 export const groupActivityDataSchema = z.object({
   kind: z.literal('group'),
   summary: z.string().optional(),
+  oldCurrencyCode: z.string().optional(),
+  newCurrencyCode: z.string().optional(),
   changedFields: z.array(groupChangedFieldSchema).optional(),
   changes: z.array(groupActivityChangeSchema).optional(),
 })

@@ -28,7 +28,9 @@ import { Route as GroupsGroupIdEditRouteImport } from './routes/groups/$groupId/
 import { Route as GroupsGroupIdBalancesRouteImport } from './routes/groups/$groupId/balances'
 import { Route as GroupsGroupIdActivityRouteImport } from './routes/groups/$groupId/activity'
 import { Route as GroupsGroupIdExpensesIndexRouteImport } from './routes/groups/$groupId/expenses/index'
+import { Route as GroupsGroupIdEditIndexRouteImport } from './routes/groups/$groupId/edit/index'
 import { Route as GroupsGroupIdExpensesCreateRouteImport } from './routes/groups/$groupId/expenses/create'
+import { Route as GroupsGroupIdEditCurrencyMigrationRouteImport } from './routes/groups/$groupId/edit/currency-migration'
 import { Route as GroupsGroupIdExpensesExpenseIdEditRouteImport } from './routes/groups/$groupId/expenses/$expenseId/edit'
 
 const GroupsRouteRoute = GroupsRouteRouteImport.update({
@@ -158,6 +160,13 @@ const GroupsGroupIdExpensesIndexRoute =
   } as any).lazy(() =>
     import('./routes/groups/$groupId/expenses/index.lazy').then((d) => d.Route),
   )
+const GroupsGroupIdEditIndexRoute = GroupsGroupIdEditIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GroupsGroupIdEditRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/edit/index.lazy').then((d) => d.Route),
+)
 const GroupsGroupIdExpensesCreateRoute =
   GroupsGroupIdExpensesCreateRouteImport.update({
     id: '/create',
@@ -165,6 +174,16 @@ const GroupsGroupIdExpensesCreateRoute =
     getParentRoute: () => GroupsGroupIdExpensesRoute,
   } as any).lazy(() =>
     import('./routes/groups/$groupId/expenses/create.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const GroupsGroupIdEditCurrencyMigrationRoute =
+  GroupsGroupIdEditCurrencyMigrationRouteImport.update({
+    id: '/currency-migration',
+    path: '/currency-migration',
+    getParentRoute: () => GroupsGroupIdEditRoute,
+  } as any).lazy(() =>
+    import('./routes/groups/$groupId/edit/currency-migration.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -192,13 +211,15 @@ export interface FileRoutesByFullPath {
   '/groups/import': typeof GroupsImportRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
-  '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
+  '/groups/$groupId/edit': typeof GroupsGroupIdEditRouteWithChildren
   '/groups/$groupId/expenses': typeof GroupsGroupIdExpensesRouteWithChildren
   '/groups/$groupId/information': typeof GroupsGroupIdInformationRoute
   '/groups/$groupId/members': typeof GroupsGroupIdMembersRoute
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
   '/groups/$groupId/': typeof GroupsGroupIdIndexRoute
+  '/groups/$groupId/edit/currency-migration': typeof GroupsGroupIdEditCurrencyMigrationRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
+  '/groups/$groupId/edit/': typeof GroupsGroupIdEditIndexRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
   '/groups/$groupId/expenses/$expenseId/edit': typeof GroupsGroupIdExpensesExpenseIdEditRoute
 }
@@ -214,12 +235,13 @@ export interface FileRoutesByTo {
   '/groups/import': typeof GroupsImportRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
-  '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
   '/groups/$groupId/information': typeof GroupsGroupIdInformationRoute
   '/groups/$groupId/members': typeof GroupsGroupIdMembersRoute
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
   '/groups/$groupId': typeof GroupsGroupIdIndexRoute
+  '/groups/$groupId/edit/currency-migration': typeof GroupsGroupIdEditCurrencyMigrationRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
+  '/groups/$groupId/edit': typeof GroupsGroupIdEditIndexRoute
   '/groups/$groupId/expenses': typeof GroupsGroupIdExpensesIndexRoute
   '/groups/$groupId/expenses/$expenseId/edit': typeof GroupsGroupIdExpensesExpenseIdEditRoute
 }
@@ -237,13 +259,15 @@ export interface FileRoutesById {
   '/groups/import': typeof GroupsImportRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
-  '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
+  '/groups/$groupId/edit': typeof GroupsGroupIdEditRouteWithChildren
   '/groups/$groupId/expenses': typeof GroupsGroupIdExpensesRouteWithChildren
   '/groups/$groupId/information': typeof GroupsGroupIdInformationRoute
   '/groups/$groupId/members': typeof GroupsGroupIdMembersRoute
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
   '/groups/$groupId/': typeof GroupsGroupIdIndexRoute
+  '/groups/$groupId/edit/currency-migration': typeof GroupsGroupIdEditCurrencyMigrationRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
+  '/groups/$groupId/edit/': typeof GroupsGroupIdEditIndexRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
   '/groups/$groupId/expenses/$expenseId/edit': typeof GroupsGroupIdExpensesExpenseIdEditRoute
 }
@@ -268,7 +292,9 @@ export interface FileRouteTypes {
     | '/groups/$groupId/members'
     | '/groups/$groupId/stats'
     | '/groups/$groupId/'
+    | '/groups/$groupId/edit/currency-migration'
     | '/groups/$groupId/expenses/create'
+    | '/groups/$groupId/edit/'
     | '/groups/$groupId/expenses/'
     | '/groups/$groupId/expenses/$expenseId/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -284,12 +310,13 @@ export interface FileRouteTypes {
     | '/groups/import'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
-    | '/groups/$groupId/edit'
     | '/groups/$groupId/information'
     | '/groups/$groupId/members'
     | '/groups/$groupId/stats'
     | '/groups/$groupId'
+    | '/groups/$groupId/edit/currency-migration'
     | '/groups/$groupId/expenses/create'
+    | '/groups/$groupId/edit'
     | '/groups/$groupId/expenses'
     | '/groups/$groupId/expenses/$expenseId/edit'
   id:
@@ -312,7 +339,9 @@ export interface FileRouteTypes {
     | '/groups/$groupId/members'
     | '/groups/$groupId/stats'
     | '/groups/$groupId/'
+    | '/groups/$groupId/edit/currency-migration'
     | '/groups/$groupId/expenses/create'
+    | '/groups/$groupId/edit/'
     | '/groups/$groupId/expenses/'
     | '/groups/$groupId/expenses/$expenseId/edit'
   fileRoutesById: FileRoutesById
@@ -462,12 +491,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GroupsGroupIdExpensesIndexRouteImport
       parentRoute: typeof GroupsGroupIdExpensesRoute
     }
+    '/groups/$groupId/edit/': {
+      id: '/groups/$groupId/edit/'
+      path: '/'
+      fullPath: '/groups/$groupId/edit/'
+      preLoaderRoute: typeof GroupsGroupIdEditIndexRouteImport
+      parentRoute: typeof GroupsGroupIdEditRoute
+    }
     '/groups/$groupId/expenses/create': {
       id: '/groups/$groupId/expenses/create'
       path: '/create'
       fullPath: '/groups/$groupId/expenses/create'
       preLoaderRoute: typeof GroupsGroupIdExpensesCreateRouteImport
       parentRoute: typeof GroupsGroupIdExpensesRoute
+    }
+    '/groups/$groupId/edit/currency-migration': {
+      id: '/groups/$groupId/edit/currency-migration'
+      path: '/currency-migration'
+      fullPath: '/groups/$groupId/edit/currency-migration'
+      preLoaderRoute: typeof GroupsGroupIdEditCurrencyMigrationRouteImport
+      parentRoute: typeof GroupsGroupIdEditRoute
     }
     '/groups/$groupId/expenses/$expenseId/edit': {
       id: '/groups/$groupId/expenses/$expenseId/edit'
@@ -478,6 +521,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface GroupsGroupIdEditRouteChildren {
+  GroupsGroupIdEditCurrencyMigrationRoute: typeof GroupsGroupIdEditCurrencyMigrationRoute
+  GroupsGroupIdEditIndexRoute: typeof GroupsGroupIdEditIndexRoute
+}
+
+const GroupsGroupIdEditRouteChildren: GroupsGroupIdEditRouteChildren = {
+  GroupsGroupIdEditCurrencyMigrationRoute:
+    GroupsGroupIdEditCurrencyMigrationRoute,
+  GroupsGroupIdEditIndexRoute: GroupsGroupIdEditIndexRoute,
+}
+
+const GroupsGroupIdEditRouteWithChildren =
+  GroupsGroupIdEditRoute._addFileChildren(GroupsGroupIdEditRouteChildren)
 
 interface GroupsGroupIdExpensesRouteChildren {
   GroupsGroupIdExpensesCreateRoute: typeof GroupsGroupIdExpensesCreateRoute
@@ -500,7 +557,7 @@ const GroupsGroupIdExpensesRouteWithChildren =
 interface GroupsGroupIdRouteRouteChildren {
   GroupsGroupIdActivityRoute: typeof GroupsGroupIdActivityRoute
   GroupsGroupIdBalancesRoute: typeof GroupsGroupIdBalancesRoute
-  GroupsGroupIdEditRoute: typeof GroupsGroupIdEditRoute
+  GroupsGroupIdEditRoute: typeof GroupsGroupIdEditRouteWithChildren
   GroupsGroupIdExpensesRoute: typeof GroupsGroupIdExpensesRouteWithChildren
   GroupsGroupIdInformationRoute: typeof GroupsGroupIdInformationRoute
   GroupsGroupIdMembersRoute: typeof GroupsGroupIdMembersRoute
@@ -511,7 +568,7 @@ interface GroupsGroupIdRouteRouteChildren {
 const GroupsGroupIdRouteRouteChildren: GroupsGroupIdRouteRouteChildren = {
   GroupsGroupIdActivityRoute: GroupsGroupIdActivityRoute,
   GroupsGroupIdBalancesRoute: GroupsGroupIdBalancesRoute,
-  GroupsGroupIdEditRoute: GroupsGroupIdEditRoute,
+  GroupsGroupIdEditRoute: GroupsGroupIdEditRouteWithChildren,
   GroupsGroupIdExpensesRoute: GroupsGroupIdExpensesRouteWithChildren,
   GroupsGroupIdInformationRoute: GroupsGroupIdInformationRoute,
   GroupsGroupIdMembersRoute: GroupsGroupIdMembersRoute,

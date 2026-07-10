@@ -398,7 +398,43 @@
       "title": "Create a group",
       "description": "Track shared expenses with friends, family, or roommates."
     },
-    "importGroup": "Import group"
+    "importGroup": "Import group",
+    "CurrencyConversion": {
+      "perDateTitle": "Per expense date",
+      "perDateDescription": "Use the provider rate for each expense date.",
+      "fixedProviderTitle": "Fixed provider rate",
+      "fixedProviderDescription": "Use one provider rate for every expense in this pair.",
+      "fixedCustomTitle": "Fixed custom rate",
+      "fixedCustomDescription": "Enter one rate to use for every expense in this pair.",
+      "rateDateLabel": "Rate date",
+      "customRateLabel": "Custom rate",
+      "fetchingRates": "Fetching rates…",
+      "ratesError": "Could not load the currency rate.",
+      "perDateSelectedHint": "Rates are resolved for each expense date.",
+      "refresh": "Refresh",
+      "affectedDates": "{count} expense dates",
+      "continue": "Continue"
+    },
+    "CurrencyMigration": {
+      "title": "Change group currency",
+      "description": "Choose a new ledger currency and review the direct conversions before applying the change.",
+      "destinationLabel": "New currency",
+      "currentCurrency": "Current currency: {currency}",
+      "unsupportedTitle": "Currency migration is unavailable",
+      "unsupportedDescription": "This group contains a currency that is not supported by the application. Correct or export the affected expenses before migrating.",
+      "unsupportedCode": "{code} ({count} expenses)",
+      "customWarning": "{count} expense(s) use an existing custom currency rate. Those rates will be discarded and totals may change.",
+      "serverWarning": "Provider rates are checked again on the server when you confirm. The final amounts may differ from this preview.",
+      "confirmationTitle": "Review currency migration",
+      "acknowledgement": "I understand that this change is irreversible and may change totals.",
+      "migrate": "Migrate currency",
+      "migrating": "Migrating…",
+      "success": "The group currency was changed successfully.",
+      "back": "Back",
+      "changeAction": "Migrate currency",
+      "noDestination": "Select a different supported currency to continue.",
+      "review": "Review migration"
+    }
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -543,9 +579,9 @@
     "CurrencyCodeField": {
       "label": "Main currency",
       "createDescription": "All amounts and balances will be in this currency.",
-      "editDescription": "All amounts and balances will be in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from US Dollar to Japanese Yen)",
       "customOption": "Custom",
-      "lockedAfterExpenses": "The currency is locked because this group already has expenses."
+      "changeAction": "Change currency",
+      "cancelChange": "Cancel"
     },
     "Participants": {
       "title": "Participants",
@@ -1381,7 +1417,8 @@
         "currency": "Currency",
         "currencyCode": "Currency code",
         "linkedParticipant": "Linked participant"
-      }
+      },
+      "currencyMigrated": "{participant} changed the group currency from {oldCurrency} to {newCurrency}."
     },
     "member": {
       "left": "{participant} left the group",

@@ -1,3 +1,4 @@
+import { CurrencyLabel } from '@/components/currency-selector'
 import { GroupForm, type Props } from '@/components/group-form'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { render, screen } from '@/test/test-utils'
@@ -103,6 +104,23 @@ beforeEach(() => {
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('GroupForm', () => {
+  it('does not repeat a currency code when it is also the currency symbol', () => {
+    const { container } = render(
+      <CurrencyLabel
+        currency={{
+          code: 'MKD',
+          symbol: 'MKD',
+          rounding: 0,
+          decimal_digits: 2,
+          name: 'Macedonian Denar',
+        }}
+      />,
+    )
+
+    expect(container).toHaveTextContent('Macedonian Denar (MKD)')
+    expect(container).not.toHaveTextContent('Macedonian Denar (MKD)MKD')
+  })
+
   it('renders form with name, currency, and info fields in create mode', () => {
     const onSubmit = vi.fn()
     render(<GroupForm onSubmit={onSubmit} />)
@@ -229,6 +247,55 @@ describe('GroupForm', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
+  it('shows an existing group currency as read-only until changed', async () => {
+    const onSubmit = vi.fn()
+    const { user } = render(
+      <GroupForm group={mockGroup as Props['group']} onSubmit={onSubmit} />,
+    )
+
+    expect(screen.getByText(/US Dollar/)).toBeInTheDocument()
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /change currency/i }))
+
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
+  })
+
+  it('returns to the read-only currency view after saving a currency change', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <GroupForm group={mockGroup as Props['group']} onSubmit={onSubmit} />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /change currency/i }))
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /change currency/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('shows the migration action for a locked currency', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        currencyLocked
+        currencyMigrationHref="/groups/group-1/edit/currency-migration"
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(
+      screen.getByRole('link', { name: /migrate currency/i }),
+    ).toHaveAttribute('href', '/groups/group-1/edit/currency-migration')
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+  })
+
   it('edit mode pre-fills group data', () => {
     const onSubmit = vi.fn()
     render(
@@ -273,15 +340,17 @@ describe('GroupForm', () => {
 
   // ── hideNameField fields still editable ────────────────────────
 
-  it('currency selector is enabled when hideNameField is true', () => {
+  it('currency selector becomes enabled when hideNameField is true', async () => {
     const onSubmit = vi.fn()
-    render(
+    const { user } = render(
       <GroupForm
         group={mockGroup as Props['group']}
         hideNameField
         onSubmit={onSubmit}
       />,
     )
+
+    await user.click(screen.getByRole('button', { name: /change currency/i }))
 
     expect(screen.getByRole('combobox')).not.toBeDisabled()
   })
@@ -311,6 +380,7 @@ describe('GroupForm', () => {
       />,
     )
 
+    await user.click(screen.getByRole('button', { name: /change currency/i }))
     const combobox = screen.getByRole('combobox')
     await user.click(combobox)
 

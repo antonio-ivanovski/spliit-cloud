@@ -8,6 +8,7 @@
     "./activities": "./src/activities/index.ts",
     "./balances": "./src/balances.ts",
     "./currency": "./src/currency.ts",
+    "./currency-migration": "./src/currency-migration.ts",
     "./i18n": "./src/i18n.ts",
     "./password": "./src/password.ts",
     "./recurring-expenses": "./src/recurring-expenses.ts",

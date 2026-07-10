@@ -90,6 +90,11 @@ export const EditGroup = () => {
         archived={!!group?.archived}
         hideNameField={isFriendLedger}
         currencyLocked={!!data?.hasExpenses}
+        currencyMigrationHref={
+          data?.hasExpenses && !isArchived && currentMember?.role === 'ADMIN'
+            ? `/groups/${groupId}/edit/currency-migration`
+            : undefined
+        }
         onSubmit={(groupFormValues) =>
           updateMutation.mutateAsync({ groupId, groupFormValues })
         }

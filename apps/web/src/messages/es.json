@@ -398,7 +398,43 @@
       "description": "Liquida deudas uno a uno con una persona concreta.",
       "title": "Crear cuenta con un amigo"
     },
-    "importGroup": "Importar grupo"
+    "importGroup": "Importar grupo",
+    "CurrencyConversion": {
+      "perDateTitle": "Per expense date",
+      "perDateDescription": "Use the provider rate for each expense date.",
+      "fixedProviderTitle": "Fixed provider rate",
+      "fixedProviderDescription": "Use one provider rate for every expense in this pair.",
+      "fixedCustomTitle": "Fixed custom rate",
+      "fixedCustomDescription": "Enter one rate to use for every expense in this pair.",
+      "rateDateLabel": "Rate date",
+      "customRateLabel": "Custom rate",
+      "fetchingRates": "Fetching rates…",
+      "ratesError": "Could not load the currency rate.",
+      "perDateSelectedHint": "Rates are resolved for each expense date.",
+      "refresh": "Refresh",
+      "affectedDates": "{count} expense dates",
+      "continue": "Continue"
+    },
+    "CurrencyMigration": {
+      "title": "Change group currency",
+      "description": "Choose a new ledger currency and review the direct conversions before applying the change.",
+      "destinationLabel": "New currency",
+      "currentCurrency": "Current currency: {currency}",
+      "unsupportedTitle": "Currency migration is unavailable",
+      "unsupportedDescription": "This group contains a currency that is not supported by the application. Correct or export the affected expenses before migrating.",
+      "unsupportedCode": "{code} ({count} expenses)",
+      "customWarning": "{count} expense(s) use an existing custom currency rate. Those rates will be discarded and totals may change.",
+      "serverWarning": "Provider rates are checked again on the server when you confirm. The final amounts may differ from this preview.",
+      "confirmationTitle": "Review currency migration",
+      "acknowledgement": "I understand that this change is irreversible and may change totals.",
+      "migrate": "Migrate currency",
+      "migrating": "Migrating…",
+      "success": "The group currency was changed successfully.",
+      "back": "Back",
+      "changeAction": "Migrate currency",
+      "noDestination": "Select a different supported currency to continue.",
+      "review": "Review migration"
+    }
   },
   "GroupForm": {
     "title": "Información del grupo",
@@ -445,9 +481,9 @@
     "CurrencyCodeField": {
       "label": "Moneda principal",
       "createDescription": "Todos los importes y saldos estarán en esta moneda.",
-      "editDescription": "Todos los importes y saldos estarán en esta moneda. Al cambiarla, NO se convertirán los gastos ya ingresados, excepto cuando la moneda tenga «unidades menores» diferentes a las actuales (por ejemplo, al cambiar de dólares estadounidenses a yenes japoneses)",
       "customOption": "Personalizado",
-      "lockedAfterExpenses": "La moneda está bloqueada porque este grupo ya tiene gastos."
+      "changeAction": "Change currency",
+      "cancelChange": "Cancel"
     },
     "readOnlyNote": "Solo los propietarios y administradores pueden cambiar la configuración del grupo.",
     "readOnlyTitle": "Configuración del grupo",
@@ -1381,7 +1417,8 @@
         "currency": "Moneda",
         "currencyCode": "Código de moneda",
         "linkedParticipant": "Participante vinculado"
-      }
+      },
+      "currencyMigrated": "{participant} changed the group currency from {oldCurrency} to {newCurrency}."
     },
     "member": {
       "left": "{participant} abandonó el grupo",

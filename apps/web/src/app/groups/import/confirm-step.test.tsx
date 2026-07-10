@@ -109,6 +109,25 @@ describe('ConfirmStep', () => {
     expect(onBack).toHaveBeenCalledOnce()
   })
 
+  it('summarizes per-date exchange rates instead of individual expenses', () => {
+    render(
+      <ConfirmStep
+        {...REQUIRED_PROPS}
+        isSubmitting={false}
+        conversionModes={{ 'EUR|GBP': 'perDate' }}
+        rates={{
+          '2026-01-02|EUR|GBP': 0.85,
+          '2026-01-03|EUR|GBP': 0.86,
+        }}
+      />,
+    )
+
+    expect(screen.getByText(/applied exchange rates/i)).toBeInTheDocument()
+    expect(screen.getByText('2026-01-02')).toBeInTheDocument()
+    expect(screen.getByText('2026-01-03')).toBeInTheDocument()
+    expect(screen.getByText(/1 EUR = 0.8500 GBP/i)).toBeInTheDocument()
+  })
+
   it('does not crash when re-rendered with new props (no infinite loop)', () => {
     // Specifically: ConfirmStep used to call `registerStepNav` in an
     // effect whose deps included the (fresh each render) `onSubmit`
