@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
-    "builtBy": "ソースコードとコントリビューターは<source>こちら</source>"
+    "builtBy": "ソースコードとコントリビューターは<source>こちら</source>",
+    "legalNavigation": "法的リンク",
+    "privacy": "プライバシー",
+    "terms": "利用規約",
+    "imprint": "運営者情報"
   },
   "Expenses": {
     "title": "支出",
@@ -1169,7 +1173,8 @@
     "signedInAs": "{name}としてサインイン中",
     "required": "グループにアクセスするにはサインインが必要です。",
     "back": "ホームに戻る",
-    "signInWithGithub": "GitHubで続ける"
+    "signInWithGithub": "GitHubで続ける",
+    "legalNotice": "続行すると、<terms>利用規約</terms>に同意し、<privacy>プライバシーに関する通知</privacy>を確認したことになります。"
   },
   "CompleteProfile": {
     "title": "プロフィールを完成",

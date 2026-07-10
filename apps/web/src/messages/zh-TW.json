@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "由開源社群用愛打造 ❤️",
-    "builtBy": "查看<source>原始碼和貢獻者</source>"
+    "builtBy": "查看<source>原始碼和貢獻者</source>",
+    "legalNavigation": "法律連結",
+    "privacy": "隱私",
+    "terms": "條款",
+    "imprint": "專案聲明"
   },
   "Expenses": {
     "title": "消費",
@@ -986,7 +990,8 @@
     "signedInAs": "以 {name} 身分登入",
     "required": "您需要登入才能存取您的群組。",
     "back": "返回首頁",
-    "signInWithGithub": "使用 GitHub 繼續"
+    "signInWithGithub": "使用 GitHub 繼續",
+    "legalNotice": "繼續即表示您同意<terms>使用條款</terms>並確認已閱讀<privacy>隱私聲明</privacy>。"
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",

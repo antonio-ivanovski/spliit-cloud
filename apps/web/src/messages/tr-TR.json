@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
-    "builtBy": "Bkz. <source>kaynak ve katkıda bulunanlar</source>"
+    "builtBy": "Bkz. <source>kaynak ve katkıda bulunanlar</source>",
+    "legalNavigation": "Yasal bağlantılar",
+    "privacy": "Gizlilik",
+    "terms": "Şartlar",
+    "imprint": "Proje bildirimi"
   },
   "Expenses": {
     "title": "Masraflar",
@@ -986,7 +990,8 @@
     "signedInAs": "{name} olarak oturum açıldı",
     "required": "Gruplarınıza erişmek için oturum açmalısınız.",
     "back": "Ana sayfaya dön",
-    "signInWithGithub": "GitHub ile devam et"
+    "signInWithGithub": "GitHub ile devam et",
+    "legalNotice": "Devam ederek <terms>Kullanım Şartları</terms>'nı kabul eder ve <privacy>Gizlilik Bildirimi</privacy>'ni onaylarsınız."
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",

@@ -1,6 +1,7 @@
+import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { AuthCard } from './auth-card'
 import { AuthSuccess } from './auth-success'
 import { MagicLinkForm } from './magic-link-form'
@@ -130,6 +131,16 @@ export function AuthPanel() {
             {mode === 'sign-in' ? t('createAccount') : t('signIn')}
           </Button>
         </div>
+
+        <p className="text-center text-xs leading-5 text-muted-foreground">
+          <Trans
+            i18nKey="Auth.legalNotice"
+            components={{
+              terms: <Link href="/terms" className="underline" />,
+              privacy: <Link href="/privacy" className="underline" />,
+            }}
+          />
+        </p>
       </div>
     </AuthCard>
   )

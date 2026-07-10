@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "נוצר על ידי קהילת הקוד הפתוח באהבה ❤️",
-    "builtBy": "ראה <source>קוד מקור ותורמים</source>"
+    "builtBy": "ראה <source>קוד מקור ותורמים</source>",
+    "legalNavigation": "קישורים משפטיים",
+    "privacy": "פרטיות",
+    "terms": "תנאים",
+    "imprint": "הודעת פרויקט"
   },
   "Expenses": {
     "title": "הוצאות",
@@ -1169,7 +1173,8 @@
     "signedInAs": "מחובר כ-{name}",
     "required": "עליך להתחבר כדי לגשת לקבוצות שלך.",
     "back": "חזרה לדף הבית",
-    "signInWithGithub": "המשך עם GitHub"
+    "signInWithGithub": "המשך עם GitHub",
+    "legalNotice": "בהמשך השימוש, אתה מסכים ל<terms>תנאי השימוש</terms> ומאשר את <privacy>הודעת הפרטיות</privacy>."
   },
   "CompleteProfile": {
     "title": "השלם את הפרופיל שלך",

@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Створено спільнотою open-source з любов'ю ❤️",
-    "builtBy": "Див. <source>джерело та учасників</source>"
+    "builtBy": "Див. <source>джерело та учасників</source>",
+    "legalNavigation": "Правові посилання",
+    "privacy": "Конфіденційність",
+    "terms": "Умови",
+    "imprint": "Примітка про проєкт"
   },
   "Expenses": {
     "title": "Витрати",
@@ -986,7 +990,8 @@
     "signedInAs": "Увійшли як {name}",
     "required": "Вам потрібно увійти, щоб отримати доступ до своїх груп.",
     "back": "На головну",
-    "signInWithGithub": "Продовжити через GitHub"
+    "signInWithGithub": "Продовжити через GitHub",
+    "legalNotice": "Продовжуючи, ви погоджуєтесь з <terms>Умовами використання</terms> та підтверджуєте <privacy>Повідомленням про конфіденційність</privacy>."
   },
   "CompleteProfile": {
     "title": "Заповніть свій профіль",

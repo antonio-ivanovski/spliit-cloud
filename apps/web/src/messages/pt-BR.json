@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Feito pela comunidade de código aberto com amor ❤️",
-    "builtBy": "Veja o <source>código-fonte e contribuidores</source>"
+    "builtBy": "Veja o <source>código-fonte e contribuidores</source>",
+    "legalNavigation": "Links jurídicos",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "imprint": "Aviso legal"
   },
   "Expenses": {
     "title": "Despesas",
@@ -1169,7 +1173,8 @@
     "signedInAs": "Conectado como {name}",
     "required": "Você precisa entrar para acessar seus grupos.",
     "back": "Voltar ao início",
-    "signInWithGithub": "Continuar com GitHub"
+    "signInWithGithub": "Continuar com GitHub",
+    "legalNotice": "Ao continuar, você aceita os <terms>Termos de uso</terms> e reconhece o <privacy>aviso de privacidade</privacy>."
   },
   "CompleteProfile": {
     "title": "Complete seu perfil",

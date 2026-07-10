@@ -4,14 +4,21 @@ import { Navigate, useRouterState } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
+const ungatedPaths = new Set([
+  '/auth/complete-profile',
+  '/privacy',
+  '/terms',
+  '/imprint',
+])
+
 /**
  * Global guard that ensures authenticated users with missing display names
  * are redirected to the complete-profile page on every route.
  *
  * Unlike `RequireAuth`, which only wraps specific protected routes, this
  * gate runs at the root shell level and catches ALL routes — including the
- * public homepage (`/`). Only `/auth/complete-profile` itself is excluded
- * to avoid redirect loops.
+ * public homepage (`/`). The complete-profile and legal-information routes
+ * are excluded so people can always read them.
  *
  * Signed-out visitors pass through unchanged.
  */
@@ -33,8 +40,7 @@ export function ProfileGate({ children }: PropsWithChildren) {
     return <>{children}</>
   }
 
-  // Already on the complete-profile page — don't redirect
-  if (currentPath === '/auth/complete-profile') {
+  if (ungatedPaths.has(currentPath)) {
     return <>{children}</>
   }
 

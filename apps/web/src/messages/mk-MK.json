@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Направено од open-source заедницата со љубов ❤️",
-    "builtBy": "Погледнете го <source>изворниот код и соработниците</source>"
+    "builtBy": "Погледнете го <source>изворниот код и соработниците</source>",
+    "legalNavigation": "Правни линкови",
+    "privacy": "Приватност",
+    "terms": "Услови",
+    "imprint": "Забелешка за проектот"
   },
   "Expenses": {
     "title": "Трошоци",
@@ -451,7 +455,8 @@
     "signedInAs": "Најавени како {name}",
     "required": "Мора да се најавите за да пристапите до вашите групи.",
     "back": "Назад кон почетна страница",
-    "signInWithGithub": "Продолжи со GitHub"
+    "signInWithGithub": "Продолжи со GitHub",
+    "legalNotice": "Со продолжување се согласувате со <terms>Условите за користење</terms> и го прифаќате <privacy>Известувањето за приватност</privacy>."
   },
   "AccountSettings": {
     "title": "Поставки на профил",

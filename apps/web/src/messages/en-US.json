@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>"
+    "builtBy": "See <source>source and contributors</source>",
+    "legalNavigation": "Legal links",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "imprint": "Project notice"
   },
   "Expenses": {
     "title": "Expenses",
@@ -451,7 +455,8 @@
     "signedInAs": "Signed in as {name}",
     "required": "You need to sign in to access your groups.",
     "back": "Back to home",
-    "signInWithGithub": "Continue with GitHub"
+    "signInWithGithub": "Continue with GitHub",
+    "legalNotice": "By continuing, you agree to the <terms>Terms of use</terms> and acknowledge the <privacy>Privacy notice</privacy>."
   },
   "AccountSettings": {
     "title": "Account settings",

@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
-    "builtBy": "Ikusi <source>iturburu-kodea eta kolaboratzaileak</source>"
+    "builtBy": "Ikusi <source>iturburu-kodea eta kolaboratzaileak</source>",
+    "legalNavigation": "Esteka legalak",
+    "privacy": "Pribatutasuna",
+    "terms": "Baldintzak",
+    "imprint": "Lege-oharra"
   },
   "Expenses": {
     "title": "Gastuak",
@@ -1169,7 +1173,8 @@
     "signedInAs": "{name} gisa saioa hasita",
     "required": "Saioa hasi behar duzu zure taldeetara sartzeko.",
     "back": "Itzuli hasierara",
-    "signInWithGithub": "Jarraitu GitHub-ekin"
+    "signInWithGithub": "Jarraitu GitHub-ekin",
+    "legalNotice": "Jarraituz gero, <terms>erabilera-baldintzak</terms> onartzen dituzu eta <privacy>pribatutasun-oharra</privacy> aitortzen duzu."
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",

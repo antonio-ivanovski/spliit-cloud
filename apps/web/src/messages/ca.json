@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
-    "builtBy": "Consulta el <source>codi font i col·laboradors</source>"
+    "builtBy": "Consulta el <source>codi font i col·laboradors</source>",
+    "legalNavigation": "Enllaços legals",
+    "privacy": "Privadesa",
+    "terms": "Termes",
+    "imprint": "Avís legal"
   },
   "Expenses": {
     "title": "Despeses",
@@ -1169,7 +1173,8 @@
     "signedInAs": "Sessió iniciada com a {name}",
     "required": "Has d'iniciar sessió per accedir als teus grups.",
     "back": "Tornar a l'inici",
-    "signInWithGithub": "Continua amb GitHub"
+    "signInWithGithub": "Continua amb GitHub",
+    "legalNotice": "En continuar, acceptes els <terms>Termes d'ús</terms> i reconeixes l'<privacy>avís de privadesa</privacy>."
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",

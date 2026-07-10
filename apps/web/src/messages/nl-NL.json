@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de open-source community ❤️",
-    "builtBy": "Zie <source>bron en bijdragers</source>"
+    "builtBy": "Zie <source>bron en bijdragers</source>",
+    "legalNavigation": "Juridische links",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden",
+    "imprint": "Colofon"
   },
   "Expenses": {
     "title": "Uitgaven",
@@ -1169,7 +1173,8 @@
     "signedInAs": "Ingelogd als {name}",
     "required": "Je moet inloggen om toegang te krijgen tot je groepen.",
     "back": "Terug naar startpagina",
-    "signInWithGithub": "Doorgaan met GitHub"
+    "signInWithGithub": "Doorgaan met GitHub",
+    "legalNotice": "Door verder te gaan ga je akkoord met de <terms>algemene voorwaarden</terms> en erken je de <privacy>privacyverklaring</privacy>."
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",

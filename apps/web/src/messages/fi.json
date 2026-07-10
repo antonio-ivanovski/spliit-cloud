@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
-    "builtBy": "Katso <source>lähdekoodia ja tekijöitä</source>"
+    "builtBy": "Katso <source>lähdekoodia ja tekijöitä</source>",
+    "legalNavigation": "Oikeudelliset linkit",
+    "privacy": "Tietosuoja",
+    "terms": "Käyttöehdot",
+    "imprint": "Julkaisutiedot"
   },
   "Expenses": {
     "title": "Kulut",
@@ -1169,7 +1173,8 @@
     "signedInAs": "Kirjautuneena käyttäjänä {name}",
     "required": "Sinun täytyy kirjautua sisään päästäksesi ryhmiisi.",
     "back": "Takaisin etusivulle",
-    "signInWithGithub": "Jatka GitHubilla"
+    "signInWithGithub": "Jatka GitHubilla",
+    "legalNotice": "Jatkamalla hyväksyt <terms>käyttöehdot</terms> ja vahvistat, että olet lukenut <privacy>tietosuojailmoituksen</privacy>."
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",

@@ -173,6 +173,35 @@ describe('ProfileGate', () => {
     expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
   })
 
+  it.each(['/privacy', '/terms', '/imprint'])(
+    'does NOT redirect from %s when account has no name',
+    (path) => {
+      mockCurrentPath = path
+
+      ;(useCurrentAccount as Mock).mockReturnValue({
+        data: {
+          id: 'user-1',
+          name: '',
+          email: 'alice@example.com',
+          image: null,
+          emailVerified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        isPending: false,
+      })
+
+      render(
+        <ProfileGate>
+          <div data-testid="child">legal page</div>
+        </ProfileGate>,
+      )
+
+      expect(screen.getByTestId('child')).toHaveTextContent('legal page')
+      expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
+    },
+  )
+
   it('redirects from / when account has no name', () => {
     mockCurrentPath = '/'
 

@@ -91,6 +91,14 @@ function Content() {
                   }}
                 />
               </span>
+              <nav
+                aria-label={t('Footer.legalNavigation')}
+                className="flex flex-wrap gap-x-3 gap-y-1"
+              >
+                <Link href="/privacy">{t('Footer.privacy')}</Link>
+                <Link href="/terms">{t('Footer.terms')}</Link>
+                <Link href="/imprint">{t('Footer.imprint')}</Link>
+              </nav>
             </div>
           </div>
           <Button asChild variant="secondary" size="sm">

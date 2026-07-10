@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
-    "builtBy": "Lihat <source>sumber dan kontributor</source>"
+    "builtBy": "Lihat <source>sumber dan kontributor</source>",
+    "legalNavigation": "Tautan hukum",
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "imprint": "Pemberitahuan proyek"
   },
   "Expenses": {
     "title": "Pengeluaran",
@@ -1169,7 +1173,8 @@
     "signedInAs": "Masuk sebagai {name}",
     "required": "Anda perlu masuk untuk mengakses grup Anda.",
     "back": "Kembali ke beranda",
-    "signInWithGithub": "Lanjutkan dengan GitHub"
+    "signInWithGithub": "Lanjutkan dengan GitHub",
+    "legalNotice": "Dengan melanjutkan, Anda menyetujui <terms>Ketentuan penggunaan</terms> dan mengakui <privacy>Pemberitahuan privasi</privacy>."
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",

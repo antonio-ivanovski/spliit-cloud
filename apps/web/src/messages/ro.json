@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
-    "builtBy": "Vezi <source>codul sursă și contribuitorii</source>"
+    "builtBy": "Vezi <source>codul sursă și contribuitorii</source>",
+    "legalNavigation": "Linkuri legale",
+    "privacy": "Confidențialitate",
+    "terms": "Termeni",
+    "imprint": "Mențiuni legale"
   },
   "Expenses": {
     "title": "Cheltuieli",
@@ -1169,7 +1173,8 @@
     "signedInAs": "Autentificat ca {name}",
     "required": "Trebuie să te autentifici pentru a accesa grupurile tale.",
     "back": "Înapoi la pagina principală",
-    "signInWithGithub": "Continuă cu GitHub"
+    "signInWithGithub": "Continuă cu GitHub",
+    "legalNotice": "Prin continuare, acceptați <terms>Termenii de utilizare</terms> și recunoașteți <privacy>nota de confidențialitate</privacy>."
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",

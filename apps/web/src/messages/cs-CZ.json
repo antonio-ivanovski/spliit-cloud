@@ -47,7 +47,11 @@
   },
   "Footer": {
     "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
-    "builtBy": "Zobrazit <source>zdroj a přispěvatele</source>"
+    "builtBy": "Zobrazit <source>zdroj a přispěvatele</source>",
+    "legalNavigation": "Právní odkazy",
+    "privacy": "Ochrana soukromí",
+    "terms": "Podmínky",
+    "imprint": "Podrobnosti o projektu"
   },
   "Expenses": {
     "title": "Výdaje",
@@ -986,7 +990,8 @@
     "signedInAs": "Přihlášen jako {name}",
     "required": "Pro přístup ke svým skupinám se musíte přihlásit.",
     "back": "Zpět na domovskou stránku",
-    "signInWithGithub": "Pokračovat přes GitHub"
+    "signInWithGithub": "Pokračovat přes GitHub",
+    "legalNotice": "Pokračováním souhlasíte s <terms>Obchodními podmínkami</terms> a berete na vědomí <privacy>Zásady ochrany soukromí</privacy>."
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",

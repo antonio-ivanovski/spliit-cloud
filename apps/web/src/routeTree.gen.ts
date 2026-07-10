@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GroupsImportRouteImport } from './routes/groups/import'
@@ -32,6 +35,21 @@ import { Route as GroupsGroupIdExpensesIndexRouteImport } from './routes/groups/
 import { Route as GroupsGroupIdExpensesCreateRouteImport } from './routes/groups/$groupId/expenses/create'
 import { Route as GroupsGroupIdExpensesExpenseIdEditRouteImport } from './routes/groups/$groupId/expenses/$expenseId/edit'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/terms.lazy').then((d) => d.Route))
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
+const ImprintRoute = ImprintRouteImport.update({
+  id: '/imprint',
+  path: '/imprint',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/imprint.lazy').then((d) => d.Route))
 const GroupsRouteRoute = GroupsRouteRouteImport.update({
   id: '/groups',
   path: '/groups',
@@ -193,6 +211,9 @@ const GroupsGroupIdExpensesExpenseIdEditRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
+  '/imprint': typeof ImprintRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
@@ -217,6 +238,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
+  '/imprint': typeof ImprintRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -240,6 +264,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
+  '/imprint': typeof ImprintRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
@@ -266,6 +293,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/groups'
+    | '/imprint'
+    | '/privacy'
+    | '/terms'
     | '/groups/$groupId'
     | '/account/settings'
     | '/auth/complete-profile'
@@ -290,6 +320,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/groups'
+    | '/imprint'
+    | '/privacy'
+    | '/terms'
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
@@ -312,6 +345,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/groups'
+    | '/imprint'
+    | '/privacy'
+    | '/terms'
     | '/groups/$groupId'
     | '/account/settings'
     | '/auth/complete-profile'
@@ -337,6 +373,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GroupsRouteRoute: typeof GroupsRouteRouteWithChildren
+  ImprintRoute: typeof ImprintRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCompleteProfileRoute: typeof AuthCompleteProfileRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
@@ -346,6 +385,27 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/imprint': {
+      id: '/imprint'
+      path: '/imprint'
+      fullPath: '/imprint'
+      preLoaderRoute: typeof ImprintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/groups': {
       id: '/groups'
       path: '/groups'
@@ -567,6 +627,9 @@ const GroupsRouteRouteWithChildren = GroupsRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GroupsRouteRoute: GroupsRouteRouteWithChildren,
+  ImprintRoute: ImprintRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   AuthCompleteProfileRoute: AuthCompleteProfileRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
