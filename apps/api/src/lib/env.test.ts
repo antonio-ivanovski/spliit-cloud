@@ -94,6 +94,28 @@ describe('envSchema — AI / OpenAI', () => {
     expect(env.OPENAI_CATEGORY_MODEL).toBe('gpt-4o-mini')
   })
 
+  it('applies default OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT of 50 when absent', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT).toBe(50)
+  })
+
+  it('parses a custom OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT', '25')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT).toBe(25)
+  })
+
+  it('throws when OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT is not a positive integer', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT', '0')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow()
+  })
+
   it('parses a valid OPENAI_BASE_URL', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('OPENAI_BASE_URL', 'https://openrouter.ai/api/v1')

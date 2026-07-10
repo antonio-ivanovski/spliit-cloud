@@ -141,6 +141,7 @@ export function ExpenseForm(props: {
           isIncome={isIncome}
           setIsIncome={setIsIncome}
           isCreate={isCreate}
+          linkInviteToken={props.linkInviteToken}
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
           heading={props.heading}

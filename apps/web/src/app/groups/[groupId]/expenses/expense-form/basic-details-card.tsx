@@ -72,6 +72,8 @@ export function BasicDetailsCard(props: {
   isCreate: boolean
   heading?: string
   onMakeCopy?: () => void
+  /** Link-invite token carried in the URL for pending invitees. */
+  linkInviteToken?: string
   extractCategoryMutation: ReturnType<
     typeof trpc.ai.extractCategoryFromTitle.useMutation
   >
@@ -244,6 +246,9 @@ export function BasicDetailsCard(props: {
                       const { categoryId } =
                         await props.extractCategoryMutation.mutateAsync({
                           description: field.value,
+                          groupId: group.id,
+                          locale,
+                          linkInviteToken: props.linkInviteToken,
                         })
                       form.setValue('category', categoryId)
                       setCategoryLoading(false)

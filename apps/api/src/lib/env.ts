@@ -34,6 +34,11 @@ const envSchema = z
     OPENAI_BASE_URL: z.string().url().optional(),
     OPENAI_RECEIPT_MODEL: z.string().optional().default('gpt-5-nano'),
     OPENAI_CATEGORY_MODEL: z.string().optional().default('gpt-3.5-turbo'),
+    OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(50),
 
     // better-auth
     BETTER_AUTH_SECRET: z.string().optional(),

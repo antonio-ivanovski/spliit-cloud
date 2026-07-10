@@ -5,19 +5,18 @@
 It keeps the simplicity of the original Spliit while moving toward cloud accounts, reliable group syncing, stronger tests, and a more maintainable stack.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-[![Status Spliit Cloud](https://status.spliit.cloud/api/badge/38/uptime)](https://status.spliit.cloud/)
+[![Status Spliit Cloud](https://status.spliit.cloud/api/badge/38/uptime/720)](https://status.spliit.cloud/)
 ![Status: Active Development](https://img.shields.io/badge/status-active%20development-blue)
 ![Open Source](https://img.shields.io/badge/open%20source-yes-brightgreen)
 ![GitHub stars](https://img.shields.io/github/stars/antonio-ivanovski/spliit-cloud)
 ![GitHub issues](https://img.shields.io/github/issues/antonio-ivanovski/spliit-cloud)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/antonio-ivanovski/spliit-cloud)
 
-> [!NOTE]
-> Spliit Cloud is stable enough for testing and everyday usage, but it is still evolving quickly. Please report bugs, missing features, and migration issues.
-
 ## Try it
 
 Public instance: **[https://spliit.cloud](https://spliit.cloud)**
+
+Live uptime & incident status at **[https://status.spliit.cloud](https://status.spliit.cloud/)**
 
 You can also self-host your own instance. See [Self-hosting overview](#self-hosting-overview), [Run locally](#run-locally), and [Run in a container](#run-in-a-container).
 
@@ -87,6 +86,11 @@ Spliit Cloud may be useful if you want:
 | Granular expense items     | Track item-level details inside an expense for more precise splitting.                            | ✅           | ❌              |
 | Detailed activity audit    | Granular per-expense change history so members can see who changed what, and when.                | ✅           | ❓              |
 | Email notifications        | Group changes push to members' inboxes so they stay in sync without opening the app.              | ✅           | ❌              |
+| Group stats with charts    | Simple charts and per-group stats so members can see spending trends at a glance.                 | ✅           | ❌              |
+| Balance currency view      | View group balances in each expense's original currency or converted to the group's currency.     | ✅           | ❌              |
+| Group archive & delete     | Archive groups to make them view-only, or permanently delete them when no longer needed.          | ✅           | ❌              |
+| Advanced AI categorization | AI suggests expense categories and learns from your past categorization patterns over time.       | ✅           | ❓              |
+| Expense amount calculator  | A calculator widget in the expense amount field for quick arithmetic while entering expenses.     | ✅           | ❌              |
 | Improved everyday UI       | Focused papercut fixes make common flows smoother without changing the simple Spliit feel.        | ✅           | ❓              |
 | Active maintenance         | New features, fixes, and self-hosting improvements continue to move forward.                      | ✅           | ❓              |
 | Core Spliit features       | Groups, categories, receipts, balances, reimbursements, advanced splits, PWA support, and no ads. | ✅           | ✅              |
