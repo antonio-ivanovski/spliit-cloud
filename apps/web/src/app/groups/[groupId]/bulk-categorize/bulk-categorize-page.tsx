@@ -236,7 +236,7 @@ function BlockedCard(props: {
         <CardTitle>{title}</CardTitle>
         {props.reason === 'feature' && (
           <CardDescription>
-            <code className="text-xs">PUBLIC_ENABLE_CATEGORY_EXTRACT</code>
+            <code className="text-xs">PUBLIC_ENABLE_BULK_CATEGORIZE</code>
           </CardDescription>
         )}
       </CardHeader>

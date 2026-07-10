@@ -32,6 +32,7 @@ export const EditGroup = () => {
   })
   const updateMutation = useUpdateGroupMutation()
   const deleteMutation = useDeleteGroupMutation()
+  const { data: features } = trpc.features.get.useQuery()
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const [forceArchiveOpen, setForceArchiveOpen] = useState(false)
@@ -95,7 +96,7 @@ export const EditGroup = () => {
         }
       />
 
-      {canArchive && !isArchived && (
+      {canArchive && !isArchived && features?.enableBulkCategorize && (
         <Card className="mb-2">
           <CardHeader>
             <CardTitle>{t('bulkCategorizeSectionTitle')}</CardTitle>

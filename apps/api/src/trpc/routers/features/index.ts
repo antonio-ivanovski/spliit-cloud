@@ -6,5 +6,6 @@ export const featuresRouter = createTRPCRouter({
     enableExpenseDocuments: env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS,
     enableReceiptExtract: env.PUBLIC_ENABLE_RECEIPT_EXTRACT,
     enableCategoryExtract: env.PUBLIC_ENABLE_CATEGORY_EXTRACT,
+    enableBulkCategorize: env.PUBLIC_ENABLE_BULK_CATEGORIZE,
   })),
 })

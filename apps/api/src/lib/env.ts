@@ -30,6 +30,10 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
+    PUBLIC_ENABLE_BULK_CATEGORIZE: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
     AI_PROVIDER: z
       .enum(['openai', 'anthropic', 'openai-compatible', 'google'])
       .default('openai'),

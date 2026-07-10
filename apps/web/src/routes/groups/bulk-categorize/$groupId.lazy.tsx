@@ -42,7 +42,7 @@ function BulkCategorizeRoute() {
   let blockedReason: 'admin' | 'archived' | 'feature' | null = null
   if (role !== 'ADMIN') blockedReason = 'admin'
   else if (group.archived) blockedReason = 'archived'
-  else if (!features?.enableCategoryExtract) blockedReason = 'feature'
+  else if (!features?.enableBulkCategorize) blockedReason = 'feature'
 
   return (
     <BulkCategorizePage
