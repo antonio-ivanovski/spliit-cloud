@@ -6,7 +6,7 @@ For local development, see [Run locally](../README.md#run-locally) and [Run in a
 
 ## Essentials
 
-The app needs: a web frontend (static SPA), an API service, PostgreSQL, and SMTP for sign-in/invitations. Optional: S3-compatible storage for expense documents, OpenAI key for receipt scanning.
+The app needs: a web frontend (static SPA), an API service, PostgreSQL, and SMTP for sign-in/invitations. Optional: S3-compatible storage for expense documents and an AI provider for receipt scanning.
 
 Copy `container.env.example` to `container.env`, set the required values (see the inline comments), then `bun start-container`. The API runs at `localhost:3001`; the database is only reachable on the internal Docker network.
 
@@ -17,10 +17,11 @@ Copy `container.env.example` to `container.env`, set the required values (see th
 - `WEB_ORIGINS` — the public web origin
 - `SMTP_HOST`, `EMAIL_FROM` — required for magic-link sign-in and invitations
 - `S3_UPLOAD_*` — only if `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true`
-- `OPENAI_API_KEY` — only if `PUBLIC_ENABLE_RECEIPT_EXTRACT=true` or `PUBLIC_ENABLE_CATEGORY_EXTRACT=true`
-- `OPENAI_BASE_URL` — optional, for OpenAI-compatible providers (e.g. `https://openrouter.ai/api/v1`)
-- `OPENAI_RECEIPT_MODEL` — optional, defaults to `gpt-5-nano`
-- `OPENAI_CATEGORY_MODEL` — optional, defaults to `gpt-3.5-turbo`
+- `AI_PROVIDER` — optional: `openai`, `anthropic`, `openai-compatible`, or `google`; defaults to `openai`
+- `AI_API_KEY` — only if `PUBLIC_ENABLE_RECEIPT_EXTRACT=true` or `PUBLIC_ENABLE_CATEGORY_EXTRACT=true`
+- `AI_BASE_URL` — optional API root for the selected provider (e.g. `https://openrouter.ai/api/v1`)
+- `AI_RECEIPT_MODEL` — optional, defaults to `gpt-5-nano`
+- `AI_CATEGORY_MODEL` — optional, defaults to `gpt-5-nano`
 
 The web app is a Vite SPA. Build with `bun run build`, serve `apps/web/dist` from any static host, and set `VITE_API_URL` to your API origin.
 

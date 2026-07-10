@@ -20,6 +20,7 @@ import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as GroupsGroupIdRouteRouteImport } from './routes/groups/$groupId/route'
 import { Route as GroupsGroupIdIndexRouteImport } from './routes/groups/$groupId/index'
+import { Route as GroupsBulkCategorizeGroupIdRouteImport } from './routes/groups/bulk-categorize/$groupId'
 import { Route as GroupsGroupIdStatsRouteImport } from './routes/groups/$groupId/stats'
 import { Route as GroupsGroupIdMembersRouteImport } from './routes/groups/$groupId/members'
 import { Route as GroupsGroupIdInformationRouteImport } from './routes/groups/$groupId/information'
@@ -100,6 +101,16 @@ const GroupsGroupIdIndexRoute = GroupsGroupIdIndexRouteImport.update({
 } as any).lazy(() =>
   import('./routes/groups/$groupId/index.lazy').then((d) => d.Route),
 )
+const GroupsBulkCategorizeGroupIdRoute =
+  GroupsBulkCategorizeGroupIdRouteImport.update({
+    id: '/bulk-categorize/$groupId',
+    path: '/bulk-categorize/$groupId',
+    getParentRoute: () => GroupsRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/groups/bulk-categorize/$groupId.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const GroupsGroupIdStatsRoute = GroupsGroupIdStatsRouteImport.update({
   id: '/stats',
   path: '/stats',
@@ -197,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/groups/$groupId/information': typeof GroupsGroupIdInformationRoute
   '/groups/$groupId/members': typeof GroupsGroupIdMembersRoute
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
+  '/groups/bulk-categorize/$groupId': typeof GroupsBulkCategorizeGroupIdRoute
   '/groups/$groupId/': typeof GroupsGroupIdIndexRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
@@ -218,6 +230,7 @@ export interface FileRoutesByTo {
   '/groups/$groupId/information': typeof GroupsGroupIdInformationRoute
   '/groups/$groupId/members': typeof GroupsGroupIdMembersRoute
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
+  '/groups/bulk-categorize/$groupId': typeof GroupsBulkCategorizeGroupIdRoute
   '/groups/$groupId': typeof GroupsGroupIdIndexRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses': typeof GroupsGroupIdExpensesIndexRoute
@@ -242,6 +255,7 @@ export interface FileRoutesById {
   '/groups/$groupId/information': typeof GroupsGroupIdInformationRoute
   '/groups/$groupId/members': typeof GroupsGroupIdMembersRoute
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
+  '/groups/bulk-categorize/$groupId': typeof GroupsBulkCategorizeGroupIdRoute
   '/groups/$groupId/': typeof GroupsGroupIdIndexRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
@@ -267,6 +281,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/information'
     | '/groups/$groupId/members'
     | '/groups/$groupId/stats'
+    | '/groups/bulk-categorize/$groupId'
     | '/groups/$groupId/'
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses/'
@@ -288,6 +303,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/information'
     | '/groups/$groupId/members'
     | '/groups/$groupId/stats'
+    | '/groups/bulk-categorize/$groupId'
     | '/groups/$groupId'
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses'
@@ -311,6 +327,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/information'
     | '/groups/$groupId/members'
     | '/groups/$groupId/stats'
+    | '/groups/bulk-categorize/$groupId'
     | '/groups/$groupId/'
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses/'
@@ -405,6 +422,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/groups/$groupId/'
       preLoaderRoute: typeof GroupsGroupIdIndexRouteImport
       parentRoute: typeof GroupsGroupIdRouteRoute
+    }
+    '/groups/bulk-categorize/$groupId': {
+      id: '/groups/bulk-categorize/$groupId'
+      path: '/bulk-categorize/$groupId'
+      fullPath: '/groups/bulk-categorize/$groupId'
+      preLoaderRoute: typeof GroupsBulkCategorizeGroupIdRouteImport
+      parentRoute: typeof GroupsRouteRoute
     }
     '/groups/$groupId/stats': {
       id: '/groups/$groupId/stats'
@@ -526,12 +550,14 @@ interface GroupsRouteRouteChildren {
   GroupsGroupIdRouteRoute: typeof GroupsGroupIdRouteRouteWithChildren
   GroupsCreateRoute: typeof GroupsCreateRoute
   GroupsImportRoute: typeof GroupsImportRoute
+  GroupsBulkCategorizeGroupIdRoute: typeof GroupsBulkCategorizeGroupIdRoute
 }
 
 const GroupsRouteRouteChildren: GroupsRouteRouteChildren = {
   GroupsGroupIdRouteRoute: GroupsGroupIdRouteRouteWithChildren,
   GroupsCreateRoute: GroupsCreateRoute,
   GroupsImportRoute: GroupsImportRoute,
+  GroupsBulkCategorizeGroupIdRoute: GroupsBulkCategorizeGroupIdRoute,
 }
 
 const GroupsRouteRouteWithChildren = GroupsRouteRoute._addFileChildren(

@@ -4,8 +4,10 @@ import { extractCategoryFromTitle } from '../../../lib/expense-form-actions'
 import { hashLinkToken } from '../../../lib/invitations'
 import { extractExpenseInformationFromImage } from '../../../lib/receipt-actions'
 import { baseProcedure, createTRPCRouter, loadGroupViewer } from '../../init'
+import { aiBulkCategorizeRouter } from './bulkCategorize'
 
 export const aiRouter = createTRPCRouter({
+  bulkCategorize: aiBulkCategorizeRouter,
   extractCategoryFromTitle: baseProcedure
     .input(
       z.object({

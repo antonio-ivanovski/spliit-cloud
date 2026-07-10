@@ -1,30 +1,19 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-// Capture the body passed to chat.completions.create so we can assert
-// on the actual system prompt content.
-const captured: Array<{ messages: Array<{ role: string; content: string }> }> =
-  []
+// Capture generation arguments so we can assert on the actual instructions.
+const captured: Array<{ instructions: string; prompt: string }> = []
 
-vi.mock('./openai', () => ({
-  getOpenAIClient: () => ({
-    chat: {
-      completions: {
-        create: vi.fn(
-          async (body: {
-            messages: Array<{ role: string; content: string }>
-          }) => {
-            captured.push({ messages: body.messages })
-            // Echo back a valid category id so the wrapper resolves cleanly.
-            return {
-              choices: [
-                { message: { role: 'assistant', content: '"groceries"' } },
-              ],
-            }
-          },
-        ),
-      },
+vi.mock('./ai', () => ({
+  getModel: vi.fn(async () => ({})),
+}))
+
+vi.mock('ai', () => ({
+  generateText: vi.fn(
+    async (args: { instructions: string; prompt: string }) => {
+      captured.push(args)
+      return { text: '"groceries"' }
     },
-  }),
+  ),
 }))
 
 // Imports AFTER the mock so the module-under-test picks up the mocked client.
@@ -34,18 +23,16 @@ afterEach(() => {
   captured.length = 0
 })
 
-function systemPrompt(promptIndex = 0): string {
+function instructions(promptIndex = 0): string {
   const entry = captured[promptIndex]
   if (!entry) throw new Error(`no captured call at index ${promptIndex}`)
-  const sys = entry.messages.find((m) => m.role === 'system')
-  if (!sys) throw new Error('no system message captured')
-  return sys.content
+  return entry.instructions
 }
 
 describe('extractCategoryFromTitle', () => {
   it('produces the baseline prompt when no options are provided', async () => {
     await extractCategoryFromTitle('Whole Foods')
-    const prompt = systemPrompt()
+    const prompt = instructions()
     // Baseline: no locale hint, no group context, no past-expense section.
     expect(prompt).not.toContain("user's app language")
     expect(prompt).not.toContain('Group context')
@@ -54,13 +41,12 @@ describe('extractCategoryFromTitle', () => {
     expect(prompt).toContain('Task: Receive expense titles')
     expect(prompt).toContain('Boundaries:')
     // User message truncated to 40 chars.
-    const user = captured[0]!.messages.find((m) => m.role === 'user')!
-    expect(user.content).toBe('Whole Foods')
+    expect(captured[0]!.prompt).toBe('Whole Foods')
   })
 
   it('includes a soft-hint locale line when locale is provided', async () => {
     await extractCategoryFromTitle('Compra en el mercado', { locale: 'es' })
-    const prompt = systemPrompt()
+    const prompt = instructions()
     expect(prompt).toContain("user's app language is Español")
     expect(prompt).toContain('hint, not a rule')
     // Must not demand the title be in Spanish.
@@ -69,7 +55,7 @@ describe('extractCategoryFromTitle', () => {
 
   it('omits locale hint for unknown locales', async () => {
     await extractCategoryFromTitle('Some title', { locale: 'xx' })
-    expect(systemPrompt()).not.toContain("user's app language")
+    expect(instructions()).not.toContain("user's app language")
   })
 
   it('includes a group context section when groupContext is provided', async () => {
@@ -80,7 +66,7 @@ describe('extractCategoryFromTitle', () => {
         currencyCode: 'EUR',
       },
     })
-    const prompt = systemPrompt()
+    const prompt = instructions()
     expect(prompt).toContain('Group context')
     expect(prompt).toContain('Paris Weekend')
     expect(prompt).toContain('EUR')
@@ -90,7 +76,7 @@ describe('extractCategoryFromTitle', () => {
     await extractCategoryFromTitle('Beers', {
       groupContext: { name: 'Bottle Club', currency: '⛁', currencyCode: null },
     })
-    const prompt = systemPrompt()
+    const prompt = instructions()
     expect(prompt).toContain('Bottle Club')
     expect(prompt).toContain('⛁')
   })
@@ -102,7 +88,7 @@ describe('extractCategoryFromTitle', () => {
         { title: 'Uber', categoryId: 'taxi' },
       ],
     })
-    const prompt = systemPrompt()
+    const prompt = instructions()
     expect(prompt).toContain('Past expenses in this group')
     expect(prompt).toContain('"Mercadona" -> groceries')
     expect(prompt).toContain('"Uber" -> taxi')
@@ -114,7 +100,7 @@ describe('extractCategoryFromTitle', () => {
       groupContext: { name: 'Madrid Trip', currency: '$', currencyCode: 'EUR' },
       recentExpenses: [{ title: 'Café', categoryId: 'dining-out' }],
     })
-    const prompt = systemPrompt()
+    const prompt = instructions()
     expect(prompt).toContain('Madrid Trip')
     expect(prompt).toContain("user's app language is Español")
     expect(prompt).toContain('"Café" -> dining-out')
@@ -123,7 +109,6 @@ describe('extractCategoryFromTitle', () => {
   it('truncates user input to 40 characters', async () => {
     const longTitle = 'a'.repeat(100)
     await extractCategoryFromTitle(longTitle)
-    const user = captured[0]!.messages.find((m) => m.role === 'user')!
-    expect(user.content).toBe('a'.repeat(40))
+    expect(captured[0]!.prompt).toBe('a'.repeat(40))
   })
 })
