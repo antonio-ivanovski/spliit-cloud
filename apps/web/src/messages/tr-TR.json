@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Onayladığınız her örnek, yapay zekanın bir sonraki turu için temel doğru olur. Tek bir turdan sonra hazır olabilir ya da daha fazla örnek isteyebilir.",
     "roundCount": "Tur {round} / {max}",
     "confidence": {
-      "high": "Yüksek güven",
-      "medium": "Orta güven",
-      "low": "Düşük güven"
+      "high": "Yüksek",
+      "medium": "Orta",
+      "low": "Düşük"
     },
     "aiWantsMore": "Yapay zeka birkaç örnek daha istiyor. Aşağıdaki önerileri onaylayın veya düzeltin ve başka bir tur çalıştırın.",
     "aiSaidReady": "Yapay zeka hazır olduğunu hissediyor. Kaydetmek için önizlemeye geçin.",

@@ -1513,9 +1513,9 @@
     "calibrationDescription": "您确认的每个示例都会成为AI下一轮学习的标准答案。可能一轮即可就绪，也可能需要提供更多示例。",
     "roundCount": "第{round}轮 / 共{max}轮",
     "confidence": {
-      "high": "高置信度",
-      "medium": "中置信度",
-      "low": "低置信度"
+      "high": "高",
+      "medium": "中",
+      "low": "低"
     },
     "aiWantsMore": "AI希望再提供一些示例。确认或修正下方的建议，然后运行另一轮。",
     "aiSaidReady": "AI已准备就绪。前往预览以提交。",

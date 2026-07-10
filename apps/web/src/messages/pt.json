@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Cada exemplo que confirmas torna-se a verdade absoluta para a próxima passada da IA. Pode estar pronta após uma ronda, ou pedir mais exemplos.",
     "roundCount": "Ronda {round} de {max}",
     "confidence": {
-      "high": "Confiança alta",
-      "medium": "Confiança média",
-      "low": "Confiança baixa"
+      "high": "Alta",
+      "medium": "Média",
+      "low": "Baixa"
     },
     "aiWantsMore": "A IA gostaria de mais alguns exemplos. Confirma ou corrige as sugestões abaixo e executa outra ronda.",
     "aiSaidReady": "A IA sente-se preparada. Avança para a pré-visualização para aplicar as alterações.",

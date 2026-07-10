@@ -1513,9 +1513,9 @@
     "calibrationDescription": "확정하는 각 예시는 AI의 다음 학습 단계에서 정답(ground truth)이 됩니다. 한 번의 학습으로 완료될 수도 있고, 더 많은 예시를 요청할 수도 있습니다.",
     "roundCount": "라운드 {round} / {max}",
     "confidence": {
-      "high": "신뢰도 높음",
-      "medium": "신뢰도 중간",
-      "low": "신뢰도 낮음"
+      "high": "높음",
+      "medium": "중간",
+      "low": "낮음"
     },
     "aiWantsMore": "AI가 몇 가지 더 예시를 원합니다. 아래 제안을 확인하거나 수정하고 다른 라운드를 실행하세요.",
     "aiSaidReady": "AI가 준비되었다고 판단했습니다. 미리보기로 이동하여 확정하세요.",

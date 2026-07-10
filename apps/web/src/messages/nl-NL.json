@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Elk voorbeeld dat je bevestigt wordt de ground truth voor de volgende AI-ronde. De AI kan na één ronde klaar zijn, of vraagt om meer voorbeelden.",
     "roundCount": "Ronde {round} van {max}",
     "confidence": {
-      "high": "Hoge zekerheid",
-      "medium": "Gemiddelde zekerheid",
-      "low": "Lage zekerheid"
+      "high": "Hoog",
+      "medium": "Gemiddeld",
+      "low": "Laag"
     },
     "aiWantsMore": "De AI wil nog een paar voorbeelden. Bevestig of corrigeer de onderstaande suggesties en voer nog een ronde uit.",
     "aiSaidReady": "De AI is er klaar voor. Ga naar de voorbeeldweergave om toe te passen.",

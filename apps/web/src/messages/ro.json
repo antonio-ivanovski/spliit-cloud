@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Fiecare exemplu pe care îl confirmi devine adevărul absolut pentru următoarea trecere a IA. Poate fi gata după un singur tur, sau poate cere mai multe exemple.",
     "roundCount": "Runda {round} din {max}",
     "confidence": {
-      "high": "Încredere ridicată",
-      "medium": "Încredere medie",
-      "low": "Încredere scăzută"
+      "high": "Ridicată",
+      "medium": "Medie",
+      "low": "Scăzută"
     },
     "aiWantsMore": "AI ar dori câteva exemple în plus. Confirmă sau corectează sugestiile de mai jos și rulează o altă rundă.",
     "aiSaidReady": "AI se simte pregătită. Mergi la previzualizare pentru a aplica modificările.",

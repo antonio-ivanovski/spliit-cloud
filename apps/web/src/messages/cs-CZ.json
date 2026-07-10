@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Každý příklad, který potvrdíte, se stane spolehlivým vzorem pro další průchod AI. Může být připravená už po jednom kole, nebo si vyžádá další příklady.",
     "roundCount": "Kolo {round} z {max}",
     "confidence": {
-      "high": "Vysoká jistota",
-      "medium": "Střední jistota",
-      "low": "Nízká jistota"
+      "high": "Vysoká",
+      "medium": "Střední",
+      "low": "Nízká"
     },
     "aiWantsMore": "AI by uvítalo ještě pár příkladů. Potvrďte nebo opravte návrhy níže a spusťte další kolo.",
     "aiSaidReady": "AI se cítí připraveno. Přejděte k náhledu pro potvrzení.",

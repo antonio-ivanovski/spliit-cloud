@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Jedes Beispiel, das du bestätigst, wird zur Ground Truth für den nächsten KI-Durchlauf. Die KI ist eventuell schon nach einer Runde bereit oder fordert weitere Beispiele an.",
     "roundCount": "Runde {round} von {max}",
     "confidence": {
-      "high": "Hohe Sicherheit",
-      "medium": "Mittlere Sicherheit",
-      "low": "Niedrige Sicherheit"
+      "high": "Hoch",
+      "medium": "Mittel",
+      "low": "Niedrig"
     },
     "aiWantsMore": "Die KI möchte noch ein paar weitere Beispiele. Bestätigen oder korrigieren Sie die unten stehenden Vorschläge und führen Sie eine weitere Runde aus.",
     "aiSaidReady": "Die KI ist bereit. Gehen Sie zur Vorschau, um zu übernehmen.",

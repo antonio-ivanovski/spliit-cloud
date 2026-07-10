@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Each example you confirm becomes ground truth for the AI’s next pass. It may be ready after one round, or ask for more examples.",
     "roundCount": "Round {round} of {max}",
     "confidence": {
-      "high": "High confidence",
-      "medium": "Medium confidence",
-      "low": "Low confidence"
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
     },
     "aiWantsMore": "The AI would like a few more examples. Confirm or correct the suggestions below and run another round.",
     "aiSaidReady": "The AI feels ready. Move to the preview to commit.",

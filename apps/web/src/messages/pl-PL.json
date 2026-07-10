@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Każdy potwierdzony przykład staje się wzorcem odniesienia dla kolejnego przebiegu AI. Może być gotowe już po jednej rundzie lub poprosić o więcej przykładów.",
     "roundCount": "Runda {round} z {max}",
     "confidence": {
-      "high": "Wysoka pewność",
-      "medium": "Średnia pewność",
-      "low": "Niska pewność"
+      "high": "Wysoka",
+      "medium": "Średnia",
+      "low": "Niska"
     },
     "aiWantsMore": "AI chciałoby jeszcze kilka przykładów. Potwierdź lub popraw sugestie poniżej i uruchom kolejną rundę.",
     "aiSaidReady": "AI czuje się gotowe. Przejdź do podglądu, aby zatwierdzić.",

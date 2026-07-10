@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Setiap contoh yang Anda konfirmasi menjadi ground truth bagi proses AI berikutnya. Mungkin sudah siap setelah satu putaran, atau meminta lebih banyak contoh.",
     "roundCount": "Putaran {round} dari {max}",
     "confidence": {
-      "high": "Keyakinan tinggi",
-      "medium": "Keyakinan sedang",
-      "low": "Keyakinan rendah"
+      "high": "Tinggi",
+      "medium": "Sedang",
+      "low": "Rendah"
     },
     "aiWantsMore": "AI ingin beberapa contoh lagi. Konfirmasi atau perbaiki saran di bawah ini lalu jalankan putaran lainnya.",
     "aiSaidReady": "AI sudah merasa siap. Buka pratinjau untuk menyimpan.",

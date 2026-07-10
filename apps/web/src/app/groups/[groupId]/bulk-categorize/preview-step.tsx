@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { WizardNav } from '@/components/wizard'
 import { DEFAULT_CATEGORIES, type CategoryId } from '@spliit/domain'
 import { Loader2 } from 'lucide-react'
@@ -75,25 +76,29 @@ export function PreviewStep(props: {
                   {props.rows.map((row) => {
                     const value =
                       row.overrideCategoryId ?? row.suggestedCategoryId
+                    const checkboxId = `include-expense-${row.expenseId}`
                     return (
                       <div
                         key={row.expenseId}
                         className="grid grid-cols-[minmax(0,1fr)_12rem_7.5rem] items-center gap-3 p-3"
                       >
-                        <label className="flex min-w-0 items-center gap-2">
-                          <input
-                            type="checkbox"
+                        <div className="flex min-w-0 items-center gap-2">
+                          <Checkbox
+                            id={checkboxId}
                             checked={row.included}
-                            onChange={(event) =>
-                              props.onInclude(
-                                row.expenseId,
-                                event.target.checked,
-                              )
+                            onCheckedChange={(checked) =>
+                              props.onInclude(row.expenseId, checked === true)
                             }
                             aria-label={t('removeAction')}
+                            className="shrink-0"
                           />
-                          <span className="truncate text-sm">{row.title}</span>
-                        </label>
+                          <label
+                            htmlFor={checkboxId}
+                            className="min-w-0 cursor-pointer truncate text-sm"
+                          >
+                            {row.title}
+                          </label>
+                        </div>
                         <CategorySelector
                           categories={DEFAULT_CATEGORIES}
                           defaultValue={value}

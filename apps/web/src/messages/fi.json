@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Jokainen esimerkki, jonka vahvistat, tulee totuusarvoksi tekoälyn seuraavalle kierrokselle. Tekoäly voi olla valmis jo yhden kierroksen jälkeen tai pyytää lisää esimerkkejä.",
     "roundCount": "Kierros {round} / {max}",
     "confidence": {
-      "high": "Korkea varmuus",
-      "medium": "Kohtalainen varmuus",
-      "low": "Matala varmuus"
+      "high": "Korkea",
+      "medium": "Kohtalainen",
+      "low": "Matala"
     },
     "aiWantsMore": "AI haluaisi vielä muutaman esimerkin lisää. Vahvista tai korjaa alla olevat ehdotukset ja suorita uusi kierros.",
     "aiSaidReady": "AI on valmis. Siirry esikatseluun vahvistaaksesi.",

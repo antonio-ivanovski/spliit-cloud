@@ -1513,9 +1513,9 @@
     "calibrationDescription": "Zuk berresten duzun adibide bakoitza IAren hurrengo pasarako egia absolutua da. Ronda bat ostean prest egon daiteke, edo eska itzazu adibide gehiago.",
     "roundCount": "{round}. erronda, {max}tik",
     "confidence": {
-      "high": "Konfiantza handia",
-      "medium": "Konfiantza ertaina",
-      "low": "Konfiantza baxua"
+      "high": "Handia",
+      "medium": "Ertaina",
+      "low": "Baxua"
     },
     "aiWantsMore": "IAk adibide gehiago nahiko lituzke. Berretsi edo zuzendu beheko iradokizunak eta exekutatu beste erronda bat.",
     "aiSaidReady": "IA prest sentitzen da. Joan aurrebistara aldaketak aplikatzeko.",
