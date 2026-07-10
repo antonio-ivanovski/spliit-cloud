@@ -1,5 +1,7 @@
+import { prisma } from '@spliit/db'
 import {
   getBalances,
+  getCurrencyBalanceSummaries,
   getPublicBalances,
   getSuggestedReimbursements,
   type BalanceExpense,
@@ -27,6 +29,10 @@ export const listGroupBalancesProcedure = protectedProcedure
       accountEmail: ctx.auth.user.email,
       linkTokenHash: await hashLinkInviteToken(linkInviteToken),
     })
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+      select: { ledger: { select: { currencyCode: true } } },
+    })
     const rows = await getGroupExpenses(groupId)
     // Map LedgerParticipant references to the participant-like shape the
     // domain balance functions expect, keeping the math untouched.
@@ -44,6 +50,10 @@ export const listGroupBalancesProcedure = protectedProcedure
     const balances = getBalances(expenses)
     const reimbursements = getSuggestedReimbursements(balances)
     const publicBalances = getPublicBalances(reimbursements)
+    const currencyBalances = getCurrencyBalanceSummaries(
+      expenses,
+      group?.ledger.currencyCode,
+    )
 
-    return { balances: publicBalances, reimbursements }
+    return { balances: publicBalances, reimbursements, currencyBalances }
   })

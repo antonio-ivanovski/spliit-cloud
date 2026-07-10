@@ -746,6 +746,14 @@
       "noImbursements": "Vypadá to, že vaše skupina nepotřebuje žádné proplacení 😁",
       "owes": "<strong>{from}</strong> dluží <strong>{to}</strong>",
       "markAsPaid": "Označit jako zaplaceno"
+    },
+    "currencyDisplay": {
+      "label": "Zobrazení",
+      "group": "Měna skupiny ({currency})",
+      "original": "Měny výdajů",
+      "title": "Zvolte, jak zobrazit zůstatky",
+      "groupDescription": "Převeďte všechny výdaje na {currency} pro jednotný pohled.",
+      "originalDescription": "Ponechte každý výdaj v měně, ve které byl zadán."
     }
   },
   "Stats": {

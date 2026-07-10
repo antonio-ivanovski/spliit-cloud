@@ -746,6 +746,14 @@
       "noImbursements": "Wygląda na to, że w twojej grupie nie ma potrzeby żadnych zwrotów 😁",
       "owes": "<strong>{from}</strong> jest winny dla <strong>{to}</strong>",
       "markAsPaid": "Zaznacz jako opłacone"
+    },
+    "currencyDisplay": {
+      "label": "Wyświetlanie",
+      "group": "Waluta grupy ({currency})",
+      "original": "Waluty wydatków",
+      "title": "Wybierz sposób wyświetlania sald",
+      "groupDescription": "Przelicz wszystkie wydatki na {currency}, aby uzyskać jeden zbiorczy widok.",
+      "originalDescription": "Zachowaj oryginalną walutę każdego wydatku."
     }
   },
   "Stats": {

@@ -746,6 +746,14 @@
       "noImbursements": "Se pare că grupul tău nu are nevoie de rambursări 😁",
       "owes": "<strong>{from}</strong> datorează <strong>{to}</strong>",
       "markAsPaid": "Bifează ca plătit"
+    },
+    "currencyDisplay": {
+      "label": "Afișare",
+      "group": "Moneda grupului ({currency})",
+      "original": "Valutele cheltuielilor",
+      "title": "Alege cum să vizualizezi soldurile",
+      "groupDescription": "Convertește toate cheltuielile în {currency} pentru o singură vizualizare.",
+      "originalDescription": "Păstrează fiecare cheltuială în moneda în care a fost introdusă."
     }
   },
   "Stats": {

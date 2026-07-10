@@ -464,6 +464,29 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     expect(result.category).toBe(PAYMENT_CATEGORY_ID)
     expect(result.recurrenceRule).toBe(RecurrenceRule.NONE)
   })
+
+  it('prefills an original-currency reimbursement with exchange conversion', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {
+        reimbursement: 'yes',
+        from: 'lp-1',
+        to: 'lp-2',
+        amount: '2500',
+        originalCurrency: 'EUR',
+      },
+      group: mockGroup,
+      groupCurrency: usd(),
+      currentLedgerParticipantId: null,
+      reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
+    })
+
+    expect(result.amount).toBe(25)
+    expect(result.paidByList).toEqual([{ participant: 'lp-1', shares: 25 }])
+    expect(result.originalCurrency).toBe('EUR')
+    expect(result.conversionType).toBe('EXCHANGE')
+  })
 })
 
 describe('buildExpenseFormDefaults (prefilled items)', () => {

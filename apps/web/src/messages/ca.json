@@ -746,6 +746,14 @@
       "noImbursements": "Sembla que el teu grup no necessita cap reemborsament 😁",
       "owes": "<strong>{from}</strong> deu a <strong>{to}</strong>",
       "markAsPaid": "Marcar com a pagat"
+    },
+    "currencyDisplay": {
+      "label": "Visualització",
+      "group": "Moneda del grup ({currency})",
+      "original": "Monedes de la despesa",
+      "title": "Tria com veure els saldos",
+      "groupDescription": "Converteix totes les despeses a {currency} per a una vista combinada.",
+      "originalDescription": "Mantén cada despesa en la moneda en què es va introduir."
     }
   },
   "Stats": {

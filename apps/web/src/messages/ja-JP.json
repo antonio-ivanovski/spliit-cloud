@@ -746,6 +746,14 @@
       "noImbursements": "グループに払い戻しが必要ないようです 😁",
       "owes": "<strong>{from}</strong>は<strong>{to}</strong>に借りがあります",
       "markAsPaid": "支払い済みとしてマーク"
+    },
+    "currencyDisplay": {
+      "label": "表示",
+      "group": "グループ通貨 ({currency})",
+      "original": "支出通貨",
+      "title": "残高の表示方式を選択",
+      "groupDescription": "すべての支出を{currency}に変換して1つの統合ビューで表示します。",
+      "originalDescription": "各支出は入力された通貨のまま表示します。"
     }
   },
   "Stats": {

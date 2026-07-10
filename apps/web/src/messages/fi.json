@@ -746,6 +746,14 @@
       "noImbursements": "Näyttää siltä, että kaikki ovat sujut 😁",
       "owes": "<strong>{from}</strong> maksaa henkilölle <strong>{to}</strong>",
       "markAsPaid": "Merkitse maksetuksi"
+    },
+    "currencyDisplay": {
+      "label": "Näyttö",
+      "group": "Ryhmän valuutta ({currency})",
+      "original": "Kulujen valuutat",
+      "title": "Valitse, miten saldot näytetään",
+      "groupDescription": "Muunna kaikki kulut valuutaksi {currency} yhtenäistä näkymää varten.",
+      "originalDescription": "Pidä jokainen kulu siinä valuutassa, johon se on syötetty."
     }
   },
   "Stats": {

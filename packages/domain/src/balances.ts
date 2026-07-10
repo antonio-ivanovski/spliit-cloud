@@ -56,6 +56,12 @@ export type Reimbursement = {
   amount: number
 }
 
+export type CurrencyBalanceSummary = {
+  currencyCode: string
+  balances: Balances
+  reimbursements: Reimbursement[]
+}
+
 function isCrossCurrency(expense: BalanceExpense): boolean {
   return Boolean(expense.originalCurrency && expense.conversionRate)
 }
@@ -248,6 +254,142 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
   }
 
   return balances
+}
+
+/**
+ * Compute balances in each expense's entered currency. These are deliberately
+ * separate from getBalances(), whose values are normalized to the ledger.
+ */
+export function getBalancesByCurrency(
+  expenses: BalanceExpense[],
+  groupCurrencyCode: string | null | undefined,
+): Record<string, Balances> {
+  const paidByCurrency: Record<string, Record<string, ExactAmount>> = {}
+  const paidForByCurrency: Record<string, Record<string, ExactAmount>> = {}
+  const totalsByCurrency: Record<string, number> = {}
+
+  for (const expense of expenses) {
+    const crossCurrency = isCrossCurrency(expense)
+    const currencyCode = crossCurrency
+      ? expense.originalCurrency!
+      : (groupCurrencyCode ?? '')
+    const amount = crossCurrency
+      ? (expense.originalAmount ?? expense.amount)
+      : expense.amount
+    const primaryPayerId = expense.paidByList[0]?.participant.id
+    const paid = (paidByCurrency[currencyCode] ??= {})
+    const paidFor = (paidForByCurrency[currencyCode] ??= {})
+    totalsByCurrency[currencyCode] =
+      (totalsByCurrency[currencyCode] ?? 0) + amount
+
+    const paidBySplitMode: SplitMode =
+      expense.paidBySplitMode === 'ITEMIZED'
+        ? 'BY_AMOUNT'
+        : expense.paidBySplitMode
+    let exactPaidBy = calculateExactShares({
+      amount,
+      splitMode: paidBySplitMode,
+      participants: expense.paidByList.map((payer) => ({
+        id: payer.participant.id,
+        shares: Number(payer.shares),
+      })),
+    })
+    if (
+      paidBySplitMode === 'BY_AMOUNT' ||
+      expense.paidBySplitMode === 'ITEMIZED'
+    ) {
+      exactPaidBy = applyLiteralResidual(exactPaidBy, amount, primaryPayerId)
+    }
+
+    let exactPaidFor: Record<string, ExactAmount>
+    if (
+      expense.splitMode === 'ITEMIZED' &&
+      Array.isArray(expense.items) &&
+      expense.items.length > 0
+    ) {
+      const memberIds = [
+        ...new Set([
+          ...expense.paidFor.map((participant) => participant.participant.id),
+          ...expense.paidByList.map((payer) => payer.participant.id),
+          ...expense.items.flatMap((item) =>
+            item.paidFor.map((participant) => participant.participant),
+          ),
+          ...(expense.itemizedRemainder?.paidFor.map(
+            (participant) => participant.participant,
+          ) ?? []),
+        ]),
+      ]
+      exactPaidFor = computeExactSharesFromItems(
+        expense.items,
+        memberIds,
+        amount,
+        expense.itemizedRemainder ?? undefined,
+      )
+    } else {
+      const splitMode =
+        expense.splitMode === 'ITEMIZED' ? 'BY_SHARES' : expense.splitMode
+      exactPaidFor = calculateExactShares({
+        amount,
+        splitMode,
+        participants: expense.paidFor.map((participant) => ({
+          id: participant.participant.id,
+          shares: Number(participant.shares),
+        })),
+      })
+      if (expense.splitMode === 'BY_AMOUNT')
+        exactPaidFor = applyLiteralResidual(
+          exactPaidFor,
+          amount,
+          primaryPayerId,
+        )
+    }
+
+    addExact(paid, exactPaidBy)
+    addExact(paidFor, exactPaidFor)
+  }
+
+  return Object.fromEntries(
+    Object.keys(totalsByCurrency).map((currencyCode) => {
+      const paid = distributeRemainder(
+        paidByCurrency[currencyCode] ?? {},
+        totalsByCurrency[currencyCode],
+        { seed: 0 },
+      )
+      const paidFor = distributeRemainder(
+        paidForByCurrency[currencyCode] ?? {},
+        totalsByCurrency[currencyCode],
+        { seed: 0 },
+      )
+      const balances: Balances = {}
+      const ids = new Set([...Object.keys(paid), ...Object.keys(paidFor)])
+      for (const id of ids) {
+        const participantPaid = (paid[id] ?? 0) + 0
+        const participantPaidFor = (paidFor[id] ?? 0) + 0
+        balances[id] = {
+          paid: participantPaid,
+          paidFor: participantPaidFor,
+          total: participantPaid - participantPaidFor + 0,
+        }
+      }
+      return [currencyCode, balances]
+    }),
+  )
+}
+
+export function getCurrencyBalanceSummaries(
+  expenses: BalanceExpense[],
+  groupCurrencyCode: string | null | undefined,
+): CurrencyBalanceSummary[] {
+  return Object.entries(getBalancesByCurrency(expenses, groupCurrencyCode)).map(
+    ([currencyCode, balances]) => {
+      const reimbursements = getSuggestedReimbursements(balances)
+      return {
+        currencyCode,
+        balances: getPublicBalances(reimbursements),
+        reimbursements,
+      }
+    },
+  )
 }
 
 export function getPublicBalances(reimbursements: Reimbursement[]): Balances {

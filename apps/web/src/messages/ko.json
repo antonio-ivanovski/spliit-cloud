@@ -644,7 +644,15 @@
       "markAsPaid": "지불 완료로 표시하기",
       "owes": "<strong>{from}</strong>가 <strong>{to}</strong>에게 돈을 내야 해요"
     },
-    "description": "각 참가자가 지불했거나 대신 지불받은 금액입니다."
+    "description": "각 참가자가 지불했거나 대신 지불받은 금액입니다.",
+    "currencyDisplay": {
+      "label": "표시",
+      "group": "그룹 통화 ({currency})",
+      "original": "지출 통화",
+      "title": "잔액 보기 방식 선택",
+      "groupDescription": "모든 지출을 {currency}로 변환하여 하나의 통합 보기로 표시합니다.",
+      "originalDescription": "각 지출을 입력된 통화 그대로 유지합니다."
+    }
   },
   "Stats": {
     "title": "현황",

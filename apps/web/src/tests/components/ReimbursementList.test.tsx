@@ -139,4 +139,24 @@ describe('ReimbursementList', () => {
       '/groups/group-1/expenses/create?reimbursement=yes&from=alice-id&to=bob-id&amount=2000',
     )
   })
+
+  it('passes the selected expense currency to an actionable reimbursement', () => {
+    render(
+      <ReimbursementList
+        reimbursements={[{ from: 'alice-id', to: 'bob-id', amount: 2000 }]}
+        participants={[
+          makeParticipant('alice-id', 'Alice'),
+          makeParticipant('bob-id', 'Bob'),
+        ]}
+        currency={EUR}
+        reimbursementCurrencyCode="EUR"
+        groupId="group-1"
+      />,
+    )
+
+    expect(screen.getByText('Mark as paid').closest('a')).toHaveAttribute(
+      'href',
+      '/groups/group-1/expenses/create?reimbursement=yes&from=alice-id&to=bob-id&amount=2000&originalCurrency=EUR',
+    )
+  })
 })

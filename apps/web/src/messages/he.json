@@ -746,6 +746,14 @@
       "noImbursements": "נראה שהקבוצה שלך לא צריכה החזרים 😁",
       "owes": "<strong>{from}</strong> חייב ל<strong>{to}</strong>",
       "markAsPaid": "סמן כשולם"
+    },
+    "currencyDisplay": {
+      "label": "תצוגה",
+      "group": "מטבע הקבוצה ({currency})",
+      "original": "מטבעות ההוצאות",
+      "title": "בחר כיצד להציג את המאזנים",
+      "groupDescription": "המר את כל ההוצאות ל-{currency} לתצוגה מאוחדת אחת.",
+      "originalDescription": "השאר כל הוצאה במטבע שבו הוזנה."
     }
   },
   "Stats": {

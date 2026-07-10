@@ -746,6 +746,14 @@
       "noImbursements": "Lijkt erop dat je groep geen terugbetalingen nodig heeft 😁",
       "owes": "<strong>{from}</strong> betaalt aan <strong>{to}</strong>",
       "markAsPaid": "Markeer als betaald"
+    },
+    "currencyDisplay": {
+      "label": "Weergave",
+      "group": "Groepsvaluta ({currency})",
+      "original": "Valuta's van uitgaven",
+      "title": "Kies hoe saldi worden weergegeven",
+      "groupDescription": "Converteer alle uitgaven naar {currency} voor één gecombineerd overzicht.",
+      "originalDescription": "Houd elke uitgave in de valuta waarin deze is ingevoerd."
     }
   },
   "Stats": {

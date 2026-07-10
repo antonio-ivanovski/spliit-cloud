@@ -114,6 +114,10 @@ export const createExpenseSearchSchema = z.object({
   fromExpenseId: z.string().optional().catch(undefined),
 })
 
+export const balancesSearchSchema = z.object({
+  currencyDisplay: z.enum(['group', 'original']).optional().catch(undefined),
+})
+
 export type CreateExpenseSearch = z.infer<typeof createExpenseSearchSchema>
 export type CompleteProfileSearch = z.infer<typeof completeProfileSearchSchema>
 export type ResetPasswordSearch = z.infer<typeof resetPasswordSearchSchema>

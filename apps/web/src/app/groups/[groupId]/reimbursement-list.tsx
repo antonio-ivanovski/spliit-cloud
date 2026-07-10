@@ -12,6 +12,7 @@ type Props = {
   reimbursements: Reimbursement[]
   participants: Participant[]
   currency: Currency
+  reimbursementCurrencyCode?: string
   groupId: string
 }
 
@@ -19,6 +20,7 @@ export function ReimbursementList({
   reimbursements,
   participants,
   currency,
+  reimbursementCurrencyCode,
   groupId,
 }: Props) {
   const locale = useLocale()
@@ -64,6 +66,9 @@ export function ReimbursementList({
                     from: reimbursement.from,
                     to: reimbursement.to,
                     amount: reimbursement.amount.toString(),
+                    ...(reimbursementCurrencyCode
+                      ? { originalCurrency: reimbursementCurrencyCode }
+                      : {}),
                   }}
                 >
                   {t('markAsPaid')}

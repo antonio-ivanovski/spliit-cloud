@@ -746,6 +746,14 @@
       "noImbursements": "Les dépenses effectuées ne nécessitent pas d'équilibrage 😁",
       "owes": "<strong>{from}</strong> doit à <strong>{to}</strong>",
       "markAsPaid": "Marquer comme payé"
+    },
+    "currencyDisplay": {
+      "label": "Affichage",
+      "group": "Devise du groupe ({currency})",
+      "original": "Devises des dépenses",
+      "title": "Choisissez comment afficher les soldes",
+      "groupDescription": "Convertissez toutes les dépenses en {currency} pour une vue combinée.",
+      "originalDescription": "Conservez chaque dépense dans la devise dans laquelle elle a été saisie."
     }
   },
   "Stats": {

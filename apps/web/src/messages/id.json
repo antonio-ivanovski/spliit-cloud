@@ -929,6 +929,14 @@
       "noImbursements": "Sepertinya grup Anda tidak memerlukan reimburse apa pun 😁",
       "owes": "<strong>{from}</strong> berutang <strong>{to}</strong>",
       "markAsPaid": "Tandai sebagai telah dibayar"
+    },
+    "currencyDisplay": {
+      "label": "Tampilan",
+      "group": "Mata uang grup ({currency})",
+      "original": "Mata uang pengeluaran",
+      "title": "Pilih cara melihat saldo",
+      "groupDescription": "Konversi semua pengeluaran ke {currency} untuk satu tampilan gabungan.",
+      "originalDescription": "Biarkan setiap pengeluaran dalam mata uang saat dimasukkan."
     }
   },
   "Stats": {

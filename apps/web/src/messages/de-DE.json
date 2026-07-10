@@ -746,6 +746,14 @@
       "noImbursements": "Es sieht aus, als seien in der Gruppe keine Rückzahlungen nötig 😁",
       "owes": "<strong>{from}</strong> schuldet <strong>{to}</strong>",
       "markAsPaid": "Als gezahlt markieren"
+    },
+    "currencyDisplay": {
+      "label": "Anzeige",
+      "group": "Gruppenwährung ({currency})",
+      "original": "Währungen der Ausgaben",
+      "title": "Wähle, wie Salden angezeigt werden",
+      "groupDescription": "Wandle alle Ausgaben in {currency} um, um eine kombinierte Ansicht zu erhalten.",
+      "originalDescription": "Behalte jede Ausgabe in der Währung, in der sie erfasst wurde."
     }
   },
   "Stats": {

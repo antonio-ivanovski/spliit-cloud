@@ -746,6 +746,14 @@
       "noImbursements": "Похоже, все в расчете 😁",
       "owes": "<strong>{from}</strong> должен <strong>{to}</strong>",
       "markAsPaid": "Пометить оплаченным"
+    },
+    "currencyDisplay": {
+      "label": "Отображение",
+      "group": "Валюта группы ({currency})",
+      "original": "Валюты расходов",
+      "title": "Выберите способ отображения балансов",
+      "groupDescription": "Конвертируйте все расходы в {currency} для единого отображения.",
+      "originalDescription": "Сохраняйте для каждого расхода валюту, в которой он был введён."
     }
   },
   "Stats": {

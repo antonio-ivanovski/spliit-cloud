@@ -847,6 +847,14 @@
       "noImbursements": "Parece que o teu grupo não precisa de nenhum reembolso 😁",
       "owes": "<strong>{from}</strong> deve a <strong>{to}</strong>",
       "markAsPaid": "Marcar como pago"
+    },
+    "currencyDisplay": {
+      "label": "Apresentação",
+      "group": "Moeda do grupo ({currency})",
+      "original": "Moedas das despesas",
+      "title": "Escolha como ver os saldos",
+      "groupDescription": "Converta todas as despesas para {currency} para uma visão combinada.",
+      "originalDescription": "Mantenha cada despesa na moeda em que foi inserida."
     }
   },
   "Stats": {

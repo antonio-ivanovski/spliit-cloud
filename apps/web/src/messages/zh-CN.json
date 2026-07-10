@@ -746,6 +746,14 @@
       "noImbursements": "看起来你的群组不需要任何报销😁",
       "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
       "markAsPaid": "标记为已支付"
+    },
+    "currencyDisplay": {
+      "label": "显示",
+      "group": "群组货币 ({currency})",
+      "original": "消费货币",
+      "title": "选择余额显示方式",
+      "groupDescription": "将所有支出转换为{currency}，以单一合并视图查看。",
+      "originalDescription": "保留每笔支出原本输入的货币。"
     }
   },
   "Stats": {

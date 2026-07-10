@@ -406,16 +406,19 @@ export function buildExpenseFormDefaults(args: {
     : []
 
   if (searchParams.reimbursement) {
+    const reimbursementNeedsConversion =
+      searchOriginalCurrency != null &&
+      searchOriginalCurrency !== group.currencyCode
     return {
       title: reimbursementTitle,
       expenseDate: new Date(),
       amount:
         searchParams.amount != null
-          ? amountAsDecimal(Number(searchParams.amount) || 0, groupCurrency)
+          ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)
           : ('' as unknown as number),
-      originalCurrency: group.currencyCode,
+      originalCurrency: searchOriginalCurrency,
       conversionRate: undefined,
-      conversionType: undefined,
+      conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
       category: PAYMENT_CATEGORY_ID,
       paidBySplitMode: 'BY_AMOUNT' as const,
       paidByList: searchParams.from
@@ -424,7 +427,7 @@ export function buildExpenseFormDefaults(args: {
               participant: searchParams.from,
               shares: amountAsDecimal(
                 Number(searchParams.amount) || 0,
-                groupCurrency,
+                searchCurrency,
               ),
             },
           ]

@@ -746,6 +746,14 @@
       "noImbursements": "看起來你的群組目前不需要銷帳😁",
       "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
       "markAsPaid": "標記為已支付"
+    },
+    "currencyDisplay": {
+      "label": "顯示",
+      "group": "群組貨幣 ({currency})",
+      "original": "消費貨幣",
+      "title": "選擇餘額顯示方式",
+      "groupDescription": "將所有支出轉換為{currency}，以單一合併檢視查看。",
+      "originalDescription": "保留每筆支出原本輸入的貨幣。"
     }
   },
   "Stats": {

@@ -746,6 +746,14 @@
       "noImbursements": "Antza denez zure taldeak ez du diru-itzulketarik behar 😁",
       "owes": "<strong>{from}</strong> zor dio <strong>{to}</strong>-ri",
       "markAsPaid": "Markatu ordainduta gisa"
+    },
+    "currencyDisplay": {
+      "label": "Bistaratu",
+      "group": "Taldearen moneta ({currency})",
+      "original": "Gastuen monetak",
+      "title": "Aukeratu nola ikusi saldoak",
+      "groupDescription": "Bihurtu gastu guztiak {currency} monetan ikuspegi bakarra lortzeko.",
+      "originalDescription": "Mantendu gastu bakoitza sartu zen monetan."
     }
   },
   "Stats": {

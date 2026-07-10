@@ -866,6 +866,14 @@
       "noImbursements": "It looks like your group doesn’t need any reimbursement 😁",
       "owes": "<strong>{from}</strong> owes <strong>{to}</strong>",
       "markAsPaid": "Mark as paid"
+    },
+    "currencyDisplay": {
+      "label": "Display",
+      "group": "Group currency ({currency})",
+      "original": "Expense currencies",
+      "title": "Choose how to view balances",
+      "groupDescription": "Convert all expenses to {currency} for one combined view.",
+      "originalDescription": "Keep each expense in the currency it was entered in."
     }
   },
   "Stats": {

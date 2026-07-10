@@ -746,6 +746,14 @@
       "noImbursements": "Sembra che il tuo gruppo non abbia bisogno di alcun rimborso 😁",
       "owes": "<strong>{from}</strong> deve <strong>{to}</strong>",
       "markAsPaid": "Segna come pagato"
+    },
+    "currencyDisplay": {
+      "label": "Visualizzazione",
+      "group": "Valuta del gruppo ({currency})",
+      "original": "Valute delle spese",
+      "title": "Scegli come visualizzare i saldi",
+      "groupDescription": "Converti tutte le spese in {currency} per una vista combinata.",
+      "originalDescription": "Mantieni ogni spesa nella valuta in cui è stata inserita."
     }
   },
   "Stats": {

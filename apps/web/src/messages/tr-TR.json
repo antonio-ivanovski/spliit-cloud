@@ -746,6 +746,14 @@
       "noImbursements": "Görünüşe göre grubunuzun hiçbir geri ödemeye ihtiyacı yok 😁",
       "owes": "<strong>{from}</strong>, <strong>{to}</strong>'ya borçlu",
       "markAsPaid": "Ödendi olarak işaretle"
+    },
+    "currencyDisplay": {
+      "label": "Görünüm",
+      "group": "Grup para birimi ({currency})",
+      "original": "Harcama para birimleri",
+      "title": "Bakiye görüntüleme şeklini seçin",
+      "groupDescription": "Tek bir birleşik görünüm için tüm harcamaları {currency} para birimine çevirin.",
+      "originalDescription": "Her harcamayı girildiği para biriminde tutun."
     }
   },
   "Stats": {

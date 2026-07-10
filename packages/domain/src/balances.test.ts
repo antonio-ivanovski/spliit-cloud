@@ -1,5 +1,6 @@
 import {
   getBalances,
+  getCurrencyBalanceSummaries,
   getPublicBalances,
   getSuggestedReimbursements,
 } from './balances'
@@ -1073,6 +1074,85 @@ describe('getBalances', () => {
     expect(sumPaid).toBe(totalAmount)
     expect(sumPaidFor).toBe(totalAmount)
     expect(Object.values(balances).reduce((s, b) => s + b.total, 0)).toBe(0)
+  })
+})
+
+describe('getCurrencyBalanceSummaries', () => {
+  it('keeps group and converted expenses in separate actionable currencies', () => {
+    const summaries = getCurrencyBalanceSummaries(
+      [
+        makeExpense({
+          id: 'usd',
+          amount: 9200,
+          originalAmount: 10000,
+          originalCurrency: 'USD',
+          conversionRate: 0.92,
+          paidByList: defaultPaidByList('p0', 'P0'),
+          paidFor: [{ participant: { id: 'p1', name: 'P1' }, shares: 1 }],
+        }),
+        makeExpense({
+          id: 'eur',
+          amount: 5000,
+          paidByList: defaultPaidByList('p1', 'P1'),
+          paidFor: [{ participant: { id: 'p0', name: 'P0' }, shares: 1 }],
+        }),
+      ],
+      'EUR',
+    )
+
+    expect(summaries).toEqual([
+      {
+        currencyCode: 'USD',
+        balances: {
+          p0: { paid: 10000, paidFor: 0, total: 10000 },
+          p1: { paid: 0, paidFor: 10000, total: -10000 },
+        },
+        reimbursements: [{ from: 'p1', to: 'p0', amount: 10000 }],
+      },
+      {
+        currencyCode: 'EUR',
+        balances: {
+          p1: { paid: 5000, paidFor: 0, total: 5000 },
+          p0: { paid: 0, paidFor: 5000, total: -5000 },
+        },
+        reimbursements: [{ from: 'p0', to: 'p1', amount: 5000 }],
+      },
+    ])
+  })
+
+  it('uses native item amounts for converted itemized expenses', () => {
+    const [summary] = getCurrencyBalanceSummaries(
+      [
+        makeExpense({
+          amount: 1800,
+          originalAmount: 2000,
+          originalCurrency: 'USD',
+          conversionRate: 0.9,
+          splitMode: 'ITEMIZED',
+          paidByList: defaultPaidByList('p0', 'P0'),
+          paidFor: [
+            { participant: { id: 'p0', name: 'P0' }, shares: 1000 },
+            { participant: { id: 'p1', name: 'P1' }, shares: 1000 },
+          ],
+          items: [
+            {
+              amount: 2000,
+              splitMode: 'EVENLY',
+              paidFor: [
+                { participant: 'p0', shares: 1 },
+                { participant: 'p1', shares: 1 },
+              ],
+            },
+          ],
+        }),
+      ],
+      'EUR',
+    )
+
+    expect(summary.currencyCode).toBe('USD')
+    expect(summary.reimbursements).toEqual([
+      { from: 'p1', to: 'p0', amount: 1000 },
+    ])
   })
 })
 

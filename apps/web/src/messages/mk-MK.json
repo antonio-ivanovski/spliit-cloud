@@ -866,6 +866,14 @@
       "noImbursements": "Изгледа вашата група нема потреба од никакво раздолжување 😁",
       "owes": "<strong>{from}</strong> должи на <strong>{to}</strong>",
       "markAsPaid": "Означи како платено"
+    },
+    "currencyDisplay": {
+      "label": "Приказ",
+      "group": "Валута на групата ({currency})",
+      "original": "Валути на трошоците",
+      "title": "Изберете како да ги прегледате салдата",
+      "groupDescription": "Конвертирајте ги сите трошоци во {currency} за еден обединет преглед.",
+      "originalDescription": "Задржете го секој трошок во валутата во која е внесен."
     }
   },
   "Stats": {

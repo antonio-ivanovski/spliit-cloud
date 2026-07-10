@@ -746,6 +746,14 @@
       "noImbursements": "Parece que tu grupo no necesita ningún reembolso 😁",
       "owes": "<strong>{from}</strong> debe a <strong>{to}</strong>",
       "markAsPaid": "Marcar como pagado"
+    },
+    "currencyDisplay": {
+      "label": "Mostrar",
+      "group": "Moneda del grupo ({currency})",
+      "original": "Monedas de los gastos",
+      "title": "Elige cómo ver los saldos",
+      "groupDescription": "Convierte todos los gastos a {currency} para una vista combinada.",
+      "originalDescription": "Mantén cada gasto en la moneda en la que se introdujo."
     }
   },
   "Stats": {
