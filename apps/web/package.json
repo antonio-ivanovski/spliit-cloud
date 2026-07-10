@@ -47,6 +47,8 @@
     "react-hook-form": "^7.80.0",
     "react-i18next": "^17.0.8",
     "react-intersection-observer": "^10.0.3",
+    "react-is": "19.2.7",
+    "recharts": "^3.9.2",
     "superjson": "^2.2.6",
     "tailwindcss-animate": "^1.0.7",
     "ts-pattern": "^5.9.0",

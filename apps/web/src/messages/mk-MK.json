@@ -886,6 +886,44 @@
       "yourSpendings": "Ваши вкупни трошоци",
       "yourEarnings": "Ваши вкупни приходи",
       "yourShare": "Ваш вкупен удел"
+    },
+    "Dashboard": {
+      "description": "Краток преглед на тоа како оваа група троши заедно.",
+      "title": "Активност на трошење",
+      "periods": {
+        "LATEST_ACTIVITY": "Последна активност",
+        "WEEK": "1Н",
+        "MONTH": "1М",
+        "QUARTER": "3М",
+        "YEAR": "1Г",
+        "CUSTOM": "Прилагодено"
+      },
+      "lifetime": "Вкупни трошоци",
+      "selectedPeriod": "Избран период",
+      "lifetimeDescription": "Низ целата историја на групата",
+      "expenseCount_one": "{count} трошок",
+      "expenseCount_other": "{count} трошоци",
+      "spendingOverTime": "Трошење низ времето",
+      "bucketedBy": "Групирано по: {granularity}",
+      "granularity": {
+        "DAY": "ден",
+        "WEEK": "недела",
+        "MONTH": "месец"
+      },
+      "other": "Друго",
+      "inactiveGap": "Период на неактивност",
+      "categories": "Категории",
+      "categoriesDescription": "Каде отиде избраното трошење",
+      "participants": "Удели на учесниците",
+      "participantsDescription": "Како беше распределено трошењето",
+      "emptyTitle": "Сè уште нема трошоци за прикажување",
+      "emptyDescription": "Додадете трошок за да почнете да ја создавате приказната за трошењето на оваа група.",
+      "error": "Не успеавме да ги вчитаме статистиките на групата.",
+      "retry": "Обидете се повторно",
+      "customRange": {
+        "from": "Од",
+        "to": "До"
+      }
     }
   },
   "Activity": {

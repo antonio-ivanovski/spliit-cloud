@@ -766,6 +766,44 @@
       "yourSpendings": "你的總開銷",
       "yourEarnings": "你的總收入",
       "yourShare": "你的總計份額"
+    },
+    "Dashboard": {
+      "description": "快速了解這個群組的共同支出情況。",
+      "title": "支出活動",
+      "periods": {
+        "LATEST_ACTIVITY": "最近活動",
+        "WEEK": "1週",
+        "MONTH": "1個月",
+        "QUARTER": "3個月",
+        "YEAR": "1年",
+        "CUSTOM": "自訂"
+      },
+      "lifetime": "歷史總支出",
+      "selectedPeriod": "所選期間",
+      "lifetimeDescription": "涵蓋群組的完整歷史",
+      "expenseCount_one": "{count} 筆支出",
+      "expenseCount_other": "{count} 筆支出",
+      "spendingOverTime": "支出趨勢",
+      "bucketedBy": "依{granularity}彙整",
+      "granularity": {
+        "DAY": "日",
+        "WEEK": "週",
+        "MONTH": "月"
+      },
+      "other": "其他",
+      "inactiveGap": "無支出期間",
+      "categories": "類別",
+      "categoriesDescription": "所選期間的支出去向",
+      "participants": "參與者分攤",
+      "participantsDescription": "支出的分攤情況",
+      "emptyTitle": "暫時沒有可顯示的支出",
+      "emptyDescription": "新增一筆支出，開始記錄此群組的支出情況。",
+      "error": "無法載入群組統計資訊。",
+      "retry": "重試",
+      "customRange": {
+        "from": "從",
+        "to": "到"
+      }
     }
   },
   "Activity": {

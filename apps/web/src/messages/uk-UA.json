@@ -766,6 +766,44 @@
       "yourSpendings": "Ваші загальні витрати",
       "yourEarnings": "Ваші загальні доходи",
       "yourShare": "Ваша частка"
+    },
+    "Dashboard": {
+      "description": "Короткий огляд того, як ця група витрачає разом.",
+      "title": "Активність витрат",
+      "periods": {
+        "LATEST_ACTIVITY": "Остання активність",
+        "WEEK": "1Т",
+        "MONTH": "1М",
+        "QUARTER": "3М",
+        "YEAR": "1Р",
+        "CUSTOM": "Власний"
+      },
+      "lifetime": "Витрати за весь час",
+      "selectedPeriod": "Вибраний період",
+      "lifetimeDescription": "За всю історію групи",
+      "expenseCount_one": "{count} витрата",
+      "expenseCount_other": "{count} витрат",
+      "spendingOverTime": "Витрати з часом",
+      "bucketedBy": "Згруповано за: {granularity}",
+      "granularity": {
+        "DAY": "день",
+        "WEEK": "тиждень",
+        "MONTH": "місяць"
+      },
+      "other": "Інше",
+      "inactiveGap": "Період без активності",
+      "categories": "Категорії",
+      "categoriesDescription": "На що було витрачено кошти у вибраному періоді",
+      "participants": "Частки учасників",
+      "participantsDescription": "Як було розподілено витрати",
+      "emptyTitle": "Ще немає витрат для відображення",
+      "emptyDescription": "Додайте витрату, щоб почати формувати історію витрат цієї групи.",
+      "error": "Не вдалося завантажити статистику групи.",
+      "retry": "Спробувати ще раз",
+      "customRange": {
+        "from": "Від",
+        "to": "До"
+      }
     }
   },
   "Activity": {

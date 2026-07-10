@@ -766,6 +766,44 @@
       "yourSpendings": "Suma de les teves despeses",
       "yourEarnings": "Suma dels teus ingressos",
       "yourShare": "El teu percentatge"
+    },
+    "Dashboard": {
+      "description": "Una instantània de com aquest grup gasta plegat.",
+      "lifetime": "Despesa acumulada",
+      "selectedPeriod": "Període seleccionat",
+      "lifetimeDescription": "Al llarg de tot l’historial del grup",
+      "expenseCount_one": "{count} despesa",
+      "expenseCount_other": "{count} despeses",
+      "spendingOverTime": "Despesa al llarg del temps",
+      "bucketedBy": "Agrupat per {granularity}",
+      "other": "Altres",
+      "inactiveGap": "Període inactiu",
+      "categories": "Categories",
+      "categoriesDescription": "On han anat les despeses seleccionades",
+      "participants": "Parts dels participants",
+      "participantsDescription": "Com s’han repartit les despeses",
+      "emptyTitle": "Encara no hi ha despeses per mostrar",
+      "emptyDescription": "Afegeix una despesa per començar a construir la història de despeses d’aquest grup.",
+      "error": "No s’han pogut carregar les estadístiques del grup.",
+      "granularity": {
+        "DAY": "dia",
+        "WEEK": "setmana",
+        "MONTH": "mes"
+      },
+      "title": "Activitat de despesa",
+      "periods": {
+        "LATEST_ACTIVITY": "Activitat més recent",
+        "WEEK": "1S",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1A",
+        "CUSTOM": "Personalitzat"
+      },
+      "retry": "Torna-ho a provar",
+      "customRange": {
+        "from": "Des de",
+        "to": "Fins a"
+      }
     }
   },
   "Activity": {

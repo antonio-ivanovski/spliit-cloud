@@ -766,6 +766,44 @@
       "yourSpendings": "Vos dépenses totales",
       "yourEarnings": "Vos revenus totaux",
       "yourShare": "Votre part totale"
+    },
+    "Dashboard": {
+      "description": "Un aperçu de la façon dont ce groupe dépense ensemble.",
+      "lifetime": "Dépenses cumulées",
+      "selectedPeriod": "Période sélectionnée",
+      "lifetimeDescription": "Sur l’ensemble de l’historique du groupe",
+      "expenseCount_one": "{count} dépense",
+      "expenseCount_other": "{count} dépenses",
+      "spendingOverTime": "Dépenses au fil du temps",
+      "bucketedBy": "Regroupé par {granularity}",
+      "other": "Autres",
+      "inactiveGap": "Période inactive",
+      "categories": "Catégories",
+      "categoriesDescription": "Répartition des dépenses sélectionnées",
+      "participants": "Parts des participants",
+      "participantsDescription": "Répartition des dépenses",
+      "emptyTitle": "Aucune dépense à afficher pour le moment",
+      "emptyDescription": "Ajoutez une dépense pour commencer à suivre les dépenses de ce groupe.",
+      "error": "Impossible de charger les statistiques du groupe.",
+      "granularity": {
+        "DAY": "jour",
+        "WEEK": "semaine",
+        "MONTH": "mois"
+      },
+      "title": "Activité des dépenses",
+      "periods": {
+        "LATEST_ACTIVITY": "Activité récente",
+        "WEEK": "1S",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1A",
+        "CUSTOM": "Personnalisé"
+      },
+      "retry": "Réessayer",
+      "customRange": {
+        "from": "Du",
+        "to": "Au"
+      }
     }
   },
   "Activity": {

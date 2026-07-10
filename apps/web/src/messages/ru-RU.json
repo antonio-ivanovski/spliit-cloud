@@ -766,6 +766,44 @@
       "yourSpendings": "Всего потрачено вами",
       "yourEarnings": "Всего заработано вами",
       "yourShare": "Ваша суммарная доля"
+    },
+    "Dashboard": {
+      "description": "Краткий обзор того, как участники группы тратят вместе.",
+      "title": "Динамика расходов",
+      "periods": {
+        "LATEST_ACTIVITY": "Последняя активность",
+        "WEEK": "1Н",
+        "MONTH": "1М",
+        "QUARTER": "3М",
+        "YEAR": "1Г",
+        "CUSTOM": "Произвольный"
+      },
+      "lifetime": "Расходы за всё время",
+      "selectedPeriod": "Выбранный период",
+      "lifetimeDescription": "За всю историю группы",
+      "expenseCount_one": "{count} расход",
+      "expenseCount_other": "{count} расходов",
+      "spendingOverTime": "Расходы с течением времени",
+      "bucketedBy": "Группировка: {granularity}",
+      "granularity": {
+        "DAY": "день",
+        "WEEK": "неделя",
+        "MONTH": "месяц"
+      },
+      "other": "Другое",
+      "inactiveGap": "Период без активности",
+      "categories": "Категории",
+      "categoriesDescription": "На что были потрачены средства за выбранный период",
+      "participants": "Доли участников",
+      "participantsDescription": "Как были распределены расходы",
+      "emptyTitle": "Пока нет расходов для отображения",
+      "emptyDescription": "Добавьте расход, чтобы начать формировать историю расходов этой группы.",
+      "error": "Не удалось загрузить статистику группы.",
+      "retry": "Попробовать снова",
+      "customRange": {
+        "from": "С",
+        "to": "По"
+      }
     }
   },
   "Activity": {

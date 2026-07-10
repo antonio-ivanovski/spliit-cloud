@@ -766,6 +766,44 @@
       "yourSpendings": "Twoje wydatki",
       "yourEarnings": "Twoje wpływy",
       "yourShare": "Twoje udziały"
+    },
+    "Dashboard": {
+      "description": "Migawka tego, jak ta grupa wspólnie wydaje.",
+      "title": "Aktywność wydatków",
+      "periods": {
+        "LATEST_ACTIVITY": "Ostatnia aktywność",
+        "WEEK": "1T",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1R",
+        "CUSTOM": "Niestandardowy"
+      },
+      "lifetime": "Łączne wydatki",
+      "selectedPeriod": "Wybrany okres",
+      "lifetimeDescription": "Z całej historii grupy",
+      "expenseCount_one": "{count} wydatek",
+      "expenseCount_other": "{count} wydatków",
+      "spendingOverTime": "Wydatki w czasie",
+      "bucketedBy": "Grupowane według: {granularity}",
+      "granularity": {
+        "DAY": "dzień",
+        "WEEK": "tydzień",
+        "MONTH": "miesiąc"
+      },
+      "other": "Inne",
+      "inactiveGap": "Okres nieaktywności",
+      "categories": "Kategorie",
+      "categoriesDescription": "Na co wydano środki w wybranym okresie",
+      "participants": "Udziały uczestników",
+      "participantsDescription": "Jak podzielono wydatki",
+      "emptyTitle": "Brak wydatków do wyświetlenia",
+      "emptyDescription": "Dodaj wydatek, aby rozpocząć tworzenie historii wydatków tej grupy.",
+      "error": "Nie udało się wczytać statystyk grupy.",
+      "retry": "Spróbuj ponownie",
+      "customRange": {
+        "from": "Od",
+        "to": "Do"
+      }
     }
   },
   "Activity": {

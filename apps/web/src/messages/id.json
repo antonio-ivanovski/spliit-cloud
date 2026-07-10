@@ -949,6 +949,44 @@
       "yourSpendings": "Total pengeluaran Anda",
       "yourEarnings": "Total pemasukan Anda",
       "yourShare": "Total bagian Anda"
+    },
+    "Dashboard": {
+      "description": "Gambaran singkat cara grup ini berbelanja bersama.",
+      "lifetime": "Total pengeluaran",
+      "selectedPeriod": "Periode terpilih",
+      "lifetimeDescription": "Sepanjang riwayat lengkap grup",
+      "expenseCount_one": "{count} pengeluaran",
+      "expenseCount_other": "{count} pengeluaran",
+      "spendingOverTime": "Pengeluaran dari waktu ke waktu",
+      "bucketedBy": "Dikelompokkan per {granularity}",
+      "other": "Lainnya",
+      "inactiveGap": "Periode tidak aktif",
+      "categories": "Kategori",
+      "categoriesDescription": "Ke mana pengeluaran terpilih digunakan",
+      "participants": "Bagian peserta",
+      "participantsDescription": "Cara pengeluaran dibagi",
+      "emptyTitle": "Belum ada pengeluaran untuk ditampilkan",
+      "emptyDescription": "Tambahkan pengeluaran untuk mulai membangun riwayat pengeluaran grup ini.",
+      "error": "Kami tidak dapat memuat statistik grup.",
+      "granularity": {
+        "DAY": "hari",
+        "WEEK": "minggu",
+        "MONTH": "bulan"
+      },
+      "title": "Aktivitas pengeluaran",
+      "periods": {
+        "LATEST_ACTIVITY": "Aktivitas terbaru",
+        "WEEK": "1Mgg",
+        "MONTH": "1B",
+        "QUARTER": "3B",
+        "YEAR": "1Th",
+        "CUSTOM": "Kustom"
+      },
+      "retry": "Coba lagi",
+      "customRange": {
+        "from": "Dari",
+        "to": "Sampai"
+      }
     }
   },
   "Activity": {

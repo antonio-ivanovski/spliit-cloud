@@ -766,6 +766,44 @@
       "yourSpendings": "Deine gesamten Ausgaben",
       "yourEarnings": "Deine gesamten Einnahmen",
       "yourShare": "Dein gesamter Anteil"
+    },
+    "Dashboard": {
+      "description": "Ein Überblick darüber, wie diese Gruppe gemeinsam Geld ausgibt.",
+      "lifetime": "Ausgaben insgesamt",
+      "selectedPeriod": "Ausgewählter Zeitraum",
+      "lifetimeDescription": "Über den gesamten Verlauf der Gruppe",
+      "expenseCount_one": "{count} Ausgabe",
+      "expenseCount_other": "{count} Ausgaben",
+      "spendingOverTime": "Ausgaben im Zeitverlauf",
+      "bucketedBy": "Gruppiert nach {granularity}",
+      "other": "Andere",
+      "inactiveGap": "Inaktiver Zeitraum",
+      "categories": "Kategorien",
+      "categoriesDescription": "Wofür die Ausgaben im ausgewählten Zeitraum verwendet wurden",
+      "participants": "Ausgabenanteile der Teilnehmenden",
+      "participantsDescription": "Wie die Ausgaben aufgeteilt wurden",
+      "emptyTitle": "Noch keine Ausgaben zum Anzeigen",
+      "emptyDescription": "Füge eine Ausgabe hinzu, um die Ausgabengeschichte dieser Gruppe zu beginnen.",
+      "error": "Die Gruppenstatistiken konnten nicht geladen werden.",
+      "granularity": {
+        "DAY": "Tag",
+        "WEEK": "Woche",
+        "MONTH": "Monat"
+      },
+      "title": "Ausgabenaktivität",
+      "periods": {
+        "LATEST_ACTIVITY": "Letzte Aktivität",
+        "WEEK": "1W",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1J",
+        "CUSTOM": "Benutzerdefiniert"
+      },
+      "retry": "Erneut versuchen",
+      "customRange": {
+        "from": "Von",
+        "to": "Bis"
+      }
     }
   },
   "Activity": {

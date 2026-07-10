@@ -766,6 +766,44 @@
       "yourSpendings": "Sizin toplam harcamalarınız",
       "yourEarnings": "Sizin toplam gelirleriniz",
       "yourShare": "Sizin toplam payınız"
+    },
+    "Dashboard": {
+      "description": "Bu grubun birlikte nasıl harcama yaptığının özeti.",
+      "lifetime": "Tüm zamanlardaki harcamalar",
+      "selectedPeriod": "Seçili dönem",
+      "lifetimeDescription": "Grubun tüm geçmişi boyunca",
+      "expenseCount_one": "{count} gider",
+      "expenseCount_other": "{count} gider",
+      "spendingOverTime": "Zaman içindeki harcamalar",
+      "bucketedBy": "{granularity} bazında gruplandı",
+      "other": "Diğer",
+      "inactiveGap": "Etkin olmayan dönem",
+      "categories": "Kategoriler",
+      "categoriesDescription": "Seçili harcamanın nereye gittiği",
+      "participants": "Katılımcı payları",
+      "participantsDescription": "Harcamaların nasıl paylaşıldığı",
+      "emptyTitle": "Henüz gösterilecek harcama yok",
+      "emptyDescription": "Bu grubun harcama geçmişini oluşturmaya başlamak için bir gider ekleyin.",
+      "error": "Grup istatistikleri yüklenemedi.",
+      "granularity": {
+        "DAY": "gün",
+        "WEEK": "hafta",
+        "MONTH": "ay"
+      },
+      "title": "Harcama etkinliği",
+      "periods": {
+        "LATEST_ACTIVITY": "Son etkinlik",
+        "WEEK": "1H",
+        "MONTH": "1A",
+        "QUARTER": "3A",
+        "YEAR": "1Y",
+        "CUSTOM": "Özel"
+      },
+      "retry": "Tekrar deneyin",
+      "customRange": {
+        "from": "Başlangıç",
+        "to": "Bitiş"
+      }
     }
   },
   "Activity": {

@@ -766,6 +766,44 @@
       "yourSpendings": "Vaše celkové výdaje",
       "yourEarnings": "Vaše celkové příjmy",
       "yourShare": "Váš celkový podíl"
+    },
+    "Dashboard": {
+      "description": "Přehled, jak tato skupina společně utrácí.",
+      "title": "Aktivita výdajů",
+      "periods": {
+        "LATEST_ACTIVITY": "Poslední aktivita",
+        "WEEK": "1T",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1R",
+        "CUSTOM": "Vlastní"
+      },
+      "lifetime": "Výdaje za celou dobu",
+      "selectedPeriod": "Vybrané období",
+      "lifetimeDescription": "Za celou historii skupiny",
+      "expenseCount_one": "{count} výdaj",
+      "expenseCount_other": "{count} výdajů",
+      "spendingOverTime": "Výdaje v čase",
+      "bucketedBy": "Seskupeno podle: {granularity}",
+      "granularity": {
+        "DAY": "den",
+        "WEEK": "týden",
+        "MONTH": "měsíc"
+      },
+      "other": "Ostatní",
+      "inactiveGap": "Období neaktivity",
+      "categories": "Kategorie",
+      "categoriesDescription": "Kam směřovaly vybrané výdaje",
+      "participants": "Podíly účastníků",
+      "participantsDescription": "Jak byly výdaje rozděleny",
+      "emptyTitle": "Zatím nejsou k zobrazení žádné výdaje",
+      "emptyDescription": "Přidejte výdaj a začněte budovat příběh výdajů této skupiny.",
+      "error": "Nepodařilo se načíst statistiky skupiny.",
+      "retry": "Zkusit znovu",
+      "customRange": {
+        "from": "Od",
+        "to": "Do"
+      }
     }
   },
   "Activity": {

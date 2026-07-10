@@ -766,6 +766,44 @@
       "yourSpendings": "Jouw totale uitgaven",
       "yourEarnings": "Jouw totale inkomsten",
       "yourShare": "Jouw totale aandeel"
+    },
+    "Dashboard": {
+      "description": "Een overzicht van hoe deze groep samen uitgeeft.",
+      "lifetime": "Totale uitgaven",
+      "selectedPeriod": "Geselecteerde periode",
+      "lifetimeDescription": "Over de volledige geschiedenis van de groep",
+      "expenseCount_one": "{count} uitgave",
+      "expenseCount_other": "{count} uitgaven",
+      "spendingOverTime": "Uitgaven in de loop van de tijd",
+      "bucketedBy": "Gegroepeerd op {granularity}",
+      "other": "Overig",
+      "inactiveGap": "Inactieve periode",
+      "categories": "Categorieën",
+      "categoriesDescription": "Waar de uitgaven in de geselecteerde periode naartoe gingen",
+      "participants": "Aandelen per deelnemer",
+      "participantsDescription": "Hoe de uitgaven zijn verdeeld",
+      "emptyTitle": "Nog geen uitgaven om te tonen",
+      "emptyDescription": "Voeg een uitgave toe om het uitgavenverhaal van deze groep op te bouwen.",
+      "error": "We konden de groepsstatistieken niet laden.",
+      "granularity": {
+        "DAY": "dag",
+        "WEEK": "week",
+        "MONTH": "maand"
+      },
+      "title": "Uitgavenactiviteit",
+      "periods": {
+        "LATEST_ACTIVITY": "Meest recente activiteit",
+        "WEEK": "1W",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1J",
+        "CUSTOM": "Aangepast"
+      },
+      "retry": "Opnieuw proberen",
+      "customRange": {
+        "from": "Van",
+        "to": "Tot"
+      }
     }
   },
   "Activity": {

@@ -766,6 +766,44 @@
       "yourSpendings": "Kulutuksesi",
       "yourEarnings": "Saatavasi",
       "yourShare": "Osuutesi"
+    },
+    "Dashboard": {
+      "description": "Yleiskatsaus siihen, miten tämä ryhmä käyttää rahaa yhdessä.",
+      "lifetime": "Kulutus koko ajalta",
+      "selectedPeriod": "Valittu ajanjakso",
+      "lifetimeDescription": "Ryhmän koko historian ajalta",
+      "expenseCount_one": "{count} kulu",
+      "expenseCount_other": "{count} kulua",
+      "spendingOverTime": "Kulutus ajan mittaan",
+      "bucketedBy": "Ryhmitelty {granularity}kohtaisesti",
+      "other": "Muut",
+      "inactiveGap": "Toimeton ajanjakso",
+      "categories": "Luokat",
+      "categoriesDescription": "Mihin valitun jakson kulut kohdistuivat",
+      "participants": "Osallistujien osuudet",
+      "participantsDescription": "Miten kulut jaettiin",
+      "emptyTitle": "Ei vielä näytettäviä kuluja",
+      "emptyDescription": "Lisää kulu, niin ryhmän kulutustarina alkaa muodostua.",
+      "error": "Ryhmän tilastoja ei voitu ladata.",
+      "granularity": {
+        "DAY": "päivä",
+        "WEEK": "viikko",
+        "MONTH": "kuukausi"
+      },
+      "title": "Kulutustoiminta",
+      "periods": {
+        "LATEST_ACTIVITY": "Viimeisin toiminta",
+        "WEEK": "1 vk",
+        "MONTH": "1 kk",
+        "QUARTER": "3 kk",
+        "YEAR": "1 v",
+        "CUSTOM": "Mukautettu"
+      },
+      "retry": "Yritä uudelleen",
+      "customRange": {
+        "from": "Alkaen",
+        "to": "Asti"
+      }
     }
   },
   "Activity": {

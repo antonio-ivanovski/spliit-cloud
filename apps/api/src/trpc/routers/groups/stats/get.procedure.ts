@@ -12,6 +12,11 @@ import {
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
+import {
+  buildGroupStatsDashboard,
+  statsPeriods,
+  type StatsExpense,
+} from './dashboard'
 
 /**
  * The new "active user" is the signed-in account. We resolve it from the
@@ -26,45 +31,77 @@ export const getGroupStatsProcedure = protectedProcedure
     z.object({
       groupId: z.string().min(1),
       linkInviteToken: linkInviteTokenInput,
+      period: z.enum(statsPeriods).default('LATEST_ACTIVITY'),
+      customRange: z
+        .object({
+          from: z.coerce.date(),
+          to: z.coerce.date(),
+        })
+        .refine((range) => range.from <= range.to, {
+          message: 'Custom range must end after it starts',
+        })
+        .optional(),
     }),
   )
-  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    const { member } = await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
-      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-    })
+  .query(
+    async ({
+      input: { groupId, linkInviteToken, period, customRange },
+      ctx,
+    }) => {
+      const { member } = await loadGroupViewer({
+        groupId,
+        accountId: ctx.auth.user.id,
+        accountEmail: ctx.auth.user.email,
+        linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+      })
 
-    const activeParticipantId = member?.ledgerParticipant?.id ?? null
+      const activeParticipantId = member?.ledgerParticipant?.id ?? null
 
-    const rows = await getGroupExpenses(groupId)
-    const expenses: TotalsExpense[] = rows.map((row) => ({
-      ...row,
-      paidByList: row.paidByList.map((pb) => ({
-        shares: pb.shares,
-        participant: pb.ledgerParticipant,
-      })),
-      paidFor: row.paidFor.map((pf) => ({
-        shares: pf.shares,
-        participant: pf.ledgerParticipant,
-      })),
-    }))
+      const rows = await getGroupExpenses(groupId)
+      const expenses: TotalsExpense[] = rows.map((row) => ({
+        ...row,
+        paidByList: row.paidByList.map((pb) => ({
+          shares: pb.shares,
+          participant: pb.ledgerParticipant,
+        })),
+        paidFor: row.paidFor.map((pf) => ({
+          shares: pf.shares,
+          participant: pf.ledgerParticipant,
+        })),
+      }))
 
-    const totalGroupSpendings = getTotalGroupSpending(expenses)
-    const totalParticipantSpendings = getTotalActiveUserPaidFor(
-      activeParticipantId,
-      expenses,
-    )
-    const totalParticipantShare = getTotalActiveUserShare(
-      activeParticipantId,
-      expenses,
-    )
+      const totalGroupSpendings = getTotalGroupSpending(expenses)
+      const totalParticipantSpendings = getTotalActiveUserPaidFor(
+        activeParticipantId,
+        expenses,
+      )
+      const totalParticipantShare = getTotalActiveUserShare(
+        activeParticipantId,
+        expenses,
+      )
+      const dashboardExpenses: StatsExpense[] = rows.map((row) => ({
+        ...row,
+        expenseDate: new Date(row.expenseDate),
+        paidByList: row.paidByList.map((paidBy) => ({
+          shares: paidBy.shares,
+          participant: paidBy.ledgerParticipant,
+        })),
+        paidFor: row.paidFor.map((paidFor) => ({
+          shares: paidFor.shares,
+          participant: paidFor.ledgerParticipant,
+        })),
+      }))
 
-    return {
-      totalGroupSpendings,
-      totalParticipantSpendings,
-      totalParticipantShare,
-      activeParticipantId,
-    }
-  })
+      return {
+        totalGroupSpendings,
+        totalParticipantSpendings,
+        totalParticipantShare,
+        activeParticipantId,
+        dashboard: buildGroupStatsDashboard(
+          dashboardExpenses,
+          period,
+          customRange,
+        ),
+      }
+    },
+  )

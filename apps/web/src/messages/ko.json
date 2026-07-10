@@ -664,6 +664,44 @@
       "yourShare": "나의 총 부담금",
       "groupEarnings": "그룹 총 수입",
       "yourEarnings": "내 총 수입"
+    },
+    "Dashboard": {
+      "description": "이 그룹의 지출 현황을 한눈에 확인하세요.",
+      "title": "지출 활동",
+      "periods": {
+        "LATEST_ACTIVITY": "최근 활동",
+        "WEEK": "1주",
+        "MONTH": "1개월",
+        "QUARTER": "3개월",
+        "YEAR": "1년",
+        "CUSTOM": "사용자 지정"
+      },
+      "lifetime": "전체 기간 지출",
+      "selectedPeriod": "선택한 기간",
+      "lifetimeDescription": "그룹 전체 기록 기준",
+      "expenseCount_one": "{count}건의 지출",
+      "expenseCount_other": "{count}건의 지출",
+      "spendingOverTime": "기간별 지출",
+      "bucketedBy": "{granularity} 단위로 그룹화",
+      "granularity": {
+        "DAY": "일",
+        "WEEK": "주",
+        "MONTH": "월"
+      },
+      "other": "기타",
+      "inactiveGap": "비활성 기간",
+      "categories": "카테고리",
+      "categoriesDescription": "선택한 기간의 지출 내역",
+      "participants": "참여자별 분담",
+      "participantsDescription": "지출 분담 내역",
+      "emptyTitle": "아직 표시할 지출이 없습니다",
+      "emptyDescription": "지출을 추가하여 이 그룹의 지출 기록을 시작하세요.",
+      "error": "그룹 통계를 불러올 수 없습니다.",
+      "retry": "다시 시도",
+      "customRange": {
+        "from": "시작",
+        "to": "종료"
+      }
     }
   },
   "Activity": {

@@ -766,6 +766,44 @@
       "yourSpendings": "Zure gastuak denetara",
       "yourEarnings": "Zure diru-sarrerak denetara",
       "yourShare": "Zure parte osoa"
+    },
+    "Dashboard": {
+      "description": "Talde honek elkarrekin nola gastatzen duenaren laburpena.",
+      "lifetime": "Bizitza osoko gastua",
+      "selectedPeriod": "Hautatutako aldia",
+      "lifetimeDescription": "Taldearen historia osoan zehar",
+      "expenseCount_one": "{count} gastu",
+      "expenseCount_other": "{count} gastu",
+      "spendingOverTime": "Gastua denboran zehar",
+      "bucketedBy": "{granularity}en arabera multzokatuta",
+      "other": "Besteak",
+      "inactiveGap": "Aldi inaktiboa",
+      "categories": "Kategoriak",
+      "categoriesDescription": "Hautatutako gastua zertara bideratu den",
+      "participants": "Parte-hartzaileen zatiak",
+      "participantsDescription": "Gastua nola banatu den",
+      "emptyTitle": "Oraindik ez dago erakusteko gasturik",
+      "emptyDescription": "Gehitu gastu bat talde honen gastuen historia eraikitzen hasteko.",
+      "error": "Ezin izan dira taldearen estatistikak kargatu.",
+      "granularity": {
+        "DAY": "egun",
+        "WEEK": "aste",
+        "MONTH": "hilabete"
+      },
+      "title": "Gastuen jarduera",
+      "periods": {
+        "LATEST_ACTIVITY": "Azken jarduera",
+        "WEEK": "1A",
+        "MONTH": "1H",
+        "QUARTER": "3H",
+        "YEAR": "1U",
+        "CUSTOM": "Pertsonalizatua"
+      },
+      "retry": "Saiatu berriro",
+      "customRange": {
+        "from": "Noiztik",
+        "to": "Noiz arte"
+      }
     }
   },
   "Activity": {

@@ -766,6 +766,44 @@
       "yourSpendings": "你的总计开销",
       "yourEarnings": "你的总计收入",
       "yourShare": "你的总计份额"
+    },
+    "Dashboard": {
+      "description": "快速了解这个群组的共同支出情况。",
+      "title": "支出动态",
+      "periods": {
+        "LATEST_ACTIVITY": "最近活动",
+        "WEEK": "1周",
+        "MONTH": "1个月",
+        "QUARTER": "3个月",
+        "YEAR": "1年",
+        "CUSTOM": "自定义"
+      },
+      "lifetime": "历史总支出",
+      "selectedPeriod": "所选期间",
+      "lifetimeDescription": "涵盖群组完整历史",
+      "expenseCount_one": "{count} 笔支出",
+      "expenseCount_other": "{count} 笔支出",
+      "spendingOverTime": "支出趋势",
+      "bucketedBy": "按{granularity}汇总",
+      "granularity": {
+        "DAY": "日",
+        "WEEK": "周",
+        "MONTH": "月"
+      },
+      "other": "其他",
+      "inactiveGap": "无支出期间",
+      "categories": "类别",
+      "categoriesDescription": "所选期间的支出去向",
+      "participants": "参与者分摊",
+      "participantsDescription": "支出的分摊情况",
+      "emptyTitle": "暂时没有可显示的支出",
+      "emptyDescription": "添加一笔支出，开始记录此群组的支出情况。",
+      "error": "无法加载群组统计信息。",
+      "retry": "重试",
+      "customRange": {
+        "from": "从",
+        "to": "到"
+      }
     }
   },
   "Activity": {

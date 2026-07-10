@@ -766,6 +766,44 @@
       "yourSpendings": "Totalul cheltuielilor tale",
       "yourEarnings": "Totalul veniturilor tale",
       "yourShare": "Partea ta"
+    },
+    "Dashboard": {
+      "description": "O privire de ansamblu asupra modului în care acest grup cheltuie împreună.",
+      "lifetime": "Cheltuieli totale",
+      "selectedPeriod": "Perioada selectată",
+      "lifetimeDescription": "Pe întreaga durată a istoricului grupului",
+      "expenseCount_one": "{count} cheltuială",
+      "expenseCount_other": "{count} cheltuieli",
+      "spendingOverTime": "Cheltuieli în timp",
+      "bucketedBy": "Grupat după {granularity}",
+      "other": "Altele",
+      "inactiveGap": "Perioadă inactivă",
+      "categories": "Categorii",
+      "categoriesDescription": "Pe ce s-au cheltuit sumele selectate",
+      "participants": "Cotele participanților",
+      "participantsDescription": "Cum au fost împărțite cheltuielile",
+      "emptyTitle": "Nu există încă cheltuieli de afișat",
+      "emptyDescription": "Adaugă o cheltuială pentru a începe istoricul cheltuielilor acestui grup.",
+      "error": "Nu s-au putut încărca statisticile grupului.",
+      "granularity": {
+        "DAY": "zi",
+        "WEEK": "săptămână",
+        "MONTH": "lună"
+      },
+      "title": "Activitatea cheltuielilor",
+      "periods": {
+        "LATEST_ACTIVITY": "Activitate recentă",
+        "WEEK": "1S",
+        "MONTH": "1L",
+        "QUARTER": "3L",
+        "YEAR": "1A",
+        "CUSTOM": "Personalizat"
+      },
+      "retry": "Încearcă din nou",
+      "customRange": {
+        "from": "De la",
+        "to": "Până la"
+      }
     }
   },
   "Activity": {

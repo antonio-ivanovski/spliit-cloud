@@ -766,6 +766,44 @@
       "yourSpendings": "סך ההוצאות שלך",
       "yourEarnings": "סך ההכנסות שלך",
       "yourShare": "סך החלק שלך"
+    },
+    "Dashboard": {
+      "description": "תמונת מצב של אופן ההוצאה המשותפת של הקבוצה.",
+      "lifetime": "הוצאות מצטברות",
+      "selectedPeriod": "התקופה שנבחרה",
+      "lifetimeDescription": "לאורך כל היסטוריית הקבוצה",
+      "expenseCount_one": "{count} הוצאה",
+      "expenseCount_other": "{count} הוצאות",
+      "spendingOverTime": "הוצאות לאורך זמן",
+      "bucketedBy": "מקובץ לפי {granularity}",
+      "other": "אחר",
+      "inactiveGap": "תקופה לא פעילה",
+      "categories": "קטגוריות",
+      "categoriesDescription": "לאן הלכו ההוצאות שנבחרו",
+      "participants": "חלקי המשתתפים",
+      "participantsDescription": "אופן חלוקת ההוצאות",
+      "emptyTitle": "עדיין אין הוצאות להצגה",
+      "emptyDescription": "הוסיפו הוצאה כדי להתחיל לבנות את סיפור ההוצאות של הקבוצה.",
+      "error": "לא ניתן היה לטעון את סטטיסטיקות הקבוצה.",
+      "granularity": {
+        "DAY": "יום",
+        "WEEK": "שבוע",
+        "MONTH": "חודש"
+      },
+      "title": "פעילות הוצאות",
+      "periods": {
+        "LATEST_ACTIVITY": "הפעילות האחרונה",
+        "WEEK": "1ש׳",
+        "MONTH": "1ח׳",
+        "QUARTER": "3ח׳",
+        "YEAR": "1 שנה",
+        "CUSTOM": "מותאם אישית"
+      },
+      "retry": "נסו שוב",
+      "customRange": {
+        "from": "מ",
+        "to": "עד"
+      }
     }
   },
   "Activity": {

@@ -867,6 +867,44 @@
       "yourSpendings": "Os teus gastos totais",
       "yourEarnings": "As tuas receitas totais",
       "yourShare": "A tua parte total"
+    },
+    "Dashboard": {
+      "description": "Uma visão geral de como este grupo gasta em conjunto.",
+      "lifetime": "Despesa total",
+      "selectedPeriod": "Período selecionado",
+      "lifetimeDescription": "Ao longo de todo o histórico do grupo",
+      "expenseCount_one": "{count} despesa",
+      "expenseCount_other": "{count} despesas",
+      "spendingOverTime": "Despesas ao longo do tempo",
+      "bucketedBy": "Agrupado por {granularity}",
+      "other": "Outros",
+      "inactiveGap": "Período inativo",
+      "categories": "Categorias",
+      "categoriesDescription": "Onde foi gasto o valor selecionado",
+      "participants": "Partilhas dos participantes",
+      "participantsDescription": "Como as despesas foram partilhadas",
+      "emptyTitle": "Ainda não há despesas para mostrar",
+      "emptyDescription": "Adicione uma despesa para começar a criar o histórico de despesas deste grupo.",
+      "error": "Não foi possível carregar as estatísticas do grupo.",
+      "granularity": {
+        "DAY": "dia",
+        "WEEK": "semana",
+        "MONTH": "mês"
+      },
+      "title": "Atividade de despesas",
+      "periods": {
+        "LATEST_ACTIVITY": "Atividade mais recente",
+        "WEEK": "1S",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1A",
+        "CUSTOM": "Personalizado"
+      },
+      "retry": "Tentar novamente",
+      "customRange": {
+        "from": "De",
+        "to": "Até"
+      }
     }
   },
   "Activity": {

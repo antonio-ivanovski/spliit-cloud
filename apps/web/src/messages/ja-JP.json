@@ -766,6 +766,44 @@
       "yourSpendings": "あなたの総支出",
       "yourEarnings": "あなたの総収入",
       "yourShare": "あなたの総シェア"
+    },
+    "Dashboard": {
+      "description": "このグループの支出の概要です。",
+      "title": "支出の状況",
+      "periods": {
+        "LATEST_ACTIVITY": "最近のアクティビティ",
+        "WEEK": "1週間",
+        "MONTH": "1か月",
+        "QUARTER": "3か月",
+        "YEAR": "1年",
+        "CUSTOM": "カスタム"
+      },
+      "lifetime": "累計支出",
+      "selectedPeriod": "選択した期間",
+      "lifetimeDescription": "グループの全期間",
+      "expenseCount_one": "{count} 件の支出",
+      "expenseCount_other": "{count} 件の支出",
+      "spendingOverTime": "期間別の支出",
+      "bucketedBy": "集計単位: {granularity}",
+      "granularity": {
+        "DAY": "日",
+        "WEEK": "週",
+        "MONTH": "月"
+      },
+      "other": "その他",
+      "inactiveGap": "非アクティブ期間",
+      "categories": "カテゴリ",
+      "categoriesDescription": "選択した期間の支出内訳",
+      "participants": "参加者ごとの負担",
+      "participantsDescription": "支出の分担",
+      "emptyTitle": "表示する支出はまだありません",
+      "emptyDescription": "支出を追加して、このグループの支出の記録を始めましょう。",
+      "error": "グループの統計情報を読み込めませんでした。",
+      "retry": "再試行",
+      "customRange": {
+        "from": "開始",
+        "to": "終了"
+      }
     }
   },
   "Activity": {

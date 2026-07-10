@@ -886,6 +886,44 @@
       "yourSpendings": "Your total spendings",
       "yourEarnings": "Your total earnings",
       "yourShare": "Your total share"
+    },
+    "Dashboard": {
+      "description": "A snapshot of how this group spends together.",
+      "title": "Spending activity",
+      "periods": {
+        "LATEST_ACTIVITY": "Latest activity",
+        "WEEK": "1W",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1Y",
+        "CUSTOM": "Custom"
+      },
+      "lifetime": "Lifetime spending",
+      "selectedPeriod": "Selected period",
+      "lifetimeDescription": "Across the group’s full history",
+      "expenseCount_one": "{count} expense",
+      "expenseCount_other": "{count} expenses",
+      "spendingOverTime": "Spending over time",
+      "bucketedBy": "Grouped by {granularity}",
+      "granularity": {
+        "DAY": "day",
+        "WEEK": "week",
+        "MONTH": "month"
+      },
+      "other": "Other",
+      "inactiveGap": "Inactive period",
+      "categories": "Categories",
+      "categoriesDescription": "Where the selected spending went",
+      "participants": "Participant shares",
+      "participantsDescription": "How the spending was shared",
+      "emptyTitle": "No spending to show yet",
+      "emptyDescription": "Add an expense to start building this group’s spending story.",
+      "error": "We could not load the group statistics.",
+      "retry": "Try again",
+      "customRange": {
+        "from": "From",
+        "to": "To"
+      }
     }
   },
   "Activity": {
