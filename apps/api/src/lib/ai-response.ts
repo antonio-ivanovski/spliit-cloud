@@ -1,7 +1,3 @@
-export function stripThinking(content: string) {
-  return content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim()
-}
-
 export function getLastNonEmptyLine(content: string) {
   return (
     content
@@ -22,12 +18,11 @@ export function extractAllowedIdFromAIResponse(
 ) {
   if (!rawContent) return null
 
-  const content = stripThinking(rawContent)
-  const trimmed = content.trim()
+  const trimmed = rawContent.trim()
 
   if (validIds.includes(trimmed)) return trimmed
 
-  const lines = content
+  const lines = trimmed
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
@@ -40,7 +35,7 @@ export function extractAllowedIdFromAIResponse(
     const idPattern = new RegExp(
       `(^|[^a-zA-Z0-9_-])${escapeRegExp(id)}([^a-zA-Z0-9_-]|$)`,
     )
-    if (idPattern.test(content)) return id
+    if (idPattern.test(trimmed)) return id
   }
 
   return null

@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { trpc } from '@/trpc/client'
-import { Archive, ArchiveRestore, Trash2 } from 'lucide-react'
+import { Archive, ArchiveRestore, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
@@ -32,6 +32,7 @@ export const EditGroup = () => {
   })
   const updateMutation = useUpdateGroupMutation()
   const deleteMutation = useDeleteGroupMutation()
+  const { data: features } = trpc.features.get.useQuery()
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const [forceArchiveOpen, setForceArchiveOpen] = useState(false)
@@ -94,6 +95,25 @@ export const EditGroup = () => {
           updateMutation.mutateAsync({ groupId, groupFormValues })
         }
       />
+
+      {canArchive && !isArchived && features?.enableBulkCategorize && (
+        <Card className="mb-2">
+          <CardHeader>
+            <CardTitle>{t('bulkCategorizeSectionTitle')}</CardTitle>
+            <CardDescription>
+              {t('bulkCategorizeSectionDescription')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="secondary">
+              <Link href={`/groups/bulk-categorize/${groupId}`}>
+                <Sparkles className="w-4 h-4 mr-2" />
+                {t('bulkCategorizeButton')}
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {canArchive && (
         <Card className="mb-2">

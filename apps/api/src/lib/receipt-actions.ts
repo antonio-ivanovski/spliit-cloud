@@ -5,45 +5,13 @@ import {
   getCurrency,
   getCurrencyFromGroup,
 } from '@spliit/domain'
-import type { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs'
+import { generateText } from 'ai'
+import { getModel } from './ai'
 import {
   extractAllowedIdFromAIResponse,
   getLastNonEmptyLine,
-  stripThinking,
 } from './ai-response'
 import { env } from './env'
-import { getOpenAIClient } from './openai'
-
-const receiptResponseSchema = {
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    amount: {
-      type: 'number',
-      description: 'Receipt total as a plain number, without currency symbols.',
-    },
-    categoryId: {
-      type: 'string',
-      description: 'The best matching category ID from the allowed list.',
-    },
-    currencyCode: {
-      type: 'string',
-      description:
-        'ISO 4217 currency code printed or implied by the receipt, or an empty string when unreadable.',
-    },
-    date: {
-      type: 'string',
-      description:
-        'Receipt date as yyyy-mm-dd, or an empty string when unreadable.',
-    },
-    title: {
-      type: 'string',
-      description:
-        'Short merchant or expense title, or an empty string when unreadable.',
-    },
-  },
-  required: ['amount', 'categoryId', 'currencyCode', 'date', 'title'],
-} as const
 
 type ParsedReceiptAIResponse = {
   amount: number
@@ -102,11 +70,10 @@ function parseReceiptAIResponse(rawContent: string | null | undefined) {
     }
   }
 
-  const content = stripThinking(rawContent)
-  const jsonResponse = parseReceiptJSONResponse(content)
+  const jsonResponse = parseReceiptJSONResponse(rawContent)
   if (jsonResponse) return jsonResponse
 
-  const responseLine = getLastNonEmptyLine(content)
+  const responseLine = getLastNonEmptyLine(rawContent)
   const [amountString, categoryId, date, titleOrCurrency, ...restParts] =
     responseLine.split(',')
 
@@ -130,21 +97,12 @@ export async function extractExpenseInformationFromImage(
   imageUrl: string,
   groupCurrencyInput: { currency: string; currencyCode?: string | null },
 ) {
-  const openai = getOpenAIClient()
   const categories = DEFAULT_CATEGORIES
   const categoryIds = categories.map((category) => category.id)
   const groupCurrency = getCurrencyFromGroup(groupCurrencyInput)
 
-  const body: ChatCompletionCreateParamsNonStreaming = {
-    model: env.OPENAI_RECEIPT_MODEL,
-    reasoning_effort: 'none',
-    response_format: {
-      type: 'json_schema',
-      json_schema: {
-        name: 'receipt',
-        schema: receiptResponseSchema,
-      },
-    },
+  const { text: rawContent } = await generateText({
+    model: await getModel(env.AI_RECEIPT_MODEL),
     messages: [
       {
         role: 'user',
@@ -165,20 +123,16 @@ export async function extractExpenseInformationFromImage(
                 (category) => formatCategoryForAIPrompt(category),
               )}.
               The group's currency is ${groupCurrency.code || groupCurrency.symbol}; use the receipt total as written and do not convert currencies.
-              Return JSON matching the requested schema. Do not explain. Do not include reasoning. Do not include <think> tags.`,
+              Return exactly one JSON object with these required fields: amount (number), categoryId (string), currencyCode (string), date (string), and title (string). Do not explain.`,
           },
         ],
       },
       {
         role: 'user',
-        content: [{ type: 'image_url', image_url: { url: imageUrl } }],
+        content: [{ type: 'image', image: imageUrl }],
       },
     ],
-  }
-
-  const completion = await openai.chat.completions.create(body)
-
-  const rawContent = completion.choices.at(0)?.message.content
+  })
 
   const parsed = parseReceiptAIResponse(rawContent)
   parsed.categoryId =

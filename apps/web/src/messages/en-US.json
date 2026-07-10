@@ -572,7 +572,10 @@
       "creating": "Creating…",
       "cancel": "Cancel",
       "inviteAfterCreate": "After the group is created, open the Members tab to invite people by email or by shareable link."
-    }
+    },
+    "bulkCategorizeSectionTitle": "Bulk AI tools",
+    "bulkCategorizeSectionDescription": "Run the AI categorizer across many expenses at once. Useful after importing expenses or when many titles are still uncategorized.",
+    "bulkCategorizeButton": "Open bulk categorizer"
   },
   "ExpenseForm": {
     "Income": {
@@ -1503,5 +1506,65 @@
       "createFriendLedger": "Create a friend ledger",
       "showHidden": "Show hidden groups"
     }
+  },
+  "BulkCategorize": {
+    "title": "Bulk categorize",
+    "calibrationTitle": "Step 1 — Calibration",
+    "calibrationDescription": "Each example you confirm becomes ground truth for the AI’s next pass. It may be ready after one round, or ask for more examples.",
+    "roundCount": "Round {round} of {max}",
+    "confidence": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "aiWantsMore": "The AI would like a few more examples. Confirm or correct the suggestions below and run another round.",
+    "aiSaidReady": "The AI feels ready. Move to the preview to commit.",
+    "feedbackTableTitle": "Selected expenses",
+    "emptySelection": "No expenses need review right now. Generate the preview to apply categories across all candidates.",
+    "runCalibration": "Run calibration round",
+    "runAnotherRound": "Run another calibration round",
+    "calibrationError": "Could not run calibration: {message}",
+    "generatePreview": "Generate preview",
+    "previewTitle": "Step 2 — Review & save",
+    "previewDescription": "Edit any row, then save. Confidence flags rows the model is least sure about.",
+    "previewHint": "Showing {shown} of {total} candidates.",
+    "removeAction": "Skip",
+    "targetExceedsCap": "The target set has too many expenses ({count}). Narrow down the dates or process in batches.",
+    "saveAll": "Save {count} changes",
+    "saving": "Saving…",
+    "saved": "{count} expenses were re-categorized.",
+    "applyError": "Could not save the bulk category update: {message}",
+    "noCandidates": "No expenses need categorizing.",
+    "adminsOnly": "Only group admins can run the bulk categorizer.",
+    "description": "Use the AI to suggest categories for all uncategorized expenses at once.",
+    "backToSettings": "Back to settings",
+    "archived": "This group is archived. The bulk categorizer is unavailable.",
+    "requiresFeatureFlag": "This feature requires PUBLIC_ENABLE_CATEGORY_EXTRACT to be enabled.",
+    "previewError": "Could not generate a preview: {message}",
+    "introTitle": "How it works",
+    "loadingCandidates": "Checking uncategorized expenses…",
+    "introDescription": "There are {count} uncategorized expenses ready for review.",
+    "introStepLook": "The AI reviews a broad pool of up to {count} expenses to find the most useful examples.",
+    "introStepReview": "You review and correct up to {count} selected examples so the AI learns this group’s categories.",
+    "introStepPreview": "When the AI has enough signal, it prepares a full review and leaves uncertain expenses uncategorized.",
+    "startCalibration": "Start calibration",
+    "calibrationStartHint": "The AI is choosing useful examples for you to review.",
+    "calibrationReady": "The AI has enough feedback to prepare the full review.",
+    "reviewSample": "Review these examples",
+    "calibrationNoSample": "The AI did not need another sample.",
+    "categorizeSample": "Categorize a sample",
+    "submitReviewedExamples": "Submit reviewed examples",
+    "continueToPreview": "Continue to preview",
+    "back": "Back",
+    "backToCalibration": "Back to calibration",
+    "generatingPreview": "Preparing suggestions…",
+    "noSuggestions": "The AI left every expense uncategorized. You can try again after more calibration.",
+    "previewSummary": "The AI suggested categories for {suggested} of {total} expenses.",
+    "leftUncategorized": "{count} expenses were left uncategorized because the AI was not confident enough.",
+    "retryPreview": "Try preview again",
+    "doneTitle": "Categories saved",
+    "expenseColumn": "Expense",
+    "categoryColumn": "Category",
+    "confidenceColumn": "Confidence"
   }
 }

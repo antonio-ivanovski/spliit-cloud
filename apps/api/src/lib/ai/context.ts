@@ -30,13 +30,13 @@ export type RecentExpenseContext = {
  * Repetition is intentional: frequency in the prompt acts as an implicit
  * weighting signal for the AI.
  *
- * `limit` defaults to env.OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT (50). The
+ * `limit` defaults to env.AI_CATEGORY_RECENT_EXPENSES_LIMIT (50). The
  * function does not trigger any side effects (no recurring-expense
  * materialization) so it is safe to call from batch/backfill jobs.
  */
 export async function getRecentExpenseContext(
   groupId: string,
-  limit: number = env.OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT,
+  limit: number = env.AI_CATEGORY_RECENT_EXPENSES_LIMIT,
 ): Promise<RecentExpenseContext> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },

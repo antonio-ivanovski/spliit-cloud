@@ -30,11 +30,18 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
-    OPENAI_API_KEY: z.string().optional(),
-    OPENAI_BASE_URL: z.string().url().optional(),
-    OPENAI_RECEIPT_MODEL: z.string().optional().default('gpt-5-nano'),
-    OPENAI_CATEGORY_MODEL: z.string().optional().default('gpt-3.5-turbo'),
-    OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT: z.coerce
+    PUBLIC_ENABLE_BULK_CATEGORIZE: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
+    AI_PROVIDER: z
+      .enum(['openai', 'anthropic', 'openai-compatible', 'google'])
+      .default('openai'),
+    AI_API_KEY: z.string().optional(),
+    AI_BASE_URL: z.string().url().optional(),
+    AI_RECEIPT_MODEL: z.string().optional().default('gpt-5-nano'),
+    AI_CATEGORY_MODEL: z.string().optional().default('gpt-5-nano'),
+    AI_CATEGORY_RECENT_EXPENSES_LIMIT: z.coerce
       .number()
       .int()
       .positive()
@@ -109,12 +116,12 @@ const envSchema = z
     if (
       (env.PUBLIC_ENABLE_RECEIPT_EXTRACT ||
         env.PUBLIC_ENABLE_CATEGORY_EXTRACT) &&
-      !env.OPENAI_API_KEY
+      !env.AI_API_KEY
     ) {
       ctx.addIssue({
         code: 'custom',
         message:
-          'If PUBLIC_ENABLE_RECEIPT_EXTRACT or PUBLIC_ENABLE_CATEGORY_EXTRACT is specified, then OPENAI_API_KEY must be specified too',
+          'If PUBLIC_ENABLE_RECEIPT_EXTRACT or PUBLIC_ENABLE_CATEGORY_EXTRACT is specified, then AI_API_KEY must be specified too',
       })
     }
   })

@@ -13,6 +13,13 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
+    features: {
+      get: {
+        useQuery: vi.fn(() => ({
+          data: { enableBulkCategorize: false },
+        })),
+      },
+    },
     groups: {
       getDetails: {
         useQuery: vi.fn(() => ({ data: null, isLoading: false })),

@@ -133,7 +133,7 @@ If you discover a security issue, please follow the responsible disclosure proce
 
 The current project focus is on the cloud account system and the public instance at [spliit.cloud](https://spliit.cloud). Self-hosting is supported but is not the primary development priority at this stage.
 
-Spliit Cloud can be self-hosted with a web frontend, an API service, PostgreSQL, optional S3-compatible storage for expense documents, and optional OpenAI-compatible configuration for receipt scanning and category extraction.
+Spliit Cloud can be self-hosted with a web frontend, an API service, PostgreSQL, optional S3-compatible storage for expense documents, and optional AI-provider configuration for receipt scanning and category extraction.
 
 The simplest local setup uses local Docker containers for PostgreSQL, object storage, and email capture.
 
@@ -228,43 +228,44 @@ is not configured, documents use the default AWS S3 public URL format.
 
 ### Create expense from receipt
 
-You can offer users to create expense by uploading a receipt. This feature relies on an OpenAI-compatible API and a public S3 storage endpoint.
+You can offer users to create expense by uploading a receipt. This feature relies on an AI provider and a public S3 storage endpoint.
 
 To enable the feature:
 
 - You must enable expense documents feature as well (see section above). That might change in the future, but for now we need to store images to make receipt scanning work.
-- Subscribe to an OpenAI-compatible provider and get an API key.
+- Subscribe to an AI provider and get an API key.
 - Update your environment variables with appropriate values:
 
 ```.env
 PUBLIC_ENABLE_RECEIPT_EXTRACT=true
-OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+AI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-The model used for receipt extraction defaults to `gpt-5-nano`. Override it with `OPENAI_RECEIPT_MODEL`.
+The model used for receipt extraction defaults to `gpt-5-nano`. Override it with `AI_RECEIPT_MODEL`.
 
 ### Deduce category from title
 
-You can offer users to automatically deduce the expense category from the title. This feature relies on an OpenAI-compatible API, follow the signup instructions above and configure the following environment variables:
+You can offer users to automatically deduce the expense category from the title. This feature relies on an AI provider; follow the signup instructions above and configure the following environment variables:
 
 ```.env
 PUBLIC_ENABLE_CATEGORY_EXTRACT=true
-OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+AI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-The model used for category extraction defaults to `gpt-3.5-turbo`. Override it with `OPENAI_CATEGORY_MODEL`.
+The model used for category extraction defaults to `gpt-5-nano`. Override it with `AI_CATEGORY_MODEL`.
 
-### Using an OpenAI-compatible provider
+### Choosing an AI provider
 
-Both AI features can use any OpenAI-compatible provider by setting a custom base URL:
+Set `AI_PROVIDER` to select the request protocol. Provider selection is explicit and is never inferred from a model ID:
 
 ```.env
-OPENAI_BASE_URL=https://openrouter.ai/api/v1
-OPENAI_RECEIPT_MODEL=openai/gpt-4o-mini
-OPENAI_CATEGORY_MODEL=openai/gpt-4o-mini
+AI_PROVIDER=openai-compatible
+AI_BASE_URL=https://openrouter.ai/api/v1
+AI_RECEIPT_MODEL=openai/gpt-4o-mini
+AI_CATEGORY_MODEL=openai/gpt-4o-mini
 ```
 
-`OPENAI_BASE_URL` is optional. When unset, the official OpenAI endpoint is used.
+Supported providers are `openai` (Responses API), `anthropic` (Messages API), `openai-compatible` (Chat Completions API), and `google` (Gemini API). `AI_BASE_URL` is optional and must be the API root; the selected SDK adapter appends its endpoint path.
 
 ## Stack
 

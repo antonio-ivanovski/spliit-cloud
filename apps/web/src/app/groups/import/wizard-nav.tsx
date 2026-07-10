@@ -1,4 +1,7 @@
-import { Button } from '@/components/ui/button'
+import {
+  WizardNav as SharedWizardNav,
+  WizardStepHeader,
+} from '@/components/wizard'
 import { useTranslation } from 'react-i18next'
 import {
   type CustomContinueLabelKey,
@@ -24,12 +27,10 @@ export function StepHeader({ step }: { step: ImportStep }) {
   const { t } = useTranslation()
   const stepLabel = t(STEP_HEADER_LABEL_KEYS[step])
   return (
-    <div className="flex flex-col gap-1">
-      <p className="text-sm uppercase tracking-wide text-muted-foreground">
-        {t('Groups.Import.StepHeader.title')}
-      </p>
-      <h1 className="text-2xl font-semibold leading-none">{stepLabel}</h1>
-    </div>
+    <WizardStepHeader
+      eyebrow={t('Groups.Import.StepHeader.title')}
+      title={stepLabel}
+    />
   )
 }
 
@@ -100,32 +101,20 @@ export function WizardNav({
   const showContinue = continueLabel !== undefined
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      {nav.previousStepKey ? (
-        <Button variant="ghost" onClick={onBack} type="button">
-          {backLabel}
-        </Button>
-      ) : (
-        <span />
-      )}
-      {showContinue &&
-        (continueAsFormId ? (
-          <Button
-            type="submit"
-            form={continueAsFormId}
-            disabled={continueDisabled}
-          >
-            {continueLabel}
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            onClick={onContinue}
-            disabled={continueDisabled || !onContinue}
-          >
-            {continueLabel}
-          </Button>
-        ))}
-    </div>
+    <SharedWizardNav
+      {...(nav.previousStepKey && backLabel && onBack
+        ? { back: { label: backLabel, onClick: onBack } }
+        : {})}
+      {...(showContinue && continueLabel
+        ? {
+            continue: {
+              label: continueLabel,
+              onClick: continueAsFormId ? undefined : onContinue,
+              form: continueAsFormId,
+              disabled: continueDisabled,
+            },
+          }
+        : {})}
+    />
   )
 }

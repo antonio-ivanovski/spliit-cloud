@@ -75,99 +75,113 @@ describe('envSchema — development', () => {
   })
 })
 
-describe('envSchema — AI / OpenAI', () => {
-  it('applies default models when OPENAI_RECEIPT_MODEL and OPENAI_CATEGORY_MODEL are absent', async () => {
+describe('envSchema — AI', () => {
+  it('applies default provider and models when AI settings are absent', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.OPENAI_RECEIPT_MODEL).toBe('gpt-5-nano')
-    expect(env.OPENAI_CATEGORY_MODEL).toBe('gpt-3.5-turbo')
+    expect(env.AI_PROVIDER).toBe('openai')
+    expect(env.AI_RECEIPT_MODEL).toBe('gpt-5-nano')
+    expect(env.AI_CATEGORY_MODEL).toBe('gpt-5-nano')
   })
 
-  it('parses custom OPENAI_RECEIPT_MODEL and OPENAI_CATEGORY_MODEL', async () => {
+  it('parses custom provider and models', async () => {
     vi.stubEnv('NODE_ENV', 'development')
-    vi.stubEnv('OPENAI_RECEIPT_MODEL', 'gpt-4o')
-    vi.stubEnv('OPENAI_CATEGORY_MODEL', 'gpt-4o-mini')
+    vi.stubEnv('AI_PROVIDER', 'anthropic')
+    vi.stubEnv('AI_RECEIPT_MODEL', 'claude-haiku-4-5')
+    vi.stubEnv('AI_CATEGORY_MODEL', 'claude-sonnet-4-5')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.OPENAI_RECEIPT_MODEL).toBe('gpt-4o')
-    expect(env.OPENAI_CATEGORY_MODEL).toBe('gpt-4o-mini')
+    expect(env.AI_PROVIDER).toBe('anthropic')
+    expect(env.AI_RECEIPT_MODEL).toBe('claude-haiku-4-5')
+    expect(env.AI_CATEGORY_MODEL).toBe('claude-sonnet-4-5')
   })
 
-  it('applies default OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT of 50 when absent', async () => {
+  it.each(['openai', 'anthropic', 'openai-compatible', 'google'] as const)(
+    'accepts the %s provider',
+    async (provider) => {
+      vi.stubEnv('NODE_ENV', 'development')
+      vi.stubEnv('AI_PROVIDER', provider)
+      vi.resetModules()
+      const { env } = await import('./env')
+      expect(env.AI_PROVIDER).toBe(provider)
+    },
+  )
+
+  it('applies default AI_CATEGORY_RECENT_EXPENSES_LIMIT of 50 when absent', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT).toBe(50)
+    expect(env.AI_CATEGORY_RECENT_EXPENSES_LIMIT).toBe(50)
   })
 
-  it('parses a custom OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT', async () => {
+  it('parses a custom AI_CATEGORY_RECENT_EXPENSES_LIMIT', async () => {
     vi.stubEnv('NODE_ENV', 'development')
-    vi.stubEnv('OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT', '25')
+    vi.stubEnv('AI_CATEGORY_RECENT_EXPENSES_LIMIT', '25')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT).toBe(25)
+    expect(env.AI_CATEGORY_RECENT_EXPENSES_LIMIT).toBe(25)
   })
 
-  it('throws when OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT is not a positive integer', async () => {
+  it('throws when AI_CATEGORY_RECENT_EXPENSES_LIMIT is not a positive integer', async () => {
     vi.stubEnv('NODE_ENV', 'development')
-    vi.stubEnv('OPENAI_CATEGORY_RECENT_EXPENSES_LIMIT', '0')
+    vi.stubEnv('AI_CATEGORY_RECENT_EXPENSES_LIMIT', '0')
     vi.resetModules()
     await expect(import('./env')).rejects.toThrow()
   })
 
-  it('parses a valid OPENAI_BASE_URL', async () => {
+  it('parses a valid AI_BASE_URL', async () => {
     vi.stubEnv('NODE_ENV', 'development')
-    vi.stubEnv('OPENAI_BASE_URL', 'https://openrouter.ai/api/v1')
+    vi.stubEnv('AI_BASE_URL', 'https://openrouter.ai/api/v1')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.OPENAI_BASE_URL).toBe('https://openrouter.ai/api/v1')
+    expect(env.AI_BASE_URL).toBe('https://openrouter.ai/api/v1')
   })
 
-  it('allows OPENAI_BASE_URL to be absent', async () => {
+  it('allows AI_BASE_URL to be absent', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.OPENAI_BASE_URL).toBeUndefined()
+    expect(env.AI_BASE_URL).toBeUndefined()
   })
 
-  it('throws when OPENAI_BASE_URL is an invalid URL', async () => {
+  it('throws when AI_BASE_URL is an invalid URL', async () => {
     vi.stubEnv('NODE_ENV', 'development')
-    vi.stubEnv('OPENAI_BASE_URL', 'not-a-url')
+    vi.stubEnv('AI_BASE_URL', 'not-a-url')
     vi.resetModules()
     await expect(import('./env')).rejects.toThrow()
   })
 
-  it('throws when PUBLIC_ENABLE_RECEIPT_EXTRACT is true but OPENAI_API_KEY is missing', async () => {
+  it('throws when PUBLIC_ENABLE_RECEIPT_EXTRACT is true but AI_API_KEY is missing', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('PUBLIC_ENABLE_RECEIPT_EXTRACT', 'true')
-    // OPENAI_API_KEY intentionally not stubbed.
+    // AI_API_KEY intentionally not stubbed.
     vi.resetModules()
     await expect(import('./env')).rejects.toThrow(
-      /OPENAI_API_KEY must be specified/,
+      /AI_API_KEY must be specified/,
     )
   })
 
-  it('throws when PUBLIC_ENABLE_CATEGORY_EXTRACT is true but OPENAI_API_KEY is missing', async () => {
+  it('throws when PUBLIC_ENABLE_CATEGORY_EXTRACT is true but AI_API_KEY is missing', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('PUBLIC_ENABLE_CATEGORY_EXTRACT', 'true')
-    // OPENAI_API_KEY intentionally not stubbed.
+    // AI_API_KEY intentionally not stubbed.
     vi.resetModules()
     await expect(import('./env')).rejects.toThrow(
-      /OPENAI_API_KEY must be specified/,
+      /AI_API_KEY must be specified/,
     )
   })
 
-  it('parses successfully when both AI feature flags are enabled and OPENAI_API_KEY is set', async () => {
+  it('parses successfully when both AI feature flags are enabled and AI_API_KEY is set', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('PUBLIC_ENABLE_RECEIPT_EXTRACT', 'true')
     vi.stubEnv('PUBLIC_ENABLE_CATEGORY_EXTRACT', 'true')
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key')
+    vi.stubEnv('AI_API_KEY', 'sk-test-key')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.OPENAI_API_KEY).toBe('sk-test-key')
+    expect(env.AI_API_KEY).toBe('sk-test-key')
     // defaults still apply
-    expect(env.OPENAI_RECEIPT_MODEL).toBe('gpt-5-nano')
-    expect(env.OPENAI_CATEGORY_MODEL).toBe('gpt-3.5-turbo')
+    expect(env.AI_RECEIPT_MODEL).toBe('gpt-5-nano')
+    expect(env.AI_CATEGORY_MODEL).toBe('gpt-5-nano')
   })
 })

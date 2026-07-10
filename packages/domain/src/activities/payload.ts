@@ -1,4 +1,5 @@
 import * as z from 'zod'
+import { categoryIdSchema } from '../categories'
 import { conversionSourceSchema } from '../conversion'
 
 export const expenseChangedFields = [
@@ -131,12 +132,45 @@ export type ImportSummaryActivityData = z.infer<
   typeof importSummaryActivityDataSchema
 >
 
+/**
+ * One-line summary of a bulk category reassignment (e.g. the admin
+ * utility that classifies every expense on `general` in one pass). The
+ * feed records a single row per save — instead of one row per
+ * expense — and stores enough metadata for the UI to render an
+ * expandable list of the affected expenses and their previous
+ * categories.
+ */
+export const expenseCategoriesBulkUpdatedRowSchema = z.object({
+  expenseId: z.string().min(1),
+  title: z.string().optional(),
+  fromCategoryId: categoryIdSchema,
+  toCategoryId: categoryIdSchema,
+})
+export type ExpenseCategoriesBulkUpdatedRow = z.infer<
+  typeof expenseCategoriesBulkUpdatedRowSchema
+>
+
+export const expenseCategoriesBulkUpdatedActivityDataSchema = z.object({
+  kind: z.literal('expense_categories_bulk_updated'),
+  summary: z.string().optional(),
+  count: z.number().int().nonnegative(),
+  distinctCategories: z.number().int().nonnegative().optional(),
+  rows: z.array(expenseCategoriesBulkUpdatedRowSchema).max(2000),
+  fromCategoryId: categoryIdSchema,
+  triggeredByAiConfidence: z.boolean().optional(),
+})
+
+export type ExpenseCategoriesBulkUpdatedActivityData = z.infer<
+  typeof expenseCategoriesBulkUpdatedActivityDataSchema
+>
+
 export const activityDataSchema = z.discriminatedUnion('kind', [
   expenseActivityDataSchema,
   groupActivityDataSchema,
   memberActivityDataSchema,
   invitationActivityDataSchema,
   importSummaryActivityDataSchema,
+  expenseCategoriesBulkUpdatedActivityDataSchema,
 ])
 
 export type ActivityData = z.infer<typeof activityDataSchema>

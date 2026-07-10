@@ -257,6 +257,7 @@ const runtimeFeatureFlags = {
   enableExpenseDocuments: false,
   enableReceiptExtract: false,
   enableCategoryExtract: false,
+  enableBulkCategorize: false,
 }
 
 // ── Setup ───────────────────────────────────────────────────────────────

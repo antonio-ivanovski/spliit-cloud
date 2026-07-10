@@ -1,4 +1,5 @@
 import { createTRPCRouter } from '../../../init'
+import { bulkUpdateExpenseCategoriesProcedure } from './bulkUpdateCategories.procedure'
 import { commonCurrenciesProcedure } from './common-currencies.procedure'
 import { createGroupExpenseProcedure } from './create.procedure'
 import { deleteGroupExpenseProcedure } from './delete.procedure'
@@ -13,4 +14,5 @@ export const groupExpensesRouter = createTRPCRouter({
   create: createGroupExpenseProcedure,
   update: updateGroupExpenseProcedure,
   delete: deleteGroupExpenseProcedure,
+  bulkUpdateCategories: bulkUpdateExpenseCategoriesProcedure,
 })

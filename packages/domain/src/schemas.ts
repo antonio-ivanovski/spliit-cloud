@@ -647,6 +647,32 @@ export const expenseApiSchema = z
 
 export type Expense = z.infer<typeof expenseApiSchema>
 
+/**
+ * Input to the admin bulk-categorize apply step. Each row pairs an
+ * expense id with the destination category. The server validates that
+ * the expense is eligible for the bulk operation (still on
+ * `general`, scoped to the group's ledger, non-reimbursement, etc.)
+ * before applying the change in a single transaction.
+ */
+export const bulkUpdateExpenseCategoriesInputSchema = z.object({
+  groupId: z.string().min(1),
+  fromCategoryId: categoryIdSchema.default(categoryIdSchema.options[0]),
+  triggeredByAiConfidence: z.boolean().optional(),
+  changes: z
+    .array(
+      z.object({
+        expenseId: z.string().min(1),
+        categoryId: categoryIdSchema,
+      }),
+    )
+    .min(1)
+    .max(2000),
+})
+
+export type BulkUpdateExpenseCategoriesInput = z.infer<
+  typeof bulkUpdateExpenseCategoriesInputSchema
+>
+
 export type SplittingOptions = {
   // Used for saving default splitting options in localStorage
   splitMode: SplitMode
