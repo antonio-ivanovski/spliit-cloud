@@ -127,16 +127,7 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
     try {
       const json = JSON.parse(raw ?? '{}')
       parsed = calibrationResponseSchema.parse(json)
-      console.info('[bulk-categorize-ai] parsed', {
-        operation: 'bulk-calibration',
-        needsFeedback: parsed.needsFeedback,
-        suggestionCount: parsed.selections.length,
-      })
     } catch (error) {
-      console.warn('[bulk-categorize-ai] invalid response', {
-        operation: 'bulk-calibration',
-        message: error instanceof Error ? error.message : String(error),
-      })
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message:
@@ -219,6 +210,9 @@ export function renderCalibrationUserPrompt(args: {
     '- Choose the most informative representative sample (up to ' +
       BULK_CALIBRATION_SAMPLE_SIZE +
       ' entries) for the admin to review. Do not choose rows merely because they appear first.',
+    '- This is calibration, not the final preview. Keep the sample small and purposeful: choose only enough diverse examples to make a strong final estimate, usually far fewer than the maximum.',
+    '- Even if this pool contains fewer than the maximum sample size, do not return every expense unless each one is needed to cover a distinct pattern. The final preview will classify the full list.',
+    '- Be quick: scan the titles rapidly and stop once you have enough representative variety. Do not analyze every entry.',
     '- For each picked entry, return your best-guess category id (so the admin can correct it quickly).',
     '- On the first round, set needsFeedback=true and return a non-empty sample.',
     '- On later rounds, use prior admin feedback as ground truth. Set needsFeedback=true only when a new sample would materially improve categorization.',

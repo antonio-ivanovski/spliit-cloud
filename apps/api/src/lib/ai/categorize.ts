@@ -110,6 +110,9 @@ const confidenceSchema = z.preprocess(
   z.enum(['high', 'medium', 'low']),
 )
 
+export const BULK_CATEGORIZATION_TIMEOUT_MS = 245_000
+export const BULK_CATEGORIZATION_MAX_RETRIES = 0
+
 /**
  * JSON Schema for a calibration round. The AI returns 0–20
  * representative ids from the supplied pool together with its
@@ -207,7 +210,11 @@ export const bulkPreviewResponseSchema = z.object({
 })
 export type BulkPreviewResponse = z.infer<typeof bulkPreviewResponseSchema>
 
-/** Temporary, intentionally small diagnostics for the bulk AI wizard. */
+/**
+ * Shared AI call for bulk calibration and preview. Keeps the request
+ * bounded with an explicit timeout and no SDK retries so a slow
+ * provider cannot hang the tRPC handler.
+ */
 export async function callBulkCategorizationModel(args: {
   operation: 'bulk-calibration' | 'bulk-preview'
   prompt: {
@@ -220,39 +227,16 @@ export async function callBulkCategorizationModel(args: {
   priorFeedbackCount: number
   round?: number
 }): Promise<string | null | undefined> {
-  const startedAt = Date.now()
-  console.info('[bulk-categorize-ai] request', {
-    operation: args.operation,
-    model: args.prompt.model,
-    candidateCount: args.candidateCount,
-    priorFeedbackCount: args.priorFeedbackCount,
+  const result = await generateText({
+    model: await getModel(args.prompt.model),
     instructions: args.prompt.instructions,
     prompt: args.prompt.prompt,
-    ...(args.round === undefined ? {} : { round: args.round }),
+    reasoning: 'none',
+    maxRetries: BULK_CATEGORIZATION_MAX_RETRIES,
+    timeout: BULK_CATEGORIZATION_TIMEOUT_MS,
+    ...(args.prompt.temperature === undefined
+      ? {}
+      : { temperature: args.prompt.temperature }),
   })
-
-  try {
-    const { text: content } = await generateText({
-      model: await getModel(args.prompt.model),
-      instructions: args.prompt.instructions,
-      prompt: args.prompt.prompt,
-      reasoning: 'none',
-      ...(args.prompt.temperature === undefined
-        ? {}
-        : { temperature: args.prompt.temperature }),
-    })
-    console.info('[bulk-categorize-ai] response', {
-      operation: args.operation,
-      durationMs: Date.now() - startedAt,
-      hasContent: Boolean(content),
-    })
-    return content
-  } catch (error) {
-    console.warn('[bulk-categorize-ai] failed', {
-      operation: args.operation,
-      durationMs: Date.now() - startedAt,
-      message: error instanceof Error ? error.message : String(error),
-    })
-    throw error
-  }
+  return result.text
 }

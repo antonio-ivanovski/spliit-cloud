@@ -130,23 +130,7 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
               )
             : [],
         })
-        console.info('[bulk-categorize-ai] parsed', {
-          operation: 'bulk-preview',
-          suggestionCount: parsed.suggestions.length,
-          confidence: parsed.suggestions.reduce<Record<string, number>>(
-            (counts, suggestion) => {
-              counts[suggestion.confidence] =
-                (counts[suggestion.confidence] ?? 0) + 1
-              return counts
-            },
-            {},
-          ),
-        })
       } catch (error) {
-        console.warn('[bulk-categorize-ai] invalid response', {
-          operation: 'bulk-preview',
-          message: error instanceof Error ? error.message : String(error),
-        })
         // Skip this chunk; the UI shows the surviving rows and
         // the admin can correct the rest manually.
         continue

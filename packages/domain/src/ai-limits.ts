@@ -20,7 +20,7 @@ export const BULK_CALIBRATION_SAMPLE_SIZE = 20
  * representative calibration sample. This is deliberately larger
  * than the displayed sample so the AI can pick informative examples.
  */
-export const BULK_CALIBRATION_CANDIDATE_POOL_SIZE = 200
+export const BULK_CALIBRATION_CANDIDATE_POOL_SIZE = 50
 
 /**
  * The prompt asks the AI to finish calibration within this many rounds.

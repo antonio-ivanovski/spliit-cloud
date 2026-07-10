@@ -24,6 +24,10 @@ describe('renderCalibrationUserPrompt', () => {
     )
     expect(prompt).toContain('On the first round, set needsFeedback=true')
     expect(prompt).toContain('within 3 rounds')
+    expect(prompt).toContain('This is calibration, not the final preview.')
+    expect(prompt).toContain(
+      'do not return every expense unless each one is needed to cover a distinct pattern',
+    )
     expect(prompt).toContain('expense-1')
     expect(prompt).not.toContain('should be truncated before it reaches')
   })
