@@ -58,6 +58,35 @@ function stubGroupContext(memberRole: 'ADMIN' | 'MEMBER' = 'ADMIN') {
 }
 
 describe('importLinksRouter.link — email-based lookup', () => {
+  it('rejects member linking for friend ledgers', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      name: '',
+      information: null,
+      createdAt: new Date(),
+      archived: false,
+      groupType: 'FRIEND',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currency: '€', currencyCode: 'EUR' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      id: 'gm-admin',
+      groupId: 'grp-1',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+
+    const caller = importLinksRouter.createCaller(makeCaller('acct-admin'))
+    await expect(
+      caller.link({
+        groupId: 'grp-1',
+        ledgerParticipantId: 'lp-1',
+        accountId: 'acct-target',
+      }),
+    ).rejects.toThrow(/friend ledger member management is not allowed/i)
+  })
+
   it('looks up the account by email and links it to the unlinked participant', async () => {
     stubGroupContext()
     // First call (loadGroupContext) returns the admin member; the

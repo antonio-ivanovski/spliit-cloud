@@ -861,6 +861,47 @@ describe('importGroup (tRPC caller)', () => {
     ).rejects.toThrow(/Only admins can import/i)
   })
 
+  it('rejects imports into a friend ledger even for an admin', async () => {
+    const caller = groupsRouter.createCaller({
+      auth: {
+        session: { id: 'sess-1' },
+        user: {
+          id: 'acct-admin',
+          email: 'alice@example.com',
+          emailVerified: true,
+          name: 'Alice',
+        },
+      },
+    } as never)
+
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'friend-group',
+      name: '',
+      information: null,
+      archived: false,
+      createdAt: new Date(),
+      groupType: 'FRIEND',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currency: '€', currencyCode: 'EUR' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      id: 'gm-admin',
+      groupId: 'friend-group',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+      ledgerParticipant: { id: 'lp-1', ledgerId: 'ledger-1' },
+    } as never)
+
+    await expect(
+      caller.import({
+        targetGroupId: 'friend-group',
+        participants: [...baseParticipants],
+        expenses: [],
+      }),
+    ).rejects.toThrow(/friend ledger imports are not supported/i)
+  })
+
   it('rejects duplicate source participant names via Zod superRefine', async () => {
     const caller = groupsRouter.createCaller({
       auth: {

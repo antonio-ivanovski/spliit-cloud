@@ -1,4 +1,4 @@
-import { GroupRole } from '@spliit/db'
+import { GroupRole, GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
@@ -96,7 +96,7 @@ export const importLinksRouter = createTRPCRouter({
         },
         ctx,
       }) => {
-        const { member } = await loadGroupContext({
+        const { group, member } = await loadGroupContext({
           groupId,
           accountId: ctx.auth.user.id,
         })
@@ -104,6 +104,12 @@ export const importLinksRouter = createTRPCRouter({
           throw new TRPCError({
             code: 'FORBIDDEN',
             message: 'Only admins can link unlinked participants',
+          })
+        }
+        if (group.groupType === GroupType.FRIEND) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Friend ledger member management is not allowed',
           })
         }
 

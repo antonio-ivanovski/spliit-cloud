@@ -2,6 +2,7 @@ import {
   GroupInvitationStatus,
   GroupMemberStatus,
   GroupRole,
+  GroupType,
   LedgerParticipantKind,
   prisma,
   type Prisma,
@@ -26,7 +27,12 @@ export async function linkUnlinkedParticipantToAccount(opts: {
     const participant = await tx.ledgerParticipant.findUnique({
       where: { id: ledgerParticipantId },
       include: {
-        ledger: { select: { id: true, group: { select: { id: true } } } },
+        ledger: {
+          select: {
+            id: true,
+            group: { select: { id: true, groupType: true } },
+          },
+        },
       },
     })
     if (!participant) {
@@ -34,6 +40,9 @@ export async function linkUnlinkedParticipantToAccount(opts: {
     }
     if (participant.ledger.group?.id !== groupId) {
       throw new Error('Ledger participant does not belong to this group')
+    }
+    if (participant.ledger.group?.groupType === GroupType.FRIEND) {
+      throw new Error('Cannot add members to a friend ledger')
     }
     if (participant.kind !== LedgerParticipantKind.UNLINKED_PARTICIPANT) {
       throw new Error('Ledger participant is not unlinked')

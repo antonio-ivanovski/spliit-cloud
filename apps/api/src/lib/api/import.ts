@@ -1,6 +1,7 @@
 import {
   GroupMemberStatus,
   GroupRole,
+  GroupType,
   LedgerParticipantKind,
   prisma,
 } from '@spliit/db'
@@ -90,13 +91,16 @@ export async function importGroup(
     if (input.targetGroupId) {
       const existing = await tx.group.findUnique({
         where: { id: input.targetGroupId },
-        select: { id: true, ledgerId: true, archived: true },
+        select: { id: true, ledgerId: true, archived: true, groupType: true },
       })
       if (!existing) {
         throw new Error('Target group not found')
       }
       if (existing.archived) {
         throw new Error('Cannot import into an archived group')
+      }
+      if (existing.groupType === GroupType.FRIEND) {
+        throw new Error('Cannot import into a friend ledger')
       }
       if (!existing.ledgerId) {
         throw new Error('Target group is missing its ledger')

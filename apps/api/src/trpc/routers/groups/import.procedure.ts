@@ -1,4 +1,4 @@
-import { GroupRole } from '@spliit/db'
+import { GroupRole, GroupType } from '@spliit/db'
 import { expenseApiSchema, groupFormSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
@@ -82,7 +82,7 @@ export const importGroupProcedure = protectedProcedure
   )
   .mutation(async ({ input, ctx }) => {
     if (input.targetGroupId) {
-      const { member } = await loadGroupContext({
+      const { group, member } = await loadGroupContext({
         groupId: input.targetGroupId,
         accountId: ctx.auth.user.id,
       })
@@ -90,6 +90,12 @@ export const importGroupProcedure = protectedProcedure
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'Only admins can import into an existing group',
+        })
+      }
+      if (group.groupType === GroupType.FRIEND) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Friend ledger imports are not supported',
         })
       }
     }

@@ -50,7 +50,7 @@ export function DestinationStep({
     includeArchived: false,
   })
   const groups = (data?.groups ?? []).filter(
-    (g) => g.currentMemberRole === 'ADMIN',
+    (g) => g.currentMemberRole === 'ADMIN' && g.groupType !== 'FRIEND',
   )
 
   // EXISTING_GROUP mode transitions via clicking a group card, so the

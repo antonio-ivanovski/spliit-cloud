@@ -36,9 +36,8 @@ export function AccountAvatar({
     <Avatar
       className={cn(
         variant === 'stack'
-          ? 'ring-2 ring-background'
-          : 'ring-1 ring-primary/20',
-        'bg-primary/15',
+          ? 'bg-background ring-2 ring-background'
+          : 'bg-primary/15 ring-1 ring-primary/20',
         sizeClasses[size],
         className,
       )}
