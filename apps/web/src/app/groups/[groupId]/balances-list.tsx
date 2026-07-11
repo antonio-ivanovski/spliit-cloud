@@ -1,9 +1,15 @@
+import { ParticipantAvatar } from '@/components/participant-avatar'
 import { useLocale } from '@/i18n/react'
+import type { AccountIdentity } from '@/lib/account'
 import type { Balances } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { cn, formatCurrency } from '@/lib/utils'
 
-type Participant = { id: string; name: string }
+type Participant = {
+  id: string
+  name: string
+  account?: AccountIdentity | null
+}
 
 type Props = {
   balances: Balances
@@ -28,7 +34,17 @@ export function BalancesList({ balances, participants, currency }: Props) {
             className={cn('flex min-w-0', isLeft || 'flex-row-reverse')}
             data-testid={`balance-row-${participant.name}`}
           >
-            <div className={cn('w-1/2 min-w-0 p-2', isLeft && 'text-right')}>
+            <div
+              className={cn(
+                'w-1/2 min-w-0 p-2 flex items-center gap-2',
+                isLeft && 'justify-end',
+              )}
+            >
+              <ParticipantAvatar
+                participant={participant}
+                size="md"
+                className={cn('shrink-0', isLeft && 'order-last')}
+              />
               <span className="block truncate">{participant.name}</span>
             </div>
             <div

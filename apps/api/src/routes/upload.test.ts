@@ -3,9 +3,12 @@ import { env } from '../lib/env'
 import '../test/mocks'
 import { authState, prismaMock } from '../test/state'
 import {
+  createProfileImageUploadUrl,
   createUploadUrl,
   deleteS3Object,
+  isProfileImageUrlForAccount,
   promoteUploadedDocument,
+  validateProfileImageUpload,
 } from './upload'
 
 function makeRequest(): Request {
@@ -35,6 +38,9 @@ vi.mock('@aws-sdk/client-s3', () => ({
     return input
   }),
   DeleteObjectCommand: vi.fn(function (input: unknown) {
+    return input
+  }),
+  HeadObjectCommand: vi.fn(function (input: unknown) {
     return input
   }),
 }))
@@ -265,6 +271,71 @@ describe('createUploadUrl', () => {
     expect(body.fileUrl).toMatch(/\.pdf$/)
     expect(body.key).toMatch(/^tmp\/document-/)
     env.S3_UPLOAD_PUBLIC_URL = undefined
+  })
+})
+
+describe('profile image uploads', () => {
+  it('requires an authenticated account', async () => {
+    authState.session = null
+
+    const response = await createProfileImageUploadUrl(makeRequest(), 100)
+
+    expect(response.status).toBe(401)
+  })
+
+  it('issues an owned, versioned direct upload URL', async () => {
+    authState.session = {
+      user: { id: 'acct-1' },
+      session: { id: 'sess-1' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      email: 'alice@example.com',
+    })
+
+    const response = await createProfileImageUploadUrl(makeRequest(), 100)
+
+    expect(response.status).toBe(200)
+    const body = await response.json()
+    expect(body.uploadUrl).toBe('https://s3.example.com/presigned-upload-url')
+    expect(body.fileUrl).toMatch(/profile-images\/acct-1\/.+\.jpg$/)
+    expect(isProfileImageUrlForAccount(body.fileUrl, 'acct-1')).toBe(true)
+    expect(isProfileImageUrlForAccount(body.fileUrl, 'acct-2')).toBe(false)
+  })
+
+  it('rejects a declared file larger than 512 KB', async () => {
+    authState.session = {
+      user: { id: 'acct-1' },
+      session: { id: 'sess-1' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      email: 'alice@example.com',
+    })
+
+    const response = await createProfileImageUploadUrl(
+      makeRequest(),
+      513 * 1024,
+    )
+
+    expect(response.status).toBe(400)
+  })
+
+  it('validates the stored object metadata before accepting it', async () => {
+    mockS3Client.send.mockResolvedValueOnce({
+      ContentType: 'image/jpeg',
+      ContentLength: 100,
+    })
+    const url =
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/profile-images/acct-1/avatar.jpg'
+
+    await expect(validateProfileImageUpload(url, 'acct-1')).resolves.toBe(true)
+
+    mockS3Client.send.mockResolvedValueOnce({
+      ContentType: 'image/jpeg',
+      ContentLength: 513 * 1024,
+    })
+    await expect(validateProfileImageUpload(url, 'acct-1')).resolves.toBe(false)
   })
 })
 

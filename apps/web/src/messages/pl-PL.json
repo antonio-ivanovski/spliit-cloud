@@ -1392,7 +1392,17 @@
       "nameRequired": "Wprowadź nazwę wyświetlaną.",
       "nameTooShort": "Nazwa musi mieć co najmniej 2 znaki.",
       "nameTooLong": "Nazwa może mieć maksymalnie 50 znaków.",
-      "generic": "Coś poszło nie tak. Spróbuj ponownie."
+      "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "imageUpload": "Nie udało się zaktualizować zdjęcia profilowego. Spróbuj ponownie."
+    },
+    "image": {
+      "label": "Zdjęcie profilowe",
+      "help": "Wybierz zdjęcie, aby natychmiast je zaktualizować. Bez niego wyświetlane są Twoje inicjały.",
+      "choose": "Wybierz zdjęcie",
+      "uploading": "Przesyłanie…",
+      "updated": "Zdjęcie profilowe zaktualizowane.",
+      "remove": "Usuń zdjęcie",
+      "removed": "Zdjęcie profilowe usunięte."
     }
   },
   "Activities": {

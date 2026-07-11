@@ -15,10 +15,18 @@ export const statsPeriods = [
 
 export type StatsPeriod = (typeof statsPeriods)[number]
 
+type StatsParticipant = {
+  id: string
+  name?: string
+  account?: { id: string; name: string; image: string | null } | null
+}
+
 export type StatsExpense = BalanceExpense & {
   expenseDate: Date
   categoryId: CategoryId
   isReimbursement: boolean
+  paidByList: Array<{ shares: number; participant: StatsParticipant }>
+  paidFor: Array<{ shares: number; participant: StatsParticipant }>
 }
 
 type Granularity = 'DAY' | 'WEEK' | 'MONTH'
@@ -226,6 +234,10 @@ export function buildGroupStatsDashboard(
   })
   const categoryTotals = new Map<CategoryId, number>()
   const participantNames = new Map<string, string>()
+  const participantAccounts = new Map<
+    string,
+    { id: string; name: string; image: string | null }
+  >()
 
   for (const expense of selectedExpenses) {
     categoryTotals.set(
@@ -237,6 +249,10 @@ export function buildGroupStatsDashboard(
         participant.participant.id,
         participant.participant.name ?? '',
       )
+      const account = participant.participant.account
+      if (account) {
+        participantAccounts.set(participant.participant.id, account)
+      }
     }
   }
 
@@ -305,6 +321,7 @@ export function buildGroupStatsDashboard(
       .map(([participantId, balance]) => ({
         participantId,
         name: participantNames.get(participantId) ?? '',
+        account: participantAccounts.get(participantId) ?? null,
         amount: balance.paidFor,
         percentage: selectedTotal === 0 ? 0 : balance.paidFor / selectedTotal,
       }))

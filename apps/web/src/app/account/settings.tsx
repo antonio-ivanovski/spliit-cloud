@@ -1,3 +1,4 @@
+import { AccountAvatar } from '@/components/account-avatar'
 import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,11 +11,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
+import { prepareProfileImage } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 /**
@@ -44,25 +46,35 @@ function AccountSettingsContent() {
   const name = dirtyName ?? account?.name ?? ''
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+
+  async function refreshAccount() {
+    // Bust better-auth's cookie-cached session so the account menu
+    // (and anywhere else reading the session) updates immediately.
+    await refetch({ query: { disableCookieCache: true } })
+    // Invalidate every cached tRPC response that resolves the
+    // account's display name through `Account.name` — the previous
+    // snapshot is now stale. This covers the account menu, group
+    // lists, group detail (participants), members, expenses, balances,
+    // activity feed, invitations, and stats.
+    await Promise.all([
+      utils.account.invalidate(),
+      utils.groups.invalidate(),
+      utils.invitations.invalidate(),
+    ])
+  }
 
   const updateProfile = trpc.account.updateProfile.useMutation({
     onSuccess: async () => {
-      // Bust better-auth's cookie-cached session so the account menu
-      // (and anywhere else reading the session) updates immediately.
-      await refetch({ query: { disableCookieCache: true } })
-      // Invalidate every cached tRPC response that resolves the
-      // account's display name through `Account.name` — the previous
-      // snapshot is now stale. This covers the account menu, group
-      // lists, group detail (participants), members, expenses, balances,
-      // activity feed, invitations, and stats.
-      await Promise.all([
-        utils.account.invalidate(),
-        utils.groups.invalidate(),
-        utils.invitations.invalidate(),
-      ])
+      await refreshAccount()
       toast({ description: t('success') })
     },
   })
+  const removeProfileImage = trpc.account.removeProfileImage.useMutation({
+    onSuccess: refreshAccount,
+  })
+  const setProfileImage = trpc.account.setProfileImage.useMutation()
 
   // `name` is derived from `dirtyName ?? account?.name` so the input
   // automatically reflects the server-side value when the account loads
@@ -113,6 +125,52 @@ function AccountSettingsContent() {
     }
   }
 
+  async function handleImageChange(file: File) {
+    setError(null)
+    setIsUploadingImage(true)
+    try {
+      const prepared = await prepareProfileImage(file)
+      const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
+      const presignResponse = await fetch(
+        `${apiUrl}/uploads/profile-image/presign`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ fileSize: prepared.size }),
+        },
+      )
+      if (!presignResponse.ok) throw new Error('Could not create upload URL')
+      const { uploadUrl, fileUrl } = (await presignResponse.json()) as {
+        uploadUrl: string
+        fileUrl: string
+      }
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'image/jpeg' },
+        body: prepared,
+      })
+      if (!uploadResponse.ok) throw new Error('Upload failed')
+      await setProfileImage.mutateAsync({ fileUrl })
+      await refreshAccount()
+      toast({ description: t('image.updated') })
+    } catch {
+      setError(t('errors.imageUpload'))
+    } finally {
+      setIsUploadingImage(false)
+    }
+  }
+
+  async function handleRemoveImage() {
+    setError(null)
+    try {
+      await removeProfileImage.mutateAsync()
+      toast({ description: t('image.removed') })
+    } catch {
+      setError(t('errors.imageUpload'))
+    }
+  }
+
   const isDirty = name.trim() !== (account.name ?? '')
 
   return (
@@ -137,6 +195,51 @@ function AccountSettingsContent() {
         </CardHeader>
         <CardContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <div className="flex items-center gap-4 rounded-lg border border-dashed border-primary/20 bg-primary/3 p-3">
+              <AccountAvatar account={account} size="xl" />
+              <div className="min-w-0 flex-1">
+                <p className="font-medium text-sm">{t('image.label')}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {t('image.help')}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept="image/*,.heic,.heif"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0]
+                      if (file) void handleImageChange(file)
+                      event.target.value = ''
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => imageInputRef.current?.click()}
+                    disabled={isUploadingImage || removeProfileImage.isPending}
+                  >
+                    {isUploadingImage
+                      ? t('image.uploading')
+                      : t('image.choose')}
+                  </Button>
+                  {account.image && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => void handleRemoveImage()}
+                      disabled={
+                        isUploadingImage || removeProfileImage.isPending
+                      }
+                    >
+                      {t('image.remove')}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
             <div className="grid gap-1.5">
               <Label htmlFor="account-settings-name">{t('nameLabel')}</Label>
               <Input

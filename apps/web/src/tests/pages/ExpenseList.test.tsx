@@ -114,8 +114,20 @@ function setDefaultGroup() {
       currency: 'EUR',
       currencyCode: 'EUR',
       participants: [
-        { id: 'lp1', name: 'Alice', pending: false, unlinked: false },
-        { id: 'lp2', name: 'Bob', pending: false, unlinked: false },
+        {
+          id: 'lp1',
+          name: 'Alice',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
+        {
+          id: 'lp2',
+          name: 'Bob',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
       ],
     },
     currentLedgerParticipantId: 'lp1',
@@ -188,7 +200,13 @@ describe('ExpenseList', () => {
         currency: 'EUR',
         currencyCode: 'EUR',
         participants: [
-          { id: 'lp1', name: 'Alice', pending: false, unlinked: false },
+          {
+            id: 'lp1',
+            name: 'Alice',
+            account: null,
+            pending: false,
+            unlinked: false,
+          },
         ],
       },
       currentLedgerParticipantId: 'lp1',
@@ -214,7 +232,13 @@ describe('ExpenseList', () => {
         currency: 'EUR',
         currencyCode: 'EUR',
         participants: [
-          { id: 'lp1', name: 'Alice', pending: false, unlinked: false },
+          {
+            id: 'lp1',
+            name: 'Alice',
+            account: null,
+            pending: false,
+            unlinked: false,
+          },
         ],
       },
       currentLedgerParticipantId: null,
@@ -356,7 +380,13 @@ describe('ExpenseList', () => {
         currency: 'EUR',
         currencyCode: 'EUR',
         participants: [
-          { id: 'lp1', name: 'Alice', pending: false, unlinked: false },
+          {
+            id: 'lp1',
+            name: 'Alice',
+            account: null,
+            pending: false,
+            unlinked: false,
+          },
         ],
       },
       currentLedgerParticipantId: null,

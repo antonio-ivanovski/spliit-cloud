@@ -1,3 +1,4 @@
+import { AccountAvatar } from '@/components/account-avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,7 +21,12 @@ import { badgeVariantForRole, formatDate, roleLabel } from './members-hooks'
 
 type Member = {
   id: string
-  account?: { id: string; name?: string; email?: string } | null
+  account?: {
+    id: string
+    name?: string
+    email?: string
+    image?: string | null
+  } | null
   role: 'ADMIN' | 'MEMBER'
   joinedAt?: Date | string | null
 }
@@ -77,6 +83,13 @@ export function MemberListCard({
                   key={member.id}
                   className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
                 >
+                  {member.account && (
+                    <AccountAvatar
+                      account={member.account}
+                      size="lg"
+                      className="mt-0.5"
+                    />
+                  )}
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-medium text-foreground truncate">

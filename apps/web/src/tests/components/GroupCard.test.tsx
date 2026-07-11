@@ -98,28 +98,31 @@ describe('GroupCard — friend-ledger behavior', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', '/groups/friend-1')
   })
 
-  it('shows an initials avatar for FRIEND cards (first letter of displayName)', () => {
+  it('shows a friend avatar for FRIEND cards', () => {
     render(
       <GroupCard
-        group={makeFriendGroup({ displayName: 'Alice' })}
+        group={makeFriendGroup({
+          displayName: 'Alice',
+          friendAccount: { id: 'acct-bob', name: 'Alice', image: null },
+        })}
         onToggleStar={() => {}}
         onToggleHidden={() => {}}
       />,
     )
-    // The initials avatar is rendered with the first letter
-    const avatar = screen.getByText('A')
-    expect(avatar).toBeInTheDocument()
+    expect(screen.getByText('A')).toBeInTheDocument()
   })
 
-  it('falls back to "?" for an empty displayName avatar', () => {
+  it('shows a question-mark fallback when the friend has no name', () => {
     render(
       <GroupCard
-        group={makeFriendGroup({ displayName: '' })}
+        group={makeFriendGroup({
+          displayName: '',
+          friendAccount: { id: 'acct-bob', name: '', image: null },
+        })}
         onToggleStar={() => {}}
         onToggleHidden={() => {}}
       />,
     )
-    // Empty displayName renders the "?" fallback
     expect(screen.getByText('?')).toBeInTheDocument()
   })
 

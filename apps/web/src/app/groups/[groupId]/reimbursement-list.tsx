@@ -1,12 +1,18 @@
 import Link from '@/components/link'
+import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
+import type { AccountIdentity } from '@/lib/account'
 import type { Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 import { Trans, useTranslation } from 'react-i18next'
 
-type Participant = { id: string; name: string }
+type Participant = {
+  id: string
+  name: string
+  account?: AccountIdentity | null
+}
 
 type Props = {
   reimbursements: Reimbursement[]
@@ -39,23 +45,41 @@ export function ReimbursementList({
   return (
     <div className="text-sm" data-testid="reimbursements-list">
       {reimbursements.map((reimbursement) => {
-        const fromName = getParticipant(reimbursement.from)?.name ?? ''
-        const toName = getParticipant(reimbursement.to)?.name ?? ''
+        const from = getParticipant(reimbursement.from)
+        const to = getParticipant(reimbursement.to)
+        const fromName = from?.name ?? ''
+        const toName = to?.name ?? ''
         return (
           <div
             className="py-4 flex min-w-0 justify-between gap-2"
             key={`${reimbursement.from}-${reimbursement.to}`}
             data-testid={`reimbursement-row-${fromName}-${toName}`}
           >
-            <div className="flex min-w-0 flex-1 flex-col gap-1 items-start sm:flex-row sm:items-baseline sm:gap-4">
-              <div className="min-w-0 break-words">
-                <Trans
-                  i18nKey="Balances.Reimbursements.owes"
-                  values={{ from: fromName, to: toName }}
-                  components={{
-                    strong: <strong className="break-all" />,
-                  }}
-                />
+            <div className="flex min-w-0 flex-1 flex-col gap-1 items-start sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex items-center gap-2 min-w-0">
+                {from && (
+                  <ParticipantAvatar
+                    participant={from}
+                    size="sm"
+                    className="shrink-0"
+                  />
+                )}
+                <span className="min-w-0">
+                  <Trans
+                    i18nKey="Balances.Reimbursements.owes"
+                    values={{ from: fromName, to: toName }}
+                    components={{
+                      strong: <strong className="break-all" />,
+                    }}
+                  />
+                </span>
+                {to && (
+                  <ParticipantAvatar
+                    participant={to}
+                    size="sm"
+                    className="shrink-0"
+                  />
+                )}
               </div>
               <Button variant="link" asChild className="-mx-4 -my-3 shrink-0">
                 <Link

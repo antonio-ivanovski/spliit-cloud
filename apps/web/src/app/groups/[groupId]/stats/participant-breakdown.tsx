@@ -1,3 +1,4 @@
+import { ParticipantAvatar } from '@/components/participant-avatar'
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
@@ -28,9 +29,14 @@ export function ParticipantBreakdown({ data, currency }: Props) {
         {data.participants.slice(0, 8).map((participant, index) => (
           <div key={participant.participantId}>
             <div className="mb-1.5 flex items-center gap-2 text-sm">
-              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
-                {participant.name.slice(0, 1).toUpperCase()}
-              </span>
+              <ParticipantAvatar
+                participant={{
+                  id: participant.participantId,
+                  name: participant.name,
+                  account: participant.account,
+                }}
+                size="lg"
+              />
               <span className="min-w-0 flex-1 truncate">
                 {participant.name}
               </span>

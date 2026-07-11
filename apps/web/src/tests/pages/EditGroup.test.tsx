@@ -90,8 +90,20 @@ function setFriendGroup() {
       groupType: 'FRIEND',
       friendPairKey: 'k1',
       participants: [
-        { id: 'lp1', name: 'Alice', pending: false, unlinked: false },
-        { id: 'lp2', name: 'Bob', pending: false, unlinked: false },
+        {
+          id: 'lp1',
+          name: 'Alice',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
+        {
+          id: 'lp2',
+          name: 'Bob',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
       ],
     },
     displayName: 'Alice & Bob',
@@ -149,7 +161,13 @@ describe('EditGroup', () => {
         groupType: 'GROUP',
         friendPairKey: null,
         participants: [
-          { id: 'lp1', name: 'Alice', pending: false, unlinked: false },
+          {
+            id: 'lp1',
+            name: 'Alice',
+            account: null,
+            pending: false,
+            unlinked: false,
+          },
         ],
       },
       displayName: 'Regular Group',

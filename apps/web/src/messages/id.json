@@ -1392,7 +1392,17 @@
       "nameRequired": "Masukkan nama tampilan.",
       "nameTooShort": "Nama harus minimal 2 karakter.",
       "nameTooLong": "Nama harus maksimal 50 karakter.",
-      "generic": "Terjadi kesalahan. Silakan coba lagi."
+      "generic": "Terjadi kesalahan. Silakan coba lagi.",
+      "imageUpload": "Tidak dapat memperbarui foto profil. Silakan coba lagi."
+    },
+    "image": {
+      "label": "Foto profil",
+      "help": "Pilih foto untuk langsung memperbaruinya. Jika tidak ada foto, inisial Anda akan ditampilkan.",
+      "choose": "Pilih foto",
+      "uploading": "Mengunggah…",
+      "updated": "Foto profil diperbarui.",
+      "remove": "Hapus foto",
+      "removed": "Foto profil dihapus."
     }
   },
   "Activities": {

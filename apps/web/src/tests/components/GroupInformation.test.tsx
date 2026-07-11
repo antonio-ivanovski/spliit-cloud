@@ -56,7 +56,13 @@ const mockGroup = {
     updatedAt: new Date('2025-01-01'),
   },
   participants: [
-    { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+    {
+      id: 'lp-1',
+      name: 'Alice',
+      account: null,
+      pending: false,
+      unlinked: false,
+    },
   ],
   members: [],
   invitations: [],

@@ -1392,7 +1392,17 @@
       "nameRequired": "Anna näyttönimi.",
       "nameTooShort": "Nimen on oltava vähintään 2 merkkiä.",
       "nameTooLong": "Nimi voi olla enintään 50 merkkiä.",
-      "generic": "Jotain meni pieleen. Yritä uudelleen."
+      "generic": "Jotain meni pieleen. Yritä uudelleen.",
+      "imageUpload": "Profiilikuvaa ei voitu päivittää. Yritä uudelleen."
+    },
+    "image": {
+      "label": "Profiilikuva",
+      "help": "Valitse kuva päivittääksesi sen heti. Ilman kuvaa näytetään nimikirjaimesi.",
+      "choose": "Valitse kuva",
+      "uploading": "Lähetetään…",
+      "updated": "Profiilikuva päivitetty.",
+      "remove": "Poista kuva",
+      "removed": "Profiilikuva poistettu."
     }
   },
   "Activities": {

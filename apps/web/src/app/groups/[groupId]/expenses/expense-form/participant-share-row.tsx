@@ -1,5 +1,7 @@
+import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { FormControl, FormItem, FormLabel } from '@/components/ui/form'
+import type { AccountIdentity } from '@/lib/account'
 import { cn } from '@/lib/utils'
 import type { ReactNode } from 'react'
 
@@ -20,6 +22,7 @@ export function ParticipantShareRow({
     name: string
     pending?: boolean
     unlinked?: boolean
+    account?: AccountIdentity | null
   }
   checked: boolean
   onCheckedChange: (next: boolean) => void
@@ -68,6 +71,11 @@ export function ParticipantShareRow({
           </FormControl>
         )}
         <FormLabel className="text-sm font-normal min-w-0 flex-1 flex items-center">
+          <ParticipantAvatar
+            participant={participant}
+            size="sm"
+            className="mr-2 shrink-0"
+          />
           <span className="min-w-0 truncate">{participant.name}</span>
           {pendingLabel != null && (
             <span className="shrink-0">{pendingLabel}</span>

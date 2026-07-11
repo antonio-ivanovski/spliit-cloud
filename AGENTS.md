@@ -23,8 +23,11 @@ to regenerate without running any consumer task (rare).
 Other commands:
 
 ```bash
-bun check-types
-bun check-formatting
+bun lint                         # ESLint
+bun check-types                  # TypeScript type-checking
+bun check-formatting             # Prettier formatting check
+bun check-formatting --write     # auto-fix formatting
+bun i18n check                   # audit translations
 bun run test                     # Vitest unit tests through turbo
 bun test-e2e                     # Playwright; starts web/API via config
 bun test:integration             # Real-DB integration tests (API + web)

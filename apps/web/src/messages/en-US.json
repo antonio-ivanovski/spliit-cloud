@@ -474,7 +474,17 @@
       "nameRequired": "Enter a display name.",
       "nameTooShort": "Name must be at least 2 characters.",
       "nameTooLong": "Name must be at most 50 characters.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "imageUpload": "Could not update your profile photo. Please try again."
+    },
+    "image": {
+      "label": "Profile photo",
+      "help": "Choose a photo to update it immediately. Without one, your initials are shown.",
+      "choose": "Choose photo",
+      "uploading": "Uploading…",
+      "updated": "Profile photo updated.",
+      "remove": "Remove photo",
+      "removed": "Profile photo removed."
     }
   },
   "CompleteProfile": {

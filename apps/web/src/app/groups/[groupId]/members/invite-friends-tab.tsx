@@ -1,3 +1,4 @@
+import { AccountAvatar } from '@/components/account-avatar'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -15,6 +16,7 @@ type Friend = {
   accountId: string
   name: string
   email: string
+  image?: string | null
   sharedGroupCount: number
   isMember: boolean
   isPendingInvite: boolean
@@ -72,6 +74,14 @@ export function InviteFriendsTab({
                     disabled={f.isMember || f.isPendingInvite}
                   >
                     <span className="flex items-center gap-2">
+                      <AccountAvatar
+                        account={{
+                          id: f.accountId,
+                          image: f.image,
+                          name: f.name,
+                        }}
+                        size="sm"
+                      />
                       <span>{f.name}</span>
                       <span className="text-xs text-muted-foreground">
                         {f.email}

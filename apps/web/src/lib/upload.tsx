@@ -4,6 +4,7 @@ import { useRef } from 'react'
 
 const MAX_DIMENSION = 2560
 const JPEG_QUALITY = 0.8
+const PROFILE_IMAGE_DIMENSION = 512
 const HEIC_TYPES = new Set(['image/heic', 'image/heif'])
 
 export async function getImageData(file: File) {
@@ -91,6 +92,39 @@ export async function resizeImage(file: File): Promise<ResizeResult> {
     width,
     height,
   }
+}
+
+export async function prepareProfileImage(file: File): Promise<File> {
+  const decoded = HEIC_TYPES.has(file.type) ? await decodeHeic(file) : file
+  const img = await loadImage(decoded)
+  const sourceSize = Math.min(img.naturalWidth, img.naturalHeight)
+  if (!sourceSize) throw new Error('Cannot read image dimensions')
+
+  const canvas = document.createElement('canvas')
+  canvas.width = PROFILE_IMAGE_DIMENSION
+  canvas.height = PROFILE_IMAGE_DIMENSION
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('Canvas is unavailable')
+  ctx.drawImage(
+    img,
+    Math.floor((img.naturalWidth - sourceSize) / 2),
+    Math.floor((img.naturalHeight - sourceSize) / 2),
+    sourceSize,
+    sourceSize,
+    0,
+    0,
+    PROFILE_IMAGE_DIMENSION,
+    PROFILE_IMAGE_DIMENSION,
+  )
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      (value) =>
+        value ? resolve(value) : reject(new Error('Canvas toBlob failed')),
+      'image/jpeg',
+      JPEG_QUALITY,
+    )
+  })
+  return new File([blob], 'profile.jpg', { type: 'image/jpeg' })
 }
 
 export function usePresignedUpload(ledgerId?: string | null) {

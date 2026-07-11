@@ -1,3 +1,4 @@
+import { ParticipantAvatar } from '@/components/participant-avatar'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { Button } from '@/components/ui/button'
 import {
@@ -264,6 +265,9 @@ export function PaidByCard(props: {
             name="paidByList"
             render={() => {
               const selectedPayer = paidByList[0]?.participant ?? ''
+              const selectedParticipant = group.participants.find(
+                (p) => p.id === selectedPayer,
+              )
               return (
                 <FormItem>
                   <Select
@@ -282,21 +286,39 @@ export function PaidByCard(props: {
                     disabled={readOnly}
                   >
                     <SelectTrigger>
-                      <SelectValue
-                        placeholder={t('Expense.paidByField.placeholder')}
-                      />
+                      {selectedParticipant ? (
+                        <div className="flex items-center gap-2">
+                          <ParticipantAvatar
+                            participant={selectedParticipant}
+                            size="xs"
+                          />
+                          <span>{selectedParticipant.name}</span>
+                        </div>
+                      ) : (
+                        <SelectValue
+                          placeholder={t('Expense.paidByField.placeholder')}
+                        />
+                      )}
                     </SelectTrigger>
                     <SelectContent>
-                      {group.participants.map(({ id, name, pending }) => (
-                        <SelectItem key={id} value={id}>
-                          {name}
-                          {pending && (
-                            <span className="ml-2 text-xs text-muted-foreground">
-                              {t('participant.pending')}
+                      {group.participants.map(
+                        ({ id, name, pending, account }) => (
+                          <SelectItem key={id} value={id}>
+                            <span className="flex items-center gap-2">
+                              <ParticipantAvatar
+                                participant={{ id, name, account }}
+                                size="xs"
+                              />
+                              <span>{name}</span>
+                              {pending && (
+                                <span className="text-xs text-muted-foreground">
+                                  {t('participant.pending')}
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </SelectItem>
-                      ))}
+                          </SelectItem>
+                        ),
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />

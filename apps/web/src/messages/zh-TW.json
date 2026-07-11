@@ -1392,7 +1392,17 @@
       "nameRequired": "請輸入顯示名稱。",
       "nameTooShort": "名稱至少需要2個字元。",
       "nameTooLong": "名稱最多50個字元。",
-      "generic": "出了點問題。請重試。"
+      "generic": "出了點問題。請重試。",
+      "imageUpload": "無法更新您的個人資料照片。請重試。"
+    },
+    "image": {
+      "label": "個人資料照片",
+      "help": "選擇照片後會立即更新。若沒有照片，將顯示您的姓名縮寫。",
+      "choose": "選擇照片",
+      "uploading": "上傳中…",
+      "updated": "個人資料照片已更新。",
+      "remove": "移除照片",
+      "removed": "個人資料照片已移除。"
     }
   },
   "Activities": {

@@ -1392,7 +1392,17 @@
       "nameRequired": "Bir görünen ad girin.",
       "nameTooShort": "Ad en az 2 karakter olmalıdır.",
       "nameTooLong": "Ad en fazla 50 karakter olmalıdır.",
-      "generic": "Bir şeyler ters gitti. Lütfen tekrar deneyin."
+      "generic": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+      "imageUpload": "Profil fotoğrafı güncellenemedi. Lütfen tekrar deneyin."
+    },
+    "image": {
+      "label": "Profil fotoğrafı",
+      "help": "Hemen güncellemek için bir fotoğraf seçin. Fotoğraf olmadığında baş harfleriniz gösterilir.",
+      "choose": "Fotoğraf seç",
+      "uploading": "Yükleniyor…",
+      "updated": "Profil fotoğrafı güncellendi.",
+      "remove": "Fotoğrafı kaldır",
+      "removed": "Profil fotoğrafı kaldırıldı."
     }
   },
   "Activities": {

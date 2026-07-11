@@ -1392,7 +1392,17 @@
       "nameRequired": "Introduza um nome de exibição.",
       "nameTooShort": "O nome deve ter pelo menos 2 caracteres.",
       "nameTooLong": "O nome deve ter no máximo 50 caracteres.",
-      "generic": "Algo correu mal. Tente novamente."
+      "generic": "Algo correu mal. Tente novamente.",
+      "imageUpload": "Não foi possível atualizar a foto de perfil. Tente novamente."
+    },
+    "image": {
+      "label": "Foto de perfil",
+      "help": "Escolha uma foto para a atualizar de imediato. Sem uma foto, serão apresentadas as suas iniciais.",
+      "choose": "Escolher foto",
+      "uploading": "A carregar…",
+      "updated": "Foto de perfil atualizada.",
+      "remove": "Remover fotografia",
+      "removed": "Fotografia de perfil removida."
     }
   },
   "Activities": {

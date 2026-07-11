@@ -1392,7 +1392,17 @@
       "nameRequired": "Geben Sie einen Anzeigenamen ein.",
       "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein.",
       "nameTooLong": "Der Name darf höchstens 50 Zeichen lang sein.",
-      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+      "imageUpload": "Ihr Profilbild konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+    },
+    "image": {
+      "label": "Profilbild",
+      "help": "Wählen Sie ein Foto aus, um es sofort zu aktualisieren. Ohne Foto werden Ihre Initialen angezeigt.",
+      "choose": "Foto auswählen",
+      "uploading": "Wird hochgeladen…",
+      "updated": "Profilbild aktualisiert.",
+      "remove": "Foto entfernen",
+      "removed": "Profilbild entfernt."
     }
   },
   "Activities": {

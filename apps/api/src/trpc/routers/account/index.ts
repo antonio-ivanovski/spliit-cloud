@@ -10,6 +10,11 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { randomId } from '../../../lib/api'
 import { isPlaceholderEmail } from '../../../lib/invitations'
+import {
+  deleteS3Object,
+  isProfileImageUrlForAccount,
+  validateProfileImageUpload,
+} from '../../../routes/upload'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 
 /**
@@ -40,8 +45,71 @@ export const accountRouter = createTRPCRouter({
       const account = await prisma.account.update({
         where: { id: ctx.auth.user.id },
         data: { name: input.name },
-        select: { id: true, name: true, email: true, emailVerified: true },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+        },
       })
+      return { account }
+    }),
+
+  removeProfileImage: protectedProcedure.mutation(async ({ ctx }) => {
+    const existing = await prisma.account.findUnique({
+      where: { id: ctx.auth.user.id },
+      select: { image: true },
+    })
+    const account = await prisma.account.update({
+      where: { id: ctx.auth.user.id },
+      data: { image: null },
+      select: { id: true, image: true },
+    })
+    if (
+      existing?.image &&
+      isProfileImageUrlForAccount(existing.image, ctx.auth.user.id)
+    ) {
+      try {
+        await deleteS3Object(existing.image)
+      } catch (error) {
+        console.warn('Failed to delete profile image:', error)
+      }
+    }
+    return { account }
+  }),
+
+  setProfileImage: protectedProcedure
+    .input(z.object({ fileUrl: z.string().url() }))
+    .mutation(async ({ input, ctx }) => {
+      if (
+        !(await validateProfileImageUpload(input.fileUrl, ctx.auth.user.id))
+      ) {
+        if (isProfileImageUrlForAccount(input.fileUrl, ctx.auth.user.id)) {
+          await deleteS3Object(input.fileUrl).catch(() => undefined)
+        }
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Profile image upload is invalid',
+        })
+      }
+      const existing = await prisma.account.findUnique({
+        where: { id: ctx.auth.user.id },
+        select: { image: true },
+      })
+      const account = await prisma.account.update({
+        where: { id: ctx.auth.user.id },
+        data: { image: input.fileUrl },
+        select: { id: true, image: true },
+      })
+      if (
+        existing?.image &&
+        isProfileImageUrlForAccount(existing.image, ctx.auth.user.id)
+      ) {
+        await deleteS3Object(existing.image).catch((error) =>
+          console.warn('Failed to delete previous profile image:', error),
+        )
+      }
       return { account }
     }),
 
@@ -65,6 +133,14 @@ export const accountRouter = createTRPCRouter({
             include: {
               ledger: { select: { currency: true, currencyCode: true } },
               _count: { select: { members: true } },
+              members: {
+                where: { status: GroupMemberStatus.ACTIVE },
+                orderBy: { joinedAt: 'asc' },
+                take: 4,
+                select: {
+                  account: { select: { id: true, name: true, image: true } },
+                },
+              },
             },
           },
         },
@@ -100,34 +176,11 @@ export const accountRouter = createTRPCRouter({
       const friendGroupIds = memberships
         .filter((m) => m.group.groupType === GroupType.FRIEND)
         .map((m) => m.groupId)
-      const friendMemberByGroupId = new Map<
-        string,
-        { name: string; id: string } | null
-      >()
       const friendPendingByGroupId = new Map<
         string,
         { name: string | null; email: string } | null
       >()
       if (friendGroupIds.length > 0) {
-        const friendMembers = await prisma.groupMember.findMany({
-          where: {
-            groupId: { in: friendGroupIds },
-            accountId: { not: ctx.auth.user.id },
-            status: GroupMemberStatus.ACTIVE,
-          },
-          select: {
-            groupId: true,
-            account: { select: { id: true, name: true } },
-          },
-        })
-        for (const m of friendMembers) {
-          if (!friendMemberByGroupId.has(m.groupId)) {
-            friendMemberByGroupId.set(m.groupId, {
-              id: m.account.id,
-              name: m.account.name,
-            })
-          }
-        }
         const friendInvitations = await prisma.groupInvitation.findMany({
           where: {
             groupId: { in: friendGroupIds },
@@ -152,9 +205,14 @@ export const accountRouter = createTRPCRouter({
 
       const entries = memberships.map((m) => {
         const isFriend = m.group.groupType === GroupType.FRIEND
+        const friendAccount = isFriend
+          ? (m.group.members.find(
+              (member) => member.account.id !== ctx.auth.user.id,
+            )?.account ?? null)
+          : null
         const pendingInv = friendPendingByGroupId.get(m.groupId)
         const displayName = isFriend
-          ? friendMemberByGroupId.get(m.groupId)?.name ||
+          ? friendAccount?.name ||
             pendingInv?.name ||
             (pendingInv?.email && !isPlaceholderEmail(pendingInv.email)
               ? pendingInv.email
@@ -169,6 +227,11 @@ export const accountRouter = createTRPCRouter({
           currentMemberRole: m.role,
           preference: prefByGroupId.get(m.groupId) ?? defaultPref,
           displayName,
+          friendAccount,
+          memberAccounts: (m.group.members ?? [])
+            .map((member) => member.account)
+            // Friend ledgers: only show the other person's avatar, not the caller's.
+            .filter((account) => !isFriend || account.id !== ctx.auth.user.id),
         }
       })
 
@@ -367,7 +430,9 @@ export const accountRouter = createTRPCRouter({
       const members = await prisma.groupMember.findMany({
         where: { groupId, status: GroupMemberStatus.ACTIVE },
         include: {
-          account: { select: { id: true, name: true, email: true } },
+          account: {
+            select: { id: true, name: true, email: true, image: true },
+          },
           ledgerParticipant: { select: { id: true } },
         },
         orderBy: [{ joinedAt: 'asc' }, { createdAt: 'asc' }],
@@ -433,7 +498,7 @@ export const accountRouter = createTRPCRouter({
       const accountIds = coMembers.map((c) => c.accountId)
       const accounts = await prisma.account.findMany({
         where: { id: { in: accountIds } },
-        select: { id: true, name: true, email: true },
+        select: { id: true, name: true, email: true, image: true },
       })
       const accountMap = new Map(accounts.map((a) => [a.id, a]))
 

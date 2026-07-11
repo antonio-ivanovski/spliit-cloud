@@ -210,7 +210,13 @@ describe('getGroup — pending invitations as participants', () => {
     const group = await getGroup(groupId)
 
     expect(group!.participants).toEqual([
-      { id: 'lp-owner', name: 'Alice', pending: false, unlinked: false },
+      {
+        id: 'lp-owner',
+        name: 'Alice',
+        account: { id: 'acct-owner', name: 'Alice', image: null },
+        pending: false,
+        unlinked: false,
+      },
     ])
     expect(prismaMock.ledgerParticipant.create).not.toHaveBeenCalled()
     expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
@@ -252,6 +258,7 @@ describe('getGroup — pending invitations as participants', () => {
       {
         id: 'lp-dave',
         name: 'Dave from accounting',
+        account: null,
         pending: true,
         unlinked: false,
       },
@@ -294,6 +301,7 @@ describe('getGroup — pending invitations as participants', () => {
       {
         id: 'lp-dave',
         name: 'dave@example.com',
+        account: null,
         pending: true,
         unlinked: false,
       },
@@ -346,6 +354,7 @@ describe('getGroup — pending invitations as participants', () => {
       {
         id: 'lp-jane',
         name: 'Jane',
+        account: null,
         pending: true,
         unlinked: false,
       },
@@ -371,7 +380,13 @@ describe('getGroup — pending invitations as participants', () => {
     ] as never)
     const group = await getGroup(groupId)
     expect(group!.participants).toEqual([
-      { id: 'lp-orphan', name: 'Carlos', pending: false, unlinked: true },
+      {
+        id: 'lp-orphan',
+        name: 'Carlos',
+        account: null,
+        pending: false,
+        unlinked: true,
+      },
     ])
   })
 })

@@ -1392,7 +1392,17 @@
       "nameRequired": "Saisissez un nom d'affichage.",
       "nameTooShort": "Le nom doit contenir au moins 2 caractères.",
       "nameTooLong": "Le nom doit contenir au maximum 50 caractères.",
-      "generic": "Une erreur est survenue. Veuillez réessayer."
+      "generic": "Une erreur est survenue. Veuillez réessayer.",
+      "imageUpload": "Impossible de mettre à jour votre photo de profil. Veuillez réessayer."
+    },
+    "image": {
+      "label": "Photo de profil",
+      "help": "Choisissez une photo pour la mettre à jour immédiatement. Sans photo, vos initiales sont affichées.",
+      "choose": "Choisir une photo",
+      "uploading": "Téléchargement…",
+      "updated": "Photo de profil mise à jour.",
+      "remove": "Supprimer la photo",
+      "removed": "Photo de profil supprimée."
     }
   },
   "Activities": {

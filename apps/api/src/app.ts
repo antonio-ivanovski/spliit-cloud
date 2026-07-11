@@ -9,7 +9,7 @@ import { logServerError, logServerWarn } from './lib/logging'
 import { postCurrencyRates } from './routes/currency-rates'
 import { exportGroupCsv } from './routes/export-csv'
 import { exportGroupJson } from './routes/export-json'
-import { createUploadUrl } from './routes/upload'
+import { createProfileImageUploadUrl, createUploadUrl } from './routes/upload'
 import { createTRPCContext } from './trpc/init'
 import { appRouter } from './trpc/routers/_app'
 
@@ -65,6 +65,11 @@ app.post('/uploads/presign', async (c) => {
     body.contentType ?? 'application/octet-stream',
     body.fileSize,
   )
+})
+
+app.post('/uploads/profile-image/presign', async (c) => {
+  const body = await c.req.json<{ fileSize?: number }>()
+  return createProfileImageUploadUrl(c.req.raw, body.fileSize)
 })
 
 app.get('/groups/:groupId/expenses/export/json', (c) =>

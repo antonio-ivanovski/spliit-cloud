@@ -1392,7 +1392,17 @@
       "nameRequired": "请输入显示名称。",
       "nameTooShort": "名称至少需要2个字符。",
       "nameTooLong": "名称最多50个字符。",
-      "generic": "出了点问题。请重试。"
+      "generic": "出了点问题。请重试。",
+      "imageUpload": "无法更新您的个人资料照片。请重试。"
+    },
+    "image": {
+      "label": "个人资料照片",
+      "help": "选择照片后会立即更新。如果没有照片，将显示你的姓名首字母。",
+      "choose": "选择照片",
+      "uploading": "上传中…",
+      "updated": "个人资料照片已更新。",
+      "remove": "删除照片",
+      "removed": "个人资料照片已删除。"
     }
   },
   "Activities": {

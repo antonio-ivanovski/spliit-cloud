@@ -1392,7 +1392,17 @@
       "nameRequired": "Sartu erakusteko izen bat.",
       "nameTooShort": "Izenak gutxienez 2 karaktere izan behar ditu.",
       "nameTooLong": "Izenak gehienez 50 karaktere izan ditzake.",
-      "generic": "Zerbait gaizki joan da. Saiatu berriro."
+      "generic": "Zerbait gaizki joan da. Saiatu berriro.",
+      "imageUpload": "Ezin izan da profil-argazkia eguneratu. Saiatu berriro."
+    },
+    "image": {
+      "label": "Profil-argazkia",
+      "help": "Aukeratu argazki bat berehala eguneratzeko. Argazkirik gabe, zure inizialak erakutsiko dira.",
+      "choose": "Aukeratu argazkia",
+      "uploading": "Igotzen…",
+      "updated": "Profil-argazkia eguneratu da.",
+      "remove": "Kendu argazkia",
+      "removed": "Profil-argazkia kendu da."
     }
   },
   "Activities": {

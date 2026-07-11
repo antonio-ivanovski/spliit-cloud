@@ -476,7 +476,11 @@ export async function updateExpense(
     select: {
       id: true,
       displayName: true,
-      groupMember: { select: { account: { select: { name: true } } } },
+      groupMember: {
+        select: {
+          account: { select: { id: true, name: true, image: true } },
+        },
+      },
       invitations: {
         where: { status: 'PENDING' },
         select: { email: true, temporaryName: true },
@@ -940,7 +944,11 @@ export async function getGroupExpenses(
           ledgerParticipant: {
             select: {
               id: true,
-              groupMember: { select: { account: { select: { name: true } } } },
+              groupMember: {
+                select: {
+                  account: { select: { id: true, name: true, image: true } },
+                },
+              },
               invitations: {
                 select: { email: true, temporaryName: true },
                 take: 1,
@@ -956,7 +964,11 @@ export async function getGroupExpenses(
           ledgerParticipant: {
             select: {
               id: true,
-              groupMember: { select: { account: { select: { name: true } } } },
+              groupMember: {
+                select: {
+                  account: { select: { id: true, name: true, image: true } },
+                },
+              },
               invitations: {
                 select: { email: true, temporaryName: true },
                 take: 1,
@@ -1016,6 +1028,7 @@ export async function getGroupExpenses(
       ledgerParticipant: {
         id: pb.ledgerParticipant.id,
         name: resolveParticipantDisplayName(pb.ledgerParticipant),
+        account: pb.ledgerParticipant.groupMember?.account ?? null,
       },
       shares: pb.shares,
     })),
@@ -1023,6 +1036,7 @@ export async function getGroupExpenses(
       ledgerParticipant: {
         id: pf.ledgerParticipant.id,
         name: resolveParticipantDisplayName(pf.ledgerParticipant),
+        account: pf.ledgerParticipant.groupMember?.account ?? null,
       },
       shares: pf.shares,
     })),

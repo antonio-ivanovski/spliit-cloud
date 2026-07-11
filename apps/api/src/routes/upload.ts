@@ -1,6 +1,7 @@
 import {
   CopyObjectCommand,
   DeleteObjectCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
@@ -64,6 +65,81 @@ export async function deleteS3Object(fileUrl: string) {
   await getS3Client().send(
     new DeleteObjectCommand({ Bucket: env.S3_UPLOAD_BUCKET, Key: key }),
   )
+}
+
+const MAX_PROFILE_IMAGE_SIZE = 512 * 1024
+
+export function isProfileImageUrlForAccount(
+  fileUrl: string,
+  accountId: string,
+): boolean {
+  try {
+    return keyFromFileUrl(fileUrl).startsWith(`profile-images/${accountId}/`)
+  } catch {
+    return false
+  }
+}
+
+export async function createProfileImageUploadUrl(
+  request: Request,
+  fileSize?: number,
+) {
+  const auth = await getAuthFromRequest(request)
+  if (!auth) {
+    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
+  }
+  if (!fileSize || fileSize > MAX_PROFILE_IMAGE_SIZE) {
+    return Response.json(
+      { error: 'Profile image exceeds the maximum upload size' },
+      { status: 400 },
+    )
+  }
+  if (!uploadsConfigured()) {
+    return Response.json(
+      { error: 'Uploads are not configured' },
+      { status: 503 },
+    )
+  }
+
+  const key = `profile-images/${auth.user.id}/${randomId()}.jpg`
+  const fileUrl = publicUrlForKey(key)
+  const uploadUrl = await getSignedUrl(
+    getS3Client(),
+    new PutObjectCommand({
+      Bucket: env.S3_UPLOAD_BUCKET,
+      Key: key,
+      ContentType: 'image/jpeg',
+    }),
+    { expiresIn: 60 },
+  )
+  return Response.json({ uploadUrl, fileUrl })
+}
+
+export async function validateProfileImageUpload(
+  fileUrl: string,
+  accountId: string,
+) {
+  if (
+    !uploadsConfigured() ||
+    !isProfileImageUrlForAccount(fileUrl, accountId)
+  ) {
+    return false
+  }
+  try {
+    const metadata = await getS3Client().send(
+      new HeadObjectCommand({
+        Bucket: env.S3_UPLOAD_BUCKET,
+        Key: keyFromFileUrl(fileUrl),
+      }),
+    )
+    return (
+      metadata.ContentType === 'image/jpeg' &&
+      !!metadata.ContentLength &&
+      metadata.ContentLength <= MAX_PROFILE_IMAGE_SIZE
+    )
+  } catch {
+    return false
+  }
 }
 
 /**

@@ -1392,7 +1392,17 @@
       "nameRequired": "Voer een weergavenaam in.",
       "nameTooShort": "De naam moet minimaal 2 tekens bevatten.",
       "nameTooLong": "De naam mag maximaal 50 tekens bevatten.",
-      "generic": "Er is iets misgegaan. Probeer het opnieuw."
+      "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "imageUpload": "Je profielfoto kon niet worden bijgewerkt. Probeer het opnieuw."
+    },
+    "image": {
+      "label": "Profielfoto",
+      "help": "Kies een foto om deze direct bij te werken. Zonder foto worden je initialen getoond.",
+      "choose": "Foto kiezen",
+      "uploading": "Bezig met uploaden…",
+      "updated": "Profielfoto bijgewerkt.",
+      "remove": "Foto verwijderen",
+      "removed": "Profielfoto verwijderd."
     }
   },
   "Activities": {

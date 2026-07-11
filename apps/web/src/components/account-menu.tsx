@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { AccountAvatar } from '@/components/account-avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +10,7 @@ import {
 import { authClient } from '@/lib/auth'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { Link, useNavigate } from '@tanstack/react-router'
-import {
-  LogOut,
-  Settings as SettingsIcon,
-  User as UserIcon,
-} from 'lucide-react'
+import { LogOut, Settings as SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export function AccountMenu() {
@@ -39,11 +35,7 @@ export function AccountMenu() {
           className="rounded-full focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           aria-label={t('account')}
         >
-          <Avatar className="h-8 w-8 bg-primary/10">
-            <AvatarFallback className="bg-transparent p-0">
-              <UserIcon className="w-4 h-4 text-primary" />
-            </AvatarFallback>
-          </Avatar>
+          <AccountAvatar account={account} size="lg" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

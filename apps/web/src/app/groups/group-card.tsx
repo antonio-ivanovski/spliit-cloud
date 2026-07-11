@@ -1,3 +1,5 @@
+import { AccountAvatar } from '@/components/account-avatar'
+import { AvatarStack } from '@/components/avatar-stack'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -47,7 +49,7 @@ export function GroupCard({
   const isArchived = group.archived
   const isFriend = group.groupType === 'FRIEND'
   const isPending = isFriend && group._count.members === 1
-  const initials = (group.displayName || '?').trim().charAt(0).toUpperCase()
+  const memberAccounts = group.memberAccounts ?? []
   const formattedDate = new Date(group.createdAt).toLocaleDateString(locale, {
     dateStyle: 'medium',
   })
@@ -60,14 +62,9 @@ export function GroupCard({
         <div className="w-full flex flex-col gap-1">
           <div className="text-base flex gap-2 justify-between items-center">
             <span className="flex-1 overflow-hidden text-ellipsis font-medium min-w-0 flex items-center gap-2">
-              {isFriend && (
-                <span
-                  aria-hidden
-                  className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary text-sm font-semibold"
-                >
-                  {initials}
-                </span>
-              )}
+              {isFriend && group.friendAccount ? (
+                <AccountAvatar account={group.friendAccount} size="md" />
+              ) : null}
               <Link
                 href={`/groups/${group.id}`}
                 className="text-foreground no-underline outline-hidden focus-visible:underline before:absolute before:inset-0 before:rounded-lg before:content-[''] min-w-0 truncate"
@@ -175,9 +172,15 @@ export function GroupCard({
                   <Users className="w-3 h-3 inline" />
                 </span>
               ) : (
-                <div className="flex items-center gap-1.5">
-                  <Users className="w-3 h-3 inline" />
+                <div className="flex items-center gap-2">
                   <span>{group._count.members}</span>
+                  {memberAccounts.length > 0 && (
+                    <AvatarStack
+                      accounts={memberAccounts}
+                      size="sm"
+                      label={`${group._count.members} members`}
+                    />
+                  )}
                 </div>
               )}
               <div className="flex items-center gap-1.5 truncate">

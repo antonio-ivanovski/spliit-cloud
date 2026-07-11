@@ -33,6 +33,7 @@ import { Route as GroupsGroupIdBalancesRouteImport } from './routes/groups/$grou
 import { Route as GroupsGroupIdActivityRouteImport } from './routes/groups/$groupId/activity'
 import { Route as GroupsGroupIdExpensesIndexRouteImport } from './routes/groups/$groupId/expenses/index'
 import { Route as GroupsGroupIdExpensesCreateRouteImport } from './routes/groups/$groupId/expenses/create'
+import { Route as GroupsGroupIdExpensesExpenseIdIndexRouteImport } from './routes/groups/$groupId/expenses/$expenseId/index'
 import { Route as GroupsGroupIdExpensesExpenseIdEditRouteImport } from './routes/groups/$groupId/expenses/$expenseId/edit'
 
 const TermsRoute = TermsRouteImport.update({
@@ -197,6 +198,16 @@ const GroupsGroupIdExpensesCreateRoute =
       (d) => d.Route,
     ),
   )
+const GroupsGroupIdExpensesExpenseIdIndexRoute =
+  GroupsGroupIdExpensesExpenseIdIndexRouteImport.update({
+    id: '/$expenseId/',
+    path: '/$expenseId/',
+    getParentRoute: () => GroupsGroupIdExpensesRoute,
+  } as any).lazy(() =>
+    import('./routes/groups/$groupId/expenses/$expenseId/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const GroupsGroupIdExpensesExpenseIdEditRoute =
   GroupsGroupIdExpensesExpenseIdEditRouteImport.update({
     id: '/$expenseId/edit',
@@ -234,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
   '/groups/$groupId/expenses/$expenseId/edit': typeof GroupsGroupIdExpensesExpenseIdEditRoute
+  '/groups/$groupId/expenses/$expenseId/': typeof GroupsGroupIdExpensesExpenseIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -259,6 +271,7 @@ export interface FileRoutesByTo {
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses': typeof GroupsGroupIdExpensesIndexRoute
   '/groups/$groupId/expenses/$expenseId/edit': typeof GroupsGroupIdExpensesExpenseIdEditRoute
+  '/groups/$groupId/expenses/$expenseId': typeof GroupsGroupIdExpensesExpenseIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -287,6 +300,7 @@ export interface FileRoutesById {
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
   '/groups/$groupId/expenses/$expenseId/edit': typeof GroupsGroupIdExpensesExpenseIdEditRoute
+  '/groups/$groupId/expenses/$expenseId/': typeof GroupsGroupIdExpensesExpenseIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -316,6 +330,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses/'
     | '/groups/$groupId/expenses/$expenseId/edit'
+    | '/groups/$groupId/expenses/$expenseId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -341,6 +356,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses'
     | '/groups/$groupId/expenses/$expenseId/edit'
+    | '/groups/$groupId/expenses/$expenseId'
   id:
     | '__root__'
     | '/'
@@ -368,6 +384,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses/'
     | '/groups/$groupId/expenses/$expenseId/edit'
+    | '/groups/$groupId/expenses/$expenseId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -553,6 +570,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GroupsGroupIdExpensesCreateRouteImport
       parentRoute: typeof GroupsGroupIdExpensesRoute
     }
+    '/groups/$groupId/expenses/$expenseId/': {
+      id: '/groups/$groupId/expenses/$expenseId/'
+      path: '/$expenseId'
+      fullPath: '/groups/$groupId/expenses/$expenseId/'
+      preLoaderRoute: typeof GroupsGroupIdExpensesExpenseIdIndexRouteImport
+      parentRoute: typeof GroupsGroupIdExpensesRoute
+    }
     '/groups/$groupId/expenses/$expenseId/edit': {
       id: '/groups/$groupId/expenses/$expenseId/edit'
       path: '/$expenseId/edit'
@@ -567,6 +591,7 @@ interface GroupsGroupIdExpensesRouteChildren {
   GroupsGroupIdExpensesCreateRoute: typeof GroupsGroupIdExpensesCreateRoute
   GroupsGroupIdExpensesIndexRoute: typeof GroupsGroupIdExpensesIndexRoute
   GroupsGroupIdExpensesExpenseIdEditRoute: typeof GroupsGroupIdExpensesExpenseIdEditRoute
+  GroupsGroupIdExpensesExpenseIdIndexRoute: typeof GroupsGroupIdExpensesExpenseIdIndexRoute
 }
 
 const GroupsGroupIdExpensesRouteChildren: GroupsGroupIdExpensesRouteChildren = {
@@ -574,6 +599,8 @@ const GroupsGroupIdExpensesRouteChildren: GroupsGroupIdExpensesRouteChildren = {
   GroupsGroupIdExpensesIndexRoute: GroupsGroupIdExpensesIndexRoute,
   GroupsGroupIdExpensesExpenseIdEditRoute:
     GroupsGroupIdExpensesExpenseIdEditRoute,
+  GroupsGroupIdExpensesExpenseIdIndexRoute:
+    GroupsGroupIdExpensesExpenseIdIndexRoute,
 }
 
 const GroupsGroupIdExpensesRouteWithChildren =

@@ -1392,7 +1392,17 @@
       "nameRequired": "Introduïu un nom per mostrar.",
       "nameTooShort": "El nom ha de tenir almenys 2 caràcters.",
       "nameTooLong": "El nom ha de tenir com a màxim 50 caràcters.",
-      "generic": "Alguna cosa ha anat malament. Torneu-ho a provar."
+      "generic": "Alguna cosa ha anat malament. Torneu-ho a provar.",
+      "imageUpload": "No s'ha pogut actualitzar la foto de perfil. Torneu-ho a provar."
+    },
+    "image": {
+      "label": "Foto de perfil",
+      "help": "Trieu una foto per actualitzar-la immediatament. Si no en teniu cap, es mostraran les vostres inicials.",
+      "choose": "Tria una foto",
+      "uploading": "S'està pujant…",
+      "updated": "Foto de perfil actualitzada.",
+      "remove": "Elimina la foto",
+      "removed": "Foto de perfil eliminada."
     }
   },
   "Activities": {

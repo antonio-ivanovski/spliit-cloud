@@ -26,6 +26,7 @@ export type StatsDashboardData = {
   participants: Array<{
     participantId: string
     name: string
+    account: { id: string; name: string; image: string | null } | null
     amount: number
     percentage: number
   }>

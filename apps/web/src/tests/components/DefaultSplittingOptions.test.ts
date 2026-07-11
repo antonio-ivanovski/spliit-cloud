@@ -18,8 +18,20 @@ const mockGroup = {
   name: 'Test Group',
   currencyCode: 'USD',
   participants: [
-    { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
-    { id: 'lp-2', name: 'Bob', pending: false, unlinked: false },
+    {
+      id: 'lp-1',
+      name: 'Alice',
+      account: null,
+      pending: false,
+      unlinked: false,
+    },
+    {
+      id: 'lp-2',
+      name: 'Bob',
+      account: null,
+      pending: false,
+      unlinked: false,
+    },
   ],
   ledger: { id: 'ledger-1' },
   members: [],

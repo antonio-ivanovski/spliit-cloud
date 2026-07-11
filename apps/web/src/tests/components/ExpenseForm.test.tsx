@@ -224,8 +224,20 @@ const mockGroup = {
   members: [],
   invitations: [],
   participants: [
-    { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
-    { id: 'lp-2', name: 'Bob', pending: false, unlinked: false },
+    {
+      id: 'lp-1',
+      name: 'Alice',
+      account: null,
+      pending: false,
+      unlinked: false,
+    },
+    {
+      id: 'lp-2',
+      name: 'Bob',
+      account: null,
+      pending: false,
+      unlinked: false,
+    },
   ],
 }
 
@@ -438,7 +450,13 @@ describe('ExpenseForm', () => {
           {
             ...mockGroup,
             participants: [
-              { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+              {
+                id: 'lp-1',
+                name: 'Alice',
+                account: null,
+                pending: false,
+                unlinked: false,
+              },
             ],
           } as unknown as GroupShape
         }
@@ -480,7 +498,13 @@ describe('ExpenseForm', () => {
           {
             ...mockGroup,
             participants: [
-              { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+              {
+                id: 'lp-1',
+                name: 'Alice',
+                account: null,
+                pending: false,
+                unlinked: false,
+              },
             ],
           } as unknown as GroupShape
         }
@@ -704,7 +728,13 @@ describe('ExpenseForm', () => {
           {
             ...mockGroup,
             participants: [
-              { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
+              {
+                id: 'lp-1',
+                name: 'Alice',
+                account: null,
+                pending: false,
+                unlinked: false,
+              },
             ],
           } as unknown as GroupShape
         }
@@ -1336,7 +1366,13 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
       ...mockGroup,
       participants: [
         ...mockGroup.participants,
-        { id: 'lp-3', name: 'Carol', pending: false, unlinked: false },
+        {
+          id: 'lp-3',
+          name: 'Carol',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
       ],
     }
     const expense = {

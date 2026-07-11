@@ -80,8 +80,20 @@ const mockGroup = {
   members: [],
   invitations: [],
   participants: [
-    { id: 'lp-1', name: 'Alice', pending: false, unlinked: false },
-    { id: 'lp-2', name: 'Bob', pending: false, unlinked: false },
+    {
+      id: 'lp-1',
+      name: 'Alice',
+      account: null,
+      pending: false,
+      unlinked: false,
+    },
+    {
+      id: 'lp-2',
+      name: 'Bob',
+      account: null,
+      pending: false,
+      unlinked: false,
+    },
   ],
 }
 

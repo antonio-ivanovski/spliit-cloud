@@ -1392,7 +1392,17 @@
       "nameRequired": "Zadejte zobrazované jméno.",
       "nameTooShort": "Jméno musí mít alespoň 2 znaky.",
       "nameTooLong": "Jméno může mít maximálně 50 znaků.",
-      "generic": "Něco se pokazilo. Zkuste to znovu."
+      "generic": "Něco se pokazilo. Zkuste to znovu.",
+      "imageUpload": "Profilovou fotografii se nepodařilo aktualizovat. Zkuste to znovu."
+    },
+    "image": {
+      "label": "Profilová fotografie",
+      "help": "Vyberte fotografii pro okamžitou aktualizaci. Bez ní se zobrazí vaše iniciály.",
+      "choose": "Vybrat fotografii",
+      "uploading": "Nahrávání…",
+      "updated": "Profilová fotografie aktualizována.",
+      "remove": "Odstranit fotografii",
+      "removed": "Profilová fotografie odstraněna."
     }
   },
   "Activities": {

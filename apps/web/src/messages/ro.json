@@ -1392,7 +1392,17 @@
       "nameRequired": "Introduceți un nume de afișat.",
       "nameTooShort": "Numele trebuie să aibă cel puțin 2 caractere.",
       "nameTooLong": "Numele trebuie să aibă cel mult 50 de caractere.",
-      "generic": "Ceva a mers greșit. Încercați din nou."
+      "generic": "Ceva a mers greșit. Încercați din nou.",
+      "imageUpload": "Nu s-a putut actualiza fotografia de profil. Încercați din nou."
+    },
+    "image": {
+      "label": "Fotografie de profil",
+      "help": "Alegeți o fotografie pentru a o actualiza imediat. Fără fotografie, vor fi afișate inițialele dvs.",
+      "choose": "Alegeți fotografia",
+      "uploading": "Se încarcă…",
+      "updated": "Fotografia de profil a fost actualizată.",
+      "remove": "Elimină fotografia",
+      "removed": "Fotografia de profil a fost eliminată."
     }
   },
   "Activities": {

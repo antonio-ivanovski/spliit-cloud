@@ -1392,7 +1392,17 @@
       "nameRequired": "Inserisci un nome visualizzato.",
       "nameTooShort": "Il nome deve contenere almeno 2 caratteri.",
       "nameTooLong": "Il nome deve contenere al massimo 50 caratteri.",
-      "generic": "Qualcosa è andato storto. Riprova."
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "imageUpload": "Impossibile aggiornare la foto del profilo. Riprova."
+    },
+    "image": {
+      "label": "Foto del profilo",
+      "help": "Scegli una foto per aggiornarla immediatamente. Se non ne scegli una, verranno mostrate le tue iniziali.",
+      "choose": "Scegli foto",
+      "uploading": "Caricamento…",
+      "updated": "Foto del profilo aggiornata.",
+      "remove": "Rimuovi foto",
+      "removed": "Foto del profilo rimossa."
     }
   },
   "Activities": {

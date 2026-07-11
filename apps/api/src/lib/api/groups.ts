@@ -223,6 +223,13 @@ export async function getGroup(groupId: string) {
               {
                 id: m.ledgerParticipant.id,
                 name: m.account?.name ?? '',
+                account: m.account
+                  ? {
+                      id: m.account.id,
+                      name: m.account.name,
+                      image: m.account.image ?? null,
+                    }
+                  : null,
                 pending: false,
                 unlinked: false,
               },
@@ -243,6 +250,7 @@ export async function getGroup(groupId: string) {
                     },
                   ],
                 }),
+                account: null,
                 pending: true,
                 unlinked: false,
               },
@@ -252,6 +260,7 @@ export async function getGroup(groupId: string) {
       ...unlinkedParticipants.map((p) => ({
         id: p.id,
         name: p.displayName ?? '',
+        account: null,
         pending: false,
         unlinked: true,
       })),

@@ -27,7 +27,11 @@ export function BalancesCard({
   currencyDisplay: 'group' | 'original'
   balances: Balances | undefined
   currencyBalances: CurrencyBalance[]
-  participants: { id: string; name: string }[]
+  participants: {
+    id: string
+    name: string
+    account?: { id: string; name?: string | null; image?: string | null } | null
+  }[]
   groupCurrency: Currency | undefined
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })

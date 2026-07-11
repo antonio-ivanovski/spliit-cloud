@@ -31,6 +31,7 @@ export function PaidByRow({
     name: string
     pending?: boolean
     unlinked?: boolean
+    account?: { id: string; name?: string | null; image?: string | null } | null
   }
   payerCurrency: Currency
   groupCurrency: Currency
