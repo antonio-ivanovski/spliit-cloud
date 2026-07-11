@@ -19,6 +19,10 @@ class CapturingDispatcher implements ActivityNotificationDispatcher {
   }
 }
 
+function eventsForGroup(capture: CapturingDispatcher, groupId: string) {
+  return capture.events.filter((event) => event.groupId === groupId)
+}
+
 // --------------------------------------------------------------------------
 // Per-test fixture helpers
 // --------------------------------------------------------------------------
@@ -214,17 +218,23 @@ function makeInvitationCaller(
 }
 
 describe('Group activity — real DB', () => {
-  let fixture: GroupActivityFixture
+  let fixture: GroupActivityFixture | undefined
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await waitForScheduledNotificationDispatchesForTest()
     setDefaultActivityNotificationDispatchers([])
+    fixture = undefined
   })
 
   afterEach(async () => {
-    await waitForScheduledNotificationDispatchesForTest()
-    setDefaultActivityNotificationDispatchers([])
-    if (fixture) {
-      await fixture.cleanup()
+    try {
+      await waitForScheduledNotificationDispatchesForTest()
+    } finally {
+      setDefaultActivityNotificationDispatchers([])
+      if (fixture) {
+        await fixture.cleanup()
+        fixture = undefined
+      }
     }
   })
 
@@ -265,7 +275,7 @@ describe('Group activity — real DB', () => {
     expect(data.changedFields).toEqual(expect.arrayContaining(['name']))
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 
   // ------------------------------------------------------------------------
@@ -295,7 +305,7 @@ describe('Group activity — real DB', () => {
     expect(data.kind).toBe('group')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 
   // ------------------------------------------------------------------------
@@ -353,8 +363,8 @@ describe('Group activity — real DB', () => {
 
     // Assert settlement EXPENSE_CREATED dispatches
     await waitForScheduledNotificationDispatchesForTest()
-    const settlementEvents = capture.events.filter(
-      (e) => e.type === 'EXPENSE_CREATED',
+    const settlementEvents = eventsForGroup(capture, fixture.groupId).filter(
+      (event) => event.type === 'EXPENSE_CREATED',
     )
     expect(settlementEvents.length).toBeGreaterThanOrEqual(1)
     expect(settlementEvents[0].groupId).toBe(fixture.groupId)
@@ -399,7 +409,7 @@ describe('Group activity — real DB', () => {
     expect(data.nextRole).toBe('ADMIN')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 
   // ------------------------------------------------------------------------
@@ -439,7 +449,7 @@ describe('Group activity — real DB', () => {
     expect(data.targetDisplayName).toBe('Test Member')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 
   // ------------------------------------------------------------------------
@@ -476,7 +486,7 @@ describe('Group activity — real DB', () => {
     expect(data.targetDisplayName).toBe('Test Member')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 
   // ------------------------------------------------------------------------
@@ -511,7 +521,7 @@ describe('Group activity — real DB', () => {
     expect(createdData.invitationType).toBe('EMAIL')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
 
     // Revoke the invitation
     await invCaller.revoke({ invitationId, settleBalances: false })
@@ -530,7 +540,7 @@ describe('Group activity — real DB', () => {
     expect(revokedData.kind).toBe('invitation')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 
   // ------------------------------------------------------------------------
@@ -569,6 +579,6 @@ describe('Group activity — real DB', () => {
     expect(acceptedData.kind).toBe('invitation')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(capture.events).toHaveLength(0)
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 })

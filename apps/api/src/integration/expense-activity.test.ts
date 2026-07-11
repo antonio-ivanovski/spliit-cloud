@@ -123,13 +123,17 @@ describe('Expense activity — real DB', () => {
     })
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await waitForScheduledNotificationDispatchesForTest()
     setDefaultActivityNotificationDispatchers([])
   })
 
   afterEach(async () => {
-    await waitForScheduledNotificationDispatchesForTest()
-    setDefaultActivityNotificationDispatchers([])
+    try {
+      await waitForScheduledNotificationDispatchesForTest()
+    } finally {
+      setDefaultActivityNotificationDispatchers([])
+    }
   })
 
   afterAll(async () => {
@@ -301,7 +305,10 @@ describe('Expense activity — real DB', () => {
     // No new dispatcher events
     await waitForScheduledNotificationDispatchesForTest()
     const updateEvents = capture.events.filter(
-      (e) => e.type === 'EXPENSE_UPDATED',
+      (event) =>
+        event.type === 'EXPENSE_UPDATED' &&
+        event.subject.type === 'EXPENSE' &&
+        event.subject.id === expenseId,
     )
     expect(updateEvents).toHaveLength(0)
   })

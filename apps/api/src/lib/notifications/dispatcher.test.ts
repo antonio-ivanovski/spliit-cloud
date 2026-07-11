@@ -1,5 +1,5 @@
 import type { ActivityData } from '@spliit/domain/activities'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   CompositeActivityNotificationDispatcher,
   getDefaultActivityNotificationDispatcher,
@@ -41,6 +41,15 @@ class ThrowingDispatcher implements ActivityNotificationDispatcher {
     throw new Error('boom')
   }
 }
+
+afterEach(async () => {
+  try {
+    await waitForScheduledNotificationDispatchesForTest()
+  } finally {
+    setDefaultActivityNotificationDispatchers([])
+    vi.restoreAllMocks()
+  }
+})
 
 describe('CompositeActivityNotificationDispatcher', () => {
   it('forwards the event to every registered dispatcher in parallel', async () => {
@@ -104,6 +113,24 @@ describe('scheduleNotificationDispatch', () => {
     await waitForScheduledNotificationDispatchesForTest()
     expect(warn).toHaveBeenCalled()
     warn.mockRestore()
+  })
+
+  it('drains dispatches scheduled by an in-flight dispatcher', async () => {
+    const capture = new CapturingDispatcher()
+    const schedulingDispatcher: ActivityNotificationDispatcher = {
+      async dispatch() {
+        await Promise.resolve()
+        scheduleNotificationDispatch(
+          capture,
+          buildEvent({ activityId: 'nested' }),
+        )
+      },
+    }
+
+    scheduleNotificationDispatch(schedulingDispatcher, buildEvent())
+    await waitForScheduledNotificationDispatchesForTest()
+
+    expect(capture.events.map((event) => event.activityId)).toEqual(['nested'])
   })
 })
 

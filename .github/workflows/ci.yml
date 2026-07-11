@@ -81,23 +81,26 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Check TypeScript types
-        run: bun run check-types
-
-      - name: Check ESLint
-        run: bun run lint
-
       - name: Check Prettier formatting
         run: bun run check-formatting
 
       - name: Audit translations
         run: bun i18n check
 
-      - name: Run Prisma migrations
-        run: bun run prisma-migrate
+      - name: Check ESLint
+        run: bun run lint
+
+      - name: Check TypeScript types
+        run: bun run check-types
+
+      - name: Build
+        run: bun run build
 
       - name: Run tests
         run: bun run test
+
+      - name: Run Prisma migrations
+        run: bun run prisma-migrate
 
       - name: Run integration tests
         run: |
@@ -132,6 +135,3 @@ jobs:
           fi
 
           bun run test:integration
-
-      - name: Build
-        run: bun run build

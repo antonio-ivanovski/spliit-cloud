@@ -460,6 +460,7 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
 
   beforeEach(async () => {
     await clearMaildevInbox()
+    vi.mocked(sendEmail).mockClear()
   })
 
   it('invitation creation succeeds gracefully when SMTP is unreachable', async () => {
@@ -480,14 +481,10 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
     expect(invitation!.email).toBe(inviteeEmail.toLowerCase())
     expect(invitation!.groupId).toBe(groupId)
 
-    // Short retry loop to account for async SMTP delivery,
-    // but quickly conclude no email was sent (SMTP is mocked to fail).
-    let email = null
-    for (let i = 0; i < 3; i++) {
-      email = await getEmailForRecipient({ recipient: inviteeEmail })
-      if (email) break
-      await new Promise((r) => setTimeout(r, 100))
-    }
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: inviteeEmail.toLowerCase() }),
+    )
+    const email = await getEmailForRecipient({ recipient: inviteeEmail })
     expect(email).toBeNull()
   })
 })

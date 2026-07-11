@@ -19,15 +19,15 @@ const pendingDispatches: Promise<void>[] = []
  * Safe to call when no dispatches are pending — returns immediately.
  */
 export async function waitForScheduledNotificationDispatchesForTest(): Promise<void> {
-  // Flush the microtask queue so any queued `run()` closures execute and
-  // push their dispatch promises into the pending array.
-  await Promise.resolve()
-  // Flush the `.then()` chain inside `run()` so each dispatcher's
-  // `dispatch()` is actually invoked and its promise settles.
-  await Promise.resolve()
-  // Collect and await all tracked dispatch promises.
-  const promises = pendingDispatches.splice(0)
-  if (promises.length > 0) {
+  while (true) {
+    // Let queued `run()` closures and dispatcher continuations register any
+    // follow-up work before deciding that the queue is drained.
+    await Promise.resolve()
+    await Promise.resolve()
+
+    const promises = pendingDispatches.splice(0)
+    if (promises.length === 0) return
+
     await Promise.all(promises)
   }
 }

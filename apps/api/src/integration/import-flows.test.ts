@@ -237,8 +237,11 @@ describe('import summary notification', () => {
   })
 
   afterEach(async () => {
-    await waitForScheduledNotificationDispatchesForTest()
-    setDefaultActivityNotificationDispatchers([])
+    try {
+      await waitForScheduledNotificationDispatchesForTest()
+    } finally {
+      setDefaultActivityNotificationDispatchers([])
+    }
   })
 
   afterAll(async () => {
@@ -399,10 +402,11 @@ describe('import summary notification', () => {
 
     await waitForScheduledNotificationDispatchesForTest()
     const perExpenseEvents = capture.events.filter(
-      (e) => e.type === 'EXPENSE_CREATED',
+      (event) => event.groupId === groupId && event.type === 'EXPENSE_CREATED',
     )
     const summaryEvents = capture.events.filter(
-      (e) => e.type === 'EXPENSES_IMPORTED',
+      (event) =>
+        event.groupId === groupId && event.type === 'EXPENSES_IMPORTED',
     )
     expect(perExpenseEvents).toHaveLength(0)
     expect(summaryEvents).toHaveLength(1)

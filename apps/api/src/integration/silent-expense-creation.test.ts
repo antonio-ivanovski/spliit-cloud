@@ -71,8 +71,11 @@ describe('Silent expense creation — activity + notification', () => {
   })
 
   afterEach(async () => {
-    await waitForScheduledNotificationDispatchesForTest()
-    setDefaultActivityNotificationDispatchers([])
+    try {
+      await waitForScheduledNotificationDispatchesForTest()
+    } finally {
+      setDefaultActivityNotificationDispatchers([])
+    }
   })
 
   afterAll(async () => {
