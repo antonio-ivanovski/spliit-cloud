@@ -163,12 +163,33 @@ export function CreateFromReceiptButton({
   responsive?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
+  const { group } = useCurrentGroup()
+  const navigate = useNavigate()
   return (
     <ReceiptScanTrigger
       className={className}
       iconOnly
       responsive={responsive}
       title={t('Dialog.triggerTitle')}
+      onAccept={({ info, document }) => {
+        if (!group) return
+        navigate({
+          to: '/groups/$groupId/expenses/create',
+          params: { groupId: group.id },
+          search: {
+            amount: info.amount.toString(),
+            categoryId:
+              (info.categoryId as CategoryId | undefined) ?? undefined,
+            originalCurrency: info.currencyCode ?? undefined,
+            date: info.date ?? undefined,
+            title: info.title ?? undefined,
+            items: info.items.length ? JSON.stringify(info.items) : undefined,
+            imageUrl: document.url,
+            imageWidth: document.width.toString(),
+            imageHeight: document.height.toString(),
+          },
+        })
+      }}
     >
       {t('Dialog.triggerTitle')}
     </ReceiptScanTrigger>
@@ -207,7 +228,6 @@ function ReceiptDialogContent({
     group?.ledgerId,
   )
   const { toast } = useToast()
-  const navigate = useNavigate()
   const extractReceiptMutation =
     trpc.ai.extractExpenseInformationFromImage.useMutation()
 
@@ -428,31 +448,9 @@ function ReceiptDialogContent({
                   disabled={pending}
                   onClick={() => {
                     if (!group) return
-                    if (onAccept) {
-                      onAccept({
-                        info: receiptInfo,
-                        document: selectedDocument,
-                      })
-                      return
-                    }
-                    navigate({
-                      to: '/groups/$groupId/expenses/create',
-                      params: { groupId: group.id },
-                      search: {
-                        amount: receiptInfo.amount.toString(),
-                        categoryId:
-                          (receiptInfo.categoryId as CategoryId | undefined) ??
-                          undefined,
-                        originalCurrency: receiptInfo.currencyCode ?? undefined,
-                        date: receiptInfo.date ?? undefined,
-                        title: receiptInfo.title ?? undefined,
-                        items: receiptInfo.items.length
-                          ? JSON.stringify(receiptInfo.items)
-                          : undefined,
-                        imageUrl: selectedDocument.url,
-                        imageWidth: selectedDocument.width.toString(),
-                        imageHeight: selectedDocument.height.toString(),
-                      },
+                    onAccept?.({
+                      info: receiptInfo,
+                      document: selectedDocument,
                     })
                   }}
                 >
