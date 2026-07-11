@@ -4,7 +4,54 @@ import {
   enforceIntegerPattern,
   enforcePercentagePattern,
   formatDate,
+  parseCurrencyPaste,
 } from './currency-utils'
+
+const currencies = [
+  { code: 'USD', symbol: '$' },
+  { code: 'CAD', symbol: '$' },
+  { code: 'EUR', symbol: '€' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'JPY', symbol: '¥' },
+]
+
+describe('parseCurrencyPaste', () => {
+  it.each([
+    ['-$1,659.84', '1659.84', 'USD'],
+    ['-€1.659,84', '1659.84', 'EUR'],
+    ['1,234,567.89', '1234567.89', undefined],
+    ['1.234.567,89', '1234567.89', undefined],
+    ['1,234', '1234', undefined],
+  ])('parses %s', (input, amount, currencyCode) => {
+    expect(parseCurrencyPaste(input, currencies)).toEqual({
+      amount,
+      ...(currencyCode ? { currencyCode } : {}),
+    })
+  })
+
+  it('recognizes explicit ISO codes and suffixes', () => {
+    expect(parseCurrencyPaste('USD 1,659.84', currencies)).toEqual({
+      amount: '1659.84',
+      currencyCode: 'USD',
+    })
+    expect(parseCurrencyPaste('1.659,84 EUR', currencies)).toEqual({
+      amount: '1659.84',
+      currencyCode: 'EUR',
+    })
+  })
+
+  it('supports accounting parentheses and grouping spaces', () => {
+    expect(parseCurrencyPaste('(€ 1\u00a0659,84)', currencies)).toEqual({
+      amount: '1659.84',
+      currencyCode: 'EUR',
+    })
+  })
+
+  it('rejects malformed or competing values', () => {
+    expect(parseCurrencyPaste('total 12 and 34', currencies)).toBeNull()
+    expect(parseCurrencyPaste('$1,234)', currencies)).toBeNull()
+  })
+})
 
 describe('enforceCurrencyPattern', () => {
   it('passes through simple integer', () => {

@@ -6,7 +6,7 @@ import type {
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
-import { fireEvent, render, screen } from '@/test/test-utils'
+import { act, fireEvent, render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -786,6 +786,27 @@ describe('ExpenseForm', () => {
     expect(
       screen.queryByTestId('converted-amount-preview'),
     ).not.toBeInTheDocument()
+  })
+
+  it('parses pasted currency text and selects its detected currency', async () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+    const input = screen.getByRole('textbox', { name: /^amount$/i })
+    const currencySelector = screen.getAllByRole('combobox')[1]
+
+    await act(async () => {
+      fireEvent.paste(input, {
+        clipboardData: { getData: () => '-€1.659,84' },
+      })
+    })
+
+    expect(input).toHaveValue('1659.84')
+    expect(currencySelector).toHaveTextContent('EUR')
   })
 
   it('does not render the refresh button when the conversion rate loaded successfully', async () => {

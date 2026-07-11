@@ -57,7 +57,11 @@ import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { AmountCalculatorDialog } from './amount-calculator-dialog'
 import { AmountInput } from './amount-input'
-import { enforceCurrencyPattern, formatDate } from './currency-utils'
+import {
+  enforceCurrencyPattern,
+  formatDate,
+  parseCurrencyPaste,
+} from './currency-utils'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -401,6 +405,28 @@ export function BasicDetailsCard(props: {
                         setIsIncome(income)
                         if (income) form.setValue('isReimbursement', false)
                         onChange(v)
+                      }}
+                      onPaste={(event) => {
+                        const parsed = parseCurrencyPaste(
+                          event.clipboardData.getData('text'),
+                          props.originalCurrencies,
+                        )
+                        if (!parsed) return
+                        event.preventDefault()
+                        setCalculatorExpression(parsed.amount)
+                        setIsIncome(false)
+                        onChange(parsed.amount)
+                        if (parsed.currencyCode && group.currencyCode) {
+                          form.setValue(
+                            'originalCurrency',
+                            parsed.currencyCode,
+                            {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            },
+                          )
+                        }
                       }}
                       onFocus={(e) => {
                         const target = e.currentTarget
