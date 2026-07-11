@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Op bedrag verdelen",
       "switchToItemizedTitle": "Overschakelen naar splitsen per item?",
       "switchToItemizedDescription": "Als je itemdeelnemers bewerkt, wordt Betaald voor gewijzigd naar Per item en wordt de ingestelde Betaald voor-verdeling vervangen.",
-      "switchToItemizedConfirm": "Overschakelen naar per item"
+      "switchToItemizedConfirm": "Overschakelen naar per item",
+      "showItems": "Items tonen",
+      "hideItems": "Items verbergen"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

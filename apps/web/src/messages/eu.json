@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Banatu zenbatekoaren arabera",
       "switchToItemizedTitle": "Aldatu elementukako banaketara?",
       "switchToItemizedDescription": "Elementuaren parte-hartzaileak editatzeak Norentzat ordaindua Elementuka bihurtzen du eta konfiguratutako norentzat ordaindua banaketa ordezkatzen du.",
-      "switchToItemizedConfirm": "Aldatu elementukora"
+      "switchToItemizedConfirm": "Aldatu elementukora",
+      "showItems": "Erakutsi elementuak",
+      "hideItems": "Ezkutatu elementuak"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

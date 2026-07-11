@@ -384,6 +384,31 @@ describe('ExpenseForm', () => {
     expect(screen.getByText('Create expense')).toBeInTheDocument()
   })
 
+  it('collapses an empty expense items section until requested', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /show items/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /add item/i }),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /show items/i }))
+    expect(
+      screen.getByRole('button', { name: /hide items/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /add item/i }),
+    ).toBeInTheDocument()
+  })
+
   it('applies an AI category suggestion when the expense is uncategorized', async () => {
     const { user } = render(
       <ExpenseForm

@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Tutara göre böl",
       "switchToItemizedTitle": "Kalemlere göre bölmeye geçilsin mi?",
       "switchToItemizedDescription": "Kalem katılımcılarını düzenlemek Ödenen kişileri Kalemlere göre olarak değiştirir ve yapılandırdığınız ödenen kişiler bölüşümünü değiştirir.",
-      "switchToItemizedConfirm": "Kalemlere göre geç"
+      "switchToItemizedConfirm": "Kalemlere göre geç",
+      "showItems": "Öğeleri göster",
+      "hideItems": "Öğeleri gizle"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

@@ -620,7 +620,9 @@
       "splitByAmountLabel": "금액별 분할",
       "switchToItemizedTitle": "항목별 분할로 전환할까요?",
       "switchToItemizedDescription": "항목 참여자를 편집하면 지불 대상이 항목별로 변경되고 설정한 지불 대상 분할이 대체됩니다.",
-      "switchToItemizedConfirm": "항목별로 전환"
+      "switchToItemizedConfirm": "항목별로 전환",
+      "showItems": "항목 표시",
+      "hideItems": "항목 숨기기"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

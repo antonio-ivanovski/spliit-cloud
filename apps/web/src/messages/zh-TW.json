@@ -690,7 +690,9 @@
       "splitByAmountLabel": "按金額分攤",
       "switchToItemizedTitle": "切換為逐項分攤？",
       "switchToItemizedDescription": "編輯項目參與者會將「支付對象」改為「逐項」，並取代你已設定的支付對象分攤方式。",
-      "switchToItemizedConfirm": "切換為逐項"
+      "switchToItemizedConfirm": "切換為逐項",
+      "showItems": "顯示項目",
+      "hideItems": "隱藏項目"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

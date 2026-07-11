@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Dividi per importo",
       "switchToItemizedTitle": "Passare alla suddivisione per voci?",
       "switchToItemizedDescription": "Modificare i partecipanti della voce cambia Pagato per in Per voci e sostituisce la suddivisione Pagato per configurata.",
-      "switchToItemizedConfirm": "Passa a per voci"
+      "switchToItemizedConfirm": "Passa a per voci",
+      "showItems": "Mostra elementi",
+      "hideItems": "Nascondi elementi"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

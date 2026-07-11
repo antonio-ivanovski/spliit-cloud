@@ -7,6 +7,11 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
+import {
   ResponsiveDialog,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
@@ -21,8 +26,8 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { Plus, UserPen } from 'lucide-react'
-import { type ReactNode, useState } from 'react'
+import { ChevronDown, ChevronUp, Plus, UserPen } from 'lucide-react'
+import { type ReactNode, useEffect, useState } from 'react'
 import type { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -121,8 +126,15 @@ export function ExpenseItemsCard({
   const [editingTarget, setEditingTarget] = useState<EditingTarget | null>(null)
   const [pendingItemizedEdit, setPendingItemizedEdit] =
     useState<EditingTarget | null>(null)
+  const [itemsOpen, setItemsOpen] = useState(
+    () => splitMode === 'ITEMIZED' || items.length > 0,
+  )
 
-  if (splitMode !== 'ITEMIZED' && items.length === 0) return null
+  useEffect(() => {
+    if (splitMode === 'ITEMIZED' || items.length > 0) {
+      setItemsOpen(true)
+    }
+  }, [items.length, splitMode])
 
   const beginEditing = (target: EditingTarget) => {
     if (splitMode !== 'ITEMIZED') {
@@ -174,138 +186,161 @@ export function ExpenseItemsCard({
   return (
     <>
       <Card className={cn('mt-4', exceedsAmount && 'border-destructive')}>
-        <CardHeader>
-          <CardTitle>{t('items.title')}</CardTitle>
-          <CardDescription>{t('items.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {items.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4 text-center">
-              {t('items.empty')}
-            </p>
-          ) : (
-            <div>
-              <div
-                className={cn(
-                  'hidden border-t py-2 text-[11px] font-medium uppercase text-muted-foreground md:grid md:gap-x-3',
-                  expenseItemGridClass,
-                )}
-              >
-                <span>{t('items.columnItem')}</span>
-                <span className="text-right">{t('items.columnCost')}</span>
-                <span className="text-right">{t('items.columnQuantity')}</span>
-                <span className="text-right">{t('items.columnTotal')}</span>
-                <span />
-              </div>
-              {items.map((item, displayIndex) => {
-                return (
-                  <ExpenseItemRow
-                    key={item.id ?? displayIndex}
-                    form={form}
-                    item={item}
-                    itemIndex={displayIndex}
-                    readOnly={readOnly}
-                    group={group}
-                    groupCurrency={groupCurrency}
-                    onEdit={() => {
-                      openEditDialog({ kind: 'item', index: displayIndex })
-                    }}
-                    onDelete={() => {
-                      handleDeleteItem(displayIndex)
-                    }}
-                  />
-                )
-              })}
+        <Collapsible open={itemsOpen} onOpenChange={setItemsOpen}>
+          <CardHeader className="flex flex-row items-start justify-between gap-4">
+            <div className="min-w-0">
+              <CardTitle>{t('items.title')}</CardTitle>
+              <CardDescription>{t('items.description')}</CardDescription>
             </div>
-          )}
-
-          {!readOnly && (
-            <div className="mt-4 flex justify-center">
+            <CollapsibleTrigger asChild>
               <Button
-                variant="outline"
-                size="default"
                 type="button"
-                onClick={handleAddItem}
-                className="min-w-48 gap-2 px-8"
+                variant="ghost"
+                size="sm"
+                className="shrink-0 gap-1 px-2 text-muted-foreground hover:text-foreground"
               >
-                <Plus className="h-4 w-4" />
-                {t('items.addItem')}
+                {itemsOpen ? t('items.hideItems') : t('items.showItems')}
+                {itemsOpen ? (
+                  <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                )}
               </Button>
-            </div>
-          )}
+            </CollapsibleTrigger>
+          </CardHeader>
+          <CollapsibleContent>
+            <CardContent>
+              {items.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-4 text-center">
+                  {t('items.empty')}
+                </p>
+              ) : (
+                <div>
+                  <div
+                    className={cn(
+                      'hidden border-t py-2 text-[11px] font-medium uppercase text-muted-foreground md:grid md:gap-x-3',
+                      expenseItemGridClass,
+                    )}
+                  >
+                    <span>{t('items.columnItem')}</span>
+                    <span className="text-right">{t('items.columnCost')}</span>
+                    <span className="text-right">
+                      {t('items.columnQuantity')}
+                    </span>
+                    <span className="text-right">{t('items.columnTotal')}</span>
+                    <span />
+                  </div>
+                  {items.map((item, displayIndex) => {
+                    return (
+                      <ExpenseItemRow
+                        key={item.id ?? displayIndex}
+                        form={form}
+                        item={item}
+                        itemIndex={displayIndex}
+                        readOnly={readOnly}
+                        group={group}
+                        groupCurrency={groupCurrency}
+                        onEdit={() => {
+                          openEditDialog({ kind: 'item', index: displayIndex })
+                        }}
+                        onDelete={() => {
+                          handleDeleteItem(displayIndex)
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+              )}
 
-          {fillerItem && (
-            <div className="mt-4 flex flex-col gap-2 border-t pt-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="min-w-0">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-medium">
-                    {t('items.other')}
-                  </span>
-                  <span className="text-sm font-medium tabular-nums">
+              {!readOnly && (
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    variant="outline"
+                    size="default"
+                    type="button"
+                    onClick={handleAddItem}
+                    className="min-w-48 gap-2 px-8"
+                  >
+                    <Plus className="h-4 w-4" />
+                    {t('items.addItem')}
+                  </Button>
+                </div>
+              )}
+
+              {fillerItem && (
+                <div className="mt-4 flex flex-col gap-2 border-t pt-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm font-medium">
+                        {t('items.other')}
+                      </span>
+                      <span className="text-sm font-medium tabular-nums">
+                        {formatCurrency(
+                          groupCurrency,
+                          Number(fillerItem.unitPrice) *
+                            Number(fillerItem.quantity),
+                          'en-US',
+                          true,
+                        )}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                      <SummarizeParticipants item={fillerItem} group={group} />
+                    </p>
+                  </div>
+                  {!readOnly && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      onClick={() => openEditDialog({ kind: 'filler' })}
+                      aria-label={t('items.modalTitle')}
+                      title={t('items.modalTitle')}
+                      className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
+                    >
+                      <UserPen className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {exceedsAmount && (
+                <div className="mt-3 flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between">
+                  <span>{t('items.errorExceedsAmount')}</span>
+                  {!readOnly && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      type="button"
+                      onClick={handleSetExpenseAmount}
+                      className="shrink-0 border-destructive/40 text-destructive hover:text-destructive"
+                    >
+                      {t('items.setExpenseAmount')}
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              <div className="border-t pt-3 mt-2">
+                <div className="flex justify-between text-sm font-medium">
+                  <span>{t('items.total')}</span>
+                  <span>
                     {formatCurrency(
                       groupCurrency,
-                      Number(fillerItem.unitPrice) *
-                        Number(fillerItem.quantity),
+                      itemsWithFiller.reduce(
+                        (s, item) =>
+                          s + Number(item.unitPrice) * Number(item.quantity),
+                        0,
+                      ),
                       'en-US',
                       true,
                     )}
                   </span>
                 </div>
-                <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                  <SummarizeParticipants item={fillerItem} group={group} />
-                </p>
               </div>
-              {!readOnly && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  type="button"
-                  onClick={() => openEditDialog({ kind: 'filler' })}
-                  aria-label={t('items.modalTitle')}
-                  title={t('items.modalTitle')}
-                  className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
-                >
-                  <UserPen className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          )}
-
-          {exceedsAmount && (
-            <div className="mt-3 flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between">
-              <span>{t('items.errorExceedsAmount')}</span>
-              {!readOnly && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  onClick={handleSetExpenseAmount}
-                  className="shrink-0 border-destructive/40 text-destructive hover:text-destructive"
-                >
-                  {t('items.setExpenseAmount')}
-                </Button>
-              )}
-            </div>
-          )}
-
-          <div className="border-t pt-3 mt-2">
-            <div className="flex justify-between text-sm font-medium">
-              <span>{t('items.total')}</span>
-              <span>
-                {formatCurrency(
-                  groupCurrency,
-                  itemsWithFiller.reduce(
-                    (s, item) =>
-                      s + Number(item.unitPrice) * Number(item.quantity),
-                    0,
-                  ),
-                  'en-US',
-                  true,
-                )}
-              </span>
-            </div>
-          </div>
-        </CardContent>
+            </CardContent>
+          </CollapsibleContent>
+        </Collapsible>
       </Card>
 
       {editingTarget?.kind === 'item' &&

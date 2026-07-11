@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Nach Betrag aufteilen",
       "switchToItemizedTitle": "Zur Aufteilung nach Posten wechseln?",
       "switchToItemizedDescription": "Wenn du die Teilnehmer eines Postens bearbeitest, wird Bezahlt für auf Nach Posten geändert und die konfigurierte Bezahlt-für-Aufteilung ersetzt.",
-      "switchToItemizedConfirm": "Zu Posten wechseln"
+      "switchToItemizedConfirm": "Zu Posten wechseln",
+      "showItems": "Ausgabenposten anzeigen",
+      "hideItems": "Ausgabenposten ausblenden"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

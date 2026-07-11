@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Разделить по сумме",
       "switchToItemizedTitle": "Перейти к разделению по позициям?",
       "switchToItemizedDescription": "Редактирование участников позиции изменит «Оплачено за» на «По позициям» и заменит настроенное вами распределение «Оплачено за».",
-      "switchToItemizedConfirm": "Перейти к позициям"
+      "switchToItemizedConfirm": "Перейти к позициям",
+      "showItems": "Показать позиции",
+      "hideItems": "Скрыть позиции"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

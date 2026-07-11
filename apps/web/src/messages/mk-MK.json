@@ -821,7 +821,9 @@
       "splitByAmountLabel": "Подели по износ",
       "switchToItemizedTitle": "Да се префрли на поделба по ставки?",
       "switchToItemizedDescription": "Уредувањето на учесниците на ставката ќе го смени „Платено за“ во „По ставки“ и ќе ја замени поделбата „Платено за“ што ја конфигуриравте.",
-      "switchToItemizedConfirm": "Префрли на ставки"
+      "switchToItemizedConfirm": "Префрли на ставки",
+      "showItems": "Прикажи ставки",
+      "hideItems": "Скриј ставки"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

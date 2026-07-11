@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Bagi berdasarkan jumlah",
       "switchToItemizedTitle": "Beralih ke pembagian per item?",
       "switchToItemizedDescription": "Mengedit peserta item akan mengubah Dibayar untuk menjadi Per item dan mengganti pembagian dibayar untuk yang sudah Anda atur.",
-      "switchToItemizedConfirm": "Beralih ke per item"
+      "switchToItemizedConfirm": "Beralih ke per item",
+      "showItems": "Tampilkan item",
+      "hideItems": "Sembunyikan item"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

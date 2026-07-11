@@ -690,7 +690,9 @@
       "splitByAmountLabel": "金額で分割",
       "switchToItemizedTitle": "項目別の分割に切り替えますか？",
       "switchToItemizedDescription": "項目の参加者を編集すると、「支払い対象」が「項目別」に変更され、設定済みの支払い対象の分割が置き換えられます。",
-      "switchToItemizedConfirm": "項目別に切り替え"
+      "switchToItemizedConfirm": "項目別に切り替え",
+      "showItems": "項目を表示",
+      "hideItems": "項目を非表示"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

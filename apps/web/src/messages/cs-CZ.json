@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Rozdělit podle částky",
       "switchToItemizedTitle": "Přepnout na rozdělení podle položek?",
       "switchToItemizedDescription": "Úprava účastníků položky změní Zaplaceno za na Podle položek a nahradí nastavené rozdělení zaplaceno za.",
-      "switchToItemizedConfirm": "Přepnout na položky"
+      "switchToItemizedConfirm": "Přepnout na položky",
+      "showItems": "Zobrazit položky",
+      "hideItems": "Skrýt položky"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

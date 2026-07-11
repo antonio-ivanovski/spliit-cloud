@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Répartir par montant",
       "switchToItemizedTitle": "Passer au partage par articles ?",
       "switchToItemizedDescription": "Modifier les participants d'un article change Payé pour en Par articles et remplace la répartition Payé pour que vous aviez configurée.",
-      "switchToItemizedConfirm": "Passer aux articles"
+      "switchToItemizedConfirm": "Passer aux articles",
+      "showItems": "Afficher les éléments",
+      "hideItems": "Masquer les éléments"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

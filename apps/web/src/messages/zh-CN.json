@@ -690,7 +690,9 @@
       "splitByAmountLabel": "按金额分摊",
       "switchToItemizedTitle": "切换为按项目分摊？",
       "switchToItemizedDescription": "编辑项目参与者会将“支付对象”改为“按项目”，并替换你已配置的支付对象分摊方式。",
-      "switchToItemizedConfirm": "切换为按项目"
+      "switchToItemizedConfirm": "切换为按项目",
+      "showItems": "显示项目",
+      "hideItems": "隐藏项目"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

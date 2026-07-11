@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Împarte după sumă",
       "switchToItemizedTitle": "Comutați la împărțirea pe articole?",
       "switchToItemizedDescription": "Editarea participanților unui articol schimbă Plătit pentru în Pe articole și înlocuiește împărțirea Plătit pentru configurată.",
-      "switchToItemizedConfirm": "Comută la pe articole"
+      "switchToItemizedConfirm": "Comută la pe articole",
+      "showItems": "Afișează elementele",
+      "hideItems": "Ascunde elementele"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

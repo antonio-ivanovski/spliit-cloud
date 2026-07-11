@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Jaa summan mukaan",
       "switchToItemizedTitle": "Vaihdetaanko erittelykohtaiseen jakoon?",
       "switchToItemizedDescription": "Kohteen osallistujien muokkaaminen vaihtaa Maksettu kohteelle -jaon erittelykohtaiseksi ja korvaa määrittämäsi Maksettu kohteelle -jaon.",
-      "switchToItemizedConfirm": "Vaihda erittelykohtaiseksi"
+      "switchToItemizedConfirm": "Vaihda erittelykohtaiseksi",
+      "showItems": "Näytä kohteet",
+      "hideItems": "Piilota kohteet"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

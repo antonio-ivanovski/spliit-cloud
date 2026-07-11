@@ -117,14 +117,12 @@ export function ExpenseItemRow({
     <div className={cn('border-t py-3', isFiller && 'bg-muted/25')}>
       <div
         className={cn(
-          'grid grid-cols-1 gap-2 md:items-start md:gap-x-3',
+          'grid grid-cols-[minmax(0,1fr)_3.5rem_2.5rem_3.25rem_auto] items-center gap-1 md:items-start md:gap-x-3',
           expenseItemGridClass,
         )}
       >
         <div className="min-w-0">
-          <div className="mb-1 text-[11px] font-medium text-muted-foreground md:hidden">
-            {displayColumnItem}
-          </div>
+          <div className="sr-only">{displayColumnItem}</div>
           {isFiller ? (
             <div className="flex min-h-9 items-center">
               <span className="truncate text-sm font-medium">
@@ -155,11 +153,9 @@ export function ExpenseItemRow({
         </div>
 
         <div>
-          <div className="mb-1 text-[11px] font-medium text-muted-foreground md:hidden">
-            {displayColumnCost}
-          </div>
+          <div className="sr-only">{displayColumnCost}</div>
           {isFiller ? (
-            <div className="flex h-9 items-center justify-start text-sm text-muted-foreground md:justify-end">
+            <div className="flex h-9 items-center justify-end truncate text-right text-sm text-muted-foreground">
               {priceDisplay}
             </div>
           ) : (
@@ -172,6 +168,7 @@ export function ExpenseItemRow({
                     <AmountInput
                       currency={groupCurrency}
                       aria-label={displayColumnCost}
+                      containerClassName="w-full min-w-0"
                       className="h-9"
                       type="text"
                       disabled={readOnly}
@@ -197,11 +194,9 @@ export function ExpenseItemRow({
         </div>
 
         <div>
-          <div className="mb-1 text-[11px] font-medium text-muted-foreground md:hidden">
-            {displayColumnQuantity}
-          </div>
+          <div className="sr-only">{displayColumnQuantity}</div>
           {isFiller ? (
-            <div className="flex h-9 items-center justify-start text-sm text-muted-foreground md:justify-end">
+            <div className="flex h-9 items-center justify-end text-right text-sm text-muted-foreground">
               {Number(quantity)}
             </div>
           ) : (
@@ -240,15 +235,13 @@ export function ExpenseItemRow({
         </div>
 
         <div>
-          <div className="mb-1 text-[11px] font-medium text-muted-foreground md:hidden">
-            {displayColumnTotal}
-          </div>
-          <div className="flex h-9 items-center justify-start text-sm font-medium tabular-nums md:justify-end">
+          <div className="sr-only">{displayColumnTotal}</div>
+          <div className="flex h-9 items-center justify-end truncate text-right text-sm font-medium tabular-nums">
             {totalDisplay}
           </div>
         </div>
 
-        <div className="flex items-end gap-1 md:justify-end">
+        <div className="flex h-9 items-center justify-end gap-0 md:gap-1">
           {!readOnly && (
             <Button
               variant="ghost"
@@ -257,7 +250,7 @@ export function ExpenseItemRow({
               onClick={onEdit}
               aria-label={displayActionEdit}
               title={displayActionEdit}
-              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground md:h-8 md:w-8"
             >
               <UserPen className="h-4 w-4" />
             </Button>
@@ -270,7 +263,7 @@ export function ExpenseItemRow({
               onClick={onDelete}
               aria-label={displayActionDelete}
               title={displayActionDelete}
-              className="h-8 w-8 text-muted-foreground hover:text-destructive"
+              className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive md:h-8 md:w-8"
             >
               <Trash2 className="h-4 w-4" />
             </Button>

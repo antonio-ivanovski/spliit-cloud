@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Dividir por importe",
       "switchToItemizedTitle": "¿Cambiar a división por artículos?",
       "switchToItemizedDescription": "Editar los participantes del artículo cambia Pagado para a Por artículos y sustituye la división de Pagado para que configuraste.",
-      "switchToItemizedConfirm": "Cambiar a por artículos"
+      "switchToItemizedConfirm": "Cambiar a por artículos",
+      "showItems": "Mostrar partidas",
+      "hideItems": "Ocultar partidas"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

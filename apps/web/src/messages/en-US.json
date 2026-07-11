@@ -821,7 +821,9 @@
       "splitByAmountLabel": "Split by amount",
       "switchToItemizedTitle": "Switch to itemized split?",
       "switchToItemizedDescription": "Editing item participants changes Paid for to Itemized and replaces the paid-for split you configured.",
-      "switchToItemizedConfirm": "Switch to itemized"
+      "switchToItemizedConfirm": "Switch to itemized",
+      "showItems": "Show items",
+      "hideItems": "Hide items"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

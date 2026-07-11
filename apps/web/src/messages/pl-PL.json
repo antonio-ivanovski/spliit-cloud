@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Podziel według kwoty",
       "switchToItemizedTitle": "Przełączyć na podział według pozycji?",
       "switchToItemizedDescription": "Edycja uczestników pozycji zmieni Zapłacono za na Według pozycji i zastąpi skonfigurowany podział Zapłacono za.",
-      "switchToItemizedConfirm": "Przełącz na pozycje"
+      "switchToItemizedConfirm": "Przełącz na pozycje",
+      "showItems": "Pokaż pozycje",
+      "hideItems": "Ukryj pozycje"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

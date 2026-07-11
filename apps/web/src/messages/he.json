@@ -690,7 +690,9 @@
       "splitByAmountLabel": "חלק לפי סכום",
       "switchToItemizedTitle": "לעבור לפיצול לפי פריטים?",
       "switchToItemizedDescription": "עריכת המשתתפים בפריט תשנה את שולם עבור ללפי פריטים ותחליף את פיצול שולם עבור שהגדרת.",
-      "switchToItemizedConfirm": "לעבור לפי פריטים"
+      "switchToItemizedConfirm": "לעבור לפי פריטים",
+      "showItems": "הצג פריטים",
+      "hideItems": "הסתר פריטים"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

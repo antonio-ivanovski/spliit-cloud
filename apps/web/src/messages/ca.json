@@ -690,7 +690,9 @@
       "splitByAmountLabel": "Divideix per import",
       "switchToItemizedTitle": "Voleu canviar al repartiment per articles?",
       "switchToItemizedDescription": "Editar els participants de l'article canvia Pagat per a a Per articles i substitueix el repartiment de pagat per a que havíeu configurat.",
-      "switchToItemizedConfirm": "Canvia a per articles"
+      "switchToItemizedConfirm": "Canvia a per articles",
+      "showItems": "Mostra els elements",
+      "hideItems": "Amaga els elements"
     },
     "leaveItemized": {
       "title": "Switch split mode?",
