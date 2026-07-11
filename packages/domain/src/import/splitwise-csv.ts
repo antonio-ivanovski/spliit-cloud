@@ -10,6 +10,10 @@ import {
 import { amountAsMinorUnitsByCode } from '../utils'
 import { guessSplitMode } from './split-guess'
 import { splitwiseCategoryToId } from './splitwise-categories'
+import {
+  isSplitwiseHeader,
+  isSplitwiseTotalBalanceLabel,
+} from './splitwise-headers'
 import type { ImportParseResult, NormalizedSource } from './types'
 
 const PARTICIPANT_START_INDEX = 5
@@ -50,13 +54,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
   let headerRowIdx = -1
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]
-    if (
-      row[0] === 'Date' &&
-      row[1] === 'Description' &&
-      row[2] === 'Category' &&
-      row[3] === 'Cost' &&
-      row[4] === 'Currency'
-    ) {
+    if (isSplitwiseHeader(row)) {
       headerRowIdx = i
       break
     }
@@ -98,7 +96,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     if (!title) continue
     if (cost === null) continue
     if (currencyCode.length !== 3) continue
-    if (title.toLowerCase() === 'total balance') continue
+    if (isSplitwiseTotalBalanceLabel(title)) continue
 
     currencyCounts.set(
       currencyCode,

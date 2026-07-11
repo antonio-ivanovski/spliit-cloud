@@ -6,6 +6,21 @@ import type { NormalizedSource } from './types'
 
 const HEADER = 'Date,Description,Category,Cost,Currency,John Doe,Jane Doe'
 
+const LOCALIZED_HEADERS = [
+  'Date,Description,Category,Cost,Currency,John Doe,Jane Doe',
+  'Fecha,Descripción,Categoría,Coste,Moneda,John Doe,Jane Doe',
+  'Date,Description,Catégorie,Coût,Devise,John Doe,Jane Doe',
+  'Datum,Beschreibung,Kategorie,Kosten,Währung,John Doe,Jane Doe',
+  'Tanggal,Keterangan,Kategori,Biaya,Mata uang,John Doe,Jane Doe',
+  'Data,Descrizione,Categorie,Costo,Valuta,John Doe,Jane Doe',
+  '日付,概要,カテゴリ,費用,通貨,John Doe,Jane Doe',
+  'Datum,Omschrijving,Categorie,Kosten,Valuta,John Doe,Jane Doe',
+  'Data,Opis,Kategoria,Koszt,Waluta,John Doe,Jane Doe',
+  'Data,Descrição,Categoria,Custo,Moeda,John Doe,Jane Doe',
+  'Datum,Beskrivning,Kategori,Kostnad,Valuta,John Doe,Jane Doe',
+  'วันที่,คำอธิบาย,หมวดหมู่,ราคา,สกุลเงิน,John Doe,Jane Doe',
+] as const
+
 function splitwiseCsv(
   rows: Array<Array<string>>,
   header: string = HEADER,
@@ -95,6 +110,33 @@ function pf(aid: string, shares: number) {
 }
 
 describe('tryParseSplitwiseCsv', () => {
+  it.each(LOCALIZED_HEADERS)('parses localized header: %s', (header) => {
+    const result = tryParseSplitwiseCsv(
+      splitwiseCsv(
+        [
+          [
+            '2026-01-15',
+            'Localized header',
+            'General',
+            '10.00',
+            'MKD',
+            '5.00',
+            '-5.00',
+          ],
+        ],
+        header,
+      ),
+    )
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.participants.map((p) => p.sourceName)).toEqual([
+      'John Doe',
+      'Jane Doe',
+    ])
+    expect(result.source.expenses).toHaveLength(1)
+  })
+
   it('parses a representative Splitwise CSV with two participants, MKD-only rows', () => {
     const csv = splitwiseCsv([
       [
@@ -205,8 +247,21 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses).toHaveLength(1)
   })
 
-  it('skips case-insensitive TOTAL BALANCE and total balance rows', () => {
-    for (const label of ['TOTAL BALANCE', 'total balance']) {
+  it('skips localized total balance rows', () => {
+    for (const label of [
+      'TOTAL BALANCE',
+      'total balance',
+      'Saldo total',
+      'Solde total',
+      'Total saldo',
+      'Bilancio totale',
+      '合計残高',
+      'Totaal saldo',
+      'Całkowite saldo',
+      'Totalsumma',
+      'ยอดคงเหลือรวม',
+      'Gesamtbilanz',
+    ]) {
       const csv = splitwiseCsv([
         [
           '2026-01-15',
@@ -217,7 +272,7 @@ describe('tryParseSplitwiseCsv', () => {
           '360.00',
           '-180.00',
         ],
-        ['2026-06-30', label, '', '', 'MKD', '0.00', '0.00'],
+        ['2026-06-30', label, '', '1.00', 'MKD', '1.00', '0.00'],
       ])
       const result = tryParseSplitwiseCsv(csv)
       expect(result.ok).toBe(true)

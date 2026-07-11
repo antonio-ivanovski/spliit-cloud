@@ -6,6 +6,8 @@ import { tryParseSplitwiseCsv } from './splitwise-csv'
 
 const HEADER = 'Date,Description,Category,Cost,Currency,John Doe,Jane Doe'
 
+const FRENCH_HEADER = 'Date,Description,Catégorie,Coût,Devise,John Doe,Jane Doe'
+
 function buildSplitwiseCsv(rows: Array<Array<string>>): string {
   return [
     HEADER,
@@ -78,6 +80,21 @@ function assertAnonymized(input: string) {
 }
 
 describe('anonymizeSplitwiseCsv', () => {
+  it('anonymizes a localized Splitwise export without changing its header', () => {
+    const csv = [
+      FRENCH_HEADER,
+      '2026-01-15,Dîner,Général,40.00,USD,40.00,-40.00',
+    ].join('\n')
+
+    const result = anonymizeSplitwiseCsv(csv)
+    expect(result.outputCsv.split('\n')[0]?.trimEnd()).toBe(
+      'Date,Description,Catégorie,Coût,Devise,Person 1,Person 2',
+    )
+
+    const reparsed = tryParseSplitwiseCsv(result.outputCsv)
+    expect(reparsed.ok).toBe(true)
+  })
+
   it('smoke: replaces names and descriptions on a tiny inline CSV', () => {
     const csv = buildSplitwiseCsv([
       ['2026-01-15', 'Dinner', 'Food', '40.00', 'USD', '40.00', '-40.00'],

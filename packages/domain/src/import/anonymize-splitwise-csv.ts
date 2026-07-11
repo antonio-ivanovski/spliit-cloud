@@ -1,4 +1,5 @@
 import Papa from 'papaparse'
+import { isSplitwiseHeader } from './splitwise-headers'
 
 const PARTICIPANT_START_INDEX = 5
 
@@ -32,13 +33,7 @@ export function anonymizeSplitwiseCsv(input: string): AnonymizedSplitwiseCsv {
   let headerRowIdx = -1
   for (let i = 0; i < parsed.data.length; i++) {
     const row = parsed.data[i]
-    if (
-      row[0] === 'Date' &&
-      row[1] === 'Description' &&
-      row[2] === 'Category' &&
-      row[3] === 'Cost' &&
-      row[4] === 'Currency'
-    ) {
+    if (isSplitwiseHeader(row)) {
       headerRowIdx = i
       break
     }
