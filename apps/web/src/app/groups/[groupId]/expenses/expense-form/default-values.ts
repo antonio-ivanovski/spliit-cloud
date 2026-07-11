@@ -92,11 +92,6 @@ const parsePrefilledItems = (
     if (!parsed.success) return []
 
     const validParticipantIds = new Set(group.participants.map((p) => p.id))
-    const allParticipants = group.participants.map(({ id }) => ({
-      participant: id,
-      shares: 1,
-    }))
-
     return parsed.data.map((item) => {
       const seen = new Set<string>()
       const paidFor = (item.paidFor ?? [])
@@ -108,13 +103,16 @@ const parsePrefilledItems = (
         })
         .map(({ participant, shares }) => ({ participant, shares }))
 
+      // Missing assignments keep URL-prefilled items as documentation. The
+      // participant editor supplies all members when the user opts into an
+      // item split.
       return {
         id: item.id ?? randomId(),
         title: item.title ?? '',
         unitPrice: item.unitPrice ?? 0,
         quantity: item.quantity ?? 1,
         splitMode: item.splitMode ?? 'EVENLY',
-        paidFor: paidFor.length ? paidFor : allParticipants,
+        paidFor,
       }
     })
   } catch {

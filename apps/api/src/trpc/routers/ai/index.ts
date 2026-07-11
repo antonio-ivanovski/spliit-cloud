@@ -60,12 +60,36 @@ export const aiRouter = createTRPCRouter({
         imageUrl: z.string().url(),
         currency: z.string(),
         currencyCode: z.string().nullish(),
+        groupId: z.string().min(1),
+        locale: z.string().optional(),
       }),
     )
-    .mutation(({ input }) =>
-      extractExpenseInformationFromImage(input.imageUrl, {
-        currency: input.currency,
-        currencyCode: input.currencyCode,
-      }),
-    ),
+    .mutation(async ({ input, ctx }) => {
+      let recentExpenses: Awaited<
+        ReturnType<typeof getRecentExpenseContext>
+      >['expenses'] = []
+      let groupContext:
+        Awaited<ReturnType<typeof getRecentExpenseContext>>['group'] | undefined
+
+      if (ctx.auth) {
+        await loadGroupViewer({
+          groupId: input.groupId,
+          accountId: ctx.auth.user.id,
+          accountEmail: ctx.auth.user.email,
+          linkTokenHash: null,
+        })
+        const context = await getRecentExpenseContext(input.groupId)
+        recentExpenses = context.expenses
+        groupContext = context.group
+      }
+
+      return extractExpenseInformationFromImage(
+        input.imageUrl,
+        {
+          currency: input.currency,
+          currencyCode: input.currencyCode,
+        },
+        { recentExpenses, groupContext, locale: input.locale },
+      )
+    }),
 })

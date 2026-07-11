@@ -502,6 +502,34 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
 })
 
 describe('buildExpenseFormDefaults (prefilled items)', () => {
+  it('keeps extracted items as documentation without changing the overall split', () => {
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {
+        amount: '2500',
+        items: JSON.stringify([
+          { title: 'Pizza', unitPrice: 12.5, quantity: 2 },
+        ]),
+      },
+      group: mockGroup,
+      groupCurrency: usd(),
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
+    })
+
+    expect(result.splitMode).toBe('EVENLY')
+    expect(result.items).toEqual([
+      expect.objectContaining({
+        title: 'Pizza',
+        unitPrice: 12.5,
+        quantity: 2,
+        splitMode: 'EVENLY',
+        paidFor: [],
+      }),
+    ])
+  })
+
   it('prefills create defaults with URL item rows and item participant splits', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,

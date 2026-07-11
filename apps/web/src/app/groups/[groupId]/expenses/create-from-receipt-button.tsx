@@ -42,6 +42,11 @@ type ReceiptExtractedInfo = {
   currencyCode: string | null
   date: string | null
   title: string | null
+  items: Array<{
+    title: string
+    unitPrice: number
+    quantity: number
+  }>
 }
 
 export function CreateFromReceiptButton() {
@@ -83,6 +88,7 @@ function ReceiptDialogContent() {
 
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
+  const { t: tExpenseForm } = useTranslation()
   const [pending, setPending] = useState(false)
   const { uploadToS3, FileInput, openFileDialog } = usePresignedUpload(
     group?.ledgerId,
@@ -116,11 +122,13 @@ function ReceiptDialogContent() {
         console.log('Uploading image…')
         const { url } = await uploadToS3(resizedFile)
         console.log('Extracting information from receipt…')
-        const { amount, categoryId, currencyCode, date, title } =
+        const { amount, categoryId, currencyCode, date, title, items } =
           await extractReceiptMutation.mutateAsync({
             imageUrl: url,
             currency: group?.currency ?? '',
             currencyCode: group?.currencyCode,
+            groupId: group?.id ?? '',
+            locale,
           })
         setReceiptInfo({
           amount,
@@ -128,6 +136,7 @@ function ReceiptDialogContent() {
           currencyCode,
           date,
           title,
+          items,
           url,
           width,
           height,
@@ -263,6 +272,52 @@ function ReceiptDialogContent() {
               )}
             </div>
           </div>
+          <div className="col-span-2">
+            <strong>{tExpenseForm('ExpenseForm.items.title')}</strong>
+            {receiptInfo ? (
+              receiptInfo.items.length ? (
+                <ul className="m-0 max-h-24 list-none overflow-y-auto p-0 text-xs">
+                  {receiptInfo.items.slice(0, 8).map((item, index) => {
+                    const itemCurrency = receiptInfo.currencyCode
+                      ? (getCurrency(receiptInfo.currencyCode) ??
+                        (group ? getCurrencyFromGroup(group) : null))
+                      : group
+                        ? getCurrencyFromGroup(group)
+                        : null
+                    return (
+                      <li
+                        key={`${item.title}-${index}`}
+                        className="flex items-baseline justify-between gap-2"
+                      >
+                        <span className="min-w-0 truncate">
+                          {item.title}
+                          {item.quantity > 1 ? ` × ${item.quantity}` : ''}
+                        </span>
+                        {itemCurrency ? (
+                          <span className="shrink-0 text-muted-foreground">
+                            {formatCurrency(
+                              itemCurrency,
+                              item.unitPrice,
+                              locale,
+                            )}
+                          </span>
+                        ) : null}
+                      </li>
+                    )
+                  })}
+                  {receiptInfo.items.length > 8 ? (
+                    <li className="text-muted-foreground">
+                      +{receiptInfo.items.length - 8}
+                    </li>
+                  ) : null}
+                </ul>
+              ) : (
+                <Unknown />
+              )
+            ) : (
+              '…'
+            )}
+          </div>
         </div>
       </div>
       <p>{t('Dialog.editNext')}</p>
@@ -282,6 +337,9 @@ function ReceiptDialogContent() {
                 originalCurrency: receiptInfo.currencyCode ?? undefined,
                 date: receiptInfo.date ?? undefined,
                 title: receiptInfo.title ?? undefined,
+                items: receiptInfo.items.length
+                  ? JSON.stringify(receiptInfo.items)
+                  : undefined,
                 imageUrl: receiptInfo.url,
                 imageWidth:
                   receiptInfo.width !== undefined
