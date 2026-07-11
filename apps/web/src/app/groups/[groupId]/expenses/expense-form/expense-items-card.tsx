@@ -122,6 +122,8 @@ export function ExpenseItemsCard({
   const [pendingItemizedEdit, setPendingItemizedEdit] =
     useState<EditingTarget | null>(null)
 
+  if (splitMode !== 'ITEMIZED' && items.length === 0) return null
+
   const beginEditing = (target: EditingTarget) => {
     if (splitMode !== 'ITEMIZED') {
       setPendingItemizedEdit(target)

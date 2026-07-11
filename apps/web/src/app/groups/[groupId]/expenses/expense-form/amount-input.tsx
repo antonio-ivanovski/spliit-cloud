@@ -6,19 +6,27 @@ import type { ComponentProps } from 'react'
 export function AmountInput({
   currency,
   className,
+  containerClassName,
   ...props
 }: ComponentProps<typeof Input> & {
-  currency: Currency
+  currency?: Currency
+  containerClassName?: string
 }) {
   return (
-    <div className="relative w-fit">
+    <div className={cn('relative w-fit', containerClassName)}>
       <Input
         {...props}
-        className={cn('pr-10 text-right tabular-nums', className)}
+        className={cn(
+          currency ? 'pr-10' : 'pr-3',
+          'text-right tabular-nums',
+          className,
+        )}
       />
-      <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-[11px] font-medium text-muted-foreground">
-        {currency.symbol}
-      </span>
+      {currency && (
+        <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-[11px] font-medium text-muted-foreground">
+          {currency.symbol}
+        </span>
+      )}
     </div>
   )
 }

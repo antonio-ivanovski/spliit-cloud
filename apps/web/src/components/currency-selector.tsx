@@ -48,6 +48,8 @@ type Props = {
    * common list. Omit / leave undefined to keep the static fallback.
    */
   recommendedCurrencyCodes?: string[]
+  /** Render a compact trigger for embedding beside an amount input. */
+  compact?: boolean
 }
 
 export function CurrencySelector({
@@ -58,6 +60,7 @@ export function CurrencySelector({
   disabled = false,
   pinnedCurrencyCode,
   recommendedCurrencyCodes,
+  compact = false,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -87,6 +90,7 @@ export function CurrencySelector({
             open={open}
             isLoading={isLoading}
             disabled={disabled}
+            compact={compact}
           />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
@@ -104,6 +108,7 @@ export function CurrencySelector({
           open={open}
           isLoading={isLoading}
           disabled={disabled}
+          compact={compact}
         />
       </DrawerTrigger>
       <DrawerContent className="p-0">{command}</DrawerContent>
@@ -197,10 +202,18 @@ type CurrencyButtonProps = {
   open: boolean
   isLoading: boolean
   disabled?: boolean
+  compact?: boolean
 }
 const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
   (
-    { currency, open, isLoading, ...props }: ButtonProps & CurrencyButtonProps,
+    {
+      currency,
+      open,
+      isLoading,
+      compact = false,
+      className,
+      ...props
+    }: ButtonProps & CurrencyButtonProps,
     ref,
   ) => {
     const iconClassName = 'ml-2 h-4 w-4 shrink-0 opacity-50'
@@ -209,12 +222,21 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="flex w-full"
+        aria-label={
+          compact
+            ? `${currency.name}${currency.code ? ` (${currency.code})` : ''}`
+            : undefined
+        }
+        className={
+          compact
+            ? `h-10 shrink-0 gap-1 rounded-none border-0 px-3 ${className ?? ''}`
+            : `flex w-full ${className ?? ''}`
+        }
         ref={ref}
         {...props}
       >
-        <span className="flex-1 text-left">
-          <CurrencyLabel currency={currency} />
+        <span className={compact ? 'text-left' : 'flex-1 text-left'}>
+          <CurrencyLabel currency={currency} compact={compact} />
         </span>
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />
@@ -227,15 +249,22 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
 )
 CurrencyButton.displayName = 'CurrencyButton'
 
-function CurrencyLabel({ currency }: { currency: DisplayCurrency }) {
+function CurrencyLabel({
+  currency,
+  compact = false,
+}: {
+  currency: DisplayCurrency
+  compact?: boolean
+}) {
   const flagUrl = `https://flagcdn.com/h24/${
     currency?.code.length ? currency.code.slice(0, 2).toLowerCase() : 'un'
   }.png`
   return (
     <div className="flex items-center gap-3">
       <img src={flagUrl} className="w-4" alt="" />
-      {currency.name}
-      {currency.code ? ` (${currency.code})` : ''}
+      {compact
+        ? currency.code || currency.symbol || currency.name
+        : `${currency.name}${currency.code ? ` (${currency.code})` : ''}`}
     </div>
   )
 }

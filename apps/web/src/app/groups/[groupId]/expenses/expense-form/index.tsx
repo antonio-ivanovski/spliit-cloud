@@ -173,15 +173,6 @@ export function ExpenseForm(props: {
             />
           )}
         />
-        <PaidByCard
-          form={form}
-          group={props.group}
-          groupCurrency={groupCurrency}
-          payerCurrency={payerCurrency}
-          readOnly={!!props.readOnly}
-          sExpense={sExpense}
-          setManuallyEditedPayers={setManuallyEditedPayers}
-        />
         <PaidForCard
           form={form}
           group={props.group}
@@ -192,6 +183,15 @@ export function ExpenseForm(props: {
           setManuallyEditedParticipants={setManuallyEditedParticipants}
           savedDefault={savedDefault}
           isCreate={isCreate}
+        />
+        <PaidByCard
+          form={form}
+          group={props.group}
+          groupCurrency={groupCurrency}
+          payerCurrency={payerCurrency}
+          readOnly={!!props.readOnly}
+          sExpense={sExpense}
+          setManuallyEditedPayers={setManuallyEditedPayers}
         />
         {props.runtimeFeatureFlags.enableExpenseDocuments && (
           <DocumentsCard

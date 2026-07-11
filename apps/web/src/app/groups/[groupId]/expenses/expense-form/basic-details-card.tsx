@@ -46,13 +46,13 @@ import type {
   ExpenseFormItemValues,
   RecurrenceRule,
 } from '@spliit/domain'
-import { DEFAULT_CATEGORIES } from '@spliit/domain'
+import { DEFAULT_CATEGORIES, DEFAULT_CATEGORY_ID } from '@spliit/domain'
 import {
   formatCalculatorAmount,
   type CalculatorItem,
 } from '@spliit/domain/calculator'
 import { ArrowLeft, Calculator, FileInput } from 'lucide-react'
-import { useState, type Dispatch, type SetStateAction } from 'react'
+import { useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { AmountCalculatorDialog } from './amount-calculator-dialog'
@@ -116,6 +116,11 @@ export function BasicDetailsCard(props: {
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale() as Locale
   const [isCategoryLoading, setCategoryLoading] = useState(false)
+  const categoryRequestRef = useRef(0)
+  const categorySourceRef = useRef<'default' | 'manual' | 'ai'>(
+    form.getValues('category') === DEFAULT_CATEGORY_ID ? 'default' : 'manual',
+  )
+  const lastCategorizedTitleRef = useRef<string | null>(null)
   const [calculatorOpen, setCalculatorOpen] = useState(false)
   const [calculatorExpression, setCalculatorExpression] = useState<
     string | null
@@ -228,35 +233,89 @@ export function BasicDetailsCard(props: {
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem className="">
+            <FormItem className="order-1">
               <FormLabel>{t(`${sExpense}.TitleField.label`)}</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={t(`${sExpense}.TitleField.placeholder`)}
-                  className="text-base"
-                  disabled={readOnly}
-                  {...field}
-                  onBlur={async () => {
-                    field.onBlur()
-                    if (
-                      !readOnly &&
-                      props.runtimeFeatureFlags.enableCategoryExtract
-                    ) {
-                      setCategoryLoading(true)
-                      const { categoryId } =
-                        await props.extractCategoryMutation.mutateAsync({
-                          description: field.value,
-                          groupId: group.id,
-                          locale,
-                          linkInviteToken: props.linkInviteToken,
-                        })
-                      form.setValue('category', categoryId)
-                      setCategoryLoading(false)
-                    }
-                  }}
+              <div className="flex min-h-10 w-full overflow-hidden rounded-md border border-input bg-background transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field: categoryField }) => (
+                    <CategorySelector
+                      categories={DEFAULT_CATEGORIES}
+                      defaultValue={categoryField.value}
+                      compact
+                      onValueChange={(categoryId) => {
+                        categoryRequestRef.current += 1
+                        categorySourceRef.current = 'manual'
+                        setCategoryLoading(false)
+                        props.extractCategoryMutation.reset?.()
+                        categoryField.onChange(categoryId)
+                      }}
+                      isLoading={isCategoryLoading}
+                      disabled={readOnly}
+                    />
+                  )}
                 />
-              </FormControl>
-              <FormDescription>
+                <div className="min-w-0 flex-1 border-l border-input">
+                  <FormControl>
+                    <Input
+                      placeholder={t(`${sExpense}.TitleField.placeholder`)}
+                      className="h-10 w-full rounded-none border-0 text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                      disabled={readOnly}
+                      {...field}
+                      onBlur={() => {
+                        field.onBlur()
+                        const title = field.value.trim()
+                        const canSuggest =
+                          !readOnly &&
+                          props.runtimeFeatureFlags.enableCategoryExtract &&
+                          title.length > 0 &&
+                          (categorySourceRef.current === 'default' ||
+                            categorySourceRef.current === 'ai') &&
+                          lastCategorizedTitleRef.current !== title
+
+                        if (!canSuggest) return
+
+                        const requestId = ++categoryRequestRef.current
+                        setCategoryLoading(true)
+
+                        void props.extractCategoryMutation
+                          .mutateAsync({
+                            description: title,
+                            groupId: group.id,
+                            locale,
+                            linkInviteToken: props.linkInviteToken,
+                          })
+                          .then(({ categoryId }) => {
+                            if (
+                              requestId !== categoryRequestRef.current ||
+                              form.getValues('title').trim() !== title ||
+                              (categorySourceRef.current !== 'default' &&
+                                categorySourceRef.current !== 'ai')
+                            ) {
+                              return
+                            }
+
+                            lastCategorizedTitleRef.current = title
+                            categorySourceRef.current = 'ai'
+                            form.setValue('category', categoryId, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            })
+                          })
+                          .catch(() => undefined)
+                          .finally(() => {
+                            if (requestId === categoryRequestRef.current) {
+                              setCategoryLoading(false)
+                            }
+                          })
+                      }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+              <FormDescription className="hidden sm:block">
                 {t(`${sExpense}.TitleField.description`)}
               </FormDescription>
               <FormMessage />
@@ -268,7 +327,7 @@ export function BasicDetailsCard(props: {
           control={form.control}
           name="expenseDate"
           render={({ field }) => (
-            <FormItem className="sm:order-1">
+            <FormItem className="order-5">
               <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
               <FormControl>
                 <Input
@@ -281,42 +340,8 @@ export function BasicDetailsCard(props: {
                   }}
                 />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="hidden sm:block">
                 {t(`${sExpense}.DateField.description`)}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="originalCurrency"
-          render={({ field: { onChange, ...field } }) => (
-            <FormItem className="sm:order-3">
-              <FormLabel>{t(`${sExpense}.currencyField.label`)}</FormLabel>
-              <FormControl>
-                {group.currencyCode ? (
-                  <CurrencySelector
-                    currencies={props.originalCurrencies}
-                    defaultValue={form.watch(field.name) ?? ''}
-                    isLoading={false}
-                    disabled={readOnly}
-                    onValueChange={(v) => onChange(v)}
-                    pinnedCurrencyCode={props.pinnedCurrencyCode}
-                    recommendedCurrencyCodes={props.recommendedCurrencyCodes}
-                  />
-                ) : (
-                  <Input
-                    className="text-base"
-                    disabled={true}
-                    {...field}
-                    placeholder={group.currency}
-                  />
-                )}
-              </FormControl>
-              <FormDescription>
-                {t(`${sExpense}.currencyField.description`)}{' '}
-                {!group.currencyCode && t('conversionUnavailable')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -327,38 +352,71 @@ export function BasicDetailsCard(props: {
           control={form.control}
           name="amount"
           render={({ field: { onChange, ...field } }) => (
-            <FormItem className="sm:order-4 col-span-2 md:col-span-1 space-y-2">
+            <FormItem className="order-2 col-span-2 md:col-span-1 space-y-2">
               <FormLabel>{t('amountField.label')}</FormLabel>
-              <div className="flex items-center gap-1">
-                <FormControl>
-                  <AmountInput
-                    currency={inputCurrency}
-                    className="max-w-[132px] text-base"
-                    type="text"
-                    inputMode="decimal"
-                    placeholder="0.00"
+              <div className="flex min-h-10 w-full overflow-hidden rounded-md border border-input bg-background transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                {group.currencyCode ? (
+                  <CurrencySelector
+                    currencies={props.originalCurrencies}
+                    defaultValue={form.watch('originalCurrency') ?? ''}
+                    isLoading={false}
                     disabled={readOnly}
-                    onChange={(event) => {
-                      const v = enforceCurrencyPattern(event.target.value)
-                      setCalculatorExpression(v)
-                      const income = Number(v) < 0
-                      setIsIncome(income)
-                      if (income) form.setValue('isReimbursement', false)
-                      onChange(v)
-                    }}
-                    onFocus={(e) => {
-                      const target = e.currentTarget
-                      setTimeout(() => target.select(), 1)
-                    }}
-                    {...field}
+                    compact
+                    onValueChange={(value) =>
+                      form.setValue('originalCurrency', value, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      })
+                    }
+                    pinnedCurrencyCode={props.pinnedCurrencyCode}
+                    recommendedCurrencyCodes={props.recommendedCurrencyCodes}
                   />
-                </FormControl>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled
+                    className="h-10 shrink-0 gap-2 rounded-none border-0 border-r border-input px-3"
+                    aria-label={group.currency}
+                  >
+                    <span className="text-sm font-medium">
+                      {group.currency}
+                    </span>
+                  </Button>
+                )}
+                <div className="min-w-0 flex-1 border-l border-input">
+                  <FormControl>
+                    <AmountInput
+                      containerClassName="min-w-0 flex-1"
+                      className="h-10 w-full rounded-none border-0 text-lg font-semibold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="0.00"
+                      disabled={readOnly}
+                      onChange={(event) => {
+                        const v = enforceCurrencyPattern(event.target.value)
+                        setCalculatorExpression(v)
+                        const income = Number(v) < 0
+                        setIsIncome(income)
+                        if (income) form.setValue('isReimbursement', false)
+                        onChange(v)
+                      }}
+                      onFocus={(e) => {
+                        const target = e.currentTarget
+                        setTimeout(() => target.select(), 1)
+                      }}
+                      {...field}
+                    />
+                  </FormControl>
+                </div>
                 {!readOnly && (
                   <Button
                     aria-label={t('amountField.calculator.buttonLabel')}
                     size="icon"
                     type="button"
                     variant="outline"
+                    className="h-10 shrink-0 rounded-none border-0 border-l border-input"
                     onClick={() => {
                       setCalculatorExpression(
                         (expression) =>
@@ -494,28 +552,7 @@ export function BasicDetailsCard(props: {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem className="order-3 sm:order-2">
-              <FormLabel>{t('categoryField.label')}</FormLabel>
-              <CategorySelector
-                categories={DEFAULT_CATEGORIES}
-                defaultValue={form.watch(field.name)}
-                onValueChange={field.onChange}
-                isLoading={isCategoryLoading}
-                disabled={readOnly}
-              />
-              <FormDescription>
-                {t(`${sExpense}.categoryFieldDescription`)}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="sm:order-6">
+        <div className="order-7">
           {!isIncome && (
             <FormField
               control={form.control}
@@ -542,7 +579,7 @@ export function BasicDetailsCard(props: {
           control={form.control}
           name="notes"
           render={({ field }) => (
-            <FormItem className="sm:order-7">
+            <FormItem className="order-8 sm:col-span-2">
               <FormLabel>{t('notesField.label')}</FormLabel>
               <FormControl>
                 <Textarea
@@ -558,7 +595,7 @@ export function BasicDetailsCard(props: {
           control={form.control}
           name="recurrenceRule"
           render={({ field }) => (
-            <FormItem className="sm:order-8">
+            <FormItem className="order-9 sm:col-span-2">
               <FormLabel>{t('Expense.recurrenceRule.label')}</FormLabel>
               <Select
                 onValueChange={(value) => {
@@ -585,7 +622,7 @@ export function BasicDetailsCard(props: {
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>
+              <FormDescription className="hidden sm:block">
                 {t('Expense.recurrenceRule.description')}
               </FormDescription>
               <FormMessage />

@@ -21,6 +21,8 @@ vi.mock('@trpc/react-query', () => ({
 // against. Without `vi.hoisted` the factory would close over undefined.
 const {
   mockUseMutation,
+  mockCategoryMutateAsync,
+  mockCategoryReset,
   mockCurrencyGetRate,
   mockAccountDefaultSplit,
   mockInvalidateDefaultSplit,
@@ -56,6 +58,10 @@ const {
       isPending: false,
     }
   })
+  const mockCategoryMutateAsync = vi
+    .fn()
+    .mockResolvedValue({ categoryId: 'general' })
+  const mockCategoryReset = vi.fn()
 
   const mockCurrencyGetRate = vi.fn((_opts?: unknown): MockQueryResult => ({
     data: undefined,
@@ -89,6 +95,8 @@ const {
 
   return {
     mockUseMutation,
+    mockCategoryMutateAsync,
+    mockCategoryReset,
     mockCurrencyGetRate,
     mockAccountDefaultSplit,
     mockInvalidateDefaultSplit,
@@ -100,7 +108,11 @@ vi.mock('@/trpc/client', () => ({
   trpc: {
     ai: {
       extractCategoryFromTitle: {
-        useMutation: () => mockUseMutation(),
+        useMutation: () => ({
+          mutateAsync: mockCategoryMutateAsync,
+          reset: mockCategoryReset,
+          isPending: false,
+        }),
       },
     },
     currency: {
@@ -285,6 +297,9 @@ type MockQueryResult = {
 }
 
 beforeEach(() => {
+  mockCategoryMutateAsync.mockReset()
+  mockCategoryMutateAsync.mockResolvedValue({ categoryId: 'general' })
+  mockCategoryReset.mockReset()
   mockAccountDefaultSplit.mockReset()
   mockAccountDefaultSplit.mockImplementation(
     (_opts?: unknown): MockQueryResult => ({
@@ -351,7 +366,9 @@ describe('ExpenseForm', () => {
     expect(screen.getByText('Expense title')).toBeInTheDocument()
     expect(screen.getByText('Amount')).toBeInTheDocument()
     expect(screen.getByText('Expense date')).toBeInTheDocument()
-    expect(screen.getByText('Category')).toBeInTheDocument()
+    expect(
+      screen.getByRole('combobox', { name: 'General' }),
+    ).toBeInTheDocument()
   })
 
   it('renders the Create expense title in create mode', () => {
@@ -365,6 +382,95 @@ describe('ExpenseForm', () => {
     )
 
     expect(screen.getByText('Create expense')).toBeInTheDocument()
+  })
+
+  it('applies an AI category suggestion when the expense is uncategorized', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    mockCategoryMutateAsync.mockResolvedValueOnce({ categoryId: 'groceries' })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Whole Foods')
+    await user.tab()
+
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+    })
+    expect(
+      screen.getByRole('combobox', { name: 'Groceries' }),
+    ).toBeInTheDocument()
+  })
+
+  it('does not auto-categorize an expense with an existing category', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    const title = screen.getByDisplayValue('Dinner')
+    await user.click(title)
+    await user.tab()
+
+    expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
+  })
+
+  it('ignores an in-flight AI suggestion after a manual category selection', async () => {
+    let resolveSuggestion: ((value: { categoryId: string }) => void) | undefined
+    mockCategoryMutateAsync.mockReturnValueOnce(
+      new Promise<{ categoryId: string }>((resolve) => {
+        resolveSuggestion = resolve
+      }),
+    )
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Whole Foods')
+    await user.tab()
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+    })
+
+    const categoryButton = screen.getByRole('combobox', { name: 'General' })
+    expect(categoryButton).toHaveAttribute('aria-busy', 'true')
+    expect(categoryButton.querySelector('.lucide-sparkles')).toBeInTheDocument()
+
+    await user.click(categoryButton)
+    await user.click(screen.getByText('Groceries'))
+    resolveSuggestion?.({ categoryId: 'dining-out' })
+
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('combobox', { name: 'Groceries' }),
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByRole('combobox', { name: 'Dining Out' }),
+    ).not.toBeInTheDocument()
+    expect(mockCategoryReset).toHaveBeenCalled()
   })
 
   it('edit mode pre-fills expense data', () => {
@@ -568,7 +674,7 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    const currencySelector = screen.getAllByRole('combobox')[0]
+    const currencySelector = screen.getAllByRole('combobox')[1]
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 
@@ -597,7 +703,7 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    const currencySelector = screen.getAllByRole('combobox')[0]
+    const currencySelector = screen.getAllByRole('combobox')[1]
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 
@@ -637,7 +743,7 @@ describe('ExpenseForm', () => {
     await user.clear(amountInput)
     await user.type(amountInput, '100')
 
-    const currencySelector = screen.getAllByRole('combobox')[0]
+    const currencySelector = screen.getAllByRole('combobox')[1]
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 
@@ -673,7 +779,7 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    const currencySelector = screen.getAllByRole('combobox')[0]
+    const currencySelector = screen.getAllByRole('combobox')[1]
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 
@@ -702,7 +808,7 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    const currencySelector = screen.getAllByRole('combobox')[0]
+    const currencySelector = screen.getAllByRole('combobox')[1]
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 
@@ -746,7 +852,7 @@ describe('ExpenseForm', () => {
 
     await user.type(screen.getByLabelText(/expense title/i), 'Dinner')
 
-    const currencySelector = screen.getAllByRole('combobox')[0]
+    const currencySelector = screen.getAllByRole('combobox')[1]
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 
@@ -1158,7 +1264,7 @@ describe('ExpenseForm', () => {
 
     await user.type(screen.getByLabelText(/expense title/i), 'Dinner')
 
-    const currencySelector = screen.getAllByRole('combobox')[0]
+    const currencySelector = screen.getAllByRole('combobox')[1]
     await user.click(currencySelector)
     await user.click(screen.getByText('Euro (EUR)'))
 

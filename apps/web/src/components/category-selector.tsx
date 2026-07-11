@@ -1,4 +1,4 @@
-import { ChevronDown, Loader2 } from 'lucide-react'
+import { ChevronDown, Sparkles } from 'lucide-react'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import type { ButtonProps } from '@/components/ui/button'
@@ -29,6 +29,8 @@ type Props = {
   defaultValue: CategoryId
   isLoading: boolean
   disabled?: boolean
+  /** Render an icon-only trigger for embedding beside a title input. */
+  compact?: boolean
 }
 
 export function CategorySelector({
@@ -37,6 +39,7 @@ export function CategorySelector({
   defaultValue,
   isLoading,
   disabled = false,
+  compact = false,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -53,6 +56,7 @@ export function CategorySelector({
             open={open}
             isLoading={isLoading}
             disabled={disabled}
+            compact={compact}
           />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
@@ -76,6 +80,7 @@ export function CategorySelector({
           open={open}
           isLoading={isLoading}
           disabled={disabled}
+          compact={compact}
         />
       </DrawerTrigger>
       <DrawerContent className="p-0">
@@ -176,27 +181,49 @@ type CategoryButtonProps = {
   open: boolean
   isLoading: boolean
   disabled?: boolean
+  compact?: boolean
 }
 const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
   (
-    { category, open, isLoading, ...props }: ButtonProps & CategoryButtonProps,
+    {
+      category,
+      open,
+      isLoading,
+      compact = false,
+      className,
+      ...props
+    }: ButtonProps & CategoryButtonProps,
     ref,
   ) => {
-    const iconClassName = 'ml-2 h-4 w-4 shrink-0 opacity-50'
+    const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
+    const iconClassName = 'h-4 w-4 shrink-0 opacity-50'
     return (
       <Button
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="flex w-full"
+        aria-busy={isLoading}
+        aria-label={t(categoryLabelKey(category))}
+        className={
+          compact
+            ? `h-10 w-16 shrink-0 rounded-none border-0 px-3 gap-2 ${className ?? ''}`
+            : `flex w-full ${className ?? ''}`
+        }
         ref={ref}
         {...props}
       >
-        <span className="flex-1 text-left">
-          <CategoryLabel category={category} />
+        <span
+          className={
+            compact ? 'flex items-center justify-center' : 'flex-1 text-left'
+          }
+        >
+          <CategoryLabel category={category} compact={compact} />
         </span>
         {isLoading ? (
-          <Loader2 className={`animate-spin ${iconClassName}`} />
+          <Sparkles
+            aria-hidden="true"
+            className="h-4 w-4 shrink-0 text-primary motion-reduce:animate-none animate-sparkle-pulse"
+          />
         ) : (
           <ChevronDown className={iconClassName} />
         )}
@@ -206,12 +233,18 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
 )
 CategoryButton.displayName = 'CategoryButton'
 
-function CategoryLabel({ category }: { category: Category }) {
+function CategoryLabel({
+  category,
+  compact = false,
+}: {
+  category: Category
+  compact?: boolean
+}) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   return (
     <div className="flex items-center gap-3">
       <CategoryIcon category={category} className="w-4 h-4" />
-      {t(categoryLabelKey(category))}
+      {!compact && t(categoryLabelKey(category))}
     </div>
   )
 }

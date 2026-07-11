@@ -69,25 +69,14 @@ export async function extractCategoryFromTitle(
     temperature: 0.1,
   })
 
-  console.log(
-    'AI took ',
-    new Date().getTime() - now.getTime(),
-    'ms to extract category from title',
-  )
-  console.log('AI category extraction raw content:', rawContent)
-
   // ensure the returned id actually exists in the in-code list
   const categoryId = extractAllowedIdFromAIResponse(
     rawContent,
     categories.map((category) => category.id),
   )
 
-  console.log('AI category extraction result:', categoryId)
-
   const category = categories.find((category) => category.id === categoryId)
   const result = { categoryId: category?.id ?? DEFAULT_CATEGORY_ID }
-
-  console.log('AI category extraction final result:', result)
 
   // fall back to the default category ("General") if the model did not
   // return a valid id
