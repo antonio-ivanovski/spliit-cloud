@@ -347,42 +347,98 @@ export function PaidForCard(props: {
     applyPaidForSplitModeChange(currentMode, nextMode)
   }
 
+  const togglePaidForParticipants = () => {
+    const currentPaidFor = form.getValues().paidFor
+    const allSelected = currentPaidFor.length === group.participants.length
+    const newPaidFor = allSelected
+      ? []
+      : group.participants.map((p) => ({
+          participant: p.id,
+          shares:
+            currentPaidFor.find((pfor) => pfor.participant === p.id)?.shares ??
+            1,
+        }))
+    form.setValue('paidFor', newPaidFor, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+  }
+
+  const renderPaidForContent = (mode: ItemSplitMode) => (
+    <>
+      <div className="mb-2 flex justify-end">
+        <Button
+          variant="link"
+          type="button"
+          className="-my-2 -mr-2"
+          disabled={readOnly}
+          onClick={togglePaidForParticipants}
+        >
+          {paidFor.length === group.participants.length
+            ? t('selectNone')
+            : t('selectAll')}
+        </Button>
+      </div>
+      <FormField
+        control={form.control}
+        name="paidFor"
+        render={() => (
+          <FormItem className="space-y-0">
+            {group.participants.map((participant) => (
+              <PaidForRow
+                key={participant.id}
+                form={form}
+                participant={participant}
+                groupCurrency={groupCurrency}
+                originalCurrency={originalCurrency}
+                conversionRequired={conversionRequired}
+                exchangeRate={exchangeRate}
+                readOnly={readOnly}
+                setManuallyEditedParticipants={
+                  props.setManuallyEditedParticipants
+                }
+              />
+            ))}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <ParticipantDistributionFooter
+        splitMode={mode}
+        targetAmount={
+          mode === 'BY_PERCENTAGE'
+            ? 100
+            : amountAsMinorUnits(
+                Number(amount) || 0,
+                conversionRequired ? originalCurrency : groupCurrency,
+              )
+        }
+        shares={
+          mode === 'BY_AMOUNT'
+            ? paidFor.map((p) =>
+                amountAsMinorUnits(
+                  p.shares || 0,
+                  conversionRequired ? originalCurrency : groupCurrency,
+                ),
+              )
+            : paidFor.map((p) => p.shares || 0)
+        }
+        currency={conversionRequired ? originalCurrency : groupCurrency}
+        paidByCount={paidFor.length}
+        dataTestId="paid-for-distribution-footer"
+      />
+      <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
+        {t('paidForItemizedEntryHint')}
+      </p>
+    </>
+  )
+
   return (
     <Card className="mt-4">
       <CardHeader>
         <CardTitle className="flex justify-between gap-2">
           <span>{t(`${sExpense}.paidFor.title`)}</span>
-          {splitMode !== 'ITEMIZED' && (
-            <Button
-              variant="link"
-              type="button"
-              className="-my-2 -mx-4"
-              disabled={readOnly}
-              onClick={() => {
-                const paidFor = form.getValues().paidFor
-                const allSelected = paidFor.length === group.participants.length
-                const newPaidFor = allSelected
-                  ? []
-                  : group.participants.map((p) => ({
-                      participant: p.id,
-                      shares:
-                        paidFor.find((pfor) => pfor.participant === p.id)
-                          ?.shares ?? 1,
-                    }))
-                form.setValue('paidFor', newPaidFor, {
-                  shouldDirty: true,
-                  shouldTouch: true,
-                  shouldValidate: true,
-                })
-              }}
-            >
-              {form.getValues().paidFor.length === group.participants.length ? (
-                <>{t('selectNone')}</>
-              ) : (
-                <>{t('selectAll')}</>
-              )}
-            </Button>
-          )}
         </CardTitle>
         {splitMode !== 'ITEMIZED' && (
           // Default-split actions live in their own row, visually
@@ -410,41 +466,15 @@ export function PaidForCard(props: {
           <PaidForSplitOptionCards
             value={splitMode}
             onChange={handlePaidForSplitModeChange}
+            renderContent={renderPaidForContent}
             readOnly={readOnly}
           />
-          <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
-            {splitMode === 'ITEMIZED'
-              ? t('paidForItemizedActiveHint')
-              : t('paidForItemizedEntryHint')}
-          </p>
+          {splitMode === 'ITEMIZED' && (
+            <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
+              {t('paidForItemizedActiveHint')}
+            </p>
+          )}
         </div>
-
-        {splitMode !== 'ITEMIZED' && (
-          <FormField
-            control={form.control}
-            name="paidFor"
-            render={() => (
-              <FormItem className="sm:order-4 row-span-2 space-y-0">
-                {group.participants.map((participant) => (
-                  <PaidForRow
-                    key={participant.id}
-                    form={form}
-                    participant={participant}
-                    groupCurrency={groupCurrency}
-                    originalCurrency={originalCurrency}
-                    conversionRequired={conversionRequired}
-                    exchangeRate={exchangeRate}
-                    readOnly={readOnly}
-                    setManuallyEditedParticipants={
-                      props.setManuallyEditedParticipants
-                    }
-                  />
-                ))}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
 
         {splitMode === 'ITEMIZED' && (
           <div className="space-y-0">
@@ -481,33 +511,6 @@ export function PaidForCard(props: {
               )
             })}
           </div>
-        )}
-
-        {splitMode !== 'ITEMIZED' && (
-          <ParticipantDistributionFooter
-            splitMode={splitMode}
-            targetAmount={
-              splitMode === 'BY_PERCENTAGE'
-                ? 100
-                : amountAsMinorUnits(
-                    Number(amount) || 0,
-                    conversionRequired ? originalCurrency : groupCurrency,
-                  )
-            }
-            shares={
-              splitMode === 'BY_AMOUNT'
-                ? paidFor.map((p) =>
-                    amountAsMinorUnits(
-                      p.shares || 0,
-                      conversionRequired ? originalCurrency : groupCurrency,
-                    ),
-                  )
-                : paidFor.map((p) => p.shares || 0)
-            }
-            currency={conversionRequired ? originalCurrency : groupCurrency}
-            paidByCount={paidFor.length}
-            dataTestId="paid-for-distribution-footer"
-          />
         )}
       </CardContent>
 

@@ -46,6 +46,24 @@ describe('expenseFormInputSchema', () => {
     expect(result.success).toBe(true)
   })
 
+  it('does not report zero shares while the amount itself is zero', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      amount: 0,
+      paidByList: [{ participant: 'p0', shares: 0 }],
+      paidFor: [{ participant: 'p0', shares: 0 }],
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some((issue) => issue.message === 'amountNotZero'),
+    ).toBe(true)
+    expect(
+      result.error.issues.some((issue) => issue.message === 'noZeroShares'),
+    ).toBe(false)
+  })
+
   it('allows valid recurring rules', () => {
     const result = expenseFormInputSchema.safeParse({
       ...baseInput,

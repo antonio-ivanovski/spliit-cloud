@@ -365,31 +365,9 @@ export const expenseFormInputSchema = z
       .array(formPaidByRowSchema)
       .min(1, { error: 'paidByMin1' })
       .superRefine((paidByList, ctx) => {
-        for (const { shares } of paidByList) {
-          // Same negative-share rule the previous commit locked in:
-          // allow negatives for negative-income expenses, reject only 0.
-          if (shares === 0) {
-            ctx.addIssue({
-              code: 'custom',
-              message: 'noZeroShares',
-            })
-          }
-        }
         paidByDuplicateGuard(paidByList, ctx)
       }),
-    paidFor: z
-      .array(formPaidForRowSchema)
-      .min(1, { error: 'paidForMin1' })
-      .superRefine((paidFor, ctx) => {
-        for (const { shares } of paidFor) {
-          if (shares <= 0) {
-            ctx.addIssue({
-              code: 'custom',
-              message: 'noZeroShares',
-            })
-          }
-        }
-      }),
+    paidFor: z.array(formPaidForRowSchema).min(1, { error: 'paidForMin1' }),
     isMultiPayer: z.boolean().default(false),
     splitMode: splitModeSchema,
     isReimbursement: z.boolean(),
@@ -400,6 +378,29 @@ export const expenseFormInputSchema = z
     itemizedRemainder: itemizedRemainderFormSchema.optional(),
   })
   .superRefine((expense, ctx) => {
+    // A zero amount is already invalid at the amount field. Avoid reporting
+    // the same state as a share-input problem while the user fixes it.
+    if (expense.amount !== 0) {
+      expense.paidByList.forEach(({ shares }, i) => {
+        if (shares === 0) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'noZeroShares',
+            path: ['paidByList', i, 'shares'],
+          })
+        }
+      })
+      expense.paidFor.forEach(({ shares }, i) => {
+        if (shares <= 0) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'noZeroShares',
+            path: ['paidFor', i, 'shares'],
+          })
+        }
+      })
+    }
+
     switch (expense.splitMode) {
       case 'EVENLY':
         break

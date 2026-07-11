@@ -134,6 +134,38 @@ describe('PaidBySplitOptionCards', () => {
     )
     screen.getAllByRole('radio').forEach((r) => expect(r).toBeDisabled())
   })
+
+  it('renders selected option content and moves it when the mode changes', async () => {
+    const onChange = vi.fn()
+    const { user, rerender } = render(
+      <PaidForSplitOptionCards
+        value="EVENLY"
+        onChange={onChange}
+        renderContent={(mode) => (
+          <div data-testid="selected-content">Editor for {mode}</div>
+        )}
+      />,
+    )
+
+    expect(screen.getByTestId('selected-content')).toHaveTextContent(
+      'Editor for EVENLY',
+    )
+    await user.click(screen.getByRole('radio', { name: /by amount/i }))
+    expect(onChange).toHaveBeenCalledWith('BY_AMOUNT')
+
+    rerender(
+      <PaidForSplitOptionCards
+        value="BY_AMOUNT"
+        onChange={onChange}
+        renderContent={(mode) => (
+          <div data-testid="selected-content">Editor for {mode}</div>
+        )}
+      />,
+    )
+    expect(screen.getByTestId('selected-content')).toHaveTextContent(
+      'Editor for BY_AMOUNT',
+    )
+  })
 })
 
 describe('PaidForSplitOptionCards', () => {
@@ -167,9 +199,11 @@ describe('PaidForSplitOptionCards', () => {
     const selected = screen.getByRole('radio', { name: /by shares/i })
     expect(selected).toHaveAttribute('aria-checked', 'true')
     expect(selected).toHaveAttribute('data-state', 'checked')
+    expect(selected).toHaveClass('data-[state=checked]:cursor-default')
     const notSelected = screen.getByRole('radio', { name: /evenly/i })
     expect(notSelected).toHaveAttribute('aria-checked', 'false')
     expect(notSelected).toHaveAttribute('data-state', 'unchecked')
+    expect(notSelected).toHaveClass('data-[state=unchecked]:cursor-pointer')
   })
 
   it('disabled when readOnly is true', () => {

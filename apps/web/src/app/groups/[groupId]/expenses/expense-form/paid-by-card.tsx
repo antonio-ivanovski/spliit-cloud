@@ -27,7 +27,10 @@ import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { PaidByRow } from './paid-by-row'
 import { convertParticipantShares } from './split-mode-conversions'
-import { PaidBySplitOptionCards } from './split-option-cards'
+import {
+  PaidBySplitOptionCards,
+  type PaidBySplitOption,
+} from './split-option-cards'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -97,44 +100,155 @@ export function PaidByCard(props: {
     })
   }, [singlePayerTargetAmount, isMultiPayer, form, singlePayerPaidByList])
 
+  const togglePaidByParticipants = () => {
+    const currentPaidByList = form.getValues().paidByList
+    const allSelected = currentPaidByList.length === group.participants.length
+    const newPaidByList = allSelected
+      ? []
+      : group.participants.map((p) => ({
+          participant: p.id,
+          shares:
+            currentPaidByList.find((pb) => pb.participant === p.id)?.shares ??
+            1,
+        }))
+    form.setValue('paidByList', newPaidByList, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+  }
+
+  const renderPaidByContent = (option: PaidBySplitOption) => {
+    if (!option.isMultiPayer) {
+      return (
+        <FormField
+          control={form.control}
+          name="paidByList"
+          render={() => {
+            const selectedPayer = paidByList[0]?.participant ?? ''
+            const selectedParticipant = group.participants.find(
+              (p) => p.id === selectedPayer,
+            )
+            return (
+              <FormItem>
+                <Select
+                  value={selectedPayer}
+                  onValueChange={(value) => {
+                    form.setValue('paidByList', singlePayerPaidByList(value), {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    })
+                  }}
+                  disabled={readOnly}
+                >
+                  <SelectTrigger>
+                    {selectedParticipant ? (
+                      <div className="flex items-center gap-2">
+                        <ParticipantAvatar
+                          participant={selectedParticipant}
+                          size="xs"
+                        />
+                        <span>{selectedParticipant.name}</span>
+                      </div>
+                    ) : (
+                      <SelectValue
+                        placeholder={t('Expense.paidByField.placeholder')}
+                      />
+                    )}
+                  </SelectTrigger>
+                  <SelectContent>
+                    {group.participants.map(
+                      ({ id, name, pending, account }) => (
+                        <SelectItem key={id} value={id}>
+                          <span className="flex items-center gap-2">
+                            <ParticipantAvatar
+                              participant={{ id, name, account }}
+                              size="xs"
+                            />
+                            <span>{name}</span>
+                            {pending && (
+                              <span className="text-xs text-muted-foreground">
+                                {t('participant.pending')}
+                              </span>
+                            )}
+                          </span>
+                        </SelectItem>
+                      ),
+                    )}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )
+          }}
+        />
+      )
+    }
+
+    const sharesForFooter =
+      option.splitMode === 'BY_AMOUNT'
+        ? paidByList.map((p) =>
+            amountAsMinorUnits(Number(p.shares) || 0, payerCurrency),
+          )
+        : paidByList.map((p) => Number(p.shares) || 0)
+    const targetForFooter =
+      option.splitMode === 'BY_PERCENTAGE'
+        ? 100
+        : amountAsMinorUnits(Number(amount) || 0, payerCurrency)
+
+    return (
+      <>
+        <div className="mb-2 flex justify-end">
+          <Button
+            variant="link"
+            type="button"
+            className="-my-2 -mr-2"
+            disabled={readOnly}
+            onClick={togglePaidByParticipants}
+          >
+            {paidByList.length === group.participants.length
+              ? t('selectNone')
+              : t('selectAll')}
+          </Button>
+        </div>
+        <FormField
+          control={form.control}
+          name="paidByList"
+          render={() => (
+            <FormItem className="space-y-0">
+              {group.participants.map((participant) => (
+                <PaidByRow
+                  key={participant.id}
+                  form={form}
+                  participant={participant}
+                  payerCurrency={payerCurrency}
+                  groupCurrency={groupCurrency}
+                  readOnly={readOnly}
+                  setManuallyEditedPayers={props.setManuallyEditedPayers}
+                />
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <ParticipantDistributionFooter
+          splitMode={option.splitMode}
+          targetAmount={targetForFooter}
+          shares={sharesForFooter}
+          currency={payerCurrency}
+          paidByCount={paidByList.length}
+          dataTestId="paid-by-distribution-footer"
+        />
+      </>
+    )
+  }
+
   return (
     <Card className="mt-4">
       <CardHeader>
         <CardTitle className="flex justify-between">
           <span>{t(`${sExpense}.paidByField.label`)}</span>
-          {isMultiPayer && (
-            <Button
-              variant="link"
-              type="button"
-              className="-my-2 -mx-4"
-              disabled={readOnly}
-              onClick={() => {
-                const paidByList = form.getValues().paidByList
-                const allSelected =
-                  paidByList.length === group.participants.length
-                const newPaidByList = allSelected
-                  ? []
-                  : group.participants.map((p) => ({
-                      participant: p.id,
-                      shares:
-                        paidByList.find((pb) => pb.participant === p.id)
-                          ?.shares ?? 1,
-                    }))
-                form.setValue('paidByList', newPaidByList, {
-                  shouldDirty: true,
-                  shouldTouch: true,
-                  shouldValidate: true,
-                })
-              }}
-            >
-              {form.getValues().paidByList.length ===
-              group.participants.length ? (
-                <>{t('selectNone')}</>
-              ) : (
-                <>{t('selectAll')}</>
-              )}
-            </Button>
-          )}
         </CardTitle>
         <CardDescription>
           {t(`${sExpense}.paidByField.description`)}
@@ -209,124 +323,10 @@ export function PaidByCard(props: {
                 handlePaidBySplitModeChange(next.splitMode)
               }
             }}
+            renderContent={renderPaidByContent}
             readOnly={readOnly}
           />
         </div>
-        {isMultiPayer ? (
-          <>
-            <FormField
-              control={form.control}
-              name="paidByList"
-              render={() => (
-                <FormItem className="sm:order-4 row-span-2 space-y-0">
-                  {group.participants.map((participant) => (
-                    <PaidByRow
-                      key={participant.id}
-                      form={form}
-                      participant={participant}
-                      payerCurrency={payerCurrency}
-                      groupCurrency={groupCurrency}
-                      readOnly={readOnly}
-                      setManuallyEditedPayers={props.setManuallyEditedPayers}
-                    />
-                  ))}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {(() => {
-              const paidByCount = paidByList.length
-              const sharesForFooter =
-                paidBySplitMode === 'BY_AMOUNT'
-                  ? paidByList.map((p) =>
-                      amountAsMinorUnits(Number(p.shares) || 0, payerCurrency),
-                    )
-                  : paidByList.map((p) => Number(p.shares) || 0)
-              const targetForFooter =
-                paidBySplitMode === 'BY_PERCENTAGE'
-                  ? 100
-                  : amountAsMinorUnits(Number(amount) || 0, payerCurrency)
-              return (
-                <ParticipantDistributionFooter
-                  splitMode={paidBySplitMode}
-                  targetAmount={targetForFooter}
-                  shares={sharesForFooter}
-                  currency={payerCurrency}
-                  paidByCount={paidByCount}
-                  dataTestId="paid-by-distribution-footer"
-                />
-              )
-            })()}
-          </>
-        ) : (
-          <FormField
-            control={form.control}
-            name="paidByList"
-            render={() => {
-              const selectedPayer = paidByList[0]?.participant ?? ''
-              const selectedParticipant = group.participants.find(
-                (p) => p.id === selectedPayer,
-              )
-              return (
-                <FormItem>
-                  <Select
-                    value={selectedPayer}
-                    onValueChange={(value) => {
-                      form.setValue(
-                        'paidByList',
-                        singlePayerPaidByList(value),
-                        {
-                          shouldDirty: true,
-                          shouldTouch: true,
-                          shouldValidate: true,
-                        },
-                      )
-                    }}
-                    disabled={readOnly}
-                  >
-                    <SelectTrigger>
-                      {selectedParticipant ? (
-                        <div className="flex items-center gap-2">
-                          <ParticipantAvatar
-                            participant={selectedParticipant}
-                            size="xs"
-                          />
-                          <span>{selectedParticipant.name}</span>
-                        </div>
-                      ) : (
-                        <SelectValue
-                          placeholder={t('Expense.paidByField.placeholder')}
-                        />
-                      )}
-                    </SelectTrigger>
-                    <SelectContent>
-                      {group.participants.map(
-                        ({ id, name, pending, account }) => (
-                          <SelectItem key={id} value={id}>
-                            <span className="flex items-center gap-2">
-                              <ParticipantAvatar
-                                participant={{ id, name, account }}
-                                size="xs"
-                              />
-                              <span>{name}</span>
-                              {pending && (
-                                <span className="text-xs text-muted-foreground">
-                                  {t('participant.pending')}
-                                </span>
-                              )}
-                            </span>
-                          </SelectItem>
-                        ),
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )
-            }}
-          />
-        )}
       </CardContent>
     </Card>
   )

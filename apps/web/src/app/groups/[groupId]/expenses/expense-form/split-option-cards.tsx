@@ -1,3 +1,4 @@
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { cn } from '@/lib/utils'
 import type { SplitMode } from '@spliit/domain'
 import { Coins, Hash, Percent, User, Users } from 'lucide-react'
@@ -51,6 +52,8 @@ const PAID_BY_OPTIONS = [
   },
 ] as const
 
+export type PaidBySplitOption = (typeof PAID_BY_OPTIONS)[number]
+
 const PAID_FOR_OPTIONS = [
   {
     id: 'EVENLY' as const,
@@ -100,41 +103,19 @@ function SelectionDot({ selected }: { selected: boolean }) {
   )
 }
 
-function OptionCard({
+function OptionHeader({
   icon: Icon,
   title,
   helper,
   selected,
-  onClick,
-  disabled,
-  ariaLabel,
 }: {
   icon: IconType
   title: string
   helper: string
   selected: boolean
-  onClick: () => void
-  disabled?: boolean
-  ariaLabel?: string
 }) {
   return (
-    <button
-      type="button"
-      role="radio"
-      aria-checked={selected}
-      aria-label={ariaLabel}
-      data-state={selected ? 'checked' : 'unchecked'}
-      disabled={disabled}
-      onClick={onClick}
-      className={cn(
-        'group relative flex w-full items-start gap-3 rounded-lg border bg-card p-3 text-left transition-colors',
-        'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card',
-        selected
-          ? 'border-primary bg-primary/4 shadow-[inset_0_0_0_1px_var(--color-primary)]'
-          : 'border-border hover:border-foreground/25 hover:bg-muted/40',
-        disabled && 'cursor-not-allowed opacity-50',
-      )}
-    >
+    <>
       <span
         aria-hidden="true"
         className={cn(
@@ -153,7 +134,7 @@ function OptionCard({
         </p>
       </div>
       <SelectionDot selected={selected} />
-    </button>
+    </>
   )
 }
 
@@ -169,8 +150,9 @@ export function PaidBySplitOptionCards(props: {
   value: { isMultiPayer: boolean; splitMode: SplitMode }
   onChange: (next: { isMultiPayer: boolean; splitMode: SplitMode }) => void
   readOnly?: boolean
+  renderContent?: (option: PaidBySplitOption) => ReactNode
 }) {
-  const { value, onChange, readOnly } = props
+  const { value, onChange, readOnly, renderContent } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   const isSelected = (opt: (typeof PAID_BY_OPTIONS)[number]) => {
@@ -182,59 +164,73 @@ export function PaidBySplitOptionCards(props: {
   const multi = PAID_BY_OPTIONS.filter((o) => o.id !== 'single')
   const multiSectionLabel = t('paidBySectionMultiple')
 
+  const selectedOption = PAID_BY_OPTIONS.find(isSelected)
+
   return (
-    <div role="radiogroup" aria-label={multiSectionLabel} className="space-y-3">
+    <RadioGroup
+      value={selectedOption?.id}
+      onValueChange={(nextId) => {
+        const opt = PAID_BY_OPTIONS.find((candidate) => candidate.id === nextId)
+        if (!opt) return
+        onChange({
+          isMultiPayer: opt.isMultiPayer,
+          splitMode: opt.splitMode,
+        })
+      }}
+      aria-label={multiSectionLabel}
+      className="!flex flex-col gap-3"
+    >
       <div className="space-y-1.5">
         <SectionLabel>{t('paidBySectionSingle')}</SectionLabel>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2">
           {single.map((opt) => {
             const selected = isSelected(opt)
             return (
-              <OptionCard
+              <RadioGroupItem
                 key={opt.id}
-                icon={opt.icon}
-                title={t(opt.labelKey)}
-                helper={t(opt.helperKey)}
-                selected={selected}
+                value={opt.id}
+                card
                 disabled={readOnly}
-                onClick={() =>
-                  onChange({
-                    isMultiPayer: opt.isMultiPayer,
-                    splitMode: opt.splitMode,
-                  })
-                }
-              />
+                content={selected ? renderContent?.(opt) : undefined}
+              >
+                <OptionHeader
+                  icon={opt.icon}
+                  title={t(opt.labelKey)}
+                  helper={t(opt.helperKey)}
+                  selected={selected}
+                />
+              </RadioGroupItem>
             )
           })}
         </div>
       </div>
       <div className="space-y-1.5">
         <SectionLabel>{multiSectionLabel}</SectionLabel>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2">
           {multi.map((opt) => {
             const selected = isSelected(opt)
             const title = t(opt.labelKey)
             return (
-              <OptionCard
+              <RadioGroupItem
                 key={opt.id}
-                icon={opt.icon}
-                title={title}
-                helper={t(opt.helperKey)}
-                selected={selected}
+                value={opt.id}
+                card
                 disabled={readOnly}
-                ariaLabel={`${multiSectionLabel} \u2014 ${title}`}
-                onClick={() =>
-                  onChange({
-                    isMultiPayer: opt.isMultiPayer,
-                    splitMode: opt.splitMode,
-                  })
-                }
-              />
+                content={selected ? renderContent?.(opt) : undefined}
+                aria-label={`${multiSectionLabel} \u2014 ${title}`}
+              >
+                <OptionHeader
+                  icon={opt.icon}
+                  title={title}
+                  helper={t(opt.helperKey)}
+                  selected={selected}
+                />
+              </RadioGroupItem>
             )
           })}
         </div>
       </div>
-    </div>
+    </RadioGroup>
   )
 }
 
@@ -242,39 +238,43 @@ export function PaidForSplitOptionCards(props: {
   value: SplitMode
   onChange: (next: SplitMode) => void
   readOnly?: boolean
+  renderContent?: (mode: Exclude<SplitMode, 'ITEMIZED'>) => ReactNode
 }) {
-  const { value, onChange, readOnly } = props
+  const { value, onChange, readOnly, renderContent } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   return (
-    <div
-      role="radiogroup"
+    <RadioGroup
+      value={value === 'ITEMIZED' ? undefined : value}
+      onValueChange={(next) => onChange(next as SplitMode)}
       aria-label={t('paidForSection')}
-      className="space-y-1.5"
+      className="!flex flex-col gap-1.5"
     >
       <SectionLabel>{t('paidForSection')}</SectionLabel>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         {PAID_FOR_OPTIONS.map((opt) => {
           const selected = value === opt.id
           const title = t(opt.labelKey)
           const disabled = readOnly
           return (
-            <OptionCard
+            <RadioGroupItem
               key={opt.id}
-              icon={opt.icon}
-              title={title}
-              helper={t(opt.helperKey)}
-              selected={selected}
+              value={opt.id}
+              card
               disabled={disabled}
-              ariaLabel={`Split ${title}`}
-              onClick={() => {
-                if (disabled) return
-                onChange(opt.id)
-              }}
-            />
+              content={selected ? renderContent?.(opt.id) : undefined}
+              aria-label={`Split ${title}`}
+            >
+              <OptionHeader
+                icon={opt.icon}
+                title={title}
+                helper={t(opt.helperKey)}
+                selected={selected}
+              />
+            </RadioGroupItem>
           )
         })}
       </div>
-    </div>
+    </RadioGroup>
   )
 }
