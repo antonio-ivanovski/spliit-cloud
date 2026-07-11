@@ -11,10 +11,15 @@ import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
-import type { Currency } from '@spliit/domain'
+import { amountAsDecimal, type Currency } from '@spliit/domain'
 import { useState } from 'react'
 import { useForm, useWatch, type Resolver } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import type {
+  ReceiptDocument,
+  ReceiptExtractedInfo,
+  ReceiptScanContext,
+} from '../create-from-receipt-button'
 import { BasicDetailsCard } from './basic-details-card'
 import { buildExpenseFormDefaults } from './default-values'
 import { DocumentsCard } from './documents-card'
@@ -94,6 +99,7 @@ export function ExpenseForm(props: {
     control: form.control,
     name: 'originalCurrency',
   })
+  const watchedFormValues = useWatch({ control: form.control })
   const payerCurrency: Currency = originalCurrencyValue
     ? (getCurrency(originalCurrencyValue) ?? groupCurrency)
     : groupCurrency
@@ -102,6 +108,83 @@ export function ExpenseForm(props: {
     useExpenseFormBalancing({ form, payerCurrency })
 
   const sExpense = (isIncome ? 'Income' : 'Expense') as 'Expense' | 'Income'
+
+  const receiptScanContext: ReceiptScanContext = {
+    title: watchedFormValues.title || undefined,
+    amount: Number(watchedFormValues.amount) || undefined,
+    date: watchedFormValues.expenseDate?.toISOString().slice(0, 10),
+    currencyCode: watchedFormValues.originalCurrency || groupCurrency.code,
+    categoryId: watchedFormValues.category || undefined,
+    items: (watchedFormValues.items ?? []).map((item) => ({
+      title: item.title ?? '',
+      unitPrice: Number(item.unitPrice) || 0,
+      quantity: Number(item.quantity) || 1,
+    })),
+  }
+
+  const applyReceiptResult = ({
+    info,
+    document,
+  }: {
+    info: ReceiptExtractedInfo
+    document: ReceiptDocument
+  }) => {
+    const receiptCurrency = info.currencyCode
+      ? (getCurrency(info.currencyCode) ?? groupCurrency)
+      : groupCurrency
+    if (info.title) {
+      form.setValue('title', info.title, { shouldDirty: true })
+    }
+    if (info.amount > 0) {
+      form.setValue('amount', amountAsDecimal(info.amount, receiptCurrency), {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
+    }
+    if (info.date) {
+      form.setValue('expenseDate', new Date(`${info.date}T12:00:00`), {
+        shouldDirty: true,
+      })
+    }
+    if (info.currencyCode) {
+      form.setValue('originalCurrency', receiptCurrency.code, {
+        shouldDirty: true,
+      })
+    }
+    if (info.categoryId) {
+      form.setValue('category', info.categoryId as never, {
+        shouldDirty: true,
+      })
+    }
+    if (info.items.length) {
+      form.setValue(
+        'items',
+        info.items.map((item) => ({
+          id: crypto.randomUUID(),
+          title: item.title,
+          // Receipt line-item prices are returned as major-unit numbers;
+          // only the total is normalized to minor units by the API.
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+          splitMode: 'EVENLY' as const,
+          paidFor: props.group.participants.map((participant) => ({
+            participant: participant.id,
+            shares: 1,
+          })),
+        })),
+        { shouldDirty: true },
+      )
+    }
+    if (
+      !form
+        .getValues('documents')
+        .some((existing) => existing.url === document.url)
+    ) {
+      form.setValue('documents', [...form.getValues('documents'), document], {
+        shouldDirty: true,
+      })
+    }
+  }
 
   const submit = async (values: ExpenseFormInputValues) => {
     if (props.readOnly) return
@@ -144,6 +227,9 @@ export function ExpenseForm(props: {
           linkInviteToken={props.linkInviteToken}
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
+          receiptDocuments={form.getValues('documents')}
+          receiptScanContext={receiptScanContext}
+          onReceiptAccepted={applyReceiptResult}
           heading={props.heading}
           onMakeCopy={props.onMakeCopy}
           {...conversion}
@@ -199,6 +285,11 @@ export function ExpenseForm(props: {
             group={props.group}
             readOnly={!!props.readOnly}
             sExpense={sExpense}
+            enableReceiptExtract={
+              props.runtimeFeatureFlags.enableReceiptExtract
+            }
+            receiptContext={receiptScanContext}
+            onReceiptAccepted={applyReceiptResult}
           />
         )}
         <FormActions

@@ -402,7 +402,8 @@
       "description": "与某位特定朋友一对一结算。",
       "title": "创建朋友账本"
     },
-    "importGroup": "导入群组"
+    "importGroup": "导入群组",
+    "exportDescription": "将群组支出下载为 JSON 或 CSV。"
   },
   "GroupForm": {
     "title": "群组信息",
@@ -708,7 +709,8 @@
       "heading": "默认分摊",
       "load": "载入",
       "save": "保存"
-    }
+    },
+    "scanReceipt": "使用 AI 扫描收据"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "从收据中创建消费",
+      "triggerTitle": "AI 扫描收据",
       "title": "从收据中创建",
       "description": "从收据照片上提取消费信息。",
       "body": "上传收据的图片，我们会尽可能地从中扫描出消费信息。",
@@ -733,7 +735,15 @@
       "amountLabel": "金额：",
       "dateLabel": "日期：",
       "editNext": "你之后可以修改消费的信息。",
-      "continue": "继续"
+      "continue": "继续",
+      "existingDocuments": "选择已附加的收据",
+      "existingDocumentAlt": "已附加的收据",
+      "uploadAndScan": "上传并扫描收据",
+      "scannedReceiptAlt": "已扫描的收据",
+      "fillTitle": "从收据填写支出",
+      "fillNext": "查看建议的详细信息，然后将其应用到这笔支出。",
+      "scanningHint": "扫描可能需要一点时间 — 请耐心等待。",
+      "fillBody": "选择已附加的收据或上传新的收据 — 我们会扫描它，为这笔支出建议详细信息。"
     },
     "unknown": "未知",
     "TooBigToast": {

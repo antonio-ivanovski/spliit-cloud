@@ -26,10 +26,10 @@ export function GroupTabs({ groupId }: Props) {
   const { data } = trpc.account.members.useQuery({ groupId })
   const { group, currentMember } = useCurrentGroup()
   const memberCount = data?.members?.length ?? 0
-  // The "Settings" tab is the /edit route, which is only meaningful for
-  // ADMIN. MEMBERs are redirected to a read-only view, so we hide
-  // the tab entirely.
-  const canEditSettings = currentMember?.role === 'ADMIN'
+  // The "Settings" tab is also the member-accessible home for export.
+  // Members see a read-only settings view; admins additionally see the
+  // group editing and lifecycle controls.
+  const canViewSettings = !!currentMember
   const canUnarchive = !!group?.archived && currentMember?.role === 'ADMIN'
   const isArchived = !!group?.archived
   // FRIEND-typed ledgers are strictly 2 people, so the Members tab is
@@ -98,7 +98,7 @@ export function GroupTabs({ groupId }: Props) {
               )}
             </TabsTrigger>
           )}
-          {canEditSettings && (
+          {canViewSettings && (
             <TabsTrigger value="edit">{t('Settings.title')}</TabsTrigger>
           )}
         </TabsList>

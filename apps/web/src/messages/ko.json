@@ -332,7 +332,8 @@
       "description": "특정 친구와 1대1로 정산하세요.",
       "title": "친구 장부 만들기"
     },
-    "importGroup": "그룹 가져오기"
+    "importGroup": "그룹 가져오기",
+    "exportDescription": "그룹 지출을 JSON 또는 CSV로 다운로드합니다."
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -638,7 +639,8 @@
       "heading": "기본 분할",
       "load": "불러오기",
       "save": "저장"
-    }
+    },
+    "scanReceipt": "AI로 영수증 스캔"
   },
   "Balances": {
     "title": "잔액",
@@ -913,7 +915,6 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "영수증으로 지출 추가하기",
       "description": "영수증 사진으로 지출 내역을 자동으로 불러와요.",
       "body": "영수증 사진을 업로드하면, 가능하면 지출 정보를 스캔해서 추출해 드려요.",
       "selectImage": "사진 선택하기…",
@@ -923,7 +924,16 @@
       "dateLabel": "날짜:",
       "editNext": "다음 단계에서 지출 정보를 수정할 수 있습니다.",
       "continue": "계속하기",
-      "title": "영수증으로 만들기"
+      "triggerTitle": "AI 영수증 스캔",
+      "title": "영수증으로 만들기",
+      "existingDocuments": "첨부된 영수증 선택",
+      "existingDocumentAlt": "첨부된 영수증",
+      "uploadAndScan": "영수증 업로드 및 스캔",
+      "scannedReceiptAlt": "스캔한 영수증",
+      "fillTitle": "영수증에서 지출 정보 채우기",
+      "fillNext": "제안된 세부 정보를 검토한 후 이 지출에 적용하세요.",
+      "scanningHint": "스캔에 시간이 조금 걸릴 수 있습니다 — 잠시만 기다려 주세요.",
+      "fillBody": "첨부된 영수증을 선택하거나 새 영수증을 업로드하세요 — 스캔하여 이 지출의 세부 정보를 제안합니다."
     },
     "TooBigToast": {
       "title": "파일이 너무 커요",

@@ -402,7 +402,8 @@
       "description": "Acertar contas individualmente com uma pessoa específica.",
       "title": "Criar registo com um amigo"
     },
-    "importGroup": "Importar grupo"
+    "importGroup": "Importar grupo",
+    "exportDescription": "Descarrega as despesas do grupo em JSON ou CSV."
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -810,7 +811,8 @@
       "heading": "Divisão predefinida",
       "load": "Carregar",
       "save": "Guardar"
-    }
+    },
+    "scanReceipt": "Digitaliza o recibo com IA"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -825,7 +827,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Criar despesa a partir de recibo",
+      "triggerTitle": "Digitalização de recibo com IA",
       "title": "Criar a partir de recibo",
       "description": "Extrair as informações da despesa a partir de uma foto de recibo.",
       "body": "Envia a foto de um recibo, e vamos digitalizá-la para extrair as informações da despesa se for possível.",
@@ -835,7 +837,15 @@
       "amountLabel": "Montante:",
       "dateLabel": "Data:",
       "editNext": "Poderás editar as informações da despesa de seguida.",
-      "continue": "Continuar"
+      "continue": "Continuar",
+      "existingDocuments": "Escolhe um recibo anexado",
+      "existingDocumentAlt": "Recibo anexado",
+      "uploadAndScan": "Envia e digitaliza o recibo",
+      "scannedReceiptAlt": "Recibo digitalizado",
+      "fillTitle": "Preencher despesa a partir do recibo",
+      "fillNext": "Reveja os detalhes sugeridos e aplique-os a esta despesa.",
+      "scanningHint": "A digitalização pode demorar um pouco — aguarde.",
+      "fillBody": "Escolha um recibo anexado ou carregue um novo — vamos digitalizá-lo para sugerir os detalhes desta despesa."
     },
     "unknown": "Desconhecido",
     "TooBigToast": {

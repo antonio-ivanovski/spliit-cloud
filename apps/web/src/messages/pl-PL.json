@@ -402,7 +402,8 @@
       "description": "Rozlicz się jeden na jeden z konkretną osobą.",
       "title": "Utwórz rozliczenie z przyjacielem"
     },
-    "importGroup": "Importuj grupę"
+    "importGroup": "Importuj grupę",
+    "exportDescription": "Pobierz wydatki grupy jako JSON lub CSV."
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -708,7 +709,8 @@
       "heading": "Domyślny podział",
       "load": "Wczytaj",
       "save": "Zapisz"
-    }
+    },
+    "scanReceipt": "Skanuj paragon za pomocą AI"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Utwórz wydatek z paragonu",
+      "triggerTitle": "Skan paragonu z AI",
       "title": "Utwórz z paragonu",
       "description": "Wyodrębnij informacje o wydatkach ze zdjęcia paragonu.",
       "body": "Prześlij zdjęcie paragonu, a my zeskanujemy je, aby wyodrębnić informacje o wydatkach, jeśli to możliwe.",
@@ -733,7 +735,15 @@
       "amountLabel": "Suma:",
       "dateLabel": "Data:",
       "editNext": "Następnie będziesz mógł edytować informacje o wydatkach.",
-      "continue": "Kontynuuj"
+      "continue": "Kontynuuj",
+      "existingDocuments": "Wybierz załączony paragon",
+      "existingDocumentAlt": "Załączony paragon",
+      "uploadAndScan": "Prześlij i zeskanuj paragon",
+      "scannedReceiptAlt": "Zeskanowany paragon",
+      "fillTitle": "Wypełnij wydatek z paragonu",
+      "fillNext": "Sprawdź sugerowane dane i zastosuj je do tego wydatku.",
+      "scanningHint": "Skanowanie może chwilę potrwać — prosimy o cierpliwość.",
+      "fillBody": "Wybierz dołączony paragon lub prześlij nowy — zeskanujemy go, aby zasugerować dane tego wydatku."
     },
     "unknown": "Nieznany",
     "TooBigToast": {

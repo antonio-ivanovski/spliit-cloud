@@ -62,6 +62,24 @@ export const aiRouter = createTRPCRouter({
         currencyCode: z.string().nullish(),
         groupId: z.string().min(1),
         locale: z.string().optional(),
+        currentExpense: z
+          .object({
+            title: z.string().optional(),
+            amount: z.number().optional(),
+            date: z.string().optional(),
+            currencyCode: z.string().optional(),
+            categoryId: z.string().optional(),
+            items: z
+              .array(
+                z.object({
+                  title: z.string(),
+                  unitPrice: z.number(),
+                  quantity: z.number(),
+                }),
+              )
+              .optional(),
+          })
+          .optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -89,7 +107,12 @@ export const aiRouter = createTRPCRouter({
           currency: input.currency,
           currencyCode: input.currencyCode,
         },
-        { recentExpenses, groupContext, locale: input.locale },
+        {
+          recentExpenses,
+          groupContext,
+          locale: input.locale,
+          currentExpense: input.currentExpense,
+        },
       )
     }),
 })

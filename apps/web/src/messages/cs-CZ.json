@@ -402,7 +402,8 @@
       "description": "Vyrovnejte se jeden na jednoho s konkrétní osobou.",
       "title": "Vytvořit účet s přítelem"
     },
-    "importGroup": "Importovat skupinu"
+    "importGroup": "Importovat skupinu",
+    "exportDescription": "Stáhnout výdaje skupiny jako JSON nebo CSV."
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -708,7 +709,8 @@
       "heading": "Výchozí rozdělení",
       "load": "Načíst",
       "save": "Uložit"
-    }
+    },
+    "scanReceipt": "Naskenovat účtenku pomocí AI"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Vytvořit výdaj z účtenky",
+      "triggerTitle": "Sken účtenky pomocí AI",
       "title": "Vytvořit z účtenky",
       "description": "Získat informace o výdaji z fotografie účtenky.",
       "body": "Nahrajte fotografii účtenky a my se pokusíme z ní získat informace o výdaji.",
@@ -733,7 +735,15 @@
       "amountLabel": "Částka:",
       "dateLabel": "Datum:",
       "editNext": "Informace o výdaji budete moci upravit v dalším kroku.",
-      "continue": "Pokračovat"
+      "continue": "Pokračovat",
+      "existingDocuments": "Vyberte přiloženou účtenku",
+      "existingDocumentAlt": "Přiložená účtenka",
+      "uploadAndScan": "Nahrát a naskenovat účtenku",
+      "scannedReceiptAlt": "Naskenovaná účtenka",
+      "fillTitle": "Vyplnit výdaj z účtenky",
+      "fillNext": "Zkontrolujte navržené údaje a použijte je pro tento výdaj.",
+      "scanningHint": "Skenování může chvíli trvat — buďte prosím trpěliví.",
+      "fillBody": "Vyberte přiloženou účtenku nebo nahrajte novou — naskenujeme ji a navrhneme údaje pro tento výdaj."
     },
     "unknown": "Neznámé",
     "TooBigToast": {

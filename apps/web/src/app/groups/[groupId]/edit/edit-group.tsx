@@ -14,6 +14,7 @@ import { Archive, ArchiveRestore, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import ExportButton from '../export-button'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { DeleteGroupDialog } from './delete-group-dialog'
 import {
@@ -35,6 +36,7 @@ export const EditGroup = () => {
   const { data: features } = trpc.features.get.useQuery()
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tExpenses } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const [forceArchiveOpen, setForceArchiveOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
@@ -64,17 +66,28 @@ export const EditGroup = () => {
 
   if (currentMember?.role === 'MEMBER') {
     return (
-      <Card className="mb-4">
-        <CardHeader>
-          <CardTitle>{t('readOnlyTitle')}</CardTitle>
-          <CardDescription>{t('readOnlyNote')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild variant="secondary">
-            <Link href={`/groups/${groupId}`}>{t('readOnlyBack')}</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>{tExpenses('export')}</CardTitle>
+            <CardDescription>{tGroups('exportDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ExportButton groupId={groupId} showLabel />
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>{t('readOnlyTitle')}</CardTitle>
+            <CardDescription>{t('readOnlyNote')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="secondary">
+              <Link href={`/groups/${groupId}`}>{t('readOnlyBack')}</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </>
     )
   }
 
@@ -85,6 +98,15 @@ export const EditGroup = () => {
 
   return (
     <>
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>{tExpenses('export')}</CardTitle>
+          <CardDescription>{tGroups('exportDescription')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ExportButton groupId={groupId} showLabel />
+        </CardContent>
+      </Card>
       <GroupForm
         group={data?.group}
         currentMemberRole={currentMember?.role}

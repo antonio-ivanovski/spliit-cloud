@@ -55,6 +55,11 @@ import { ArrowLeft, Calculator, FileInput } from 'lucide-react'
 import { useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import type {
+  ReceiptDocument,
+  ReceiptExtractedInfo,
+  ReceiptScanContext,
+} from '../create-from-receipt-button'
 import { AmountCalculatorDialog } from './amount-calculator-dialog'
 import { AmountInput } from './amount-input'
 import {
@@ -103,6 +108,12 @@ export function BasicDetailsCard(props: {
   }[]
   pinnedCurrencyCode?: string
   recommendedCurrencyCodes?: string[]
+  receiptDocuments: ReceiptDocument[]
+  receiptScanContext: ReceiptScanContext
+  onReceiptAccepted: (result: {
+    info: ReceiptExtractedInfo
+    document: ReceiptDocument
+  }) => void
 }) {
   const {
     form,
@@ -206,8 +217,8 @@ export function BasicDetailsCard(props: {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center gap-2 space-y-0">
-        <Button variant="ghost" size="icon" asChild className="-ml-2">
+      <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-center">
+        <Button variant="ghost" size="icon" asChild className="-ml-2 shrink-0">
           <Link
             href={`/groups/${group.id}/expenses`}
             title={tGroups('backToExpenses')}
@@ -215,7 +226,7 @@ export function BasicDetailsCard(props: {
             <ArrowLeft className="w-4 h-4" />
           </Link>
         </Button>
-        <CardTitle className="flex-1">
+        <CardTitle className="min-w-0 flex-1">
           {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
         </CardTitle>
         {onMakeCopy && (

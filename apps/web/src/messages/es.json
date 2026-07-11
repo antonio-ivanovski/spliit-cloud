@@ -402,7 +402,8 @@
       "description": "Liquida deudas uno a uno con una persona concreta.",
       "title": "Crear cuenta con un amigo"
     },
-    "importGroup": "Importar grupo"
+    "importGroup": "Importar grupo",
+    "exportDescription": "Descargar los gastos del grupo en formato JSON o CSV."
   },
   "GroupForm": {
     "title": "Información del grupo",
@@ -708,7 +709,8 @@
       "heading": "División predeterminada",
       "load": "Cargar",
       "save": "Guardar"
-    }
+    },
+    "scanReceipt": "Escanear recibo con IA"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Crear gasto desde ticket",
+      "triggerTitle": "Escaneo de recibo con IA",
       "title": "Crear desde ticket",
       "description": "Extraer la información de gastos de una foto de recibo.",
       "body": "Sube la foto de un recibo y lo escanearemos para extraer la información del gasto si podemos.",
@@ -733,7 +735,15 @@
       "amountLabel": "Cantidad:",
       "dateLabel": "Fecha:",
       "editNext": "A continuación podrá editar la información de los gastos.",
-      "continue": "Continuar"
+      "continue": "Continuar",
+      "existingDocuments": "Elige un recibo adjunto",
+      "existingDocumentAlt": "Recibo adjunto",
+      "uploadAndScan": "Subir y escanear recibo",
+      "scannedReceiptAlt": "Recibo escaneado",
+      "fillTitle": "Completar gasto desde el recibo",
+      "fillNext": "Revisa los datos sugeridos y aplícalos a este gasto.",
+      "scanningHint": "El escaneo puede tardar un poco — ten paciencia.",
+      "fillBody": "Elige un recibo adjunto o sube uno nuevo — lo escanearemos para sugerir datos para este gasto."
     },
     "unknown": "Desconocido",
     "TooBigToast": {

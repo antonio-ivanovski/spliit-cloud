@@ -148,7 +148,16 @@ function parseReceiptAIResponse(rawContent: string | null | undefined) {
 export async function extractExpenseInformationFromImage(
   imageUrl: string,
   groupCurrencyInput: { currency: string; currencyCode?: string | null },
-  context: ReceiptAIContext = {},
+  context: ReceiptAIContext & {
+    currentExpense?: {
+      title?: string
+      amount?: number
+      date?: string
+      currencyCode?: string
+      categoryId?: string
+      items?: Array<{ title: string; unitPrice: number; quantity: number }>
+    }
+  } = {},
 ) {
   const categories = DEFAULT_CATEGORIES
   const categoryIds = categories.map((category) => category.id)
@@ -156,6 +165,9 @@ export async function extractExpenseInformationFromImage(
   const groupSection = buildGroupContextSection(context.groupContext)
   const localeHint = buildLocaleHint(context.locale)
   const recentSection = buildRecentExpensesSection(context.recentExpenses ?? [])
+  const currentExpenseSection = context.currentExpense
+    ? `\nCurrent form values are soft hints only. Re-check them against the receipt and improve or replace them when the image supports it:\n${JSON.stringify(context.currentExpense)}`
+    : ''
 
   const { text: rawContent } = await generateText({
     model: await getModel(env.AI_RECEIPT_MODEL),
@@ -181,6 +193,7 @@ export async function extractExpenseInformationFromImage(
               ${groupSection}
               ${localeHint}
               ${recentSection}
+              ${currentExpenseSection}
               Use the group context and past-expense examples only as soft hints for currency, merchant/title, and category; the receipt image is the source of truth. Do not copy an example's amount, date, or items.
               Make a best-effort attempt to extract the purchased receipt line items. For each clearly readable item, return its display title, unit price as a plain positive number in the receipt currency, and positive integer quantity. Exclude taxes, service charges, discounts, subtotals, totals, payment details, and unreadable or uncertain lines. Return an empty items array when no line items can be identified.
               The group's currency is ${groupCurrency.code || groupCurrency.symbol}; use the receipt total as written and do not convert currencies.

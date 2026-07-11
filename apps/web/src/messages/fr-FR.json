@@ -402,7 +402,8 @@
       "description": "Réglez vos comptes en tête-à-tête avec une personne précise.",
       "title": "Créer un compte entre amis"
     },
-    "importGroup": "Importer un groupe"
+    "importGroup": "Importer un groupe",
+    "exportDescription": "Télécharger les dépenses du groupe au format JSON ou CSV."
   },
   "GroupForm": {
     "title": "Informations sur le groupe",
@@ -708,7 +709,8 @@
       "heading": "Répartition par défaut",
       "load": "Charger",
       "save": "Sauvegarder"
-    }
+    },
+    "scanReceipt": "Analyser le reçu avec l’IA"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Créer une dépense à partir du reçu",
+      "triggerTitle": "Analyse de reçu par IA",
       "title": "Créer à partir du reçu",
       "description": "Extraire les informations de la dépense à partir d'une photo de reçu.",
       "body": "Téléchargez la photo d'un reçu, et nous l'analyserons pour extraire les informations de la dépense si possible.",
@@ -733,7 +735,15 @@
       "amountLabel": "Montant :",
       "dateLabel": "Date :",
       "editNext": "Vous pourrez modifier les informations de la dépense ensuite.",
-      "continue": "Continuer"
+      "continue": "Continuer",
+      "existingDocuments": "Choisir un reçu joint",
+      "existingDocumentAlt": "Reçu joint",
+      "uploadAndScan": "Télécharger et analyser le reçu",
+      "scannedReceiptAlt": "Reçu numérisé",
+      "fillTitle": "Remplir la dépense depuis le reçu",
+      "fillNext": "Vérifiez les détails suggérés, puis appliquez-les à cette dépense.",
+      "scanningHint": "L’analyse peut prendre un moment — merci de patienter.",
+      "fillBody": "Choisissez un reçu joint ou importez-en un nouveau — nous l’analyserons pour suggérer les détails de cette dépense."
     },
     "unknown": "Inconnu",
     "TooBigToast": {

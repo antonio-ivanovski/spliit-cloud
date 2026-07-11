@@ -402,7 +402,8 @@
       "description": "Tasaa velat suoraan tietyn henkilön kanssa.",
       "title": "Luo ystäväkirjanpito"
     },
-    "importGroup": "Tuo ryhmä"
+    "importGroup": "Tuo ryhmä",
+    "exportDescription": "Lataa ryhmän kulut JSON- tai CSV-muodossa."
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -708,7 +709,8 @@
       "heading": "Oletusjako",
       "load": "Lataa",
       "save": "Tallenna"
-    }
+    },
+    "scanReceipt": "Skannaa kuitti tekoälyllä"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Luo kulu kuitista",
+      "triggerTitle": "Tekoälykuittiskannaus",
       "title": "Luo kuitista",
       "description": "Lue kuitin valokuvasta kulun tiedot.",
       "body": "Lataa kuitista valokuva. Siitä skannataan tiedot kulua varten.",
@@ -733,7 +735,15 @@
       "amountLabel": "Summa:",
       "dateLabel": "Päivä:",
       "editNext": "Voit muokata kulun tietoja seuraavaksi.",
-      "continue": "Jatka"
+      "continue": "Jatka",
+      "existingDocuments": "Valitse liitetty kuitti",
+      "existingDocumentAlt": "Liitetty kuitti",
+      "uploadAndScan": "Lataa ja skannaa kuitti",
+      "scannedReceiptAlt": "Skannattu kuitti",
+      "fillTitle": "Täytä kulu kuitin perusteella",
+      "fillNext": "Tarkista ehdotetut tiedot ja käytä niitä tähän kululaskuun.",
+      "scanningHint": "Skannaus voi kestää hetken — ole kärsivällinen.",
+      "fillBody": "Valitse liitetty kuitti tai lataa uusi — skannaamme sen ja ehdotamme tämän kulun tietoja."
     },
     "unknown": "Tuntematon",
     "TooBigToast": {

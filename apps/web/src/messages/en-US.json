@@ -402,7 +402,8 @@
       "title": "Create a group",
       "description": "Track shared expenses with friends, family, or roommates."
     },
-    "importGroup": "Import group"
+    "importGroup": "Import group",
+    "exportDescription": "Download the group expenses as JSON or CSV."
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -839,7 +840,8 @@
       "heading": "Default split",
       "load": "Load",
       "save": "Save"
-    }
+    },
+    "scanReceipt": "Scan receipt with AI"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -854,7 +856,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Create expense from receipt",
+      "triggerTitle": "AI receipt scan",
       "title": "Create from receipt",
       "description": "Extract the expense information from a receipt photo.",
       "body": "Upload the photo of a receipt, and we’ll scan it to extract the expense information if we can.",
@@ -864,7 +866,15 @@
       "amountLabel": "Amount:",
       "dateLabel": "Date:",
       "editNext": "You’ll be able to edit the expense information next.",
-      "continue": "Continue"
+      "continue": "Continue",
+      "existingDocuments": "Choose an attached receipt",
+      "existingDocumentAlt": "Attached receipt",
+      "uploadAndScan": "Upload and scan receipt",
+      "scannedReceiptAlt": "Scanned receipt",
+      "fillTitle": "Fill expense from receipt",
+      "fillNext": "Review the suggested details, then apply them to this expense.",
+      "scanningHint": "Scanning can take a little while — please be patient.",
+      "fillBody": "Choose an attached receipt or upload a new one — we’ll scan it to suggest details for this expense."
     },
     "unknown": "Unknown",
     "TooBigToast": {

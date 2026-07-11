@@ -1,3 +1,9 @@
+import {
+  ReceiptScanTrigger,
+  type ReceiptDocument,
+  type ReceiptExtractedInfo,
+  type ReceiptScanContext,
+} from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
 import Image from '@/components/app-image'
 import { Button } from '@/components/ui/button'
 import type { CarouselApi } from '@/components/ui/carousel'
@@ -25,7 +31,7 @@ import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
 import type { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
-import { formatFileSize } from '@/lib/utils'
+import { cn, formatFileSize } from '@/lib/utils'
 import { Loader2, Plus, Trash, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,6 +41,12 @@ type Props = {
   updateDocuments: (documents: ExpenseFormInputValues['documents']) => void
   ledgerId?: string | null
   readOnly?: boolean
+  enableReceiptExtract?: boolean
+  receiptContext?: ReceiptScanContext
+  onReceiptAccepted?: (result: {
+    info: ReceiptExtractedInfo
+    document: ReceiptDocument
+  }) => void
 }
 
 const MAX_FILE_SIZE = 2 * 1024 ** 2
@@ -44,6 +56,9 @@ export function ExpenseDocumentsInput({
   updateDocuments,
   ledgerId,
   readOnly = false,
+  enableReceiptExtract = false,
+  receiptContext,
+  onReceiptAccepted,
 }: Props) {
   const locale = useLocale()
   const { t } = useTranslation(undefined, {
@@ -100,7 +115,7 @@ export function ExpenseDocumentsInput({
         accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
       />
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 **:aspect-square">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {documents.map((doc) => (
           <DocumentThumbnail
             key={doc.id}
@@ -110,11 +125,14 @@ export function ExpenseDocumentsInput({
               updateDocuments(documents.filter((d) => d.id !== document.id))
             }}
             readOnly={readOnly}
+            enableReceiptExtract={enableReceiptExtract}
+            receiptContext={receiptContext}
+            onReceiptAccepted={onReceiptAccepted}
           />
         ))}
 
         {!readOnly && (
-          <div>
+          <div className="aspect-square">
             <Button
               variant="secondary"
               type="button"
@@ -140,6 +158,9 @@ export function DocumentThumbnail({
   documents,
   deleteDocument,
   readOnly = false,
+  enableReceiptExtract = false,
+  receiptContext,
+  onReceiptAccepted,
 }: {
   document: ExpenseFormInputValues['documents'][number]
   documents: ExpenseFormInputValues['documents']
@@ -147,6 +168,12 @@ export function DocumentThumbnail({
     document: ExpenseFormInputValues['documents'][number],
   ) => void
   readOnly?: boolean
+  enableReceiptExtract?: boolean
+  receiptContext?: ReceiptScanContext
+  onReceiptAccepted?: (result: {
+    info: ReceiptExtractedInfo
+    document: ReceiptDocument
+  }) => void
 }) {
   const [open, setOpen] = useState(false)
   const [api, setApi] = useState<CarouselApi>()
@@ -163,41 +190,92 @@ export function DocumentThumbnail({
     })
   }, [api])
 
+  const { t: tExpenseForm } = useTranslation()
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="secondary"
-          className="w-full h-full border overflow-hidden rounded shadow-inner"
-        >
-          <Image
-            width={300}
-            height={300}
-            className="object-contain"
-            src={document.url}
-            alt=""
-          />
-        </Button>
-      </DialogTrigger>
+      <div className="relative aspect-square h-full w-full">
+        <DialogTrigger asChild>
+          <Button
+            variant="secondary"
+            className="h-full w-full overflow-hidden rounded border shadow-inner"
+          >
+            <Image
+              width={300}
+              height={300}
+              className="object-contain"
+              src={document.url}
+              alt=""
+            />
+          </Button>
+        </DialogTrigger>
+        {!readOnly && (
+          <div className="absolute inset-x-0 bottom-0 z-10 flex">
+            {enableReceiptExtract && onReceiptAccepted && (
+              <ReceiptScanTrigger
+                iconOnly
+                autoScan
+                title={tExpenseForm('ExpenseForm.scanReceipt')}
+                mode="fill"
+                documents={[document]}
+                currentExpense={receiptContext}
+                onAccept={onReceiptAccepted}
+                className="h-10 flex-1 rounded-t-none rounded-bl-md rounded-br-none border-r border-secondary-foreground/20 hover:bg-pink-200"
+              />
+            )}
+            <Button
+              type="button"
+              variant="secondary"
+              className={cn(
+                'h-10 flex-1 rounded-t-none text-destructive hover:bg-destructive hover:text-destructive-foreground',
+                enableReceiptExtract && onReceiptAccepted
+                  ? 'rounded-bl-none rounded-br-md border-l-0'
+                  : 'rounded-b-md',
+              )}
+              title="Delete document"
+              aria-label="Delete document"
+              onClick={() => deleteDocument(document)}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
       <DialogContent className="p-4 w-screen max-w-[100vw] h-dvh max-h-dvh sm:max-w-[calc(100vw-32px)] sm:max-h-[calc(100dvh-32px)] *:last:hidden">
         <DialogTitle className="sr-only">Document</DialogTitle>
         <DialogDescription className="sr-only"></DialogDescription>
         <div className="flex flex-col gap-4">
           <div className="flex justify-end">
             {!readOnly && (
-              <Button
-                variant="ghost"
-                className="text-destructive"
-                onClick={() => {
-                  if (currentDocument !== null) {
-                    deleteDocument(documents[currentDocument])
-                  }
-                  setOpen(false)
-                }}
-              >
-                <Trash className="w-4 h-4 mr-2" />
-                Delete document
-              </Button>
+              <div className="flex gap-2">
+                {enableReceiptExtract && onReceiptAccepted && (
+                  <ReceiptScanTrigger
+                    title={tExpenseForm('ExpenseForm.scanReceipt')}
+                    autoScan
+                    mode="fill"
+                    documents={[document]}
+                    currentExpense={receiptContext}
+                    onAccept={onReceiptAccepted}
+                  >
+                    {tExpenseForm('ExpenseForm.scanReceipt')}
+                  </ReceiptScanTrigger>
+                )}
+                <Button
+                  variant="ghost"
+                  className="text-destructive"
+                  onClick={() => {
+                    deleteDocument(
+                      currentDocument !== null
+                        ? documents[currentDocument]
+                        : document,
+                    )
+                    setOpen(false)
+                  }}
+                >
+                  <Trash className="mr-2 h-4 w-4" />
+                  Delete document
+                </Button>
+              </div>
             )}
             <DialogClose asChild>
               <Button variant="ghost">

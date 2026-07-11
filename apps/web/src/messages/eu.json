@@ -402,7 +402,8 @@
       "description": "Pertsona zehatz batekin zorrak banan-banan kitatu.",
       "title": "Lagun-liburu bat sortu"
     },
-    "importGroup": "Inportatu taldea"
+    "importGroup": "Inportatu taldea",
+    "exportDescription": "Deskargatu taldeko gastuak JSON edo CSV formatuan."
   },
   "GroupForm": {
     "title": "Taldeko informazioa",
@@ -708,7 +709,8 @@
       "heading": "Lehenetsitako banaketa",
       "load": "Kargatu",
       "save": "Gorde"
-    }
+    },
+    "scanReceipt": "Eskaneatu ordainagiria IArekin"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Sortu gastua ordainagiri batetik",
+      "triggerTitle": "IArekin ordainagiri-eskaneatzea",
       "title": "Sortu ordainagiritik",
       "description": "Erauzi gastuaren informazioa ordainagiriren argazkitik.",
       "body": "Igo ordainagiri baten argazkia eta eskaneatuko dugu gastuaren informazioa erauzteko, ahal badugu.",
@@ -733,7 +735,15 @@
       "amountLabel": "Zenbatekoa:",
       "dateLabel": "Data:",
       "editNext": "Ondoren, gastuaren informazioa editatzeko aukera izango duzu.",
-      "continue": "Jarraitu"
+      "continue": "Jarraitu",
+      "existingDocuments": "Aukeratu erantsitako ordainagiri bat",
+      "existingDocumentAlt": "Erantsitako ordainagiria",
+      "uploadAndScan": "Igo eta eskaneatu ordainagiria",
+      "scannedReceiptAlt": "Eskaneatutako ordainagiria",
+      "fillTitle": "Gastua ordainagitik bete",
+      "fillNext": "Berrikusi iradokitako xehetasunak eta aplikatu gastu honetan.",
+      "scanningHint": "Eskaneatzeak pixka bat iraun dezake — izan pazientzia.",
+      "fillBody": "Aukeratu erantsitako ordainagiri bat edo igo berri bat — eskaneatu eta gastu honetarako xehetasunak proposatuko ditugu."
     },
     "unknown": "Ezezaguna",
     "TooBigToast": {

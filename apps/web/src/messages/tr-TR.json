@@ -402,7 +402,8 @@
       "description": "Belirli bir kişiyle birebir hesaplaşın.",
       "title": "Arkadaş defteri oluştur"
     },
-    "importGroup": "Grubu içe aktar"
+    "importGroup": "Grubu içe aktar",
+    "exportDescription": "Grup harcamalarını JSON veya CSV olarak indirin."
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -708,7 +709,8 @@
       "heading": "Varsayılan bölünme",
       "load": "Yükle",
       "save": "Kaydet"
-    }
+    },
+    "scanReceipt": "Makbuzu yapay zekâ ile tara"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Makbuzdan masraf oluştur",
+      "triggerTitle": "Yapay zekâ makbuz taraması",
       "title": "Makbuzdan oluştur",
       "description": "Bir makbuz fotoğrafındaki masraf bilgilerini çekin.",
       "body": "Bir makbuz fotoğrafı yükleyin, mümkünse masraf bilgilerini otomatik olarak çıkaracağız.",
@@ -733,7 +735,15 @@
       "amountLabel": "Tutar:",
       "dateLabel": "Tarih:",
       "editNext": "Masraf bilgilerini sonraki adımda düzenleyebileceksiniz.",
-      "continue": "Devam et"
+      "continue": "Devam et",
+      "existingDocuments": "Ekli bir makbuz seçin",
+      "existingDocumentAlt": "Ekli makbuz",
+      "uploadAndScan": "Makbuzu yükle ve tara",
+      "scannedReceiptAlt": "Taranmış makbuz",
+      "fillTitle": "Fişi kullanarak harcamayı doldur",
+      "fillNext": "Önerilen ayrıntıları inceleyip bu harcamaya uygulayın.",
+      "scanningHint": "Tarama biraz sürebilir — lütfen bekleyin.",
+      "fillBody": "Ekli bir fiş seçin veya yeni bir fiş yükleyin — bu harcamanın ayrıntılarını önermek için tarayacağız."
     },
     "unknown": "Bilinmiyor",
     "TooBigToast": {

@@ -402,7 +402,8 @@
       "description": "Direkt mit einer bestimmten Person abrechnen.",
       "title": "Freund-Haushaltsbuch erstellen"
     },
-    "importGroup": "Gruppe importieren"
+    "importGroup": "Gruppe importieren",
+    "exportDescription": "Lade die Gruppenausgaben als JSON oder CSV herunter."
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -708,7 +709,8 @@
       "heading": "Standardaufteilung",
       "load": "Laden",
       "save": "Speichern"
-    }
+    },
+    "scanReceipt": "Beleg mit KI scannen"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Ausgabe von Rechnungsbeleg erstellen",
+      "triggerTitle": "KI-Belegscan",
       "title": "Von Rechnungsbeleg erstellen",
       "description": "Ausgabeninformationen von einem Foto einer Rechnung lesen.",
       "body": "Lade ein Foto der Rechnung hoch und wir versuchen die Ausgabeinformationen zu extrahieren.",
@@ -733,7 +735,15 @@
       "amountLabel": "Betrag:",
       "dateLabel": "Datum:",
       "editNext": "Als nächstes kannst du die Informationen zur Ausgabe editieren.",
-      "continue": "Weiter"
+      "continue": "Weiter",
+      "existingDocuments": "Angehängten Beleg auswählen",
+      "existingDocumentAlt": "Angehängter Beleg",
+      "uploadAndScan": "Beleg hochladen und scannen",
+      "scannedReceiptAlt": "Gescannter Beleg",
+      "fillTitle": "Ausgabe aus Beleg ausfüllen",
+      "fillNext": "Prüfe die vorgeschlagenen Angaben und übernimm sie für diese Ausgabe.",
+      "scanningHint": "Das Scannen kann etwas dauern — bitte hab Geduld.",
+      "fillBody": "Wähle einen angehängten Beleg oder lade einen neuen hoch — wir scannen ihn und schlagen Details für diese Ausgabe vor."
     },
     "unknown": "Unbekannt",
     "TooBigToast": {

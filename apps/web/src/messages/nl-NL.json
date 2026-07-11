@@ -402,7 +402,8 @@
       "description": "Vereffen één-op-één met een specifiek persoon.",
       "title": "Vriendenadministratie aanmaken"
     },
-    "importGroup": "Groep importeren"
+    "importGroup": "Groep importeren",
+    "exportDescription": "Download de groepsuitgaven als JSON of CSV."
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -708,7 +709,8 @@
       "heading": "Standaardverdeling",
       "load": "Laden",
       "save": "Opslaan"
-    }
+    },
+    "scanReceipt": "Bon scannen met AI"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Uitgave maken van foto",
+      "triggerTitle": "AI-bonscan",
       "title": "Maak uitgave van foto",
       "description": "Uitgave-informatie van een foto van een bon lezen.",
       "body": "Upload de foto van een bon, en we lezen de uitgave-informatie eruit.",
@@ -733,7 +735,15 @@
       "amountLabel": "Bedrag:",
       "dateLabel": "Datum:",
       "editNext": "Hierna kun je de uitgave-informatie bewerken.",
-      "continue": "Doorgaan"
+      "continue": "Doorgaan",
+      "existingDocuments": "Kies een bijgevoegde bon",
+      "existingDocumentAlt": "Bijgevoegde bon",
+      "uploadAndScan": "Bon uploaden en scannen",
+      "scannedReceiptAlt": "Gescande bon",
+      "fillTitle": "Uitgave invullen vanaf bon",
+      "fillNext": "Controleer de voorgestelde gegevens en pas ze toe op deze uitgave.",
+      "scanningHint": "Het scannen kan even duren — heb geduld.",
+      "fillBody": "Kies een bijgevoegde bon of upload een nieuwe — we scannen die en stellen gegevens voor deze uitgave voor."
     },
     "unknown": "Onbekend",
     "TooBigToast": {

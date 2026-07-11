@@ -402,7 +402,8 @@
       "description": "Liquida els deutes un a un amb una persona concreta.",
       "title": "Crea un compte amb un amic"
     },
-    "importGroup": "Importa un grup"
+    "importGroup": "Importa un grup",
+    "exportDescription": "Baixa les despeses del grup en format JSON o CSV."
   },
   "GroupForm": {
     "title": "Informació del grup",
@@ -708,7 +709,8 @@
       "heading": "Divisió per defecte",
       "load": "Carregar",
       "save": "Desar"
-    }
+    },
+    "scanReceipt": "Escaneja el tiquet amb IA"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Crear una despesa des d'un tiquet",
+      "triggerTitle": "Escaneig de tiquet amb IA",
       "title": "Crear des del tiquet",
       "description": "Extreure la informació de despeses de la foto d'un tiquet.",
       "body": "Puja la foto d'un tiquet i l'escanejarem per extreure'n, si podem, la informaició de la despesa.",
@@ -733,7 +735,15 @@
       "amountLabel": "Quantitat:",
       "dateLabel": "Data:",
       "editNext": "A continuació, podràs editar la informació de les despeses.",
-      "continue": "Continuar"
+      "continue": "Continuar",
+      "existingDocuments": "Tria un tiquet adjunt",
+      "existingDocumentAlt": "Tiquet adjunt",
+      "uploadAndScan": "Puja i escaneja el tiquet",
+      "scannedReceiptAlt": "Tiquet escanejat",
+      "fillTitle": "Omple la despesa a partir del rebut",
+      "fillNext": "Revisa els detalls suggerits i aplica’ls a aquesta despesa.",
+      "scanningHint": "L’escaneig pot trigar una mica — tingues paciència.",
+      "fillBody": "Tria un rebut adjunt o puja’n un de nou — l’escanejarem per suggerir detalls per a aquesta despesa."
     },
     "unknown": "Desconegut",
     "TooBigToast": {

@@ -9,14 +9,25 @@ import {
 import { Download, FileDown, FileJson } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-export default function ExportButton({ groupId }: { groupId: string }) {
+export default function ExportButton({
+  groupId,
+  showLabel = false,
+}: {
+  groupId: string
+  showLabel?: boolean
+}) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button title={t('export')} variant="secondary" size="icon">
+        <Button
+          title={t('export')}
+          variant="secondary"
+          size={showLabel ? 'default' : 'icon'}
+        >
           <Download className="w-4 h-4" />
+          {showLabel && <span className="ml-2">{t('export')}</span>}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

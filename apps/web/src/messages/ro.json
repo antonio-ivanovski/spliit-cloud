@@ -402,7 +402,8 @@
       "description": "Echilibrează socotelile unu-la-unu cu o anumită persoană.",
       "title": "Creează registru de prieten"
     },
-    "importGroup": "Importă grup"
+    "importGroup": "Importă grup",
+    "exportDescription": "Descarcă cheltuielile grupului în format JSON sau CSV."
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -708,7 +709,8 @@
       "heading": "Împărțire implicită",
       "load": "Încarcă",
       "save": "Salvează"
-    }
+    },
+    "scanReceipt": "Scanează bonul cu IA"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Adaugă o cheltuială dintr-un bon",
+      "triggerTitle": "Scanare bon cu IA",
       "title": "Adaugă din bon",
       "description": "Extrage informații despre cheltuială dintr-o poză cu bonul.",
       "body": "Adaugă o poză cu bonul și vom încerca să o scanăm pentru a extrage informații despre cheltuială.",
@@ -733,7 +735,15 @@
       "amountLabel": "Sumă:",
       "dateLabel": "Data:",
       "editNext": "Vei putea să modifici informațiile despre cheltuială în continuare.",
-      "continue": "Continuă"
+      "continue": "Continuă",
+      "existingDocuments": "Alege un bon atașat",
+      "existingDocumentAlt": "Bon atașat",
+      "uploadAndScan": "Încarcă și scanează bonul",
+      "scannedReceiptAlt": "Bon scanat",
+      "fillTitle": "Completează cheltuiala din chitanță",
+      "fillNext": "Verifică detaliile sugerate și aplică-le acestei cheltuieli.",
+      "scanningHint": "Scanarea poate dura puțin — te rugăm să ai răbdare.",
+      "fillBody": "Alege o chitanță atașată sau încarcă una nouă — o vom scana pentru a sugera detaliile acestei cheltuieli."
     },
     "unknown": "Necunoscut",
     "TooBigToast": {

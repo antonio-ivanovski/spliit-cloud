@@ -402,7 +402,8 @@
       "description": "סגור חשבון אחד-על-אחד עם אדם מסוים.",
       "title": "צור פנקס חבר"
     },
-    "importGroup": "ייבא קבוצה"
+    "importGroup": "ייבא קבוצה",
+    "exportDescription": "הורדת הוצאות הקבוצה כקובץ JSON או CSV."
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",
@@ -708,7 +709,8 @@
       "heading": "חלוקה כברירת מחדל",
       "load": "טען",
       "save": "שמור"
-    }
+    },
+    "scanReceipt": "סריקת קבלה באמצעות AI"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "צור הוצאה מקבלה",
+      "triggerTitle": "סריקת קבלה ב‑AI",
       "title": "צור מקבלה",
       "description": "חלץ את מידע ההוצאה מתמונת קבלה.",
       "body": "העלה תמונה של קבלה, ואנחנו נסרוק אותה כדי לחלץ את מידע ההוצאה אם נוכל.",
@@ -733,7 +735,15 @@
       "amountLabel": "סכום:",
       "dateLabel": "תאריך:",
       "editNext": "תוכל לערוך את מידע ההוצאה מאוחר יותר.",
-      "continue": "המשך"
+      "continue": "המשך",
+      "existingDocuments": "בחירת קבלה מצורפת",
+      "existingDocumentAlt": "קבלה מצורפת",
+      "uploadAndScan": "העלאה וסריקת קבלה",
+      "scannedReceiptAlt": "קבלה שנסרקה",
+      "fillTitle": "מילוי הוצאה מקבלה",
+      "fillNext": "בדקו את הפרטים שהוצעו והחילו אותם על הוצאה זו.",
+      "scanningHint": "הסריקה עשויה להימשך מעט — נא להמתין בסבלנות.",
+      "fillBody": "בחרו קבלה מצורפת או העלו חדשה — נסרוק אותה כדי להציע פרטים להוצאה הזו."
     },
     "unknown": "לא ידוע",
     "TooBigToast": {

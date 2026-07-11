@@ -402,7 +402,8 @@
       "description": "Salda i conti individualmente con una persona specifica.",
       "title": "Crea un registro con un amico"
     },
-    "importGroup": "Importa gruppo"
+    "importGroup": "Importa gruppo",
+    "exportDescription": "Scarica le spese del gruppo in formato JSON o CSV."
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",
@@ -708,7 +709,8 @@
       "heading": "Divisione predefinita",
       "load": "Carica",
       "save": "Salva"
-    }
+    },
+    "scanReceipt": "Scansiona la ricevuta con l’IA"
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {
@@ -723,7 +725,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Crea spesa dalla ricevuta",
+      "triggerTitle": "Scansione ricevuta con IA",
       "title": "Crea dalla ricevuta",
       "description": "Estrai le informazioni sulla spesa da una foto della ricevuta.",
       "body": "Carica la foto di una ricevuta e, se possibile, la scannerizzeremo per estrarre le informazioni sulle spese.",
@@ -733,7 +735,15 @@
       "amountLabel": "Importo:",
       "dateLabel": "Data:",
       "editNext": "Successivamente potrai modificare le informazioni sulle spese.",
-      "continue": "Continua"
+      "continue": "Continua",
+      "existingDocuments": "Scegli una ricevuta allegata",
+      "existingDocumentAlt": "Ricevuta allegata",
+      "uploadAndScan": "Carica e scansiona la ricevuta",
+      "scannedReceiptAlt": "Ricevuta scansionata",
+      "fillTitle": "Compila spesa dalla ricevuta",
+      "fillNext": "Controlla i dettagli suggeriti e applicali a questa spesa.",
+      "scanningHint": "La scansione potrebbe richiedere un po’ di tempo — attendi.",
+      "fillBody": "Scegli una ricevuta allegata o caricane una nuova — la scansioneremo per suggerire i dettagli di questa spesa."
     },
     "unknown": "Sconosciuto",
     "TooBigToast": {

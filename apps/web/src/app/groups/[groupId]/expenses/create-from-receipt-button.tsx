@@ -17,6 +17,7 @@ import { useLocale } from '@/i18n/react'
 import { getCurrency } from '@/lib/currency'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import {
+  cn,
   formatCurrency,
   formatDate,
   formatFileSize,
@@ -24,51 +25,112 @@ import {
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import {
-  type CategoryId,
   categoryIdSchema,
   getCategoryById,
+  type CategoryId,
 } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
-import { ChevronRight, FileQuestion, Loader2, Receipt } from 'lucide-react'
-import { useState } from 'react'
+import { Check, FileQuestion, ScanLine, Sparkles } from 'lucide-react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 
 const MAX_FILE_SIZE = 2 * 1024 ** 2
 
-type ReceiptExtractedInfo = {
+export type ReceiptExtractedInfo = {
   amount: number
   categoryId: string | null
   currencyCode: string | null
   date: string | null
   title: string | null
-  items: Array<{
-    title: string
-    unitPrice: number
-    quantity: number
-  }>
+  items: Array<{ title: string; unitPrice: number; quantity: number }>
 }
 
-export function CreateFromReceiptButton() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
+export type ReceiptDocument = {
+  id: string
+  url: string
+  width: number
+  height: number
+}
 
+export type ReceiptScanContext = {
+  title?: string
+  amount?: number
+  date?: string
+  currencyCode?: string
+  categoryId?: string
+  items?: Array<{ title: string; unitPrice: number; quantity: number }>
+}
+
+export function ReceiptScanTrigger({
+  documents = [],
+  currentExpense,
+  onAccept,
+  className,
+  mode = 'create',
+  iconOnly = false,
+  responsive = false,
+  autoScan = false,
+  title,
+  children,
+}: {
+  documents?: ReceiptDocument[]
+  currentExpense?: ReceiptScanContext
+  onAccept?: (result: {
+    info: ReceiptExtractedInfo
+    document: ReceiptDocument
+  }) => void
+  className?: string
+  mode?: 'create' | 'fill'
+  iconOnly?: boolean
+  responsive?: boolean
+  autoScan?: boolean
+  title?: string
+  children?: ReactNode
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
+  const [open, setOpen] = useState(false)
+  // iconOnly && !responsive → always icon-only
+  // iconOnly && responsive → icon-only on mobile, full on desktop
+  // !iconOnly → always full
+  const isAlwaysIconOnly = iconOnly && !responsive
+  const isResponsiveIconOnly = iconOnly && responsive
+  const showText = !isAlwaysIconOnly
   return (
-    <ResponsiveDialog>
+    <ResponsiveDialog open={open} onOpenChange={setOpen}>
       <ResponsiveDialogTrigger asChild>
         <Button
-          size="icon"
+          type="button"
           variant="secondary"
-          title={t('Dialog.triggerTitle')}
+          size={isAlwaysIconOnly ? 'icon' : 'default'}
+          className={cn(
+            isResponsiveIconOnly &&
+              'h-11 w-11 p-0 sm:h-10 sm:w-auto sm:px-4 sm:py-2',
+            className,
+          )}
+          title={title}
+          aria-label={title}
         >
-          <Receipt className="w-4 h-4" />
+          <span className={cn('relative inline-flex', showText && 'mr-2')}>
+            <ScanLine className="h-6 w-6 sm:h-4 sm:w-4" />
+            <Sparkles className="absolute -right-[1px] -top-[2px] h-3.5 w-3.5 sm:h-2.5 sm:w-2.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)]" />
+          </span>
+          {showText && (
+            <span className={cn(isResponsiveIconOnly && 'hidden sm:inline')}>
+              {children ?? t('Dialog.triggerTitle')}
+            </span>
+          )}
         </Button>
       </ResponsiveDialogTrigger>
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2">
-            <span>{t('Dialog.title')}</span>
+            <ScanLine className="h-5 w-5 text-pink-600" />
+            <span>
+              {t(mode === 'fill' ? 'Dialog.fillTitle' : 'Dialog.title')}
+            </span>
             <Badge className="bg-pink-700 hover:bg-pink-600 dark:bg-pink-500 dark:hover:bg-pink-600">
-              Beta
+              AI
             </Badge>
           </ResponsiveDialogTitle>
           <ResponsiveDialogDescription className="text-left">
@@ -76,20 +138,71 @@ export function CreateFromReceiptButton() {
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <ResponsiveDialogBody>
-          <ReceiptDialogContent />
+          <ReceiptDialogContent
+            documents={documents}
+            currentExpense={currentExpense}
+            mode={mode}
+            autoScan={autoScan}
+            open={open}
+            onAccept={(result) => {
+              onAccept?.(result)
+              setOpen(false)
+            }}
+          />
         </ResponsiveDialogBody>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   )
 }
 
-function ReceiptDialogContent() {
-  const { group } = useCurrentGroup()
+export function CreateFromReceiptButton({
+  className,
+  responsive = false,
+}: {
+  className?: string
+  responsive?: boolean
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
+  return (
+    <ReceiptScanTrigger
+      className={className}
+      iconOnly
+      responsive={responsive}
+      title={t('Dialog.triggerTitle')}
+    >
+      {t('Dialog.triggerTitle')}
+    </ReceiptScanTrigger>
+  )
+}
 
+function ReceiptDialogContent({
+  documents,
+  currentExpense,
+  mode,
+  autoScan,
+  open,
+  onAccept,
+}: {
+  documents: ReceiptDocument[]
+  currentExpense?: ReceiptScanContext
+  mode: 'create' | 'fill'
+  autoScan: boolean
+  open: boolean
+  onAccept?: (result: {
+    info: ReceiptExtractedInfo
+    document: ReceiptDocument
+  }) => void
+}) {
+  const { group } = useCurrentGroup()
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
   const { t: tExpenseForm } = useTranslation()
   const [pending, setPending] = useState(false)
+  const [selectedDocument, setSelectedDocument] =
+    useState<ReceiptDocument | null>(null)
+  const [receiptInfo, setReceiptInfo] = useState<ReceiptExtractedInfo | null>(
+    null,
+  )
   const { uploadToS3, FileInput, openFileDialog } = usePresignedUpload(
     group?.ledgerId,
   )
@@ -97,265 +210,260 @@ function ReceiptDialogContent() {
   const navigate = useNavigate()
   const extractReceiptMutation =
     trpc.ai.extractExpenseInformationFromImage.useMutation()
-  const [receiptInfo, setReceiptInfo] = useState<
-    | null
-    | (ReceiptExtractedInfo & { url: string; width?: number; height?: number })
-  >(null)
 
-  const handleFileChange = async (file: File) => {
-    const { file: resizedFile, width, height } = await resizeImage(file)
-    if (resizedFile.size > MAX_FILE_SIZE) {
-      toast({
-        title: t('TooBigToast.title'),
-        description: t('TooBigToast.description', {
-          maxSize: formatFileSize(MAX_FILE_SIZE, locale),
-          size: formatFileSize(resizedFile.size, locale),
-        }),
-        variant: 'destructive',
+  const scan = async (document: ReceiptDocument) => {
+    if (!group) return
+    setSelectedDocument(document)
+    setReceiptInfo(null)
+    try {
+      setPending(true)
+      const result = await extractReceiptMutation.mutateAsync({
+        imageUrl: document.url,
+        currency: group.currency,
+        currencyCode: group.currencyCode,
+        groupId: group.id,
+        locale,
+        currentExpense,
       })
-      return
+      setReceiptInfo(result)
+    } catch (err) {
+      console.error(err)
+      toast({
+        title: t('ErrorToast.title'),
+        description: t('ErrorToast.description'),
+        variant: 'destructive',
+        action: (
+          <ToastAction
+            altText={t('ErrorToast.retry')}
+            onClick={() => scan(document)}
+          >
+            {t('ErrorToast.retry')}
+          </ToastAction>
+        ),
+      })
+    } finally {
+      setPending(false)
     }
-
-    const upload = async () => {
-      try {
-        setPending(true)
-        console.log('Uploading image…')
-        const { url } = await uploadToS3(resizedFile)
-        console.log('Extracting information from receipt…')
-        const { amount, categoryId, currencyCode, date, title, items } =
-          await extractReceiptMutation.mutateAsync({
-            imageUrl: url,
-            currency: group?.currency ?? '',
-            currencyCode: group?.currencyCode,
-            groupId: group?.id ?? '',
-            locale,
-          })
-        setReceiptInfo({
-          amount,
-          categoryId,
-          currencyCode,
-          date,
-          title,
-          items,
-          url,
-          width,
-          height,
-        })
-      } catch (err) {
-        console.error(err)
-        toast({
-          title: t('ErrorToast.title'),
-          description: t('ErrorToast.description'),
-          variant: 'destructive',
-          action: (
-            <ToastAction
-              altText={t('ErrorToast.retry')}
-              onClick={() => upload()}
-            >
-              {t('ErrorToast.retry')}
-            </ToastAction>
-          ),
-        })
-      } finally {
-        setPending(false)
-      }
-    }
-    upload()
   }
 
-  const parsedReceiptCategoryId = receiptInfo?.categoryId
+  useEffect(() => {
+    if (!open || !autoScan || documents.length !== 1 || selectedDocument) return
+    void scan(documents[0])
+  }, [autoScan, documents, open, selectedDocument])
+
+  const handleFileChange = async (file: File) => {
+    try {
+      const { file: resizedFile, width, height } = await resizeImage(file)
+      if (resizedFile.size > MAX_FILE_SIZE) {
+        toast({
+          title: t('TooBigToast.title'),
+          description: t('TooBigToast.description', {
+            maxSize: formatFileSize(MAX_FILE_SIZE, locale),
+            size: formatFileSize(resizedFile.size, locale),
+          }),
+          variant: 'destructive',
+        })
+        return
+      }
+      setPending(true)
+      const { url } = await uploadToS3(resizedFile)
+      const document = { id: crypto.randomUUID(), url, width, height }
+      setSelectedDocument(document)
+      setReceiptInfo(null)
+      await scan(document)
+    } catch (err) {
+      console.error(err)
+      toast({
+        title: t('ErrorToast.title'),
+        description: t('ErrorToast.description'),
+        variant: 'destructive',
+      })
+      setPending(false)
+    }
+  }
+
+  const parsedCategory = receiptInfo?.categoryId
     ? categoryIdSchema.safeParse(receiptInfo.categoryId)
     : null
-  const receiptInfoCategory =
-    (parsedReceiptCategoryId?.success &&
-      getCategoryById(parsedReceiptCategoryId.data)) ||
-    null
+  const category = parsedCategory?.success
+    ? getCategoryById(parsedCategory.data)
+    : null
 
   return (
     <div className="prose prose-sm dark:prose-invert">
-      <p>{t('Dialog.body')}</p>
-      <div>
-        <FileInput
-          onChange={handleFileChange}
-          accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
-        />
-        <div className="grid gap-x-4 gap-y-2 grid-cols-3">
-          <Button
-            variant="secondary"
-            className="row-span-3 w-full h-full relative"
-            title="Create expense from receipt"
-            onClick={openFileDialog}
-            disabled={pending}
-          >
-            {pending ? (
-              <Loader2 className="w-8 h-8 animate-spin" />
-            ) : receiptInfo ? (
-              <div className="absolute top-2 left-2 bottom-2 right-2">
+      <p>{t(mode === 'fill' ? 'Dialog.fillBody' : 'Dialog.body')}</p>
+      <FileInput
+        onChange={handleFileChange}
+        accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+      />
+      {!selectedDocument && documents.length > 0 && (
+        <div className="not-prose mb-4 space-y-2">
+          <p className="text-sm font-medium">{t('Dialog.existingDocuments')}</p>
+          <div className="grid grid-cols-4 gap-2">
+            {documents.map((document) => (
+              <Button
+                key={document.id}
+                type="button"
+                variant="secondary"
+                className="h-20 overflow-hidden p-1"
+                onClick={() => scan(document)}
+                disabled={pending}
+              >
                 <Image
-                  src={receiptInfo.url}
-                  width={receiptInfo.width}
-                  height={receiptInfo.height}
-                  className="w-full h-full m-0 object-contain drop-shadow-lg"
-                  alt="Scanned receipt"
+                  src={document.url}
+                  width={document.width}
+                  height={document.height}
+                  className="h-full w-full object-contain"
+                  alt={t('Dialog.existingDocumentAlt')}
                 />
-              </div>
-            ) : (
-              <span className="text-xs sm:text-sm text-muted-foreground">
-                {t('Dialog.selectImage')}
-              </span>
-            )}
-          </Button>
-          <div className="col-span-2">
-            <strong>{t('Dialog.titleLabel')}</strong>
-            <div>{receiptInfo ? (receiptInfo.title ?? <Unknown />) : '…'}</div>
-          </div>
-          <div className="col-span-2">
-            <strong>{t('Dialog.categoryLabel')}</strong>
-            <div>
-              {receiptInfo ? (
-                receiptInfoCategory ? (
-                  <div className="flex items-center">
-                    <CategoryIcon
-                      category={receiptInfoCategory}
-                      className="inline w-4 h-4 mr-2"
-                    />
-                    <span className="mr-1">{receiptInfoCategory.grouping}</span>
-                    <ChevronRight className="inline w-3 h-3 mr-1" />
-                    <span>{receiptInfoCategory.name}</span>
-                  </div>
-                ) : (
-                  <Unknown />
-                )
-              ) : (
-                ''
-              )}
-            </div>
-          </div>
-          <div>
-            <strong>{t('Dialog.amountLabel')}</strong>
-            <div>
-              {receiptInfo && group ? (
-                receiptInfo.amount ? (
-                  <>
-                    {formatCurrency(
-                      receiptInfo.currencyCode
-                        ? (getCurrency(receiptInfo.currencyCode) ??
-                            getCurrencyFromGroup(group))
-                        : getCurrencyFromGroup(group),
-                      receiptInfo.amount,
-                      locale,
-                    )}
-                  </>
-                ) : (
-                  <Unknown />
-                )
-              ) : (
-                '…'
-              )}
-            </div>
-          </div>
-          <div>
-            <strong>{t('Dialog.dateLabel')}</strong>
-            <div>
-              {receiptInfo ? (
-                receiptInfo.date ? (
-                  formatDate(
-                    new Date(`${receiptInfo?.date}T12:00:00.000Z`),
-                    locale,
-                    { dateStyle: 'medium' },
-                  )
-                ) : (
-                  <Unknown />
-                )
-              ) : (
-                '…'
-              )}
-            </div>
-          </div>
-          <div className="col-span-2">
-            <strong>{tExpenseForm('ExpenseForm.items.title')}</strong>
-            {receiptInfo ? (
-              receiptInfo.items.length ? (
-                <ul className="m-0 max-h-24 list-none overflow-y-auto p-0 text-xs">
-                  {receiptInfo.items.slice(0, 8).map((item, index) => {
-                    const itemCurrency = receiptInfo.currencyCode
-                      ? (getCurrency(receiptInfo.currencyCode) ??
-                        (group ? getCurrencyFromGroup(group) : null))
-                      : group
-                        ? getCurrencyFromGroup(group)
-                        : null
-                    return (
-                      <li
-                        key={`${item.title}-${index}`}
-                        className="flex items-baseline justify-between gap-2"
-                      >
-                        <span className="min-w-0 truncate">
-                          {item.title}
-                          {item.quantity > 1 ? ` × ${item.quantity}` : ''}
-                        </span>
-                        {itemCurrency ? (
-                          <span className="shrink-0 text-muted-foreground">
-                            {formatCurrency(
-                              itemCurrency,
-                              item.unitPrice,
-                              locale,
-                            )}
-                          </span>
-                        ) : null}
-                      </li>
-                    )
-                  })}
-                  {receiptInfo.items.length > 8 ? (
-                    <li className="text-muted-foreground">
-                      +{receiptInfo.items.length - 8}
-                    </li>
-                  ) : null}
-                </ul>
-              ) : (
-                <Unknown />
-              )
-            ) : (
-              '…'
-            )}
+              </Button>
+            ))}
           </div>
         </div>
-      </div>
-      <p>{t('Dialog.editNext')}</p>
-      <div className="text-center">
+      )}
+      {!selectedDocument && (
         <Button
-          disabled={pending || !receiptInfo}
-          onClick={() => {
-            if (!receiptInfo || !group) return
-            navigate({
-              to: '/groups/$groupId/expenses/create',
-              params: { groupId: group.id },
-              search: {
-                amount: receiptInfo.amount.toString(),
-                categoryId:
-                  (receiptInfo.categoryId as CategoryId | undefined) ??
-                  undefined,
-                originalCurrency: receiptInfo.currencyCode ?? undefined,
-                date: receiptInfo.date ?? undefined,
-                title: receiptInfo.title ?? undefined,
-                items: receiptInfo.items.length
-                  ? JSON.stringify(receiptInfo.items)
-                  : undefined,
-                imageUrl: receiptInfo.url,
-                imageWidth:
-                  receiptInfo.width !== undefined
-                    ? receiptInfo.width.toString()
-                    : undefined,
-                imageHeight:
-                  receiptInfo.height !== undefined
-                    ? receiptInfo.height.toString()
-                    : undefined,
-              },
-            })
-          }}
+          type="button"
+          variant="outline"
+          className="not-prose w-full"
+          onClick={openFileDialog}
+          disabled={pending}
         >
-          {t('Dialog.continue')}
+          <ScanLine className="mr-2 h-4 w-4" />
+          {t('Dialog.uploadAndScan')}
         </Button>
-      </div>
+      )}
+      {selectedDocument && (
+        <>
+          <div className="not-prose mb-3 grid grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-3 text-sm">
+            <div className="relative col-span-2 flex min-h-48 justify-center overflow-hidden rounded border bg-muted/20">
+              <Image
+                src={selectedDocument.url}
+                width={selectedDocument.width}
+                height={selectedDocument.height}
+                className="max-h-72 w-auto max-w-full object-contain"
+                alt={t('Dialog.scannedReceiptAlt')}
+              />
+              {pending && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/75 p-3 text-center text-xs font-medium text-foreground backdrop-blur-[1px]">
+                  <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-pink-500/15 text-pink-600 shadow-[0_0_24px_rgba(236,72,153,0.55)]">
+                    <ScanLine className="h-7 w-7 animate-pulse" />
+                    <Sparkles className="absolute -right-1 -top-1 h-6 w-6 animate-[pulse_1.2s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_9px_rgba(236,72,153,1)]" />
+                  </span>
+                  <span>{t('Dialog.scanningHint')}</span>
+                </div>
+              )}
+            </div>
+            {receiptInfo ? (
+              <>
+                <div>
+                  <strong>{t('Dialog.titleLabel')}</strong>
+                  <div>{receiptInfo.title ?? <Unknown />}</div>
+                </div>
+                <div>
+                  <strong>{t('Dialog.categoryLabel')}</strong>
+                  <div>
+                    {category ? (
+                      <span className="inline-flex items-center gap-1">
+                        <CategoryIcon category={category} className="h-4 w-4" />
+                        {category.name}
+                      </span>
+                    ) : (
+                      <Unknown />
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <strong>{t('Dialog.amountLabel')}</strong>
+                  <div>
+                    {group
+                      ? formatCurrency(
+                          receiptInfo.currencyCode
+                            ? (getCurrency(receiptInfo.currencyCode) ??
+                                getCurrencyFromGroup(group))
+                            : getCurrencyFromGroup(group),
+                          receiptInfo.amount,
+                          locale,
+                        )
+                      : '…'}
+                  </div>
+                </div>
+                <div>
+                  <strong>{t('Dialog.dateLabel')}</strong>
+                  <div>
+                    {receiptInfo.date ? (
+                      formatDate(
+                        new Date(`${receiptInfo.date}T12:00:00.000Z`),
+                        locale,
+                        { dateStyle: 'medium' },
+                      )
+                    ) : (
+                      <Unknown />
+                    )}
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <strong>{tExpenseForm('ExpenseForm.items.title')}</strong>
+                  <div>
+                    {receiptInfo.items.length ? (
+                      receiptInfo.items
+                        .map((item) => `${item.title} × ${item.quantity}`)
+                        .join(', ')
+                    ) : (
+                      <Unknown />
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : null}
+          </div>
+          {receiptInfo && (
+            <>
+              <p>
+                {t(mode === 'fill' ? 'Dialog.fillNext' : 'Dialog.editNext')}
+              </p>
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  disabled={pending}
+                  onClick={() => {
+                    if (!group) return
+                    if (onAccept) {
+                      onAccept({
+                        info: receiptInfo,
+                        document: selectedDocument,
+                      })
+                      return
+                    }
+                    navigate({
+                      to: '/groups/$groupId/expenses/create',
+                      params: { groupId: group.id },
+                      search: {
+                        amount: receiptInfo.amount.toString(),
+                        categoryId:
+                          (receiptInfo.categoryId as CategoryId | undefined) ??
+                          undefined,
+                        originalCurrency: receiptInfo.currencyCode ?? undefined,
+                        date: receiptInfo.date ?? undefined,
+                        title: receiptInfo.title ?? undefined,
+                        items: receiptInfo.items.length
+                          ? JSON.stringify(receiptInfo.items)
+                          : undefined,
+                        imageUrl: selectedDocument.url,
+                        imageWidth: selectedDocument.width.toString(),
+                        imageHeight: selectedDocument.height.toString(),
+                      },
+                    })
+                  }}
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  {t('Dialog.continue')}
+                </Button>
+              </div>
+            </>
+          )}
+        </>
+      )}
     </div>
   )
 }
@@ -363,9 +471,9 @@ function ReceiptDialogContent() {
 function Unknown() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
   return (
-    <div className="flex gap-1 items-center text-muted-foreground">
-      <FileQuestion className="w-4 h-4" />
+    <span className="inline-flex items-center gap-1 text-muted-foreground">
+      <FileQuestion className="h-4 w-4" />
       <em>{t('unknown')}</em>
-    </div>
+    </span>
   )
 }

@@ -402,7 +402,8 @@
       "description": "Selesaikan satu lawan satu dengan orang tertentu.",
       "title": "Buat buku besar teman"
     },
-    "importGroup": "Impor grup"
+    "importGroup": "Impor grup",
+    "exportDescription": "Unduh pengeluaran grup sebagai JSON atau CSV."
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -708,7 +709,8 @@
       "heading": "Pembagian default",
       "load": "Muat",
       "save": "Simpan"
-    }
+    },
+    "scanReceipt": "Pindai struk dengan AI"
   },
   "Currencies": {
     "search": "Cari mata uang...",
@@ -906,7 +908,7 @@
   },
   "CreateFromReceipt": {
     "Dialog": {
-      "triggerTitle": "Buat pengeluaran dari tanda terima",
+      "triggerTitle": "Pindai struk AI",
       "title": "Buat dari tanda terima",
       "description": "Ekstrak informasi pengeluaran dari foto tanda terima.",
       "body": "Unggah foto struk, dan kami akan memindainya untuk mengekstrak informasi pengeluaran jika memungkinkan.",
@@ -916,7 +918,15 @@
       "amountLabel": "Jumlah:",
       "dateLabel": "Tanggal:",
       "editNext": "Anda dapat mengedit informasi pengeluaran berikutnya.",
-      "continue": "Lanjutkan"
+      "continue": "Lanjutkan",
+      "existingDocuments": "Pilih struk terlampir",
+      "existingDocumentAlt": "Struk terlampir",
+      "uploadAndScan": "Unggah dan pindai struk",
+      "scannedReceiptAlt": "Struk yang dipindai",
+      "fillTitle": "Isi pengeluaran dari struk",
+      "fillNext": "Tinjau detail yang disarankan, lalu terapkan ke pengeluaran ini.",
+      "scanningHint": "Pemindaian mungkin memerlukan waktu — harap bersabar.",
+      "fillBody": "Pilih struk terlampir atau unggah yang baru — kami akan memindainya untuk menyarankan detail pengeluaran ini."
     },
     "unknown": "Tidak diketahui",
     "TooBigToast": {
