@@ -5,6 +5,7 @@ import {
   isMobileGroupNavPath,
   MobileGroupNav,
 } from '@/components/mobile-shell'
+import { QueryErrorState } from '@/components/query-error-state'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -77,7 +78,7 @@ export function GroupLayoutClient({
     }
   }, [friendLinkInviteUrl, groupId, navigate])
 
-  const { data, isLoading, error } = trpc.groups.get.useQuery(
+  const { data, isLoading, error, refetch } = trpc.groups.get.useQuery(
     { groupId, linkInviteToken },
     { retry: false },
   )
@@ -181,6 +182,15 @@ export function GroupLayoutClient({
   // pre-filled.
   if (!isLoading && error?.data?.code === 'NOT_FOUND') {
     return <NotFoundGroup groupId={groupId} />
+  }
+
+  if (error && !data?.group) {
+    return (
+      <QueryErrorState
+        onRetry={() => void refetch()}
+        onBack={() => window.history.back()}
+      />
+    )
   }
 
   const props =

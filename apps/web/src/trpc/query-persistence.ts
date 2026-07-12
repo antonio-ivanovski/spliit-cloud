@@ -86,6 +86,10 @@ export function shouldPersistQueryKey(queryKey: QueryKey): boolean {
     (path.length === 3 &&
       path[0] === 'groups' &&
       path[1] === 'expenses' &&
+      path[2] === 'get') ||
+    (path.length === 3 &&
+      path[0] === 'groups' &&
+      path[1] === 'expenses' &&
       path[2] === 'list')
   )
 }

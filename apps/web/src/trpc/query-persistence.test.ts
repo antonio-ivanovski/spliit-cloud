@@ -16,6 +16,15 @@ describe('query persistence allowlist', () => {
     )
     expect(
       shouldPersistQueryKey([
+        ['groups', 'expenses', 'get'],
+        {
+          type: 'query',
+          input: { groupId: 'group-1', expenseId: 'expense-1' },
+        },
+      ]),
+    ).toBe(true)
+    expect(
+      shouldPersistQueryKey([
         ['groups', 'get'],
         {
           type: 'query',

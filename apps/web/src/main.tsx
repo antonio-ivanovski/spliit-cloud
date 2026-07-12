@@ -1,6 +1,7 @@
 import '@/app/globals.css'
 import { initI18n } from '@/i18n/react'
 import { installAppRecovery } from '@/lib/app-recovery'
+import '@/pwa-registration'
 import { router } from '@/router'
 import { RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'

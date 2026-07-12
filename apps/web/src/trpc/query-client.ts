@@ -6,6 +6,10 @@ export function makeQueryClient() {
     defaultOptions: {
       queries: {
         staleTime: 30 * 1000,
+        // Persisted queries must not be garbage-collected by TanStack Query's
+        // five-minute default before the persister's maxAge is reached.
+        gcTime: Infinity,
+        networkMode: 'offlineFirst',
       },
       dehydrate: {
         serializeData: superjson.serialize,

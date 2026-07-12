@@ -1604,5 +1604,14 @@
     "attachments": "Erantsitakoak ({count})",
     "edit": "Editatu gastua",
     "makeCopy": "Kopia bat egin"
+  },
+  "OfflineData": {
+    "errorTitle": "Ezin izan dira datu hauek kargatu",
+    "offlineDescription": "Datu hauek ez daude erabilgarri lineaz kanpo oraindik. Konektatu internetera eta saiatu berriro.",
+    "errorDescription": "Errore bat gertatu da datu hauek kargatzean.",
+    "retry": "Saiatu berriro",
+    "back": "Itzuli",
+    "unavailableTitle": "Pantaila hau ez dago erabilgarri lineaz kanpo",
+    "unavailableDescription": "Eginbide honek oraindik deskargatu ez den baliabide bat behar du."
   }
 }

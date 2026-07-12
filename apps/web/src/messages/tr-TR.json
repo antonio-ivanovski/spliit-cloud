@@ -1604,5 +1604,14 @@
     "attachments": "Ekler ({count})",
     "edit": "Masrafı düzenle",
     "makeCopy": "Kopya oluştur"
+  },
+  "OfflineData": {
+    "errorTitle": "Bu veriler yüklenemiyor",
+    "offlineDescription": "Bu veriler henüz çevrimdışı kullanılamıyor. İnternete bağlanıp tekrar deneyin.",
+    "errorDescription": "Bu veriler yüklenirken bir şeyler ters gitti.",
+    "retry": "Tekrar dene",
+    "back": "Geri dön",
+    "unavailableTitle": "Bu ekran çevrimdışı kullanılamıyor",
+    "unavailableDescription": "Bu özellik henüz indirilmemiş bir varlık gerektiriyor."
   }
 }

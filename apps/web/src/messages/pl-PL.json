@@ -1604,5 +1604,14 @@
     "attachments": "Załączniki ({count})",
     "edit": "Edytuj wydatek",
     "makeCopy": "Utwórz kopię"
+  },
+  "OfflineData": {
+    "errorTitle": "Nie można wczytać tych danych",
+    "offlineDescription": "Te dane nie są jeszcze dostępne offline. Połącz się z internetem i spróbuj ponownie.",
+    "errorDescription": "Coś poszło nie tak podczas ładowania tych danych.",
+    "retry": "Spróbuj ponownie",
+    "back": "Wróć",
+    "unavailableTitle": "Ten ekran jest niedostępny offline",
+    "unavailableDescription": "Ta funkcja wymaga zasobu, który nie został jeszcze pobrany."
   }
 }

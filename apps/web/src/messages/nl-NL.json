@@ -1604,5 +1604,14 @@
     "attachments": "Bijlagen ({count})",
     "edit": "Bewerk uitgave",
     "makeCopy": "Kopie maken"
+  },
+  "OfflineData": {
+    "errorTitle": "Deze gegevens kunnen niet worden geladen",
+    "offlineDescription": "Deze gegevens zijn nog niet offline beschikbaar. Maak verbinding met internet en probeer het opnieuw.",
+    "errorDescription": "Er is iets misgegaan bij het laden van deze gegevens.",
+    "retry": "Opnieuw proberen",
+    "back": "Ga terug",
+    "unavailableTitle": "Dit scherm is offline niet beschikbaar",
+    "unavailableDescription": "Deze functie vereist een asset dat nog niet is gedownload."
   }
 }

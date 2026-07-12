@@ -5,6 +5,7 @@ import { useDeleteExpenseMutation } from '@/app/groups/[groupId]/expenses/expens
 import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-bars'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { DeletePopup } from '@/components/delete-popup'
+import { QueryErrorState } from '@/components/query-error-state'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -122,7 +123,7 @@ export function ExpensePreviewModal({
     keyPrefix: 'Categories',
   })
 
-  const { data, isLoading, error } = trpc.groups.expenses.get.useQuery(
+  const { data, isLoading, error, refetch } = trpc.groups.expenses.get.useQuery(
     { groupId, expenseId, linkInviteToken },
     { enabled: open, retry: false },
   )
@@ -256,10 +257,14 @@ export function ExpensePreviewModal({
               <Skeleton className="h-20 w-full" />
             </div>
           )}
-          {!isLoading && error && (
-            <p className="text-sm text-muted-foreground">{error.message}</p>
+          {!isLoading && error && !expense && (
+            <QueryErrorState
+              compact
+              onRetry={() => void refetch()}
+              onBack={() => handleOpenChange(false)}
+            />
           )}
-          {!isLoading && !error && expense && currency && (
+          {!isLoading && expense && currency && (
             <div className="space-y-5">
               <div>
                 <div className="text-3xl font-bold tabular-nums tracking-tight">

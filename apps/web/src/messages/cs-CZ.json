@@ -1604,5 +1604,14 @@
     "attachments": "Přílohy ({count})",
     "edit": "Upravit výdaj",
     "makeCopy": "Vytvořit kopii"
+  },
+  "OfflineData": {
+    "errorTitle": "Tato data se nepodařilo načíst",
+    "offlineDescription": "Tato data zatím nejsou offline dostupná. Připojte se k internetu a zkuste to znovu.",
+    "errorDescription": "Při načítání těchto dat se něco pokazilo.",
+    "retry": "Zkusit znovu",
+    "back": "Zpět",
+    "unavailableTitle": "Tato obrazovka není offline dostupná",
+    "unavailableDescription": "Tato funkce vyžaduje prostředek, který ještě nebyl stažen."
   }
 }

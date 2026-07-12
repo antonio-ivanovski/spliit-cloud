@@ -1,5 +1,6 @@
 import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import Link from '@/components/link'
+import { QueryErrorState } from '@/components/query-error-state'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -112,7 +113,9 @@ const ExpenseListForSearch = ({
   const {
     data,
     isLoading: expensesAreLoading,
+    isError,
     fetchNextPage,
+    refetch,
   } = trpc.groups.expenses.list.useInfiniteQuery(
     {
       groupId,
@@ -125,7 +128,7 @@ const ExpenseListForSearch = ({
   const expenses = data?.pages.flatMap((page) => page.expenses)
   const hasMore = data?.pages.at(-1)?.hasMore ?? false
 
-  const isLoading = expensesAreLoading || !expenses || !group
+  const isLoading = (expensesAreLoading || !expenses || !group) && !isError
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) fetchNextPage()
@@ -142,6 +145,12 @@ const ExpenseListForSearch = ({
   )
 
   if (isLoading) return <ExpensesLoading />
+
+  if (isError && (!data || !expenses || !group)) {
+    return <QueryErrorState onRetry={() => void refetch()} />
+  }
+
+  if (!expenses || !group) return <ExpensesLoading />
 
   if (expenses.length === 0)
     return (

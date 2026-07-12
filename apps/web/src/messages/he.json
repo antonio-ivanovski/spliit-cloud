@@ -1604,5 +1604,14 @@
     "attachments": "קבצים מצורפים ({count})",
     "edit": "ערוך הוצאה",
     "makeCopy": "צור עותק"
+  },
+  "OfflineData": {
+    "errorTitle": "לא ניתן לטעון את הנתונים האלה",
+    "offlineDescription": "הנתונים האלה עדיין אינם זמינים במצב לא מקוון. התחברו לאינטרנט ונסו שוב.",
+    "errorDescription": "משהו השתבש בטעינת הנתונים האלה.",
+    "retry": "נסו שוב",
+    "back": "חזרה",
+    "unavailableTitle": "המסך הזה אינו זמין במצב לא מקוון",
+    "unavailableDescription": "תכונה זו זקוקה לנכס שעדיין לא הורד."
   }
 }

@@ -1604,5 +1604,14 @@
     "attachments": "Documenti allegati ({count})",
     "edit": "Modifica spesa",
     "makeCopy": "Crea una copia"
+  },
+  "OfflineData": {
+    "errorTitle": "Impossibile caricare questi dati",
+    "offlineDescription": "Questi dati non sono ancora disponibili offline. Connettiti a Internet e riprova.",
+    "errorDescription": "Si è verificato un errore durante il caricamento di questi dati.",
+    "retry": "Riprova",
+    "back": "Indietro",
+    "unavailableTitle": "Questa schermata non è disponibile offline",
+    "unavailableDescription": "Questa funzione richiede una risorsa che non è stata ancora scaricata."
   }
 }

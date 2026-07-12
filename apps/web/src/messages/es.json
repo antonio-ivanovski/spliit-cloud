@@ -1604,5 +1604,14 @@
     "attachments": "Documentos adjuntos ({count})",
     "edit": "Editar gasto",
     "makeCopy": "Hacer una copia"
+  },
+  "OfflineData": {
+    "errorTitle": "No se pueden cargar estos datos",
+    "offlineDescription": "Estos datos aún no están disponibles sin conexión. Conéctate a internet e inténtalo de nuevo.",
+    "errorDescription": "Algo salió mal al cargar estos datos.",
+    "retry": "Inténtalo de nuevo",
+    "back": "Volver",
+    "unavailableTitle": "Esta pantalla no está disponible sin conexión",
+    "unavailableDescription": "Esta función necesita un recurso que aún no se ha descargado."
   }
 }

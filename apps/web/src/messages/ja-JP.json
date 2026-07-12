@@ -1604,5 +1604,14 @@
     "attachments": "添付ファイル ({count})",
     "edit": "支出を編集",
     "makeCopy": "コピーを作成"
+  },
+  "OfflineData": {
+    "errorTitle": "このデータを読み込めません",
+    "offlineDescription": "このデータはまだオフラインでは利用できません。インターネットに接続して、もう一度お試しください。",
+    "errorDescription": "このデータの読み込み中に問題が発生しました。",
+    "retry": "再試行",
+    "back": "戻る",
+    "unavailableTitle": "この画面はオフラインでは利用できません",
+    "unavailableDescription": "この機能には、まだダウンロードされていないアセットが必要です。"
   }
 }

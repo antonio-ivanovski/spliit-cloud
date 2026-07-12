@@ -1604,5 +1604,14 @@
     "attachments": "附件（{count}）",
     "edit": "編輯消費紀錄",
     "makeCopy": "複製消費紀錄"
+  },
+  "OfflineData": {
+    "errorTitle": "無法載入此資料",
+    "offlineDescription": "此資料尚未支援離線使用。請連線至網際網路後再試一次。",
+    "errorDescription": "載入此資料時發生問題。",
+    "retry": "再試一次",
+    "back": "返回",
+    "unavailableTitle": "此畫面無法離線使用",
+    "unavailableDescription": "此功能需要尚未下載的資產。"
   }
 }

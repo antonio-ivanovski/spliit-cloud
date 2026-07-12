@@ -1604,5 +1604,14 @@
     "attachments": "Adjunts ({count})",
     "edit": "Editar despesa",
     "makeCopy": "Fer una còpia"
+  },
+  "OfflineData": {
+    "errorTitle": "No s'han pogut carregar aquestes dades",
+    "offlineDescription": "Aquestes dades encara no estan disponibles sense connexió. Connecta't a internet i torna-ho a provar.",
+    "errorDescription": "S'ha produït un error en carregar aquestes dades.",
+    "retry": "Torna-ho a provar",
+    "back": "Torna enrere",
+    "unavailableTitle": "Aquesta pantalla no està disponible sense connexió",
+    "unavailableDescription": "Aquesta funció necessita un recurs que encara no s'ha baixat."
   }
 }

@@ -1604,5 +1604,14 @@
     "attachments": "Anexos ({count})",
     "edit": "Editar despesa",
     "makeCopy": "Fazer uma cópia"
+  },
+  "OfflineData": {
+    "errorTitle": "Não foi possível carregar estes dados",
+    "offlineDescription": "Estes dados ainda não estão disponíveis off-line. Conecte-se à internet e tente novamente.",
+    "errorDescription": "Ocorreu um erro ao carregar estes dados.",
+    "retry": "Tentar novamente",
+    "back": "Voltar",
+    "unavailableTitle": "Esta tela não está disponível off-line",
+    "unavailableDescription": "Este recurso precisa de um arquivo que ainda não foi baixado."
   }
 }

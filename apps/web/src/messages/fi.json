@@ -1604,5 +1604,14 @@
     "attachments": "Liitteet ({count})",
     "edit": "Muokkaa kulua",
     "makeCopy": "Tee kopio"
+  },
+  "OfflineData": {
+    "errorTitle": "Näitä tietoja ei voitu ladata",
+    "offlineDescription": "Nämä tiedot eivät ole vielä saatavilla offline-tilassa. Yhdistä internetiin ja yritä uudelleen.",
+    "errorDescription": "Näiden tietojen lataamisessa tapahtui virhe.",
+    "retry": "Yritä uudelleen",
+    "back": "Takaisin",
+    "unavailableTitle": "Tämä näkymä ei ole käytettävissä offline-tilassa",
+    "unavailableDescription": "Tämä ominaisuus tarvitsee resurssin, jota ei ole vielä ladattu."
   }
 }

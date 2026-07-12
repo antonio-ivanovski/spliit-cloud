@@ -1604,5 +1604,14 @@
     "attachments": "Attachments ({count})",
     "edit": "Edit expense",
     "makeCopy": "Make a copy"
+  },
+  "OfflineData": {
+    "errorTitle": "Unable to load this data",
+    "offlineDescription": "This data is not available offline yet. Connect to the internet and try again.",
+    "errorDescription": "Something went wrong while loading this data.",
+    "retry": "Try again",
+    "back": "Go back",
+    "unavailableTitle": "This screen is unavailable offline",
+    "unavailableDescription": "This feature needs an asset that has not been downloaded yet."
   }
 }

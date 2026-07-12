@@ -1604,5 +1604,14 @@
     "attachments": "Anhänge ({count})",
     "edit": "Ausgabe bearbeiten",
     "makeCopy": "Kopie erstellen"
+  },
+  "OfflineData": {
+    "errorTitle": "Diese Daten konnten nicht geladen werden",
+    "offlineDescription": "Diese Daten sind offline noch nicht verfügbar. Stelle eine Internetverbindung her und versuche es erneut.",
+    "errorDescription": "Beim Laden dieser Daten ist ein Fehler aufgetreten.",
+    "retry": "Erneut versuchen",
+    "back": "Zurück",
+    "unavailableTitle": "Dieser Bildschirm ist offline nicht verfügbar",
+    "unavailableDescription": "Diese Funktion benötigt ein Asset, das noch nicht heruntergeladen wurde."
   }
 }

@@ -1604,5 +1604,14 @@
     "attachments": "Atașamente ({count})",
     "edit": "Modifică cheltuiala",
     "makeCopy": "Fă o copie"
+  },
+  "OfflineData": {
+    "errorTitle": "Datele nu pot fi încărcate",
+    "offlineDescription": "Aceste date nu sunt încă disponibile offline. Conectează-te la internet și încearcă din nou.",
+    "errorDescription": "A apărut o eroare la încărcarea acestor date.",
+    "retry": "Încearcă din nou",
+    "back": "Înapoi",
+    "unavailableTitle": "Acest ecran nu este disponibil offline",
+    "unavailableDescription": "Această funcție necesită o resursă care nu a fost încă descărcată."
   }
 }

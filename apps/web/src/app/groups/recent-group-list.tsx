@@ -1,3 +1,4 @@
+import { QueryErrorState } from '@/components/query-error-state'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
 import { Cloud, Loader2, Plus, Users } from 'lucide-react'
@@ -22,7 +23,7 @@ const STORAGE_KEYS = {
 export function RecentGroupList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const utils = trpc.useUtils()
-  const { data, isLoading } = trpc.account.groups.useQuery({
+  const { data, isLoading, isError, refetch } = trpc.account.groups.useQuery({
     includeArchived: true,
   })
   const [forceArchiveTarget, setForceArchiveTarget] =
@@ -78,7 +79,7 @@ export function RecentGroupList() {
     await archiveGroupWithBalancesCheck(group, !group.archived)
   }
 
-  const isGroupsLoading = isLoading || !data
+  const isGroupsLoading = (isLoading || !data) && !isError
   const allGroups = data?.groups ?? []
 
   function renderGroupItems(
@@ -124,6 +125,8 @@ export function RecentGroupList() {
         {t('loadingRecent')}
       </p>
     )
+  } else if (isError && !data) {
+    body = <QueryErrorState onRetry={() => void refetch()} />
   } else {
     const {
       groups: sectionGroups,

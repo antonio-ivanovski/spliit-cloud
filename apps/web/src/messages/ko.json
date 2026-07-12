@@ -1604,5 +1604,14 @@
     "attachments": "첨부 파일 ({count})",
     "edit": "지출 수정하기",
     "makeCopy": "복사본 만들기"
+  },
+  "OfflineData": {
+    "errorTitle": "이 데이터를 불러올 수 없습니다",
+    "offlineDescription": "이 데이터는 아직 오프라인에서 사용할 수 없습니다. 인터넷에 연결한 후 다시 시도하세요.",
+    "errorDescription": "데이터를 불러오는 중 문제가 발생했습니다.",
+    "retry": "다시 시도",
+    "back": "뒤로 가기",
+    "unavailableTitle": "이 화면은 오프라인에서 사용할 수 없습니다",
+    "unavailableDescription": "이 기능을 사용하려면 아직 다운로드되지 않은 에셋이 필요합니다."
   }
 }

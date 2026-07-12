@@ -1604,5 +1604,14 @@
     "attachments": "Lampiran ({count})",
     "edit": "Ubah pengeluaran",
     "makeCopy": "Buat salinan"
+  },
+  "OfflineData": {
+    "errorTitle": "Tidak dapat memuat data ini",
+    "offlineDescription": "Data ini belum tersedia secara offline. Sambungkan ke internet lalu coba lagi.",
+    "errorDescription": "Terjadi kesalahan saat memuat data ini.",
+    "retry": "Coba lagi",
+    "back": "Kembali",
+    "unavailableTitle": "Layar ini tidak tersedia secara offline",
+    "unavailableDescription": "Fitur ini memerlukan aset yang belum diunduh."
   }
 }

@@ -1604,5 +1604,14 @@
     "attachments": "Pièces jointes ({count})",
     "edit": "Modifier la dépense",
     "makeCopy": "Faire une copie"
+  },
+  "OfflineData": {
+    "errorTitle": "Impossible de charger ces données",
+    "offlineDescription": "Ces données ne sont pas encore disponibles hors connexion. Connectez-vous à Internet et réessayez.",
+    "errorDescription": "Une erreur s'est produite lors du chargement de ces données.",
+    "retry": "Réessayer",
+    "back": "Retour",
+    "unavailableTitle": "Cet écran n'est pas disponible hors connexion",
+    "unavailableDescription": "Cette fonctionnalité nécessite une ressource qui n'a pas encore été téléchargée."
   }
 }

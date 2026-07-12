@@ -1604,5 +1604,14 @@
     "attachments": "附件（{count}）",
     "edit": "编辑消费",
     "makeCopy": "复制消费"
+  },
+  "OfflineData": {
+    "errorTitle": "无法加载此数据",
+    "offlineDescription": "此数据尚未支持离线使用。请连接互联网后重试。",
+    "errorDescription": "加载此数据时出了问题。",
+    "retry": "重试",
+    "back": "返回",
+    "unavailableTitle": "此屏幕无法离线使用",
+    "unavailableDescription": "此功能需要尚未下载的资源。"
   }
 }
