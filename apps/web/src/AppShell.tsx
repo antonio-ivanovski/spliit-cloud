@@ -3,6 +3,7 @@ import Image from '@/components/app-image'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
+import { isFocusedMobilePath, MobileAppBar } from '@/components/mobile-shell'
 import { OfflineBanner } from '@/components/offline-banner'
 import { ProfileGate } from '@/components/profile-gate'
 import { ProgressBar } from '@/components/progress-bar'
@@ -12,23 +13,25 @@ import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
 import { TRPCProvider } from '@/trpc/client'
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, useLocation } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import githubSvg from './components/auth/github.svg'
 
 function Content() {
   const { t } = useTranslation()
+  const pathname = useLocation({ select: (location) => location.pathname })
+  const focusedMobileRoute = isFocusedMobilePath(pathname)
 
   return (
     <TRPCProvider>
-      <div className="min-h-screen flex flex-col">
-        <header className="fixed top-0 left-0 right-0 h-16 flex justify-between bg-white/50 dark:bg-gray-950/50 p-2 border-b backdrop-blur-xs z-50">
+      <div className="app-shell flex min-h-screen flex-col">
+        <header className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs dark:bg-gray-950/50 sm:flex">
           <Link
             className="flex items-center gap-2 hover:scale-105 transition-transform"
             href="/"
           >
-            <h1 className="flex items-center gap-2">
+            <div className="flex items-center gap-2" aria-label="Spliit">
               <Image
                 src="/logo-with-text.svg"
                 className="m-1 h-[45px] w-auto"
@@ -36,7 +39,7 @@ function Content() {
                 height={45}
                 alt="Spliit"
               />
-            </h1>
+            </div>
           </Link>
           <div role="navigation" aria-label="Menu" className="flex">
             <ul className="flex items-center text-sm gap-1">
@@ -53,16 +56,38 @@ function Content() {
           </div>
         </header>
 
+        {focusedMobileRoute ? (
+          <MobileAppBar />
+        ) : (
+          <div className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur dark:bg-gray-950/90 sm:hidden">
+            <Link href="/" aria-label="Spliit" className="flex items-center">
+              <Image
+                src="/logo-with-text.svg"
+                className="h-9 w-auto"
+                width={(36 * 522) / 180}
+                height={36}
+                alt="Spliit"
+              />
+            </Link>
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <AccountMenu />
+            </div>
+          </div>
+        )}
+
         <OfflineBanner />
         <InstallPromotionDialog />
 
-        <div className="pt-16 flex-1 flex flex-col">
+        <div className="flex flex-1 flex-col pt-(--app-header-height)">
           <ProfileGate>
             <Outlet />
           </ProfileGate>
         </div>
 
-        <footer className="sm:p-8 md:p-16 sm:mt-16 sm:text-sm md:text-base md:mt-32 bg-slate-50 dark:bg-card border-t p-6 mt-8 flex flex-col sm:flex-row sm:justify-between gap-4 text-xs [&_a]:underline">
+        <footer
+          className={`${focusedMobileRoute ? 'hidden sm:flex' : 'flex'} sm:p-8 md:p-16 sm:mt-16 sm:text-sm md:text-base md:mt-32 bg-slate-50 dark:bg-card border-t p-6 mt-8 flex-col sm:flex-row sm:justify-between gap-4 text-xs [&_a]:underline`}
+        >
           <div className="flex flex-col space-y-2">
             <div className="sm:text-lg font-semibold text-base flex space-x-2 items-center">
               <Link className="flex items-center gap-2" href="/">

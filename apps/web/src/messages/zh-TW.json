@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "若要依明細項目計算「為誰支付」，請在項目列中編輯參與者。",
     "paidForItemizedActiveHint": "已啟用依明細項目計算「為誰支付」。若要變更此分攤，請在「項目」卡片中編輯項目參與者。",
-    "makeCopy": "建立副本",
     "DefaultSplit": {
       "savedAsDefault": "已儲存為預設",
       "heading": "預設分攤",
@@ -1603,6 +1602,7 @@
     "yourBalance": "你的餘額",
     "notes": "備註",
     "attachments": "附件（{count}）",
-    "edit": "編輯消費紀錄"
+    "edit": "編輯消費紀錄",
+    "makeCopy": "複製消費紀錄"
   }
 }

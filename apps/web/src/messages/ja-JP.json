@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "品目ごとの「対象者」計算を使うには、品目行から参加者を編集します。",
     "paidForItemizedActiveHint": "品目ごとの「対象者」計算が有効です。この分割を変更するには、品目カードで品目の参加者を編集してください。",
-    "makeCopy": "コピーを作成",
     "DefaultSplit": {
       "savedAsDefault": "デフォルトに保存しました",
       "heading": "デフォルトの分割",
@@ -1603,6 +1602,7 @@
     "yourBalance": "あなたの残高",
     "notes": "メモ",
     "attachments": "添付ファイル ({count})",
-    "edit": "支出を編集"
+    "edit": "支出を編集",
+    "makeCopy": "コピーを作成"
   }
 }

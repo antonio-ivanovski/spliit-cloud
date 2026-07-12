@@ -51,7 +51,7 @@ import {
   formatCalculatorAmount,
   type CalculatorItem,
 } from '@spliit/domain/calculator'
-import { ArrowLeft, Calculator, FileInput } from 'lucide-react'
+import { ArrowLeft, Calculator } from 'lucide-react'
 import { useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -80,7 +80,6 @@ export function BasicDetailsCard(props: {
   setIsIncome: Dispatch<SetStateAction<boolean>>
   isCreate: boolean
   heading?: string
-  onMakeCopy?: () => void
   /** Link-invite token carried in the URL for pending invitees. */
   linkInviteToken?: string
   extractCategoryMutation: ReturnType<
@@ -125,7 +124,6 @@ export function BasicDetailsCard(props: {
     setIsIncome,
     isCreate,
     heading,
-    onMakeCopy,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -216,9 +214,14 @@ export function BasicDetailsCard(props: {
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-2 space-y-0">
-        <Button variant="ghost" size="icon" asChild className="-ml-2 shrink-0">
+    <Card className="mobile-surface">
+      <CardHeader className="hidden sm:flex flex-row items-center gap-2 space-y-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          asChild
+          className="-ml-2 hidden shrink-0 sm:inline-flex"
+        >
           <Link
             href={`/groups/${group.id}/expenses`}
             title={tGroups('backToExpenses')}
@@ -226,22 +229,9 @@ export function BasicDetailsCard(props: {
             <ArrowLeft className="w-4 h-4" />
           </Link>
         </Button>
-        <CardTitle className="min-w-0 flex-1 truncate">
+        <CardTitle className="hidden min-w-0 flex-1 truncate sm:block">
           {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
         </CardTitle>
-        {onMakeCopy && (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onMakeCopy}
-            disabled={readOnly}
-            data-testid="expense-make-copy"
-          >
-            <FileInput className="w-4 h-4 min-[420px]:mr-2" />
-            <span className="hidden min-[420px]:inline">{t('makeCopy')}</span>
-          </Button>
-        )}
       </CardHeader>
       <CardContent className="grid sm:grid-cols-2 gap-6">
         <FormField

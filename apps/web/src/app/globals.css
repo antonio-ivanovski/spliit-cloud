@@ -117,6 +117,24 @@
   }
 }
 
+.app-shell {
+  --app-header-height: 3.5rem;
+}
+
+@media (width >= 640px) {
+  .app-shell {
+    --app-header-height: 4rem;
+  }
+}
+
+@media (width < 640px) {
+  .mobile-surface {
+    border-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

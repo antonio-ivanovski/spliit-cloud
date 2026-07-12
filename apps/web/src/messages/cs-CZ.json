@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Chcete-li použít položkové rozúčtování v části Zaplaceno za, upravte účastníky v řádku položky.",
     "paidForItemizedActiveHint": "Položkové rozúčtování v části Zaplaceno za je aktivní. Tento podíl změníte úpravou účastníků položek na kartě Položky.",
-    "makeCopy": "Vytvořit kopii",
     "DefaultSplit": {
       "savedAsDefault": "Uloženo jako výchozí",
       "heading": "Výchozí rozdělení",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Váš zůstatek",
     "notes": "Poznámky",
     "attachments": "Přílohy ({count})",
-    "edit": "Upravit výdaj"
+    "edit": "Upravit výdaj",
+    "makeCopy": "Vytvořit kopii"
   }
 }

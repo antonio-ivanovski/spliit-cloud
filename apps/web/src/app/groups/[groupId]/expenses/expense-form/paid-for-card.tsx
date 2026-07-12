@@ -435,7 +435,7 @@ export function PaidForCard(props: {
   )
 
   return (
-    <Card className="mt-4">
+    <Card className="mobile-surface mt-4">
       <CardHeader>
         <CardTitle className="flex justify-between gap-2">
           <span>{t(`${sExpense}.paidFor.title`)}</span>

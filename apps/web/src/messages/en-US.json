@@ -834,7 +834,6 @@
     },
     "paidForItemizedEntryHint": "To use itemized paid-for accounting, edit participants from an item row.",
     "paidForItemizedActiveHint": "Itemized paid-for accounting is active. Edit item participants from the Items card to change this split.",
-    "makeCopy": "Make a copy",
     "DefaultSplit": {
       "savedAsDefault": "Saved as default",
       "heading": "Default split",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Your balance",
     "notes": "Notes",
     "attachments": "Attachments ({count})",
-    "edit": "Edit expense"
+    "edit": "Edit expense",
+    "makeCopy": "Make a copy"
   }
 }

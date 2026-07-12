@@ -173,7 +173,7 @@ export function CreateFriend() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold flex items-center gap-2">
+      <h1 className="hidden text-2xl font-semibold items-center gap-2 sm:flex">
         <Button
           variant="ghost"
           size="icon"
@@ -187,8 +187,8 @@ export function CreateFriend() {
         {t('title')}
       </h1>
 
-      <Card>
-        <CardHeader>
+      <Card className="mobile-surface">
+        <CardHeader className="hidden sm:flex">
           <CardTitle>{t('title')}</CardTitle>
           <CardDescription>{t('linkHelp')}</CardDescription>
         </CardHeader>

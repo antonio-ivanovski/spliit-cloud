@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Pour utiliser une répartition « payé pour » par article, modifiez les participants depuis une ligne d’article.",
     "paidForItemizedActiveHint": "La répartition « payé pour » par article est active. Modifiez les participants des articles depuis la carte Articles pour changer cette répartition.",
-    "makeCopy": "Faire une copie",
     "DefaultSplit": {
       "savedAsDefault": "Enregistré comme par défaut",
       "heading": "Répartition par défaut",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Votre solde :",
     "notes": "Notes",
     "attachments": "Pièces jointes ({count})",
-    "edit": "Modifier la dépense"
+    "edit": "Modifier la dépense",
+    "makeCopy": "Faire une copie"
   }
 }

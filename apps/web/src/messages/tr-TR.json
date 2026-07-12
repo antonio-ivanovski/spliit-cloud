@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Kalem bazlı “adına ödendi” paylaşımını kullanmak için katılımcıları bir kalem satırından düzenleyin.",
     "paidForItemizedActiveHint": "Kalem bazlı “adına ödendi” paylaşımı etkin. Bu paylaşımı değiştirmek için Kalemler kartından kalem katılımcılarını düzenleyin.",
-    "makeCopy": "Bir kopya oluştur",
     "DefaultSplit": {
       "savedAsDefault": "Varsayılan olarak kaydedildi",
       "heading": "Varsayılan bölünme",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Bakiyeniz",
     "notes": "Notlar",
     "attachments": "Ekler ({count})",
-    "edit": "Masrafı düzenle"
+    "edit": "Masrafı düzenle",
+    "makeCopy": "Kopya oluştur"
   }
 }

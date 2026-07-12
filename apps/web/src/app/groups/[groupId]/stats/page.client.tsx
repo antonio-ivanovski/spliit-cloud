@@ -13,7 +13,7 @@ export function TotalsPageClient() {
 
   return (
     <>
-      <Card className="mb-4">
+      <Card className="mobile-surface mb-4">
         <CardHeader>
           <CardTitle>{t('Dashboard.title')}</CardTitle>
           <CardDescription>{t('Dashboard.description')}</CardDescription>

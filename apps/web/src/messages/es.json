@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Para usar el reparto detallado por artículos en «Pagado para», edita los participantes desde una fila de artículo.",
     "paidForItemizedActiveHint": "El reparto detallado por artículos está activo. Edita los participantes de los artículos desde la tarjeta Artículos para cambiar este reparto.",
-    "makeCopy": "Hacer una copia",
     "DefaultSplit": {
       "savedAsDefault": "Guardado como predeterminado",
       "heading": "División predeterminada",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Tu balance:",
     "notes": "Notas",
     "attachments": "Documentos adjuntos ({count})",
-    "edit": "Editar gasto"
+    "edit": "Editar gasto",
+    "makeCopy": "Hacer una copia"
   }
 }

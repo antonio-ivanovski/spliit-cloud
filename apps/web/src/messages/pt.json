@@ -805,7 +805,6 @@
     },
     "paidForItemizedEntryHint": "Para usar a divisão detalhada por itens em “pago por”, edita os participantes numa linha de item.",
     "paidForItemizedActiveHint": "A divisão detalhada por itens em “pago por” está ativa. Edita os participantes dos itens no cartão Itens para alterar esta divisão.",
-    "makeCopy": "Fazer uma cópia",
     "DefaultSplit": {
       "savedAsDefault": "Guardado como predefinição",
       "heading": "Divisão predefinida",
@@ -1603,6 +1602,7 @@
     "yourBalance": "O teu saldo:",
     "notes": "Notas",
     "attachments": "Documentos anexados ({count})",
-    "edit": "Editar despesa"
+    "edit": "Editar despesa",
+    "makeCopy": "Fazer uma cópia"
   }
 }

@@ -38,7 +38,7 @@ export function ReimbursementsCard({
   )
 
   return (
-    <Card className="mb-4">
+    <Card className="mobile-surface mb-4">
       <CardHeader>
         <CardTitle>{t('Reimbursements.title')}</CardTitle>
         <CardDescription>{t('Reimbursements.description')}</CardDescription>

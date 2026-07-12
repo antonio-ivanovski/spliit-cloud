@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Jos haluat käyttää eriteltyä maksettu puolesta -jakoa, muokkaa osallistujia tuoteriviltä.",
     "paidForItemizedActiveHint": "Eritelty maksettu puolesta -jako on käytössä. Muuta jakoa muokkaamalla tuotteiden osallistujia Tuotteet-kortista.",
-    "makeCopy": "Tee kopio",
     "DefaultSplit": {
       "savedAsDefault": "Tallennettu oletukseksi",
       "heading": "Oletusjako",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Saldosi",
     "notes": "Muistiinpanot",
     "attachments": "Liitteet ({count})",
-    "edit": "Muokkaa kulua"
+    "edit": "Muokkaa kulua",
+    "makeCopy": "Tee kopio"
   }
 }

@@ -1,4 +1,5 @@
 import { CreateExpenseForm } from '@/app/groups/[groupId]/expenses/create-expense-form'
+import { Skeleton } from '@/components/ui/skeleton'
 import { trpc } from '@/trpc/client'
 import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
 
@@ -7,7 +8,14 @@ const groupRouteApi = getRouteApi('/groups/$groupId/expenses/create')
 function ExpenseCreateRoute() {
   const { groupId } = groupRouteApi.useParams()
   const { data } = trpc.features.get.useQuery()
-  if (!data) return null
+  if (!data) {
+    return (
+      <div className="flex flex-col gap-4" aria-busy="true">
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-48 w-full" />
+      </div>
+    )
+  }
   return <CreateExpenseForm groupId={groupId} runtimeFeatureFlags={data} />
 }
 

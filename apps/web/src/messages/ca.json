@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Per utilitzar la comptabilitat detallada de «paid for», edita els participants des d'una fila d'article.",
     "paidForItemizedActiveHint": "La comptabilitat detallada de «paid for» és activa. Edita els participants dels articles des de la targeta Articles per canviar aquest repartiment.",
-    "makeCopy": "Fer una còpia",
     "DefaultSplit": {
       "savedAsDefault": "Desat com a opcions per defecte",
       "heading": "Divisió per defecte",
@@ -1603,6 +1602,7 @@
     "yourBalance": "El teu balanç:",
     "notes": "Notes",
     "attachments": "Adjunts ({count})",
-    "edit": "Editar despesa"
+    "edit": "Editar despesa",
+    "makeCopy": "Fer una còpia"
   }
 }

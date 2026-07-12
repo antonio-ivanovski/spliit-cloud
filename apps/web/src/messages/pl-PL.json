@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Aby użyć rozliczenia „zapłacono za” według pozycji, edytuj uczestników w wierszu pozycji.",
     "paidForItemizedActiveHint": "Rozliczenie „zapłacono za” według pozycji jest aktywne. Edytuj uczestników pozycji w karcie Pozycje, aby zmienić ten podział.",
-    "makeCopy": "Utwórz kopię",
     "DefaultSplit": {
       "savedAsDefault": "Zapisano jako domyślne",
       "heading": "Domyślny podział",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Twoje saldo",
     "notes": "Notatki",
     "attachments": "Załączniki ({count})",
-    "edit": "Edytuj wydatek"
+    "edit": "Edytuj wydatek",
+    "makeCopy": "Utwórz kopię"
   }
 }

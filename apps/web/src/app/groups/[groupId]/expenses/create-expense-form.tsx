@@ -64,8 +64,8 @@ export function CreateExpenseForm({
 
   if (isPendingInvitee) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className="mobile-surface">
+        <CardHeader className="hidden sm:flex">
           <CardTitle>{tGroups('pendingInviteeExpenseTitle')}</CardTitle>
           <CardDescription>{t('create')}</CardDescription>
         </CardHeader>
@@ -87,8 +87,8 @@ export function CreateExpenseForm({
 
   if (group.archived) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className="mobile-surface">
+        <CardHeader className="hidden sm:flex">
           <CardTitle>{tGroups('bannerArchived')}</CardTitle>
           <CardDescription>{t('create')}</CardDescription>
         </CardHeader>
@@ -112,8 +112,8 @@ export function CreateExpenseForm({
   // locks in `defaultValues` on first render.
   if (sourceExpenseId && (isFetchingSource || !sourceExpense)) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className="mobile-surface">
+        <CardHeader className="hidden sm:flex">
           <CardTitle>{t('create')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">

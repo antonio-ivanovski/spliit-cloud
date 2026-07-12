@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Bewerk de deelnemers in een itemrij om itemgewijze betaald-voor-verdeling te gebruiken.",
     "paidForItemizedActiveHint": "Itemgewijze betaald-voor-verdeling is actief. Bewerk itemdeelnemers op de kaart Items om deze verdeling te wijzigen.",
-    "makeCopy": "Kopie maken",
     "DefaultSplit": {
       "savedAsDefault": "Opgeslagen als standaard",
       "heading": "Standaardverdeling",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Jouw balans",
     "notes": "Notities",
     "attachments": "Bijlagen ({count})",
-    "edit": "Bewerk uitgave"
+    "edit": "Bewerk uitgave",
+    "makeCopy": "Kopie maken"
   }
 }

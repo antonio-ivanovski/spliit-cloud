@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Untuk memakai pembagian Dibayar untuk berbasis item, edit peserta dari baris item.",
     "paidForItemizedActiveHint": "Pembagian Dibayar untuk berbasis item sedang aktif. Edit peserta item dari kartu Item untuk mengubah pembagian ini.",
-    "makeCopy": "Buat salinan",
     "DefaultSplit": {
       "savedAsDefault": "Tersimpan sebagai default",
       "heading": "Pembagian default",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Saldo Anda",
     "notes": "Catatan",
     "attachments": "Lampiran ({count})",
-    "edit": "Ubah pengeluaran"
+    "edit": "Ubah pengeluaran",
+    "makeCopy": "Buat salinan"
   }
 }

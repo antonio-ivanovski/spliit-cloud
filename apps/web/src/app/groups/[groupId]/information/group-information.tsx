@@ -19,7 +19,7 @@ export default function GroupInformation({ groupId }: { groupId: string }) {
 
   return (
     <>
-      <Card className="mb-4">
+      <Card className="mobile-surface mb-4">
         <CardHeader>
           <CardTitle className="flex justify-between">
             <span>{t('title')}</span>

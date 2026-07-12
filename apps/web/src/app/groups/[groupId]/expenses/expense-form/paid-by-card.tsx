@@ -245,7 +245,7 @@ export function PaidByCard(props: {
   }
 
   return (
-    <Card className="mt-4">
+    <Card className="mobile-surface mt-4">
       <CardHeader>
         <CardTitle className="flex justify-between">
           <span>{t(`${sExpense}.paidByField.label`)}</span>

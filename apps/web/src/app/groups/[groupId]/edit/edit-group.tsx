@@ -48,7 +48,7 @@ export const EditGroup = () => {
 
   if (isPendingInvitee) {
     return (
-      <Card className="mb-4">
+      <Card className="mobile-surface mb-4">
         <CardHeader>
           <CardTitle>{tGroups('pendingInviteeSettingsTitle')}</CardTitle>
           <CardDescription>
@@ -67,7 +67,7 @@ export const EditGroup = () => {
   if (currentMember?.role === 'MEMBER') {
     return (
       <>
-        <Card className="mb-4">
+        <Card className="mobile-surface mb-4">
           <CardHeader>
             <CardTitle>{tExpenses('export')}</CardTitle>
             <CardDescription>{tGroups('exportDescription')}</CardDescription>
@@ -76,7 +76,7 @@ export const EditGroup = () => {
             <ExportButton groupId={groupId} showLabel />
           </CardContent>
         </Card>
-        <Card className="mb-4">
+        <Card className="mobile-surface mb-4">
           <CardHeader>
             <CardTitle>{t('readOnlyTitle')}</CardTitle>
             <CardDescription>{t('readOnlyNote')}</CardDescription>
@@ -98,7 +98,7 @@ export const EditGroup = () => {
 
   return (
     <>
-      <Card className="mb-4">
+      <Card className="mobile-surface mb-4">
         <CardHeader>
           <CardTitle>{tExpenses('export')}</CardTitle>
           <CardDescription>{tGroups('exportDescription')}</CardDescription>
@@ -119,7 +119,7 @@ export const EditGroup = () => {
       />
 
       {canArchive && !isArchived && features?.enableBulkCategorize && (
-        <Card className="mb-2">
+        <Card className="mobile-surface mb-2">
           <CardHeader>
             <CardTitle>{t('bulkCategorizeSectionTitle')}</CardTitle>
             <CardDescription>
@@ -138,7 +138,7 @@ export const EditGroup = () => {
       )}
 
       {canArchive && (
-        <Card className="mb-2">
+        <Card className="mobile-surface mb-2">
           <CardHeader>
             <CardTitle>{tGroups('archiveSectionTitle')}</CardTitle>
             <CardDescription>
@@ -174,7 +174,7 @@ export const EditGroup = () => {
       )}
 
       {canDelete && (
-        <Card className="mb-2 border-destructive/40 bg-destructive/5">
+        <Card className="mobile-surface mb-2 border-destructive/40 bg-destructive/5">
           <CardHeader>
             <CardTitle className="text-destructive">
               {tGroups('delete.sectionTitle')}

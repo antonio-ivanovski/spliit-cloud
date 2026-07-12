@@ -1,3 +1,4 @@
+import { shouldHideMobileGroupTabs } from '@/components/mobile-shell'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -17,6 +18,7 @@ export function GroupTabs({ groupId }: Props) {
   const { t } = useTranslation()
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const pathname = useLocation({ select: (location) => location.pathname })
+  const hideMobileTabs = shouldHideMobileGroupTabs(pathname)
   const value =
     pathname.replace(/\/groups\/[^/]+\/([^/]+).*/, '$1') || 'expenses'
   const navigate = useNavigate()
@@ -70,39 +72,41 @@ export function GroupTabs({ groupId }: Props) {
           </AlertDescription>
         </Alert>
       )}
-      <Tabs
-        value={value}
-        className="*:border overflow-x-auto"
-        onValueChange={(value) => {
-          navigate({ href: `/groups/${groupId}/${value}` })
-        }}
-      >
-        <TabsList>
-          <TabsTrigger value="expenses">{t('Expenses.title')}</TabsTrigger>
-          <TabsTrigger value="balances">{t('Balances.title')}</TabsTrigger>
-          <TabsTrigger value="information">
-            {t('Information.title')}
-          </TabsTrigger>
-          <TabsTrigger value="stats">{t('Stats.title')}</TabsTrigger>
-          <TabsTrigger value="activity">{t('Activity.title')}</TabsTrigger>
-          {!isFriendLedger && (
-            <TabsTrigger value="members" className="flex items-center gap-2">
-              <span>{t('Members.title')}</span>
-              {memberCount > 0 && (
-                <Badge
-                  variant="outline"
-                  className="px-1.5 py-0 text-current border-current"
-                >
-                  {memberCount}
-                </Badge>
-              )}
+      <div className={hideMobileTabs ? 'hidden sm:block' : undefined}>
+        <Tabs
+          value={value}
+          className="*:border overflow-x-auto"
+          onValueChange={(value) => {
+            navigate({ href: `/groups/${groupId}/${value}` })
+          }}
+        >
+          <TabsList>
+            <TabsTrigger value="expenses">{t('Expenses.title')}</TabsTrigger>
+            <TabsTrigger value="balances">{t('Balances.title')}</TabsTrigger>
+            <TabsTrigger value="information">
+              {t('Information.title')}
             </TabsTrigger>
-          )}
-          {canViewSettings && (
-            <TabsTrigger value="edit">{t('Settings.title')}</TabsTrigger>
-          )}
-        </TabsList>
-      </Tabs>
+            <TabsTrigger value="stats">{t('Stats.title')}</TabsTrigger>
+            <TabsTrigger value="activity">{t('Activity.title')}</TabsTrigger>
+            {!isFriendLedger && (
+              <TabsTrigger value="members" className="flex items-center gap-2">
+                <span>{t('Members.title')}</span>
+                {memberCount > 0 && (
+                  <Badge
+                    variant="outline"
+                    className="px-1.5 py-0 text-current border-current"
+                  >
+                    {memberCount}
+                  </Badge>
+                )}
+              </TabsTrigger>
+            )}
+            {canViewSettings && (
+              <TabsTrigger value="edit">{t('Settings.title')}</TabsTrigger>
+            )}
+          </TabsList>
+        </Tabs>
+      </div>
     </>
   )
 }

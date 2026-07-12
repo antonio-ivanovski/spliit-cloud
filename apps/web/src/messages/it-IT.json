@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Per usare la ripartizione “pagato per” per articoli, modifica i partecipanti da una riga articolo.",
     "paidForItemizedActiveHint": "La ripartizione “pagato per” per articoli è attiva. Modifica i partecipanti degli articoli dalla scheda Articoli per cambiare questa ripartizione.",
-    "makeCopy": "Fai una copia",
     "DefaultSplit": {
       "savedAsDefault": "Salvato come predefinito",
       "heading": "Divisione predefinita",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Il tuo saldo:",
     "notes": "Note",
     "attachments": "Documenti allegati ({count})",
-    "edit": "Modifica spesa"
+    "edit": "Modifica spesa",
+    "makeCopy": "Crea una copia"
   }
 }

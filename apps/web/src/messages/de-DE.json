@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Um die Aufteilung unter „Bezahlt für“ nach Artikeln zu verwenden, bearbeite die Teilnehmenden in einer Artikelzeile.",
     "paidForItemizedActiveHint": "Die artikelbasierte Aufteilung unter „Bezahlt für“ ist aktiv. Bearbeite die Teilnehmenden in der Karte „Artikel“, um diese Aufteilung zu ändern.",
-    "makeCopy": "Kopie erstellen",
     "DefaultSplit": {
       "savedAsDefault": "Als Standard gespeichert",
       "heading": "Standardaufteilung",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Dein Saldo",
     "notes": "Notizen",
     "attachments": "Anhänge ({count})",
-    "edit": "Ausgabe bearbeiten"
+    "edit": "Ausgabe bearbeiten",
+    "makeCopy": "Kopie erstellen"
   }
 }

@@ -29,7 +29,7 @@ export const CreateGroup = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold flex items-center gap-2">
+      <h1 className="hidden text-2xl font-semibold items-center gap-2 sm:flex">
         <Button
           variant="ghost"
           size="icon"

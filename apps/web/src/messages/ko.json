@@ -633,7 +633,6 @@
     },
     "paidForItemizedEntryHint": "항목별 정산 대상 계산을 사용하려면 항목 행에서 참가자를 편집하세요.",
     "paidForItemizedActiveHint": "항목별 정산 대상 계산이 활성화되어 있습니다. 이 분할을 변경하려면 항목 카드에서 항목 참가자를 편집하세요.",
-    "makeCopy": "복사하기",
     "DefaultSplit": {
       "savedAsDefault": "기본값으로 저장됨",
       "heading": "기본 분할",
@@ -1603,6 +1602,7 @@
     "yourBalance": "내 잔액",
     "notes": "메모",
     "attachments": "첨부 파일 ({count})",
-    "edit": "지출 수정하기"
+    "edit": "지출 수정하기",
+    "makeCopy": "복사본 만들기"
   }
 }

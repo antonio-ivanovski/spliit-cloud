@@ -82,7 +82,7 @@ function AccountSettingsContent() {
 
   if (isPending || !account) {
     return (
-      <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-4 py-6 flex items-center justify-center">
+      <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-3 py-4 sm:px-4 sm:py-6 flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
       </main>
     )
@@ -174,8 +174,8 @@ function AccountSettingsContent() {
   const isDirty = name.trim() !== (account.name ?? '')
 
   return (
-    <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-4 py-6 flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold flex items-center gap-2">
+    <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-3 py-4 sm:px-4 sm:py-6 flex flex-col gap-6">
+      <h1 className="hidden text-2xl font-semibold items-center gap-2 sm:flex">
         <Button
           variant="ghost"
           size="icon"
@@ -188,7 +188,7 @@ function AccountSettingsContent() {
         </Button>
         {t('title')}
       </h1>
-      <Card>
+      <Card className="mobile-surface">
         <CardHeader>
           <CardTitle className="text-lg">{t('profile.title')}</CardTitle>
           <CardDescription>{t('profile.description')}</CardDescription>

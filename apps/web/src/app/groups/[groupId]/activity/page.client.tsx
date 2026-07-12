@@ -13,7 +13,7 @@ export function ActivityPageClient() {
 
   return (
     <>
-      <Card className="mb-4">
+      <Card className="mobile-surface mb-4">
         <CardHeader>
           <CardTitle>{t('title')}</CardTitle>
           <CardDescription>{t('description')}</CardDescription>

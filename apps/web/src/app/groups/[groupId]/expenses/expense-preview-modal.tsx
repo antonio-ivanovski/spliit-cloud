@@ -1,8 +1,10 @@
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expense-attachments-preview'
 import { ExpenseItemsSummary } from '@/app/groups/[groupId]/expenses/expense-items-summary'
+import { useDeleteExpenseMutation } from '@/app/groups/[groupId]/expenses/expense-mutation-hooks'
 import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-bars'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
+import { DeletePopup } from '@/components/delete-popup'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,6 +17,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import type { BalanceExpense } from '@/lib/balances'
 import { getBalances } from '@/lib/balances'
@@ -28,7 +31,7 @@ import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
-import { Pencil } from 'lucide-react'
+import { FileInput, Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -46,6 +49,8 @@ export type ExpensePreviewModalProps = {
   onClose?: () => void
   /** Override the default navigation to the full expense edit page. */
   onEdit?: () => void
+  /** Override the default navigation that prefills the create form from this expense. */
+  onMakeCopy?: () => void
 }
 
 function toBalanceExpense(
@@ -102,12 +107,14 @@ export function ExpensePreviewModal({
   onOpenChange,
   onClose,
   onEdit,
+  onMakeCopy,
 }: ExpensePreviewModalProps) {
   const { group, currentLedgerParticipantId } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
   const navigate = useNavigate()
+  const { toast } = useToast()
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tCard } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
@@ -174,6 +181,26 @@ export function ExpensePreviewModal({
       to: '/groups/$groupId/expenses/$expenseId/edit',
       params: { groupId, expenseId },
     })
+  }
+
+  const handleMakeCopy = () => {
+    if (onMakeCopy) {
+      onMakeCopy()
+      return
+    }
+    toast({ description: tCard('copyToast') })
+    navigate({
+      to: '/groups/$groupId/expenses/create',
+      params: { groupId },
+      search: { fromExpenseId: expenseId },
+    })
+  }
+
+  const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
+    linkInviteToken,
+  })
+  const handleDelete = async () => {
+    await deleteExpenseMutateAsync({ expenseId, groupId })
   }
 
   const originalCurrency =
@@ -318,12 +345,31 @@ export function ExpensePreviewModal({
           )}
         </ResponsiveDialogBody>
 
-        <ResponsiveDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <ResponsiveDialogFooter className="flex-row gap-2 sm:justify-end">
           {canEdit && (
-            <Button type="button" onClick={handleEdit}>
-              <Pencil className="mr-2 h-4 w-4" />
-              {t('edit')}
-            </Button>
+            <DeletePopup onDelete={handleDelete} className="mr-auto" />
+          )}
+          {canEdit && (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1 sm:flex-none"
+                onClick={handleMakeCopy}
+                data-testid="expense-make-copy"
+              >
+                <FileInput className="mr-2 h-4 w-4" />
+                {t('makeCopy')}
+              </Button>
+              <Button
+                type="button"
+                className="flex-1 sm:flex-none"
+                onClick={handleEdit}
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                {t('edit')}
+              </Button>
+            </>
           )}
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>

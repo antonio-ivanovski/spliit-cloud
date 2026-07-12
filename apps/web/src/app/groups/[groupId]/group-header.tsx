@@ -1,11 +1,12 @@
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
 import Link from '@/components/link'
+import { isFocusedMobilePath } from '@/components/mobile-shell'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router'
 import { ArrowLeft, Check, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from './current-group-context'
@@ -24,6 +25,8 @@ export const GroupHeader = () => {
   const { toast } = useToast()
   const navigate = useNavigate()
   const utils = trpc.useUtils()
+  const pathname = useLocation({ select: (location) => location.pathname })
+  const focusedMobileRoute = isFocusedMobilePath(pathname)
 
   // The `?invite=<token>` search param is the single source of truth
   // for link-invite banner state. The route schema captures any
@@ -135,7 +138,9 @@ export const GroupHeader = () => {
 
   return (
     <div className="flex flex-col justify-between gap-3">
-      <h1 className="font-bold text-2xl flex items-center gap-2">
+      <h1
+        className={`font-bold text-2xl flex items-center gap-2 ${focusedMobileRoute ? 'hidden sm:flex' : ''}`}
+      >
         <Button variant="ghost" size="icon" asChild className="-ml-2">
           <Link href="/" title={tGroups('backToHome')}>
             <ArrowLeft className="w-5 h-5" />

@@ -1,5 +1,10 @@
 import { CopyButton } from '@/components/copy-button'
 import Link from '@/components/link'
+import {
+  isFocusedMobilePath,
+  isMobileGroupNavPath,
+  MobileGroupNav,
+} from '@/components/mobile-shell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -16,6 +21,7 @@ import { trpc } from '@/trpc/client'
 import {
   Navigate,
   Outlet,
+  useLocation,
   useNavigate,
   useSearch,
 } from '@tanstack/react-router'
@@ -45,6 +51,9 @@ export function GroupLayoutClient({
   )
   const [canShare, setCanShare] = useState(false)
   const navigate = useNavigate({ from: '/groups/$groupId' })
+  const pathname = useLocation({ select: (location) => location.pathname })
+  const focusedMobileRoute = isFocusedMobilePath(pathname)
+  const showMobileNav = isMobileGroupNavPath(pathname)
 
   useEffect(() => {
     setCanShare(
@@ -84,8 +93,26 @@ export function GroupLayoutClient({
   const { t: tFriends } = useTranslation(undefined, {
     keyPrefix: 'Friends',
   })
+  const { t: tTitles } = useTranslation()
   const { toast } = useToast()
   const { isPending: accountPending } = useCurrentAccount()
+
+  useEffect(() => {
+    if (!data?.group || focusedMobileRoute) return
+    const titleKey = pathname.endsWith('/balances')
+      ? 'Balances.title'
+      : pathname.endsWith('/information')
+        ? 'Information.title'
+        : pathname.endsWith('/stats')
+          ? 'Stats.title'
+          : pathname.endsWith('/activity')
+            ? 'Activity.title'
+            : pathname.endsWith('/members')
+              ? 'Members.title'
+              : 'Expenses.title'
+    const groupName = data.displayName ?? data.group.name
+    document.title = `${groupName} · ${tTitles(titleKey)}`
+  }, [data, focusedMobileRoute, pathname, tTitles])
 
   useEffect(() => {
     if (data && !data.group) {
@@ -181,10 +208,13 @@ export function GroupLayoutClient({
 
   return (
     <CurrentGroupProvider {...props}>
-      <div className="flex min-w-0 flex-col gap-3">
+      <div
+        className={`flex min-w-0 flex-col gap-3 ${showMobileNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] sm:pb-0' : ''}`}
+      >
         <GroupHeader />
         {children ?? <Outlet />}
       </div>
+      {showMobileNav && <MobileGroupNav groupId={groupId} />}
       <SaveGroupLocally />
       <ResponsiveDialog
         open={!!friendLinkDialogUrl}

@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Elementukako «paid for» kontabilitatea erabiltzeko, editatu parte-hartzaileak elementu baten errenkadatik.",
     "paidForItemizedActiveHint": "Elementukako «paid for» kontabilitatea aktibo dago. Banaketa hau aldatzeko, editatu elementuen parte-hartzaileak Elementuak txarteletik.",
-    "makeCopy": "Egin kopia bat",
     "DefaultSplit": {
       "savedAsDefault": "Lehenetsi gisa gordea",
       "heading": "Lehenetsitako banaketa",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Zure saldoa:",
     "notes": "Oharrak",
     "attachments": "Erantsitakoak ({count})",
-    "edit": "Editatu gastua"
+    "edit": "Editatu gastua",
+    "makeCopy": "Kopia bat egin"
   }
 }

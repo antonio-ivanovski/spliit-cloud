@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useToast } from '@/components/ui/use-toast'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
@@ -33,7 +32,6 @@ export function EditExpenseForm({
   const { t: tExpenseForm } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm',
   })
-  const { t: tCard } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const { data: groupData } = trpc.groups.get.useQuery({ groupId })
   const group = groupData?.group
   const currentLedgerParticipantId =
@@ -49,7 +47,6 @@ export function EditExpenseForm({
   const expense = expenseData?.expense
 
   const navigate = useNavigate()
-  const { toast } = useToast()
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
     linkInviteToken,
@@ -67,8 +64,8 @@ export function EditExpenseForm({
 
   if (isPendingInvitee) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className="mobile-surface">
+        <CardHeader className="hidden sm:flex">
           <CardTitle>{t('pendingInviteeExpenseTitle')}</CardTitle>
           <CardDescription>{expense.title}</CardDescription>
         </CardHeader>
@@ -96,14 +93,6 @@ export function EditExpenseForm({
       linkInviteToken={linkInviteToken}
       readOnly={readOnly}
       heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
-      onMakeCopy={() => {
-        toast({ description: tCard('copyToast') })
-        navigate({
-          to: '/groups/$groupId/expenses/create',
-          params: { groupId },
-          search: { fromExpenseId: expenseId },
-        })
-      }}
       onSubmit={async (expense) => {
         if (readOnly) return
         await updateExpenseMutateAsync({

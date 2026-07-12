@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "要按明细项目计算“为谁支付”，请在项目行中编辑参与者。",
     "paidForItemizedActiveHint": "已启用按明细项目计算“为谁支付”。如需更改此分摊，请在“项目”卡片中编辑项目参与者。",
-    "makeCopy": "创建副本",
     "DefaultSplit": {
       "savedAsDefault": "已保存为默认",
       "heading": "默认分摊",
@@ -1603,6 +1602,7 @@
     "yourBalance": "你的余额",
     "notes": "附注",
     "attachments": "附件（{count}）",
-    "edit": "编辑消费"
+    "edit": "编辑消费",
+    "makeCopy": "复制消费"
   }
 }

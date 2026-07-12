@@ -703,7 +703,6 @@
     },
     "paidForItemizedEntryHint": "Pentru a folosi împărțirea „plătit pentru” pe articole, editează participanții dintr-un rând de articol.",
     "paidForItemizedActiveHint": "Împărțirea „plătit pentru” pe articole este activă. Editează participanții articolelor din cardul Articole pentru a schimba această împărțire.",
-    "makeCopy": "Fă o copie",
     "DefaultSplit": {
       "savedAsDefault": "Salvat ca implicit",
       "heading": "Împărțire implicită",
@@ -1603,6 +1602,7 @@
     "yourBalance": "Soldul tău:",
     "notes": "Notițe",
     "attachments": "Atașamente ({count})",
-    "edit": "Modifică cheltuiala"
+    "edit": "Modifică cheltuiala",
+    "makeCopy": "Fă o copie"
   }
 }

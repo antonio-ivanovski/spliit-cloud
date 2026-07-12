@@ -136,7 +136,7 @@ export function ActivityList() {
           <div key={dateGroup} data-testid={`activity-date-group-${dateGroup}`}>
             <div
               className={
-                'text-muted-foreground text-xs py-1 font-semibold sticky top-16 bg-white dark:bg-[#1b1917]'
+                'text-muted-foreground text-xs py-1 font-semibold sticky top-(--app-header-height) bg-white dark:bg-[#1b1917]'
               }
             >
               {t(DATE_GROUP_I18N_KEYS[dateGroup])}

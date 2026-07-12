@@ -38,7 +38,6 @@ export function ExpenseForm(props: {
   isCopy?: boolean
   searchParams?: CreateExpenseSearch
   heading?: string
-  onMakeCopy?: () => void
   onSubmit: (value: Expense) => Promise<void>
   onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
@@ -231,7 +230,6 @@ export function ExpenseForm(props: {
           receiptScanContext={receiptScanContext}
           onReceiptAccepted={applyReceiptResult}
           heading={props.heading}
-          onMakeCopy={props.onMakeCopy}
           {...conversion}
         />
         <ExpenseItemsCard

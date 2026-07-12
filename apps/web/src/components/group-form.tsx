@@ -182,8 +182,8 @@ export function GroupForm({
           </p>
         )}
 
-        <Card className="mb-2">
-          <CardHeader>
+        <Card className="mobile-surface mb-2">
+          <CardHeader className="hidden sm:flex">
             <CardTitle>{t('title')}</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -280,7 +280,7 @@ export function GroupForm({
               )}
             />
 
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <FormField
                 control={form.control}
                 name="information"

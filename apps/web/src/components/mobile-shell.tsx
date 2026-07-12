@@ -1,0 +1,252 @@
+import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
+import Link from '@/components/link'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
+import { useLocation } from '@tanstack/react-router'
+import {
+  Activity,
+  ArrowLeft,
+  BarChart3,
+  Info,
+  MoreHorizontal,
+  ReceiptText,
+  Scale,
+  Settings2,
+  Users,
+} from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+type FocusedRouteMeta = {
+  title: string
+  backHref: string
+}
+
+const groupIdFromPath = (pathname: string) =>
+  pathname.match(/^\/groups\/bulk-categorize\/([^/]+)/)?.[1] ??
+  pathname.match(/^\/groups\/([^/]+)/)?.[1]
+
+export function isFocusedMobilePath(pathname: string) {
+  return (
+    pathname === '/groups/create' ||
+    pathname === '/groups/import' ||
+    pathname === '/friends/create' ||
+    pathname === '/account/settings' ||
+    pathname.startsWith('/groups/bulk-categorize/') ||
+    /^\/groups\/[^/]+\/edit$/.test(pathname) ||
+    /^\/groups\/[^/]+\/expenses\/create$/.test(pathname) ||
+    /^\/groups\/[^/]+\/expenses\/[^/]+\/edit$/.test(pathname)
+  )
+}
+
+export function isMobileGroupNavPath(pathname: string) {
+  return /^\/groups\/[^/]+\/(expenses|balances|activity|stats|information|members|edit)\/?$/.test(
+    pathname,
+  )
+}
+
+export function shouldHideMobileGroupTabs(pathname: string) {
+  return (
+    isMobileGroupNavPath(pathname) ||
+    isFocusedMobilePath(pathname) ||
+    /^\/groups\/[^/]+\/expenses\/[^/]+\/?$/.test(pathname)
+  )
+}
+
+export function getFocusedRouteMeta(
+  pathname: string,
+  t: (key: string) => string,
+): FocusedRouteMeta | null {
+  const groupId = groupIdFromPath(pathname)
+  if (pathname === '/groups/create') {
+    return { title: t('Groups.createGroupCard.title'), backHref: '/' }
+  }
+  if (pathname === '/groups/import') {
+    return { title: t('Groups.Import.StepHeader.title'), backHref: '/' }
+  }
+  if (pathname === '/friends/create') {
+    return { title: t('Groups.createFriendLedgerCard.title'), backHref: '/' }
+  }
+  if (pathname === '/account/settings') {
+    return { title: t('AccountSettings.title'), backHref: '/' }
+  }
+  if (pathname.startsWith('/groups/bulk-categorize/') && groupId) {
+    return {
+      title: t('BulkCategorize.title'),
+      backHref: `/groups/${groupId}/expenses`,
+    }
+  }
+  if (groupId && /^\/groups\/[^/]+\/edit$/.test(pathname)) {
+    return {
+      title: t('Settings.title'),
+      backHref: `/groups/${groupId}/expenses`,
+    }
+  }
+  if (groupId && /^\/groups\/[^/]+\/expenses\/create$/.test(pathname)) {
+    return {
+      title: t('Expenses.create'),
+      backHref: `/groups/${groupId}/expenses`,
+    }
+  }
+  if (groupId && /^\/groups\/[^/]+\/expenses\/[^/]+\/edit$/.test(pathname)) {
+    return {
+      title: t('ExpensePreview.edit'),
+      backHref: `/groups/${groupId}/expenses`,
+    }
+  }
+  return null
+}
+
+export function MobileAppBar() {
+  const pathname = useLocation({ select: (location) => location.pathname })
+  const { t } = useTranslation()
+  const meta = useMemo(() => getFocusedRouteMeta(pathname, t), [pathname, t])
+
+  useEffect(() => {
+    if (meta) {
+      document.title = `Spliit · ${meta.title}`
+    } else if (!pathname.startsWith('/groups/')) {
+      document.title = 'Spliit Cloud'
+    }
+  }, [meta, pathname])
+
+  if (!meta) return null
+
+  return (
+    <header className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center gap-2 border-b bg-background/95 px-2 backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden">
+      <Link
+        href={meta.backHref}
+        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+        aria-label={t('Header.back')}
+      >
+        <ArrowLeft className="size-5" aria-hidden="true" />
+      </Link>
+      <h1 className="min-w-0 truncate text-base font-semibold">{meta.title}</h1>
+    </header>
+  )
+}
+
+type GroupNavProps = { groupId: string }
+
+export function MobileGroupNav({ groupId }: GroupNavProps) {
+  const pathname = useLocation({ select: (location) => location.pathname })
+  const { t } = useTranslation()
+  const { group } = useCurrentGroup()
+  const [moreOpen, setMoreOpen] = useState(false)
+  const tabs = [
+    {
+      href: `/groups/${groupId}/expenses`,
+      label: t('Expenses.title'),
+      icon: ReceiptText,
+    },
+    {
+      href: `/groups/${groupId}/balances`,
+      label: t('Balances.title'),
+      icon: Scale,
+    },
+    {
+      href: `/groups/${groupId}/activity`,
+      label: t('Activity.title'),
+      icon: Activity,
+    },
+    {
+      href: `/groups/${groupId}/stats`,
+      label: t('Stats.title'),
+      icon: BarChart3,
+    },
+  ] as const
+  const moreTabs = [
+    {
+      href: `/groups/${groupId}/information`,
+      label: t('Information.title'),
+      icon: Info,
+    },
+    ...(group?.groupType === 'FRIEND'
+      ? []
+      : [
+          {
+            href: `/groups/${groupId}/members`,
+            label: t('Members.title'),
+            icon: Users,
+          },
+        ]),
+    {
+      href: `/groups/${groupId}/edit`,
+      label: t('Settings.title'),
+      icon: Settings2,
+    },
+  ] as const
+  const activeMore = moreTabs.some((tab) => pathname === tab.href)
+
+  return (
+    <>
+      <nav
+        aria-label={t('Groups.groupActions')}
+        className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgb(0_0_0/0.06)] backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
+      >
+        <div className="mx-auto grid h-16 max-w-lg grid-cols-5 items-stretch px-1">
+          {tabs.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href
+            return (
+              <Link
+                key={href}
+                href={href}
+                aria-current={active ? 'page' : undefined}
+                className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 text-[10px] font-medium transition-colors ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                <Icon
+                  className="size-5"
+                  strokeWidth={active ? 2.5 : 2}
+                  aria-hidden="true"
+                />
+                <span className="max-w-full truncate">{label}</span>
+              </Link>
+            )
+          })}
+          <button
+            type="button"
+            aria-label={t('Groups.groupActions')}
+            aria-current={activeMore ? 'page' : undefined}
+            onClick={() => setMoreOpen(true)}
+            className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 text-[10px] font-medium transition-colors ${activeMore ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            <MoreHorizontal className="size-5" aria-hidden="true" />
+            <span>{t('Groups.groupActions')}</span>
+          </button>
+        </div>
+      </nav>
+
+      <ResponsiveDialog open={moreOpen} onOpenChange={setMoreOpen}>
+        <ResponsiveDialogContent className="sm:max-w-sm">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {t('Groups.groupActions')}
+            </ResponsiveDialogTitle>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogBody className="flex flex-col gap-2 pb-[env(safe-area-inset-bottom)]">
+            {moreTabs.map(({ href, label, icon: Icon }) => (
+              <ResponsiveDialogClose key={href} asChild>
+                <Link
+                  href={href}
+                  className="flex min-h-12 items-center gap-3 rounded-lg border px-3 text-sm font-medium hover:bg-muted"
+                >
+                  <Icon
+                    className="size-5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                  {label}
+                </Link>
+              </ResponsiveDialogClose>
+            ))}
+          </ResponsiveDialogBody>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
+    </>
+  )
+}
