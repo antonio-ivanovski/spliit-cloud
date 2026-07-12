@@ -1593,5 +1593,16 @@
     "expenseColumn": "지출",
     "categoryColumn": "카테고리",
     "confidenceColumn": "신뢰도"
+  },
+  "ExpensePreview": {
+    "title": "지출 미리보기",
+    "category": "카테고리",
+    "date": "날짜",
+    "paidBy": "결제한 사람",
+    "paidFor": "비용 부담자",
+    "yourBalance": "내 잔액",
+    "notes": "메모",
+    "attachments": "첨부 파일 ({count})",
+    "edit": "지출 수정하기"
   }
 }

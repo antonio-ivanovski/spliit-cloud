@@ -1593,5 +1593,16 @@
     "expenseColumn": "Expense",
     "categoryColumn": "Category",
     "confidenceColumn": "Confidence"
+  },
+  "ExpensePreview": {
+    "title": "Expense preview",
+    "category": "Category",
+    "date": "Date",
+    "paidBy": "Paid by",
+    "paidFor": "Paid for",
+    "yourBalance": "Your balance",
+    "notes": "Notes",
+    "attachments": "Attachments ({count})",
+    "edit": "Edit expense"
   }
 }

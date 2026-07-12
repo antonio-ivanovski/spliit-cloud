@@ -1593,5 +1593,16 @@
     "expenseColumn": "Cheltuială",
     "categoryColumn": "Categorie",
     "confidenceColumn": "Încredere"
+  },
+  "ExpensePreview": {
+    "title": "Previzualizarea cheltuielii",
+    "category": "Categorie",
+    "date": "Data",
+    "paidBy": "Plătit de",
+    "paidFor": "Plătit pentru",
+    "yourBalance": "Soldul tău:",
+    "notes": "Notițe",
+    "attachments": "Atașamente ({count})",
+    "edit": "Modifică cheltuiala"
   }
 }

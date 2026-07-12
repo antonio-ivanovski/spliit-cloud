@@ -1593,5 +1593,16 @@
     "expenseColumn": "支出",
     "categoryColumn": "カテゴリ",
     "confidenceColumn": "確信度"
+  },
+  "ExpensePreview": {
+    "title": "支出のプレビュー",
+    "category": "カテゴリー",
+    "date": "日付",
+    "paidBy": "支払者",
+    "paidFor": "支払い対象",
+    "yourBalance": "あなたの残高",
+    "notes": "メモ",
+    "attachments": "添付ファイル ({count})",
+    "edit": "支出を編集"
   }
 }

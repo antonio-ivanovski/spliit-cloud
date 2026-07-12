@@ -229,7 +229,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       onClick={() => {
         if (expenseExists) {
           navigate({
-            href: `/groups/${groupId}/expenses/${activity.expense!.id}/edit`,
+            href: `/groups/${groupId}/expenses/${activity.expense!.id}`,
           })
         }
       }}
@@ -283,7 +283,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
           className="self-center hidden sm:flex w-5 h-5"
           asChild
         >
-          <a href={`/groups/${groupId}/expenses/${activity.expense!.id}/edit`}>
+          <a href={`/groups/${groupId}/expenses/${activity.expense!.id}`}>
             <ChevronRight className="w-4 h-4" />
           </a>
         </Button>

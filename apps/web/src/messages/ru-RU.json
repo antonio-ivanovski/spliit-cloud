@@ -1593,5 +1593,16 @@
     "expenseColumn": "Расход",
     "categoryColumn": "Категория",
     "confidenceColumn": "Уверенность"
+  },
+  "ExpensePreview": {
+    "title": "Предпросмотр расхода",
+    "category": "Категория",
+    "date": "Дата",
+    "paidBy": "Оплативший",
+    "paidFor": "Оплачено за",
+    "yourBalance": "Ваш баланс",
+    "notes": "Заметки",
+    "attachments": "Вложения ({count})",
+    "edit": "Изменить расход"
   }
 }

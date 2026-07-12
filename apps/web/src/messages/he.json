@@ -1593,5 +1593,16 @@
     "expenseColumn": "הוצאה",
     "categoryColumn": "קטגוריה",
     "confidenceColumn": "ביטחון"
+  },
+  "ExpensePreview": {
+    "title": "תצוגה מקדימה של הוצאה",
+    "category": "קטגוריה",
+    "date": "תאריך",
+    "paidBy": "שולם על ידי",
+    "paidFor": "שולם עבור",
+    "yourBalance": "היתרה שלך",
+    "notes": "הערות",
+    "attachments": "קבצים מצורפים ({count})",
+    "edit": "ערוך הוצאה"
   }
 }

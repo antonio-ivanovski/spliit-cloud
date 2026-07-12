@@ -1593,5 +1593,16 @@
     "expenseColumn": "Трошок",
     "categoryColumn": "Категорија",
     "confidenceColumn": "Сигурност"
+  },
+  "ExpensePreview": {
+    "title": "Преглед на трошок",
+    "category": "Категорија",
+    "date": "Датум",
+    "paidBy": "Платен од",
+    "paidFor": "Платен за",
+    "yourBalance": "Вашето салдо",
+    "notes": "Белешки",
+    "attachments": "Прилози ({count})",
+    "edit": "Уреди трошок"
   }
 }

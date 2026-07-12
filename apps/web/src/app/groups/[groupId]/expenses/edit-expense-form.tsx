@@ -112,8 +112,8 @@ export function EditExpenseForm({
           expense,
         })
         navigate({
-          to: '/groups/$groupId/expenses',
-          params: { groupId: group.id },
+          to: '/groups/$groupId/expenses/$expenseId',
+          params: { groupId: group.id, expenseId },
           replace: true,
         })
       }}

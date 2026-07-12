@@ -1593,5 +1593,16 @@
     "expenseColumn": "Despesa",
     "categoryColumn": "Categoria",
     "confidenceColumn": "Confiança"
+  },
+  "ExpensePreview": {
+    "title": "Vista prèvia de la despesa",
+    "category": "Categoria",
+    "date": "Data",
+    "paidBy": "Pagat per",
+    "paidFor": "Pagat per a",
+    "yourBalance": "El teu balanç:",
+    "notes": "Notes",
+    "attachments": "Adjunts ({count})",
+    "edit": "Editar despesa"
   }
 }

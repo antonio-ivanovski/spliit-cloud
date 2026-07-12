@@ -1593,5 +1593,16 @@
     "expenseColumn": "Gastua",
     "categoryColumn": "Kategoria",
     "confidenceColumn": "Konfiantza"
+  },
+  "ExpensePreview": {
+    "title": "Gastuaren aurrebista",
+    "category": "Kategoria",
+    "date": "Data",
+    "paidBy": "Zeinek ordaindu du",
+    "paidFor": "Honentzat ordaindu da",
+    "yourBalance": "Zure saldoa:",
+    "notes": "Oharrak",
+    "attachments": "Erantsitakoak ({count})",
+    "edit": "Editatu gastua"
   }
 }

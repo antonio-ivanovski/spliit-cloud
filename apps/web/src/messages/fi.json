@@ -1593,5 +1593,16 @@
     "expenseColumn": "Kulu",
     "categoryColumn": "Kategoria",
     "confidenceColumn": "Varmuus"
+  },
+  "ExpensePreview": {
+    "title": "Kulun esikatselu",
+    "category": "Kategoria",
+    "date": "Päivä",
+    "paidBy": "Maksaja",
+    "paidFor": "Maksettu puolesta",
+    "yourBalance": "Saldosi",
+    "notes": "Muistiinpanot",
+    "attachments": "Liitteet ({count})",
+    "edit": "Muokkaa kulua"
   }
 }

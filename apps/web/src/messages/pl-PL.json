@@ -1593,5 +1593,16 @@
     "expenseColumn": "Wydatek",
     "categoryColumn": "Kategoria",
     "confidenceColumn": "Pewność"
+  },
+  "ExpensePreview": {
+    "title": "Podgląd wydatku",
+    "category": "Kategoria",
+    "date": "Data",
+    "paidBy": "Opłacone przez",
+    "paidFor": "Opłacone dla",
+    "yourBalance": "Twoje saldo",
+    "notes": "Notatki",
+    "attachments": "Załączniki ({count})",
+    "edit": "Edytuj wydatek"
   }
 }

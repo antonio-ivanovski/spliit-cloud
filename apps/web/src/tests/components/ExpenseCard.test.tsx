@@ -172,7 +172,7 @@ describe('ExpenseCard', () => {
     expect(card.className).toContain('italic')
   })
 
-  it('shows pending invitation banner when isPendingInvitee', () => {
+  it('keeps the preview affordance available to pending invitees', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(true)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
@@ -186,16 +186,14 @@ describe('ExpenseCard', () => {
       />,
     )
 
-    // When isPendingInvitee, canEdit is false, so the card should NOT have
-    // the cursor-pointer and hover styles
+    // Pending invitees can view the expense preview even though they cannot
+    // edit it.
     const card = screen.getByTestId('expense-item-exp-1')
-    expect(card.className).not.toContain('cursor-pointer')
-    // The edit chevron button should not be rendered
-    // (it's inside a Button with ChevronRight icon)
-    expect(card.querySelector('.lucide-chevron-right')).not.toBeInTheDocument()
+    expect(card.className).toContain('cursor-pointer')
+    expect(card.querySelector('.lucide-chevron-right')).toBeInTheDocument()
   })
 
-  it('shows edit affordance (cursor-pointer, onClick) when can edit', () => {
+  it('shows preview affordance (cursor-pointer, onClick)', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
@@ -209,7 +207,7 @@ describe('ExpenseCard', () => {
       />,
     )
 
-    // canEdit is true, so cursor-pointer class should be present
+    // Every viewer can open the read-only preview.
     const card = screen.getByTestId('expense-item-exp-1')
     expect(card.className).toContain('cursor-pointer')
     expect(card.className).toContain('hover:bg-accent')

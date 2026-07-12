@@ -1593,5 +1593,16 @@
     "expenseColumn": "Harcama",
     "categoryColumn": "Kategori",
     "confidenceColumn": "Güven"
+  },
+  "ExpensePreview": {
+    "title": "Masraf önizlemesi",
+    "category": "Kategori",
+    "date": "Tarih",
+    "paidBy": "Ödeyen",
+    "paidFor": "Masraf kimin için ödendi",
+    "yourBalance": "Bakiyeniz",
+    "notes": "Notlar",
+    "attachments": "Ekler ({count})",
+    "edit": "Masrafı düzenle"
   }
 }

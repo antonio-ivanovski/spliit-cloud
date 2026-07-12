@@ -1593,5 +1593,16 @@
     "expenseColumn": "Ausgabe",
     "categoryColumn": "Kategorie",
     "confidenceColumn": "Konfidenz"
+  },
+  "ExpensePreview": {
+    "title": "Ausgabenvorschau",
+    "category": "Kategorie",
+    "date": "Datum",
+    "paidBy": "Gezahlt von",
+    "paidFor": "Gezahlt für",
+    "yourBalance": "Dein Saldo",
+    "notes": "Notizen",
+    "attachments": "Anhänge ({count})",
+    "edit": "Ausgabe bearbeiten"
   }
 }

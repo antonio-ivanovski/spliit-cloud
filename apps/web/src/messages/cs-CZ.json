@@ -1593,5 +1593,16 @@
     "expenseColumn": "Výdaj",
     "categoryColumn": "Kategorie",
     "confidenceColumn": "Spolehlivost"
+  },
+  "ExpensePreview": {
+    "title": "Náhled výdaje",
+    "category": "Kategorie",
+    "date": "Datum",
+    "paidBy": "Zaplatil/a",
+    "paidFor": "Zaplaceno pro",
+    "yourBalance": "Váš zůstatek",
+    "notes": "Poznámky",
+    "attachments": "Přílohy ({count})",
+    "edit": "Upravit výdaj"
   }
 }

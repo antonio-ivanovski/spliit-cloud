@@ -1593,5 +1593,16 @@
     "expenseColumn": "Витрата",
     "categoryColumn": "Категорія",
     "confidenceColumn": "Впевненість"
+  },
+  "ExpensePreview": {
+    "title": "Попередній перегляд витрати",
+    "category": "Категорія",
+    "date": "Дата",
+    "paidBy": "Сплатив",
+    "paidFor": "Сплачено за",
+    "yourBalance": "Ваш баланс",
+    "notes": "Примітки",
+    "attachments": "Вкладення ({count})",
+    "edit": "Редагувати витрату"
   }
 }

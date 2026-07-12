@@ -1593,5 +1593,16 @@
     "expenseColumn": "支出",
     "categoryColumn": "類別",
     "confidenceColumn": "置信度"
+  },
+  "ExpensePreview": {
+    "title": "消費紀錄預覽",
+    "category": "類別",
+    "date": "日期",
+    "paidBy": "支付人",
+    "paidFor": "應支付人",
+    "yourBalance": "你的餘額",
+    "notes": "備註",
+    "attachments": "附件（{count}）",
+    "edit": "編輯消費紀錄"
   }
 }

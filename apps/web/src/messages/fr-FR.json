@@ -1593,5 +1593,16 @@
     "expenseColumn": "Dépense",
     "categoryColumn": "Catégorie",
     "confidenceColumn": "Confiance"
+  },
+  "ExpensePreview": {
+    "title": "Aperçu de la dépense",
+    "category": "Catégorie",
+    "date": "Date",
+    "paidBy": "Payé par",
+    "paidFor": "Payé pour",
+    "yourBalance": "Votre solde :",
+    "notes": "Notes",
+    "attachments": "Pièces jointes ({count})",
+    "edit": "Modifier la dépense"
   }
 }

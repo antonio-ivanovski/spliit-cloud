@@ -1593,5 +1593,16 @@
     "expenseColumn": "支出",
     "categoryColumn": "类别",
     "confidenceColumn": "置信度"
+  },
+  "ExpensePreview": {
+    "title": "消费预览",
+    "category": "类别",
+    "date": "日期",
+    "paidBy": "支付自",
+    "paidFor": "支付给",
+    "yourBalance": "你的余额",
+    "notes": "附注",
+    "attachments": "附件（{count}）",
+    "edit": "编辑消费"
   }
 }

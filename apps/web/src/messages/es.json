@@ -1593,5 +1593,16 @@
     "expenseColumn": "Gasto",
     "categoryColumn": "Categoria",
     "confidenceColumn": "Confianza"
+  },
+  "ExpensePreview": {
+    "title": "Vista previa del gasto",
+    "category": "Categoría",
+    "date": "Fecha",
+    "paidBy": "Pagado por",
+    "paidFor": "Pagado para",
+    "yourBalance": "Tu balance:",
+    "notes": "Notas",
+    "attachments": "Documentos adjuntos ({count})",
+    "edit": "Editar gasto"
   }
 }

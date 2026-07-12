@@ -1593,5 +1593,16 @@
     "expenseColumn": "Spesa",
     "categoryColumn": "Categoria",
     "confidenceColumn": "Confidenza"
+  },
+  "ExpensePreview": {
+    "title": "Anteprima della spesa",
+    "category": "Categoria",
+    "date": "Data",
+    "paidBy": "Pagato da",
+    "paidFor": "Pagato per",
+    "yourBalance": "Il tuo saldo:",
+    "notes": "Note",
+    "attachments": "Documenti allegati ({count})",
+    "edit": "Modifica spesa"
   }
 }

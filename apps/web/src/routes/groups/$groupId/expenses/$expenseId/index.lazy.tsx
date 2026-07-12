@@ -1,26 +1,41 @@
+import { ExpensePreviewModal } from '@/app/groups/[groupId]/expenses/expense-preview-modal'
+import GroupExpensesPageClient from '@/app/groups/[groupId]/expenses/page.client'
+import { trpc } from '@/trpc/client'
 import {
   createLazyFileRoute,
   getRouteApi,
-  Navigate,
+  useNavigate,
 } from '@tanstack/react-router'
 
-// The bare expense URL is reserved for the future view-only expense page.
-// Until that ships, direct navigation here redirects to the edit page.
 const expenseRouteApi = getRouteApi('/groups/$groupId/expenses/$expenseId/')
 
-function ExpenseRedirect() {
+function ExpensePreviewRoute() {
   const { groupId, expenseId } = expenseRouteApi.useParams()
+  const { data } = trpc.features.get.useQuery()
+  const navigate = useNavigate()
+  if (!data) return null
   return (
-    <Navigate
-      to="/groups/$groupId/expenses/$expenseId/edit"
-      params={{ groupId, expenseId }}
-      replace
-    />
+    <>
+      <GroupExpensesPageClient
+        enableReceiptExtract={data.enableReceiptExtract ?? false}
+      />
+      <ExpensePreviewModal
+        groupId={groupId}
+        expenseId={expenseId}
+        onClose={() =>
+          navigate({
+            to: '/groups/$groupId/expenses',
+            params: { groupId },
+            replace: true,
+          })
+        }
+      />
+    </>
   )
 }
 
 export const Route = createLazyFileRoute(
   '/groups/$groupId/expenses/$expenseId/',
 )({
-  component: ExpenseRedirect,
+  component: ExpensePreviewRoute,
 })

@@ -1593,5 +1593,16 @@
     "expenseColumn": "Uitgave",
     "categoryColumn": "Categorie",
     "confidenceColumn": "Betrouwbaarheid"
+  },
+  "ExpensePreview": {
+    "title": "Voorbeeld van uitgave",
+    "category": "Categorie",
+    "date": "Datum",
+    "paidBy": "Betaald door",
+    "paidFor": "Betaald voor",
+    "yourBalance": "Jouw balans",
+    "notes": "Notities",
+    "attachments": "Bijlagen ({count})",
+    "edit": "Bewerk uitgave"
   }
 }

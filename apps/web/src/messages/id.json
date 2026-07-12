@@ -1593,5 +1593,16 @@
     "expenseColumn": "Pengeluaran",
     "categoryColumn": "Kategori",
     "confidenceColumn": "Keyakinan"
+  },
+  "ExpensePreview": {
+    "title": "Pratinjau pengeluaran",
+    "category": "Kategori",
+    "date": "Tanggal",
+    "paidBy": "Dibayar oleh",
+    "paidFor": "Dibayar untuk",
+    "yourBalance": "Saldo Anda",
+    "notes": "Catatan",
+    "attachments": "Lampiran ({count})",
+    "edit": "Ubah pengeluaran"
   }
 }
