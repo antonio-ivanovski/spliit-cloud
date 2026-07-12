@@ -1981,6 +1981,36 @@ describe('BY_SHARES default shares on transition', () => {
 // ── Participant row click behavior tests ─────────────────────────────────
 
 describe('ParticipantShareRow click behavior', () => {
+  it('keeps participant names visible with compact share controls', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_SHARES' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 1 },
+              { ledgerParticipantId: 'lp-2', shares: 1 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const aliceRow = document.querySelector<HTMLElement>(
+      '[data-id="lp-1/BY_SHARES/USD"]',
+    )
+    expect(aliceRow).toBeTruthy()
+    expect(aliceRow).toHaveClass('w-[calc(100%+3rem)]')
+    expect(aliceRow).toHaveTextContent('Alice')
+    expect(aliceRow).toHaveTextContent('#')
+    expect(aliceRow?.querySelector('input')).toBeTruthy()
+    expect(aliceRow?.querySelector('button[data-state]')).toBeTruthy()
+  })
+
   it('clicking a participant row (name text) toggles the selection', () => {
     render(
       <ExpenseForm

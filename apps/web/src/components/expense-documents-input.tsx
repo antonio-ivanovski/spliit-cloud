@@ -220,14 +220,14 @@ export function DocumentThumbnail({
                 documents={[document]}
                 currentExpense={receiptContext}
                 onAccept={onReceiptAccepted}
-                className="h-10 flex-1 rounded-t-none rounded-bl-md rounded-br-none border-r border-secondary-foreground/20 hover:bg-pink-200"
+                className="h-10 min-w-0 basis-0 flex-1 rounded-t-none rounded-bl-md rounded-br-none border-r border-secondary-foreground/20 bg-secondary/70 backdrop-blur-sm hover:bg-pink-200/70"
               />
             )}
             <Button
               type="button"
               variant="secondary"
               className={cn(
-                'h-10 flex-1 rounded-t-none text-destructive hover:bg-destructive hover:text-destructive-foreground',
+                'h-10 min-w-0 basis-0 flex-1 rounded-t-none bg-secondary/70 text-destructive backdrop-blur-sm hover:bg-destructive/70 hover:text-destructive-foreground',
                 enableReceiptExtract && onReceiptAccepted
                   ? 'rounded-bl-none rounded-br-md border-l-0'
                   : 'rounded-b-md',

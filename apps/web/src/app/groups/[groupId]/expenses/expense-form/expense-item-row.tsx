@@ -117,11 +117,11 @@ export function ExpenseItemRow({
     <div className={cn('border-t py-3', isFiller && 'bg-muted/25')}>
       <div
         className={cn(
-          'grid grid-cols-[minmax(0,1fr)_3.5rem_2.5rem_3.25rem_auto] items-center gap-1 md:items-start md:gap-x-3',
+          'grid grid-cols-[minmax(0,1fr)_minmax(0,5.5rem)_minmax(0,4.5rem)] items-center gap-1 md:items-start md:gap-x-3',
           expenseItemGridClass,
         )}
       >
-        <div className="min-w-0">
+        <div className="col-start-1 row-start-1 min-w-0 md:col-auto md:row-auto">
           <div className="sr-only">{displayColumnItem}</div>
           {isFiller ? (
             <div className="flex min-h-9 items-center">
@@ -152,7 +152,7 @@ export function ExpenseItemRow({
           )}
         </div>
 
-        <div>
+        <div className="col-start-2 row-start-1 min-w-0 md:col-auto md:row-auto">
           <div className="sr-only">{displayColumnCost}</div>
           {isFiller ? (
             <div className="flex h-9 items-center justify-end truncate text-right text-sm text-muted-foreground">
@@ -193,7 +193,7 @@ export function ExpenseItemRow({
           )}
         </div>
 
-        <div>
+        <div className="col-start-3 row-start-1 min-w-0 md:col-auto md:row-auto">
           <div className="sr-only">{displayColumnQuantity}</div>
           {isFiller ? (
             <div className="flex h-9 items-center justify-end text-right text-sm text-muted-foreground">
@@ -234,14 +234,14 @@ export function ExpenseItemRow({
           )}
         </div>
 
-        <div>
+        <div className="col-span-2 col-start-1 row-start-2 min-w-0 md:col-auto md:row-auto">
           <div className="sr-only">{displayColumnTotal}</div>
           <div className="flex h-9 items-center justify-end truncate text-right text-sm font-medium tabular-nums">
             {totalDisplay}
           </div>
         </div>
 
-        <div className="flex h-9 items-center justify-end gap-0 md:gap-1">
+        <div className="col-start-3 row-start-2 flex h-9 items-center justify-end gap-0 md:col-auto md:row-auto md:gap-1">
           {!readOnly && (
             <Button
               variant="ghost"
@@ -250,7 +250,7 @@ export function ExpenseItemRow({
               onClick={onEdit}
               aria-label={displayActionEdit}
               title={displayActionEdit}
-              className="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground md:h-8 md:w-8"
+              className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground md:h-8 md:w-8"
             >
               <UserPen className="h-4 w-4" />
             </Button>
@@ -263,7 +263,7 @@ export function ExpenseItemRow({
               onClick={onDelete}
               aria-label={displayActionDelete}
               title={displayActionDelete}
-              className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive md:h-8 md:w-8"
+              className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive md:h-8 md:w-8"
             >
               <Trash2 className="h-4 w-4" />
             </Button>

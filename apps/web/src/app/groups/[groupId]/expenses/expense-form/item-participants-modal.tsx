@@ -224,12 +224,12 @@ export function ItemParticipantsModal(props: {
               }
               shareInput={
                 mode !== 'EVENLY' && checked ? (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center justify-end gap-1">
                     <span className="text-sm">
                       {mode === 'BY_AMOUNT' && groupCurrency.symbol}
                     </span>
                     <Input
-                      className="-my-2 w-[80px] text-base"
+                      className="-my-2 w-[80px] shrink-0 text-right text-base tabular-nums"
                       type="text"
                       disabled={readOnly}
                       value={String(row?.shares ?? '')}
@@ -247,7 +247,7 @@ export function ItemParticipantsModal(props: {
                     />
                     <span className="text-sm">
                       {match(mode)
-                        .with('BY_SHARES', () => t('shares'))
+                        .with('BY_SHARES', () => '#')
                         .with('BY_PERCENTAGE', () => '%')
                         .otherwise(() => '')}
                     </span>

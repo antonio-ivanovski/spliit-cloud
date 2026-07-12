@@ -55,7 +55,9 @@ const RadioGroupItem = React.forwardRef<
         >
           {children}
         </RadioGroupPrimitive.Item>
-        {content && <div className="border-t px-3 pb-3 pt-3">{content}</div>}
+        {content && (
+          <div className="w-full min-w-0 border-t px-6 pb-3 pt-3">{content}</div>
+        )}
       </div>
     )
   }

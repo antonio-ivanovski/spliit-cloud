@@ -162,14 +162,14 @@ export function PaidForRow({
                     if (splitMode === 'BY_AMOUNT') {
                       return (
                         <div>
-                          <div className="flex gap-1 items-center">
+                          <div className="flex items-center justify-end gap-1">
                             <span className="text-sm">
                               {inputCurrency.symbol}
                             </span>
                             <FormControl>
                               <Input
                                 key={String(!isSelected)}
-                                className="text-base w-[80px] -my-2"
+                                className="-my-2 w-[80px] shrink-0 text-right text-base tabular-nums"
                                 type="text"
                                 disabled={readOnly || !isSelected}
                                 value={String(row?.shares ?? '')}
@@ -222,7 +222,7 @@ export function PaidForRow({
                         })}
                       >
                         {match(splitMode)
-                          .with('BY_SHARES', () => <>{t('shares')}</>)
+                          .with('BY_SHARES', () => <>#</>)
                           .with('BY_PERCENTAGE', () => <>%</>)
                           .otherwise(() => (
                             <></>
@@ -231,11 +231,11 @@ export function PaidForRow({
                     )
                     return (
                       <div>
-                        <div className="flex gap-1 items-center">
+                        <div className="flex items-center justify-end gap-1">
                           <FormControl>
                             <Input
                               key={String(!isSelected)}
-                              className="text-base w-[80px] -my-2"
+                              className="-my-2 w-[80px] shrink-0 text-right text-base tabular-nums"
                               type="text"
                               disabled={readOnly || !isSelected}
                               value={String(row?.shares ?? '')}

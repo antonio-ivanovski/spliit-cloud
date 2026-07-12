@@ -384,7 +384,7 @@ export function PaidForCard(props: {
         control={form.control}
         name="paidFor"
         render={() => (
-          <FormItem className="space-y-0">
+          <FormItem className="w-full min-w-0 space-y-0">
             {group.participants.map((participant) => (
               <PaidForRow
                 key={participant.id}
@@ -489,7 +489,6 @@ export function PaidForCard(props: {
                   checked={!!row}
                   onCheckedChange={() => {}}
                   disabled
-                  showCheckbox={false}
                   pendingLabel={
                     participant.pending ? (
                       <ParticipantPendingLabel

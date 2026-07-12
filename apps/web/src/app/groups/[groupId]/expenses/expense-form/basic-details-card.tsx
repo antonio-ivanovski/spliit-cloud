@@ -217,7 +217,7 @@ export function BasicDetailsCard(props: {
 
   return (
     <Card>
-      <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-center">
+      <CardHeader className="flex flex-row items-center gap-2 space-y-0">
         <Button variant="ghost" size="icon" asChild className="-ml-2 shrink-0">
           <Link
             href={`/groups/${group.id}/expenses`}
@@ -226,7 +226,7 @@ export function BasicDetailsCard(props: {
             <ArrowLeft className="w-4 h-4" />
           </Link>
         </Button>
-        <CardTitle className="min-w-0 flex-1">
+        <CardTitle className="min-w-0 flex-1 truncate">
           {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
         </CardTitle>
         {onMakeCopy && (

@@ -182,7 +182,7 @@ export function PaidBySplitOptionCards(props: {
     >
       <div className="space-y-1.5">
         <SectionLabel>{t('paidBySectionSingle')}</SectionLabel>
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid w-full min-w-0 grid-cols-1 gap-2">
           {single.map((opt) => {
             const selected = isSelected(opt)
             return (
@@ -206,7 +206,7 @@ export function PaidBySplitOptionCards(props: {
       </div>
       <div className="space-y-1.5">
         <SectionLabel>{multiSectionLabel}</SectionLabel>
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid w-full min-w-0 grid-cols-1 gap-2">
           {multi.map((opt) => {
             const selected = isSelected(opt)
             const title = t(opt.labelKey)
@@ -251,7 +251,7 @@ export function PaidForSplitOptionCards(props: {
       className="!flex flex-col gap-1.5"
     >
       <SectionLabel>{t('paidForSection')}</SectionLabel>
-      <div className="grid grid-cols-1 gap-2">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-2">
         {PAID_FOR_OPTIONS.map((opt) => {
           const selected = value === opt.id
           const title = t(opt.labelKey)

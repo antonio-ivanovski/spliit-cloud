@@ -15,7 +15,6 @@ export function ParticipantShareRow({
   className,
   disabled,
   dataId,
-  showCheckbox = true,
 }: {
   participant: {
     id: string
@@ -32,8 +31,9 @@ export function ParticipantShareRow({
   className?: string
   disabled?: boolean
   dataId?: string
-  showCheckbox?: boolean
 }) {
+  const hasPreview = preview != null && preview !== false
+
   const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (disabled) return
     const target = e.target as HTMLElement
@@ -48,7 +48,7 @@ export function ParticipantShareRow({
   return (
     <div
       className={cn(
-        'flex min-w-0 w-full flex-wrap gap-y-4 items-center border-t last-of-type:border-b last-of-type:mb-4! -mx-6 px-6 py-3',
+        'flex w-[calc(100%+3rem)] min-w-0 items-center gap-3 border-t px-6 py-3 last-of-type:mb-4! last-of-type:border-b -mx-6',
         disabled
           ? 'cursor-default [&_button]:cursor-default [&_label]:cursor-default'
           : 'cursor-pointer [&_button]:cursor-pointer [&_label]:cursor-pointer',
@@ -57,33 +57,41 @@ export function ParticipantShareRow({
       data-id={dataId}
       onClick={handleRowClick}
     >
-      <FormItem className="min-w-0 flex-1 flex flex-row items-center space-x-3 space-y-0">
-        {showCheckbox && (
-          <FormControl>
-            <Checkbox
-              checked={checked}
-              onCheckedChange={(next) => {
-                if (disabled) return
-                onCheckedChange(next as boolean)
-              }}
-              disabled={disabled}
-            />
-          </FormControl>
-        )}
-        <FormLabel className="text-sm font-normal min-w-0 flex-1 flex items-center">
+      <FormItem className="grid w-full min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 space-y-0 md:flex md:flex-row md:items-center md:gap-3">
+        <FormControl>
+          <Checkbox
+            checked={checked}
+            onCheckedChange={(next) => {
+              if (disabled) return
+              onCheckedChange(next as boolean)
+            }}
+            disabled={disabled}
+          />
+        </FormControl>
+        <FormLabel className="col-start-2 row-start-1 min-w-0 flex flex-1 items-center text-sm font-normal md:col-auto md:row-auto">
           <ParticipantAvatar
             participant={participant}
             size="sm"
             className="mr-2 shrink-0"
           />
-          <span className="min-w-0 truncate">{participant.name}</span>
+          <span className="min-w-0 flex-1 truncate" title={participant.name}>
+            {participant.name}
+          </span>
           {pendingLabel != null && (
             <span className="shrink-0">{pendingLabel}</span>
           )}
-          {preview != null && <span className="shrink-0">{preview}</span>}
         </FormLabel>
+        {hasPreview && (
+          <span className="col-start-2 row-start-2 min-w-0 pl-10 md:col-auto md:row-auto md:shrink-0 md:pl-0">
+            {preview}
+          </span>
+        )}
+        {shareInput && (
+          <div className="col-start-3 row-start-1 ml-0 flex w-fit shrink-0 justify-self-end md:ml-auto">
+            {shareInput}
+          </div>
+        )}
       </FormItem>
-      {shareInput && <div className="flex shrink-0">{shareInput}</div>}
     </div>
   )
 }
