@@ -9,6 +9,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/lib/auth'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import {
+  clearPersistedQueryCache,
+  setStoredAccountId,
+} from '@/trpc/query-persistence'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LogOut, Settings as SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +21,7 @@ import { useTranslation } from 'react-i18next'
 export function AccountMenu() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: account, isPending } = useCurrentAccount()
 
   if (isPending) {
@@ -58,6 +64,9 @@ export function AccountMenu() {
           onSelect={async (event) => {
             event.preventDefault()
             await authClient.signOut()
+            queryClient.clear()
+            setStoredAccountId(null)
+            await clearPersistedQueryCache()
             navigate({ to: '/', replace: true })
           }}
         >

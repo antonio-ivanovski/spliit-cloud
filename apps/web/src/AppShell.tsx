@@ -1,5 +1,6 @@
 import { AccountMenu } from '@/components/account-menu'
 import Image from '@/components/app-image'
+import { AppRecoveryNotice } from '@/components/app-recovery-notice'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
@@ -77,6 +78,7 @@ function Content() {
         )}
 
         <OfflineBanner />
+        <AppRecoveryNotice />
         <InstallPromotionDialog />
 
         <div className="flex flex-1 flex-col pt-(--app-header-height)">

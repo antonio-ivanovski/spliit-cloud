@@ -1,6 +1,7 @@
 import { WifiOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOnlineStatus } from '@/lib/use-online-status'
 
 /**
@@ -13,9 +14,10 @@ import { useOnlineStatus } from '@/lib/use-online-status'
  */
 export function OfflineBanner() {
   const isOnline = useOnlineStatus()
+  const { source: accountSource } = useCurrentAccount()
   const { t } = useTranslation()
 
-  if (isOnline) return null
+  if (isOnline && accountSource !== 'cache') return null
 
   return (
     <div

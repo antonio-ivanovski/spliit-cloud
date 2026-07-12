@@ -1,11 +1,25 @@
+import { useCurrentAccount } from '@/lib/use-current-account'
 import type { AppRouter } from '@spliit/api/router'
-import type { QueryClient } from '@tanstack/react-query'
-import { QueryClientProvider } from '@tanstack/react-query'
+import {
+  QueryClientProvider,
+  useQueryClient,
+  type QueryClient,
+} from '@tanstack/react-query'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import superjson from 'superjson'
 import { makeQueryClient } from './query-client'
+import {
+  clearPersistedQueryCache,
+  getStoredAccountId,
+  QUERY_CACHE_BUSTER,
+  QUERY_CACHE_MAX_AGE,
+  queryCachePersister,
+  setStoredAccountId,
+  shouldDehydrateReadQuery,
+} from './query-persistence'
 
 export const trpc = createTRPCReact<AppRouter>()
 
@@ -22,6 +36,27 @@ function getQueryClient() {
 
 function getUrl() {
   return `${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/trpc`
+}
+
+/** Remove restored data when a session changes to a different account. */
+function AccountCacheBoundary() {
+  const queryClient = useQueryClient()
+  const { data: account, isPending } = useCurrentAccount()
+  const accountId = account?.id ?? null
+
+  useEffect(() => {
+    if (isPending) return
+
+    const previousAccountId = getStoredAccountId()
+    if (previousAccountId && previousAccountId !== accountId) {
+      queryClient.clear()
+      void clearPersistedQueryCache()
+    }
+
+    setStoredAccountId(accountId)
+  }, [accountId, isPending, queryClient])
+
+  return null
 }
 
 export function TRPCProvider(
@@ -51,10 +86,30 @@ export function TRPCProvider(
     }),
   )
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        {props.children}
-      </QueryClientProvider>
-    </trpc.Provider>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister: queryCachePersister,
+        maxAge: QUERY_CACHE_MAX_AGE,
+        buster: QUERY_CACHE_BUSTER,
+        dehydrateOptions: {
+          serializeData: superjson.serialize,
+          shouldDehydrateMutation: () => false,
+          shouldDehydrateQuery: shouldDehydrateReadQuery,
+        },
+        hydrateOptions: {
+          defaultOptions: {
+            deserializeData: superjson.deserialize,
+          },
+        },
+      }}
+    >
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <AccountCacheBoundary />
+          {props.children}
+        </QueryClientProvider>
+      </trpc.Provider>
+    </PersistQueryClientProvider>
   )
 }

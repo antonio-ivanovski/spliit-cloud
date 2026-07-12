@@ -30,6 +30,7 @@
     "@radix-ui/react-toast": "^1.2.18",
     "@spliit/domain": "workspace:*",
     "@tanstack/react-query": "^5.101.2",
+    "@tanstack/react-query-persist-client": "^5.101.2",
     "@tanstack/react-router": "^1.170.16",
     "@trpc/client": "^11.18.0",
     "@trpc/react-query": "^11.18.0",

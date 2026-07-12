@@ -17,6 +17,174 @@
   </head>
   <body>
     <div id="root"></div>
+    <!--
+      This tiny bootstrap guard intentionally lives before the module entry.
+      If a deployment removes an entry chunk, the application module cannot
+      install its normal recovery listener. Keep this guard dependency-free so
+      it can perform one update/reload attempt and then leave a manual action
+      instead of trapping the user in a reload loop.
+    -->
+    <script>
+      ;(() => {
+        const ATTEMPT_KEY = 'spliit:asset-recovery-attempted'
+        const RECOVERY_PARAM = '__spliit_recovery'
+        const bootWindow = window
+        bootWindow.__spliitAppBooted = false
+
+        const message = () => {
+          const root = document.getElementById('root')
+          if (!root || root.querySelector('[data-spliit-bootstrap-recovery]')) {
+            return
+          }
+
+          const box = document.createElement('div')
+          box.dataset.spliitBootstrapRecovery = 'true'
+          box.setAttribute('role', 'alert')
+          box.style.cssText =
+            'box-sizing:border-box;max-width:36rem;margin:15vh auto;padding:1.25rem;border:1px solid #fca5a5;border-radius:.5rem;background:#fef2f2;color:#450a0a;font:16px/1.5 system-ui,sans-serif;text-align:center'
+          box.innerHTML =
+            '<p style="margin:0 0 .75rem">Spliit could not load the latest app code.</p>'
+          const button = document.createElement('button')
+          button.type = 'button'
+          button.textContent = 'Refresh app'
+          button.style.cssText =
+            'border:1px solid #991b1b;border-radius:.375rem;background:#fff;padding:.5rem .75rem;color:#450a0a;font:inherit;cursor:pointer'
+          button.disabled = navigator.onLine === false
+          if (button.disabled) {
+            button.title = 'Reconnect to refresh the app'
+            window.addEventListener(
+              'online',
+              () => {
+                button.disabled = false
+                button.removeAttribute('title')
+              },
+              { once: true },
+            )
+          }
+          button.addEventListener('click', () => {
+            void clearAppCaches().finally(reloadWithFreshDocument)
+          })
+          box.append(button)
+          root.replaceChildren(box)
+        }
+
+        const clearAppCaches = async () => {
+          try {
+            const registrations =
+              await navigator.serviceWorker?.getRegistrations()
+            await Promise.all(
+              (registrations ?? []).map((registration) =>
+                registration.unregister(),
+              ),
+            )
+          } catch {
+            // Continue with Cache Storage cleanup when service workers are unavailable.
+          }
+
+          try {
+            const names = await caches.keys()
+            await Promise.all(
+              names
+                .filter(
+                  (name) =>
+                    name.startsWith('spliit-pages-') ||
+                    name.startsWith('spliit-code-') ||
+                    name.startsWith('workbox-precache-'),
+                )
+                .map((name) => caches.delete(name)),
+            )
+          } catch {
+            // Cache Storage may be unavailable in restricted browser contexts.
+          }
+
+          try {
+            sessionStorage.removeItem(ATTEMPT_KEY)
+          } catch {
+            // Ignore unavailable storage.
+          }
+        }
+
+        const assetError = (value) => {
+          const text =
+            value && typeof value === 'object' && 'message' in value
+              ? String(value.message)
+              : String(value || '')
+          return /ChunkLoadError|Loading chunk|dynamically imported module|modulepreload|Importing a module script failed/i.test(
+            text,
+          )
+        }
+
+        const isBootstrapAsset = (target) => {
+          if (!target || !('src' in target || 'href' in target)) return false
+          try {
+            const raw = target.src || target.href
+            const url = new URL(raw, window.location.href)
+            return (
+              url.origin === window.location.origin &&
+              url.pathname.startsWith('/assets/') &&
+              /\.(?:js|css)$/.test(url.pathname)
+            )
+          } catch {
+            return false
+          }
+        }
+
+        const reloadWithFreshDocument = () => {
+          const url = new URL(window.location.href)
+          url.searchParams.set(RECOVERY_PARAM, String(Date.now()))
+          window.location.replace(url)
+        }
+
+        const recover = () => {
+          if (bootWindow.__spliitAppBooted) return
+
+          // A missing route chunk while offline is expected. Keep the cached
+          // app intact and expose the manual action instead of reloading.
+          if (navigator.onLine === false) {
+            message()
+            return
+          }
+
+          try {
+            if (sessionStorage.getItem(ATTEMPT_KEY) === '1') {
+              message()
+              return
+            }
+            sessionStorage.setItem(ATTEMPT_KEY, '1')
+          } catch {
+            // The page-local guard below still prevents duplicate attempts.
+          }
+
+          if (bootWindow.__spliitBootstrapRecoveryInProgress) return
+          bootWindow.__spliitBootstrapRecoveryInProgress = true
+          const update = navigator.serviceWorker?.getRegistration?.()
+          Promise.resolve(update)
+            .then((registration) => registration?.update())
+            .catch(() => undefined)
+            .finally(reloadWithFreshDocument)
+        }
+
+        const handlePreload = (event) => {
+          event.preventDefault()
+          recover()
+        }
+        const handleError = (event) => {
+          if (
+            isBootstrapAsset(event.target) ||
+            assetError(event.error || event.message)
+          ) {
+            recover()
+          }
+        }
+        const handleRejection = (event) => {
+          if (assetError(event.reason)) recover()
+        }
+
+        window.addEventListener('vite:preloadError', handlePreload)
+        window.addEventListener('error', handleError)
+        window.addEventListener('unhandledrejection', handleRejection)
+      })()
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
