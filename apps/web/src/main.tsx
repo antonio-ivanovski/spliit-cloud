@@ -6,16 +6,6 @@ import { RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-// The inline bootstrap guard in index.html handles entry-module failures. As
-// soon as this module has loaded, let that guard stand down so lazy chunks can
-// use the React-aware recovery notice below instead.
-if (typeof window !== 'undefined') {
-  const bootstrapWindow = window as unknown as {
-    __spliitAppBooted?: boolean
-  }
-  bootstrapWindow.__spliitAppBooted = true
-}
-
 await initI18n()
 
 installAppRecovery()
@@ -25,3 +15,13 @@ createRoot(document.getElementById('root')!).render(
     <RouterProvider router={router} />
   </StrictMode>,
 )
+
+// The inline bootstrap guard in index.html handles entry-module and early
+// startup failures. Only stand it down after i18n, recovery installation, and
+// the initial React render have all started successfully.
+if (typeof window !== 'undefined') {
+  const bootstrapWindow = window as unknown as {
+    __spliitAppBooted?: boolean
+  }
+  bootstrapWindow.__spliitAppBooted = true
+}
