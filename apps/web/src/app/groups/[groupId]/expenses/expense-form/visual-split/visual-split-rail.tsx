@@ -3,6 +3,7 @@ import { useLocale } from '@/i18n/react'
 import { participantSegmentColor } from '@/lib/participant-colors'
 import { cn } from '@/lib/utils'
 import type { Currency, SplitMode } from '@spliit/domain'
+import { UnfoldHorizontal } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import {
   allocationStep,
@@ -141,7 +142,7 @@ export function VisualSplitRail({
                 aria-valuemax={boundary.maximum}
                 aria-valuenow={boundary.position}
                 aria-valuetext={`${formatValue(entry.value)} / ${formatValue(right.value)}`}
-                className="absolute left-1/2 top-3 size-6 -translate-x-1/2 cursor-ew-resize touch-none rounded-full border-2 border-primary/60 bg-background shadow-[0_1px_3px_hsl(var(--foreground)/0.18)] transition-[transform,background-color,border-color] hover:scale-110 hover:border-primary hover:bg-primary/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:opacity-60"
+                className="group absolute left-1/2 top-3 flex size-5 -translate-x-1/2 cursor-ew-resize touch-none items-center justify-center rounded-full border-2 border-primary/60 bg-background shadow-[0_1px_3px_hsl(var(--foreground)/0.18)] transition-[transform,background-color,border-color,opacity] hover:scale-125 hover:border-primary hover:bg-primary/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:opacity-60"
                 onPointerDown={(event) => {
                   event.currentTarget.setPointerCapture(event.pointerId)
                   onSetActiveBoundary(index)
@@ -178,7 +179,12 @@ export function VisualSplitRail({
                     onUpdateBoundary(index, boundary.maximum)
                   }
                 }}
-              />
+              >
+                <UnfoldHorizontal
+                  aria-hidden="true"
+                  className="size-3 text-primary/60 transition-opacity group-hover:opacity-0 group-active:opacity-0"
+                />
+              </button>
             </div>
           )
         })}
