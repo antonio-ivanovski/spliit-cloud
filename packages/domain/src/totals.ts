@@ -86,6 +86,11 @@ type PaidBySharesExpense = Pick<
   id?: string | null
 }
 
+/** Normalize display-unit values before they cross an exact BigInt boundary. */
+function integerForExactMath(value: number): number {
+  return Number.isFinite(value) ? Math.round(value) : 0
+}
+
 /** Exact rational per-participant shares for all split modes. */
 export function calculateExactShares(
   input: SplitInput,
@@ -102,7 +107,7 @@ export function calculateExactShares(
   switch (splitMode) {
     case 'EVENLY': {
       const share = exactFromFraction(
-        BigInt(amount),
+        BigInt(integerForExactMath(amount)),
         BigInt(participants.length),
       )
       for (const p of participants) {
@@ -111,7 +116,10 @@ export function calculateExactShares(
       break
     }
     case 'BY_SHARES': {
-      const totalShares = participants.reduce((sum, p) => sum + p.shares, 0)
+      const totalShares = participants.reduce(
+        (sum, p) => sum + integerForExactMath(p.shares),
+        0,
+      )
       if (totalShares === 0) {
         for (const p of participants) {
           result[p.id] = result[p.id] ?? exactZero()
@@ -122,7 +130,8 @@ export function calculateExactShares(
         result[p.id] = addExactAmount(
           result[p.id] ?? exactZero(),
           exactFromFraction(
-            BigInt(amount) * BigInt(p.shares),
+            BigInt(integerForExactMath(amount)) *
+              BigInt(integerForExactMath(p.shares)),
             BigInt(totalShares),
           ),
         )
@@ -133,7 +142,11 @@ export function calculateExactShares(
       for (const p of participants) {
         result[p.id] = addExactAmount(
           result[p.id] ?? exactZero(),
-          exactFromFraction(BigInt(amount) * BigInt(p.shares), 10000n),
+          exactFromFraction(
+            BigInt(integerForExactMath(amount)) *
+              BigInt(integerForExactMath(p.shares)),
+            10000n,
+          ),
         )
       }
       break
@@ -143,7 +156,7 @@ export function calculateExactShares(
       for (const p of participants) {
         result[p.id] = addExactAmount(
           result[p.id] ?? exactZero(),
-          exactFromInteger(p.shares),
+          exactFromInteger(integerForExactMath(p.shares)),
         )
       }
       break

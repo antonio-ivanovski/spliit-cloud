@@ -709,7 +709,30 @@
       "load": "Загрузить",
       "save": "Сохранить"
     },
-    "scanReceipt": "Сканировать чек с помощью ИИ"
+    "scanReceipt": "Сканировать чек с помощью ИИ",
+    "VisualSplit": {
+      "participants": "Участники",
+      "unlockAll": "Снять все фиксации",
+      "resetEqually": "Разделить поровну",
+      "remainder": "Остаток",
+      "lock": "Зафиксировать значение участника {name} на {value}",
+      "unlock": "Снять фиксацию для участника {name}",
+      "setValue": "Установить {kind} для участника {name}",
+      "percentage": "процент",
+      "amount": "сумму",
+      "shares": "доли",
+      "exactValue": "Точное значение",
+      "decreaseShares": "Уменьшить количество долей участника {name}",
+      "increaseShares": "Увеличить количество долей участника {name}",
+      "unlockToEdit": "Снимите фиксацию с другого участника, чтобы изменить остаток.",
+      "distributionChanged": "Для участника {name} теперь указано {value}. Остаток перераспределён.",
+      "selectParticipant": "Выбрать участника {name} для изменения доли",
+      "locked": "Зафиксировано",
+      "unavailableAmount": "Укажите сумму расхода, чтобы изменить это распределение.",
+      "allocationConflict": "Текущие зафиксированные доли не укладываются в новую итоговую сумму.",
+      "scaleToTotal": "Пересчитать для новой суммы",
+      "permittedRange": "Введите значение от {minimum} до {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

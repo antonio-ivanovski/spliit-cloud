@@ -709,7 +709,30 @@
       "load": "载入",
       "save": "保存"
     },
-    "scanReceipt": "使用 AI 扫描收据"
+    "scanReceipt": "使用 AI 扫描收据",
+    "VisualSplit": {
+      "participants": "参与者",
+      "unlockAll": "全部解锁",
+      "resetEqually": "重置为平均分配",
+      "remainder": "剩余",
+      "lock": "将{name}锁定为{value}",
+      "unlock": "解锁{name}",
+      "setValue": "设置{name}的{kind}",
+      "percentage": "百分比",
+      "amount": "金额",
+      "shares": "份额",
+      "exactValue": "精确值",
+      "decreaseShares": "减少{name}的份额",
+      "increaseShares": "增加{name}的份额",
+      "unlockToEdit": "请解锁另一位参与者以更改剩余值。",
+      "distributionChanged": "{name}现在为{value}。剩余值已重新分配。",
+      "selectParticipant": "选择{name}以编辑其分配",
+      "locked": "已锁定",
+      "unavailableAmount": "请输入支出金额以编辑此分配。",
+      "allocationConflict": "当前锁定的分摊不符合新的总额。",
+      "scaleToTotal": "按新总额调整",
+      "permittedRange": "请输入 {minimum} 到 {maximum} 之间的值。"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

@@ -279,8 +279,9 @@ function normalizePaidForByAmount(
   const exact: Record<string, { numerator: bigint; denominator: bigint }> = {}
   for (const p of paidFor) {
     exact[p.participant] = {
-      numerator: BigInt(p.shares) * BigInt(targetAmount),
-      denominator: BigInt(sum),
+      numerator:
+        BigInt(Math.round(p.shares)) * BigInt(Math.round(targetAmount)),
+      denominator: BigInt(Math.round(sum)),
     }
   }
   const reconciled = distributeRemainder(exact, targetAmount, {

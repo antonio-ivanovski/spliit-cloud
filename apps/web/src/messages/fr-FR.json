@@ -709,7 +709,30 @@
       "load": "Charger",
       "save": "Sauvegarder"
     },
-    "scanReceipt": "Analyser le reçu avec l’IA"
+    "scanReceipt": "Analyser le reçu avec l’IA",
+    "VisualSplit": {
+      "participants": "Participants",
+      "unlockAll": "Tout déverrouiller",
+      "resetEqually": "Répartir à parts égales",
+      "remainder": "Reste",
+      "lock": "Verrouiller {name} à {value}",
+      "unlock": "Déverrouiller {name}",
+      "setValue": "Définir {kind} pour {name}",
+      "percentage": "pourcentage",
+      "amount": "montant",
+      "shares": "parts",
+      "exactValue": "Valeur exacte",
+      "decreaseShares": "Diminuer les parts de {name}",
+      "increaseShares": "Augmenter les parts de {name}",
+      "unlockToEdit": "Déverrouillez un autre participant pour modifier le reste.",
+      "distributionChanged": "{name} est maintenant à {value}. Le reste a été redistribué.",
+      "selectParticipant": "Sélectionnez {name} pour modifier sa part",
+      "locked": "Verrouillé",
+      "unavailableAmount": "Saisissez le montant de la dépense pour modifier cette répartition.",
+      "allocationConflict": "Les répartitions actuellement verrouillées ne correspondent pas au nouveau total.",
+      "scaleToTotal": "Ajuster au nouveau total",
+      "permittedRange": "Saisissez une valeur comprise entre {minimum} et {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

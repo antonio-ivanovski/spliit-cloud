@@ -20,7 +20,11 @@ export const exactZero = (): ExactAmount => ({
 })
 
 export function exactFromInteger(amount: number): ExactAmount {
-  return { numerator: BigInt(amount), denominator: 1n }
+  // Display values can carry binary floating-point residue (e.g.
+  // 4029.9999999999995). Round at the exact-math boundary so BigInt always
+  // receives an integer while preserving the intended minor-unit value.
+  const integer = Number.isFinite(amount) ? Math.round(amount) : 0
+  return { numerator: BigInt(integer), denominator: 1n }
 }
 
 function bigintAbs(value: bigint): bigint {

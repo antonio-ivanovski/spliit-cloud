@@ -639,7 +639,30 @@
       "load": "불러오기",
       "save": "저장"
     },
-    "scanReceipt": "AI로 영수증 스캔"
+    "scanReceipt": "AI로 영수증 스캔",
+    "VisualSplit": {
+      "participants": "참여자",
+      "unlockAll": "모두 잠금 해제",
+      "resetEqually": "균등하게 재설정",
+      "remainder": "나머지",
+      "lock": "{name}: {value}로 잠그기",
+      "unlock": "{name} 잠금 해제",
+      "setValue": "{name}의 {kind} 설정",
+      "percentage": "비율",
+      "amount": "금액",
+      "shares": "지분",
+      "exactValue": "정확한 값",
+      "decreaseShares": "{name}의 지분 줄이기",
+      "increaseShares": "{name}의 지분 늘리기",
+      "unlockToEdit": "나머지를 변경하려면 다른 참여자의 잠금을 해제하세요.",
+      "distributionChanged": "{name}: 현재 {value}. 나머지를 다시 배분했습니다.",
+      "selectParticipant": "{name}을 선택하여 분할 편집",
+      "locked": "잠김",
+      "unavailableAmount": "이 분할을 편집하려면 지출 금액을 입력하세요.",
+      "allocationConflict": "현재 잠긴 분할은 새 합계에 맞지 않습니다.",
+      "scaleToTotal": "새 합계에 맞게 조정",
+      "permittedRange": "{minimum}에서 {maximum} 사이의 값을 입력하세요."
+    }
   },
   "Balances": {
     "title": "잔액",

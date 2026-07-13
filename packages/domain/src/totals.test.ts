@@ -329,6 +329,19 @@ describe('calculateExactShares', () => {
     expect(exactAmountToNumber(result.b)).toBe(750)
   })
 
+  it('rounds display-float percentages before exact BigInt math', () => {
+    const result = calculateExactShares({
+      amount: 1000,
+      splitMode: 'BY_PERCENTAGE',
+      participants: [
+        { id: 'a', shares: 4029.9999999999995 },
+        { id: 'b', shares: 5970.000000000001 },
+      ],
+    })
+    expect(exactAmountToNumber(result.a)).toBeCloseTo(403)
+    expect(exactAmountToNumber(result.b)).toBeCloseTo(597)
+  })
+
   it('BY_AMOUNT returns literal shares', () => {
     const result = calculateExactShares({
       amount: 999,

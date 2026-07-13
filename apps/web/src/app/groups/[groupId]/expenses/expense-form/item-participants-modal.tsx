@@ -1,7 +1,5 @@
-import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -23,16 +21,10 @@ import type {
 import { useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { match } from 'ts-pattern'
-import {
-  enforceCurrencyPattern,
-  enforceIntegerPattern,
-  enforcePercentagePattern,
-} from './currency-utils'
-import { ParticipantPendingLabel } from './participant-pending-label'
-import { ParticipantShareRow } from './participant-share-row'
+import { percentageToBasisPoints } from './allocation-engine'
 import { convertParticipantShares } from './split-mode-conversions'
 import { PaidForSplitOptionCards } from './split-option-cards'
+import { VisualSplitEditor } from './visual-split-editor'
 
 type GroupShape = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -111,172 +103,43 @@ export function ItemParticipantsModal(props: {
     onOpenChange(false)
   }
 
-  const allSelected = draft.paidFor.length === group.participants.length
-  const selectLabel = allSelected ? t('selectNone') : t('selectAll')
-
-  const handleSelectAll = () => {
-    setDraft((prev) => ({
-      ...prev,
-      paidFor: allSelected
-        ? []
-        : group.participants.map((p) => ({
-            participant: p.id,
-            shares:
-              prev.paidFor.find((f) => f.participant === p.id)?.shares ?? 1,
-          })),
-    }))
-  }
-
-  const handleCheckedChange = (participantId: string, checked: boolean) => {
-    setDraft((prev) => ({
-      ...prev,
-      paidFor: checked
-        ? [...prev.paidFor, { participant: participantId, shares: 1 }]
-        : prev.paidFor.filter((p) => p.participant !== participantId),
-    }))
-  }
-
-  const handleShareChange = (participantId: string, rawValue: string) => {
-    const sanitizer = match(draft.splitMode)
-      .with('BY_AMOUNT', () => enforceCurrencyPattern)
-      .with('BY_PERCENTAGE', () => enforcePercentagePattern)
-      .with('BY_SHARES', () => enforceIntegerPattern)
-      .otherwise(() => enforceCurrencyPattern)
-    const sanitized = sanitizer(rawValue)
-    setDraft((prev) => ({
-      ...prev,
-      paidFor: prev.paidFor.map((p) =>
-        p.participant === participantId
-          ? { ...p, shares: Number(sanitized) || 0 }
-          : p,
-      ),
-    }))
-  }
-
   const renderItemParticipants = (mode: ItemSplitMode) => {
-    const distributionShares = draft.paidFor.map((p) => p.shares || 0)
-
     return (
-      <>
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-sm font-medium">Participants</span>
-          <Button
-            variant="link"
-            type="button"
-            className="-my-2 -mr-2"
-            disabled={readOnly}
-            onClick={handleSelectAll}
-          >
-            {selectLabel}
-          </Button>
-        </div>
-
-        {group.participants.map((participant) => {
-          const checked = draft.paidFor.some(
-            (p) => p.participant === participant.id,
-          )
-          const row = draft.paidFor.find(
-            (p) => p.participant === participant.id,
-          )
-
-          const previewAmount =
-            checked && mode !== 'BY_AMOUNT'
-              ? calculateShare(participant.id, {
-                  amount: amountAsMinorUnits(itemTotal, groupCurrency),
-                  paidFor: draft.paidFor.map((p) => ({
-                    participant: {
-                      id: p.participant,
-                      name: '',
-                      groupId: '',
-                    },
-                    shares:
-                      mode === 'BY_PERCENTAGE' ? p.shares * 100 : p.shares,
-                    expenseId: '',
-                    participantId: '',
-                  })),
-                  splitMode: mode,
-                  isReimbursement: false,
-                })
-              : null
-
+      <VisualSplitEditor
+        key={`${mode}/${groupCurrency.code}`}
+        mode={mode}
+        participants={group.participants}
+        rows={draft.paidFor}
+        targetAmount={itemTotal}
+        currency={groupCurrency}
+        readOnly={readOnly}
+        pendingLabel={t('participant.pending')}
+        onRowsChange={(next) =>
+          setDraft((previous) => ({ ...previous, paidFor: next }))
+        }
+        amountPreview={(participantId, nextRows) => {
+          if (mode === 'BY_AMOUNT') return null
           return (
-            <ParticipantShareRow
-              key={participant.id}
-              dataId={`${participant.id}/${mode}/${groupCurrency.code}`}
-              participant={participant}
-              checked={checked}
-              onCheckedChange={(next) =>
-                handleCheckedChange(participant.id, next)
-              }
-              disabled={readOnly}
-              pendingLabel={
-                participant.pending ? (
-                  <ParticipantPendingLabel text={t('participant.pending')} />
-                ) : undefined
-              }
-              preview={
-                previewAmount != null ? (
-                  <ParticipantRowAmountPreview
-                    amount={previewAmount}
-                    currency={groupCurrency}
-                  />
-                ) : undefined
-              }
-              shareInput={
-                mode !== 'EVENLY' && checked ? (
-                  <div className="flex items-center justify-end gap-1">
-                    <span className="text-sm">
-                      {mode === 'BY_AMOUNT' && groupCurrency.symbol}
-                    </span>
-                    <Input
-                      className="-my-2 w-[80px] shrink-0 text-right text-base tabular-nums"
-                      type="text"
-                      disabled={readOnly}
-                      value={String(row?.shares ?? '')}
-                      onChange={(e) =>
-                        handleShareChange(participant.id, e.target.value)
-                      }
-                      inputMode={match(mode)
-                        .with('BY_PERCENTAGE', () => 'decimal' as const)
-                        .with('BY_SHARES', () => 'numeric' as const)
-                        .otherwise(() => 'decimal' as const)}
-                      step={match(mode)
-                        .with('BY_PERCENTAGE', () => 0.01)
-                        .with('BY_SHARES', () => 1)
-                        .otherwise(() => 10 ** -groupCurrency.decimal_digits)}
-                    />
-                    <span className="text-sm">
-                      {match(mode)
-                        .with('BY_SHARES', () => '#')
-                        .with('BY_PERCENTAGE', () => '%')
-                        .otherwise(() => '')}
-                    </span>
-                  </div>
-                ) : undefined
-              }
+            <ParticipantRowAmountPreview
+              amount={calculateShare(participantId, {
+                amount: amountAsMinorUnits(itemTotal, groupCurrency),
+                paidFor: nextRows.map((row) => ({
+                  participant: { id: row.participant, name: '', groupId: '' },
+                  shares:
+                    mode === 'BY_PERCENTAGE'
+                      ? percentageToBasisPoints(row.shares)
+                      : row.shares,
+                  expenseId: '',
+                  participantId: '',
+                })),
+                splitMode: mode,
+                isReimbursement: false,
+              })}
+              currency={groupCurrency}
             />
           )
-        })}
-
-        <ParticipantDistributionFooter
-          splitMode={mode}
-          targetAmount={
-            mode === 'BY_PERCENTAGE'
-              ? 100
-              : amountAsMinorUnits(itemTotal, groupCurrency)
-          }
-          shares={
-            mode === 'BY_AMOUNT'
-              ? distributionShares.map((s) =>
-                  amountAsMinorUnits(s, groupCurrency),
-                )
-              : distributionShares
-          }
-          currency={groupCurrency}
-          paidByCount={draft.paidFor.length}
-          dataTestId="item-participants-distribution-footer"
-        />
-      </>
+        }}
+      />
     )
   }
 

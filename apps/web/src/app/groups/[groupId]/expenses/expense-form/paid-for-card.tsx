@@ -1,6 +1,4 @@
-import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -10,6 +8,7 @@ import {
 } from '@/components/ui/card'
 import { FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { getCurrency } from '@/lib/currency'
+import { calculateShare } from '@/lib/totals'
 import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
@@ -19,18 +18,19 @@ import type {
 } from '@spliit/domain'
 import { computePaidForFromItems, type SplitMode } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { percentageToBasisPoints } from './allocation-engine'
 import { DefaultSplitActions } from './default-split/default-split-actions'
 import type { SavedSplit } from './default-split/split-equal'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
-import { PaidForRow } from './paid-for-row'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
 import { convertParticipantShares, roundTo } from './split-mode-conversions'
 import { PaidForSplitOptionCards } from './split-option-cards'
+import { VisualSplitEditor } from './visual-split-editor'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -79,7 +79,10 @@ export function PaidForCard(props: {
   })
   const splitMode = useWatch({ control: form.control, name: 'splitMode' })
   const amount = useWatch({ control: form.control, name: 'amount' })
-  const paidFor = useWatch({ control: form.control, name: 'paidFor' })
+  const isReimbursement = useWatch({
+    control: form.control,
+    name: 'isReimbursement',
+  })
   const items = useWatch({ control: form.control, name: 'items' }) ?? []
 
   const originalCurrency = originalCurrencyCode
@@ -101,6 +104,36 @@ export function PaidForCard(props: {
     from: SplitMode
     to: SplitMode
   } | null>(null)
+
+  useEffect(() => {
+    if (readOnly || sExpense !== 'Income' || splitMode !== 'BY_AMOUNT') return
+    const shareCurrency = conversionRequired ? originalCurrency : groupCurrency
+    const converted = convertParticipantShares({
+      rows: form.getValues('paidFor'),
+      fromMode: 'BY_AMOUNT',
+      toMode: 'BY_PERCENTAGE',
+      targetAmount: Math.abs(Number(form.getValues('amount')) || 0),
+      currency: shareCurrency,
+    })
+    form.setValue('splitMode', 'BY_PERCENTAGE', {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('paidFor', converted, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+  }, [
+    conversionRequired,
+    form,
+    groupCurrency,
+    originalCurrency,
+    readOnly,
+    sExpense,
+    splitMode,
+  ])
 
   const applyPaidForSplitModeChange = (from: SplitMode, to: SplitMode) => {
     const resetItemParticipants = (mode: SplitMode) => {
@@ -295,7 +328,7 @@ export function PaidForCard(props: {
             mode === 'BY_AMOUNT'
               ? amountAsMinorUnits(Number(shares) || 0, inputCurrency)
               : mode === 'BY_PERCENTAGE'
-                ? Math.round((Number(shares) || 0) * 100)
+                ? percentageToBasisPoints(Number(shares) || 0)
                 : Math.round(Number(shares) || 0),
         }))
       return computePaidForFromItems(
@@ -347,86 +380,76 @@ export function PaidForCard(props: {
     applyPaidForSplitModeChange(currentMode, nextMode)
   }
 
-  const togglePaidForParticipants = () => {
-    const currentPaidFor = form.getValues().paidFor
-    const allSelected = currentPaidFor.length === group.participants.length
-    const newPaidFor = allSelected
-      ? []
-      : group.participants.map((p) => ({
-          participant: p.id,
-          shares:
-            currentPaidFor.find((pfor) => pfor.participant === p.id)?.shares ??
-            1,
-        }))
-    form.setValue('paidFor', newPaidFor, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
-  }
-
   const renderPaidForContent = (mode: ItemSplitMode) => (
     <>
-      <div className="mb-2 flex justify-end">
-        <Button
-          variant="link"
-          type="button"
-          className="-my-2 -mr-2"
-          disabled={readOnly}
-          onClick={togglePaidForParticipants}
-        >
-          {paidFor.length === group.participants.length
-            ? t('selectNone')
-            : t('selectAll')}
-        </Button>
-      </div>
       <FormField
         control={form.control}
         name="paidFor"
-        render={() => (
+        render={({ field }) => (
           <FormItem className="w-full min-w-0 space-y-0">
-            {group.participants.map((participant) => (
-              <PaidForRow
-                key={participant.id}
-                form={form}
-                participant={participant}
-                groupCurrency={groupCurrency}
-                originalCurrency={originalCurrency}
-                conversionRequired={conversionRequired}
-                exchangeRate={exchangeRate}
-                readOnly={readOnly}
-                setManuallyEditedParticipants={
-                  props.setManuallyEditedParticipants
+            <VisualSplitEditor
+              key={`${mode}/${originalCurrency.code}`}
+              mode={mode}
+              participants={group.participants}
+              rows={field.value}
+              targetAmount={Number(amount) || 0}
+              currency={conversionRequired ? originalCurrency : groupCurrency}
+              readOnly={readOnly}
+              pendingLabel={t('participant.pending')}
+              selectAllLabel={t('selectAll')}
+              onRowsChange={(next, options) =>
+                form.setValue('paidFor', next, options)
+              }
+              amountPreview={(participantId, nextRows) => {
+                if (isReimbursement) return null
+                if (mode === 'BY_AMOUNT') {
+                  const share =
+                    nextRows.find((row) => row.participant === participantId)
+                      ?.shares ?? 0
+                  if (!conversionRequired) return null
+                  return (
+                    <ParticipantRowAmountPreview
+                      amount={amountAsMinorUnits(
+                        share * Number(exchangeRate || 1),
+                        groupCurrency,
+                      )}
+                      currency={groupCurrency}
+                    />
+                  )
                 }
-              />
-            ))}
+                return (
+                  <ParticipantRowAmountPreview
+                    amount={calculateShare(participantId, {
+                      amount: amountAsMinorUnits(
+                        Number(amount) || 0,
+                        conversionRequired ? originalCurrency : groupCurrency,
+                      ),
+                      paidFor: nextRows.map((row) => ({
+                        participant: {
+                          id: row.participant,
+                          name: '',
+                          groupId: '',
+                        },
+                        shares:
+                          mode === 'BY_PERCENTAGE'
+                            ? percentageToBasisPoints(row.shares)
+                            : row.shares,
+                        expenseId: '',
+                        participantId: '',
+                      })),
+                      splitMode: mode,
+                      isReimbursement: false,
+                    })}
+                    currency={
+                      conversionRequired ? originalCurrency : groupCurrency
+                    }
+                  />
+                )
+              }}
+            />
             <FormMessage />
           </FormItem>
         )}
-      />
-      <ParticipantDistributionFooter
-        splitMode={mode}
-        targetAmount={
-          mode === 'BY_PERCENTAGE'
-            ? 100
-            : amountAsMinorUnits(
-                Number(amount) || 0,
-                conversionRequired ? originalCurrency : groupCurrency,
-              )
-        }
-        shares={
-          mode === 'BY_AMOUNT'
-            ? paidFor.map((p) =>
-                amountAsMinorUnits(
-                  p.shares || 0,
-                  conversionRequired ? originalCurrency : groupCurrency,
-                ),
-              )
-            : paidFor.map((p) => p.shares || 0)
-        }
-        currency={conversionRequired ? originalCurrency : groupCurrency}
-        paidByCount={paidFor.length}
-        dataTestId="paid-for-distribution-footer"
       />
       <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
         {t('paidForItemizedEntryHint')}
@@ -468,6 +491,7 @@ export function PaidForCard(props: {
             onChange={handlePaidForSplitModeChange}
             renderContent={renderPaidForContent}
             readOnly={readOnly}
+            disabledModes={sExpense === 'Income' ? ['BY_AMOUNT'] : []}
           />
           {splitMode === 'ITEMIZED' && (
             <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">

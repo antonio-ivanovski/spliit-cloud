@@ -709,7 +709,30 @@
       "load": "Завантажити",
       "save": "Зберегти"
     },
-    "scanReceipt": "Сканувати чек за допомогою ШІ"
+    "scanReceipt": "Сканувати чек за допомогою ШІ",
+    "VisualSplit": {
+      "participants": "Учасники",
+      "unlockAll": "Зняти всі фіксації",
+      "resetEqually": "Розділити порівну",
+      "remainder": "Залишок",
+      "lock": "Зафіксувати значення учасника {name} на {value}",
+      "unlock": "Зняти фіксацію для учасника {name}",
+      "setValue": "Установити {kind} для учасника {name}",
+      "percentage": "відсоток",
+      "amount": "суму",
+      "shares": "частки",
+      "exactValue": "Точне значення",
+      "decreaseShares": "Зменшити кількість часток учасника {name}",
+      "increaseShares": "Збільшити кількість часток учасника {name}",
+      "unlockToEdit": "Зніміть фіксацію з іншого учасника, щоб змінити залишок.",
+      "distributionChanged": "Для учасника {name} тепер указано {value}. Залишок перерозподілено.",
+      "selectParticipant": "Обрати учасника {name}, щоб змінити частку",
+      "locked": "Зафіксовано",
+      "unavailableAmount": "Укажіть суму витрати, щоб змінити цей розподіл.",
+      "allocationConflict": "Поточні зафіксовані частки не вкладаються в нову підсумкову суму.",
+      "scaleToTotal": "Перерахувати для нової суми",
+      "permittedRange": "Введіть значення від {minimum} до {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

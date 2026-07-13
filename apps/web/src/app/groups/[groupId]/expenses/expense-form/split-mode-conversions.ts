@@ -1,4 +1,5 @@
 import { type SplitMode } from '@spliit/domain'
+import { percentageToBasisPoints } from './allocation-engine'
 
 export type ParticipantRow = {
   participant: string
@@ -175,7 +176,7 @@ export function convertParticipantShares(args: {
   // ── BY_PERCENTAGE → * ─────────────────────────────────────
 
   if (fromMode === 'BY_PERCENTAGE' && toMode === 'BY_SHARES') {
-    const weights = selected.map((r) => Math.round(r.shares * 100))
+    const weights = selected.map((r) => percentageToBasisPoints(r.shares))
     const g = weights.reduce((acc, w) => gcd(acc, w))
     const reduced = weights.map((w) => Math.max(1, Math.round(w / g)))
     return buildOutput(reduced, 'BY_SHARES')

@@ -163,6 +163,23 @@ describe('getBalances', () => {
     expect(balances.p2).toEqual({ paid: 0, paidFor: 10, total: -10 })
   })
 
+  it('rounds a display-float amount before applying a literal residual', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'float-amount',
+        amount: 100.00000000000001,
+        splitMode: 'BY_AMOUNT',
+        paidByList: defaultPaidByList('p0', 'P0'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 40 },
+          { participant: { id: 'p1', name: 'P1' }, shares: 60 },
+        ],
+      }),
+    ]
+
+    expect(() => getBalances(expenses)).not.toThrow()
+  })
+
   it('handles rounding correctly', () => {
     const expenses: BalancesExpense[] = [
       makeExpense({

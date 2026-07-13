@@ -1,6 +1,5 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
-import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
-import { Button } from '@/components/ui/button'
+import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import {
   Card,
   CardContent,
@@ -16,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { calculatePaidByShare } from '@/lib/totals'
 import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
@@ -25,12 +25,13 @@ import { useCallback, useEffect, type Dispatch } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { PaidByRow } from './paid-by-row'
+import { percentageToBasisPoints } from './allocation-engine'
 import { convertParticipantShares } from './split-mode-conversions'
 import {
   PaidBySplitOptionCards,
   type PaidBySplitOption,
 } from './split-option-cards'
+import { VisualSplitEditor } from './visual-split-editor'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -100,24 +101,6 @@ export function PaidByCard(props: {
     })
   }, [singlePayerTargetAmount, isMultiPayer, form, singlePayerPaidByList])
 
-  const togglePaidByParticipants = () => {
-    const currentPaidByList = form.getValues().paidByList
-    const allSelected = currentPaidByList.length === group.participants.length
-    const newPaidByList = allSelected
-      ? []
-      : group.participants.map((p) => ({
-          participant: p.id,
-          shares:
-            currentPaidByList.find((pb) => pb.participant === p.id)?.shares ??
-            1,
-        }))
-    form.setValue('paidByList', newPaidByList, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
-  }
-
   const renderPaidByContent = (option: PaidBySplitOption) => {
     if (!option.isMultiPayer) {
       return (
@@ -186,59 +169,81 @@ export function PaidByCard(props: {
       )
     }
 
-    const sharesForFooter =
-      option.splitMode === 'BY_AMOUNT'
-        ? paidByList.map((p) =>
-            amountAsMinorUnits(Number(p.shares) || 0, payerCurrency),
-          )
-        : paidByList.map((p) => Number(p.shares) || 0)
-    const targetForFooter =
-      option.splitMode === 'BY_PERCENTAGE'
-        ? 100
-        : amountAsMinorUnits(Number(amount) || 0, payerCurrency)
-
     return (
       <>
-        <div className="mb-2 flex justify-end">
-          <Button
-            variant="link"
-            type="button"
-            className="-my-2 -mr-2"
-            disabled={readOnly}
-            onClick={togglePaidByParticipants}
-          >
-            {paidByList.length === group.participants.length
-              ? t('selectNone')
-              : t('selectAll')}
-          </Button>
-        </div>
         <FormField
           control={form.control}
           name="paidByList"
-          render={() => (
+          render={({ field }) => (
             <FormItem className="w-full min-w-0 space-y-0">
-              {group.participants.map((participant) => (
-                <PaidByRow
-                  key={participant.id}
-                  form={form}
-                  participant={participant}
-                  payerCurrency={payerCurrency}
-                  groupCurrency={groupCurrency}
-                  readOnly={readOnly}
-                  setManuallyEditedPayers={props.setManuallyEditedPayers}
-                />
-              ))}
+              <VisualSplitEditor
+                key={`${option.splitMode}/${payerCurrency.code}`}
+                mode={option.splitMode}
+                participants={group.participants}
+                rows={field.value}
+                targetAmount={Math.abs(Number(amount) || 0)}
+                currency={payerCurrency}
+                amountSign={Number(amount) < 0 ? -1 : 1}
+                readOnly={readOnly}
+                pendingLabel={t('participant.pending')}
+                selectAllLabel={t('selectAll')}
+                onRowsChange={(next, options) =>
+                  form.setValue('paidByList', next, options)
+                }
+                amountPreview={(participantId, nextRows) => {
+                  if (option.splitMode === 'EVENLY') {
+                    return (
+                      <ParticipantRowAmountPreview
+                        amount={Math.round(
+                          amountAsMinorUnits(
+                            Math.abs(Number(amount) || 0),
+                            payerCurrency,
+                          ) / Math.max(1, nextRows.length),
+                        )}
+                        currency={payerCurrency}
+                      />
+                    )
+                  }
+                  if (option.splitMode === 'BY_AMOUNT') {
+                    const share = Math.abs(
+                      nextRows.find((row) => row.participant === participantId)
+                        ?.shares ?? 0,
+                    )
+                    return payerCurrency.code !== groupCurrency.code ? (
+                      <ParticipantRowAmountPreview
+                        amount={amountAsMinorUnits(
+                          share * Number(form.getValues('conversionRate') || 1),
+                          groupCurrency,
+                        )}
+                        currency={groupCurrency}
+                      />
+                    ) : null
+                  }
+                  return (
+                    <ParticipantRowAmountPreview
+                      amount={calculatePaidByShare(participantId, {
+                        amount: amountAsMinorUnits(
+                          Math.abs(Number(amount) || 0),
+                          payerCurrency,
+                        ),
+                        paidByList: nextRows.map((row) => ({
+                          participant: { id: row.participant },
+                          shares:
+                            option.splitMode === 'BY_PERCENTAGE'
+                              ? percentageToBasisPoints(row.shares)
+                              : row.shares,
+                        })),
+                        paidBySplitMode: option.splitMode,
+                        isReimbursement: false,
+                      })}
+                      currency={payerCurrency}
+                    />
+                  )
+                }}
+              />
               <FormMessage />
             </FormItem>
           )}
-        />
-        <ParticipantDistributionFooter
-          splitMode={option.splitMode}
-          targetAmount={targetForFooter}
-          shares={sharesForFooter}
-          currency={payerCurrency}
-          paidByCount={paidByList.length}
-          dataTestId="paid-by-distribution-footer"
         />
       </>
     )

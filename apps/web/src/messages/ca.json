@@ -709,7 +709,30 @@
       "load": "Carregar",
       "save": "Desar"
     },
-    "scanReceipt": "Escaneja el tiquet amb IA"
+    "scanReceipt": "Escaneja el tiquet amb IA",
+    "VisualSplit": {
+      "participants": "Participants",
+      "unlockAll": "Desbloqueja-ho tot",
+      "resetEqually": "Restableix a parts iguals",
+      "remainder": "Resta",
+      "lock": "Bloqueja {name} a {value}",
+      "unlock": "Desbloqueja {name}",
+      "setValue": "Estableix el valor de {kind} de {name}",
+      "percentage": "percentatge",
+      "amount": "import",
+      "shares": "parts",
+      "exactValue": "Valor exacte",
+      "decreaseShares": "Disminueix les parts de {name}",
+      "increaseShares": "Augmenta les parts de {name}",
+      "unlockToEdit": "Desbloqueja un altre participant per canviar la resta.",
+      "distributionChanged": "{name} ara és {value}. La resta s'ha redistribuït.",
+      "selectParticipant": "Selecciona {name} per editar la seva part",
+      "locked": "Bloquejat",
+      "unavailableAmount": "Introdueix un import de despesa per editar aquesta divisió.",
+      "allocationConflict": "Els repartiments bloquejats actuals no s'ajusten al total nou.",
+      "scaleToTotal": "Ajusta al total nou",
+      "permittedRange": "Introdueix un valor entre {minimum} i {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

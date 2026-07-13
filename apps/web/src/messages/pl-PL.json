@@ -709,7 +709,30 @@
       "load": "Wczytaj",
       "save": "Zapisz"
     },
-    "scanReceipt": "Skanuj paragon za pomocą AI"
+    "scanReceipt": "Skanuj paragon za pomocą AI",
+    "VisualSplit": {
+      "participants": "Uczestnicy",
+      "unlockAll": "Odblokuj wszystkie",
+      "resetEqually": "Podziel po równo",
+      "remainder": "Pozostała część",
+      "lock": "Zablokuj wartość dla: {name} na poziomie {value}",
+      "unlock": "Odblokuj wartość dla: {name}",
+      "setValue": "Ustaw {kind} dla: {name}",
+      "percentage": "wartość procentową",
+      "amount": "kwotę",
+      "shares": "udziały",
+      "exactValue": "Dokładna wartość",
+      "decreaseShares": "Zmniejsz liczbę udziałów dla: {name}",
+      "increaseShares": "Zwiększ liczbę udziałów dla: {name}",
+      "unlockToEdit": "Odblokuj innego uczestnika, aby zmienić pozostałą część.",
+      "distributionChanged": "Udział uczestnika {name} wynosi teraz {value}. Pozostała część została rozdzielona ponownie.",
+      "selectParticipant": "Wybierz: {name}, aby edytować udział",
+      "locked": "Zablokowane",
+      "unavailableAmount": "Wprowadź kwotę wydatku, aby edytować ten podział.",
+      "allocationConflict": "Obecne zablokowane udziały nie mieszczą się w nowej sumie.",
+      "scaleToTotal": "Dostosuj do nowej sumy",
+      "permittedRange": "Wprowadź wartość od {minimum} do {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

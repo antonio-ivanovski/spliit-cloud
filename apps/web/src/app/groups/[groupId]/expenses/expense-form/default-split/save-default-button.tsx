@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { percentageToBasisPoints } from '../allocation-engine'
 import type { GroupShape } from '../default-values'
 
 const CONFIRMATION_DURATION_MS = 2000
@@ -58,7 +59,7 @@ export function SaveDefaultButton(props: {
         participant,
         shares:
           splitMode === 'BY_PERCENTAGE'
-            ? Math.round(Number(shares) * 100)
+            ? percentageToBasisPoints(Number(shares))
             : splitMode === 'BY_AMOUNT'
               ? amountAsMinorUnits(Number(shares), groupCurrency)
               : Math.round(Number(shares)),

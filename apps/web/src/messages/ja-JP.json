@@ -709,7 +709,30 @@
       "load": "読込",
       "save": "保存"
     },
-    "scanReceipt": "AIでレシートをスキャン"
+    "scanReceipt": "AIでレシートをスキャン",
+    "VisualSplit": {
+      "participants": "参加者",
+      "unlockAll": "すべてロック解除",
+      "resetEqually": "均等にリセット",
+      "remainder": "残り",
+      "lock": "{name}を{value}でロック",
+      "unlock": "{name}のロックを解除",
+      "setValue": "{name}の{kind}を設定",
+      "percentage": "パーセンテージ",
+      "amount": "金額",
+      "shares": "シェア",
+      "exactValue": "正確な値",
+      "decreaseShares": "{name}のシェアを減らす",
+      "increaseShares": "{name}のシェアを増やす",
+      "unlockToEdit": "残りを変更するには、別の参加者のロックを解除してください。",
+      "distributionChanged": "{name}は{value}になりました。残りを再配分しました。",
+      "selectParticipant": "{name}を選択して分割を編集",
+      "locked": "ロック済み",
+      "unavailableAmount": "この分割を編集するには、支出額を入力してください。",
+      "allocationConflict": "現在ロックされている分割は、新しい合計に収まりません。",
+      "scaleToTotal": "新しい合計に合わせて調整",
+      "permittedRange": "{minimum}から{maximum}までの値を入力してください。"
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

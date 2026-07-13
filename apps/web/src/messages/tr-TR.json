@@ -709,7 +709,30 @@
       "load": "Yükle",
       "save": "Kaydet"
     },
-    "scanReceipt": "Makbuzu yapay zekâ ile tara"
+    "scanReceipt": "Makbuzu yapay zekâ ile tara",
+    "VisualSplit": {
+      "participants": "Katılımcılar",
+      "unlockAll": "Tüm kilitleri aç",
+      "resetEqually": "Eşit dağılıma sıfırla",
+      "remainder": "Kalan",
+      "lock": "{name} değerini {value} olarak kilitle",
+      "unlock": "{name} kilidini aç",
+      "setValue": "{name} için {kind} ayarla",
+      "percentage": "yüzde",
+      "amount": "tutar",
+      "shares": "pay",
+      "exactValue": "Tam değer",
+      "decreaseShares": "{name} adlı katılımcının payını azalt",
+      "increaseShares": "{name} adlı katılımcının payını artır",
+      "unlockToEdit": "Kalanı değiştirmek için başka bir katılımcının kilidini açın.",
+      "distributionChanged": "{name} artık {value}. Kalan yeniden dağıtıldı.",
+      "selectParticipant": "Bölüşümünü düzenlemek için {name} adlı katılımcıyı seçin",
+      "locked": "Kilitli",
+      "unavailableAmount": "Bu bölüşümü düzenlemek için bir harcama tutarı girin.",
+      "allocationConflict": "Mevcut kilitli paylar yeni toplamla uyumlu değil.",
+      "scaleToTotal": "Yeni toplama göre ölçekle",
+      "permittedRange": "{minimum} ile {maximum} arasında bir değer girin."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

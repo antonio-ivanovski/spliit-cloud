@@ -709,7 +709,30 @@
       "load": "Načíst",
       "save": "Uložit"
     },
-    "scanReceipt": "Naskenovat účtenku pomocí AI"
+    "scanReceipt": "Naskenovat účtenku pomocí AI",
+    "VisualSplit": {
+      "participants": "Účastníci",
+      "unlockAll": "Odemknout vše",
+      "resetEqually": "Rozdělit rovnoměrně",
+      "remainder": "Zbytek",
+      "lock": "Uzamknout hodnotu pro {name} na {value}",
+      "unlock": "Odemknout hodnotu pro {name}",
+      "setValue": "Nastavit {kind} pro {name}",
+      "percentage": "procento",
+      "amount": "částku",
+      "shares": "podíly",
+      "exactValue": "Přesná hodnota",
+      "decreaseShares": "Snížit počet podílů pro {name}",
+      "increaseShares": "Zvýšit počet podílů pro {name}",
+      "unlockToEdit": "Chcete-li změnit zbytek, odemkněte jiného účastníka.",
+      "distributionChanged": "{name}: nyní {value}. Zbytek byl přerozdělen.",
+      "selectParticipant": "Vybrat {name} a upravit podíl",
+      "locked": "Uzamčeno",
+      "unavailableAmount": "Chcete-li tento podíl upravit, zadejte částku výdaje.",
+      "allocationConflict": "Současné uzamčené podíly se nevejdou do nového součtu.",
+      "scaleToTotal": "Přepočítat na nový součet",
+      "permittedRange": "Zadejte hodnotu od {minimum} do {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

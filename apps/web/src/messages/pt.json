@@ -811,7 +811,30 @@
       "load": "Carregar",
       "save": "Guardar"
     },
-    "scanReceipt": "Digitaliza o recibo com IA"
+    "scanReceipt": "Digitaliza o recibo com IA",
+    "VisualSplit": {
+      "participants": "Participantes",
+      "unlockAll": "Desbloquear tudo",
+      "resetEqually": "Repor em partes iguais",
+      "remainder": "Restante",
+      "lock": "Bloquear {name} em {value}",
+      "unlock": "Desbloquear {name}",
+      "setValue": "Definir {kind} de {name}",
+      "percentage": "percentagem",
+      "amount": "montante",
+      "shares": "partes",
+      "exactValue": "Valor exato",
+      "decreaseShares": "Diminuir as partes de {name}",
+      "increaseShares": "Aumentar as partes de {name}",
+      "unlockToEdit": "Desbloqueie outro participante para alterar o restante.",
+      "distributionChanged": "{name} tem agora {value}. O restante foi redistribuído.",
+      "selectParticipant": "Selecionar {name} para editar a sua parte",
+      "locked": "Bloqueado",
+      "unavailableAmount": "Introduza o montante da despesa para editar esta divisão.",
+      "allocationConflict": "As repartições atualmente bloqueadas não se ajustam ao novo total.",
+      "scaleToTotal": "Ajustar ao novo total",
+      "permittedRange": "Introduza um valor entre {minimum} e {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

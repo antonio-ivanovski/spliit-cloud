@@ -5,7 +5,7 @@ import { trpc } from '@/trpc/client'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { utcTodayIso } from '@spliit/domain'
 import type { Dispatch, SetStateAction } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -41,6 +41,7 @@ export function useExpenseCurrencyConversion(args: {
   recommendedCurrencyCodes: string[] | undefined
 } {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const lastIncomeState = useRef<boolean | null>(null)
   const watchedExpenseDate = useWatch({
     control: args.form.control,
     name: 'expenseDate',
@@ -130,6 +131,8 @@ export function useExpenseCurrencyConversion(args: {
   // selected expense currency; signedness is currency-agnostic).
   useEffect(() => {
     const income = Number(watchedAmount) < 0
+    if (lastIncomeState.current === income) return
+    lastIncomeState.current = income
     args.onAmountChanged?.(income)
   }, [watchedAmount, args])
 

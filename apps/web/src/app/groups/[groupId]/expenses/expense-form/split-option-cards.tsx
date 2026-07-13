@@ -239,8 +239,9 @@ export function PaidForSplitOptionCards(props: {
   onChange: (next: SplitMode) => void
   readOnly?: boolean
   renderContent?: (mode: Exclude<SplitMode, 'ITEMIZED'>) => ReactNode
+  disabledModes?: SplitMode[]
 }) {
-  const { value, onChange, readOnly, renderContent } = props
+  const { value, onChange, readOnly, renderContent, disabledModes = [] } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   return (
@@ -255,7 +256,7 @@ export function PaidForSplitOptionCards(props: {
         {PAID_FOR_OPTIONS.map((opt) => {
           const selected = value === opt.id
           const title = t(opt.labelKey)
-          const disabled = readOnly
+          const disabled = readOnly || disabledModes.includes(opt.id)
           return (
             <RadioGroupItem
               key={opt.id}

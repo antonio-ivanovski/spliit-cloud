@@ -220,6 +220,17 @@ describe('BY_SHARES → BY_AMOUNT', () => {
 // ── BY_PERCENTAGE → * ──────────────────────────────────────────────────
 
 describe('BY_PERCENTAGE → BY_SHARES', () => {
+  it('keeps decimal percentages integer-safe at the conversion boundary', () => {
+    const result = convertParticipantShares({
+      rows: [row('a', 40.3), row('b', 59.7)],
+      fromMode: 'BY_PERCENTAGE',
+      toMode: 'BY_SHARES',
+      targetAmount: 100,
+    })
+    expect(result.map((r) => r.shares)).toEqual([403, 597])
+    expect(result.every((r) => Number.isSafeInteger(r.shares))).toBe(true)
+  })
+
   it('converts [25, 75] to [1, 3] via GCD reduction', () => {
     const rows = [row('a', 25), row('b', 75)]
     const result = convertParticipantShares({

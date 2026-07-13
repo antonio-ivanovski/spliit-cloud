@@ -709,7 +709,30 @@
       "load": "Carica",
       "save": "Salva"
     },
-    "scanReceipt": "Scansiona la ricevuta con l’IA"
+    "scanReceipt": "Scansiona la ricevuta con l’IA",
+    "VisualSplit": {
+      "participants": "Partecipanti",
+      "unlockAll": "Sblocca tutto",
+      "resetEqually": "Ripristina in parti uguali",
+      "remainder": "Resto",
+      "lock": "Blocca {name} a {value}",
+      "unlock": "Sblocca {name}",
+      "setValue": "Imposta {kind} di {name}",
+      "percentage": "percentuale",
+      "amount": "importo",
+      "shares": "quote",
+      "exactValue": "Valore esatto",
+      "decreaseShares": "Riduci le quote di {name}",
+      "increaseShares": "Aumenta le quote di {name}",
+      "unlockToEdit": "Sblocca un altro partecipante per modificare il resto.",
+      "distributionChanged": "{name} ora ha {value}. Il resto è stato ridistribuito.",
+      "selectParticipant": "Seleziona {name} per modificare la sua quota",
+      "locked": "Bloccato",
+      "unavailableAmount": "Inserisci l'importo della spesa per modificare questa suddivisione.",
+      "allocationConflict": "Le suddivisioni attualmente bloccate non corrispondono al nuovo totale.",
+      "scaleToTotal": "Adatta al nuovo totale",
+      "permittedRange": "Inserisci un valore compreso tra {minimum} e {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

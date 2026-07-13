@@ -87,7 +87,8 @@ function applyLiteralResidual(
     (total, value) => total + exactAmountToNumber(value),
     0,
   )
-  const diff = amount - Math.round(sum)
+  const residual = amount - Math.round(sum)
+  const diff = Number.isFinite(residual) ? Math.round(residual) : 0
   if (diff === 0) return exact
   const next = { ...exact }
   const current = next[payerId]

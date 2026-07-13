@@ -709,7 +709,30 @@
       "load": "Kargatu",
       "save": "Gorde"
     },
-    "scanReceipt": "Eskaneatu ordainagiria IArekin"
+    "scanReceipt": "Eskaneatu ordainagiria IArekin",
+    "VisualSplit": {
+      "participants": "Parte-hartzaileak",
+      "unlockAll": "Desblokeatu guztiak",
+      "resetEqually": "Berrezarri zati berdinetan",
+      "remainder": "Gainerakoa",
+      "lock": "Blokeatu {name}, {value} balioan",
+      "unlock": "Desblokeatu {name}",
+      "setValue": "Ezarri {name}: {kind}",
+      "percentage": "ehunekoa",
+      "amount": "zenbatekoa",
+      "shares": "parte",
+      "exactValue": "Balio zehatza",
+      "decreaseShares": "Murriztu parte kopurua: {name}",
+      "increaseShares": "Handitu parte kopurua: {name}",
+      "unlockToEdit": "Desblokeatu beste parte-hartzaile bat gainerakoa aldatzeko.",
+      "distributionChanged": "{name}: {value} orain. Gainerakoa birbanatu da.",
+      "selectParticipant": "Hautatu {name} bere banaketa editatzeko",
+      "locked": "Blokeatuta",
+      "unavailableAmount": "Sartu gastuaren zenbatekoa banaketa hau editatzeko.",
+      "allocationConflict": "Uneko banaketa blokeatuak ez datoz bat guztizko berriarekin.",
+      "scaleToTotal": "Doitu guztizko berrira",
+      "permittedRange": "Sartu {minimum} eta {maximum} arteko balio bat."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

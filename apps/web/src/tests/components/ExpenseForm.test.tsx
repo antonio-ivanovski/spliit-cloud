@@ -6,7 +6,7 @@ import type {
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
-import { act, fireEvent, render, screen } from '@/test/test-utils'
+import { act, fireEvent, render, screen, within } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -1201,10 +1201,10 @@ describe('ExpenseForm', () => {
     // The single-payer placeholder should NOT be visible.
     expect(screen.queryByText('Select a participant')).not.toBeInTheDocument()
 
-    // The multi-payer breakdown should render the per-row data-id wrapper
-    // for each participant (one row per participant).
-    const paidByRows = document.querySelectorAll('[data-id]')
-    expect(paidByRows.length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByTestId('visual-split-by_amount')).not.toHaveLength(0)
+    expect(
+      screen.getAllByRole('textbox', { name: "Set Alice's amount" }),
+    ).not.toHaveLength(0)
   })
 
   it('multi-payer with EVENLY split mode hides the per-row input', () => {
@@ -1228,17 +1228,9 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    // Sanity check: the form should have rendered multi-payer breakdown.
-    const dataIdWrappers = document.querySelectorAll('[data-id]')
-    expect(dataIdWrappers.length).toBeGreaterThan(0)
-
-    // The legacy code rendered a disabled <Input class="...w-[80px]...">
-    // per row in EVENLY mode. After this change, no such input should be
-    // rendered inside the per-row wrappers.
-    const paidByPerRowShareInputs = document.querySelectorAll(
-      '[data-id] input.w-\\[80px\\]',
-    )
-    expect(paidByPerRowShareInputs.length).toBe(0)
+    expect(screen.getAllByTestId('visual-split-evenly')).not.toHaveLength(0)
+    expect(screen.queryByRole('slider')).not.toBeInTheDocument()
+    expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument()
   })
 
   it('keeps single-payer paid-by amount in original currency during create', async () => {
@@ -1304,7 +1296,7 @@ describe('ExpenseForm', () => {
         screen.queryByText('All shares must be higher than 0.'),
       ).not.toBeInTheDocument()
     })
-    expect(screen.getByText(/Evenly split: \$10\.00 × 1/)).toBeInTheDocument()
+    expect(screen.getAllByTestId('visual-split-evenly')).not.toHaveLength(0)
 
     await user.click(
       screen.getByRole('radio', { name: /multiple payers.*by shares/i }),
@@ -1337,245 +1329,60 @@ const groupCurrency = {
   decimal_digits: 2,
 }
 
-describe('ExpenseForm Total/Missing footer (paid by)', () => {
-  it('BY_AMOUNT: shows "✓ Matches" in green when shares sum to the target', () => {
-    const expense = {
-      ...mockExpense,
-      // Empty originalCurrency prevents the form from treating the group
-      // currency as a foreign one and falling back to originalAmount (0).
-      originalCurrency: '',
-      amount: 10000, // $100.00
-      paidBySplitMode: 'BY_AMOUNT' as const,
-      paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
-        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00
-      ],
-    }
+describe('ExpenseForm visual allocation editors', () => {
+  it('normalizes a saved amount split and exposes inline boundary controls', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            originalCurrency: '',
+            amount: 10000,
+            splitMode: 'BY_AMOUNT' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 4000 },
+              { ledgerParticipantId: 'lp-2', shares: 5000 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: "Set Alice's amount" }),
+    ).toBeInTheDocument()
+    expect(screen.getAllByRole('slider')).toHaveLength(1)
+  })
+
+  it('shows share steppers instead of generic text inputs', () => {
     render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
+        expense={
+          {
+            ...mockExpense,
+            originalCurrency: '',
+            paidBySplitMode: 'BY_SHARES' as const,
+            paidByList: [
+              { ledgerParticipantId: 'lp-1', shares: 1 },
+              { ledgerParticipantId: 'lp-2', shares: 2 },
+            ],
+          } as unknown as LoadedExpense
+        }
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
     )
 
-    const footer = screen.getByTestId('paid-by-distribution-footer')
-    expect(footer).toHaveTextContent('✓ Matches $100.00')
-    expect(footer.className).toContain('text-emerald-600')
-  })
-
-  it('BY_AMOUNT: shows "Missing X of Y" in red when shares under-sum', () => {
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      amount: 10000, // $100.00
-      paidBySplitMode: 'BY_AMOUNT' as const,
-      paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
-        { ledgerParticipantId: 'lp-2', shares: 5000 }, // $50.00 → total $90
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-by-distribution-footer')
-    expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
-    expect(footer.className).toContain('text-red-600')
-  })
-
-  it('BY_AMOUNT: shows "Surplus X of Y" in red when shares over-sum', () => {
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      amount: 10000, // $100.00
-      paidBySplitMode: 'BY_AMOUNT' as const,
-      paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 6000 }, // $60.00
-        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00 → total $120
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-by-distribution-footer')
-    expect(footer).toHaveTextContent('Surplus $20.00 of $100.00')
-    expect(footer.className).toContain('text-red-600')
-  })
-
-  it('BY_PERCENTAGE: shows "✓ Matches 100%" in green when shares sum to 100', () => {
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      paidBySplitMode: 'BY_PERCENTAGE' as const,
-      paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 4000 }, // 40%
-        { ledgerParticipantId: 'lp-2', shares: 6000 }, // 60%
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-by-distribution-footer')
-    expect(footer).toHaveTextContent('✓ Matches 100%')
-    expect(footer.className).toContain('text-emerald-600')
-  })
-
-  it('BY_PERCENTAGE: shows "Missing X%" in red when shares under-sum', () => {
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      paidBySplitMode: 'BY_PERCENTAGE' as const,
-      paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 4000 }, // 40%
-        { ledgerParticipantId: 'lp-2', shares: 5000 }, // 50% → total 90%
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-by-distribution-footer')
-    expect(footer).toHaveTextContent('Missing 10%')
-    expect(footer.className).toContain('text-red-600')
-  })
-
-  it('EVENLY: shows "Evenly split: amount × count" in muted color', () => {
-    const groupWith3 = {
-      ...mockGroup,
-      participants: [
-        ...mockGroup.participants,
-        {
-          id: 'lp-3',
-          name: 'Carol',
-          account: null,
-          pending: false,
-          unlinked: false,
-        },
-      ],
-    }
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      amount: 10000, // $100.00
-      paidBySplitMode: 'EVENLY' as const,
-      paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 1 },
-        { ledgerParticipantId: 'lp-2', shares: 1 },
-        { ledgerParticipantId: 'lp-3', shares: 1 },
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={groupWith3 as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-by-distribution-footer')
-    expect(footer).toHaveTextContent('Evenly split: $33.33 × 3')
-    expect(footer.className).toContain('text-muted-foreground')
-  })
-
-  it('BY_SHARES: shows "Total weight: <sum> shares" in muted color', () => {
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      paidBySplitMode: 'BY_SHARES' as const,
-      paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 1 },
-        { ledgerParticipantId: 'lp-2', shares: 2 },
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-by-distribution-footer')
-    expect(footer).toHaveTextContent('Total weight: 3 shares')
-    expect(footer.className).toContain('text-muted-foreground')
-  })
-})
-
-describe('ExpenseForm Total/Missing footer (paid for)', () => {
-  it('BY_AMOUNT: shows "Missing X of Y" in red when shares under-sum', () => {
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      amount: 10000, // $100.00
-      splitMode: 'BY_AMOUNT' as const,
-      paidFor: [
-        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
-        { ledgerParticipantId: 'lp-2', shares: 5000 }, // $50.00 → total $90
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-for-distribution-footer')
-    expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
-    expect(footer.className).toContain('text-red-600')
-  })
-
-  it('BY_AMOUNT: shows "✓ Matches" in green when shares sum to the target', () => {
-    const expense = {
-      ...mockExpense,
-      originalCurrency: '',
-      amount: 10000, // $100.00
-      splitMode: 'BY_AMOUNT' as const,
-      paidFor: [
-        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
-        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00
-      ],
-    }
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={expense as unknown as LoadedExpense}
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    const footer = screen.getByTestId('paid-for-distribution-footer')
-    expect(footer).toHaveTextContent('✓ Matches $100.00')
-    expect(footer.className).toContain('text-emerald-600')
+    expect(
+      screen.getByRole('button', { name: "Increase Alice's shares" }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('spinbutton', { name: 'Alice shares' }),
+    ).toHaveValue(1)
   })
 })
 
@@ -1809,13 +1616,9 @@ describe('ExpenseForm option-card transitions', () => {
 
     expect(sharesRadio).toBeChecked()
 
-    const shareInputs = document.querySelectorAll(
-      '[data-id$="/BY_SHARES/USD"] input[type="text"]',
-    )
-    expect(shareInputs.length).toBeGreaterThan(0)
-    shareInputs.forEach((input) => {
-      const val = (input as HTMLInputElement).value
-      expect(val).toMatch(/^\d+$/)
+    expect(screen.getByTestId('visual-split-by_shares')).toBeInTheDocument()
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(Number((input as HTMLInputElement).value) % 1).toBe(0)
     })
   })
 
@@ -1845,10 +1648,163 @@ describe('ExpenseForm option-card transitions', () => {
     await user.click(amountRadio)
 
     expect(amountRadio).toBeChecked()
-    const paidForInputs = document.querySelectorAll(
-      '[data-testid="paid-for-distribution-footer"]',
+    expect(screen.getAllByTestId('visual-split-by_amount')).not.toHaveLength(0)
+    expect(
+      screen.getByRole('textbox', { name: "Set Alice's amount" }),
+    ).toBeInTheDocument()
+    expect(screen.getAllByRole('slider')).toHaveLength(1)
+  })
+
+  it('paid-for: select all preserves a locked percentage and allocates the remainder', async () => {
+    const groupWithCarol = {
+      ...mockGroup,
+      participants: [
+        ...mockGroup.participants,
+        {
+          id: 'lp-3',
+          name: 'Carol',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={groupWithCarol as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_PERCENTAGE' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 5000 },
+              { ledgerParticipantId: 'lp-2', shares: 5000 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
     )
-    expect(paidForInputs.length).toBeGreaterThan(0)
+
+    const editor = screen.getByTestId('visual-split-by_percentage')
+    const aliceInput = within(editor).getByRole('textbox', {
+      name: "Set Alice's percentage",
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '30')
+    await user.tab()
+    await user.click(
+      within(editor).getByRole('button', { name: /Lock Alice \/ Bob at/ }),
+    )
+    await user.click(within(editor).getByRole('button', { name: 'Select all' }))
+
+    expect(
+      within(editor).getByRole('button', { name: /Unlock Alice \/ Bob/ }),
+    ).toBeInTheDocument()
+    expect(
+      within(editor).getByRole('textbox', { name: "Set Alice's percentage" }),
+    ).toBeInTheDocument()
+    expect(
+      within(editor).getByRole('textbox', { name: "Set Carol's percentage" }),
+    ).toBeInTheDocument()
+  })
+
+  it('paid-by: select all preserves a locked percentage and allocates the remainder', async () => {
+    const groupWithCarol = {
+      ...mockGroup,
+      participants: [
+        ...mockGroup.participants,
+        {
+          id: 'lp-3',
+          name: 'Carol',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={groupWithCarol as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            paidBySplitMode: 'BY_PERCENTAGE' as const,
+            paidByList: [
+              { ledgerParticipantId: 'lp-1', shares: 5000 },
+              { ledgerParticipantId: 'lp-2', shares: 5000 },
+            ],
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 1 },
+              { ledgerParticipantId: 'lp-2', shares: 1 },
+              { ledgerParticipantId: 'lp-3', shares: 1 },
+            ],
+            splitMode: 'EVENLY' as const,
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const editor = screen.getByTestId('visual-split-by_percentage')
+    const aliceInput = within(editor).getByRole('textbox', {
+      name: "Set Alice's percentage",
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '30')
+    await user.tab()
+    await user.click(
+      within(editor).getByRole('button', { name: /Lock Alice \/ Bob at/ }),
+    )
+    await user.click(within(editor).getByRole('button', { name: 'Select all' }))
+
+    expect(
+      within(editor).getByRole('button', { name: /Unlock Alice \/ Bob/ }),
+    ).toBeInTheDocument()
+    expect(
+      within(editor).getByRole('textbox', { name: "Set Alice's percentage" }),
+    ).toBeInTheDocument()
+    expect(
+      within(editor).getByRole('textbox', { name: "Set Carol's percentage" }),
+    ).toBeInTheDocument()
+  })
+
+  it('paid-for: changing a by-amount expense to income preserves ratios as percentages', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            amount: 10000,
+            splitMode: 'BY_AMOUNT' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 3000 },
+              { ledgerParticipantId: 'lp-2', shares: 7000 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    fireEvent.change(amountInput, { target: { value: '-100' } })
+
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('radio', { name: /split by percentage/i }),
+      ).toBeChecked()
+    })
+    expect(
+      screen.getByRole('radio', { name: /split by amount/i }),
+    ).toBeDisabled()
+    expect(
+      screen.getByRole('textbox', { name: "Set Alice's percentage" }),
+    ).toHaveValue('30')
   })
 })
 
@@ -1876,11 +1832,9 @@ describe('BY_SHARES default shares on transition', () => {
     })
     await user.click(sharesRadio)
 
-    const shareInput = document.querySelector<HTMLInputElement>(
-      '[data-id="lp-1/BY_SHARES/USD"] input[type="text"]',
-    )
-    expect(shareInput).toBeTruthy()
-    expect(shareInput!.value).toBe('1')
+    expect(
+      screen.getByRole('spinbutton', { name: 'Alice shares' }),
+    ).toHaveValue(1)
   })
 
   it('single → multi-by-percentage: percentages sum to 100', async () => {
@@ -1898,11 +1852,9 @@ describe('BY_SHARES default shares on transition', () => {
     })
     await user.click(percentageRadio)
 
-    const shareInput = document.querySelector<HTMLInputElement>(
-      '[data-id="lp-1/BY_PERCENTAGE/USD"] input[type="text"]',
-    )
-    expect(shareInput).toBeTruthy()
-    expect(Number(shareInput!.value)).toBe(100)
+    expect(
+      screen.getByRole('textbox', { name: "Set Alice's percentage" }),
+    ).toHaveValue('100')
   })
 
   it('single → multi-by-amount: shares split evenly', async () => {
@@ -1920,17 +1872,15 @@ describe('BY_SHARES default shares on transition', () => {
     })
     await user.click(amountRadio)
 
-    const shareInput = document.querySelector<HTMLInputElement>(
-      '[data-id="lp-1/BY_AMOUNT/USD"] input[type="text"]',
-    )
-    expect(shareInput).toBeTruthy()
-    expect(Number(shareInput!.value)).toBe(50)
+    expect(
+      screen.getByRole('textbox', { name: "Set Alice's amount" }),
+    ).toHaveValue('50.00')
   })
 })
 
 // ── Participant row click behavior tests ─────────────────────────────────
 
-describe('ParticipantShareRow click behavior', () => {
+describe('Visual split participant behavior', () => {
   it('keeps participant names visible with compact share controls', () => {
     render(
       <ExpenseForm
@@ -1950,62 +1900,16 @@ describe('ParticipantShareRow click behavior', () => {
       />,
     )
 
-    const aliceRow = document.querySelector<HTMLElement>(
-      '[data-id="lp-1/BY_SHARES/USD"]',
-    )
-    expect(aliceRow).toBeTruthy()
-    expect(aliceRow).toHaveClass('w-[calc(100%+3rem)]')
-    expect(aliceRow).toHaveTextContent('Alice')
-    expect(aliceRow).toHaveTextContent('#')
-    expect(aliceRow?.querySelector('input')).toBeTruthy()
-    expect(aliceRow?.querySelector('button[data-state]')).toBeTruthy()
+    expect(screen.getAllByText('Alice')).not.toHaveLength(0)
+    expect(
+      screen.getByRole('spinbutton', { name: 'Alice shares' }),
+    ).toHaveValue(1)
+    expect(
+      screen.getByRole('button', { name: "Increase Alice's shares" }),
+    ).toHaveClass('size-10')
   })
 
-  it('clicking a participant row (name text) toggles the selection', () => {
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={
-          {
-            ...mockExpense,
-            splitMode: 'BY_AMOUNT' as const,
-            paidFor: [
-              { ledgerParticipantId: 'lp-1', shares: 2500 },
-              { ledgerParticipantId: 'lp-2', shares: 2500 },
-            ],
-          } as unknown as LoadedExpense
-        }
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    // Both checkboxes should be checked initially (both in paidFor)
-    const checkboxes = screen.getAllByRole('checkbox')
-    const paidForCheckboxes = checkboxes.filter(
-      (cb) => cb.getAttribute('data-state') !== undefined,
-    )
-    const initiallyChecked = paidForCheckboxes.filter(
-      (cb) => cb.getAttribute('data-state') === 'checked',
-    )
-    expect(initiallyChecked.length).toBeGreaterThanOrEqual(2)
-
-    // Click directly on the row div (non-interactive padding area)
-    const row = document.querySelector<HTMLElement>(
-      '[data-id="lp-1/BY_AMOUNT/USD"]',
-    )
-    expect(row).toBeTruthy()
-    fireEvent.click(row!)
-
-    // After clicking Alice's row, she should be toggled off
-    const checkboxesAfter = screen.getAllByRole('checkbox')
-    const checkedAfter = checkboxesAfter.filter(
-      (cb) => cb.getAttribute('data-state') === 'checked',
-    )
-    expect(checkedAfter.length).toBe(initiallyChecked.length - 1)
-  })
-
-  it('clicking the share input does NOT toggle the checkbox', async () => {
+  it('uses the participant checkbox to toggle selection', async () => {
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2024,32 +1928,14 @@ describe('ParticipantShareRow click behavior', () => {
       />,
     )
 
-    // Find a share input inside a participant row
-    const rowInput = document.querySelector<HTMLInputElement>(
-      '[data-id="lp-1/BY_AMOUNT/USD"] input[type="text"]',
-    )
-    expect(rowInput).toBeTruthy()
-    const initialChecked = rowInput!
-      .closest('[data-id]')
-      ?.querySelector('button[data-state]')
-      ?.getAttribute('data-state')
-
-    // Click on the input to focus it (should NOT toggle checkbox)
-    await user.click(rowInput!)
-
-    // Verify the input has focus
-    expect(document.activeElement).toBe(rowInput)
-
-    // Verify checkbox state has NOT changed
-    const checkboxAfter = rowInput!
-      .closest('[data-id]')
-      ?.querySelector('button[data-state]')
-      ?.getAttribute('data-state')
-    expect(checkboxAfter).toBe(initialChecked)
+    const alice = screen.getByRole('checkbox', { name: 'Alice' })
+    expect(alice).toBeChecked()
+    await user.click(alice)
+    expect(alice).not.toBeChecked()
   })
 
-  it('participant row applies cursor-pointer to the wrapper when enabled', () => {
-    render(
+  it('editing an exact value does not toggle participant selection', async () => {
+    const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
         expense={
@@ -2067,13 +1953,37 @@ describe('ParticipantShareRow click behavior', () => {
       />,
     )
 
-    const row = document.querySelector<HTMLElement>(
-      '[data-id="lp-1/BY_AMOUNT/USD"]',
-    )
-    expect(row).toHaveClass('cursor-pointer')
+    const exact = screen.getByRole('textbox', { name: "Set Alice's amount" })
+    await user.click(exact)
+    expect(document.activeElement).toBe(exact)
+    expect(screen.getByRole('checkbox', { name: 'Alice' })).toBeChecked()
   })
 
-  it('participant row applies cursor-default to the wrapper when read-only', () => {
+  it('exposes a full-size lock action when editable', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_AMOUNT' as const,
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 2500 },
+              { ledgerParticipantId: 'lp-2', shares: 2500 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /lock alice \/ bob at/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('removes split editing controls when read-only', () => {
     render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2093,10 +2003,9 @@ describe('ParticipantShareRow click behavior', () => {
       />,
     )
 
-    const row = document.querySelector<HTMLElement>(
-      '[data-id="lp-1/BY_AMOUNT/USD"]',
-    )
-    expect(row).toHaveClass('cursor-default')
+    expect(screen.queryByRole('slider')).not.toBeInTheDocument()
+    expect(screen.queryByText('Unlock all')).not.toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'Alice' })).toBeDisabled()
   })
 })
 

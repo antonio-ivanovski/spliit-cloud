@@ -709,7 +709,30 @@
       "load": "Laden",
       "save": "Opslaan"
     },
-    "scanReceipt": "Bon scannen met AI"
+    "scanReceipt": "Bon scannen met AI",
+    "VisualSplit": {
+      "participants": "Deelnemers",
+      "unlockAll": "Alles ontgrendelen",
+      "resetEqually": "Opnieuw gelijk verdelen",
+      "remainder": "Restant",
+      "lock": "{name} op {value} vergrendelen",
+      "unlock": "{name} ontgrendelen",
+      "setValue": "{kind} van {name} instellen",
+      "percentage": "percentage",
+      "amount": "bedrag",
+      "shares": "delen",
+      "exactValue": "Exacte waarde",
+      "decreaseShares": "Het aantal delen van {name} verlagen",
+      "increaseShares": "Het aantal delen van {name} verhogen",
+      "unlockToEdit": "Ontgrendel een andere deelnemer om het restant te wijzigen.",
+      "distributionChanged": "{name} is nu {value}. De rest is opnieuw verdeeld.",
+      "selectParticipant": "{name} selecteren om de verdeling te bewerken",
+      "locked": "Vergrendeld",
+      "unavailableAmount": "Vul een uitgavenbedrag in om deze verdeling te bewerken.",
+      "allocationConflict": "De huidige vergrendelde verdelingen passen niet bij het nieuwe totaal.",
+      "scaleToTotal": "Aan nieuw totaal aanpassen",
+      "permittedRange": "Vul een waarde van {minimum} tot {maximum} in."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

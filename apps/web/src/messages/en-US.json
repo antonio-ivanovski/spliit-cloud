@@ -840,7 +840,30 @@
       "load": "Load",
       "save": "Save"
     },
-    "scanReceipt": "Scan receipt with AI"
+    "scanReceipt": "Scan receipt with AI",
+    "VisualSplit": {
+      "participants": "Participants",
+      "unlockAll": "Unlock all",
+      "resetEqually": "Reset equally",
+      "remainder": "Remainder",
+      "lock": "Lock {name} at {value}",
+      "unlock": "Unlock {name}",
+      "setValue": "Set {name}'s {kind}",
+      "percentage": "percentage",
+      "amount": "amount",
+      "shares": "shares",
+      "exactValue": "Exact value",
+      "decreaseShares": "Decrease {name}'s shares",
+      "increaseShares": "Increase {name}'s shares",
+      "unlockToEdit": "Unlock another participant to change the remainder.",
+      "distributionChanged": "{name} is now {value}. The remainder was redistributed.",
+      "selectParticipant": "Select {name} to edit their split",
+      "locked": "Locked",
+      "unavailableAmount": "Enter an expense amount to edit this split.",
+      "allocationConflict": "The current locked splits do not fit the new total.",
+      "scaleToTotal": "Scale to new total",
+      "permittedRange": "Enter a value from {minimum} to {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

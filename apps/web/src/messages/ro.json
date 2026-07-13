@@ -709,7 +709,30 @@
       "load": "Încarcă",
       "save": "Salvează"
     },
-    "scanReceipt": "Scanează bonul cu IA"
+    "scanReceipt": "Scanează bonul cu IA",
+    "VisualSplit": {
+      "participants": "Participanți",
+      "unlockAll": "Deblochează tot",
+      "resetEqually": "Resetează în mod egal",
+      "remainder": "Rest",
+      "lock": "Blochează {name} la {value}",
+      "unlock": "Deblochează {name}",
+      "setValue": "Setează {kind} pentru {name}",
+      "percentage": "procentaj",
+      "amount": "sumă",
+      "shares": "părți",
+      "exactValue": "Valoare exactă",
+      "decreaseShares": "Scade părțile lui {name}",
+      "increaseShares": "Mărește părțile lui {name}",
+      "unlockToEdit": "Deblochează alt participant pentru a modifica restul.",
+      "distributionChanged": "{name} are acum {value}. Restul a fost redistribuit.",
+      "selectParticipant": "Selectează {name} pentru a-i modifica partea",
+      "locked": "Blocat",
+      "unavailableAmount": "Introdu suma cheltuielii pentru a modifica această împărțire.",
+      "allocationConflict": "Împărțirile blocate curente nu se încadrează în noul total.",
+      "scaleToTotal": "Ajustează la noul total",
+      "permittedRange": "Introdu o valoare între {minimum} și {maximum}."
+    }
   },
   "ExpenseDocumentsInput": {
     "TooBigToast": {

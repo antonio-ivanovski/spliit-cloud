@@ -67,6 +67,13 @@ describe('exactFromInteger', () => {
   it('handles negative integers', () => {
     expect(exactFromInteger(-5)).toEqual({ numerator: -5n, denominator: 1n })
   })
+
+  it('rounds display float residue before converting to BigInt', () => {
+    expect(exactFromInteger(4029.9999999999995)).toEqual({
+      numerator: 4030n,
+      denominator: 1n,
+    })
+  })
 })
 
 describe('exactAmountToNumber', () => {

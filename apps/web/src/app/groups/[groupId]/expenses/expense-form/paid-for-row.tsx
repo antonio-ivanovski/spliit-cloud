@@ -9,6 +9,7 @@ import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
+import { percentageToBasisPoints } from './allocation-engine'
 import {
   enforceCurrencyPattern,
   enforceIntegerPattern,
@@ -136,7 +137,9 @@ export function PaidForRow({
                           groupId: '',
                         },
                         shares:
-                          splitMode === 'BY_PERCENTAGE' ? shares * 100 : shares,
+                          splitMode === 'BY_PERCENTAGE'
+                            ? percentageToBasisPoints(shares)
+                            : shares,
                         expenseId: '',
                         participantId: '',
                       }),
