@@ -763,15 +763,40 @@
       "description": "這是建議的銷帳方式",
       "noImbursements": "看起來你的群組目前不需要銷帳😁",
       "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
-      "markAsPaid": "標記為已支付"
+      "markAsPaid": "標記為已支付",
+      "markAsPaidAria": "將 {from} 向 {to} 的 {amount} 標記為已付款"
     },
     "currencyDisplay": {
-      "label": "顯示",
+      "label": "貨幣",
       "group": "群組貨幣 ({currency})",
-      "original": "消費貨幣",
+      "original": "原始",
       "title": "選擇餘額顯示方式",
       "groupDescription": "將所有支出轉換為{currency}，以單一合併檢視查看。",
       "originalDescription": "保留每筆支出原本輸入的貨幣。"
+    },
+    "direction": {
+      "toReceive": "待收款",
+      "toPay": "待付款",
+      "settledUp": "已結清",
+      "toReceiveDescription": "每個區段顯示向你付款的人。",
+      "toPayDescription": "每個區段顯示你需要向誰付款。"
+    },
+    "view": {
+      "label": "檢視",
+      "title": "選擇餘額檢視方式",
+      "simple": "簡潔",
+      "simpleDescription": "查看誰欠誰，並完成結算。",
+      "visual": "視覺化",
+      "visualDescription": "餘額明細與圖表。"
+    },
+    "simple": {
+      "title": "結算餘額",
+      "description": "查看欠款關係並將付款標記為已結算。",
+      "netBalances": "淨餘額",
+      "isOwed": "應收 {amount}",
+      "owes": "應付 {amount}",
+      "suggestedPayments": "建議付款",
+      "empty": "所有人都已結清。"
     }
   },
   "Stats": {

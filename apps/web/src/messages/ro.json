@@ -763,15 +763,40 @@
       "description": "Acestea sunt sugestiile pentru rambursări optimizate între membri.",
       "noImbursements": "Se pare că grupul tău nu are nevoie de rambursări 😁",
       "owes": "<strong>{from}</strong> datorează <strong>{to}</strong>",
-      "markAsPaid": "Bifează ca plătit"
+      "markAsPaid": "Bifează ca plătit",
+      "markAsPaidAria": "Marchează {amount} de la {from} către {to} ca plătit"
     },
     "currencyDisplay": {
-      "label": "Afișare",
+      "label": "Monedă",
       "group": "Moneda grupului ({currency})",
-      "original": "Valutele cheltuielilor",
+      "original": "Original",
       "title": "Alege cum să vizualizezi soldurile",
       "groupDescription": "Convertește toate cheltuielile în {currency} pentru o singură vizualizare.",
       "originalDescription": "Păstrează fiecare cheltuială în moneda în care a fost introdusă."
+    },
+    "direction": {
+      "toReceive": "De primit",
+      "toPay": "De plătit",
+      "settledUp": "Decontate",
+      "toReceiveDescription": "Fiecare segment arată cine îți plătește.",
+      "toPayDescription": "Fiecare segment arată cui trebuie să plătești."
+    },
+    "view": {
+      "label": "Vizualizare",
+      "title": "Alege cum să vizualizezi soldurile",
+      "simple": "Simplu",
+      "simpleDescription": "Cine cui datorează și decontează.",
+      "visual": "Vizual",
+      "visualDescription": "Defalcarea soldurilor și grafice."
+    },
+    "simple": {
+      "title": "Decontează soldurile",
+      "description": "Vezi cine ce datorează și marchează plățile ca decontate.",
+      "netBalances": "Solduri nete",
+      "isOwed": "are de primit {amount}",
+      "owes": "datorează {amount}",
+      "suggestedPayments": "Plăți sugerate",
+      "empty": "Toată lumea este la zi."
     }
   },
   "Stats": {

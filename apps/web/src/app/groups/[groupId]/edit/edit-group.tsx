@@ -69,15 +69,6 @@ export const EditGroup = () => {
       <>
         <Card className="mobile-surface mb-4">
           <CardHeader>
-            <CardTitle>{tExpenses('export')}</CardTitle>
-            <CardDescription>{tGroups('exportDescription')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ExportButton groupId={groupId} showLabel />
-          </CardContent>
-        </Card>
-        <Card className="mobile-surface mb-4">
-          <CardHeader>
             <CardTitle>{t('readOnlyTitle')}</CardTitle>
             <CardDescription>{t('readOnlyNote')}</CardDescription>
           </CardHeader>
@@ -85,6 +76,15 @@ export const EditGroup = () => {
             <Button asChild variant="secondary">
               <Link href={`/groups/${groupId}`}>{t('readOnlyBack')}</Link>
             </Button>
+          </CardContent>
+        </Card>
+        <Card className="mobile-surface mb-4">
+          <CardHeader>
+            <CardTitle>{tExpenses('export')}</CardTitle>
+            <CardDescription>{tGroups('exportDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ExportButton groupId={groupId} showLabel />
           </CardContent>
         </Card>
       </>
@@ -98,15 +98,6 @@ export const EditGroup = () => {
 
   return (
     <>
-      <Card className="mobile-surface mb-4">
-        <CardHeader>
-          <CardTitle>{tExpenses('export')}</CardTitle>
-          <CardDescription>{tGroups('exportDescription')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ExportButton groupId={groupId} showLabel />
-        </CardContent>
-      </Card>
       <GroupForm
         group={data?.group}
         currentMemberRole={currentMember?.role}
@@ -117,6 +108,16 @@ export const EditGroup = () => {
           updateMutation.mutateAsync({ groupId, groupFormValues })
         }
       />
+
+      <Card className="mobile-surface mb-4">
+        <CardHeader>
+          <CardTitle>{tExpenses('export')}</CardTitle>
+          <CardDescription>{tGroups('exportDescription')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ExportButton groupId={groupId} showLabel />
+        </CardContent>
+      </Card>
 
       {canArchive && !isArchived && features?.enableBulkCategorize && (
         <Card className="mobile-surface mb-2">

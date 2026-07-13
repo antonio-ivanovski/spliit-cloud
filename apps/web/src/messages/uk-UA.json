@@ -763,15 +763,40 @@
       "description": "Ось пропозиції для оптимізованих відшкодувань між учасниками",
       "noImbursements": "Схоже, ніхто нікому не винен 😁",
       "owes": "<strong>{from}</strong> винен <strong>{to}</strong>",
-      "markAsPaid": "Позначити як сплачене"
+      "markAsPaid": "Позначити як сплачене",
+      "markAsPaidAria": "Позначити {amount} від {from} для {to} як сплачені"
     },
     "currencyDisplay": {
-      "label": "Відображення",
+      "label": "Валюта",
       "group": "Валюта групи ({currency})",
-      "original": "Валюти витрат",
+      "original": "Оригінальна",
       "title": "Виберіть спосіб перегляду балансів",
       "groupDescription": "Конвертуйте всі витрати в {currency} для єдиного перегляду.",
       "originalDescription": "Зберігайте для кожної витрати валюту, у якій її було введено."
+    },
+    "direction": {
+      "toReceive": "До отримання",
+      "toPay": "До сплати",
+      "settledUp": "Розраховано",
+      "toReceiveDescription": "Кожен сегмент показує, хто вам платить.",
+      "toPayDescription": "Кожен сегмент показує, кому ви повинні заплатити."
+    },
+    "view": {
+      "label": "Вигляд",
+      "title": "Виберіть спосіб перегляду балансів",
+      "simple": "Простий",
+      "simpleDescription": "Хто кому винен і погашення платежів.",
+      "visual": "Візуальний",
+      "visualDescription": "Розподіл балансів і графіки."
+    },
+    "simple": {
+      "title": "Звести баланси",
+      "description": "Перегляньте, хто кому винен, і позначте платежі як погашені.",
+      "netBalances": "Чисті баланси",
+      "isOwed": "отримає {amount}",
+      "owes": "винен {amount}",
+      "suggestedPayments": "Запропоновані платежі",
+      "empty": "Усі розрахувалися."
     }
   },
   "Stats": {

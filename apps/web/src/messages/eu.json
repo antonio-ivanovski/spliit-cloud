@@ -763,15 +763,40 @@
       "description": "Hona hemen kideen arteko ditu-itzulketak optimizatzeko proposamenak.",
       "noImbursements": "Antza denez zure taldeak ez du diru-itzulketarik behar 😁",
       "owes": "<strong>{from}</strong> zor dio <strong>{to}</strong>-ri",
-      "markAsPaid": "Markatu ordainduta gisa"
+      "markAsPaid": "Markatu ordainduta gisa",
+      "markAsPaidAria": "Markatu {amount}-ko ordainketa ({from} → {to}) ordainduta gisa"
     },
     "currencyDisplay": {
-      "label": "Bistaratu",
+      "label": "Moneta",
       "group": "Taldearen moneta ({currency})",
-      "original": "Gastuen monetak",
+      "original": "Jatorrizkoa",
       "title": "Aukeratu nola ikusi saldoak",
       "groupDescription": "Bihurtu gastu guztiak {currency} monetan ikuspegi bakarra lortzeko.",
       "originalDescription": "Mantendu gastu bakoitza sartu zen monetan."
+    },
+    "direction": {
+      "toReceive": "Jasotzeko",
+      "toPay": "Ordaintzeko",
+      "settledUp": "Kitatuak",
+      "toReceiveDescription": "Segmentu bakoitzak nork ordaintzen dizun erakusten du.",
+      "toPayDescription": "Segmentu bakoitzak nori ordaindu behar diozun erakusten du."
+    },
+    "view": {
+      "label": "Bista",
+      "title": "Aukeratu nola ikusi saldoak",
+      "simple": "Soila",
+      "simpleDescription": "Nork nori zor dion eta kitatu.",
+      "visual": "Bisuala",
+      "visualDescription": "Saldoen xehetasunak eta grafikoak."
+    },
+    "simple": {
+      "title": "Kitatu saldoak",
+      "description": "Ikusi nork zer zor duen eta markatu ordainketak kitatuta gisa.",
+      "netBalances": "Saldo garbiak",
+      "isOwed": "{amount} jasotzeke du",
+      "owes": "{amount} zor du",
+      "suggestedPayments": "Iradokitako ordainketak",
+      "empty": "Denak kitatuta daude."
     }
   },
   "Stats": {

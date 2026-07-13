@@ -763,15 +763,40 @@
       "description": "Zde jsou návrhy na optimalizovaná proplacení mezi účastníky.",
       "noImbursements": "Vypadá to, že vaše skupina nepotřebuje žádné proplacení 😁",
       "owes": "<strong>{from}</strong> dluží <strong>{to}</strong>",
-      "markAsPaid": "Označit jako zaplaceno"
+      "markAsPaid": "Označit jako zaplaceno",
+      "markAsPaidAria": "Označit {amount} od {from} pro {to} jako zaplacené"
     },
     "currencyDisplay": {
-      "label": "Zobrazení",
+      "label": "Měna",
       "group": "Měna skupiny ({currency})",
-      "original": "Měny výdajů",
+      "original": "Původní",
       "title": "Zvolte, jak zobrazit zůstatky",
       "groupDescription": "Převeďte všechny výdaje na {currency} pro jednotný pohled.",
       "originalDescription": "Ponechte každý výdaj v měně, ve které byl zadán."
+    },
+    "direction": {
+      "toReceive": "K obdržení",
+      "toPay": "K zaplacení",
+      "settledUp": "Vyrovnáno",
+      "toReceiveDescription": "Každý segment zobrazuje, kdo vám platí.",
+      "toPayDescription": "Každý segment zobrazuje, komu musíte zaplatit."
+    },
+    "view": {
+      "label": "Zobrazení",
+      "title": "Vyberte způsob zobrazení zůstatků",
+      "simple": "Jednoduché",
+      "simpleDescription": "Kdo komu dluží a vyrovnat platby.",
+      "visual": "Vizuální",
+      "visualDescription": "Rozpis zůstatků a grafy."
+    },
+    "simple": {
+      "title": "Vyrovnat zůstatky",
+      "description": "Zjistěte, kdo co dluží, a označte platby jako vyrovnané.",
+      "netBalances": "Čisté zůstatky",
+      "isOwed": "má dostat {amount}",
+      "owes": "dluží {amount}",
+      "suggestedPayments": "Navrhované platby",
+      "empty": "Všichni jsou vyrovnaní."
     }
   },
   "Stats": {

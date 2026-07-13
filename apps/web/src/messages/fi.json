@@ -763,15 +763,40 @@
       "description": "Optimoitu ehdotus kuka maksaa kenellekin.",
       "noImbursements": "Näyttää siltä, että kaikki ovat sujut 😁",
       "owes": "<strong>{from}</strong> maksaa henkilölle <strong>{to}</strong>",
-      "markAsPaid": "Merkitse maksetuksi"
+      "markAsPaid": "Merkitse maksetuksi",
+      "markAsPaidAria": "Merkitse {from}–{to}, {amount}, maksetuksi"
     },
     "currencyDisplay": {
-      "label": "Näyttö",
+      "label": "Valuutta",
       "group": "Ryhmän valuutta ({currency})",
-      "original": "Kulujen valuutat",
+      "original": "Alkuperäinen",
       "title": "Valitse, miten saldot näytetään",
       "groupDescription": "Muunna kaikki kulut valuutaksi {currency} yhtenäistä näkymää varten.",
       "originalDescription": "Pidä jokainen kulu siinä valuutassa, johon se on syötetty."
+    },
+    "direction": {
+      "toReceive": "Saatavaa",
+      "toPay": "Maksettavaa",
+      "settledUp": "Tasattu",
+      "toReceiveDescription": "Jokainen segmentti näyttää, kuka maksaa sinulle.",
+      "toPayDescription": "Jokainen segmentti näyttää, kenelle sinun pitää maksaa."
+    },
+    "view": {
+      "label": "Näkymä",
+      "title": "Valitse saldojen näkymä",
+      "simple": "Yksinkertainen",
+      "simpleDescription": "Kuka on velkaa kenelle ja selvitä maksut.",
+      "visual": "Visuaalinen",
+      "visualDescription": "Saldojen erittely ja kaaviot."
+    },
+    "simple": {
+      "title": "Selvitä saldot",
+      "description": "Näe kuka on velkaa ja merkitse maksut suoritetuiksi.",
+      "netBalances": "Nettosaldot",
+      "isOwed": "saa {amount}",
+      "owes": "on velkaa {amount}",
+      "suggestedPayments": "Ehdotetut maksut",
+      "empty": "Kaikki ovat tasoissa."
     }
   },
   "Stats": {

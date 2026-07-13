@@ -763,15 +763,40 @@
       "description": "Hier sind Vorschläge für optimierte Rückzahlungen zwischen Mitgliedern.",
       "noImbursements": "Es sieht aus, als seien in der Gruppe keine Rückzahlungen nötig 😁",
       "owes": "<strong>{from}</strong> schuldet <strong>{to}</strong>",
-      "markAsPaid": "Als gezahlt markieren"
+      "markAsPaid": "Als gezahlt markieren",
+      "markAsPaidAria": "Markiere {amount} von {from} an {to} als bezahlt"
     },
     "currencyDisplay": {
-      "label": "Anzeige",
+      "label": "Währung",
       "group": "Gruppenwährung ({currency})",
-      "original": "Währungen der Ausgaben",
+      "original": "Original",
       "title": "Wähle, wie Salden angezeigt werden",
       "groupDescription": "Wandle alle Ausgaben in {currency} um, um eine kombinierte Ansicht zu erhalten.",
       "originalDescription": "Behalte jede Ausgabe in der Währung, in der sie erfasst wurde."
+    },
+    "direction": {
+      "toReceive": "Zu erhalten",
+      "toPay": "Zu zahlen",
+      "settledUp": "Beglichen",
+      "toReceiveDescription": "Jedes Segment zeigt, wer an dich zahlt.",
+      "toPayDescription": "Jedes Segment zeigt, an wen du zahlen musst."
+    },
+    "view": {
+      "label": "Ansicht",
+      "title": "Wähle, wie Salden angezeigt werden",
+      "simple": "Einfach",
+      "simpleDescription": "Wer wem etwas schuldet und begleichen.",
+      "visual": "Visuell",
+      "visualDescription": "Saldoaufteilung und Diagramme."
+    },
+    "simple": {
+      "title": "Salden begleichen",
+      "description": "Sieh, wer was schuldet, und markiere Zahlungen als beglichen.",
+      "netBalances": "Netto-Salden",
+      "isOwed": "erhält {amount}",
+      "owes": "schuldet {amount}",
+      "suggestedPayments": "Vorgeschlagene Zahlungen",
+      "empty": "Alle sind ausgeglichen."
     }
   },
   "Stats": {

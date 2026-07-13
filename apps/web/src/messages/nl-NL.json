@@ -763,15 +763,40 @@
       "description": "Dit zijn de voorgestelde terugbetalingen tussen deelnemers.",
       "noImbursements": "Lijkt erop dat je groep geen terugbetalingen nodig heeft 😁",
       "owes": "<strong>{from}</strong> betaalt aan <strong>{to}</strong>",
-      "markAsPaid": "Markeer als betaald"
+      "markAsPaid": "Markeer als betaald",
+      "markAsPaidAria": "Markeer {amount} van {from} aan {to} als betaald"
     },
     "currencyDisplay": {
-      "label": "Weergave",
+      "label": "Valuta",
       "group": "Groepsvaluta ({currency})",
-      "original": "Valuta's van uitgaven",
+      "original": "Origineel",
       "title": "Kies hoe saldi worden weergegeven",
       "groupDescription": "Converteer alle uitgaven naar {currency} voor één gecombineerd overzicht.",
       "originalDescription": "Houd elke uitgave in de valuta waarin deze is ingevoerd."
+    },
+    "direction": {
+      "toReceive": "Te ontvangen",
+      "toPay": "Te betalen",
+      "settledUp": "Vereffend",
+      "toReceiveDescription": "Elk segment laat zien wie jou betaalt.",
+      "toPayDescription": "Elk segment laat zien aan wie je moet betalen."
+    },
+    "view": {
+      "label": "Weergave",
+      "title": "Kies hoe je saldi wilt bekijken",
+      "simple": "Eenvoudig",
+      "simpleDescription": "Wie wat aan wie verschuldigd is en afrekenen.",
+      "visual": "Visueel",
+      "visualDescription": "Saldo-overzicht en grafieken."
+    },
+    "simple": {
+      "title": "Saldi vereffenen",
+      "description": "Bekijk wie wat verschuldigd is en markeer betalingen als vereffend.",
+      "netBalances": "Nettosaldi",
+      "isOwed": "krijgt {amount}",
+      "owes": "is {amount} verschuldigd",
+      "suggestedPayments": "Voorgestelde betalingen",
+      "empty": "Iedereen staat quitte."
     }
   },
   "Stats": {

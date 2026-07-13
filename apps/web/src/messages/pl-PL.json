@@ -763,15 +763,40 @@
       "description": "Oto sugestie dotyczące optymalizacji zwrotów między uczestnikami.",
       "noImbursements": "Wygląda na to, że w twojej grupie nie ma potrzeby żadnych zwrotów 😁",
       "owes": "<strong>{from}</strong> jest winny dla <strong>{to}</strong>",
-      "markAsPaid": "Zaznacz jako opłacone"
+      "markAsPaid": "Zaznacz jako opłacone",
+      "markAsPaidAria": "Oznacz {amount} od {from} dla {to} jako zapłacone"
     },
     "currencyDisplay": {
-      "label": "Wyświetlanie",
+      "label": "Waluta",
       "group": "Waluta grupy ({currency})",
-      "original": "Waluty wydatków",
+      "original": "Oryginalna",
       "title": "Wybierz sposób wyświetlania sald",
       "groupDescription": "Przelicz wszystkie wydatki na {currency}, aby uzyskać jeden zbiorczy widok.",
       "originalDescription": "Zachowaj oryginalną walutę każdego wydatku."
+    },
+    "direction": {
+      "toReceive": "Do otrzymania",
+      "toPay": "Do zapłaty",
+      "settledUp": "Rozliczono",
+      "toReceiveDescription": "Każdy segment pokazuje, kto Ci płaci.",
+      "toPayDescription": "Każdy segment pokazuje, komu musisz zapłacić."
+    },
+    "view": {
+      "label": "Widok",
+      "title": "Wybierz sposób wyświetlania sald",
+      "simple": "Prosty",
+      "simpleDescription": "Kto komu ile winien i rozlicz płatności.",
+      "visual": "Wizualny",
+      "visualDescription": "Podział sald i wykresy."
+    },
+    "simple": {
+      "title": "Rozlicz salda",
+      "description": "Sprawdź, kto ile winien, i oznacz płatności jako rozliczone.",
+      "netBalances": "Salda netto",
+      "isOwed": "otrzyma {amount}",
+      "owes": "jest winien {amount}",
+      "suggestedPayments": "Sugerowane płatności",
+      "empty": "Wszyscy są rozliczeni."
     }
   },
   "Stats": {

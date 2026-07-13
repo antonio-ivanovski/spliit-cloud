@@ -1,6 +1,4 @@
 import { Skeleton } from '@/components/ui/skeleton'
-import { Fragment } from 'react'
-import { match } from 'ts-pattern'
 
 export function ReimbursementsLoading({
   participantCount = 3,
@@ -29,37 +27,35 @@ export function BalancesLoading({
 }: {
   participantCount?: number
 }) {
-  const barWidth = (index: number) =>
-    match(index % 3)
-      .with(0, () => 'w-1/3')
-      .with(1, () => 'w-2/3')
-      .otherwise(() => 'w-full')
+  const rows = Math.max(2, Math.min(participantCount, 4))
 
   return (
-    <div className="grid grid-cols-2 py-1 gap-y-2">
-      {Array(participantCount)
-        .fill(undefined)
-        .map((_, index) =>
-          index % 2 === 0 ? (
-            <Fragment key={index}>
-              <div className="flex items-center justify-end pr-2">
-                <Skeleton className="h-3 w-16" />
-              </div>
-              <div className="self-start">
-                <Skeleton className={`h-7 ${barWidth(index)} rounded-l-none`} />
-              </div>
-            </Fragment>
-          ) : (
-            <Fragment key={index}>
-              <div className="flex items-center justify-end">
-                <Skeleton className={`h-7 ${barWidth(index)} rounded-r-none`} />
-              </div>
-              <div className="flex items-center pl-2">
-                <Skeleton className="h-3 w-16" />
-              </div>
-            </Fragment>
-          ),
-        )}
+    <div className="space-y-7 py-1">
+      {[0, 1].map((section) => (
+        <section key={section} className="space-y-4">
+          <Skeleton className="h-3 w-20" />
+          <div className="space-y-5">
+            {Array(section === 0 ? Math.ceil(rows / 2) : Math.floor(rows / 2))
+              .fill(undefined)
+              .map((_, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="size-7 rounded-full" />
+                      <Skeleton className="h-3 w-24" />
+                    </div>
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                  <Skeleton className="h-2.5 w-full rounded-full" />
+                  <div className="flex gap-4">
+                    <Skeleton className="h-3 w-32" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                </div>
+              ))}
+          </div>
+        </section>
+      ))}
     </div>
   )
 }

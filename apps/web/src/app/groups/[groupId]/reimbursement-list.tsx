@@ -81,7 +81,11 @@ export function ReimbursementList({
                   />
                 )}
               </div>
-              <Button variant="link" asChild className="-mx-4 -my-3 shrink-0">
+              <Button
+                variant="link"
+                asChild
+                className="-mx-4 -my-3 min-h-11 shrink-0"
+              >
                 <Link
                   href="/groups/$groupId/expenses/create"
                   params={{ groupId }}
@@ -94,6 +98,15 @@ export function ReimbursementList({
                       ? { originalCurrency: reimbursementCurrencyCode }
                       : {}),
                   }}
+                  aria-label={t('markAsPaidAria', {
+                    amount: formatCurrency(
+                      currency,
+                      reimbursement.amount,
+                      locale,
+                    ),
+                    from: fromName,
+                    to: toName,
+                  })}
                 >
                   {t('markAsPaid')}
                 </Link>

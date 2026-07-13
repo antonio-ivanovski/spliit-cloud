@@ -763,15 +763,40 @@
       "description": "Suggerència per optimitzar els reemborsaments entre participants.",
       "noImbursements": "Sembla que el teu grup no necessita cap reemborsament 😁",
       "owes": "<strong>{from}</strong> deu a <strong>{to}</strong>",
-      "markAsPaid": "Marcar com a pagat"
+      "markAsPaid": "Marcar com a pagat",
+      "markAsPaidAria": "Marca {amount} de {from} a {to} com a pagat"
     },
     "currencyDisplay": {
-      "label": "Visualització",
+      "label": "Moneda",
       "group": "Moneda del grup ({currency})",
-      "original": "Monedes de la despesa",
+      "original": "Original",
       "title": "Tria com veure els saldos",
       "groupDescription": "Converteix totes les despeses a {currency} per a una vista combinada.",
       "originalDescription": "Mantén cada despesa en la moneda en què es va introduir."
+    },
+    "direction": {
+      "toReceive": "Per rebre",
+      "toPay": "Per pagar",
+      "settledUp": "Saldats",
+      "toReceiveDescription": "Cada segment mostra qui et paga.",
+      "toPayDescription": "Cada segment mostra a qui has de pagar."
+    },
+    "view": {
+      "label": "Vista",
+      "title": "Tria com veure els saldos",
+      "simple": "Simple",
+      "simpleDescription": "Qui deu a qui i saldar comptes.",
+      "visual": "Visual",
+      "visualDescription": "Desglossament dels saldos i gràfics."
+    },
+    "simple": {
+      "title": "Saldar comptes",
+      "description": "Consulta qui deu què i marca els pagaments com a liquidats.",
+      "netBalances": "Saldos nets",
+      "isOwed": "ha de rebre {amount}",
+      "owes": "deu {amount}",
+      "suggestedPayments": "Pagaments suggerits",
+      "empty": "Tots els comptes estan saldats."
     }
   },
   "Stats": {

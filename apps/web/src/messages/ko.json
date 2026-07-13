@@ -648,16 +648,41 @@
       "description": "참가자 간에 가장 좋은 정산 방안을 알려드려요.",
       "noImbursements": "그룹에선 따로 정산할 게 없네요 😁",
       "markAsPaid": "지불 완료로 표시하기",
-      "owes": "<strong>{from}</strong>가 <strong>{to}</strong>에게 돈을 내야 해요"
+      "owes": "<strong>{from}</strong>가 <strong>{to}</strong>에게 돈을 내야 해요",
+      "markAsPaidAria": "{from}에서 {to}로 {amount}을(를) 결제 완료로 표시"
     },
     "description": "각 참가자가 지불했거나 대신 지불받은 금액입니다.",
     "currencyDisplay": {
-      "label": "표시",
+      "label": "통화",
       "group": "그룹 통화 ({currency})",
-      "original": "지출 통화",
+      "original": "원본",
       "title": "잔액 보기 방식 선택",
       "groupDescription": "모든 지출을 {currency}로 변환하여 하나의 통합 보기로 표시합니다.",
       "originalDescription": "각 지출을 입력된 통화 그대로 유지합니다."
+    },
+    "direction": {
+      "toReceive": "받을 금액",
+      "toPay": "지불할 금액",
+      "settledUp": "정산 완료",
+      "toReceiveDescription": "각 세그먼트에는 나에게 돈을 지불하는 사람이 표시됩니다.",
+      "toPayDescription": "각 세그먼트에는 내가 돈을 지불해야 하는 사람이 표시됩니다."
+    },
+    "view": {
+      "label": "보기",
+      "title": "잔액 표시 방법 선택",
+      "simple": "간단히",
+      "simpleDescription": "누가 누구에게 얼마를 지불할지 확인하고 정산합니다.",
+      "visual": "시각적",
+      "visualDescription": "잔액 분석 및 차트."
+    },
+    "simple": {
+      "title": "잔액 정산",
+      "description": "누가 무엇을 빚졌는지 확인하고 결제를 정산 완료로 표시하세요.",
+      "netBalances": "순 잔액",
+      "isOwed": "{amount}을(를) 받을 금액",
+      "owes": "{amount}을(를) 지불할 금액",
+      "suggestedPayments": "추천 결제",
+      "empty": "모두 정산되었습니다."
     }
   },
   "Stats": {

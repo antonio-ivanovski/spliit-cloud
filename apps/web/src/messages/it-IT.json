@@ -763,15 +763,40 @@
       "description": "Ecco alcuni suggerimenti per ottimizzare i rimborsi tra i partecipanti.",
       "noImbursements": "Sembra che il tuo gruppo non abbia bisogno di alcun rimborso 😁",
       "owes": "<strong>{from}</strong> deve <strong>{to}</strong>",
-      "markAsPaid": "Segna come pagato"
+      "markAsPaid": "Segna come pagato",
+      "markAsPaidAria": "Segna come pagato {amount} da {from} a {to}"
     },
     "currencyDisplay": {
-      "label": "Visualizzazione",
+      "label": "Valuta",
       "group": "Valuta del gruppo ({currency})",
-      "original": "Valute delle spese",
+      "original": "Originale",
       "title": "Scegli come visualizzare i saldi",
       "groupDescription": "Converti tutte le spese in {currency} per una vista combinata.",
       "originalDescription": "Mantieni ogni spesa nella valuta in cui è stata inserita."
+    },
+    "direction": {
+      "toReceive": "Da ricevere",
+      "toPay": "Da pagare",
+      "settledUp": "Saldati",
+      "toReceiveDescription": "Ogni segmento mostra chi ti paga.",
+      "toPayDescription": "Ogni segmento mostra chi devi pagare."
+    },
+    "view": {
+      "label": "Visualizzazione",
+      "title": "Scegli come visualizzare i saldi",
+      "simple": "Semplice",
+      "simpleDescription": "Chi deve a chi e salda.",
+      "visual": "Visuale",
+      "visualDescription": "Dettaglio dei saldi e grafici."
+    },
+    "simple": {
+      "title": "Salda i conti",
+      "description": "Scopri chi deve cosa e segna i pagamenti come saldati.",
+      "netBalances": "Saldi netti",
+      "isOwed": "deve ricevere {amount}",
+      "owes": "deve {amount}",
+      "suggestedPayments": "Pagamenti suggeriti",
+      "empty": "Tutti i conti sono saldati."
     }
   },
   "Stats": {

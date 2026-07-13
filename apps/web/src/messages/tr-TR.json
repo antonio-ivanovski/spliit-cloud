@@ -763,15 +763,40 @@
       "description": "Katılımcılar arasındaki en uygun geri ödeme önerileri aşağıdadır.",
       "noImbursements": "Görünüşe göre grubunuzun hiçbir geri ödemeye ihtiyacı yok 😁",
       "owes": "<strong>{from}</strong>, <strong>{to}</strong>'ya borçlu",
-      "markAsPaid": "Ödendi olarak işaretle"
+      "markAsPaid": "Ödendi olarak işaretle",
+      "markAsPaidAria": "{from} tarafından {to} için {amount} ödemesini yapıldı olarak işaretle"
     },
     "currencyDisplay": {
-      "label": "Görünüm",
+      "label": "Para birimi",
       "group": "Grup para birimi ({currency})",
-      "original": "Harcama para birimleri",
+      "original": "Orijinal",
       "title": "Bakiye görüntüleme şeklini seçin",
       "groupDescription": "Tek bir birleşik görünüm için tüm harcamaları {currency} para birimine çevirin.",
       "originalDescription": "Her harcamayı girildiği para biriminde tutun."
+    },
+    "direction": {
+      "toReceive": "Alınacak",
+      "toPay": "Ödenecek",
+      "settledUp": "Borç yok",
+      "toReceiveDescription": "Her segment, size ödeme yapan kişiyi gösterir.",
+      "toPayDescription": "Her segment, ödeme yapmanız gereken kişiyi gösterir."
+    },
+    "view": {
+      "label": "Görünüm",
+      "title": "Bakiyeleri nasıl görmek istediğinizi seçin",
+      "simple": "Basit",
+      "simpleDescription": "Kimin kime borcu var ve ödemeyi tamamla.",
+      "visual": "Görsel",
+      "visualDescription": "Bakiye ayrıntıları ve grafikler."
+    },
+    "simple": {
+      "title": "Bakiyeleri kapat",
+      "description": "Kimin ne borcu olduğunu görün ve ödemeleri tamamlandı olarak işaretleyin.",
+      "netBalances": "Net bakiyeler",
+      "isOwed": "{amount} alacağı var",
+      "owes": "{amount} borcu var",
+      "suggestedPayments": "Önerilen ödemeler",
+      "empty": "Herkesin hesabı kapandı."
     }
   },
   "Stats": {

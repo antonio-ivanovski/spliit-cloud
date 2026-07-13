@@ -894,15 +894,40 @@
       "description": "Here are suggestions for optimized reimbursements between participants.",
       "noImbursements": "It looks like your group doesn’t need any reimbursement 😁",
       "owes": "<strong>{from}</strong> owes <strong>{to}</strong>",
-      "markAsPaid": "Mark as paid"
+      "markAsPaid": "Mark as paid",
+      "markAsPaidAria": "Mark {amount} from {from} to {to} as paid"
     },
     "currencyDisplay": {
-      "label": "Display",
+      "label": "Currency",
       "group": "Group currency ({currency})",
-      "original": "Expense currencies",
+      "original": "Original",
       "title": "Choose how to view balances",
       "groupDescription": "Convert all expenses to {currency} for one combined view.",
       "originalDescription": "Keep each expense in the currency it was entered in."
+    },
+    "view": {
+      "label": "View",
+      "title": "Choose how to view balances",
+      "simple": "Simple",
+      "simpleDescription": "Who owes whom and settle.",
+      "visual": "Visual",
+      "visualDescription": "Balance breakdown and charts."
+    },
+    "simple": {
+      "title": "Settle balances",
+      "description": "See who owes what and mark payments as settled.",
+      "netBalances": "Net balances",
+      "isOwed": "is owed {amount}",
+      "owes": "owes {amount}",
+      "suggestedPayments": "Suggested payments",
+      "empty": "Everyone is settled up."
+    },
+    "direction": {
+      "toReceive": "To receive",
+      "toPay": "To pay",
+      "settledUp": "Settled up",
+      "toReceiveDescription": "Each segment shows who is paying you.",
+      "toPayDescription": "Each segment shows who you need to pay."
     }
   },
   "Stats": {

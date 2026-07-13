@@ -763,15 +763,40 @@
       "description": "参加者間の最適化された払い戻しの提案です。",
       "noImbursements": "グループに払い戻しが必要ないようです 😁",
       "owes": "<strong>{from}</strong>は<strong>{to}</strong>に借りがあります",
-      "markAsPaid": "支払い済みとしてマーク"
+      "markAsPaid": "支払い済みとしてマーク",
+      "markAsPaidAria": "{from}から{to}への{amount}を支払い済みとしてマーク"
     },
     "currencyDisplay": {
-      "label": "表示",
+      "label": "通貨",
       "group": "グループ通貨 ({currency})",
-      "original": "支出通貨",
+      "original": "元の通貨",
       "title": "残高の表示方式を選択",
       "groupDescription": "すべての支出を{currency}に変換して1つの統合ビューで表示します。",
       "originalDescription": "各支出は入力された通貨のまま表示します。"
+    },
+    "direction": {
+      "toReceive": "受け取り",
+      "toPay": "支払い",
+      "settledUp": "精算済み",
+      "toReceiveDescription": "各セグメントには、あなたに支払う人が表示されます。",
+      "toPayDescription": "各セグメントには、あなたが支払う相手が表示されます。"
+    },
+    "view": {
+      "label": "表示",
+      "title": "残高の表示方法を選択",
+      "simple": "シンプル",
+      "simpleDescription": "誰が誰にいくら支払うかを確認して精算します。",
+      "visual": "ビジュアル",
+      "visualDescription": "残高の内訳とグラフ。"
+    },
+    "simple": {
+      "title": "残高を精算",
+      "description": "誰がいくら支払うかを確認し、支払いを精算済みにします。",
+      "netBalances": "純残高",
+      "isOwed": "{amount}を受け取る",
+      "owes": "{amount}を支払う",
+      "suggestedPayments": "推奨される支払い",
+      "empty": "全員の精算が完了しています。"
     }
   },
   "Stats": {

@@ -763,15 +763,40 @@
       "description": "Aqui estão sugestões para reembolsos otimizados entre os participantes.",
       "noImbursements": "Parece que seu grupo não precisa de nenhum reembolso 😁",
       "owes": "<strong>{from}</strong> deve <strong>{to}</strong>",
-      "markAsPaid": "Marcar como pago"
+      "markAsPaid": "Marcar como pago",
+      "markAsPaidAria": "Marcar {amount} de {from} para {to} como pago"
     },
     "currencyDisplay": {
-      "label": "Exibição",
+      "label": "Moeda",
       "group": "Moeda do grupo ({currency})",
-      "original": "Moedas das despesas",
+      "original": "Original",
       "title": "Escolha como ver os saldos",
       "groupDescription": "Converta todas as despesas para {currency} para uma visão combinada.",
       "originalDescription": "Mantenha cada despesa na moeda em que foi inserida."
+    },
+    "direction": {
+      "toReceive": "A receber",
+      "toPay": "A pagar",
+      "settledUp": "Quitados",
+      "toReceiveDescription": "Cada segmento mostra quem paga para você.",
+      "toPayDescription": "Cada segmento mostra quem você precisa pagar."
+    },
+    "view": {
+      "label": "Visualização",
+      "title": "Escolha como ver os saldos",
+      "simple": "Simples",
+      "simpleDescription": "Quem deve a quem e quitar.",
+      "visual": "Visual",
+      "visualDescription": "Detalhamento dos saldos e gráficos."
+    },
+    "simple": {
+      "title": "Quitar saldos",
+      "description": "Veja quem deve o quê e marque os pagamentos como quitados.",
+      "netBalances": "Saldos líquidos",
+      "isOwed": "tem a receber {amount}",
+      "owes": "deve {amount}",
+      "suggestedPayments": "Pagamentos sugeridos",
+      "empty": "Todos estão quitados."
     }
   },
   "Stats": {

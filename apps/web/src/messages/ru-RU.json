@@ -763,15 +763,40 @@
       "description": "Вот список задолженностей между участниками.",
       "noImbursements": "Похоже, все в расчете 😁",
       "owes": "<strong>{from}</strong> должен <strong>{to}</strong>",
-      "markAsPaid": "Пометить оплаченным"
+      "markAsPaid": "Пометить оплаченным",
+      "markAsPaidAria": "Отметить {amount} от {from} к {to} как оплаченные"
     },
     "currencyDisplay": {
-      "label": "Отображение",
+      "label": "Валюта",
       "group": "Валюта группы ({currency})",
-      "original": "Валюты расходов",
+      "original": "Исходная",
       "title": "Выберите способ отображения балансов",
       "groupDescription": "Конвертируйте все расходы в {currency} для единого отображения.",
       "originalDescription": "Сохраняйте для каждого расхода валюту, в которой он был введён."
+    },
+    "direction": {
+      "toReceive": "К получению",
+      "toPay": "К оплате",
+      "settledUp": "Рассчитались",
+      "toReceiveDescription": "Каждый сегмент показывает, кто вам платит.",
+      "toPayDescription": "Каждый сегмент показывает, кому вы должны заплатить."
+    },
+    "view": {
+      "label": "Вид",
+      "title": "Выберите способ просмотра балансов",
+      "simple": "Простой",
+      "simpleDescription": "Кто кому должен и погашение платежей.",
+      "visual": "Визуальный",
+      "visualDescription": "Разбор балансов и графики."
+    },
+    "simple": {
+      "title": "Свести балансы",
+      "description": "Узнайте, кто кому должен, и отметьте платежи как погашенные.",
+      "netBalances": "Чистые балансы",
+      "isOwed": "получит {amount}",
+      "owes": "должен {amount}",
+      "suggestedPayments": "Предлагаемые платежи",
+      "empty": "Все рассчитались."
     }
   },
   "Stats": {

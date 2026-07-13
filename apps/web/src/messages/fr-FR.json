@@ -763,15 +763,40 @@
       "description": "Voici des suggestions pour des remboursements optimisés entre les participants.",
       "noImbursements": "Les dépenses effectuées ne nécessitent pas d'équilibrage 😁",
       "owes": "<strong>{from}</strong> doit à <strong>{to}</strong>",
-      "markAsPaid": "Marquer comme payé"
+      "markAsPaid": "Marquer comme payé",
+      "markAsPaidAria": "Marquer comme payé : {amount} de {from} à {to}"
     },
     "currencyDisplay": {
-      "label": "Affichage",
+      "label": "Devise",
       "group": "Devise du groupe ({currency})",
-      "original": "Devises des dépenses",
+      "original": "Original",
       "title": "Choisissez comment afficher les soldes",
       "groupDescription": "Convertissez toutes les dépenses en {currency} pour une vue combinée.",
       "originalDescription": "Conservez chaque dépense dans la devise dans laquelle elle a été saisie."
+    },
+    "direction": {
+      "toReceive": "À recevoir",
+      "toPay": "À payer",
+      "settledUp": "Réglés",
+      "toReceiveDescription": "Chaque segment indique qui vous paie.",
+      "toPayDescription": "Chaque segment indique qui vous devez payer."
+    },
+    "view": {
+      "label": "Affichage",
+      "title": "Choisissez comment afficher les soldes",
+      "simple": "Simple",
+      "simpleDescription": "Qui doit quoi à qui et régler.",
+      "visual": "Visuel",
+      "visualDescription": "Détail des soldes et graphiques."
+    },
+    "simple": {
+      "title": "Régler les soldes",
+      "description": "Voyez qui doit quoi et marquez les paiements comme réglés.",
+      "netBalances": "Soldes nets",
+      "isOwed": "doit recevoir {amount}",
+      "owes": "doit {amount}",
+      "suggestedPayments": "Paiements suggérés",
+      "empty": "Tous les comptes sont réglés."
     }
   },
   "Stats": {

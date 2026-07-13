@@ -763,15 +763,40 @@
       "description": "הנה הצעות להחזרים אופטימליים בין משתתפים.",
       "noImbursements": "נראה שהקבוצה שלך לא צריכה החזרים 😁",
       "owes": "<strong>{from}</strong> חייב ל<strong>{to}</strong>",
-      "markAsPaid": "סמן כשולם"
+      "markAsPaid": "סמן כשולם",
+      "markAsPaidAria": "סמן {amount} מ־{from} ל־{to} כשולם"
     },
     "currencyDisplay": {
-      "label": "תצוגה",
+      "label": "מטבע",
       "group": "מטבע הקבוצה ({currency})",
-      "original": "מטבעות ההוצאות",
+      "original": "מקורי",
       "title": "בחר כיצד להציג את המאזנים",
       "groupDescription": "המר את כל ההוצאות ל-{currency} לתצוגה מאוחדת אחת.",
       "originalDescription": "השאר כל הוצאה במטבע שבו הוזנה."
+    },
+    "direction": {
+      "toReceive": "לקבל",
+      "toPay": "לשלם",
+      "settledUp": "היתרות הוסדרו",
+      "toReceiveDescription": "כל קטע מראה מי משלם לך.",
+      "toPayDescription": "כל קטע מראה למי עליך לשלם."
+    },
+    "view": {
+      "label": "תצוגה",
+      "title": "בחרו כיצד להציג יתרות",
+      "simple": "פשוט",
+      "simpleDescription": "ראו מי חייב למי והסדירו תשלומים.",
+      "visual": "חזותי",
+      "visualDescription": "פירוט יתרות ותרשימים."
+    },
+    "simple": {
+      "title": "הסדרת יתרות",
+      "description": "ראו מי חייב מה וסמנו תשלומים כמוסדרים.",
+      "netBalances": "יתרות נטו",
+      "isOwed": "זכאי ל־{amount}",
+      "owes": "חייב {amount}",
+      "suggestedPayments": "תשלומים מוצעים",
+      "empty": "כולם התחשבנו."
     }
   },
   "Stats": {
