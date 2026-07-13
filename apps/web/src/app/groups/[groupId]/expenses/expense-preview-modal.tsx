@@ -29,6 +29,7 @@ import {
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
+import type { SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { FileInput, Pencil } from 'lucide-react'
@@ -149,16 +150,85 @@ export function ExpensePreviewModal({
         isReimbursement: expense?.isReimbursement ?? false,
       })
     : {}
-  const splitRows = (shares: Record<string, number>) =>
-    Object.entries(shares).map(([id, amount]) => {
+  const splitModeLabel = (
+    side: 'paidBy' | 'paidFor',
+    mode: SplitMode,
+  ): string => {
+    if (side === 'paidBy') {
+      switch (mode) {
+        case 'EVENLY':
+          return tForm('paidByOptionEvenly')
+        case 'BY_SHARES':
+          return tForm('paidByOptionByShares')
+        case 'BY_PERCENTAGE':
+          return tForm('paidByOptionByPercentage')
+        case 'BY_AMOUNT':
+          return tForm('paidByOptionByAmount')
+        case 'ITEMIZED':
+          return tForm('paidForOptionItemized')
+      }
+    }
+
+    switch (mode) {
+      case 'EVENLY':
+        return tForm('paidForOptionEvenly')
+      case 'BY_SHARES':
+        return tForm('paidForOptionByShares')
+      case 'BY_PERCENTAGE':
+        return tForm('paidForOptionByPercentage')
+      case 'BY_AMOUNT':
+        return tForm('paidForOptionByAmount')
+      case 'ITEMIZED':
+        return tForm('paidForOptionItemized')
+    }
+  }
+
+  const splitRows = (
+    shares: Record<string, number>,
+    sourceRows: Array<{ ledgerParticipantId: string; shares: number }>,
+    mode: SplitMode,
+  ) => {
+    const totalShares = sourceRows.reduce((sum, row) => sum + row.shares, 0)
+    const percentageFormatter = new Intl.NumberFormat(locale, {
+      style: 'percent',
+      maximumFractionDigits: 2,
+    })
+
+    const valueFor = (id: string): string | undefined => {
+      const source = sourceRows.find((row) => row.ledgerParticipantId === id)
+      if (!source) return undefined
+
+      switch (mode) {
+        case 'EVENLY':
+          return `1/${sourceRows.length}`
+        case 'BY_SHARES':
+          return totalShares > 0 ? `${source.shares}/${totalShares}` : undefined
+        case 'BY_PERCENTAGE':
+          return percentageFormatter.format(source.shares / 10000)
+        case 'BY_AMOUNT':
+        case 'ITEMIZED':
+          return undefined
+      }
+    }
+
+    return Object.entries(shares).map(([id, amount]) => {
       const participant = participants.find((item) => item.id === id)
       return {
         id,
         name: participant?.name ?? id,
         amount,
+        value: valueFor(id),
         participant,
       }
     })
+  }
+
+  const paidByRows = expense
+    ? splitRows(paidByShares, expense.paidByList, expense.paidBySplitMode)
+    : []
+  const paidForRows = expense
+    ? splitRows(paidForShares, expense.paidFor, expense.splitMode)
+    : []
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (onOpenChange) {
@@ -172,11 +242,16 @@ export function ExpensePreviewModal({
     if (!nextOpen) onClose?.()
   }
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (onEdit) {
       onEdit()
       return
     }
+    await navigate({
+      to: '/groups/$groupId/expenses',
+      params: { groupId },
+      replace: true,
+    })
     navigate({
       to: '/groups/$groupId/expenses/$expenseId/edit',
       params: { groupId, expenseId },
@@ -288,13 +363,15 @@ export function ExpensePreviewModal({
               <div className="space-y-4 border-t pt-4">
                 <ExpenseSplitBars
                   label={t('paidBy')}
-                  rows={splitRows(paidByShares)}
+                  modeLabel={splitModeLabel('paidBy', expense.paidBySplitMode)}
+                  rows={paidByRows}
                   currency={currency}
                   locale={locale}
                 />
                 <ExpenseSplitBars
                   label={t('paidFor')}
-                  rows={splitRows(paidForShares)}
+                  modeLabel={splitModeLabel('paidFor', expense.splitMode)}
+                  rows={paidForRows}
                   currency={currency}
                   locale={locale}
                 />

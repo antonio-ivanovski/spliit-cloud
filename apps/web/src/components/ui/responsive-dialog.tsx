@@ -156,8 +156,9 @@ ResponsiveDialogDescription.displayName = 'ResponsiveDialogDescription'
 
 /**
  * Body slot between `ResponsiveDialogHeader` and `ResponsiveDialogFooter`.
- * Adds drawer-style horizontal padding on mobile; desktop relies on the
- * `DialogContent`'s built-in padding so no extra wrapper is needed.
+ * Adds drawer-style horizontal padding and owns mobile scrolling; desktop
+ * relies on the `DialogContent`'s built-in padding so no extra wrapper is
+ * needed. Keeping the scroll owner here prevents nested drawer scrolling.
  */
 const ResponsiveDialogBody = ({
   className,
@@ -166,7 +167,10 @@ const ResponsiveDialogBody = ({
   const isDesktop = React.useContext(ResponsiveDialogContext)
   return (
     <div
-      className={cn(isDesktop ? undefined : 'px-4 pb-4', className)}
+      className={cn(
+        isDesktop ? undefined : 'min-h-0 flex-1 overflow-y-auto px-4 pb-4',
+        className,
+      )}
       {...props}
     />
   )

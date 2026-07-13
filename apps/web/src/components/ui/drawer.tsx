@@ -1,5 +1,3 @@
-
-
 import * as React from 'react'
 import { Drawer as DrawerPrimitive } from 'vaul'
 
@@ -43,7 +41,7 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[calc(100dvh-3rem)] h-auto flex-col overflow-y-auto rounded-t-[10px] border bg-background pb-[env(safe-area-inset-bottom)]',
+        'fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[calc(100dvh-3rem)] h-auto flex-col overflow-hidden rounded-t-[10px] border bg-background pb-[env(safe-area-inset-bottom)]',
         className,
       )}
       {...props}

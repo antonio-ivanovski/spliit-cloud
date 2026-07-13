@@ -97,12 +97,19 @@ describe('ResponsiveDialog', () => {
 
     // vaul also exposes role="dialog" on the drawer container so
     // accessibility tooling treats it the same as a modal.
-    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toBeInTheDocument()
+    expect(dialog).toHaveClass('overflow-hidden')
     // Title remains an h2 on mobile.
     expect(
       screen.getByRole('heading', { name: /confirm action/i }),
     ).toBeInTheDocument()
     expect(screen.getByText('Body content')).toBeInTheDocument()
+    expect(screen.getByText('Body content').parentElement).toHaveClass(
+      'min-h-0',
+      'flex-1',
+      'overflow-y-auto',
+    )
   })
 
   it('keeps title and description accessible in both modes', () => {
