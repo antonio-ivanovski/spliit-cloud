@@ -1,7 +1,7 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
-import { participantSegmentColor } from '@/lib/participant-colors'
 import type { AccountIdentity } from '@/lib/account'
 import type { Currency } from '@/lib/currency'
+import { participantSegmentColor } from '@/lib/participant-colors'
 import { cn, formatCurrency } from '@/lib/utils'
 import type { ReactNode } from 'react'
 

@@ -1,6 +1,5 @@
 import Link from '@/components/link'
 import { ParticipantAvatar } from '@/components/participant-avatar'
-import { participantSegmentColor } from '@/lib/participant-colors'
 import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +12,7 @@ import {
 import { useLocale } from '@/i18n/react'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
+import { participantSegmentColor } from '@/lib/participant-colors'
 import { formatCurrency } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
 import { BalancesLoading } from './balances-loading'

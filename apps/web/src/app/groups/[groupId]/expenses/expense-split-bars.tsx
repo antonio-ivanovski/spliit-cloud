@@ -1,8 +1,8 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Badge } from '@/components/ui/badge'
-import { PARTICIPANT_SEGMENT_COLORS } from '@/lib/participant-colors'
 import type { AccountIdentity } from '@/lib/account'
 import type { Currency } from '@/lib/currency'
+import { PARTICIPANT_SEGMENT_COLORS } from '@/lib/participant-colors'
 import { formatCurrency } from '@/lib/utils'
 
 type SplitRow = {

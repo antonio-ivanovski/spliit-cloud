@@ -1,5 +1,5 @@
-import { participantSegmentColor } from '@/lib/participant-colors'
 import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
+import { participantSegmentColor } from '@/lib/participant-colors'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
