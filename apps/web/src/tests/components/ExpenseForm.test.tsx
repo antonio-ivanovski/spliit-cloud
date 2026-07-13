@@ -1655,7 +1655,7 @@ describe('ExpenseForm option-card transitions', () => {
     expect(screen.getAllByRole('slider')).toHaveLength(1)
   })
 
-  it('paid-for: select all preserves a locked percentage and allocates the remainder', async () => {
+  it('paid-for: select all allocates the remainder to the new participant', async () => {
     const groupWithCarol = {
       ...mockGroup,
       participants: [
@@ -1688,20 +1688,8 @@ describe('ExpenseForm option-card transitions', () => {
     )
 
     const editor = screen.getByTestId('visual-split-by_percentage')
-    const aliceInput = within(editor).getByRole('textbox', {
-      name: "Set Alice's percentage",
-    })
-    await user.clear(aliceInput)
-    await user.type(aliceInput, '30')
-    await user.tab()
-    await user.click(
-      within(editor).getByRole('button', { name: /Lock Alice \/ Bob at/ }),
-    )
     await user.click(within(editor).getByRole('button', { name: 'Select all' }))
 
-    expect(
-      within(editor).getByRole('button', { name: /Unlock Alice \/ Bob/ }),
-    ).toBeInTheDocument()
     expect(
       within(editor).getByRole('textbox', { name: "Set Alice's percentage" }),
     ).toBeInTheDocument()
@@ -1710,7 +1698,7 @@ describe('ExpenseForm option-card transitions', () => {
     ).toBeInTheDocument()
   })
 
-  it('paid-by: select all preserves a locked percentage and allocates the remainder', async () => {
+  it('paid-by: select all allocates the remainder to the new participant', async () => {
     const groupWithCarol = {
       ...mockGroup,
       participants: [
@@ -1749,20 +1737,8 @@ describe('ExpenseForm option-card transitions', () => {
     )
 
     const editor = screen.getByTestId('visual-split-by_percentage')
-    const aliceInput = within(editor).getByRole('textbox', {
-      name: "Set Alice's percentage",
-    })
-    await user.clear(aliceInput)
-    await user.type(aliceInput, '30')
-    await user.tab()
-    await user.click(
-      within(editor).getByRole('button', { name: /Lock Alice \/ Bob at/ }),
-    )
     await user.click(within(editor).getByRole('button', { name: 'Select all' }))
 
-    expect(
-      within(editor).getByRole('button', { name: /Unlock Alice \/ Bob/ }),
-    ).toBeInTheDocument()
     expect(
       within(editor).getByRole('textbox', { name: "Set Alice's percentage" }),
     ).toBeInTheDocument()
@@ -1959,30 +1935,6 @@ describe('Visual split participant behavior', () => {
     expect(screen.getByRole('checkbox', { name: 'Alice' })).toBeChecked()
   })
 
-  it('exposes a full-size lock action when editable', async () => {
-    const { user } = render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={
-          {
-            ...mockExpense,
-            splitMode: 'BY_AMOUNT' as const,
-            paidFor: [
-              { ledgerParticipantId: 'lp-1', shares: 2500 },
-              { ledgerParticipantId: 'lp-2', shares: 2500 },
-            ],
-          } as unknown as LoadedExpense
-        }
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    expect(
-      screen.getByRole('button', { name: /lock alice \/ bob at/i }),
-    ).toBeInTheDocument()
-  })
-
   it('removes split editing controls when read-only', () => {
     render(
       <ExpenseForm
@@ -2004,7 +1956,6 @@ describe('Visual split participant behavior', () => {
     )
 
     expect(screen.queryByRole('slider')).not.toBeInTheDocument()
-    expect(screen.queryByText('Unlock all')).not.toBeInTheDocument()
     expect(screen.getByRole('checkbox', { name: 'Alice' })).toBeDisabled()
   })
 })

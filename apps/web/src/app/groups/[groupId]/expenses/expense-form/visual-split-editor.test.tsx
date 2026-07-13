@@ -140,7 +140,7 @@ describe('VisualSplitEditor', () => {
     expect(total).toHaveValue(7)
   })
 
-  it('edits an inline percentage and can lock its adjacent boundary', async () => {
+  it('edits an inline percentage', async () => {
     const { user } = render(<Harness mode="BY_PERCENTAGE" />)
     const input = screen.getByRole('textbox', {
       name: "Set Alice's percentage",
@@ -151,11 +151,6 @@ describe('VisualSplitEditor', () => {
     expect(screen.getByLabelText('Current split')).toHaveTextContent(
       '"shares":30',
     )
-    const lock = screen.getByRole('button', { name: /Lock Alice \/ Bob at/ })
-    await user.click(lock)
-    expect(
-      screen.getByRole('button', { name: /Unlock Alice \/ Bob/ }),
-    ).toBeInTheDocument()
     expect(screen.queryByTestId('focused-split-slider')).not.toBeInTheDocument()
   })
 
@@ -163,7 +158,6 @@ describe('VisualSplitEditor', () => {
     render(<Harness mode="BY_AMOUNT" readOnly />)
 
     expect(screen.queryByRole('slider')).not.toBeInTheDocument()
-    expect(screen.queryByText('Unlock all')).not.toBeInTheDocument()
     expect(screen.getAllByRole('checkbox')[0]).toBeDisabled()
   })
 
@@ -196,7 +190,7 @@ describe('VisualSplitEditor', () => {
     )
   })
 
-  it('selects all through the allocation state without changing locked values', async () => {
+  it('selects all through the allocation state', async () => {
     const { user } = render(
       <Harness
         mode="BY_PERCENTAGE"
@@ -207,24 +201,15 @@ describe('VisualSplitEditor', () => {
       />,
     )
 
-    const input = screen.getByRole('textbox', {
-      name: "Set Alice's percentage",
-    })
-    await user.clear(input)
-    await user.type(input, '30')
-    await user.tab()
-    await user.click(
-      screen.getByRole('button', { name: /Lock Alice \/ Bob at/ }),
-    )
     await user.click(screen.getByRole('button', { name: 'Select all' }))
-    expect(screen.getByLabelText('Current split')).toHaveTextContent(
-      '"participant":"alice","shares":30',
-    )
     expect(screen.getByLabelText('Current split')).toHaveTextContent(
       '"participant":"carol"',
     )
     expect(screen.getByLabelText('Current split')).toHaveTextContent(
       '"participant":"bob"',
+    )
+    expect(screen.getByLabelText('Current split')).toHaveTextContent(
+      '"participant":"alice"',
     )
   })
 
@@ -248,37 +233,6 @@ describe('VisualSplitEditor', () => {
     expect(screen.getByLabelText('Current split').textContent).not.toMatch(
       /"shares":30(?:[,}])/,
     )
-  })
-
-  it('recovers a locked resize conflict by scaling and clearing locks', async () => {
-    const { user } = render(
-      <Harness
-        mode="BY_AMOUNT"
-        initialRows={[
-          { participant: 'alice', shares: 80 },
-          { participant: 'bob', shares: 10 },
-          { participant: 'carol', shares: 10 },
-        ]}
-        initialTarget={100}
-      />,
-    )
-    const input = screen.getByRole('textbox', { name: "Set Alice's amount" })
-    await user.clear(input)
-    await user.type(input, '80')
-    await user.tab()
-    await user.click(
-      screen.getByRole('button', { name: /Lock Alice \/ Bob at/ }),
-    )
-    await user.click(screen.getByRole('button', { name: 'Change total' }))
-
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'current locked splits do not fit',
-    )
-    await user.click(screen.getByRole('button', { name: 'Scale to new total' }))
-    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: /Lock Alice \/ Bob at/ }),
-    ).toBeInTheDocument()
   })
 
   it('allows deselecting participants until a tiny amount becomes editable', async () => {

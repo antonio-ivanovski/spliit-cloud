@@ -2,11 +2,9 @@ import { describe, expect, it } from 'vitest'
 import {
   addAllocationEntry,
   allocationBoundaries,
-  allocationBoundaryKey,
   allocationStep,
   createAllocation,
   fromAllocationMagnitude,
-  lockAllocationBoundary,
   majorToMinorUnits,
   PERCENTAGE_ALLOCATION_TOTAL,
   percentageToBasisPoints,
@@ -18,9 +16,7 @@ import {
   setAllocationBoundary,
   setAllocationValue,
   shareTotalOptions,
-  unlockAllAllocationBoundaries,
   unlockAllAllocationEntries,
-  unlockAllocationBoundary,
 } from './allocation-engine'
 
 function stateOf(result: ReturnType<typeof createAllocation>) {
@@ -199,89 +195,13 @@ describe('cumulative boundary allocation', () => {
     expect(left.ok && values(left.state)).toEqual([40, 10, 25, 25])
   })
 
-  it('locks a boundary by adjacent participant identity', () => {
-    const state = stateOf(
-      createAllocation(100, [{ id: 'a' }, { id: 'b' }, { id: 'c' }]),
-    )
-    const key = allocationBoundaryKey('a', 'b')
-    const locked = lockAllocationBoundary(state, key)
-    expect(locked.ok && locked.state.boundaryLocks).toEqual({ [key]: true })
-    if (!locked.ok) return
-    expect(setAllocationBoundary(locked.state, key, 50)).toMatchObject({
-      ok: false,
-      reason: 'LOCKED_BOUNDARY',
-    })
-    const unlocked = unlockAllocationBoundary(locked.state, key)
-    expect(unlocked.ok && unlocked.state.boundaryLocks).toEqual({})
-  })
-
-  it('never lets a boundary cross a locked neighboring boundary', () => {
-    const state = stateOf(
-      createAllocation(100, [
-        { id: 'a', value: 30 },
-        { id: 'b', value: 30 },
-        { id: 'c', value: 40 },
-      ]),
-    )
-    const locked = lockAllocationBoundary(state, 1)
-    if (!locked.ok) return
-    expect(setAllocationBoundary(locked.state, 0, 90)).toMatchObject({
-      ok: false,
-      reason: 'VALUE_OUT_OF_RANGE',
-      maximum: 59,
-    })
-    expect(values(locked.state)).toEqual([30, 30, 40])
-  })
-
-  it('keeps locked cumulative positions while resizing', () => {
-    const initial = stateOf(
-      createAllocation(100, [{ id: 'a' }, { id: 'b' }, { id: 'c' }]),
-    )
-    const locked = lockAllocationBoundary(initial, 0)
-    if (!locked.ok) return
-    const resized = resizeAllocationTarget(locked.state, 120)
-    expect(resized.ok && values(resized.state)).toEqual([34, 43, 43])
-    expect(resized.ok && allocationBoundaries(resized.state)[0].position).toBe(
-      34,
-    )
-  })
-
-  it('preserves boundary locks when adding and removes locks whose pair disappears', () => {
-    const initial = stateOf(
-      createAllocation(100, [{ id: 'a' }, { id: 'b' }, { id: 'c' }]),
-    )
-    const locked = lockAllocationBoundary(initial, 0)
-    if (!locked.ok) return
-    const added = addAllocationEntry(locked.state, 'd')
-    expect(added.ok && added.state.boundaryLocks).toEqual({
-      [allocationBoundaryKey('a', 'b')]: true,
-    })
-    if (!added.ok) return
-    const removed = removeAllocationEntry(added.state, 'b')
-    expect(removed.ok && removed.state.boundaryLocks).toEqual({})
-  })
-
-  it('previews a boundary without changing the source or locks', () => {
+  it('previews a boundary without changing the source', () => {
     const state = stateOf(
       createAllocation(100, [{ id: 'a' }, { id: 'b' }, { id: 'c' }]),
     )
     const preview = previewAllocationBoundary(state, 1, 70)
     expect(preview.ok && values(preview.state)).toEqual([34, 36, 30])
     expect(values(state)).toEqual([34, 33, 33])
-    expect(preview.ok && preview.state.boundaryLocks).toEqual({})
-  })
-
-  it('clears every boundary lock without changing the distribution', () => {
-    const state = stateOf(
-      createAllocation(100, [{ id: 'a' }, { id: 'b' }, { id: 'c' }]),
-    )
-    const first = lockAllocationBoundary(state, 0)
-    if (!first.ok) return
-    const second = lockAllocationBoundary(first.state, 1)
-    if (!second.ok) return
-    const unlocked = unlockAllAllocationBoundaries(second.state)
-    expect(values(unlocked)).toEqual(values(second.state))
-    expect(unlocked.boundaryLocks).toEqual({})
   })
 })
 

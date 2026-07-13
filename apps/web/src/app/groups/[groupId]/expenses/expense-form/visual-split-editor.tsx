@@ -1,24 +1,19 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
-import {
-  PARTICIPANT_SEGMENT_COLORS,
-  participantSegmentColor,
-} from '@/components/participant-segment-bar'
+import { participantSegmentColor } from '@/components/participant-segment-bar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
 import { amountAsMinorUnits, cn, formatCurrency } from '@/lib/utils'
 import type { Currency, SplitMode } from '@spliit/domain'
-import { Check, Lock, Minus, Plus, Unlock } from 'lucide-react'
+import { Check, Minus, Plus } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   addAllocationEntry,
   allocationBoundaries,
-  allocationBoundaryKey,
   allocationStep,
   createAllocation,
-  lockAllocationBoundary,
   previewAllocationBoundary,
   quantizeAllocationPosition,
   removeAllocationEntry,
@@ -26,8 +21,6 @@ import {
   resizeAllocationTarget,
   scaleAllocationToTarget,
   setAllocationParticipantValue,
-  unlockAllAllocationBoundaries,
-  unlockAllocationBoundary,
   type AllocationState,
 } from './allocation-engine'
 
@@ -338,19 +331,6 @@ export function VisualSplitEditor({
     if (!raw) return
     const index = entryIndexById.get(participantId) ?? -1
     if (index < 0 || allocation.entries.length < 2) return
-    const boundaryIndex =
-      index < allocation.entries.length - 1 ? index : index - 1
-    const key = allocationBoundaryKey(
-      allocation.entries[boundaryIndex].id,
-      allocation.entries[boundaryIndex + 1].id,
-    )
-    if (allocation.boundaryLocks?.[key]) {
-      setInputErrors((current) => ({
-        ...current,
-        [participantId]: t('unlockToEdit'),
-      }))
-      return
-    }
     const desired = unitValue(mode, Number(raw), currency)
     if (!Number.isFinite(desired) || desired < 1) {
       setInputErrors((current) => ({
@@ -560,7 +540,7 @@ export function VisualSplitEditor({
 
   return (
     <div
-      className="mt-4 min-w-0 border-t pt-4"
+      className="mt-4 min-w-0 pt-4"
       data-testid={`visual-split-${mode.toLowerCase()}`}
     >
       <div className="mb-3 flex items-center justify-between gap-2">
@@ -580,37 +560,24 @@ export function VisualSplitEditor({
               </Button>
             )}
             {editable && allocation && (
-              <>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() =>
-                    emitAllocation(unlockAllAllocationBoundaries(allocation))
-                  }
-                >
-                  <Unlock className="mr-1 size-3.5" />
-                  {t('unlockAll')}
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    const result = resetAllocationEqually(allocation)
-                    if (result.ok) emitAllocation(result.state)
-                  }}
-                >
-                  {t('resetEqually')}
-                </Button>
-              </>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const result = resetAllocationEqually(allocation)
+                  if (result.ok) emitAllocation(result.state)
+                }}
+              >
+                {t('resetEqually')}
+              </Button>
             )}
           </div>
         )}
       </div>
 
       {mode === 'BY_SHARES' && rows.length > 0 && (
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-muted/20 px-3 py-2">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
             {t('shares')}
           </span>
@@ -709,7 +676,6 @@ export function VisualSplitEditor({
               const boundary = boundaries[index]
               const position = (boundary.position / allocation.target) * 100
               const key = boundary.key
-              const locked = boundary.locked
               const boundaryLabel = `${entry.participant?.name ?? entry.id} / ${right.participant?.name ?? right.id}`
               return (
                 <div
@@ -717,32 +683,6 @@ export function VisualSplitEditor({
                   className="absolute inset-y-0"
                   style={{ left: `${position}%` }}
                 >
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute left-1/2 top-[-1.65rem] size-6 -translate-x-1/2 rounded-full border border-border/80 bg-background/95 p-0 text-muted-foreground shadow-sm backdrop-blur-sm hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label={
-                      locked
-                        ? t('unlock', { name: boundaryLabel })
-                        : t('lock', {
-                            name: boundaryLabel,
-                            value: formatUnit(boundary.position),
-                          })
-                    }
-                    onClick={() => {
-                      const result = locked
-                        ? unlockAllocationBoundary(allocation, key)
-                        : lockAllocationBoundary(allocation, key)
-                      if (result.ok) emitAllocation(result.state)
-                    }}
-                  >
-                    {locked ? (
-                      <Lock className="size-3.5" />
-                    ) : (
-                      <Unlock className="size-3.5 opacity-60" />
-                    )}
-                  </Button>
                   <button
                     type="button"
                     role="slider"
@@ -760,15 +700,15 @@ export function VisualSplitEditor({
                     aria-valuemax={boundary.maximum}
                     aria-valuenow={boundary.position}
                     aria-valuetext={`${formatUnit(entry.value)} / ${formatUnit(right.value)}`}
-                    disabled={locked}
-                    className="absolute left-1/2 top-[1.15rem] size-6 -translate-x-1/2 cursor-ew-resize touch-none rounded-full border-2 border-primary/60 bg-background shadow-[0_1px_3px_hsl(var(--foreground)/0.18)] transition-[transform,background-color,border-color] hover:scale-110 hover:border-primary hover:bg-primary/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:opacity-60"
+                    className="absolute left-1/2 top-3 size-6 -translate-x-1/2 cursor-ew-resize touch-none rounded-full border-2 border-primary/60 bg-background shadow-[0_1px_3px_hsl(var(--foreground)/0.18)] transition-[transform,background-color,border-color] hover:scale-110 hover:border-primary hover:bg-primary/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:opacity-60"
                     onPointerDown={(event) => {
                       event.currentTarget.setPointerCapture(event.pointerId)
                       setActiveBoundary(index)
                     }}
-                    onPointerMove={(event) =>
-                      queuePointerMove(index, event.clientX)
-                    }
+                    onPointerMove={(event) => {
+                      if (event.buttons > 0)
+                        queuePointerMove(index, event.clientX)
+                    }}
                     onPointerUp={finishPointerMove}
                     onPointerCancel={finishPointerMove}
                     onLostPointerCapture={finishPointerMove}
@@ -839,7 +779,7 @@ export function VisualSplitEditor({
             size="sm"
             onClick={() => {
               const scaled = scaleAllocationToTarget(
-                unlockAllAllocationBoundaries(allocation),
+                allocation,
                 allocationTarget,
               )
               if (scaled.ok) {
@@ -859,28 +799,31 @@ export function VisualSplitEditor({
           const entry = entryById.get(participant.id)
           const checked = !!row
           const value = currentValue(participant.id)
-          const index = entryIndexById.get(participant.id) ?? -1
-          const controllingBoundary =
-            index >= 0 && allocation && allocation.entries.length > 1
-              ? index < allocation.entries.length - 1
-                ? index
-                : index - 1
-              : -1
-          const controllingKey =
-            controllingBoundary >= 0 && allocation
-              ? allocationBoundaryKey(
-                  allocation.entries[controllingBoundary].id,
-                  allocation.entries[controllingBoundary + 1].id,
-                )
-              : ''
-          const inputLocked =
-            !!controllingKey && !!allocation?.boundaryLocks?.[controllingKey]
           const preview = checked
             ? (amountPreviews.get(participant.id) ?? null)
             : null
           return (
             <div key={participant.id} className="py-2.5">
-              <div className="flex min-h-11 items-center gap-3">
+              <div
+                className={cn(
+                  'flex min-h-11 items-center gap-3',
+                  !readOnly &&
+                    !(checked && rows.length === 1) &&
+                    'cursor-pointer',
+                )}
+                onClick={(event) => {
+                  if (readOnly) return
+                  if (checked && rows.length === 1) return
+                  const target = event.target as HTMLElement
+                  if (
+                    target.closest(
+                      'button, input, label, [role="button"], textarea, select',
+                    )
+                  )
+                    return
+                  toggleParticipant(participant.id, !checked)
+                }}
+              >
                 <Checkbox
                   checked={checked}
                   disabled={readOnly || (checked && rows.length === 1)}
@@ -995,7 +938,7 @@ export function VisualSplitEditor({
                         inputValues[participant.id] ??
                         formatUnit(value).replace(/[^0-9.,-]/g, '')
                       }
-                      disabled={readOnly || inputLocked}
+                      disabled={readOnly}
                       aria-label={t('setValue', {
                         name: participant.name,
                         kind: t(
@@ -1028,17 +971,10 @@ export function VisualSplitEditor({
                     <span className="text-xs text-muted-foreground">
                       {mode === 'BY_PERCENTAGE' ? '%' : currency.symbol}
                     </span>
-                    {inputLocked ? (
-                      <Lock
-                        className="size-3.5 text-muted-foreground"
-                        aria-label={t('locked')}
-                      />
-                    ) : (
-                      <Check
-                        className="size-4 text-muted-foreground"
-                        aria-hidden="true"
-                      />
-                    )}
+                    <Check
+                      className="size-4 text-muted-foreground"
+                      aria-hidden="true"
+                    />
                   </div>
                 )}
               </div>
@@ -1046,30 +982,6 @@ export function VisualSplitEditor({
                 <p className="ml-[5.5rem] mt-1 text-right text-xs text-destructive">
                   {inputErrors[participant.id]}
                 </p>
-              )}
-              {mode === 'BY_SHARES' && checked && (
-                <div
-                  className="ml-[5.5rem] mt-1 flex h-1.5 max-w-40 gap-0.5"
-                  aria-hidden="true"
-                >
-                  {Array.from({
-                    length: Math.min(
-                      12,
-                      Math.max(1, Math.round(row?.shares ?? 1)),
-                    ),
-                  }).map((_, index) => (
-                    <span
-                      key={index}
-                      className={cn(
-                        'flex-1 rounded-full',
-                        PARTICIPANT_SEGMENT_COLORS[
-                          (participantIndexById.get(participant.id) ?? 0) %
-                            PARTICIPANT_SEGMENT_COLORS.length
-                        ],
-                      )}
-                    />
-                  ))}
-                </div>
               )}
             </div>
           )

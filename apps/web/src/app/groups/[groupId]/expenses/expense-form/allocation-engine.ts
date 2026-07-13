@@ -63,8 +63,6 @@ export type AllocationEntry = {
 export type AllocationState = {
   target: number
   entries: AllocationEntry[]
-  /** Boundary locks are keyed by the two adjacent participant ids. */
-  boundaryLocks?: Record<string, boolean>
 }
 
 export type AllocationBoundary = {
@@ -75,7 +73,6 @@ export type AllocationBoundary = {
   position: number
   minimum: number
   maximum: number
-  locked: boolean
 }
 
 export type AllocationFailureReason =
@@ -88,7 +85,6 @@ export type AllocationFailureReason =
   | 'VALUE_OUT_OF_RANGE'
   | 'LAST_FLEXIBLE'
   | 'LAST_PARTICIPANT'
-  | 'LOCKED_BOUNDARY'
   | 'LOCKED_TOTAL_CONFLICT'
 
 export type AllocationResult =
@@ -118,7 +114,6 @@ function cloneState(state: AllocationState): AllocationState {
   return {
     target: state.target,
     entries: state.entries.map((entry) => ({ ...entry })),
-    boundaryLocks: { ...(state.boundaryLocks ?? {}) },
   }
 }
 
@@ -178,97 +173,8 @@ export function allocationBoundaries(
         index === state.entries.length - 2
           ? state.target - 1
           : cumulative[index + 1] - 1,
-      locked: state.boundaryLocks?.[key] === true,
     }
   })
-}
-
-function minimumTotalForBoundaryLocks(state: AllocationState): number {
-  const boundaries = allocationBoundaries(state).filter(
-    (boundary) => boundary.locked,
-  )
-  let minimum = state.entries.length
-  for (const boundary of boundaries) {
-    minimum = Math.max(
-      minimum,
-      boundary.position + (state.entries.length - boundary.index - 1),
-    )
-  }
-  return minimum
-}
-
-/** Redistribute each interval bounded by locked cumulative boundaries. */
-function redistributeBoundaryState(state: AllocationState): AllocationResult {
-  if (state.entries.length === 0) {
-    return { ok: false, reason: 'EMPTY_ALLOCATION' }
-  }
-  if (state.target < state.entries.length) {
-    return {
-      ok: false,
-      reason: 'INSUFFICIENT_TOTAL',
-      minimumTotal: Math.max(
-        state.entries.length,
-        minimumTotalForBoundaryLocks(state),
-      ),
-    }
-  }
-
-  const locked = allocationBoundaries(state)
-    .filter((boundary) => boundary.locked)
-    .sort((a, b) => a.index - b.index)
-  let startIndex = 0
-  let startPosition = 0
-  const values = state.entries.map((entry) => entry.value)
-  const intervals = [
-    ...locked.map((boundary) => ({
-      endIndex: boundary.index,
-      endPosition: boundary.position,
-    })),
-    { endIndex: state.entries.length - 1, endPosition: state.target },
-  ]
-
-  for (const interval of intervals) {
-    const count = interval.endIndex - startIndex + 1
-    const intervalTarget = interval.endPosition - startPosition
-    if (intervalTarget < count) {
-      return {
-        ok: false,
-        reason: 'LOCKED_TOTAL_CONFLICT',
-        minimumTotal: minimumTotalForBoundaryLocks(state),
-      }
-    }
-    const distributed = distributeWithMinimum(
-      state.entries
-        .slice(startIndex, interval.endIndex + 1)
-        .map((entry, offset) => ({
-          index: startIndex + offset,
-          weight: entry.value,
-        })),
-      intervalTarget,
-    )
-    if (!distributed) {
-      return {
-        ok: false,
-        reason: 'LOCKED_TOTAL_CONFLICT',
-        minimumTotal: minimumTotalForBoundaryLocks(state),
-      }
-    }
-    for (const [index, value] of distributed) values[index] = value
-    startIndex = interval.endIndex + 1
-    startPosition = interval.endPosition
-  }
-
-  return {
-    ok: true,
-    state: {
-      target: state.target,
-      boundaryLocks: { ...(state.boundaryLocks ?? {}) },
-      entries: state.entries.map((entry, index) => ({
-        ...entry,
-        value: values[index],
-      })),
-    },
-  }
 }
 
 function hamilton(entries: WeightedEntry[], target: number): number[] {
@@ -354,7 +260,6 @@ function redistributeFlexible(
     ok: true,
     state: {
       target: state.target,
-      boundaryLocks: { ...(state.boundaryLocks ?? {}) },
       entries: state.entries.map((entry, index) => ({
         ...entry,
         value: entry.locked
@@ -389,7 +294,6 @@ export function createAllocation(
   }
   return redistributeFlexible({
     target,
-    boundaryLocks: {},
     entries: entries.map((entry) => ({
       id: entry.id,
       value: entry.value ?? 1,
@@ -471,9 +375,6 @@ function setBoundaryValue(
     }
   }
   const boundary = allocationBoundaries(state)[index]
-  if (boundary.locked) {
-    return { ok: false, reason: 'LOCKED_BOUNDARY', participantId: boundary.key }
-  }
   if (!isUnit(position)) {
     return { ok: false, reason: 'INVALID_VALUE', participantId: boundary.key }
   }
@@ -555,48 +456,6 @@ export function setAllocationParticipantValue(
 
 export const previewAllocationParticipantValue = setAllocationParticipantValue
 
-export function lockAllocationBoundary(
-  state: AllocationState,
-  reference: number | string,
-): AllocationResult {
-  const index = boundaryIndex(state, reference)
-  if (index < 0) {
-    return {
-      ok: false,
-      reason: 'PARTICIPANT_NOT_FOUND',
-      participantId: typeof reference === 'string' ? reference : undefined,
-    }
-  }
-  const boundary = allocationBoundaries(state)[index]
-  const next = cloneState(state)
-  next.boundaryLocks = { ...(next.boundaryLocks ?? {}), [boundary.key]: true }
-  return { ok: true, state: next }
-}
-
-export function unlockAllocationBoundary(
-  state: AllocationState,
-  reference: number | string,
-): AllocationResult {
-  const index = boundaryIndex(state, reference)
-  if (index < 0) {
-    return {
-      ok: false,
-      reason: 'PARTICIPANT_NOT_FOUND',
-      participantId: typeof reference === 'string' ? reference : undefined,
-    }
-  }
-  const boundary = allocationBoundaries(state)[index]
-  const next = cloneState(state)
-  delete next.boundaryLocks?.[boundary.key]
-  return { ok: true, state: next }
-}
-
-export function unlockAllAllocationBoundaries(
-  state: AllocationState,
-): AllocationState {
-  return { ...cloneState(state), boundaryLocks: {} }
-}
-
 export function lockAllocationEntry(
   state: AllocationState,
   participantId: string,
@@ -663,14 +522,10 @@ export function addAllocationEntry(
   )
   const next: AllocationState = {
     target: state.target,
-    boundaryLocks: { ...(state.boundaryLocks ?? {}) },
     entries: [
       ...state.entries.map((entry) => ({ ...entry })),
       { id: participantId, value: meanWeight, locked: false },
     ],
-  }
-  if (Object.keys(state.boundaryLocks ?? {}).length > 0) {
-    return redistributeBoundaryState(next)
   }
   return redistributeFlexible(next)
 }
@@ -685,24 +540,8 @@ export function removeAllocationEntry(
   if (state.entries.length === 1) {
     return { ok: false, reason: 'LAST_PARTICIPANT', participantId }
   }
-  const boundaryMode = Object.keys(state.boundaryLocks ?? {}).length > 0
   const next = cloneState(state)
   next.entries.splice(index, 1)
-  if (boundaryMode) {
-    const validKeys = new Set(
-      next.entries
-        .slice(0, -1)
-        .map((entry, entryIndex) =>
-          allocationBoundaryKey(entry.id, next.entries[entryIndex + 1].id),
-        ),
-    )
-    next.boundaryLocks = Object.fromEntries(
-      Object.entries(next.boundaryLocks ?? {}).filter(([key]) =>
-        validKeys.has(key),
-      ),
-    )
-    return redistributeBoundaryState(next)
-  }
   if (next.entries.every((entry) => entry.locked)) {
     const replacementIndex = Math.min(index, next.entries.length - 1)
     next.entries[replacementIndex].locked = false
@@ -723,9 +562,6 @@ export function resizeAllocationTarget(
     }
   }
   const next = { ...cloneState(state), target }
-  if (Object.keys(state.boundaryLocks ?? {}).length > 0) {
-    return redistributeBoundaryState(next)
-  }
   return redistributeFlexible(next)
 }
 
