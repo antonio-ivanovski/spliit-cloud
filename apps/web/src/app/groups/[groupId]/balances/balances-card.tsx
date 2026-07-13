@@ -1,9 +1,7 @@
 import Link from '@/components/link'
 import { ParticipantAvatar } from '@/components/participant-avatar'
-import {
-  ParticipantSegmentBar,
-  participantSegmentColor,
-} from '@/components/participant-segment-bar'
+import { participantSegmentColor } from '@/lib/participant-colors'
+import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
 import { Button } from '@/components/ui/button'
 import {
   Card,

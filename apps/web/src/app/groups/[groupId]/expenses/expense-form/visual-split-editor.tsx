@@ -1,5 +1,5 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
-import { participantSegmentColor } from '@/components/participant-segment-bar'
+import { participantSegmentColor } from '@/lib/participant-colors'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'

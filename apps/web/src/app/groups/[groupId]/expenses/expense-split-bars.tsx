@@ -1,5 +1,6 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Badge } from '@/components/ui/badge'
+import { PARTICIPANT_SEGMENT_COLORS } from '@/lib/participant-colors'
 import type { AccountIdentity } from '@/lib/account'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
@@ -15,15 +16,6 @@ type SplitRow = {
     account?: AccountIdentity | null
   }
 }
-
-const COLORS = [
-  'bg-sky-500',
-  'bg-amber-500',
-  'bg-emerald-500',
-  'bg-violet-500',
-  'bg-rose-500',
-  'bg-cyan-500',
-]
 
 export function ExpenseSplitBars({
   label,
@@ -61,7 +53,7 @@ export function ExpenseSplitBars({
             {rows.map((row, index) => (
               <span
                 key={row.id}
-                className={`@container relative h-2.5 min-w-0 ${COLORS[index % COLORS.length]} first:rounded-l-full last:rounded-r-full`}
+                className={`@container relative h-2.5 min-w-0 ${PARTICIPANT_SEGMENT_COLORS[index % PARTICIPANT_SEGMENT_COLORS.length]} first:rounded-l-full last:rounded-r-full`}
                 style={{
                   width: `${total > 0 ? (Math.abs(row.amount) / total) * 100 : 0}%`,
                 }}
@@ -91,7 +83,7 @@ export function ExpenseSplitBars({
             {!isSingleParticipant && (
               <span
                 aria-hidden="true"
-                className={`h-2 w-2 shrink-0 rounded-full ${COLORS[index % COLORS.length]}`}
+                className={`h-2 w-2 shrink-0 rounded-full ${PARTICIPANT_SEGMENT_COLORS[index % PARTICIPANT_SEGMENT_COLORS.length]}`}
               />
             )}
             <span className="min-w-0 flex-1 truncate">{row.name}</span>

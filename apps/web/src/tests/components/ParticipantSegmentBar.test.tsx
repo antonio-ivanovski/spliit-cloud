@@ -1,7 +1,5 @@
-import {
-  ParticipantSegmentBar,
-  participantSegmentColor,
-} from '@/components/participant-segment-bar'
+import { participantSegmentColor } from '@/lib/participant-colors'
+import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
@@ -103,7 +101,7 @@ describe('ParticipantSegmentBar', () => {
   })
 
   it('normalizes negative color indexes and prefers an explicit color class', () => {
-    expect(participantSegmentColor({ colorIndex: -1 }, 0)).toBe('bg-cyan-500')
+    expect(participantSegmentColor({ colorIndex: -1 }, 0)).toBe('bg-blue-700')
     expect(
       participantSegmentColor(
         { colorIndex: 0, colorClass: 'bg-fuchsia-500' },
