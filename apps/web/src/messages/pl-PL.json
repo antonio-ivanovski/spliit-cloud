@@ -1629,5 +1629,16 @@
     "attachments": "Załączniki ({count})",
     "edit": "Edytuj wydatek",
     "makeCopy": "Utwórz kopię"
+  },
+  "CreateReimbursement": {
+    "description": "Sprawdź płatność przed jej zapisaniem.",
+    "pays": "{from} płaci {to}",
+    "amount": "Kwota",
+    "date": "Data",
+    "category": "Kategoria",
+    "create": "Stwórz",
+    "edit": "Edytuj szczegóły",
+    "creating": "Tworzenie…",
+    "successToast": "Zwrot środków zapisany"
   }
 }

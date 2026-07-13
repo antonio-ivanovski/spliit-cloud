@@ -1629,5 +1629,16 @@
     "attachments": "添付ファイル ({count})",
     "edit": "支出を編集",
     "makeCopy": "コピーを作成"
+  },
+  "CreateReimbursement": {
+    "description": "支払いを記録する前に確認してください。",
+    "pays": "{from} が {to} に支払う",
+    "amount": "金額",
+    "date": "日付",
+    "category": "カテゴリー",
+    "create": "作成する",
+    "edit": "詳細を編集",
+    "creating": "作成中…",
+    "successToast": "払い戻しを記録しました"
   }
 }

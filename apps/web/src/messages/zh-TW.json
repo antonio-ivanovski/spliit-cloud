@@ -1629,5 +1629,16 @@
     "attachments": "附件（{count}）",
     "edit": "編輯消費紀錄",
     "makeCopy": "複製消費紀錄"
+  },
+  "CreateReimbursement": {
+    "description": "請確認付款資訊後再記錄。",
+    "pays": "{from} 支付給 {to}",
+    "amount": "金額",
+    "date": "日期",
+    "category": "分類",
+    "create": "新增",
+    "edit": "編輯詳細資訊",
+    "creating": "新增中…",
+    "successToast": "報銷已記錄"
   }
 }

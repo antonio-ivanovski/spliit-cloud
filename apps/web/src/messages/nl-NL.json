@@ -1629,5 +1629,16 @@
     "attachments": "Bijlagen ({count})",
     "edit": "Bewerk uitgave",
     "makeCopy": "Kopie maken"
+  },
+  "CreateReimbursement": {
+    "description": "Controleer de betaling voordat je deze vastlegt.",
+    "pays": "{from} betaalt {to}",
+    "amount": "Bedrag",
+    "date": "Datum",
+    "category": "Categorie",
+    "create": "Maken",
+    "edit": "Details bewerken",
+    "creating": "Aan het maken…",
+    "successToast": "Terugbetaling vastgelegd"
   }
 }

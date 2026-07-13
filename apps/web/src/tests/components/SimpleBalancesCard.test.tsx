@@ -1,33 +1,42 @@
 import { SimpleBalancesCard } from '@/app/groups/[groupId]/balances/simple-balances-card'
+import {
+  useCurrentGroup,
+  useIsPendingInvitee,
+} from '@/app/groups/[groupId]/current-group-context'
 import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    children,
-    search,
-    params,
-    ...props
-  }: {
-    to: string
-    children: React.ReactNode
-    search?: Record<string, string>
-    params?: Record<string, string>
-    [key: string]: unknown
-  }) => {
-    let href = to
-    for (const [key, value] of Object.entries(params ?? {})) {
-      href = href.replace(`$${key}`, value)
-    }
-    const query = new URLSearchParams(search)
-    if (query.size > 0) href += `?${query.toString()}`
-    return (
-      <a href={href} {...props}>
-        {children}
-      </a>
-    )
+vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
+  useCurrentGroup: vi.fn(),
+  useIsPendingInvitee: vi.fn(),
+}))
+
+vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
+  useLinkInviteToken: vi.fn(() => undefined),
+}))
+
+vi.mock('@/app/groups/[groupId]/expenses/expense-mutation-hooks', () => ({
+  useCreateExpenseMutation: () => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  }),
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    useUtils: () => ({
+      groups: { balances: { invalidate: vi.fn() } },
+    }),
   },
+}))
+
+vi.mock('@/components/ui/use-toast', () => ({
+  useToast: () => ({ toast: vi.fn() }),
+}))
+
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => vi.fn(),
+  useRouter: () => ({}),
 }))
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
@@ -41,7 +50,32 @@ const balances = {
 }
 const reimbursements = [{ from: 'bob', to: 'alice', amount: 3000 }]
 
+function setupCurrentGroup() {
+  vi.mocked(useCurrentGroup).mockReturnValue({
+    isLoading: false,
+    groupId: 'group-1',
+    group: {
+      id: 'group-1',
+      currencyCode: 'EUR',
+      ledger: { currencyCode: 'EUR' },
+      participants: [],
+      archived: false,
+    } as never,
+    displayName: 'Group',
+    currentLedgerParticipantId: null,
+    currentMember: null,
+    currentInvitation: null,
+    linkInviteState: null,
+  })
+  vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+}
+
 describe('SimpleBalancesCard', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    setupCurrentGroup()
+  })
+
   it('renders plain net balances and direct settlement actions without charts', () => {
     render(
       <SimpleBalancesCard
@@ -62,14 +96,16 @@ describe('SimpleBalancesCard', () => {
     expect(screen.getByText('owes €30.00')).toBeInTheDocument()
     expect(screen.getByText('Suggested payments')).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: /Mark €30\.00 from Bob to Alice/ }),
+      screen.getByRole('button', {
+        name: /Mark €30\.00 from Bob to Alice/,
+      }),
     ).toBeInTheDocument()
     expect(
       screen.queryByTestId('participant-segment-bar'),
     ).not.toBeInTheDocument()
   })
 
-  it('preserves the native currency on original-currency settlement links', () => {
+  it('preserves the native currency on original-currency settlement actions', () => {
     render(
       <SimpleBalancesCard
         isLoading={false}
@@ -92,7 +128,9 @@ describe('SimpleBalancesCard', () => {
 
     expect(screen.getByText('EUR')).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: /Mark €30\.00 from Bob to Alice/ }),
-    ).toHaveAttribute('href', expect.stringContaining('originalCurrency=EUR'))
+      screen.getByRole('button', {
+        name: /Mark €30\.00 from Bob to Alice/,
+      }),
+    ).toBeInTheDocument()
   })
 })

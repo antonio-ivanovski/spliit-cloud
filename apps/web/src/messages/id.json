@@ -1629,5 +1629,16 @@
     "attachments": "Lampiran ({count})",
     "edit": "Ubah pengeluaran",
     "makeCopy": "Buat salinan"
+  },
+  "CreateReimbursement": {
+    "description": "Tinjau pembayaran sebelum mencatatnya.",
+    "pays": "{from} membayar {to}",
+    "amount": "Jumlah",
+    "date": "Tanggal",
+    "category": "Kategori",
+    "create": "Buat",
+    "edit": "Ubah detail",
+    "creating": "Membuat…",
+    "successToast": "Reimburse tercatat"
   }
 }

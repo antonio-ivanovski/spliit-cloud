@@ -1,33 +1,42 @@
 import { BalancesCard } from '@/app/groups/[groupId]/balances/balances-card'
+import {
+  useCurrentGroup,
+  useIsPendingInvitee,
+} from '@/app/groups/[groupId]/current-group-context'
 import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    children,
-    search,
-    params,
-    ...props
-  }: {
-    to: string
-    children: React.ReactNode
-    search?: Record<string, string>
-    params?: Record<string, string>
-    [key: string]: unknown
-  }) => {
-    let href = to
-    for (const [key, value] of Object.entries(params ?? {})) {
-      href = href.replace(`$${key}`, value)
-    }
-    const query = new URLSearchParams(search)
-    if (query.size > 0) href += `?${query.toString()}`
-    return (
-      <a href={href} {...props}>
-        {children}
-      </a>
-    )
+vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
+  useCurrentGroup: vi.fn(),
+  useIsPendingInvitee: vi.fn(),
+}))
+
+vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
+  useLinkInviteToken: vi.fn(() => undefined),
+}))
+
+vi.mock('@/app/groups/[groupId]/expenses/expense-mutation-hooks', () => ({
+  useCreateExpenseMutation: () => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  }),
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    useUtils: () => ({
+      groups: { balances: { invalidate: vi.fn() } },
+    }),
   },
+}))
+
+vi.mock('@/components/ui/use-toast', () => ({
+  useToast: () => ({ toast: vi.fn() }),
+}))
+
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => vi.fn(),
+  useRouter: () => ({}),
 }))
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
@@ -49,7 +58,32 @@ const reimbursements = [
   { from: 'carol', to: 'alice', amount: 1000 },
 ]
 
+function setupCurrentGroup() {
+  vi.mocked(useCurrentGroup).mockReturnValue({
+    isLoading: false,
+    groupId: 'group-1',
+    group: {
+      id: 'group-1',
+      currencyCode: 'EUR',
+      ledger: { currencyCode: 'EUR' },
+      participants: [],
+      archived: false,
+    } as never,
+    displayName: 'Group',
+    currentLedgerParticipantId: null,
+    currentMember: null,
+    currentInvitation: null,
+    linkInviteState: null,
+  })
+  vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+}
+
 describe('BalancesCard', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    setupCurrentGroup()
+  })
+
   it('renders receive and pay sections from suggested reimbursement legs', () => {
     render(
       <BalancesCard
@@ -82,12 +116,33 @@ describe('BalancesCard', () => {
         .every((bar) => bar.querySelector('[aria-hidden="true"].h-4')),
     ).toBe(true)
     expect(screen.queryByText(/owes/)).not.toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: /Mark as paid/ })).toHaveLength(
-      2,
-    )
+    expect(
+      screen.getAllByRole('button', { name: /Mark as paid/ }),
+    ).toHaveLength(2)
   })
 
-  it('keeps original currency on payer actions in expense-currency mode', () => {
+  it('opens the create reimbursement modal when clicking Mark as paid', async () => {
+    const { user } = render(
+      <BalancesCard
+        isLoading={false}
+        currencyDisplay="group"
+        balances={balances}
+        reimbursements={reimbursements}
+        currencyBalances={[]}
+        participants={participants}
+        groupCurrency={EUR}
+        groupId="group-1"
+      />,
+    )
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    await user.click(screen.getAllByText('Mark as paid')[0])
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByText('Reimbursement')).toBeInTheDocument()
+  })
+
+  it('preserves the original currency on payer actions in expense-currency mode', () => {
     render(
       <BalancesCard
         isLoading={false}
@@ -112,8 +167,8 @@ describe('BalancesCard', () => {
     expect(
       document.querySelector('img[src*="flagcdn.com/h24/eu.png"]'),
     ).toBeInTheDocument()
-    const markAsPaid = screen.getAllByText('Mark as paid')[0].closest('a')
-    expect(markAsPaid).toHaveAttribute('href')
-    expect(markAsPaid?.getAttribute('href')).toContain('originalCurrency=EUR')
+    expect(
+      screen.getAllByRole('button', { name: /Mark as paid/ }).length,
+    ).toBeGreaterThan(0)
   })
 })

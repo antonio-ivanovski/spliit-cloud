@@ -1629,5 +1629,16 @@
     "attachments": "Прилози ({count})",
     "edit": "Уреди трошок",
     "makeCopy": "Направи копија"
+  },
+  "CreateReimbursement": {
+    "description": "Прегледајте го плаќањето пред да го снимите.",
+    "pays": "{from} плаќа {to}",
+    "amount": "Износ",
+    "date": "Датум",
+    "category": "Категорија",
+    "create": "Креирај",
+    "edit": "Уреди детали",
+    "creating": "Се креира…",
+    "successToast": "Раздолжувањето е снимено"
   }
 }

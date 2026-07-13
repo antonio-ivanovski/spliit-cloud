@@ -1,4 +1,3 @@
-import Link from '@/components/link'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import {
   ParticipantSegmentBar,
@@ -16,8 +15,10 @@ import { useLocale } from '@/i18n/react'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BalancesLoading } from './balances-loading'
+import { CreateReimbursementModal } from './create-reimbursement-modal'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
 
@@ -217,105 +218,97 @@ function SettlementDirection({
   includeOriginalCurrency?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
+  const [selectedReimbursement, setSelectedReimbursement] =
+    useState<Reimbursement | null>(null)
   return (
-    <section aria-label={title} className="space-y-4">
-      <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        {title}
-      </h3>
-      <p className="-mt-2 text-xs leading-snug text-muted-foreground/70">
-        {t(
-          direction === 'receive'
-            ? 'direction.toReceiveDescription'
-            : 'direction.toPayDescription',
-        )}
-      </p>
-      <div className="space-y-5">
-        {participants.map((participant) => {
-          const legs = reimbursements.filter((reimbursement) =>
+    <>
+      <section aria-label={title} className="space-y-4">
+        <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          {title}
+        </h3>
+        <p className="-mt-2 text-xs leading-snug text-muted-foreground/70">
+          {t(
             direction === 'receive'
-              ? reimbursement.to === participant.id
-              : reimbursement.from === participant.id,
-          )
-          const rows = legs.map((leg) => {
-            const counterparty = getParticipant(
-              direction === 'receive' ? leg.from : leg.to,
+              ? 'direction.toReceiveDescription'
+              : 'direction.toPayDescription',
+          )}
+        </p>
+        <div className="space-y-5">
+          {participants.map((participant) => {
+            const legs = reimbursements.filter((reimbursement) =>
+              direction === 'receive'
+                ? reimbursement.to === participant.id
+                : reimbursement.from === participant.id,
             )
-            return {
-              id: `${leg.from}-${leg.to}`,
-              name: counterparty.name,
-              amount: leg.amount,
-              participant: counterparty,
-              colorIndex: participantIndex.get(counterparty.id) ?? 0,
-            }
-          })
-          const total = rows.reduce((sum, row) => sum + row.amount, 0)
+            const rows = legs.map((leg) => {
+              const counterparty = getParticipant(
+                direction === 'receive' ? leg.from : leg.to,
+              )
+              return {
+                id: `${leg.from}-${leg.to}`,
+                name: counterparty.name,
+                amount: leg.amount,
+                participant: counterparty,
+                colorIndex: participantIndex.get(counterparty.id) ?? 0,
+              }
+            })
+            const total = rows.reduce((sum, row) => sum + row.amount, 0)
 
-          return (
-            <article
-              key={participant.id}
-              className="space-y-5 border-b border-border/60 pb-5 last:border-b-0 last:pb-0"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-2">
-                  <ParticipantAvatar participant={participant} size="sm" />
-                  <span className="min-w-0 truncate text-sm font-medium">
-                    {participant.name}
+            return (
+              <article
+                key={participant.id}
+                className="space-y-5 border-b border-border/60 pb-5 last:border-b-0 last:pb-0"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <ParticipantAvatar participant={participant} size="sm" />
+                    <span className="min-w-0 truncate text-sm font-medium">
+                      {participant.name}
+                    </span>
+                  </div>
+                  <span className="shrink-0 tabular-nums text-sm font-medium">
+                    {formatCurrency(currency, total, locale)}
                   </span>
                 </div>
-                <span className="shrink-0 tabular-nums text-sm font-medium">
-                  {formatCurrency(currency, total, locale)}
-                </span>
-              </div>
-              <ParticipantSegmentBar
-                rows={rows}
-                currency={currency}
-                locale={locale}
-                showSingleParticipantBar
-              >
-                <div className="grid grid-cols-1 gap-y-1">
-                  {legs.map((leg, index) => {
-                    const to = getParticipant(leg.to)
-                    const counterparty = getParticipant(
-                      direction === 'receive' ? leg.from : leg.to,
-                    )
-                    const color = participantSegmentColor(rows[index], index)
-                    return (
-                      <div
-                        key={`${leg.from}-${leg.to}`}
-                        className="flex min-w-0 items-center gap-2 text-xs"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={`h-2 w-2 shrink-0 rounded-full ${color}`}
-                        />
-                        <span
-                          className="min-w-0 flex-1 truncate font-medium"
-                          title={counterparty.name}
+                <ParticipantSegmentBar
+                  rows={rows}
+                  currency={currency}
+                  locale={locale}
+                  showSingleParticipantBar
+                >
+                  <div className="grid grid-cols-1 gap-y-1">
+                    {legs.map((leg, index) => {
+                      const to = getParticipant(leg.to)
+                      const counterparty = getParticipant(
+                        direction === 'receive' ? leg.from : leg.to,
+                      )
+                      const color = participantSegmentColor(rows[index], index)
+                      return (
+                        <div
+                          key={`${leg.from}-${leg.to}`}
+                          className="flex min-w-0 items-center gap-2 text-xs"
                         >
-                          {counterparty.name}
-                        </span>
-                        <span className="shrink-0 tabular-nums text-muted-foreground">
-                          {formatCurrency(currency, leg.amount, locale)}
-                        </span>
-                        {direction === 'pay' && (
-                          <Button
-                            variant="link"
-                            asChild
-                            className="h-auto shrink-0 p-0 text-xs"
+                          <span
+                            aria-hidden="true"
+                            className={`h-2 w-2 shrink-0 rounded-full ${color}`}
+                          />
+                          <span
+                            className="min-w-0 flex-1 truncate font-medium"
+                            title={counterparty.name}
                           >
-                            <Link
-                              href="/groups/$groupId/expenses/create"
-                              params={{ groupId }}
-                              search={{
-                                reimbursement: 'yes',
-                                from: leg.from,
-                                to: leg.to,
-                                amount: leg.amount.toString(),
-                                ...(includeOriginalCurrency
-                                  ? { originalCurrency: currency.code }
-                                  : {}),
-                              }}
+                            {counterparty.name}
+                          </span>
+                          <span className="shrink-0 tabular-nums text-muted-foreground">
+                            {formatCurrency(currency, leg.amount, locale)}
+                          </span>
+                          {direction === 'pay' && (
+                            <Button
+                              type="button"
+                              variant="link"
+                              onClick={() => setSelectedReimbursement(leg)}
+                              className="h-auto shrink-0 p-0 text-xs"
                               aria-label={`${t('Reimbursements.markAsPaid')} ${formatCurrency(currency, leg.amount, locale)} ${to.name}`}
+                              data-testid={`reimbursement-mark-as-paid-${leg.from}-${leg.to}`}
                             >
                               <span className="sr-only sm:not-sr-only">
                                 {t('Reimbursements.markAsPaid')}
@@ -323,18 +316,30 @@ function SettlementDirection({
                               <span className="sm:hidden">
                                 {t('Reimbursements.markAsPaid')}
                               </span>
-                            </Link>
-                          </Button>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              </ParticipantSegmentBar>
-            </article>
-          )
-        })}
-      </div>
-    </section>
+                            </Button>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </ParticipantSegmentBar>
+              </article>
+            )
+          })}
+        </div>
+      </section>
+      <CreateReimbursementModal
+        groupId={groupId}
+        reimbursement={selectedReimbursement}
+        currency={currency}
+        originalCurrencyCode={
+          includeOriginalCurrency ? currency.code : undefined
+        }
+        open={selectedReimbursement !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedReimbursement(null)
+        }}
+      />
+    </>
   )
 }

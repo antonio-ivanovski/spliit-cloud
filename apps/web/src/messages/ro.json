@@ -1629,5 +1629,16 @@
     "attachments": "Atașamente ({count})",
     "edit": "Modifică cheltuiala",
     "makeCopy": "Fă o copie"
+  },
+  "CreateReimbursement": {
+    "description": "Revizuiește plata înainte de a o înregistra.",
+    "pays": "{from} plătește {to}",
+    "amount": "Sumă",
+    "date": "Data",
+    "category": "Categorie",
+    "create": "Adaugă",
+    "edit": "Modifică detaliile",
+    "creating": "Se adaugă…",
+    "successToast": "Rambursare înregistrată"
   }
 }

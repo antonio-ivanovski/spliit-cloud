@@ -1629,5 +1629,16 @@
     "attachments": "Erantsitakoak ({count})",
     "edit": "Editatu gastua",
     "makeCopy": "Kopia bat egin"
+  },
+  "CreateReimbursement": {
+    "description": "Berrikusi ordainketa erregistratu aurretik.",
+    "pays": "{from} {to}-ri ordaintzen dio",
+    "amount": "Zenbatekoa",
+    "date": "Data",
+    "category": "Kategoria",
+    "create": "Sortu",
+    "edit": "Editatu xehetasunak",
+    "creating": "Sortzen…",
+    "successToast": "Diru-itzulketa erregistratu da"
   }
 }

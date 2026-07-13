@@ -1629,5 +1629,16 @@
     "attachments": "Anexos ({count})",
     "edit": "Editar despesa",
     "makeCopy": "Fazer uma cópia"
+  },
+  "CreateReimbursement": {
+    "description": "Revise o pagamento antes de registrá-lo.",
+    "pays": "{from} paga {to}",
+    "amount": "Valor",
+    "date": "Data",
+    "category": "Categoria",
+    "create": "Criar",
+    "edit": "Editar detalhes",
+    "creating": "Criando…",
+    "successToast": "Reembolso registrado"
   }
 }

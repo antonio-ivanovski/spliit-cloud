@@ -1629,5 +1629,16 @@
     "attachments": "附件（{count}）",
     "edit": "编辑消费",
     "makeCopy": "复制消费"
+  },
+  "CreateReimbursement": {
+    "description": "请核对付款信息后再记录。",
+    "pays": "{from} 支付给 {to}",
+    "amount": "金额",
+    "date": "日期",
+    "category": "分类",
+    "create": "创建",
+    "edit": "编辑详情",
+    "creating": "创建中…",
+    "successToast": "报销已记录"
   }
 }

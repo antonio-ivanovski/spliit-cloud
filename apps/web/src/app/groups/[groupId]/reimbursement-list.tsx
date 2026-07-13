@@ -1,4 +1,3 @@
-import Link from '@/components/link'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
@@ -6,7 +5,9 @@ import type { AccountIdentity } from '@/lib/account'
 import type { Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { CreateReimbursementModal } from './balances/create-reimbursement-modal'
 
 type Participant = {
   id: string
@@ -33,6 +34,9 @@ export function ReimbursementList({
   const { t } = useTranslation(undefined, {
     keyPrefix: 'Balances.Reimbursements',
   })
+  const [selectedReimbursement, setSelectedReimbursement] =
+    useState<Reimbursement | null>(null)
+
   if (reimbursements.length === 0) {
     return (
       <p className="text-sm pb-6" data-testid="no-reimbursements">
@@ -82,34 +86,22 @@ export function ReimbursementList({
                 )}
               </div>
               <Button
+                type="button"
                 variant="link"
-                asChild
                 className="-mx-4 -my-3 min-h-11 shrink-0"
+                onClick={() => setSelectedReimbursement(reimbursement)}
+                aria-label={t('markAsPaidAria', {
+                  amount: formatCurrency(
+                    currency,
+                    reimbursement.amount,
+                    locale,
+                  ),
+                  from: fromName,
+                  to: toName,
+                })}
+                data-testid={`reimbursement-mark-as-paid-${fromName}-${toName}`}
               >
-                <Link
-                  href="/groups/$groupId/expenses/create"
-                  params={{ groupId }}
-                  search={{
-                    reimbursement: 'yes',
-                    from: reimbursement.from,
-                    to: reimbursement.to,
-                    amount: reimbursement.amount.toString(),
-                    ...(reimbursementCurrencyCode
-                      ? { originalCurrency: reimbursementCurrencyCode }
-                      : {}),
-                  }}
-                  aria-label={t('markAsPaidAria', {
-                    amount: formatCurrency(
-                      currency,
-                      reimbursement.amount,
-                      locale,
-                    ),
-                    from: fromName,
-                    to: toName,
-                  })}
-                >
-                  {t('markAsPaid')}
-                </Link>
+                {t('markAsPaid')}
               </Button>
             </div>
             <div className="shrink-0">
@@ -118,6 +110,16 @@ export function ReimbursementList({
           </div>
         )
       })}
+      <CreateReimbursementModal
+        groupId={groupId}
+        reimbursement={selectedReimbursement}
+        currency={currency}
+        originalCurrencyCode={reimbursementCurrencyCode}
+        open={selectedReimbursement !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedReimbursement(null)
+        }}
+      />
     </div>
   )
 }

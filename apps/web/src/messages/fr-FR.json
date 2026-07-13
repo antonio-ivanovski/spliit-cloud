@@ -1629,5 +1629,16 @@
     "attachments": "Pièces jointes ({count})",
     "edit": "Modifier la dépense",
     "makeCopy": "Faire une copie"
+  },
+  "CreateReimbursement": {
+    "description": "Vérifiez le paiement avant de l'enregistrer.",
+    "pays": "{from} paie {to}",
+    "amount": "Montant",
+    "date": "Date",
+    "category": "Catégorie",
+    "create": "Créer",
+    "edit": "Modifier les détails",
+    "creating": "Création…",
+    "successToast": "Remboursement enregistré"
   }
 }

@@ -1629,5 +1629,16 @@
     "attachments": "Attachments ({count})",
     "edit": "Edit expense",
     "makeCopy": "Make a copy"
+  },
+  "CreateReimbursement": {
+    "description": "Review the payment before recording it.",
+    "pays": "{from} pays {to}",
+    "amount": "Amount",
+    "date": "Date",
+    "category": "Category",
+    "create": "Create",
+    "edit": "Edit details",
+    "creating": "Creating…",
+    "successToast": "Reimbursement recorded"
   }
 }

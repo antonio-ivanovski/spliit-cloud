@@ -1629,5 +1629,16 @@
     "attachments": "Anhänge ({count})",
     "edit": "Ausgabe bearbeiten",
     "makeCopy": "Kopie erstellen"
+  },
+  "CreateReimbursement": {
+    "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",
+    "pays": "{from} zahlt {to}",
+    "amount": "Betrag",
+    "date": "Datum",
+    "category": "Kategorie",
+    "create": "Erstellen",
+    "edit": "Details bearbeiten",
+    "creating": "Erstellt…",
+    "successToast": "Rückzahlung aufgezeichnet"
   }
 }

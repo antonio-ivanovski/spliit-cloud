@@ -1629,5 +1629,16 @@
     "attachments": "Ekler ({count})",
     "edit": "Masrafı düzenle",
     "makeCopy": "Kopya oluştur"
+  },
+  "CreateReimbursement": {
+    "description": "Ödemeyi kaydetmeden önce gözden geçirin.",
+    "pays": "{from}, {to}'ye öder",
+    "amount": "Tutar",
+    "date": "Tarih",
+    "category": "Kategori",
+    "create": "Oluştur",
+    "edit": "Detayları düzenle",
+    "creating": "Oluşturuluyor…",
+    "successToast": "Geri ödeme kaydedildi"
   }
 }

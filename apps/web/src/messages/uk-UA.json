@@ -1629,5 +1629,16 @@
     "attachments": "Вкладення ({count})",
     "edit": "Редагувати витрату",
     "makeCopy": "Створити копію"
+  },
+  "CreateReimbursement": {
+    "description": "Перевірте платіж перед його записом.",
+    "pays": "{from} платить {to}",
+    "amount": "Сума",
+    "date": "Дата",
+    "category": "Категорія",
+    "create": "Створити",
+    "edit": "Редагувати деталі",
+    "creating": "Створення…",
+    "successToast": "Відшкодування записано"
   }
 }

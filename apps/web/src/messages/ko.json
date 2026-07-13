@@ -1629,5 +1629,16 @@
     "attachments": "첨부 파일 ({count})",
     "edit": "지출 수정하기",
     "makeCopy": "복사본 만들기"
+  },
+  "CreateReimbursement": {
+    "description": "지불을 기록하기 전에 확인하세요.",
+    "pays": "{from}님이 {to}님에게 지불",
+    "amount": "금액",
+    "date": "날짜",
+    "category": "카테고리",
+    "create": "만들기",
+    "edit": "세부 정보 수정",
+    "creating": "만드는 중…",
+    "successToast": "정산이 기록되었습니다"
   }
 }

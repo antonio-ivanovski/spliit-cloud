@@ -1629,5 +1629,16 @@
     "attachments": "קבצים מצורפים ({count})",
     "edit": "ערוך הוצאה",
     "makeCopy": "צור עותק"
+  },
+  "CreateReimbursement": {
+    "description": "סקור את התשלום לפני רישומו.",
+    "pays": "{from} משלם ל-{to}",
+    "amount": "סכום",
+    "date": "תאריך",
+    "category": "קטגוריה",
+    "create": "צור",
+    "edit": "ערוך פרטים",
+    "creating": "יוצר…",
+    "successToast": "ההחזר נרשם"
   }
 }

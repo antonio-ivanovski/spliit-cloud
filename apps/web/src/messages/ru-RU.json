@@ -1629,5 +1629,16 @@
     "attachments": "Вложения ({count})",
     "edit": "Изменить расход",
     "makeCopy": "Создать копию"
+  },
+  "CreateReimbursement": {
+    "description": "Проверьте платёж перед его записью.",
+    "pays": "{from} платит {to}",
+    "amount": "Сумма",
+    "date": "Дата",
+    "category": "Категория",
+    "create": "Создать",
+    "edit": "Изменить детали",
+    "creating": "Создание…",
+    "successToast": "Возмещение записано"
   }
 }

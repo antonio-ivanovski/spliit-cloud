@@ -1629,5 +1629,16 @@
     "attachments": "Liitteet ({count})",
     "edit": "Muokkaa kulua",
     "makeCopy": "Tee kopio"
+  },
+  "CreateReimbursement": {
+    "description": "Tarkista maksu ennen sen tallentamista.",
+    "pays": "{from} maksaa {to}:lle",
+    "amount": "Summa",
+    "date": "Päivä",
+    "category": "Kategoria",
+    "create": "Luo",
+    "edit": "Muokkaa tietoja",
+    "creating": "Luodaan…",
+    "successToast": "Velanmaksu tallennettu"
   }
 }
