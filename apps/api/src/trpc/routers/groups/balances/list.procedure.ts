@@ -19,7 +19,9 @@ export const listGroupBalancesProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput,
+      linkInviteToken: linkInviteTokenInput.describe(
+        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
+      ),
     }),
   )
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {

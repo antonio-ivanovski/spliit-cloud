@@ -88,6 +88,23 @@ export async function createProfileImageUploadUrl(
   if (!auth) {
     return Response.json({ error: 'Unauthenticated' }, { status: 401 })
   }
+  return mintProfileImagePresign({ fileSize, accountId: auth.user.id })
+}
+
+/**
+ * Account-bound variant used by the tRPC `uploads.profileImagePresign`
+ * mutation. `protectedProcedure` has already resolved the caller, so
+ * we skip the cookie round-trip and the size/env-config checks are
+ * duplicated from `createProfileImageUploadUrl` to keep both entry
+ * points' behavior identical.
+ */
+export async function mintProfileImagePresign({
+  fileSize,
+  accountId,
+}: {
+  fileSize?: number
+  accountId: string
+}) {
   if (!fileSize || fileSize > MAX_PROFILE_IMAGE_SIZE) {
     return Response.json(
       { error: 'Profile image exceeds the maximum upload size' },
@@ -101,7 +118,7 @@ export async function createProfileImageUploadUrl(
     )
   }
 
-  const key = `profile-images/${auth.user.id}/${randomId()}.jpg`
+  const key = `profile-images/${accountId}/${randomId()}.jpg`
   const fileUrl = publicUrlForKey(key)
   const uploadUrl = await getSignedUrl(
     getS3Client(),
@@ -176,27 +193,28 @@ export async function promoteUploadedDocument(
 
 const MAX_UPLOAD_SIZE = 2 * 1024 ** 2
 
-export async function createUploadUrl(
-  request: Request,
-  ledgerId: string | undefined,
-  fileName: string,
-  contentType: string,
-  fileSize?: number,
-) {
-  // Auth is checked first so unauthenticated callers always get 401, even
-  // when the server-side uploader is not configured.
-  const auth = await getAuthFromRequest(request)
-  if (!auth) {
-    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
-  }
-
-  // Presign URLs are only minted for authenticated members of the target
-  // ledger. Uploads without a ledgerId are not allowed because the resulting
-  // document would be unowned and could be attached to any expense.
-  if (!ledgerId) {
-    return Response.json({ error: 'Missing ledgerId' }, { status: 400 })
-  }
-
+/**
+ * Internal helper used by both the legacy HTTP `/uploads/presign`
+ * route (via `createUploadUrl`) and the tRPC `uploads.presign`
+ * mutation. Performs the post-auth work — membership check,
+ * file-size validation, S3 presign — given an already-resolved
+ * account id. Returns a `Response` so the caller decides how to map
+ * the status code (HTTP route maps to itself; the tRPC procedure
+ * maps via `statusToTRPCCode`).
+ */
+async function mintUploadPresign({
+  ledgerId,
+  fileName,
+  contentType,
+  fileSize,
+  accountId,
+}: {
+  ledgerId: string
+  fileName: string
+  contentType: string
+  fileSize?: number
+  accountId: string
+}): Promise<Response> {
   if (fileSize !== undefined && fileSize > MAX_UPLOAD_SIZE) {
     return Response.json(
       { error: 'File exceeds the maximum upload size' },
@@ -222,7 +240,7 @@ export async function createUploadUrl(
       group: {
         include: {
           members: {
-            where: { accountId: auth.user.id, status: 'ACTIVE' },
+            where: { accountId, status: 'ACTIVE' },
           },
         },
       },
@@ -254,4 +272,62 @@ export async function createUploadUrl(
   const fileUrl = publicUrlForKey(key)
 
   return Response.json({ uploadUrl, fileUrl, key })
+}
+
+export async function createUploadUrl(
+  request: Request,
+  ledgerId: string | undefined,
+  fileName: string,
+  contentType: string,
+  fileSize?: number,
+) {
+  // Auth is checked first so unauthenticated callers always get 401, even
+  // when the server-side uploader is not configured.
+  const auth = await getAuthFromRequest(request)
+  if (!auth) {
+    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
+  }
+
+  // Presign URLs are only minted for authenticated members of the target
+  // ledger. Uploads without a ledgerId are not allowed because the resulting
+  // document would be unowned and could be attached to any expense.
+  if (!ledgerId) {
+    return Response.json({ error: 'Missing ledgerId' }, { status: 400 })
+  }
+
+  return mintUploadPresign({
+    ledgerId,
+    fileName,
+    contentType,
+    fileSize,
+    accountId: auth.user.id,
+  })
+}
+
+/**
+ * Presign a document upload for an already-authenticated account. Used
+ * by the tRPC `uploads.presign` mutation — the `protectedProcedure`
+ * middleware has already enforced auth, so we skip the
+ * `getAuthFromRequest` round-trip the HTTP-shaped helper requires.
+ */
+export async function createUploadPresignForAccount({
+  ledgerId,
+  fileName,
+  contentType,
+  fileSize,
+  accountId,
+}: {
+  ledgerId: string
+  fileName: string
+  contentType: string
+  fileSize?: number
+  accountId: string
+}) {
+  return mintUploadPresign({
+    ledgerId,
+    fileName,
+    contentType,
+    fileSize,
+    accountId,
+  })
 }

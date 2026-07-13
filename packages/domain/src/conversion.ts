@@ -36,7 +36,12 @@ export const expenseConversionInputSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('custom'),
     currency: conversionCurrencySchema,
-    rate: z.number().positive('ratePositive'),
+    rate: z
+      .number()
+      .positive('ratePositive')
+      .describe(
+        'Custom multiplier from the expense currency to the ledger base currency.',
+      ),
   }),
   z.object({
     type: z.literal('exchange'),

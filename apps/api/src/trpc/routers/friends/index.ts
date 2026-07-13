@@ -34,6 +34,7 @@ async function sendFriendLedgerNotification(opts: {
 }
 
 export const friendsRouter = createTRPCRouter({
+  /** Create a friend ledger via one of three modes (account id, email, or shareable link). Exactly one mode must be set on `friendFormValues`. */
   create: protectedProcedure
     .input(z.object({ friendFormValues: friendFormSchema }))
     .mutation(async ({ input: { friendFormValues }, ctx }) => {

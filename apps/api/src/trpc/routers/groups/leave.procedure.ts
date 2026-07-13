@@ -60,8 +60,19 @@ export const leaveGroupProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      force: z.boolean().optional(),
-      promoteMemberId: z.string().min(1).optional(),
+      force: z
+        .boolean()
+        .optional()
+        .describe(
+          "Force-leave even when you're the last admin or have non-zero balances.",
+        ),
+      promoteMemberId: z
+        .string()
+        .min(1)
+        .optional()
+        .describe(
+          'Member to promote to ADMIN so the group keeps an admin after you leave.',
+        ),
     }),
   )
   .mutation(async ({ input: { groupId, force, promoteMemberId }, ctx }) => {

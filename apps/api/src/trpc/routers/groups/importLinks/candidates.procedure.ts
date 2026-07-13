@@ -29,7 +29,16 @@ import { loadGroupContext, protectedProcedure } from '../../../init'
  * email.
  */
 export const candidatesProcedure = protectedProcedure
-  .input(z.object({ unlinkedParticipantId: z.string().min(1) }))
+  .input(
+    z.object({
+      unlinkedParticipantId: z
+        .string()
+        .min(1)
+        .describe(
+          'Imported participant that has no linked account, to be matched against candidates.',
+        ),
+    }),
+  )
   .query(async ({ input: { unlinkedParticipantId }, ctx }) => {
     const participant = await prisma.ledgerParticipant.findUnique({
       where: { id: unlinkedParticipantId },

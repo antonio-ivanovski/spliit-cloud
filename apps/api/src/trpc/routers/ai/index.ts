@@ -8,13 +8,19 @@ import { aiBulkCategorizeRouter } from './bulkCategorize'
 
 export const aiRouter = createTRPCRouter({
   bulkCategorize: aiBulkCategorizeRouter,
+  /** Public: AI-guesses a category from an expense title. No auth required. */
   extractCategoryFromTitle: baseProcedure
     .input(
       z.object({
         description: z.string(),
         groupId: z.string().min(1),
         locale: z.string().optional(),
-        linkInviteToken: z.string().optional(),
+        linkInviteToken: z
+          .string()
+          .optional()
+          .describe(
+            'Raw link-invite token from the share URL. Grants access for pending link-invitees.',
+          ),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -54,6 +60,7 @@ export const aiRouter = createTRPCRouter({
         locale: input.locale,
       })
     }),
+  /** Public: AI-extracts expense fields from a receipt image. No auth required. */
   extractExpenseInformationFromImage: baseProcedure
     .input(
       z.object({
@@ -79,7 +86,10 @@ export const aiRouter = createTRPCRouter({
               )
               .optional(),
           })
-          .optional(),
+          .optional()
+          .describe(
+            'Existing expense fields to refine the extraction (optional context for the AI).',
+          ),
       }),
     )
     .mutation(async ({ input, ctx }) => {

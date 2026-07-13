@@ -14,7 +14,9 @@ export const listGroupExpensesProcedure = protectedProcedure
       cursor: z.number().optional(),
       limit: z.number().optional(),
       filter: z.string().optional(),
-      linkInviteToken: linkInviteTokenInput,
+      linkInviteToken: linkInviteTokenInput.describe(
+        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
+      ),
     }),
   )
   .query(

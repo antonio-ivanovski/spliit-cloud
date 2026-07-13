@@ -159,15 +159,16 @@ export type CurrencyRatesResponse = Array<
 >
 
 /**
- * Bulk FX lookup routed over POST so a large batch doesn't blow the
- * URL length limit (HTTP 431). React Query gives us caching, refetch
- * control, and loading/error state without the tRPC GET URL envelope.
+ * Bulk FX lookup routed via the tRPC `currency.rates` mutation so a
+ * 500-item batch fits in the request body without blowing the URL
+ * length limit (HTTP 431). React Query gives us caching, refetch
+ * control, and loading/error state around the mutation.
  */
 export function useCurrencyRates(
   items: CurrencyRatesItem[],
   options?: { enabled?: boolean },
 ) {
-  const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
+  const utils = trpc.useUtils()
   const itemsKey = useMemo(
     () => items.map((i) => `${i.date}|${i.base}|${i.target}`).join(','),
     [items],
@@ -184,18 +185,11 @@ export function useCurrencyRates(
         ...item,
         date: exchangeRateLookupDate(item.date, today),
       }))
-      const res = await fetch(`${apiBaseUrl}/currency/rates`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: lookupItems }),
-        signal,
-      })
-      if (!res.ok) {
-        throw new Error(`Currency rates request failed (${res.status})`)
-      }
-      const json = (await res.json()) as { results: CurrencyRatesResponse }
-      return json.results
+      const result = await utils.client.currency.rates.mutate(
+        { items: lookupItems },
+        { signal },
+      )
+      return result.results
     },
   })
 }

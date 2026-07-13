@@ -13,7 +13,9 @@ export const getGroupExpenseProcedure = protectedProcedure
     z.object({
       groupId: z.string().min(1),
       expenseId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput,
+      linkInviteToken: linkInviteTokenInput.describe(
+        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
+      ),
     }),
   )
   .query(async ({ input: { groupId, expenseId, linkInviteToken }, ctx }) => {

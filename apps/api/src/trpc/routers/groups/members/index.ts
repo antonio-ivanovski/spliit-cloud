@@ -12,7 +12,18 @@ import { updateMemberRoleProcedure } from './updateRole.procedure'
  * dedicated leave flow).
  */
 export const groupMembersRouter = createTRPCRouter({
+  /**
+   * Promote or demote a member. Cannot demote the last admin.
+   */
   updateRole: updateMemberRoleProcedure,
+
+  /**
+   * Remove a member from a group. `settleBalances` zeroes their balances first.
+   */
   remove: removeMemberProcedure,
+
+  /**
+   * Preview the balance impact of removing a member.
+   */
   removePreview: removeMemberPreviewProcedure,
 })

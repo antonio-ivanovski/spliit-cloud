@@ -13,7 +13,13 @@ export const aiBulkCategorizeListCandidatesProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      fromCategoryId: z.string().min(1).optional(),
+      fromCategoryId: z
+        .string()
+        .min(1)
+        .optional()
+        .describe(
+          "Filter expenses currently in this category. Defaults to 'general'.",
+        ),
     }),
   )
   .query(async ({ ctx, input }) => {

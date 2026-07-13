@@ -52,7 +52,13 @@ export const importGroupProcedure = protectedProcedure
   .input(
     z
       .object({
-        targetGroupId: z.string().min(1).optional(),
+        targetGroupId: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            'When set, merge imported data into this group instead of creating a new one.',
+          ),
         groupFormValues: groupFormSchema.optional(),
         participants: z.array(importParticipantMappingSchema).min(1),
         expenses: z.array(expenseApiSchema).min(0).default([]),

@@ -21,11 +21,23 @@ import { loadGroupContext, protectedProcedure } from '../../../init'
 const calibrateInputSchema = z.object({
   groupId: z.string().min(1),
   locale: z.string().optional(),
-  round: z.number().int().positive(),
+  round: z
+    .number()
+    .int()
+    .positive()
+    .describe(
+      '1-based batch number. Each round fetches the next slice of candidates.',
+    ),
   // Optional overrides so the admin can start the calibration flow
   // from a different "uncategorized" pool in the future (e.g. only
   // last quarter). Today only `general` is supported.
-  fromCategoryId: z.string().min(1).optional(),
+  fromCategoryId: z
+    .string()
+    .min(1)
+    .optional()
+    .describe(
+      "Filter expenses currently in this category. Defaults to 'general'.",
+    ),
   // Admin-supplied corrections from a previous calibration round.
   // The server uses them to thread feedback to the AI in subsequent
   // rounds — but re-validates the ids against the candidates so a
@@ -38,7 +50,10 @@ const calibrateInputSchema = z.object({
       }),
     )
     .max(BULK_CALIBRATION_CANDIDATE_POOL_SIZE)
-    .optional(),
+    .optional()
+    .describe(
+      'Previous (expenseId, categoryId) picks to condition the AI model on prior answers.',
+    ),
 })
 
 export const aiBulkCategorizeCalibrateProcedure = protectedProcedure

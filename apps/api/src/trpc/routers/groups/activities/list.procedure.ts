@@ -13,7 +13,9 @@ export const listGroupActivitiesProcedure = protectedProcedure
       groupId: z.string(),
       cursor: z.number().optional().default(0),
       limit: z.number().optional().default(5),
-      linkInviteToken: linkInviteTokenInput,
+      linkInviteToken: linkInviteTokenInput.describe(
+        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
+      ),
     }),
   )
   .query(

@@ -1,0 +1,510 @@
+/**
+ * Build-time OpenAPI spec generator.
+ *
+ * Generates an OpenAPI 3.1 document for the Spliit API by combining:
+ *
+ *   1. Auto-generated spec from the tRPC router via `@trpc/openapi`. Zero
+ *      per-procedure annotations are required — the generator introspects
+ *      the router type and the Zod v4 inputs.
+ *   2. Auto-generated auth paths from better-auth's `openAPI` plugin via
+ *      `auth.api.generateOpenAPISchema()`. The plugin introspects every
+ *      registered endpoint (core + magic-link) and emits accurate paths,
+ *      request bodies, and responses — replacing hand-maintained auth
+ *      paths that drifted from the real routes (e.g. magic-link is
+ *      `/sign-in/magic-link`, not `/magic-link/generate`).
+ *   3. Hand-maintained OpenAPI paths for the remaining REST endpoints
+ *      (group expense CSV/JSON exports) that cannot move into tRPC.
+ *   4. A `securitySchemes.session` cookie scheme + global `security` block
+ *      so external consumers know how to authenticate, with `security: []`
+ *      overrides on public procedures. Auth operations emitted by the
+ *      better-auth plugin get their `bearerAuth` security remapped to
+ *      `session` so the spec documents the real cookie name.
+ *   5. Summary extraction: the first paragraph of each JSDoc-derived
+ *      `description` becomes `summary`; the remaining paragraphs stay
+ *      as `description` with the tRPC procedure footnote appended.
+ *   6. A root `description` that explains the tRPC wire shape (dotted
+ *      paths, envelope-wrapped responses, GET `?input=<json>` convention)
+ *      because the auto-generated spec is tRPC-protocol-shaped rather
+ *      than idiomatic REST.
+ *
+ * Output: `apps/api/openapi.json`. Served at `GET /openapi.json` and at
+ * Scalar `/docs` from the running API server.
+ */
+
+import { generateOpenAPIDocument } from '@trpc/openapi'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import type { OpenAPIV3_1 } from 'openapi-types'
+import { auth } from '../src/lib/auth'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const apiRoot = resolve(__dirname, '..')
+const routerPath = resolve(apiRoot, 'src/trpc/routers/_app.ts')
+const outputPath = resolve(apiRoot, 'openapi.json')
+
+// Procedures that don't require authentication. The generator emits no
+// auth metadata, so we apply `security` globally and override these to
+// `security: []` so the spec accurately reflects public access.
+const PUBLIC_PROCEDURES = new Set<string>([
+  'features.get',
+  'currency.getRate',
+  'invitations.previewLink',
+  'ai.extractCategoryFromTitle',
+  'ai.extractExpenseInformationFromImage',
+])
+
+// Procedures behind the `PUBLIC_ENABLE_BULK_CATEGORIZE` feature flag
+// (default off). Marked `deprecated: true` in the spec and tagged with a
+// description note so Scalar renders them with a warning badge and
+// external consumers know not to depend on them. The flag is a
+// frontend-only gate today — these procedures remain callable by admins
+// regardless — but the whole flow is undergoing rework (see
+// `handoff/bulk-categorizer-spike.md`) and the wire shape may change.
+const DEPRECATED_PROCEDURES = new Set<string>([
+  'ai.bulkCategorize.listCandidates',
+  'ai.bulkCategorize.calibrate',
+  'ai.bulkCategorize.preview',
+  'groups.expenses.bulkUpdateCategories',
+])
+const DEPRECATION_NOTE =
+  'Behind the `PUBLIC_ENABLE_BULK_CATEGORIZE` feature flag (default off). Undergoing rework — not for external consumption.'
+
+// Session cookie name. better-auth uses `better-auth.session_token` by
+// default; under `useSecureCookies` (production) it becomes
+// `__Secure-better-auth.session_token`. Both names are documented in
+// the security scheme description so consumers can pick the right one
+// for their environment.
+const SESSION_COOKIE_NAME = 'better-auth.session_token'
+const SESSION_COOKIE_NAME_SECURE = '__Secure-better-auth.session_token'
+
+async function main() {
+  const doc = await generateOpenAPIDocument(routerPath, {
+    exportName: 'appRouter',
+    title: 'Spliit API',
+    version: '0.1.0',
+    servers: [{ url: '/trpc', description: 'tRPC mount point' }],
+  })
+
+  // The generated document uses `@trpc/openapi`'s stricter customized
+  // OpenAPI 3.1 type aliases; cast to the upstream `openapi-types`
+  // shapes so we can compose with hand-written paths in a single
+  // strongly-typed object.
+  const merged = await postProcess(doc as unknown as OpenAPIV3_1.Document)
+  await mkdir(dirname(outputPath), { recursive: true })
+  await writeFile(outputPath, JSON.stringify(merged, null, 2) + '\n', 'utf8')
+
+  const opCount = Object.values(merged.paths ?? {}).reduce((sum, item) => {
+    if (!item) return sum
+    const methods = ['get', 'post', 'put', 'delete', 'patch'] as const
+    return (
+      sum +
+      methods.filter((m) => (item as Record<string, unknown>)[m] != null).length
+    )
+  }, 0)
+  console.log(
+    `Wrote ${outputPath} (${opCount} operations across ${
+      Object.keys(merged.paths ?? {}).length
+    } paths)`,
+  )
+}
+
+async function postProcess(
+  doc: OpenAPIV3_1.Document,
+): Promise<OpenAPIV3_1.Document> {
+  const result: OpenAPIV3_1.Document = structuredClone(doc)
+  result.paths = result.paths ?? {}
+  result.components = result.components ?? {}
+
+  // Root description — critical for external consumers since the spec is
+  // tRPC-shaped (dotted paths, envelope responses, `?input=<json>` GET).
+  result.info = {
+    ...result.info,
+    title: result.info?.title ?? 'Spliit API',
+    version: result.info?.version ?? '0.1.0',
+    description: ROOT_DESCRIPTION,
+  }
+
+  // Security scheme (cookie session).
+  result.components.securitySchemes = {
+    ...result.components.securitySchemes,
+    session: {
+      type: 'apiKey',
+      in: 'cookie',
+      name: SESSION_COOKIE_NAME,
+      description:
+        `Session cookie issued by better-auth after sign-in. ` +
+        `Default non-secure name is \`${SESSION_COOKIE_NAME}\`; in production ` +
+        `(HTTPS, \`useSecureCookies\`) the cookie is prefixed with \`__Secure-\` ` +
+        `i.e. \`${SESSION_COOKIE_NAME_SECURE}\`. Send credentials on every ` +
+        `cross-origin request (\`credentials: 'include'\` in the browser; ` +
+        `\`Cookie: <name>=<value>\` from other clients).`,
+    },
+  }
+  result.security = [{ session: [] }]
+
+  // Override security on public procedures; tag every operation;
+  // extract summary from JSDoc description (first paragraph becomes
+  // `summary`, the rest stays as `description` with the procedure
+  // footnote appended).
+  for (const [path, item] of Object.entries(result.paths)) {
+    if (!item) continue
+    for (const method of ['get', 'post', 'put', 'delete', 'patch'] as const) {
+      const op = (
+        item as Record<string, OpenAPIV3_1.OperationObject | undefined>
+      )[method]
+      if (!op) continue
+      const procPath = stripTrpcPrefix(path)
+      const tags = op.tags ?? []
+      const routerTag = procPath.split('.')[0] || 'default'
+      op.tags = Array.from(new Set([routerTag, ...tags]))
+      const footnote = `_tRPC procedure: \`${procPath}\`_`
+      if (op.description) {
+        const breakIdx = op.description.indexOf('\n\n')
+        if (breakIdx >= 0) {
+          op.summary = op.description.slice(0, breakIdx).trim()
+          const rest = op.description.slice(breakIdx + 2).trim()
+          op.description = rest ? `${rest}\n\n${footnote}` : footnote
+        } else {
+          op.summary = op.description.trim()
+          op.description = footnote
+        }
+      } else {
+        op.description = footnote
+      }
+      if (PUBLIC_PROCEDURES.has(procPath)) {
+        op.security = []
+      }
+      if (DEPRECATED_PROCEDURES.has(procPath)) {
+        op.deprecated = true
+        op.description = `${DEPRECATION_NOTE}\n\n${op.description ?? ''}`.trim()
+      }
+    }
+  }
+
+  // Merge in remaining REST operations: auto-generated auth paths from
+  // better-auth's `openAPI` plugin, and hand-maintained export paths.
+  const authPaths = await buildAuthPaths()
+  Object.assign(result.paths, authPaths.paths, buildExportPaths())
+
+  // Auth and export endpoints aren't mounted under `/trpc`, so each of
+  // their operations needs an explicit `servers: [{ url: '/' }]` override
+  // — otherwise Scalar would prefix the path with the document-level
+  // `/trpc` server URL and resolve `/auth/sign-in/email` to
+  // `/trpc/auth/sign-in/email`, which the API never serves. tRPC
+  // procedures keep inheriting the document-level `/trpc` server.
+  for (const [path, item] of Object.entries(result.paths)) {
+    if (!item) continue
+    if (!isRestPath(path)) continue
+    for (const method of ['get', 'post', 'put', 'delete', 'patch'] as const) {
+      const op = (
+        item as Record<string, OpenAPIV3_1.OperationObject | undefined>
+      )[method]
+      if (!op) continue
+      op.servers = ROOT_SERVER
+    }
+  }
+
+  // The auth plugin's response bodies reference the auth model schemas
+  // (`User`, `Session`, etc.) via `$ref`. Merge those into the document's
+  // `components.schemas` so the refs resolve.
+  if (authPaths.schemas) {
+    result.components.schemas = {
+      ...result.components.schemas,
+      ...authPaths.schemas,
+    }
+  }
+
+  result.tags = buildTags()
+  return result
+}
+
+function stripTrpcPrefix(path: string): string {
+  // @trpc/openapi emits paths as the dotted procedure name with a
+  // leading slash, e.g. `/groups.expenses.create`.
+  return path.replace(/^\//, '').replace(/\//g, '.')
+}
+
+function isRestPath(path: string): boolean {
+  // REST routes outside the tRPC mount: better-auth (`/auth/*`, emitted
+  // by the `openAPI` plugin in `buildAuthPaths`) and the group expense
+  // exports (`/expenses/export/*`, hand-maintained in `buildExportPaths`).
+  // Everything else is a tRPC procedure.
+  return path.startsWith('/auth/') || path.includes('/expenses/export/')
+}
+
+// Root-path server (empty URL resolves to the spec's own origin) is
+// applied per-operation to REST paths that aren't mounted under `/trpc`:
+// better-auth (`/auth/*`) and the group expense exports
+// (`/groups/:groupId/expenses/export/*`). The document-level `servers`
+// of `/trpc` would otherwise prefix these paths with `/trpc/`, breaking
+// the URL Scalar hands to its "Test Request" client.
+const ROOT_SERVER: OpenAPIV3_1.ServerObject[] = [
+  { url: '/', description: 'API root (REST endpoints outside tRPC)' },
+]
+
+// better-auth endpoints that don't require a session — they accept an
+// anonymous request. The OpenAPI plugin marks every endpoint as
+// `bearerAuth`-required (a plugin limitation — it doesn't know which
+// routes are anonymous). We override to `security: []` so the spec
+// accurately reflects that no session cookie is needed. Add to this set
+// when better-auth ships new anonymous endpoints.
+const PUBLIC_AUTH_PATHS = new Set<string>([
+  '/auth/sign-up/email',
+  '/auth/sign-in/email',
+  '/auth/sign-in/magic-link',
+  '/auth/magic-link/verify',
+  '/auth/sign-in/social',
+  '/auth/callback/{id}',
+  '/auth/request-password-reset',
+  // POST takes a token in the body; GET `{token}` is the link target.
+  '/auth/reset-password',
+  '/auth/reset-password/{token}',
+  '/auth/verify-email',
+  '/auth/ok',
+  '/auth/error',
+  '/auth/refresh-token',
+  '/auth/delete-user/callback',
+])
+
+/**
+ * Auth paths auto-generated by better-auth's `openAPI` plugin.
+ *
+ * The plugin introspects every registered endpoint (core sign-in/up/out,
+ * session, email verification, password reset + the `magicLink` plugin)
+ * and emits accurate OpenAPI paths, request bodies, and error responses.
+ * This replaces the previous hand-maintained auth paths that had drifted
+ * from the real routes (e.g. magic-link is `/sign-in/magic-link`, not
+ * `/magic-link/generate`).
+ *
+ * Post-processing applied to each operation:
+ *   - **Path prefix**: better-auth emits paths relative to its `basePath`
+ *     (`/auth`), e.g. `/sign-in/magic-link`. We prefix with `/auth` so
+ *     the spec shows the full URL the API actually serves.
+ *   - **Security remap**: the plugin emits `security: [{ bearerAuth: [] }]`
+ *     (and a generic `apiKeyCookie` scheme with a placeholder cookie
+ *     name). We remap to our `session` cookie scheme, which documents
+ *     the real cookie name (`better-auth.session_token` /
+ *     `__Secure-better-auth.session_token`). Anonymous endpoints
+ *     (sign-in, sign-up, magic-link request, OAuth callbacks,
+ *     token-based flows) get `security: []` instead — see
+ *     `PUBLIC_AUTH_PATHS`.
+ *   - **Tag normalisation**: rename the plugin's `Default` tag (core
+ *     endpoints) to `auth` for consistency with the rest of the Spliit
+ *     API tags; lowercase `Magic-link` → `magic-link`.
+ */
+async function buildAuthPaths(): Promise<{
+  paths: Record<string, OpenAPIV3_1.PathItemObject>
+  schemas: Record<string, OpenAPIV3_1.SchemaObject>
+}> {
+  const authSchema = await auth.api.generateOpenAPISchema()
+  const paths: Record<string, OpenAPIV3_1.PathItemObject> = {}
+  for (const [path, item] of Object.entries(authSchema.paths ?? {})) {
+    if (!item) continue
+    // better-auth emits paths relative to its basePath; prefix with
+    // `/auth` so the spec shows the full URL the API serves.
+    const fullPath = path.startsWith('/') ? `/auth${path}` : `/auth/${path}`
+    const newItem = structuredClone(item) as OpenAPIV3_1.PathItemObject
+    for (const method of ['get', 'post', 'put', 'delete', 'patch'] as const) {
+      const op = (
+        newItem as Record<string, OpenAPIV3_1.OperationObject | undefined>
+      )[method]
+      if (!op) continue
+      // Anonymous endpoints → no security required. Everything else
+      // → `session` cookie scheme (overrides the plugin's generic
+      // `bearerAuth` and documents the real cookie name).
+      op.security = PUBLIC_AUTH_PATHS.has(fullPath) ? [] : [{ session: [] }]
+      // Normalise tags: `Default` (core) → `auth`; `Magic-link` → `magic-link`.
+      op.tags = (op.tags ?? []).map((tag) =>
+        tag === 'Default' ? 'auth' : tag === 'Magic-link' ? 'magic-link' : tag,
+      )
+      if (op.tags.length === 0) op.tags = ['auth']
+    }
+    paths[fullPath] = newItem
+  }
+  const schemas = (authSchema.components?.schemas ?? {}) as unknown as Record<
+    string,
+    OpenAPIV3_1.SchemaObject
+  >
+  return { paths, schemas }
+}
+
+/**
+ * Hand-maintained OpenAPI paths for the group expense CSV/JSON exports.
+ * These are Hono routes outside tRPC and outside better-auth, so they
+ * can't be auto-generated — they're documented here manually.
+ */
+function buildExportPaths(): Record<string, OpenAPIV3_1.PathItemObject> {
+  const groupIdParam: OpenAPIV3_1.ParameterObject = {
+    name: 'groupId',
+    in: 'path',
+    required: true,
+    schema: { type: 'string', minLength: 1 },
+    description: 'Group id.',
+  }
+
+  const errorResponse = (description: string, example: string) =>
+    ({
+      description,
+      content: {
+        'application/json': {
+          schema: { type: 'object' },
+          example,
+        },
+      },
+    }) satisfies OpenAPIV3_1.ResponseObject
+
+  return {
+    '/groups/{groupId}/expenses/export/json': {
+      parameters: [groupIdParam],
+      get: {
+        tags: ['groups'],
+        summary: 'Download a JSON export of the group expenses',
+        description:
+          'Stream the group + expenses + participants as a JSON file download. Requires an active membership.',
+        responses: {
+          '200': {
+            description: 'JSON file (Content-Disposition: attachment).',
+            content: {
+              'application/json': {
+                schema: { type: 'object' },
+              },
+            },
+          },
+          '401': errorResponse(
+            'Unauthenticated',
+            '{"error":"Unauthenticated"}',
+          ),
+          '403': errorResponse('Forbidden', '{"error":"Forbidden"}'),
+          '404': errorResponse(
+            'Invalid group ID',
+            '{"error":"Invalid group ID"}',
+          ),
+        },
+      },
+    },
+    '/groups/{groupId}/expenses/export/csv': {
+      parameters: [groupIdParam],
+      get: {
+        tags: ['groups'],
+        summary: 'Download a CSV export of the group expenses',
+        description:
+          'Stream the group expenses as a CSV file download. Requires an active membership.',
+        responses: {
+          '200': {
+            description: 'CSV file (Content-Disposition: attachment).',
+            content: {
+              'text/csv': { schema: { type: 'string' } },
+            },
+          },
+          '401': errorResponse(
+            'Unauthenticated',
+            '{"error":"Unauthenticated"}',
+          ),
+          '403': errorResponse('Forbidden', '{"error":"Forbidden"}'),
+          '404': errorResponse(
+            'Invalid group ID',
+            '{"error":"Invalid group ID"}',
+          ),
+        },
+      },
+    },
+  }
+}
+
+function buildTags(): OpenAPIV3_1.TagObject[] {
+  return [
+    {
+      name: 'auth',
+      description:
+        'better-auth core endpoints (sign-in, sign-up, sign-out, session, email verification, password reset). Auto-generated by the `openAPI` plugin. Sign-in/sign-up return a session cookie that authenticates the other routes.',
+    },
+    {
+      name: 'magic-link',
+      description:
+        'Magic-link sign-in plugin endpoints (request + verify). Auto-generated by the `openAPI` plugin.',
+    },
+    {
+      name: 'groups',
+      description: 'Group CRUD + expenses + balances + activities + exports.',
+    },
+    {
+      name: 'account',
+      description: 'Authenticated account profile and per-group preferences.',
+    },
+    {
+      name: 'ai',
+      description:
+        'AI-assisted extraction (receipt → expense fields, title → category). Some procedures are public for unauthenticated previews.',
+    },
+    {
+      name: 'currency',
+      description: 'Single + bulk FX lookups against the Frankfurter provider.',
+    },
+    {
+      name: 'features',
+      description: 'Public feature flags (used by the web client at boot).',
+    },
+    {
+      name: 'friends',
+      description: 'Friends and friend-ledger invitations.',
+    },
+    {
+      name: 'invitations',
+      description: 'Group invitations (email + link) and accept/decline flows.',
+    },
+    {
+      name: 'uploads',
+      description:
+        'S3/R2 presigned upload URLs for expense documents and profile images.',
+    },
+  ]
+}
+
+const ROOT_DESCRIPTION = `
+The Spliit API is a [tRPC](https://trpc.io) server mounted at \`/trpc\`. Every
+operation in this spec is a tRPC procedure that follows the tRPC wire
+convention:
+
+- **Paths are dotted procedure names.** A path like
+  \`/groups.expenses.create\` corresponds to the tRPC procedure
+  \`groups.expenses.create\` and resolves to
+  \`POST /trpc/groups.expenses.create\` at runtime.
+- **GET procedures** take their input as a single JSON query parameter
+  named \`input\`: \`GET /trpc/<proc>?input=<urlencoded-json>\`.
+- **POST procedures** (mutations) take their input as a JSON request body.
+- **Responses are wrapped** in the tRPC envelope. Successful responses
+  look like \`{ "result": { "data": <T> } }\`. Errors look like
+  \`{ "error": { "message": "…", "code": "UNAUTHORIZED" } }\`. The
+  \`components.schemas\` describe the unwrapped \`T\`; apply the envelope
+  on the wire.
+
+For TypeScript consumers, generate a typed client with
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) using the
+\`@trpc/openapi/heyapi\` resolvers and pass \`transformer: superjson\` at
+runtime — that handles \`Date\` / \`Map\` / \`Set\` round-tripping correctly.
+
+For non-TS hand-callers (curl, Postman, other languages) the same
+conventions apply: send credentials, POST mutations as JSON bodies with
+the tRPC path as the URL, and unwrap the \`{result:{data}}\` envelope
+from the response.
+
+Authentication is **cookie-based**, served by [better-auth](https://better-auth.com).
+Sign in via \`POST /auth/sign-in/email\` (email + password) or
+\`POST /auth/sign-in/magic-link\` (passwordless magic link) to receive a
+session cookie (\`better-auth.session_token\`, or
+\`__Secure-better-auth.session_token\` in production); send it with every
+subsequent request. See the \`session\` security scheme below.
+
+The full list of \`/auth/*\` endpoints — sign-in/sign-up/sign-out, session,
+email verification, password reset, social sign-in, account linking,
+magic-link, and more — is auto-generated by better-auth's
+[\`openAPI\` plugin](https://better-auth.com/docs/plugins/open-api) so it
+stays in sync with the actual routes. \`/groups/:groupId/expenses/export/*\`
+are hand-maintained Hono routes (CSV/JSON download).
+`.trim()
+
+main().catch((err) => {
+  console.error('Failed to generate OpenAPI spec:', err)
+  process.exit(1)
+})

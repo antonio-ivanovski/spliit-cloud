@@ -23,17 +23,14 @@ import { candidatesProcedure } from './candidates.procedure'
  */
 export const importLinksRouter = createTRPCRouter({
   /**
-   * List the destination candidates (existing active members and
-   * pending EMAIL-type invitations) for the "link unlinked
-   * participant" picker. See `candidates.procedure.ts` for the
-   * cross-check that excludes the unlinked LP itself and the LPs
-   * on the opposite side of any expense leg.
+   * Accounts and pending invitations that could be linked to an
+   * unlinked imported participant.
    */
   candidates: candidatesProcedure,
 
   /**
-   * List unlinked `LedgerParticipant` rows in the group. The web uses
-   * this to render the post-import admin link list.
+   * List imported participants that are not yet linked to an account
+   * or pending invitation.
    */
   listUnlinked: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
@@ -44,25 +41,8 @@ export const importLinksRouter = createTRPCRouter({
     }),
 
   /**
-   * One-way admin link: migrate an unlinked `LedgerParticipant` to
-   * an account, or merge it into a pending EMAIL or LINK-type
-   * invitation's materialized `LedgerParticipant`. The destination
-   * `GroupMember` is created or reactivated in the account case; the
-   * participant's `kind` flips to `ACCOUNT_MEMBER` and the
-   * `displayName` is cleared. In the pending-invite case the unlinked
-   * LP is deleted and its references are rewritten onto the
-   * invitee's LP.
-   *
-   * The caller must supply either `accountId` (a known account),
-   * `email` (we look up the account server-side), or
-   * `pendingInvitationId` (merge into the invitee's LP).
-   * `pendingInvitationId` takes precedence: when it is present, the
-   * account-resolution branch is skipped and the email field (if
-   * also supplied, possibly as a synthetic `*.placeholder.local`
-   * for LINK-type) is ignored. Email matching is case-insensitive.
-   * When no account exists for the email, the mutation rejects with
-   * `NOT_FOUND` so the admin can invite the person via the regular
-   * invite flow first.
+   * Link an unlinked imported participant to an account, email, or
+   * pending invitation (exactly one).
    */
   link: protectedProcedure
     .input(
@@ -70,7 +50,13 @@ export const importLinksRouter = createTRPCRouter({
         .object({
           groupId: z.string().min(1),
           ledgerParticipantId: z.string().min(1),
-          accountId: z.string().min(1).optional(),
+          accountId: z
+            .string()
+            .min(1)
+            .optional()
+            .describe(
+              'Exactly one of accountId, email, or pendingInvitationId must be set.',
+            ),
           email: z.string().email().optional(),
           pendingInvitationId: z.string().min(1).optional(),
         })

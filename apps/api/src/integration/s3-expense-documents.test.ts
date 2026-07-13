@@ -2,6 +2,7 @@ import { prisma } from '@spliit/db'
 import { afterAll, describe, expect, it } from 'vitest'
 import { app } from '../app'
 import { randomId } from '../lib/api'
+import { appRouter } from '../trpc/routers/_app'
 import { groupsRouter } from '../trpc/routers/groups'
 import {
   getObjectBody,
@@ -111,6 +112,28 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     } as never)
   }
 
+  // Build a caller for the full app router so tests can hit the
+  // `uploads.presign` mutation directly. Pass `null` for `accountId`
+  // to simulate an unauthenticated request (the protectedProcedure
+  // will reject with UNAUTHORIZED).
+  function makeUploadsCaller(accountId: string | null, email?: string) {
+    return appRouter.createCaller(
+      accountId
+        ? ({
+            auth: {
+              session: { id: `sess-${randomId()}` },
+              user: {
+                id: accountId,
+                email: email ?? '',
+                emailVerified: true,
+                name: 'S3 Test Admin',
+              },
+            },
+          } as never)
+        : ({ auth: null } as never),
+    )
+  }
+
   async function createGroup(
     name: string,
     adminId: string,
@@ -183,25 +206,15 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     const caller = makeCaller(accountId, email)
 
     // 1a — Presign upload URL & PUT bytes
-    const presignRes = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        cookie,
-      },
-      body: JSON.stringify({
-        ledgerId,
-        fileName: 'receipt.jpg',
-        contentType: 'image/jpeg',
-        fileSize: 1024,
-      }),
+    const presignData = await makeUploadsCaller(
+      accountId,
+      email,
+    ).uploads.presign({
+      ledgerId,
+      fileName: 'receipt.jpg',
+      contentType: 'image/jpeg',
+      fileSize: 1024,
     })
-    expect(presignRes.status).toBe(200)
-    const presignData = (await presignRes.json()) as {
-      uploadUrl: string
-      fileUrl: string
-      key: string
-    }
     expect(presignData.key).toMatch(/^tmp\//)
 
     const content = Buffer.from('fake-jpeg-test-content')
@@ -280,21 +293,15 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
 
     const promotedKeys: string[] = []
     for (let i = 0; i < 3; i++) {
-      const presignRes = await app.request('/uploads/presign', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', cookie },
-        body: JSON.stringify({
-          ledgerId,
-          fileName: `doc-${i}.jpg`,
-          contentType: 'image/jpeg',
-          fileSize: 512,
-        }),
+      const { uploadUrl, fileUrl, key } = await makeUploadsCaller(
+        accountId,
+        email,
+      ).uploads.presign({
+        ledgerId,
+        fileName: `doc-${i}.jpg`,
+        contentType: 'image/jpeg',
+        fileSize: 512,
       })
-      const { uploadUrl, fileUrl, key } = (await presignRes.json()) as {
-        uploadUrl: string
-        fileUrl: string
-        key: string
-      }
       await fetch(uploadUrl, {
         method: 'PUT',
         headers: { 'Content-Type': 'image/jpeg' },
@@ -357,25 +364,16 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     const caller = makeCaller(accountId, email)
 
     // Upload A
-    const presignA = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', cookie },
-      body: JSON.stringify({
-        ledgerId,
-        fileName: 'a.jpg',
-        contentType: 'image/jpeg',
-        fileSize: 512,
-      }),
-    })
     const {
       uploadUrl: uploadUrlA,
       fileUrl: fileUrlA,
       key: tmpKeyA,
-    } = (await presignA.json()) as {
-      uploadUrl: string
-      fileUrl: string
-      key: string
-    }
+    } = await makeUploadsCaller(accountId, email).uploads.presign({
+      ledgerId,
+      fileName: 'a.jpg',
+      contentType: 'image/jpeg',
+      fileSize: 512,
+    })
     await fetch(uploadUrlA, {
       method: 'PUT',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -383,25 +381,16 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     })
 
     // Upload B
-    const presignB = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', cookie },
-      body: JSON.stringify({
-        ledgerId,
-        fileName: 'b.jpg',
-        contentType: 'image/jpeg',
-        fileSize: 512,
-      }),
-    })
     const {
       uploadUrl: uploadUrlB,
       fileUrl: fileUrlB,
       key: tmpKeyB,
-    } = (await presignB.json()) as {
-      uploadUrl: string
-      fileUrl: string
-      key: string
-    }
+    } = await makeUploadsCaller(accountId, email).uploads.presign({
+      ledgerId,
+      fileName: 'b.jpg',
+      contentType: 'image/jpeg',
+      fileSize: 512,
+    })
     await fetch(uploadUrlB, {
       method: 'PUT',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -441,25 +430,16 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     expect(await objectExists(tmpKeyB)).toBe(false)
 
     // Upload A' (replacement for A)
-    const presignAprime = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', cookie },
-      body: JSON.stringify({
-        ledgerId,
-        fileName: 'a-prime.jpg',
-        contentType: 'image/jpeg',
-        fileSize: 512,
-      }),
-    })
     const {
       uploadUrl: uploadUrlAprime,
       fileUrl: fileUrlAprime,
       key: tmpKeyAprime,
-    } = (await presignAprime.json()) as {
-      uploadUrl: string
-      fileUrl: string
-      key: string
-    }
+    } = await makeUploadsCaller(accountId, email).uploads.presign({
+      ledgerId,
+      fileName: 'a-prime.jpg',
+      contentType: 'image/jpeg',
+      fileSize: 512,
+    })
     await fetch(uploadUrlAprime, {
       method: 'PUT',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -510,69 +490,62 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   // -------------------------------------------------------------------
   // Group 4: Presigned URL auth edge cases
   // -------------------------------------------------------------------
-  it('4a: presign — no cookie returns 401', async () => {
-    const res = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        origin: 'http://localhost:3000',
-      },
-      body: JSON.stringify({
+  it('4a: presign — no auth returns UNAUTHORIZED', async () => {
+    await expect(
+      makeUploadsCaller(null).uploads.presign({
         ledgerId: 'some-ledger',
         fileName: 'test.jpg',
         contentType: 'image/jpeg',
       }),
+    ).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+      message: 'Authentication required',
     })
-    expect(res.status).toBe(401)
-    const body = (await res.json()) as { error: string }
-    expect(body.error).toBe('Unauthenticated')
   })
 
-  it('4b: presign — empty body (no ledgerId) returns 400', async () => {
+  it('4b: presign — empty body (no ledgerId) returns BAD_REQUEST', async () => {
     const runId = testRunId()
     const email = `s4b-${runId}@test.example`
 
-    const { cookie } = await createSession(email)
-    expect(cookie).not.toBe('')
+    const { accountId } = await createSession(email)
 
-    const res = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', cookie },
-      body: JSON.stringify({
+    // The new tRPC mutation validates `ledgerId` with Zod (.min(1))
+    // before the resolver runs, so an empty string is rejected as a
+    // validation error rather than as the Hono helper's "Missing
+    // ledgerId" message. We assert on the validation error shape.
+    await expect(
+      makeUploadsCaller(accountId, email).uploads.presign({
+        ledgerId: '',
         fileName: 'test.jpg',
         contentType: 'image/jpeg',
       }),
+    ).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
     })
-    expect(res.status).toBe(400)
-    const body = (await res.json()) as { error: string }
-    expect(body.error).toBe('Missing ledgerId')
   })
 
-  it('4c: presign — fileSize > 2MB returns 400', async () => {
+  it('4c: presign — fileSize > 2MB returns BAD_REQUEST', async () => {
     const runId = testRunId()
     const email = `s4c-${runId}@test.example`
 
-    const { cookie, accountId } = await createSession(email)
-    expect(cookie).not.toBe('')
+    const { accountId } = await createSession(email)
 
     const { ledgerId } = await createGroup(`Auth4c-${runId}`, accountId, email)
 
-    const res = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', cookie },
-      body: JSON.stringify({
+    await expect(
+      makeUploadsCaller(accountId, email).uploads.presign({
         ledgerId,
         fileName: 'large.jpg',
         contentType: 'image/jpeg',
         fileSize: 2 * 1024 * 1024 + 1,
       }),
+    ).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+      message: expect.stringMatching(/exceeds the maximum upload size/i),
     })
-    expect(res.status).toBe(400)
-    const body = (await res.json()) as { error: string }
-    expect(body.error).toMatch(/exceeds the maximum upload size/i)
   })
 
-  it('4d: presign — non-member returns 403', async () => {
+  it('4d: presign — non-member returns FORBIDDEN', async () => {
     const runId = testRunId()
     const emailA = `s4d-a-${runId}@test.example`
 
@@ -585,48 +558,34 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
 
     // User B signs in but is not a member
     const emailB = `s4d-b-${runId}@test.example`
-    const { cookie: cookieB } = await createSession(emailB)
-    expect(cookieB).not.toBe('')
+    const { accountId: accountIdB } = await createSession(emailB)
 
-    const res = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', cookie: cookieB },
-      body: JSON.stringify({
+    await expect(
+      makeUploadsCaller(accountIdB, emailB).uploads.presign({
         ledgerId,
         fileName: 'test.jpg',
         contentType: 'image/jpeg',
       }),
+    ).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+      message: expect.stringMatching(/not authorized/i),
     })
-    expect(res.status).toBe(403)
-    const body = (await res.json()) as { error: string }
-    expect(body.error).toMatch(/not authorized/i)
   })
 
-  it('4e: presign — valid cookie + member returns 200 with callable URL', async () => {
+  it('4e: presign — valid cookie + member returns a callable URL', async () => {
     const runId = testRunId()
     const email = `s4e-${runId}@test.example`
 
-    const { cookie, accountId } = await createSession(email)
-    expect(cookie).not.toBe('')
+    const { accountId } = await createSession(email)
 
     const { ledgerId } = await createGroup(`Auth4e-${runId}`, accountId, email)
 
-    const res = await app.request('/uploads/presign', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', cookie },
-      body: JSON.stringify({
-        ledgerId,
-        fileName: 'test.jpg',
-        contentType: 'image/jpeg',
-        fileSize: 512,
-      }),
+    const data = await makeUploadsCaller(accountId, email).uploads.presign({
+      ledgerId,
+      fileName: 'test.jpg',
+      contentType: 'image/jpeg',
+      fileSize: 512,
     })
-    expect(res.status).toBe(200)
-    const data = (await res.json()) as {
-      uploadUrl: string
-      fileUrl: string
-      key: string
-    }
     expect(data).toHaveProperty('uploadUrl')
     expect(data).toHaveProperty('fileUrl')
     expect(data).toHaveProperty('key')

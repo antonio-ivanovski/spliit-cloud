@@ -75,6 +75,7 @@ function AccountSettingsContent() {
     onSuccess: refreshAccount,
   })
   const setProfileImage = trpc.account.setProfileImage.useMutation()
+  const presignProfileImage = trpc.uploads.profileImagePresign.useMutation()
 
   // `name` is derived from `dirtyName ?? account?.name` so the input
   // automatically reflects the server-side value when the account loads
@@ -130,21 +131,9 @@ function AccountSettingsContent() {
     setIsUploadingImage(true)
     try {
       const prepared = await prepareProfileImage(file)
-      const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
-      const presignResponse = await fetch(
-        `${apiUrl}/uploads/profile-image/presign`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ fileSize: prepared.size }),
-        },
-      )
-      if (!presignResponse.ok) throw new Error('Could not create upload URL')
-      const { uploadUrl, fileUrl } = (await presignResponse.json()) as {
-        uploadUrl: string
-        fileUrl: string
-      }
+      const { uploadUrl, fileUrl } = await presignProfileImage.mutateAsync({
+        fileSize: prepared.size,
+      })
       const uploadResponse = await fetch(uploadUrl, {
         method: 'PUT',
         headers: { 'Content-Type': 'image/jpeg' },

@@ -12,3 +12,4 @@ postgres-data
 !.env.example
 !container.env.example
 !bun.lock
+apps/api/openapi.json

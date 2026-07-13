@@ -21,7 +21,13 @@ import { loadGroupContext, protectedProcedure } from '../../../init'
 const previewInputSchema = z.object({
   groupId: z.string().min(1),
   locale: z.string().optional(),
-  fromCategoryId: z.string().min(1).optional(),
+  fromCategoryId: z
+    .string()
+    .min(1)
+    .optional()
+    .describe(
+      "Filter expenses currently in this category. Defaults to 'general'.",
+    ),
   // Admin-supplied corrections, same shape & rationale as in
   // calibrate. Threaded into every chunk's preamble so the AI uses
   // them as ground truth.
@@ -33,7 +39,10 @@ const previewInputSchema = z.object({
       }),
     )
     .max(BULK_CALIBRATION_SAMPLE_SIZE * 100)
-    .optional(),
+    .optional()
+    .describe(
+      'Previous (expenseId, categoryId) picks to condition the AI model on prior answers.',
+    ),
 })
 
 export const aiBulkCategorizePreviewProcedure = protectedProcedure

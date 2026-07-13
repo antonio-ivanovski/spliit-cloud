@@ -39,7 +39,9 @@ export const getGroupProcedure = protectedProcedure
       // enforced by `loadGroupContext` (for members) and the inline
       // LINK check below (for non-members) against the stored hash, so
       // no client-side format check is needed here.
-      linkInviteToken: linkInviteTokenInput,
+      linkInviteToken: linkInviteTokenInput.describe(
+        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
+      ),
     }),
   )
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {

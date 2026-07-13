@@ -365,6 +365,8 @@ For now, the best ways to support Spliit Cloud are:
 ## Links
 
 - App: [spliit.cloud](https://spliit.cloud)
+- API reference (Scalar): [api.spliit.cloud/docs](https://api.spliit.cloud/docs)
+- OpenAPI spec: [api.spliit.cloud/openapi.json](https://api.spliit.cloud/openapi.json)
 - Repository: [github.com/antonio-ivanovski/spliit-cloud](https://github.com/antonio-ivanovski/spliit-cloud)
 - Original Spliit repository: [github.com/spliit-app/spliit](https://github.com/spliit-app/spliit)
 - Original creator: [Sebastien Castiel](https://github.com/scastiel)

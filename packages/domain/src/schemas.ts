@@ -11,7 +11,11 @@ export const groupFormSchema = z
     name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
     information: z.string().optional(),
     currency: z.string().min(1, { error: 'min1' }).max(5, { error: 'max5' }),
-    currencyCode: z.union([z.string().length(3).nullish(), z.literal('')]), // ISO-4217 currency code
+    currencyCode: z
+      .union([z.string().length(3).nullish(), z.literal('')])
+      .describe(
+        'ISO-4217 3-letter code, or empty string for custom currencies',
+      ),
     participants: z
       .array(
         z.object({
@@ -47,10 +51,29 @@ export type GroupFormValues = z.infer<typeof groupFormSchema>
 // cleanly with `optional()` fields across all three paths.
 export const friendFormSchema = z
   .object({
-    peerAccountId: z.string().min(1).optional(),
+    peerAccountId: z
+      .string()
+      .min(1)
+      .optional()
+      .describe(
+        'Exactly one of peerAccountId, peerEmail, or useLink must be set.',
+      ),
     peerEmail: z.string().email().optional(),
-    temporaryName: z.string().trim().min(1).max(120).optional(),
-    useLink: z.boolean().optional(),
+    temporaryName: z
+      .string()
+      .trim()
+      .min(1)
+      .max(120)
+      .optional()
+      .describe(
+        "Required when useLink is true; used as the friend's display name until they sign up.",
+      ),
+    useLink: z
+      .boolean()
+      .optional()
+      .describe(
+        'Create via shareable link. Exactly one of peerAccountId, peerEmail, or useLink must be set.',
+      ),
     currency: z.string().min(1),
     currencyCode: z.string().optional(),
     information: z.string().optional(),
@@ -126,12 +149,22 @@ const formPaidByRowSchema = z.object({
 // BY_SHARES / EVENLY.
 const apiPaidForRowSchema = z.object({
   participant: z.string(),
-  shares: z.number().int(),
+  shares: z
+    .number()
+    .int()
+    .describe(
+      'Units depend on splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+    ),
 })
 
 const apiPaidByRowSchema = z.object({
   participant: z.string(),
-  shares: z.number().int(),
+  shares: z
+    .number()
+    .int()
+    .describe(
+      'Units depend on paidBySplitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+    ),
 })
 
 const itemSplitModeSchema = z
@@ -145,7 +178,12 @@ const itemFormPaidForRowSchema = z.object({
 
 const itemApiPaidForRowSchema = z.object({
   participant: z.string(),
-  shares: z.number().int(),
+  shares: z
+    .number()
+    .int()
+    .describe(
+      'Units depend on the item splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+    ),
 })
 
 const itemRowDuplicateGuard = (
@@ -175,12 +213,19 @@ const itemRowDuplicateGuard = (
 // and the UI hides the save action when the current split is itemized.
 export const defaultSplitSchema = z
   .object({
-    splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
+    splitMode: z
+      .enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT'])
+      .describe('ITEMIZED is rejected — only flat split modes are allowed.'),
     paidFor: z
       .array(
         z.object({
           participant: z.string(),
-          shares: z.number().int(),
+          shares: z
+            .number()
+            .int()
+            .describe(
+              'Units depend on splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+            ),
         }),
       )
       .min(1),
@@ -245,9 +290,17 @@ export const expenseItemFormInputSchema = z.object({
 export const expenseItemApiSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, { error: 'itemTitleRequired' }),
-  unitPrice: z.number().int().positive('itemAmountPositive'),
+  unitPrice: z
+    .number()
+    .int()
+    .positive('itemAmountPositive')
+    .describe('Integer minor units of the expense currency.'),
   quantity: z.number().int().min(1, { error: 'itemQuantityMin1' }),
-  amount: z.number().int().positive('itemAmountPositive'),
+  amount: z
+    .number()
+    .int()
+    .positive('itemAmountPositive')
+    .describe('Integer minor units. Must equal unitPrice * quantity.'),
   paidFor: z
     .array(itemApiPaidForRowSchema)
     .min(0)
@@ -528,8 +581,13 @@ export const expenseApiSchema = z
       .refine((amount) => amount != 0, 'amountNotZero')
       // 1,000,000,000 minor units = $10,000,000 (decimal_digits=2).
       // Same error key as the form schema's `amountTenMillion`.
-      .refine((amount) => amount <= 1_000_000_000, 'amountTenMillion'),
-    conversion: optionalExpenseConversionSchema,
+      .refine((amount) => amount <= 1_000_000_000, 'amountTenMillion')
+      .describe(
+        'Integer minor units of the expense currency (e.g. cents), not decimal. Max 1,000,000,000.',
+      ),
+    conversion: optionalExpenseConversionSchema.describe(
+      'Optional FX conversion to the ledger base currency. Absent means same currency as the group.',
+    ),
     paidBySplitMode: paidBySplitModeSchema,
     paidByList: z
       .array(apiPaidByRowSchema)
@@ -558,14 +616,27 @@ export const expenseApiSchema = z
           }
         }
       }),
-    isMultiPayer: z.boolean().default(false),
+    isMultiPayer: z
+      .boolean()
+      .default(false)
+      .describe(
+        'Whether multiple participants paid. When false, paidByList must contain a single row.',
+      ),
     splitMode: splitModeSchema,
-    isReimbursement: z.boolean(),
+    isReimbursement: z
+      .boolean()
+      .describe(
+        'Marks a payment between participants rather than an expense. Excluded from spend stats.',
+      ),
     documents: documentsSchema,
     notes: z.string().optional(),
     recurrenceRule: recurrenceRuleSchema,
     items: z.array(expenseItemApiSchema).optional(),
-    itemizedRemainder: itemizedRemainderApiSchema.optional(),
+    itemizedRemainder: itemizedRemainderApiSchema
+      .optional()
+      .describe(
+        'How the leftover amount (total minus item subtotals) is split across participants.',
+      ),
   })
   .superRefine((expense, ctx) => {
     switch (expense.splitMode) {
@@ -657,8 +728,17 @@ export type Expense = z.infer<typeof expenseApiSchema>
  */
 export const bulkUpdateExpenseCategoriesInputSchema = z.object({
   groupId: z.string().min(1),
-  fromCategoryId: categoryIdSchema.default(categoryIdSchema.options[0]),
-  triggeredByAiConfidence: z.boolean().optional(),
+  fromCategoryId: categoryIdSchema
+    .default(categoryIdSchema.options[0])
+    .describe(
+      "Recategorize expenses currently in this category. Defaults to 'general'.",
+    ),
+  triggeredByAiConfidence: z
+    .boolean()
+    .optional()
+    .describe(
+      'Whether this bulk update was triggered by an AI confidence workflow.',
+    ),
   changes: z
     .array(
       z.object({

@@ -38,6 +38,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# generated
+packages/db/src/generated
+apps/api/openapi.json
+
 # db
 postgres-data
 storage/
@@ -50,7 +54,7 @@ storage/maxio/buckets/*
 !storage/maxio/buckets/spliit-local/
 storage/maxio/buckets/spliit-local/*
 !storage/maxio/buckets/spliit-local/.bucket.json
-packages/db/src/generated
+
 
 # Playwright
 node_modules/

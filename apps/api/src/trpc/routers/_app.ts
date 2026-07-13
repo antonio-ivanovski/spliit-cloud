@@ -7,6 +7,7 @@ import { featuresRouter } from './features'
 import { friendsRouter } from './friends'
 import { groupsRouter } from './groups'
 import { invitationsRouter } from './invitations'
+import { uploadsRouter } from './uploads'
 
 export const appRouter = createTRPCRouter({
   account: accountRouter,
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   features: featuresRouter,
   friends: friendsRouter,
   invitations: invitationsRouter,
+  uploads: uploadsRouter,
 })
 
 export type AppRouter = typeof appRouter

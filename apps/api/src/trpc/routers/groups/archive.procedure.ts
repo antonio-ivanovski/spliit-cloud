@@ -29,7 +29,10 @@ export const archiveGroupProcedure = protectedProcedure
     z.object({
       groupId: z.string().min(1),
       archived: z.boolean(),
-      force: z.boolean().optional(),
+      force: z
+        .boolean()
+        .optional()
+        .describe('Archive even when the group has non-zero balances.'),
     }),
   )
   .mutation(async ({ input: { groupId, archived, force = false }, ctx }) => {

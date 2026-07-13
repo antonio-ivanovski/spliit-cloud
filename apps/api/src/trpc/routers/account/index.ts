@@ -28,6 +28,9 @@ export const accountRouter = createTRPCRouter({
     return { account: ctx.auth.user }
   }),
 
+  /**
+   * Update the display name. Used by the post-signup complete-profile flow.
+   */
   // Update the current account's display name. Used by the
   // `complete-profile` flow that runs after a magic-link sign-up (or any
   // other first-time sign-in) when the account has no display name yet.
@@ -56,6 +59,7 @@ export const accountRouter = createTRPCRouter({
       return { account }
     }),
 
+  /** Delete the profile avatar and clean up the S3 object. */
   removeProfileImage: protectedProcedure.mutation(async ({ ctx }) => {
     const existing = await prisma.account.findUnique({
       where: { id: ctx.auth.user.id },
@@ -79,6 +83,7 @@ export const accountRouter = createTRPCRouter({
     return { account }
   }),
 
+  /** Set the profile avatar. `fileUrl` must come from `uploads.profileImagePresign`. */
   setProfileImage: protectedProcedure
     .input(z.object({ fileUrl: z.string().url() }))
     .mutation(async ({ input, ctx }) => {
@@ -113,12 +118,18 @@ export const accountRouter = createTRPCRouter({
       return { account }
     }),
 
+  /**
+   * List the caller's groups. Skips archived and hidden unless `includeArchived` is true.
+   */
   // Account group memberships (active ones by default).
   groups: protectedProcedure
     .input(
       z
         .object({
-          includeArchived: z.boolean().default(false),
+          includeArchived: z
+            .boolean()
+            .describe('Include archived and hidden groups in the result.')
+            .default(false),
         })
         .default({ includeArchived: false }),
     )
@@ -270,6 +281,7 @@ export const accountRouter = createTRPCRouter({
       }
     }),
 
+  /** Set per-group UI preferences (starred, hidden) for the caller. */
   setPreference: protectedProcedure
     .input(
       z.object({
@@ -305,6 +317,9 @@ export const accountRouter = createTRPCRouter({
       }
     }),
 
+  /**
+   * Get the caller's persisted default split for a group. Returns null when none is saved.
+   */
   // Per-user, per-group saved default split. Null means "no default".
   // ITEMIZED is not allowed: itemized expenses carry an `items` array
   // whose shape is too heavy to be a useful "default", and the UI hides
@@ -330,6 +345,7 @@ export const accountRouter = createTRPCRouter({
       }
     }),
 
+  /** Persist the caller's default split for a group. ITEMIZED is rejected by the schema. */
   setDefaultSplit: protectedProcedure
     .input(
       z.object({
@@ -413,6 +429,7 @@ export const accountRouter = createTRPCRouter({
       return { defaultSplit }
     }),
 
+  /** List active members of a group. Used by the default-split picker. */
   // Members list for a group (active members). Used to render member
   // management UI.
   members: protectedProcedure
@@ -440,6 +457,10 @@ export const accountRouter = createTRPCRouter({
       return { members }
     }),
 
+  /**
+   * List accounts the caller has shared groups with, ordered by shared group count.
+   * When `groupId` is provided, each friend carries an `isMember` flag.
+   */
   // Friends: accounts the current user has shared groups with,
   // ordered by number of shared groups descending. Excludes accounts
   // whose only email is a synthetic placeholder (cannot be invited

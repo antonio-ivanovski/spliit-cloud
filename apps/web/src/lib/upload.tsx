@@ -1,3 +1,4 @@
+import { trpc } from '@/trpc/client'
 import { useMutation } from '@tanstack/react-query'
 import type { ChangeEvent, InputHTMLAttributes } from 'react'
 import { useRef } from 'react'
@@ -129,27 +130,17 @@ export async function prepareProfileImage(file: File): Promise<File> {
 
 export function usePresignedUpload(ledgerId?: string | null) {
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const presignMutation = trpc.uploads.presign.useMutation()
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
       const contentType = file.type || 'application/octet-stream'
-      const presignResponse = await fetch(`${apiUrl}/uploads/presign`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          ledgerId,
-          fileName: file.name,
-          contentType,
-          fileSize: file.size,
-        }),
+      const { uploadUrl, fileUrl } = await presignMutation.mutateAsync({
+        ledgerId: ledgerId ?? '',
+        fileName: file.name,
+        contentType,
+        fileSize: file.size,
       })
-      if (!presignResponse.ok) throw new Error('Could not create upload URL')
-      const { uploadUrl, fileUrl } = (await presignResponse.json()) as {
-        uploadUrl: string
-        fileUrl: string
-      }
       const uploadResponse = await fetch(uploadUrl, {
         method: 'PUT',
         headers: { 'Content-Type': contentType },

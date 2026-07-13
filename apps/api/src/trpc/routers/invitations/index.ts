@@ -64,6 +64,7 @@ export const invitationsRouter = createTRPCRouter({
       return { invitations }
     }),
 
+  /** Create a shareable link invitation. Returns the full invite URL and expiry. */
   // Create a single-use link invitation (ADMIN only). The raw token is
   // returned exactly once; subsequent reads only see the hash. The
   // web client surfaces the URL in a copyable card right after
@@ -73,7 +74,15 @@ export const invitationsRouter = createTRPCRouter({
       z.object({
         groupId: z.string().min(1),
         role: invitationRoleSchema.default('MEMBER'),
-        temporaryName: z.string().trim().min(1).max(120).optional(),
+        temporaryName: z
+          .string()
+          .trim()
+          .min(1)
+          .max(120)
+          .describe(
+            'Pending-only label that overrides the email/name wherever the invitee is rendered.',
+          )
+          .optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -106,6 +115,7 @@ export const invitationsRouter = createTRPCRouter({
       }
     }),
 
+  /** Public: preview a link invitation by token (no auth). Shows group name and role before accepting. */
   // Public preview of a link invitation. The accept page calls this
   // before showing the Accept button so unauthenticated visitors can
   // see the group name and inviter (and a clear error message when the
@@ -119,6 +129,7 @@ export const invitationsRouter = createTRPCRouter({
       return { preview }
     }),
 
+  /** Accept a link invitation by token. Joins the group with the invitation's role. */
   // Accept a link invitation for the current account. The helper
   // refuses expired / revoked / already-used tokens and the
   // double-active-member case.
@@ -132,6 +143,7 @@ export const invitationsRouter = createTRPCRouter({
       return { groupId: result.groupId, role: result.role }
     }),
 
+  /** Send an email invitation. The invitee appears as pending until they accept. */
   // Create an email invitation (ADMIN only). Today this is the only
   // invite kind; a link-invite sibling will sit next to it later.
   create: protectedProcedure
@@ -142,7 +154,15 @@ export const invitationsRouter = createTRPCRouter({
         role: invitationRoleSchema.default('MEMBER'),
         // Pending-only label that wins over the email wherever a
         // pending invitee is rendered.
-        temporaryName: z.string().trim().min(1).max(120).optional(),
+        temporaryName: z
+          .string()
+          .trim()
+          .min(1)
+          .max(120)
+          .describe(
+            'Pending-only label that overrides the email/name wherever the invitee is rendered.',
+          )
+          .optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -191,6 +211,7 @@ export const invitationsRouter = createTRPCRouter({
       return { invitationId: invitation.id }
     }),
 
+  /** Preview the balance impact of revoking a pending invitation. */
   // Read-only summary the web client uses to render the admin
   // "revoke invitation" dialog. Mirrors `groups.members.removePreview`:
   // returns whether the invitation's ledger participant has unsettled
@@ -226,6 +247,7 @@ export const invitationsRouter = createTRPCRouter({
       }
     }),
 
+  /** Revoke a pending invitation. Requires `settleBalances: true` when the invitee has unsettled balances. */
   // Revoke a pending invitation (ADMIN only).
   //
   // If the invitation's materialized ledger participant has unsettled
@@ -240,7 +262,12 @@ export const invitationsRouter = createTRPCRouter({
     .input(
       z.object({
         invitationId: z.string().min(1),
-        settleBalances: z.boolean().optional(),
+        settleBalances: z
+          .boolean()
+          .describe(
+            "When true, create settlement expenses for the invitee's balances before revoking.",
+          )
+          .optional(),
       }),
     )
     .mutation(async ({ input: { invitationId, settleBalances }, ctx }) => {

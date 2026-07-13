@@ -2,9 +2,10 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
   getCurrencyRates,
+  type BatchRateRequest,
   type BatchRateResult,
 } from '../../../lib/currency-rates'
-import { baseProcedure, createTRPCRouter } from '../../init'
+import { baseProcedure, createTRPCRouter, protectedProcedure } from '../../init'
 
 // `YYYY-MM-DD` (no time component). Frankfurter's date is the
 // requested date for the rate, not a timestamp.
@@ -15,6 +16,16 @@ const singleRateInput = z.object({
   date: dateSchema,
   base: currencyCodeSchema,
   target: currencyCodeSchema,
+})
+
+const batchRateItemInput = z.object({
+  date: dateSchema,
+  base: currencyCodeSchema,
+  target: currencyCodeSchema,
+})
+
+const batchRateInput = z.object({
+  items: z.array(batchRateItemInput).min(1).max(500),
 })
 
 /**
@@ -50,22 +61,7 @@ function raiseBatchError(
 }
 
 export const currencyRouter = createTRPCRouter({
-  /**
-   * Preview exchange rate for the expense form. The API fetches the rate
-   * from Frankfurter server-side and caches it in-memory, which lets the
-   * browser keep making direct XHR calls (no CORS dance with the
-   * upstream) and avoids hammering the provider for repeated form
-   * interactions.
-   *
-   * Returns the rate and both the requested and as-of dates so the
-   * client can show a warning when the as-of differs from the
-   * requested date (e.g. weekend / holiday market fallback).
-   *
-   * Bulk lookups for the import wizard are handled by the POST
-   * `/currency/rates` endpoint rather than this tRPC procedure — the
-   * superjson-enveloped batch URL blew past 8 KB on large imports and
-   * tripped HTTP 431.
-   */
+  /** Public: single FX rate for a date from the Frankfurter provider. */
   getRate: baseProcedure.input(singleRateInput).query(async ({ input }) => {
     const [result] = await getCurrencyRates([
       {
@@ -82,4 +78,17 @@ export const currencyRouter = createTRPCRouter({
     }
     raiseBatchError(result.error)
   }),
+
+  /** Bulk-fetch up to 500 FX rates in one call. */
+  rates: protectedProcedure
+    .input(batchRateInput)
+    .mutation(async ({ input }) => {
+      const items: BatchRateRequest[] = input.items.map((item) => ({
+        date: item.date,
+        base: item.base.toUpperCase(),
+        target: item.target.toUpperCase(),
+      }))
+      const results = await getCurrencyRates(items)
+      return { results }
+    }),
 })

@@ -3,7 +3,7 @@ import { isStrongPassword } from '@spliit/domain/password'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
-import { magicLink } from 'better-auth/plugins'
+import { magicLink, openAPI } from 'better-auth/plugins'
 import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
 import { env, webOrigins } from '../env'
 import { buildProviderPlaceholderEmail } from '../invitations'
@@ -362,6 +362,22 @@ export const auth = betterAuth({
         }
       },
     }),
+    // Exposes `auth.api.generateOpenAPISchema()` so the build-time spec
+    // generator in `apps/api/scripts/generate-openapi.ts` can introspect
+    // every endpoint (core + magic-link) and emit accurate paths, request
+    // bodies, and responses — replacing hand-maintained auth paths that
+    // drifted from the real routes. `disableDefaultReference` keeps
+    // better-auth from mounting its own Scalar UI at `/auth/reference`;
+    // we already serve a unified `/docs` page that merges tRPC + auth.
+    //
+    // Gated to non-production: the runtime schema endpoint
+    // (`GET /auth/open-api/generate-schema`) leaks the auth API surface
+    // and is not needed once the spec has been generated. The build
+    // script runs with `NODE_ENV=` (empty), so the plugin is always
+    // available at build time.
+    ...(process.env.NODE_ENV === 'production'
+      ? []
+      : [openAPI({ disableDefaultReference: true })]),
   ],
 
   advanced: {

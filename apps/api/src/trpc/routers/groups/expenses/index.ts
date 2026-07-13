@@ -10,9 +10,19 @@ import { updateGroupExpenseProcedure } from './update.procedure'
 export const groupExpensesRouter = createTRPCRouter({
   list: listGroupExpensesProcedure,
   get: getGroupExpenseProcedure,
+  /** Currencies actually used by the group's expenses, for driving the UI filter. */
   commonCurrencies: commonCurrenciesProcedure,
+  /**
+   * Create an expense in a group.
+   * Rejects if the group is archived. May fetch an FX rate when `conversion.type` is 'exchange'.
+   */
   create: createGroupExpenseProcedure,
+  /** Update an existing expense. Same conversion rules as create. */
   update: updateGroupExpenseProcedure,
   delete: deleteGroupExpenseProcedure,
+  /**
+   * Recategorize up to 2000 expenses in one transaction.
+   * Only expenses still on `fromCategoryId` are eligible.
+   */
   bulkUpdateCategories: bulkUpdateExpenseCategoriesProcedure,
 })

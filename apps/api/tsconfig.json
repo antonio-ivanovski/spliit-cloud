@@ -1,13 +1,13 @@
 {
   "extends": "@spliit/config/tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "noEmit": true,
     "types": ["bun"],
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "scripts/**/*.ts"],
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

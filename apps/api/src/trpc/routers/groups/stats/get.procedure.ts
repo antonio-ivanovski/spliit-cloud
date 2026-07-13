@@ -30,7 +30,9 @@ export const getGroupStatsProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput,
+      linkInviteToken: linkInviteTokenInput.describe(
+        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
+      ),
       period: z.enum(statsPeriods).default('LATEST_ACTIVITY'),
       customRange: z
         .object({
@@ -40,6 +42,7 @@ export const getGroupStatsProcedure = protectedProcedure
         .refine((range) => range.from <= range.to, {
           message: 'Custom range must end after it starts',
         })
+        .describe('Required when period is CUSTOM. Inclusive date range.')
         .optional(),
     }),
   )

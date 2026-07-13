@@ -71,7 +71,12 @@ export const removeMemberProcedure = protectedProcedure
     z.object({
       groupId: z.string().min(1),
       memberId: z.string().min(1),
-      settleBalances: z.boolean().optional(),
+      settleBalances: z
+        .boolean()
+        .optional()
+        .describe(
+          "When true, the server zeroes out the member's balances before removal.",
+        ),
     }),
   )
   .mutation(async ({ input: { groupId, memberId, settleBalances }, ctx }) => {
