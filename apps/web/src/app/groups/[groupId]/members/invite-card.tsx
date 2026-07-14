@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { InviteEmailTab } from './invite-email-tab'
@@ -52,19 +52,18 @@ export function InviteCard({
   const [inviteTab, setInviteTab] = useState<'friends' | 'email' | 'link'>(
     'email',
   )
-  const [canShare, setCanShare] = useState(false)
+  const canShare = useSyncExternalStore(
+    () => () => {},
+    () =>
+      typeof navigator !== 'undefined' && typeof navigator.share === 'function',
+    () => false,
+  )
   const [selectedFriendAccountId, setSelectedFriendAccountId] =
     useState<string>('')
 
-  useEffect(() => {
-    setCanShare(
-      typeof navigator !== 'undefined' && typeof navigator.share === 'function',
-    )
-  }, [])
-
   const friendsQuery = trpc.account.friends.useQuery({ groupId })
-  const friends = friendsQuery.data?.friends ?? []
-  const selectedFriend = friends.find(
+  const friends = friendsQuery.data?.friends
+  const selectedFriend = (friends ?? []).find(
     (f) => f.accountId === selectedFriendAccountId,
   )
 
@@ -72,7 +71,7 @@ export function InviteCard({
   const defaultTabApplied = useRef(false)
   useEffect(() => {
     if (defaultTabApplied.current) return
-    if (!friendsQuery.isLoading && friends.some((f) => !f.isMember)) {
+    if (!friendsQuery.isLoading && (friends ?? []).some((f) => !f.isMember)) {
       setInviteTab('friends')
       defaultTabApplied.current = true
     }
@@ -164,7 +163,7 @@ export function InviteCard({
 
           <TabsContent value="friends" className="mt-0 flex flex-col gap-4">
             <InviteFriendsTab
-              friends={friends}
+              friends={friends ?? []}
               isLoading={friendsQuery.isLoading}
               selectedFriendAccountId={selectedFriendAccountId}
               onSelectFriend={setSelectedFriendAccountId}

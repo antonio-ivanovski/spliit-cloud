@@ -177,6 +177,7 @@ function renderItemsDiff(before: string | null): ReactNode {
       {lines.map((line, i) => {
         if (line.startsWith('- ')) {
           return (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- diff lines from immutable string snapshot, no per-item identity
             <div key={i} className="text-muted-foreground/60 line-through">
               {line.slice(2)}
             </div>
@@ -184,6 +185,7 @@ function renderItemsDiff(before: string | null): ReactNode {
         }
         if (line.startsWith('+ ')) {
           return (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- diff lines from immutable string snapshot, no per-item identity
             <div key={i} className="text-emerald-600 dark:text-emerald-400">
               {line.slice(2)}
             </div>
@@ -195,6 +197,7 @@ function renderItemsDiff(before: string | null): ReactNode {
           const beforeHalf = line.slice(0, arrowIdx)
           const afterHalf = line.slice(arrowIdx + 3)
           return (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- diff lines from immutable string snapshot, no per-item identity
             <div key={i}>
               <span className="text-muted-foreground/60">{beforeHalf}</span>
               <span className="text-muted-foreground/40">{' → '}</span>
@@ -202,6 +205,7 @@ function renderItemsDiff(before: string | null): ReactNode {
             </div>
           )
         }
+        // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- diff lines from immutable string snapshot, no per-item identity
         return <div key={i}>{line}</div>
       })}
     </div>
@@ -226,8 +230,19 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
         'flex min-w-0 justify-between sm:rounded-lg px-2 sm:pr-1 sm:pl-2 py-2 text-sm hover:bg-accent gap-1 items-stretch',
         expenseExists && 'cursor-pointer',
       )}
+      role={expenseExists ? 'button' : undefined}
+      tabIndex={expenseExists ? 0 : undefined}
       onClick={() => {
         if (expenseExists) {
+          navigate({
+            href: `/groups/${groupId}/expenses/${activity.expense!.id}`,
+          })
+        }
+      }}
+      onKeyDown={(e) => {
+        if (!expenseExists) return
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
           navigate({
             href: `/groups/${groupId}/expenses/${activity.expense!.id}`,
           })
@@ -249,9 +264,9 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
         <div className="m-1 break-words">{message}</div>
         {changes && changes.length > 0 && (
           <div className="mx-1 mt-0.5 mb-1 min-w-0 border-l-2 border-muted-foreground/20 pl-2 space-y-0.5">
-            {changes.map((change, i) => (
+            {changes.map((change) => (
               <div
-                key={`${change.field}-${i}`}
+                key={change.field}
                 className="grid min-w-0 grid-cols-[auto,minmax(0,1fr)] gap-x-2 text-xs"
                 data-testid={`activity-item-${activity.id}-change-${change.field}`}
               >
@@ -283,7 +298,10 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
           className="self-center hidden sm:flex w-5 h-5"
           asChild
         >
-          <a href={`/groups/${groupId}/expenses/${activity.expense!.id}`}>
+          <a
+            href={`/groups/${groupId}/expenses/${activity.expense!.id}`}
+            aria-label={t('openExpense')}
+          >
             <ChevronRight className="w-4 h-4" />
           </a>
         </Button>

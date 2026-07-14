@@ -1490,7 +1490,8 @@
     "unknownActor": "Jemand",
     "import": {
       "imported": "{participant} importierte {count} Ausgaben"
-    }
+    },
+    "openExpense": "Ausgabe öffnen"
   },
   "OfflineBanner": {
     "message": "Du bist offline. Änderungen, die du jetzt machst, werden erst gespeichert, wenn du wieder online bist."

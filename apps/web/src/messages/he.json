@@ -1490,7 +1490,8 @@
     "unknownActor": "מישהו",
     "import": {
       "imported": "{participant} ייבא {count} הוצאות"
-    }
+    },
+    "openExpense": "פתח הוצאה"
   },
   "OfflineBanner": {
     "message": "אתה לא מחובר לרשת. השינויים שתבצע כעת לא יישמרו עד שתתחבר מחדש."

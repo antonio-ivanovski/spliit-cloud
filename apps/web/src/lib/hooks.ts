@@ -1,4 +1,4 @@
-import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
+import { useCurrentGroupOrNull } from '@/app/groups/[groupId]/current-group-context'
 import { trpc } from '@/trpc/client'
 import { exchangeRateLookupDate, utcTodayIso } from '@spliit/domain'
 import { useQuery } from '@tanstack/react-query'
@@ -44,12 +44,8 @@ export function useBaseUrl() {
  * `localStorage`. Callers that are not inside a group layout will get
  * `null`. Returns `null` while the group is still loading.
  */
-function useCurrentGroupSafe(): ReturnType<typeof useCurrentGroup> | null {
-  try {
-    return useCurrentGroup()
-  } catch {
-    return null
-  }
+function useCurrentGroupSafe() {
+  return useCurrentGroupOrNull()
 }
 
 export function useActiveUser(groupId?: string) {

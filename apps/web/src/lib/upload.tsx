@@ -132,6 +132,7 @@ export function usePresignedUpload(ledgerId?: string | null) {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const presignMutation = trpc.uploads.presign.useMutation()
 
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller invalidates with returned URL
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
       const contentType = file.type || 'application/octet-stream'

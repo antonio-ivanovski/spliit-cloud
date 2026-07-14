@@ -1490,7 +1490,8 @@
     "unknownActor": "Qualcuno",
     "import": {
       "imported": "{participant} ha importato {count} spese"
-    }
+    },
+    "openExpense": "Apri spesa"
   },
   "OfflineBanner": {
     "message": "Sei offline. Le modifiche che farai adesso non verranno salvate finché non tornerai online."

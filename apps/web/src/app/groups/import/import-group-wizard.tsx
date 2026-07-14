@@ -28,10 +28,11 @@ import { buildImportExpenses } from './import-wizard-state'
 import { MappingStep } from './mapping-step'
 import { SourceStep } from './source-step'
 import { useImportSource } from './use-import-source'
-import { STEP_HEADER_LABEL_KEYS, StepHeader } from './wizard-nav'
+import { StepHeader } from './wizard-nav'
 
 const importRoute = getRouteApi('/groups/import')
 
+// react-doctor-disable-next-line react-doctor/no-giant-component -- wizard orchestrator, delegates to step components
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
   const navigate = useNavigate()
@@ -49,8 +50,10 @@ export function ImportGroupWizard() {
 
   const {
     data: sourcePreview,
+    isLoading: isSourcePreviewLoading,
     error: sourcePreviewError,
     submit,
+    reset: resetSourcePreview,
   } = useImportSource()
 
   const { data: destinationGroupData } = trpc.groups.get.useQuery(
@@ -152,20 +155,43 @@ export function ImportGroupWizard() {
   // both NOT_FOUND (a successful response with a non-OK kind) and
   // transport errors as SOURCE_FAILED. The reducer rejects duplicates
   // so a second tick after `state.source` is set is a no-op.
+  // After a successful load we clear the shared preview state so a
+  // subsequent manual paste re-fires the OK→SOURCE_LOADED transition
+  // cleanly instead of re-dispatching from a stale cache. The
+  // auto-match key is also reset so a different source re-evaluates
+  // destination matching instead of being skipped as a repeat.
   useEffect(() => {
     if (state.source) return
     if (sourcePreview?.kind === 'OK') {
+      autoMatchKeyRef.current = null
       dispatch({
         type: 'SOURCE_LOADED',
         source: sourcePreview.source,
         accountId: account?.id,
       })
+      resetSourcePreview()
     } else if (sourcePreview || sourcePreviewError) {
       dispatch({ type: 'SOURCE_FAILED' })
     }
-  }, [sourcePreview, sourcePreviewError, state.source, account?.id])
+  }, [
+    sourcePreview,
+    sourcePreviewError,
+    state.source,
+    account?.id,
+    resetSourcePreview,
+  ])
 
-  const handleSourceLoaded = useCallback(
+  const handleSourceError = useCallback(
+    (message: string) => {
+      toast({ description: message, variant: 'destructive' })
+    },
+    [toast],
+  )
+
+  // File uploads are parsed client-side and hand the parsed source
+  // directly up via this callback. URL pastes / prefill go through the
+  // shared `useImportSource` instance and the wizard's effect above.
+  const handleFileLoaded = useCallback(
     (source: NormalizedSource) => {
       autoMatchKeyRef.current = null
       dispatch({
@@ -175,13 +201,6 @@ export function ImportGroupWizard() {
       })
     },
     [account?.id],
-  )
-
-  const handleSourceError = useCallback(
-    (message: string) => {
-      toast({ description: message, variant: 'destructive' })
-    },
-    [toast],
   )
 
   const handleDestinationChosen = useCallback(
@@ -288,7 +307,12 @@ export function ImportGroupWizard() {
 
       {state.step === 'source' && (
         <SourceStep
-          onLoaded={handleSourceLoaded}
+          onLoaded={handleFileLoaded}
+          sourcePreview={sourcePreview}
+          isSourcePreviewLoading={isSourcePreviewLoading}
+          sourcePreviewError={sourcePreviewError}
+          submitPreview={submit}
+          resetPreview={resetSourcePreview}
           onError={handleSourceError}
           initialError={prefillErrorMessage}
         />
@@ -373,5 +397,4 @@ export function ImportGroupWizard() {
   )
 }
 
-export { STEP_HEADER_LABEL_KEYS }
 export type { ImportStep }

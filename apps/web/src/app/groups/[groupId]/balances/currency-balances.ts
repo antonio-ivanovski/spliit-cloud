@@ -11,8 +11,8 @@ export function withDisplayCurrencies(
   summaries: Array<Omit<CurrencyBalance, 'currency'>>,
   groupCurrency: Currency,
 ): CurrencyBalance[] {
-  return [...summaries]
-    .sort((left, right) => {
+  return summaries
+    .toSorted((left, right) => {
       if (left.currencyCode === groupCurrency.code) return -1
       if (right.currencyCode === groupCurrency.code) return 1
       return left.currencyCode.localeCompare(right.currencyCode)

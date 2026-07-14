@@ -1490,7 +1490,8 @@
     "unknownActor": "Algú",
     "import": {
       "imported": "{participant} ha importat {count} despeses"
-    }
+    },
+    "openExpense": "Obre la despesa"
   },
   "OfflineBanner": {
     "message": "No tens connexió. Els canvis que facis ara no es desaran fins que et tornis a connectar."

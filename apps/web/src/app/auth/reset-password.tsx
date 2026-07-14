@@ -47,6 +47,7 @@ export function ResetPasswordPage() {
   const [clientError, setClientError] = useState<string | null>(null)
   const [done, setDone] = useState(false)
 
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- better-auth fire-and-forget, no tRPC query cache
   const resetPassword = useMutation({
     retry: false,
     mutationFn: async (vars: { newPassword: string; token: string }) => {

@@ -1,10 +1,6 @@
 import { CopyButton } from '@/components/copy-button'
 import Link from '@/components/link'
-import {
-  isFocusedMobilePath,
-  isMobileGroupNavPath,
-  MobileGroupNav,
-} from '@/components/mobile-shell'
+import { MobileGroupNav } from '@/components/mobile-shell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -16,6 +12,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import {
@@ -27,7 +24,7 @@ import {
 } from '@tanstack/react-router'
 import { Cloud, Loader2, Share2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrentGroupProvider } from './current-group-context'
 import { GroupHeader } from './group-header'
@@ -49,17 +46,16 @@ export function GroupLayoutClient({
   const [friendLinkDialogUrl, setFriendLinkDialogUrl] = useState<string | null>(
     null,
   )
-  const [canShare, setCanShare] = useState(false)
+  const canShare = useSyncExternalStore(
+    () => () => {},
+    () =>
+      typeof navigator !== 'undefined' && typeof navigator.share === 'function',
+    () => false,
+  )
   const navigate = useNavigate({ from: '/groups/$groupId' })
   const pathname = useLocation({ select: (location) => location.pathname })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const showMobileNav = isMobileGroupNavPath(pathname)
-
-  useEffect(() => {
-    setCanShare(
-      typeof navigator !== 'undefined' && typeof navigator.share === 'function',
-    )
-  }, [])
 
   // Friend-ledger link-path creation navigates here with the invite URL
   // in the `friendLinkInvite` search param. Open a one-time dialog so the

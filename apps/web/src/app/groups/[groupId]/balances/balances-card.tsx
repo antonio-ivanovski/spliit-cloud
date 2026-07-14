@@ -1,8 +1,6 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
-import {
-  ParticipantSegmentBar,
-  participantSegmentColor,
-} from '@/components/participant-segment-bar'
+import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
+import { participantSegmentColor } from '@/components/participant-segment-utils'
 import { Button } from '@/components/ui/button'
 import {
   Card,

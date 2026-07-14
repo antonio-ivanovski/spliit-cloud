@@ -33,7 +33,7 @@ import type { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import { cn, formatFileSize } from '@/lib/utils'
 import { Loader2, Plus, Trash, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -177,17 +177,23 @@ export function DocumentThumbnail({
 }) {
   const [open, setOpen] = useState(false)
   const [api, setApi] = useState<CarouselApi>()
-  const [currentDocument, setCurrentDocument] = useState<number | null>(null)
+  const currentDocumentRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (!api) return
 
-    api.on('slidesInView', () => {
+    const handleSlidesInView = () => {
       const index = api.slidesInView()[0]
       if (index !== undefined) {
-        setCurrentDocument(index)
+        currentDocumentRef.current = index
       }
-    })
+    }
+
+    api.on('slidesInView', handleSlidesInView)
+
+    return () => {
+      api.off('slidesInView', handleSlidesInView)
+    }
   }, [api])
 
   const { t: tExpenseForm } = useTranslation()
@@ -265,8 +271,8 @@ export function DocumentThumbnail({
                   className="text-destructive"
                   onClick={() => {
                     deleteDocument(
-                      currentDocument !== null
-                        ? documents[currentDocument]
+                      currentDocumentRef.current !== null
+                        ? documents[currentDocumentRef.current]
                         : document,
                     )
                     setOpen(false)
@@ -293,8 +299,8 @@ export function DocumentThumbnail({
             setApi={setApi}
           >
             <CarouselContent>
-              {documents.map((document, index) => (
-                <CarouselItem key={index}>
+              {documents.map((document) => (
+                <CarouselItem key={document.url}>
                   <Image
                     className="object-contain w-[calc(100vw-32px)] h-[calc(100dvh-32px-40px-16px-48px)] sm:w-[calc(100vw-32px-32px)] sm:h-[calc(100dvh-32px-40px-16px-32px-48px)]"
                     src={document.url}

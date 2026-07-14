@@ -164,7 +164,7 @@ export function useInstallPrompt(): UseInstallPromptResult {
     if (!readyToShow && isOpen) {
       setIsOpen(false)
     }
-  }, [readyToShow])
+  }, [readyToShow, isOpen])
 
   const open = useCallback(() => {
     if (!readyToShow) return

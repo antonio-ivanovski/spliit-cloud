@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { pickParser } from './source-step'
+import { pickParser } from './source-providers'
 
 describe('pickParser', () => {
   it('routes .csv to spliit csv parser on spliit tab', () => {

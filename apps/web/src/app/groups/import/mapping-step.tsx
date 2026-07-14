@@ -111,13 +111,11 @@ export function MappingStep({
           participants,
         ) !== null,
     )
-    const existingLpIds = participants
-      .filter(
-        (p) =>
-          p.mode === 'LINK_EXISTING_PARTICIPANT' &&
-          p.existingLedgerParticipantId,
-      )
-      .map((p) => p.existingLedgerParticipantId!)
+    const existingLpIds = participants.flatMap((p) =>
+      p.mode === 'LINK_EXISTING_PARTICIPANT' && p.existingLedgerParticipantId
+        ? [p.existingLedgerParticipantId!]
+        : [],
+    )
     const hasDuplicateDestId =
       existingLpIds.length !== new Set(existingLpIds).size
     return (

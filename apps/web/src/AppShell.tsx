@@ -3,7 +3,7 @@ import Image from '@/components/app-image'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
-import { isFocusedMobilePath, MobileAppBar } from '@/components/mobile-shell'
+import { MobileAppBar } from '@/components/mobile-shell'
 import { OfflineBanner } from '@/components/offline-banner'
 import { ProfileGate } from '@/components/profile-gate'
 import { ProgressBar } from '@/components/progress-bar'
@@ -12,6 +12,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
+import { isFocusedMobilePath } from '@/lib/mobile-nav'
 import { TRPCProvider } from '@/trpc/client'
 import { Outlet, useLocation } from '@tanstack/react-router'
 import { Suspense } from 'react'
@@ -41,7 +42,7 @@ function Content() {
               />
             </div>
           </Link>
-          <div role="navigation" aria-label="Menu" className="flex">
+          <nav aria-label="Menu" className="flex">
             <ul className="flex items-center text-sm gap-1">
               <li>
                 <LocaleSwitcher />
@@ -53,7 +54,7 @@ function Content() {
                 <AccountMenu />
               </li>
             </ul>
-          </div>
+          </nav>
         </header>
 
         {focusedMobileRoute ? (
@@ -110,7 +111,7 @@ function Content() {
                       <a
                         href="https://github.com/antonio-ivanovski/spliit-cloud/graphs/contributors"
                         target="_blank"
-                        rel="noopener"
+                        rel="noopener noreferrer"
                       />
                     ),
                   }}

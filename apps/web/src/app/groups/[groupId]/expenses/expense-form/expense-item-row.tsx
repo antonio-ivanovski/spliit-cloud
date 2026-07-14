@@ -88,10 +88,10 @@ export function ExpenseItemRow({
   )
   const participantNames =
     paidFor
-      ?.map((pf: { participant: string }) =>
-        participantNameMap.get(pf.participant),
-      )
-      .filter(Boolean)
+      ?.flatMap((pf: { participant: string }) => {
+        const name = participantNameMap.get(pf.participant)
+        return name ? [name] : []
+      })
       .join(', ') ?? ''
   const participantsLabel = participantNames
     ? `${t(splitModeLabelKeys[splitMode])}: ${participantNames}`

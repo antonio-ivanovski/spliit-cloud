@@ -154,6 +154,7 @@ vi.mock('@/lib/use-current-account', () => ({
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
+  useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
 }))
 
 // ── Fixtures ────────────────────────────────────────────────────────────

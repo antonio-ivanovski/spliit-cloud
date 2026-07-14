@@ -29,30 +29,33 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
 }))
 
-// `useImportSource` always returns empty data so the inline error
-// test isolates the prefill-error prop path.
-vi.mock('./use-import-source', () => ({
-  useImportSource: () => ({
-    data: undefined,
-    isLoading: false,
-    isError: false,
-    error: null,
-    submit: vi.fn(),
-    reset: vi.fn(),
-  }),
-}))
+// SourceStep no longer owns its own useImportSource; the wizard passes
+// the shared state down. The tests pass it explicitly so the prefill-
+// error path is the only thing under test.
+function renderSourceStep(
+  overrides: Partial<React.ComponentProps<typeof SourceStep>> = {},
+) {
+  return render(
+    <SourceStep
+      onLoaded={vi.fn()}
+      onError={vi.fn()}
+      sourcePreview={undefined}
+      isSourcePreviewLoading={false}
+      sourcePreviewError={null}
+      submitPreview={vi.fn()}
+      resetPreview={vi.fn()}
+      {...overrides}
+    />,
+  )
+}
 
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('SourceStep — initialError (prefill) handling', () => {
   it('renders the prefill error inline when no own serverUrlError is set', () => {
-    render(
-      <SourceStep
-        onLoaded={vi.fn()}
-        onError={vi.fn()}
-        initialError="Spliit Cloud did not find this group"
-      />,
-    )
+    renderSourceStep({
+      initialError: 'Spliit Cloud did not find this group',
+    })
     expect(
       screen.getByText('Spliit Cloud did not find this group'),
     ).toBeInTheDocument()
@@ -60,13 +63,9 @@ describe('SourceStep — initialError (prefill) handling', () => {
 
   it('hides the prefill error after the user types in the URL input', async () => {
     const user = userEvent.setup()
-    render(
-      <SourceStep
-        onLoaded={vi.fn()}
-        onError={vi.fn()}
-        initialError="Spliit Cloud did not find this group"
-      />,
-    )
+    renderSourceStep({
+      initialError: 'Spliit Cloud did not find this group',
+    })
 
     const urlInput = screen.getByPlaceholderText(/spliit\.app.*groups/i)
     await user.type(urlInput, 'a')
@@ -77,7 +76,7 @@ describe('SourceStep — initialError (prefill) handling', () => {
   })
 
   it('does not render any error when no initialError is provided', () => {
-    render(<SourceStep onLoaded={vi.fn()} onError={vi.fn()} />)
+    renderSourceStep()
     // No Spliit error visible.
     expect(
       screen.queryByText(/did not find this group/i),

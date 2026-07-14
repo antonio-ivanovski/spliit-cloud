@@ -1490,7 +1490,8 @@
     "unknownActor": "Iemand",
     "import": {
       "imported": "{participant} importeerde {count} uitgaven"
-    }
+    },
+    "openExpense": "Open uitgave"
   },
   "OfflineBanner": {
     "message": "Je bent offline. Wijzigingen die je nu maakt, worden pas opgeslagen als je weer verbinding hebt."

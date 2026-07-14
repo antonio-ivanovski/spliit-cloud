@@ -1490,7 +1490,8 @@
     "unknownActor": "Někdo",
     "import": {
       "imported": "{participant} importoval {count} výdajů"
-    }
+    },
+    "openExpense": "Otevřít výdaj"
   },
   "OfflineBanner": {
     "message": "Jste offline. Změny, které nyní provedete, nebudou uloženy, dokud se znovu nepřipojíte."

@@ -3,7 +3,7 @@ import {
   isFocusedMobilePath,
   isMobileGroupNavPath,
   shouldHideMobileGroupTabs,
-} from '@/components/mobile-shell'
+} from '@/lib/mobile-nav'
 import { describe, expect, it } from 'vitest'
 
 const translate = (key: string) => key

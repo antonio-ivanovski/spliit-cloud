@@ -52,17 +52,21 @@ export function SaveDefaultButton(props: {
     // Convert display-unit shares back to storage units before sending
     // to the server. The mutation validates against the schema and the
     // participant ids it already knows about.
-    const paidFor = values.paidFor
-      .filter((row) => Number(row.shares) > 0)
-      .map(({ participant, shares }) => ({
-        participant,
-        shares:
-          splitMode === 'BY_PERCENTAGE'
-            ? Math.round(Number(shares) * 100)
-            : splitMode === 'BY_AMOUNT'
-              ? amountAsMinorUnits(Number(shares), groupCurrency)
-              : Math.round(Number(shares)),
-      }))
+    const paidFor = values.paidFor.flatMap((row) =>
+      Number(row.shares) > 0
+        ? [
+            {
+              participant: row.participant,
+              shares:
+                splitMode === 'BY_PERCENTAGE'
+                  ? Math.round(Number(row.shares) * 100)
+                  : splitMode === 'BY_AMOUNT'
+                    ? amountAsMinorUnits(Number(row.shares), groupCurrency)
+                    : Math.round(Number(row.shares)),
+            },
+          ]
+        : [],
+    )
     if (!paidFor.length) return
 
     setDefaultSplit.mutate(

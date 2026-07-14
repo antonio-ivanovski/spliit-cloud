@@ -31,7 +31,7 @@ import {
 } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { Check, FileQuestion, ScanLine, Sparkles } from 'lucide-react'
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 
@@ -266,9 +266,18 @@ function ReceiptDialogContent({
     }
   }
 
+  // Mirror `scan` in a ref so the auto-scan effect depends only on the
+  // inputs that should drive it, without listing every closure capture.
+  // The ref is resynced on every render — the assignment is cheap and
+  // always reads the latest closure.
+  const scanRef = useRef(scan)
+  useEffect(() => {
+    scanRef.current = scan
+  })
+
   useEffect(() => {
     if (!open || !autoScan || documents.length !== 1 || selectedDocument) return
-    void scan(documents[0])
+    void scanRef.current(documents[0])
   }, [autoScan, documents, open, selectedDocument])
 
   const handleFileChange = async (file: File) => {

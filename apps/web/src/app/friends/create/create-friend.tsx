@@ -50,6 +50,25 @@ type CreateFriendResponse = {
 
 type PeerTab = 'friends' | 'email' | 'link'
 
+function FriendOptionContent({
+  name,
+  email,
+  badge,
+}: {
+  name: string
+  email: string
+  badge?: string
+}) {
+  return (
+    <span className="flex items-center gap-2">
+      <span>{name}</span>
+      <span className="text-xs text-muted-foreground">{email}</span>
+      {badge && <span className="text-xs text-muted-foreground">{badge}</span>}
+    </span>
+  )
+}
+
+// react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive form with tab-based peer selection, shared form state
 export function CreateFriend() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Friends' })
   const { t: tGroupForm } = useTranslation(undefined, {
@@ -274,12 +293,10 @@ export function CreateFriend() {
                                             key={f.accountId}
                                             value={f.accountId}
                                           >
-                                            <span className="flex items-center gap-2">
-                                              <span>{f.name}</span>
-                                              <span className="text-xs text-muted-foreground">
-                                                {f.email}
-                                              </span>
-                                            </span>
+                                            <FriendOptionContent
+                                              name={f.name}
+                                              email={f.email}
+                                            />
                                           </SelectItem>
                                         ))}
                                       </SelectGroup>
@@ -294,15 +311,11 @@ export function CreateFriend() {
                                             key={f.accountId}
                                             value={f.accountId}
                                           >
-                                            <span className="flex items-center gap-2">
-                                              <span>{f.name}</span>
-                                              <span className="text-xs text-muted-foreground">
-                                                {f.email}
-                                              </span>
-                                              <span className="text-xs text-muted-foreground">
-                                                (already invited)
-                                              </span>
-                                            </span>
+                                            <FriendOptionContent
+                                              name={f.name}
+                                              email={f.email}
+                                              badge="(already invited)"
+                                            />
                                           </SelectItem>
                                         ))}
                                       </SelectGroup>
@@ -318,15 +331,11 @@ export function CreateFriend() {
                                             value={f.accountId}
                                             disabled
                                           >
-                                            <span className="flex items-center gap-2">
-                                              <span>{f.name}</span>
-                                              <span className="text-xs text-muted-foreground">
-                                                {f.email}
-                                              </span>
-                                              <span className="text-xs text-muted-foreground">
-                                                (already has a friend ledger)
-                                              </span>
-                                            </span>
+                                            <FriendOptionContent
+                                              name={f.name}
+                                              email={f.email}
+                                              badge="(already has a friend ledger)"
+                                            />
                                           </SelectItem>
                                         ))}
                                       </SelectGroup>

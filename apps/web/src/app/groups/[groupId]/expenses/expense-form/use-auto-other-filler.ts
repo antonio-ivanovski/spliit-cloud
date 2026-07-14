@@ -4,8 +4,6 @@ import type {
   ExpenseFormItemValues,
 } from '@spliit/domain'
 import { amountAsMinorUnits } from '@spliit/domain'
-import type { Control } from 'react-hook-form'
-import { useWatch } from 'react-hook-form'
 
 export type ExpenseFormDisplayItem = ExpenseFormItemValues & {
   isFiller?: boolean
@@ -49,19 +47,4 @@ export function withAutoOtherFiller(
       isFiller: true,
     },
   ]
-}
-
-export function useAutoOtherFiller(
-  control: Control<ExpenseFormInputValues>,
-  groupCurrency: Currency,
-): ExpenseFormDisplayItem[] {
-  const items = useWatch({ control, name: 'items' }) ?? []
-  const amount = useWatch({ control, name: 'amount' })
-  const itemizedRemainder = useWatch({ control, name: 'itemizedRemainder' })
-  return withAutoOtherFiller(
-    items,
-    Number(amount) || 0,
-    groupCurrency,
-    itemizedRemainder,
-  )
 }

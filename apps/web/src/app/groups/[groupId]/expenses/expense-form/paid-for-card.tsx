@@ -44,6 +44,7 @@ const paidForOptionKeys = {
 
 type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
 
+// react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive split-method card, shared form state
 export function PaidForCard(props: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group

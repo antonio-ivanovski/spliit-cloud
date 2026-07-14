@@ -7,6 +7,7 @@ import { useState } from 'react'
 import superjson from 'superjson'
 import { makeQueryClient } from './query-client'
 
+// react-doctor-disable-next-line react-doctor/only-export-components -- tRPC client singleton co-exported with provider
 export const trpc = createTRPCReact<AppRouter>()
 
 let clientQueryClientSingleton: QueryClient

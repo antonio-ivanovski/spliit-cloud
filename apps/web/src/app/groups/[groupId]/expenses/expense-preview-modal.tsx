@@ -33,6 +33,7 @@ import type { SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { FileInput, Pencil } from 'lucide-react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -101,6 +102,7 @@ function toBalanceExpense(
   }
 }
 
+// react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive preview modal, single responsibility
 export function ExpensePreviewModal({
   groupId,
   expenseId,
@@ -183,16 +185,21 @@ export function ExpensePreviewModal({
     }
   }
 
+  const percentageFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        style: 'percent',
+        maximumFractionDigits: 2,
+      }),
+    [locale],
+  )
+
   const splitRows = (
     shares: Record<string, number>,
     sourceRows: Array<{ ledgerParticipantId: string; shares: number }>,
     mode: SplitMode,
   ) => {
     const totalShares = sourceRows.reduce((sum, row) => sum + row.shares, 0)
-    const percentageFormatter = new Intl.NumberFormat(locale, {
-      style: 'percent',
-      maximumFractionDigits: 2,
-    })
 
     const valueFor = (id: string): string | undefined => {
       const source = sourceRows.find((row) => row.ledgerParticipantId === id)

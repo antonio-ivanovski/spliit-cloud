@@ -1,6 +1,7 @@
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CategoryIcon } from '../expenses/category-icon'
 import {
@@ -15,9 +16,21 @@ type Props = {
   currency: Currency
 }
 
+function usePercentFormatter(locale: string) {
+  return useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        style: 'percent',
+        maximumFractionDigits: 0,
+      }),
+    [locale],
+  )
+}
+
 export function CategoryBreakdown({ data, currency }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Stats.Dashboard' })
   const locale = useLocale()
+  const percentFormatter = usePercentFormatter(locale)
 
   return (
     <section aria-labelledby="category-breakdown-title">
@@ -64,10 +77,7 @@ export function CategoryBreakdown({ data, currency }: Props) {
                 />
               </div>
               <span className="w-9 text-right text-xs tabular-nums text-muted-foreground">
-                {new Intl.NumberFormat(locale, {
-                  style: 'percent',
-                  maximumFractionDigits: 0,
-                }).format(category.percentage)}
+                {percentFormatter.format(category.percentage)}
               </span>
             </div>
           </div>

@@ -44,6 +44,7 @@ export function ThemeProvider({ children }: PropsWithChildren<object>) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
+// react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
 export function useTheme() {
   const value = useContext(ThemeContext)
   if (!value) throw new Error('useTheme must be used within ThemeProvider')

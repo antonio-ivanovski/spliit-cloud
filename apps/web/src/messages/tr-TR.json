@@ -1490,7 +1490,8 @@
     "unknownActor": "Birisi",
     "import": {
       "imported": "{participant} {count} gider içe aktardı"
-    }
+    },
+    "openExpense": "Harcamayı aç"
   },
   "OfflineBanner": {
     "message": "Çevrimdışısınız. Şu an yapacağınız değişiklikler yeniden bağlanana kadar kaydedilmeyecek."

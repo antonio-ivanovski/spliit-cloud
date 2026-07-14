@@ -12,7 +12,7 @@ import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { amountAsDecimal, type Currency } from '@spliit/domain'
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useForm, useWatch, type Resolver } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type {
@@ -80,19 +80,23 @@ export function ExpenseForm(props: {
     }),
   })
 
-  const [isIncome, setIsIncome] = useState(Number(form.getValues().amount) < 0)
-
   const groupCurrency = getCurrencyFromGroup(props.group)
   const conversion = useExpenseCurrencyConversion({
     form,
     group: props.group,
     groupCurrency,
     linkInviteToken: props.linkInviteToken,
-    onAmountChanged: (income) => {
-      setIsIncome(income)
-      if (income) form.setValue('isReimbursement', false)
-    },
   })
+
+  const isIncome = conversion.isIncome
+
+  // Income expenses cannot be reimbursements; clear the flag automatically
+  // so saving an income expense doesn't accidentally pay the user back.
+  useEffect(() => {
+    if (isIncome && form.getValues('isReimbursement')) {
+      form.setValue('isReimbursement', false)
+    }
+  }, [isIncome, form])
 
   const originalCurrencyValue = useWatch({
     control: form.control,
@@ -217,11 +221,8 @@ export function ExpenseForm(props: {
         <BasicDetailsCard
           form={form}
           group={props.group}
-          groupCurrency={groupCurrency}
           readOnly={!!props.readOnly}
           sExpense={sExpense}
-          isIncome={isIncome}
-          setIsIncome={setIsIncome}
           isCreate={isCreate}
           linkInviteToken={props.linkInviteToken}
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
@@ -231,6 +232,7 @@ export function ExpenseForm(props: {
           onReceiptAccepted={applyReceiptResult}
           heading={props.heading}
           {...conversion}
+          groupCurrency={groupCurrency}
         />
         <ExpenseItemsCard
           form={form}

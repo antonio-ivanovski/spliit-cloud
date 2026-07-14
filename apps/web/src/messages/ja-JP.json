@@ -1490,7 +1490,8 @@
     "unknownActor": "誰か",
     "import": {
       "imported": "{participant}が{count}件の支出をインポートしました"
-    }
+    },
+    "openExpense": "経費を開く"
   },
   "OfflineBanner": {
     "message": "現在オフラインです。行った変更は再接続するまで保存されません。"

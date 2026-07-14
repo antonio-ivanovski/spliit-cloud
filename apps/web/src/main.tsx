@@ -1,5 +1,5 @@
 import '@/app/globals.css'
-import { initI18n } from '@/i18n/react'
+import { initI18n } from '@/i18n/setup'
 import { router } from '@/router'
 import { RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'

@@ -15,7 +15,7 @@ import {
   LoaderCircle,
   ReceiptText,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -85,6 +85,15 @@ export function StatsDashboard() {
   const { groupId, group } = useCurrentGroup()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
+  const dateRange = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
+    [locale],
+  )
   const [period, setPeriod] = useState<StatsPeriod>('LATEST_ACTIVITY')
   const [customRange, setCustomRange] = useState<StatsCustomRange | null>(null)
   const { data, error, refetch, isFetching } = trpc.groups.stats.get.useQuery(
@@ -109,6 +118,7 @@ export function StatsDashboard() {
         <CardContent className="flex min-h-56 flex-col items-center justify-center gap-3 p-6 text-center">
           <p className="text-sm text-muted-foreground">{t('error')}</p>
           <button
+            type="button"
             className="text-sm font-medium text-primary underline-offset-4 hover:underline"
             onClick={() => refetch()}
           >
@@ -136,12 +146,6 @@ export function StatsDashboard() {
       </Card>
     )
   }
-
-  const dateRange = new Intl.DateTimeFormat(locale, {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
   const periodDates = `${dateRange.format(dashboard.period.from)} – ${dateRange.format(dashboard.period.to)}`
 
   const handlePeriodChange = (nextPeriod: StatsPeriod) => {

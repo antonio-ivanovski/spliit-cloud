@@ -34,7 +34,9 @@ export function ParticipantShareRow({
 }) {
   const hasPreview = preview != null && preview !== false
 
-  const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleRowClick = (
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+  ) => {
     if (disabled) return
     const target = e.target as HTMLElement
     if (
@@ -55,7 +57,17 @@ export function ParticipantShareRow({
         className,
       )}
       data-id={dataId}
+      role="checkbox"
+      aria-checked={checked}
+      tabIndex={disabled ? -1 : 0}
       onClick={handleRowClick}
+      onKeyDown={(e) => {
+        if (disabled) return
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault()
+          handleRowClick(e)
+        }
+      }}
     >
       <FormItem className="grid w-full min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 space-y-0 md:flex md:flex-row md:items-center md:gap-3">
         <FormControl>

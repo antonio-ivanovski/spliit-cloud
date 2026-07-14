@@ -3,10 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   extractSpliitGroupIdFromUrl,
   guessGroupNameFromFilename,
-  tryParseSpliitCsv,
-  tryParseSpliitExport,
-  tryParseSplitwiseCsv,
-  type ImportParseResult,
   type NormalizedSource,
 } from '@spliit/domain/import'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
@@ -16,85 +12,46 @@ import { useTranslation } from 'react-i18next'
 import { DomainSwapCard } from './domain-swap-card'
 import { FileUploadCard } from './file-upload-card'
 import { PasteUrlCard } from './paste-url-card'
+import { PROVIDERS, pickParser, type SourceMode } from './source-providers'
 import { SplitwiseAnonymizerCard } from './splitwise-anonymizer-card'
-import { useImportSource } from './use-import-source'
+import type { ImportSourceState } from './use-import-source'
 
 type Props = {
+  /** Client-parsed file uploads hand the result directly up. */
   onLoaded: (source: NormalizedSource) => void
   onError: (message: string) => void
   /**
+   * Shared import-source state owned by the wizard so manual paste and
+   * the prefill URL flow write to one `submittedUrl`. The wizard's
+   * effect dispatches SOURCE_LOADED whenever the shared preview
+   * resolves to OK, so the server-fetch path doesn't need an
+   * onLoaded callback here.
+   */
+  sourcePreview?: ImportSourceState['data']
+  isSourcePreviewLoading?: boolean
+  sourcePreviewError?: ImportSourceState['error']
+  submitPreview: ImportSourceState['submit']
+  resetPreview: ImportSourceState['reset']
+  /**
    * Error message from a wizard-level prefill that failed before the
-   * source step mounted (the wizard's `useImportSource` and the
-   * source step's `useImportSource` don't share their `submittedUrl`,
-   * so we hand the message down). Shown inline next to the URL
-   * input until the user starts interacting.
+   * shared preview resolved to OK. Shown inline next to the URL input
+   * until the user starts interacting.
    */
   initialError?: string | null
 }
 
-type SourceMode = 'spliit' | 'splitwise' | 'tricount' | 'settleup'
-
 const importRoute = getRouteApi('/groups/import')
 
-type FileParser =
-  | ((text: string) => ImportParseResult)
-  | ((input: unknown) => ImportParseResult)
-
-type ProviderConfig = {
-  hasUrlPaste: boolean
-  hasDomainSwap: boolean
-  fileImport: { csv: FileParser; json: FileParser | null } | null
-  accept: string
-}
-
-const PROVIDERS: Record<SourceMode, ProviderConfig> = {
-  spliit: {
-    hasUrlPaste: true,
-    hasDomainSwap: true,
-    fileImport: { csv: tryParseSpliitCsv, json: tryParseSpliitExport },
-    accept: '.json,.csv,application/json,text/csv',
-  },
-  splitwise: {
-    hasUrlPaste: false,
-    hasDomainSwap: false,
-    fileImport: { csv: tryParseSplitwiseCsv, json: null },
-    accept: '.csv,text/csv',
-  },
-  tricount: {
-    hasUrlPaste: false,
-    hasDomainSwap: false,
-    fileImport: null,
-    accept: '',
-  },
-  settleup: {
-    hasUrlPaste: false,
-    hasDomainSwap: false,
-    fileImport: null,
-    accept: '',
-  },
-}
-
-export function pickParser(
-  provider: SourceMode,
-  fileName: string,
-):
-  | { format: 'csv'; parser: FileParser }
-  | { format: 'json'; parser: FileParser }
-  | { format: null } {
-  const cfg = PROVIDERS[provider]
-  if (!cfg.fileImport) return { format: null }
-  const lower = fileName.toLowerCase()
-  if (lower.endsWith('.csv')) {
-    return { format: 'csv', parser: cfg.fileImport.csv }
-  }
-  if (lower.endsWith('.json')) {
-    if (!cfg.fileImport.json) return { format: null }
-    return { format: 'json', parser: cfg.fileImport.json }
-  }
-  return { format: null }
-}
-
-export function SourceStep({ onLoaded, onError, initialError = null }: Props) {
+export function SourceStep({
+  onLoaded,
+  onError,
+  sourcePreview,
+  isSourcePreviewLoading,
+  sourcePreviewError,
+  submitPreview,
+  resetPreview,
+  initialError = null,
+}: Props) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { source } = importRoute.useSearch()
@@ -105,13 +62,6 @@ export function SourceStep({ onLoaded, onError, initialError = null }: Props) {
   // longer applies — the URL they're now typing is unrelated to it.
   const [hasInteracted, setHasInteracted] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const {
-    data: sourcePreview,
-    isLoading: isPreviewLoading,
-    error: sourcePreviewError,
-    submit: submitPreview,
-    reset: resetPreview,
-  } = useImportSource()
 
   const cfg = PROVIDERS[provider]
 
@@ -130,15 +80,6 @@ export function SourceStep({ onLoaded, onError, initialError = null }: Props) {
     urlError ??
     serverUrlError ??
     (initialError && !hasInteracted ? initialError : null)
-
-  // Keep only the onLoaded transition in an effect (not a setState
-  // call, so not flagged by set-state-in-effect).
-  useEffect(() => {
-    if (sourcePreview?.kind === 'OK') {
-      onLoaded(sourcePreview.source)
-      resetPreview()
-    }
-  }, [sourcePreview, resetPreview, onLoaded])
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -322,7 +263,7 @@ export function SourceStep({ onLoaded, onError, initialError = null }: Props) {
       {showUrlPaste && (
         <PasteUrlCard
           disabled={false}
-          isPending={isPreviewLoading}
+          isPending={Boolean(isSourcePreviewLoading)}
           url={url}
           urlError={displayedUrlError}
           onUrlChange={handleUrlChange}

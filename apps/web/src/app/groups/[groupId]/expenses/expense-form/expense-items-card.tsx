@@ -51,6 +51,7 @@ function makeDefaultItem(group: Group): ExpenseFormItemValues {
   }
 }
 
+// react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive itemized expense card, shared form state
 export function ExpenseItemsCard({
   form,
   group,
@@ -405,6 +406,13 @@ export function ExpenseItemsCard({
   )
 }
 
+const labelKeys = {
+  EVENLY: 'items.splitEvenlyLabel',
+  BY_SHARES: 'items.splitBySharesLabel',
+  BY_PERCENTAGE: 'items.splitByPercentageLabel',
+  BY_AMOUNT: 'items.splitByAmountLabel',
+} as const
+
 function SummarizeParticipants({
   item,
   group,
@@ -413,18 +421,14 @@ function SummarizeParticipants({
   group: Group
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
-  const labelKeys = {
-    EVENLY: 'items.splitEvenlyLabel',
-    BY_SHARES: 'items.splitBySharesLabel',
-    BY_PERCENTAGE: 'items.splitByPercentageLabel',
-    BY_AMOUNT: 'items.splitByAmountLabel',
-  } as const
   const participantNameMap = new Map(
     group.participants.map((p) => [p.id, p.name]),
   )
   const names = item.paidFor
-    .map((pf) => participantNameMap.get(pf.participant))
-    .filter(Boolean)
+    .flatMap((pf) => {
+      const name = participantNameMap.get(pf.participant)
+      return name ? [name] : []
+    })
     .join(', ')
 
   return names

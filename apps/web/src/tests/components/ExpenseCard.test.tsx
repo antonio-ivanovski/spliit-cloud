@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest'
 // ── Module mocks ────────────────────────────────────────────────────────
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
+  useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
   useIsPendingInvitee: vi.fn(),
 }))
 

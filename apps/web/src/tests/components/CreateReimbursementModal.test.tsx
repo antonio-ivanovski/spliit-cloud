@@ -16,6 +16,7 @@ const mockNavigate = vi.fn()
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
+  useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
   useIsPendingInvitee: vi.fn(),
 }))
 

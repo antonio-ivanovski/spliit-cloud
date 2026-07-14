@@ -78,7 +78,7 @@ function Participants({
 
   if (isMultiPayer) {
     // Decision #13: sort payers alphabetically by resolved display name.
-    const sortedPaidByList = [...expense.paidByList].sort((a, b) =>
+    const sortedPaidByList = expense.paidByList.toSorted((a, b) =>
       a.ledgerParticipant.name.localeCompare(b.ledgerParticipant.name),
     )
     const paidByNames = sortedPaidByList.map((pb, index) => (
@@ -147,11 +147,22 @@ export function ExpenseCard({
         'cursor-pointer hover:bg-accent',
         expense.isReimbursement && 'italic',
       )}
+      role="button"
+      tabIndex={0}
       onClick={() => {
         navigate({
           to: '/groups/$groupId/expenses/$expenseId',
           params: { groupId, expenseId: expense.id },
         })
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          navigate({
+            to: '/groups/$groupId/expenses/$expenseId',
+            params: { groupId, expenseId: expense.id },
+          })
+        }
       }}
     >
       <CategoryIcon

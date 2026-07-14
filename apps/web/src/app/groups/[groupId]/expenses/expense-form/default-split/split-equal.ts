@@ -72,10 +72,10 @@ function evenlyRowsEqual(
   savedRows: SplitRowDisplay[],
 ): boolean {
   const current = new Set(
-    currentRows.filter((r) => r.shares > 0).map((r) => r.participant),
+    currentRows.flatMap((r) => (r.shares > 0 ? [r.participant] : [])),
   )
   const saved = new Set(
-    savedRows.filter((r) => r.shares > 0).map((r) => r.participant),
+    savedRows.flatMap((r) => (r.shares > 0 ? [r.participant] : [])),
   )
   if (current.size !== saved.size) return false
   for (const id of current) if (!saved.has(id)) return false

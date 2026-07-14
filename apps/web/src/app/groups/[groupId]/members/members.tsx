@@ -20,15 +20,21 @@ import { RevokeInvitationDialog } from './revoke-invitation-dialog'
 import { UnlinkedParticipantsSection } from './unlinked-participants-section'
 
 export default function GroupMembers() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
-  const locale = useLocale()
-  const { groupId, group, currentMember } = useCurrentGroup()
+  const { groupId, group } = useCurrentGroup()
 
   if (group?.groupType === 'FRIEND') {
     return (
       <Navigate to="/groups/$groupId/expenses" params={{ groupId }} replace />
     )
   }
+
+  return <GroupMembersBody />
+}
+
+function GroupMembersBody() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const locale = useLocale()
+  const { groupId, group, currentMember } = useCurrentGroup()
 
   const {
     account,

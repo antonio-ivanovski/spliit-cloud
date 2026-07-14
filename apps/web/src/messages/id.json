@@ -1490,7 +1490,8 @@
     "unknownActor": "Seseorang",
     "import": {
       "imported": "{participant} mengimpor {count} pengeluaran"
-    }
+    },
+    "openExpense": " Buka pengeluaran"
   },
   "OfflineBanner": {
     "message": "Anda sedang offline. Perubahan yang Anda buat sekarang tidak akan disimpan sampai Anda tersambung kembali."

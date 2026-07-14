@@ -67,13 +67,19 @@ function uniquePairs(
   items: Array<{ date: string; base: string; target: string }>,
 ): CurrencyPair[] {
   const map = new Map<string, CurrencyPair>()
+  const seenDates = new Map<string, Set<string>>()
   for (const { date, base, target } of items) {
     const key = `${base}|${target}`
     const pair = map.get(key)
     if (pair) {
-      if (!pair.dates.includes(date)) pair.dates.push(date)
+      const dates = seenDates.get(key)!
+      if (!dates.has(date)) {
+        dates.add(date)
+        pair.dates.push(date)
+      }
     } else {
       map.set(key, { base, target, dates: [date] })
+      seenDates.set(key, new Set([date]))
     }
   }
   return [...map.values()]

@@ -2,6 +2,7 @@ import { ParticipantAvatar } from '@/components/participant-avatar'
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StatsDashboardData } from './dashboard-types'
 
@@ -13,6 +14,14 @@ type Props = {
 export function ParticipantBreakdown({ data, currency }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Stats.Dashboard' })
   const locale = useLocale()
+  const percentFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        style: 'percent',
+        maximumFractionDigits: 0,
+      }),
+    [locale],
+  )
 
   return (
     <section aria-labelledby="participant-breakdown-title">
@@ -55,10 +64,7 @@ export function ParticipantBreakdown({ data, currency }: Props) {
                 />
               </div>
               <span className="w-9 text-right text-xs tabular-nums text-muted-foreground">
-                {new Intl.NumberFormat(locale, {
-                  style: 'percent',
-                  maximumFractionDigits: 0,
-                }).format(participant.percentage)}
+                {percentFormatter.format(participant.percentage)}
               </span>
             </div>
           </div>

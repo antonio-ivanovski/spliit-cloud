@@ -124,7 +124,7 @@ Object.defineProperty(navigator, 'clipboard', {
 })
 
 // ── Initialize i18n (loads en-US locale for tests) ─────────────────────
-import { initI18n } from '@/i18n/react'
+import { initI18n } from '@/i18n/setup'
 await initI18n()
 
 // ── Stub import.meta.env defaults ──────────────────────────────────────

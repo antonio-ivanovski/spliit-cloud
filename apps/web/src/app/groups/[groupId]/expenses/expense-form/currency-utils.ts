@@ -100,6 +100,7 @@ export function parseCurrencyPaste(
     const trailingDigits = numeric.length - lastSeparatorIndex - 1
     const repeatedGrouping =
       separatorChars.length > 1 &&
+      separatorChars.length === separators.length &&
       separatorChars.every((_, index) => {
         const start = separators[index]! + 1
         const end = separators[index + 1] ?? numeric.length

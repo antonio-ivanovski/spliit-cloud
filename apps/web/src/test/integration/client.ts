@@ -9,10 +9,6 @@
  * - PostgreSQL test database must be running and migrated.
  */
 
-import type { AppRouter } from '@spliit/api/router'
-import { createTRPCClient, httpBatchLink } from '@trpc/client'
-import superjson from 'superjson'
-
 const DEFAULT_API_URL = 'http://localhost:3001'
 
 /**
@@ -27,23 +23,6 @@ export async function probeExistingApi(
   } catch {
     return false
   }
-}
-
-/**
- * Create a test tRPC client for data setup. Uses httpBatchLink.
- */
-export function createTestTRPCClient(baseUrl: string) {
-  return createTRPCClient<AppRouter>({
-    links: [
-      httpBatchLink({
-        url: `${baseUrl}/trpc`,
-        transformer: superjson,
-        fetch(url, options) {
-          return fetch(url, { ...options, credentials: 'include' })
-        },
-      }),
-    ],
-  })
 }
 
 /**

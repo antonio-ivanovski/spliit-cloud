@@ -1,5 +1,5 @@
-import * as i18nReact from '@/i18n/react'
 import { localeLabels } from '@/i18n/request'
+import * as i18nSetup from '@/i18n/setup'
 import { render, screen } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -8,7 +8,7 @@ import { LocaleSwitcher } from '@/components/locale-switcher'
 
 describe('LocaleSwitcher', () => {
   beforeEach(() => {
-    vi.spyOn(i18nReact, 'setUserLocale').mockResolvedValue(undefined)
+    vi.spyOn(i18nSetup, 'setUserLocale').mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -50,7 +50,7 @@ describe('LocaleSwitcher', () => {
     const frenchItem = screen.getByText(frenchLabel)
     await user.click(frenchItem)
 
-    expect(i18nReact.setUserLocale).toHaveBeenCalledWith('fr-FR')
+    expect(i18nSetup.setUserLocale).toHaveBeenCalledWith('fr-FR')
   })
 
   it('clicking another locale calls setUserLocale correctly', async () => {
@@ -63,7 +63,7 @@ describe('LocaleSwitcher', () => {
     // Click Japanese locale
     const japaneseLabel = localeLabels['ja-JP']
     await user.click(screen.getByText(japaneseLabel))
-    expect(i18nReact.setUserLocale).toHaveBeenCalledWith('ja-JP')
+    expect(i18nSetup.setUserLocale).toHaveBeenCalledWith('ja-JP')
   })
 
   it('renders all locales as dropdown items', async () => {

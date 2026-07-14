@@ -41,6 +41,7 @@ vi.mock('@/trpc/client', () => ({
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
+  useCurrentGroupOrNull: () => null,
   useIsPendingInvitee: mocks.mockUseIsPendingInvitee,
 }))
 

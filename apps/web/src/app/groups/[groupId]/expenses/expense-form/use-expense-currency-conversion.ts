@@ -16,7 +16,6 @@ export function useExpenseCurrencyConversion(args: {
   groupCurrency: Currency
   /** Forwarded so link-invite viewers get the same recommendations. */
   linkInviteToken?: string
-  onAmountChanged?: (income: boolean) => void
 }): {
   originalCurrency: Currency
   originalCurrencies: ReturnType<typeof useCurrencies>
@@ -25,6 +24,12 @@ export function useExpenseCurrencyConversion(args: {
   setUsingCustomConversionRate: Dispatch<SetStateAction<boolean>>
   conversionRateMessage: string
   exchangeRate: ReturnType<typeof useCurrencyRate>
+  /**
+   * Whether the typed amount is negative (income rather than expense).
+   * Derived directly from the watched `amount` field; the parent can
+   * react to it without a callback prop.
+   */
+  isIncome: boolean
   /**
    * Read-only preview of the typed `amount` after conversion into the
    * group (Ledger) currency. Undefined when no conversion is needed or
@@ -126,12 +131,10 @@ export function useExpenseCurrencyConversion(args: {
     args.form,
   ])
 
-  // Income detection tracks the typed amount directly (it is in the
-  // selected expense currency; signedness is currency-agnostic).
-  useEffect(() => {
-    const income = Number(watchedAmount) < 0
-    args.onAmountChanged?.(income)
-  }, [watchedAmount, args])
+  // Income detection: a negative typed amount flips the expense to income.
+  // Derive directly from form state rather than passing the value back
+  // to the parent via a callback in an effect.
+  const isIncome = Number(watchedAmount) < 0
 
   // Derive the converted Ledger amount as a non-stored preview. Form
   // state stays untouched so the schema's `amount` invariant (which is
@@ -204,6 +207,7 @@ export function useExpenseCurrencyConversion(args: {
     setUsingCustomConversionRate,
     conversionRateMessage,
     exchangeRate,
+    isIncome,
     convertedAmountPreview,
     pinnedCurrencyCode,
     recommendedCurrencyCodes,

@@ -32,15 +32,14 @@ export function badgeVariantForRole(role: MemberRole): 'secondary' | 'outline' {
 }
 
 export const emailFormSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   temporaryName: z.string().trim().max(120).optional(),
 })
 export type EmailFormValues = z.infer<typeof emailFormSchema>
 
-export const linkFormSchema = z.object({
-  temporaryName: z.string().trim().max(120).optional(),
-})
-export type LinkFormValues = z.infer<typeof linkFormSchema>
+export type LinkFormValues = {
+  temporaryName?: string | undefined
+}
 
 export type GeneratedLink = {
   inviteUrl: string
@@ -49,13 +48,24 @@ export type GeneratedLink = {
   expiresAt: Date | string
 }
 
+const dateFormatCache = new Map<string, Intl.DateTimeFormat>()
+
+function getDateFormat(locale: string) {
+  let fmt = dateFormatCache.get(locale)
+  if (!fmt) {
+    fmt = new Intl.DateTimeFormat(locale, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+    dateFormatCache.set(locale, fmt)
+  }
+  return fmt
+}
+
 export function formatDate(value: string | Date, locale: string) {
   const date = typeof value === 'string' ? new Date(value) : value
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(date)
+  return getDateFormat(locale).format(date)
 }
 
 export function useMembersDialogs() {

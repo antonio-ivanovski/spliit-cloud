@@ -38,6 +38,7 @@ export function ForgotPasswordPage() {
   const [email, setEmail] = useState(initialEmail ?? '')
   const [emailSent, setEmailSent] = useState(false)
 
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- better-auth fire-and-forget, no tRPC query cache
   const requestReset = useMutation({
     retry: false,
     mutationFn: async (vars: { email: string }) => {

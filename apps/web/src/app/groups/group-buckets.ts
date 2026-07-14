@@ -64,11 +64,22 @@ export function partitionGroups(groups: AccountGroup[]) {
   return { groups: grouped, friends, starred, archived, hidden }
 }
 
+const dateFormatCache = new Map<string, Intl.DateTimeFormat>()
+
+function getDateFormat(locale: string) {
+  let fmt = dateFormatCache.get(locale)
+  if (!fmt) {
+    fmt = new Intl.DateTimeFormat(locale, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+    dateFormatCache.set(locale, fmt)
+  }
+  return fmt
+}
+
 export function formatDate(value: string | Date, locale: string) {
   const date = typeof value === 'string' ? new Date(value) : value
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(date)
+  return getDateFormat(locale).format(date)
 }

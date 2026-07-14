@@ -95,13 +95,12 @@ export function useExpenseFormBalancing(args: {
       const paidFor = args.form.getValues().paidFor
       let newPaidFor = [...paidFor]
 
-      const editedParticipants = Array.from(manuallyEditedParticipants)
+      const editedParticipants = manuallyEditedParticipants
       let remainingAmount = totalAmount
-      const remainingParticipants =
-        newPaidFor.length - editedParticipants.length
+      const remainingParticipants = newPaidFor.length - editedParticipants.size
 
       newPaidFor = newPaidFor.map((participant) => {
-        if (editedParticipants.includes(participant.participant)) {
+        if (editedParticipants.has(participant.participant)) {
           const participantShare = Number(participant.shares) || 0
           if (splitMode === 'BY_AMOUNT') {
             remainingAmount -= participantShare
@@ -118,7 +117,7 @@ export function useExpenseFormBalancing(args: {
         }
 
         newPaidFor = newPaidFor.map((participant) => {
-          if (!editedParticipants.includes(participant.participant)) {
+          if (!editedParticipants.has(participant.participant)) {
             return {
               ...participant,
               shares: Number(
@@ -152,12 +151,12 @@ export function useExpenseFormBalancing(args: {
       const paidByList = args.form.getValues().paidByList
       let newPaidByList = [...paidByList]
 
-      const editedPayers = Array.from(manuallyEditedPayers)
+      const editedPayers = manuallyEditedPayers
       let remainingAmount = totalAmount
-      const remainingPayers = newPaidByList.length - editedPayers.length
+      const remainingPayers = newPaidByList.length - editedPayers.size
 
       newPaidByList = newPaidByList.map((payer) => {
-        if (editedPayers.includes(payer.participant)) {
+        if (editedPayers.has(payer.participant)) {
           const payerShare = Number(payer.shares) || 0
           remainingAmount -= payerShare
           return payer
@@ -168,7 +167,7 @@ export function useExpenseFormBalancing(args: {
       if (remainingPayers > 0) {
         const amountPerRemaining = remainingAmount / remainingPayers
         newPaidByList = newPaidByList.map((payer) => {
-          if (!editedPayers.includes(payer.participant)) {
+          if (!editedPayers.has(payer.participant)) {
             return {
               ...payer,
               shares: Number(

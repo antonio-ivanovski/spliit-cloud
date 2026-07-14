@@ -44,6 +44,7 @@ vi.mock(import('@/lib/upload'), async (importOriginal) => {
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: contextMocks.mockUseCurrentGroup,
+  useCurrentGroupOrNull: () => null,
   useIsPendingInvitee: contextMocks.mockUseIsPendingInvitee,
 }))
 

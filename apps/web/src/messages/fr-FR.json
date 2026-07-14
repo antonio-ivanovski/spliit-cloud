@@ -1490,7 +1490,8 @@
     "unknownActor": "Quelqu'un",
     "import": {
       "imported": "{participant} a importé {count} dépenses"
-    }
+    },
+    "openExpense": "Ouvrir la dépense"
   },
   "OfflineBanner": {
     "message": "Vous êtes hors ligne. Les modifications que vous effectuerez ne seront pas enregistrées tant que vous ne serez pas reconnecté."

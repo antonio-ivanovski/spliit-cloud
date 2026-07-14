@@ -34,4 +34,5 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
+// react-doctor-disable-next-line react-doctor/only-export-components -- shadcn/ui CVA variants co-exported with component
 export { Badge, badgeVariants }

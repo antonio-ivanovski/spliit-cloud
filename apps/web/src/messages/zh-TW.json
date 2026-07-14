@@ -1490,7 +1490,8 @@
     "unknownActor": "某人",
     "import": {
       "imported": "{participant} 導入了 {count} 筆支出"
-    }
+    },
+    "openExpense": "開啟支出"
   },
   "OfflineBanner": {
     "message": "目前處於離線狀態。在重新連線之前，您所做的變更不會被儲存。"

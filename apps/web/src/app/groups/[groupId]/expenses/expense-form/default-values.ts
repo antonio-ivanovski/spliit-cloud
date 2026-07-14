@@ -94,14 +94,14 @@ const parsePrefilledItems = (
     const validParticipantIds = new Set(group.participants.map((p) => p.id))
     return parsed.data.map((item) => {
       const seen = new Set<string>()
-      const paidFor = (item.paidFor ?? [])
-        .filter((row) => {
-          if (!validParticipantIds.has(row.participant)) return false
-          if (seen.has(row.participant)) return false
-          seen.add(row.participant)
-          return true
-        })
-        .map(({ participant, shares }) => ({ participant, shares }))
+      const paidFor = (item.paidFor ?? []).flatMap(
+        ({ participant, shares }) => {
+          if (!validParticipantIds.has(participant)) return []
+          if (seen.has(participant)) return []
+          seen.add(participant)
+          return [{ participant, shares }]
+        },
+      )
 
       // Missing assignments keep URL-prefilled items as documentation. The
       // participant editor supplies all members when the user opts into an
@@ -152,17 +152,21 @@ export function savedDefaultToFormValues(
   const parsed = savedDefaultSplitSchema.safeParse(raw)
   if (!parsed.success) return null
   const validIds = new Set(group.participants.map((p) => p.id))
-  const paidFor = parsed.data.paidFor
-    .filter((row) => validIds.has(row.participant))
-    .map(({ participant, shares }) => ({
-      participant,
-      shares:
-        parsed.data.splitMode === 'BY_PERCENTAGE'
-          ? shares / 100
-          : parsed.data.splitMode === 'BY_AMOUNT'
-            ? amountAsDecimal(shares, groupCurrency)
-            : shares,
-    }))
+  const paidFor = parsed.data.paidFor.flatMap(({ participant, shares }) =>
+    validIds.has(participant)
+      ? [
+          {
+            participant,
+            shares:
+              parsed.data.splitMode === 'BY_PERCENTAGE'
+                ? shares / 100
+                : parsed.data.splitMode === 'BY_AMOUNT'
+                  ? amountAsDecimal(shares, groupCurrency)
+                  : shares,
+          },
+        ]
+      : [],
+  )
   if (!paidFor.length) return null
   return { splitMode: parsed.data.splitMode, paidFor }
 }

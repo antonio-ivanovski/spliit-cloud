@@ -62,21 +62,25 @@ export function SimpleBalancesCard({
             {currencyBalances.filter(hasActivity).length === 0 ? (
               <SimpleEmptyState />
             ) : (
-              currencyBalances.filter(hasActivity).map((summary) => (
-                <CurrencySection
-                  key={summary.currencyCode}
-                  currency={summary.currency}
-                >
-                  <SimpleCurrencyContent
-                    balances={summary.balances}
-                    reimbursements={summary.reimbursements}
-                    participants={participants}
-                    currency={summary.currency}
-                    currencyCode={summary.currencyCode}
-                    groupId={groupId}
-                  />
-                </CurrencySection>
-              ))
+              currencyBalances.flatMap((summary) =>
+                hasActivity(summary)
+                  ? [
+                      <CurrencySection
+                        key={summary.currencyCode}
+                        currency={summary.currency}
+                      >
+                        <SimpleCurrencyContent
+                          balances={summary.balances}
+                          reimbursements={summary.reimbursements}
+                          participants={participants}
+                          currency={summary.currency}
+                          currencyCode={summary.currencyCode}
+                          groupId={groupId}
+                        />
+                      </CurrencySection>,
+                    ]
+                  : [],
+              )
             )}
           </div>
         ) : (

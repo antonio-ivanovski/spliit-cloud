@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next'
  * delete flow on the settings page is now the only way to leave a group
  * with a single member, so the leave dialog never renders for that case.
  */
+// react-doctor-disable-next-line react-doctor/no-many-boolean-props -- independent section flags, not mutually-exclusive variants
 export function LeaveGroupDialog({
   leaveDialogOpen,
   leavePreviewQuery,

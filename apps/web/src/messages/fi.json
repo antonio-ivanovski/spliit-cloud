@@ -1490,7 +1490,8 @@
     "unknownActor": "Joku",
     "import": {
       "imported": "{participant} toi {count} kulua"
-    }
+    },
+    "openExpense": "Avaa meno"
   },
   "OfflineBanner": {
     "message": "Et ole yhteydessä internetiin. Nyt tekemiäsi muutoksia ei tallenneta, ennen kuin muodostat yhteyden uudelleen."

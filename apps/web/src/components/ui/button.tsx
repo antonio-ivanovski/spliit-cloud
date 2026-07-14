@@ -54,4 +54,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = 'Button'
 
+// react-doctor-disable-next-line react-doctor/only-export-components -- shadcn/ui CVA variants co-exported with component
 export { Button, buttonVariants }

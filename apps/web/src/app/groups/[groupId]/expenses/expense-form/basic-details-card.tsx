@@ -70,6 +70,11 @@ import {
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
+function getSelectedRecurrenceRule(field?: { value: string }) {
+  return field?.value as RecurrenceRule
+}
+
+// react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive expense form section, shared form state
 export function BasicDetailsCard(props: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
@@ -77,7 +82,6 @@ export function BasicDetailsCard(props: {
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
   isIncome: boolean
-  setIsIncome: Dispatch<SetStateAction<boolean>>
   isCreate: boolean
   heading?: string
   /** Link-invite token carried in the URL for pending invitees. */
@@ -121,7 +125,6 @@ export function BasicDetailsCard(props: {
     readOnly,
     sExpense,
     isIncome,
-    setIsIncome,
     isCreate,
     heading,
   } = props
@@ -142,10 +145,6 @@ export function BasicDetailsCard(props: {
     CalculatorItem[] | null
   >(null)
   const watchedItems = useWatch({ control: form.control, name: 'items' }) ?? []
-
-  const getSelectedRecurrenceRule = (field?: { value: string }) => {
-    return field?.value as RecurrenceRule
-  }
 
   const inputCurrency = props.originalCurrency
   const hasExistingItems = watchedItems.some(
@@ -200,7 +199,6 @@ export function BasicDetailsCard(props: {
         shouldValidate: true,
       },
     )
-    setIsIncome(false)
     window.setTimeout(() => form.setFocus('items.0.title'), 0)
   }
 
@@ -402,9 +400,6 @@ export function BasicDetailsCard(props: {
                       onChange={(event) => {
                         const v = enforceCurrencyPattern(event.target.value)
                         setCalculatorExpression(v)
-                        const income = Number(v) < 0
-                        setIsIncome(income)
-                        if (income) form.setValue('isReimbursement', false)
                         onChange(v)
                       }}
                       onPaste={(event) => {
@@ -415,7 +410,6 @@ export function BasicDetailsCard(props: {
                         if (!parsed) return
                         event.preventDefault()
                         setCalculatorExpression(parsed.amount)
-                        setIsIncome(false)
                         onChange(parsed.amount)
                         if (parsed.currencyCode && group.currencyCode) {
                           form.setValue(
@@ -465,9 +459,6 @@ export function BasicDetailsCard(props: {
                 onExpressionChange={setCalculatorExpression}
                 onTransferAmount={(value) => {
                   const sanitizedValue = enforceCurrencyPattern(value)
-                  const income = Number(sanitizedValue) < 0
-                  setIsIncome(income)
-                  if (income) form.setValue('isReimbursement', false)
                   onChange(sanitizedValue)
                 }}
                 onTransferItems={handleCalculatorItems}

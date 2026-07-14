@@ -47,10 +47,12 @@ export function BulkCategorizePage(props: BulkCategorizePageProps) {
   const previewMutation = trpc.ai.bulkCategorize.preview.useMutation()
   const applyMutation = trpc.groups.expenses.bulkUpdateCategories.useMutation()
   const utils = trpc.useUtils()
-  const candidates = listQuery.data?.candidates ?? []
+  const candidates = listQuery.data?.candidates
   const titleById = useMemo(
     () =>
-      new Map(candidates.map((candidate) => [candidate.id, candidate.title])),
+      new Map(
+        (candidates ?? []).map((candidate) => [candidate.id, candidate.title]),
+      ),
     [candidates],
   )
 
@@ -143,12 +145,16 @@ export function BulkCategorizePage(props: BulkCategorizePageProps) {
   }
 
   async function savePreview() {
-    const changes = state.previewRows
-      .filter((row) => row.included)
-      .map((row) => ({
-        expenseId: row.expenseId,
-        categoryId: row.overrideCategoryId ?? row.suggestedCategoryId,
-      }))
+    const changes = state.previewRows.flatMap((row) =>
+      row.included
+        ? [
+            {
+              expenseId: row.expenseId,
+              categoryId: row.overrideCategoryId ?? row.suggestedCategoryId,
+            },
+          ]
+        : [],
+    )
     if (changes.length === 0) return
     try {
       const result = await applyMutation.mutateAsync({

@@ -15,7 +15,7 @@ import {
   type CalculatorItem,
 } from '@spliit/domain/calculator'
 import { Delete, ListPlus } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Key = {
@@ -27,6 +27,7 @@ type Key = {
 type ItemTransferState =
   'empty' | 'invalid' | 'unsupported' | 'create' | 'replace'
 
+// react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive calculator dialog, keypad+display share expression state
 export function AmountCalculatorDialog({
   open,
   onOpenChange,
@@ -184,6 +185,18 @@ export function AmountCalculatorDialog({
     onOpenChange(nextOpen)
   }
 
+  // Key handlers are recreated each render. Mirror them in refs so the
+  // global keydown effect only re-subscribes when the dialog actually
+  // opens/closes, not whenever expression/result/currency change.
+  const appendRef = useRef(append)
+  const updateExpressionRef = useRef(updateExpression)
+  const transferAmountRef = useRef(transferAmount)
+  useEffect(() => {
+    appendRef.current = append
+    updateExpressionRef.current = updateExpression
+    transferAmountRef.current = transferAmount
+  })
+
   useEffect(() => {
     if (!open) return
 
@@ -192,7 +205,7 @@ export function AmountCalculatorDialog({
 
       if (/^\d$/.test(event.key)) {
         event.preventDefault()
-        append(event.key)
+        appendRef.current(event.key)
         return
       }
 
@@ -209,31 +222,33 @@ export function AmountCalculatorDialog({
       }
       if (event.key in keyboardOperators) {
         event.preventDefault()
-        append(keyboardOperators[event.key])
+        appendRef.current(keyboardOperators[event.key])
         return
       }
 
       if (event.key === 'Backspace') {
         event.preventDefault()
-        updateExpression((currentExpression) => currentExpression.slice(0, -1))
+        updateExpressionRef.current((currentExpression) =>
+          currentExpression.slice(0, -1),
+        )
         return
       }
 
       if (event.key === 'Delete') {
         event.preventDefault()
-        updateExpression('')
+        updateExpressionRef.current('')
         return
       }
 
       if (event.key === 'Enter' || event.key === '=') {
         event.preventDefault()
-        transferAmount()
+        transferAmountRef.current()
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currency, expression, open, result])
+  }, [open])
 
   return (
     <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>

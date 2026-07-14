@@ -1490,7 +1490,8 @@
     "unknownActor": "Norbait",
     "import": {
       "imported": "{participant}(e)k {count} gastu inportatu ditu"
-    }
+    },
+    "openExpense": "Gastua ireki"
   },
   "OfflineBanner": {
     "message": "Lineaz kanpo zaude. Oraingoz egiten dituzun aldaketak ez dira gordeko berriro konektatu arte."

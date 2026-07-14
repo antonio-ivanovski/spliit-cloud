@@ -67,12 +67,20 @@ export const useCurrentGroup = () => {
 }
 
 /**
+ * Like {@link useCurrentGroup} but returns `null` when the caller is not
+ * inside a {@link CurrentGroupProvider}. Use this from hooks that may run
+ * outside the group layout (e.g. page-level controls) without throwing.
+ */
+export const useCurrentGroupOrNull = () => useContext(CurrentGroupContext)
+
+/**
  * True when the signed-in viewer is a PENDING invitee of this group (i.e.
  * their account email matches a PENDING GroupInvitation, and they have not
  * yet accepted). Pending invitees can read the group, but every mutation
  * (create/update/delete/archive/invitations) is rejected on the server and
  * edit affordances are hidden in the UI.
  */
+// react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
 export function useIsPendingInvitee() {
   const { currentInvitation } = useCurrentGroup()
   return currentInvitation != null

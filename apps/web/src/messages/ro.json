@@ -1490,7 +1490,8 @@
     "unknownActor": "Cineva",
     "import": {
       "imported": "{participant} a importat {count} cheltuieli"
-    }
+    },
+    "openExpense": "Deschide cheltuiala"
   },
   "OfflineBanner": {
     "message": "Ești offline. Modificările pe care le faci acum nu vor fi salvate până nu te reconectezi."

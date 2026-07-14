@@ -48,6 +48,7 @@ export function useAuthPanel() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [successState, setSuccessState] = useState<SuccessState | null>(null)
 
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- better-auth session via cookies, not tRPC query cache
   const emailAuth = useMutation({
     retry: false,
     mutationFn: async (vars: {
@@ -108,6 +109,7 @@ export function useAuthPanel() {
     },
   })
 
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- better-auth session via cookies, not tRPC query cache
   const magicLink = useMutation({
     retry: false,
     mutationFn: async (vars: { email: string; callbackURL: string }) => {

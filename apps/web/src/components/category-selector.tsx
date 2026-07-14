@@ -117,33 +117,31 @@ function CategoryCommand({
       <CommandInput placeholder={t('search')} className="text-base" />
       <CommandEmpty>{t('noCategory')}</CommandEmpty>
       <div className="w-full max-h-[300px] overflow-y-auto">
-        {Object.entries(categoriesByGroup).map(
-          ([group, groupCategories], index) => (
-            <CommandGroup
-              key={index}
-              heading={t(
-                CATEGORY_GROUPING_HEADINGS[
-                  group as keyof typeof CATEGORY_GROUPING_HEADINGS
-                ],
-              )}
-            >
-              {groupCategories.map((category) => (
-                <CommandItem
-                  key={category.id}
-                  value={`${category.id} ${t(
-                    CATEGORY_GROUPING_HEADINGS[category.grouping],
-                  )} ${t(categoryLabelKey(category))}`}
-                  onSelect={(currentValue) => {
-                    const id = currentValue.split(' ')[0] as CategoryId
-                    onValueChange(id)
-                  }}
-                >
-                  <CategoryLabel category={category} />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          ),
-        )}
+        {Object.entries(categoriesByGroup).map(([group, groupCategories]) => (
+          <CommandGroup
+            key={group}
+            heading={t(
+              CATEGORY_GROUPING_HEADINGS[
+                group as keyof typeof CATEGORY_GROUPING_HEADINGS
+              ],
+            )}
+          >
+            {groupCategories.map((category) => (
+              <CommandItem
+                key={category.id}
+                value={`${category.id} ${t(
+                  CATEGORY_GROUPING_HEADINGS[category.grouping],
+                )} ${t(categoryLabelKey(category))}`}
+                onSelect={(currentValue) => {
+                  const id = currentValue.split(' ')[0] as CategoryId
+                  onValueChange(id)
+                }}
+              >
+                <CategoryLabel category={category} />
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        ))}
       </div>
     </Command>
   )

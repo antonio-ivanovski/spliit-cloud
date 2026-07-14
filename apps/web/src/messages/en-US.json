@@ -1490,7 +1490,8 @@
       "imported": "{participant} imported {count} expenses"
     },
     "fallback": "An activity was recorded",
-    "unknownActor": "Someone"
+    "unknownActor": "Someone",
+    "openExpense": "Open expense"
   },
   "OfflineBanner": {
     "message": "You're offline. Changes you make now won't be saved until you reconnect."
