@@ -185,7 +185,7 @@ function help() {
     '  add <path> "<value>"            Add a key to en-US (creates intermediate objects).',
     '  add --stdin                     Read {"path": "value", ...} from stdin and add to en-US.',
     '  set <locale> <path> "<value>"   Set a translation in any single locale.',
-    '  remove <path>                   Remove a key from en-US and all other locales (cleanup).',
+    '  remove <path>                   Remove a key from every locale where it exists (cleanup).',
     '  get <locale> <path>             Print the current value at a path.',
     '  list [locale]                   Print flat dotted keys (defaults to en-US).',
     '  missing [--locale <l>] [--all] [--json]',
@@ -196,16 +196,16 @@ function help() {
     '  check [--changes-only] [--locale <l>] [--ref <r>] [--json]',
     '                                  Audit all locales. Exits 1 on orphan keys or missing keys.',
     '                                  --changes-only: only flag missing keys introduced by the diff vs ref.',
-    '  validate                        JSON-parse and check for orphan keys.',
+    '  validate                        Validate values, placeholders, rich-text tags, plurals, and orphan keys.',
     '  help                            Show this help.',
     '',
     'Exit codes:',
     '  0  clean',
-    '  1  issues found (orphan keys or missing keys for `check` / `validate`)',
+    '  1  translation or validation issues found',
     '  2  usage error or unknown locale / key',
     '',
     'Notes:',
-    '  - `add` and `remove` only touch en-US.json.',
+    '  - `add` only touches en-US.json; `remove` cleans the key from every locale.',
     '  - Use `set` to fill in a translation in another locale.',
     '  - Use `diff` to see what new translations a change introduces.',
     '  - Use `check` as the canonical CI gate: `bun i18n check` exits 1 if any',
@@ -268,7 +268,7 @@ async function main() {
       if (!path) die('usage: bun i18n remove <path>')
       const count = await removeString(path)
       if (count === 0) {
-        console.log(`Nothing to remove: ${path} not present in en-US.`)
+        console.log(`Nothing to remove: ${path} not present in any locale.`)
         return
       }
       console.log(`Removed ${path} from ${count} locale(s).`)

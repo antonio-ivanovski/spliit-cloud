@@ -174,7 +174,7 @@ describe('GroupCard — friend-ledger behavior', () => {
     )
     // Open the dropdown
     const actionsButton = screen.getByRole('button', {
-      name: /friend ledger actions/i,
+      name: /friend expense actions/i,
     })
     await user.click(actionsButton)
     // Hide/unhide is shown

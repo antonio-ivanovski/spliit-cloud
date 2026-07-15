@@ -197,6 +197,9 @@ export function DocumentThumbnail({
   }, [api])
 
   const { t: tExpenseForm } = useTranslation()
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'ExpenseDocumentsInput',
+  })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -238,8 +241,8 @@ export function DocumentThumbnail({
                   ? 'rounded-bl-none rounded-br-md border-l-0'
                   : 'rounded-b-md',
               )}
-              title="Delete document"
-              aria-label="Delete document"
+              title={t('deleteDocument')}
+              aria-label={t('deleteDocument')}
               onClick={() => deleteDocument(document)}
             >
               <Trash className="h-4 w-4" />
@@ -248,7 +251,7 @@ export function DocumentThumbnail({
         )}
       </div>
       <DialogContent className="p-4 w-screen max-w-[100vw] h-dvh max-h-dvh sm:max-w-[calc(100vw-32px)] sm:max-h-[calc(100dvh-32px)] *:last:hidden">
-        <DialogTitle className="sr-only">Document</DialogTitle>
+        <DialogTitle className="sr-only">{t('document')}</DialogTitle>
         <DialogDescription className="sr-only"></DialogDescription>
         <div className="flex flex-col gap-4">
           <div className="flex justify-end">
@@ -279,13 +282,13 @@ export function DocumentThumbnail({
                   }}
                 >
                   <Trash className="mr-2 h-4 w-4" />
-                  Delete document
+                  {t('deleteDocument')}
                 </Button>
               </div>
             )}
             <DialogClose asChild>
               <Button variant="ghost">
-                <X className="w-4 h-4 mr-2" /> Close
+                <X className="w-4 h-4 mr-2" /> {t('close')}
               </Button>
             </DialogClose>
           </div>

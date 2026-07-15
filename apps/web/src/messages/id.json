@@ -8,32 +8,32 @@
       "createAccount": "Buat akun",
       "createGroup": "Buat grup",
       "importGroup": "Impor grup dari layanan lain",
-      "createFriendLedger": "Buat buku besar teman"
+      "createFriendLedger": "Catat pengeluaran bersama teman"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Grup + sinkronisasi",
+        "description": "Buat grup untuk perjalanan, acara, dan hadiah, lalu sinkronkan di semua perangkat."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Pengeluaran + struk",
+        "description": "Tambahkan pengeluaran dan foto struk, serta buat biaya berulang harian, mingguan, atau bulanan."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Pembagian fleksibel",
+        "description": "Bagi berdasarkan persentase, porsi, jumlah pasti, atau sama rata."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Saldo",
+        "description": "Lihat siapa membayar berapa dan optimalkan transfer antar peserta."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Kategori",
+        "description": "Tetapkan kategori agar pengeluaran bersama mudah dipindai."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Akun",
+        "description": "Masuk untuk melindungi data dan menjaga riwayat pengeluaran tetap tersedia."
       }
     },
     "welcomeBack": "Selamat datang kembali, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Keluar",
     "account": "Akun",
     "accountSettings": "Pengaturan akun",
-    "back": "Kembali"
+    "back": "Kembali",
+    "menu": "Menu"
   },
   "Footer": {
     "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
@@ -64,8 +65,8 @@
     "exportCsv": "Ekspor ke CSV",
     "searchPlaceholder": "Cari pengeluaran…",
     "ActiveUserModal": {
-      "title": "Siapa nama anda?",
-      "description": "Beritahu kami nama Anda agar kami dapat menyesuaikan cara informasi ditampilkan.",
+      "title": "Anda peserta yang mana?",
+      "description": "Pilih peserta yang mewakili Anda agar tampilan informasi dapat disesuaikan.",
       "nobody": "Saya tidak ingin memilih siapa pun",
       "save": "Simpan perubahan",
       "footer": "Pengaturan ini dapat diubah nanti di pengaturan grup."
@@ -77,7 +78,7 @@
       "lastMonth": "Bulan lalu",
       "earlierThisYear": "Awal tahun ini",
       "lastYear": "Tahun lalu",
-      "older": "Lebih tua"
+      "older": "Pengeluaran sebelumnya"
     },
     "filters": {
       "mobileTitle": "Filter pengeluaran",
@@ -107,7 +108,7 @@
       "noMatchClear": "Hapus filter",
       "category": "Kategori",
       "paidBy": "Dibayar oleh",
-      "paidFor": "Dibayar untuk",
+      "paidFor": "Dibagi antara",
       "dateRange": "Rentang tanggal",
       "dateFrom": "Dari",
       "dateTo": "Sampai",
@@ -122,7 +123,7 @@
       "allCategories": "Semua kategori",
       "allParticipants": "Semua peserta",
       "allCurrencies": "Semua mata uang",
-      "nSelected": "{count} dipilih",
+      "nSelected_other": "{count} dipilih",
       "removeFilter": "Hapus filter",
       "settlementsHidden": "Pembayaran tersembunyi",
       "title": "Filter"
@@ -130,16 +131,16 @@
     "showSettlements": "Tampilkan pembayaran"
   },
   "ExpenseCard": {
-    "paidBy": "Dibayar oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
-    "paidByMultiple": "Dibayar oleh <paidByNames></paidByNames> untuk <paidFor></paidFor>",
+    "paidBy": "Dibayar oleh <strong>{paidBy}</strong> · dibagi antara <paidFor></paidFor>",
+    "paidByMultiple": "Dibayar oleh <paidByNames></paidByNames> · dibagi antara <paidFor></paidFor>",
     "everyone": "semua orang",
-    "receivedBy": "Diterima oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
-    "receivedByMultiple": "Diterima oleh <paidByNames></paidByNames> untuk <paidFor></paidFor>",
+    "receivedBy": "Diterima oleh <strong>{paidBy}</strong> · dialokasikan kepada <paidFor></paidFor>",
+    "receivedByMultiple": "Diterima oleh <paidByNames></paidByNames> · dialokasikan kepada <paidFor></paidFor>",
     "yourBalance": "Saldo Anda:",
     "notInvolved": "Anda tidak terlibat",
     "settlementBadge": "Penyelesaian",
     "items": {
-      "more": "+{count} more",
+      "more_other": "+{count} lainnya",
       "title": "Items",
       "participants": "{names}"
     },
@@ -161,7 +162,8 @@
     },
     "NotFound": {
       "text": "Grup ini tidak dapat ditemukan.",
-      "link": "Buka beranda"
+      "link": "Buka beranda",
+      "lookingUp": "Mencari grup ini…"
     },
     "createdInviteHint": "Grup dibuat. Undang anggota untuk memulai.",
     "hidden": "Tersembunyi",
@@ -169,14 +171,14 @@
     "showArchived": "Tampilkan grup yang diarsipkan",
     "hide": "Sembunyikan grup",
     "unhide": "Tampilkan grup",
-    "hideFriend": "Sembunyikan buku besar teman",
-    "unhideFriend": "Tampilkan buku besar teman",
+    "hideFriend": "Sembunyikan pengeluaran bersama teman",
+    "unhideFriend": "Tampilkan pengeluaran bersama teman",
     "starGroup": "Bintangi grup",
     "unstarGroup": "Hapus bintang grup",
-    "starFriend": "Bintangi buku besar teman",
-    "unstarFriend": "Hapus bintang buku besar teman",
+    "starFriend": "Bintangi pengeluaran bersama teman",
+    "unstarFriend": "Hapus bintang pengeluaran bersama teman",
     "groupActions": "Tindakan grup",
-    "friendActions": "Tindakan buku besar teman",
+    "friendActions": "Tindakan pengeluaran bersama teman",
     "archiveGroup": "Arsipkan grup",
     "unarchiveGroup": "Batalkan pengarsipan grup",
     "archiveSuccess": "Grup diarsipkan.",
@@ -245,9 +247,9 @@
         "newGroupFormat": "Grup baru · {currency}",
         "existingGroupFormat": "Grup yang ada · digabungkan",
         "summaryLabel": "Ringkasan",
-        "sourceParticipants": "{count} peserta sumber",
+        "sourceParticipants_other": "{count} peserta sumber",
         "participantBreakdown": "{linked} ditautkan · {email} undangan email · {link} undangan tautan · {unlinked} tidak ditautkan",
-        "expenseCount": "{count} pengeluaran akan dibuat",
+        "expenseCount_other": "{count} pengeluaran akan dibuat",
         "sourceName": "Sumber: {name}",
         "footer": "Setiap peserta sumber dan pengeluaran akan diimpor. Undangan dikirim/dibuat setelah grup dibuat.",
         "importingButton": "Mengimpor…",
@@ -272,7 +274,7 @@
         "existingGroup": "Grup yang ada",
         "loading": "Memuat…",
         "noAdminGroups": "Anda belum mengelola grup apa pun.",
-        "memberCount": "{count} anggota"
+        "memberCount_other": "{count} anggota"
       },
       "Done": {
         "importComplete": "Impor selesai",
@@ -440,16 +442,16 @@
       "description": "Lacak pengeluaran bersama dengan teman, keluarga, atau teman sekamar."
     },
     "groups": "Grup",
-    "friends": "Buku besar teman",
+    "friends": "Teman",
     "createExpense": "Buat pengeluaran",
     "pending": "Tertunda",
     "scopePickerGroups": "Pilih grup",
-    "scopePickerFriends": "Pilih buku besar teman",
+    "scopePickerFriends": "Pilih teman",
     "scopePickerEmpty": "Belum ada grup",
-    "scopePickerMembers": "{count} anggota",
+    "scopePickerMembers_other": "{count} anggota",
     "createFriendLedgerCard": {
       "description": "Selesaikan satu lawan satu dengan orang tertentu.",
-      "title": "Buat buku besar teman"
+      "title": "Catat pengeluaran bersama teman"
     },
     "importGroup": "Impor grup",
     "exportDescription": "Unduh pengeluaran grup sebagai JSON atau CSV."
@@ -480,7 +482,7 @@
     "Participants": {
       "title": "Peserta",
       "description": "Masukkan nama untuk setiap peserta.",
-      "protectedParticipant": "Peserta ini adalah bagian dari pengeluaran, dan tidak dapat dihapus.",
+      "protectedParticipant": "Peserta ini termasuk dalam pengeluaran sehingga tidak dapat dihapus.",
       "new": "Baru",
       "add": "Tambahkan peserta",
       "John": "John",
@@ -517,8 +519,8 @@
       "edit": "Ubah pemasukan",
       "TitleField": {
         "label": "Judul pemasukan",
-        "placeholder": "Restoran Senin malam",
-        "description": "Masukkan deskripsi untuk pemasukan."
+        "placeholder": "Gaji atau pengembalian dana",
+        "description": "Jelaskan sumber pendapatan ini."
       },
       "DateField": {
         "label": "Tanggal pemasukan",
@@ -531,11 +533,11 @@
       "categoryFieldDescription": "Pilih kategori pemasukan.",
       "paidByField": {
         "label": "Diterima oleh",
-        "description": "Pilih peserta yang menerima pemasukan."
+        "description": "Pilih siapa yang menerima uang dan jumlah yang diterima setiap orang."
       },
       "paidFor": {
-        "title": "Diterima untuk",
-        "description": "Pilih untuk siapa pemasukan tersebut diterima."
+        "title": "Dialokasikan kepada",
+        "description": "Pilih peserta yang berbagi pendapatan ini."
       },
       "splitModeDescription": "Pilih cara membagi pemasukan.",
       "attachDescription": "Lihat dan lampirkan tanda terima pada pemasukan."
@@ -560,7 +562,7 @@
       "paidByField": {
         "label": "Dibayar oleh",
         "placeholder": "Pilih peserta",
-        "description": "Pilih peserta yang membayar pengeluaran."
+        "description": "Pilih siapa yang membayar dan jumlah yang dibayarkan setiap orang."
       },
       "recurrenceRule": {
         "label": "Pengeluaran Berulang",
@@ -571,13 +573,13 @@
         "monthly": "Setiap bulan"
       },
       "paidFor": {
-        "title": "Dibayar oleh",
-        "description": "Pilih untuk siapa biaya tersebut dibayarkan."
+        "title": "Dibagi antara",
+        "description": "Pilih peserta yang berbagi pengeluaran ini."
       },
       "splitModeDescription": "Pilih cara membagi pengeluaran.",
       "attachDescription": "Lihat dan lampirkan tanda terima pada pengeluaran.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Buat salinan: {title}",
+      "editTitle": "Ubah: {title}"
     },
     "amountField": {
       "label": "Jumlah",
@@ -635,7 +637,7 @@
       "customRate": "Menggunakan kurs kustom"
     },
     "isReimbursementField": {
-      "label": "Ini adalah reimburse"
+      "label": "Ini adalah pembayaran pelunasan"
     },
     "categoryField": {
       "label": "Kategori"
@@ -658,6 +660,7 @@
       "title": "Hapus pengeluaran?",
       "description": "Apakah Anda yakin ingin menghapus pengeluaran ini? Tindakan ini tidak dapat dibatalkan.",
       "yes": "Iya",
+      "deleting": "Menghapus…",
       "cancel": "Batalkan"
     },
     "attachDocuments": "Lampirkan dokumen",
@@ -666,10 +669,10 @@
     "save": "Simpan",
     "saving": "Menyimpan…",
     "cancel": "Batalkan",
-    "reimbursement": "Reimburse",
     "participant": {
       "pending": "(diundang)"
     },
+    "reimbursement": "Pembayaran pelunasan",
     "readOnlyNotice": "Grup ini diarsipkan. Pengeluaran ditampilkan hanya-baca.",
     "PaidBySplitModeField": {
       "label": "Mode pembagian pembayaran"
@@ -698,6 +701,7 @@
     "paidBySectionSingle": "Tunggal",
     "paidBySectionMultiple": "Beberapa pembayar",
     "paidForSection": "Dibagi di antara peserta",
+    "splitOptionAria": "Pembagian: {title}",
     "paidByOptionSinglePayerHelper": "Satu orang menanggung seluruh pengeluaran",
     "paidByOptionEvenlyHelper": "Setiap orang membayar bagian yang sama",
     "paidByOptionBySharesHelper": "Setiap orang membayar bagian tertimbang",
@@ -710,48 +714,48 @@
     "convertedAmountField": {
       "label": "Jumlah yang dikonversi"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Per item",
+    "paidForOptionItemizedHelper": "Hitung bagian setiap peserta dari masing-masing item dalam pengeluaran.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
-      "columnItem": "Item",
+      "title": "Item",
+      "description": "Tambahkan item untuk membagi pengeluaran dengan tepat atau menyimpannya sebagai dokumentasi pada metode pembagian apa pun.",
+      "addItem": "Tambah item",
+      "empty": "Belum ada item. Klik “Tambah item” untuk memulai.",
+      "allMembers": "Semua peserta",
+      "noMembers": "Tidak ada peserta",
+      "other": "Lainnya (belum diperhitungkan)",
+      "derivedBadge": "Dihitung otomatis",
+      "errorExceedsAmount": "Total item melebihi jumlah pengeluaran.",
+      "actionEdit": "Ubah",
+      "actionDelete": "Hapus",
+      "total": "Total item",
+      "requiredForItemized": "Tambahkan setidaknya satu item untuk menggunakan pembagian per item.",
+      "participantsSummary_other": "{count} peserta",
+      "modalTitle": "Peserta item",
+      "columnItem": "Rincian",
       "columnCost": "Biaya",
       "columnQuantity": "Jml",
       "columnParticipants": "Peserta",
-      "columnTotal": "Total",
+      "columnTotal": "Jumlah",
       "setExpenseAmount": "Atur jumlah pengeluaran",
       "splitEvenlyLabel": "Bagi rata",
       "splitBySharesLabel": "Bagi berdasarkan bagian",
       "splitByPercentageLabel": "Bagi berdasarkan persentase",
       "splitByAmountLabel": "Bagi berdasarkan jumlah",
       "switchToItemizedTitle": "Beralih ke pembagian per item?",
-      "switchToItemizedDescription": "Mengedit peserta item akan mengubah Dibayar untuk menjadi Per item dan mengganti pembagian dibayar untuk yang sudah Anda atur.",
+      "switchToItemizedDescription": "Mengedit peserta item akan mengubah Dibagi antara menjadi Per item dan menggantikan pembagian peserta yang telah Anda atur.",
       "switchToItemizedConfirm": "Beralih ke per item",
       "showItems": "Tampilkan item",
       "hideItems": "Sembunyikan item"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Ganti metode pembagian?",
+      "description": "Beralih ke {mode} akan menyimpan item hanya sebagai dokumentasi. Semua penetapan peserta per item akan dihapus.",
+      "cancel": "Batal",
+      "confirm": "Ganti"
     },
-    "paidForItemizedEntryHint": "Untuk memakai pembagian Dibayar untuk berbasis item, edit peserta dari baris item.",
-    "paidForItemizedActiveHint": "Pembagian Dibayar untuk berbasis item sedang aktif. Edit peserta item dari kartu Item untuk mengubah pembagian ini.",
+    "paidForItemizedEntryHint": "Untuk membagi per item, edit peserta pada baris item.",
+    "paidForItemizedActiveHint": "Pembagian per item aktif. Edit peserta item dari kartu Item untuk mengubah pembagian ini.",
     "DefaultSplit": {
       "savedAsDefault": "Tersimpan sebagai default",
       "heading": "Pembagian default",
@@ -944,6 +948,9 @@
     }
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Hapus dokumen",
+    "document": "Dokumen",
+    "close": "Tutup",
     "TooBigToast": {
       "title": "Ukuran file terlalu besar",
       "description": "Ukuran file maksimum yang dapat Anda unggah adalah {maxSize}. Ukuran file Anda adalah {size}."
@@ -989,11 +996,11 @@
   },
   "Balances": {
     "title": "Saldo",
-    "description": "Ini adalah jumlah yang dibayarkan atau yang diterima oleh setiap peserta.",
+    "description": "Lihat saldo bersih setiap peserta.",
     "Reimbursements": {
-      "title": "Saran reimburse",
-      "description": "Berikut adalah saran untuk reimburse yang optimal antara peserta.",
-      "noImbursements": "Sepertinya grup Anda tidak memerlukan reimburse apa pun 😁",
+      "title": "Saran pembayaran pelunasan",
+      "description": "Gunakan pembayaran ini untuk melunasi saldo dengan transfer sesedikit mungkin.",
+      "noImbursements": "Saldo semua orang di grup sudah lunas 😁",
       "owes": "<strong>{from}</strong> berutang <strong>{to}</strong>",
       "markAsPaid": "Tandai sebagai telah dibayar",
       "markAsPaidAria": "Tandai {amount} dari {from} ke {to} sebagai sudah dibayar"
@@ -1017,7 +1024,7 @@
       "label": "Tampilan",
       "title": "Pilih cara melihat saldo",
       "simple": "Sederhana",
-      "simpleDescription": "Siapa berutang kepada siapa dan selesaikan.",
+      "simpleDescription": "Lihat siapa berutang kepada siapa dan catat pembayaran pelunasan.",
       "visual": "Visual",
       "visualDescription": "Rincian saldo dan grafik."
     },
@@ -1099,12 +1106,12 @@
       "lastMonth": "Bulan lalu",
       "earlierThisYear": "Awal tahun ini",
       "lastYear": "Tahun lalu",
-      "older": "Lebih lama"
+      "older": "Aktivitas sebelumnya"
     }
   },
   "Information": {
     "title": "Informasi",
-    "description": "Gunakan tempat ini untuk menambahkan informasi apa pun yang relevan bagi peserta grup.",
+    "description": "Tambahkan informasi yang mungkin berguna bagi peserta grup.",
     "empty": "Belum ada informasi grup."
   },
   "Settings": {
@@ -1129,7 +1136,7 @@
     "amountTenMillion": "Jumlahnya harus kurang dari 10.000.000.",
     "ratePositive": "Angkanya harus lebih besar dari nol.",
     "paidByRequired": "Anda harus memilih peserta.",
-    "paidForMin1": "Pengeluaran harus dibayarkan untuk setidaknya satu peserta.",
+    "paidForMin1": "Pengeluaran harus dibagi antara setidaknya satu peserta.",
     "noZeroShares": "Semua porsi harus lebih tinggi dari 0.",
     "amountSum": "Total harus sama dengan jumlah pengeluaran.",
     "percentageSum": "Total persentase harus sama dengan 100.",
@@ -1391,7 +1398,7 @@
           "description": "Cabut undangan ke {email}? Saldo mereka harus diselesaikan terlebih dahulu.",
           "warning": {
             "title": "Undangan ini memiliki saldo yang belum diselesaikan",
-            "description": "Centang kotak di bawah untuk membuat satu pengeluaran penggantian per leg yang melibatkan yang diundang ini sebelum mencabut. Undangan hanya dapat dicabut setelah saldo diselesaikan."
+            "description": "Pilih opsi di bawah untuk membuat satu pembayaran pelunasan bagi setiap saldo yang melibatkan penerima undangan ini. Undangan hanya dapat dicabut setelah saldo tersebut dilunasi."
           },
           "checkbox": "Selesaikan saldo yang diundang sebelum mencabut"
         }
@@ -1416,9 +1423,9 @@
         "description": "Hapus {name} dari grup ini? Mereka memiliki saldo yang belum diselesaikan — centang kotak di bawah untuk menyelesaikannya secara otomatis sebelum menghapus.",
         "warning": {
           "title": "Anggota ini memiliki saldo yang belum diselesaikan",
-          "description": "Menghapus tanpa menyelesaikan akan meninggalkan saldo di buku besar tanpa batas waktu. Centang kotak di bawah untuk membuat satu pengeluaran penggantian per leg yang melibatkan anggota ini sebelum menghapus, atau hapus tanpa menyelesaikan dan urus saldonya secara manual."
+          "description": "Menghapus tanpa melunasi akan membuat saldo ini tetap berada di grup. Pilih opsi di bawah untuk membuat satu pembayaran pelunasan bagi setiap saldo yang melibatkan anggota ini, atau hapus anggota lalu lunasi saldo secara manual."
         },
-        "checkbox": "Buat penggantian biaya penyelesaian sebelum menghapus"
+        "checkbox": "Lunasi saldo anggota ini sebelum menghapusnya"
       }
     },
     "leave": {
@@ -1434,7 +1441,7 @@
         "otherAdmins": "Para admin ini akan tetap memegang kendali setelah Anda pergi: {names}.",
         "unsettled": {
           "title": "Anda memiliki saldo yang belum diselesaikan",
-          "description": "Meninggalkan secara paksa akan membuat pengeluaran penggantian secara otomatis untuk bagian yang melibatkan Anda agar buku besar tetap sinkron. Saldo lainnya dibiarkan apa adanya."
+          "description": "Spliit akan membuat pembayaran pelunasan untuk saldo yang melibatkan Anda sebelum Anda keluar. Saldo peserta lain tidak akan berubah."
         },
         "lastAdmin": {
           "title": "Pilih admin baru",
@@ -1461,11 +1468,11 @@
       "idHint": "ID peserta buku besar: {id}",
       "linkDialog": {
         "title": "Tautkan peserta yang belum ditautkan",
-        "description": "Pilih anggota yang ada yang harus ditautkan dengan {displayName}. Tujuan tidak boleh sudah berada di sisi yang berlawanan dari transaksi dengan peserta ini.",
+        "description": "Pilih anggota yang akan ditautkan dengan {displayName}. Anggota tersebut tidak boleh sudah memiliki saldo pengeluaran dengan peserta ini.",
         "membersGroup": "Anggota",
         "cancel": "Batal",
         "confirm": "Tautkan",
-        "noCandidates": "Tidak ada anggota yang kompatibel ditemukan. Ini biasanya berarti peserta yang belum ditautkan ini berada di kedua sisi transaksi dengan setiap anggota lainnya — impor perlu diulang atau pengeluaran disesuaikan terlebih dahulu.",
+        "noCandidates": "Tidak ada anggota yang cocok. Biasanya peserta yang belum tertaut ini memiliki saldo pengeluaran yang bertentangan dengan setiap anggota lain. Impor ulang grup atau sesuaikan pengeluarannya terlebih dahulu.",
         "pendingLabel": "tertunda",
         "pendingHint": "Menautkan ke undangan tertunda akan menggabungkan entri yang hanya berupa nama ini ke dalam akun yang diundang. Yang diundang tetap memiliki barisnya sendiri; referensi yang digabungkan sekarang akan diselesaikan melaluinya saat mereka menerima.",
         "membersGroupWithPending": "Anggota dan undangan tertunda",
@@ -1520,7 +1527,7 @@
         "items": "Item baris",
         "documents": "Lampiran",
         "recurrence": "Pengulangan",
-        "reimbursement": "Reimburse",
+        "reimbursement": "Pembayaran pelunasan",
         "conversionSource": "Sumber konversi",
         "conversionRate": "Kurs"
       }
@@ -1550,10 +1557,10 @@
     },
     "fallback": "Sebuah aktivitas telah dicatat",
     "unknownActor": "Seseorang",
+    "openExpense": " Buka pengeluaran",
     "import": {
-      "imported": "{participant} mengimpor {count} pengeluaran"
-    },
-    "openExpense": " Buka pengeluaran"
+      "imported_other": "{participant} mengimpor {count} pengeluaran"
+    }
   },
   "OfflineBanner": {
     "message": "Anda sedang offline. Perubahan yang Anda buat sekarang tidak akan disimpan sampai Anda tersambung kembali."
@@ -1593,38 +1600,43 @@
     "labels": {
       "group": "grup",
       "groupPlural": "grup",
-      "friendLedger": "buku besar teman",
-      "friendLedgerPlural": "buku besar teman"
+      "friendLedger": "teman",
+      "friendLedgerPlural": "teman"
     },
     "actions": {
       "createGroup": "Buat grup",
-      "createFriendLedger": "Buat buku besar teman",
+      "createFriendLedger": "Catat pengeluaran bersama teman",
       "showHidden": "Tampilkan grup tersembunyi"
     }
   },
   "Friends": {
-    "title": "Buat buku besar teman",
+    "title": "Catat pengeluaran bersama teman",
     "peerFriendsTab": "Daftar teman",
     "peerEmailTab": "Email",
     "peerLinkTab": "Tautan yang dapat dibagikan",
-    "alreadyHasLedger": "sudah memiliki buku besar teman",
+    "friendsSection": "Teman",
+    "pendingInvitationsSection": "Undangan tertunda",
+    "activeFriendExpensesSection": "Pengeluaran bersama teman yang aktif",
+    "alreadyInvited": "(sudah diundang)",
+    "alreadyHasLedger": "(sudah berbagi pengeluaran dengan Anda)",
     "inviteSent": "Undangan terkirim. Teman Anda akan ditambahkan saat mereka bergabung ke Spliit Cloud.",
     "inviteLinkTitle": "Bagikan tautan ini",
-    "inviteLinkDescription": "Bagikan tautan ini kepada teman Anda untuk menambahkan mereka ke buku besar.",
+    "inviteLinkDescription": "Bagikan tautan ini agar teman Anda dapat bergabung dalam pengeluaran bersama.",
     "copy": "Salin",
     "share": "Bagikan",
-    "linkHelp": "Buat tautan yang dapat dibagikan yang dapat digunakan teman Anda untuk bergabung ke buku besar ini.",
+    "linkHelp": "Buat tautan yang dapat dibagikan agar teman Anda dapat bergabung.",
     "emailLabel": "Email teman",
     "temporaryNameLabel": "Nama tampilan",
     "temporaryNameHelp": "Masukkan nama untuk orang yang Anda undang.",
     "friendsEmpty": "Tambahkan teman dengan memasukkan email mereka atau bagikan tautan untuk mengundang mereka.",
     "infoLabel": "Informasi (opsional)",
-    "infoPlaceholder": "Tambahkan konteks seperti 'Pengeluaran teman sekamar'"
+    "infoPlaceholder": "Tambahkan konteks seperti 'Pengeluaran teman sekamar'",
+    "createError": "Tidak dapat membuat pengeluaran bersama teman"
   },
   "BulkCategorize": {
     "title": "Kategorisasi massal",
     "calibrationTitle": "Langkah 1 — Kalibrasi",
-    "calibrationDescription": "Setiap contoh yang Anda konfirmasi menjadi ground truth bagi proses AI berikutnya. Mungkin sudah siap setelah satu putaran, atau meminta lebih banyak contoh.",
+    "calibrationDescription": "Setiap contoh yang Anda konfirmasi membantu AI memperbaiki saran berikutnya. AI mungkin siap setelah satu putaran atau meminta contoh tambahan.",
     "roundCount": "Putaran {round} dari {max}",
     "confidence": {
       "high": "Tinggi",
@@ -1643,10 +1655,10 @@
     "previewDescription": "Edit baris apa pun, lalu simpan. Tingkat keyakinan menandai baris yang paling tidak yakin oleh model.",
     "previewHint": "Menampilkan {shown} dari {total} kandidat.",
     "removeAction": "Lewati",
-    "targetExceedsCap": "Kumpulan target memiliki terlalu banyak pengeluaran ({count}). Persempit tanggal atau proses secara bertahap.",
-    "saveAll": "Simpan {count} perubahan",
+    "targetExceedsCap_other": "Terlalu banyak pengeluaran untuk diproses ({count}). Persempit rentang tanggal atau proses secara bertahap.",
+    "saveAll_other": "Simpan {count} perubahan",
     "saving": "Menyimpan…",
-    "saved": "{count} pengeluaran telah dikategorikan ulang.",
+    "saved_other": "{count} pengeluaran telah dikategorikan ulang.",
     "applyError": "Tidak dapat menyimpan pembaruan kategori massal: {message}",
     "noCandidates": "Tidak ada pengeluaran yang perlu dikategorikan.",
     "adminsOnly": "Hanya admin grup yang dapat menjalankan kategorisasi massal.",
@@ -1657,10 +1669,10 @@
     "previewError": "Tidak dapat membuat pratinjau: {message}",
     "introTitle": "Cara kerjanya",
     "loadingCandidates": "Memeriksa pengeluaran yang belum dikategorikan…",
-    "introDescription": "Ada {count} pengeluaran belum dikategorikan yang siap ditinjau.",
-    "introStepLook": "AI meninjau kumpulan hingga {count} pengeluaran untuk menemukan contoh yang paling berguna.",
-    "introStepReview": "Anda meninjau dan mengoreksi hingga {count} contoh terpilih sehingga AI mempelajari kategori grup ini.",
-    "introStepPreview": "Ketika AI memiliki cukup sinyal, AI menyiapkan tinjauan lengkap dan membiarkan pengeluaran yang tidak pasti tidak dikategorikan.",
+    "introDescription_other": "Ada {count} pengeluaran tanpa kategori yang siap ditinjau.",
+    "introStepLook_other": "AI meninjau hingga {count} pengeluaran untuk menemukan contoh yang paling berguna.",
+    "introStepReview_other": "Anda meninjau dan mengoreksi hingga {count} contoh terpilih agar AI mempelajari kategori grup ini.",
+    "introStepPreview": "Setelah mendapat cukup contoh, AI menyiapkan tinjauan lengkap dan membiarkan pengeluaran yang meragukan tanpa kategori.",
     "startCalibration": "Mulai kalibrasi",
     "calibrationStartHint": "AI sedang memilih contoh yang berguna untuk Anda tinjau.",
     "calibrationReady": "AI memiliki cukup umpan balik untuk menyiapkan tinjauan lengkap.",
@@ -1674,7 +1686,7 @@
     "generatingPreview": "Menyiapkan saran…",
     "noSuggestions": "AI membiarkan setiap pengeluaran tidak dikategorikan. Anda dapat mencoba lagi setelah kalibrasi lebih lanjut.",
     "previewSummary": "AI menyarankan kategori untuk {suggested} dari {total} pengeluaran.",
-    "leftUncategorized": "{count} pengeluaran dibiarkan tidak dikategorikan karena AI tidak cukup yakin.",
+    "leftUncategorized_other": "{count} pengeluaran dibiarkan tanpa kategori karena AI belum cukup yakin.",
     "retryPreview": "Coba pratinjau lagi",
     "doneTitle": "Kategori tersimpan",
     "expenseColumn": "Pengeluaran",
@@ -1686,10 +1698,10 @@
     "category": "Kategori",
     "date": "Tanggal",
     "paidBy": "Dibayar oleh",
-    "paidFor": "Dibayar untuk",
+    "paidFor": "Dibagi antara",
     "yourBalance": "Saldo Anda",
     "notes": "Catatan",
-    "attachments": "Lampiran ({count})",
+    "attachments_other": "Lampiran ({count})",
     "edit": "Ubah pengeluaran",
     "makeCopy": "Buat salinan"
   },
@@ -1702,10 +1714,21 @@
     "create": "Buat",
     "edit": "Ubah detail",
     "creating": "Membuat…",
-    "successToast": "Reimburse tercatat"
+    "successToast": "Pembayaran pelunasan dicatat"
   },
   "Participants": {
     "search": "Cari peserta...",
     "noParticipant": "Peserta tidak ditemukan"
+  },
+  "Common": {
+    "close": "Tutup",
+    "previousSlide": "Slide sebelumnya",
+    "nextSlide": "Slide berikutnya"
+  },
+  "Theme": {
+    "toggle": "Ubah tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Default sistem"
   }
 }

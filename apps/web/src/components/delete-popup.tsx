@@ -49,7 +49,7 @@ export function DeletePopup({
           <AsyncButton
             type="button"
             variant="destructive"
-            loadingContent="Deleting…"
+            loadingContent={t('deleting')}
             action={onDelete}
           >
             {t('yes')}

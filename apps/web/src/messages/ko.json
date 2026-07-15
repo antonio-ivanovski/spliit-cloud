@@ -16,8 +16,8 @@
       "lastMonth": "지난달",
       "lastYear": "작년",
       "earlierThisYear": "올해 초",
-      "older": "이전",
-      "upcoming": "다가오는"
+      "upcoming": "다가오는",
+      "older": "이전 지출"
     },
     "title": "지출",
     "description": "그룹에서 만든 지출 항목들을 보여드려요.",
@@ -53,7 +53,7 @@
       "noMatchClear": "필터 지우기",
       "category": "카테고리",
       "paidBy": "지불자",
-      "paidFor": "분담자",
+      "paidFor": "분할 대상",
       "dateRange": "날짜 범위",
       "dateFrom": "시작",
       "dateTo": "종료",
@@ -68,7 +68,7 @@
       "allCategories": "모든 카테고리",
       "allParticipants": "모든 참여자",
       "allCurrencies": "모든 통화",
-      "nSelected": "{count}개 선택됨",
+      "nSelected_other": "{count}개 선택됨",
       "removeFilter": "필터 제거",
       "settlementsHidden": "정산 숨김",
       "title": "필터"
@@ -89,7 +89,8 @@
     },
     "NotFound": {
       "text": "그룹이 존재하지 않습니다.",
-      "link": "홈으로 가기"
+      "link": "홈으로 가기",
+      "lookingUp": "그룹을 찾는 중…"
     },
     "backToGroups": "그룹으로 돌아가기",
     "removeRecent": "최근 그룹 목록에서 삭제하기",
@@ -99,14 +100,14 @@
     "showArchived": "보관된 그룹 보기",
     "hide": "그룹 숨기기",
     "unhide": "그룹 숨기기 취소",
-    "hideFriend": "친구 장부 숨기기",
-    "unhideFriend": "친구 장부 숨기기 취소",
+    "hideFriend": "친구와의 지출 숨기기",
+    "unhideFriend": "친구와의 지출 표시",
     "starGroup": "그룹 즐겨찾기",
     "unstarGroup": "그룹 즐겨찾기 취소",
-    "starFriend": "친구 장부 즐겨찾기",
-    "unstarFriend": "친구 장부 즐겨찾기 취소",
+    "starFriend": "친구와의 지출 즐겨찾기",
+    "unstarFriend": "친구와의 지출 즐겨찾기 해제",
     "groupActions": "그룹 작업",
-    "friendActions": "친구 장부 작업",
+    "friendActions": "친구와의 지출 작업",
     "archiveGroup": "그룹 보관",
     "unarchiveGroup": "그룹 보관 해제",
     "archiveSuccess": "그룹이 보관되었습니다.",
@@ -175,9 +176,9 @@
         "newGroupFormat": "새 그룹 · {currency}",
         "existingGroupFormat": "기존 그룹 · 병합됨",
         "summaryLabel": "요약",
-        "sourceParticipants": "{count}명의 소스 참가자",
+        "sourceParticipants_other": "원본 참여자 {count}명",
         "participantBreakdown": "{linked} 연결됨 · {email} 이메일 초대 · {link} 링크 초대 · {unlinked} 연결 안 됨",
-        "expenseCount": "{count}개의 지출이 생성됩니다",
+        "expenseCount_other": "지출 {count}건이 생성돼요",
         "sourceName": "소스: {name}",
         "footer": "모든 소스 참가자와 지출이 가져와집니다. 초대는 그룹이 생성된 후 전송/생성됩니다.",
         "importingButton": "가져오는 중…",
@@ -202,7 +203,7 @@
         "existingGroup": "기존 그룹",
         "loading": "로딩 중…",
         "noAdminGroups": "아직 관리하는 그룹이 없습니다.",
-        "memberCount": "{count}명의 멤버"
+        "memberCount_other": "멤버 {count}명"
       },
       "Done": {
         "importComplete": "가져오기 완료",
@@ -370,16 +371,16 @@
       "description": "친구, 가족, 룸메이트와의 공유 지출을 기록하세요."
     },
     "groups": "그룹",
-    "friends": "친구 장부",
+    "friends": "친구",
     "createExpense": "지출 만들기",
     "pending": "대기 중",
     "scopePickerGroups": "그룹 선택",
-    "scopePickerFriends": "친구 장부 선택",
+    "scopePickerFriends": "친구 선택",
     "scopePickerEmpty": "아직 그룹이 없습니다",
-    "scopePickerMembers": "멤버 {count}명",
+    "scopePickerMembers_other": "멤버 {count}명",
     "createFriendLedgerCard": {
       "description": "특정 친구와 1대1로 정산하세요.",
-      "title": "친구 장부 만들기"
+      "title": "친구와의 지출 기록"
     },
     "importGroup": "그룹 가져오기",
     "exportDescription": "그룹 지출을 JSON 또는 CSV로 다운로드합니다."
@@ -410,11 +411,11 @@
     "Participants": {
       "title": "참여자",
       "description": "참가자 이름을 하나씩 입력해 주세요.",
-      "protectedParticipant": "이 참가자는 지출에 참여 중이라서 지울 수 없어요.",
       "add": "참가자 추가하기",
       "John": "민수",
       "Jane": "수영",
       "Jack": "길동",
+      "protectedParticipant": "이 참여자는 지출에 포함되어 있어 삭제할 수 없어요.",
       "new": "새로 만들기"
     },
     "Settings": {
@@ -462,7 +463,7 @@
       "paidByField": {
         "label": "결제한 사람",
         "placeholder": "참가자를 선택해 주세요",
-        "description": "지출을 결제한 사람을 선택해 주세요."
+        "description": "돈을 낸 사람과 각 결제 금액을 선택하세요."
       },
       "recurrenceRule": {
         "label": "지출 반복 설정",
@@ -473,13 +474,13 @@
         "none": "없음"
       },
       "paidFor": {
-        "title": "비용 부담자들",
-        "description": "비용 부담자들을 선택해 주세요."
+        "title": "분할 대상",
+        "description": "이 지출을 나눌 참여자를 선택하세요."
       },
       "splitModeDescription": "지출을 어떻게 나눌지 선택해 주세요.",
       "attachDescription": "영수증을 확인하고 지출에 첨부합니다.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "사본 만들기: {title}",
+      "editTitle": "편집: {title}"
     },
     "amountField": {
       "label": "금액",
@@ -536,7 +537,7 @@
       "customRate": "직접 설정한 환율 사용 중"
     },
     "isReimbursementField": {
-      "label": "이건 비용 정산이에요"
+      "label": "정산금이에요"
     },
     "categoryField": {
       "label": "카테고리"
@@ -554,15 +555,16 @@
     "DeletePopup": {
       "description": "정말 이 지출을 삭제할까요? 한 번 삭제하면 되돌릴 수 없어요.",
       "yes": "네",
+      "deleting": "삭제 중…",
       "cancel": "취소",
       "label": "삭제",
       "title": "이 지출을 삭제하시겠습니까?"
     },
     "Income": {
       "TitleField": {
-        "placeholder": "월요일 저녁 식사",
         "label": "수입 제목",
-        "description": "수입에 대한 설명을 입력하세요."
+        "placeholder": "급여 또는 환불",
+        "description": "수입이 어디에서 발생했는지 입력하세요."
       },
       "create": "수입 만들기",
       "edit": "수입 편집",
@@ -577,16 +579,15 @@
       "categoryFieldDescription": "수입 카테고리를 선택하세요.",
       "paidByField": {
         "label": "수취인",
-        "description": "수입을 받은 참가자를 선택하세요."
+        "description": "돈을 받은 사람과 각 수령 금액을 선택하세요."
       },
       "paidFor": {
-        "title": "수취 대상",
-        "description": "수입이 누구를 위해 수취되었는지 선택하세요."
+        "title": "배분 대상",
+        "description": "이 수입을 나눌 참여자를 선택하세요."
       },
       "splitModeDescription": "수입 분할 방식을 선택하세요.",
       "attachDescription": "영수증을 확인하고 수입에 첨부합니다."
     },
-    "reimbursement": "정산",
     "cancel": "취소",
     "conversionUnavailable": "지출별로 다른 통화를 설정하고 금액을 변환하려면 그룹에 사용자 지정이 아닌 통화를 선택하세요.",
     "selectNone": "선택 안 함",
@@ -600,6 +601,7 @@
     "creating": "만드는 중…",
     "save": "저장",
     "saving": "저장 중…",
+    "reimbursement": "정산금",
     "readOnlyNotice": "이 그룹은 보관되었습니다. 지출이 읽기 전용으로 표시됩니다.",
     "PaidBySplitModeField": {
       "label": "결제자"
@@ -609,7 +611,7 @@
       "surplus": "{total} 중 {extra} 초과",
       "matches": "✓ {total}과 일치",
       "evenlySplit": "균등 분할: {amount} × {count}",
-      "sharesTotal": "총 가중치: {sum} shares",
+      "sharesTotal": "총 가중치: {sum}몫",
       "percentageMatches": "✓ 100% 일치",
       "percentageMissing": "{pct}% 부족",
       "percentageSurplus": "{pct}% 초과"
@@ -628,6 +630,7 @@
     "paidBySectionSingle": "1명",
     "paidBySectionMultiple": "여러 명이 납부",
     "paidForSection": "참여자 간 분할",
+    "splitOptionAria": "분할 방식: {title}",
     "paidByOptionSinglePayerHelper": "1명이 전체 비용을 부담합니다",
     "paidByOptionEvenlyHelper": "각자 같은 금액을 지불합니다",
     "paidByOptionBySharesHelper": "각자 가중된 지분을 지불합니다",
@@ -640,24 +643,24 @@
     "convertedAmountField": {
       "label": "환산 금액"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "항목별",
+    "paidForOptionItemizedHelper": "지출의 개별 항목을 기준으로 참여자별 부담액을 계산해요.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "항목",
+      "description": "항목을 추가해 지출을 정확히 나누거나, 어떤 분할 방식에서도 증빙으로 보관할 수 있어요.",
+      "addItem": "항목 추가",
+      "empty": "아직 항목이 없어요. “항목 추가”를 눌러 시작하세요.",
+      "allMembers": "모든 참여자",
+      "noMembers": "참여자 없음",
+      "other": "기타(미계상)",
+      "derivedBadge": "자동 계산",
+      "errorExceedsAmount": "항목 합계가 지출 금액을 초과해요.",
+      "actionEdit": "편집",
+      "actionDelete": "삭제",
+      "total": "항목 합계",
+      "requiredForItemized": "항목별 분할을 사용하려면 항목을 하나 이상 추가하세요.",
+      "participantsSummary_other": "참여자 {count}명",
+      "modalTitle": "항목 참여자",
       "columnItem": "항목",
       "columnCost": "비용",
       "columnQuantity": "수량",
@@ -669,19 +672,19 @@
       "splitByPercentageLabel": "비율별 분할",
       "splitByAmountLabel": "금액별 분할",
       "switchToItemizedTitle": "항목별 분할로 전환할까요?",
-      "switchToItemizedDescription": "항목 참여자를 편집하면 지불 대상이 항목별로 변경되고 설정한 지불 대상 분할이 대체됩니다.",
+      "switchToItemizedDescription": "항목 참여자를 편집하면 분할 대상이 항목별 분할로 바뀌고 기존 참여자 분할 설정을 대체해요.",
       "switchToItemizedConfirm": "항목별로 전환",
       "showItems": "항목 표시",
       "hideItems": "항목 숨기기"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "분할 방식을 바꿀까요?",
+      "description": "{mode}(으)로 바꾸면 항목은 증빙으로만 남고 항목별 참여자 지정은 모두 삭제돼요.",
+      "cancel": "취소",
+      "confirm": "변경"
     },
-    "paidForItemizedEntryHint": "항목별 정산 대상 계산을 사용하려면 항목 행에서 참가자를 편집하세요.",
-    "paidForItemizedActiveHint": "항목별 정산 대상 계산이 활성화되어 있습니다. 이 분할을 변경하려면 항목 카드에서 항목 참가자를 편집하세요.",
+    "paidForItemizedEntryHint": "항목별로 나누려면 항목 행에서 참여자를 편집하세요.",
+    "paidForItemizedActiveHint": "항목별 분할을 사용 중이에요. 변경하려면 항목 카드에서 참여자를 편집하세요.",
     "DefaultSplit": {
       "savedAsDefault": "기본값으로 저장됨",
       "heading": "기본 분할",
@@ -692,15 +695,15 @@
   },
   "Balances": {
     "title": "잔액",
+    "description": "참여자별 순잔액을 확인하세요.",
     "Reimbursements": {
-      "title": "추천 정산 방법",
-      "description": "참가자 간에 가장 좋은 정산 방안을 알려드려요.",
-      "noImbursements": "그룹에선 따로 정산할 게 없네요 😁",
+      "title": "추천 정산금",
+      "description": "가능한 한 적은 송금으로 잔액을 정산할 수 있어요.",
       "markAsPaid": "지불 완료로 표시하기",
+      "noImbursements": "그룹의 모든 정산이 끝났어요 😁",
       "owes": "<strong>{from}</strong>가 <strong>{to}</strong>에게 돈을 내야 해요",
       "markAsPaidAria": "{from}에서 {to}로 {amount}을(를) 결제 완료로 표시"
     },
-    "description": "각 참가자가 지불했거나 대신 지불받은 금액입니다.",
     "currencyDisplay": {
       "label": "통화",
       "group": "그룹 통화 ({currency})",
@@ -720,7 +723,7 @@
       "label": "보기",
       "title": "잔액 표시 방법 선택",
       "simple": "간단히",
-      "simpleDescription": "누가 누구에게 얼마를 지불할지 확인하고 정산합니다.",
+      "simpleDescription": "누가 누구에게 갚아야 하는지 확인하고 정산금을 기록하세요.",
       "visual": "시각적",
       "visualDescription": "잔액 분석 및 차트."
     },
@@ -797,7 +800,7 @@
       "lastMonth": "지난달",
       "earlierThisYear": "올해 초",
       "lastYear": "작년",
-      "older": "이전"
+      "older": "이전 활동"
     },
     "settingsModified": "<strong>{participant}</strong>가 그룹 설정을 수정했어요.",
     "expenseCreated": "<strong>{participant}</strong>가 <em>{expense}</em> 지출 내역을 추가했어요.",
@@ -813,8 +816,8 @@
     "amountTenMillion": "금액은 10,000,000보다 작아야 해요.",
     "ratePositive": "환율은 0보다 커야 해요.",
     "paidByRequired": "참가자를 선택해 주세요.",
-    "paidForMin1": "지출은 최소 한 명의 참가자를 위해 지불되어야 합니다.",
-    "noZeroShares": "각 몫은 0보다 커야 합니다.",
+    "paidForMin1": "지출은 참여자 한 명 이상에게 분할해야 해요.",
+    "noZeroShares": "모든 몫은 0보다 커야 해요.",
     "amountSum": "금액 합계가 지출 금액과 같아야 해요.",
     "percentageSum": "퍼센트 합이 100이 되어야 합니다.",
     "min1": "최소 한 글자 이상 입력해 주세요.",
@@ -916,34 +919,34 @@
       "createAccount": "계정 만들기",
       "createGroup": "그룹 만들기",
       "importGroup": "다른 서비스에서 그룹 가져오기",
-      "createFriendLedger": "친구 장부 만들기"
+      "createFriendLedger": "친구와의 지출 기록"
     },
     "title": "<strong>친구 & 가족</strong>과 <strong>지출</strong>을 함께 관리해요",
     "description": "공유 지출을 추적하고 정산하세요. 무료 오픈 소스, <strong>내 계정으로 동기화 및 보호</strong>됩니다.",
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "그룹과 동기화",
+        "description": "여행, 행사, 선물을 위한 그룹을 만들고 여러 기기에서 동기화하세요."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "지출과 영수증",
+        "description": "지출과 영수증 이미지를 추가하고 매일, 매주, 매월 반복되는 비용을 만들 수 있어요."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "다양한 분할",
+        "description": "백분율, 몫, 정확한 금액 또는 균등 분할로 나눌 수 있어요."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "잔액",
+        "description": "누가 얼마를 냈는지 확인하고 참여자 간 송금을 최적화하세요."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "카테고리",
+        "description": "공동 지출을 한눈에 볼 수 있도록 카테고리를 지정하세요."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "계정",
+        "description": "로그인하여 데이터를 보호하고 지출 내역을 계속 확인하세요."
       }
     },
     "welcomeBack": "돌아오신 것을 환영합니다, {name}."
@@ -953,7 +956,8 @@
     "signOut": "로그아웃",
     "account": "계정",
     "accountSettings": "계정 설정",
-    "back": "뒤로"
+    "back": "뒤로",
+    "menu": "메뉴"
   },
   "Footer": {
     "madeIn": "오픈소스 커뮤니티가 사랑을 담아 만들었어요 ❤️",
@@ -973,22 +977,25 @@
     "description": "다른 참가자들이 그룹을 보고 지출을 추가할 수 있도록 URL을 공유해 주세요."
   },
   "ExpenseCard": {
-    "paidBy": "<strong>{paidBy}</strong>가 <paidFor></paidFor>를 위해 결제함",
-    "paidByMultiple": "<paidByNames></paidByNames>가 <paidFor></paidFor>를 위해 결제함",
+    "paidBy": "<strong>{paidBy}</strong>님이 결제 · <paidFor></paidFor>에게 분할",
+    "paidByMultiple": "<paidByNames></paidByNames>님이 결제 · <paidFor></paidFor>에게 분할",
     "everyone": "모두",
-    "receivedByMultiple": "<paidByNames></paidByNames>님이 <paidFor></paidFor>를 위해 받음",
+    "receivedBy": "<strong>{paidBy}</strong>님이 수령 · <paidFor></paidFor>에게 배분",
+    "receivedByMultiple": "<paidByNames></paidByNames>님이 수령 · <paidFor></paidFor>에게 배분",
     "yourBalance": "내 잔액:",
     "notInvolved": "당신은 관련이 없어요",
-    "receivedBy": "<strong>{paidBy}</strong>님이 <paidFor></paidFor>를 위해 받음",
     "settlementBadge": "정산",
     "items": {
-      "more": "+{count} more",
+      "more_other": "+{count}개 더 보기",
       "title": "Items",
       "participants": "{names}"
     },
     "copyToast": "지출 복사가 시작되었습니다. 기존 지출 정보를 사용해 새 지출이 생성됩니다."
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "문서 삭제",
+    "document": "문서",
+    "close": "닫기",
     "TooBigToast": {
       "title": "파일이 너무 커요",
       "description": "업로드 가능한 최대 파일 크기: {maxSize}, 현재 파일 크기: {size}입니다."
@@ -1034,8 +1041,8 @@
   },
   "Information": {
     "title": "정보",
-    "empty": "아직 그룹 정보가 없어요.",
-    "description": "그룹 참가자와 관련된 정보를 추가하려면 이 공간을 사용하세요."
+    "description": "그룹 참여자에게 도움이 될 정보를 추가하세요.",
+    "empty": "아직 그룹 정보가 없어요."
   },
   "Currencies": {
     "search": "통화 선택하기...",
@@ -1391,7 +1398,7 @@
           "description": "{email}에 대한 초대를 취소하시겠습니까? 먼저 잔액을 정산해야 합니다.",
           "warning": {
             "title": "이 초대에는 미정산 잔액이 있습니다",
-            "description": "아래 체크박스를 선택하면 이 초대받은 사람과 관련된 각 항목에 대해 하나의 정산 상환 지출을 취소 전에 생성합니다. 잔액이 정산된 후에만 초대를 취소할 수 있습니다."
+            "description": "아래 옵션을 선택하면 초대받은 사람과 관련된 잔액마다 정산금이 하나씩 생성돼요. 잔액이 정산된 후에만 초대를 취소할 수 있어요."
           },
           "checkbox": "취소 전에 초대받은 사람의 잔액 정산"
         }
@@ -1416,9 +1423,9 @@
         "description": "{name}을(를) 이 그룹에서 삭제하시겠습니까? 미정산 잔액이 있습니다 — 아래 체크박스를 선택하면 삭제 전에 자동으로 정산됩니다.",
         "warning": {
           "title": "이 멤버에게는 미정산 잔액이 있습니다",
-          "description": "정산 없이 삭제하면 이 잔액들이 장부에 무기한 남게 됩니다. 아래 체크박스를 선택하면 이 멤버와 관련된 각 항목에 대해 하나의 상환 지출을 생성한 후 삭제하거나, 정산 없이 삭제하고 잔액을 직접 처리할 수 있습니다."
+          "description": "정산하지 않고 삭제하면 이 잔액은 그룹에 계속 남아요. 아래 옵션을 선택해 이 멤버와 관련된 잔액마다 정산금을 만들거나, 삭제한 뒤 직접 정산하세요."
         },
-        "checkbox": "삭제 전 정산용 상환 지출 생성"
+        "checkbox": "삭제 전에 이 멤버의 잔액 정산"
       }
     },
     "leave": {
@@ -1439,7 +1446,7 @@
         },
         "unsettled": {
           "title": "미정산 잔액이 있습니다",
-          "description": "강제로 나가면 사용자와 관련된 항목에 대한 정산 상환 지출이 자동으로 생성되어 장부가 일관되게 유지됩니다. 다른 잔액은 그대로 남습니다."
+          "description": "나가기 전에 회원님과 관련된 잔액의 정산금이 생성돼요. 다른 참여자의 잔액은 바뀌지 않아요."
         }
       },
       "confirmWithForce": "정산하고 나가기",
@@ -1460,11 +1467,11 @@
       "idHint": "원장 참가자 ID: {id}",
       "linkDialog": {
         "title": "연결되지 않은 참가자 연결",
-        "description": "{displayName}을(를) 연결할 기존 멤버를 선택하세요. 대상 멤버가 이 참가자와 이미 상대방으로 연결된 지출 항목이 없어야 합니다.",
+        "description": "{displayName}님과 연결할 기존 멤버를 선택하세요. 해당 멤버는 이 참여자와 지출 잔액이 없어야 해요.",
         "membersGroup": "멤버",
         "cancel": "취소",
         "confirm": "연결",
-        "noCandidates": "호환 가능한 멤버를 찾을 수 없습니다. 일반적으로 이 연결되지 않은 참가자가 다른 모든 멤버와 지출 항목의 양쪽에 모두 있는 경우입니다. 가져오기를 다시 하거나 지출을 먼저 조정해야 합니다.",
+        "noCandidates": "연결할 수 있는 멤버가 없어요. 연결되지 않은 이 참여자가 다른 모든 멤버와 충돌하는 지출 잔액을 가진 경우가 많아요. 그룹을 다시 가져오거나 먼저 지출을 조정하세요.",
         "pendingLabel": "대기 중",
         "pendingHint": "대기 중인 초대에 연결하면 이 이름만 있는 항목이 초대받은 사람과 병합됩니다. 초대받은 사람은 자신의 행을 유지하며, 병합된 참조는 그들이 수락할 때 이를 통해 확인됩니다.",
         "membersGroupWithPending": "멤버 및 대기 중인 초대",
@@ -1520,7 +1527,7 @@
         "items": "항목",
         "documents": "첨부파일",
         "recurrence": "반복",
-        "reimbursement": "정산",
+        "reimbursement": "정산금",
         "conversionSource": "변환 출처",
         "conversionRate": "변환 환율"
       }
@@ -1540,7 +1547,7 @@
     "member": {
       "left": "{participant}님이 그룹을 떠났습니다",
       "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다",
-      "roleChanged": "{participant}님이 {target}의 역할을 {previousRole}에서 {nextRole}(으)로 변경했습니다"
+      "roleChanged": "{participant}님이 {target}님의 역할을 {previousRole}에서 {nextRole}(으)로 변경했어요"
     },
     "invitation": {
       "created": "{participant}님이 {target}을(를) 초대했습니다",
@@ -1550,10 +1557,10 @@
     },
     "fallback": "활동이 기록되었습니다",
     "unknownActor": "누군가",
+    "openExpense": "지출 열기",
     "import": {
-      "imported": "{participant}님이 {count}개의 지출을 가져왔습니다"
-    },
-    "openExpense": "지출 열기"
+      "imported_other": "{participant}님이 지출 {count}건을 가져왔어요"
+    }
   },
   "OfflineBanner": {
     "message": "현재 오프라인 상태입니다. 변경 내용은 다시 연결될 때까지 저장되지 않습니다."
@@ -1590,12 +1597,12 @@
     "labels": {
       "group": "그룹",
       "groupPlural": "그룹",
-      "friendLedger": "친구 장부",
-      "friendLedgerPlural": "친구 장부"
+      "friendLedger": "친구",
+      "friendLedgerPlural": "친구"
     },
     "actions": {
       "createGroup": "그룹 만들기",
-      "createFriendLedger": "친구 장부 만들기",
+      "createFriendLedger": "친구와의 지출 기록",
       "showHidden": "숨긴 그룹 보기"
     },
     "description": {
@@ -1603,28 +1610,33 @@
     }
   },
   "Friends": {
-    "title": "친구 장부 만들기",
+    "title": "친구와의 지출 기록",
     "peerFriendsTab": "친구 목록",
     "peerEmailTab": "이메일",
     "peerLinkTab": "공유 링크",
-    "alreadyHasLedger": "이미 친구 장부가 있습니다",
+    "friendsSection": "친구",
+    "pendingInvitationsSection": "대기 중인 초대",
+    "activeFriendExpensesSection": "진행 중인 친구와의 지출",
+    "alreadyInvited": "(이미 초대됨)",
+    "alreadyHasLedger": "(이미 지출을 공유하고 있어요)",
     "inviteSent": "초대를 보냈습니다. 친구가 Spliit Cloud에 가입하면 장부에 추가됩니다.",
     "inviteLinkTitle": "이 링크 공유",
-    "inviteLinkDescription": "이 링크를 친구와 공유하여 장부에 추가하세요.",
+    "inviteLinkDescription": "이 링크를 공유하면 친구가 공동 지출에 참여할 수 있어요.",
     "copy": "복사",
     "share": "공유",
-    "linkHelp": "친구가 이 장부에 참여할 수 있는 공유 가능한 링크를 생성하세요.",
+    "linkHelp": "친구가 참여할 수 있는 공유 링크를 만드세요.",
     "emailLabel": "친구의 이메일",
     "temporaryNameLabel": "표시 이름",
     "temporaryNameHelp": "초대하는 사람의 이름을 입력하세요.",
     "friendsEmpty": "이메일을 입력하거나 링크를 공유하여 친구를 추가하세요.",
     "infoLabel": "정보 (선택)",
-    "infoPlaceholder": "'룸메이트 비용' 같은 설명 추가"
+    "infoPlaceholder": "'룸메이트 비용' 같은 설명 추가",
+    "createError": "친구와의 지출 기록을 만들지 못했어요"
   },
   "BulkCategorize": {
     "title": "일괄 카테고리 분류",
     "calibrationTitle": "1단계 — 캘리브레이션",
-    "calibrationDescription": "확정하는 각 예시는 AI의 다음 학습 단계에서 정답(ground truth)이 됩니다. 한 번의 학습으로 완료될 수도 있고, 더 많은 예시를 요청할 수도 있습니다.",
+    "calibrationDescription": "확인한 예시가 쌓일수록 AI의 다음 추천이 더 정확해져요. 한 번에 준비될 수도 있고 예시를 더 요청할 수도 있어요.",
     "roundCount": "라운드 {round} / {max}",
     "confidence": {
       "high": "높음",
@@ -1643,10 +1655,10 @@
     "previewDescription": "행을 편집한 후 저장하세요. 신뢰도는 모델이 가장 확신하지 못하는 행을 나타냅니다.",
     "previewHint": "후보 {total}개 중 {shown}개 표시 중",
     "removeAction": "건너뛰기",
-    "targetExceedsCap": "대상 세트에 지출이 너무 많습니다({count}개). 날짜 범위를 좁히거나 배치로 처리하세요.",
-    "saveAll": "{count}개 변경사항 저장",
+    "targetExceedsCap_other": "처리할 지출이 너무 많아요({count}건). 기간을 좁히거나 나누어 처리해 주세요.",
+    "saveAll_other": "변경 사항 {count}건 저장",
     "saving": "저장 중…",
-    "saved": "{count}개의 지출이 재분류되었습니다.",
+    "saved_other": "지출 {count}건을 다시 분류했어요.",
     "applyError": "일괄 카테고리 업데이트를 저장할 수 없습니다: {message}",
     "noCandidates": "분류가 필요한 지출이 없습니다.",
     "adminsOnly": "그룹 관리자만 일괄 분류기를 실행할 수 있습니다.",
@@ -1657,10 +1669,10 @@
     "previewError": "미리보기를 생성할 수 없습니다: {message}",
     "introTitle": "작동 방식",
     "loadingCandidates": "미분류 지출 확인 중…",
-    "introDescription": "{count}개의 미분류 지출을 검토할 준비가 되었습니다.",
-    "introStepLook": "AI는 최대 {count}개의 지출을 광범위하게 검토하여 가장 유용한 예시를 찾습니다.",
-    "introStepReview": "최대 {count}개의 선택된 예시를 검토하고 수정하여 AI가 이 그룹의 카테고리를 학습하게 합니다.",
-    "introStepPreview": "AI가 충분한 신호를 얻으면 전체 검토를 준비하고, 확신이 부족한 지출은 미분류로 남깁니다.",
+    "introDescription_other": "검토할 미분류 지출이 {count}건 있어요.",
+    "introStepLook_other": "AI가 최대 {count}건의 지출을 검토해 가장 유용한 예시를 찾아요.",
+    "introStepReview_other": "선택된 예시를 최대 {count}건 검토하고 수정하면 AI가 이 그룹의 카테고리를 학습해요.",
+    "introStepPreview": "예시가 충분히 모이면 AI가 전체 검토를 준비하고 확실하지 않은 지출은 미분류로 남겨 둬요.",
     "startCalibration": "캘리브레이션 시작",
     "calibrationStartHint": "AI가 검토할 유용한 예시를 선택하고 있습니다.",
     "calibrationReady": "AI가 전체 검토를 준비할 충분한 피드백을 받았습니다.",
@@ -1674,7 +1686,7 @@
     "generatingPreview": "제안 준비 중…",
     "noSuggestions": "AI가 모든 지출을 미분류로 남겼습니다. 더 많은 캘리브레이션 후 다시 시도할 수 있습니다.",
     "previewSummary": "AI가 {total}개 중 {suggested}개의 지출에 대해 카테고리를 제안했습니다.",
-    "leftUncategorized": "AI의 신뢰도가 충분하지 않아 {count}개의 지출이 미분류로 남았습니다.",
+    "leftUncategorized_other": "AI의 확신이 부족해 지출 {count}건은 미분류로 남겨 두었어요.",
     "retryPreview": "미리보기 다시 시도",
     "doneTitle": "카테고리 저장됨",
     "expenseColumn": "지출",
@@ -1686,10 +1698,10 @@
     "category": "카테고리",
     "date": "날짜",
     "paidBy": "결제한 사람",
-    "paidFor": "비용 부담자",
+    "paidFor": "분할 대상",
     "yourBalance": "내 잔액",
     "notes": "메모",
-    "attachments": "첨부 파일 ({count})",
+    "attachments_other": "첨부 파일 {count}개",
     "edit": "지출 수정하기",
     "makeCopy": "복사본 만들기"
   },
@@ -1702,10 +1714,21 @@
     "create": "만들기",
     "edit": "세부 정보 수정",
     "creating": "만드는 중…",
-    "successToast": "정산이 기록되었습니다"
+    "successToast": "정산금을 기록했어요"
   },
   "Participants": {
     "search": "참여자 검색...",
     "noParticipant": "참여자를 찾을 수 없습니다"
+  },
+  "Common": {
+    "close": "닫기",
+    "previousSlide": "이전 슬라이드",
+    "nextSlide": "다음 슬라이드"
+  },
+  "Theme": {
+    "toggle": "테마 변경",
+    "light": "라이트",
+    "dark": "다크",
+    "system": "시스템 설정"
   }
 }

@@ -149,7 +149,7 @@ describe('CreateFriend', () => {
     await user.click(option)
 
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -177,7 +177,7 @@ describe('CreateFriend', () => {
     )
 
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -202,7 +202,7 @@ describe('CreateFriend', () => {
     )
 
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -250,7 +250,7 @@ describe('CreateFriend', () => {
     )
 
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -294,7 +294,7 @@ describe('CreateFriend', () => {
     const option = await screen.findByRole('option', { name: /Alice/ })
     await user.click(option)
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -336,7 +336,7 @@ describe('CreateFriend', () => {
     const option = await screen.findByRole('option', { name: /Alice/ })
     await user.click(option)
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -376,7 +376,7 @@ describe('CreateFriend', () => {
     const option = await screen.findByRole('option', { name: /Alice/ })
     await user.click(option)
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -386,6 +386,40 @@ describe('CreateFriend', () => {
           variant: 'destructive',
         }),
       )
+    })
+  })
+
+  it('uses the localized fallback when mutation fails without an Error', async () => {
+    mocks.mockFriendsQuery.mockReturnValue({
+      data: {
+        friends: [
+          {
+            accountId: 'peer-1',
+            name: 'Alice',
+            email: 'a@b.com',
+            friendLedgerStatus: 'NONE',
+          },
+        ],
+      },
+      isLoading: false,
+    })
+    mocks.mockCreateFriend.mockRejectedValue(null)
+
+    const { user } = render(<CreateFriend />)
+    const combobox = within(
+      screen.getByRole('tabpanel', { name: 'Friends list' }),
+    ).getByRole('combobox')
+    await user.click(combobox)
+    await user.click(await screen.findByRole('option', { name: /Alice/ }))
+    await user.click(
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
+    )
+
+    await vi.waitFor(() => {
+      expect(mocks.mockToast).toHaveBeenCalledWith({
+        description: 'Could not create friend expenses',
+        variant: 'destructive',
+      })
     })
   })
 
@@ -406,7 +440,7 @@ describe('CreateFriend', () => {
     await user.click(screen.getByRole('tab', { name: 'Shareable link' }))
 
     await user.click(
-      screen.getByRole('button', { name: 'Create a friend ledger' }),
+      screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
     await vi.waitFor(() => {
@@ -459,7 +493,7 @@ describe('CreateFriend', () => {
     await user.click(combobox)
 
     expect(
-      screen.getAllByText(/already has a friend ledger/i).length,
+      screen.getAllByText(/already shares expenses with you/i).length,
     ).toBeGreaterThanOrEqual(1)
   })
 })

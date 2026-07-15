@@ -9,7 +9,7 @@ describe('ThemeToggle', () => {
     render(<ThemeToggle />)
 
     // The trigger is a button containing the Sun and Moon icons
-    const trigger = screen.getByRole('button', { name: /toggle theme/i })
+    const trigger = screen.getByRole('button', { name: /change theme/i })
     expect(trigger).toBeInTheDocument()
 
     // Both icons are rendered (visible via CSS classes)
@@ -24,20 +24,20 @@ describe('ThemeToggle', () => {
     render(<ThemeToggle />)
 
     // Open the dropdown by clicking the trigger
-    const trigger = screen.getByRole('button', { name: /toggle theme/i })
+    const trigger = screen.getByRole('button', { name: /change theme/i })
     await user.click(trigger)
 
     // Now the dropdown content should be visible (portaled to body)
     expect(screen.getByText('Light')).toBeInTheDocument()
     expect(screen.getByText('Dark')).toBeInTheDocument()
-    expect(screen.getByText('System')).toBeInTheDocument()
+    expect(screen.getByText('System default')).toBeInTheDocument()
   })
 
   it('clicking Dark calls setTheme with dark', async () => {
     const user = userEvent.setup()
     render(<ThemeToggle />)
 
-    const trigger = screen.getByRole('button', { name: /toggle theme/i })
+    const trigger = screen.getByRole('button', { name: /change theme/i })
     await user.click(trigger)
 
     // Click the Dark option
@@ -55,7 +55,7 @@ describe('ThemeToggle', () => {
     const user = userEvent.setup()
     render(<ThemeToggle />)
 
-    const trigger = screen.getByRole('button', { name: /toggle theme/i })
+    const trigger = screen.getByRole('button', { name: /change theme/i })
     await user.click(trigger)
 
     await user.click(screen.getByText('Light'))
@@ -67,10 +67,10 @@ describe('ThemeToggle', () => {
     const user = userEvent.setup()
     render(<ThemeToggle />)
 
-    const trigger = screen.getByRole('button', { name: /toggle theme/i })
+    const trigger = screen.getByRole('button', { name: /change theme/i })
     await user.click(trigger)
 
-    await user.click(screen.getByText('System'))
+    await user.click(screen.getByText('System default'))
     expect(localStorage.getItem('theme')).toBe('system')
     // matchMedia returns false → resolved to light → no dark class
     expect(document.documentElement.classList.contains('dark')).toBe(false)

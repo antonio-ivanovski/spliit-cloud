@@ -263,7 +263,7 @@ export function PaidForSplitOptionCards(props: {
               card
               disabled={disabled}
               content={selected ? renderContent?.(opt.id) : undefined}
-              aria-label={`Split ${title}`}
+              aria-label={t('splitOptionAria', { title })}
             >
               <OptionHeader
                 icon={opt.icon}

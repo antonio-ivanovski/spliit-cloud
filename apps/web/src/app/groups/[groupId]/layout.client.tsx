@@ -279,7 +279,7 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
       <main className="flex-1 flex items-center justify-center px-4 py-10">
         <div className="flex flex-col items-center gap-2 text-muted-foreground">
           <Loader2 className="w-5 h-5 animate-spin" />
-          <p className="text-sm">Looking for this group…</p>
+          <p className="text-sm">{tNotFound('lookingUp')}</p>
         </div>
       </main>
     )

@@ -8,32 +8,32 @@
       "createAccount": "Konto erstellen",
       "createGroup": "Gruppe erstellen",
       "importGroup": "Gruppe von einem anderen Dienst importieren",
-      "createFriendLedger": "Freund-Haushaltsbuch erstellen"
+      "createFriendLedger": "Ausgaben mit einer befreundeten Person erfassen"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Gruppen und Synchronisierung",
+        "description": "Erstelle Gruppen für Reisen, Veranstaltungen oder Geschenke und halte sie auf allen Geräten synchron."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Ausgaben und Belege",
+        "description": "Füge Ausgaben und Belegbilder hinzu und erstelle täglich, wöchentlich oder monatlich wiederkehrende Kosten."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Flexible Aufteilung",
+        "description": "Teile nach Prozenten, Anteilen, exakten Beträgen oder einfach zu gleichen Teilen auf."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Salden",
+        "description": "Sieh, wer was bezahlt hat, und minimiere die Überweisungen zwischen den Teilnehmenden."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Kategorien",
+        "description": "Ordne Kategorien zu, damit gemeinsame Ausgaben übersichtlich bleiben."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Konten",
+        "description": "Melde dich einmal an, um deine Daten zu schützen und jederzeit auf deinen Ausgabenverlauf zuzugreifen."
       }
     },
     "welcomeBack": "Willkommen zurück, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Abmelden",
     "account": "Konto",
     "accountSettings": "Kontoeinstellungen",
-    "back": "Zurück"
+    "back": "Zurück",
+    "menu": "Menü"
   },
   "Footer": {
     "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
@@ -76,7 +77,7 @@
       "lastMonth": "Letzten Monat",
       "earlierThisYear": "Dieses Jahr",
       "lastYear": "Letztes Jahr",
-      "older": "Älter"
+      "older": "Ältere Ausgaben"
     },
     "export": "Exportieren",
     "filters": {
@@ -107,7 +108,7 @@
       "noMatchClear": "Filter zurücksetzen",
       "category": "Kategorie",
       "paidBy": "Bezahlt von",
-      "paidFor": "Bezahlt für",
+      "paidFor": "Aufgeteilt auf",
       "dateRange": "Datumsbereich",
       "dateFrom": "Von",
       "dateTo": "Bis",
@@ -122,7 +123,12 @@
       "allCategories": "Alle Kategorien",
       "allParticipants": "Alle Teilnehmer",
       "allCurrencies": "Alle Währungen",
-      "nSelected": "{count} ausgewählt",
+      "nSelected_zero": "{count} ausgewählt",
+      "nSelected_one": "{count} ausgewählt",
+      "nSelected_two": "{count} ausgewählt",
+      "nSelected_few": "{count} ausgewählt",
+      "nSelected_many": "{count} ausgewählt",
+      "nSelected_other": "{count} ausgewählt",
       "removeFilter": "Filter entfernen",
       "settlementsHidden": "Ausgleichszahlungen ausgeblendet",
       "title": "Filter"
@@ -130,17 +136,22 @@
     "showSettlements": "Ausgleichszahlungen anzeigen"
   },
   "ExpenseCard": {
-    "paidBy": "Gezahlt von <strong>{paidBy}</strong> für <paidFor></paidFor>",
-    "receivedBy": "Empfangen von <strong>{paidBy}</strong> für <paidFor></paidFor>",
-    "receivedByMultiple": "Empfangen von <paidByNames></paidByNames> für <paidFor></paidFor>",
-    "yourBalance": "Deine Bilanz:",
-    "paidByMultiple": "Bezahlt von <paidByNames></paidByNames> für <paidFor></paidFor>",
+    "receivedBy": "Erhalten von <strong>{paidBy}</strong> · zugeordnet zu <paidFor></paidFor>",
+    "receivedByMultiple": "Erhalten von <paidByNames></paidByNames> · zugeordnet zu <paidFor></paidFor>",
+    "paidBy": "Bezahlt von <strong>{paidBy}</strong> · aufgeteilt auf <paidFor></paidFor>",
+    "paidByMultiple": "Bezahlt von <paidByNames></paidByNames> · aufgeteilt auf <paidFor></paidFor>",
     "everyone": "jeder",
+    "yourBalance": "Dein Saldo:",
     "notInvolved": "Du bist nicht involviert",
     "settlementBadge": "Ausgleich",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_zero": "+{count} weitere",
+      "more_one": "+{count} weiterer",
+      "more_two": "+{count} weitere",
+      "more_few": "+{count} weitere",
+      "more_many": "+{count} weitere",
+      "more_other": "+{count} weitere",
+      "title": "Artikel",
       "participants": "{names}"
     },
     "copyToast": "Ausgabe wird kopiert. Die bestehenden Ausgabedetails werden zum Erstellen einer neuen Ausgabe verwendet."
@@ -157,14 +168,14 @@
     "showArchived": "Archivierte Gruppen anzeigen",
     "hide": "Gruppe ausblenden",
     "unhide": "Gruppe einblenden",
-    "hideFriend": "Freund-Haushaltsbuch ausblenden",
-    "unhideFriend": "Freund-Haushaltsbuch einblenden",
+    "hideFriend": "Ausgaben mit dieser Person ausblenden",
+    "unhideFriend": "Ausgaben mit dieser Person anzeigen",
     "starGroup": "Gruppe mit Stern markieren",
     "unstarGroup": "Sternmarkierung entfernen",
-    "starFriend": "Freund-Haushaltsbuch mit Stern markieren",
-    "unstarFriend": "Sternmarkierung für Freund-Haushaltsbuch entfernen",
+    "starFriend": "Ausgaben mit dieser Person favorisieren",
+    "unstarFriend": "Favorit für diese Person entfernen",
     "groupActions": "Gruppenaktionen",
-    "friendActions": "Freund-Haushaltsbuch-Aktionen",
+    "friendActions": "Aktionen für Ausgaben mit Freunden",
     "archiveGroup": "Gruppe archivieren",
     "unarchiveGroup": "Gruppe wiederherstellen",
     "archiveSuccess": "Gruppe archiviert.",
@@ -206,7 +217,8 @@
     },
     "NotFound": {
       "text": "Diese Gruppe existiert nicht.",
-      "link": "Zur Startseite"
+      "link": "Zur Startseite",
+      "lookingUp": "Gruppe wird gesucht…"
     },
     "Unauthorized": {
       "title": "Du hast keinen Zugriff auf diese Gruppe",
@@ -244,9 +256,19 @@
         "newGroupFormat": "Neue Gruppe · {currency}",
         "existingGroupFormat": "Bestehende Gruppe · zusammengeführt",
         "summaryLabel": "Zusammenfassung",
-        "sourceParticipants": "{count} Quellteilnehmer",
+        "sourceParticipants_zero": "{count} Teilnehmende in der Quelldatei",
+        "sourceParticipants_one": "{count} teilnehmende Person in der Quelldatei",
+        "sourceParticipants_two": "{count} Teilnehmende in der Quelldatei",
+        "sourceParticipants_few": "{count} Teilnehmende in der Quelldatei",
+        "sourceParticipants_many": "{count} Teilnehmende in der Quelldatei",
+        "sourceParticipants_other": "{count} Teilnehmende in der Quelldatei",
         "participantBreakdown": "{linked} verknüpft · {email} E-Mail-Einladungen · {link} Link-Einladungen · {unlinked} nicht verknüpft",
-        "expenseCount": "{count} Ausgaben werden erstellt",
+        "expenseCount_zero": "{count} Ausgaben werden erstellt",
+        "expenseCount_one": "{count} Ausgabe wird erstellt",
+        "expenseCount_two": "{count} Ausgaben werden erstellt",
+        "expenseCount_few": "{count} Ausgaben werden erstellt",
+        "expenseCount_many": "{count} Ausgaben werden erstellt",
+        "expenseCount_other": "{count} Ausgaben werden erstellt",
         "sourceName": "Quelle: {name}",
         "footer": "Jeder Quellteilnehmer und jede Ausgabe wird importiert. Einladungen werden nach der Gruppenerstellung versandt/generiert.",
         "importingButton": "Importiere…",
@@ -271,7 +293,12 @@
         "existingGroup": "Bestehende Gruppe",
         "loading": "Laden…",
         "noAdminGroups": "Du verwaltest noch keine Gruppe.",
-        "memberCount": "{count} Mitglieder"
+        "memberCount_zero": "{count} Mitglieder",
+        "memberCount_one": "{count} Mitglied",
+        "memberCount_two": "{count} Mitglieder",
+        "memberCount_few": "{count} Mitglieder",
+        "memberCount_many": "{count} Mitglieder",
+        "memberCount_other": "{count} Mitglieder"
       },
       "Done": {
         "importComplete": "Import abgeschlossen",
@@ -440,16 +467,21 @@
       "description": "Gemeinsame Ausgaben mit Freunden, Familie oder Mitbewohnern verfolgen."
     },
     "groups": "Gruppen",
-    "friends": "Freund-Haushaltsbücher",
+    "friends": "Freunde",
     "createExpense": "Ausgabe erstellen",
     "pending": "Ausstehend",
     "scopePickerGroups": "Wähle eine Gruppe",
-    "scopePickerFriends": "Wähle ein Freund-Haushaltsbuch",
+    "scopePickerFriends": "Befreundete Person auswählen",
     "scopePickerEmpty": "Noch keine Gruppen",
-    "scopePickerMembers": "{count} Mitglied(er)",
+    "scopePickerMembers_zero": "{count} Mitglieder",
+    "scopePickerMembers_one": "{count} Mitglied",
+    "scopePickerMembers_two": "{count} Mitglieder",
+    "scopePickerMembers_few": "{count} Mitglieder",
+    "scopePickerMembers_many": "{count} Mitglieder",
+    "scopePickerMembers_other": "{count} Mitglieder",
     "createFriendLedgerCard": {
       "description": "Direkt mit einer bestimmten Person abrechnen.",
-      "title": "Freund-Haushaltsbuch erstellen"
+      "title": "Ausgaben mit einer befreundeten Person erfassen"
     },
     "importGroup": "Gruppe importieren",
     "exportDescription": "Lade die Gruppenausgaben als JSON oder CSV herunter."
@@ -484,7 +516,7 @@
     "Participants": {
       "title": "Mitglieder",
       "description": "Füge einen Namen für jedes Gruppenmitglied hinzu.",
-      "protectedParticipant": "Dieses Mitglied ist Teil der Ausgaben und kann nicht entfernt werden.",
+      "protectedParticipant": "Diese teilnehmende Person kommt in einer Ausgabe vor und kann nicht entfernt werden.",
       "new": "Neu",
       "add": "Mitglied hinzufügen",
       "John": "Johannes",
@@ -517,8 +549,8 @@
       "edit": "Einnahme bearbeiten",
       "TitleField": {
         "label": "Titel der Einnahme",
-        "placeholder": "Montagabend Restaurant",
-        "description": "Füge eine Beschreibung für die Einnahme hinzu."
+        "placeholder": "Gehalt oder Rückerstattung",
+        "description": "Beschreibe, woher die Einnahme stammt."
       },
       "DateField": {
         "label": "Datum der Einnahme",
@@ -531,11 +563,11 @@
       "categoryFieldDescription": "Wähle die Kategorie der Einnahme.",
       "paidByField": {
         "label": "Empfangen von",
-        "description": "Wähle das Mitglied, das die Einnahme erhalten hat."
+        "description": "Wähle aus, wer das Geld erhalten hat und wie viel jede Person erhalten hat."
       },
       "paidFor": {
-        "title": "Empfangen für",
-        "description": "Wähle für wen die Einnahme empfangen wurde."
+        "title": "Zugeordnet zu",
+        "description": "Wähle die Teilnehmenden aus, denen diese Einnahme zugeordnet wird."
       },
       "splitModeDescription": "Wähle, wie die Einnahme aufgeteilt werden soll.",
       "attachDescription": "Füge der Einnahme einen Beleg hinzu."
@@ -560,7 +592,7 @@
       "paidByField": {
         "label": "Gezahlt von",
         "placeholder": "Wähle ein Mitglied",
-        "description": "Wähle das Mitglied, das die Ausgabe bezahlt hat."
+        "description": "Wähle aus, wer das Geld bereitgestellt hat und wie viel jede zahlende Person beigetragen hat."
       },
       "recurrenceRule": {
         "label": "Wiederholung der Ausgabe",
@@ -571,13 +603,13 @@
         "monthly": "Monatlich"
       },
       "paidFor": {
-        "title": "Gezahlt für",
-        "description": "Wähle für wen die Ausgabe gezahlt wurde."
+        "title": "Aufgeteilt auf",
+        "description": "Wähle die Teilnehmenden aus, auf die diese Ausgabe aufgeteilt wird."
       },
       "splitModeDescription": "Wähle, wie die Ausgabe aufgeteilt werden soll.",
       "attachDescription": "Füge der Ausgabe einen Beleg hinzu.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Kopie erstellen: {title}",
+      "editTitle": "Bearbeiten: {title}"
     },
     "amountField": {
       "label": "Betrag",
@@ -586,7 +618,7 @@
         "title": "Rechner",
         "description": "Betrag berechnen oder Ausgabeartikel erstellen.",
         "clear": "Löschen",
-        "backspace": "Rückschritt",
+        "backspace": "Rücktaste",
         "equals": "Gleich",
         "plus": "Plus",
         "minus": "Minus",
@@ -635,7 +667,7 @@
       "customRate": "Benutzerdefinierte Rate verwenden"
     },
     "isReimbursementField": {
-      "label": "Das ist eine Rückzahlung"
+      "label": "Dies ist eine Ausgleichszahlung"
     },
     "categoryField": {
       "label": "Kategorie"
@@ -661,6 +693,7 @@
       "title": "Diese Ausgabe löschen?",
       "description": "Willst du diese Ausgabe wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "yes": "Ja",
+      "deleting": "Wird gelöscht…",
       "cancel": "Abbrechen"
     },
     "attachDocuments": "Dokument hinzufügen",
@@ -669,7 +702,7 @@
     "save": "Speichern",
     "saving": "Speichert…",
     "cancel": "Abbrechen",
-    "reimbursement": "Rückzahlung",
+    "reimbursement": "Ausgleichszahlung",
     "readOnlyNotice": "Diese Gruppe ist archiviert. Die Ausgabe wird schreibgeschützt angezeigt.",
     "PaidBySplitModeField": {
       "label": "Aufteilungsart des Zahlers"
@@ -698,6 +731,7 @@
     "paidBySectionSingle": "Einzeln",
     "paidBySectionMultiple": "Mehrere Zahlende",
     "paidForSection": "Aufteilen zwischen Teilnehmenden",
+    "splitOptionAria": "Aufteilung: {title}",
     "paidByOptionSinglePayerHelper": "Eine Person übernimmt die gesamte Ausgabe",
     "paidByOptionEvenlyHelper": "Jeder zahlt den gleichen Anteil",
     "paidByOptionBySharesHelper": "Jeder zahlt einen gewichteten Anteil",
@@ -713,21 +747,26 @@
     "paidForOptionItemized": "Itemized",
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Artikel",
+      "description": "Füge Artikel hinzu, um die Ausgabe genau aufzuteilen, oder bewahre sie unabhängig von der Aufteilungsart als Dokumentation auf.",
+      "addItem": "Artikel hinzufügen",
+      "empty": "Noch keine Artikel. Klicke auf „Artikel hinzufügen“, um zu beginnen.",
+      "allMembers": "Alle Teilnehmenden",
+      "noMembers": "Keine Teilnehmenden",
+      "other": "Sonstiges (nicht zugeordnet)",
+      "derivedBadge": "Abgeleitet",
+      "errorExceedsAmount": "Die Artikelsumme übersteigt den Ausgabenbetrag.",
+      "actionEdit": "Bearbeiten",
+      "actionDelete": "Löschen",
+      "total": "Artikelsumme",
+      "requiredForItemized": "Füge mindestens einen Artikel hinzu, um nach Artikeln aufzuteilen.",
+      "participantsSummary_zero": "{count} Teilnehmende",
+      "participantsSummary_one": "{count} teilnehmende Person",
+      "participantsSummary_two": "{count} Teilnehmende",
+      "participantsSummary_few": "{count} Teilnehmende",
+      "participantsSummary_many": "{count} Teilnehmende",
+      "participantsSummary_other": "{count} Teilnehmende",
+      "modalTitle": "Teilnehmende des Artikels",
       "columnItem": "Artikel",
       "columnCost": "Kosten",
       "columnQuantity": "Menge",
@@ -739,19 +778,19 @@
       "splitByPercentageLabel": "Nach Prozentsatz aufteilen",
       "splitByAmountLabel": "Nach Betrag aufteilen",
       "switchToItemizedTitle": "Zur Aufteilung nach Posten wechseln?",
-      "switchToItemizedDescription": "Wenn du die Teilnehmer eines Postens bearbeitest, wird Bezahlt für auf Nach Posten geändert und die konfigurierte Bezahlt-für-Aufteilung ersetzt.",
+      "switchToItemizedDescription": "Wenn du die Teilnehmenden eines Artikels bearbeitest, wird die Aufteilung auf „Nach Artikeln“ umgestellt und die bisherige Aufteilung der Teilnehmenden ersetzt.",
       "switchToItemizedConfirm": "Zu Posten wechseln",
       "showItems": "Ausgabenposten anzeigen",
       "hideItems": "Ausgabenposten ausblenden"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Aufteilungsart wechseln?",
+      "description": "Beim Wechsel zu „{mode}“ bleiben die Artikel nur als Dokumentation erhalten. Alle Zuordnungen von Teilnehmenden zu Artikeln werden entfernt.",
+      "cancel": "Abbrechen",
+      "confirm": "Wechseln"
     },
-    "paidForItemizedEntryHint": "Um die Aufteilung unter „Bezahlt für“ nach Artikeln zu verwenden, bearbeite die Teilnehmenden in einer Artikelzeile.",
-    "paidForItemizedActiveHint": "Die artikelbasierte Aufteilung unter „Bezahlt für“ ist aktiv. Bearbeite die Teilnehmenden in der Karte „Artikel“, um diese Aufteilung zu ändern.",
+    "paidForItemizedEntryHint": "Um nach Artikeln aufzuteilen, bearbeite die Teilnehmenden in einer Artikelzeile.",
+    "paidForItemizedActiveHint": "Die Aufteilung nach Artikeln ist aktiv. Bearbeite die Teilnehmenden eines Artikels in der Karte „Artikel“, um diese Aufteilung zu ändern.",
     "DefaultSplit": {
       "savedAsDefault": "Als Standard gespeichert",
       "heading": "Standardaufteilung",
@@ -761,6 +800,9 @@
     "scanReceipt": "Beleg mit KI scannen"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Dokument löschen",
+    "document": "Dokument",
+    "close": "Schließen",
     "TooBigToast": {
       "title": "Die Datei ist zu groß",
       "description": "Die maximale Dateigröße ist {maxSize}. Deine ist {size}."
@@ -805,12 +847,12 @@
     }
   },
   "Balances": {
-    "title": "Bilanz",
-    "description": "Das sind die Beträge, die jedes Mitglied bezahlt oder empfangen hat.",
+    "title": "Salden",
+    "description": "Zeigt den Nettosaldo jeder teilnehmenden Person.",
     "Reimbursements": {
-      "title": "Vorgeschlagene Rückzahlungen",
-      "description": "Hier sind Vorschläge für optimierte Rückzahlungen zwischen Mitgliedern.",
-      "noImbursements": "Es sieht aus, als seien in der Gruppe keine Rückzahlungen nötig 😁",
+      "title": "Vorgeschlagene Ausgleichszahlungen",
+      "description": "Mit diesen Zahlungen gleichst du die Salden mit möglichst wenigen Überweisungen aus.",
+      "noImbursements": "Alle in deiner Gruppe sind ausgeglichen 😁",
       "owes": "<strong>{from}</strong> schuldet <strong>{to}</strong>",
       "markAsPaid": "Als gezahlt markieren",
       "markAsPaidAria": "Markiere {amount} von {from} an {to} als bezahlt"
@@ -834,7 +876,7 @@
       "label": "Ansicht",
       "title": "Wähle, wie Salden angezeigt werden",
       "simple": "Einfach",
-      "simpleDescription": "Wer wem etwas schuldet und begleichen.",
+      "simpleDescription": "Sieh, wer wem etwas schuldet, und erfasse Ausgleichszahlungen.",
       "visual": "Visuell",
       "visualDescription": "Saldoaufteilung und Diagramme."
     },
@@ -864,7 +906,11 @@
       "lifetime": "Ausgaben insgesamt",
       "selectedPeriod": "Ausgewählter Zeitraum",
       "lifetimeDescription": "Über den gesamten Verlauf der Gruppe",
+      "expenseCount_zero": "{count} Ausgaben",
       "expenseCount_one": "{count} Ausgabe",
+      "expenseCount_two": "{count} Ausgaben",
+      "expenseCount_few": "{count} Ausgaben",
+      "expenseCount_many": "{count} Ausgaben",
       "expenseCount_other": "{count} Ausgaben",
       "spendingOverTime": "Ausgaben im Zeitverlauf",
       "bucketedBy": "Gruppiert nach {granularity}",
@@ -913,15 +959,15 @@
       "earlierThisWeek": "Anfang dieser Woche",
       "lastWeek": "Letze Woche",
       "earlierThisMonth": "Diesen Monat",
-      "lastMonth": "Letzen Monat",
+      "lastMonth": "Letzten Monat",
       "earlierThisYear": "Dieses Jahr",
       "lastYear": "Letztes Jahr",
-      "older": "Älter"
+      "older": "Ältere Aktivitäten"
     }
   },
   "Information": {
     "title": "Informationen",
-    "description": "Nutze diesen Ort, um Informationen hinzuzufügen, die für die Gruppenmitglieder wichtig sein könnten.",
+    "description": "Füge Informationen hinzu, die für die Teilnehmenden der Gruppe nützlich sein können.",
     "empty": "Noch keine Gruppeninformationen vorhanden."
   },
   "Settings": {
@@ -945,7 +991,7 @@
     "amountNotZero": "Der Betrag darf nicht 0 sein.",
     "amountTenMillion": "Der Betrag muss kleiner als 10.000.000 sein.",
     "paidByRequired": "Du musst ein Mitglied auswählen.",
-    "paidForMin1": "Die Ausgabe muss mindestens für ein Mitglied bezahlt werden.",
+    "paidForMin1": "Die Ausgabe muss auf mindestens eine teilnehmende Person aufgeteilt werden.",
     "noZeroShares": "Alle Anteile müssen größer als 0 sein.",
     "amountSum": "Die Summe der Beträge muss dem Betrag der Ausgabe entsprechen.",
     "percentageSum": "Die Summe der prozentualen Anteile muss 100 ergeben.",
@@ -1391,7 +1437,7 @@
           "description": "Einladung an {email} widerrufen? Die Salden müssen zuerst ausgeglichen werden.",
           "warning": {
             "title": "Diese Einladung hat nicht ausgeglichene Salden",
-            "description": "Aktiviere das Kontrollkästchen unten, um vor dem Widerruf eine Ausgleichsausgabe pro Bein zu erstellen, an dem dieser Eingeladene beteiligt ist. Die Einladung kann erst widerrufen werden, nachdem die Salden ausgeglichen sind."
+            "description": "Wähle die Option unten, um für jeden Saldo dieser eingeladenen Person eine Ausgleichszahlung zu erstellen. Die Einladung kann erst widerrufen werden, nachdem diese Salden ausgeglichen wurden."
           },
           "checkbox": "Salden des Eingeladenen vor dem Widerruf ausgleichen"
         }
@@ -1408,9 +1454,9 @@
         "description": "{name} aus dieser Gruppe entfernen? {name} hat nicht ausgeglichene Salden – aktiviere das Kontrollkästchen unten, um sie vor dem Entfernen automatisch auszugleichen.",
         "warning": {
           "title": "Dieses Mitglied hat nicht ausgeglichene Salden",
-          "description": "Das Entfernen ohne Ausgleich belässt die Salden dauerhaft im Hauptbuch. Aktiviere das Kontrollkästchen unten, um vor dem Entfernen eine Ausgleichsausgabe pro Bein zu erstellen, an dem dieses Mitglied beteiligt ist, oder entferne ohne Ausgleich und bearbeite die Salden manuell."
+          "description": "Beim Entfernen ohne Ausgleich bleiben diese Salden dauerhaft in der Gruppe. Wähle die Option unten, um für jeden Saldo dieses Mitglieds eine Ausgleichszahlung zu erstellen, oder entferne das Mitglied und gleiche die Salden manuell aus."
         },
-        "checkbox": "Ausgleichsausgabe vor dem Entfernen erstellen"
+        "checkbox": "Salden dieses Mitglieds vor dem Entfernen ausgleichen"
       },
       "title": "Mitglied entfernen?",
       "description": "{name} aus dieser Gruppe entfernen? Die bisherigen Ausgaben bleiben im Hauptbuch erhalten, aber {name} hat dann keinen Zugriff mehr.",
@@ -1437,7 +1483,7 @@
         },
         "unsettled": {
           "title": "Sie haben nicht ausgeglichene Salden",
-          "description": "Beim Verlassen mit Ausgleich werden automatisch Ausgleichsausgaben für die Beine erstellt, an denen Sie beteiligt sind, damit das Hauptbuch synchron bleibt. Andere Salden bleiben unverändert."
+          "description": "Spliit erstellt vor deinem Austritt Ausgleichszahlungen für deine Salden. Die Salden anderer Teilnehmender ändern sich nicht."
         }
       },
       "toast": {
@@ -1461,16 +1507,16 @@
       "link": "Mit Konto verknüpfen",
       "linkDialog": {
         "title": "Nicht verknüpften Teilnehmer verknüpfen",
-        "description": "Wählen Sie das vorhandene Mitglied aus, mit dem {displayName} verknüpft werden soll. Das Ziel darf nicht bereits auf der gegenüberliegenden Seite eines Ausgabenbeins mit diesem Teilnehmer stehen.",
         "cancel": "Abbrechen",
         "confirm": "Verknüpfen",
+        "description": "Wähle das vorhandene Mitglied aus, mit dem {displayName} verknüpft werden soll. Dieses Mitglied darf noch keinen Ausgabensaldo mit dieser teilnehmenden Person haben.",
         "membersGroup": "Mitglieder",
         "membersGroupWithPending": "Mitglieder und ausstehende Einladungen",
         "pendingGroup": "Ausstehende Einladungen",
+        "noCandidates": "Keine passenden Mitglieder gefunden. Meist hat diese nicht verknüpfte teilnehmende Person widersprüchliche Ausgabensalden mit allen anderen Mitgliedern. Importiere die Gruppe erneut oder passe zuerst die Ausgaben an.",
         "pendingLabel": "ausstehend",
         "pendingSuffix": "(ausstehend)",
-        "pendingHint": "Die Verknüpfung mit einer ausstehenden Einladung führt dazu, dass dieser namensbasierte Eintrag mit dem Eingeladenen zusammengeführt wird. Der Eingeladene behält seine eigene Zeile; die zusammengeführten Verweise werden nach der Annahme über ihn aufgelöst.",
-        "noCandidates": "Keine kompatiblen Mitglieder gefunden. Das bedeutet in der Regel, dass dieser nicht verknüpfte Teilnehmer bei jedem anderen Mitglied auf beiden Seiten eines Ausgabenbeins steht — der Import muss wiederholt oder die Ausgaben müssen zuerst angepasst werden."
+        "pendingHint": "Die Verknüpfung mit einer ausstehenden Einladung führt dazu, dass dieser namensbasierte Eintrag mit dem Eingeladenen zusammengeführt wird. Der Eingeladene behält seine eigene Zeile; die zusammengeführten Verweise werden nach der Annahme über ihn aufgelöst."
       }
     }
   },
@@ -1520,7 +1566,7 @@
         "items": "Positionen",
         "documents": "Anhänge",
         "recurrence": "Wiederholung",
-        "reimbursement": "Rückzahlung",
+        "reimbursement": "Ausgleichszahlung",
         "conversionSource": "Umrechnungsquelle",
         "conversionRate": "Umrechnungskurs"
       }
@@ -1550,10 +1596,15 @@
     },
     "fallback": "Eine Aktivität wurde aufgezeichnet",
     "unknownActor": "Jemand",
+    "openExpense": "Ausgabe öffnen",
     "import": {
-      "imported": "{participant} importierte {count} Ausgaben"
-    },
-    "openExpense": "Ausgabe öffnen"
+      "imported_zero": "{participant} hat {count} Ausgaben importiert",
+      "imported_one": "{participant} hat {count} Ausgabe importiert",
+      "imported_two": "{participant} hat {count} Ausgaben importiert",
+      "imported_few": "{participant} hat {count} Ausgaben importiert",
+      "imported_many": "{participant} hat {count} Ausgaben importiert",
+      "imported_other": "{participant} hat {count} Ausgaben importiert"
+    }
   },
   "OfflineBanner": {
     "message": "Du bist offline. Änderungen, die du jetzt machst, werden erst gespeichert, wenn du wieder online bist."
@@ -1585,7 +1636,7 @@
   "EmptyState": {
     "actions": {
       "createGroup": "Gruppe erstellen",
-      "createFriendLedger": "Freund-Haushaltsbuch erstellen",
+      "createFriendLedger": "Ausgaben mit einer befreundeten Person erfassen",
       "showHidden": "Ausgeblendete Gruppen anzeigen"
     },
     "description": {
@@ -1594,8 +1645,8 @@
     "labels": {
       "group": "Gruppe",
       "groupPlural": "Gruppen",
-      "friendLedger": "Freund-Haushaltsbuch",
-      "friendLedgerPlural": "Freund-Haushaltsbücher"
+      "friendLedger": "befreundete Person",
+      "friendLedgerPlural": "befreundete Personen"
     },
     "title": {
       "empty": "Noch keine {itemLabelPlural}",
@@ -1603,28 +1654,33 @@
     }
   },
   "Friends": {
-    "title": "Freund-Haushaltsbuch erstellen",
+    "title": "Ausgaben mit einer befreundeten Person erfassen",
     "peerFriendsTab": "Freundesliste",
     "peerEmailTab": "E-Mail",
     "peerLinkTab": "Teilbarer Link",
-    "alreadyHasLedger": "hat bereits ein Freund-Haushaltsbuch",
+    "friendsSection": "Freunde",
+    "pendingInvitationsSection": "Ausstehende Einladungen",
+    "activeFriendExpensesSection": "Aktive Ausgaben mit Freunden",
+    "alreadyInvited": "(bereits eingeladen)",
+    "alreadyHasLedger": "(teilt bereits Ausgaben mit dir)",
     "inviteSent": "Einladung gesendet. Dein Freund wird hinzugefügt, sobald er Spliit Cloud beitritt.",
     "inviteLinkTitle": "Diesen Link teilen",
-    "inviteLinkDescription": "Teile diesen Link mit deinem Freund, um ihn zum Haushaltsbuch hinzuzufügen.",
+    "inviteLinkDescription": "Teile diesen Link, damit die befreundete Person euren gemeinsamen Ausgaben beitreten kann.",
     "copy": "Kopieren",
     "share": "Teilen",
-    "linkHelp": "Erzeuge einen teilbaren Link, mit dem dein Freund diesem Haushaltsbuch beitreten kann.",
+    "linkHelp": "Erstelle einen teilbaren Link, über den die befreundete Person beitreten kann.",
     "emailLabel": "E-Mail des Freundes",
     "temporaryNameLabel": "Anzeigename",
     "temporaryNameHelp": "Gib einen Namen für die Person ein, die du einlädst.",
     "friendsEmpty": "Füge einen Freund hinzu, indem du seine E-Mail eingibst, oder teile einen Link, um ihn einzuladen.",
     "infoLabel": "Informationen (optional)",
-    "infoPlaceholder": "Füge einen Kontext hinzu, z. B. „Mitbewohner-Ausgaben\""
+    "infoPlaceholder": "Füge einen Kontext hinzu, z. B. „Mitbewohner-Ausgaben\"",
+    "createError": "Die Ausgaben mit der befreundeten Person konnten nicht erstellt werden"
   },
   "BulkCategorize": {
     "title": "Massenkategorisierung",
     "calibrationTitle": "Schritt 1 — Kalibrierung",
-    "calibrationDescription": "Jedes Beispiel, das du bestätigst, wird zur Ground Truth für den nächsten KI-Durchlauf. Die KI ist eventuell schon nach einer Runde bereit oder fordert weitere Beispiele an.",
+    "calibrationDescription": "Jedes bestätigte Beispiel hilft der KI, ihre nächsten Vorschläge zu verbessern. Sie kann nach einem Durchlauf bereit sein oder weitere Beispiele anfordern.",
     "roundCount": "Runde {round} von {max}",
     "confidence": {
       "high": "Hoch",
@@ -1643,10 +1699,25 @@
     "previewDescription": "Bearbeiten Sie eine beliebige Zeile und speichern Sie dann. Die Sicherheit markiert Zeilen, bei denen das Modell am wenigsten sicher ist.",
     "previewHint": "{shown} von {total} Kandidaten werden angezeigt.",
     "removeAction": "Überspringen",
-    "targetExceedsCap": "Die Zielmenge enthält zu viele Ausgaben ({count}). Schränken Sie die Zeiträume ein oder verarbeiten Sie sie in Batches.",
-    "saveAll": "{count} Änderungen speichern",
+    "targetExceedsCap_zero": "{count} Ausgaben können in diesem Durchlauf nicht verarbeitet werden. Passe den Zeitraum an und versuche es erneut.",
+    "targetExceedsCap_one": "{count} Ausgabe kann in diesem Durchlauf nicht verarbeitet werden. Passe den Zeitraum an und versuche es erneut.",
+    "targetExceedsCap_two": "Es sind zu viele Ausgaben für die Verarbeitung ({count}). Grenze den Zeitraum ein oder verarbeite sie in mehreren Durchläufen.",
+    "targetExceedsCap_few": "Es sind zu viele Ausgaben für die Verarbeitung ({count}). Grenze den Zeitraum ein oder verarbeite sie in mehreren Durchläufen.",
+    "targetExceedsCap_many": "Es sind zu viele Ausgaben für die Verarbeitung ({count}). Grenze den Zeitraum ein oder verarbeite sie in mehreren Durchläufen.",
+    "targetExceedsCap_other": "Es sind zu viele Ausgaben für die Verarbeitung ({count}). Grenze den Zeitraum ein oder verarbeite sie in mehreren Durchläufen.",
+    "saveAll_zero": "{count} Änderungen speichern",
+    "saveAll_one": "{count} Änderung speichern",
+    "saveAll_two": "{count} Änderungen speichern",
+    "saveAll_few": "{count} Änderungen speichern",
+    "saveAll_many": "{count} Änderungen speichern",
+    "saveAll_other": "{count} Änderungen speichern",
     "saving": "Speichern…",
-    "saved": "{count} Ausgaben wurden neu kategorisiert.",
+    "saved_zero": "{count} Ausgaben wurden neu kategorisiert.",
+    "saved_one": "{count} Ausgabe wurde neu kategorisiert.",
+    "saved_two": "{count} Ausgaben wurden neu kategorisiert.",
+    "saved_few": "{count} Ausgaben wurden neu kategorisiert.",
+    "saved_many": "{count} Ausgaben wurden neu kategorisiert.",
+    "saved_other": "{count} Ausgaben wurden neu kategorisiert.",
     "applyError": "Die Massen-Kategorieaktualisierung konnte nicht gespeichert werden: {message}",
     "noCandidates": "Keine Ausgaben müssen kategorisiert werden.",
     "adminsOnly": "Nur Gruppenadministratoren können den Massenkategorisierer ausführen.",
@@ -1657,10 +1728,25 @@
     "previewError": "Vorschau konnte nicht generiert werden: {message}",
     "introTitle": "So funktioniert's",
     "loadingCandidates": "Unkategorisierte Ausgaben werden geprüft…",
-    "introDescription": "{count} unkategorisierte Ausgaben sind bereit zur Überprüfung.",
-    "introStepLook": "Die KI durchsucht einen großen Pool von bis zu {count} Ausgaben, um die nützlichsten Beispiele zu finden.",
-    "introStepReview": "Du überprüfst und korrigierst bis zu {count} ausgewählte Beispiele, damit die KI die Kategorien dieser Gruppe lernt.",
-    "introStepPreview": "Sobald die KI genug Anhaltspunkte hat, erstellt sie eine vollständige Überprüfung und lässt unsichere Ausgaben unkategorisiert.",
+    "introDescription_zero": "{count} nicht kategorisierte Ausgaben können überprüft werden.",
+    "introDescription_one": "{count} nicht kategorisierte Ausgabe kann überprüft werden.",
+    "introDescription_two": "{count} nicht kategorisierte Ausgaben können überprüft werden.",
+    "introDescription_few": "{count} nicht kategorisierte Ausgaben können überprüft werden.",
+    "introDescription_many": "{count} nicht kategorisierte Ausgaben können überprüft werden.",
+    "introDescription_other": "{count} nicht kategorisierte Ausgaben können überprüft werden.",
+    "introStepLook_zero": "Die KI prüft bis zu {count} Ausgaben, um hilfreiche Beispiele zu finden.",
+    "introStepLook_one": "Die KI prüft bis zu {count} Ausgabe, um das hilfreichste Beispiel zu finden.",
+    "introStepLook_two": "Die KI prüft bis zu {count} Ausgaben, um die hilfreichsten Beispiele zu finden.",
+    "introStepLook_few": "Die KI prüft bis zu {count} Ausgaben, um die hilfreichsten Beispiele zu finden.",
+    "introStepLook_many": "Die KI prüft bis zu {count} Ausgaben, um die hilfreichsten Beispiele zu finden.",
+    "introStepLook_other": "Die KI prüft bis zu {count} Ausgaben, um die hilfreichsten Beispiele zu finden.",
+    "introStepReview_zero": "Du prüfst und korrigierst bis zu {count} ausgewählte Beispiele, damit die KI die Kategorien dieser Gruppe lernt.",
+    "introStepReview_one": "Du prüfst und korrigierst bis zu {count} ausgewähltes Beispiel, damit die KI die Kategorien dieser Gruppe lernt.",
+    "introStepReview_two": "Du prüfst und korrigierst bis zu {count} ausgewählte Beispiele, damit die KI die Kategorien dieser Gruppe lernt.",
+    "introStepReview_few": "Du prüfst und korrigierst bis zu {count} ausgewählte Beispiele, damit die KI die Kategorien dieser Gruppe lernt.",
+    "introStepReview_many": "Du prüfst und korrigierst bis zu {count} ausgewählte Beispiele, damit die KI die Kategorien dieser Gruppe lernt.",
+    "introStepReview_other": "Du prüfst und korrigierst bis zu {count} ausgewählte Beispiele, damit die KI die Kategorien dieser Gruppe lernt.",
+    "introStepPreview": "Wenn die KI genügend Beispiele hat, bereitet sie eine vollständige Überprüfung vor und lässt unsichere Ausgaben nicht kategorisiert.",
     "startCalibration": "Kalibrierung starten",
     "calibrationStartHint": "Die KI wählt nützliche Beispiele für dich zur Überprüfung aus.",
     "calibrationReady": "Die KI hat genug Rückmeldungen, um die vollständige Überprüfung vorzubereiten.",
@@ -1674,7 +1760,12 @@
     "generatingPreview": "Vorschläge werden vorbereitet…",
     "noSuggestions": "Die KI hat alle Ausgaben unkategorisiert gelassen. Du kannst es nach weiterer Kalibrierung erneut versuchen.",
     "previewSummary": "Die KI hat Kategorien für {suggested} von {total} Ausgaben vorgeschlagen.",
-    "leftUncategorized": "{count} Ausgaben blieben unkategorisiert, weil die KI nicht sicher genug war.",
+    "leftUncategorized_zero": "{count} Ausgaben blieben nicht kategorisiert, weil die KI nicht sicher genug war.",
+    "leftUncategorized_one": "{count} Ausgabe blieb nicht kategorisiert, weil die KI nicht sicher genug war.",
+    "leftUncategorized_two": "{count} Ausgaben blieben nicht kategorisiert, weil die KI nicht sicher genug war.",
+    "leftUncategorized_few": "{count} Ausgaben blieben nicht kategorisiert, weil die KI nicht sicher genug war.",
+    "leftUncategorized_many": "{count} Ausgaben blieben nicht kategorisiert, weil die KI nicht sicher genug war.",
+    "leftUncategorized_other": "{count} Ausgaben blieben nicht kategorisiert, weil die KI nicht sicher genug war.",
     "retryPreview": "Vorschau erneut versuchen",
     "doneTitle": "Kategorien gespeichert",
     "expenseColumn": "Ausgabe",
@@ -1686,10 +1777,15 @@
     "category": "Kategorie",
     "date": "Datum",
     "paidBy": "Gezahlt von",
-    "paidFor": "Gezahlt für",
+    "paidFor": "Aufgeteilt auf",
     "yourBalance": "Dein Saldo",
     "notes": "Notizen",
-    "attachments": "Anhänge ({count})",
+    "attachments_zero": "Anhänge ({count})",
+    "attachments_one": "Anhang ({count})",
+    "attachments_two": "Anhänge ({count})",
+    "attachments_few": "Anhänge ({count})",
+    "attachments_many": "Anhänge ({count})",
+    "attachments_other": "Anhänge ({count})",
     "edit": "Ausgabe bearbeiten",
     "makeCopy": "Kopie erstellen"
   },
@@ -1702,10 +1798,21 @@
     "create": "Erstellen",
     "edit": "Details bearbeiten",
     "creating": "Erstellt…",
-    "successToast": "Rückzahlung aufgezeichnet"
+    "successToast": "Ausgleichszahlung erfasst"
   },
   "Participants": {
     "search": "Teilnehmer suchen...",
     "noParticipant": "Kein Teilnehmer gefunden"
+  },
+  "Common": {
+    "close": "Schließen",
+    "previousSlide": "Vorherige Folie",
+    "nextSlide": "Nächste Folie"
+  },
+  "Theme": {
+    "toggle": "Design ändern",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "Systemeinstellung"
   }
 }

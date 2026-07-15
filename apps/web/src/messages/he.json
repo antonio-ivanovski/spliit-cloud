@@ -8,32 +8,32 @@
       "createAccount": "צור חשבון",
       "createGroup": "צור קבוצה",
       "importGroup": "ייבא קבוצה משירות אחר",
-      "createFriendLedger": "צור פנקס חבר"
+      "createFriendLedger": "מעקב אחר הוצאות עם חברים"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "קבוצות וסנכרון",
+        "description": "יצירת קבוצות לטיולים, אירועים ומתנות וסנכרון שלהן בין מכשירים."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "הוצאות וקבלות",
+        "description": "הוספת הוצאות ותמונות קבלה ויצירת עלויות חוזרות יומיות, שבועיות או חודשיות."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "חלוקה גמישה",
+        "description": "חלוקה לפי אחוזים, חלקים, סכום מדויק או באופן שווה."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "יתרות",
+        "description": "אפשר לראות מי שילם וכמה ולייעל העברות כספים בין המשתתפים."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "קטגוריות",
+        "description": "שיוך קטגוריות מאפשר לסרוק בקלות את ההוצאות המשותפות."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "חשבונות",
+        "description": "כניסה לחשבון מגנה על הנתונים ומשאירה את היסטוריית ההוצאות זמינה."
       }
     },
     "welcomeBack": "ברוך השב, {name}."
@@ -43,7 +43,8 @@
     "signOut": "התנתק",
     "account": "חשבון",
     "accountSettings": "הגדרות חשבון",
-    "back": "חזרה"
+    "back": "חזרה",
+    "menu": "תפריט"
   },
   "Footer": {
     "madeIn": "נוצר על ידי קהילת הקוד הפתוח באהבה ❤️",
@@ -77,7 +78,7 @@
       "lastMonth": "חודש שעבר",
       "earlierThisYear": "מוקדם יותר השנה",
       "lastYear": "שנה שעברה",
-      "older": "ישנות יותר"
+      "older": "הוצאות קודמות"
     },
     "filters": {
       "mobileTitle": "סנן הוצאות",
@@ -107,7 +108,7 @@
       "noMatchClear": "נקה סינונים",
       "category": "קטגוריה",
       "paidBy": "שולם על ידי",
-      "paidFor": "שולם עבור",
+      "paidFor": "פיצול בין",
       "dateRange": "טווח תאריכים",
       "dateFrom": "מ",
       "dateTo": "עד",
@@ -122,7 +123,9 @@
       "allCategories": "כל הקטגוריות",
       "allParticipants": "כל המשתתפים",
       "allCurrencies": "כל המטבעות",
-      "nSelected": "{count} נבחרו",
+      "nSelected_one": "נבחר {count} פריט",
+      "nSelected_two": "נבחרו {count} פריטים",
+      "nSelected_other": "נבחרו {count} פריטים",
       "removeFilter": "הסר סינון",
       "settlementsHidden": "סליקות מוסתרות",
       "title": "סינונים"
@@ -130,16 +133,18 @@
     "showSettlements": "הצג סליקות"
   },
   "ExpenseCard": {
-    "paidBy": "שולם על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
-    "paidByMultiple": "שולם על ידי <paidByNames></paidByNames> עבור <paidFor></paidFor>",
+    "paidBy": "שולם על ידי <strong>{paidBy}</strong> · פוצל בין <paidFor></paidFor>",
+    "paidByMultiple": "שולם על ידי <paidByNames></paidByNames> · פוצל בין <paidFor></paidFor>",
     "everyone": "כולם",
-    "receivedBy": "התקבל על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
-    "receivedByMultiple": "התקבל על ידי <paidByNames></paidByNames> עבור <paidFor></paidFor>",
+    "receivedBy": "התקבל על ידי <strong>{paidBy}</strong> · הוקצה ל־<paidFor></paidFor>",
+    "receivedByMultiple": "התקבל על ידי <paidByNames></paidByNames> · הוקצה ל־<paidFor></paidFor>",
     "yourBalance": "היתרה שלך:",
     "notInvolved": "אתה לא מעורב",
     "settlementBadge": "הסדר",
     "items": {
-      "more": "+{count} more",
+      "more_one": "+עוד {count}",
+      "more_two": "+עוד {count}",
+      "more_other": "+עוד {count}",
       "title": "Items",
       "participants": "{names}"
     },
@@ -161,7 +166,8 @@
     },
     "NotFound": {
       "text": "קבוצה זו אינה קיימת.",
-      "link": "עבור לדף הבית"
+      "link": "עבור לדף הבית",
+      "lookingUp": "הקבוצה בחיפוש…"
     },
     "createdInviteHint": "קבוצה נוצרה. הזמן חברים כדי להתחיל.",
     "hidden": "מוסתרים",
@@ -169,14 +175,14 @@
     "showArchived": "הצג קבוצות בארכיון",
     "hide": "הסתר קבוצה",
     "unhide": "בטל הסתרה",
-    "hideFriend": "הסתר פנקס חבר",
-    "unhideFriend": "בטל הסתרת פנקס חבר",
+    "hideFriend": "הסתרת הוצאות עם חברים",
+    "unhideFriend": "הצגת הוצאות עם חברים",
     "starGroup": "סמן בכוכב",
     "unstarGroup": "בטל סימון כוכב",
-    "starFriend": "סמן פנקס חבר בכוכב",
-    "unstarFriend": "בטל סימון פנקס חבר בכוכב",
+    "starFriend": "סימון הוצאות עם חברים בכוכב",
+    "unstarFriend": "הסרת הכוכב מהוצאות עם חברים",
     "groupActions": "פעולות קבוצה",
-    "friendActions": "פעולות פנקס חבר",
+    "friendActions": "פעולות להוצאות עם חברים",
     "archiveGroup": "ארכב קבוצה",
     "unarchiveGroup": "בטל ארכוב",
     "archiveSuccess": "הקבוצה אורכבה.",
@@ -245,9 +251,13 @@
         "newGroupFormat": "קבוצה חדשה · {currency}",
         "existingGroupFormat": "קבוצה קיימת · מוזגה",
         "summaryLabel": "סיכום",
-        "sourceParticipants": "{count} משתתפי מקור",
+        "sourceParticipants_one": "{count} משתתף/ת במקור",
+        "sourceParticipants_two": "{count} משתתפים/ות במקור",
+        "sourceParticipants_other": "{count} משתתפים ומשתתפות במקור",
         "participantBreakdown": "{linked} מקושרים · {email} הזמנות בדואר · {link} הזמנות בקישור · {unlinked} לא מקושרים",
-        "expenseCount": "{count} הוצאות ייווצרו",
+        "expenseCount_one": "תיווצר {count} הוצאה",
+        "expenseCount_two": "ייווצרו {count} הוצאות",
+        "expenseCount_other": "ייווצרו {count} הוצאות",
         "sourceName": "מקור: {name}",
         "footer": "כל משתתף מקור וכל הוצאה ייובאו. הזמנות נשלחות/נוצרות לאחר יצירת הקבוצה.",
         "importingButton": "מייבא…",
@@ -272,7 +282,9 @@
         "existingGroup": "קבוצה קיימת",
         "loading": "טוען…",
         "noAdminGroups": "עדיין אינך מנהל אף קבוצה.",
-        "memberCount": "{count} חברים"
+        "memberCount_one": "{count} חבר/ת קבוצה",
+        "memberCount_two": "{count} חברי/ות קבוצה",
+        "memberCount_other": "{count} חברי וחברות קבוצה"
       },
       "Done": {
         "importComplete": "הייבוא הושלם",
@@ -440,16 +452,18 @@
       "description": "עקוב אחר הוצאות משותפות עם חברים, משפחה או שותפי דירה."
     },
     "groups": "קבוצות",
-    "friends": "פנקסי חברים",
+    "friends": "חברים",
     "createExpense": "צרו הוצאה",
     "pending": "ממתינים",
     "scopePickerGroups": "בחרו קבוצה",
-    "scopePickerFriends": "בחרו פנקס חבר",
+    "scopePickerFriends": "בחירת חבר או חברה",
     "scopePickerEmpty": "עוד אין קבוצות",
-    "scopePickerMembers": "{count} חברים",
+    "scopePickerMembers_one": "{count} חבר/ת קבוצה",
+    "scopePickerMembers_two": "{count} חברי/ות קבוצה",
+    "scopePickerMembers_other": "{count} חברי וחברות קבוצה",
     "createFriendLedgerCard": {
       "description": "סגור חשבון אחד-על-אחד עם אדם מסוים.",
-      "title": "צור פנקס חבר"
+      "title": "מעקב אחר הוצאות עם חברים"
     },
     "importGroup": "ייבא קבוצה",
     "exportDescription": "הורדת הוצאות הקבוצה כקובץ JSON או CSV."
@@ -480,7 +494,7 @@
     "Participants": {
       "title": "משתתפים",
       "description": "הזן את השם עבור כל משתתף.",
-      "protectedParticipant": "משתתף זה לקח חלק בהוצאות, ולא ניתן להסירו.",
+      "protectedParticipant": "המשתתף או המשתתפת כלולים בהוצאה ולכן אי אפשר להסיר אותם.",
       "new": "חדש",
       "add": "הוסף משתתף",
       "John": "אבי",
@@ -517,8 +531,8 @@
       "edit": "ערוך הכנסה",
       "TitleField": {
         "label": "כותרת הכנסה",
-        "placeholder": "מסעדה בערב יום שני",
-        "description": "הזן תיאור עבור ההכנסה."
+        "placeholder": "משכורת או החזר כספי",
+        "description": "תיאור מקור ההכנסה."
       },
       "DateField": {
         "label": "תאריך ההכנסה",
@@ -531,11 +545,11 @@
       "categoryFieldDescription": "בחר את קטגוריית ההכנסה.",
       "paidByField": {
         "label": "ניתן על ידי",
-        "description": "בחר את המשתתף שהעביר את ההכנסה."
+        "description": "בחירת מי שקיבלו את הכסף וכמה קיבל כל אחד ואחת."
       },
       "paidFor": {
-        "title": "התקבל עבור",
-        "description": "בחר עבור מי התקבלה ההכנסה."
+        "title": "הקצאה ל־",
+        "description": "בחירת המשתתפים והמשתתפות שמתחלקים בהכנסה הזאת."
       },
       "splitModeDescription": "בחר כיצד לפצל את ההכנסה.",
       "attachDescription": "ראה וצרף קבלות להכנסה."
@@ -560,7 +574,7 @@
       "paidByField": {
         "label": "שולם על ידי",
         "placeholder": "בחר משתתף",
-        "description": "בחר את המשתתף ששילם את ההוצאה."
+        "description": "בחירת מי ששילמו וכמה כל אחד ואחת שילמו."
       },
       "recurrenceRule": {
         "label": "חזרתיות הוצאה",
@@ -571,13 +585,13 @@
         "monthly": "חודשית"
       },
       "paidFor": {
-        "title": "שולם עבור",
-        "description": "בחר עבור מי שולמה ההוצאה."
+        "title": "פיצול בין",
+        "description": "בחירת המשתתפים והמשתתפות שמתחלקים בהוצאה הזאת."
       },
       "splitModeDescription": "בחר כיצד לפצל את ההוצאה.",
       "attachDescription": "ראה וצרף קבלות להוצאה.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "יצירת עותק: {title}",
+      "editTitle": "עריכה: {title}"
     },
     "amountField": {
       "label": "סכום",
@@ -599,7 +613,7 @@
         "replaceItemsTitle": "להחליף את פריטי ההוצאה?",
         "replaceItemsDescription": "פעולה זו תחליף את פריטי ההוצאה הקיימים בפריטים המחושבים.",
         "replaceItemsConfirm": "החלף פריטים",
-        "splitIntoItems_zero": "צור {count} פריט הוצאה",
+        "splitIntoItems_zero": "יצירת {count} פריטי הוצאה",
         "splitIntoItems_one": "צור {count} פריט הוצאה",
         "splitIntoItems_two": "צור {count} פריטי הוצאה",
         "splitIntoItems_few": "צור {count} פריטי הוצאה",
@@ -635,7 +649,7 @@
       "dateMismatch": "שערים מתאריך: {date}"
     },
     "isReimbursementField": {
-      "label": "זהו החזר"
+      "label": "זהו תשלום להסדרת היתרה"
     },
     "categoryField": {
       "label": "קטגוריה"
@@ -658,6 +672,7 @@
       "title": "למחוק הוצאה זו?",
       "description": "האם אתה באמת רוצה למחוק הוצאה זו? פעולה זו בלתי הפיכה.",
       "yes": "כן",
+      "deleting": "במחיקה…",
       "cancel": "ביטול"
     },
     "attachDocuments": "צרף מסמכים",
@@ -666,10 +681,10 @@
     "save": "שמור",
     "saving": "שומר…",
     "cancel": "ביטול",
-    "reimbursement": "החזר",
     "participant": {
       "pending": "(הוזמן)"
     },
+    "reimbursement": "תשלום להסדרת היתרה",
     "readOnlyNotice": "קבוצה זו בארכיון. ההוצאה מוצגת לקריאה בלבד.",
     "PaidBySplitModeField": {
       "label": "מצב פיצול לפי משלם"
@@ -698,6 +713,7 @@
     "paidBySectionSingle": "יחיד",
     "paidBySectionMultiple": "מספר משלמים",
     "paidForSection": "חלוקה בין משתתפים",
+    "splitOptionAria": "חלוקה: {title}",
     "paidByOptionSinglePayerHelper": "אדם אחד מכסה את ההוצאה במלואה",
     "paidByOptionEvenlyHelper": "כל אחד משלם חלק שווה",
     "paidByOptionBySharesHelper": "כל אחד משלם חלק משוקלל",
@@ -710,24 +726,26 @@
     "convertedAmountField": {
       "label": "סכום מומר"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "לפי פריטים",
+    "paidForOptionItemizedHelper": "חישוב החלק של כל משתתף ומשתתפת לפי הפריטים בהוצאה.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "פריטים",
+      "description": "הוספת פריטים מאפשרת לפצל את ההוצאה במדויק או לשמור אותם כתיעוד בכל שיטת חלוקה.",
+      "addItem": "הוספת פריט",
+      "empty": "אין עדיין פריטים. יש ללחוץ על „הוספת פריט” כדי להתחיל.",
+      "allMembers": "כל המשתתפים והמשתתפות",
+      "noMembers": "אין משתתפים",
+      "other": "אחר (לא נכלל בחישוב)",
+      "derivedBadge": "מחושב",
+      "errorExceedsAmount": "סכום הפריטים חורג מסכום ההוצאה.",
+      "actionEdit": "עריכה",
+      "actionDelete": "מחיקה",
+      "total": "סכום הפריטים",
+      "requiredForItemized": "יש להוסיף לפחות פריט אחד כדי להשתמש בחלוקה לפי פריטים.",
+      "participantsSummary_one": "{count} משתתף/ת",
+      "participantsSummary_two": "{count} משתתפים/ות",
+      "participantsSummary_other": "{count} משתתפים ומשתתפות",
+      "modalTitle": "משתתפים בפריט",
       "columnItem": "פריט",
       "columnCost": "עלות",
       "columnQuantity": "כמות",
@@ -739,19 +757,19 @@
       "splitByPercentageLabel": "חלק לפי אחוזים",
       "splitByAmountLabel": "חלק לפי סכום",
       "switchToItemizedTitle": "לעבור לפיצול לפי פריטים?",
-      "switchToItemizedDescription": "עריכת המשתתפים בפריט תשנה את שולם עבור ללפי פריטים ותחליף את פיצול שולם עבור שהגדרת.",
+      "switchToItemizedDescription": "עריכת המשתתפים בפריט תשנה את „פיצול בין” ל„לפי פריטים” ותחליף את חלוקת המשתתפים שהוגדרה.",
       "switchToItemizedConfirm": "לעבור לפי פריטים",
       "showItems": "הצג פריטים",
       "hideItems": "הסתר פריטים"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "להחליף את שיטת החלוקה?",
+      "description": "מעבר אל {mode} ישאיר את הפריטים כתיעוד בלבד. כל שיוכי המשתתפים לכל פריט יוסרו.",
+      "cancel": "ביטול",
+      "confirm": "החלפה"
     },
-    "paidForItemizedEntryHint": "כדי להשתמש בחלוקת \"שולם עבור\" לפי פריטים, ערוך את המשתתפים משורת פריט.",
-    "paidForItemizedActiveHint": "חלוקת \"שולם עבור\" לפי פריטים פעילה. כדי לשנות את החלוקה, ערוך את משתתפי הפריטים מכרטיס הפריטים.",
+    "paidForItemizedEntryHint": "כדי לפצל לפי פריטים, יש לערוך את המשתתפים בשורת הפריט.",
+    "paidForItemizedActiveHint": "חלוקה לפי פריטים פעילה. כדי לשנות אותה, יש לערוך את המשתתפים בפריטים בכרטיס הפריטים.",
     "DefaultSplit": {
       "savedAsDefault": "נשמר כברירת מחדל",
       "heading": "חלוקה כברירת מחדל",
@@ -761,6 +779,9 @@
     "scanReceipt": "סריקת קבלה באמצעות AI"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "מחיקת מסמך",
+    "document": "מסמך",
+    "close": "סגירה",
     "TooBigToast": {
       "title": "הקובץ גדול מדי",
       "description": "גודל הקובץ המקסימלי שאתה יכול להעלות הוא {maxSize}. הקובץ שלך הוא {size}."
@@ -806,11 +827,11 @@
   },
   "Balances": {
     "title": "יתרות",
-    "description": "זה הסכום שכל משתתף שילם או קיבל.",
+    "description": "הצגת היתרה נטו של כל משתתף ומשתתפת.",
     "Reimbursements": {
-      "title": "החזרים מוצעים",
-      "description": "הנה הצעות להחזרים אופטימליים בין משתתפים.",
-      "noImbursements": "נראה שהקבוצה שלך לא צריכה החזרים 😁",
+      "title": "תשלומים מוצעים להסדרת היתרה",
+      "description": "התשלומים האלה מאפשרים להסדיר את היתרות במספר ההעברות הקטן ביותר.",
+      "noImbursements": "היתרות של כל חברי הקבוצה הוסדרו 😁",
       "owes": "<strong>{from}</strong> חייב ל<strong>{to}</strong>",
       "markAsPaid": "סמן כשולם",
       "markAsPaidAria": "סמן {amount} מ־{from} ל־{to} כשולם"
@@ -834,7 +855,7 @@
       "label": "תצוגה",
       "title": "בחרו כיצד להציג יתרות",
       "simple": "פשוט",
-      "simpleDescription": "ראו מי חייב למי והסדירו תשלומים.",
+      "simpleDescription": "אפשר לראות מי חייב למי ולתעד תשלומים להסדרת היתרה.",
       "visual": "חזותי",
       "visualDescription": "פירוט יתרות ותרשימים."
     },
@@ -865,6 +886,7 @@
       "selectedPeriod": "התקופה שנבחרה",
       "lifetimeDescription": "לאורך כל היסטוריית הקבוצה",
       "expenseCount_one": "{count} הוצאה",
+      "expenseCount_two": "{count} הוצאות",
       "expenseCount_other": "{count} הוצאות",
       "spendingOverTime": "הוצאות לאורך זמן",
       "bucketedBy": "מקובץ לפי {granularity}",
@@ -916,12 +938,12 @@
       "lastMonth": "חודש שעבר",
       "earlierThisYear": "מוקדם יותר השנה",
       "lastYear": "שנה שעברה",
-      "older": "ישנות יותר"
+      "older": "פעילות קודמת"
     }
   },
   "Information": {
     "title": "מידע",
-    "description": "השתמש במקום זה כדי להוסיף כל מידע שיכול להיות רלוונטי למשתתפי הקבוצה.",
+    "description": "הוספת מידע שעשוי להועיל למשתתפי הקבוצה.",
     "empty": "עדיין אין מידע על הקבוצה."
   },
   "Settings": {
@@ -946,7 +968,7 @@
     "amountTenMillion": "הסכום חייב להיות נמוך מ-10,000,000.",
     "ratePositive": "השער חייב להיות גדול מאפס באופן קפדני.",
     "paidByRequired": "עליך לבחור משתתף.",
-    "paidForMin1": "ההוצאה חייבת להיות משולמת עבור לפחות משתתף אחד.",
+    "paidForMin1": "יש לפצל את ההוצאה בין משתתף או משתתפת אחד לפחות.",
     "noZeroShares": "כל חלקי ההשתתפות חייבים להיות גבוהים מ-0.",
     "amountSum": "סיכום הסכומים חייב להיות שווה לסכום ההוצאה.",
     "percentageSum": "סיכום האחוזים חייב להיות שווה ל-100.",
@@ -1391,7 +1413,7 @@
           "description": "לבטל את ההזמנה ל-{email}? יש להסדיר קודם את היתרות.",
           "warning": {
             "title": "להזמנה זו יש יתרות לא מסודרות",
-            "description": "סמן את התיבה למטה כדי ליצור הוצאת החזר אחת לכל רגל המערבת מוזמן זה לפני הביטול. ניתן לבטל את ההזמנה רק לאחר הסדרת היתרות."
+            "description": "בחירת האפשרות למטה תיצור תשלום אחד להסדרת כל יתרה שקשורה למוזמנים. אפשר לבטל את ההזמנה רק לאחר הסדרת היתרות האלה."
           },
           "checkbox": "הסדר את יתרות המוזמן לפני הביטול"
         }
@@ -1416,9 +1438,9 @@
         "description": "להסיר את {name} מהקבוצה הזו? יש להם יתרות לא מסודרות — סמן את התיבה למטה כדי להסדיר אותן אוטומטית לפני ההסרה.",
         "warning": {
           "title": "לחבר זה יש יתרות לא מסודרות",
-          "description": "הסרה ללא הסדר תשאיר את היתרות בפנקס ללא הגבלת זמן. סמן את התיבה למטה כדי ליצור הוצאת החזר אחת לכל רגל המערבת חבר זה לפני ההסרה, או הסר ללא הסדר וטפל ביתרות ידנית."
+          "description": "הסרה בלי הסדרה תשאיר את היתרות האלה בקבוצה ללא הגבלת זמן. אפשר לבחור באפשרות למטה כדי ליצור תשלום לכל יתרה שקשורה לחבר/ת הקבוצה, או להסיר ולהסדיר את היתרות ידנית."
         },
-        "checkbox": "צור החזר הסדר לפני ההסרה"
+        "checkbox": "הסדרת היתרות של חבר/ת הקבוצה לפני ההסרה"
       }
     },
     "leave": {
@@ -1440,7 +1462,7 @@
         },
         "unsettled": {
           "title": "יש לך יתרות לא מסודרות",
-          "description": "עזיבה בכפייה תיצור אוטומטית הוצאות החזר עבור הרגליים שבהן אתה מעורב, כדי לשמור על סדר בפנקס. יתרות אחרות יישארו כפי שהן."
+          "description": "לפני העזיבה ייווצרו תשלומים להסדרת היתרות הקשורות אליך. היתרות של משתתפים אחרים לא ישתנו."
         }
       },
       "toast": {
@@ -1461,11 +1483,11 @@
       "linkButton": "קשר",
       "linkDialog": {
         "title": "קשר משתתף לא מקושר",
-        "description": "בחר את החבר הקיים שאליו {displayName} צריך להיות מקושר. היעד לא צריך להיות כבר בצד הנגדי של רגל הוצאה עם משתתף זה.",
+        "description": "יש לבחור את חבר/ת הקבוצה הקיימים שאליהם יקושר {displayName}. לא יכולה להיות להם כבר יתרת הוצאות עם המשתתף או המשתתפת האלה.",
         "membersGroup": "חברים",
         "cancel": "ביטול",
         "confirm": "קשר",
-        "noCandidates": "לא נמצאו חברים תואמים. בדרך כלל זה אומר שמשתתף לא מקושר זה נמצא משני הצדדים של רגל הוצאה עם כל חבר אחר — יש לבצע את הייבוא מחדש או להתאים תחילה את ההוצאות.",
+        "noCandidates": "לא נמצאו חברי קבוצה תואמים. בדרך כלל פירוש הדבר שלמשתתף הלא מקושר יש יתרות הוצאות מתנגשות עם כל שאר חברי הקבוצה. יש לייבא את הקבוצה מחדש או להתאים תחילה את ההוצאות.",
         "pendingLabel": "ממתין",
         "pendingHint": "קישור להזמנה ממתינה ממזג רשומה על-שם-בלבד זו לתוך המוזמן. למוזמן נשארת שורה משלו; ההפניות הממוזגות עוברות דרכה כשהוא מאשר.",
         "membersGroupWithPending": "חברים והזמנות ממתינות",
@@ -1520,7 +1542,7 @@
         "items": "פריטים",
         "documents": "קבצים מצורפים",
         "recurrence": "תדירות",
-        "reimbursement": "החזר",
+        "reimbursement": "תשלום להסדרת היתרה",
         "conversionSource": "מקור ההמרה",
         "conversionRate": "שער המרה"
       }
@@ -1550,10 +1572,12 @@
     },
     "fallback": "נרשמה פעילות",
     "unknownActor": "מישהו",
+    "openExpense": "פתח הוצאה",
     "import": {
-      "imported": "{participant} ייבא {count} הוצאות"
-    },
-    "openExpense": "פתח הוצאה"
+      "imported_one": "{participant} ייבא {count} הוצאה",
+      "imported_two": "{participant} ייבא {count} הוצאות",
+      "imported_other": "{participant} ייבא {count} הוצאות"
+    }
   },
   "OfflineBanner": {
     "message": "אתה לא מחובר לרשת. השינויים שתבצע כעת לא יישמרו עד שתתחבר מחדש."
@@ -1593,38 +1617,43 @@
     "labels": {
       "group": "קבוצה",
       "groupPlural": "קבוצות",
-      "friendLedger": "פנקס חבר",
-      "friendLedgerPlural": "פנקסי חברים"
+      "friendLedger": "חבר/ה",
+      "friendLedgerPlural": "חברים"
     },
     "actions": {
       "createGroup": "צרו קבוצה",
-      "createFriendLedger": "צרו פנקס חבר",
+      "createFriendLedger": "מעקב אחר הוצאות עם חברים",
       "showHidden": "הצג קבוצות מוסתרות"
     }
   },
   "Friends": {
-    "title": "צור פנקס חבר",
+    "title": "מעקב אחר הוצאות עם חברים",
     "peerFriendsTab": "רשימת חברים",
     "peerEmailTab": "דוא״ל",
     "peerLinkTab": "קישור לשיתוף",
-    "alreadyHasLedger": "כבר יש לו פנקס חבר",
+    "friendsSection": "חברים",
+    "pendingInvitationsSection": "הזמנות ממתינות",
+    "activeFriendExpensesSection": "הוצאות פעילות עם חברים",
+    "alreadyInvited": "(כבר הוזמנו)",
+    "alreadyHasLedger": "(כבר משתפים איתך הוצאות)",
     "inviteSent": "ההזמנה נשלחה. החבר שלכם יתווסף כשיצטרף ל-Spliit Cloud.",
     "inviteLinkTitle": "שתפו קישור זה",
-    "inviteLinkDescription": "שתפו קישור זה עם החבר שלכם כדי להוסיף אותם לפנקס.",
+    "inviteLinkDescription": "אפשר לשתף את הקישור כדי שהחבר או החברה יצטרפו להוצאות המשותפות.",
     "copy": "העתק",
     "share": "שתף",
-    "linkHelp": "צרו קישור לשיתוף שהחבר שלכם יוכל להשתמש בו כדי להצטרף לפנקס זה.",
+    "linkHelp": "יצירת קישור לשיתוף שבאמצעותו אפשר להצטרף.",
     "emailLabel": "דוא״ל של החבר",
     "temporaryNameLabel": "שם תצוגה",
     "temporaryNameHelp": "הזן שם עבור האדם שאתה מזמין.",
     "friendsEmpty": "הוסיפו חבר על-ידי הזנת הדוא״ל שלו או שיתוף קישור להזמנתם.",
     "infoLabel": "מידע (לא חובה)",
-    "infoPlaceholder": "הוסיפו הקשר כמו 'הוצאות שותף לדירה'"
+    "infoPlaceholder": "הוסיפו הקשר כמו 'הוצאות שותף לדירה'",
+    "createError": "לא ניתן ליצור הוצאות משותפות עם חברים"
   },
   "BulkCategorize": {
     "title": "קטלוג המוני",
     "calibrationTitle": "שלב 1 — כיול",
-    "calibrationDescription": "כל דוגמה שתאשר הופכת לאמת יסוד עבור הסבב הבא של הבינה המלאכותית. זה עשוי להיות מוכן לאחר סבב אחד, או לבקש עוד דוגמאות.",
+    "calibrationDescription": "כל דוגמה שמאשרים עוזרת ל-AI לשפר את ההצעות הבאות. ייתכן שסבב אחד יספיק או שיידרשו דוגמאות נוספות.",
     "roundCount": "סבב {round} מתוך {max}",
     "confidence": {
       "high": "גבוה",
@@ -1643,10 +1672,16 @@
     "previewDescription": "ערוך כל שורה ולאחר מכן שמור. רמת הביטחון מסמנת שורות שהמודל פחות בטוח לגביהן.",
     "previewHint": "מציג {shown} מתוך {total} מועמדות.",
     "removeAction": "דלג",
-    "targetExceedsCap": "קבוצת היעד כוללת יותר מדי הוצאות ({count}). צמצם את התאריכים או עבד בקבוצות.",
-    "saveAll": "שמור {count} שינויים",
+    "targetExceedsCap_one": "אי אפשר לעבד {count} הוצאה באצווה הזאת. יש לצמצם את טווח התאריכים ולנסות שוב.",
+    "targetExceedsCap_two": "יש יותר מדי הוצאות לעיבוד ({count}). יש לצמצם את טווח התאריכים או לעבד אותן באצוות.",
+    "targetExceedsCap_other": "יש יותר מדי הוצאות לעיבוד ({count}). יש לצמצם את טווח התאריכים או לעבד אותן באצוות.",
+    "saveAll_one": "שמירת {count} שינוי",
+    "saveAll_two": "שמירת {count} שינויים",
+    "saveAll_other": "שמירת {count} שינויים",
     "saving": "שומר…",
-    "saved": "{count} הוצאות סווגו מחדש.",
+    "saved_one": "הסיווג של {count} הוצאה עודכן.",
+    "saved_two": "הסיווג של {count} הוצאות עודכן.",
+    "saved_other": "הסיווג של {count} הוצאות עודכן.",
     "applyError": "לא ניתן לשמור את עדכון הקטגוריות ההמוני: {message}",
     "noCandidates": "אין הוצאות הדורשות קטלוג.",
     "adminsOnly": "רק מנהלי הקבוצה יכולים להריץ את הכלי ההמוני לקטלוג.",
@@ -1657,10 +1692,16 @@
     "previewError": "לא ניתן ליצור תצוגה מקדימה: {message}",
     "introTitle": "איך זה עובד",
     "loadingCandidates": "בודק הוצאות ללא קטגוריה…",
-    "introDescription": "ישנן {count} הוצאות ללא קטגוריה המוכנות לבדיקה.",
-    "introStepLook": "הבינה המלאכותית סוקרת מאגר רחב של עד {count} הוצאות כדי למצוא את הדוגמאות השימושיות ביותר.",
-    "introStepReview": "אתה סוקר ומתקן עד {count} דוגמאות נבחרות כדי שהבינה המלאכותית תלמד את הקטגוריות של קבוצה זו.",
-    "introStepPreview": "כשלבינה המלאכותית יש מספיק מידע, היא מכינה בדיקה מלאה ומשאירה הוצאות לא ודאיות ללא קטגוריה.",
+    "introDescription_one": "יש {count} הוצאה ללא קטגוריה שמוכנה לבדיקה.",
+    "introDescription_two": "יש {count} הוצאות ללא קטגוריה שמוכנות לבדיקה.",
+    "introDescription_other": "יש {count} הוצאות ללא קטגוריה שמוכנות לבדיקה.",
+    "introStepLook_one": "ה-AI בודק עד {count} הוצאה כדי למצוא את הדוגמה המועילה ביותר.",
+    "introStepLook_two": "ה-AI בודק עד {count} הוצאות כדי למצוא את הדוגמאות המועילות ביותר.",
+    "introStepLook_other": "ה-AI בודק עד {count} הוצאות כדי למצוא את הדוגמאות המועילות ביותר.",
+    "introStepReview_one": "בודקים ומתקנים עד {count} דוגמה שנבחרה כדי שה-AI ילמד את הקטגוריות של הקבוצה.",
+    "introStepReview_two": "בודקים ומתקנים עד {count} דוגמאות שנבחרו כדי שה-AI ילמד את הקטגוריות של הקבוצה.",
+    "introStepReview_other": "בודקים ומתקנים עד {count} דוגמאות שנבחרו כדי שה-AI ילמד את הקטגוריות של הקבוצה.",
+    "introStepPreview": "כשיש ל-AI מספיק דוגמאות, הוא מכין סקירה מלאה ומשאיר הוצאות לא ודאיות ללא קטגוריה.",
     "startCalibration": "התחל כיול",
     "calibrationStartHint": "הבינה המלאכותית בוחרת דוגמאות שימושיות עבורך לסקירה.",
     "calibrationReady": "לבינה המלאכותית יש מספיק משוב כדי להכין את הבדיקה המלאה.",
@@ -1674,7 +1715,9 @@
     "generatingPreview": "מכין הצעות…",
     "noSuggestions": "הבינה המלאכותית השאירה כל הוצאה ללא קטגוריה. תוכל לנסות שוב לאחר כיול נוסף.",
     "previewSummary": "הבינה המלאכותית הציעה קטגוריות עבור {suggested} מתוך {total} הוצאות.",
-    "leftUncategorized": "{count} הוצאות נותרו ללא קטגוריה כי הבינה המלאכותית לא הייתה מספיק בטוחה.",
+    "leftUncategorized_one": "{count} הוצאה נותרה ללא קטגוריה כי ה-AI לא היה בטוח מספיק.",
+    "leftUncategorized_two": "{count} הוצאות נותרו ללא קטגוריה כי ה-AI לא היה בטוח מספיק.",
+    "leftUncategorized_other": "{count} הוצאות נותרו ללא קטגוריה כי ה-AI לא היה בטוח מספיק.",
     "retryPreview": "נסה בדיקה שוב",
     "doneTitle": "הקטגוריות נשמרו",
     "expenseColumn": "הוצאה",
@@ -1686,10 +1729,12 @@
     "category": "קטגוריה",
     "date": "תאריך",
     "paidBy": "שולם על ידי",
-    "paidFor": "שולם עבור",
+    "paidFor": "פיצול בין",
     "yourBalance": "היתרה שלך",
     "notes": "הערות",
-    "attachments": "קבצים מצורפים ({count})",
+    "attachments_one": "{count} קובץ מצורף",
+    "attachments_two": "{count} קבצים מצורפים",
+    "attachments_other": "{count} קבצים מצורפים",
     "edit": "ערוך הוצאה",
     "makeCopy": "צור עותק"
   },
@@ -1702,10 +1747,21 @@
     "create": "צור",
     "edit": "ערוך פרטים",
     "creating": "יוצר…",
-    "successToast": "ההחזר נרשם"
+    "successToast": "התשלום להסדרת היתרה נרשם"
   },
   "Participants": {
     "search": "חפש משתתפים...",
     "noParticipant": "לא נמצא משתתף"
+  },
+  "Common": {
+    "close": "סגירה",
+    "previousSlide": "השקופית הקודמת",
+    "nextSlide": "השקופית הבאה"
+  },
+  "Theme": {
+    "toggle": "שינוי ערכת נושא",
+    "light": "בהירה",
+    "dark": "כהה",
+    "system": "ברירת המחדל של המערכת"
   }
 }

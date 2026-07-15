@@ -305,7 +305,7 @@ describe('ExpenseList', () => {
 
     // Date-group headings
     expect(screen.getByText('Upcoming')).toBeInTheDocument()
-    expect(screen.getByText('Older')).toBeInTheDocument()
+    expect(screen.getByText('Older expenses')).toBeInTheDocument()
 
     // Amounts in EUR (cents to euro conversion)
     expect(screen.getByText('€30.00')).toBeInTheDocument()

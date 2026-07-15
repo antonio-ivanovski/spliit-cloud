@@ -235,6 +235,25 @@ describe('removeString', () => {
     expect(await readFileJson('de-DE')).toEqual({ a: 'a' })
   })
 
+  it('removes locale orphans when the key is already absent from en-US', async () => {
+    await seedFile('en-US', { group: { source: 'source' } })
+    await seedFile('fr-FR', {
+      group: { before: 'avant', obsolete: 'ancien', after: 'après' },
+    })
+    await seedFile('de-DE', { group: { obsolete: 'alt' } })
+
+    const count = await removeString('group.obsolete')
+
+    expect(count).toBe(2)
+    expect(await readFileJson('en-US')).toEqual({
+      group: { source: 'source' },
+    })
+    expect(await readFileJson('fr-FR')).toEqual({
+      group: { before: 'avant', after: 'après' },
+    })
+    expect(await readFileJson('de-DE')).toEqual({})
+  })
+
   it('cleans up empty parents recursively', async () => {
     await seedFile('en-US', { a: { b: { c: 'x' } } })
     await removeString('a.b.c')
@@ -285,6 +304,130 @@ describe('validateAllMessages', () => {
     expect(result.errors[0]).toContain('orphan')
     expect(result.errors[0]).toContain('fr-FR.json')
   })
+
+  it('rejects empty and non-string message values', async () => {
+    await seedFile('en-US', { empty: ' ', wrong: 42 })
+    const result = await validateAllMessages()
+    expect(result.errors).toContain(
+      'en-US.json: empty: value must not be empty',
+    )
+    expect(result.errors).toContain('en-US.json: wrong: value must be a string')
+  })
+
+  it('compares interpolation placeholder sets and permits repetition', async () => {
+    await seedFile('en-US', { greeting: 'Hello {name}, total {amount}' })
+    await seedFile('fr-FR', {
+      greeting: '{name}, bonjour {name}, total {extra}',
+    })
+    const result = await validateAllMessages()
+    expect(result.errors).toContain(
+      'fr-FR.json: greeting: missing placeholder(s): amount',
+    )
+    expect(result.errors).toContain(
+      'fr-FR.json: greeting: unknown placeholder(s): extra',
+    )
+    expect(
+      result.errors.some((error) =>
+        error.includes('unknown placeholder(s): name'),
+      ),
+    ).toBe(false)
+  })
+
+  it('can restrict structural validation to one locale', async () => {
+    await seedFile('en-US', { greeting: 'Hello' })
+    await seedFile('fr-FR', { greeting: 'Bonjour' })
+    await seedFile('de-DE', { orphan: 'Hallo' })
+    const result = await validateAllMessages('fr-FR')
+    expect(result.valid).toBe(true)
+  })
+
+  it('rejects malformed, mismatched, and source-incompatible rich-text tags', async () => {
+    await seedFile('en-US', { first: '<strong>Hello</strong>', second: 'Hi' })
+    await seedFile('fr-FR', {
+      first: '<em>Bonjour</strong>',
+      second: '<em>Salut</em>',
+    })
+    const result = await validateAllMessages()
+    expect(
+      result.errors.some((error) =>
+        error.includes('mismatched rich-text tags <em> and </strong>'),
+      ),
+    ).toBe(true)
+    expect(
+      result.errors.some((error) =>
+        error.includes('rich-text tags differ from en-US'),
+      ),
+    ).toBe(true)
+  })
+
+  it('preserves rich-text nesting and placeholder emphasis', async () => {
+    await seedFile('en-US', {
+      nested: '<strong><em>Delete</em></strong>',
+      named: 'Delete <strong>{name}</strong>',
+    })
+    await seedFile('fr-FR', {
+      nested: '<em><strong>Supprimer</strong></em>',
+      named: '<strong>Supprimer</strong> {name}',
+    })
+
+    const result = await validateAllMessages('fr-FR')
+
+    expect(result.errors).toContain(
+      'fr-FR.json: nested: rich-text tag nesting differs from en-US',
+    )
+    expect(result.errors).toContain(
+      'fr-FR.json: named: placeholder {name} must remain inside <strong>',
+    )
+  })
+
+  it('requires the canonical plural suffix family in en-US', async () => {
+    await seedFile('en-US', {
+      itemCount_one: '{count} item',
+      itemCount_other: '{count} items',
+    })
+    const result = await validateAllMessages()
+    for (const suffix of ['zero', 'two', 'few', 'many']) {
+      expect(result.errors).toContain(
+        `en-US.json: itemCount_${suffix}: missing required plural form`,
+      )
+    }
+  })
+
+  it('requires locale-specific plural forms and {count}', async () => {
+    const source = Object.fromEntries(
+      ['zero', 'one', 'two', 'few', 'many', 'other'].map((suffix) => [
+        `itemCount_${suffix}`,
+        '{count} items',
+      ]),
+    )
+    await seedFile('en-US', source)
+    for (const locale of locales.filter((locale) => locale !== 'en-US')) {
+      const localized = Object.fromEntries(
+        new Intl.PluralRules(locale)
+          .resolvedOptions()
+          .pluralCategories.map((suffix) => [
+            `itemCount_${suffix}`,
+            '{count} translated',
+          ]),
+      )
+      await seedFile(locale, localized)
+    }
+    await seedFile('he', {
+      itemCount_one: 'one without count',
+      itemCount_other: '{count} others',
+    })
+
+    const result = await validateAllMessages()
+    expect(result.errors).toContain(
+      'he.json: itemCount_two: missing required plural form',
+    )
+    expect(result.errors).toContain(
+      'he.json: itemCount_one: missing placeholder(s): count',
+    )
+    expect(result.errors).toContain(
+      'he.json: itemCount_one: plural form must contain {count}',
+    )
+  })
 })
 
 describe('diffMessages', () => {
@@ -300,11 +443,34 @@ describe('diffMessages', () => {
 
   it('classifies modified values separately from pure additions', async () => {
     await seedFile('en-US', { same: 'SAME', changed: 'NEW' })
+    await seedFile('fr-FR', { same: 'IDENTIQUE', changed: 'TRADUIT' })
     const result = await diffMessages({
+      locale: 'fr-FR',
       readOldEn: async () => ({ same: 'SAME', changed: 'OLD' }),
     })
     expect(result.thisChange.added).toEqual([])
     expect(result.thisChange.modified).toEqual(['changed'])
+    expect(result.translationWork['fr-FR'].present).toEqual(['changed'])
+  })
+
+  it('reports changed plural forms only where the locale uses that category', async () => {
+    const source = Object.fromEntries(
+      ['zero', 'one', 'two', 'few', 'many', 'other'].map((suffix) => [
+        `count_${suffix}`,
+        suffix === 'one' ? 'new {count}' : '{count}',
+      ]),
+    )
+    await seedFile('en-US', source)
+    await seedFile('ja-JP', { count_other: '{count}' })
+    const result = await diffMessages({
+      locale: 'ja-JP',
+      readOldEn: async () => ({ ...source, count_one: 'old {count}' }),
+    })
+    expect(result.thisChange.modified).toEqual(['count_one'])
+    expect(result.translationWork['ja-JP']).toEqual({
+      missing: [],
+      present: [],
+    })
   })
 
   it('partitions translation work into translationWork vs legacyMissing', async () => {
@@ -349,6 +515,21 @@ describe('missingKeysByLocale', () => {
     for (const locale of Object.keys(result)) {
       expect(locale).not.toBe('en-US')
     }
+  })
+
+  it('does not report plural categories unused by the locale', async () => {
+    const source = Object.fromEntries(
+      ['zero', 'one', 'two', 'few', 'many', 'other'].map((suffix) => [
+        `count_${suffix}`,
+        '{count}',
+      ]),
+    )
+    await seedFile('en-US', source)
+    await seedFile('ja-JP', { count_other: '{count}' })
+
+    const result = await missingKeysByLocale()
+
+    expect(result['ja-JP']).toEqual([])
   })
 })
 
@@ -408,6 +589,14 @@ describe('auditMessages', () => {
     expect(result.locales['fr-FR'].missing).toBe(1)
   })
 
+  it('restricts structural validation to --locale', async () => {
+    await seedFile('en-US', { a: 'a' })
+    await seedFile('fr-FR', { a: 'A' })
+    await seedFile('de-DE', { orphan: 'O' })
+    const result = await auditMessages({ locale: 'fr-FR' })
+    expect(result.valid).toBe(true)
+  })
+
   it('reports orphan keys via the embedded validation result', async () => {
     await seedFile('en-US', { a: 'a' })
     await seedNonEnLocales({ a: 'A' })
@@ -459,5 +648,22 @@ describe('auditMessages', () => {
     for (const audit of Object.values(result.locales)) {
       expect(audit.coverage).toBe(1)
     }
+  })
+
+  it('requires only the target locale plural categories', async () => {
+    const source = Object.fromEntries(
+      ['zero', 'one', 'two', 'few', 'many', 'other'].map((suffix) => [
+        `count_${suffix}`,
+        '{count}',
+      ]),
+    )
+    await seedFile('en-US', source)
+    await seedFile('ja-JP', { count_other: '{count}' })
+    const result = await auditMessages({ locale: 'ja-JP' })
+    expect(result.totalKeys).toBe(6)
+    expect(result.locales['ja-JP'].total).toBe(1)
+    expect(result.locales['ja-JP'].present).toBe(1)
+    expect(result.locales['ja-JP'].coverage).toBe(1)
+    expect(result.locales['ja-JP'].missingKeys).toEqual([])
   })
 })

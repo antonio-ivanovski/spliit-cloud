@@ -1,5 +1,6 @@
 import { locales, type Locale } from '../../../packages/domain/src/i18n.ts'
 import { readMessagesFile, writeMessagesFile } from './fs-helpers'
+import { expectedKeysForLocale } from './message-validation'
 import {
   cleanupEmptyParents,
   flattenKeys,
@@ -51,7 +52,7 @@ export async function missingKeys(
     readMessagesFile(source),
     readMessagesFile(target),
   ])
-  const sourceKeys = flattenKeys(sourceData)
+  const sourceKeys = expectedKeysForLocale(flattenKeys(sourceData), target)
   const targetKeys = new Set(flattenKeys(targetData))
   return sourceKeys.filter((k) => !targetKeys.has(k)).sort()
 }

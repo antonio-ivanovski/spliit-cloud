@@ -34,7 +34,7 @@
       "createAccount": "Create an account",
       "createGroup": "Create a group",
       "importGroup": "Import group from another service",
-      "createFriendLedger": "Create friend ledger"
+      "createFriendLedger": "Track expenses with a friend"
     },
     "welcomeBack": "Welcome back, {name}."
   },
@@ -43,7 +43,19 @@
     "signOut": "Sign out",
     "account": "Account",
     "accountSettings": "Account settings",
-    "back": "Back"
+    "back": "Back",
+    "menu": "Menu"
+  },
+  "Common": {
+    "close": "Close",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
+  },
+  "Theme": {
+    "toggle": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System default"
   },
   "Footer": {
     "madeIn": "Made by the open-source community with love ❤️",
@@ -77,7 +89,7 @@
       "lastMonth": "Last month",
       "earlierThisYear": "Earlier this year",
       "lastYear": "Last year",
-      "older": "Older"
+      "older": "Older expenses"
     },
     "filters": {
       "mobileTitle": "Filter expenses",
@@ -107,7 +119,7 @@
       "noMatchClear": "Clear filters",
       "category": "Category",
       "paidBy": "Paid by",
-      "paidFor": "Paid for",
+      "paidFor": "Split between",
       "dateRange": "Date range",
       "dateFrom": "From",
       "dateTo": "To",
@@ -122,7 +134,12 @@
       "allCategories": "All categories",
       "allParticipants": "All participants",
       "allCurrencies": "All currencies",
-      "nSelected": "{count} selected",
+      "nSelected_zero": "{count} selected",
+      "nSelected_one": "{count} selected",
+      "nSelected_two": "{count} selected",
+      "nSelected_few": "{count} selected",
+      "nSelected_many": "{count} selected",
+      "nSelected_other": "{count} selected",
       "removeFilter": "Remove filter",
       "settlementsHidden": "Settlements hidden",
       "title": "Filters"
@@ -130,16 +147,21 @@
     "showSettlements": "Show settlements"
   },
   "ExpenseCard": {
-    "paidBy": "Paid by <strong>{paidBy}</strong> for <paidFor></paidFor>",
-    "paidByMultiple": "Paid by <paidByNames></paidByNames> for <paidFor></paidFor>",
+    "paidBy": "Paid by <strong>{paidBy}</strong> · split between <paidFor></paidFor>",
+    "paidByMultiple": "Paid by <paidByNames></paidByNames> · split between <paidFor></paidFor>",
     "everyone": "everyone",
-    "receivedBy": "Received by <strong>{paidBy}</strong> for <paidFor></paidFor>",
-    "receivedByMultiple": "Received by <paidByNames></paidByNames> for <paidFor></paidFor>",
+    "receivedBy": "Received by <strong>{paidBy}</strong> · allocated to <paidFor></paidFor>",
+    "receivedByMultiple": "Received by <paidByNames></paidByNames> · allocated to <paidFor></paidFor>",
     "yourBalance": "Your balance:",
     "notInvolved": "You are not involved",
     "settlementBadge": "Settlement",
     "items": {
-      "more": "+{count} more",
+      "more_zero": "+{count} more",
+      "more_one": "+{count} more",
+      "more_two": "+{count} more",
+      "more_few": "+{count} more",
+      "more_many": "+{count} more",
+      "more_other": "+{count} more",
       "title": "Items",
       "participants": "{names}"
     },
@@ -157,14 +179,14 @@
     "showArchived": "Show archived groups",
     "hide": "Hide group",
     "unhide": "Unhide group",
-    "hideFriend": "Hide friend ledger",
-    "unhideFriend": "Unhide friend ledger",
+    "hideFriend": "Hide friend expenses",
+    "unhideFriend": "Show friend expenses",
     "starGroup": "Star group",
     "unstarGroup": "Unstar group",
-    "starFriend": "Star friend ledger",
-    "unstarFriend": "Unstar friend ledger",
+    "starFriend": "Star friend expenses",
+    "unstarFriend": "Unstar friend expenses",
     "groupActions": "Group actions",
-    "friendActions": "Friend ledger actions",
+    "friendActions": "Friend expense actions",
     "archiveGroup": "Archive group",
     "unarchiveGroup": "Unarchive group",
     "archiveSuccess": "Group archived.",
@@ -234,7 +256,8 @@
     },
     "NotFound": {
       "text": "This group does not exist.",
-      "link": "Go to home"
+      "link": "Go to home",
+      "lookingUp": "Looking for this group…"
     },
     "Importable": {
       "title": "Found this group on spliit.app",
@@ -333,7 +356,12 @@
         "existingGroup": "Existing group",
         "loading": "Loading…",
         "noAdminGroups": "You don't administer any group yet.",
-        "memberCount": "{count} members"
+        "memberCount_zero": "{count} members",
+        "memberCount_one": "{count} member",
+        "memberCount_two": "{count} members",
+        "memberCount_few": "{count} members",
+        "memberCount_many": "{count} members",
+        "memberCount_other": "{count} members"
       },
       "Mapping": {
         "headsUp": "Heads up",
@@ -385,9 +413,19 @@
         "newGroupFormat": "New group · {currency}",
         "existingGroupFormat": "Existing group · merged",
         "summaryLabel": "Summary",
-        "sourceParticipants": "{count} source participants",
+        "sourceParticipants_zero": "{count} source participants",
+        "sourceParticipants_one": "{count} source participant",
+        "sourceParticipants_two": "{count} source participants",
+        "sourceParticipants_few": "{count} source participants",
+        "sourceParticipants_many": "{count} source participants",
+        "sourceParticipants_other": "{count} source participants",
         "participantBreakdown": "{linked} linked · {email} email invites · {link} link invites · {unlinked} unlinked",
-        "expenseCount": "{count} expenses will be created",
+        "expenseCount_zero": "{count} expenses will be created",
+        "expenseCount_one": "{count} expense will be created",
+        "expenseCount_two": "{count} expenses will be created",
+        "expenseCount_few": "{count} expenses will be created",
+        "expenseCount_many": "{count} expenses will be created",
+        "expenseCount_other": "{count} expenses will be created",
         "sourceName": "Source: {name}",
         "footer": "Every source participant and expense will be imported. Invitations are sent / generated after the group is created.",
         "importingButton": "Importing…",
@@ -436,16 +474,21 @@
       }
     },
     "groups": "Groups",
-    "friends": "Friends ledgers",
+    "friends": "Friends",
     "createExpense": "Create expense",
     "pending": "Pending",
     "scopePickerGroups": "Choose a group",
-    "scopePickerFriends": "Choose a friend ledger",
+    "scopePickerFriends": "Choose a friend",
     "scopePickerEmpty": "No groups yet",
-    "scopePickerMembers": "{count} member(s)",
+    "scopePickerMembers_zero": "{count} members",
+    "scopePickerMembers_one": "{count} member",
+    "scopePickerMembers_two": "{count} members",
+    "scopePickerMembers_few": "{count} members",
+    "scopePickerMembers_many": "{count} members",
+    "scopePickerMembers_other": "{count} members",
     "createFriendLedgerCard": {
       "description": "Settle up one-on-one with a specific person.",
-      "title": "Create friend ledger"
+      "title": "Track expenses with a friend"
     },
     "createGroupCard": {
       "title": "Create a group",
@@ -615,7 +658,7 @@
     "Participants": {
       "title": "Participants",
       "description": "Enter the name for each participant.",
-      "protectedParticipant": "This participant is part of expenses, and can not be removed.",
+      "protectedParticipant": "This participant is part of an expense and cannot be removed.",
       "new": "New",
       "add": "Add participant",
       "John": "John",
@@ -648,8 +691,8 @@
       "edit": "Edit income",
       "TitleField": {
         "label": "Income title",
-        "placeholder": "Monday evening restaurant",
-        "description": "Enter a description for the income."
+        "placeholder": "Salary or refund",
+        "description": "Describe where the income came from."
       },
       "DateField": {
         "label": "Income date",
@@ -662,11 +705,11 @@
       "categoryFieldDescription": "Select the income category.",
       "paidByField": {
         "label": "Received by",
-        "description": "Select who received this income and how to split it."
+        "description": "Select who received the money and how much each person received."
       },
       "paidFor": {
-        "title": "Received for",
-        "description": "Select who the income was received for."
+        "title": "Allocated to",
+        "description": "Select the participants who share this income."
       },
       "splitModeDescription": "Select how to split the income.",
       "attachDescription": "See and attach receipts to the income."
@@ -691,7 +734,7 @@
       "paidByField": {
         "label": "Paid by",
         "placeholder": "Select a participant",
-        "description": "Select who paid for this expense and how to split the payment."
+        "description": "Select who provided the money and how much each payer contributed."
       },
       "recurrenceRule": {
         "label": "Expense Recurrence",
@@ -702,8 +745,8 @@
         "monthly": "Monthly"
       },
       "paidFor": {
-        "title": "Paid for",
-        "description": "Select who the expense was paid for."
+        "title": "Split between",
+        "description": "Select the participants who share this expense."
       },
       "splitModeDescription": "Select how to split the expense.",
       "attachDescription": "See and attach receipts to the expense.",
@@ -766,7 +809,7 @@
       "customRate": "Using custom rate"
     },
     "isReimbursementField": {
-      "label": "This is a reimbursement"
+      "label": "This is a settlement payment"
     },
     "categoryField": {
       "label": "Category"
@@ -795,6 +838,7 @@
       "title": "Delete this expense?",
       "description": "Do you really want to delete this expense? This action is irreversible.",
       "yes": "Yes",
+      "deleting": "Deleting…",
       "cancel": "Cancel"
     },
     "attachDocuments": "Attach documents",
@@ -803,7 +847,7 @@
     "save": "Save",
     "saving": "Saving…",
     "cancel": "Cancel",
-    "reimbursement": "Reimbursement",
+    "reimbursement": "Settlement payment",
     "readOnlyNotice": "This group is archived. The expense is shown read-only.",
     "ParticipantDistribution": {
       "missing": "Missing {missing} of {total}",
@@ -829,6 +873,7 @@
     "paidBySectionSingle": "Single",
     "paidBySectionMultiple": "Multiple payers",
     "paidForSection": "Split between participants",
+    "splitOptionAria": "Split: {title}",
     "paidByOptionSinglePayerHelper": "One person covers the full expense",
     "paidByOptionEvenlyHelper": "Each pays an equal share",
     "paidByOptionBySharesHelper": "Each pays a weighted share",
@@ -848,8 +893,8 @@
       "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
       "addItem": "Add item",
       "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
+      "allMembers": "All participants",
+      "noMembers": "No participants",
       "other": "Other (unaccounted)",
       "derivedBadge": "Derived",
       "errorExceedsAmount": "Items total exceeds the expense amount.",
@@ -857,7 +902,12 @@
       "actionDelete": "Delete",
       "total": "Items total",
       "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
+      "participantsSummary_zero": "{count} participants",
+      "participantsSummary_one": "{count} participant",
+      "participantsSummary_two": "{count} participants",
+      "participantsSummary_few": "{count} participants",
+      "participantsSummary_many": "{count} participants",
+      "participantsSummary_other": "{count} participants",
       "modalTitle": "Item participants",
       "columnItem": "Item",
       "columnCost": "Cost",
@@ -870,7 +920,7 @@
       "splitByPercentageLabel": "Split by percentage",
       "splitByAmountLabel": "Split by amount",
       "switchToItemizedTitle": "Switch to itemized split?",
-      "switchToItemizedDescription": "Editing item participants changes Paid for to Itemized and replaces the paid-for split you configured.",
+      "switchToItemizedDescription": "Editing item participants changes Split between to Itemized and replaces the participant split you configured.",
       "switchToItemizedConfirm": "Switch to itemized",
       "showItems": "Show items",
       "hideItems": "Hide items"
@@ -881,8 +931,8 @@
       "cancel": "Cancel",
       "confirm": "Switch"
     },
-    "paidForItemizedEntryHint": "To use itemized paid-for accounting, edit participants from an item row.",
-    "paidForItemizedActiveHint": "Itemized paid-for accounting is active. Edit item participants from the Items card to change this split.",
+    "paidForItemizedEntryHint": "To split by item, edit participants from an item row.",
+    "paidForItemizedActiveHint": "Itemized splitting is active. Edit item participants from the Items card to change this split.",
     "DefaultSplit": {
       "savedAsDefault": "Saved as default",
       "heading": "Default split",
@@ -892,6 +942,9 @@
     "scanReceipt": "Scan receipt with AI"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Delete document",
+    "document": "Document",
+    "close": "Close",
     "TooBigToast": {
       "title": "The file is too big",
       "description": "The maximum file size you can upload is {maxSize}. Yours is {size}."
@@ -937,11 +990,11 @@
   },
   "Balances": {
     "title": "Balances",
-    "description": "This is the amount that each participant paid or was paid for.",
+    "description": "See each participant’s net balance.",
     "Reimbursements": {
-      "title": "Suggested reimbursements",
-      "description": "Here are suggestions for optimized reimbursements between participants.",
-      "noImbursements": "It looks like your group doesn’t need any reimbursement 😁",
+      "title": "Suggested settlement payments",
+      "description": "Use these payments to settle balances with as few transfers as possible.",
+      "noImbursements": "Everyone in your group is settled up 😁",
       "owes": "<strong>{from}</strong> owes <strong>{to}</strong>",
       "markAsPaid": "Mark as paid",
       "markAsPaidAria": "Mark {amount} from {from} to {to} as paid"
@@ -958,7 +1011,7 @@
       "label": "View",
       "title": "Choose how to view balances",
       "simple": "Simple",
-      "simpleDescription": "Who owes whom and settle.",
+      "simpleDescription": "See who owes whom and record settlement payments.",
       "visual": "Visual",
       "visualDescription": "Balance breakdown and charts."
     },
@@ -1004,7 +1057,11 @@
       "lifetime": "Lifetime spending",
       "selectedPeriod": "Selected period",
       "lifetimeDescription": "Across the group’s full history",
+      "expenseCount_zero": "{count} expenses",
       "expenseCount_one": "{count} expense",
+      "expenseCount_two": "{count} expenses",
+      "expenseCount_few": "{count} expenses",
+      "expenseCount_many": "{count} expenses",
       "expenseCount_other": "{count} expenses",
       "spendingOverTime": "Spending over time",
       "bucketedBy": "Grouped by {granularity}",
@@ -1047,12 +1104,12 @@
       "lastMonth": "Last month",
       "earlierThisYear": "Earlier this year",
       "lastYear": "Last year",
-      "older": "Older"
+      "older": "Older activity"
     }
   },
   "Information": {
     "title": "Information",
-    "description": "Use this place to add any information that can be relevant to the group participants.",
+    "description": "Add information that may be useful to the group’s participants.",
     "empty": "No group information yet."
   },
   "Settings": {
@@ -1077,7 +1134,7 @@
     "amountTenMillion": "The amount must be lower than 10,000,000.",
     "ratePositive": "The rate must be strictly greater than zero.",
     "paidByRequired": "You must select a participant.",
-    "paidForMin1": "The expense must be paid for at least one participant.",
+    "paidForMin1": "The expense must be split between at least one participant.",
     "noZeroShares": "All shares must be higher than 0.",
     "amountSum": "Sum of amounts must equal the expense amount.",
     "percentageSum": "Sum of percentages must equal 100.",
@@ -1376,10 +1433,10 @@
         "description": "Remove {name} from this group? They have unsettled balances — tick the box below to settle them automatically before removing.",
         "warning": {
           "title": "This member has unsettled balances",
-          "description": "Removing without settling will leave these balances in the ledger indefinitely. Tick the box below to create one reimbursement expense per leg involving this member before removing them, or remove without settling and deal with the balances manually."
+          "description": "Removing without settling will leave these balances in the group indefinitely. Select the option below to create one settlement payment for each balance involving this member, or remove them and settle the balances manually."
         },
         "toast": "Member removed, balances settled.",
-        "checkbox": "Create settle reimbursement before removing"
+        "checkbox": "Settle this member’s balances before removing"
       }
     },
     "noManagePermission": "Only admins can invite, revoke, or manage group members.",
@@ -1439,7 +1496,7 @@
           "description": "Revoke the invitation to {email}? Their balances must be settled first.",
           "warning": {
             "title": "This invitation has unsettled balances",
-            "description": "Tick the box below to create one reimbursement expense per leg involving this invitee before revoking. The invitation can only be revoked once the balances are settled."
+            "description": "Select the option below to create one settlement payment for each balance involving this invitee. The invitation can only be revoked after these balances are settled."
           },
           "toast": "Invitation revoked, balances settled.",
           "checkbox": "Settle the invitee's balances before revoking"
@@ -1466,7 +1523,7 @@
         },
         "unsettled": {
           "title": "You have unsettled balances",
-          "description": "Leaving with force will auto-create reimbursement expenses for the legs involving you so the ledger stays in sync. Other balances are left as-is."
+          "description": "Spliit will create settlement payments for balances involving you before you leave. Other participants’ balances will not change."
         }
       },
       "cancel": "Cancel",
@@ -1489,11 +1546,11 @@
       "idHint": "Ledger participant id: {id}",
       "linkDialog": {
         "title": "Link unlinked participant",
-        "description": "Pick the existing member that {displayName} should be linked to. The destination must not already be on the opposite side of an expense leg with this participant.",
+        "description": "Pick the existing member that {displayName} should be linked to. That member must not already have an expense balance with this participant.",
         "membersGroup": "Members",
         "cancel": "Cancel",
         "confirm": "Link",
-        "noCandidates": "No compatible members found. This usually means this unlinked participant is on both sides of an expense leg with every other member — the import needs to be redone or expenses adjusted first.",
+        "noCandidates": "No compatible members found. This usually means this unlinked participant has conflicting expense balances with every other member. Import the group again or adjust the expenses first.",
         "pendingLabel": "pending",
         "pendingHint": "Linking to a pending invitation merges this name-only entry into the invitee. The invitee keeps their own row; the merged references now resolve through it when they accept.",
         "membersGroupWithPending": "Members and pending invitations",
@@ -1519,7 +1576,7 @@
         "items": "Line items",
         "documents": "Attachments",
         "recurrence": "Recurrence",
-        "reimbursement": "Reimbursement",
+        "reimbursement": "Settlement payment",
         "conversionSource": "Conversion source",
         "conversionRate": "Conversion rate"
       },
@@ -1549,7 +1606,12 @@
       "declined": "{target} declined the invitation"
     },
     "import": {
-      "imported": "{participant} imported {count} expenses"
+      "imported_zero": "{participant} imported {count} expenses",
+      "imported_one": "{participant} imported {count} expense",
+      "imported_two": "{participant} imported {count} expenses",
+      "imported_few": "{participant} imported {count} expenses",
+      "imported_many": "{participant} imported {count} expenses",
+      "imported_other": "{participant} imported {count} expenses"
     },
     "fallback": "An activity was recorded",
     "unknownActor": "Someone",
@@ -1583,23 +1645,28 @@
     }
   },
   "Friends": {
-    "title": "Create a friend ledger",
+    "title": "Track expenses with a friend",
     "peerFriendsTab": "Friends list",
     "peerEmailTab": "Email",
     "peerLinkTab": "Shareable link",
-    "alreadyHasLedger": "already has a friend ledger",
+    "friendsSection": "Friends",
+    "pendingInvitationsSection": "Pending invitations",
+    "activeFriendExpensesSection": "Active friend expenses",
+    "alreadyInvited": "(already invited)",
+    "alreadyHasLedger": "(already shares expenses with you)",
     "inviteSent": "Invitation sent. Your friend will be added when they join Spliit Cloud.",
     "inviteLinkTitle": "Share this link",
-    "inviteLinkDescription": "Share this link with your friend to add them to the ledger.",
+    "inviteLinkDescription": "Share this link so your friend can join your shared expenses.",
     "copy": "Copy",
     "share": "Share",
-    "linkHelp": "Generate a shareable link that your friend can use to join this ledger.",
+    "linkHelp": "Generate a shareable link your friend can use to join.",
     "emailLabel": "Friend's email",
     "temporaryNameLabel": "Display name",
     "temporaryNameHelp": "Enter a name for the person you're inviting.",
     "friendsEmpty": "Add a friend by entering their email or share a link to invite them.",
     "infoLabel": "Information (optional)",
-    "infoPlaceholder": "Add context like 'Roommate expenses'"
+    "infoPlaceholder": "Add context like 'Roommate expenses'",
+    "createError": "Could not create friend expenses"
   },
   "EmptyState": {
     "title": {
@@ -1612,19 +1679,19 @@
     "labels": {
       "group": "group",
       "groupPlural": "groups",
-      "friendLedger": "friend ledger",
-      "friendLedgerPlural": "friend ledgers"
+      "friendLedger": "friend",
+      "friendLedgerPlural": "friends"
     },
     "actions": {
       "createGroup": "Create a group",
-      "createFriendLedger": "Create a friend ledger",
+      "createFriendLedger": "Track expenses with a friend",
       "showHidden": "Show hidden groups"
     }
   },
   "BulkCategorize": {
     "title": "Bulk categorize",
     "calibrationTitle": "Step 1 — Calibration",
-    "calibrationDescription": "Each example you confirm becomes ground truth for the AI’s next pass. It may be ready after one round, or ask for more examples.",
+    "calibrationDescription": "Each example you confirm helps the AI improve its next suggestions. It may be ready after one round or ask for more examples.",
     "roundCount": "Round {round} of {max}",
     "confidence": {
       "high": "High",
@@ -1643,10 +1710,25 @@
     "previewDescription": "Edit any row, then save. Confidence flags rows the model is least sure about.",
     "previewHint": "Showing {shown} of {total} candidates.",
     "removeAction": "Skip",
-    "targetExceedsCap": "The target set has too many expenses ({count}). Narrow down the dates or process in batches.",
-    "saveAll": "Save {count} changes",
+    "targetExceedsCap_zero": "There are too many expenses to process ({count}). Narrow the date range or process them in batches.",
+    "targetExceedsCap_one": "Cannot process {count} expense in this batch. Narrow the date range and try again.",
+    "targetExceedsCap_two": "There are too many expenses to process ({count}). Narrow the date range or process them in batches.",
+    "targetExceedsCap_few": "There are too many expenses to process ({count}). Narrow the date range or process them in batches.",
+    "targetExceedsCap_many": "There are too many expenses to process ({count}). Narrow the date range or process them in batches.",
+    "targetExceedsCap_other": "There are too many expenses to process ({count}). Narrow the date range or process them in batches.",
+    "saveAll_zero": "Save {count} changes",
+    "saveAll_one": "Save {count} change",
+    "saveAll_two": "Save {count} changes",
+    "saveAll_few": "Save {count} changes",
+    "saveAll_many": "Save {count} changes",
+    "saveAll_other": "Save {count} changes",
     "saving": "Saving…",
-    "saved": "{count} expenses were re-categorized.",
+    "saved_zero": "{count} expenses were recategorized.",
+    "saved_one": "{count} expense was recategorized.",
+    "saved_two": "{count} expenses were recategorized.",
+    "saved_few": "{count} expenses were recategorized.",
+    "saved_many": "{count} expenses were recategorized.",
+    "saved_other": "{count} expenses were recategorized.",
     "applyError": "Could not save the bulk category update: {message}",
     "noCandidates": "No expenses need categorizing.",
     "adminsOnly": "Only group admins can run the bulk categorizer.",
@@ -1657,10 +1739,25 @@
     "previewError": "Could not generate a preview: {message}",
     "introTitle": "How it works",
     "loadingCandidates": "Checking uncategorized expenses…",
-    "introDescription": "There are {count} uncategorized expenses ready for review.",
-    "introStepLook": "The AI reviews a broad pool of up to {count} expenses to find the most useful examples.",
-    "introStepReview": "You review and correct up to {count} selected examples so the AI learns this group’s categories.",
-    "introStepPreview": "When the AI has enough signal, it prepares a full review and leaves uncertain expenses uncategorized.",
+    "introDescription_zero": "There are {count} uncategorized expenses ready for review.",
+    "introDescription_one": "There is {count} uncategorized expense ready for review.",
+    "introDescription_two": "There are {count} uncategorized expenses ready for review.",
+    "introDescription_few": "There are {count} uncategorized expenses ready for review.",
+    "introDescription_many": "There are {count} uncategorized expenses ready for review.",
+    "introDescription_other": "There are {count} uncategorized expenses ready for review.",
+    "introStepLook_zero": "The AI reviews up to {count} expenses to find the most useful examples.",
+    "introStepLook_one": "The AI reviews up to {count} expense to find the most useful example.",
+    "introStepLook_two": "The AI reviews up to {count} expenses to find the most useful examples.",
+    "introStepLook_few": "The AI reviews up to {count} expenses to find the most useful examples.",
+    "introStepLook_many": "The AI reviews up to {count} expenses to find the most useful examples.",
+    "introStepLook_other": "The AI reviews up to {count} expenses to find the most useful examples.",
+    "introStepReview_zero": "You review and correct up to {count} selected examples so the AI learns this group’s categories.",
+    "introStepReview_one": "You review and correct up to {count} selected example so the AI learns this group’s categories.",
+    "introStepReview_two": "You review and correct up to {count} selected examples so the AI learns this group’s categories.",
+    "introStepReview_few": "You review and correct up to {count} selected examples so the AI learns this group’s categories.",
+    "introStepReview_many": "You review and correct up to {count} selected examples so the AI learns this group’s categories.",
+    "introStepReview_other": "You review and correct up to {count} selected examples so the AI learns this group’s categories.",
+    "introStepPreview": "When the AI has enough examples, it prepares a full review and leaves uncertain expenses uncategorized.",
     "startCalibration": "Start calibration",
     "calibrationStartHint": "The AI is choosing useful examples for you to review.",
     "calibrationReady": "The AI has enough feedback to prepare the full review.",
@@ -1674,7 +1771,12 @@
     "generatingPreview": "Preparing suggestions…",
     "noSuggestions": "The AI left every expense uncategorized. You can try again after more calibration.",
     "previewSummary": "The AI suggested categories for {suggested} of {total} expenses.",
-    "leftUncategorized": "{count} expenses were left uncategorized because the AI was not confident enough.",
+    "leftUncategorized_zero": "{count} expenses were left uncategorized because the AI was not confident enough.",
+    "leftUncategorized_one": "{count} expense was left uncategorized because the AI was not confident enough.",
+    "leftUncategorized_two": "{count} expenses were left uncategorized because the AI was not confident enough.",
+    "leftUncategorized_few": "{count} expenses were left uncategorized because the AI was not confident enough.",
+    "leftUncategorized_many": "{count} expenses were left uncategorized because the AI was not confident enough.",
+    "leftUncategorized_other": "{count} expenses were left uncategorized because the AI was not confident enough.",
     "retryPreview": "Try preview again",
     "doneTitle": "Categories saved",
     "expenseColumn": "Expense",
@@ -1686,10 +1788,15 @@
     "category": "Category",
     "date": "Date",
     "paidBy": "Paid by",
-    "paidFor": "Paid for",
+    "paidFor": "Split between",
     "yourBalance": "Your balance",
     "notes": "Notes",
-    "attachments": "Attachments ({count})",
+    "attachments_zero": "Attachments ({count})",
+    "attachments_one": "Attachment ({count})",
+    "attachments_two": "Attachments ({count})",
+    "attachments_few": "Attachments ({count})",
+    "attachments_many": "Attachments ({count})",
+    "attachments_other": "Attachments ({count})",
     "edit": "Edit expense",
     "makeCopy": "Make a copy"
   },
@@ -1702,7 +1809,7 @@
     "create": "Create",
     "edit": "Edit details",
     "creating": "Creating…",
-    "successToast": "Reimbursement recorded"
+    "successToast": "Settlement payment recorded"
   },
   "Participants": {
     "search": "Search participants...",

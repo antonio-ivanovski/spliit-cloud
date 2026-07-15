@@ -8,32 +8,32 @@
       "createAccount": "Créer un compte",
       "createGroup": "Créer un groupe",
       "importGroup": "Importer un groupe depuis un autre service",
-      "createFriendLedger": "Créer un compte entre amis"
+      "createFriendLedger": "Suivre les dépenses avec un proche"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Groupes et synchronisation",
+        "description": "Créez des groupes pour les voyages, événements ou cadeaux et synchronisez-les sur tous vos appareils."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Dépenses et reçus",
+        "description": "Ajoutez des dépenses, joignez des photos de reçus et créez des coûts récurrents quotidiens, hebdomadaires ou mensuels."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Répartition avancée",
+        "description": "Répartissez par pourcentage, parts, montant exact ou parts égales."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Soldes",
+        "description": "Voyez qui a payé quoi et réduisez le nombre de virements entre les participants."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Catégories",
+        "description": "Attribuez des catégories pour parcourir facilement les dépenses partagées."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Comptes",
+        "description": "Connectez-vous pour protéger vos données et conserver l’accès à votre historique de dépenses."
       }
     },
     "welcomeBack": "Bon retour, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Se déconnecter",
     "account": "Compte",
     "accountSettings": "Paramètres du compte",
-    "back": "Retour"
+    "back": "Retour",
+    "menu": "Menu"
   },
   "Footer": {
     "madeIn": "Créé par la communauté open-source avec amour ❤️",
@@ -107,7 +108,7 @@
       "noMatchClear": "Effacer les filtres",
       "category": "Catégorie",
       "paidBy": "Payé par",
-      "paidFor": "Payé pour",
+      "paidFor": "Réparti entre",
       "dateRange": "Plage de dates",
       "dateFrom": "Du",
       "dateTo": "Au",
@@ -122,7 +123,9 @@
       "allCategories": "Toutes les catégories",
       "allParticipants": "Tous les participants",
       "allCurrencies": "Toutes les devises",
-      "nSelected": "{count} sélectionné(s)",
+      "nSelected_one": "{count} personne sélectionnée",
+      "nSelected_many": "{count} sélectionné(s)",
+      "nSelected_other": "{count} sélectionné(s)",
       "removeFilter": "Retirer le filtre",
       "settlementsHidden": "Règlements masqués",
       "title": "Filtres"
@@ -130,17 +133,19 @@
     "showSettlements": "Afficher les règlements"
   },
   "ExpenseCard": {
-    "paidBy": "Payé par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
     "receivedBy": "Reçu par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
     "receivedByMultiple": "Reçu par <paidByNames></paidByNames> pour <paidFor></paidFor>",
     "yourBalance": "Votre solde :",
-    "paidByMultiple": "Payé par <paidByNames></paidByNames> pour <paidFor></paidFor>",
+    "paidBy": "Payé par <strong>{paidBy}</strong> · réparti entre <paidFor></paidFor>",
+    "paidByMultiple": "Payé par <paidByNames></paidByNames> · réparti entre <paidFor></paidFor>",
     "everyone": "tout le monde",
     "notInvolved": "Vous n'êtes pas concerné",
     "settlementBadge": "Règlement",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+{count} autre",
+      "more_many": "+{count} autres",
+      "more_other": "+{count} autres",
+      "title": "Articles",
       "participants": "{names}"
     },
     "copyToast": "Copie de la dépense initiée. Les détails de la dépense existante seront utilisés pour en créer une nouvelle."
@@ -161,7 +166,8 @@
     },
     "NotFound": {
       "text": "Ce groupe n'existe pas.",
-      "link": "Aller à l'accueil"
+      "link": "Aller à l'accueil",
+      "lookingUp": "Recherche du groupe…"
     },
     "createdInviteHint": "Groupe créé. Invitez des membres pour commencer.",
     "hidden": "Masqués",
@@ -245,9 +251,13 @@
         "newGroupFormat": "Nouveau groupe · {currency}",
         "existingGroupFormat": "Groupe existant · fusionné",
         "summaryLabel": "Résumé",
-        "sourceParticipants": "{count} participants source",
+        "sourceParticipants_one": "{count} participant source",
+        "sourceParticipants_many": "{count} participants source",
+        "sourceParticipants_other": "{count} participants source",
         "participantBreakdown": "{linked} liés · {email} invitations par e-mail · {link} invitations par lien · {unlinked} non liés",
-        "expenseCount": "{count} dépenses seront créées",
+        "expenseCount_one": "{count} dépense sera créée",
+        "expenseCount_many": "{count} dépenses seront créées",
+        "expenseCount_other": "{count} dépenses seront créées",
         "sourceName": "Source: {name}",
         "footer": "Chaque participant source et chaque dépense seront importés. Les invitations sont envoyées/générées après la création du groupe.",
         "importingButton": "Importation…",
@@ -272,7 +282,9 @@
         "existingGroup": "Groupe existant",
         "loading": "Chargement…",
         "noAdminGroups": "Vous n'administrez encore aucun groupe.",
-        "memberCount": "{count} membres"
+        "memberCount_one": "{count} membre",
+        "memberCount_many": "{count} membres",
+        "memberCount_other": "{count} membres"
       },
       "Done": {
         "importComplete": "Importation terminée",
@@ -446,10 +458,12 @@
     "scopePickerGroups": "Choisir un groupe",
     "scopePickerFriends": "Choisir un compte entre amis",
     "scopePickerEmpty": "Aucun groupe pour le moment",
-    "scopePickerMembers": "{count} membre(s)",
+    "scopePickerMembers_one": "{count} membre",
+    "scopePickerMembers_many": "{count} membre(s)",
+    "scopePickerMembers_other": "{count} membre(s)",
     "createFriendLedgerCard": {
       "description": "Réglez vos comptes en tête-à-tête avec une personne précise.",
-      "title": "Créer un compte entre amis"
+      "title": "Suivre les dépenses avec un proche"
     },
     "importGroup": "Importer un groupe",
     "exportDescription": "Télécharger les dépenses du groupe au format JSON ou CSV."
@@ -555,8 +569,8 @@
       "categoryFieldDescription": "Sélectionnez la catégorie de dépense.",
       "paidByField": {
         "label": "Payé par",
-        "description": "Sélectionnez le participant qui a réglé la dépense.",
-        "placeholder": "Sélectionner un participant"
+        "placeholder": "Sélectionner un participant",
+        "description": "Sélectionnez qui a fourni l’argent et la contribution de chaque personne."
       },
       "recurrenceRule": {
         "label": "Récurrence de la dépense",
@@ -567,7 +581,7 @@
         "monthly": "Mensuelle"
       },
       "paidFor": {
-        "title": "Payé pour",
+        "title": "Réparti entre",
         "description": "Sélectionnez les participants concernés."
       },
       "splitModeDescription": "Sélectionnez comment diviser la dépense.",
@@ -576,8 +590,8 @@
         "label": "Devise de la dépense",
         "description": "La devise dans laquelle la dépense a été payée."
       },
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Créer une copie : {title}",
+      "editTitle": "Modifier : {title}"
     },
     "amountField": {
       "label": "Montant",
@@ -615,7 +629,7 @@
       }
     },
     "isReimbursementField": {
-      "label": "C'est un remboursement"
+      "label": "Il s’agit d’un paiement de règlement"
     },
     "categoryField": {
       "label": "Catégorie"
@@ -638,6 +652,7 @@
       "title": "Supprimer cette dépense ?",
       "description": "Voulez-vous vraiment supprimer cette dépense ? Cette action est irréversible.",
       "yes": "Oui",
+      "deleting": "Suppression…",
       "cancel": "Annuler"
     },
     "attachDocuments": "Joindre des documents",
@@ -646,7 +661,6 @@
     "save": "Sauvegarder",
     "saving": "Sauvegarde…",
     "cancel": "Annuler",
-    "reimbursement": "Remboursement",
     "conversionUnavailable": "Pour définir une devise différente pour chaque dépense et convertir les montants, sélectionnez une devise non personnalisée pour le groupe.",
     "conversionRateField": {
       "useCustom": "Utiliser un taux personnalisé",
@@ -670,6 +684,7 @@
     "participant": {
       "pending": "(invité)"
     },
+    "reimbursement": "Paiement de règlement",
     "readOnlyNotice": "Ce groupe est archivé. La dépense est affichée en lecture seule.",
     "PaidBySplitModeField": {
       "label": "Mode de répartition du payeur"
@@ -698,6 +713,7 @@
     "paidBySectionSingle": "Unique",
     "paidBySectionMultiple": "Plusieurs payeurs",
     "paidForSection": "Répartir entre les participants",
+    "splitOptionAria": "Répartition : {title}",
     "paidByOptionSinglePayerHelper": "Une personne couvre l'intégralité de la dépense",
     "paidByOptionEvenlyHelper": "Chacun paie une part égale",
     "paidByOptionBySharesHelper": "Chacun paie une part pondérée",
@@ -710,24 +726,26 @@
     "convertedAmountField": {
       "label": "Montant converti"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Par articles",
+    "paidForOptionItemizedHelper": "Calculez la part de chaque participant à partir des articles de la dépense.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Articles",
+      "description": "Ajoutez des articles pour répartir précisément la dépense ou les conserver comme justificatifs avec n’importe quel mode de répartition.",
+      "addItem": "Ajouter un article",
+      "empty": "Aucun article pour le moment. Cliquez sur « Ajouter un article » pour commencer.",
+      "allMembers": "Tous les participants",
+      "noMembers": "Aucun participant",
+      "other": "Autre (non attribué)",
+      "derivedBadge": "Calculé",
+      "errorExceedsAmount": "Le total des articles dépasse le montant de la dépense.",
+      "actionEdit": "Modifier",
+      "actionDelete": "Supprimer",
+      "total": "Total des articles",
+      "requiredForItemized": "Ajoutez au moins un article pour utiliser la répartition par articles.",
+      "participantsSummary_one": "{count} participant",
+      "participantsSummary_many": "{count} participants",
+      "participantsSummary_other": "{count} participants",
+      "modalTitle": "Participants à l’article",
       "columnItem": "Article",
       "columnCost": "Coût",
       "columnQuantity": "Qté",
@@ -745,13 +763,13 @@
       "hideItems": "Masquer les éléments"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Changer de mode de répartition ?",
+      "description": "Passer à {mode} conservera vos articles uniquement comme justificatifs. Toutes les attributions de participants par article seront supprimées.",
+      "cancel": "Annuler",
+      "confirm": "Changer"
     },
-    "paidForItemizedEntryHint": "Pour utiliser une répartition « payé pour » par article, modifiez les participants depuis une ligne d’article.",
-    "paidForItemizedActiveHint": "La répartition « payé pour » par article est active. Modifiez les participants des articles depuis la carte Articles pour changer cette répartition.",
+    "paidForItemizedEntryHint": "Pour répartir par article, modifiez les participants depuis une ligne d’article.",
+    "paidForItemizedActiveHint": "La répartition par articles est active. Modifiez les participants depuis la carte Articles pour la changer.",
     "DefaultSplit": {
       "savedAsDefault": "Enregistré comme par défaut",
       "heading": "Répartition par défaut",
@@ -761,6 +779,9 @@
     "scanReceipt": "Analyser le reçu avec l’IA"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Supprimer le document",
+    "document": "Document",
+    "close": "Fermer",
     "TooBigToast": {
       "title": "Le fichier est trop grand",
       "description": "La taille maximale du fichier que vous pouvez télécharger est {maxSize}. La vôtre est {size}."
@@ -806,11 +827,11 @@
   },
   "Balances": {
     "title": "Équilibres",
-    "description": "Voici le montant que chaque participant a payé ou doit rembourser.",
+    "description": "Consultez le solde net de chaque participant.",
     "Reimbursements": {
-      "title": "Remboursements suggérés",
-      "description": "Voici des suggestions pour des remboursements optimisés entre les participants.",
-      "noImbursements": "Les dépenses effectuées ne nécessitent pas d'équilibrage 😁",
+      "title": "Paiements de règlement suggérés",
+      "description": "Utilisez ces paiements pour régler les soldes avec le moins de virements possible.",
+      "noImbursements": "Tous les soldes de votre groupe sont réglés 😁",
       "owes": "<strong>{from}</strong> doit à <strong>{to}</strong>",
       "markAsPaid": "Marquer comme payé",
       "markAsPaidAria": "Marquer comme payé : {amount} de {from} à {to}"
@@ -834,7 +855,7 @@
       "label": "Affichage",
       "title": "Choisissez comment afficher les soldes",
       "simple": "Simple",
-      "simpleDescription": "Qui doit quoi à qui et régler.",
+      "simpleDescription": "Voyez qui doit de l’argent à qui et enregistrez les paiements de règlement.",
       "visual": "Visuel",
       "visualDescription": "Détail des soldes et graphiques."
     },
@@ -865,6 +886,7 @@
       "selectedPeriod": "Période sélectionnée",
       "lifetimeDescription": "Sur l’ensemble de l’historique du groupe",
       "expenseCount_one": "{count} dépense",
+      "expenseCount_many": "{count} dépenses",
       "expenseCount_other": "{count} dépenses",
       "spendingOverTime": "Dépenses au fil du temps",
       "bucketedBy": "Regroupé par {granularity}",
@@ -1391,7 +1413,7 @@
           "description": "Révoquer l'invitation de {email} ? Ses soldes doivent d'abord être réglés.",
           "warning": {
             "title": "Cette invitation a des soldes impayés",
-            "description": "Cochez la case ci-dessous pour créer une dépense de remboursement par part impliquant cet invité avant de révoquer. L'invitation ne peut être révoquée qu'une fois les soldes réglés."
+            "description": "Sélectionnez l'option ci-dessous pour créer un paiement de règlement pour chaque solde concernant cette personne invitée. L'invitation ne peut être révoquée qu'une fois ces soldes réglés."
           },
           "checkbox": "Régler les soldes de l'invité avant de révoquer"
         }
@@ -1416,9 +1438,9 @@
         "description": "Supprimer {name} de ce groupe ? Il a des soldes impayés — cochez la case ci-dessous pour les régler automatiquement avant de supprimer.",
         "warning": {
           "title": "Ce membre a des soldes impayés",
-          "description": "Supprimer sans régler laissera les soldes dans le grand livre indéfiniment. Cochez la case ci-dessous pour créer une dépense de remboursement par part impliquant ce membre avant de le supprimer, ou supprimez sans régler et gérez les soldes manuellement."
+          "description": "Si vous supprimez ce membre sans régler ses soldes, ceux-ci resteront indéfiniment dans le groupe. Sélectionnez l'option ci-dessous pour créer un paiement de règlement pour chaque solde concernant ce membre, ou supprimez-le et réglez les soldes manuellement."
         },
-        "checkbox": "Créer un remboursement de régularisation avant de supprimer"
+        "checkbox": "Régler les soldes de ce membre avant de le supprimer"
       }
     },
     "leave": {
@@ -1440,7 +1462,7 @@
         },
         "unsettled": {
           "title": "Vous avez des soldes impayés",
-          "description": "Quitter avec règlement forcé créera automatiquement des dépenses de remboursement pour les lignes vous concernant afin que le journal reste synchronisé. Les autres soldes restent inchangés."
+          "description": "Spliit créera des paiements de règlement pour les soldes qui vous concernent avant votre départ. Les soldes des autres participants ne changeront pas."
         }
       },
       "toast": {
@@ -1520,7 +1542,7 @@
         "items": "Lignes",
         "documents": "Documents",
         "recurrence": "Récurrence",
-        "reimbursement": "Remboursement",
+        "reimbursement": "Paiement de règlement",
         "conversionSource": "Source de conversion",
         "conversionRate": "Taux de conversion"
       }
@@ -1550,10 +1572,12 @@
     },
     "fallback": "Une activité a été enregistrée",
     "unknownActor": "Quelqu'un",
+    "openExpense": "Ouvrir la dépense",
     "import": {
-      "imported": "{participant} a importé {count} dépenses"
-    },
-    "openExpense": "Ouvrir la dépense"
+      "imported_one": "{participant} a importé {count} dépense",
+      "imported_many": "{participant} a importé {count} dépenses",
+      "imported_other": "{participant} a importé {count} dépenses"
+    }
   },
   "OfflineBanner": {
     "message": "Vous êtes hors ligne. Les modifications que vous effectuerez ne seront pas enregistrées tant que vous ne serez pas reconnecté."
@@ -1594,8 +1618,8 @@
     "labels": {
       "group": "groupe",
       "groupPlural": "groupes",
-      "friendLedger": "compte entre amis",
-      "friendLedgerPlural": "comptes entre amis"
+      "friendLedger": "dépense avec un proche",
+      "friendLedgerPlural": "dépenses avec des proches"
     },
     "title": {
       "empty": "Aucun {itemLabelPlural} pour le moment",
@@ -1607,6 +1631,10 @@
     "peerFriendsTab": "Liste d'amis",
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Lien partageable",
+    "friendsSection": "Proches",
+    "pendingInvitationsSection": "Invitations en attente",
+    "activeFriendExpensesSection": "Dépenses actives avec des proches",
+    "alreadyInvited": "Déjà invité",
     "alreadyHasLedger": "a déjà un compte entre amis",
     "inviteSent": "Invitation envoyée. Votre ami sera ajouté lorsqu'il rejoindra Spliit Cloud.",
     "inviteLinkTitle": "Partagez ce lien",
@@ -1619,7 +1647,8 @@
     "temporaryNameHelp": "Saisissez un nom pour la personne que vous invitez.",
     "friendsEmpty": "Ajoutez un ami en saisissant son e-mail ou partagez un lien pour l'inviter.",
     "infoLabel": "Informations (facultatif)",
-    "infoPlaceholder": "Ajoutez un contexte, par exemple « Dépenses de colocation »"
+    "infoPlaceholder": "Ajoutez un contexte, par exemple « Dépenses de colocation »",
+    "createError": "Impossible de créer les dépenses avec ce proche"
   },
   "BulkCategorize": {
     "title": "Catégorisation en lot",
@@ -1643,10 +1672,16 @@
     "previewDescription": "Modifiez les lignes, puis enregistrez. La confiance indique les lignes dont le modèle est le moins certain.",
     "previewHint": "Affichage de {shown} sur {total} candidats.",
     "removeAction": "Passer",
-    "targetExceedsCap": "L'ensemble cible contient trop de dépenses ({count}). Réduisez les dates ou traitez par lots.",
-    "saveAll": "Enregistrer {count} modification(s)",
+    "targetExceedsCap_one": "Impossible de traiter {count} dépense dans ce lot. Réduisez la plage de dates et réessayez.",
+    "targetExceedsCap_many": "L'ensemble cible contient trop de dépenses ({count}). Réduisez les dates ou traitez par lots.",
+    "targetExceedsCap_other": "L'ensemble cible contient trop de dépenses ({count}). Réduisez les dates ou traitez par lots.",
+    "saveAll_one": "Enregistrer {count} modification",
+    "saveAll_many": "Enregistrer {count} modification(s)",
+    "saveAll_other": "Enregistrer {count} modification(s)",
     "saving": "Enregistrement…",
-    "saved": "{count} dépenses ont été re-catégorisées.",
+    "saved_one": "{count} dépense a été recatégorisée.",
+    "saved_many": "{count} dépenses ont été re-catégorisées.",
+    "saved_other": "{count} dépenses ont été re-catégorisées.",
     "applyError": "Impossible d'enregistrer la mise à jour des catégories en lot : {message}",
     "noCandidates": "Aucune dépense à catégoriser.",
     "adminsOnly": "Seuls les administrateurs du groupe peuvent utiliser le catégoriseur en lot.",
@@ -1657,9 +1692,15 @@
     "previewError": "Impossible de générer l'aperçu : {message}",
     "introTitle": "Comment ça marche",
     "loadingCandidates": "Vérification des dépenses non catégorisées…",
-    "introDescription": "{count} dépenses non catégorisées sont prêtes à être révisées.",
-    "introStepLook": "L'IA examine un large ensemble de jusqu'à {count} dépenses pour trouver les exemples les plus utiles.",
-    "introStepReview": "Vous révisez et corrigez jusqu'à {count} exemples sélectionnés pour que l'IA apprenne les catégories de ce groupe.",
+    "introDescription_one": "{count} dépense non catégorisée est prête à être révisée.",
+    "introDescription_many": "{count} dépenses non catégorisées sont prêtes à être révisées.",
+    "introDescription_other": "{count} dépenses non catégorisées sont prêtes à être révisées.",
+    "introStepLook_one": "L'IA examine jusqu'à {count} dépense pour trouver l'exemple le plus utile.",
+    "introStepLook_many": "L'IA examine un large ensemble de jusqu'à {count} dépenses pour trouver les exemples les plus utiles.",
+    "introStepLook_other": "L'IA examine un large ensemble de jusqu'à {count} dépenses pour trouver les exemples les plus utiles.",
+    "introStepReview_one": "Vous révisez et corrigez jusqu'à {count} exemple sélectionné pour que l'IA apprenne les catégories de ce groupe.",
+    "introStepReview_many": "Vous révisez et corrigez jusqu'à {count} exemples sélectionnés pour que l'IA apprenne les catégories de ce groupe.",
+    "introStepReview_other": "Vous révisez et corrigez jusqu'à {count} exemples sélectionnés pour que l'IA apprenne les catégories de ce groupe.",
     "introStepPreview": "Quand l'IA a suffisamment d'informations, elle prépare une révision complète et laisse les dépenses incertaines non catégorisées.",
     "startCalibration": "Démarrer la calibration",
     "calibrationStartHint": "L'IA sélectionne des exemples utiles pour que vous les révisiez.",
@@ -1674,7 +1715,9 @@
     "generatingPreview": "Préparation des suggestions…",
     "noSuggestions": "L'IA a laissé toutes les dépenses non catégorisées. Vous pouvez réessayer après plus de calibration.",
     "previewSummary": "L'IA a suggéré des catégories pour {suggested} des {total} dépenses.",
-    "leftUncategorized": "{count} dépenses ont été laissées non catégorisées car l'IA n'était pas assez confiante.",
+    "leftUncategorized_one": "{count} dépense est restée non catégorisée car l'IA n'était pas assez sûre.",
+    "leftUncategorized_many": "{count} dépenses ont été laissées non catégorisées car l'IA n'était pas assez confiante.",
+    "leftUncategorized_other": "{count} dépenses ont été laissées non catégorisées car l'IA n'était pas assez confiante.",
     "retryPreview": "Réessayer l'aperçu",
     "doneTitle": "Catégories enregistrées",
     "expenseColumn": "Dépense",
@@ -1686,10 +1729,12 @@
     "category": "Catégorie",
     "date": "Date",
     "paidBy": "Payé par",
-    "paidFor": "Payé pour",
+    "paidFor": "Réparti entre",
     "yourBalance": "Votre solde :",
     "notes": "Notes",
-    "attachments": "Pièces jointes ({count})",
+    "attachments_one": "Pièce jointe ({count})",
+    "attachments_many": "Pièces jointes ({count})",
+    "attachments_other": "Pièces jointes ({count})",
     "edit": "Modifier la dépense",
     "makeCopy": "Faire une copie"
   },
@@ -1702,10 +1747,21 @@
     "create": "Créer",
     "edit": "Modifier les détails",
     "creating": "Création…",
-    "successToast": "Remboursement enregistré"
+    "successToast": "Paiement de règlement enregistré"
   },
   "Participants": {
     "search": "Rechercher des participants...",
     "noParticipant": "Aucun participant trouvé"
+  },
+  "Common": {
+    "close": "Fermer",
+    "previousSlide": "Diapositive précédente",
+    "nextSlide": "Diapositive suivante"
+  },
+  "Theme": {
+    "toggle": "Changer de thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Réglage du système"
   }
 }

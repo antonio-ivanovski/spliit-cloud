@@ -133,9 +133,7 @@ describe('ReimbursementList', () => {
 
     expect(screen.getByTestId('no-reimbursements')).toBeInTheDocument()
     expect(
-      screen.getByText(
-        'It looks like your group doesn\u2019t need any reimbursement \uD83D\uDE01',
-      ),
+      screen.getByText('Everyone in your group is settled up \uD83D\uDE01'),
     ).toBeInTheDocument()
     expect(screen.queryByTestId('reimbursements-list')).not.toBeInTheDocument()
   })
@@ -226,7 +224,7 @@ describe('ReimbursementList', () => {
     await user.click(screen.getByText('Mark as paid'))
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Reimbursement')).toBeInTheDocument()
+    expect(screen.getByText('Settlement payment')).toBeInTheDocument()
     expect(
       within(screen.getByRole('dialog')).getByText('€20.00'),
     ).toBeInTheDocument()
@@ -278,7 +276,7 @@ describe('ReimbursementList', () => {
       expect(mockInvalidateBalances).toHaveBeenCalledTimes(1)
     })
     expect(mockToast).toHaveBeenCalledWith({
-      description: 'Reimbursement recorded',
+      description: 'Settlement payment recorded',
     })
   })
 

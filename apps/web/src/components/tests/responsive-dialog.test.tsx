@@ -91,6 +91,18 @@ describe('ResponsiveDialog', () => {
     expect(screen.getByRole('button', { name: /confirm/i })).toBeInTheDocument()
   })
 
+  it('positions the close button at the logical end in RTL layouts', () => {
+    mockDesktopMediaQuery()
+    document.documentElement.dir = 'rtl'
+    render(<SampleDialog />)
+
+    expect(screen.getByRole('button', { name: 'Close' })).toHaveClass('end-4')
+    expect(screen.getByRole('button', { name: 'Close' })).not.toHaveClass(
+      'right-4',
+    )
+    document.documentElement.dir = 'ltr'
+  })
+
   it('renders mobile content as a bottom drawer (vaul)', () => {
     mockMobileMediaQuery()
     render(<SampleDialog />)

@@ -8,32 +8,32 @@
       "createAccount": "Crea un compte",
       "createGroup": "Crear un grup",
       "importGroup": "Importa un grup des d'un altre servei",
-      "createFriendLedger": "Crea un compte amb un amic"
+      "createFriendLedger": "Registra despeses amb una amistat"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Grups i sincronització",
+        "description": "Crea grups per a viatges, esdeveniments o regals i mantén-los sincronitzats entre dispositius."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Despeses i rebuts",
+        "description": "Afegeix despeses, adjunta imatges de rebuts i crea costos recurrents diaris, setmanals o mensuals."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Repartiment avançat",
+        "description": "Reparteix per percentatge, parts, import exacte o a parts iguals."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Saldos",
+        "description": "Consulta qui ha pagat què i redueix les transferències entre participants."
       },
       "organization": {
         "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "description": "Assigna categories perquè les despeses compartides siguin fàcils de revisar."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Comptes",
+        "description": "Inicia la sessió una vegada per protegir les dades i mantenir disponible l’historial de despeses."
       }
     },
     "welcomeBack": "Benvingut de nou, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Tanca sessió",
     "account": "Compte",
     "accountSettings": "Configuració del compte",
-    "back": "Enrere"
+    "back": "Enrere",
+    "menu": "Menú"
   },
   "Footer": {
     "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
@@ -76,7 +77,7 @@
       "lastMonth": "El mes anterior",
       "earlierThisYear": "A inicis d'aquest any",
       "lastYear": "L'any passat",
-      "older": "Més antics"
+      "older": "Despeses anteriors"
     },
     "export": "Exportar",
     "filters": {
@@ -107,7 +108,7 @@
       "noMatchClear": "Esborrar filtres",
       "category": "Categoria",
       "paidBy": "Pagat per",
-      "paidFor": "Pagat a",
+      "paidFor": "Repartit entre",
       "dateRange": "Interval de dates",
       "dateFrom": "Des de",
       "dateTo": "Fins a",
@@ -122,7 +123,9 @@
       "allCategories": "Totes les categories",
       "allParticipants": "Tots els participants",
       "allCurrencies": "Totes les divises",
-      "nSelected": "{count} seleccionats",
+      "nSelected_one": "{count} seleccionada",
+      "nSelected_many": "{count} seleccionades",
+      "nSelected_other": "{count} seleccionades",
       "removeFilter": "Elimina el filtre",
       "settlementsHidden": "Liquidacions ocultes",
       "title": "Filtres"
@@ -130,17 +133,19 @@
     "showSettlements": "Mostra les liquidacions"
   },
   "ExpenseCard": {
-    "paidBy": "Pagada per <strong>{paidBy}</strong> per a <paidFor></paidFor>",
-    "receivedBy": "Debuda per <strong>{paidBy}</strong> para <paidFor></paidFor>",
-    "receivedByMultiple": "Rebut per <paidByNames></paidByNames> per a <paidFor></paidFor>",
+    "receivedBy": "Rebut per <strong>{paidBy}</strong> · assignat a <paidFor></paidFor>",
+    "receivedByMultiple": "Rebut per <paidByNames></paidByNames> · assignat a <paidFor></paidFor>",
     "yourBalance": "El teu balanç: balance:",
-    "paidByMultiple": "Pagat per <paidByNames></paidByNames> per a <paidFor></paidFor>",
+    "paidBy": "Pagat per <strong>{paidBy}</strong> · repartit entre <paidFor></paidFor>",
+    "paidByMultiple": "Pagat per <paidByNames></paidByNames> · repartit entre <paidFor></paidFor>",
     "everyone": "totes",
     "notInvolved": "No ets implicat o implicada",
     "settlementBadge": "Liquidació",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+{count} més",
+      "more_many": "+{count} més",
+      "more_other": "+{count} més",
+      "title": "Articles",
       "participants": "{names}"
     },
     "copyToast": "S'ha iniciat la còpia de la despesa. Les dades de la despesa existent s'utilitzaran per crear-ne una de nova."
@@ -161,7 +166,8 @@
     },
     "NotFound": {
       "text": "Aquest grup no existeix.",
-      "link": "Anar a l'inici"
+      "link": "Anar a l'inici",
+      "lookingUp": "S’està cercant el grup…"
     },
     "createdInviteHint": "Grup creat. Convida membres per començar.",
     "hidden": "Amagats",
@@ -169,14 +175,14 @@
     "showArchived": "Mostra els grups arxivats",
     "hide": "Amaga el grup",
     "unhide": "Mostra el grup",
-    "hideFriend": "Amaga el compte entre amics",
-    "unhideFriend": "Mostra el compte entre amics",
+    "hideFriend": "Amaga l’amistat",
+    "unhideFriend": "Mostra l’amistat",
     "starGroup": "Afegeix als preferits",
     "unstarGroup": "Treu dels preferits",
-    "starFriend": "Marca el compte entre amics",
-    "unstarFriend": "Desmarca el compte entre amics",
+    "starFriend": "Marca l’amistat com a preferida",
+    "unstarFriend": "Treu l’amistat de preferides",
     "groupActions": "Accions del grup",
-    "friendActions": "Accions del compte entre amics",
+    "friendActions": "Accions de l’amistat",
     "archiveGroup": "Arxiva el grup",
     "unarchiveGroup": "Desarxivar el grup",
     "archiveSuccess": "Grup arxivat.",
@@ -245,9 +251,13 @@
         "newGroupFormat": "Grup nou · {currency}",
         "existingGroupFormat": "Grup existent · fusionat",
         "summaryLabel": "Resum",
-        "sourceParticipants": "{count} participants d'origen",
+        "sourceParticipants_one": "{count} participant d’origen",
+        "sourceParticipants_many": "{count} participants d’origen",
+        "sourceParticipants_other": "{count} participants d’origen",
         "participantBreakdown": "{linked} enllaçats · {email} invitacions per correu · {link} invitacions per enllaç · {unlinked} desenllaçats",
-        "expenseCount": "Es crearan {count} despeses",
+        "expenseCount_one": "Es crearà {count} despesa",
+        "expenseCount_many": "Es crearan {count} despeses",
+        "expenseCount_other": "Es crearan {count} despeses",
         "sourceName": "Origen: {name}",
         "footer": "Tots els participants d'origen i despeses s'importaran. Les invitacions s'envien o es generen després de crear el grup.",
         "importingButton": "Important…",
@@ -272,7 +282,9 @@
         "existingGroup": "Grup existent",
         "loading": "Carregant…",
         "noAdminGroups": "Encara no administreu cap grup.",
-        "memberCount": "{count} membres"
+        "memberCount_one": "{count} membre",
+        "memberCount_many": "{count} membres",
+        "memberCount_other": "{count} membres"
       },
       "Done": {
         "importComplete": "Importació completa",
@@ -440,16 +452,18 @@
       "description": "Fes el seguiment de les despeses compartides amb amics, família o companys de pis."
     },
     "groups": "Grups",
-    "friends": "Comptes entre amics",
+    "friends": "Amistats",
     "createExpense": "Crea una despesa",
     "pending": "Pendent",
     "scopePickerGroups": "Tria un grup",
-    "scopePickerFriends": "Tria un compte entre amics",
+    "scopePickerFriends": "Tria una amistat",
     "scopePickerEmpty": "Encara no hi ha grups",
-    "scopePickerMembers": "{count} membre(s)",
+    "scopePickerMembers_one": "{count} membre",
+    "scopePickerMembers_many": "{count} membres",
+    "scopePickerMembers_other": "{count} membres",
     "createFriendLedgerCard": {
       "description": "Liquida els deutes un a un amb una persona concreta.",
-      "title": "Crea un compte amb un amic"
+      "title": "Registra despeses amb una amistat"
     },
     "importGroup": "Importa un grup",
     "exportDescription": "Baixa les despeses del grup en format JSON o CSV."
@@ -473,7 +487,7 @@
     "Participants": {
       "title": "Participants",
       "description": "Afegeix el nom de totes les participants.",
-      "protectedParticipant": "Aquestes participants ténen despeses al seu nom i no poden ser esborrades.",
+      "protectedParticipant": "Aquest participant està vinculat a un compte i no es pot suprimir.",
       "new": "Nou",
       "add": "Afegir participants",
       "John": "Ermessenda",
@@ -517,8 +531,8 @@
       "edit": "Editar despesa",
       "TitleField": {
         "label": "Títol de la despesa",
-        "placeholder": "Berenar-sopar",
-        "description": "Introdueix una descripció per aquesta despesa."
+        "placeholder": "Sou o devolució",
+        "description": "Descriu d’on provenen els ingressos."
       },
       "DateField": {
         "label": "Data de la despesa",
@@ -527,11 +541,11 @@
       "categoryFieldDescription": "Selecciona la categoria de la despesa.",
       "paidByField": {
         "label": "Pagat per",
-        "description": "Selecciona la participant que ha fet el pagament."
+        "description": "Selecciona qui ha rebut els diners i quant n’ha rebut cadascú."
       },
       "paidFor": {
-        "title": "Pagat per a",
-        "description": "Selecciona per a qui s'ha efectuat el pagament."
+        "title": "Assignat a",
+        "description": "Selecciona els participants que comparteixen aquests ingressos."
       },
       "splitModeDescription": "Selecciona com vols dividir la despesa.",
       "attachDescription": "Veure i adjuntar tiquets a la despesa.",
@@ -555,12 +569,12 @@
       "categoryFieldDescription": "Selecciona la cateogria de la despesa.",
       "paidByField": {
         "label": "Pagat per",
-        "description": "Selecciona la participant que ha pagat la despesa.",
-        "placeholder": "Tria un membre"
+        "placeholder": "Tria un membre",
+        "description": "Selecciona qui ha aportat els diners i quant hi ha contribuït cada pagador."
       },
       "paidFor": {
-        "title": "Pagado per a",
-        "description": "Selecciona per a qui s'ha pagat la despesa."
+        "title": "Repartit entre",
+        "description": "Selecciona els participants que comparteixen aquesta despesa."
       },
       "splitModeDescription": "Selecciona com vols dividir la despesa.",
       "attachDescription": "Veure i adjuntar tiquets a la despesa.",
@@ -576,8 +590,8 @@
         "weekly": "Setmanalment",
         "monthly": "Mensualment"
       },
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Crea una còpia: {title}",
+      "editTitle": "Edita: {title}"
     },
     "amountField": {
       "label": "Quantitat",
@@ -615,7 +629,7 @@
       }
     },
     "isReimbursementField": {
-      "label": "Això és un reemborsament"
+      "label": "Això és un pagament de liquidació"
     },
     "categoryField": {
       "label": "Categoria"
@@ -638,6 +652,7 @@
       "title": "Esborrar la despesa?",
       "description": "Segur que vols suprimir aquesta despesa? Aquesta acció és irreversible.",
       "yes": "Sí",
+      "deleting": "S’està suprimint…",
       "cancel": "Cancel·lar"
     },
     "attachDocuments": "Adjuntar documents",
@@ -646,7 +661,6 @@
     "save": "Desar",
     "saving": "Desant",
     "cancel": "Cancel·lar",
-    "reimbursement": "Reemborsament",
     "conversionUnavailable": "Per a seleccionar una moneda diferent per despesa i convertir quantitats, tria una moneda no personalitzada per al grup.",
     "conversionRateField": {
       "useApi": "Emprar les tases de Frankfurter",
@@ -670,6 +684,7 @@
     "participant": {
       "pending": "(convidat)"
     },
+    "reimbursement": "Pagament de liquidació",
     "readOnlyNotice": "Aquest grup està arxivat. La despesa es mostra només de lectura.",
     "PaidBySplitModeField": {
       "label": "Mode de divisió del pagador"
@@ -698,6 +713,7 @@
     "paidBySectionSingle": "Únic",
     "paidBySectionMultiple": "Diversos pagadors",
     "paidForSection": "Repartir entre participants",
+    "splitOptionAria": "Repartiment: {title}",
     "paidByOptionSinglePayerHelper": "Una persona cobreix tota la despesa",
     "paidByOptionEvenlyHelper": "Cada u paga una part igual",
     "paidByOptionBySharesHelper": "Cada u paga una part ponderada",
@@ -713,45 +729,47 @@
     "paidForOptionItemized": "Itemized",
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Articles",
+      "description": "Afegeix articles per repartir la despesa amb precisió o per conservar-los com a documentació amb qualsevol mode de repartiment.",
+      "addItem": "Afegeix un article",
+      "empty": "Encara no hi ha articles. Prem «Afegeix un article» per començar.",
+      "allMembers": "Tots els participants",
+      "noMembers": "Cap participant",
+      "other": "Altres (sense assignar)",
+      "derivedBadge": "Calculat",
+      "errorExceedsAmount": "El total dels articles supera l’import de la despesa.",
+      "actionEdit": "Edita",
+      "actionDelete": "Suprimeix",
+      "total": "Total dels articles",
+      "requiredForItemized": "Afegeix com a mínim un article per fer servir el repartiment per articles.",
+      "participantsSummary_one": "{count} participant",
+      "participantsSummary_many": "{count} participants",
+      "participantsSummary_other": "{count} participants",
+      "modalTitle": "Participants de l’article",
       "columnItem": "Article",
       "columnCost": "Cost",
       "columnQuantity": "Quant.",
       "columnParticipants": "Participants",
       "columnTotal": "Total",
-      "setExpenseAmount": "Defineix l'import de la despesa",
-      "splitEvenlyLabel": "Divideix a parts iguals",
-      "splitBySharesLabel": "Divideix per parts",
-      "splitByPercentageLabel": "Divideix per percentatge",
-      "splitByAmountLabel": "Divideix per import",
-      "switchToItemizedTitle": "Voleu canviar al repartiment per articles?",
-      "switchToItemizedDescription": "Editar els participants de l'article canvia Pagat per a a Per articles i substitueix el repartiment de pagat per a que havíeu configurat.",
+      "setExpenseAmount": "Defineix l’import de la despesa",
+      "splitEvenlyLabel": "Reparteix a parts iguals",
+      "splitBySharesLabel": "Reparteix per parts",
+      "splitByPercentageLabel": "Reparteix per percentatge",
+      "splitByAmountLabel": "Reparteix per import",
+      "switchToItemizedTitle": "Vols canviar al repartiment per articles?",
+      "switchToItemizedDescription": "Editar els participants d’un article canvia «Repartit entre» a «Per articles» i substitueix el repartiment de participants configurat.",
       "switchToItemizedConfirm": "Canvia a per articles",
-      "showItems": "Mostra els elements",
-      "hideItems": "Amaga els elements"
+      "showItems": "Mostra els articles",
+      "hideItems": "Amaga els articles"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Vols canviar el mode de repartiment?",
+      "description": "Si canvies a {mode}, els articles es conservaran només com a documentació. Se suprimiran totes les assignacions de participants per article.",
+      "cancel": "Cancel·la",
+      "confirm": "Canvia"
     },
-    "paidForItemizedEntryHint": "Per utilitzar la comptabilitat detallada de «paid for», edita els participants des d'una fila d'article.",
-    "paidForItemizedActiveHint": "La comptabilitat detallada de «paid for» és activa. Edita els participants dels articles des de la targeta Articles per canviar aquest repartiment.",
+    "paidForItemizedEntryHint": "Per repartir per article, edita els participants des d’una fila d’article.",
+    "paidForItemizedActiveHint": "El repartiment per articles està actiu. Edita els participants des de la targeta Articles per canviar-lo.",
     "DefaultSplit": {
       "savedAsDefault": "Desat com a opcions per defecte",
       "heading": "Divisió per defecte",
@@ -761,6 +779,9 @@
     "scanReceipt": "Escaneja el tiquet amb IA"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Suprimeix el document",
+    "document": "Document",
+    "close": "Tanca",
     "TooBigToast": {
       "title": "L'arxiu és massa gran",
       "description": "La mida màxima que pot tenir l'arxiu és de {maxSize}. El teu pesa {size}."
@@ -806,11 +827,11 @@
   },
   "Balances": {
     "title": "Balanç",
-    "description": "L'import total que ha pagat o rebut cada participant.",
+    "description": "Consulta el saldo net de cada participant.",
     "Reimbursements": {
-      "title": "Proposta de reemborsaments",
-      "description": "Suggerència per optimitzar els reemborsaments entre participants.",
-      "noImbursements": "Sembla que el teu grup no necessita cap reemborsament 😁",
+      "title": "Pagaments de liquidació suggerits",
+      "description": "Fes servir aquests pagaments per liquidar els saldos amb el mínim de transferències.",
+      "noImbursements": "Tothom del grup té els comptes liquidats 😁",
       "owes": "<strong>{from}</strong> deu a <strong>{to}</strong>",
       "markAsPaid": "Marcar com a pagat",
       "markAsPaidAria": "Marca {amount} de {from} a {to} com a pagat"
@@ -834,7 +855,7 @@
       "label": "Vista",
       "title": "Tria com veure els saldos",
       "simple": "Simple",
-      "simpleDescription": "Qui deu a qui i saldar comptes.",
+      "simpleDescription": "Consulta qui deu diners a qui i registra pagaments de liquidació.",
       "visual": "Visual",
       "visualDescription": "Desglossament dels saldos i gràfics."
     },
@@ -865,6 +886,7 @@
       "selectedPeriod": "Període seleccionat",
       "lifetimeDescription": "Al llarg de tot l’historial del grup",
       "expenseCount_one": "{count} despesa",
+      "expenseCount_many": "{count} despeses",
       "expenseCount_other": "{count} despeses",
       "spendingOverTime": "Despesa al llarg del temps",
       "bucketedBy": "Agrupat per {granularity}",
@@ -916,12 +938,12 @@
       "lastMonth": "El mes passat",
       "earlierThisYear": "A inicis d'aquest any",
       "lastYear": "El darrer any",
-      "older": "Més antigues"
+      "older": "Activitat anterior"
     }
   },
   "Information": {
     "title": "Informació",
-    "description": "Utilitza aquest apartat per afegir informació rellevant per als participants del grup.",
+    "description": "Afegeix informació que pugui ser útil als participants del grup.",
     "empty": "Encara no hi ha informació sobre el grup."
   },
   "Settings": {
@@ -945,7 +967,7 @@
     "amountNotZero": "L'import no pot ser zero.",
     "amountTenMillion": "L'import ha de ser inferior a 10.000.000.",
     "paidByRequired": "Cal seleccionar una participant",
-    "paidForMin1": "La despesa ha de ser pagada com a mínim per a una participant",
+    "paidForMin1": "La despesa s’ha de repartir com a mínim entre un participant.",
     "noZeroShares": "Totes les participacions han de ser superiors a 0",
     "amountSum": "La suma dels imports ha de ser igual a la suma de la despesa",
     "percentageSum": "La suma dels percentatges ha de ser igual a 100",
@@ -1391,7 +1413,7 @@
           "description": "Revocar la invitació a {email}? Cal liquidar primer els saldos.",
           "warning": {
             "title": "Aquesta invitació té saldos pendents",
-            "description": "Marca la casella de sota per crear una despesa de reemborsament per cada part que impliqui aquest convidat abans de revocar. La invitació només es pot revocar un cop liquidats els saldos."
+            "description": "Selecciona l’opció següent per crear un pagament de liquidació per cada saldo relacionat amb aquesta persona convidada. Només podràs revocar la invitació quan s’hagin liquidat aquests saldos."
           },
           "checkbox": "Liquidar els saldos del convidat abans de revocar"
         }
@@ -1416,9 +1438,9 @@
         "description": "Eliminar {name} d'aquest grup? Té saldos pendents — marca la casella de sota per liquidar-los automàticament abans d'eliminar.",
         "warning": {
           "title": "Aquest membre té saldos pendents",
-          "description": "Eliminar sense liquidar deixarà els saldos al llibre de comptes indefinidament. Marca la casella de sota per crear una despesa de reemborsament per cada part que impliqui aquest membre abans d'eliminar-lo, o elimina sense liquidar i gestiona els saldos manualment."
+          "description": "Si el suprimeixes sense liquidar, aquests saldos quedaran al grup indefinidament. Selecciona l’opció següent per crear un pagament de liquidació per cada saldo relacionat amb aquest membre, o suprimeix-lo i liquida els saldos manualment."
         },
-        "checkbox": "Crear reemborsament de liquidació abans d'eliminar"
+        "checkbox": "Liquida els saldos d’aquest membre abans de suprimir-lo"
       }
     },
     "leave": {
@@ -1440,7 +1462,7 @@
         },
         "unsettled": {
           "title": "Tens saldos pendents",
-          "description": "Sortir amb liquidació forçosa crearà automàticament despeses de reemborsament per a les partides que t'afecten, mantenint el llibre de comptes sincronitzat. Els altres saldos es deixen tal com estan."
+          "description": "Spliit crearà pagaments de liquidació per als saldos relacionats amb tu abans que surtis. Els saldos dels altres participants no canviaran."
         }
       },
       "toast": {
@@ -1461,11 +1483,11 @@
       "linkButton": "Vincula",
       "linkDialog": {
         "title": "Vincula participant no vinculat",
-        "description": "Escull el membre existent al qual {displayName} s'ha de vincular. El destí no ha d'estar ja al costat oposat d'una partida de despesa amb aquest participant.",
+        "description": "Tria el membre existent al qual s’ha de vincular {displayName}. Aquest membre no pot tenir ja cap saldo de despeses amb aquest participant.",
         "membersGroup": "Membres",
         "cancel": "Cancel·la",
         "confirm": "Vincula",
-        "noCandidates": "No s'han trobat membres compatibles. Això normalment significa que aquest participant no vinculat està als dos costats d'una partida de despesa amb tots els altres membres: cal reimportar o ajustar les despeses primer.",
+        "noCandidates": "No s’ha trobat cap membre compatible. Normalment això vol dir que aquest participant sense vincular té saldos de despeses en conflicte amb tots els altres membres. Torna a importar el grup o ajusta primer les despeses.",
         "pendingLabel": "pendent",
         "pendingHint": "Vincular a una invitació pendent fusiona aquesta entrada sense compte a l'invitat. L'invitat manté la seva pròpia fila; les referències fusionades ara es resolen a través d'ella quan accepti.",
         "membersGroupWithPending": "Membres i invitacions pendents",
@@ -1520,7 +1542,7 @@
         "items": "Línies",
         "documents": "Documents",
         "recurrence": "Recurrència",
-        "reimbursement": "Reemborsament",
+        "reimbursement": "pagament de liquidació",
         "conversionSource": "Font de conversió",
         "conversionRate": "Tasa de conversió"
       }
@@ -1550,10 +1572,12 @@
     },
     "fallback": "S'ha registrat una activitat",
     "unknownActor": "Algú",
+    "openExpense": "Obre la despesa",
     "import": {
-      "imported": "{participant} ha importat {count} despeses"
-    },
-    "openExpense": "Obre la despesa"
+      "imported_one": "{participant} ha importat {count} despesa",
+      "imported_many": "{participant} ha importat {count} despeses",
+      "imported_other": "{participant} ha importat {count} despeses"
+    }
   },
   "OfflineBanner": {
     "message": "No tens connexió. Els canvis que facis ara no es desaran fins que et tornis a connectar."
@@ -1585,7 +1609,7 @@
   "EmptyState": {
     "actions": {
       "createGroup": "Crea un grup",
-      "createFriendLedger": "Crea un compte amb un amic",
+      "createFriendLedger": "Registra despeses amb una amistat",
       "showHidden": "Mostra els grups ocults"
     },
     "description": {
@@ -1594,8 +1618,8 @@
     "labels": {
       "group": "grup",
       "groupPlural": "grups",
-      "friendLedger": "compte entre amics",
-      "friendLedgerPlural": "comptes entre amics"
+      "friendLedger": "amistat",
+      "friendLedgerPlural": "amistats"
     },
     "title": {
       "empty": "Encara no tens cap {itemLabelPlural}",
@@ -1603,28 +1627,33 @@
     }
   },
   "Friends": {
-    "title": "Crea un compte amb un amic",
+    "title": "Amistats",
     "peerFriendsTab": "Llista d'amics",
     "peerEmailTab": "Correu electrònic",
     "peerLinkTab": "Enllaç per compartir",
-    "alreadyHasLedger": "ja té un compte entre amics",
+    "friendsSection": "Amistats",
+    "pendingInvitationsSection": "Invitacions pendents",
+    "activeFriendExpensesSection": "Despeses actives amb amistats",
+    "alreadyInvited": "Ja l’has convidat",
+    "alreadyHasLedger": "Ja tens despeses compartides amb aquesta amistat.",
     "inviteSent": "S'ha enviat la invitació. El teu amic s'afegirà quan s'uneixi a Spliit Cloud.",
     "inviteLinkTitle": "Comparteix aquest enllaç",
-    "inviteLinkDescription": "Comparteix aquest enllaç amb el teu amic per afegir-lo al compte.",
+    "inviteLinkDescription": "Genera un enllaç d’un sol ús perquè una amistat s’uneixi a les despeses compartides.",
     "copy": "Copia",
     "share": "Comparteix",
-    "linkHelp": "Genera un enllaç per compartir que el teu amic pugui fer servir per unir-se a aquest compte.",
+    "linkHelp": "Comparteix aquest enllaç amb la persona que vols convidar.",
     "emailLabel": "Correu de l'amic",
     "temporaryNameLabel": "Nom visible",
     "temporaryNameHelp": "Introdueix un nom per a la persona que convides.",
     "friendsEmpty": "Afegeix un amic introduint el seu correu o comparteix un enllaç per convidar-lo.",
     "infoLabel": "Informació (opcional)",
-    "infoPlaceholder": "Afegeix context com «Despeses de pis»"
+    "infoPlaceholder": "Afegeix context com «Despeses de pis»",
+    "createError": "No s’han pogut crear les despeses compartides amb aquesta amistat"
   },
   "BulkCategorize": {
     "title": "Categorització en lots",
     "calibrationTitle": "Pas 1 — Calibració",
-    "calibrationDescription": "Cada exemple que confirmis esdevé la veritat de referència per a la següent passada de la IA. Pot estar a punt després d'una ronda, o demana més exemples.",
+    "calibrationDescription": "Cada exemple que confirmes ajuda la IA a millorar els suggeriments següents. Pot estar preparada després d’una ronda o demanar més exemples.",
     "roundCount": "Ronda {round} de {max}",
     "confidence": {
       "high": "Alt",
@@ -1643,10 +1672,16 @@
     "previewDescription": "Edita qualsevol fila i després desa. La confiança marca les files de les quals el model n'està menys segur.",
     "previewHint": "Mostrant {shown} de {total} candidats.",
     "removeAction": "Ometre",
-    "targetExceedsCap": "El conjunt objectiu té massa despeses ({count}). Redueix les dates o processa per lots.",
-    "saveAll": "Desa {count} canvis",
+    "targetExceedsCap_one": "No es pot processar {count} despesa en aquest lot. Redueix l’interval de dates i torna-ho a provar.",
+    "targetExceedsCap_many": "Hi ha massa despeses per processar ({count}). Redueix l’interval de dates o processa-les per lots.",
+    "targetExceedsCap_other": "Hi ha massa despeses per processar ({count}). Redueix l’interval de dates o processa-les per lots.",
+    "saveAll_one": "Desa {count} canvi",
+    "saveAll_many": "Desa {count} canvis",
+    "saveAll_other": "Desa {count} canvis",
     "saving": "Desant…",
-    "saved": "S'han recategoritzat {count} despeses.",
+    "saved_one": "S’ha tornat a categoritzar {count} despesa.",
+    "saved_many": "S’han tornat a categoritzar {count} despeses.",
+    "saved_other": "S’han tornat a categoritzar {count} despeses.",
     "applyError": "No s'ha pogut desar l'actualització de categories en lots: {message}",
     "noCandidates": "No hi ha despeses pendents de categoritzar.",
     "adminsOnly": "Només els administradors del grup poden executar el categoritzador en lots.",
@@ -1657,10 +1692,16 @@
     "previewError": "No s'ha pogut generar la previsualització: {message}",
     "introTitle": "Com funciona",
     "loadingCandidates": "Comprovant despeses sense categoritzar…",
-    "introDescription": "Hi ha {count} despeses sense categoritzar preparades per revisar.",
-    "introStepLook": "La IA revisa un conjunt ampli de fins a {count} despeses per trobar els exemples més útils.",
-    "introStepReview": "Revisa i corregeix fins a {count} exemples seleccionats perquè la IA aprengui les categories d'aquest grup.",
-    "introStepPreview": "Quan la IA té prou informació, prepara una revisió completa i deixa les despeses incertes sense categoritzar.",
+    "introDescription_one": "Hi ha {count} despesa sense categoria preparada per revisar.",
+    "introDescription_many": "Hi ha {count} despeses sense categoria preparades per revisar.",
+    "introDescription_other": "Hi ha {count} despeses sense categoria preparades per revisar.",
+    "introStepLook_one": "La IA revisa fins a {count} despesa per trobar l’exemple més útil.",
+    "introStepLook_many": "La IA revisa fins a {count} despeses per trobar els exemples més útils.",
+    "introStepLook_other": "La IA revisa fins a {count} despeses per trobar els exemples més útils.",
+    "introStepReview_one": "Revisa i corregeix fins a {count} exemple seleccionat perquè la IA aprengui les categories d’aquest grup.",
+    "introStepReview_many": "Revisa i corregeix fins a {count} exemples seleccionats perquè la IA aprengui les categories d’aquest grup.",
+    "introStepReview_other": "Revisa i corregeix fins a {count} exemples seleccionats perquè la IA aprengui les categories d’aquest grup.",
+    "introStepPreview": "Quan la IA té prou exemples, prepara una revisió completa i deixa sense categoria les despeses poc segures.",
     "startCalibration": "Iniciar la calibració",
     "calibrationStartHint": "La IA està escollint exemples útils perquè els revisis.",
     "calibrationReady": "La IA té prou comentaris per preparar la revisió completa.",
@@ -1674,7 +1715,9 @@
     "generatingPreview": "Preparant suggeriments…",
     "noSuggestions": "La IA ha deixat totes les despeses sense categoritzar. Pots tornar-ho a provar després de més calibració.",
     "previewSummary": "La IA ha suggerit categories per a {suggested} de {total} despeses.",
-    "leftUncategorized": "{count} despeses s'han deixat sense categoritzar perquè la IA no tenia prou confiança.",
+    "leftUncategorized_one": "S’ha deixat {count} despesa sense categoria perquè la IA no tenia prou confiança.",
+    "leftUncategorized_many": "S’han deixat {count} despeses sense categoria perquè la IA no tenia prou confiança.",
+    "leftUncategorized_other": "S’han deixat {count} despeses sense categoria perquè la IA no tenia prou confiança.",
     "retryPreview": "Tornar a provar la previsualització",
     "doneTitle": "Categories desades",
     "expenseColumn": "Despesa",
@@ -1686,10 +1729,12 @@
     "category": "Categoria",
     "date": "Data",
     "paidBy": "Pagat per",
-    "paidFor": "Pagat per a",
+    "paidFor": "Repartit entre",
     "yourBalance": "El teu balanç:",
     "notes": "Notes",
-    "attachments": "Adjunts ({count})",
+    "attachments_one": "Fitxer adjunt ({count})",
+    "attachments_many": "Fitxers adjunts ({count})",
+    "attachments_other": "Fitxers adjunts ({count})",
     "edit": "Editar despesa",
     "makeCopy": "Fer una còpia"
   },
@@ -1702,10 +1747,21 @@
     "create": "Crea",
     "edit": "Edita els detalls",
     "creating": "Creant…",
-    "successToast": "Reemborsament registrat"
+    "successToast": "S’ha creat el pagament de liquidació."
   },
   "Participants": {
     "search": "Cerca participants...",
     "noParticipant": "No s'ha trobat cap participant"
+  },
+  "Common": {
+    "close": "Tanca",
+    "previousSlide": "Diapositiva anterior",
+    "nextSlide": "Diapositiva següent"
+  },
+  "Theme": {
+    "toggle": "Canvia el tema",
+    "light": "Clar",
+    "dark": "Fosc",
+    "system": "Predeterminat del sistema"
   }
 }

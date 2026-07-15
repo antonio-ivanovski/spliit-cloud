@@ -930,7 +930,7 @@ describe('ExpenseForm', () => {
 
     // Split mode option cards should be visible without clicking anything
     expect(
-      screen.getByRole('radio', { name: /split evenly/i }),
+      screen.getByRole('radio', { name: /split.*evenly/i }),
     ).toBeInTheDocument()
   })
 
@@ -1841,7 +1841,7 @@ describe('ExpenseForm option-card transitions', () => {
     )
 
     const amountRadio = screen.getByRole('radio', {
-      name: /split by amount/i,
+      name: /split.*by amount/i,
     })
     await user.click(amountRadio)
 

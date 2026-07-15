@@ -8,32 +8,32 @@
       "createAccount": "Account aanmaken",
       "createGroup": "Groep aanmaken",
       "importGroup": "Importeer groep van een andere dienst",
-      "createFriendLedger": "Vriendenadministratie aanmaken"
+      "createFriendLedger": "Uitgaven met een vriend(in) bijhouden"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Groepen en synchronisatie",
+        "description": "Maak groepen voor reizen, evenementen en cadeaus en houd ze op al je apparaten gesynchroniseerd."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Uitgaven en bonnetjes",
+        "description": "Voeg uitgaven en afbeeldingen van bonnetjes toe en maak dagelijks, wekelijks of maandelijks terugkerende kosten."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Flexibel verdelen",
+        "description": "Verdeel op percentage, aandelen, een exact bedrag of gewoon gelijk."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Saldi",
+        "description": "Bekijk wie wat betaalde en beperk het aantal overschrijvingen tussen deelnemers."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Categorieën",
+        "description": "Wijs categorieën toe, zodat gezamenlijke uitgaven overzichtelijk blijven."
       },
       "accounts": {
         "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "description": "Log één keer in om je gegevens te beschermen en je uitgavengeschiedenis beschikbaar te houden."
       }
     },
     "welcomeBack": "Welkom terug, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Uitloggen",
     "account": "Account",
     "accountSettings": "Accountinstellingen",
-    "back": "Terug"
+    "back": "Terug",
+    "menu": "Menu"
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de open-source community ❤️",
@@ -77,7 +78,7 @@
       "lastMonth": "Vorige maand",
       "earlierThisYear": "Eerder dit jaar",
       "lastYear": "Vorig jaar",
-      "older": "Ouder"
+      "older": "Oudere uitgaven"
     },
     "filters": {
       "mobileTitle": "Filter kosten",
@@ -107,7 +108,7 @@
       "noMatchClear": "Filters wissen",
       "category": "Categorie",
       "paidBy": "Betaald door",
-      "paidFor": "Betaald voor",
+      "paidFor": "Verdeeld over",
       "dateRange": "Datumbereik",
       "dateFrom": "Van",
       "dateTo": "Tot",
@@ -122,7 +123,8 @@
       "allCategories": "Alle categorieën",
       "allParticipants": "Alle deelnemers",
       "allCurrencies": "Alle valuta",
-      "nSelected": "{count} geselecteerd",
+      "nSelected_one": "{count} geselecteerd",
+      "nSelected_other": "{count} geselecteerd",
       "removeFilter": "Filter verwijderen",
       "settlementsHidden": "Verrekeningen verborgen",
       "title": "Filters"
@@ -130,16 +132,17 @@
     "showSettlements": "Verrekeningen tonen"
   },
   "ExpenseCard": {
-    "paidBy": "Betaald door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
-    "paidByMultiple": "Betaald door <paidByNames></paidByNames> voor <paidFor></paidFor>",
+    "paidBy": "Betaald door <strong>{paidBy}</strong> · verdeeld over <paidFor></paidFor>",
+    "paidByMultiple": "Betaald door <paidByNames></paidByNames> · verdeeld over <paidFor></paidFor>",
     "everyone": "iedereen",
-    "receivedBy": "Ontvangen door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
-    "receivedByMultiple": "Ontvangen door <paidByNames></paidByNames> voor <paidFor></paidFor>",
+    "receivedBy": "Ontvangen door <strong>{paidBy}</strong> · toegewezen aan <paidFor></paidFor>",
+    "receivedByMultiple": "Ontvangen door <paidByNames></paidByNames> · toegewezen aan <paidFor></paidFor>",
     "yourBalance": "Jouw balans:",
     "notInvolved": "Je bent hier niet bij betrokken",
     "settlementBadge": "Verrekening",
     "items": {
-      "more": "+{count} more",
+      "more_one": "+{count} meer",
+      "more_other": "+{count} meer",
       "title": "Items",
       "participants": "{names}"
     },
@@ -157,14 +160,14 @@
     "showArchived": "Gearchiveerde groepen tonen",
     "hide": "Groep verbergen",
     "unhide": "Groep zichtbaar maken",
-    "hideFriend": "Vriendenadministratie verbergen",
-    "unhideFriend": "Vriendenadministratie zichtbaar maken",
+    "hideFriend": "Uitgaven met deze vriend(in) verbergen",
+    "unhideFriend": "Uitgaven met deze vriend(in) tonen",
     "starGroup": "Groep als favoriet markeren",
     "unstarGroup": "Favoriet verwijderen",
-    "starFriend": "Vriendenadministratie als favoriet markeren",
-    "unstarFriend": "Favoriet verwijderen",
+    "starFriend": "Uitgaven met deze vriend(in) als favoriet markeren",
+    "unstarFriend": "Uitgaven met deze vriend(in) niet meer als favoriet markeren",
     "groupActions": "Groepsacties",
-    "friendActions": "Vriendenadministratie-acties",
+    "friendActions": "Acties voor uitgaven met vrienden",
     "archiveGroup": "Groep archiveren",
     "unarchiveGroup": "Groep uit archief halen",
     "archiveSuccess": "Groep gearchiveerd.",
@@ -207,7 +210,8 @@
     },
     "NotFound": {
       "text": "Deze groep bestaat niet.",
-      "link": "Ga naar startpagina"
+      "link": "Ga naar startpagina",
+      "lookingUp": "Groep zoeken…"
     },
     "Unauthorized": {
       "title": "Je hebt geen toegang tot deze groep",
@@ -245,9 +249,11 @@
         "newGroupFormat": "Nieuwe groep · {currency}",
         "existingGroupFormat": "Bestaande groep · samengevoegd",
         "summaryLabel": "Samenvatting",
-        "sourceParticipants": "{count} brondeelnemers",
+        "sourceParticipants_one": "{count} deelnemer in de bron",
+        "sourceParticipants_other": "{count} deelnemers in de bron",
         "participantBreakdown": "{linked} gekoppeld · {email} e-mailuitnodigingen · {link} linkuitnodigingen · {unlinked} niet gekoppeld",
-        "expenseCount": "{count} uitgaven worden aangemaakt",
+        "expenseCount_one": "{count} uitgave wordt aangemaakt",
+        "expenseCount_other": "{count} uitgaven worden aangemaakt",
         "sourceName": "Bron: {name}",
         "footer": "Elke brondeelnemer en -uitgave wordt geïmporteerd. Uitnodigingen worden verzonden/generated na het aanmaken van de groep.",
         "importingButton": "Importeren…",
@@ -272,7 +278,8 @@
         "existingGroup": "Bestaande groep",
         "loading": "Laden…",
         "noAdminGroups": "Je beheert nog geen groep.",
-        "memberCount": "{count} leden"
+        "memberCount_one": "{count} lid",
+        "memberCount_other": "{count} leden"
       },
       "Done": {
         "importComplete": "Import voltooid",
@@ -440,16 +447,17 @@
       "description": "Houd gedeelde uitgaven bij met vrienden, familie of huisgenoten."
     },
     "groups": "Groepen",
-    "friends": "Vriendenadministraties",
+    "friends": "Vrienden",
     "createExpense": "Maak uitgave",
     "pending": "In afwachting",
     "scopePickerGroups": "Kies een groep",
-    "scopePickerFriends": "Kies een vriendenadministratie",
+    "scopePickerFriends": "Kies een vriend(in)",
     "scopePickerEmpty": "Nog geen groepen",
-    "scopePickerMembers": "{count} lid/leden",
+    "scopePickerMembers_one": "{count} lid",
+    "scopePickerMembers_other": "{count} leden",
     "createFriendLedgerCard": {
       "description": "Vereffen één-op-één met een specifiek persoon.",
-      "title": "Vriendenadministratie aanmaken"
+      "title": "Uitgaven met een vriend(in) bijhouden"
     },
     "importGroup": "Groep importeren",
     "exportDescription": "Download de groepsuitgaven als JSON of CSV."
@@ -484,7 +492,7 @@
     "Participants": {
       "title": "Deelnemers",
       "description": "Voer de naam in van de deelnemers in de groep.",
-      "protectedParticipant": "Deze deelnemer maakt deel uit van de uitgaven en kan niet worden verwijderd.",
+      "protectedParticipant": "Deze deelnemer komt voor in een uitgave en kan niet worden verwijderd.",
       "new": "Nieuwe deelnemer",
       "add": "Voeg deelnemer toe",
       "John": "Jan",
@@ -517,8 +525,8 @@
       "edit": "Bewerk inkomen",
       "TitleField": {
         "label": "Titel inkomen",
-        "placeholder": "Restaurant maandagavond",
-        "description": "Voer een beschrijving in voor het inkomen."
+        "placeholder": "Salaris of terugbetaling",
+        "description": "Beschrijf waar de inkomsten vandaan kwamen."
       },
       "DateField": {
         "label": "Datum inkomen",
@@ -531,11 +539,11 @@
       "categoryFieldDescription": "Selecteer de inkomencategorie.",
       "paidByField": {
         "label": "Ontvangen door",
-        "description": "Selecteer de deelnemer die het inkomen heeft ontvangen."
+        "description": "Selecteer wie het geld heeft ontvangen en hoeveel iedere persoon ontving."
       },
       "paidFor": {
-        "title": "Ontvangen voor",
-        "description": "Selecteer voor wie het inkomen is ontvangen."
+        "title": "Toegewezen aan",
+        "description": "Selecteer de deelnemers over wie deze inkomsten worden verdeeld."
       },
       "splitModeDescription": "Selecteer hoe het inkomen verdeeld moet worden.",
       "attachDescription": "Bekijk en voeg bijlagen toe aan het inkomen."
@@ -560,24 +568,24 @@
       "paidByField": {
         "label": "Betaald door",
         "placeholder": "Selecteer een deelnemer",
-        "description": "Selecteer de deelnemer die de uitgave heeft gedaan."
+        "description": "Selecteer wie het geld heeft voorgeschoten en hoeveel elke betaler heeft bijgedragen."
       },
       "recurrenceRule": {
         "label": "Terugkerende uitgave",
         "description": "Kies hoe vaak de uitgave herhaald wordt.",
-        "none": "Niet",
+        "none": "Geen herhaling",
         "daily": "Dagelijks",
         "weekly": "Wekelijks",
         "monthly": "Maandelijks"
       },
       "paidFor": {
-        "title": "Betaald voor",
-        "description": "Selecteer voor wie de uitgave is gedaan."
+        "title": "Verdeeld over",
+        "description": "Selecteer de deelnemers over wie deze uitgave wordt verdeeld."
       },
       "splitModeDescription": "Selecteer hoe de uitgave verdeeld moet worden.",
       "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Kopie maken: {title}",
+      "editTitle": "Bewerken: {title}"
     },
     "amountField": {
       "label": "Bedrag",
@@ -635,7 +643,7 @@
       "customRate": "Aangepaste wisselkoers wordt gebruikt"
     },
     "isReimbursementField": {
-      "label": "Dit is een terugbetaling"
+      "label": "Dit is een vereffeningsbetaling"
     },
     "categoryField": {
       "label": "Categorie"
@@ -661,6 +669,7 @@
       "title": "Deze uitgave verwijderen?",
       "description": "Wil je deze uitgave echt verwijderen? Dit kan niet ongedaan worden.",
       "yes": "Ja",
+      "deleting": "Verwijderen…",
       "cancel": "Annuleer"
     },
     "attachDocuments": "Voeg documenten toe",
@@ -669,7 +678,7 @@
     "save": "Opslaan",
     "saving": "Aan het opslaan…",
     "cancel": "Annuleren",
-    "reimbursement": "Terugbetaling",
+    "reimbursement": "Vereffeningsbetaling",
     "readOnlyNotice": "Deze groep is gearchiveerd. De uitgave wordt alleen-lezen weergegeven.",
     "PaidBySplitModeField": {
       "label": "Splitsingssoort betaler"
@@ -698,6 +707,7 @@
     "paidBySectionSingle": "Enkel",
     "paidBySectionMultiple": "Meerdere betalers",
     "paidForSection": "Verdelen tussen deelnemers",
+    "splitOptionAria": "Verdeling: {title}",
     "paidByOptionSinglePayerHelper": "Eén persoon betaalt de volledige uitgave",
     "paidByOptionEvenlyHelper": "Iedereen betaalt een gelijk aandeel",
     "paidByOptionBySharesHelper": "Iedereen betaalt een gewogen aandeel",
@@ -714,20 +724,21 @@
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
     "items": {
       "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "description": "Voeg items toe om de uitgave precies te verdelen of om ze bij elke verdeelmethode als documentatie te bewaren.",
+      "addItem": "Item toevoegen",
+      "empty": "Nog geen items. Klik op ‘Item toevoegen’ om te beginnen.",
+      "allMembers": "Alle deelnemers",
+      "noMembers": "Geen deelnemers",
+      "other": "Overig (niet toegewezen)",
+      "derivedBadge": "Berekend",
+      "errorExceedsAmount": "Het itemtotaal is hoger dan het uitgavenbedrag.",
+      "actionEdit": "Bewerken",
+      "actionDelete": "Verwijderen",
+      "total": "Itemtotaal",
+      "requiredForItemized": "Voeg ten minste één item toe om per item te verdelen.",
+      "participantsSummary_one": "{count} deelnemer",
+      "participantsSummary_other": "{count} deelnemers",
+      "modalTitle": "Deelnemers aan item",
       "columnItem": "Item",
       "columnCost": "Kosten",
       "columnQuantity": "Aant.",
@@ -739,19 +750,19 @@
       "splitByPercentageLabel": "Op percentage verdelen",
       "splitByAmountLabel": "Op bedrag verdelen",
       "switchToItemizedTitle": "Overschakelen naar splitsen per item?",
-      "switchToItemizedDescription": "Als je itemdeelnemers bewerkt, wordt Betaald voor gewijzigd naar Per item en wordt de ingestelde Betaald voor-verdeling vervangen.",
+      "switchToItemizedDescription": "Als je deelnemers van een item bewerkt, wordt de verdeling gewijzigd naar Per item en wordt de ingestelde deelnemersverdeling vervangen.",
       "switchToItemizedConfirm": "Overschakelen naar per item",
       "showItems": "Items tonen",
       "hideItems": "Items verbergen"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Verdeelmethode wijzigen?",
+      "description": "Als je overschakelt naar {mode}, blijven je items alleen als documentatie bewaard. Alle deelnemers per item worden verwijderd.",
+      "cancel": "Annuleren",
+      "confirm": "Wijzigen"
     },
-    "paidForItemizedEntryHint": "Bewerk de deelnemers in een itemrij om itemgewijze betaald-voor-verdeling te gebruiken.",
-    "paidForItemizedActiveHint": "Itemgewijze betaald-voor-verdeling is actief. Bewerk itemdeelnemers op de kaart Items om deze verdeling te wijzigen.",
+    "paidForItemizedEntryHint": "Bewerk deelnemers in een itemrij om per item te verdelen.",
+    "paidForItemizedActiveHint": "Verdeling per item is actief. Bewerk itemdeelnemers via de kaart Items om deze verdeling te wijzigen.",
     "DefaultSplit": {
       "savedAsDefault": "Opgeslagen als standaard",
       "heading": "Standaardverdeling",
@@ -761,6 +772,9 @@
     "scanReceipt": "Bon scannen met AI"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Document verwijderen",
+    "document": "Document",
+    "close": "Sluiten",
     "TooBigToast": {
       "title": "Het bestand is te groot",
       "description": "De maximum bestandsgrootte {maxSize}. Jouw bestand is {size}."
@@ -806,11 +820,11 @@
   },
   "Balances": {
     "title": "Balans",
-    "description": "Dit zijn de bedragen die elke deelnemer heeft betaald of waarvoor is betaald.",
+    "description": "Bekijk het nettosaldo van elke deelnemer.",
     "Reimbursements": {
-      "title": "Voorgestelde terugbetalingen",
-      "description": "Dit zijn de voorgestelde terugbetalingen tussen deelnemers.",
-      "noImbursements": "Lijkt erop dat je groep geen terugbetalingen nodig heeft 😁",
+      "title": "Voorgestelde vereffeningsbetalingen",
+      "description": "Gebruik deze betalingen om saldi met zo min mogelijk overschrijvingen te vereffenen.",
+      "noImbursements": "Iedereen in je groep heeft een vereffend saldo 😁",
       "owes": "<strong>{from}</strong> betaalt aan <strong>{to}</strong>",
       "markAsPaid": "Markeer als betaald",
       "markAsPaidAria": "Markeer {amount} van {from} aan {to} als betaald"
@@ -834,7 +848,7 @@
       "label": "Weergave",
       "title": "Kies hoe je saldi wilt bekijken",
       "simple": "Eenvoudig",
-      "simpleDescription": "Wie wat aan wie verschuldigd is en afrekenen.",
+      "simpleDescription": "Bekijk wie wie iets verschuldigd is en leg vereffeningsbetalingen vast.",
       "visual": "Visueel",
       "visualDescription": "Saldo-overzicht en grafieken."
     },
@@ -916,12 +930,12 @@
       "lastMonth": "Vorige maand",
       "earlierThisYear": "Eerder dit jaar",
       "lastYear": "Vorig jaar",
-      "older": "Ouder"
+      "older": "Oudere activiteit"
     }
   },
   "Information": {
     "title": "Informatie",
-    "description": "Gebruike deze plek om informatie toe te voegen die relevant kan zijn voor de groepsleden.",
+    "description": "Voeg informatie toe die nuttig kan zijn voor de deelnemers van de groep.",
     "empty": "Nog geen informatie toegevoegd."
   },
   "Settings": {
@@ -945,7 +959,7 @@
     "amountNotZero": "Het bedrag moet hoger zijn dan 0.",
     "amountTenMillion": "Het bedrag mag niet hoger zijn dan 10,000,000.",
     "paidByRequired": "Selecteer een deelnemer die de uitgave heeft gedaan.",
-    "paidForMin1": "De uitgave moet voor ten minste één deelnemer zijn gedaan.",
+    "paidForMin1": "De uitgave moet over ten minste één deelnemer worden verdeeld.",
     "noZeroShares": "Een deel mag niet 0 zijn.",
     "amountSum": "Het totaalbedrag moet gelijk zijn aan het uitgavebedrag.",
     "percentageSum": "Het totaalpercentage moet gelijk zijn aan 100%.",
@@ -1391,7 +1405,7 @@
           "description": "Uitnodiging aan {email} intrekken? De saldi moeten eerst vereffend worden.",
           "warning": {
             "title": "Deze uitnodiging heeft niet-vereffende saldi",
-            "description": "Vink het vakje hieronder aan om één verrekeningsuitgave per been aan te maken waar deze genodigde bij betrokken is vóór het intrekken. De uitnodiging kan pas worden ingetrokken zodra de saldi vereffend zijn."
+            "description": "Selecteer de optie hieronder om voor elk saldo van deze genodigde een vereffeningsbetaling aan te maken. De uitnodiging kan pas worden ingetrokken nadat deze saldi zijn vereffend."
           },
           "checkbox": "Vereffen de saldi van de genodigde vóór het intrekken"
         }
@@ -1416,9 +1430,9 @@
         "description": "{name} uit deze groep verwijderen? {name} heeft niet-vereffende saldi — vink het vakje hieronder aan om ze automatisch te vereffenen vóór het verwijderen.",
         "warning": {
           "title": "Dit lid heeft niet-vereffende saldi",
-          "description": "Verwijderen zonder vereffenen laat de saldi voor onbepaalde tijd in het grootboek staan. Vink het vakje hieronder aan om één verrekeningsuitgave per been aan te maken waar dit lid bij betrokken is vóór het verwijderen, of verwijder zonder vereffenen en handel de saldi handmatig af."
+          "description": "Als je dit lid zonder vereffening verwijdert, blijven deze saldi onbeperkt in de groep staan. Selecteer de optie hieronder om voor elk saldo van dit lid een vereffeningsbetaling aan te maken, of verwijder het lid en vereffen de saldi handmatig."
         },
-        "checkbox": "Verrekeningsuitgave aanmaken vóór verwijderen"
+        "checkbox": "Saldi van dit lid vereffenen vóór verwijdering"
       }
     },
     "leave": {
@@ -1439,7 +1453,7 @@
         },
         "unsettled": {
           "title": "Je hebt niet-vereffende saldi",
-          "description": "Geforceerd verlaten maakt automatisch verrekeningsuitgaven aan voor de betalingen waarbij jij betrokken bent, zodat het grootboek synchroon blijft. Overige saldi blijven zoals ze zijn."
+          "description": "Spliit maakt vereffeningsbetalingen aan voor jouw saldi voordat je vertrekt. De saldi van andere deelnemers veranderen niet."
         }
       },
       "error": {
@@ -1461,11 +1475,11 @@
       "idHint": "Grootboekdeelnemer-id: {id}",
       "linkDialog": {
         "title": "Niet-gekoppelde deelnemer koppelen",
-        "description": "Kies het bestaande lid waaraan {displayName} moet worden gekoppeld. De bestemming mag niet al aan de andere kant van een uitgavenpost met deze deelnemer staan.",
+        "description": "Kies het bestaande lid waaraan {displayName} moet worden gekoppeld. Dat lid mag nog geen uitgavensaldo met deze deelnemer hebben.",
         "membersGroup": "Leden",
         "cancel": "Annuleren",
         "confirm": "Koppelen",
-        "noCandidates": "Geen compatibele leden gevonden. Dit betekent meestal dat deze niet-gekoppelde deelnemer aan beide kanten van een uitgavenpost staat met elk ander lid — de import moet opnieuw worden gedaan of er moeten eerst uitgaven worden aangepast.",
+        "noCandidates": "Geen geschikte leden gevonden. Meestal heeft deze niet-gekoppelde deelnemer conflicterende uitgavensaldi met alle andere leden. Importeer de groep opnieuw of pas eerst de uitgaven aan.",
         "pendingLabel": "openstaand",
         "pendingHint": "Koppelen aan een openstaande uitnodiging voegt deze alleen-naam vermelding samen met de genodigde. De genodigde behoudt hun eigen rij; de samengevoegde verwijzingen lopen via hen zodra ze accepteren.",
         "membersGroupWithPending": "Leden en openstaande uitnodigingen",
@@ -1520,7 +1534,7 @@
         "items": "Regels",
         "documents": "Bijlagen",
         "recurrence": "Herhaling",
-        "reimbursement": "Terugbetaling",
+        "reimbursement": "Vereffeningsbetaling",
         "conversionSource": "Conversiebron",
         "conversionRate": "Conversiekoers"
       }
@@ -1550,10 +1564,11 @@
     },
     "fallback": "Er is een activiteit geregistreerd",
     "unknownActor": "Iemand",
+    "openExpense": "Open uitgave",
     "import": {
-      "imported": "{participant} importeerde {count} uitgaven"
-    },
-    "openExpense": "Open uitgave"
+      "imported_one": "{participant} importeerde {count} uitgave",
+      "imported_other": "{participant} importeerde {count} uitgaven"
+    }
   },
   "OfflineBanner": {
     "message": "Je bent offline. Wijzigingen die je nu maakt, worden pas opgeslagen als je weer verbinding hebt."
@@ -1585,7 +1600,7 @@
   "EmptyState": {
     "actions": {
       "createGroup": "Groep aanmaken",
-      "createFriendLedger": "Vriendenadministratie aanmaken",
+      "createFriendLedger": "Uitgaven met een vriend(in) bijhouden",
       "showHidden": "Verborgen groepen tonen"
     },
     "description": {
@@ -1594,8 +1609,8 @@
     "labels": {
       "group": "groep",
       "groupPlural": "groepen",
-      "friendLedger": "vriendenadministratie",
-      "friendLedgerPlural": "vriendenadministraties"
+      "friendLedger": "vriend(in)",
+      "friendLedgerPlural": "vrienden"
     },
     "title": {
       "empty": "Nog geen {itemLabelPlural}",
@@ -1603,28 +1618,33 @@
     }
   },
   "Friends": {
-    "title": "Vriendenadministratie aanmaken",
+    "title": "Uitgaven met een vriend(in) bijhouden",
     "peerFriendsTab": "Vriendenlijst",
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Deelbare link",
-    "alreadyHasLedger": "heeft al een vriendenadministratie",
+    "friendsSection": "Vrienden",
+    "pendingInvitationsSection": "Openstaande uitnodigingen",
+    "activeFriendExpensesSection": "Actieve uitgaven met vrienden",
+    "alreadyInvited": "(al uitgenodigd)",
+    "alreadyHasLedger": "(deelt al uitgaven met je)",
     "inviteSent": "Uitnodiging verstuurd. Je vriend wordt toegevoegd zodra hij of zij lid wordt van Spliit Cloud.",
     "inviteLinkTitle": "Deel deze link",
-    "inviteLinkDescription": "Deel deze link met je vriend om hem of haar toe te voegen aan de administratie.",
+    "inviteLinkDescription": "Deel deze link, zodat je vriend(in) aan jullie gezamenlijke uitgaven kan deelnemen.",
     "copy": "Kopiëren",
     "share": "Delen",
-    "linkHelp": "Genereer een deelbare link die je vriend kan gebruiken om lid te worden van deze administratie.",
+    "linkHelp": "Maak een deelbare link waarmee je vriend(in) kan deelnemen.",
     "emailLabel": "E-mail van vriend",
     "temporaryNameLabel": "Weergavenaam",
     "temporaryNameHelp": "Voer een naam in voor de persoon die je uitnodigt.",
     "friendsEmpty": "Voeg een vriend toe door zijn of haar e-mail in te vullen, of deel een link om hem of haar uit te nodigen.",
     "infoLabel": "Informatie (optioneel)",
-    "infoPlaceholder": "Voeg context toe, bijv. 'Huisgenotenuitgaven'"
+    "infoPlaceholder": "Voeg context toe, bijv. 'Huisgenotenuitgaven'",
+    "createError": "De uitgaven met deze vriend(in) konden niet worden aangemaakt"
   },
   "BulkCategorize": {
     "title": "Bulkcategoriseren",
     "calibrationTitle": "Stap 1 — Kalibratie",
-    "calibrationDescription": "Elk voorbeeld dat je bevestigt wordt de ground truth voor de volgende AI-ronde. De AI kan na één ronde klaar zijn, of vraagt om meer voorbeelden.",
+    "calibrationDescription": "Elk voorbeeld dat je bevestigt, helpt de AI om de volgende suggesties te verbeteren. De AI kan na één ronde klaar zijn of om meer voorbeelden vragen.",
     "roundCount": "Ronde {round} van {max}",
     "confidence": {
       "high": "Hoog",
@@ -1643,10 +1663,13 @@
     "previewDescription": "Bewerk elke rij en sla daarna op. Zekerheid markeert rijen waar het model het minst zeker van is.",
     "previewHint": "{shown} van {total} kandidaten worden weergegeven.",
     "removeAction": "Overslaan",
-    "targetExceedsCap": "De doelgroep bevat te veel uitgaven ({count}). Beperk de datums of verwerk ze in batches.",
-    "saveAll": "{count} wijzigingen opslaan",
+    "targetExceedsCap_one": "{count} uitgave kan niet in deze batch worden verwerkt. Verklein het datumbereik en probeer het opnieuw.",
+    "targetExceedsCap_other": "Er zijn te veel uitgaven om te verwerken ({count}). Verklein het datumbereik of verwerk ze in batches.",
+    "saveAll_one": "{count} wijziging opslaan",
+    "saveAll_other": "{count} wijzigingen opslaan",
     "saving": "Opslaan…",
-    "saved": "{count} uitgaven zijn opnieuw gecategoriseerd.",
+    "saved_one": "{count} uitgave is opnieuw gecategoriseerd.",
+    "saved_other": "{count} uitgaven zijn opnieuw gecategoriseerd.",
     "applyError": "Kon de bulkcategorie-update niet opslaan: {message}",
     "noCandidates": "Geen uitgaven hoeven te worden gecategoriseerd.",
     "adminsOnly": "Alleen groepsbeheerders kunnen de bulkcategoriseerder uitvoeren.",
@@ -1657,10 +1680,13 @@
     "previewError": "Kon geen voorbeeldweergave genereren: {message}",
     "introTitle": "Hoe het werkt",
     "loadingCandidates": "Ongecategoriseerde uitgaven controleren…",
-    "introDescription": "Er zijn {count} ongecategoriseerde uitgaven klaar om te beoordelen.",
-    "introStepLook": "De AI doorzoekt een brede pool van maximaal {count} uitgaven om de meest nuttige voorbeelden te vinden.",
-    "introStepReview": "Jij beoordeelt en corrigeert maximaal {count} geselecteerde voorbeelden, zodat de AI de categorieën van deze groep leert.",
-    "introStepPreview": "Wanneer de AI genoeg signalen heeft, bereidt het een volledige beoordeling voor en laat onzekere uitgaven ongecategoriseerd.",
+    "introDescription_one": "Er staat {count} ongecategoriseerde uitgave klaar om te beoordelen.",
+    "introDescription_other": "Er staan {count} ongecategoriseerde uitgaven klaar om te beoordelen.",
+    "introStepLook_one": "De AI bekijkt maximaal {count} uitgave om het nuttigste voorbeeld te vinden.",
+    "introStepLook_other": "De AI bekijkt maximaal {count} uitgaven om de nuttigste voorbeelden te vinden.",
+    "introStepReview_one": "Je beoordeelt en verbetert maximaal {count} geselecteerd voorbeeld, zodat de AI de categorieën van deze groep leert.",
+    "introStepReview_other": "Je beoordeelt en verbetert maximaal {count} geselecteerde voorbeelden, zodat de AI de categorieën van deze groep leert.",
+    "introStepPreview": "Zodra de AI genoeg voorbeelden heeft, bereidt deze een volledige beoordeling voor en laat onzekere uitgaven ongecategoriseerd.",
     "startCalibration": "Kalibratie starten",
     "calibrationStartHint": "De AI kiest nuttige voorbeelden voor jou om te beoordelen.",
     "calibrationReady": "De AI heeft genoeg feedback om de volledige beoordeling voor te bereiden.",
@@ -1674,7 +1700,8 @@
     "generatingPreview": "Suggesties voorbereiden…",
     "noSuggestions": "De AI heeft alle uitgaven ongecategoriseerd gelaten. Je kunt het opnieuw proberen na meer kalibratie.",
     "previewSummary": "De AI stelde categorieën voor voor {suggested} van de {total} uitgaven.",
-    "leftUncategorized": "{count} uitgaven bleven ongecategoriseerd omdat de AI niet zeker genoeg was.",
+    "leftUncategorized_one": "{count} uitgave bleef ongecategoriseerd omdat de AI niet zeker genoeg was.",
+    "leftUncategorized_other": "{count} uitgaven bleven ongecategoriseerd omdat de AI niet zeker genoeg was.",
     "retryPreview": "Voorbeeld opnieuw proberen",
     "doneTitle": "Categorieën opgeslagen",
     "expenseColumn": "Uitgave",
@@ -1686,10 +1713,11 @@
     "category": "Categorie",
     "date": "Datum",
     "paidBy": "Betaald door",
-    "paidFor": "Betaald voor",
+    "paidFor": "Verdeeld over",
     "yourBalance": "Jouw balans",
     "notes": "Notities",
-    "attachments": "Bijlagen ({count})",
+    "attachments_one": "Bijlage ({count})",
+    "attachments_other": "Bijlagen ({count})",
     "edit": "Bewerk uitgave",
     "makeCopy": "Kopie maken"
   },
@@ -1702,10 +1730,21 @@
     "create": "Maken",
     "edit": "Details bewerken",
     "creating": "Aan het maken…",
-    "successToast": "Terugbetaling vastgelegd"
+    "successToast": "Vereffeningsbetaling vastgelegd"
   },
   "Participants": {
     "search": "Deelnemers zoeken...",
     "noParticipant": "Geen deelnemer gevonden"
+  },
+  "Common": {
+    "close": "Sluiten",
+    "previousSlide": "Vorige dia",
+    "nextSlide": "Volgende dia"
+  },
+  "Theme": {
+    "toggle": "Thema wijzigen",
+    "light": "Licht",
+    "dark": "Donker",
+    "system": "Systeeminstelling"
   }
 }

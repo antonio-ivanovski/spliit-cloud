@@ -42,7 +42,7 @@ function Content() {
               />
             </div>
           </Link>
-          <nav aria-label="Menu" className="flex">
+          <nav aria-label={t('Header.menu')} className="flex">
             <ul className="flex items-center text-sm gap-1">
               <li>
                 <LocaleSwitcher />
@@ -58,7 +58,12 @@ function Content() {
         </header>
 
         {focusedMobileRoute ? (
-          <MobileAppBar />
+          <div className="sm:hidden [&>header]:pe-12">
+            <MobileAppBar />
+            <div className="fixed end-2 top-0 z-50 flex h-(--app-header-height) items-center">
+              <LocaleSwitcher />
+            </div>
+          </div>
         ) : (
           <div className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur dark:bg-gray-950/90 sm:hidden">
             <Link href="/" aria-label="Spliit" className="flex items-center">
@@ -71,6 +76,7 @@ function Content() {
               />
             </Link>
             <div className="flex items-center gap-1">
+              <LocaleSwitcher />
               <ThemeToggle />
               <AccountMenu />
             </div>

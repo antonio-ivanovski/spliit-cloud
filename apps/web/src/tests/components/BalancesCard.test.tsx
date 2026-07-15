@@ -118,8 +118,13 @@ describe('BalancesCard', () => {
     ).toBe(true)
     expect(screen.queryByText(/owes/)).not.toBeInTheDocument()
     expect(
-      screen.getAllByRole('button', { name: /Mark as paid/ }),
+      screen.getAllByRole('button', { name: /Mark .* as paid/ }),
     ).toHaveLength(2)
+    expect(
+      screen.getByRole('button', {
+        name: 'Mark €20.00 from Bob to Alice as paid',
+      }),
+    ).toBeInTheDocument()
   })
 
   it('opens the create reimbursement modal when clicking Mark as paid', async () => {
@@ -140,7 +145,7 @@ describe('BalancesCard', () => {
     await user.click(screen.getAllByText('Mark as paid')[0])
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Reimbursement')).toBeInTheDocument()
+    expect(screen.getByText('Settlement payment')).toBeInTheDocument()
   })
 
   it('preserves the original currency on payer actions in expense-currency mode', () => {
@@ -169,7 +174,7 @@ describe('BalancesCard', () => {
       document.querySelector('img[src*="flagcdn.com/h24/eu.png"]'),
     ).toBeInTheDocument()
     expect(
-      screen.getAllByRole('button', { name: /Mark as paid/ }).length,
+      screen.getAllByRole('button', { name: /Mark .* as paid/ }).length,
     ).toBeGreaterThan(0)
   })
 })

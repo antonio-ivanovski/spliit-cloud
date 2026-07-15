@@ -1,10 +1,21 @@
-import { localeLabels } from '@/i18n/request'
+import { LocaleSwitcher, localeFlags } from '@/components/locale-switcher'
+import { localeLabels, locales } from '@/i18n/request'
 import * as i18nSetup from '@/i18n/setup'
-import { render, screen } from '@/test/test-utils'
-import userEvent from '@testing-library/user-event'
+import { render, screen, waitFor, within } from '@/test/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { LocaleSwitcher } from '@/components/locale-switcher'
+function mockViewport(desktop: boolean) {
+  vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({
+    matches: query === '(min-width: 768px)' ? desktop : false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(() => false),
+  }))
+}
 
 describe('LocaleSwitcher', () => {
   beforeEach(() => {
@@ -15,69 +26,95 @@ describe('LocaleSwitcher', () => {
     vi.restoreAllMocks()
   })
 
-  it('renders current locale label from localeLabels', () => {
-    render(<LocaleSwitcher />)
-
-    // Default locale in test environment is 'en-US'
-    const trigger = screen.getByRole('button', { name: localeLabels['en-US'] })
-    expect(trigger).toBeInTheDocument()
-  })
-
-  it('clicking opens dropdown with all locale options', async () => {
-    const user = userEvent.setup()
-    render(<LocaleSwitcher />)
-
-    const trigger = screen.getByRole('button', { name: localeLabels['en-US'] })
-    await user.click(trigger)
-
-    // All locale labels should be visible in the dropdown (some labels
-    // may appear both in the trigger and the menu, so use getAllByText).
-    for (const label of Object.values(localeLabels)) {
-      const matches = screen.getAllByText(label)
-      expect(matches.length).toBeGreaterThanOrEqual(1)
+  it('has an exhaustive, non-empty flag mapping', () => {
+    expect(Object.keys(localeFlags)).toEqual(locales)
+    for (const locale of locales) {
+      expect(localeFlags[locale]).not.toBe('')
     }
   })
 
-  it('clicking a locale calls setUserLocale with that locale', async () => {
-    const user = userEvent.setup()
-    render(<LocaleSwitcher />)
+  it('shows the flag and native label in the desktop trigger and dropdown', async () => {
+    mockViewport(true)
+    const { user } = render(<LocaleSwitcher />)
 
-    const trigger = screen.getByRole('button', { name: localeLabels['en-US'] })
+    const trigger = screen.getByRole('button', {
+      name: localeLabels['en-US'],
+    })
+    expect(trigger).toHaveTextContent(localeFlags['en-US'])
+    expect(trigger).toHaveTextContent(localeLabels['en-US'])
+
     await user.click(trigger)
 
-    // Find and click the French locale
-    const frenchLabel = localeLabels['fr-FR']
-    const frenchItem = screen.getByText(frenchLabel)
-    await user.click(frenchItem)
+    for (const locale of locales) {
+      const option = screen.getByRole('menuitem', {
+        name: localeLabels[locale],
+      })
+      expect(option).toHaveTextContent(localeFlags[locale])
+    }
+    expect(
+      screen.getByRole('menuitem', { name: localeLabels['en-US'] }),
+    ).toHaveAttribute('aria-current', 'true')
+  })
+
+  it('uses a flag-only trigger and bottom drawer on mobile', async () => {
+    mockViewport(false)
+    const { user } = render(<LocaleSwitcher />)
+
+    const trigger = screen.getByRole('button', {
+      name: localeLabels['en-US'],
+    })
+    expect(trigger).toHaveTextContent(localeFlags['en-US'])
+    expect(trigger).not.toHaveTextContent(localeLabels['en-US'])
+    expect(trigger).toHaveAttribute('title', localeLabels['en-US'])
+
+    await user.click(trigger)
+
+    const drawer = screen.getByRole('dialog', {
+      name: localeLabels['en-US'],
+    })
+    expect(drawer).toBeInTheDocument()
+    for (const locale of locales) {
+      const option = within(drawer).getByRole('button', {
+        name: localeLabels[locale],
+      })
+      expect(option).toHaveTextContent(localeFlags[locale])
+    }
+    expect(
+      within(drawer).getByRole('button', { name: localeLabels['en-US'] }),
+    ).toHaveAttribute('aria-current', 'true')
+  })
+
+  it('selects a desktop locale', async () => {
+    mockViewport(true)
+    const { user } = render(<LocaleSwitcher />)
+
+    await user.click(
+      screen.getByRole('button', { name: localeLabels['en-US'] }),
+    )
+    await user.click(
+      screen.getByRole('menuitem', { name: localeLabels['fr-FR'] }),
+    )
 
     expect(i18nSetup.setUserLocale).toHaveBeenCalledWith('fr-FR')
   })
 
-  it('clicking another locale calls setUserLocale correctly', async () => {
-    const user = userEvent.setup()
-    render(<LocaleSwitcher />)
+  it('selects a mobile locale and closes the drawer', async () => {
+    mockViewport(false)
+    const { user } = render(<LocaleSwitcher />)
 
-    const trigger = screen.getByRole('button', { name: localeLabels['en-US'] })
-    await user.click(trigger)
+    await user.click(
+      screen.getByRole('button', { name: localeLabels['en-US'] }),
+    )
+    const drawer = screen.getByRole('dialog', {
+      name: localeLabels['en-US'],
+    })
+    await user.click(
+      within(drawer).getByRole('button', { name: localeLabels['ja-JP'] }),
+    )
 
-    // Click Japanese locale
-    const japaneseLabel = localeLabels['ja-JP']
-    await user.click(screen.getByText(japaneseLabel))
     expect(i18nSetup.setUserLocale).toHaveBeenCalledWith('ja-JP')
-  })
-
-  it('renders all locales as dropdown items', async () => {
-    const user = userEvent.setup()
-    render(<LocaleSwitcher />)
-
-    const trigger = screen.getByRole('button', { name: localeLabels['en-US'] })
-    await user.click(trigger)
-
-    const labels = Object.values(localeLabels)
-    expect(labels.length).toBeGreaterThan(20) // sanity check
-    for (const label of labels) {
-      const matches = screen.getAllByText(label)
-      expect(matches.length).toBeGreaterThanOrEqual(1)
-    }
+    await waitFor(() => {
+      expect(drawer).toHaveAttribute('data-state', 'closed')
+    })
   })
 })

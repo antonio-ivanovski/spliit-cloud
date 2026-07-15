@@ -305,7 +305,15 @@ function SettlementDirection({
                               variant="link"
                               onClick={() => setSelectedReimbursement(leg)}
                               className="h-auto shrink-0 p-0 text-xs"
-                              aria-label={`${t('Reimbursements.markAsPaid')} ${formatCurrency(currency, leg.amount, locale)} ${to.name}`}
+                              aria-label={t('Reimbursements.markAsPaidAria', {
+                                amount: formatCurrency(
+                                  currency,
+                                  leg.amount,
+                                  locale,
+                                ),
+                                from: getParticipant(leg.from).name,
+                                to: to.name,
+                              })}
                               data-testid={`reimbursement-mark-as-paid-${leg.from}-${leg.to}`}
                             >
                               <span className="sr-only sm:not-sr-only">

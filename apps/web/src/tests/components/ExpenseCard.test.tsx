@@ -367,7 +367,7 @@ describe('ExpenseCard', () => {
       expect(container.textContent).toContain('Alice, Bob, Carol')
       // Phrase template renders the payer group before the payee.
       expect(container.textContent).toContain(
-        'Paid by Alice, Bob, Carol for Dave',
+        'Paid by Alice, Bob, Carol · split between Dave',
       )
       // The strong-order check pins the exact slot order.
       const strongTexts = Array.from(container.querySelectorAll('strong')).map(

@@ -149,7 +149,7 @@ describe('CreateReimbursementModal', () => {
     )
 
     const dialog = screen.getByRole('dialog')
-    expect(within(dialog).getByText('Reimbursement')).toBeInTheDocument()
+    expect(within(dialog).getByText('Settlement payment')).toBeInTheDocument()
     expect(within(dialog).getByText('€25.00')).toBeInTheDocument()
     expect(within(dialog).getByText('Alice pays Bob')).toBeInTheDocument()
     expect(within(dialog).getByText('Alice')).toBeInTheDocument()
@@ -211,7 +211,7 @@ describe('CreateReimbursementModal', () => {
     expect(call.expense.conversion).toBeUndefined()
     expect(mockInvalidateBalances).toHaveBeenCalledTimes(1)
     expect(mockToast).toHaveBeenCalledWith({
-      description: 'Reimbursement recorded',
+      description: 'Settlement payment recorded',
     })
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })

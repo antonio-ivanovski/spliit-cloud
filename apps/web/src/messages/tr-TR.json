@@ -8,32 +8,32 @@
       "createAccount": "Hesap oluşturun",
       "createGroup": "Grup oluştur",
       "importGroup": "Grubu başka bir servisten içe aktar",
-      "createFriendLedger": "Arkadaş defteri oluştur"
+      "createFriendLedger": "Arkadaşla ortak harcamaları takip et"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Gruplar + eşitleme",
+        "description": "Geziler, etkinlikler ve hediyeler için gruplar oluşturup cihazlar arasında eşitleyin."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Masraflar + makbuzlar",
+        "description": "Masraf ve makbuz görüntüleri ekleyin; günlük, haftalık veya aylık yinelenen masraflar oluşturun."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Esnek bölüşüm",
+        "description": "Yüzdeye, paya, kesin tutara göre veya eşit olarak bölüştürün."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Bakiyeler",
+        "description": "Kimin ne ödediğini görün ve katılımcılar arasındaki para transferlerini en aza indirin."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Kategoriler",
+        "description": "Ortak harcamaları kolayca taramak için kategoriler atayın."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Hesaplar",
+        "description": "Verilerinizi korumak ve masraf geçmişinize erişmek için oturum açın."
       }
     },
     "welcomeBack": "Tekrar hoş geldin, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Oturumu kapat",
     "account": "Hesap",
     "accountSettings": "Hesap ayarları",
-    "back": "Geri"
+    "back": "Geri",
+    "menu": "Menü"
   },
   "Footer": {
     "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
@@ -76,7 +77,7 @@
       "lastMonth": "Geçen ay",
       "earlierThisYear": "Bu yılın başlarında",
       "lastYear": "Geçen yıl",
-      "older": "Daha eski"
+      "older": "Daha eski masraflar"
     },
     "export": "Dışa aktar",
     "filters": {
@@ -107,7 +108,7 @@
       "noMatchClear": "Filtreleri temizle",
       "category": "Kategori",
       "paidBy": "Ödeyen",
-      "paidFor": "Ödenen",
+      "paidFor": "Arasında bölüştürülen",
       "dateRange": "Tarih aralığı",
       "dateFrom": "Başlangıç",
       "dateTo": "Bitiş",
@@ -122,7 +123,8 @@
       "allCategories": "Tüm kategoriler",
       "allParticipants": "Tüm katılımcılar",
       "allCurrencies": "Tüm para birimleri",
-      "nSelected": "{count} seçildi",
+      "nSelected_one": "{count} seçili",
+      "nSelected_other": "{count} seçili",
       "removeFilter": "Filtreyi kaldır",
       "settlementsHidden": "Ödemeler gizli",
       "title": "Filtreler"
@@ -130,16 +132,17 @@
     "showSettlements": "Ödemeleri göster"
   },
   "ExpenseCard": {
-    "paidBy": "<strong>{paidBy}</strong> tarafından ödendi, <paidFor></paidFor> için",
-    "receivedBy": "<strong>{paidBy}</strong> tarafından alındı, <paidFor></paidFor> için",
-    "receivedByMultiple": "<paidByNames></paidByNames> tarafından alındı, <paidFor></paidFor> için",
+    "receivedBy": "<strong>{paidBy}</strong> aldı · <paidFor></paidFor> için paylaştırıldı",
+    "receivedByMultiple": "<paidByNames></paidByNames> aldı · <paidFor></paidFor> için paylaştırıldı",
     "yourBalance": "Bakiyeniz:",
-    "paidByMultiple": "<paidByNames></paidByNames> tarafından ödendi, <paidFor></paidFor> için",
+    "paidBy": "<strong>{paidBy}</strong> ödedi · <paidFor></paidFor> arasında bölüştürüldü",
+    "paidByMultiple": "<paidByNames></paidByNames> ödedi · <paidFor></paidFor> arasında bölüştürüldü",
     "everyone": "herkes",
     "notInvolved": "Dahil değilsiniz",
     "settlementBadge": "Mutabakat",
     "items": {
-      "more": "+{count} more",
+      "more_one": "+{count} tane daha",
+      "more_other": "+{count} tane daha",
       "title": "Items",
       "participants": "{names}"
     },
@@ -161,7 +164,8 @@
     },
     "NotFound": {
       "text": "Bu grup mevcut değil.",
-      "link": "Ana sayfaya git"
+      "link": "Ana sayfaya git",
+      "lookingUp": "Bu grup aranıyor…"
     },
     "createdInviteHint": "Grup oluşturuldu. Başlamak için üyeleri davet edin.",
     "hidden": "Gizli",
@@ -169,14 +173,14 @@
     "showArchived": "Arşivlenmiş grupları göster",
     "hide": "Grubu gizle",
     "unhide": "Grubu göster",
-    "hideFriend": "Arkadaş defterini gizle",
-    "unhideFriend": "Arkadaş defterini göster",
+    "hideFriend": "Arkadaş harcamalarını gizle",
+    "unhideFriend": "Arkadaş harcamalarını göster",
     "starGroup": "Yıldızla",
     "unstarGroup": "Yıldızı kaldır",
-    "starFriend": "Arkadaş defterini yıldızla",
-    "unstarFriend": "Arkadaş defterinin yıldızını kaldır",
+    "starFriend": "Arkadaş harcamalarını yıldızla",
+    "unstarFriend": "Arkadaş harcamalarından yıldızı kaldır",
     "groupActions": "Grup işlemleri",
-    "friendActions": "Arkadaş defteri işlemleri",
+    "friendActions": "Arkadaş harcaması işlemleri",
     "archiveGroup": "Grubu arşivle",
     "unarchiveGroup": "Arşivden çıkar",
     "archiveSuccess": "Grup arşivlendi.",
@@ -245,9 +249,11 @@
         "newGroupFormat": "Yeni grup · {currency}",
         "existingGroupFormat": "Mevcut grup · birleştirildi",
         "summaryLabel": "Özet",
-        "sourceParticipants": "{count} kaynak katılımcı",
+        "sourceParticipants_one": "{count} kaynak katılımcı",
+        "sourceParticipants_other": "{count} kaynak katılımcı",
         "participantBreakdown": "{linked} bağlı · {email} e-posta daveti · {link} bağlantı daveti · {unlinked} bağlı değil",
-        "expenseCount": "{count} harcama oluşturulacak",
+        "expenseCount_one": "{count} masraf oluşturulacak",
+        "expenseCount_other": "{count} masraf oluşturulacak",
         "sourceName": "Kaynak: {name}",
         "footer": "Her kaynak katılımcı ve harcama içe aktarılacak. Davetler, grup oluşturulduktan sonra gönderilir/oluşturulur.",
         "importingButton": "İçe aktarılıyor…",
@@ -272,7 +278,8 @@
         "existingGroup": "Mevcut grup",
         "loading": "Yükleniyor…",
         "noAdminGroups": "Henüz hiçbir grubu yönetmiyorsunuz.",
-        "memberCount": "{count} üye"
+        "memberCount_one": "{count} üye",
+        "memberCount_other": "{count} üye"
       },
       "Done": {
         "importComplete": "İçe aktarma tamamlandı",
@@ -440,16 +447,17 @@
       "description": "Arkadaşlar, aile veya oda arkadaşlarıyla paylaşılan harcamaları takip edin."
     },
     "groups": "Gruplar",
-    "friends": "Arkadaş defterleri",
+    "friends": "Arkadaşlar",
     "createExpense": "Masraf oluştur",
     "pending": "Beklemede",
     "scopePickerGroups": "Bir grup seçin",
-    "scopePickerFriends": "Bir arkadaş defteri seçin",
+    "scopePickerFriends": "Arkadaş seçin",
     "scopePickerEmpty": "Henüz grup yok",
-    "scopePickerMembers": "{count} üye",
+    "scopePickerMembers_one": "{count} üye",
+    "scopePickerMembers_other": "{count} üye",
     "createFriendLedgerCard": {
       "description": "Belirli bir kişiyle birebir hesaplaşın.",
-      "title": "Arkadaş defteri oluştur"
+      "title": "Arkadaşla ortak harcamaları takip et"
     },
     "importGroup": "Grubu içe aktar",
     "exportDescription": "Grup harcamalarını JSON veya CSV olarak indirin."
@@ -473,7 +481,7 @@
     "Participants": {
       "title": "Katılımcılar",
       "description": "Her katılımcı için bir ad girin.",
-      "protectedParticipant": "Bu katılımcı masraflara dahil olduğundan kaldırılamaz.",
+      "protectedParticipant": "Bu katılımcı bir masrafa dahil olduğu için kaldırılamaz.",
       "new": "Yeni",
       "add": "Katılımcı ekle",
       "John": "Ahmet",
@@ -517,8 +525,8 @@
       "edit": "Geliri düzenle",
       "TitleField": {
         "label": "Gelir başlığı",
-        "placeholder": "Pazartesi akşamı restoran",
-        "description": "Gelir için bir açıklama girin."
+        "placeholder": "Maaş veya para iadesi",
+        "description": "Gelirin nereden geldiğini açıklayın."
       },
       "DateField": {
         "label": "Gelir tarihi",
@@ -527,11 +535,11 @@
       "categoryFieldDescription": "Gelir kategorisini seçin.",
       "paidByField": {
         "label": "Geliri alan",
-        "description": "Geliri alan katılımcıyı seçin."
+        "description": "Parayı kimin aldığını ve her kişinin ne kadar aldığını seçin."
       },
       "paidFor": {
-        "title": "Gelirin alındığı kişiler",
-        "description": "Gelirin kim(ler) için alındığını seçin."
+        "title": "Paylaştırılan",
+        "description": "Bu geliri paylaşan katılımcıları seçin."
       },
       "splitModeDescription": "Gelirin nasıl paylaştırılacağını seçin.",
       "attachDescription": "Gelire makbuz ekleyin ve görüntüleyin.",
@@ -555,12 +563,12 @@
       "categoryFieldDescription": "Masraf kategorisini seçin.",
       "paidByField": {
         "label": "Ödeyen",
-        "description": "Masrafı ödeyen katılımcıyı seçin.",
-        "placeholder": "Bir katılımcı seçin"
+        "placeholder": "Bir katılımcı seçin",
+        "description": "Parayı kimin sağladığını ve her ödeyenin ne kadar ödediğini seçin."
       },
       "paidFor": {
-        "title": "Masraf kimin için ödendi",
-        "description": "Masrafın kim(ler) için ödendiğini seçin."
+        "title": "Arasında bölüştürülen",
+        "description": "Bu masrafı paylaşan katılımcıları seçin."
       },
       "splitModeDescription": "Masrafın nasıl paylaştırılacağını seçin.",
       "attachDescription": "Masrafa makbuz ekleyin ve görüntüleyin.",
@@ -576,8 +584,8 @@
         "weekly": "Haftalık",
         "monthly": "Aylık"
       },
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Kopya oluştur: {title}",
+      "editTitle": "Düzenle: {title}"
     },
     "amountField": {
       "label": "Tutar",
@@ -615,7 +623,7 @@
       }
     },
     "isReimbursementField": {
-      "label": "Bu bir geri ödeme"
+      "label": "Bu bir borç kapatma ödemesidir"
     },
     "categoryField": {
       "label": "Kategori"
@@ -638,6 +646,7 @@
       "title": "Bu masraf silinsin mi?",
       "description": "Bu masrafı gerçekten silmek istiyor musunuz? Bu işlem geri alınamaz.",
       "yes": "Evet",
+      "deleting": "Siliniyor…",
       "cancel": "İptal"
     },
     "attachDocuments": "Belge ekle",
@@ -646,7 +655,6 @@
     "save": "Kaydet",
     "saving": "Kaydediliyor…",
     "cancel": "İptal",
-    "reimbursement": "Geri ödeme",
     "conversionUnavailable": "Gider başına farklı bir para birimi ayarlamak ve tutarları dönüştürmek için grup için özel olmayan bir para birimi seçin.",
     "conversionRateField": {
       "useApi": "Frankfurter'dan kurları kullan",
@@ -670,6 +678,7 @@
     "participant": {
       "pending": "(davet edildi)"
     },
+    "reimbursement": "Borç kapatma ödemesi",
     "readOnlyNotice": "Bu grup arşivlendi. Gider salt okunur olarak gösteriliyor.",
     "PaidBySplitModeField": {
       "label": "Ödeyen paylaşım modu"
@@ -698,6 +707,7 @@
     "paidBySectionSingle": "Tek",
     "paidBySectionMultiple": "Birden çok ödeyici",
     "paidForSection": "Katılımcılar arasında bölme",
+    "splitOptionAria": "Bölüşüm: {title}",
     "paidByOptionSinglePayerHelper": "Bir kişi tüm harcamayı karşılar",
     "paidByOptionEvenlyHelper": "Herkes eşit pay öder",
     "paidByOptionBySharesHelper": "Herkes ağırlıklı pay öder",
@@ -710,24 +720,25 @@
     "convertedAmountField": {
       "label": "Dönüştürülen tutar"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Kalem bazında",
+    "paidForOptionItemizedHelper": "Her katılımcının payını masraftaki ayrı kalemlerden hesaplayın.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Kalemler",
+      "description": "Masrafı tam olarak bölüştürmek veya herhangi bir bölüşüm yönteminde belge olarak saklamak için kalem ekleyin.",
+      "addItem": "Kalem ekle",
+      "empty": "Henüz kalem yok. Başlamak için “Kalem ekle”ye tıklayın.",
+      "allMembers": "Tüm katılımcılar",
+      "noMembers": "Katılımcı yok",
+      "other": "Diğer (hesaba katılmayan)",
+      "derivedBadge": "Hesaplanan",
+      "errorExceedsAmount": "Kalemlerin toplamı masraf tutarını aşıyor.",
+      "actionEdit": "Düzenle",
+      "actionDelete": "Sil",
+      "total": "Kalem toplamı",
+      "requiredForItemized": "Kalem bazlı bölüşüm için en az bir kalem ekleyin.",
+      "participantsSummary_one": "{count} katılımcı",
+      "participantsSummary_other": "{count} katılımcı",
+      "modalTitle": "Kalem katılımcıları",
       "columnItem": "Kalem",
       "columnCost": "Tutar",
       "columnQuantity": "Adet",
@@ -739,19 +750,19 @@
       "splitByPercentageLabel": "Yüzdeye göre böl",
       "splitByAmountLabel": "Tutara göre böl",
       "switchToItemizedTitle": "Kalemlere göre bölmeye geçilsin mi?",
-      "switchToItemizedDescription": "Kalem katılımcılarını düzenlemek Ödenen kişileri Kalemlere göre olarak değiştirir ve yapılandırdığınız ödenen kişiler bölüşümünü değiştirir.",
+      "switchToItemizedDescription": "Kalem katılımcılarını düzenlemek, Arasında bölüştürülen seçeneğini Kalem bazında olarak değiştirir ve yapılandırdığınız katılımcı bölüşümünün yerini alır.",
       "switchToItemizedConfirm": "Kalemlere göre geç",
       "showItems": "Öğeleri göster",
       "hideItems": "Öğeleri gizle"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Bölüşüm yöntemi değiştirilsin mi?",
+      "description": "{mode} yöntemine geçildiğinde kalemler yalnızca belge olarak saklanır. Kalem başına tüm katılımcı atamaları kaldırılır.",
+      "cancel": "İptal",
+      "confirm": "Değiştir"
     },
-    "paidForItemizedEntryHint": "Kalem bazlı “adına ödendi” paylaşımını kullanmak için katılımcıları bir kalem satırından düzenleyin.",
-    "paidForItemizedActiveHint": "Kalem bazlı “adına ödendi” paylaşımı etkin. Bu paylaşımı değiştirmek için Kalemler kartından kalem katılımcılarını düzenleyin.",
+    "paidForItemizedEntryHint": "Kalem bazında bölüştürmek için bir kalem satırındaki katılımcıları düzenleyin.",
+    "paidForItemizedActiveHint": "Kalem bazlı bölüşüm etkin. Değiştirmek için Kalemler kartından kalem katılımcılarını düzenleyin.",
     "DefaultSplit": {
       "savedAsDefault": "Varsayılan olarak kaydedildi",
       "heading": "Varsayılan bölünme",
@@ -761,6 +772,9 @@
     "scanReceipt": "Makbuzu yapay zekâ ile tara"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Belgeyi sil",
+    "document": "Belge",
+    "close": "Kapat",
     "TooBigToast": {
       "title": "Dosya çok büyük",
       "description": "Yükleyebileceğiniz maksimum dosya boyutu {maxSize}. Dosyanız {size} boyutunda."
@@ -806,11 +820,11 @@
   },
   "Balances": {
     "title": "Bakiyeler",
-    "description": "Her katılımcının ödediği veya kendisi için ödenen tutar burada gösterilir.",
+    "description": "Her katılımcının net bakiyesini görün.",
     "Reimbursements": {
-      "title": "Önerilen geri ödemeler",
-      "description": "Katılımcılar arasındaki en uygun geri ödeme önerileri aşağıdadır.",
-      "noImbursements": "Görünüşe göre grubunuzun hiçbir geri ödemeye ihtiyacı yok 😁",
+      "title": "Önerilen borç kapatma ödemeleri",
+      "description": "Bakiyeleri mümkün olan en az transferle kapatmak için bu ödemeleri kullanın.",
+      "noImbursements": "Gruptaki herkesin hesabı kapandı 😁",
       "owes": "<strong>{from}</strong>, <strong>{to}</strong>'ya borçlu",
       "markAsPaid": "Ödendi olarak işaretle",
       "markAsPaidAria": "{from} tarafından {to} için {amount} ödemesini yapıldı olarak işaretle"
@@ -834,7 +848,7 @@
       "label": "Görünüm",
       "title": "Bakiyeleri nasıl görmek istediğinizi seçin",
       "simple": "Basit",
-      "simpleDescription": "Kimin kime borcu var ve ödemeyi tamamla.",
+      "simpleDescription": "Kimin kime borcu olduğunu görün ve borç kapatma ödemelerini kaydedin.",
       "visual": "Görsel",
       "visualDescription": "Bakiye ayrıntıları ve grafikler."
     },
@@ -916,12 +930,12 @@
       "lastMonth": "Geçen ay",
       "earlierThisYear": "Bu yılın başlarında",
       "lastYear": "Geçen yıl",
-      "older": "Daha eski"
+      "older": "Daha eski etkinlikler"
     }
   },
   "Information": {
     "title": "Bilgi",
-    "description": "Grup katılımcıları için yararlı olabilecek bilgileri buraya ekleyebilirsiniz.",
+    "description": "Grubun katılımcılarına yararlı olabilecek bilgiler ekleyin.",
     "empty": "Henüz grup bilgisi bulunmuyor."
   },
   "Settings": {
@@ -940,12 +954,12 @@
     "max50": "En fazla 50 karakter girin.",
     "duplicateParticipantName": "Başka bir katılımcı zaten bu ada sahip.",
     "titleRequired": "Lütfen bir başlık girin.",
-    "invalidNumber": "Geçersiz numara.",
+    "invalidNumber": "Geçerli bir sayı girin.",
     "amountRequired": "Bir tutar girmelisiniz.",
     "amountNotZero": "Tutar sıfır olamaz.",
     "amountTenMillion": "Tutar 10.000.000'dan düşük olmalı.",
     "paidByRequired": "Bir katılımcı seçmelisiniz.",
-    "paidForMin1": "Masraf en az bir katılımcı için ödenmiş olmalıdır.",
+    "paidForMin1": "Masraf en az bir katılımcı arasında bölüştürülmelidir.",
     "noZeroShares": "Tüm paylar 0'dan büyük olmalıdır.",
     "amountSum": "Tutarların toplamı masraf tutarına eşit olmalıdır.",
     "percentageSum": "Yüzdelerin toplamı 100 olmalıdır.",
@@ -1391,7 +1405,7 @@
           "description": "{email} adresine gönderilen davet iptal edilsin mi? Bakiyelerin önce kapatılması gerekir.",
           "warning": {
             "title": "Bu davetin kapatılmamış bakiyeleri var",
-            "description": "Aşağıdaki kutuyu işaretleyerek bu davetliyi içeren her ayak başına bir kapatma geri ödeme gideri oluşturun. Davet yalnızca bakiyeler kapatıldıktan sonra iptal edilebilir."
+            "description": "Bu davetliyle ilgili her bakiye için bir borç kapatma ödemesi oluşturmak üzere aşağıdaki seçeneği işaretleyin. Davet ancak bu bakiyeler kapatıldıktan sonra iptal edilebilir."
           },
           "checkbox": "İptalden önce davetlinin bakiyelerini kapat"
         }
@@ -1416,9 +1430,9 @@
         "description": "{name} kişisini bu gruptan çıkarılsın mı? Kapatılmamış bakiyeleri var — aşağıdaki kutuyu işaretleyerek çıkarmadan önce bunları otomatik olarak kapatın.",
         "warning": {
           "title": "Bu üyenin kapatılmamış bakiyeleri var",
-          "description": "Kapatmadan çıkarmak, bakiyeleri defterde süresiz olarak bırakacaktır. Aşağıdaki kutuyu işaretleyerek bu üyeyi içeren her ayak başına bir geri ödeme gideri oluşturun veya kapatmadan çıkarıp bakiyeleri manuel olarak halledin."
+          "description": "Bakiyeleri kapatmadan kaldırmak, bu bakiyelerin grupta süresiz kalmasına neden olur. Bu üyeyle ilgili her bakiye için bir borç kapatma ödemesi oluşturmak üzere aşağıdaki seçeneği işaretleyin veya üyeyi kaldırıp bakiyeleri elle kapatın."
         },
-        "checkbox": "Çıkarmadan önce kapatma geri ödemesi oluştur"
+        "checkbox": "Kaldırmadan önce bu üyenin bakiyelerini kapat"
       }
     },
     "leave": {
@@ -1437,7 +1451,7 @@
         },
         "unsettled": {
           "title": "Kapatılmamış bakiyeleriniz var",
-          "description": "Zorla ayrılmak, sizi ilgilendiren her ayak için otomatik olarak geri ödeme masrafı oluşturur, böylece defter dengede kalır. Diğer bakiyeler olduğu gibi kalır."
+          "description": "Ayrılmadan önce sizinle ilgili bakiyeler için borç kapatma ödemeleri oluşturulur. Diğer katılımcıların bakiyeleri değişmez."
         }
       },
       "cancel": "İptal",
@@ -1460,11 +1474,11 @@
       "idHint": "Defter katılımcı kimliği: {id}",
       "linkDialog": {
         "title": "Bağlanmamış katılımcıyı bağla",
-        "description": "{displayName} kişisinin bağlanacağı mevcut üyeyi seçin. Hedef, bu katılımcıyla bir masraf ayağının karşı tarafında zaten bulunmamalıdır.",
+        "description": "{displayName} ile bağlanacak mevcut üyeyi seçin. Bu üyenin söz konusu katılımcıyla zaten bir masraf bakiyesi olmamalıdır.",
         "membersGroup": "Üyeler",
         "cancel": "İptal",
         "confirm": "Bağla",
-        "noCandidates": "Uyumlu üye bulunamadı. Bu genellikle bağlanmamış katılımcının her diğer üyeyle bir masraf ayağının her iki tarafında olduğu anlamına gelir — içe aktarmanın yeniden yapılması veya masrafların önce ayarlanması gerekir.",
+        "noCandidates": "Uyumlu üye bulunamadı. Genellikle bu, bağlantısız katılımcının diğer tüm üyelerle çakışan masraf bakiyeleri olduğu anlamına gelir. Grubu yeniden aktarın veya önce masrafları düzenleyin.",
         "pendingLabel": "bekliyor",
         "pendingHint": "Bekleyen bir davete bağlamak, bu yalnızca ad girişini davetliyle birleştirir. Davetli kendi satırını korur; birleştirilen referanslar, kabul ettiklerinde artık onun üzerinden çözümlenir.",
         "membersGroupWithPending": "Üyeler ve bekleyen davetler",
@@ -1520,7 +1534,7 @@
         "items": "Kalemler",
         "documents": "Ekler",
         "recurrence": "Tekrarlama",
-        "reimbursement": "Geri ödeme",
+        "reimbursement": "Borç kapatma ödemesi",
         "conversionSource": "Dönüşüm kaynağı",
         "conversionRate": "Döviz kuru"
       }
@@ -1540,7 +1554,7 @@
     "member": {
       "left": "{participant} gruptan ayrıldı",
       "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı",
-      "roleChanged": "{participant}, {target} rolünü {previousRole} olarak {nextRole} olarak değiştirdi"
+      "roleChanged": "{participant}, {target} kullanıcısının rolünü {previousRole} iken {nextRole} olarak değiştirdi"
     },
     "invitation": {
       "created": "{participant}, {target} kullanıcısını davet etti",
@@ -1550,10 +1564,11 @@
     },
     "fallback": "Bir aktivite kaydedildi",
     "unknownActor": "Birisi",
+    "openExpense": "Harcamayı aç",
     "import": {
-      "imported": "{participant} {count} gider içe aktardı"
-    },
-    "openExpense": "Harcamayı aç"
+      "imported_one": "{participant}, {count} masraf aktardı",
+      "imported_other": "{participant}, {count} masraf aktardı"
+    }
   },
   "OfflineBanner": {
     "message": "Çevrimdışısınız. Şu an yapacağınız değişiklikler yeniden bağlanana kadar kaydedilmeyecek."
@@ -1593,38 +1608,43 @@
     "labels": {
       "group": "grup",
       "groupPlural": "grup",
-      "friendLedger": "arkadaş defteri",
-      "friendLedgerPlural": "arkadaş defteri"
+      "friendLedger": "arkadaş",
+      "friendLedgerPlural": "arkadaşlar"
     },
     "actions": {
       "createGroup": "Grup oluştur",
-      "createFriendLedger": "Arkadaş defteri oluştur",
+      "createFriendLedger": "Arkadaşla ortak harcamaları takip et",
       "showHidden": "Gizli grupları göster"
     }
   },
   "Friends": {
-    "title": "Arkadaş defteri oluştur",
+    "title": "Arkadaşla ortak harcamaları takip et",
     "peerFriendsTab": "Arkadaş listesi",
     "peerEmailTab": "E-posta",
     "peerLinkTab": "Paylaşılabilir bağlantı",
-    "alreadyHasLedger": "zaten bir arkadaş defteri var",
+    "friendsSection": "Arkadaşlar",
+    "pendingInvitationsSection": "Bekleyen davetler",
+    "activeFriendExpensesSection": "Etkin arkadaş harcamaları",
+    "alreadyInvited": "(zaten davet edildi)",
+    "alreadyHasLedger": "(sizinle zaten ortak harcamaları var)",
     "inviteSent": "Davet gönderildi. Arkadaşınız Spliit Cloud'e katıldığında eklenecek.",
     "inviteLinkTitle": "Bu bağlantıyı paylaş",
-    "inviteLinkDescription": "Onları deftere eklemek için bu bağlantıyı arkadaşınızla paylaşın.",
+    "inviteLinkDescription": "Arkadaşınızın ortak harcamalarınıza katılabilmesi için bu bağlantıyı paylaşın.",
     "copy": "Kopyala",
     "share": "Paylaş",
-    "linkHelp": "Arkadaşınızın bu deftere katılmak için kullanabileceği paylaşılabilir bir bağlantı oluşturun.",
+    "linkHelp": "Arkadaşınızın katılmak için kullanabileceği paylaşılabilir bir bağlantı oluşturun.",
     "emailLabel": "Arkadaşın e-postası",
     "temporaryNameLabel": "Görünen ad",
     "temporaryNameHelp": "Davet ettiğiniz kişi için bir ad girin.",
     "friendsEmpty": "E-postalarını girerek bir arkadaş ekleyin veya davet etmek için bir bağlantı paylaşın.",
     "infoLabel": "Bilgi (isteğe bağlı)",
-    "infoPlaceholder": "'Oda arkadaşı harcamaları' gibi bağlam ekleyin"
+    "infoPlaceholder": "'Oda arkadaşı harcamaları' gibi bağlam ekleyin",
+    "createError": "Arkadaşla ortak harcamalar oluşturulamadı"
   },
   "BulkCategorize": {
     "title": "Toplu kategorilendirme",
     "calibrationTitle": "Adım 1 — Kalibrasyon",
-    "calibrationDescription": "Onayladığınız her örnek, yapay zekanın bir sonraki turu için temel doğru olur. Tek bir turdan sonra hazır olabilir ya da daha fazla örnek isteyebilir.",
+    "calibrationDescription": "Onayladığınız her örnek, AI’ın sonraki önerilerini geliştirmesine yardımcı olur. Tek turdan sonra hazır olabilir veya daha fazla örnek isteyebilir.",
     "roundCount": "Tur {round} / {max}",
     "confidence": {
       "high": "Yüksek",
@@ -1643,10 +1663,13 @@
     "previewDescription": "İstediğiniz satırı düzenleyin, ardından kaydedin. Güven düzeyi, modelin en az emin olduğu satırları işaretler.",
     "previewHint": "{total} adaydan {shown} tanesi gösteriliyor.",
     "removeAction": "Atla",
-    "targetExceedsCap": "Hedef kümesinde çok fazla harcama var ({count}). Tarihleri daraltın veya gruplar halinde işleyin.",
-    "saveAll": "{count} değişikliği kaydet",
+    "targetExceedsCap_one": "Bu toplu işlemde {count} masraf işlenemiyor. Tarih aralığını daraltıp yeniden deneyin.",
+    "targetExceedsCap_other": "İşlenecek çok fazla masraf var ({count}). Tarih aralığını daraltın veya masrafları gruplar hâlinde işleyin.",
+    "saveAll_one": "{count} değişikliği kaydet",
+    "saveAll_other": "{count} değişikliği kaydet",
     "saving": "Kaydediliyor…",
-    "saved": "{count} harcama yeniden kategorilendirildi.",
+    "saved_one": "{count} masraf yeniden kategorilendirildi.",
+    "saved_other": "{count} masraf yeniden kategorilendirildi.",
     "applyError": "Toplu kategori güncellemesi kaydedilemedi: {message}",
     "noCandidates": "Kategorilendirilecek harcama yok.",
     "adminsOnly": "Toplu kategorilendirmeyi yalnızca grup yöneticileri çalıştırabilir.",
@@ -1657,10 +1680,13 @@
     "previewError": "Önizleme oluşturulamadı: {message}",
     "introTitle": "Nasıl çalışır",
     "loadingCandidates": "Kategorilendirilmemiş harcamalar kontrol ediliyor…",
-    "introDescription": "İncelenmeye hazır {count} kategorilendirilmemiş harcama var.",
-    "introStepLook": "AI, en yararlı örnekleri bulmak için {count} harcamaya kadar geniş bir havuzu inceler.",
-    "introStepReview": "AI bu grubun kategorilerini öğrenmesi için {count} seçili örneği inceler ve düzeltirsiniz.",
-    "introStepPreview": "AI yeterli sinyale sahip olduğunda, tam bir inceleme hazırlar ve emin olmadığı harcamaları kategorilendirilmemiş olarak bırakır.",
+    "introDescription_one": "İncelenmeye hazır {count} kategorisiz masraf var.",
+    "introDescription_other": "İncelenmeye hazır {count} kategorisiz masraf var.",
+    "introStepLook_one": "AI, en yararlı örneği bulmak için en fazla {count} masrafı inceler.",
+    "introStepLook_other": "AI, en yararlı örnekleri bulmak için en fazla {count} masrafı inceler.",
+    "introStepReview_one": "AI bu grubun kategorilerini öğrensin diye seçilen en fazla {count} örneği inceleyip düzeltirsiniz.",
+    "introStepReview_other": "AI bu grubun kategorilerini öğrensin diye seçilen en fazla {count} örneği inceleyip düzeltirsiniz.",
+    "introStepPreview": "AI yeterli örneğe ulaştığında tam bir inceleme hazırlar ve emin olmadığı masrafları kategorisiz bırakır.",
     "startCalibration": "Kalibrasyonu başlat",
     "calibrationStartHint": "AI, sizin incelemeniz için yararlı örnekler seçiyor.",
     "calibrationReady": "AI, tam incelemeyi hazırlamak için yeterli geri bildirime sahip.",
@@ -1674,7 +1700,8 @@
     "generatingPreview": "Öneriler hazırlanıyor…",
     "noSuggestions": "AI tüm harcamaları kategorilendirilmemiş olarak bıraktı. Daha fazla kalibrasyondan sonra tekrar deneyebilirsiniz.",
     "previewSummary": "AI, {total} harcamadan {suggested} tanesi için kategori önerdi.",
-    "leftUncategorized": "{count} harcama, AI yeterince emin olmadığı için kategorilendirilmemiş olarak bırakıldı.",
+    "leftUncategorized_one": "AI yeterince emin olmadığı için {count} masraf kategorisiz bırakıldı.",
+    "leftUncategorized_other": "AI yeterince emin olmadığı için {count} masraf kategorisiz bırakıldı.",
     "retryPreview": "Önizlemeyi tekrar dene",
     "doneTitle": "Kategoriler kaydedildi",
     "expenseColumn": "Harcama",
@@ -1686,10 +1713,11 @@
     "category": "Kategori",
     "date": "Tarih",
     "paidBy": "Ödeyen",
-    "paidFor": "Masraf kimin için ödendi",
+    "paidFor": "Arasında bölüştürülen",
     "yourBalance": "Bakiyeniz",
     "notes": "Notlar",
-    "attachments": "Ekler ({count})",
+    "attachments_one": "Ek ({count})",
+    "attachments_other": "Ekler ({count})",
     "edit": "Masrafı düzenle",
     "makeCopy": "Kopya oluştur"
   },
@@ -1702,10 +1730,21 @@
     "create": "Oluştur",
     "edit": "Detayları düzenle",
     "creating": "Oluşturuluyor…",
-    "successToast": "Geri ödeme kaydedildi"
+    "successToast": "Borç kapatma ödemesi kaydedildi"
   },
   "Participants": {
     "search": "Katılımcı ara...",
     "noParticipant": "Katılımcı bulunamadı"
+  },
+  "Common": {
+    "close": "Kapat",
+    "previousSlide": "Önceki slayt",
+    "nextSlide": "Sonraki slayt"
+  },
+  "Theme": {
+    "toggle": "Temayı değiştir",
+    "light": "Açık",
+    "dark": "Koyu",
+    "system": "Sistem varsayılanı"
   }
 }

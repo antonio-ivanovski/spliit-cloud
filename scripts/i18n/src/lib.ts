@@ -85,6 +85,12 @@ import {
   readMessagesFile,
   readStagedBlob,
 } from './fs-helpers'
+import {
+  expectedKeysForLocale,
+  getPluralFamilies,
+  isAllowedLocaleKey,
+  validateMessageData,
+} from './message-validation'
 import { flattenKeys, getAt } from './object-path'
 
 export async function diffMessages(
@@ -143,16 +149,20 @@ export async function diffMessages(
     targetLocales.map(async (locale) => {
       const data = await readMessagesFile(locale)
       const presentKeys = new Set(flattenKeys(data))
+      const expectedKeys = new Set(expectedKeysForLocale(newKeys, locale))
+      const relevantChangedKeys = changedKeys.filter((key) =>
+        expectedKeys.has(key),
+      )
 
       const missing: string[] = []
       const present: string[] = []
-      for (const key of changedKeys) {
+      for (const key of relevantChangedKeys) {
         if (presentKeys.has(key)) present.push(key)
         else missing.push(key)
       }
       translationWork[locale] = { missing, present }
 
-      const legacyCount = allEnKeys.filter(
+      const legacyCount = expectedKeysForLocale(allEnKeys, locale).filter(
         (k) => !presentKeys.has(k) && !changedKeySet.has(k),
       ).length
       legacyMissing[locale] = legacyCount
@@ -167,29 +177,49 @@ export async function diffMessages(
   }
 }
 
-export async function validateAllMessages(): Promise<ValidationResult> {
+export async function validateAllMessages(
+  targetLocale?: Locale,
+): Promise<ValidationResult> {
   const errors: string[] = []
   const sourceData = await readMessagesFile('en-US')
-  const sourceKeys = new Set(flattenKeys(sourceData))
+  const sourceKeyList = flattenKeys(sourceData)
+  const sourceKeys = new Set(sourceKeyList)
+  const sourceFamilies = getPluralFamilies(sourceKeyList)
 
   await Promise.all(
-    locales.map(async (locale) => {
-      try {
-        const data = await readMessagesFile(locale)
-        const localeKeys = flattenKeys(data)
-        for (const key of localeKeys) {
-          if (!sourceKeys.has(key)) {
-            errors.push(
-              `${LOCALE_TO_FILE[locale]}: orphan key "${key}" — not present in en-US`,
-            )
+    locales
+      .filter(
+        (locale) =>
+          targetLocale === undefined ||
+          locale === 'en-US' ||
+          locale === targetLocale,
+      )
+      .map(async (locale) => {
+        try {
+          const data = await readMessagesFile(locale)
+          const localeKeys = flattenKeys(data)
+          for (const key of localeKeys) {
+            if (!isAllowedLocaleKey(key, sourceKeys, sourceFamilies)) {
+              errors.push(
+                `${LOCALE_TO_FILE[locale]}: orphan key "${key}" — not present in en-US`,
+              )
+            }
           }
+          for (const error of validateMessageData(
+            locale,
+            data,
+            sourceData,
+            sourceKeyList,
+          )) {
+            errors.push(`${LOCALE_TO_FILE[locale]}: ${error}`)
+          }
+        } catch (e) {
+          errors.push(`${locale}: ${(e as Error).message}`)
         }
-      } catch (e) {
-        errors.push(`${locale}: ${(e as Error).message}`)
-      }
-    }),
+      }),
   )
 
+  errors.sort()
   return { valid: errors.length === 0, errors }
 }
 
@@ -197,7 +227,7 @@ export async function auditMessages(
   opts: AuditOptions = {},
 ): Promise<AuditResult> {
   const [valResult, enData] = await Promise.all([
-    validateAllMessages(),
+    validateAllMessages(opts.locale),
     readMessagesFile('en-US'),
   ])
 
@@ -221,18 +251,20 @@ export async function auditMessages(
     targetLocales.map(async (locale) => {
       const data = await readMessagesFile(locale)
       const presentSet = new Set(flattenKeys(data))
-      let missingKeys = enKeys.filter((k) => !presentSet.has(k))
+      const expectedKeys = expectedKeysForLocale(enKeys, locale)
+      let missingKeys = expectedKeys.filter((k) => !presentSet.has(k))
       if (opts.changesOnly) {
         missingKeys = missingKeys.filter((k) => introducedSet.has(k))
       }
-      const presentCount = totalKeys - missingKeys.length
+      const localeTotal = expectedKeys.length
+      const presentCount = localeTotal - missingKeys.length
       localesAudit[locale] = {
         locale,
-        total: totalKeys,
+        total: localeTotal,
         present: presentCount,
         missing: missingKeys.length,
         missingKeys,
-        coverage: totalKeys === 0 ? 1 : presentCount / totalKeys,
+        coverage: localeTotal === 0 ? 1 : presentCount / localeTotal,
       }
     }),
   )
@@ -271,7 +303,9 @@ export async function missingKeysByLocale(): Promise<Record<Locale, string[]>> {
       .map(async (locale) => {
         const data = await readMessagesFile(locale)
         const present = new Set(flattenKeys(data))
-        result[locale] = enKeys.filter((k) => !present.has(k))
+        result[locale] = expectedKeysForLocale(enKeys, locale).filter(
+          (k) => !present.has(k),
+        )
       }),
   )
   return result

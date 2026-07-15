@@ -12,28 +12,28 @@
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Групи й синхронізація",
+        "description": "Створюйте групи для подорожей, подій і подарунків та синхронізуйте їх між пристроями."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Витрати й чеки",
+        "description": "Додавайте витрати й фото чеків та створюйте щоденні, щотижневі або щомісячні регулярні платежі."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Гнучкий розподіл",
+        "description": "Розподіляйте за відсотками, частками, точними сумами або порівну."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Сальдо",
+        "description": "Переглядайте, хто за що заплатив, і скорочуйте кількість переказів між учасниками."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Категорії",
+        "description": "Призначайте категорії, щоб спільні витрати залишалися наочними."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Облікові записи",
+        "description": "Увійдіть один раз, щоб захистити дані й зберегти доступ до історії витрат."
       }
     },
     "welcomeBack": "З поверненням, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Вийти",
     "account": "Обліковий запис",
     "accountSettings": "Налаштування облікового запису",
-    "back": "Назад"
+    "back": "Назад",
+    "menu": "Меню"
   },
   "Footer": {
     "madeIn": "Створено спільнотою open-source з любов'ю ❤️",
@@ -122,7 +123,10 @@
       "allCategories": "Усі категорії",
       "allParticipants": "Усі учасники",
       "allCurrencies": "Усі валюти",
-      "nSelected": "{count} вибрано",
+      "nSelected_one": "Вибрано: {count}",
+      "nSelected_few": "Вибрано: {count}",
+      "nSelected_many": "Вибрано: {count}",
+      "nSelected_other": "Вибрано: {count}",
       "removeFilter": "Видалити фільтр",
       "settlementsHidden": "Розрахунки приховано",
       "title": "Фільтри"
@@ -139,8 +143,11 @@
     "notInvolved": "Ви не берете участі",
     "settlementBadge": "Розрахунок",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+ ще {count}",
+      "more_few": "+ ще {count}",
+      "more_many": "+ ще {count}",
+      "more_other": "+ ще {count}",
+      "title": "Позиції",
       "participants": "{names}"
     },
     "copyToast": "Копіювання витрати розпочато. Наявні дані витрати будуть використані для створення нової."
@@ -207,7 +214,8 @@
     },
     "NotFound": {
       "text": "Цієї групи не існує",
-      "link": "Перейти на головну"
+      "link": "Перейти на головну",
+      "lookingUp": "Пошук групи…"
     },
     "Unauthorized": {
       "title": "У вас немає доступу до цієї групи",
@@ -245,9 +253,15 @@
         "newGroupFormat": "Нова група · {currency}",
         "existingGroupFormat": "Існуюча група · об'єднано",
         "summaryLabel": "Підсумок",
-        "sourceParticipants": "{count} вихідних учасників",
+        "sourceParticipants_one": "{count} учасник у джерелі",
+        "sourceParticipants_few": "{count} учасники у джерелі",
+        "sourceParticipants_many": "{count} учасників у джерелі",
+        "sourceParticipants_other": "{count} учасників у джерелі",
         "participantBreakdown": "{linked} прив'язано · {email} запрошень email · {link} запрошень за посиланням · {unlinked} неприв'язано",
-        "expenseCount": "Буде створено {count} витрат",
+        "expenseCount_one": "Буде створено {count} витрату",
+        "expenseCount_few": "Буде створено {count} витрати",
+        "expenseCount_many": "Буде створено {count} витрат",
+        "expenseCount_other": "Буде створено {count} витрат",
         "sourceName": "Джерело: {name}",
         "footer": "Кожного вихідного учасника та витрату буде імпортовано. Запрошення надсилаються/генеруються після створення групи.",
         "importingButton": "Імпорт…",
@@ -272,7 +286,10 @@
         "existingGroup": "Існуюча група",
         "loading": "Завантаження…",
         "noAdminGroups": "Ви ще не керуєте жодною групою.",
-        "memberCount": "{count} учасників"
+        "memberCount_one": "{count} член групи",
+        "memberCount_few": "{count} члени групи",
+        "memberCount_many": "{count} членів групи",
+        "memberCount_other": "{count} членів групи"
       },
       "Done": {
         "importComplete": "Імпорт завершено",
@@ -442,7 +459,10 @@
     "scopePickerGroups": "Виберіть групу",
     "scopePickerFriends": "Виберіть книгу з другом",
     "scopePickerEmpty": "Поки немає груп",
-    "scopePickerMembers": "{count} учасник(ів)",
+    "scopePickerMembers_one": "{count} член групи",
+    "scopePickerMembers_few": "{count} члени групи",
+    "scopePickerMembers_many": "{count} членів групи",
+    "scopePickerMembers_other": "{count} членів групи",
     "createFriendLedgerCard": {
       "description": "Розрахуйтеся один на один з конкретною людиною.",
       "title": "Створити розрахунок з другом"
@@ -535,7 +555,7 @@
       },
       "paidFor": {
         "title": "Учасники",
-        "description": "Виберіть тих, між ким цей дохід буде розподілено"
+        "description": "Виберіть учасників, між якими розподіляється цей дохід."
       },
       "splitModeDescription": "Оберіть, як розділити дохід між учасниками",
       "attachDescription": "Перегляньте та прикріпіть чеки до доходу"
@@ -572,12 +592,12 @@
       },
       "paidFor": {
         "title": "Учасники",
-        "description": "Оберіть тих, між ким цю витрату буде розподілено. Якщо ця витрата - відшкодування учаснику (учасникам), виберіть тільки його (їх)."
+        "description": "Виберіть учасників, між якими розподіляється ця витрата."
       },
       "splitModeDescription": "Оберіть, як розділити витрату",
       "attachDescription": "Перегляньте та прикріпіть чеки до витрати",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Створити копію: {title}",
+      "editTitle": "Редагувати: {title}"
     },
     "amountField": {
       "label": "Сума",
@@ -635,7 +655,7 @@
       "customRate": "Використовується власний курс"
     },
     "isReimbursementField": {
-      "label": "Це відшкодування"
+      "label": "Це платіж для погашення боргу"
     },
     "categoryField": {
       "label": "Категорія"
@@ -661,6 +681,7 @@
       "title": "Видалити цю витрату?",
       "description": "Ви дійсно хочете видалити цю витрату? Ця дія не може бути скасована",
       "yes": "Так",
+      "deleting": "Видалення…",
       "cancel": "Скасувати"
     },
     "attachDocuments": "Прикріпити документи",
@@ -669,7 +690,7 @@
     "save": "Зберегти",
     "saving": "Збереження..",
     "cancel": "Скасувати",
-    "reimbursement": "Відшкодування",
+    "reimbursement": "Платіж для погашення боргу",
     "readOnlyNotice": "Цю групу заархівовано. Витрата відображається лише для читання.",
     "PaidBySplitModeField": {
       "label": "Режим поділу платника"
@@ -698,6 +719,7 @@
     "paidBySectionSingle": "Один",
     "paidBySectionMultiple": "Кілька платників",
     "paidForSection": "Розділити між учасниками",
+    "splitOptionAria": "Розподіл: {title}",
     "paidByOptionSinglePayerHelper": "Одна особа покриває всю витрату",
     "paidByOptionEvenlyHelper": "Кожен платить рівну частку",
     "paidByOptionBySharesHelper": "Кожен платить зважену частку",
@@ -713,21 +735,24 @@
     "paidForOptionItemized": "Itemized",
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
+      "title": "Позиції",
+      "description": "Додайте позиції, щоб точно розподілити витрату або зберегти їх як пояснення за будь-якого способу розподілу.",
+      "addItem": "Додати позицію",
+      "empty": "Позицій ще немає. Виберіть «Додати позицію», щоб почати.",
       "allMembers": "All members",
       "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "other": "Інше (не враховано)",
+      "derivedBadge": "Обчислено",
+      "errorExceedsAmount": "Сума позицій перевищує суму витрати.",
+      "actionEdit": "Редагувати",
+      "actionDelete": "Видалити",
+      "total": "Сума позицій",
+      "requiredForItemized": "Додайте принаймні одну позицію для розподілу за позиціями.",
+      "participantsSummary_one": "{count} учасник",
+      "participantsSummary_few": "{count} учасники",
+      "participantsSummary_many": "{count} учасників",
+      "participantsSummary_other": "{count} учасників",
+      "modalTitle": "Учасники позиції",
       "columnItem": "Позиція",
       "columnCost": "Вартість",
       "columnQuantity": "К-сть",
@@ -745,10 +770,10 @@
       "hideItems": "Сховати позиції"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Змінити спосіб розподілу?",
+      "description": "Після переходу на {mode} позиції залишаться лише як пояснення. Усі призначення учасників за позиціями буде видалено.",
+      "cancel": "Скасувати",
+      "confirm": "Перейти"
     },
     "paidForItemizedEntryHint": "Щоб використовувати розподіл «оплачено за» за позиціями, змініть учасників у рядку позиції.",
     "paidForItemizedActiveHint": "Розподіл «оплачено за» за позиціями активний. Змініть учасників позицій у картці Позиції, щоб змінити цей розподіл.",
@@ -761,6 +786,9 @@
     "scanReceipt": "Сканувати чек за допомогою ШІ"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Видалити документ",
+    "document": "Документ",
+    "close": "Закрити",
     "TooBigToast": {
       "title": "Файл занадто великий",
       "description": "Максимальний розмір файлу, який можна завантажити, становить {maxSize}. Ваш файл {size}"
@@ -806,11 +834,11 @@
   },
   "Balances": {
     "title": "Баланси",
-    "description": "Це список балансів всіх учасників групи. Баланс збільшується у тих, хто слачує витрату, і зменшується в тих, між ким вона була розподілена",
+    "description": "Перегляньте чисте сальдо кожного учасника.",
     "Reimbursements": {
-      "title": "Запропоновані відшкодування",
-      "description": "Ось пропозиції для оптимізованих відшкодувань між учасниками",
-      "noImbursements": "Схоже, ніхто нікому не винен 😁",
+      "title": "Запропоновані платежі для погашення боргів",
+      "description": "Скористайтеся цими платежами, щоб погасити заборгованість із якнайменшою кількістю переказів.",
+      "noImbursements": "Усі учасники групи розрахувалися 😁",
       "owes": "<strong>{from}</strong> винен <strong>{to}</strong>",
       "markAsPaid": "Позначити як сплачене",
       "markAsPaidAria": "Позначити {amount} від {from} для {to} як сплачені"
@@ -834,7 +862,7 @@
       "label": "Вигляд",
       "title": "Виберіть спосіб перегляду балансів",
       "simple": "Простий",
-      "simpleDescription": "Хто кому винен і погашення платежів.",
+      "simpleDescription": "Перегляньте, хто кому винен, і записуйте платежі для погашення боргів.",
       "visual": "Візуальний",
       "visualDescription": "Розподіл балансів і графіки."
     },
@@ -874,6 +902,8 @@
       "selectedPeriod": "Вибраний період",
       "lifetimeDescription": "За всю історію групи",
       "expenseCount_one": "{count} витрата",
+      "expenseCount_few": "{count} витрати",
+      "expenseCount_many": "{count} витрат",
       "expenseCount_other": "{count} витрат",
       "spendingOverTime": "Витрати з часом",
       "bucketedBy": "Згруповано за: {granularity}",
@@ -1386,14 +1416,14 @@
         "cancel": "Скасувати",
         "confirm": "Відкликати",
         "unsettled": {
-          "toast": "Запрошення відкликано, баланси врегульовано.",
-          "title": "Врегулювати баланси перед відкликанням",
-          "description": "Відкликати запрошення для {email}? Спочатку потрібно врегулювати баланси.",
+          "title": "Погасити заборгованість перед відкликанням",
+          "description": "Відкликати запрошення для {email}? Спочатку потрібно погасити заборгованість запрошеного учасника.",
           "warning": {
-            "title": "Це запрошення має неврегульовані баланси",
-            "description": "Поставте прапорець нижче, щоб створити по одній розрахунковій витраті на кожну ланку за участю цього запрошеного перед відкликанням. Запрошення можна відкликати лише після врегулювання балансів."
+            "title": "Запрошений учасник має непогашену заборгованість",
+            "description": "Виберіть параметр нижче, щоб створити по одному платежу для погашення кожного боргу за участю запрошеного. Запрошення можна відкликати лише після погашення цих боргів."
           },
-          "checkbox": "Врегулювати баланси запрошеного перед відкликанням"
+          "toast": "Запрошення відкликано, заборгованість погашено.",
+          "checkbox": "Погасити заборгованість запрошеного учасника перед відкликанням"
         }
       },
       "link": {
@@ -1411,20 +1441,19 @@
       "cancel": "Скасувати",
       "confirm": "Видалити",
       "unsettled": {
-        "title": "Видалити учасника з неврегульованим балансом?",
-        "toast": "Учасника видалено, баланси врегульовано.",
-        "description": "Видалити {name} з цієї групи? {name} має неврегульовані баланси — поставте прапорець нижче, щоб врегулювати їх автоматично перед видаленням.",
+        "title": "Видалити члена групи з непогашеною заборгованістю?",
+        "description": "Видалити {name} із цієї групи? Цей учасник має непогашену заборгованість — установіть прапорець нижче, щоб погасити її автоматично перед видаленням.",
         "warning": {
-          "title": "Цей учасник має неврегульовані баланси",
-          "description": "Видалення без врегулювання залишить баланси в книзі на невизначений термін. Поставте прапорець нижче, щоб створити одну розрахункову витрату на кожну ногу, у якій бере участь цей учасник, перед видаленням, або видаліть без врегулювання та розберіться з балансами вручну."
+          "title": "Цей член групи має непогашену заборгованість",
+          "description": "Якщо видалити члена групи без погашення, заборгованість назавжди залишиться в групі. Виберіть параметр нижче, щоб створити по одному платежу для погашення кожного боргу за участю цього члена групи, або видаліть його й погасіть борги вручну."
         },
-        "checkbox": "Створити розрахункову витрату перед видаленням"
+        "toast": "Члена групи видалено, заборгованість погашено.",
+        "checkbox": "Погасити заборгованість цього члена групи перед видаленням"
       }
     },
     "leave": {
       "cancel": "Скасувати",
       "confirm": "Покинути групу",
-      "confirmWithForce": "Врегулювати та покинути",
       "button": "Покинути групу",
       "title": "Покинути групу?",
       "description": "Ви втратите доступ до витрат, балансів та активності цієї групи. Минулі дані зберігаються в книзі, щоб інші учасники могли їх бачити.",
@@ -1433,8 +1462,8 @@
       "lastMemberRedirect": "Ви не можете покинути групу, в якій ви єдиний активний учасник. Натомість видаліть групу зі сторінки налаштувань.",
       "body": {
         "unsettled": {
-          "title": "У вас є неврегульовані баланси",
-          "description": "Примусовий вихід автоматично створить розрахункові витрати для ланок за вашою участю, щоб книга залишалася узгодженою. Інші баланси залишаться без змін."
+          "title": "Ви маєте непогашену заборгованість",
+          "description": "Перед вашим виходом Spliit створить платежі для погашення боргів за всіма балансами з вашою участю. Баланси інших учасників не зміняться."
         },
         "otherAdmins": "Ці адміністратори збережуть контроль після вашого виходу: {names}.",
         "lastAdmin": {
@@ -1445,8 +1474,9 @@
       },
       "error": {
         "lastAdmin": "Виберіть учасника, якого підвищити до адміністратора, перш ніж покинути групу.",
-        "unsettled": "Врегулюйте баланси або підтвердьте примусове врегулювання, щоб покинути групу."
+        "unsettled": "Погасіть свої борги або виберіть «Погасити борги й вийти»."
       },
+      "confirmWithForce": "Погасити борги й вийти",
       "toast": {
         "left": "Ви покинули групу."
       }
@@ -1461,11 +1491,11 @@
       "idHint": "Ідентифікатор учасника в книзі: {id}",
       "linkDialog": {
         "title": "Прив'язати неприв'язаного учасника",
-        "description": "Виберіть наявного учасника, до якого слід прив'язати {displayName}. Одержувач не повинен перебувати на протилежному боці ланки витрат із цим учасником.",
+        "description": "Виберіть наявного члена групи, з яким слід пов’язати {displayName}. Він не повинен мати боргу за витратами з цим учасником.",
         "membersGroup": "Учасники",
         "cancel": "Скасувати",
         "confirm": "Прив'язати",
-        "noCandidates": "Сумісних учасників не знайдено. Зазвичай це означає, що цей неприв'язаний учасник перебуває на обох сторонах ланки витрат із кожним іншим учасником — імпорт потрібно виконати заново або спочатку скоригувати витрати.",
+        "noCandidates": "Сумісних членів групи не знайдено. Зазвичай це означає, що непов’язаний учасник має суперечливі борги за витратами з усіма іншими. Імпортуйте групу знову або спочатку скоригуйте витрати.",
         "pendingLabel": "очікує",
         "pendingHint": "Прив'язка до очікуваного запрошення об'єднує цей запис лише з іменем із запрошеним. Запрошений зберігає власний рядок; об'єднані посилання тепер вирішуються через нього, коли він прийме запрошення.",
         "membersGroupWithPending": "Учасники та очікувані запрошення",
@@ -1520,7 +1550,7 @@
         "items": "Позиції",
         "documents": "Вкладення",
         "recurrence": "Повторення",
-        "reimbursement": "Відшкодування",
+        "reimbursement": "Платіж для погашення боргу",
         "conversionSource": "Джерело конвертації",
         "conversionRate": "Обмінний курс"
       }
@@ -1550,10 +1580,13 @@
     },
     "fallback": "Активність зареєстровано",
     "unknownActor": "Хтось",
+    "openExpense": "Відкрити витрату",
     "import": {
-      "imported": "{participant} імпортував {count} витрат"
-    },
-    "openExpense": "Відкрити витрату"
+      "imported_one": "Користувач {participant} імпортував {count} витрату",
+      "imported_few": "Користувач {participant} імпортував {count} витрати",
+      "imported_many": "Користувач {participant} імпортував {count} витрат",
+      "imported_other": "Користувач {participant} імпортував {count} витрат"
+    }
   },
   "OfflineBanner": {
     "message": "Ви офлайн. Зміни, які ви вносите зараз, не буде збережено, доки ви не відновите підключення."
@@ -1607,6 +1640,10 @@
     "peerFriendsTab": "Список друзів",
     "peerEmailTab": "Електронна пошта",
     "peerLinkTab": "Посилання для поширення",
+    "friendsSection": "Друзі",
+    "pendingInvitationsSection": "Запрошення, що очікують",
+    "activeFriendExpensesSection": "Активні витрати з друзями",
+    "alreadyInvited": "(уже запрошено)",
     "alreadyHasLedger": "уже має книгу з другом",
     "inviteSent": "Запрошення надіслано. Ваш друг буде доданий, щойно зареєструється в Spliit Cloud.",
     "inviteLinkTitle": "Поділіться цим посиланням",
@@ -1619,12 +1656,13 @@
     "temporaryNameHelp": "Введіть ім'я людини, яку ви запрошуєте.",
     "friendsEmpty": "Додайте друга, ввівши його електронну адресу, або поділіться посиланням для запрошення.",
     "infoLabel": "Інформація (необов’язково)",
-    "infoPlaceholder": "Додайте контекст, наприклад «Витрати на спільну оренду»"
+    "infoPlaceholder": "Додайте контекст, наприклад «Витрати на спільну оренду»",
+    "createError": "Не вдалося створити витрати з другом або подругою"
   },
   "BulkCategorize": {
     "title": "Пакетна категоризація",
     "calibrationTitle": "Крок 1 — Калібрування",
-    "calibrationDescription": "Кожен підтверджений вами приклад стає еталоном для наступного проходу AI. Воно може бути готове вже після одного кола або запросити більше прикладів.",
+    "calibrationDescription": "Кожен підтверджений приклад допомагає ШІ поліпшити наступні пропозиції. Він може бути готовий після одного етапу або запросити додаткові приклади.",
     "roundCount": "Раунд {round} із {max}",
     "confidence": {
       "high": "Висока",
@@ -1643,10 +1681,19 @@
     "previewDescription": "Відредагуйте будь-який рядок, потім збережіть. Впевненість позначає рядки, у яких модель найменш впевнена.",
     "previewHint": "Показано {shown} із {total} кандидатів.",
     "removeAction": "Пропустити",
-    "targetExceedsCap": "Цільовий набір має забагато витрат ({count}). Звужте діапазон дат або обробляйте партіями.",
-    "saveAll": "Зберегти {count} змін",
+    "targetExceedsCap_one": "Забагато витрат для обробки ({count}). Звузьте діапазон дат або обробляйте їх частинами.",
+    "targetExceedsCap_few": "Забагато витрат для обробки ({count}). Звузьте діапазон дат або обробляйте їх частинами.",
+    "targetExceedsCap_many": "Забагато витрат для обробки ({count}). Звузьте діапазон дат або обробляйте їх частинами.",
+    "targetExceedsCap_other": "Забагато витрат для обробки ({count}). Звузьте діапазон дат або обробляйте їх частинами.",
+    "saveAll_one": "Зберегти {count} зміну",
+    "saveAll_few": "Зберегти {count} зміни",
+    "saveAll_many": "Зберегти {count} змін",
+    "saveAll_other": "Зберегти {count} змін",
     "saving": "Збереження…",
-    "saved": "{count} витрат було перекатегоризовано.",
+    "saved_one": "Змінено категорію {count} витрати.",
+    "saved_few": "Змінено категорії {count} витрат.",
+    "saved_many": "Змінено категорії {count} витрат.",
+    "saved_other": "Змінено категорії {count} витрат.",
     "applyError": "Не вдалося зберегти пакетне оновлення категорій: {message}",
     "noCandidates": "Жодні витрати не потребують категоризації.",
     "adminsOnly": "Лише адміністратори групи можуть запускати пакетну категоризацію.",
@@ -1657,13 +1704,22 @@
     "previewError": "Не вдалося згенерувати попередній перегляд: {message}",
     "introTitle": "Як це працює",
     "loadingCandidates": "Перевірка некатегоризованих витрат…",
-    "introDescription": "Готово до перегляду {count} некатегоризованих витрат.",
-    "introStepLook": "AI переглядає пул до {count} витрат, щоб знайти найкорисніші приклади.",
-    "introStepReview": "Ви переглядаєте та виправляєте до {count} вибраних прикладів, щоб AI вивчило категорії цієї групи.",
+    "introDescription_one": "До перевірки готова {count} витрата без категорії.",
+    "introDescription_few": "До перевірки готові {count} витрати без категорії.",
+    "introDescription_many": "До перевірки готові {count} витрат без категорії.",
+    "introDescription_other": "До перевірки готові {count} витрат без категорії.",
+    "introStepLook_one": "ШІ перегляне до {count} витрати, щоб знайти найкорисніший приклад.",
+    "introStepLook_few": "ШІ перегляне до {count} витрат, щоб знайти найкорисніші приклади.",
+    "introStepLook_many": "ШІ перегляне до {count} витрат, щоб знайти найкорисніші приклади.",
+    "introStepLook_other": "ШІ перегляне до {count} витрат, щоб знайти найкорисніші приклади.",
+    "introStepReview_one": "Перегляньте й виправте до {count} вибраного прикладу, щоб ШІ вивчив категорії цієї групи.",
+    "introStepReview_few": "Перегляньте й виправте до {count} вибраних прикладів, щоб ШІ вивчив категорії цієї групи.",
+    "introStepReview_many": "Перегляньте й виправте до {count} вибраних прикладів, щоб ШІ вивчив категорії цієї групи.",
+    "introStepReview_other": "Перегляньте й виправте до {count} вибраних прикладів, щоб ШІ вивчив категорії цієї групи.",
     "introStepPreview": "Коли AI матиме достатньо сигналів, воно підготує повний огляд і залишить невизначені витрати некатегоризованими.",
     "startCalibration": "Почати калібрування",
     "calibrationStartHint": "AI обирає корисні приклади для вашого перегляду.",
-    "calibrationReady": "AI має достатньо зворотного зв'язку, щоб підготувати повний огляд.",
+    "calibrationReady": "ШІ має достатньо прикладів для підготовки повного огляду.",
     "reviewSample": "Переглянути ці приклади",
     "calibrationNoSample": "AI не потребувало додаткового зразка.",
     "categorizeSample": "Категоризувати зразок",
@@ -1674,7 +1730,10 @@
     "generatingPreview": "Підготовка пропозицій…",
     "noSuggestions": "AI залишило всі витрати некатегоризованими. Ви можете спробувати знову після додаткового калібрування.",
     "previewSummary": "AI запропонувало категорії для {suggested} з {total} витрат.",
-    "leftUncategorized": "{count} витрат залишилися некатегоризованими, оскільки AI не було достатньо впевнене.",
+    "leftUncategorized_one": "{count} витрата залишилася без категорії, оскільки ШІ не був достатньо впевнений.",
+    "leftUncategorized_few": "{count} витрати залишилися без категорії, оскільки ШІ не був достатньо впевнений.",
+    "leftUncategorized_many": "{count} витрат залишилися без категорії, оскільки ШІ не був достатньо впевнений.",
+    "leftUncategorized_other": "{count} витрат залишилися без категорії, оскільки ШІ не був достатньо впевнений.",
     "retryPreview": "Спробувати перегляд знову",
     "doneTitle": "Категорії збережено",
     "expenseColumn": "Витрата",
@@ -1689,7 +1748,10 @@
     "paidFor": "Сплачено за",
     "yourBalance": "Ваш баланс",
     "notes": "Примітки",
-    "attachments": "Вкладення ({count})",
+    "attachments_one": "Вкладення ({count})",
+    "attachments_few": "Вкладення ({count})",
+    "attachments_many": "Вкладень ({count})",
+    "attachments_other": "Вкладень ({count})",
     "edit": "Редагувати витрату",
     "makeCopy": "Створити копію"
   },
@@ -1702,10 +1764,21 @@
     "create": "Створити",
     "edit": "Редагувати деталі",
     "creating": "Створення…",
-    "successToast": "Відшкодування записано"
+    "successToast": "Платіж для погашення боргу записано"
   },
   "Participants": {
     "search": "Пошук учасників...",
     "noParticipant": "Учасника не знайдено"
+  },
+  "Common": {
+    "close": "Закрити",
+    "previousSlide": "Попередній слайд",
+    "nextSlide": "Наступний слайд"
+  },
+  "Theme": {
+    "toggle": "Змінити тему",
+    "light": "Світла",
+    "dark": "Темна",
+    "system": "Системна"
   }
 }

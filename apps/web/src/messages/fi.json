@@ -1,6 +1,6 @@
 {
   "Homepage": {
-    "title": "Jaa kulut ystävien ja perheen kanssa",
+    "title": "Jaa <strong>kulut</strong> <strong>ystävien ja perheen</strong> kanssa",
     "description": "Seuraa yhteisiä kuluja ja tasoita tilit. Ilmainen ja avoimen lähdekoodin, <strong>synkronoitu ja suojattu tililläsi</strong>.",
     "button": {
       "github": "GitHub",
@@ -8,32 +8,32 @@
       "createAccount": "Luo tili",
       "createGroup": "Luo ryhmä",
       "importGroup": "Tuo ryhmä toisesta palvelusta",
-      "createFriendLedger": "Luo ystäväkirjanpito"
+      "createFriendLedger": "Seuraa yhteisiä kuluja ystävän kanssa"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Ryhmät ja synkronointi",
+        "description": "Luo ryhmiä matkoja, tapahtumia ja lahjoja varten ja pidä ne ajan tasalla kaikilla laitteillasi."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Kulut ja kuitit",
+        "description": "Lisää kuluja ja kuittikuvia sekä luo päivittäin, viikoittain tai kuukausittain toistuvia kuluja."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Monipuolinen jako",
+        "description": "Jaa prosenttien, osuuksien, tarkkojen summien tai yksinkertaisesti tasajaon mukaan."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Saldot",
+        "description": "Näe, kuka maksoi mitäkin, ja minimoi osallistujien väliset tilisiirrot."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Luokat",
+        "description": "Luokittele kulut, jotta yhteiset menot pysyvät helposti hahmotettavina."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Tilit",
+        "description": "Kirjaudu kerran sisään suojataksesi tietosi ja pitääksesi kuluhistoriasi saatavilla."
       }
     },
     "welcomeBack": "Tervetuloa takaisin, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Kirjaudu ulos",
     "account": "Tili",
     "accountSettings": "Tilin asetukset",
-    "back": "Takaisin"
+    "back": "Takaisin",
+    "menu": "Valikko"
   },
   "Footer": {
     "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
@@ -77,7 +78,7 @@
       "lastMonth": "Viime kuussa",
       "earlierThisYear": "Aikaisemmin tänä vuonna",
       "lastYear": "Viime vuonna",
-      "older": "Vanhemmat"
+      "older": "Vanhemmat kulut"
     },
     "filters": {
       "mobileTitle": "Suodata kulut",
@@ -107,7 +108,7 @@
       "noMatchClear": "Tyhjennä suodattimet",
       "category": "Kategoria",
       "paidBy": "Maksaja",
-      "paidFor": "Maksettu puolesta",
+      "paidFor": "Jaettu osallistujien kesken",
       "dateRange": "Aikaväli",
       "dateFrom": "Alkaen",
       "dateTo": "Asti",
@@ -122,7 +123,8 @@
       "allCategories": "Kaikki kategoriat",
       "allParticipants": "Kaikki osallistujat",
       "allCurrencies": "Kaikki valuutat",
-      "nSelected": "{count} valittu",
+      "nSelected_one": "{count} valittu",
+      "nSelected_other": "{count} valittu",
       "removeFilter": "Poista suodatin",
       "settlementsHidden": "Tilitykset piilotettu",
       "title": "Suodattimet"
@@ -130,17 +132,18 @@
     "showSettlements": "Näytä tilitykset"
   },
   "ExpenseCard": {
-    "paidBy": "<strong>{paidBy}</strong> maksoi {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
-    "receivedBy": "<strong>{paidBy}</strong> sai rahaa {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
-    "receivedByMultiple": "Sai rahaa <paidByNames></paidByNames> <paidFor></paidFor> puolesta",
+    "receivedBy": "Vastaanottaja <strong>{paidBy}</strong> · kohdistettu osallistujille <paidFor></paidFor>",
+    "receivedByMultiple": "Vastaanottajat <paidByNames></paidByNames> · kohdistettu osallistujille <paidFor></paidFor>",
     "yourBalance": "Saldosi:",
-    "paidByMultiple": "Maksoi <paidByNames></paidByNames> <paidFor></paidFor> puolesta",
+    "paidBy": "Maksaja <strong>{paidBy}</strong> · jaettu osallistujien <paidFor></paidFor> kesken",
+    "paidByMultiple": "Maksajat <paidByNames></paidByNames> · jaettu osallistujien <paidFor></paidFor> kesken",
     "everyone": "kaikki",
     "notInvolved": "Et ole osallisena",
     "settlementBadge": "Tasaus",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+{count} muu",
+      "more_other": "+{count} muuta",
+      "title": "Kohteet",
       "participants": "{names}"
     },
     "copyToast": "Kulun kopiointi aloitettu. Olemassa olevia kulun tietoja käytetään uuden kulun luomiseen."
@@ -157,14 +160,14 @@
     "showArchived": "Näytä arkistoidut ryhmät",
     "hide": "Piilota ryhmä",
     "unhide": "Paljasta ryhmä",
-    "hideFriend": "Piilota ystäväkirjanpito",
-    "unhideFriend": "Paljasta ystäväkirjanpito",
+    "hideFriend": "Piilota yhteiset kulut ystävän kanssa",
+    "unhideFriend": "Näytä yhteiset kulut ystävän kanssa",
     "starGroup": "Merkitse suosikiksi",
     "unstarGroup": "Poista suosikki",
-    "starFriend": "Merkitse ystäväkirjanpito suosikiksi",
-    "unstarFriend": "Poista ystäväkirjanpito suosikeista",
+    "starFriend": "Merkitse yhteiset kulut ystävän kanssa suosikiksi",
+    "unstarFriend": "Poista yhteiset kulut ystävän kanssa suosikeista",
     "groupActions": "Ryhmän toiminnot",
-    "friendActions": "Ystäväkirjanpidon toiminnot",
+    "friendActions": "Ystävän kanssa jaettujen kulujen toiminnot",
     "archiveGroup": "Arkistoi ryhmä",
     "unarchiveGroup": "Palauta arkistosta",
     "archiveSuccess": "Ryhmä arkistoitu.",
@@ -207,7 +210,8 @@
     },
     "NotFound": {
       "text": "Tätä ryhmää ei löydy.",
-      "link": "Siirry etusivulle"
+      "link": "Siirry etusivulle",
+      "lookingUp": "Etsitään ryhmää…"
     },
     "Unauthorized": {
       "title": "Sinulla ei ole pääsyä tähän ryhmään",
@@ -245,9 +249,11 @@
         "newGroupFormat": "Uusi ryhmä · {currency}",
         "existingGroupFormat": "Olemassa oleva ryhmä · yhdistetty",
         "summaryLabel": "Yhteenveto",
-        "sourceParticipants": "{count} lähdeosallistujaa",
+        "sourceParticipants_one": "{count} lähteen osallistuja",
+        "sourceParticipants_other": "{count} lähteen osallistujaa",
         "participantBreakdown": "{linked} linkitetty · {email} sähköpostikutsut · {link} linkkikutsut · {unlinked} linkittämättä",
-        "expenseCount": "{count} kulua luodaan",
+        "expenseCount_one": "{count} kulu luodaan",
+        "expenseCount_other": "{count} kulua luodaan",
         "sourceName": "Lähde: {name}",
         "footer": "Jokainen lähdeosallistuja ja -kulu tuodaan. Kutsut lähetetään/luodaan ryhmän luomisen jälkeen.",
         "importingButton": "Tuodaan…",
@@ -272,7 +278,8 @@
         "existingGroup": "Olemassa oleva ryhmä",
         "loading": "Ladataan…",
         "noAdminGroups": "Et hallinnoi vielä yhtään ryhmää.",
-        "memberCount": "{count} jäsentä"
+        "memberCount_one": "{count} jäsen",
+        "memberCount_other": "{count} jäsentä"
       },
       "Done": {
         "importComplete": "Tuonti valmis",
@@ -440,16 +447,17 @@
       "description": "Seuraa yhteisiä kuluja ystävien, perheen tai kämppäkavereiden kanssa."
     },
     "groups": "Ryhmät",
-    "friends": "Ystäväkirjanpidot",
+    "friends": "Ystävät",
     "createExpense": "Lisää kulu",
     "pending": "Odottaa",
     "scopePickerGroups": "Valitse ryhmä",
-    "scopePickerFriends": "Valitse ystäväkirjanpito",
+    "scopePickerFriends": "Valitse ystävä",
     "scopePickerEmpty": "Ei vielä ryhmiä",
-    "scopePickerMembers": "{count} jäsentä",
+    "scopePickerMembers_one": "{count} jäsen",
+    "scopePickerMembers_other": "{count} jäsentä",
     "createFriendLedgerCard": {
       "description": "Tasaa velat suoraan tietyn henkilön kanssa.",
-      "title": "Luo ystäväkirjanpito"
+      "title": "Seuraa yhteisiä kuluja ystävän kanssa"
     },
     "importGroup": "Tuo ryhmä",
     "exportDescription": "Lataa ryhmän kulut JSON- tai CSV-muodossa."
@@ -484,7 +492,7 @@
     "Participants": {
       "title": "Osallistujat",
       "description": "Syötä jokaisen osallistujan nimi.",
-      "protectedParticipant": "Tätä osallistujaa ei voida poistaa, koska hän osallistuu kuluihin.",
+      "protectedParticipant": "Tämä osallistuja kuuluu johonkin kuluun, joten häntä ei voi poistaa.",
       "new": "Uusi",
       "add": "Lisää osallistuja",
       "John": "Antti",
@@ -517,8 +525,8 @@
       "edit": "Muokkaa tuloa",
       "TitleField": {
         "label": "Otsikko",
-        "placeholder": "Maanantain ravintola",
-        "description": "Anna lyhyt kuvaus tulolle."
+        "placeholder": "Palkka tai hyvitys",
+        "description": "Kuvaile, mistä tulo on peräisin."
       },
       "DateField": {
         "label": "Päivä",
@@ -531,11 +539,11 @@
       "categoryFieldDescription": "Valitse tulokategoria.",
       "paidByField": {
         "label": "Vastaanottaja",
-        "description": "Valitse kuka vastaanotti tulon."
+        "description": "Valitse, kuka vastaanotti rahat ja kuinka paljon kukin sai."
       },
       "paidFor": {
-        "title": "Tulon jakaminen",
-        "description": "Valitse kenelle tulo jaetaan."
+        "title": "Kohdistettu osallistujille",
+        "description": "Valitse osallistujat, joille tulo kohdistetaan."
       },
       "splitModeDescription": "Valitse miten tulo jaetaan osallistujien kesken.",
       "attachDescription": "Katso ja liitä tuloon liittyviä kuitteja."
@@ -560,7 +568,7 @@
       "paidByField": {
         "label": "Maksaja",
         "placeholder": "Valitse osallistuja",
-        "description": "Valitse kuka maksoi kulun."
+        "description": "Valitse, kuka maksoi ja kuinka paljon kukin maksaja maksoi."
       },
       "recurrenceRule": {
         "label": "Kulun toistuvuus",
@@ -571,13 +579,13 @@
         "monthly": "Kuukausittain"
       },
       "paidFor": {
-        "title": "Kulun jakaminen",
-        "description": "Valitse ketkä osallistuvat kuluun."
+        "title": "Jaettu osallistujien kesken",
+        "description": "Valitse osallistujat, joiden kesken kulu jaetaan."
       },
       "splitModeDescription": "Valitse miten kulu jaetaan osallistujien kesken.",
       "attachDescription": "Katso ja liitä kuluun liittyviä kuitteja.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Luo kopio: {title}",
+      "editTitle": "Muokkaa: {title}"
     },
     "amountField": {
       "label": "Summa",
@@ -635,7 +643,7 @@
       "customRate": "Käytetään mukautettua kurssia"
     },
     "isReimbursementField": {
-      "label": "Tämä on velanmaksu"
+      "label": "Tämä on tasausmaksu"
     },
     "categoryField": {
       "label": "Kategoria"
@@ -661,6 +669,7 @@
       "title": "Poistetaanko tämä kulu?",
       "description": "Haluatko varmasti poistaa tämän kulun? Poistoa ei voi peruuttaa.",
       "yes": "Kyllä",
+      "deleting": "Poistetaan…",
       "cancel": "Peruuta"
     },
     "attachDocuments": "Liitä dokumenttejä",
@@ -669,7 +678,7 @@
     "save": "Tallenna",
     "saving": "Tallennetaan…",
     "cancel": "Peruuta",
-    "reimbursement": "Velanmaksu",
+    "reimbursement": "Tasausmaksu",
     "readOnlyNotice": "Tämä ryhmä on arkistoitu. Kulu näytetään vain luku -tilassa.",
     "PaidBySplitModeField": {
       "label": "Maksajan jakamistapa"
@@ -698,6 +707,7 @@
     "paidBySectionSingle": "Yksi",
     "paidBySectionMultiple": "Useita maksajia",
     "paidForSection": "Jaa osallistujien kesken",
+    "splitOptionAria": "Jako: {title}",
     "paidByOptionSinglePayerHelper": "Yksi henkilö maksaa koko kulun",
     "paidByOptionEvenlyHelper": "Kukin maksaa saman osuuden",
     "paidByOptionBySharesHelper": "Kukin maksaa painotetun osuuden",
@@ -713,21 +723,22 @@
     "paidForOptionItemized": "Itemized",
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Kohteet",
+      "description": "Lisää kohteita jakaaksesi kulun tarkasti tai säilyttääksesi ne dokumentaationa minkä tahansa jakotavan yhteydessä.",
+      "addItem": "Lisää kohde",
+      "empty": "Ei vielä kohteita. Aloita valitsemalla ”Lisää kohde”.",
+      "allMembers": "Kaikki osallistujat",
+      "noMembers": "Ei osallistujia",
+      "other": "Muu (kohdistamaton)",
+      "derivedBadge": "Laskettu",
+      "errorExceedsAmount": "Kohteiden summa ylittää kulun summan.",
+      "actionEdit": "Muokkaa",
+      "actionDelete": "Poista",
+      "total": "Kohteiden summa",
+      "requiredForItemized": "Lisää vähintään yksi kohde käyttääksesi kohdekohtaista jakoa.",
+      "participantsSummary_one": "{count} osallistuja",
+      "participantsSummary_other": "{count} osallistujaa",
+      "modalTitle": "Kohteen osallistujat",
       "columnItem": "Kohde",
       "columnCost": "Hinta",
       "columnQuantity": "Määrä",
@@ -739,19 +750,19 @@
       "splitByPercentageLabel": "Jaa prosenttien mukaan",
       "splitByAmountLabel": "Jaa summan mukaan",
       "switchToItemizedTitle": "Vaihdetaanko erittelykohtaiseen jakoon?",
-      "switchToItemizedDescription": "Kohteen osallistujien muokkaaminen vaihtaa Maksettu kohteelle -jaon erittelykohtaiseksi ja korvaa määrittämäsi Maksettu kohteelle -jaon.",
+      "switchToItemizedDescription": "Kohteen osallistujien muokkaaminen vaihtaa jakotavaksi kohdekohtaisen ja korvaa määrittämäsi osallistujajaon.",
       "switchToItemizedConfirm": "Vaihda erittelykohtaiseksi",
       "showItems": "Näytä kohteet",
       "hideItems": "Piilota kohteet"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Vaihdetaanko jakotapaa?",
+      "description": "Kun vaihdat jakotapaan {mode}, kohteet säilyvät vain dokumentaationa. Kaikki kohdekohtaiset osallistujamääritykset poistetaan.",
+      "cancel": "Peruuta",
+      "confirm": "Vaihda"
     },
-    "paidForItemizedEntryHint": "Jos haluat käyttää eriteltyä maksettu puolesta -jakoa, muokkaa osallistujia tuoteriviltä.",
-    "paidForItemizedActiveHint": "Eritelty maksettu puolesta -jako on käytössä. Muuta jakoa muokkaamalla tuotteiden osallistujia Tuotteet-kortista.",
+    "paidForItemizedEntryHint": "Jaa kohteittain muokkaamalla osallistujia kohderivillä.",
+    "paidForItemizedActiveHint": "Kohdekohtainen jako on käytössä. Muuta jakoa muokkaamalla kohteen osallistujia Kohteet-kortissa.",
     "DefaultSplit": {
       "savedAsDefault": "Tallennettu oletukseksi",
       "heading": "Oletusjako",
@@ -761,6 +772,9 @@
     "scanReceipt": "Skannaa kuitti tekoälyllä"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Poista asiakirja",
+    "document": "Asiakirja",
+    "close": "Sulje",
     "TooBigToast": {
       "title": "Tiedosto on liian suuri",
       "description": "Maksimikoko ladattavalle tiedostolle on {maxSize}. Tiedostosi on {size}."
@@ -806,11 +820,11 @@
   },
   "Balances": {
     "title": "Saldo",
-    "description": "Osallistujien saatavat tai velat.",
+    "description": "Näe kunkin osallistujan nettosaldo.",
     "Reimbursements": {
-      "title": "Maksuehdotus",
-      "description": "Optimoitu ehdotus kuka maksaa kenellekin.",
-      "noImbursements": "Näyttää siltä, että kaikki ovat sujut 😁",
+      "title": "Ehdotetut tasausmaksut",
+      "description": "Näillä maksuilla voit tasata saldot mahdollisimman vähillä tilisiirroilla.",
+      "noImbursements": "Kaikkien ryhmän jäsenten saldot on tasattu 😁",
       "owes": "<strong>{from}</strong> maksaa henkilölle <strong>{to}</strong>",
       "markAsPaid": "Merkitse maksetuksi",
       "markAsPaidAria": "Merkitse {from}–{to}, {amount}, maksetuksi"
@@ -834,7 +848,7 @@
       "label": "Näkymä",
       "title": "Valitse saldojen näkymä",
       "simple": "Yksinkertainen",
-      "simpleDescription": "Kuka on velkaa kenelle ja selvitä maksut.",
+      "simpleDescription": "Näe, kuka on velkaa kenelle, ja kirjaa tasausmaksut.",
       "visual": "Visuaalinen",
       "visualDescription": "Saldojen erittely ja kaaviot."
     },
@@ -902,7 +916,7 @@
     "title": "Tapahtumat",
     "description": "Yleisnäkymä ryhmän kaikista tapahtumista.",
     "noActivity": "Ryhmässäsi ei ole vielä tapahtumia.",
-    "someone": "Tuntematon",
+    "someone": "Joku",
     "settingsModified": "<strong>{participant}</strong> muokkasi ryhmän asetuksia.",
     "expenseCreated": "<strong>{participant}</strong> lisäsi kulun <em>{expense}</em>.",
     "expenseUpdated": "<strong>{participant}</strong> muokkasi kulua <em>{expense}</em>.",
@@ -916,12 +930,12 @@
       "lastMonth": "Viime kuussa",
       "earlierThisYear": "Tänä vuonna",
       "lastYear": "Viime vuonna",
-      "older": "Vanhemmat"
+      "older": "Vanhempi toiminta"
     }
   },
   "Information": {
     "title": "Tiedot",
-    "description": "Käytä tätä paikkaa lisätäksesi kaikki tiedot, joilla voi olla merkitystä ryhmän osallistujille.",
+    "description": "Lisää tietoja, joista voi olla hyötyä ryhmän osallistujille.",
     "empty": "Ryhmätietoja ei vielä ole."
   },
   "Settings": {
@@ -945,7 +959,7 @@
     "amountNotZero": "Summa ei voi olla nolla.",
     "amountTenMillion": "Summan pitää olla pienempi kuin 10 000 000.",
     "paidByRequired": "Osallistuja puuttuu.",
-    "paidForMin1": "Valitse vähintään yksi osallistuja.",
+    "paidForMin1": "Kulu on jaettava vähintään yhdelle osallistujalle.",
     "noZeroShares": "Jokaisen osuuden täytyy olla suurempi kuin 0.",
     "amountSum": "Osuuksien summan täytyy vastata kulun summaa.",
     "percentageSum": "Prosenttiosuuksien summan täytyy olla 100.",
@@ -1391,7 +1405,7 @@
           "description": "Peruutetaanko kutsu käyttäjälle {email}? Hänen saatavansa on tasattava ensin.",
           "warning": {
             "title": "Tällä kutsulla on tasaussaatavia",
-            "description": "Valitse alla oleva valintaruutu luodaksesi yksi korvauskulu tähän kutsuttuun liittyvää osuutta kohden ennen peruutusta. Kutsun voi peruuttaa vasta, kun saatavat on tasattu."
+            "description": "Valitse alla oleva vaihtoehto, niin jokaisesta tähän kutsuttuun liittyvästä saldosta luodaan tasausmaksu. Kutsun voi perua vasta, kun saldot on tasattu."
           },
           "checkbox": "Tasaa kutsutun saatavat ennen peruutusta"
         }
@@ -1412,9 +1426,9 @@
         "description": "Poistetaanko {name} tästä ryhmästä? Hänellä on tasaussaatavia — valitse alla oleva valintaruutu tasataksesi ne automaattisesti ennen poistoa.",
         "warning": {
           "title": "Tällä jäsenellä on tasaussaatavia",
-          "description": "Poistaminen ilman tasausta jättää saatavat kirjanpitoon toistaiseksi. Valitse alla oleva valintaruutu luodaksesi yksi korvauskulu tähän jäseneen liittyvää osuutta kohden ennen poistoa, tai poista ilman tasausta ja hoida saatavat manuaalisesti."
+          "description": "Jos jäsen poistetaan tasaamatta, nämä saldot jäävät ryhmään pysyvästi. Valitse alla oleva vaihtoehto, niin jokaisesta tähän jäseneen liittyvästä saldosta luodaan tasausmaksu, tai poista jäsen ja tasaa saldot käsin."
         },
-        "checkbox": "Luo tasauskorvaus ennen poistoa"
+        "checkbox": "Tasaa tämän jäsenen saldot ennen poistamista"
       },
       "title": "Poistetaanko jäsen?",
       "cancel": "Peruuta"
@@ -1435,7 +1449,7 @@
         "otherAdmins": "Nämä ylläpitäjät säilyttävät hallinnan, kun poistut: {names}.",
         "unsettled": {
           "title": "Sinulla on tasaamattomia saldoja",
-          "description": "Poistuminen pakotettuna luo automaattisesti korvauskulut sinua koskeville osuuksille, jotta kirjanpito pysyy ajan tasalla. Muut saldot jäävät ennalleen."
+          "description": "Spliit luo saldoihisi liittyvät tasausmaksut ennen poistumistasi. Muiden osallistujien saldot eivät muutu."
         }
       },
       "toast": {
@@ -1453,15 +1467,15 @@
       "description": "Näillä henkilöillä on nimi ryhmässä, mutta ei vielä sovellustiliä. Linkitä kukin olemassa olevaan tiliin yhdistääksesi heidän kulunsa kyseiseen käyttäjään.",
       "linkSuccess": "Osallistuja linkitetty tiliin",
       "linkDialog": {
-        "description": "Valitse olemassa oleva jäsen, johon {displayName} tulisi linkittää. Kohde ei voi olla jo saman kulun vastakkaisella puolella tämän osallistujan kanssa.",
+        "description": "Valitse nykyinen jäsen, johon {displayName} yhdistetään. Jäsenellä ei saa jo olla kulusaldoa tämän osallistujan kanssa.",
         "membersGroup": "Jäsenet",
         "confirm": "Linkitä",
-        "noCandidates": "Yhteensopivia jäseniä ei löytynyt. Tämä johtuu yleensä siitä, että tämä linkittämätön osallistuja on molemmilla puolilla kulua jokaisen muun jäsenen kanssa — tuonti täytyy tehdä uudelleen tai kuluja muokata ensin.",
         "pendingHint": "Linkittäminen odottavaan kutsuun yhdistää tämän vain nimen sisältävän merkinnän kutsuttuun. Kutsuttu säilyttää oman rivinsä; yhdistetyt viittaukset kulkevat nyt hänen kauttaan, kun hän hyväksyy kutsun.",
         "membersGroupWithPending": "Jäsenet ja odottavat kutsut",
         "title": "Linkitä linkittämätön osallistuja",
         "cancel": "Peruuta",
         "pendingGroup": "Odottavat kutsut",
+        "noCandidates": "Yhteensopivia jäseniä ei löytynyt. Tämä tarkoittaa yleensä, että linkittämättömällä osallistujalla on ristiriitaisia kulusaldoja kaikkien muiden jäsenten kanssa. Tuo ryhmä uudelleen tai korjaa kulut ensin.",
         "pendingLabel": "odottaa",
         "pendingSuffix": "(odottaa)"
       },
@@ -1520,7 +1534,7 @@
         "items": "Rivit",
         "documents": "Liitteet",
         "recurrence": "Toistuminen",
-        "reimbursement": "Velanmaksu",
+        "reimbursement": "Tasausmaksu",
         "conversionSource": "Muunnoslähde",
         "conversionRate": "Muunnoskurssi"
       }
@@ -1550,10 +1564,11 @@
     },
     "fallback": "Toiminto on kirjattu",
     "unknownActor": "Joku",
+    "openExpense": "Avaa meno",
     "import": {
-      "imported": "{participant} toi {count} kulua"
-    },
-    "openExpense": "Avaa meno"
+      "imported_one": "{participant} toi {count} kulun",
+      "imported_other": "{participant} toi {count} kulua"
+    }
   },
   "OfflineBanner": {
     "message": "Et ole yhteydessä internetiin. Nyt tekemiäsi muutoksia ei tallenneta, ennen kuin muodostat yhteyden uudelleen."
@@ -1585,14 +1600,14 @@
   "EmptyState": {
     "actions": {
       "createGroup": "Luo ryhmä",
-      "createFriendLedger": "Luo ystäväkirjanpito",
+      "createFriendLedger": "Seuraa yhteisiä kuluja ystävän kanssa",
       "showHidden": "Näytä piilotetut ryhmät"
     },
     "labels": {
       "group": "ryhmä",
       "groupPlural": "ryhmät",
-      "friendLedger": "ystäväkirjanpito",
-      "friendLedgerPlural": "ystäväkirjanpidot"
+      "friendLedger": "ystävä",
+      "friendLedgerPlural": "ystävät"
     },
     "description": {
       "empty": "Luo ensimmäinen {itemLabel} aloittaaksesi."
@@ -1603,28 +1618,33 @@
     }
   },
   "Friends": {
-    "title": "Luo ystäväkirjanpito",
+    "title": "Seuraa yhteisiä kuluja ystävän kanssa",
     "peerFriendsTab": "Kaverilista",
     "peerEmailTab": "Sähköposti",
     "peerLinkTab": "Jaettava linkki",
-    "alreadyHasLedger": "on jo ystäväkirjanpito",
+    "friendsSection": "Ystävät",
+    "pendingInvitationsSection": "Odottavat kutsut",
+    "activeFriendExpensesSection": "Aktiiviset yhteiset kulut ystävien kanssa",
+    "alreadyInvited": "(jo kutsuttu)",
+    "alreadyHasLedger": "(seuraa jo yhteisiä kuluja kanssasi)",
     "inviteSent": "Kutsu lähetetty. Kaverisi lisätään, kun hän liittyy Spliit Cloudtiin.",
     "inviteLinkTitle": "Jaa tämä linkki",
-    "inviteLinkDescription": "Jaa tämä linkki kaverillesi lisätäksesi hänet kirjanpitoon.",
+    "inviteLinkDescription": "Jaa tämä linkki, jotta ystäväsi voi liittyä yhteisiin kuluihinne.",
     "copy": "Kopioi",
     "share": "Jaa",
-    "linkHelp": "Luo jaettava linkki, jota kaverisi voi käyttää liittyäkseen tähän kirjanpitoon.",
+    "linkHelp": "Luo jaettava linkki, jolla ystäväsi voi liittyä.",
     "emailLabel": "Kaverin sähköposti",
     "temporaryNameLabel": "Näyttönimi",
     "temporaryNameHelp": "Anna nimi henkilölle, jota kutsut.",
     "friendsEmpty": "Lisää kaveri syöttämällä hänen sähköpostinsa tai jaa linkki kutsua varten.",
     "infoLabel": "Tiedot (valinnainen)",
-    "infoPlaceholder": "Lisää kontekstia, esim. 'Kämppäkaverin kulut'"
+    "infoPlaceholder": "Lisää kontekstia, esim. 'Kämppäkaverin kulut'",
+    "createError": "Yhteisiä kuluja ystävän kanssa ei voitu luoda"
   },
   "BulkCategorize": {
     "title": "Joukkokategorisointi",
     "calibrationTitle": "Vaihe 1 — Kalibrointi",
-    "calibrationDescription": "Jokainen esimerkki, jonka vahvistat, tulee totuusarvoksi tekoälyn seuraavalle kierrokselle. Tekoäly voi olla valmis jo yhden kierroksen jälkeen tai pyytää lisää esimerkkejä.",
+    "calibrationDescription": "Jokainen vahvistamasi esimerkki auttaa tekoälyä parantamaan seuraavia ehdotuksiaan. Se voi olla valmis yhden kierroksen jälkeen tai pyytää lisää esimerkkejä.",
     "roundCount": "Kierros {round} / {max}",
     "confidence": {
       "high": "Korkea",
@@ -1643,10 +1663,13 @@
     "previewDescription": "Muokkaa mitä tahansa riviä ja tallenna sitten. Varmuus merkitsee rivit, joista malli on vähiten varma.",
     "previewHint": "Näytetään {shown} / {total} ehdokkaasta.",
     "removeAction": "Ohita",
-    "targetExceedsCap": "Kohdejoukossa on liian monta kulua ({count}). Rajoita päivämääriä tai käsittele erissä.",
-    "saveAll": "Tallenna {count} muutosta",
+    "targetExceedsCap_one": "{count} kulua ei voi käsitellä tässä erässä. Rajaa ajanjaksoa ja yritä uudelleen.",
+    "targetExceedsCap_other": "Käsiteltäviä kuluja on liikaa ({count}). Rajaa ajanjaksoa tai käsittele kulut useassa erässä.",
+    "saveAll_one": "Tallenna {count} muutos",
+    "saveAll_other": "Tallenna {count} muutosta",
     "saving": "Tallennetaan…",
-    "saved": "{count} kulua kategorisoitiin uudelleen.",
+    "saved_one": "{count} kulu luokiteltiin uudelleen.",
+    "saved_other": "{count} kulua luokiteltiin uudelleen.",
     "applyError": "Joukkokategoriapäivitystä ei voitu tallentaa: {message}",
     "noCandidates": "Yhtään kulua ei tarvitse kategorisoida.",
     "adminsOnly": "Vain ryhmän ylläpitäjät voivat suorittaa joukkokategorisoijan.",
@@ -1657,10 +1680,13 @@
     "previewError": "Esikatselua ei voitu luoda: {message}",
     "introTitle": "Näin se toimii",
     "loadingCandidates": "Tarkistetaan luokittelemattomia kuluja…",
-    "introDescription": "{count} luokittelematonta kulua odottaa tarkistusta.",
-    "introStepLook": "Tekoäly tarkastelee laajaa joukkoa, jopa {count} kulua, löytääkseen hyödyllisimmät esimerkit.",
-    "introStepReview": "Tarkistat ja korjaat enintään {count} valittua esimerkkiä, jotta tekoäly oppii tämän ryhmän kategoriat.",
-    "introStepPreview": "Kun tekoälyllä on tarpeeksi tietoa, se valmistelee täyden tarkastelun ja jättää epävarmat kulut luokittelematta.",
+    "introDescription_one": "{count} luokittelematon kulu on valmis tarkistettavaksi.",
+    "introDescription_other": "{count} luokittelematonta kulua on valmis tarkistettavaksi.",
+    "introStepLook_one": "Tekoäly tarkistaa enintään {count} kulun löytääkseen hyödyllisimmän esimerkin.",
+    "introStepLook_other": "Tekoäly tarkistaa enintään {count} kulua löytääkseen hyödyllisimmät esimerkit.",
+    "introStepReview_one": "Tarkista ja korjaa enintään {count} valittu esimerkki, jotta tekoäly oppii tämän ryhmän luokat.",
+    "introStepReview_other": "Tarkista ja korjaa enintään {count} valittua esimerkkiä, jotta tekoäly oppii tämän ryhmän luokat.",
+    "introStepPreview": "Kun tekoälyllä on tarpeeksi esimerkkejä, se valmistelee koko tarkistuksen ja jättää epävarmat kulut luokittelematta.",
     "startCalibration": "Aloita kalibrointi",
     "calibrationStartHint": "Tekoäly valitsee hyödyllisiä esimerkkejä sinun tarkistettavaksesi.",
     "calibrationReady": "Tekoälyllä on tarpeeksi palautetta täyden tarkastelun valmisteluun.",
@@ -1674,7 +1700,8 @@
     "generatingPreview": "Valmistellaan ehdotuksia…",
     "noSuggestions": "Tekoäly jätti kaikki kulut luokittelematta. Voit yrittää uudelleen lisäkalibroinnin jälkeen.",
     "previewSummary": "Tekoäly ehdotti kategorioita {suggested}:lle {total}:sta kulusta.",
-    "leftUncategorized": "{count} kulua jäi luokittelematta, koska tekoäly ei ollut tarpeeksi varma.",
+    "leftUncategorized_one": "{count} kulu jätettiin luokittelematta, koska tekoäly ei ollut riittävän varma.",
+    "leftUncategorized_other": "{count} kulua jätettiin luokittelematta, koska tekoäly ei ollut riittävän varma.",
     "retryPreview": "Yritä esikatselua uudelleen",
     "doneTitle": "Kategoriat tallennettu",
     "expenseColumn": "Kulu",
@@ -1686,10 +1713,11 @@
     "category": "Kategoria",
     "date": "Päivä",
     "paidBy": "Maksaja",
-    "paidFor": "Maksettu puolesta",
+    "paidFor": "Jaettu osallistujien kesken",
     "yourBalance": "Saldosi",
     "notes": "Muistiinpanot",
-    "attachments": "Liitteet ({count})",
+    "attachments_one": "Liite ({count})",
+    "attachments_other": "Liitteet ({count})",
     "edit": "Muokkaa kulua",
     "makeCopy": "Tee kopio"
   },
@@ -1702,10 +1730,21 @@
     "create": "Luo",
     "edit": "Muokkaa tietoja",
     "creating": "Luodaan…",
-    "successToast": "Velanmaksu tallennettu"
+    "successToast": "Tasausmaksu kirjattu"
   },
   "Participants": {
     "search": "Hae osallistujia...",
     "noParticipant": "Osallistujaa ei löytynyt"
+  },
+  "Common": {
+    "close": "Sulje",
+    "previousSlide": "Edellinen dia",
+    "nextSlide": "Seuraava dia"
+  },
+  "Theme": {
+    "toggle": "Vaihda teemaa",
+    "light": "Vaalea",
+    "dark": "Tumma",
+    "system": "Järjestelmän oletus"
   }
 }

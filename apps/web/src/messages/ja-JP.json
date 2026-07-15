@@ -8,32 +8,32 @@
       "createAccount": "アカウントを作成",
       "createGroup": "グループを作成",
       "importGroup": "他のサービスからグループをインポート",
-      "createFriendLedger": "フレンド台帳を作成"
+      "createFriendLedger": "友人との支出を記録"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "グループと同期",
+        "description": "旅行やイベント、贈り物用のグループを作り、複数の端末で同期できます。"
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "支出と領収書",
+        "description": "支出や領収書の画像を追加し、毎日・毎週・毎月の定期支出も作成できます。"
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "柔軟な分割",
+        "description": "割合、シェア、金額指定、均等割りで分割できます。"
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "残高",
+        "description": "誰がいくら支払ったかを確認し、参加者間の送金を最適化します。"
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "カテゴリ",
+        "description": "カテゴリを付けることで、共有の支出を見やすく整理できます。"
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "アカウント",
+        "description": "サインインしてデータを保護し、支出履歴をいつでも確認できます。"
       }
     },
     "welcomeBack": "おかえりなさい、{name}。"
@@ -43,7 +43,8 @@
     "signOut": "サインアウト",
     "account": "アカウント",
     "accountSettings": "アカウント設定",
-    "back": "戻る"
+    "back": "戻る",
+    "menu": "メニュー"
   },
   "Footer": {
     "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
@@ -77,7 +78,7 @@
       "lastMonth": "先月",
       "earlierThisYear": "今年初め",
       "lastYear": "昨年",
-      "older": "それ以前"
+      "older": "過去の支出"
     },
     "filters": {
       "mobileTitle": "支出を絞り込む",
@@ -107,7 +108,7 @@
       "noMatchClear": "フィルターをクリア",
       "category": "カテゴリ",
       "paidBy": "支払者",
-      "paidFor": "負担者",
+      "paidFor": "分割対象",
       "dateRange": "日付範囲",
       "dateFrom": "開始",
       "dateTo": "終了",
@@ -122,7 +123,7 @@
       "allCategories": "すべてのカテゴリ",
       "allParticipants": "すべての参加者",
       "allCurrencies": "すべての通貨",
-      "nSelected": "{count}件選択中",
+      "nSelected_other": "{count}件選択中",
       "removeFilter": "フィルターを削除",
       "settlementsHidden": "精算非表示",
       "title": "フィルター"
@@ -130,16 +131,16 @@
     "showSettlements": "精算を表示"
   },
   "ExpenseCard": {
-    "paidBy": "<strong>{paidBy}</strong>が<paidFor></paidFor>のために支払いました",
-    "receivedBy": "<strong>{paidBy}</strong>が<paidFor></paidFor>のために受け取りました",
-    "receivedByMultiple": "<paidByNames></paidByNames>が<paidFor></paidFor>のために受け取りました",
+    "receivedBy": "<strong>{paidBy}</strong>が受取 · <paidFor></paidFor>に配分",
+    "receivedByMultiple": "<paidByNames></paidByNames>が受取 · <paidFor></paidFor>に配分",
     "yourBalance": "あなたの残高:",
-    "paidByMultiple": "<paidByNames></paidByNames>が<paidFor></paidFor>のために支払いました",
+    "paidBy": "<strong>{paidBy}</strong>が支払い · <paidFor></paidFor>で分割",
+    "paidByMultiple": "<paidByNames></paidByNames>が支払い · <paidFor></paidFor>で分割",
     "everyone": "全員",
     "notInvolved": "あなたは関係していません",
     "settlementBadge": "精算",
     "items": {
-      "more": "+{count} more",
+      "more_other": "+{count}件",
       "title": "Items",
       "participants": "{names}"
     },
@@ -161,7 +162,8 @@
     },
     "NotFound": {
       "text": "このグループは存在しません。",
-      "link": "ホームへ移動"
+      "link": "ホームへ移動",
+      "lookingUp": "グループを検索中…"
     },
     "createdInviteHint": "グループを作成しました。メンバーを招待して始めましょう。",
     "hidden": "非表示",
@@ -169,14 +171,14 @@
     "showArchived": "アーカイブ済みのグループを表示",
     "hide": "グループを非表示",
     "unhide": "グループの非表示を解除",
-    "hideFriend": "フレンド台帳を非表示",
-    "unhideFriend": "フレンド台帳の非表示を解除",
+    "hideFriend": "友人との支出を非表示",
+    "unhideFriend": "友人との支出を表示",
     "starGroup": "グループにスターを付ける",
     "unstarGroup": "グループのスターを外す",
-    "starFriend": "フレンド台帳にスターを付ける",
-    "unstarFriend": "フレンド台帳のスターを外す",
+    "starFriend": "友人との支出をお気に入りに追加",
+    "unstarFriend": "友人との支出をお気に入りから削除",
     "groupActions": "グループ操作",
-    "friendActions": "フレンド台帳の操作",
+    "friendActions": "友人との支出の操作",
     "archiveGroup": "グループをアーカイブ",
     "unarchiveGroup": "グループのアーカイブを解除",
     "archiveSuccess": "グループをアーカイブしました。",
@@ -245,9 +247,9 @@
         "newGroupFormat": "新しいグループ · {currency}",
         "existingGroupFormat": "既存のグループ · 統合",
         "summaryLabel": "概要",
-        "sourceParticipants": "{count} 名のソース参加者",
+        "sourceParticipants_other": "インポート元の参加者{count}人",
         "participantBreakdown": "{linked} リンク済み · {email} メール招待 · {link} リンク招待 · {unlinked} 未リンク",
-        "expenseCount": "{count} 件の支出が作成されます",
+        "expenseCount_other": "支出が{count}件作成されます",
         "sourceName": "ソース: {name}",
         "footer": "すべてのソース参加者と支出がインポートされます。招待はグループ作成後に送信/生成されます。",
         "importingButton": "インポート中…",
@@ -272,7 +274,7 @@
         "existingGroup": "既存のグループ",
         "loading": "読み込み中…",
         "noAdminGroups": "まだグループを管理していません。",
-        "memberCount": "{count} 名のメンバー"
+        "memberCount_other": "メンバー{count}人"
       },
       "Done": {
         "importComplete": "インポート完了",
@@ -440,16 +442,16 @@
       "description": "友達や家族、ルームメイトとの共有支出を記録しましょう。"
     },
     "groups": "グループ",
-    "friends": "フレンド台帳",
+    "friends": "友人",
     "createExpense": "支出を作成",
     "pending": "保留中",
     "scopePickerGroups": "グループを選択",
-    "scopePickerFriends": "フレンド台帳を選択",
+    "scopePickerFriends": "友人を選択",
     "scopePickerEmpty": "まだグループがありません",
-    "scopePickerMembers": "{count}名のメンバー",
+    "scopePickerMembers_other": "メンバー{count}人",
     "createFriendLedgerCard": {
       "description": "特定の人と1対1で精算しましょう。",
-      "title": "フレンド台帳を作成"
+      "title": "友人との支出を記録"
     },
     "importGroup": "グループをインポート",
     "exportDescription": "グループの支出を JSON または CSV としてダウンロードします。"
@@ -473,7 +475,7 @@
     "Participants": {
       "title": "参加者",
       "description": "各参加者の名前を入力してください。",
-      "protectedParticipant": "この参加者は支出の一部であり、削除できません。",
+      "protectedParticipant": "この参加者は支出に含まれているため削除できません。",
       "new": "新規",
       "add": "参加者を追加",
       "John": "一郎",
@@ -517,8 +519,8 @@
       "edit": "収入を編集",
       "TitleField": {
         "label": "収入タイトル",
-        "placeholder": "月曜日の夕食レストラン",
-        "description": "収入の説明を入力してください。"
+        "placeholder": "給与や返金",
+        "description": "収入の出所を入力します。"
       },
       "DateField": {
         "label": "収入日",
@@ -527,11 +529,11 @@
       "categoryFieldDescription": "収入カテゴリーを選択してください。",
       "paidByField": {
         "label": "受取人",
-        "description": "収入を受け取った参加者を選択してください。"
+        "description": "受け取った人と、それぞれの受取額を選択します。"
       },
       "paidFor": {
-        "title": "受け取り対象",
-        "description": "誰のために収入が受け取られたかを選択してください。"
+        "title": "配分先",
+        "description": "この収入を分ける参加者を選択します。"
       },
       "splitModeDescription": "収入の分割方法を選択してください。",
       "attachDescription": "領収書を確認し、収入に添付してください。",
@@ -555,8 +557,8 @@
       "categoryFieldDescription": "支出カテゴリーを選択してください。",
       "paidByField": {
         "label": "支払者",
-        "description": "支出を支払った参加者を選択してください。",
-        "placeholder": "参加者を選択してください"
+        "placeholder": "参加者を選択してください",
+        "description": "支払った人と、それぞれの支払額を選択します。"
       },
       "recurrenceRule": {
         "label": "支出の繰り返し",
@@ -567,8 +569,8 @@
         "monthly": "毎月"
       },
       "paidFor": {
-        "title": "支払い対象",
-        "description": "誰のために支出が支払われたかを選択してください。"
+        "title": "分割対象",
+        "description": "この支出を分担する参加者を選択します。"
       },
       "splitModeDescription": "支出の分割方法を選択してください。",
       "attachDescription": "領収書を確認し、支出に添付してください。",
@@ -576,8 +578,8 @@
         "label": "支出の通貨",
         "description": "支出が支払われた通貨。"
       },
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "コピーを作成：{title}",
+      "editTitle": "編集：{title}"
     },
     "amountField": {
       "label": "金額",
@@ -615,7 +617,7 @@
       }
     },
     "isReimbursementField": {
-      "label": "これは払い戻しです"
+      "label": "これは精算金です"
     },
     "categoryField": {
       "label": "カテゴリー"
@@ -638,6 +640,7 @@
       "title": "この支出を削除しますか？",
       "description": "本当にこの支出を削除しますか？この操作は元に戻せません。",
       "yes": "はい",
+      "deleting": "削除中…",
       "cancel": "キャンセル"
     },
     "attachDocuments": "書類を添付",
@@ -646,7 +649,6 @@
     "save": "保存",
     "saving": "保存中…",
     "cancel": "キャンセル",
-    "reimbursement": "払い戻し",
     "conversionUnavailable": "支出ごとに異なる通貨を設定して金額を換算するには、グループの通貨をカスタム以外の通貨に設定してください。",
     "conversionRateField": {
       "useApi": "Frankfurterのレートを使用する",
@@ -670,6 +672,7 @@
     "participant": {
       "pending": "(招待済み)"
     },
+    "reimbursement": "精算金",
     "readOnlyNotice": "このグループはアーカイブされています。この支出は読み取り専用で表示されています。",
     "PaidBySplitModeField": {
       "label": "支払者の分割モード"
@@ -698,6 +701,7 @@
     "paidBySectionSingle": "単独",
     "paidBySectionMultiple": "複数の支払い者",
     "paidForSection": "参加者間で分割",
+    "splitOptionAria": "分割方法：{title}",
     "paidByOptionSinglePayerHelper": "1人で全額を負担",
     "paidByOptionEvenlyHelper": "全員が同じ額を支払う",
     "paidByOptionBySharesHelper": "重み付けされたシェアを支払う",
@@ -710,24 +714,24 @@
     "convertedAmountField": {
       "label": "換算後の金額"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "品目別",
+    "paidForOptionItemizedHelper": "支出の各品目から参加者ごとの負担額を計算します。",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "品目",
+      "description": "品目を追加して支出を正確に分割したり、任意の分割方法の明細として残したりできます。",
+      "addItem": "品目を追加",
+      "empty": "品目はまだありません。「品目を追加」を押して始めてください。",
+      "allMembers": "参加者全員",
+      "noMembers": "参加者なし",
+      "other": "その他（未計上）",
+      "derivedBadge": "自動計算",
+      "errorExceedsAmount": "品目の合計が支出額を超えています。",
+      "actionEdit": "編集",
+      "actionDelete": "削除",
+      "total": "品目合計",
+      "requiredForItemized": "品目別に分割するには、品目を1件以上追加してください。",
+      "participantsSummary_other": "参加者{count}人",
+      "modalTitle": "品目の参加者",
       "columnItem": "品目",
       "columnCost": "金額",
       "columnQuantity": "数量",
@@ -739,19 +743,19 @@
       "splitByPercentageLabel": "割合で分割",
       "splitByAmountLabel": "金額で分割",
       "switchToItemizedTitle": "項目別の分割に切り替えますか？",
-      "switchToItemizedDescription": "項目の参加者を編集すると、「支払い対象」が「項目別」に変更され、設定済みの支払い対象の分割が置き換えられます。",
+      "switchToItemizedDescription": "品目の参加者を編集すると、分割対象が「品目別」に変わり、設定済みの参加者ごとの分割は置き換えられます。",
       "switchToItemizedConfirm": "項目別に切り替え",
       "showItems": "項目を表示",
       "hideItems": "項目を非表示"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "分割方法を変更しますか？",
+      "description": "{mode}に変更すると、品目は明細としてのみ残り、品目ごとの参加者設定はすべて削除されます。",
+      "cancel": "キャンセル",
+      "confirm": "変更"
     },
-    "paidForItemizedEntryHint": "品目ごとの「対象者」計算を使うには、品目行から参加者を編集します。",
-    "paidForItemizedActiveHint": "品目ごとの「対象者」計算が有効です。この分割を変更するには、品目カードで品目の参加者を編集してください。",
+    "paidForItemizedEntryHint": "品目別に分割するには、品目の行から参加者を編集してください。",
+    "paidForItemizedActiveHint": "品目別の分割が有効です。変更するには「品目」カードで品目の参加者を編集してください。",
     "DefaultSplit": {
       "savedAsDefault": "デフォルトに保存しました",
       "heading": "デフォルトの分割",
@@ -761,6 +765,9 @@
     "scanReceipt": "AIでレシートをスキャン"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "書類を削除",
+    "document": "書類",
+    "close": "閉じる",
     "TooBigToast": {
       "title": "ファイルが大きすぎます",
       "description": "アップロードできる最大ファイルサイズは{maxSize}です。あなたのファイルは{size}です。"
@@ -806,11 +813,11 @@
   },
   "Balances": {
     "title": "残高",
-    "description": "これは各参加者が支払ったまたは支払われた金額です。",
+    "description": "各参加者の差引残高を確認できます。",
     "Reimbursements": {
-      "title": "提案される払い戻し",
-      "description": "参加者間の最適化された払い戻しの提案です。",
-      "noImbursements": "グループに払い戻しが必要ないようです 😁",
+      "title": "精算金の提案",
+      "description": "送金回数をできるだけ少なくして残高を精算するための支払いです。",
+      "noImbursements": "全員の精算が完了しています 😁",
       "owes": "<strong>{from}</strong>は<strong>{to}</strong>に借りがあります",
       "markAsPaid": "支払い済みとしてマーク",
       "markAsPaidAria": "{from}から{to}への{amount}を支払い済みとしてマーク"
@@ -834,7 +841,7 @@
       "label": "表示",
       "title": "残高の表示方法を選択",
       "simple": "シンプル",
-      "simpleDescription": "誰が誰にいくら支払うかを確認して精算します。",
+      "simpleDescription": "誰が誰にいくら支払う必要があるかを確認し、精算金を記録します。",
       "visual": "ビジュアル",
       "visualDescription": "残高の内訳とグラフ。"
     },
@@ -916,12 +923,12 @@
       "lastMonth": "先月",
       "earlierThisYear": "今年初め",
       "lastYear": "昨年",
-      "older": "それ以前"
+      "older": "過去のアクティビティ"
     }
   },
   "Information": {
     "title": "情報",
-    "description": "グループ参加者に関連する情報を追加するためにこの場所を使用してください。",
+    "description": "グループの参加者に役立つ情報を追加します。",
     "empty": "まだグループ情報がありません。"
   },
   "Settings": {
@@ -945,7 +952,7 @@
     "amountNotZero": "金額はゼロであってはなりません。",
     "amountTenMillion": "金額は10,000,000未満である必要があります。",
     "paidByRequired": "参加者を選択する必要があります。",
-    "paidForMin1": "支出は少なくとも1人の参加者のために支払われている必要があります。",
+    "paidForMin1": "支出は1人以上の参加者で分割する必要があります。",
     "noZeroShares": "すべてのシェアは0より大きくなければなりません。",
     "amountSum": "金額の合計は支出金額と一致する必要があります。",
     "percentageSum": "パーセンテージの合計は100である必要があります。",
@@ -1391,7 +1398,7 @@
           "description": "{email}への招待を取り消しますか？先に残高を精算する必要があります。",
           "warning": {
             "title": "この招待には未決済の残高があります",
-            "description": "下のチェックボックスをオンにすると、この招待者が関わる各取引に対して1件の精算払い戻し支出を取り消し前に作成します。残高が精算されるまで招待を取り消すことはできません。"
+            "description": "下のオプションを選ぶと、この招待者に関係する残高ごとに精算金が1件作成されます。残高を精算するまで招待は取り消せません。"
           },
           "checkbox": "取り消す前にこの招待者の残高を精算"
         }
@@ -1416,9 +1423,9 @@
         "description": "{name}をこのグループから削除しますか？未決済の残高があります — 下のチェックボックスをオンにすると、削除前に自動的に決済されます。",
         "warning": {
           "title": "このメンバーには未決済の残高があります",
-          "description": "決済せずに削除すると、これらの残高が台帳に無期限に残ります。下のチェックボックスをオンにすると、このメンバーが関わる各取引に対して1件の払い戻し支出を作成してから削除するか、決済せずに削除して残高を手動で処理することもできます。"
+          "description": "精算せずに削除すると、この残高はグループに残り続けます。下のオプションを選んで、このメンバーに関係する残高ごとに精算金を作成するか、削除後に手動で精算してください。"
         },
-        "checkbox": "削除前に決済払い戻しを作成する"
+        "checkbox": "削除前にこのメンバーの残高を精算する"
       }
     },
     "leave": {
@@ -1440,7 +1447,7 @@
         },
         "unsettled": {
           "title": "未決済の残高があります",
-          "description": "強制退会すると、あなたが関わる取引に対して自動的に精算払い戻し支出が作成され、台帳の整合性が保たれます。その他の残高はそのまま残ります。"
+          "description": "退出前に、あなたに関係する残高の精算金が作成されます。他の参加者の残高は変わりません。"
         }
       },
       "toast": {
@@ -1461,11 +1468,11 @@
       "linkButton": "リンク",
       "linkDialog": {
         "title": "未リンク参加者をリンク",
-        "description": "{displayName}をリンクする既存のメンバーを選んでください。リンク先が、この参加者と支出の反対側にすでに含まれていてはいけません。",
+        "description": "{displayName}のリンク先となる既存メンバーを選択します。そのメンバーには、この参加者との支出残高がないことが必要です。",
         "membersGroup": "メンバー",
         "cancel": "キャンセル",
         "confirm": "リンク",
-        "noCandidates": "互換性のあるメンバーが見つかりませんでした。これは通常、この未リンク参加者が他のすべてのメンバーと支出の両側に含まれていることを意味します — インポートをやり直すか、先に支出を調整する必要があります。",
+        "noCandidates": "リンク可能なメンバーが見つかりません。この未リンクの参加者が、他のすべてのメンバーと競合する支出残高を持っている可能性があります。グループを再度インポートするか、先に支出を調整してください。",
         "pendingLabel": "保留中",
         "pendingHint": "保留中の招待にリンクすると、名前のみのエントリーが招待者に統合されます。招待者は自身の行を保持し、リンクされた参照は招待者が承認したときに解決されるようになります。",
         "membersGroupWithPending": "メンバーと保留中の招待",
@@ -1520,7 +1527,7 @@
         "items": "明細",
         "documents": "添付ファイル",
         "recurrence": "繰り返し",
-        "reimbursement": "払い戻し",
+        "reimbursement": "精算金",
         "conversionSource": "換算元",
         "conversionRate": "換算レート"
       }
@@ -1550,10 +1557,10 @@
     },
     "fallback": "アクティビティが記録されました",
     "unknownActor": "誰か",
+    "openExpense": "経費を開く",
     "import": {
-      "imported": "{participant}が{count}件の支出をインポートしました"
-    },
-    "openExpense": "経費を開く"
+      "imported_other": "{participant}が支出を{count}件インポートしました"
+    }
   },
   "OfflineBanner": {
     "message": "現在オフラインです。行った変更は再接続するまで保存されません。"
@@ -1593,38 +1600,43 @@
     "labels": {
       "group": "グループ",
       "groupPlural": "グループ",
-      "friendLedger": "フレンド台帳",
-      "friendLedgerPlural": "フレンド台帳"
+      "friendLedger": "友人",
+      "friendLedgerPlural": "友人"
     },
     "actions": {
       "createGroup": "グループを作成",
-      "createFriendLedger": "フレンド台帳を作成",
+      "createFriendLedger": "友人との支出を記録",
       "showHidden": "非表示のグループを表示"
     }
   },
   "Friends": {
-    "title": "フレンド台帳を作成",
+    "title": "友人との支出を記録",
     "peerFriendsTab": "友達リスト",
     "peerEmailTab": "メールアドレス",
     "peerLinkTab": "共有リンク",
-    "alreadyHasLedger": "すでにフレンド台帳があります",
+    "friendsSection": "友人",
+    "pendingInvitationsSection": "保留中の招待",
+    "activeFriendExpensesSection": "進行中の友人との支出",
+    "alreadyInvited": "（招待済み）",
+    "alreadyHasLedger": "（すでに支出を共有しています）",
     "inviteSent": "招待を送信しました。友達がSpliit Cloudに参加すると、台帳に追加されます。",
     "inviteLinkTitle": "このリンクを共有",
-    "inviteLinkDescription": "このリンクを友達と共有して、台帳に追加しましょう。",
+    "inviteLinkDescription": "このリンクを共有すると、友人が共通の支出に参加できます。",
     "copy": "コピー",
     "share": "共有",
-    "linkHelp": "友達が台帳に参加するための共有可能なリンクを生成します。",
+    "linkHelp": "友人が参加するための共有リンクを作成します。",
     "emailLabel": "友達のメールアドレス",
     "temporaryNameLabel": "表示名",
     "temporaryNameHelp": "招待する相手の名前を入力してください。",
     "friendsEmpty": "メールアドレスを入力するか、リンクを共有して友達を追加しましょう。",
     "infoLabel": "情報（任意）",
-    "infoPlaceholder": "「ルームメイトの費用」など、説明を追加"
+    "infoPlaceholder": "「ルームメイトの費用」など、説明を追加",
+    "createError": "友人との支出を作成できませんでした"
   },
   "BulkCategorize": {
     "title": "一括カテゴリ分類",
     "calibrationTitle": "ステップ1 — キャリブレーション",
-    "calibrationDescription": "あなたが確定した各例は、AIの次のパスにおける正解（グラウンドトゥルース）になります。1回の学習で完了する場合もあれば、さらに例を求められる場合もあります。",
+    "calibrationDescription": "確認した例が増えるほど、AIの次の提案が改善されます。1回で準備が整う場合も、追加の例が必要な場合もあります。",
     "roundCount": "ラウンド {round} / {max}",
     "confidence": {
       "high": "高",
@@ -1643,10 +1655,10 @@
     "previewDescription": "各行を編集してから保存してください。信頼度はモデルが最も確信していない行を示します。",
     "previewHint": "候補{total}件中{shown}件を表示中",
     "removeAction": "スキップ",
-    "targetExceedsCap": "対象セットの支出が多すぎます（{count}件）。日付を絞り込むか、バッチで処理してください。",
-    "saveAll": "{count}件の変更を保存",
+    "targetExceedsCap_other": "処理する支出が多すぎます（{count}件）。期間を狭めるか、複数回に分けて処理してください。",
+    "saveAll_other": "{count}件の変更を保存",
     "saving": "保存中…",
-    "saved": "{count}件の支出が再カテゴリ分類されました。",
+    "saved_other": "{count}件の支出を再分類しました。",
     "applyError": "一括カテゴリ更新を保存できませんでした: {message}",
     "noCandidates": "カテゴリ分類が必要な支出はありません。",
     "adminsOnly": "グループ管理者のみが一括カテゴリ分類を実行できます。",
@@ -1657,10 +1669,10 @@
     "previewError": "プレビューを生成できませんでした: {message}",
     "introTitle": "仕組み",
     "loadingCandidates": "未分類の支出を確認中…",
-    "introDescription": "{count}件の未分類の支出が確認待ちです。",
-    "introStepLook": "AIは最大{count}件の支出を広く調査し、最も有用な例を見つけます。",
-    "introStepReview": "最大{count}件の選択された例を確認・修正して、AIにこのグループのカテゴリを学習させます。",
-    "introStepPreview": "AIが十分なシグナルを得たら、完全なレビューを準備し、確信が持てない支出は未分類のままにします。",
+    "introDescription_other": "確認待ちの未分類の支出が{count}件あります。",
+    "introStepLook_other": "AIが最大{count}件の支出を確認し、最も参考になる例を探します。",
+    "introStepReview_other": "選ばれた例を最大{count}件確認・修正すると、AIがこのグループのカテゴリを学習します。",
+    "introStepPreview": "十分な例が集まると、AIが全件の確認画面を用意し、判断が難しい支出は未分類のままにします。",
     "startCalibration": "キャリブレーションを開始",
     "calibrationStartHint": "AIが確認すべき有用な例を選んでいます。",
     "calibrationReady": "AIはプレビューを準備するのに十分なフィードバックを得ました。",
@@ -1674,7 +1686,7 @@
     "generatingPreview": "提案を準備中…",
     "noSuggestions": "AIはすべての支出を未分類のままにしました。さらにキャリブレーションを行ってから再試行できます。",
     "previewSummary": "AIが{total}件中{suggested}件の支出にカテゴリを提案しました。",
-    "leftUncategorized": "AIの確信度が不十分なため、{count}件の支出が未分類のまま残りました。",
+    "leftUncategorized_other": "AIが十分な確信を持てなかったため、{count}件の支出は未分類のままです。",
     "retryPreview": "プレビューを再試行",
     "doneTitle": "カテゴリを保存しました",
     "expenseColumn": "支出",
@@ -1686,10 +1698,10 @@
     "category": "カテゴリー",
     "date": "日付",
     "paidBy": "支払者",
-    "paidFor": "支払い対象",
+    "paidFor": "分割対象",
     "yourBalance": "あなたの残高",
     "notes": "メモ",
-    "attachments": "添付ファイル ({count})",
+    "attachments_other": "添付ファイル（{count}件）",
     "edit": "支出を編集",
     "makeCopy": "コピーを作成"
   },
@@ -1702,10 +1714,21 @@
     "create": "作成する",
     "edit": "詳細を編集",
     "creating": "作成中…",
-    "successToast": "払い戻しを記録しました"
+    "successToast": "精算金を記録しました"
   },
   "Participants": {
     "search": "参加者を検索...",
     "noParticipant": "参加者が見つかりません"
+  },
+  "Common": {
+    "close": "閉じる",
+    "previousSlide": "前のスライド",
+    "nextSlide": "次のスライド"
+  },
+  "Theme": {
+    "toggle": "テーマを変更",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム設定"
   }
 }

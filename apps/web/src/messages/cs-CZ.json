@@ -8,32 +8,32 @@
       "createAccount": "Vytvořit účet",
       "createGroup": "Vytvořit skupinu",
       "importGroup": "Importovat skupinu z jiné služby",
-      "createFriendLedger": "Vytvořit účet s přítelem"
+      "createFriendLedger": "Sledovat výdaje s přítelem či přítelkyní"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Skupiny a synchronizace",
+        "description": "Vytvářejte skupiny pro cesty, události a dárky a synchronizujte je mezi zařízeními."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Výdaje a účtenky",
+        "description": "Přidávejte výdaje a snímky účtenek a vytvářejte denní, týdenní nebo měsíční opakované náklady."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Pokročilé rozdělení",
+        "description": "Rozdělujte procenty, podíly, přesnou částkou nebo jednoduše rovným dílem."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Zůstatky",
+        "description": "Zjistěte, kdo co zaplatil, a minimalizujte převody mezi účastníky."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Kategorie",
+        "description": "Přiřaďte kategorie, aby společné výdaje zůstaly přehledné."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Účty",
+        "description": "Jedním přihlášením ochráníte data a zachováte přístup k historii výdajů."
       }
     },
     "welcomeBack": "Vítej zpátky, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Odhlásit se",
     "account": "Účet",
     "accountSettings": "Nastavení účtu",
-    "back": "Zpět"
+    "back": "Zpět",
+    "menu": "Nabídka"
   },
   "Footer": {
     "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
@@ -77,7 +78,7 @@
       "lastMonth": "Minulý měsíc",
       "earlierThisYear": "Dříve tento rok",
       "lastYear": "Minulý rok",
-      "older": "Starší"
+      "older": "Starší výdaje"
     },
     "filters": {
       "mobileTitle": "Filtrovat výdaje",
@@ -107,7 +108,7 @@
       "noMatchClear": "Vymazat filtry",
       "category": "Kategorie",
       "paidBy": "Zaplatil",
-      "paidFor": "Zaplaceno za",
+      "paidFor": "Rozděleno mezi",
       "dateRange": "Rozsah dat",
       "dateFrom": "Od",
       "dateTo": "Do",
@@ -122,7 +123,10 @@
       "allCategories": "Všechny kategorie",
       "allParticipants": "Všichni účastníci",
       "allCurrencies": "Všechny měny",
-      "nSelected": "{count} vybráno",
+      "nSelected_one": "Vybráno: {count}",
+      "nSelected_few": "Vybráno: {count}",
+      "nSelected_many": "Vybráno: {count}",
+      "nSelected_other": "Vybráno: {count}",
       "removeFilter": "Odstranit filtr",
       "settlementsHidden": "Vyrovnání skryta",
       "title": "Filtry"
@@ -130,17 +134,20 @@
     "showSettlements": "Zobrazit vyrovnání"
   },
   "ExpenseCard": {
-    "paidBy": "Zaplatil/a <strong>{paidBy}</strong> za <paidFor></paidFor>",
-    "receivedBy": "Obdržel/a <strong>{paidBy}</strong> od <paidFor></paidFor>",
-    "receivedByMultiple": "Obdržel/a <paidByNames></paidByNames> od <paidFor></paidFor>",
+    "receivedBy": "Přijal(a) <strong>{paidBy}</strong> · přiděleno účastníkům <paidFor></paidFor>",
+    "receivedByMultiple": "Přijali <paidByNames></paidByNames> · přiděleno účastníkům <paidFor></paidFor>",
     "yourBalance": "Váš zůstatek:",
-    "paidByMultiple": "Zaplatil/a <paidByNames></paidByNames> za <paidFor></paidFor>",
+    "paidBy": "Zaplatil(a) <strong>{paidBy}</strong> · rozděleno mezi <paidFor></paidFor>",
+    "paidByMultiple": "Zaplatili <paidByNames></paidByNames> · rozděleno mezi <paidFor></paidFor>",
     "everyone": "všechny",
     "notInvolved": "Nejste zapojeni",
     "settlementBadge": "Vyrovnání",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+{count} dalších",
+      "more_few": "+{count} dalších",
+      "more_many": "+{count} dalších",
+      "more_other": "+{count} dalších",
+      "title": "Položky",
       "participants": "{names}"
     },
     "copyToast": "Vytvoření kopie výdaje zahájeno. Stávající údaje výdaje budou použity k vytvoření nového."
@@ -157,14 +164,14 @@
     "showArchived": "Zobrazit archivované skupiny",
     "hide": "Skrýt skupinu",
     "unhide": "Zobrazit skupinu",
-    "hideFriend": "Skrýt účet s přítelem",
-    "unhideFriend": "Zobrazit účet s přítelem",
+    "hideFriend": "Skrýt výdaje s přítelem",
+    "unhideFriend": "Zobrazit výdaje s přítelem",
     "starGroup": "Označit hvězdičkou",
     "unstarGroup": "Odznačit hvězdičku",
-    "starFriend": "Označit hvězdičkou účet s přítelem",
-    "unstarFriend": "Odznačit hvězdičkou účet s přítelem",
+    "starFriend": "Přidat výdaje s přítelem do oblíbených",
+    "unstarFriend": "Odebrat výdaje s přítelem z oblíbených",
     "groupActions": "Akce skupiny",
-    "friendActions": "Akce účtu s přítelem",
+    "friendActions": "Akce pro výdaje s přítelem",
     "archiveGroup": "Archivovat skupinu",
     "unarchiveGroup": "Obnovit skupinu",
     "archiveSuccess": "Skupina archivována.",
@@ -207,7 +214,8 @@
     },
     "NotFound": {
       "text": "Tato skupina neexistuje.",
-      "link": "Přejít na domovskou stránku"
+      "link": "Přejít na domovskou stránku",
+      "lookingUp": "Hledání skupiny…"
     },
     "Unauthorized": {
       "title": "Nemáte přístup k této skupině",
@@ -245,9 +253,15 @@
         "newGroupFormat": "Nová skupina · {currency}",
         "existingGroupFormat": "Existující skupina · sloučeno",
         "summaryLabel": "Souhrn",
-        "sourceParticipants": "{count} zdrojových účastníků",
+        "sourceParticipants_one": "{count} účastník ve zdroji",
+        "sourceParticipants_few": "{count} účastníci ve zdroji",
+        "sourceParticipants_many": "{count} účastníků ve zdroji",
+        "sourceParticipants_other": "{count} účastníků ve zdroji",
         "participantBreakdown": "{linked} propojeno · {email} e-mailové pozvánky · {link} odkazové pozvánky · {unlinked} nepropojeno",
-        "expenseCount": "Bude vytvořeno {count} výdajů",
+        "expenseCount_one": "Bude vytvořen {count} výdaj",
+        "expenseCount_few": "Budou vytvořeny {count} výdaje",
+        "expenseCount_many": "Bude vytvořeno {count} výdajů",
+        "expenseCount_other": "Bude vytvořeno {count} výdajů",
         "sourceName": "Zdroj: {name}",
         "footer": "Každý zdrojový účastník a výdaj bude importován. Pozvánky jsou odesílány / generovány po vytvoření skupiny.",
         "importingButton": "Importuji…",
@@ -272,7 +286,10 @@
         "existingGroup": "Existující skupina",
         "loading": "Načítám…",
         "noAdminGroups": "Zatím nespravujete žádnou skupinu.",
-        "memberCount": "{count} členů"
+        "memberCount_one": "{count} člen",
+        "memberCount_few": "{count} členové",
+        "memberCount_many": "{count} členů",
+        "memberCount_other": "{count} členů"
       },
       "Done": {
         "importComplete": "Import dokončen",
@@ -440,16 +457,19 @@
       "description": "Sledujte sdílené výdaje s přáteli, rodinou nebo spolubydlícími."
     },
     "groups": "Skupiny",
-    "friends": "Účty s přáteli",
+    "friends": "Přátelé",
     "createExpense": "Vytvořit výdaj",
     "pending": "Čeká na vyřízení",
     "scopePickerGroups": "Vyberte skupinu",
-    "scopePickerFriends": "Vyberte účet s přítelem",
+    "scopePickerFriends": "Vybrat přítele",
     "scopePickerEmpty": "Zatím žádné skupiny",
-    "scopePickerMembers": "{count} člen(ů)",
+    "scopePickerMembers_one": "{count} člen",
+    "scopePickerMembers_few": "{count} členové",
+    "scopePickerMembers_many": "{count} členů",
+    "scopePickerMembers_other": "{count} členů",
     "createFriendLedgerCard": {
       "description": "Vyrovnejte se jeden na jednoho s konkrétní osobou.",
-      "title": "Vytvořit účet s přítelem"
+      "title": "Sledovat výdaje s přítelem či přítelkyní"
     },
     "importGroup": "Importovat skupinu",
     "exportDescription": "Stáhnout výdaje skupiny jako JSON nebo CSV."
@@ -484,7 +504,7 @@
     "Participants": {
       "title": "Účastníci",
       "description": "Zadejte jméno každého účastníka.",
-      "protectedParticipant": "Tento účastník je součástí výdajů a nelze jej odebrat.",
+      "protectedParticipant": "Tento účastník je součástí výdaje a nelze jej odebrat.",
       "new": "Nový",
       "add": "Přidat účastníka",
       "John": "Jan",
@@ -517,8 +537,8 @@
       "edit": "Upravit příjem",
       "TitleField": {
         "label": "Název příjmu",
-        "placeholder": "Pondělní večerní restaurace",
-        "description": "Zadejte popis příjmu."
+        "placeholder": "Mzda nebo vratka",
+        "description": "Popište, odkud příjem pochází."
       },
       "DateField": {
         "label": "Datum příjmu",
@@ -531,11 +551,11 @@
       "categoryFieldDescription": "Vyberte kategorii příjmu.",
       "paidByField": {
         "label": "Obdržel/a",
-        "description": "Vyberte účastníka, který příjem obdržel."
+        "description": "Vyberte, kdo peníze přijal a kolik každý obdržel."
       },
       "paidFor": {
-        "title": "Obdrženo pro",
-        "description": "Vyberte, pro koho byl příjem obdržen."
+        "title": "Přiděleno účastníkům",
+        "description": "Vyberte účastníky, kterým se tento příjem přidělí."
       },
       "splitModeDescription": "Vyberte, jak rozdělit příjem.",
       "attachDescription": "Zobrazit a připojit účtenky k příjmu."
@@ -560,7 +580,7 @@
       "paidByField": {
         "label": "Zaplatil/a",
         "placeholder": "Vyberte účastníka",
-        "description": "Vyberte účastníka, který výdaj zaplatil."
+        "description": "Vyberte, kdo poskytl peníze a jakou částkou každý plátce přispěl."
       },
       "recurrenceRule": {
         "label": "Opakování výdaje",
@@ -571,13 +591,13 @@
         "monthly": "Měsíčně"
       },
       "paidFor": {
-        "title": "Zaplaceno pro",
-        "description": "Vyberte, pro koho byl výdaj zaplacen."
+        "title": "Rozděleno mezi",
+        "description": "Vyberte účastníky, mezi které se tento výdaj rozdělí."
       },
       "splitModeDescription": "Vyberte, jak rozdělit výdaj.",
       "attachDescription": "Zobrazit a připojit účtenky k výdaji.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Vytvořit kopii: {title}",
+      "editTitle": "Upravit: {title}"
     },
     "amountField": {
       "label": "Částka",
@@ -635,7 +655,7 @@
       "customRate": "Použít vlastní kurz"
     },
     "isReimbursementField": {
-      "label": "Toto je proplacení"
+      "label": "Toto je vyrovnávací platba"
     },
     "categoryField": {
       "label": "Kategorie"
@@ -661,6 +681,7 @@
       "title": "Smazat tento výdaj?",
       "description": "Opravdu chcete tento výdaj smazat? Tato akce je nevratná.",
       "yes": "Ano",
+      "deleting": "Mazání…",
       "cancel": "Zrušit"
     },
     "attachDocuments": "Připojit dokumenty",
@@ -669,7 +690,7 @@
     "save": "Uložit",
     "saving": "Ukládání…",
     "cancel": "Zrušit",
-    "reimbursement": "Proplacení",
+    "reimbursement": "Vyrovnávací platba",
     "readOnlyNotice": "Tato skupina je archivována. Výdaj je zobrazen pouze pro čtení.",
     "PaidBySplitModeField": {
       "label": "Způsob rozdělení plátce"
@@ -698,6 +719,7 @@
     "paidBySectionSingle": "Jeden",
     "paidBySectionMultiple": "Více plátců",
     "paidForSection": "Rozdělit mezi účastníky",
+    "splitOptionAria": "Rozdělení: {title}",
     "paidByOptionSinglePayerHelper": "Jedna osoba hradí celý výdaj",
     "paidByOptionEvenlyHelper": "Každý zaplatí stejný podíl",
     "paidByOptionBySharesHelper": "Každý zaplatí vážený podíl",
@@ -713,21 +735,24 @@
     "paidForOptionItemized": "Itemized",
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Položky",
+      "description": "Přidejte položky pro přesné rozdělení výdaje nebo je uchovejte jako dokumentaci u libovolného způsobu rozdělení.",
+      "addItem": "Přidat položku",
+      "empty": "Zatím žádné položky. Začněte kliknutím na „Přidat položku“.",
+      "allMembers": "Všichni účastníci",
+      "noMembers": "Žádní účastníci",
+      "other": "Ostatní (nezaúčtováno)",
+      "derivedBadge": "Vypočteno",
+      "errorExceedsAmount": "Součet položek přesahuje částku výdaje.",
+      "actionEdit": "Upravit",
+      "actionDelete": "Smazat",
+      "total": "Součet položek",
+      "requiredForItemized": "Pro položkové rozdělení přidejte alespoň jednu položku.",
+      "participantsSummary_one": "{count} účastník",
+      "participantsSummary_few": "{count} účastníci",
+      "participantsSummary_many": "{count} účastníků",
+      "participantsSummary_other": "{count} účastníků",
+      "modalTitle": "Účastníci položky",
       "columnItem": "Položka",
       "columnCost": "Cena",
       "columnQuantity": "Množ.",
@@ -739,19 +764,19 @@
       "splitByPercentageLabel": "Rozdělit podle procent",
       "splitByAmountLabel": "Rozdělit podle částky",
       "switchToItemizedTitle": "Přepnout na rozdělení podle položek?",
-      "switchToItemizedDescription": "Úprava účastníků položky změní Zaplaceno za na Podle položek a nahradí nastavené rozdělení zaplaceno za.",
+      "switchToItemizedDescription": "Úpravou účastníků položky přepnete na položkové rozdělení a nahradíte nastavené rozdělení mezi účastníky.",
       "switchToItemizedConfirm": "Přepnout na položky",
       "showItems": "Zobrazit položky",
       "hideItems": "Skrýt položky"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Změnit způsob rozdělení?",
+      "description": "Po přepnutí na {mode} zůstanou položky pouze jako dokumentace. Všechna přiřazení účastníků k položkám budou odstraněna.",
+      "cancel": "Zrušit",
+      "confirm": "Přepnout"
     },
-    "paidForItemizedEntryHint": "Chcete-li použít položkové rozúčtování v části Zaplaceno za, upravte účastníky v řádku položky.",
-    "paidForItemizedActiveHint": "Položkové rozúčtování v části Zaplaceno za je aktivní. Tento podíl změníte úpravou účastníků položek na kartě Položky.",
+    "paidForItemizedEntryHint": "Pro rozdělení podle položek upravte účastníky v řádku položky.",
+    "paidForItemizedActiveHint": "Položkové rozdělení je aktivní. Změníte je úpravou účastníků položek na kartě Položky.",
     "DefaultSplit": {
       "savedAsDefault": "Uloženo jako výchozí",
       "heading": "Výchozí rozdělení",
@@ -761,6 +786,9 @@
     "scanReceipt": "Naskenovat účtenku pomocí AI"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Smazat dokument",
+    "document": "Dokument",
+    "close": "Zavřít",
     "TooBigToast": {
       "title": "Soubor je příliš velký",
       "description": "Maximální velikost souboru, který můžete nahrát, je {maxSize}. Váš má {size}."
@@ -806,11 +834,11 @@
   },
   "Balances": {
     "title": "Zůstatky",
-    "description": "Toto je částka, kterou každý účastník zaplatil nebo za kterou bylo zaplaceno.",
+    "description": "Zobrazte čistý zůstatek každého účastníka.",
     "Reimbursements": {
-      "title": "Navrhovaná proplacení",
-      "description": "Zde jsou návrhy na optimalizovaná proplacení mezi účastníky.",
-      "noImbursements": "Vypadá to, že vaše skupina nepotřebuje žádné proplacení 😁",
+      "title": "Navrhované vyrovnávací platby",
+      "description": "Těmito platbami vyrovnáte zůstatky s co nejmenším počtem převodů.",
+      "noImbursements": "Všichni ve skupině mají vyrovnáno 😁",
       "owes": "<strong>{from}</strong> dluží <strong>{to}</strong>",
       "markAsPaid": "Označit jako zaplaceno",
       "markAsPaidAria": "Označit {amount} od {from} pro {to} jako zaplacené"
@@ -834,7 +862,7 @@
       "label": "Zobrazení",
       "title": "Vyberte způsob zobrazení zůstatků",
       "simple": "Jednoduché",
-      "simpleDescription": "Kdo komu dluží a vyrovnat platby.",
+      "simpleDescription": "Zjistěte, kdo komu dluží, a zaznamenejte vyrovnávací platby.",
       "visual": "Vizuální",
       "visualDescription": "Rozpis zůstatků a grafy."
     },
@@ -874,6 +902,8 @@
       "selectedPeriod": "Vybrané období",
       "lifetimeDescription": "Za celou historii skupiny",
       "expenseCount_one": "{count} výdaj",
+      "expenseCount_few": "{count} výdaje",
+      "expenseCount_many": "{count} výdajů",
       "expenseCount_other": "{count} výdajů",
       "spendingOverTime": "Výdaje v čase",
       "bucketedBy": "Seskupeno podle: {granularity}",
@@ -916,12 +946,12 @@
       "lastMonth": "Minulý měsíc",
       "earlierThisYear": "Dříve tento rok",
       "lastYear": "Minulý rok",
-      "older": "Starší"
+      "older": "Starší aktivita"
     }
   },
   "Information": {
     "title": "Informace",
-    "description": "Použijte toto místo k přidání informací, které mohou být důležité pro účastníky skupiny.",
+    "description": "Přidejte informace, které mohou být užitečné účastníkům skupiny.",
     "empty": "Zatím žádné informace o skupině."
   },
   "Settings": {
@@ -946,7 +976,7 @@
     "amountTenMillion": "Částka musí být nižší než 10 000 000.",
     "ratePositive": "Kurz musí být přísně větší než nula.",
     "paidByRequired": "Musíte vybrat účastníka.",
-    "paidForMin1": "Výdaj musí být zaplacen alespoň za jednoho účastníka.",
+    "paidForMin1": "Výdaj musí být rozdělen alespoň mezi jednoho účastníka.",
     "noZeroShares": "Všechny podíly musí být větší než 0.",
     "amountSum": "Součet částek se musí rovnat částce výdaje.",
     "percentageSum": "Součet procent musí být 100.",
@@ -1391,7 +1421,7 @@
           "description": "Zrušit pozvánku pro {email}? Zůstatky je třeba nejprve vyrovnat.",
           "warning": {
             "title": "Tato pozvánka má nevyrovnané zůstatky",
-            "description": "Zaškrtni políčko níže pro vytvoření jednoho vyrovnávacího výdaje za každou nohu, které se tento pozvaný účastní, před zrušením. Pozvánku lze zrušit až po vyrovnání zůstatků."
+            "description": "Vyberte možnost níže a pro každý zůstatek tohoto pozvaného vytvořte vyrovnávací platbu. Pozvánku lze odvolat až po vyrovnání zůstatků."
           },
           "checkbox": "Vyrovnat zůstatky pozvaného před zrušením"
         }
@@ -1416,9 +1446,9 @@
         "description": "Odebrat {name} z této skupiny? {name} má nevyrovnané zůstatky — zaškrtni políčko níže, aby se automaticky vyrovnaly před odebráním.",
         "warning": {
           "title": "Tento člen má nevyrovnané zůstatky",
-          "description": "Odebrání bez vyrovnání ponechá zůstatky v účetní knize na neurčito. Zaškrtni políčko níže pro vytvoření jednoho vyrovnávacího výdaje za každou nohu, které se tento člen účastní, před odebráním, nebo odeber bez vyrovnání a řeš zůstatky ručně."
+          "description": "Odebráním bez vyrovnání zůstanou tyto zůstatky ve skupině trvale. Vytvořte vyrovnávací platbu pro každý zůstatek člena, nebo jej odeberte a zůstatky vyrovnejte ručně."
         },
-        "checkbox": "Vytvořit vyrovnávací výdaj před odebráním"
+        "checkbox": "Vyrovnat zůstatky člena před odebráním"
       }
     },
     "leave": {
@@ -1434,7 +1464,7 @@
         "otherAdmins": "Tito správci si po vašem odchodu udrží kontrolu: {names}.",
         "unsettled": {
           "title": "Máte nevyrovnané zůstatky",
-          "description": "Vynucený odchod automaticky vytvoří vyrovnávací výdaje za položky, které se vás týkají, aby účetní deník zůstal konzistentní. Ostatní zůstatky zůstávají beze změny."
+          "description": "Spliit před vaším odchodem vytvoří vyrovnávací platby pro zůstatky, kterých se účastníte. Zůstatky ostatních účastníků se nezmění."
         },
         "lastAdmin": {
           "title": "Vybrat nového správce",
@@ -1460,11 +1490,11 @@
       "idHint": "ID účastníka v účetním deníku: {id}",
       "linkDialog": {
         "title": "Propojit nepropojeného účastníka",
-        "description": "Vyberte existujícího člena, se kterým má být {displayName} propojen. Cílový člen nesmí být na opačné straně výdajové položky s tímto účastníkem.",
+        "description": "Vyberte existujícího člena, se kterým se má {displayName} propojit. Člen nesmí mít s tímto účastníkem zůstatek z výdajů.",
         "membersGroup": "Členové",
         "cancel": "Zrušit",
         "confirm": "Propojit",
-        "noCandidates": "Nenalezeni žádní kompatibilní členové. To obvykle znamená, že tento nepropojený účastník je na obou stranách výdajové položky se všemi ostatními členy — import je třeba provést znovu nebo nejprve upravit výdaje.",
+        "noCandidates": "Nebyli nalezeni kompatibilní členové. Nepropojený účastník má pravděpodobně konfliktní zůstatky se všemi ostatními členy. Importujte skupinu znovu nebo nejprve upravte výdaje.",
         "pendingLabel": "čeká",
         "pendingHint": "Propojení s čekající pozvánkou sloučí tento záznam pouze se jménem do pozvaného. Pozvaný si ponechá svůj vlastní řádek; sloučené reference se po přijetí pozvánky vyřeší přes něj.",
         "membersGroupWithPending": "Členové a čekající pozvánky",
@@ -1520,7 +1550,7 @@
         "items": "Položky",
         "documents": "Přílohy",
         "recurrence": "Opakování",
-        "reimbursement": "Proplacení",
+        "reimbursement": "Vyrovnávací platba",
         "conversionSource": "Zdroj konverze",
         "conversionRate": "Směnný kurz"
       }
@@ -1550,10 +1580,13 @@
     },
     "fallback": "Byla zaznamenána aktivita",
     "unknownActor": "Někdo",
+    "openExpense": "Otevřít výdaj",
     "import": {
-      "imported": "{participant} importoval {count} výdajů"
-    },
-    "openExpense": "Otevřít výdaj"
+      "imported_one": "{participant} importoval(a) {count} výdaj",
+      "imported_few": "{participant} importoval(a) {count} výdaje",
+      "imported_many": "{participant} importoval(a) {count} výdajů",
+      "imported_other": "{participant} importoval(a) {count} výdajů"
+    }
   },
   "OfflineBanner": {
     "message": "Jste offline. Změny, které nyní provedete, nebudou uloženy, dokud se znovu nepřipojíte."
@@ -1585,7 +1618,7 @@
   "EmptyState": {
     "actions": {
       "createGroup": "Vytvořit skupinu",
-      "createFriendLedger": "Vytvořit účet s přítelem",
+      "createFriendLedger": "Sledovat výdaje s přítelem či přítelkyní",
       "showHidden": "Zobrazit skryté skupiny"
     },
     "description": {
@@ -1594,8 +1627,8 @@
     "labels": {
       "group": "skupina",
       "groupPlural": "skupiny",
-      "friendLedger": "účet s přítelem",
-      "friendLedgerPlural": "účty s přáteli"
+      "friendLedger": "přítel",
+      "friendLedgerPlural": "přátelé"
     },
     "title": {
       "empty": "Zatím nemáte žádné {itemLabelPlural}",
@@ -1603,28 +1636,33 @@
     }
   },
   "Friends": {
-    "title": "Vytvořit účet s přítelem",
+    "title": "Sledovat výdaje s přítelem či přítelkyní",
     "peerFriendsTab": "Seznam přátel",
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Sdílitelný odkaz",
-    "alreadyHasLedger": "již má účet s přítelem",
+    "friendsSection": "Přátelé",
+    "pendingInvitationsSection": "Čekající pozvánky",
+    "activeFriendExpensesSection": "Aktivní výdaje s přáteli",
+    "alreadyInvited": "(již pozván/a)",
+    "alreadyHasLedger": "(již s vámi sdílí výdaje)",
     "inviteSent": "Pozvánka odeslána. Váš přítel bude přidán, jakmile se připojí ke Spliit Cloud.",
     "inviteLinkTitle": "Sdílejte tento odkaz",
-    "inviteLinkDescription": "Sdílejte tento odkaz s přítelem a přidejte ho do účtu.",
+    "inviteLinkDescription": "Sdílejte tento odkaz, aby se přítel či přítelkyně mohl(a) připojit ke společným výdajům.",
     "copy": "Kopírovat",
     "share": "Sdílet",
-    "linkHelp": "Vygenerujte sdílitelný odkaz, pomocí kterého se váš přítel může připojit k tomuto účtu.",
+    "linkHelp": "Vytvořte odkaz, pomocí kterého se přítel či přítelkyně může připojit.",
     "emailLabel": "E-mail přítele",
     "temporaryNameLabel": "Zobrazované jméno",
     "temporaryNameHelp": "Zadejte jméno osoby, kterou zvete.",
     "friendsEmpty": "Přidejte přítele zadáním e-mailu nebo sdílejte odkaz a pozvěte ho.",
     "infoLabel": "Informace (volitelné)",
-    "infoPlaceholder": "Přidejte kontext, například „Výdaje se spolubydlícím“"
+    "infoPlaceholder": "Přidejte kontext, například „Výdaje se spolubydlícím“",
+    "createError": "Nepodařilo se vytvořit výdaje s přítelem či přítelkyní"
   },
   "BulkCategorize": {
     "title": "Hromadná kategorizace",
     "calibrationTitle": "Krok 1 — Kalibrace",
-    "calibrationDescription": "Každý příklad, který potvrdíte, se stane spolehlivým vzorem pro další průchod AI. Může být připravená už po jednom kole, nebo si vyžádá další příklady.",
+    "calibrationDescription": "Každý potvrzený příklad pomáhá AI zlepšit další návrhy. Může být hotová po jednom kole nebo si vyžádat další příklady.",
     "roundCount": "Kolo {round} z {max}",
     "confidence": {
       "high": "Vysoká",
@@ -1643,10 +1681,19 @@
     "previewDescription": "Upravte libovolný řádek, pak uložte. Jistota označuje řádky, kterými si model není nejjistější.",
     "previewHint": "Zobrazeno {shown} z {total} kandidátů.",
     "removeAction": "Přeskočit",
-    "targetExceedsCap": "Cílová sada má příliš mnoho výdajů ({count}). Zúžte rozsah dat nebo zpracujte po dávkách.",
-    "saveAll": "Uložit {count} změn",
+    "targetExceedsCap_one": "V této dávce nelze zpracovat {count} výdaj. Zužte rozsah dat a zkuste to znovu.",
+    "targetExceedsCap_few": "Ke zpracování je příliš mnoho výdajů ({count}). Zužte rozsah dat nebo je zpracujte po dávkách.",
+    "targetExceedsCap_many": "Ke zpracování je příliš mnoho výdajů ({count}). Zužte rozsah dat nebo je zpracujte po dávkách.",
+    "targetExceedsCap_other": "Ke zpracování je příliš mnoho výdajů ({count}). Zužte rozsah dat nebo je zpracujte po dávkách.",
+    "saveAll_one": "Uložit {count} změnu",
+    "saveAll_few": "Uložit {count} změny",
+    "saveAll_many": "Uložit {count} změn",
+    "saveAll_other": "Uložit {count} změn",
     "saving": "Ukládání…",
-    "saved": "{count} výdajů bylo překategorizováno.",
+    "saved_one": "{count} výdaj byl přeřazen.",
+    "saved_few": "{count} výdaje byly přeřazeny.",
+    "saved_many": "{count} výdajů bylo přeřazeno.",
+    "saved_other": "{count} výdajů bylo přeřazeno.",
     "applyError": "Nelze uložit hromadnou aktualizaci kategorií: {message}",
     "noCandidates": "Žádné výdaje nevyžadují kategorizaci.",
     "adminsOnly": "Hromadnou kategorizaci mohou spouštět pouze správci skupiny.",
@@ -1657,10 +1704,19 @@
     "previewError": "Nelze vygenerovat náhled: {message}",
     "introTitle": "Jak to funguje",
     "loadingCandidates": "Kontrola nekategorizovaných výdajů…",
-    "introDescription": "Ke kontrole je připraveno {count} nekategorizovaných výdajů.",
-    "introStepLook": "AI prozkoumá až {count} výdajů, aby našlo nejužitečnější příklady.",
-    "introStepReview": "Zkontrolujete a opravíte až {count} vybraných příkladů, aby se AI naučilo kategorie této skupiny.",
-    "introStepPreview": "Až bude mít AI dostatek informací, připraví úplný přehled a nejisté výdaje ponechá nekategorizované.",
+    "introDescription_one": "K revizi je připraven {count} nezařazený výdaj.",
+    "introDescription_few": "K revizi jsou připraveny {count} nezařazené výdaje.",
+    "introDescription_many": "K revizi je připraveno {count} nezařazených výdajů.",
+    "introDescription_other": "K revizi je připraveno {count} nezařazených výdajů.",
+    "introStepLook_one": "AI zkontroluje až {count} výdaj a vyhledá nejužitečnější příklad.",
+    "introStepLook_few": "AI zkontroluje až {count} výdaje a vyhledá nejužitečnější příklady.",
+    "introStepLook_many": "AI zkontroluje až {count} výdajů a vyhledá nejužitečnější příklady.",
+    "introStepLook_other": "AI zkontroluje až {count} výdajů a vyhledá nejužitečnější příklady.",
+    "introStepReview_one": "Zkontrolujete a opravíte až {count} vybraný příklad, aby se AI naučila kategorie této skupiny.",
+    "introStepReview_few": "Zkontrolujete a opravíte až {count} vybrané příklady, aby se AI naučila kategorie této skupiny.",
+    "introStepReview_many": "Zkontrolujete a opravíte až {count} vybraných příkladů, aby se AI naučila kategorie této skupiny.",
+    "introStepReview_other": "Zkontrolujete a opravíte až {count} vybraných příkladů, aby se AI naučila kategorie této skupiny.",
+    "introStepPreview": "Jakmile má AI dostatek příkladů, připraví úplnou revizi a nejisté výdaje ponechá bez kategorie.",
     "startCalibration": "Spustit kalibraci",
     "calibrationStartHint": "AI vybírá užitečné příklady k vaší kontrole.",
     "calibrationReady": "AI má dostatek zpětné vazby k přípravě úplného přehledu.",
@@ -1674,7 +1730,10 @@
     "generatingPreview": "Připravují se návrhy…",
     "noSuggestions": "AI ponechalo všechny výdaje nekategorizované. Po další kalibraci to můžete zkusit znovu.",
     "previewSummary": "AI navrhlo kategorie pro {suggested} z {total} výdajů.",
-    "leftUncategorized": "{count} výdajů zůstalo nekategorizováno, protože si AI nebylo dost jisté.",
+    "leftUncategorized_one": "{count} výdaj zůstal nezařazený, protože si AI nebyla dostatečně jistá.",
+    "leftUncategorized_few": "{count} výdaje zůstaly nezařazené, protože si AI nebyla dostatečně jistá.",
+    "leftUncategorized_many": "{count} výdajů zůstalo nezařazených, protože si AI nebyla dostatečně jistá.",
+    "leftUncategorized_other": "{count} výdajů zůstalo nezařazených, protože si AI nebyla dostatečně jistá.",
     "retryPreview": "Zkusit náhled znovu",
     "doneTitle": "Kategorie uloženy",
     "expenseColumn": "Výdaj",
@@ -1686,10 +1745,13 @@
     "category": "Kategorie",
     "date": "Datum",
     "paidBy": "Zaplatil/a",
-    "paidFor": "Zaplaceno pro",
+    "paidFor": "Rozděleno mezi",
     "yourBalance": "Váš zůstatek",
     "notes": "Poznámky",
-    "attachments": "Přílohy ({count})",
+    "attachments_one": "Příloha ({count})",
+    "attachments_few": "Přílohy ({count})",
+    "attachments_many": "Příloh ({count})",
+    "attachments_other": "Přílohy ({count})",
     "edit": "Upravit výdaj",
     "makeCopy": "Vytvořit kopii"
   },
@@ -1702,10 +1764,21 @@
     "create": "Vytvořit",
     "edit": "Upravit podrobnosti",
     "creating": "Vytváření…",
-    "successToast": "Proplacení zaznamenáno"
+    "successToast": "Vyrovnávací platba zaznamenána"
   },
   "Participants": {
     "search": "Hledat účastníky...",
     "noParticipant": "Účastník nenalezen"
+  },
+  "Common": {
+    "close": "Zavřít",
+    "previousSlide": "Předchozí snímek",
+    "nextSlide": "Následující snímek"
+  },
+  "Theme": {
+    "toggle": "Změnit motiv",
+    "light": "Světlý",
+    "dark": "Tmavý",
+    "system": "Výchozí nastavení systému"
   }
 }

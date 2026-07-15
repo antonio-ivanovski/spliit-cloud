@@ -1,5 +1,8 @@
+import { I18nProvider } from '@/i18n/react'
 import { defaultLocale } from '@/i18n/request'
 import { detectLocale, i18n, loadLocale, setUserLocale } from '@/i18n/setup'
+import { act, cleanup, render } from '@testing-library/react'
+import { createElement } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Helpers ────────────────────────────────────────────────────────────
@@ -129,5 +132,37 @@ describe('setUserLocale', () => {
     await setUserLocale('de-DE')
     expect(i18n.language).toBe('de-DE')
     expect(getCookie(COOKIE_NAME)).toBe('de-DE')
+  })
+})
+
+// ── document locale metadata ───────────────────────────────────────────
+
+describe('I18nProvider document locale metadata', () => {
+  afterEach(async () => {
+    cleanup()
+    await resetLocale()
+    document.documentElement.lang = defaultLocale
+    document.documentElement.dir = 'ltr'
+  })
+
+  it('applies the initial locale and RTL direction on mount', async () => {
+    await i18n.changeLanguage('he')
+
+    render(createElement(I18nProvider, null, createElement('div')))
+
+    expect(document.documentElement.lang).toBe('he')
+    expect(document.documentElement.dir).toBe('rtl')
+  })
+
+  it('updates the locale and restores LTR when switching away from Hebrew', async () => {
+    render(createElement(I18nProvider, null, createElement('div')))
+
+    await act(() => i18n.changeLanguage('he'))
+    expect(document.documentElement.lang).toBe('he')
+    expect(document.documentElement.dir).toBe('rtl')
+
+    await act(() => i18n.changeLanguage('fr-FR'))
+    expect(document.documentElement.lang).toBe('fr-FR')
+    expect(document.documentElement.dir).toBe('ltr')
   })
 })

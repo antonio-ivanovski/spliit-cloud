@@ -8,32 +8,32 @@
       "createAccount": "Creează un cont",
       "createGroup": "Creează un grup",
       "importGroup": "Importă grup dintr-un alt serviciu",
-      "createFriendLedger": "Creează registru de prieten"
+      "createFriendLedger": "Urmărește cheltuielile cu un prieten"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Grupuri și sincronizare",
+        "description": "Creează grupuri pentru călătorii, evenimente sau cadouri și păstrează-le sincronizate pe toate dispozitivele."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Cheltuieli și chitanțe",
+        "description": "Adaugă cheltuieli, atașează imagini cu chitanțe și creează costuri recurente zilnice, săptămânale sau lunare."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Împărțire avansată",
+        "description": "Împarte procentual, pe cote, după sumă exactă sau în mod egal."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Solduri",
+        "description": "Vezi cine și ce a plătit și redu transferurile între participanți."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Categorii",
+        "description": "Atribuie categorii pentru a consulta ușor cheltuielile comune."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Conturi",
+        "description": "Autentifică-te pentru a-ți proteja datele și a păstra disponibil istoricul cheltuielilor."
       }
     },
     "welcomeBack": "Bine ai revenit, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Deconectează-te",
     "account": "Cont",
     "accountSettings": "Setările contului",
-    "back": "Înapoi"
+    "back": "Înapoi",
+    "menu": "Meniu"
   },
   "Footer": {
     "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
@@ -107,7 +108,7 @@
       "noMatchClear": "Șterge filtrele",
       "category": "Categorie",
       "paidBy": "Plătit de",
-      "paidFor": "Plătit către",
+      "paidFor": "Împărțit între",
       "dateRange": "Interval de date",
       "dateFrom": "De la",
       "dateTo": "Până la",
@@ -122,7 +123,9 @@
       "allCategories": "Toate categoriile",
       "allParticipants": "Toți participanții",
       "allCurrencies": "Toate monedele",
-      "nSelected": "{count} selectate",
+      "nSelected_one": "{count} participant selectat",
+      "nSelected_few": "{count} selectate",
+      "nSelected_other": "{count} selectate",
       "removeFilter": "Elimină filtrul",
       "settlementsHidden": "Decontări ascunse",
       "title": "Filtre"
@@ -130,17 +133,19 @@
     "showSettlements": "Arată decontările"
   },
   "ExpenseCard": {
-    "paidBy": "Plătit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
     "receivedByMultiple": "Primit de <paidByNames></paidByNames> pentru <paidFor></paidFor>",
     "yourBalance": "Soldul tău:",
-    "paidByMultiple": "Plătit de <paidByNames></paidByNames> pentru <paidFor></paidFor>",
+    "paidBy": "Plătit de <strong>{paidBy}</strong> · împărțit între <paidFor></paidFor>",
+    "paidByMultiple": "Plătit de <paidByNames></paidByNames> · împărțit între <paidFor></paidFor>",
     "everyone": "toată lumea",
     "notInvolved": "Nu ești implicat",
     "settlementBadge": "Decontare",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+încă {count}",
+      "more_few": "+încă {count}",
+      "more_other": "+încă {count}",
+      "title": "Articole",
       "participants": "{names}"
     },
     "copyToast": "Copierea cheltuielii a fost inițiată. Detaliile cheltuielii existente vor fi folosite pentru a crea una nouă."
@@ -161,7 +166,8 @@
     },
     "NotFound": {
       "text": "Acest grup nu există.",
-      "link": "Mergi la pagina principală"
+      "link": "Mergi la pagina principală",
+      "lookingUp": "Se caută grupul…"
     },
     "createdInviteHint": "Grup creat. Invită membri pentru a începe.",
     "hidden": "Ascunse",
@@ -245,9 +251,13 @@
         "newGroupFormat": "Grup nou · {currency}",
         "existingGroupFormat": "Grup existent · îmbinat",
         "summaryLabel": "Rezumat",
-        "sourceParticipants": "{count} participanți sursă",
+        "sourceParticipants_one": "{count} participant sursă",
+        "sourceParticipants_few": "{count} participanți sursă",
+        "sourceParticipants_other": "{count} participanți sursă",
         "participantBreakdown": "{linked} legați · {email} invitații prin e-mail · {link} invitații prin link · {unlinked} nelegați",
-        "expenseCount": "Se vor crea {count} cheltuieli",
+        "expenseCount_one": "Se va crea {count} cheltuială",
+        "expenseCount_few": "Se vor crea {count} cheltuieli",
+        "expenseCount_other": "Se vor crea {count} cheltuieli",
         "sourceName": "Sursă: {name}",
         "footer": "Fiecare participant sursă și cheltuială va fi importat. Invitațiile sunt trimise/generate după crearea grupului.",
         "importingButton": "Se importă…",
@@ -272,7 +282,9 @@
         "existingGroup": "Grup existent",
         "loading": "Se încarcă…",
         "noAdminGroups": "Nu administrați încă niciun grup.",
-        "memberCount": "{count} membri"
+        "memberCount_one": "{count} membru",
+        "memberCount_few": "{count} membri",
+        "memberCount_other": "{count} membri"
       },
       "Done": {
         "importComplete": "Import finalizat",
@@ -446,10 +458,12 @@
     "scopePickerGroups": "Alege un grup",
     "scopePickerFriends": "Alege un registru de prieten",
     "scopePickerEmpty": "Nu există încă grupuri",
-    "scopePickerMembers": "{count} membru/membri",
+    "scopePickerMembers_one": "{count} membru",
+    "scopePickerMembers_few": "{count} membru/membri",
+    "scopePickerMembers_other": "{count} membru/membri",
     "createFriendLedgerCard": {
       "description": "Echilibrează socotelile unu-la-unu cu o anumită persoană.",
-      "title": "Creează registru de prieten"
+      "title": "Urmărește cheltuielile cu un prieten"
     },
     "importGroup": "Importă grup",
     "exportDescription": "Descarcă cheltuielile grupului în format JSON sau CSV."
@@ -555,11 +569,11 @@
       "categoryFieldDescription": "Selectează categoria cheltuielii.",
       "paidByField": {
         "label": "Plătit de către",
-        "description": "Selectează membrul care a plătit cheltuiala.",
-        "placeholder": "Selectează un membru"
+        "placeholder": "Selectează un membru",
+        "description": "Selectează cine a furnizat banii și cât a contribuit fiecare plătitor."
       },
       "paidFor": {
-        "title": "Plătit pentru",
+        "title": "Împărțit între",
         "description": "Selectează pentru cine a fost plătită cheltuiala."
       },
       "splitModeDescription": "Selectează cum să fie împărțită cheltuiala.",
@@ -576,8 +590,8 @@
         "weekly": "Săptămânal",
         "monthly": "Lunar"
       },
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Creează o copie: {title}",
+      "editTitle": "Editează: {title}"
     },
     "amountField": {
       "label": "Sumă",
@@ -615,7 +629,7 @@
       }
     },
     "isReimbursementField": {
-      "label": "Aceasta este o rambursare"
+      "label": "Aceasta este o plată de decontare"
     },
     "categoryField": {
       "label": "Categorie"
@@ -638,6 +652,7 @@
       "title": "Ștergi această cheltuială?",
       "description": "Ești sigur că vrei să ștergi această cheltuială? Această acțiune este ireversibilă.",
       "yes": "Da",
+      "deleting": "Se șterge…",
       "cancel": "Anulează"
     },
     "attachDocuments": "Atașează documente",
@@ -646,7 +661,6 @@
     "save": "Salvează",
     "saving": "Se salvează…",
     "cancel": "Anulează",
-    "reimbursement": "Rambursare",
     "conversionUnavailable": "Pentru a seta o monedă diferită per cheltuială și a converti sumele, selectează o monedă non-personalizată pentru grup.",
     "conversionRateField": {
       "useApi": "Folosește rate de la Frankfurter",
@@ -670,6 +684,7 @@
     "participant": {
       "pending": "(invitat)"
     },
+    "reimbursement": "Plată de decontare",
     "readOnlyNotice": "Acest grup este arhivat. Cheltuiala este afișată doar în citire.",
     "PaidBySplitModeField": {
       "label": "Mod de împărțire plătitor"
@@ -698,6 +713,7 @@
     "paidBySectionSingle": "Unic",
     "paidBySectionMultiple": "Mai mulți plătitori",
     "paidForSection": "Împărțire între participanți",
+    "splitOptionAria": "Împărțire: {title}",
     "paidByOptionSinglePayerHelper": "O singură persoană acoperă toată cheltuiala",
     "paidByOptionEvenlyHelper": "Fiecare plătește o parte egală",
     "paidByOptionBySharesHelper": "Fiecare plătește o parte ponderată",
@@ -710,24 +726,26 @@
     "convertedAmountField": {
       "label": "Sumă convertită"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Pe articole",
+    "paidForOptionItemizedHelper": "Calculează partea fiecărui participant din articolele individuale ale cheltuielii.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Articole",
+      "description": "Adaugă articole pentru a împărți precis cheltuiala sau pentru a le păstra ca documentație cu orice mod de împărțire.",
+      "addItem": "Adaugă articol",
+      "empty": "Nu există încă articole. Apasă „Adaugă articol” pentru a începe.",
+      "allMembers": "Toți participanții",
+      "noMembers": "Niciun participant",
+      "other": "Altele (neatribuite)",
+      "derivedBadge": "Calculat",
+      "errorExceedsAmount": "Totalul articolelor depășește valoarea cheltuielii.",
+      "actionEdit": "Editează",
+      "actionDelete": "Șterge",
+      "total": "Total articole",
+      "requiredForItemized": "Adaugă cel puțin un articol pentru împărțirea pe articole.",
+      "participantsSummary_one": "{count} participant",
+      "participantsSummary_few": "{count} participanți",
+      "participantsSummary_other": "{count} de participanți",
+      "modalTitle": "Participanții articolului",
       "columnItem": "Element",
       "columnCost": "Cost",
       "columnQuantity": "Cant.",
@@ -745,13 +763,13 @@
       "hideItems": "Ascunde elementele"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Schimbi modul de împărțire?",
+      "description": "Trecerea la {mode} va păstra articolele doar ca documentație. Toate atribuirile participanților pentru fiecare articol vor fi eliminate.",
+      "cancel": "Anulează",
+      "confirm": "Schimbă"
     },
-    "paidForItemizedEntryHint": "Pentru a folosi împărțirea „plătit pentru” pe articole, editează participanții dintr-un rând de articol.",
-    "paidForItemizedActiveHint": "Împărțirea „plătit pentru” pe articole este activă. Editează participanții articolelor din cardul Articole pentru a schimba această împărțire.",
+    "paidForItemizedEntryHint": "Pentru împărțirea pe articole, editează participanții din rândul unui articol.",
+    "paidForItemizedActiveHint": "Împărțirea pe articole este activă. Editează participanții din cardul Articole pentru a o schimba.",
     "DefaultSplit": {
       "savedAsDefault": "Salvat ca implicit",
       "heading": "Împărțire implicită",
@@ -761,6 +779,9 @@
     "scanReceipt": "Scanează bonul cu IA"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Șterge documentul",
+    "document": "Document",
+    "close": "Închide",
     "TooBigToast": {
       "title": "Fișierul este prea mare",
       "description": "Dimensiunea maximă a fișierului pe care îl poți atașa este {maxSize}. Fișierul tău are {size}."
@@ -806,11 +827,11 @@
   },
   "Balances": {
     "title": "Solduri",
-    "description": "Aceasta este suma pe care fiecare membru a plătit-o sau cu care a fost plătit.",
+    "description": "Vezi soldul net al fiecărui participant.",
     "Reimbursements": {
-      "title": "Rambursări sugerate",
-      "description": "Acestea sunt sugestiile pentru rambursări optimizate între membri.",
-      "noImbursements": "Se pare că grupul tău nu are nevoie de rambursări 😁",
+      "title": "Plăți de decontare sugerate",
+      "description": "Folosește aceste plăți pentru a deconta soldurile cu cât mai puține transferuri.",
+      "noImbursements": "Toate soldurile din grupul tău sunt decontate 😁",
       "owes": "<strong>{from}</strong> datorează <strong>{to}</strong>",
       "markAsPaid": "Bifează ca plătit",
       "markAsPaidAria": "Marchează {amount} de la {from} către {to} ca plătit"
@@ -834,7 +855,7 @@
       "label": "Vizualizare",
       "title": "Alege cum să vizualizezi soldurile",
       "simple": "Simplu",
-      "simpleDescription": "Cine cui datorează și decontează.",
+      "simpleDescription": "Vezi cine cui datorează bani și înregistrează plăți de decontare.",
       "visual": "Vizual",
       "visualDescription": "Defalcarea soldurilor și grafice."
     },
@@ -865,6 +886,7 @@
       "selectedPeriod": "Perioada selectată",
       "lifetimeDescription": "Pe întreaga durată a istoricului grupului",
       "expenseCount_one": "{count} cheltuială",
+      "expenseCount_few": "{count} cheltuieli",
       "expenseCount_other": "{count} cheltuieli",
       "spendingOverTime": "Cheltuieli în timp",
       "bucketedBy": "Grupat după {granularity}",
@@ -1391,7 +1413,7 @@
           "description": "Revoci invitația pentru {email}? Soldurile trebuie decontate mai întâi.",
           "warning": {
             "title": "Această invitație are solduri nedecontate",
-            "description": "Bifează căsuța de mai jos pentru a crea o cheltuială de rambursare pentru fiecare parte care implică acest invitat înainte de revocare. Invitația poate fi revocată doar după decontarea soldurilor."
+            "description": "Selectează opțiunea de mai jos pentru a crea o plată de decontare pentru fiecare sold al acestui invitat. Invitația poate fi revocată numai după decontarea acestor solduri."
           },
           "checkbox": "Decontează soldurile invitatului înainte de revocare"
         }
@@ -1416,9 +1438,9 @@
         "description": "Elimini {name} din acest grup? Are solduri nedecontate — bifează căsuța de mai jos pentru a le deconta automat înainte de eliminare.",
         "warning": {
           "title": "Acest membru are solduri nedecontate",
-          "description": "Eliminarea fără decontare va lăsa soldurile în registru pe termen nelimitat. Bifează căsuța de mai jos pentru a crea o cheltuială de rambursare pentru fiecare parte care implică acest membru înainte de a-l elimina, sau elimină fără decontare și gestionează soldurile manual."
+          "description": "Dacă elimini acest membru fără decontare, soldurile vor rămâne în grup pe termen nelimitat. Selectează opțiunea de mai jos pentru a crea o plată de decontare pentru fiecare sold al acestui membru sau elimină-l și decontează soldurile manual."
         },
-        "checkbox": "Creează rambursare de decontare înainte de eliminare"
+        "checkbox": "Decontează soldurile acestui membru înainte de eliminare"
       }
     },
     "leave": {
@@ -1440,7 +1462,7 @@
         },
         "unsettled": {
           "title": "Ai solduri neregularizate",
-          "description": "Plecarea cu regularizare forțată va crea automat cheltuieli de rambursare pentru tranzacțiile care te implică, menținând registrul sincronizat. Celelalte solduri rămân neschimbate."
+          "description": "Spliit va crea plăți de decontare pentru soldurile care te implică înainte să pleci. Soldurile celorlalți participanți nu se vor schimba."
         }
       },
       "toast": {
@@ -1520,7 +1542,7 @@
         "items": "Elemente",
         "documents": "Documente",
         "recurrence": "Recurență",
-        "reimbursement": "Rambursare",
+        "reimbursement": "Plată de decontare",
         "conversionSource": "Sursa conversiei",
         "conversionRate": "Curs de conversie"
       }
@@ -1550,10 +1572,12 @@
     },
     "fallback": "O activitate a fost înregistrată",
     "unknownActor": "Cineva",
+    "openExpense": "Deschide cheltuiala",
     "import": {
-      "imported": "{participant} a importat {count} cheltuieli"
-    },
-    "openExpense": "Deschide cheltuiala"
+      "imported_one": "{participant} a importat {count} cheltuială",
+      "imported_few": "{participant} a importat {count} cheltuieli",
+      "imported_other": "{participant} a importat {count} cheltuieli"
+    }
   },
   "OfflineBanner": {
     "message": "Ești offline. Modificările pe care le faci acum nu vor fi salvate până nu te reconectezi."
@@ -1594,8 +1618,8 @@
     "labels": {
       "group": "grup",
       "groupPlural": "grupuri",
-      "friendLedger": "registru de prieten",
-      "friendLedgerPlural": "registre de prieten"
+      "friendLedger": "cheltuială cu un prieten",
+      "friendLedgerPlural": "cheltuieli cu prieteni"
     },
     "title": {
       "empty": "Nu ai încă {itemLabelPlural}",
@@ -1607,6 +1631,10 @@
     "peerFriendsTab": "Lista de prieteni",
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Link partajabil",
+    "friendsSection": "Prieteni",
+    "pendingInvitationsSection": "Invitații în așteptare",
+    "activeFriendExpensesSection": "Cheltuieli active cu prietenii",
+    "alreadyInvited": "Deja invitat",
     "alreadyHasLedger": "are deja un registru de prieten",
     "inviteSent": "Invitație trimisă. Prietenul tău va fi adăugat când se alătură Spliit Cloud.",
     "inviteLinkTitle": "Partajează acest link",
@@ -1619,7 +1647,8 @@
     "temporaryNameHelp": "Introduceți un nume pentru persoana pe care o invitați.",
     "friendsEmpty": "Adaugă un prieten introducând e-mailul lui sau partajează un link pentru a-l invita.",
     "infoLabel": "Informații (opțional)",
-    "infoPlaceholder": "Adaugă un context, de exemplu «Cheltuieli de colocatar»"
+    "infoPlaceholder": "Adaugă un context, de exemplu «Cheltuieli de colocatar»",
+    "createError": "Nu s-au putut crea cheltuielile cu un prieten"
   },
   "BulkCategorize": {
     "title": "Categorizare în lot",
@@ -1643,10 +1672,16 @@
     "previewDescription": "Editează orice rând, apoi salvează. Încrederea marchează rândurile de care modelul este cel mai puțin sigur.",
     "previewHint": "Se afișează {shown} din {total} candidați.",
     "removeAction": "Sari peste",
-    "targetExceedsCap": "Setul țintă are prea multe cheltuieli ({count}). Limitează datele sau procesează în loturi.",
-    "saveAll": "Salvează {count} modificări",
+    "targetExceedsCap_one": "Nu se poate procesa {count} cheltuială în acest lot. Restrânge intervalul de date și încearcă din nou.",
+    "targetExceedsCap_few": "Setul țintă are prea multe cheltuieli ({count}). Limitează datele sau procesează în loturi.",
+    "targetExceedsCap_other": "Setul țintă are prea multe cheltuieli ({count}). Limitează datele sau procesează în loturi.",
+    "saveAll_one": "Salvează {count} modificare",
+    "saveAll_few": "Salvează {count} modificări",
+    "saveAll_other": "Salvează {count} modificări",
     "saving": "Se salvează…",
-    "saved": "{count} cheltuieli au fost recategorizate.",
+    "saved_one": "{count} cheltuială a fost recategorizată.",
+    "saved_few": "{count} cheltuieli au fost recategorizate.",
+    "saved_other": "{count} cheltuieli au fost recategorizate.",
     "applyError": "Nu s-a putut salva actualizarea categoriilor în lot: {message}",
     "noCandidates": "Nu există cheltuieli de categorizat.",
     "adminsOnly": "Doar administratorii grupului pot rula categorizatorul în lot.",
@@ -1657,9 +1692,15 @@
     "previewError": "Nu s-a putut genera previzualizarea: {message}",
     "introTitle": "Cum funcționează",
     "loadingCandidates": "Se verifică cheltuielile necategorizate…",
-    "introDescription": "Există {count} cheltuieli necategorizate gata de revizuit.",
-    "introStepLook": "AI analizează un set larg de până la {count} cheltuieli pentru a găsi cele mai utile exemple.",
-    "introStepReview": "Revizuiești și corectezi până la {count} exemple selectate pentru ca AI să învețe categoriile acestui grup.",
+    "introDescription_one": "Există {count} cheltuială necategorizată gata de revizuit.",
+    "introDescription_few": "Există {count} cheltuieli necategorizate gata de revizuit.",
+    "introDescription_other": "Există {count} cheltuieli necategorizate gata de revizuit.",
+    "introStepLook_one": "AI analizează până la {count} cheltuială pentru a găsi cel mai util exemplu.",
+    "introStepLook_few": "AI analizează un set larg de până la {count} cheltuieli pentru a găsi cele mai utile exemple.",
+    "introStepLook_other": "AI analizează un set larg de până la {count} cheltuieli pentru a găsi cele mai utile exemple.",
+    "introStepReview_one": "Revizuiești și corectezi până la {count} exemplu selectat pentru ca AI să învețe categoriile acestui grup.",
+    "introStepReview_few": "Revizuiești și corectezi până la {count} exemple selectate pentru ca AI să învețe categoriile acestui grup.",
+    "introStepReview_other": "Revizuiești și corectezi până la {count} exemple selectate pentru ca AI să învețe categoriile acestui grup.",
     "introStepPreview": "Când AI are suficient semnal, pregătește o revizuire completă și lasă cheltuielile incerte necategorizate.",
     "startCalibration": "Începe calibrarea",
     "calibrationStartHint": "AI alege exemple utile pentru a le revizui.",
@@ -1674,7 +1715,9 @@
     "generatingPreview": "Se pregătesc sugestiile…",
     "noSuggestions": "AI a lăsat toate cheltuielile necategorizate. Poți încerca din nou după mai multă calibrare.",
     "previewSummary": "AI a sugerat categorii pentru {suggested} din {total} cheltuieli.",
-    "leftUncategorized": "{count} cheltuieli au fost lăsate necategorizate deoarece AI nu era suficient de încrezătoare.",
+    "leftUncategorized_one": "{count} cheltuială a rămas necategorizată deoarece AI nu a avut suficientă încredere.",
+    "leftUncategorized_few": "{count} cheltuieli au fost lăsate necategorizate deoarece AI nu era suficient de încrezătoare.",
+    "leftUncategorized_other": "{count} cheltuieli au fost lăsate necategorizate deoarece AI nu era suficient de încrezătoare.",
     "retryPreview": "Încearcă din nou previzualizarea",
     "doneTitle": "Categorii salvate",
     "expenseColumn": "Cheltuială",
@@ -1686,10 +1729,12 @@
     "category": "Categorie",
     "date": "Data",
     "paidBy": "Plătit de",
-    "paidFor": "Plătit pentru",
+    "paidFor": "Împărțit între",
     "yourBalance": "Soldul tău:",
     "notes": "Notițe",
-    "attachments": "Atașamente ({count})",
+    "attachments_one": "Atașament ({count})",
+    "attachments_few": "Atașamente ({count})",
+    "attachments_other": "Atașamente ({count})",
     "edit": "Modifică cheltuiala",
     "makeCopy": "Fă o copie"
   },
@@ -1702,10 +1747,21 @@
     "create": "Adaugă",
     "edit": "Modifică detaliile",
     "creating": "Se adaugă…",
-    "successToast": "Rambursare înregistrată"
+    "successToast": "Plată de decontare înregistrată"
   },
   "Participants": {
     "search": "Caută participanți...",
     "noParticipant": "Niciun participant găsit"
+  },
+  "Common": {
+    "close": "Închide",
+    "previousSlide": "Diapozitivul anterior",
+    "nextSlide": "Diapozitivul următor"
+  },
+  "Theme": {
+    "toggle": "Schimbă tema",
+    "light": "Luminoasă",
+    "dark": "Întunecată",
+    "system": "Setarea sistemului"
   }
 }

@@ -10,7 +10,7 @@ import {
 describe('resolveLanguageName', () => {
   it('returns the native name for known locales', () => {
     expect(resolveLanguageName('es')).toBe('Español')
-    expect(resolveLanguageName('en-US')).toBe('English')
+    expect(resolveLanguageName('en-US')).toBe('English (US)')
     expect(resolveLanguageName('ja-JP')).toBe('日本語')
     expect(resolveLanguageName('zh-CN')).toBe('简体中文')
   })

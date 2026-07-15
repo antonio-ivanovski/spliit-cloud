@@ -8,32 +8,32 @@
       "createAccount": "建立帳戶",
       "createGroup": "建立群組",
       "importGroup": "從其他服務匯入群組",
-      "createFriendLedger": "建立朋友帳本"
+      "createFriendLedger": "記錄與好友的共同支出"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "群組與同步",
+        "description": "為旅行、活動和禮物創建群組，並在設備之間保持同步。"
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "支出與收據",
+        "description": "添加支出和收據圖片，並創建每日、每周或每月的重復支出。"
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "靈活分攤",
+        "description": "可按百分比、份額、指定金額或平均分攤。"
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "餘額",
+        "description": "查看每個人的付款金額，並優化參與者之間的轉賬。"
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "分類",
+        "description": "為共同支出指定分類，方便快速瀏覽。"
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "帳號",
+        "description": "登入即可保護資料，並隨時查看支出記錄。"
       }
     },
     "welcomeBack": "歡迎回來，{name}。"
@@ -43,7 +43,8 @@
     "signOut": "登出",
     "account": "帳戶",
     "accountSettings": "帳戶設定",
-    "back": "返回"
+    "back": "返回",
+    "menu": "選單"
   },
   "Footer": {
     "madeIn": "由開源社群用愛打造 ❤️",
@@ -76,7 +77,7 @@
       "lastMonth": "上個月",
       "earlierThisYear": "今年稍早",
       "lastYear": "去年",
-      "older": "更早"
+      "older": "較早的支出"
     },
     "export": "匯出",
     "filters": {
@@ -107,7 +108,7 @@
       "noMatchClear": "清除篩選",
       "category": "類別",
       "paidBy": "付款人",
-      "paidFor": "分攤對象",
+      "paidFor": "分攤給",
       "dateRange": "日期範圍",
       "dateFrom": "從",
       "dateTo": "到",
@@ -122,7 +123,7 @@
       "allCategories": "所有類別",
       "allParticipants": "所有參與者",
       "allCurrencies": "所有貨幣",
-      "nSelected": "已選 {count} 項",
+      "nSelected_other": "已選擇 {count} 項",
       "removeFilter": "移除篩選",
       "settlementsHidden": "結算隱藏",
       "title": "篩選"
@@ -130,16 +131,16 @@
     "showSettlements": "顯示結算"
   },
   "ExpenseCard": {
-    "paidBy": "由 <strong>{paidBy}</strong> 支付 <paidFor></paidFor>。",
-    "receivedBy": "由 <strong>{paidBy}</strong> 收取 <paidFor></paidFor>。",
-    "receivedByMultiple": "由 <paidByNames></paidByNames> 為 <paidFor></paidFor> 收取",
+    "receivedBy": "收款人：<strong>{paidBy}</strong> · 分配給 <paidFor></paidFor>",
+    "receivedByMultiple": "收款人：<paidByNames></paidByNames> · 分配給 <paidFor></paidFor>",
     "yourBalance": "你的餘額：",
-    "paidByMultiple": "由 <paidByNames></paidByNames> 為 <paidFor></paidFor> 支付",
+    "paidBy": "付款人：<strong>{paidBy}</strong> · 分攤給 <paidFor></paidFor>",
+    "paidByMultiple": "付款人：<paidByNames></paidByNames> · 分攤給 <paidFor></paidFor>",
     "everyone": "所有人",
     "notInvolved": "您未參與其中",
     "settlementBadge": "結算",
     "items": {
-      "more": "+{count} more",
+      "more_other": "另有 {count} 項",
       "title": "Items",
       "participants": "{names}"
     },
@@ -161,7 +162,8 @@
     },
     "NotFound": {
       "text": "該群組不存在。",
-      "link": "前往首頁"
+      "link": "前往首頁",
+      "lookingUp": "正在尋找此群組…"
     },
     "createdInviteHint": "群組已建立。邀請成員開始使用。",
     "hidden": "已隱藏",
@@ -169,14 +171,14 @@
     "showArchived": "顯示已封存的群組",
     "hide": "隱藏群組",
     "unhide": "取消隱藏群組",
-    "hideFriend": "隱藏朋友帳本",
-    "unhideFriend": "取消隱藏朋友帳本",
+    "hideFriend": "隱藏好友共同支出",
+    "unhideFriend": "顯示好友共同支出",
     "starGroup": "收藏群組",
     "unstarGroup": "取消收藏群組",
-    "starFriend": "收藏朋友帳本",
-    "unstarFriend": "取消收藏朋友帳本",
+    "starFriend": "收藏好友共同支出",
+    "unstarFriend": "取消收藏好友共同支出",
     "groupActions": "群組操作",
-    "friendActions": "朋友帳本操作",
+    "friendActions": "好友共同支出操作",
     "archiveGroup": "封存群組",
     "unarchiveGroup": "取消封存群組",
     "archiveSuccess": "群組已封存。",
@@ -245,9 +247,9 @@
         "newGroupFormat": "新群組 · {currency}",
         "existingGroupFormat": "現有群組 · 已合併",
         "summaryLabel": "摘要",
-        "sourceParticipants": "{count} 個來源參與者",
+        "sourceParticipants_other": "{count} 位來源參與者",
         "participantBreakdown": "{linked} 已連結 · {email} 電子郵件邀請 · {link} 連結邀請 · {unlinked} 未連結",
-        "expenseCount": "將建立 {count} 筆支出",
+        "expenseCount_other": "將創建 {count} 筆支出",
         "sourceName": "來源：{name}",
         "footer": "每個來源參與者和每筆支出都會被匯入。邀請會在群組建立後傳送/產生。",
         "importingButton": "匯入中…",
@@ -272,7 +274,7 @@
         "existingGroup": "現有群組",
         "loading": "載入中…",
         "noAdminGroups": "您尚未管理任何群組。",
-        "memberCount": "{count} 位成員"
+        "memberCount_other": "{count} 位成員"
       },
       "Done": {
         "importComplete": "匯入完成",
@@ -440,16 +442,16 @@
       "description": "與朋友、家人或室友一起記錄共同開支。"
     },
     "groups": "群組",
-    "friends": "朋友帳本",
+    "friends": "好友",
     "createExpense": "建立支出",
     "pending": "待處理",
     "scopePickerGroups": "選擇群組",
-    "scopePickerFriends": "選擇朋友帳本",
+    "scopePickerFriends": "選擇好友",
     "scopePickerEmpty": "還沒有群組",
-    "scopePickerMembers": "{count} 位成員",
+    "scopePickerMembers_other": "{count} 位成員",
     "createFriendLedgerCard": {
       "description": "與某位特定朋友一對一結算。",
-      "title": "建立朋友帳本"
+      "title": "記錄與好友的共同支出"
     },
     "importGroup": "匯入群組",
     "exportDescription": "將群組支出下載為 JSON 或 CSV。"
@@ -473,7 +475,7 @@
     "Participants": {
       "title": "群組成員",
       "description": "輸入每位成員的名稱。",
-      "protectedParticipant": "此成員已有登記支出，無法刪除。",
+      "protectedParticipant": "此參與者已包含在支出中，無法移除。",
       "new": "新增",
       "add": "新增群組成員",
       "John": "林俊凱",
@@ -517,8 +519,8 @@
       "edit": "編輯收入",
       "TitleField": {
         "label": "收入標題",
-        "placeholder": "禮拜一晚餐",
-        "description": "輸入此筆收入的描述。"
+        "placeholder": "薪資或退款",
+        "description": "說明這筆收入的來源。"
       },
       "DateField": {
         "label": "收入日期",
@@ -527,11 +529,11 @@
       "categoryFieldDescription": "選擇收入類別。",
       "paidByField": {
         "label": "接收人",
-        "description": "選擇接收這筆收入的成員。"
+        "description": "選擇收款人及每人的收款金額。"
       },
       "paidFor": {
-        "title": "應接收人",
-        "description": "選擇應參與此筆收入的成員。"
+        "title": "分配給",
+        "description": "選擇共同分配此收入的參與者。"
       },
       "splitModeDescription": "選擇如何分配此筆收入。",
       "attachDescription": "查看／附上此筆收入的收據。",
@@ -555,12 +557,12 @@
       "categoryFieldDescription": "選擇消費類別。",
       "paidByField": {
         "label": "支付人",
-        "description": "选择支付这笔消费的群组成员。",
-        "placeholder": "選擇參與者"
+        "placeholder": "選擇參與者",
+        "description": "選擇付款人及每位付款人的付款金額。"
       },
       "paidFor": {
-        "title": "應支付人",
-        "description": "選擇需參與此筆消費的成員。"
+        "title": "分攤給",
+        "description": "選擇共同分攤此支出的參與者。"
       },
       "splitModeDescription": "選擇如何分配此筆消費。",
       "currencyField": {
@@ -576,8 +578,8 @@
         "monthly": "每月"
       },
       "attachDescription": "查看／附上此筆消費的收據。",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "建立副本：{title}",
+      "editTitle": "編輯：{title}"
     },
     "amountField": {
       "label": "金額",
@@ -615,7 +617,7 @@
       }
     },
     "isReimbursementField": {
-      "label": "這是一筆報銷款"
+      "label": "這是結算付款"
     },
     "categoryField": {
       "label": "類別"
@@ -638,6 +640,7 @@
       "title": "要刪除這筆消費嗎？",
       "description": "確定要刪除這筆消費嗎？刪除後無法回復哦。",
       "yes": "確定",
+      "deleting": "正在刪除…",
       "cancel": "取消"
     },
     "attachDocuments": "附件",
@@ -646,7 +649,6 @@
     "save": "儲存",
     "saving": "儲存中……",
     "cancel": "取消",
-    "reimbursement": "報銷",
     "conversionUnavailable": "若要為每筆支出設定不同貨幣並轉換金額，請為群組選擇非自訂貨幣。",
     "conversionRateField": {
       "useApi": "使用 Frankfurter 的匯率",
@@ -670,6 +672,7 @@
     "participant": {
       "pending": "（已邀請）"
     },
+    "reimbursement": "結算付款",
     "readOnlyNotice": "此群組已封存。支出以唯讀方式顯示。",
     "PaidBySplitModeField": {
       "label": "付款人分帳方式"
@@ -698,6 +701,7 @@
     "paidBySectionSingle": "單一",
     "paidBySectionMultiple": "多個付款人",
     "paidForSection": "在群組成員之間分攤",
+    "splitOptionAria": "分攤方式：{title}",
     "paidByOptionSinglePayerHelper": "由一人支付全部費用",
     "paidByOptionEvenlyHelper": "每人支付相同份額",
     "paidByOptionBySharesHelper": "每人按加權份額支付",
@@ -710,24 +714,24 @@
     "convertedAmountField": {
       "label": "換算金額"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "按項目分攤",
+    "paidForOptionItemizedHelper": "根據支出中的各個項目計算每位參與者的分攤額。",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "項目",
+      "description": "添加項目可精確分攤支出，也可在任意分攤方式下將其保留為明細記錄。",
+      "addItem": "添加項目",
+      "empty": "目前沒有項目。按一下「新增項目」即可開始。",
+      "allMembers": "所有參與者",
+      "noMembers": "無參與者",
+      "other": "其他（未計入）",
+      "derivedBadge": "自動計算",
+      "errorExceedsAmount": "項目總額超過支出金額。",
+      "actionEdit": "編輯",
+      "actionDelete": "刪除",
+      "total": "項目總額",
+      "requiredForItemized": "至少添加一個項目才能使用按項目分攤。",
+      "participantsSummary_other": "{count} 位參與者",
+      "modalTitle": "項目參與者",
       "columnItem": "項目",
       "columnCost": "費用",
       "columnQuantity": "數量",
@@ -739,19 +743,19 @@
       "splitByPercentageLabel": "按百分比分攤",
       "splitByAmountLabel": "按金額分攤",
       "switchToItemizedTitle": "切換為逐項分攤？",
-      "switchToItemizedDescription": "編輯項目參與者會將「支付對象」改為「逐項」，並取代你已設定的支付對象分攤方式。",
+      "switchToItemizedDescription": "編輯項目參與者會將“分攤給”改為“按項目分攤”，並替換已設置的參與者分攤。",
       "switchToItemizedConfirm": "切換為逐項",
       "showItems": "顯示項目",
       "hideItems": "隱藏項目"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "切換分攤方式？",
+      "description": "切換為{mode}後，項目將只保留為明細，所有依項目設定的參與者都會被移除。",
+      "cancel": "取消",
+      "confirm": "切換"
     },
-    "paidForItemizedEntryHint": "若要依明細項目計算「為誰支付」，請在項目列中編輯參與者。",
-    "paidForItemizedActiveHint": "已啟用依明細項目計算「為誰支付」。若要變更此分攤，請在「項目」卡片中編輯項目參與者。",
+    "paidForItemizedEntryHint": "如需按項目分攤，請在項目行中編輯參與者。",
+    "paidForItemizedActiveHint": "已啓用按項目分攤。如需更改，請在“項目”卡片中編輯項目參與者。",
     "DefaultSplit": {
       "savedAsDefault": "已儲存為預設",
       "heading": "預設分攤",
@@ -761,6 +765,9 @@
     "scanReceipt": "使用 AI 掃描收據"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "刪除文檔",
+    "document": "文檔",
+    "close": "關閉",
     "TooBigToast": {
       "title": "文件過大",
       "description": "可以上傳的最大文件大小為 {maxSize}。這份文件大小為 {size}。"
@@ -806,11 +813,11 @@
   },
   "Balances": {
     "title": "總覽",
-    "description": "這是每個成員已支付及需支付的金額",
+    "description": "查看每位參與者的淨餘額。",
     "Reimbursements": {
-      "title": "建議核銷",
-      "description": "這是建議的銷帳方式",
-      "noImbursements": "看起來你的群組目前不需要銷帳😁",
+      "title": "建議的結算付款",
+      "description": "使用這些付款，以盡可能少的轉賬次數結清餘額。",
+      "noImbursements": "群組中所有人的餘額均已結清 😁",
       "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
       "markAsPaid": "標記為已支付",
       "markAsPaidAria": "將 {from} 向 {to} 的 {amount} 標記為已付款"
@@ -834,7 +841,7 @@
       "label": "檢視",
       "title": "選擇餘額檢視方式",
       "simple": "簡潔",
-      "simpleDescription": "查看誰欠誰，並完成結算。",
+      "simpleDescription": "查看誰欠誰錢並記錄結算付款。",
       "visual": "視覺化",
       "visualDescription": "餘額明細與圖表。"
     },
@@ -916,12 +923,12 @@
       "lastMonth": "上個月",
       "earlierThisYear": "今年稍早",
       "lastYear": "去年",
-      "older": "更早"
+      "older": "較早的活動"
     }
   },
   "Information": {
     "title": "資訊",
-    "description": "可在此添加群組相關資訊、公告及說明等。",
+    "description": "添加可能對群組參與者有用的信息。",
     "empty": "目前沒有群組資訊。"
   },
   "Settings": {
@@ -945,7 +952,7 @@
     "amountNotZero": "金額不可為 0。",
     "amountTenMillion": "金額需小於 10,000,000。",
     "paidByRequired": "必須選擇一個成員。",
-    "paidForMin1": "這筆消費必須包含至少一個成員。",
+    "paidForMin1": "支出必須由至少一位參與者分攤。",
     "noZeroShares": "份額需大於 0。",
     "amountSum": "金額總計必須等於消費金額。",
     "percentageSum": "百分比加總必須等於 100。",
@@ -994,12 +1001,12 @@
       "heading": "生活",
       "Childcare": "育兒",
       "Clothing": "衣服",
+      "Donation": "捐款",
       "Education": "教育",
       "Gifts": "禮物",
       "Insurance": "保險",
       "Medical Expenses": "醫療支出",
-      "Taxes": "稅",
-      "Donation": "Donation"
+      "Taxes": "稅"
     },
     "Transportation": {
       "heading": "交通",
@@ -1391,7 +1398,7 @@
           "description": "撤銷對 {email} 的邀請？必須先結算其餘額。",
           "warning": {
             "title": "此邀請有未結算的餘額",
-            "description": "勾選下方核取方塊可在撤銷前為該受邀者涉及的每筆交易建立一筆結算報銷支出。只有在餘額結算完成後才能撤銷邀請。"
+            "description": "選擇下方選項，為與此受邀者相關的每筆餘額創建一筆結算付款。只有結清這些餘額後才能撤銷邀請。"
           },
           "checkbox": "撤銷前先結算該受邀者的餘額"
         }
@@ -1410,9 +1417,9 @@
         "description": "將{name}從此群組中移除？他們有未結算的餘額 — 勾選下方核取方塊可在移除前自動結算。",
         "warning": {
           "title": "此成員有未結算的餘額",
-          "description": "不結算就移除將使這些餘額無限期留在帳本中。勾選下方核取方塊可在移除前對此成員涉及的每條交易建立一筆報銷支出，也可以不結算直接移除並手動處理這些餘額。"
+          "description": "若不結算便移除，這些餘額將一直保留在群組中。請選擇下方選項，為與此成員相關的每筆餘額創建一筆結算付款；也可以先移除成員，再手動結算餘額。"
         },
-        "checkbox": "移除前建立結算報銷"
+        "checkbox": "移除前結清此成員的餘額"
       },
       "title": "移除成員？",
       "cancel": "取消",
@@ -1426,7 +1433,7 @@
       "body": {
         "unsettled": {
           "title": "您有未結算的餘額",
-          "description": "強制退出將自動為涉及您的部分建立報銷支出，以保持帳本同步。其餘餘額將保持不變。"
+          "description": "你離開前，Spliit 會為與你相關的餘額創建結算付款。其他參與者的餘額不會改變。"
         },
         "otherAdmins": "您退出後，以下管理員將繼續管理：{names}。",
         "lastAdmin": {
@@ -1451,14 +1458,14 @@
     "unlinked": {
       "emailPlaceholder": "account@example.com",
       "linkDialog": {
-        "description": "選擇 {displayName} 應連結到的現有成員。目標成員不得已與此參與者位於同一筆支出的對立面。",
+        "description": "選擇要與 {displayName} 關聯的現有成員。該成員不能已與此參與者存在支出餘額。",
         "membersGroup": "成員",
-        "noCandidates": "找不到可相容的成員。這通常表示此未連結的參與者與其他每位成員都存在於同一筆支出的對立面——需要重新進行匯入或先調整支出。",
         "title": "連結未連結的參與者",
         "cancel": "取消",
         "confirm": "連結",
         "membersGroupWithPending": "成員和待處理的邀請",
         "pendingGroup": "待處理的邀請",
+        "noCandidates": "找不到可關聯的成員。通常是因為這位未關聯參與者與其他每位成員都存在衝突的支出餘額。請重新導入群組或先調整支出。",
         "pendingLabel": "待處理",
         "pendingSuffix": "（待處理）",
         "pendingHint": "連結到待處理的邀請會將此僅有名稱的項目合併到受邀者中。受邀者保留其自己的列；合併後的參照將在受邀者接受後透過該列解析。"
@@ -1520,7 +1527,7 @@
         "items": "明細",
         "documents": "附件",
         "recurrence": "重複",
-        "reimbursement": "報銷",
+        "reimbursement": "結算付款",
         "conversionSource": "轉換來源",
         "conversionRate": "轉換匯率"
       }
@@ -1550,10 +1557,10 @@
     },
     "fallback": "已記錄一項活動",
     "unknownActor": "某人",
+    "openExpense": "開啟支出",
     "import": {
-      "imported": "{participant} 導入了 {count} 筆支出"
-    },
-    "openExpense": "開啟支出"
+      "imported_other": "{participant} 導入了 {count} 筆支出"
+    }
   },
   "OfflineBanner": {
     "message": "目前處於離線狀態。在重新連線之前，您所做的變更不會被儲存。"
@@ -1593,38 +1600,43 @@
     "labels": {
       "group": "群組",
       "groupPlural": "群組",
-      "friendLedger": "朋友帳本",
-      "friendLedgerPlural": "朋友帳本"
+      "friendLedger": "好友",
+      "friendLedgerPlural": "好友"
     },
     "actions": {
       "createGroup": "建立群組",
-      "createFriendLedger": "建立朋友帳本",
+      "createFriendLedger": "記錄與好友的共同支出",
       "showHidden": "顯示已隱藏的群組"
     }
   },
   "Friends": {
-    "title": "建立朋友帳本",
+    "title": "記錄與好友的共同支出",
     "peerFriendsTab": "朋友清單",
     "peerEmailTab": "電子郵件",
     "peerLinkTab": "可分享連結",
-    "alreadyHasLedger": "已經有朋友帳本",
+    "friendsSection": "好友",
+    "pendingInvitationsSection": "待接受的邀請",
+    "activeFriendExpensesSection": "進行中的好友共同支出",
+    "alreadyInvited": "（已邀請）",
+    "alreadyHasLedger": "（已與你共享支出）",
     "inviteSent": "邀請已傳送。當朋友加入 Spliit Cloud 後，他們將被新增至帳本。",
     "inviteLinkTitle": "分享此連結",
-    "inviteLinkDescription": "與朋友分享此連結，將其新增至帳本。",
+    "inviteLinkDescription": "分享此鏈接，好友即可加入你們的共同支出。",
     "copy": "複製",
     "share": "分享",
-    "linkHelp": "產生一個朋友可以用來加入此帳本的可分享連結。",
+    "linkHelp": "生成好友可用來加入的分享鏈接。",
     "emailLabel": "朋友的電子郵件",
     "temporaryNameLabel": "顯示名稱",
     "temporaryNameHelp": "請輸入受邀者的姓名。",
     "friendsEmpty": "輸入朋友的電子郵件或分享連結以邀請他們。",
     "infoLabel": "資訊（選填）",
-    "infoPlaceholder": "新增說明，例如「室友費用」"
+    "infoPlaceholder": "新增說明，例如「室友費用」",
+    "createError": "無法建立與好友的共同支出"
   },
   "BulkCategorize": {
     "title": "批次分類",
     "calibrationTitle": "步驟1 — 校正",
-    "calibrationDescription": "您確認的每個範例都會成為AI下一輪學習的標準答案。可能一輪即可就緒，也可能需要提供更多範例。",
+    "calibrationDescription": "你確認的每個示例都會幫助 AI 改進下一次建議。AI 可能一輪後即可準備就緒，也可能需要更多示例。",
     "roundCount": "第{round}輪 / 共{max}輪",
     "confidence": {
       "high": "高",
@@ -1643,10 +1655,10 @@
     "previewDescription": "編輯任意列，然後儲存。信賴度標記了模型最不確定的列。",
     "previewHint": "顯示第{shown}/{total}條候選項目",
     "removeAction": "略過",
-    "targetExceedsCap": "目標集合中的支出過多（{count}筆）。請縮小日期範圍或分批處理。",
-    "saveAll": "儲存{count}項變更",
+    "targetExceedsCap_other": "待處理的支出過多（{count} 筆）。請縮小日期範圍或分批處理。",
+    "saveAll_other": "儲存 {count} 項變更",
     "saving": "儲存中…",
-    "saved": "{count}筆支出已重新分類。",
+    "saved_other": "已重新分類 {count} 筆支出。",
     "applyError": "無法儲存批次分類更新：{message}",
     "noCandidates": "沒有需要分類的支出。",
     "adminsOnly": "只有群組管理員才能執行批次分類器。",
@@ -1657,10 +1669,10 @@
     "previewError": "無法產生預覽：{message}",
     "introTitle": "運作方式",
     "loadingCandidates": "正在檢查未分類的支出…",
-    "introDescription": "有{count}筆未分類的支出等待審查。",
-    "introStepLook": "AI廣泛審查最多{count}筆支出，以找到最有用的範例。",
-    "introStepReview": "您審查並修正最多{count}個選定範例，讓AI學習這個群組的分類。",
-    "introStepPreview": "當AI獲得足夠訊號後，它會準備完整審查，並將不確定的支出保持未分類狀態。",
+    "introDescription_other": "有 {count} 筆未分類支出待審核。",
+    "introStepLook_other": "AI 最多審核 {count} 筆支出，以找出最有用的示例。",
+    "introStepReview_other": "你最多審核並修正 {count} 個選定示例，讓 AI 學習此群組的分類。",
+    "introStepPreview": "AI 獲得足夠的示例後，會準備完整的審核內容，並將無法確定的支出保留為未分類。",
     "startCalibration": "開始校正",
     "calibrationStartHint": "AI正在選擇有用的範例供您審查。",
     "calibrationReady": "AI已獲得足夠回饋來準備完整審查。",
@@ -1674,7 +1686,7 @@
     "generatingPreview": "正在準備建議…",
     "noSuggestions": "AI將所有支出保留為未分類。您可以進行更多校正後重試。",
     "previewSummary": "AI為{total}筆中的{suggested}筆支出建議了分類。",
-    "leftUncategorized": "由於AI信心不足，{count}筆支出未被分類。",
+    "leftUncategorized_other": "由於 AI 無法確定分類，{count} 筆支出仍未分類。",
     "retryPreview": "重試預覽",
     "doneTitle": "分類已儲存",
     "expenseColumn": "支出",
@@ -1686,10 +1698,10 @@
     "category": "類別",
     "date": "日期",
     "paidBy": "支付人",
-    "paidFor": "應支付人",
+    "paidFor": "分攤給",
     "yourBalance": "你的餘額",
     "notes": "備註",
-    "attachments": "附件（{count}）",
+    "attachments_other": "附件（{count}）",
     "edit": "編輯消費紀錄",
     "makeCopy": "複製消費紀錄"
   },
@@ -1702,10 +1714,21 @@
     "create": "新增",
     "edit": "編輯詳細資訊",
     "creating": "新增中…",
-    "successToast": "報銷已記錄"
+    "successToast": "已記錄結算付款"
   },
   "Participants": {
     "search": "搜尋參與者……",
     "noParticipant": "找不到參與者"
+  },
+  "Common": {
+    "close": "關閉",
+    "previousSlide": "上一張投影片",
+    "nextSlide": "下一張投影片"
+  },
+  "Theme": {
+    "toggle": "更改主題",
+    "light": "淺色",
+    "dark": "深色",
+    "system": "跟隨系統"
   }
 }

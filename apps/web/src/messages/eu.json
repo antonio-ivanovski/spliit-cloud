@@ -1,6 +1,6 @@
 {
   "Homepage": {
-    "title": "Partekatu <strong>gastuak lagunekin eta familiarekin</strong>",
+    "title": "Partekatu <strong>gastuak</strong> <strong>lagunekin eta familiarekin</strong>",
     "description": "Jarraitu partekatutako gastuak eta likidatu kontuak. Doakoa eta kode irekikoa, <strong>zure kontuarekin sinkronizatua eta babestua</strong>.",
     "button": {
       "github": "GitHub",
@@ -8,32 +8,32 @@
       "createAccount": "Sortu kontua",
       "createGroup": "Talde bat sortu",
       "importGroup": "Inportatu taldea beste zerbitzu batetik",
-      "createFriendLedger": "Sortu lagun-liburua"
+      "createFriendLedger": "Jarraitu lagun batekin izandako gastuak"
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Taldeak eta sinkronizazioa",
+        "description": "Sortu bidaietarako, ekitaldietarako edo oparietarako taldeak, eta mantendu gailu guztietan sinkronizatuta."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Gastuak eta ordainagiriak",
+        "description": "Gehitu gastuak, erantsi ordainagirien irudiak eta sortu eguneroko, asteko edo hileko kostu errepikariak."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Banaketa aurreratua",
+        "description": "Banatu ehunekoaren, zatien, zenbateko zehatzaren edo zati berdinen arabera."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Saldoak",
+        "description": "Ikusi nork zer ordaindu duen eta murriztu parte-hartzaileen arteko diru-transferentziak."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Kategoriak",
+        "description": "Esleitu kategoriak partekatutako gastuak erraz berrikusteko."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Kontuak",
+        "description": "Hasi saioa datuak babesteko eta gastuen historia erabilgarri mantentzeko."
       }
     },
     "welcomeBack": "Ongi etorri berriro, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Amaitu saioa",
     "account": "Kontua",
     "accountSettings": "Kontuaren ezarpenak",
-    "back": "Atzera"
+    "back": "Atzera",
+    "menu": "Menua"
   },
   "Footer": {
     "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
@@ -107,7 +108,7 @@
       "noMatchClear": "Garbitu filtroak",
       "category": "Kategoria",
       "paidBy": "Ordaindu duena",
-      "paidFor": "Ordaindutakoak",
+      "paidFor": "Hauen artean banatuta",
       "dateRange": "Data tartea",
       "dateFrom": "Hasiera",
       "dateTo": "Amaiera",
@@ -122,7 +123,9 @@
       "allCategories": "Kategoria guztiak",
       "allParticipants": "Kide guztiak",
       "allCurrencies": "Moneta guztiak",
-      "nSelected": "{count} hautatuta",
+      "nSelected_one": "{count} hautatuta",
+      "nSelected_many": "{count} hautatuta",
+      "nSelected_other": "{count} hautatuta",
       "removeFilter": "Kendu filtroa",
       "settlementsHidden": "Kitapenak ezkutatuta",
       "title": "Iragazkiak"
@@ -130,8 +133,8 @@
     "showSettlements": "Erakutsi kitapenak"
   },
   "ExpenseCard": {
-    "paidBy": "<strong>{paidBy}</strong>-k ordaindua <paidFor></paidFor>-rentzat",
-    "paidByMultiple": "<paidByNames></paidByNames>-(e)k ordaindua <paidFor></paidFor>-rentzat",
+    "paidBy": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor> hauen artean banatuta",
+    "paidByMultiple": "<paidByNames></paidByNames> hauek ordaindua · <paidFor></paidFor> hauen artean banatuta",
     "everyone": "denak",
     "receivedBy": "<strong>{paidBy}</strong>-k jasota <paidFor></paidFor>-rentzat",
     "receivedByMultiple": "<paidByNames></paidByNames>-ek jasota <paidFor></paidFor>-rentzat",
@@ -139,8 +142,10 @@
     "notInvolved": "Ez duzu parte hartzen",
     "settlementBadge": "Kitzea",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+{count} gehiago",
+      "more_many": "+{count} gehiago",
+      "more_other": "+{count} gehiago",
+      "title": "Artikuluak",
       "participants": "{names}"
     },
     "copyToast": "Gastuaren kopia hasi da. Lehendik dagoen gastuaren datuak erabiliko dira berri bat sortzeko."
@@ -161,7 +166,8 @@
     },
     "NotFound": {
       "text": "Talde hori ez da existitzen.",
-      "link": "Joan hasierara"
+      "link": "Joan hasierara",
+      "lookingUp": "Taldea bilatzen…"
     },
     "createdInviteHint": "Taldea sortuta. Gonbidatu kideak hasteko.",
     "hidden": "Ezkutukoak",
@@ -245,9 +251,13 @@
         "newGroupFormat": "Talde berria · {currency}",
         "existingGroupFormat": "Lehendik dagoen taldea · baturatuta",
         "summaryLabel": "Laburpena",
-        "sourceParticipants": "{count} iturburuko parte-hartzaile",
+        "sourceParticipants_one": "Jatorriko parte-hartzailea: {count}",
+        "sourceParticipants_many": "Jatorriko {count} parte-hartzaile",
+        "sourceParticipants_other": "Jatorriko {count} parte-hartzaile",
         "participantBreakdown": "{linked} lotuta · {email} posta gonbidapen · {link} esteka gonbidapen · {unlinked} lotu gabe",
-        "expenseCount": "{count} gastu sortuko dira",
+        "expenseCount_one": "{count} gastu sortuko da",
+        "expenseCount_many": "{count} gastu sortuko dira",
+        "expenseCount_other": "{count} gastu sortuko dira",
         "sourceName": "Iturburua: {name}",
         "footer": "Iturburuko parte-hartzaile eta gastu guztiak inportatuko dira. Gonbidapenak taldea sortu ondoren bidaltzen/sortzen dira.",
         "importingButton": "Inportatzen…",
@@ -272,7 +282,9 @@
         "existingGroup": "Lehendik dagoen taldea",
         "loading": "Kargatzen…",
         "noAdminGroups": "Oraindik ez duzu talderik administratzen.",
-        "memberCount": "{count} kide"
+        "memberCount_one": "{count} kide",
+        "memberCount_many": "{count} kide",
+        "memberCount_other": "{count} kide"
       },
       "Done": {
         "importComplete": "Inportazioa osatuta",
@@ -446,10 +458,12 @@
     "scopePickerGroups": "Aukeratu talde bat",
     "scopePickerFriends": "Aukeratu lagun-liburu bat",
     "scopePickerEmpty": "Ez dago oraindik talderik",
-    "scopePickerMembers": "{count} kide",
+    "scopePickerMembers_one": "{count} kide",
+    "scopePickerMembers_many": "{count} kide",
+    "scopePickerMembers_other": "{count} kide",
     "createFriendLedgerCard": {
       "description": "Pertsona zehatz batekin zorrak banan-banan kitatu.",
-      "title": "Lagun-liburu bat sortu"
+      "title": "Jarraitu lagun batekin izandako gastuak"
     },
     "importGroup": "Inportatu taldea",
     "exportDescription": "Deskargatu taldeko gastuak JSON edo CSV formatuan."
@@ -560,7 +574,7 @@
       "paidByField": {
         "label": "Zeinek ordaindu du",
         "placeholder": "Hautatu kide bat",
-        "description": "Hautatu gastua ordaindu duen kidea."
+        "description": "Hautatu nork jarri duen dirua eta ordaintzaile bakoitzak zenbat jarri duen."
       },
       "recurrenceRule": {
         "label": "Gastu errepikakorra",
@@ -571,13 +585,13 @@
         "monthly": "Hilabetero"
       },
       "paidFor": {
-        "title": "Honentzat ordaindu da",
+        "title": "Hauen artean banatuta",
         "description": "Hautatu gastua norentzat ordaindu den."
       },
       "splitModeDescription": "Hautatu nola zatitu gastua.",
       "attachDescription": "Ikusi eta erantsi gastuaren ordainagiriak.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Sortu kopia: {title}",
+      "editTitle": "Editatu: {title}"
     },
     "amountField": {
       "label": "Zenbatekoa",
@@ -635,7 +649,7 @@
       "customRate": "Tasa pertsonalizatua erabiltzen"
     },
     "isReimbursementField": {
-      "label": "Hau diru-itzultzea da"
+      "label": "Hau zor-kitapenaren ordainketa bat da"
     },
     "categoryField": {
       "label": "Kategoria"
@@ -658,6 +672,7 @@
       "title": "Ezabatu gastu hau?",
       "description": "Benetan gastu hau ezabatu nahi duzu? Ekintzak ez dauka atzera bueltarik.",
       "yes": "Bai",
+      "deleting": "Ezabatzen…",
       "cancel": "Utzi"
     },
     "attachDocuments": "Erantsi dokumentuak",
@@ -666,10 +681,10 @@
     "save": "Gorde",
     "saving": "Gordetzen…",
     "cancel": "Utzi",
-    "reimbursement": "Diru-itzultzea",
     "participant": {
       "pending": "(gonbidatua)"
     },
+    "reimbursement": "Zor-kitapenaren ordainketa",
     "readOnlyNotice": "Talde hau artxibatuta dago. Gastua irakurtzeko soilik erakusten da.",
     "PaidBySplitModeField": {
       "label": "Ordaintzailearen zatiketa modua"
@@ -698,6 +713,7 @@
     "paidBySectionSingle": "Bakarra",
     "paidBySectionMultiple": "Ordaintzaile anitz",
     "paidForSection": "Parte-hartzaileen artean banatu",
+    "splitOptionAria": "Banaketa: {title}",
     "paidByOptionSinglePayerHelper": "Pertsona batek gastu osoa estaltzen du",
     "paidByOptionEvenlyHelper": "Bakoitzak zati berdina ordaintzen du",
     "paidByOptionBySharesHelper": "Bakoitzak zati haztatua ordaintzen du",
@@ -710,24 +726,26 @@
     "convertedAmountField": {
       "label": "Zenbateko bihurtua"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Artikuluka",
+    "paidForOptionItemizedHelper": "Kalkulatu parte-hartzaile bakoitzaren zatia gastuaren artikulu bakoitzetik.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
-      "allMembers": "All members",
-      "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "title": "Artikuluak",
+      "description": "Gehitu artikuluak gastua zehaztasunez banatzeko edo edozein banaketa-modurekin dokumentazio gisa gordetzeko.",
+      "addItem": "Gehitu artikulua",
+      "empty": "Oraindik ez dago artikulurik. Hautatu «Gehitu artikulua» hasteko.",
+      "allMembers": "Parte-hartzaile guztiak",
+      "noMembers": "Ez dago parte-hartzailerik",
+      "other": "Bestelakoa (esleitu gabea)",
+      "derivedBadge": "Kalkulatua",
+      "errorExceedsAmount": "Artikuluen guztizkoak gastuaren zenbatekoa gainditzen du.",
+      "actionEdit": "Editatu",
+      "actionDelete": "Ezabatu",
+      "total": "Artikuluen guztizkoa",
+      "requiredForItemized": "Gehitu gutxienez artikulu bat artikuluka banatzea erabiltzeko.",
+      "participantsSummary_one": "{count} parte-hartzaile",
+      "participantsSummary_many": "{count} parte-hartzaile",
+      "participantsSummary_other": "{count} parte-hartzaile",
+      "modalTitle": "Artikuluaren parte-hartzaileak",
       "columnItem": "Elementua",
       "columnCost": "Kostua",
       "columnQuantity": "Kop.",
@@ -745,13 +763,13 @@
       "hideItems": "Ezkutatu elementuak"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Banaketa-modua aldatu?",
+      "description": "{mode} modura aldatzean, artikuluak dokumentazio gisa soilik gordeko dira. Artikulu bakoitzeko parte-hartzaileen esleipen guztiak kenduko dira.",
+      "cancel": "Utzi",
+      "confirm": "Aldatu"
     },
-    "paidForItemizedEntryHint": "Elementukako «paid for» kontabilitatea erabiltzeko, editatu parte-hartzaileak elementu baten errenkadatik.",
-    "paidForItemizedActiveHint": "Elementukako «paid for» kontabilitatea aktibo dago. Banaketa hau aldatzeko, editatu elementuen parte-hartzaileak Elementuak txarteletik.",
+    "paidForItemizedEntryHint": "Artikuluka banatzeko, editatu parte-hartzaileak artikulu baten errenkadatik.",
+    "paidForItemizedActiveHint": "Artikuluko banaketa aktibo dago. Banaketa aldatzeko, editatu parte-hartzaileak Artikuluak txartelean.",
     "DefaultSplit": {
       "savedAsDefault": "Lehenetsi gisa gordea",
       "heading": "Lehenetsitako banaketa",
@@ -761,6 +779,9 @@
     "scanReceipt": "Eskaneatu ordainagiria IArekin"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Ezabatu dokumentua",
+    "document": "Dokumentua",
+    "close": "Itxi",
     "TooBigToast": {
       "title": "Fitxategia handiegia da",
       "description": "Igo dezakezun fitxategirik handiena {maxSize} da. Zureak {size} pisatzen du."
@@ -806,12 +827,12 @@
   },
   "Balances": {
     "title": "Saldoak",
-    "description": "Hau da kide bakoitzak ordaindu edo jaso duen zenbatekoa.",
+    "description": "Ikusi parte-hartzaile bakoitzaren saldo garbia.",
     "Reimbursements": {
-      "title": "Proposatutako diru-itzulketak",
-      "description": "Hona hemen kideen arteko ditu-itzulketak optimizatzeko proposamenak.",
-      "noImbursements": "Antza denez zure taldeak ez du diru-itzulketarik behar 😁",
-      "owes": "<strong>{from}</strong> zor dio <strong>{to}</strong>-ri",
+      "title": "Iradokitako zor-kitapenaren ordainketak",
+      "description": "Erabili ordainketa hauek saldoak ahalik eta transferentzia gutxienekin kitatzeko.",
+      "noImbursements": "Taldeko kide guztien saldoak kitatuta daude 😁",
+      "owes": "<strong>{from}</strong>(e)k <strong>{to}</strong>(r)i zor dio",
       "markAsPaid": "Markatu ordainduta gisa",
       "markAsPaidAria": "Markatu {amount}-ko ordainketa ({from} → {to}) ordainduta gisa"
     },
@@ -834,7 +855,7 @@
       "label": "Bista",
       "title": "Aukeratu nola ikusi saldoak",
       "simple": "Soila",
-      "simpleDescription": "Nork nori zor dion eta kitatu.",
+      "simpleDescription": "Ikusi nork nori zor dion eta erregistratu zor-kitapenaren ordainketak.",
       "visual": "Bisuala",
       "visualDescription": "Saldoen xehetasunak eta grafikoak."
     },
@@ -865,6 +886,7 @@
       "selectedPeriod": "Hautatutako aldia",
       "lifetimeDescription": "Taldearen historia osoan zehar",
       "expenseCount_one": "{count} gastu",
+      "expenseCount_many": "{count} gastu",
       "expenseCount_other": "{count} gastu",
       "spendingOverTime": "Gastua denboran zehar",
       "bucketedBy": "{granularity}en arabera multzokatuta",
@@ -1391,7 +1413,7 @@
           "description": "{email}(e)ri bidalitako gonbidapena ezeztatu? Lehenik saldoak kitatu behar dira.",
           "warning": {
             "title": "Gonbidapen honek kitatu gabeko saldoak ditu",
-            "description": "Markatu beheko laukia gonbidatu hau inplikatzen duen hanka bakoitzeko itzultze-gastu bat sortzeko ezeztatu aurretik. Gonbidapena ezin da ezeztatu saldoak kitatu arte."
+            "description": "Hautatu beheko aukera gonbidatu honen saldo bakoitzerako zor-kitapenaren ordainketa bat sortzeko. Gonbidapena saldo horiek kitatu ondoren soilik ezezta daiteke."
           },
           "checkbox": "Kitatu gonbidatuaren saldoak ezeztatu aurretik"
         }
@@ -1416,9 +1438,9 @@
         "description": "{name} talde honetatik kendu? Kitatu gabeko saldoak dituzte — markatu beheko laukia automatikoki kitatzeko kendu aurretik.",
         "warning": {
           "title": "Kide honek kitatu gabeko saldoak ditu",
-          "description": "Kitatu gabe kentzeak saldoak liburuan mugarik gabe utziko ditu. Markatu beheko laukia kide hau inplikatzen duen hanka bakoitzeko itzultze-gastu bat sortzeko kendu aurretik, edo kitatu gabe kendu eta saldoak eskuz kudeatu."
+          "description": "Kidea saldoak kitatu gabe kentzen baduzu, saldo horiek taldean geratuko dira behin betiko. Hautatu beheko aukera kide honen saldo bakoitzerako zor-kitapenaren ordainketa bat sortzeko, edo kendu kidea eta kitatu saldoak eskuz."
         },
-        "checkbox": "Sortu kitatze-itzultzea kendu aurretik"
+        "checkbox": "Kitatu kide honen saldoak kidea kendu aurretik"
       }
     },
     "leave": {
@@ -1440,7 +1462,7 @@
         },
         "unsettled": {
           "title": "Kitatu gabeko saldoak dituzu",
-          "description": "Behartuta irtenez gero, zuk parte hartzen duzun hanka bakoitzerako kitatze-gastuak sortuko dira kontabilitatea sinkronizatuta mantentzeko. Beste saldoak utziko dira dauden bezala."
+          "description": "Spliit-ek zure saldoetarako zor-kitapenaren ordainketak sortuko ditu irten aurretik. Beste parte-hartzaileen saldoak ez dira aldatuko."
         }
       },
       "toast": {
@@ -1520,7 +1542,7 @@
         "items": "Partidak",
         "documents": "Erantsitakoak",
         "recurrence": "Maiztasuna",
-        "reimbursement": "Diru-itzultzea",
+        "reimbursement": "Zor-kitapenaren ordainketa",
         "conversionSource": "Bihurketa-iturria",
         "conversionRate": "Bihurketa-tasa"
       }
@@ -1550,10 +1572,12 @@
     },
     "fallback": "Jarduera bat erregistratu da",
     "unknownActor": "Norbait",
+    "openExpense": "Gastua ireki",
     "import": {
-      "imported": "{participant}(e)k {count} gastu inportatu ditu"
-    },
-    "openExpense": "Gastua ireki"
+      "imported_one": "{participant} parte-hartzaileak {count} gastu inportatu du",
+      "imported_many": "{participant}(e)k {count} gastu inportatu ditu",
+      "imported_other": "{participant}(e)k {count} gastu inportatu ditu"
+    }
   },
   "OfflineBanner": {
     "message": "Lineaz kanpo zaude. Oraingoz egiten dituzun aldaketak ez dira gordeko berriro konektatu arte."
@@ -1594,8 +1618,8 @@
     "labels": {
       "group": "talde",
       "groupPlural": "taldeak",
-      "friendLedger": "lagun-liburu",
-      "friendLedgerPlural": "lagun-liburuak"
+      "friendLedger": "lagun batekin izandako gastua",
+      "friendLedgerPlural": "lagunekin izandako gastuak"
     },
     "title": {
       "empty": "Ez dago oraindik {itemLabelPlural}rik",
@@ -1607,6 +1631,10 @@
     "peerFriendsTab": "Lagunen zerrenda",
     "peerEmailTab": "Posta elektronikoa",
     "peerLinkTab": "Partekatzeko esteka",
+    "friendsSection": "Lagunak",
+    "pendingInvitationsSection": "Zain dauden gonbidapenak",
+    "activeFriendExpensesSection": "Lagunak",
+    "alreadyInvited": "Dagoeneko gonbidatuta",
     "alreadyHasLedger": "badu lagun-liburu bat",
     "inviteSent": "Gonbidapena bidali da. Zure laguna gehituko da Spliit Cloud-era batzen denean.",
     "inviteLinkTitle": "Partekatu esteka hau",
@@ -1619,7 +1647,8 @@
     "temporaryNameHelp": "Idatzi izen bat gonbidatzen ari zaren pertsonarentzat.",
     "friendsEmpty": "Gehitu lagun bat bere posta elektronikoa idatziz, edo partekatu esteka bat gonbidapena bidaltzeko.",
     "infoLabel": "Informazioa (aukerakoa)",
-    "infoPlaceholder": "Gehitu testuingurua, adibidez 'Bizikidearen gastuak'"
+    "infoPlaceholder": "Gehitu testuingurua, adibidez 'Bizikidearen gastuak'",
+    "createError": "Ezin izan dira lagunarekiko gastuak sortu"
   },
   "BulkCategorize": {
     "title": "Kategorizazio multzokatua",
@@ -1643,10 +1672,16 @@
     "previewDescription": "Editatu edozein errenkada eta gero gorde. Konfiantzak modeloak ziurtasun txikiena duen errenkadak markatzen ditu.",
     "previewHint": "{total} hautagaietatik {shown} erakusten.",
     "removeAction": "Saltatu",
-    "targetExceedsCap": "Xede-multzoak gastu gehiegi ditu ({count}). Mugatu datak edo prozesatu multzoka.",
-    "saveAll": "Gorde {count} aldaketa",
+    "targetExceedsCap_one": "Ezin da {count} gastu prozesatu sorta honetan. Murriztu data-tartea eta saiatu berriro.",
+    "targetExceedsCap_many": "Gastu gehiegi daude prozesatzeko ({count}). Murriztu data-tartea edo prozesatu sortaka.",
+    "targetExceedsCap_other": "Gastu gehiegi daude prozesatzeko ({count}). Murriztu data-tartea edo prozesatu sortaka.",
+    "saveAll_one": "Gorde {count} aldaketa",
+    "saveAll_many": "Gorde {count} aldaketa",
+    "saveAll_other": "Gorde {count} aldaketa",
     "saving": "Gordetzen…",
-    "saved": "{count} gastu bir-kategorizatu dira.",
+    "saved_one": "{count} gastu berriz kategorizatu da.",
+    "saved_many": "{count} gastu berriz kategorizatu dira.",
+    "saved_other": "{count} gastu berriz kategorizatu dira.",
     "applyError": "Ezin izan da kategoria-eguneratze multzokatua gorde: {message}",
     "noCandidates": "Ez dago kategorizatzeko gasturik.",
     "adminsOnly": "Taldeko administratzaileek bakarrik exekuta dezakete kategorizatzaile multzokatua.",
@@ -1657,9 +1692,15 @@
     "previewError": "Ezin izan da aurrebista sortu: {message}",
     "introTitle": "Nola funtzionatzen du",
     "loadingCandidates": "Gastu kategorizatu gabeak egiaztatzen…",
-    "introDescription": "{count} gastu kategorizatu gabe daude berrikusteko prest.",
-    "introStepLook": "IAk {count} gastu arteko multzo zabala aztertzen du adibiderik erabilgarrienak aurkitzeko.",
-    "introStepReview": "{count} adibide hautatu arte berrikusi eta zuzentzen dituzu IAk talde honen kategoriak ikas ditzan.",
+    "introDescription_one": "Kategoriarik gabeko {count} gastu dago berrikusteko prest.",
+    "introDescription_many": "Kategoriarik gabeko {count} gastu daude berrikusteko prest.",
+    "introDescription_other": "Kategoriarik gabeko {count} gastu daude berrikusteko prest.",
+    "introStepLook_one": "IAk gehienez {count} gastu berrikusten du adibiderik erabilgarriena aurkitzeko.",
+    "introStepLook_many": "IAk gehienez {count} gastu berrikusten ditu adibiderik erabilgarrienak aurkitzeko.",
+    "introStepLook_other": "IAk gehienez {count} gastu berrikusten ditu adibiderik erabilgarrienak aurkitzeko.",
+    "introStepReview_one": "Berrikusi eta zuzendu hautatutako {count} adibide, IAk talde honen kategoriak ikas ditzan.",
+    "introStepReview_many": "Berrikusi eta zuzendu hautatutako {count} adibide, IAk talde honen kategoriak ikas ditzan.",
+    "introStepReview_other": "Berrikusi eta zuzendu hautatutako {count} adibide, IAk talde honen kategoriak ikas ditzan.",
     "introStepPreview": "IAk nahiko seinale duenean, berrikuspen osoa prestatzen du eta gastu ziurgabeak kategorizatu gabe uzten ditu.",
     "startCalibration": "Hasi kalibrazioa",
     "calibrationStartHint": "IAk adibide erabilgarriak aukeratzen ari ditu berrikus ditzazun.",
@@ -1674,7 +1715,9 @@
     "generatingPreview": "Iradokizunak prestatzen…",
     "noSuggestions": "IAk gastu guztiak kategorizatu gabe utzi ditu. Berriro saia zaitezke kalibrazio gehiagoren ondoren.",
     "previewSummary": "IAk {total} gastuetatik {suggested}entzat iradoki ditu kategoriak.",
-    "leftUncategorized": "{count} gastu kategorizatu gabe utzi dira IAk nahiko konfiantza ez zuelako.",
+    "leftUncategorized_one": "{count} gastu kategoriarik gabe utzi da, IAk ez zuelako ziurtasun nahikorik.",
+    "leftUncategorized_many": "{count} gastu kategoriarik gabe utzi dira, IAk ez zuelako ziurtasun nahikorik.",
+    "leftUncategorized_other": "{count} gastu kategoriarik gabe utzi dira, IAk ez zuelako ziurtasun nahikorik.",
     "retryPreview": "Saiatu aurrebista berriro",
     "doneTitle": "Kategoriak gordeta",
     "expenseColumn": "Gastua",
@@ -1686,10 +1729,12 @@
     "category": "Kategoria",
     "date": "Data",
     "paidBy": "Zeinek ordaindu du",
-    "paidFor": "Honentzat ordaindu da",
+    "paidFor": "Hauen artean banatuta",
     "yourBalance": "Zure saldoa:",
     "notes": "Oharrak",
-    "attachments": "Erantsitakoak ({count})",
+    "attachments_one": "Eranskin ({count})",
+    "attachments_many": "Eranskinak ({count})",
+    "attachments_other": "Eranskinak ({count})",
     "edit": "Editatu gastua",
     "makeCopy": "Kopia bat egin"
   },
@@ -1702,10 +1747,21 @@
     "create": "Sortu",
     "edit": "Editatu xehetasunak",
     "creating": "Sortzen…",
-    "successToast": "Diru-itzulketa erregistratu da"
+    "successToast": "Zor-kitapenaren ordainketa erregistratu da"
   },
   "Participants": {
     "search": "Bilatu kideak...",
     "noParticipant": "Ez da kiderik aurkitu"
+  },
+  "Common": {
+    "close": "Itxi",
+    "previousSlide": "Aurreko diapositiba",
+    "nextSlide": "Hurrengo diapositiba"
+  },
+  "Theme": {
+    "toggle": "Aldatu gaia",
+    "light": "Argia",
+    "dark": "Iluna",
+    "system": "Sistemaren lehenetsia"
   }
 }

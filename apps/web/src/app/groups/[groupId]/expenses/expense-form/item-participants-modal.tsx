@@ -159,7 +159,7 @@ export function ItemParticipantsModal(props: {
     return (
       <>
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-sm font-medium">Participants</span>
+          <span className="text-sm font-medium">{t('items.modalTitle')}</span>
           <Button
             variant="link"
             type="button"

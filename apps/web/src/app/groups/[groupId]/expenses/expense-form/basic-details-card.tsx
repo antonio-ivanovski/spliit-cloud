@@ -623,7 +623,7 @@ export function BasicDetailsCard(props: {
                 disabled={readOnly}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="NONE" />
+                  <SelectValue placeholder={t('Expense.recurrenceRule.none')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="NONE">

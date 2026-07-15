@@ -12,28 +12,28 @@
     },
     "features": {
       "groupsSync": {
-        "title": "Groups + sync",
-        "description": "Create groups for trips, events, gifts, and keep them synced across devices."
+        "title": "Grupy i synchronizacja",
+        "description": "Twórz grupy na wyjazdy, wydarzenia i prezenty oraz synchronizuj je między urządzeniami."
       },
       "expenses": {
-        "title": "Expenses + receipts",
-        "description": "Add expenses, attach receipt images, and create daily, weekly, or monthly recurring costs."
+        "title": "Wydatki i paragony",
+        "description": "Dodawaj wydatki i zdjęcia paragonów oraz twórz koszty powtarzane codziennie, co tydzień lub co miesiąc."
       },
       "splitting": {
-        "title": "Advanced split",
-        "description": "Split by percentage, shares, exact amount, or a simple equal share."
+        "title": "Zaawansowany podział",
+        "description": "Dziel procentowo, według udziałów, dokładnych kwot albo po równo."
       },
       "settlement": {
-        "title": "Balances",
-        "description": "See who paid what and optimize money transfers between participants."
+        "title": "Salda",
+        "description": "Sprawdź, kto za co zapłacił, i ogranicz liczbę przelewów między uczestnikami."
       },
       "organization": {
-        "title": "Categories",
-        "description": "Assign categories so shared spending stays easy to scan."
+        "title": "Kategorie",
+        "description": "Przypisuj kategorie, aby wspólne wydatki były przejrzyste."
       },
       "accounts": {
-        "title": "Accounts",
-        "description": "Sign in once to protect your data and keep your expense history available."
+        "title": "Konta",
+        "description": "Zaloguj się raz, aby chronić dane i zachować dostęp do historii wydatków."
       }
     },
     "welcomeBack": "Witaj z powrotem, {name}."
@@ -43,7 +43,8 @@
     "signOut": "Wyloguj się",
     "account": "Konto",
     "accountSettings": "Ustawienia konta",
-    "back": "Wstecz"
+    "back": "Wstecz",
+    "menu": "Menu"
   },
   "Footer": {
     "madeIn": "Stworzone przez społeczność open-source z miłością ❤️",
@@ -74,7 +75,7 @@
       "upcoming": "Nadchodzące",
       "thisWeek": "Ten tydzień",
       "earlierThisMonth": "Wcześniej w tym miesiącu",
-      "lastMonth": "Ostatni miesiąc",
+      "lastMonth": "W zeszłym miesiącu",
       "earlierThisYear": "Wcześniej w tym roku",
       "lastYear": "Poprzedni rok",
       "older": "Starsze"
@@ -122,7 +123,10 @@
       "allCategories": "Wszystkie kategorie",
       "allParticipants": "Wszyscy uczestnicy",
       "allCurrencies": "Wszystkie waluty",
-      "nSelected": "{count} wybrano",
+      "nSelected_one": "Wybrano: {count}",
+      "nSelected_few": "Wybrano: {count}",
+      "nSelected_many": "Wybrano: {count}",
+      "nSelected_other": "Wybrano: {count}",
       "removeFilter": "Usuń filtr",
       "settlementsHidden": "Rozliczenia ukryte",
       "title": "Filtry"
@@ -139,8 +143,11 @@
     "notInvolved": "Nie jesteś zaangażowany",
     "settlementBadge": "Rozliczenie",
     "items": {
-      "more": "+{count} more",
-      "title": "Items",
+      "more_one": "+ jeszcze {count}",
+      "more_few": "+ jeszcze {count}",
+      "more_many": "+ jeszcze {count}",
+      "more_other": "+ jeszcze {count}",
+      "title": "Pozycje",
       "participants": "{names}"
     },
     "copyToast": "Kopiowanie wydatku rozpoczęte. Istniejące szczegóły wydatku zostaną użyte do utworzenia nowego."
@@ -207,7 +214,8 @@
     },
     "NotFound": {
       "text": "Ta grupa nie istnieje.",
-      "link": "Przejdź do strony głównej"
+      "link": "Przejdź do strony głównej",
+      "lookingUp": "Wyszukiwanie grupy…"
     },
     "Unauthorized": {
       "title": "Nie masz dostępu do tej grupy",
@@ -245,9 +253,15 @@
         "newGroupFormat": "Nowa grupa · {currency}",
         "existingGroupFormat": "Istniejąca grupa · scalona",
         "summaryLabel": "Podsumowanie",
-        "sourceParticipants": "{count} uczestników źródłowych",
+        "sourceParticipants_one": "{count} uczestnik źródłowy",
+        "sourceParticipants_few": "{count} uczestników źródłowych",
+        "sourceParticipants_many": "{count} uczestników źródłowych",
+        "sourceParticipants_other": "{count} uczestników źródłowych",
         "participantBreakdown": "{linked} połączonych · {email} zaproszenia e-mail · {link} zaproszenia przez link · {unlinked} niepołączonych",
-        "expenseCount": "Zostanie utworzonych {count} wydatków",
+        "expenseCount_one": "Zostanie utworzony {count} wydatek",
+        "expenseCount_few": "Zostaną utworzone {count} wydatki",
+        "expenseCount_many": "Zostanie utworzonych {count} wydatków",
+        "expenseCount_other": "Zostanie utworzonych {count} wydatków",
         "sourceName": "Źródło: {name}",
         "footer": "Każdy uczestnik źródłowy i wydatek zostanie zaimportowany. Zaproszenia są wysyłane/generowane po utworzeniu grupy.",
         "importingButton": "Importowanie…",
@@ -272,7 +286,10 @@
         "existingGroup": "Istniejąca grupa",
         "loading": "Ładowanie…",
         "noAdminGroups": "Nie administrujesz jeszcze żadną grupą.",
-        "memberCount": "{count} członków"
+        "memberCount_one": "{count} członek",
+        "memberCount_few": "{count} członków",
+        "memberCount_many": "{count} członków",
+        "memberCount_other": "{count} członków"
       },
       "Done": {
         "importComplete": "Import zakończony",
@@ -446,7 +463,10 @@
     "scopePickerGroups": "Wybierz grupę",
     "scopePickerFriends": "Wybierz rejestr ze znajomym",
     "scopePickerEmpty": "Nie masz jeszcze grup",
-    "scopePickerMembers": "{count} członk(ów)",
+    "scopePickerMembers_one": "{count} członek",
+    "scopePickerMembers_few": "{count} członków",
+    "scopePickerMembers_many": "{count} członków",
+    "scopePickerMembers_other": "{count} członków",
     "createFriendLedgerCard": {
       "description": "Rozlicz się jeden na jeden z konkretną osobą.",
       "title": "Utwórz rozliczenie z przyjacielem"
@@ -572,12 +592,12 @@
       },
       "paidFor": {
         "title": "Opłacone dla",
-        "description": "Wybierz kogo dotyczył wydatek."
+        "description": "Wybierz uczestników, między których zostanie podzielony ten wydatek."
       },
       "splitModeDescription": "Wybierz jak podzielić wydatek.",
       "attachDescription": "Zobacz i załącz rachunki do wydatku.",
-      "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "createCopy": "Utwórz kopię: {title}",
+      "editTitle": "Edytuj: {title}"
     },
     "amountField": {
       "label": "Suma",
@@ -635,7 +655,7 @@
       "customRate": "Używany kurs niestandardowy"
     },
     "isReimbursementField": {
-      "label": "Oznacz jako zwrot kosztów"
+      "label": "To płatność rozliczeniowa"
     },
     "categoryField": {
       "label": "Kategoria"
@@ -661,6 +681,7 @@
       "title": "Usunąć ten wydatek?",
       "description": "Czy na pewno chcesz usunąć ten wydatek? Ta akcja jest nieodwracalna.",
       "yes": "Tak",
+      "deleting": "Usuwanie…",
       "cancel": "Anuluj"
     },
     "attachDocuments": "Załącz dokumenty",
@@ -669,7 +690,7 @@
     "save": "Zapisz",
     "saving": "Zapisywanie…",
     "cancel": "Anuluj",
-    "reimbursement": "Zwrot środków",
+    "reimbursement": "Płatność rozliczeniowa",
     "readOnlyNotice": "Ta grupa jest zarchiwizowana. Wydatek jest wyświetlany tylko do odczytu.",
     "PaidBySplitModeField": {
       "label": "Typ podziału płatnika"
@@ -698,6 +719,7 @@
     "paidBySectionSingle": "Pojedynczy",
     "paidBySectionMultiple": "Wielu płatników",
     "paidForSection": "Podziel między uczestników",
+    "splitOptionAria": "Podział: {title}",
     "paidByOptionSinglePayerHelper": "Jedna osoba pokrywa cały wydatek",
     "paidByOptionEvenlyHelper": "Każdy płaci równy udział",
     "paidByOptionBySharesHelper": "Każdy płaci ważony udział",
@@ -713,21 +735,24 @@
     "paidForOptionItemized": "Itemized",
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
     "items": {
-      "title": "Items",
-      "description": "Add items to split the expense precisely, or to keep them as documentation alongside any split mode.",
-      "addItem": "Add item",
-      "empty": "No items yet. Click \"Add item\" to start.",
+      "title": "Pozycje",
+      "description": "Dodaj pozycje, aby dokładnie podzielić wydatek lub zachować je jako dokumentację przy dowolnym sposobie podziału.",
+      "addItem": "Dodaj pozycję",
+      "empty": "Brak pozycji. Wybierz „Dodaj pozycję”, aby rozpocząć.",
       "allMembers": "All members",
       "noMembers": "No members",
-      "other": "Other (unaccounted)",
-      "derivedBadge": "Derived",
-      "errorExceedsAmount": "Items total exceeds the expense amount.",
-      "actionEdit": "Edit",
-      "actionDelete": "Delete",
-      "total": "Items total",
-      "requiredForItemized": "Add at least one item to use Itemized split.",
-      "participantsSummary": "{count} participants",
-      "modalTitle": "Item participants",
+      "other": "Inne (nieuwzględnione)",
+      "derivedBadge": "Obliczone",
+      "errorExceedsAmount": "Suma pozycji przekracza kwotę wydatku.",
+      "actionEdit": "Edytuj",
+      "actionDelete": "Usuń",
+      "total": "Suma pozycji",
+      "requiredForItemized": "Dodaj co najmniej jedną pozycję, aby użyć podziału według pozycji.",
+      "participantsSummary_one": "{count} uczestnik",
+      "participantsSummary_few": "{count} uczestników",
+      "participantsSummary_many": "{count} uczestników",
+      "participantsSummary_other": "{count} uczestników",
+      "modalTitle": "Uczestnicy pozycji",
       "columnItem": "Pozycja",
       "columnCost": "Koszt",
       "columnQuantity": "Ilość",
@@ -745,10 +770,10 @@
       "hideItems": "Ukryj pozycje"
     },
     "leaveItemized": {
-      "title": "Switch split mode?",
-      "description": "Switching to {mode} will keep your items as documentation only. All per-item participant assignments will be removed.",
-      "cancel": "Cancel",
-      "confirm": "Switch"
+      "title": "Zmienić sposób podziału?",
+      "description": "Po przełączeniu na {mode} pozycje pozostaną tylko jako dokumentacja. Wszystkie przypisania uczestników do pozycji zostaną usunięte.",
+      "cancel": "Anuluj",
+      "confirm": "Przełącz"
     },
     "paidForItemizedEntryHint": "Aby użyć rozliczenia „zapłacono za” według pozycji, edytuj uczestników w wierszu pozycji.",
     "paidForItemizedActiveHint": "Rozliczenie „zapłacono za” według pozycji jest aktywne. Edytuj uczestników pozycji w karcie Pozycje, aby zmienić ten podział.",
@@ -761,6 +786,9 @@
     "scanReceipt": "Skanuj paragon za pomocą AI"
   },
   "ExpenseDocumentsInput": {
+    "deleteDocument": "Usuń dokument",
+    "document": "Dokument",
+    "close": "Zamknij",
     "TooBigToast": {
       "title": "Ten plik jest zbyt duży",
       "description": "Maksymalny rozmiar pliku to {maxSize}. Twój plik ma {size}."
@@ -808,9 +836,9 @@
     "title": "Salda",
     "description": "Jest to kwota, którą każdy członek zapłacił lub otrzymał.",
     "Reimbursements": {
-      "title": "Sugerowane zwroty",
-      "description": "Oto sugestie dotyczące optymalizacji zwrotów między uczestnikami.",
-      "noImbursements": "Wygląda na to, że w twojej grupie nie ma potrzeby żadnych zwrotów 😁",
+      "title": "Sugerowane płatności rozliczeniowe",
+      "description": "Użyj tych płatności, aby rozliczyć salda przy jak najmniejszej liczbie przelewów.",
+      "noImbursements": "Wszyscy w grupie są rozliczeni 😁",
       "owes": "<strong>{from}</strong> jest winny dla <strong>{to}</strong>",
       "markAsPaid": "Zaznacz jako opłacone",
       "markAsPaidAria": "Oznacz {amount} od {from} dla {to} jako zapłacone"
@@ -834,7 +862,7 @@
       "label": "Widok",
       "title": "Wybierz sposób wyświetlania sald",
       "simple": "Prosty",
-      "simpleDescription": "Kto komu ile winien i rozlicz płatności.",
+      "simpleDescription": "Sprawdź, kto komu jest winien, i zapisuj płatności rozliczeniowe.",
       "visual": "Wizualny",
       "visualDescription": "Podział sald i wykresy."
     },
@@ -874,6 +902,8 @@
       "selectedPeriod": "Wybrany okres",
       "lifetimeDescription": "Z całej historii grupy",
       "expenseCount_one": "{count} wydatek",
+      "expenseCount_few": "{count} wydatki",
+      "expenseCount_many": "{count} wydatków",
       "expenseCount_other": "{count} wydatków",
       "spendingOverTime": "Wydatki w czasie",
       "bucketedBy": "Grupowane według: {granularity}",
@@ -913,7 +943,7 @@
       "earlierThisWeek": "Wcześniej w tym tygodniu",
       "lastWeek": "W zeszłym tygodniu",
       "earlierThisMonth": "Wcześniej w tym miesiącu",
-      "lastMonth": "Ostatni miesiąc",
+      "lastMonth": "W zeszłym miesiącu",
       "earlierThisYear": "Wcześniej w tym roku",
       "lastYear": "Poprzedni rok",
       "older": "Starsze"
@@ -1391,7 +1421,7 @@
           "description": "Odwołać zaproszenie dla {email}? Salda muszą najpierw zostać rozliczone.",
           "warning": {
             "title": "To zaproszenie ma nierozliczone salda",
-            "description": "Zaznacz pole poniżej, aby utworzyć jeden wydatek rozliczeniowy na każdą nogę, w którą zaangażowany jest ten zaproszony, przed odwołaniem. Zaproszenie można odwołać dopiero po rozliczeniu sald."
+            "description": "Zaznacz opcję poniżej, aby utworzyć po jednej płatności rozliczeniowej dla każdego salda z udziałem zaproszonej osoby. Zaproszenie można odwołać dopiero po rozliczeniu tych sald."
           },
           "checkbox": "Rozlicz salda zaproszonego przed odwołaniem"
         }
@@ -1416,9 +1446,9 @@
         "description": "Usunąć {name} z tej grupy? {name} ma nierozliczone salda — zaznacz pole poniżej, aby rozliczyć je automatycznie przed usunięciem.",
         "warning": {
           "title": "Ten członek ma nierozliczone salda",
-          "description": "Usunięcie bez rozliczenia pozostawi salda w księdze na stałe. Zaznacz pole poniżej, aby utworzyć jeden wydatek rozliczeniowy na każdą nogę, w którą zaangażowany jest ten członek, przed usunięciem, lub usuń bez rozliczania i zajmij się saldami ręcznie."
+          "description": "Usunięcie bez rozliczenia sprawi, że te salda pozostaną w grupie bezterminowo. Zaznacz opcję poniżej, aby utworzyć po jednej płatności rozliczeniowej dla każdego salda z udziałem tego członka, albo usuń go i rozlicz salda ręcznie."
         },
-        "checkbox": "Utwórz wydatek rozliczeniowy przed usunięciem"
+        "checkbox": "Rozlicz salda tego członka przed usunięciem"
       }
     },
     "leave": {
@@ -1427,7 +1457,6 @@
       "description": "Utracisz dostęp do wydatków, sald i aktywności tej grupy. Dotychczasowe dane pozostaną w księdze, aby inni członkowie mogli je nadal przeglądać.",
       "cancel": "Anuluj",
       "confirm": "Opuść grupę",
-      "confirmWithForce": "Rozlicz i opuść",
       "descriptionOnlyMember": "Jesteś jedynym aktywnym członkiem tej grupy, więc opuszczenie jej w ten sposób nie jest możliwe. Aby całkowicie pozbyć się grupy, usuń ją ze strony ustawień.",
       "onlyMemberHint": "Jesteś jedynym aktywnym członkiem. Użyj opcji „Usuń grupę” w Ustawieniach, aby usunąć grupę.",
       "lastMemberRedirect": "Nie możesz opuścić grupy, w której jesteś jedynym aktywnym członkiem. Zamiast tego usuń grupę ze strony ustawień.",
@@ -1440,15 +1469,16 @@
         },
         "unsettled": {
           "title": "Masz nierozliczone salda",
-          "description": "Wymuszone opuszczenie grupy automatycznie utworzy wydatki rozliczeniowe dla nóg z Twoim udziałem, aby księga pozostała spójna. Pozostałe salda pozostaną bez zmian."
+          "description": "Spliit utworzy płatności rozliczeniowe dla sald z Twoim udziałem, zanim opuścisz grupę. Salda pozostałych uczestników nie zmienią się."
         }
       },
+      "confirmWithForce": "Rozlicz salda i opuść",
       "toast": {
         "left": "Opuściłeś grupę."
       },
       "error": {
         "lastAdmin": "Wybierz członka do awansu na administratora przed opuszczeniem grupy.",
-        "unsettled": "Rozlicz saldo lub potwierdź wymuszone rozliczenie, aby opuścić grupę."
+        "unsettled": "Rozlicz swoje salda lub wybierz opcję „Rozlicz salda i opuść”."
       }
     },
     "unlinked": {
@@ -1520,7 +1550,7 @@
         "items": "Pozycje",
         "documents": "Załączniki",
         "recurrence": "Powtarzanie",
-        "reimbursement": "Zwrot środków",
+        "reimbursement": "Płatność rozliczeniowa",
         "conversionSource": "Źródło konwersji",
         "conversionRate": "Kurs wymiany"
       }
@@ -1550,10 +1580,13 @@
     },
     "fallback": "Aktywność została zarejestrowana",
     "unknownActor": "Ktoś",
+    "openExpense": "Otwórz wydatek",
     "import": {
-      "imported": "{participant} zaimportował {count} wydatków"
-    },
-    "openExpense": "Otwórz wydatek"
+      "imported_one": "Użytkownik {participant} zaimportował {count} wydatek",
+      "imported_few": "Użytkownik {participant} zaimportował {count} wydatki",
+      "imported_many": "Użytkownik {participant} zaimportował {count} wydatków",
+      "imported_other": "Użytkownik {participant} zaimportował {count} wydatków"
+    }
   },
   "OfflineBanner": {
     "message": "Jesteś offline. Zmiany, które teraz wprowadzisz, nie zostaną zapisane, dopóki nie połączysz się ponownie."
@@ -1607,6 +1640,10 @@
     "peerFriendsTab": "Lista znajomych",
     "peerEmailTab": "E-mail",
     "peerLinkTab": "Link do udostępnienia",
+    "friendsSection": "Znajomi",
+    "pendingInvitationsSection": "Oczekujące zaproszenia",
+    "activeFriendExpensesSection": "Aktywne wydatki ze znajomymi",
+    "alreadyInvited": "(już zaproszono)",
     "alreadyHasLedger": "ma już rejestr ze znajomym",
     "inviteSent": "Zaproszenie wysłane. Twój znajomy zostanie dodany po dołączeniu do Spliit Cloud.",
     "inviteLinkTitle": "Udostępnij ten link",
@@ -1619,7 +1656,8 @@
     "temporaryNameHelp": "Wprowadź nazwę dla osoby, którą zapraszasz.",
     "friendsEmpty": "Dodaj znajomego, wpisując jego adres e-mail, lub udostępnij link z zaproszeniem.",
     "infoLabel": "Informacje (opcjonalnie)",
-    "infoPlaceholder": "Dodaj kontekst, np. „Wydatki ze współlokatorem“"
+    "infoPlaceholder": "Dodaj kontekst, np. „Wydatki ze współlokatorem“",
+    "createError": "Nie udało się utworzyć wydatków ze znajomą osobą"
   },
   "BulkCategorize": {
     "title": "Zbiorcza kategoryzacja",
@@ -1643,10 +1681,19 @@
     "previewDescription": "Edytuj dowolny wiersz, a następnie zapisz. Pewność oznacza wiersze, co do których model jest najmniej pewien.",
     "previewHint": "Wyświetlono {shown} z {total} kandydatów.",
     "removeAction": "Pomiń",
-    "targetExceedsCap": "Zbiór docelowy ma zbyt wiele wydatków ({count}). Zawęź zakres dat lub przetwarzaj partiami.",
-    "saveAll": "Zapisz {count} zmian",
+    "targetExceedsCap_one": "Liczba wydatków do przetworzenia jest zbyt duża ({count}). Zawęź zakres dat lub przetwarzaj je partiami.",
+    "targetExceedsCap_few": "Liczba wydatków do przetworzenia jest zbyt duża ({count}). Zawęź zakres dat lub przetwarzaj je partiami.",
+    "targetExceedsCap_many": "Liczba wydatków do przetworzenia jest zbyt duża ({count}). Zawęź zakres dat lub przetwarzaj je partiami.",
+    "targetExceedsCap_other": "Liczba wydatków do przetworzenia jest zbyt duża ({count}). Zawęź zakres dat lub przetwarzaj je partiami.",
+    "saveAll_one": "Zapisz {count} zmianę",
+    "saveAll_few": "Zapisz {count} zmiany",
+    "saveAll_many": "Zapisz {count} zmian",
+    "saveAll_other": "Zapisz {count} zmian",
     "saving": "Zapisywanie…",
-    "saved": "{count} wydatków zostało przekategoryzowanych.",
+    "saved_one": "Zmieniono kategorię {count} wydatku.",
+    "saved_few": "Zmieniono kategorię {count} wydatków.",
+    "saved_many": "Zmieniono kategorię {count} wydatków.",
+    "saved_other": "Zmieniono kategorię {count} wydatków.",
     "applyError": "Nie można zapisać zbiorczej aktualizacji kategorii: {message}",
     "noCandidates": "Żadne wydatki nie wymagają kategoryzacji.",
     "adminsOnly": "Tylko administratorzy grupy mogą uruchomić zbiorczą kategoryzację.",
@@ -1657,9 +1704,18 @@
     "previewError": "Nie można wygenerować podglądu: {message}",
     "introTitle": "Jak to działa",
     "loadingCandidates": "Sprawdzanie nieskategoryzowanych wydatków…",
-    "introDescription": "Liczba nieskategoryzowanych wydatków gotowych do przeglądu: {count}.",
-    "introStepLook": "AI analizuje pulę do {count} wydatków, aby znaleźć najbardziej przydatne przykłady.",
-    "introStepReview": "Przeglądasz i poprawiasz do {count} wybranych przykładów, aby AI poznało kategorie tej grupy.",
+    "introDescription_one": "Do sprawdzenia jest {count} nieskategoryzowany wydatek.",
+    "introDescription_few": "Do sprawdzenia są {count} nieskategoryzowane wydatki.",
+    "introDescription_many": "Do sprawdzenia jest {count} nieskategoryzowanych wydatków.",
+    "introDescription_other": "Do sprawdzenia jest {count} nieskategoryzowanych wydatków.",
+    "introStepLook_one": "AI przejrzy maksymalnie {count} wydatek, aby znaleźć najbardziej przydatny przykład.",
+    "introStepLook_few": "AI przejrzy maksymalnie {count} wydatki, aby znaleźć najbardziej przydatne przykłady.",
+    "introStepLook_many": "AI przejrzy maksymalnie {count} wydatków, aby znaleźć najbardziej przydatne przykłady.",
+    "introStepLook_other": "AI przejrzy maksymalnie {count} wydatków, aby znaleźć najbardziej przydatne przykłady.",
+    "introStepReview_one": "Sprawdź i popraw maksymalnie {count} wybrany przykład, aby AI poznała kategorie tej grupy.",
+    "introStepReview_few": "Sprawdź i popraw maksymalnie {count} wybrane przykłady, aby AI poznała kategorie tej grupy.",
+    "introStepReview_many": "Sprawdź i popraw maksymalnie {count} wybranych przykładów, aby AI poznała kategorie tej grupy.",
+    "introStepReview_other": "Sprawdź i popraw maksymalnie {count} wybranych przykładów, aby AI poznała kategorie tej grupy.",
     "introStepPreview": "Gdy AI zbierze wystarczający sygnał, przygotowuje pełny przegląd i pozostawia niepewne wydatki nieskategoryzowane.",
     "startCalibration": "Rozpocznij kalibrację",
     "calibrationStartHint": "AI wybiera przydatne przykłady do Twojego przeglądu.",
@@ -1674,7 +1730,10 @@
     "generatingPreview": "Przygotowywanie sugestii…",
     "noSuggestions": "AI pozostawiło wszystkie wydatki nieskategoryzowane. Możesz spróbować ponownie po kolejnej kalibracji.",
     "previewSummary": "AI zasugerowało kategorie dla {suggested} z {total} wydatków.",
-    "leftUncategorized": "{count} wydatków pozostało nieskategoryzowanych, ponieważ AI nie było wystarczająco pewne.",
+    "leftUncategorized_one": "{count} wydatek pozostał bez kategorii, ponieważ AI nie była wystarczająco pewna.",
+    "leftUncategorized_few": "{count} wydatki pozostały bez kategorii, ponieważ AI nie była wystarczająco pewna.",
+    "leftUncategorized_many": "{count} wydatków pozostało bez kategorii, ponieważ AI nie była wystarczająco pewna.",
+    "leftUncategorized_other": "{count} wydatków pozostało bez kategorii, ponieważ AI nie była wystarczająco pewna.",
     "retryPreview": "Spróbuj ponownie podglądu",
     "doneTitle": "Kategorie zapisane",
     "expenseColumn": "Wydatek",
@@ -1689,7 +1748,10 @@
     "paidFor": "Opłacone dla",
     "yourBalance": "Twoje saldo",
     "notes": "Notatki",
-    "attachments": "Załączniki ({count})",
+    "attachments_one": "Załącznik ({count})",
+    "attachments_few": "Załączniki ({count})",
+    "attachments_many": "Załączników ({count})",
+    "attachments_other": "Załączników ({count})",
     "edit": "Edytuj wydatek",
     "makeCopy": "Utwórz kopię"
   },
@@ -1702,10 +1764,21 @@
     "create": "Stwórz",
     "edit": "Edytuj szczegóły",
     "creating": "Tworzenie…",
-    "successToast": "Zwrot środków zapisany"
+    "successToast": "Zapisano płatność rozliczeniową"
   },
   "Participants": {
     "search": "Szukaj uczestników...",
     "noParticipant": "Nie znaleziono uczestnika"
+  },
+  "Common": {
+    "close": "Zamknij",
+    "previousSlide": "Poprzedni slajd",
+    "nextSlide": "Następny slajd"
+  },
+  "Theme": {
+    "toggle": "Zmień motyw",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "system": "Ustawienie systemowe"
   }
 }

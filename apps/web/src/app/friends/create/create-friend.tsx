@@ -139,10 +139,7 @@ export function CreateFriend() {
       })) as CreateFriendResponse
     } catch (error) {
       toast({
-        description:
-          error instanceof Error
-            ? error.message
-            : 'Could not create friend ledger',
+        description: error instanceof Error ? error.message : t('createError'),
         variant: 'destructive',
       })
       return
@@ -287,7 +284,9 @@ export function CreateFriend() {
                                   <>
                                     {noLedger.length > 0 && (
                                       <SelectGroup>
-                                        <SelectLabel>Friends</SelectLabel>
+                                        <SelectLabel>
+                                          {t('friendsSection')}
+                                        </SelectLabel>
                                         {noLedger.map((f) => (
                                           <SelectItem
                                             key={f.accountId}
@@ -304,7 +303,7 @@ export function CreateFriend() {
                                     {invited.length > 0 && (
                                       <SelectGroup>
                                         <SelectLabel>
-                                          Pending invitations
+                                          {t('pendingInvitationsSection')}
                                         </SelectLabel>
                                         {invited.map((f) => (
                                           <SelectItem
@@ -314,7 +313,7 @@ export function CreateFriend() {
                                             <FriendOptionContent
                                               name={f.name}
                                               email={f.email}
-                                              badge="(already invited)"
+                                              badge={t('alreadyInvited')}
                                             />
                                           </SelectItem>
                                         ))}
@@ -323,7 +322,7 @@ export function CreateFriend() {
                                     {active.length > 0 && (
                                       <SelectGroup>
                                         <SelectLabel>
-                                          Active friend ledgers
+                                          {t('activeFriendExpensesSection')}
                                         </SelectLabel>
                                         {active.map((f) => (
                                           <SelectItem
@@ -334,7 +333,7 @@ export function CreateFriend() {
                                             <FriendOptionContent
                                               name={f.name}
                                               email={f.email}
-                                              badge="(already has a friend ledger)"
+                                              badge={t('alreadyHasLedger')}
                                             />
                                           </SelectItem>
                                         ))}
