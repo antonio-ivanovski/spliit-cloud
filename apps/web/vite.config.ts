@@ -56,14 +56,12 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{html,svg,png,ico,webp}'],
-        // Receipt-scanning chunk is ~3MB and lazy-loaded; defer offline
-        // support for it until full offline mode is in scope.
-        navigateFallbackDenylist: [/^\/api\//],
-        // Let the network/CDN serve Vite's hashed module graph. Precaching
-        // chunks can leave an active service worker in charge of URLs from a
-        // different build during deploys or updates.
+        // Keep only version-independent public media in the interim worker.
+        // HTML and Vite's hashed module graph must always come from the network
+        // so a stale entry point cannot reference a different deployment.
+        globPatterns: ['**/*.{svg,png,ico,webp}'],
         globIgnores: ['assets/**/*'],
+        navigateFallback: null,
       },
     }),
   ],

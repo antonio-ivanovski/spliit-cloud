@@ -43,7 +43,8 @@ function detectBrowserSupport(): BrowserSupport {
   const isFirefox = /Firefox/.test(ua) && !/Seamonkey/.test(ua)
   const isEdge = /Edg/.test(ua)
   // Chromium-based browsers (Chrome, Brave, Arc, Vivaldi, Samsung) all
-  // fire `beforeinstallprompt` once the manifest + SW are in place.
+  // fire `beforeinstallprompt` once the manifest and browser installability
+  // criteria are satisfied.
   const isChromium = /Chrome|Chromium|OPR/.test(ua) && !isFirefox
 
   if (isIOS) return 'ios-instructions'
