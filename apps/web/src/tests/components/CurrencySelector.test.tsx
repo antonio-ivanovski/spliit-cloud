@@ -1,11 +1,14 @@
 import { CurrencySelector } from '@/components/currency-selector'
 import type { DisplayCurrency } from '@/lib/currency'
+import { useMediaQuery } from '@/lib/hooks'
 import { fireEvent, render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/lib/hooks', () => ({
   useMediaQuery: vi.fn(() => true),
 }))
+
+const mediaQueryMock = vi.mocked(useMediaQuery)
 
 const currencies: DisplayCurrency[] = [
   {
@@ -99,6 +102,37 @@ function separatorCount(): number {
 describe('CurrencySelector', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mediaQueryMock.mockReturnValue(true)
+  })
+
+  it('uses a mobile drawer for multi-selects and keeps it open while toggling', () => {
+    mediaQueryMock.mockReturnValue(false)
+    const onValueToggle = vi.fn()
+
+    render(
+      <CurrencySelector
+        currencies={currencies}
+        defaultValue="USD"
+        isLoading={false}
+        onValueChange={vi.fn()}
+        mode="multi"
+        selectedValues={[]}
+        onValueToggle={onValueToggle}
+        multiPlaceholder="All currencies"
+        mobileTitle="Currency"
+        mobileDoneLabel="Done"
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('combobox'))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    fireEvent.click(screen.getByText(/US Dollar/))
+
+    expect(onValueToggle).toHaveBeenCalledWith('USD')
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Done' }))
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-state', 'closed')
   })
 
   it('pins the group currency first in the priority block', () => {

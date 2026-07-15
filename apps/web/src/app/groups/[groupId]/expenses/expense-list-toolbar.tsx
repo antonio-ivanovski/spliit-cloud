@@ -5,12 +5,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
 import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer'
-import {
   ResponsiveDialog,
   ResponsiveDialogBody,
   ResponsiveDialogContent,
@@ -366,10 +360,6 @@ export function ExpenseListFiltersPanel() {
   const linkInviteToken = useLinkInviteToken()
   const { filters, setFilters, filtersOpen, setFiltersOpen } =
     useExpenseFiltersContext()
-  const isDesktop = useMediaQuery('(min-width: 640px)')
-  const { t: tFilters } = useTranslation(undefined, {
-    keyPrefix: 'Expenses.filters',
-  })
 
   const currenciesQuery = trpc.groups.expenses.commonCurrencies.useQuery(
     { groupId, linkInviteToken },
@@ -406,28 +396,18 @@ export function ExpenseListFiltersPanel() {
     />
   )
 
-  if (isDesktop) {
-    return (
-      <Collapsible
-        open={filtersOpen}
-        onOpenChange={setFiltersOpen}
-        className="mx-4 sm:mx-6"
-      >
-        <CollapsibleContent className="border rounded-md p-4 mt-1 mb-2 bg-muted/30">
-          {content}
-        </CollapsibleContent>
-      </Collapsible>
-    )
-  }
-
   return (
-    <Drawer open={filtersOpen} onOpenChange={setFiltersOpen}>
-      <DrawerContent className="max-h-[85vh]">
-        <DrawerHeader>
-          <DrawerTitle>{tFilters('title')}</DrawerTitle>
-        </DrawerHeader>
-        <div className="overflow-y-auto px-4 pb-4 flex-1">{content}</div>
-      </DrawerContent>
-    </Drawer>
+    <Collapsible
+      open={filtersOpen}
+      onOpenChange={setFiltersOpen}
+      className="mx-4 sm:mx-6"
+    >
+      <CollapsibleContent
+        id="expense-filters-panel"
+        className="border-y sm:border rounded-md p-3 sm:p-4 mt-1 mb-2 bg-muted/30"
+      >
+        {content}
+      </CollapsibleContent>
+    </Collapsible>
   )
 }

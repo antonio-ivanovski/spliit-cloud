@@ -10,10 +10,19 @@ import {
   CommandItem,
 } from '@/components/ui/command'
 import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -36,6 +45,9 @@ type Props = {
   disabled?: boolean
   className?: string
   triggerClassName?: string
+  /** Title and action label shown by the mobile multi-select drawer. */
+  mobileTitle?: string
+  mobileDoneLabel?: string
 }
 
 export function ParticipantSelector({
@@ -49,9 +61,12 @@ export function ParticipantSelector({
   disabled = false,
   className,
   triggerClassName,
+  mobileTitle,
+  mobileDoneLabel,
 }: Props) {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
+  const isDesktop = useMediaQuery('(min-width: 768px)')
 
   const selected =
     participants.find((participant) => participant.id === defaultValue) ??
@@ -68,72 +83,133 @@ export function ParticipantSelector({
 
   const triggerAriaLabel = mode === 'single' ? selected?.name : undefined
 
+  const trigger = (
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      aria-label={triggerAriaLabel}
+      disabled={disabled}
+      className={cn(
+        'h-9 px-3 text-sm justify-between font-normal',
+        className,
+        triggerClassName,
+      )}
+    >
+      <span className="truncate">{triggerLabel}</span>
+      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  )
+
+  if (mode === 'multi' && !isDesktop) {
+    return (
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+        <DrawerContent className="p-0">
+          <DrawerHeader className="pb-2 text-start">
+            <DrawerTitle>
+              {mobileTitle ?? t('Expenses.filters.paidBy')}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="min-h-0 overflow-y-auto px-1">
+            <ParticipantCommand
+              participants={participants}
+              mode={mode}
+              selectedValues={selectedValues}
+              onValueChange={onValueChange}
+              onValueToggle={onValueToggle}
+              onClose={() => setOpen(false)}
+            />
+          </div>
+          <DrawerFooter className="border-t bg-background pt-3">
+            <Button type="button" onClick={() => setOpen(false)}>
+              {mobileDoneLabel ?? t('Groups.Import.StepHeader.done')}
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    )
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          aria-label={triggerAriaLabel}
-          disabled={disabled}
-          className={cn(
-            'h-9 px-3 text-sm justify-between font-normal',
-            className,
-            triggerClassName,
-          )}
-        >
-          <span className="truncate">{triggerLabel}</span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
+      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverContent className="p-0" align="start">
-        <Command>
-          <CommandInput placeholder={t('Participants.search')} />
-          <CommandEmpty>{t('Participants.noParticipant')}</CommandEmpty>
-          <div className="max-h-[300px] overflow-y-auto">
-            <CommandGroup>
-              {participants.map((participant) => {
-                const isSelected = selectedValues?.includes(participant.id)
-                return (
-                  <CommandItem
-                    key={participant.id}
-                    value={participant.name}
-                    onSelect={() => {
-                      if (mode === 'multi') {
-                        onValueToggle?.(participant.id)
-                        return
-                      }
-                      onValueChange?.(participant.id)
-                      setOpen(false)
-                    }}
-                  >
-                    {mode === 'multi' && (
-                      <Check
-                        className={cn(
-                          'mr-2 h-4 w-4 shrink-0',
-                          isSelected ? '' : 'invisible',
-                        )}
-                      />
-                    )}
-                    <ParticipantAvatar
-                      participant={participant}
-                      size="xs"
-                      className="mr-2 shrink-0"
-                    />
-                    <span className="truncate">{participant.name}</span>
-                    {participant.pending && (
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {t('ExpenseForm.participant.pending')}
-                      </span>
-                    )}
-                  </CommandItem>
-                )
-              })}
-            </CommandGroup>
-          </div>
-        </Command>
+        <ParticipantCommand
+          participants={participants}
+          mode={mode}
+          selectedValues={selectedValues}
+          onValueChange={onValueChange}
+          onValueToggle={onValueToggle}
+          onClose={() => setOpen(false)}
+        />
       </PopoverContent>
     </Popover>
+  )
+}
+
+function ParticipantCommand({
+  participants,
+  mode,
+  selectedValues,
+  onValueChange,
+  onValueToggle,
+  onClose,
+}: {
+  participants: Participant[]
+  mode: 'single' | 'multi'
+  selectedValues?: string[]
+  onValueChange?: (participantId: string) => void
+  onValueToggle?: (participantId: string) => void
+  onClose: () => void
+}) {
+  const { t } = useTranslation()
+
+  return (
+    <Command>
+      <CommandInput placeholder={t('Participants.search')} />
+      <CommandEmpty>{t('Participants.noParticipant')}</CommandEmpty>
+      <div className="max-h-[300px] overflow-y-auto">
+        <CommandGroup>
+          {participants.map((participant) => {
+            const isSelected = selectedValues?.includes(participant.id)
+            return (
+              <CommandItem
+                key={participant.id}
+                value={participant.name}
+                onSelect={() => {
+                  if (mode === 'multi') {
+                    onValueToggle?.(participant.id)
+                    return
+                  }
+                  onValueChange?.(participant.id)
+                  onClose()
+                }}
+              >
+                {mode === 'multi' && (
+                  <Check
+                    className={cn(
+                      'mr-2 h-4 w-4 shrink-0',
+                      isSelected ? '' : 'invisible',
+                    )}
+                  />
+                )}
+                <ParticipantAvatar
+                  participant={participant}
+                  size="xs"
+                  className="mr-2 shrink-0"
+                />
+                <span className="truncate">{participant.name}</span>
+                {participant.pending && (
+                  <span className="text-xs text-muted-foreground ml-auto">
+                    {t('ExpenseForm.participant.pending')}
+                  </span>
+                )}
+              </CommandItem>
+            )
+          })}
+        </CommandGroup>
+      </div>
+    </Command>
   )
 }

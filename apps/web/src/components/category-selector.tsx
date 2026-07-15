@@ -10,7 +10,14 @@ import {
   CommandInput,
   CommandItem,
 } from '@/components/ui/command'
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 import {
   Popover,
   PopoverContent,
@@ -40,6 +47,9 @@ type Props = {
   onValueToggle?: (categoryId: CategoryId) => void
   /** Trigger text when nothing selected in multi mode. */
   multiPlaceholder?: string
+  /** Title and action label shown by the mobile multi-select drawer. */
+  mobileTitle?: string
+  mobileDoneLabel?: string
 }
 
 export function CategorySelector({
@@ -53,14 +63,67 @@ export function CategorySelector({
   selectedValues = [],
   onValueToggle,
   multiPlaceholder,
+  mobileTitle,
+  mobileDoneLabel,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const { t } = useTranslation()
 
   const selectedCategory =
     categories.find((category) => category.id === defaultValue) ?? categories[0]
 
   if (mode === 'multi') {
+    const command = (
+      <CategoryCommand
+        categories={categories}
+        mode="multi"
+        selectedValues={selectedValues}
+        onValueToggle={(id) => {
+          onValueToggle?.(id)
+        }}
+      />
+    )
+
+    if (!isDesktop) {
+      return (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              disabled={disabled}
+              className="h-9 px-3 text-sm justify-between font-normal"
+            >
+              <span className="truncate">
+                {selectedValues.length > 0
+                  ? t('Expenses.filters.nSelected', {
+                      count: selectedValues.length,
+                    })
+                  : (multiPlaceholder ?? 'Select')}
+              </span>
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="p-0">
+            <DrawerHeader className="pb-2 text-start">
+              <DrawerTitle>
+                {mobileTitle ?? t('Expenses.filters.category')}
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="min-h-0 overflow-y-auto px-1">{command}</div>
+            <DrawerFooter className="border-t bg-background pt-3">
+              <Button type="button" onClick={() => setOpen(false)}>
+                {mobileDoneLabel ?? t('Groups.Import.StepHeader.done')}
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      )
+    }
+
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -69,6 +132,7 @@ export function CategorySelector({
             variant="outline"
             role="combobox"
             aria-expanded={open}
+            disabled={disabled}
             className="h-9 px-3 text-sm justify-between font-normal"
           >
             <span className="truncate">
@@ -80,14 +144,7 @@ export function CategorySelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
-          <CategoryCommand
-            categories={categories}
-            mode="multi"
-            selectedValues={selectedValues}
-            onValueToggle={(id) => {
-              onValueToggle?.(id)
-            }}
-          />
+          {command}
         </PopoverContent>
       </Popover>
     )

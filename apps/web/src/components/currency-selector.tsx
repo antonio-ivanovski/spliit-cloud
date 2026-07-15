@@ -10,7 +10,14 @@ import {
   CommandItem,
   CommandSeparator,
 } from '@/components/ui/command'
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 import {
   Popover,
   PopoverContent,
@@ -59,6 +66,9 @@ type Props = {
   onValueToggle?: (currencyCode: string) => void
   /** Trigger text when nothing selected in multi mode. */
   multiPlaceholder?: string
+  /** Title and action label shown by the mobile multi-select drawer. */
+  mobileTitle?: string
+  mobileDoneLabel?: string
 }
 
 export function CurrencySelector({
@@ -74,9 +84,12 @@ export function CurrencySelector({
   selectedValues = [],
   onValueToggle,
   multiPlaceholder,
+  mobileTitle,
+  mobileDoneLabel,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const { t } = useTranslation()
 
   const selectedCurrency =
     currencies.find((currency) => (currency.code ?? '') === defaultValue) ??
@@ -95,6 +108,61 @@ export function CurrencySelector({
   )
 
   if (mode === 'multi') {
+    const command = (
+      <CurrencyCommand
+        currencies={currencies}
+        pinnedCurrencyCode={pinnedCurrencyCode}
+        recommendedCurrencyCodes={recommendedCurrencyCodes}
+        mode="multi"
+        selectedValues={selectedValues}
+        onValueChange={() => {
+          /* multi mode uses onValueToggle; no-op to satisfy the type */
+        }}
+        onValueToggle={(code) => {
+          onValueToggle?.(code)
+        }}
+      />
+    )
+
+    if (!isDesktop) {
+      return (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              disabled={disabled}
+              className="h-9 px-3 text-sm justify-between font-normal"
+            >
+              <span className="truncate">
+                {selectedValues.length > 0
+                  ? t('Expenses.filters.nSelected', {
+                      count: selectedValues.length,
+                    })
+                  : (multiPlaceholder ?? 'Select')}
+              </span>
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="p-0">
+            <DrawerHeader className="pb-2 text-start">
+              <DrawerTitle>
+                {mobileTitle ?? t('Expenses.filters.currency')}
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="min-h-0 overflow-y-auto px-1">{command}</div>
+            <DrawerFooter className="border-t bg-background pt-3">
+              <Button type="button" onClick={() => setOpen(false)}>
+                {mobileDoneLabel ?? t('Groups.Import.StepHeader.done')}
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      )
+    }
+
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -103,6 +171,7 @@ export function CurrencySelector({
             variant="outline"
             role="combobox"
             aria-expanded={open}
+            disabled={disabled}
             className="h-9 px-3 text-sm justify-between font-normal"
           >
             <span className="truncate">
@@ -114,19 +183,7 @@ export function CurrencySelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
-          <CurrencyCommand
-            currencies={currencies}
-            pinnedCurrencyCode={pinnedCurrencyCode}
-            recommendedCurrencyCodes={recommendedCurrencyCodes}
-            mode="multi"
-            selectedValues={selectedValues}
-            onValueChange={() => {
-              /* multi mode uses onValueToggle; no-op to satisfy the type */
-            }}
-            onValueToggle={(code) => {
-              onValueToggle?.(code)
-            }}
-          />
+          {command}
         </PopoverContent>
       </Popover>
     )

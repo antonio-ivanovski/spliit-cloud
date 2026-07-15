@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { type DisplayCurrency } from '@/lib/currency'
+import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import {
@@ -121,11 +122,51 @@ function FilterChips({
 function MatchModeSelect({
   value,
   onChange,
+  ariaLabel,
 }: {
   value: ExpenseMatchMode
   onChange: (next: ExpenseMatchMode) => void
+  ariaLabel: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses.filters' })
+  const isDesktop = useMediaQuery('(min-width: 640px)')
+  const options = [
+    { value: 'any' as const, label: t('matchModeAny') },
+    { value: 'all' as const, label: t('matchModeAll') },
+    { value: 'exact' as const, label: t('matchModeExact') },
+  ]
+
+  if (!isDesktop) {
+    return (
+      <div
+        role="group"
+        aria-label={ariaLabel}
+        className="inline-flex min-w-0 rounded-md border bg-background p-0.5"
+      >
+        {options.map((option) => {
+          const isActive = value === option.value
+          return (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={isActive}
+              onClick={() => onChange(option.value)}
+              className={cn(
+                'min-h-8 flex-1 rounded px-2 text-xs font-medium transition-colors',
+                'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring',
+                isActive
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:bg-muted',
+              )}
+            >
+              {option.label}
+            </button>
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <Select
       value={value}
@@ -135,9 +176,11 @@ function MatchModeSelect({
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="any">{t('matchModeAny')}</SelectItem>
-        <SelectItem value="all">{t('matchModeAll')}</SelectItem>
-        <SelectItem value="exact">{t('matchModeExact')}</SelectItem>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   )
@@ -213,6 +256,7 @@ export function ExpenseFiltersContent({
             updateDraft({ categories: toggleArrayMember(draft.categories, id) })
           }
           multiPlaceholder={t('allCategories')}
+          mobileTitle={t('category')}
         />
         <FilterChips
           options={categoryOptions}
@@ -232,11 +276,13 @@ export function ExpenseFiltersContent({
             updateDraft({ paidBy: toggleArrayMember(draft.paidBy, id) })
           }
           multiPlaceholder={t('allParticipants')}
+          mobileTitle={t('paidBy')}
         />
         {draft.paidBy.length >= 1 && (
           <MatchModeSelect
             value={draft.paidByMatch}
             onChange={(paidByMatch) => updateDraft({ paidByMatch })}
+            ariaLabel={t('paidBy')}
           />
         )}
         <FilterChips
@@ -257,11 +303,13 @@ export function ExpenseFiltersContent({
             updateDraft({ paidFor: toggleArrayMember(draft.paidFor, id) })
           }
           multiPlaceholder={t('allParticipants')}
+          mobileTitle={t('paidFor')}
         />
         {draft.paidFor.length >= 1 && (
           <MatchModeSelect
             value={draft.paidForMatch}
             onChange={(paidForMatch) => updateDraft({ paidForMatch })}
+            ariaLabel={t('paidFor')}
           />
         )}
         <FilterChips
@@ -336,6 +384,7 @@ export function ExpenseFiltersContent({
               })
             }
             multiPlaceholder={t('allCurrencies')}
+            mobileTitle={t('currency')}
           />
           <FilterChips
             options={currencyOptions}
