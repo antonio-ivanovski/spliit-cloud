@@ -1022,6 +1022,19 @@
       "Trash": "垃圾",
       "TV/Phone/Internet": "电视/手机/互联网",
       "Water": "水"
+    },
+    "Social and Activities": {
+      "heading": "社交与活动",
+      "Events and Activities": "活动与赛事"
+    },
+    "Personal Care and Wellness": {
+      "heading": "个人护理与健康",
+      "Personal Care and Wellness": "个人护理与健康"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "订阅与会员",
+      "Digital Subscriptions": "数字订阅",
+      "Memberships": "会员"
     }
   },
   "Currencies": {

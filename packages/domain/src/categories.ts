@@ -104,6 +104,26 @@ export const DEFAULT_CATEGORIES = defineCategories([
   },
   { id: 'water', grouping: 'Utilities', name: 'Water' },
   { id: 'donation', grouping: 'Life', name: 'Donation' },
+  {
+    id: 'events-and-activities',
+    grouping: 'Social and Activities',
+    name: 'Events and Activities',
+  },
+  {
+    id: 'digital-subscriptions',
+    grouping: 'Subscriptions and Memberships',
+    name: 'Digital Subscriptions',
+  },
+  {
+    id: 'memberships',
+    grouping: 'Subscriptions and Memberships',
+    name: 'Memberships',
+  },
+  {
+    id: 'personal-care-and-wellness',
+    grouping: 'Personal Care and Wellness',
+    name: 'Personal Care and Wellness',
+  },
 ])
 
 export type Category = (typeof DEFAULT_CATEGORIES)[number]

@@ -894,6 +894,19 @@
       "Trash": "쓰레기 처리비",
       "TV/Phone/Internet": "TV/전화/인터넷 요금",
       "Water": "수도 요금"
+    },
+    "Social and Activities": {
+      "heading": "소셜 및 활동",
+      "Events and Activities": "이벤트 및 활동"
+    },
+    "Personal Care and Wellness": {
+      "heading": "개인 관리 및 웰니스",
+      "Personal Care and Wellness": "개인 관리 및 웰니스"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "구독 및 멤버십",
+      "Digital Subscriptions": "디지털 구독",
+      "Memberships": "멤버십"
     }
   },
   "Homepage": {

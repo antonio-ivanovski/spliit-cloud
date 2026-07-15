@@ -1022,6 +1022,19 @@
       "Trash": "Утилизация отходов",
       "TV/Phone/Internet": "ТВ/Телефон/Интернет",
       "Water": "Вода"
+    },
+    "Social and Activities": {
+      "heading": "Социальные активности",
+      "Events and Activities": "Мероприятия и активности"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Личный уход и здоровье",
+      "Personal Care and Wellness": "Личный уход и здоровье"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Подписки и членство",
+      "Digital Subscriptions": "Цифровые подписки",
+      "Memberships": "Членство"
     }
   },
   "Auth": {

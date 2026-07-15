@@ -1022,6 +1022,19 @@
       "Trash": "Odpad",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Voda"
+    },
+    "Social and Activities": {
+      "heading": "Sociální a aktivity",
+      "Events and Activities": "Události a aktivity"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Osobní péče a wellness",
+      "Personal Care and Wellness": "Osobní péče a wellness"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Předplatné a členství",
+      "Digital Subscriptions": "Digitální předplatné",
+      "Memberships": "Členství"
     }
   },
   "Auth": {

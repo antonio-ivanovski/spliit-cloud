@@ -1022,6 +1022,19 @@
       "Trash": "ゴミ",
       "TV/Phone/Internet": "テレビ/電話/インターネット",
       "Water": "水道"
+    },
+    "Social and Activities": {
+      "heading": "ソーシャルとアクティビティ",
+      "Events and Activities": "イベントとアクティビティ"
+    },
+    "Personal Care and Wellness": {
+      "heading": "パーソナルケアとウェルネス",
+      "Personal Care and Wellness": "パーソナルケアとウェルネス"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "サブスクリプションと会員費",
+      "Digital Subscriptions": "デジタルサブスクリプション",
+      "Memberships": "会員費"
     }
   },
   "Currencies": {

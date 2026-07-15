@@ -1022,6 +1022,19 @@
       "Trash": "Gunoi",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Apă"
+    },
+    "Social and Activities": {
+      "heading": "Social și activități",
+      "Events and Activities": "Evenimente și activități"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Îngrijire personală și stare de bine",
+      "Personal Care and Wellness": "Îngrijire personală și stare de bine"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Abonamente și membri",
+      "Digital Subscriptions": "Abonamente digitale",
+      "Memberships": "Membri"
     }
   },
   "Currencies": {

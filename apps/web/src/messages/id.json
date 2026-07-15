@@ -1205,6 +1205,19 @@
       "Trash": "Sampah",
       "TV/Phone/Internet": "TV/HP/Internet",
       "Water": "Air"
+    },
+    "Social and Activities": {
+      "heading": "Sosial dan Aktivitas",
+      "Events and Activities": "Acara dan Aktivitas"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Perawatan Pribadi dan Kebugaran",
+      "Personal Care and Wellness": "Perawatan Pribadi dan Kebugaran"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Langganan dan Keanggotaan",
+      "Digital Subscriptions": "Langganan digital",
+      "Memberships": "Keanggotaan"
     }
   },
   "Auth": {

@@ -1022,6 +1022,19 @@
       "Trash": "Śmieci",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Woda"
+    },
+    "Social and Activities": {
+      "heading": "Życie towarzyskie i aktywności",
+      "Events and Activities": "Wydarzenia i aktywności"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Pielęgnacja osobista i dobre samopoczucie",
+      "Personal Care and Wellness": "Pielęgnacja osobista i dobre samopoczucie"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Subskrypcje i członkostwa",
+      "Digital Subscriptions": "Subskrypcje cyfrowe",
+      "Memberships": "Członkostwa"
     }
   },
   "Auth": {

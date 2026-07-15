@@ -1022,6 +1022,19 @@
       "Trash": "Zaborra",
       "TV/Phone/Internet": "TV/Telefonoa/Interneta",
       "Water": "Ura"
+    },
+    "Social and Activities": {
+      "heading": "Gizartea eta jarduerak",
+      "Events and Activities": "Ekitaldiak eta jarduerak"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Zainketa pertsonala eta ongizatea",
+      "Personal Care and Wellness": "Zainketa pertsonala eta ongizatea"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Harpidetzak eta kidetzak",
+      "Digital Subscriptions": "Harpidetza digitalak",
+      "Memberships": "Kidetzak"
     }
   },
   "Currencies": {

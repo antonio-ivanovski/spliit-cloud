@@ -1022,6 +1022,19 @@
       "Trash": "Jätehuolto",
       "TV/Phone/Internet": "TV/Puhelin/Internet",
       "Water": "Vesi"
+    },
+    "Social and Activities": {
+      "heading": "Sosiaalinen ja toiminta",
+      "Events and Activities": "Tapahtumat ja aktiviteetit"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Henkilökohtainen hoito ja hyvinvointi",
+      "Personal Care and Wellness": "Henkilökohtainen hoito ja hyvinvointi"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Tilaukset ja jäsenyydet",
+      "Digital Subscriptions": "Digitaaliset tilaukset",
+      "Memberships": "Jäsenyydet"
     }
   },
   "Currencies": {

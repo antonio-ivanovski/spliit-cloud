@@ -1022,6 +1022,19 @@
       "Trash": "Afval",
       "TV/Phone/Internet": "Internet/TV/Telefoon",
       "Water": "Water"
+    },
+    "Social and Activities": {
+      "heading": "Sociaal en activiteiten",
+      "Events and Activities": "Evenementen en activiteiten"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Persoonlijke verzorging en welzijn",
+      "Personal Care and Wellness": "Persoonlijke verzorging en welzijn"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Abonnementen en lidmaatschappen",
+      "Digital Subscriptions": "Digitale abonnementen",
+      "Memberships": "Lidmaatschappen"
     }
   },
   "Currencies": {

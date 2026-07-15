@@ -1124,6 +1124,19 @@
       "Trash": "Lixo",
       "TV/Phone/Internet": "TV/Telefone/Internet",
       "Water": "Água"
+    },
+    "Social and Activities": {
+      "heading": "Social e atividades",
+      "Events and Activities": "Eventos e atividades"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Cuidados pessoais e bem-estar",
+      "Personal Care and Wellness": "Cuidados pessoais e bem-estar"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Assinaturas e filiações",
+      "Digital Subscriptions": "Assinaturas digitais",
+      "Memberships": "Filiações"
     }
   },
   "Currencies": {

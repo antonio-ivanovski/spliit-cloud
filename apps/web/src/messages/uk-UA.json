@@ -1022,6 +1022,19 @@
       "Trash": "Сміття",
       "TV/Phone/Internet": "ТБ/Телефон/Інтернет",
       "Water": "Вода"
+    },
+    "Social and Activities": {
+      "heading": "Соціальні активності",
+      "Events and Activities": "Події та активності"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Особистий догляд і добробут",
+      "Personal Care and Wellness": "Особистий догляд і добробут"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Підписки та членство",
+      "Digital Subscriptions": "Цифрові підписки",
+      "Memberships": "Членство"
     }
   },
   "Auth": {

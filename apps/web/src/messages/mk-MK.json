@@ -1153,6 +1153,19 @@
       "Trash": "Ѓубре",
       "TV/Phone/Internet": "ТВ/Телефон/Интернет",
       "Water": "Вода"
+    },
+    "Social and Activities": {
+      "heading": "Социјални и активности",
+      "Events and Activities": "Настани и активности"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Лична нега и благосостојба",
+      "Personal Care and Wellness": "Лична нега и благосостојба"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Претплати и членарини",
+      "Digital Subscriptions": "Дигитални претплати",
+      "Memberships": "Членарини"
     }
   },
   "Currencies": {

@@ -1022,6 +1022,19 @@
       "Trash": "垃圾費",
       "TV/Phone/Internet": "電視/電話/網路",
       "Water": "水費"
+    },
+    "Social and Activities": {
+      "heading": "社交與活動",
+      "Events and Activities": "活動與賽事"
+    },
+    "Personal Care and Wellness": {
+      "heading": "個人護理與健康",
+      "Personal Care and Wellness": "個人護理與健康"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "訂閱與會員",
+      "Digital Subscriptions": "數位訂閱",
+      "Memberships": "會員"
     }
   },
   "Auth": {

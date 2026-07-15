@@ -1022,6 +1022,19 @@
       "Trash": "Poubelle",
       "TV/Phone/Internet": "TV/Téléphone/Internet",
       "Water": "Eau"
+    },
+    "Social and Activities": {
+      "heading": "Social et activités",
+      "Events and Activities": "Événements et activités"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Soins personnels et bien-être",
+      "Personal Care and Wellness": "Soins personnels et bien-être"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Abonnements et adhésions",
+      "Digital Subscriptions": "Abonnements numériques",
+      "Memberships": "Adhésions"
     }
   },
   "Currencies": {

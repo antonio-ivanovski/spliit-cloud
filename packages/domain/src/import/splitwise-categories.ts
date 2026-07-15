@@ -56,6 +56,29 @@ const CATEGORY_MAP: Record<string, CategoryId> = {
   trash: 'trash',
   'tv/phone/internet': 'tv-phone-internet',
   water: 'water',
+  // Social and Activities
+  'events and activities': 'events-and-activities',
+  'events & activities': 'events-and-activities',
+  activities: 'events-and-activities',
+  events: 'events-and-activities',
+  attractions: 'events-and-activities',
+  parties: 'events-and-activities',
+  // Subscriptions and Memberships
+  'digital subscriptions': 'digital-subscriptions',
+  'digital subscription': 'digital-subscriptions',
+  subscriptions: 'digital-subscriptions',
+  streaming: 'digital-subscriptions',
+  software: 'digital-subscriptions',
+  'cloud storage': 'digital-subscriptions',
+  membership: 'memberships',
+  memberships: 'memberships',
+  gym: 'memberships',
+  fitness: 'memberships',
+  // Personal Care and Wellness
+  'personal care and wellness': 'personal-care-and-wellness',
+  'personal care': 'personal-care-and-wellness',
+  wellness: 'personal-care-and-wellness',
+  beauty: 'personal-care-and-wellness',
 
   // ── Deutsch (German) ─────────────────────────────────────────────────
   // Unkategorisiert (Uncategorized)

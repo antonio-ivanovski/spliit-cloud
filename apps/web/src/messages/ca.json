@@ -1022,6 +1022,19 @@
       "Trash": "Esmorzar",
       "TV/Phone/Internet": "TV/Telèfon/Internet",
       "Water": "Aigua"
+    },
+    "Social and Activities": {
+      "heading": "Social i activitats",
+      "Events and Activities": "Esdeveniments i activitats"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Cura personal i benestar",
+      "Personal Care and Wellness": "Cura personal i benestar"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Subscripcions i membresies",
+      "Digital Subscriptions": "Subscripcions digitals",
+      "Memberships": "Membresies"
     }
   },
   "Currencies": {

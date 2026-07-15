@@ -1022,6 +1022,19 @@
       "Trash": "Çöp",
       "TV/Phone/Internet": "TV/Telefon/İnternet",
       "Water": "Su"
+    },
+    "Social and Activities": {
+      "heading": "Sosyal ve Aktiviteler",
+      "Events and Activities": "Etkinlikler ve Aktiviteler"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Kişisel Bakım ve Sağlık",
+      "Personal Care and Wellness": "Kişisel Bakım ve Sağlık"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Abonelikler ve Üyelikler",
+      "Digital Subscriptions": "Dijital Abonelikler",
+      "Memberships": "Üyelikler"
     }
   },
   "Auth": {

@@ -219,6 +219,9 @@ const CATEGORY_GROUPING_HEADINGS = {
   Life: 'Life.heading',
   Transportation: 'Transportation.heading',
   Utilities: 'Utilities.heading',
+  'Social and Activities': 'Social and Activities.heading',
+  'Subscriptions and Memberships': 'Subscriptions and Memberships.heading',
+  'Personal Care and Wellness': 'Personal Care and Wellness.heading',
 } as const satisfies Record<
   (typeof DEFAULT_CATEGORIES)[number]['grouping'],
   string

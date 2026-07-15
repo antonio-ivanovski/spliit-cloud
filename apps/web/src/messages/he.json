@@ -1022,6 +1022,19 @@
       "Trash": "פסולת",
       "TV/Phone/Internet": "תקשורת",
       "Water": "מים"
+    },
+    "Social and Activities": {
+      "heading": "חברה ופעילויות",
+      "Events and Activities": "אירועים ופעילויות"
+    },
+    "Personal Care and Wellness": {
+      "heading": "טיפוח אישי ובריאות",
+      "Personal Care and Wellness": "טיפוח אישי ובריאות"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "מינויים וחברויות",
+      "Digital Subscriptions": "מינויים דיגיטליים",
+      "Memberships": "חברויות"
     }
   },
   "Currencies": {

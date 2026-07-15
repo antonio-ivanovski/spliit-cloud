@@ -144,6 +144,20 @@ function getCategoryIcon(category: string): LucideIcon {
       return Phone
     case 'Utilities/Water':
       return CupSoda
+    case 'Social and Activities/Events and Activities':
+      return FerrisWheel
+    case 'Subscriptions and Memberships/Digital Subscriptions':
+      return Clapperboard
+    case 'Subscriptions and Memberships/Memberships':
+      return HandHelping
+    case 'Personal Care and Wellness/Personal Care and Wellness':
+      return HandHelping
+    case 'Personal Care and Wellness/Personal Care':
+      return Shirt
+    case 'Personal Care and Wellness/Fitness':
+      return Dumbbell
+    case 'Personal Care and Wellness/Wellness':
+      return HandHelping
     default:
       return Banknote
   }
