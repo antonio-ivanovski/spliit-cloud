@@ -78,7 +78,56 @@
       "lastYear": "L'année dernière",
       "older": "Plus ancien"
     },
-    "export": "Exporter"
+    "export": "Exporter",
+    "filters": {
+      "mobileTitle": "Filtrer les dépenses",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Date (du plus récent au plus ancien)",
+            "asc": "Date (du plus ancien au plus récent)"
+          },
+          "amount": {
+            "desc": "Montant (du plus élevé au plus faible)",
+            "asc": "Montant (du plus faible au plus élevé)"
+          },
+          "createdAt": {
+            "desc": "Création (du plus récent au plus ancien)",
+            "asc": "Création (du plus ancien au plus récent)"
+          }
+        },
+        "title": "Trier les dépenses"
+      },
+      "cancel": "Annuler",
+      "apply": "Appliquer",
+      "clearAll": "Tout effacer",
+      "clearFilterAria": "Effacer le filtre {label}",
+      "noMatchTitle": "Aucune dépense ne correspond à vos filtres",
+      "noMatchBody": "Essayez de retirer ou de modifier certains filtres pour voir plus de résultats.",
+      "noMatchClear": "Effacer les filtres",
+      "category": "Catégorie",
+      "paidBy": "Payé par",
+      "paidFor": "Payé pour",
+      "dateRange": "Plage de dates",
+      "dateFrom": "Du",
+      "dateTo": "Au",
+      "amountRange": "Montant",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Devise",
+      "matchModeAny": "Au moins un",
+      "matchModeAll": "Tous",
+      "button": "Filtres",
+      "matchModeExact": "Exactement",
+      "allCategories": "Toutes les catégories",
+      "allParticipants": "Tous les participants",
+      "allCurrencies": "Toutes les devises",
+      "nSelected": "{count} sélectionné(s)",
+      "removeFilter": "Retirer le filtre",
+      "settlementsHidden": "Règlements masqués",
+      "title": "Filtres"
+    },
+    "showSettlements": "Afficher les règlements"
   },
   "ExpenseCard": {
     "paidBy": "Payé par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Modifier les détails",
     "creating": "Création…",
     "successToast": "Remboursement enregistré"
+  },
+  "Participants": {
+    "search": "Rechercher des participants...",
+    "noParticipant": "Aucun participant trouvé"
   }
 }

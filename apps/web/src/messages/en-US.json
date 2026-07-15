@@ -78,7 +78,56 @@
       "earlierThisYear": "Earlier this year",
       "lastYear": "Last year",
       "older": "Older"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Filter expenses",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Date (newest first)",
+            "asc": "Date (oldest first)"
+          },
+          "amount": {
+            "desc": "Amount (highest first)",
+            "asc": "Amount (lowest first)"
+          },
+          "createdAt": {
+            "desc": "Created (newest first)",
+            "asc": "Created (oldest first)"
+          }
+        },
+        "title": "Sort expenses"
+      },
+      "cancel": "Cancel",
+      "apply": "Apply",
+      "clearAll": "Clear all",
+      "clearFilterAria": "Clear {label} filter",
+      "noMatchTitle": "No expenses match your filters",
+      "noMatchBody": "Try removing or changing some filters to see more results.",
+      "noMatchClear": "Clear filters",
+      "category": "Category",
+      "paidBy": "Paid by",
+      "paidFor": "Paid for",
+      "dateRange": "Date range",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "amountRange": "Amount",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Currency",
+      "matchModeAny": "Match any",
+      "matchModeAll": "Match all",
+      "button": "Filters",
+      "matchModeExact": "Match exact",
+      "allCategories": "All categories",
+      "allParticipants": "All participants",
+      "allCurrencies": "All currencies",
+      "nSelected": "{count} selected",
+      "removeFilter": "Remove filter",
+      "settlementsHidden": "Settlements hidden",
+      "title": "Filters"
+    },
+    "showSettlements": "Show settlements"
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> for <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Edit details",
     "creating": "Creating…",
     "successToast": "Reimbursement recorded"
+  },
+  "Participants": {
+    "search": "Search participants...",
+    "noParticipant": "No participant found"
   }
 }

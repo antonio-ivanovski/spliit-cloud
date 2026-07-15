@@ -78,7 +78,56 @@
       "earlierThisYear": "Awal tahun ini",
       "lastYear": "Tahun lalu",
       "older": "Lebih tua"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Filter pengeluaran",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Tanggal (terbaru dahulu)",
+            "asc": "Tanggal (terlama dahulu)"
+          },
+          "amount": {
+            "desc": "Jumlah (tertinggi dahulu)",
+            "asc": "Jumlah (terendah dahulu)"
+          },
+          "createdAt": {
+            "desc": "Dibuat (terbaru dahulu)",
+            "asc": "Dibuat (terlama dahulu)"
+          }
+        },
+        "title": "Urutkan pengeluaran"
+      },
+      "cancel": "Batal",
+      "apply": "Terapkan",
+      "clearAll": "Hapus semua",
+      "clearFilterAria": "Hapus filter {label}",
+      "noMatchTitle": "Tidak ada pengeluaran yang cocok dengan filter Anda",
+      "noMatchBody": "Coba hapus atau ubah beberapa filter untuk melihat lebih banyak hasil.",
+      "noMatchClear": "Hapus filter",
+      "category": "Kategori",
+      "paidBy": "Dibayar oleh",
+      "paidFor": "Dibayar untuk",
+      "dateRange": "Rentang tanggal",
+      "dateFrom": "Dari",
+      "dateTo": "Sampai",
+      "amountRange": "Jumlah",
+      "minAmount": "Min",
+      "maxAmount": "Maks",
+      "currency": "Mata uang",
+      "matchModeAny": "Cocok salah satu",
+      "matchModeAll": "Cocok semua",
+      "button": "Filter",
+      "matchModeExact": "Cocok persis",
+      "allCategories": "Semua kategori",
+      "allParticipants": "Semua peserta",
+      "allCurrencies": "Semua mata uang",
+      "nSelected": "{count} dipilih",
+      "removeFilter": "Hapus filter",
+      "settlementsHidden": "Pembayaran tersembunyi",
+      "title": "Filter"
+    },
+    "showSettlements": "Tampilkan pembayaran"
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> untuk <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Ubah detail",
     "creating": "Membuat…",
     "successToast": "Reimburse tercatat"
+  },
+  "Participants": {
+    "search": "Cari peserta...",
+    "noParticipant": "Peserta tidak ditemukan"
   }
 }

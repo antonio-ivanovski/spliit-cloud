@@ -7,10 +7,14 @@ import { Search, XCircle } from 'lucide-react'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onValueChange?: (value: string) => void
+  containerClassName?: string
 }
 
 const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onValueChange, ...props }, ref) => {
+  (
+    { className, containerClassName, type, onValueChange, ...props },
+    ref,
+  ) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
     const [value, _setValue] = React.useState('')
 
@@ -20,12 +24,12 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
     }
 
     return (
-      <div className="mx-4 sm:mx-6 flex relative">
+      <div className={cn('flex relative', containerClassName)}>
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           type={type}
           className={cn(
-            'pl-10 text-sm focus:text-base bg-muted border-none text-muted-foreground',
+            'pl-10 h-9 text-sm focus:text-base bg-muted border-none text-muted-foreground',
             className,
           )}
           ref={ref}

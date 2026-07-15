@@ -78,7 +78,56 @@
       "earlierThisYear": "Ранее в этом году",
       "lastYear": "В прошлом году",
       "older": "Очень давно"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Фильтровать расходы",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Дата (сначала новые)",
+            "asc": "Дата (сначала старые)"
+          },
+          "amount": {
+            "desc": "Сумма (сначала большие)",
+            "asc": "Сумма (сначала меньшие)"
+          },
+          "createdAt": {
+            "desc": "Создано (сначала новые)",
+            "asc": "Создано (сначала старые)"
+          }
+        },
+        "title": "Сортировать расходы"
+      },
+      "cancel": "Отмена",
+      "apply": "Применить",
+      "clearAll": "Очистить всё",
+      "clearFilterAria": "Очистить фильтр {label}",
+      "noMatchTitle": "Нет расходов, соответствующих вашим фильтрам",
+      "noMatchBody": "Попробуйте удалить или изменить некоторые фильтры, чтобы увидеть больше результатов.",
+      "noMatchClear": "Очистить фильтры",
+      "category": "Категория",
+      "paidBy": "Оплатил",
+      "paidFor": "Оплачено за",
+      "dateRange": "Диапазон дат",
+      "dateFrom": "С",
+      "dateTo": "По",
+      "amountRange": "Сумма",
+      "minAmount": "Мин",
+      "maxAmount": "Макс",
+      "currency": "Валюта",
+      "matchModeAny": "Совпадение с любым",
+      "matchModeAll": "Совпадение со всеми",
+      "button": "Фильтры",
+      "matchModeExact": "Точное совпадение",
+      "allCategories": "Все категории",
+      "allParticipants": "Все участники",
+      "allCurrencies": "Все валюты",
+      "nSelected": "{count} выбрано",
+      "removeFilter": "Удалить фильтр",
+      "settlementsHidden": "Расчёты скрыты",
+      "title": "Фильтры"
+    },
+    "showSettlements": "Показать расчёты"
   },
   "ExpenseCard": {
     "paidBy": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Изменить детали",
     "creating": "Создание…",
     "successToast": "Возмещение записано"
+  },
+  "Participants": {
+    "search": "Поиск участников...",
+    "noParticipant": "Участник не найден"
   }
 }

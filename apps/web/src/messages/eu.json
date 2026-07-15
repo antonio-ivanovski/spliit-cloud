@@ -78,7 +78,56 @@
       "nobody": "Ez dut inor aukeratu nahi",
       "save": "Gorde aldaketak",
       "footer": "Doikuntza hori geroago alda daiteke taldearen konfigurazioan."
-    }
+    },
+    "filters": {
+      "mobileTitle": "Iragazi gastuak",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Data (berriena lehenik)",
+            "asc": "Data (zaharrena lehenik)"
+          },
+          "amount": {
+            "desc": "Kopurua (handiena lehenik)",
+            "asc": "Kopurua (txikiena lehenik)"
+          },
+          "createdAt": {
+            "desc": "Sortua (berriena lehenik)",
+            "asc": "Sortua (zaharrena lehenik)"
+          }
+        },
+        "title": "Ordenatu gastuak"
+      },
+      "cancel": "Utzi",
+      "apply": "Aplikatu",
+      "clearAll": "Garbitu guztiak",
+      "clearFilterAria": "Garbitu {label} filtroa",
+      "noMatchTitle": "Ez dago zure filtroekin bat datorren gasturik",
+      "noMatchBody": "Saiatu filtro batzuk kendu edo aldatu emaitza gehiago ikusteko.",
+      "noMatchClear": "Garbitu filtroak",
+      "category": "Kategoria",
+      "paidBy": "Ordaindu duena",
+      "paidFor": "Ordaindutakoak",
+      "dateRange": "Data tartea",
+      "dateFrom": "Hasiera",
+      "dateTo": "Amaiera",
+      "amountRange": "Kopurua",
+      "minAmount": "Gutx",
+      "maxAmount": "Geh",
+      "currency": "Moneta",
+      "matchModeAny": "Bat edozein",
+      "matchModeAll": "Denak",
+      "button": "Iragazkiak",
+      "matchModeExact": "Bat zehatz",
+      "allCategories": "Kategoria guztiak",
+      "allParticipants": "Kide guztiak",
+      "allCurrencies": "Moneta guztiak",
+      "nSelected": "{count} hautatuta",
+      "removeFilter": "Kendu filtroa",
+      "settlementsHidden": "Kitapenak ezkutatuta",
+      "title": "Iragazkiak"
+    },
+    "showSettlements": "Erakutsi kitapenak"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>-k ordaindua <paidFor></paidFor>-rentzat",
@@ -1641,5 +1690,9 @@
     "edit": "Editatu xehetasunak",
     "creating": "Sortzen…",
     "successToast": "Diru-itzulketa erregistratu da"
+  },
+  "Participants": {
+    "search": "Bilatu kideak...",
+    "noParticipant": "Ez da kiderik aurkitu"
   }
 }

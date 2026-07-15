@@ -78,7 +78,56 @@
       "lastYear": "去年",
       "older": "更早"
     },
-    "export": "匯出"
+    "export": "匯出",
+    "filters": {
+      "mobileTitle": "篩選消費",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "日期（最新優先）",
+            "asc": "日期（最早優先）"
+          },
+          "amount": {
+            "desc": "金額（由高到低）",
+            "asc": "金額（由低到高）"
+          },
+          "createdAt": {
+            "desc": "建立時間（最新優先）",
+            "asc": "建立時間（最早優先）"
+          }
+        },
+        "title": "排序消費"
+      },
+      "cancel": "取消",
+      "apply": "套用",
+      "clearAll": "清除全部",
+      "clearFilterAria": "清除{label}篩選",
+      "noMatchTitle": "沒有符合篩選條件的消費",
+      "noMatchBody": "請移除或變更部分篩選條件以查看更多結果。",
+      "noMatchClear": "清除篩選",
+      "category": "類別",
+      "paidBy": "付款人",
+      "paidFor": "分攤對象",
+      "dateRange": "日期範圍",
+      "dateFrom": "從",
+      "dateTo": "到",
+      "amountRange": "金額",
+      "minAmount": "最小",
+      "maxAmount": "最大",
+      "currency": "貨幣",
+      "matchModeAny": "符合任一",
+      "matchModeAll": "符合全部",
+      "button": "篩選",
+      "matchModeExact": "精確符合",
+      "allCategories": "所有類別",
+      "allParticipants": "所有參與者",
+      "allCurrencies": "所有貨幣",
+      "nSelected": "已選 {count} 項",
+      "removeFilter": "移除篩選",
+      "settlementsHidden": "結算隱藏",
+      "title": "篩選"
+    },
+    "showSettlements": "顯示結算"
   },
   "ExpenseCard": {
     "paidBy": "由 <strong>{paidBy}</strong> 支付 <paidFor></paidFor>。",
@@ -1641,5 +1690,9 @@
     "edit": "編輯詳細資訊",
     "creating": "新增中…",
     "successToast": "報銷已記錄"
+  },
+  "Participants": {
+    "search": "搜尋參與者……",
+    "noParticipant": "找不到參與者"
   }
 }

@@ -78,7 +78,56 @@
       "earlierThisYear": "Dříve tento rok",
       "lastYear": "Minulý rok",
       "older": "Starší"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Filtrovat výdaje",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Datum (nejnovější první)",
+            "asc": "Datum (nejstarší první)"
+          },
+          "amount": {
+            "desc": "Částka (nejvyšší první)",
+            "asc": "Částka (nejnižší první)"
+          },
+          "createdAt": {
+            "desc": "Vytvořeno (nejnovější první)",
+            "asc": "Vytvořeno (nejstarší první)"
+          }
+        },
+        "title": "Seřadit výdaje"
+      },
+      "cancel": "Zrušit",
+      "apply": "Použít",
+      "clearAll": "Vymazat vše",
+      "clearFilterAria": "Vymazat filtr {label}",
+      "noMatchTitle": "Žádné výdaje neodpovídají vašim filtrům",
+      "noMatchBody": "Zkuste odstranit nebo změnit některé filtry pro zobrazení více výsledků.",
+      "noMatchClear": "Vymazat filtry",
+      "category": "Kategorie",
+      "paidBy": "Zaplatil",
+      "paidFor": "Zaplaceno za",
+      "dateRange": "Rozsah dat",
+      "dateFrom": "Od",
+      "dateTo": "Do",
+      "amountRange": "Částka",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Měna",
+      "matchModeAny": "Shoda s jakýmkoliv",
+      "matchModeAll": "Shoda se všemi",
+      "button": "Filtry",
+      "matchModeExact": "Přesná shoda",
+      "allCategories": "Všechny kategorie",
+      "allParticipants": "Všichni účastníci",
+      "allCurrencies": "Všechny měny",
+      "nSelected": "{count} vybráno",
+      "removeFilter": "Odstranit filtr",
+      "settlementsHidden": "Vyrovnání skryta",
+      "title": "Filtry"
+    },
+    "showSettlements": "Zobrazit vyrovnání"
   },
   "ExpenseCard": {
     "paidBy": "Zaplatil/a <strong>{paidBy}</strong> za <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Upravit podrobnosti",
     "creating": "Vytváření…",
     "successToast": "Proplacení zaznamenáno"
+  },
+  "Participants": {
+    "search": "Hledat účastníky...",
+    "noParticipant": "Účastník nenalezen"
   }
 }

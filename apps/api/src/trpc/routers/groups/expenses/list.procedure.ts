@@ -7,21 +7,61 @@ import {
   protectedProcedure,
 } from '../../../init'
 
+const matchModeSchema = z
+  .enum(['any', 'all', 'exact'])
+  .optional()
+  .catch(undefined)
+
+const listExpensesInputSchema = z.object({
+  groupId: z.string().min(1),
+  cursor: z.number().optional(),
+  limit: z.number().optional(),
+  filter: z.string().optional(),
+  hideReimbursements: z.boolean().optional(),
+  categories: z.array(z.string()).optional(),
+  paidBy: z.array(z.string()).optional(),
+  paidByMatch: matchModeSchema,
+  paidFor: z.array(z.string()).optional(),
+  paidForMatch: matchModeSchema,
+  dateFrom: z.date().optional(),
+  dateTo: z.date().optional(),
+  minAmount: z.number().optional(),
+  maxAmount: z.number().optional(),
+  currencies: z.array(z.string()).optional(),
+  sortBy: z
+    .enum(['expenseDate', 'createdAt', 'amount'])
+    .optional()
+    .catch(undefined),
+  sortDir: z.enum(['asc', 'desc']).optional().catch(undefined),
+  linkInviteToken: linkInviteTokenInput.describe(
+    'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
+  ),
+})
+
 export const listGroupExpensesProcedure = protectedProcedure
-  .input(
-    z.object({
-      groupId: z.string().min(1),
-      cursor: z.number().optional(),
-      limit: z.number().optional(),
-      filter: z.string().optional(),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
-    }),
-  )
+  .input(listExpensesInputSchema)
   .query(
     async ({
-      input: { groupId, cursor = 0, limit = 10, filter, linkInviteToken },
+      input: {
+        groupId,
+        cursor = 0,
+        limit = 10,
+        filter,
+        hideReimbursements,
+        categories,
+        paidBy,
+        paidByMatch,
+        paidFor,
+        paidForMatch,
+        dateFrom,
+        dateTo,
+        minAmount,
+        maxAmount,
+        currencies,
+        sortBy,
+        sortDir,
+        linkInviteToken,
+      },
       ctx,
     }) => {
       await loadGroupViewer({
@@ -34,6 +74,19 @@ export const listGroupExpensesProcedure = protectedProcedure
         offset: cursor,
         length: limit + 1,
         filter,
+        hideReimbursements,
+        categories,
+        paidBy,
+        paidByMatch,
+        paidFor,
+        paidForMatch,
+        dateFrom,
+        dateTo,
+        minAmount,
+        maxAmount,
+        currencies,
+        sortBy,
+        sortDir,
       })
       return {
         expenses: expenses.slice(0, limit).map((expense) => ({

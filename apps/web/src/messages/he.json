@@ -78,7 +78,56 @@
       "earlierThisYear": "מוקדם יותר השנה",
       "lastYear": "שנה שעברה",
       "older": "ישנות יותר"
-    }
+    },
+    "filters": {
+      "mobileTitle": "סנן הוצאות",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "תאריך (חדש ביותר תחילה)",
+            "asc": "תאריך (ישן ביותר תחילה)"
+          },
+          "amount": {
+            "desc": "סכום (גבוה ביותר תחילה)",
+            "asc": "סכום (נמוך ביותר תחילה)"
+          },
+          "createdAt": {
+            "desc": "נוצר (חדש ביותר תחילה)",
+            "asc": "נוצר (ישן ביותר תחילה)"
+          }
+        },
+        "title": "מיין הוצאות"
+      },
+      "cancel": "ביטול",
+      "apply": "החל",
+      "clearAll": "נקה הכל",
+      "clearFilterAria": "נקה סינון {label}",
+      "noMatchTitle": "אין הוצאות התואמות לסינון שלך",
+      "noMatchBody": "נסה להסיר או לשנות חלק מהסינונים כדי לראות תוצאות נוספות.",
+      "noMatchClear": "נקה סינונים",
+      "category": "קטגוריה",
+      "paidBy": "שולם על ידי",
+      "paidFor": "שולם עבור",
+      "dateRange": "טווח תאריכים",
+      "dateFrom": "מ",
+      "dateTo": "עד",
+      "amountRange": "סכום",
+      "minAmount": "מינ'",
+      "maxAmount": "מקס'",
+      "currency": "מטבע",
+      "matchModeAny": "התאם כל אחד",
+      "matchModeAll": "התאם את כולם",
+      "button": "סינונים",
+      "matchModeExact": "התאמה מדויקת",
+      "allCategories": "כל הקטגוריות",
+      "allParticipants": "כל המשתתפים",
+      "allCurrencies": "כל המטבעות",
+      "nSelected": "{count} נבחרו",
+      "removeFilter": "הסר סינון",
+      "settlementsHidden": "סליקות מוסתרות",
+      "title": "סינונים"
+    },
+    "showSettlements": "הצג סליקות"
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> עבור <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "ערוך פרטים",
     "creating": "יוצר…",
     "successToast": "ההחזר נרשם"
+  },
+  "Participants": {
+    "search": "חפש משתתפים...",
+    "noParticipant": "לא נמצא משתתף"
   }
 }

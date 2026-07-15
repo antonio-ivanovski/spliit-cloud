@@ -1,3 +1,4 @@
+import type { Prisma } from '@spliit/db'
 import { prisma, RecurrenceRule, type Expense as DbExpense } from '@spliit/db'
 import {
   calculateNextDate,
@@ -914,9 +915,61 @@ export async function getGroupExpensesParticipants(groupId: string) {
   )
 }
 
+type GetGroupExpensesSortBy = 'expenseDate' | 'createdAt' | 'amount'
+type GetGroupExpensesSortDir = 'asc' | 'desc'
+type GetGroupExpensesMatch = 'any' | 'all' | 'exact'
+
+type GetGroupExpensesOptions = {
+  offset?: number
+  length?: number
+  filter?: string
+  hideReimbursements?: boolean
+  categories?: string[]
+  paidBy?: string[]
+  paidByMatch?: GetGroupExpensesMatch
+  paidFor?: string[]
+  paidForMatch?: GetGroupExpensesMatch
+  dateFrom?: Date
+  dateTo?: Date
+  minAmount?: number
+  maxAmount?: number
+  currencies?: string[]
+  sortBy?: GetGroupExpensesSortBy
+  sortDir?: GetGroupExpensesSortDir
+}
+
+function buildParticipantMatch(
+  selected: string[] | undefined,
+  match: GetGroupExpensesMatch | undefined,
+  relation: 'paidByList' | 'paidFor',
+): Prisma.ExpenseWhereInput | undefined {
+  if (!selected || selected.length === 0) return undefined
+  const relationFilter = {
+    [relation]: {
+      some: { ledgerParticipantId: { in: selected } },
+    },
+  } as const
+  if ((match ?? 'any') === 'any') return relationFilter
+  if (match === 'exact') {
+    return {
+      AND: selected.map((id) => ({
+        [relation]: { some: { ledgerParticipantId: id } },
+      })),
+      NOT: {
+        [relation]: { some: { ledgerParticipantId: { notIn: selected } } },
+      },
+    } as Prisma.ExpenseWhereInput
+  }
+  return {
+    AND: selected.map((id) => ({
+      [relation]: { some: { ledgerParticipantId: id } },
+    })),
+  } as Prisma.ExpenseWhereInput
+}
+
 export async function getGroupExpenses(
   groupId: string,
-  options?: { offset?: number; length?: number; filter?: string },
+  options?: GetGroupExpensesOptions,
 ) {
   await createRecurringExpenses()
 
@@ -925,6 +978,64 @@ export async function getGroupExpenses(
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) return []
+
+  const expenseDateRange: Prisma.DateTimeFilter | undefined =
+    options?.dateFrom || options?.dateTo
+      ? {
+          ...(options.dateFrom ? { gte: options.dateFrom } : {}),
+          ...(options.dateTo ? { lte: options.dateTo } : {}),
+        }
+      : undefined
+
+  const amountRange: Prisma.IntFilter | undefined =
+    options?.minAmount !== undefined || options?.maxAmount !== undefined
+      ? {
+          ...(options.minAmount !== undefined
+            ? { gte: options.minAmount }
+            : {}),
+          ...(options.maxAmount !== undefined
+            ? { lte: options.maxAmount }
+            : {}),
+        }
+      : undefined
+
+  const where: Prisma.ExpenseWhereInput = {
+    ledgerId: group.ledgerId,
+    title: options?.filter
+      ? { contains: options.filter, mode: 'insensitive' }
+      : undefined,
+    isReimbursement: options?.hideReimbursements ? false : undefined,
+    categoryId:
+      options?.categories && options.categories.length > 0
+        ? { in: options.categories }
+        : undefined,
+    originalCurrency:
+      options?.currencies && options.currencies.length > 0
+        ? { in: options.currencies }
+        : undefined,
+    expenseDate: expenseDateRange,
+    amount: amountRange,
+    ...(buildParticipantMatch(
+      options?.paidBy,
+      options?.paidByMatch,
+      'paidByList',
+    ) ?? {}),
+    ...(buildParticipantMatch(
+      options?.paidFor,
+      options?.paidForMatch,
+      'paidFor',
+    ) ?? {}),
+  }
+
+  const sortField = options?.sortBy ?? 'expenseDate'
+  const sortDir = options?.sortDir ?? 'desc'
+  const primaryOrder: Prisma.ExpenseOrderByWithRelationInput = {
+    [sortField]: sortDir,
+  }
+  const orderBy: Prisma.ExpenseOrderByWithRelationInput[] =
+    sortField === 'expenseDate'
+      ? [primaryOrder, { createdAt: 'desc' }]
+      : [primaryOrder, { id: 'desc' }]
 
   const rows = await prisma.expense.findMany({
     select: {
@@ -1011,13 +1122,8 @@ export async function getGroupExpenses(
         },
       },
     },
-    where: {
-      ledgerId: group.ledgerId,
-      title: options?.filter
-        ? { contains: options.filter, mode: 'insensitive' }
-        : undefined,
-    },
-    orderBy: [{ expenseDate: 'desc' }, { createdAt: 'desc' }],
+    where,
+    orderBy,
     skip: options && options.offset,
     take: options && options.length,
   })

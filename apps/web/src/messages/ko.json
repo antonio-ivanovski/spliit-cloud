@@ -24,7 +24,56 @@
     "create": "지출 추가하기",
     "noExpenses": "그룹에 아직 지출 항목이 없네요.",
     "searchPlaceholder": "지출 검색하기…",
-    "createFirst": "첫 지출 추가하기"
+    "createFirst": "첫 지출 추가하기",
+    "filters": {
+      "mobileTitle": "지출 필터",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "날짜 (최신순)",
+            "asc": "날짜 (오래된순)"
+          },
+          "amount": {
+            "desc": "금액 (높은순)",
+            "asc": "금액 (낮은순)"
+          },
+          "createdAt": {
+            "desc": "생성일 (최신순)",
+            "asc": "생성일 (오래된순)"
+          }
+        },
+        "title": "지출 정렬"
+      },
+      "cancel": "취소",
+      "apply": "적용",
+      "clearAll": "모두 지우기",
+      "clearFilterAria": "{label} 필터 지우기",
+      "noMatchTitle": "필터와 일치하는 지출이 없습니다",
+      "noMatchBody": "필터를 삭제하거나 변경하여 더 많은 결과를 확인하세요.",
+      "noMatchClear": "필터 지우기",
+      "category": "카테고리",
+      "paidBy": "지불자",
+      "paidFor": "분담자",
+      "dateRange": "날짜 범위",
+      "dateFrom": "시작",
+      "dateTo": "종료",
+      "amountRange": "금액",
+      "minAmount": "최소",
+      "maxAmount": "최대",
+      "currency": "통화",
+      "matchModeAny": "하나라도 일치",
+      "matchModeAll": "모두 일치",
+      "button": "필터",
+      "matchModeExact": "정확히 일치",
+      "allCategories": "모든 카테고리",
+      "allParticipants": "모든 참여자",
+      "allCurrencies": "모든 통화",
+      "nSelected": "{count}개 선택됨",
+      "removeFilter": "필터 제거",
+      "settlementsHidden": "정산 숨김",
+      "title": "필터"
+    },
+    "showSettlements": "정산 표시"
   },
   "Groups": {
     "myGroups": "내 그룹",
@@ -1641,5 +1690,9 @@
     "edit": "세부 정보 수정",
     "creating": "만드는 중…",
     "successToast": "정산이 기록되었습니다"
+  },
+  "Participants": {
+    "search": "참여자 검색...",
+    "noParticipant": "참여자를 찾을 수 없습니다"
   }
 }

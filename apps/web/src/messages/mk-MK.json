@@ -78,7 +78,56 @@
       "earlierThisYear": "Порано оваа година",
       "lastYear": "Минатата година",
       "older": "Постари"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Филтрирај трошоци",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Дата (најнови прво)",
+            "asc": "Дата (најстари прво)"
+          },
+          "amount": {
+            "desc": "Износ (највисок прво)",
+            "asc": "Износ (најнизок прво)"
+          },
+          "createdAt": {
+            "desc": "Создадено (најнови прво)",
+            "asc": "Создадено (најстари прво)"
+          }
+        },
+        "title": "Сортирај трошоци"
+      },
+      "cancel": "Откажи",
+      "apply": "Примени",
+      "clearAll": "Исчисти сѐ",
+      "clearFilterAria": "Исчисти филтер {label}",
+      "noMatchTitle": "Нема трошоци што одговараат на вашите филтри",
+      "noMatchBody": "Обидете се да отстраните или измените некои филтри за да видите повеќе резултати.",
+      "noMatchClear": "Исчисти филтри",
+      "category": "Категорија",
+      "paidBy": "Платено од",
+      "paidFor": "Платено за",
+      "dateRange": "Опсег на датуми",
+      "dateFrom": "Од",
+      "dateTo": "До",
+      "amountRange": "Износ",
+      "minAmount": "Мин",
+      "maxAmount": "Макс",
+      "currency": "Валута",
+      "matchModeAny": "Совпаѓање со било кој",
+      "matchModeAll": "Совпаѓање со сите",
+      "button": "Филтри",
+      "matchModeExact": "Точно совпаѓање",
+      "allCategories": "Сите категории",
+      "allParticipants": "Сите учесници",
+      "allCurrencies": "Сите валути",
+      "nSelected": "{count} избрани",
+      "removeFilter": "Отстрани филтер",
+      "settlementsHidden": "Порамнувања скриени",
+      "title": "Филтри"
+    },
+    "showSettlements": "Прикажи порамнувања"
   },
   "ExpenseCard": {
     "paidBy": "Платил <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Уреди детали",
     "creating": "Се креира…",
     "successToast": "Раздолжувањето е снимено"
+  },
+  "Participants": {
+    "search": "Пребарувај учесници...",
+    "noParticipant": "Не е пронајден учесник"
   }
 }

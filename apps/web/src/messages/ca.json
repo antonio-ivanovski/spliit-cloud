@@ -78,7 +78,56 @@
       "lastYear": "L'any passat",
       "older": "Més antics"
     },
-    "export": "Exportar"
+    "export": "Exportar",
+    "filters": {
+      "mobileTitle": "Filtrar despeses",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Data (més recents primer)",
+            "asc": "Data (més antigues primer)"
+          },
+          "amount": {
+            "desc": "Import (més alt primer)",
+            "asc": "Import (més baix primer)"
+          },
+          "createdAt": {
+            "desc": "Creada (més recent primer)",
+            "asc": "Creada (més antiga primer)"
+          }
+        },
+        "title": "Ordenar despeses"
+      },
+      "cancel": "Cancel·la",
+      "apply": "Aplicar",
+      "clearAll": "Esborrar-ho tot",
+      "clearFilterAria": "Esborra el filtre {label}",
+      "noMatchTitle": "Cap despesa coincideix amb els teus filtres",
+      "noMatchBody": "Prova de treure o canviar alguns filtres per veure més resultats.",
+      "noMatchClear": "Esborrar filtres",
+      "category": "Categoria",
+      "paidBy": "Pagat per",
+      "paidFor": "Pagat a",
+      "dateRange": "Interval de dates",
+      "dateFrom": "Des de",
+      "dateTo": "Fins a",
+      "amountRange": "Import",
+      "minAmount": "Mín",
+      "maxAmount": "Màx",
+      "currency": "Divisa",
+      "matchModeAny": "Coincideix amb qualsevol",
+      "matchModeAll": "Coincideix amb tots",
+      "button": "Filtres",
+      "matchModeExact": "Coincidència exacta",
+      "allCategories": "Totes les categories",
+      "allParticipants": "Tots els participants",
+      "allCurrencies": "Totes les divises",
+      "nSelected": "{count} seleccionats",
+      "removeFilter": "Elimina el filtre",
+      "settlementsHidden": "Liquidacions ocultes",
+      "title": "Filtres"
+    },
+    "showSettlements": "Mostra les liquidacions"
   },
   "ExpenseCard": {
     "paidBy": "Pagada per <strong>{paidBy}</strong> per a <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Edita els detalls",
     "creating": "Creant…",
     "successToast": "Reemborsament registrat"
+  },
+  "Participants": {
+    "search": "Cerca participants...",
+    "noParticipant": "No s'ha trobat cap participant"
   }
 }

@@ -78,7 +78,56 @@
       "lastYear": "Anul trecut",
       "older": "Mai vechi"
     },
-    "export": "Export"
+    "export": "Export",
+    "filters": {
+      "mobileTitle": "Filtrează cheltuielile",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Dată (cea mai recentă prima)",
+            "asc": "Dată (cea mai veche prima)"
+          },
+          "amount": {
+            "desc": "Sumă (cea mai mare prima)",
+            "asc": "Sumă (cea mai mică prima)"
+          },
+          "createdAt": {
+            "desc": "Creare (cea mai recentă prima)",
+            "asc": "Creare (cea mai veche prima)"
+          }
+        },
+        "title": "Sortează cheltuielile"
+      },
+      "cancel": "Anulează",
+      "apply": "Aplică",
+      "clearAll": "Șterge tot",
+      "clearFilterAria": "Șterge filtrul {label}",
+      "noMatchTitle": "Nicio cheltuială nu corespunde filtrelor tale",
+      "noMatchBody": "Încearcă să elimini sau să schimbi unele filtre pentru a vedea mai multe rezultate.",
+      "noMatchClear": "Șterge filtrele",
+      "category": "Categorie",
+      "paidBy": "Plătit de",
+      "paidFor": "Plătit către",
+      "dateRange": "Interval de date",
+      "dateFrom": "De la",
+      "dateTo": "Până la",
+      "amountRange": "Sumă",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Monedă",
+      "matchModeAny": "Oricare",
+      "matchModeAll": "Toate",
+      "button": "Filtre",
+      "matchModeExact": "Exact",
+      "allCategories": "Toate categoriile",
+      "allParticipants": "Toți participanții",
+      "allCurrencies": "Toate monedele",
+      "nSelected": "{count} selectate",
+      "removeFilter": "Elimină filtrul",
+      "settlementsHidden": "Decontări ascunse",
+      "title": "Filtre"
+    },
+    "showSettlements": "Arată decontările"
   },
   "ExpenseCard": {
     "paidBy": "Plătit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Modifică detaliile",
     "creating": "Se adaugă…",
     "successToast": "Rambursare înregistrată"
+  },
+  "Participants": {
+    "search": "Caută participanți...",
+    "noParticipant": "Niciun participant găsit"
   }
 }

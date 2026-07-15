@@ -78,7 +78,56 @@
       "earlierThisYear": "Wcześniej w tym roku",
       "lastYear": "Poprzedni rok",
       "older": "Starsze"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Filtruj wydatki",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Data (najnowsze pierwsze)",
+            "asc": "Data (najstarsze pierwsze)"
+          },
+          "amount": {
+            "desc": "Kwota (najwyższa pierwsza)",
+            "asc": "Kwota (najniższa pierwsza)"
+          },
+          "createdAt": {
+            "desc": "Utworzono (najnowsze pierwsze)",
+            "asc": "Utworzono (najstarsze pierwsze)"
+          }
+        },
+        "title": "Sortuj wydatki"
+      },
+      "cancel": "Anuluj",
+      "apply": "Zastosuj",
+      "clearAll": "Wyczyść wszystko",
+      "clearFilterAria": "Wyczyść filtr {label}",
+      "noMatchTitle": "Żadne wydatki nie pasują do Twoich filtrów",
+      "noMatchBody": "Spróbuj usunąć lub zmienić niektóre filtry, aby zobaczyć więcej wyników.",
+      "noMatchClear": "Wyczyść filtry",
+      "category": "Kategoria",
+      "paidBy": "Zapłacone przez",
+      "paidFor": "Zapłacone za",
+      "dateRange": "Zakres dat",
+      "dateFrom": "Od",
+      "dateTo": "Do",
+      "amountRange": "Kwota",
+      "minAmount": "Min",
+      "maxAmount": "Maks",
+      "currency": "Waluta",
+      "matchModeAny": "Dopasuj dowolny",
+      "matchModeAll": "Dopasuj wszystkie",
+      "button": "Filtry",
+      "matchModeExact": "Dopasuj dokładnie",
+      "allCategories": "Wszystkie kategorie",
+      "allParticipants": "Wszyscy uczestnicy",
+      "allCurrencies": "Wszystkie waluty",
+      "nSelected": "{count} wybrano",
+      "removeFilter": "Usuń filtr",
+      "settlementsHidden": "Rozliczenia ukryte",
+      "title": "Filtry"
+    },
+    "showSettlements": "Pokaż rozliczenia"
   },
   "ExpenseCard": {
     "paidBy": "Opłacone przez <strong>{paidBy}</strong> dla <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Edytuj szczegóły",
     "creating": "Tworzenie…",
     "successToast": "Zwrot środków zapisany"
+  },
+  "Participants": {
+    "search": "Szukaj uczestników...",
+    "noParticipant": "Nie znaleziono uczestnika"
   }
 }

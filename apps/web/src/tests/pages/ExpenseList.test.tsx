@@ -13,6 +13,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   mockUseInfiniteQuery: vi.fn(),
+  mockUseCommonCurrencies: vi.fn(() => ({
+    data: { currencies: ['EUR'] },
+    isLoading: false,
+  })),
   mockUseUtils: vi.fn(() => ({
     groups: {
       expenses: { invalidate: vi.fn().mockResolvedValue(undefined) },
@@ -32,6 +36,9 @@ vi.mock('@/trpc/client', () => ({
       expenses: {
         list: {
           useInfiniteQuery: mocks.mockUseInfiniteQuery,
+        },
+        commonCurrencies: {
+          useQuery: mocks.mockUseCommonCurrencies,
         },
       },
     },

@@ -78,7 +78,56 @@
       "earlierThisYear": "Aikaisemmin tänä vuonna",
       "lastYear": "Viime vuonna",
       "older": "Vanhemmat"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Suodata kulut",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Päivämäärä (uusin ensin)",
+            "asc": "Päivämäärä (vanhin ensin)"
+          },
+          "amount": {
+            "desc": "Summa (suurin ensin)",
+            "asc": "Summa (pienin ensin)"
+          },
+          "createdAt": {
+            "desc": "Luotu (uusin ensin)",
+            "asc": "Luotu (vanhin ensin)"
+          }
+        },
+        "title": "Järjestä kuluja"
+      },
+      "cancel": "Peruuta",
+      "apply": "Käytä",
+      "clearAll": "Tyhjennä kaikki",
+      "clearFilterAria": "Poista {label}-suodatin",
+      "noMatchTitle": "Yksikään kulu ei vastaa suodattimia",
+      "noMatchBody": "Poista tai muuta joitakin suodattimia nähdäksesi lisää tuloksia.",
+      "noMatchClear": "Tyhjennä suodattimet",
+      "category": "Kategoria",
+      "paidBy": "Maksaja",
+      "paidFor": "Maksettu puolesta",
+      "dateRange": "Aikaväli",
+      "dateFrom": "Alkaen",
+      "dateTo": "Asti",
+      "amountRange": "Summa",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Valuutta",
+      "matchModeAny": "Mikä tahansa",
+      "matchModeAll": "Kaikki",
+      "button": "Suodattimet",
+      "matchModeExact": "Tarkka",
+      "allCategories": "Kaikki kategoriat",
+      "allParticipants": "Kaikki osallistujat",
+      "allCurrencies": "Kaikki valuutat",
+      "nSelected": "{count} valittu",
+      "removeFilter": "Poista suodatin",
+      "settlementsHidden": "Tilitykset piilotettu",
+      "title": "Suodattimet"
+    },
+    "showSettlements": "Näytä tilitykset"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> maksoi {forCount, plural, =1 {henkilön} other {henkilöiden}} <paidFor></paidFor> puolesta",
@@ -1641,5 +1690,9 @@
     "edit": "Muokkaa tietoja",
     "creating": "Luodaan…",
     "successToast": "Velanmaksu tallennettu"
+  },
+  "Participants": {
+    "search": "Hae osallistujia...",
+    "noParticipant": "Osallistujaa ei löytynyt"
   }
 }

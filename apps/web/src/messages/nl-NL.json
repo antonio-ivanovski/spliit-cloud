@@ -78,7 +78,56 @@
       "earlierThisYear": "Eerder dit jaar",
       "lastYear": "Vorig jaar",
       "older": "Ouder"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Filter kosten",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Datum (nieuwste eerst)",
+            "asc": "Datum (oudste eerst)"
+          },
+          "amount": {
+            "desc": "Bedrag (hoogste eerst)",
+            "asc": "Bedrag (laagste eerst)"
+          },
+          "createdAt": {
+            "desc": "Aangemaakt (nieuwste eerst)",
+            "asc": "Aangemaakt (oudste eerst)"
+          }
+        },
+        "title": "Kosten sorteren"
+      },
+      "cancel": "Annuleren",
+      "apply": "Toepassen",
+      "clearAll": "Alles wissen",
+      "clearFilterAria": "{label}-filter wissen",
+      "noMatchTitle": "Geen kosten voldoen aan uw filters",
+      "noMatchBody": "Verwijder of wijzig enkele filters om meer resultaten te zien.",
+      "noMatchClear": "Filters wissen",
+      "category": "Categorie",
+      "paidBy": "Betaald door",
+      "paidFor": "Betaald voor",
+      "dateRange": "Datumbereik",
+      "dateFrom": "Van",
+      "dateTo": "Tot",
+      "amountRange": "Bedrag",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Valuta",
+      "matchModeAny": "Willekeurige",
+      "matchModeAll": "Alle",
+      "button": "Filters",
+      "matchModeExact": "Exact",
+      "allCategories": "Alle categorieën",
+      "allParticipants": "Alle deelnemers",
+      "allCurrencies": "Alle valuta",
+      "nSelected": "{count} geselecteerd",
+      "removeFilter": "Filter verwijderen",
+      "settlementsHidden": "Verrekeningen verborgen",
+      "title": "Filters"
+    },
+    "showSettlements": "Verrekeningen tonen"
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> voor <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Details bewerken",
     "creating": "Aan het maken…",
     "successToast": "Terugbetaling vastgelegd"
+  },
+  "Participants": {
+    "search": "Deelnemers zoeken...",
+    "noParticipant": "Geen deelnemer gevonden"
   }
 }

@@ -78,7 +78,56 @@
       "lastYear": "去年",
       "older": "更早"
     },
-    "export": "导出"
+    "export": "导出",
+    "filters": {
+      "mobileTitle": "筛选支出",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "日期（最新优先）",
+            "asc": "日期（最早优先）"
+          },
+          "amount": {
+            "desc": "金额（从高到低）",
+            "asc": "金额（从低到高）"
+          },
+          "createdAt": {
+            "desc": "创建时间（最新优先）",
+            "asc": "创建时间（最早优先）"
+          }
+        },
+        "title": "排序支出"
+      },
+      "cancel": "取消",
+      "apply": "应用",
+      "clearAll": "清除全部",
+      "clearFilterAria": "清除{label}筛选",
+      "noMatchTitle": "没有符合筛选条件的支出",
+      "noMatchBody": "请移除或更改部分筛选条件以查看更多结果。",
+      "noMatchClear": "清除筛选",
+      "category": "类别",
+      "paidBy": "付款人",
+      "paidFor": "分摊对象",
+      "dateRange": "日期范围",
+      "dateFrom": "从",
+      "dateTo": "到",
+      "amountRange": "金额",
+      "minAmount": "最小",
+      "maxAmount": "最大",
+      "currency": "货币",
+      "matchModeAny": "匹配任意",
+      "matchModeAll": "匹配全部",
+      "button": "筛选",
+      "matchModeExact": "精确匹配",
+      "allCategories": "所有类别",
+      "allParticipants": "所有参与者",
+      "allCurrencies": "所有货币",
+      "nSelected": "已选 {count} 项",
+      "removeFilter": "移除筛选",
+      "settlementsHidden": "结算隐藏",
+      "title": "筛选"
+    },
+    "showSettlements": "显示结算"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> 为 <paidFor></paidFor> 支付。",
@@ -1641,5 +1690,9 @@
     "edit": "编辑详情",
     "creating": "创建中…",
     "successToast": "报销已记录"
+  },
+  "Participants": {
+    "search": "搜索参与者……",
+    "noParticipant": "未找到参与者"
   }
 }

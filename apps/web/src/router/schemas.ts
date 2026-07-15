@@ -22,6 +22,24 @@ export const expenseIdParamSchema = cuidLike
 
 const optionalString = z.string().optional().catch(undefined)
 
+const numericString = z
+  .string()
+  .regex(/^-?\d+(\.\d+)?$/, 'expected a numeric string')
+  .optional()
+  .catch(undefined)
+
+const integerString = z
+  .string()
+  .regex(/^-?\d+$/, 'expected an integer string')
+  .optional()
+  .catch(undefined)
+
+const dateString = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}/, 'expected an ISO date')
+  .optional()
+  .catch(undefined)
+
 /**
  * Search-param schema for the `/groups/import` wizard. The `prefill`
  * field carries an encoded `spliit.app` group URL when the user
@@ -44,10 +62,33 @@ export const importGroupSearchSchema = z.object({
  * `friendLinkInvite` carries the invite URL returned by
  * `friends.create` on the link path. The layout surfaces it as a
  * one-time dialog so the user can copy/share it before continuing.
+ *
+ * The `exp*` fields drive the expense-list filter panel. Multi-value
+ * filters (categories, paid by/for, currencies) are encoded as
+ * comma-separated strings so a single search param holds the whole
+ * set; they are parsed to arrays by the expense-filters hook.
+ * `expShowSettlements` flips the settlement visibility alongside the
+ * other filters (it is omitted when at the default `true`).
  */
 export const groupSearchSchema = z.object({
   invite: z.string().optional(),
   friendLinkInvite: optionalString,
+  expCategories: z.string().optional().catch(undefined),
+  expPaidBy: z.string().optional().catch(undefined),
+  expPaidByMatch: z.enum(['any', 'all', 'exact']).optional().catch(undefined),
+  expPaidFor: z.string().optional().catch(undefined),
+  expPaidForMatch: z.enum(['any', 'all', 'exact']).optional().catch(undefined),
+  expDateFrom: dateString,
+  expDateTo: dateString,
+  expMinAmount: numericString,
+  expMaxAmount: numericString,
+  expCurrencies: z.string().optional().catch(undefined),
+  expShowSettlements: z.enum(['true', 'false']).optional().catch(undefined),
+  expSortBy: z
+    .enum(['expenseDate', 'createdAt', 'amount'])
+    .optional()
+    .catch(undefined),
+  expSortDir: z.enum(['asc', 'desc']).optional().catch(undefined),
 })
 
 export const groupParamsSchema = z.object({
@@ -77,24 +118,6 @@ export const resetPasswordSearchSchema = z.object({
 export const completeProfileSearchSchema = z.object({
   redirect: optionalString,
 })
-
-const numericString = z
-  .string()
-  .regex(/^-?\d+(\.\d+)?$/, 'expected a numeric string')
-  .optional()
-  .catch(undefined)
-
-const integerString = z
-  .string()
-  .regex(/^-?\d+$/, 'expected an integer string')
-  .optional()
-  .catch(undefined)
-
-const dateString = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}/, 'expected an ISO date')
-  .optional()
-  .catch(undefined)
 
 export const createExpenseSearchSchema = z.object({
   reimbursement: optionalString,

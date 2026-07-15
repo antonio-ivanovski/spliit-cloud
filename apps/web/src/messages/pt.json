@@ -78,7 +78,56 @@
       "earlierThisYear": "No início deste ano",
       "lastYear": "Ano passado",
       "older": "Mais antigos"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Filtrar despesas",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Data (mais recente primeiro)",
+            "asc": "Data (mais antiga primeiro)"
+          },
+          "amount": {
+            "desc": "Montante (maior primeiro)",
+            "asc": "Montante (menor primeiro)"
+          },
+          "createdAt": {
+            "desc": "Criação (mais recente primeiro)",
+            "asc": "Criação (mais antiga primeiro)"
+          }
+        },
+        "title": "Ordenar despesas"
+      },
+      "cancel": "Cancelar",
+      "apply": "Aplicar",
+      "clearAll": "Limpar tudo",
+      "clearFilterAria": "Limpar o filtro {label}",
+      "noMatchTitle": "Nenhuma despesa corresponde aos seus filtros",
+      "noMatchBody": "Tente remover ou alterar alguns filtros para ver mais resultados.",
+      "noMatchClear": "Limpar filtros",
+      "category": "Categoria",
+      "paidBy": "Pago por",
+      "paidFor": "Pago a",
+      "dateRange": "Intervalo de datas",
+      "dateFrom": "De",
+      "dateTo": "Até",
+      "amountRange": "Montante",
+      "minAmount": "Mín",
+      "maxAmount": "Máx",
+      "currency": "Moeda",
+      "matchModeAny": "Qualquer um",
+      "matchModeAll": "Todos",
+      "button": "Filtros",
+      "matchModeExact": "Exata",
+      "allCategories": "Todas as categorias",
+      "allParticipants": "Todos os participantes",
+      "allCurrencies": "Todas as moedas",
+      "nSelected": "{count} selecionados",
+      "removeFilter": "Remover filtro",
+      "settlementsHidden": "Liquidações ocultas",
+      "title": "Filtros"
+    },
+    "showSettlements": "Mostrar liquidações"
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> para <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Editar detalhes",
     "creating": "A criar…",
     "successToast": "Reembolso registado"
+  },
+  "Participants": {
+    "search": "Pesquisar participantes...",
+    "noParticipant": "Nenhum participante encontrado"
   }
 }

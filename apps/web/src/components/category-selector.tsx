@@ -1,4 +1,4 @@
-import { ChevronDown, Sparkles } from 'lucide-react'
+import { Check, ChevronDown, ChevronsUpDown, Sparkles } from 'lucide-react'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import type { ButtonProps } from '@/components/ui/button'
@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useMediaQuery } from '@/lib/hooks'
+import { cn } from '@/lib/utils'
 import type { DEFAULT_CATEGORIES } from '@spliit/domain'
 import { type Category, type CategoryId } from '@spliit/domain'
 import { forwardRef, useState } from 'react'
@@ -31,6 +32,14 @@ type Props = {
   disabled?: boolean
   /** Render an icon-only trigger for embedding beside a title input. */
   compact?: boolean
+  /** Multi-select mode for filter panels. Defaults to 'single'. */
+  mode?: 'single' | 'multi'
+  /** IDs currently selected (multi mode only). */
+  selectedValues?: CategoryId[]
+  /** Toggle a category ID in multi mode. */
+  onValueToggle?: (categoryId: CategoryId) => void
+  /** Trigger text when nothing selected in multi mode. */
+  multiPlaceholder?: string
 }
 
 export function CategorySelector({
@@ -40,12 +49,49 @@ export function CategorySelector({
   isLoading,
   disabled = false,
   compact = false,
+  mode = 'single',
+  selectedValues = [],
+  onValueToggle,
+  multiPlaceholder,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
   const selectedCategory =
     categories.find((category) => category.id === defaultValue) ?? categories[0]
+
+  if (mode === 'multi') {
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="h-9 px-3 text-sm justify-between font-normal"
+          >
+            <span className="truncate">
+              {selectedValues.length > 0
+                ? `${selectedValues.length} selected`
+                : (multiPlaceholder ?? 'Select')}
+            </span>
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0" align="start">
+          <CategoryCommand
+            categories={categories}
+            mode="multi"
+            selectedValues={selectedValues}
+            onValueToggle={(id) => {
+              onValueToggle?.(id)
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    )
+  }
 
   if (isDesktop) {
     return (
@@ -99,9 +145,15 @@ export function CategorySelector({
 function CategoryCommand({
   categories,
   onValueChange,
+  mode = 'single',
+  selectedValues = [],
+  onValueToggle,
 }: {
   categories: ReadonlyArray<Category>
-  onValueChange: (categoryId: CategoryId) => void
+  onValueChange?: (categoryId: CategoryId) => void
+  mode?: 'single' | 'multi'
+  selectedValues?: CategoryId[]
+  onValueToggle?: (categoryId: CategoryId) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   const categoriesByGroup = categories.reduce<Record<string, Category[]>>(
@@ -134,9 +186,21 @@ function CategoryCommand({
                 )} ${t(categoryLabelKey(category))}`}
                 onSelect={(currentValue) => {
                   const id = currentValue.split(' ')[0] as CategoryId
-                  onValueChange(id)
+                  if (mode === 'multi') {
+                    onValueToggle?.(id)
+                  } else {
+                    onValueChange?.(id)
+                  }
                 }}
               >
+                {mode === 'multi' && (
+                  <Check
+                    className={cn(
+                      'mr-2 h-4 w-4 shrink-0',
+                      selectedValues.includes(category.id) ? '' : 'invisible',
+                    )}
+                  />
+                )}
                 <CategoryLabel category={category} />
               </CommandItem>
             ))}

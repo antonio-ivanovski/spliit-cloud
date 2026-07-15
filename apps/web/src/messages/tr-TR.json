@@ -78,7 +78,56 @@
       "lastYear": "Geçen yıl",
       "older": "Daha eski"
     },
-    "export": "Dışa aktar"
+    "export": "Dışa aktar",
+    "filters": {
+      "mobileTitle": "Harcamaları filtrele",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Tarih (önce en yeni)",
+            "asc": "Tarih (önce en eski)"
+          },
+          "amount": {
+            "desc": "Tutar (önce en yüksek)",
+            "asc": "Tutar (önce en düşük)"
+          },
+          "createdAt": {
+            "desc": "Oluşturulma (önce en yeni)",
+            "asc": "Oluşturulma (önce en eski)"
+          }
+        },
+        "title": "Harcamaları sırala"
+      },
+      "cancel": "İptal",
+      "apply": "Uygula",
+      "clearAll": "Tümünü temizle",
+      "clearFilterAria": "{label} filtresini temizle",
+      "noMatchTitle": "Filtrelerinize uyan hiçbir harcama yok",
+      "noMatchBody": "Daha fazla sonuç görmek için bazı filtreleri kaldırmayı veya değiştirmeyi deneyin.",
+      "noMatchClear": "Filtreleri temizle",
+      "category": "Kategori",
+      "paidBy": "Ödeyen",
+      "paidFor": "Ödenen",
+      "dateRange": "Tarih aralığı",
+      "dateFrom": "Başlangıç",
+      "dateTo": "Bitiş",
+      "amountRange": "Tutar",
+      "minAmount": "Min",
+      "maxAmount": "Maks",
+      "currency": "Para birimi",
+      "matchModeAny": "Herhangi biriyle eşleş",
+      "matchModeAll": "Tümüyle eşleş",
+      "button": "Filtreler",
+      "matchModeExact": "Tam eşleşme",
+      "allCategories": "Tüm kategoriler",
+      "allParticipants": "Tüm katılımcılar",
+      "allCurrencies": "Tüm para birimleri",
+      "nSelected": "{count} seçildi",
+      "removeFilter": "Filtreyi kaldır",
+      "settlementsHidden": "Ödemeler gizli",
+      "title": "Filtreler"
+    },
+    "showSettlements": "Ödemeleri göster"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong> tarafından ödendi, <paidFor></paidFor> için",
@@ -1641,5 +1690,9 @@
     "edit": "Detayları düzenle",
     "creating": "Oluşturuluyor…",
     "successToast": "Geri ödeme kaydedildi"
+  },
+  "Participants": {
+    "search": "Katılımcı ara...",
+    "noParticipant": "Katılımcı bulunamadı"
   }
 }

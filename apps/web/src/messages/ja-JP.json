@@ -78,7 +78,56 @@
       "earlierThisYear": "今年初め",
       "lastYear": "昨年",
       "older": "それ以前"
-    }
+    },
+    "filters": {
+      "mobileTitle": "支出を絞り込む",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "日付（新しい順）",
+            "asc": "日付（古い順）"
+          },
+          "amount": {
+            "desc": "金額（高い順）",
+            "asc": "金額（低い順）"
+          },
+          "createdAt": {
+            "desc": "作成日（新しい順）",
+            "asc": "作成日（古い順）"
+          }
+        },
+        "title": "支出を並べ替える"
+      },
+      "cancel": "キャンセル",
+      "apply": "適用",
+      "clearAll": "すべてクリア",
+      "clearFilterAria": "{label}のフィルターをクリア",
+      "noMatchTitle": "条件に一致する支出がありません",
+      "noMatchBody": "フィルターを削除または変更して、さらに結果を表示してください。",
+      "noMatchClear": "フィルターをクリア",
+      "category": "カテゴリ",
+      "paidBy": "支払者",
+      "paidFor": "負担者",
+      "dateRange": "日付範囲",
+      "dateFrom": "開始",
+      "dateTo": "終了",
+      "amountRange": "金額",
+      "minAmount": "最小",
+      "maxAmount": "最大",
+      "currency": "通貨",
+      "matchModeAny": "いずれかと一致",
+      "matchModeAll": "すべてと一致",
+      "button": "フィルター",
+      "matchModeExact": "完全一致",
+      "allCategories": "すべてのカテゴリ",
+      "allParticipants": "すべての参加者",
+      "allCurrencies": "すべての通貨",
+      "nSelected": "{count}件選択中",
+      "removeFilter": "フィルターを削除",
+      "settlementsHidden": "精算非表示",
+      "title": "フィルター"
+    },
+    "showSettlements": "精算を表示"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>が<paidFor></paidFor>のために支払いました",
@@ -1641,5 +1690,9 @@
     "edit": "詳細を編集",
     "creating": "作成中…",
     "successToast": "払い戻しを記録しました"
+  },
+  "Participants": {
+    "search": "参加者を検索...",
+    "noParticipant": "参加者が見つかりません"
   }
 }

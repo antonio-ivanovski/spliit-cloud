@@ -78,7 +78,56 @@
       "lastYear": "Letztes Jahr",
       "older": "Älter"
     },
-    "export": "Exportieren"
+    "export": "Exportieren",
+    "filters": {
+      "mobileTitle": "Ausgaben filtern",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Datum (neueste zuerst)",
+            "asc": "Datum (älteste zuerst)"
+          },
+          "amount": {
+            "desc": "Betrag (höchster zuerst)",
+            "asc": "Betrag (niedrigster zuerst)"
+          },
+          "createdAt": {
+            "desc": "Erstellt (neueste zuerst)",
+            "asc": "Erstellt (älteste zuerst)"
+          }
+        },
+        "title": "Ausgaben sortieren"
+      },
+      "cancel": "Abbrechen",
+      "apply": "Anwenden",
+      "clearAll": "Alle entfernen",
+      "clearFilterAria": "{label}-Filter entfernen",
+      "noMatchTitle": "Keine Ausgaben entsprechen Ihren Filtern",
+      "noMatchBody": "Entfernen oder ändern Sie einige Filter, um mehr Ergebnisse zu sehen.",
+      "noMatchClear": "Filter zurücksetzen",
+      "category": "Kategorie",
+      "paidBy": "Bezahlt von",
+      "paidFor": "Bezahlt für",
+      "dateRange": "Datumsbereich",
+      "dateFrom": "Von",
+      "dateTo": "Bis",
+      "amountRange": "Betrag",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Währung",
+      "matchModeAny": "Beliebige",
+      "matchModeAll": "Alle",
+      "button": "Filter",
+      "matchModeExact": "Exakt",
+      "allCategories": "Alle Kategorien",
+      "allParticipants": "Alle Teilnehmer",
+      "allCurrencies": "Alle Währungen",
+      "nSelected": "{count} ausgewählt",
+      "removeFilter": "Filter entfernen",
+      "settlementsHidden": "Ausgleichszahlungen ausgeblendet",
+      "title": "Filter"
+    },
+    "showSettlements": "Ausgleichszahlungen anzeigen"
   },
   "ExpenseCard": {
     "paidBy": "Gezahlt von <strong>{paidBy}</strong> für <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Details bearbeiten",
     "creating": "Erstellt…",
     "successToast": "Rückzahlung aufgezeichnet"
+  },
+  "Participants": {
+    "search": "Teilnehmer suchen...",
+    "noParticipant": "Kein Teilnehmer gefunden"
   }
 }

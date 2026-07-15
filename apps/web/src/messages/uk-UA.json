@@ -78,7 +78,56 @@
       "earlierThisYear": "Раніше цього року",
       "lastYear": "Минулого року",
       "older": "Старіші"
-    }
+    },
+    "filters": {
+      "mobileTitle": "Фільтрувати витрати",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Дата (спочатку нові)",
+            "asc": "Дата (спочатку старі)"
+          },
+          "amount": {
+            "desc": "Сума (спочатку більші)",
+            "asc": "Сума (спочатку менші)"
+          },
+          "createdAt": {
+            "desc": "Створено (спочатку нові)",
+            "asc": "Створено (спочатку старі)"
+          }
+        },
+        "title": "Сортувати витрати"
+      },
+      "cancel": "Скасувати",
+      "apply": "Застосувати",
+      "clearAll": "Очистити все",
+      "clearFilterAria": "Очистити фільтр {label}",
+      "noMatchTitle": "Жодних витрат, що відповідають вашим фільтрам",
+      "noMatchBody": "Спробуйте видалити або змінити деякі фільтри, щоб побачити більше результатів.",
+      "noMatchClear": "Очистити фільтри",
+      "category": "Категорія",
+      "paidBy": "Оплатив",
+      "paidFor": "Оплачено за",
+      "dateRange": "Діапазон дат",
+      "dateFrom": "З",
+      "dateTo": "По",
+      "amountRange": "Сума",
+      "minAmount": "Мін",
+      "maxAmount": "Макс",
+      "currency": "Валюта",
+      "matchModeAny": "Збіг з будь-яким",
+      "matchModeAll": "Збіг з усіма",
+      "button": "Фільтри",
+      "matchModeExact": "Точний збіг",
+      "allCategories": "Усі категорії",
+      "allParticipants": "Усі учасники",
+      "allCurrencies": "Усі валюти",
+      "nSelected": "{count} вибрано",
+      "removeFilter": "Видалити фільтр",
+      "settlementsHidden": "Розрахунки приховано",
+      "title": "Фільтри"
+    },
+    "showSettlements": "Показати розрахунки"
   },
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -1641,5 +1690,9 @@
     "edit": "Редагувати деталі",
     "creating": "Створення…",
     "successToast": "Відшкодування записано"
+  },
+  "Participants": {
+    "search": "Пошук учасників...",
+    "noParticipant": "Учасника не знайдено"
   }
 }

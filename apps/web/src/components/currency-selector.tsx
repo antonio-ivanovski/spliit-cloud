@@ -1,4 +1,4 @@
-import { ChevronDown, Loader2 } from 'lucide-react'
+import { Check, ChevronDown, ChevronsUpDown, Loader2 } from 'lucide-react'
 
 import type { ButtonProps } from '@/components/ui/button'
 import { Button } from '@/components/ui/button'
@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/popover'
 import { type DisplayCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
+import { cn } from '@/lib/utils'
 import { forwardRef, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -50,6 +51,14 @@ type Props = {
   recommendedCurrencyCodes?: string[]
   /** Render a compact trigger for embedding beside an amount input. */
   compact?: boolean
+  /** Multi-select mode for filter panels. Defaults to 'single'. */
+  mode?: 'single' | 'multi'
+  /** Currency codes currently selected (multi mode only). */
+  selectedValues?: string[]
+  /** Toggle a currency code in multi mode. */
+  onValueToggle?: (currencyCode: string) => void
+  /** Trigger text when nothing selected in multi mode. */
+  multiPlaceholder?: string
 }
 
 export function CurrencySelector({
@@ -61,6 +70,10 @@ export function CurrencySelector({
   pinnedCurrencyCode,
   recommendedCurrencyCodes,
   compact = false,
+  mode = 'single',
+  selectedValues = [],
+  onValueToggle,
+  multiPlaceholder,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -80,6 +93,44 @@ export function CurrencySelector({
       }}
     />
   )
+
+  if (mode === 'multi') {
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="h-9 px-3 text-sm justify-between font-normal"
+          >
+            <span className="truncate">
+              {selectedValues.length > 0
+                ? `${selectedValues.length} selected`
+                : (multiPlaceholder ?? 'Select')}
+            </span>
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0" align="start">
+          <CurrencyCommand
+            currencies={currencies}
+            pinnedCurrencyCode={pinnedCurrencyCode}
+            recommendedCurrencyCodes={recommendedCurrencyCodes}
+            mode="multi"
+            selectedValues={selectedValues}
+            onValueChange={() => {
+              /* multi mode uses onValueToggle; no-op to satisfy the type */
+            }}
+            onValueToggle={(code) => {
+              onValueToggle?.(code)
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    )
+  }
 
   if (isDesktop) {
     return (
@@ -121,11 +172,17 @@ function CurrencyCommand({
   onValueChange,
   pinnedCurrencyCode,
   recommendedCurrencyCodes,
+  mode = 'single',
+  selectedValues = [],
+  onValueToggle,
 }: {
   currencies: DisplayCurrency[]
   onValueChange: (currencyId: DisplayCurrency['code']) => void
   pinnedCurrencyCode?: string
   recommendedCurrencyCodes?: string[]
+  mode?: 'single' | 'multi'
+  selectedValues?: string[]
+  onValueToggle?: (currencyCode: string) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Currencies' })
 
@@ -176,8 +233,22 @@ function CurrencyCommand({
       <CommandItem
         key={currency.code || currency.symbol || currency.name}
         value={`${currency.code} ${currency.name} ${currency.symbol}`}
-        onSelect={() => onValueChange(currency.code)}
+        onSelect={() => {
+          if (mode === 'multi') {
+            onValueToggle?.(currency.code)
+          } else {
+            onValueChange(currency.code)
+          }
+        }}
       >
+        {mode === 'multi' && (
+          <Check
+            className={cn(
+              'mr-2 h-4 w-4 shrink-0',
+              selectedValues.includes(currency.code) ? '' : 'invisible',
+            )}
+          />
+        )}
         <CurrencyLabel currency={currency} />
       </CommandItem>
     ))
