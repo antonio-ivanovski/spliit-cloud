@@ -204,8 +204,8 @@ export const auth = betterAuth({
   },
   session: {
     modelName: 'Session',
-    // 7-day rolling sessions; better-auth handles refresh/sliding expiry.
-    expiresIn: 60 * 60 * 24 * 7,
+    // 180-day (6 months) rolling sessions; better-auth handles refresh/sliding expiry.
+    expiresIn: 60 * 60 * 24 * 180,
     updateAge: 60 * 60 * 24,
     cookieCache: {
       enabled: true,

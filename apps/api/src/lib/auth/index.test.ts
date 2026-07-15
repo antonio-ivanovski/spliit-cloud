@@ -22,6 +22,10 @@ const realAuthModule = (await vi.importActual('./index')) as {
   auth: {
     options: {
       emailVerification?: { autoSignInAfterVerification?: boolean }
+      session?: {
+        expiresIn?: number
+        updateAge?: number
+      }
       hooks?: { before?: unknown }
       account?: {
         accountLinking?: {
@@ -59,6 +63,15 @@ const realAuthModule = (await vi.importActual('./index')) as {
 
 afterEach(() => {
   vi.unstubAllGlobals()
+})
+
+describe('better-auth session config', () => {
+  it('uses a 180-day rolling session refreshed daily', () => {
+    expect(realAuthModule.auth.options.session?.expiresIn).toBe(
+      60 * 60 * 24 * 180,
+    )
+    expect(realAuthModule.auth.options.session?.updateAge).toBe(60 * 60 * 24)
+  })
 })
 
 describe('better-auth emailVerification config', () => {
