@@ -848,8 +848,12 @@
       "toReceive": "À recevoir",
       "toPay": "À payer",
       "settledUp": "Réglés",
-      "toReceiveDescription": "Chaque segment indique qui vous paie.",
-      "toPayDescription": "Chaque segment indique qui vous devez payer."
+      "toReceiveDescription": "Chaque segment indique qui paie ce participant.",
+      "toPayDescription": "Chaque segment indique à qui ce participant paie.",
+      "participantReceives": "<strong>{name}</strong> reçoit",
+      "participantPays": "<strong>{name}</strong> paie",
+      "fromParticipant": "de <strong>{name}</strong>",
+      "toParticipant": "à <strong>{name}</strong>"
     },
     "view": {
       "label": "Affichage",

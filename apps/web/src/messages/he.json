@@ -848,8 +848,12 @@
       "toReceive": "לקבל",
       "toPay": "לשלם",
       "settledUp": "היתרות הוסדרו",
-      "toReceiveDescription": "כל קטע מראה מי משלם לך.",
-      "toPayDescription": "כל קטע מראה למי עליך לשלם."
+      "toReceiveDescription": "כל קטע מראה מי משלם למשתתף זה.",
+      "toPayDescription": "כל קטע מראה למי המשתתף הזה משלם.",
+      "participantReceives": "<strong>{name}</strong> מקבל/ת",
+      "participantPays": "<strong>{name}</strong> משלם/ת",
+      "fromParticipant": "מאת <strong>{name}</strong>",
+      "toParticipant": "אל <strong>{name}</strong>"
     },
     "view": {
       "label": "תצוגה",

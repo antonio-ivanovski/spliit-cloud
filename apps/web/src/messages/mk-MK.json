@@ -972,8 +972,12 @@
       "toReceive": "За примање",
       "toPay": "За плаќање",
       "settledUp": "Подмирено",
-      "toReceiveDescription": "Секој сегмент покажува кој ви плаќа.",
-      "toPayDescription": "Секој сегмент покажува кому треба да му платите."
+      "toReceiveDescription": "Секој сегмент покажува кој му плаќа на овој учесник.",
+      "toPayDescription": "Секој сегмент покажува кому му плаќа овој учесник.",
+      "participantReceives": "<strong>{name}</strong> прима",
+      "participantPays": "<strong>{name}</strong> плаќа",
+      "fromParticipant": "од <strong>{name}</strong>",
+      "toParticipant": "на <strong>{name}</strong>"
     },
     "view": {
       "label": "Приказ",

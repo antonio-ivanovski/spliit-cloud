@@ -1028,8 +1028,12 @@
       "toReceive": "To receive",
       "toPay": "To pay",
       "settledUp": "Settled up",
-      "toReceiveDescription": "Each segment shows who is paying you.",
-      "toPayDescription": "Each segment shows who you need to pay."
+      "toReceiveDescription": "Each segment shows who pays this participant.",
+      "toPayDescription": "Each segment shows who this participant pays.",
+      "participantReceives": "<strong>{name}</strong> receives",
+      "participantPays": "<strong>{name}</strong> pays",
+      "fromParticipant": "from <strong>{name}</strong>",
+      "toParticipant": "to <strong>{name}</strong>"
     }
   },
   "Stats": {

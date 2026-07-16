@@ -848,8 +848,12 @@
       "toReceive": "Por recibir",
       "toPay": "Por pagar",
       "settledUp": "Saldados",
-      "toReceiveDescription": "Cada segmento muestra quién te paga.",
-      "toPayDescription": "Cada segmento muestra a quién debes pagar."
+      "toReceiveDescription": "Cada segmento muestra quién paga a este participante.",
+      "toPayDescription": "Cada segmento muestra a quién paga este participante.",
+      "participantReceives": "<strong>{name}</strong> recibe",
+      "participantPays": "<strong>{name}</strong> paga",
+      "fromParticipant": "de <strong>{name}</strong>",
+      "toParticipant": "a <strong>{name}</strong>"
     },
     "view": {
       "label": "Vista",

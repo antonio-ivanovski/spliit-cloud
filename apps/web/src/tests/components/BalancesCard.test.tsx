@@ -102,14 +102,37 @@ describe('BalancesCard', () => {
     expect(screen.getByText('To receive')).toBeInTheDocument()
     expect(screen.getByText('To pay')).toBeInTheDocument()
     expect(
-      screen.getByText('Each segment shows who is paying you.'),
+      screen.queryByText('Each segment shows who is paying you.'),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByText('Each segment shows who pays this participant.'),
     ).toBeInTheDocument()
     expect(
-      screen.getByText('Each segment shows who you need to pay.'),
+      screen.getByText('Each segment shows who this participant pays.'),
     ).toBeInTheDocument()
-    expect(screen.getAllByText('Alice').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Bob').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Carol').length).toBeGreaterThan(0)
+    const emphasizedNames = Array.from(
+      screen
+        .getByTestId('settlement-balances')
+        .querySelectorAll('strong.font-semibold'),
+    )
+    expect(
+      emphasizedNames.some(
+        (element) => element.parentElement?.textContent === 'Alice receives',
+      ),
+    ).toBe(true)
+    expect(
+      emphasizedNames.some(
+        (element) => element.parentElement?.textContent === 'Bob pays',
+      ),
+    ).toBe(true)
+    expect(
+      emphasizedNames.some(
+        (element) => element.parentElement?.textContent === 'Carol pays',
+      ),
+    ).toBe(true)
+    expect(
+      emphasizedNames.filter((element) => element.textContent === 'Alice'),
+    ).toHaveLength(3)
     expect(screen.getAllByTestId('participant-segment-bar')).toHaveLength(3)
     expect(
       screen

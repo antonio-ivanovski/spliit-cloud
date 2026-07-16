@@ -848,8 +848,12 @@
       "toReceive": "Jasotzeko",
       "toPay": "Ordaintzeko",
       "settledUp": "Kitatuak",
-      "toReceiveDescription": "Segmentu bakoitzak nork ordaintzen dizun erakusten du.",
-      "toPayDescription": "Segmentu bakoitzak nori ordaindu behar diozun erakusten du."
+      "toReceiveDescription": "Segmentu bakoitzak parte-hartzaile honi nork ordaintzen dion erakusten du.",
+      "toPayDescription": "Segmentu bakoitzak parte-hartzaile honek nori ordaintzen dion erakusten du.",
+      "participantReceives": "<strong>{name}</strong>-k jasotzen du",
+      "participantPays": "<strong>{name}</strong>-k ordaintzen du",
+      "fromParticipant": "<strong>{name}</strong>-gandik",
+      "toParticipant": "<strong>{name}</strong>-ri"
     },
     "view": {
       "label": "Bista",

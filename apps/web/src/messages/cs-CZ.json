@@ -855,8 +855,12 @@
       "toReceive": "K obdržení",
       "toPay": "K zaplacení",
       "settledUp": "Vyrovnáno",
-      "toReceiveDescription": "Každý segment zobrazuje, kdo vám platí.",
-      "toPayDescription": "Každý segment zobrazuje, komu musíte zaplatit."
+      "toReceiveDescription": "Každý segment ukazuje, kdo tomuto účastníkovi platí.",
+      "toPayDescription": "Každý segment ukazuje, komu tento účastník platí.",
+      "participantReceives": "<strong>{name}</strong> přijímá",
+      "participantPays": "<strong>{name}</strong> platí",
+      "fromParticipant": "od <strong>{name}</strong>",
+      "toParticipant": "pro <strong>{name}</strong>"
     },
     "view": {
       "label": "Zobrazení",

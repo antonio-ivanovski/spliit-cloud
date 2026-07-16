@@ -855,8 +855,12 @@
       "toReceive": "К получению",
       "toPay": "К оплате",
       "settledUp": "Рассчитались",
-      "toReceiveDescription": "Каждый сегмент показывает, кто вам платит.",
-      "toPayDescription": "Каждый сегмент показывает, кому вы должны заплатить."
+      "toReceiveDescription": "Каждый сегмент показывает, кто платит этому участнику.",
+      "toPayDescription": "Каждый сегмент показывает, кому этот участник платит.",
+      "participantReceives": "<strong>{name}</strong> получает",
+      "participantPays": "<strong>{name}</strong> платит",
+      "fromParticipant": "от <strong>{name}</strong>",
+      "toParticipant": "для <strong>{name}</strong>"
     },
     "view": {
       "label": "Вид",

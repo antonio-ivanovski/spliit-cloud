@@ -848,8 +848,12 @@
       "toReceive": "De primit",
       "toPay": "De plătit",
       "settledUp": "Decontate",
-      "toReceiveDescription": "Fiecare segment arată cine îți plătește.",
-      "toPayDescription": "Fiecare segment arată cui trebuie să plătești."
+      "toReceiveDescription": "Fiecare segment arată cine îi plătește acestui participant.",
+      "toPayDescription": "Fiecare segment arată cui îi plătește acest participant.",
+      "participantReceives": "<strong>{name}</strong> primește",
+      "participantPays": "<strong>{name}</strong> plătește",
+      "fromParticipant": "de la <strong>{name}</strong>",
+      "toParticipant": "către <strong>{name}</strong>"
     },
     "view": {
       "label": "Vizualizare",

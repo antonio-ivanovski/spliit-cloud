@@ -841,8 +841,12 @@
       "toReceive": "Alınacak",
       "toPay": "Ödenecek",
       "settledUp": "Borç yok",
-      "toReceiveDescription": "Her segment, size ödeme yapan kişiyi gösterir.",
-      "toPayDescription": "Her segment, ödeme yapmanız gereken kişiyi gösterir."
+      "toReceiveDescription": "Her segment bu katılımcıya kimin ödeme yaptığını gösterir.",
+      "toPayDescription": "Her segment bu katılımcının kime ödeme yaptığını gösterir.",
+      "participantReceives": "<strong>{name}</strong> ödeme alır",
+      "participantPays": "<strong>{name}</strong> ödeme yapar",
+      "fromParticipant": "<strong>{name}</strong> adlı kişiden",
+      "toParticipant": "<strong>{name}</strong> adlı kişiye"
     },
     "view": {
       "label": "Görünüm",

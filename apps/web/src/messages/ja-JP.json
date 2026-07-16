@@ -834,8 +834,12 @@
       "toReceive": "受け取り",
       "toPay": "支払い",
       "settledUp": "精算済み",
-      "toReceiveDescription": "各セグメントには、あなたに支払う人が表示されます。",
-      "toPayDescription": "各セグメントには、あなたが支払う相手が表示されます。"
+      "toReceiveDescription": "各セグメントには、この参加者に支払う人が表示されます。",
+      "toPayDescription": "各セグメントには、この参加者が支払う相手が表示されます。",
+      "participantReceives": "<strong>{name}</strong>が受け取る",
+      "participantPays": "<strong>{name}</strong>が支払う",
+      "fromParticipant": "<strong>{name}</strong>から",
+      "toParticipant": "<strong>{name}</strong>へ"
     },
     "view": {
       "label": "表示",

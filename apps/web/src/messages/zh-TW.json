@@ -834,8 +834,12 @@
       "toReceive": "待收款",
       "toPay": "待付款",
       "settledUp": "已結清",
-      "toReceiveDescription": "每個區段顯示向你付款的人。",
-      "toPayDescription": "每個區段顯示你需要向誰付款。"
+      "toReceiveDescription": "每個區段顯示誰向該參與者付款。",
+      "toPayDescription": "每個區段顯示該參與者向誰付款。",
+      "participantReceives": "<strong>{name}</strong>收款",
+      "participantPays": "<strong>{name}</strong>付款",
+      "fromParticipant": "來自<strong>{name}</strong>",
+      "toParticipant": "支付給<strong>{name}</strong>"
     },
     "view": {
       "label": "檢視",

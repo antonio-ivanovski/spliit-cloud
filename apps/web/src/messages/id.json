@@ -1017,8 +1017,12 @@
       "toReceive": "Akan menerima",
       "toPay": "Akan membayar",
       "settledUp": "Sudah lunas",
-      "toReceiveDescription": "Setiap segmen menunjukkan siapa yang membayar Anda.",
-      "toPayDescription": "Setiap segmen menunjukkan kepada siapa Anda harus membayar."
+      "toReceiveDescription": "Setiap segmen menunjukkan siapa yang membayar peserta ini.",
+      "toPayDescription": "Setiap segmen menunjukkan kepada siapa peserta ini membayar.",
+      "participantReceives": "<strong>{name}</strong> menerima",
+      "participantPays": "<strong>{name}</strong> membayar",
+      "fromParticipant": "dari <strong>{name}</strong>",
+      "toParticipant": "kepada <strong>{name}</strong>"
     },
     "view": {
       "label": "Tampilan",

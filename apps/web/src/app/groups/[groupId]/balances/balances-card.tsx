@@ -14,7 +14,7 @@ import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { BalancesLoading } from './balances-loading'
 import { CreateReimbursementModal } from './create-reimbursement-modal'
 import type { CurrencyBalance } from './currency-balances'
@@ -260,8 +260,16 @@ function SettlementDirection({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2">
                     <ParticipantAvatar participant={participant} size="sm" />
-                    <span className="min-w-0 truncate text-sm font-medium">
-                      {participant.name}
+                    <span className="min-w-0 truncate text-sm font-normal text-muted-foreground">
+                      <Trans
+                        i18nKey={`Balances.direction.${direction === 'receive' ? 'participantReceives' : 'participantPays'}`}
+                        components={{
+                          strong: (
+                            <strong className="font-semibold text-foreground" />
+                          ),
+                        }}
+                        values={{ name: participant.name }}
+                      />
                     </span>
                   </div>
                   <span className="shrink-0 tabular-nums text-sm font-medium">
@@ -291,10 +299,18 @@ function SettlementDirection({
                             className={`h-2 w-2 shrink-0 rounded-full ${color}`}
                           />
                           <span
-                            className="min-w-0 flex-1 truncate font-medium"
+                            className="min-w-0 flex-1 truncate font-normal text-muted-foreground"
                             title={counterparty.name}
                           >
-                            {counterparty.name}
+                            <Trans
+                              i18nKey={`Balances.direction.${direction === 'receive' ? 'fromParticipant' : 'toParticipant'}`}
+                              components={{
+                                strong: (
+                                  <strong className="font-semibold text-foreground" />
+                                ),
+                              }}
+                              values={{ name: counterparty.name }}
+                            />
                           </span>
                           <span className="shrink-0 tabular-nums text-muted-foreground">
                             {formatCurrency(currency, leg.amount, locale)}

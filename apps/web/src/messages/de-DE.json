@@ -869,8 +869,12 @@
       "toReceive": "Zu erhalten",
       "toPay": "Zu zahlen",
       "settledUp": "Beglichen",
-      "toReceiveDescription": "Jedes Segment zeigt, wer an dich zahlt.",
-      "toPayDescription": "Jedes Segment zeigt, an wen du zahlen musst."
+      "toReceiveDescription": "Jedes Segment zeigt, wer an diese Person zahlt.",
+      "toPayDescription": "Jedes Segment zeigt, an wen diese Person zahlt.",
+      "participantReceives": "<strong>{name}</strong> erhält",
+      "participantPays": "<strong>{name}</strong> zahlt",
+      "fromParticipant": "von <strong>{name}</strong>",
+      "toParticipant": "an <strong>{name}</strong>"
     },
     "view": {
       "label": "Ansicht",

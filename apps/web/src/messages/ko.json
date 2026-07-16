@@ -716,8 +716,12 @@
       "toReceive": "받을 금액",
       "toPay": "지불할 금액",
       "settledUp": "정산 완료",
-      "toReceiveDescription": "각 세그먼트에는 나에게 돈을 지불하는 사람이 표시됩니다.",
-      "toPayDescription": "각 세그먼트에는 내가 돈을 지불해야 하는 사람이 표시됩니다."
+      "toReceiveDescription": "각 세그먼트에는 이 참가자에게 돈을 지불하는 사람이 표시됩니다.",
+      "toPayDescription": "각 세그먼트에는 이 참가자가 돈을 지불하는 상대방이 표시됩니다.",
+      "participantReceives": "<strong>{name}</strong>님이 받습니다",
+      "participantPays": "<strong>{name}</strong>님이 지불합니다",
+      "fromParticipant": "<strong>{name}</strong>님에게서",
+      "toParticipant": "<strong>{name}</strong>님에게"
     },
     "view": {
       "label": "보기",

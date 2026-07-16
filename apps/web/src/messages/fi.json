@@ -841,8 +841,12 @@
       "toReceive": "Saatavaa",
       "toPay": "Maksettavaa",
       "settledUp": "Tasattu",
-      "toReceiveDescription": "Jokainen segmentti näyttää, kuka maksaa sinulle.",
-      "toPayDescription": "Jokainen segmentti näyttää, kenelle sinun pitää maksaa."
+      "toReceiveDescription": "Jokainen segmentti näyttää, kuka maksaa tälle osallistujalle.",
+      "toPayDescription": "Jokainen segmentti näyttää, kenelle tämä osallistuja maksaa.",
+      "participantReceives": "<strong>{name}</strong> saa",
+      "participantPays": "<strong>{name}</strong> maksaa",
+      "fromParticipant": "<strong>{name}</strong>lta",
+      "toParticipant": "<strong>{name}</strong>lle"
     },
     "view": {
       "label": "Näkymä",

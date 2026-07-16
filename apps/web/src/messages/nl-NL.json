@@ -841,8 +841,12 @@
       "toReceive": "Te ontvangen",
       "toPay": "Te betalen",
       "settledUp": "Vereffend",
-      "toReceiveDescription": "Elk segment laat zien wie jou betaalt.",
-      "toPayDescription": "Elk segment laat zien aan wie je moet betalen."
+      "toReceiveDescription": "Elk segment laat zien wie aan deze deelnemer betaalt.",
+      "toPayDescription": "Elk segment laat zien aan wie deze deelnemer betaalt.",
+      "participantReceives": "<strong>{name}</strong> ontvangt",
+      "participantPays": "<strong>{name}</strong> betaalt",
+      "fromParticipant": "van <strong>{name}</strong>",
+      "toParticipant": "aan <strong>{name}</strong>"
     },
     "view": {
       "label": "Weergave",
