@@ -923,7 +923,8 @@
       "switchToItemizedDescription": "Editing item participants changes Split between to Itemized and replaces the participant split you configured.",
       "switchToItemizedConfirm": "Switch to itemized",
       "showItems": "Show items",
-      "hideItems": "Hide items"
+      "hideItems": "Hide items",
+      "participantValueLabel": "Split value for {name}"
     },
     "leaveItemized": {
       "title": "Switch split mode?",
@@ -939,7 +940,12 @@
       "load": "Load",
       "save": "Save"
     },
-    "scanReceipt": "Scan receipt with AI"
+    "scanReceipt": "Scan receipt with AI",
+    "participantAmountLabel": "Amount for {name}",
+    "participantPercentageLabel": "Percentage for {name}",
+    "participantSharesLabel": "Shares for {name}",
+    "decreaseShares": "Decrease shares for {name}",
+    "increaseShares": "Increase shares for {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",

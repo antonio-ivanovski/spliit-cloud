@@ -760,7 +760,8 @@
       "switchToItemizedDescription": "Editar els participants d’un article canvia «Repartit entre» a «Per articles» i substitueix el repartiment de participants configurat.",
       "switchToItemizedConfirm": "Canvia a per articles",
       "showItems": "Mostra els articles",
-      "hideItems": "Amaga els articles"
+      "hideItems": "Amaga els articles",
+      "participantValueLabel": "Valor dividit per a {name}"
     },
     "leaveItemized": {
       "title": "Vols canviar el mode de repartiment?",
@@ -776,7 +777,12 @@
       "load": "Carregar",
       "save": "Desar"
     },
-    "scanReceipt": "Escaneja el tiquet amb IA"
+    "scanReceipt": "Escaneja el tiquet amb IA",
+    "participantAmountLabel": "Quantitat per a {name}",
+    "participantPercentageLabel": "Percentatge de {name}",
+    "participantSharesLabel": "Parts de {name}",
+    "decreaseShares": "Disminueix les parts de {name}",
+    "increaseShares": "Augmenta les parts de {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",

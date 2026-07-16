@@ -884,7 +884,8 @@
       "switchToItemizedDescription": "Уредувањето на учесниците во ставка го менува начинот во детална поделба и ја заменува поставената поделба меѓу учесниците.",
       "switchToItemizedConfirm": "Префрли на ставки",
       "showItems": "Прикажи ставки",
-      "hideItems": "Скриј ставки"
+      "hideItems": "Скриј ставки",
+      "participantValueLabel": "Вредност на поделбата за {name}"
     },
     "leaveItemized": {
       "title": "Да се смени начинот на поделба?",
@@ -900,7 +901,12 @@
       "load": "Вчитај",
       "save": "Зачувај"
     },
-    "scanReceipt": "Скенирајте сметка со ВИ"
+    "scanReceipt": "Скенирајте сметка со ВИ",
+    "participantAmountLabel": "Износ за {name}",
+    "participantPercentageLabel": "Процент за {name}",
+    "participantSharesLabel": "Број на удели за {name}",
+    "decreaseShares": "Намали ги уделите на {name}",
+    "increaseShares": "Зголеми ги уделите на {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Избриши документ",

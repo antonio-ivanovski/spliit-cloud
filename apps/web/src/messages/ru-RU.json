@@ -767,7 +767,8 @@
       "switchToItemizedDescription": "Редактирование участников позиции изменит «Оплачено за» на «По позициям» и заменит настроенное вами распределение «Оплачено за».",
       "switchToItemizedConfirm": "Перейти к позициям",
       "showItems": "Показать позиции",
-      "hideItems": "Скрыть позиции"
+      "hideItems": "Скрыть позиции",
+      "participantValueLabel": "Значение распределения для {name}"
     },
     "leaveItemized": {
       "title": "Изменить способ распределения?",
@@ -783,7 +784,12 @@
       "load": "Загрузить",
       "save": "Сохранить"
     },
-    "scanReceipt": "Сканировать чек с помощью ИИ"
+    "scanReceipt": "Сканировать чек с помощью ИИ",
+    "participantAmountLabel": "Сумма для {name}",
+    "participantPercentageLabel": "Процент для {name}",
+    "participantSharesLabel": "Количество долей для {name}",
+    "decreaseShares": "Уменьшить количество долей для {name}",
+    "increaseShares": "Увеличить количество долей для {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Удалить документ",

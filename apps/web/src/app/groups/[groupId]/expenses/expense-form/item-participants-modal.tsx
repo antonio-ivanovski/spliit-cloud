@@ -12,7 +12,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { calculateShare } from '@/lib/totals'
-import { amountAsMinorUnits } from '@/lib/utils'
+import { amountAsMinorUnits, cn } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
   Currency,
@@ -20,6 +20,7 @@ import type {
   ExpenseFormItemValues,
   SplitMode,
 } from '@spliit/domain'
+import { Minus, Plus } from 'lucide-react'
 import { useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +32,10 @@ import {
 } from './currency-utils'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
-import { convertParticipantShares } from './split-mode-conversions'
+import {
+  buildEqualParticipantRows,
+  convertParticipantShares,
+} from './split-mode-conversions'
 import { PaidForSplitOptionCards } from './split-option-cards'
 
 type GroupShape = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -119,11 +123,12 @@ export function ItemParticipantsModal(props: {
       ...prev,
       paidFor: allSelected
         ? []
-        : group.participants.map((p) => ({
-            participant: p.id,
-            shares:
-              prev.paidFor.find((f) => f.participant === p.id)?.shares ?? 1,
-          })),
+        : buildEqualParticipantRows({
+            participantIds: group.participants.map((p) => p.id),
+            splitMode: prev.splitMode,
+            targetAmount: itemTotal,
+            currency: groupCurrency,
+          }),
     }))
   }
 
@@ -145,11 +150,13 @@ export function ItemParticipantsModal(props: {
     const sanitized = sanitizer(rawValue)
     setDraft((prev) => ({
       ...prev,
-      paidFor: prev.paidFor.map((p) =>
-        p.participant === participantId
-          ? { ...p, shares: Number(sanitized) || 0 }
-          : p,
-      ),
+      paidFor:
+        Number(sanitized) > 0
+          ? [
+              ...prev.paidFor.filter((p) => p.participant !== participantId),
+              { participant: participantId, shares: Number(sanitized) },
+            ]
+          : prev.paidFor.filter((p) => p.participant !== participantId),
     }))
   }
 
@@ -223,34 +230,81 @@ export function ItemParticipantsModal(props: {
                 ) : undefined
               }
               shareInput={
-                mode !== 'EVENLY' && checked ? (
-                  <div className="flex items-center justify-end gap-1">
+                mode !== 'EVENLY' ? (
+                  <div className="flex items-center justify-end gap-0.5">
+                    {mode === 'BY_SHARES' && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="size-8 shrink-0"
+                        disabled={readOnly || !checked}
+                        aria-label={t('decreaseShares', {
+                          name: participant.name,
+                        })}
+                        onClick={() =>
+                          handleShareChange(
+                            participant.id,
+                            String(Math.max(0, Number(row?.shares ?? 0) - 1)),
+                          )
+                        }
+                      >
+                        <Minus className="size-4" aria-hidden="true" />
+                      </Button>
+                    )}
                     <span className="text-sm">
                       {mode === 'BY_AMOUNT' && groupCurrency.symbol}
                     </span>
-                    <Input
-                      className="-my-2 w-[80px] shrink-0 text-right text-base tabular-nums"
-                      type="text"
-                      disabled={readOnly}
-                      value={String(row?.shares ?? '')}
-                      onChange={(e) =>
-                        handleShareChange(participant.id, e.target.value)
-                      }
-                      inputMode={match(mode)
-                        .with('BY_PERCENTAGE', () => 'decimal' as const)
-                        .with('BY_SHARES', () => 'numeric' as const)
-                        .otherwise(() => 'decimal' as const)}
-                      step={match(mode)
-                        .with('BY_PERCENTAGE', () => 0.01)
-                        .with('BY_SHARES', () => 1)
-                        .otherwise(() => 10 ** -groupCurrency.decimal_digits)}
-                    />
-                    <span className="text-sm">
-                      {match(mode)
-                        .with('BY_SHARES', () => '#')
-                        .with('BY_PERCENTAGE', () => '%')
-                        .otherwise(() => '')}
-                    </span>
+                    <div className="relative">
+                      <Input
+                        className={cn(
+                          '-my-2 w-[72px] shrink-0 px-2 text-right text-base tabular-nums',
+                          mode === 'BY_PERCENTAGE' && 'pr-5',
+                        )}
+                        type="text"
+                        disabled={readOnly}
+                        value={String(row?.shares ?? '')}
+                        aria-label={t('items.participantValueLabel', {
+                          name: participant.name,
+                        })}
+                        onChange={(e) =>
+                          handleShareChange(participant.id, e.target.value)
+                        }
+                        inputMode={match(mode)
+                          .with('BY_PERCENTAGE', () => 'decimal' as const)
+                          .with('BY_SHARES', () => 'numeric' as const)
+                          .otherwise(() => 'decimal' as const)}
+                        step={match(mode)
+                          .with('BY_PERCENTAGE', () => 0.01)
+                          .with('BY_SHARES', () => 1)
+                          .otherwise(() => 10 ** -groupCurrency.decimal_digits)}
+                      />
+                      {mode === 'BY_PERCENTAGE' && (
+                        <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs text-muted-foreground">
+                          %
+                        </span>
+                      )}
+                    </div>
+                    {mode === 'BY_SHARES' && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="size-8 shrink-0"
+                        disabled={readOnly}
+                        aria-label={t('increaseShares', {
+                          name: participant.name,
+                        })}
+                        onClick={() =>
+                          handleShareChange(
+                            participant.id,
+                            String(Number(row?.shares ?? 0) + 1),
+                          )
+                        }
+                      >
+                        <Plus className="size-4" aria-hidden="true" />
+                      </Button>
+                    )}
                   </div>
                 ) : undefined
               }

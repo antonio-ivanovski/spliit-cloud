@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  buildEqualParticipantRows,
   convertParticipantShares,
   gcd,
   type ParticipantRow,
@@ -32,6 +33,66 @@ describe('gcd', () => {
   it('returns 1 when either argument is 0', () => {
     expect(gcd(0, 5)).toBe(1)
     expect(gcd(5, 0)).toBe(1)
+  })
+})
+
+describe('buildEqualParticipantRows', () => {
+  const participantIds = ['a', 'b', 'c']
+
+  it('creates equal percentage rows with residual correction', () => {
+    const result = buildEqualParticipantRows({
+      participantIds,
+      splitMode: 'BY_PERCENTAGE',
+      targetAmount: 0,
+    })
+    expect(result.map((r) => r.shares)).toEqual([33.33, 33.33, 33.34])
+  })
+
+  it('creates equal amount rows using currency precision', () => {
+    const result = buildEqualParticipantRows({
+      participantIds,
+      splitMode: 'BY_AMOUNT',
+      targetAmount: 10,
+      currency: { decimal_digits: 2 },
+    })
+    expect(result.map((r) => r.shares)).toEqual([3.33, 3.33, 3.34])
+  })
+
+  it('uses one share for evenly and weighted modes', () => {
+    expect(
+      buildEqualParticipantRows({
+        participantIds,
+        splitMode: 'EVENLY',
+        targetAmount: 100,
+      }).map((r) => r.shares),
+    ).toEqual([1, 1, 1])
+    expect(
+      buildEqualParticipantRows({
+        participantIds,
+        splitMode: 'BY_SHARES',
+        targetAmount: 100,
+      }).map((r) => r.shares),
+    ).toEqual([1, 1, 1])
+  })
+
+  it('does not create zero-value rows when the target cannot cover everyone', () => {
+    const result = buildEqualParticipantRows({
+      participantIds: ['a', 'b'],
+      splitMode: 'BY_AMOUNT',
+      targetAmount: 1,
+      currency: { decimal_digits: 0 },
+    })
+    expect(result).toEqual([{ participant: 'b', shares: 1 }])
+  })
+
+  it('keeps the sign for negative amount distributions', () => {
+    const result = buildEqualParticipantRows({
+      participantIds: ['a', 'b'],
+      splitMode: 'BY_AMOUNT',
+      targetAmount: -10,
+      currency: { decimal_digits: 2 },
+    })
+    expect(result.map((r) => r.shares)).toEqual([-5, -5])
   })
 })
 

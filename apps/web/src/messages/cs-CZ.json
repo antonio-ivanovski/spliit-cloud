@@ -767,7 +767,8 @@
       "switchToItemizedDescription": "Úpravou účastníků položky přepnete na položkové rozdělení a nahradíte nastavené rozdělení mezi účastníky.",
       "switchToItemizedConfirm": "Přepnout na položky",
       "showItems": "Zobrazit položky",
-      "hideItems": "Skrýt položky"
+      "hideItems": "Skrýt položky",
+      "participantValueLabel": "Hodnota rozdělení pro {name}"
     },
     "leaveItemized": {
       "title": "Změnit způsob rozdělení?",
@@ -783,7 +784,12 @@
       "load": "Načíst",
       "save": "Uložit"
     },
-    "scanReceipt": "Naskenovat účtenku pomocí AI"
+    "scanReceipt": "Naskenovat účtenku pomocí AI",
+    "participantAmountLabel": "Částka pro {name}",
+    "participantPercentageLabel": "Procento pro {name}",
+    "participantSharesLabel": "Počet podílů pro {name}",
+    "decreaseShares": "Snížit počet podílů u {name}",
+    "increaseShares": "Zvýšit počet podílů u {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",

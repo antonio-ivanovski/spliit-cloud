@@ -760,7 +760,8 @@
       "switchToItemizedDescription": "Editarea participanților unui articol schimbă Plătit pentru în Pe articole și înlocuiește împărțirea Plătit pentru configurată.",
       "switchToItemizedConfirm": "Comută la pe articole",
       "showItems": "Afișează elementele",
-      "hideItems": "Ascunde elementele"
+      "hideItems": "Ascunde elementele",
+      "participantValueLabel": "Valoare împărțită pentru {name}"
     },
     "leaveItemized": {
       "title": "Schimbi modul de împărțire?",
@@ -776,7 +777,12 @@
       "load": "Încarcă",
       "save": "Salvează"
     },
-    "scanReceipt": "Scanează bonul cu IA"
+    "scanReceipt": "Scanează bonul cu IA",
+    "participantAmountLabel": "Sumă pentru {name}",
+    "participantPercentageLabel": "Procentaj pentru {name}",
+    "participantSharesLabel": "Părți pentru {name}",
+    "decreaseShares": "Micșorează părțile lui {name}",
+    "increaseShares": "Mărește părțile lui {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",

@@ -746,7 +746,8 @@
       "switchToItemizedDescription": "編輯項目參與者會將“分攤給”改為“按項目分攤”，並替換已設置的參與者分攤。",
       "switchToItemizedConfirm": "切換為逐項",
       "showItems": "顯示項目",
-      "hideItems": "隱藏項目"
+      "hideItems": "隱藏項目",
+      "participantValueLabel": "{name} 的分攤值"
     },
     "leaveItemized": {
       "title": "切換分攤方式？",
@@ -762,7 +763,12 @@
       "load": "載入",
       "save": "儲存"
     },
-    "scanReceipt": "使用 AI 掃描收據"
+    "scanReceipt": "使用 AI 掃描收據",
+    "participantAmountLabel": "{name} 的金額",
+    "participantPercentageLabel": "{name} 的百分比",
+    "participantSharesLabel": "{name} 的份額",
+    "decreaseShares": "減少 {name} 的份額",
+    "increaseShares": "增加 {name} 的份額"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",

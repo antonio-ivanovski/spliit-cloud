@@ -1,5 +1,5 @@
-import { ParticipantAvatar } from '@/components/participant-avatar'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
+import { ParticipantSelector } from '@/components/participant-selector'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,13 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { FormField, FormItem, FormMessage } from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
@@ -26,7 +19,10 @@ import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { PaidByRow } from './paid-by-row'
-import { convertParticipantShares } from './split-mode-conversions'
+import {
+  buildEqualParticipantRows,
+  convertParticipantShares,
+} from './split-mode-conversions'
 import {
   PaidBySplitOptionCards,
   type PaidBySplitOption,
@@ -105,12 +101,12 @@ export function PaidByCard(props: {
     const allSelected = currentPaidByList.length === group.participants.length
     const newPaidByList = allSelected
       ? []
-      : group.participants.map((p) => ({
-          participant: p.id,
-          shares:
-            currentPaidByList.find((pb) => pb.participant === p.id)?.shares ??
-            1,
-        }))
+      : buildEqualParticipantRows({
+          participantIds: group.participants.map((p) => p.id),
+          splitMode: paidBySplitMode as Exclude<SplitMode, 'ITEMIZED'>,
+          targetAmount: Number(amount) || 0,
+          currency: payerCurrency,
+        })
     form.setValue('paidByList', newPaidByList, {
       shouldDirty: true,
       shouldTouch: true,
@@ -126,13 +122,12 @@ export function PaidByCard(props: {
           name="paidByList"
           render={() => {
             const selectedPayer = paidByList[0]?.participant ?? ''
-            const selectedParticipant = group.participants.find(
-              (p) => p.id === selectedPayer,
-            )
             return (
               <FormItem>
-                <Select
-                  value={selectedPayer}
+                <ParticipantSelector
+                  participants={group.participants}
+                  mode="single"
+                  defaultValue={selectedPayer}
                   onValueChange={(value) => {
                     form.setValue('paidByList', singlePayerPaidByList(value), {
                       shouldDirty: true,
@@ -141,43 +136,10 @@ export function PaidByCard(props: {
                     })
                   }}
                   disabled={readOnly}
-                >
-                  <SelectTrigger>
-                    {selectedParticipant ? (
-                      <div className="flex items-center gap-2">
-                        <ParticipantAvatar
-                          participant={selectedParticipant}
-                          size="xs"
-                        />
-                        <span>{selectedParticipant.name}</span>
-                      </div>
-                    ) : (
-                      <SelectValue
-                        placeholder={t('Expense.paidByField.placeholder')}
-                      />
-                    )}
-                  </SelectTrigger>
-                  <SelectContent>
-                    {group.participants.map(
-                      ({ id, name, pending, account }) => (
-                        <SelectItem key={id} value={id}>
-                          <span className="flex items-center gap-2">
-                            <ParticipantAvatar
-                              participant={{ id, name, account }}
-                              size="xs"
-                            />
-                            <span>{name}</span>
-                            {pending && (
-                              <span className="text-xs text-muted-foreground">
-                                {t('participant.pending')}
-                              </span>
-                            )}
-                          </span>
-                        </SelectItem>
-                      ),
-                    )}
-                  </SelectContent>
-                </Select>
+                  className="w-full"
+                  singlePlaceholder={t('Expense.paidByField.placeholder')}
+                  mobileTitle={t(`${sExpense}.paidByField.label`)}
+                />
                 <FormMessage />
               </FormItem>
             )

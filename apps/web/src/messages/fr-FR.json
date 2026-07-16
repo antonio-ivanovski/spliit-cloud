@@ -760,7 +760,8 @@
       "switchToItemizedDescription": "Modifier les participants d'un article change Payé pour en Par articles et remplace la répartition Payé pour que vous aviez configurée.",
       "switchToItemizedConfirm": "Passer aux articles",
       "showItems": "Afficher les éléments",
-      "hideItems": "Masquer les éléments"
+      "hideItems": "Masquer les éléments",
+      "participantValueLabel": "Valeur répartie pour {name}"
     },
     "leaveItemized": {
       "title": "Changer de mode de répartition ?",
@@ -776,7 +777,12 @@
       "load": "Charger",
       "save": "Sauvegarder"
     },
-    "scanReceipt": "Analyser le reçu avec l’IA"
+    "scanReceipt": "Analyser le reçu avec l’IA",
+    "participantAmountLabel": "Montant pour {name}",
+    "participantPercentageLabel": "Pourcentage pour {name}",
+    "participantSharesLabel": "Parts de {name}",
+    "decreaseShares": "Diminuer les parts de {name}",
+    "increaseShares": "Augmenter les parts de {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",

@@ -760,7 +760,8 @@
       "switchToItemizedDescription": "Elementuaren parte-hartzaileak editatzeak Norentzat ordaindua Elementuka bihurtzen du eta konfiguratutako norentzat ordaindua banaketa ordezkatzen du.",
       "switchToItemizedConfirm": "Aldatu elementukora",
       "showItems": "Erakutsi elementuak",
-      "hideItems": "Ezkutatu elementuak"
+      "hideItems": "Ezkutatu elementuak",
+      "participantValueLabel": "{name}(r)entzako banatutako balioa"
     },
     "leaveItemized": {
       "title": "Banaketa-modua aldatu?",
@@ -776,7 +777,12 @@
       "load": "Kargatu",
       "save": "Gorde"
     },
-    "scanReceipt": "Eskaneatu ordainagiria IArekin"
+    "scanReceipt": "Eskaneatu ordainagiria IArekin",
+    "participantAmountLabel": "{name}(r)entzako zenbatekoa",
+    "participantPercentageLabel": "{name}(r)en ehunekoa",
+    "participantSharesLabel": "{name}(r)en zatiak",
+    "decreaseShares": "{name}(r)en zatiak murriztu",
+    "increaseShares": "{name}(r)en zatiak handitu"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",

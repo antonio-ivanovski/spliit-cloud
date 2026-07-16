@@ -760,7 +760,8 @@
       "switchToItemizedDescription": "Editar los participantes de un artículo cambia «Dividido entre» a «Por artículos» y sustituye la división configurada.",
       "switchToItemizedConfirm": "Cambiar a por artículos",
       "showItems": "Mostrar artículos",
-      "hideItems": "Ocultar artículos"
+      "hideItems": "Ocultar artículos",
+      "participantValueLabel": "Valor dividido para {name}"
     },
     "leaveItemized": {
       "title": "¿Cambiar el modo de división?",
@@ -776,7 +777,12 @@
       "load": "Cargar",
       "save": "Guardar"
     },
-    "scanReceipt": "Escanear recibo con IA"
+    "scanReceipt": "Escanear recibo con IA",
+    "participantAmountLabel": "Cantidad para {name}",
+    "participantPercentageLabel": "Porcentaje de {name}",
+    "participantSharesLabel": "Partes de {name}",
+    "decreaseShares": "Disminuir las partes de {name}",
+    "increaseShares": "Aumentar las partes de {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",

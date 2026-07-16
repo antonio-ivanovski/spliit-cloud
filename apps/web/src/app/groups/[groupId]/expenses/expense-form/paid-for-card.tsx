@@ -29,7 +29,11 @@ import { LeaveItemizedDialog } from './leave-itemized-dialog'
 import { PaidForRow } from './paid-for-row'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
-import { convertParticipantShares, roundTo } from './split-mode-conversions'
+import {
+  buildEqualParticipantRows,
+  convertParticipantShares,
+  roundTo,
+} from './split-mode-conversions'
 import { PaidForSplitOptionCards } from './split-option-cards'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -353,12 +357,12 @@ export function PaidForCard(props: {
     const allSelected = currentPaidFor.length === group.participants.length
     const newPaidFor = allSelected
       ? []
-      : group.participants.map((p) => ({
-          participant: p.id,
-          shares:
-            currentPaidFor.find((pfor) => pfor.participant === p.id)?.shares ??
-            1,
-        }))
+      : buildEqualParticipantRows({
+          participantIds: group.participants.map((p) => p.id),
+          splitMode: splitMode as ItemSplitMode,
+          targetAmount: Number(amount) || 0,
+          currency: conversionRequired ? originalCurrency : groupCurrency,
+        })
     form.setValue('paidFor', newPaidFor, {
       shouldDirty: true,
       shouldTouch: true,
@@ -429,9 +433,6 @@ export function PaidForCard(props: {
         paidByCount={paidFor.length}
         dataTestId="paid-for-distribution-footer"
       />
-      <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
-        {t('paidForItemizedEntryHint')}
-      </p>
     </>
   )
 
@@ -470,11 +471,6 @@ export function PaidForCard(props: {
             renderContent={renderPaidForContent}
             readOnly={readOnly}
           />
-          {splitMode === 'ITEMIZED' && (
-            <p className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
-              {t('paidForItemizedActiveHint')}
-            </p>
-          )}
         </div>
 
         {splitMode === 'ITEMIZED' && (

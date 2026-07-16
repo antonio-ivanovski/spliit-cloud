@@ -95,8 +95,11 @@ export function ParticipantDistributionFooter({
   return (
     <div
       data-testid={dataTestId}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
       className={cn(
-        'mt-2 text-sm font-medium flex justify-end items-baseline gap-2',
+        'mt-3 flex items-baseline justify-between gap-2 rounded-md bg-muted/50 px-3 py-2 text-sm font-medium',
         colorClass,
       )}
     >

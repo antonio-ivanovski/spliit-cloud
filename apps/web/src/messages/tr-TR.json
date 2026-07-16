@@ -753,7 +753,8 @@
       "switchToItemizedDescription": "Kalem katılımcılarını düzenlemek, Arasında bölüştürülen seçeneğini Kalem bazında olarak değiştirir ve yapılandırdığınız katılımcı bölüşümünün yerini alır.",
       "switchToItemizedConfirm": "Kalemlere göre geç",
       "showItems": "Öğeleri göster",
-      "hideItems": "Öğeleri gizle"
+      "hideItems": "Öğeleri gizle",
+      "participantValueLabel": "{name} için paylaşım değeri"
     },
     "leaveItemized": {
       "title": "Bölüşüm yöntemi değiştirilsin mi?",
@@ -769,7 +770,12 @@
       "load": "Yükle",
       "save": "Kaydet"
     },
-    "scanReceipt": "Makbuzu yapay zekâ ile tara"
+    "scanReceipt": "Makbuzu yapay zekâ ile tara",
+    "participantAmountLabel": "{name} için tutar",
+    "participantPercentageLabel": "{name} için yüzde",
+    "participantSharesLabel": "{name} için pay",
+    "decreaseShares": "{name} için payları azalt",
+    "increaseShares": "{name} için payları artır"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",

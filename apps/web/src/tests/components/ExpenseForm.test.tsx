@@ -1134,16 +1134,16 @@ describe('ExpenseForm', () => {
     })
     await user.click(evenlyRadio)
 
-    // Now the multi-payer breakdown should appear with checkboxes for each
-    // participant. The "Paid by" header should also now have the "Select all"
+    // Now the multi-payer breakdown should appear with participant toggles.
+    // The "Paid by" header should also now have the "Select all"
     // / "Select none" button rendered alongside the title.
     expect(evenlyRadio).toBeChecked()
     expect(screen.getByText('Select all')).toBeInTheDocument()
 
-    // Each participant row should have a checkbox in the multi-payer view
-    const participantCheckboxes = screen.getAllByRole('checkbox')
-    // At least 2 payer checkboxes (Alice + Bob) + the Save as default checkbox = 3
-    expect(participantCheckboxes.length).toBeGreaterThanOrEqual(3)
+    const participantToggles = document.querySelectorAll(
+      '[data-id] button[aria-pressed]',
+    )
+    expect(participantToggles.length).toBeGreaterThanOrEqual(2)
   })
 
   it('edit mode of a single-payer expense shows the single-payer dropdown', () => {
@@ -1957,9 +1957,9 @@ describe('ParticipantShareRow click behavior', () => {
     expect(aliceRow).toBeTruthy()
     expect(aliceRow).toHaveClass('w-[calc(100%+3rem)]')
     expect(aliceRow).toHaveTextContent('Alice')
-    expect(aliceRow).toHaveTextContent('#')
     expect(aliceRow?.querySelector('input')).toBeTruthy()
-    expect(aliceRow?.querySelector('button[data-state]')).toBeTruthy()
+    expect(aliceRow).not.toHaveTextContent('#')
+    expect(aliceRow?.querySelector('button[aria-pressed]')).toBeTruthy()
   })
 
   it('clicking a participant row (name text) toggles the selection', () => {
@@ -1981,13 +1981,14 @@ describe('ParticipantShareRow click behavior', () => {
       />,
     )
 
-    // Both checkboxes should be checked initially (both in paidFor)
-    const checkboxes = screen.getAllByRole('checkbox')
-    const paidForCheckboxes = checkboxes.filter(
-      (cb) => cb.getAttribute('data-state') !== undefined,
-    )
-    const initiallyChecked = paidForCheckboxes.filter(
-      (cb) => cb.getAttribute('data-state') === 'checked',
+    const toggles = () =>
+      Array.from(
+        document.querySelectorAll<HTMLButtonElement>(
+          '[data-id] button[aria-pressed]',
+        ),
+      )
+    const initiallyChecked = toggles().filter(
+      (toggle) => toggle.getAttribute('aria-pressed') === 'true',
     )
     expect(initiallyChecked.length).toBeGreaterThanOrEqual(2)
 
@@ -1999,9 +2000,8 @@ describe('ParticipantShareRow click behavior', () => {
     fireEvent.click(row!)
 
     // After clicking Alice's row, she should be toggled off
-    const checkboxesAfter = screen.getAllByRole('checkbox')
-    const checkedAfter = checkboxesAfter.filter(
-      (cb) => cb.getAttribute('data-state') === 'checked',
+    const checkedAfter = toggles().filter(
+      (toggle) => toggle.getAttribute('aria-pressed') === 'true',
     )
     expect(checkedAfter.length).toBe(initiallyChecked.length - 1)
   })
@@ -2032,8 +2032,8 @@ describe('ParticipantShareRow click behavior', () => {
     expect(rowInput).toBeTruthy()
     const initialChecked = rowInput!
       .closest('[data-id]')
-      ?.querySelector('button[data-state]')
-      ?.getAttribute('data-state')
+      ?.querySelector('button[aria-pressed]')
+      ?.getAttribute('aria-pressed')
 
     // Click on the input to focus it (should NOT toggle checkbox)
     await user.click(rowInput!)
@@ -2041,11 +2041,11 @@ describe('ParticipantShareRow click behavior', () => {
     // Verify the input has focus
     expect(document.activeElement).toBe(rowInput)
 
-    // Verify checkbox state has NOT changed
+    // Verify selection state has NOT changed
     const checkboxAfter = rowInput!
       .closest('[data-id]')
-      ?.querySelector('button[data-state]')
-      ?.getAttribute('data-state')
+      ?.querySelector('button[aria-pressed]')
+      ?.getAttribute('aria-pressed')
     expect(checkboxAfter).toBe(initialChecked)
   })
 

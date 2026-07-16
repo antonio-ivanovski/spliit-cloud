@@ -746,7 +746,8 @@
       "switchToItemizedDescription": "Mengedit peserta item akan mengubah Dibagi antara menjadi Per item dan menggantikan pembagian peserta yang telah Anda atur.",
       "switchToItemizedConfirm": "Beralih ke per item",
       "showItems": "Tampilkan item",
-      "hideItems": "Sembunyikan item"
+      "hideItems": "Sembunyikan item",
+      "participantValueLabel": "Nilai pembagian untuk {name}"
     },
     "leaveItemized": {
       "title": "Ganti metode pembagian?",
@@ -762,7 +763,12 @@
       "load": "Muat",
       "save": "Simpan"
     },
-    "scanReceipt": "Pindai struk dengan AI"
+    "scanReceipt": "Pindai struk dengan AI",
+    "participantAmountLabel": "Jumlah untuk {name}",
+    "participantPercentageLabel": "Persentase untuk {name}",
+    "participantSharesLabel": "Porsi untuk {name}",
+    "decreaseShares": "Kurangi porsi untuk {name}",
+    "increaseShares": "Tambah porsi untuk {name}"
   },
   "Currencies": {
     "search": "Cari mata uang...",

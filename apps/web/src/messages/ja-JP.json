@@ -746,7 +746,8 @@
       "switchToItemizedDescription": "品目の参加者を編集すると、分割対象が「品目別」に変わり、設定済みの参加者ごとの分割は置き換えられます。",
       "switchToItemizedConfirm": "項目別に切り替え",
       "showItems": "項目を表示",
-      "hideItems": "項目を非表示"
+      "hideItems": "項目を非表示",
+      "participantValueLabel": "{name}の分割値"
     },
     "leaveItemized": {
       "title": "分割方法を変更しますか？",
@@ -762,7 +763,12 @@
       "load": "読込",
       "save": "保存"
     },
-    "scanReceipt": "AIでレシートをスキャン"
+    "scanReceipt": "AIでレシートをスキャン",
+    "participantAmountLabel": "{name}の金額",
+    "participantPercentageLabel": "{name}の割合",
+    "participantSharesLabel": "{name}のシェア",
+    "decreaseShares": "{name}のシェアを減らす",
+    "increaseShares": "{name}のシェアを増やす"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",

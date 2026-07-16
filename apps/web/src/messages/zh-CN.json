@@ -746,7 +746,8 @@
       "switchToItemizedDescription": "编辑项目参与者会将“分摊给”改为“按项目分摊”，并替换已设置的参与者分摊。",
       "switchToItemizedConfirm": "切换为按项目",
       "showItems": "显示项目",
-      "hideItems": "隐藏项目"
+      "hideItems": "隐藏项目",
+      "participantValueLabel": "{name} 的分摊值"
     },
     "leaveItemized": {
       "title": "切换分摊方式？",
@@ -762,7 +763,12 @@
       "load": "载入",
       "save": "保存"
     },
-    "scanReceipt": "使用 AI 扫描收据"
+    "scanReceipt": "使用 AI 扫描收据",
+    "participantAmountLabel": "{name} 的金额",
+    "participantPercentageLabel": "{name} 的百分比",
+    "participantSharesLabel": "{name} 的份额",
+    "decreaseShares": "减少 {name} 的份额",
+    "increaseShares": "增加 {name} 的份额"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",

@@ -753,7 +753,8 @@
       "switchToItemizedDescription": "Als je deelnemers van een item bewerkt, wordt de verdeling gewijzigd naar Per item en wordt de ingestelde deelnemersverdeling vervangen.",
       "switchToItemizedConfirm": "Overschakelen naar per item",
       "showItems": "Items tonen",
-      "hideItems": "Items verbergen"
+      "hideItems": "Items verbergen",
+      "participantValueLabel": "Verdeelwaarde voor {name}"
     },
     "leaveItemized": {
       "title": "Verdeelmethode wijzigen?",
@@ -769,7 +770,12 @@
       "load": "Laden",
       "save": "Opslaan"
     },
-    "scanReceipt": "Bon scannen met AI"
+    "scanReceipt": "Bon scannen met AI",
+    "participantAmountLabel": "Bedrag voor {name}",
+    "participantPercentageLabel": "Percentage voor {name}",
+    "participantSharesLabel": "Aantal delen voor {name}",
+    "decreaseShares": "Aantal delen voor {name} verlagen",
+    "increaseShares": "Aantal delen voor {name} verhogen"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",

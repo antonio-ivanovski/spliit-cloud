@@ -760,7 +760,8 @@
       "switchToItemizedDescription": "Modificare i partecipanti della voce cambia Pagato per in Per voci e sostituisce la suddivisione Pagato per configurata.",
       "switchToItemizedConfirm": "Passa a per voci",
       "showItems": "Mostra elementi",
-      "hideItems": "Nascondi elementi"
+      "hideItems": "Nascondi elementi",
+      "participantValueLabel": "Valore suddiviso per {name}"
     },
     "leaveItemized": {
       "title": "Cambiare modalità di divisione?",
@@ -776,7 +777,12 @@
       "load": "Carica",
       "save": "Salva"
     },
-    "scanReceipt": "Scansiona la ricevuta con l’IA"
+    "scanReceipt": "Scansiona la ricevuta con l’IA",
+    "participantAmountLabel": "Importo per {name}",
+    "participantPercentageLabel": "Percentuale per {name}",
+    "participantSharesLabel": "Quote di {name}",
+    "decreaseShares": "Diminuisci le quote di {name}",
+    "increaseShares": "Aumenta le quote di {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",

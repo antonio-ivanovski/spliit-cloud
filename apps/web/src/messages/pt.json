@@ -862,7 +862,8 @@
       "switchToItemizedDescription": "Editar os participantes do item muda Pago para para Por itens e substitui a divisão de Pago para que configuraste.",
       "switchToItemizedConfirm": "Mudar para por itens",
       "showItems": "Mostrar itens",
-      "hideItems": "Ocultar itens"
+      "hideItems": "Ocultar itens",
+      "participantValueLabel": "Valor dividido para {name}"
     },
     "leaveItemized": {
       "title": "Alterar o modo de divisão?",
@@ -878,7 +879,12 @@
       "load": "Carregar",
       "save": "Guardar"
     },
-    "scanReceipt": "Digitaliza o recibo com IA"
+    "scanReceipt": "Digitaliza o recibo com IA",
+    "participantAmountLabel": "Montante para {name}",
+    "participantPercentageLabel": "Percentagem para {name}",
+    "participantSharesLabel": "Partes de {name}",
+    "decreaseShares": "Diminuir partes de {name}",
+    "increaseShares": "Aumentar partes de {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",

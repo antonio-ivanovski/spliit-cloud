@@ -675,7 +675,8 @@
       "switchToItemizedDescription": "항목 참여자를 편집하면 분할 대상이 항목별 분할로 바뀌고 기존 참여자 분할 설정을 대체해요.",
       "switchToItemizedConfirm": "항목별로 전환",
       "showItems": "항목 표시",
-      "hideItems": "항목 숨기기"
+      "hideItems": "항목 숨기기",
+      "participantValueLabel": "{name}의 분할 값"
     },
     "leaveItemized": {
       "title": "분할 방식을 바꿀까요?",
@@ -691,7 +692,12 @@
       "load": "불러오기",
       "save": "저장"
     },
-    "scanReceipt": "AI로 영수증 스캔"
+    "scanReceipt": "AI로 영수증 스캔",
+    "participantAmountLabel": "{name}의 금액",
+    "participantPercentageLabel": "{name}의 비율",
+    "participantSharesLabel": "{name}의 몫",
+    "decreaseShares": "{name}의 몫 줄이기",
+    "increaseShares": "{name}의 몫 늘리기"
   },
   "Balances": {
     "title": "잔액",

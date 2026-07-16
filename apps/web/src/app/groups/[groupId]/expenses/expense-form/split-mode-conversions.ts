@@ -9,6 +9,44 @@ export type CurrencyLike = {
   decimal_digits: number
 }
 
+export function buildEqualParticipantRows(args: {
+  participantIds: string[]
+  splitMode: Exclude<SplitMode, 'ITEMIZED'>
+  targetAmount: number
+  currency?: CurrencyLike
+}): ParticipantRow[] {
+  const { participantIds, splitMode, targetAmount } = args
+  const count = participantIds.length
+  if (count === 0) return []
+
+  if (splitMode === 'BY_SHARES' || splitMode === 'EVENLY')
+    return participantIds.map((participant) => ({ participant, shares: 1 }))
+
+  const precision = args.currency?.decimal_digits ?? 2
+  const decimals = splitMode === 'BY_PERCENTAGE' ? 2 : precision
+  const target = splitMode === 'BY_PERCENTAGE' ? 100 : targetAmount
+  const sign = target < 0 ? -1 : 1
+  const unitCount = Math.max(0, Math.round(Math.abs(target) * 10 ** decimals))
+  if (unitCount === 0) {
+    return [
+      {
+        participant: participantIds[0]!,
+        shares: sign * 10 ** -decimals,
+      },
+    ]
+  }
+  const base = Math.floor(unitCount / count)
+  const remainder = unitCount % count
+  const values = participantIds.map(
+    (_, index) => base + (index >= count - remainder ? 1 : 0),
+  )
+  const unit = 10 ** -decimals
+  return participantIds.flatMap((participant, index) => {
+    const shares = roundTo(sign * values[index]! * unit, decimals)
+    return shares !== 0 ? [{ participant, shares }] : []
+  })
+}
+
 export function roundTo(value: number, decimals: number): number {
   const factor = 10 ** decimals
   return Math.round(value * factor) / factor

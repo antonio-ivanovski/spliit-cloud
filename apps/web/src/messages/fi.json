@@ -753,7 +753,8 @@
       "switchToItemizedDescription": "Kohteen osallistujien muokkaaminen vaihtaa jakotavaksi kohdekohtaisen ja korvaa määrittämäsi osallistujajaon.",
       "switchToItemizedConfirm": "Vaihda erittelykohtaiseksi",
       "showItems": "Näytä kohteet",
-      "hideItems": "Piilota kohteet"
+      "hideItems": "Piilota kohteet",
+      "participantValueLabel": "Jaon arvo henkilölle {name}"
     },
     "leaveItemized": {
       "title": "Vaihdetaanko jakotapaa?",
@@ -769,7 +770,12 @@
       "load": "Lataa",
       "save": "Tallenna"
     },
-    "scanReceipt": "Skannaa kuitti tekoälyllä"
+    "scanReceipt": "Skannaa kuitti tekoälyllä",
+    "participantAmountLabel": "Summa henkilölle {name}",
+    "participantPercentageLabel": "Prosenttiosuus henkilölle {name}",
+    "participantSharesLabel": "Osuudet henkilölle {name}",
+    "decreaseShares": "Vähennä henkilön {name} osuuksia",
+    "increaseShares": "Lisää henkilön {name} osuuksia"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",

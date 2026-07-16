@@ -767,7 +767,8 @@
       "switchToItemizedDescription": "Edycja uczestników pozycji zmieni Zapłacono za na Według pozycji i zastąpi skonfigurowany podział Zapłacono za.",
       "switchToItemizedConfirm": "Przełącz na pozycje",
       "showItems": "Pokaż pozycje",
-      "hideItems": "Ukryj pozycje"
+      "hideItems": "Ukryj pozycje",
+      "participantValueLabel": "Wartość podziału dla {name}"
     },
     "leaveItemized": {
       "title": "Zmienić sposób podziału?",
@@ -783,7 +784,12 @@
       "load": "Wczytaj",
       "save": "Zapisz"
     },
-    "scanReceipt": "Skanuj paragon za pomocą AI"
+    "scanReceipt": "Skanuj paragon za pomocą AI",
+    "participantAmountLabel": "Kwota dla {name}",
+    "participantPercentageLabel": "Procent dla {name}",
+    "participantSharesLabel": "Liczba udziałów dla {name}",
+    "decreaseShares": "Zmniejsz liczbę udziałów dla {name}",
+    "increaseShares": "Zwiększ liczbę udziałów dla {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",

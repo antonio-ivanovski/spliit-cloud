@@ -41,6 +41,7 @@ type Props = {
   onValueChange?: (participantId: string) => void
   selectedValues?: string[]
   onValueToggle?: (participantId: string) => void
+  singlePlaceholder?: string
   multiPlaceholder?: string
   disabled?: boolean
   className?: string
@@ -57,6 +58,7 @@ export function ParticipantSelector({
   onValueChange,
   selectedValues,
   onValueToggle,
+  singlePlaceholder,
   multiPlaceholder,
   disabled = false,
   className,
@@ -68,9 +70,9 @@ export function ParticipantSelector({
   const { t } = useTranslation()
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const selected =
-    participants.find((participant) => participant.id === defaultValue) ??
-    participants[0]
+  const selected = participants.find(
+    (participant) => participant.id === defaultValue,
+  )
 
   const selectedCount = selectedValues?.length ?? 0
 
@@ -79,7 +81,7 @@ export function ParticipantSelector({
       ? selectedCount > 0
         ? t('Expenses.filters.nSelected', { count: selectedCount })
         : (multiPlaceholder ?? '')
-      : (selected?.name ?? '')
+      : (selected?.name ?? singlePlaceholder ?? '')
 
   const triggerAriaLabel = mode === 'single' ? selected?.name : undefined
 
@@ -96,12 +98,15 @@ export function ParticipantSelector({
         triggerClassName,
       )}
     >
+      {mode === 'single' && selected && (
+        <ParticipantAvatar participant={selected} size="xs" className="mr-2" />
+      )}
       <span className="truncate">{triggerLabel}</span>
       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   )
 
-  if (mode === 'multi' && !isDesktop) {
+  if (!isDesktop) {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>{trigger}</DrawerTrigger>

@@ -760,7 +760,8 @@
       "switchToItemizedDescription": "עריכת המשתתפים בפריט תשנה את „פיצול בין” ל„לפי פריטים” ותחליף את חלוקת המשתתפים שהוגדרה.",
       "switchToItemizedConfirm": "לעבור לפי פריטים",
       "showItems": "הצג פריטים",
-      "hideItems": "הסתר פריטים"
+      "hideItems": "הסתר פריטים",
+      "participantValueLabel": "ערך החלוקה עבור {name}"
     },
     "leaveItemized": {
       "title": "להחליף את שיטת החלוקה?",
@@ -776,7 +777,12 @@
       "load": "טען",
       "save": "שמור"
     },
-    "scanReceipt": "סריקת קבלה באמצעות AI"
+    "scanReceipt": "סריקת קבלה באמצעות AI",
+    "participantAmountLabel": "סכום עבור {name}",
+    "participantPercentageLabel": "אחוז עבור {name}",
+    "participantSharesLabel": "חלקי השתתפות עבור {name}",
+    "decreaseShares": "הפחתת חלקי ההשתתפות של {name}",
+    "increaseShares": "הגדלת חלקי ההשתתפות של {name}"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",
