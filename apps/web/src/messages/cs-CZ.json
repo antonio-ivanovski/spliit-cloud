@@ -860,7 +860,10 @@
       "participantReceives": "<strong>{name}</strong> přijímá",
       "participantPays": "<strong>{name}</strong> platí",
       "fromParticipant": "od <strong>{name}</strong>",
-      "toParticipant": "pro <strong>{name}</strong>"
+      "toParticipant": "pro <strong>{name}</strong>",
+      "settle": "Vyrovnat",
+      "settlePaymentsBy": "Vyrovnat {count} plateb od {name}, {amount}",
+      "settlePaymentsTo": "Vyrovnat {count} plateb pro {name}, {amount}"
     },
     "view": {
       "label": "Zobrazení",
@@ -1768,7 +1771,18 @@
     "create": "Vytvořit",
     "edit": "Upravit podrobnosti",
     "creating": "Vytváření…",
-    "successToast": "Vyrovnávací platba zaznamenána"
+    "successToast": "Vyrovnávací platba zaznamenána",
+    "successToastMultiple": "Zaznamenáno {count} vyrovnávacích plateb jako jedna položka",
+    "paysMany": "{from} platí {count} lidem",
+    "receivesMany": "{to} přijímá {count} plateb",
+    "paymentsToInclude": "Platby k zahrnutí",
+    "selectionSummary": "Vybráno {count} plateb, celkem {total}",
+    "legToAria": "{from} platí {to}, {amount}",
+    "legFromAria": "{from} platí {to}, {amount}",
+    "toParticipant": "pro {name}",
+    "fromParticipant": "od {name}",
+    "createSingle": "Zaznamenat platbu",
+    "createMultiple": "Zaznamenat {count} plateb"
   },
   "Participants": {
     "search": "Hledat účastníky...",

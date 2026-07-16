@@ -853,7 +853,10 @@
       "participantReceives": "<strong>{name}</strong> מקבל/ת",
       "participantPays": "<strong>{name}</strong> משלם/ת",
       "fromParticipant": "מאת <strong>{name}</strong>",
-      "toParticipant": "אל <strong>{name}</strong>"
+      "toParticipant": "אל <strong>{name}</strong>",
+      "settle": "הסדר",
+      "settlePaymentsBy": "הסדר {count} תשלומים מ־{name}, {amount}",
+      "settlePaymentsTo": "הסדר {count} תשלומים אל {name}, {amount}"
     },
     "view": {
       "label": "תצוגה",
@@ -1751,7 +1754,18 @@
     "create": "צור",
     "edit": "ערוך פרטים",
     "creating": "יוצר…",
-    "successToast": "התשלום להסדרת היתרה נרשם"
+    "successToast": "התשלום להסדרת היתרה נרשם",
+    "successToastMultiple": "נרשמו {count} תשלומים להסדרת היתרה כרשומה אחת",
+    "paysMany": "{from} משלם/ת ל־{count} אנשים",
+    "receivesMany": "{to} מקבל/ת {count} תשלומים",
+    "paymentsToInclude": "תשלומים להכללה",
+    "selectionSummary": "נבחרו {count} תשלומים, בסך הכול {total}",
+    "legToAria": "{from} משלם/ת ל־{to}, {amount}",
+    "legFromAria": "{from} משלם/ת ל־{to}, {amount}",
+    "toParticipant": "אל {name}",
+    "fromParticipant": "מאת {name}",
+    "createSingle": "רשום תשלום",
+    "createMultiple": "רשום {count} תשלומים"
   },
   "Participants": {
     "search": "חפש משתתפים...",

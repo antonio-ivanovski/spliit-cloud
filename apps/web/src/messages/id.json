@@ -1022,7 +1022,10 @@
       "participantReceives": "<strong>{name}</strong> menerima",
       "participantPays": "<strong>{name}</strong> membayar",
       "fromParticipant": "dari <strong>{name}</strong>",
-      "toParticipant": "kepada <strong>{name}</strong>"
+      "toParticipant": "kepada <strong>{name}</strong>",
+      "settle": "Lunasi",
+      "settlePaymentsBy": "Lunasi {count} pembayaran oleh {name}, {amount}",
+      "settlePaymentsTo": "Lunasi {count} pembayaran kepada {name}, {amount}"
     },
     "view": {
       "label": "Tampilan",
@@ -1718,7 +1721,18 @@
     "create": "Buat",
     "edit": "Ubah detail",
     "creating": "Membuat…",
-    "successToast": "Pembayaran pelunasan dicatat"
+    "successToast": "Pembayaran pelunasan dicatat",
+    "successToastMultiple": "{count} pembayaran pelunasan dicatat sebagai satu entri",
+    "paysMany": "{from} membayar {count} orang",
+    "receivesMany": "{to} menerima {count} pembayaran",
+    "paymentsToInclude": "Pembayaran yang disertakan",
+    "selectionSummary": "{count} pembayaran dipilih, total {total}",
+    "legToAria": "{from} membayar {to}, {amount}",
+    "legFromAria": "{from} membayar {to}, {amount}",
+    "toParticipant": "kepada {name}",
+    "fromParticipant": "dari {name}",
+    "createSingle": "Catat pembayaran",
+    "createMultiple": "Catat {count} pembayaran"
   },
   "Participants": {
     "search": "Cari peserta...",

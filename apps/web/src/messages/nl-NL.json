@@ -846,7 +846,10 @@
       "participantReceives": "<strong>{name}</strong> ontvangt",
       "participantPays": "<strong>{name}</strong> betaalt",
       "fromParticipant": "van <strong>{name}</strong>",
-      "toParticipant": "aan <strong>{name}</strong>"
+      "toParticipant": "aan <strong>{name}</strong>",
+      "settle": "Vereffenen",
+      "settlePaymentsBy": "Vereffen {count} betalingen van {name}, {amount}",
+      "settlePaymentsTo": "Vereffen {count} betalingen aan {name}, {amount}"
     },
     "view": {
       "label": "Weergave",
@@ -1734,7 +1737,18 @@
     "create": "Maken",
     "edit": "Details bewerken",
     "creating": "Aan het maken…",
-    "successToast": "Vereffeningsbetaling vastgelegd"
+    "successToast": "Vereffeningsbetaling vastgelegd",
+    "successToastMultiple": "{count} vereffeningsbetalingen vastgelegd als één boeking",
+    "paysMany": "{from} betaalt aan {count} personen",
+    "receivesMany": "{to} ontvangt {count} betalingen",
+    "paymentsToInclude": "Op te nemen betalingen",
+    "selectionSummary": "{count} betalingen geselecteerd, totaal {total}",
+    "legToAria": "{from} betaalt aan {to}, {amount}",
+    "legFromAria": "{from} betaalt aan {to}, {amount}",
+    "toParticipant": "aan {name}",
+    "fromParticipant": "van {name}",
+    "createSingle": "Betaling vastleggen",
+    "createMultiple": "{count} betalingen vastleggen"
   },
   "Participants": {
     "search": "Deelnemers zoeken...",

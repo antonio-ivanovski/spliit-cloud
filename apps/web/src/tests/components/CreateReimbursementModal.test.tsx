@@ -150,7 +150,7 @@ describe('CreateReimbursementModal', () => {
 
     const dialog = screen.getByRole('dialog')
     expect(within(dialog).getByText('Settlement payment')).toBeInTheDocument()
-    expect(within(dialog).getByText('€25.00')).toBeInTheDocument()
+    expect(within(dialog).getAllByText('€25.00').length).toBeGreaterThan(0)
     expect(within(dialog).getByText('Alice pays Bob')).toBeInTheDocument()
     expect(within(dialog).getByText('Alice')).toBeInTheDocument()
     expect(within(dialog).getByText('Bob')).toBeInTheDocument()
@@ -240,6 +240,134 @@ describe('CreateReimbursementModal', () => {
     expect(mockMutateAsync.mock.calls[0][0].expense.conversion).toEqual({
       type: 'exchange',
       currency: 'USD',
+    })
+  })
+
+  it('records multiple recipients as one exact-amount reimbursement', async () => {
+    setupCurrentGroup({
+      participants: [
+        { id: 'alice-id', name: 'Alice' },
+        { id: 'bob-id', name: 'Bob' },
+        { id: 'carol-id', name: 'Carol' },
+      ],
+    })
+    mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
+
+    const { user } = render(
+      <CreateReimbursementModal
+        groupId="group-1"
+        settlementGroup={{
+          direction: 'pay',
+          participantId: 'alice-id',
+          legs: [
+            { from: 'alice-id', to: 'bob-id', amount: 2500 },
+            { from: 'alice-id', to: 'carol-id', amount: 1500 },
+          ],
+        }}
+        currency={EUR}
+        open={true}
+        onOpenChange={vi.fn()}
+      />,
+    )
+
+    await user.click(screen.getByTestId('reimbursement-create'))
+
+    await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1))
+    expect(mockMutateAsync.mock.calls[0][0].expense).toMatchObject({
+      amount: 4000,
+      paidBySplitMode: 'BY_AMOUNT',
+      splitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: 'alice-id', shares: 4000 }],
+      paidFor: [
+        { participant: 'bob-id', shares: 2500 },
+        { participant: 'carol-id', shares: 1500 },
+      ],
+      isMultiPayer: false,
+      isReimbursement: true,
+    })
+  })
+
+  it('supports a row-triggered preview with only that leg selected', async () => {
+    setupCurrentGroup({
+      participants: [
+        { id: 'alice-id', name: 'Alice' },
+        { id: 'bob-id', name: 'Bob' },
+        { id: 'carol-id', name: 'Carol' },
+      ],
+    })
+    mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
+
+    const { user } = render(
+      <CreateReimbursementModal
+        groupId="group-1"
+        settlementGroup={{
+          direction: 'pay',
+          participantId: 'alice-id',
+          legs: [
+            { from: 'alice-id', to: 'bob-id', amount: 2500 },
+            { from: 'alice-id', to: 'carol-id', amount: 1500 },
+          ],
+        }}
+        initialSelectedKeys={['alice-id:bob-id']}
+        currency={EUR}
+        open={true}
+        onOpenChange={vi.fn()}
+      />,
+    )
+
+    expect(
+      screen.getByTestId('reimbursement-select-alice-id:carol-id'),
+    ).toHaveAttribute('aria-checked', 'false')
+    await user.click(screen.getByTestId('reimbursement-create'))
+
+    await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1))
+    expect(mockMutateAsync.mock.calls[0][0].expense.amount).toBe(2500)
+    expect(mockMutateAsync.mock.calls[0][0].expense.paidFor).toEqual([
+      { participant: 'bob-id', shares: 2500 },
+    ])
+  })
+
+  it('records multiple payers to one recipient as one reimbursement', async () => {
+    setupCurrentGroup({
+      participants: [
+        { id: 'alice-id', name: 'Alice' },
+        { id: 'bob-id', name: 'Bob' },
+        { id: 'carol-id', name: 'Carol' },
+      ],
+    })
+    mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
+
+    const { user } = render(
+      <CreateReimbursementModal
+        groupId="group-1"
+        settlementGroup={{
+          direction: 'receive',
+          participantId: 'alice-id',
+          legs: [
+            { from: 'bob-id', to: 'alice-id', amount: 2500 },
+            { from: 'carol-id', to: 'alice-id', amount: 1500 },
+          ],
+        }}
+        currency={EUR}
+        open={true}
+        onOpenChange={vi.fn()}
+      />,
+    )
+
+    await user.click(screen.getByTestId('reimbursement-create'))
+
+    await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1))
+    expect(mockMutateAsync.mock.calls[0][0].expense).toMatchObject({
+      amount: 4000,
+      paidBySplitMode: 'BY_AMOUNT',
+      splitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: 'bob-id', shares: 2500 },
+        { participant: 'carol-id', shares: 1500 },
+      ],
+      paidFor: [{ participant: 'alice-id', shares: 4000 }],
+      isMultiPayer: true,
+      isReimbursement: true,
     })
   })
 

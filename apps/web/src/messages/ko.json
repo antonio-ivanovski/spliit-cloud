@@ -721,7 +721,10 @@
       "participantReceives": "<strong>{name}</strong>님이 받습니다",
       "participantPays": "<strong>{name}</strong>님이 지불합니다",
       "fromParticipant": "<strong>{name}</strong>님에게서",
-      "toParticipant": "<strong>{name}</strong>님에게"
+      "toParticipant": "<strong>{name}</strong>님에게",
+      "settle": "정산",
+      "settlePaymentsBy": "{name}님이 결제하는 {count}건 정산, {amount}",
+      "settlePaymentsTo": "{name}님에게 보내는 {count}건 정산, {amount}"
     },
     "view": {
       "label": "보기",
@@ -1718,7 +1721,18 @@
     "create": "만들기",
     "edit": "세부 정보 수정",
     "creating": "만드는 중…",
-    "successToast": "정산금을 기록했어요"
+    "successToast": "정산금을 기록했어요",
+    "successToastMultiple": "{count}건의 정산 결제를 하나의 항목으로 기록했어요",
+    "paysMany": "{from}님이 {count}명에게 결제",
+    "receivesMany": "{to}님이 {count}건의 결제를 받음",
+    "paymentsToInclude": "포함할 결제",
+    "selectionSummary": "{count}건의 결제를 선택했으며 총액은 {total}",
+    "legToAria": "{from}님이 {to}님에게 {amount} 결제",
+    "legFromAria": "{from}님이 {to}님에게 {amount} 결제",
+    "toParticipant": "{name}님에게",
+    "fromParticipant": "{name}님에게서",
+    "createSingle": "결제 기록",
+    "createMultiple": "{count}건 결제 기록"
   },
   "Participants": {
     "search": "참여자 검색...",

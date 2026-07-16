@@ -121,6 +121,7 @@ export const completeProfileSearchSchema = z.object({
 
 export const createExpenseSearchSchema = z.object({
   reimbursement: optionalString,
+  settlements: optionalString,
   amount: numericString,
   from: optionalString,
   to: optionalString,

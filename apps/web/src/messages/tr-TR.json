@@ -846,7 +846,10 @@
       "participantReceives": "<strong>{name}</strong> ödeme alır",
       "participantPays": "<strong>{name}</strong> ödeme yapar",
       "fromParticipant": "<strong>{name}</strong> adlı kişiden",
-      "toParticipant": "<strong>{name}</strong> adlı kişiye"
+      "toParticipant": "<strong>{name}</strong> adlı kişiye",
+      "settle": "Borcu kapat",
+      "settlePaymentsBy": "{name} tarafından yapılan {count} ödemeyi kapat, {amount}",
+      "settlePaymentsTo": "{name} için {count} ödemeyi kapat, {amount}"
     },
     "view": {
       "label": "Görünüm",
@@ -1734,7 +1737,18 @@
     "create": "Oluştur",
     "edit": "Detayları düzenle",
     "creating": "Oluşturuluyor…",
-    "successToast": "Borç kapatma ödemesi kaydedildi"
+    "successToast": "Borç kapatma ödemesi kaydedildi",
+    "successToastMultiple": "{count} borç kapatma ödemesi tek kayıt olarak kaydedildi",
+    "paysMany": "{from}, {count} kişiye ödeme yapar",
+    "receivesMany": "{to}, {count} ödeme alır",
+    "paymentsToInclude": "Dahil edilecek ödemeler",
+    "selectionSummary": "{count} ödeme seçildi, toplam {total}",
+    "legToAria": "{from}, {to} kişisine {amount} öder",
+    "legFromAria": "{from}, {to} kişisine {amount} öder",
+    "toParticipant": "{name} adlı kişiye",
+    "fromParticipant": "{name} adlı kişiden",
+    "createSingle": "Ödemeyi kaydet",
+    "createMultiple": "{count} ödemeyi kaydet"
   },
   "Participants": {
     "search": "Katılımcı ara...",

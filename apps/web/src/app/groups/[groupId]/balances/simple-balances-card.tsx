@@ -1,4 +1,5 @@
 import { ParticipantAvatar } from '@/components/participant-avatar'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -10,11 +11,20 @@ import { useLocale } from '@/i18n/react'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
-import { useTranslation } from 'react-i18next'
-import { ReimbursementList } from '../reimbursement-list'
+import { Trans, useTranslation } from 'react-i18next'
 import { BalancesLoading, ReimbursementsLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
+import {
+  SettlementGroupActions,
+  SettlementGroupButton,
+} from './settlement-group-actions'
+import {
+  buildSettlementGroups,
+  settlementLegKey,
+  sumSettlementLegs,
+  type SettlementDirection,
+} from './settlement-groups'
 
 type Participant = {
   id: string
@@ -168,7 +178,8 @@ function SimpleCurrencyContent({
         <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {t('simple.suggestedPayments')}
         </h3>
-        <ReimbursementList
+        <SimpleSettlementDirections
+          balances={balances}
           reimbursements={reimbursements}
           participants={participants}
           currency={currency}
@@ -176,6 +187,183 @@ function SimpleCurrencyContent({
           groupId={groupId}
         />
       </section>
+    </div>
+  )
+}
+
+function SimpleSettlementDirections({
+  balances,
+  reimbursements,
+  participants,
+  currency,
+  reimbursementCurrencyCode,
+  groupId,
+}: {
+  balances: Balances
+  reimbursements: Reimbursement[]
+  participants: Participant[]
+  currency: Currency
+  reimbursementCurrencyCode?: string
+  groupId: string
+}) {
+  const locale = useLocale()
+  const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
+  const participantIdsWithBalance = (predicate: (total: number) => boolean) =>
+    participants.reduce<string[]>((ids, participant) => {
+      if (predicate(balances[participant.id]?.total ?? 0)) {
+        ids.push(participant.id)
+      }
+      return ids
+    }, [])
+  const directions: Array<{
+    direction: SettlementDirection
+    title: string
+    participantIds: string[]
+  }> = [
+    {
+      direction: 'pay',
+      title: t('direction.toPay'),
+      participantIds: participantIdsWithBalance((total) => total < 0),
+    },
+    {
+      direction: 'receive',
+      title: t('direction.toReceive'),
+      participantIds: participantIdsWithBalance((total) => total > 0),
+    },
+  ]
+
+  return (
+    <div className="space-y-6">
+      {directions.map(({ direction, title, participantIds }) => {
+        const groups = buildSettlementGroups(
+          reimbursements,
+          participantIds,
+          direction,
+        )
+        if (groups.length === 0) return null
+        return (
+          <section key={direction} aria-label={title} className="space-y-3">
+            <h4 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              {title}
+            </h4>
+            <div className="space-y-3">
+              {groups.map((group) => {
+                const participant = participants.find(
+                  (item) => item.id === group.participantId,
+                )
+                if (!participant) return null
+                const total = sumSettlementLegs(group.legs)
+                return (
+                  <SettlementGroupActions
+                    key={`${direction}-${group.participantId}`}
+                    group={group}
+                    currency={currency}
+                    originalCurrencyCode={reimbursementCurrencyCode}
+                    groupId={groupId}
+                  >
+                    {(openFor) => (
+                      <div className="rounded-lg border border-border/70">
+                        <div className="flex min-h-12 items-center justify-between gap-2 px-3 py-2">
+                          <div className="flex min-w-0 items-center gap-2">
+                            <ParticipantAvatar
+                              participant={participant}
+                              size="sm"
+                            />
+                            <span className="min-w-0 truncate text-sm font-normal text-muted-foreground">
+                              <Trans
+                                i18nKey={`Balances.direction.${direction === 'receive' ? 'participantReceives' : 'participantPays'}`}
+                                components={{
+                                  strong: (
+                                    <strong className="font-semibold text-foreground" />
+                                  ),
+                                }}
+                                values={{ name: participant.name }}
+                              />
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="shrink-0 tabular-nums text-sm font-medium">
+                              {formatCurrency(currency, total, locale)}
+                            </span>
+                            <SettlementGroupButton
+                              group={group}
+                              currency={currency}
+                              participantName={participant.name}
+                              onClick={() => openFor()}
+                            />
+                          </div>
+                        </div>
+                        <div className="divide-y divide-border/60 border-t border-border/60">
+                          {group.legs.map((leg) => {
+                            const counterparty = participants.find(
+                              (item) =>
+                                item.id ===
+                                (direction === 'pay' ? leg.to : leg.from),
+                            )
+                            const counterpartyName = counterparty?.name ?? ''
+                            return (
+                              <div
+                                key={settlementLegKey(leg)}
+                                className="flex min-h-11 items-center gap-2 px-3 py-2 text-xs"
+                              >
+                                {counterparty && (
+                                  <ParticipantAvatar
+                                    participant={counterparty}
+                                    size="xs"
+                                  />
+                                )}
+                                <span className="min-w-0 flex-1 truncate text-muted-foreground">
+                                  <Trans
+                                    i18nKey={`Balances.direction.${direction === 'receive' ? 'fromParticipant' : 'toParticipant'}`}
+                                    components={{
+                                      strong: (
+                                        <strong className="font-semibold text-foreground" />
+                                      ),
+                                    }}
+                                    values={{ name: counterpartyName }}
+                                  />
+                                </span>
+                                <span className="shrink-0 tabular-nums text-muted-foreground">
+                                  {formatCurrency(currency, leg.amount, locale)}
+                                </span>
+                                {direction === 'pay' && (
+                                  <Button
+                                    type="button"
+                                    variant="link"
+                                    className="h-auto shrink-0 p-0 text-xs"
+                                    onClick={() =>
+                                      openFor([settlementLegKey(leg)])
+                                    }
+                                    aria-label={t(
+                                      'Reimbursements.markAsPaidAria',
+                                      {
+                                        amount: formatCurrency(
+                                          currency,
+                                          leg.amount,
+                                          locale,
+                                        ),
+                                        from: participant.name,
+                                        to: counterpartyName,
+                                      },
+                                    )}
+                                    data-testid={`reimbursement-mark-as-paid-${leg.from}-${leg.to}`}
+                                  >
+                                    {t('Reimbursements.markAsPaid')}
+                                  </Button>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </SettlementGroupActions>
+                )
+              })}
+            </div>
+          </section>
+        )
+      })}
     </div>
   )
 }

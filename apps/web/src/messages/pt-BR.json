@@ -853,7 +853,10 @@
       "participantReceives": "<strong>{name}</strong> recebe",
       "participantPays": "<strong>{name}</strong> paga",
       "fromParticipant": "de <strong>{name}</strong>",
-      "toParticipant": "para <strong>{name}</strong>"
+      "toParticipant": "para <strong>{name}</strong>",
+      "settle": "Acertar",
+      "settlePaymentsBy": "Acertar {count} pagamentos de {name}, {amount}",
+      "settlePaymentsTo": "Acertar {count} pagamentos para {name}, {amount}"
     },
     "view": {
       "label": "Visualização",
@@ -1751,7 +1754,18 @@
     "create": "Criar",
     "edit": "Editar detalhes",
     "creating": "Criando…",
-    "successToast": "Pagamento de acerto registrado"
+    "successToast": "Pagamento de acerto registrado",
+    "successToastMultiple": "Registrados {count} pagamentos de acerto em uma única entrada",
+    "paysMany": "{from} paga para {count} pessoas",
+    "receivesMany": "{to} recebe {count} pagamentos",
+    "paymentsToInclude": "Pagamentos a incluir",
+    "selectionSummary": "{count} pagamentos selecionados, total: {total}",
+    "legToAria": "{from} paga para {to}, {amount}",
+    "legFromAria": "{from} paga para {to}, {amount}",
+    "toParticipant": "para {name}",
+    "fromParticipant": "de {name}",
+    "createSingle": "Registrar pagamento",
+    "createMultiple": "Registrar {count} pagamentos"
   },
   "Participants": {
     "search": "Pesquisar participantes...",

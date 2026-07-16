@@ -96,6 +96,20 @@ describe('SimpleBalancesCard', () => {
     expect(screen.getByText('is owed €30.00')).toBeInTheDocument()
     expect(screen.getByText('owes €30.00')).toBeInTheDocument()
     expect(screen.getByText('Suggested payments')).toBeInTheDocument()
+    const emphasizedLabels = Array.from(
+      document.querySelectorAll('strong.font-semibold'),
+    )
+    expect(
+      emphasizedLabels.some(
+        (element) => element.parentElement?.textContent === 'Alice receives',
+      ),
+    ).toBe(true)
+    expect(
+      emphasizedLabels.some(
+        (element) => element.parentElement?.textContent === 'Bob pays',
+      ),
+    ).toBe(true)
+    expect(screen.queryByText(/<strong>/)).not.toBeInTheDocument()
     expect(
       screen.getByRole('button', {
         name: /Mark €30\.00 from Bob to Alice/,

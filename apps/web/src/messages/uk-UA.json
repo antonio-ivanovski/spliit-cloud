@@ -860,7 +860,10 @@
       "participantReceives": "<strong>{name}</strong> отримує",
       "participantPays": "<strong>{name}</strong> платить",
       "fromParticipant": "від <strong>{name}</strong>",
-      "toParticipant": "для <strong>{name}</strong>"
+      "toParticipant": "для <strong>{name}</strong>",
+      "settle": "Погасити",
+      "settlePaymentsBy": "Погасити {count} платежів від {name}, {amount}",
+      "settlePaymentsTo": "Погасити {count} платежів для {name}, {amount}"
     },
     "view": {
       "label": "Вигляд",
@@ -1768,7 +1771,18 @@
     "create": "Створити",
     "edit": "Редагувати деталі",
     "creating": "Створення…",
-    "successToast": "Платіж для погашення боргу записано"
+    "successToast": "Платіж для погашення боргу записано",
+    "successToastMultiple": "Записано {count} платежів для погашення боргів як один запис",
+    "paysMany": "{from} платить {count} людям",
+    "receivesMany": "{to} отримує {count} платежів",
+    "paymentsToInclude": "Платежі для включення",
+    "selectionSummary": "Вибрано платежів: {count}, на суму {total}",
+    "legToAria": "{from} платить {to}, {amount}",
+    "legFromAria": "{from} платить {to}, {amount}",
+    "toParticipant": "для {name}",
+    "fromParticipant": "від {name}",
+    "createSingle": "Записати платіж",
+    "createMultiple": "Записати {count} платежів"
   },
   "Participants": {
     "search": "Пошук учасників...",

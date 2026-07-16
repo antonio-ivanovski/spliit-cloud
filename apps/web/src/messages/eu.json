@@ -853,7 +853,10 @@
       "participantReceives": "<strong>{name}</strong>-k jasotzen du",
       "participantPays": "<strong>{name}</strong>-k ordaintzen du",
       "fromParticipant": "<strong>{name}</strong>-gandik",
-      "toParticipant": "<strong>{name}</strong>-ri"
+      "toParticipant": "<strong>{name}</strong>-ri",
+      "settle": "Kitatu",
+      "settlePaymentsBy": "Kitatu {count} ordainketa {name}-k egindakoak, {amount}",
+      "settlePaymentsTo": "Kitatu {count} ordainketa {name}-ri, {amount}"
     },
     "view": {
       "label": "Bista",
@@ -1751,7 +1754,18 @@
     "create": "Sortu",
     "edit": "Editatu xehetasunak",
     "creating": "Sortzen…",
-    "successToast": "Zor-kitapenaren ordainketa erregistratu da"
+    "successToast": "Zor-kitapenaren ordainketa erregistratu da",
+    "successToastMultiple": "{count} likidazio-ordainketa sarrera bakar gisa erregistratu dira",
+    "paysMany": "{from}k {count} laguni ordaintzen die",
+    "receivesMany": "{to}k {count} ordainketa jasotzen ditu",
+    "paymentsToInclude": "Sartu beharreko ordainketak",
+    "selectionSummary": "{count} ordainketa hautatuta, guztira {total}",
+    "legToAria": "{from}k {to}ri ordaintzen dio, {amount}",
+    "legFromAria": "{from}k {to}ri ordaintzen dio, {amount}",
+    "toParticipant": "{name}-ri",
+    "fromParticipant": "{name}-gandik",
+    "createSingle": "Erregistratu ordainketa",
+    "createMultiple": "Erregistratu {count} ordainketa"
   },
   "Participants": {
     "search": "Bilatu kideak...",

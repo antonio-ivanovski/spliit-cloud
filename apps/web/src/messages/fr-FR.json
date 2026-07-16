@@ -853,7 +853,10 @@
       "participantReceives": "<strong>{name}</strong> reçoit",
       "participantPays": "<strong>{name}</strong> paie",
       "fromParticipant": "de <strong>{name}</strong>",
-      "toParticipant": "à <strong>{name}</strong>"
+      "toParticipant": "à <strong>{name}</strong>",
+      "settle": "Régler",
+      "settlePaymentsBy": "Régler {count} paiements de {name}, {amount}",
+      "settlePaymentsTo": "Régler {count} paiements à {name}, {amount}"
     },
     "view": {
       "label": "Affichage",
@@ -1751,7 +1754,18 @@
     "create": "Créer",
     "edit": "Modifier les détails",
     "creating": "Création…",
-    "successToast": "Paiement de règlement enregistré"
+    "successToast": "Paiement de règlement enregistré",
+    "successToastMultiple": "{count} paiements de règlement enregistrés en une seule entrée",
+    "paysMany": "{from} paie {count} personnes",
+    "receivesMany": "{to} reçoit {count} paiements",
+    "paymentsToInclude": "Paiements à inclure",
+    "selectionSummary": "{count} paiements sélectionnés, total : {total}",
+    "legToAria": "{from} paie {to}, {amount}",
+    "legFromAria": "{from} paie {to}, {amount}",
+    "toParticipant": "à {name}",
+    "fromParticipant": "de {name}",
+    "createSingle": "Enregistrer le paiement",
+    "createMultiple": "Enregistrer {count} paiements"
   },
   "Participants": {
     "search": "Rechercher des participants...",

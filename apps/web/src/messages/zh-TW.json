@@ -839,7 +839,10 @@
       "participantReceives": "<strong>{name}</strong>收款",
       "participantPays": "<strong>{name}</strong>付款",
       "fromParticipant": "來自<strong>{name}</strong>",
-      "toParticipant": "支付給<strong>{name}</strong>"
+      "toParticipant": "支付給<strong>{name}</strong>",
+      "settle": "結算",
+      "settlePaymentsBy": "結算 {name} 支付的 {count} 筆款項，共 {amount}",
+      "settlePaymentsTo": "結算支付給 {name} 的 {count} 筆款項，共 {amount}"
     },
     "view": {
       "label": "檢視",
@@ -1718,7 +1721,18 @@
     "create": "新增",
     "edit": "編輯詳細資訊",
     "creating": "新增中…",
-    "successToast": "已記錄結算付款"
+    "successToast": "已記錄結算付款",
+    "successToastMultiple": "已將 {count} 筆結算付款記錄為一筆",
+    "paysMany": "{from} 支付給 {count} 人",
+    "receivesMany": "{to} 收到 {count} 筆付款",
+    "paymentsToInclude": "要包含的付款",
+    "selectionSummary": "已選擇 {count} 筆付款，總計 {total}",
+    "legToAria": "{from} 支付給 {to}，{amount}",
+    "legFromAria": "{from} 支付給 {to}，{amount}",
+    "toParticipant": "支付給{name}",
+    "fromParticipant": "來自{name}",
+    "createSingle": "記錄付款",
+    "createMultiple": "記錄 {count} 筆付款"
   },
   "Participants": {
     "search": "搜尋參與者……",

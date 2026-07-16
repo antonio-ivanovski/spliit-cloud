@@ -226,8 +226,8 @@ describe('ReimbursementList', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(screen.getByText('Settlement payment')).toBeInTheDocument()
     expect(
-      within(screen.getByRole('dialog')).getByText('€20.00'),
-    ).toBeInTheDocument()
+      within(screen.getByRole('dialog')).getAllByText('€20.00').length,
+    ).toBeGreaterThan(0)
   })
 
   it('creates a reimbursement via mutation when clicking Create', async () => {

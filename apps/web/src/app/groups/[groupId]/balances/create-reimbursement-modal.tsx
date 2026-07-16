@@ -3,6 +3,7 @@ import { useCreateExpenseMutation } from '@/app/groups/[groupId]/expenses/expens
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -25,13 +26,23 @@ import { trpc } from '@/trpc/client'
 import { PAYMENT_CATEGORY_ID, RecurrenceRule } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { Check, Pencil } from 'lucide-react'
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
+import {
+  settlementLegKey,
+  sumSettlementLegs,
+  type SettlementDirection,
+  type SettlementGroup,
+} from './settlement-groups'
 
 type CreateReimbursementModalProps = {
   groupId: string
-  reimbursement: Reimbursement | null
+  /** Kept for the existing single-leg entry point. */
+  reimbursement?: Reimbursement | null
+  settlementGroup?: SettlementGroup
+  initialSelectedKeys?: string[]
   currency: Currency
   originalCurrencyCode?: string
   open: boolean
@@ -41,6 +52,8 @@ type CreateReimbursementModalProps = {
 export function CreateReimbursementModal({
   groupId,
   reimbursement,
+  settlementGroup,
+  initialSelectedKeys,
   currency,
   originalCurrencyCode,
   open,
@@ -61,17 +74,30 @@ export function CreateReimbursementModal({
 
   const groupCurrency = group ? getCurrencyFromGroup(group) : undefined
   const participants = group?.participants ?? []
-  const fromParticipant = reimbursement
-    ? participants.find((p) => p.id === reimbursement.from)
-    : undefined
-  const toParticipant = reimbursement
-    ? participants.find((p) => p.id === reimbursement.to)
-    : undefined
+  const legs = settlementGroup?.legs ?? (reimbursement ? [reimbursement] : [])
+  const direction: SettlementDirection = settlementGroup?.direction ?? 'pay'
+  const centralParticipantId =
+    settlementGroup?.participantId ?? reimbursement?.from
+  const centralParticipant = participants.find(
+    (participant) => participant.id === centralParticipantId,
+  )
+  const legKeys = legs.map(settlementLegKey).join('|')
+  const defaultSelectedKeys =
+    initialSelectedKeys ?? legs.map((leg) => settlementLegKey(leg))
+  const defaultSelectedValue = defaultSelectedKeys.join('|')
+  const [selectedKeys, setSelectedKeys] = useState(defaultSelectedKeys)
+  const selectedKeySet = new Set(selectedKeys)
+  const selectedLegs = legs.filter((leg) =>
+    selectedKeySet.has(settlementLegKey(leg)),
+  )
+  const summaryLeg = selectedLegs[0] ?? legs[0]
+  const selectedTotal = sumSettlementLegs(selectedLegs)
+  const isLegacySingle = !settlementGroup && selectedLegs.length === 1
   const canCreate = Boolean(
-    reimbursement && group && !group.archived && !isPendingInvitee,
+    legs.length > 0 && group && !group.archived && !isPendingInvitee,
   )
   const needsConversion =
-    !!reimbursement &&
+    legs.length > 0 &&
     !!groupCurrency &&
     !!originalCurrencyCode &&
     originalCurrencyCode !== groupCurrency.code
@@ -79,22 +105,54 @@ export function CreateReimbursementModal({
   const { mutateAsync: createExpenseMutateAsync, isPending } =
     useCreateExpenseMutation({ linkInviteToken })
 
+  useEffect(() => {
+    if (open) {
+      setSelectedKeys(
+        (defaultSelectedValue ? defaultSelectedValue.split('|') : []).filter(
+          Boolean,
+        ),
+      )
+    }
+  }, [defaultSelectedValue, legKeys, open])
+
   const handleOpenChange = (nextOpen: boolean) => {
     if (isPending) return
     onOpenChange(nextOpen)
   }
 
   const handleEdit = () => {
-    if (!reimbursement) return
+    if (selectedLegs.length === 0) return
     onOpenChange(false)
+
+    if (selectedLegs.length > 1 && settlementGroup) {
+      navigate({
+        to: '/groups/$groupId/expenses/create',
+        params: { groupId },
+        search: {
+          reimbursement: 'yes',
+          amount: selectedTotal.toString(),
+          settlements: JSON.stringify({
+            direction,
+            participantId: centralParticipantId,
+            legs: selectedLegs,
+          }),
+          ...(originalCurrencyCode
+            ? { originalCurrency: originalCurrencyCode }
+            : {}),
+        },
+      })
+      return
+    }
+
+    const selected = selectedLegs[0]
     navigate({
       to: '/groups/$groupId/expenses/create',
       params: { groupId },
       search: {
         reimbursement: 'yes',
-        from: reimbursement.from,
-        to: reimbursement.to,
-        amount: reimbursement.amount.toString(),
+        from: selected.from,
+        to: selected.to,
+        amount: selected.amount.toString(),
         ...(originalCurrencyCode
           ? { originalCurrency: originalCurrencyCode }
           : {}),
@@ -103,21 +161,36 @@ export function CreateReimbursementModal({
   }
 
   const handleCreate = async () => {
-    if (!reimbursement) return
+    if (selectedLegs.length === 0 || !centralParticipantId) return
+
+    const paidByList =
+      direction === 'pay'
+        ? [{ participant: centralParticipantId, shares: selectedTotal }]
+        : selectedLegs.map((leg) => ({
+            participant: leg.from,
+            shares: leg.amount,
+          }))
+    const paidFor = isLegacySingle
+      ? [{ participant: selectedLegs[0].to, shares: 1 }]
+      : direction === 'pay'
+        ? selectedLegs.map((leg) => ({
+            participant: leg.to,
+            shares: leg.amount,
+          }))
+        : [{ participant: centralParticipantId, shares: selectedTotal }]
+
     await createExpenseMutateAsync({
       groupId,
       expense: {
         expenseDate: new Date(),
         title: tForm('reimbursement'),
         category: PAYMENT_CATEGORY_ID,
-        amount: reimbursement.amount,
+        amount: selectedTotal,
         paidBySplitMode: 'BY_AMOUNT',
-        paidByList: [
-          { participant: reimbursement.from, shares: reimbursement.amount },
-        ],
-        splitMode: 'EVENLY',
-        paidFor: [{ participant: reimbursement.to, shares: 1 }],
-        isMultiPayer: false,
+        paidByList,
+        splitMode: isLegacySingle ? 'EVENLY' : 'BY_AMOUNT',
+        paidFor,
+        isMultiPayer: direction === 'receive' && paidByList.length > 1,
         isReimbursement: true,
         documents: [],
         recurrenceRule: RecurrenceRule.NONE,
@@ -131,12 +204,17 @@ export function CreateReimbursementModal({
           : {}),
       },
     })
-    toast({ description: t('successToast') })
+    toast({
+      description:
+        selectedLegs.length > 1
+          ? t('successToastMultiple', { count: selectedLegs.length })
+          : t('successToast'),
+    })
     onOpenChange(false)
     await utils.groups.balances.invalidate()
   }
 
-  if (!reimbursement) {
+  if (legs.length === 0) {
     return (
       <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
         <ResponsiveDialogContent className="max-w-lg" />
@@ -150,10 +228,7 @@ export function CreateReimbursementModal({
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2">
             <CategoryIcon
-              category={{
-                grouping: 'Uncategorized',
-                name: 'Payment',
-              }}
+              category={{ grouping: 'Uncategorized', name: 'Payment' }}
               className="h-5 w-5 shrink-0 text-muted-foreground"
             />
             <span className="truncate">{tForm('reimbursement')}</span>
@@ -164,49 +239,78 @@ export function CreateReimbursementModal({
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="max-h-[70vh] space-y-5 overflow-y-auto">
-          <div>
-            <div className="text-3xl font-bold tabular-nums tracking-tight">
-              {formatCurrency(currency, reimbursement.amount, locale)}
-            </div>
+          <div className="text-3xl font-bold tabular-nums tracking-tight">
+            {formatCurrency(currency, selectedTotal, locale)}
           </div>
 
           <div className="space-y-4 border-t pt-4">
             <div className="text-sm text-muted-foreground">
-              {t('pays', {
-                from: fromParticipant?.name ?? '',
-                to: toParticipant?.name ?? '',
-              })}
+              {selectedLegs.length > 1
+                ? direction === 'pay'
+                  ? t('paysMany', {
+                      from: centralParticipant?.name ?? '',
+                      count: selectedLegs.length,
+                    })
+                  : t('receivesMany', {
+                      to: centralParticipant?.name ?? '',
+                      count: selectedLegs.length,
+                    })
+                : t('pays', {
+                    from:
+                      participants.find(
+                        (participant) => participant.id === summaryLeg?.from,
+                      )?.name ?? '',
+                    to:
+                      participants.find(
+                        (participant) => participant.id === summaryLeg?.to,
+                      )?.name ?? '',
+                  })}
             </div>
+            <ReimbursementSelectionList
+              legs={legs}
+              direction={direction}
+              participants={participants}
+              centralParticipant={centralParticipant}
+              currency={currency}
+              locale={locale}
+              selectedKeySet={selectedKeySet}
+              setSelectedKeys={setSelectedKeys}
+            />
             <div className="flex items-center gap-3">
-              {fromParticipant && (
+              {centralParticipant && (
                 <div className="flex items-center gap-2">
                   <ParticipantAvatar
-                    participant={fromParticipant}
+                    participant={centralParticipant}
                     size="sm"
                     className="shrink-0"
                   />
                   <span className="text-sm font-medium">
-                    {fromParticipant.name}
+                    {centralParticipant.name}
                   </span>
                 </div>
               )}
-              {fromParticipant && toParticipant && (
-                <span aria-hidden="true" className="text-muted-foreground">
-                  →
-                </span>
-              )}
-              {toParticipant && (
-                <div className="flex items-center gap-2">
-                  <ParticipantAvatar
-                    participant={toParticipant}
-                    size="sm"
-                    className="shrink-0"
-                  />
+              {selectedLegs.length === 1 && (
+                <>
+                  <span aria-hidden="true" className="text-muted-foreground">
+                    {direction === 'pay' ? '→' : '←'}
+                  </span>
                   <span className="text-sm font-medium">
-                    {toParticipant.name}
+                    {participants.find(
+                      (participant) =>
+                        participant.id ===
+                        (direction === 'pay'
+                          ? selectedLegs[0].to
+                          : selectedLegs[0].from),
+                    )?.name ?? ''}
                   </span>
-                </div>
+                </>
               )}
+            </div>
+            <div className="sr-only" aria-live="polite">
+              {t('selectionSummary', {
+                count: selectedLegs.length,
+                total: formatCurrency(currency, selectedTotal, locale),
+              })}
             </div>
           </div>
 
@@ -233,7 +337,7 @@ export function CreateReimbursementModal({
                 variant="outline"
                 className="flex-1 sm:flex-none"
                 onClick={handleEdit}
-                disabled={isPending}
+                disabled={isPending || selectedLegs.length === 0}
                 data-testid="reimbursement-edit"
               >
                 <Pencil className="mr-2 h-4 w-4" />
@@ -243,16 +347,103 @@ export function CreateReimbursementModal({
                 type="button"
                 className="flex-1 sm:flex-none"
                 onClick={handleCreate}
-                disabled={isPending}
+                disabled={isPending || selectedLegs.length === 0}
                 data-testid="reimbursement-create"
               >
                 <Check className="mr-2 h-4 w-4" />
-                {isPending ? t('creating') : t('create')}
+                {isPending
+                  ? t('creating')
+                  : selectedLegs.length === 1
+                    ? t('createSingle')
+                    : t('createMultiple', { count: selectedLegs.length })}
               </Button>
             </>
           )}
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
+  )
+}
+
+function ReimbursementSelectionList({
+  legs,
+  direction,
+  participants,
+  centralParticipant,
+  currency,
+  locale,
+  selectedKeySet,
+  setSelectedKeys,
+}: {
+  legs: Reimbursement[]
+  direction: SettlementDirection
+  participants: Array<{ id: string; name: string }>
+  centralParticipant?: { id: string; name: string }
+  currency: Currency
+  locale: string
+  selectedKeySet: Set<string>
+  setSelectedKeys: Dispatch<SetStateAction<string[]>>
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateReimbursement' })
+  return (
+    <div className="space-y-2" role="group" aria-label={t('paymentsToInclude')}>
+      {legs.map((leg) => {
+        const key = settlementLegKey(leg)
+        const counterpartyId = direction === 'pay' ? leg.to : leg.from
+        const counterparty = participants.find(
+          (participant) => participant.id === counterpartyId,
+        )
+        return (
+          <label
+            key={key}
+            htmlFor={`reimbursement-${key}`}
+            className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md border border-border/70 px-3 py-2 transition-colors hover:bg-muted/50"
+          >
+            <Checkbox
+              id={`reimbursement-${key}`}
+              checked={selectedKeySet.has(key)}
+              onCheckedChange={(checked) => {
+                setSelectedKeys((current) =>
+                  checked
+                    ? [...new Set([...current, key])]
+                    : current.filter((item) => item !== key),
+                )
+              }}
+              aria-label={
+                direction === 'pay'
+                  ? t('legToAria', {
+                      from: centralParticipant?.name ?? '',
+                      to: counterparty?.name ?? '',
+                      amount: formatCurrency(currency, leg.amount, locale),
+                    })
+                  : t('legFromAria', {
+                      from: counterparty?.name ?? '',
+                      to: centralParticipant?.name ?? '',
+                      amount: formatCurrency(currency, leg.amount, locale),
+                    })
+              }
+              data-testid={`reimbursement-select-${key}`}
+            />
+            {counterparty && (
+              <ParticipantAvatar
+                participant={counterparty}
+                size="sm"
+                className="shrink-0"
+              />
+            )}
+            <span className="min-w-0 flex-1 truncate text-sm font-medium">
+              {direction === 'pay'
+                ? t('toParticipant', { name: counterparty?.name ?? '' })
+                : t('fromParticipant', {
+                    name: counterparty?.name ?? '',
+                  })}
+            </span>
+            <span className="shrink-0 tabular-nums text-sm">
+              {formatCurrency(currency, leg.amount, locale)}
+            </span>
+          </label>
+        )
+      })}
+    </div>
   )
 }

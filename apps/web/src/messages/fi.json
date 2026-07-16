@@ -846,7 +846,10 @@
       "participantReceives": "<strong>{name}</strong> saa",
       "participantPays": "<strong>{name}</strong> maksaa",
       "fromParticipant": "<strong>{name}</strong>lta",
-      "toParticipant": "<strong>{name}</strong>lle"
+      "toParticipant": "<strong>{name}</strong>lle",
+      "settle": "Selvitä",
+      "settlePaymentsBy": "Selvitä {count} {name}n maksamaa maksua, {amount}",
+      "settlePaymentsTo": "Selvitä {count} maksua {name}lle, {amount}"
     },
     "view": {
       "label": "Näkymä",
@@ -1734,7 +1737,18 @@
     "create": "Luo",
     "edit": "Muokkaa tietoja",
     "creating": "Luodaan…",
-    "successToast": "Tasausmaksu kirjattu"
+    "successToast": "Tasausmaksu kirjattu",
+    "successToastMultiple": "{count} tasausmaksua kirjattu yhdeksi merkinnäksi",
+    "paysMany": "{from} maksaa {count} henkilölle",
+    "receivesMany": "{to} vastaanottaa {count} maksua",
+    "paymentsToInclude": "Mukaan otettavat maksut",
+    "selectionSummary": "{count} maksua valittu, yhteensä {total}",
+    "legToAria": "{from} maksaa {to}:lle, {amount}",
+    "legFromAria": "{from} maksaa {to}:lle, {amount}",
+    "toParticipant": "{name}lle",
+    "fromParticipant": "{name}lta",
+    "createSingle": "Kirjaa maksu",
+    "createMultiple": "Kirjaa {count} maksua"
   },
   "Participants": {
     "search": "Hae osallistujia...",

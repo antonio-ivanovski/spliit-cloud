@@ -853,7 +853,10 @@
       "participantReceives": "<strong>{name}</strong> primește",
       "participantPays": "<strong>{name}</strong> plătește",
       "fromParticipant": "de la <strong>{name}</strong>",
-      "toParticipant": "către <strong>{name}</strong>"
+      "toParticipant": "către <strong>{name}</strong>",
+      "settle": "Decontează",
+      "settlePaymentsBy": "Decontează {count} plăți efectuate de {name}, {amount}",
+      "settlePaymentsTo": "Decontează {count} plăți către {name}, {amount}"
     },
     "view": {
       "label": "Vizualizare",
@@ -1751,7 +1754,18 @@
     "create": "Adaugă",
     "edit": "Modifică detaliile",
     "creating": "Se adaugă…",
-    "successToast": "Plată de decontare înregistrată"
+    "successToast": "Plată de decontare înregistrată",
+    "successToastMultiple": "Au fost înregistrate {count} plăți de decontare ca o singură înregistrare",
+    "paysMany": "{from} plătește {count} persoane",
+    "receivesMany": "{to} primește {count} plăți",
+    "paymentsToInclude": "Plăți de inclus",
+    "selectionSummary": "{count} plăți selectate, în total {total}",
+    "legToAria": "{from} îi plătește lui {to}, {amount}",
+    "legFromAria": "{from} îi plătește lui {to}, {amount}",
+    "toParticipant": "către {name}",
+    "fromParticipant": "de la {name}",
+    "createSingle": "Înregistrează plata",
+    "createMultiple": "Înregistrează {count} plăți"
   },
   "Participants": {
     "search": "Caută participanți...",

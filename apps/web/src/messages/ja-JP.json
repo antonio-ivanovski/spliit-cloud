@@ -839,7 +839,10 @@
       "participantReceives": "<strong>{name}</strong>が受け取る",
       "participantPays": "<strong>{name}</strong>が支払う",
       "fromParticipant": "<strong>{name}</strong>から",
-      "toParticipant": "<strong>{name}</strong>へ"
+      "toParticipant": "<strong>{name}</strong>へ",
+      "settle": "精算",
+      "settlePaymentsBy": "{name}さんが支払う{count}件を精算、{amount}",
+      "settlePaymentsTo": "{name}さんへの{count}件の支払いを精算、{amount}"
     },
     "view": {
       "label": "表示",
@@ -1718,7 +1721,18 @@
     "create": "作成する",
     "edit": "詳細を編集",
     "creating": "作成中…",
-    "successToast": "精算金を記録しました"
+    "successToast": "精算金を記録しました",
+    "successToastMultiple": "{count}件の精算支払いを1件として記録しました",
+    "paysMany": "{from}さんが{count}人に支払う",
+    "receivesMany": "{to}さんが{count}件の支払いを受け取る",
+    "paymentsToInclude": "含める支払い",
+    "selectionSummary": "{count}件の支払いを選択、合計{total}",
+    "legToAria": "{from}さんが{to}さんに支払い、{amount}",
+    "legFromAria": "{from}さんが{to}さんに支払い、{amount}",
+    "toParticipant": "{name}さんへ",
+    "fromParticipant": "{name}さんから",
+    "createSingle": "支払いを記録",
+    "createMultiple": "{count}件の支払いを記録"
   },
   "Participants": {
     "search": "参加者を検索...",

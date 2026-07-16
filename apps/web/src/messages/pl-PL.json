@@ -860,7 +860,10 @@
       "participantReceives": "<strong>{name}</strong> otrzymuje",
       "participantPays": "<strong>{name}</strong> płaci",
       "fromParticipant": "od <strong>{name}</strong>",
-      "toParticipant": "dla <strong>{name}</strong>"
+      "toParticipant": "dla <strong>{name}</strong>",
+      "settle": "Rozlicz",
+      "settlePaymentsBy": "Rozlicz {count} płatności od {name}, {amount}",
+      "settlePaymentsTo": "Rozlicz {count} płatności dla {name}, {amount}"
     },
     "view": {
       "label": "Widok",
@@ -1768,7 +1771,18 @@
     "create": "Stwórz",
     "edit": "Edytuj szczegóły",
     "creating": "Tworzenie…",
-    "successToast": "Zapisano płatność rozliczeniową"
+    "successToast": "Zapisano płatność rozliczeniową",
+    "successToastMultiple": "Zapisano {count} płatności rozliczeniowych jako jeden wpis",
+    "paysMany": "{from} płaci {count} osobom",
+    "receivesMany": "{to} otrzymuje {count} płatności",
+    "paymentsToInclude": "Płatności do uwzględnienia",
+    "selectionSummary": "Wybrano {count} płatności, łącznie {total}",
+    "legToAria": "{from} płaci {to}, {amount}",
+    "legFromAria": "{from} płaci {to}, {amount}",
+    "toParticipant": "dla {name}",
+    "fromParticipant": "od {name}",
+    "createSingle": "Zapisz płatność",
+    "createMultiple": "Zapisz {count} płatności"
   },
   "Participants": {
     "search": "Szukaj uczestników...",

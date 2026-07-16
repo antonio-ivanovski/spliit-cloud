@@ -977,7 +977,10 @@
       "participantReceives": "<strong>{name}</strong> прима",
       "participantPays": "<strong>{name}</strong> плаќа",
       "fromParticipant": "од <strong>{name}</strong>",
-      "toParticipant": "на <strong>{name}</strong>"
+      "toParticipant": "на <strong>{name}</strong>",
+      "settle": "Порамни",
+      "settlePaymentsBy": "Порамни {count} уплати од {name}, {amount}",
+      "settlePaymentsTo": "Порамни {count} уплати кон {name}, {amount}"
     },
     "view": {
       "label": "Приказ",
@@ -1734,7 +1737,18 @@
     "create": "Креирај",
     "edit": "Уреди детали",
     "creating": "Се креира…",
-    "successToast": "Порамнителната уплата е евидентирана"
+    "successToast": "Порамнителната уплата е евидентирана",
+    "successToastMultiple": "Евидентирани се {count} порамнителни уплати како една ставка",
+    "paysMany": "{from} плаќа на {count} лица",
+    "receivesMany": "{to} прима {count} уплати",
+    "paymentsToInclude": "Уплати за вклучување",
+    "selectionSummary": "Избрани се {count} уплати, вкупно {total}",
+    "legToAria": "{from} му плаќа на {to}, {amount}",
+    "legFromAria": "{from} му плаќа на {to}, {amount}",
+    "toParticipant": "на {name}",
+    "fromParticipant": "од {name}",
+    "createSingle": "Евидентирај уплата",
+    "createMultiple": "Евидентирај {count} уплати"
   },
   "Participants": {
     "search": "Пребарувај учесници...",

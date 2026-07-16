@@ -1033,7 +1033,10 @@
       "participantReceives": "<strong>{name}</strong> receives",
       "participantPays": "<strong>{name}</strong> pays",
       "fromParticipant": "from <strong>{name}</strong>",
-      "toParticipant": "to <strong>{name}</strong>"
+      "toParticipant": "to <strong>{name}</strong>",
+      "settle": "Settle",
+      "settlePaymentsBy": "Settle {count} payments by {name}, {amount}",
+      "settlePaymentsTo": "Settle {count} payments to {name}, {amount}"
     }
   },
   "Stats": {
@@ -1813,7 +1816,18 @@
     "create": "Create",
     "edit": "Edit details",
     "creating": "Creating…",
-    "successToast": "Settlement payment recorded"
+    "successToast": "Settlement payment recorded",
+    "successToastMultiple": "Recorded {count} settlement payments as one entry",
+    "paysMany": "{from} pays {count} people",
+    "receivesMany": "{to} receives {count} payments",
+    "paymentsToInclude": "Payments to include",
+    "selectionSummary": "{count} payments selected, totaling {total}",
+    "legToAria": "{from} pays {to}, {amount}",
+    "legFromAria": "{from} pays {to}, {amount}",
+    "toParticipant": "to {name}",
+    "fromParticipant": "from {name}",
+    "createSingle": "Record payment",
+    "createMultiple": "Record {count} payments"
   },
   "Participants": {
     "search": "Search participants...",

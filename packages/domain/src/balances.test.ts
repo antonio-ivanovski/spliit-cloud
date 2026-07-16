@@ -1157,6 +1157,96 @@ describe('getCurrencyBalanceSummaries', () => {
 })
 
 describe('getSuggestedReimbursements', () => {
+  it('clears multiple debtor legs with one payer reimbursement expense', () => {
+    // P0 owes P1 100 and P2 50. Recording those two transfers as one
+    // BY_AMOUNT reimbursement (P0 pays both recipients) should settle the
+    // same legs that getSuggestedReimbursements recommends.
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100,
+        paidByList: defaultPaidByList('p1', 'P1'),
+        paidFor: [{ participant: { id: 'p0', name: 'P0' }, shares: 1 }],
+      }),
+      makeExpense({
+        id: 'e2',
+        amount: 50,
+        paidByList: defaultPaidByList('p2', 'P2'),
+        paidFor: [{ participant: { id: 'p0', name: 'P0' }, shares: 1 }],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    expect(getSuggestedReimbursements(balances)).toEqual([
+      { from: 'p0', to: 'p1', amount: 100 },
+      { from: 'p0', to: 'p2', amount: 50 },
+    ])
+
+    const combinedReimbursement = makeExpense({
+      id: 'settlement',
+      amount: 150,
+      isReimbursement: true,
+      splitMode: 'BY_AMOUNT',
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [{ participant: { id: 'p0', name: 'P0' }, shares: 150 }],
+      paidFor: [
+        { participant: { id: 'p1', name: 'P1' }, shares: 100 },
+        { participant: { id: 'p2', name: 'P2' }, shares: 50 },
+      ],
+    })
+
+    const settledBalances = getBalances([...expenses, combinedReimbursement])
+    expect(getSuggestedReimbursements(settledBalances)).toEqual([])
+    expect(
+      Object.values(settledBalances).every((balance) => balance.total === 0),
+    ).toBe(true)
+  })
+
+  it('clears multiple payer legs with one recipient reimbursement expense', () => {
+    // P0 and P2 each owe P1 50. One reimbursement with both debtors as
+    // exact-amount payers and P1 as the sole recipient settles both legs.
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'e1',
+        amount: 100,
+        paidByList: defaultPaidByList('p1', 'P1'),
+        paidFor: [
+          { participant: { id: 'p0', name: 'P0' }, shares: 1 },
+          { participant: { id: 'p2', name: 'P2' }, shares: 1 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    const suggested = getSuggestedReimbursements(balances)
+    expect(suggested).toHaveLength(2)
+    expect(suggested).toEqual(
+      expect.arrayContaining([
+        { from: 'p0', to: 'p1', amount: 50 },
+        { from: 'p2', to: 'p1', amount: 50 },
+      ]),
+    )
+
+    const combinedReimbursement = makeExpense({
+      id: 'settlement',
+      amount: 100,
+      isReimbursement: true,
+      splitMode: 'BY_AMOUNT',
+      paidBySplitMode: 'BY_AMOUNT',
+      paidByList: [
+        { participant: { id: 'p0', name: 'P0' }, shares: 50 },
+        { participant: { id: 'p2', name: 'P2' }, shares: 50 },
+      ],
+      paidFor: [{ participant: { id: 'p1', name: 'P1' }, shares: 100 }],
+    })
+
+    const settledBalances = getBalances([...expenses, combinedReimbursement])
+    expect(getSuggestedReimbursements(settledBalances)).toEqual([])
+    expect(
+      Object.values(settledBalances).every((balance) => balance.total === 0),
+    ).toBe(true)
+  })
+
   it('sorts balances correctly (positive before negative)', () => {
     const balances = {
       p0: { paid: 100, paidFor: 50, total: 50 }, // positive

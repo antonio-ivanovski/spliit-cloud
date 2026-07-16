@@ -839,7 +839,10 @@
       "participantReceives": "<strong>{name}</strong>收款",
       "participantPays": "<strong>{name}</strong>付款",
       "fromParticipant": "来自<strong>{name}</strong>",
-      "toParticipant": "支付给<strong>{name}</strong>"
+      "toParticipant": "支付给<strong>{name}</strong>",
+      "settle": "结算",
+      "settlePaymentsBy": "结算 {name} 支付的 {count} 笔款项，共 {amount}",
+      "settlePaymentsTo": "结算支付给 {name} 的 {count} 笔款项，共 {amount}"
     },
     "view": {
       "label": "视图",
@@ -1718,7 +1721,18 @@
     "create": "创建",
     "edit": "编辑详情",
     "creating": "创建中…",
-    "successToast": "已记录结算付款"
+    "successToast": "已记录结算付款",
+    "successToastMultiple": "已将 {count} 笔结算付款记录为一笔",
+    "paysMany": "{from} 支付给 {count} 人",
+    "receivesMany": "{to} 收到 {count} 笔付款",
+    "paymentsToInclude": "要包含的付款",
+    "selectionSummary": "已选择 {count} 笔付款，总计 {total}",
+    "legToAria": "{from} 支付给 {to}，{amount}",
+    "legFromAria": "{from} 支付给 {to}，{amount}",
+    "toParticipant": "支付给{name}",
+    "fromParticipant": "来自{name}",
+    "createSingle": "记录付款",
+    "createMultiple": "记录 {count} 笔付款"
   },
   "Participants": {
     "search": "搜索参与者……",

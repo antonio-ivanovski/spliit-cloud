@@ -853,7 +853,10 @@
       "participantReceives": "<strong>{name}</strong> rep",
       "participantPays": "<strong>{name}</strong> paga",
       "fromParticipant": "de <strong>{name}</strong>",
-      "toParticipant": "a <strong>{name}</strong>"
+      "toParticipant": "a <strong>{name}</strong>",
+      "settle": "Liquidar",
+      "settlePaymentsBy": "Liquidar {count} pagaments de {name}, {amount}",
+      "settlePaymentsTo": "Liquidar {count} pagaments a {name}, {amount}"
     },
     "view": {
       "label": "Vista",
@@ -1751,7 +1754,18 @@
     "create": "Crea",
     "edit": "Edita els detalls",
     "creating": "Creant…",
-    "successToast": "S’ha creat el pagament de liquidació."
+    "successToast": "S’ha creat el pagament de liquidació.",
+    "successToastMultiple": "S’han registrat {count} pagaments de liquidació en una sola entrada",
+    "paysMany": "{from} paga a {count} persones",
+    "receivesMany": "{to} rep {count} pagaments",
+    "paymentsToInclude": "Pagaments a incloure",
+    "selectionSummary": "{count} pagaments seleccionats, total: {total}",
+    "legToAria": "{from} paga a {to}, {amount}",
+    "legFromAria": "{from} paga a {to}, {amount}",
+    "toParticipant": "a {name}",
+    "fromParticipant": "de {name}",
+    "createSingle": "Registra el pagament",
+    "createMultiple": "Registra {count} pagaments"
   },
   "Participants": {
     "search": "Cerca participants...",

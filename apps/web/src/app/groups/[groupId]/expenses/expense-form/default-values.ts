@@ -58,6 +58,20 @@ const prefilledExpenseItemsSchema = z.array(
   }),
 )
 
+const prefilledSettlementSchema = z.object({
+  direction: z.enum(['pay', 'receive']),
+  participantId: z.string().min(1),
+  legs: z
+    .array(
+      z.object({
+        from: z.string().min(1),
+        to: z.string().min(1),
+        amount: z.number().int().positive(),
+      }),
+    )
+    .min(1),
+})
+
 export type GroupShape = NonNullable<AppRouterOutput['groups']['get']['group']>
 export type LoadedExpense = NonNullable<
   AppRouterOutput['groups']['expenses']['get']['expense']
@@ -117,6 +131,27 @@ const parsePrefilledItems = (
     })
   } catch {
     return []
+  }
+}
+
+function parsePrefilledSettlement(
+  raw: string | undefined,
+  group: GroupShape,
+): z.infer<typeof prefilledSettlementSchema> | null {
+  if (!raw) return null
+  try {
+    const parsed = prefilledSettlementSchema.safeParse(JSON.parse(raw))
+    if (!parsed.success) return null
+    const validIds = new Set(group.participants.map(({ id }) => id))
+    const legs = parsed.data.legs.filter(
+      ({ from, to }) => validIds.has(from) && validIds.has(to) && from !== to,
+    )
+    if (!validIds.has(parsed.data.participantId) || legs.length === 0) {
+      return null
+    }
+    return { ...parsed.data, legs }
+  } catch {
+    return null
   }
 }
 
@@ -411,6 +446,67 @@ export function buildExpenseFormDefaults(args: {
     const reimbursementNeedsConversion =
       searchOriginalCurrency != null &&
       searchOriginalCurrency !== group.currencyCode
+    const prefilledSettlement = parsePrefilledSettlement(
+      searchParams.settlements,
+      group,
+    )
+    if (prefilledSettlement) {
+      const totalMinor = prefilledSettlement.legs.reduce(
+        (sum, leg) => sum + leg.amount,
+        0,
+      )
+      const totalDisplay = amountAsDecimal(totalMinor, searchCurrency)
+      const paidByList =
+        prefilledSettlement.direction === 'pay'
+          ? [
+              {
+                participant: prefilledSettlement.participantId,
+                shares: totalDisplay,
+              },
+            ]
+          : prefilledSettlement.legs.map((leg) => ({
+              participant: leg.from,
+              shares: amountAsDecimal(leg.amount, searchCurrency),
+            }))
+      const paidFor =
+        prefilledSettlement.direction === 'pay'
+          ? prefilledSettlement.legs.map((leg) => ({
+              participant: leg.to,
+              shares: amountAsDecimal(leg.amount, searchCurrency),
+            }))
+          : [
+              {
+                participant: prefilledSettlement.participantId,
+                shares: totalDisplay,
+              },
+            ]
+      return {
+        title: reimbursementTitle,
+        expenseDate: new Date(),
+        amount: totalDisplay,
+        originalCurrency: searchOriginalCurrency,
+        conversionRate: undefined,
+        conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
+        category: PAYMENT_CATEGORY_ID,
+        paidBySplitMode: 'BY_AMOUNT' as const,
+        paidByList,
+        isMultiPayer:
+          prefilledSettlement.direction === 'receive' && paidByList.length > 1,
+        paidFor,
+        isReimbursement: true,
+        splitMode: 'BY_AMOUNT' as const,
+        documents: [],
+        notes: '',
+        recurrenceRule: RecurrenceRule.NONE,
+        itemizedRemainder: {
+          splitMode: 'EVENLY' as const,
+          paidFor: group.participants.map(({ id }) => ({
+            participant: id,
+            shares: 1,
+          })),
+        },
+      }
+    }
     return {
       title: reimbursementTitle,
       expenseDate: new Date(),

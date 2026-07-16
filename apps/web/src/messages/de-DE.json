@@ -874,7 +874,10 @@
       "participantReceives": "<strong>{name}</strong> erhält",
       "participantPays": "<strong>{name}</strong> zahlt",
       "fromParticipant": "von <strong>{name}</strong>",
-      "toParticipant": "an <strong>{name}</strong>"
+      "toParticipant": "an <strong>{name}</strong>",
+      "settle": "Ausgleichen",
+      "settlePaymentsBy": "{count} Zahlungen von {name} ausgleichen, {amount}",
+      "settlePaymentsTo": "{count} Zahlungen an {name} ausgleichen, {amount}"
     },
     "view": {
       "label": "Ansicht",
@@ -1802,7 +1805,18 @@
     "create": "Erstellen",
     "edit": "Details bearbeiten",
     "creating": "Erstellt…",
-    "successToast": "Ausgleichszahlung erfasst"
+    "successToast": "Ausgleichszahlung erfasst",
+    "successToastMultiple": "{count} Ausgleichszahlungen als einen Eintrag erfasst",
+    "paysMany": "{from} zahlt an {count} Personen",
+    "receivesMany": "{to} erhält {count} Zahlungen",
+    "paymentsToInclude": "Einzubeziehende Zahlungen",
+    "selectionSummary": "{count} Zahlungen ausgewählt, insgesamt {total}",
+    "legToAria": "{from} zahlt an {to}, {amount}",
+    "legFromAria": "{from} zahlt an {to}, {amount}",
+    "toParticipant": "an {name}",
+    "fromParticipant": "von {name}",
+    "createSingle": "Zahlung erfassen",
+    "createMultiple": "{count} Zahlungen erfassen"
   },
   "Participants": {
     "search": "Teilnehmer suchen...",
