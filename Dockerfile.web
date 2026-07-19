@@ -21,6 +21,7 @@ ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_DEFAULT_CURRENCY_CODE=$VITE_DEFAULT_CURRENCY_CODE
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=pruner /app/out/full/ ./
+RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 RUN bun --filter @spliit/web build
 
 FROM nginx:1.27-alpine
