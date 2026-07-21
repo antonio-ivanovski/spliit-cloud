@@ -1521,6 +1521,19 @@
       "updated": "个人资料照片已更新。",
       "remove": "删除照片",
       "removed": "个人资料照片已删除。"
+    },
+    "notifications": {
+      "title": "推送通知",
+      "description": "应用关闭时，在此设备上接收消费活动提醒。",
+      "enable": "启用推送通知",
+      "disable": "停用推送通知",
+      "enabled": "此设备上的推送通知已启用。",
+      "disabled": "此设备上的推送通知目前已停用。",
+      "unsupported": "此浏览器或环境不支持推送通知。",
+      "notConfigured": "此环境不提供推送通知。",
+      "permissionDenied": "通知已被阻止。请在浏览器或设备设置中允许通知，然后重试。",
+      "iosInstall": "在 iPhone 或 iPad 上，请先将 Spliit 添加到主屏幕，然后再启用推送通知。",
+      "error": "无法更新推送通知设置。请重试。"
     }
   },
   "Activities": {

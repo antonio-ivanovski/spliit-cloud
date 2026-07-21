@@ -1544,6 +1544,19 @@
       "updated": "Zdjęcie profilowe zaktualizowane.",
       "remove": "Usuń zdjęcie",
       "removed": "Zdjęcie profilowe usunięte."
+    },
+    "notifications": {
+      "title": "Powiadomienia push",
+      "description": "Otrzymuj na tym urządzeniu alerty o aktywności wydatków, gdy aplikacja jest zamknięta.",
+      "enable": "Włącz powiadomienia push",
+      "disable": "Wyłącz powiadomienia push",
+      "enabled": "Powiadomienia push są włączone na tym urządzeniu.",
+      "disabled": "Powiadomienia push są obecnie wyłączone na tym urządzeniu.",
+      "unsupported": "Powiadomienia push nie są obsługiwane przez tę przeglądarkę lub kontekst.",
+      "notConfigured": "Powiadomienia push nie są dostępne w tym wdrożeniu.",
+      "permissionDenied": "Powiadomienia są zablokowane. Zezwól na nie w ustawieniach przeglądarki lub urządzenia, a następnie spróbuj ponownie.",
+      "iosInstall": "Na iPhonie lub iPadzie dodaj Spliit do ekranu początkowego przed włączeniem powiadomień push.",
+      "error": "Nie udało się zaktualizować ustawień powiadomień push. Spróbuj ponownie."
     }
   },
   "Activities": {

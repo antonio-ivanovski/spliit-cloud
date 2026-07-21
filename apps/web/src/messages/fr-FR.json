@@ -1536,6 +1536,19 @@
       "updated": "Photo de profil mise à jour.",
       "remove": "Supprimer la photo",
       "removed": "Photo de profil supprimée."
+    },
+    "notifications": {
+      "title": "Notifications push",
+      "description": "Recevez des alertes d’activité concernant les dépenses sur cet appareil lorsque l’application est fermée.",
+      "enable": "Activer les notifications push",
+      "disable": "Désactiver les notifications push",
+      "enabled": "Les notifications push sont activées sur cet appareil.",
+      "disabled": "Les notifications push sont actuellement désactivées sur cet appareil.",
+      "unsupported": "Les notifications push ne sont pas prises en charge par ce navigateur ou ce contexte.",
+      "notConfigured": "Les notifications push ne sont pas disponibles sur ce déploiement.",
+      "permissionDenied": "Les notifications sont bloquées. Autorisez-les dans votre navigateur ou les réglages de votre appareil, puis réessayez.",
+      "iosInstall": "Sur iPhone ou iPad, ajoutez Spliit à votre écran d’accueil avant d’activer les notifications push.",
+      "error": "Impossible de mettre à jour les réglages des notifications push. Veuillez réessayer."
     }
   },
   "Activities": {

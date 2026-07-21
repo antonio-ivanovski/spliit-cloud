@@ -61,6 +61,12 @@ const envSchema = z
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
     EMAIL_FROM: z.string().optional(),
+
+    // Web Push delivery. These are intentionally optional outside production
+    // so local development can run without a VAPID key pair.
+    PUSH_VAPID_PUBLIC_KEY: z.string().optional(),
+    PUSH_VAPID_PRIVATE_KEY: z.string().optional(),
+    PUSH_VAPID_SUBJECT: z.string().url().optional(),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
@@ -82,6 +88,19 @@ const envSchema = z
         code: 'custom',
         path: ['EMAIL_FROM'],
         message: 'EMAIL_FROM is required in production',
+      })
+    }
+    const pushVapidValues = [
+      env.PUSH_VAPID_PUBLIC_KEY,
+      env.PUSH_VAPID_PRIVATE_KEY,
+      env.PUSH_VAPID_SUBJECT,
+    ]
+    if (pushVapidValues.some(Boolean) && !pushVapidValues.every(Boolean)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['PUSH_VAPID_PUBLIC_KEY'],
+        message:
+          'PUSH_VAPID_PUBLIC_KEY, PUSH_VAPID_PRIVATE_KEY and PUSH_VAPID_SUBJECT must be configured together',
       })
     }
     // When SMTP is configured in production, require credentials. This rules

@@ -578,6 +578,19 @@
       "updated": "Profile photo updated.",
       "remove": "Remove photo",
       "removed": "Profile photo removed."
+    },
+    "notifications": {
+      "title": "Push notifications",
+      "description": "Get expense activity alerts on this device when the app is closed.",
+      "enable": "Enable push notifications",
+      "disable": "Disable push notifications",
+      "enabled": "Push notifications are enabled on this device.",
+      "disabled": "Push notifications are currently disabled on this device.",
+      "unsupported": "Push notifications aren't supported by this browser or context.",
+      "notConfigured": "Push notifications aren't available on this deployment.",
+      "permissionDenied": "Notifications are blocked. Allow them in your browser or device settings, then try again.",
+      "iosInstall": "On iPhone or iPad, add Spliit to your Home Screen before enabling push notifications.",
+      "error": "Could not update push notification settings. Please try again."
     }
   },
   "CompleteProfile": {

@@ -7,6 +7,7 @@ import { featuresRouter } from './features'
 import { friendsRouter } from './friends'
 import { groupsRouter } from './groups'
 import { invitationsRouter } from './invitations'
+import { notificationsRouter } from './notifications'
 import { uploadsRouter } from './uploads'
 
 export const appRouter = createTRPCRouter({
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   features: featuresRouter,
   friends: friendsRouter,
   invitations: invitationsRouter,
+  notifications: notificationsRouter,
   uploads: uploadsRouter,
 })
 

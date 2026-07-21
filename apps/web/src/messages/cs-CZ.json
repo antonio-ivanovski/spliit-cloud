@@ -1544,6 +1544,19 @@
       "updated": "Profilová fotografie aktualizována.",
       "remove": "Odstranit fotografii",
       "removed": "Profilová fotografie odstraněna."
+    },
+    "notifications": {
+      "title": "Push notifikace",
+      "description": "Dostávejte na tomto zařízení upozornění na aktivitu u výdajů, když je aplikace zavřená.",
+      "enable": "Povolit push notifikace",
+      "disable": "Zakázat push notifikace",
+      "enabled": "Push notifikace jsou na tomto zařízení povolené.",
+      "disabled": "Push notifikace jsou na tomto zařízení momentálně zakázané.",
+      "unsupported": "Tento prohlížeč nebo kontext nepodporuje push notifikace.",
+      "notConfigured": "Push notifikace nejsou v tomto nasazení k dispozici.",
+      "permissionDenied": "Oznámení jsou blokována. Povolte je v nastavení prohlížeče nebo zařízení a zkuste to znovu.",
+      "iosInstall": "Na iPhonu nebo iPadu přidejte Spliit na plochu před povolením push notifikací.",
+      "error": "Nastavení push notifikací se nepodařilo aktualizovat. Zkuste to znovu."
     }
   },
   "Activities": {

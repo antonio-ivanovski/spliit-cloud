@@ -1528,6 +1528,19 @@
       "updated": "Profiilikuva päivitetty.",
       "remove": "Poista kuva",
       "removed": "Profiilikuva poistettu."
+    },
+    "notifications": {
+      "title": "Push-ilmoitukset",
+      "description": "Saat tällä laitteella ilmoituksia kulutapahtumista, kun sovellus on suljettu.",
+      "enable": "Ota push-ilmoitukset käyttöön",
+      "disable": "Poista push-ilmoitukset käytöstä",
+      "enabled": "Push-ilmoitukset ovat käytössä tällä laitteella.",
+      "disabled": "Push-ilmoitukset eivät ole tällä hetkellä käytössä tällä laitteella.",
+      "unsupported": "Tämä selain tai konteksti ei tue push-ilmoituksia.",
+      "notConfigured": "Push-ilmoitukset eivät ole käytettävissä tässä ympäristössä.",
+      "permissionDenied": "Ilmoitukset on estetty. Salli ne selaimen tai laitteen asetuksissa ja yritä uudelleen.",
+      "iosInstall": "Lisää Spliit iPhonen tai iPadin Koti-valikkoon ennen push-ilmoitusten käyttöönottoa.",
+      "error": "Push-ilmoitusasetusten päivittäminen epäonnistui. Yritä uudelleen."
     }
   },
   "Activities": {

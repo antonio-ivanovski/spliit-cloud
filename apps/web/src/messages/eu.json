@@ -1536,6 +1536,19 @@
       "updated": "Profil-argazkia eguneratu da.",
       "remove": "Kendu argazkia",
       "removed": "Profil-argazkia kendu da."
+    },
+    "notifications": {
+      "title": "Push jakinarazpenak",
+      "description": "Aplikazioa itxita dagoenean, jaso gastuen jarduerari buruzko alertak gailu honetan.",
+      "enable": "Gaitu push jakinarazpenak",
+      "disable": "Desgaitu push jakinarazpenak",
+      "enabled": "Push jakinarazpenak gaituta daude gailu honetan.",
+      "disabled": "Push jakinarazpenak desgaituta daude gailu honetan.",
+      "unsupported": "Nabigatzaile edo testuinguru honek ez ditu push jakinarazpenak onartzen.",
+      "notConfigured": "Push jakinarazpenak ez daude erabilgarri inplementazio honetan.",
+      "permissionDenied": "Jakinarazpenak blokeatuta daude. Baimendu nabigatzailearen edo gailuaren ezarpenetan, eta saiatu berriro.",
+      "iosInstall": "iPhone edo iPad batean, gehitu Spliit hasierako pantailara push jakinarazpenak gaitu aurretik.",
+      "error": "Ezin izan dira push jakinarazpenen ezarpenak eguneratu. Saiatu berriro."
     }
   },
   "Activities": {

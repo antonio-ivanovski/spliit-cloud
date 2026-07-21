@@ -1560,6 +1560,19 @@
       "updated": "Profilbild aktualisiert.",
       "remove": "Foto entfernen",
       "removed": "Profilbild entfernt."
+    },
+    "notifications": {
+      "title": "Push-Benachrichtigungen",
+      "description": "Erhalte Benachrichtigungen zu Ausgaben auf diesem Gerät, wenn die App geschlossen ist.",
+      "enable": "Push-Benachrichtigungen aktivieren",
+      "disable": "Push-Benachrichtigungen deaktivieren",
+      "enabled": "Push-Benachrichtigungen sind auf diesem Gerät aktiviert.",
+      "disabled": "Push-Benachrichtigungen sind auf diesem Gerät derzeit deaktiviert.",
+      "unsupported": "Push-Benachrichtigungen werden von diesem Browser oder Kontext nicht unterstützt.",
+      "notConfigured": "Push-Benachrichtigungen sind in dieser Umgebung nicht verfügbar.",
+      "permissionDenied": "Benachrichtigungen sind blockiert. Erlaube sie in den Browser- oder Geräteeinstellungen und versuche es erneut.",
+      "iosInstall": "Füge Spliit auf iPhone oder iPad zuerst zum Home-Bildschirm hinzu, bevor du Push-Benachrichtigungen aktivierst.",
+      "error": "Push-Benachrichtigungseinstellungen konnten nicht aktualisiert werden. Bitte versuche es erneut."
     }
   },
   "Activities": {

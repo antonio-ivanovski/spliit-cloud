@@ -10,6 +10,7 @@ import {
   renderExpenseActivityEmail,
   type ExpenseActivityInputAny,
 } from '../mail/templates'
+import { isPushConfigured } from './push'
 import type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
@@ -302,6 +303,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         changedFields: changedFieldsForTemplate,
         expenseUrl: baseTemplate.expenseUrl,
       }),
+      skipPushSubscribed: true,
     })
   }
 
@@ -385,6 +387,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         totalStr,
         groupUrl,
       }),
+      skipPushSubscribed: false,
     })
   }
 
@@ -396,6 +399,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     buildSubject: (displayName: string) => string
     buildText: (displayName: string) => string
     templateFor: (displayName: string) => ExpenseActivityInputAny
+    skipPushSubscribed?: boolean
   }): Promise<void> {
     for (const participant of args.participants) {
       const groupMember = participant.groupMember
@@ -406,6 +410,14 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       if (isPlaceholderEmail(account.email)) continue
       if (args.actor?.id === account.id && args.actor?.type === 'ACCOUNT')
         continue
+
+      if (args.skipPushSubscribed && isPushConfigured) {
+        const subscriptions = await prisma.pushSubscription.findMany({
+          where: { accountId: account.id },
+          select: { id: true },
+        })
+        if (Array.isArray(subscriptions) && subscriptions.length > 0) continue
+      }
 
       const displayName = resolveGroupDisplayName(
         args.group.groupType,

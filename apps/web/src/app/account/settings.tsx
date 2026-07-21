@@ -13,9 +13,10 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
 import { prepareProfileImage } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { usePushNotifications } from '@/lib/use-push-notifications'
 import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft, Bell, Loader2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -41,6 +42,7 @@ function AccountSettingsContent() {
   const navigate = useNavigate()
   const utils = trpc.useUtils()
   const { toast } = useToast()
+  const push = usePushNotifications()
 
   const [dirtyName, setDirtyName] = useState<string | null>(null)
   const name = dirtyName ?? account?.name ?? ''
@@ -160,6 +162,18 @@ function AccountSettingsContent() {
     }
   }
 
+  async function handlePushToggle() {
+    try {
+      if (push.enabled) {
+        await push.disable()
+      } else {
+        await push.enable()
+      }
+    } catch {
+      setError(t('notifications.error'))
+    }
+  }
+
   const isDirty = name.trim() !== (account.name ?? '')
 
   return (
@@ -271,6 +285,57 @@ function AccountSettingsContent() {
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+      <Card className="mobile-surface">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Bell className="h-5 w-5" aria-hidden="true" />
+            {t('notifications.title')}
+          </CardTitle>
+          <CardDescription>{t('notifications.description')}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          {!push.supported ? (
+            <p className="text-sm text-muted-foreground">
+              {t('notifications.unsupported')}
+            </p>
+          ) : !push.configured ? (
+            <p className="text-sm text-muted-foreground">
+              {t('notifications.notConfigured')}
+            </p>
+          ) : push.iosHomeScreenRequired ? (
+            <p className="text-sm text-muted-foreground">
+              {t('notifications.iosInstall')}
+            </p>
+          ) : push.permission === 'denied' ? (
+            <p className="text-sm text-muted-foreground">
+              {t('notifications.permissionDenied')}
+            </p>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">
+                {push.enabled
+                  ? t('notifications.enabled')
+                  : t('notifications.disabled')}
+              </p>
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant={push.enabled ? 'outline' : 'default'}
+                  onClick={() => void handlePushToggle()}
+                  disabled={push.isLoading || push.isUpdating}
+                >
+                  {(push.isLoading || push.isUpdating) && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {push.enabled
+                    ? t('notifications.disable')
+                    : t('notifications.enable')}
+                </Button>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </main>

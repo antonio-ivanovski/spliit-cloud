@@ -1,6 +1,6 @@
 import { setDefaultActivityNotificationDispatchers } from './dispatcher'
-import { ExpenseEmailActivityNotificationDispatcher } from './expense-email-dispatcher'
+import { ExpenseActivityNotificationRouter } from './expense-router'
 
 setDefaultActivityNotificationDispatchers([
-  new ExpenseEmailActivityNotificationDispatcher(),
+  new ExpenseActivityNotificationRouter(),
 ])

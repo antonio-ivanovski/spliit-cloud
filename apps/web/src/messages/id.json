@@ -1521,6 +1521,19 @@
       "updated": "Foto profil diperbarui.",
       "remove": "Hapus foto",
       "removed": "Foto profil dihapus."
+    },
+    "notifications": {
+      "title": "Notifikasi push",
+      "description": "Dapatkan peringatan aktivitas pengeluaran di perangkat ini saat aplikasi ditutup.",
+      "enable": "Aktifkan notifikasi push",
+      "disable": "Nonaktifkan notifikasi push",
+      "enabled": "Notifikasi push diaktifkan di perangkat ini.",
+      "disabled": "Notifikasi push saat ini dinonaktifkan di perangkat ini.",
+      "unsupported": "Notifikasi push tidak didukung oleh browser atau konteks ini.",
+      "notConfigured": "Notifikasi push tidak tersedia di lingkungan ini.",
+      "permissionDenied": "Notifikasi diblokir. Izinkan notifikasi di pengaturan browser atau perangkat, lalu coba lagi.",
+      "iosInstall": "Di iPhone atau iPad, tambahkan Spliit ke Layar Utama sebelum mengaktifkan notifikasi push.",
+      "error": "Tidak dapat memperbarui pengaturan notifikasi push. Silakan coba lagi."
     }
   },
   "Activities": {

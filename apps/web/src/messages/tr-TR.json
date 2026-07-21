@@ -1528,6 +1528,19 @@
       "updated": "Profil fotoğrafı güncellendi.",
       "remove": "Fotoğrafı kaldır",
       "removed": "Profil fotoğrafı kaldırıldı."
+    },
+    "notifications": {
+      "title": "Anlık bildirimler",
+      "description": "Uygulama kapalıyken bu cihazda harcama etkinliği bildirimleri alın.",
+      "enable": "Anlık bildirimleri etkinleştir",
+      "disable": "Anlık bildirimleri devre dışı bırak",
+      "enabled": "Anlık bildirimler bu cihazda etkin.",
+      "disabled": "Anlık bildirimler şu anda bu cihazda devre dışı.",
+      "unsupported": "Anlık bildirimler bu tarayıcı veya bağlam tarafından desteklenmiyor.",
+      "notConfigured": "Anlık bildirimler bu ortamda kullanılamıyor.",
+      "permissionDenied": "Bildirimler engellendi. Tarayıcı veya cihaz ayarlarından izin verip tekrar deneyin.",
+      "iosInstall": "iPhone veya iPad'de anlık bildirimleri etkinleştirmeden önce Spliit'i Ana Ekran'a ekleyin.",
+      "error": "Anlık bildirim ayarları güncellenemedi. Lütfen tekrar deneyin."
     }
   },
   "Activities": {

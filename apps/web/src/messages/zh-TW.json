@@ -1521,6 +1521,19 @@
       "updated": "個人資料照片已更新。",
       "remove": "移除照片",
       "removed": "個人資料照片已移除。"
+    },
+    "notifications": {
+      "title": "推播通知",
+      "description": "應用程式關閉時，在此裝置上接收支出活動通知。",
+      "enable": "啟用推播通知",
+      "disable": "停用推播通知",
+      "enabled": "此裝置已啟用推播通知。",
+      "disabled": "此裝置目前已停用推播通知。",
+      "unsupported": "此瀏覽器或環境不支援推播通知。",
+      "notConfigured": "此部署不提供推播通知。",
+      "permissionDenied": "通知已被封鎖。請在瀏覽器或裝置設定中允許通知，然後再試一次。",
+      "iosInstall": "在 iPhone 或 iPad 上，請先將 Spliit 加入主畫面，再啟用推播通知。",
+      "error": "無法更新推播通知設定。請再試一次。"
     }
   },
   "Activities": {

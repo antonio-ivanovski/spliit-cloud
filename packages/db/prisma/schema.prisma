@@ -52,7 +52,22 @@ model Account {
   sentInvitations     GroupInvitation[]        @relation("InvitationInviter")
   groupPreferences    AccountGroupPreference[]
   defaultSplits       AccountGroupDefaultSplit[]
+  pushSubscriptions   PushSubscription[]
 
+}
+
+model PushSubscription {
+  id        String   @id
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  endpoint  String   @unique @db.Text
+  p256dh    String   @db.Text
+  auth      String   @db.Text
+  userAgent String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([accountId])
 }
 
 model AuthIdentity {

@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/lib/auth'
+import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LogOut, Settings as SettingsIcon } from 'lucide-react'
@@ -58,6 +59,7 @@ export function AccountMenu() {
           className="text-destructive focus:text-destructive"
           onSelect={async (event) => {
             event.preventDefault()
+            await disconnectPushSubscription()
             await authClient.signOut()
             navigate({ to: '/', replace: true })
           }}

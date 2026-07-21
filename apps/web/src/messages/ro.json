@@ -1536,6 +1536,19 @@
       "updated": "Fotografia de profil a fost actualizată.",
       "remove": "Elimină fotografia",
       "removed": "Fotografia de profil a fost eliminată."
+    },
+    "notifications": {
+      "title": "Notificări push",
+      "description": "Primește alerte despre activitatea cheltuielilor pe acest dispozitiv când aplicația este închisă.",
+      "enable": "Activează notificările push",
+      "disable": "Dezactivează notificările push",
+      "enabled": "Notificările push sunt activate pe acest dispozitiv.",
+      "disabled": "Notificările push sunt dezactivate momentan pe acest dispozitiv.",
+      "unsupported": "Notificările push nu sunt acceptate de acest browser sau context.",
+      "notConfigured": "Notificările push nu sunt disponibile în această implementare.",
+      "permissionDenied": "Notificările sunt blocate. Permite-le în browser sau în setările dispozitivului, apoi încearcă din nou.",
+      "iosInstall": "Pe iPhone sau iPad, adaugă Spliit pe ecranul principal înainte de a activa notificările push.",
+      "error": "Nu s-au putut actualiza setările notificărilor push. Încearcă din nou."
     }
   },
   "Activities": {

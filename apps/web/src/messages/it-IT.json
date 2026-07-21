@@ -1536,6 +1536,19 @@
       "updated": "Foto del profilo aggiornata.",
       "remove": "Rimuovi foto",
       "removed": "Foto del profilo rimossa."
+    },
+    "notifications": {
+      "title": "Notifiche push",
+      "description": "Ricevi avvisi sull'attività delle spese su questo dispositivo quando l'app è chiusa.",
+      "enable": "Abilita le notifiche push",
+      "disable": "Disabilita le notifiche push",
+      "enabled": "Le notifiche push sono abilitate su questo dispositivo.",
+      "disabled": "Le notifiche push sono attualmente disabilitate su questo dispositivo.",
+      "unsupported": "Le notifiche push non sono supportate da questo browser o contesto.",
+      "notConfigured": "Le notifiche push non sono disponibili in questa distribuzione.",
+      "permissionDenied": "Le notifiche sono bloccate. Consentile nel browser o nelle impostazioni del dispositivo, quindi riprova.",
+      "iosInstall": "Su iPhone o iPad, aggiungi Spliit alla schermata Home prima di abilitare le notifiche push.",
+      "error": "Impossibile aggiornare le impostazioni delle notifiche push. Riprova."
     }
   },
   "Activities": {

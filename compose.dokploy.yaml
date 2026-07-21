@@ -53,6 +53,9 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       EMAIL_FROM: ${EMAIL_FROM:?EMAIL_FROM must be set}
+      PUSH_VAPID_PUBLIC_KEY: ${PUSH_VAPID_PUBLIC_KEY:?PUSH_VAPID_PUBLIC_KEY must be set}
+      PUSH_VAPID_PRIVATE_KEY: ${PUSH_VAPID_PRIVATE_KEY:?PUSH_VAPID_PRIVATE_KEY must be set}
+      PUSH_VAPID_SUBJECT: ${PUSH_VAPID_SUBJECT:?PUSH_VAPID_SUBJECT must be set}
     networks:
       - dokploy-network
     healthcheck:

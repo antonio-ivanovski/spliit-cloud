@@ -1528,6 +1528,19 @@
       "updated": "Profielfoto bijgewerkt.",
       "remove": "Foto verwijderen",
       "removed": "Profielfoto verwijderd."
+    },
+    "notifications": {
+      "title": "Pushmeldingen",
+      "description": "Ontvang meldingen over uitgavenactiviteit op dit apparaat wanneer de app gesloten is.",
+      "enable": "Pushmeldingen inschakelen",
+      "disable": "Pushmeldingen uitschakelen",
+      "enabled": "Pushmeldingen zijn ingeschakeld op dit apparaat.",
+      "disabled": "Pushmeldingen zijn momenteel uitgeschakeld op dit apparaat.",
+      "unsupported": "Pushmeldingen worden niet ondersteund door deze browser of context.",
+      "notConfigured": "Pushmeldingen zijn niet beschikbaar in deze omgeving.",
+      "permissionDenied": "Meldingen zijn geblokkeerd. Sta ze toe in je browser- of apparaatinstellingen en probeer het opnieuw.",
+      "iosInstall": "Voeg Spliit op een iPhone of iPad eerst toe aan je beginscherm voordat je pushmeldingen inschakelt.",
+      "error": "Pushmeldinginstellingen konden niet worden bijgewerkt. Probeer het opnieuw."
     }
   },
   "Activities": {
