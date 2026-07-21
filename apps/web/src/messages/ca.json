@@ -1919,5 +1919,25 @@
     "failedDescription": "No s'ha pogut registrar aquest dispositiu. Les notificacions configurades per correu electrònic continuaran arribant-hi; les opcions només push no es redirigeixen.",
     "emailUsage": "Només arribaran les notificacions configurades per correu electrònic fins que activis un dispositiu. Pots permetre les notificacions a la configuració del navegador i tornar-ho a provar des de Configuració.",
     "done": "Fet"
+  },
+  "Unsubscribe": {
+    "title": "Desactiva aquests correus?",
+    "description": "Tria si vols continuar rebent un tipus de notificació per correu.",
+    "confirm": "Desactiva aquests correus",
+    "submitting": "Cancel·lant la subscripció…",
+    "cancel": "Mantén aquests correus",
+    "error": "No hem pogut actualitzar les teves preferències de correu. Torna-ho a provar.",
+    "loading": "Comprovant l’enllaç de cancel·lació…",
+    "backHome": "Torna a l’inici",
+    "manageSettings": "Revisa tota la configuració de notificacions",
+    "invalid": {
+      "title": "Aquest enllaç ja no funciona",
+      "description": "Pot haver caducat. Inicia sessió per revisar la configuració del correu i de les notificacions push."
+    },
+    "success": {
+      "title": "Aquests correus estan desactivats",
+      "description": "No rebràs correus de {category}. La resta de configuració de notificacions no ha canviat."
+    },
+    "scope": "Només es desactivarà aquesta notificació per correu. La resta de correus i les notificacions push es mantindran igual."
   }
 }

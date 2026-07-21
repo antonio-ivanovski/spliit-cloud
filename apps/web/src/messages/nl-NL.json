@@ -1902,5 +1902,25 @@
     "failedDescription": "We konden dit apparaat niet registreren. Meldingen die voor e-mail zijn ingesteld, blijven daar aankomen; keuzes met alleen push worden niet omgeleid.",
     "emailUsage": "Er komen alleen meldingen aan die voor e-mail zijn ingesteld totdat je een apparaat inschakelt. Je kunt meldingen toestaan in je browserinstellingen en het daarna opnieuw proberen via Instellingen.",
     "done": "Klaar"
+  },
+  "Unsubscribe": {
+    "title": "Deze e-mails uitschakelen?",
+    "description": "Je kiest of je dit type e-mailmelding wilt blijven ontvangen.",
+    "confirm": "Deze e-mails uitschakelen",
+    "submitting": "Afmelden…",
+    "cancel": "Deze e-mails behouden",
+    "error": "We konden je e-mailvoorkeuren niet bijwerken. Probeer het opnieuw.",
+    "loading": "Afmeldlink controleren…",
+    "backHome": "Terug naar home",
+    "manageSettings": "Alle meldingsinstellingen bekijken",
+    "invalid": {
+      "title": "Deze link werkt niet meer",
+      "description": "De link is mogelijk verlopen. Meld je aan om je e-mail- en pushmeldingsinstellingen te bekijken."
+    },
+    "success": {
+      "title": "Deze e-mails zijn uitgeschakeld",
+      "description": "Je ontvangt geen e-mails meer voor {category}. Je andere meldingsinstellingen zijn niet gewijzigd."
+    },
+    "scope": "Alleen deze e-mailmelding wordt uitgeschakeld. Je andere e-mails en pushmeldingen blijven hetzelfde."
   }
 }

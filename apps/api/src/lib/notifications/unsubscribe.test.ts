@@ -78,4 +78,27 @@ describe('signed email unsubscribe tokens', () => {
     expect(metadata?.textFooter).toContain('unsubscribe')
     vi.unstubAllEnvs()
   })
+
+  it('builds the web preview URL with the token in the fragment', async () => {
+    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'd'.repeat(32))
+    vi.resetModules()
+    const {
+      createEmailUnsubscribeToken,
+      getEmailUnsubscribePreviewUrl,
+      previewEmailUnsubscribeToken,
+    } = await import('./unsubscribe')
+    const token = await createEmailUnsubscribeToken({
+      accountId: 'acct-1',
+      category: NotificationCategory.EXPENSE_CREATED,
+    })
+
+    expect(getEmailUnsubscribePreviewUrl(token)).toBe(
+      `http://localhost:3000/unsubscribe#token=${encodeURIComponent(token)}`,
+    )
+    await expect(previewEmailUnsubscribeToken(token)).resolves.toEqual({
+      category: NotificationCategory.EXPENSE_CREATED,
+    })
+    await expect(previewEmailUnsubscribeToken(`${token}x`)).resolves.toBeNull()
+    vi.unstubAllEnvs()
+  })
 })

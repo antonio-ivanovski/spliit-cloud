@@ -1919,5 +1919,25 @@
     "failedDescription": "Não foi possível registrar este dispositivo. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
     "emailUsage": "Somente as notificações configuradas para e-mail serão recebidas até que você ative um dispositivo. Permita notificações nas configurações do navegador e tente novamente em Configurações.",
     "done": "Concluído"
+  },
+  "Unsubscribe": {
+    "title": "Desativar estes e-mails?",
+    "description": "Escolha se deseja continuar recebendo um tipo de notificação por e-mail.",
+    "confirm": "Desativar estes e-mails",
+    "submitting": "Cancelando inscrição…",
+    "cancel": "Manter estes e-mails",
+    "error": "Não foi possível atualizar suas preferências de e-mail. Tente novamente.",
+    "loading": "Verificando o link para cancelar a inscrição…",
+    "backHome": "Voltar ao início",
+    "manageSettings": "Revisar todas as configurações de notificações",
+    "invalid": {
+      "title": "Este link não funciona mais",
+      "description": "Ele pode ter expirado. Entre para revisar as configurações de e-mail e notificações push."
+    },
+    "success": {
+      "title": "Estes e-mails estão desativados",
+      "description": "Você não receberá e-mails de {category}. Suas outras configurações de notificações não foram alteradas."
+    },
+    "scope": "Somente esta notificação por e-mail será desativada. Seus outros e-mails e notificações push continuarão iguais."
   }
 }

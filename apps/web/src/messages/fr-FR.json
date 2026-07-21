@@ -1919,5 +1919,25 @@
     "failedDescription": "Nous n’avons pas pu enregistrer cet appareil. Les notifications configurées par e-mail continueront d’y être envoyées ; les choix uniquement push ne seront pas redirigés.",
     "emailUsage": "Seules les notifications configurées par e-mail seront reçues tant que vous n’aurez pas activé un appareil. Vous pouvez autoriser les notifications dans les paramètres du navigateur et réessayer depuis les paramètres.",
     "done": "Terminé"
+  },
+  "Unsubscribe": {
+    "title": "Désactiver ces e-mails ?",
+    "description": "Choisissez si vous souhaitez continuer à recevoir un type de notification par e-mail.",
+    "confirm": "Désactiver ces e-mails",
+    "submitting": "Désabonnement…",
+    "cancel": "Conserver ces e-mails",
+    "error": "Nous n’avons pas pu mettre à jour vos préférences e-mail. Veuillez réessayer.",
+    "loading": "Vérification du lien de désabonnement…",
+    "backHome": "Retour à l’accueil",
+    "manageSettings": "Voir tous les paramètres de notification",
+    "invalid": {
+      "title": "Ce lien ne fonctionne plus",
+      "description": "Il a peut-être expiré. Connectez-vous pour consulter vos paramètres d’e-mail et de notifications push."
+    },
+    "success": {
+      "title": "Ces e-mails sont désactivés",
+      "description": "Vous ne recevrez plus d’e-mails pour {category}. Vos autres paramètres de notification n’ont pas changé."
+    },
+    "scope": "Seule cette notification par e-mail sera désactivée. Vos autres e-mails et notifications push resteront inchangés."
   }
 }

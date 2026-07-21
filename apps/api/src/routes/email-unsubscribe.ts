@@ -1,6 +1,9 @@
 import type { Context } from 'hono'
 import { removeEmailPreference } from '../lib/notifications/preferences'
-import { verifyEmailUnsubscribeToken } from '../lib/notifications/unsubscribe'
+import {
+  getEmailUnsubscribePreviewUrl,
+  verifyEmailUnsubscribeToken,
+} from '../lib/notifications/unsubscribe'
 
 function secureHeaders(c: Context) {
   c.header('Cache-Control', 'no-store')
@@ -19,14 +22,10 @@ function tokenFrom(c: Context): string | null {
 
 export async function emailUnsubscribeGet(c: Context) {
   secureHeaders(c)
-  const claims = await verifyEmailUnsubscribeToken(tokenFrom(c))
+  const token = tokenFrom(c)
+  const claims = await verifyEmailUnsubscribeToken(token)
   if (!claims) return c.text('Invalid unsubscribe link', 400)
-  const label = claims.category.toLowerCase().replaceAll('_', ' ')
-  return c.html(
-    `<!doctype html><meta charset="utf-8"><title>Unsubscribe</title>` +
-      `<meta name="referrer" content="no-referrer"><p>Remove ${label} email notifications?</p>` +
-      `<form method="post" action="/email/unsubscribe?token=${encodeURIComponent(tokenFrom(c) as string)}"><input type="hidden" name="List-Unsubscribe" value="One-Click"><button type="submit">Unsubscribe</button></form>`,
-  )
+  return c.redirect(getEmailUnsubscribePreviewUrl(token as string), 302)
 }
 
 export async function emailUnsubscribePost(c: Context) {

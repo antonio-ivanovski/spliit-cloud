@@ -11,8 +11,9 @@ import { makeQueryClient } from './query-client'
 export const trpc = createTRPCReact<AppRouter>()
 
 let clientQueryClientSingleton: QueryClient
+let trpcClientSingleton: ReturnType<typeof trpc.createClient> | undefined
 
-function getQueryClient() {
+export function getQueryClient() {
   if (typeof window === 'undefined') {
     // Server: always make a new query client
     return makeQueryClient()
@@ -25,6 +26,23 @@ function getUrl() {
   return `${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/trpc`
 }
 
+export function getTrpcClient() {
+  return (trpcClientSingleton ??= trpc.createClient({
+    links: [
+      httpBatchLink({
+        transformer: superjson,
+        url: getUrl(),
+        fetch(url, options) {
+          return fetch(url, {
+            ...options,
+            credentials: 'include',
+          })
+        },
+      }),
+    ],
+  }))
+}
+
 export function TRPCProvider(
   props: Readonly<{
     children: React.ReactNode
@@ -35,22 +53,7 @@ export function TRPCProvider(
   //       suspend because React will throw away the client on the initial
   //       render if it suspends and there is no boundary
   const queryClient = getQueryClient()
-  const [trpcClient] = useState(() =>
-    trpc.createClient({
-      links: [
-        httpBatchLink({
-          transformer: superjson,
-          url: getUrl(),
-          fetch(url, options) {
-            return fetch(url, {
-              ...options,
-              credentials: 'include',
-            })
-          },
-        }),
-      ],
-    }),
-  )
+  const [trpcClient] = useState(getTrpcClient)
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>

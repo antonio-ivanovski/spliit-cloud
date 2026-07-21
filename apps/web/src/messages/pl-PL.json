@@ -1936,5 +1936,25 @@
     "failedDescription": "Nie udało się zarejestrować tego urządzenia. Powiadomienia skonfigurowane dla e-maila nadal będą tam dostarczane; wybory wyłącznie push nie są przekierowywane.",
     "emailUsage": "Dopóki nie włączysz urządzenia, będą docierać tylko powiadomienia skonfigurowane dla e-maila. Zezwól na powiadomienia w ustawieniach przeglądarki i spróbuj ponownie w Ustawieniach.",
     "done": "Gotowe"
+  },
+  "Unsubscribe": {
+    "title": "Wyłączyć te e-maile?",
+    "description": "Wybierasz, czy zachować ten rodzaj powiadomień e-mail.",
+    "confirm": "Wyłącz te e-maile",
+    "submitting": "Wypisywanie…",
+    "cancel": "Zachowaj te e-maile",
+    "error": "Nie udało się zaktualizować ustawień e-mail. Spróbuj ponownie.",
+    "loading": "Sprawdzanie linku rezygnacji z subskrypcji…",
+    "backHome": "Wróć do strony głównej",
+    "manageSettings": "Przejrzyj wszystkie ustawienia powiadomień",
+    "invalid": {
+      "title": "Ten link już nie działa",
+      "description": "Mógł wygasnąć. Zaloguj się, aby przejrzeć ustawienia powiadomień e-mail i push."
+    },
+    "success": {
+      "title": "Te e-maile są wyłączone",
+      "description": "Nie będziesz otrzymywać e-maili dotyczących {category}. Pozostałe ustawienia powiadomień nie uległy zmianie."
+    },
+    "scope": "Wyłączone zostanie tylko to powiadomienie e-mail. Pozostałe e-maile i powiadomienia push pozostaną bez zmian."
   }
 }

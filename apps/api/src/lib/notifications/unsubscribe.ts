@@ -3,7 +3,7 @@ import {
   type NotificationCategory,
 } from '@spliit/domain/notifications'
 import { Jwt } from 'hono/utils/jwt'
-import { getApiBaseUrl } from '../auth/urls'
+import { getApiBaseUrl, getWebBaseUrl } from '../auth/urls'
 import { env } from '../env'
 
 const AUDIENCE = 'spliit:email-unsubscribe'
@@ -52,6 +52,21 @@ export async function getEmailUnsubscribeUrl(input: {
 }): Promise<string> {
   const token = await createEmailUnsubscribeToken(input)
   return `${getApiBaseUrl()}/email/unsubscribe?token=${encodeURIComponent(token)}`
+}
+
+/** Build the browser URL used to preview a signed unsubscribe token. */
+export function getEmailUnsubscribePreviewUrl(token: string): string {
+  const url = new URL('/unsubscribe', getWebBaseUrl())
+  url.hash = `token=${encodeURIComponent(token)}`
+  return url.toString()
+}
+
+/** Return only the category exposed by the token-scoped public preview. */
+export async function previewEmailUnsubscribeToken(
+  token: string | null | undefined,
+): Promise<{ category: NotificationCategory } | null> {
+  const claims = await verifyEmailUnsubscribeToken(token)
+  return claims ? { category: claims.category } : null
 }
 
 /** Build controlled headers and a visible text footer for optional email. */

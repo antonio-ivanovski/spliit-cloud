@@ -1919,5 +1919,25 @@
     "failedDescription": "No hemos podido registrar este dispositivo. Las notificaciones configuradas para correo electrónico seguirán llegando allí; las opciones solo push no se redirigen.",
     "emailUsage": "Solo llegarán las notificaciones configuradas para correo electrónico hasta que actives un dispositivo. Puedes permitir las notificaciones en la configuración del navegador y volver a intentarlo desde Ajustes.",
     "done": "Listo"
+  },
+  "Unsubscribe": {
+    "title": "¿Desactivar estos correos?",
+    "description": "Elige si quieres seguir recibiendo un tipo de notificación por correo.",
+    "confirm": "Desactivar estos correos",
+    "submitting": "Dándose de baja…",
+    "cancel": "Mantener estos correos",
+    "error": "No hemos podido actualizar tus preferencias de correo. Inténtalo de nuevo.",
+    "loading": "Comprobando el enlace para darse de baja…",
+    "backHome": "Volver al inicio",
+    "manageSettings": "Revisar toda la configuración de notificaciones",
+    "invalid": {
+      "title": "Este enlace ya no funciona",
+      "description": "Puede que haya caducado. Inicia sesión para revisar la configuración del correo y de las notificaciones push."
+    },
+    "success": {
+      "title": "Estos correos están desactivados",
+      "description": "No recibirás correos de {category}. El resto de tu configuración de notificaciones no ha cambiado."
+    },
+    "scope": "Solo se desactivará esta notificación por correo. Tus otros correos y notificaciones push seguirán igual."
   }
 }

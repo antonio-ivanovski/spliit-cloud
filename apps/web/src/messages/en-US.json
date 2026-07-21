@@ -1970,5 +1970,25 @@
   "Participants": {
     "search": "Search participants...",
     "noParticipant": "No participant found"
+  },
+  "Unsubscribe": {
+    "title": "Turn off these emails?",
+    "description": "You’re choosing whether to keep one type of email notification.",
+    "confirm": "Turn off these emails",
+    "submitting": "Unsubscribing…",
+    "cancel": "Keep these emails",
+    "error": "We could not update your email preferences. Please try again.",
+    "loading": "Checking unsubscribe link…",
+    "backHome": "Back to home",
+    "manageSettings": "Review all notification settings",
+    "invalid": {
+      "title": "This link no longer works",
+      "description": "It may have expired. Sign in to review your email and push notification settings."
+    },
+    "success": {
+      "title": "These emails are turned off",
+      "description": "You won’t receive emails for {category}. Your other notification settings haven’t changed."
+    },
+    "scope": "Only this email notification will be turned off. Your other emails and push notifications will stay the same."
   }
 }

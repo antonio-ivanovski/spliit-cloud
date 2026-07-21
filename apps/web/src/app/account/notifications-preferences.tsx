@@ -27,15 +27,19 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 import { usePushNotifications } from '@/lib/use-push-notifications'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
+import type { NotificationCategory } from '@spliit/domain/notifications'
 import {
   NOTIFICATION_CATEGORIES,
   NOTIFICATION_CHANNELS,
-  NotificationCategory,
   NotificationChannel,
 } from '@spliit/domain/notifications'
 import { Bell, Check, ChevronsUpDown, Smartphone } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+  NOTIFICATION_SECTIONS,
+  type NotificationRow,
+} from './notification-category-metadata'
 
 type Channel = NotificationChannel
 type Category = NotificationCategory
@@ -55,84 +59,8 @@ type PreferenceData = {
   categories: PreferenceCategory[]
 }
 
-type Row = {
-  id: string
-  category?: Category
-  titleKey:
-    | 'rows.addedToGroup.title'
-    | 'rows.addedAsFriend.title'
-    | 'rows.newExpense.title'
-    | 'rows.expenseChanged.title'
-    | 'rows.newComment.title'
-    | 'rows.weeklySummary.title'
-    | 'rows.cloudNews.title'
-  descriptionKey:
-    | 'rows.addedToGroup.description'
-    | 'rows.addedAsFriend.description'
-    | 'rows.newExpense.description'
-    | 'rows.expenseChanged.description'
-    | 'rows.newComment.description'
-    | 'rows.weeklySummary.description'
-    | 'rows.cloudNews.description'
-  comingSoon?: boolean
-}
-
 const CHANNELS = NOTIFICATION_CHANNELS
 const CATEGORIES = NOTIFICATION_CATEGORIES
-
-const GROUP_ROWS: Row[] = [
-  {
-    id: 'added-to-group',
-    category: NotificationCategory.GROUP_INVITE_RECEIVED,
-    titleKey: 'rows.addedToGroup.title',
-    descriptionKey: 'rows.addedToGroup.description',
-  },
-  {
-    id: 'added-as-friend',
-    category: NotificationCategory.FRIEND_ADDED,
-    titleKey: 'rows.addedAsFriend.title',
-    descriptionKey: 'rows.addedAsFriend.description',
-  },
-]
-
-const EXPENSE_ROWS: Row[] = [
-  {
-    id: 'new-expense',
-    category: NotificationCategory.EXPENSE_CREATED,
-    titleKey: 'rows.newExpense.title',
-    descriptionKey: 'rows.newExpense.description',
-  },
-  {
-    id: 'expense-changed',
-    category: NotificationCategory.EXPENSE_CHANGED,
-    titleKey: 'rows.expenseChanged.title',
-    descriptionKey: 'rows.expenseChanged.description',
-  },
-  {
-    id: 'new-comment',
-    category: NotificationCategory.EXPENSE_COMMENT,
-    titleKey: 'rows.newComment.title',
-    descriptionKey: 'rows.newComment.description',
-    comingSoon: true,
-  },
-]
-
-const SUMMARY_ROWS: Row[] = [
-  {
-    id: 'weekly-summary',
-    category: NotificationCategory.WEEKLY_SUMMARY,
-    titleKey: 'rows.weeklySummary.title',
-    descriptionKey: 'rows.weeklySummary.description',
-    comingSoon: true,
-  },
-  {
-    id: 'cloud-news',
-    category: NotificationCategory.PRODUCT_UPDATES,
-    titleKey: 'rows.cloudNews.title',
-    descriptionKey: 'rows.cloudNews.description',
-    comingSoon: true,
-  },
-]
 
 function channelsForCategory(data: PreferenceData, category: Category) {
   const entry = data.categories.find((item) => item.category === category)
@@ -428,11 +356,11 @@ export function NotificationsPreferences() {
     )
   }
 
-  const rows = [
-    { id: 'groups', title: t('sections.groups'), items: GROUP_ROWS },
-    { id: 'expenses', title: t('sections.expenses'), items: EXPENSE_ROWS },
-    { id: 'summaries', title: t('sections.summaries'), items: SUMMARY_ROWS },
-  ]
+  const rows = NOTIFICATION_SECTIONS.map((section) => ({
+    ...section,
+    title: t(`sections.${section.id}` as 'sections.groups'),
+    items: section.rows as readonly NotificationRow[],
+  }))
 
   return (
     <Card id="notifications" className="mobile-surface scroll-mt-6">

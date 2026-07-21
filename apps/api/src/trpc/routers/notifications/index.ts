@@ -11,7 +11,14 @@ import {
   isPushConfigured,
   pushVapidPublicKey,
 } from '../../../lib/notifications/push'
-import { createTRPCRouter, protectedProcedure } from '../../init'
+import { previewEmailUnsubscribeToken } from '../../../lib/notifications/unsubscribe'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from '../../init'
+
+const unsubscribeTokenSchema = z.string().min(1).max(4096)
 
 const subscriptionSchema = z.object({
   endpoint: z.url().max(4096),
@@ -22,6 +29,21 @@ const subscriptionSchema = z.object({
 })
 
 export const notificationsRouter = createTRPCRouter({
+  unsubscribe: createTRPCRouter({
+    /** Public token-scoped preview; no account data is returned. */
+    preview: publicProcedure
+      .input(z.object({ token: unsubscribeTokenSchema }))
+      .query(async ({ input }) => {
+        const preview = await previewEmailUnsubscribeToken(input.token)
+        if (!preview) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Invalid unsubscribe token',
+          })
+        }
+        return preview
+      }),
+  }),
   preferences: createTRPCRouter({
     get: protectedProcedure
       .input(z.object({ accountId: z.string().min(1) }))

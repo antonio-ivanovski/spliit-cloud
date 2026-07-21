@@ -1902,5 +1902,25 @@
     "failedDescription": "Laitteen rekisteröinti epäonnistui. Sähköpostiin määritetyt ilmoitukset toimitetaan edelleen sähköpostitse; vain pushille valittuja ei ohjata sähköpostiin.",
     "emailUsage": "Saat sähköpostitse vain ilmoitukset, jotka on määritetty sähköpostiin, kunnes otat laitteen käyttöön. Voit sallia ilmoitukset selaimesi asetuksissa ja yrittää uudelleen asetuksissa.",
     "done": "Valmis"
+  },
+  "Unsubscribe": {
+    "title": "Poistetaanko nämä sähköpostit käytöstä?",
+    "description": "Valitset, haluatko jatkossa saada tämän tyyppisiä sähköposti-ilmoituksia.",
+    "confirm": "Poista nämä sähköpostit käytöstä",
+    "submitting": "Tilausta peruutetaan…",
+    "cancel": "Säilytä nämä sähköpostit",
+    "error": "Sähköpostiasetuksiasi ei voitu päivittää. Yritä uudelleen.",
+    "loading": "Peruutuslinkkiä tarkistetaan…",
+    "backHome": "Takaisin etusivulle",
+    "manageSettings": "Tarkista kaikki ilmoitusasetukset",
+    "invalid": {
+      "title": "Tämä linkki ei enää toimi",
+      "description": "Se on saattanut vanhentua. Kirjaudu sisään tarkistaaksesi sähköposti- ja push-ilmoitusasetuksesi."
+    },
+    "success": {
+      "title": "Nämä sähköpostit on poistettu käytöstä",
+      "description": "Et saa enää sähköposteja aiheesta {category}. Muut ilmoitusasetuksesi eivät muuttuneet."
+    },
+    "scope": "Vain tämä sähköposti-ilmoitus poistetaan käytöstä. Muut sähköpostisi ja push-ilmoituksesi säilyvät ennallaan."
   }
 }

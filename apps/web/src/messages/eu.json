@@ -1919,5 +1919,25 @@
     "failedDescription": "Ezin izan dugu gailu hau erregistratu. Posta elektronikorako konfiguratuta dauden jakinarazpenak posta elektronikoz jasotzen jarraituko duzu; push hutseko aukerak ez dira birbideratuko.",
     "emailUsage": "Gailu bat aktibatu arte, posta elektronikorako konfiguratuta dauden jakinarazpenak baino ez dira iritsiko. Jakinarazpenak arakatzailearen ezarpenetan baimendu eta berriro saiatu zaitezke Ezarpenetatik.",
     "done": "Eginda"
+  },
+  "Unsubscribe": {
+    "title": "Desaktibatu mezu elektroniko hauek?",
+    "description": "Aukeratu posta bidezko jakinarazpen mota bat jasotzen jarraitu nahi duzun.",
+    "confirm": "Desaktibatu mezu elektroniko hauek",
+    "submitting": "Harpidetzatik kentzen…",
+    "cancel": "Mantendu mezu elektroniko hauek",
+    "error": "Ezin izan ditugu zure posta elektronikoko hobespenak eguneratu. Saiatu berriro.",
+    "loading": "Harpidetza kentzeko esteka egiaztatzen…",
+    "backHome": "Itzuli hasierara",
+    "manageSettings": "Berrikusi jakinarazpenen ezarpen guztiak",
+    "invalid": {
+      "title": "Esteka honek ez du jada funtzionatzen",
+      "description": "Baliteke iraungita egotea. Hasi saioa posta elektronikoaren eta push jakinarazpenen ezarpenak berrikusteko."
+    },
+    "success": {
+      "title": "Mezu elektroniko hauek desaktibatuta daude",
+      "description": "Ez duzu {category} kategoriako mezurik jasoko. Gainerako jakinarazpenen ezarpenak ez dira aldatu."
+    },
+    "scope": "Posta bidezko jakinarazpen hau bakarrik desaktibatuko da. Gainerako mezu elektronikoek eta push jakinarazpenek berdin jarraituko dute."
   }
 }

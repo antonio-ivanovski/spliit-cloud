@@ -1919,5 +1919,25 @@
     "failedDescription": "Nu am putut înregistra acest dispozitiv. Notificările configurate pentru e-mail vor continua să fie trimise acolo; opțiunile doar push nu sunt redirecționate.",
     "emailUsage": "Până când activezi un dispozitiv, vor ajunge doar notificările configurate pentru e-mail. Poți permite notificările din setările browserului și încerca din nou din Setări.",
     "done": "Gata"
+  },
+  "Unsubscribe": {
+    "title": "Dezactivezi aceste e-mailuri?",
+    "description": "Alege dacă vrei să primești în continuare un tip de notificare prin e-mail.",
+    "confirm": "Dezactivează aceste e-mailuri",
+    "submitting": "Se efectuează dezabonarea…",
+    "cancel": "Păstrează aceste e-mailuri",
+    "error": "Nu am putut actualiza preferințele tale de e-mail. Încearcă din nou.",
+    "loading": "Se verifică linkul de dezabonare…",
+    "backHome": "Înapoi la pagina principală",
+    "manageSettings": "Revizuiește toate setările notificărilor",
+    "invalid": {
+      "title": "Acest link nu mai funcționează",
+      "description": "Este posibil să fi expirat. Conectează-te pentru a revizui setările e-mailului și ale notificărilor push."
+    },
+    "success": {
+      "title": "Aceste e-mailuri sunt dezactivate",
+      "description": "Nu vei mai primi e-mailuri pentru {category}. Celelalte setări ale notificărilor nu s-au schimbat."
+    },
+    "scope": "Doar această notificare prin e-mail va fi dezactivată. Celelalte e-mailuri și notificări push vor rămâne neschimbate."
   }
 }

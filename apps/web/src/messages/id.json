@@ -1886,5 +1886,25 @@
     "failedDescription": "Kami tidak dapat mendaftarkan perangkat ini. Notifikasi yang dikonfigurasi untuk Email akan tetap dikirim melalui Email; pilihan Push saja tidak dialihkan.",
     "emailUsage": "Hanya notifikasi yang dikonfigurasi untuk Email yang akan diterima sampai Anda mengaktifkan perangkat. Izinkan notifikasi di setelan browser, lalu coba lagi dari Pengaturan.",
     "done": "Selesai"
+  },
+  "Unsubscribe": {
+    "title": "Nonaktifkan email-email ini?",
+    "description": "Anda memilih apakah akan tetap menerima satu jenis notifikasi email.",
+    "confirm": "Nonaktifkan email-email ini",
+    "submitting": "Membatalkan langganan…",
+    "cancel": "Tetap terima email-email ini",
+    "error": "Kami tidak dapat memperbarui preferensi email Anda. Silakan coba lagi.",
+    "loading": "Memeriksa tautan berhenti berlangganan…",
+    "backHome": "Kembali ke beranda",
+    "manageSettings": "Tinjau semua pengaturan notifikasi",
+    "invalid": {
+      "title": "Tautan ini tidak lagi berfungsi",
+      "description": "Tautan ini mungkin telah kedaluwarsa. Masuk untuk meninjau pengaturan email dan notifikasi push Anda."
+    },
+    "success": {
+      "title": "Email-email ini dinonaktifkan",
+      "description": "Anda tidak akan menerima email untuk {category}. Pengaturan notifikasi lainnya tidak berubah."
+    },
+    "scope": "Hanya notifikasi email ini yang akan dinonaktifkan. Email dan notifikasi push lainnya akan tetap sama."
   }
 }

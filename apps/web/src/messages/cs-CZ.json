@@ -1936,5 +1936,25 @@
     "failedDescription": "Toto zařízení se nepodařilo zaregistrovat. Oznámení nastavená pro e-mail budou i nadále chodit tam; volby pouze pro Push se nepřesměrují.",
     "emailUsage": "Dokud nepovolíte zařízení, budou přicházet pouze oznámení nastavená pro e-mail. Povolte oznámení v nastavení prohlížeče a zkuste to znovu v Nastavení.",
     "done": "Hotovo"
+  },
+  "Unsubscribe": {
+    "title": "Vypnout tyto e-maily?",
+    "description": "Rozhodujete se, zda ponechat jeden typ e-mailových oznámení.",
+    "confirm": "Vypnout tyto e-maily",
+    "submitting": "Odhlašování odběru…",
+    "cancel": "Ponechat tyto e-maily",
+    "error": "Vaše e-mailová nastavení se nepodařilo aktualizovat. Zkuste to prosím znovu.",
+    "loading": "Ověřování odkazu pro odhlášení odběru…",
+    "backHome": "Zpět na domovskou stránku",
+    "manageSettings": "Prohlédnout všechna nastavení oznámení",
+    "invalid": {
+      "title": "Tento odkaz již nefunguje",
+      "description": "Platnost odkazu mohla vypršet. Přihlaste se a zkontrolujte nastavení e-mailových a push oznámení."
+    },
+    "success": {
+      "title": "Tyto e-maily jsou vypnuté",
+      "description": "E-maily pro kategorii {category} nebudete dostávat. Vaše ostatní nastavení oznámení se nezměnila."
+    },
+    "scope": "Vypne se pouze toto e-mailové oznámení. Ostatní e-maily a push oznámení zůstanou beze změny."
   }
 }

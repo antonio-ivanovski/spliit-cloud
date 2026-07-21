@@ -1970,5 +1970,25 @@
     "failedDescription": "Dieses Gerät konnte nicht registriert werden. Für E-Mail konfigurierte Benachrichtigungen werden weiterhin per E-Mail zugestellt; Nur-Push-Auswahlen werden nicht umgeleitet.",
     "emailUsage": "Es werden nur Benachrichtigungen zugestellt, die für E-Mail konfiguriert sind, bis du ein Gerät aktivierst. Du kannst Benachrichtigungen in deinen Browsereinstellungen erlauben und es anschließend in den Einstellungen erneut versuchen.",
     "done": "Fertig"
+  },
+  "Unsubscribe": {
+    "title": "Diese E-Mails deaktivieren?",
+    "description": "Sie entscheiden, ob Sie diese Art von E-Mail-Benachrichtigung weiterhin erhalten möchten.",
+    "confirm": "Diese E-Mails deaktivieren",
+    "submitting": "Abmeldung läuft…",
+    "cancel": "Diese E-Mails behalten",
+    "error": "Ihre E-Mail-Einstellungen konnten nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "loading": "Abmeldelink wird überprüft…",
+    "backHome": "Zurück zur Startseite",
+    "manageSettings": "Alle Benachrichtigungseinstellungen prüfen",
+    "invalid": {
+      "title": "Dieser Link funktioniert nicht mehr",
+      "description": "Er ist möglicherweise abgelaufen. Melden Sie sich an, um Ihre E-Mail- und Push-Benachrichtigungseinstellungen zu prüfen."
+    },
+    "success": {
+      "title": "Diese E-Mails sind deaktiviert",
+      "description": "Sie erhalten keine E-Mails für {category}. Ihre anderen Benachrichtigungseinstellungen wurden nicht geändert."
+    },
+    "scope": "Nur diese E-Mail-Benachrichtigung wird deaktiviert. Ihre anderen E-Mails und Push-Benachrichtigungen bleiben unverändert."
   }
 }

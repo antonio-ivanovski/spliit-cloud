@@ -1902,5 +1902,25 @@
     "failedDescription": "Bu cihaz kaydedilemedi. E-posta için yapılandırılan bildirimler e-posta üzerinden devam eder; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
     "emailUsage": "Bir cihaz etkinleştirene kadar yalnızca e-posta için yapılandırılan bildirimler gelir. Tarayıcı ayarlarınızdan bildirimlere izin verin ve Ayarlar'dan tekrar deneyin.",
     "done": "Tamam"
+  },
+  "Unsubscribe": {
+    "title": "Bu e-postaları kapat?",
+    "description": "Bir tür e-posta bildirimini almaya devam edip etmeyeceğinizi seçiyorsunuz.",
+    "confirm": "Bu e-postaları kapat",
+    "submitting": "Abonelikten çıkılıyor…",
+    "cancel": "Bu e-postaları koru",
+    "error": "E-posta tercihlerinizi güncelleyemedik. Lütfen tekrar deneyin.",
+    "loading": "Abonelikten çıkma bağlantısı kontrol ediliyor…",
+    "backHome": "Ana sayfaya dön",
+    "manageSettings": "Tüm bildirim ayarlarını incele",
+    "invalid": {
+      "title": "Bu bağlantı artık çalışmıyor",
+      "description": "Süresi dolmuş olabilir. E-posta ve anlık bildirim ayarlarınızı incelemek için giriş yapın."
+    },
+    "success": {
+      "title": "Bu e-postalar kapatıldı",
+      "description": "{category} için e-posta almayacaksınız. Diğer bildirim ayarlarınız değişmedi."
+    },
+    "scope": "Yalnızca bu e-posta bildirimi kapatılacak. Diğer e-postalarınız ve anlık bildirimleriniz aynı kalacak."
   }
 }
