@@ -3,7 +3,10 @@ import type {
   ActivityData,
   ActivitySubjectType,
 } from '@spliit/domain/activities'
-import type { NotificationCategory } from '@spliit/domain/notifications'
+import {
+  getNotificationCategoryForActivity,
+  type NotificationCategory,
+} from '@spliit/domain/notifications'
 import { CompositeActivityNotificationDispatcher } from './composite'
 import {
   scheduleNotificationDispatch,
@@ -75,6 +78,16 @@ export function setDefaultActivityNotificationDispatchers(
 export function scheduleDefaultNotificationDispatch(
   event: ActivityNotificationEvent,
 ): void {
+  // Skip events for activity types without an active producer; the
+  // ActivityNotificationCoordinator would drop them anyway. Events with an
+  // explicit `notificationCategory` (friend-added via
+  // `scheduleTargetedNotificationDispatch`) always flow through.
+  if (
+    !event.notificationCategory &&
+    !getNotificationCategoryForActivity(event.type)
+  ) {
+    return
+  }
   scheduleNotificationDispatch(singleton, event)
 }
 

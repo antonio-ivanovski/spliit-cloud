@@ -4,12 +4,10 @@ import { randomId } from '../lib/api'
 import {
   setDefaultActivityNotificationDispatchers,
   waitForScheduledNotificationDispatchesForTest,
-  type ActivityNotificationDispatcher,
-  type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
 import { expectEmailEventually, probeMaildev } from './maildev-client'
-import { checkDbConnection, testRunId } from './setup'
+import { CapturingDispatcher, checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
@@ -189,13 +187,6 @@ describe('import summary notification', () => {
   const ledgerIds2: string[] = []
   function trackLedger(id: string) {
     ledgerIds2.push(id)
-  }
-
-  class CapturingDispatcher implements ActivityNotificationDispatcher {
-    events: ActivityNotificationEvent[] = []
-    async dispatch(event: ActivityNotificationEvent): Promise<void> {
-      this.events.push(event)
-    }
   }
 
   let capture: CapturingDispatcher
