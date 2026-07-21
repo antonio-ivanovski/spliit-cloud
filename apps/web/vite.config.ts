@@ -18,6 +18,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: { enabled: false },
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
       includeAssets: [
         'logo.svg',
         'logo-with-text.svg',
@@ -55,13 +58,12 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
+      injectManifest: {
         // Keep only version-independent public media in the interim worker.
         // HTML and Vite's hashed module graph must always come from the network
         // so a stale entry point cannot reference a different deployment.
         globPatterns: ['**/*.{svg,png,ico,webp}'],
         globIgnores: ['assets/**/*'],
-        navigateFallback: null,
       },
     }),
   ],

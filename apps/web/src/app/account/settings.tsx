@@ -18,6 +18,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NotificationsPreferences } from './notifications-preferences'
 
 /**
  * Account settings page. Allows a signed-in user to update their display
@@ -273,6 +274,7 @@ function AccountSettingsContent() {
           </form>
         </CardContent>
       </Card>
+      <NotificationsPreferences />
     </main>
   )
 }

@@ -1,12 +1,14 @@
 import { prisma } from '@spliit/db'
 import { friendFormSchema } from '@spliit/domain'
+import { NotificationCategory } from '@spliit/domain/notifications'
 import { z } from 'zod'
 import {
   createFriendLedger,
   type CreateFriendLedgerPeer,
 } from '../../../lib/api/friends'
 import { sendEmail } from '../../../lib/mail/send'
-import { renderFriendLedgerEmail } from '../../../lib/mail/templates'
+import { renderFriendLedgerEmail } from '../../../lib/mail/templates/friend-ledger'
+import { scheduleTargetedNotificationDispatch } from '../../../lib/notifications/dispatcher'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 
 /**
@@ -88,19 +90,19 @@ export const friendsRouter = createTRPCRouter({
             isNewUser,
           })
         } else if ('accountId' in peer) {
-          // Friends tab: the peer was selected from the list. Look up
-          // their email for the notification.
-          const account = await prisma.account.findUnique({
-            where: { id: peer.accountId },
-            select: { email: true },
+          // Existing accounts receive the preference-aware coordinator event;
+          // unknown-email peers retain the required transactional email above.
+          scheduleTargetedNotificationDispatch({
+            activityId: `friend:${result.groupId}:${peer.accountId}`,
+            groupId: result.groupId,
+            category: NotificationCategory.FRIEND_ADDED,
+            recipientAccountId: peer.accountId,
+            actor: { type: 'ACCOUNT', id: callerId },
+            data: {
+              kind: 'invitation',
+              summary: `${inviterName} created a friend ledger with you`,
+            },
           })
-          if (account?.email) {
-            await sendFriendLedgerNotification({
-              recipientEmail: account.email,
-              inviterName,
-              isNewUser: false, // already has an account
-            })
-          }
         }
         // Link tab: no email — the inviter shares the link off-channel.
       }

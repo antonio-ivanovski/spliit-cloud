@@ -1521,6 +1521,122 @@
       "updated": "Foto profil diperbarui.",
       "remove": "Hapus foto",
       "removed": "Foto profil dihapus."
+    },
+    "notifications": {
+      "title": "Notifikasi",
+      "description": "Pilih di mana Spliit mengirimkan notifikasi aktivitas.",
+      "enable": "Aktifkan notifikasi push",
+      "disable": "Nonaktifkan notifikasi push",
+      "enabled": "Notifikasi push diaktifkan di perangkat ini.",
+      "disabled": "Notifikasi push saat ini dinonaktifkan di perangkat ini.",
+      "unsupported": "Notifikasi push tidak didukung oleh browser atau konteks ini.",
+      "notConfigured": "Notifikasi push tidak tersedia di lingkungan ini.",
+      "permissionDenied": "Notifikasi diblokir. Izinkan notifikasi di pengaturan browser atau perangkat, lalu coba lagi.",
+      "iosInstall": "Di iPhone atau iPad, tambahkan Spliit ke Layar Utama sebelum mengaktifkan notifikasi push.",
+      "error": "Tidak dapat memperbarui pengaturan notifikasi push. Silakan coba lagi.",
+      "preferencesTitle": "Preferensi notifikasi",
+      "preferencesDescription": "Pilihan ini berlaku untuk aktivitas grup dan pengeluaran di masa mendatang.",
+      "globalLabel": "Semua aktivitas",
+      "globalDescription": "Rekomendasi berbeda berdasarkan aktivitas dan menyesuaikan diri saat Push tidak tersedia: pembaruan cepat menggunakan Push, sedangkan aktivitas bervolume tinggi tetap menggunakan Email. Pilih Email atau Push untuk menggunakan satu saluran global.",
+      "recommended": "Disarankan",
+      "recommendedDescription": "Pengiriman yang disarankan: {channels}. Notifikasi push hanya dikirim ke perangkat yang Anda aktifkan.",
+      "mixedByActivity": "Berbeda berdasarkan aktivitas",
+      "recommendedCategoryDescription": "Aktivitas ini menggunakan pengiriman yang disarankan: {channels}.",
+      "useRecommended": "Gunakan pengaturan yang disarankan",
+      "custom": "Kustom",
+      "useGlobal": "Gunakan pengaturan semua aktivitas",
+      "inheritedDescription": "Mengikuti pengaturan semua aktivitas Anda. Pilih saluran untuk menyesuaikan kategori ini.",
+      "customDescription": "Pengiriman khusus untuk kategori ini. Pilih salah satu atau kedua saluran.",
+      "channelsLabel": "Saluran notifikasi",
+      "email": "Email",
+      "pushDescription": "Terima peringatan di perangkat yang diaktifkan.",
+      "off": "Nonaktif",
+      "pushSelectionError": "Push tidak dapat diaktifkan di perangkat ini. Email tetap aktif untuk kategori ini.",
+      "pushMissingTarget": "Push dipilih, tetapi notifikasi ini tidak akan terkirim sampai Anda mengaktifkan perangkat. Anda dapat mengaktifkannya di bawah atau di Pengaturan.",
+      "rowSaved": "Preferensi notifikasi disimpan.",
+      "comingSoon": "Segera hadir",
+      "emailComingSoon": "Konfigurasi email segera hadir.",
+      "inherited": "Diwariskan",
+      "currently": "Saat ini: {channels}",
+      "expenseActivity": "Aktivitas pengeluaran",
+      "groupActivity": "Aktivitas grup",
+      "save": "Simpan perubahan",
+      "saving": "Menyimpan…",
+      "reset": "Atur ulang",
+      "saved": "Preferensi notifikasi disimpan.",
+      "saveError": "Preferensi notifikasi tidak dapat disimpan. Silakan coba lagi.",
+      "loading": "Memuat preferensi notifikasi…",
+      "loadError": "Preferensi notifikasi tidak dapat dimuat.",
+      "emailDescription": "Terima pesan di kotak masuk Anda.",
+      "push": {
+        "deviceTitle": "Perangkat ini",
+        "deviceDescription": "Aktifkan notifikasi push di perangkat ini. Pengaturan ini tidak mengubah perangkat Anda yang lain.",
+        "deviceDisabled": "Push dipilih, tetapi tidak diaktifkan di perangkat ini.",
+        "noDevices": "Push dipilih, tetapi belum ada perangkat yang diaktifkan."
+      },
+      "retry": "Coba lagi",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Pengeluaran baru",
+          "description": "Saat seseorang menambahkan pengeluaran ke grup."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Impor pengeluaran dan perubahan massal",
+          "description": "Saat pengeluaran diimpor atau diperbarui secara massal."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Perubahan pengeluaran",
+          "description": "Saat pengeluaran diperbarui atau dihapus."
+        },
+        "GROUP_CHANGES": {
+          "title": "Perubahan grup",
+          "description": "Saat detail grup atau status arsip berubah."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Undangan",
+          "description": "Saat undangan dikirim, diterima, ditolak, atau dicabut."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Keanggotaan",
+          "description": "Saat anggota keluar, dihapus, atau berganti peran."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Catatan pengeluaran bersama teman",
+          "description": "Saat seseorang memulai catatan pengeluaran bersama Anda."
+        },
+        "addedToGroup": {
+          "title": "Ditambahkan ke grup",
+          "description": "Saat seseorang menambahkan Anda ke grup."
+        },
+        "cloudNews": {
+          "title": "Berita dan pembaruan Spliit Cloud",
+          "description": "Berita produk, kiat, dan pembaruan layanan."
+        },
+        "expenseChanged": {
+          "title": "Pengeluaran diedit atau dihapus",
+          "description": "Saat pengeluaran diperbarui atau dihapus."
+        },
+        "newComment": {
+          "title": "Komentar baru",
+          "description": "Saat seseorang mengomentari pengeluaran."
+        },
+        "newExpense": {
+          "title": "Pengeluaran baru",
+          "description": "Saat seseorang menambahkan pengeluaran ke grup."
+        },
+        "weeklySummary": {
+          "title": "Ringkasan aktivitas mingguan",
+          "description": "Ringkasan aktivitas mingguan di semua grup Anda."
+        }
+      },
+      "sections": {
+        "groups": "Grup dan teman",
+        "expenses": "Pengeluaran",
+        "summaries": "Ringkasan"
+      }
     }
   },
   "Activities": {
@@ -1754,5 +1870,41 @@
     "light": "Terang",
     "dark": "Gelap",
     "system": "Default sistem"
+  },
+  "PushOnboarding": {
+    "title": "Pilih cara untuk tetap mendapatkan info terbaru",
+    "description": "Spliit dapat memberi tahu Anda tentang aktivitas grup dan pengeluaran saat terjadi.",
+    "pushBenefit": "Notifikasi push diterima di perangkat ini meskipun Spliit tidak sedang dibuka.",
+    "emailFallback": "Email tersedia untuk notifikasi yang Anda pilih untuk diterima melalui Email; pilihan Push saja tidak dialihkan.",
+    "settingsHint": "Anda dapat mengubah pilihan ini kapan saja di Pengaturan. Notifikasi push diaktifkan secara terpisah untuk setiap perangkat.",
+    "enable": "Aktifkan notifikasi push",
+    "enabling": "Mengaktifkan…",
+    "useEmail": "Gunakan email",
+    "deniedTitle": "Notifikasi push diblokir",
+    "deniedDescription": "Browser Anda memblokir izin notifikasi. Notifikasi yang dikonfigurasi untuk Email akan tetap dikirim melalui Email; pilihan Push saja tidak dialihkan.",
+    "failedTitle": "Push tidak dapat diaktifkan",
+    "failedDescription": "Kami tidak dapat mendaftarkan perangkat ini. Notifikasi yang dikonfigurasi untuk Email akan tetap dikirim melalui Email; pilihan Push saja tidak dialihkan.",
+    "emailUsage": "Hanya notifikasi yang dikonfigurasi untuk Email yang akan diterima sampai Anda mengaktifkan perangkat. Izinkan notifikasi di setelan browser, lalu coba lagi dari Pengaturan.",
+    "done": "Selesai"
+  },
+  "Unsubscribe": {
+    "title": "Nonaktifkan email-email ini?",
+    "description": "Anda memilih apakah akan tetap menerima satu jenis notifikasi email.",
+    "confirm": "Nonaktifkan email-email ini",
+    "submitting": "Membatalkan langganan…",
+    "cancel": "Tetap terima email-email ini",
+    "error": "Kami tidak dapat memperbarui preferensi email Anda. Silakan coba lagi.",
+    "loading": "Memeriksa tautan berhenti berlangganan…",
+    "backHome": "Kembali ke beranda",
+    "manageSettings": "Tinjau semua pengaturan notifikasi",
+    "invalid": {
+      "title": "Tautan ini tidak lagi berfungsi",
+      "description": "Tautan ini mungkin telah kedaluwarsa. Masuk untuk meninjau pengaturan email dan notifikasi push Anda."
+    },
+    "success": {
+      "title": "Email-email ini dinonaktifkan",
+      "description": "Anda tidak akan menerima email untuk {category}. Pengaturan notifikasi lainnya tidak berubah."
+    },
+    "scope": "Hanya notifikasi email ini yang akan dinonaktifkan. Email dan notifikasi push lainnya akan tetap sama."
   }
 }

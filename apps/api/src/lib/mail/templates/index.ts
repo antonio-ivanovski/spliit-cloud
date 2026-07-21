@@ -17,6 +17,11 @@ export {
 } from './expense-activity'
 export { FriendLedgerEmail, renderFriendLedgerEmail } from './friend-ledger'
 export {
+  GroupActivityEmail,
+  renderGroupActivityEmail,
+  type GroupActivityEmailInput,
+} from './group-activity'
+export {
   InvitationEmail,
   renderInvitationEmail,
   type InvitationEmailInput,

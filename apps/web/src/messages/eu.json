@@ -1536,6 +1536,122 @@
       "updated": "Profil-argazkia eguneratu da.",
       "remove": "Kendu argazkia",
       "removed": "Profil-argazkia kendu da."
+    },
+    "notifications": {
+      "title": "Jakinarazpenak",
+      "description": "Aukeratu Spliit-ek jardueraren jakinarazpenak nora bidaliko dituen.",
+      "enable": "Gaitu push jakinarazpenak",
+      "disable": "Desgaitu push jakinarazpenak",
+      "enabled": "Push jakinarazpenak gaituta daude gailu honetan.",
+      "disabled": "Push jakinarazpenak desgaituta daude gailu honetan.",
+      "unsupported": "Nabigatzaile edo testuinguru honek ez ditu push jakinarazpenak onartzen.",
+      "notConfigured": "Push jakinarazpenak ez daude erabilgarri inplementazio honetan.",
+      "permissionDenied": "Jakinarazpenak blokeatuta daude. Baimendu nabigatzailearen edo gailuaren ezarpenetan, eta saiatu berriro.",
+      "iosInstall": "iPhone edo iPad batean, gehitu Spliit hasierako pantailara push jakinarazpenak gaitu aurretik.",
+      "error": "Ezin izan dira push jakinarazpenen ezarpenak eguneratu. Saiatu berriro.",
+      "preferencesTitle": "Jakinarazpenen hobespenak",
+      "preferencesDescription": "Aukera hauek etorkizuneko talde eta gastuen jarduerari aplikatzen zaizkio.",
+      "globalLabel": "Jarduera guztiak",
+      "globalDescription": "Gomendioa jardueraren arabera aldatzen da eta Push erabilgarri ez dagoenean egokitzen da: eguneratze azkarrak Push bidez bidaltzen dira, eta bolumen handiagoko jarduera posta elektroniko bidez mantentzen da. Aukeratu Posta elektronikoa edo Push kanal global bakarra erabiltzeko.",
+      "recommended": "Gomendatua",
+      "recommendedDescription": "Gomendatutako entrega: {channels}. Push jakinarazpenak gaitzen dituzun gailuetara soilik bidaltzen dira.",
+      "mixedByActivity": "Jardueraren arabera konbinatuta",
+      "recommendedCategoryDescription": "Jarduera honetarako gomendatutako {channels} bidalketa erabiltzen da.",
+      "useRecommended": "Erabili gomendatutako ezarpena",
+      "custom": "Pertsonalizatua",
+      "useGlobal": "Erabili jarduera guztietarako ezarpena",
+      "inheritedDescription": "Jarduera guztietarako ezarpenari jarraitzen dio. Aukeratu kanal bat kategoria hau pertsonalizatzeko.",
+      "customDescription": "Kategoriarako entrega pertsonalizatua. Aukeratu kanal bat edo biak.",
+      "channelsLabel": "Jakinarazpen-kanalak",
+      "email": "Posta elektronikoa",
+      "pushDescription": "Gaitutako gailu batean alerta bat jasoko duzu.",
+      "off": "Desaktibatuta",
+      "pushSelectionError": "Ezin izan dira push jakinarazpenak gailu honetan aktibatu. Kategoria honetarako posta elektronikoa aktibatuta mantendu da.",
+      "pushMissingTarget": "Pusha hautatuta dago, baina jakinarazpen hauek ez dira bidaliko gailu bat aktibatu arte. Behean edo Ezarpenetan aktiba dezakezu.",
+      "rowSaved": "Jakinarazpen-hobespena gorde da.",
+      "comingSoon": "Laster",
+      "emailComingSoon": "Posta elektronikoaren konfigurazioa laster egongo da erabilgarri.",
+      "inherited": "Heredatua",
+      "currently": "Une honetan: {channels}",
+      "expenseActivity": "Gastuen jarduera",
+      "groupActivity": "Taldearen jarduera",
+      "save": "Gorde aldaketak",
+      "saving": "Gordetzen…",
+      "reset": "Berrezarri",
+      "saved": "Jakinarazpenen hobespenak gorde dira.",
+      "saveError": "Ezin izan dira jakinarazpenen hobespenak gorde. Saiatu berriro.",
+      "loading": "Jakinarazpenen hobespenak kargatzen…",
+      "loadError": "Ezin izan dira jakinarazpenen hobespenak kargatu.",
+      "emailDescription": "Sarrerako ontzian mezu bat jasoko duzu.",
+      "push": {
+        "deviceTitle": "Gailu hau",
+        "deviceDescription": "Gaitu push alertak gailu honetan. Horrek ez ditu beste gailuak aldatzen.",
+        "deviceDisabled": "Push hautatuta dago, baina ez dago gaituta gailu honetan.",
+        "noDevices": "Push hautatuta dago, baina oraindik ez dago gaitutako gailurik."
+      },
+      "retry": "Saiatu berriro",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Gastu berriak",
+          "description": "Norbaitek talde batera gastu bat gehitzen duenean."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Gastuen inportazioak eta multzoko aldaketak",
+          "description": "Gastuak inportatzen direnean edo multzaka eguneratzen direnean."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Gastuen aldaketak",
+          "description": "Gastu bat eguneratzen edo ezabatzen denean."
+        },
+        "GROUP_CHANGES": {
+          "title": "Taldearen aldaketak",
+          "description": "Taldearen xehetasunak edo artxibo-egoera aldatzen direnean."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Gonbidapenak",
+          "description": "Gonbidapenak bidali, onartu, baztertu edo baliogabetzen direnean."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Kide izatea",
+          "description": "Kideek alde egiten dutenean, kentzen dituztenean edo rola aldatzen dutenean."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Lagun-liburua",
+          "description": "Norbaitek zurekin lagun-liburu bat sortzen duenean."
+        },
+        "addedToGroup": {
+          "title": "Talde batera gehitu zaituzte",
+          "description": "Norbaitek talde batera gehitzen zaitu."
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud-eko berriak eta eguneraketak",
+          "description": "Produktuaren berriak, aholkuak eta zerbitzuaren eguneraketak."
+        },
+        "expenseChanged": {
+          "title": "Gastua editatu edo ezabatu da",
+          "description": "Gastua eguneratzen edo ezabatzen denean."
+        },
+        "newComment": {
+          "title": "Iruzkin berria",
+          "description": "Norbaitek gastu bati buruzko iruzkina egiten duenean."
+        },
+        "newExpense": {
+          "title": "Gastu berria",
+          "description": "Norbaitek talde batera gastu bat gehitzen duenean."
+        },
+        "weeklySummary": {
+          "title": "Asteko jardueraren laburpena",
+          "description": "Zure taldeetako jardueraren asteko laburpena."
+        }
+      },
+      "sections": {
+        "groups": "Taldeak eta lagunak",
+        "expenses": "Gastuak",
+        "summaries": "Laburpenak"
+      }
     }
   },
   "Activities": {
@@ -1787,5 +1903,41 @@
     "light": "Argia",
     "dark": "Iluna",
     "system": "Sistemaren lehenetsia"
+  },
+  "PushOnboarding": {
+    "title": "Aukeratu nola egon eguneratuta",
+    "description": "Spliit-ek taldeen eta gastuen jardueraren berri eman diezazuke gertatu ahala.",
+    "pushBenefit": "Push jakinarazpenak gailu honetara iristen dira Spliit irekita ez dagoenean ere.",
+    "emailFallback": "Posta elektronikoa erabilgarri dago bertan jasotzea aukeratzen dituzun jakinarazpenetarako; push hutseko aukerak ez dira birbideratuko.",
+    "settingsHint": "Aukera hauek edozein unetan alda ditzakezu Ezarpenetan. Push jakinarazpenak gailu bakoitzean bereiz aktibatzen dira.",
+    "enable": "Push jakinarazpenak aktibatu",
+    "enabling": "Aktibatzen…",
+    "useEmail": "Erabili posta elektronikoa",
+    "deniedTitle": "Push jakinarazpenak blokeatuta daude",
+    "deniedDescription": "Arakatzaileak jakinarazpenetarako baimena blokeatu du. Posta elektronikorako konfiguratuta dauden jakinarazpenak posta elektronikoz jasotzen jarraituko duzu; push hutseko aukerak ez dira birbideratuko.",
+    "failedTitle": "Ezin izan dira push jakinarazpenak aktibatu",
+    "failedDescription": "Ezin izan dugu gailu hau erregistratu. Posta elektronikorako konfiguratuta dauden jakinarazpenak posta elektronikoz jasotzen jarraituko duzu; push hutseko aukerak ez dira birbideratuko.",
+    "emailUsage": "Gailu bat aktibatu arte, posta elektronikorako konfiguratuta dauden jakinarazpenak baino ez dira iritsiko. Jakinarazpenak arakatzailearen ezarpenetan baimendu eta berriro saiatu zaitezke Ezarpenetatik.",
+    "done": "Eginda"
+  },
+  "Unsubscribe": {
+    "title": "Desaktibatu mezu elektroniko hauek?",
+    "description": "Aukeratu posta bidezko jakinarazpen mota bat jasotzen jarraitu nahi duzun.",
+    "confirm": "Desaktibatu mezu elektroniko hauek",
+    "submitting": "Harpidetzatik kentzen…",
+    "cancel": "Mantendu mezu elektroniko hauek",
+    "error": "Ezin izan ditugu zure posta elektronikoko hobespenak eguneratu. Saiatu berriro.",
+    "loading": "Harpidetza kentzeko esteka egiaztatzen…",
+    "backHome": "Itzuli hasierara",
+    "manageSettings": "Berrikusi jakinarazpenen ezarpen guztiak",
+    "invalid": {
+      "title": "Esteka honek ez du jada funtzionatzen",
+      "description": "Baliteke iraungita egotea. Hasi saioa posta elektronikoaren eta push jakinarazpenen ezarpenak berrikusteko."
+    },
+    "success": {
+      "title": "Mezu elektroniko hauek desaktibatuta daude",
+      "description": "Ez duzu {category} kategoriako mezurik jasoko. Gainerako jakinarazpenen ezarpenak ez dira aldatu."
+    },
+    "scope": "Posta bidezko jakinarazpen hau bakarrik desaktibatuko da. Gainerako mezu elektronikoek eta push jakinarazpenek berdin jarraituko dute."
   }
 }

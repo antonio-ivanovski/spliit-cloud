@@ -19,6 +19,9 @@ vi.mock('@/components/app-image', () => ({
 vi.mock('@/components/install-promotion-dialog', () => ({
   InstallPromotionDialog: () => null,
 }))
+vi.mock('@/components/push-notification-onboarding', () => ({
+  PushNotificationOnboarding: () => null,
+}))
 vi.mock('@/components/link', () => ({
   default: ({ children, href, ...props }: React.ComponentProps<'a'>) => (
     <a href={href} {...props}>

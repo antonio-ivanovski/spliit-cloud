@@ -61,6 +61,15 @@ const envSchema = z
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
     EMAIL_FROM: z.string().optional(),
+
+    // Web Push delivery. These are intentionally optional outside production
+    // so local development can run without a VAPID key pair.
+    PUSH_VAPID_PUBLIC_KEY: z.string().optional(),
+    PUSH_VAPID_PRIVATE_KEY: z.string().optional(),
+    PUSH_VAPID_SUBJECT: z.url().optional(),
+
+    // Dedicated secret for stateless optional-email unsubscribe links.
+    EMAIL_UNSUBSCRIBE_SECRET: z.string().optional(),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
@@ -84,6 +93,19 @@ const envSchema = z
         message: 'EMAIL_FROM is required in production',
       })
     }
+    const pushVapidValues = [
+      env.PUSH_VAPID_PUBLIC_KEY,
+      env.PUSH_VAPID_PRIVATE_KEY,
+      env.PUSH_VAPID_SUBJECT,
+    ]
+    if (pushVapidValues.some(Boolean) && !pushVapidValues.every(Boolean)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['PUSH_VAPID_PUBLIC_KEY'],
+        message:
+          'PUSH_VAPID_PUBLIC_KEY, PUSH_VAPID_PRIVATE_KEY and PUSH_VAPID_SUBJECT must be configured together',
+      })
+    }
     // When SMTP is configured in production, require credentials. This rules
     // out silent misconfiguration against real providers (SendGrid, Mailgun,
     // Postmark, Gmail, ...), which all need a username + password. Local
@@ -99,6 +121,19 @@ const envSchema = z
         message:
           'SMTP_USER and SMTP_PASS are required in production when SMTP_HOST is set',
       })
+    }
+    if (env.NODE_ENV === 'production' && env.SMTP_HOST) {
+      if (
+        !env.EMAIL_UNSUBSCRIBE_SECRET ||
+        Buffer.byteLength(env.EMAIL_UNSUBSCRIBE_SECRET, 'utf8') < 32
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['EMAIL_UNSUBSCRIBE_SECRET'],
+          message:
+            'EMAIL_UNSUBSCRIBE_SECRET must be at least 32 bytes in production',
+        })
+      }
     }
     if (
       env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS &&

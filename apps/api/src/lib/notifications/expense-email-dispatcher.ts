@@ -2,6 +2,12 @@ import { prisma } from '@spliit/db'
 import type { Expense } from '@spliit/domain'
 import { getCurrency } from '@spliit/domain'
 import { parseActivityData } from '@spliit/domain/activities'
+import {
+  getNotificationCategoryForActivity,
+  NotificationCategory,
+  notificationCategoryFamily,
+  NotificationCategoryFamily,
+} from '@spliit/domain/notifications'
 import { getAffectedParticipantIds } from '../api/expense-activity-diff'
 import { getWebBaseUrl } from '../auth/urls'
 import { isPlaceholderEmail } from '../invitations/display'
@@ -9,11 +15,13 @@ import { sendEmail } from '../mail/send'
 import {
   renderExpenseActivityEmail,
   type ExpenseActivityInputAny,
-} from '../mail/templates'
+} from '../mail/templates/expense-activity'
 import type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
+  ActivityNotificationIntent,
 } from './types'
+import { buildEmailUnsubscribeMetadata } from './unsubscribe'
 
 const EXPENSE_EVENT_TYPES = new Set([
   'EXPENSE_CREATED',
@@ -21,6 +29,7 @@ const EXPENSE_EVENT_TYPES = new Set([
   'EXPENSE_DELETED',
 ])
 const IMPORT_EVENT_TYPES = new Set(['EXPENSES_IMPORTED'])
+const CATEGORY_BULK_EVENT_TYPES = new Set(['EXPENSE_CATEGORIES_BULK_UPDATED'])
 
 function formatAmount(cents: number, currencyCode?: string | null): string {
   const currency = currencyCode ? getCurrency(currencyCode) : undefined
@@ -101,9 +110,29 @@ type Group = {
 }
 
 export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotificationDispatcher {
-  async dispatch(event: ActivityNotificationEvent): Promise<void> {
+  async dispatch(
+    input: ActivityNotificationEvent | ActivityNotificationIntent,
+  ): Promise<void> {
+    const event = 'activity' in input ? input.activity : input
+    const recipientAccountId =
+      'activity' in input ? input.recipientAccountId : undefined
+    const eventCategory =
+      event.notificationCategory ??
+      getNotificationCategoryForActivity(event.type)
+    if (!eventCategory) return
+    const category = 'activity' in input ? input.category : eventCategory
+    if (category !== eventCategory) return
+    if (
+      notificationCategoryFamily[category] !==
+      NotificationCategoryFamily.EXPENSE
+    )
+      return
     if (IMPORT_EVENT_TYPES.has(event.type)) {
-      await this.dispatchImportSummary(event)
+      await this.dispatchImportSummary(event, recipientAccountId)
+      return
+    }
+    if (CATEGORY_BULK_EVENT_TYPES.has(event.type)) {
+      await this.dispatchCategoryBulkSummary(event, recipientAccountId)
       return
     }
     if (!EXPENSE_EVENT_TYPES.has(event.type)) return
@@ -259,9 +288,6 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     }
 
     // Event type narrowing for the React Email template input.
-    // Subject and text come from the legacy buildSubject/buildText; we
-    // only add the HTML body here so the HTML rendering stays out of
-    // the per-recipient filtering loop.
     const eventType: 'EXPENSE_CREATED' | 'EXPENSE_UPDATED' | 'EXPENSE_DELETED' =
       event.type === 'EXPENSE_UPDATED'
         ? 'EXPENSE_UPDATED'
@@ -302,6 +328,8 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         changedFields: changedFieldsForTemplate,
         expenseUrl: baseTemplate.expenseUrl,
       }),
+      recipientAccountId,
+      category,
     })
   }
 
@@ -312,6 +340,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
    */
   private async dispatchImportSummary(
     event: ActivityNotificationEvent,
+    recipientAccountId?: string,
   ): Promise<void> {
     const parsed = parseActivityData(event.data)
     if (!parsed || parsed.kind !== 'import_summary') return
@@ -385,6 +414,70 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         totalStr,
         groupUrl,
       }),
+      recipientAccountId,
+      category: NotificationCategory.EXPENSE_CHANGED,
+    })
+  }
+
+  private async dispatchCategoryBulkSummary(
+    event: ActivityNotificationEvent,
+    recipientAccountId?: string,
+  ): Promise<void> {
+    const parsed = parseActivityData(event.data)
+    if (!parsed || parsed.kind !== 'expense_categories_bulk_updated') return
+
+    const [group, actorAccount, members] = await Promise.all([
+      prisma.group.findUnique({
+        where: { id: event.groupId },
+        select: GROUP_SELECT,
+      }),
+      event.actor?.type === 'ACCOUNT'
+        ? prisma.account.findUnique({
+            where: { id: event.actor.id },
+            select: { name: true },
+          })
+        : Promise.resolve(null),
+      prisma.groupMember.findMany({
+        where: {
+          groupId: event.groupId,
+          status: 'ACTIVE',
+          ...(recipientAccountId ? { accountId: recipientAccountId } : {}),
+        },
+        select: { account: { select: { id: true, email: true } } },
+      }),
+    ])
+    if (!group) return
+
+    const actorName = actorAccount?.name ?? 'Someone'
+    const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
+    const participants: Participant[] = members.map((member) => ({
+      groupMember: { status: 'ACTIVE', account: member.account },
+    }))
+
+    await this.sendToActiveMembers({
+      participants,
+      actor: event.actor,
+      activityId: event.activityId,
+      group,
+      buildSubject: (displayName) =>
+        `[Spliit Cloud] Expense categories updated in ${displayName}`,
+      buildText: (displayName) =>
+        `${actorName} updated categories for ${parsed.count} ${
+          parsed.count === 1 ? 'expense' : 'expenses'
+        } in ${displayName}.\n\nView the group here:\n${groupUrl}`,
+      templateFor: (displayName) => ({
+        kind: 'expense_categories_bulk_updated',
+        subject: '',
+        text: '',
+        brandBaseUrl: getWebBaseUrl(),
+        groupDisplayName: displayName,
+        actorName,
+        count: parsed.count,
+        distinctCategories: parsed.distinctCategories ?? null,
+        groupUrl,
+      }),
+      recipientAccountId,
+      category: NotificationCategory.EXPENSE_CHANGED,
     })
   }
 
@@ -396,6 +489,8 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     buildSubject: (displayName: string) => string
     buildText: (displayName: string) => string
     templateFor: (displayName: string) => ExpenseActivityInputAny
+    recipientAccountId?: string
+    category: NotificationCategory
   }): Promise<void> {
     for (const participant of args.participants) {
       const groupMember = participant.groupMember
@@ -403,6 +498,8 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       if (groupMember.status !== 'ACTIVE') continue
       const account = groupMember.account
       if (!account?.email) continue
+      if (args.recipientAccountId && account.id !== args.recipientAccountId)
+        continue
       if (isPlaceholderEmail(account.email)) continue
       if (args.actor?.id === account.id && args.actor?.type === 'ACCOUNT')
         continue
@@ -421,12 +518,21 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       // Pass the canonical subject/text computed by the dispatcher so
       // the rendered email matches the test contract.
       const finalInput = { ...templateInput, subject, text }
-      const rendered = await renderExpenseActivityEmail(finalInput)
+      const unsubscribe = await buildEmailUnsubscribeMetadata({
+        accountId: account.id,
+        category: args.category,
+      })
+      const rendered = await renderExpenseActivityEmail({
+        ...finalInput,
+        unsubscribeUrl: unsubscribe?.url,
+      })
 
       try {
         await sendEmail({
           to: account.email,
           ...rendered,
+          text: `${rendered.text}${unsubscribe?.textFooter ?? ''}`,
+          headers: unsubscribe?.headers,
         })
       } catch (err) {
         console.warn(

@@ -9,6 +9,7 @@ const ungatedPaths = new Set([
   '/privacy',
   '/terms',
   '/imprint',
+  '/unsubscribe',
 ])
 
 /**
@@ -48,7 +49,7 @@ export function ProfileGate({ children }: PropsWithChildren) {
   if (needsDisplayName(account)) {
     const target =
       typeof window !== 'undefined'
-        ? `${currentPath}${window.location.search}`
+        ? `${currentPath}${window.location.search}${window.location.hash}`
         : currentPath
     return (
       <Navigate

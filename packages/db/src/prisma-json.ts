@@ -12,6 +12,9 @@
 // This file must be a module (`export {}`) so the global declaration
 // merges with the one Prisma Client expects internally.
 //
+// Notification channel annotations emit a bare global alias below, preserving
+// the shared domain literal type in generated Prisma models.
+//
 // String vs JSON annotations:
 //   - `/// ![ActivityType]` (with !) → generator emits bare (ActivityType)
 //     references in model files — these need a global type alias.
@@ -24,6 +27,7 @@ import type {
   ActivitySubjectType as DomainActivitySubjectType,
   ActivityType as DomainActivityType,
 } from '@spliit/domain/activities'
+import type { NotificationChannel as DomainNotificationChannel } from '@spliit/domain/notifications'
 
 export {}
 
@@ -34,6 +38,7 @@ declare global {
     type ActivityActorType = DomainActivityActorType
     type ActivitySubjectType = DomainActivitySubjectType
     type ActivityData = DomainActivityData
+    type NotificationChannel = DomainNotificationChannel
   }
 
   // The generator emits bare (ActivityType) for string-annotated fields
@@ -44,4 +49,5 @@ declare global {
   type ActivityType = DomainActivityType
   type ActivityActorType = DomainActivityActorType
   type ActivitySubjectType = DomainActivitySubjectType
+  type NotificationChannel = DomainNotificationChannel
 }

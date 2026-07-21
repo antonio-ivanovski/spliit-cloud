@@ -578,6 +578,122 @@
       "updated": "Profile photo updated.",
       "remove": "Remove photo",
       "removed": "Profile photo removed."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Choose where Spliit sends activity notifications.",
+      "enable": "Enable push notifications",
+      "disable": "Disable push notifications",
+      "enabled": "Push notifications are enabled on this device.",
+      "disabled": "Push notifications are currently disabled on this device.",
+      "unsupported": "Push notifications aren't supported by this browser or context.",
+      "notConfigured": "Push notifications aren't available on this deployment.",
+      "permissionDenied": "Notifications are blocked. Allow them in your browser or device settings, then try again.",
+      "iosInstall": "On iPhone or iPad, add Spliit to your Home Screen before enabling push notifications.",
+      "error": "Could not update push notification settings. Please try again.",
+      "preferencesTitle": "Notification preferences",
+      "preferencesDescription": "These choices apply to future group and expense activity.",
+      "globalLabel": "All activity",
+      "globalDescription": "Recommended varies by activity and adapts when Push is unavailable: quick updates use push, while higher-volume activity stays in email. Choose Email or Push to use one global channel.",
+      "recommended": "Recommended",
+      "recommendedDescription": "Recommended delivery: {channels}. Push notifications are delivered only to devices you enable.",
+      "mixedByActivity": "Mixed by activity",
+      "recommendedCategoryDescription": "Using the recommended {channels} delivery for this activity.",
+      "useRecommended": "Use recommended",
+      "custom": "Custom",
+      "useGlobal": "Use all activity setting",
+      "inheritedDescription": "Following your all activity setting. Choose a channel to customize this category.",
+      "customDescription": "Custom delivery for this category. Choose one or both channels.",
+      "channelsLabel": "Notification channels",
+      "email": "Email",
+      "emailDescription": "Receive a message in your inbox.",
+      "push": {
+        "deviceTitle": "This device",
+        "deviceDescription": "Enable push alerts on this device. This does not change your other devices.",
+        "deviceDisabled": "Push is selected, but push is not enabled on this device.",
+        "noDevices": "Push is selected, but no device is enabled yet."
+      },
+      "pushDescription": "Receive an alert on an enabled device.",
+      "off": "Off",
+      "pushSelectionError": "Push could not be enabled on this device. Push was not selected.",
+      "pushMissingTarget": "Push is selected, but these notifications will not be delivered until you enable a device. You can enable one below or in Settings.",
+      "rowSaved": "Notification preference saved.",
+      "comingSoon": "Coming soon",
+      "emailComingSoon": "Email configuration coming soon.",
+      "sections": {
+        "groups": "Groups and friends",
+        "expenses": "Expenses",
+        "summaries": "Summaries"
+      },
+      "rows": {
+        "addedToGroup": {
+          "title": "Added to a group",
+          "description": "When someone adds you to a group."
+        },
+        "addedAsFriend": {
+          "title": "Friend ledger",
+          "description": "When someone starts a friend ledger with you."
+        },
+        "newExpense": {
+          "title": "New expense",
+          "description": "When someone adds an expense to a group."
+        },
+        "expenseChanged": {
+          "title": "Expense edited or deleted",
+          "description": "When an expense is updated or deleted."
+        },
+        "newComment": {
+          "title": "New comment",
+          "description": "When someone comments on an expense."
+        },
+        "weeklySummary": {
+          "title": "Weekly activity summary",
+          "description": "A weekly summary of activity across your groups."
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud news and updates",
+          "description": "Product news, tips, and service updates."
+        }
+      },
+      "inherited": "Inherited",
+      "currently": "Currently: {channels}",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "New expenses",
+          "description": "When someone adds an expense to a group."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Expense changes",
+          "description": "When an expense is updated or deleted."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Expense imports and bulk changes",
+          "description": "When expenses are imported or updated in bulk."
+        },
+        "GROUP_CHANGES": {
+          "title": "Group changes",
+          "description": "When group details or archive status changes."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Invitations",
+          "description": "When invitations are sent, accepted, declined, or revoked."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Membership",
+          "description": "When members leave, are removed, or change roles."
+        }
+      },
+      "expenseActivity": "Expense activity",
+      "groupActivity": "Group activity",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "reset": "Reset",
+      "saved": "Notification preferences saved.",
+      "saveError": "Could not save notification preferences. Please try again.",
+      "loading": "Loading notification preferences…",
+      "loadError": "Could not load notification preferences.",
+      "retry": "Try again",
+      "pushChannel": "Push"
     }
   },
   "CompleteProfile": {
@@ -1657,6 +1773,22 @@
       "step2": "Tap Install"
     }
   },
+  "PushOnboarding": {
+    "title": "Choose how to stay up to date",
+    "description": "Spliit can alert you about group and expense activity as it happens.",
+    "pushBenefit": "Push notifications arrive on this device even when Spliit is not open.",
+    "emailFallback": "Email is available for notifications you choose to receive there; Push-only choices are not rerouted.",
+    "settingsHint": "You can change these choices any time in Settings. Push notifications are enabled separately for each device.",
+    "enable": "Enable push notifications",
+    "enabling": "Enabling…",
+    "useEmail": "Use email",
+    "deniedTitle": "Push notifications are blocked",
+    "deniedDescription": "Your browser blocked notification permission. Notifications configured for Email will continue there; Push-only choices are not rerouted.",
+    "failedTitle": "Push could not be enabled",
+    "failedDescription": "We could not register this device. Notifications configured for Email will continue there; Push-only choices are not rerouted.",
+    "emailUsage": "Only notifications configured for Email will arrive until you enable a device. You can allow notifications in your browser settings and try again from Settings.",
+    "done": "Done"
+  },
   "Friends": {
     "title": "Track expenses with a friend",
     "peerFriendsTab": "Friends list",
@@ -1838,5 +1970,25 @@
   "Participants": {
     "search": "Search participants...",
     "noParticipant": "No participant found"
+  },
+  "Unsubscribe": {
+    "title": "Turn off these emails?",
+    "description": "You’re choosing whether to keep one type of email notification.",
+    "confirm": "Turn off these emails",
+    "submitting": "Unsubscribing…",
+    "cancel": "Keep these emails",
+    "error": "We could not update your email preferences. Please try again.",
+    "loading": "Checking unsubscribe link…",
+    "backHome": "Back to home",
+    "manageSettings": "Review all notification settings",
+    "invalid": {
+      "title": "This link no longer works",
+      "description": "It may have expired. Sign in to review your email and push notification settings."
+    },
+    "success": {
+      "title": "These emails are turned off",
+      "description": "You won’t receive emails for {category}. Your other notification settings haven’t changed."
+    },
+    "scope": "Only this email notification will be turned off. Your other emails and push notifications will stay the same."
   }
 }

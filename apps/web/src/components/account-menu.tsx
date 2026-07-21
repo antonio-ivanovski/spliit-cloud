@@ -1,4 +1,5 @@
 import { AccountAvatar } from '@/components/account-avatar'
+import { clearPushOnboardingCompletion } from '@/components/push-notification-onboarding'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +9,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/lib/auth'
+import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LogOut, Settings as SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +19,7 @@ import { useTranslation } from 'react-i18next'
 export function AccountMenu() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: account, isPending } = useCurrentAccount()
 
   if (isPending) {
@@ -58,7 +62,10 @@ export function AccountMenu() {
           className="text-destructive focus:text-destructive"
           onSelect={async (event) => {
             event.preventDefault()
+            const disconnected = await disconnectPushSubscription()
+            if (disconnected) clearPushOnboardingCompletion(account.id)
             await authClient.signOut()
+            queryClient.clear()
             navigate({ to: '/', replace: true })
           }}
         >

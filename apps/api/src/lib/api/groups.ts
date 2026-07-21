@@ -1,7 +1,11 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { type GroupFormValues } from '@spliit/domain'
-import { resolveParticipantDisplayName } from '../invitations'
-import { buildGroupActivityData, logActivity } from './activities'
+import { resolveParticipantDisplayName } from '../invitations/display'
+import {
+  buildGroupActivityData,
+  logActivity,
+  scheduleActivityNotification,
+} from './activities'
 import type { DiffableGroup } from './group-activity-diff'
 import { getGroupChangeSummary } from './group-activity-diff'
 import { loadGroupWithLedger, randomId } from './shared'
@@ -98,42 +102,56 @@ export async function updateGroup(
 
   const summary = getGroupChangeSummary(oldGroup, newGroup, {})
 
-  return prisma.$transaction(async (tx) => {
-    await logActivity(
-      groupId,
-      {
-        type: 'GROUP_UPDATED',
-        actor: { type: 'ACCOUNT', id: actor.accountId },
-        subject: { type: 'GROUP', id: groupId },
-        data: buildGroupActivityData({
-          summary: groupFormValues.name,
-          ...(summary
-            ? { changedFields: summary.changedFields, changes: summary.changes }
-            : {}),
-        }),
-      },
-      tx,
-    )
-    const group = await tx.group.update({
-      where: { id: groupId },
-      data: {
-        name: groupFormValues.name,
-        information: groupFormValues.information,
-      },
-    })
-
-    if (existingGroup.ledgerId) {
-      await tx.ledger.update({
+  const result = await prisma.$transaction(async (tx) => {
+    const [activity, group] = await Promise.all([
+      logActivity(
+        groupId,
+        {
+          type: 'GROUP_UPDATED',
+          actor: { type: 'ACCOUNT', id: actor.accountId },
+          subject: { type: 'GROUP', id: groupId },
+          data: buildGroupActivityData({
+            summary: groupFormValues.name,
+            ...(summary
+              ? {
+                  changedFields: summary.changedFields,
+                  changes: summary.changes,
+                }
+              : {}),
+          }),
+        },
+        tx,
+      ),
+      tx.group.update({
+        where: { id: groupId },
+        data: {
+          name: groupFormValues.name,
+          information: groupFormValues.information,
+        },
+      }),
+      tx.ledger.update({
         where: { id: existingGroup.ledgerId },
         data: {
           currency: groupFormValues.currency,
           currencyCode: groupFormValues.currencyCode || null,
         },
-      })
-    }
+      }),
+    ])
 
-    return group
+    return { group, activity }
   })
+  scheduleActivityNotification(result.activity, groupId, {
+    type: 'GROUP_UPDATED',
+    actor: { type: 'ACCOUNT', id: actor.accountId },
+    subject: { type: 'GROUP', id: groupId },
+    data: buildGroupActivityData({
+      summary: groupFormValues.name,
+      ...(summary
+        ? { changedFields: summary.changedFields, changes: summary.changes }
+        : {}),
+    }),
+  })
+  return result.group
 }
 
 export async function getGroup(groupId: string) {

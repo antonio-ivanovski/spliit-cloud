@@ -1536,6 +1536,122 @@
       "updated": "Foto de perfil atualizada.",
       "remove": "Remover foto",
       "removed": "Foto de perfil removida."
+    },
+    "notifications": {
+      "title": "Notificações push",
+      "description": "Escolha onde o Spliit envia as notificações de atividade.",
+      "enable": "Ativar notificações push",
+      "disable": "Desativar notificações push",
+      "enabled": "As notificações push estão ativadas neste dispositivo.",
+      "disabled": "As notificações push estão desativadas no momento neste dispositivo.",
+      "unsupported": "As notificações push não são compatíveis com este navegador ou contexto.",
+      "notConfigured": "As notificações push não estão disponíveis nesta implantação.",
+      "permissionDenied": "As notificações estão bloqueadas. Permita-as no navegador ou nas configurações do dispositivo e tente novamente.",
+      "iosInstall": "No iPhone ou iPad, adicione o Spliit à tela inicial antes de ativar as notificações push.",
+      "error": "Não foi possível atualizar as configurações das notificações push. Tente novamente.",
+      "preferencesTitle": "Preferências de notificação",
+      "preferencesDescription": "Estas opções se aplicam às futuras atividades de grupos e despesas.",
+      "globalLabel": "Todas as atividades",
+      "globalDescription": "A recomendação varia de acordo com a atividade e se adapta quando o push não está disponível: atualizações rápidas usam push, enquanto atividades de maior volume permanecem no e-mail. Escolha E-mail ou Push para usar um único canal global.",
+      "recommended": "Recomendado",
+      "recommendedDescription": "Entrega recomendada: {channels}. As notificações push são entregues somente nos dispositivos que você ativar.",
+      "mixedByActivity": "Misto por atividade",
+      "recommendedCategoryDescription": "A entrega recomendada ({channels}) é usada para esta atividade.",
+      "useRecommended": "Usar a configuração recomendada",
+      "custom": "Personalizado",
+      "useGlobal": "Usar a configuração para todas as atividades",
+      "inheritedDescription": "Segue a configuração para todas as atividades. Escolha um canal para personalizar esta categoria.",
+      "customDescription": "Entrega personalizada para esta categoria. Escolha um ou ambos os canais.",
+      "channelsLabel": "Canais de notificação",
+      "email": "E-mail",
+      "pushDescription": "Receba um alerta em um dispositivo ativado.",
+      "off": "Desativado",
+      "pushSelectionError": "Não foi possível ativar as notificações push neste dispositivo. O e-mail foi mantido ativado para esta categoria.",
+      "pushMissingTarget": "As notificações push estão selecionadas, mas não serão entregues até que você ative um dispositivo. Você pode ativar um abaixo ou em Configurações.",
+      "rowSaved": "Preferência de notificação salva.",
+      "comingSoon": "Em breve",
+      "emailComingSoon": "A configuração de e-mail estará disponível em breve.",
+      "inherited": "Herdado",
+      "currently": "Atualmente: {channels}",
+      "expenseActivity": "Atividade de despesas",
+      "groupActivity": "Atividade do grupo",
+      "save": "Salvar alterações",
+      "saving": "Salvando…",
+      "reset": "Redefinir",
+      "saved": "Preferências de notificação salvas.",
+      "saveError": "Não foi possível salvar as preferências de notificação. Tente novamente.",
+      "loading": "Carregando preferências de notificação…",
+      "loadError": "Não foi possível carregar as preferências de notificação.",
+      "emailDescription": "Receba uma mensagem na sua caixa de entrada.",
+      "push": {
+        "deviceTitle": "Este dispositivo",
+        "deviceDescription": "Ative os alertas push neste dispositivo. Isso não altera seus outros dispositivos.",
+        "deviceDisabled": "O push está selecionado, mas não está ativado neste dispositivo.",
+        "noDevices": "O push está selecionado, mas nenhum dispositivo está ativado ainda."
+      },
+      "retry": "Tentar novamente",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Novas despesas",
+          "description": "Quando alguém adiciona uma despesa a um grupo."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Importações e alterações em massa de despesas",
+          "description": "Quando as despesas são importadas ou atualizadas em massa."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Alterações nas despesas",
+          "description": "Quando uma despesa é atualizada ou excluída."
+        },
+        "GROUP_CHANGES": {
+          "title": "Alterações no grupo",
+          "description": "Quando os detalhes do grupo ou o status de arquivamento mudam."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Convites",
+          "description": "Quando os convites são enviados, aceitos, recusados ou revogados."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Membros",
+          "description": "Quando os membros saem, são removidos ou mudam de função."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Registro com um amigo",
+          "description": "Quando alguém cria um registro com você."
+        },
+        "addedToGroup": {
+          "title": "Adicionado a um grupo",
+          "description": "Quando alguém adiciona você a um grupo."
+        },
+        "cloudNews": {
+          "title": "Notícias e atualizações do Spliit Cloud",
+          "description": "Notícias do produto, dicas e atualizações do serviço."
+        },
+        "expenseChanged": {
+          "title": "Despesa editada ou excluída",
+          "description": "Quando uma despesa é atualizada ou excluída."
+        },
+        "newComment": {
+          "title": "Novo comentário",
+          "description": "Quando alguém comenta uma despesa."
+        },
+        "newExpense": {
+          "title": "Nova despesa",
+          "description": "Quando alguém adiciona uma despesa a um grupo."
+        },
+        "weeklySummary": {
+          "title": "Resumo semanal de atividade",
+          "description": "Um resumo semanal da atividade dos seus grupos."
+        }
+      },
+      "sections": {
+        "groups": "Grupos e amigos",
+        "expenses": "Despesas",
+        "summaries": "Resumos"
+      }
     }
   },
   "Activities": {
@@ -1787,5 +1903,41 @@
     "light": "Claro",
     "dark": "Escuro",
     "system": "Padrão do sistema"
+  },
+  "PushOnboarding": {
+    "title": "Escolha como ficar por dentro",
+    "description": "O Spliit pode avisar você sobre a atividade de grupos e despesas conforme elas acontecem.",
+    "pushBenefit": "As notificações push chegam a este dispositivo mesmo quando o Spliit não está aberto.",
+    "emailFallback": "O e-mail está disponível para as notificações que você escolher receber; as opções somente push não serão redirecionadas.",
+    "settingsHint": "Você pode alterar essas opções a qualquer momento em Configurações. As notificações push são ativadas separadamente para cada dispositivo.",
+    "enable": "Ativar notificações push",
+    "enabling": "Ativando…",
+    "useEmail": "Usar e-mail",
+    "deniedTitle": "As notificações push estão bloqueadas",
+    "deniedDescription": "Seu navegador bloqueou a permissão para notificações. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
+    "failedTitle": "Não foi possível ativar as notificações push",
+    "failedDescription": "Não foi possível registrar este dispositivo. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
+    "emailUsage": "Somente as notificações configuradas para e-mail serão recebidas até que você ative um dispositivo. Permita notificações nas configurações do navegador e tente novamente em Configurações.",
+    "done": "Concluído"
+  },
+  "Unsubscribe": {
+    "title": "Desativar estes e-mails?",
+    "description": "Escolha se deseja continuar recebendo um tipo de notificação por e-mail.",
+    "confirm": "Desativar estes e-mails",
+    "submitting": "Cancelando inscrição…",
+    "cancel": "Manter estes e-mails",
+    "error": "Não foi possível atualizar suas preferências de e-mail. Tente novamente.",
+    "loading": "Verificando o link para cancelar a inscrição…",
+    "backHome": "Voltar ao início",
+    "manageSettings": "Revisar todas as configurações de notificações",
+    "invalid": {
+      "title": "Este link não funciona mais",
+      "description": "Ele pode ter expirado. Entre para revisar as configurações de e-mail e notificações push."
+    },
+    "success": {
+      "title": "Estes e-mails estão desativados",
+      "description": "Você não receberá e-mails de {category}. Suas outras configurações de notificações não foram alteradas."
+    },
+    "scope": "Somente esta notificação por e-mail será desativada. Seus outros e-mails e notificações push continuarão iguais."
   }
 }

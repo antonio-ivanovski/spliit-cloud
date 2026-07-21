@@ -30,7 +30,12 @@ describe('sendEmail', () => {
     const { sendEmail } = await import('./send')
 
     await expect(
-      sendEmail({ to: 'dev@example.com', subject: 's', text: 't' }),
+      sendEmail({
+        to: 'dev@example.com',
+        subject: 's',
+        text: 't',
+        html: '<p>t</p>',
+      }),
     ).rejects.toThrow(/SMTP_HOST is not configured/)
   })
 
@@ -61,6 +66,28 @@ describe('sendEmail', () => {
     expect(sent[0].html).toBe('<p>html body</p>')
   })
 
+  it.each([
+    { text: '', html: '<p>html body</p>' },
+    { text: 'plain text body', html: '' },
+    { text: '   ', html: '<p>html body</p>' },
+    { text: 'plain text body', html: '   ' },
+  ])('rejects empty email bodies', async ({ text, html }) => {
+    vi.stubEnv('SMTP_HOST', 'smtp.test')
+    vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
+    vi.resetModules()
+
+    const { sendEmail } = await import('./send')
+
+    await expect(
+      sendEmail({
+        to: 'recipient@example.com',
+        subject: 'Test subject',
+        text,
+        html,
+      }),
+    ).rejects.toThrow(/Email text and html must be non-empty/)
+  })
+
   it('uses EMAIL_FROM as the from address on every send', async () => {
     vi.stubEnv('SMTP_HOST', 'smtp.test')
     vi.stubEnv('SMTP_PORT', '587')
@@ -72,8 +99,18 @@ describe('sendEmail', () => {
     const { sendEmail } = await import('./send')
     const mock = (await import('nodemailer-mock')).mocked
 
-    await sendEmail({ to: 'a@example.com', subject: 's1', text: 'b1' })
-    await sendEmail({ to: 'b@example.com', subject: 's2', text: 'b2' })
+    await sendEmail({
+      to: 'a@example.com',
+      subject: 's1',
+      text: 'b1',
+      html: '<p>b1</p>',
+    })
+    await sendEmail({
+      to: 'b@example.com',
+      subject: 's2',
+      text: 'b2',
+      html: '<p>b2</p>',
+    })
 
     const sent = mock.mock.getSentMail()
     expect(sent).toHaveLength(2)
@@ -106,7 +143,12 @@ describe('sendEmail', () => {
         const createTransportSpy = vi.spyOn(mocked, 'createTransport')
         const { sendEmail } = await import('./send')
 
-        await sendEmail({ to: 'r@example.com', subject: 's', text: 't' })
+        await sendEmail({
+          to: 'r@example.com',
+          subject: 's',
+          text: 't',
+          html: '<p>t</p>',
+        })
 
         expect(createTransportSpy).toHaveBeenCalledTimes(1)
         const opts = createTransportSpy.mock.calls[0][0] as Record<
@@ -135,8 +177,18 @@ describe('sendEmail', () => {
     const createTransportSpy = vi.spyOn(mocked, 'createTransport')
     const { sendEmail } = await import('./send')
 
-    await sendEmail({ to: 'a@example.com', subject: 's1', text: 't1' })
-    await sendEmail({ to: 'b@example.com', subject: 's2', text: 't2' })
+    await sendEmail({
+      to: 'a@example.com',
+      subject: 's1',
+      text: 't1',
+      html: '<p>t1</p>',
+    })
+    await sendEmail({
+      to: 'b@example.com',
+      subject: 's2',
+      text: 't2',
+      html: '<p>t2</p>',
+    })
 
     expect(createTransportSpy).toHaveBeenCalledTimes(1)
   })
@@ -154,7 +206,12 @@ describe('sendEmail', () => {
     mock.mock.setShouldFail(true)
     try {
       await expect(
-        sendEmail({ to: 'r@example.com', subject: 's', text: 't' }),
+        sendEmail({
+          to: 'r@example.com',
+          subject: 's',
+          text: 't',
+          html: '<p>t</p>',
+        }),
       ).rejects.toThrow(/nodemailer-mock failure/i)
     } finally {
       mock.mock.setShouldFail(false)

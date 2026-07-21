@@ -1544,6 +1544,122 @@
       "updated": "Zdjęcie profilowe zaktualizowane.",
       "remove": "Usuń zdjęcie",
       "removed": "Zdjęcie profilowe usunięte."
+    },
+    "notifications": {
+      "title": "Powiadomienia",
+      "description": "Wybierz, gdzie Spliit ma wysyłać powiadomienia o aktywności.",
+      "enable": "Włącz powiadomienia push",
+      "disable": "Wyłącz powiadomienia push",
+      "enabled": "Powiadomienia push są włączone na tym urządzeniu.",
+      "disabled": "Powiadomienia push są obecnie wyłączone na tym urządzeniu.",
+      "unsupported": "Powiadomienia push nie są obsługiwane przez tę przeglądarkę lub kontekst.",
+      "notConfigured": "Powiadomienia push nie są dostępne w tym wdrożeniu.",
+      "permissionDenied": "Powiadomienia są zablokowane. Zezwól na nie w ustawieniach przeglądarki lub urządzenia, a następnie spróbuj ponownie.",
+      "iosInstall": "Na iPhonie lub iPadzie dodaj Spliit do ekranu początkowego przed włączeniem powiadomień push.",
+      "error": "Nie udało się zaktualizować ustawień powiadomień push. Spróbuj ponownie.",
+      "preferencesTitle": "Preferencje powiadomień",
+      "preferencesDescription": "Te ustawienia dotyczą przyszłej aktywności grup i wydatków.",
+      "globalLabel": "Cała aktywność",
+      "globalDescription": "Zalecane ustawienie różni się w zależności od aktywności i dostosowuje się, gdy push jest niedostępny: szybkie aktualizacje są wysyłane jako push, a aktywność o większej liczbie zdarzeń pozostaje w e-mailu. Wybierz e-mail lub push, aby używać jednego kanału globalnie.",
+      "recommended": "Zalecane",
+      "recommendedDescription": "Zalecany sposób dostarczania: {channels}. Powiadomienia push są dostarczane tylko na urządzenia, na których je włączysz.",
+      "mixedByActivity": "Różne kanały w zależności od aktywności",
+      "recommendedCategoryDescription": "Dla tej aktywności używane są zalecane kanały: {channels}.",
+      "useRecommended": "Użyj zalecanych",
+      "custom": "Niestandardowe",
+      "useGlobal": "Użyj ustawienia dla całej aktywności",
+      "inheritedDescription": "Zgodnie z ustawieniem dla całej aktywności. Wybierz kanał, aby dostosować tę kategorię.",
+      "customDescription": "Niestandardowe dostarczanie dla tej kategorii. Wybierz jeden lub oba kanały.",
+      "channelsLabel": "Kanały powiadomień",
+      "email": "E-mail",
+      "pushDescription": "Otrzymuj alerty na włączonym urządzeniu.",
+      "off": "Wyłączone",
+      "pushSelectionError": "Nie udało się włączyć powiadomień push na tym urządzeniu. E-mail pozostał włączony dla tej kategorii.",
+      "pushMissingTarget": "Wybrano push, ale te powiadomienia nie będą dostarczane, dopóki nie włączysz urządzenia. Możesz włączyć je poniżej lub w Ustawieniach.",
+      "rowSaved": "Preferencja powiadomień została zapisana.",
+      "comingSoon": "Już wkrótce",
+      "emailComingSoon": "Konfiguracja poczty e-mail już wkrótce.",
+      "inherited": "Dziedziczone",
+      "currently": "Obecnie: {channels}",
+      "expenseActivity": "Aktywność wydatków",
+      "groupActivity": "Aktywność grupy",
+      "save": "Zapisz zmiany",
+      "saving": "Zapisywanie…",
+      "reset": "Resetuj",
+      "saved": "Preferencje powiadomień zapisane.",
+      "saveError": "Nie udało się zapisać preferencji powiadomień. Spróbuj ponownie.",
+      "loading": "Wczytywanie preferencji powiadomień…",
+      "loadError": "Nie udało się wczytać preferencji powiadomień.",
+      "emailDescription": "Otrzymuj wiadomości w swojej skrzynce odbiorczej.",
+      "push": {
+        "deviceTitle": "To urządzenie",
+        "deviceDescription": "Włącz alerty push na tym urządzeniu. Nie wpłynie to na inne urządzenia.",
+        "deviceDisabled": "Wybrano push, ale nie jest on włączony na tym urządzeniu.",
+        "noDevices": "Wybrano push, ale nie włączono jeszcze żadnego urządzenia."
+      },
+      "retry": "Spróbuj ponownie",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Nowe wydatki",
+          "description": "Gdy ktoś doda wydatek do grupy."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Zmiany wydatków",
+          "description": "Gdy wydatek zostanie zaktualizowany lub usunięty."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Importy wydatków i zmiany zbiorcze",
+          "description": "Gdy wydatki są importowane lub zbiorczo aktualizowane."
+        },
+        "GROUP_CHANGES": {
+          "title": "Zmiany grupy",
+          "description": "Gdy zmieniają się dane grupy lub jej status archiwizacji."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Zaproszenia",
+          "description": "Gdy zaproszenia są wysyłane, akceptowane, odrzucane lub cofane."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Członkostwo",
+          "description": "Gdy członkowie opuszczą grupę, zostaną usunięci lub zmienią role."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Rejestr ze znajomym",
+          "description": "Gdy ktoś zacznie prowadzić z Tobą rejestr wydatków."
+        },
+        "addedToGroup": {
+          "title": "Dodano do grupy",
+          "description": "Gdy ktoś doda Cię do grupy."
+        },
+        "cloudNews": {
+          "title": "Wiadomości i aktualizacje Spliit Cloud",
+          "description": "Wiadomości o produkcie, porady i aktualizacje usługi."
+        },
+        "expenseChanged": {
+          "title": "Wydatek zmieniony lub usunięty",
+          "description": "Gdy wydatek zostanie zaktualizowany lub usunięty."
+        },
+        "newComment": {
+          "title": "Nowy komentarz",
+          "description": "Gdy ktoś skomentuje wydatek."
+        },
+        "newExpense": {
+          "title": "Nowy wydatek",
+          "description": "Gdy ktoś doda wydatek do grupy."
+        },
+        "weeklySummary": {
+          "title": "Cotygodniowe podsumowanie aktywności",
+          "description": "Cotygodniowe podsumowanie aktywności we wszystkich Twoich grupach."
+        }
+      },
+      "sections": {
+        "groups": "Grupy i znajomi",
+        "expenses": "Wydatki",
+        "summaries": "Podsumowania"
+      }
     }
   },
   "Activities": {
@@ -1804,5 +1920,41 @@
     "light": "Jasny",
     "dark": "Ciemny",
     "system": "Ustawienie systemowe"
+  },
+  "PushOnboarding": {
+    "title": "Wybierz sposób otrzymywania aktualizacji",
+    "description": "Spliit może powiadamiać Cię o aktywności w grupach i wydatkach, gdy tylko się wydarzy.",
+    "pushBenefit": "Powiadomienia push docierają na to urządzenie, nawet gdy Spliit nie jest otwarty.",
+    "emailFallback": "E-mail jest dostępny dla powiadomień, które wybierzesz do odbioru tą drogą; wybory wyłącznie push nie są przekierowywane.",
+    "settingsHint": "Możesz zmienić te ustawienia w dowolnym momencie w Ustawieniach. Powiadomienia push włącza się osobno na każdym urządzeniu.",
+    "enable": "Włącz powiadomienia push",
+    "enabling": "Włączanie…",
+    "useEmail": "Użyj e-maila",
+    "deniedTitle": "Powiadomienia push są zablokowane",
+    "deniedDescription": "Przeglądarka zablokowała uprawnienia do powiadomień. Powiadomienia skonfigurowane dla e-maila nadal będą tam dostarczane; wybory wyłącznie push nie są przekierowywane.",
+    "failedTitle": "Nie udało się włączyć powiadomień push",
+    "failedDescription": "Nie udało się zarejestrować tego urządzenia. Powiadomienia skonfigurowane dla e-maila nadal będą tam dostarczane; wybory wyłącznie push nie są przekierowywane.",
+    "emailUsage": "Dopóki nie włączysz urządzenia, będą docierać tylko powiadomienia skonfigurowane dla e-maila. Zezwól na powiadomienia w ustawieniach przeglądarki i spróbuj ponownie w Ustawieniach.",
+    "done": "Gotowe"
+  },
+  "Unsubscribe": {
+    "title": "Wyłączyć te e-maile?",
+    "description": "Wybierasz, czy zachować ten rodzaj powiadomień e-mail.",
+    "confirm": "Wyłącz te e-maile",
+    "submitting": "Wypisywanie…",
+    "cancel": "Zachowaj te e-maile",
+    "error": "Nie udało się zaktualizować ustawień e-mail. Spróbuj ponownie.",
+    "loading": "Sprawdzanie linku rezygnacji z subskrypcji…",
+    "backHome": "Wróć do strony głównej",
+    "manageSettings": "Przejrzyj wszystkie ustawienia powiadomień",
+    "invalid": {
+      "title": "Ten link już nie działa",
+      "description": "Mógł wygasnąć. Zaloguj się, aby przejrzeć ustawienia powiadomień e-mail i push."
+    },
+    "success": {
+      "title": "Te e-maile są wyłączone",
+      "description": "Nie będziesz otrzymywać e-maili dotyczących {category}. Pozostałe ustawienia powiadomień nie uległy zmianie."
+    },
+    "scope": "Wyłączone zostanie tylko to powiadomienie e-mail. Pozostałe e-maile i powiadomienia push pozostaną bez zmian."
   }
 }

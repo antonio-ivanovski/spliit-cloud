@@ -1,8 +1,10 @@
 import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { randomId } from '../lib/api'
+import '../lib/notifications'
+import { waitForScheduledNotificationDispatchesForTest } from '../lib/notifications/dispatcher'
 import { invitationsRouter } from '../trpc/routers/invitations'
-import { findEmailForRecipient, probeMaildev } from './maildev-client'
+import { expectEmailEventually, probeMaildev } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -155,19 +157,22 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
     expect(invitation!.type).toBe('EMAIL')
     expect(invitation!.invitedById).toBe(adminId)
 
+    await waitForScheduledNotificationDispatchesForTest()
+
     // Pull the invitation email out of MailDev's inbox. The lookup is
     // recipient-scoped, so a non-null result already proves the email was
     // delivered to `inviteeEmail`. The body assertions below check the
     // template variant (existing-user link) and the target URL.
-    const captured = await findEmailForRecipient(inviteeEmail)
-    expect(captured).not.toBeNull()
-    const mailContent = captured!.text
+    const captured = await expectEmailEventually({ recipient: inviteeEmail })
+    const mailContent = captured.text
     expect(mailContent).toContain(groupName)
     expect(mailContent).toContain('You will appear as "Invited User"')
     // Since invitee has an account, email should say "Open Spliit Cloud"
     // and link to the group page (not the sign-up page).
     expect(mailContent).toContain('Open Spliit Cloud')
     expect(mailContent).toContain(`/groups/${groupId}`)
+    expect(captured.html).toContain('Open Spliit Cloud')
+    expect(captured.html).toContain(`/groups/${groupId}`)
   })
 
   // ------------------------------------------------------------------
@@ -269,10 +274,10 @@ describe.skipIf(!apiReachable || !maildevReachable)(
       expect(sendRes.status).toBe(200)
 
       // Pull the magic link email out of MailDev's inbox.
-      const captured = await findEmailForRecipient(testEmail)
-      expect(captured).not.toBeNull()
-      const mailContent = captured!.text
+      const captured = await expectEmailEventually({ recipient: testEmail })
+      const mailContent = captured.text
       expect(mailContent).toContain('Click the link below to sign in to Spliit')
+      expect(captured.html).toContain('Sign in to Spliit Cloud')
 
       // Parse the email to extract the magic link URL
       // The email body lines after the header contain the URL.

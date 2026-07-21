@@ -3,21 +3,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   setDefaultActivityNotificationDispatchers,
   waitForScheduledNotificationDispatchesForTest,
-  type ActivityNotificationDispatcher,
-  type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
-import { checkDbConnection, testRunId } from './setup'
+import { CapturingDispatcher, checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
-
-class CapturingDispatcher implements ActivityNotificationDispatcher {
-  events: ActivityNotificationEvent[] = []
-  async dispatch(event: ActivityNotificationEvent): Promise<void> {
-    this.events.push(event)
-  }
-}
 
 function eventsForGroup(capture: CapturingDispatcher, groupId: string) {
   return capture.events.filter((event) => event.groupId === groupId)
@@ -579,6 +570,13 @@ describe('Group activity — real DB', () => {
     expect(acceptedData.kind).toBe('invitation')
 
     await waitForScheduledNotificationDispatchesForTest()
-    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
+    // The setup invites an existing account, so `INVITATION_CREATED`
+    // legitimately dispatches to the invitee in production. Assert only on
+    // the activity under test.
+    expect(
+      eventsForGroup(capture, fixture.groupId).filter(
+        (event) => event.type === 'INVITATION_ACCEPTED',
+      ),
+    ).toHaveLength(0)
   })
 })

@@ -1521,6 +1521,122 @@
       "updated": "プロフィール写真を更新しました。",
       "remove": "写真を削除",
       "removed": "プロフィール写真を削除しました。"
+    },
+    "notifications": {
+      "title": "通知",
+      "description": "Spliit がアクティビティ通知を送信する方法を選択します。",
+      "enable": "プッシュ通知を有効にする",
+      "disable": "プッシュ通知を無効にする",
+      "enabled": "このデバイスではプッシュ通知が有効です。",
+      "disabled": "このデバイスでは現在プッシュ通知が無効です。",
+      "unsupported": "このブラウザまたはコンテキストではプッシュ通知はサポートされていません。",
+      "notConfigured": "この環境ではプッシュ通知を利用できません。",
+      "permissionDenied": "通知がブロックされています。ブラウザまたはデバイスの設定で許可してから、もう一度お試しください。",
+      "iosInstall": "iPhoneまたはiPadでは、プッシュ通知を有効にする前にSpliitをホーム画面に追加してください。",
+      "error": "プッシュ通知の設定を更新できませんでした。もう一度お試しください。",
+      "preferencesTitle": "通知設定",
+      "preferencesDescription": "これらの選択は、今後のグループと支出アクティビティに適用されます。",
+      "globalLabel": "すべてのアクティビティ",
+      "globalDescription": "推奨設定では、アクティビティに応じて通知方法が変わり、プッシュ通知が利用できない場合は自動的に調整されます。すぐに確認したい更新はプッシュ通知で、通知量の多いアクティビティはメールで受け取ります。すべてを同じ通知方法にするには、メールまたはプッシュ通知を選択してください。",
+      "recommended": "推奨",
+      "recommendedDescription": "おすすめの配信先: {channels}。プッシュ通知は、有効にしたデバイスにのみ配信されます。",
+      "mixedByActivity": "アクティビティによって異なります",
+      "recommendedCategoryDescription": "このアクティビティでは推奨される {channels} 配信を使用します。",
+      "useRecommended": "おすすめを使用",
+      "custom": "カスタム",
+      "useGlobal": "全体設定を使用",
+      "inheritedDescription": "すべてのアクティビティ設定に従っています。チャンネルを選択して、このカテゴリをカスタマイズできます。",
+      "customDescription": "このカテゴリのカスタム配信です。1つまたは両方のチャンネルを選択してください。",
+      "channelsLabel": "通知チャンネル",
+      "email": "メール",
+      "pushDescription": "有効なデバイスで通知を受け取ります。",
+      "off": "オフ",
+      "pushSelectionError": "このデバイスでプッシュを有効にできませんでした。このカテゴリではメールをオンのままにしました。",
+      "pushMissingTarget": "プッシュが選択されていますが、デバイスを有効にするまでこれらの通知は配信されません。下記または設定でデバイスを有効にできます。",
+      "rowSaved": "通知設定を保存しました。",
+      "comingSoon": "近日公開",
+      "emailComingSoon": "メール設定は近日公開予定です。",
+      "inherited": "継承",
+      "currently": "現在: {channels}",
+      "expenseActivity": "支出のアクティビティ",
+      "groupActivity": "グループのアクティビティ",
+      "save": "変更を保存",
+      "saving": "保存中…",
+      "reset": "リセット",
+      "saved": "通知設定を保存しました。",
+      "saveError": "通知設定を保存できませんでした。もう一度お試しください。",
+      "loading": "通知設定を読み込み中…",
+      "loadError": "通知設定を読み込めませんでした。",
+      "emailDescription": "受信トレイでメッセージを受け取ります。",
+      "push": {
+        "deviceTitle": "このデバイス",
+        "deviceDescription": "このデバイスでプッシュ通知を有効にします。他のデバイスには影響しません。",
+        "deviceDisabled": "プッシュが選択されていますが、このデバイスではプッシュが有効になっていません。",
+        "noDevices": "プッシュが選択されていますが、有効なデバイスがまだありません。"
+      },
+      "retry": "再試行",
+      "pushChannel": "プッシュ",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "新しい支出",
+          "description": "グループに誰かが支出を追加したとき。"
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "支出のインポートと一括変更",
+          "description": "支出がインポートされた、または一括で更新されたとき。"
+        },
+        "EXPENSE_CHANGES": {
+          "title": "支出の変更",
+          "description": "支出が更新または削除されたとき。"
+        },
+        "GROUP_CHANGES": {
+          "title": "グループの変更",
+          "description": "グループの詳細またはアーカイブ状態が変更されたとき。"
+        },
+        "GROUP_INVITATIONS": {
+          "title": "招待",
+          "description": "招待が送信、承認、辞退、または取り消されたとき。"
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "メンバーシップ",
+          "description": "メンバーが退出、削除、または役割を変更したとき。"
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "友人との支出記録",
+          "description": "誰かがあなたと一緒に友人との支出記録を始めたとき。"
+        },
+        "addedToGroup": {
+          "title": "グループに追加されました",
+          "description": "誰かがあなたをグループに追加したとき。"
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud のニュースと最新情報",
+          "description": "プロダクトニュース、ヒント、サービスのお知らせ。"
+        },
+        "expenseChanged": {
+          "title": "支出が編集または削除されました",
+          "description": "支出が更新または削除されたとき。"
+        },
+        "newComment": {
+          "title": "新しいコメント",
+          "description": "誰かが支出にコメントしたとき。"
+        },
+        "newExpense": {
+          "title": "新しい支出",
+          "description": "誰かがグループに支出を追加したとき。"
+        },
+        "weeklySummary": {
+          "title": "週間アクティビティサマリー",
+          "description": "あなたのグループ全体のアクティビティの週間サマリー。"
+        }
+      },
+      "sections": {
+        "groups": "グループと友人",
+        "expenses": "支出",
+        "summaries": "サマリー"
+      }
     }
   },
   "Activities": {
@@ -1754,5 +1870,41 @@
     "light": "ライト",
     "dark": "ダーク",
     "system": "システム設定"
+  },
+  "PushOnboarding": {
+    "title": "最新情報を受け取る方法を選択",
+    "description": "Spliitでは、グループや支出のアクティビティを発生時に通知できます。",
+    "pushBenefit": "Spliitを開いていないときでも、このデバイスにプッシュ通知が届きます。",
+    "emailFallback": "受け取りたい通知にはメールを利用できます。プッシュのみの選択はメールに振り替えられません。",
+    "settingsHint": "これらの選択は設定でいつでも変更できます。プッシュ通知はデバイスごとに個別に有効にします。",
+    "enable": "プッシュ通知を有効にする",
+    "enabling": "有効にしています…",
+    "useEmail": "メールを使用",
+    "deniedTitle": "プッシュ通知がブロックされています",
+    "deniedDescription": "ブラウザによって通知の許可がブロックされました。メールに設定した通知は引き続きメールで届きます。プッシュのみの選択はメールに振り替えられません。",
+    "failedTitle": "プッシュを有効にできませんでした",
+    "failedDescription": "このデバイスを登録できませんでした。メールに設定した通知は引き続きメールで届きます。プッシュのみの選択はメールに振り替えられません。",
+    "emailUsage": "デバイスを有効にするまで、メールに設定した通知のみ届きます。ブラウザの設定で通知を許可し、設定からもう一度お試しください。",
+    "done": "完了"
+  },
+  "Unsubscribe": {
+    "title": "これらのメールを停止しますか？",
+    "description": "1種類のメール通知を受け取り続けるか選択しています。",
+    "confirm": "これらのメールを停止",
+    "submitting": "配信を停止しています…",
+    "cancel": "これらのメールを受け取り続ける",
+    "error": "メール設定を更新できませんでした。もう一度お試しください。",
+    "loading": "配信停止リンクを確認しています…",
+    "backHome": "ホームに戻る",
+    "manageSettings": "すべての通知設定を確認",
+    "invalid": {
+      "title": "このリンクはご利用いただけなくなりました",
+      "description": "有効期限が切れている可能性があります。サインインしてメールとプッシュ通知の設定を確認してください。"
+    },
+    "success": {
+      "title": "これらのメールを停止しました",
+      "description": "{category}のメールは届かなくなります。他の通知設定は変更されません。"
+    },
+    "scope": "停止されるのはこのメール通知のみです。他のメールやプッシュ通知は引き続き受け取れます。"
   }
 }

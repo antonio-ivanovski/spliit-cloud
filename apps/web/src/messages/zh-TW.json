@@ -1521,6 +1521,122 @@
       "updated": "個人資料照片已更新。",
       "remove": "移除照片",
       "removed": "個人資料照片已移除。"
+    },
+    "notifications": {
+      "title": "通知",
+      "description": "選擇 Spliit 傳送活動通知的管道。",
+      "enable": "啟用推播通知",
+      "disable": "停用推播通知",
+      "enabled": "此裝置已啟用推播通知。",
+      "disabled": "此裝置目前已停用推播通知。",
+      "unsupported": "此瀏覽器或環境不支援推播通知。",
+      "notConfigured": "此部署不提供推播通知。",
+      "permissionDenied": "通知已被封鎖。請在瀏覽器或裝置設定中允許通知，然後再試一次。",
+      "iosInstall": "在 iPhone 或 iPad 上，請先將 Spliit 加入主畫面，再啟用推播通知。",
+      "error": "無法更新推播通知設定。請再試一次。",
+      "preferencesTitle": "通知偏好設定",
+      "preferencesDescription": "這些選項會套用至未來的群組和支出活動。",
+      "globalLabel": "所有活動",
+      "globalDescription": "建議設定會依活動類型選擇不同的通知管道，並在無法使用推播時自動調整：需要快速查看的更新會透過推播傳送，而通知量較大的活動則保留透過電子郵件傳送。若要所有活動使用同一個管道，請選擇電子郵件或推播。",
+      "recommended": "建議",
+      "recommendedDescription": "建議的通知管道：{channels}。推播通知只會傳送到你啟用的裝置。",
+      "mixedByActivity": "依活動而異",
+      "recommendedCategoryDescription": "此活動使用建議的 {channels} 傳送方式。",
+      "useRecommended": "使用建議設定",
+      "custom": "自訂",
+      "useGlobal": "使用所有活動設定",
+      "inheritedDescription": "目前沿用所有活動設定。選取管道即可自訂此類別。",
+      "customDescription": "此類別使用自訂通知方式。請選取一個或兩個管道。",
+      "channelsLabel": "通知管道",
+      "email": "電子郵件",
+      "pushDescription": "在已啟用的裝置上接收通知。",
+      "off": "關閉",
+      "pushSelectionError": "無法在此裝置啟用推播。此類別仍保留電子郵件。",
+      "pushMissingTarget": "已選擇推播，但在啟用裝置前不會傳送這些通知。你可以在下方或設定中啟用裝置。",
+      "rowSaved": "通知偏好設定已儲存。",
+      "comingSoon": "即將推出",
+      "emailComingSoon": "電子郵件設定即將推出。",
+      "inherited": "沿用",
+      "currently": "目前：{channels}",
+      "expenseActivity": "支出活動",
+      "groupActivity": "群組活動",
+      "save": "儲存變更",
+      "saving": "儲存中…",
+      "reset": "重設",
+      "saved": "通知偏好設定已儲存。",
+      "saveError": "無法儲存通知偏好設定。請再試一次。",
+      "loading": "正在載入通知偏好設定…",
+      "loadError": "無法載入通知偏好設定。",
+      "emailDescription": "在收件匣中接收訊息。",
+      "push": {
+        "deviceTitle": "此裝置",
+        "deviceDescription": "在此裝置上啟用推播提醒。這不會變更其他裝置的設定。",
+        "deviceDisabled": "已選取推播，但此裝置尚未啟用推播。",
+        "noDevices": "已選取推播，但尚未啟用任何裝置。"
+      },
+      "retry": "再試一次",
+      "pushChannel": "推播",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "新增支出",
+          "description": "當有人在群組中新增支出時。"
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "支出匯入與大量變更",
+          "description": "當支出匯入或大量更新時。"
+        },
+        "EXPENSE_CHANGES": {
+          "title": "支出變更",
+          "description": "當支出更新或刪除時。"
+        },
+        "GROUP_CHANGES": {
+          "title": "群組變更",
+          "description": "當群組詳細資料或封存狀態變更時。"
+        },
+        "GROUP_INVITATIONS": {
+          "title": "邀請",
+          "description": "當邀請傳送、接受、拒絕或撤銷時。"
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "成員資格",
+          "description": "當成員離開、遭移除或變更角色時。"
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "記錄與好友的共同支出",
+          "description": "當有人開始與你記錄共同支出時。"
+        },
+        "addedToGroup": {
+          "title": "已新增至群組",
+          "description": "當有人將你新增至群組時。"
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud 資訊與更新",
+          "description": "產品資訊、提示與服務更新。"
+        },
+        "expenseChanged": {
+          "title": "支出已編輯或刪除",
+          "description": "當支出遭到更新或刪除時。"
+        },
+        "newComment": {
+          "title": "新評論",
+          "description": "當有人評論支出時。"
+        },
+        "newExpense": {
+          "title": "新支出",
+          "description": "當有人將支出新增至群組時。"
+        },
+        "weeklySummary": {
+          "title": "每週活動摘要",
+          "description": "你各個群組的每週活動摘要。"
+        }
+      },
+      "sections": {
+        "groups": "群組與好友",
+        "expenses": "消費",
+        "summaries": "摘要"
+      }
     }
   },
   "Activities": {
@@ -1754,5 +1870,41 @@
     "light": "淺色",
     "dark": "深色",
     "system": "跟隨系統"
+  },
+  "PushOnboarding": {
+    "title": "選擇接收最新資訊的方式",
+    "description": "Spliit 可在群組和支出活動發生時通知你。",
+    "pushBenefit": "即使 Spliit 未開啟，推播通知也會傳送到此裝置。",
+    "emailFallback": "你可以將想接收的通知設為電子郵件；僅選擇推播的通知不會改由電子郵件傳送。",
+    "settingsHint": "你可以隨時在設定中變更這些選擇。推播通知需在每部裝置上分別啟用。",
+    "enable": "啟用推播通知",
+    "enabling": "正在啟用…",
+    "useEmail": "使用電子郵件",
+    "deniedTitle": "推播通知已被封鎖",
+    "deniedDescription": "你的瀏覽器封鎖了通知權限。設為電子郵件的通知仍會傳送到信箱；僅選擇推播的通知不會改由電子郵件傳送。",
+    "failedTitle": "無法啟用推播",
+    "failedDescription": "無法註冊此裝置。設為電子郵件的通知仍會傳送到信箱；僅選擇推播的通知不會改由電子郵件傳送。",
+    "emailUsage": "啟用裝置前，只會收到設為電子郵件的通知。你可以在瀏覽器設定中允許通知，然後從設定重試。",
+    "done": "完成"
+  },
+  "Unsubscribe": {
+    "title": "要關閉這些電子郵件嗎？",
+    "description": "您正在選擇是否繼續接收某一類電子郵件通知。",
+    "confirm": "關閉這些電子郵件",
+    "submitting": "正在取消訂閱…",
+    "cancel": "繼續接收這些電子郵件",
+    "error": "無法更新您的電子郵件偏好設定。請再試一次。",
+    "loading": "正在檢查取消訂閱連結…",
+    "backHome": "返回首頁",
+    "manageSettings": "檢視所有通知設定",
+    "invalid": {
+      "title": "此連結已失效",
+      "description": "連結可能已過期。請登入以檢視電子郵件和推播通知設定。"
+    },
+    "success": {
+      "title": "這些電子郵件已關閉",
+      "description": "您將不再收到{category}的電子郵件。其他通知設定不會變更。"
+    },
+    "scope": "僅會關閉此電子郵件通知。您仍會收到其他電子郵件和推播通知。"
   }
 }

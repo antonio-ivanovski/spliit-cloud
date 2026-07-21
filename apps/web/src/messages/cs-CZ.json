@@ -1544,6 +1544,122 @@
       "updated": "Profilová fotografie aktualizována.",
       "remove": "Odstranit fotografii",
       "removed": "Profilová fotografie odstraněna."
+    },
+    "notifications": {
+      "title": "Oznámení",
+      "description": "Vyberte, kam Spliit posílá oznámení o aktivitě.",
+      "enable": "Povolit push notifikace",
+      "disable": "Zakázat push notifikace",
+      "enabled": "Push notifikace jsou na tomto zařízení povolené.",
+      "disabled": "Push notifikace jsou na tomto zařízení momentálně zakázané.",
+      "unsupported": "Tento prohlížeč nebo kontext nepodporuje push notifikace.",
+      "notConfigured": "Push notifikace nejsou v tomto nasazení k dispozici.",
+      "permissionDenied": "Oznámení jsou blokována. Povolte je v nastavení prohlížeče nebo zařízení a zkuste to znovu.",
+      "iosInstall": "Na iPhonu nebo iPadu přidejte Spliit na plochu před povolením push notifikací.",
+      "error": "Nastavení push notifikací se nepodařilo aktualizovat. Zkuste to znovu.",
+      "preferencesTitle": "Předvolby oznámení",
+      "preferencesDescription": "Tato nastavení se použijí na budoucí aktivitu ve skupinách a výdajích.",
+      "globalLabel": "Veškerá aktivita",
+      "globalDescription": "Doporučené nastavení se liší podle aktivity a přizpůsobí se, když push není k dispozici: rychlé aktualizace se posílají přes push, zatímco aktivita s větším objemem zůstává v e-mailu. Zvolte E-mail nebo push, pokud chcete použít jeden globální kanál.",
+      "recommended": "Doporučeno",
+      "recommendedDescription": "Doporučené doručení: {channels}. Push oznámení jsou doručována pouze na zařízení, na kterých je povolíte.",
+      "mixedByActivity": "Různé kanály podle aktivity",
+      "recommendedCategoryDescription": "Pro tuto aktivitu se používají doporučené kanály: {channels}.",
+      "useRecommended": "Použít doporučené",
+      "custom": "Vlastní",
+      "useGlobal": "Použít nastavení pro veškerou aktivitu",
+      "inheritedDescription": "Řídí se nastavením pro veškerou aktivitu. Zvolte kanál a přizpůsobte tuto kategorii.",
+      "customDescription": "Vlastní doručení pro tuto kategorii. Zvolte jeden nebo oba kanály.",
+      "channelsLabel": "Kanály oznámení",
+      "email": "E-mail",
+      "pushDescription": "Dostávat upozornění na povoleném zařízení.",
+      "off": "Vypnuto",
+      "pushSelectionError": "Push na tomto zařízení nebylo možné povolit. E-mail zůstal pro tuto kategorii zapnutý.",
+      "pushMissingTarget": "Push je vybrán, ale tato oznámení nebudou doručena, dokud nepovolíte zařízení. Zařízení můžete povolit níže nebo v Nastavení.",
+      "rowSaved": "Předvolba oznámení byla uložena.",
+      "comingSoon": "Již brzy",
+      "emailComingSoon": "Nastavení e-mailu bude k dispozici již brzy.",
+      "inherited": "Zděděné",
+      "currently": "Aktuálně: {channels}",
+      "expenseActivity": "Aktivita výdajů",
+      "groupActivity": "Aktivita skupiny",
+      "save": "Uložit změny",
+      "saving": "Ukládání…",
+      "reset": "Obnovit",
+      "saved": "Předvolby oznámení byly uloženy.",
+      "saveError": "Předvolby oznámení se nepodařilo uložit. Zkuste to znovu.",
+      "loading": "Načítání předvoleb oznámení…",
+      "loadError": "Předvolby oznámení se nepodařilo načíst.",
+      "emailDescription": "Dostávat zprávy do schránky.",
+      "push": {
+        "deviceTitle": "Toto zařízení",
+        "deviceDescription": "Povolte push upozornění na tomto zařízení. Ostatní zařízení to neovlivní.",
+        "deviceDisabled": "Push je vybrán, ale na tomto zařízení není povolen.",
+        "noDevices": "Push je vybrán, ale zatím není povoleno žádné zařízení."
+      },
+      "retry": "Zkusit znovu",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Nové výdaje",
+          "description": "Když někdo přidá výdaj do skupiny."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Změny výdajů",
+          "description": "Když je výdaj upraven nebo smazán."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Importy výdajů a hromadné změny",
+          "description": "Když jsou výdaje importovány nebo hromadně upraveny."
+        },
+        "GROUP_CHANGES": {
+          "title": "Změny skupiny",
+          "description": "Když se změní údaje skupiny nebo stav archivace."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Pozvánky",
+          "description": "Když jsou pozvánky odeslány, přijaty, odmítnuty nebo odvolány."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Členství",
+          "description": "Když členové odejdou, jsou odebráni nebo změní role."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Výdaje s přítelem",
+          "description": "Když s vámi někdo začne sdílet výdaje."
+        },
+        "addedToGroup": {
+          "title": "Přidání do skupiny",
+          "description": "Když vás někdo přidá do skupiny."
+        },
+        "cloudNews": {
+          "title": "Novinky a aktualizace Spliit Cloud",
+          "description": "Novinky o produktu, tipy a aktualizace služby."
+        },
+        "expenseChanged": {
+          "title": "Výdaj upraven nebo smazán",
+          "description": "Když je výdaj upraven nebo smazán."
+        },
+        "newComment": {
+          "title": "Nový komentář",
+          "description": "Když někdo okomentuje výdaj."
+        },
+        "newExpense": {
+          "title": "Nový výdaj",
+          "description": "Když někdo přidá výdaj do skupiny."
+        },
+        "weeklySummary": {
+          "title": "Týdenní souhrn aktivity",
+          "description": "Týdenní souhrn aktivity ve vašich skupinách."
+        }
+      },
+      "sections": {
+        "groups": "Skupiny a přátelé",
+        "expenses": "Výdaje",
+        "summaries": "Souhrny"
+      }
     }
   },
   "Activities": {
@@ -1804,5 +1920,41 @@
     "light": "Světlý",
     "dark": "Tmavý",
     "system": "Výchozí nastavení systému"
+  },
+  "PushOnboarding": {
+    "title": "Zvolte, jak chcete zůstat v obraze",
+    "description": "Spliit vás může upozorňovat na aktivitu ve skupinách a výdajích, jakmile k ní dojde.",
+    "pushBenefit": "Push oznámení přicházejí na toto zařízení, i když Spliit není otevřený.",
+    "emailFallback": "E-mail je k dispozici pro oznámení, která si zvolíte dostávat tímto způsobem; volby pouze pro Push se nepřesměrují.",
+    "settingsHint": "Tato nastavení můžete kdykoli změnit v Nastavení. Push oznámení se povolují samostatně pro každé zařízení.",
+    "enable": "Povolit push oznámení",
+    "enabling": "Povolování…",
+    "useEmail": "Použít e-mail",
+    "deniedTitle": "Push oznámení jsou zablokována",
+    "deniedDescription": "Váš prohlížeč zablokoval oprávnění k oznámením. Oznámení nastavená pro e-mail budou i nadále chodit tam; volby pouze pro Push se nepřesměrují.",
+    "failedTitle": "Push se nepodařilo povolit",
+    "failedDescription": "Toto zařízení se nepodařilo zaregistrovat. Oznámení nastavená pro e-mail budou i nadále chodit tam; volby pouze pro Push se nepřesměrují.",
+    "emailUsage": "Dokud nepovolíte zařízení, budou přicházet pouze oznámení nastavená pro e-mail. Povolte oznámení v nastavení prohlížeče a zkuste to znovu v Nastavení.",
+    "done": "Hotovo"
+  },
+  "Unsubscribe": {
+    "title": "Vypnout tyto e-maily?",
+    "description": "Rozhodujete se, zda ponechat jeden typ e-mailových oznámení.",
+    "confirm": "Vypnout tyto e-maily",
+    "submitting": "Odhlašování odběru…",
+    "cancel": "Ponechat tyto e-maily",
+    "error": "Vaše e-mailová nastavení se nepodařilo aktualizovat. Zkuste to prosím znovu.",
+    "loading": "Ověřování odkazu pro odhlášení odběru…",
+    "backHome": "Zpět na domovskou stránku",
+    "manageSettings": "Prohlédnout všechna nastavení oznámení",
+    "invalid": {
+      "title": "Tento odkaz již nefunguje",
+      "description": "Platnost odkazu mohla vypršet. Přihlaste se a zkontrolujte nastavení e-mailových a push oznámení."
+    },
+    "success": {
+      "title": "Tyto e-maily jsou vypnuté",
+      "description": "E-maily pro kategorii {category} nebudete dostávat. Vaše ostatní nastavení oznámení se nezměnila."
+    },
+    "scope": "Vypne se pouze toto e-mailové oznámení. Ostatní e-maily a push oznámení zůstanou beze změny."
   }
 }

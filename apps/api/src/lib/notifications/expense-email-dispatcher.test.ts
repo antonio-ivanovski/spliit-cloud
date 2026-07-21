@@ -1,3 +1,7 @@
+import {
+  NotificationCategory,
+  NotificationChannel,
+} from '@spliit/domain/notifications'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import '../../test/mocks'
 import { prismaMock, sendEmailMock } from '../../test/state'
@@ -84,6 +88,45 @@ beforeEach(() => {
 })
 
 describe('ExpenseEmailActivityNotificationDispatcher', () => {
+  it('sends a bulk category summary through the expense channel', async () => {
+    prismaMock.groupMember.findMany.mockResolvedValue([
+      {
+        account: {
+          id: 'acct-bob',
+          email: 'bob@test.com',
+        },
+      },
+    ] as never)
+    prismaMock.account.findUnique.mockResolvedValue({ name: 'Alice' } as never)
+
+    await dispatcher.dispatch({
+      activity: buildEvent({
+        type: 'EXPENSE_CATEGORIES_BULK_UPDATED',
+        subject: null,
+        data: {
+          kind: 'expense_categories_bulk_updated',
+          count: 3,
+          distinctCategories: 2,
+          rows: [],
+          fromCategoryId: 'general',
+        },
+      }),
+      category: NotificationCategory.EXPENSE_CHANGED,
+      recipientAccountId: 'acct-bob',
+      channels: [NotificationChannel.EMAIL],
+    })
+
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'bob@test.com',
+        subject: '[Spliit Cloud] Expense categories updated in Test Group',
+        text: expect.stringContaining(
+          'Alice updated categories for 3 expenses in Test Group.',
+        ),
+      }),
+    )
+  })
+
   describe('successful create email', () => {
     it('sends email to affected active participants for EXPENSE_CREATED', async () => {
       prismaMock.expense.findUnique.mockResolvedValue(makeExpenseRow() as never)

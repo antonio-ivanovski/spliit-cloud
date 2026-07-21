@@ -7,6 +7,7 @@ import { MobileAppBar } from '@/components/mobile-shell'
 import { OfflineBanner } from '@/components/offline-banner'
 import { ProfileGate } from '@/components/profile-gate'
 import { ProgressBar } from '@/components/progress-bar'
+import { PushNotificationOnboarding } from '@/components/push-notification-onboarding'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
@@ -84,6 +85,7 @@ function Content() {
         )}
 
         <OfflineBanner />
+        <PushNotificationOnboarding />
         <InstallPromotionDialog />
 
         <div className="flex flex-1 flex-col pt-(--app-header-height)">

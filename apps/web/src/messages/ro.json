@@ -1536,6 +1536,122 @@
       "updated": "Fotografia de profil a fost actualizată.",
       "remove": "Elimină fotografia",
       "removed": "Fotografia de profil a fost eliminată."
+    },
+    "notifications": {
+      "title": "Notificări",
+      "description": "Alegeți unde trimite Spliit notificările despre activitate.",
+      "enable": "Activează notificările push",
+      "disable": "Dezactivează notificările push",
+      "enabled": "Notificările push sunt activate pe acest dispozitiv.",
+      "disabled": "Notificările push sunt dezactivate momentan pe acest dispozitiv.",
+      "unsupported": "Notificările push nu sunt acceptate de acest browser sau context.",
+      "notConfigured": "Notificările push nu sunt disponibile în această implementare.",
+      "permissionDenied": "Notificările sunt blocate. Permite-le în browser sau în setările dispozitivului, apoi încearcă din nou.",
+      "iosInstall": "Pe iPhone sau iPad, adaugă Spliit pe ecranul principal înainte de a activa notificările push.",
+      "error": "Nu s-au putut actualiza setările notificărilor push. Încearcă din nou.",
+      "preferencesTitle": "Preferințe de notificare",
+      "preferencesDescription": "Aceste opțiuni se aplică activităților viitoare ale grupurilor și cheltuielilor.",
+      "globalLabel": "Toată activitatea",
+      "globalDescription": "Recomandarea variază în funcție de activitate și se adaptează atunci când notificările push nu sunt disponibile: actualizările rapide folosesc push, iar activitățile cu volum mai mare rămân pe e-mail. Alegeți E-mail sau Push pentru a folosi un singur canal global.",
+      "recommended": "Recomandat",
+      "recommendedDescription": "Livrare recomandată: {channels}. Notificările push sunt livrate numai către dispozitivele pe care le activezi.",
+      "mixedByActivity": "Combinat în funcție de activitate",
+      "recommendedCategoryDescription": "Se utilizează livrarea recomandată ({channels}) pentru această activitate.",
+      "useRecommended": "Folosiți setarea recomandată",
+      "custom": "Personalizat",
+      "useGlobal": "Folosiți setarea pentru toate activitățile",
+      "inheritedDescription": "Urmează setarea pentru toate activitățile. Alegeți un canal pentru a personaliza această categorie.",
+      "customDescription": "Livrare personalizată pentru această categorie. Alegeți unul sau ambele canale.",
+      "channelsLabel": "Canale de notificare",
+      "email": "E-mail",
+      "pushDescription": "Primiți o alertă pe un dispozitiv activat.",
+      "off": "Dezactivat",
+      "pushSelectionError": "Notificările push nu au putut fi activate pe acest dispozitiv. E-mailul a rămas activ pentru această categorie.",
+      "pushMissingTarget": "Notificările push sunt selectate, dar nu vor fi livrate până când nu activezi un dispozitiv. Poți activa unul mai jos sau din Setări.",
+      "rowSaved": "Preferința de notificare a fost salvată.",
+      "comingSoon": "În curând",
+      "emailComingSoon": "Configurarea e-mailului va fi disponibilă în curând.",
+      "inherited": "Moștenit",
+      "currently": "În prezent: {channels}",
+      "expenseActivity": "Activitatea cheltuielilor",
+      "groupActivity": "Activitatea grupului",
+      "save": "Salvați modificările",
+      "saving": "Se salvează…",
+      "reset": "Resetați",
+      "saved": "Preferințele de notificare au fost salvate.",
+      "saveError": "Nu s-au putut salva preferințele de notificare. Încercați din nou.",
+      "loading": "Se încarcă preferințele de notificare…",
+      "loadError": "Nu s-au putut încărca preferințele de notificare.",
+      "emailDescription": "Primiți un mesaj în căsuța de e-mail.",
+      "push": {
+        "deviceTitle": "Acest dispozitiv",
+        "deviceDescription": "Activați alertele push pe acest dispozitiv. Acest lucru nu modifică celelalte dispozitive.",
+        "deviceDisabled": "Push este selectat, dar nu este activat pe acest dispozitiv.",
+        "noDevices": "Push este selectat, dar niciun dispozitiv nu este activat încă."
+      },
+      "retry": "Încercați din nou",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Cheltuieli noi",
+          "description": "Când cineva adaugă o cheltuială într-un grup."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Importuri și modificări în masă ale cheltuielilor",
+          "description": "Când cheltuielile sunt importate sau actualizate în bloc."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Modificări ale cheltuielilor",
+          "description": "Când o cheltuială este actualizată sau ștearsă."
+        },
+        "GROUP_CHANGES": {
+          "title": "Modificări ale grupului",
+          "description": "Când se modifică detaliile grupului sau starea de arhivare."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Invitații",
+          "description": "Când invitațiile sunt trimise, acceptate, refuzate sau revocate."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Membri",
+          "description": "Când membrii pleacă, sunt eliminați sau își schimbă rolul."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Registru cu un prieten",
+          "description": "Când cineva creează un registru cu tine."
+        },
+        "addedToGroup": {
+          "title": "Adăugat într-un grup",
+          "description": "Când cineva te adaugă într-un grup."
+        },
+        "cloudNews": {
+          "title": "Noutăți și actualizări Spliit Cloud",
+          "description": "Noutăți despre produs, sfaturi și actualizări ale serviciului."
+        },
+        "expenseChanged": {
+          "title": "Cheltuială editată sau ștearsă",
+          "description": "Când o cheltuială este actualizată sau ștearsă."
+        },
+        "newComment": {
+          "title": "Comentariu nou",
+          "description": "Când cineva comentează o cheltuială."
+        },
+        "newExpense": {
+          "title": "Cheltuială nouă",
+          "description": "Când cineva adaugă o cheltuială într-un grup."
+        },
+        "weeklySummary": {
+          "title": "Rezumat săptămânal al activității",
+          "description": "Un rezumat săptămânal al activității din grupurile tale."
+        }
+      },
+      "sections": {
+        "groups": "Grupuri și prieteni",
+        "expenses": "Cheltuieli",
+        "summaries": "Rezumate"
+      }
     }
   },
   "Activities": {
@@ -1787,5 +1903,41 @@
     "light": "Luminoasă",
     "dark": "Întunecată",
     "system": "Setarea sistemului"
+  },
+  "PushOnboarding": {
+    "title": "Alege cum să fii la curent",
+    "description": "Spliit te poate alerta cu privire la activitatea grupurilor și cheltuielilor pe măsură ce are loc.",
+    "pushBenefit": "Notificările push ajung pe acest dispozitiv chiar și când Spliit nu este deschis.",
+    "emailFallback": "E-mailul este disponibil pentru notificările pe care alegi să le primești acolo; opțiunile doar push nu sunt redirecționate.",
+    "settingsHint": "Poți schimba aceste opțiuni oricând din Setări. Notificările push sunt activate separat pentru fiecare dispozitiv.",
+    "enable": "Activează notificările push",
+    "enabling": "Se activează…",
+    "useEmail": "Folosește e-mailul",
+    "deniedTitle": "Notificările push sunt blocate",
+    "deniedDescription": "Browserul a blocat permisiunea pentru notificări. Notificările configurate pentru e-mail vor continua să fie trimise acolo; opțiunile doar push nu sunt redirecționate.",
+    "failedTitle": "Notificările push nu au putut fi activate",
+    "failedDescription": "Nu am putut înregistra acest dispozitiv. Notificările configurate pentru e-mail vor continua să fie trimise acolo; opțiunile doar push nu sunt redirecționate.",
+    "emailUsage": "Până când activezi un dispozitiv, vor ajunge doar notificările configurate pentru e-mail. Poți permite notificările din setările browserului și încerca din nou din Setări.",
+    "done": "Gata"
+  },
+  "Unsubscribe": {
+    "title": "Dezactivezi aceste e-mailuri?",
+    "description": "Alege dacă vrei să primești în continuare un tip de notificare prin e-mail.",
+    "confirm": "Dezactivează aceste e-mailuri",
+    "submitting": "Se efectuează dezabonarea…",
+    "cancel": "Păstrează aceste e-mailuri",
+    "error": "Nu am putut actualiza preferințele tale de e-mail. Încearcă din nou.",
+    "loading": "Se verifică linkul de dezabonare…",
+    "backHome": "Înapoi la pagina principală",
+    "manageSettings": "Revizuiește toate setările notificărilor",
+    "invalid": {
+      "title": "Acest link nu mai funcționează",
+      "description": "Este posibil să fi expirat. Conectează-te pentru a revizui setările e-mailului și ale notificărilor push."
+    },
+    "success": {
+      "title": "Aceste e-mailuri sunt dezactivate",
+      "description": "Nu vei mai primi e-mailuri pentru {category}. Celelalte setări ale notificărilor nu s-au schimbat."
+    },
+    "scope": "Doar această notificare prin e-mail va fi dezactivată. Celelalte e-mailuri și notificări push vor rămâne neschimbate."
   }
 }

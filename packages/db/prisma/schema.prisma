@@ -52,7 +52,43 @@ model Account {
   sentInvitations     GroupInvitation[]        @relation("InvitationInviter")
   groupPreferences    AccountGroupPreference[]
   defaultSplits       AccountGroupDefaultSplit[]
+  pushSubscriptions   PushSubscription[]
+  notificationPreferences AccountNotificationPreference[]
 
+}
+
+model PushSubscription {
+  id        String   @id
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  endpoint  String   @unique @db.Text
+  p256dh    String   @db.Text
+  auth      String   @db.Text
+  userAgent String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([accountId])
+}
+
+// Account-scoped notification channel preferences. Categories and channel
+// values are validated by the shared domain package and intentionally remain
+// strings in the database so adding a category/channel does not require a
+// Prisma enum migration.
+model AccountNotificationPreference {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  // Notification category validated by @spliit/domain at API boundaries.
+  category  String
+  /// ![NotificationChannel]
+  channels  String[]
+
+  @@unique([accountId, category])
+  @@index([accountId])
 }
 
 model AuthIdentity {

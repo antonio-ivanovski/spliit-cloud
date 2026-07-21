@@ -11,20 +11,11 @@ import {
 import {
   setDefaultActivityNotificationDispatchers,
   waitForScheduledNotificationDispatchesForTest,
-  type ActivityNotificationDispatcher,
-  type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
-import { checkDbConnection, testRunId } from './setup'
+import { CapturingDispatcher, checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
-
-class CapturingDispatcher implements ActivityNotificationDispatcher {
-  events: ActivityNotificationEvent[] = []
-  async dispatch(event: ActivityNotificationEvent): Promise<void> {
-    this.events.push(event)
-  }
-}
 
 describe('Expense activity — real DB', () => {
   const runId = testRunId()

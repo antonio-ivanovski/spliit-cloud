@@ -1,4 +1,9 @@
 import { prisma } from '@spliit/db'
+import type {
+  ActivityNotificationDispatcher,
+  ActivityNotificationEvent,
+} from '../lib/notifications/dispatcher'
+import { defaultActivityHandlers } from '../lib/notifications/handlers'
 
 /**
  * Verify the test database is reachable.
@@ -20,4 +25,17 @@ let runCounter = 0
 export function testRunId(): string {
   runCounter++
   return `int-${Date.now()}-${runCounter}-${Math.random().toString(36).slice(2, 6)}`
+}
+
+export class CapturingDispatcher implements ActivityNotificationDispatcher {
+  events: ActivityNotificationEvent[] = []
+  private readonly handlers = defaultActivityHandlers()
+
+  async dispatch(event: ActivityNotificationEvent): Promise<void> {
+    const handler = this.handlers.find((h) => h.supports(event.type))
+    if (!handler) return
+    const intents = await handler.buildIntents(event)
+    if (intents.length === 0) return
+    this.events.push(event)
+  }
 }

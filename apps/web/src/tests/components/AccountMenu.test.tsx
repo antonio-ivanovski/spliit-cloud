@@ -7,7 +7,14 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
-const { mockNavigate, mockSignOut } = vi.hoisted(() => ({
+const {
+  mockClearPushOnboardingCompletion,
+  mockDisconnectPushSubscription,
+  mockNavigate,
+  mockSignOut,
+} = vi.hoisted(() => ({
+  mockClearPushOnboardingCompletion: vi.fn(),
+  mockDisconnectPushSubscription: vi.fn(),
   mockNavigate: vi.fn(),
   mockSignOut: vi.fn().mockResolvedValue(undefined),
 }))
@@ -34,9 +41,23 @@ vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
 }))
 
+vi.mock('@/lib/push-notifications', () => ({
+  disconnectPushSubscription: mockDisconnectPushSubscription,
+}))
+
+vi.mock('@/components/push-notification-onboarding', () => ({
+  clearPushOnboardingCompletion: mockClearPushOnboardingCompletion,
+}))
+
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('AccountMenu', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockDisconnectPushSubscription.mockResolvedValue(false)
+    mockSignOut.mockResolvedValue(undefined)
+  })
+
   it('shows skeleton pulse when isPending', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,
@@ -161,5 +182,58 @@ describe('AccountMenu', () => {
 
     expect(mockSignOut).toHaveBeenCalledOnce()
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/', replace: true })
+  })
+
+  it('clears push onboarding completion when logout disconnects a device', async () => {
+    mockDisconnectPushSubscription.mockResolvedValue(true)
+    const user = userEvent.setup()
+
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<AccountMenu />)
+    await user.click(screen.getByRole('button', { name: /account/i }))
+    await user.click(screen.getByText('Sign out'))
+
+    expect(mockClearPushOnboardingCompletion).toHaveBeenCalledWith('user-1')
+  })
+
+  it('keeps push onboarding completion when no device was connected', async () => {
+    const user = userEvent.setup()
+
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<AccountMenu />)
+    await user.click(screen.getByRole('button', { name: /account/i }))
+    await user.click(screen.getByText('Sign out'))
+
+    expect(mockClearPushOnboardingCompletion).not.toHaveBeenCalled()
   })
 })

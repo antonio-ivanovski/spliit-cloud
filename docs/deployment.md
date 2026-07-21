@@ -16,6 +16,12 @@ Copy `container.env.example` to `container.env`, set the required values (see th
 - `BETTER_AUTH_URL` — the public API origin (HTTPS), e.g. `https://api.spliit.example.com`
 - `WEB_ORIGINS` — the public web origin
 - `SMTP_HOST`, `EMAIL_FROM` — required for magic-link sign-in and invitations
+- `PUSH_VAPID_PUBLIC_KEY`, `PUSH_VAPID_PRIVATE_KEY`, `PUSH_VAPID_SUBJECT` —
+  required together for Web Push delivery. Generate the key pair with
+  `bunx web-push generate-vapid-keys`; expose only the public key to clients.
+- `EMAIL_UNSUBSCRIBE_SECRET` — secret used to sign optional-email unsubscribe
+  links. Generate one with `openssl rand -hex 32`; use a separate value per
+  environment and keep it out of source control. Tokens expire after 90 days.
 - `S3_UPLOAD_*` — only if `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true`
 - `AI_PROVIDER` — optional: `openai`, `anthropic`, `openai-compatible`, or `google`; defaults to `openai`
 - `AI_API_KEY` — only if `PUBLIC_ENABLE_RECEIPT_EXTRACT=true` or `PUBLIC_ENABLE_CATEGORY_EXTRACT=true`

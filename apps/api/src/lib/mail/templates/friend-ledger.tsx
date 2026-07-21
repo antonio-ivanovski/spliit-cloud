@@ -10,20 +10,25 @@ export function FriendLedgerEmail(props: {
   webBase: string
   inviterName: string
   isNewUser: boolean
+  unsubscribeUrl?: string
 }): ReactElement {
   const label = props.isNewUser ? 'Create a free account' : 'Open Spliit Cloud'
-  const preview = `${props.inviterName} added you as a friend on Spliit Cloud`
+  const preview = `${props.inviterName} started a friend ledger with you on Spliit Cloud`
   return (
-    <EmailLayout preview={preview} brandBaseUrl={props.webBase}>
+    <EmailLayout
+      preview={preview}
+      brandBaseUrl={props.webBase}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
       <Heading
         as="h1"
         className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
       >
-        {props.inviterName} added you as a friend
+        {props.inviterName} started a friend ledger with you
       </Heading>
       <Text className="m-0 mb-4 text-[15px] leading-[24px] text-[#0f172a]">
-        {props.inviterName} would like to track shared expenses with you on
-        Spliit Cloud. Use the button below to view the new friend ledger.
+        {props.inviterName} started a friend ledger with you on Spliit Cloud.
+        Use the button below to view it.
       </Text>
       <Section className="text-center my-6">
         <EmailButton href={props.webBase} label={label} />
@@ -46,15 +51,16 @@ export function FriendLedgerEmail(props: {
 export async function renderFriendLedgerEmail(input: {
   inviterName: string
   isNewUser: boolean
+  unsubscribeUrl?: string
 }): Promise<RenderedEmail> {
   const webBase = getWebBaseUrl()
-  const subject = `${input.inviterName} added you as a friend on Spliit Cloud`
+  const subject = `${input.inviterName} started a friend ledger with you on Spliit Cloud`
 
   const text = input.isNewUser
-    ? `${input.inviterName} would like to track shared expenses with you.\n\n` +
+    ? `${input.inviterName} started a friend ledger with you.\n\n` +
       `Create a free Spliit Cloud account to get started:\n${webBase}\n\n` +
       `If you don't recognize this request, you can safely ignore this email.`
-    : `${input.inviterName} would like to track shared expenses with you.\n\n` +
+    : `${input.inviterName} started a friend ledger with you.\n\n` +
       `Open Spliit Cloud to see your new friend ledger:\n${webBase}\n\n` +
       `If you don't recognize this request, you can safely ignore this email.`
 
@@ -63,6 +69,7 @@ export async function renderFriendLedgerEmail(input: {
       webBase={webBase}
       inviterName={input.inviterName}
       isNewUser={input.isNewUser}
+      unsubscribeUrl={input.unsubscribeUrl}
     />,
     { subject, text },
   )

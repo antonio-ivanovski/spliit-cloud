@@ -9,17 +9,19 @@ import { z } from 'zod'
 import {
   RevokeInvitationPreconditionError,
   acceptInvitation,
-  acceptLinkInvitation,
   createEmailInvitation,
-  createLinkInvitation,
   declineInvitation,
-  getLinkInvitationPreview,
   getRevokeInvitationPreview,
   listGroupInvitations,
   listPendingEmailInvitationsForAccount,
   revokeInvitation,
   sendInvitationEmail,
-} from '../../../lib/invitations'
+} from '../../../lib/invitations/email-invitations'
+import {
+  acceptLinkInvitation,
+  createLinkInvitation,
+  getLinkInvitationPreview,
+} from '../../../lib/invitations/link-invitations'
 import {
   createTRPCRouter,
   loadGroupContext,
@@ -197,16 +199,18 @@ export const invitationsRouter = createTRPCRouter({
         },
         select: { id: true },
       })
-      await sendInvitationEmail({
-        invitationId: invitation.id,
-        groupId: group.id,
-        groupName: group.name,
-        inviterDisplayName: ctx.auth.user.name || ctx.auth.user.email,
-        inviterRole: member.role,
-        recipientEmail: invitation.email,
-        recipientIsExistingUser: !!existingAccount,
-        temporaryName: invitation.temporaryName,
-      })
+      if (!existingAccount) {
+        await sendInvitationEmail({
+          invitationId: invitation.id,
+          groupId: group.id,
+          groupName: group.name,
+          inviterDisplayName: ctx.auth.user.name || ctx.auth.user.email,
+          inviterRole: member.role,
+          recipientEmail: invitation.email,
+          recipientIsExistingUser: false,
+          temporaryName: invitation.temporaryName,
+        })
+      }
 
       return { invitationId: invitation.id }
     }),

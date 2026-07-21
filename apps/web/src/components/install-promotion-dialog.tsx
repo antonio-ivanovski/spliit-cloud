@@ -2,6 +2,7 @@ import { Menu, Share, Smartphone } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { isPushOnboardingActive } from '@/components/push-notification-onboarding'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -58,11 +59,20 @@ export function InstallPromotionDialog() {
   // signal has fired. The timer is re-armed on every `readyToShow` transition.
   useEffect(() => {
     if (!readyToShow || isOpen) return
-    const timer = window.setTimeout(
-      open,
-      INSTALL_PROMPT_TIMING.AUTO_OPEN_DELAY_MS,
-    )
-    return () => window.clearTimeout(timer)
+    let timer: number | undefined
+    const schedule = (delay: number) => {
+      timer = window.setTimeout(() => {
+        if (isPushOnboardingActive()) {
+          schedule(500)
+          return
+        }
+        open()
+      }, delay)
+    }
+    schedule(INSTALL_PROMPT_TIMING.AUTO_OPEN_DELAY_MS)
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer)
+    }
   }, [readyToShow, isOpen, open])
 
   if (browserSupport === 'unsupported') return null

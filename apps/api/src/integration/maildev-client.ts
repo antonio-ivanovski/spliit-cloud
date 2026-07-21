@@ -31,7 +31,7 @@ export interface CapturedEmail {
   id: string
   subject: string
   text: string
-  /** HTML body of the email, if any. Empty string when the message has no HTML body. */
+  /** Non-empty HTML body; parsing rejects messages that omit it. */
   html: string
 }
 
@@ -123,11 +123,22 @@ export async function getEmailForRecipient({
 
   const detail = (await detailRes.json()) as MaildevDetail
 
+  if (
+    typeof detail.text !== 'string' ||
+    !detail.text.trim() ||
+    typeof detail.html !== 'string' ||
+    !detail.html.trim()
+  ) {
+    throw new Error(
+      `MailDev email ${summary.id} is missing a non-empty text or html body`,
+    )
+  }
+
   return {
     id: summary.id,
     subject: summary.subject,
-    text: detail.text ?? '',
-    html: detail.html ?? '',
+    text: detail.text,
+    html: detail.html,
   }
 }
 
@@ -163,34 +174,6 @@ export async function expectEmailEventually({
       `, but none was found after ${attempts} attempts.` +
       `\n\nInbox:\n${JSON.stringify(inbox, null, 2)}`,
   )
-}
-
-// ---------------------------------------------------------------------------
-// Legacy helper (kept for backward compat with other test files)
-// ---------------------------------------------------------------------------
-
-/**
- * Poll the MailDev inbox until an email addressed to `recipient` appears,
- * then return its plain-text body. Returns null if no such email arrives
- * within `timeoutMs`.
- *
- * @deprecated Prefer getEmailForRecipient (single-shot) or
- *   expectEmailEventually (bounded retry with diagnostics) for new tests.
- */
-export async function findEmailForRecipient(
-  recipient: string,
-  {
-    timeoutMs = 5000,
-    pollMs = 100,
-  }: { timeoutMs?: number; pollMs?: number } = {},
-): Promise<CapturedEmail | null> {
-  const deadline = Date.now() + timeoutMs
-  while (Date.now() < deadline) {
-    const email = await getEmailForRecipient({ recipient })
-    if (email) return email
-    await sleep(pollMs)
-  }
-  return null
 }
 
 function sleep(ms: number): Promise<void> {

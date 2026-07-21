@@ -4,11 +4,13 @@ import { z } from 'zod'
 import {
   buildExpenseActivityData,
   buildGroupActivityData,
+  logActivity,
+} from '../../../lib/api/activities'
+import {
   createSettlementExpensesForArchive,
   getGroupBalances,
   hasUnsettledBalances,
-  logActivity,
-} from '../../../lib/api'
+} from '../../../lib/api/balances'
 import { scheduleDefaultNotificationDispatch } from '../../../lib/notifications/dispatcher'
 import { loadGroupContext, protectedProcedure } from '../../init'
 
@@ -93,7 +95,7 @@ export const archiveGroupProcedure = protectedProcedure
           where: { id: groupId },
           data: { archived: true },
         })
-        await logActivity(
+        const activity = await logActivity(
           groupId,
           {
             type: 'GROUP_ARCHIVED',
@@ -103,7 +105,16 @@ export const archiveGroupProcedure = protectedProcedure
           },
           tx,
         )
-        return { group: updated, settlementActivities }
+        return { group: updated, settlementActivities, activity }
+      })
+      scheduleDefaultNotificationDispatch({
+        activityId: result.activity.id,
+        type: 'GROUP_ARCHIVED',
+        groupId,
+        actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({ summary: result.group.name }),
+        occurredAt: result.activity.time,
       })
       if (result.settlementActivities) {
         for (const meta of result.settlementActivities) {
@@ -135,13 +146,22 @@ export const archiveGroupProcedure = protectedProcedure
     })
 
     if (willArchive || willUnarchive) {
-      await logActivity(groupId, {
+      const activity = await logActivity(groupId, {
         type: willArchive ? 'GROUP_ARCHIVED' : 'GROUP_UNARCHIVED',
         actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
         subject: { type: 'GROUP', id: groupId },
         data: buildGroupActivityData({
           summary: willArchive ? updated.name : updated.name,
         }),
+      })
+      scheduleDefaultNotificationDispatch({
+        activityId: activity.id,
+        type: willArchive ? 'GROUP_ARCHIVED' : 'GROUP_UNARCHIVED',
+        groupId,
+        actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({ summary: updated.name }),
+        occurredAt: activity.time,
       })
     }
 
