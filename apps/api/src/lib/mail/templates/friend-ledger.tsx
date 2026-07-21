@@ -10,11 +10,16 @@ export function FriendLedgerEmail(props: {
   webBase: string
   inviterName: string
   isNewUser: boolean
+  unsubscribeUrl?: string
 }): ReactElement {
   const label = props.isNewUser ? 'Create a free account' : 'Open Spliit Cloud'
   const preview = `${props.inviterName} started a friend ledger with you on Spliit Cloud`
   return (
-    <EmailLayout preview={preview} brandBaseUrl={props.webBase}>
+    <EmailLayout
+      preview={preview}
+      brandBaseUrl={props.webBase}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
       <Heading
         as="h1"
         className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
@@ -46,6 +51,7 @@ export function FriendLedgerEmail(props: {
 export async function renderFriendLedgerEmail(input: {
   inviterName: string
   isNewUser: boolean
+  unsubscribeUrl?: string
 }): Promise<RenderedEmail> {
   const webBase = getWebBaseUrl()
   const subject = `${input.inviterName} started a friend ledger with you on Spliit Cloud`
@@ -63,6 +69,7 @@ export async function renderFriendLedgerEmail(input: {
       webBase={webBase}
       inviterName={input.inviterName}
       isNewUser={input.isNewUser}
+      unsubscribeUrl={input.unsubscribeUrl}
     />,
     { subject, text },
   )

@@ -1,6 +1,8 @@
 # Notification System Phase 2 — Durable Delivery Handoff
 
 Status: planned; depends on Phase 1 Web Push and the existing activity dispatcher.
+Phase 3 account preferences and optional-email unsubscribe are already
+implemented and are part of the delivery contract below.
 
 ## Definition
 
@@ -9,8 +11,10 @@ transient provider failures, and future horizontal scaling. The activity row
 and intended per-recipient channel deliveries must survive independently of the
 request process.
 
-Out of scope: user-facing notification preferences, quiet hours, digests, and
-an in-app inbox. Those belong to later phases.
+Out of scope: quiet hours, digests, and an in-app inbox. Account-level
+user-facing preferences are already implemented in Phase 3; this phase must
+persist their resolved channel choices rather than add another preference
+surface or policy.
 
 ## Proposal
 
@@ -19,6 +23,17 @@ then process it from a separate worker. The worker claims deliveries with a
 lease, sends through the existing email/push adapters, records success or
 terminal failure, and retries transient failures with bounded exponential
 backoff.
+
+Resolve each recipient with the existing Phase 3 category and account
+preference policy before creating delivery rows. Create one durable row per
+resolved channel and keep the resolved choice stable while a delivery is
+retried; the worker must not silently recalculate preferences or turn a
+missing Push target into Email.
+
+The protected `notifications.preferences.get` and
+`notifications.preferences.save` procedures are the account-facing contract.
+The save operation accepts only the supplied categories in one transaction;
+`null` removes an override and omitted categories remain unchanged.
 
 Use an idempotency key covering activity, recipient account, channel, and push
 subscription where applicable. One activity may therefore produce multiple
@@ -39,8 +54,16 @@ creating intent; it does not wait for delivery.
   graceful shutdown path.
 - Add worker health/lag metrics and structured logs keyed by activity and
   delivery IDs.
-- Keep the Phase 1 routing policy as the producer-facing policy; later
-  preference resolution should only alter which rows are created.
+- Keep the shared notification category identifiers and account preference
+  semantics as the producer-facing policy: explicit channels override the
+  system default, `null`/reset removes the override, and omitted categories
+  are preserved. Preference resolution should only alter which rows are
+  created.
+- Optional user-facing email rows must retain the Phase 3 unsubscribe
+  contract: generate a signed URL at render/send time, include RFC 8058
+  `List-Unsubscribe` headers, and make the exact one-click POST idempotently
+  remove Email while preserving Push. Authentication, invitation, and other
+  mandatory mail remain outside this contract.
 
 ## Risks / Open Decisions
 

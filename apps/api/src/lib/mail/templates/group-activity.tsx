@@ -15,6 +15,7 @@ export type GroupActivityEmailInput = {
   activityLabel: string
   summary?: string | null
   groupUrl: string
+  unsubscribeUrl?: string
 }
 
 export function GroupActivityEmail(
@@ -22,7 +23,11 @@ export function GroupActivityEmail(
 ): ReactElement {
   const preview = `${props.activityLabel} in ${props.groupDisplayName}`
   return (
-    <EmailLayout preview={preview} brandBaseUrl={props.brandBaseUrl}>
+    <EmailLayout
+      preview={preview}
+      brandBaseUrl={props.brandBaseUrl}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
       <Heading
         as="h1"
         className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"

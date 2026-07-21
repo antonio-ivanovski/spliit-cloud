@@ -27,6 +27,7 @@ export type InvitationEmailInput = {
   expenseCount?: number
   totalAmount?: number
   currencyCode?: string | null
+  unsubscribeUrl?: string
 }
 
 export function InvitationEmail(
@@ -51,7 +52,11 @@ export function InvitationEmail(
     : `${props.inviterDisplayName} invited you to join "${props.groupName}".`
 
   return (
-    <EmailLayout preview={preview} brandBaseUrl={props.brandBaseUrl}>
+    <EmailLayout
+      preview={preview}
+      brandBaseUrl={props.brandBaseUrl}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
       <Heading
         as="h1"
         className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"

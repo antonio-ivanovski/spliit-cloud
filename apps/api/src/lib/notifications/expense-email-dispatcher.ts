@@ -31,12 +31,6 @@ const EXPENSE_EVENT_TYPES = new Set([
 const IMPORT_EVENT_TYPES = new Set(['EXPENSES_IMPORTED'])
 const CATEGORY_BULK_EVENT_TYPES = new Set(['EXPENSE_CATEGORIES_BULK_UPDATED'])
 
-function appendHtmlFooter(html: string, footer: string): string {
-  const bodyEnd = html.lastIndexOf('</body>')
-  if (bodyEnd < 0) return `${html}${footer}`
-  return `${html.slice(0, bodyEnd)}${footer}${html.slice(bodyEnd)}`
-}
-
 function formatAmount(cents: number, currencyCode?: string | null): string {
   const currency = currencyCode ? getCurrency(currencyCode) : undefined
   const digits = currency?.decimal_digits ?? 2
@@ -524,10 +518,13 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       // Pass the canonical subject/text computed by the dispatcher so
       // the rendered email matches the test contract.
       const finalInput = { ...templateInput, subject, text }
-      const rendered = await renderExpenseActivityEmail(finalInput)
       const unsubscribe = await buildEmailUnsubscribeMetadata({
         accountId: account.id,
         category: args.category,
+      })
+      const rendered = await renderExpenseActivityEmail({
+        ...finalInput,
+        unsubscribeUrl: unsubscribe?.url,
       })
 
       try {
@@ -535,10 +532,6 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
           to: account.email,
           ...rendered,
           text: `${rendered.text}${unsubscribe?.textFooter ?? ''}`,
-          html:
-            rendered.html && unsubscribe?.htmlFooter
-              ? appendHtmlFooter(rendered.html, unsubscribe.htmlFooter)
-              : rendered.html,
           headers: unsubscribe?.headers,
         })
       } catch (err) {

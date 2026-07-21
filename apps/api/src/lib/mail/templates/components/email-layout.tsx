@@ -15,6 +15,7 @@ type EmailLayoutProps = {
   preview: string
   /** Absolute URL prefix for the logo asset (e.g. `https://spliit.app`). */
   brandBaseUrl: string
+  unsubscribeUrl?: string
   children: ReactNode
 }
 
@@ -30,6 +31,7 @@ type EmailLayoutProps = {
 export function EmailLayout({
   preview,
   brandBaseUrl,
+  unsubscribeUrl,
   children,
 }: EmailLayoutProps) {
   return (
@@ -41,7 +43,7 @@ export function EmailLayout({
           <Container className="bg-white border border-solid border-[#e5e7eb] rounded-[12px] max-w-[600px] mx-auto my-8 p-8">
             <BrandHeader brandBaseUrl={brandBaseUrl} />
             {children}
-            <EmailFooter />
+            <EmailFooter unsubscribeUrl={unsubscribeUrl} />
           </Container>
         </Body>
       </Tailwind>

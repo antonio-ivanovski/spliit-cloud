@@ -184,11 +184,17 @@ describe('email templates', () => {
         actorName: 'Alice',
         activityLabel: 'Group details were updated',
         groupUrl: 'https://spliit.test/groups/grp-1',
+        unsubscribeUrl:
+          'https://spliit.test/email/unsubscribe?token=test-token',
       })
       expect(r.text).toContain('View the group here')
       expect(r.html).toContain('Group details were updated')
       expect(r.html).toContain('View group')
       expect(r.html).toContain('https://spliit.test/groups/grp-1')
+      expect(r.html).toContain('Unsubscribe from these email notifications')
+      expect(r.html).toContain(
+        'https://spliit.test/email/unsubscribe?token=test-token',
+      )
     })
   })
 

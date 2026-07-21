@@ -54,20 +54,7 @@ export async function getEmailUnsubscribeUrl(input: {
   return `${getApiBaseUrl()}/email/unsubscribe?token=${encodeURIComponent(token)}`
 }
 
-function escapeHtml(value: string): string {
-  return value.replace(/[&<>'"]/g, (character) => {
-    const entities: Record<string, string> = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;',
-    }
-    return entities[character]!
-  })
-}
-
-/** Build controlled headers and a small visible footer for optional email. */
+/** Build controlled headers and a visible text footer for optional email. */
 export async function buildEmailUnsubscribeMetadata(input: {
   accountId: string
   category: NotificationCategory
@@ -75,11 +62,9 @@ export async function buildEmailUnsubscribeMetadata(input: {
   url: string
   headers: { 'List-Unsubscribe': string; 'List-Unsubscribe-Post': string }
   textFooter: string
-  htmlFooter: string
 } | null> {
   try {
     const url = await getEmailUnsubscribeUrl(input)
-    const safeUrl = escapeHtml(url)
     const label = input.category.toLowerCase().replaceAll('_', ' ')
     return {
       url,
@@ -88,7 +73,6 @@ export async function buildEmailUnsubscribeMetadata(input: {
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
       },
       textFooter: `\n\nUnsubscribe from ${label} email notifications: ${url}`,
-      htmlFooter: `<p style="color:#64748b;font-size:13px"><a href="${safeUrl}">Unsubscribe from ${escapeHtml(label)} email notifications</a></p>`,
     }
   } catch {
     return null

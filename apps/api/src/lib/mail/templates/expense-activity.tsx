@@ -19,6 +19,7 @@ export type ExpenseActivityInput = {
   date: string | null
   changedFields?: string[]
   expenseUrl: string
+  unsubscribeUrl?: string
 }
 
 export type ExpenseImportSummaryInput = {
@@ -32,6 +33,7 @@ export type ExpenseImportSummaryInput = {
   sourceProvider: string | null
   totalStr: string | null
   groupUrl: string
+  unsubscribeUrl?: string
 }
 
 export type ExpenseCategoryBulkSummaryInput = {
@@ -44,6 +46,7 @@ export type ExpenseCategoryBulkSummaryInput = {
   count: number
   distinctCategories: number | null
   groupUrl: string
+  unsubscribeUrl?: string
 }
 
 export type ExpenseActivityInputAny =
@@ -61,7 +64,11 @@ export function ExpenseActivityEmail(
   )
   const preview = `${props.actorName} ${eventVerbPastParticiple(props.eventType)} "${props.title}"`
   return (
-    <EmailLayout preview={preview} brandBaseUrl={props.brandBaseUrl}>
+    <EmailLayout
+      preview={preview}
+      brandBaseUrl={props.brandBaseUrl}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
       <Heading
         as="h1"
         className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
@@ -122,7 +129,11 @@ export function ExpenseImportSummaryEmail(
   const preview = `${props.count} ${noun} imported into ${props.groupDisplayName}`
   const heading = `${props.count} ${noun[0].toUpperCase()}${noun.slice(1)} imported`
   return (
-    <EmailLayout preview={preview} brandBaseUrl={props.brandBaseUrl}>
+    <EmailLayout
+      preview={preview}
+      brandBaseUrl={props.brandBaseUrl}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
       <Heading
         as="h1"
         className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
@@ -161,6 +172,7 @@ export function ExpenseCategoryBulkSummaryEmail(
     <EmailLayout
       preview={`${props.count} ${noun} recategorized in ${props.groupDisplayName}`}
       brandBaseUrl={props.brandBaseUrl}
+      unsubscribeUrl={props.unsubscribeUrl}
     >
       <Heading
         as="h1"

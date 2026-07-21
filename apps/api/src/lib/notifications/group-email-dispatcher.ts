@@ -35,12 +35,6 @@ function customerFacingSummary(summary: string | undefined) {
   return /^[a-z][a-z-]*(?::[a-z-]+)+$/.test(summary) ? undefined : summary
 }
 
-function appendHtmlFooter(html: string, footer: string): string {
-  const bodyEnd = html.lastIndexOf('</body>')
-  if (bodyEnd < 0) return `${html}${footer}`
-  return `${html.slice(0, bodyEnd)}${footer}${html.slice(bodyEnd)}`
-}
-
 export class GroupEmailActivityNotificationDispatcher implements ActivityNotificationChannelDispatcher {
   async dispatch(intent: ActivityNotificationIntent): Promise<void> {
     if (
@@ -127,6 +121,7 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
               recipientEmail: account.email,
               recipientIsExistingUser: true,
               temporaryName: invitation?.temporaryName,
+              unsubscribeUrl: unsubscribe?.url,
             })
           : null
       const subject =
@@ -140,6 +135,7 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
           ? await renderFriendLedgerEmail({
               inviterName: actorName,
               isNewUser: false,
+              unsubscribeUrl: unsubscribe?.url,
             })
           : await renderGroupActivityEmail({
               subject,
@@ -150,12 +146,13 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
               activityLabel: label,
               summary,
               groupUrl: `${getWebBaseUrl()}/groups/${intent.activity.groupId}`,
+              unsubscribeUrl: unsubscribe?.url,
             })
       await sendEmail({
         to: account.email,
         subject: rendered.subject,
         text: `${rendered.text}${unsubscribe?.textFooter ?? ''}`,
-        html: appendHtmlFooter(rendered.html, unsubscribe?.htmlFooter ?? ''),
+        html: rendered.html,
         headers: unsubscribe?.headers,
       })
     } catch (error) {
