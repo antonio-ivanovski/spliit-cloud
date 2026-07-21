@@ -14,6 +14,7 @@ import { trpc } from '@/trpc/client'
 import {
   ACTIVE_NOTIFICATION_CATEGORIES,
   NotificationChannel,
+  RECOMMENDED_NOTIFICATION_CHANNELS,
 } from '@spliit/domain/notifications'
 import { BellRing, Mail, Smartphone } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -120,37 +121,81 @@ function tryAcquireActive(token: string) {
   return readActive()?.token === token
 }
 
-/**
- * Presents push setup once for each signed-in account in this browser. The
- * browser permission request remains inside the explicit Enable button's
- * event handler, which is required by browser security policies.
- */
+type OnboardingMode = 'initial' | 'device' | 'email-only-device'
+type OnboardingResult = 'denied' | 'failed'
+
+type PreferenceData = {
+  hasExplicitPreferences: boolean
+  categories: Array<{
+    category: string
+    effectiveChannels?: NotificationChannel[]
+  }>
+}
+
+/** Presents account-level delivery setup once per signed-in account/browser. */
 export function PushNotificationOnboarding() {
   const { t } = useTranslation()
   const { data: account, isPending: accountPending } = useCurrentAccount()
   const push = usePushNotifications()
   const utils = trpc.useUtils()
+  const preferences = trpc.notifications.preferences.get.useQuery(
+    { accountId: account?.id ?? '' },
+    { enabled: !!account },
+  )
   const savePreferences = trpc.notifications.preferences.save.useMutation()
   const [isOpen, setIsOpen] = useState(false)
-  const [result, setResult] = useState<'email' | 'denied' | 'failed' | null>(
-    null,
-  )
+  const [result, setResult] = useState<OnboardingResult | null>(null)
   const [isEnabling, setIsEnabling] = useState(false)
   const [preferenceError, setPreferenceError] = useState(false)
   const [coordinationVersion, setCoordinationVersion] = useState(0)
   const activeToken = useRef<string | null>(null)
 
   const accountId = account?.id
+  const mode = useMemo<OnboardingMode | null>(() => {
+    const data = preferences.data as PreferenceData | undefined
+    if (!data) return null
+    if (!data.hasExplicitPreferences) return 'initial'
+    const activeCategories = data.categories.filter((category) =>
+      (ACTIVE_NOTIFICATION_CATEGORIES as readonly string[]).includes(
+        category.category,
+      ),
+    )
+    const hasPushChoice = activeCategories.some((category) =>
+      category.effectiveChannels?.includes(NotificationChannel.PUSH),
+    )
+    if (hasPushChoice) return 'device'
+    const hasEmailChoice = activeCategories.some((category) =>
+      category.effectiveChannels?.includes(NotificationChannel.EMAIL),
+    )
+    if (!hasEmailChoice) return null
+    return 'email-only-device'
+  }, [preferences.data])
   const eligible = useMemo(
     () =>
       !!accountId &&
       !accountPending &&
       !needsDisplayName(account) &&
+      !preferences.isPending &&
+      !preferences.isError &&
+      !!mode &&
       push.supported &&
       push.configured &&
       !push.iosHomeScreenRequired &&
-      !push.enabled,
-    [account, accountId, accountPending, push],
+      push.permission !== 'denied' &&
+      (!push.enabled || isOpen || isEnabling || !!result || preferenceError),
+    [
+      account,
+      accountId,
+      accountPending,
+      mode,
+      preferences.isError,
+      preferences.isPending,
+      push,
+      isEnabling,
+      isOpen,
+      preferenceError,
+      result,
+    ],
   )
 
   useEffect(() => {
@@ -202,20 +247,38 @@ export function PushNotificationOnboarding() {
     setIsOpen(false)
   }, [accountId, releaseActive])
 
+  const saveChannels = useCallback(
+    async (
+      channelsFor: (
+        category: (typeof ACTIVE_NOTIFICATION_CATEGORIES)[number],
+      ) => readonly NotificationChannel[],
+    ) => {
+      if (!accountId) throw new Error('No active account')
+      await savePreferences.mutateAsync({
+        preferences: ACTIVE_NOTIFICATION_CATEGORIES.map((category) => ({
+          category,
+          channels: [...channelsFor(category)],
+        })),
+      })
+      await utils.notifications.preferences.get.invalidate({ accountId })
+    },
+    [accountId, savePreferences, utils],
+  )
+
   const saveEmailPreference = useCallback(async () => {
     if (!accountId) throw new Error('No active account')
-    await savePreferences.mutateAsync({
-      preferences: [
-        ...ACTIVE_NOTIFICATION_CATEGORIES.map((category) => ({
-          category,
-          channels: [NotificationChannel.EMAIL],
-        })),
-      ],
-    })
-    await utils.notifications.preferences.get.invalidate({ accountId })
-  }, [accountId, savePreferences, utils])
+    await saveChannels(() => [NotificationChannel.EMAIL])
+  }, [accountId, saveChannels])
+
+  const saveRecommendedPreferences = useCallback(async () => {
+    if (!accountId) throw new Error('No active account')
+    await saveChannels(
+      (category) => RECOMMENDED_NOTIFICATION_CHANNELS[category],
+    )
+  }, [accountId, saveChannels])
 
   const chooseEmail = useCallback(async () => {
+    if (mode !== 'initial') return
     setPreferenceError(false)
     try {
       await saveEmailPreference()
@@ -223,9 +286,13 @@ export function PushNotificationOnboarding() {
     } catch {
       setPreferenceError(true)
     }
-  }, [finishAndClose, saveEmailPreference])
+  }, [finishAndClose, mode, saveEmailPreference])
 
-  const closeResult = useCallback(() => {
+  const dismiss = useCallback(() => {
+    finishAndClose()
+  }, [finishAndClose])
+
+  const closeWithoutCompletion = useCallback(() => {
     releaseActive()
     setIsOpen(false)
   }, [releaseActive])
@@ -250,33 +317,31 @@ export function PushNotificationOnboarding() {
     return () => window.removeEventListener('storage', handleStorage)
   }, [accountId, releaseActive])
 
-  const retryDeniedEmail = useCallback(async () => {
-    if (!accountId) return
+  async function enable() {
+    if (!mode) return
+    setIsEnabling(true)
     setPreferenceError(false)
     try {
-      await saveEmailPreference()
-      recordCompleted(accountId)
-    } catch {
-      setPreferenceError(true)
-    }
-  }, [accountId, saveEmailPreference])
-
-  async function enable() {
-    setIsEnabling(true)
-    try {
-      await push.enable()
+      try {
+        await push.enable()
+      } catch {
+        const permissionDenied =
+          push.permission === 'denied' ||
+          (typeof Notification !== 'undefined' &&
+            Notification.permission === 'denied')
+        setResult(permissionDenied ? 'denied' : 'failed')
+        return
+      }
+      try {
+        if (mode === 'initial') await saveRecommendedPreferences()
+      } catch {
+        setPreferenceError(true)
+        return
+      }
       finishAndClose()
-    } catch {
-      const permissionDenied =
-        push.permission === 'denied' ||
-        (typeof Notification !== 'undefined' &&
-          Notification.permission === 'denied')
-      if (permissionDenied) {
-        setResult('denied')
-        await retryDeniedEmail()
-      } else {
-        setResult('failed')
-        if (accountId) recordCompleted(accountId)
+      if (mode === 'email-only-device') {
+        window.history.pushState({}, '', '/account/settings#notifications')
+        window.dispatchEvent(new PopStateEvent('popstate'))
       }
     } finally {
       setIsEnabling(false)
@@ -290,12 +355,16 @@ export function PushNotificationOnboarding() {
       open={isOpen}
       onOpenChange={(next) => {
         if (next) return
+        if (isEnabling) return
         if (preferenceError) {
-          closeResult()
+          closeWithoutCompletion()
           return
         }
-        if (result) closeResult()
-        else void chooseEmail()
+        if (mode === 'initial' && !result && !preferenceError) {
+          void chooseEmail()
+          return
+        }
+        dismiss()
       }}
     >
       <ResponsiveDialogContent
@@ -341,14 +410,10 @@ export function PushNotificationOnboarding() {
             <ResponsiveDialogFooter className="mt-2">
               <Button
                 type="button"
-                onClick={() =>
-                  preferenceError ? void retryDeniedEmail() : closeResult()
-                }
+                onClick={dismiss}
                 disabled={savePreferences.isPending}
               >
-                {preferenceError
-                  ? t('AccountSettings.notifications.retry')
-                  : t('PushOnboarding.done')}
+                {t('PushOnboarding.done')}
               </Button>
             </ResponsiveDialogFooter>
           </div>
@@ -362,13 +427,23 @@ export function PushNotificationOnboarding() {
                 />
                 <p>{t('PushOnboarding.pushBenefit')}</p>
               </div>
-              <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
-                <Mail
-                  className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
-                <p>{t('PushOnboarding.emailFallback')}</p>
-              </div>
+              {mode === 'initial' ? (
+                <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                  <Mail
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <p>{t('PushOnboarding.emailFallback')}</p>
+                </div>
+              ) : mode === 'email-only-device' ? (
+                <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                  <Mail
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <p>{t('PushOnboarding.emailUsage')}</p>
+                </div>
+              ) : null}
               <p className="text-xs text-muted-foreground">
                 {t('PushOnboarding.settingsHint')}
               </p>
@@ -377,12 +452,16 @@ export function PushNotificationOnboarding() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => void chooseEmail()}
+                onClick={() =>
+                  mode === 'initial' ? void chooseEmail() : dismiss()
+                }
                 disabled={isEnabling || savePreferences.isPending}
               >
                 {preferenceError
                   ? t('AccountSettings.notifications.retry')
-                  : t('PushOnboarding.useEmail')}
+                  : mode === 'initial'
+                    ? t('PushOnboarding.useEmail')
+                    : t('InstallPromotion.dismiss')}
               </Button>
               <Button
                 type="button"

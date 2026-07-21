@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   useCurrentAccount: vi.fn(),
   usePushNotifications: vi.fn(),
+  usePreferencesQuery: vi.fn(),
   enable: vi.fn(),
   savePreferences: vi.fn(),
   invalidatePreferences: vi.fn(),
@@ -27,6 +28,7 @@ vi.mock('@/trpc/client', () => ({
     }),
     notifications: {
       preferences: {
+        get: { useQuery: mocks.usePreferencesQuery },
         save: {
           useMutation: () => ({
             mutateAsync: mocks.savePreferences,
@@ -47,6 +49,7 @@ import {
 describe('PushNotificationOnboarding', () => {
   beforeEach(() => {
     localStorage.clear()
+    window.history.replaceState({}, '', '/')
     vi.clearAllMocks()
     mocks.useCurrentAccount.mockReturnValue({
       data: { id: 'account-1', name: 'Ada', email: 'ada@example.com' },
@@ -63,6 +66,19 @@ describe('PushNotificationOnboarding', () => {
     mocks.enable.mockResolvedValue(undefined)
     mocks.savePreferences.mockResolvedValue(undefined)
     mocks.invalidatePreferences.mockResolvedValue(undefined)
+    mocks.usePreferencesQuery.mockReturnValue({
+      isPending: false,
+      isError: false,
+      data: {
+        hasExplicitPreferences: false,
+        categories: [
+          { category: 'GROUP_INVITE_RECEIVED', effectiveChannels: ['EMAIL'] },
+          { category: 'FRIEND_ADDED', effectiveChannels: ['EMAIL'] },
+          { category: 'EXPENSE_CREATED', effectiveChannels: ['EMAIL'] },
+          { category: 'EXPENSE_CHANGED', effectiveChannels: ['EMAIL'] },
+        ],
+      },
+    })
   })
 
   it('presents once and records the email choice per account', async () => {
@@ -205,12 +221,102 @@ describe('PushNotificationOnboarding', () => {
     expect(mocks.enable).toHaveBeenCalledTimes(1)
   })
 
-  it('explains email usage after browser permission is denied', async () => {
+  it('applies the optimized channels after the first push opt-in', async () => {
+    const user = userEvent.setup()
+    render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+
+    await user.click(
+      screen.getByRole('button', { name: /enable push notifications/i }),
+    )
+
+    await waitFor(() => {
+      expect(mocks.savePreferences).toHaveBeenCalledWith({
+        preferences: [
+          { category: 'GROUP_INVITE_RECEIVED', channels: ['EMAIL', 'PUSH'] },
+          { category: 'FRIEND_ADDED', channels: ['EMAIL', 'PUSH'] },
+          { category: 'EXPENSE_CREATED', channels: ['PUSH'] },
+          { category: 'EXPENSE_CHANGED', channels: ['PUSH'] },
+        ],
+      })
+    })
+  })
+
+  it('offers device-only setup without changing Push preferences', async () => {
+    mocks.usePreferencesQuery.mockReturnValue({
+      isPending: false,
+      isError: false,
+      data: {
+        hasExplicitPreferences: true,
+        categories: [
+          { category: 'EXPENSE_CREATED', effectiveChannels: ['PUSH'] },
+        ],
+      },
+    })
+    const user = userEvent.setup()
+    render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+
+    await user.click(
+      screen.getByRole('button', { name: /enable push notifications/i }),
+    )
+
+    await waitFor(() => expect(mocks.enable).toHaveBeenCalledTimes(1))
+    expect(mocks.savePreferences).not.toHaveBeenCalled()
+  })
+
+  it('does not prompt again when all active notifications are turned off', async () => {
+    mocks.usePreferencesQuery.mockReturnValue({
+      isPending: false,
+      isError: false,
+      data: {
+        hasExplicitPreferences: true,
+        categories: [
+          { category: 'GROUP_INVITE_RECEIVED', effectiveChannels: [] },
+          { category: 'FRIEND_ADDED', effectiveChannels: [] },
+          { category: 'EXPENSE_CREATED', effectiveChannels: [] },
+          { category: 'EXPENSE_CHANGED', effectiveChannels: [] },
+        ],
+      },
+    })
+    render(<PushNotificationOnboarding />)
+
+    await new Promise((resolve) => window.setTimeout(resolve, 800))
+    expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
+  })
+
+  it('opens notification settings after enabling an Email-only account', async () => {
+    mocks.usePreferencesQuery.mockReturnValue({
+      isPending: false,
+      isError: false,
+      data: {
+        hasExplicitPreferences: true,
+        categories: [
+          { category: 'EXPENSE_CREATED', effectiveChannels: ['EMAIL'] },
+        ],
+      },
+    })
+    const user = userEvent.setup()
+    render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+
+    await user.click(
+      screen.getByRole('button', { name: /enable push notifications/i }),
+    )
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe('/account/settings')
+      expect(window.location.hash).toBe('#notifications')
+    })
+    expect(mocks.savePreferences).not.toHaveBeenCalled()
+  })
+
+  it('explains email usage after push registration fails', async () => {
     mocks.usePushNotifications.mockReturnValue({
       supported: true,
       configured: true,
       iosHomeScreenRequired: false,
-      permission: 'denied',
+      permission: 'default',
       enabled: false,
       enable: mocks.enable.mockRejectedValue(new Error('denied')),
     })
@@ -224,19 +330,27 @@ describe('PushNotificationOnboarding', () => {
     expect(
       await screen.findByText(/only notifications configured for email/i),
     ).toBeInTheDocument()
-    expect(mocks.savePreferences).toHaveBeenCalledWith({
-      preferences: [
-        { category: 'GROUP_INVITE_RECEIVED', channels: ['EMAIL'] },
-        { category: 'FRIEND_ADDED', channels: ['EMAIL'] },
-        { category: 'EXPENSE_CREATED', channels: ['EMAIL'] },
-        { category: 'EXPENSE_CHANGED', channels: ['EMAIL'] },
-      ],
-    })
+    expect(mocks.savePreferences).not.toHaveBeenCalled()
     expect(localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)).not.toBeNull()
     expect(screen.getByRole('button', { name: /done/i })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /done/i }))
     expect(localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)).toBeNull()
+  })
+
+  it('does not prompt when browser permission is already denied', async () => {
+    mocks.usePushNotifications.mockReturnValue({
+      supported: true,
+      configured: true,
+      iosHomeScreenRequired: false,
+      permission: 'denied',
+      enabled: false,
+      enable: mocks.enable,
+    })
+    render(<PushNotificationOnboarding />)
+
+    await new Promise((resolve) => window.setTimeout(resolve, 800))
+    expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
   })
 
   it('keeps onboarding active and retryable when saving the email preference fails', async () => {

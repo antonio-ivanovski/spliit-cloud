@@ -50,7 +50,21 @@ export const ACTIVE_NOTIFICATION_CATEGORIES = [
   NotificationCategory.EXPENSE_CHANGED,
 ] as const
 
-/** Defaults are deliberately independent of device availability. */
+/** Account defaults stay durable until the user explicitly opts into Push. */
+export const DEFAULT_NOTIFICATION_CHANNELS: Readonly<
+  Record<NotificationCategory, readonly NotificationChannel[]>
+> = {
+  [NotificationCategory.GROUP_INVITE_RECEIVED]: [NotificationChannel.EMAIL],
+  [NotificationCategory.FRIEND_ADDED]: [NotificationChannel.EMAIL],
+  [NotificationCategory.EXPENSE_CREATED]: [NotificationChannel.EMAIL],
+  [NotificationCategory.EXPENSE_CHANGED]: [NotificationChannel.EMAIL],
+  [NotificationCategory.EXPENSE_COMMENT]: [NotificationChannel.EMAIL],
+  [NotificationCategory.WEEKLY_SUMMARY]: [NotificationChannel.EMAIL],
+  [NotificationCategory.PRODUCT_UPDATES]: [NotificationChannel.EMAIL],
+}
+
+export const defaultNotificationChannels = DEFAULT_NOTIFICATION_CHANNELS
+
 export const RECOMMENDED_NOTIFICATION_CHANNELS: Readonly<
   Record<NotificationCategory, readonly NotificationChannel[]>
 > = {
@@ -77,6 +91,12 @@ export function getRecommendedNotificationChannels(
   _hasPushTarget = true,
 ): NotificationChannel[] {
   return [...RECOMMENDED_NOTIFICATION_CHANNELS[category]]
+}
+
+export function getDefaultNotificationChannels(
+  category: NotificationCategory,
+): NotificationChannel[] {
+  return [...DEFAULT_NOTIFICATION_CHANNELS[category]]
 }
 
 export const NotificationCategoryFamily = {
@@ -136,4 +156,4 @@ export const notificationChannelsSchema = z
 export type NotificationChannels = z.infer<typeof notificationChannelsSchema>
 
 /** System policy used when no account override is saved. */
-export const SYSTEM_NOTIFICATION_POLICY = 'OPTIMIZED_BY_ACTIVITY' as const
+export const SYSTEM_NOTIFICATION_POLICY = 'EMAIL_BY_DEFAULT' as const

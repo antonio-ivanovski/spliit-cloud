@@ -49,6 +49,7 @@ type PreferenceCategory = {
 }
 
 type PreferenceData = {
+  hasExplicitPreferences: boolean
   hasPushTargets: boolean
   isPushConfigured: boolean
   categories: PreferenceCategory[]
@@ -328,15 +329,10 @@ export function NotificationsPreferences() {
   async function updateCategory(category: Category, channels: Channel[]) {
     if (!draft || pendingCategory) return
     const previous = draft[category]
-    const recommended =
-      (preferences.data as PreferenceData).categories.find(
-        (entry) => entry.category === category,
-      )?.recommendedChannels ?? []
-    const savedChannels =
-      channels.length === recommended.length &&
-      channels.every((channel) => recommended.includes(channel))
-        ? null
-        : channels
+    // Keep explicit selections explicit. In particular, Email-only is an
+    // intentional onboarding choice and must not look like an unconfigured
+    // account on another device.
+    const savedChannels = channels
     setDraft((current) =>
       current ? { ...current, [category]: channels } : current,
     )
@@ -439,7 +435,7 @@ export function NotificationsPreferences() {
   ]
 
   return (
-    <Card className="mobile-surface">
+    <Card id="notifications" className="mobile-surface scroll-mt-6">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <Bell className="h-5 w-5" aria-hidden="true" />

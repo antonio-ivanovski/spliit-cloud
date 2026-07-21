@@ -57,10 +57,10 @@ describe('resolveNotificationChannelsForIntents', () => {
 
     await expect(
       resolveNotificationChannelsForIntents([intent()]),
-    ).resolves.toEqual([[NotificationChannel.PUSH]])
+    ).resolves.toEqual([[NotificationChannel.EMAIL]])
   })
 
-  it('keeps durable email recommendations for bulk and group invitation activity', async () => {
+  it('keeps Email defaults even when a push target exists', async () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
     prismaMock.pushSubscription.findMany.mockResolvedValue([
       { accountId: 'account-1' },
@@ -72,8 +72,8 @@ describe('resolveNotificationChannelsForIntents', () => {
         intent({ category: NotificationCategory.GROUP_INVITE_RECEIVED }),
       ]),
     ).resolves.toEqual([
-      [NotificationChannel.PUSH],
-      [NotificationChannel.EMAIL, NotificationChannel.PUSH],
+      [NotificationChannel.EMAIL],
+      [NotificationChannel.EMAIL],
     ])
   })
 })

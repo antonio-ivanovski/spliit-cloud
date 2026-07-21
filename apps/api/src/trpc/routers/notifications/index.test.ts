@@ -85,13 +85,17 @@ describe('notifications.preferences', () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
     prismaMock.pushSubscription.count.mockResolvedValue(0)
     const result = await makeCaller().preferences.get({ accountId: 'acct-1' })
-    expect(result.systemDefault).toBe('OPTIMIZED_BY_ACTIVITY')
+    expect(result.systemDefault).toBe('EMAIL_BY_DEFAULT')
+    expect(result.hasExplicitPreferences).toBe(false)
     expect(result).not.toHaveProperty('global')
     expect(result.categories).toHaveLength(7)
     expect(result.categories[0].channels).toBeNull()
     expect(result.categories[0].recommendedChannels).toEqual([
       NotificationChannel.EMAIL,
       NotificationChannel.PUSH,
+    ])
+    expect(result.categories[0].inheritedChannels).toEqual([
+      NotificationChannel.EMAIL,
     ])
   })
 

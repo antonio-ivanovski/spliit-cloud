@@ -48,10 +48,12 @@ vi.mock('@/components/ui/use-toast', () => ({
 import { NotificationsPreferences } from './notifications-preferences'
 
 type MockPreferenceData = {
+  hasExplicitPreferences: boolean
   categories: Array<{
     category: string
     channels: string[] | null
     recommendedChannels: string[]
+    effectiveChannels?: string[]
   }>
   hasPushTargets: boolean
   isPushConfigured: boolean
@@ -61,41 +63,49 @@ function makeData(
   overrides: Partial<MockPreferenceData> = {},
 ): MockPreferenceData {
   return {
+    hasExplicitPreferences: false,
     categories: [
       {
         category: 'GROUP_INVITE_RECEIVED',
         channels: null,
         recommendedChannels: ['EMAIL', 'PUSH'],
+        effectiveChannels: ['EMAIL'],
       },
       {
         category: 'FRIEND_ADDED',
         channels: null,
         recommendedChannels: ['EMAIL', 'PUSH'],
+        effectiveChannels: ['EMAIL'],
       },
       {
         category: 'EXPENSE_CREATED',
         channels: null,
         recommendedChannels: ['PUSH'],
+        effectiveChannels: ['EMAIL'],
       },
       {
         category: 'EXPENSE_CHANGED',
         channels: null,
         recommendedChannels: ['PUSH'],
+        effectiveChannels: ['EMAIL'],
       },
       {
         category: 'EXPENSE_COMMENT',
         channels: null,
         recommendedChannels: ['PUSH'],
+        effectiveChannels: ['EMAIL'],
       },
       {
         category: 'WEEKLY_SUMMARY',
         channels: null,
         recommendedChannels: ['EMAIL'],
+        effectiveChannels: ['EMAIL'],
       },
       {
         category: 'PRODUCT_UPDATES',
         channels: null,
         recommendedChannels: ['EMAIL'],
+        effectiveChannels: ['EMAIL'],
       },
     ],
     hasPushTargets: true,
@@ -180,7 +190,9 @@ describe('NotificationsPreferences', () => {
     expect(mocks.enablePush).toHaveBeenCalledTimes(1)
     await waitFor(() =>
       expect(mocks.savePreferences).toHaveBeenCalledWith({
-        preferences: [{ category: 'FRIEND_ADDED', channels: null }],
+        preferences: [
+          { category: 'FRIEND_ADDED', channels: ['EMAIL', 'PUSH'] },
+        ],
       }),
     )
   })
@@ -201,10 +213,13 @@ describe('NotificationsPreferences', () => {
   })
 
   it('warns when Push is selected but no device target exists', () => {
+    const data = makeData({ hasPushTargets: false })
+    data.categories[2].channels = ['PUSH']
+    data.categories[2].effectiveChannels = ['PUSH']
     mocks.usePreferencesQuery.mockReturnValue({
       isPending: false,
       isError: false,
-      data: makeData({ hasPushTargets: false }),
+      data,
       refetch: vi.fn(),
     })
     render(<NotificationsPreferences />)
@@ -217,6 +232,9 @@ describe('NotificationsPreferences', () => {
   })
 
   it('surfaces disabled-device and no-target warnings separately', () => {
+    const data = makeData({ hasPushTargets: false })
+    data.categories[2].channels = ['PUSH']
+    data.categories[2].effectiveChannels = ['PUSH']
     mocks.usePushNotifications.mockReturnValue({
       supported: true,
       configured: true,
@@ -231,7 +249,7 @@ describe('NotificationsPreferences', () => {
     mocks.usePreferencesQuery.mockReturnValue({
       isPending: false,
       isError: false,
-      data: makeData({ hasPushTargets: false }),
+      data,
       refetch: vi.fn(),
     })
 

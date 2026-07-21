@@ -2,6 +2,7 @@ import { prisma } from '@spliit/db'
 import {
   NotificationChannel,
   SYSTEM_NOTIFICATION_POLICY,
+  getDefaultNotificationChannels,
   getRecommendedNotificationChannels,
   notificationCategorySchema,
   notificationCategoryValues,
@@ -42,9 +43,9 @@ export const SYSTEM_DEFAULT = SYSTEM_NOTIFICATION_POLICY
 
 export function effectiveChannels(
   explicit: readonly NotificationChannel[] | null,
-  recommended: readonly NotificationChannel[],
+  inherited: readonly NotificationChannel[],
 ): NotificationChannel[] {
-  return [...(explicit ?? recommended)]
+  return [...(explicit ?? inherited)]
 }
 
 export async function getNotificationPreferences(accountId: string) {
@@ -58,17 +59,19 @@ export async function getNotificationPreferences(accountId: string) {
   const byCategory = new Map(rows.map((row) => [row.category, row.channels]))
   return {
     systemDefault: SYSTEM_DEFAULT,
+    hasExplicitPreferences: rows.length > 0,
     hasPushTargets: pushCount > 0,
     isPushConfigured,
     categories: preferenceCategories.map((category) => {
       const channels = byCategory.get(category) ?? null
+      const inheritedChannels = getDefaultNotificationChannels(category)
       const recommendedChannels = getRecommendedNotificationChannels(category)
       return {
         category,
         channels,
         recommendedChannels,
-        inheritedChannels: [...recommendedChannels],
-        effectiveChannels: effectiveChannels(channels, recommendedChannels),
+        inheritedChannels,
+        effectiveChannels: effectiveChannels(channels, inheritedChannels),
       }
     }),
   }
@@ -115,7 +118,7 @@ export async function removeEmailPreference(
     where: { accountId_category: { accountId, category } },
     select: { channels: true },
   })
-  const current = row?.channels ?? getRecommendedNotificationChannels(category)
+  const current = row?.channels ?? getDefaultNotificationChannels(category)
   const channels = current.filter(
     (channel): channel is NotificationChannel =>
       channel !== NotificationChannel.EMAIL,

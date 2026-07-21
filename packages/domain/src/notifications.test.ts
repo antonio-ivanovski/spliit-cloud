@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  getDefaultNotificationChannels,
   getRecommendedNotificationChannels,
   NotificationCategory,
   notificationCategoryForActivityType,
@@ -74,5 +75,16 @@ describe('notification preference domain values', () => {
     expect(Object.keys(recommendedNotificationChannels)).toHaveLength(
       notificationCategoryValues.length,
     )
+  })
+
+  it('uses email for accounts without an explicit preference', () => {
+    expect(
+      getDefaultNotificationChannels(NotificationCategory.EXPENSE_CREATED),
+    ).toEqual([NotificationChannel.EMAIL])
+    expect(
+      getDefaultNotificationChannels(
+        NotificationCategory.GROUP_INVITE_RECEIVED,
+      ),
+    ).toEqual([NotificationChannel.EMAIL])
   })
 })

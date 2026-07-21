@@ -1,7 +1,7 @@
 import { prisma } from '@spliit/db'
 import {
   NotificationChannel,
-  getRecommendedNotificationChannels,
+  getDefaultNotificationChannels,
 } from '@spliit/domain/notifications'
 import { isPushConfigured } from './push'
 import type { ActivityNotificationIntent } from './types'
@@ -54,9 +54,6 @@ export async function resolveNotificationChannelsForIntents(
       // silently turn an explicit PUSH choice into email delivery.
       return channels
     }
-    return getRecommendedNotificationChannels(
-      intent.category,
-      isPushConfigured && pushTargets.has(intent.recipientAccountId),
-    )
+    return getDefaultNotificationChannels(intent.category)
   })
 }
