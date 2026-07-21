@@ -768,7 +768,11 @@
       "switchToItemizedConfirm": "Przełącz na pozycje",
       "showItems": "Pokaż pozycje",
       "hideItems": "Ukryj pozycje",
-      "participantValueLabel": "Wartość podziału dla {name}"
+      "participantValueLabel": "Wartość podziału dla {name}",
+      "defaultSplitLabel": "Domyślny podział pozycji",
+      "defaultSplitMixed": "Mieszane",
+      "defaultSplitEdit": "Edytuj domyślny podział pozycji",
+      "defaultSplitModalTitle": "Domyślny podział pozycji"
     },
     "leaveItemized": {
       "title": "Zmienić sposób podziału?",

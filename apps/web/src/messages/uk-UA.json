@@ -768,7 +768,11 @@
       "switchToItemizedConfirm": "Перейти до позицій",
       "showItems": "Показати позиції",
       "hideItems": "Сховати позиції",
-      "participantValueLabel": "Значення розподілу для {name}"
+      "participantValueLabel": "Значення розподілу для {name}",
+      "defaultSplitLabel": "Розподіл позицій за замовчуванням",
+      "defaultSplitMixed": "Змішане",
+      "defaultSplitEdit": "Редагувати розподіл позицій за замовчуванням",
+      "defaultSplitModalTitle": "Розподіл позицій за замовчуванням"
     },
     "leaveItemized": {
       "title": "Змінити спосіб розподілу?",

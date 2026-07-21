@@ -761,7 +761,11 @@
       "switchToItemizedConfirm": "Canvia a per articles",
       "showItems": "Mostra els articles",
       "hideItems": "Amaga els articles",
-      "participantValueLabel": "Valor dividit per a {name}"
+      "participantValueLabel": "Valor dividit per a {name}",
+      "defaultSplitLabel": "Divisió per defecte dels articles",
+      "defaultSplitMixed": "Mixta",
+      "defaultSplitEdit": "Edita la divisió per defecte dels articles",
+      "defaultSplitModalTitle": "Divisió per defecte dels articles"
     },
     "leaveItemized": {
       "title": "Vols canviar el mode de repartiment?",

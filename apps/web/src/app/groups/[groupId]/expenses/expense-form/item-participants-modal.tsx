@@ -30,6 +30,9 @@ import {
   enforceIntegerPattern,
   enforcePercentagePattern,
 } from './currency-utils'
+import type { SavedSplit } from './default-split/split-equal'
+import { splitEqual } from './default-split/split-equal'
+import { savedDefaultToFormValues } from './default-values'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
 import {
@@ -52,6 +55,19 @@ export function ItemParticipantsModal(props: {
   item: ExpenseFormItemValues
   onSaveItem?: (item: ExpenseFormItemValues) => void
   readOnly?: boolean
+  /** Optional override for the modal header title (used by the
+   *  expense-level "default items split" editor). */
+  titleOverride?: string
+  /** Hide the "qty × unitPrice" description under the title. */
+  hideAmountDescription?: boolean
+  /** Hide the BY_AMOUNT split card. Used by the "default items split"
+   *  editor, where amounts are relative to each item's total. */
+  hideAmountMode?: boolean
+  /** Persisted per-user-per-group default split. When present, the
+   *  modal renders a "Load default" link above the radio cards that
+   *  resets the local `draft` to this default (visible regardless of
+   *  whether the draft already matches). */
+  savedDefault?: SavedSplit | null
 }) {
   const {
     open,
@@ -63,6 +79,10 @@ export function ItemParticipantsModal(props: {
     item,
     onSaveItem,
     readOnly,
+    titleOverride,
+    hideAmountDescription,
+    hideAmountMode,
+    savedDefault,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
@@ -84,6 +104,7 @@ export function ItemParticipantsModal(props: {
 
   const handleSplitModeChange = (nextMode: SplitMode) => {
     if (nextMode === 'ITEMIZED' || draft.splitMode === nextMode) return
+    if (hideAmountMode && nextMode === 'BY_AMOUNT') return
     const converted = convertParticipantShares({
       rows: draft.paidFor,
       fromMode: draft.splitMode,
@@ -97,6 +118,28 @@ export function ItemParticipantsModal(props: {
       paidFor: converted,
     }))
   }
+
+  const handleLoadDefault = () => {
+    if (!savedDefault) return
+    const restored = savedDefaultToFormValues(
+      savedDefault,
+      group,
+      groupCurrency,
+    )
+    if (!restored) return
+    setDraft((prev) => ({
+      ...prev,
+      splitMode: restored.splitMode as ItemSplitMode,
+      paidFor: restored.paidFor,
+    }))
+  }
+
+  const isCurrentEqualSaved = splitEqual(
+    draft.splitMode,
+    draft.paidFor,
+    savedDefault ?? null,
+    groupCurrency,
+  )
 
   const handleSave = () => {
     if (onSaveItem) {
@@ -339,25 +382,46 @@ export function ItemParticipantsModal(props: {
       <ResponsiveDialogContent className="sm:max-w-lg">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
-            {item.title || '(unnamed item)'}
+            {titleOverride ?? (item.title || '(unnamed item)')}
           </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
-            {itemTotal.toFixed(2)}
-            {' · '}
-            {draft.quantity}
-            {' × '}
-            {Number(draft.unitPrice).toFixed(2)}
-          </ResponsiveDialogDescription>
+          {!hideAmountDescription && (
+            <ResponsiveDialogDescription>
+              {itemTotal.toFixed(2)}
+              {' · '}
+              {draft.quantity}
+              {' × '}
+              {Number(draft.unitPrice).toFixed(2)}
+            </ResponsiveDialogDescription>
+          )}
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody>
           <div>
+            {savedDefault && !isCurrentEqualSaved && !readOnly && (
+              // Default-split action row, mirrors PaidForCard's header
+              // strip: heading label + Load link, separated from the
+              // radio cards by a top border.
+              <div className="mb-3 flex items-center justify-end gap-3 border-b pb-3 text-xs text-muted-foreground">
+                <span className="uppercase tracking-wide">
+                  {t('DefaultSplit.heading')}
+                </span>
+                <Button
+                  variant="link"
+                  type="button"
+                  className="-my-2 -mx-4"
+                  onClick={handleLoadDefault}
+                >
+                  {t('DefaultSplit.load')}
+                </Button>
+              </div>
+            )}
             <div className="mb-4">
               <PaidForSplitOptionCards
                 value={draft.splitMode}
                 onChange={handleSplitModeChange}
                 renderContent={renderItemParticipants}
                 readOnly={readOnly}
+                hiddenModes={hideAmountMode ? ['BY_AMOUNT'] : undefined}
               />
             </div>
           </div>

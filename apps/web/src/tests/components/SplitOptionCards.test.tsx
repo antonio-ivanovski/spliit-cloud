@@ -212,4 +212,38 @@ describe('PaidForSplitOptionCards', () => {
     )
     screen.getAllByRole('radio').forEach((r) => expect(r).toBeDisabled())
   })
+
+  it('omits modes listed in hiddenModes', () => {
+    render(
+      <PaidForSplitOptionCards
+        value="EVENLY"
+        onChange={vi.fn()}
+        hiddenModes={['BY_AMOUNT']}
+      />,
+    )
+    expect(screen.queryByRole('radio', { name: /by amount/i })).toBeNull()
+    expect(screen.getAllByRole('radio')).toHaveLength(3)
+    expect(screen.getByRole('radio', { name: /evenly/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('radio', { name: /by shares/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('radio', { name: /by percentage/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('clears selection when the current value is hidden', () => {
+    render(
+      <PaidForSplitOptionCards
+        value="BY_AMOUNT"
+        onChange={vi.fn()}
+        hiddenModes={['BY_AMOUNT']}
+      />,
+    )
+    screen
+      .getAllByRole('radio')
+      .forEach((radio) =>
+        expect(radio).toHaveAttribute('aria-checked', 'false'),
+      )
+  })
 })

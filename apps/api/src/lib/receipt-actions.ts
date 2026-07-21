@@ -203,7 +203,7 @@ export async function extractExpenseInformationFromImage(
       },
       {
         role: 'user',
-        content: [{ type: 'image', image: imageUrl }],
+        content: [{ type: 'file', mediaType: 'image', data: imageUrl }],
       },
     ],
   })

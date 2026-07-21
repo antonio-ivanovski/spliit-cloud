@@ -761,7 +761,11 @@
       "switchToItemizedConfirm": "Mudar para por itens",
       "showItems": "Mostrar itens",
       "hideItems": "Ocultar itens",
-      "participantValueLabel": "Valor dividido para {name}"
+      "participantValueLabel": "Valor dividido para {name}",
+      "defaultSplitLabel": "Divisão padrão dos itens",
+      "defaultSplitMixed": "Mista",
+      "defaultSplitEdit": "Editar a divisão padrão dos itens",
+      "defaultSplitModalTitle": "Divisão padrão dos itens"
     },
     "leaveItemized": {
       "title": "Mudar o modo de divisão?",

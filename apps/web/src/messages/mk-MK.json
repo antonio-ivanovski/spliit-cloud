@@ -1001,7 +1001,11 @@
       "switchToItemizedConfirm": "Префрли на ставки",
       "showItems": "Прикажи ставки",
       "hideItems": "Скриј ставки",
-      "participantValueLabel": "Вредност на поделбата за {name}"
+      "participantValueLabel": "Вредност на поделбата за {name}",
+      "defaultSplitLabel": "Стандардно разделување на ставки",
+      "defaultSplitMixed": "Мешано",
+      "defaultSplitEdit": "Измени стандардно разделување на ставки",
+      "defaultSplitModalTitle": "Стандардно разделување на ставки"
     },
     "leaveItemized": {
       "title": "Да се смени начинот на поделба?",

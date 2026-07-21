@@ -747,7 +747,11 @@
       "switchToItemizedConfirm": "切換為逐項",
       "showItems": "顯示項目",
       "hideItems": "隱藏項目",
-      "participantValueLabel": "{name} 的分攤值"
+      "participantValueLabel": "{name} 的分攤值",
+      "defaultSplitLabel": "預設項目分攤",
+      "defaultSplitMixed": "混合",
+      "defaultSplitEdit": "編輯預設項目分攤",
+      "defaultSplitModalTitle": "預設項目分攤"
     },
     "leaveItemized": {
       "title": "切換分攤方式？",

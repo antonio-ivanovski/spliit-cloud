@@ -197,6 +197,57 @@ describe('Expense items — real DB', () => {
     )
   })
 
+  it('generates fresh item IDs when a create request reuses a client item ID', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Itemized-ID-${runId}`,
+      [],
+    )
+    const caller = makeCaller()
+    const clientItemId = `client-item-${runId}`
+    const baseExpense = {
+      amount: 1000,
+      paidByList: [{ participant: participants['Admin'], shares: 1000 }],
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      isMultiPayer: false,
+      paidFor: [{ participant: participants['Admin'], shares: 1 }],
+      category: 'general' as const,
+      splitMode: 'EVENLY' as const,
+      expenseDate: new Date().toISOString(),
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE' as const,
+      items: [
+        {
+          id: clientItemId,
+          title: 'Copied item',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'EVENLY' as const,
+          paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        },
+      ],
+    }
+
+    const first = await caller.expenses.create({
+      groupId,
+      expense: { ...baseExpense, title: 'First copy' },
+    })
+    const second = await caller.expenses.create({
+      groupId,
+      expense: { ...baseExpense, title: 'Second copy' },
+    })
+
+    const saved = await prisma.expense.findMany({
+      where: { id: { in: [first.expenseId, second.expenseId] } },
+      include: { items: true },
+      orderBy: { title: 'asc' },
+    })
+    expect(saved).toHaveLength(2)
+    expect(saved[0]!.items[0]!.id).not.toBe(clientItemId)
+    expect(saved[0]!.items[0]!.id).not.toBe(saved[1]!.items[0]!.id)
+  })
+
   // ------------------------------------------------------------------
   // 2. CREATE: ITEMIZED + items sum < amount => filler applied
   // ------------------------------------------------------------------

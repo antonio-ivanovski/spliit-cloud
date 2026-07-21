@@ -26,28 +26,72 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { ChevronDown, ChevronUp, Plus, UserPen } from 'lucide-react'
-import { type ReactNode, useEffect, useState } from 'react'
+import {
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Coins,
+  Hash,
+  Percent,
+  Plus,
+  UserPen,
+  Users,
+} from 'lucide-react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import type { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { applySplitToAll, getCommonItemSplit } from './default-item-split'
+import type { SavedSplit } from './default-split/split-equal'
+import {
+  getNeutralDefaultSplit,
+  savedDefaultToFormValues,
+} from './default-values'
 import { ExpenseItemRow, expenseItemGridClass } from './expense-item-row'
 import { isFillerItem, withAutoOtherFiller } from './use-auto-other-filler'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
-type EditingTarget = { kind: 'item'; index: number } | { kind: 'filler' }
+type ItemSplitMode = ExpenseFormItemValues['splitMode']
+type EditingTarget =
+  { kind: 'item'; index: number } | { kind: 'filler' } | { kind: 'default' }
 
-function makeDefaultItem(group: Group): ExpenseFormItemValues {
+function makeDefaultItem(
+  group: Group,
+  commonSplit: {
+    splitMode: ItemSplitMode
+    paidFor: ExpenseFormItemValues['paidFor']
+  } | null = null,
+): ExpenseFormItemValues {
+  const splitMode: ItemSplitMode = commonSplit?.splitMode ?? 'EVENLY'
+  const paidFor =
+    commonSplit?.paidFor ??
+    group.participants.map((p) => ({
+      participant: p.id,
+      shares: 1,
+    }))
   return {
     id: crypto.randomUUID(),
     title: '',
     unitPrice: 0,
     quantity: 1,
-    paidFor: group.participants.map((p) => ({
-      participant: p.id,
-      shares: 1,
-    })),
-    splitMode: 'EVENLY',
+    paidFor: paidFor.map((r) => ({ ...r })),
+    splitMode,
+  }
+}
+
+function resolveSeedSplit(
+  savedDefault: SavedSplit | null | undefined,
+  group: Group,
+  groupCurrency: Currency,
+): { splitMode: ItemSplitMode; paidFor: ExpenseFormItemValues['paidFor'] } {
+  // savedDefaultToFormValues and getNeutralDefaultSplit both reject
+  // ITEMIZED at runtime (the persisted-default schema and the neutral
+  // default are hardcoded EVENLY); the wider static SplitMode union from
+  // DefaultSplittingOptions is safe to narrow here.
+  return (savedDefaultToFormValues(savedDefault, group, groupCurrency) ??
+    getNeutralDefaultSplit(group)) as {
+    splitMode: ItemSplitMode
+    paidFor: ExpenseFormItemValues['paidFor']
   }
 }
 
@@ -57,18 +101,27 @@ export function ExpenseItemsCard({
   group,
   groupCurrency,
   readOnly,
+  savedDefault,
   renderItemParticipantsModal,
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
   readOnly?: boolean
+  /** Persisted per-user-per-group default split, used to seed items when
+   *  switching to itemized and surfaced in the per-item modal as a
+   *  "Load default" action. */
+  savedDefault?: SavedSplit | null
   renderItemParticipantsModal?: (props: {
     itemIndex: number
     item: ExpenseFormItemValues
     open: boolean
     onClose: () => void
     onSaveItem?: (item: ExpenseFormItemValues) => void
+    titleOverride?: string
+    hideAmountDescription?: boolean
+    hideAmountMode?: boolean
+    savedDefault?: unknown
   }) => ReactNode
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -95,11 +148,42 @@ export function ExpenseItemsCard({
   const exceedsAmount = itemsSumMajor > amountMajor + 0.01
   const fillerItem = itemsWithFiller.find(isFillerItem)
 
+  const commonSplit = useMemo(() => getCommonItemSplit(items), [items])
+  const displayedDefaultSplit =
+    commonSplit ??
+    (items.length === 0
+      ? resolveSeedSplit(savedDefault, group, groupCurrency)
+      : null)
+
+  const seedItemsAndRemainder = () => {
+    const seed = resolveSeedSplit(savedDefault, group, groupCurrency)
+    const result = applySplitToAll({
+      items: form.getValues('items') ?? [],
+      split: seed,
+      expenseAmount: Number(form.getValues('amount')) || 0,
+      groupCurrency,
+    })
+    form.setValue('items', result.items, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('itemizedRemainder', result.itemizedRemainder, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+  }
+
   const handleAddItem = () => {
     const currentItems = form.getValues('items') ?? []
-    form.setValue('items', [...currentItems, makeDefaultItem(group)], {
-      shouldDirty: true,
-    })
+    form.setValue(
+      'items',
+      [...currentItems, makeDefaultItem(group, commonSplit)],
+      {
+        shouldDirty: true,
+      },
+    )
     window.setTimeout(() => {
       form.setFocus(
         `items.${currentItems.length}.title` as FieldPath<ExpenseFormInputValues>,
@@ -146,7 +230,7 @@ export function ExpenseItemsCard({
   }
 
   const openEditDialog = (target: EditingTarget) => {
-    if (target.kind === 'filler') {
+    if (target.kind === 'filler' || target.kind === 'default') {
       beginEditing(target)
       return
     }
@@ -161,6 +245,7 @@ export function ExpenseItemsCard({
       shouldTouch: true,
       shouldValidate: true,
     })
+    seedItemsAndRemainder()
     setEditingTarget(pendingItemizedEdit)
     setPendingItemizedEdit(null)
   }
@@ -182,6 +267,38 @@ export function ExpenseItemsCard({
         shouldValidate: true,
       },
     )
+  }
+
+  const handleSaveDefault = (item: ExpenseFormItemValues) => {
+    const result = applySplitToAll({
+      items: form.getValues('items') ?? [],
+      split: { splitMode: item.splitMode, paidFor: item.paidFor },
+      expenseAmount: Number(form.getValues('amount')) || 0,
+      groupCurrency,
+    })
+    form.setValue('items', result.items, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('itemizedRemainder', result.itemizedRemainder, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+  }
+
+  const defaultSplitDraft = (): ExpenseFormItemValues => {
+    const base =
+      commonSplit ?? resolveSeedSplit(savedDefault, group, groupCurrency)
+    return {
+      id: 'default-items-split',
+      title: t('items.defaultSplitModalTitle'),
+      unitPrice: Number(form.getValues('amount')) || 0,
+      quantity: 1,
+      paidFor: base.paidFor.map((r) => ({ ...r })),
+      splitMode: base.splitMode,
+    }
   }
 
   return (
@@ -216,15 +333,36 @@ export function ExpenseItemsCard({
           </CardHeader>
           <CollapsibleContent>
             <CardContent>
+              <DefaultSplitAction
+                splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
+                label={t('items.defaultSplitLabel')}
+                summary={
+                  displayedDefaultSplit ? (
+                    <SummarizeParticipants
+                      item={{
+                        splitMode: displayedDefaultSplit.splitMode,
+                        paidFor: displayedDefaultSplit.paidFor,
+                      }}
+                      group={group}
+                    />
+                  ) : (
+                    t('items.defaultSplitMixed')
+                  )
+                }
+                editLabel={t('items.defaultSplitEdit')}
+                readOnly={readOnly}
+                onClick={() => openEditDialog({ kind: 'default' })}
+              />
+
               {items.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">
+                <p className="py-4 text-center text-sm text-muted-foreground">
                   {t('items.empty')}
                 </p>
               ) : (
                 <div>
                   <div
                     className={cn(
-                      'hidden border-t py-2 text-[11px] font-medium uppercase text-muted-foreground md:grid md:gap-x-3',
+                      'mt-5 hidden border-t py-2 text-[11px] font-medium uppercase text-muted-foreground md:grid md:gap-x-3',
                       expenseItemGridClass,
                     )}
                   >
@@ -355,6 +493,7 @@ export function ExpenseItemsCard({
           item: (form.getValues('items') ?? [])[editingTarget.index],
           open: true,
           onClose: closeEditDialog,
+          savedDefault,
         })}
       {editingTarget?.kind === 'filler' &&
         fillerItem &&
@@ -373,6 +512,19 @@ export function ExpenseItemsCard({
           open: true,
           onClose: closeEditDialog,
           onSaveItem: handleSaveFiller,
+          savedDefault,
+        })}
+      {editingTarget?.kind === 'default' &&
+        renderItemParticipantsModal?.({
+          itemIndex: -1,
+          item: defaultSplitDraft(),
+          open: true,
+          onClose: closeEditDialog,
+          onSaveItem: handleSaveDefault,
+          titleOverride: t('items.defaultSplitModalTitle'),
+          hideAmountDescription: true,
+          hideAmountMode: true,
+          savedDefault,
         })}
       <ResponsiveDialog
         open={!!pendingItemizedEdit}
@@ -406,6 +558,75 @@ export function ExpenseItemsCard({
   )
 }
 
+const defaultSplitIcons = {
+  EVENLY: Users,
+  BY_SHARES: Hash,
+  BY_PERCENTAGE: Percent,
+  BY_AMOUNT: Coins,
+} as const
+
+function DefaultSplitAction({
+  splitMode,
+  label,
+  summary,
+  editLabel,
+  readOnly,
+  onClick,
+}: {
+  splitMode: ItemSplitMode
+  label: string
+  summary: ReactNode
+  editLabel: string
+  readOnly?: boolean
+  onClick: () => void
+}) {
+  const Icon = defaultSplitIcons[splitMode]
+  const content = (
+    <>
+      <span
+        aria-hidden="true"
+        className={cn(
+          'inline-flex size-9 shrink-0 items-center justify-center rounded-md transition-colors',
+          readOnly
+            ? 'bg-muted text-muted-foreground'
+            : 'bg-primary/10 text-primary group-hover:bg-primary/15',
+        )}
+      >
+        <Icon className="size-4" strokeWidth={2} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-medium leading-tight">{label}</span>
+        <span className="mt-1 block text-xs leading-snug text-muted-foreground sm:text-sm">
+          {summary}
+        </span>
+      </span>
+      {!readOnly && (
+        <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground sm:text-sm">
+          <span className="hidden sm:inline">{editLabel}</span>
+          <ChevronRight className="size-4" aria-hidden="true" />
+        </span>
+      )}
+    </>
+  )
+
+  if (readOnly) {
+    return (
+      <div className="flex items-center gap-3 border-y py-3">{content}</div>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={editLabel}
+      className="group flex w-full items-center gap-3 border-y py-3 text-left transition-colors hover:bg-muted/30 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    >
+      {content}
+    </button>
+  )
+}
+
 const labelKeys = {
   EVENLY: 'items.splitEvenlyLabel',
   BY_SHARES: 'items.splitBySharesLabel',
@@ -417,7 +638,7 @@ function SummarizeParticipants({
   item,
   group,
 }: {
-  item: ExpenseFormItemValues
+  item: Pick<ExpenseFormItemValues, 'splitMode' | 'paidFor'>
   group: Group
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })

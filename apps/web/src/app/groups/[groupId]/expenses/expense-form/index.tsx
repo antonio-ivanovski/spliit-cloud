@@ -12,7 +12,7 @@ import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { amountAsDecimal, type Currency } from '@spliit/domain'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useForm, useWatch, type Resolver } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type {
@@ -21,7 +21,11 @@ import type {
   ReceiptScanContext,
 } from '../create-from-receipt-button'
 import { BasicDetailsCard } from './basic-details-card'
-import { buildExpenseFormDefaults } from './default-values'
+import { type SavedSplit } from './default-split/split-equal'
+import {
+  buildExpenseFormDefaults,
+  savedDefaultToFormValues,
+} from './default-values'
 import { DocumentsCard } from './documents-card'
 import { ExpenseItemsCard } from './expense-items-card'
 import { FormActions } from './form-actions'
@@ -81,6 +85,48 @@ export function ExpenseForm(props: {
   })
 
   const groupCurrency = getCurrencyFromGroup(props.group)
+
+  // `buildExpenseFormDefaults` runs synchronously on first render, but
+  // `savedDefault` is `null` until the tRPC query resolves — so fresh
+  // create flows open with the neutral (EVENLY) split instead of the
+  // user's saved default. Once the query resolves, swap the form into
+  // the saved shape so the user doesn't have to click "Load default"
+  // manually. Guarded to fresh-create (no edit/copy overwrite) and to
+  // a pristine form (never yank values the user has already typed).
+  const autoAppliedRef = useRef(false)
+  useEffect(() => {
+    if (autoAppliedRef.current) return
+    if (!isCreate || props.isCopy) return
+    if (!savedDefaultQuery.isSuccess || !savedDefault) return
+    if (form.formState.isDirty) return
+    if (form.getValues('splitMode') === 'ITEMIZED') return
+    const restored = savedDefaultToFormValues(
+      savedDefault,
+      props.group,
+      groupCurrency,
+    )
+    if (!restored) return
+    form.setValue('splitMode', restored.splitMode, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('paidFor', restored.paidFor, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    autoAppliedRef.current = true
+  }, [
+    isCreate,
+    props.isCopy,
+    props.group,
+    groupCurrency,
+    savedDefaultQuery.isSuccess,
+    savedDefault,
+    form,
+  ])
+
   const conversion = useExpenseCurrencyConversion({
     form,
     group: props.group,
@@ -233,18 +279,24 @@ export function ExpenseForm(props: {
           heading={props.heading}
           {...conversion}
           groupCurrency={groupCurrency}
+          savedDefault={savedDefault}
         />
         <ExpenseItemsCard
           form={form}
           group={props.group}
           groupCurrency={payerCurrency}
           readOnly={!!props.readOnly}
+          savedDefault={savedDefault}
           renderItemParticipantsModal={({
             itemIndex,
             item,
             open,
             onClose,
             onSaveItem,
+            titleOverride,
+            hideAmountDescription,
+            hideAmountMode,
+            savedDefault,
           }) => (
             <ItemParticipantsModal
               open={open}
@@ -256,6 +308,10 @@ export function ExpenseForm(props: {
               item={item}
               onSaveItem={onSaveItem}
               readOnly={!!props.readOnly}
+              titleOverride={titleOverride}
+              hideAmountDescription={hideAmountDescription}
+              hideAmountMode={hideAmountMode}
+              savedDefault={(savedDefault ?? null) as SavedSplit | null}
             />
           )}
         />

@@ -754,7 +754,11 @@
       "switchToItemizedConfirm": "Vaihda erittelykohtaiseksi",
       "showItems": "Näytä kohteet",
       "hideItems": "Piilota kohteet",
-      "participantValueLabel": "Jaon arvo henkilölle {name}"
+      "participantValueLabel": "Jaon arvo henkilölle {name}",
+      "defaultSplitLabel": "Kohteiden oletusjako",
+      "defaultSplitMixed": "Sekalaiset",
+      "defaultSplitEdit": "Muokkaa kohteiden oletusjakoa",
+      "defaultSplitModalTitle": "Kohteiden oletusjako"
     },
     "leaveItemized": {
       "title": "Vaihdetaanko jakotapaa?",

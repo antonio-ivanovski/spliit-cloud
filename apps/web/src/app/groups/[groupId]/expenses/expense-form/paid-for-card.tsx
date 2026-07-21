@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card'
 import { FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { getCurrency } from '@/lib/currency'
-import { amountAsMinorUnits } from '@/lib/utils'
+import { amountAsMinorUnits, cn } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
   Currency,
@@ -442,23 +442,27 @@ export function PaidForCard(props: {
         <CardTitle className="flex justify-between gap-2">
           <span>{t(`${sExpense}.paidFor.title`)}</span>
         </CardTitle>
-        {splitMode !== 'ITEMIZED' && (
-          // Default-split actions live in their own row, visually
-          // separated from the title's "Select all/None" toggle by a
-          // top border. The same row is reused when the saved default
-          // differs from the live split (Save) or matches it but the
-          // user diverged (Load). Hidden in ITEMIZED / read-only modes
-          // — see `DefaultSplitActions` for the full visibility rules.
-          <div className="mt-2 flex items-center justify-end gap-1 border-t pt-3">
-            <DefaultSplitActions
-              form={form}
-              group={group}
-              groupCurrency={groupCurrency}
-              savedDefault={savedDefault}
-              readOnly={readOnly}
-            />
-          </div>
-        )}
+        {/* Default-split actions live in their own row, visually
+            separated from the title by a top border. In non-ITEMIZED
+            modes there's a "Select all/None" toggle above, so the
+            border separates the two action rows; in ITEMIZED mode the
+            actions slot in flush with the title (no border needed).
+            Hidden entirely in read-only mode and when nothing is
+            actionable — see `DefaultSplitActions` for visibility. */}
+        <div
+          className={cn(
+            'mt-2 flex items-center justify-end gap-1 pt-3',
+            splitMode !== 'ITEMIZED' && 'border-t',
+          )}
+        >
+          <DefaultSplitActions
+            form={form}
+            group={group}
+            groupCurrency={groupCurrency}
+            savedDefault={savedDefault}
+            readOnly={readOnly}
+          />
+        </div>
         <CardDescription>
           {t(`${sExpense}.paidFor.description`)}
         </CardDescription>

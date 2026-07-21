@@ -67,6 +67,12 @@ import {
   formatDate,
   parseCurrencyPaste,
 } from './currency-utils'
+import { applySplitToAll } from './default-item-split'
+import type { SavedSplit } from './default-split/split-equal'
+import {
+  getNeutralDefaultSplit,
+  savedDefaultToFormValues,
+} from './default-values'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -117,6 +123,9 @@ export function BasicDetailsCard(props: {
     info: ReceiptExtractedInfo
     document: ReceiptDocument
   }) => void
+  /** Persisted per-user-per-group default split, used to seed new
+   *  items created by the calculator flow when switching to itemized. */
+  savedDefault?: SavedSplit | null
 }) {
   const {
     form,
@@ -127,6 +136,7 @@ export function BasicDetailsCard(props: {
     isIncome,
     isCreate,
     heading,
+    savedDefault,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -164,6 +174,14 @@ export function BasicDetailsCard(props: {
       : ''
 
   const applyCalculatorItems = (items: CalculatorItem[]) => {
+    const seed = (savedDefaultToFormValues(
+      savedDefault ?? null,
+      group,
+      groupCurrency,
+    ) ?? getNeutralDefaultSplit(group)) as {
+      splitMode: ExpenseFormItemValues['splitMode']
+      paidFor: ExpenseFormItemValues['paidFor']
+    }
     const formItems: ExpenseFormItemValues[] = items.map((item) => ({
       id: crypto.randomUUID(),
       title: '',
@@ -179,26 +197,34 @@ export function BasicDetailsCard(props: {
       (sum, item) => sum + Number(item.quantity) * Number(item.unitPrice),
       0,
     )
+    const totalDisplay = Number(formatCalculatorAmount(total, inputCurrency))
 
     form.setValue('splitMode', 'ITEMIZED', {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true,
     })
-    form.setValue('items', formItems, {
+    const seeded = applySplitToAll({
+      items: formItems,
+      split: seed,
+      expenseAmount: totalDisplay,
+      groupCurrency,
+    })
+    form.setValue('items', seeded.items, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true,
     })
-    form.setValue(
-      'amount',
-      Number(formatCalculatorAmount(total, inputCurrency)),
-      {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      },
-    )
+    form.setValue('itemizedRemainder', seeded.itemizedRemainder, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('amount', totalDisplay, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
     window.setTimeout(() => form.setFocus('items.0.title'), 0)
   }
 

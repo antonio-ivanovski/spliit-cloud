@@ -144,6 +144,7 @@ export function ExpenseItemRow({
                       disabled={readOnly}
                       value={(field.value as string) ?? ''}
                       autoComplete="off"
+                      onFocus={(event) => event.target.select()}
                     />
                   </FormControl>
                 </FormItem>
@@ -185,6 +186,7 @@ export function ExpenseItemRow({
                           enforceCurrencyPattern(event.target.value),
                         )
                       }
+                      onFocus={(event) => event.target.select()}
                     />
                   </FormControl>
                 </FormItem>
@@ -225,6 +227,7 @@ export function ExpenseItemRow({
                               0,
                           )
                         }
+                        onFocus={(event) => event.target.select()}
                       />
                     </div>
                   </FormControl>

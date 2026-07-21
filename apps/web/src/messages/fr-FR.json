@@ -761,7 +761,11 @@
       "switchToItemizedConfirm": "Passer aux articles",
       "showItems": "Afficher les éléments",
       "hideItems": "Masquer les éléments",
-      "participantValueLabel": "Valeur répartie pour {name}"
+      "participantValueLabel": "Valeur répartie pour {name}",
+      "defaultSplitLabel": "Répartition par défaut des articles",
+      "defaultSplitMixed": "Mixte",
+      "defaultSplitEdit": "Modifier la répartition par défaut des articles",
+      "defaultSplitModalTitle": "Répartition par défaut des articles"
     },
     "leaveItemized": {
       "title": "Changer de mode de répartition ?",

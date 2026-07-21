@@ -754,7 +754,11 @@
       "switchToItemizedConfirm": "Overschakelen naar per item",
       "showItems": "Items tonen",
       "hideItems": "Items verbergen",
-      "participantValueLabel": "Verdeelwaarde voor {name}"
+      "participantValueLabel": "Verdeelwaarde voor {name}",
+      "defaultSplitLabel": "Standaardverdeling van items",
+      "defaultSplitMixed": "Gemengd",
+      "defaultSplitEdit": "Standaardverdeling van items bewerken",
+      "defaultSplitModalTitle": "Standaardverdeling van items"
     },
     "leaveItemized": {
       "title": "Verdeelmethode wijzigen?",

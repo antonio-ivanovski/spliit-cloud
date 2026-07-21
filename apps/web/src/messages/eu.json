@@ -761,7 +761,11 @@
       "switchToItemizedConfirm": "Aldatu elementukora",
       "showItems": "Erakutsi elementuak",
       "hideItems": "Ezkutatu elementuak",
-      "participantValueLabel": "{name}(r)entzako banatutako balioa"
+      "participantValueLabel": "{name}(r)entzako banatutako balioa",
+      "defaultSplitLabel": "Lehenetsitako elementuen banaketa",
+      "defaultSplitMixed": "Mistoa",
+      "defaultSplitEdit": "Editatu lehenetsitako elementuen banaketa",
+      "defaultSplitModalTitle": "Lehenetsitako elementuen banaketa"
     },
     "leaveItemized": {
       "title": "Banaketa-modua aldatu?",

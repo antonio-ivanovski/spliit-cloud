@@ -1040,7 +1040,11 @@
       "switchToItemizedConfirm": "Switch to itemized",
       "showItems": "Show items",
       "hideItems": "Hide items",
-      "participantValueLabel": "Split value for {name}"
+      "participantValueLabel": "Split value for {name}",
+      "defaultSplitLabel": "Default items split",
+      "defaultSplitMixed": "Mixed",
+      "defaultSplitEdit": "Edit default items split",
+      "defaultSplitModalTitle": "Default items split"
     },
     "leaveItemized": {
       "title": "Switch split mode?",

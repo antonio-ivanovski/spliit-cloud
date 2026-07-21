@@ -138,6 +138,30 @@ describe('extractExpenseInformationFromImage', () => {
     expect(prompt).toMatch(/quantity/i)
   })
 
+  it('uses the current AI SDK file part for receipt images', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({ amount: 1, items: [] }),
+    })
+
+    const imageUrl = 'https://example.com/receipt.jpg'
+    await extractExpenseInformationFromImage(imageUrl, groupCurrency)
+
+    const request = generateTextMock.mock.calls[0]?.[0] as {
+      messages: Array<{
+        content: Array<{
+          type: string
+          mediaType?: string
+          data?: string
+        }>
+      }>
+    }
+    expect(request.messages[1]?.content).toContainEqual({
+      type: 'file',
+      mediaType: 'image',
+      data: imageUrl,
+    })
+  })
+
   it('includes group, locale, and past-expense context as soft hints', async () => {
     generateTextMock.mockResolvedValue({
       text: JSON.stringify({ amount: 1, items: [] }),

@@ -761,7 +761,11 @@
       "switchToItemizedConfirm": "לעבור לפי פריטים",
       "showItems": "הצג פריטים",
       "hideItems": "הסתר פריטים",
-      "participantValueLabel": "ערך החלוקה עבור {name}"
+      "participantValueLabel": "ערך החלוקה עבור {name}",
+      "defaultSplitLabel": "חלוקת פריטים כברירת מחדל",
+      "defaultSplitMixed": "מעורב",
+      "defaultSplitEdit": "עריכת חלוקת פריטים כברירת מחדל",
+      "defaultSplitModalTitle": "חלוקת פריטים כברירת מחדל"
     },
     "leaveItemized": {
       "title": "להחליף את שיטת החלוקה?",

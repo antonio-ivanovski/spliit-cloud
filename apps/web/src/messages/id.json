@@ -747,7 +747,11 @@
       "switchToItemizedConfirm": "Beralih ke per item",
       "showItems": "Tampilkan item",
       "hideItems": "Sembunyikan item",
-      "participantValueLabel": "Nilai pembagian untuk {name}"
+      "participantValueLabel": "Nilai pembagian untuk {name}",
+      "defaultSplitLabel": "Pembagian default item",
+      "defaultSplitMixed": "Bervariasi",
+      "defaultSplitEdit": "Edit pembagian default item",
+      "defaultSplitModalTitle": "Pembagian default item"
     },
     "leaveItemized": {
       "title": "Ganti metode pembagian?",

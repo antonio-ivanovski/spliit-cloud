@@ -768,7 +768,11 @@
       "switchToItemizedConfirm": "Přepnout na položky",
       "showItems": "Zobrazit položky",
       "hideItems": "Skrýt položky",
-      "participantValueLabel": "Hodnota rozdělení pro {name}"
+      "participantValueLabel": "Hodnota rozdělení pro {name}",
+      "defaultSplitLabel": "Výchozí rozdělení položek",
+      "defaultSplitMixed": "Smíšené",
+      "defaultSplitEdit": "Upravit výchozí rozdělení položek",
+      "defaultSplitModalTitle": "Výchozí rozdělení položek"
     },
     "leaveItemized": {
       "title": "Změnit způsob rozdělení?",

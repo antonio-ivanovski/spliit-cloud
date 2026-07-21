@@ -676,7 +676,11 @@
       "switchToItemizedConfirm": "항목별로 전환",
       "showItems": "항목 표시",
       "hideItems": "항목 숨기기",
-      "participantValueLabel": "{name}의 분할 값"
+      "participantValueLabel": "{name}의 분할 값",
+      "defaultSplitLabel": "기본 항목 분할",
+      "defaultSplitMixed": "혼합",
+      "defaultSplitEdit": "기본 항목 분할 편집",
+      "defaultSplitModalTitle": "기본 항목 분할"
     },
     "leaveItemized": {
       "title": "분할 방식을 바꿀까요?",

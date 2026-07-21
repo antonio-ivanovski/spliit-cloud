@@ -239,20 +239,32 @@ export function PaidForSplitOptionCards(props: {
   onChange: (next: SplitMode) => void
   readOnly?: boolean
   renderContent?: (mode: Exclude<SplitMode, 'ITEMIZED'>) => ReactNode
+  /** Modes to omit from the rendered radio group. The selected mode is
+   *  NOT auto-snapped — callers must ensure `value` is not in the
+   *  hidden list, or no card will appear as selected. */
+  hiddenModes?: Exclude<SplitMode, 'ITEMIZED'>[]
 }) {
-  const { value, onChange, readOnly, renderContent } = props
+  const { value, onChange, readOnly, renderContent, hiddenModes } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+
+  const hidden = new Set(hiddenModes ?? [])
+  const visibleOptions = PAID_FOR_OPTIONS.filter((opt) => !hidden.has(opt.id))
 
   return (
     <RadioGroup
-      value={value === 'ITEMIZED' ? undefined : value}
+      value={
+        value === 'ITEMIZED' ||
+        hidden.has(value as Exclude<SplitMode, 'ITEMIZED'>)
+          ? undefined
+          : value
+      }
       onValueChange={(next) => onChange(next as SplitMode)}
       aria-label={t('paidForSection')}
       className="!flex flex-col gap-1.5"
     >
       <SectionLabel>{t('paidForSection')}</SectionLabel>
       <div className="grid w-full min-w-0 grid-cols-1 gap-2">
-        {PAID_FOR_OPTIONS.map((opt) => {
+        {visibleOptions.map((opt) => {
           const selected = value === opt.id
           const title = t(opt.labelKey)
           const disabled = readOnly

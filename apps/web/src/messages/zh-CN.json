@@ -747,7 +747,11 @@
       "switchToItemizedConfirm": "切换为按项目",
       "showItems": "显示项目",
       "hideItems": "隐藏项目",
-      "participantValueLabel": "{name} 的分摊值"
+      "participantValueLabel": "{name} 的分摊值",
+      "defaultSplitLabel": "默认项目分摊",
+      "defaultSplitMixed": "混合",
+      "defaultSplitEdit": "编辑默认项目分摊",
+      "defaultSplitModalTitle": "默认项目分摊"
     },
     "leaveItemized": {
       "title": "切换分摊方式？",

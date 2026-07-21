@@ -782,7 +782,11 @@
       "switchToItemizedConfirm": "Zu Posten wechseln",
       "showItems": "Ausgabenposten anzeigen",
       "hideItems": "Ausgabenposten ausblenden",
-      "participantValueLabel": "Aufteilungswert für {name}"
+      "participantValueLabel": "Aufteilungswert für {name}",
+      "defaultSplitLabel": "Standardaufteilung der Ausgabenposten",
+      "defaultSplitMixed": "Gemischt",
+      "defaultSplitEdit": "Standardaufteilung der Ausgabenposten bearbeiten",
+      "defaultSplitModalTitle": "Standardaufteilung der Ausgabenposten"
     },
     "leaveItemized": {
       "title": "Aufteilungsart wechseln?",

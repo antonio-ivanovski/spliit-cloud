@@ -761,7 +761,11 @@
       "switchToItemizedConfirm": "Comută la pe articole",
       "showItems": "Afișează elementele",
       "hideItems": "Ascunde elementele",
-      "participantValueLabel": "Valoare împărțită pentru {name}"
+      "participantValueLabel": "Valoare împărțită pentru {name}",
+      "defaultSplitLabel": "Împărțire implicită a elementelor",
+      "defaultSplitMixed": "Mixtă",
+      "defaultSplitEdit": "Modifică împărțirea implicită a elementelor",
+      "defaultSplitModalTitle": "Împărțire implicită a elementelor"
     },
     "leaveItemized": {
       "title": "Schimbi modul de împărțire?",

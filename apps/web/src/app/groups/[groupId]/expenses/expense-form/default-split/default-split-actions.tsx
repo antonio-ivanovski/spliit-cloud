@@ -17,11 +17,9 @@ import { splitEqual, type SavedSplit } from './split-equal'
  *
  * Visibility rules:
  * - `readOnly` → nothing renders.
- * - `splitMode === 'ITEMIZED'` → nothing renders (itemized splits
- *   cannot be saved as defaults and "loading" one would lose the
- *   items array anyway).
- * - Load button renders only when a `savedDefault` exists and the
- *   current form split diverges from it.
+ * - Load button renders whenever a `savedDefault` exists. In
+ *   ITEMIZED mode this is the only available action (Save is
+ *   disallowed for itemized splits at the API level).
  * - Save button renders when the current split is not itemized and
  *   diverges from the saved default (or no saved default exists).
  */
@@ -44,20 +42,16 @@ export function DefaultSplitActions(props: {
   })
 
   if (readOnly) return null
-  if (splitMode === 'ITEMIZED') return null
 
   const current = splitEqual(splitMode, paidFor, savedDefault, groupCurrency)
 
   // Save is hidden when the live state already matches the saved
   // default — the affordance is redundant in that case. It is also
-  // hidden when there is no saved default and the current split is
-  // the neutral default (EVENLY over all participants) so users do
-  // not see "Save default" against the empty initial state of a
-  // brand-new group.
-  const showSave = !current
+  // hidden in ITEMIZED mode (the API rejects itemized defaults).
+  const showSave = splitMode !== 'ITEMIZED' && !current
 
-  // Load is only useful when a saved default exists and the live
-  // state has diverged from it.
+  // Load is only useful when a saved default exists. Shown even in
+  // ITEMIZED mode so users can pull a non-itemized default back in.
   const showLoad = !!savedDefault && !current
 
   if (!showSave && !showLoad) return null

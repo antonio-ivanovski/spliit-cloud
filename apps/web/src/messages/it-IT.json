@@ -761,7 +761,11 @@
       "switchToItemizedConfirm": "Passa a per voci",
       "showItems": "Mostra elementi",
       "hideItems": "Nascondi elementi",
-      "participantValueLabel": "Valore suddiviso per {name}"
+      "participantValueLabel": "Valore suddiviso per {name}",
+      "defaultSplitLabel": "Divisione predefinita delle voci",
+      "defaultSplitMixed": "Mista",
+      "defaultSplitEdit": "Modifica la divisione predefinita delle voci",
+      "defaultSplitModalTitle": "Divisione predefinita delle voci"
     },
     "leaveItemized": {
       "title": "Cambiare modalità di divisione?",

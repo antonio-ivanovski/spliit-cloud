@@ -754,7 +754,11 @@
       "switchToItemizedConfirm": "Kalemlere göre geç",
       "showItems": "Öğeleri göster",
       "hideItems": "Öğeleri gizle",
-      "participantValueLabel": "{name} için paylaşım değeri"
+      "participantValueLabel": "{name} için paylaşım değeri",
+      "defaultSplitLabel": "Varsayılan öğe paylaşımı",
+      "defaultSplitMixed": "Karışık",
+      "defaultSplitEdit": "Varsayılan öğe paylaşımını düzenle",
+      "defaultSplitModalTitle": "Varsayılan öğe paylaşımı"
     },
     "leaveItemized": {
       "title": "Bölüşüm yöntemi değiştirilsin mi?",

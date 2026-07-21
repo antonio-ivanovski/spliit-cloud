@@ -282,7 +282,9 @@ export async function createExpense(
         },
         items: {
           create: (expense.items ?? []).map((item) => ({
-            id: item.id ?? randomId(),
+            // Item IDs are database-global and create requests may be copied
+            // or replayed, so never persist a client-provided ID here.
+            id: randomId(),
             title: item.title,
             unitPrice: item.unitPrice,
             quantity: item.quantity,
