@@ -108,7 +108,7 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
     const text = isFriendAdded
       ? `${actorName} created a friend ledger with you on Spliit Cloud.${summary ? `\n\n${summary}` : ''}\n\nOpen Spliit Cloud to view your friend ledger:\n${getWebBaseUrl()}`
       : `${label} in ${group.name} by ${actorName}.${summary ? `\n\n${summary}` : ''}\n\nView the group here:\n${getWebBaseUrl()}/groups/${intent.activity.groupId}`
-    const unsubscribe = buildEmailUnsubscribeMetadata({
+    const unsubscribe = await buildEmailUnsubscribeMetadata({
       accountId: intent.recipientAccountId,
       category:
         intent.activity.notificationCategory ??

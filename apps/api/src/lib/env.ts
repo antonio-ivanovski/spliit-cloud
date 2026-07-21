@@ -68,9 +68,8 @@ const envSchema = z
     PUSH_VAPID_PRIVATE_KEY: z.string().optional(),
     PUSH_VAPID_SUBJECT: z.url().optional(),
 
-    // Dedicated key ring for stateless optional-email unsubscribe links.
-    // Format: kid:base64url-secret[,previousKid:base64url-secret]
-    NOTIFICATION_UNSUBSCRIBE_KEYS: z.string().optional(),
+    // Dedicated secret for stateless optional-email unsubscribe links.
+    EMAIL_UNSUBSCRIBE_SECRET: z.string().optional(),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
@@ -124,35 +123,15 @@ const envSchema = z
       })
     }
     if (env.NODE_ENV === 'production' && env.SMTP_HOST) {
-      const entries = (env.NOTIFICATION_UNSUBSCRIBE_KEYS ?? '')
-        .split(',')
-        .map((entry) => entry.trim())
-        .filter(Boolean)
       if (
-        !entries.length ||
-        entries.some((entry) => {
-          const separator = entry.indexOf(':')
-          if (separator <= 0) return true
-          const kid = entry.slice(0, separator)
-          const rawEncoded = entry.slice(separator + 1)
-          if (
-            !/^[A-Za-z0-9_-]{1,64}$/.test(kid) ||
-            !/^[A-Za-z0-9_-]+$/.test(rawEncoded)
-          )
-            return true
-          const encoded = rawEncoded.replace(/-/g, '+').replace(/_/g, '/')
-          try {
-            return Buffer.from(encoded, 'base64').length < 32
-          } catch {
-            return true
-          }
-        })
+        !env.EMAIL_UNSUBSCRIBE_SECRET ||
+        Buffer.byteLength(env.EMAIL_UNSUBSCRIBE_SECRET, 'utf8') < 32
       ) {
         ctx.addIssue({
           code: 'custom',
-          path: ['NOTIFICATION_UNSUBSCRIBE_KEYS'],
+          path: ['EMAIL_UNSUBSCRIBE_SECRET'],
           message:
-            'NOTIFICATION_UNSUBSCRIBE_KEYS must contain base64url secrets of at least 32 bytes in production',
+            'EMAIL_UNSUBSCRIBE_SECRET must be at least 32 bytes in production',
         })
       }
     }

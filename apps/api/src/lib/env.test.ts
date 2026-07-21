@@ -47,6 +47,20 @@ describe('envSchema — production', () => {
     )
   })
 
+  it('throws when the unsubscribe secret is too short', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('BETTER_AUTH_SECRET', 'test-secret')
+    vi.stubEnv('SMTP_HOST', 'smtp.test')
+    vi.stubEnv('SMTP_USER', 'user')
+    vi.stubEnv('SMTP_PASS', 'pass')
+    vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
+    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'too-short')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /EMAIL_UNSUBSCRIBE_SECRET must be at least 32 bytes in production/,
+    )
+  })
+
   it('parses successfully when all required production vars are set', async () => {
     vi.stubEnv('NODE_ENV', 'production')
     vi.stubEnv('BETTER_AUTH_SECRET', 'test-secret')
@@ -58,10 +72,7 @@ describe('envSchema — production', () => {
     vi.stubEnv('PUSH_VAPID_PUBLIC_KEY', 'public-key')
     vi.stubEnv('PUSH_VAPID_PRIVATE_KEY', 'private-key')
     vi.stubEnv('PUSH_VAPID_SUBJECT', 'mailto:test@example.com')
-    vi.stubEnv(
-      'NOTIFICATION_UNSUBSCRIBE_KEYS',
-      `current:${Buffer.alloc(32, 1).toString('base64url')}`,
-    )
+    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'a'.repeat(32))
     vi.resetModules()
     const { env } = await import('./env')
     expect(env.SMTP_HOST).toBe('smtp.test')

@@ -19,7 +19,7 @@ function tokenFrom(c: Context): string | null {
 
 export async function emailUnsubscribeGet(c: Context) {
   secureHeaders(c)
-  const claims = verifyEmailUnsubscribeToken(tokenFrom(c))
+  const claims = await verifyEmailUnsubscribeToken(tokenFrom(c))
   if (!claims) return c.text('Invalid unsubscribe link', 400)
   const label = claims.category.toLowerCase().replaceAll('_', ' ')
   return c.html(
@@ -31,7 +31,7 @@ export async function emailUnsubscribeGet(c: Context) {
 
 export async function emailUnsubscribePost(c: Context) {
   secureHeaders(c)
-  const claims = verifyEmailUnsubscribeToken(tokenFrom(c))
+  const claims = await verifyEmailUnsubscribeToken(tokenFrom(c))
   if (!claims) return c.text('Invalid unsubscribe link', 400)
   const contentType = c.req
     .header('content-type')

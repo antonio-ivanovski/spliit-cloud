@@ -525,7 +525,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       // the rendered email matches the test contract.
       const finalInput = { ...templateInput, subject, text }
       const rendered = await renderExpenseActivityEmail(finalInput)
-      const unsubscribe = buildEmailUnsubscribeMetadata({
+      const unsubscribe = await buildEmailUnsubscribeMetadata({
         accountId: account.id,
         category: args.category,
       })
