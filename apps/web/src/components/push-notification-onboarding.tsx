@@ -55,6 +55,14 @@ function recordCompleted(accountId: string) {
   }
 }
 
+export function clearPushOnboardingCompletion(accountId: string) {
+  try {
+    localStorage.removeItem(completionKey(accountId))
+  } catch {
+    // A blocked storage API must not prevent logout.
+  }
+}
+
 function readActive(): ActiveOnboarding | null {
   try {
     const raw = localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)

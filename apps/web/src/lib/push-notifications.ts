@@ -68,10 +68,10 @@ export function serializePushSubscription(
 }
 
 /** Disconnect the browser subscription during logout; server cleanup is best effort. */
-export async function disconnectPushSubscription(): Promise<void> {
+export async function disconnectPushSubscription(): Promise<boolean> {
   try {
     const subscription = await getPushSubscription()
-    if (!subscription) return
+    if (!subscription) return false
 
     // Keep logout usable in lightweight surfaces that do not mount the tRPC
     // React provider (for example the account menu tests). The request uses
@@ -86,8 +86,10 @@ export async function disconnectPushSubscription(): Promise<void> {
         body: JSON.stringify([{ json: { endpoint: subscription.endpoint } }]),
       },
     ).catch(() => undefined)
-    await subscription.unsubscribe()
+    await subscription.unsubscribe().catch(() => undefined)
+    return true
   } catch {
     // Logout must complete even if a browser has already discarded its endpoint.
+    return false
   }
 }

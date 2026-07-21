@@ -1,4 +1,5 @@
 import { AccountAvatar } from '@/components/account-avatar'
+import { clearPushOnboardingCompletion } from '@/components/push-notification-onboarding'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,7 +62,8 @@ export function AccountMenu() {
           className="text-destructive focus:text-destructive"
           onSelect={async (event) => {
             event.preventDefault()
-            await disconnectPushSubscription()
+            const disconnected = await disconnectPushSubscription()
+            if (disconnected) clearPushOnboardingCompletion(account.id)
             await authClient.signOut()
             queryClient.clear()
             navigate({ to: '/', replace: true })
