@@ -168,8 +168,7 @@ export function MagicLinkEmail(props: {
 }
 
 // ---------------------------------------------------------------------------
-// Production renderers (turn a component + explicit plain text into a
-// RenderedEmail that `sendEmail` can forward to the SMTP transport).
+// Production renderers return the complete multipart email sent by SMTP.
 // ---------------------------------------------------------------------------
 
 /**
@@ -180,8 +179,7 @@ export function MagicLinkEmail(props: {
  * magic-link-only variant explains that there is no password to reset
  * and instructs the user to use one of the other methods.
  *
- * The plain-text body intentionally mirrors the historical wording so
- * existing search/inbox filters keep matching the new emails.
+ * The text and HTML bodies share the same action and security guidance.
  */
 export async function renderPasswordRecoveryEmail(input: {
   resetUrl: string

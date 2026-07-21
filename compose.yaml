@@ -54,6 +54,7 @@ services:
       PUSH_VAPID_PUBLIC_KEY: ${PUSH_VAPID_PUBLIC_KEY:-}
       PUSH_VAPID_PRIVATE_KEY: ${PUSH_VAPID_PRIVATE_KEY:-}
       PUSH_VAPID_SUBJECT: ${PUSH_VAPID_SUBJECT:-}
+      NOTIFICATION_UNSUBSCRIBE_KEYS: ${NOTIFICATION_UNSUBSCRIBE_KEYS:-}
     depends_on:
       db:
         condition: service_healthy

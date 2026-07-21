@@ -1,3 +1,9 @@
+import type {
+  ActivityActorType,
+  ActivityData,
+  ActivitySubjectType,
+} from '@spliit/domain/activities'
+import type { NotificationCategory } from '@spliit/domain/notifications'
 import { CompositeActivityNotificationDispatcher } from './composite'
 import {
   scheduleNotificationDispatch,
@@ -9,10 +15,16 @@ import type {
 } from './types'
 
 export { CompositeActivityNotificationDispatcher } from './composite'
+export { ActivityNotificationCoordinator } from './coordinator'
+export { ExpenseActivityHandler, GroupActivityHandler } from './handlers'
 export { scheduleNotificationDispatch } from './schedule'
 export type {
+  ActivityNotificationChannelDispatcher,
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
+  ActivityNotificationIntent,
+  NotificationCategory,
+  NotificationChannel,
 } from './types'
 export { waitForScheduledNotificationDispatchesForTest }
 
@@ -64,4 +76,30 @@ export function scheduleDefaultNotificationDispatch(
   event: ActivityNotificationEvent,
 ): void {
   scheduleNotificationDispatch(singleton, event)
+}
+
+/** Schedule a non-activity notification with the same composed coordinator. */
+export function scheduleTargetedNotificationDispatch(args: {
+  activityId: string
+  groupId: string
+  category: NotificationCategory
+  recipientAccountId: string
+  actor?: { type: ActivityActorType; id: string }
+  subject?: { type: ActivitySubjectType; id: string }
+  data: ActivityData
+  occurredAt?: Date
+}): void {
+  scheduleDefaultNotificationDispatch({
+    activityId: args.activityId,
+    // The activity type is only a compatibility discriminator for existing
+    // channel dispatchers; the explicit category is authoritative.
+    type: 'INVITATION_CREATED',
+    groupId: args.groupId,
+    actor: args.actor ?? null,
+    subject: args.subject ?? null,
+    data: args.data,
+    occurredAt: args.occurredAt ?? new Date(),
+    notificationCategory: args.category,
+    recipientAccountId: args.recipientAccountId,
+  })
 }

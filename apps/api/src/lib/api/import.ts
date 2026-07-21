@@ -516,20 +516,22 @@ export async function importGroup(
         where: { email: { equals: email.toLowerCase(), mode: 'insensitive' } },
         select: { id: true },
       })
-      await sendInvitationEmail({
-        invitationId: invitation.id,
-        groupId: baseResult.groupId,
-        groupName: group.name,
-        inviterDisplayName,
-        inviterRole: GroupRole.ADMIN,
-        recipientEmail: invitation.email,
-        recipientIsExistingUser: !!existingAccount,
-        temporaryName: invite.sourceName,
-        sourceProvider: input.sourceMeta?.provider,
-        expenseCount: input.expenses.length,
-        totalAmount: baseResult.summaryActivity.totalAmount,
-        currencyCode: baseResult.summaryActivity.currencyCode,
-      })
+      if (!existingAccount) {
+        await sendInvitationEmail({
+          invitationId: invitation.id,
+          groupId: baseResult.groupId,
+          groupName: group.name,
+          inviterDisplayName,
+          inviterRole: GroupRole.ADMIN,
+          recipientEmail: invitation.email,
+          recipientIsExistingUser: false,
+          temporaryName: invite.sourceName,
+          sourceProvider: input.sourceMeta?.provider,
+          expenseCount: input.expenses.length,
+          totalAmount: baseResult.summaryActivity.totalAmount,
+          currencyCode: baseResult.summaryActivity.currencyCode,
+        })
+      }
       inviteResults.push({
         sourceName: invite.sourceName,
         kind: 'EMAIL',

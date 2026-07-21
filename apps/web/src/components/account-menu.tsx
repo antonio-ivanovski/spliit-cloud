@@ -10,6 +10,7 @@ import {
 import { authClient } from '@/lib/auth'
 import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LogOut, Settings as SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +18,7 @@ import { useTranslation } from 'react-i18next'
 export function AccountMenu() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: account, isPending } = useCurrentAccount()
 
   if (isPending) {
@@ -61,6 +63,7 @@ export function AccountMenu() {
             event.preventDefault()
             await disconnectPushSubscription()
             await authClient.signOut()
+            queryClient.clear()
             navigate({ to: '/', replace: true })
           }}
         >

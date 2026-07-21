@@ -8,7 +8,11 @@ import {
   type GroupRole,
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
-import { buildInvitationActivityData, logActivity } from '../api/activities'
+import {
+  buildInvitationActivityData,
+  logActivity,
+  scheduleActivityNotification,
+} from '../api/activities'
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { buildLinkPlaceholderEmail, getInvitationDisplayName } from './display'
@@ -134,7 +138,7 @@ export async function createLinkInvitation(
     },
   })
 
-  await logActivity(invitation.groupId, {
+  const activity = await logActivity(invitation.groupId, {
     type: 'INVITATION_CREATED',
     actor: { type: 'ACCOUNT', id: input.inviterAccountId },
     subject: { type: 'INVITATION', id: invitation.id },
@@ -145,6 +149,16 @@ export async function createLinkInvitation(
     }),
   })
 
+  scheduleActivityNotification(activity, invitation.groupId, {
+    type: 'INVITATION_CREATED',
+    actor: { type: 'ACCOUNT', id: input.inviterAccountId },
+    subject: { type: 'INVITATION', id: invitation.id },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+      invitationType: 'LINK',
+      role: input.role,
+    }),
+  })
   return {
     invitation: {
       id: invitation.id,
@@ -332,7 +346,7 @@ export async function acceptLinkInvitation(opts: {
         pendingParticipantId: invitation.ledgerParticipantId,
       })
 
-      await logActivity(
+      const activity = await logActivity(
         invitation.groupId,
         {
           type: 'INVITATION_ACCEPTED',
@@ -345,7 +359,12 @@ export async function acceptLinkInvitation(opts: {
         tx,
       )
 
-      return { groupId: invitation.groupId, role: invitation.role }
+      return {
+        groupId: invitation.groupId,
+        role: invitation.role,
+        invitationId: invitation.id,
+        activity,
+      }
     })
     .catch(async (err) => {
       if (err instanceof DuplicateFriendLedgerError) {
@@ -359,5 +378,11 @@ export async function acceptLinkInvitation(opts: {
       throw err
     })
 
-  return result
+  scheduleActivityNotification(result.activity, result.groupId, {
+    type: 'INVITATION_ACCEPTED',
+    actor: { type: 'ACCOUNT', id: opts.accountId },
+    subject: { type: 'INVITATION', id: result.invitationId },
+    data: buildInvitationActivityData({}),
+  })
+  return { groupId: result.groupId, role: result.role }
 }

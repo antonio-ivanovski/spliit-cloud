@@ -1530,8 +1530,8 @@
       "removed": "Profil fotoğrafı kaldırıldı."
     },
     "notifications": {
-      "title": "Anlık bildirimler",
-      "description": "Uygulama kapalıyken bu cihazda harcama etkinliği bildirimleri alın.",
+      "title": "Bildirimler",
+      "description": "Spliit'in etkinlik bildirimlerini nereye göndereceğini seçin.",
       "enable": "Anlık bildirimleri etkinleştir",
       "disable": "Anlık bildirimleri devre dışı bırak",
       "enabled": "Anlık bildirimler bu cihazda etkin.",
@@ -1540,7 +1540,110 @@
       "notConfigured": "Anlık bildirimler bu ortamda kullanılamıyor.",
       "permissionDenied": "Bildirimler engellendi. Tarayıcı veya cihaz ayarlarından izin verip tekrar deneyin.",
       "iosInstall": "iPhone veya iPad'de anlık bildirimleri etkinleştirmeden önce Spliit'i Ana Ekran'a ekleyin.",
-      "error": "Anlık bildirim ayarları güncellenemedi. Lütfen tekrar deneyin."
+      "error": "Anlık bildirim ayarları güncellenemedi. Lütfen tekrar deneyin.",
+      "preferencesTitle": "Bildirim tercihleri",
+      "preferencesDescription": "Bu seçimler gelecekteki grup ve harcama etkinlikleri için geçerlidir.",
+      "globalLabel": "Tüm etkinlikler",
+      "globalDescription": "Önerilen seçenek etkinliğe göre değişir ve Anlık bildirim kullanılamadığında uyarlanır: hızlı güncellemeler anlık bildirim olarak gönderilirken yoğun etkinlikler e-posta ile gönderilmeye devam eder. Tek bir genel kanal kullanmak için E-posta veya Anlık bildirim seçin.",
+      "recommended": "Önerilen",
+      "recommendedDescription": "Önerilen teslimat: {channels}. Anlık bildirimler yalnızca etkinleştirdiğiniz cihazlara gönderilir.",
+      "mixedByActivity": "Etkinliğe göre değişir",
+      "recommendedCategoryDescription": "Bu etkinlik için önerilen {channels} teslimatı kullanılıyor.",
+      "useRecommended": "Önerilen ayarı kullan",
+      "custom": "Özel",
+      "useGlobal": "Tüm etkinlik ayarını kullan",
+      "inheritedDescription": "Tüm etkinlik ayarınızı kullanır. Bu kategoriyi özelleştirmek için bir kanal seçin.",
+      "customDescription": "Bu kategori için özel teslimat. Bir veya iki kanal seçin.",
+      "channelsLabel": "Bildirim kanalları",
+      "email": "E-posta",
+      "pushDescription": "Etkinleştirilmiş bir cihazda bildirim alın.",
+      "off": "Kapalı",
+      "pushSelectionError": "Bu cihazda anlık bildirim etkinleştirilemedi. Bu kategori için e-posta açık bırakıldı.",
+      "pushMissingTarget": "Anlık bildirim seçildi ancak bir cihaz etkinleştirene kadar bu bildirimler teslim edilmeyecek. Aşağıdan veya Ayarlar'dan bir cihaz etkinleştirebilirsiniz.",
+      "rowSaved": "Bildirim tercihi kaydedildi.",
+      "comingSoon": "Yakında",
+      "emailComingSoon": "E-posta yapılandırması yakında kullanıma sunulacak.",
+      "inherited": "Devralındı",
+      "currently": "Şu anda: {channels}",
+      "expenseActivity": "Masraf etkinliği",
+      "groupActivity": "Grup etkinliği",
+      "save": "Değişiklikleri kaydet",
+      "saving": "Kaydediliyor…",
+      "reset": "Sıfırla",
+      "saved": "Bildirim tercihleri kaydedildi.",
+      "saveError": "Bildirim tercihleri kaydedilemedi. Lütfen tekrar deneyin.",
+      "loading": "Bildirim tercihleri yükleniyor…",
+      "loadError": "Bildirim tercihleri yüklenemedi.",
+      "emailDescription": "Gelen kutunuza bir mesaj alın.",
+      "push": {
+        "deviceTitle": "Bu cihaz",
+        "deviceDescription": "Bu cihazda anlık bildirimleri etkinleştirin. Diğer cihazlarınız değişmez.",
+        "deviceDisabled": "Anlık bildirim seçildi ancak bu cihazda etkin değil.",
+        "noDevices": "Anlık bildirim seçildi ancak henüz etkin bir cihaz yok."
+      },
+      "retry": "Tekrar deneyin",
+      "pushChannel": "Anlık bildirim",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Yeni masraflar",
+          "description": "Birisi bir gruba masraf eklediğinde."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Masraf içe aktarmaları ve toplu değişiklikler",
+          "description": "Masraflar içe aktarıldığında veya toplu olarak güncellendiğinde."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Masraf değişiklikleri",
+          "description": "Bir masraf güncellendiğinde veya silindiğinde."
+        },
+        "GROUP_CHANGES": {
+          "title": "Grup değişiklikleri",
+          "description": "Grup ayrıntıları veya arşiv durumu değiştiğinde."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Davetler",
+          "description": "Davetler gönderildiğinde, kabul edildiğinde, reddedildiğinde veya iptal edildiğinde."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Üyelik",
+          "description": "Üyeler ayrıldığında, kaldırıldığında veya rolleri değiştiğinde."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Arkadaşla ortak harcama takibi",
+          "description": "Biri sizinle ortak harcama takibi başlattığında."
+        },
+        "addedToGroup": {
+          "title": "Bir gruba eklendiniz",
+          "description": "Biri sizi bir gruba eklediğinde."
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud haberleri ve güncellemeleri",
+          "description": "Ürün haberleri, ipuçları ve hizmet güncellemeleri."
+        },
+        "expenseChanged": {
+          "title": "Harcama düzenlendi veya silindi",
+          "description": "Bir harcama güncellendiğinde veya silindiğinde."
+        },
+        "newComment": {
+          "title": "Yeni yorum",
+          "description": "Biri bir harcamaya yorum yaptığında."
+        },
+        "newExpense": {
+          "title": "Yeni harcama",
+          "description": "Biri gruba harcama eklediğinde."
+        },
+        "weeklySummary": {
+          "title": "Haftalık etkinlik özeti",
+          "description": "Gruplarınızdaki etkinliklerin haftalık özeti."
+        }
+      },
+      "sections": {
+        "groups": "Gruplar ve arkadaşlar",
+        "expenses": "Harcamalar",
+        "summaries": "Özetler"
+      }
     }
   },
   "Activities": {
@@ -1783,5 +1886,21 @@
     "light": "Açık",
     "dark": "Koyu",
     "system": "Sistem varsayılanı"
+  },
+  "PushOnboarding": {
+    "title": "Güncel kalma yöntemini seçin",
+    "description": "Spliit, grup ve masraf etkinlikleri gerçekleştiğinde sizi haberdar edebilir.",
+    "pushBenefit": "Spliit açık olmasa bile anlık bildirimler bu cihaza ulaşır.",
+    "emailFallback": "Seçtiğiniz e-posta bildirimleri e-posta üzerinden alınabilir; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
+    "settingsHint": "Bu seçimleri Ayarlar'dan istediğiniz zaman değiştirebilirsiniz. Anlık bildirimler her cihaz için ayrı ayrı etkinleştirilir.",
+    "enable": "Anlık bildirimleri etkinleştir",
+    "enabling": "Etkinleştiriliyor…",
+    "useEmail": "E-posta kullan",
+    "deniedTitle": "Anlık bildirimler engellendi",
+    "deniedDescription": "Tarayıcınız bildirim iznini engelledi. E-posta için yapılandırılan bildirimler e-posta üzerinden devam eder; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
+    "failedTitle": "Anlık bildirim etkinleştirilemedi",
+    "failedDescription": "Bu cihaz kaydedilemedi. E-posta için yapılandırılan bildirimler e-posta üzerinden devam eder; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
+    "emailUsage": "Bir cihaz etkinleştirene kadar yalnızca e-posta için yapılandırılan bildirimler gelir. Tarayıcı ayarlarınızdan bildirimlere izin verin ve Ayarlar'dan tekrar deneyin.",
+    "done": "Tamam"
   }
 }

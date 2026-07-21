@@ -11,6 +11,7 @@ import {
   buildExpenseActivityData,
   buildInvitationActivityData,
   logActivity,
+  scheduleActivityNotification,
 } from '../api/activities'
 import {
   createSettlementExpensesForLeave,
@@ -18,7 +19,7 @@ import {
 } from '../api/balances'
 import { randomId } from '../api/shared'
 import { sendEmail } from '../mail/send'
-import { renderInvitationEmail } from '../mail/templates'
+import { renderInvitationEmail } from '../mail/templates/invitation'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
@@ -122,7 +123,7 @@ export async function createEmailInvitation({
     },
   })
 
-  await logActivity(groupId, {
+  const activity = await logActivity(groupId, {
     type: 'INVITATION_CREATED',
     actor: { type: 'ACCOUNT', id: inviterAccountId },
     subject: { type: 'INVITATION', id: invitation.id },
@@ -133,6 +134,16 @@ export async function createEmailInvitation({
     }),
   })
 
+  scheduleActivityNotification(activity, groupId, {
+    type: 'INVITATION_CREATED',
+    actor: { type: 'ACCOUNT', id: inviterAccountId },
+    subject: { type: 'INVITATION', id: invitation.id },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+      invitationType: 'EMAIL',
+      role,
+    }),
+  })
   return invitation
 }
 
@@ -199,26 +210,27 @@ export async function revokeInvitation(opts: {
       settlementActivities = r.activities
     }
 
-    const updated = await tx.groupInvitation.update({
-      where: { id: opts.invitationId },
-      data: {
-        status: GroupInvitationStatus.REVOKED,
-        revokedAt: new Date(),
-      },
-    })
-
-    await logActivity(
-      opts.groupId,
-      {
-        type: 'INVITATION_REVOKED',
-        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
-        subject: { type: 'INVITATION', id: opts.invitationId },
-        data: buildInvitationActivityData({
-          displayLabel: getInvitationDisplayName(invitation),
-        }),
-      },
-      tx,
-    )
+    const [updated, activity] = await Promise.all([
+      tx.groupInvitation.update({
+        where: { id: opts.invitationId },
+        data: {
+          status: GroupInvitationStatus.REVOKED,
+          revokedAt: new Date(),
+        },
+      }),
+      logActivity(
+        opts.groupId,
+        {
+          type: 'INVITATION_REVOKED',
+          actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+          subject: { type: 'INVITATION', id: opts.invitationId },
+          data: buildInvitationActivityData({
+            displayLabel: getInvitationDisplayName(invitation),
+          }),
+        },
+        tx,
+      ),
+    ])
 
     if (
       invitation.ledgerParticipantId &&
@@ -236,7 +248,15 @@ export async function revokeInvitation(opts: {
       }
     }
 
-    return { updated, settlementActivities }
+    return { updated, settlementActivities, activity }
+  })
+  scheduleActivityNotification(result.activity, opts.groupId, {
+    type: 'INVITATION_REVOKED',
+    actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+    subject: { type: 'INVITATION', id: opts.invitationId },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+    }),
   })
   if (result.settlementActivities) {
     for (const meta of result.settlementActivities) {
@@ -341,14 +361,31 @@ export async function declineInvitation(opts: {
     throw new InvitationError('Invitation is no longer pending.')
   }
   assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
-  const updated = await prisma.groupInvitation.update({
-    where: { id: opts.invitationId },
-    data: {
-      status: GroupInvitationStatus.DECLINED,
-    },
+  const { updated, activity } = await prisma.$transaction(async (tx) => {
+    const [updated, activity] = await Promise.all([
+      tx.groupInvitation.update({
+        where: { id: opts.invitationId },
+        data: {
+          status: GroupInvitationStatus.DECLINED,
+        },
+      }),
+      logActivity(
+        invitation.groupId,
+        {
+          type: 'INVITATION_DECLINED',
+          actor: { type: 'ACCOUNT', id: opts.accountId },
+          subject: { type: 'INVITATION', id: opts.invitationId },
+          data: buildInvitationActivityData({
+            displayLabel: getInvitationDisplayName(invitation),
+          }),
+        },
+        tx,
+      ),
+    ])
+    return { updated, activity }
   })
 
-  await logActivity(invitation.groupId, {
+  scheduleActivityNotification(activity, invitation.groupId, {
     type: 'INVITATION_DECLINED',
     actor: { type: 'ACCOUNT', id: opts.accountId },
     subject: { type: 'INVITATION', id: opts.invitationId },
@@ -356,17 +393,13 @@ export async function declineInvitation(opts: {
       displayLabel: getInvitationDisplayName(invitation),
     }),
   })
-
   return updated
 }
 
 /**
  * Send the invitation email to the recipient.
  *
- * Body is rendered by `renderInvitationEmail` (which produces both
- * a styled HTML body and the historical plain-text body). The HTML
- * version matches the Spliit Cloud brand; the plain-text version is
- * kept stable so existing inbox search filters keep matching.
+ * Both HTML and text bodies are rendered by `renderInvitationEmail`.
  */
 export async function sendInvitationEmail(opts: {
   invitationId: string
@@ -456,7 +489,7 @@ export async function acceptInvitation(opts: {
       },
     })
 
-    await logActivity(
+    const activity = await logActivity(
       invitation.groupId,
       {
         type: 'INVITATION_ACCEPTED',
@@ -469,10 +502,17 @@ export async function acceptInvitation(opts: {
       tx,
     )
 
-    return member
+    return { member, activity }
   })
-
-  return result
+  scheduleActivityNotification(result.activity, invitation.groupId, {
+    type: 'INVITATION_ACCEPTED',
+    actor: { type: 'ACCOUNT', id: opts.accountId },
+    subject: { type: 'INVITATION', id: invitation.id },
+    data: buildInvitationActivityData({
+      displayLabel: getInvitationDisplayName(invitation),
+    }),
+  })
+  return result.member
 }
 
 /** List pending email invitations targeted at the current account. */

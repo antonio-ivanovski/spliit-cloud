@@ -4,6 +4,15 @@ import type {
   ActivitySubjectType,
   ActivityType,
 } from '@spliit/domain/activities'
+import type {
+  NotificationCategory,
+  NotificationChannel,
+} from '@spliit/domain/notifications'
+
+export {
+  NotificationCategory,
+  NotificationChannel,
+} from '@spliit/domain/notifications'
 
 /**
  * Normalized event handed to every {@link ActivityNotificationDispatcher}.
@@ -25,6 +34,18 @@ export type ActivityNotificationEvent = {
   subject: { type: ActivitySubjectType; id: string } | null
   data: ActivityData
   occurredAt: Date
+  /** Override the activity-to-category mapping for targeted synthetic events. */
+  notificationCategory?: NotificationCategory
+  /** Optional direct recipient, used for account-backed invite/friend events. */
+  recipientAccountId?: string
+}
+
+/** A single recipient's canonical delivery intent. */
+export type ActivityNotificationIntent = {
+  activity: ActivityNotificationEvent
+  category: NotificationCategory
+  recipientAccountId: string
+  channels: ReadonlyArray<NotificationChannel>
 }
 
 /**
@@ -36,4 +57,8 @@ export type ActivityNotificationEvent = {
  */
 export interface ActivityNotificationDispatcher {
   dispatch(event: ActivityNotificationEvent): Promise<void>
+}
+
+export interface ActivityNotificationChannelDispatcher {
+  dispatch(intent: ActivityNotificationIntent): Promise<void>
 }

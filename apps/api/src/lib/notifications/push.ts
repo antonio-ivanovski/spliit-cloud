@@ -10,7 +10,7 @@ export type StoredPushSubscription = {
 
 export type PushNotificationPayload = {
   version: 1
-  kind: 'expense'
+  kind: 'expense' | 'activity'
   activityId: string
   title: string
   body: string

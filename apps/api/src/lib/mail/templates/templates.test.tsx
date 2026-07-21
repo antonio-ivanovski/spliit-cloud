@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   renderExpenseActivityEmail,
   renderFriendLedgerEmail,
+  renderGroupActivityEmail,
   renderInvitationEmail,
   renderMagicLinkEmail,
   renderPasswordRecoveryEmail,
@@ -10,7 +11,7 @@ import {
 
 describe('email templates', () => {
   describe('renderPasswordRecoveryEmail', () => {
-    it('keeps the legacy credentials copy in the plain-text body', async () => {
+    it('renders the credentials copy in both email bodies', async () => {
       const r = await renderPasswordRecoveryEmail({
         resetUrl: 'https://spliit.test/reset?token=abc',
         methodLabels: ['email and password'],
@@ -52,7 +53,7 @@ describe('email templates', () => {
   })
 
   describe('renderVerificationEmail', () => {
-    it('keeps the historical verification body', async () => {
+    it('renders the verification body in both email formats', async () => {
       const r = await renderVerificationEmail({
         verificationUrl: 'https://spliit.test/verify?token=abc',
       })
@@ -66,7 +67,7 @@ describe('email templates', () => {
   })
 
   describe('renderMagicLinkEmail', () => {
-    it('keeps the historical sign-in body', async () => {
+    it('renders the sign-in body in both email formats', async () => {
       const r = await renderMagicLinkEmail({
         signInUrl: 'https://spliit.test/auth/verify?token=abc',
       })
@@ -156,10 +157,10 @@ describe('email templates', () => {
         inviterName: 'Alice',
         isNewUser: false,
       })
-      expect(r.subject).toBe('Alice added you as a friend on Spliit Cloud')
-      expect(r.text).toContain(
-        'Open Spliit Cloud to see your new friend ledger',
+      expect(r.subject).toBe(
+        'Alice started a friend ledger with you on Spliit Cloud',
       )
+      expect(r.text).toContain('Alice started a friend ledger with you')
       expect(r.html).toContain('Open Spliit Cloud')
     })
 
@@ -168,10 +169,26 @@ describe('email templates', () => {
         inviterName: 'Alice',
         isNewUser: true,
       })
-      expect(r.text).toContain(
-        'Create a free Spliit Cloud account to get started',
-      )
+      expect(r.text).toContain('Alice started a friend ledger with you')
       expect(r.html).toContain('Create a free account')
+    })
+  })
+
+  describe('renderGroupActivityEmail', () => {
+    it('renders generic activity details in both email bodies', async () => {
+      const r = await renderGroupActivityEmail({
+        subject: '[Spliit Cloud] Group details were updated in Roadtrip 2026',
+        text: 'Group details were updated in Roadtrip 2026 by Alice.\n\nView the group here:\nhttps://spliit.test/groups/grp-1',
+        brandBaseUrl: 'https://spliit.test',
+        groupDisplayName: 'Roadtrip 2026',
+        actorName: 'Alice',
+        activityLabel: 'Group details were updated',
+        groupUrl: 'https://spliit.test/groups/grp-1',
+      })
+      expect(r.text).toContain('View the group here')
+      expect(r.html).toContain('Group details were updated')
+      expect(r.html).toContain('View group')
+      expect(r.html).toContain('https://spliit.test/groups/grp-1')
     })
   })
 

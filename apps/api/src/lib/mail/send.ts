@@ -5,7 +5,9 @@ export type EmailMessage = {
   to: string
   subject: string
   text: string
-  html?: string
+  html: string
+  /** Controlled RFC 5322 headers (for example List-Unsubscribe). */
+  headers?: Record<string, string>
 }
 
 let transporter: Transporter | undefined
@@ -46,11 +48,21 @@ export async function sendEmail(message: EmailMessage): Promise<void> {
     )
   }
 
+  if (
+    typeof message.text !== 'string' ||
+    typeof message.html !== 'string' ||
+    !message.text.trim() ||
+    !message.html.trim()
+  ) {
+    throw new Error('[mail] Email text and html must be non-empty.')
+  }
+
   await getTransporter().sendMail({
     from: env.EMAIL_FROM,
     to: message.to,
     subject: message.subject,
     text: message.text,
     html: message.html,
+    headers: message.headers,
   })
 }

@@ -1,3 +1,7 @@
+import {
+  NotificationCategory,
+  NotificationChannel,
+} from '@spliit/domain/notifications'
 import { describe, expect, it } from 'vitest'
 import '../../../test/mocks'
 import { prismaMock } from '../../../test/state'
@@ -34,7 +38,7 @@ describe('notifications.push', () => {
 
   it('registers a subscription for the authenticated account', async () => {
     prismaMock.pushSubscription.findUnique.mockResolvedValue(null)
-    prismaMock.pushSubscription.upsert.mockResolvedValue({
+    prismaMock.pushSubscription.create.mockResolvedValue({
       id: 'push-1',
       endpoint: subscription.endpoint,
       updatedAt: new Date(),
@@ -42,10 +46,9 @@ describe('notifications.push', () => {
 
     await makeCaller('acct-1').push.register(subscription)
 
-    expect(prismaMock.pushSubscription.upsert).toHaveBeenCalledWith(
+    expect(prismaMock.pushSubscription.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { endpoint: subscription.endpoint },
-        create: expect.objectContaining({
+        data: expect.objectContaining({
           accountId: 'acct-1',
           p256dh: subscription.keys.p256dh,
           auth: subscription.keys.auth,
@@ -65,7 +68,7 @@ describe('notifications.push', () => {
     ).rejects.toMatchObject({
       code: 'CONFLICT',
     })
-    expect(prismaMock.pushSubscription.upsert).not.toHaveBeenCalled()
+    expect(prismaMock.pushSubscription.create).not.toHaveBeenCalled()
   })
 
   it('removes only the authenticated account subscription', async () => {
@@ -74,5 +77,65 @@ describe('notifications.push', () => {
     expect(prismaMock.pushSubscription.deleteMany).toHaveBeenCalledWith({
       where: { endpoint: subscription.endpoint, accountId: 'acct-1' },
     })
+  })
+})
+
+describe('notifications.preferences', () => {
+  it('returns inherited defaults and push-target availability', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
+    prismaMock.pushSubscription.count.mockResolvedValue(0)
+    const result = await makeCaller().preferences.get({ accountId: 'acct-1' })
+    expect(result.systemDefault).toBe('OPTIMIZED_BY_ACTIVITY')
+    expect(result).not.toHaveProperty('global')
+    expect(result.categories).toHaveLength(7)
+    expect(result.categories[0].channels).toBeNull()
+    expect(result.categories[0].recommendedChannels).toEqual([
+      NotificationChannel.EMAIL,
+      NotificationChannel.PUSH,
+    ])
+  })
+
+  it('rejects a cache scope for another account', async () => {
+    await expect(
+      makeCaller('acct-1').preferences.get({ accountId: 'acct-other' }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('saves only supplied overrides and null removes one', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
+    prismaMock.pushSubscription.count.mockResolvedValue(0)
+    await makeCaller().preferences.save({
+      preferences: [
+        {
+          category: NotificationCategory.EXPENSE_CHANGED,
+          channels: [NotificationChannel.EMAIL],
+        },
+      ],
+    })
+    expect(
+      prismaMock.accountNotificationPreference.upsert,
+    ).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          accountId_category: {
+            accountId: 'acct-1',
+            category: NotificationCategory.EXPENSE_CHANGED,
+          },
+        },
+      }),
+    )
+  })
+
+  it('rejects duplicate channels instead of silently normalizing them', async () => {
+    await expect(
+      makeCaller().preferences.save({
+        preferences: [
+          {
+            category: NotificationCategory.EXPENSE_CHANGED,
+            channels: [NotificationChannel.PUSH, NotificationChannel.PUSH],
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
   })
 })

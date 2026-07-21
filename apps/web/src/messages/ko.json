@@ -1523,8 +1523,8 @@
       "removed": "프로필 사진이 삭제되었습니다."
     },
     "notifications": {
-      "title": "푸시 알림",
-      "description": "앱이 닫혀 있을 때 이 기기에서 지출 활동 알림을 받습니다.",
+      "title": "알림",
+      "description": "Spliit이 활동 알림을 보낼 위치를 선택하세요.",
       "enable": "푸시 알림 켜기",
       "disable": "푸시 알림 끄기",
       "enabled": "이 기기에서 푸시 알림이 켜져 있습니다.",
@@ -1533,7 +1533,110 @@
       "notConfigured": "이 배포에서는 푸시 알림을 사용할 수 없습니다.",
       "permissionDenied": "알림이 차단되어 있습니다. 브라우저 또는 기기 설정에서 허용한 후 다시 시도하세요.",
       "iosInstall": "iPhone 또는 iPad에서는 푸시 알림을 켜기 전에 Spliit을 홈 화면에 추가하세요.",
-      "error": "푸시 알림 설정을 업데이트할 수 없습니다. 다시 시도해 주세요."
+      "error": "푸시 알림 설정을 업데이트할 수 없습니다. 다시 시도해 주세요.",
+      "preferencesTitle": "알림 환경설정",
+      "preferencesDescription": "이 선택 사항은 향후 그룹 및 지출 활동에 적용됩니다.",
+      "globalLabel": "모든 활동",
+      "globalDescription": "권장 설정은 활동 유형에 따라 전송 방식을 다르게 적용하며, 푸시 알림을 사용할 수 없을 때 자동으로 조정합니다. 빠르게 확인해야 하는 업데이트는 푸시로, 알림이 많이 발생하는 활동은 이메일로 전송합니다. 모든 활동에 하나의 채널을 사용하려면 이메일 또는 푸시를 선택하세요.",
+      "recommended": "권장",
+      "recommendedDescription": "권장 알림 채널: {channels}. 푸시 알림은 활성화한 기기에만 전송됩니다.",
+      "mixedByActivity": "활동에 따라 다름",
+      "recommendedCategoryDescription": "이 활동에는 권장 {channels} 전달 방식이 사용됩니다.",
+      "useRecommended": "권장 설정 사용",
+      "custom": "맞춤 설정",
+      "useGlobal": "전체 설정 사용",
+      "inheritedDescription": "모든 활동 설정을 따릅니다. 채널을 선택해 이 카테고리를 맞춤 설정하세요.",
+      "customDescription": "이 카테고리의 맞춤 알림입니다. 하나 또는 두 채널을 선택하세요.",
+      "channelsLabel": "알림 채널",
+      "email": "이메일",
+      "pushDescription": "활성화된 기기에서 알림을 받습니다.",
+      "off": "끔",
+      "pushSelectionError": "이 기기에서 푸시를 활성화하지 못했습니다. 이 카테고리에서는 이메일을 계속 켜 두었습니다.",
+      "pushMissingTarget": "푸시가 선택되었지만 기기를 활성화할 때까지 이러한 알림이 전송되지 않습니다. 아래 또는 설정에서 기기를 활성화할 수 있습니다.",
+      "rowSaved": "알림 설정이 저장되었습니다.",
+      "comingSoon": "곧 제공됩니다",
+      "emailComingSoon": "이메일 설정은 곧 제공됩니다.",
+      "inherited": "상속됨",
+      "currently": "현재: {channels}",
+      "expenseActivity": "지출 활동",
+      "groupActivity": "그룹 활동",
+      "save": "변경사항 저장",
+      "saving": "저장 중…",
+      "reset": "초기화",
+      "saved": "알림 설정이 저장되었습니다.",
+      "saveError": "알림 설정을 저장하지 못했습니다. 다시 시도해 주세요.",
+      "loading": "알림 설정을 불러오는 중…",
+      "loadError": "알림 설정을 불러오지 못했습니다.",
+      "emailDescription": "받은편지함에서 메시지를 받습니다.",
+      "push": {
+        "deviceTitle": "이 기기",
+        "deviceDescription": "이 기기에서 푸시 알림을 켭니다. 다른 기기에는 영향을 주지 않습니다.",
+        "deviceDisabled": "푸시를 선택했지만 이 기기에서는 푸시 알림이 켜져 있지 않습니다.",
+        "noDevices": "푸시를 선택했지만 아직 활성화된 기기가 없습니다."
+      },
+      "retry": "다시 시도",
+      "pushChannel": "푸시",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "새 지출",
+          "description": "누군가 그룹에 지출을 추가할 때."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "지출 가져오기 및 일괄 변경",
+          "description": "지출을 가져오거나 일괄 수정할 때."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "지출 변경",
+          "description": "지출이 수정되거나 삭제될 때."
+        },
+        "GROUP_CHANGES": {
+          "title": "그룹 변경",
+          "description": "그룹 세부 정보 또는 보관 상태가 변경될 때."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "초대",
+          "description": "초대가 전송, 수락, 거절 또는 취소될 때."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "멤버십",
+          "description": "멤버가 나가거나 삭제되거나 역할을 변경할 때."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "친구와의 지출 기록",
+          "description": "누군가 나와 함께 친구와의 지출 기록을 시작했을 때."
+        },
+        "addedToGroup": {
+          "title": "그룹에 추가됨",
+          "description": "누군가 나를 그룹에 추가했을 때."
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud 소식 및 업데이트",
+          "description": "제품 소식, 팁 및 서비스 업데이트."
+        },
+        "expenseChanged": {
+          "title": "지출 수정 또는 삭제",
+          "description": "지출이 수정되거나 삭제되었을 때."
+        },
+        "newComment": {
+          "title": "새 댓글",
+          "description": "누군가 지출에 댓글을 남겼을 때."
+        },
+        "newExpense": {
+          "title": "새 지출",
+          "description": "누군가 그룹에 지출을 추가했을 때."
+        },
+        "weeklySummary": {
+          "title": "주간 활동 요약",
+          "description": "그룹 전체 활동의 주간 요약."
+        }
+      },
+      "sections": {
+        "groups": "그룹 및 친구",
+        "expenses": "지출",
+        "summaries": "요약"
+      }
     }
   },
   "Activities": {
@@ -1767,5 +1870,21 @@
     "light": "라이트",
     "dark": "다크",
     "system": "시스템 설정"
+  },
+  "PushOnboarding": {
+    "title": "최신 정보를 받는 방법 선택",
+    "description": "Spliit에서 그룹 및 지출 활동이 발생할 때 알림을 받을 수 있습니다.",
+    "pushBenefit": "Spliit이 열려 있지 않아도 이 기기로 푸시 알림을 받을 수 있습니다.",
+    "emailFallback": "받고 싶은 알림에는 이메일을 사용할 수 있습니다. 푸시만 선택한 알림은 이메일로 전환되지 않습니다.",
+    "settingsHint": "설정에서 언제든지 선택을 변경할 수 있습니다. 푸시 알림은 기기별로 별도로 활성화됩니다.",
+    "enable": "푸시 알림 활성화",
+    "enabling": "활성화 중…",
+    "useEmail": "이메일 사용",
+    "deniedTitle": "푸시 알림이 차단되었습니다",
+    "deniedDescription": "브라우저에서 알림 권한을 차단했습니다. 이메일로 설정한 알림은 계속 이메일로 전송됩니다. 푸시만 선택한 알림은 이메일로 전환되지 않습니다.",
+    "failedTitle": "푸시를 활성화할 수 없습니다",
+    "failedDescription": "이 기기를 등록하지 못했습니다. 이메일로 설정한 알림은 계속 이메일로 전송됩니다. 푸시만 선택한 알림은 이메일로 전환되지 않습니다.",
+    "emailUsage": "기기를 활성화할 때까지 이메일로 설정한 알림만 도착합니다. 브라우저 설정에서 알림을 허용한 후 설정에서 다시 시도할 수 있습니다.",
+    "done": "완료"
   }
 }

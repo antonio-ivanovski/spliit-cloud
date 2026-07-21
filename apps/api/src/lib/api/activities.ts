@@ -7,7 +7,8 @@ import {
   type ActivitySubjectType,
   type ActivityType,
 } from '@spliit/domain/activities'
-import { resolveParticipantDisplayName } from '../invitations'
+import { resolveParticipantDisplayName } from '../invitations/display'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { randomId } from './shared'
 export {
   buildExpenseActivityData,
@@ -24,6 +25,22 @@ export type LogActivityArgs = {
   actor?: { type: ActivityActorType; id: string }
   subject?: { type: ActivitySubjectType; id: string }
   data: ActivityData
+}
+
+export function scheduleActivityNotification(
+  activity: Activity,
+  groupId: string,
+  args: Omit<LogActivityArgs, 'type'> & { type: ActivityType },
+): void {
+  scheduleDefaultNotificationDispatch({
+    activityId: activity.id,
+    type: args.type,
+    groupId,
+    actor: args.actor ?? null,
+    subject: args.subject ?? null,
+    data: args.data,
+    occurredAt: activity.time,
+  })
 }
 
 /**

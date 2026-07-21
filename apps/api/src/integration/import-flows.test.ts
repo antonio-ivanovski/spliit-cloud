@@ -8,7 +8,7 @@ import {
   type ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
-import { findEmailForRecipient, probeMaildev } from './maildev-client'
+import { expectEmailEventually, probeMaildev } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -165,15 +165,16 @@ describe.skipIf(!maildevReachable)(
       expect(result.invites[0].kind).toBe('EMAIL')
       expect(result.invites[0].email).toBe(inviteeEmail.toLowerCase())
 
-      const captured = await findEmailForRecipient(inviteeEmail)
-      expect(captured).not.toBeNull()
-      expect(captured!.text).toContain('You will appear as "Invited Friend"')
-      expect(captured!.text).toContain(
+      const captured = await expectEmailEventually({ recipient: inviteeEmail })
+      expect(captured.text).toContain('You will appear as "Invited Friend"')
+      expect(captured.text).toContain(
         'This invitation is part of an import from a Spliit export.',
       )
-      expect(captured!.text).toContain(
+      expect(captured.text).toContain(
         'The group contains 2 expenses from the import (total USD 35.00)',
       )
+      expect(captured.html).toContain('Create an account')
+      expect(captured.html).toContain('This invitation is part of an import')
     })
   },
 )

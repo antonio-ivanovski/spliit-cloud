@@ -2,6 +2,11 @@ import { prisma } from '@spliit/db'
 import type { Expense } from '@spliit/domain'
 import { getCurrency } from '@spliit/domain'
 import { parseActivityData } from '@spliit/domain/activities'
+import {
+  NotificationCategoryFamily,
+  getNotificationCategoryForActivity,
+  notificationCategoryFamily,
+} from '@spliit/domain/notifications'
 import { getAffectedParticipantIds } from '../api/expense-activity-diff'
 import { getWebBaseUrl } from '../auth/urls'
 import {
@@ -12,6 +17,7 @@ import {
 import type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
+  ActivityNotificationIntent,
 } from './types'
 
 const EXPENSE_EVENT_TYPES = new Set([
@@ -91,9 +97,35 @@ function formatDualAmount(
 }
 
 export class ExpensePushActivityNotificationDispatcher implements ActivityNotificationDispatcher {
-  async dispatch(event: ActivityNotificationEvent): Promise<void> {
-    if (!EXPENSE_EVENT_TYPES.has(event.type)) return
+  async dispatch(
+    input: ActivityNotificationEvent | ActivityNotificationIntent,
+  ): Promise<void> {
+    const event = 'activity' in input ? input.activity : input
+    const recipientAccountId =
+      'activity' in input ? input.recipientAccountId : undefined
+    const eventCategory =
+      event.notificationCategory ??
+      getNotificationCategoryForActivity(event.type)
+    if (!eventCategory) return
+    const category = 'activity' in input ? input.category : eventCategory
+    if (category !== eventCategory) return
+    if (
+      notificationCategoryFamily[category] !==
+      NotificationCategoryFamily.EXPENSE
+    )
+      return
     const parsed = parseActivityData(event.data)
+    if (
+      parsed &&
+      (parsed.kind === 'import_summary' ||
+        parsed.kind === 'expense_categories_bulk_updated')
+    ) {
+      if (recipientAccountId) {
+        await this.dispatchSummary(event, recipientAccountId, parsed)
+      }
+      return
+    }
+    if (!EXPENSE_EVENT_TYPES.has(event.type)) return
     if (!parsed || parsed.kind !== 'expense' || !parsed.title) return
 
     let participantIds: string[]
@@ -194,10 +226,12 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
           : 'removed'
 
     const notifiedAccountIds = new Set<string>()
+    const sends: Promise<void>[] = []
     for (const participant of participants as unknown as Participant[]) {
       const groupMember = participant.groupMember
       const account = groupMember?.account
       if (!groupMember || groupMember.status !== 'ACTIVE' || !account) continue
+      if (recipientAccountId && account.id !== recipientAccountId) continue
       if (event.actor?.type === 'ACCOUNT' && event.actor.id === account.id)
         continue
       if (notifiedAccountIds.has(account.id)) continue
@@ -220,11 +254,72 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
         url,
         tag: `activity:${event.activityId}`,
       }
-      const subscriptions = await prisma.pushSubscription.findMany({
-        where: { accountId: account.id },
-        select: { id: true, endpoint: true, p256dh: true, auth: true },
-      })
-      for (const subscription of subscriptions ?? []) {
+      sends.push(this.sendToAccount(account.id, payload))
+    }
+    await Promise.all(sends)
+  }
+
+  private async dispatchSummary(
+    event: ActivityNotificationEvent,
+    recipientAccountId: string,
+    parsed:
+      | Extract<
+          NonNullable<ReturnType<typeof parseActivityData>>,
+          { kind: 'import_summary' }
+        >
+      | Extract<
+          NonNullable<ReturnType<typeof parseActivityData>>,
+          { kind: 'expense_categories_bulk_updated' }
+        >,
+  ): Promise<void> {
+    const [group, actorAccount] = await Promise.all([
+      prisma.group.findUnique({
+        where: { id: event.groupId },
+        select: GROUP_SELECT,
+      }),
+      event.actor?.type === 'ACCOUNT'
+        ? prisma.account.findUnique({
+            where: { id: event.actor.id },
+            select: { name: true },
+          })
+        : Promise.resolve(null),
+    ])
+    if (!group) return
+
+    const actorName = actorAccount?.name ?? 'Someone'
+    const displayName = resolveGroupDisplayName(
+      group.groupType,
+      group.name,
+      group.members,
+      recipientAccountId,
+      group.invitations[0]?.temporaryName ?? undefined,
+    )
+    const noun = parsed.count === 1 ? 'expense' : 'expenses'
+    const isImport = parsed.kind === 'import_summary'
+    const payload: PushNotificationPayload = {
+      version: 1,
+      kind: 'activity',
+      activityId: event.activityId,
+      title: isImport ? 'Expenses imported' : 'Expense categories updated',
+      body: isImport
+        ? `${actorName} imported ${parsed.count} ${noun}${parsed.sourceProvider ? ` from ${parsed.sourceProvider}` : ''} in ${displayName}.`
+        : `${actorName} updated categories for ${parsed.count} ${noun} in ${displayName}.`,
+      url: `${getWebBaseUrl()}/groups/${event.groupId}`,
+      tag: `activity:${event.activityId}`,
+    }
+    await this.sendToAccount(recipientAccountId, payload)
+  }
+
+  private async sendToAccount(
+    accountId: string,
+    payload: PushNotificationPayload,
+  ): Promise<void> {
+    const subscriptions = await prisma.pushSubscription.findMany({
+      where: { accountId },
+      select: { id: true, endpoint: true, p256dh: true, auth: true },
+    })
+    await Promise.all(
+      subscriptions.map(async (subscription) => {
         try {
           await sendPushNotification(subscription, payload)
         } catch (error) {
@@ -234,12 +329,12 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
             })
           } else {
             console.warn(
-              `[notifications] failed to send push for activity ${event.activityId}:`,
+              `[notifications] failed to send push for activity ${payload.activityId}:`,
               error,
             )
           }
         }
-      }
-    }
+      }),
+    )
   }
 }

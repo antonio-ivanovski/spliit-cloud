@@ -1539,7 +1539,7 @@
     },
     "notifications": {
       "title": "Notificacions push",
-      "description": "Rep alertes d'activitat de despeses en aquest dispositiu quan l'aplicació està tancada.",
+      "description": "Tria on envia Spliit les notificacions d'activitat.",
       "enable": "Activa les notificacions push",
       "disable": "Desactiva les notificacions push",
       "enabled": "Les notificacions push estan activades en aquest dispositiu.",
@@ -1548,7 +1548,110 @@
       "notConfigured": "Les notificacions push no estan disponibles en aquesta implementació.",
       "permissionDenied": "Les notificacions estan bloquejades. Permet-les al navegador o a la configuració del dispositiu i torna-ho a provar.",
       "iosInstall": "A l'iPhone o l'iPad, afegeix Spliit a la pantalla d'inici abans d'activar les notificacions push.",
-      "error": "No s'han pogut actualitzar els ajustos de les notificacions push. Torna-ho a provar."
+      "error": "No s'han pogut actualitzar els ajustos de les notificacions push. Torna-ho a provar.",
+      "preferencesTitle": "Preferències de notificacions",
+      "preferencesDescription": "Aquestes opcions s'aplicaran a la futura activitat de grups i despeses.",
+      "globalLabel": "Tota l'activitat",
+      "globalDescription": "La recomanació varia segons l'activitat i s'adapta quan Push no està disponible: les actualitzacions ràpides s'envien per Push, mentre que l'activitat de major volum es manté al correu electrònic. Tria Correu electrònic o Push per utilitzar un únic canal global.",
+      "recommended": "Recomanat",
+      "recommendedDescription": "Lliurament recomanat: {channels}. Les notificacions push només es lliuren als dispositius que activis.",
+      "mixedByActivity": "Combinat segons l'activitat",
+      "recommendedCategoryDescription": "S'utilitza el lliurament recomanat ({channels}) per a aquesta activitat.",
+      "useRecommended": "Utilitza la configuració recomanada",
+      "custom": "Personalitzat",
+      "useGlobal": "Utilitza la configuració per a totes les activitats",
+      "inheritedDescription": "Segueix la configuració per a totes les activitats. Tria un canal per personalitzar aquesta categoria.",
+      "customDescription": "Lliurament personalitzat per a aquesta categoria. Tria un o tots dos canals.",
+      "channelsLabel": "Canals de notificació",
+      "email": "Correu electrònic",
+      "pushDescription": "Rep una alerta en un dispositiu activat.",
+      "off": "Desactivat",
+      "pushSelectionError": "No s'ha pogut activar la notificació push en aquest dispositiu. S'ha mantingut el correu electrònic activat per a aquesta categoria.",
+      "pushMissingTarget": "La notificació push està seleccionada, però aquestes notificacions no s'enviaran fins que activis un dispositiu. Pots activar-ne un aquí baix o a Configuració.",
+      "rowSaved": "Preferència de notificacions desada.",
+      "comingSoon": "Pròximament",
+      "emailComingSoon": "La configuració del correu electrònic estarà disponible aviat.",
+      "inherited": "Heretat",
+      "currently": "Actualment: {channels}",
+      "expenseActivity": "Activitat de despeses",
+      "groupActivity": "Activitat del grup",
+      "save": "Desa els canvis",
+      "saving": "Desant…",
+      "reset": "Restableix",
+      "saved": "Preferències de notificacions desades.",
+      "saveError": "No s'han pogut desar les preferències de notificacions. Torna-ho a provar.",
+      "loading": "S'estan carregant les preferències de notificacions…",
+      "loadError": "No s'han pogut carregar les preferències de notificacions.",
+      "emailDescription": "Rep un missatge a la safata d'entrada.",
+      "push": {
+        "deviceTitle": "Aquest dispositiu",
+        "deviceDescription": "Activa les alertes push en aquest dispositiu. Això no canvia els altres dispositius.",
+        "deviceDisabled": "S'ha seleccionat push, però no està activat en aquest dispositiu.",
+        "noDevices": "S'ha seleccionat push, però encara no hi ha cap dispositiu activat."
+      },
+      "retry": "Torna-ho a provar",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Noves despeses",
+          "description": "Quan algú afegeix una despesa a un grup."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Importacions i canvis massius de despeses",
+          "description": "Quan s'importen despeses o se n'actualitzen diverses alhora."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Canvis de despeses",
+          "description": "Quan s'actualitza o s'elimina una despesa."
+        },
+        "GROUP_CHANGES": {
+          "title": "Canvis del grup",
+          "description": "Quan canvien les dades del grup o l'estat d'arxivament."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Invitacions",
+          "description": "Quan s'envien, accepten, rebutgen o revocen invitacions."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Membresia",
+          "description": "Quan els membres marxen, són expulsats o canvien de rol."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Amistat",
+          "description": "Quan algú comença a compartir despeses amb tu."
+        },
+        "addedToGroup": {
+          "title": "Afegit a un grup",
+          "description": "Quan algú t'afegeix a un grup."
+        },
+        "cloudNews": {
+          "title": "Notícies i actualitzacions de Spliit Cloud",
+          "description": "Notícies del producte, consells i actualitzacions del servei."
+        },
+        "expenseChanged": {
+          "title": "Despesa editada o eliminada",
+          "description": "Quan una despesa s'actualitza o s'elimina."
+        },
+        "newComment": {
+          "title": "Comentari nou",
+          "description": "Quan algú comenta una despesa."
+        },
+        "newExpense": {
+          "title": "Despesa nova",
+          "description": "Quan algú afegeix una despesa a un grup."
+        },
+        "weeklySummary": {
+          "title": "Resum setmanal d'activitat",
+          "description": "Un resum setmanal de l'activitat dels teus grups."
+        }
+      },
+      "sections": {
+        "groups": "Grups i amics",
+        "expenses": "Despeses",
+        "summaries": "Resums"
+      }
     }
   },
   "Activities": {
@@ -1800,5 +1903,21 @@
     "light": "Clar",
     "dark": "Fosc",
     "system": "Predeterminat del sistema"
+  },
+  "PushOnboarding": {
+    "title": "Tria com estar al dia",
+    "description": "Spliit pot avisar-te de l'activitat dels grups i les despeses a mesura que passi.",
+    "pushBenefit": "Les notificacions push arriben a aquest dispositiu encara que Spliit no estigui obert.",
+    "emailFallback": "El correu electrònic està disponible per a les notificacions que triïs rebre-hi; les opcions només push no es redirigeixen.",
+    "settingsHint": "Pots canviar aquestes opcions en qualsevol moment a Configuració. Les notificacions push s'activen per separat per a cada dispositiu.",
+    "enable": "Activar les notificacions push",
+    "enabling": "S'estan activant…",
+    "useEmail": "Utilitzar el correu electrònic",
+    "deniedTitle": "Les notificacions push estan bloquejades",
+    "deniedDescription": "El navegador ha bloquejat el permís de notificacions. Les notificacions configurades per correu electrònic continuaran arribant-hi; les opcions només push no es redirigeixen.",
+    "failedTitle": "No s'han pogut activar les notificacions push",
+    "failedDescription": "No s'ha pogut registrar aquest dispositiu. Les notificacions configurades per correu electrònic continuaran arribant-hi; les opcions només push no es redirigeixen.",
+    "emailUsage": "Només arribaran les notificacions configurades per correu electrònic fins que activis un dispositiu. Pots permetre les notificacions a la configuració del navegador i tornar-ho a provar des de Configuració.",
+    "done": "Fet"
   }
 }

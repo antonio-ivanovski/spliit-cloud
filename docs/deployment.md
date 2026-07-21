@@ -19,6 +19,9 @@ Copy `container.env.example` to `container.env`, set the required values (see th
 - `PUSH_VAPID_PUBLIC_KEY`, `PUSH_VAPID_PRIVATE_KEY`, `PUSH_VAPID_SUBJECT` —
   required together for Web Push delivery. Generate the key pair with
   `bunx web-push generate-vapid-keys`; expose only the public key to clients.
+- `NOTIFICATION_UNSUBSCRIBE_KEYS` — comma-separated `kid:base64url-secret`
+  entries for signed optional-email unsubscribe links. Use at least 32 random
+  bytes per secret and retain previous kids during key rotation.
 - `S3_UPLOAD_*` — only if `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true`
 - `AI_PROVIDER` — optional: `openai`, `anthropic`, `openai-compatible`, or `google`; defaults to `openai`
 - `AI_API_KEY` — only if `PUBLIC_ENABLE_RECEIPT_EXTRACT=true` or `PUBLIC_ENABLE_CATEGORY_EXTRACT=true`

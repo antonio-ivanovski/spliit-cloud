@@ -8,7 +8,11 @@ import {
   type Prisma,
 } from '@spliit/db'
 import type { GroupActivityChange } from '@spliit/domain/activities'
-import { buildGroupActivityData, logActivity } from './activities'
+import {
+  buildGroupActivityData,
+  logActivity,
+  scheduleActivityNotification,
+} from './activities'
 import { randomId } from './shared'
 
 /**
@@ -23,7 +27,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
 }): Promise<{ groupMemberId: string; ledgerParticipantId: string }> {
   const { groupId, ledgerParticipantId, accountId, actor } = opts
 
-  return prisma.$transaction(async (tx) => {
+  const outcome = await prisma.$transaction(async (tx) => {
     const participant = await tx.ledgerParticipant.findUnique({
       where: { id: ledgerParticipantId },
       include: {
@@ -106,24 +110,26 @@ export async function linkUnlinkedParticipantToAccount(opts: {
         },
       ]
 
-      await logActivity(
+      const activityData = buildGroupActivityData({
+        summary: account.name ?? 'Participant merged',
+        changedFields: ['linkedParticipant'],
+        changes: mergedChanges,
+      })
+      const activity = await logActivity(
         groupId,
         {
           type: 'GROUP_UPDATED',
           actor: { type: 'ACCOUNT', id: actor.accountId },
           subject: { type: 'GROUP', id: groupId },
-          data: buildGroupActivityData({
-            summary: account.name ?? 'Participant merged',
-            changedFields: ['linkedParticipant'],
-            changes: mergedChanges,
-          }),
+          data: activityData,
         },
         tx,
       )
 
       return {
-        groupMemberId,
-        ledgerParticipantId: existingLp.id,
+        result: { groupMemberId, ledgerParticipantId: existingLp.id },
+        activity,
+        activityData,
       }
     }
 
@@ -144,26 +150,35 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       },
     ]
 
-    await logActivity(
+    const activityData = buildGroupActivityData({
+      summary: account.name ?? 'Participant linked',
+      changedFields: ['linkedParticipant'],
+      changes: linkChanges,
+    })
+    const activity = await logActivity(
       groupId,
       {
         type: 'GROUP_UPDATED',
         actor: { type: 'ACCOUNT', id: actor.accountId },
         subject: { type: 'GROUP', id: groupId },
-        data: buildGroupActivityData({
-          summary: account.name ?? 'Participant linked',
-          changedFields: ['linkedParticipant'],
-          changes: linkChanges,
-        }),
+        data: activityData,
       },
       tx,
     )
 
     return {
-      groupMemberId,
-      ledgerParticipantId: participant.id,
+      result: { groupMemberId, ledgerParticipantId: participant.id },
+      activity,
+      activityData,
     }
   })
+  scheduleActivityNotification(outcome.activity, groupId, {
+    type: 'GROUP_UPDATED',
+    actor: { type: 'ACCOUNT', id: actor.accountId },
+    subject: { type: 'GROUP', id: groupId },
+    data: outcome.activityData,
+  })
+  return outcome.result
 }
 
 /**
@@ -344,7 +359,7 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
 }): Promise<{ groupMemberId: null; ledgerParticipantId: string }> {
   const { groupId, ledgerParticipantId, pendingInvitationId, actor } = opts
 
-  return prisma.$transaction(async (tx) => {
+  const outcome = await prisma.$transaction(async (tx) => {
     const participant = await tx.ledgerParticipant.findUnique({
       where: { id: ledgerParticipantId },
       include: {
@@ -409,23 +424,35 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
       },
     ]
 
-    await logActivity(
+    const activityData = buildGroupActivityData({
+      summary: invitation.email ?? 'Participant linked to invitation',
+      changedFields: ['linkedParticipant'],
+      changes: mergedInviteChanges,
+    })
+    const activity = await logActivity(
       groupId,
       {
         type: 'GROUP_UPDATED',
         actor: { type: 'ACCOUNT', id: actor.accountId },
         subject: { type: 'GROUP', id: groupId },
-        data: buildGroupActivityData({
-          summary: invitation.email ?? 'Participant linked to invitation',
-          changedFields: ['linkedParticipant'],
-          changes: mergedInviteChanges,
-        }),
+        data: activityData,
       },
       tx,
     )
 
-    return { groupMemberId: null, ledgerParticipantId: targetLp.id }
+    return {
+      result: { groupMemberId: null, ledgerParticipantId: targetLp.id },
+      activity,
+      activityData,
+    }
   })
+  scheduleActivityNotification(outcome.activity, groupId, {
+    type: 'GROUP_UPDATED',
+    actor: { type: 'ACCOUNT', id: actor.accountId },
+    subject: { type: 'GROUP', id: groupId },
+    data: outcome.activityData,
+  })
+  return outcome.result
 }
 
 /**

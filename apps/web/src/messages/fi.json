@@ -1530,8 +1530,8 @@
       "removed": "Profiilikuva poistettu."
     },
     "notifications": {
-      "title": "Push-ilmoitukset",
-      "description": "Saat tällä laitteella ilmoituksia kulutapahtumista, kun sovellus on suljettu.",
+      "title": "Ilmoitukset",
+      "description": "Valitse, mihin Spliit lähettää toimintaasi koskevat ilmoitukset.",
       "enable": "Ota push-ilmoitukset käyttöön",
       "disable": "Poista push-ilmoitukset käytöstä",
       "enabled": "Push-ilmoitukset ovat käytössä tällä laitteella.",
@@ -1540,7 +1540,110 @@
       "notConfigured": "Push-ilmoitukset eivät ole käytettävissä tässä ympäristössä.",
       "permissionDenied": "Ilmoitukset on estetty. Salli ne selaimen tai laitteen asetuksissa ja yritä uudelleen.",
       "iosInstall": "Lisää Spliit iPhonen tai iPadin Koti-valikkoon ennen push-ilmoitusten käyttöönottoa.",
-      "error": "Push-ilmoitusasetusten päivittäminen epäonnistui. Yritä uudelleen."
+      "error": "Push-ilmoitusasetusten päivittäminen epäonnistui. Yritä uudelleen.",
+      "preferencesTitle": "Ilmoitusasetukset",
+      "preferencesDescription": "Nämä valinnat koskevat tulevaa ryhmä- ja kulutapahtumatoimintaa.",
+      "globalLabel": "Kaikki toiminta",
+      "globalDescription": "Suositus vaihtelee toiminnan mukaan ja mukautuu, jos push-ilmoitukset eivät ole käytettävissä: nopeat päivitykset lähetetään push-ilmoituksina, kun taas runsaasti ilmoituksia tuottava toiminta toimitetaan edelleen sähköpostitse. Valitse sähköposti tai push, jos haluat käyttää yhtä kanavaa kaikelle.",
+      "recommended": "Suositeltu",
+      "recommendedDescription": "Suositeltu toimitustapa: {channels}. Push-ilmoitukset toimitetaan vain laitteille, jotka otat käyttöön.",
+      "mixedByActivity": "Toimintokohtainen",
+      "recommendedCategoryDescription": "Tässä toiminnossa käytetään suositeltua toimitustapaa {channels}.",
+      "useRecommended": "Käytä suositeltua asetusta",
+      "custom": "Mukautettu",
+      "useGlobal": "Käytä kaikkien toimintojen asetusta",
+      "inheritedDescription": "Noudattaa kaikkien toimintojen asetusta. Valitse kanava mukauttaaksesi tätä luokkaa.",
+      "customDescription": "Mukautettu toimitus tälle luokalle. Valitse yksi tai molemmat kanavat.",
+      "channelsLabel": "Ilmoituskanavat",
+      "email": "Sähköposti",
+      "pushDescription": "Vastaanota ilmoitus käyttöön otetulla laitteella.",
+      "off": "Pois",
+      "pushSelectionError": "Push-ilmoituksia ei voitu ottaa käyttöön tällä laitteella. Sähköposti pidettiin käytössä tässä luokassa.",
+      "pushMissingTarget": "Push on valittu, mutta näitä ilmoituksia ei toimiteta ennen kuin otat laitteen käyttöön. Voit ottaa laitteen käyttöön alla tai asetuksissa.",
+      "rowSaved": "Ilmoitusasetus tallennettu.",
+      "comingSoon": "Tulossa pian",
+      "emailComingSoon": "Sähköpostiasetukset ovat tulossa pian.",
+      "inherited": "Peritty",
+      "currently": "Tällä hetkellä: {channels}",
+      "expenseActivity": "Kulutapahtumat",
+      "groupActivity": "Ryhmätoiminta",
+      "save": "Tallenna muutokset",
+      "saving": "Tallennetaan…",
+      "reset": "Palauta",
+      "saved": "Ilmoitusasetukset tallennettu.",
+      "saveError": "Ilmoitusasetuksia ei voitu tallentaa. Yritä uudelleen.",
+      "loading": "Ladataan ilmoitusasetuksia…",
+      "loadError": "Ilmoitusasetuksia ei voitu ladata.",
+      "emailDescription": "Vastaanota viesti postilaatikkoosi.",
+      "push": {
+        "deviceTitle": "Tämä laite",
+        "deviceDescription": "Ota push-ilmoitukset käyttöön tällä laitteella. Tämä ei muuta muita laitteitasi.",
+        "deviceDisabled": "Push on valittu, mutta sitä ei ole otettu käyttöön tällä laitteella.",
+        "noDevices": "Push on valittu, mutta yhtään laitetta ei ole vielä otettu käyttöön."
+      },
+      "retry": "Yritä uudelleen",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Uudet kulut",
+          "description": "Kun joku lisää kulun ryhmään."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Kulujen tuonnit ja massamuutokset",
+          "description": "Kun kuluja tuodaan tai päivitetään joukkona."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Kulumuutokset",
+          "description": "Kun kulua päivitetään tai se poistetaan."
+        },
+        "GROUP_CHANGES": {
+          "title": "Ryhmämuutokset",
+          "description": "Kun ryhmän tiedot tai arkistointitila muuttuu."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Kutsut",
+          "description": "Kun kutsuja lähetetään, hyväksytään, hylätään tai perutaan."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Jäsenyys",
+          "description": "Kun jäsen poistuu, poistetaan tai hänen roolinsa muuttuu."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Seuraa yhteisiä kuluja ystävän kanssa",
+          "description": "Kun joku alkaa seurata yhteisiä kuluja kanssasi."
+        },
+        "addedToGroup": {
+          "title": "Lisätty ryhmään",
+          "description": "Kun joku lisää sinut ryhmään."
+        },
+        "cloudNews": {
+          "title": "Spliit Cloudin uutiset ja päivitykset",
+          "description": "Tuoteuutiset, vinkit ja palvelupäivitykset."
+        },
+        "expenseChanged": {
+          "title": "Kulua muokattu tai poistettu",
+          "description": "Kun kulua päivitetään tai se poistetaan."
+        },
+        "newComment": {
+          "title": "Uusi kommentti",
+          "description": "Kun joku kommentoi kulua."
+        },
+        "newExpense": {
+          "title": "Uusi kulu",
+          "description": "Kun joku lisää kulun ryhmään."
+        },
+        "weeklySummary": {
+          "title": "Viikoittainen toimintayhteenveto",
+          "description": "Viikoittainen yhteenveto ryhmiesi toiminnasta."
+        }
+      },
+      "sections": {
+        "groups": "Ryhmät ja ystävät",
+        "expenses": "Kulut",
+        "summaries": "Yhteenvedot"
+      }
     }
   },
   "Activities": {
@@ -1783,5 +1886,21 @@
     "light": "Vaalea",
     "dark": "Tumma",
     "system": "Järjestelmän oletus"
+  },
+  "PushOnboarding": {
+    "title": "Valitse, miten pysyt ajan tasalla",
+    "description": "Spliit voi ilmoittaa ryhmä- ja kulutapahtumista niiden tapahtuessa.",
+    "pushBenefit": "Push-ilmoitukset saapuvat tälle laitteelle, vaikka Spliit ei olisi avoinna.",
+    "emailFallback": "Sähköposti on käytettävissä ilmoituksille, jotka valitset vastaanotettaviksi siellä; vain pushille valittuja ei ohjata sähköpostiin.",
+    "settingsHint": "Voit muuttaa näitä valintoja milloin tahansa asetuksissa. Push-ilmoitukset otetaan käyttöön erikseen kullakin laitteella.",
+    "enable": "Ota push-ilmoitukset käyttöön",
+    "enabling": "Otetaan käyttöön…",
+    "useEmail": "Käytä sähköpostia",
+    "deniedTitle": "Push-ilmoitukset on estetty",
+    "deniedDescription": "Selaimesi esti ilmoitusluvan. Sähköpostiin määritetyt ilmoitukset toimitetaan edelleen sähköpostitse; vain pushille valittuja ei ohjata sähköpostiin.",
+    "failedTitle": "Push-ilmoituksia ei voitu ottaa käyttöön",
+    "failedDescription": "Laitteen rekisteröinti epäonnistui. Sähköpostiin määritetyt ilmoitukset toimitetaan edelleen sähköpostitse; vain pushille valittuja ei ohjata sähköpostiin.",
+    "emailUsage": "Saat sähköpostitse vain ilmoitukset, jotka on määritetty sähköpostiin, kunnes otat laitteen käyttöön. Voit sallia ilmoitukset selaimesi asetuksissa ja yrittää uudelleen asetuksissa.",
+    "done": "Valmis"
   }
 }

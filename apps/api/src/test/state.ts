@@ -1,6 +1,7 @@
 import type { PrismaClient } from '@spliit/db'
 import { vi, type Mock } from 'vitest'
 import { mockDeep, mockReset, type DeepMockProxy } from 'vitest-mock-extended'
+import type { EmailMessage } from '../lib/mail/send'
 
 export type PrismaMock = DeepMockProxy<PrismaClient>
 
@@ -17,7 +18,7 @@ export const authState: {
   account: null,
 }
 
-export const sendEmailMock = vi.fn(async () => undefined)
+export const sendEmailMock = vi.fn(async (_message: EmailMessage) => undefined)
 
 export function resetPrisma() {
   mockReset(prismaMock)

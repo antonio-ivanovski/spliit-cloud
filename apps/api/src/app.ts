@@ -11,6 +11,10 @@ import { webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'
 import { logServerError, logServerWarn } from './lib/logging'
 import { buildScalarConfig } from './lib/scalar-theme'
+import {
+  emailUnsubscribeGet,
+  emailUnsubscribePost,
+} from './routes/email-unsubscribe'
 import { exportGroupCsv } from './routes/export-csv'
 import { exportGroupJson } from './routes/export-json'
 import { createTRPCContext } from './trpc/init'
@@ -56,6 +60,11 @@ app.use(
 app.get('/health', () => checkLiveness())
 app.get('/health/liveness', () => checkLiveness())
 app.get('/health/readiness', () => checkReadiness())
+
+// Public, stateless optional-email unsubscribe endpoint. GET only renders a
+// confirmation page; POST performs the RFC 8058 one-click mutation.
+app.get('/email/unsubscribe', emailUnsubscribeGet)
+app.post('/email/unsubscribe', emailUnsubscribePost)
 
 // better-auth handler — exposes /auth/sign-in, /auth/sign-up, etc.
 app.on(['GET', 'POST'], '/auth/*', (c) => auth.handler(c.req.raw))

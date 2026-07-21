@@ -66,7 +66,11 @@ const envSchema = z
     // so local development can run without a VAPID key pair.
     PUSH_VAPID_PUBLIC_KEY: z.string().optional(),
     PUSH_VAPID_PRIVATE_KEY: z.string().optional(),
-    PUSH_VAPID_SUBJECT: z.string().url().optional(),
+    PUSH_VAPID_SUBJECT: z.url().optional(),
+
+    // Dedicated key ring for stateless optional-email unsubscribe links.
+    // Format: kid:base64url-secret[,previousKid:base64url-secret]
+    NOTIFICATION_UNSUBSCRIBE_KEYS: z.string().optional(),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
@@ -118,6 +122,39 @@ const envSchema = z
         message:
           'SMTP_USER and SMTP_PASS are required in production when SMTP_HOST is set',
       })
+    }
+    if (env.NODE_ENV === 'production' && env.SMTP_HOST) {
+      const entries = (env.NOTIFICATION_UNSUBSCRIBE_KEYS ?? '')
+        .split(',')
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+      if (
+        !entries.length ||
+        entries.some((entry) => {
+          const separator = entry.indexOf(':')
+          if (separator <= 0) return true
+          const kid = entry.slice(0, separator)
+          const rawEncoded = entry.slice(separator + 1)
+          if (
+            !/^[A-Za-z0-9_-]{1,64}$/.test(kid) ||
+            !/^[A-Za-z0-9_-]+$/.test(rawEncoded)
+          )
+            return true
+          const encoded = rawEncoded.replace(/-/g, '+').replace(/_/g, '/')
+          try {
+            return Buffer.from(encoded, 'base64').length < 32
+          } catch {
+            return true
+          }
+        })
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['NOTIFICATION_UNSUBSCRIBE_KEYS'],
+          message:
+            'NOTIFICATION_UNSUBSCRIBE_KEYS must contain base64url secrets of at least 32 bytes in production',
+        })
+      }
     }
     if (
       env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS &&

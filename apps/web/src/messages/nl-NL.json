@@ -1530,8 +1530,8 @@
       "removed": "Profielfoto verwijderd."
     },
     "notifications": {
-      "title": "Pushmeldingen",
-      "description": "Ontvang meldingen over uitgavenactiviteit op dit apparaat wanneer de app gesloten is.",
+      "title": "Meldingen",
+      "description": "Kies waar Spliit meldingen over activiteiten naartoe stuurt.",
       "enable": "Pushmeldingen inschakelen",
       "disable": "Pushmeldingen uitschakelen",
       "enabled": "Pushmeldingen zijn ingeschakeld op dit apparaat.",
@@ -1540,7 +1540,110 @@
       "notConfigured": "Pushmeldingen zijn niet beschikbaar in deze omgeving.",
       "permissionDenied": "Meldingen zijn geblokkeerd. Sta ze toe in je browser- of apparaatinstellingen en probeer het opnieuw.",
       "iosInstall": "Voeg Spliit op een iPhone of iPad eerst toe aan je beginscherm voordat je pushmeldingen inschakelt.",
-      "error": "Pushmeldinginstellingen konden niet worden bijgewerkt. Probeer het opnieuw."
+      "error": "Pushmeldinginstellingen konden niet worden bijgewerkt. Probeer het opnieuw.",
+      "preferencesTitle": "Meldingsvoorkeuren",
+      "preferencesDescription": "Deze keuzes gelden voor toekomstige groeps- en uitgavenactiviteit.",
+      "globalLabel": "Alle activiteit",
+      "globalDescription": "Aanbevolen varieert per activiteit en past zich aan wanneer push niet beschikbaar is: snelle updates worden via push verstuurd, terwijl activiteiten met een hoger volume via e-mail blijven gaan. Kies E-mail of Push om één kanaal voor alles te gebruiken.",
+      "recommended": "Aanbevolen",
+      "recommendedDescription": "Aanbevolen bezorging: {channels}. Pushmeldingen worden alleen bezorgd op apparaten die je inschakelt.",
+      "mixedByActivity": "Per activiteit verschillend",
+      "recommendedCategoryDescription": "Voor deze activiteit wordt de aanbevolen bezorging {channels} gebruikt.",
+      "useRecommended": "Aanbevolen instelling gebruiken",
+      "custom": "Aangepast",
+      "useGlobal": "Instelling voor alle activiteit gebruiken",
+      "inheritedDescription": "Volgt je instelling voor alle activiteit. Kies een kanaal om deze categorie aan te passen.",
+      "customDescription": "Aangepaste bezorging voor deze categorie. Kies één of beide kanalen.",
+      "channelsLabel": "Meldingskanalen",
+      "email": "E-mail",
+      "pushDescription": "Ontvang een melding op een ingeschakeld apparaat.",
+      "off": "Uit",
+      "pushSelectionError": "Push kon op dit apparaat niet worden ingeschakeld. E-mail bleef voor deze categorie ingeschakeld.",
+      "pushMissingTarget": "Push is geselecteerd, maar deze meldingen worden pas bezorgd zodra je een apparaat inschakelt. Je kunt dit hieronder of in Instellingen doen.",
+      "rowSaved": "Meldingsvoorkeur opgeslagen.",
+      "comingSoon": "Binnenkort beschikbaar",
+      "emailComingSoon": "E-mailconfiguratie binnenkort beschikbaar.",
+      "inherited": "Overgenomen",
+      "currently": "Momenteel: {channels}",
+      "expenseActivity": "Uitgavenactiviteit",
+      "groupActivity": "Groepsactiviteit",
+      "save": "Wijzigingen opslaan",
+      "saving": "Opslaan…",
+      "reset": "Resetten",
+      "saved": "Meldingsvoorkeuren opgeslagen.",
+      "saveError": "Meldingsvoorkeuren konden niet worden opgeslagen. Probeer het opnieuw.",
+      "loading": "Meldingsvoorkeuren laden…",
+      "loadError": "Meldingsvoorkeuren konden niet worden geladen.",
+      "emailDescription": "Ontvang een bericht in je inbox.",
+      "push": {
+        "deviceTitle": "Dit apparaat",
+        "deviceDescription": "Schakel pushmeldingen in op dit apparaat. Dit heeft geen invloed op je andere apparaten.",
+        "deviceDisabled": "Push is geselecteerd, maar niet ingeschakeld op dit apparaat.",
+        "noDevices": "Push is geselecteerd, maar er is nog geen apparaat ingeschakeld."
+      },
+      "retry": "Opnieuw proberen",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Nieuwe uitgaven",
+          "description": "Wanneer iemand een uitgave aan een groep toevoegt."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Uitgavenimports en bulk wijzigingen",
+          "description": "Wanneer uitgaven worden geïmporteerd of in bulk bijgewerkt."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Wijzigingen aan uitgaven",
+          "description": "Wanneer een uitgave wordt bijgewerkt of verwijderd."
+        },
+        "GROUP_CHANGES": {
+          "title": "Groepswijzigingen",
+          "description": "Wanneer groepsgegevens of de archiveringsstatus wijzigen."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Uitnodigingen",
+          "description": "Wanneer uitnodigingen worden verzonden, geaccepteerd, afgewezen of ingetrokken."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Lidmaatschap",
+          "description": "Wanneer leden vertrekken, worden verwijderd of van rol veranderen."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Uitgaven met een vriend(in) bijhouden",
+          "description": "Wanneer iemand gezamenlijke uitgaven met jou begint bij te houden."
+        },
+        "addedToGroup": {
+          "title": "Aan een groep toegevoegd",
+          "description": "Wanneer iemand je aan een groep toevoegt."
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud-nieuws en updates",
+          "description": "Productnieuws, tips en service-updates."
+        },
+        "expenseChanged": {
+          "title": "Uitgave bewerkt of verwijderd",
+          "description": "Wanneer een uitgave wordt bijgewerkt of verwijderd."
+        },
+        "newComment": {
+          "title": "Nieuwe opmerking",
+          "description": "Wanneer iemand een opmerking bij een uitgave plaatst."
+        },
+        "newExpense": {
+          "title": "Nieuwe uitgave",
+          "description": "Wanneer iemand een uitgave aan een groep toevoegt."
+        },
+        "weeklySummary": {
+          "title": "Wekelijks activiteitenoverzicht",
+          "description": "Een wekelijks overzicht van activiteiten in je groepen."
+        }
+      },
+      "sections": {
+        "groups": "Groepen en vrienden",
+        "expenses": "Uitgaven",
+        "summaries": "Samenvattingen"
+      }
     }
   },
   "Activities": {
@@ -1783,5 +1886,21 @@
     "light": "Licht",
     "dark": "Donker",
     "system": "Systeeminstelling"
+  },
+  "PushOnboarding": {
+    "title": "Kies hoe je op de hoogte wilt blijven",
+    "description": "Spliit kan je direct op de hoogte brengen van groeps- en uitgavenactiviteit.",
+    "pushBenefit": "Pushmeldingen komen op dit apparaat aan, ook als Spliit niet geopend is.",
+    "emailFallback": "E-mail is beschikbaar voor meldingen die je daar wilt ontvangen; keuzes met alleen push worden niet omgeleid.",
+    "settingsHint": "Je kunt deze keuzes altijd wijzigen in Instellingen. Pushmeldingen worden per apparaat afzonderlijk ingeschakeld.",
+    "enable": "Pushmeldingen inschakelen",
+    "enabling": "Inschakelen…",
+    "useEmail": "E-mail gebruiken",
+    "deniedTitle": "Pushmeldingen zijn geblokkeerd",
+    "deniedDescription": "Je browser heeft toestemming voor meldingen geblokkeerd. Meldingen die voor e-mail zijn ingesteld, blijven daar aankomen; keuzes met alleen push worden niet omgeleid.",
+    "failedTitle": "Push kon niet worden ingeschakeld",
+    "failedDescription": "We konden dit apparaat niet registreren. Meldingen die voor e-mail zijn ingesteld, blijven daar aankomen; keuzes met alleen push worden niet omgeleid.",
+    "emailUsage": "Er komen alleen meldingen aan die voor e-mail zijn ingesteld totdat je een apparaat inschakelt. Je kunt meldingen toestaan in je browserinstellingen en het daarna opnieuw proberen via Instellingen.",
+    "done": "Klaar"
   }
 }

@@ -553,7 +553,7 @@ describe('invitationsRouter.create — guards and email', () => {
     expect(prismaMock.groupInvitation.create).toHaveBeenCalled()
   })
 
-  it('sends an "in-app" invitation email when the recipient already has an account', async () => {
+  it('routes existing-account invitations through notifications instead of transactional email', async () => {
     await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
@@ -583,16 +583,7 @@ describe('invitationsRouter.create — guards and email', () => {
       role: 'MEMBER',
     })
 
-    expect(sendEmailMock).toHaveBeenCalledTimes(1)
-    const call = sendEmailMock.mock.calls[0][0]
-    expect(call.to).toBe('bob@example.com')
-    expect(call.subject).toContain('Roadtrip 2026')
-    expect(call.text).toMatch(/open spliit/i)
-    // Email links to the group page itself (not /members): the
-    // `groups.get` procedure now allows pending invitees to open
-    // /groups/:id and surfaces an Accept/Decline banner in the header.
-    expect(call.text).toContain('/groups/grp-1')
-    expect(call.text).not.toMatch(/create an account/i)
+    expect(sendEmailMock).not.toHaveBeenCalled()
   })
 
   it('sends a "sign-up" invitation email when the recipient has no account', async () => {

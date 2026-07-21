@@ -6,6 +6,7 @@ import {
   buildGroupActivityData,
   buildMemberActivityData,
   logActivity,
+  scheduleActivityNotification,
 } from './activities'
 import {
   createSettlementExpensesForLeave,
@@ -51,7 +52,7 @@ export async function updateMemberRole(opts: {
     select: { name: true },
   })
 
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     if (role !== GroupRole.ADMIN && target.role === GroupRole.ADMIN) {
       const remainingAdmins = await tx.groupMember.count({
         where: {
@@ -65,27 +66,41 @@ export async function updateMemberRole(opts: {
         throw new Error('Group must keep at least one admin')
       }
     }
-    const updated = await tx.groupMember.update({
-      where: { id: memberId },
-      data: { role },
-    })
-    await logActivity(
-      groupId,
-      {
-        type: 'MEMBER_ROLE_CHANGED',
-        actor: { type: 'ACCOUNT', id: actor.accountId },
-        subject: { type: 'MEMBER', id: memberId },
-        data: buildMemberActivityData({
-          displayName: actorAccount?.name ?? undefined,
-          targetDisplayName: targetAccount?.name ?? undefined,
-          previousRole: target.role,
-          nextRole: role,
-        }),
-      },
-      tx,
-    )
-    return updated
+    const [updated, activity] = await Promise.all([
+      tx.groupMember.update({
+        where: { id: memberId },
+        data: { role },
+      }),
+      logActivity(
+        groupId,
+        {
+          type: 'MEMBER_ROLE_CHANGED',
+          actor: { type: 'ACCOUNT', id: actor.accountId },
+          subject: { type: 'MEMBER', id: memberId },
+          data: buildMemberActivityData({
+            displayName: actorAccount?.name ?? undefined,
+            targetDisplayName: targetAccount?.name ?? undefined,
+            previousRole: target.role,
+            nextRole: role,
+          }),
+        },
+        tx,
+      ),
+    ])
+    return { updated, activity }
   })
+  scheduleActivityNotification(result.activity, groupId, {
+    type: 'MEMBER_ROLE_CHANGED',
+    actor: { type: 'ACCOUNT', id: actor.accountId },
+    subject: { type: 'MEMBER', id: memberId },
+    data: buildMemberActivityData({
+      displayName: actorAccount?.name ?? undefined,
+      targetDisplayName: targetAccount?.name ?? undefined,
+      previousRole: target.role,
+      nextRole: role,
+    }),
+  })
+  return result.updated
 }
 
 export class RemoveMemberPreconditionError extends Error {
@@ -172,28 +187,42 @@ export async function removeMember(opts: {
         throw new Error('Group must keep at least one admin')
       }
     }
-    const updated = await tx.groupMember.update({
-      where: { id: memberId },
-      data: {
-        status: GroupMemberStatus.REMOVED,
-        leftAt: new Date(),
-      },
-    })
-    await logActivity(
-      groupId,
-      {
-        type: 'MEMBER_REMOVED',
-        actor: { type: 'ACCOUNT', id: actor.accountId },
-        subject: { type: 'MEMBER', id: memberId },
-        data: buildMemberActivityData({
-          displayName: actorAccount?.name ?? undefined,
-          targetDisplayName: target.account?.name ?? undefined,
-          summary: settleBalances ? 'member:removed:settled' : 'member:removed',
-        }),
-      },
-      tx,
-    )
-    return { updated, settlementActivities }
+    const [updated, activity] = await Promise.all([
+      tx.groupMember.update({
+        where: { id: memberId },
+        data: {
+          status: GroupMemberStatus.REMOVED,
+          leftAt: new Date(),
+        },
+      }),
+      logActivity(
+        groupId,
+        {
+          type: 'MEMBER_REMOVED',
+          actor: { type: 'ACCOUNT', id: actor.accountId },
+          subject: { type: 'MEMBER', id: memberId },
+          data: buildMemberActivityData({
+            displayName: actorAccount?.name ?? undefined,
+            targetDisplayName: target.account?.name ?? undefined,
+            summary: settleBalances
+              ? 'member:removed:settled'
+              : 'member:removed',
+          }),
+        },
+        tx,
+      ),
+    ])
+    return { updated, settlementActivities, activity }
+  })
+  scheduleActivityNotification(result.activity, groupId, {
+    type: 'MEMBER_REMOVED',
+    actor: { type: 'ACCOUNT', id: actor.accountId },
+    subject: { type: 'MEMBER', id: memberId },
+    data: buildMemberActivityData({
+      displayName: actorAccount?.name ?? undefined,
+      targetDisplayName: target.account?.name ?? undefined,
+      summary: settleBalances ? 'member:removed:settled' : 'member:removed',
+    }),
   })
   if (result.settlementActivities) {
     for (const meta of result.settlementActivities) {
@@ -382,7 +411,7 @@ export async function leaveGroup(opts: {
       },
     })
 
-    await logActivity(
+    const activity = await logActivity(
       groupId,
       {
         type: 'MEMBER_LEFT',
@@ -400,7 +429,19 @@ export async function leaveGroup(opts: {
     return {
       promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
       settlementActivities,
+      activity,
     }
+  })
+
+  scheduleActivityNotification(result.activity, groupId, {
+    type: 'MEMBER_LEFT',
+    actor: { type: 'ACCOUNT', id: actor.accountId },
+    subject: { type: 'MEMBER', id: member.id },
+    data: buildMemberActivityData({
+      displayName: member.account?.name ?? undefined,
+      targetDisplayName: member.account?.name ?? undefined,
+      summary: 'member:left',
+    }),
   })
 
   for (const meta of result.settlementActivities) {
@@ -450,7 +491,7 @@ export async function archiveGroupForSelf(opts: {
     )
   }
 
-  await prisma.$transaction(async (tx) => {
+  const activity = await prisma.$transaction(async (tx) => {
     await tx.group.update({
       where: { id: groupId },
       data: { archived: true },
@@ -469,7 +510,7 @@ export async function archiveGroupForSelf(opts: {
       },
     })
 
-    await logActivity(
+    return logActivity(
       groupId,
       {
         type: 'GROUP_ARCHIVED',
@@ -479,6 +520,13 @@ export async function archiveGroupForSelf(opts: {
       },
       tx,
     )
+  })
+
+  scheduleActivityNotification(activity, groupId, {
+    type: 'GROUP_ARCHIVED',
+    actor: { type: 'ACCOUNT', id: accountId },
+    subject: { type: 'GROUP', id: groupId },
+    data: buildGroupActivityData({ summary: 'group:archived-on-leave' }),
   })
 
   return { archived: true }

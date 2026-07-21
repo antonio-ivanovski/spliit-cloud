@@ -34,8 +34,22 @@ export type ExpenseImportSummaryInput = {
   groupUrl: string
 }
 
+export type ExpenseCategoryBulkSummaryInput = {
+  kind: 'expense_categories_bulk_updated'
+  subject: string
+  text: string
+  brandBaseUrl: string
+  groupDisplayName: string
+  actorName: string
+  count: number
+  distinctCategories: number | null
+  groupUrl: string
+}
+
 export type ExpenseActivityInputAny =
-  ExpenseActivityInput | ExpenseImportSummaryInput
+  | ExpenseActivityInput
+  | ExpenseImportSummaryInput
+  | ExpenseCategoryBulkSummaryInput
 
 export function ExpenseActivityEmail(
   props: Omit<ExpenseActivityInput, 'kind' | 'subject' | 'text'>,
@@ -139,6 +153,47 @@ export function ExpenseImportSummaryEmail(
   )
 }
 
+export function ExpenseCategoryBulkSummaryEmail(
+  props: Omit<ExpenseCategoryBulkSummaryInput, 'kind' | 'subject' | 'text'>,
+): ReactElement {
+  const noun = props.count === 1 ? 'expense' : 'expenses'
+  return (
+    <EmailLayout
+      preview={`${props.count} ${noun} recategorized in ${props.groupDisplayName}`}
+      brandBaseUrl={props.brandBaseUrl}
+    >
+      <Heading
+        as="h1"
+        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+      >
+        Expense categories updated
+      </Heading>
+      <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
+        <strong>{props.actorName}</strong> updated categories for{' '}
+        <strong>
+          {props.count} {noun}
+        </strong>{' '}
+        in <strong>{props.groupDisplayName}</strong>
+        {props.distinctCategories
+          ? ` across ${props.distinctCategories} categories`
+          : null}
+        .
+      </Text>
+      <Section className="text-center my-6">
+        <EmailButton href={props.groupUrl} label="Open group" />
+      </Section>
+      <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
+        If the button doesn't work, copy and paste this URL into your browser:
+      </Text>
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+        <Link href={props.groupUrl} className="text-[#64748b] underline">
+          {props.groupUrl}
+        </Link>
+      </Text>
+    </EmailLayout>
+  )
+}
+
 export async function renderExpenseActivityEmail(
   input: ExpenseActivityInputAny,
 ): Promise<RenderedEmail> {
@@ -149,11 +204,18 @@ export async function renderExpenseActivityEmail(
       text,
     })
   }
+  if (input.kind === 'import_summary') {
+    const { kind: _kind, subject, text, ...componentProps } = input
+    return renderTemplate(<ExpenseImportSummaryEmail {...componentProps} />, {
+      subject,
+      text,
+    })
+  }
   const { kind: _kind, subject, text, ...componentProps } = input
-  return renderTemplate(<ExpenseImportSummaryEmail {...componentProps} />, {
-    subject,
-    text,
-  })
+  return renderTemplate(
+    <ExpenseCategoryBulkSummaryEmail {...componentProps} />,
+    { subject, text },
+  )
 }
 
 function expenseHeadline(

@@ -1523,8 +1523,8 @@
       "removed": "个人资料照片已删除。"
     },
     "notifications": {
-      "title": "推送通知",
-      "description": "应用关闭时，在此设备上接收消费活动提醒。",
+      "title": "通知",
+      "description": "选择 Spliit 发送活动通知的渠道。",
       "enable": "启用推送通知",
       "disable": "停用推送通知",
       "enabled": "此设备上的推送通知已启用。",
@@ -1533,7 +1533,110 @@
       "notConfigured": "此环境不提供推送通知。",
       "permissionDenied": "通知已被阻止。请在浏览器或设备设置中允许通知，然后重试。",
       "iosInstall": "在 iPhone 或 iPad 上，请先将 Spliit 添加到主屏幕，然后再启用推送通知。",
-      "error": "无法更新推送通知设置。请重试。"
+      "error": "无法更新推送通知设置。请重试。",
+      "preferencesTitle": "通知偏好设置",
+      "preferencesDescription": "这些选项适用于今后的群组和消费活动。",
+      "globalLabel": "所有活动",
+      "globalDescription": "推荐设置会根据活动类型选择不同的通知渠道，并在无法使用推送时自动调整：需要快速查看的更新通过推送发送，而通知量较大的活动则保留通过电子邮件发送。若要所有活动使用同一渠道，请选择电子邮件或推送。",
+      "recommended": "推荐",
+      "recommendedDescription": "推荐通知渠道：{channels}。推送通知仅发送到你启用的设备。",
+      "mixedByActivity": "根据活动而异",
+      "recommendedCategoryDescription": "此活动使用推荐的 {channels} 通知方式。",
+      "useRecommended": "使用推荐设置",
+      "custom": "自定义",
+      "useGlobal": "使用所有活动设置",
+      "inheritedDescription": "正在沿用所有活动设置。选择渠道即可自定义此类别。",
+      "customDescription": "此类别使用自定义通知方式。请选择一个或两个渠道。",
+      "channelsLabel": "通知渠道",
+      "email": "电子邮件",
+      "pushDescription": "在已启用的设备上接收提醒。",
+      "off": "关闭",
+      "pushSelectionError": "无法在此设备上启用推送。此类别仍保留电子邮件。",
+      "pushMissingTarget": "已选择推送，但在启用设备前不会发送这些通知。你可以在下方或设置中启用设备。",
+      "rowSaved": "通知偏好设置已保存。",
+      "comingSoon": "即将推出",
+      "emailComingSoon": "电子邮件配置即将推出。",
+      "inherited": "继承",
+      "currently": "当前：{channels}",
+      "expenseActivity": "支出活动",
+      "groupActivity": "群组活动",
+      "save": "保存更改",
+      "saving": "保存中…",
+      "reset": "重置",
+      "saved": "通知偏好设置已保存。",
+      "saveError": "无法保存通知偏好设置。请重试。",
+      "loading": "正在加载通知偏好设置…",
+      "loadError": "无法加载通知偏好设置。",
+      "emailDescription": "在收件箱中接收消息。",
+      "push": {
+        "deviceTitle": "此设备",
+        "deviceDescription": "在此设备上启用推送提醒。不会更改其他设备的设置。",
+        "deviceDisabled": "已选择推送，但此设备尚未启用推送。",
+        "noDevices": "已选择推送，但尚未启用任何设备。"
+      },
+      "retry": "重试",
+      "pushChannel": "推送",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "新增支出",
+          "description": "当有人在群组中添加支出时。"
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "支出导入和批量更改",
+          "description": "当支出被导入或批量更新时。"
+        },
+        "EXPENSE_CHANGES": {
+          "title": "支出更改",
+          "description": "当支出被更新或删除时。"
+        },
+        "GROUP_CHANGES": {
+          "title": "群组更改",
+          "description": "当群组详情或归档状态发生更改时。"
+        },
+        "GROUP_INVITATIONS": {
+          "title": "邀请",
+          "description": "当邀请被发送、接受、拒绝或撤销时。"
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "成员资格",
+          "description": "当成员离开、被移除或更改角色时。"
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "记录与好友的共同支出",
+          "description": "当有人开始与你记录共同支出时。"
+        },
+        "addedToGroup": {
+          "title": "已添加到群组",
+          "description": "当有人将你添加到群组时。"
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud 新闻和更新",
+          "description": "产品新闻、提示和服务更新。"
+        },
+        "expenseChanged": {
+          "title": "支出已编辑或删除",
+          "description": "当支出被更新或删除时。"
+        },
+        "newComment": {
+          "title": "新评论",
+          "description": "当有人评论支出时。"
+        },
+        "newExpense": {
+          "title": "新支出",
+          "description": "当有人向群组添加支出时。"
+        },
+        "weeklySummary": {
+          "title": "每周活动摘要",
+          "description": "你的各个群组的每周活动摘要。"
+        }
+      },
+      "sections": {
+        "groups": "群组和好友",
+        "expenses": "消费",
+        "summaries": "摘要"
+      }
     }
   },
   "Activities": {
@@ -1767,5 +1870,21 @@
     "light": "浅色",
     "dark": "深色",
     "system": "跟随系统"
+  },
+  "PushOnboarding": {
+    "title": "选择接收更新的方式",
+    "description": "Spliit 可在群组和支出活动发生时提醒你。",
+    "pushBenefit": "即使 Spliit 未打开，推送通知也会发送到此设备。",
+    "emailFallback": "你可以为希望接收的通知使用电子邮件；仅选择推送的通知不会改用电子邮件发送。",
+    "settingsHint": "你可以随时在设置中更改这些选择。推送通知需要在每台设备上单独启用。",
+    "enable": "启用推送通知",
+    "enabling": "正在启用…",
+    "useEmail": "使用电子邮件",
+    "deniedTitle": "推送通知已被阻止",
+    "deniedDescription": "你的浏览器阻止了通知权限。设置为电子邮件的通知仍会发送到邮箱；仅选择推送的通知不会改用电子邮件发送。",
+    "failedTitle": "无法启用推送",
+    "failedDescription": "无法注册此设备。设置为电子邮件的通知仍会发送到邮箱；仅选择推送的通知不会改用电子邮件发送。",
+    "emailUsage": "启用设备前，只会收到设置为电子邮件的通知。你可以在浏览器设置中允许通知，然后从设置中重试。",
+    "done": "完成"
   }
 }

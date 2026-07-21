@@ -53,6 +53,7 @@ model Account {
   groupPreferences    AccountGroupPreference[]
   defaultSplits       AccountGroupDefaultSplit[]
   pushSubscriptions   PushSubscription[]
+  notificationPreferences AccountNotificationPreference[]
 
 }
 
@@ -67,6 +68,26 @@ model PushSubscription {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([accountId])
+}
+
+// Account-scoped notification channel preferences. Categories and channel
+// values are validated by the shared domain package and intentionally remain
+// strings in the database so adding a category/channel does not require a
+// Prisma enum migration.
+model AccountNotificationPreference {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  // Notification category validated by @spliit/domain at API boundaries.
+  category  String
+  /// ![NotificationChannel]
+  channels  String[]
+
+  @@unique([accountId, category])
   @@index([accountId])
 }
 

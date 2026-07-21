@@ -1562,8 +1562,8 @@
       "removed": "Profilbild entfernt."
     },
     "notifications": {
-      "title": "Push-Benachrichtigungen",
-      "description": "Erhalte Benachrichtigungen zu Ausgaben auf diesem Gerät, wenn die App geschlossen ist.",
+      "title": "Benachrichtigungen",
+      "description": "Wähle, wohin Spliit Aktivitätsbenachrichtigungen sendet.",
       "enable": "Push-Benachrichtigungen aktivieren",
       "disable": "Push-Benachrichtigungen deaktivieren",
       "enabled": "Push-Benachrichtigungen sind auf diesem Gerät aktiviert.",
@@ -1572,7 +1572,110 @@
       "notConfigured": "Push-Benachrichtigungen sind in dieser Umgebung nicht verfügbar.",
       "permissionDenied": "Benachrichtigungen sind blockiert. Erlaube sie in den Browser- oder Geräteeinstellungen und versuche es erneut.",
       "iosInstall": "Füge Spliit auf iPhone oder iPad zuerst zum Home-Bildschirm hinzu, bevor du Push-Benachrichtigungen aktivierst.",
-      "error": "Push-Benachrichtigungseinstellungen konnten nicht aktualisiert werden. Bitte versuche es erneut."
+      "error": "Push-Benachrichtigungseinstellungen konnten nicht aktualisiert werden. Bitte versuche es erneut.",
+      "preferencesTitle": "Benachrichtigungseinstellungen",
+      "preferencesDescription": "Diese Auswahl gilt für zukünftige Gruppen- und Ausgabenaktivitäten.",
+      "globalLabel": "Alle Aktivitäten",
+      "globalDescription": "Die empfohlene Auswahl variiert je nach Aktivität und passt sich an, wenn Push nicht verfügbar ist: Schnelle Aktualisierungen werden per Push gesendet, während Aktivitäten mit höherem Aufkommen weiterhin per E-Mail gesendet werden. Wähle E-Mail oder Push, um einen einheitlichen Kanal für alles zu verwenden.",
+      "recommended": "Empfohlen",
+      "recommendedDescription": "Empfohlene Zustellung: {channels}. Push-Benachrichtigungen werden nur an Geräte zugestellt, die du aktivierst.",
+      "mixedByActivity": "Je nach Aktivität",
+      "recommendedCategoryDescription": "Für diese Aktivität wird die empfohlene Zustellung {channels} verwendet.",
+      "useRecommended": "Empfohlene Einstellung verwenden",
+      "custom": "Benutzerdefiniert",
+      "useGlobal": "Einstellung für alle Aktivitäten verwenden",
+      "inheritedDescription": "Wird von deiner Einstellung für alle Aktivitäten übernommen. Wähle einen Kanal, um diese Kategorie anzupassen.",
+      "customDescription": "Benutzerdefinierte Zustellung für diese Kategorie. Wähle einen oder beide Kanäle.",
+      "channelsLabel": "Benachrichtigungskanäle",
+      "email": "E-Mail",
+      "pushDescription": "Erhalte eine Benachrichtigung auf einem aktivierten Gerät.",
+      "off": "Aus",
+      "pushSelectionError": "Push konnte auf diesem Gerät nicht aktiviert werden. E-Mail blieb für diese Kategorie aktiviert.",
+      "pushMissingTarget": "Push ist ausgewählt, aber diese Benachrichtigungen werden erst zugestellt, wenn du ein Gerät aktivierst. Du kannst unten oder in den Einstellungen eines aktivieren.",
+      "rowSaved": "Benachrichtigungseinstellung gespeichert.",
+      "comingSoon": "Demnächst verfügbar",
+      "emailComingSoon": "Die E-Mail-Konfiguration ist demnächst verfügbar.",
+      "inherited": "Übernommen",
+      "currently": "Aktuell: {channels}",
+      "expenseActivity": "Ausgabenaktivität",
+      "groupActivity": "Gruppenaktivität",
+      "save": "Änderungen speichern",
+      "saving": "Wird gespeichert…",
+      "reset": "Zurücksetzen",
+      "saved": "Benachrichtigungseinstellungen gespeichert.",
+      "saveError": "Benachrichtigungseinstellungen konnten nicht gespeichert werden. Bitte versuche es erneut.",
+      "loading": "Benachrichtigungseinstellungen werden geladen…",
+      "loadError": "Benachrichtigungseinstellungen konnten nicht geladen werden.",
+      "emailDescription": "Erhalte eine Nachricht in deinem Posteingang.",
+      "push": {
+        "deviceTitle": "Dieses Gerät",
+        "deviceDescription": "Aktiviere Push-Benachrichtigungen auf diesem Gerät. Dies ändert nichts an deinen anderen Geräten.",
+        "deviceDisabled": "Push ist ausgewählt, aber auf diesem Gerät nicht aktiviert.",
+        "noDevices": "Push ist ausgewählt, aber noch kein Gerät aktiviert."
+      },
+      "retry": "Erneut versuchen",
+      "pushChannel": "Push",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Neue Ausgaben",
+          "description": "Wenn jemand eine Ausgabe zu einer Gruppe hinzufügt."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Ausgabenimporte und Sammeländerungen",
+          "description": "Wenn Ausgaben importiert oder gesammelt aktualisiert werden."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Änderungen an Ausgaben",
+          "description": "Wenn eine Ausgabe aktualisiert oder gelöscht wird."
+        },
+        "GROUP_CHANGES": {
+          "title": "Gruppenänderungen",
+          "description": "Wenn sich Gruppendetails oder der Archivstatus ändern."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Einladungen",
+          "description": "Wenn Einladungen gesendet, angenommen, abgelehnt oder widerrufen werden."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Mitgliedschaft",
+          "description": "Wenn Mitglieder die Gruppe verlassen, entfernt werden oder ihre Rolle ändern."
+        }
+      },
+      "rows": {
+        "addedAsFriend": {
+          "title": "Ausgaben mit einer befreundeten Person erfassen",
+          "description": "Wenn jemand beginnt, gemeinsame Ausgaben mit dir zu erfassen."
+        },
+        "addedToGroup": {
+          "title": "Zu einer Gruppe hinzugefügt",
+          "description": "Wenn dich jemand zu einer Gruppe hinzufügt."
+        },
+        "cloudNews": {
+          "title": "Neuigkeiten und Updates zu Spliit Cloud",
+          "description": "Produktneuigkeiten, Tipps und Service-Updates."
+        },
+        "expenseChanged": {
+          "title": "Ausgabe bearbeitet oder gelöscht",
+          "description": "Wenn eine Ausgabe aktualisiert oder gelöscht wird."
+        },
+        "newComment": {
+          "title": "Neuer Kommentar",
+          "description": "Wenn jemand eine Ausgabe kommentiert."
+        },
+        "newExpense": {
+          "title": "Neue Ausgabe",
+          "description": "Wenn jemand eine Ausgabe zu einer Gruppe hinzufügt."
+        },
+        "weeklySummary": {
+          "title": "Wöchentliche Aktivitätszusammenfassung",
+          "description": "Eine wöchentliche Zusammenfassung der Aktivitäten in deinen Gruppen."
+        }
+      },
+      "sections": {
+        "groups": "Gruppen und Freunde",
+        "expenses": "Ausgaben",
+        "summaries": "Zusammenfassungen"
+      }
     }
   },
   "Activities": {
@@ -1851,5 +1954,21 @@
     "light": "Hell",
     "dark": "Dunkel",
     "system": "Systemeinstellung"
+  },
+  "PushOnboarding": {
+    "title": "Wähle, wie du auf dem Laufenden bleiben möchtest",
+    "description": "Spliit kann dich über Gruppen- und Ausgabenaktivitäten informieren, sobald sie geschehen.",
+    "pushBenefit": "Push-Benachrichtigungen erreichen dieses Gerät auch dann, wenn Spliit nicht geöffnet ist.",
+    "emailFallback": "E-Mail ist für Benachrichtigungen verfügbar, die du dort empfangen möchtest; Nur-Push-Auswahlen werden nicht umgeleitet.",
+    "settingsHint": "Du kannst diese Auswahl jederzeit in den Einstellungen ändern. Push-Benachrichtigungen werden für jedes Gerät separat aktiviert.",
+    "enable": "Push-Benachrichtigungen aktivieren",
+    "enabling": "Wird aktiviert…",
+    "useEmail": "E-Mail verwenden",
+    "deniedTitle": "Push-Benachrichtigungen sind blockiert",
+    "deniedDescription": "Dein Browser hat die Berechtigung für Benachrichtigungen blockiert. Für E-Mail konfigurierte Benachrichtigungen werden weiterhin per E-Mail zugestellt; Nur-Push-Auswahlen werden nicht auf E-Mail umgeleitet.",
+    "failedTitle": "Push konnte nicht aktiviert werden",
+    "failedDescription": "Dieses Gerät konnte nicht registriert werden. Für E-Mail konfigurierte Benachrichtigungen werden weiterhin per E-Mail zugestellt; Nur-Push-Auswahlen werden nicht umgeleitet.",
+    "emailUsage": "Es werden nur Benachrichtigungen zugestellt, die für E-Mail konfiguriert sind, bis du ein Gerät aktivierst. Du kannst Benachrichtigungen in deinen Browsereinstellungen erlauben und es anschließend in den Einstellungen erneut versuchen.",
+    "done": "Fertig"
   }
 }

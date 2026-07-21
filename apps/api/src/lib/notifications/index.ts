@@ -1,6 +1,6 @@
+import { ActivityNotificationCoordinator } from './coordinator'
 import { setDefaultActivityNotificationDispatchers } from './dispatcher'
-import { ExpenseActivityNotificationRouter } from './expense-router'
 
 setDefaultActivityNotificationDispatchers([
-  new ExpenseActivityNotificationRouter(),
+  new ActivityNotificationCoordinator(),
 ])

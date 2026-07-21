@@ -8,6 +8,7 @@ import {
   type ExpenseCategoriesBulkUpdatedRow,
 } from '@spliit/domain'
 import type { BulkUpdateExpenseCategoriesInput } from '@spliit/domain/schemas'
+import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { logActivity } from './activities'
 
 /**
@@ -86,7 +87,8 @@ export async function bulkUpdateExpenseCategories(args: {
     throw new Error('Cannot bulk-update categories on an archived group')
   }
 
-  return prisma.$transaction(async (tx) => {
+  let committedActivity: Awaited<ReturnType<typeof logActivity>> | null = null
+  const result = await prisma.$transaction(async (tx) => {
     // Lock the candidate rows by selecting them. Update via updateMany
     // below would not surface the prior categoryIds for the activity
     // row in one call, so we go with N targeted updates.
@@ -166,7 +168,7 @@ export async function bulkUpdateExpenseCategories(args: {
         : {}),
     }
 
-    await logActivity(
+    committedActivity = await logActivity(
       groupId,
       {
         type: 'EXPENSE_CATEGORIES_BULK_UPDATED',
@@ -187,6 +189,36 @@ export async function bulkUpdateExpenseCategories(args: {
       rows,
     } satisfies BulkCategorizeApplyResult
   })
+
+  const activity = committedActivity as Awaited<
+    ReturnType<typeof logActivity>
+  > | null
+  if (activity) {
+    scheduleDefaultNotificationDispatch({
+      activityId: activity.id,
+      type: 'EXPENSE_CATEGORIES_BULK_UPDATED',
+      groupId,
+      actor: { type: 'ACCOUNT', id: accountId },
+      subject: null,
+      data: result.rows.length
+        ? {
+            kind: 'expense_categories_bulk_updated',
+            summary: `Bulk-categorized ${result.rows.length} expense${result.rows.length === 1 ? '' : 's'} from ${fromCategoryId}.`,
+            count: result.rows.length,
+            distinctCategories: result.distinctCategories,
+            rows: result.rows,
+            fromCategoryId,
+          }
+        : {
+            kind: 'expense_categories_bulk_updated',
+            count: 0,
+            rows: [],
+            fromCategoryId,
+          },
+      occurredAt: activity.time,
+    })
+  }
+  return result
 }
 
 /**
