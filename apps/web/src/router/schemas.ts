@@ -100,6 +100,10 @@ export const expenseParamsSchema = z.object({
   expenseId: expenseIdParamSchema,
 })
 
+export const editExpenseSearchSchema = z.object({
+  scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional().catch(undefined),
+})
+
 export const homeSearchSchema = z.object({
   redirect: optionalString,
   mode: z.enum(['sign-in', 'sign-up']).optional().catch(undefined),

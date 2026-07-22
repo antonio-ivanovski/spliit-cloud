@@ -1,4 +1,4 @@
-import { expenseParamsSchema } from '@/router/schemas'
+import { editExpenseSearchSchema, expenseParamsSchema } from '@/router/schemas'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
@@ -11,4 +11,5 @@ export const Route = createFileRoute(
       expenseId: params.expenseId,
     }),
   },
+  validateSearch: editExpenseSearchSchema,
 })

@@ -634,7 +634,9 @@
         "increaseOccurrences": "Zwiększ liczbę wystąpień",
         "ruleSummary": "Co {interval} {frequency} · {count} wystąpień",
         "ruleSummaryIndefinite": "Co {interval} {frequency} · Brak daty zakończenia"
-      }
+      },
+      "recurringEditScopeOccurrence": "Edytowanie tylko tego wystąpienia",
+      "recurringEditScopeFuture": "Edytowanie tego i przyszłych wystąpień"
     },
     "amountField": {
       "label": "Suma",
@@ -2019,10 +2021,38 @@
     "deleteScopeDescription": "Wybierz, czy usunąć jedno wystąpienie, czy zakończyć serię.",
     "deleteOccurrence": "Usuń tylko to wystąpienie",
     "deleteThisAndFuture": "Usuń to i przyszłe wystąpienia",
+    "deleteThisAndFutureStop": "Usuń to i przyszłe wystąpienia oraz zatrzymaj cykl",
+    "deleteThisAndFutureDescription": "Usuń ten i późniejsze wydatki; harmonogram pozostanie aktywny.",
+    "deleteThisAndFutureStopDescription": "Usuń ten i późniejsze wydatki oraz trwale zatrzymaj harmonogram.",
+    "deleteOccurrenceDescription": "Usuń tylko ten wydatek. Pozostałe zaplanowane wystąpienia pozostaną bez zmian.",
+    "actions": "Działania cykliczne",
+    "actionsTitle": "Działania dotyczące cyklicznego wydatku",
+    "actionsDescription": "Wybierz dokładnie wystąpienie do edycji lub usunięcia.",
+    "editActions": "Działania edycji",
+    "deleteActions": "Opcje usuwania",
+    "confirmDelete": "Usuń",
+    "confirmStop": "Zatrzymaj cykl",
+    "working": "Przetwarzanie…",
+    "back": "Wstecz",
     "confirm": "Kontynuuj",
     "cancel": "Anuluj",
     "occurrences": "{count} wystąpień w tej serii",
     "loading": "Wczytywanie…",
-    "loadMore": "Wczytaj więcej wystąpień"
+    "loadMore": "Wczytaj więcej wystąpień",
+    "editOccurrence": "Edytuj to wystąpienie",
+    "editOccurrenceDescription": "Zmień tylko ten wydatek.",
+    "editThisAndFuture": "Edytuj to i przyszłe wystąpienia",
+    "editThisAndFutureDescription": "Zmień ten wydatek i wszystkie przyszłe zaplanowane wydatki.",
+    "stopRecurrence": "Zatrzymaj cykl",
+    "stopConfirmTitle": "Zatrzymać ten cykl?",
+    "stopConfirmDescription": "Istniejące wydatki pozostaną. Nie zostaną utworzone nowe wystąpienia.",
+    "stopConfirmHint": "Zatrzymanie jest trwałe. Aby rozpocząć ponownie, utwórz nowy cykliczny wydatek.",
+    "deleteConfirmTitle": "Potwierdź usunięcie",
+    "deleteConfirmHint": "Tej czynności nie można cofnąć dla wybranych wystąpień.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Usunięte zostanie tylko to wystąpienie.",
+      "THIS_AND_FUTURE": "To i przyszłe wystąpienia zostaną usunięte. Cykl będzie kontynuowany od następnego zaplanowanego wystąpienia.",
+      "THIS_AND_FUTURE_STOP": "To i przyszłe wystąpienia zostaną usunięte, a cykl zostanie zatrzymany."
+    }
   }
 }

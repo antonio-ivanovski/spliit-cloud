@@ -873,7 +873,9 @@
         "increaseOccurrences": "Зголеми ги повторувањата",
         "ruleSummary": "На секои {interval} {frequency} · {count} повторувања",
         "ruleSummaryIndefinite": "На секои {interval} {frequency} · Без датум на завршување"
-      }
+      },
+      "recurringEditScopeOccurrence": "Уредување само на ова појавување",
+      "recurringEditScopeFuture": "Уредување на ова и идните појавувања"
     },
     "amountField": {
       "label": "Износ",
@@ -1985,10 +1987,38 @@
     "deleteScopeDescription": "Изберете дали да избришете едно појавување или да ја завршите серијата.",
     "deleteOccurrence": "Избриши го само ова појавување",
     "deleteThisAndFuture": "Избриши го ова и идните појавувања",
+    "deleteThisAndFutureStop": "Избриши го ова и идните појавувања и запре го повторувањето",
+    "deleteThisAndFutureDescription": "Отстранете го овој и подоцнежните трошоци; распоредот останува активен.",
+    "deleteThisAndFutureStopDescription": "Отстранете го овој и подоцнежните трошоци и трајно запрете го распоредот.",
+    "deleteOccurrenceDescription": "Отстранете го само овој трошок. Другите закажани појавувања остануваат непроменети.",
+    "actions": "Повторливи дејства",
+    "actionsTitle": "Дејства за повторлив трошок",
+    "actionsDescription": "Изберете точно кое појавување да го уредите или избришете.",
+    "editActions": "Дејства за уредување",
+    "deleteActions": "Дејства за бришење",
+    "confirmDelete": "Избриши",
+    "confirmStop": "Запри го повторувањето",
+    "working": "Се обработува…",
+    "back": "Назад",
     "confirm": "Продолжи",
     "cancel": "Откажи",
     "occurrences": "{count} појавувања во оваа серија",
     "loading": "Се вчитува…",
-    "loadMore": "Вчитај повеќе појавувања"
+    "loadMore": "Вчитај повеќе појавувања",
+    "editOccurrence": "Уреди го ова појавување",
+    "editOccurrenceDescription": "Променете го само овој трошок.",
+    "editThisAndFuture": "Уреди го ова и идните појавувања",
+    "editThisAndFutureDescription": "Променете го овој трошок и сите идни закажани трошоци.",
+    "stopRecurrence": "Запри го повторувањето",
+    "stopConfirmTitle": "Да се запре ова повторување?",
+    "stopConfirmDescription": "Постојните трошоци ќе останат. Нема да се создаваат нови појавувања.",
+    "stopConfirmHint": "Запирањето е трајно. За повторно започнување, создадете нов повторлив трошок.",
+    "deleteConfirmTitle": "Потврди бришење",
+    "deleteConfirmHint": "Ова дејство не може да се врати за избраните појавувања.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Ќе биде избришано само ова појавување.",
+      "THIS_AND_FUTURE": "Ќе бидат избришани ова и идните појавувања. Повторувањето ќе продолжи со следното закажано појавување.",
+      "THIS_AND_FUTURE_STOP": "Ќе бидат избришани ова и идните појавувања и повторувањето ќе запре."
+    }
   }
 }

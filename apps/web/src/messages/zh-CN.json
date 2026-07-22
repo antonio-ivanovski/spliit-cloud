@@ -616,7 +616,9 @@
         "increaseOccurrences": "增加重复次数",
         "ruleSummary": "每{interval}{frequency} · {count} 次",
         "ruleSummaryIndefinite": "每{interval}{frequency} · 无结束日期"
-      }
+      },
+      "recurringEditScopeOccurrence": "仅编辑本次重复项",
+      "recurringEditScopeFuture": "编辑本次及后续重复项"
     },
     "amountField": {
       "label": "金额",
@@ -1969,10 +1971,38 @@
     "deleteScopeDescription": "选择是删除本次还是结束整个系列。",
     "deleteOccurrence": "仅删除本次",
     "deleteThisAndFuture": "删除本次及之后的支出",
+    "deleteThisAndFutureStop": "删除本次及后续重复项并停止重复",
+    "deleteThisAndFutureDescription": "删除这笔及之后的支出；计划仍保持活动状态。",
+    "deleteThisAndFutureStopDescription": "删除这笔及之后的支出并永久停止计划。",
+    "deleteOccurrenceDescription": "仅删除这笔支出。其他计划的重复项保持不变。",
+    "actions": "重复操作",
+    "actionsTitle": "定期支出操作",
+    "actionsDescription": "准确选择要编辑或删除的重复项。",
+    "editActions": "编辑操作",
+    "deleteActions": "删除操作",
+    "confirmDelete": "删除",
+    "confirmStop": "停止重复",
+    "working": "处理中…",
+    "back": "返回",
     "confirm": "继续",
     "cancel": "取消",
     "occurrences": "此系列共 {count} 次",
     "loading": "加载中…",
-    "loadMore": "加载更多记录"
+    "loadMore": "加载更多记录",
+    "editOccurrence": "编辑本次重复项",
+    "editOccurrenceDescription": "仅更改这笔支出。",
+    "editThisAndFuture": "编辑本次及后续重复项",
+    "editThisAndFutureDescription": "更改这笔支出和所有计划的未来支出。",
+    "stopRecurrence": "停止重复",
+    "stopConfirmTitle": "停止此重复？",
+    "stopConfirmDescription": "现有支出将保留。不会创建新的重复项。",
+    "stopConfirmHint": "停止操作是永久性的。要重新开始，请创建新的定期支出。",
+    "deleteConfirmTitle": "确认删除",
+    "deleteConfirmHint": "此操作对所选重复项不可撤销。",
+    "deleteConfirm": {
+      "OCCURRENCE": "仅删除本次重复项。",
+      "THIS_AND_FUTURE": "删除本次及后续重复项。重复将从下一个计划的重复项继续。",
+      "THIS_AND_FUTURE_STOP": "删除本次及后续重复项并停止重复。"
+    }
   }
 }

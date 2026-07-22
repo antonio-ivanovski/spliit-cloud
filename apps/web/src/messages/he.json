@@ -628,7 +628,9 @@
         "increaseOccurrences": "הגדלת מספר המופעים",
         "ruleSummary": "כל {interval} {frequency} · {count} מופעים",
         "ruleSummaryIndefinite": "כל {interval} {frequency} · ללא תאריך סיום"
-      }
+      },
+      "recurringEditScopeOccurrence": "עריכת מופע זה בלבד",
+      "recurringEditScopeFuture": "עריכת מופע זה והמופעים הבאים"
     },
     "amountField": {
       "label": "סכום",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "בחרו אם למחוק מופע אחד או לסיים את הסדרה.",
     "deleteOccurrence": "מחיקת מופע זה בלבד",
     "deleteThisAndFuture": "מחיקת מופע זה והמופעים העתידיים",
+    "deleteThisAndFutureStop": "מחיקת מופע זה והמופעים הבאים ועצירת ההחזרה",
+    "deleteThisAndFutureDescription": "הסרת הוצאה זו והוצאות מאוחרות יותר; לוח הזמנים יישאר פעיל.",
+    "deleteThisAndFutureStopDescription": "הסרת הוצאה זו והוצאות מאוחרות יותר ועצירת לוח הזמנים לצמיתות.",
+    "deleteOccurrenceDescription": "הסרת הוצאה זו בלבד. מופעים מתוזמנים אחרים לא ישתנו.",
+    "actions": "פעולות חוזרות",
+    "actionsTitle": "פעולות הוצאה חוזרת",
+    "actionsDescription": "בחרו בדיוק איזה מופע לערוך או למחוק.",
+    "editActions": "עריכה",
+    "deleteActions": "מחיקה",
+    "confirmDelete": "מחיקה",
+    "confirmStop": "עצירת החזרה",
+    "working": "בעיבוד…",
+    "back": "חזרה",
     "confirm": "המשך",
     "cancel": "ביטול",
     "occurrences": "{count} מופעים בסדרה זו",
     "loading": "בטעינה…",
-    "loadMore": "טעינת מופעים נוספים"
+    "loadMore": "טעינת מופעים נוספים",
+    "editOccurrence": "עריכת מופע זה",
+    "editOccurrenceDescription": "שינוי הוצאה זו בלבד.",
+    "editThisAndFuture": "עריכת מופע זה והמופעים הבאים",
+    "editThisAndFutureDescription": "שינוי הוצאה זו וכל ההוצאות המתוזמנות העתידיות.",
+    "stopRecurrence": "עצירת החזרה",
+    "stopConfirmTitle": "לעצור את ההחזרה הזו?",
+    "stopConfirmDescription": "הוצאות קיימות יישארו. לא ייווצרו מופעים חדשים.",
+    "stopConfirmHint": "העצירה היא לצמיתות. כדי להתחיל מחדש, צרו הוצאה חוזרת חדשה.",
+    "deleteConfirmTitle": "אישור מחיקה",
+    "deleteConfirmHint": "לא ניתן לבטל פעולה זו עבור המופעים שנבחרו.",
+    "deleteConfirm": {
+      "OCCURRENCE": "רק מופע זה יימחק.",
+      "THIS_AND_FUTURE": "מופע זה והמופעים הבאים יימחקו. ההחזרה תמשיך במופע המתוזמן הבא.",
+      "THIS_AND_FUTURE_STOP": "מופע זה והמופעים הבאים יימחקו וההחזרה תיעצר."
+    }
   }
 }

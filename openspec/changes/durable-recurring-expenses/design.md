@@ -29,6 +29,16 @@ Alternatives rejected: BullMQ adds Redis operations; a bespoke jobs table duplic
 
 Each job locks the series, validates expected sequence/date, resolves conversion, creates the expense and activity, advances the series, and sends the next pg-boss job using the same transaction-bound adapter. `(seriesId, sequence)` is the durable idempotency boundary. Catch-up is a chain of immediately available jobs rather than one unbounded transaction.
 
+### Monotonic consumed sequence without tombstones
+
+`RecurringExpenseSeries.occurrencesCreated` is the authoritative count of consumed schedule slots and only moves forward. A materialized occurrence is identified by its `(seriesId, sequence)` expense row while it exists; deleting that row does not decrement the counter and does not create a tombstone or a deleted placeholder. Sequence gaps are therefore expected and are not evidence that reconciliation should recreate an expense. Count termination includes deleted slots, and date termination continues to use the original anchored schedule; deletion never extends either limit.
+
+Occurrence deletion removes one materialized row and leaves the series active. “Delete this and following” removes all currently materialized rows at or after the selected sequence but leaves the series active and continues from the next unconsumed sequence. Since unmaterialized dates have no rows, this operation cannot delete future schedule slots; choosing “delete this and following and stop recurrence” performs the same row deletion and marks the series `CANCELLED`, preventing all future materialization. All three operations are idempotent under retries.
+
+Stop Recurrence is a separate permanent mutation. It locks the series, marks it `CANCELLED`, invalidates queued work, and preserves every materialized expense. A cancelled or completed series has no Stop Recurrence action; restarting requires a new recurrence or copy.
+
+Cancelled and completed series remain historical collections whose existing materialized rows can still be maintained. Their action surface keeps occurrence-only and this-and-future edit/delete choices, but a scoped mutation must preserve the terminal status and must never resume generation. For terminal series, “this and future” means the selected and higher-sequence materialized rows only. `PAUSED` is an operational archive state and is presented as running in the simplified user-facing lifecycle badge.
+
 ### Anchored interval calculation
 
 New and reconfigured schedules calculate occurrence dates from the anchor and ordinal, not from the prior clamped date. Missing month/year days clamp only that occurrence. Legacy schedules preserve their existing open expense as anchor and exact stored next date so migration does not silently move production schedules.
@@ -37,9 +47,23 @@ New and reconfigured schedules calculate occurrence dates from the anchor and or
 
 The series template stores original input amount, splits/items in their existing input units, and conversion intent. CUSTOM retains its fixed rate; EXCHANGE calls the existing resolver with the occurrence date. Attachments are omitted because they belong to a particular receipt.
 
-### Existing notification dispatcher remains
+### Individual activities with coalesced recurring delivery
 
-Generated rows record `RECURRING_EXPENSE_CREATED` and immediately schedule the existing dispatcher after commit. Recurring creation is a distinct notification preference category so users can configure its channels independently. The recurring-only path includes the original creator while ordinary activity continues excluding its actor.
+Every created, edited, or deleted materialized expense records its own activity so the feed remains an accurate per-expense audit trail. Notification fan-out is separately coalesced: one affected expense uses normal recurring-aware content, while two or more expenses affected by one recurring operation produce one participant-scoped summary containing the count and scheduled date range. Eligible recipients are the union of active account-backed participants represented by the affected rows or series template, with the normal actor-exclusion rule except for generated recurring creation, which continues to include the original creator.
+
+Creating a recurrence always uses the `RECURRING_EXPENSE_CREATED` preference category and content that explains the recurrence rule and termination. If occurrence one is the only occurrence due through the current UTC date, its recurring-specific notification is dispatched after commit. If the past anchor makes multiple occurrences immediately due, creation opens a persisted catch-up batch seeded with occurrence one, suppresses its standalone delivery, and emits one combined schedule-created/catch-up summary after the worker finishes the due range. The combined summary includes occurrence one, the total created count, date range, and recurrence rule; recipients do not receive a second schedule-created message.
+
+Generated rows and bulk mutation rows retain individual activities even while their email/push delivery is suppressed. This-and-future edit and this-and-following delete use normal delivery for one affected row and one summary for multiple affected rows. A standalone Stop Recurrence operation records and dispatches a recurrence-stopped event through the existing deletion-style delivery path under `EXPENSE_CHANGED`, scoped to eligible participants in the series template and excluding the actor. Delete-and-stop emits no second stop notification: the single deletion notification or summary states that the schedule was also stopped.
+
+Persisted batch state and stable event identifiers protect catch-up summaries from worker retries. Request-driven bulk edit/delete summaries derive a stable operation identifier from their committed activity set so the dispatcher is invoked once for the operation. Cancellation or reconfiguration clears any unrelated open catch-up batch without claiming ungenerated occurrences. Notification channel delivery remains governed by the existing fire-and-forget coordinator.
+
+### Lifecycle-aware UI and cache convergence
+
+Edit-scope context is rendered as a non-sticky inline status alert inside the page content immediately above the expense form, keeping it below the application header on mobile and desktop. Recurrence badges expose `Running`, `Stopped`, or `Completed` in both visible text and accessible labels; `PAUSED` maps to `Running`. The repeat icon is paired or composed with play, X, or check respectively, and color is supplementary rather than the only status signal.
+
+Recurring actions are driven by authoritative series status. Active or paused series offer Stop Recurrence; cancelled or completed series do not. Terminal series keep occurrence-only and this-and-future edit/delete actions for already-materialized rows, and these mutations preserve terminal state.
+
+Expense mutations invalidate every cached expense-list variant for the group, not only the empty-filter first page, as well as expense detail, series history, activities, balances, and other existing expense-derived queries. Past-dated recurrence creation is asynchronous, so its response exposes enough series progress to let the client temporarily poll while catch-up is pending. Completion or terminal failure stops polling and triggers one final broad invalidation. This bounded convergence mechanism covers navigation away and back without requiring a new real-time transport.
 
 ### Legacy Spliit import stays immutable
 

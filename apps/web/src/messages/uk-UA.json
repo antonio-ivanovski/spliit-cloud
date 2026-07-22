@@ -634,7 +634,9 @@
         "increaseOccurrences": "Збільшити кількість повторень",
         "ruleSummary": "Кожні {interval} {frequency} · {count} повторень",
         "ruleSummaryIndefinite": "Кожні {interval} {frequency} · Без дати завершення"
-      }
+      },
+      "recurringEditScopeOccurrence": "Редагування лише цього повторення",
+      "recurringEditScopeFuture": "Редагування цього й майбутніх повторень"
     },
     "amountField": {
       "label": "Сума",
@@ -2019,10 +2021,38 @@
     "deleteScopeDescription": "Виберіть, видалити одне повторення чи завершити серію.",
     "deleteOccurrence": "Видалити лише це повторення",
     "deleteThisAndFuture": "Видалити це й майбутні повторення",
+    "deleteThisAndFutureStop": "Видалити це й майбутні повторення та зупинити повторення",
+    "deleteThisAndFutureDescription": "Видаліть цю й наступні витрати; розклад залишиться активним.",
+    "deleteThisAndFutureStopDescription": "Видаліть цю й наступні витрати та назавжди зупиніть розклад.",
+    "deleteOccurrenceDescription": "Видаліть лише цю витрату. Інші заплановані повторення залишаться без змін.",
+    "actions": "Дії для повторюваних витрат",
+    "actionsTitle": "Дії з повторюваною витратою",
+    "actionsDescription": "Виберіть, яке саме повторення редагувати або видалити.",
+    "editActions": "Дії редагування",
+    "deleteActions": "Дії видалення",
+    "confirmDelete": "Видалити",
+    "confirmStop": "Зупинити повторення",
+    "working": "Виконується…",
+    "back": "Назад",
     "confirm": "Продовжити",
     "cancel": "Скасувати",
     "occurrences": "Повторень у цій серії: {count}",
     "loading": "Завантаження…",
-    "loadMore": "Завантажити більше повторень"
+    "loadMore": "Завантажити більше повторень",
+    "editOccurrence": "Редагувати це повторення",
+    "editOccurrenceDescription": "Змініть лише цю витрату.",
+    "editThisAndFuture": "Редагувати це й майбутні повторення",
+    "editThisAndFutureDescription": "Змініть цю витрату та всі майбутні заплановані витрати.",
+    "stopRecurrence": "Зупинити повторення",
+    "stopConfirmTitle": "Зупинити це повторення?",
+    "stopConfirmDescription": "Наявні витрати залишаться. Нові повторення створюватися не будуть.",
+    "stopConfirmHint": "Зупинка є незворотною. Щоб почати знову, створіть нову повторювану витрату.",
+    "deleteConfirmTitle": "Підтвердьте видалення",
+    "deleteConfirmHint": "Цю дію неможливо скасувати для вибраних повторень.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Буде видалено лише це повторення.",
+      "THIS_AND_FUTURE": "Це й майбутні повторення буде видалено. Повторення продовжиться з наступного запланованого.",
+      "THIS_AND_FUTURE_STOP": "Це й майбутні повторення буде видалено, а повторення зупиниться."
+    }
   }
 }

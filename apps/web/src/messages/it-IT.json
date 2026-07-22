@@ -628,7 +628,9 @@
         "increaseOccurrences": "Aumenta le occorrenze",
         "ruleSummary": "Ogni {interval} {frequency} · {count} occorrenze",
         "ruleSummaryIndefinite": "Ogni {interval} {frequency} · Senza data di fine"
-      }
+      },
+      "recurringEditScopeOccurrence": "Modifica solo questa occorrenza",
+      "recurringEditScopeFuture": "Modifica questa e le occorrenze future"
     },
     "amountField": {
       "label": "Importo",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "Scegli se eliminare una sola occorrenza o terminare la serie.",
     "deleteOccurrence": "Elimina solo questa occorrenza",
     "deleteThisAndFuture": "Elimina questa occorrenza e quelle future",
+    "deleteThisAndFutureStop": "Elimina questa e le occorrenze future e interrompi la ricorrenza",
+    "deleteThisAndFutureDescription": "Rimuovi questa e le spese successive; la programmazione resterà attiva.",
+    "deleteThisAndFutureStopDescription": "Rimuovi questa e le spese successive e interrompi definitivamente la programmazione.",
+    "deleteOccurrenceDescription": "Rimuovi solo questa spesa. Le altre occorrenze programmate rimarranno invariate.",
+    "actions": "Azioni ricorrenti",
+    "actionsTitle": "Azioni della spesa ricorrente",
+    "actionsDescription": "Scegli esattamente quale occorrenza modificare o eliminare.",
+    "editActions": "Modifica",
+    "deleteActions": "Elimina",
+    "confirmDelete": "Elimina",
+    "confirmStop": "Interrompi ricorrenza",
+    "working": "Elaborazione…",
+    "back": "Indietro",
     "confirm": "Continua",
     "cancel": "Annulla",
     "occurrences": "{count} occorrenze in questa serie",
     "loading": "Caricamento…",
-    "loadMore": "Carica altre occorrenze"
+    "loadMore": "Carica altre occorrenze",
+    "editOccurrence": "Modifica questa occorrenza",
+    "editOccurrenceDescription": "Modifica solo questa spesa.",
+    "editThisAndFuture": "Modifica questa e le occorrenze future",
+    "editThisAndFutureDescription": "Modifica questa spesa e tutte le spese future programmate.",
+    "stopRecurrence": "Interrompi ricorrenza",
+    "stopConfirmTitle": "Interrompere questa ricorrenza?",
+    "stopConfirmDescription": "Le spese esistenti resteranno. Non verranno create nuove occorrenze.",
+    "stopConfirmHint": "L’interruzione è permanente. Per ricominciare, crea una nuova spesa ricorrente.",
+    "deleteConfirmTitle": "Conferma eliminazione",
+    "deleteConfirmHint": "Questa azione è irreversibile per le occorrenze selezionate.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Verrà eliminata solo questa occorrenza.",
+      "THIS_AND_FUTURE": "Questa e le occorrenze successive verranno eliminate. La ricorrenza continuerà con la prossima occorrenza programmata.",
+      "THIS_AND_FUTURE_STOP": "Questa e le occorrenze successive verranno eliminate e la ricorrenza verrà interrotta."
+    }
   }
 }

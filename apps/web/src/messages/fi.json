@@ -622,7 +622,9 @@
         "increaseOccurrences": "Lisää toistokertoja",
         "ruleSummary": "Joka {interval} {frequency} · {count} toistokertaa",
         "ruleSummaryIndefinite": "Joka {interval} {frequency} · Ei päättymispäivää"
-      }
+      },
+      "recurringEditScopeOccurrence": "Muokataan vain tätä esiintymää",
+      "recurringEditScopeFuture": "Muokataan tätä ja tulevia esiintymiä"
     },
     "amountField": {
       "label": "Summa",
@@ -1985,10 +1987,38 @@
     "deleteScopeDescription": "Valitse, poistetaanko yksi toisto vai päätetäänkö sarja.",
     "deleteOccurrence": "Poista vain tämä toisto",
     "deleteThisAndFuture": "Poista tämä ja tulevat toistot",
+    "deleteThisAndFutureStop": "Poista tämä ja tulevat esiintymät ja pysäytä toisto",
+    "deleteThisAndFutureDescription": "Poista tämä ja myöhemmät kulut; aikataulu pysyy aktiivisena.",
+    "deleteThisAndFutureStopDescription": "Poista tämä ja myöhemmät kulut ja pysäytä aikataulu pysyvästi.",
+    "deleteOccurrenceDescription": "Poista vain tämä kulu. Muut ajoitetut esiintymät säilyvät ennallaan.",
+    "actions": "Toistuvat toiminnot",
+    "actionsTitle": "Toistuvan kulun toiminnot",
+    "actionsDescription": "Valitse tarkalleen, mitä esiintymää muokataan tai poistetaan.",
+    "editActions": "Muokkaa",
+    "deleteActions": "Poista",
+    "confirmDelete": "Poista",
+    "confirmStop": "Pysäytä toisto",
+    "working": "Käsitellään…",
+    "back": "Takaisin",
     "confirm": "Jatka",
     "cancel": "Peruuta",
     "occurrences": "{count} toistoa tässä sarjassa",
     "loading": "Ladataan…",
-    "loadMore": "Lataa lisää toistoja"
+    "loadMore": "Lataa lisää toistoja",
+    "editOccurrence": "Muokkaa tätä esiintymää",
+    "editOccurrenceDescription": "Muuta vain tätä kulua.",
+    "editThisAndFuture": "Muokkaa tätä ja tulevia esiintymiä",
+    "editThisAndFutureDescription": "Muuta tätä kulua ja kaikkia tulevia ajoitettuja kuluja.",
+    "stopRecurrence": "Pysäytä toisto",
+    "stopConfirmTitle": "Pysäytetäänkö tämä toisto?",
+    "stopConfirmDescription": "Olemassa olevat kulut säilyvät. Uusia esiintymiä ei luoda.",
+    "stopConfirmHint": "Pysäyttäminen on pysyvää. Aloita uudelleen luomalla uusi toistuva kulu.",
+    "deleteConfirmTitle": "Vahvista poisto",
+    "deleteConfirmHint": "Tätä toimintoa ei voi kumota valittujen esiintymien osalta.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Vain tämä esiintymä poistetaan.",
+      "THIS_AND_FUTURE": "Tämä ja seuraavat esiintymät poistetaan. Toisto jatkuu seuraavasta ajoitetusta esiintymästä.",
+      "THIS_AND_FUTURE_STOP": "Tämä ja seuraavat esiintymät poistetaan ja toisto pysäytetään."
+    }
   }
 }

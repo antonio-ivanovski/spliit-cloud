@@ -152,3 +152,20 @@ export function useDeleteExpenseMutation({
     },
   })
 }
+
+export function useStopRecurrenceMutation({
+  linkInviteToken,
+}: {
+  linkInviteToken: string | undefined
+}) {
+  const invalidateExpenseDependencies =
+    useInvalidateExpenseDependencies(linkInviteToken)
+
+  return trpc.groups.expenses.stopRecurrence.useMutation({
+    onSuccess: (_data, variables) =>
+      invalidateExpenseDependencies({
+        groupId: variables.groupId,
+        expenseId: variables.expenseId,
+      }),
+  })
+}

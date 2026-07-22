@@ -634,7 +634,9 @@
         "increaseOccurrences": "Zvýšit počet opakování",
         "ruleSummary": "Každých {interval} {frequency} · {count} opakování",
         "ruleSummaryIndefinite": "Každých {interval} {frequency} · Bez data ukončení"
-      }
+      },
+      "recurringEditScopeOccurrence": "Upravit pouze tento výskyt",
+      "recurringEditScopeFuture": "Upravit tento a budoucí výskyty"
     },
     "amountField": {
       "label": "Částka",
@@ -2019,10 +2021,38 @@
     "deleteScopeDescription": "Zvolte, zda chcete odstranit jeden výskyt, nebo ukončit celou řadu.",
     "deleteOccurrence": "Smazat pouze tento výskyt",
     "deleteThisAndFuture": "Smazat tento a všechny budoucí výskyty",
+    "deleteThisAndFutureStop": "Smazat tento a budoucí výskyty a zastavit opakování",
+    "deleteThisAndFutureDescription": "Odstraní tento a pozdější výdaje; plán zůstane aktivní.",
+    "deleteThisAndFutureStopDescription": "Odstraní tento a pozdější výdaje a trvale zastaví plán.",
+    "deleteOccurrenceDescription": "Odstraní pouze tento výdaj. Ostatní naplánované výskyty zůstanou beze změny.",
+    "actions": "Akce opakování",
+    "actionsTitle": "Akce opakovaného výdaje",
+    "actionsDescription": "Vyberte přesně, který výskyt chcete upravit nebo smazat.",
+    "editActions": "Upravit",
+    "deleteActions": "Smazat",
+    "confirmDelete": "Smazat",
+    "confirmStop": "Zastavit opakování",
+    "working": "Probíhá…",
+    "back": "Zpět",
     "confirm": "Pokračovat",
     "cancel": "Zrušit",
     "occurrences": "Počet výskytů v této řadě: {count}",
     "loading": "Načítání…",
-    "loadMore": "Načíst další výskyty"
+    "loadMore": "Načíst další výskyty",
+    "editOccurrence": "Upravit tento výskyt",
+    "editOccurrenceDescription": "Změní pouze tento výdaj.",
+    "editThisAndFuture": "Upravit tento a budoucí výskyty",
+    "editThisAndFutureDescription": "Změní tento výdaj a všechny budoucí naplánované výdaje.",
+    "stopRecurrence": "Zastavit opakování",
+    "stopConfirmTitle": "Zastavit toto opakování?",
+    "stopConfirmDescription": "Stávající výdaje zůstanou. Nebudou vytvořeny žádné nové výskyty.",
+    "stopConfirmHint": "Zastavení je trvalé. Chcete-li začít znovu, vytvořte nový opakovaný výdaj.",
+    "deleteConfirmTitle": "Potvrdit smazání",
+    "deleteConfirmHint": "Tuto akci pro vybrané výskyty nelze vrátit zpět.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Bude smazán pouze tento výskyt.",
+      "THIS_AND_FUTURE": "Tento a následující výskyty budou smazány. Opakování bude pokračovat dalším naplánovaným výskytem.",
+      "THIS_AND_FUTURE_STOP": "Tento a následující výskyty budou smazány a opakování bude zastaveno."
+    }
   }
 }

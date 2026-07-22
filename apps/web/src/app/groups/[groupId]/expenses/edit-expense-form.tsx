@@ -28,10 +28,12 @@ export function EditExpenseForm({
   groupId,
   expenseId,
   runtimeFeatureFlags,
+  initialScope,
 }: {
   groupId: string
   expenseId: string
   runtimeFeatureFlags: RuntimeFeatureFlags
+  initialScope?: SeriesMutationScope
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tExpenseForm } = useTranslation(undefined, {
@@ -68,6 +70,7 @@ export function EditExpenseForm({
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
     linkInviteToken,
   })
+  const selectedScope = initialScope ?? null
 
   if (!group || !expense) return null
 
@@ -111,6 +114,20 @@ export function EditExpenseForm({
         onSubmit={async (expense) => {
           if (readOnly) return
           if (seriesId) {
+            if (selectedScope) {
+              await updateExpenseMutateAsync({
+                expenseId,
+                groupId,
+                expense,
+                scope: selectedScope,
+              } as Parameters<typeof updateExpenseMutateAsync>[0])
+              await navigate({
+                to: '/groups/$groupId/expenses/$expenseId',
+                params: { groupId: group.id, expenseId },
+                replace: true,
+              })
+              return
+            }
             setScopeDialog({ mode: 'update', expense })
             return
           }
@@ -131,13 +148,26 @@ export function EditExpenseForm({
         }}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />
+      {seriesId && selectedScope && (
+        <div
+          className="fixed inset-x-0 top-0 z-30 border-b bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground shadow-sm"
+          role="status"
+        >
+          {tExpenseForm(
+            selectedScope === 'OCCURRENCE'
+              ? 'Expense.recurringEditScopeOccurrence'
+              : 'Expense.recurringEditScopeFuture',
+          )}
+        </div>
+      )}
       <SeriesScopeDialog
+        key={scopeDialog?.mode ?? 'closed'}
         open={scopeDialog != null}
         mode={scopeDialog?.mode ?? 'update'}
         onOpenChange={(open) => {
           if (!open) setScopeDialog(null)
         }}
-        onConfirm={async (scope: SeriesMutationScope) => {
+        onConfirm={async (scope: SeriesMutationScope, stopRecurrence) => {
           const pending = scopeDialog
           setScopeDialog(null)
           if (!pending) return
@@ -146,6 +176,9 @@ export function EditExpenseForm({
               expenseId,
               groupId,
               scope,
+              ...(scope === 'THIS_AND_FUTURE' && stopRecurrence !== undefined
+                ? { stopRecurrence }
+                : {}),
             } as Parameters<typeof deleteExpenseMutateAsync>[0])
             return
           }

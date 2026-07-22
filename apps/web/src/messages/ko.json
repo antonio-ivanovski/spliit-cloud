@@ -517,7 +517,9 @@
         "increaseOccurrences": "반복 횟수 늘리기",
         "ruleSummary": "{interval}{frequency}마다 · {count}회",
         "ruleSummaryIndefinite": "{interval}{frequency}마다 · 종료일 없음"
-      }
+      },
+      "recurringEditScopeOccurrence": "이 항목만 수정",
+      "recurringEditScopeFuture": "이 항목 및 이후 항목 수정"
     },
     "amountField": {
       "label": "금액",
@@ -1969,10 +1971,38 @@
     "deleteScopeDescription": "한 번의 반복을 삭제할지 시리즈를 종료할지 선택하세요.",
     "deleteOccurrence": "이 반복만 삭제",
     "deleteThisAndFuture": "이 반복과 이후 반복 삭제",
+    "deleteThisAndFutureStop": "이 항목과 이후 항목 삭제 및 반복 중지",
+    "deleteThisAndFutureDescription": "이 지출과 이후 지출을 삭제합니다. 일정은 계속 활성 상태입니다.",
+    "deleteThisAndFutureStopDescription": "이 지출과 이후 지출을 삭제하고 일정을 영구적으로 중지합니다.",
+    "deleteOccurrenceDescription": "이 지출만 삭제합니다. 다른 예정 항목은 변경되지 않습니다.",
+    "actions": "반복 작업",
+    "actionsTitle": "반복 지출 작업",
+    "actionsDescription": "수정하거나 삭제할 항목을 정확히 선택하세요.",
+    "editActions": "수정",
+    "deleteActions": "삭제",
+    "confirmDelete": "삭제",
+    "confirmStop": "반복 중지",
+    "working": "처리 중…",
+    "back": "뒤로",
     "confirm": "계속",
     "cancel": "취소",
     "occurrences": "이 시리즈의 반복 {count}개",
     "loading": "불러오는 중…",
-    "loadMore": "반복 더 불러오기"
+    "loadMore": "반복 더 불러오기",
+    "editOccurrence": "이 항목 수정",
+    "editOccurrenceDescription": "이 지출만 변경합니다.",
+    "editThisAndFuture": "이 항목 및 이후 항목 수정",
+    "editThisAndFutureDescription": "이 지출과 이후 예정된 모든 지출을 변경합니다.",
+    "stopRecurrence": "반복 중지",
+    "stopConfirmTitle": "이 반복을 중지할까요?",
+    "stopConfirmDescription": "기존 지출은 유지됩니다. 새 항목은 생성되지 않습니다.",
+    "stopConfirmHint": "중지는 영구적입니다. 다시 시작하려면 새 반복 지출을 만드세요.",
+    "deleteConfirmTitle": "삭제 확인",
+    "deleteConfirmHint": "선택한 항목에 대해 이 작업은 되돌릴 수 없습니다.",
+    "deleteConfirm": {
+      "OCCURRENCE": "이 항목만 삭제됩니다.",
+      "THIS_AND_FUTURE": "이 항목과 이후 항목이 삭제됩니다. 반복은 다음 예정 항목부터 계속됩니다.",
+      "THIS_AND_FUTURE_STOP": "이 항목과 이후 항목이 삭제되고 반복이 중지됩니다."
+    }
   }
 }

@@ -12,6 +12,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export type SeriesMutationScope = 'OCCURRENCE' | 'THIS_AND_FUTURE'
+export type SeriesDeleteOption =
+  'OCCURRENCE' | 'THIS_AND_FUTURE' | 'THIS_AND_FUTURE_STOP'
 
 export function SeriesScopeDialog({
   open,
@@ -22,10 +24,10 @@ export function SeriesScopeDialog({
   open: boolean
   mode: 'update' | 'delete'
   onOpenChange: (open: boolean) => void
-  onConfirm: (scope: SeriesMutationScope) => void
+  onConfirm: (scope: SeriesMutationScope, stopRecurrence?: boolean) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
-  const [scope, setScope] = useState<SeriesMutationScope>('OCCURRENCE')
+  const [scope, setScope] = useState<SeriesDeleteOption>('OCCURRENCE')
   const isDelete = mode === 'delete'
 
   return (
@@ -41,7 +43,7 @@ export function SeriesScopeDialog({
         </ResponsiveDialogHeader>
         <RadioGroup
           value={scope}
-          onValueChange={(value) => setScope(value as SeriesMutationScope)}
+          onValueChange={(value) => setScope(value as SeriesDeleteOption)}
           aria-label={t(isDelete ? 'deleteScopeTitle' : 'scopeTitle')}
         >
           <RadioGroupItem value="OCCURRENCE" card>
@@ -58,6 +60,15 @@ export function SeriesScopeDialog({
               </div>
             </div>
           </RadioGroupItem>
+          {isDelete && (
+            <RadioGroupItem value="THIS_AND_FUTURE_STOP" card>
+              <div>
+                <div className="font-medium">
+                  {t('deleteThisAndFutureStop')}
+                </div>
+              </div>
+            </RadioGroupItem>
+          )}
         </RadioGroup>
         <ResponsiveDialogFooter>
           <Button
@@ -70,7 +81,12 @@ export function SeriesScopeDialog({
           <Button
             type="button"
             variant={isDelete ? 'destructive' : 'default'}
-            onClick={() => onConfirm(scope)}
+            onClick={() =>
+              onConfirm(
+                scope === 'THIS_AND_FUTURE_STOP' ? 'THIS_AND_FUTURE' : scope,
+                scope === 'THIS_AND_FUTURE_STOP',
+              )
+            }
           >
             {t('confirm')}
           </Button>

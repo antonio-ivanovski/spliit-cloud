@@ -628,7 +628,9 @@
         "increaseOccurrences": "Aumentar repeticiones",
         "ruleSummary": "Cada {interval} {frequency} · {count} ocurrencias",
         "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sin fecha de finalización"
-      }
+      },
+      "recurringEditScopeOccurrence": "Editar solo esta ocurrencia",
+      "recurringEditScopeFuture": "Editar esta y las futuras ocurrencias"
     },
     "amountField": {
       "label": "Cantidad",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "Elige si quieres eliminar una repetición o finalizar la serie.",
     "deleteOccurrence": "Eliminar solo esta repetición",
     "deleteThisAndFuture": "Eliminar esta repetición y las futuras",
+    "deleteThisAndFutureStop": "Eliminar esta y las futuras ocurrencias y detener la recurrencia",
+    "deleteThisAndFutureDescription": "Elimina este y los gastos posteriores; la programación seguirá activa.",
+    "deleteThisAndFutureStopDescription": "Elimina este y los gastos posteriores y detén permanentemente la programación.",
+    "deleteOccurrenceDescription": "Elimina solo este gasto. Las demás ocurrencias programadas no cambiarán.",
+    "actions": "Acciones recurrentes",
+    "actionsTitle": "Acciones del gasto recurrente",
+    "actionsDescription": "Elige exactamente qué ocurrencia editar o eliminar.",
+    "editActions": "Editar",
+    "deleteActions": "Eliminar",
+    "confirmDelete": "Eliminar",
+    "confirmStop": "Detener recurrencia",
+    "working": "Procesando…",
+    "back": "Atrás",
     "confirm": "Continuar",
     "cancel": "Cancelar",
     "occurrences": "{count} repeticiones en esta serie",
     "loading": "Cargando…",
-    "loadMore": "Cargar más repeticiones"
+    "loadMore": "Cargar más repeticiones",
+    "editOccurrence": "Editar esta ocurrencia",
+    "editOccurrenceDescription": "Cambia solo este gasto.",
+    "editThisAndFuture": "Editar esta y las futuras ocurrencias",
+    "editThisAndFutureDescription": "Cambia este gasto y todos los gastos futuros programados.",
+    "stopRecurrence": "Detener recurrencia",
+    "stopConfirmTitle": "¿Detener esta recurrencia?",
+    "stopConfirmDescription": "Los gastos existentes se conservarán. No se crearán nuevas ocurrencias.",
+    "stopConfirmHint": "Detenerla es permanente. Para empezar de nuevo, crea un nuevo gasto recurrente.",
+    "deleteConfirmTitle": "Confirmar eliminación",
+    "deleteConfirmHint": "Esta acción no se puede deshacer para las ocurrencias seleccionadas.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Solo se eliminará esta ocurrencia.",
+      "THIS_AND_FUTURE": "Se eliminarán esta y las siguientes ocurrencias. La recurrencia continuará con la próxima ocurrencia programada.",
+      "THIS_AND_FUTURE_STOP": "Se eliminarán esta y las siguientes ocurrencias y se detendrá la recurrencia."
+    }
   }
 }

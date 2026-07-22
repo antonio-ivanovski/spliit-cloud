@@ -117,6 +117,15 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
       return
     const parsed = parseActivityData(event.data)
     if (
+      event.type === 'RECURRING_EXPENSE_CREATED' &&
+      parsed?.kind === 'recurring_expense_summary'
+    ) {
+      if (recipientAccountId) {
+        await this.dispatchRecurringSummary(event, recipientAccountId, parsed)
+      }
+      return
+    }
+    if (
       parsed &&
       (parsed.kind === 'import_summary' ||
         parsed.kind === 'expense_categories_bulk_updated')
@@ -358,6 +367,48 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
       tag: `activity:${event.activityId}`,
     }
     await this.sendToAccount(recipientAccountId, payload)
+  }
+
+  private async dispatchRecurringSummary(
+    event: ActivityNotificationEvent,
+    recipientAccountId: string,
+    parsed: Extract<
+      NonNullable<ReturnType<typeof parseActivityData>>,
+      { kind: 'recurring_expense_summary' }
+    >,
+  ): Promise<void> {
+    const [group, actorAccount] = await Promise.all([
+      prisma.group.findUnique({
+        where: { id: event.groupId },
+        select: GROUP_SELECT,
+      }),
+      event.actor?.type === 'ACCOUNT'
+        ? prisma.account.findUnique({
+            where: { id: event.actor.id },
+            select: { name: true },
+          })
+        : Promise.resolve(null),
+    ])
+    if (!group) return
+    const displayName = resolveGroupDisplayName(
+      group.groupType,
+      group.name,
+      group.members,
+      recipientAccountId,
+      group.invitations[0]?.temporaryName ?? undefined,
+    )
+    const actorName = actorAccount?.name ?? 'Someone'
+    const noun = parsed.count === 1 ? 'expense' : 'expenses'
+    const title = parsed.title ? ` "${parsed.title}"` : ''
+    await this.sendToAccount(recipientAccountId, {
+      version: 1,
+      kind: 'activity',
+      activityId: event.activityId,
+      title: 'Recurring expenses caught up',
+      body: `${actorName} added ${parsed.count} recurring ${noun}${title} in ${displayName} for ${parsed.startDate} through ${parsed.endDate}.`,
+      url: `${getWebBaseUrl()}/groups/${event.groupId}`,
+      tag: `activity:${event.activityId}`,
+    })
   }
 
   private async sendToAccount(

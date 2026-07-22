@@ -628,7 +628,9 @@
         "increaseOccurrences": "Handitu errepikapenak",
         "ruleSummary": "{interval} {frequency} bakoitzean · {count} errepikapen",
         "ruleSummaryIndefinite": "{interval} {frequency} bakoitzean · Amaiera-datarik ez"
-      }
+      },
+      "recurringEditScopeOccurrence": "Editatu agerraldi hau soilik",
+      "recurringEditScopeFuture": "Editatu agerraldi hau eta etorkizunekoak"
     },
     "amountField": {
       "label": "Zenbatekoa",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "Aukeratu errepikapen bat ezabatu edo seriea amaitu nahi duzun.",
     "deleteOccurrence": "Ezabatu errepikapen hau bakarrik",
     "deleteThisAndFuture": "Ezabatu hau eta etorkizuneko errepikapenak",
+    "deleteThisAndFutureStop": "Ezabatu agerraldi hau eta etorkizunekoak eta gelditu errepikapena",
+    "deleteThisAndFutureDescription": "Kendu gastu hau eta ondorengoak; egutegia aktibo egongo da.",
+    "deleteThisAndFutureStopDescription": "Kendu gastu hau eta ondorengoak eta gelditu egutegia betiko.",
+    "deleteOccurrenceDescription": "Gastu hau bakarrik kendu. Programatutako beste agerraldiak ez dira aldatuko.",
+    "actions": "Errepikapen-ekintzak",
+    "actionsTitle": "Gastu errepikakorraren ekintzak",
+    "actionsDescription": "Aukeratu zehazki zein agerraldi editatu edo ezabatu nahi duzun.",
+    "editActions": "Editatu",
+    "deleteActions": "Ezabatu",
+    "confirmDelete": "Ezabatu",
+    "confirmStop": "Utzi errepikapena",
+    "working": "Lanean…",
+    "back": "Atzera",
     "confirm": "Jarraitu",
     "cancel": "Utzi",
     "occurrences": "{count} errepikapen serie honetan",
     "loading": "Kargatzen…",
-    "loadMore": "Kargatu errepikapen gehiago"
+    "loadMore": "Kargatu errepikapen gehiago",
+    "editOccurrence": "Editatu agerraldi hau",
+    "editOccurrenceDescription": "Aldatu gastu hau bakarrik.",
+    "editThisAndFuture": "Editatu agerraldi hau eta etorkizunekoak",
+    "editThisAndFutureDescription": "Aldatu gastu hau eta etorkizuneko programatutako gastu guztiak.",
+    "stopRecurrence": "Utzi errepikapena",
+    "stopConfirmTitle": "Gelditu errepikapen hau?",
+    "stopConfirmDescription": "Dauden gastuak mantenduko dira. Ez da agerraldi berririk sortuko.",
+    "stopConfirmHint": "Gelditzea behin betikoa da. Berriro hasteko, sortu gastu errepikakor berri bat.",
+    "deleteConfirmTitle": "Berretsi ezabatzea",
+    "deleteConfirmHint": "Ekintza hau ezin da desegin hautatutako agerraldietan.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Agerraldi hau bakarrik ezabatuko da.",
+      "THIS_AND_FUTURE": "Agerraldi hau eta hurrengoak ezabatuko dira. Errepikapenak programatutako hurrengo agerraldiarekin jarraituko du.",
+      "THIS_AND_FUTURE_STOP": "Agerraldi hau eta hurrengoak ezabatuko dira eta errepikapena geldituko da."
+    }
   }
 }

@@ -646,7 +646,9 @@
         "increaseOccurrences": "Vorkommen erhöhen",
         "ruleSummary": "Alle {interval} {frequency} · {count} Vorkommen",
         "ruleSummaryIndefinite": "Alle {interval} {frequency} · Kein Enddatum"
-      }
+      },
+      "recurringEditScopeOccurrence": "Nur dieses Vorkommen bearbeiten",
+      "recurringEditScopeFuture": "Dieses und zukünftige Vorkommen bearbeiten"
     },
     "amountField": {
       "label": "Betrag",
@@ -2053,10 +2055,38 @@
     "deleteScopeDescription": "Wähle, ob ein Termin gelöscht oder die Serie beendet werden soll.",
     "deleteOccurrence": "Nur diesen Termin löschen",
     "deleteThisAndFuture": "Diesen und alle zukünftigen Termine löschen",
+    "deleteThisAndFutureStop": "Dieses und zukünftige Vorkommen löschen und Wiederholung stoppen",
+    "deleteThisAndFutureDescription": "Dieses und spätere Ausgaben entfernen; der Zeitplan bleibt aktiv.",
+    "deleteThisAndFutureStopDescription": "Dieses und spätere Ausgaben entfernen und den Zeitplan dauerhaft stoppen.",
+    "deleteOccurrenceDescription": "Nur diese Ausgabe entfernen. Andere geplante Vorkommen bleiben unverändert.",
+    "actions": "Wiederkehrende Aktionen",
+    "actionsTitle": "Aktionen für wiederkehrende Ausgaben",
+    "actionsDescription": "Wählen Sie genau aus, welches Vorkommen Sie bearbeiten oder löschen möchten.",
+    "editActions": "Bearbeiten",
+    "deleteActions": "Löschen",
+    "confirmDelete": "Löschen",
+    "confirmStop": "Wiederholung stoppen",
+    "working": "Wird bearbeitet…",
+    "back": "Zurück",
     "confirm": "Weiter",
     "cancel": "Abbrechen",
     "occurrences": "{count} Termine in dieser Serie",
     "loading": "Wird geladen…",
-    "loadMore": "Weitere Termine laden"
+    "loadMore": "Weitere Termine laden",
+    "editOccurrence": "Dieses Vorkommen bearbeiten",
+    "editOccurrenceDescription": "Nur diese Ausgabe ändern.",
+    "editThisAndFuture": "Dieses und zukünftige Vorkommen bearbeiten",
+    "editThisAndFutureDescription": "Diese Ausgabe und alle zukünftigen geplanten Ausgaben ändern.",
+    "stopRecurrence": "Wiederholung stoppen",
+    "stopConfirmTitle": "Diese Wiederholung stoppen?",
+    "stopConfirmDescription": "Bestehende Ausgaben bleiben erhalten. Es werden keine neuen Vorkommen erstellt.",
+    "stopConfirmHint": "Das Stoppen ist dauerhaft. Erstellen Sie eine neue wiederkehrende Ausgabe, um erneut zu beginnen.",
+    "deleteConfirmTitle": "Löschen bestätigen",
+    "deleteConfirmHint": "Diese Aktion kann für die ausgewählten Vorkommen nicht rückgängig gemacht werden.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Nur dieses Vorkommen wird gelöscht.",
+      "THIS_AND_FUTURE": "Dieses und alle folgenden Vorkommen werden gelöscht. Die Wiederholung wird mit dem nächsten geplanten Vorkommen fortgesetzt.",
+      "THIS_AND_FUTURE_STOP": "Dieses und alle folgenden Vorkommen werden gelöscht und die Wiederholung wird gestoppt."
+    }
   }
 }

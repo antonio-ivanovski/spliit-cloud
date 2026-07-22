@@ -377,6 +377,25 @@ export type MaterializationPayload = {
   occurrenceDate: string
 }
 
+type RecurringCatchUpBatch = {
+  id: string
+  startDate: string
+  count: number
+}
+
+function recurringTemplateParticipantIds(template: RecurringExpenseTemplate) {
+  return [
+    ...template.paidByList.map((row) => row.ledgerParticipantId),
+    ...template.paidFor.map((row) => row.ledgerParticipantId),
+    ...template.items.flatMap((item) =>
+      item.paidFor.map((row) => row.ledgerParticipantId),
+    ),
+    ...(template.itemizedRemainder?.paidFor.map(
+      (row) => row.ledgerParticipantId,
+    ) ?? []),
+  ].filter((id, index, ids) => id && ids.indexOf(id) === index)
+}
+
 export type MaterializationResult = {
   created: boolean
   expenseId?: string
@@ -390,6 +409,37 @@ export type MaterializationResult = {
   /** Exact activity payload/time persisted with the occurrence. */
   activityData?: ReturnType<typeof buildExpenseActivityData>
   activityTime?: Date
+  /** Metadata used by the worker to coalesce overdue creation notifications. */
+  recurringSeriesId?: string
+  recurrenceSequence?: number
+  nextOccurrenceDate?: string
+  seriesStatus?: RecurringExpenseSeriesStatus
+  suppressNotification?: boolean
+  catchUpSummary?: {
+    count: number
+    startDate: string
+    endDate: string
+    affectedParticipants: string[]
+  }
+}
+
+function parseCatchUpBatch(value: unknown): RecurringCatchUpBatch | null {
+  if (!value || typeof value !== 'object') return null
+  const row = value as Partial<RecurringCatchUpBatch>
+  return typeof row.id === 'string' &&
+    typeof row.startDate === 'string' &&
+    typeof row.count === 'number' &&
+    Number.isInteger(row.count) &&
+    row.count >= 0
+    ? { id: row.id, startDate: row.startDate, count: row.count }
+    : null
+}
+
+function utcTodayDate(): Date {
+  const now = new Date()
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  )
 }
 
 function asDate(value: string) {
@@ -535,6 +585,29 @@ export async function materializeRecurringExpense(
       return { created: false }
     }
 
+    const nextOrdinal = ordinal + 1
+    const nextDate = calculateRecurrenceDate(
+      series.anchorDate,
+      series.frequency,
+      series.interval,
+      nextOrdinal,
+    )
+    const date = occurrenceDate.toISOString().slice(0, 10)
+    const today = utcTodayDate()
+    const storedBatch = parseCatchUpBatch(series.catchUpBatch)
+    const startsBatch =
+      !storedBatch && occurrenceDate <= today && nextDate <= today
+    const batch =
+      storedBatch ??
+      (startsBatch
+        ? {
+            id: `recurring-catchup:${series.id}:${date}`,
+            startDate: date,
+            count: 0,
+          }
+        : null)
+    const batchCount = batch ? batch.count + 1 : 0
+
     const template = snapshotTemplate
     const expenseId = randomId()
     const expense = await tx.expense.create({
@@ -551,7 +624,6 @@ export async function materializeRecurringExpense(
         ledgerId: series.ledgerId,
       },
     })
-    const date = occurrenceDate.toISOString().slice(0, 10)
     const actor = series.creatorAccountId
       ? { type: 'ACCOUNT' as const, id: series.creatorAccountId }
       : { type: 'SYSTEM' as const, id: 'system' }
@@ -577,13 +649,6 @@ export async function materializeRecurringExpense(
       tx,
     )
     const nextSequence = payload.sequence + 1
-    const nextOrdinal = ordinal + 1
-    const nextDate = calculateRecurrenceDate(
-      series.anchorDate,
-      series.frequency,
-      series.interval,
-      nextOrdinal,
-    )
     const completed =
       endReached(series, payload.sequence, occurrenceDate) ||
       (series.endType === 'DATE' &&
@@ -599,6 +664,10 @@ export async function materializeRecurringExpense(
         status: completed
           ? RecurringExpenseSeriesStatus.COMPLETED
           : RecurringExpenseSeriesStatus.ACTIVE,
+        catchUpBatch:
+          batch && !completed && nextDate <= today
+            ? { ...batch, count: batchCount }
+            : null,
       },
     })
     if (!completed) {
@@ -624,6 +693,22 @@ export async function materializeRecurringExpense(
       actor,
       activityData,
       activityTime: activity.time,
+      recurringSeriesId: series.id,
+      recurrenceSequence: payload.sequence,
+      nextOccurrenceDate: nextDate.toISOString().slice(0, 10),
+      seriesStatus: completed
+        ? RecurringExpenseSeriesStatus.COMPLETED
+        : RecurringExpenseSeriesStatus.ACTIVE,
+      suppressNotification: batch !== null,
+      catchUpSummary:
+        batch && batchCount >= 2 && (completed || nextDate > today)
+          ? {
+              count: batchCount,
+              startDate: batch.startDate,
+              endDate: date,
+              affectedParticipants: recurringTemplateParticipantIds(template),
+            }
+          : undefined,
     }
   })
 }

@@ -622,7 +622,9 @@
         "increaseOccurrences": "Yineleme sayısını artır",
         "ruleSummary": "Her {interval} {frequency} · {count} yineleme",
         "ruleSummaryIndefinite": "Her {interval} {frequency} · Bitiş tarihi yok"
-      }
+      },
+      "recurringEditScopeOccurrence": "Yalnızca bu yineleme düzenleniyor",
+      "recurringEditScopeFuture": "Bu ve gelecekteki yinelemeler düzenleniyor"
     },
     "amountField": {
       "label": "Tutar",
@@ -1985,10 +1987,38 @@
     "deleteScopeDescription": "Bir yinelemeyi silmeyi veya seriyi sonlandırmayı seçin.",
     "deleteOccurrence": "Yalnızca bu yinelemeyi sil",
     "deleteThisAndFuture": "Bu ve gelecekteki yinelemeleri sil",
+    "deleteThisAndFutureStop": "Bu ve gelecekteki yinelemeleri sil ve yinelemeyi durdur",
+    "deleteThisAndFutureDescription": "Bu ve sonraki giderleri kaldır; plan etkin kalır.",
+    "deleteThisAndFutureStopDescription": "Bu ve sonraki giderleri kaldır ve planı kalıcı olarak durdur.",
+    "deleteOccurrenceDescription": "Yalnızca bu gideri kaldır. Diğer planlanan yinelemeler değişmeden kalır.",
+    "actions": "Yinelenen işlemler",
+    "actionsTitle": "Yinelenen gider işlemleri",
+    "actionsDescription": "Düzenlemek veya silmek istediğiniz yinelemeyi tam olarak seçin.",
+    "editActions": "Düzenleme işlemleri",
+    "deleteActions": "Silme işlemleri",
+    "confirmDelete": "Sil",
+    "confirmStop": "Yinelemeyi durdur",
+    "working": "İşleniyor…",
+    "back": "Geri",
     "confirm": "Devam et",
     "cancel": "İptal",
     "occurrences": "Bu seride {count} yineleme",
     "loading": "Yükleniyor…",
-    "loadMore": "Daha fazla yineleme yükle"
+    "loadMore": "Daha fazla yineleme yükle",
+    "editOccurrence": "Bu yinelemeyi düzenle",
+    "editOccurrenceDescription": "Yalnızca bu gideri değiştir.",
+    "editThisAndFuture": "Bu ve gelecekteki yinelemeleri düzenle",
+    "editThisAndFutureDescription": "Bu gideri ve planlanan tüm gelecekteki giderleri değiştir.",
+    "stopRecurrence": "Yinelemeyi durdur",
+    "stopConfirmTitle": "Bu yineleme durdurulsun mu?",
+    "stopConfirmDescription": "Mevcut giderler korunur. Yeni yinelemeler oluşturulmaz.",
+    "stopConfirmHint": "Durdurma kalıcıdır. Yeniden başlatmak için yeni bir yinelenen gider oluşturun.",
+    "deleteConfirmTitle": "Silmeyi onayla",
+    "deleteConfirmHint": "Seçilen yinelemeler için bu işlem geri alınamaz.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Yalnızca bu yineleme silinecek.",
+      "THIS_AND_FUTURE": "Bu ve gelecekteki yinelemeler silinecek. Yineleme bir sonraki planlanan yinelemeyle devam edecek.",
+      "THIS_AND_FUTURE_STOP": "Bu ve gelecekteki yinelemeler silinecek ve yineleme durdurulacak."
+    }
   }
 }

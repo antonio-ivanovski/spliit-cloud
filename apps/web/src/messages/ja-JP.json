@@ -616,7 +616,9 @@
         "increaseOccurrences": "繰り返し回数を増やす",
         "ruleSummary": "{interval}{frequency}ごと · {count}回",
         "ruleSummaryIndefinite": "{interval}{frequency}ごと · 終了日なし"
-      }
+      },
+      "recurringEditScopeOccurrence": "この発生分のみ編集",
+      "recurringEditScopeFuture": "この発生分と今後の発生分を編集"
     },
     "amountField": {
       "label": "金額",
@@ -1969,10 +1971,38 @@
     "deleteScopeDescription": "この回のみ削除するか、シリーズを終了するかを選択してください。",
     "deleteOccurrence": "この回のみ削除",
     "deleteThisAndFuture": "この回以降を削除",
+    "deleteThisAndFutureStop": "この発生分と今後の発生分を削除して繰り返しを停止",
+    "deleteThisAndFutureDescription": "この支出とそれ以降の支出を削除します。スケジュールは有効なままです。",
+    "deleteThisAndFutureStopDescription": "この支出とそれ以降の支出を削除し、スケジュールを完全に停止します。",
+    "deleteOccurrenceDescription": "この支出のみ削除します。その他の予定された発生分は変更されません。",
+    "actions": "繰り返しの操作",
+    "actionsTitle": "繰り返し支出の操作",
+    "actionsDescription": "編集または削除する発生分を正確に選択してください。",
+    "editActions": "編集",
+    "deleteActions": "削除",
+    "confirmDelete": "削除",
+    "confirmStop": "繰り返しを停止",
+    "working": "処理中…",
+    "back": "戻る",
     "confirm": "続行",
     "cancel": "キャンセル",
     "occurrences": "このシリーズは{count}回です",
     "loading": "読み込み中…",
-    "loadMore": "さらに読み込む"
+    "loadMore": "さらに読み込む",
+    "editOccurrence": "この発生分を編集",
+    "editOccurrenceDescription": "この支出のみ変更します。",
+    "editThisAndFuture": "この発生分と今後の発生分を編集",
+    "editThisAndFutureDescription": "この支出と今後予定されているすべての支出を変更します。",
+    "stopRecurrence": "繰り返しを停止",
+    "stopConfirmTitle": "この繰り返しを停止しますか？",
+    "stopConfirmDescription": "既存の支出は残ります。新しい発生分は作成されません。",
+    "stopConfirmHint": "停止すると再開できません。もう一度開始するには、新しい繰り返し支出を作成してください。",
+    "deleteConfirmTitle": "削除を確認",
+    "deleteConfirmHint": "選択した発生分に対してこの操作を元に戻すことはできません。",
+    "deleteConfirm": {
+      "OCCURRENCE": "この発生分のみ削除されます。",
+      "THIS_AND_FUTURE": "この発生分と今後の発生分が削除されます。繰り返しは次に予定された発生分から続行されます。",
+      "THIS_AND_FUTURE_STOP": "この発生分と今後の発生分が削除され、繰り返しが停止します。"
+    }
   }
 }

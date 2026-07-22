@@ -21,16 +21,37 @@ export const handlers: JobHandlers = {
       result.activityData &&
       result.activityTime
     ) {
-      scheduleDefaultNotificationDispatch({
-        activityId: result.activityId,
-        type: 'RECURRING_EXPENSE_CREATED',
-        groupId: result.groupId,
-        actor: result.actor ?? { type: 'SYSTEM', id: 'system' },
-        subject: { type: 'EXPENSE', id: result.expenseId },
-        data: result.activityData,
-        occurredAt: result.activityTime,
-        includeActorAsRecipient: true,
-      })
+      if (!result.suppressNotification) {
+        scheduleDefaultNotificationDispatch({
+          activityId: result.activityId,
+          type: 'RECURRING_EXPENSE_CREATED',
+          groupId: result.groupId,
+          actor: result.actor ?? { type: 'SYSTEM', id: 'system' },
+          subject: { type: 'EXPENSE', id: result.expenseId },
+          data: result.activityData,
+          occurredAt: result.activityTime,
+          includeActorAsRecipient: true,
+        })
+      }
+      if (result.catchUpSummary) {
+        scheduleDefaultNotificationDispatch({
+          activityId: `recurring-catchup-summary:${result.recurringSeriesId}:${result.catchUpSummary.startDate}:${result.catchUpSummary.endDate}`,
+          type: 'RECURRING_EXPENSE_CREATED',
+          groupId: result.groupId,
+          actor: result.actor ?? { type: 'SYSTEM', id: 'system' },
+          subject: null,
+          data: {
+            kind: 'recurring_expense_summary',
+            title: result.title,
+            count: result.catchUpSummary.count,
+            startDate: result.catchUpSummary.startDate,
+            endDate: result.catchUpSummary.endDate,
+            affectedParticipants: result.catchUpSummary.affectedParticipants,
+          },
+          occurredAt: result.activityTime,
+          includeActorAsRecipient: true,
+        })
+      }
     }
   },
   [JOB_NAMES.RECONCILE_RECURRING_EXPENSES]: async (payload, context) => {

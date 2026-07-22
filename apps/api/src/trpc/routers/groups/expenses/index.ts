@@ -6,6 +6,7 @@ import { deleteGroupExpenseProcedure } from './delete.procedure'
 import { getGroupExpenseProcedure } from './get.procedure'
 import { listGroupExpensesProcedure } from './list.procedure'
 import { listRecurringExpenseSeriesProcedure } from './series-list.procedure'
+import { stopRecurrenceProcedure } from './stopRecurrence.procedure'
 import { updateGroupExpenseProcedure } from './update.procedure'
 
 export const groupExpensesRouter = createTRPCRouter({
@@ -22,6 +23,7 @@ export const groupExpensesRouter = createTRPCRouter({
   /** Update an existing expense. Same conversion rules as create. */
   update: updateGroupExpenseProcedure,
   delete: deleteGroupExpenseProcedure,
+  stopRecurrence: stopRecurrenceProcedure,
   /**
    * Recategorize up to 2000 expenses in one transaction.
    * Only expenses still on `fromCategoryId` are eligible.

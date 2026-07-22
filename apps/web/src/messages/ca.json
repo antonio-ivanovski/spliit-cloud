@@ -628,7 +628,9 @@
         "increaseOccurrences": "Augmenta les repeticions",
         "ruleSummary": "Cada {interval} {frequency} · {count} ocurrències",
         "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sense data de finalització"
-      }
+      },
+      "recurringEditScopeOccurrence": "Editant només aquesta ocurrència",
+      "recurringEditScopeFuture": "Editant aquesta ocurrència i les futures"
     },
     "amountField": {
       "label": "Quantitat",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "Tria si vols eliminar una repetició o finalitzar la sèrie.",
     "deleteOccurrence": "Elimina només aquesta repetició",
     "deleteThisAndFuture": "Elimina aquesta repetició i les futures",
+    "deleteThisAndFutureStop": "Elimina aquesta ocurrència i les futures i atura la recurrència",
+    "deleteThisAndFutureDescription": "Elimina aquesta i les despeses futures; la programació continuarà activa.",
+    "deleteThisAndFutureStopDescription": "Elimina aquesta i les despeses futures i atura permanentment la programació.",
+    "deleteOccurrenceDescription": "Elimina només aquesta despesa. Les altres ocurrències programades no canviaran.",
+    "actions": "Accions recurrents",
+    "actionsTitle": "Accions de despeses recurrents",
+    "actionsDescription": "Tria exactament quina ocurrència vols editar o eliminar.",
+    "editActions": "Edita",
+    "deleteActions": "Eliminar",
+    "confirmDelete": "Elimina",
+    "confirmStop": "Atura la recurrència",
+    "working": "S'està processant…",
+    "back": "Enrere",
     "confirm": "Continua",
     "cancel": "Cancel·la",
     "occurrences": "{count} repeticions en aquesta sèrie",
     "loading": "S’està carregant…",
-    "loadMore": "Carrega més repeticions"
+    "loadMore": "Carrega més repeticions",
+    "editOccurrence": "Edita aquesta ocurrència",
+    "editOccurrenceDescription": "Canvia només aquesta despesa.",
+    "editThisAndFuture": "Edita aquesta i les ocurrències futures",
+    "editThisAndFutureDescription": "Canvia aquesta despesa i totes les despeses futures programades.",
+    "stopRecurrence": "Atura la recurrència",
+    "stopConfirmTitle": "Atura aquesta recurrència?",
+    "stopConfirmDescription": "Les despeses existents es conservaran. No es crearan ocurrències noves.",
+    "stopConfirmHint": "Aturar és permanent. Per tornar a començar, crea una nova despesa recurrent.",
+    "deleteConfirmTitle": "Confirma l'eliminació",
+    "deleteConfirmHint": "Aquesta acció no es pot desfer per a les ocurrències seleccionades.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Només s'eliminarà aquesta ocurrència.",
+      "THIS_AND_FUTURE": "S'eliminaran aquesta ocurrència i les següents. La recurrència continuarà amb la propera ocurrència programada.",
+      "THIS_AND_FUTURE_STOP": "S'eliminaran aquesta ocurrència i les següents i s'aturarà la recurrència."
+    }
   }
 }

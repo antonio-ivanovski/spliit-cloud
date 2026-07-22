@@ -164,6 +164,26 @@ export type ExpenseCategoriesBulkUpdatedActivityData = z.infer<
   typeof expenseCategoriesBulkUpdatedActivityDataSchema
 >
 
+/**
+ * Notification-only summary emitted when a recurring series catches up two or
+ * more overdue occurrences. The individual occurrence activities remain in
+ * the activity feed; this payload only controls delivery fan-out.
+ */
+export const recurringExpenseSummaryActivityDataSchema = z.object({
+  kind: z.literal('recurring_expense_summary'),
+  summary: z.string().optional(),
+  title: z.string().optional(),
+  count: z.number().int().positive(),
+  startDate: z.string(),
+  endDate: z.string(),
+  /** Participant scope shared by every occurrence in the coalesced batch. */
+  affectedParticipants: z.array(z.string()).optional(),
+})
+
+export type RecurringExpenseSummaryActivityData = z.infer<
+  typeof recurringExpenseSummaryActivityDataSchema
+>
+
 export const activityDataSchema = z.discriminatedUnion('kind', [
   expenseActivityDataSchema,
   groupActivityDataSchema,
@@ -171,6 +191,7 @@ export const activityDataSchema = z.discriminatedUnion('kind', [
   invitationActivityDataSchema,
   importSummaryActivityDataSchema,
   expenseCategoriesBulkUpdatedActivityDataSchema,
+  recurringExpenseSummaryActivityDataSchema,
 ])
 
 export type ActivityData = z.infer<typeof activityDataSchema>

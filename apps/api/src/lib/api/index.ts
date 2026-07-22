@@ -24,6 +24,7 @@ export {
   getGroupExpenses,
   getGroupExpensesParticipants,
   getRecurringExpenseSeries,
+  stopRecurrence,
   updateExpense,
 } from './expenses'
 export {

@@ -622,7 +622,9 @@
         "increaseOccurrences": "Aantal herhalingen verhogen",
         "ruleSummary": "Elke {interval} {frequency} · {count} herhalingen",
         "ruleSummaryIndefinite": "Elke {interval} {frequency} · Geen einddatum"
-      }
+      },
+      "recurringEditScopeOccurrence": "Alleen dit voorkomen bewerken",
+      "recurringEditScopeFuture": "Deze en toekomstige voorkomens bewerken"
     },
     "amountField": {
       "label": "Bedrag",
@@ -1985,10 +1987,38 @@
     "deleteScopeDescription": "Kies of je één voorkomen wilt verwijderen of de reeks wilt beëindigen.",
     "deleteOccurrence": "Alleen dit voorkomen verwijderen",
     "deleteThisAndFuture": "Dit en toekomstige voorkomens verwijderen",
+    "deleteThisAndFutureStop": "Dit en toekomstige voorkomens verwijderen en reeks stoppen",
+    "deleteThisAndFutureDescription": "Deze en latere uitgaven verwijderen; de planning blijft actief.",
+    "deleteThisAndFutureStopDescription": "Deze en latere uitgaven verwijderen en de planning permanent stoppen.",
+    "deleteOccurrenceDescription": "Alleen deze uitgave verwijderen. Andere geplande voorkomens blijven ongewijzigd.",
+    "actions": "Terugkerende acties",
+    "actionsTitle": "Acties voor terugkerende uitgave",
+    "actionsDescription": "Kies precies welk voorkomen je wilt bewerken of verwijderen.",
+    "editActions": "Bewerkacties",
+    "deleteActions": "Verwijderacties",
+    "confirmDelete": "Verwijderen",
+    "confirmStop": "Reeks stoppen",
+    "working": "Bezig…",
+    "back": "Terug",
     "confirm": "Doorgaan",
     "cancel": "Annuleren",
     "occurrences": "{count} voorkomens in deze reeks",
     "loading": "Laden…",
-    "loadMore": "Meer voorkomens laden"
+    "loadMore": "Meer voorkomens laden",
+    "editOccurrence": "Dit voorkomen bewerken",
+    "editOccurrenceDescription": "Alleen deze uitgave wijzigen.",
+    "editThisAndFuture": "Dit en toekomstige voorkomens bewerken",
+    "editThisAndFutureDescription": "Deze uitgave en alle toekomstige geplande uitgaven wijzigen.",
+    "stopRecurrence": "Reeks stoppen",
+    "stopConfirmTitle": "Deze reeks stoppen?",
+    "stopConfirmDescription": "Bestaande uitgaven blijven behouden. Er worden geen nieuwe voorkomens aangemaakt.",
+    "stopConfirmHint": "Stoppen is permanent. Maak een nieuwe terugkerende uitgave om opnieuw te beginnen.",
+    "deleteConfirmTitle": "Verwijdering bevestigen",
+    "deleteConfirmHint": "Deze actie kan niet ongedaan worden gemaakt voor de geselecteerde voorkomens.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Alleen dit voorkomen wordt verwijderd.",
+      "THIS_AND_FUTURE": "Dit en toekomstige voorkomens worden verwijderd. De reeks gaat door met het volgende geplande voorkomen.",
+      "THIS_AND_FUTURE_STOP": "Dit en toekomstige voorkomens worden verwijderd en de reeks wordt gestopt."
+    }
   }
 }

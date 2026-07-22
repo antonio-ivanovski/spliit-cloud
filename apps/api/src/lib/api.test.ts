@@ -11,6 +11,7 @@ import {
   linkUnlinkedParticipantToAccount,
   linkUnlinkedParticipantToPendingInvite,
   mergeLedgerParticipantReferences,
+  stopRecurrence,
 } from '../lib/api'
 
 vi.mock('../routes/upload', () => ({
@@ -441,6 +442,128 @@ describe('deleteExpense', () => {
 
     expect(prismaMock.expense.deleteMany).toHaveBeenCalledWith({
       where: { id: 'exp-1', ledgerId: 'ledger-1' },
+    })
+  })
+
+  it('deletes this and following while leaving the series active by default', async () => {
+    const recurringExpense = {
+      id: 'exp-2',
+      ledgerId: 'ledger-1',
+      title: 'Rent',
+      amount: 1000,
+      expenseDate: new Date('2026-07-01T00:00:00Z'),
+      categoryId: 'general',
+      paidBySplitMode: 'BY_AMOUNT',
+      splitMode: 'EVENLY',
+      notes: null,
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+      conversionSource: null,
+      isReimbursement: false,
+      paidByList: [],
+      paidFor: [],
+      items: [],
+      itemizedRemainder: null,
+      documents: [],
+      recurringSeriesId: 'series-1',
+      recurrenceSequence: 2,
+      recurringSeries: {
+        id: 'series-1',
+        frequency: 'MONTHLY',
+        interval: 1,
+        endType: 'INDEFINITE',
+        occurrenceLimit: null,
+        endDate: null,
+        status: 'ACTIVE',
+        anchorDate: new Date('2026-06-01T00:00:00Z'),
+        nextOccurrenceDate: new Date('2026-08-01T00:00:00Z'),
+      },
+    }
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+      ledger: { currencyCode: null },
+    } as never)
+    prismaMock.expense.findFirst
+      .mockResolvedValueOnce(recurringExpense as never)
+      .mockResolvedValue(null)
+    prismaMock.expense.deleteMany.mockResolvedValue({ count: 2 } as never)
+
+    await deleteExpense(
+      'grp-1',
+      'exp-2',
+      { accountId: 'acct-1' },
+      { scope: 'THIS_AND_FUTURE' },
+    )
+
+    expect(prismaMock.expense.deleteMany).toHaveBeenCalledWith({
+      where: {
+        ledgerId: 'ledger-1',
+        recurringSeriesId: 'series-1',
+        recurrenceSequence: { gte: 2 },
+      },
+    })
+    expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith({
+      where: { id: 'series-1' },
+      data: { version: { increment: 1 }, catchUpBatch: null },
+    })
+  })
+
+  it('supports stopping a recurrence without deleting materialized expenses', async () => {
+    const recurringExpense = {
+      id: 'exp-3',
+      ledgerId: 'ledger-1',
+      title: 'Rent',
+      amount: 1000,
+      expenseDate: new Date('2026-07-01T00:00:00Z'),
+      categoryId: 'general',
+      paidBySplitMode: 'BY_AMOUNT',
+      splitMode: 'EVENLY',
+      notes: null,
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+      conversionSource: null,
+      isReimbursement: false,
+      paidByList: [],
+      paidFor: [],
+      items: [],
+      itemizedRemainder: null,
+      documents: [],
+      recurringSeriesId: 'series-1',
+      recurrenceSequence: 2,
+      recurringSeries: {
+        id: 'series-1',
+        frequency: 'MONTHLY',
+        interval: 1,
+        endType: 'INDEFINITE',
+        occurrenceLimit: null,
+        endDate: null,
+        status: 'ACTIVE',
+        anchorDate: new Date('2026-06-01T00:00:00Z'),
+        nextOccurrenceDate: new Date('2026-08-01T00:00:00Z'),
+      },
+    }
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.expense.findFirst
+      .mockResolvedValueOnce(recurringExpense as never)
+      .mockResolvedValue(null)
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      status: 'ACTIVE',
+    } as never)
+
+    await stopRecurrence('grp-1', 'exp-3')
+
+    expect(prismaMock.expense.deleteMany).not.toHaveBeenCalled()
+    expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith({
+      where: { id: 'series-1' },
+      data: {
+        status: 'CANCELLED',
+        version: { increment: 1 },
+        catchUpBatch: null,
+      },
     })
   })
 })

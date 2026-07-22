@@ -628,7 +628,9 @@
         "increaseOccurrences": "Augmenter le nombre d’occurrences",
         "ruleSummary": "Tous les {interval} {frequency} · {count} occurrences",
         "ruleSummaryIndefinite": "Tous les {interval} {frequency} · Sans date de fin"
-      }
+      },
+      "recurringEditScopeOccurrence": "Modifier uniquement cette occurrence",
+      "recurringEditScopeFuture": "Modifier cette occurrence et les suivantes"
     },
     "amountField": {
       "label": "Montant",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "Choisissez de supprimer une occurrence ou de mettre fin à la série.",
     "deleteOccurrence": "Supprimer uniquement cette occurrence",
     "deleteThisAndFuture": "Supprimer cette occurrence et les suivantes",
+    "deleteThisAndFutureStop": "Supprimer cette occurrence et les suivantes et arrêter la récurrence",
+    "deleteThisAndFutureDescription": "Supprimer cette dépense et les suivantes ; le calendrier reste actif.",
+    "deleteThisAndFutureStopDescription": "Supprimer cette dépense et les suivantes et arrêter définitivement le calendrier.",
+    "deleteOccurrenceDescription": "Supprimer uniquement cette dépense. Les autres occurrences programmées restent inchangées.",
+    "actions": "Actions récurrentes",
+    "actionsTitle": "Actions de dépense récurrente",
+    "actionsDescription": "Choisissez précisément quelle occurrence modifier ou supprimer.",
+    "editActions": "Modifier",
+    "deleteActions": "Supprimer",
+    "confirmDelete": "Supprimer",
+    "confirmStop": "Arrêter la récurrence",
+    "working": "Traitement…",
+    "back": "Retour",
     "confirm": "Continuer",
     "cancel": "Annuler",
     "occurrences": "{count} occurrences dans cette série",
     "loading": "Chargement…",
-    "loadMore": "Charger plus d’occurrences"
+    "loadMore": "Charger plus d’occurrences",
+    "editOccurrence": "Modifier cette occurrence",
+    "editOccurrenceDescription": "Modifier uniquement cette dépense.",
+    "editThisAndFuture": "Modifier cette occurrence et les suivantes",
+    "editThisAndFutureDescription": "Modifier cette dépense et toutes les dépenses futures programmées.",
+    "stopRecurrence": "Arrêter la récurrence",
+    "stopConfirmTitle": "Arrêter cette récurrence ?",
+    "stopConfirmDescription": "Les dépenses existantes seront conservées. Aucune nouvelle occurrence ne sera créée.",
+    "stopConfirmHint": "L’arrêt est définitif. Pour recommencer, créez une nouvelle dépense récurrente.",
+    "deleteConfirmTitle": "Confirmer la suppression",
+    "deleteConfirmHint": "Cette action est irréversible pour les occurrences sélectionnées.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Seule cette occurrence sera supprimée.",
+      "THIS_AND_FUTURE": "Cette occurrence et les suivantes seront supprimées. La récurrence continuera avec la prochaine occurrence programmée.",
+      "THIS_AND_FUTURE_STOP": "Cette occurrence et les suivantes seront supprimées et la récurrence sera arrêtée."
+    }
   }
 }

@@ -730,7 +730,9 @@
         "increaseOccurrences": "Aumentar ocorrências",
         "ruleSummary": "A cada {interval} {frequency} · {count} ocorrências",
         "ruleSummaryIndefinite": "A cada {interval} {frequency} · Sem data de fim"
-      }
+      },
+      "recurringEditScopeOccurrence": "Editar apenas esta ocorrência",
+      "recurringEditScopeFuture": "Editar esta ocorrência e as futuras"
     },
     "amountField": {
       "label": "Montante",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "Escolha se pretende eliminar uma ocorrência ou terminar a série.",
     "deleteOccurrence": "Eliminar apenas esta ocorrência",
     "deleteThisAndFuture": "Eliminar esta ocorrência e as futuras",
+    "deleteThisAndFutureStop": "Eliminar esta e as ocorrências futuras e parar a recorrência",
+    "deleteThisAndFutureDescription": "Remover esta e as despesas posteriores; o agendamento permanece ativo.",
+    "deleteThisAndFutureStopDescription": "Remover esta e as despesas posteriores e parar permanentemente o agendamento.",
+    "deleteOccurrenceDescription": "Remover apenas esta despesa. As outras ocorrências agendadas permanecem inalteradas.",
+    "actions": "Ações recorrentes",
+    "actionsTitle": "Ações da despesa recorrente",
+    "actionsDescription": "Escolha exatamente qual ocorrência editar ou eliminar.",
+    "editActions": "Ações de edição",
+    "deleteActions": "Ações de eliminação",
+    "confirmDelete": "Eliminar",
+    "confirmStop": "Parar recorrência",
+    "working": "A processar…",
+    "back": "Voltar",
     "confirm": "Continuar",
     "cancel": "Cancelar",
     "occurrences": "{count} ocorrências nesta série",
     "loading": "A carregar…",
-    "loadMore": "Carregar mais ocorrências"
+    "loadMore": "Carregar mais ocorrências",
+    "editOccurrence": "Editar esta ocorrência",
+    "editOccurrenceDescription": "Alterar apenas esta despesa.",
+    "editThisAndFuture": "Editar esta ocorrência e as futuras",
+    "editThisAndFutureDescription": "Alterar esta despesa e todas as despesas futuras agendadas.",
+    "stopRecurrence": "Parar recorrência",
+    "stopConfirmTitle": "Parar esta recorrência?",
+    "stopConfirmDescription": "As despesas existentes permanecem. Não serão criadas novas ocorrências.",
+    "stopConfirmHint": "Parar é permanente. Para começar novamente, crie uma nova despesa recorrente.",
+    "deleteConfirmTitle": "Confirmar eliminação",
+    "deleteConfirmHint": "Esta ação não pode ser desfeita para as ocorrências selecionadas.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Apenas esta ocorrência será eliminada.",
+      "THIS_AND_FUTURE": "Esta e as ocorrências futuras serão eliminadas. A recorrência continuará com a próxima ocorrência agendada.",
+      "THIS_AND_FUTURE_STOP": "Esta e as ocorrências futuras serão eliminadas e a recorrência será parada."
+    }
   }
 }

@@ -139,6 +139,13 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     if (!EXPENSE_EVENT_TYPES.has(event.type)) return
 
     const parsed = parseActivityData(event.data)
+    if (
+      event.type === 'RECURRING_EXPENSE_CREATED' &&
+      parsed?.kind === 'recurring_expense_summary'
+    ) {
+      await this.dispatchRecurringSummary(event, recipientAccountId, parsed)
+      return
+    }
     if (!parsed || parsed.kind !== 'expense') return
 
     const {
@@ -525,6 +532,80 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       }),
       recipientAccountId,
       category: NotificationCategory.EXPENSE_CHANGED,
+    })
+  }
+
+  private async dispatchRecurringSummary(
+    event: ActivityNotificationEvent,
+    recipientAccountId: string | undefined,
+    parsed: Extract<
+      NonNullable<ReturnType<typeof parseActivityData>>,
+      { kind: 'recurring_expense_summary' }
+    >,
+  ): Promise<void> {
+    if (!recipientAccountId) return
+    const [group, actorAccount, member] = await Promise.all([
+      prisma.group.findUnique({
+        where: { id: event.groupId },
+        select: GROUP_SELECT,
+      }),
+      event.actor?.type === 'ACCOUNT'
+        ? prisma.account.findUnique({
+            where: { id: event.actor.id },
+            select: { name: true },
+          })
+        : Promise.resolve(null),
+      prisma.groupMember.findFirst({
+        where: {
+          groupId: event.groupId,
+          accountId: recipientAccountId,
+          status: 'ACTIVE',
+        },
+        select: {
+          status: true,
+          account: { select: { id: true, email: true, name: true } },
+        },
+      }),
+    ])
+    if (!group || !member?.account) return
+    const actorName = actorAccount?.name ?? 'Someone'
+    const displayName = resolveGroupDisplayName(
+      group.groupType,
+      group.name,
+      group.members,
+      recipientAccountId,
+      group.invitations[0]?.temporaryName ?? undefined,
+    )
+    const noun = parsed.count === 1 ? 'expense' : 'expenses'
+    const title = parsed.title ? ` "${parsed.title}"` : ''
+    const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
+    await this.sendToActiveMembers({
+      participants: [
+        { groupMember: { status: member.status, account: member.account } },
+      ],
+      actor: event.actor,
+      includeActorAsRecipient: true,
+      activityId: event.activityId,
+      group,
+      buildSubject: () =>
+        `[Spliit Cloud] ${parsed.count} recurring ${noun} caught up in ${displayName}`,
+      buildText: () =>
+        `${actorName} added ${parsed.count} recurring ${noun}${title} in ${displayName} for ${parsed.startDate} through ${parsed.endDate}.\n\nView the group here:\n${groupUrl}`,
+      templateFor: (): ExpenseActivityInputAny => ({
+        kind: 'recurring_expense_summary',
+        subject: '',
+        text: '',
+        brandBaseUrl: getWebBaseUrl(),
+        groupDisplayName: displayName,
+        actorName,
+        title: parsed.title ?? null,
+        count: parsed.count,
+        startDate: parsed.startDate,
+        endDate: parsed.endDate,
+        groupUrl,
+      }),
+      recipientAccountId,
+      category: NotificationCategory.RECURRING_EXPENSE_CREATED,
     })
   }
 

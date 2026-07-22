@@ -96,8 +96,9 @@ async function expenseParticipantAccounts(
   if (!parsed) return []
   let participantIds: string[] = []
   if (
-    event.type === 'EXPENSE_CREATED' ||
-    event.type === 'RECURRING_EXPENSE_CREATED'
+    (event.type === 'EXPENSE_CREATED' ||
+      event.type === 'RECURRING_EXPENSE_CREATED') &&
+    parsed.kind !== 'recurring_expense_summary'
   ) {
     if (!event.subject?.id) return []
     const raw = await prisma.expense.findUnique({
@@ -186,11 +187,20 @@ export class ExpenseActivityHandler implements ActivityHandler {
   async buildIntents(event: ActivityNotificationEvent) {
     const category = eventCategory(event)
     if (!category) return []
+    // Catch-up summaries intentionally have no expense subject: affected
+    // participants receive one coalesced summary while each occurrence
+    // activity remains available in the feed.
+    const parsed = parseActivityData(event.data)
     const [participants, actor] = await Promise.all([
       expenseParticipantAccounts(event),
       activeActorAccount(event),
     ])
-    const recipients = [...participants, ...actor]
+    const recipients =
+      event.type === 'RECURRING_EXPENSE_CREATED' &&
+      parsed?.kind === 'recurring_expense_summary' &&
+      participants.length === 0
+        ? [...(await activeGroupAccounts(event.groupId)), ...actor]
+        : [...participants, ...actor]
     return dedupeRecipients(event, recipients, category)
   }
 }

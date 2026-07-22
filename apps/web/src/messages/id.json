@@ -616,7 +616,9 @@
         "increaseOccurrences": "Tambah jumlah kejadian",
         "ruleSummary": "Setiap {interval} {frequency} · {count} kejadian",
         "ruleSummaryIndefinite": "Setiap {interval} {frequency} · Tanpa tanggal berakhir"
-      }
+      },
+      "recurringEditScopeOccurrence": "Edit hanya kejadian ini",
+      "recurringEditScopeFuture": "Edit kejadian ini dan yang akan datang"
     },
     "amountField": {
       "label": "Jumlah",
@@ -1969,10 +1971,38 @@
     "deleteScopeDescription": "Pilih apakah akan menghapus satu kejadian atau mengakhiri rangkaian.",
     "deleteOccurrence": "Hapus hanya kejadian ini",
     "deleteThisAndFuture": "Hapus kejadian ini dan yang akan datang",
+    "deleteThisAndFutureStop": "Hapus kejadian ini dan yang berikutnya lalu hentikan pengulangan",
+    "deleteThisAndFutureDescription": "Hapus pengeluaran ini dan yang berikutnya; jadwal tetap aktif.",
+    "deleteThisAndFutureStopDescription": "Hapus pengeluaran ini dan yang berikutnya dan hentikan jadwal secara permanen.",
+    "deleteOccurrenceDescription": "Hapus hanya pengeluaran ini. Kejadian terjadwal lainnya tetap tidak berubah.",
+    "actions": "Tindakan berulang",
+    "actionsTitle": "Tindakan pengeluaran berulang",
+    "actionsDescription": "Pilih tepat kejadian mana yang ingin diedit atau dihapus.",
+    "editActions": "Edit",
+    "deleteActions": "Hapus",
+    "confirmDelete": "Hapus",
+    "confirmStop": "Hentikan pengulangan",
+    "working": "Memproses…",
+    "back": "Kembali",
     "confirm": "Lanjutkan",
     "cancel": "Batal",
     "occurrences": "{count} kejadian dalam rangkaian ini",
     "loading": "Memuat…",
-    "loadMore": "Muat lebih banyak kejadian"
+    "loadMore": "Muat lebih banyak kejadian",
+    "editOccurrence": "Edit kejadian ini",
+    "editOccurrenceDescription": "Ubah hanya pengeluaran ini.",
+    "editThisAndFuture": "Edit kejadian ini dan yang akan datang",
+    "editThisAndFutureDescription": "Ubah pengeluaran ini dan semua pengeluaran terjadwal yang akan datang.",
+    "stopRecurrence": "Hentikan pengulangan",
+    "stopConfirmTitle": "Hentikan pengulangan ini?",
+    "stopConfirmDescription": "Pengeluaran yang ada akan tetap. Tidak ada kejadian baru yang dibuat.",
+    "stopConfirmHint": "Penghentian bersifat permanen. Untuk memulai lagi, buat pengeluaran berulang baru.",
+    "deleteConfirmTitle": "Konfirmasi penghapusan",
+    "deleteConfirmHint": "Tindakan ini tidak dapat dibatalkan untuk kejadian yang dipilih.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Hanya kejadian ini yang akan dihapus.",
+      "THIS_AND_FUTURE": "Kejadian ini dan berikutnya akan dihapus. Pengulangan akan berlanjut pada kejadian terjadwal berikutnya.",
+      "THIS_AND_FUTURE_STOP": "Kejadian ini dan berikutnya akan dihapus dan pengulangan akan dihentikan."
+    }
   }
 }

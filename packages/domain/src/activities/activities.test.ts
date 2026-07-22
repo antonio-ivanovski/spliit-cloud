@@ -7,6 +7,7 @@ import {
   invitationActivityDataSchema,
   memberActivityDataSchema,
   parseActivityData,
+  recurringExpenseSummaryActivityDataSchema,
 } from './payload'
 import {
   activityActorTypeSchema,
@@ -199,6 +200,17 @@ describe('importSummaryActivityDataSchema', () => {
 })
 
 describe('activityDataSchema (discriminated union)', () => {
+  it('accepts recurring catch-up summaries', () => {
+    expect(
+      recurringExpenseSummaryActivityDataSchema.safeParse({
+        kind: 'recurring_expense_summary',
+        count: 2,
+        startDate: '2026-07-20',
+        endDate: '2026-07-21',
+      }).success,
+    ).toBe(true)
+  })
+
   it('rejects an invalid discriminator value', () => {
     const result = activityDataSchema.safeParse({
       kind: 'expense',

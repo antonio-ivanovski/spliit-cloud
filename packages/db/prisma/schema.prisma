@@ -534,6 +534,8 @@ model RecurringExpenseSeries {
   status             RecurringExpenseSeriesStatus @default(ACTIVE)
   /// [RecurringExpenseTemplate]
   template           Json
+  /// [RecurringExpenseCatchUpBatch] Persisted notification coalescing state.
+  catchUpBatch       Json?
   version            Int                           @default(1)
   createdAt          DateTime                      @default(now())
   updatedAt          DateTime                      @updatedAt

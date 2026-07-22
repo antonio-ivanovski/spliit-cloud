@@ -634,7 +634,9 @@
         "increaseOccurrences": "Увеличить количество повторений",
         "ruleSummary": "Каждые {interval} {frequency} · {count} повторений",
         "ruleSummaryIndefinite": "Каждые {interval} {frequency} · Без даты окончания"
-      }
+      },
+      "recurringEditScopeOccurrence": "Редактирование только этого повторения",
+      "recurringEditScopeFuture": "Редактирование этого и будущих повторений"
     },
     "amountField": {
       "label": "Сумма",
@@ -2019,10 +2021,38 @@
     "deleteScopeDescription": "Выберите, удалить одно повторение или завершить серию.",
     "deleteOccurrence": "Удалить только это повторение",
     "deleteThisAndFuture": "Удалить это и будущие повторения",
+    "deleteThisAndFutureStop": "Удалить это и будущие повторения и остановить повторение",
+    "deleteThisAndFutureDescription": "Удалить этот и последующие расходы; расписание останется активным.",
+    "deleteThisAndFutureStopDescription": "Удалить этот и последующие расходы и навсегда остановить расписание.",
+    "deleteOccurrenceDescription": "Удалить только этот расход. Остальные запланированные повторения не изменятся.",
+    "actions": "Действия для повторяющихся расходов",
+    "actionsTitle": "Действия с повторяющимся расходом",
+    "actionsDescription": "Выберите, какое повторение редактировать или удалить.",
+    "editActions": "Действия редактирования",
+    "deleteActions": "Действия удаления",
+    "confirmDelete": "Удалить",
+    "confirmStop": "Остановить повторение",
+    "working": "Выполняется…",
+    "back": "Назад",
     "confirm": "Продолжить",
     "cancel": "Отмена",
     "occurrences": "Повторений в этой серии: {count}",
     "loading": "Загрузка…",
-    "loadMore": "Загрузить ещё повторения"
+    "loadMore": "Загрузить ещё повторения",
+    "editOccurrence": "Редактировать это повторение",
+    "editOccurrenceDescription": "Изменить только этот расход.",
+    "editThisAndFuture": "Редактировать это и будущие повторения",
+    "editThisAndFutureDescription": "Изменить этот расход и все будущие запланированные расходы.",
+    "stopRecurrence": "Остановить повторение",
+    "stopConfirmTitle": "Остановить это повторение?",
+    "stopConfirmDescription": "Существующие расходы сохранятся. Новые повторения создаваться не будут.",
+    "stopConfirmHint": "Остановка необратима. Чтобы начать снова, создайте новый повторяющийся расход.",
+    "deleteConfirmTitle": "Подтвердите удаление",
+    "deleteConfirmHint": "Это действие необратимо для выбранных повторений.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Будет удалено только это повторение.",
+      "THIS_AND_FUTURE": "Это и будущие повторения будут удалены. Повторение продолжится со следующего запланированного.",
+      "THIS_AND_FUTURE_STOP": "Это и будущие повторения будут удалены, и повторение остановится."
+    }
   }
 }

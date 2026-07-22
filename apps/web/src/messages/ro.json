@@ -628,7 +628,9 @@
         "increaseOccurrences": "Mărește numărul de apariții",
         "ruleSummary": "La fiecare {interval} {frequency} · {count} apariții",
         "ruleSummaryIndefinite": "La fiecare {interval} {frequency} · Fără dată de sfârșit"
-      }
+      },
+      "recurringEditScopeOccurrence": "Editarea doar a acestei apariții",
+      "recurringEditScopeFuture": "Editarea acestei apariții și a celor viitoare"
     },
     "amountField": {
       "label": "Sumă",
@@ -2002,10 +2004,38 @@
     "deleteScopeDescription": "Alege dacă ștergi o apariție sau închei seria.",
     "deleteOccurrence": "Șterge doar această apariție",
     "deleteThisAndFuture": "Șterge această apariție și pe cele viitoare",
+    "deleteThisAndFutureStop": "Șterge această apariție și pe cele viitoare și oprește recurența",
+    "deleteThisAndFutureDescription": "Elimină această cheltuială și pe cele ulterioare; programarea rămâne activă.",
+    "deleteThisAndFutureStopDescription": "Elimină această cheltuială și pe cele ulterioare și oprește permanent programarea.",
+    "deleteOccurrenceDescription": "Elimină doar această cheltuială. Celelalte apariții programate rămân neschimbate.",
+    "actions": "Acțiuni recurente",
+    "actionsTitle": "Acțiuni pentru cheltuiala recurentă",
+    "actionsDescription": "Alege exact apariția pe care vrei să o editezi sau să o ștergi.",
+    "editActions": "Acțiuni de editare",
+    "deleteActions": "Acțiuni de ștergere",
+    "confirmDelete": "Șterge",
+    "confirmStop": "Oprește recurența",
+    "working": "Se procesează…",
+    "back": "Înapoi",
     "confirm": "Continuă",
     "cancel": "Anulează",
     "occurrences": "{count} apariții în această serie",
     "loading": "Se încarcă…",
-    "loadMore": "Încarcă mai multe apariții"
+    "loadMore": "Încarcă mai multe apariții",
+    "editOccurrence": "Editează această apariție",
+    "editOccurrenceDescription": "Modifică doar această cheltuială.",
+    "editThisAndFuture": "Editează această apariție și pe cele viitoare",
+    "editThisAndFutureDescription": "Modifică această cheltuială și toate cheltuielile viitoare programate.",
+    "stopRecurrence": "Oprește recurența",
+    "stopConfirmTitle": "Oprești această recurență?",
+    "stopConfirmDescription": "Cheltuielile existente vor rămâne. Nu vor fi create apariții noi.",
+    "stopConfirmHint": "Oprirea este permanentă. Pentru a începe din nou, creează o cheltuială recurentă nouă.",
+    "deleteConfirmTitle": "Confirmă ștergerea",
+    "deleteConfirmHint": "Această acțiune este ireversibilă pentru aparițiile selectate.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Doar această apariție va fi ștearsă.",
+      "THIS_AND_FUTURE": "Această apariție și cele viitoare vor fi șterse. Recurența va continua cu următoarea apariție programată.",
+      "THIS_AND_FUTURE_STOP": "Această apariție și cele viitoare vor fi șterse, iar recurența va fi oprită."
+    }
   }
 }

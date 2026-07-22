@@ -398,7 +398,11 @@ export async function deleteExpense(
   groupId: string,
   expenseId: string,
   actor: { accountId: string },
-  options?: { scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' },
+  options?: {
+    scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE'
+    /** For THIS_AND_FUTURE, also cancel the series after deleting rows. */
+    stopRecurrence?: boolean
+  },
 ) {
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
@@ -415,6 +419,21 @@ export async function deleteExpense(
   ]
 
   const expenseDateStr = existingExpense.expenseDate.toISOString().slice(0, 10)
+
+  if (
+    options?.stopRecurrence !== undefined &&
+    options.scope !== 'THIS_AND_FUTURE'
+  ) {
+    throw new Error(
+      'stopRecurrence is only valid with THIS_AND_FUTURE deletion scope',
+    )
+  }
+  if (
+    options?.scope === 'THIS_AND_FUTURE' &&
+    !existingExpense.recurringSeriesId
+  ) {
+    throw new Error('THIS_AND_FUTURE deletion requires a recurring expense')
+  }
 
   const activity = await prisma.$transaction(async (tx) => {
     if (existingExpense.recurringSeriesId) {
@@ -456,9 +475,16 @@ export async function deleteExpense(
           recurrenceSequence: { gte: existingExpense.recurrenceSequence },
         },
       })
+      // Bump the optimistic-concurrency version even for delete-only. A
+      // materializer that took a snapshot before this mutation must not be
+      // allowed to recreate one of the rows just removed.
       await tx.recurringExpenseSeries.update({
         where: { id: existingExpense.recurringSeriesId },
-        data: { status: 'CANCELLED', version: { increment: 1 } },
+        data: {
+          version: { increment: 1 },
+          catchUpBatch: null,
+          ...(options.stopRecurrence ? { status: 'CANCELLED' as const } : {}),
+        },
       })
     } else {
       await tx.expense.deleteMany({
@@ -499,6 +525,41 @@ export async function deleteExpense(
       ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
     }),
     occurredAt: activity.time,
+  })
+}
+
+/**
+ * Stop a recurring series without deleting any already-materialized expenses.
+ * The series row is the concurrency boundary; queued jobs will observe the
+ * cancelled status and reconciliation will no longer enqueue work.
+ */
+export async function stopRecurrence(
+  groupId: string,
+  expenseId: string,
+): Promise<void> {
+  const existingExpense = await getExpense(groupId, expenseId)
+  if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
+  if (!existingExpense.recurringSeriesId) {
+    throw new Error('Expense is not part of a recurring series')
+  }
+  const seriesId = existingExpense.recurringSeriesId
+
+  await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${seriesId} FOR UPDATE`
+    const series = await tx.recurringExpenseSeries.findUnique({
+      where: { id: seriesId },
+      select: { status: true },
+    })
+    if (!series) throw new Error('Recurring series not found')
+    if (series.status === 'CANCELLED' || series.status === 'COMPLETED') return
+    await tx.recurringExpenseSeries.update({
+      where: { id: seriesId },
+      data: {
+        status: 'CANCELLED',
+        version: { increment: 1 },
+        catchUpBatch: null,
+      },
+    })
   })
 }
 
@@ -1007,11 +1068,15 @@ export async function updateExpense(
         })
       } else if (options?.scope === 'THIS_AND_FUTURE') {
         const anchorSequence = existingExpense.recurrenceSequence ?? 1
-        const highest = await tx.expense.findFirst({
-          where: { recurringSeriesId: existingSeries.id },
-          orderBy: { recurrenceSequence: 'desc' },
-          select: { recurrenceSequence: true, expenseDate: true },
+        // `occurrencesCreated` is authoritative and monotonic. Do not infer
+        // progress from surviving expense rows: occurrence-only deletion can
+        // leave sequence gaps, and this-and-future delete-only intentionally
+        // removes later rows while keeping the series active.
+        const seriesProgress = await tx.recurringExpenseSeries.findUnique({
+          where: { id: existingSeries.id },
+          select: { occurrencesCreated: true },
         })
+        if (!seriesProgress) throw new Error('Recurring series not found')
         const latest = await tx.expense.findFirst({
           where: { recurringSeriesId: existingSeries.id },
           orderBy: { expenseDate: 'desc' },
@@ -1019,7 +1084,7 @@ export async function updateExpense(
         })
         const maxSequence = Math.max(
           anchorSequence,
-          highest?.recurrenceSequence ?? 0,
+          seriesProgress.occurrencesCreated,
         )
         let nextOrdinal = maxSequence - anchorSequence + 2
         let nextOccurrenceDate = calculateRecurrenceDate(
@@ -1063,6 +1128,7 @@ export async function updateExpense(
             status: completed ? 'COMPLETED' : 'ACTIVE',
             version: { increment: 1 },
             template,
+            catchUpBatch: null,
           },
         })
         for (const row of materializedFutureRows) {

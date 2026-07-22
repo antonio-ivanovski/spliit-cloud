@@ -53,10 +53,26 @@ export type ExpenseCategoryBulkSummaryInput = {
   unsubscribeUrl?: string
 }
 
+export type RecurringExpenseSummaryInput = {
+  kind: 'recurring_expense_summary'
+  subject: string
+  text: string
+  brandBaseUrl: string
+  groupDisplayName: string
+  actorName: string
+  title: string | null
+  count: number
+  startDate: string
+  endDate: string
+  groupUrl: string
+  unsubscribeUrl?: string
+}
+
 export type ExpenseActivityInputAny =
   | ExpenseActivityInput
   | ExpenseImportSummaryInput
   | ExpenseCategoryBulkSummaryInput
+  | RecurringExpenseSummaryInput
 
 export function ExpenseActivityEmail(
   props: Omit<ExpenseActivityInput, 'kind' | 'subject' | 'text'>,
@@ -210,6 +226,46 @@ export function ExpenseCategoryBulkSummaryEmail(
   )
 }
 
+export function RecurringExpenseSummaryEmail(
+  props: Omit<RecurringExpenseSummaryInput, 'kind' | 'subject' | 'text'>,
+): ReactElement {
+  const noun = props.count === 1 ? 'expense' : 'expenses'
+  const title = props.title ? ` "${props.title}"` : ''
+  return (
+    <EmailLayout
+      preview={`${props.count} recurring ${noun} caught up in ${props.groupDisplayName}`}
+      brandBaseUrl={props.brandBaseUrl}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
+      <Heading
+        as="h1"
+        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+      >
+        Recurring expenses caught up
+      </Heading>
+      <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
+        <strong>{props.actorName}</strong> added{' '}
+        <strong>
+          {props.count} recurring {noun}
+        </strong>
+        {title} in <strong>{props.groupDisplayName}</strong> for{' '}
+        {props.startDate} through {props.endDate}.
+      </Text>
+      <Section className="text-center my-6">
+        <EmailButton href={props.groupUrl} label="Open group" />
+      </Section>
+      <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
+        If the button doesn't work, copy and paste this URL into your browser:
+      </Text>
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+        <Link href={props.groupUrl} className="text-[#64748b] underline">
+          {props.groupUrl}
+        </Link>
+      </Text>
+    </EmailLayout>
+  )
+}
+
 export async function renderExpenseActivityEmail(
   input: ExpenseActivityInputAny,
 ): Promise<RenderedEmail> {
@@ -226,6 +282,16 @@ export async function renderExpenseActivityEmail(
       subject,
       text,
     })
+  }
+  if (input.kind === 'recurring_expense_summary') {
+    const { kind: _kind, subject, text, ...componentProps } = input
+    return renderTemplate(
+      <RecurringExpenseSummaryEmail {...componentProps} />,
+      {
+        subject,
+        text,
+      },
+    )
   }
   const { kind: _kind, subject, text, ...componentProps } = input
   return renderTemplate(
