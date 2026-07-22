@@ -60,12 +60,6 @@ function mockGroupContext(opts: {
     status: 'ACTIVE',
     ledgerParticipant: null,
   } as never)
-  // `removeMember` (and the preview query) now goes through
-  // `getGroupBalances` → `getGroupExpenses` → `createRecurringExpenses`
-  // whenever the target has a ledger participant. Default to empty
-  // results so the existing "no balances" tests don't have to set up
-  // these mocks themselves.
-  prismaMock.recurringExpenseLink.findMany.mockResolvedValue([] as never)
   prismaMock.expense.findMany.mockResolvedValue([] as never)
 }
 

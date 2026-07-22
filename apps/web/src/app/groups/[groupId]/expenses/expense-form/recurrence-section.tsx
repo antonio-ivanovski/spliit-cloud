@@ -1,0 +1,643 @@
+import { ResponsiveChoicePicker } from '@/components/responsive-choice-picker'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
+import { useLocale } from '@/i18n/react'
+import { cn, formatDateOnly } from '@/lib/utils'
+import { CalendarClock, Check, Minus, Plus } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useWatch,
+  type FieldValues,
+  type Path,
+  type UseFormReturn,
+} from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { ProjectedScheduleList } from './projected-schedule-list'
+import {
+  formatDateInputValue,
+  getRecurrenceSchedule,
+  getRecurrenceScheduleMetadata,
+  parseDateInputValue,
+  type RecurrenceConfig,
+  type RecurrenceEnd,
+  type RecurrenceFrequency,
+  type RecurrenceScheduleEntry,
+} from './recurrence-schedule'
+
+type RecurrenceFormValues = FieldValues & {
+  expenseDate?: Date
+  recurrence?: RecurrenceConfig | null
+}
+
+const frequencies: RecurrenceFrequency[] = [
+  'DAILY',
+  'WEEKLY',
+  'MONTHLY',
+  'YEARLY',
+]
+
+const defaultRecurrence: RecurrenceConfig = {
+  frequency: 'WEEKLY',
+  interval: 1,
+  end: { type: 'INDEFINITE' },
+}
+
+export function RecurrenceSection<T extends RecurrenceFormValues>({
+  form,
+  readOnly,
+  currentSequence = 1,
+}: {
+  form: UseFormReturn<T>
+  readOnly: boolean
+  currentSequence?: number
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm.Expense' })
+  const locale = useLocale()
+  const [scheduleOpen, setScheduleOpen] = useState(false)
+  // Keep the raw text while a numeric field is being edited. The form value
+  // stays valid, so an empty draft never reaches the API/schema validation.
+  const [intervalDraft, setIntervalDraft] = useState<string | null>(null)
+  const [countDraft, setCountDraft] = useState<string | null>(null)
+  const [endDateDraft, setEndDateDraft] = useState<string | null>(null)
+  const recurrence = useWatch({
+    control: form.control,
+    name: 'recurrence' as Path<T>,
+  }) as RecurrenceConfig | null | undefined
+  const expenseDate = useWatch({
+    control: form.control,
+    name: 'expenseDate' as Path<T>,
+  }) as Date | undefined
+  const lastRecurrenceRef = useRef<RecurrenceConfig>(
+    recurrence ?? defaultRecurrence,
+  )
+  if (recurrence) lastRecurrenceRef.current = recurrence
+
+  const isEnabled = recurrence != null
+  const end = recurrence?.end
+  const schedule = useMemo(
+    () => getRecurrenceSchedule(expenseDate, recurrence, currentSequence, 101),
+    [expenseDate, recurrence, currentSequence],
+  )
+  const scheduleMetadata = useMemo(
+    () =>
+      getRecurrenceScheduleMetadata(expenseDate, recurrence, currentSequence),
+    [expenseDate, recurrence, currentSequence],
+  )
+  const previewEntries = schedule.entries.slice(0, 4)
+  const hasViewAll =
+    schedule.remainingCount === null || schedule.remainingCount > 3
+  const frequencyLabels: Record<RecurrenceFrequency, string> = {
+    DAILY: t('recurrence.frequencyOptions.daily'),
+    WEEKLY: t('recurrence.frequencyOptions.weekly'),
+    MONTHLY: t('recurrence.frequencyOptions.monthly'),
+    YEARLY: t('recurrence.frequencyOptions.yearly'),
+  }
+  const countPresets: Record<RecurrenceFrequency, number[]> = {
+    DAILY: [7, 14, 30, 90],
+    WEEKLY: [4, 12, 26, 52],
+    MONTHLY: [3, 6, 12, 24],
+    YEARLY: [2, 5, 10, 20],
+  }
+  const scheduleSummary = recurrence
+    ? schedule.totalCount === null
+      ? t('recurrence.ruleSummaryIndefinite', {
+          interval: recurrence.interval,
+          frequency: frequencyLabels[recurrence.frequency],
+        })
+      : t('recurrence.ruleSummary', {
+          interval: recurrence.interval,
+          frequency: frequencyLabels[recurrence.frequency],
+          count:
+            recurrence.end.type === 'COUNT'
+              ? recurrence.end.count
+              : schedule.totalCount,
+        })
+    : ''
+
+  const updateRecurrence = (next: RecurrenceConfig | null) => {
+    form.setValue('recurrence' as Path<T>, next as never, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+  }
+
+  const updateEnd = (next: RecurrenceEnd) => {
+    if (!recurrence) return
+    updateRecurrence({ ...recurrence, end: next })
+  }
+
+  useEffect(() => {
+    if (
+      !recurrence ||
+      recurrence.end.type !== 'DATE' ||
+      !expenseDate ||
+      !Number.isFinite(expenseDate.getTime())
+    ) {
+      return
+    }
+    if (recurrence.end.endDate.getTime() >= expenseDate.getTime()) return
+    updateRecurrence({
+      ...recurrence,
+      end: { type: 'DATE', endDate: expenseDate },
+    })
+    setEndDateDraft(null)
+  }, [expenseDate, recurrence])
+
+  const parseIntegerDraft = (value: string) => {
+    if (!/^\d+$/.test(value)) return null
+    const parsed = Number(value)
+    return Number.isSafeInteger(parsed) ? parsed : null
+  }
+
+  const normalizeIntervalDraft = () => {
+    if (!recurrence || intervalDraft === null) return
+    const parsed = parseIntegerDraft(intervalDraft)
+    if (parsed !== null) {
+      const interval = Math.max(1, Math.min(99, parsed))
+      if (interval !== recurrence.interval) {
+        updateRecurrence({ ...recurrence, interval })
+      }
+    }
+    setIntervalDraft(null)
+  }
+
+  const normalizeCountDraft = () => {
+    if (!recurrence || end?.type !== 'COUNT' || countDraft === null) return
+    const parsed = parseIntegerDraft(countDraft)
+    if (parsed !== null) {
+      const count = Math.max(currentSequence, Math.min(9999, parsed))
+      if (count !== end.count) updateEnd({ type: 'COUNT', count })
+    }
+    setCountDraft(null)
+  }
+
+  const toggleRecurrence = (checked: boolean) => {
+    if (checked) updateRecurrence(lastRecurrenceRef.current)
+    else {
+      if (recurrence) lastRecurrenceRef.current = recurrence
+      updateRecurrence(null)
+      setScheduleOpen(false)
+      setIntervalDraft(null)
+      setCountDraft(null)
+      setEndDateDraft(null)
+    }
+  }
+
+  const renderTimelineEntry = (
+    entry: RecurrenceScheduleEntry,
+    index: number,
+  ) => {
+    const current = entry.sequence === currentSequence
+    return (
+      <li
+        key={`${entry.sequence}-${entry.date.toISOString()}`}
+        className="relative flex min-w-0 flex-1 gap-2 pb-4 sm:pb-0 sm:pl-0"
+        aria-current={current ? 'date' : undefined}
+      >
+        {index < previewEntries.length - 1 && (
+          <span
+            aria-hidden="true"
+            className="absolute left-[7px] top-4 h-[calc(100%-0.5rem)] w-px bg-border sm:left-4 sm:top-[7px] sm:h-px sm:w-[calc(100%-0.5rem)]"
+          />
+        )}
+        <span
+          className={cn(
+            'relative z-10 mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 bg-background',
+            current
+              ? 'border-primary bg-primary'
+              : 'border-muted-foreground/40',
+          )}
+        >
+          {current && <Check className="size-2.5 text-primary-foreground" />}
+        </span>
+        <span className="min-w-0 text-sm">
+          <span className="block truncate font-medium tabular-nums">
+            {formatDateOnly(entry.date, locale, { dateStyle: 'medium' })}
+          </span>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            {current ? t('recurrence.currentOccurrence') : `${entry.sequence}.`}
+          </span>
+        </span>
+      </li>
+    )
+  }
+
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name={'recurrence' as Path<T>}
+        render={() => (
+          <FormItem className="order-9 col-span-1 min-w-0 w-full sm:col-span-2 md:col-span-2">
+            <div className="w-full min-w-0 rounded-lg border bg-muted/20 p-3 sm:p-4">
+              <div className="flex items-center gap-3">
+                <FormControl>
+                  <Checkbox
+                    id="recurrence-enabled"
+                    checked={isEnabled}
+                    onCheckedChange={(checked) =>
+                      toggleRecurrence(checked === true)
+                    }
+                    disabled={readOnly}
+                    aria-controls="recurrence-settings"
+                  />
+                </FormControl>
+                <div className="min-w-0 flex-1">
+                  <FormLabel
+                    htmlFor="recurrence-enabled"
+                    className="cursor-pointer text-sm font-semibold leading-tight"
+                  >
+                    {t('recurrence.checkboxLabel')}
+                  </FormLabel>
+                  <p className="mt-0.5 text-sm leading-snug text-muted-foreground">
+                    {t('recurrence.checkboxDescription')}
+                  </p>
+                </div>
+              </div>
+
+              <Collapsible open={isEnabled}>
+                <CollapsibleContent id="recurrence-settings" className="pt-4">
+                  <div className="border-t border-border/70 pt-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                      <FormItem className="flex-1 space-y-1.5">
+                        <FormLabel className="text-xs text-muted-foreground">
+                          {t('recurrence.repeatEvery')}
+                        </FormLabel>
+                        <div className="flex gap-2">
+                          <FormControl>
+                            <Input
+                              aria-label={t('recurrence.interval')}
+                              type="number"
+                              min={1}
+                              max={99}
+                              step={1}
+                              inputMode="numeric"
+                              value={
+                                intervalDraft ??
+                                String(recurrence?.interval ?? 1)
+                              }
+                              disabled={readOnly}
+                              onFocus={() => {
+                                if (intervalDraft === null)
+                                  setIntervalDraft(
+                                    String(recurrence?.interval ?? 1),
+                                  )
+                              }}
+                              onChange={(event) => {
+                                if (!recurrence) return
+                                const raw = event.target.value
+                                setIntervalDraft(raw)
+                                const parsed = parseIntegerDraft(raw)
+                                if (parsed === null) return
+                                updateRecurrence({
+                                  ...recurrence,
+                                  interval: Math.max(1, Math.min(99, parsed)),
+                                })
+                              }}
+                              onBlur={normalizeIntervalDraft}
+                            />
+                          </FormControl>
+                          <ResponsiveChoicePicker
+                            value={recurrence?.frequency ?? 'WEEKLY'}
+                            options={frequencies.map((frequency) => ({
+                              value: frequency,
+                              label: frequencyLabels[frequency],
+                            }))}
+                            mobileTitle={t('recurrence.frequency')}
+                            ariaLabel={t('recurrence.frequency')}
+                            disabled={readOnly}
+                            onValueChange={(value) => {
+                              if (!recurrence) return
+                              updateRecurrence({
+                                ...recurrence,
+                                frequency: value as RecurrenceFrequency,
+                              })
+                            }}
+                            triggerClassName="min-w-32 flex-1"
+                          />
+                        </div>
+                      </FormItem>
+                      <FormItem className="flex-1 space-y-1.5">
+                        <FormLabel className="text-xs text-muted-foreground">
+                          {t('recurrence.ends.label')}
+                        </FormLabel>
+                        <ResponsiveChoicePicker
+                          value={end?.type ?? 'INDEFINITE'}
+                          options={[
+                            {
+                              value: 'INDEFINITE',
+                              label: t('recurrence.ends.never'),
+                            },
+                            {
+                              value: 'COUNT',
+                              label: t('recurrence.ends.count'),
+                            },
+                            {
+                              value: 'DATE',
+                              label: t('recurrence.ends.date'),
+                            },
+                          ]}
+                          mobileTitle={t('recurrence.ends.label')}
+                          ariaLabel={t('recurrence.ends.label')}
+                          disabled={readOnly}
+                          onValueChange={(value) => {
+                            if (value === 'COUNT')
+                              updateEnd({
+                                type: 'COUNT',
+                                count: Math.max(2, currentSequence),
+                              })
+                            else if (value === 'DATE') {
+                              const fallback = expenseDate ?? new Date()
+                              updateEnd({
+                                type: 'DATE',
+                                endDate: new Date(
+                                  fallback.getTime() + 30 * 24 * 60 * 60 * 1000,
+                                ),
+                              })
+                            } else updateEnd({ type: 'INDEFINITE' })
+                            setCountDraft(null)
+                            setEndDateDraft(null)
+                          }}
+                          triggerClassName="w-full"
+                        />
+                      </FormItem>
+                    </div>
+
+                    {end?.type === 'COUNT' && (
+                      <div className="mt-4 max-w-md">
+                        <FormLabel
+                          className="text-xs text-muted-foreground"
+                          htmlFor="recurrence-count"
+                        >
+                          {t('recurrence.ends.countInput')}
+                        </FormLabel>
+                        <div className="mt-1 flex h-10 overflow-hidden rounded-md border border-input bg-background shadow-xs focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-full w-10 shrink-0 rounded-none border-r"
+                            aria-label={t('recurrence.decreaseOccurrences')}
+                            disabled={readOnly || end.count <= currentSequence}
+                            onClick={() =>
+                              (() => {
+                                setCountDraft(null)
+                                updateEnd({
+                                  type: 'COUNT',
+                                  count: Math.max(
+                                    currentSequence,
+                                    Math.min(9999, end.count - 1),
+                                  ),
+                                })
+                              })()
+                            }
+                          >
+                            <Minus className="size-4" aria-hidden="true" />
+                          </Button>
+                          <Input
+                            id="recurrence-count"
+                            type="number"
+                            min={currentSequence}
+                            max={9999}
+                            step={1}
+                            inputMode="numeric"
+                            value={countDraft ?? String(end.count)}
+                            disabled={readOnly}
+                            onFocus={() => {
+                              if (countDraft === null)
+                                setCountDraft(String(end.count))
+                            }}
+                            onChange={(event) => {
+                              const raw = event.target.value
+                              setCountDraft(raw)
+                              const count = parseIntegerDraft(raw)
+                              if (count === null) return
+                              updateEnd({
+                                type: 'COUNT',
+                                count: Math.max(
+                                  currentSequence,
+                                  Math.min(9999, count),
+                                ),
+                              })
+                            }}
+                            onBlur={normalizeCountDraft}
+                            className="h-full min-w-0 flex-1 rounded-none border-0 text-center shadow-none focus-visible:ring-0"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-full w-10 shrink-0 rounded-none border-l"
+                            aria-label={t('recurrence.increaseOccurrences')}
+                            disabled={readOnly || end.count >= 9999}
+                            onClick={() =>
+                              (() => {
+                                setCountDraft(null)
+                                updateEnd({
+                                  type: 'COUNT',
+                                  count: Math.min(9999, end.count + 1),
+                                })
+                              })()
+                            }
+                          >
+                            <Plus className="size-4" aria-hidden="true" />
+                          </Button>
+                        </div>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {countPresets[recurrence?.frequency ?? 'WEEKLY']
+                            .filter((preset) => preset >= currentSequence)
+                            .map((preset) => (
+                              <Button
+                                key={preset}
+                                type="button"
+                                size="sm"
+                                variant={
+                                  end.count === preset ? 'secondary' : 'outline'
+                                }
+                                className="h-8 px-2.5 text-xs tabular-nums"
+                                disabled={readOnly}
+                                aria-pressed={end.count === preset}
+                                onClick={() =>
+                                  (() => {
+                                    setCountDraft(null)
+                                    updateEnd({
+                                      type: 'COUNT',
+                                      count: preset,
+                                    })
+                                  })()
+                                }
+                              >
+                                {preset}
+                              </Button>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {end?.type === 'DATE' && (
+                      <div className="mt-3 max-w-xs">
+                        <FormLabel
+                          className="text-xs text-muted-foreground"
+                          htmlFor="recurrence-end-date"
+                        >
+                          {t('recurrence.ends.dateInput')}
+                        </FormLabel>
+                        <Input
+                          id="recurrence-end-date"
+                          type="date"
+                          min={
+                            expenseDate
+                              ? formatDateInputValue(expenseDate)
+                              : undefined
+                          }
+                          value={
+                            endDateDraft ??
+                            (Number.isFinite(end.endDate.getTime())
+                              ? formatDateInputValue(end.endDate)
+                              : '')
+                          }
+                          disabled={readOnly}
+                          onFocus={() => {
+                            if (endDateDraft === null) {
+                              setEndDateDraft(
+                                Number.isFinite(end.endDate.getTime())
+                                  ? formatDateInputValue(end.endDate)
+                                  : '',
+                              )
+                            }
+                          }}
+                          onChange={(event) => {
+                            const raw = event.target.value
+                            setEndDateDraft(raw)
+                            if (!raw) return
+                            const selected = parseDateInputValue(raw)
+                            if (!Number.isFinite(selected.getTime())) return
+                            const anchor = expenseDate ?? selected
+                            updateEnd({
+                              type: 'DATE',
+                              endDate:
+                                selected.getTime() < anchor.getTime()
+                                  ? anchor
+                                  : selected,
+                            })
+                          }}
+                          onBlur={() => setEndDateDraft(null)}
+                          className="mt-1"
+                        />
+                      </div>
+                    )}
+
+                    <div
+                      className="mt-4"
+                      aria-live="polite"
+                      aria-label={t('recurrence.previewLabel')}
+                    >
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                          <CalendarClock
+                            className="h-3.5 w-3.5"
+                            aria-hidden="true"
+                          />
+                          {t('recurrence.previewLabel')}
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {scheduleSummary}
+                        </span>
+                      </div>
+                      {previewEntries.length > 0 ? (
+                        <ol className="flex flex-col gap-0 sm:flex-row sm:gap-2">
+                          {previewEntries.map(renderTimelineEntry)}
+                        </ol>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          {t('recurrence.noFurtherOccurrences')}
+                        </p>
+                      )}
+                      {schedule.remainingCount === 0 && (
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {t('recurrence.noFurtherOccurrences')}
+                        </p>
+                      )}
+                      {hasViewAll && (
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="mt-2 h-auto px-0 text-sm"
+                          onClick={() => setScheduleOpen(true)}
+                        >
+                          {t('recurrence.viewAll')}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <ResponsiveDialog open={scheduleOpen} onOpenChange={setScheduleOpen}>
+        <ResponsiveDialogContent className="max-w-lg">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {t('recurrence.scheduleTitle')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {schedule.totalCount === null
+                ? t('recurrence.unlimitedSchedule')
+                : t('recurrence.scheduleCount', {
+                    count: schedule.totalCount,
+                  })}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogBody className="min-h-0 overflow-hidden">
+            <ProjectedScheduleList
+              schedule={scheduleMetadata}
+              locale={locale}
+              currentLabel={t('recurrence.currentOccurrence')}
+              noEndLabel={t('recurrence.unlimitedSchedule')}
+              emptyLabel={t('recurrence.noFurtherOccurrences')}
+              ariaLabel={t('recurrence.scheduleTitle')}
+              renderEntry={(entry) => (
+                <>
+                  <span className="w-8 shrink-0 text-center text-xs text-muted-foreground">
+                    {entry.sequence}.
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    {formatDateOnly(entry.date, locale, {
+                      dateStyle: 'medium',
+                    })}
+                  </span>
+                  {entry.sequence === currentSequence && (
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                      {t('recurrence.currentOccurrence')}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </ResponsiveDialogBody>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
+    </>
+  )
+}

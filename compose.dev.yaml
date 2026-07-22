@@ -50,6 +50,26 @@ services:
     networks:
       - spliit-dev
 
+  pgboss-dashboard:
+    image: node:24-bookworm-slim
+    container_name: spliit-pgboss-dashboard
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:1234@postgres:5432/postgres
+      PGBOSS_SCHEMA: pgboss
+      PORT: 3004
+    command:
+      - sh
+      - -c
+      - npm install --global @pg-boss/dashboard@1.6.2 && pg-boss-dashboard
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 127.0.0.1:3004:3004
+    networks:
+      - spliit-dev
+
 networks:
   spliit-dev:
     driver: bridge

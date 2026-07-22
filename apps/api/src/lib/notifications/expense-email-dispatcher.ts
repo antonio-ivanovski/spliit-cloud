@@ -25,6 +25,7 @@ import { buildEmailUnsubscribeMetadata } from './unsubscribe'
 
 const EXPENSE_EVENT_TYPES = new Set([
   'EXPENSE_CREATED',
+  'RECURRING_EXPENSE_CREATED',
   'EXPENSE_UPDATED',
   'EXPENSE_DELETED',
 ])
@@ -158,7 +159,10 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     // (old + new) from the activity payload so removed participants
     // who are still active members still get notified.
     let participantIds: string[]
-    if (event.type === 'EXPENSE_CREATED') {
+    if (
+      event.type === 'EXPENSE_CREATED' ||
+      event.type === 'RECURRING_EXPENSE_CREATED'
+    ) {
       if (!event.subject?.id) return
       const raw = await prisma.expense.findUnique({
         where: { id: event.subject.id },
@@ -213,7 +217,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       participantIds = affectedParticipants ?? []
     }
 
-    if (participantIds.length === 0) return
+    if (participantIds.length === 0 && !event.includeActorAsRecipient) return
 
     const [participants, group, actorAccount] = await Promise.all([
       prisma.ledgerParticipant.findMany({
@@ -236,6 +240,39 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
 
     if (!group) return
 
+    // A recurring series creator may not be one of the expense's affected
+    // participants. The handler still emits a targeted intent for that
+    // active member, so include them in the channel's account-backed list.
+    const creatorAccountId =
+      event.includeActorAsRecipient && event.actor?.type === 'ACCOUNT'
+        ? event.actor.id
+        : undefined
+    const targetedAccountId = recipientAccountId ?? creatorAccountId
+    if (targetedAccountId && event.includeActorAsRecipient) {
+      const hasRecipient = participants.some(
+        (participant) =>
+          participant.groupMember?.account?.id === targetedAccountId,
+      )
+      if (!hasRecipient) {
+        const member = await prisma.groupMember.findFirst({
+          where: {
+            groupId: event.groupId,
+            accountId: targetedAccountId,
+            status: 'ACTIVE',
+          },
+          select: {
+            status: true,
+            account: { select: { id: true, email: true, name: true } },
+          },
+        })
+        if (member?.account) {
+          participants.push({
+            groupMember: { status: member.status, account: member.account },
+          } as (typeof participants)[number])
+        }
+      }
+    }
+
     const actorName = actorAccount?.name ?? 'Someone'
 
     const expenseUrl =
@@ -255,6 +292,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
 
     const preambles: Record<string, string> = {
       EXPENSE_CREATED: `Expense "${title}"${amountStr ? ` (${amountStr})` : ''} was added by ${actorName} to`,
+      RECURRING_EXPENSE_CREATED: `Recurring expense "${title}"${amountStr ? ` (${amountStr})` : ''} was created by ${actorName} in`,
       EXPENSE_UPDATED: `Expense "${title}" was updated by ${actorName} in`,
       EXPENSE_DELETED: `Expense "${title}"${amountStr ? ` (${amountStr})` : ''} was removed by ${actorName} from`,
     }
@@ -263,6 +301,8 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     const subjectForType: Record<string, (dn: string) => string> = {
       EXPENSE_CREATED: (dn) =>
         `[Spliit Cloud] Expense "${title}" was added by ${actorName} to ${dn}`,
+      RECURRING_EXPENSE_CREATED: (dn) =>
+        `[Spliit Cloud] Recurring expense "${title}" was created by ${actorName} in ${dn}`,
       EXPENSE_UPDATED: (dn) =>
         `[Spliit Cloud] Expense "${title}" was updated by ${actorName} in ${dn}`,
       EXPENSE_DELETED: (dn) =>
@@ -288,12 +328,18 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     }
 
     // Event type narrowing for the React Email template input.
-    const eventType: 'EXPENSE_CREATED' | 'EXPENSE_UPDATED' | 'EXPENSE_DELETED' =
-      event.type === 'EXPENSE_UPDATED'
-        ? 'EXPENSE_UPDATED'
-        : event.type === 'EXPENSE_DELETED'
-          ? 'EXPENSE_DELETED'
-          : 'EXPENSE_CREATED'
+    const eventType:
+      | 'EXPENSE_CREATED'
+      | 'RECURRING_EXPENSE_CREATED'
+      | 'EXPENSE_UPDATED'
+      | 'EXPENSE_DELETED' =
+      event.type === 'RECURRING_EXPENSE_CREATED'
+        ? 'RECURRING_EXPENSE_CREATED'
+        : event.type === 'EXPENSE_UPDATED'
+          ? 'EXPENSE_UPDATED'
+          : event.type === 'EXPENSE_DELETED'
+            ? 'EXPENSE_DELETED'
+            : 'EXPENSE_CREATED'
 
     const baseTemplate = {
       eventType,
@@ -310,6 +356,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     await this.sendToActiveMembers({
       participants,
       actor: event.actor,
+      includeActorAsRecipient: event.includeActorAsRecipient,
       activityId: event.activityId,
       group,
       buildSubject,
@@ -484,6 +531,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
   private async sendToActiveMembers(args: {
     participants: Array<Participant>
     actor: ActivityNotificationEvent['actor']
+    includeActorAsRecipient?: boolean
     activityId: string
     group: Group
     buildSubject: (displayName: string) => string
@@ -501,7 +549,11 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       if (args.recipientAccountId && account.id !== args.recipientAccountId)
         continue
       if (isPlaceholderEmail(account.email)) continue
-      if (args.actor?.id === account.id && args.actor?.type === 'ACCOUNT')
+      if (
+        args.actor?.id === account.id &&
+        args.actor?.type === 'ACCOUNT' &&
+        !args.includeActorAsRecipient
+      )
         continue
 
       const displayName = resolveGroupDisplayName(

@@ -591,7 +591,44 @@
         "monthly": "Mensualment"
       },
       "createCopy": "Crea una còpia: {title}",
-      "editTitle": "Edita: {title}"
+      "editTitle": "Edita: {title}",
+      "recurrence": {
+        "label": "Recurrència de la despesa",
+        "description": "Tria quan s’ha de tornar a crear aquesta despesa.",
+        "checkboxLabel": "Recurrent",
+        "checkboxDescription": "Crea aquesta despesa segons un calendari",
+        "enable": "Afegeix recurrència",
+        "remove": "Elimina la recurrència",
+        "repeatEvery": "Repeteix cada",
+        "interval": "Interval de repetició",
+        "frequency": "Freqüència de recurrència",
+        "frequencyOptions": {
+          "daily": "dia/dies",
+          "weekly": "setmana/setmanes",
+          "monthly": "mes/mesos",
+          "yearly": "any/anys"
+        },
+        "ends": {
+          "label": "Finalitza",
+          "never": "Mai",
+          "count": "Després d’un nombre de repeticions",
+          "date": "En una data",
+          "countInput": "Repeticions totals (inclosa aquesta despesa)",
+          "dateInput": "Data de finalització"
+        },
+        "previewLabel": "Pròximes repeticions",
+        "currentOccurrence": "Actual",
+        "viewAll": "Veure-ho tot",
+        "scheduleTitle": "Calendari de recurrència",
+        "remainingCount": "Queden {count} ocurrències.",
+        "unlimitedSchedule": "Aquesta recurrència no té data de finalització.",
+        "noFurtherOccurrences": "No hi ha més repeticions amb aquesta configuració.",
+        "scheduleCount": "Mostrant {count} ocurrències a partir d’aquesta despesa.",
+        "decreaseOccurrences": "Disminueix les repeticions",
+        "increaseOccurrences": "Augmenta les repeticions",
+        "ruleSummary": "Cada {interval} {frequency} · {count} ocurrències",
+        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sense data de finalització"
+      }
     },
     "amountField": {
       "label": "Quantitat",
@@ -1649,6 +1686,10 @@
         "weeklySummary": {
           "title": "Resum setmanal d'activitat",
           "description": "Un resum setmanal de l'activitat dels teus grups."
+        },
+        "recurringExpense": {
+          "title": "Despesa recurrent",
+          "description": "Quan es crea una despesa recurrent programada en un grup."
         }
       },
       "sections": {
@@ -1678,7 +1719,8 @@
         "reimbursement": "pagament de liquidació",
         "conversionSource": "Font de conversió",
         "conversionRate": "Tasa de conversió"
-      }
+      },
+      "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»"
     },
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",
@@ -1943,5 +1985,27 @@
       "description": "No rebràs correus de {category}. La resta de configuració de notificacions no ha canviat."
     },
     "scope": "Només es desactivarà aquesta notificació per correu. La resta de correus i les notificacions push es mantindran igual."
+  },
+  "ExpenseSeries": {
+    "badge": "Recurrent",
+    "occurrence": "Repetició {sequence}",
+    "previous": "Anterior",
+    "next": "Següent",
+    "viewSeries": "Mostra la sèrie",
+    "title": "Sèrie de despeses",
+    "empty": "Encara no hi ha cap altra repetició.",
+    "scopeTitle": "Actualitza la despesa recurrent",
+    "scopeDescription": "Tria quines repeticions s’han de veure afectades.",
+    "occurrenceOnly": "Només aquesta repetició",
+    "thisAndFuture": "Aquesta repetició i les futures",
+    "deleteScopeTitle": "Elimina la despesa recurrent",
+    "deleteScopeDescription": "Tria si vols eliminar una repetició o finalitzar la sèrie.",
+    "deleteOccurrence": "Elimina només aquesta repetició",
+    "deleteThisAndFuture": "Elimina aquesta repetició i les futures",
+    "confirm": "Continua",
+    "cancel": "Cancel·la",
+    "occurrences": "{count} repeticions en aquesta sèrie",
+    "loading": "S’està carregant…",
+    "loadMore": "Carrega més repeticions"
   }
 }

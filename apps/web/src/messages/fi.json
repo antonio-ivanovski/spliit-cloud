@@ -585,7 +585,44 @@
       "splitModeDescription": "Valitse miten kulu jaetaan osallistujien kesken.",
       "attachDescription": "Katso ja liitä kuluun liittyviä kuitteja.",
       "createCopy": "Luo kopio: {title}",
-      "editTitle": "Muokkaa: {title}"
+      "editTitle": "Muokkaa: {title}",
+      "recurrence": {
+        "label": "Kulun toistuvuus",
+        "description": "Valitse, milloin tämä kulu luodaan uudelleen.",
+        "checkboxLabel": "Toistuva",
+        "checkboxDescription": "Luo tämä kulu aikataulun mukaan",
+        "enable": "Lisää toistuvuus",
+        "remove": "Poista toistuvuus",
+        "repeatEvery": "Toista joka",
+        "interval": "Toistoväli",
+        "frequency": "Toistumistiheys",
+        "frequencyOptions": {
+          "daily": "päivä(ä)",
+          "weekly": "viikko(a)",
+          "monthly": "kuukausi/kuukautta",
+          "yearly": "vuosi/vuotta"
+        },
+        "ends": {
+          "label": "Päättyy",
+          "never": "Ei koskaan",
+          "count": "Tietyn toistomäärän jälkeen",
+          "date": "Tiettynä päivänä",
+          "countInput": "Toistojen kokonaismäärä (tämä kulu mukaan lukien)",
+          "dateInput": "Päättymispäivä"
+        },
+        "previewLabel": "Seuraavat toistot",
+        "currentOccurrence": "Nykyinen",
+        "viewAll": "Näytä kaikki",
+        "scheduleTitle": "Toistoaikataulu",
+        "remainingCount": "{count} toistokertaa jäljellä.",
+        "unlimitedSchedule": "Tällä toistolla ei ole päättymispäivää.",
+        "noFurtherOccurrences": "Näillä asetuksilla ei ole muita toistoja.",
+        "scheduleCount": "Näytetään {count} tämän kulun toistokertaa.",
+        "decreaseOccurrences": "Vähennä toistokertoja",
+        "increaseOccurrences": "Lisää toistokertoja",
+        "ruleSummary": "Joka {interval} {frequency} · {count} toistokertaa",
+        "ruleSummaryIndefinite": "Joka {interval} {frequency} · Ei päättymispäivää"
+      }
     },
     "amountField": {
       "label": "Summa",
@@ -1641,6 +1678,10 @@
         "weeklySummary": {
           "title": "Viikoittainen toimintayhteenveto",
           "description": "Viikoittainen yhteenveto ryhmiesi toiminnasta."
+        },
+        "recurringExpense": {
+          "title": "Toistuva kulu",
+          "description": "Kun ajastettu toistuva kulu luodaan ryhmään."
         }
       },
       "sections": {
@@ -1670,7 +1711,8 @@
         "reimbursement": "Tasausmaksu",
         "conversionSource": "Muunnoslähde",
         "conversionRate": "Muunnoskurssi"
-      }
+      },
+      "recurringCreated": "{participant} loi toistuvan kulun ”{title}”"
     },
     "group": {
       "updated": "{participant} päivitti ryhmän asetuksia",
@@ -1926,5 +1968,27 @@
       "description": "Et saa enää sähköposteja aiheesta {category}. Muut ilmoitusasetuksesi eivät muuttuneet."
     },
     "scope": "Vain tämä sähköposti-ilmoitus poistetaan käytöstä. Muut sähköpostisi ja push-ilmoituksesi säilyvät ennallaan."
+  },
+  "ExpenseSeries": {
+    "badge": "Toistuva",
+    "occurrence": "Toisto {sequence}",
+    "previous": "Edellinen",
+    "next": "Seuraava",
+    "viewSeries": "Näytä sarja",
+    "title": "Kulusarja",
+    "empty": "Muita toistoja ei vielä ole.",
+    "scopeTitle": "Päivitä toistuva kulu",
+    "scopeDescription": "Valitse, mihin toistoihin muutos vaikuttaa.",
+    "occurrenceOnly": "Vain tämä toisto",
+    "thisAndFuture": "Tämä ja tulevat toistot",
+    "deleteScopeTitle": "Poista toistuva kulu",
+    "deleteScopeDescription": "Valitse, poistetaanko yksi toisto vai päätetäänkö sarja.",
+    "deleteOccurrence": "Poista vain tämä toisto",
+    "deleteThisAndFuture": "Poista tämä ja tulevat toistot",
+    "confirm": "Jatka",
+    "cancel": "Peruuta",
+    "occurrences": "{count} toistoa tässä sarjassa",
+    "loading": "Ladataan…",
+    "loadMore": "Lataa lisää toistoja"
   }
 }

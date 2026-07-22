@@ -5,10 +5,12 @@ import { createGroupExpenseProcedure } from './create.procedure'
 import { deleteGroupExpenseProcedure } from './delete.procedure'
 import { getGroupExpenseProcedure } from './get.procedure'
 import { listGroupExpensesProcedure } from './list.procedure'
+import { listRecurringExpenseSeriesProcedure } from './series-list.procedure'
 import { updateGroupExpenseProcedure } from './update.procedure'
 
 export const groupExpensesRouter = createTRPCRouter({
   list: listGroupExpensesProcedure,
+  series: listRecurringExpenseSeriesProcedure,
   get: getGroupExpenseProcedure,
   /** Currencies actually used by the group's expenses, for driving the UI filter. */
   commonCurrencies: commonCurrenciesProcedure,

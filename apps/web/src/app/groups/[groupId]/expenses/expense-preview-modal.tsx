@@ -33,10 +33,12 @@ import type { SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { FileInput, Pencil } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
+import { SeriesControls, type ExpenseSeriesMetadata } from './series-controls'
+import { SeriesListDialog } from './series-list-dialog'
 
 type Expense = NonNullable<
   AppRouterOutput['groups']['expenses']['get']['expense']
@@ -131,6 +133,32 @@ export function ExpensePreviewModal({
   )
 
   const expense = data?.expense
+  const [seriesListOpen, setSeriesListOpen] = useState(false)
+  const series = useMemo<ExpenseSeriesMetadata | null>(() => {
+    if (!expense) return null
+    const raw = expense as typeof expense & {
+      recurringSeriesId?: string | null
+      recurrenceSequence?: number | null
+      previousExpenseId?: string | null
+      nextExpenseId?: string | null
+      recurringSeries?: {
+        id: string
+        status?: ExpenseSeriesMetadata['status']
+      } | null
+      series?: { id: string; status?: ExpenseSeriesMetadata['status'] } | null
+    }
+    const related = raw.recurringSeries ?? raw.series
+    const id = raw.recurringSeriesId ?? related?.id
+    const sequence = raw.recurrenceSequence
+    if (!id || sequence == null) return null
+    return {
+      id,
+      sequence,
+      status: related?.status,
+      previousExpenseId: raw.previousExpenseId,
+      nextExpenseId: raw.nextExpenseId,
+    }
+  }, [expense])
   const currency = group ? getCurrencyFromGroup(group) : undefined
   const canEdit = Boolean(
     expense && group && !group.archived && !isPendingInvitee,
@@ -425,6 +453,14 @@ export function ExpensePreviewModal({
               />
 
               <ExpenseAttachmentsPreview documents={expense.documents} />
+
+              {series && (
+                <SeriesControls
+                  groupId={groupId}
+                  series={series}
+                  onViewSeries={() => setSeriesListOpen(true)}
+                />
+              )}
             </div>
           )}
         </ResponsiveDialogBody>
@@ -457,6 +493,14 @@ export function ExpensePreviewModal({
           )}
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
+      {series && (
+        <SeriesListDialog
+          groupId={groupId}
+          seriesId={series.id}
+          open={seriesListOpen}
+          onOpenChange={setSeriesListOpen}
+        />
+      )}
     </ResponsiveDialog>
   )
 }

@@ -41,8 +41,7 @@ async function authAs(userId: string) {
  * Build the prisma stubs the leave procedure needs to:
  *   - resolve the group and the caller's membership (`loadGroupContext`),
  *   - count remaining active admins / members,
- *   - run balance queries via `getGroupBalances` (which goes through
- *     `getGroupExpenses` and `createRecurringExpenses`).
+ *   - run balance queries via `getGroupBalances`.
  *
  * `role` is the caller's role. `activeMemberCount` is the number of
  * *other* active members in the group (excluding the caller). `archived`
@@ -124,7 +123,6 @@ function seedLeaveContext(args: {
     return args.otherMemberCount
   })
 
-  prismaMock.recurringExpenseLink.findMany.mockResolvedValue([] as never)
   prismaMock.expense.findMany.mockResolvedValue([] as never)
   prismaMock.activity.create.mockResolvedValue({ id: 'act-1' } as never)
   return { groupId, ledgerId, callerParticipantId }

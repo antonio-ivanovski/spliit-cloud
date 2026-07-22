@@ -11,9 +11,10 @@ export const updateGroupExpenseProcedure = protectedProcedure
       expenseId: z.string().min(1),
       groupId: z.string().min(1),
       expense: expenseApiSchema,
+      scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional(),
     }),
   )
-  .mutation(async ({ input: { expenseId, groupId, expense }, ctx }) => {
+  .mutation(async ({ input: { expenseId, groupId, expense, scope }, ctx }) => {
     const { group } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
@@ -25,9 +26,15 @@ export const updateGroupExpenseProcedure = protectedProcedure
       })
     }
     try {
-      const { id } = await updateExpense(groupId, expenseId, expense, {
-        accountId: ctx.auth.user.id,
-      })
+      const { id } = await updateExpense(
+        groupId,
+        expenseId,
+        expense,
+        {
+          accountId: ctx.auth.user.id,
+        },
+        { scope },
+      )
       return { expenseId: id }
     } catch (err) {
       if (err instanceof ConversionError) {

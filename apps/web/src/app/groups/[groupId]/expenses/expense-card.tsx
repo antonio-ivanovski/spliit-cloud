@@ -11,6 +11,7 @@ import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
+import { RecurringBadge } from './series-controls'
 
 type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
 
@@ -137,6 +138,11 @@ export function ExpenseCard({
   const originalAmount = expense.originalAmount ?? undefined
   const showOriginalAmount =
     originalCurrency !== undefined && originalAmount !== undefined
+  const seriesId = (
+    expense as typeof expense & {
+      recurringSeriesId?: string | null
+    }
+  ).recurringSeriesId
 
   return (
     <div
@@ -183,6 +189,7 @@ export function ExpenseCard({
               {t('settlementBadge')}
             </Badge>
           )}
+          {seriesId && <RecurringBadge className="text-[0.68rem]" />}
         </div>
         <div className="text-xs text-muted-foreground">
           <Participants expense={expense} participantCount={participantCount} />

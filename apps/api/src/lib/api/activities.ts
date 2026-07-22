@@ -25,6 +25,8 @@ export type LogActivityArgs = {
   actor?: { type: ActivityActorType; id: string }
   subject?: { type: ActivitySubjectType; id: string }
   data: ActivityData
+  /** Opt in to notifying the actor for recurring expense creation only. */
+  includeActorAsRecipient?: boolean
 }
 
 export function scheduleActivityNotification(
@@ -40,6 +42,7 @@ export function scheduleActivityNotification(
     subject: args.subject ?? null,
     data: args.data,
     occurredAt: activity.time,
+    includeActorAsRecipient: args.includeActorAsRecipient,
   })
 }
 

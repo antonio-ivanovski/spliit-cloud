@@ -303,6 +303,37 @@ describe('exportGroupJson', () => {
         isReimbursement: false,
         splitMode: 'BY_AMOUNT',
         recurrenceRule: 'NONE',
+        recurrenceSequence: 4,
+        recurringSeries: {
+          id: 'series-1',
+          frequency: 'MONTHLY',
+          interval: 2,
+          endType: 'COUNT',
+          occurrenceLimit: 8,
+          endDate: null,
+          status: 'CANCELLED',
+          anchorDate: new Date('2024-01-31T00:00:00Z'),
+          anchorSequence: 3,
+          nextOccurrenceDate: new Date('2024-05-31T00:00:00Z'),
+          nextOccurrenceOrdinal: 3,
+          template: {
+            title: 'Current template',
+            categoryId: 'dining-out',
+            amount: 10000,
+            originalAmount: 10000,
+            originalCurrency: 'USD',
+            conversionRate: 0.92,
+            conversionSource: 'CUSTOM',
+            paidBySplitMode: 'BY_AMOUNT',
+            paidByList: [{ ledgerParticipantId: 'lp-1', shares: 10000 }],
+            paidFor: [{ ledgerParticipantId: 'lp-1', shares: 10000 }],
+            splitMode: 'BY_AMOUNT',
+            isReimbursement: false,
+            notes: 'future template',
+            items: [],
+            itemizedRemainder: null,
+          },
+        },
         items: [],
         itemizedRemainder: null,
       },
@@ -326,5 +357,9 @@ describe('exportGroupJson', () => {
     expect(exp.originalCurrency).toBe('USD')
     expect(exp.paidByList[0].shares).toBe(10000)
     expect(exp.paidFor[0].shares).toBe(9200)
+    expect(exp.paidById).toBe('lp-1')
+    expect(exp.recurrenceRule).toBe('NONE')
+    expect(exp.recurrence).toBeUndefined()
+    expect(exp.recurringSeriesId).toBeUndefined()
   })
 })

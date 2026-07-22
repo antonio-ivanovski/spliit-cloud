@@ -88,7 +88,7 @@ describe('notifications.preferences', () => {
     expect(result.systemDefault).toBe('EMAIL_BY_DEFAULT')
     expect(result.hasExplicitPreferences).toBe(false)
     expect(result).not.toHaveProperty('global')
-    expect(result.categories).toHaveLength(7)
+    expect(result.categories).toHaveLength(8)
     expect(result.categories[0].channels).toBeNull()
     expect(result.categories[0].recommendedChannels).toEqual([
       NotificationChannel.EMAIL,
@@ -124,6 +124,31 @@ describe('notifications.preferences', () => {
           accountId_category: {
             accountId: 'acct-1',
             category: NotificationCategory.EXPENSE_CHANGED,
+          },
+        },
+      }),
+    )
+  })
+
+  it('accepts a distinct recurring-expense preference category', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
+    prismaMock.pushSubscription.count.mockResolvedValue(0)
+    await makeCaller().preferences.save({
+      preferences: [
+        {
+          category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+          channels: [NotificationChannel.PUSH],
+        },
+      ],
+    })
+    expect(
+      prismaMock.accountNotificationPreference.upsert,
+    ).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          accountId_category: {
+            accountId: 'acct-1',
+            category: NotificationCategory.RECURRING_EXPENSE_CREATED,
           },
         },
       }),

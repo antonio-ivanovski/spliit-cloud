@@ -8,9 +8,10 @@ export const deleteGroupExpenseProcedure = protectedProcedure
     z.object({
       expenseId: z.string().min(1),
       groupId: z.string().min(1),
+      scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional(),
     }),
   )
-  .mutation(async ({ input: { expenseId, groupId }, ctx }) => {
+  .mutation(async ({ input: { expenseId, groupId, scope }, ctx }) => {
     const { group } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
@@ -21,8 +22,13 @@ export const deleteGroupExpenseProcedure = protectedProcedure
         message: 'This group is archived and expenses cannot be modified',
       })
     }
-    await deleteExpense(groupId, expenseId, {
-      accountId: ctx.auth.user.id,
-    })
+    await deleteExpense(
+      groupId,
+      expenseId,
+      {
+        accountId: ctx.auth.user.id,
+      },
+      { scope },
+    )
     return {}
   })

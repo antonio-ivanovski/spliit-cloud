@@ -609,7 +609,44 @@
       "splitModeDescription": "Wähle, wie die Ausgabe aufgeteilt werden soll.",
       "attachDescription": "Füge der Ausgabe einen Beleg hinzu.",
       "createCopy": "Kopie erstellen: {title}",
-      "editTitle": "Bearbeiten: {title}"
+      "editTitle": "Bearbeiten: {title}",
+      "recurrence": {
+        "label": "Wiederholung der Ausgabe",
+        "description": "Lege fest, wann diese Ausgabe erneut erstellt werden soll.",
+        "checkboxLabel": "Wiederkehrend",
+        "checkboxDescription": "Diese Ausgabe nach einem Zeitplan erstellen",
+        "enable": "Wiederholung hinzufügen",
+        "remove": "Wiederholung entfernen",
+        "repeatEvery": "Wiederholen alle",
+        "interval": "Wiederholungsintervall",
+        "frequency": "Wiederholungsfrequenz",
+        "frequencyOptions": {
+          "daily": "Tag(e)",
+          "weekly": "Woche(n)",
+          "monthly": "Monat(e)",
+          "yearly": "Jahr(e)"
+        },
+        "ends": {
+          "label": "Endet",
+          "never": "Nie",
+          "count": "Nach einer bestimmten Anzahl von Terminen",
+          "date": "An einem Datum",
+          "countInput": "Gesamtzahl der Termine (einschließlich dieser Ausgabe)",
+          "dateInput": "Enddatum"
+        },
+        "previewLabel": "Nächste Termine",
+        "currentOccurrence": "Aktuell",
+        "viewAll": "Alle anzeigen",
+        "scheduleTitle": "Wiederholungsplan",
+        "remainingCount": "Es verbleiben {count} Vorkommen.",
+        "unlimitedSchedule": "Diese Wiederholung hat kein Enddatum.",
+        "noFurtherOccurrences": "Mit diesen Einstellungen gibt es keine weiteren Termine.",
+        "scheduleCount": "{count} Vorkommen dieser Ausgabe werden angezeigt.",
+        "decreaseOccurrences": "Vorkommen verringern",
+        "increaseOccurrences": "Vorkommen erhöhen",
+        "ruleSummary": "Alle {interval} {frequency} · {count} Vorkommen",
+        "ruleSummaryIndefinite": "Alle {interval} {frequency} · Kein Enddatum"
+      }
     },
     "amountField": {
       "label": "Betrag",
@@ -1673,6 +1710,10 @@
         "weeklySummary": {
           "title": "Wöchentliche Aktivitätszusammenfassung",
           "description": "Eine wöchentliche Zusammenfassung der Aktivitäten in deinen Gruppen."
+        },
+        "recurringExpense": {
+          "title": "Wiederkehrende Ausgabe",
+          "description": "Wenn eine geplante wiederkehrende Ausgabe in einer Gruppe erstellt wird."
         }
       },
       "sections": {
@@ -1702,7 +1743,8 @@
         "reimbursement": "Ausgleichszahlung",
         "conversionSource": "Umrechnungsquelle",
         "conversionRate": "Umrechnungskurs"
-      }
+      },
+      "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt"
     },
     "group": {
       "updated": "{participant} aktualisierte die Gruppeneinstellungen",
@@ -1994,5 +2036,27 @@
       "description": "Sie erhalten keine E-Mails für {category}. Ihre anderen Benachrichtigungseinstellungen wurden nicht geändert."
     },
     "scope": "Nur diese E-Mail-Benachrichtigung wird deaktiviert. Ihre anderen E-Mails und Push-Benachrichtigungen bleiben unverändert."
+  },
+  "ExpenseSeries": {
+    "badge": "Wiederkehrend",
+    "occurrence": "Termin {sequence}",
+    "previous": "Vorheriger",
+    "next": "Nächster",
+    "viewSeries": "Serie anzeigen",
+    "title": "Ausgabenserie",
+    "empty": "Noch keine weiteren Termine vorhanden.",
+    "scopeTitle": "Wiederkehrende Ausgabe aktualisieren",
+    "scopeDescription": "Wähle aus, welche Termine betroffen sein sollen.",
+    "occurrenceOnly": "Nur dieser Termin",
+    "thisAndFuture": "Dieser und alle zukünftigen Termine",
+    "deleteScopeTitle": "Wiederkehrende Ausgabe löschen",
+    "deleteScopeDescription": "Wähle, ob ein Termin gelöscht oder die Serie beendet werden soll.",
+    "deleteOccurrence": "Nur diesen Termin löschen",
+    "deleteThisAndFuture": "Diesen und alle zukünftigen Termine löschen",
+    "confirm": "Weiter",
+    "cancel": "Abbrechen",
+    "occurrences": "{count} Termine in dieser Serie",
+    "loading": "Wird geladen…",
+    "loadMore": "Weitere Termine laden"
   }
 }

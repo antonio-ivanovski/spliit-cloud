@@ -763,7 +763,6 @@ function seedRevokeContext(args: {
     status: 'REVOKED',
     revokedAt: new Date(),
   } as never)
-  prismaMock.recurringExpenseLink.findMany.mockResolvedValue([] as never)
   prismaMock.expense.findMany.mockResolvedValue([] as never)
   return { groupId, ledgerId, invitationId, participantId }
 }

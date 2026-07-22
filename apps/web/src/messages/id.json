@@ -579,7 +579,44 @@
       "splitModeDescription": "Pilih cara membagi pengeluaran.",
       "attachDescription": "Lihat dan lampirkan tanda terima pada pengeluaran.",
       "createCopy": "Buat salinan: {title}",
-      "editTitle": "Ubah: {title}"
+      "editTitle": "Ubah: {title}",
+      "recurrence": {
+        "label": "Pengulangan pengeluaran",
+        "description": "Pilih kapan pengeluaran ini harus dibuat lagi.",
+        "checkboxLabel": "Berulang",
+        "checkboxDescription": "Buat pengeluaran ini sesuai jadwal",
+        "enable": "Tambahkan pengulangan",
+        "remove": "Hapus pengulangan",
+        "repeatEvery": "Ulangi setiap",
+        "interval": "Interval pengulangan",
+        "frequency": "Frekuensi pengulangan",
+        "frequencyOptions": {
+          "daily": "hari",
+          "weekly": "minggu",
+          "monthly": "bulan",
+          "yearly": "tahun"
+        },
+        "ends": {
+          "label": "Berakhir",
+          "never": "Tidak pernah",
+          "count": "Setelah sejumlah kejadian",
+          "date": "Pada tanggal tertentu",
+          "countInput": "Jumlah kejadian (termasuk pengeluaran ini)",
+          "dateInput": "Tanggal berakhir"
+        },
+        "previewLabel": "Kejadian berikutnya",
+        "currentOccurrence": "Saat ini",
+        "viewAll": "Lihat semua",
+        "scheduleTitle": "Jadwal pengulangan",
+        "remainingCount": "Tersisa {count} kejadian.",
+        "unlimitedSchedule": "Pengulangan ini tidak memiliki tanggal berakhir.",
+        "noFurtherOccurrences": "Tidak ada kejadian berikutnya dengan pengaturan ini.",
+        "scheduleCount": "Menampilkan {count} kejadian dari pengeluaran ini.",
+        "decreaseOccurrences": "Kurangi jumlah kejadian",
+        "increaseOccurrences": "Tambah jumlah kejadian",
+        "ruleSummary": "Setiap {interval} {frequency} · {count} kejadian",
+        "ruleSummaryIndefinite": "Setiap {interval} {frequency} · Tanpa tanggal berakhir"
+      }
     },
     "amountField": {
       "label": "Jumlah",
@@ -1634,6 +1671,10 @@
         "weeklySummary": {
           "title": "Ringkasan aktivitas mingguan",
           "description": "Ringkasan aktivitas mingguan di semua grup Anda."
+        },
+        "recurringExpense": {
+          "title": "Pengeluaran berulang",
+          "description": "Saat pengeluaran berulang terjadwal dibuat dalam grup."
         }
       },
       "sections": {
@@ -1663,7 +1704,8 @@
         "reimbursement": "Pembayaran pelunasan",
         "conversionSource": "Sumber konversi",
         "conversionRate": "Kurs"
-      }
+      },
+      "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”"
     },
     "group": {
       "updated": "{participant} memperbarui pengaturan grup",
@@ -1910,5 +1952,27 @@
       "description": "Anda tidak akan menerima email untuk {category}. Pengaturan notifikasi lainnya tidak berubah."
     },
     "scope": "Hanya notifikasi email ini yang akan dinonaktifkan. Email dan notifikasi push lainnya akan tetap sama."
+  },
+  "ExpenseSeries": {
+    "badge": "Berulang",
+    "occurrence": "Kejadian {sequence}",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya",
+    "viewSeries": "Lihat rangkaian",
+    "title": "Rangkaian pengeluaran",
+    "empty": "Belum ada kejadian lain.",
+    "scopeTitle": "Perbarui pengeluaran berulang",
+    "scopeDescription": "Pilih kejadian mana yang akan terpengaruh.",
+    "occurrenceOnly": "Hanya kejadian ini",
+    "thisAndFuture": "Kejadian ini dan yang akan datang",
+    "deleteScopeTitle": "Hapus pengeluaran berulang",
+    "deleteScopeDescription": "Pilih apakah akan menghapus satu kejadian atau mengakhiri rangkaian.",
+    "deleteOccurrence": "Hapus hanya kejadian ini",
+    "deleteThisAndFuture": "Hapus kejadian ini dan yang akan datang",
+    "confirm": "Lanjutkan",
+    "cancel": "Batal",
+    "occurrences": "{count} kejadian dalam rangkaian ini",
+    "loading": "Memuat…",
+    "loadMore": "Muat lebih banyak kejadian"
   }
 }

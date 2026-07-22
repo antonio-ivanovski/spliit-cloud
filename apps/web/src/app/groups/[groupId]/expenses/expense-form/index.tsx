@@ -270,6 +270,11 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           isCreate={isCreate}
+          recurrenceSequence={
+            !props.isCopy
+              ? (props.expense?.recurrenceSequence ?? undefined)
+              : undefined
+          }
           linkInviteToken={props.linkInviteToken}
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}

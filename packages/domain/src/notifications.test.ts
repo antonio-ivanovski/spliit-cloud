@@ -32,6 +32,7 @@ describe('notification preference domain values', () => {
       NotificationCategory.GROUP_INVITE_RECEIVED,
       NotificationCategory.FRIEND_ADDED,
       NotificationCategory.EXPENSE_CREATED,
+      NotificationCategory.RECURRING_EXPENSE_CREATED,
       NotificationCategory.EXPENSE_CHANGED,
       NotificationCategory.EXPENSE_COMMENT,
       NotificationCategory.WEEKLY_SUMMARY,
@@ -43,6 +44,9 @@ describe('notification preference domain values', () => {
   it('folds imports into created and bulk changes into changed', () => {
     expect(notificationCategoryForActivityType.EXPENSE_CREATED).toBe(
       NotificationCategory.EXPENSE_CREATED,
+    )
+    expect(notificationCategoryForActivityType.RECURRING_EXPENSE_CREATED).toBe(
+      NotificationCategory.RECURRING_EXPENSE_CREATED,
     )
     expect(notificationCategoryForActivityType.EXPENSE_UPDATED).toBe(
       NotificationCategory.EXPENSE_CHANGED,
@@ -80,6 +84,11 @@ describe('notification preference domain values', () => {
   it('uses email for accounts without an explicit preference', () => {
     expect(
       getDefaultNotificationChannels(NotificationCategory.EXPENSE_CREATED),
+    ).toEqual([NotificationChannel.EMAIL])
+    expect(
+      getDefaultNotificationChannels(
+        NotificationCategory.RECURRING_EXPENSE_CREATED,
+      ),
     ).toEqual([NotificationChannel.EMAIL])
     expect(
       getDefaultNotificationChannels(

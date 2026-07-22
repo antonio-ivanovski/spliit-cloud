@@ -597,7 +597,44 @@
       "splitModeDescription": "Wybierz jak podzielić wydatek.",
       "attachDescription": "Zobacz i załącz rachunki do wydatku.",
       "createCopy": "Utwórz kopię: {title}",
-      "editTitle": "Edytuj: {title}"
+      "editTitle": "Edytuj: {title}",
+      "recurrence": {
+        "label": "Cykliczność wydatku",
+        "description": "Wybierz, kiedy ten wydatek ma zostać utworzony ponownie.",
+        "checkboxLabel": "Cykliczny",
+        "checkboxDescription": "Utwórz ten wydatek według harmonogramu",
+        "enable": "Dodaj cykliczność",
+        "remove": "Usuń cykliczność",
+        "repeatEvery": "Powtarzaj co",
+        "interval": "Interwał powtarzania",
+        "frequency": "Częstotliwość powtarzania",
+        "frequencyOptions": {
+          "daily": "dzień/dni",
+          "weekly": "tydzień/tygodnie",
+          "monthly": "miesiąc/miesiące",
+          "yearly": "rok/lata"
+        },
+        "ends": {
+          "label": "Kończy się",
+          "never": "Nigdy",
+          "count": "Po określonej liczbie wystąpień",
+          "date": "W określonym dniu",
+          "countInput": "Łączna liczba wystąpień (w tym ten wydatek)",
+          "dateInput": "Data zakończenia"
+        },
+        "previewLabel": "Następne wystąpienia",
+        "currentOccurrence": "Bieżący",
+        "viewAll": "Wyświetl wszystko",
+        "scheduleTitle": "Harmonogram cykliczności",
+        "remainingCount": "Pozostało {count} wystąpień.",
+        "unlimitedSchedule": "To powtarzanie nie ma daty zakończenia.",
+        "noFurtherOccurrences": "Przy tych ustawieniach nie ma kolejnych wystąpień.",
+        "scheduleCount": "Wyświetlono {count} wystąpień od tego wydatku.",
+        "decreaseOccurrences": "Zmniejsz liczbę wystąpień",
+        "increaseOccurrences": "Zwiększ liczbę wystąpień",
+        "ruleSummary": "Co {interval} {frequency} · {count} wystąpień",
+        "ruleSummaryIndefinite": "Co {interval} {frequency} · Brak daty zakończenia"
+      }
     },
     "amountField": {
       "label": "Suma",
@@ -1657,6 +1694,10 @@
         "weeklySummary": {
           "title": "Cotygodniowe podsumowanie aktywności",
           "description": "Cotygodniowe podsumowanie aktywności we wszystkich Twoich grupach."
+        },
+        "recurringExpense": {
+          "title": "Wydatek cykliczny",
+          "description": "Gdy w grupie zostanie utworzony zaplanowany wydatek cykliczny."
         }
       },
       "sections": {
@@ -1686,7 +1727,8 @@
         "reimbursement": "Płatność rozliczeniowa",
         "conversionSource": "Źródło konwersji",
         "conversionRate": "Kurs wymiany"
-      }
+      },
+      "recurringCreated": "{participant} utworzył(a) cykliczny wydatek „{title}”"
     },
     "group": {
       "updated": "{participant} zaktualizował ustawienia grupy",
@@ -1960,5 +2002,27 @@
       "description": "Nie będziesz otrzymywać e-maili dotyczących {category}. Pozostałe ustawienia powiadomień nie uległy zmianie."
     },
     "scope": "Wyłączone zostanie tylko to powiadomienie e-mail. Pozostałe e-maile i powiadomienia push pozostaną bez zmian."
+  },
+  "ExpenseSeries": {
+    "badge": "Cykliczny",
+    "occurrence": "Wystąpienie {sequence}",
+    "previous": "Poprzednie",
+    "next": "Następne",
+    "viewSeries": "Wyświetl serię",
+    "title": "Seria wydatków",
+    "empty": "Nie ma jeszcze innych wystąpień.",
+    "scopeTitle": "Zaktualizuj cykliczny wydatek",
+    "scopeDescription": "Wybierz, których wystąpień ma dotyczyć zmiana.",
+    "occurrenceOnly": "Tylko to wystąpienie",
+    "thisAndFuture": "To i przyszłe wystąpienia",
+    "deleteScopeTitle": "Usuń cykliczny wydatek",
+    "deleteScopeDescription": "Wybierz, czy usunąć jedno wystąpienie, czy zakończyć serię.",
+    "deleteOccurrence": "Usuń tylko to wystąpienie",
+    "deleteThisAndFuture": "Usuń to i przyszłe wystąpienia",
+    "confirm": "Kontynuuj",
+    "cancel": "Anuluj",
+    "occurrences": "{count} wystąpień w tej serii",
+    "loading": "Wczytywanie…",
+    "loadMore": "Wczytaj więcej wystąpień"
   }
 }

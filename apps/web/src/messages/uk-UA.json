@@ -597,7 +597,44 @@
       "splitModeDescription": "Оберіть, як розділити витрату",
       "attachDescription": "Перегляньте та прикріпіть чеки до витрати",
       "createCopy": "Створити копію: {title}",
-      "editTitle": "Редагувати: {title}"
+      "editTitle": "Редагувати: {title}",
+      "recurrence": {
+        "label": "Повторення витрати",
+        "description": "Виберіть, коли цю витрату потрібно створити знову.",
+        "checkboxLabel": "Повторювана",
+        "checkboxDescription": "Створювати цю витрату за розкладом",
+        "enable": "Додати повторення",
+        "remove": "Видалити повторення",
+        "repeatEvery": "Повторювати кожні",
+        "interval": "Інтервал повторення",
+        "frequency": "Частота повторення",
+        "frequencyOptions": {
+          "daily": "день/днів",
+          "weekly": "тиждень/тижнів",
+          "monthly": "місяць/місяців",
+          "yearly": "рік/років"
+        },
+        "ends": {
+          "label": "Завершення",
+          "never": "Ніколи",
+          "count": "Після заданої кількості повторень",
+          "date": "У зазначену дату",
+          "countInput": "Загальна кількість повторень (включно з цією витратою)",
+          "dateInput": "Дата завершення"
+        },
+        "previewLabel": "Наступні повторення",
+        "currentOccurrence": "Поточна",
+        "viewAll": "Показати все",
+        "scheduleTitle": "Розклад повторень",
+        "remainingCount": "Залишилося повторень: {count}.",
+        "unlimitedSchedule": "Це повторення не має дати завершення.",
+        "noFurtherOccurrences": "За цих налаштувань більше немає повторень.",
+        "scheduleCount": "Показано повторень від цієї витрати: {count}.",
+        "decreaseOccurrences": "Зменшити кількість повторень",
+        "increaseOccurrences": "Збільшити кількість повторень",
+        "ruleSummary": "Кожні {interval} {frequency} · {count} повторень",
+        "ruleSummaryIndefinite": "Кожні {interval} {frequency} · Без дати завершення"
+      }
     },
     "amountField": {
       "label": "Сума",
@@ -1657,6 +1694,10 @@
         "weeklySummary": {
           "title": "Щотижневий підсумок активності",
           "description": "Щотижневий підсумок активності у ваших групах."
+        },
+        "recurringExpense": {
+          "title": "Періодична витрата",
+          "description": "Коли в групі створюється запланована періодична витрата."
         }
       },
       "sections": {
@@ -1686,7 +1727,8 @@
         "reimbursement": "Платіж для погашення боргу",
         "conversionSource": "Джерело конвертації",
         "conversionRate": "Обмінний курс"
-      }
+      },
+      "recurringCreated": "{participant} створив(-ла) регулярну витрату «{title}»"
     },
     "group": {
       "updated": "{participant} оновив налаштування групи",
@@ -1960,5 +2002,27 @@
       "description": "Ви не отримуватимете листів про {category}. Інші налаштування сповіщень не змінено."
     },
     "scope": "Буде вимкнено лише це сповіщення електронною поштою. Інші листи та push-сповіщення залишаться без змін."
+  },
+  "ExpenseSeries": {
+    "badge": "Регулярна",
+    "occurrence": "Повторення {sequence}",
+    "previous": "Попереднє",
+    "next": "Наступне",
+    "viewSeries": "Переглянути серію",
+    "title": "Серія витрат",
+    "empty": "Інших повторень ще немає.",
+    "scopeTitle": "Оновити регулярну витрату",
+    "scopeDescription": "Виберіть, яких повторень стосуватиметься зміна.",
+    "occurrenceOnly": "Лише це повторення",
+    "thisAndFuture": "Це й майбутні повторення",
+    "deleteScopeTitle": "Видалити регулярну витрату",
+    "deleteScopeDescription": "Виберіть, видалити одне повторення чи завершити серію.",
+    "deleteOccurrence": "Видалити лише це повторення",
+    "deleteThisAndFuture": "Видалити це й майбутні повторення",
+    "confirm": "Продовжити",
+    "cancel": "Скасувати",
+    "occurrences": "Повторень у цій серії: {count}",
+    "loading": "Завантаження…",
+    "loadMore": "Завантажити більше повторень"
   }
 }

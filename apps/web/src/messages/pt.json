@@ -693,7 +693,44 @@
       "splitModeDescription": "Seleciona como dividir a despesa.",
       "attachDescription": "Ver e anexar recibos à despesa.",
       "createCopy": "Criar cópia: {title}",
-      "editTitle": "Editar: {title}"
+      "editTitle": "Editar: {title}",
+      "recurrence": {
+        "label": "Recorrência da despesa",
+        "description": "Escolha quando esta despesa deve ser criada novamente.",
+        "checkboxLabel": "Recorrente",
+        "checkboxDescription": "Criar esta despesa de acordo com um calendário",
+        "enable": "Adicionar recorrência",
+        "remove": "Remover recorrência",
+        "repeatEvery": "Repetir a cada",
+        "interval": "Intervalo de repetição",
+        "frequency": "Frequência da recorrência",
+        "frequencyOptions": {
+          "daily": "dia(s)",
+          "weekly": "semana(s)",
+          "monthly": "mês/meses",
+          "yearly": "ano(s)"
+        },
+        "ends": {
+          "label": "Termina",
+          "never": "Nunca",
+          "count": "Após um número de ocorrências",
+          "date": "Numa data",
+          "countInput": "Total de ocorrências (incluindo esta despesa)",
+          "dateInput": "Data de fim"
+        },
+        "previewLabel": "Próximas ocorrências",
+        "currentOccurrence": "Atual",
+        "viewAll": "Ver todas",
+        "scheduleTitle": "Calendário de recorrência",
+        "remainingCount": "Restam {count} ocorrências.",
+        "unlimitedSchedule": "Esta recorrência não tem data de fim.",
+        "noFurtherOccurrences": "Não há mais ocorrências com estas definições.",
+        "scheduleCount": "A mostrar {count} ocorrências a partir desta despesa.",
+        "decreaseOccurrences": "Diminuir ocorrências",
+        "increaseOccurrences": "Aumentar ocorrências",
+        "ruleSummary": "A cada {interval} {frequency} · {count} ocorrências",
+        "ruleSummaryIndefinite": "A cada {interval} {frequency} · Sem data de fim"
+      }
     },
     "amountField": {
       "label": "Montante",
@@ -1649,6 +1686,10 @@
         "weeklySummary": {
           "title": "Resumo semanal de atividade",
           "description": "Um resumo semanal da atividade dos seus grupos."
+        },
+        "recurringExpense": {
+          "title": "Despesa recorrente",
+          "description": "Quando é criada uma despesa recorrente agendada num grupo."
         }
       },
       "sections": {
@@ -1678,7 +1719,8 @@
         "reimbursement": "Pagamento de acerto",
         "conversionSource": "Fonte de conversão",
         "conversionRate": "Taxa de conversão"
-      }
+      },
+      "recurringCreated": "{participant} criou a despesa recorrente «{title}»"
     },
     "group": {
       "updated": "{participant} atualizou as definições do grupo",
@@ -1943,5 +1985,27 @@
       "description": "Você não receberá e-mails de {category}. Suas outras configurações de notificações não foram alteradas."
     },
     "scope": "Somente esta notificação por e-mail será desativada. Seus outros e-mails e notificações push continuarão iguais."
+  },
+  "ExpenseSeries": {
+    "badge": "Recorrente",
+    "occurrence": "Ocorrência {sequence}",
+    "previous": "Anterior",
+    "next": "Seguinte",
+    "viewSeries": "Ver série",
+    "title": "Série de despesas",
+    "empty": "Ainda não há outras ocorrências.",
+    "scopeTitle": "Atualizar despesa recorrente",
+    "scopeDescription": "Escolha as ocorrências que devem ser afetadas.",
+    "occurrenceOnly": "Apenas esta ocorrência",
+    "thisAndFuture": "Esta ocorrência e as futuras",
+    "deleteScopeTitle": "Eliminar despesa recorrente",
+    "deleteScopeDescription": "Escolha se pretende eliminar uma ocorrência ou terminar a série.",
+    "deleteOccurrence": "Eliminar apenas esta ocorrência",
+    "deleteThisAndFuture": "Eliminar esta ocorrência e as futuras",
+    "confirm": "Continuar",
+    "cancel": "Cancelar",
+    "occurrences": "{count} ocorrências nesta série",
+    "loading": "A carregar…",
+    "loadMore": "Carregar mais ocorrências"
   }
 }

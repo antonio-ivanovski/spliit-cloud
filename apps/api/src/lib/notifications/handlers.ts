@@ -38,10 +38,31 @@ function dedupeRecipients(
   return recipients.flatMap((recipient) => {
     if (!recipient.id || seen.has(recipient.id)) return []
     seen.add(recipient.id)
-    if (event.actor?.type === 'ACCOUNT' && event.actor.id === recipient.id)
+    if (
+      event.actor?.type === 'ACCOUNT' &&
+      event.actor.id === recipient.id &&
+      !event.includeActorAsRecipient
+    )
       return []
     return [{ activity: event, category, recipientAccountId: recipient.id }]
   })
+}
+
+async function activeActorAccount(
+  event: ActivityNotificationEvent,
+): Promise<Recipient[]> {
+  if (!event.includeActorAsRecipient || event.actor?.type !== 'ACCOUNT') {
+    return []
+  }
+  const member = await prisma.groupMember.findFirst({
+    where: {
+      groupId: event.groupId,
+      accountId: event.actor.id,
+      status: 'ACTIVE',
+    },
+    select: { accountId: true },
+  })
+  return member ? [{ id: member.accountId }] : []
 }
 
 async function activeGroupAccounts(groupId: string): Promise<Recipient[]> {
@@ -74,7 +95,10 @@ async function expenseParticipantAccounts(
   const parsed = parseActivityData(event.data)
   if (!parsed) return []
   let participantIds: string[] = []
-  if (event.type === 'EXPENSE_CREATED') {
+  if (
+    event.type === 'EXPENSE_CREATED' ||
+    event.type === 'RECURRING_EXPENSE_CREATED'
+  ) {
     if (!event.subject?.id) return []
     const raw = await prisma.expense.findUnique({
       where: { id: event.subject.id },
@@ -162,7 +186,11 @@ export class ExpenseActivityHandler implements ActivityHandler {
   async buildIntents(event: ActivityNotificationEvent) {
     const category = eventCategory(event)
     if (!category) return []
-    const recipients = await expenseParticipantAccounts(event)
+    const [participants, actor] = await Promise.all([
+      expenseParticipantAccounts(event),
+      activeActorAccount(event),
+    ])
+    const recipients = [...participants, ...actor]
     return dedupeRecipients(event, recipients, category)
   }
 }

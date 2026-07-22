@@ -157,6 +157,36 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
       expect(email.text).toContain('EUR 45.00')
       expect(email.text).toContain('2026-07-02')
     })
+
+    it('sends recurring creation email to the original creator as well', async () => {
+      prismaMock.expense.findUnique.mockResolvedValue(makeExpenseRow() as never)
+      prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+        makeParticipant('lp-alice', { email: 'alice@test.com' }),
+        makeParticipant('lp-bob', { email: 'bob@test.com' }),
+      ] as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
+
+      await dispatcher.dispatch({
+        activity: buildEvent({
+          type: 'RECURRING_EXPENSE_CREATED',
+          includeActorAsRecipient: true,
+        }),
+        category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+        recipientAccountId: 'acct-alice',
+        channels: [NotificationChannel.EMAIL],
+      })
+
+      expect(sendEmailMock).toHaveBeenCalledTimes(1)
+      expect(sendEmailMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: 'alice@test.com',
+          subject: expect.stringContaining('Recurring expense "Dinner"'),
+        }),
+      )
+    })
   })
 
   describe('successful update email', () => {

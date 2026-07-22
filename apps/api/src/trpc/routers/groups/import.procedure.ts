@@ -48,6 +48,20 @@ const importSourceMetaSchema = z.object({
   sourceUrl: z.string().url().optional(),
 })
 
+/**
+ * Spliit imports intentionally remain the immutable legacy spliit.app
+ * transport. Internal Cloud series metadata is never accepted here; legacy
+ * recurrenceRule values are mapped to independent destination series.
+ */
+export const importExpenseSchema = z.preprocess((value) => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return value
+  const { recurrence: _recurrence, ...legacyExpense } = value as Record<
+    string,
+    unknown
+  >
+  return legacyExpense
+}, expenseApiSchema)
+
 export const importGroupProcedure = protectedProcedure
   .input(
     z
@@ -61,7 +75,7 @@ export const importGroupProcedure = protectedProcedure
           ),
         groupFormValues: groupFormSchema.optional(),
         participants: z.array(importParticipantMappingSchema).min(1),
-        expenses: z.array(expenseApiSchema).min(0).default([]),
+        expenses: z.array(importExpenseSchema).min(0).default([]),
         sourceMeta: importSourceMetaSchema.optional(),
       })
       .superRefine((value, ctx) => {
@@ -107,7 +121,7 @@ export const importGroupProcedure = protectedProcedure
     }
 
     try {
-      const result = await importGroup(input, {
+      const result = await importGroup(input as never, {
         accountId: ctx.auth.user.id,
       })
       return result

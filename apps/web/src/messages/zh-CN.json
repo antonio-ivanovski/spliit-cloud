@@ -579,7 +579,44 @@
         "monthly": "每月"
       },
       "createCopy": "创建副本：{title}",
-      "editTitle": "编辑：{title}"
+      "editTitle": "编辑：{title}",
+      "recurrence": {
+        "label": "支出重复",
+        "description": "选择再次创建此支出的时间。",
+        "checkboxLabel": "重复支出",
+        "checkboxDescription": "按计划创建此支出",
+        "enable": "添加重复",
+        "remove": "移除重复",
+        "repeatEvery": "每隔",
+        "interval": "重复间隔",
+        "frequency": "重复频率",
+        "frequencyOptions": {
+          "daily": "天",
+          "weekly": "周",
+          "monthly": "个月",
+          "yearly": "年"
+        },
+        "ends": {
+          "label": "结束",
+          "never": "永不",
+          "count": "达到指定次数后",
+          "date": "在指定日期",
+          "countInput": "总次数（包括本次支出）",
+          "dateInput": "结束日期"
+        },
+        "previewLabel": "接下来的日期",
+        "currentOccurrence": "当前",
+        "viewAll": "查看全部",
+        "scheduleTitle": "重复计划",
+        "remainingCount": "还剩 {count} 次支出。",
+        "unlimitedSchedule": "此重复没有结束日期。",
+        "noFurtherOccurrences": "按这些设置不会再有后续支出。",
+        "scheduleCount": "显示从此支出开始的 {count} 次记录。",
+        "decreaseOccurrences": "减少重复次数",
+        "increaseOccurrences": "增加重复次数",
+        "ruleSummary": "每{interval}{frequency} · {count} 次",
+        "ruleSummaryIndefinite": "每{interval}{frequency} · 无结束日期"
+      }
     },
     "amountField": {
       "label": "金额",
@@ -1634,6 +1671,10 @@
         "weeklySummary": {
           "title": "每周活动摘要",
           "description": "你的各个群组的每周活动摘要。"
+        },
+        "recurringExpense": {
+          "title": "周期性支出",
+          "description": "在群组中创建计划的周期性支出时。"
         }
       },
       "sections": {
@@ -1663,7 +1704,8 @@
         "reimbursement": "结算付款",
         "conversionSource": "转换来源",
         "conversionRate": "转换汇率"
-      }
+      },
+      "recurringCreated": "{participant}创建了定期支出“{title}”"
     },
     "group": {
       "updated": "{participant} 更新了群组设置",
@@ -1910,5 +1952,27 @@
       "description": "您将不再收到{category}的邮件。其他通知设置不会改变。"
     },
     "scope": "仅关闭此邮件通知。您仍会收到其他邮件和推送通知。"
+  },
+  "ExpenseSeries": {
+    "badge": "定期",
+    "occurrence": "第 {sequence} 次",
+    "previous": "上一个",
+    "next": "下一个",
+    "viewSeries": "查看系列",
+    "title": "支出系列",
+    "empty": "目前还没有其他记录。",
+    "scopeTitle": "更新定期支出",
+    "scopeDescription": "选择要影响的记录。",
+    "occurrenceOnly": "仅本次",
+    "thisAndFuture": "本次及之后",
+    "deleteScopeTitle": "删除定期支出",
+    "deleteScopeDescription": "选择是删除本次还是结束整个系列。",
+    "deleteOccurrence": "仅删除本次",
+    "deleteThisAndFuture": "删除本次及之后的支出",
+    "confirm": "继续",
+    "cancel": "取消",
+    "occurrences": "此系列共 {count} 次",
+    "loading": "加载中…",
+    "loadMore": "加载更多记录"
   }
 }

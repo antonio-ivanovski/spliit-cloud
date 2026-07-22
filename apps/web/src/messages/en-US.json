@@ -167,6 +167,28 @@
     },
     "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one."
   },
+  "ExpenseSeries": {
+    "badge": "Recurring",
+    "occurrence": "Occurrence {sequence}",
+    "previous": "Previous",
+    "next": "Next",
+    "viewSeries": "View series",
+    "title": "Expense series",
+    "empty": "No other occurrences yet.",
+    "scopeTitle": "Update recurring expense",
+    "scopeDescription": "Choose which occurrences should be affected.",
+    "occurrenceOnly": "Only this occurrence",
+    "thisAndFuture": "This and future occurrences",
+    "deleteScopeTitle": "Delete recurring expense",
+    "deleteScopeDescription": "Choose whether to remove one occurrence or end the series.",
+    "deleteOccurrence": "Delete only this occurrence",
+    "deleteThisAndFuture": "Delete this and future occurrences",
+    "confirm": "Continue",
+    "cancel": "Cancel",
+    "occurrences": "{count} occurrences in this series",
+    "loading": "Loading…",
+    "loadMore": "Load more occurrences"
+  },
   "Groups": {
     "myGroups": "My groups",
     "create": "Create",
@@ -638,6 +660,10 @@
           "title": "New expense",
           "description": "When someone adds an expense to a group."
         },
+        "recurringExpense": {
+          "title": "Recurring expense",
+          "description": "When a scheduled recurring expense is created in a group."
+        },
         "expenseChanged": {
           "title": "Expense edited or deleted",
           "description": "When an expense is updated or deleted."
@@ -859,6 +885,43 @@
         "daily": "Daily",
         "weekly": "Weekly",
         "monthly": "Monthly"
+      },
+      "recurrence": {
+        "label": "Expense recurrence",
+        "description": "Choose when this expense should be created again.",
+        "checkboxLabel": "Recurring",
+        "checkboxDescription": "Create this expense on a schedule",
+        "enable": "Add recurrence",
+        "remove": "Remove recurrence",
+        "repeatEvery": "Repeat every",
+        "interval": "Repeat interval",
+        "frequency": "Recurrence frequency",
+        "frequencyOptions": {
+          "daily": "day(s)",
+          "weekly": "week(s)",
+          "monthly": "month(s)",
+          "yearly": "year(s)"
+        },
+        "ends": {
+          "label": "Ends",
+          "never": "Never",
+          "count": "After a number of occurrences",
+          "date": "On a date",
+          "countInput": "Total occurrences (including this expense)",
+          "dateInput": "End date"
+        },
+        "previewLabel": "Next occurrences",
+        "currentOccurrence": "Current",
+        "viewAll": "View all",
+        "scheduleTitle": "Recurrence schedule",
+        "remainingCount": "There are {count} remaining occurrences.",
+        "unlimitedSchedule": "This recurrence has no end date.",
+        "noFurtherOccurrences": "No further occurrences with these settings.",
+        "scheduleCount": "Showing {count} occurrences from this expense.",
+        "decreaseOccurrences": "Decrease occurrences",
+        "increaseOccurrences": "Increase occurrences",
+        "ruleSummary": "Every {interval} {frequency} · {count} occurrences",
+        "ruleSummaryIndefinite": "Every {interval} {frequency} · No end date"
       },
       "paidFor": {
         "title": "Split between",
@@ -1713,7 +1776,8 @@
         "conversionSource": "Conversion source",
         "conversionRate": "Conversion rate"
       },
-      "changeEmptyValue": "Not set"
+      "changeEmptyValue": "Not set",
+      "recurringCreated": "{participant} created recurring expense “{title}”"
     },
     "group": {
       "updated": "{participant} updated group settings",

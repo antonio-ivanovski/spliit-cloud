@@ -96,6 +96,7 @@ describe('PushNotificationOnboarding', () => {
           { category: 'GROUP_INVITE_RECEIVED', channels: ['EMAIL'] },
           { category: 'FRIEND_ADDED', channels: ['EMAIL'] },
           { category: 'EXPENSE_CREATED', channels: ['EMAIL'] },
+          { category: 'RECURRING_EXPENSE_CREATED', channels: ['EMAIL'] },
           { category: 'EXPENSE_CHANGED', channels: ['EMAIL'] },
         ],
       })
@@ -236,6 +237,7 @@ describe('PushNotificationOnboarding', () => {
           { category: 'GROUP_INVITE_RECEIVED', channels: ['EMAIL', 'PUSH'] },
           { category: 'FRIEND_ADDED', channels: ['EMAIL', 'PUSH'] },
           { category: 'EXPENSE_CREATED', channels: ['PUSH'] },
+          { category: 'RECURRING_EXPENSE_CREATED', channels: ['PUSH'] },
           { category: 'EXPENSE_CHANGED', channels: ['PUSH'] },
         ],
       })

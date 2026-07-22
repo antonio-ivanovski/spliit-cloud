@@ -480,7 +480,44 @@
       "splitModeDescription": "지출을 어떻게 나눌지 선택해 주세요.",
       "attachDescription": "영수증을 확인하고 지출에 첨부합니다.",
       "createCopy": "사본 만들기: {title}",
-      "editTitle": "편집: {title}"
+      "editTitle": "편집: {title}",
+      "recurrence": {
+        "label": "지출 반복",
+        "description": "이 지출을 다시 생성할 시점을 선택하세요.",
+        "checkboxLabel": "반복 지출",
+        "checkboxDescription": "이 지출을 일정에 따라 생성",
+        "enable": "반복 추가",
+        "remove": "반복 제거",
+        "repeatEvery": "반복 주기",
+        "interval": "반복 간격",
+        "frequency": "반복 빈도",
+        "frequencyOptions": {
+          "daily": "일",
+          "weekly": "주",
+          "monthly": "개월",
+          "yearly": "년"
+        },
+        "ends": {
+          "label": "종료",
+          "never": "없음",
+          "count": "지정한 횟수 후",
+          "date": "지정한 날짜",
+          "countInput": "총 반복 횟수(이 지출 포함)",
+          "dateInput": "종료일"
+        },
+        "previewLabel": "다음 반복일",
+        "currentOccurrence": "현재",
+        "viewAll": "모두 보기",
+        "scheduleTitle": "반복 일정",
+        "remainingCount": "남은 지출은 {count}개입니다.",
+        "unlimitedSchedule": "이 반복에는 종료일이 없습니다.",
+        "noFurtherOccurrences": "이 설정으로는 더 이상 반복되지 않습니다.",
+        "scheduleCount": "이 지출부터 {count}개의 항목을 표시합니다.",
+        "decreaseOccurrences": "반복 횟수 줄이기",
+        "increaseOccurrences": "반복 횟수 늘리기",
+        "ruleSummary": "{interval}{frequency}마다 · {count}회",
+        "ruleSummaryIndefinite": "{interval}{frequency}마다 · 종료일 없음"
+      }
     },
     "amountField": {
       "label": "금액",
@@ -1634,6 +1671,10 @@
         "weeklySummary": {
           "title": "주간 활동 요약",
           "description": "그룹 전체 활동의 주간 요약."
+        },
+        "recurringExpense": {
+          "title": "반복 지출",
+          "description": "그룹에 예약된 반복 지출이 생성될 때."
         }
       },
       "sections": {
@@ -1663,7 +1704,8 @@
         "reimbursement": "정산금",
         "conversionSource": "변환 출처",
         "conversionRate": "변환 환율"
-      }
+      },
+      "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다"
     },
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
@@ -1910,5 +1952,27 @@
       "description": "{category} 이메일을 더 이상 받지 않습니다. 다른 알림 설정은 변경되지 않았습니다."
     },
     "scope": "이 이메일 알림만 꺼집니다. 다른 이메일과 푸시 알림은 계속 유지됩니다."
+  },
+  "ExpenseSeries": {
+    "badge": "반복",
+    "occurrence": "{sequence}번째 반복",
+    "previous": "이전",
+    "next": "다음",
+    "viewSeries": "시리즈 보기",
+    "title": "지출 시리즈",
+    "empty": "아직 다른 반복이 없습니다.",
+    "scopeTitle": "반복 지출 수정",
+    "scopeDescription": "영향을 받을 반복을 선택하세요.",
+    "occurrenceOnly": "이 반복만",
+    "thisAndFuture": "이 반복과 이후 반복",
+    "deleteScopeTitle": "반복 지출 삭제",
+    "deleteScopeDescription": "한 번의 반복을 삭제할지 시리즈를 종료할지 선택하세요.",
+    "deleteOccurrence": "이 반복만 삭제",
+    "deleteThisAndFuture": "이 반복과 이후 반복 삭제",
+    "confirm": "계속",
+    "cancel": "취소",
+    "occurrences": "이 시리즈의 반복 {count}개",
+    "loading": "불러오는 중…",
+    "loadMore": "반복 더 불러오기"
   }
 }

@@ -1,7 +1,7 @@
 import type { Prisma } from '@spliit/db'
-import { prisma, RecurrenceRule, type Expense as DbExpense } from '@spliit/db'
+import { prisma, type Expense as DbExpense } from '@spliit/db'
 import {
-  calculateNextDate,
+  calculateRecurrenceDate,
   categoryIdSchema,
   commonCurrencyLookbackDate,
   computePaidForFromItems,
@@ -13,6 +13,7 @@ import {
   type CategoryId,
   type Expense,
 } from '@spliit/domain'
+import { env as jobsEnv } from '@spliit/jobs'
 import { deleteS3Object, promoteUploadedDocument } from '../../routes/upload'
 import { resolveConversion } from '../expense-conversion'
 import { resolveParticipantDisplayName } from '../invitations'
@@ -23,7 +24,14 @@ import {
   getExpenseChangeSummary,
   type ChangeContext,
 } from './expense-activity-diff'
-import { createRecurringExpenses } from './recurring-expenses'
+import {
+  buildRecurringTemplate,
+  createSeriesForExpense,
+  enqueueMaterialization,
+  getApiBoss,
+  getExpenseRecurrence,
+  toRecurrenceConfig,
+} from './recurrence-series'
 import { randomId } from './shared'
 
 /**
@@ -76,7 +84,10 @@ function toExpenseDomainShape(
     expenseDate: existing.expenseDate,
     category: existing.categoryId as Expense['category'],
     notes: existing.notes ?? undefined,
-    recurrenceRule: existing.recurrenceRule,
+    recurrenceRule: existing.recurringSeries?.frequency ?? 'NONE',
+    recurrence: existing.recurringSeries
+      ? toRecurrenceConfig(existing.recurringSeries)
+      : null,
     splitMode: existing.splitMode,
     paidBySplitMode: existing.paidBySplitMode,
     paidByList: existing.paidByList.map((pb) => ({
@@ -193,11 +204,34 @@ export async function createExpense(
 
   const expenseDateStr = expense.expenseDate.toISOString().slice(0, 10)
 
-  const isCreateRecurrence = expense.recurrenceRule !== RecurrenceRule.NONE
+  const recurrence = getExpenseRecurrence(
+    expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
+    expense.expenseDate,
+  )
+  const isCreateRecurrence = recurrence !== null
+  const queueBoss =
+    recurrence && jobsEnv.JOBS_ENABLED ? await getApiBoss() : undefined
 
   const documents = await promoteExpenseDocuments(expense.documents)
+  const recurringPaidFor =
+    expense.splitMode === 'ITEMIZED'
+      ? computePaidForFromItems(
+          expense.items ?? [],
+          [...participantIds],
+          conversion.originalAmount ?? expenseAmount,
+          expense.itemizedRemainder,
+          expenseId,
+        ).paidFor
+      : expense.paidFor
 
   const { activity, createdExpense } = await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT id FROM "Group" WHERE id = ${groupId} FOR UPDATE`
+    const lockedGroup = await tx.group.findUnique({
+      where: { id: groupId },
+      select: { archived: true },
+    })
+    if (lockedGroup?.archived)
+      throw new Error('This group is archived and no new expenses can be added')
     const activity = await logActivity(
       groupId,
       {
@@ -219,16 +253,22 @@ export async function createExpense(
       tx,
     )
 
-    const recurringExpenseLinkPayload = isCreateRecurrence
-      ? {
-          id: randomId(),
-          ledgerId,
-          nextExpenseDate: calculateNextDate(
-            expense.recurrenceRule as RecurrenceRule,
-            expense.expenseDate,
-          ),
-        }
-      : undefined
+    const recurringSeriesId = isCreateRecurrence ? randomId() : undefined
+    if (recurrence && recurringSeriesId) {
+      await createSeriesForExpense({
+        tx,
+        seriesId: recurringSeriesId,
+        ledgerId,
+        creatorAccountId: actor.accountId,
+        anchorDate: expense.expenseDate,
+        config: recurrence,
+        template: buildRecurringTemplate({
+          expense: { ...expense, paidForOverride: recurringPaidFor },
+          conversion,
+        }),
+        boss: queueBoss,
+      })
+    }
 
     const createdExpense = await tx.expense.create({
       data: {
@@ -252,13 +292,8 @@ export async function createExpense(
           },
         },
         splitMode: expense.splitMode,
-        recurrenceRule: expense.recurrenceRule,
-        ...(recurringExpenseLinkPayload
-          ? {
-              recurringExpenseLink: {
-                create: recurringExpenseLinkPayload,
-              },
-            }
+        ...(recurringSeriesId
+          ? { recurringSeriesId, recurrenceSequence: 1 }
           : {}),
         paidFor: {
           createMany: {
@@ -363,6 +398,7 @@ export async function deleteExpense(
   groupId: string,
   expenseId: string,
   actor: { accountId: string },
+  options?: { scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' },
 ) {
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
@@ -381,6 +417,9 @@ export async function deleteExpense(
   const expenseDateStr = existingExpense.expenseDate.toISOString().slice(0, 10)
 
   const activity = await prisma.$transaction(async (tx) => {
+    if (existingExpense.recurringSeriesId) {
+      await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${existingExpense.recurringSeriesId} FOR UPDATE`
+    }
     const act = await logActivity(
       groupId,
       {
@@ -405,9 +444,27 @@ export async function deleteExpense(
       tx,
     )
 
-    await tx.expense.deleteMany({
-      where: { id: expenseId, ledgerId: existingExpense.ledgerId },
-    })
+    if (
+      options?.scope === 'THIS_AND_FUTURE' &&
+      existingExpense.recurringSeriesId &&
+      existingExpense.recurrenceSequence
+    ) {
+      await tx.expense.deleteMany({
+        where: {
+          ledgerId: existingExpense.ledgerId,
+          recurringSeriesId: existingExpense.recurringSeriesId,
+          recurrenceSequence: { gte: existingExpense.recurrenceSequence },
+        },
+      })
+      await tx.recurringExpenseSeries.update({
+        where: { id: existingExpense.recurringSeriesId },
+        data: { status: 'CANCELLED', version: { increment: 1 } },
+      })
+    } else {
+      await tx.expense.deleteMany({
+        where: { id: expenseId, ledgerId: existingExpense.ledgerId },
+      })
+    }
 
     return act
   })
@@ -450,6 +507,7 @@ export async function updateExpense(
   expenseId: string,
   expense: Expense,
   actor: { accountId: string },
+  options?: { scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' },
 ) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -460,9 +518,16 @@ export async function updateExpense(
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
 
+  const preserveRecurringDates =
+    options?.scope === 'THIS_AND_FUTURE' &&
+    existingExpense.recurringSeriesId !== null &&
+    existingExpense.recurrenceSequence !== null
+
   const conversion = await resolveConversion(expense, {
     ledgerCurrency: group.ledger.currencyCode ?? null,
-    expenseDate: expense.expenseDate,
+    expenseDate: preserveRecurringDates
+      ? existingExpense.expenseDate
+      : expense.expenseDate,
   })
 
   const expenseAmount = conversion.ledgerAmountMinor
@@ -528,11 +593,24 @@ export async function updateExpense(
   const expenseDateStr = expense.expenseDate.toISOString().slice(0, 10)
 
   const documents = await promoteExpenseDocuments(expense.documents)
+  const recurrence = getExpenseRecurrence(
+    expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
+    expense.expenseDate,
+  )
+  const legacyRecurrenceRule =
+    recurrence?.frequency === 'DAILY' ||
+    recurrence?.frequency === 'WEEKLY' ||
+    recurrence?.frequency === 'MONTHLY'
+      ? recurrence.frequency
+      : ('NONE' as const)
+  const queueBoss =
+    recurrence && jobsEnv.JOBS_ENABLED ? await getApiBoss() : undefined
 
   // Diff against the post-resolution shape so ledger `amount` and
   // conversion fields are compared in the same units as the stored row.
   const resolvedExpense = {
     ...expense,
+    recurrenceRule: legacyRecurrenceRule,
     amount: expenseAmount,
     conversion: conversion.conversionSource
       ? conversion.conversionSource === 'CUSTOM'
@@ -587,32 +665,12 @@ export async function updateExpense(
   const existingItemIds = new Set(existingItems.map((i) => i.id))
   const itemsToDelete = existingItems.filter((i) => !incomingIds.has(i.id))
 
-  const isDeleteRecurrenceExpenseLink =
-    existingExpense.recurrenceRule !== RecurrenceRule.NONE &&
-    expense.recurrenceRule === RecurrenceRule.NONE &&
-    existingExpense.recurringExpenseLink?.nextExpenseCreatedAt === null
-
-  const isUpdateRecurrenceExpenseLink =
-    existingExpense.recurrenceRule !== expense.recurrenceRule &&
-    existingExpense.recurringExpenseLink?.nextExpenseCreatedAt === null
-  const isCreateRecurrenceExpenseLink =
-    existingExpense.recurrenceRule === RecurrenceRule.NONE &&
-    expense.recurrenceRule !== RecurrenceRule.NONE &&
-    existingExpense.recurringExpenseLink === null
-
-  const newRecurringExpenseLink = {
-    id: randomId(),
-    ledgerId: group.ledgerId,
-    nextExpenseDate: calculateNextDate(
-      expense.recurrenceRule as RecurrenceRule,
-      expense.expenseDate,
-    ),
-  }
-
-  const updatedRecurrenceExpenseLinkNextExpenseDate = calculateNextDate(
-    expense.recurrenceRule as RecurrenceRule,
-    existingExpense.expenseDate,
-  )
+  const existingSeries = existingExpense.recurringSeries
+  const detachRecurrence = existingSeries !== null && recurrence === null
+  const isDeleteRecurrence =
+    detachRecurrence && options?.scope === 'THIS_AND_FUTURE'
+  const isUpdateRecurrence = existingSeries !== null && recurrence !== null
+  const isCreateRecurrence = existingSeries === null && recurrence !== null
 
   const expensePaidFor =
     expense.splitMode === 'ITEMIZED'
@@ -625,8 +683,78 @@ export async function updateExpense(
         ).paidFor
       : expense.paidFor
 
+  const recurrenceTemplate = recurrence
+    ? buildRecurringTemplate({
+        expense: { ...expense, paidForOverride: expensePaidFor },
+        conversion,
+      })
+    : null
+
+  // Exchange rates are date-sensitive. Resolve them before entering the
+  // write transaction, then apply the resulting snapshots while the series
+  // row is locked. Newly materialized rows will use the updated series
+  // template after this transaction commits.
+  const materializedFutureRows =
+    isUpdateRecurrence && options?.scope === 'THIS_AND_FUTURE'
+      ? await prisma.expense.findMany({
+          where: {
+            recurringSeriesId: existingSeries!.id,
+            recurrenceSequence: {
+              gte: existingExpense.recurrenceSequence ?? 1,
+            },
+          },
+          orderBy: { recurrenceSequence: 'asc' },
+          select: { id: true, expenseDate: true, recurrenceSequence: true },
+        })
+      : []
+  const materializedConversions = new Map<
+    string,
+    Awaited<ReturnType<typeof resolveConversion>>
+  >()
+  if (recurrenceTemplate) {
+    const conversionInput =
+      recurrenceTemplate.conversionSource === 'CUSTOM'
+        ? {
+            type: 'custom' as const,
+            currency: recurrenceTemplate.originalCurrency ?? '',
+            rate: recurrenceTemplate.conversionRate ?? 1,
+          }
+        : recurrenceTemplate.conversionSource === 'EXCHANGE'
+          ? {
+              type: 'exchange' as const,
+              currency: recurrenceTemplate.originalCurrency ?? '',
+            }
+          : undefined
+    for (const row of materializedFutureRows) {
+      materializedConversions.set(
+        row.id,
+        await resolveConversion(
+          { amount: recurrenceTemplate.amount, conversion: conversionInput },
+          {
+            ledgerCurrency: group.ledger.currencyCode ?? null,
+            expenseDate: row.expenseDate,
+          },
+        ),
+      )
+    }
+  }
+
   // Transaction: activity log + all DB writes are atomic
   const { activity, createdExpense } = await prisma.$transaction(async (tx) => {
+    if (existingExpense.recurringSeriesId) {
+      await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${existingExpense.recurringSeriesId} FOR UPDATE`
+      if (options?.scope === 'THIS_AND_FUTURE' && existingSeries !== null) {
+        const lockedSeries = await tx.recurringExpenseSeries.findUnique({
+          where: { id: existingSeries.id },
+          select: { version: true },
+        })
+        if (!lockedSeries || lockedSeries.version !== existingSeries.version) {
+          throw new Error(
+            'Recurring expense series changed while it was being updated; retry the update',
+          )
+        }
+      }
+    }
     let act: Awaited<ReturnType<typeof logActivity>> | null = null
 
     if (changeSummary) {
@@ -751,7 +879,9 @@ export async function updateExpense(
     const updated = await tx.expense.update({
       where: { id: expenseId },
       data: {
-        expenseDate: expense.expenseDate,
+        expenseDate: preserveRecurringDates
+          ? existingExpense.expenseDate
+          : expense.expenseDate,
         amount: expenseAmount,
         originalAmount: conversion.originalAmount,
         originalCurrency: conversion.originalCurrency,
@@ -800,7 +930,6 @@ export async function updateExpense(
             }
           : {}),
         splitMode: expense.splitMode,
-        recurrenceRule: expense.recurrenceRule,
         paidFor: {
           create: expensePaidFor
             .filter(
@@ -831,21 +960,9 @@ export async function updateExpense(
               ),
           ),
         },
-        recurringExpenseLink: {
-          ...(isCreateRecurrenceExpenseLink
-            ? {
-                create: newRecurringExpenseLink,
-              }
-            : {}),
-          ...(isUpdateRecurrenceExpenseLink
-            ? {
-                update: {
-                  nextExpenseDate: updatedRecurrenceExpenseLinkNextExpenseDate,
-                },
-              }
-            : {}),
-          delete: isDeleteRecurrenceExpenseLink,
-        },
+        ...(detachRecurrence
+          ? { recurringSeries: { disconnect: true }, recurrenceSequence: null }
+          : {}),
         isReimbursement: expense.isReimbursement,
         documents: {
           connectOrCreate: documents.map((doc) => ({
@@ -865,6 +982,114 @@ export async function updateExpense(
       },
     })
 
+    if (isDeleteRecurrence && existingSeries) {
+      await tx.recurringExpenseSeries.update({
+        where: { id: existingSeries.id },
+        data: { status: 'CANCELLED' },
+      })
+    } else if ((isCreateRecurrence || isUpdateRecurrence) && recurrence) {
+      const seriesId = existingSeries?.id ?? randomId()
+      const template = recurrenceTemplate!
+      if (!existingSeries) {
+        await createSeriesForExpense({
+          tx,
+          seriesId,
+          ledgerId: group.ledgerId,
+          creatorAccountId: actor.accountId,
+          anchorDate: expense.expenseDate,
+          config: recurrence,
+          template,
+          boss: queueBoss,
+        })
+        await tx.expense.update({
+          where: { id: expenseId },
+          data: { recurringSeriesId: seriesId, recurrenceSequence: 1 },
+        })
+      } else if (options?.scope === 'THIS_AND_FUTURE') {
+        const anchorSequence = existingExpense.recurrenceSequence ?? 1
+        const highest = await tx.expense.findFirst({
+          where: { recurringSeriesId: existingSeries.id },
+          orderBy: { recurrenceSequence: 'desc' },
+          select: { recurrenceSequence: true, expenseDate: true },
+        })
+        const latest = await tx.expense.findFirst({
+          where: { recurringSeriesId: existingSeries.id },
+          orderBy: { expenseDate: 'desc' },
+          select: { expenseDate: true },
+        })
+        const maxSequence = Math.max(
+          anchorSequence,
+          highest?.recurrenceSequence ?? 0,
+        )
+        let nextOrdinal = maxSequence - anchorSequence + 2
+        let nextOccurrenceDate = calculateRecurrenceDate(
+          expense.expenseDate,
+          recurrence.frequency,
+          recurrence.interval,
+          nextOrdinal,
+        )
+        while (
+          latest?.expenseDate &&
+          nextOccurrenceDate <= latest.expenseDate
+        ) {
+          nextOrdinal += 1
+          nextOccurrenceDate = calculateRecurrenceDate(
+            expense.expenseDate,
+            recurrence.frequency,
+            recurrence.interval,
+            nextOrdinal,
+          )
+        }
+        const completed =
+          (recurrence.end.type === 'COUNT' &&
+            maxSequence >= recurrence.end.count) ||
+          (recurrence.end.type === 'DATE' &&
+            nextOccurrenceDate > recurrence.end.endDate)
+        await tx.recurringExpenseSeries.update({
+          where: { id: existingSeries.id },
+          data: {
+            frequency: recurrence.frequency,
+            interval: recurrence.interval,
+            endType: recurrence.end.type,
+            occurrenceLimit:
+              recurrence.end.type === 'COUNT' ? recurrence.end.count : null,
+            endDate:
+              recurrence.end.type === 'DATE' ? recurrence.end.endDate : null,
+            anchorDate: expense.expenseDate,
+            anchorSequence,
+            occurrencesCreated: maxSequence,
+            nextOccurrenceDate,
+            nextOccurrenceOrdinal: nextOrdinal,
+            status: completed ? 'COMPLETED' : 'ACTIVE',
+            version: { increment: 1 },
+            template,
+          },
+        })
+        for (const row of materializedFutureRows) {
+          // The edited occurrence was already updated above (including its
+          // documents). Future rows receive the new template while retaining
+          // their own date, recurrence identity, and attachments.
+          if (row.id === expenseId) continue
+          await updateMaterializedOccurrence(
+            tx,
+            row,
+            template,
+            materializedConversions.get(row.id) ?? conversion,
+          )
+        }
+        if (!completed) {
+          await enqueueMaterialization(
+            tx,
+            {
+              seriesId: existingSeries.id,
+              sequence: maxSequence + 1,
+              occurrenceDate: nextOccurrenceDate,
+            },
+            queueBoss,
+          )
+        }
+      }
+    }
     return { activity: act, createdExpense: updated }
   })
 
@@ -973,8 +1198,6 @@ export async function getGroupExpenses(
   groupId: string,
   options?: GetGroupExpensesOptions,
 ) {
-  await createRecurringExpenses()
-
   const group = await prisma.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
@@ -1048,6 +1271,7 @@ export async function getGroupExpenses(
       createdAt: true,
       expenseDate: true,
       id: true,
+      recurrenceSequence: true,
       isReimbursement: true,
       originalAmount: true,
       originalCurrency: true,
@@ -1093,7 +1317,19 @@ export async function getGroupExpenses(
         },
       },
       splitMode: true,
-      recurrenceRule: true,
+      recurringSeries: {
+        select: {
+          id: true,
+          frequency: true,
+          interval: true,
+          endType: true,
+          occurrenceLimit: true,
+          endDate: true,
+          status: true,
+          anchorDate: true,
+          nextOccurrenceDate: true,
+        },
+      },
       title: true,
       _count: { select: { documents: true } },
       items: {
@@ -1173,7 +1409,77 @@ export async function getGroupExpenses(
     category: resolveCategory(row.categoryId),
     conversionRate: row.conversionRate ?? null,
     conversionSource: row.conversionSource,
+    recurringSeriesId: row.recurringSeries?.id ?? null,
+    recurrenceSequence: row.recurrenceSequence,
+    recurrence: row.recurringSeries
+      ? toRecurrenceConfig(row.recurringSeries)
+      : null,
+    recurringSeriesStatus: row.recurringSeries?.status ?? null,
   }))
+}
+
+/** Replace the mutable template fields on a materialized occurrence. Dates,
+ * recurrence identity, and documents intentionally remain untouched. */
+async function updateMaterializedOccurrence(
+  tx: Prisma.TransactionClient,
+  row: { id: string },
+  template: ReturnType<typeof buildRecurringTemplate>,
+  conversion: {
+    ledgerAmountMinor: number
+    originalAmount: number | null
+    originalCurrency: string | null
+    conversionRate: number | null
+    conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+  },
+) {
+  await tx.expenseItemizedRemainder.deleteMany({ where: { expenseId: row.id } })
+  await tx.expense.update({
+    where: { id: row.id },
+    data: {
+      amount: conversion.ledgerAmountMinor,
+      originalAmount: conversion.originalAmount,
+      originalCurrency: conversion.originalCurrency,
+      conversionRate: conversion.conversionRate,
+      conversionSource: conversion.conversionSource,
+      title: template.title,
+      categoryId: template.categoryId,
+      paidBySplitMode: template.paidBySplitMode as never,
+      splitMode: template.splitMode as never,
+      isReimbursement: template.isReimbursement,
+      notes: template.notes,
+      paidByList: {
+        deleteMany: {},
+        createMany: { data: template.paidByList },
+      },
+      paidFor: {
+        deleteMany: {},
+        createMany: { data: template.paidFor },
+      },
+      items: {
+        deleteMany: {},
+        create: template.items.map((item) => ({
+          id: randomId(),
+          title: item.title,
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+          amount: item.amount,
+          splitMode: item.splitMode as never,
+          paidFor: { createMany: { data: item.paidFor } },
+        })),
+      },
+    },
+  })
+  if (template.itemizedRemainder) {
+    await tx.expenseItemizedRemainder.create({
+      data: {
+        expenseId: row.id,
+        splitMode: template.itemizedRemainder.splitMode as never,
+        paidFor: {
+          createMany: { data: template.itemizedRemainder.paidFor },
+        },
+      },
+    })
+  }
 }
 
 export async function getGroupExpenseCount(groupId: string) {
@@ -1230,7 +1536,7 @@ export async function getExpense(groupId: string, expenseId: string) {
       paidByList: { include: { ledgerParticipant: true } },
       paidFor: true,
       documents: true,
-      recurringExpenseLink: true,
+      recurringSeries: true,
       items: {
         include: { paidFor: true },
       },
@@ -1240,9 +1546,109 @@ export async function getExpense(groupId: string, expenseId: string) {
     },
   })
   if (!expense) return null
+  const previousExpense =
+    expense.recurringSeries && expense.recurrenceSequence
+      ? await prisma.expense.findFirst({
+          where: {
+            recurringSeriesId: expense.recurringSeriesId,
+            recurrenceSequence: { lt: expense.recurrenceSequence },
+          },
+          orderBy: { recurrenceSequence: 'desc' },
+          select: { id: true },
+        })
+      : null
+  const nextExpense =
+    expense.recurringSeries && expense.recurrenceSequence
+      ? await prisma.expense.findFirst({
+          where: {
+            recurringSeriesId: expense.recurringSeriesId,
+            recurrenceSequence: { gt: expense.recurrenceSequence },
+          },
+          orderBy: { recurrenceSequence: 'asc' },
+          select: { id: true },
+        })
+      : null
   return {
     ...expense,
     categoryId: narrowCategoryId(expense.categoryId),
     category: resolveCategory(expense.categoryId),
+    recurrence: expense.recurringSeries
+      ? toRecurrenceConfig(expense.recurringSeries)
+      : null,
+    previousExpenseId: previousExpense?.id ?? null,
+    nextExpenseId: nextExpense?.id ?? null,
+  }
+}
+
+export async function getRecurringExpenseSeries(
+  groupId: string,
+  options?: {
+    cursor?: string
+    limit?: number
+    seriesId?: string
+    occurrenceCursor?: number
+    occurrenceLimit?: number
+  },
+) {
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { ledgerId: true },
+  })
+  if (!group?.ledgerId) return { series: [], nextCursor: null }
+  const limit = Math.min(Math.max(options?.limit ?? 20, 1), 100)
+  const rows = await prisma.recurringExpenseSeries.findMany({
+    where: {
+      ledgerId: group.ledgerId,
+      ...(options?.seriesId ? { id: options.seriesId } : {}),
+    },
+    orderBy: [{ anchorDate: 'desc' }, { id: 'desc' }],
+    ...(options?.cursor ? { cursor: { id: options.cursor }, skip: 1 } : {}),
+    take: limit + 1,
+    include: {
+      expenses: options?.seriesId
+        ? {
+            where: options.occurrenceCursor
+              ? { recurrenceSequence: { gt: options.occurrenceCursor } }
+              : undefined,
+            orderBy: { recurrenceSequence: 'asc' },
+            take: Math.min(Math.max(options.occurrenceLimit ?? 50, 1), 100) + 1,
+            select: {
+              id: true,
+              expenseDate: true,
+              recurrenceSequence: true,
+              title: true,
+              amount: true,
+            },
+          }
+        : false,
+    },
+  })
+  const hasMore = rows.length > limit
+  const page = rows.slice(0, limit)
+  return {
+    series: page.map((series) => {
+      const expenses = Array.isArray(series.expenses) ? series.expenses : []
+      const occurrenceLimit = options?.occurrenceLimit ?? 50
+      return {
+        id: series.id,
+        frequency: series.frequency,
+        interval: series.interval,
+        anchorDate: series.anchorDate,
+        nextOccurrenceDate: series.nextOccurrenceDate,
+        endType: series.endType,
+        occurrenceLimit: series.occurrenceLimit,
+        endDate: series.endDate,
+        occurrencesCreated: series.occurrencesCreated,
+        status: series.status,
+        recurrence: toRecurrenceConfig(series),
+        expenses: expenses.slice(0, occurrenceLimit),
+        hasMoreOccurrences: expenses.length > occurrenceLimit,
+        nextOccurrenceCursor:
+          expenses.length > occurrenceLimit
+            ? (expenses[occurrenceLimit - 1]?.recurrenceSequence ?? null)
+            : null,
+      }
+    }),
+    nextCursor: hasMore ? (page.at(-1)?.id ?? null) : null,
   }
 }

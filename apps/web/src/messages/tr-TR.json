@@ -585,7 +585,44 @@
         "monthly": "Aylık"
       },
       "createCopy": "Kopya oluştur: {title}",
-      "editTitle": "Düzenle: {title}"
+      "editTitle": "Düzenle: {title}",
+      "recurrence": {
+        "label": "Gider yinelemesi",
+        "description": "Bu giderin ne zaman yeniden oluşturulacağını seçin.",
+        "checkboxLabel": "Tekrarlanan",
+        "checkboxDescription": "Bu gideri bir programa göre oluştur",
+        "enable": "Yineleme ekle",
+        "remove": "Yinelemeyi kaldır",
+        "repeatEvery": "Tekrarlama aralığı",
+        "interval": "Yineleme aralığı",
+        "frequency": "Yineleme sıklığı",
+        "frequencyOptions": {
+          "daily": "gün",
+          "weekly": "hafta",
+          "monthly": "ay",
+          "yearly": "yıl"
+        },
+        "ends": {
+          "label": "Biter",
+          "never": "Hiçbir zaman",
+          "count": "Belirli sayıda yinelemeden sonra",
+          "date": "Belirli bir tarihte",
+          "countInput": "Toplam yineleme sayısı (bu gider dahil)",
+          "dateInput": "Bitiş tarihi"
+        },
+        "previewLabel": "Sonraki yinelemeler",
+        "currentOccurrence": "Mevcut",
+        "viewAll": "Tümünü görüntüle",
+        "scheduleTitle": "Yineleme takvimi",
+        "remainingCount": "{count} yineleme kaldı.",
+        "unlimitedSchedule": "Bu yinelemenin bitiş tarihi yok.",
+        "noFurtherOccurrences": "Bu ayarlarla başka yineleme yok.",
+        "scheduleCount": "Bu giderden {count} yineleme gösteriliyor.",
+        "decreaseOccurrences": "Yineleme sayısını azalt",
+        "increaseOccurrences": "Yineleme sayısını artır",
+        "ruleSummary": "Her {interval} {frequency} · {count} yineleme",
+        "ruleSummaryIndefinite": "Her {interval} {frequency} · Bitiş tarihi yok"
+      }
     },
     "amountField": {
       "label": "Tutar",
@@ -1641,6 +1678,10 @@
         "weeklySummary": {
           "title": "Haftalık etkinlik özeti",
           "description": "Gruplarınızdaki etkinliklerin haftalık özeti."
+        },
+        "recurringExpense": {
+          "title": "Yinelenen harcama",
+          "description": "Bir grupta planlanmış yinelenen harcama oluşturulduğunda."
         }
       },
       "sections": {
@@ -1670,7 +1711,8 @@
         "reimbursement": "Borç kapatma ödemesi",
         "conversionSource": "Dönüşüm kaynağı",
         "conversionRate": "Döviz kuru"
-      }
+      },
+      "recurringCreated": "{participant}, “{title}” yinelenen giderini oluşturdu"
     },
     "group": {
       "updated": "{participant} grup ayarlarını güncelledi",
@@ -1926,5 +1968,27 @@
       "description": "{category} için e-posta almayacaksınız. Diğer bildirim ayarlarınız değişmedi."
     },
     "scope": "Yalnızca bu e-posta bildirimi kapatılacak. Diğer e-postalarınız ve anlık bildirimleriniz aynı kalacak."
+  },
+  "ExpenseSeries": {
+    "badge": "Yinelenen",
+    "occurrence": "Yineleme {sequence}",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "viewSeries": "Seriyi görüntüle",
+    "title": "Gider serisi",
+    "empty": "Henüz başka yineleme yok.",
+    "scopeTitle": "Yinelenen gideri güncelle",
+    "scopeDescription": "Hangi yinelemelerin etkileneceğini seçin.",
+    "occurrenceOnly": "Yalnızca bu yineleme",
+    "thisAndFuture": "Bu ve gelecekteki yinelemeler",
+    "deleteScopeTitle": "Yinelenen gideri sil",
+    "deleteScopeDescription": "Bir yinelemeyi silmeyi veya seriyi sonlandırmayı seçin.",
+    "deleteOccurrence": "Yalnızca bu yinelemeyi sil",
+    "deleteThisAndFuture": "Bu ve gelecekteki yinelemeleri sil",
+    "confirm": "Devam et",
+    "cancel": "İptal",
+    "occurrences": "Bu seride {count} yineleme",
+    "loading": "Yükleniyor…",
+    "loadMore": "Daha fazla yineleme yükle"
   }
 }

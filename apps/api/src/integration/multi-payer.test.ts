@@ -619,9 +619,24 @@ describe('Multi-payer expenses — real DB', () => {
     })
     expect(result).toHaveProperty('expenseId')
 
-    // Trigger the same helper the cron-like worker would call.
-    const { createRecurringExpenses } = await import('../lib/api')
-    await createRecurringExpenses()
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    let series = await prisma.recurringExpenseSeries.findFirst({
+      where: {
+        ledgerId,
+        template: { path: ['title'], equals: 'Weekly groceries' },
+      },
+    })
+    while (series && series.nextOccurrenceDate <= new Date()) {
+      await materializeRecurringExpense({
+        seriesId: series.id,
+        sequence: series.occurrencesCreated + 1,
+        occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+      })
+      series = await prisma.recurringExpenseSeries.findUnique({
+        where: { id: series.id },
+      })
+    }
 
     const cloned = await prisma.expense.findMany({
       where: { ledgerId, title: 'Weekly groceries' },

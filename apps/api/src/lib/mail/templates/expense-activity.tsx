@@ -10,7 +10,11 @@ export type ExpenseActivityInput = {
   /** Pre-computed by the dispatcher (per event type and recipient). */
   subject: string
   text: string
-  eventType: 'EXPENSE_CREATED' | 'EXPENSE_UPDATED' | 'EXPENSE_DELETED'
+  eventType:
+    | 'EXPENSE_CREATED'
+    | 'RECURRING_EXPENSE_CREATED'
+    | 'EXPENSE_UPDATED'
+    | 'EXPENSE_DELETED'
   brandBaseUrl: string
   groupDisplayName: string
   actorName: string
@@ -231,13 +235,19 @@ export async function renderExpenseActivityEmail(
 }
 
 function expenseHeadline(
-  eventType: 'EXPENSE_CREATED' | 'EXPENSE_UPDATED' | 'EXPENSE_DELETED',
+  eventType:
+    | 'EXPENSE_CREATED'
+    | 'RECURRING_EXPENSE_CREATED'
+    | 'EXPENSE_UPDATED'
+    | 'EXPENSE_DELETED',
   actorName: string,
   title: string,
 ): string {
   switch (eventType) {
     case 'EXPENSE_CREATED':
       return `${actorName} added "${title}"`
+    case 'RECURRING_EXPENSE_CREATED':
+      return `${actorName} created recurring "${title}"`
     case 'EXPENSE_UPDATED':
       return `${actorName} updated "${title}"`
     case 'EXPENSE_DELETED':
@@ -246,11 +256,17 @@ function expenseHeadline(
 }
 
 function eventVerbPastParticiple(
-  eventType: 'EXPENSE_CREATED' | 'EXPENSE_UPDATED' | 'EXPENSE_DELETED',
+  eventType:
+    | 'EXPENSE_CREATED'
+    | 'RECURRING_EXPENSE_CREATED'
+    | 'EXPENSE_UPDATED'
+    | 'EXPENSE_DELETED',
 ): string {
   switch (eventType) {
     case 'EXPENSE_CREATED':
       return 'added'
+    case 'RECURRING_EXPENSE_CREATED':
+      return 'created recurring'
     case 'EXPENSE_UPDATED':
       return 'updated'
     case 'EXPENSE_DELETED':

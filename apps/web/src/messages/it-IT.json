@@ -591,7 +591,44 @@
         "description": "La valuta in cui è stata pagata la spesa."
       },
       "createCopy": "Crea copia: {title}",
-      "editTitle": "Modifica: {title}"
+      "editTitle": "Modifica: {title}",
+      "recurrence": {
+        "label": "Ricorrenza della spesa",
+        "description": "Scegli quando questa spesa deve essere creata di nuovo.",
+        "checkboxLabel": "Ricorrente",
+        "checkboxDescription": "Crea questa spesa secondo una pianificazione",
+        "enable": "Aggiungi ricorrenza",
+        "remove": "Rimuovi ricorrenza",
+        "repeatEvery": "Ripeti ogni",
+        "interval": "Intervallo di ripetizione",
+        "frequency": "Frequenza di ricorrenza",
+        "frequencyOptions": {
+          "daily": "giorno/i",
+          "weekly": "settimana/e",
+          "monthly": "mese/i",
+          "yearly": "anno/i"
+        },
+        "ends": {
+          "label": "Termina",
+          "never": "Mai",
+          "count": "Dopo un numero di occorrenze",
+          "date": "In una data",
+          "countInput": "Occorrenze totali (inclusa questa spesa)",
+          "dateInput": "Data di fine"
+        },
+        "previewLabel": "Prossime occorrenze",
+        "currentOccurrence": "Attuale",
+        "viewAll": "Visualizza tutto",
+        "scheduleTitle": "Pianificazione della ricorrenza",
+        "remainingCount": "Restano {count} occorrenze.",
+        "unlimitedSchedule": "Questa ricorrenza non ha una data di fine.",
+        "noFurtherOccurrences": "Nessun’altra occorrenza con queste impostazioni.",
+        "scheduleCount": "Visualizzazione di {count} occorrenze a partire da questa spesa.",
+        "decreaseOccurrences": "Diminuisci le occorrenze",
+        "increaseOccurrences": "Aumenta le occorrenze",
+        "ruleSummary": "Ogni {interval} {frequency} · {count} occorrenze",
+        "ruleSummaryIndefinite": "Ogni {interval} {frequency} · Senza data di fine"
+      }
     },
     "amountField": {
       "label": "Importo",
@@ -1649,6 +1686,10 @@
         "weeklySummary": {
           "title": "Riepilogo settimanale delle attività",
           "description": "Un riepilogo settimanale delle attività dei tuoi gruppi."
+        },
+        "recurringExpense": {
+          "title": "Spesa ricorrente",
+          "description": "Quando viene creata una spesa ricorrente programmata in un gruppo."
         }
       },
       "sections": {
@@ -1678,7 +1719,8 @@
         "reimbursement": "Pagamento di saldo",
         "conversionSource": "Fonte di conversione",
         "conversionRate": "Tasso di conversione"
-      }
+      },
+      "recurringCreated": "{participant} ha creato la spesa ricorrente «{title}»"
     },
     "group": {
       "updated": "{participant} ha aggiornato le impostazioni del gruppo",
@@ -1943,5 +1985,27 @@
       "description": "Non riceverai e-mail per {category}. Le altre impostazioni delle notifiche non sono cambiate."
     },
     "scope": "Verrà disattivata solo questa notifica e-mail. Le altre e-mail e notifiche push resteranno invariate."
+  },
+  "ExpenseSeries": {
+    "badge": "Ricorrente",
+    "occurrence": "Occorrenza {sequence}",
+    "previous": "Precedente",
+    "next": "Successiva",
+    "viewSeries": "Visualizza serie",
+    "title": "Serie di spese",
+    "empty": "Non ci sono ancora altre occorrenze.",
+    "scopeTitle": "Aggiorna spesa ricorrente",
+    "scopeDescription": "Scegli quali occorrenze modificare.",
+    "occurrenceOnly": "Solo questa occorrenza",
+    "thisAndFuture": "Questa occorrenza e quelle future",
+    "deleteScopeTitle": "Elimina spesa ricorrente",
+    "deleteScopeDescription": "Scegli se eliminare una sola occorrenza o terminare la serie.",
+    "deleteOccurrence": "Elimina solo questa occorrenza",
+    "deleteThisAndFuture": "Elimina questa occorrenza e quelle future",
+    "confirm": "Continua",
+    "cancel": "Annulla",
+    "occurrences": "{count} occorrenze in questa serie",
+    "loading": "Caricamento…",
+    "loadMore": "Carica altre occorrenze"
   }
 }

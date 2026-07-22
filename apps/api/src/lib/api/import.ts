@@ -6,6 +6,7 @@ import {
   prisma,
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
+import { env as jobsEnv } from '@spliit/jobs'
 import { resolveConversion } from '../expense-conversion'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import {
@@ -13,6 +14,12 @@ import {
   buildImportSummaryActivityData,
   logActivity,
 } from './activities'
+import {
+  buildRecurringTemplate,
+  createSeriesForExpense,
+  getApiBoss,
+  getExpenseRecurrence,
+} from './recurrence-series'
 import { randomId } from './shared'
 
 export type ImportParticipantMapping =
@@ -84,6 +91,16 @@ export async function importGroup(
   input: ImportInput,
   actor: { accountId: string },
 ): Promise<ImportResult> {
+  // The legacy importer accepts the immutable spliit.app export format. Each
+  // legacy recurring row starts a new internal series; exported Cloud series
+  // metadata is intentionally not part of this transport contract.
+  const queueBoss =
+    jobsEnv.JOBS_ENABLED &&
+    input.expenses.some(
+      (expense) => expense.recurrenceRule && expense.recurrenceRule !== 'NONE',
+    )
+      ? await getApiBoss()
+      : undefined
   const baseResult = await prisma.$transaction(async (tx) => {
     let groupId: string
     let ledgerId: string
@@ -276,7 +293,6 @@ export async function importGroup(
     // one summary email fans out to everyone affected.
     const affectedParticipantIds = new Set<string>()
     let totalAmount = 0
-
     // Resolve per expense by index — titles are not unique in imports.
     const resolvedConversions: Awaited<ReturnType<typeof resolveConversion>>[] =
       []
@@ -377,6 +393,64 @@ export async function importGroup(
           `Expense "${expense.title}" has no remaining paidFor participants after import resolution`,
         )
       }
+      const recurrence = getExpenseRecurrence(expense, expense.expenseDate)
+      const destinationSeriesId = recurrence ? randomId() : undefined
+      if (recurrence && destinationSeriesId) {
+        const template = buildRecurringTemplate({
+          expense: {
+            ...expense,
+            paidByList: resolvedPaidByList.map((row) => ({
+              participant: row.ledgerParticipantId,
+              shares: row.shares,
+            })),
+            paidFor: resolvedPaidFor.map((row) => ({
+              participant: row.ledgerParticipantId,
+              shares: row.shares,
+            })),
+            items: (expense.items ?? []).map((item) => ({
+              ...item,
+              paidFor: item.paidFor
+                .map((row) => {
+                  const resolved = destIdByClientKey.get(row.participant)
+                  return resolved
+                    ? { participant: resolved, shares: row.shares }
+                    : null
+                })
+                .filter(
+                  (row): row is { participant: string; shares: number } =>
+                    row !== null,
+                ),
+            })),
+            itemizedRemainder: expense.itemizedRemainder
+              ? {
+                  ...expense.itemizedRemainder,
+                  paidFor: expense.itemizedRemainder.paidFor
+                    .map((row) => {
+                      const resolved = destIdByClientKey.get(row.participant)
+                      return resolved
+                        ? { participant: resolved, shares: row.shares }
+                        : null
+                    })
+                    .filter(
+                      (row): row is { participant: string; shares: number } =>
+                        row !== null,
+                    ),
+                }
+              : undefined,
+          },
+          conversion,
+        })
+        await createSeriesForExpense({
+          tx,
+          seriesId: destinationSeriesId,
+          ledgerId,
+          creatorAccountId: actor.accountId,
+          anchorDate: expense.expenseDate,
+          config: recurrence,
+          template,
+          boss: queueBoss,
+        })
+      }
       await tx.expense.create({
         data: {
           id: expenseId,
@@ -396,7 +470,9 @@ export async function importGroup(
             },
           },
           splitMode: expense.splitMode,
-          recurrenceRule: expense.recurrenceRule,
+          ...(destinationSeriesId
+            ? { recurringSeriesId: destinationSeriesId, recurrenceSequence: 1 }
+            : {}),
           isReimbursement: expense.isReimbursement,
           notes: expense.notes,
           paidFor: {

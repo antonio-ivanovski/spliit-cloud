@@ -53,6 +53,74 @@ const validExport = {
 }
 
 describe('parseSpliitExport', () => {
+  it('maps legacy recurrence rules to an interval-one indefinite config', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      expenses: [
+        {
+          ...validExport.expenses[0],
+          recurrenceRule: 'MONTHLY',
+        },
+      ],
+    })
+    expect(result.expenses[0].recurrence).toEqual({
+      frequency: 'MONTHLY',
+      interval: 1,
+      end: { type: 'INDEFINITE' },
+    })
+    expect(result.expenses[0].recurrenceRule).toBe('MONTHLY')
+  })
+
+  it('ignores Spliit Cloud recurrence state outside the legacy schema', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      expenses: [
+        {
+          ...validExport.expenses[0],
+          recurrence: {
+            seriesId: 'series-1',
+            frequency: 'YEARLY',
+            interval: 2,
+            end: {
+              type: 'DATE',
+              endDate: '2030-02-28',
+            },
+            status: 'CANCELLED',
+            anchorDate: '2026-02-28',
+            anchorSequence: 3,
+            nextOccurrenceDate: '2030-02-28',
+            nextOccurrenceOrdinal: 5,
+            template: {
+              title: 'Current template',
+              categoryId: 'transportation',
+              amount: 23000,
+              originalAmount: null,
+              originalCurrency: null,
+              conversionRate: null,
+              conversionSource: null,
+              paidBySplitMode: 'BY_AMOUNT',
+              paidByList: [{ ledgerParticipantId: 'p-1', shares: 23000 }],
+              paidFor: [
+                { ledgerParticipantId: 'p-1', shares: 300 },
+                { ledgerParticipantId: 'p-2', shares: 200 },
+              ],
+              splitMode: 'EVENLY',
+              isReimbursement: false,
+              notes: 'future state',
+              items: [],
+              itemizedRemainder: null,
+            },
+          },
+          recurrenceSequence: 3,
+        },
+      ],
+    })
+    expect(result.expenses[0].recurrence).toBeNull()
+    expect('recurrenceSeriesId' in result.expenses[0]).toBe(false)
+    expect('recurrenceSequence' in result.expenses[0]).toBe(false)
+    expect(result.expenses[0].recurrenceRule).toBe('NONE')
+  })
+
   it('parses a representative export into the normalized shape', () => {
     const result = parseSpliitExport(validExport)
     expect(result.sourceGroupId).toBe('grp-123')

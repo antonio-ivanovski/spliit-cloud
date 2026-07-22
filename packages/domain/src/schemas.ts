@@ -5,6 +5,7 @@ import {
   optionalExpenseConversionSchema,
 } from './conversion'
 import type { RecurrenceRule, SplitMode } from './enums'
+import { recurrenceConfigSchema } from './recurring-expenses'
 
 export const groupFormSchema = z
   .object({
@@ -426,6 +427,9 @@ export const expenseFormInputSchema = z
     isReimbursement: z.boolean(),
     documents: documentsSchema,
     notes: z.string().optional(),
+    // Authoritative series cadence. `recurrenceRule` below remains accepted
+    // for legacy imports until the API compatibility layer is removed.
+    recurrence: recurrenceConfigSchema.nullish(),
     recurrenceRule: recurrenceRuleSchema,
     items: z.array(expenseItemFormInputSchema).optional(),
     itemizedRemainder: itemizedRemainderFormSchema.optional(),
@@ -630,6 +634,7 @@ export const expenseApiSchema = z
       ),
     documents: documentsSchema,
     notes: z.string().optional(),
+    recurrence: recurrenceConfigSchema.nullish(),
     recurrenceRule: recurrenceRuleSchema,
     items: z.array(expenseItemApiSchema).optional(),
     itemizedRemainder: itemizedRemainderApiSchema

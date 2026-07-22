@@ -597,7 +597,44 @@
       "splitModeDescription": "Vyberte, jak rozdělit výdaj.",
       "attachDescription": "Zobrazit a připojit účtenky k výdaji.",
       "createCopy": "Vytvořit kopii: {title}",
-      "editTitle": "Upravit: {title}"
+      "editTitle": "Upravit: {title}",
+      "recurrence": {
+        "label": "Opakování výdaje",
+        "description": "Zvolte, kdy má být tento výdaj znovu vytvořen.",
+        "checkboxLabel": "Opakovaný",
+        "checkboxDescription": "Vytvořit tento výdaj podle plánu",
+        "enable": "Přidat opakování",
+        "remove": "Odebrat opakování",
+        "repeatEvery": "Opakovat každých",
+        "interval": "Interval opakování",
+        "frequency": "Frekvence opakování",
+        "frequencyOptions": {
+          "daily": "den/dny",
+          "weekly": "týden/týdny",
+          "monthly": "měsíc(e)",
+          "yearly": "rok(y)"
+        },
+        "ends": {
+          "label": "Končí",
+          "never": "Nikdy",
+          "count": "Po určitém počtu výskytů",
+          "date": "K určitému datu",
+          "countInput": "Celkový počet výskytů (včetně tohoto výdaje)",
+          "dateInput": "Datum ukončení"
+        },
+        "previewLabel": "Další výskyty",
+        "currentOccurrence": "Aktuální",
+        "viewAll": "Zobrazit vše",
+        "scheduleTitle": "Plán opakování",
+        "remainingCount": "Zbývá {count} opakování.",
+        "unlimitedSchedule": "Toto opakování nemá datum ukončení.",
+        "noFurtherOccurrences": "S tímto nastavením nejsou žádné další výskyty.",
+        "scheduleCount": "Zobrazeno {count} opakování od tohoto výdaje.",
+        "decreaseOccurrences": "Snížit počet opakování",
+        "increaseOccurrences": "Zvýšit počet opakování",
+        "ruleSummary": "Každých {interval} {frequency} · {count} opakování",
+        "ruleSummaryIndefinite": "Každých {interval} {frequency} · Bez data ukončení"
+      }
     },
     "amountField": {
       "label": "Částka",
@@ -1657,6 +1694,10 @@
         "weeklySummary": {
           "title": "Týdenní souhrn aktivity",
           "description": "Týdenní souhrn aktivity ve vašich skupinách."
+        },
+        "recurringExpense": {
+          "title": "Opakovaný výdaj",
+          "description": "Když je ve skupině vytvořen naplánovaný opakovaný výdaj."
         }
       },
       "sections": {
@@ -1686,7 +1727,8 @@
         "reimbursement": "Vyrovnávací platba",
         "conversionSource": "Zdroj konverze",
         "conversionRate": "Směnný kurz"
-      }
+      },
+      "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“"
     },
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",
@@ -1960,5 +2002,27 @@
       "description": "E-maily pro kategorii {category} nebudete dostávat. Vaše ostatní nastavení oznámení se nezměnila."
     },
     "scope": "Vypne se pouze toto e-mailové oznámení. Ostatní e-maily a push oznámení zůstanou beze změny."
+  },
+  "ExpenseSeries": {
+    "badge": "Opakovaný",
+    "occurrence": "Výskyt {sequence}",
+    "previous": "Předchozí",
+    "next": "Další",
+    "viewSeries": "Zobrazit řadu",
+    "title": "Řada výdajů",
+    "empty": "Zatím nejsou žádné další výskyty.",
+    "scopeTitle": "Upravit opakovaný výdaj",
+    "scopeDescription": "Zvolte, kterých výskytů se má změna týkat.",
+    "occurrenceOnly": "Pouze tento výskyt",
+    "thisAndFuture": "Tento a všechny budoucí výskyty",
+    "deleteScopeTitle": "Smazat opakovaný výdaj",
+    "deleteScopeDescription": "Zvolte, zda chcete odstranit jeden výskyt, nebo ukončit celou řadu.",
+    "deleteOccurrence": "Smazat pouze tento výskyt",
+    "deleteThisAndFuture": "Smazat tento a všechny budoucí výskyty",
+    "confirm": "Pokračovat",
+    "cancel": "Zrušit",
+    "occurrences": "Počet výskytů v této řadě: {count}",
+    "loading": "Načítání…",
+    "loadMore": "Načíst další výskyty"
   }
 }

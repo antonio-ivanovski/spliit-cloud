@@ -579,7 +579,44 @@
       },
       "attachDescription": "查看／附上此筆消費的收據。",
       "createCopy": "建立副本：{title}",
-      "editTitle": "編輯：{title}"
+      "editTitle": "編輯：{title}",
+      "recurrence": {
+        "label": "支出重複",
+        "description": "選擇再次建立此支出的時間。",
+        "checkboxLabel": "重複支出",
+        "checkboxDescription": "依排程建立此筆支出",
+        "enable": "新增重複",
+        "remove": "移除重複",
+        "repeatEvery": "每隔",
+        "interval": "重複間隔",
+        "frequency": "重複頻率",
+        "frequencyOptions": {
+          "daily": "天",
+          "weekly": "週",
+          "monthly": "個月",
+          "yearly": "年"
+        },
+        "ends": {
+          "label": "結束",
+          "never": "永不",
+          "count": "達到指定次數後",
+          "date": "在指定日期",
+          "countInput": "總次數（包含本次支出）",
+          "dateInput": "結束日期"
+        },
+        "previewLabel": "接下來的日期",
+        "currentOccurrence": "目前",
+        "viewAll": "查看全部",
+        "scheduleTitle": "重複排程",
+        "remainingCount": "還有 {count} 筆支出。",
+        "unlimitedSchedule": "此重複沒有結束日期。",
+        "noFurtherOccurrences": "依照這些設定不會再有後續支出。",
+        "scheduleCount": "顯示從此筆支出開始的 {count} 筆記錄。",
+        "decreaseOccurrences": "減少重複次數",
+        "increaseOccurrences": "增加重複次數",
+        "ruleSummary": "每{interval}{frequency} · {count} 次",
+        "ruleSummaryIndefinite": "每{interval}{frequency} · 無結束日期"
+      }
     },
     "amountField": {
       "label": "金額",
@@ -1634,6 +1671,10 @@
         "weeklySummary": {
           "title": "每週活動摘要",
           "description": "你各個群組的每週活動摘要。"
+        },
+        "recurringExpense": {
+          "title": "週期性支出",
+          "description": "在群組中建立排程的週期性支出時."
         }
       },
       "sections": {
@@ -1663,7 +1704,8 @@
         "reimbursement": "結算付款",
         "conversionSource": "轉換來源",
         "conversionRate": "轉換匯率"
-      }
+      },
+      "recurringCreated": "{participant}建立了定期支出「{title}」"
     },
     "group": {
       "updated": "{participant} 更新了群組設定",
@@ -1910,5 +1952,27 @@
       "description": "您將不再收到{category}的電子郵件。其他通知設定不會變更。"
     },
     "scope": "僅會關閉此電子郵件通知。您仍會收到其他電子郵件和推播通知。"
+  },
+  "ExpenseSeries": {
+    "badge": "定期",
+    "occurrence": "第 {sequence} 次",
+    "previous": "上一個",
+    "next": "下一個",
+    "viewSeries": "檢視系列",
+    "title": "支出系列",
+    "empty": "目前還沒有其他紀錄。",
+    "scopeTitle": "更新定期支出",
+    "scopeDescription": "選擇要影響的紀錄。",
+    "occurrenceOnly": "僅本次",
+    "thisAndFuture": "本次及之後",
+    "deleteScopeTitle": "刪除定期支出",
+    "deleteScopeDescription": "選擇要刪除本次，或結束整個系列。",
+    "deleteOccurrence": "僅刪除本次",
+    "deleteThisAndFuture": "刪除本次及之後的支出",
+    "confirm": "繼續",
+    "cancel": "取消",
+    "occurrences": "此系列共 {count} 次",
+    "loading": "載入中…",
+    "loadMore": "載入更多紀錄"
   }
 }

@@ -591,7 +591,44 @@
       "splitModeDescription": "Hautatu nola zatitu gastua.",
       "attachDescription": "Ikusi eta erantsi gastuaren ordainagiriak.",
       "createCopy": "Sortu kopia: {title}",
-      "editTitle": "Editatu: {title}"
+      "editTitle": "Editatu: {title}",
+      "recurrence": {
+        "label": "Gastuaren errepikapena",
+        "description": "Aukeratu gastu hau noiz sortu behar den berriro.",
+        "checkboxLabel": "Errepikakorra",
+        "checkboxDescription": "Sortu gastu hau egutegi baten arabera",
+        "enable": "Gehitu errepikapena",
+        "remove": "Kendu errepikapena",
+        "repeatEvery": "Errepikatu",
+        "interval": "Errepikapen-tartea",
+        "frequency": "Errepikapen-maiztasuna",
+        "frequencyOptions": {
+          "daily": "egun",
+          "weekly": "aste",
+          "monthly": "hilabete",
+          "yearly": "urte"
+        },
+        "ends": {
+          "label": "Amaiera",
+          "never": "Inoiz ez",
+          "count": "Errepikapen kopuru baten ondoren",
+          "date": "Data batean",
+          "countInput": "Errepikapenak guztira (gastu hau barne)",
+          "dateInput": "Amaiera-data"
+        },
+        "previewLabel": "Hurrengo errepikapenak",
+        "currentOccurrence": "Unekoa",
+        "viewAll": "Ikusi guztiak",
+        "scheduleTitle": "Errepikapen-egutegia",
+        "remainingCount": "{count} errepikapen geratzen dira.",
+        "unlimitedSchedule": "Errepikapen honek ez du amaiera-datarik.",
+        "noFurtherOccurrences": "Ezarpen hauekin ez dago errepikapen gehiagorik.",
+        "scheduleCount": "{count} errepikapen erakusten dira gastu honetatik aurrera.",
+        "decreaseOccurrences": "Gutxitu errepikapenak",
+        "increaseOccurrences": "Handitu errepikapenak",
+        "ruleSummary": "{interval} {frequency} bakoitzean · {count} errepikapen",
+        "ruleSummaryIndefinite": "{interval} {frequency} bakoitzean · Amaiera-datarik ez"
+      }
     },
     "amountField": {
       "label": "Zenbatekoa",
@@ -1649,6 +1686,10 @@
         "weeklySummary": {
           "title": "Asteko jardueraren laburpena",
           "description": "Zure taldeetako jardueraren asteko laburpena."
+        },
+        "recurringExpense": {
+          "title": "Gastua errepikakorra",
+          "description": "Talde batean programatutako gastu errepikakorra sortzen denean."
         }
       },
       "sections": {
@@ -1678,7 +1719,8 @@
         "reimbursement": "Zor-kitapenaren ordainketa",
         "conversionSource": "Bihurketa-iturria",
         "conversionRate": "Bihurketa-tasa"
-      }
+      },
+      "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du"
     },
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
@@ -1943,5 +1985,27 @@
       "description": "Ez duzu {category} kategoriako mezurik jasoko. Gainerako jakinarazpenen ezarpenak ez dira aldatu."
     },
     "scope": "Posta bidezko jakinarazpen hau bakarrik desaktibatuko da. Gainerako mezu elektronikoek eta push jakinarazpenek berdin jarraituko dute."
+  },
+  "ExpenseSeries": {
+    "badge": "Errepikaria",
+    "occurrence": "{sequence}. errepikapena",
+    "previous": "Aurrekoa",
+    "next": "Hurrengoa",
+    "viewSeries": "Ikusi seriea",
+    "title": "Gastu-seriea",
+    "empty": "Oraindik ez dago beste errepikapenik.",
+    "scopeTitle": "Eguneratu gastu errepikaria",
+    "scopeDescription": "Aukeratu zein errepikapenetan eragingo duen.",
+    "occurrenceOnly": "Errepikapen hau bakarrik",
+    "thisAndFuture": "Hau eta etorkizuneko errepikapenak",
+    "deleteScopeTitle": "Ezabatu gastu errepikaria",
+    "deleteScopeDescription": "Aukeratu errepikapen bat ezabatu edo seriea amaitu nahi duzun.",
+    "deleteOccurrence": "Ezabatu errepikapen hau bakarrik",
+    "deleteThisAndFuture": "Ezabatu hau eta etorkizuneko errepikapenak",
+    "confirm": "Jarraitu",
+    "cancel": "Utzi",
+    "occurrences": "{count} errepikapen serie honetan",
+    "loading": "Kargatzen…",
+    "loadMore": "Kargatu errepikapen gehiago"
   }
 }

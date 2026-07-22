@@ -585,7 +585,44 @@
       "splitModeDescription": "Selecteer hoe de uitgave verdeeld moet worden.",
       "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave.",
       "createCopy": "Kopie maken: {title}",
-      "editTitle": "Bewerken: {title}"
+      "editTitle": "Bewerken: {title}",
+      "recurrence": {
+        "label": "Herhaling van uitgave",
+        "description": "Kies wanneer deze uitgave opnieuw moet worden aangemaakt.",
+        "checkboxLabel": "Terugkerend",
+        "checkboxDescription": "Deze uitgave volgens een schema aanmaken",
+        "enable": "Herhaling toevoegen",
+        "remove": "Herhaling verwijderen",
+        "repeatEvery": "Herhaal elke",
+        "interval": "Herhalingsinterval",
+        "frequency": "Herhalingsfrequentie",
+        "frequencyOptions": {
+          "daily": "dag(en)",
+          "weekly": "week/weken",
+          "monthly": "maand(en)",
+          "yearly": "jaar/jaren"
+        },
+        "ends": {
+          "label": "Eindigt",
+          "never": "Nooit",
+          "count": "Na een aantal voorkomens",
+          "date": "Op een datum",
+          "countInput": "Totaal aantal voorkomens (inclusief deze uitgave)",
+          "dateInput": "Einddatum"
+        },
+        "previewLabel": "Volgende voorkomens",
+        "currentOccurrence": "Huidig",
+        "viewAll": "Alles weergeven",
+        "scheduleTitle": "Herhalingsschema",
+        "remainingCount": "Er zijn {count} resterende exemplaren.",
+        "unlimitedSchedule": "Deze herhaling heeft geen einddatum.",
+        "noFurtherOccurrences": "Er zijn geen verdere voorkomens met deze instellingen.",
+        "scheduleCount": "{count} exemplaren van deze uitgave worden getoond.",
+        "decreaseOccurrences": "Aantal herhalingen verminderen",
+        "increaseOccurrences": "Aantal herhalingen verhogen",
+        "ruleSummary": "Elke {interval} {frequency} · {count} herhalingen",
+        "ruleSummaryIndefinite": "Elke {interval} {frequency} · Geen einddatum"
+      }
     },
     "amountField": {
       "label": "Bedrag",
@@ -1641,6 +1678,10 @@
         "weeklySummary": {
           "title": "Wekelijks activiteitenoverzicht",
           "description": "Een wekelijks overzicht van activiteiten in je groepen."
+        },
+        "recurringExpense": {
+          "title": "Terugkerende uitgave",
+          "description": "Wanneer een geplande terugkerende uitgave in een groep wordt aangemaakt."
         }
       },
       "sections": {
@@ -1670,7 +1711,8 @@
         "reimbursement": "Vereffeningsbetaling",
         "conversionSource": "Conversiebron",
         "conversionRate": "Conversiekoers"
-      }
+      },
+      "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt"
     },
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",
@@ -1926,5 +1968,27 @@
       "description": "Je ontvangt geen e-mails meer voor {category}. Je andere meldingsinstellingen zijn niet gewijzigd."
     },
     "scope": "Alleen deze e-mailmelding wordt uitgeschakeld. Je andere e-mails en pushmeldingen blijven hetzelfde."
+  },
+  "ExpenseSeries": {
+    "badge": "Terugkerend",
+    "occurrence": "Voorkomen {sequence}",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "viewSeries": "Reeks bekijken",
+    "title": "Uitgavenreeks",
+    "empty": "Er zijn nog geen andere voorkomens.",
+    "scopeTitle": "Terugkerende uitgave bijwerken",
+    "scopeDescription": "Kies welke voorkomens worden beïnvloed.",
+    "occurrenceOnly": "Alleen dit voorkomen",
+    "thisAndFuture": "Dit en toekomstige voorkomens",
+    "deleteScopeTitle": "Terugkerende uitgave verwijderen",
+    "deleteScopeDescription": "Kies of je één voorkomen wilt verwijderen of de reeks wilt beëindigen.",
+    "deleteOccurrence": "Alleen dit voorkomen verwijderen",
+    "deleteThisAndFuture": "Dit en toekomstige voorkomens verwijderen",
+    "confirm": "Doorgaan",
+    "cancel": "Annuleren",
+    "occurrences": "{count} voorkomens in deze reeks",
+    "loading": "Laden…",
+    "loadMore": "Meer voorkomens laden"
   }
 }

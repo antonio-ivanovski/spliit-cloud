@@ -18,6 +18,7 @@ describe('activityTypeSchema', () => {
   it('accepts every supported event value', () => {
     const values = [
       'EXPENSE_CREATED',
+      'RECURRING_EXPENSE_CREATED',
       'EXPENSE_UPDATED',
       'EXPENSE_DELETED',
       'EXPENSES_IMPORTED',

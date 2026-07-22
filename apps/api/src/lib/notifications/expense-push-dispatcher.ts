@@ -22,6 +22,7 @@ import type {
 
 const EXPENSE_EVENT_TYPES = new Set([
   'EXPENSE_CREATED',
+  'RECURRING_EXPENSE_CREATED',
   'EXPENSE_UPDATED',
   'EXPENSE_DELETED',
 ])
@@ -129,7 +130,10 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
     if (!parsed || parsed.kind !== 'expense' || !parsed.title) return
 
     let participantIds: string[]
-    if (event.type === 'EXPENSE_CREATED') {
+    if (
+      event.type === 'EXPENSE_CREATED' ||
+      event.type === 'RECURRING_EXPENSE_CREATED'
+    ) {
       if (!event.subject?.id) return
       const raw = await prisma.expense.findUnique({
         where: { id: event.subject.id },
@@ -183,7 +187,7 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
     } else {
       participantIds = parsed.affectedParticipants ?? []
     }
-    if (participantIds.length === 0) return
+    if (participantIds.length === 0 && !event.includeActorAsRecipient) return
 
     const [participants, group, actorAccount] = await Promise.all([
       prisma.ledgerParticipant.findMany({
@@ -202,6 +206,43 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
         : Promise.resolve(null),
     ])
     if (!group) return
+
+    // The series creator can be an active group member without appearing in
+    // the generated expense's participant split. Include that targeted
+    // recipient so recurring creation reaches the original creator too.
+    let recipientParticipants = participants
+    const creatorAccountId =
+      event.includeActorAsRecipient && event.actor?.type === 'ACCOUNT'
+        ? event.actor.id
+        : undefined
+    const targetedAccountId = recipientAccountId ?? creatorAccountId
+    if (targetedAccountId && event.includeActorAsRecipient) {
+      const hasRecipient = participants.some(
+        (participant) =>
+          participant.groupMember?.account?.id === targetedAccountId,
+      )
+      if (!hasRecipient) {
+        const member = await prisma.groupMember.findFirst({
+          where: {
+            groupId: event.groupId,
+            accountId: targetedAccountId,
+            status: 'ACTIVE',
+          },
+          select: {
+            status: true,
+            account: { select: { id: true, email: true, name: true } },
+          },
+        })
+        if (member?.account) {
+          recipientParticipants = [
+            ...participants,
+            {
+              groupMember: { status: member.status, account: member.account },
+            } as (typeof participants)[number],
+          ]
+        }
+      }
+    }
     const actorName = actorAccount?.name ?? 'Someone'
     const amountStr =
       parsed.amount != null
@@ -219,20 +260,26 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
         : groupUrl
 
     const action =
-      event.type === 'EXPENSE_CREATED'
-        ? 'added'
-        : event.type === 'EXPENSE_UPDATED'
-          ? 'updated'
-          : 'removed'
+      event.type === 'RECURRING_EXPENSE_CREATED'
+        ? 'created as a recurring expense'
+        : event.type === 'EXPENSE_CREATED'
+          ? 'added'
+          : event.type === 'EXPENSE_UPDATED'
+            ? 'updated'
+            : 'removed'
 
     const notifiedAccountIds = new Set<string>()
     const sends: Promise<void>[] = []
-    for (const participant of participants as unknown as Participant[]) {
+    for (const participant of recipientParticipants as unknown as Participant[]) {
       const groupMember = participant.groupMember
       const account = groupMember?.account
       if (!groupMember || groupMember.status !== 'ACTIVE' || !account) continue
       if (recipientAccountId && account.id !== recipientAccountId) continue
-      if (event.actor?.type === 'ACCOUNT' && event.actor.id === account.id)
+      if (
+        event.actor?.type === 'ACCOUNT' &&
+        event.actor.id === account.id &&
+        !event.includeActorAsRecipient
+      )
         continue
       if (notifiedAccountIds.has(account.id)) continue
       notifiedAccountIds.add(account.id)
@@ -249,7 +296,10 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
         version: 1,
         kind: 'expense',
         activityId: event.activityId,
-        title: `Expense ${action}`,
+        title:
+          event.type === 'RECURRING_EXPENSE_CREATED'
+            ? 'Recurring expense created'
+            : `Expense ${action}`,
         body,
         url,
         tag: `activity:${event.activityId}`,

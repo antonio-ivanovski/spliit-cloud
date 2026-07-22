@@ -91,6 +91,35 @@ describe('recurrenceDiffer', () => {
     expect(result!.after).toBe('Monthly')
   })
 
+  it('compares the complete cadence and termination configuration', () => {
+    const base = {
+      frequency: 'YEARLY' as const,
+      interval: 2,
+      end: { type: 'DATE' as const, endDate: new Date('2030-01-01') },
+    }
+    expect(
+      recurrenceDiffer.check(
+        makeExpense({ recurrence: base, recurrenceRule: 'YEARLY' }),
+        makeExpense({
+          recurrence: {
+            ...base,
+            end: { type: 'DATE', endDate: new Date('2031-01-01') },
+          },
+          recurrenceRule: 'YEARLY',
+        }),
+      ),
+    ).toBe(true)
+    expect(
+      recurrenceDiffer.check(
+        makeExpense({ recurrence: base, recurrenceRule: 'YEARLY' }),
+        makeExpense({
+          recurrence: { ...base },
+          recurrenceRule: 'YEARLY',
+        }),
+      ),
+    ).toBe(false)
+  })
+
   it('diff returns raw string for unknown recurrence values', () => {
     const result = recurrenceDiffer.diff(
       makeExpense({ recurrenceRule: 'NONE' }),

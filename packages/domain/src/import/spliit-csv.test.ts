@@ -31,6 +31,16 @@ describe('papaparse-backed CSV primitives', () => {
 })
 
 describe('tryParseSpliitCsv', () => {
+  it('rejects Spliit Cloud recurrence columns', () => {
+    const csv =
+      '"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Recurrence series ID","John ","Jane"\n' +
+      '"2026-01-12","Rent","Rent","EUR","100.00",,,,"No","Evenly","series-1",50,-50'
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error).toMatch(/CSV header is not a Spliit export/i)
+  })
+
   it('parses a representative CSV export', () => {
     const result = tryParseSpliitCsv(sampleCsv)
     expect(result.ok).toBe(true)

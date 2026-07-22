@@ -591,7 +591,44 @@
         "description": "La moneda en la que se pagó el gasto."
       },
       "createCopy": "Crear copia: {title}",
-      "editTitle": "Editar: {title}"
+      "editTitle": "Editar: {title}",
+      "recurrence": {
+        "label": "Recurrencia del gasto",
+        "description": "Elige cuándo debe volver a crearse este gasto.",
+        "checkboxLabel": "Recurrente",
+        "checkboxDescription": "Crea este gasto según un calendario",
+        "enable": "Añadir recurrencia",
+        "remove": "Eliminar recurrencia",
+        "repeatEvery": "Repetir cada",
+        "interval": "Intervalo de repetición",
+        "frequency": "Frecuencia de recurrencia",
+        "frequencyOptions": {
+          "daily": "día(s)",
+          "weekly": "semana(s)",
+          "monthly": "mes(es)",
+          "yearly": "año(s)"
+        },
+        "ends": {
+          "label": "Finaliza",
+          "never": "Nunca",
+          "count": "Después de un número de repeticiones",
+          "date": "En una fecha",
+          "countInput": "Repeticiones totales (incluido este gasto)",
+          "dateInput": "Fecha de finalización"
+        },
+        "previewLabel": "Próximas repeticiones",
+        "currentOccurrence": "Actual",
+        "viewAll": "Ver todas",
+        "scheduleTitle": "Calendario de recurrencia",
+        "remainingCount": "Quedan {count} ocurrencias.",
+        "unlimitedSchedule": "Esta recurrencia no tiene fecha de finalización.",
+        "noFurtherOccurrences": "No hay más repeticiones con esta configuración.",
+        "scheduleCount": "Mostrando {count} ocurrencias a partir de este gasto.",
+        "decreaseOccurrences": "Reducir repeticiones",
+        "increaseOccurrences": "Aumentar repeticiones",
+        "ruleSummary": "Cada {interval} {frequency} · {count} ocurrencias",
+        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sin fecha de finalización"
+      }
     },
     "amountField": {
       "label": "Cantidad",
@@ -1649,6 +1686,10 @@
         "weeklySummary": {
           "title": "Resumen semanal de actividad",
           "description": "Un resumen semanal de la actividad de tus grupos."
+        },
+        "recurringExpense": {
+          "title": "Gasto recurrente",
+          "description": "Cuando se crea un gasto recurrente programado en un grupo."
         }
       },
       "sections": {
@@ -1678,7 +1719,8 @@
         "reimbursement": "pago de liquidación",
         "conversionSource": "Fuente de conversión",
         "conversionRate": "Tasa de conversión"
-      }
+      },
+      "recurringCreated": "{participant} creó el gasto recurrent «{title}»"
     },
     "group": {
       "updated": "{participant} actualizó la configuración del grupo",
@@ -1943,5 +1985,27 @@
       "description": "No recibirás correos de {category}. El resto de tu configuración de notificaciones no ha cambiado."
     },
     "scope": "Solo se desactivará esta notificación por correo. Tus otros correos y notificaciones push seguirán igual."
+  },
+  "ExpenseSeries": {
+    "badge": "Recurrente",
+    "occurrence": "Repetición {sequence}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "viewSeries": "Ver serie",
+    "title": "Serie de gastos",
+    "empty": "Todavía no hay otras repeticiones.",
+    "scopeTitle": "Actualizar gasto recurrente",
+    "scopeDescription": "Elige qué repeticiones deben verse afectadas.",
+    "occurrenceOnly": "Solo esta repetición",
+    "thisAndFuture": "Esta repetición y las futuras",
+    "deleteScopeTitle": "Eliminar gasto recurrente",
+    "deleteScopeDescription": "Elige si quieres eliminar una repetición o finalizar la serie.",
+    "deleteOccurrence": "Eliminar solo esta repetición",
+    "deleteThisAndFuture": "Eliminar esta repetición y las futuras",
+    "confirm": "Continuar",
+    "cancel": "Cancelar",
+    "occurrences": "{count} repeticiones en esta serie",
+    "loading": "Cargando…",
+    "loadMore": "Cargar más repeticiones"
   }
 }

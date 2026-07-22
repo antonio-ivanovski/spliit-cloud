@@ -1,0 +1,29 @@
+{
+  "name": "@spliit/jobs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./registry": "./src/registry.ts",
+    "./boss": "./src/boss.ts",
+    "./lifecycle": "./src/lifecycle.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --globals src"
+  },
+  "dependencies": {
+    "pg-boss": "12.26.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@spliit/config": "workspace:*",
+    "@types/node": "24.13.2",
+    "typescript": "6.0.3",
+    "vitest": "5.0.0-beta.5"
+  }
+}

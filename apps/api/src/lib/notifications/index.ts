@@ -1,6 +1,5 @@
-import { ActivityNotificationCoordinator } from './coordinator'
-import { setDefaultActivityNotificationDispatchers } from './dispatcher'
+import { initializeDefaultNotificationDispatchers } from './dispatcher'
 
-setDefaultActivityNotificationDispatchers([
-  new ActivityNotificationCoordinator(),
-])
+initializeDefaultNotificationDispatchers()
+
+export { initializeDefaultNotificationDispatchers }

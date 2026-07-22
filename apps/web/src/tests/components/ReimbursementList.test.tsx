@@ -52,7 +52,7 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
 }))
 
-import { PAYMENT_CATEGORY_ID, RecurrenceRule } from '@spliit/domain'
+import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
 
 // ── Fixtures ────────────────────────────────────────────────────────────
 
@@ -265,7 +265,7 @@ describe('ReimbursementList', () => {
     expect(call.expense.splitMode).toBe('EVENLY')
     expect(call.expense.isMultiPayer).toBe(false)
     expect(call.expense.documents).toEqual([])
-    expect(call.expense.recurrenceRule).toBe(RecurrenceRule.NONE)
+    expect(call.expense.recurrence).toBeNull()
     expect(call.expense.paidByList).toEqual([
       { participant: 'alice-id', shares: 2000 },
     ])

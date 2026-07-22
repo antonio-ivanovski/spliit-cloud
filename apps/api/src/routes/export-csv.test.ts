@@ -98,6 +98,40 @@ describe('exportGroupCsv', () => {
         isReimbursement: false,
         splitMode: 'EVENLY',
         recurrenceRule: 'NONE',
+        recurrenceSequence: 4,
+        recurringSeries: {
+          id: 'series-1',
+          frequency: 'WEEKLY',
+          interval: 3,
+          endType: 'INDEFINITE',
+          occurrenceLimit: null,
+          endDate: null,
+          status: 'COMPLETED',
+          anchorDate: new Date('2024-01-01T00:00:00Z'),
+          anchorSequence: 2,
+          nextOccurrenceDate: new Date('2024-03-04T00:00:00Z'),
+          nextOccurrenceOrdinal: 5,
+          template: {
+            title: 'Future dinner',
+            categoryId: 'groceries',
+            amount: 3000,
+            originalAmount: null,
+            originalCurrency: null,
+            conversionRate: null,
+            conversionSource: null,
+            paidBySplitMode: 'BY_AMOUNT',
+            paidByList: [{ ledgerParticipantId: 'lp-1', shares: 3000 }],
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 1 },
+              { ledgerParticipantId: 'lp-2', shares: 1 },
+            ],
+            splitMode: 'EVENLY',
+            isReimbursement: false,
+            notes: 'current template',
+            items: [],
+            itemizedRemainder: null,
+          },
+        },
       },
     ])
     prismaMock.ledgerParticipant.findMany.mockResolvedValue([
@@ -133,6 +167,11 @@ describe('exportGroupCsv', () => {
     expect(text).toContain('Alice')
     expect(text).toContain('Bob')
     expect(text).toContain('Dinner')
+    expect(text).not.toContain('Recurrence series ID')
+    expect(text).not.toContain('Recurrence frequency')
+    expect(text).not.toContain('Recurrence status')
+    expect(text).not.toContain('Future dinner')
+    expect(text).not.toContain('current template')
   })
 
   it('includes ledger participants referenced by expenses even when they are not active members', async () => {

@@ -34,6 +34,18 @@ function renderItem(activity: Activity) {
 }
 
 describe('ActivityItem', () => {
+  it('renders recurring expense creation distinctly', () => {
+    renderItem(
+      makeActivity({
+        type: 'RECURRING_EXPENSE_CREATED',
+        data: { kind: 'expense', title: 'Rent' },
+      }),
+    )
+    expect(
+      screen.getByText(/Alice created recurring expense .*Rent/),
+    ).toBeInTheDocument()
+  })
+
   it('renders expense created', () => {
     renderItem(
       makeActivity({

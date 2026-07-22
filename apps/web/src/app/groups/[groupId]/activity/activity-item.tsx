@@ -36,6 +36,14 @@ function useMessage(activity: Activity) {
             message: t('expense.created', { participant: actor, title }),
             changes: null,
           }
+        case 'RECURRING_EXPENSE_CREATED':
+          return {
+            message: t('expense.recurringCreated', {
+              participant: actor,
+              title,
+            }),
+            changes: null,
+          }
         case 'EXPENSE_UPDATED':
           return {
             message: t('expense.updated', { participant: actor, title }),

@@ -11,6 +11,7 @@ import {
 } from '../../../lib/api'
 import { prisma$Transaction, prismaMock } from '../../../test/state'
 import { groupsRouter } from './index'
+import { importExpenseSchema } from './import.procedure'
 
 function _makeCaller(authUserId: string) {
   return {
@@ -101,6 +102,26 @@ const baseParticipants = [
 ]
 
 describe('importGroup', () => {
+  it('keeps the Spliit importer boundary on the immutable legacy schema', () => {
+    const parsed = importExpenseSchema.parse({
+      ...baseExpense,
+      recurrenceSeriesId: 'cloud-series-id',
+      recurrenceSequence: 4,
+      recurrenceSeries: { status: 'ACTIVE' },
+      recurrence: {
+        frequency: 'YEARLY',
+        interval: 2,
+        end: { type: 'INDEFINITE' },
+      },
+    })
+
+    expect(parsed.recurrenceRule).toBe('NONE')
+    expect('recurrence' in parsed).toBe(false)
+    expect('recurrenceSeriesId' in parsed).toBe(false)
+    expect('recurrenceSequence' in parsed).toBe(false)
+    expect('recurrenceSeries' in parsed).toBe(false)
+  })
+
   it('creates a new group when groupFormValues is supplied and the destination id is fresh', async () => {
     await authAs('acct-importer')
     stubGroupWithLedger('dest-grp', 'dest-ledger')

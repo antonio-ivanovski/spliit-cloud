@@ -591,7 +591,44 @@
         "monthly": "Lunar"
       },
       "createCopy": "Creează o copie: {title}",
-      "editTitle": "Editează: {title}"
+      "editTitle": "Editează: {title}",
+      "recurrence": {
+        "label": "Recurența cheltuielii",
+        "description": "Alege când trebuie creată din nou această cheltuială.",
+        "checkboxLabel": "Recurentă",
+        "checkboxDescription": "Creează această cheltuială conform unui calendar",
+        "enable": "Adaugă recurență",
+        "remove": "Elimină recurența",
+        "repeatEvery": "Repetă la fiecare",
+        "interval": "Interval de repetare",
+        "frequency": "Frecvența recurenței",
+        "frequencyOptions": {
+          "daily": "zi(le)",
+          "weekly": "săptămână/săptămâni",
+          "monthly": "lună/luni",
+          "yearly": "an(i)"
+        },
+        "ends": {
+          "label": "Se încheie",
+          "never": "Niciodată",
+          "count": "După un număr de apariții",
+          "date": "La o dată",
+          "countInput": "Număr total de apariții (inclusiv această cheltuială)",
+          "dateInput": "Data de încheiere"
+        },
+        "previewLabel": "Următoarele apariții",
+        "currentOccurrence": "Curentă",
+        "viewAll": "Vezi toate",
+        "scheduleTitle": "Calendarul recurenței",
+        "remainingCount": "Au mai rămas {count} apariții.",
+        "unlimitedSchedule": "Această recurență nu are o dată de sfârșit.",
+        "noFurtherOccurrences": "Nu mai există apariții cu aceste setări.",
+        "scheduleCount": "Se afișează {count} apariții începând cu această cheltuială.",
+        "decreaseOccurrences": "Micșorează numărul de apariții",
+        "increaseOccurrences": "Mărește numărul de apariții",
+        "ruleSummary": "La fiecare {interval} {frequency} · {count} apariții",
+        "ruleSummaryIndefinite": "La fiecare {interval} {frequency} · Fără dată de sfârșit"
+      }
     },
     "amountField": {
       "label": "Sumă",
@@ -1649,6 +1686,10 @@
         "weeklySummary": {
           "title": "Rezumat săptămânal al activității",
           "description": "Un rezumat săptămânal al activității din grupurile tale."
+        },
+        "recurringExpense": {
+          "title": "Cheltuială recurentă",
+          "description": "Când este creată o cheltuială recurentă programată într-un grup."
         }
       },
       "sections": {
@@ -1678,7 +1719,8 @@
         "reimbursement": "Plată de decontare",
         "conversionSource": "Sursa conversiei",
         "conversionRate": "Curs de conversie"
-      }
+      },
+      "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”"
     },
     "group": {
       "updated": "{participant} a actualizat setările grupului",
@@ -1943,5 +1985,27 @@
       "description": "Nu vei mai primi e-mailuri pentru {category}. Celelalte setări ale notificărilor nu s-au schimbat."
     },
     "scope": "Doar această notificare prin e-mail va fi dezactivată. Celelalte e-mailuri și notificări push vor rămâne neschimbate."
+  },
+  "ExpenseSeries": {
+    "badge": "Recurentă",
+    "occurrence": "Apariția {sequence}",
+    "previous": "Anterioara",
+    "next": "Următoarea",
+    "viewSeries": "Vezi seria",
+    "title": "Serie de cheltuieli",
+    "empty": "Nu există încă alte apariții.",
+    "scopeTitle": "Actualizează cheltuiala recurentă",
+    "scopeDescription": "Alege ce apariții vor fi afectate.",
+    "occurrenceOnly": "Doar această apariție",
+    "thisAndFuture": "Această apariție și cele viitoare",
+    "deleteScopeTitle": "Șterge cheltuiala recurentă",
+    "deleteScopeDescription": "Alege dacă ștergi o apariție sau închei seria.",
+    "deleteOccurrence": "Șterge doar această apariție",
+    "deleteThisAndFuture": "Șterge această apariție și pe cele viitoare",
+    "confirm": "Continuă",
+    "cancel": "Anulează",
+    "occurrences": "{count} apariții în această serie",
+    "loading": "Se încarcă…",
+    "loadMore": "Încarcă mai multe apariții"
   }
 }

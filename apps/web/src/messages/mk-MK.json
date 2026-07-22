@@ -652,6 +652,10 @@
         "weeklySummary": {
           "title": "Неделен преглед на активностите",
           "description": "Неделен преглед на активностите во вашите групи."
+        },
+        "recurringExpense": {
+          "title": "Повторлив трошок",
+          "description": "Кога во група ќе се создаде закажан повторлив трошок."
         }
       },
       "sections": {
@@ -832,7 +836,44 @@
       "splitModeDescription": "Изберете како да го поделите трошокот.",
       "attachDescription": "Погледнете и прикачете сметки на трошокот.",
       "createCopy": "Креирај копија: {title}",
-      "editTitle": "Уреди: {title}"
+      "editTitle": "Уреди: {title}",
+      "recurrence": {
+        "label": "Повторување на трошокот",
+        "description": "Изберете кога овој трошок треба повторно да се создаде.",
+        "checkboxLabel": "Повторлив",
+        "checkboxDescription": "Креирајте го овој трошок според распоред",
+        "enable": "Додај повторување",
+        "remove": "Отстрани повторување",
+        "repeatEvery": "Повтори на секои",
+        "interval": "Интервал на повторување",
+        "frequency": "Честота на повторување",
+        "frequencyOptions": {
+          "daily": "ден(ови)",
+          "weekly": "недела(и)",
+          "monthly": "месец(и)",
+          "yearly": "година(и)"
+        },
+        "ends": {
+          "label": "Завршува",
+          "never": "Никогаш",
+          "count": "По одреден број појавувања",
+          "date": "На одреден датум",
+          "countInput": "Вкупно појавувања (вклучувајќи го и овој трошок)",
+          "dateInput": "Краен датум"
+        },
+        "previewLabel": "Следни појавувања",
+        "currentOccurrence": "Тековен",
+        "viewAll": "Прикажи ги сите",
+        "scheduleTitle": "Распоред на повторувања",
+        "remainingCount": "Преостануваат {count} повторувања.",
+        "unlimitedSchedule": "Ова повторување нема датум на завршување.",
+        "noFurtherOccurrences": "Нема дополнителни појавувања со овие поставки.",
+        "scheduleCount": "Прикажани се {count} повторувања од овој трошок.",
+        "decreaseOccurrences": "Намали ги повторувањата",
+        "increaseOccurrences": "Зголеми ги повторувањата",
+        "ruleSummary": "На секои {interval} {frequency} · {count} повторувања",
+        "ruleSummaryIndefinite": "На секои {interval} {frequency} · Без датум на завршување"
+      }
     },
     "amountField": {
       "label": "Износ",
@@ -1670,7 +1711,8 @@
         "reimbursement": "Порамнителна уплата",
         "conversionSource": "Извор на конверзија",
         "conversionRate": "Девизен курс"
-      }
+      },
+      "recurringCreated": "{participant} го создаде повторливиот трошок „{title}“"
     },
     "group": {
       "updated": "{participant} ажурираше поставки на групата",
@@ -1926,5 +1968,27 @@
       "description": "Нема да добивате е-пораки за {category}. Другите поставки за известувања не се променети."
     },
     "scope": "Ќе се исклучи само ова известување по е-пошта. Другите е-пораки и push известувања ќе останат исти."
+  },
+  "ExpenseSeries": {
+    "badge": "Повторлив",
+    "occurrence": "Појавување {sequence}",
+    "previous": "Претходно",
+    "next": "Следно",
+    "viewSeries": "Прикажи ја серијата",
+    "title": "Серија трошоци",
+    "empty": "Сè уште нема други појавувања.",
+    "scopeTitle": "Ажурирај повторлив трошок",
+    "scopeDescription": "Изберете кои појавувања ќе бидат засегнати.",
+    "occurrenceOnly": "Само ова појавување",
+    "thisAndFuture": "Ова и идните појавувања",
+    "deleteScopeTitle": "Избриши повторлив трошок",
+    "deleteScopeDescription": "Изберете дали да избришете едно појавување или да ја завршите серијата.",
+    "deleteOccurrence": "Избриши го само ова појавување",
+    "deleteThisAndFuture": "Избриши го ова и идните појавувања",
+    "confirm": "Продолжи",
+    "cancel": "Откажи",
+    "occurrences": "{count} појавувања во оваа серија",
+    "loading": "Се вчитува…",
+    "loadMore": "Вчитај повеќе појавувања"
   }
 }

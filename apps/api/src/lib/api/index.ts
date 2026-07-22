@@ -23,6 +23,7 @@ export {
   getGroupExpenseCount,
   getGroupExpenses,
   getGroupExpensesParticipants,
+  getRecurringExpenseSeries,
   updateExpense,
 } from './expenses'
 export {
@@ -58,8 +59,4 @@ export {
   removeMember,
   updateMemberRole,
 } from './members'
-export {
-  createPayloadForNewRecurringExpenseLink,
-  createRecurringExpenses,
-} from './recurring-expenses'
 export { randomId, type GroupWithLedger } from './shared'

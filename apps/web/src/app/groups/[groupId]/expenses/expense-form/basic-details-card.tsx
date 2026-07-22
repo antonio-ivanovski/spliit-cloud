@@ -26,13 +26,6 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
@@ -44,7 +37,6 @@ import type {
   Currency,
   ExpenseFormInputValues,
   ExpenseFormItemValues,
-  RecurrenceRule,
 } from '@spliit/domain'
 import { DEFAULT_CATEGORIES, DEFAULT_CATEGORY_ID } from '@spliit/domain'
 import {
@@ -73,12 +65,9 @@ import {
   getNeutralDefaultSplit,
   savedDefaultToFormValues,
 } from './default-values'
+import { RecurrenceSection } from './recurrence-section'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
-
-function getSelectedRecurrenceRule(field?: { value: string }) {
-  return field?.value as RecurrenceRule
-}
 
 // react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive expense form section, shared form state
 export function BasicDetailsCard(props: {
@@ -89,6 +78,7 @@ export function BasicDetailsCard(props: {
   sExpense: 'Expense' | 'Income'
   isIncome: boolean
   isCreate: boolean
+  recurrenceSequence?: number
   heading?: string
   /** Link-invite token carried in the URL for pending invitees. */
   linkInviteToken?: string
@@ -257,12 +247,12 @@ export function BasicDetailsCard(props: {
           {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid sm:grid-cols-2 gap-6">
+      <CardContent className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2">
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem className="order-1">
+            <FormItem className="order-1 col-span-1 min-w-0">
               <FormLabel>{t(`${sExpense}.TitleField.label`)}</FormLabel>
               <div className="flex min-h-10 w-full overflow-hidden rounded-md border border-input bg-background transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                 <FormField
@@ -352,36 +342,47 @@ export function BasicDetailsCard(props: {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="expenseDate"
-          render={({ field }) => (
-            <FormItem className="order-5">
-              <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
-              <FormControl>
-                <Input
-                  className="date-base"
-                  type="date"
-                  defaultValue={formatDate(field.value)}
-                  disabled={readOnly}
-                  onChange={(event) => {
-                    return field.onChange(new Date(event.target.value))
-                  }}
-                />
-              </FormControl>
-              <FormDescription className="hidden sm:block">
-                {t(`${sExpense}.DateField.description`)}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <section className="order-3 col-span-full grid min-w-0 gap-6 rounded-xl border border-border/70 bg-muted/10 p-4 sm:p-5">
+          <div className="min-w-0">
+            <FormField
+              control={form.control}
+              name="expenseDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="date-base"
+                      type="date"
+                      defaultValue={formatDate(field.value)}
+                      disabled={readOnly}
+                      onChange={(event) => {
+                        return field.onChange(new Date(event.target.value))
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription className="hidden sm:block">
+                    {t(`${sExpense}.DateField.description`)}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="min-w-0">
+            <RecurrenceSection
+              form={form}
+              readOnly={readOnly}
+              currentSequence={props.recurrenceSequence}
+            />
+          </div>
+        </section>
 
         <FormField
           control={form.control}
           name="amount"
           render={({ field: { onChange, ...field } }) => (
-            <FormItem className="order-2 col-span-2 md:col-span-1 space-y-2">
+            <FormItem className="order-2 col-span-1 min-w-0 space-y-2">
               <FormLabel>{t('amountField.label')}</FormLabel>
               <div className="flex min-h-10 w-full overflow-hidden rounded-md border border-input bg-background transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                 {group.currencyCode ? (
@@ -596,83 +597,49 @@ export function BasicDetailsCard(props: {
           )}
         />
 
-        <div className="order-7">
+        <section className="order-5 col-span-full grid min-w-0 gap-4 rounded-xl border border-border/70 bg-muted/10 p-4 sm:p-5">
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem className="min-w-0">
+                <FormLabel>{t('notesField.label')}</FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="min-h-24 resize-y text-base"
+                    disabled={readOnly}
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           {!isIncome && (
             <FormField
               control={form.control}
               name="isReimbursement"
               render={({ field }) => (
-                <FormItem className="flex flex-row gap-2 items-center space-y-0 pt-2">
+                <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border bg-background px-3 py-3">
                   <FormControl>
                     <Checkbox
+                      id="is-reimbursement"
                       checked={field.value}
                       onCheckedChange={field.onChange}
                       disabled={readOnly}
                     />
                   </FormControl>
-                  <div>
-                    <FormLabel>{t('isReimbursementField.label')}</FormLabel>
-                  </div>
+                  <FormLabel
+                    htmlFor="is-reimbursement"
+                    className="cursor-pointer leading-5"
+                  >
+                    {t('isReimbursementField.label')}
+                  </FormLabel>
                 </FormItem>
               )}
             />
           )}
-        </div>
-
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem className="order-8 sm:col-span-2">
-              <FormLabel>{t('notesField.label')}</FormLabel>
-              <FormControl>
-                <Textarea
-                  className="text-base"
-                  disabled={readOnly}
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="recurrenceRule"
-          render={({ field }) => (
-            <FormItem className="order-9 sm:col-span-2">
-              <FormLabel>{t('Expense.recurrenceRule.label')}</FormLabel>
-              <Select
-                onValueChange={(value) => {
-                  form.setValue('recurrenceRule', value as RecurrenceRule)
-                }}
-                defaultValue={getSelectedRecurrenceRule(field)}
-                disabled={readOnly}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t('Expense.recurrenceRule.none')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="NONE">
-                    {t('Expense.recurrenceRule.none')}
-                  </SelectItem>
-                  <SelectItem value="DAILY">
-                    {t('Expense.recurrenceRule.daily')}
-                  </SelectItem>
-                  <SelectItem value="WEEKLY">
-                    {t('Expense.recurrenceRule.weekly')}
-                  </SelectItem>
-                  <SelectItem value="MONTHLY">
-                    {t('Expense.recurrenceRule.monthly')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription className="hidden sm:block">
-                {t('Expense.recurrenceRule.description')}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        </section>
       </CardContent>
       <ResponsiveDialog
         open={!!pendingCalculatorItems}

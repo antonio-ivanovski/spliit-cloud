@@ -591,7 +591,44 @@
         "description": "La devise dans laquelle la dépense a été payée."
       },
       "createCopy": "Créer une copie : {title}",
-      "editTitle": "Modifier : {title}"
+      "editTitle": "Modifier : {title}",
+      "recurrence": {
+        "label": "Récurrence de la dépense",
+        "description": "Choisissez quand cette dépense doit être créée à nouveau.",
+        "checkboxLabel": "Récurrente",
+        "checkboxDescription": "Créer cette dépense selon un calendrier",
+        "enable": "Ajouter une récurrence",
+        "remove": "Supprimer la récurrence",
+        "repeatEvery": "Répéter tous les",
+        "interval": "Intervalle de répétition",
+        "frequency": "Fréquence de récurrence",
+        "frequencyOptions": {
+          "daily": "jour(s)",
+          "weekly": "semaine(s)",
+          "monthly": "mois",
+          "yearly": "année(s)"
+        },
+        "ends": {
+          "label": "Se termine",
+          "never": "Jamais",
+          "count": "Après un certain nombre d’occurrences",
+          "date": "À une date",
+          "countInput": "Nombre total d’occurrences (cette dépense comprise)",
+          "dateInput": "Date de fin"
+        },
+        "previewLabel": "Prochaines occurrences",
+        "currentOccurrence": "Actuelle",
+        "viewAll": "Tout afficher",
+        "scheduleTitle": "Calendrier de récurrence",
+        "remainingCount": "Il reste {count} occurrences.",
+        "unlimitedSchedule": "Cette récurrence n’a pas de date de fin.",
+        "noFurtherOccurrences": "Aucune autre occurrence avec ces paramètres.",
+        "scheduleCount": "Affichage de {count} occurrences à partir de cette dépense.",
+        "decreaseOccurrences": "Diminuer le nombre d’occurrences",
+        "increaseOccurrences": "Augmenter le nombre d’occurrences",
+        "ruleSummary": "Tous les {interval} {frequency} · {count} occurrences",
+        "ruleSummaryIndefinite": "Tous les {interval} {frequency} · Sans date de fin"
+      }
     },
     "amountField": {
       "label": "Montant",
@@ -1649,6 +1686,10 @@
         "weeklySummary": {
           "title": "Résumé hebdomadaire de l’activité",
           "description": "Un résumé hebdomadaire de l’activité de vos groupes."
+        },
+        "recurringExpense": {
+          "title": "Dépense récurrente",
+          "description": "Lorsqu’une dépense récurrente planifiée est créée dans un groupe."
         }
       },
       "sections": {
@@ -1678,7 +1719,8 @@
         "reimbursement": "Paiement de règlement",
         "conversionSource": "Source de conversion",
         "conversionRate": "Taux de conversion"
-      }
+      },
+      "recurringCreated": "{participant} a créé la dépense récurrente « {title} »"
     },
     "group": {
       "updated": "{participant} a modifié les paramètres du groupe",
@@ -1943,5 +1985,27 @@
       "description": "Vous ne recevrez plus d’e-mails pour {category}. Vos autres paramètres de notification n’ont pas changé."
     },
     "scope": "Seule cette notification par e-mail sera désactivée. Vos autres e-mails et notifications push resteront inchangés."
+  },
+  "ExpenseSeries": {
+    "badge": "Récurrente",
+    "occurrence": "Occurrence {sequence}",
+    "previous": "Précédente",
+    "next": "Suivante",
+    "viewSeries": "Voir la série",
+    "title": "Série de dépenses",
+    "empty": "Aucune autre occurrence pour le moment.",
+    "scopeTitle": "Modifier la dépense récurrente",
+    "scopeDescription": "Choisissez les occurrences concernées.",
+    "occurrenceOnly": "Uniquement cette occurrence",
+    "thisAndFuture": "Cette occurrence et les suivantes",
+    "deleteScopeTitle": "Supprimer la dépense récurrente",
+    "deleteScopeDescription": "Choisissez de supprimer une occurrence ou de mettre fin à la série.",
+    "deleteOccurrence": "Supprimer uniquement cette occurrence",
+    "deleteThisAndFuture": "Supprimer cette occurrence et les suivantes",
+    "confirm": "Continuer",
+    "cancel": "Annuler",
+    "occurrences": "{count} occurrences dans cette série",
+    "loading": "Chargement…",
+    "loadMore": "Charger plus d’occurrences"
   }
 }

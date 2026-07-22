@@ -657,6 +657,41 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
     expect(result.expenseDate).not.toEqual(loadedExpense.expenseDate)
   })
 
+  it('copies recurrence and shifts a date termination by the anchor offset', () => {
+    const recurringExpense = {
+      ...loadedExpense,
+      recurrence: {
+        frequency: 'WEEKLY',
+        interval: 5,
+        end: {
+          type: 'DATE',
+          endDate: new Date('2025-01-12T00:00:00.000Z'),
+        },
+      },
+    } as LoadedExpense
+
+    const result = buildExpenseFormDefaults({
+      isCreate: true,
+      expense: recurringExpense,
+      isCopy: true,
+      searchParams: {},
+      group: mockGroup,
+      groupCurrency: usd(),
+      currentLedgerParticipantId: 'lp-1',
+      reimbursementTitle: 'Reimbursement',
+      savedDefault: null,
+    })
+
+    expect(result.recurrence).toEqual({
+      frequency: 'WEEKLY',
+      interval: 5,
+      end: {
+        type: 'DATE',
+        endDate: new Date('2025-08-26T12:00:00.000Z'),
+      },
+    })
+  })
+
   it('does not touch other fields when not in copy mode', () => {
     const result = buildExpenseFormDefaults({
       isCreate: false,

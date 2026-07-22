@@ -4,7 +4,7 @@ import {
   useIsPendingInvitee,
 } from '@/app/groups/[groupId]/current-group-context'
 import { render, screen, waitFor, within } from '@/test/test-utils'
-import { PAYMENT_CATEGORY_ID, RecurrenceRule } from '@spliit/domain'
+import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
 import { describe, expect, it, vi } from 'vitest'
 
 // ── Mocks ───────────────────────────────────────────────────────────────
@@ -203,7 +203,7 @@ describe('CreateReimbursementModal', () => {
     expect(call.expense.splitMode).toBe('EVENLY')
     expect(call.expense.isMultiPayer).toBe(false)
     expect(call.expense.documents).toEqual([])
-    expect(call.expense.recurrenceRule).toBe(RecurrenceRule.NONE)
+    expect(call.expense.recurrence).toBeNull()
     expect(call.expense.paidByList).toEqual([
       { participant: 'alice-id', shares: 2500 },
     ])

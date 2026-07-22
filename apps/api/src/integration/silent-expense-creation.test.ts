@@ -268,9 +268,10 @@ describe('Silent expense creation — activity + notification', () => {
   })
 
   // -------------------------------------------------------------------
-  // 3. Recurring expense — activity + notification per installment
+  // 3. Recurring expense — activity per installment. Notification dispatch is
+  // owned by the background worker and is covered by its unit test.
   // -------------------------------------------------------------------
-  it('recurring expense materialization writes activity + notification', async () => {
+  it('recurring expense materialization writes a recurring activity', async () => {
     const { groupId, ledgerId, adminLp } = await createGroup(
       `Recur-Act-${runId}`,
       false,
@@ -298,8 +299,21 @@ describe('Silent expense creation — activity + notification', () => {
     })
     capture.events.length = 0
 
-    const { createRecurringExpenses } = await import('../lib/api')
-    await createRecurringExpenses()
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    let series = await prisma.recurringExpenseSeries.findFirst({
+      where: { ledgerId, template: { path: ['title'], equals: 'Weekly sub' } },
+    })
+    while (series && series.nextOccurrenceDate <= new Date()) {
+      await materializeRecurringExpense({
+        seriesId: series.id,
+        sequence: series.occurrencesCreated + 1,
+        occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+      })
+      series = await prisma.recurringExpenseSeries.findUnique({
+        where: { id: series.id },
+      })
+    }
 
     const cloned = await prisma.expense.findMany({
       where: { ledgerId, title: 'Weekly sub' },
@@ -311,20 +325,48 @@ describe('Silent expense creation — activity + notification', () => {
     const installments = cloned.slice(1)
     for (const inst of installments) {
       const activity = await prisma.activity.findFirst({
-        where: { subjectId: inst.id, type: 'EXPENSE_CREATED' },
+        where: { subjectId: inst.id, type: 'RECURRING_EXPENSE_CREATED' },
       })
       expect(activity).not.toBeNull()
       const data = activity!.data as Record<string, unknown>
       expect(data.kind).toBe('expense')
       expect(data.title).toBe('Weekly sub')
       expect(data.amount).toBe(1000)
-      expect(data.currencyCode).toBe('USD')
+      expect(data.currencyCode).toBeNull()
+      expect(data.ledgerCurrencyCode).toBe('USD')
     }
 
-    await waitForScheduledNotificationDispatchesForTest()
-    const installmentEvents = capture.events.filter(
-      (e) => e.type === 'EXPENSE_CREATED',
-    )
-    expect(installmentEvents.length).toBeGreaterThanOrEqual(installments.length)
+    expect(installments.length).toBeGreaterThanOrEqual(2)
+    await makeCaller().expenses.update({
+      groupId,
+      expenseId: installments[0]!.id,
+      scope: 'THIS_AND_FUTURE',
+      expense: {
+        title: 'Updated weekly sub',
+        amount: 1200,
+        expenseDate: installments[0]!.expenseDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: adminLp, shares: 1200 }],
+        paidFor: [{ participant: adminLp, shares: 1 }],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'WEEKLY',
+        recurrence: {
+          frequency: 'WEEKLY',
+          interval: 1,
+          end: { type: 'INDEFINITE' },
+        },
+      },
+    })
+    const propagated = await prisma.expense.findUniqueOrThrow({
+      where: { id: installments[1]!.id },
+      include: { documents: true },
+    })
+    expect(propagated.title).toBe('Updated weekly sub')
+    expect(propagated.amount).toBe(1200)
+    expect(propagated.expenseDate).toEqual(installments[1]!.expenseDate)
+    expect(propagated.documents).toEqual([])
   })
 })

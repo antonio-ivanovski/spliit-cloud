@@ -84,6 +84,12 @@ function makeData(
         effectiveChannels: ['EMAIL'],
       },
       {
+        category: 'RECURRING_EXPENSE_CREATED',
+        channels: null,
+        recommendedChannels: ['PUSH'],
+        effectiveChannels: ['EMAIL'],
+      },
+      {
         category: 'EXPENSE_CHANGED',
         channels: null,
         recommendedChannels: ['PUSH'],
@@ -157,7 +163,7 @@ describe('NotificationsPreferences', () => {
     expect(screen.getByText('Added to a group')).toBeInTheDocument()
     expect(screen.getByText('Friend ledger')).toBeInTheDocument()
     expect(screen.getByText('New comment')).toBeInTheDocument()
-    expect(screen.getAllByRole('combobox')).toHaveLength(4)
+    expect(screen.getAllByRole('combobox')).toHaveLength(5)
     expect(screen.getAllByText('Coming soon').length).toBeGreaterThan(0)
   })
 

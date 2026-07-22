@@ -433,7 +433,6 @@ describe('deleteExpense', () => {
       items: [],
       itemizedRemainder: null,
       documents: [],
-      recurringExpenseLink: null,
     } as never)
     prismaMock.activity.create.mockResolvedValue({} as never)
     prismaMock.expense.deleteMany.mockResolvedValue({ count: 1 } as never)
