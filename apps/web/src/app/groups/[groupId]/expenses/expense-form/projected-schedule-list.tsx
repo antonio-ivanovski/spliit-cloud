@@ -136,7 +136,7 @@ export function ProjectedScheduleList({
           return (
             <li
               key={`${entry.sequence}-${entry.date.toISOString()}`}
-              className="absolute inset-x-0 flex items-center gap-3 rounded-md bg-background px-3 py-2 text-sm tabular-nums shadow-xs"
+              className="absolute inset-x-0 top-0 flex items-center gap-3 rounded-md bg-background px-3 py-2 text-sm tabular-nums shadow-xs"
               style={{
                 height: item.size,
                 transform: `translateY(${item.start}px)`,

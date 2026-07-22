@@ -342,7 +342,7 @@ export function BasicDetailsCard(props: {
           )}
         />
 
-        <section className="order-3 col-span-full grid min-w-0 gap-6 rounded-xl border border-border/70 bg-muted/10 p-4 sm:p-5">
+        <section className="order-3 col-span-full grid min-w-0 gap-6">
           <div className="min-w-0">
             <FormField
               control={form.control}
@@ -597,7 +597,7 @@ export function BasicDetailsCard(props: {
           )}
         />
 
-        <section className="order-5 col-span-full grid min-w-0 gap-4 rounded-xl border border-border/70 bg-muted/10 p-4 sm:p-5">
+        <section className="order-5 col-span-full grid min-w-0 gap-4">
           <FormField
             control={form.control}
             name="notes"
@@ -620,7 +620,7 @@ export function BasicDetailsCard(props: {
               control={form.control}
               name="isReimbursement"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border bg-background px-3 py-3">
+                <FormItem className="flex flex-row items-center gap-3 space-y-0 py-1">
                   <FormControl>
                     <Checkbox
                       id="is-reimbursement"

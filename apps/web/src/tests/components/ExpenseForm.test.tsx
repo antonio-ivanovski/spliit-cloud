@@ -1073,6 +1073,16 @@ describe('ExpenseForm', () => {
       fireEvent.click(screen.getByRole('button', { name: 'View all' }))
     })
     expect(screen.getByText('Recurrence schedule')).toBeInTheDocument()
+    const projectedSchedule = screen.getByRole('list', {
+      name: 'Recurrence schedule',
+    })
+    const currentProjectedOccurrence = projectedSchedule.querySelector(
+      '[aria-current="date"]',
+    )
+    expect(currentProjectedOccurrence).toHaveClass('top-0')
+    expect(currentProjectedOccurrence).toHaveStyle({
+      transform: 'translateY(0px)',
+    })
     // The indefinite schedule drawer should include concrete dates, not only
     // the no-end summary (the inline preview contributes four list items).
     expect(screen.getAllByRole('listitem').length).toBeGreaterThan(4)

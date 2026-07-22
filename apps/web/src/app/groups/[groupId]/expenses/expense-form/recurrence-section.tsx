@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
 import { cn, formatDateOnly } from '@/lib/utils'
-import { CalendarClock, Check, Minus, Plus } from 'lucide-react'
+import { CalendarClock, Check, Ellipsis, Minus, Plus } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   useWatch,
@@ -59,6 +59,19 @@ const defaultRecurrence: RecurrenceConfig = {
   end: { type: 'INDEFINITE' },
 }
 
+const countPresets: Record<RecurrenceFrequency, number[]> = {
+  DAILY: [7, 14, 30, 90],
+  WEEKLY: [4, 12, 26, 52],
+  MONTHLY: [3, 6, 12, 24],
+  YEARLY: [2, 5, 10, 20],
+}
+
+const parseIntegerDraft = (value: string) => {
+  if (!/^\d+$/.test(value)) return null
+  const parsed = Number(value)
+  return Number.isSafeInteger(parsed) ? parsed : null
+}
+
 export function RecurrenceSection<T extends RecurrenceFormValues>({
   form,
   readOnly,
@@ -87,7 +100,10 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
   const lastRecurrenceRef = useRef<RecurrenceConfig>(
     recurrence ?? defaultRecurrence,
   )
-  if (recurrence) lastRecurrenceRef.current = recurrence
+
+  useEffect(() => {
+    if (recurrence) lastRecurrenceRef.current = recurrence
+  }, [recurrence])
 
   const isEnabled = recurrence != null
   const end = recurrence?.end
@@ -108,12 +124,6 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
     WEEKLY: t('recurrence.frequencyOptions.weekly'),
     MONTHLY: t('recurrence.frequencyOptions.monthly'),
     YEARLY: t('recurrence.frequencyOptions.yearly'),
-  }
-  const countPresets: Record<RecurrenceFrequency, number[]> = {
-    DAILY: [7, 14, 30, 90],
-    WEEKLY: [4, 12, 26, 52],
-    MONTHLY: [3, 6, 12, 24],
-    YEARLY: [2, 5, 10, 20],
   }
   const scheduleSummary = recurrence
     ? schedule.totalCount === null
@@ -161,12 +171,6 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
     setEndDateDraft(null)
   }, [expenseDate, recurrence])
 
-  const parseIntegerDraft = (value: string) => {
-    if (!/^\d+$/.test(value)) return null
-    const parsed = Number(value)
-    return Number.isSafeInteger(parsed) ? parsed : null
-  }
-
   const normalizeIntervalDraft = () => {
     if (!recurrence || intervalDraft === null) return
     const parsed = parseIntegerDraft(intervalDraft)
@@ -206,21 +210,31 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
     index: number,
   ) => {
     const current = entry.sequence === currentSequence
+    const continues = index < previewEntries.length - 1 || hasViewAll
     return (
       <li
         key={`${entry.sequence}-${entry.date.toISOString()}`}
-        className="relative flex min-w-0 flex-1 gap-2 pb-4 sm:pb-0 sm:pl-0"
+        className="relative grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] grid-rows-[1.25rem_auto] pb-4 sm:flex sm:flex-1 sm:flex-col sm:items-stretch sm:pb-0"
         aria-current={current ? 'date' : undefined}
       >
-        {index < previewEntries.length - 1 && (
+        {index > 0 && (
           <span
             aria-hidden="true"
-            className="absolute left-[7px] top-4 h-[calc(100%-0.5rem)] w-px bg-border sm:left-4 sm:top-[7px] sm:h-px sm:w-[calc(100%-0.5rem)]"
+            className="absolute left-4 top-0 h-7 w-px bg-border sm:hidden"
           />
         )}
+        {continues && (
+          <span
+            aria-hidden="true"
+            className="absolute bottom-0 left-4 top-7 w-px bg-border sm:bottom-auto sm:left-1/2 sm:top-7 sm:h-px sm:w-[calc(100%+0.5rem)]"
+          />
+        )}
+        <span className="col-start-1 row-start-1 block text-center text-xs tabular-nums text-muted-foreground sm:h-5">
+          {entry.sequence}
+        </span>
         <span
           className={cn(
-            'relative z-10 mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 bg-background',
+            'relative z-10 col-start-1 row-start-2 mx-auto flex size-4 shrink-0 items-center justify-center rounded-full border-2 bg-background sm:mt-0',
             current
               ? 'border-primary bg-primary'
               : 'border-muted-foreground/40',
@@ -228,13 +242,15 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
         >
           {current && <Check className="size-2.5 text-primary-foreground" />}
         </span>
-        <span className="min-w-0 text-sm">
+        <span className="col-start-2 row-start-2 min-w-0 self-start pl-2 text-sm sm:mt-2 sm:px-1 sm:text-center">
           <span className="block truncate font-medium tabular-nums">
             {formatDateOnly(entry.date, locale, { dateStyle: 'medium' })}
           </span>
-          <span className="mt-0.5 block text-xs text-muted-foreground">
-            {current ? t('recurrence.currentOccurrence') : `${entry.sequence}.`}
-          </span>
+          {current && (
+            <span className="mt-0.5 block truncate text-xs font-medium text-primary">
+              {t('recurrence.currentOccurrence')}
+            </span>
+          )}
         </span>
       </li>
     )
@@ -382,14 +398,14 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                     </div>
 
                     {end?.type === 'COUNT' && (
-                      <div className="mt-4 max-w-md">
+                      <div className="mt-4 max-w-sm">
                         <FormLabel
                           className="text-xs text-muted-foreground"
                           htmlFor="recurrence-count"
                         >
                           {t('recurrence.ends.countInput')}
                         </FormLabel>
-                        <div className="mt-1 flex h-10 overflow-hidden rounded-md border border-input bg-background shadow-xs focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                        <div className="mt-1 flex h-10 w-full max-w-56 overflow-hidden rounded-md border border-input bg-background shadow-xs focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                           <Button
                             type="button"
                             variant="ghost"
@@ -439,7 +455,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                               })
                             }}
                             onBlur={normalizeCountDraft}
-                            className="h-full min-w-0 flex-1 rounded-none border-0 text-center shadow-none focus-visible:ring-0"
+                            className="h-full min-w-0 flex-1 appearance-none rounded-none border-0 text-center shadow-none focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                           />
                           <Button
                             type="button"
@@ -565,6 +581,34 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                       {previewEntries.length > 0 ? (
                         <ol className="flex flex-col gap-0 sm:flex-row sm:gap-2">
                           {previewEntries.map(renderTimelineEntry)}
+                          {hasViewAll && (
+                            <li className="relative grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] grid-rows-[1.25rem_auto] pb-1 sm:flex sm:flex-1 sm:flex-col sm:items-stretch sm:pb-0">
+                              <span
+                                aria-hidden="true"
+                                className="absolute left-4 top-0 h-7 w-px bg-border sm:hidden"
+                              />
+                              <span
+                                aria-hidden="true"
+                                className="col-start-1 row-start-1 block text-center text-xs text-muted-foreground sm:h-5"
+                              >
+                                …
+                              </span>
+                              <span className="relative z-10 col-start-1 row-start-2 mx-auto flex size-4 items-center justify-center rounded-full border-2 border-dashed border-primary/60 bg-background text-primary">
+                                <Ellipsis
+                                  className="size-3"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                              <Button
+                                type="button"
+                                variant="link"
+                                className="col-start-2 row-start-2 h-auto min-w-0 justify-start self-start px-2 py-0 text-sm sm:mt-2 sm:justify-center sm:px-0"
+                                onClick={() => setScheduleOpen(true)}
+                              >
+                                {t('recurrence.viewAll')}
+                              </Button>
+                            </li>
+                          )}
                         </ol>
                       ) : (
                         <p className="text-sm text-muted-foreground">
@@ -575,16 +619,6 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                         <p className="mt-2 text-sm text-muted-foreground">
                           {t('recurrence.noFurtherOccurrences')}
                         </p>
-                      )}
-                      {hasViewAll && (
-                        <Button
-                          type="button"
-                          variant="link"
-                          className="mt-2 h-auto px-0 text-sm"
-                          onClick={() => setScheduleOpen(true)}
-                        >
-                          {t('recurrence.viewAll')}
-                        </Button>
                       )}
                     </div>
                   </div>

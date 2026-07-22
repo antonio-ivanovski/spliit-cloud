@@ -43,3 +43,4 @@
 - [x] 6.8 Add cadence-aware occurrence presets, split-style count stepper, and connected timeline preview
 - [x] 6.9 Add indexed virtual projected-schedule browsing for finite and indefinite recurrences
 - [x] 6.10 Keep end-date drafts valid, clamp DATE termination when the expense date moves, and add picker keyboard navigation
+- [x] 6.11 Remove redundant form framing, refine the inline timeline continuation, compact the count stepper, and correct virtual-row positioning
