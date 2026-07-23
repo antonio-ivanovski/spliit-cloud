@@ -641,7 +641,12 @@
         "decreaseOccurrences": "Зменшити кількість повторень",
         "increaseOccurrences": "Збільшити кількість повторень",
         "ruleSummary": "Кожні {interval} {frequency} · {count} повторень",
-        "ruleSummaryIndefinite": "Кожні {interval} {frequency} · Без дати завершення"
+        "ruleSummaryIndefinite": "Кожні {interval} {frequency} · Без дати завершення",
+        "scheduleChangeWarningTitle": "Розклад повторень зміниться",
+        "scheduleChangeWarning": "Після збереження буде перенесено це та майбутні повторення. Існуючі майбутні витрати можуть бути перенесені на нові дати або видалені, а відсутні дати можуть бути створені автоматично.",
+        "pastDateBackfillNote": "Оскільки ця витрата починається в минулому, повторення до сьогоднішнього дня будуть створені автоматично після збереження.",
+        "completedOccurrence": "Створено",
+        "upcomingOccurrence": "Майбутнє"
       },
       "recurringEditScopeOccurrence": "Редагування лише цього повторення",
       "recurringEditScopeFuture": "Редагування цього й майбутніх повторень"

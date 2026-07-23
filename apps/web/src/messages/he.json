@@ -635,7 +635,12 @@
         "decreaseOccurrences": "הפחתת מספר המופעים",
         "increaseOccurrences": "הגדלת מספר המופעים",
         "ruleSummary": "כל {interval} {frequency} · {count} מופעים",
-        "ruleSummaryIndefinite": "כל {interval} {frequency} · ללא תאריך סיום"
+        "ruleSummaryIndefinite": "כל {interval} {frequency} · ללא תאריך סיום",
+        "scheduleChangeWarningTitle": "לוח זמני החזרה ישתנה",
+        "scheduleChangeWarning": "שמירה תשנה את מועדי המופע הנוכחי והמופעים העתידיים. הוצאות עתידיות קיימות עלולות לעבור לתאריכים חדשים או להימחק, ותאריכי יעד חסרים עלולים להיווצר אוטומטית.",
+        "pastDateBackfillNote": "מכיוון שההוצאה מתחילה בעבר, מופעים עד היום ייווצרו אוטומטית לאחר השמירה.",
+        "completedOccurrence": "נוצר",
+        "upcomingOccurrence": "עתידי"
       },
       "recurringEditScopeOccurrence": "עריכת מופע זה בלבד",
       "recurringEditScopeFuture": "עריכת מופע זה והמופעים הבאים"

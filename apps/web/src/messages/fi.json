@@ -629,7 +629,12 @@
         "decreaseOccurrences": "Vähennä toistokertoja",
         "increaseOccurrences": "Lisää toistokertoja",
         "ruleSummary": "Joka {interval} {frequency} · {count} toistokertaa",
-        "ruleSummaryIndefinite": "Joka {interval} {frequency} · Ei päättymispäivää"
+        "ruleSummaryIndefinite": "Joka {interval} {frequency} · Ei päättymispäivää",
+        "scheduleChangeWarningTitle": "Toistoaikataulu muuttuu",
+        "scheduleChangeWarning": "Tallentaminen ajoittaa tämän ja tulevat toistot uudelleen. Olemassa olevat tulevat kulut voivat siirtyä uusiin päiviin tai poistua, ja puuttuvat eräpäivät voidaan luoda automaattisesti.",
+        "pastDateBackfillNote": "Koska tämä kulu alkaa menneisyydessä, tämän päivän loppuun asti olevat toistot luodaan automaattisesti tallennuksen jälkeen.",
+        "completedOccurrence": "Luotu",
+        "upcomingOccurrence": "Tulossa"
       },
       "recurringEditScopeOccurrence": "Muokataan vain tätä esiintymää",
       "recurringEditScopeFuture": "Muokataan tätä ja tulevia esiintymiä"

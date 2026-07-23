@@ -629,7 +629,12 @@
         "decreaseOccurrences": "Aantal herhalingen verminderen",
         "increaseOccurrences": "Aantal herhalingen verhogen",
         "ruleSummary": "Elke {interval} {frequency} · {count} herhalingen",
-        "ruleSummaryIndefinite": "Elke {interval} {frequency} · Geen einddatum"
+        "ruleSummaryIndefinite": "Elke {interval} {frequency} · Geen einddatum",
+        "scheduleChangeWarningTitle": "Het herhalingsschema wijzigt",
+        "scheduleChangeWarning": "Bij het opslaan worden dit en toekomstige voorkomens opnieuw ingepland. Bestaande toekomstige uitgaven kunnen naar nieuwe data worden verplaatst of worden verwijderd, en ontbrekende vervaldata kunnen automatisch worden aangemaakt.",
+        "pastDateBackfillNote": "Omdat deze uitgave in het verleden begint, worden voorkomens tot en met vandaag automatisch aangemaakt nadat je opslaat.",
+        "completedOccurrence": "Aangemaakt",
+        "upcomingOccurrence": "Aankomend"
       },
       "recurringEditScopeOccurrence": "Alleen dit voorkomen bewerken",
       "recurringEditScopeFuture": "Deze en toekomstige voorkomens bewerken"

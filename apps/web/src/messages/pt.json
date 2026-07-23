@@ -737,7 +737,12 @@
         "decreaseOccurrences": "Diminuir ocorrências",
         "increaseOccurrences": "Aumentar ocorrências",
         "ruleSummary": "A cada {interval} {frequency} · {count} ocorrências",
-        "ruleSummaryIndefinite": "A cada {interval} {frequency} · Sem data de fim"
+        "ruleSummaryIndefinite": "A cada {interval} {frequency} · Sem data de fim",
+        "scheduleChangeWarningTitle": "O calendário de recorrência vai mudar",
+        "scheduleChangeWarning": "Ao guardar, esta e as ocorrências futuras serão reagendadas. As despesas futuras existentes podem mudar para novas datas ou ser removidas, e as datas de vencimento em falta podem ser criadas automaticamente.",
+        "pastDateBackfillNote": "Como esta despesa começa no passado, as ocorrências até hoje serão criadas automaticamente depois de guardar.",
+        "completedOccurrence": "Criada",
+        "upcomingOccurrence": "Próxima"
       },
       "recurringEditScopeOccurrence": "Editar apenas esta ocorrência",
       "recurringEditScopeFuture": "Editar esta ocorrência e as futuras"

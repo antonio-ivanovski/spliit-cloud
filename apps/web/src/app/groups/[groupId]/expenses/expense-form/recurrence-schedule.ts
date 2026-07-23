@@ -244,3 +244,60 @@ export function dateOnlyTime(date: Date): number {
       (24 * 60 * 60 * 1000),
   )
 }
+
+export function utcTodayDate(): Date {
+  const now = new Date()
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  )
+}
+
+export type OccurrenceScheduleStatus = 'current' | 'completed' | 'upcoming'
+
+export function getOccurrenceScheduleStatus(
+  entry: RecurrenceScheduleEntry,
+  currentSequence: number,
+  today: Date = utcTodayDate(),
+): OccurrenceScheduleStatus {
+  if (entry.sequence === currentSequence) return 'current'
+  if (dateOnlyTime(entry.date) <= dateOnlyTime(today)) return 'completed'
+  return 'upcoming'
+}
+
+/** True when frequency, interval, or end differ. */
+export function isScheduleConfigEqual(
+  a: RecurrenceConfig,
+  b: RecurrenceConfig,
+): boolean {
+  if (a.frequency !== b.frequency || a.interval !== b.interval) return false
+  if (a.end.type !== b.end.type) return false
+  if (a.end.type === 'COUNT' && b.end.type === 'COUNT') {
+    return a.end.count === b.end.count
+  }
+  if (a.end.type === 'DATE' && b.end.type === 'DATE') {
+    return (
+      a.end.endDate.toISOString().slice(0, 10) ===
+      b.end.endDate.toISOString().slice(0, 10)
+    )
+  }
+  return true
+}
+
+/** Count projected occurrences after the current one that fall on or before today. */
+export function countDueBackfillOccurrences(
+  schedule: RecurrenceSchedule,
+  today: Date = utcTodayDate(),
+): number {
+  let count = 0
+  const todayDay = dateOnlyTime(today)
+  for (let offset = 1; ; offset += 1) {
+    const entry = schedule.getEntryAt(offset)
+    if (!entry) break
+    if (dateOnlyTime(entry.date) > todayDay) break
+    count += 1
+    if (schedule.totalCount !== null && offset >= schedule.totalCount - 1) break
+    // Cap indefinite scans to a year of daily-scale safety.
+    if (offset > 400) break
+  }
+  return count
+}

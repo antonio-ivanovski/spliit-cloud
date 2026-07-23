@@ -880,7 +880,12 @@
         "decreaseOccurrences": "Намали ги повторувањата",
         "increaseOccurrences": "Зголеми ги повторувањата",
         "ruleSummary": "На секои {interval} {frequency} · {count} повторувања",
-        "ruleSummaryIndefinite": "На секои {interval} {frequency} · Без датум на завршување"
+        "ruleSummaryIndefinite": "На секои {interval} {frequency} · Без датум на завршување",
+        "scheduleChangeWarningTitle": "Распоредот на повторувањата ќе се промени",
+        "scheduleChangeWarning": "Со зачувувањето ќе се прераспоредат ова и идните појавувања. Постоечките идни трошоци може да се преместат на нови датуми или да се отстранат, а недостасувачките датуми може автоматски да се создадат.",
+        "pastDateBackfillNote": "Бидејќи овој трошок започнува во минатото, појавувањата до денес ќе се создадат автоматски по зачувувањето.",
+        "completedOccurrence": "Создадено",
+        "upcomingOccurrence": "Претстојни"
       },
       "recurringEditScopeOccurrence": "Уредување само на ова појавување",
       "recurringEditScopeFuture": "Уредување на ова и идните појавувања"

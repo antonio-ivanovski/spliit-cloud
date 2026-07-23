@@ -653,7 +653,12 @@
         "decreaseOccurrences": "Vorkommen verringern",
         "increaseOccurrences": "Vorkommen erhöhen",
         "ruleSummary": "Alle {interval} {frequency} · {count} Vorkommen",
-        "ruleSummaryIndefinite": "Alle {interval} {frequency} · Kein Enddatum"
+        "ruleSummaryIndefinite": "Alle {interval} {frequency} · Kein Enddatum",
+        "scheduleChangeWarningTitle": "Der Wiederholungsplan ändert sich",
+        "scheduleChangeWarning": "Beim Speichern werden dieses und künftige Vorkommen neu geplant. Bestehende zukünftige Ausgaben können auf neue Termine verschoben oder entfernt werden, und fehlende Fälligkeitstermine können automatisch erstellt werden.",
+        "pastDateBackfillNote": "Da diese Ausgabe in der Vergangenheit beginnt, werden Vorkommen bis einschließlich heute nach dem Speichern automatisch erstellt.",
+        "completedOccurrence": "Erstellt",
+        "upcomingOccurrence": "Bevorstehend"
       },
       "recurringEditScopeOccurrence": "Nur dieses Vorkommen bearbeiten",
       "recurringEditScopeFuture": "Dieses und zukünftige Vorkommen bearbeiten"

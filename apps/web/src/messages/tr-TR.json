@@ -629,7 +629,12 @@
         "decreaseOccurrences": "Yineleme sayısını azalt",
         "increaseOccurrences": "Yineleme sayısını artır",
         "ruleSummary": "Her {interval} {frequency} · {count} yineleme",
-        "ruleSummaryIndefinite": "Her {interval} {frequency} · Bitiş tarihi yok"
+        "ruleSummaryIndefinite": "Her {interval} {frequency} · Bitiş tarihi yok",
+        "scheduleChangeWarningTitle": "Yinelenme takvimi değişecek",
+        "scheduleChangeWarning": "Kaydetmek bu ve gelecekteki yinelemeleri yeniden planlar. Mevcut gelecekteki giderler yeni tarihlere taşınabilir veya kaldırılabilir; eksik vade tarihleri otomatik olarak oluşturulabilir.",
+        "pastDateBackfillNote": "Bu gider geçmişte başladığı için bugüne kadar olan yinelemeler kaydettikten sonra otomatik olarak oluşturulacaktır.",
+        "completedOccurrence": "Oluşturuldu",
+        "upcomingOccurrence": "Yaklaşan"
       },
       "recurringEditScopeOccurrence": "Yalnızca bu yineleme düzenleniyor",
       "recurringEditScopeFuture": "Bu ve gelecekteki yinelemeler düzenleniyor"

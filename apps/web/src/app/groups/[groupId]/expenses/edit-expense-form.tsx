@@ -131,6 +131,7 @@ export function EditExpenseForm({
         currentLedgerParticipantId={currentLedgerParticipantId}
         linkInviteToken={linkInviteToken}
         readOnly={readOnly}
+        editScope={selectedScope}
         heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
         onSubmit={async (expense) => {
           if (readOnly) return

@@ -635,7 +635,12 @@
         "decreaseOccurrences": "Disminueix les repeticions",
         "increaseOccurrences": "Augmenta les repeticions",
         "ruleSummary": "Cada {interval} {frequency} · {count} ocurrències",
-        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sense data de finalització"
+        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sense data de finalització",
+        "scheduleChangeWarningTitle": "El calendari de recurrència canviarà",
+        "scheduleChangeWarning": "En desar, es reprogramaran aquesta ocurrència i les futures. Les despeses futures existents poden passar a noves dates o eliminar-se, i les dates de venciment que faltin es poden crear automàticament.",
+        "pastDateBackfillNote": "Com que aquesta despesa comença en el passat, les ocurrències fins avui es crearan automàticament després de desar.",
+        "completedOccurrence": "Creada",
+        "upcomingOccurrence": "Propera"
       },
       "recurringEditScopeOccurrence": "Editant només aquesta ocurrència",
       "recurringEditScopeFuture": "Editant aquesta ocurrència i les futures"

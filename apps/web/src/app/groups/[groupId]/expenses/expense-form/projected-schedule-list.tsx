@@ -1,25 +1,27 @@
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
-import { cn, formatDateOnly } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
-import type {
-  RecurrenceSchedule,
-  RecurrenceScheduleEntry,
+import { formatDateOnly } from '@/lib/utils'
+import {
+  OccurrenceStatusLabel,
+  OccurrenceTimelineNode,
+} from './occurrence-timeline'
+import {
+  getOccurrenceScheduleStatus,
+  type RecurrenceSchedule,
+  type RecurrenceScheduleEntry,
 } from './recurrence-schedule'
 
 const DEFAULT_PAGE_SIZE = 100
-const ROW_HEIGHT = 52
+const ROW_HEIGHT = 72
 
 export type ProjectedScheduleListProps = {
   schedule: RecurrenceSchedule
   locale?: string
-  /** Customize row contents while keeping virtualization and accessibility. */
-  renderEntry?: (
-    entry: RecurrenceScheduleEntry,
-    context: { index: number; current: boolean },
-  ) => ReactNode
   currentLabel?: ReactNode
+  completedLabel?: ReactNode
   noEndLabel?: ReactNode
   emptyLabel?: ReactNode
   ariaLabel?: string
@@ -28,14 +30,15 @@ export type ProjectedScheduleListProps = {
 }
 
 /**
- * A bounded-DOM schedule viewer. Rows are resolved by index, so opening a
- * very long or indefinite recurrence never allocates the entire series.
+ * A bounded-DOM vertical timeline schedule viewer. Rows are resolved by
+ * index, so opening a very long or indefinite recurrence never allocates
+ * the entire series.
  */
 export function ProjectedScheduleList({
   schedule,
   locale = 'en-US',
-  renderEntry,
   currentLabel = 'Current occurrence',
+  completedLabel = 'Created',
   noEndLabel = 'No end date',
   emptyLabel = 'No occurrences',
   ariaLabel = 'Projected recurrence schedule',
@@ -132,38 +135,54 @@ export function ProjectedScheduleList({
         {visibleItems.map((item) => {
           const entry = entries.get(item.index)
           if (!entry) return null
-          const current = entry.sequence === schedule.currentSequence
+          const status = getOccurrenceScheduleStatus(
+            entry,
+            schedule.currentSequence,
+          )
+          const continues =
+            item.index < rowCount - 1 || schedule.totalCount === null
           return (
             <li
               key={`${entry.sequence}-${entry.date.toISOString()}`}
-              className="absolute inset-x-0 top-0 flex items-center gap-3 rounded-md bg-background px-3 py-2 text-sm tabular-nums shadow-xs"
+              className="absolute inset-x-0 top-0 grid grid-cols-[2rem_minmax(0,1fr)] grid-rows-[1.25rem_auto] px-1"
               style={{
                 height: item.size,
                 transform: `translateY(${item.start}px)`,
               }}
-              aria-current={current ? 'date' : undefined}
+              aria-current={status === 'current' ? 'date' : undefined}
               aria-posinset={item.index + 1}
               aria-setsize={schedule.totalCount ?? undefined}
             >
-              {renderEntry ? (
-                renderEntry(entry, { index: item.index, current })
-              ) : (
-                <>
-                  <span className="w-8 shrink-0 text-center text-xs text-muted-foreground">
-                    {entry.sequence}.
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    {formatDateOnly(entry.date, locale, {
-                      dateStyle: 'medium',
-                    })}
-                  </span>
-                  {current && (
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                      {currentLabel}
-                    </span>
-                  )}
-                </>
+              {item.index > 0 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-4 top-0 h-7 w-px bg-border"
+                />
               )}
+              {continues && (
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-0 left-4 top-7 w-px bg-border"
+                />
+              )}
+              <span className="col-start-1 row-start-1 block text-center text-xs tabular-nums text-muted-foreground">
+                {entry.sequence}
+              </span>
+              <span className="col-start-1 row-start-2 mx-auto">
+                <OccurrenceTimelineNode status={status} />
+              </span>
+              <span className="col-start-2 row-start-2 min-w-0 self-start pl-2 text-sm">
+                <span className="block truncate font-medium tabular-nums">
+                  {formatDateOnly(entry.date, locale, {
+                    dateStyle: 'medium',
+                  })}
+                </span>
+                <OccurrenceStatusLabel
+                  status={status}
+                  currentLabel={currentLabel}
+                  completedLabel={completedLabel}
+                />
+              </span>
             </li>
           )
         })}

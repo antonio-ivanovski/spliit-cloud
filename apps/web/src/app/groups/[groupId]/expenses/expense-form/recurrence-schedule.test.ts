@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   calculateRecurrenceDate,
+  countDueBackfillOccurrences,
+  getOccurrenceScheduleStatus,
   getRecurrencePreviewDates,
   getRecurrenceSchedule,
   getRecurrenceScheduleMetadata,
+  isScheduleConfigEqual,
   type RecurrenceConfig,
 } from './recurrence-schedule'
 
@@ -124,5 +127,43 @@ describe('recurrence schedule preview', () => {
     expect(schedule.totalCount).toBe(11_000_001)
     expect(schedule.hasMore).toBe(true)
     expect(schedule.getEntryAt(11_000_000)?.date).toBeInstanceOf(Date)
+  })
+
+  it('classifies occurrence schedule status relative to today', () => {
+    const today = new Date('2026-07-23T00:00:00.000Z')
+    expect(
+      getOccurrenceScheduleStatus(
+        { sequence: 2, date: new Date('2026-07-23T00:00:00.000Z') },
+        2,
+        today,
+      ),
+    ).toBe('current')
+    expect(
+      getOccurrenceScheduleStatus(
+        { sequence: 1, date: new Date('2026-07-20T00:00:00.000Z') },
+        2,
+        today,
+      ),
+    ).toBe('completed')
+    expect(
+      getOccurrenceScheduleStatus(
+        { sequence: 3, date: new Date('2026-07-30T00:00:00.000Z') },
+        2,
+        today,
+      ),
+    ).toBe('upcoming')
+  })
+
+  it('detects schedule config changes and due backfill counts', () => {
+    expect(isScheduleConfigEqual(config('WEEKLY'), config('DAILY'))).toBe(false)
+    expect(isScheduleConfigEqual(config('WEEKLY'), config('WEEKLY'))).toBe(true)
+    const anchor = new Date('2026-07-20T00:00:00.000Z')
+    const schedule = getRecurrenceSchedule(anchor, config('DAILY'), 1, 20)
+    expect(
+      countDueBackfillOccurrences(
+        schedule,
+        new Date('2026-07-23T00:00:00.000Z'),
+      ),
+    ).toBe(3)
   })
 })

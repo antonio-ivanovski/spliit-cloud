@@ -147,7 +147,7 @@ export function futureRowBeforeShape(
 /** Build the AFTER shape from the new template + this row's resolved
  * conversion. The row's `documents` and the shared series recurrence
  * identity are passed through unchanged (no per-row document or
- * recurrence diff). */
+ * recurrence diff). Pass `expenseDate` when a schedule reflow moves the row. */
 export function futureRowAfterShape(args: {
   row: FutureRowSnapshot
   template: ReturnType<typeof buildRecurringTemplate>
@@ -159,6 +159,7 @@ export function futureRowAfterShape(args: {
     conversionSource: 'EXCHANGE' | 'CUSTOM' | null
   }
   shared: RecurrenceShape
+  expenseDate?: Date
 }): Expense & {
   originalAmount?: number
   originalCurrency?: string
@@ -169,7 +170,7 @@ export function futureRowAfterShape(args: {
   return {
     title: template.title,
     amount: rowConv.ledgerAmountMinor,
-    expenseDate: row.expenseDate,
+    expenseDate: args.expenseDate ?? row.expenseDate,
     category: template.categoryId as Expense['category'],
     notes: template.notes ?? undefined,
     recurrenceRule: shared.recurrenceRule,

@@ -641,7 +641,12 @@
         "decreaseOccurrences": "Snížit počet opakování",
         "increaseOccurrences": "Zvýšit počet opakování",
         "ruleSummary": "Každých {interval} {frequency} · {count} opakování",
-        "ruleSummaryIndefinite": "Každých {interval} {frequency} · Bez data ukončení"
+        "ruleSummaryIndefinite": "Každých {interval} {frequency} · Bez data ukončení",
+        "scheduleChangeWarningTitle": "Plán opakování se změní",
+        "scheduleChangeWarning": "Uložením přeplánujete tento a budoucí výskyty. Stávající budoucí výdaje se mohou přesunout na nová data nebo být odstraněny a chybějící termíny mohou být vytvořeny automaticky.",
+        "pastDateBackfillNote": "Protože tento výdaj začíná v minulosti, výskyty do dnešního dne budou po uložení vytvořeny automaticky.",
+        "completedOccurrence": "Vytvořeno",
+        "upcomingOccurrence": "Nadcházející"
       },
       "recurringEditScopeOccurrence": "Upravit pouze tento výskyt",
       "recurringEditScopeFuture": "Upravit tento a budoucí výskyty"

@@ -623,7 +623,12 @@
         "decreaseOccurrences": "繰り返し回数を減らす",
         "increaseOccurrences": "繰り返し回数を増やす",
         "ruleSummary": "{interval}{frequency}ごと · {count}回",
-        "ruleSummaryIndefinite": "{interval}{frequency}ごと · 終了日なし"
+        "ruleSummaryIndefinite": "{interval}{frequency}ごと · 終了日なし",
+        "scheduleChangeWarningTitle": "繰り返しスケジュールが変更されます",
+        "scheduleChangeWarning": "保存すると、この発生分と今後の発生分が再スケジュールされます。既存の将来の支出は新しい日付に移動したり削除されたりする場合があり、不足している発生日は自動的に作成される場合があります。",
+        "pastDateBackfillNote": "この支出が過去の日付から始まるため、保存後に今日までの発生分が自動的に作成されます。",
+        "completedOccurrence": "作成済み",
+        "upcomingOccurrence": "予定"
       },
       "recurringEditScopeOccurrence": "この発生分のみ編集",
       "recurringEditScopeFuture": "この発生分と今後の発生分を編集"

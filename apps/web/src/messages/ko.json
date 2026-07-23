@@ -524,7 +524,12 @@
         "decreaseOccurrences": "반복 횟수 줄이기",
         "increaseOccurrences": "반복 횟수 늘리기",
         "ruleSummary": "{interval}{frequency}마다 · {count}회",
-        "ruleSummaryIndefinite": "{interval}{frequency}마다 · 종료일 없음"
+        "ruleSummaryIndefinite": "{interval}{frequency}마다 · 종료일 없음",
+        "scheduleChangeWarningTitle": "반복 일정이 변경됩니다",
+        "scheduleChangeWarning": "저장하면 이번 항목과 이후 항목의 일정이 다시 조정됩니다. 기존 미래 지출은 새 날짜로 옮겨지거나 삭제될 수 있으며, 빠진 예정일은 자동으로 생성될 수 있습니다.",
+        "pastDateBackfillNote": "이 지출이 과거 날짜로 시작하므로, 저장 후 오늘까지의 항목이 자동으로 생성됩니다.",
+        "completedOccurrence": "생성됨",
+        "upcomingOccurrence": "예정"
       },
       "recurringEditScopeOccurrence": "이 항목만 수정",
       "recurringEditScopeFuture": "이 항목 및 이후 항목 수정"

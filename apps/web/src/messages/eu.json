@@ -635,7 +635,12 @@
         "decreaseOccurrences": "Gutxitu errepikapenak",
         "increaseOccurrences": "Handitu errepikapenak",
         "ruleSummary": "{interval} {frequency} bakoitzean · {count} errepikapen",
-        "ruleSummaryIndefinite": "{interval} {frequency} bakoitzean · Amaiera-datarik ez"
+        "ruleSummaryIndefinite": "{interval} {frequency} bakoitzean · Amaiera-datarik ez",
+        "scheduleChangeWarningTitle": "Errepikapen-egutegia aldatuko da",
+        "scheduleChangeWarning": "Gordetzean, hau eta etorkizuneko gertaerak berriro programatuko dira. Etorkizuneko gastu existenteak data berrietara mugi daitezke edo kendu, eta falta diren epemuga-datak automatikoki sortu daitezke.",
+        "pastDateBackfillNote": "Gastu hau iraganean hasten delako, gaur arteko gertaerak automatikoki sortuko dira gordetzean.",
+        "completedOccurrence": "Sortua",
+        "upcomingOccurrence": "Hurrengoa"
       },
       "recurringEditScopeOccurrence": "Editatu agerraldi hau soilik",
       "recurringEditScopeFuture": "Editatu agerraldi hau eta etorkizunekoak"

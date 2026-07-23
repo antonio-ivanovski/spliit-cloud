@@ -641,7 +641,12 @@
         "decreaseOccurrences": "Zmniejsz liczbę wystąpień",
         "increaseOccurrences": "Zwiększ liczbę wystąpień",
         "ruleSummary": "Co {interval} {frequency} · {count} wystąpień",
-        "ruleSummaryIndefinite": "Co {interval} {frequency} · Brak daty zakończenia"
+        "ruleSummaryIndefinite": "Co {interval} {frequency} · Brak daty zakończenia",
+        "scheduleChangeWarningTitle": "Harmonogram cykliczności ulegnie zmianie",
+        "scheduleChangeWarning": "Zapisanie spowoduje przeplanowanie tego i przyszłych wystąpień. Istniejące przyszłe wydatki mogą zostać przeniesione na nowe daty lub usunięte, a brakujące terminy mogą zostać utworzone automatycznie.",
+        "pastDateBackfillNote": "Ponieważ ten wydatek zaczyna się w przeszłości, wystąpienia do dzisiejszego dnia zostaną utworzone automatycznie po zapisaniu.",
+        "completedOccurrence": "Utworzono",
+        "upcomingOccurrence": "Nadchodzące"
       },
       "recurringEditScopeOccurrence": "Edytowanie tylko tego wystąpienia",
       "recurringEditScopeFuture": "Edytowanie tego i przyszłych wystąpień"

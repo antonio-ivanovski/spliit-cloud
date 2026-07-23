@@ -1,4 +1,5 @@
 import { ResponsiveChoicePicker } from '@/components/responsive-choice-picker'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
@@ -20,7 +21,13 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
 import { cn, formatDateOnly } from '@/lib/utils'
-import { CalendarClock, Check, Ellipsis, Minus, Plus } from 'lucide-react'
+import {
+  AlertTriangle,
+  CalendarClock,
+  Ellipsis,
+  Minus,
+  Plus,
+} from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   useWatch,
@@ -29,11 +36,18 @@ import {
   type UseFormReturn,
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import {
+  OccurrenceStatusLabel,
+  OccurrenceTimelineNode,
+} from './occurrence-timeline'
 import { ProjectedScheduleList } from './projected-schedule-list'
 import {
+  countDueBackfillOccurrences,
   formatDateInputValue,
+  getOccurrenceScheduleStatus,
   getRecurrenceSchedule,
   getRecurrenceScheduleMetadata,
+  isScheduleConfigEqual,
   parseDateInputValue,
   type RecurrenceConfig,
   type RecurrenceEnd,
@@ -76,10 +90,16 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
   form,
   readOnly,
   currentSequence = 1,
+  editScope,
+  initialRecurrence,
 }: {
   form: UseFormReturn<T>
   readOnly: boolean
   currentSequence?: number
+  /** Locked edit scope when editing an existing series. */
+  editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
+  /** Original series recurrence when editing (for schedule-change detection). */
+  initialRecurrence?: RecurrenceConfig | null
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm.Expense' })
   const locale = useLocale()
@@ -119,6 +139,22 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
   const previewEntries = schedule.entries.slice(0, 4)
   const hasViewAll =
     schedule.remainingCount === null || schedule.remainingCount > 3
+  const scheduleChanged =
+    editScope === 'THIS_AND_FUTURE' &&
+    recurrence != null &&
+    initialRecurrence != null &&
+    !isScheduleConfigEqual(initialRecurrence, recurrence)
+  const dueBackfillCount = useMemo(() => {
+    if (
+      !recurrence ||
+      !expenseDate ||
+      !Number.isFinite(expenseDate.getTime())
+    ) {
+      return 0
+    }
+    return countDueBackfillOccurrences(schedule)
+  }, [expenseDate, recurrence, schedule])
+  const showPastDateBackfillNote = isEnabled && dueBackfillCount > 0
   const frequencyLabels: Record<RecurrenceFrequency, string> = {
     DAILY: t('recurrence.frequencyOptions.daily'),
     WEEKLY: t('recurrence.frequencyOptions.weekly'),
@@ -209,13 +245,13 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
     entry: RecurrenceScheduleEntry,
     index: number,
   ) => {
-    const current = entry.sequence === currentSequence
+    const status = getOccurrenceScheduleStatus(entry, currentSequence)
     const continues = index < previewEntries.length - 1 || hasViewAll
     return (
       <li
         key={`${entry.sequence}-${entry.date.toISOString()}`}
         className="relative grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] grid-rows-[1.25rem_auto] pb-4 sm:flex sm:flex-1 sm:flex-col sm:items-stretch sm:pb-0"
-        aria-current={current ? 'date' : undefined}
+        aria-current={status === 'current' ? 'date' : undefined}
       >
         {index > 0 && (
           <span
@@ -232,25 +268,18 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
         <span className="col-start-1 row-start-1 block text-center text-xs tabular-nums text-muted-foreground sm:h-5">
           {entry.sequence}
         </span>
-        <span
-          className={cn(
-            'relative z-10 col-start-1 row-start-2 mx-auto flex size-4 shrink-0 items-center justify-center rounded-full border-2 bg-background sm:mt-0',
-            current
-              ? 'border-primary bg-primary'
-              : 'border-muted-foreground/40',
-          )}
-        >
-          {current && <Check className="size-2.5 text-primary-foreground" />}
+        <span className="relative z-10 col-start-1 row-start-2 mx-auto sm:mt-0">
+          <OccurrenceTimelineNode status={status} />
         </span>
         <span className="col-start-2 row-start-2 min-w-0 self-start pl-2 text-sm sm:mt-2 sm:px-1 sm:text-center">
           <span className="block truncate font-medium tabular-nums">
             {formatDateOnly(entry.date, locale, { dateStyle: 'medium' })}
           </span>
-          {current && (
-            <span className="mt-0.5 block truncate text-xs font-medium text-primary">
-              {t('recurrence.currentOccurrence')}
-            </span>
-          )}
+          <OccurrenceStatusLabel
+            status={status}
+            currentLabel={t('recurrence.currentOccurrence')}
+            completedLabel={t('recurrence.completedOccurrence')}
+          />
         </span>
       </li>
     )
@@ -561,6 +590,33 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                       </div>
                     )}
 
+                    {scheduleChanged && (
+                      <Alert
+                        className="mt-4 border-amber-500/50 bg-amber-50 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
+                        role="status"
+                      >
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                        <AlertTitle>
+                          {t('recurrence.scheduleChangeWarningTitle')}
+                        </AlertTitle>
+                        <AlertDescription>
+                          {t('recurrence.scheduleChangeWarning')}
+                        </AlertDescription>
+                      </Alert>
+                    )}
+
+                    {showPastDateBackfillNote && (
+                      <p
+                        className={cn(
+                          'mt-4 border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground',
+                          scheduleChanged && 'mt-3',
+                        )}
+                        role="status"
+                      >
+                        {t('recurrence.pastDateBackfillNote')}
+                      </p>
+                    )}
+
                     <div
                       className="mt-4"
                       aria-live="polite"
@@ -648,26 +704,10 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
               schedule={scheduleMetadata}
               locale={locale}
               currentLabel={t('recurrence.currentOccurrence')}
+              completedLabel={t('recurrence.completedOccurrence')}
               noEndLabel={t('recurrence.unlimitedSchedule')}
               emptyLabel={t('recurrence.noFurtherOccurrences')}
               ariaLabel={t('recurrence.scheduleTitle')}
-              renderEntry={(entry) => (
-                <>
-                  <span className="w-8 shrink-0 text-center text-xs text-muted-foreground">
-                    {entry.sequence}.
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    {formatDateOnly(entry.date, locale, {
-                      dateStyle: 'medium',
-                    })}
-                  </span>
-                  {entry.sequence === currentSequence && (
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                      {t('recurrence.currentOccurrence')}
-                    </span>
-                  )}
-                </>
-              )}
             />
           </ResponsiveDialogBody>
         </ResponsiveDialogContent>

@@ -623,7 +623,12 @@
         "decreaseOccurrences": "Kurangi jumlah kejadian",
         "increaseOccurrences": "Tambah jumlah kejadian",
         "ruleSummary": "Setiap {interval} {frequency} · {count} kejadian",
-        "ruleSummaryIndefinite": "Setiap {interval} {frequency} · Tanpa tanggal berakhir"
+        "ruleSummaryIndefinite": "Setiap {interval} {frequency} · Tanpa tanggal berakhir",
+        "scheduleChangeWarningTitle": "Jadwal pengulangan akan berubah",
+        "scheduleChangeWarning": "Menyimpan akan menjadwalkan ulang kejadian ini dan ke depannya. Pengeluaran mendatang yang ada dapat dipindah ke tanggal baru atau dihapus, dan tanggal jatuh tempo yang belum ada dapat dibuat secara otomatis.",
+        "pastDateBackfillNote": "Karena pengeluaran ini dimulai di masa lalu, kejadian hingga hari ini akan dibuat secara otomatis setelah Anda menyimpan.",
+        "completedOccurrence": "Dibuat",
+        "upcomingOccurrence": "Mendatang"
       },
       "recurringEditScopeOccurrence": "Edit hanya kejadian ini",
       "recurringEditScopeFuture": "Edit kejadian ini dan yang akan datang"

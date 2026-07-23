@@ -960,7 +960,12 @@
         "decreaseOccurrences": "Decrease occurrences",
         "increaseOccurrences": "Increase occurrences",
         "ruleSummary": "Every {interval} {frequency} · {count} occurrences",
-        "ruleSummaryIndefinite": "Every {interval} {frequency} · No end date"
+        "ruleSummaryIndefinite": "Every {interval} {frequency} · No end date",
+        "scheduleChangeWarningTitle": "Recurrence schedule will change",
+        "scheduleChangeWarning": "Saving will reschedule this and future occurrences. Existing future expenses may move to new dates or be removed, and missing due dates may be created automatically.",
+        "pastDateBackfillNote": "Because this expense starts in the past, occurrences through today will be created automatically after you save.",
+        "completedOccurrence": "Created",
+        "upcomingOccurrence": "Upcoming"
       },
       "paidFor": {
         "title": "Split between",

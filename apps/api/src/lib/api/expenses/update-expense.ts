@@ -1,10 +1,6 @@
 import type { Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
-import {
-  calculateRecurrenceDate,
-  computePaidForFromItems,
-  type Expense,
-} from '@spliit/domain'
+import { computePaidForFromItems, type Expense } from '@spliit/domain'
 import { env as jobsEnv } from '@spliit/jobs'
 import { deleteS3Object } from '../../../routes/upload'
 import { resolveConversion } from '../../expense-conversion'
@@ -22,7 +18,15 @@ import {
   enqueueMaterialization,
   getApiBoss,
   getExpenseRecurrence,
+  toRecurrenceConfig,
 } from '../recurrence-series'
+import {
+  buildCatchUpSeedAfterReflow,
+  computeNextMaterializationCursor,
+  expectedOccurrenceDate,
+  isOutsideTermination,
+  isScheduleConfigEqual,
+} from '../recurrence/reflow-series-from-anchor'
 import { randomId } from '../shared'
 import {
   futureRowAfterShape,
@@ -183,6 +187,8 @@ export async function updateExpense(
   const removedDocuments = existingExpense.documents.filter(
     (existingDoc) => !documents.some((doc) => doc.id === existingDoc.id),
   )
+  // Populated during THIS_AND_FUTURE schedule reflow when future rows are dropped.
+  const reflowDeletedDocumentUrls: string[] = []
   // S3 document deletions moved to post-transaction best-effort cleanup below
 
   // Handle items: delete stale, create/update incoming
@@ -229,6 +235,16 @@ export async function updateExpense(
   // write transaction, then apply the resulting snapshots while the series
   // row is locked. Newly materialized rows will use the updated series
   // template after this transaction commits.
+  const scheduleChanged =
+    isUpdateRecurrence &&
+    recurrence !== null &&
+    existingSeries !== null &&
+    !isScheduleConfigEqual(toRecurrenceConfig(existingSeries), recurrence)
+  const reflowAnchorDate =
+    preserveRecurringDates && existingExpense.expenseDate
+      ? existingExpense.expenseDate
+      : expense.expenseDate
+  const reflowAnchorSequence = existingExpense.recurrenceSequence ?? 1
   const materializedFutureRows =
     isUpdateRecurrence && options?.scope === 'THIS_AND_FUTURE'
       ? await prisma.expense.findMany({
@@ -239,9 +255,51 @@ export async function updateExpense(
             },
           },
           orderBy: { recurrenceSequence: 'asc' },
-          select: { id: true, expenseDate: true, recurrenceSequence: true },
+          select: {
+            id: true,
+            expenseDate: true,
+            recurrenceSequence: true,
+            title: true,
+            amount: true,
+            originalCurrency: true,
+            originalAmount: true,
+            conversionRate: true,
+            conversionSource: true,
+            documents: { select: { url: true } },
+            paidByList: { select: { ledgerParticipantId: true } },
+            paidFor: { select: { ledgerParticipantId: true } },
+            items: {
+              select: {
+                paidFor: { select: { ledgerParticipantId: true } },
+              },
+            },
+            itemizedRemainder: {
+              select: {
+                paidFor: { select: { ledgerParticipantId: true } },
+              },
+            },
+          },
         })
       : []
+  const expectedDatesByRowId = new Map<string, Date>()
+  const rowsToDeleteIds = new Set<string>()
+  if (scheduleChanged && recurrence) {
+    for (const row of materializedFutureRows) {
+      if (row.id === expenseId) continue
+      const seq = row.recurrenceSequence ?? reflowAnchorSequence
+      const expected = expectedOccurrenceDate(
+        reflowAnchorDate,
+        recurrence,
+        reflowAnchorSequence,
+        seq,
+      )
+      if (isOutsideTermination(recurrence, seq, expected)) {
+        rowsToDeleteIds.add(row.id)
+      } else {
+        expectedDatesByRowId.set(row.id, expected)
+      }
+    }
+  }
   const materializedConversions = new Map<
     string,
     Awaited<ReturnType<typeof resolveConversion>>
@@ -261,13 +319,16 @@ export async function updateExpense(
             }
           : undefined
     for (const row of materializedFutureRows) {
+      if (rowsToDeleteIds.has(row.id)) continue
+      const expenseDateForRate =
+        expectedDatesByRowId.get(row.id) ?? row.expenseDate
       materializedConversions.set(
         row.id,
         await resolveConversion(
           { amount: recurrenceTemplate.amount, conversion: conversionInput },
           {
             ledgerCurrency: group.ledger.currencyCode ?? null,
-            expenseDate: row.expenseDate,
+            expenseDate: expenseDateForRate,
           },
         ),
       )
@@ -562,7 +623,8 @@ export async function updateExpense(
             data: { recurringSeriesId: seriesId, recurrenceSequence: 1 },
           })
         } else if (options?.scope === 'THIS_AND_FUTURE') {
-          const anchorSequence = existingExpense.recurrenceSequence ?? 1
+          const anchorSequence = reflowAnchorSequence
+          const anchorDate = reflowAnchorDate
           // `occurrencesCreated` is authoritative and monotonic. Do not infer
           // progress from surviving expense rows: occurrence-only deletion can
           // leave sequence gaps, and this-and-future delete-only intentionally
@@ -572,39 +634,17 @@ export async function updateExpense(
             select: { occurrencesCreated: true, status: true },
           })
           if (!seriesProgress) throw new Error('Recurring series not found')
-          const latest = await tx.expense.findFirst({
-            where: { recurringSeriesId: existingSeries.id },
-            orderBy: { expenseDate: 'desc' },
-            select: { expenseDate: true },
-          })
           const maxSequence = Math.max(
             anchorSequence,
             seriesProgress.occurrencesCreated,
           )
-          let nextOrdinal = maxSequence - anchorSequence + 2
-          let nextOccurrenceDate = calculateRecurrenceDate(
-            expense.expenseDate,
-            recurrence.frequency,
-            recurrence.interval,
-            nextOrdinal,
-          )
-          while (
-            latest?.expenseDate &&
-            nextOccurrenceDate <= latest.expenseDate
-          ) {
-            nextOrdinal += 1
-            nextOccurrenceDate = calculateRecurrenceDate(
-              expense.expenseDate,
-              recurrence.frequency,
-              recurrence.interval,
-              nextOrdinal,
-            )
-          }
-          const completed =
-            (recurrence.end.type === 'COUNT' &&
-              maxSequence >= recurrence.end.count) ||
-            (recurrence.end.type === 'DATE' &&
-              nextOccurrenceDate > recurrence.end.endDate)
+          const { nextOrdinal, nextOccurrenceDate, completed } =
+            computeNextMaterializationCursor({
+              anchorDate,
+              anchorSequence,
+              maxSequence,
+              config: recurrence,
+            })
           const terminalStatus =
             seriesProgress.status === 'CANCELLED' ||
             seriesProgress.status === 'COMPLETED'
@@ -620,6 +660,17 @@ export async function updateExpense(
           // When the series is already terminal, only update template
           // fields and version — scheduling metadata must not change.
           const terminal = terminalStatus !== null
+          const catchUpBatch =
+            !terminal && scheduleChanged
+              ? buildCatchUpSeedAfterReflow({
+                  seriesId: existingSeries.id,
+                  anchorDate,
+                  nextOccurrenceDate,
+                  completed,
+                  config: recurrence,
+                  maxSequence,
+                })
+              : null
           await tx.recurringExpenseSeries.update({
             where: { id: existingSeries.id },
             data: {
@@ -636,7 +687,7 @@ export async function updateExpense(
                       recurrence.end.type === 'DATE'
                         ? recurrence.end.endDate
                         : null,
-                    anchorDate: expense.expenseDate,
+                    anchorDate,
                     anchorSequence,
                     occurrencesCreated: maxSequence,
                     nextOccurrenceDate,
@@ -646,12 +697,70 @@ export async function updateExpense(
               status: nextStatus,
               version: { increment: 1 },
               template,
-              catchUpBatch: null,
+              catchUpBatch: catchUpBatch ?? null,
             },
           })
-          const futureRowIds = materializedFutureRows
-            .filter((r) => r.id !== expenseId)
-            .map((r) => r.id)
+
+          // Schedule reflow: delete future rows outside the new termination.
+          if (!terminal && scheduleChanged && rowsToDeleteIds.size > 0) {
+            const toDelete = materializedFutureRows.filter((r) =>
+              rowsToDeleteIds.has(r.id),
+            )
+            for (const row of toDelete) {
+              const rowParticipants = new Set<string>()
+              for (const pb of row.paidByList)
+                rowParticipants.add(pb.ledgerParticipantId)
+              for (const pf of row.paidFor)
+                rowParticipants.add(pf.ledgerParticipantId)
+              for (const item of row.items) {
+                for (const ipf of item.paidFor)
+                  rowParticipants.add(ipf.ledgerParticipantId)
+              }
+              if (row.itemizedRemainder) {
+                for (const rpf of row.itemizedRemainder.paidFor)
+                  rowParticipants.add(rpf.ledgerParticipantId)
+              }
+              const rowDateStr = row.expenseDate.toISOString().slice(0, 10)
+              await logActivity(
+                groupId,
+                {
+                  type: 'EXPENSE_DELETED',
+                  actor: { type: 'ACCOUNT', id: actor.accountId },
+                  subject: { type: 'EXPENSE', id: row.id },
+                  data: buildExpenseActivityData({
+                    summary: row.title,
+                    title: row.title,
+                    amount: row.amount,
+                    currencyCode: row.originalCurrency ?? null,
+                    date: rowDateStr,
+                    affectedParticipants: [...rowParticipants],
+                    originalAmount: row.originalAmount ?? undefined,
+                    conversionRate: row.conversionRate
+                      ? Number(row.conversionRate)
+                      : undefined,
+                    conversionSource: row.conversionSource as
+                      'EXCHANGE' | 'CUSTOM' | null,
+                    ledgerCurrencyCode: group.ledger.currencyCode ?? null,
+                  }),
+                },
+                tx,
+              )
+              for (const doc of row.documents) {
+                reflowDeletedDocumentUrls.push(doc.url)
+              }
+            }
+            await tx.expense.deleteMany({
+              where: {
+                id: { in: [...rowsToDeleteIds] },
+                recurringSeriesId: existingSeries.id,
+              },
+            })
+          }
+
+          const survivingFutureRows = materializedFutureRows.filter(
+            (r) => r.id !== expenseId && !rowsToDeleteIds.has(r.id),
+          )
+          const futureRowIds = survivingFutureRows.map((r) => r.id)
           const futureRowSnapshots =
             futureRowIds.length > 0
               ? await tx.expense.findMany({
@@ -662,19 +771,37 @@ export async function updateExpense(
           const futureRowSnapshotMap = new Map(
             futureRowSnapshots.map((r) => [r.id, r]),
           )
-          // Series recurrence is identical on both sides of the per-row diff.
-          const shared = sharedRecurrenceFromSeries(existingSeries)
-          for (const row of materializedFutureRows) {
-            // The edited occurrence was already updated above (including its
-            // documents). Future rows receive the new template while retaining
-            // their own date, recurrence identity, and attachments.
-            if (row.id === expenseId) continue
+          // Series recurrence is identical on both sides of the per-row diff
+          // for template-only edits. On schedule reflow, surface date changes
+          // via expenseDate while keeping recurrence identity shared.
+          const shared = sharedRecurrenceFromSeries(
+            scheduleChanged
+              ? {
+                  ...existingSeries,
+                  frequency: recurrence.frequency,
+                  interval: recurrence.interval,
+                  endType: recurrence.end.type,
+                  occurrenceLimit:
+                    recurrence.end.type === 'COUNT'
+                      ? recurrence.end.count
+                      : null,
+                  endDate:
+                    recurrence.end.type === 'DATE'
+                      ? recurrence.end.endDate
+                      : null,
+                }
+              : existingSeries,
+          )
+          for (const row of survivingFutureRows) {
             const rowConv = materializedConversions.get(row.id) ?? conversion
-            await updateMaterializedOccurrence(tx, row, template, rowConv)
-            // Per-row diff: full snapshot before vs template + this row's
-            // resolved conversion after. Only log when the diff engine
-            // detects a meaningful change, and store its real
-            // changedFields/changes — never the hard-coded ['recurrence'].
+            const nextDate = expectedDatesByRowId.get(row.id)
+            await updateMaterializedOccurrence(
+              tx,
+              row,
+              template,
+              rowConv,
+              scheduleChanged && !terminal ? nextDate : undefined,
+            )
             const before = futureRowSnapshotMap.get(row.id)
             if (!before) continue
             const beforeShape = futureRowBeforeShape(before, shared)
@@ -683,6 +810,7 @@ export async function updateExpense(
               template,
               rowConv,
               shared,
+              expenseDate: scheduleChanged && !terminal ? nextDate : undefined,
             })
             const rowChangeSummary = getExpenseChangeSummary(
               beforeShape,
@@ -690,7 +818,9 @@ export async function updateExpense(
               changeCtx,
             )
             if (!rowChangeSummary) continue
-            const rowDateStr = row.expenseDate.toISOString().slice(0, 10)
+            const rowDateStr = (nextDate ?? row.expenseDate)
+              .toISOString()
+              .slice(0, 10)
             const rowParticipantIds = [
               ...getAffectedParticipantIds({
                 oldExpense: beforeShape,
@@ -753,6 +883,13 @@ export async function updateExpense(
       await deleteS3Object(doc.url)
     } catch (err) {
       console.warn(`[expenses] failed to delete S3 object ${doc.url}:`, err)
+    }
+  }
+  for (const url of reflowDeletedDocumentUrls) {
+    try {
+      await deleteS3Object(url)
+    } catch (err) {
+      console.warn(`[expenses] failed to delete S3 object ${url}:`, err)
     }
   }
 
@@ -831,8 +968,9 @@ export async function updateExpense(
 
   return updatedExpense
 }
-/** Replace the mutable template fields on a materialized occurrence. Dates,
- * recurrence identity, and documents intentionally remain untouched. */
+/** Replace the mutable template fields on a materialized occurrence.
+ * Recurrence identity and documents intentionally remain untouched.
+ * Pass `expenseDate` when a schedule reflow moves the occurrence. */
 async function updateMaterializedOccurrence(
   tx: Prisma.TransactionClient,
   row: { id: string },
@@ -844,11 +982,13 @@ async function updateMaterializedOccurrence(
     conversionRate: number | null
     conversionSource: 'EXCHANGE' | 'CUSTOM' | null
   },
+  expenseDate?: Date,
 ) {
   await tx.expenseItemizedRemainder.deleteMany({ where: { expenseId: row.id } })
   await tx.expense.update({
     where: { id: row.id },
     data: {
+      ...(expenseDate ? { expenseDate } : {}),
       amount: conversion.ledgerAmountMinor,
       originalAmount: conversion.originalAmount,
       originalCurrency: conversion.originalCurrency,

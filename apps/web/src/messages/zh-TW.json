@@ -623,7 +623,12 @@
         "decreaseOccurrences": "減少重複次數",
         "increaseOccurrences": "增加重複次數",
         "ruleSummary": "每{interval}{frequency} · {count} 次",
-        "ruleSummaryIndefinite": "每{interval}{frequency} · 無結束日期"
+        "ruleSummaryIndefinite": "每{interval}{frequency} · 無結束日期",
+        "scheduleChangeWarningTitle": "重複排程將變更",
+        "scheduleChangeWarning": "儲存後將重新安排此次及未來的重複項目。現有的未來支出可能會移至新日期或被移除，缺少的到期日可能會自動建立。",
+        "pastDateBackfillNote": "由於此支出始於過去，儲存後將自動建立截至今天的重複項目。",
+        "completedOccurrence": "已建立",
+        "upcomingOccurrence": "即將"
       },
       "recurringEditScopeOccurrence": "僅編輯此次重複項目",
       "recurringEditScopeFuture": "編輯此次及未來的重複項目"

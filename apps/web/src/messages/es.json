@@ -635,7 +635,12 @@
         "decreaseOccurrences": "Reducir repeticiones",
         "increaseOccurrences": "Aumentar repeticiones",
         "ruleSummary": "Cada {interval} {frequency} · {count} ocurrencias",
-        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sin fecha de finalización"
+        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sin fecha de finalización",
+        "scheduleChangeWarningTitle": "El calendario de recurrencia cambiará",
+        "scheduleChangeWarning": "Al guardar, se reprogramarán esta y las ocurrencias futuras. Los gastos futuros existentes pueden moverse a nuevas fechas o eliminarse, y las fechas de vencimiento que falten pueden crearse automáticamente.",
+        "pastDateBackfillNote": "Como este gasto comienza en el pasado, las ocurrencias hasta hoy se crearán automáticamente después de guardar.",
+        "completedOccurrence": "Creada",
+        "upcomingOccurrence": "Próxima"
       },
       "recurringEditScopeOccurrence": "Editar solo esta ocurrencia",
       "recurringEditScopeFuture": "Editar esta y las futuras ocurrencias"

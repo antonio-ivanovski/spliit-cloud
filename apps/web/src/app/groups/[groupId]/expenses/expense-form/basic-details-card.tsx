@@ -79,6 +79,8 @@ export function BasicDetailsCard(props: {
   isIncome: boolean
   isCreate: boolean
   recurrenceSequence?: number
+  editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
+  initialRecurrence?: ExpenseFormInputValues['recurrence']
   heading?: string
   /** Link-invite token carried in the URL for pending invitees. */
   linkInviteToken?: string
@@ -374,6 +376,8 @@ export function BasicDetailsCard(props: {
               form={form}
               readOnly={readOnly}
               currentSequence={props.recurrenceSequence}
+              editScope={props.editScope}
+              initialRecurrence={props.initialRecurrence}
             />
           </div>
         </section>

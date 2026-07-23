@@ -569,4 +569,405 @@ describe('Recurring bulk updates — real DB', () => {
     expect(typeof data.startDate).toBe('string')
     expect(typeof data.endDate).toBe('string')
   })
+
+  // ------------------------------------------------------------------------
+  // D3 — Schedule reflow on THIS_AND_FUTURE frequency change
+  // ------------------------------------------------------------------------
+  it('THIS_AND_FUTURE weekly→daily redates future rows and seeds catch-up', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-D3-daily-${runId}`,
+      ['Bob'],
+    )
+    const { seriesId, expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants,
+      title: 'Weekly to daily',
+      initialPaidFor: [
+        { participant: participants.Admin, shares: 1 },
+        { participant: participants.Bob, shares: 1 },
+      ],
+    })
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    const targetId = expenseIds[0]!
+    const pastIds = expenseIds.slice(0, 1)
+    const futureBefore = await prisma.expense.findMany({
+      where: { id: { in: expenseIds.slice(1) } },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, expenseDate: true, recurrenceSequence: true },
+    })
+    const target = await prisma.expense.findUniqueOrThrow({
+      where: { id: targetId },
+      select: { expenseDate: true, recurrenceSequence: true },
+    })
+
+    await makeCaller().expenses.update({
+      groupId,
+      expenseId: targetId,
+      scope: 'THIS_AND_FUTURE',
+      expense: {
+        title: 'Weekly to daily',
+        amount: 6000,
+        expenseDate: target.expenseDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 6000 }],
+        paidFor: [
+          { participant: participants.Admin, shares: 1 },
+          { participant: participants.Bob, shares: 1 },
+        ],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'DAILY',
+        recurrence: {
+          frequency: 'DAILY',
+          interval: 1,
+          end: { type: 'INDEFINITE' },
+        },
+      },
+    })
+
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(series.frequency).toBe('DAILY')
+    expect(series.interval).toBe(1)
+    expect(series.catchUpBatch).not.toBeNull()
+
+    const futureAfter = await prisma.expense.findMany({
+      where: { id: { in: futureBefore.map((r) => r.id) } },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, expenseDate: true, recurrenceSequence: true },
+    })
+    expect(futureAfter.length).toBe(futureBefore.length)
+    const anchorSeq = target.recurrenceSequence ?? 1
+    for (const row of futureAfter) {
+      const seq = row.recurrenceSequence ?? anchorSeq
+      const ordinal = seq - anchorSeq + 1
+      const expected = new Date(target.expenseDate)
+      expected.setUTCDate(expected.getUTCDate() + (ordinal - 1))
+      expect(row.expenseDate.toISOString().slice(0, 10)).toBe(
+        expected.toISOString().slice(0, 10),
+      )
+    }
+
+    // Past-before-anchor rows are untouched when editing a later occurrence.
+    // Here we edited the first occurrence, so only check the selected row kept
+    // its date.
+    const stillPast = await prisma.expense.findMany({
+      where: { id: { in: pastIds } },
+      select: { expenseDate: true },
+    })
+    expect(stillPast[0]!.expenseDate.toISOString().slice(0, 10)).toBe(
+      target.expenseDate.toISOString().slice(0, 10),
+    )
+  })
+
+  it('THIS_AND_FUTURE daily→weekly redates future rows without deleting in-band', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-D3-weekly-${runId}`,
+      ['Bob'],
+    )
+    const caller = makeCaller()
+    const pastDate = new Date()
+    pastDate.setUTCDate(pastDate.getUTCDate() - 5)
+    const created = await caller.expenses.create({
+      groupId,
+      expense: {
+        title: 'Daily to weekly',
+        amount: 3000,
+        expenseDate: pastDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 3000 }],
+        paidFor: [
+          { participant: participants.Admin, shares: 1 },
+          { participant: participants.Bob, shares: 1 },
+        ],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'DAILY',
+        // Keep COUNT high so catch-up through today leaves the series ACTIVE
+        // (terminal series intentionally skip schedule reflow).
+        recurrence: {
+          frequency: 'DAILY',
+          interval: 1,
+          end: { type: 'COUNT', count: 30 },
+        },
+      },
+    })
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    let series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: created.recurringSeriesId! },
+    })
+    while (
+      series.nextOccurrenceDate <= new Date() &&
+      series.status === 'ACTIVE'
+    ) {
+      await materializeRecurringExpense({
+        seriesId: series.id,
+        sequence: series.occurrencesCreated + 1,
+        occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+      })
+      series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+        where: { id: series.id },
+      })
+    }
+    expect(series.status).toBe('ACTIVE')
+    const rows = await prisma.expense.findMany({
+      where: { recurringSeriesId: series.id },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, expenseDate: true, recurrenceSequence: true },
+    })
+    expect(rows.length).toBeGreaterThanOrEqual(3)
+    const target = rows[0]!
+    const beforeCount = rows.length
+
+    await caller.expenses.update({
+      groupId,
+      expenseId: target.id,
+      scope: 'THIS_AND_FUTURE',
+      expense: {
+        title: 'Daily to weekly',
+        amount: 3000,
+        expenseDate: target.expenseDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 3000 }],
+        paidFor: [
+          { participant: participants.Admin, shares: 1 },
+          { participant: participants.Bob, shares: 1 },
+        ],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'WEEKLY',
+        recurrence: {
+          frequency: 'WEEKLY',
+          interval: 1,
+          end: { type: 'COUNT', count: 30 },
+        },
+      },
+    })
+
+    const after = await prisma.expense.findMany({
+      where: { recurringSeriesId: series.id },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, expenseDate: true, recurrenceSequence: true },
+    })
+    expect(after.length).toBe(beforeCount)
+    for (const row of after) {
+      const seq = row.recurrenceSequence ?? 1
+      const expected = new Date(target.expenseDate)
+      expected.setUTCDate(expected.getUTCDate() + (seq - 1) * 7)
+      expect(row.expenseDate.toISOString().slice(0, 10)).toBe(
+        expected.toISOString().slice(0, 10),
+      )
+    }
+  })
+
+  it('THIS_AND_FUTURE shortened COUNT deletes out-of-band future rows', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-D3-count-${runId}`,
+      ['Bob'],
+    )
+    const { seriesId, expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants,
+      title: 'Count truncate',
+      initialPaidFor: [
+        { participant: participants.Admin, shares: 1 },
+        { participant: participants.Bob, shares: 1 },
+      ],
+    })
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    const target = await prisma.expense.findUniqueOrThrow({
+      where: { id: expenseIds[0]! },
+      select: { id: true, expenseDate: true, recurrenceSequence: true },
+    })
+    const keepThrough = target.recurrenceSequence! + 1
+
+    await makeCaller().expenses.update({
+      groupId,
+      expenseId: target.id,
+      scope: 'THIS_AND_FUTURE',
+      expense: {
+        title: 'Count truncate',
+        amount: 6000,
+        expenseDate: target.expenseDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 6000 }],
+        paidFor: [
+          { participant: participants.Admin, shares: 1 },
+          { participant: participants.Bob, shares: 1 },
+        ],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'WEEKLY',
+        recurrence: {
+          frequency: 'WEEKLY',
+          interval: 1,
+          end: { type: 'COUNT', count: keepThrough },
+        },
+      },
+    })
+
+    const remaining = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { recurrenceSequence: true },
+    })
+    expect(
+      remaining.every((r) => (r.recurrenceSequence ?? 0) <= keepThrough),
+    ).toBe(true)
+    expect(remaining.some((r) => r.recurrenceSequence === keepThrough)).toBe(
+      true,
+    )
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(series.occurrenceLimit).toBe(keepThrough)
+  })
+
+  it('OCCURRENCE scope does not reflow the series schedule', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-D3-occ-${runId}`,
+      ['Bob'],
+    )
+    const { seriesId, expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants,
+      title: 'Occurrence only',
+      initialPaidFor: [
+        { participant: participants.Admin, shares: 1 },
+        { participant: participants.Bob, shares: 1 },
+      ],
+    })
+    const target = await prisma.expense.findUniqueOrThrow({
+      where: { id: expenseIds[0]! },
+      select: { id: true, expenseDate: true },
+    })
+    const beforeSeries = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    const beforeFuture = await prisma.expense.findMany({
+      where: { id: { in: expenseIds.slice(1) } },
+      select: { id: true, expenseDate: true },
+    })
+
+    await makeCaller().expenses.update({
+      groupId,
+      expenseId: target.id,
+      scope: 'OCCURRENCE',
+      expense: {
+        title: 'Occurrence only',
+        amount: 6000,
+        expenseDate: target.expenseDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 6000 }],
+        paidFor: [
+          { participant: participants.Admin, shares: 1 },
+          { participant: participants.Bob, shares: 1 },
+        ],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'DAILY',
+        recurrence: {
+          frequency: 'DAILY',
+          interval: 1,
+          end: { type: 'INDEFINITE' },
+        },
+      },
+    })
+
+    const afterSeries = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(afterSeries.frequency).toBe(beforeSeries.frequency)
+    expect(afterSeries.interval).toBe(beforeSeries.interval)
+    const afterFuture = await prisma.expense.findMany({
+      where: { id: { in: beforeFuture.map((r) => r.id) } },
+      select: { id: true, expenseDate: true },
+    })
+    for (const row of beforeFuture) {
+      const after = afterFuture.find((r) => r.id === row.id)!
+      expect(after.expenseDate.toISOString()).toBe(
+        row.expenseDate.toISOString(),
+      )
+    }
+  })
+
+  it('THIS_AND_FUTURE reflow leaves past-before-anchor rows untouched', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-D3-past-${runId}`,
+      ['Bob'],
+    )
+    const { seriesId, expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants,
+      title: 'Past untouched',
+      initialPaidFor: [
+        { participant: participants.Admin, shares: 1 },
+        { participant: participants.Bob, shares: 1 },
+      ],
+    })
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    const editTargetId = expenseIds[1]!
+    const pastRow = await prisma.expense.findUniqueOrThrow({
+      where: { id: expenseIds[0]! },
+      select: { id: true, expenseDate: true, title: true },
+    })
+    const editTarget = await prisma.expense.findUniqueOrThrow({
+      where: { id: editTargetId },
+      select: { expenseDate: true, recurrenceSequence: true },
+    })
+
+    await makeCaller().expenses.update({
+      groupId,
+      expenseId: editTargetId,
+      scope: 'THIS_AND_FUTURE',
+      expense: {
+        title: 'Past untouched',
+        amount: 6000,
+        expenseDate: editTarget.expenseDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 6000 }],
+        paidFor: [
+          { participant: participants.Admin, shares: 1 },
+          { participant: participants.Bob, shares: 1 },
+        ],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'DAILY',
+        recurrence: {
+          frequency: 'DAILY',
+          interval: 1,
+          end: { type: 'INDEFINITE' },
+        },
+      },
+    })
+
+    const stillPast = await prisma.expense.findUniqueOrThrow({
+      where: { id: pastRow.id },
+      select: { expenseDate: true, title: true },
+    })
+    expect(stillPast.expenseDate.toISOString()).toBe(
+      pastRow.expenseDate.toISOString(),
+    )
+    expect(stillPast.title).toBe(pastRow.title)
+
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(series.frequency).toBe('DAILY')
+    expect(series.anchorSequence).toBe(editTarget.recurrenceSequence)
+  })
 })

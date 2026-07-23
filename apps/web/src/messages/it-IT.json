@@ -635,7 +635,12 @@
         "decreaseOccurrences": "Diminuisci le occorrenze",
         "increaseOccurrences": "Aumenta le occorrenze",
         "ruleSummary": "Ogni {interval} {frequency} · {count} occorrenze",
-        "ruleSummaryIndefinite": "Ogni {interval} {frequency} · Senza data di fine"
+        "ruleSummaryIndefinite": "Ogni {interval} {frequency} · Senza data di fine",
+        "scheduleChangeWarningTitle": "Il calendario di ricorrenza cambierà",
+        "scheduleChangeWarning": "Salvando, questa occorrenza e quelle future verranno riprogrammate. Le spese future esistenti possono essere spostate a nuove date o rimosse, e le scadenze mancanti possono essere create automaticamente.",
+        "pastDateBackfillNote": "Poiché questa spesa inizia nel passato, le occorrenze fino a oggi verranno create automaticamente dopo il salvataggio.",
+        "completedOccurrence": "Creata",
+        "upcomingOccurrence": "Prossima"
       },
       "recurringEditScopeOccurrence": "Modifica solo questa occorrenza",
       "recurringEditScopeFuture": "Modifica questa e le occorrenze future"

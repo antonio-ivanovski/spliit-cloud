@@ -635,7 +635,12 @@
         "decreaseOccurrences": "Micșorează numărul de apariții",
         "increaseOccurrences": "Mărește numărul de apariții",
         "ruleSummary": "La fiecare {interval} {frequency} · {count} apariții",
-        "ruleSummaryIndefinite": "La fiecare {interval} {frequency} · Fără dată de sfârșit"
+        "ruleSummaryIndefinite": "La fiecare {interval} {frequency} · Fără dată de sfârșit",
+        "scheduleChangeWarningTitle": "Programul de recurență se va schimba",
+        "scheduleChangeWarning": "La salvare, această apariție și cele viitoare vor fi reprogramate. Cheltuielile viitoare existente pot fi mutate la date noi sau eliminate, iar datele scadente lipsă pot fi create automat.",
+        "pastDateBackfillNote": "Deoarece această cheltuială începe în trecut, aparițiile până astăzi vor fi create automat după salvare.",
+        "completedOccurrence": "Creată",
+        "upcomingOccurrence": "Viitoare"
       },
       "recurringEditScopeOccurrence": "Editarea doar a acestei apariții",
       "recurringEditScopeFuture": "Editarea acestei apariții și a celor viitoare"
