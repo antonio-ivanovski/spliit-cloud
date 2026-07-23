@@ -34,8 +34,9 @@ export const handlers: JobHandlers = {
         })
       }
       if (result.catchUpSummary) {
+        const summaryActivityId = `recurring-catchup-summary:${result.recurringSeriesId}:${result.catchUpSummary.startDate}:${result.catchUpSummary.endDate}`
         scheduleDefaultNotificationDispatch({
-          activityId: `recurring-catchup-summary:${result.recurringSeriesId}:${result.catchUpSummary.startDate}:${result.catchUpSummary.endDate}`,
+          activityId: summaryActivityId,
           type: 'RECURRING_EXPENSE_CREATED',
           groupId: result.groupId,
           actor: result.actor ?? { type: 'SYSTEM', id: 'system' },
@@ -47,6 +48,13 @@ export const handlers: JobHandlers = {
             startDate: result.catchUpSummary.startDate,
             endDate: result.catchUpSummary.endDate,
             affectedParticipants: result.catchUpSummary.affectedParticipants,
+            seriesId: result.catchUpSummary.seriesId,
+            frequency: result.catchUpSummary.frequency,
+            interval: result.catchUpSummary.interval,
+            endType: result.catchUpSummary.endType,
+            occurrenceLimit: result.catchUpSummary.occurrenceLimit,
+            seriesEndDate: result.catchUpSummary.seriesEndDate,
+            operation: 'create',
           },
           occurredAt: result.activityTime,
           includeActorAsRecipient: true,

@@ -803,4 +803,175 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
       expect(email.text).not.toMatch(/\d+ \(EUR/)
     })
   })
+
+  describe('recurring_expense_stopped (standalone)', () => {
+    it('includes full cadence+termination in the body and HTML recurrence line', async () => {
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
+      prismaMock.groupMember.findFirst.mockResolvedValue({
+        status: 'ACTIVE',
+        account: { id: 'acct-bob', email: 'bob@test.com', name: 'Bob' },
+      } as never)
+
+      await dispatcher.dispatch({
+        activity: {
+          activityId: 'act-stop',
+          type: 'RECURRING_EXPENSE_STOPPED',
+          groupId: 'grp-1',
+          actor: { type: 'ACCOUNT', id: 'acct-alice' },
+          subject: null,
+          data: {
+            kind: 'recurring_expense_stopped',
+            seriesId: 'series-1',
+            expenseId: 'exp-1',
+            title: 'Dinner',
+            frequency: 'MONTHLY',
+            interval: 2,
+            endType: 'COUNT',
+            occurrenceLimit: 12,
+            endDate: null,
+          },
+          occurredAt: new Date('2026-07-02T12:00:00Z'),
+        },
+        category: NotificationCategory.EXPENSE_CHANGED,
+        recipientAccountId: 'acct-bob',
+        channels: [NotificationChannel.EMAIL],
+      })
+
+      expect(sendEmailMock).toHaveBeenCalledTimes(1)
+      const email = sendEmailMock.mock.calls[0][0]
+      expect(email.subject).toContain('Recurring expense stopped')
+      expect(email.text).toContain('(Every 2 months, 12 total)')
+      expect(email.html).toContain('Repeats:')
+      expect(email.html).toContain('Every 2 months, 12 total')
+    })
+
+    it('renders DATE termination in the recurrence line', async () => {
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
+      prismaMock.groupMember.findFirst.mockResolvedValue({
+        status: 'ACTIVE',
+        account: { id: 'acct-bob', email: 'bob@test.com', name: 'Bob' },
+      } as never)
+
+      await dispatcher.dispatch({
+        activity: {
+          activityId: 'act-stop-2',
+          type: 'RECURRING_EXPENSE_STOPPED',
+          groupId: 'grp-1',
+          actor: { type: 'ACCOUNT', id: 'acct-alice' },
+          subject: null,
+          data: {
+            kind: 'recurring_expense_stopped',
+            seriesId: 'series-2',
+            title: 'Gym',
+            frequency: 'YEARLY',
+            interval: 1,
+            endType: 'DATE',
+            occurrenceLimit: null,
+            endDate: '2026-12-31',
+          },
+          occurredAt: new Date('2026-07-02T12:00:00Z'),
+        },
+        category: NotificationCategory.EXPENSE_CHANGED,
+        recipientAccountId: 'acct-bob',
+        channels: [NotificationChannel.EMAIL],
+      })
+
+      expect(sendEmailMock).toHaveBeenCalledTimes(1)
+      const email = sendEmailMock.mock.calls[0][0]
+      expect(email.html).toContain('Every year, until 2026-12-31')
+    })
+  })
+
+  describe('recurring_expense_summary', () => {
+    it('sends an email containing natural English cadence for the recurring summary', async () => {
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
+      prismaMock.groupMember.findFirst.mockResolvedValue({
+        status: 'ACTIVE',
+        account: { id: 'acct-bob', email: 'bob@test.com', name: 'Bob' },
+      } as never)
+
+      await dispatcher.dispatch({
+        activity: {
+          activityId: 'act-summary',
+          type: 'RECURRING_EXPENSE_CREATED',
+          groupId: 'grp-1',
+          actor: { type: 'ACCOUNT', id: 'acct-alice' },
+          subject: null,
+          data: {
+            kind: 'recurring_expense_summary',
+            title: 'Lunch',
+            count: 3,
+            startDate: '2026-07-01',
+            endDate: '2026-07-03',
+            frequency: 'MONTHLY',
+            interval: 2,
+            endType: 'COUNT',
+            occurrenceLimit: 12,
+            operation: 'create',
+          },
+          occurredAt: new Date('2026-07-02T12:00:00Z'),
+        },
+        category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+        recipientAccountId: 'acct-bob',
+        channels: [NotificationChannel.EMAIL],
+      })
+
+      expect(sendEmailMock).toHaveBeenCalledTimes(1)
+      const email = sendEmailMock.mock.calls[0][0]
+      expect(email.subject).toContain('3 recurring expenses caught up')
+      expect(email.text).toContain('(Every 2 months, 12 total)')
+      expect(email.html).toContain('Every 2 months, 12 total')
+    })
+  })
+
+  describe('single recurring_create with recurrence metadata', () => {
+    it('renders the Repeats line for RECURRING_EXPENSE_CREATED with recurrence metadata', async () => {
+      prismaMock.expense.findUnique.mockResolvedValue(makeExpenseRow() as never)
+      prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+        makeParticipant('lp-alice'),
+        makeParticipant('lp-bob', { email: 'bob@test.com' }),
+      ] as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-alice',
+        name: 'Alice',
+      } as never)
+
+      await dispatcher.dispatch({
+        activity: buildEvent({
+          type: 'RECURRING_EXPENSE_CREATED',
+          data: {
+            kind: 'expense',
+            title: 'Dinner',
+            amount: 4500,
+            currencyCode: 'EUR',
+            date: '2026-07-02',
+            recurrence: {
+              seriesId: 'series-1',
+              frequency: 'MONTHLY',
+              interval: 2,
+              endType: 'COUNT',
+              occurrenceLimit: 12,
+              endDate: null,
+            },
+          },
+        }),
+        category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+        recipientAccountId: 'acct-bob',
+        channels: [NotificationChannel.EMAIL],
+      })
+
+      const email = sendEmailMock.mock.calls[0][0]
+      expect(email.html).toContain('Repeats:')
+      expect(email.html).toContain('Every 2 months, 12 total')
+    })
+  })
 })

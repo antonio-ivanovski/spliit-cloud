@@ -199,7 +199,11 @@ export class ExpenseActivityHandler implements ActivityHandler {
       event.type === 'RECURRING_EXPENSE_CREATED' &&
       parsed?.kind === 'recurring_expense_summary' &&
       participants.length === 0
-        ? [...(await activeGroupAccounts(event.groupId)), ...actor]
+        ? // If the summary's affected participants produce no eligible
+          // accounts (all inactive or unlinked), notify only the actor.
+          // Do not broadcast to every group member — that would leak
+          // expense details to uninvolved participants.
+          [...actor]
         : [...participants, ...actor]
     return dedupeRecipients(event, recipients, category)
   }

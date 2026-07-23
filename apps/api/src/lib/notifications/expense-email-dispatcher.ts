@@ -1,6 +1,4 @@
 import { prisma } from '@spliit/db'
-import type { Expense } from '@spliit/domain'
-import { getCurrency } from '@spliit/domain'
 import { parseActivityData } from '@spliit/domain/activities'
 import {
   getNotificationCategoryForActivity,
@@ -8,7 +6,6 @@ import {
   notificationCategoryFamily,
   NotificationCategoryFamily,
 } from '@spliit/domain/notifications'
-import { getAffectedParticipantIds } from '../api/expense-activity-diff'
 import { getWebBaseUrl } from '../auth/urls'
 import { isPlaceholderEmail } from '../invitations/display'
 import { sendEmail } from '../mail/send'
@@ -16,6 +13,23 @@ import {
   renderExpenseActivityEmail,
   type ExpenseActivityInputAny,
 } from '../mail/templates/expense-activity'
+import {
+  buildRecurringSummaryContent,
+  formatRecurrenceRule,
+  type SummaryOperation,
+} from './expense-notification-content'
+import {
+  ensureAccountIncludedAsParticipant,
+  formatExpenseAmount,
+  formatExpenseDualAmount,
+  loadActivityChannelContext,
+  loadActivityGroupAndActor,
+  loadActivityRecipientMember,
+  resolveCreatedExpenseRecipientIds,
+  resolveGroupDisplayName,
+  type ExpenseNotificationGroup,
+  type ExpenseNotificationParticipant,
+} from './expense-notification-shared'
 import type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
@@ -28,87 +42,10 @@ const EXPENSE_EVENT_TYPES = new Set([
   'RECURRING_EXPENSE_CREATED',
   'EXPENSE_UPDATED',
   'EXPENSE_DELETED',
+  'RECURRING_EXPENSE_STOPPED',
 ])
 const IMPORT_EVENT_TYPES = new Set(['EXPENSES_IMPORTED'])
 const CATEGORY_BULK_EVENT_TYPES = new Set(['EXPENSE_CATEGORIES_BULK_UPDATED'])
-
-function formatAmount(cents: number, currencyCode?: string | null): string {
-  const currency = currencyCode ? getCurrency(currencyCode) : undefined
-  const digits = currency?.decimal_digits ?? 2
-  const formatted = (cents / 100).toFixed(digits)
-  return currencyCode ? `${currencyCode} ${formatted}` : formatted
-}
-
-function formatDualAmount(
-  amount: number,
-  currencyCode: string | null | undefined,
-  originalAmount: number | undefined,
-  ledgerCurrencyCode: string | null | undefined,
-): string {
-  if (
-    originalAmount != null &&
-    currencyCode &&
-    ledgerCurrencyCode &&
-    ledgerCurrencyCode !== currencyCode
-  ) {
-    const original = formatAmount(originalAmount, currencyCode)
-    const converted = formatAmount(amount, ledgerCurrencyCode)
-    return `${original} (${converted})`
-  }
-  // When currencyCode is absent (same-currency expense where
-  // originalCurrency is null), fall back to ledgerCurrencyCode so the
-  // email shows "EUR 102.22" instead of bare "10222.00".
-  return formatAmount(amount, currencyCode ?? ledgerCurrencyCode)
-}
-
-function resolveGroupDisplayName(
-  groupType: string,
-  groupName: string,
-  members: Array<{ account: { id: string; name: string } | null }>,
-  recipientAccountId: string | undefined,
-  pendingTemporaryName: string | undefined,
-): string {
-  if (groupType !== 'FRIEND') return groupName
-  if (recipientAccountId) {
-    const peer = members.find(
-      (m) => m.account && m.account.id !== recipientAccountId,
-    )
-    if (peer?.account?.name)
-      return `your friend ledger with ${peer.account.name}`
-  }
-  if (pendingTemporaryName)
-    return `your friend ledger with ${pendingTemporaryName}`
-  return 'your friend ledger'
-}
-
-const GROUP_SELECT = {
-  name: true,
-  groupType: true,
-  members: {
-    where: { status: 'ACTIVE' },
-    select: { account: { select: { id: true, name: true } } },
-    take: 2,
-  },
-  invitations: {
-    where: { status: 'PENDING' },
-    select: { temporaryName: true },
-    take: 1,
-    orderBy: { createdAt: 'desc' as const },
-  },
-} as const
-
-type Participant = {
-  groupMember: {
-    status: string
-    account: { id: string; email: string } | null
-  } | null
-}
-type Group = {
-  groupType: string
-  name: string
-  members: Array<{ account: { id: string; name: string } | null }>
-  invitations: Array<{ temporaryName: string | null }>
-}
 
 export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   async dispatch(
@@ -139,11 +76,17 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     if (!EXPENSE_EVENT_TYPES.has(event.type)) return
 
     const parsed = parseActivityData(event.data)
-    if (
-      event.type === 'RECURRING_EXPENSE_CREATED' &&
-      parsed?.kind === 'recurring_expense_summary'
-    ) {
+    if (parsed?.kind === 'recurring_expense_summary') {
       await this.dispatchRecurringSummary(event, recipientAccountId, parsed)
+      return
+    }
+    // Standalone recurrence stop — send a deletion-style notification
+    // scoped to the template participants, excluding the actor.
+    if (
+      event.type === 'RECURRING_EXPENSE_STOPPED' &&
+      parsed?.kind === 'recurring_expense_stopped'
+    ) {
+      await this.dispatchRecurrenceStopped(event, recipientAccountId, parsed)
       return
     }
     if (!parsed || parsed.kind !== 'expense') return
@@ -165,85 +108,25 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     // expense). For UPDATED and DELETED we use the pre-computed union
     // (old + new) from the activity payload so removed participants
     // who are still active members still get notified.
-    let participantIds: string[]
-    if (
+    const participantIds =
       event.type === 'EXPENSE_CREATED' ||
       event.type === 'RECURRING_EXPENSE_CREATED'
-    ) {
-      if (!event.subject?.id) return
-      const raw = await prisma.expense.findUnique({
-        where: { id: event.subject.id },
-        select: {
-          paidByList: { select: { ledgerParticipantId: true, shares: true } },
-          paidFor: { select: { ledgerParticipantId: true, shares: true } },
-          items: {
-            select: {
-              id: true,
-              paidFor: { select: { ledgerParticipantId: true, shares: true } },
-            },
-          },
-          itemizedRemainder: {
-            select: {
-              splitMode: true,
-              paidFor: { select: { ledgerParticipantId: true, shares: true } },
-            },
-          },
-        },
-      })
-      if (!raw) return
-      const expenseForDiff = {
-        paidByList: raw.paidByList.map((pb) => ({
-          participant: pb.ledgerParticipantId,
-          shares: pb.shares,
-        })),
-        paidFor: raw.paidFor.map((pf) => ({
-          participant: pf.ledgerParticipantId,
-          shares: pf.shares,
-        })),
-        items: (raw.items ?? []).map((item) => ({
-          id: item.id,
-          paidFor: item.paidFor.map((pf) => ({
-            participant: pf.ledgerParticipantId,
-            shares: pf.shares,
-          })),
-        })),
-        itemizedRemainder: raw.itemizedRemainder
-          ? {
-              splitMode: raw.itemizedRemainder.splitMode,
-              paidFor: raw.itemizedRemainder.paidFor.map((pf) => ({
-                participant: pf.ledgerParticipantId,
-                shares: pf.shares,
-              })),
-            }
-          : undefined,
-      } as unknown as Expense
-      participantIds = [
-        ...getAffectedParticipantIds({ newExpense: expenseForDiff }),
-      ]
-    } else {
-      participantIds = affectedParticipants ?? []
-    }
+        ? event.subject?.id
+          ? await resolveCreatedExpenseRecipientIds(event.subject.id)
+          : []
+        : affectedParticipants ?? []
 
     if (participantIds.length === 0 && !event.includeActorAsRecipient) return
 
-    const [participants, group, actorAccount] = await Promise.all([
-      prisma.ledgerParticipant.findMany({
-        where: { id: { in: participantIds } },
-        include: {
-          groupMember: { include: { account: true } },
-        },
-      }),
-      prisma.group.findUnique({
-        where: { id: event.groupId },
-        select: GROUP_SELECT,
-      }),
-      event.actor?.type === 'ACCOUNT'
-        ? prisma.account.findUnique({
-            where: { id: event.actor.id },
-            select: { name: true },
-          })
-        : Promise.resolve(null),
-    ])
+    const {
+      participants: initialParticipants,
+      group,
+      actorName: fetchedActorName,
+    } = await loadActivityChannelContext({
+      groupId: event.groupId,
+      participantIds,
+      actor: event.actor,
+    })
 
     if (!group) return
 
@@ -255,32 +138,15 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         ? event.actor.id
         : undefined
     const targetedAccountId = recipientAccountId ?? creatorAccountId
-    if (targetedAccountId && event.includeActorAsRecipient) {
-      const hasRecipient = participants.some(
-        (participant) =>
-          participant.groupMember?.account?.id === targetedAccountId,
-      )
-      if (!hasRecipient) {
-        const member = await prisma.groupMember.findFirst({
-          where: {
-            groupId: event.groupId,
-            accountId: targetedAccountId,
-            status: 'ACTIVE',
-          },
-          select: {
-            status: true,
-            account: { select: { id: true, email: true, name: true } },
-          },
+    const participants = targetedAccountId
+      ? await ensureAccountIncludedAsParticipant({
+          groupId: event.groupId,
+          participants: initialParticipants,
+          accountId: targetedAccountId,
         })
-        if (member?.account) {
-          participants.push({
-            groupMember: { status: member.status, account: member.account },
-          } as (typeof participants)[number])
-        }
-      }
-    }
+      : initialParticipants
 
-    const actorName = actorAccount?.name ?? 'Someone'
+    const actorName = fetchedActorName
 
     const expenseUrl =
       event.type !== 'EXPENSE_DELETED' && event.subject?.id
@@ -289,7 +155,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
 
     const amountStr =
       amount != null
-        ? formatDualAmount(
+        ? formatExpenseDualAmount(
             amount,
             currencyCode,
             originalAmount,
@@ -301,7 +167,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       EXPENSE_CREATED: `Expense "${title}"${amountStr ? ` (${amountStr})` : ''} was added by ${actorName} to`,
       RECURRING_EXPENSE_CREATED: `Recurring expense "${title}"${amountStr ? ` (${amountStr})` : ''} was created by ${actorName} in`,
       EXPENSE_UPDATED: `Expense "${title}" was updated by ${actorName} in`,
-      EXPENSE_DELETED: `Expense "${title}"${amountStr ? ` (${amountStr})` : ''} was removed by ${actorName} from`,
+      EXPENSE_DELETED: `Expense "${title}"${amountStr ? ` (${amountStr})` : ''} was removed by ${actorName}${parsed.stopped ? ' and the recurrence was stopped' : ''} from`,
     }
     const preamble = preambles[event.type]
 
@@ -313,7 +179,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       EXPENSE_UPDATED: (dn) =>
         `[Spliit Cloud] Expense "${title}" was updated by ${actorName} in ${dn}`,
       EXPENSE_DELETED: (dn) =>
-        `[Spliit Cloud] Expense "${title}" was removed by ${actorName} from ${dn}`,
+        `[Spliit Cloud] Expense "${title}" was removed${parsed.stopped ? ' and the recurrence was stopped' : ''} by ${actorName} from ${dn}`,
     }
     const buildSubject = subjectForType[event.type]
     const buildText = (displayName: string) => {
@@ -381,6 +247,11 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         date: baseTemplate.date,
         changedFields: changedFieldsForTemplate,
         expenseUrl: baseTemplate.expenseUrl,
+        recurrence:
+          parsed?.kind === 'expense' && parsed.recurrence
+            ? formatRecurrenceRule(parsed.recurrence)
+            : undefined,
+        stopped: parsed?.kind === 'expense' ? parsed.stopped : undefined,
       }),
       recipientAccountId,
       category,
@@ -403,30 +274,16 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     const participantIds = parsed.affectedParticipants ?? []
     if (participantIds.length === 0) return
 
-    const [participants, group, actorAccount] = await Promise.all([
-      prisma.ledgerParticipant.findMany({
-        where: { id: { in: participantIds } },
-        include: {
-          groupMember: { include: { account: true } },
-        },
-      }),
-      prisma.group.findUnique({
-        where: { id: event.groupId },
-        select: GROUP_SELECT,
-      }),
-      event.actor?.type === 'ACCOUNT'
-        ? prisma.account.findUnique({
-            where: { id: event.actor.id },
-            select: { name: true },
-          })
-        : Promise.resolve(null),
-    ])
+    const { participants, group, actorName } = await loadActivityChannelContext({
+      groupId: event.groupId,
+      participantIds,
+      actor: event.actor,
+    })
 
     if (!group) return
 
-    const actorName = actorAccount?.name ?? 'Someone'
     const totalStr =
-      totalAmount != null ? formatAmount(totalAmount, currencyCode) : null
+      totalAmount != null ? formatExpenseAmount(totalAmount, currencyCode) : null
 
     const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
     const brandBaseUrl = getWebBaseUrl()
@@ -480,33 +337,26 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     const parsed = parseActivityData(event.data)
     if (!parsed || parsed.kind !== 'expense_categories_bulk_updated') return
 
-    const [group, actorAccount, members] = await Promise.all([
-      prisma.group.findUnique({
-        where: { id: event.groupId },
-        select: GROUP_SELECT,
-      }),
-      event.actor?.type === 'ACCOUNT'
-        ? prisma.account.findUnique({
-            where: { id: event.actor.id },
-            select: { name: true },
-          })
-        : Promise.resolve(null),
-      prisma.groupMember.findMany({
-        where: {
-          groupId: event.groupId,
-          status: 'ACTIVE',
-          ...(recipientAccountId ? { accountId: recipientAccountId } : {}),
-        },
-        select: { account: { select: { id: true, email: true } } },
-      }),
-    ])
+    const { group, actorName } = await loadActivityGroupAndActor({
+      groupId: event.groupId,
+      actor: event.actor,
+    })
     if (!group) return
 
-    const actorName = actorAccount?.name ?? 'Someone'
     const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
-    const participants: Participant[] = members.map((member) => ({
-      groupMember: { status: 'ACTIVE', account: member.account },
-    }))
+    const members = await prisma.groupMember.findMany({
+      where: {
+        groupId: event.groupId,
+        status: 'ACTIVE',
+        ...(recipientAccountId ? { accountId: recipientAccountId } : {}),
+      },
+      select: { account: { select: { id: true, email: true } } },
+    })
+    const participants: ExpenseNotificationParticipant[] = members.map(
+      (member) => ({
+        groupMember: { status: 'ACTIVE', account: member.account },
+      }),
+    )
 
     await this.sendToActiveMembers({
       participants,
@@ -544,31 +394,19 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     >,
   ): Promise<void> {
     if (!recipientAccountId) return
-    const [group, actorAccount, member] = await Promise.all([
-      prisma.group.findUnique({
-        where: { id: event.groupId },
-        select: GROUP_SELECT,
+    const operation: SummaryOperation = parsed.operation
+    const [groupAndActor, member] = await Promise.all([
+      loadActivityGroupAndActor({
+        groupId: event.groupId,
+        actor: event.actor,
       }),
-      event.actor?.type === 'ACCOUNT'
-        ? prisma.account.findUnique({
-            where: { id: event.actor.id },
-            select: { name: true },
-          })
-        : Promise.resolve(null),
-      prisma.groupMember.findFirst({
-        where: {
-          groupId: event.groupId,
-          accountId: recipientAccountId,
-          status: 'ACTIVE',
-        },
-        select: {
-          status: true,
-          account: { select: { id: true, email: true, name: true } },
-        },
+      loadActivityRecipientMember({
+        groupId: event.groupId,
+        recipientAccountId,
       }),
     ])
-    if (!group || !member?.account) return
-    const actorName = actorAccount?.name ?? 'Someone'
+    const { group, actorName } = groupAndActor
+    if (!group || !member) return
     const displayName = resolveGroupDisplayName(
       group.groupType,
       group.name,
@@ -576,21 +414,37 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       recipientAccountId,
       group.invitations[0]?.temporaryName ?? undefined,
     )
-    const noun = parsed.count === 1 ? 'expense' : 'expenses'
-    const title = parsed.title ? ` "${parsed.title}"` : ''
+    const recurrenceMeta =
+      parsed.frequency && parsed.interval
+        ? {
+            seriesId: parsed.seriesId ?? '',
+            frequency: parsed.frequency,
+            interval: parsed.interval,
+            endType: parsed.endType ?? 'NEVER',
+            occurrenceLimit: parsed.occurrenceLimit ?? null,
+            endDate: parsed.seriesEndDate ?? null,
+          }
+        : null
+    const content = buildRecurringSummaryContent({
+      operation,
+      actorName,
+      displayName,
+      count: parsed.count,
+      title: ('title' in parsed ? parsed.title : null) as string | null,
+      startDate: parsed.startDate,
+      endDate: parsed.endDate,
+      stopped: parsed.stopped,
+      recurrenceMeta,
+    })
     const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
     await this.sendToActiveMembers({
-      participants: [
-        { groupMember: { status: member.status, account: member.account } },
-      ],
+      participants: [{ groupMember: member }],
       actor: event.actor,
       includeActorAsRecipient: true,
       activityId: event.activityId,
       group,
-      buildSubject: () =>
-        `[Spliit Cloud] ${parsed.count} recurring ${noun} caught up in ${displayName}`,
-      buildText: () =>
-        `${actorName} added ${parsed.count} recurring ${noun}${title} in ${displayName} for ${parsed.startDate} through ${parsed.endDate}.\n\nView the group here:\n${groupUrl}`,
+      buildSubject: () => content.subject,
+      buildText: () => `${content.body}\n\nView the group here:\n${groupUrl}`,
       templateFor: (): ExpenseActivityInputAny => ({
         kind: 'recurring_expense_summary',
         subject: '',
@@ -598,23 +452,102 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         brandBaseUrl: getWebBaseUrl(),
         groupDisplayName: displayName,
         actorName,
-        title: parsed.title ?? null,
+        title: ('title' in parsed ? parsed.title : null) as string | null,
         count: parsed.count,
         startDate: parsed.startDate,
         endDate: parsed.endDate,
         groupUrl,
+        operation,
+        stopped: parsed.stopped,
+        recurrence: recurrenceMeta
+          ? formatRecurrenceRule(recurrenceMeta)
+          : undefined,
       }),
       recipientAccountId,
-      category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+      category:
+        operation === 'create'
+          ? NotificationCategory.RECURRING_EXPENSE_CREATED
+          : NotificationCategory.EXPENSE_CHANGED,
+    })
+  }
+
+  private async dispatchRecurrenceStopped(
+    event: ActivityNotificationEvent,
+    recipientAccountId: string | undefined,
+    parsed: Extract<
+      NonNullable<ReturnType<typeof parseActivityData>>,
+      { kind: 'recurring_expense_stopped' }
+    >,
+  ): Promise<void> {
+    if (!recipientAccountId) return
+    const [groupAndActor, member] = await Promise.all([
+      loadActivityGroupAndActor({
+        groupId: event.groupId,
+        actor: event.actor,
+      }),
+      loadActivityRecipientMember({
+        groupId: event.groupId,
+        recipientAccountId,
+      }),
+    ])
+    const { group, actorName } = groupAndActor
+    if (!group || !member) return
+    const displayName = resolveGroupDisplayName(
+      group.groupType,
+      group.name,
+      group.members,
+      recipientAccountId,
+      group.invitations[0]?.temporaryName ?? undefined,
+    )
+    const title = parsed.title ? ` "${parsed.title}"` : ''
+    const recurrenceText =
+      parsed.frequency && parsed.interval
+        ? formatRecurrenceRule({
+            seriesId: parsed.seriesId,
+            frequency: parsed.frequency,
+            interval: parsed.interval,
+            endType: parsed.endType,
+            occurrenceLimit: parsed.occurrenceLimit ?? null,
+            endDate: parsed.endDate ?? null,
+          })
+        : undefined
+    const recurrenceDesc = recurrenceText ? ` (${recurrenceText})` : ''
+    const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
+    await this.sendToActiveMembers({
+      participants: [{ groupMember: member }],
+      actor: event.actor,
+      includeActorAsRecipient: false,
+      activityId: event.activityId,
+      group,
+      buildSubject: () =>
+        `[Spliit Cloud] Recurring expense stopped in ${displayName}`,
+      buildText: () =>
+        `${actorName} stopped the recurring expense${title}${recurrenceDesc} in ${displayName}.`,
+      templateFor: (): ExpenseActivityInputAny => ({
+        kind: 'expense',
+        subject: '',
+        text: '',
+        eventType: 'RECURRING_EXPENSE_STOPPED' as const,
+        brandBaseUrl: getWebBaseUrl(),
+        groupDisplayName: displayName,
+        actorName,
+        title: parsed.title ?? 'Recurring expense',
+        amountStr: null,
+        date: null,
+        expenseUrl: groupUrl,
+        recurrence: recurrenceText,
+      }),
+      recipientAccountId,
+      category: NotificationCategory.EXPENSE_CHANGED,
     })
   }
 
   private async sendToActiveMembers(args: {
-    participants: Array<Participant>
+    participants: Array<ExpenseNotificationParticipant>
     actor: ActivityNotificationEvent['actor']
     includeActorAsRecipient?: boolean
     activityId: string
-    group: Group
+    group: ExpenseNotificationGroup
     buildSubject: (displayName: string) => string
     buildText: (displayName: string) => string
     templateFor: (displayName: string) => ExpenseActivityInputAny
