@@ -511,6 +511,70 @@ describe('deleteExpense', () => {
     })
   })
 
+  it('rejects stopping a non-recurring expense', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.expense.findFirst.mockResolvedValue({
+      id: 'exp-3',
+      title: 'Dinner',
+      categoryId: 'general',
+      recurringSeriesId: null,
+      recurrenceSequence: null,
+      recurringSeries: null,
+    } as never)
+
+    await expect(
+      stopRecurrence('grp-1', 'exp-3', { accountId: 'acct-1' }),
+    ).rejects.toThrow('Expense is not part of a recurring series')
+
+    expect(prismaMock.recurringExpenseSeries.update).not.toHaveBeenCalled()
+    expect(prismaMock.activity.create).not.toHaveBeenCalled()
+  })
+
+  it('rejects stopping an invalid expense ID', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.expense.findFirst.mockResolvedValue(null)
+
+    await expect(
+      stopRecurrence('grp-1', 'exp-missing', { accountId: 'acct-1' }),
+    ).rejects.toThrow('Invalid expense ID: exp-missing')
+
+    expect(prismaMock.recurringExpenseSeries.update).not.toHaveBeenCalled()
+  })
+
+  it('does not update or log activity for an already terminal recurrence', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+    } as never)
+    prismaMock.expense.findFirst.mockResolvedValue({
+      id: 'exp-3',
+      title: 'Rent',
+      categoryId: 'general',
+      recurringSeriesId: 'series-1',
+      recurrenceSequence: null,
+      recurringSeries: {
+        frequency: 'MONTHLY',
+        interval: 1,
+        endType: 'INDEFINITE',
+        occurrenceLimit: null,
+        endDate: null,
+      },
+    } as never)
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      status: 'CANCELLED',
+    } as never)
+
+    await expect(
+      stopRecurrence('grp-1', 'exp-3', { accountId: 'acct-1' }),
+    ).resolves.toBeUndefined()
+
+    expect(prismaMock.recurringExpenseSeries.update).not.toHaveBeenCalled()
+    expect(prismaMock.activity.create).not.toHaveBeenCalled()
+  })
+
   it('supports stopping a recurrence without deleting materialized expenses', async () => {
     const recurringExpense = {
       id: 'exp-3',

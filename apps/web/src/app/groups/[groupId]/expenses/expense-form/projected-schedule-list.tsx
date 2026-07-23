@@ -81,14 +81,11 @@ export function ProjectedScheduleList({
   const visibleItems =
     virtualItems.length > 0
       ? virtualItems
-      : Array.from(
-          { length: Math.min(rowCount, 8) },
-          (_, index) => ({
-            index,
-            start: index * OCCURRENCE_TIMELINE_ROW_HEIGHT,
-            size: OCCURRENCE_TIMELINE_ROW_HEIGHT,
-          }),
-        )
+      : Array.from({ length: Math.min(rowCount, 8) }, (_, index) => ({
+          index,
+          start: index * OCCURRENCE_TIMELINE_ROW_HEIGHT,
+          size: OCCURRENCE_TIMELINE_ROW_HEIGHT,
+        }))
 
   useEffect(() => {
     const last = virtualItems.at(-1)?.index

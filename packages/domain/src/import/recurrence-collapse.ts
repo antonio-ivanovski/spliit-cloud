@@ -1,8 +1,5 @@
 import { calculateRecurrenceDate } from '../recurring-expenses'
-import {
-  legacyRuleToRecurrence,
-  type LegacyRecurrenceRule,
-} from './recurrence'
+import { legacyRuleToRecurrence, type LegacyRecurrenceRule } from './recurrence'
 import type { RecurrenceConfig, RecurrenceFrequency } from './types'
 
 /** Minimal expense shape used to collapse legacy recurring rows into series. */

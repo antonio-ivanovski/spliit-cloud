@@ -597,9 +597,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                               completedLabel={t(
                                 'recurrence.completedOccurrence',
                               )}
-                              upcomingLabel={t(
-                                'recurrence.upcomingOccurrence',
-                              )}
+                              upcomingLabel={t('recurrence.upcomingOccurrence')}
                               showTopConnector={index > 0}
                               showBottomConnector={
                                 index < previewEntries.length - 1 || hasViewAll

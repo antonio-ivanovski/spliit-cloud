@@ -970,4 +970,396 @@ describe('Recurring bulk updates — real DB', () => {
     expect(series.frequency).toBe('DAILY')
     expect(series.anchorSequence).toBe(editTarget.recurrenceSequence)
   })
+
+  // ------------------------------------------------------------------------
+  // DS1 — THIS_AND_FUTURE delete + stopRecurrence cancels series and
+  //       marks the summary notification payload as stopped.
+  // ------------------------------------------------------------------------
+  it('THIS_AND_FUTURE delete with stopRecurrence cancels series and marks payload stopped', async () => {
+    const { groupId, ledgerId, participants } =
+      await createGroupWithParticipants(`RB-DS1-${runId}`, [])
+    const witnessLpId = await addActiveMember(groupId, ledgerId)
+    const witnesses = { ...participants, Witness: witnessLpId }
+    const { seriesId, expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants: witnesses,
+      title: 'Series to stop',
+      initialPaidFor: [
+        { participant: witnesses.Admin, shares: 1 },
+        { participant: witnesses.Witness, shares: 1 },
+      ],
+    })
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    const targetId = expenseIds[1]!
+    const targetRow = await prisma.expense.findUniqueOrThrow({
+      where: { id: targetId },
+      select: { recurrenceSequence: true },
+    })
+    const seq = targetRow.recurrenceSequence!
+
+    const rowsBefore = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, recurrenceSequence: true },
+    })
+
+    const capture = new CapturingDispatcher()
+    setDefaultActivityNotificationDispatchers([capture])
+
+    await makeCaller().expenses.delete({
+      groupId,
+      expenseId: targetId,
+      scope: 'THIS_AND_FUTURE',
+      stopRecurrence: true,
+    })
+
+    await waitForScheduledNotificationDispatchesForTest()
+
+    const rowsAfter = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, recurrenceSequence: true },
+    })
+
+    const earlierRows = rowsBefore.filter((r) => r.recurrenceSequence! < seq)
+    const laterRows = rowsBefore.filter((r) => r.recurrenceSequence! >= seq)
+    expect(rowsAfter).toHaveLength(earlierRows.length)
+    for (const earlier of earlierRows) {
+      expect(rowsAfter.find((r) => r.id === earlier.id)).toBeDefined()
+    }
+    for (const later of laterRows) {
+      expect(rowsAfter.find((r) => r.id === later.id)).toBeUndefined()
+    }
+
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(series.status).toBe('CANCELLED')
+
+    const summaryEvents = capture.events.filter(
+      (e) => e.type === 'EXPENSE_DELETED' && e.subject === null,
+    )
+    expect(summaryEvents).toHaveLength(1)
+    const data = summaryEvents[0]!.data as Record<string, unknown>
+    expect(data.kind).toBe('recurring_expense_summary')
+    expect(data.stopped).toBe(true)
+    expect(data.frequency).toBe('WEEKLY')
+    expect(data.interval).toBe(1)
+    expect(data.endType).toBe('INDEFINITE')
+    expect(data.operation).toBe('delete')
+  })
+
+  // ------------------------------------------------------------------------
+  // DS2 — OCCURRENCE-scope delete removes only the target row, leaving
+  //       the series active and occurrencesCreated monotonic.
+  // ------------------------------------------------------------------------
+  it('OCCURRENCE scope delete preserves series and other rows', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-DS2-${runId}`,
+      ['Bob'],
+    )
+    const { seriesId, expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants,
+      title: 'Occurrence delete',
+      initialPaidFor: [
+        { participant: participants.Admin, shares: 1 },
+        { participant: participants.Bob, shares: 1 },
+      ],
+    })
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    const targetId = expenseIds[1]!
+    const beforeSeries = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    const beforeRows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, recurrenceSequence: true, recurringSeriesId: true },
+    })
+
+    await makeCaller().expenses.delete({
+      groupId,
+      expenseId: targetId,
+      scope: 'OCCURRENCE',
+    })
+
+    const deletedRow = await prisma.expense.findUnique({
+      where: { id: targetId },
+    })
+    expect(deletedRow).toBeNull()
+
+    const afterRows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true, recurrenceSequence: true, recurringSeriesId: true },
+    })
+    expect(afterRows).toHaveLength(beforeRows.length - 1)
+    for (const after of afterRows) {
+      const before = beforeRows.find((r) => r.id === after.id)!
+      expect(after.recurringSeriesId).toBe(before.recurringSeriesId)
+      expect(after.recurrenceSequence).toBe(before.recurrenceSequence)
+    }
+
+    const afterSeries = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(afterSeries.status).toBe('ACTIVE')
+    expect(afterSeries.occurrencesCreated).toBe(beforeSeries.occurrencesCreated)
+  })
+
+  // ------------------------------------------------------------------------
+  // DS3 — Standalone stopRecurrence keeps materialized rows, flips the
+  //       series to CANCELLED, logs RECURRING_EXPENSE_STOPPED, and blocks
+  //       further materialization.
+  // ------------------------------------------------------------------------
+  it('standalone stopRecurrence preserves expenses and logs RECURRING_EXPENSE_STOPPED', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-DS3-${runId}`,
+      ['Bob'],
+    )
+    const { seriesId, expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants,
+      title: 'Stop only',
+      initialPaidFor: [
+        { participant: participants.Admin, shares: 1 },
+        { participant: participants.Bob, shares: 1 },
+      ],
+    })
+    expect(expenseIds.length).toBeGreaterThanOrEqual(2)
+    const targetId = expenseIds[0]!
+    const seriesBefore = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+
+    await makeCaller().expenses.stopRecurrence({
+      groupId,
+      expenseId: targetId,
+    })
+
+    const afterRows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      select: { id: true },
+    })
+    expect(afterRows).toHaveLength(expenseIds.length)
+    for (const id of expenseIds) {
+      expect(afterRows.find((r) => r.id === id)).toBeDefined()
+    }
+
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(series.status).toBe('CANCELLED')
+
+    const activity = await prisma.activity.findFirst({
+      where: {
+        type: 'RECURRING_EXPENSE_STOPPED',
+        subjectId: targetId,
+      },
+    })
+    expect(activity).not.toBeNull()
+    const activityData = activity!.data as Record<string, unknown>
+    expect(activityData.kind).toBe('recurring_expense_stopped')
+    expect(activityData.seriesId).toBe(seriesId)
+
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    const result = await materializeRecurringExpense({
+      seriesId: seriesBefore.id,
+      sequence: seriesBefore.occurrencesCreated + 1,
+      occurrenceDate: seriesBefore.nextOccurrenceDate
+        .toISOString()
+        .slice(0, 10),
+    })
+    expect(result.created).toBe(false)
+  })
+
+  // ------------------------------------------------------------------------
+  // DS4 — Natural COUNT completion fires at the occurrence limit and
+  //       blocks further materialization.
+  // ------------------------------------------------------------------------
+  it('natural COUNT completion stops materialization at the limit', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-DS4-${runId}`,
+      ['Bob'],
+    )
+    const caller = makeCaller()
+    const pastDate = new Date()
+    pastDate.setUTCDate(pastDate.getUTCDate() - 14)
+    const created = await caller.expenses.create({
+      groupId,
+      expense: {
+        title: 'Count complete',
+        amount: 6000,
+        expenseDate: pastDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 6000 }],
+        paidFor: [{ participant: participants.Admin, shares: 1 }],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'WEEKLY',
+        recurrence: {
+          frequency: 'WEEKLY',
+          interval: 1,
+          end: { type: 'COUNT', count: 2 },
+        },
+      },
+    })
+    const seriesId = created.recurringSeriesId!
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    let series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    while (
+      series.status === 'ACTIVE' &&
+      series.nextOccurrenceDate <= new Date()
+    ) {
+      await materializeRecurringExpense({
+        seriesId: series.id,
+        sequence: series.occurrencesCreated + 1,
+        occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+      })
+      series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+        where: { id: series.id },
+      })
+    }
+    expect(series.status).toBe('COMPLETED')
+
+    const rows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+    })
+    expect(rows).toHaveLength(2)
+
+    const next = await materializeRecurringExpense({
+      seriesId,
+      sequence: series.occurrencesCreated + 1,
+      occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+    })
+    expect(next.created).toBe(false)
+  })
+
+  // ------------------------------------------------------------------------
+  // DS5 — Natural DATE completion fires once the next occurrence falls
+  //       past endDate; no rows are materialized beyond the end date.
+  // ------------------------------------------------------------------------
+  it('natural DATE completion stops materialization at endDate', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-DS5-${runId}`,
+      ['Bob'],
+    )
+    const caller = makeCaller()
+    const anchorDate = new Date()
+    anchorDate.setUTCDate(anchorDate.getUTCDate() - 14)
+    const endDate = new Date()
+    endDate.setUTCDate(endDate.getUTCDate() - 7)
+    const created = await caller.expenses.create({
+      groupId,
+      expense: {
+        title: 'Date complete',
+        amount: 6000,
+        expenseDate: anchorDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participants.Admin, shares: 6000 }],
+        paidFor: [{ participant: participants.Admin, shares: 1 }],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'WEEKLY',
+        recurrence: {
+          frequency: 'WEEKLY',
+          interval: 1,
+          end: { type: 'DATE', endDate: endDate.toISOString() },
+        },
+      },
+    })
+    const seriesId = created.recurringSeriesId!
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    let series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    while (
+      series.status === 'ACTIVE' &&
+      series.nextOccurrenceDate <= new Date()
+    ) {
+      await materializeRecurringExpense({
+        seriesId: series.id,
+        sequence: series.occurrencesCreated + 1,
+        occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+      })
+      series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+        where: { id: series.id },
+      })
+    }
+    expect(series.status).toBe('COMPLETED')
+
+    const rows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { expenseDate: true },
+    })
+    expect(rows.length).toBeGreaterThanOrEqual(1)
+    for (const row of rows) {
+      expect(row.expenseDate.getTime() <= endDate.getTime()).toBe(true)
+    }
+
+    const next = await materializeRecurringExpense({
+      seriesId,
+      sequence: series.occurrencesCreated + 1,
+      occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+    })
+    expect(next.created).toBe(false)
+  })
+
+  // ------------------------------------------------------------------------
+  // DS6 — Series navigation skips a deleted middle occurrence and never
+  //       returns the deleted id from previousExpenseId/nextExpenseId.
+  // ------------------------------------------------------------------------
+  it('series navigation skips deleted middle occurrence', async () => {
+    const { groupId, participants } = await createGroupWithParticipants(
+      `RB-DS6-${runId}`,
+      ['Bob'],
+    )
+    const { expenseIds } = await seedSeriesWithFutureOccurrences({
+      groupId,
+      participants,
+      title: 'Navigation skip',
+      initialPaidFor: [
+        { participant: participants.Admin, shares: 1 },
+        { participant: participants.Bob, shares: 1 },
+      ],
+    })
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    const firstId = expenseIds[0]!
+    const middleId = expenseIds[1]!
+    const lastId = expenseIds[expenseIds.length - 1]!
+
+    await makeCaller().expenses.delete({
+      groupId,
+      expenseId: middleId,
+      scope: 'OCCURRENCE',
+    })
+
+    const firstAfter = await makeCaller().expenses.get({
+      groupId,
+      expenseId: firstId,
+    })
+    expect(firstAfter.expense.previousExpenseId).toBeNull()
+    expect(firstAfter.expense.nextExpenseId).not.toBe(middleId)
+    expect(firstAfter.expense.nextExpenseId).toBe(lastId)
+
+    const lastAfter = await makeCaller().expenses.get({
+      groupId,
+      expenseId: lastId,
+    })
+    expect(lastAfter.expense.previousExpenseId).not.toBe(middleId)
+    expect(lastAfter.expense.previousExpenseId).toBe(firstId)
+    expect(lastAfter.expense.nextExpenseId).toBeNull()
+  })
 })

@@ -15,9 +15,7 @@ const NODE_COLUMN_CLASS = 'w-10'
 const NODE_CENTER_LEFT = 'left-5'
 
 export type OccurrenceTimelineOrientation =
-  | 'vertical'
-  | 'horizontal'
-  | 'responsive'
+  'vertical' | 'horizontal' | 'responsive'
 
 export type OccurrenceTimelineStatus = 'current' | 'completed' | 'upcoming'
 

@@ -103,4 +103,80 @@ describe('RecurringActionsMenu', () => {
     await user.click(screen.getByRole('button', { name: /stop recurrence/i }))
     await waitFor(() => expect(onStop).toHaveBeenCalledTimes(1))
   })
+
+  it('hides stop-related actions when the series is CANCELLED', async () => {
+    mockDesktopMediaQuery()
+    const { user } = render(
+      <RecurringActionsMenu
+        onEdit={vi.fn()}
+        onDelete={vi.fn().mockResolvedValue(undefined)}
+        onStop={vi.fn().mockResolvedValue(undefined)}
+        seriesStatus="CANCELLED"
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /recurring actions/i }))
+
+    expect(
+      screen.queryByRole('button', { name: /^stop recurrence$/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', {
+        name: /delete this and following occurrences and stop recurrence/i,
+      }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /delete only this occurrence/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /edit this occurrence/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /edit this and future occurrences/i }),
+    ).toBeInTheDocument()
+    const deleteThisAndFuture = screen.getAllByRole('button', {
+      name: /delete this and following occurrences/i,
+    })
+    expect(deleteThisAndFuture.length).toBeGreaterThan(0)
+    await user.click(deleteThisAndFuture[0])
+    expect(screen.getByText(/recurrence will continue/i)).toBeInTheDocument()
+  })
+
+  it('hides stop-related actions when the series is COMPLETED', async () => {
+    mockDesktopMediaQuery()
+    const { user } = render(
+      <RecurringActionsMenu
+        onEdit={vi.fn()}
+        onDelete={vi.fn().mockResolvedValue(undefined)}
+        onStop={vi.fn().mockResolvedValue(undefined)}
+        seriesStatus="COMPLETED"
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /recurring actions/i }))
+
+    expect(
+      screen.queryByRole('button', { name: /^stop recurrence$/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', {
+        name: /delete this and following occurrences and stop recurrence/i,
+      }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /delete only this occurrence/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /edit this occurrence/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /edit this and future occurrences/i }),
+    ).toBeInTheDocument()
+    const deleteThisAndFuture = screen.getAllByRole('button', {
+      name: /delete this and following occurrences/i,
+    })
+    expect(deleteThisAndFuture.length).toBeGreaterThan(0)
+    await user.click(deleteThisAndFuture[0])
+    expect(screen.getByText(/recurrence will continue/i)).toBeInTheDocument()
+  })
 })
