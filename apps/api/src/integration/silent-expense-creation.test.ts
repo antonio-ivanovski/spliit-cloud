@@ -135,6 +135,45 @@ describe('Silent expense creation — activity + notification', () => {
     }
   }
 
+  function utcDateOffset(days: number) {
+    const now = new Date()
+    return new Date(
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() + days,
+      ),
+    )
+  }
+
+  async function createDailyRecurringSeries(
+    groupId: string,
+    ledgerId: string,
+    adminLp: string,
+    title: string,
+    anchorDate: Date,
+  ) {
+    await makeCaller().expenses.create({
+      groupId,
+      expense: {
+        title,
+        amount: 1000,
+        expenseDate: anchorDate.toISOString(),
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: adminLp, shares: 1000 }],
+        paidFor: [{ participant: adminLp, shares: 1 }],
+        isReimbursement: false,
+        documents: [],
+        recurrenceRule: 'DAILY',
+      },
+    })
+    return prisma.recurringExpenseSeries.findFirstOrThrow({
+      where: { ledgerId, template: { path: ['title'], equals: title } },
+    })
+  }
+
   // -------------------------------------------------------------------
   // 1. Archive with force=true — one activity + notification per leg
   // -------------------------------------------------------------------
@@ -368,5 +407,87 @@ describe('Silent expense creation — activity + notification', () => {
     expect(propagated.amount).toBe(1200)
     expect(propagated.expenseDate).toEqual(installments[1]!.expenseDate)
     expect(propagated.documents).toEqual([])
+  })
+
+  it('persists the opening UTC cutoff for a catch-up batch', async () => {
+    const { groupId, ledgerId, adminLp } = await createGroup(
+      `Recur-Cutoff-Open-${runId}`,
+    )
+    const anchorDate = utcDateOffset(-3)
+    const series = await createDailyRecurringSeries(
+      groupId,
+      ledgerId,
+      adminLp,
+      'Daily cutoff open',
+      anchorDate,
+    )
+    await prisma.recurringExpenseSeries.update({
+      where: { id: series.id },
+      data: { catchUpBatch: null },
+    })
+
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    await materializeRecurringExpense({
+      seriesId: series.id,
+      sequence: series.occurrencesCreated + 1,
+      occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+    })
+
+    const updated = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: series.id },
+    })
+    expect(updated.catchUpBatch).toMatchObject({
+      startDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+      count: 1,
+      dueThrough: utcDateOffset(0).toISOString().slice(0, 10),
+    })
+  })
+
+  it('finalizes a catch-up batch at its persisted cutoff', async () => {
+    const { groupId, ledgerId, adminLp } = await createGroup(
+      `Recur-Cutoff-Finalize-${runId}`,
+    )
+    const anchorDate = utcDateOffset(-2)
+    const series = await createDailyRecurringSeries(
+      groupId,
+      ledgerId,
+      adminLp,
+      'Daily cutoff finalize',
+      anchorDate,
+    )
+    const occurrenceDate = series.nextOccurrenceDate.toISOString().slice(0, 10)
+    await prisma.recurringExpenseSeries.update({
+      where: { id: series.id },
+      data: {
+        catchUpBatch: {
+          id: `recurring-catchup:${series.id}:${anchorDate.toISOString().slice(0, 10)}`,
+          startDate: anchorDate.toISOString().slice(0, 10),
+          count: 1,
+          dueThrough: occurrenceDate,
+        },
+      },
+    })
+
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    const result = await materializeRecurringExpense({
+      seriesId: series.id,
+      sequence: series.occurrencesCreated + 1,
+      occurrenceDate,
+    })
+
+    const updated = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: series.id },
+    })
+    expect(updated.nextOccurrenceDate.toISOString().slice(0, 10)).toBe(
+      utcDateOffset(0).toISOString().slice(0, 10),
+    )
+    expect(updated.catchUpBatch).toBeNull()
+    expect(result.catchUpSummary).toMatchObject({
+      count: 2,
+      startDate: anchorDate.toISOString().slice(0, 10),
+      endDate: occurrenceDate,
+    })
   })
 })

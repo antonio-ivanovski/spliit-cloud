@@ -1,0 +1,309 @@
+import { prisma, RecurringExpenseSeriesStatus, type Prisma } from '@spliit/db'
+import {
+  calculateRecurrenceDate,
+  type RecurrenceConfig,
+  type RecurringExpenseTemplate,
+} from '@spliit/domain'
+import {
+  bossTransactionDb,
+  hasDeadLetteredMaterialization,
+  JOB_NAMES,
+  env as jobsEnv,
+  materializationSingletonKey,
+  sendJob,
+  type SpliitBoss,
+} from '@spliit/jobs'
+import { getApiBoss } from './boss'
+import {
+  initialSeriesCompleted,
+  recurrenceJobStartAfter,
+  toSeriesFields,
+} from './template'
+
+/** Enqueue through a transaction-bound pg-boss adapter, preserving atomicity. */
+export async function enqueueMaterialization(
+  tx: Prisma.TransactionClient,
+  payload: { seriesId: string; sequence: number; occurrenceDate: Date },
+  existingBoss?: SpliitBoss,
+) {
+  if (!jobsEnv.JOBS_ENABLED) return null
+  const boss = existingBoss ?? (await getApiBoss())
+  return sendJob(
+    boss,
+    JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE,
+    {
+      seriesId: payload.seriesId,
+      sequence: payload.sequence,
+      occurrenceDate: payload.occurrenceDate.toISOString().slice(0, 10),
+    },
+    {
+      deadLetter: `${JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE}.dead-letter`,
+      startAfter: recurrenceJobStartAfter(payload.occurrenceDate),
+      singletonKey: materializationSingletonKey(payload),
+      db: bossTransactionDb(tx),
+    },
+  )
+}
+
+export async function createSeriesForExpense(args: {
+  tx: Prisma.TransactionClient
+  seriesId: string
+  ledgerId: string
+  creatorAccountId: string
+  anchorDate: Date
+  config: RecurrenceConfig
+  template: RecurringExpenseTemplate
+  boss?: SpliitBoss
+  /** Seed a catch-up batch when past-dated creation makes multiple
+   * occurrences immediately due. The worker appends later occurrences
+   * and emits one combined summary instead of per-occurrence fan-out. */
+  catchUpBatch?: {
+    id: string
+    startDate: string
+    count: number
+    mode: 'INITIAL_CREATION'
+    dueThrough?: string
+  }
+}) {
+  const nextDate = calculateRecurrenceDate(
+    args.anchorDate,
+    args.config.frequency,
+    args.config.interval,
+    2,
+  )
+  const fields = toSeriesFields(args.config)
+  const completed = initialSeriesCompleted(fields, args.anchorDate, nextDate)
+  const series = await args.tx.recurringExpenseSeries.create({
+    data: {
+      id: args.seriesId,
+      ledgerId: args.ledgerId,
+      creatorAccountId: args.creatorAccountId,
+      frequency: fields.frequency,
+      interval: fields.interval,
+      anchorDate: args.anchorDate,
+      nextOccurrenceDate: nextDate,
+      nextOccurrenceOrdinal: 2,
+      endType: fields.endType,
+      occurrenceLimit: fields.occurrenceLimit,
+      endDate: fields.endDate,
+      occurrencesCreated: 1,
+      status: completed
+        ? RecurringExpenseSeriesStatus.COMPLETED
+        : RecurringExpenseSeriesStatus.ACTIVE,
+      template: args.template,
+      ...(args.catchUpBatch
+        ? {
+            catchUpBatch: args.catchUpBatch as unknown as Prisma.InputJsonValue,
+          }
+        : {}),
+    },
+  })
+  if (!completed) {
+    await enqueueMaterialization(
+      args.tx,
+      {
+        seriesId: series.id,
+        sequence: 2,
+        occurrenceDate: nextDate,
+      },
+      args.boss,
+    )
+  }
+  return series
+}
+export async function reconcileDueRecurringExpenses(
+  boss: SpliitBoss,
+  options: { cursor?: string } = {},
+) {
+  const pageSize = 250
+  const enqueueBatchSize = 25
+  const pausedGroups = await prisma.recurringExpenseSeries.findMany({
+    where: {
+      status: RecurringExpenseSeriesStatus.PAUSED,
+      ledger: { group: { archived: false } },
+    },
+    select: { ledger: { select: { group: { select: { id: true } } } } },
+  })
+  const pausedGroupIds = new Set<string>()
+  for (const row of Array.isArray(pausedGroups) ? pausedGroups : []) {
+    if (row.ledger.group) pausedGroupIds.add(row.ledger.group.id)
+  }
+  for (const groupId of pausedGroupIds) {
+    await resumeRecurringExpenseSeries(groupId, boss)
+  }
+  const today = new Date()
+  const due = await prisma.recurringExpenseSeries.findMany({
+    where: {
+      status: RecurringExpenseSeriesStatus.ACTIVE,
+      nextOccurrenceDate: { lte: today },
+      ledger: { group: { archived: false } },
+    },
+    ...(options.cursor ? { cursor: { id: options.cursor }, skip: 1 } : {}),
+    take: pageSize,
+    orderBy: { id: 'asc' },
+    select: { id: true, occurrencesCreated: true, nextOccurrenceDate: true },
+  })
+  for (let index = 0; index < due.length; index += enqueueBatchSize) {
+    const batch = due.slice(index, index + enqueueBatchSize)
+    await Promise.all(
+      batch.map(async (series) => {
+        const sequence = series.occurrencesCreated + 1
+        const payload = {
+          seriesId: series.id,
+          sequence,
+          occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+        }
+        if (await hasDeadLetteredMaterialization(boss, payload)) return
+        await sendJob(boss, JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE, payload, {
+          singletonKey: materializationSingletonKey(payload),
+          startAfter: recurrenceJobStartAfter(series.nextOccurrenceDate),
+        })
+      }),
+    )
+  }
+  if (due.length === pageSize) {
+    const cursor = due[due.length - 1]?.id
+    if (cursor) {
+      await sendJob(
+        boss,
+        JOB_NAMES.RECONCILE_RECURRING_EXPENSES,
+        { cursor },
+        { singletonKey: `recurring-expense-reconciliation:${cursor}` },
+      )
+    }
+  }
+  return due.length
+}
+
+/** Pause/resume hooks used by group archive mutations. Skipped archive dates
+ * are not counted as occurrences; the anchor is moved to the resumed date so
+ * the next created row remains the next sequence number. */
+export async function pauseRecurringExpenseSeries(groupId: string) {
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { ledgerId: true, archived: true },
+  })
+  if (!group?.ledgerId || !group.archived) return 0
+  return prisma.recurringExpenseSeries.updateMany({
+    where: {
+      ledgerId: group.ledgerId,
+      status: RecurringExpenseSeriesStatus.ACTIVE,
+    },
+    data: {
+      status: RecurringExpenseSeriesStatus.PAUSED,
+      version: { increment: 1 },
+    },
+  })
+}
+
+export async function resumeRecurringExpenseSeries(
+  groupId: string,
+  existingBoss?: SpliitBoss,
+) {
+  const today = new Date()
+  // Resolve the enqueue client before opening the transaction. When jobs are
+  // disabled, keep the database state authoritative and let reconciliation
+  // enqueue the occurrence once workers are enabled again.
+  const boss = jobsEnv.JOBS_ENABLED
+    ? (existingBoss ?? (await getApiBoss()))
+    : undefined
+
+  return prisma.$transaction(async (tx) => {
+    // Archive and resume use the same Group -> Series lock order. The group
+    // is re-read under the lock so a concurrent re-archive cannot leave an
+    // ACTIVE series behind.
+    await tx.$queryRaw`SELECT "id" FROM "Group" WHERE "id" = ${groupId} FOR UPDATE`
+    const group = await tx.group.findUnique({
+      where: { id: groupId },
+      select: { ledgerId: true, archived: true },
+    })
+    if (!group?.ledgerId || group.archived) return 0
+
+    const pausedResult = await tx.recurringExpenseSeries.findMany({
+      where: {
+        ledgerId: group.ledgerId,
+        status: RecurringExpenseSeriesStatus.PAUSED,
+      },
+      select: { id: true },
+      orderBy: { id: 'asc' },
+    })
+    const paused = Array.isArray(pausedResult) ? pausedResult : []
+    let resumed = 0
+    for (const candidate of paused) {
+      await tx.$queryRaw`SELECT "id" FROM "RecurringExpenseSeries" WHERE "id" = ${candidate.id} FOR UPDATE`
+      const series = await tx.recurringExpenseSeries.findUnique({
+        where: { id: candidate.id },
+      })
+      if (!series || series.status !== RecurringExpenseSeriesStatus.PAUSED)
+        continue
+
+      let ordinal = Math.max(1, series.nextOccurrenceOrdinal)
+      let next = calculateRecurrenceDate(
+        series.anchorDate,
+        series.frequency,
+        series.interval,
+        ordinal,
+      )
+      while (next <= today) {
+        ordinal += 1
+        next = calculateRecurrenceDate(
+          series.anchorDate,
+          series.frequency,
+          series.interval,
+          ordinal,
+        )
+      }
+      if (
+        series.endType === 'DATE' &&
+        series.endDate &&
+        next > series.endDate
+      ) {
+        await tx.recurringExpenseSeries.update({
+          where: { id: series.id },
+          data: {
+            status: RecurringExpenseSeriesStatus.COMPLETED,
+            version: { increment: 1 },
+          },
+        })
+        continue
+      }
+      if (
+        series.endType === 'COUNT' &&
+        series.occurrenceLimit !== null &&
+        series.occurrencesCreated >= series.occurrenceLimit
+      ) {
+        await tx.recurringExpenseSeries.update({
+          where: { id: series.id },
+          data: {
+            status: RecurringExpenseSeriesStatus.COMPLETED,
+            version: { increment: 1 },
+          },
+        })
+        continue
+      }
+      if (next > today) {
+        const sequence = series.occurrencesCreated + 1
+        await tx.recurringExpenseSeries.update({
+          where: { id: series.id },
+          data: {
+            status: RecurringExpenseSeriesStatus.ACTIVE,
+            nextOccurrenceDate: next,
+            nextOccurrenceOrdinal: ordinal,
+            version: { increment: 1 },
+          },
+        })
+        await enqueueMaterialization(
+          tx,
+          {
+            seriesId: series.id,
+            sequence,
+            occurrenceDate: next,
+          },
+          boss,
+        )
+        resumed++
+      }
+    }
+    return resumed
+  })
+}

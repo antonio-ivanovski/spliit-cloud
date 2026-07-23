@@ -21,6 +21,6 @@ export const stopRecurrenceProcedure = protectedProcedure
         message: 'This group is archived and expenses cannot be modified',
       })
     }
-    await stopRecurrence(groupId, expenseId)
+    await stopRecurrence(groupId, expenseId, { accountId: ctx.auth.user.id })
     return {}
   })

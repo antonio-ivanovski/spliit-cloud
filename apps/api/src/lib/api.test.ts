@@ -487,6 +487,8 @@ describe('deleteExpense', () => {
     prismaMock.expense.findFirst
       .mockResolvedValueOnce(recurringExpense as never)
       .mockResolvedValue(null)
+    // Snapshot query for future rows before deleteMany.
+    prismaMock.expense.findMany.mockResolvedValue([recurringExpense] as never)
     prismaMock.expense.deleteMany.mockResolvedValue({ count: 2 } as never)
 
     await deleteExpense(
@@ -552,9 +554,20 @@ describe('deleteExpense', () => {
       .mockResolvedValue(null)
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       status: 'ACTIVE',
+      frequency: 'MONTHLY',
+      interval: 1,
+      endType: 'INDEFINITE',
+      occurrenceLimit: null,
+      endDate: null,
+      template: {
+        paidByList: [],
+        paidFor: [{ ledgerParticipantId: 'lp-1', shares: 1 }],
+        items: [],
+        itemizedRemainder: null,
+      },
     } as never)
 
-    await stopRecurrence('grp-1', 'exp-3')
+    await stopRecurrence('grp-1', 'exp-3', { accountId: 'acct-1' })
 
     expect(prismaMock.expense.deleteMany).not.toHaveBeenCalled()
     expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith({
@@ -565,6 +578,14 @@ describe('deleteExpense', () => {
         catchUpBatch: null,
       },
     })
+    // A RECURRING_EXPENSE_STOPPED activity must be logged.
+    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: 'RECURRING_EXPENSE_STOPPED',
+        }),
+      }),
+    )
   })
 })
 

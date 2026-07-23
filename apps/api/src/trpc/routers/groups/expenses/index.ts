@@ -6,12 +6,16 @@ import { deleteGroupExpenseProcedure } from './delete.procedure'
 import { getGroupExpenseProcedure } from './get.procedure'
 import { listGroupExpensesProcedure } from './list.procedure'
 import { listRecurringExpenseSeriesProcedure } from './series-list.procedure'
+import { seriesProgressProcedure } from './series-progress.procedure'
 import { stopRecurrenceProcedure } from './stopRecurrence.procedure'
 import { updateGroupExpenseProcedure } from './update.procedure'
 
 export const groupExpensesRouter = createTRPCRouter({
   list: listGroupExpensesProcedure,
   series: listRecurringExpenseSeriesProcedure,
+  /** Per-series progress used by the web client to poll after creating
+   * a past-dated series. Returns null when the series is not in the group. */
+  seriesProgress: seriesProgressProcedure,
   get: getGroupExpenseProcedure,
   /** Currencies actually used by the group's expenses, for driving the UI filter. */
   commonCurrencies: commonCurrenciesProcedure,
