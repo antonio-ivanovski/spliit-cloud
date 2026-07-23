@@ -88,7 +88,7 @@ export function SeriesListDialog({
       <ResponsiveDialogContent className="max-w-lg">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2">
-            <RecurringBadge />
+            <RecurringBadge status={series?.status} />
             {t('title')}
           </ResponsiveDialogTitle>
           <ResponsiveDialogDescription>

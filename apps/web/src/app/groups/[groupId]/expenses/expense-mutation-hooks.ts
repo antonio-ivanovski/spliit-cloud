@@ -1,24 +1,48 @@
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
-import type { AppRouterOutput } from '@spliit/api/router'
-import type { InfiniteData } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 
-type ExpenseListPage = AppRouterOutput['groups']['expenses']['list']
-type ExpenseListData = InfiniteData<ExpenseListPage, number | null>
+/** Mirrors `getRecurringSeriesProgress`'s return shape. Kept inline so the
+ * web package doesn't depend on @trpc/server; the procedure is the
+ * authoritative source. */
+type SeriesProgress = {
+  seriesId: string
+  status: string
+  occurrencesCreated: number
+  nextOccurrenceDate: string
+  dueThrough: string | null
+  pending: boolean
+} | null
+
+/** Options bag for invalidating a single group's dependent queries after an
+ * expense mutation. Pass `financial: false` when the mutation changes no
+ * amounts (e.g. stopping a schedule) so balance/leave/revoke previews are
+ * not refetched. */
+type InvalidateExpenseOptions = {
+  groupId: string
+  expenseId?: string
+  financial?: boolean
+}
+
+const CATCH_UP_POLL_INTERVAL_MS = 1500
+const CATCH_UP_POLL_TIMEOUT_MS = 30_000
 
 function useInvalidateExpenseDependencies(linkInviteToken: string | undefined) {
   const utils = trpc.useUtils()
 
-  return ({ groupId, expenseId }: { groupId: string; expenseId?: string }) =>
-    Promise.all([
-      utils.groups.expenses.list.reset({
-        groupId,
-        limit: EXPENSE_LIST_PAGE_SIZE,
-        filter: '',
-        linkInviteToken,
-      }),
+  return async ({
+    groupId,
+    expenseId,
+    financial = true,
+  }: InvalidateExpenseOptions) => {
+    const tokens = { groupId, linkInviteToken }
+    const tasks: Promise<unknown>[] = [
+      // Broadly invalidate every expense-list variant so filtered,
+      // paginated, and series-scoped caches converge after multi-row
+      // mutations. Reset alone targets only one exact input. Pass
+      // { groupId, linkInviteToken } so only this group's variants are
+      // busted (not every group's caches).
+      utils.groups.expenses.list.invalidate(tokens),
       expenseId
         ? utils.groups.expenses.get.invalidate({
             groupId,
@@ -26,29 +50,101 @@ function useInvalidateExpenseDependencies(linkInviteToken: string | undefined) {
             linkInviteToken,
           })
         : Promise.resolve(),
-      utils.groups.expenses.commonCurrencies.invalidate({
-        groupId,
-        linkInviteToken,
-      }),
-      utils.groups.activities.invalidate(),
-      utils.groups.leavePreview.invalidate({ groupId }),
-      utils.invitations.revokePreview.invalidate(),
-    ])
+      utils.groups.expenses.series.invalidate(tokens),
+      utils.groups.expenses.commonCurrencies.invalidate(tokens),
+      utils.groups.activities.list.invalidate(tokens),
+    ]
+    if (financial) {
+      tasks.push(
+        utils.groups.balances.list.invalidate({ groupId }),
+        utils.groups.leavePreview.invalidate({ groupId }),
+        utils.invitations.revokePreview.invalidate({ groupId }),
+      )
+    }
+    return Promise.all(tasks)
+  }
 }
 
-function useInvalidateExpenseSideEffects(linkInviteToken: string | undefined) {
-  const utils = trpc.useUtils()
+/** Tracks the in-flight catch-up poll per series so overlapping creates
+ * don't double-poll, and so a re-mount of the consumer does not leave a
+ * dangling interval. Cancellation aborts the next scheduled tick. */
+type CatchUpHandle = { abort: () => void }
+const catchUpPolls = new Map<string, CatchUpHandle>()
 
-  return ({ groupId }: { groupId: string }) =>
-    Promise.all([
-      utils.groups.expenses.commonCurrencies.invalidate({
-        groupId,
-        linkInviteToken,
-      }),
-      utils.groups.activities.invalidate(),
-      utils.groups.leavePreview.invalidate({ groupId }),
-      utils.invitations.revokePreview.invalidate(),
-    ])
+function startCatchUpPoll(args: {
+  utils: ReturnType<typeof trpc.useUtils>
+  groupId: string
+  seriesId: string
+  linkInviteToken: string | undefined
+  invalidate: () => Promise<unknown>
+}) {
+  const { seriesId } = args
+
+  // Cancel any prior poll for this series; the latest create owns the work.
+  const prior = catchUpPolls.get(seriesId)
+  if (prior) prior.abort()
+
+  let cancelled = false
+  const handle: CatchUpHandle = {
+    abort: () => {
+      cancelled = true
+    },
+  }
+  catchUpPolls.set(seriesId, handle)
+
+  const startedAt = Date.now()
+  let lastSeenOccurrences: number | null = null
+
+  const finalize = async () => {
+    if (catchUpPolls.get(seriesId) === handle) catchUpPolls.delete(seriesId)
+    await args.invalidate()
+  }
+
+  const tick = async () => {
+    if (cancelled) return
+    if (Date.now() - startedAt > CATCH_UP_POLL_TIMEOUT_MS) {
+      handle.abort()
+      await finalize()
+      return
+    }
+    let progress: SeriesProgress
+    try {
+      progress = await args.utils.groups.expenses.seriesProgress.fetch({
+        groupId: args.groupId,
+        seriesId: args.seriesId,
+        linkInviteToken: args.linkInviteToken,
+      })
+    } catch {
+      handle.abort()
+      await finalize()
+      return
+    }
+    if (cancelled) return
+    if (!progress) {
+      // Series disappeared (deleted, wrong group). Stop and refresh anyway.
+      handle.abort()
+      await finalize()
+      return
+    }
+    const stillPending = progress.pending && progress.status === 'ACTIVE'
+    if (!stillPending) {
+      handle.abort()
+      await finalize()
+      return
+    }
+    if (
+      lastSeenOccurrences !== null &&
+      progress.occurrencesCreated !== lastSeenOccurrences
+    ) {
+      // Worker committed new occurrences between polls — re-render before
+      // continuing to wait for the remainder.
+      void args.invalidate()
+    }
+    lastSeenOccurrences = progress.occurrencesCreated
+    setTimeout(tick, CATCH_UP_POLL_INTERVAL_MS)
+  }
+
+  void tick()
 }
 
 export function useUpdateExpenseMutation({
@@ -75,20 +171,35 @@ export function useCreateExpenseMutation({
   linkInviteToken: string | undefined
 }) {
   const utils = trpc.useUtils()
-  const invalidateExpenseSideEffects =
-    useInvalidateExpenseSideEffects(linkInviteToken)
+  const invalidateExpenseDependencies =
+    useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.create.useMutation({
-    onSuccess: (_data, variables) => {
-      return Promise.all([
-        utils.groups.expenses.list.reset({
+    onSuccess: (data, variables) => {
+      // Fire-and-forget catch-up poll for past-dated series. The worker
+      // materializes the remaining occurrences asynchronously; without
+      // polling, expenses/activities/balances stay stale until an
+      // unrelated refetch. Do not await — the create's caller is not
+      // blocked on the worker draining.
+      if (data.recurringSeriesId) {
+        startCatchUpPoll({
+          utils,
           groupId: variables.groupId,
-          limit: EXPENSE_LIST_PAGE_SIZE,
-          filter: '',
+          seriesId: data.recurringSeriesId,
           linkInviteToken,
-        }),
-        invalidateExpenseSideEffects({ groupId: variables.groupId }),
-      ])
+          invalidate: () =>
+            invalidateExpenseDependencies({
+              groupId: variables.groupId,
+              expenseId: data.expenseId,
+            }),
+        })
+      }
+      // Immediate invalidation: the anchor occurrence and any same-tick
+      // catch-up the worker already committed are visible right away.
+      return invalidateExpenseDependencies({
+        groupId: variables.groupId,
+        expenseId: data.expenseId,
+      })
     },
   })
 }
@@ -98,56 +209,25 @@ export function useDeleteExpenseMutation({
 }: {
   linkInviteToken: string | undefined
 }) {
-  const utils = trpc.useUtils()
   const navigate = useNavigate()
   const { toast } = useToast()
-  const invalidateExpenseSideEffects =
-    useInvalidateExpenseSideEffects(linkInviteToken)
+  const invalidateExpenseDependencies =
+    useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.delete.useMutation({
-    onMutate: async (variables) => {
-      const listInput = {
+    onSuccess: async (_data, variables) => {
+      // Invalidate first so the next render already shows the latest
+      // state; stale cached list is not flashed.
+      await invalidateExpenseDependencies({
         groupId: variables.groupId,
-        limit: EXPENSE_LIST_PAGE_SIZE,
-        filter: '',
-        linkInviteToken,
-      }
-
-      await utils.groups.expenses.list.cancel(listInput)
-      const previousList = utils.groups.expenses.list.getInfiniteData(listInput)
-
-      utils.groups.expenses.list.setInfiniteData(listInput, (old) => {
-        if (!old) return old
-
-        return {
-          ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            expenses: page.expenses.filter(
-              (expense) => expense.id !== variables.expenseId,
-            ),
-          })),
-        } satisfies ExpenseListData
       })
-
-      return { listInput, previousList }
-    },
-    onSuccess: (_data, variables) => {
       navigate({
         to: '/groups/$groupId/expenses',
         params: { groupId: variables.groupId },
         replace: true,
       })
-
-      void invalidateExpenseSideEffects({ groupId: variables.groupId })
     },
-    onError: (error, _variables, context) => {
-      if (context?.previousList) {
-        utils.groups.expenses.list.setInfiniteData(
-          context.listInput,
-          context.previousList,
-        )
-      }
+    onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })
     },
   })
@@ -166,6 +246,7 @@ export function useStopRecurrenceMutation({
       invalidateExpenseDependencies({
         groupId: variables.groupId,
         expenseId: variables.expenseId,
+        financial: false,
       }),
   })
 }

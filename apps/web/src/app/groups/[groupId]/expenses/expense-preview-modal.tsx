@@ -498,6 +498,7 @@ export function ExpensePreviewModal({
             (series ? (
               <RecurringActionsMenu
                 className="mr-auto"
+                seriesStatus={series.status}
                 onEdit={handleEdit}
                 onDelete={(option) => handleDelete(option)}
                 onStop={

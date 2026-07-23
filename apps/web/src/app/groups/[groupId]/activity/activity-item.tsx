@@ -171,6 +171,13 @@ function useMessage(activity: Activity) {
         default:
           return { message: t('fallback'), changes: null }
       }
+    case 'recurring_expense_stopped': {
+      const title = data.title ?? ''
+      return {
+        message: t('expense.stopped', { participant: actor, title }),
+        changes: null,
+      }
+    }
     default:
       return { message: t('fallback'), changes: null }
   }

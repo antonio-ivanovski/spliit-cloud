@@ -143,6 +143,13 @@ export function ExpenseCard({
       recurringSeriesId?: string | null
     }
   ).recurringSeriesId
+  const seriesStatus =
+    (
+      expense as typeof expense & {
+        recurringSeriesStatus?:
+          'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED' | null
+      }
+    ).recurringSeriesStatus ?? undefined
 
   return (
     <div
@@ -189,7 +196,9 @@ export function ExpenseCard({
               {t('settlementBadge')}
             </Badge>
           )}
-          {seriesId && <RecurringBadge className="text-[0.68rem]" />}
+          {seriesId && (
+            <RecurringBadge className="text-[0.68rem]" status={seriesStatus} />
+          )}
         </div>
         <div className="text-xs text-muted-foreground">
           <Participants expense={expense} participantCount={participantCount} />

@@ -57,6 +57,15 @@ export function EditExpenseForm({
       recurringSeriesId?: string | null
     }
   )?.recurringSeriesId
+  const seriesStatus =
+    expense?.recurringSeries?.status ??
+    (
+      expense as typeof expense & {
+        recurringSeriesStatus?:
+          'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED' | null
+      }
+    )?.recurringSeriesStatus ??
+    undefined
   const [scopeDialog, setScopeDialog] = useState<{
     mode: 'update' | 'delete'
     expense?: Parameters<typeof updateExpenseMutateAsync>[0]['expense']
@@ -104,6 +113,18 @@ export function EditExpenseForm({
 
   return (
     <>
+      {seriesId && selectedScope && (
+        <div
+          className="mb-4 rounded-md border bg-muted/50 px-4 py-2.5 text-sm text-muted-foreground"
+          role="status"
+        >
+          {tExpenseForm(
+            selectedScope === 'OCCURRENCE'
+              ? 'Expense.recurringEditScopeOccurrence'
+              : 'Expense.recurringEditScopeFuture',
+          )}
+        </div>
+      )}
       <ExpenseForm
         group={group}
         expense={expense}
@@ -148,22 +169,11 @@ export function EditExpenseForm({
         }}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />
-      {seriesId && selectedScope && (
-        <div
-          className="fixed inset-x-0 top-0 z-30 border-b bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground shadow-sm"
-          role="status"
-        >
-          {tExpenseForm(
-            selectedScope === 'OCCURRENCE'
-              ? 'Expense.recurringEditScopeOccurrence'
-              : 'Expense.recurringEditScopeFuture',
-          )}
-        </div>
-      )}
       <SeriesScopeDialog
         key={scopeDialog?.mode ?? 'closed'}
         open={scopeDialog != null}
         mode={scopeDialog?.mode ?? 'update'}
+        seriesStatus={seriesStatus}
         onOpenChange={(open) => {
           if (!open) setScopeDialog(null)
         }}

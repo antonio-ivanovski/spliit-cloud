@@ -27,11 +27,14 @@ export function RecurringActionsMenu({
   onEdit,
   onDelete,
   onStop,
+  seriesStatus,
   className,
 }: {
   onEdit: (scope: SeriesMutationScope) => void
   onDelete: (option: RecurringDeleteOption) => Promise<void>
   onStop?: () => Promise<void>
+  /** Series status; CANCELLED/COMPLETED hide stop-related actions. */
+  seriesStatus?: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED'
   className?: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
@@ -70,6 +73,8 @@ export function RecurringActionsMenu({
   }
 
   const isDelete = pending?.kind === 'delete'
+  const isTerminal =
+    seriesStatus === 'CANCELLED' || seriesStatus === 'COMPLETED'
   const title = pending
     ? isDelete
       ? t('deleteConfirmTitle')
@@ -166,19 +171,21 @@ export function RecurringActionsMenu({
                     choose({ kind: 'delete', option: 'THIS_AND_FUTURE' })
                   }
                 />
-                <ActionButton
-                  destructive
-                  icon={<Trash2 aria-hidden="true" />}
-                  label={t('deleteThisAndFutureStop')}
-                  description={t('deleteThisAndFutureStopDescription')}
-                  onClick={() =>
-                    choose({ kind: 'delete', option: 'THIS_AND_FUTURE_STOP' })
-                  }
-                />
+                {!isTerminal && (
+                  <ActionButton
+                    destructive
+                    icon={<Trash2 aria-hidden="true" />}
+                    label={t('deleteThisAndFutureStop')}
+                    description={t('deleteThisAndFutureStopDescription')}
+                    onClick={() =>
+                      choose({ kind: 'delete', option: 'THIS_AND_FUTURE_STOP' })
+                    }
+                  />
+                )}
               </div>
             </section>
 
-            {onStop && (
+            {onStop && !isTerminal && (
               <Button
                 type="button"
                 variant="ghost"

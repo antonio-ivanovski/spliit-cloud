@@ -1,7 +1,15 @@
 import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Repeat2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Repeat2,
+  X,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useLinkInviteToken } from '../use-link-invite-token'
 
@@ -13,12 +21,43 @@ export type ExpenseSeriesMetadata = {
   nextExpenseId?: string | null
 }
 
-export function RecurringBadge({ className }: { className?: string }) {
+export function RecurringBadge({
+  className,
+  status,
+}: {
+  className?: string
+  status?: ExpenseSeriesMetadata['status']
+}) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
+  const isTerminal = status === 'CANCELLED' || status === 'COMPLETED'
+  const isActive = status === 'ACTIVE' || status === 'PAUSED'
+  const label = isTerminal
+    ? status === 'CANCELLED'
+      ? t('badgeStopped')
+      : t('badgeCompleted')
+    : t('badgeRunning')
+
   return (
-    <Badge variant="outline" className={className}>
+    <Badge
+      variant="outline"
+      className={cn(
+        className,
+        isActive && 'border-green-500/50 text-green-700 dark:text-green-400',
+        status === 'CANCELLED' && 'border-destructive/50 text-destructive',
+        status === 'COMPLETED' &&
+          'border-emerald-500/50 text-emerald-700 dark:text-emerald-400',
+      )}
+    >
       <Repeat2 className="mr-1 h-3 w-3" aria-hidden="true" />
-      {t('badge')}
+      {isActive && <Play className="mr-0.5 h-2.5 w-2.5" aria-hidden="true" />}
+      {status === 'CANCELLED' && (
+        <X className="mr-0.5 h-2.5 w-2.5" aria-hidden="true" />
+      )}
+      {status === 'COMPLETED' && (
+        <Check className="mr-0.5 h-2.5 w-2.5" aria-hidden="true" />
+      )}
+      <span className="sr-only">{t('badge')}: </span>
+      {label}
     </Badge>
   )
 }
@@ -41,7 +80,7 @@ export function SeriesControls({
 
   return (
     <div className="flex flex-wrap items-center gap-2 border-t pt-4">
-      <RecurringBadge />
+      <RecurringBadge status={series.status} />
       <span className="mr-auto text-sm text-muted-foreground">
         {t('occurrence', { sequence: series.sequence })}
       </span>

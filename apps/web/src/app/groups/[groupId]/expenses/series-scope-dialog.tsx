@@ -20,15 +20,20 @@ export function SeriesScopeDialog({
   mode,
   onOpenChange,
   onConfirm,
+  seriesStatus,
 }: {
   open: boolean
   mode: 'update' | 'delete'
   onOpenChange: (open: boolean) => void
   onConfirm: (scope: SeriesMutationScope, stopRecurrence?: boolean) => void
+  /** Series status; CANCELLED/COMPLETED hide the stop-recurrence radio. */
+  seriesStatus?: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED'
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
   const [scope, setScope] = useState<SeriesDeleteOption>('OCCURRENCE')
   const isDelete = mode === 'delete'
+  const isTerminal =
+    seriesStatus === 'CANCELLED' || seriesStatus === 'COMPLETED'
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
@@ -60,7 +65,7 @@ export function SeriesScopeDialog({
               </div>
             </div>
           </RadioGroupItem>
-          {isDelete && (
+          {isDelete && !isTerminal && (
             <RadioGroupItem value="THIS_AND_FUTURE_STOP" card>
               <div>
                 <div className="font-medium">
