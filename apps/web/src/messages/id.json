@@ -266,7 +266,14 @@
         "conversionFixed": "Kurs tetap",
         "importErrorTitle": "Impor gagal",
         "importErrorFallback": "Terjadi kesalahan tak terduga saat mengimpor grup. Silakan coba lagi.",
-        "executeImport": "Impor grup"
+        "executeImport": "Impor grup",
+        "recurringSchedulesLabel": "Jadwal berulang yang akan diimpor",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Harian",
+          "weekly": "Mingguan",
+          "monthly": "Bulanan"
+        }
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -373,7 +380,8 @@
         "splitwiseAnonymizeDescription": "Jika impor menolak CSV Anda, Anda dapat menghapus nama peserta dan deskripsi pengeluaran secara lokal dan melampirkan hasilnya ke issue GitHub. File Anda tetap di perangkat Anda — kami tidak pernah mengunggahnya.",
         "splitwiseAnonymizeButton": "Anonimkan CSV",
         "splitwiseAnonymizeIssuesLink": "Buka issue impor",
-        "splitwiseAnonymizeError": "Tidak dapat menganonimkan file ini. Pastikan itu adalah ekspor CSV Splitwise."
+        "splitwiseAnonymizeError": "Tidak dapat menganonimkan file ini. Pastikan itu adalah ekspor CSV Splitwise.",
+        "csvRecurrenceLimitation": "Ekspor CSV tidak menyertakan pengulangan. Gunakan ekspor JSON dari spliit.app untuk mengimpor pengeluaran berulang."
       },
       "StepHeader": {
         "title": "Impor grup",
@@ -579,7 +587,51 @@
       "splitModeDescription": "Pilih cara membagi pengeluaran.",
       "attachDescription": "Lihat dan lampirkan tanda terima pada pengeluaran.",
       "createCopy": "Buat salinan: {title}",
-      "editTitle": "Ubah: {title}"
+      "editTitle": "Ubah: {title}",
+      "recurrence": {
+        "label": "Pengulangan pengeluaran",
+        "description": "Pilih kapan pengeluaran ini harus dibuat lagi.",
+        "checkboxLabel": "Berulang",
+        "checkboxDescription": "Buat pengeluaran ini sesuai jadwal",
+        "enable": "Tambahkan pengulangan",
+        "remove": "Hapus pengulangan",
+        "repeatEvery": "Ulangi setiap",
+        "interval": "Interval pengulangan",
+        "frequency": "Frekuensi pengulangan",
+        "frequencyOptions": {
+          "daily": "hari",
+          "weekly": "minggu",
+          "monthly": "bulan",
+          "yearly": "tahun"
+        },
+        "ends": {
+          "label": "Berakhir",
+          "never": "Tidak pernah",
+          "count": "Setelah sejumlah kejadian",
+          "date": "Pada tanggal tertentu",
+          "countInput": "Jumlah kejadian (termasuk pengeluaran ini)",
+          "dateInput": "Tanggal berakhir"
+        },
+        "previewLabel": "Kejadian berikutnya",
+        "currentOccurrence": "Saat ini",
+        "viewAll": "Lihat semua",
+        "scheduleTitle": "Jadwal pengulangan",
+        "remainingCount": "Tersisa {count} kejadian.",
+        "unlimitedSchedule": "Pengulangan ini tidak memiliki tanggal berakhir.",
+        "noFurtherOccurrences": "Tidak ada kejadian berikutnya dengan pengaturan ini.",
+        "scheduleCount": "Menampilkan {count} kejadian dari pengeluaran ini.",
+        "decreaseOccurrences": "Kurangi jumlah kejadian",
+        "increaseOccurrences": "Tambah jumlah kejadian",
+        "ruleSummary": "Setiap {interval} {frequency} · {count} kejadian",
+        "ruleSummaryIndefinite": "Setiap {interval} {frequency} · Tanpa tanggal berakhir",
+        "scheduleChangeWarningTitle": "Jadwal pengulangan akan berubah",
+        "scheduleChangeWarning": "Menyimpan akan menjadwalkan ulang kejadian ini dan ke depannya. Pengeluaran mendatang yang ada dapat dipindah ke tanggal baru atau dihapus, dan tanggal jatuh tempo yang belum ada dapat dibuat secara otomatis.",
+        "pastDateBackfillNote": "Karena pengeluaran ini dimulai di masa lalu, kejadian hingga hari ini akan dibuat secara otomatis setelah Anda menyimpan.",
+        "completedOccurrence": "Dibuat",
+        "upcomingOccurrence": "Mendatang"
+      },
+      "recurringEditScopeOccurrence": "Edit hanya kejadian ini",
+      "recurringEditScopeFuture": "Edit kejadian ini dan yang akan datang"
     },
     "amountField": {
       "label": "Jumlah",
@@ -1634,6 +1686,10 @@
         "weeklySummary": {
           "title": "Ringkasan aktivitas mingguan",
           "description": "Ringkasan aktivitas mingguan di semua grup Anda."
+        },
+        "recurringExpense": {
+          "title": "Pengeluaran berulang",
+          "description": "Saat pengeluaran berulang terjadwal dibuat dalam grup."
         }
       },
       "sections": {
@@ -1663,7 +1719,9 @@
         "reimbursement": "Pembayaran pelunasan",
         "conversionSource": "Sumber konversi",
         "conversionRate": "Kurs"
-      }
+      },
+      "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”",
+      "stopped": "{participant} menghentikan pengeluaran berulang “{title}”"
     },
     "group": {
       "updated": "{participant} memperbarui pengaturan grup",
@@ -1910,5 +1968,58 @@
       "description": "Anda tidak akan menerima email untuk {category}. Pengaturan notifikasi lainnya tidak berubah."
     },
     "scope": "Hanya notifikasi email ini yang akan dinonaktifkan. Email dan notifikasi push lainnya akan tetap sama."
+  },
+  "ExpenseSeries": {
+    "badge": "Berulang",
+    "occurrence": "Kejadian {sequence}",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya",
+    "viewSeries": "Lihat rangkaian",
+    "title": "Rangkaian pengeluaran",
+    "empty": "Belum ada kejadian lain.",
+    "scopeTitle": "Perbarui pengeluaran berulang",
+    "scopeDescription": "Pilih kejadian mana yang akan terpengaruh.",
+    "occurrenceOnly": "Hanya kejadian ini",
+    "thisAndFuture": "Kejadian ini dan yang akan datang",
+    "deleteScopeTitle": "Hapus pengeluaran berulang",
+    "deleteScopeDescription": "Pilih apakah akan menghapus satu kejadian atau mengakhiri rangkaian.",
+    "deleteOccurrence": "Hapus hanya kejadian ini",
+    "deleteThisAndFuture": "Hapus kejadian ini dan yang akan datang",
+    "deleteThisAndFutureStop": "Hapus kejadian ini dan yang berikutnya lalu hentikan pengulangan",
+    "deleteThisAndFutureDescription": "Hapus pengeluaran ini dan yang berikutnya; jadwal tetap aktif.",
+    "deleteThisAndFutureStopDescription": "Hapus pengeluaran ini dan yang berikutnya dan hentikan jadwal secara permanen.",
+    "deleteOccurrenceDescription": "Hapus hanya pengeluaran ini. Kejadian terjadwal lainnya tetap tidak berubah.",
+    "actions": "Tindakan berulang",
+    "actionsTitle": "Tindakan pengeluaran berulang",
+    "actionsDescription": "Pilih tepat kejadian mana yang ingin diedit atau dihapus.",
+    "editActions": "Edit",
+    "deleteActions": "Hapus",
+    "confirmDelete": "Hapus",
+    "confirmStop": "Hentikan pengulangan",
+    "working": "Memproses…",
+    "back": "Kembali",
+    "confirm": "Lanjutkan",
+    "cancel": "Batal",
+    "occurrences": "{count} kejadian dalam rangkaian ini",
+    "loading": "Memuat…",
+    "loadMore": "Muat lebih banyak kejadian",
+    "editOccurrence": "Edit kejadian ini",
+    "editOccurrenceDescription": "Ubah hanya pengeluaran ini.",
+    "editThisAndFuture": "Edit kejadian ini dan yang akan datang",
+    "editThisAndFutureDescription": "Ubah pengeluaran ini dan semua pengeluaran terjadwal yang akan datang.",
+    "stopRecurrence": "Hentikan pengulangan",
+    "stopConfirmTitle": "Hentikan pengulangan ini?",
+    "stopConfirmDescription": "Pengeluaran yang ada akan tetap. Tidak ada kejadian baru yang dibuat.",
+    "stopConfirmHint": "Penghentian bersifat permanen. Untuk memulai lagi, buat pengeluaran berulang baru.",
+    "deleteConfirmTitle": "Konfirmasi penghapusan",
+    "deleteConfirmHint": "Tindakan ini tidak dapat dibatalkan untuk kejadian yang dipilih.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Hanya kejadian ini yang akan dihapus.",
+      "THIS_AND_FUTURE": "Kejadian ini dan berikutnya akan dihapus. Pengulangan akan berlanjut pada kejadian terjadwal berikutnya.",
+      "THIS_AND_FUTURE_STOP": "Kejadian ini dan berikutnya akan dihapus dan pengulangan akan dihentikan."
+    },
+    "badgeRunning": "Berulang · Berjalan",
+    "badgeStopped": "Berulang · Berhenti",
+    "badgeCompleted": "Berulang · Selesai"
   }
 }

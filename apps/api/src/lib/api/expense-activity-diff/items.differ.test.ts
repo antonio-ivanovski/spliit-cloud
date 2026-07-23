@@ -170,6 +170,93 @@ describe('itemsDiffer', () => {
       expect(itemsDiffer.diff(makeExpense(), makeExpense(), ctx)).toBeNull()
     })
 
+    it('returns null for identical id-less items', () => {
+      const items = [
+        item({ title: 'Pizza' }),
+        item({ title: 'Pizza', unitPrice: 500, amount: 500 }),
+      ]
+
+      expect(
+        itemsDiffer.diff(
+          makeExpense({ items }),
+          makeExpense({ items: [...items].reverse() }),
+          ctx,
+        ),
+      ).toBeNull()
+    })
+
+    it('reports only the changed id-less item', () => {
+      const unchangedWater = item({
+        title: 'Water',
+        unitPrice: 500,
+        amount: 500,
+      })
+      const unchangedTip = item({ title: 'Tip', unitPrice: 300, amount: 300 })
+      const result = itemsDiffer.diff(
+        makeExpense({
+          items: [
+            unchangedWater,
+            item({ title: 'Pizza', unitPrice: 1400, amount: 1400 }),
+            unchangedTip,
+          ],
+        }),
+        makeExpense({
+          items: [
+            unchangedTip,
+            item({ title: 'Pizza', unitPrice: 1600, amount: 1600 }),
+            unchangedWater,
+          ],
+        }),
+        ctx,
+      )
+
+      expect(result).toEqual({
+        field: 'items',
+        before:
+          '+ Pizza 1 × EUR 16.00 = EUR 16.00\n' +
+          '- Pizza 1 × EUR 14.00 = EUR 14.00',
+        after: null,
+      })
+    })
+
+    it('continues to pair id-bearing items as modified', () => {
+      const result = itemsDiffer.diff(
+        makeExpense({
+          items: [item({ id: 'i-1', unitPrice: 1400, amount: 1400 })],
+        }),
+        makeExpense({
+          items: [item({ id: 'i-1', unitPrice: 1600, amount: 1600 })],
+        }),
+        ctx,
+      )
+
+      expect(result).toEqual({
+        field: 'items',
+        before:
+          'Pizza 1 × EUR 14.00 = EUR 14.00 → Pizza 1 × EUR 16.00 = EUR 16.00',
+        after: null,
+      })
+    })
+
+    it('reports mixed id-less additions and removals', () => {
+      const water = item({ title: 'Water', unitPrice: 500, amount: 500 })
+      const result = itemsDiffer.diff(
+        makeExpense({ items: [water, item({ ...water })] }),
+        makeExpense({
+          items: [water, item({ title: 'Milk', unitPrice: 400, amount: 400 })],
+        }),
+        ctx,
+      )
+
+      expect(result).toEqual({
+        field: 'items',
+        before:
+          '+ Milk 1 × EUR 4.00 = EUR 4.00\n' +
+          '- Water 1 × EUR 5.00 = EUR 5.00',
+        after: null,
+      })
+    })
+
     it('emits "+ added" line when an item is added', () => {
       const result = itemsDiffer.diff(
         makeExpense({ items: [] }),

@@ -274,7 +274,14 @@
         "conversionFixed": "Taxa fixa",
         "importErrorTitle": "Ha fallat la importació",
         "importErrorFallback": "S'ha produït un error inesperat en importar el grup. Torneu-ho a provar.",
-        "executeImport": "Importa el grup"
+        "executeImport": "Importa el grup",
+        "recurringSchedulesLabel": "Planificacions recurrents a importar",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "DiDiària",
+          "weekly": "Setmanal",
+          "monthly": "Mensual"
+        }
       },
       "Destination": {
         "heading": "On voleu importar <strong>{name}</strong>? ({participantCount} participants · {expenseCount} despeses)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Si l'importador rebutja el teu CSV, pots eliminar els noms dels participants i les descripcions de les despeses localment i adjuntar el resultat a un issue de GitHub. El teu fitxer es queda al dispositiu — mai no el pugem.",
         "splitwiseAnonymizeButton": "Anonimitza un CSV",
         "splitwiseAnonymizeIssuesLink": "Obre un issue d'importació",
-        "splitwiseAnonymizeError": "No s'ha pogut anonimitzar aquest fitxer. Assegura't que sigui una exportació CSV de Splitwise."
+        "splitwiseAnonymizeError": "No s'ha pogut anonimitzar aquest fitxer. Assegura't que sigui una exportació CSV de Splitwise.",
+        "csvRecurrenceLimitation": "Les exportacions CSV no inclouen la recurrència. Utilitzeu una exportació JSON de spliit.app per importar despeses recurrents."
       },
       "StepHeader": {
         "title": "Importa un grup",
@@ -591,7 +599,51 @@
         "monthly": "Mensualment"
       },
       "createCopy": "Crea una còpia: {title}",
-      "editTitle": "Edita: {title}"
+      "editTitle": "Edita: {title}",
+      "recurrence": {
+        "label": "Recurrència de la despesa",
+        "description": "Tria quan s’ha de tornar a crear aquesta despesa.",
+        "checkboxLabel": "Recurrent",
+        "checkboxDescription": "Crea aquesta despesa segons un calendari",
+        "enable": "Afegeix recurrència",
+        "remove": "Elimina la recurrència",
+        "repeatEvery": "Repeteix cada",
+        "interval": "Interval de repetició",
+        "frequency": "Freqüència de recurrència",
+        "frequencyOptions": {
+          "daily": "dia/dies",
+          "weekly": "setmana/setmanes",
+          "monthly": "mes/mesos",
+          "yearly": "any/anys"
+        },
+        "ends": {
+          "label": "Finalitza",
+          "never": "Mai",
+          "count": "Després d’un nombre de repeticions",
+          "date": "En una data",
+          "countInput": "Repeticions totals (inclosa aquesta despesa)",
+          "dateInput": "Data de finalització"
+        },
+        "previewLabel": "Pròximes repeticions",
+        "currentOccurrence": "Actual",
+        "viewAll": "Veure-ho tot",
+        "scheduleTitle": "Calendari de recurrència",
+        "remainingCount": "Queden {count} ocurrències.",
+        "unlimitedSchedule": "Aquesta recurrència no té data de finalització.",
+        "noFurtherOccurrences": "No hi ha més repeticions amb aquesta configuració.",
+        "scheduleCount": "Mostrant {count} ocurrències a partir d’aquesta despesa.",
+        "decreaseOccurrences": "Disminueix les repeticions",
+        "increaseOccurrences": "Augmenta les repeticions",
+        "ruleSummary": "Cada {interval} {frequency} · {count} ocurrències",
+        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sense data de finalització",
+        "scheduleChangeWarningTitle": "El calendari de recurrència canviarà",
+        "scheduleChangeWarning": "En desar, es reprogramaran aquesta ocurrència i les futures. Les despeses futures existents poden passar a noves dates o eliminar-se, i les dates de venciment que faltin es poden crear automàticament.",
+        "pastDateBackfillNote": "Com que aquesta despesa comença en el passat, les ocurrències fins avui es crearan automàticament després de desar.",
+        "completedOccurrence": "Creada",
+        "upcomingOccurrence": "Propera"
+      },
+      "recurringEditScopeOccurrence": "Editant només aquesta ocurrència",
+      "recurringEditScopeFuture": "Editant aquesta ocurrència i les futures"
     },
     "amountField": {
       "label": "Quantitat",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "Resum setmanal d'activitat",
           "description": "Un resum setmanal de l'activitat dels teus grups."
+        },
+        "recurringExpense": {
+          "title": "Despesa recurrent",
+          "description": "Quan es crea una despesa recurrent programada en un grup."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "pagament de liquidació",
         "conversionSource": "Font de conversió",
         "conversionRate": "Tasa de conversió"
-      }
+      },
+      "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»",
+      "stopped": "{participant} ha aturat la despesa recurrent {title}"
     },
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",
@@ -1943,5 +2001,58 @@
       "description": "No rebràs correus de {category}. La resta de configuració de notificacions no ha canviat."
     },
     "scope": "Només es desactivarà aquesta notificació per correu. La resta de correus i les notificacions push es mantindran igual."
+  },
+  "ExpenseSeries": {
+    "badge": "Recurrent",
+    "occurrence": "Repetició {sequence}",
+    "previous": "Anterior",
+    "next": "Següent",
+    "viewSeries": "Mostra la sèrie",
+    "title": "Sèrie de despeses",
+    "empty": "Encara no hi ha cap altra repetició.",
+    "scopeTitle": "Actualitza la despesa recurrent",
+    "scopeDescription": "Tria quines repeticions s’han de veure afectades.",
+    "occurrenceOnly": "Només aquesta repetició",
+    "thisAndFuture": "Aquesta repetició i les futures",
+    "deleteScopeTitle": "Elimina la despesa recurrent",
+    "deleteScopeDescription": "Tria si vols eliminar una repetició o finalitzar la sèrie.",
+    "deleteOccurrence": "Elimina només aquesta repetició",
+    "deleteThisAndFuture": "Elimina aquesta repetició i les futures",
+    "deleteThisAndFutureStop": "Elimina aquesta ocurrència i les futures i atura la recurrència",
+    "deleteThisAndFutureDescription": "Elimina aquesta i les despeses futures; la programació continuarà activa.",
+    "deleteThisAndFutureStopDescription": "Elimina aquesta i les despeses futures i atura permanentment la programació.",
+    "deleteOccurrenceDescription": "Elimina només aquesta despesa. Les altres ocurrències programades no canviaran.",
+    "actions": "Accions recurrents",
+    "actionsTitle": "Accions de despeses recurrents",
+    "actionsDescription": "Tria exactament quina ocurrència vols editar o eliminar.",
+    "editActions": "Edita",
+    "deleteActions": "Eliminar",
+    "confirmDelete": "Elimina",
+    "confirmStop": "Atura la recurrència",
+    "working": "S'està processant…",
+    "back": "Enrere",
+    "confirm": "Continua",
+    "cancel": "Cancel·la",
+    "occurrences": "{count} repeticions en aquesta sèrie",
+    "loading": "S’està carregant…",
+    "loadMore": "Carrega més repeticions",
+    "editOccurrence": "Edita aquesta ocurrència",
+    "editOccurrenceDescription": "Canvia només aquesta despesa.",
+    "editThisAndFuture": "Edita aquesta i les ocurrències futures",
+    "editThisAndFutureDescription": "Canvia aquesta despesa i totes les despeses futures programades.",
+    "stopRecurrence": "Atura la recurrència",
+    "stopConfirmTitle": "Atura aquesta recurrència?",
+    "stopConfirmDescription": "Les despeses existents es conservaran. No es crearan ocurrències noves.",
+    "stopConfirmHint": "Aturar és permanent. Per tornar a començar, crea una nova despesa recurrent.",
+    "deleteConfirmTitle": "Confirma l'eliminació",
+    "deleteConfirmHint": "Aquesta acció no es pot desfer per a les ocurrències seleccionades.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Només s'eliminarà aquesta ocurrència.",
+      "THIS_AND_FUTURE": "S'eliminaran aquesta ocurrència i les següents. La recurrència continuarà amb la propera ocurrència programada.",
+      "THIS_AND_FUTURE_STOP": "S'eliminaran aquesta ocurrència i les següents i s'aturarà la recurrència."
+    },
+    "badgeRunning": "Recurrent · En curs",
+    "badgeStopped": "Recurrent · Aturada",
+    "badgeCompleted": "Recurrent · Completada"
   }
 }

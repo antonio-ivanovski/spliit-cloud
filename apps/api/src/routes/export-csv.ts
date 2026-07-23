@@ -120,7 +120,6 @@ export async function exportGroupCsv(request: Request, groupId: string) {
   participants.sort(
     (a, b) => participantOrder.get(a.id)! - participantOrder.get(b.id)!,
   )
-
   const fields = [
     { label: 'Date', value: 'date' },
     { label: 'Description', value: 'title' },

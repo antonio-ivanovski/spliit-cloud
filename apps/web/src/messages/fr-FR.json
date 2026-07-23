@@ -274,7 +274,14 @@
         "conversionFixed": "Taux fixe",
         "importErrorTitle": "Échec de l'importation",
         "importErrorFallback": "Une erreur inattendue est survenue lors de l'importation du groupe. Veuillez réessayer.",
-        "executeImport": "Importer le groupe"
+        "executeImport": "Importer le groupe",
+        "recurringSchedulesLabel": "Planifications récurrentes à importer",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Quotidienne",
+          "weekly": "Hebdomadaire",
+          "monthly": "Mensuelle"
+        }
       },
       "Destination": {
         "heading": "Où souhaitez-vous importer <strong>{name}</strong>? ({participantCount} participants · {expenseCount} dépenses)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Si l'importateur rejette votre CSV, vous pouvez supprimer localement les noms des participants et les descriptions des dépenses, puis joindre le résultat à un ticket GitHub. Votre fichier reste sur votre appareil — nous ne l'envoyons jamais.",
         "splitwiseAnonymizeButton": "Anonymiser un CSV",
         "splitwiseAnonymizeIssuesLink": "Ouvrir un ticket d'import",
-        "splitwiseAnonymizeError": "Impossible d'anonymiser ce fichier. Assurez-vous qu'il s'agit d'un export CSV Splitwise."
+        "splitwiseAnonymizeError": "Impossible d'anonymiser ce fichier. Assurez-vous qu'il s'agit d'un export CSV Splitwise.",
+        "csvRecurrenceLimitation": "Les exports CSV n’incluent pas la récurrence. Utilisez un export JSON de spliit.app pour importer les dépenses récurrentes."
       },
       "StepHeader": {
         "title": "Importer un groupe",
@@ -591,7 +599,51 @@
         "description": "La devise dans laquelle la dépense a été payée."
       },
       "createCopy": "Créer une copie : {title}",
-      "editTitle": "Modifier : {title}"
+      "editTitle": "Modifier : {title}",
+      "recurrence": {
+        "label": "Récurrence de la dépense",
+        "description": "Choisissez quand cette dépense doit être créée à nouveau.",
+        "checkboxLabel": "Récurrente",
+        "checkboxDescription": "Créer cette dépense selon un calendrier",
+        "enable": "Ajouter une récurrence",
+        "remove": "Supprimer la récurrence",
+        "repeatEvery": "Répéter tous les",
+        "interval": "Intervalle de répétition",
+        "frequency": "Fréquence de récurrence",
+        "frequencyOptions": {
+          "daily": "jour(s)",
+          "weekly": "semaine(s)",
+          "monthly": "mois",
+          "yearly": "année(s)"
+        },
+        "ends": {
+          "label": "Se termine",
+          "never": "Jamais",
+          "count": "Après un certain nombre d’occurrences",
+          "date": "À une date",
+          "countInput": "Nombre total d’occurrences (cette dépense comprise)",
+          "dateInput": "Date de fin"
+        },
+        "previewLabel": "Prochaines occurrences",
+        "currentOccurrence": "Actuelle",
+        "viewAll": "Tout afficher",
+        "scheduleTitle": "Calendrier de récurrence",
+        "remainingCount": "Il reste {count} occurrences.",
+        "unlimitedSchedule": "Cette récurrence n’a pas de date de fin.",
+        "noFurtherOccurrences": "Aucune autre occurrence avec ces paramètres.",
+        "scheduleCount": "Affichage de {count} occurrences à partir de cette dépense.",
+        "decreaseOccurrences": "Diminuer le nombre d’occurrences",
+        "increaseOccurrences": "Augmenter le nombre d’occurrences",
+        "ruleSummary": "Tous les {interval} {frequency} · {count} occurrences",
+        "ruleSummaryIndefinite": "Tous les {interval} {frequency} · Sans date de fin",
+        "scheduleChangeWarningTitle": "Le calendrier de récurrence va changer",
+        "scheduleChangeWarning": "L’enregistrement replanifiera cette occurrence et les suivantes. Les dépenses futures existantes peuvent être déplacées à de nouvelles dates ou supprimées, et les échéances manquantes peuvent être créées automatiquement.",
+        "pastDateBackfillNote": "Comme cette dépense commence dans le passé, les occurrences jusqu’à aujourd’hui seront créées automatiquement après l’enregistrement.",
+        "completedOccurrence": "Créée",
+        "upcomingOccurrence": "À venir"
+      },
+      "recurringEditScopeOccurrence": "Modifier uniquement cette occurrence",
+      "recurringEditScopeFuture": "Modifier cette occurrence et les suivantes"
     },
     "amountField": {
       "label": "Montant",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "Résumé hebdomadaire de l’activité",
           "description": "Un résumé hebdomadaire de l’activité de vos groupes."
+        },
+        "recurringExpense": {
+          "title": "Dépense récurrente",
+          "description": "Lorsqu’une dépense récurrente planifiée est créée dans un groupe."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "Paiement de règlement",
         "conversionSource": "Source de conversion",
         "conversionRate": "Taux de conversion"
-      }
+      },
+      "recurringCreated": "{participant} a créé la dépense récurrente « {title} »",
+      "stopped": "{participant} a arrêté la dépense récurrente {title}"
     },
     "group": {
       "updated": "{participant} a modifié les paramètres du groupe",
@@ -1943,5 +2001,58 @@
       "description": "Vous ne recevrez plus d’e-mails pour {category}. Vos autres paramètres de notification n’ont pas changé."
     },
     "scope": "Seule cette notification par e-mail sera désactivée. Vos autres e-mails et notifications push resteront inchangés."
+  },
+  "ExpenseSeries": {
+    "badge": "Récurrente",
+    "occurrence": "Occurrence {sequence}",
+    "previous": "Précédente",
+    "next": "Suivante",
+    "viewSeries": "Voir la série",
+    "title": "Série de dépenses",
+    "empty": "Aucune autre occurrence pour le moment.",
+    "scopeTitle": "Modifier la dépense récurrente",
+    "scopeDescription": "Choisissez les occurrences concernées.",
+    "occurrenceOnly": "Uniquement cette occurrence",
+    "thisAndFuture": "Cette occurrence et les suivantes",
+    "deleteScopeTitle": "Supprimer la dépense récurrente",
+    "deleteScopeDescription": "Choisissez de supprimer une occurrence ou de mettre fin à la série.",
+    "deleteOccurrence": "Supprimer uniquement cette occurrence",
+    "deleteThisAndFuture": "Supprimer cette occurrence et les suivantes",
+    "deleteThisAndFutureStop": "Supprimer cette occurrence et les suivantes et arrêter la récurrence",
+    "deleteThisAndFutureDescription": "Supprimer cette dépense et les suivantes ; le calendrier reste actif.",
+    "deleteThisAndFutureStopDescription": "Supprimer cette dépense et les suivantes et arrêter définitivement le calendrier.",
+    "deleteOccurrenceDescription": "Supprimer uniquement cette dépense. Les autres occurrences programmées restent inchangées.",
+    "actions": "Actions récurrentes",
+    "actionsTitle": "Actions de dépense récurrente",
+    "actionsDescription": "Choisissez précisément quelle occurrence modifier ou supprimer.",
+    "editActions": "Modifier",
+    "deleteActions": "Supprimer",
+    "confirmDelete": "Supprimer",
+    "confirmStop": "Arrêter la récurrence",
+    "working": "Traitement…",
+    "back": "Retour",
+    "confirm": "Continuer",
+    "cancel": "Annuler",
+    "occurrences": "{count} occurrences dans cette série",
+    "loading": "Chargement…",
+    "loadMore": "Charger plus d’occurrences",
+    "editOccurrence": "Modifier cette occurrence",
+    "editOccurrenceDescription": "Modifier uniquement cette dépense.",
+    "editThisAndFuture": "Modifier cette occurrence et les suivantes",
+    "editThisAndFutureDescription": "Modifier cette dépense et toutes les dépenses futures programmées.",
+    "stopRecurrence": "Arrêter la récurrence",
+    "stopConfirmTitle": "Arrêter cette récurrence ?",
+    "stopConfirmDescription": "Les dépenses existantes seront conservées. Aucune nouvelle occurrence ne sera créée.",
+    "stopConfirmHint": "L’arrêt est définitif. Pour recommencer, créez une nouvelle dépense récurrente.",
+    "deleteConfirmTitle": "Confirmer la suppression",
+    "deleteConfirmHint": "Cette action est irréversible pour les occurrences sélectionnées.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Seule cette occurrence sera supprimée.",
+      "THIS_AND_FUTURE": "Cette occurrence et les suivantes seront supprimées. La récurrence continuera avec la prochaine occurrence programmée.",
+      "THIS_AND_FUTURE_STOP": "Cette occurrence et les suivantes seront supprimées et la récurrence sera arrêtée."
+    },
+    "badgeRunning": "Récurrente · En cours",
+    "badgeStopped": "Récurrente · Arrêtée",
+    "badgeCompleted": "Récurrente · Terminée"
   }
 }

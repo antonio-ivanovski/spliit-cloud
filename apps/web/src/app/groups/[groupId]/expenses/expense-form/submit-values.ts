@@ -88,7 +88,8 @@ export function buildSubmitValues(
     isReimbursement: values.isReimbursement,
     documents: values.documents,
     notes: values.notes,
-    recurrenceRule: values.recurrenceRule,
+    recurrenceRule: 'NONE' as const,
+    recurrence: values.recurrence ?? null,
   }
 
   const items: Expense['items'] = (values.items ?? []).map((item) => {

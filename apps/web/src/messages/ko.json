@@ -195,7 +195,14 @@
         "conversionFixed": "고정 환율",
         "importErrorTitle": "가져오기 실패",
         "importErrorFallback": "그룹을 가져오는 동안 예기치 못한 오류가 발생했습니다. 다시 시도해 주세요.",
-        "executeImport": "그룹 가져오기"
+        "executeImport": "그룹 가져오기",
+        "recurringSchedulesLabel": "가져올 반복 일정",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "매일",
+          "weekly": "매주",
+          "monthly": "매월"
+        }
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
@@ -302,7 +309,8 @@
         "splitwiseAnonymizeDescription": "가져오기가 CSV를 거부하면 참여자 이름과 지출 설명을 로컬에서 제거하고 결과를 GitHub issue에 첨부할 수 있습니다. 파일은 사용자의 기기에만 머무르며 저희는 업로드하지 않습니다.",
         "splitwiseAnonymizeButton": "CSV 익명 처리",
         "splitwiseAnonymizeIssuesLink": "가져오기 문제 보고하기",
-        "splitwiseAnonymizeError": "이 파일을 익명 처리할 수 없습니다. Splitwise CSV 내보내기인지 확인해 주세요."
+        "splitwiseAnonymizeError": "이 파일을 익명 처리할 수 없습니다. Splitwise CSV 내보내기인지 확인해 주세요.",
+        "csvRecurrenceLimitation": "CSV보내기에는 반복 정보가 포함되지 않습니다. 반복 지출을 가져오려면 spliit.app의 JSON보내기를 사용하세요."
       },
       "StepHeader": {
         "title": "그룹 가져오기",
@@ -480,7 +488,51 @@
       "splitModeDescription": "지출을 어떻게 나눌지 선택해 주세요.",
       "attachDescription": "영수증을 확인하고 지출에 첨부합니다.",
       "createCopy": "사본 만들기: {title}",
-      "editTitle": "편집: {title}"
+      "editTitle": "편집: {title}",
+      "recurrence": {
+        "label": "지출 반복",
+        "description": "이 지출을 다시 생성할 시점을 선택하세요.",
+        "checkboxLabel": "반복 지출",
+        "checkboxDescription": "이 지출을 일정에 따라 생성",
+        "enable": "반복 추가",
+        "remove": "반복 제거",
+        "repeatEvery": "반복 주기",
+        "interval": "반복 간격",
+        "frequency": "반복 빈도",
+        "frequencyOptions": {
+          "daily": "일",
+          "weekly": "주",
+          "monthly": "개월",
+          "yearly": "년"
+        },
+        "ends": {
+          "label": "종료",
+          "never": "없음",
+          "count": "지정한 횟수 후",
+          "date": "지정한 날짜",
+          "countInput": "총 반복 횟수(이 지출 포함)",
+          "dateInput": "종료일"
+        },
+        "previewLabel": "다음 반복일",
+        "currentOccurrence": "현재",
+        "viewAll": "모두 보기",
+        "scheduleTitle": "반복 일정",
+        "remainingCount": "남은 지출은 {count}개입니다.",
+        "unlimitedSchedule": "이 반복에는 종료일이 없습니다.",
+        "noFurtherOccurrences": "이 설정으로는 더 이상 반복되지 않습니다.",
+        "scheduleCount": "이 지출부터 {count}개의 항목을 표시합니다.",
+        "decreaseOccurrences": "반복 횟수 줄이기",
+        "increaseOccurrences": "반복 횟수 늘리기",
+        "ruleSummary": "{interval}{frequency}마다 · {count}회",
+        "ruleSummaryIndefinite": "{interval}{frequency}마다 · 종료일 없음",
+        "scheduleChangeWarningTitle": "반복 일정이 변경됩니다",
+        "scheduleChangeWarning": "저장하면 이번 항목과 이후 항목의 일정이 다시 조정됩니다. 기존 미래 지출은 새 날짜로 옮겨지거나 삭제될 수 있으며, 빠진 예정일은 자동으로 생성될 수 있습니다.",
+        "pastDateBackfillNote": "이 지출이 과거 날짜로 시작하므로, 저장 후 오늘까지의 항목이 자동으로 생성됩니다.",
+        "completedOccurrence": "생성됨",
+        "upcomingOccurrence": "예정"
+      },
+      "recurringEditScopeOccurrence": "이 항목만 수정",
+      "recurringEditScopeFuture": "이 항목 및 이후 항목 수정"
     },
     "amountField": {
       "label": "금액",
@@ -1634,6 +1686,10 @@
         "weeklySummary": {
           "title": "주간 활동 요약",
           "description": "그룹 전체 활동의 주간 요약."
+        },
+        "recurringExpense": {
+          "title": "반복 지출",
+          "description": "그룹에 예약된 반복 지출이 생성될 때."
         }
       },
       "sections": {
@@ -1663,7 +1719,9 @@
         "reimbursement": "정산금",
         "conversionSource": "변환 출처",
         "conversionRate": "변환 환율"
-      }
+      },
+      "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다",
+      "stopped": "{participant}님이 반복 지출 ‘{title}’을 중지했습니다"
     },
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
@@ -1910,5 +1968,58 @@
       "description": "{category} 이메일을 더 이상 받지 않습니다. 다른 알림 설정은 변경되지 않았습니다."
     },
     "scope": "이 이메일 알림만 꺼집니다. 다른 이메일과 푸시 알림은 계속 유지됩니다."
+  },
+  "ExpenseSeries": {
+    "badge": "반복",
+    "occurrence": "{sequence}번째 반복",
+    "previous": "이전",
+    "next": "다음",
+    "viewSeries": "시리즈 보기",
+    "title": "지출 시리즈",
+    "empty": "아직 다른 반복이 없습니다.",
+    "scopeTitle": "반복 지출 수정",
+    "scopeDescription": "영향을 받을 반복을 선택하세요.",
+    "occurrenceOnly": "이 반복만",
+    "thisAndFuture": "이 반복과 이후 반복",
+    "deleteScopeTitle": "반복 지출 삭제",
+    "deleteScopeDescription": "한 번의 반복을 삭제할지 시리즈를 종료할지 선택하세요.",
+    "deleteOccurrence": "이 반복만 삭제",
+    "deleteThisAndFuture": "이 반복과 이후 반복 삭제",
+    "deleteThisAndFutureStop": "이 항목과 이후 항목 삭제 및 반복 중지",
+    "deleteThisAndFutureDescription": "이 지출과 이후 지출을 삭제합니다. 일정은 계속 활성 상태입니다.",
+    "deleteThisAndFutureStopDescription": "이 지출과 이후 지출을 삭제하고 일정을 영구적으로 중지합니다.",
+    "deleteOccurrenceDescription": "이 지출만 삭제합니다. 다른 예정 항목은 변경되지 않습니다.",
+    "actions": "반복 작업",
+    "actionsTitle": "반복 지출 작업",
+    "actionsDescription": "수정하거나 삭제할 항목을 정확히 선택하세요.",
+    "editActions": "수정",
+    "deleteActions": "삭제",
+    "confirmDelete": "삭제",
+    "confirmStop": "반복 중지",
+    "working": "처리 중…",
+    "back": "뒤로",
+    "confirm": "계속",
+    "cancel": "취소",
+    "occurrences": "이 시리즈의 반복 {count}개",
+    "loading": "불러오는 중…",
+    "loadMore": "반복 더 불러오기",
+    "editOccurrence": "이 항목 수정",
+    "editOccurrenceDescription": "이 지출만 변경합니다.",
+    "editThisAndFuture": "이 항목 및 이후 항목 수정",
+    "editThisAndFutureDescription": "이 지출과 이후 예정된 모든 지출을 변경합니다.",
+    "stopRecurrence": "반복 중지",
+    "stopConfirmTitle": "이 반복을 중지할까요?",
+    "stopConfirmDescription": "기존 지출은 유지됩니다. 새 항목은 생성되지 않습니다.",
+    "stopConfirmHint": "중지는 영구적입니다. 다시 시작하려면 새 반복 지출을 만드세요.",
+    "deleteConfirmTitle": "삭제 확인",
+    "deleteConfirmHint": "선택한 항목에 대해 이 작업은 되돌릴 수 없습니다.",
+    "deleteConfirm": {
+      "OCCURRENCE": "이 항목만 삭제됩니다.",
+      "THIS_AND_FUTURE": "이 항목과 이후 항목이 삭제됩니다. 반복은 다음 예정 항목부터 계속됩니다.",
+      "THIS_AND_FUTURE_STOP": "이 항목과 이후 항목이 삭제되고 반복이 중지됩니다."
+    },
+    "badgeRunning": "반복 · 실행 중",
+    "badgeStopped": "반복 · 중지됨",
+    "badgeCompleted": "반복 · 완료됨"
   }
 }

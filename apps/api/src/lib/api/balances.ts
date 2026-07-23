@@ -1,4 +1,4 @@
-import { prisma, RecurrenceRule, type Prisma } from '@spliit/db'
+import { prisma, type Prisma } from '@spliit/db'
 import {
   getBalances,
   getPublicBalances,
@@ -136,7 +136,6 @@ export async function createSettlementExpensesForArchive(
           },
         },
         splitMode: 'EVENLY',
-        recurrenceRule: RecurrenceRule.NONE,
         isReimbursement: true,
         paidFor: {
           createMany: {
@@ -233,7 +232,6 @@ export async function createSettlementExpensesForLeave(
           },
         },
         splitMode: 'EVENLY',
-        recurrenceRule: RecurrenceRule.NONE,
         isReimbursement: true,
         paidFor: {
           createMany: {

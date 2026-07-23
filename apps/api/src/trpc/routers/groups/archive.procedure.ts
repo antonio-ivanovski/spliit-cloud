@@ -11,6 +11,7 @@ import {
   getGroupBalances,
   hasUnsettledBalances,
 } from '../../../lib/api/balances'
+import { resumeRecurringExpenseSeries } from '../../../lib/api/recurrence-series'
 import { scheduleDefaultNotificationDispatch } from '../../../lib/notifications/dispatcher'
 import { loadGroupContext, protectedProcedure } from '../../init'
 
@@ -55,115 +56,114 @@ export const archiveGroupProcedure = protectedProcedure
       })
     }
 
-    // Re-archive (unarchive then archive) is always allowed because the
-    // existing state already cleared any previous settlement expenses.
-    const archivedRow = await prisma.group.findUnique({
-      where: { id: groupId },
-      select: { archived: true },
-    })
-    const wasAlreadyArchived = !!archivedRow?.archived
-    const willArchive = archived && !wasAlreadyArchived
-
-    if (willArchive && !force) {
-      const balances = await getGroupBalances(groupId)
-      if (hasUnsettledBalances(balances)) {
-        throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message:
-            'Group has unsettled balances. Settle or force-archive to continue.',
-        })
+    // Every archive decision is made while holding the group row lock. The
+    // materializer follows the same Group -> RecurringExpenseSeries order,
+    // so a due occurrence cannot be created between the balance precheck and
+    // pausing the series.
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT "id" FROM "Group" WHERE "id" = ${groupId} FOR UPDATE`
+      const lockedGroup = await tx.group.findUnique({
+        where: { id: groupId },
+        select: { id: true, name: true, ledgerId: true, archived: true },
+      })
+      if (!lockedGroup) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
       }
-    }
 
-    if (willArchive && force) {
-      const result = await prisma.$transaction(async (tx) => {
+      const wasAlreadyArchived = lockedGroup.archived
+      const willArchive = archived && !wasAlreadyArchived
+      const willUnarchive = !archived && wasAlreadyArchived
+
+      if (willArchive && !force) {
         const balances = await getGroupBalances(groupId)
-        let settlementActivities = undefined as
-          | Awaited<
-              ReturnType<typeof createSettlementExpensesForArchive>
-            >['activities']
-          | undefined
         if (hasUnsettledBalances(balances)) {
-          const r = await createSettlementExpensesForArchive(
+          throw new TRPCError({
+            code: 'PRECONDITION_FAILED',
+            message:
+              'Group has unsettled balances. Settle or force-archive to continue.',
+          })
+        }
+      }
+
+      let settlementActivities: Awaited<
+        ReturnType<typeof createSettlementExpensesForArchive>
+      >['activities'] = []
+      if (willArchive && force) {
+        const balances = await getGroupBalances(groupId)
+        if (hasUnsettledBalances(balances)) {
+          const settled = await createSettlementExpensesForArchive(
             groupId,
             { accountId: ctx.auth.user.id },
             tx,
           )
-          settlementActivities = r.activities
+          settlementActivities = settled.activities
         }
-        const updated = await tx.group.update({
-          where: { id: groupId },
-          data: { archived: true },
+      }
+
+      if (willArchive) {
+        await tx.recurringExpenseSeries.updateMany({
+          where: { ledgerId: lockedGroup.ledgerId, status: 'ACTIVE' },
+          data: { status: 'PAUSED', version: { increment: 1 } },
         })
-        const activity = await logActivity(
-          groupId,
-          {
-            type: 'GROUP_ARCHIVED',
-            actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
-            subject: { type: 'GROUP', id: groupId },
-            data: buildGroupActivityData({ summary: updated.name }),
-          },
-          tx,
-        )
-        return { group: updated, settlementActivities, activity }
+      }
+      const updated = await tx.group.update({
+        where: { id: groupId },
+        data: { archived },
       })
+      const activity =
+        willArchive || willUnarchive
+          ? await logActivity(
+              groupId,
+              {
+                type: willArchive ? 'GROUP_ARCHIVED' : 'GROUP_UNARCHIVED',
+                actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+                subject: { type: 'GROUP', id: groupId },
+                data: buildGroupActivityData({ summary: updated.name }),
+              },
+              tx,
+            )
+          : null
+      return {
+        group: updated,
+        activity,
+        settlementActivities,
+        willArchive,
+        willUnarchive,
+      }
+    })
+
+    if (result.activity) {
+      const activityType = result.willArchive
+        ? 'GROUP_ARCHIVED'
+        : 'GROUP_UNARCHIVED'
       scheduleDefaultNotificationDispatch({
         activityId: result.activity.id,
-        type: 'GROUP_ARCHIVED',
+        type: activityType,
         groupId,
         actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
         subject: { type: 'GROUP', id: groupId },
         data: buildGroupActivityData({ summary: result.group.name }),
         occurredAt: result.activity.time,
       })
-      if (result.settlementActivities) {
-        for (const meta of result.settlementActivities) {
-          scheduleDefaultNotificationDispatch({
-            activityId: meta.activityId,
-            type: 'EXPENSE_CREATED',
-            groupId,
-            actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
-            subject: { type: 'EXPENSE', id: meta.expenseId },
-            data: buildExpenseActivityData({
-              summary: meta.title,
-              title: meta.title,
-              amount: meta.amount,
-              currencyCode: meta.currencyCode,
-              date: meta.date,
-            }),
-            occurredAt: meta.time,
-          })
-        }
-      }
-      return { group: result.group }
     }
-
-    const willUnarchive = archived === false && wasAlreadyArchived
-
-    const updated = await prisma.group.update({
-      where: { id: groupId },
-      data: { archived },
-    })
-
-    if (willArchive || willUnarchive) {
-      const activity = await logActivity(groupId, {
-        type: willArchive ? 'GROUP_ARCHIVED' : 'GROUP_UNARCHIVED',
-        actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
-        subject: { type: 'GROUP', id: groupId },
-        data: buildGroupActivityData({
-          summary: willArchive ? updated.name : updated.name,
-        }),
-      })
+    for (const meta of result.settlementActivities) {
       scheduleDefaultNotificationDispatch({
-        activityId: activity.id,
-        type: willArchive ? 'GROUP_ARCHIVED' : 'GROUP_UNARCHIVED',
+        activityId: meta.activityId,
+        type: 'EXPENSE_CREATED',
         groupId,
         actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
-        subject: { type: 'GROUP', id: groupId },
-        data: buildGroupActivityData({ summary: updated.name }),
-        occurredAt: activity.time,
+        subject: { type: 'EXPENSE', id: meta.expenseId },
+        data: buildExpenseActivityData({
+          summary: meta.title,
+          title: meta.title,
+          amount: meta.amount,
+          currencyCode: meta.currencyCode,
+          date: meta.date,
+        }),
+        occurredAt: meta.time,
       })
     }
+    if (result.willUnarchive) await resumeRecurringExpenseSeries(groupId)
 
-    return { group: updated }
+    return { group: result.group }
   })

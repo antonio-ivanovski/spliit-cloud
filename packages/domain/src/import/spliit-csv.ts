@@ -18,7 +18,11 @@ const FALLBACK_CURRENCY: Currency = {
   decimal_digits: 2,
 }
 
-/** Column indices for a validated Spliit CSV header (old or with Conversion source). */
+/**
+ * Column indices for the immutable legacy spliit.app CSV export. This is not
+ * the Spliit Cloud export format; keep the wire schema stable and map it to
+ * current models after parsing.
+ */
 type CsvLayout = {
   isReimbursement: number
   splitMode: number
@@ -242,6 +246,7 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       paidFor: resolvedPaidFor,
       splitMode,
       recurrenceRule: 'NONE',
+      recurrence: null,
       isReimbursement,
       notes: null,
     })
@@ -280,8 +285,10 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
 }
 
 /**
- * Accept both legacy exports and exports that include `Conversion source`
- * after `Conversion rate`. Participant columns always follow `Split mode`.
+ * Accept the legacy spliit.app CSV layout (with the historical optional
+ * Conversion source column). Current Cloud recurrence columns are rejected;
+ * they are a different transport format and must not become part of this
+ * importer’s public schema.
  */
 function detectCsvLayout(header: string[]): CsvLayout | null {
   const baseOk =
@@ -295,17 +302,31 @@ function detectCsvLayout(header: string[]): CsvLayout | null {
     header[7] === 'Conversion rate'
   if (!baseOk) return null
 
+  let isReimbursement: number
+  let splitMode: number
   if (
     header[8] === 'Conversion source' &&
     header[9] === 'Is Reimbursement' &&
     header[10] === 'Split mode'
   ) {
-    return { isReimbursement: 9, splitMode: 10, participantStart: 11 }
+    isReimbursement = 9
+    splitMode = 10
+  } else if (header[8] === 'Is Reimbursement' && header[9] === 'Split mode') {
+    isReimbursement = 8
+    splitMode = 9
+  } else {
+    return null
   }
-  if (header[8] === 'Is Reimbursement' && header[9] === 'Split mode') {
-    return { isReimbursement: 8, splitMode: 9, participantStart: 10 }
+
+  if (header.some((column) => /^Recurrence(?: |$)/i.test(column.trim()))) {
+    return null
   }
-  return null
+
+  return {
+    isReimbursement,
+    splitMode,
+    participantStart: splitMode + 1,
+  }
 }
 
 function categoryToId(name: string): string {

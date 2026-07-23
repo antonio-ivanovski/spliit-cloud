@@ -214,6 +214,26 @@ describe('ExpenseCard', () => {
     expect(card.className).toContain('hover:bg-accent')
   })
 
+  it('renders the RecurringBadge for expenses that belong to a recurring series', () => {
+    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const expense = makeExpense({
+      recurringSeriesId: 'series-9',
+      recurringSeriesStatus: 'CANCELLED',
+    })
+    render(
+      <ExpenseCard
+        expense={expense}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(screen.getByText('Recurring · Stopped')).toBeInTheDocument()
+  })
+
   it('shows settlement badge for reimbursements', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)

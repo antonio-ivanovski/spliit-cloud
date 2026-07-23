@@ -274,7 +274,14 @@
         "conversionFixed": "Tasso fisso",
         "importErrorTitle": "Importazione non riuscita",
         "importErrorFallback": "Si è verificato un errore imprevisto durante l'importazione del gruppo. Riprova.",
-        "executeImport": "Importa gruppo"
+        "executeImport": "Importa gruppo",
+        "recurringSchedulesLabel": "Pianificazioni ricorrenti da importare",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Giornaliera",
+          "weekly": "Settimanale",
+          "monthly": "Mensile"
+        }
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Se l'importatore rifiuta il tuo CSV, puoi rimuovere localmente i nomi dei partecipanti e le descrizioni delle spese e allegare il risultato a una issue di GitHub. Il tuo file resta sul tuo dispositivo — non lo carichiamo mai.",
         "splitwiseAnonymizeButton": "Anonimizza un CSV",
         "splitwiseAnonymizeIssuesLink": "Apri una issue di importazione",
-        "splitwiseAnonymizeError": "Impossibile anonimizzare questo file. Assicurati che sia un'esportazione CSV di Splitwise."
+        "splitwiseAnonymizeError": "Impossibile anonimizzare questo file. Assicurati che sia un'esportazione CSV di Splitwise.",
+        "csvRecurrenceLimitation": "Le esportazioni CSV non includono la ricorrenza. Usa un’esportazione JSON da spliit.app per importare le spese ricorrenti."
       },
       "StepHeader": {
         "title": "Importa un gruppo",
@@ -591,7 +599,51 @@
         "description": "La valuta in cui è stata pagata la spesa."
       },
       "createCopy": "Crea copia: {title}",
-      "editTitle": "Modifica: {title}"
+      "editTitle": "Modifica: {title}",
+      "recurrence": {
+        "label": "Ricorrenza della spesa",
+        "description": "Scegli quando questa spesa deve essere creata di nuovo.",
+        "checkboxLabel": "Ricorrente",
+        "checkboxDescription": "Crea questa spesa secondo una pianificazione",
+        "enable": "Aggiungi ricorrenza",
+        "remove": "Rimuovi ricorrenza",
+        "repeatEvery": "Ripeti ogni",
+        "interval": "Intervallo di ripetizione",
+        "frequency": "Frequenza di ricorrenza",
+        "frequencyOptions": {
+          "daily": "giorno/i",
+          "weekly": "settimana/e",
+          "monthly": "mese/i",
+          "yearly": "anno/i"
+        },
+        "ends": {
+          "label": "Termina",
+          "never": "Mai",
+          "count": "Dopo un numero di occorrenze",
+          "date": "In una data",
+          "countInput": "Occorrenze totali (inclusa questa spesa)",
+          "dateInput": "Data di fine"
+        },
+        "previewLabel": "Prossime occorrenze",
+        "currentOccurrence": "Attuale",
+        "viewAll": "Visualizza tutto",
+        "scheduleTitle": "Pianificazione della ricorrenza",
+        "remainingCount": "Restano {count} occorrenze.",
+        "unlimitedSchedule": "Questa ricorrenza non ha una data di fine.",
+        "noFurtherOccurrences": "Nessun’altra occorrenza con queste impostazioni.",
+        "scheduleCount": "Visualizzazione di {count} occorrenze a partire da questa spesa.",
+        "decreaseOccurrences": "Diminuisci le occorrenze",
+        "increaseOccurrences": "Aumenta le occorrenze",
+        "ruleSummary": "Ogni {interval} {frequency} · {count} occorrenze",
+        "ruleSummaryIndefinite": "Ogni {interval} {frequency} · Senza data di fine",
+        "scheduleChangeWarningTitle": "Il calendario di ricorrenza cambierà",
+        "scheduleChangeWarning": "Salvando, questa occorrenza e quelle future verranno riprogrammate. Le spese future esistenti possono essere spostate a nuove date o rimosse, e le scadenze mancanti possono essere create automaticamente.",
+        "pastDateBackfillNote": "Poiché questa spesa inizia nel passato, le occorrenze fino a oggi verranno create automaticamente dopo il salvataggio.",
+        "completedOccurrence": "Creata",
+        "upcomingOccurrence": "Prossima"
+      },
+      "recurringEditScopeOccurrence": "Modifica solo questa occorrenza",
+      "recurringEditScopeFuture": "Modifica questa e le occorrenze future"
     },
     "amountField": {
       "label": "Importo",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "Riepilogo settimanale delle attività",
           "description": "Un riepilogo settimanale delle attività dei tuoi gruppi."
+        },
+        "recurringExpense": {
+          "title": "Spesa ricorrente",
+          "description": "Quando viene creata una spesa ricorrente programmata in un gruppo."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "Pagamento di saldo",
         "conversionSource": "Fonte di conversione",
         "conversionRate": "Tasso di conversione"
-      }
+      },
+      "recurringCreated": "{participant} ha creato la spesa ricorrente «{title}»",
+      "stopped": "{participant} ha interrotto la spesa ricorrente {title}"
     },
     "group": {
       "updated": "{participant} ha aggiornato le impostazioni del gruppo",
@@ -1943,5 +2001,58 @@
       "description": "Non riceverai e-mail per {category}. Le altre impostazioni delle notifiche non sono cambiate."
     },
     "scope": "Verrà disattivata solo questa notifica e-mail. Le altre e-mail e notifiche push resteranno invariate."
+  },
+  "ExpenseSeries": {
+    "badge": "Ricorrente",
+    "occurrence": "Occorrenza {sequence}",
+    "previous": "Precedente",
+    "next": "Successiva",
+    "viewSeries": "Visualizza serie",
+    "title": "Serie di spese",
+    "empty": "Non ci sono ancora altre occorrenze.",
+    "scopeTitle": "Aggiorna spesa ricorrente",
+    "scopeDescription": "Scegli quali occorrenze modificare.",
+    "occurrenceOnly": "Solo questa occorrenza",
+    "thisAndFuture": "Questa occorrenza e quelle future",
+    "deleteScopeTitle": "Elimina spesa ricorrente",
+    "deleteScopeDescription": "Scegli se eliminare una sola occorrenza o terminare la serie.",
+    "deleteOccurrence": "Elimina solo questa occorrenza",
+    "deleteThisAndFuture": "Elimina questa occorrenza e quelle future",
+    "deleteThisAndFutureStop": "Elimina questa e le occorrenze future e interrompi la ricorrenza",
+    "deleteThisAndFutureDescription": "Rimuovi questa e le spese successive; la programmazione resterà attiva.",
+    "deleteThisAndFutureStopDescription": "Rimuovi questa e le spese successive e interrompi definitivamente la programmazione.",
+    "deleteOccurrenceDescription": "Rimuovi solo questa spesa. Le altre occorrenze programmate rimarranno invariate.",
+    "actions": "Azioni ricorrenti",
+    "actionsTitle": "Azioni della spesa ricorrente",
+    "actionsDescription": "Scegli esattamente quale occorrenza modificare o eliminare.",
+    "editActions": "Modifica",
+    "deleteActions": "Elimina",
+    "confirmDelete": "Elimina",
+    "confirmStop": "Interrompi ricorrenza",
+    "working": "Elaborazione…",
+    "back": "Indietro",
+    "confirm": "Continua",
+    "cancel": "Annulla",
+    "occurrences": "{count} occorrenze in questa serie",
+    "loading": "Caricamento…",
+    "loadMore": "Carica altre occorrenze",
+    "editOccurrence": "Modifica questa occorrenza",
+    "editOccurrenceDescription": "Modifica solo questa spesa.",
+    "editThisAndFuture": "Modifica questa e le occorrenze future",
+    "editThisAndFutureDescription": "Modifica questa spesa e tutte le spese future programmate.",
+    "stopRecurrence": "Interrompi ricorrenza",
+    "stopConfirmTitle": "Interrompere questa ricorrenza?",
+    "stopConfirmDescription": "Le spese esistenti resteranno. Non verranno create nuove occorrenze.",
+    "stopConfirmHint": "L’interruzione è permanente. Per ricominciare, crea una nuova spesa ricorrente.",
+    "deleteConfirmTitle": "Conferma eliminazione",
+    "deleteConfirmHint": "Questa azione è irreversibile per le occorrenze selezionate.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Verrà eliminata solo questa occorrenza.",
+      "THIS_AND_FUTURE": "Questa e le occorrenze successive verranno eliminate. La ricorrenza continuerà con la prossima occorrenza programmata.",
+      "THIS_AND_FUTURE_STOP": "Questa e le occorrenze successive verranno eliminate e la ricorrenza verrà interrotta."
+    },
+    "badgeRunning": "Ricorrente · In corso",
+    "badgeStopped": "Ricorrente · Interrotta",
+    "badgeCompleted": "Ricorrente · Completata"
   }
 }

@@ -1,7 +1,12 @@
 import type { Page } from '@playwright/test'
 import type { AppRouter } from '@spliit/api/router'
 import type { RecurrenceRule } from '@spliit/domain'
-import { DEFAULT_CATEGORY_ID, SplitMode, type CategoryId } from '@spliit/domain'
+import {
+  DEFAULT_CATEGORY_ID,
+  SplitMode,
+  type CategoryId,
+  type RecurrenceConfig,
+} from '@spliit/domain'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 
@@ -92,6 +97,7 @@ export async function createExpensesViaAPI(
         paidFor?: Array<{ participant: string; shares: number }>
         excludeParticipants?: string[] // Participant names to exclude from the split
         recurrenceRule?: RecurrenceRule | 'NONE'
+        recurrence?: RecurrenceConfig | null
       }>
     | number, // If number, creates that many expenses with default values
   _payerNames?: string[], // Only used when first param is a number
@@ -118,6 +124,7 @@ export async function createExpensesViaAPI(
     paidFor?: Array<{ participant: string; shares: number }>
     excludeParticipants?: string[]
     recurrenceRule?: RecurrenceRule | 'NONE'
+    recurrence?: RecurrenceConfig | null
   }>
 
   if (typeof expenses === 'number') {
@@ -176,7 +183,11 @@ export async function createExpensesViaAPI(
       paidFor,
       splitMode: expense.splitMode || SplitMode.EVENLY,
       isReimbursement: expense.isReimbursement || false,
-      recurrenceRule: expense.recurrenceRule || 'NONE',
+      recurrenceRule:
+        expense.recurrenceRule === 'YEARLY'
+          ? 'NONE'
+          : expense.recurrenceRule || 'NONE',
+      recurrence: expense.recurrence ?? null,
       notes: expense.notes,
     }
 

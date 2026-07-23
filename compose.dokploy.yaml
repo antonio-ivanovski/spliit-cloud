@@ -57,6 +57,7 @@ services:
       PUSH_VAPID_PRIVATE_KEY: ${PUSH_VAPID_PRIVATE_KEY:?PUSH_VAPID_PRIVATE_KEY must be set}
       PUSH_VAPID_SUBJECT: ${PUSH_VAPID_SUBJECT:?PUSH_VAPID_SUBJECT must be set}
       EMAIL_UNSUBSCRIBE_SECRET: ${EMAIL_UNSUBSCRIBE_SECRET:?EMAIL_UNSUBSCRIBE_SECRET must be set}
+      JOBS_ENABLED: ${JOBS_ENABLED:-true}
     networks:
       - dokploy-network
     healthcheck:
@@ -64,6 +65,49 @@ services:
         [
           'CMD-SHELL',
           'bun -e "fetch(''http://127.0.0.1:3001/health/readiness'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  worker:
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-worker:latest
+    pull_policy: always
+    restart: unless-stopped
+    stop_grace_period: 40s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JOBS_ENABLED: ${JOBS_ENABLED:-true}
+      JOBS_RECONCILIATION_CRON: ${JOBS_RECONCILIATION_CRON:-* * * * *}
+      JOBS_MAX_CONCURRENCY: ${JOBS_MAX_CONCURRENCY:-5}
+      JOBS_POOL_SIZE: ${JOBS_POOL_SIZE:-8}
+      JOBS_RETRY_LIMIT: ${JOBS_RETRY_LIMIT:-5}
+      JOBS_RETRY_BACKOFF_SECONDS: ${JOBS_RETRY_BACKOFF_SECONDS:-30}
+      JOBS_RETENTION_SECONDS: ${JOBS_RETENTION_SECONDS:-604800}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      PUSH_VAPID_PUBLIC_KEY: ${PUSH_VAPID_PUBLIC_KEY:-}
+      PUSH_VAPID_PRIVATE_KEY: ${PUSH_VAPID_PRIVATE_KEY:-}
+      PUSH_VAPID_SUBJECT: ${PUSH_VAPID_SUBJECT:-}
+      EMAIL_UNSUBSCRIBE_SECRET: ${EMAIL_UNSUBSCRIBE_SECRET:-}
+      JOBS_ADMIN_HOST: 0.0.0.0
+      JOBS_ADMIN_PORT: 3003
+    networks:
+      - dokploy-network
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'bun -e "fetch(''http://127.0.0.1:3003/health/readiness'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
         ]
       interval: 10s
       timeout: 5s

@@ -38,10 +38,31 @@ function dedupeRecipients(
   return recipients.flatMap((recipient) => {
     if (!recipient.id || seen.has(recipient.id)) return []
     seen.add(recipient.id)
-    if (event.actor?.type === 'ACCOUNT' && event.actor.id === recipient.id)
+    if (
+      event.actor?.type === 'ACCOUNT' &&
+      event.actor.id === recipient.id &&
+      !event.includeActorAsRecipient
+    )
       return []
     return [{ activity: event, category, recipientAccountId: recipient.id }]
   })
+}
+
+async function activeActorAccount(
+  event: ActivityNotificationEvent,
+): Promise<Recipient[]> {
+  if (!event.includeActorAsRecipient || event.actor?.type !== 'ACCOUNT') {
+    return []
+  }
+  const member = await prisma.groupMember.findFirst({
+    where: {
+      groupId: event.groupId,
+      accountId: event.actor.id,
+      status: 'ACTIVE',
+    },
+    select: { accountId: true },
+  })
+  return member ? [{ id: member.accountId }] : []
 }
 
 async function activeGroupAccounts(groupId: string): Promise<Recipient[]> {
@@ -74,7 +95,11 @@ async function expenseParticipantAccounts(
   const parsed = parseActivityData(event.data)
   if (!parsed) return []
   let participantIds: string[] = []
-  if (event.type === 'EXPENSE_CREATED') {
+  if (
+    (event.type === 'EXPENSE_CREATED' ||
+      event.type === 'RECURRING_EXPENSE_CREATED') &&
+    parsed.kind !== 'recurring_expense_summary'
+  ) {
     if (!event.subject?.id) return []
     const raw = await prisma.expense.findUnique({
       where: { id: event.subject.id },
@@ -162,7 +187,24 @@ export class ExpenseActivityHandler implements ActivityHandler {
   async buildIntents(event: ActivityNotificationEvent) {
     const category = eventCategory(event)
     if (!category) return []
-    const recipients = await expenseParticipantAccounts(event)
+    // Catch-up summaries intentionally have no expense subject: affected
+    // participants receive one coalesced summary while each occurrence
+    // activity remains available in the feed.
+    const parsed = parseActivityData(event.data)
+    const [participants, actor] = await Promise.all([
+      expenseParticipantAccounts(event),
+      activeActorAccount(event),
+    ])
+    const recipients =
+      event.type === 'RECURRING_EXPENSE_CREATED' &&
+      parsed?.kind === 'recurring_expense_summary' &&
+      participants.length === 0
+        ? // If the summary's affected participants produce no eligible
+          // accounts (all inactive or unlinked), notify only the actor.
+          // Do not broadcast to every group member — that would leak
+          // expense details to uninvolved participants.
+          [...actor]
+        : [...participants, ...actor]
     return dedupeRecipients(event, recipients, category)
   }
 }

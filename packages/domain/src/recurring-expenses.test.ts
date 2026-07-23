@@ -1,5 +1,11 @@
-import { RecurrenceRule } from './enums'
-import { calculateNextDate } from './recurring-expenses'
+import { RecurrenceFrequency, RecurrenceRule } from './enums'
+import {
+  calculateNextDate,
+  calculateNextOccurrenceDate,
+  calculateRecurrenceDate,
+  recurrenceConfigSchema,
+  validateRecurrenceConfig,
+} from './recurring-expenses'
 
 describe('calculateNextDate', () => {
   describe('DAILY recurrence', () => {
@@ -177,5 +183,68 @@ describe('calculateNextDate', () => {
       expect(result.getUTCMonth()).toBe(11)
       expect(result.getUTCDate()).toBe(30)
     })
+  })
+})
+
+describe('anchored recurrence schedules', () => {
+  it('supports repeat-every daily and weekly intervals', () => {
+    const anchor = new Date(Date.UTC(2025, 0, 15))
+    expect(
+      calculateRecurrenceDate(anchor, RecurrenceFrequency.DAILY, 3, 3),
+    ).toEqual(new Date(Date.UTC(2025, 0, 21)))
+    expect(
+      calculateNextOccurrenceDate(anchor, RecurrenceFrequency.WEEKLY, 5, 1),
+    ).toEqual(new Date(Date.UTC(2025, 1, 19)))
+  })
+
+  it('clamps each monthly occurrence from the original anchor', () => {
+    const anchor = new Date(Date.UTC(2025, 0, 31))
+    expect(
+      calculateRecurrenceDate(anchor, RecurrenceFrequency.MONTHLY, 1, 2),
+    ).toEqual(new Date(Date.UTC(2025, 1, 28)))
+    expect(
+      calculateRecurrenceDate(anchor, RecurrenceFrequency.MONTHLY, 1, 3),
+    ).toEqual(new Date(Date.UTC(2025, 2, 31)))
+  })
+
+  it('clamps non-leap yearly occurrences and restores leap day', () => {
+    const anchor = new Date(Date.UTC(2024, 1, 29))
+    expect(
+      calculateRecurrenceDate(anchor, RecurrenceFrequency.YEARLY, 1, 2),
+    ).toEqual(new Date(Date.UTC(2025, 1, 28)))
+    expect(
+      calculateRecurrenceDate(anchor, RecurrenceFrequency.YEARLY, 1, 5),
+    ).toEqual(new Date(Date.UTC(2028, 1, 29)))
+  })
+
+  it('validates interval and inclusive termination', () => {
+    expect(
+      recurrenceConfigSchema.safeParse({
+        frequency: 'MONTHLY',
+        interval: 0,
+        end: { type: 'INDEFINITE' },
+      }).success,
+    ).toBe(false)
+    const anchor = new Date(Date.UTC(2025, 0, 31))
+    expect(() =>
+      validateRecurrenceConfig(
+        {
+          frequency: 'DAILY',
+          interval: 1,
+          end: { type: 'DATE', endDate: new Date(Date.UTC(2025, 0, 30)) },
+        },
+        anchor,
+      ),
+    ).toThrow(RangeError)
+    expect(
+      validateRecurrenceConfig(
+        {
+          frequency: 'DAILY',
+          interval: 1,
+          end: { type: 'DATE', endDate: anchor },
+        },
+        anchor,
+      ).end.type,
+    ).toBe('DATE')
   })
 })

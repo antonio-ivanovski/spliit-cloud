@@ -16,7 +16,7 @@
     "prisma"
   ],
   "scripts": {
-    "dev": "turbo --ui=tui run dev --filter=@spliit/api --filter=@spliit/web",
+    "dev": "turbo --ui=tui run dev",
     "dev:up": "docker compose -f compose.dev.yaml up -d --wait",
     "dev:down": "docker compose -f compose.dev.yaml down",
     "build": "turbo --ui=tui run build",

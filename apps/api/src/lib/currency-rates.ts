@@ -6,6 +6,8 @@ const MAX_ENTRIES = 256
 // future-date fallback (provider's latest available rate) only changes
 // on weekdays. 24h is plenty to dedupe repeated form interactions.
 const DEFAULT_TTL_MS = 24 * 60 * 60 * 1000
+/** Keep provider calls below the pg-boss 300s materialization lease. */
+export const FX_REQUEST_TIMEOUT_MS = 10_000
 
 export type CurrencyRate = {
   /** Rate of 1 unit of `base` expressed in `target`. */
@@ -119,17 +121,23 @@ async function fetchFromProvider(
   quotes?: string[],
 ): Promise<FrankfurterResponse> {
   let res: Response
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), FX_REQUEST_TIMEOUT_MS)
   try {
     const params = new URLSearchParams({ date, base })
     if (quotes?.length) {
       params.set('quotes', Array.from(new Set(quotes)).join(','))
     }
-    res = await fetch(`${FRANKFURTER_BASE_URL}/rates?${params.toString()}`)
+    res = await fetch(`${FRANKFURTER_BASE_URL}/rates?${params.toString()}`, {
+      signal: controller.signal,
+    })
   } catch (err) {
     throw new CurrencyRateProviderError(
       'Currency rate provider request failed',
       err,
     )
+  } finally {
+    clearTimeout(timeout)
   }
   if (!res.ok) {
     throw new CurrencyRateProviderError(

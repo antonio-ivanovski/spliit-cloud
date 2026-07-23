@@ -10,6 +10,7 @@ export type NotificationRow = {
     | 'rows.addedToGroup.title'
     | 'rows.addedAsFriend.title'
     | 'rows.newExpense.title'
+    | 'rows.recurringExpense.title'
     | 'rows.expenseChanged.title'
     | 'rows.newComment.title'
     | 'rows.weeklySummary.title'
@@ -18,6 +19,7 @@ export type NotificationRow = {
     | 'rows.addedToGroup.description'
     | 'rows.addedAsFriend.description'
     | 'rows.newExpense.description'
+    | 'rows.recurringExpense.description'
     | 'rows.expenseChanged.description'
     | 'rows.newComment.description'
     | 'rows.weeklySummary.description'
@@ -46,6 +48,12 @@ export const NOTIFICATION_ROWS = {
       category: NotificationCategory.EXPENSE_CREATED,
       titleKey: 'rows.newExpense.title',
       descriptionKey: 'rows.newExpense.description',
+    },
+    {
+      id: 'recurring-expense-created',
+      category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+      titleKey: 'rows.recurringExpense.title',
+      descriptionKey: 'rows.recurringExpense.description',
     },
     {
       id: 'expense-changed',

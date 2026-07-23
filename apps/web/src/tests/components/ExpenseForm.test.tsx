@@ -1041,7 +1041,7 @@ describe('ExpenseForm', () => {
     expect(submittedValues).toHaveProperty('amount')
   })
 
-  it('recurrence rule dropdown renders', () => {
+  it('recurrence checkbox renders', () => {
     const onSubmit = vi.fn()
     render(
       <ExpenseForm
@@ -1051,7 +1051,83 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    expect(screen.getByText('Expense Recurrence')).toBeInTheDocument()
+    expect(
+      screen.getByRole('checkbox', { name: 'Recurring' }),
+    ).toBeInTheDocument()
+  })
+
+  it('expands recurrence settings and opens the schedule drawer', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    act(() => {
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Recurring' }))
+    })
+    expect(screen.getByText('Repeat every')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'View all' }))
+    })
+    expect(screen.getByText('Recurrence schedule')).toBeInTheDocument()
+    const projectedSchedule = screen.getByRole('list', {
+      name: 'Recurrence schedule',
+    })
+    const currentProjectedOccurrence = projectedSchedule.querySelector(
+      '[aria-current="date"]',
+    )
+    expect(currentProjectedOccurrence).toHaveClass('top-0')
+    expect(currentProjectedOccurrence).toHaveStyle({
+      transform: 'translateY(0px)',
+    })
+    // The indefinite schedule drawer should include concrete dates, not only
+    // the no-end summary (the inline preview contributes four list items).
+    expect(screen.getAllByRole('listitem').length).toBeGreaterThan(4)
+    expect(
+      screen.getAllByText('This recurrence has no end date.').length,
+    ).toBeGreaterThanOrEqual(1)
+  })
+
+  it('allows recurrence numbers to be replaced and restores empty drafts on blur', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    await user.click(screen.getByRole('checkbox', { name: 'Recurring' }))
+
+    const interval = screen.getByRole('spinbutton', {
+      name: 'Repeat interval',
+    })
+    await user.clear(interval)
+    expect(interval).toHaveValue(null)
+    await user.type(interval, '5')
+    expect(interval).toHaveValue(5)
+    await user.clear(interval)
+    await user.tab()
+    expect(interval).toHaveValue(5)
+
+    await user.click(screen.getByRole('combobox', { name: 'Ends' }))
+    await user.click(
+      screen.getByRole('option', { name: 'After a number of occurrences' }),
+    )
+
+    const count = screen.getByRole('spinbutton', {
+      name: 'Total occurrences (including this expense)',
+    })
+    await user.clear(count)
+    expect(count).toHaveValue(null)
+    await user.type(count, '5')
+    expect(count).toHaveValue(5)
+    await user.clear(count)
+    await user.tab()
+    expect(count).toHaveValue(5)
   })
 
   it('paid-by selector renders with participant names', () => {

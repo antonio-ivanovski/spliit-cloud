@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import '../../../test/mocks'
-import { authState, prisma$Transaction, prismaMock } from '../../../test/state'
+import {
+  authState,
+  prisma$QueryRaw,
+  prisma$Transaction,
+  prismaMock,
+} from '../../../test/state'
 import { createTRPCContext } from '../../init'
 import { groupsRouter } from './index'
 
@@ -54,13 +59,6 @@ function mockGroupWithMember(role: 'ADMIN' | 'MEMBER' | null) {
         } as never)
       : null,
   )
-  // `getGroupBalances` (used by the archive procedure to decide whether
-  // settlement expenses must be auto-created) goes through
-  // `getGroupExpenses`, which itself materialises recurring expense
-  // links. The default stubs return null, so seed empty arrays here so
-  // the happy-path tests can exercise the archive mutation without
-  // touching the recurring-expense machinery.
-  prismaMock.recurringExpenseLink.findMany.mockResolvedValue([] as never)
   prismaMock.expense.findMany.mockResolvedValue([] as never)
 }
 
@@ -218,6 +216,32 @@ function makeExpenseRow(args: {
 }
 
 describe('groupsRouter.archive — unsettled balances', () => {
+  it('locks the group before checking balances', async () => {
+    await authAs('acct-owner')
+    mockGroupWithMember('ADMIN')
+    prismaMock.expense.findMany.mockResolvedValue([
+      makeExpenseRow({
+        id: 'exp-1',
+        amount: 100,
+        paidById: 'lp-alice',
+        paidFor: [
+          { participantId: 'lp-alice', shares: 1 },
+          { participantId: 'lp-bob', shares: 1 },
+        ],
+      }),
+    ] as never)
+
+    const caller = makeCaller('acct-owner')
+    await expect(
+      caller.archive({ groupId: 'grp-1', archived: true }),
+    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' })
+
+    expect(prisma$QueryRaw).toHaveBeenCalled()
+    expect(prisma$QueryRaw.mock.invocationCallOrder[0]).toBeLessThan(
+      prismaMock.expense.findMany.mock.invocationCallOrder[0]!,
+    )
+  })
+
   it('rejects an archive with PRECONDITION_FAILED when balances are unsettled and no force flag is set', async () => {
     await authAs('acct-owner')
     mockGroupWithMember('ADMIN')

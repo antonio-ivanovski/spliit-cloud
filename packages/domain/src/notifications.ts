@@ -21,6 +21,7 @@ export const NotificationCategory = {
   GROUP_INVITE_RECEIVED: 'GROUP_INVITE_RECEIVED',
   FRIEND_ADDED: 'FRIEND_ADDED',
   EXPENSE_CREATED: 'EXPENSE_CREATED',
+  RECURRING_EXPENSE_CREATED: 'RECURRING_EXPENSE_CREATED',
   EXPENSE_CHANGED: 'EXPENSE_CHANGED',
   // Reserved rows; no producers are currently registered for these types.
   EXPENSE_COMMENT: 'EXPENSE_COMMENT',
@@ -35,6 +36,7 @@ export const notificationCategoryValues = [
   NotificationCategory.GROUP_INVITE_RECEIVED,
   NotificationCategory.FRIEND_ADDED,
   NotificationCategory.EXPENSE_CREATED,
+  NotificationCategory.RECURRING_EXPENSE_CREATED,
   NotificationCategory.EXPENSE_CHANGED,
   NotificationCategory.EXPENSE_COMMENT,
   NotificationCategory.WEEKLY_SUMMARY,
@@ -47,6 +49,7 @@ export const ACTIVE_NOTIFICATION_CATEGORIES = [
   NotificationCategory.GROUP_INVITE_RECEIVED,
   NotificationCategory.FRIEND_ADDED,
   NotificationCategory.EXPENSE_CREATED,
+  NotificationCategory.RECURRING_EXPENSE_CREATED,
   NotificationCategory.EXPENSE_CHANGED,
 ] as const
 
@@ -57,6 +60,7 @@ export const DEFAULT_NOTIFICATION_CHANNELS: Readonly<
   [NotificationCategory.GROUP_INVITE_RECEIVED]: [NotificationChannel.EMAIL],
   [NotificationCategory.FRIEND_ADDED]: [NotificationChannel.EMAIL],
   [NotificationCategory.EXPENSE_CREATED]: [NotificationChannel.EMAIL],
+  [NotificationCategory.RECURRING_EXPENSE_CREATED]: [NotificationChannel.EMAIL],
   [NotificationCategory.EXPENSE_CHANGED]: [NotificationChannel.EMAIL],
   [NotificationCategory.EXPENSE_COMMENT]: [NotificationChannel.EMAIL],
   [NotificationCategory.WEEKLY_SUMMARY]: [NotificationChannel.EMAIL],
@@ -77,6 +81,7 @@ export const RECOMMENDED_NOTIFICATION_CHANNELS: Readonly<
     NotificationChannel.PUSH,
   ],
   [NotificationCategory.EXPENSE_CREATED]: [NotificationChannel.PUSH],
+  [NotificationCategory.RECURRING_EXPENSE_CREATED]: [NotificationChannel.PUSH],
   [NotificationCategory.EXPENSE_CHANGED]: [NotificationChannel.PUSH],
   [NotificationCategory.EXPENSE_COMMENT]: [NotificationChannel.PUSH],
   [NotificationCategory.WEEKLY_SUMMARY]: [NotificationChannel.EMAIL],
@@ -114,6 +119,8 @@ export const notificationCategoryFamily: Readonly<
     NotificationCategoryFamily.GROUP,
   [NotificationCategory.FRIEND_ADDED]: NotificationCategoryFamily.GROUP,
   [NotificationCategory.EXPENSE_CREATED]: NotificationCategoryFamily.EXPENSE,
+  [NotificationCategory.RECURRING_EXPENSE_CREATED]:
+    NotificationCategoryFamily.EXPENSE,
   [NotificationCategory.EXPENSE_CHANGED]: NotificationCategoryFamily.EXPENSE,
   [NotificationCategory.EXPENSE_COMMENT]: NotificationCategoryFamily.EXPENSE,
   [NotificationCategory.WEEKLY_SUMMARY]: NotificationCategoryFamily.GROUP,
@@ -125,8 +132,10 @@ export const notificationCategoryForActivityType: Readonly<
   Partial<Record<ActivityType, NotificationCategory>>
 > = {
   EXPENSE_CREATED: NotificationCategory.EXPENSE_CREATED,
+  RECURRING_EXPENSE_CREATED: NotificationCategory.RECURRING_EXPENSE_CREATED,
   EXPENSE_UPDATED: NotificationCategory.EXPENSE_CHANGED,
   EXPENSE_DELETED: NotificationCategory.EXPENSE_CHANGED,
+  RECURRING_EXPENSE_STOPPED: NotificationCategory.EXPENSE_CHANGED,
   EXPENSES_IMPORTED: NotificationCategory.EXPENSE_CREATED,
   EXPENSE_CATEGORIES_BULK_UPDATED: NotificationCategory.EXPENSE_CHANGED,
   INVITATION_CREATED: NotificationCategory.GROUP_INVITE_RECEIVED,

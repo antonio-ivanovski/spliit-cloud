@@ -1,7 +1,10 @@
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expense-attachments-preview'
 import { ExpenseItemsSummary } from '@/app/groups/[groupId]/expenses/expense-items-summary'
-import { useDeleteExpenseMutation } from '@/app/groups/[groupId]/expenses/expense-mutation-hooks'
+import {
+  useDeleteExpenseMutation,
+  useStopRecurrenceMutation,
+} from '@/app/groups/[groupId]/expenses/expense-mutation-hooks'
 import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-bars'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { DeletePopup } from '@/components/delete-popup'
@@ -33,10 +36,17 @@ import type { SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { FileInput, Pencil } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
+import {
+  RecurringActionsMenu,
+  type RecurringDeleteOption,
+} from './recurring-actions-menu'
+import { SeriesControls, type ExpenseSeriesMetadata } from './series-controls'
+import { SeriesListDialog } from './series-list-dialog'
+import type { SeriesMutationScope } from './series-scope-dialog'
 
 type Expense = NonNullable<
   AppRouterOutput['groups']['expenses']['get']['expense']
@@ -50,7 +60,7 @@ export type ExpensePreviewModalProps = {
   /** Called when the dialog closes, e.g. to restore the previous route. */
   onClose?: () => void
   /** Override the default navigation to the full expense edit page. */
-  onEdit?: () => void
+  onEdit?: (scope?: SeriesMutationScope) => void
   /** Override the default navigation that prefills the create form from this expense. */
   onMakeCopy?: () => void
 }
@@ -131,6 +141,32 @@ export function ExpensePreviewModal({
   )
 
   const expense = data?.expense
+  const [seriesListOpen, setSeriesListOpen] = useState(false)
+  const series = useMemo<ExpenseSeriesMetadata | null>(() => {
+    if (!expense) return null
+    const raw = expense as typeof expense & {
+      recurringSeriesId?: string | null
+      recurrenceSequence?: number | null
+      previousExpenseId?: string | null
+      nextExpenseId?: string | null
+      recurringSeries?: {
+        id: string
+        status?: ExpenseSeriesMetadata['status']
+      } | null
+      series?: { id: string; status?: ExpenseSeriesMetadata['status'] } | null
+    }
+    const related = raw.recurringSeries ?? raw.series
+    const id = raw.recurringSeriesId ?? related?.id
+    const sequence = raw.recurrenceSequence
+    if (!id || sequence == null) return null
+    return {
+      id,
+      sequence,
+      status: related?.status,
+      previousExpenseId: raw.previousExpenseId,
+      nextExpenseId: raw.nextExpenseId,
+    }
+  }, [expense])
   const currency = group ? getCurrencyFromGroup(group) : undefined
   const canEdit = Boolean(
     expense && group && !group.archived && !isPendingInvitee,
@@ -249,9 +285,9 @@ export function ExpensePreviewModal({
     if (!nextOpen) onClose?.()
   }
 
-  const handleEdit = async () => {
+  const handleEdit = async (scope?: SeriesMutationScope) => {
     if (onEdit) {
-      onEdit()
+      onEdit(scope)
       return
     }
     await navigate({
@@ -262,6 +298,7 @@ export function ExpensePreviewModal({
     navigate({
       to: '/groups/$groupId/expenses/$expenseId/edit',
       params: { groupId, expenseId },
+      search: scope ? { scope } : undefined,
     })
   }
 
@@ -281,8 +318,27 @@ export function ExpensePreviewModal({
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
     linkInviteToken,
   })
-  const handleDelete = async () => {
-    await deleteExpenseMutateAsync({ expenseId, groupId })
+  const { mutateAsync: stopRecurrenceMutateAsync } = useStopRecurrenceMutation({
+    linkInviteToken,
+  })
+  const handleDelete = async (option?: RecurringDeleteOption) => {
+    if (!option) {
+      await deleteExpenseMutateAsync({ expenseId, groupId })
+      return
+    }
+    const scope =
+      option === 'OCCURRENCE' ? 'OCCURRENCE' : ('THIS_AND_FUTURE' as const)
+    await deleteExpenseMutateAsync({
+      expenseId,
+      groupId,
+      scope,
+      ...(scope === 'THIS_AND_FUTURE'
+        ? { stopRecurrence: option === 'THIS_AND_FUTURE_STOP' }
+        : {}),
+    } as Parameters<typeof deleteExpenseMutateAsync>[0])
+  }
+  const handleStopRecurrence = async () => {
+    await stopRecurrenceMutateAsync({ groupId, expenseId })
   }
 
   const originalCurrency =
@@ -425,14 +481,38 @@ export function ExpensePreviewModal({
               />
 
               <ExpenseAttachmentsPreview documents={expense.documents} />
+
+              {series && (
+                <SeriesControls
+                  groupId={groupId}
+                  series={series}
+                  onViewSeries={() => setSeriesListOpen(true)}
+                />
+              )}
             </div>
           )}
         </ResponsiveDialogBody>
 
         <ResponsiveDialogFooter className="flex-row gap-2 sm:justify-end">
-          {canEdit && (
-            <DeletePopup onDelete={handleDelete} className="mr-auto" />
-          )}
+          {canEdit &&
+            (series ? (
+              <RecurringActionsMenu
+                className="mr-auto"
+                seriesStatus={series.status}
+                onEdit={handleEdit}
+                onDelete={(option) => handleDelete(option)}
+                onStop={
+                  series.status === 'CANCELLED' || series.status === 'COMPLETED'
+                    ? undefined
+                    : handleStopRecurrence
+                }
+              />
+            ) : (
+              <DeletePopup
+                onDelete={() => handleDelete()}
+                className="mr-auto"
+              />
+            ))}
           {canEdit && (
             <>
               <Button
@@ -445,18 +525,28 @@ export function ExpensePreviewModal({
                 <FileInput className="mr-2 h-4 w-4" />
                 {t('makeCopy')}
               </Button>
-              <Button
-                type="button"
-                className="flex-1 sm:flex-none"
-                onClick={handleEdit}
-              >
-                <Pencil className="mr-2 h-4 w-4" />
-                {t('edit')}
-              </Button>
+              {!series && (
+                <Button
+                  type="button"
+                  className="flex-1 sm:flex-none"
+                  onClick={() => handleEdit()}
+                >
+                  <Pencil className="mr-2 h-4 w-4" />
+                  {t('edit')}
+                </Button>
+              )}
             </>
           )}
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
+      {series && (
+        <SeriesListDialog
+          groupId={groupId}
+          seriesId={series.id}
+          open={seriesListOpen}
+          onOpenChange={setSeriesListOpen}
+        />
+      )}
     </ResponsiveDialog>
   )
 }

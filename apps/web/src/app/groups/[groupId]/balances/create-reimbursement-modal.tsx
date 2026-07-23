@@ -23,7 +23,7 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
-import { PAYMENT_CATEGORY_ID, RecurrenceRule } from '@spliit/domain'
+import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { Check, Pencil } from 'lucide-react'
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
@@ -193,7 +193,7 @@ export function CreateReimbursementModal({
         isMultiPayer: direction === 'receive' && paidByList.length > 1,
         isReimbursement: true,
         documents: [],
-        recurrenceRule: RecurrenceRule.NONE,
+        recurrence: null,
         ...(needsConversion && originalCurrencyCode
           ? {
               conversion: {

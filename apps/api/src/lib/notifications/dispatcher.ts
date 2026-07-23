@@ -8,6 +8,7 @@ import {
   type NotificationCategory,
 } from '@spliit/domain/notifications'
 import { CompositeActivityNotificationDispatcher } from './composite'
+import { ActivityNotificationCoordinator } from './coordinator'
 import {
   scheduleNotificationDispatch,
   waitForScheduledNotificationDispatchesForTest,
@@ -30,6 +31,17 @@ export type {
   NotificationChannel,
 } from './types'
 export { waitForScheduledNotificationDispatchesForTest }
+
+/**
+ * Register the production coordinator in the process-wide dispatcher.
+ * Entrypoints call this explicitly because workers do not load the API
+ * server's side-effect module.
+ */
+export function initializeDefaultNotificationDispatchers(): void {
+  setDefaultActivityNotificationDispatchers([
+    new ActivityNotificationCoordinator(),
+  ])
+}
 
 /**
  * Process-wide dispatcher used by expense create/update/delete

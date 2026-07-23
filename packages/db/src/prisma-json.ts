@@ -28,6 +28,7 @@ import type {
   ActivityType as DomainActivityType,
 } from '@spliit/domain/activities'
 import type { NotificationChannel as DomainNotificationChannel } from '@spliit/domain/notifications'
+import type { RecurringExpenseTemplate as DomainRecurringExpenseTemplate } from '@spliit/domain/recurring-expenses'
 
 export {}
 
@@ -39,6 +40,7 @@ declare global {
     type ActivitySubjectType = DomainActivitySubjectType
     type ActivityData = DomainActivityData
     type NotificationChannel = DomainNotificationChannel
+    type RecurringExpenseTemplate = DomainRecurringExpenseTemplate
   }
 
   // The generator emits bare (ActivityType) for string-annotated fields

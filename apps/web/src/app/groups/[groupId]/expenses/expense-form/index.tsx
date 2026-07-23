@@ -49,6 +49,8 @@ export function ExpenseForm(props: {
   readOnly?: boolean
   /** Link-invite token for pending invitees (currency recommendations). */
   linkInviteToken?: string
+  /** Locked series edit scope when editing a recurring expense. */
+  editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   // Copy and fresh-create both surface as a Create flow even though
@@ -270,6 +272,15 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           isCreate={isCreate}
+          recurrenceSequence={
+            !props.isCopy
+              ? (props.expense?.recurrenceSequence ?? undefined)
+              : undefined
+          }
+          editScope={props.editScope}
+          initialRecurrence={
+            !isCreate ? (props.expense?.recurrence ?? null) : undefined
+          }
           linkInviteToken={props.linkInviteToken}
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}

@@ -278,7 +278,14 @@
         "conversionFixed": "Фиксированный курс",
         "importErrorTitle": "Не удалось импортировать",
         "importErrorFallback": "При импорте группы произошла непредвиденная ошибка. Повторите попытку.",
-        "executeImport": "Импортировать группу"
+        "executeImport": "Импортировать группу",
+        "recurringSchedulesLabel": "Повторяющиеся расписания для импорта",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Ежедневно",
+          "weekly": "Еженедельно",
+          "monthly": "Ежемесячно"
+        }
       },
       "Destination": {
         "heading": "Куда вы хотите импортировать <strong>{name}</strong>? ({participantCount} участников · {expenseCount} трат)",
@@ -388,7 +395,8 @@
         "splitwiseAnonymizeDescription": "Если импортёр отклоняет ваш CSV, вы можете локально удалить имена участников и описания расходов и приложить результат к issue на GitHub. Файл остаётся на вашем устройстве — мы его никуда не загружаем.",
         "splitwiseAnonymizeButton": "Анонимизировать CSV",
         "splitwiseAnonymizeIssuesLink": "Создать issue об импорте",
-        "splitwiseAnonymizeError": "Не удалось анонимизировать этот файл. Убедитесь, что это CSV-экспорт из Splitwise."
+        "splitwiseAnonymizeError": "Не удалось анонимизировать этот файл. Убедитесь, что это CSV-экспорт из Splitwise.",
+        "csvRecurrenceLimitation": "CSV-экспорт не включает повторение. Используйте JSON-экспорт из spliit.app, чтобы импортировать повторяющиеся расходы."
       },
       "StepHeader": {
         "title": "Импортировать группу",
@@ -597,7 +605,51 @@
       "splitModeDescription": "Выберите, как расход необходимо распределить между людьми.",
       "attachDescription": "Просмотр и прикрепление чеков к этому доходу.",
       "createCopy": "Создать копию: {title}",
-      "editTitle": "Изменить: {title}"
+      "editTitle": "Изменить: {title}",
+      "recurrence": {
+        "label": "Повторение расхода",
+        "description": "Выберите, когда этот расход нужно создать снова.",
+        "checkboxLabel": "Повторяющийся",
+        "checkboxDescription": "Создавать этот расход по расписанию",
+        "enable": "Добавить повторение",
+        "remove": "Удалить повторение",
+        "repeatEvery": "Повторять каждые",
+        "interval": "Интервал повторения",
+        "frequency": "Частота повторения",
+        "frequencyOptions": {
+          "daily": "день/дней",
+          "weekly": "неделя/недель",
+          "monthly": "месяц/месяцев",
+          "yearly": "год/лет"
+        },
+        "ends": {
+          "label": "Окончание",
+          "never": "Никогда",
+          "count": "После заданного количества повторений",
+          "date": "В указанную дату",
+          "countInput": "Общее количество повторений (включая этот расход)",
+          "dateInput": "Дата окончания"
+        },
+        "previewLabel": "Следующие повторения",
+        "currentOccurrence": "Текущий",
+        "viewAll": "Показать все",
+        "scheduleTitle": "Расписание повторений",
+        "remainingCount": "Осталось повторений: {count}.",
+        "unlimitedSchedule": "У этого повторения нет даты окончания.",
+        "noFurtherOccurrences": "При этих настройках больше нет повторений.",
+        "scheduleCount": "Показано повторений от этого расхода: {count}.",
+        "decreaseOccurrences": "Уменьшить количество повторений",
+        "increaseOccurrences": "Увеличить количество повторений",
+        "ruleSummary": "Каждые {interval} {frequency} · {count} повторений",
+        "ruleSummaryIndefinite": "Каждые {interval} {frequency} · Без даты окончания",
+        "scheduleChangeWarningTitle": "Расписание повторений изменится",
+        "scheduleChangeWarning": "При сохранении будут перенесены это и будущие повторения. Существующие будущие расходы могут быть перенесены на новые даты или удалены, а отсутствующие даты могут быть созданы автоматически.",
+        "pastDateBackfillNote": "Поскольку этот расход начинается в прошлом, повторения до сегодняшнего дня будут созданы автоматически после сохранения.",
+        "completedOccurrence": "Создано",
+        "upcomingOccurrence": "Предстоящее"
+      },
+      "recurringEditScopeOccurrence": "Редактирование только этого повторения",
+      "recurringEditScopeFuture": "Редактирование этого и будущих повторений"
     },
     "amountField": {
       "label": "Сумма",
@@ -1657,6 +1709,10 @@
         "weeklySummary": {
           "title": "Еженедельная сводка активности",
           "description": "Еженедельная сводка активности во всех ваших группах."
+        },
+        "recurringExpense": {
+          "title": "Повторяющийся расход",
+          "description": "Когда в группе создаётся запланированный повторяющийся расход."
         }
       },
       "sections": {
@@ -1686,7 +1742,9 @@
         "reimbursement": "Платёж для погашения долга",
         "conversionSource": "Источник конвертации",
         "conversionRate": "Обменный курс"
-      }
+      },
+      "recurringCreated": "{participant} создал(а) регулярный расход «{title}»",
+      "stopped": "{participant} остановил(а) регулярный расход «{title}»"
     },
     "group": {
       "updated": "{participant} обновил(а) настройки группы",
@@ -1960,5 +2018,58 @@
       "description": "Вы не будете получать письма о {category}. Остальные настройки уведомлений не изменились."
     },
     "scope": "Будут отключены только эти уведомления по электронной почте. Остальные письма и push-уведомления останутся без изменений."
+  },
+  "ExpenseSeries": {
+    "badge": "Регулярный",
+    "occurrence": "Повторение {sequence}",
+    "previous": "Предыдущее",
+    "next": "Следующее",
+    "viewSeries": "Открыть серию",
+    "title": "Серия расходов",
+    "empty": "Других повторений пока нет.",
+    "scopeTitle": "Изменить регулярный расход",
+    "scopeDescription": "Выберите, какие повторения будут затронуты.",
+    "occurrenceOnly": "Только это повторение",
+    "thisAndFuture": "Это и будущие повторения",
+    "deleteScopeTitle": "Удалить регулярный расход",
+    "deleteScopeDescription": "Выберите, удалить одно повторение или завершить серию.",
+    "deleteOccurrence": "Удалить только это повторение",
+    "deleteThisAndFuture": "Удалить это и будущие повторения",
+    "deleteThisAndFutureStop": "Удалить это и будущие повторения и остановить повторение",
+    "deleteThisAndFutureDescription": "Удалить этот и последующие расходы; расписание останется активным.",
+    "deleteThisAndFutureStopDescription": "Удалить этот и последующие расходы и навсегда остановить расписание.",
+    "deleteOccurrenceDescription": "Удалить только этот расход. Остальные запланированные повторения не изменятся.",
+    "actions": "Действия для повторяющихся расходов",
+    "actionsTitle": "Действия с повторяющимся расходом",
+    "actionsDescription": "Выберите, какое повторение редактировать или удалить.",
+    "editActions": "Действия редактирования",
+    "deleteActions": "Действия удаления",
+    "confirmDelete": "Удалить",
+    "confirmStop": "Остановить повторение",
+    "working": "Выполняется…",
+    "back": "Назад",
+    "confirm": "Продолжить",
+    "cancel": "Отмена",
+    "occurrences": "Повторений в этой серии: {count}",
+    "loading": "Загрузка…",
+    "loadMore": "Загрузить ещё повторения",
+    "editOccurrence": "Редактировать это повторение",
+    "editOccurrenceDescription": "Изменить только этот расход.",
+    "editThisAndFuture": "Редактировать это и будущие повторения",
+    "editThisAndFutureDescription": "Изменить этот расход и все будущие запланированные расходы.",
+    "stopRecurrence": "Остановить повторение",
+    "stopConfirmTitle": "Остановить это повторение?",
+    "stopConfirmDescription": "Существующие расходы сохранятся. Новые повторения создаваться не будут.",
+    "stopConfirmHint": "Остановка необратима. Чтобы начать снова, создайте новый повторяющийся расход.",
+    "deleteConfirmTitle": "Подтвердите удаление",
+    "deleteConfirmHint": "Это действие необратимо для выбранных повторений.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Будет удалено только это повторение.",
+      "THIS_AND_FUTURE": "Это и будущие повторения будут удалены. Повторение продолжится со следующего запланированного.",
+      "THIS_AND_FUTURE_STOP": "Это и будущие повторения будут удалены, и повторение остановится."
+    },
+    "badgeRunning": "Регулярный · Выполняется",
+    "badgeStopped": "Регулярный · Остановлен",
+    "badgeCompleted": "Регулярный · Завершён"
   }
 }

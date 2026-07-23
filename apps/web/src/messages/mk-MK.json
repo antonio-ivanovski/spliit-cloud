@@ -302,7 +302,8 @@
         "splitwiseAnonymizeDescription": "Ако вчитувачот го одбие вашиот CSV, можете локално да ги отстраните имињата на учесниците и описите на трошоците и резултатот да го прикачите на GitHub issue. Вашата датотека останува на вашиот уред — никогаш не ја прикачуваме.",
         "splitwiseAnonymizeButton": "Анонимизирај CSV",
         "splitwiseAnonymizeIssuesLink": "Отвори issue за увоз",
-        "splitwiseAnonymizeError": "Оваа датотека не може да се анонимизира. Проверете дали е CSV извоз од Splitwise."
+        "splitwiseAnonymizeError": "Оваа датотека не може да се анонимизира. Проверете дали е CSV извоз од Splitwise.",
+        "csvRecurrenceLimitation": "CSV извозите не вклучуваат повторливост. Користете JSON извоз од spliit.app за да увезете повторувачки трошоци."
       },
       "Destination": {
         "heading": "Каде сакате да го увезете <strong>{name}</strong>? ({participantCount} учесници · {expenseCount} трошоци)",
@@ -384,7 +385,14 @@
         "conversionFixed": "Фиксен курс",
         "importErrorTitle": "Увозот не успеа",
         "importErrorFallback": "Се појави неочекувана грешка при увезување на групата. Обидете се повторно.",
-        "executeImport": "Увези група"
+        "executeImport": "Увези група",
+        "recurringSchedulesLabel": "Повторувачки распореди за увоз",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Дневно",
+          "weekly": "Неделно",
+          "monthly": "Месечно"
+        }
       },
       "Done": {
         "importComplete": "Увозот е завршен",
@@ -652,6 +660,10 @@
         "weeklySummary": {
           "title": "Неделен преглед на активностите",
           "description": "Неделен преглед на активностите во вашите групи."
+        },
+        "recurringExpense": {
+          "title": "Повторлив трошок",
+          "description": "Кога во група ќе се создаде закажан повторлив трошок."
         }
       },
       "sections": {
@@ -832,7 +844,51 @@
       "splitModeDescription": "Изберете како да го поделите трошокот.",
       "attachDescription": "Погледнете и прикачете сметки на трошокот.",
       "createCopy": "Креирај копија: {title}",
-      "editTitle": "Уреди: {title}"
+      "editTitle": "Уреди: {title}",
+      "recurrence": {
+        "label": "Повторување на трошокот",
+        "description": "Изберете кога овој трошок треба повторно да се создаде.",
+        "checkboxLabel": "Повторлив",
+        "checkboxDescription": "Креирајте го овој трошок според распоред",
+        "enable": "Додај повторување",
+        "remove": "Отстрани повторување",
+        "repeatEvery": "Повтори на секои",
+        "interval": "Интервал на повторување",
+        "frequency": "Честота на повторување",
+        "frequencyOptions": {
+          "daily": "ден(ови)",
+          "weekly": "недела(и)",
+          "monthly": "месец(и)",
+          "yearly": "година(и)"
+        },
+        "ends": {
+          "label": "Завршува",
+          "never": "Никогаш",
+          "count": "По одреден број појавувања",
+          "date": "На одреден датум",
+          "countInput": "Вкупно појавувања (вклучувајќи го и овој трошок)",
+          "dateInput": "Краен датум"
+        },
+        "previewLabel": "Следни појавувања",
+        "currentOccurrence": "Тековен",
+        "viewAll": "Прикажи ги сите",
+        "scheduleTitle": "Распоред на повторувања",
+        "remainingCount": "Преостануваат {count} повторувања.",
+        "unlimitedSchedule": "Ова повторување нема датум на завршување.",
+        "noFurtherOccurrences": "Нема дополнителни појавувања со овие поставки.",
+        "scheduleCount": "Прикажани се {count} повторувања од овој трошок.",
+        "decreaseOccurrences": "Намали ги повторувањата",
+        "increaseOccurrences": "Зголеми ги повторувањата",
+        "ruleSummary": "На секои {interval} {frequency} · {count} повторувања",
+        "ruleSummaryIndefinite": "На секои {interval} {frequency} · Без датум на завршување",
+        "scheduleChangeWarningTitle": "Распоредот на повторувањата ќе се промени",
+        "scheduleChangeWarning": "Со зачувувањето ќе се прераспоредат ова и идните појавувања. Постоечките идни трошоци може да се преместат на нови датуми или да се отстранат, а недостасувачките датуми може автоматски да се создадат.",
+        "pastDateBackfillNote": "Бидејќи овој трошок започнува во минатото, појавувањата до денес ќе се создадат автоматски по зачувувањето.",
+        "completedOccurrence": "Создадено",
+        "upcomingOccurrence": "Претстојни"
+      },
+      "recurringEditScopeOccurrence": "Уредување само на ова појавување",
+      "recurringEditScopeFuture": "Уредување на ова и идните појавувања"
     },
     "amountField": {
       "label": "Износ",
@@ -1670,7 +1726,9 @@
         "reimbursement": "Порамнителна уплата",
         "conversionSource": "Извор на конверзија",
         "conversionRate": "Девизен курс"
-      }
+      },
+      "recurringCreated": "{participant} го создаде повторливиот трошок „{title}“",
+      "stopped": "{participant} го запре повторливиот трошок „{title}“"
     },
     "group": {
       "updated": "{participant} ажурираше поставки на групата",
@@ -1926,5 +1984,58 @@
       "description": "Нема да добивате е-пораки за {category}. Другите поставки за известувања не се променети."
     },
     "scope": "Ќе се исклучи само ова известување по е-пошта. Другите е-пораки и push известувања ќе останат исти."
+  },
+  "ExpenseSeries": {
+    "badge": "Повторлив",
+    "occurrence": "Појавување {sequence}",
+    "previous": "Претходно",
+    "next": "Следно",
+    "viewSeries": "Прикажи ја серијата",
+    "title": "Серија трошоци",
+    "empty": "Сè уште нема други појавувања.",
+    "scopeTitle": "Ажурирај повторлив трошок",
+    "scopeDescription": "Изберете кои појавувања ќе бидат засегнати.",
+    "occurrenceOnly": "Само ова појавување",
+    "thisAndFuture": "Ова и идните појавувања",
+    "deleteScopeTitle": "Избриши повторлив трошок",
+    "deleteScopeDescription": "Изберете дали да избришете едно појавување или да ја завршите серијата.",
+    "deleteOccurrence": "Избриши го само ова појавување",
+    "deleteThisAndFuture": "Избриши го ова и идните појавувања",
+    "deleteThisAndFutureStop": "Избриши го ова и идните појавувања и запре го повторувањето",
+    "deleteThisAndFutureDescription": "Отстранете го овој и подоцнежните трошоци; распоредот останува активен.",
+    "deleteThisAndFutureStopDescription": "Отстранете го овој и подоцнежните трошоци и трајно запрете го распоредот.",
+    "deleteOccurrenceDescription": "Отстранете го само овој трошок. Другите закажани појавувања остануваат непроменети.",
+    "actions": "Повторливи дејства",
+    "actionsTitle": "Дејства за повторлив трошок",
+    "actionsDescription": "Изберете точно кое појавување да го уредите или избришете.",
+    "editActions": "Дејства за уредување",
+    "deleteActions": "Дејства за бришење",
+    "confirmDelete": "Избриши",
+    "confirmStop": "Запри го повторувањето",
+    "working": "Се обработува…",
+    "back": "Назад",
+    "confirm": "Продолжи",
+    "cancel": "Откажи",
+    "occurrences": "{count} појавувања во оваа серија",
+    "loading": "Се вчитува…",
+    "loadMore": "Вчитај повеќе појавувања",
+    "editOccurrence": "Уреди го ова појавување",
+    "editOccurrenceDescription": "Променете го само овој трошок.",
+    "editThisAndFuture": "Уреди го ова и идните појавувања",
+    "editThisAndFutureDescription": "Променете го овој трошок и сите идни закажани трошоци.",
+    "stopRecurrence": "Запри го повторувањето",
+    "stopConfirmTitle": "Да се запре ова повторување?",
+    "stopConfirmDescription": "Постојните трошоци ќе останат. Нема да се создаваат нови појавувања.",
+    "stopConfirmHint": "Запирањето е трајно. За повторно започнување, создадете нов повторлив трошок.",
+    "deleteConfirmTitle": "Потврди бришење",
+    "deleteConfirmHint": "Ова дејство не може да се врати за избраните појавувања.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Ќе биде избришано само ова појавување.",
+      "THIS_AND_FUTURE": "Ќе бидат избришани ова и идните појавувања. Повторувањето ќе продолжи со следното закажано појавување.",
+      "THIS_AND_FUTURE_STOP": "Ќе бидат избришани ова и идните појавувања и повторувањето ќе запре."
+    },
+    "badgeRunning": "Повторлив · Во тек",
+    "badgeStopped": "Повторлив · Запрен",
+    "badgeCompleted": "Повторлив · Завршен"
   }
 }

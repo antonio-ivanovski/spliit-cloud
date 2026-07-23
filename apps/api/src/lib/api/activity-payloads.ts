@@ -10,6 +10,7 @@ import type {
   InvitationActivityData,
   InvitationType,
   MemberActivityData,
+  RecurrenceActivityMetadata,
 } from '@spliit/domain/activities'
 
 type BuildExpenseInput = {
@@ -25,6 +26,8 @@ type BuildExpenseInput = {
   conversionRate?: number
   conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
   ledgerCurrencyCode?: string | null
+  recurrence?: RecurrenceActivityMetadata
+  stopped?: boolean
 }
 
 export function buildExpenseActivityData(
@@ -58,6 +61,8 @@ export function buildExpenseActivityData(
     ...(input.ledgerCurrencyCode !== undefined
       ? { ledgerCurrencyCode: input.ledgerCurrencyCode }
       : {}),
+    ...(input.recurrence !== undefined ? { recurrence: input.recurrence } : {}),
+    ...(input.stopped !== undefined ? { stopped: input.stopped } : {}),
   }
 }
 

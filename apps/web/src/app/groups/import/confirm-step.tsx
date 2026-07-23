@@ -1,6 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { NormalizedSource } from '@spliit/domain/import'
+import {
+  collapseExpenseFromNormalized,
+  summarizeLegacyRecurringImport,
+} from '@spliit/domain/import'
 import { Calendar, Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type {
@@ -83,6 +87,20 @@ export function ConfirmStep({
     ratesByPair[key].sort((a, b) => a.date.localeCompare(b.date))
   }
   const conversionPairs = Object.keys(conversionModes)
+  const recurringSchedules = summarizeLegacyRecurringImport(
+    resolvedExpenses.map((expense) => collapseExpenseFromNormalized(expense)),
+  )
+
+  const recurrenceRuleLabel = (rule: 'DAILY' | 'WEEKLY' | 'MONTHLY') => {
+    switch (rule) {
+      case 'DAILY':
+        return t('Groups.Import.Confirm.recurrenceRule.daily')
+      case 'WEEKLY':
+        return t('Groups.Import.Confirm.recurrenceRule.weekly')
+      case 'MONTHLY':
+        return t('Groups.Import.Confirm.recurrenceRule.monthly')
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -129,6 +147,25 @@ export function ConfirmStep({
                 count: resolvedExpenses.length,
               })}
             </li>
+            {recurringSchedules.length > 0 && (
+              <li className="flex flex-col gap-1.5">
+                <span>
+                  {t('Groups.Import.Confirm.recurringSchedulesLabel')}
+                </span>
+                <ul className="ml-4 list-disc space-y-1 text-muted-foreground">
+                  {recurringSchedules.map((schedule, index) => (
+                    <li
+                      key={`${index}:${schedule.title}:${schedule.recurrenceRule}`}
+                    >
+                      {t('Groups.Import.Confirm.recurringScheduleItem', {
+                        title: schedule.title,
+                        rule: recurrenceRuleLabel(schedule.recurrenceRule),
+                      })}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )}
             <li>
               {t('Groups.Import.Confirm.sourceName', { name: source.name })}
             </li>

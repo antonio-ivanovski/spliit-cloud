@@ -36,6 +36,12 @@ export type ActivityNotificationEvent = {
   occurredAt: Date
   /** Override the activity-to-category mapping for targeted synthetic events. */
   notificationCategory?: NotificationCategory
+  /**
+   * Recurring creation is the one expense event where the actor (the
+   * original series creator) is also an intended recipient. Keep this opt-in
+   * so ordinary actor suppression remains unchanged.
+   */
+  includeActorAsRecipient?: boolean
   /** Optional direct recipient, used for account-backed invite/friend events. */
   recipientAccountId?: string
 }

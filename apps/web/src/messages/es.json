@@ -274,7 +274,14 @@
         "conversionFixed": "Tasa fija",
         "importErrorTitle": "Error al importar",
         "importErrorFallback": "Ocurrió un error inesperado al importar el grupo. Inténtalo de nuevo.",
-        "executeImport": "Importar grupo"
+        "executeImport": "Importar grupo",
+        "recurringSchedulesLabel": "Programaciones recurrentes a importar",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Diaria",
+          "weekly": "Semanal",
+          "monthly": "Mensual"
+        }
       },
       "Destination": {
         "heading": "¿Dónde te gustaría importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} gastos)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Si el importador rechaza tu CSV, puedes eliminar localmente los nombres de los participantes y las descripciones de los gastos y adjuntar el resultado a un issue de GitHub. Tu archivo se queda en tu dispositivo — nunca lo subimos.",
         "splitwiseAnonymizeButton": "Anonimizar un CSV",
         "splitwiseAnonymizeIssuesLink": "Abrir un issue de importación",
-        "splitwiseAnonymizeError": "No se ha podido anonimizar este archivo. Asegúrate de que sea una exportación CSV de Splitwise."
+        "splitwiseAnonymizeError": "No se ha podido anonimizar este archivo. Asegúrate de que sea una exportación CSV de Splitwise.",
+        "csvRecurrenceLimitation": "Las exportaciones CSV no incluyen la recurrencia. Usa una exportación JSON de spliit.app para importar gastos recurrentes."
       },
       "StepHeader": {
         "title": "Importar un grupo",
@@ -591,7 +599,51 @@
         "description": "La moneda en la que se pagó el gasto."
       },
       "createCopy": "Crear copia: {title}",
-      "editTitle": "Editar: {title}"
+      "editTitle": "Editar: {title}",
+      "recurrence": {
+        "label": "Recurrencia del gasto",
+        "description": "Elige cuándo debe volver a crearse este gasto.",
+        "checkboxLabel": "Recurrente",
+        "checkboxDescription": "Crea este gasto según un calendario",
+        "enable": "Añadir recurrencia",
+        "remove": "Eliminar recurrencia",
+        "repeatEvery": "Repetir cada",
+        "interval": "Intervalo de repetición",
+        "frequency": "Frecuencia de recurrencia",
+        "frequencyOptions": {
+          "daily": "día(s)",
+          "weekly": "semana(s)",
+          "monthly": "mes(es)",
+          "yearly": "año(s)"
+        },
+        "ends": {
+          "label": "Finaliza",
+          "never": "Nunca",
+          "count": "Después de un número de repeticiones",
+          "date": "En una fecha",
+          "countInput": "Repeticiones totales (incluido este gasto)",
+          "dateInput": "Fecha de finalización"
+        },
+        "previewLabel": "Próximas repeticiones",
+        "currentOccurrence": "Actual",
+        "viewAll": "Ver todas",
+        "scheduleTitle": "Calendario de recurrencia",
+        "remainingCount": "Quedan {count} ocurrencias.",
+        "unlimitedSchedule": "Esta recurrencia no tiene fecha de finalización.",
+        "noFurtherOccurrences": "No hay más repeticiones con esta configuración.",
+        "scheduleCount": "Mostrando {count} ocurrencias a partir de este gasto.",
+        "decreaseOccurrences": "Reducir repeticiones",
+        "increaseOccurrences": "Aumentar repeticiones",
+        "ruleSummary": "Cada {interval} {frequency} · {count} ocurrencias",
+        "ruleSummaryIndefinite": "Cada {interval} {frequency} · Sin fecha de finalización",
+        "scheduleChangeWarningTitle": "El calendario de recurrencia cambiará",
+        "scheduleChangeWarning": "Al guardar, se reprogramarán esta y las ocurrencias futuras. Los gastos futuros existentes pueden moverse a nuevas fechas o eliminarse, y las fechas de vencimiento que falten pueden crearse automáticamente.",
+        "pastDateBackfillNote": "Como este gasto comienza en el pasado, las ocurrencias hasta hoy se crearán automáticamente después de guardar.",
+        "completedOccurrence": "Creada",
+        "upcomingOccurrence": "Próxima"
+      },
+      "recurringEditScopeOccurrence": "Editar solo esta ocurrencia",
+      "recurringEditScopeFuture": "Editar esta y las futuras ocurrencias"
     },
     "amountField": {
       "label": "Cantidad",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "Resumen semanal de actividad",
           "description": "Un resumen semanal de la actividad de tus grupos."
+        },
+        "recurringExpense": {
+          "title": "Gasto recurrente",
+          "description": "Cuando se crea un gasto recurrente programado en un grupo."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "pago de liquidación",
         "conversionSource": "Fuente de conversión",
         "conversionRate": "Tasa de conversión"
-      }
+      },
+      "recurringCreated": "{participant} creó el gasto recurrent «{title}»",
+      "stopped": "{participant} detuvo el gasto recurrente {title}"
     },
     "group": {
       "updated": "{participant} actualizó la configuración del grupo",
@@ -1943,5 +2001,58 @@
       "description": "No recibirás correos de {category}. El resto de tu configuración de notificaciones no ha cambiado."
     },
     "scope": "Solo se desactivará esta notificación por correo. Tus otros correos y notificaciones push seguirán igual."
+  },
+  "ExpenseSeries": {
+    "badge": "Recurrente",
+    "occurrence": "Repetición {sequence}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "viewSeries": "Ver serie",
+    "title": "Serie de gastos",
+    "empty": "Todavía no hay otras repeticiones.",
+    "scopeTitle": "Actualizar gasto recurrente",
+    "scopeDescription": "Elige qué repeticiones deben verse afectadas.",
+    "occurrenceOnly": "Solo esta repetición",
+    "thisAndFuture": "Esta repetición y las futuras",
+    "deleteScopeTitle": "Eliminar gasto recurrente",
+    "deleteScopeDescription": "Elige si quieres eliminar una repetición o finalizar la serie.",
+    "deleteOccurrence": "Eliminar solo esta repetición",
+    "deleteThisAndFuture": "Eliminar esta repetición y las futuras",
+    "deleteThisAndFutureStop": "Eliminar esta y las futuras ocurrencias y detener la recurrencia",
+    "deleteThisAndFutureDescription": "Elimina este y los gastos posteriores; la programación seguirá activa.",
+    "deleteThisAndFutureStopDescription": "Elimina este y los gastos posteriores y detén permanentemente la programación.",
+    "deleteOccurrenceDescription": "Elimina solo este gasto. Las demás ocurrencias programadas no cambiarán.",
+    "actions": "Acciones recurrentes",
+    "actionsTitle": "Acciones del gasto recurrente",
+    "actionsDescription": "Elige exactamente qué ocurrencia editar o eliminar.",
+    "editActions": "Editar",
+    "deleteActions": "Eliminar",
+    "confirmDelete": "Eliminar",
+    "confirmStop": "Detener recurrencia",
+    "working": "Procesando…",
+    "back": "Atrás",
+    "confirm": "Continuar",
+    "cancel": "Cancelar",
+    "occurrences": "{count} repeticiones en esta serie",
+    "loading": "Cargando…",
+    "loadMore": "Cargar más repeticiones",
+    "editOccurrence": "Editar esta ocurrencia",
+    "editOccurrenceDescription": "Cambia solo este gasto.",
+    "editThisAndFuture": "Editar esta y las futuras ocurrencias",
+    "editThisAndFutureDescription": "Cambia este gasto y todos los gastos futuros programados.",
+    "stopRecurrence": "Detener recurrencia",
+    "stopConfirmTitle": "¿Detener esta recurrencia?",
+    "stopConfirmDescription": "Los gastos existentes se conservarán. No se crearán nuevas ocurrencias.",
+    "stopConfirmHint": "Detenerla es permanente. Para empezar de nuevo, crea un nuevo gasto recurrente.",
+    "deleteConfirmTitle": "Confirmar eliminación",
+    "deleteConfirmHint": "Esta acción no se puede deshacer para las ocurrencias seleccionadas.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Solo se eliminará esta ocurrencia.",
+      "THIS_AND_FUTURE": "Se eliminarán esta y las siguientes ocurrencias. La recurrencia continuará con la próxima ocurrencia programada.",
+      "THIS_AND_FUTURE_STOP": "Se eliminarán esta y las siguientes ocurrencias y se detendrá la recurrencia."
+    },
+    "badgeRunning": "Recurrente · En curso",
+    "badgeStopped": "Recurrente · Detenida",
+    "badgeCompleted": "Recurrente · Completada"
   }
 }

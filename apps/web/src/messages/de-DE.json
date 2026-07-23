@@ -285,7 +285,14 @@
         "conversionFixed": "Fester Wechselkurs",
         "importErrorTitle": "Import fehlgeschlagen",
         "importErrorFallback": "Beim Importieren der Gruppe ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut.",
-        "executeImport": "Gruppe importieren"
+        "executeImport": "Gruppe importieren",
+        "recurringSchedulesLabel": "Wiederkehrende Pläne zum Importieren",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "TTäglich",
+          "weekly": "WWöchentlich",
+          "monthly": "Monatlich"
+        }
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",
@@ -397,7 +404,8 @@
         "splitwiseAnonymizeDescription": "Wenn der Import deine CSV ablehnt, kannst du Teilnehmernamen und Ausgabenbeschreibungen lokal entfernen und das Ergebnis an ein GitHub-Issue anhängen. Deine Datei bleibt auf deinem Gerät — wir laden sie nie hoch.",
         "splitwiseAnonymizeButton": "CSV anonymisieren",
         "splitwiseAnonymizeIssuesLink": "Import-Issue öffnen",
-        "splitwiseAnonymizeError": "Diese Datei konnte nicht anonymisiert werden. Stelle sicher, dass es ein Splitwise-CSV-Export ist."
+        "splitwiseAnonymizeError": "Diese Datei konnte nicht anonymisiert werden. Stelle sicher, dass es ein Splitwise-CSV-Export ist.",
+        "csvRecurrenceLimitation": "CSV-Exporte enthalten keine Wiederholung. Verwenden Sie einen JSON-Export von spliit.app, um wiederkehrende Ausgaben zu importieren."
       },
       "StepHeader": {
         "title": "Gruppe importieren",
@@ -609,7 +617,51 @@
       "splitModeDescription": "Wähle, wie die Ausgabe aufgeteilt werden soll.",
       "attachDescription": "Füge der Ausgabe einen Beleg hinzu.",
       "createCopy": "Kopie erstellen: {title}",
-      "editTitle": "Bearbeiten: {title}"
+      "editTitle": "Bearbeiten: {title}",
+      "recurrence": {
+        "label": "Wiederholung der Ausgabe",
+        "description": "Lege fest, wann diese Ausgabe erneut erstellt werden soll.",
+        "checkboxLabel": "Wiederkehrend",
+        "checkboxDescription": "Diese Ausgabe nach einem Zeitplan erstellen",
+        "enable": "Wiederholung hinzufügen",
+        "remove": "Wiederholung entfernen",
+        "repeatEvery": "Wiederholen alle",
+        "interval": "Wiederholungsintervall",
+        "frequency": "Wiederholungsfrequenz",
+        "frequencyOptions": {
+          "daily": "Tag(e)",
+          "weekly": "Woche(n)",
+          "monthly": "Monat(e)",
+          "yearly": "Jahr(e)"
+        },
+        "ends": {
+          "label": "Endet",
+          "never": "Nie",
+          "count": "Nach einer bestimmten Anzahl von Terminen",
+          "date": "An einem Datum",
+          "countInput": "Gesamtzahl der Termine (einschließlich dieser Ausgabe)",
+          "dateInput": "Enddatum"
+        },
+        "previewLabel": "Nächste Termine",
+        "currentOccurrence": "Aktuell",
+        "viewAll": "Alle anzeigen",
+        "scheduleTitle": "Wiederholungsplan",
+        "remainingCount": "Es verbleiben {count} Vorkommen.",
+        "unlimitedSchedule": "Diese Wiederholung hat kein Enddatum.",
+        "noFurtherOccurrences": "Mit diesen Einstellungen gibt es keine weiteren Termine.",
+        "scheduleCount": "{count} Vorkommen dieser Ausgabe werden angezeigt.",
+        "decreaseOccurrences": "Vorkommen verringern",
+        "increaseOccurrences": "Vorkommen erhöhen",
+        "ruleSummary": "Alle {interval} {frequency} · {count} Vorkommen",
+        "ruleSummaryIndefinite": "Alle {interval} {frequency} · Kein Enddatum",
+        "scheduleChangeWarningTitle": "Der Wiederholungsplan ändert sich",
+        "scheduleChangeWarning": "Beim Speichern werden dieses und künftige Vorkommen neu geplant. Bestehende zukünftige Ausgaben können auf neue Termine verschoben oder entfernt werden, und fehlende Fälligkeitstermine können automatisch erstellt werden.",
+        "pastDateBackfillNote": "Da diese Ausgabe in der Vergangenheit beginnt, werden Vorkommen bis einschließlich heute nach dem Speichern automatisch erstellt.",
+        "completedOccurrence": "Erstellt",
+        "upcomingOccurrence": "Bevorstehend"
+      },
+      "recurringEditScopeOccurrence": "Nur dieses Vorkommen bearbeiten",
+      "recurringEditScopeFuture": "Dieses und zukünftige Vorkommen bearbeiten"
     },
     "amountField": {
       "label": "Betrag",
@@ -1673,6 +1725,10 @@
         "weeklySummary": {
           "title": "Wöchentliche Aktivitätszusammenfassung",
           "description": "Eine wöchentliche Zusammenfassung der Aktivitäten in deinen Gruppen."
+        },
+        "recurringExpense": {
+          "title": "Wiederkehrende Ausgabe",
+          "description": "Wenn eine geplante wiederkehrende Ausgabe in einer Gruppe erstellt wird."
         }
       },
       "sections": {
@@ -1702,7 +1758,9 @@
         "reimbursement": "Ausgleichszahlung",
         "conversionSource": "Umrechnungsquelle",
         "conversionRate": "Umrechnungskurs"
-      }
+      },
+      "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt",
+      "stopped": "{participant} hat die wiederkehrende Ausgabe {title} gestoppt"
     },
     "group": {
       "updated": "{participant} aktualisierte die Gruppeneinstellungen",
@@ -1994,5 +2052,58 @@
       "description": "Sie erhalten keine E-Mails für {category}. Ihre anderen Benachrichtigungseinstellungen wurden nicht geändert."
     },
     "scope": "Nur diese E-Mail-Benachrichtigung wird deaktiviert. Ihre anderen E-Mails und Push-Benachrichtigungen bleiben unverändert."
+  },
+  "ExpenseSeries": {
+    "badge": "Wiederkehrend",
+    "occurrence": "Termin {sequence}",
+    "previous": "Vorheriger",
+    "next": "Nächster",
+    "viewSeries": "Serie anzeigen",
+    "title": "Ausgabenserie",
+    "empty": "Noch keine weiteren Termine vorhanden.",
+    "scopeTitle": "Wiederkehrende Ausgabe aktualisieren",
+    "scopeDescription": "Wähle aus, welche Termine betroffen sein sollen.",
+    "occurrenceOnly": "Nur dieser Termin",
+    "thisAndFuture": "Dieser und alle zukünftigen Termine",
+    "deleteScopeTitle": "Wiederkehrende Ausgabe löschen",
+    "deleteScopeDescription": "Wähle, ob ein Termin gelöscht oder die Serie beendet werden soll.",
+    "deleteOccurrence": "Nur diesen Termin löschen",
+    "deleteThisAndFuture": "Diesen und alle zukünftigen Termine löschen",
+    "deleteThisAndFutureStop": "Dieses und zukünftige Vorkommen löschen und Wiederholung stoppen",
+    "deleteThisAndFutureDescription": "Dieses und spätere Ausgaben entfernen; der Zeitplan bleibt aktiv.",
+    "deleteThisAndFutureStopDescription": "Dieses und spätere Ausgaben entfernen und den Zeitplan dauerhaft stoppen.",
+    "deleteOccurrenceDescription": "Nur diese Ausgabe entfernen. Andere geplante Vorkommen bleiben unverändert.",
+    "actions": "Wiederkehrende Aktionen",
+    "actionsTitle": "Aktionen für wiederkehrende Ausgaben",
+    "actionsDescription": "Wählen Sie genau aus, welches Vorkommen Sie bearbeiten oder löschen möchten.",
+    "editActions": "Bearbeiten",
+    "deleteActions": "Löschen",
+    "confirmDelete": "Löschen",
+    "confirmStop": "Wiederholung stoppen",
+    "working": "Wird bearbeitet…",
+    "back": "Zurück",
+    "confirm": "Weiter",
+    "cancel": "Abbrechen",
+    "occurrences": "{count} Termine in dieser Serie",
+    "loading": "Wird geladen…",
+    "loadMore": "Weitere Termine laden",
+    "editOccurrence": "Dieses Vorkommen bearbeiten",
+    "editOccurrenceDescription": "Nur diese Ausgabe ändern.",
+    "editThisAndFuture": "Dieses und zukünftige Vorkommen bearbeiten",
+    "editThisAndFutureDescription": "Diese Ausgabe und alle zukünftigen geplanten Ausgaben ändern.",
+    "stopRecurrence": "Wiederholung stoppen",
+    "stopConfirmTitle": "Diese Wiederholung stoppen?",
+    "stopConfirmDescription": "Bestehende Ausgaben bleiben erhalten. Es werden keine neuen Vorkommen erstellt.",
+    "stopConfirmHint": "Das Stoppen ist dauerhaft. Erstellen Sie eine neue wiederkehrende Ausgabe, um erneut zu beginnen.",
+    "deleteConfirmTitle": "Löschen bestätigen",
+    "deleteConfirmHint": "Diese Aktion kann für die ausgewählten Vorkommen nicht rückgängig gemacht werden.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Nur dieses Vorkommen wird gelöscht.",
+      "THIS_AND_FUTURE": "Dieses und alle folgenden Vorkommen werden gelöscht. Die Wiederholung wird mit dem nächsten geplanten Vorkommen fortgesetzt.",
+      "THIS_AND_FUTURE_STOP": "Dieses und alle folgenden Vorkommen werden gelöscht und die Wiederholung wird gestoppt."
+    },
+    "badgeRunning": "Wiederkehrend · Laufend",
+    "badgeStopped": "Wiederkehrend · Gestoppt",
+    "badgeCompleted": "Wiederkehrend · Abgeschlossen"
   }
 }

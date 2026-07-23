@@ -9,6 +9,7 @@ const expenseEditRouteApi = getRouteApi(
 
 function ExpenseEditRoute() {
   const { groupId, expenseId } = expenseEditRouteApi.useParams()
+  const { scope } = expenseEditRouteApi.useSearch()
   const { data } = trpc.features.get.useQuery()
   if (!data) {
     return (
@@ -23,6 +24,7 @@ function ExpenseEditRoute() {
       groupId={groupId}
       expenseId={expenseId}
       runtimeFeatureFlags={data}
+      initialScope={scope}
     />
   )
 }

@@ -266,7 +266,14 @@
         "conversionFixed": "固定レート",
         "importErrorTitle": "インポートに失敗しました",
         "importErrorFallback": "グループのインポート中に予期しないエラーが発生しました。もう一度お試しください。",
-        "executeImport": "グループをインポート"
+        "executeImport": "グループをインポート",
+        "recurringSchedulesLabel": "インポートする定期スケジュール",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "毎日",
+          "weekly": "毎週",
+          "monthly": "毎月"
+        }
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",
@@ -373,7 +380,8 @@
         "splitwiseAnonymizeDescription": "インポーターが CSV を拒否した場合は、参加者の名前と支出の説明をローカルで削除し、結果を GitHub issue に添付できます。ファイルはお使いのデバイスから外部に送信されず、当社がアップロードすることもありません。",
         "splitwiseAnonymizeButton": "CSV を匿名化する",
         "splitwiseAnonymizeIssuesLink": "インポートに関する issue を作成する",
-        "splitwiseAnonymizeError": "このファイルを匿名化できませんでした。Splitwise の CSV エクスポートであることを確認してください。"
+        "splitwiseAnonymizeError": "このファイルを匿名化できませんでした。Splitwise の CSV エクスポートであることを確認してください。",
+        "csvRecurrenceLimitation": "CSVエクスポートには繰り返し情報が含まれません。定期的な支出をインポートするには、spliit.appのJSONエクスポートを使用してください。"
       },
       "StepHeader": {
         "title": "グループをインポート",
@@ -579,7 +587,51 @@
         "description": "支出が支払われた通貨。"
       },
       "createCopy": "コピーを作成：{title}",
-      "editTitle": "編集：{title}"
+      "editTitle": "編集：{title}",
+      "recurrence": {
+        "label": "支出の繰り返し",
+        "description": "この支出を次に作成するタイミングを選択してください。",
+        "checkboxLabel": "定期支出",
+        "checkboxDescription": "この支出を定期的に作成",
+        "enable": "繰り返しを追加",
+        "remove": "繰り返しを削除",
+        "repeatEvery": "繰り返す間隔",
+        "interval": "繰り返し間隔",
+        "frequency": "繰り返し頻度",
+        "frequencyOptions": {
+          "daily": "日",
+          "weekly": "週間",
+          "monthly": "か月",
+          "yearly": "年"
+        },
+        "ends": {
+          "label": "終了条件",
+          "never": "なし",
+          "count": "指定回数の後",
+          "date": "指定日",
+          "countInput": "合計回数（この支出を含む）",
+          "dateInput": "終了日"
+        },
+        "previewLabel": "次の発生日",
+        "currentOccurrence": "現在",
+        "viewAll": "すべて表示",
+        "scheduleTitle": "繰り返しスケジュール",
+        "remainingCount": "残り{count}件の支出があります。",
+        "unlimitedSchedule": "この繰り返しには終了日がありません。",
+        "noFurtherOccurrences": "この設定では次回以降の発生はありません。",
+        "scheduleCount": "この支出から{count}件を表示しています。",
+        "decreaseOccurrences": "繰り返し回数を減らす",
+        "increaseOccurrences": "繰り返し回数を増やす",
+        "ruleSummary": "{interval}{frequency}ごと · {count}回",
+        "ruleSummaryIndefinite": "{interval}{frequency}ごと · 終了日なし",
+        "scheduleChangeWarningTitle": "繰り返しスケジュールが変更されます",
+        "scheduleChangeWarning": "保存すると、この発生分と今後の発生分が再スケジュールされます。既存の将来の支出は新しい日付に移動したり削除されたりする場合があり、不足している発生日は自動的に作成される場合があります。",
+        "pastDateBackfillNote": "この支出が過去の日付から始まるため、保存後に今日までの発生分が自動的に作成されます。",
+        "completedOccurrence": "作成済み",
+        "upcomingOccurrence": "予定"
+      },
+      "recurringEditScopeOccurrence": "この発生分のみ編集",
+      "recurringEditScopeFuture": "この発生分と今後の発生分を編集"
     },
     "amountField": {
       "label": "金額",
@@ -1634,6 +1686,10 @@
         "weeklySummary": {
           "title": "週間アクティビティサマリー",
           "description": "あなたのグループ全体のアクティビティの週間サマリー。"
+        },
+        "recurringExpense": {
+          "title": "定期支出",
+          "description": "グループで予定された定期支出が作成されたとき。"
         }
       },
       "sections": {
@@ -1663,7 +1719,9 @@
         "reimbursement": "精算金",
         "conversionSource": "換算元",
         "conversionRate": "換算レート"
-      }
+      },
+      "recurringCreated": "{participant}さんが定期支出「{title}」を作成しました",
+      "stopped": "{participant}さんが定期支出「{title}」を停止しました"
     },
     "group": {
       "updated": "{participant}がグループ設定を更新しました",
@@ -1910,5 +1968,58 @@
       "description": "{category}のメールは届かなくなります。他の通知設定は変更されません。"
     },
     "scope": "停止されるのはこのメール通知のみです。他のメールやプッシュ通知は引き続き受け取れます。"
+  },
+  "ExpenseSeries": {
+    "badge": "定期",
+    "occurrence": "第{sequence}回",
+    "previous": "前へ",
+    "next": "次へ",
+    "viewSeries": "シリーズを表示",
+    "title": "支出シリーズ",
+    "empty": "他の発生はまだありません。",
+    "scopeTitle": "定期支出を更新",
+    "scopeDescription": "変更する発生を選択してください。",
+    "occurrenceOnly": "この回のみ",
+    "thisAndFuture": "この回以降",
+    "deleteScopeTitle": "定期支出を削除",
+    "deleteScopeDescription": "この回のみ削除するか、シリーズを終了するかを選択してください。",
+    "deleteOccurrence": "この回のみ削除",
+    "deleteThisAndFuture": "この回以降を削除",
+    "deleteThisAndFutureStop": "この発生分と今後の発生分を削除して繰り返しを停止",
+    "deleteThisAndFutureDescription": "この支出とそれ以降の支出を削除します。スケジュールは有効なままです。",
+    "deleteThisAndFutureStopDescription": "この支出とそれ以降の支出を削除し、スケジュールを完全に停止します。",
+    "deleteOccurrenceDescription": "この支出のみ削除します。その他の予定された発生分は変更されません。",
+    "actions": "繰り返しの操作",
+    "actionsTitle": "繰り返し支出の操作",
+    "actionsDescription": "編集または削除する発生分を正確に選択してください。",
+    "editActions": "編集",
+    "deleteActions": "削除",
+    "confirmDelete": "削除",
+    "confirmStop": "繰り返しを停止",
+    "working": "処理中…",
+    "back": "戻る",
+    "confirm": "続行",
+    "cancel": "キャンセル",
+    "occurrences": "このシリーズは{count}回です",
+    "loading": "読み込み中…",
+    "loadMore": "さらに読み込む",
+    "editOccurrence": "この発生分を編集",
+    "editOccurrenceDescription": "この支出のみ変更します。",
+    "editThisAndFuture": "この発生分と今後の発生分を編集",
+    "editThisAndFutureDescription": "この支出と今後予定されているすべての支出を変更します。",
+    "stopRecurrence": "繰り返しを停止",
+    "stopConfirmTitle": "この繰り返しを停止しますか？",
+    "stopConfirmDescription": "既存の支出は残ります。新しい発生分は作成されません。",
+    "stopConfirmHint": "停止すると再開できません。もう一度開始するには、新しい繰り返し支出を作成してください。",
+    "deleteConfirmTitle": "削除を確認",
+    "deleteConfirmHint": "選択した発生分に対してこの操作を元に戻すことはできません。",
+    "deleteConfirm": {
+      "OCCURRENCE": "この発生分のみ削除されます。",
+      "THIS_AND_FUTURE": "この発生分と今後の発生分が削除されます。繰り返しは次に予定された発生分から続行されます。",
+      "THIS_AND_FUTURE_STOP": "この発生分と今後の発生分が削除され、繰り返しが停止します。"
+    },
+    "badgeRunning": "定期 · 実行中",
+    "badgeStopped": "定期 · 停止中",
+    "badgeCompleted": "定期 · 完了"
   }
 }

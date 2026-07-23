@@ -3,6 +3,11 @@ export type NormalizedSourceParticipant = {
   sourceName: string
 }
 
+import type { RecurrenceFrequency } from '../enums'
+import type { RecurrenceConfig, RecurrenceEnd } from '../recurring-expenses'
+
+export type { RecurrenceConfig, RecurrenceEnd, RecurrenceFrequency }
+
 export type NormalizedSourceExpense = {
   title: string
   expenseDate: string
@@ -16,7 +21,9 @@ export type NormalizedSourceExpense = {
   paidBy: Array<{ sourceId: string; shares: number }>
   paidFor: Array<{ sourceId: string; shares: number }>
   splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
+  /** Legacy alias retained for old import callers during the schema cutover. */
   recurrenceRule: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
+  recurrence?: RecurrenceConfig | null
   isReimbursement: boolean
   notes: string | null
 }

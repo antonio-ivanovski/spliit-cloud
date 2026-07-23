@@ -278,7 +278,14 @@
         "conversionFixed": "Stały kurs",
         "importErrorTitle": "Import nie powiódł się",
         "importErrorFallback": "Wystąpił nieoczekiwany błąd podczas importowania grupy. Spróbuj ponownie.",
-        "executeImport": "Importuj grupę"
+        "executeImport": "Importuj grupę",
+        "recurringSchedulesLabel": "Cykliczne harmonogramy do zaimportowania",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Codziennie",
+          "weekly": "Co tydzień",
+          "monthly": "Co miesiąc"
+        }
       },
       "Destination": {
         "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
@@ -388,7 +395,8 @@
         "splitwiseAnonymizeDescription": "Jeśli importer odrzuci Twój CSV, możesz lokalnie usunąć imiona uczestników i opisy wydatków, a wynik dołączyć do zgłoszenia na GitHubie. Plik pozostaje na Twoim urządzeniu — nigdy go nie wysyłamy.",
         "splitwiseAnonymizeButton": "Zanonimizuj CSV",
         "splitwiseAnonymizeIssuesLink": "Otwórz zgłoszenie importu",
-        "splitwiseAnonymizeError": "Nie udało się zanonimizować tego pliku. Upewnij się, że to eksport CSV ze Splitwise."
+        "splitwiseAnonymizeError": "Nie udało się zanonimizować tego pliku. Upewnij się, że to eksport CSV ze Splitwise.",
+        "csvRecurrenceLimitation": "Eksporty CSV nie zawierają cykliczności. Użyj eksportu JSON ze spliit.app, aby zaimportować cykliczne wydatki."
       },
       "StepHeader": {
         "title": "Importuj grupę",
@@ -597,7 +605,51 @@
       "splitModeDescription": "Wybierz jak podzielić wydatek.",
       "attachDescription": "Zobacz i załącz rachunki do wydatku.",
       "createCopy": "Utwórz kopię: {title}",
-      "editTitle": "Edytuj: {title}"
+      "editTitle": "Edytuj: {title}",
+      "recurrence": {
+        "label": "Cykliczność wydatku",
+        "description": "Wybierz, kiedy ten wydatek ma zostać utworzony ponownie.",
+        "checkboxLabel": "Cykliczny",
+        "checkboxDescription": "Utwórz ten wydatek według harmonogramu",
+        "enable": "Dodaj cykliczność",
+        "remove": "Usuń cykliczność",
+        "repeatEvery": "Powtarzaj co",
+        "interval": "Interwał powtarzania",
+        "frequency": "Częstotliwość powtarzania",
+        "frequencyOptions": {
+          "daily": "dzień/dni",
+          "weekly": "tydzień/tygodnie",
+          "monthly": "miesiąc/miesiące",
+          "yearly": "rok/lata"
+        },
+        "ends": {
+          "label": "Kończy się",
+          "never": "Nigdy",
+          "count": "Po określonej liczbie wystąpień",
+          "date": "W określonym dniu",
+          "countInput": "Łączna liczba wystąpień (w tym ten wydatek)",
+          "dateInput": "Data zakończenia"
+        },
+        "previewLabel": "Następne wystąpienia",
+        "currentOccurrence": "Bieżący",
+        "viewAll": "Wyświetl wszystko",
+        "scheduleTitle": "Harmonogram cykliczności",
+        "remainingCount": "Pozostało {count} wystąpień.",
+        "unlimitedSchedule": "To powtarzanie nie ma daty zakończenia.",
+        "noFurtherOccurrences": "Przy tych ustawieniach nie ma kolejnych wystąpień.",
+        "scheduleCount": "Wyświetlono {count} wystąpień od tego wydatku.",
+        "decreaseOccurrences": "Zmniejsz liczbę wystąpień",
+        "increaseOccurrences": "Zwiększ liczbę wystąpień",
+        "ruleSummary": "Co {interval} {frequency} · {count} wystąpień",
+        "ruleSummaryIndefinite": "Co {interval} {frequency} · Brak daty zakończenia",
+        "scheduleChangeWarningTitle": "Harmonogram cykliczności ulegnie zmianie",
+        "scheduleChangeWarning": "Zapisanie spowoduje przeplanowanie tego i przyszłych wystąpień. Istniejące przyszłe wydatki mogą zostać przeniesione na nowe daty lub usunięte, a brakujące terminy mogą zostać utworzone automatycznie.",
+        "pastDateBackfillNote": "Ponieważ ten wydatek zaczyna się w przeszłości, wystąpienia do dzisiejszego dnia zostaną utworzone automatycznie po zapisaniu.",
+        "completedOccurrence": "Utworzono",
+        "upcomingOccurrence": "Nadchodzące"
+      },
+      "recurringEditScopeOccurrence": "Edytowanie tylko tego wystąpienia",
+      "recurringEditScopeFuture": "Edytowanie tego i przyszłych wystąpień"
     },
     "amountField": {
       "label": "Suma",
@@ -1657,6 +1709,10 @@
         "weeklySummary": {
           "title": "Cotygodniowe podsumowanie aktywności",
           "description": "Cotygodniowe podsumowanie aktywności we wszystkich Twoich grupach."
+        },
+        "recurringExpense": {
+          "title": "Wydatek cykliczny",
+          "description": "Gdy w grupie zostanie utworzony zaplanowany wydatek cykliczny."
         }
       },
       "sections": {
@@ -1686,7 +1742,9 @@
         "reimbursement": "Płatność rozliczeniowa",
         "conversionSource": "Źródło konwersji",
         "conversionRate": "Kurs wymiany"
-      }
+      },
+      "recurringCreated": "{participant} utworzył(a) cykliczny wydatek „{title}”",
+      "stopped": "{participant} zatrzymał(a) cykliczny wydatek „{title}”"
     },
     "group": {
       "updated": "{participant} zaktualizował ustawienia grupy",
@@ -1960,5 +2018,58 @@
       "description": "Nie będziesz otrzymywać e-maili dotyczących {category}. Pozostałe ustawienia powiadomień nie uległy zmianie."
     },
     "scope": "Wyłączone zostanie tylko to powiadomienie e-mail. Pozostałe e-maile i powiadomienia push pozostaną bez zmian."
+  },
+  "ExpenseSeries": {
+    "badge": "Cykliczny",
+    "occurrence": "Wystąpienie {sequence}",
+    "previous": "Poprzednie",
+    "next": "Następne",
+    "viewSeries": "Wyświetl serię",
+    "title": "Seria wydatków",
+    "empty": "Nie ma jeszcze innych wystąpień.",
+    "scopeTitle": "Zaktualizuj cykliczny wydatek",
+    "scopeDescription": "Wybierz, których wystąpień ma dotyczyć zmiana.",
+    "occurrenceOnly": "Tylko to wystąpienie",
+    "thisAndFuture": "To i przyszłe wystąpienia",
+    "deleteScopeTitle": "Usuń cykliczny wydatek",
+    "deleteScopeDescription": "Wybierz, czy usunąć jedno wystąpienie, czy zakończyć serię.",
+    "deleteOccurrence": "Usuń tylko to wystąpienie",
+    "deleteThisAndFuture": "Usuń to i przyszłe wystąpienia",
+    "deleteThisAndFutureStop": "Usuń to i przyszłe wystąpienia oraz zatrzymaj cykl",
+    "deleteThisAndFutureDescription": "Usuń ten i późniejsze wydatki; harmonogram pozostanie aktywny.",
+    "deleteThisAndFutureStopDescription": "Usuń ten i późniejsze wydatki oraz trwale zatrzymaj harmonogram.",
+    "deleteOccurrenceDescription": "Usuń tylko ten wydatek. Pozostałe zaplanowane wystąpienia pozostaną bez zmian.",
+    "actions": "Działania cykliczne",
+    "actionsTitle": "Działania dotyczące cyklicznego wydatku",
+    "actionsDescription": "Wybierz dokładnie wystąpienie do edycji lub usunięcia.",
+    "editActions": "Działania edycji",
+    "deleteActions": "Opcje usuwania",
+    "confirmDelete": "Usuń",
+    "confirmStop": "Zatrzymaj cykl",
+    "working": "Przetwarzanie…",
+    "back": "Wstecz",
+    "confirm": "Kontynuuj",
+    "cancel": "Anuluj",
+    "occurrences": "{count} wystąpień w tej serii",
+    "loading": "Wczytywanie…",
+    "loadMore": "Wczytaj więcej wystąpień",
+    "editOccurrence": "Edytuj to wystąpienie",
+    "editOccurrenceDescription": "Zmień tylko ten wydatek.",
+    "editThisAndFuture": "Edytuj to i przyszłe wystąpienia",
+    "editThisAndFutureDescription": "Zmień ten wydatek i wszystkie przyszłe zaplanowane wydatki.",
+    "stopRecurrence": "Zatrzymaj cykl",
+    "stopConfirmTitle": "Zatrzymać ten cykl?",
+    "stopConfirmDescription": "Istniejące wydatki pozostaną. Nie zostaną utworzone nowe wystąpienia.",
+    "stopConfirmHint": "Zatrzymanie jest trwałe. Aby rozpocząć ponownie, utwórz nowy cykliczny wydatek.",
+    "deleteConfirmTitle": "Potwierdź usunięcie",
+    "deleteConfirmHint": "Tej czynności nie można cofnąć dla wybranych wystąpień.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Usunięte zostanie tylko to wystąpienie.",
+      "THIS_AND_FUTURE": "To i przyszłe wystąpienia zostaną usunięte. Cykl będzie kontynuowany od następnego zaplanowanego wystąpienia.",
+      "THIS_AND_FUTURE_STOP": "To i przyszłe wystąpienia zostaną usunięte, a cykl zostanie zatrzymany."
+    },
+    "badgeRunning": "Cykliczny · W toku",
+    "badgeStopped": "Cykliczny · Zatrzymany",
+    "badgeCompleted": "Cykliczny · Ukończony"
   }
 }

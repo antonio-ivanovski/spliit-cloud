@@ -28,6 +28,16 @@ function itemSignature(item: ExpenseApiItem): string {
   return `${item.splitMode}|${paidFor}`
 }
 
+function itemContentSignature(item: ExpenseApiItem): string {
+  return JSON.stringify([
+    item.title,
+    item.unitPrice,
+    item.quantity,
+    item.amount,
+    itemSignature(item),
+  ])
+}
+
 function formatItemLine(
   item: ExpenseApiItem,
   currency: string | null,
@@ -74,12 +84,20 @@ export const itemsDiffer: ExpenseDiffer = {
     }
 
     const changes: ItemChange[] = []
-    const seenOldIds = new Set<string>()
+    const unmatchedOldIdlessCounts = new Map<string, number>()
+    for (const item of oldItems) {
+      if (!item.id) {
+        const signature = itemContentSignature(item)
+        unmatchedOldIdlessCounts.set(
+          signature,
+          (unmatchedOldIdlessCounts.get(signature) ?? 0) + 1,
+        )
+      }
+    }
 
     for (const newItem of newItems) {
       if (newItem.id && oldById.has(newItem.id)) {
         const oldItem = oldById.get(newItem.id)!
-        seenOldIds.add(newItem.id)
         const mainEqual =
           oldItem.title === newItem.title &&
           oldItem.quantity === newItem.quantity &&
@@ -92,16 +110,35 @@ export const itemsDiffer: ExpenseDiffer = {
           after: newItem,
           splitOnly: mainEqual && !splitEqual,
         })
+      } else if (!newItem.id) {
+        const signature = itemContentSignature(newItem)
+        const oldCount = unmatchedOldIdlessCounts.get(signature) ?? 0
+        if (oldCount > 0) {
+          unmatchedOldIdlessCounts.set(signature, oldCount - 1)
+        } else {
+          changes.push({ kind: 'added', item: newItem })
+        }
       } else {
         changes.push({ kind: 'added', item: newItem })
       }
     }
 
     for (const oldItem of oldItems) {
-      if (!oldItem.id || !newById.has(oldItem.id)) {
-        changes.push({ kind: 'removed', item: oldItem })
+      if (oldItem.id) {
+        if (!newById.has(oldItem.id)) {
+          changes.push({ kind: 'removed', item: oldItem })
+        }
+      } else {
+        const signature = itemContentSignature(oldItem)
+        const remainingCount = unmatchedOldIdlessCounts.get(signature) ?? 0
+        if (remainingCount > 0) {
+          changes.push({ kind: 'removed', item: oldItem })
+          unmatchedOldIdlessCounts.set(signature, remainingCount - 1)
+        }
       }
     }
+
+    if (changes.length === 0) return null
 
     const oldCurrency = effectiveCurrency(oldExpense, ctx)
     const newCurrency = effectiveCurrency(newExpense, ctx)

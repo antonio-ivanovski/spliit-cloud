@@ -9,7 +9,6 @@ import type {
 import {
   DEFAULT_CATEGORY_ID,
   PAYMENT_CATEGORY_ID,
-  RecurrenceRule,
   amountAsDecimal,
   categoryIdSchema,
   getCurrency,
@@ -88,6 +87,30 @@ function getPaidForParticipantId(pf: ExpenseItemPaidForInput): string {
 export type DefaultSplittingOptions = {
   splitMode: SplitMode
   paidFor: ExpenseFormInputValues['paidFor']
+}
+
+function recurrenceForCopy(
+  recurrence: ExpenseFormInputValues['recurrence'],
+  sourceDate: Date,
+  copyDate: Date,
+): ExpenseFormInputValues['recurrence'] {
+  if (!recurrence || recurrence.end.type !== 'DATE') return recurrence
+
+  const sourceDay = Date.UTC(
+    sourceDate.getUTCFullYear(),
+    sourceDate.getUTCMonth(),
+    sourceDate.getUTCDate(),
+  )
+  const endDay = Date.UTC(
+    recurrence.end.endDate.getUTCFullYear(),
+    recurrence.end.endDate.getUTCMonth(),
+    recurrence.end.endDate.getUTCDate(),
+  )
+  const durationDays = Math.max(0, (endDay - sourceDay) / 86_400_000)
+  const shiftedEnd = new Date(copyDate)
+  shiftedEnd.setUTCDate(shiftedEnd.getUTCDate() + durationDays)
+
+  return { ...recurrence, end: { type: 'DATE', endDate: shiftedEnd } }
 }
 
 export const parseCategoryIdFromUrl = (raw: string | null | undefined) => {
@@ -232,17 +255,24 @@ export function buildExpenseFormDefaults(args: {
 
   // Copy: prefill like edit, but force today's date.
   if (isCopy && expense) {
+    const copyDate = new Date()
+    const defaults = buildExpenseFormDefaults({
+      isCreate: false,
+      expense,
+      searchParams,
+      group,
+      groupCurrency,
+      currentLedgerParticipantId,
+      reimbursementTitle,
+    })
     return {
-      ...buildExpenseFormDefaults({
-        isCreate: false,
-        expense,
-        searchParams,
-        group,
-        groupCurrency,
-        currentLedgerParticipantId,
-        reimbursementTitle,
-      }),
-      expenseDate: new Date(),
+      ...defaults,
+      expenseDate: copyDate,
+      recurrence: recurrenceForCopy(
+        defaults.recurrence,
+        expense.expenseDate,
+        copyDate,
+      ),
     }
   }
 
@@ -407,7 +437,8 @@ export function buildExpenseFormDefaults(args: {
       isReimbursement: expense.isReimbursement,
       documents: expense.documents,
       notes: expense.notes ?? '',
-      recurrenceRule: expense.recurrenceRule ?? undefined,
+      recurrence: expense.recurrence ?? null,
+      recurrenceRule: 'NONE',
       items,
       itemizedRemainder,
     }
@@ -497,7 +528,8 @@ export function buildExpenseFormDefaults(args: {
         splitMode: 'BY_AMOUNT' as const,
         documents: [],
         notes: '',
-        recurrenceRule: RecurrenceRule.NONE,
+        recurrence: null,
+        recurrenceRule: 'NONE',
         itemizedRemainder: {
           splitMode: 'EVENLY' as const,
           paidFor: group.participants.map(({ id }) => ({
@@ -543,7 +575,8 @@ export function buildExpenseFormDefaults(args: {
       splitMode: 'EVENLY' as const,
       documents: [],
       notes: '',
-      recurrenceRule: RecurrenceRule.NONE,
+      recurrence: null,
+      recurrenceRule: 'NONE',
       itemizedRemainder: {
         splitMode: 'EVENLY' as const,
         paidFor: group.participants.map(({ id }) => ({
@@ -590,7 +623,8 @@ export function buildExpenseFormDefaults(args: {
         ]
       : [],
     notes: '',
-    recurrenceRule: RecurrenceRule.NONE,
+    recurrence: null,
+    recurrenceRule: 'NONE',
     items: prefilledItems,
     itemizedRemainder: {
       splitMode: 'EVENLY' as const,

@@ -1,5 +1,6 @@
 import * as z from 'zod'
 import { DEFAULT_CATEGORIES } from '../categories'
+import { legacyRuleToRecurrence } from './recurrence'
 import {
   recoverSpliitOriginalAmount,
   shouldRecoverSpliitOriginal,
@@ -10,6 +11,12 @@ import type {
   NormalizedSourceExpense,
 } from './types'
 
+/**
+ * This parser intentionally targets the immutable legacy export produced by
+ * the original spliit.app. Keep this wire schema stable; map its fields to
+ * the current internal model in `normalizeSpliitExport` instead of adding
+ * current Spliit Cloud recurrence state here.
+ */
 export const spliitExportSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -140,6 +147,8 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
     const expenseCurrency = shouldRecover
       ? e.originalCurrency!
       : (parsed.currencyCode ?? null)
+    const recurrence = legacyRuleToRecurrence(e.recurrenceRule)
+
     return {
       title: e.title,
       expenseDate: e.expenseDate.slice(0, 10),
@@ -154,6 +163,7 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
       paidFor,
       splitMode: e.splitMode,
       recurrenceRule: e.recurrenceRule,
+      recurrence,
       isReimbursement: e.isReimbursement,
       notes: e.notes ?? null,
     }

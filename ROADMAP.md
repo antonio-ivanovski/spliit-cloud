@@ -24,33 +24,34 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 - [x] **Multi-payer expenses** — a single expense paid by several members, with a share per payer. Closes the gap with Splitwise. — upstream **[#14](https://github.com/spliit-app/spliit/issues/14)** (PRs [#146](https://github.com/spliit-app/spliit/pull/146) / [#396](https://github.com/spliit-app/spliit/pull/396) open 1.5+ years)
 - [x] **Itemized expenses** — split an expense by line items, with tax and tip, and per-person sub-totals. The most-asked "real Splitwise" feature after recurring. — upstream [#395](https://github.com/spliit-app/spliit/issues/395)
 - [x] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
-- [ ] Recurring expenses — `calculateNextDate` and daily/weekly/monthly tests already in place
+- [x] **Durable recurring expenses** — explicit recurrence series with configurable intervals, indefinite/count/date termination, durable worker processing, catch-up, retries, lifecycle status, navigation, previews, and scoped stop/edit/delete controls. ([design](./openspec/changes/durable-recurring-expenses))
 - [ ] Account overview homepage ([design](./openspec/changes/add-overview-homepage)) — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)
-- [ ] Notifications
-      — [x] Email
-      — [ ] Telegram
-      — [ ] Push
+- [x] **Notifications and delivery preferences** — email and push channels with per-user category and delivery preferences
 
 ### Quality-of-life additions (small, high-trust, ship in batches)
 
 - [ ] **Expense comments / notes on an expense** — upstream [#165](https://github.com/spliit-app/spliit/pull/165)
 - [x] **Copy an expense** — open the last one, click copy, save with today's date — upstream [#527](https://github.com/spliit-app/spliit/issues/527) (PRs [#394](https://github.com/spliit-app/spliit/pull/394), [#201](https://github.com/spliit-app/spliit/pull/201))
-- [ ] **Math expressions in the amount field** (e.g. `12+4.50`) — upstream [#184](https://github.com/spliit-app/spliit/pull/184)
+- [x] **Math expressions in the amount field** (e.g. `12+4.50`) — upstream [#184](https://github.com/spliit-app/spliit/pull/184)
 - [x] **Default split mode persisted on group** — upstream [#366](https://github.com/spliit-app/spliit/pull/366)
 - [ ] **Reorder participants** — upstream [#416](https://github.com/spliit-app/spliit/pull/416)
 - [ ] **One-line quick entry** (SplittyPie style) — upstream [#384](https://github.com/spliit-app/spliit/issues/384)
 - [ ] **Payment method field on an expense** — upstream [#451](https://github.com/spliit-app/spliit/pull/451)
 - [ ] **Locations on expenses** — upstream [#172](https://github.com/spliit-app/spliit/pull/172)
 - [ ] **QR code to share / join a group** — upstream [#500](https://github.com/spliit-app/spliit/pull/500)
-- [ ] **Recurring expense stats** — cumulative per recurrence period. Lands for free once recurring ships. — upstream [#508](https://github.com/spliit-app/spliit/issues/508)
+- [ ] **Recurring expense stats** — cumulative per recurrence period. — upstream [#508](https://github.com/spliit-app/spliit/issues/508)
 - [x] Member management
+- [x] **Expense discovery and presentation** — dedicated expense previews, filtering, sorting, and mobile-friendly controls
+- [x] **Balances and settlement UX** — clear payment direction, simple/visual balance views, quick settlement, and multi-participant settlement previews
+- [x] **Expanded categories and profile avatars** — new everyday spending categories plus account avatars across the app
+- [x] **Complete localization** — all supported locales translated and audited through the repository i18n workflow
 
 ## Phase 4: Trust, privacy, and scale — in progress
 
 ### Headline features (the moat)
 
 - [ ] **End-to-end encrypted groups and expenses** — per-group passphrase protecting group, participant, and expense data with a client-side derivation layer. The single biggest open-source expense-splitter differentiator and a real answer to upstream **[#34](https://github.com/spliit-app/spliit/issues/34)** (open since 2024, never touched).
-- [ ] **OpenAPI spec + Public API + MCP support** — tRPC → OpenAPI is largely free; expose a stable public surface behind per-user API tokens. Closes upstream **[#117](https://github.com/spliit-app/spliit/issues/117)** (top-reacted, 2+ years) and unlocks automation / agent workflows.
+- [x] **Published OpenAPI spec and Scalar reference** — generated API documentation is available at [api.spliit.cloud/docs](https://api.spliit.cloud/docs) with the [OpenAPI document](https://api.spliit.cloud/openapi.json). Stable per-user API tokens and MCP support remain planned. Addresses upstream **[#117](https://github.com/spliit-app/spliit/issues/117)**.
 - [ ] **Better offline support** — improve the existing PWA; read-only cache first, then a write queue. Addresses upstream [#79](https://github.com/spliit-app/spliit/issues/79).
 - [x] Test coverage for critical flows
 
@@ -62,10 +63,10 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 
 These are upstream issues that affect every user of Spliit Cloud too. Each one is a small PR and a meaningful trust return.
 
-- [ ] **Rounding drops a cent when splitting evenly** — upstream [#374](https://github.com/spliit-app/spliit/issues/374), [#375](https://github.com/spliit-app/spliit/issues/375), [#393](https://github.com/spliit-app/spliit/issues/393), fix PR [#427](https://github.com/spliit-app/spliit/pull/427)
+- [x] **Rounding drops a cent when splitting evenly** — upstream [#374](https://github.com/spliit-app/spliit/issues/374), [#375](https://github.com/spliit-app/spliit/issues/375), [#393](https://github.com/spliit-app/spliit/issues/393), fix PR [#427](https://github.com/spliit-app/spliit/pull/427)
 - [ ] **"Mark as paid" selects all group members as recipients** — upstream [#197](https://github.com/spliit-app/spliit/issues/197) (2-year-old bug, embarrassingly visible)
-- [ ] **`originalAmount` stored as cents** (breaks foreign-currency display & export) — upstream [#513](https://github.com/spliit-app/spliit/issues/513), fix PR [#425](https://github.com/spliit-app/spliit/pull/425)
-- [ ] **iOS / German comma-decimal input** — upstream [#528](https://github.com/spliit-app/spliit/issues/528), [#439](https://github.com/spliit-app/spliit/issues/439), fix PR [#531](https://github.com/spliit-app/spliit/pull/531)
+- [x] **`originalAmount` stored as cents** (breaks foreign-currency display & export) — upstream [#513](https://github.com/spliit-app/spliit/issues/513), fix PR [#425](https://github.com/spliit-app/spliit/pull/425)
+- [x] **iOS / German comma-decimal input** — upstream [#528](https://github.com/spliit-app/spliit/issues/528), [#439](https://github.com/spliit-app/spliit/issues/439), fix PR [#531](https://github.com/spliit-app/spliit/pull/531)
 - [ ] **"All amounts must be > 0" when editing a category** — upstream [#436](https://github.com/spliit-app/spliit/issues/436)
 - [x] **Exchange rate API redirect strips CORS** — upstream [#514](https://github.com/spliit-app/spliit/issues/514), fix PR [#515](https://github.com/spliit-app/spliit/pull/515)
 - [ ] **Keyboard navigation broken in category / currency selectors** — upstream [#491](https://github.com/spliit-app/spliit/pull/491)
@@ -76,11 +77,11 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 
 ### Headline features
 
-- [ ] **Profile photos** — upload and manage profile avatars, displayed in group member lists and expense participants
-- [ ] **App theme** — light, dark, and system theme preference persisted per account and synced across devices
-- [ ] **Favourite currencies** — user-curated list of preferred currencies that replaces the hardcoded "common currencies" in the expense creation flow. Addresses the steady stream of currency addition PRs by making the selector personal.
+- [x] **Profile photos** — upload and manage profile avatars, displayed across account, group, and expense contexts
+- [x] **App theme** — light, dark, and system theme preference persisted per account and synced across devices
+- [x] **Favourite currencies** — user-curated list of preferred currencies that replaces the hardcoded "common currencies" in the expense creation flow. Addresses the steady stream of currency addition PRs by making the selector personal.
 - [ ] **Bring-your-own AI key (per-user)** — per-user API key configuration for receipt scanning and category extraction, allowing users to bring their own OpenAI-compatible endpoint and model. Complements the server-level BYOK from Phase 4.
-- [ ] **Settings sync across devices** — preferences, favourite currencies, theme, and AI configuration are stored server-side and synced across all sessions. Builds on the account system from Phase 1.
+- [x] **Settings sync across devices** — preferences, favourite currencies, theme, and AI configuration are stored server-side and synced across all sessions. Builds on the account system from Phase 1.
 
 ## Cross-cutting
 
@@ -99,21 +100,22 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
   - [x] Currency framework to absorb the steady stream of "add NPR / MOP / VND / COP / MYR / MKD" PRs — supersedes [#418](https://github.com/spliit-app/spliit/issues/418), [#431](https://github.com/spliit-app/spliit/issues/431), [#438](https://github.com/spliit-app/spliit/issues/438)
 - **Integrations / channels**
   - [ ] Telegram notification channel — PR [#252](https://github.com/spliit-app/spliit/pull/252)
-  - [x] Email notification channel — granular per-expense change alerts delivered to group members
+  - [x] Email notification channel — granular group and expense alerts delivered according to user preferences
+  - [x] Push notification channel — web push delivery with onboarding and per-category user preferences
   - [ ] Activity feed RSS / Atom export — upstream [#381](https://github.com/spliit-app/spliit/issues/381)
 - **Analytics** — turn Spliit from "log splitter" into "money insights"
-  - [ ] Pie chart by category — PR [#163](https://github.com/spliit-app/spliit/pull/163)
-  - [ ] Monthly category visuals — PR [#532](https://github.com/spliit-app/spliit/pull/532)
+  - [x] Pie chart by category — PR [#163](https://github.com/spliit-app/spliit/pull/163)
+  - [x] Monthly category visuals — PR [#532](https://github.com/spliit-app/spliit/pull/532)
   - [ ] Cross-group balance roll-up — upstream [#509](https://github.com/spliit-app/spliit/issues/509)
 - Bundle-size reduction (main chunk from ~1500 kB to ~750 kB)
 - TypeScript and tooling upgrades
-- Weblate translation setup
+- [x] Complete locale translations and automated i18n auditing
 
 ## Sourcing
 
 The items above are a mix of:
 
-- work already in flight in this repo (recurring, notifications, account overview, direct expenses, server-authoritative currency);
+- shipped work in this repo (recurring expenses, notification preferences, direct expenses, OpenAPI/Scalar, settlements, localization, and server-authoritative currency);
 - features the upstream community has been asking for, with linked issues so anyone can verify the demand and history.
 
 When picking up an item with an upstream link, the first step is to review the upstream PR (if any) for prior art and credit the author; if a clean port is feasible on this stack it can land quickly.

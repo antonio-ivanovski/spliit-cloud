@@ -36,6 +36,14 @@ function useMessage(activity: Activity) {
             message: t('expense.created', { participant: actor, title }),
             changes: null,
           }
+        case 'RECURRING_EXPENSE_CREATED':
+          return {
+            message: t('expense.recurringCreated', {
+              participant: actor,
+              title,
+            }),
+            changes: null,
+          }
         case 'EXPENSE_UPDATED':
           return {
             message: t('expense.updated', { participant: actor, title }),
@@ -163,6 +171,13 @@ function useMessage(activity: Activity) {
         default:
           return { message: t('fallback'), changes: null }
       }
+    case 'recurring_expense_stopped': {
+      const title = data.title ?? ''
+      return {
+        message: t('expense.stopped', { participant: actor, title }),
+        changes: null,
+      }
+    }
     default:
       return { message: t('fallback'), changes: null }
   }

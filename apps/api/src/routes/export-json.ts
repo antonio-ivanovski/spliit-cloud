@@ -63,7 +63,9 @@ export async function exportGroupJson(request: Request, groupId: string) {
       paidFor: { select: { ledgerParticipantId: true, shares: true } },
       isReimbursement: true,
       splitMode: true,
-      recurrenceRule: true,
+      recurringSeries: {
+        select: { frequency: true, interval: true, endType: true },
+      },
       items: {
         select: {
           id: true,
@@ -124,14 +126,27 @@ export async function exportGroupJson(request: Request, groupId: string) {
     (a, b) => participantOrder.get(a.id)! - participantOrder.get(b.id)!,
   )
 
-  const expensesWithCategory = expenses.map((expense) => ({
-    ...expense,
-    paidByList: expense.paidByList.map((pb) => ({
-      ledgerParticipantId: pb.ledgerParticipant.id,
-      shares: pb.shares,
-    })),
-    category: getCategoryById(expense.categoryId as never) ?? null,
-  }))
+  const expensesWithCategory = expenses.map((expense) => {
+    const { recurringSeries, ...legacyExpense } = expense
+    const recurrenceRule =
+      recurringSeries?.interval === 1 &&
+      recurringSeries.endType === 'INDEFINITE' &&
+      recurringSeries.frequency !== 'YEARLY'
+        ? recurringSeries.frequency
+        : 'NONE'
+    return {
+      ...legacyExpense,
+      paidByList: expense.paidByList.map((pb) => ({
+        ledgerParticipantId: pb.ledgerParticipant.id,
+        shares: pb.shares,
+      })),
+      // Keep the original spliit.app wire shape. Schedules that legacy could
+      // not represent are exported as NONE rather than silently changing them.
+      recurrenceRule,
+      paidById: expense.paidByList[0]?.ledgerParticipant.id ?? '',
+      category: getCategoryById(expense.categoryId as never) ?? null,
+    }
+  })
 
   const payload = {
     id: group.id,

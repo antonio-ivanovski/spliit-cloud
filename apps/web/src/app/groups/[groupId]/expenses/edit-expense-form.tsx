@@ -10,6 +10,7 @@ import {
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -18,15 +19,21 @@ import {
   useDeleteExpenseMutation,
   useUpdateExpenseMutation,
 } from './expense-mutation-hooks'
+import {
+  SeriesScopeDialog,
+  type SeriesMutationScope,
+} from './series-scope-dialog'
 
 export function EditExpenseForm({
   groupId,
   expenseId,
   runtimeFeatureFlags,
+  initialScope,
 }: {
   groupId: string
   expenseId: string
   runtimeFeatureFlags: RuntimeFeatureFlags
+  initialScope?: SeriesMutationScope
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tExpenseForm } = useTranslation(undefined, {
@@ -45,6 +52,24 @@ export function EditExpenseForm({
     linkInviteToken,
   })
   const expense = expenseData?.expense
+  const seriesId = (
+    expense as typeof expense & {
+      recurringSeriesId?: string | null
+    }
+  )?.recurringSeriesId
+  const seriesStatus =
+    expense?.recurringSeries?.status ??
+    (
+      expense as typeof expense & {
+        recurringSeriesStatus?:
+          'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED' | null
+      }
+    )?.recurringSeriesStatus ??
+    undefined
+  const [scopeDialog, setScopeDialog] = useState<{
+    mode: 'update' | 'delete'
+    expense?: Parameters<typeof updateExpenseMutateAsync>[0]['expense']
+  } | null>(null)
 
   const navigate = useNavigate()
 
@@ -54,6 +79,7 @@ export function EditExpenseForm({
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
     linkInviteToken,
   })
+  const selectedScope = initialScope ?? null
 
   if (!group || !expense) return null
 
@@ -86,31 +112,101 @@ export function EditExpenseForm({
   }
 
   return (
-    <ExpenseForm
-      group={group}
-      expense={expense}
-      currentLedgerParticipantId={currentLedgerParticipantId}
-      linkInviteToken={linkInviteToken}
-      readOnly={readOnly}
-      heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
-      onSubmit={async (expense) => {
-        if (readOnly) return
-        await updateExpenseMutateAsync({
-          expenseId,
-          groupId,
-          expense,
-        })
-        navigate({
-          to: '/groups/$groupId/expenses/$expenseId',
-          params: { groupId: group.id, expenseId },
-          replace: true,
-        })
-      }}
-      onDelete={async () => {
-        if (readOnly) return
-        await deleteExpenseMutateAsync({ expenseId, groupId })
-      }}
-      runtimeFeatureFlags={runtimeFeatureFlags}
-    />
+    <>
+      {seriesId && selectedScope && (
+        <div
+          className="mb-4 rounded-md border bg-muted/50 px-4 py-2.5 text-sm text-muted-foreground"
+          role="status"
+        >
+          {tExpenseForm(
+            selectedScope === 'OCCURRENCE'
+              ? 'Expense.recurringEditScopeOccurrence'
+              : 'Expense.recurringEditScopeFuture',
+          )}
+        </div>
+      )}
+      <ExpenseForm
+        group={group}
+        expense={expense}
+        currentLedgerParticipantId={currentLedgerParticipantId}
+        linkInviteToken={linkInviteToken}
+        readOnly={readOnly}
+        editScope={selectedScope}
+        heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
+        onSubmit={async (expense) => {
+          if (readOnly) return
+          if (seriesId) {
+            if (selectedScope) {
+              await updateExpenseMutateAsync({
+                expenseId,
+                groupId,
+                expense,
+                scope: selectedScope,
+              } as Parameters<typeof updateExpenseMutateAsync>[0])
+              await navigate({
+                to: '/groups/$groupId/expenses/$expenseId',
+                params: { groupId: group.id, expenseId },
+                replace: true,
+              })
+              return
+            }
+            setScopeDialog({ mode: 'update', expense })
+            return
+          }
+          await updateExpenseMutateAsync({ expenseId, groupId, expense })
+          navigate({
+            to: '/groups/$groupId/expenses/$expenseId',
+            params: { groupId: group.id, expenseId },
+            replace: true,
+          })
+        }}
+        onDelete={async () => {
+          if (readOnly) return
+          if (seriesId) {
+            setScopeDialog({ mode: 'delete' })
+            return
+          }
+          await deleteExpenseMutateAsync({ expenseId, groupId })
+        }}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />
+      <SeriesScopeDialog
+        key={scopeDialog?.mode ?? 'closed'}
+        open={scopeDialog != null}
+        mode={scopeDialog?.mode ?? 'update'}
+        seriesStatus={seriesStatus}
+        onOpenChange={(open) => {
+          if (!open) setScopeDialog(null)
+        }}
+        onConfirm={async (scope: SeriesMutationScope, stopRecurrence) => {
+          const pending = scopeDialog
+          setScopeDialog(null)
+          if (!pending) return
+          if (pending.mode === 'delete') {
+            await deleteExpenseMutateAsync({
+              expenseId,
+              groupId,
+              scope,
+              ...(scope === 'THIS_AND_FUTURE' && stopRecurrence !== undefined
+                ? { stopRecurrence }
+                : {}),
+            } as Parameters<typeof deleteExpenseMutateAsync>[0])
+            return
+          }
+          if (!pending.expense) return
+          await updateExpenseMutateAsync({
+            expenseId,
+            groupId,
+            expense: pending.expense,
+            scope,
+          } as Parameters<typeof updateExpenseMutateAsync>[0])
+          await navigate({
+            to: '/groups/$groupId/expenses/$expenseId',
+            params: { groupId: group.id, expenseId },
+            replace: true,
+          })
+        }}
+      />
+    </>
   )
 }

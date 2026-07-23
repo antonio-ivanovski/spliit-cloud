@@ -274,7 +274,14 @@
         "conversionFixed": "Taxa fixa",
         "importErrorTitle": "Falha na importação",
         "importErrorFallback": "Ocorreu um erro inesperado ao importar o grupo. Tente novamente.",
-        "executeImport": "Importar grupo"
+        "executeImport": "Importar grupo",
+        "recurringSchedulesLabel": "Agendamentos recorrentes a importar",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "DiDiária",
+          "weekly": "Semanal",
+          "monthly": "Mensal"
+        }
       },
       "Destination": {
         "heading": "Onde você gostaria de importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Se o importador recusar seu CSV, você pode remover localmente os nomes dos participantes e as descrições das despesas e anexar o resultado a uma issue do GitHub. Seu arquivo fica no seu dispositivo — nunca o enviamos.",
         "splitwiseAnonymizeButton": "Anonimizar um CSV",
         "splitwiseAnonymizeIssuesLink": "Abrir uma issue de importação",
-        "splitwiseAnonymizeError": "Não foi possível anonimizar este arquivo. Verifique se é uma exportação CSV do Splitwise."
+        "splitwiseAnonymizeError": "Não foi possível anonimizar este arquivo. Verifique se é uma exportação CSV do Splitwise.",
+        "csvRecurrenceLimitation": "Exportações CSV não incluem recorrência. Use uma exportação JSON do spliit.app para importar despesas recorrentes."
       },
       "StepHeader": {
         "title": "Importar um grupo",
@@ -591,7 +599,51 @@
         "description": "A moeda na qual a despesa foi paga."
       },
       "createCopy": "Criar cópia: {title}",
-      "editTitle": "Editar: {title}"
+      "editTitle": "Editar: {title}",
+      "recurrence": {
+        "label": "Recorrência da despesa",
+        "description": "Escolha quando esta despesa deve ser criada novamente.",
+        "checkboxLabel": "Recorrente",
+        "checkboxDescription": "Criar esta despesa de acordo com um calendário",
+        "enable": "Adicionar recorrência",
+        "remove": "Remover recorrência",
+        "repeatEvery": "Repetir a cada",
+        "interval": "Intervalo de repetição",
+        "frequency": "Frequência da recorrência",
+        "frequencyOptions": {
+          "daily": "dia(s)",
+          "weekly": "semana(s)",
+          "monthly": "mês/meses",
+          "yearly": "ano(s)"
+        },
+        "ends": {
+          "label": "Termina",
+          "never": "Nunca",
+          "count": "Após um número de ocorrências",
+          "date": "Em uma data",
+          "countInput": "Total de ocorrências (incluindo esta despesa)",
+          "dateInput": "Data de término"
+        },
+        "previewLabel": "Próximas ocorrências",
+        "currentOccurrence": "Atual",
+        "viewAll": "Ver todas",
+        "scheduleTitle": "Calendário de recorrência",
+        "remainingCount": "Restam {count} ocorrências.",
+        "unlimitedSchedule": "Esta recorrência não tem data de término.",
+        "noFurtherOccurrences": "Não há mais ocorrências com estas configurações.",
+        "scheduleCount": "Mostrando {count} ocorrências a partir desta despesa.",
+        "decreaseOccurrences": "Diminuir ocorrências",
+        "increaseOccurrences": "Aumentar ocorrências",
+        "ruleSummary": "A cada {interval} {frequency} · {count} ocorrências",
+        "ruleSummaryIndefinite": "A cada {interval} {frequency} · Sem data de término",
+        "scheduleChangeWarningTitle": "O calendário de recorrência vai mudar",
+        "scheduleChangeWarning": "Ao salvar, esta e as ocorrências futuras serão reagendadas. As despesas futuras existentes podem mudar para novas datas ou ser removidas, e as datas de vencimento faltantes podem ser criadas automaticamente.",
+        "pastDateBackfillNote": "Como esta despesa começa no passado, as ocorrências até hoje serão criadas automaticamente depois de salvar.",
+        "completedOccurrence": "Criada",
+        "upcomingOccurrence": "Próxima"
+      },
+      "recurringEditScopeOccurrence": "Editar apenas esta ocorrência",
+      "recurringEditScopeFuture": "Editar esta ocorrência e as futuras"
     },
     "amountField": {
       "label": "Valor",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "Resumo semanal de atividade",
           "description": "Um resumo semanal da atividade dos seus grupos."
+        },
+        "recurringExpense": {
+          "title": "Despesa recorrente",
+          "description": "Quando uma despesa recorrente agendada é criada em um grupo."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "Pagamento de acerto",
         "conversionSource": "Fonte de conversão",
         "conversionRate": "Taxa de conversão"
-      }
+      },
+      "recurringCreated": "{participant} criou a despesa recorrente “{title}”",
+      "stopped": "{participant} parou a despesa recorrente {title}"
     },
     "group": {
       "updated": "{participant} atualizou as configurações do grupo",
@@ -1943,5 +2001,58 @@
       "description": "Você não receberá e-mails de {category}. Suas outras configurações de notificações não foram alteradas."
     },
     "scope": "Somente esta notificação por e-mail será desativada. Seus outros e-mails e notificações push continuarão iguais."
+  },
+  "ExpenseSeries": {
+    "badge": "Recorrente",
+    "occurrence": "Ocorrência {sequence}",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "viewSeries": "Ver série",
+    "title": "Série de despesas",
+    "empty": "Ainda não há outras ocorrências.",
+    "scopeTitle": "Atualizar despesa recorrente",
+    "scopeDescription": "Escolha quais ocorrências serão afetadas.",
+    "occurrenceOnly": "Apenas esta ocorrência",
+    "thisAndFuture": "Esta ocorrência e as futuras",
+    "deleteScopeTitle": "Excluir despesa recorrente",
+    "deleteScopeDescription": "Escolha se deseja excluir uma ocorrência ou encerrar a série.",
+    "deleteOccurrence": "Excluir apenas esta ocorrência",
+    "deleteThisAndFuture": "Excluir esta ocorrência e as futuras",
+    "deleteThisAndFutureStop": "Excluir esta e as ocorrências futuras e parar a recorrência",
+    "deleteThisAndFutureDescription": "Remova esta e as despesas posteriores; o agendamento permanece ativo.",
+    "deleteThisAndFutureStopDescription": "Remova esta e as despesas posteriores e interrompa permanentemente o agendamento.",
+    "deleteOccurrenceDescription": "Remova apenas esta despesa. As outras ocorrências agendadas permanecem inalteradas.",
+    "actions": "Ações recorrentes",
+    "actionsTitle": "Ações da despesa recorrente",
+    "actionsDescription": "Escolha exatamente qual ocorrência editar ou excluir.",
+    "editActions": "Ações de edição",
+    "deleteActions": "Ações de exclusão",
+    "confirmDelete": "Excluir",
+    "confirmStop": "Parar recorrência",
+    "working": "Processando…",
+    "back": "Voltar",
+    "confirm": "Continuar",
+    "cancel": "Cancelar",
+    "occurrences": "{count} ocorrências nesta série",
+    "loading": "Carregando…",
+    "loadMore": "Carregar mais ocorrências",
+    "editOccurrence": "Editar esta ocorrência",
+    "editOccurrenceDescription": "Altere apenas esta despesa.",
+    "editThisAndFuture": "Editar esta ocorrência e as futuras",
+    "editThisAndFutureDescription": "Altere esta despesa e todas as despesas futuras agendadas.",
+    "stopRecurrence": "Parar recorrência",
+    "stopConfirmTitle": "Parar esta recorrência?",
+    "stopConfirmDescription": "As despesas existentes permanecerão. Nenhuma nova ocorrência será criada.",
+    "stopConfirmHint": "A interrupção é permanente. Para começar novamente, crie uma nova despesa recorrente.",
+    "deleteConfirmTitle": "Confirmar exclusão",
+    "deleteConfirmHint": "Esta ação não pode ser desfeita para as ocorrências selecionadas.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Apenas esta ocorrência será excluída.",
+      "THIS_AND_FUTURE": "Esta e as ocorrências futuras serão excluídas. A recorrência continuará com a próxima ocorrência agendada.",
+      "THIS_AND_FUTURE_STOP": "Esta e as ocorrências futuras serão excluídas e a recorrência será interrompida."
+    },
+    "badgeRunning": "Recorrente · Em andamento",
+    "badgeStopped": "Recorrente · Parada",
+    "badgeCompleted": "Recorrente · Concluída"
   }
 }

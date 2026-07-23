@@ -274,7 +274,14 @@
         "conversionFixed": "שער קבוע",
         "importErrorTitle": "הייבוא נכשל",
         "importErrorFallback": "אירעה שגיאה בלתי צפויה בעת ייבוא הקבוצה. אנא נסה שוב.",
-        "executeImport": "ייבא קבוצה"
+        "executeImport": "ייבא קבוצה",
+        "recurringSchedulesLabel": "לוחות זמנים חוזרים לייבוא",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "יומי",
+          "weekly": "שבועי",
+          "monthly": "חודשי"
+        }
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "אם הייבוא דוחה את קובץ ה-CSV שלך, תוכל להסיר את שמות המשתתפים ואת תיאורי ההוצאות באופן מקומי ולצרף את התוצאה ל-GitHub issue. הקובץ נשאר במכשיר שלך — אנו לעולם לא מעלים אותו.",
         "splitwiseAnonymizeButton": "בצע אנונימיזציה ל-CSV",
         "splitwiseAnonymizeIssuesLink": "פתח issue לייבוא",
-        "splitwiseAnonymizeError": "לא ניתן היה לבצע אנונימיזציה לקובץ זה. ודא שמדובר בייצוא CSV של Splitwise."
+        "splitwiseAnonymizeError": "לא ניתן היה לבצע אנונימיזציה לקובץ זה. ודא שמדובר בייצוא CSV של Splitwise.",
+        "csvRecurrenceLimitation": "ייצואי CSV אינם כוללים חזרתיות. השתמשו בייצוא JSON מ-spliit.app כדי לייבא הוצאות חוזרות."
       },
       "StepHeader": {
         "title": "ייבא קבוצה",
@@ -591,7 +599,51 @@
       "splitModeDescription": "בחר כיצד לפצל את ההוצאה.",
       "attachDescription": "ראה וצרף קבלות להוצאה.",
       "createCopy": "יצירת עותק: {title}",
-      "editTitle": "עריכה: {title}"
+      "editTitle": "עריכה: {title}",
+      "recurrence": {
+        "label": "חזרת ההוצאה",
+        "description": "בחרו מתי ליצור שוב את ההוצאה הזו.",
+        "checkboxLabel": "חוזרת",
+        "checkboxDescription": "יצירת הוצאה זו לפי לוח זמנים",
+        "enable": "הוספת חזרה",
+        "remove": "הסרת החזרה",
+        "repeatEvery": "חזרה כל",
+        "interval": "מרווח חזרה",
+        "frequency": "תדירות החזרה",
+        "frequencyOptions": {
+          "daily": "יום/ימים",
+          "weekly": "שבוע/שבועות",
+          "monthly": "חודש/חודשים",
+          "yearly": "שנה/שנים"
+        },
+        "ends": {
+          "label": "מסתיים",
+          "never": "לעולם לא",
+          "count": "לאחר מספר מופעים",
+          "date": "בתאריך מסוים",
+          "countInput": "מספר המופעים הכולל (כולל הוצאה זו)",
+          "dateInput": "תאריך סיום"
+        },
+        "previewLabel": "המופעים הבאים",
+        "currentOccurrence": "נוכחי",
+        "viewAll": "הצג הכול",
+        "scheduleTitle": "לוח זמנים לחזרה",
+        "remainingCount": "נותרו {count} מופעים.",
+        "unlimitedSchedule": "לחזרה זו אין תאריך סיום.",
+        "noFurtherOccurrences": "אין מופעים נוספים עם הגדרות אלה.",
+        "scheduleCount": "מוצגים {count} מופעים מהוצאה זו.",
+        "decreaseOccurrences": "הפחתת מספר המופעים",
+        "increaseOccurrences": "הגדלת מספר המופעים",
+        "ruleSummary": "כל {interval} {frequency} · {count} מופעים",
+        "ruleSummaryIndefinite": "כל {interval} {frequency} · ללא תאריך סיום",
+        "scheduleChangeWarningTitle": "לוח זמני החזרה ישתנה",
+        "scheduleChangeWarning": "שמירה תשנה את מועדי המופע הנוכחי והמופעים העתידיים. הוצאות עתידיות קיימות עלולות לעבור לתאריכים חדשים או להימחק, ותאריכי יעד חסרים עלולים להיווצר אוטומטית.",
+        "pastDateBackfillNote": "מכיוון שההוצאה מתחילה בעבר, מופעים עד היום ייווצרו אוטומטית לאחר השמירה.",
+        "completedOccurrence": "נוצר",
+        "upcomingOccurrence": "עתידי"
+      },
+      "recurringEditScopeOccurrence": "עריכת מופע זה בלבד",
+      "recurringEditScopeFuture": "עריכת מופע זה והמופעים הבאים"
     },
     "amountField": {
       "label": "סכום",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "סיכום פעילות שבועי",
           "description": "סיכום שבועי של הפעילות בכל הקבוצות שלך."
+        },
+        "recurringExpense": {
+          "title": "הוצאה חוזרת",
+          "description": "כאשר נוצרת הוצאה חוזרת מתוזמנת בקבוצה."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "תשלום להסדרת היתרה",
         "conversionSource": "מקור ההמרה",
         "conversionRate": "שער המרה"
-      }
+      },
+      "recurringCreated": "{participant} יצר/ה את ההוצאה החוזרת „{title}”",
+      "stopped": "{participant} עצר/ה את ההוצאה החוזרת „{title}”"
     },
     "group": {
       "updated": "{participant} עדכן את הגדרות הקבוצה",
@@ -1943,5 +2001,58 @@
       "description": "לא תקבל אימיילים עבור {category}. הגדרות ההתראות האחרות שלך לא השתנו."
     },
     "scope": "רק התראת האימייל הזו תופסק. שאר האימיילים והתראות הדחיפה שלך יישארו ללא שינוי."
+  },
+  "ExpenseSeries": {
+    "badge": "חוזרת",
+    "occurrence": "מופע {sequence}",
+    "previous": "הקודם",
+    "next": "הבא",
+    "viewSeries": "הצגת הסדרה",
+    "title": "סדרת הוצאות",
+    "empty": "אין עדיין מופעים נוספים.",
+    "scopeTitle": "עדכון הוצאה חוזרת",
+    "scopeDescription": "בחרו אילו מופעים יושפעו.",
+    "occurrenceOnly": "מופע זה בלבד",
+    "thisAndFuture": "מופע זה והמופעים העתידיים",
+    "deleteScopeTitle": "מחיקת הוצאה חוזרת",
+    "deleteScopeDescription": "בחרו אם למחוק מופע אחד או לסיים את הסדרה.",
+    "deleteOccurrence": "מחיקת מופע זה בלבד",
+    "deleteThisAndFuture": "מחיקת מופע זה והמופעים העתידיים",
+    "deleteThisAndFutureStop": "מחיקת מופע זה והמופעים הבאים ועצירת ההחזרה",
+    "deleteThisAndFutureDescription": "הסרת הוצאה זו והוצאות מאוחרות יותר; לוח הזמנים יישאר פעיל.",
+    "deleteThisAndFutureStopDescription": "הסרת הוצאה זו והוצאות מאוחרות יותר ועצירת לוח הזמנים לצמיתות.",
+    "deleteOccurrenceDescription": "הסרת הוצאה זו בלבד. מופעים מתוזמנים אחרים לא ישתנו.",
+    "actions": "פעולות חוזרות",
+    "actionsTitle": "פעולות הוצאה חוזרת",
+    "actionsDescription": "בחרו בדיוק איזה מופע לערוך או למחוק.",
+    "editActions": "עריכה",
+    "deleteActions": "מחיקה",
+    "confirmDelete": "מחיקה",
+    "confirmStop": "עצירת החזרה",
+    "working": "בעיבוד…",
+    "back": "חזרה",
+    "confirm": "המשך",
+    "cancel": "ביטול",
+    "occurrences": "{count} מופעים בסדרה זו",
+    "loading": "בטעינה…",
+    "loadMore": "טעינת מופעים נוספים",
+    "editOccurrence": "עריכת מופע זה",
+    "editOccurrenceDescription": "שינוי הוצאה זו בלבד.",
+    "editThisAndFuture": "עריכת מופע זה והמופעים הבאים",
+    "editThisAndFutureDescription": "שינוי הוצאה זו וכל ההוצאות המתוזמנות העתידיות.",
+    "stopRecurrence": "עצירת החזרה",
+    "stopConfirmTitle": "לעצור את ההחזרה הזו?",
+    "stopConfirmDescription": "הוצאות קיימות יישארו. לא ייווצרו מופעים חדשים.",
+    "stopConfirmHint": "העצירה היא לצמיתות. כדי להתחיל מחדש, צרו הוצאה חוזרת חדשה.",
+    "deleteConfirmTitle": "אישור מחיקה",
+    "deleteConfirmHint": "לא ניתן לבטל פעולה זו עבור המופעים שנבחרו.",
+    "deleteConfirm": {
+      "OCCURRENCE": "רק מופע זה יימחק.",
+      "THIS_AND_FUTURE": "מופע זה והמופעים הבאים יימחקו. ההחזרה תמשיך במופע המתוזמן הבא.",
+      "THIS_AND_FUTURE_STOP": "מופע זה והמופעים הבאים יימחקו וההחזרה תיעצר."
+    },
+    "badgeRunning": "חוזרת · פועלת",
+    "badgeStopped": "חוזרת · נעצרה",
+    "badgeCompleted": "חוזרת · הושלמה"
   }
 }

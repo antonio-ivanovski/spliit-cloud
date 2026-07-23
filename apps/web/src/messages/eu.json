@@ -274,7 +274,14 @@
         "conversionFixed": "Tasa finkoa",
         "importErrorTitle": "Inportazioak huts egin du",
         "importErrorFallback": "Ust ezusteko bat gertatu da taldea inportatzean. Saiatu berriro.",
-        "executeImport": "Inportatu taldea"
+        "executeImport": "Inportatu taldea",
+        "recurringSchedulesLabel": "Inportatzeko gastu errepikariak",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Egunero",
+          "weekly": "Astero",
+          "monthly": "Hilero"
+        }
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Inportatzaileak zure CSV-a baztertzen badu, parte-hartzaileen izenak eta gastuen deskribapenak lokalki ken ditzakezu eta emaitza GitHub-ko issue batean erantsi. Zure fitxategia zure gailuan gelditzen da — ez dugu inoiz igoko.",
         "splitwiseAnonymizeButton": "Anonimatu CSV bat",
         "splitwiseAnonymizeIssuesLink": "Ireki inportazio-issue bat",
-        "splitwiseAnonymizeError": "Ezin izan da fitxategi hau anonimatu. Ziurtatu Splitwise-ren CSV-esportazio bat dela."
+        "splitwiseAnonymizeError": "Ezin izan da fitxategi hau anonimatu. Ziurtatu Splitwise-ren CSV-esportazio bat dela.",
+        "csvRecurrenceLimitation": "CSV esportazioek ez dute errepikapena. Erabili spliit.app-eko JSON esportazioa gastu errepikariak inportatzeko."
       },
       "StepHeader": {
         "title": "Talde bat inportatu",
@@ -591,7 +599,51 @@
       "splitModeDescription": "Hautatu nola zatitu gastua.",
       "attachDescription": "Ikusi eta erantsi gastuaren ordainagiriak.",
       "createCopy": "Sortu kopia: {title}",
-      "editTitle": "Editatu: {title}"
+      "editTitle": "Editatu: {title}",
+      "recurrence": {
+        "label": "Gastuaren errepikapena",
+        "description": "Aukeratu gastu hau noiz sortu behar den berriro.",
+        "checkboxLabel": "Errepikakorra",
+        "checkboxDescription": "Sortu gastu hau egutegi baten arabera",
+        "enable": "Gehitu errepikapena",
+        "remove": "Kendu errepikapena",
+        "repeatEvery": "Errepikatu",
+        "interval": "Errepikapen-tartea",
+        "frequency": "Errepikapen-maiztasuna",
+        "frequencyOptions": {
+          "daily": "egun",
+          "weekly": "aste",
+          "monthly": "hilabete",
+          "yearly": "urte"
+        },
+        "ends": {
+          "label": "Amaiera",
+          "never": "Inoiz ez",
+          "count": "Errepikapen kopuru baten ondoren",
+          "date": "Data batean",
+          "countInput": "Errepikapenak guztira (gastu hau barne)",
+          "dateInput": "Amaiera-data"
+        },
+        "previewLabel": "Hurrengo errepikapenak",
+        "currentOccurrence": "Unekoa",
+        "viewAll": "Ikusi guztiak",
+        "scheduleTitle": "Errepikapen-egutegia",
+        "remainingCount": "{count} errepikapen geratzen dira.",
+        "unlimitedSchedule": "Errepikapen honek ez du amaiera-datarik.",
+        "noFurtherOccurrences": "Ezarpen hauekin ez dago errepikapen gehiagorik.",
+        "scheduleCount": "{count} errepikapen erakusten dira gastu honetatik aurrera.",
+        "decreaseOccurrences": "Gutxitu errepikapenak",
+        "increaseOccurrences": "Handitu errepikapenak",
+        "ruleSummary": "{interval} {frequency} bakoitzean · {count} errepikapen",
+        "ruleSummaryIndefinite": "{interval} {frequency} bakoitzean · Amaiera-datarik ez",
+        "scheduleChangeWarningTitle": "Errepikapen-egutegia aldatuko da",
+        "scheduleChangeWarning": "Gordetzean, hau eta etorkizuneko gertaerak berriro programatuko dira. Etorkizuneko gastu existenteak data berrietara mugi daitezke edo kendu, eta falta diren epemuga-datak automatikoki sortu daitezke.",
+        "pastDateBackfillNote": "Gastu hau iraganean hasten delako, gaur arteko gertaerak automatikoki sortuko dira gordetzean.",
+        "completedOccurrence": "Sortua",
+        "upcomingOccurrence": "Hurrengoa"
+      },
+      "recurringEditScopeOccurrence": "Editatu agerraldi hau soilik",
+      "recurringEditScopeFuture": "Editatu agerraldi hau eta etorkizunekoak"
     },
     "amountField": {
       "label": "Zenbatekoa",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "Asteko jardueraren laburpena",
           "description": "Zure taldeetako jardueraren asteko laburpena."
+        },
+        "recurringExpense": {
+          "title": "Gastua errepikakorra",
+          "description": "Talde batean programatutako gastu errepikakorra sortzen denean."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "Zor-kitapenaren ordainketa",
         "conversionSource": "Bihurketa-iturria",
         "conversionRate": "Bihurketa-tasa"
-      }
+      },
+      "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du",
+      "stopped": "{participant}(e)k {title} gastu errepikaria gelditu du"
     },
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
@@ -1943,5 +2001,58 @@
       "description": "Ez duzu {category} kategoriako mezurik jasoko. Gainerako jakinarazpenen ezarpenak ez dira aldatu."
     },
     "scope": "Posta bidezko jakinarazpen hau bakarrik desaktibatuko da. Gainerako mezu elektronikoek eta push jakinarazpenek berdin jarraituko dute."
+  },
+  "ExpenseSeries": {
+    "badge": "Errepikaria",
+    "occurrence": "{sequence}. errepikapena",
+    "previous": "Aurrekoa",
+    "next": "Hurrengoa",
+    "viewSeries": "Ikusi seriea",
+    "title": "Gastu-seriea",
+    "empty": "Oraindik ez dago beste errepikapenik.",
+    "scopeTitle": "Eguneratu gastu errepikaria",
+    "scopeDescription": "Aukeratu zein errepikapenetan eragingo duen.",
+    "occurrenceOnly": "Errepikapen hau bakarrik",
+    "thisAndFuture": "Hau eta etorkizuneko errepikapenak",
+    "deleteScopeTitle": "Ezabatu gastu errepikaria",
+    "deleteScopeDescription": "Aukeratu errepikapen bat ezabatu edo seriea amaitu nahi duzun.",
+    "deleteOccurrence": "Ezabatu errepikapen hau bakarrik",
+    "deleteThisAndFuture": "Ezabatu hau eta etorkizuneko errepikapenak",
+    "deleteThisAndFutureStop": "Ezabatu agerraldi hau eta etorkizunekoak eta gelditu errepikapena",
+    "deleteThisAndFutureDescription": "Kendu gastu hau eta ondorengoak; egutegia aktibo egongo da.",
+    "deleteThisAndFutureStopDescription": "Kendu gastu hau eta ondorengoak eta gelditu egutegia betiko.",
+    "deleteOccurrenceDescription": "Gastu hau bakarrik kendu. Programatutako beste agerraldiak ez dira aldatuko.",
+    "actions": "Errepikapen-ekintzak",
+    "actionsTitle": "Gastu errepikakorraren ekintzak",
+    "actionsDescription": "Aukeratu zehazki zein agerraldi editatu edo ezabatu nahi duzun.",
+    "editActions": "Editatu",
+    "deleteActions": "Ezabatu",
+    "confirmDelete": "Ezabatu",
+    "confirmStop": "Utzi errepikapena",
+    "working": "Lanean…",
+    "back": "Atzera",
+    "confirm": "Jarraitu",
+    "cancel": "Utzi",
+    "occurrences": "{count} errepikapen serie honetan",
+    "loading": "Kargatzen…",
+    "loadMore": "Kargatu errepikapen gehiago",
+    "editOccurrence": "Editatu agerraldi hau",
+    "editOccurrenceDescription": "Aldatu gastu hau bakarrik.",
+    "editThisAndFuture": "Editatu agerraldi hau eta etorkizunekoak",
+    "editThisAndFutureDescription": "Aldatu gastu hau eta etorkizuneko programatutako gastu guztiak.",
+    "stopRecurrence": "Utzi errepikapena",
+    "stopConfirmTitle": "Gelditu errepikapen hau?",
+    "stopConfirmDescription": "Dauden gastuak mantenduko dira. Ez da agerraldi berririk sortuko.",
+    "stopConfirmHint": "Gelditzea behin betikoa da. Berriro hasteko, sortu gastu errepikakor berri bat.",
+    "deleteConfirmTitle": "Berretsi ezabatzea",
+    "deleteConfirmHint": "Ekintza hau ezin da desegin hautatutako agerraldietan.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Agerraldi hau bakarrik ezabatuko da.",
+      "THIS_AND_FUTURE": "Agerraldi hau eta hurrengoak ezabatuko dira. Errepikapenak programatutako hurrengo agerraldiarekin jarraituko du.",
+      "THIS_AND_FUTURE_STOP": "Agerraldi hau eta hurrengoak ezabatuko dira eta errepikapena geldituko da."
+    },
+    "badgeRunning": "Errepikaria · Martxan",
+    "badgeStopped": "Errepikaria · Geldituta",
+    "badgeCompleted": "Errepikaria · Osatuta"
   }
 }

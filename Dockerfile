@@ -34,3 +34,7 @@ CMD ["bun", "run", "apps/api/src/server.ts"]
 
 FROM runner AS migrate
 CMD ["bun", "--filter", "@spliit/db", "prisma-migrate"]
+
+FROM runner AS worker
+EXPOSE 3003
+CMD ["bun", "run", "apps/worker/src/server.ts"]

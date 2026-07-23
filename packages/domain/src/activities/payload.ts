@@ -28,6 +28,20 @@ export const expenseActivityChangeSchema = z.object({
 })
 export type ExpenseActivityChange = z.infer<typeof expenseActivityChangeSchema>
 
+/** Metadata attached to individual recurring expense activities so the
+ * feed can render recurrence context without reloading the series row. */
+export const recurrenceActivityMetadataSchema = z.object({
+  seriesId: z.string(),
+  frequency: z.string(),
+  interval: z.number().int().positive(),
+  endType: z.string(),
+  occurrenceLimit: z.number().int().positive().nullable().optional(),
+  endDate: z.string().nullable().optional(),
+})
+export type RecurrenceActivityMetadata = z.infer<
+  typeof recurrenceActivityMetadataSchema
+>
+
 export const expenseActivityDataSchema = z.object({
   kind: z.literal('expense'),
   summary: z.string().optional(),
@@ -50,6 +64,10 @@ export const expenseActivityDataSchema = z.object({
   conversionSource: conversionSourceSchema.optional(),
   // The ledger's base currency code.
   ledgerCurrencyCode: z.string().nullable().optional(),
+  // Recurrence metadata for RECURRING_EXPENSE_CREATED activities.
+  recurrence: recurrenceActivityMetadataSchema.optional(),
+  // Whether the recurrence was also stopped (delete-and-stop).
+  stopped: z.boolean().optional(),
 })
 
 export type ExpenseActivityData = z.infer<typeof expenseActivityDataSchema>
@@ -164,6 +182,62 @@ export type ExpenseCategoriesBulkUpdatedActivityData = z.infer<
   typeof expenseCategoriesBulkUpdatedActivityDataSchema
 >
 
+/**
+ * Notification-only summary emitted when a recurring series catches up two or
+ * more overdue occurrences, or when a bulk recurring mutation (edit/delete)
+ * affects multiple materialized expenses. The individual occurrence activities
+ * remain in the activity feed; this payload only controls delivery fan-out.
+ */
+export const recurringExpenseSummaryActivityDataSchema = z.object({
+  kind: z.literal('recurring_expense_summary'),
+  summary: z.string().optional(),
+  title: z.string().optional(),
+  count: z.number().int().positive(),
+  startDate: z.string(),
+  endDate: z.string(),
+  /** Participant scope shared by every occurrence in the coalesced batch. */
+  affectedParticipants: z.array(z.string()).optional(),
+  /** Series identifier for the recurring schedule. */
+  seriesId: z.string().optional(),
+  /** Human-renderable cadence: frequency and interval. */
+  frequency: z.string().optional(),
+  interval: z.number().int().positive().optional(),
+  /** Termination kind plus count/end date where applicable. */
+  endType: z.string().optional(),
+  occurrenceLimit: z.number().int().positive().nullable().optional(),
+  seriesEndDate: z.string().nullable().optional(),
+  /** Operation kind: create, update, delete. */
+  operation: z.enum(['create', 'update', 'delete']),
+  /** Whether recurrence was also stopped (delete-and-stop). */
+  stopped: z.boolean().optional(),
+})
+
+export type RecurringExpenseSummaryActivityData = z.infer<
+  typeof recurringExpenseSummaryActivityDataSchema
+>
+
+/**
+ * Activity data for a standalone recurrence stop. Persisted as a regular
+ * activity so the feed shows who stopped the schedule and when.
+ */
+export const recurringExpenseStoppedActivityDataSchema = z.object({
+  kind: z.literal('recurring_expense_stopped'),
+  summary: z.string().optional(),
+  seriesId: z.string(),
+  expenseId: z.string().optional(),
+  title: z.string().optional(),
+  frequency: z.string(),
+  interval: z.number().int().positive(),
+  endType: z.string(),
+  occurrenceLimit: z.number().int().positive().nullable().optional(),
+  endDate: z.string().nullable().optional(),
+  affectedParticipants: z.array(z.string()).optional(),
+})
+
+export type RecurringExpenseStoppedActivityData = z.infer<
+  typeof recurringExpenseStoppedActivityDataSchema
+>
+
 export const activityDataSchema = z.discriminatedUnion('kind', [
   expenseActivityDataSchema,
   groupActivityDataSchema,
@@ -171,6 +245,8 @@ export const activityDataSchema = z.discriminatedUnion('kind', [
   invitationActivityDataSchema,
   importSummaryActivityDataSchema,
   expenseCategoriesBulkUpdatedActivityDataSchema,
+  recurringExpenseSummaryActivityDataSchema,
+  recurringExpenseStoppedActivityDataSchema,
 ])
 
 export type ActivityData = z.infer<typeof activityDataSchema>

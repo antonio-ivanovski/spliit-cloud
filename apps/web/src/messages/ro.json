@@ -274,7 +274,14 @@
         "conversionFixed": "Curs fix",
         "importErrorTitle": "Importul a eșuat",
         "importErrorFallback": "A apărut o eroare neașteptată la importarea grupului. Încercați din nou.",
-        "executeImport": "Importați grupul"
+        "executeImport": "Importați grupul",
+        "recurringSchedulesLabel": "Programări recurente de importat",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Zilnic",
+          "weekly": "Săptămânal",
+          "monthly": "Lunar"
+        }
       },
       "Destination": {
         "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Dacă importatorul respinge CSV-ul dvs., puteți elimina local numele participanților și descrierile cheltuielilor și puteți atașa rezultatul la un issue GitHub. Fișierul dvs. rămâne pe dispozitiv — nu îl încărcăm niciodată.",
         "splitwiseAnonymizeButton": "Anonimizați un CSV",
         "splitwiseAnonymizeIssuesLink": "Deschideți un issue de import",
-        "splitwiseAnonymizeError": "Nu s-a putut anonimiza acest fișier. Asigurați-vă că este un export CSV Splitwise."
+        "splitwiseAnonymizeError": "Nu s-a putut anonimiza acest fișier. Asigurați-vă că este un export CSV Splitwise.",
+        "csvRecurrenceLimitation": "Exporturile CSV nu includ recurența. Folosiți un export JSON de pe spliit.app pentru a importa cheltuieli recurente."
       },
       "StepHeader": {
         "title": "Importați un grup",
@@ -591,7 +599,51 @@
         "monthly": "Lunar"
       },
       "createCopy": "Creează o copie: {title}",
-      "editTitle": "Editează: {title}"
+      "editTitle": "Editează: {title}",
+      "recurrence": {
+        "label": "Recurența cheltuielii",
+        "description": "Alege când trebuie creată din nou această cheltuială.",
+        "checkboxLabel": "Recurentă",
+        "checkboxDescription": "Creează această cheltuială conform unui calendar",
+        "enable": "Adaugă recurență",
+        "remove": "Elimină recurența",
+        "repeatEvery": "Repetă la fiecare",
+        "interval": "Interval de repetare",
+        "frequency": "Frecvența recurenței",
+        "frequencyOptions": {
+          "daily": "zi(le)",
+          "weekly": "săptămână/săptămâni",
+          "monthly": "lună/luni",
+          "yearly": "an(i)"
+        },
+        "ends": {
+          "label": "Se încheie",
+          "never": "Niciodată",
+          "count": "După un număr de apariții",
+          "date": "La o dată",
+          "countInput": "Număr total de apariții (inclusiv această cheltuială)",
+          "dateInput": "Data de încheiere"
+        },
+        "previewLabel": "Următoarele apariții",
+        "currentOccurrence": "Curentă",
+        "viewAll": "Vezi toate",
+        "scheduleTitle": "Calendarul recurenței",
+        "remainingCount": "Au mai rămas {count} apariții.",
+        "unlimitedSchedule": "Această recurență nu are o dată de sfârșit.",
+        "noFurtherOccurrences": "Nu mai există apariții cu aceste setări.",
+        "scheduleCount": "Se afișează {count} apariții începând cu această cheltuială.",
+        "decreaseOccurrences": "Micșorează numărul de apariții",
+        "increaseOccurrences": "Mărește numărul de apariții",
+        "ruleSummary": "La fiecare {interval} {frequency} · {count} apariții",
+        "ruleSummaryIndefinite": "La fiecare {interval} {frequency} · Fără dată de sfârșit",
+        "scheduleChangeWarningTitle": "Programul de recurență se va schimba",
+        "scheduleChangeWarning": "La salvare, această apariție și cele viitoare vor fi reprogramate. Cheltuielile viitoare existente pot fi mutate la date noi sau eliminate, iar datele scadente lipsă pot fi create automat.",
+        "pastDateBackfillNote": "Deoarece această cheltuială începe în trecut, aparițiile până astăzi vor fi create automat după salvare.",
+        "completedOccurrence": "Creată",
+        "upcomingOccurrence": "Viitoare"
+      },
+      "recurringEditScopeOccurrence": "Editarea doar a acestei apariții",
+      "recurringEditScopeFuture": "Editarea acestei apariții și a celor viitoare"
     },
     "amountField": {
       "label": "Sumă",
@@ -1649,6 +1701,10 @@
         "weeklySummary": {
           "title": "Rezumat săptămânal al activității",
           "description": "Un rezumat săptămânal al activității din grupurile tale."
+        },
+        "recurringExpense": {
+          "title": "Cheltuială recurentă",
+          "description": "Când este creată o cheltuială recurentă programată într-un grup."
         }
       },
       "sections": {
@@ -1678,7 +1734,9 @@
         "reimbursement": "Plată de decontare",
         "conversionSource": "Sursa conversiei",
         "conversionRate": "Curs de conversie"
-      }
+      },
+      "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”",
+      "stopped": "{participant} a oprit cheltuiala recurentă {title}"
     },
     "group": {
       "updated": "{participant} a actualizat setările grupului",
@@ -1943,5 +2001,58 @@
       "description": "Nu vei mai primi e-mailuri pentru {category}. Celelalte setări ale notificărilor nu s-au schimbat."
     },
     "scope": "Doar această notificare prin e-mail va fi dezactivată. Celelalte e-mailuri și notificări push vor rămâne neschimbate."
+  },
+  "ExpenseSeries": {
+    "badge": "Recurentă",
+    "occurrence": "Apariția {sequence}",
+    "previous": "Anterioara",
+    "next": "Următoarea",
+    "viewSeries": "Vezi seria",
+    "title": "Serie de cheltuieli",
+    "empty": "Nu există încă alte apariții.",
+    "scopeTitle": "Actualizează cheltuiala recurentă",
+    "scopeDescription": "Alege ce apariții vor fi afectate.",
+    "occurrenceOnly": "Doar această apariție",
+    "thisAndFuture": "Această apariție și cele viitoare",
+    "deleteScopeTitle": "Șterge cheltuiala recurentă",
+    "deleteScopeDescription": "Alege dacă ștergi o apariție sau închei seria.",
+    "deleteOccurrence": "Șterge doar această apariție",
+    "deleteThisAndFuture": "Șterge această apariție și pe cele viitoare",
+    "deleteThisAndFutureStop": "Șterge această apariție și pe cele viitoare și oprește recurența",
+    "deleteThisAndFutureDescription": "Elimină această cheltuială și pe cele ulterioare; programarea rămâne activă.",
+    "deleteThisAndFutureStopDescription": "Elimină această cheltuială și pe cele ulterioare și oprește permanent programarea.",
+    "deleteOccurrenceDescription": "Elimină doar această cheltuială. Celelalte apariții programate rămân neschimbate.",
+    "actions": "Acțiuni recurente",
+    "actionsTitle": "Acțiuni pentru cheltuiala recurentă",
+    "actionsDescription": "Alege exact apariția pe care vrei să o editezi sau să o ștergi.",
+    "editActions": "Acțiuni de editare",
+    "deleteActions": "Acțiuni de ștergere",
+    "confirmDelete": "Șterge",
+    "confirmStop": "Oprește recurența",
+    "working": "Se procesează…",
+    "back": "Înapoi",
+    "confirm": "Continuă",
+    "cancel": "Anulează",
+    "occurrences": "{count} apariții în această serie",
+    "loading": "Se încarcă…",
+    "loadMore": "Încarcă mai multe apariții",
+    "editOccurrence": "Editează această apariție",
+    "editOccurrenceDescription": "Modifică doar această cheltuială.",
+    "editThisAndFuture": "Editează această apariție și pe cele viitoare",
+    "editThisAndFutureDescription": "Modifică această cheltuială și toate cheltuielile viitoare programate.",
+    "stopRecurrence": "Oprește recurența",
+    "stopConfirmTitle": "Oprești această recurență?",
+    "stopConfirmDescription": "Cheltuielile existente vor rămâne. Nu vor fi create apariții noi.",
+    "stopConfirmHint": "Oprirea este permanentă. Pentru a începe din nou, creează o cheltuială recurentă nouă.",
+    "deleteConfirmTitle": "Confirmă ștergerea",
+    "deleteConfirmHint": "Această acțiune este ireversibilă pentru aparițiile selectate.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Doar această apariție va fi ștearsă.",
+      "THIS_AND_FUTURE": "Această apariție și cele viitoare vor fi șterse. Recurența va continua cu următoarea apariție programată.",
+      "THIS_AND_FUTURE_STOP": "Această apariție și cele viitoare vor fi șterse, iar recurența va fi oprită."
+    },
+    "badgeRunning": "Recurentă · În desfășurare",
+    "badgeStopped": "Recurentă · Oprită",
+    "badgeCompleted": "Recurentă · Finalizată"
   }
 }

@@ -4,7 +4,11 @@ import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
 import { calculateExactShares, serializePaidBy } from '../totals'
 import type { ParticipantMappingState } from './matching'
-import type { NormalizedSource, NormalizedSourceExpense } from './types'
+import type {
+  NormalizedSource,
+  NormalizedSourceExpense,
+  RecurrenceConfig,
+} from './types'
 
 export type ImportConversionMode = 'perDate' | 'fixed'
 
@@ -162,6 +166,9 @@ export type ImportBatchExpense = {
   isReimbursement: boolean
   documents: never[]
   notes: string | undefined
+  /** Internal mapping of the legacy recurrence rule. */
+  recurrence: RecurrenceConfig | null
+  /** Legacy alias kept until all import API callers consume recurrence. */
   recurrenceRule: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
 }
 
@@ -461,6 +468,7 @@ export function buildImportBatch(
         isReimbursement: e.isReimbursement,
         documents: [],
         notes: e.notes ?? undefined,
+        recurrence: e.recurrence ?? null,
         recurrenceRule: e.recurrenceRule,
       }
     }
@@ -477,6 +485,7 @@ export function buildImportBatch(
       isReimbursement: e.isReimbursement,
       documents: [],
       notes: e.notes ?? undefined,
+      recurrence: e.recurrence ?? null,
       recurrenceRule: e.recurrenceRule,
     }
   })

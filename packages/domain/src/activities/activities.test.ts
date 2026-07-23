@@ -7,6 +7,7 @@ import {
   invitationActivityDataSchema,
   memberActivityDataSchema,
   parseActivityData,
+  recurringExpenseSummaryActivityDataSchema,
 } from './payload'
 import {
   activityActorTypeSchema,
@@ -18,6 +19,7 @@ describe('activityTypeSchema', () => {
   it('accepts every supported event value', () => {
     const values = [
       'EXPENSE_CREATED',
+      'RECURRING_EXPENSE_CREATED',
       'EXPENSE_UPDATED',
       'EXPENSE_DELETED',
       'EXPENSES_IMPORTED',
@@ -198,6 +200,41 @@ describe('importSummaryActivityDataSchema', () => {
 })
 
 describe('activityDataSchema (discriminated union)', () => {
+  it('accepts recurring catch-up summaries', () => {
+    expect(
+      recurringExpenseSummaryActivityDataSchema.safeParse({
+        kind: 'recurring_expense_summary',
+        count: 2,
+        startDate: '2026-07-20',
+        endDate: '2026-07-21',
+        operation: 'create',
+      }).success,
+    ).toBe(true)
+  })
+
+  it('rejects recurring summary missing required operation', () => {
+    expect(
+      recurringExpenseSummaryActivityDataSchema.safeParse({
+        kind: 'recurring_expense_summary',
+        count: 2,
+        startDate: '2026-07-20',
+        endDate: '2026-07-21',
+      }).success,
+    ).toBe(false)
+  })
+
+  it('rejects recurring summary with unknown operation', () => {
+    expect(
+      recurringExpenseSummaryActivityDataSchema.safeParse({
+        kind: 'recurring_expense_summary',
+        count: 2,
+        startDate: '2026-07-20',
+        endDate: '2026-07-21',
+        operation: 'archive',
+      }).success,
+    ).toBe(false)
+  })
+
   it('rejects an invalid discriminator value', () => {
     const result = activityDataSchema.safeParse({
       kind: 'expense',

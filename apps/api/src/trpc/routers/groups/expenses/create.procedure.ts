@@ -25,10 +25,16 @@ export const createGroupExpenseProcedure = protectedProcedure
     }
     const account = ctx.auth.user
     try {
-      const { id: expenseId } = await createExpense(expense, groupId, {
+      const created = await createExpense(expense, groupId, {
         accountId: account.id,
       })
-      return { expenseId }
+      return {
+        expenseId: created.id,
+        // Surface the series id so the web client can poll progress when
+        // the series was created past-dated and the worker still has
+        // occurrences to materialize.
+        recurringSeriesId: created.recurringSeriesId ?? null,
+      }
     } catch (err) {
       if (err instanceof ConversionError) {
         throw new TRPCError({

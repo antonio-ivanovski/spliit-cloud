@@ -278,7 +278,14 @@
         "conversionFixed": "Pevný kurz",
         "importErrorTitle": "Import se nezdařil",
         "importErrorFallback": "Při importu skupiny došlo k neočekávané chybě. Zkuste to prosím znovu.",
-        "executeImport": "Importovat skupinu"
+        "executeImport": "Importovat skupinu",
+        "recurringSchedulesLabel": "Opakující se rozvrhy k importu",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Denně",
+          "weekly": "Týdně",
+          "monthly": "Měsíčně"
+        }
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",
@@ -388,7 +395,8 @@
         "splitwiseAnonymizeDescription": "Pokud importér odmítne vaše CSV, můžete lokálně odebrat jména účastníků a popisy výdajů a výsledek přiložit k GitHub issue. Soubor zůstává ve vašem zařízení — nikam ho nenahráváme.",
         "splitwiseAnonymizeButton": "Anonymizovat CSV",
         "splitwiseAnonymizeIssuesLink": "Otevřít issue s importem",
-        "splitwiseAnonymizeError": "Tento soubor se nepodařilo anonymizovat. Ujistěte se, že jde o CSV export ze Splitwise."
+        "splitwiseAnonymizeError": "Tento soubor se nepodařilo anonymizovat. Ujistěte se, že jde o CSV export ze Splitwise.",
+        "csvRecurrenceLimitation": "Exporty CSV neobsahují opakování. Pro import opakujících se výdajů použijte JSON export ze spliit.app."
       },
       "StepHeader": {
         "title": "Importovat skupinu",
@@ -597,7 +605,51 @@
       "splitModeDescription": "Vyberte, jak rozdělit výdaj.",
       "attachDescription": "Zobrazit a připojit účtenky k výdaji.",
       "createCopy": "Vytvořit kopii: {title}",
-      "editTitle": "Upravit: {title}"
+      "editTitle": "Upravit: {title}",
+      "recurrence": {
+        "label": "Opakování výdaje",
+        "description": "Zvolte, kdy má být tento výdaj znovu vytvořen.",
+        "checkboxLabel": "Opakovaný",
+        "checkboxDescription": "Vytvořit tento výdaj podle plánu",
+        "enable": "Přidat opakování",
+        "remove": "Odebrat opakování",
+        "repeatEvery": "Opakovat každých",
+        "interval": "Interval opakování",
+        "frequency": "Frekvence opakování",
+        "frequencyOptions": {
+          "daily": "den/dny",
+          "weekly": "týden/týdny",
+          "monthly": "měsíc(e)",
+          "yearly": "rok(y)"
+        },
+        "ends": {
+          "label": "Končí",
+          "never": "Nikdy",
+          "count": "Po určitém počtu výskytů",
+          "date": "K určitému datu",
+          "countInput": "Celkový počet výskytů (včetně tohoto výdaje)",
+          "dateInput": "Datum ukončení"
+        },
+        "previewLabel": "Další výskyty",
+        "currentOccurrence": "Aktuální",
+        "viewAll": "Zobrazit vše",
+        "scheduleTitle": "Plán opakování",
+        "remainingCount": "Zbývá {count} opakování.",
+        "unlimitedSchedule": "Toto opakování nemá datum ukončení.",
+        "noFurtherOccurrences": "S tímto nastavením nejsou žádné další výskyty.",
+        "scheduleCount": "Zobrazeno {count} opakování od tohoto výdaje.",
+        "decreaseOccurrences": "Snížit počet opakování",
+        "increaseOccurrences": "Zvýšit počet opakování",
+        "ruleSummary": "Každých {interval} {frequency} · {count} opakování",
+        "ruleSummaryIndefinite": "Každých {interval} {frequency} · Bez data ukončení",
+        "scheduleChangeWarningTitle": "Plán opakování se změní",
+        "scheduleChangeWarning": "Uložením přeplánujete tento a budoucí výskyty. Stávající budoucí výdaje se mohou přesunout na nová data nebo být odstraněny a chybějící termíny mohou být vytvořeny automaticky.",
+        "pastDateBackfillNote": "Protože tento výdaj začíná v minulosti, výskyty do dnešního dne budou po uložení vytvořeny automaticky.",
+        "completedOccurrence": "Vytvořeno",
+        "upcomingOccurrence": "Nadcházející"
+      },
+      "recurringEditScopeOccurrence": "Upravit pouze tento výskyt",
+      "recurringEditScopeFuture": "Upravit tento a budoucí výskyty"
     },
     "amountField": {
       "label": "Částka",
@@ -1657,6 +1709,10 @@
         "weeklySummary": {
           "title": "Týdenní souhrn aktivity",
           "description": "Týdenní souhrn aktivity ve vašich skupinách."
+        },
+        "recurringExpense": {
+          "title": "Opakovaný výdaj",
+          "description": "Když je ve skupině vytvořen naplánovaný opakovaný výdaj."
         }
       },
       "sections": {
@@ -1686,7 +1742,9 @@
         "reimbursement": "Vyrovnávací platba",
         "conversionSource": "Zdroj konverze",
         "conversionRate": "Směnný kurz"
-      }
+      },
+      "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“",
+      "stopped": "{participant} zastavil(a) opakovaný výdaj „{title}“"
     },
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",
@@ -1960,5 +2018,58 @@
       "description": "E-maily pro kategorii {category} nebudete dostávat. Vaše ostatní nastavení oznámení se nezměnila."
     },
     "scope": "Vypne se pouze toto e-mailové oznámení. Ostatní e-maily a push oznámení zůstanou beze změny."
+  },
+  "ExpenseSeries": {
+    "badge": "Opakovaný",
+    "occurrence": "Výskyt {sequence}",
+    "previous": "Předchozí",
+    "next": "Další",
+    "viewSeries": "Zobrazit řadu",
+    "title": "Řada výdajů",
+    "empty": "Zatím nejsou žádné další výskyty.",
+    "scopeTitle": "Upravit opakovaný výdaj",
+    "scopeDescription": "Zvolte, kterých výskytů se má změna týkat.",
+    "occurrenceOnly": "Pouze tento výskyt",
+    "thisAndFuture": "Tento a všechny budoucí výskyty",
+    "deleteScopeTitle": "Smazat opakovaný výdaj",
+    "deleteScopeDescription": "Zvolte, zda chcete odstranit jeden výskyt, nebo ukončit celou řadu.",
+    "deleteOccurrence": "Smazat pouze tento výskyt",
+    "deleteThisAndFuture": "Smazat tento a všechny budoucí výskyty",
+    "deleteThisAndFutureStop": "Smazat tento a budoucí výskyty a zastavit opakování",
+    "deleteThisAndFutureDescription": "Odstraní tento a pozdější výdaje; plán zůstane aktivní.",
+    "deleteThisAndFutureStopDescription": "Odstraní tento a pozdější výdaje a trvale zastaví plán.",
+    "deleteOccurrenceDescription": "Odstraní pouze tento výdaj. Ostatní naplánované výskyty zůstanou beze změny.",
+    "actions": "Akce opakování",
+    "actionsTitle": "Akce opakovaného výdaje",
+    "actionsDescription": "Vyberte přesně, který výskyt chcete upravit nebo smazat.",
+    "editActions": "Upravit",
+    "deleteActions": "Smazat",
+    "confirmDelete": "Smazat",
+    "confirmStop": "Zastavit opakování",
+    "working": "Probíhá…",
+    "back": "Zpět",
+    "confirm": "Pokračovat",
+    "cancel": "Zrušit",
+    "occurrences": "Počet výskytů v této řadě: {count}",
+    "loading": "Načítání…",
+    "loadMore": "Načíst další výskyty",
+    "editOccurrence": "Upravit tento výskyt",
+    "editOccurrenceDescription": "Změní pouze tento výdaj.",
+    "editThisAndFuture": "Upravit tento a budoucí výskyty",
+    "editThisAndFutureDescription": "Změní tento výdaj a všechny budoucí naplánované výdaje.",
+    "stopRecurrence": "Zastavit opakování",
+    "stopConfirmTitle": "Zastavit toto opakování?",
+    "stopConfirmDescription": "Stávající výdaje zůstanou. Nebudou vytvořeny žádné nové výskyty.",
+    "stopConfirmHint": "Zastavení je trvalé. Chcete-li začít znovu, vytvořte nový opakovaný výdaj.",
+    "deleteConfirmTitle": "Potvrdit smazání",
+    "deleteConfirmHint": "Tuto akci pro vybrané výskyty nelze vrátit zpět.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Bude smazán pouze tento výskyt.",
+      "THIS_AND_FUTURE": "Tento a následující výskyty budou smazány. Opakování bude pokračovat dalším naplánovaným výskytem.",
+      "THIS_AND_FUTURE_STOP": "Tento a následující výskyty budou smazány a opakování bude zastaveno."
+    },
+    "badgeRunning": "Opakovaný · Probíhá",
+    "badgeStopped": "Opakovaný · Zastavený",
+    "badgeCompleted": "Opakovaný · Dokončený"
   }
 }

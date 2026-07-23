@@ -54,6 +54,7 @@ model Account {
   defaultSplits       AccountGroupDefaultSplit[]
   pushSubscriptions   PushSubscription[]
   notificationPreferences AccountNotificationPreference[]
+  recurringExpenseSeriesCreated RecurringExpenseSeries[] @relation("RecurringExpenseSeriesCreator")
 
 }
 
@@ -162,7 +163,7 @@ model Ledger {
   expenses              Expense[]
   activities            Activity[]
   documents             ExpenseDocument[]      @relation("LedgerDocuments")
-  recurringExpenseLinks RecurringExpenseLink[]
+  recurringExpenseSeries RecurringExpenseSeries[]
 
   group Group?
 }
@@ -460,14 +461,17 @@ model Expense {
   documents        ExpenseDocument[]
   notes            String?
 
-  recurrenceRule       RecurrenceRule            @default(NONE)
-  recurringExpenseLink RecurringExpenseLink?
+  recurringSeriesId    String?
+  recurrenceSequence  Int?
+  recurringSeries      RecurringExpenseSeries? @relation(fields: [recurringSeriesId], references: [id], onDelete: SetNull)
   items                ExpenseItem[]
   itemizedRemainder    ExpenseItemizedRemainder?
 
   // ledgerId prefix covers group-scoped scans; expenseDate supports
   // recency-bounded currency recommendation queries.
   @@index([ledgerId, expenseDate])
+  @@index([recurringSeriesId, recurrenceSequence])
+  @@unique([recurringSeriesId, recurrenceSequence])
 }
 
 model ExpenseDocument {
@@ -491,29 +495,54 @@ enum SplitMode {
   ITEMIZED
 }
 
-model RecurringExpenseLink {
-  id                    String  @id
-  ledgerId              String
-  currentFrameExpense   Expense @relation(fields: [currentFrameExpenseId], references: [id], onDelete: Cascade)
-  currentFrameExpenseId String  @unique
-
-  // Note: We do not want to link to the next expense because once it is created, it should be
-  // treated as it's own independent entity. This means that if a user wants to delete an Expense
-  // and any prior related recurring expenses, they'll need to delete them one by one.
-  nextExpenseCreatedAt DateTime?
-  nextExpenseDate      DateTime
-
-  ledger Ledger @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
-
-  @@index([ledgerId])
-  @@index([ledgerId, nextExpenseCreatedAt, nextExpenseDate(sort: Desc)])
-}
-
-enum RecurrenceRule {
-  NONE
+enum RecurrenceFrequency {
   DAILY
   WEEKLY
   MONTHLY
+  YEARLY
+}
+
+enum RecurrenceEndType {
+  INDEFINITE
+  COUNT
+  DATE
+}
+
+enum RecurringExpenseSeriesStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+model RecurringExpenseSeries {
+  id                 String                        @id
+  ledger             Ledger                        @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId           String
+  creatorAccount     Account?                      @relation("RecurringExpenseSeriesCreator", fields: [creatorAccountId], references: [id], onDelete: SetNull)
+  creatorAccountId   String?
+  frequency          RecurrenceFrequency
+  interval           Int
+  anchorDate         DateTime                      @db.Date
+  anchorSequence     Int                           @default(1)
+  nextOccurrenceDate DateTime                      @db.Date
+  nextOccurrenceOrdinal Int                        @default(2)
+  endType            RecurrenceEndType             @default(INDEFINITE)
+  occurrenceLimit    Int?
+  endDate            DateTime?                     @db.Date
+  occurrencesCreated Int                          @default(1)
+  status             RecurringExpenseSeriesStatus @default(ACTIVE)
+  /// [RecurringExpenseTemplate]
+  template           Json
+  /// [RecurringExpenseCatchUpBatch] Persisted notification coalescing state.
+  catchUpBatch       Json?
+  version            Int                           @default(1)
+  createdAt          DateTime                      @default(now())
+  updatedAt          DateTime                      @updatedAt
+  expenses           Expense[]
+
+  @@index([ledgerId, status, nextOccurrenceDate])
+  @@index([ledgerId, anchorDate])
 }
 
 model ExpensePaidFor {

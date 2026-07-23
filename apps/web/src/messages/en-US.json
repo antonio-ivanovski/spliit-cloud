@@ -167,6 +167,59 @@
     },
     "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one."
   },
+  "ExpenseSeries": {
+    "badge": "Recurring",
+    "occurrence": "Occurrence {sequence}",
+    "previous": "Previous",
+    "next": "Next",
+    "viewSeries": "View series",
+    "title": "Expense series",
+    "empty": "No other occurrences yet.",
+    "scopeTitle": "Update recurring expense",
+    "scopeDescription": "Choose which occurrences should be affected.",
+    "occurrenceOnly": "Only this occurrence",
+    "thisAndFuture": "This and future occurrences",
+    "deleteScopeTitle": "Delete recurring expense",
+    "deleteScopeDescription": "Choose whether to remove one occurrence, this and following occurrences, or also stop the recurrence.",
+    "deleteOccurrence": "Delete only this occurrence",
+    "deleteThisAndFuture": "Delete this and following occurrences",
+    "deleteThisAndFutureStop": "Delete this and following occurrences and stop recurrence",
+    "deleteThisAndFutureDescription": "Remove this and following expenses; the schedule stays active.",
+    "deleteThisAndFutureStopDescription": "Remove this and following expenses and permanently stop the schedule.",
+    "deleteOccurrenceDescription": "Remove only this expense. Other scheduled occurrences stay unchanged.",
+    "actions": "Recurring actions",
+    "actionsTitle": "Recurring expense actions",
+    "actionsDescription": "Choose exactly which occurrence to edit or delete.",
+    "editActions": "Edit",
+    "deleteActions": "Delete",
+    "editOccurrence": "Edit this occurrence",
+    "editOccurrenceDescription": "Change only this expense.",
+    "editThisAndFuture": "Edit this and future occurrences",
+    "editThisAndFutureDescription": "Change this expense and all future scheduled expenses.",
+    "stopRecurrence": "Stop recurrence",
+    "stopConfirmTitle": "Stop this recurrence?",
+    "stopConfirmDescription": "Existing expenses will stay. No new occurrences will be created.",
+    "stopConfirmHint": "Stopping is permanent. To start again, create a new recurring expense.",
+    "deleteConfirmTitle": "Confirm deletion",
+    "deleteConfirmHint": "This action is irreversible for the selected occurrences.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Only this occurrence will be deleted.",
+      "THIS_AND_FUTURE": "This and following occurrences will be deleted. The recurrence will continue with the next scheduled occurrence.",
+      "THIS_AND_FUTURE_STOP": "This and following occurrences will be deleted and the recurrence will stop."
+    },
+    "confirmDelete": "Delete",
+    "confirmStop": "Stop recurrence",
+    "working": "Working…",
+    "back": "Back",
+    "confirm": "Continue",
+    "cancel": "Cancel",
+    "occurrences": "{count} occurrences in this series",
+    "loading": "Loading…",
+    "loadMore": "Load more occurrences",
+    "badgeRunning": "Recurring · Running",
+    "badgeStopped": "Recurring · Stopped",
+    "badgeCompleted": "Recurring · Completed"
+  },
   "Groups": {
     "myGroups": "My groups",
     "create": "Create",
@@ -348,7 +401,8 @@
         "splitwiseAnonymizeDescription": "If the importer rejects your CSV, you can strip participant names and expense descriptions locally and attach the result to a GitHub issue. Your file stays on your device — we never upload it.",
         "splitwiseAnonymizeButton": "Anonymize a CSV",
         "splitwiseAnonymizeIssuesLink": "Open an import issue",
-        "splitwiseAnonymizeError": "Could not anonymize this file. Make sure it's a Splitwise CSV export."
+        "splitwiseAnonymizeError": "Could not anonymize this file. Make sure it's a Splitwise CSV export.",
+        "csvRecurrenceLimitation": "CSV exports do not include recurrence. Use a JSON export from spliit.app to import recurring expenses."
       },
       "Destination": {
         "heading": "Where would you like to import <strong>{name}</strong>? ({participantCount} participants · {expenseCount} expenses)",
@@ -442,7 +496,14 @@
         "conversionFixed": "Fixed rate",
         "importErrorTitle": "Import failed",
         "importErrorFallback": "An unexpected error occurred while importing the group. Please try again.",
-        "executeImport": "Import group"
+        "executeImport": "Import group",
+        "recurringSchedulesLabel": "Recurring schedules to import",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Daily",
+          "weekly": "Weekly",
+          "monthly": "Monthly"
+        }
       },
       "Done": {
         "importComplete": "Import complete",
@@ -637,6 +698,10 @@
         "newExpense": {
           "title": "New expense",
           "description": "When someone adds an expense to a group."
+        },
+        "recurringExpense": {
+          "title": "Recurring expense",
+          "description": "When a scheduled recurring expense is created in a group."
         },
         "expenseChanged": {
           "title": "Expense edited or deleted",
@@ -860,6 +925,48 @@
         "weekly": "Weekly",
         "monthly": "Monthly"
       },
+      "recurrence": {
+        "label": "Expense recurrence",
+        "description": "Choose when this expense should be created again.",
+        "checkboxLabel": "Recurring",
+        "checkboxDescription": "Create this expense on a schedule",
+        "enable": "Add recurrence",
+        "remove": "Remove recurrence",
+        "repeatEvery": "Repeat every",
+        "interval": "Repeat interval",
+        "frequency": "Recurrence frequency",
+        "frequencyOptions": {
+          "daily": "day(s)",
+          "weekly": "week(s)",
+          "monthly": "month(s)",
+          "yearly": "year(s)"
+        },
+        "ends": {
+          "label": "Ends",
+          "never": "Never",
+          "count": "After a number of occurrences",
+          "date": "On a date",
+          "countInput": "Total occurrences (including this expense)",
+          "dateInput": "End date"
+        },
+        "previewLabel": "Next occurrences",
+        "currentOccurrence": "Current",
+        "viewAll": "View all",
+        "scheduleTitle": "Recurrence schedule",
+        "remainingCount": "There are {count} remaining occurrences.",
+        "unlimitedSchedule": "This recurrence has no end date.",
+        "noFurtherOccurrences": "No further occurrences with these settings.",
+        "scheduleCount": "Showing {count} occurrences from this expense.",
+        "decreaseOccurrences": "Decrease occurrences",
+        "increaseOccurrences": "Increase occurrences",
+        "ruleSummary": "Every {interval} {frequency} · {count} occurrences",
+        "ruleSummaryIndefinite": "Every {interval} {frequency} · No end date",
+        "scheduleChangeWarningTitle": "Recurrence schedule will change",
+        "scheduleChangeWarning": "Saving will reschedule this and future occurrences. Existing future expenses may move to new dates or be removed, and missing due dates may be created automatically.",
+        "pastDateBackfillNote": "Because this expense starts in the past, occurrences through today will be created automatically after you save.",
+        "completedOccurrence": "Created",
+        "upcomingOccurrence": "Upcoming"
+      },
       "paidFor": {
         "title": "Split between",
         "description": "Select the participants who share this expense."
@@ -867,7 +974,9 @@
       "splitModeDescription": "Select how to split the expense.",
       "attachDescription": "See and attach receipts to the expense.",
       "createCopy": "Create copy: {title}",
-      "editTitle": "Edit: {title}"
+      "editTitle": "Edit: {title}",
+      "recurringEditScopeOccurrence": "Editing this occurrence only",
+      "recurringEditScopeFuture": "Editing this and future occurrences"
     },
     "amountField": {
       "label": "Amount",
@@ -1713,7 +1822,9 @@
         "conversionSource": "Conversion source",
         "conversionRate": "Conversion rate"
       },
-      "changeEmptyValue": "Not set"
+      "changeEmptyValue": "Not set",
+      "recurringCreated": "{participant} created recurring expense “{title}”",
+      "stopped": "{participant} stopped the recurring expense {title}"
     },
     "group": {
       "updated": "{participant} updated group settings",

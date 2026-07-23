@@ -270,7 +270,14 @@
         "conversionFixed": "Vaste koers",
         "importErrorTitle": "Importeren mislukt",
         "importErrorFallback": "Er is een onverwachte fout opgetreden bij het importeren van de groep. Probeer het opnieuw.",
-        "executeImport": "Importeer groep"
+        "executeImport": "Importeer groep",
+        "recurringSchedulesLabel": "Terugkerende schema’s om te importeren",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Dagelijks",
+          "weekly": "Wekelijks",
+          "monthly": "Maandelijks"
+        }
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
@@ -378,7 +385,8 @@
         "splitwiseAnonymizeDescription": "Als de import je CSV weigert, kun je deelnemersnamen en uitgavebeschrijvingen lokaal verwijderen en het resultaat bij een GitHub-issue voegen. Je bestand blijft op je apparaat — we uploaden het nooit.",
         "splitwiseAnonymizeButton": "CSV anonimiseren",
         "splitwiseAnonymizeIssuesLink": "Importprobleem melden",
-        "splitwiseAnonymizeError": "Dit bestand kon niet worden geanonimiseerd. Zorg dat het een Splitwise-CSV-export is."
+        "splitwiseAnonymizeError": "Dit bestand kon niet worden geanonimiseerd. Zorg dat het een Splitwise-CSV-export is.",
+        "csvRecurrenceLimitation": "CSV-exports bevatten geen herhaling. Gebruik een JSON-export van spliit.app om terugkerende uitgaven te importeren."
       },
       "StepHeader": {
         "title": "Importeer een groep",
@@ -585,7 +593,51 @@
       "splitModeDescription": "Selecteer hoe de uitgave verdeeld moet worden.",
       "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave.",
       "createCopy": "Kopie maken: {title}",
-      "editTitle": "Bewerken: {title}"
+      "editTitle": "Bewerken: {title}",
+      "recurrence": {
+        "label": "Herhaling van uitgave",
+        "description": "Kies wanneer deze uitgave opnieuw moet worden aangemaakt.",
+        "checkboxLabel": "Terugkerend",
+        "checkboxDescription": "Deze uitgave volgens een schema aanmaken",
+        "enable": "Herhaling toevoegen",
+        "remove": "Herhaling verwijderen",
+        "repeatEvery": "Herhaal elke",
+        "interval": "Herhalingsinterval",
+        "frequency": "Herhalingsfrequentie",
+        "frequencyOptions": {
+          "daily": "dag(en)",
+          "weekly": "week/weken",
+          "monthly": "maand(en)",
+          "yearly": "jaar/jaren"
+        },
+        "ends": {
+          "label": "Eindigt",
+          "never": "Nooit",
+          "count": "Na een aantal voorkomens",
+          "date": "Op een datum",
+          "countInput": "Totaal aantal voorkomens (inclusief deze uitgave)",
+          "dateInput": "Einddatum"
+        },
+        "previewLabel": "Volgende voorkomens",
+        "currentOccurrence": "Huidig",
+        "viewAll": "Alles weergeven",
+        "scheduleTitle": "Herhalingsschema",
+        "remainingCount": "Er zijn {count} resterende exemplaren.",
+        "unlimitedSchedule": "Deze herhaling heeft geen einddatum.",
+        "noFurtherOccurrences": "Er zijn geen verdere voorkomens met deze instellingen.",
+        "scheduleCount": "{count} exemplaren van deze uitgave worden getoond.",
+        "decreaseOccurrences": "Aantal herhalingen verminderen",
+        "increaseOccurrences": "Aantal herhalingen verhogen",
+        "ruleSummary": "Elke {interval} {frequency} · {count} herhalingen",
+        "ruleSummaryIndefinite": "Elke {interval} {frequency} · Geen einddatum",
+        "scheduleChangeWarningTitle": "Het herhalingsschema wijzigt",
+        "scheduleChangeWarning": "Bij het opslaan worden dit en toekomstige voorkomens opnieuw ingepland. Bestaande toekomstige uitgaven kunnen naar nieuwe data worden verplaatst of worden verwijderd, en ontbrekende vervaldata kunnen automatisch worden aangemaakt.",
+        "pastDateBackfillNote": "Omdat deze uitgave in het verleden begint, worden voorkomens tot en met vandaag automatisch aangemaakt nadat je opslaat.",
+        "completedOccurrence": "Aangemaakt",
+        "upcomingOccurrence": "Aankomend"
+      },
+      "recurringEditScopeOccurrence": "Alleen dit voorkomen bewerken",
+      "recurringEditScopeFuture": "Deze en toekomstige voorkomens bewerken"
     },
     "amountField": {
       "label": "Bedrag",
@@ -1641,6 +1693,10 @@
         "weeklySummary": {
           "title": "Wekelijks activiteitenoverzicht",
           "description": "Een wekelijks overzicht van activiteiten in je groepen."
+        },
+        "recurringExpense": {
+          "title": "Terugkerende uitgave",
+          "description": "Wanneer een geplande terugkerende uitgave in een groep wordt aangemaakt."
         }
       },
       "sections": {
@@ -1670,7 +1726,9 @@
         "reimbursement": "Vereffeningsbetaling",
         "conversionSource": "Conversiebron",
         "conversionRate": "Conversiekoers"
-      }
+      },
+      "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt",
+      "stopped": "{participant} is de terugkerende uitgave {title} gestopt"
     },
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",
@@ -1926,5 +1984,58 @@
       "description": "Je ontvangt geen e-mails meer voor {category}. Je andere meldingsinstellingen zijn niet gewijzigd."
     },
     "scope": "Alleen deze e-mailmelding wordt uitgeschakeld. Je andere e-mails en pushmeldingen blijven hetzelfde."
+  },
+  "ExpenseSeries": {
+    "badge": "Terugkerend",
+    "occurrence": "Voorkomen {sequence}",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "viewSeries": "Reeks bekijken",
+    "title": "Uitgavenreeks",
+    "empty": "Er zijn nog geen andere voorkomens.",
+    "scopeTitle": "Terugkerende uitgave bijwerken",
+    "scopeDescription": "Kies welke voorkomens worden beïnvloed.",
+    "occurrenceOnly": "Alleen dit voorkomen",
+    "thisAndFuture": "Dit en toekomstige voorkomens",
+    "deleteScopeTitle": "Terugkerende uitgave verwijderen",
+    "deleteScopeDescription": "Kies of je één voorkomen wilt verwijderen of de reeks wilt beëindigen.",
+    "deleteOccurrence": "Alleen dit voorkomen verwijderen",
+    "deleteThisAndFuture": "Dit en toekomstige voorkomens verwijderen",
+    "deleteThisAndFutureStop": "Dit en toekomstige voorkomens verwijderen en reeks stoppen",
+    "deleteThisAndFutureDescription": "Deze en latere uitgaven verwijderen; de planning blijft actief.",
+    "deleteThisAndFutureStopDescription": "Deze en latere uitgaven verwijderen en de planning permanent stoppen.",
+    "deleteOccurrenceDescription": "Alleen deze uitgave verwijderen. Andere geplande voorkomens blijven ongewijzigd.",
+    "actions": "Terugkerende acties",
+    "actionsTitle": "Acties voor terugkerende uitgave",
+    "actionsDescription": "Kies precies welk voorkomen je wilt bewerken of verwijderen.",
+    "editActions": "Bewerkacties",
+    "deleteActions": "Verwijderacties",
+    "confirmDelete": "Verwijderen",
+    "confirmStop": "Reeks stoppen",
+    "working": "Bezig…",
+    "back": "Terug",
+    "confirm": "Doorgaan",
+    "cancel": "Annuleren",
+    "occurrences": "{count} voorkomens in deze reeks",
+    "loading": "Laden…",
+    "loadMore": "Meer voorkomens laden",
+    "editOccurrence": "Dit voorkomen bewerken",
+    "editOccurrenceDescription": "Alleen deze uitgave wijzigen.",
+    "editThisAndFuture": "Dit en toekomstige voorkomens bewerken",
+    "editThisAndFutureDescription": "Deze uitgave en alle toekomstige geplande uitgaven wijzigen.",
+    "stopRecurrence": "Reeks stoppen",
+    "stopConfirmTitle": "Deze reeks stoppen?",
+    "stopConfirmDescription": "Bestaande uitgaven blijven behouden. Er worden geen nieuwe voorkomens aangemaakt.",
+    "stopConfirmHint": "Stoppen is permanent. Maak een nieuwe terugkerende uitgave om opnieuw te beginnen.",
+    "deleteConfirmTitle": "Verwijdering bevestigen",
+    "deleteConfirmHint": "Deze actie kan niet ongedaan worden gemaakt voor de geselecteerde voorkomens.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Alleen dit voorkomen wordt verwijderd.",
+      "THIS_AND_FUTURE": "Dit en toekomstige voorkomens worden verwijderd. De reeks gaat door met het volgende geplande voorkomen.",
+      "THIS_AND_FUTURE_STOP": "Dit en toekomstige voorkomens worden verwijderd en de reeks wordt gestopt."
+    },
+    "badgeRunning": "Terugkerend · Lopend",
+    "badgeStopped": "Terugkerend · Gestopt",
+    "badgeCompleted": "Terugkerend · Voltooid"
   }
 }
