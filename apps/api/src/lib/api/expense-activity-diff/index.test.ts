@@ -343,6 +343,21 @@ describe('getExpenseChangeSummary (backward-compat)', () => {
     ).toBeNull()
   })
 
+  it('detects a reimbursement-only toggle', () => {
+    const result = getExpenseChangeSummary(
+      makeExpense({ isReimbursement: false }),
+      makeExpense({ isReimbursement: true }),
+      ctx,
+    )
+    expect(result).not.toBeNull()
+    expect(result!.changedFields).toEqual(['reimbursement'])
+    expect(result!.changes[0]).toEqual({
+      field: 'reimbursement',
+      before: 'Expense',
+      after: 'Reimbursement',
+    })
+  })
+
   it('produces amount before/after and excludes payers (BY_AMOUNT noise suppression)', () => {
     const result = getExpenseChangeSummary(
       makeExpense({

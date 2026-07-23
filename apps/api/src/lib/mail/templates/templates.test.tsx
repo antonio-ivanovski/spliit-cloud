@@ -282,5 +282,65 @@ describe('email templates', () => {
       expect(r.html).toContain('Splitwise')
       expect(r.html).toContain('EUR 1234.50')
     })
+
+    it('renders recurrence line on RECURRING_EXPENSE_STOPPED expense email', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'expense',
+        subject: '[Spliit Cloud] Recurring expense stopped in Test Group',
+        text: 'Alice stopped the recurring expense "Dinner" (Every 2 months, 12 total) in Test Group.',
+        eventType: 'RECURRING_EXPENSE_STOPPED',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        title: 'Dinner',
+        amountStr: null,
+        date: null,
+        expenseUrl: 'https://spliit.app/groups/grp-1',
+        recurrence: 'Every 2 months, 12 total',
+      })
+      expect(r.html).toContain('Repeats:')
+      expect(r.html).toContain('Every 2 months, 12 total')
+      expect(r.html).toContain('Alice stopped recurring')
+    })
+
+    it('renders recurrence line on RECURRING_EXPENSE_CREATED expense email', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'expense',
+        subject:
+          '[Spliit Cloud] Recurring expense "Dinner" was created by Alice in Test Group',
+        text: 'Recurring expense "Dinner" (EUR 45.00) was created by Alice in Test Group on 2026-07-02.',
+        eventType: 'RECURRING_EXPENSE_CREATED',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        title: 'Dinner',
+        amountStr: 'EUR 45.00',
+        date: '2026-07-02',
+        expenseUrl: 'https://spliit.app/groups/grp-1/expenses/exp-1',
+        recurrence: 'Every month',
+      })
+      expect(r.html).toContain('Repeats:')
+      expect(r.html).toContain('Every month')
+    })
+
+    it('renders recurrence line on recurring_expense_summary email', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'recurring_expense_summary',
+        subject: '[Spliit Cloud] 3 recurring expenses caught up in Test Group',
+        text: 'Alice created 3 recurring expenses "Lunch" (Every 2 months, 12 total) in Test Group from 2026-07-01 to 2026-07-03.',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        title: 'Lunch',
+        count: 3,
+        startDate: '2026-07-01',
+        endDate: '2026-07-03',
+        groupUrl: 'https://spliit.app/groups/grp-1',
+        operation: 'create',
+        recurrence: 'Every 2 months, 12 total',
+      })
+      expect(r.html).toContain('Every 2 months, 12 total')
+      expect(r.html).toContain('Open group')
+    })
   })
 })

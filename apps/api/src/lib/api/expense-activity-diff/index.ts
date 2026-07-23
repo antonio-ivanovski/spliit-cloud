@@ -15,6 +15,7 @@ import { itemsDiffer } from './items.differ'
 import { notesDiffer } from './notes.differ'
 import { payersDiffer } from './payers.differ'
 import { recurrenceDiffer } from './recurrence.differ'
+import { reimbursementDiffer } from './reimbursement.differ'
 import { splitDiffer } from './split.differ'
 import { titleDiffer } from './title.differ'
 import type { ChangeContext, DifferenceableExpense } from './types'
@@ -42,6 +43,7 @@ export { itemsDiffer } from './items.differ'
 export { notesDiffer } from './notes.differ'
 export { payersDiffer } from './payers.differ'
 export { recurrenceDiffer } from './recurrence.differ'
+export { reimbursementDiffer } from './reimbursement.differ'
 export { splitDiffer } from './split.differ'
 export { titleDiffer } from './title.differ'
 
@@ -60,6 +62,7 @@ const defaultDiffer = compositeExpenseDiffer([
   splitDiffer,
   itemsDiffer,
   documentsDiffer,
+  reimbursementDiffer,
   conversionSourceDiffer,
   conversionRateDiffer,
 ])

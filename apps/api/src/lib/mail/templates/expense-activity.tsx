@@ -15,6 +15,7 @@ export type ExpenseActivityInput = {
     | 'RECURRING_EXPENSE_CREATED'
     | 'EXPENSE_UPDATED'
     | 'EXPENSE_DELETED'
+    | 'RECURRING_EXPENSE_STOPPED'
   brandBaseUrl: string
   groupDisplayName: string
   actorName: string
@@ -24,6 +25,10 @@ export type ExpenseActivityInput = {
   changedFields?: string[]
   expenseUrl: string
   unsubscribeUrl?: string
+  /** Human-readable recurrence description, e.g. "Monthly, 12 total". */
+  recurrence?: string
+  /** When true the recurrence was cancelled as part of this action. */
+  stopped?: boolean
 }
 
 export type ExpenseImportSummaryInput = {
@@ -66,6 +71,9 @@ export type RecurringExpenseSummaryInput = {
   endDate: string
   groupUrl: string
   unsubscribeUrl?: string
+  operation?: string
+  stopped?: boolean
+  recurrence?: string
 }
 
 export type ExpenseActivityInputAny =
@@ -112,6 +120,16 @@ export function ExpenseActivityEmail(
         {props.date ? (
           <Text className="m-0 mt-2 text-[14px] leading-[22px] text-[#0f172a]">
             <strong>Date:</strong> {props.date}
+          </Text>
+        ) : null}
+        {props.recurrence ? (
+          <Text className="m-0 mt-2 text-[14px] leading-[22px] text-[#0f172a]">
+            <strong>Repeats:</strong> {props.recurrence}
+          </Text>
+        ) : null}
+        {props.stopped ? (
+          <Text className="m-0 mt-2 text-[14px] leading-[22px] text-[#0f172a]">
+            <strong>Recurrence:</strong> stopped
           </Text>
         ) : null}
         {props.changedFields?.length ? (
@@ -229,11 +247,32 @@ export function ExpenseCategoryBulkSummaryEmail(
 export function RecurringExpenseSummaryEmail(
   props: Omit<RecurringExpenseSummaryInput, 'kind' | 'subject' | 'text'>,
 ): ReactElement {
+  const operation = props.operation ?? 'create'
   const noun = props.count === 1 ? 'expense' : 'expenses'
   const title = props.title ? ` "${props.title}"` : ''
+  const verb =
+    operation === 'update'
+      ? 'updated'
+      : operation === 'delete'
+        ? 'removed'
+        : 'added'
+  const heading =
+    operation === 'update'
+      ? 'Recurring expenses updated'
+      : operation === 'delete'
+        ? 'Recurring expenses removed'
+        : 'Recurring expenses caught up'
+  const preview =
+    operation === 'update'
+      ? `${props.count} recurring ${noun} updated in ${props.groupDisplayName}`
+      : operation === 'delete'
+        ? `${props.count} recurring ${noun} removed from ${props.groupDisplayName}`
+        : `${props.count} recurring ${noun} caught up in ${props.groupDisplayName}`
+  const recurrenceDesc = props.recurrence ? ` (${props.recurrence})` : ''
+  const stoppedSuffix = props.stopped ? ' and the recurrence was stopped' : ''
   return (
     <EmailLayout
-      preview={`${props.count} recurring ${noun} caught up in ${props.groupDisplayName}`}
+      preview={preview}
       brandBaseUrl={props.brandBaseUrl}
       unsubscribeUrl={props.unsubscribeUrl}
     >
@@ -241,15 +280,17 @@ export function RecurringExpenseSummaryEmail(
         as="h1"
         className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
       >
-        Recurring expenses caught up
+        {heading}
       </Heading>
       <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
-        <strong>{props.actorName}</strong> added{' '}
+        <strong>{props.actorName}</strong> {verb}{' '}
         <strong>
           {props.count} recurring {noun}
         </strong>
-        {title} in <strong>{props.groupDisplayName}</strong> for{' '}
-        {props.startDate} through {props.endDate}.
+        {title}
+        {recurrenceDesc} in <strong>{props.groupDisplayName}</strong> for{' '}
+        {props.startDate} through {props.endDate}
+        {stoppedSuffix}.
       </Text>
       <Section className="text-center my-6">
         <EmailButton href={props.groupUrl} label="Open group" />
@@ -305,7 +346,8 @@ function expenseHeadline(
     | 'EXPENSE_CREATED'
     | 'RECURRING_EXPENSE_CREATED'
     | 'EXPENSE_UPDATED'
-    | 'EXPENSE_DELETED',
+    | 'EXPENSE_DELETED'
+    | 'RECURRING_EXPENSE_STOPPED',
   actorName: string,
   title: string,
 ): string {
@@ -318,6 +360,8 @@ function expenseHeadline(
       return `${actorName} updated "${title}"`
     case 'EXPENSE_DELETED':
       return `${actorName} removed "${title}"`
+    case 'RECURRING_EXPENSE_STOPPED':
+      return `${actorName} stopped recurring "${title}"`
   }
 }
 
@@ -326,7 +370,8 @@ function eventVerbPastParticiple(
     | 'EXPENSE_CREATED'
     | 'RECURRING_EXPENSE_CREATED'
     | 'EXPENSE_UPDATED'
-    | 'EXPENSE_DELETED',
+    | 'EXPENSE_DELETED'
+    | 'RECURRING_EXPENSE_STOPPED',
 ): string {
   switch (eventType) {
     case 'EXPENSE_CREATED':
@@ -337,5 +382,7 @@ function eventVerbPastParticiple(
       return 'updated'
     case 'EXPENSE_DELETED':
       return 'removed'
+    case 'RECURRING_EXPENSE_STOPPED':
+      return 'stopped'
   }
 }
