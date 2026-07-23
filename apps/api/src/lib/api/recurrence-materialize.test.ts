@@ -199,7 +199,13 @@ describe('recurring expense materialization', () => {
       }),
     ).resolves.toEqual({ created: false })
     expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith(
-      expect.objectContaining({ data: { status: 'PAUSED' } }),
+      expect.objectContaining({
+        data: {
+          status: 'PAUSED',
+          catchUpBatch: null,
+          version: { increment: 1 },
+        },
+      }),
     )
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
   })

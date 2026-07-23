@@ -136,12 +136,14 @@ export async function updateExpense(
     expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
     expense.expenseDate,
   )
-  const legacyRecurrenceRule =
+  const legacyRecurrenceRule = (
     recurrence?.frequency === 'DAILY' ||
     recurrence?.frequency === 'WEEKLY' ||
-    recurrence?.frequency === 'MONTHLY'
+    recurrence?.frequency === 'MONTHLY' ||
+    recurrence?.frequency === 'YEARLY'
       ? recurrence.frequency
-      : ('NONE' as const)
+      : 'NONE'
+  ) as Expense['recurrenceRule']
   const queueBoss =
     recurrence && jobsEnv.JOBS_ENABLED ? await getApiBoss() : undefined
 
@@ -602,7 +604,11 @@ export async function updateExpense(
       if (isDeleteRecurrence && existingSeries) {
         await tx.recurringExpenseSeries.update({
           where: { id: existingSeries.id },
-          data: { status: 'CANCELLED' },
+          data: {
+            status: 'CANCELLED',
+            catchUpBatch: null,
+            version: { increment: 1 },
+          },
         })
       } else if ((isCreateRecurrence || isUpdateRecurrence) && recurrence) {
         const seriesId = existingSeries?.id ?? randomId()

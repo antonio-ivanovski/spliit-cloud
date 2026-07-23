@@ -243,7 +243,11 @@ export async function materializeRecurringExpense(
     if (series.ledger.group.archived) {
       await tx.recurringExpenseSeries.update({
         where: { id: series.id },
-        data: { status: RecurringExpenseSeriesStatus.PAUSED },
+        data: {
+          status: RecurringExpenseSeriesStatus.PAUSED,
+          catchUpBatch: null,
+          version: { increment: 1 },
+        },
       })
       return { created: false }
     }
