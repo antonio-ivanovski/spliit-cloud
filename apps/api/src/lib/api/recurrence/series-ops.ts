@@ -129,7 +129,23 @@ export async function reconcileDueRecurringExpenses(
     if (row.ledger.group) pausedGroupIds.add(row.ledger.group.id)
   }
   for (const groupId of pausedGroupIds) {
-    await resumeRecurringExpenseSeries(groupId, boss)
+    // Resume uses a transactional send that can hit a benign singleton collision;
+    // skip this group so the rest of the reconcile still runs.
+    try {
+      await resumeRecurringExpenseSeries(groupId, boss)
+    } catch (error) {
+      console.warn(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'warning',
+          component: 'recurring-reconcile',
+          message: 'skipped paused-group resume, enqueue failed',
+          groupId,
+          error: error instanceof Error ? error.message : String(error),
+        }),
+      )
+      continue
+    }
   }
   const today = new Date()
   const due = await prisma.recurringExpenseSeries.findMany({
@@ -153,23 +169,58 @@ export async function reconcileDueRecurringExpenses(
           sequence,
           occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
         }
-        if (await hasDeadLetteredMaterialization(boss, payload)) return
-        await sendJob(boss, JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE, payload, {
-          singletonKey: materializationSingletonKey(payload),
-          startAfter: recurrenceJobStartAfter(series.nextOccurrenceDate),
-        })
+        // A singleton collision means the job is already queued/retrying/active
+        // and the handler is idempotent; skip this series so the rest of the batch still runs.
+        try {
+          if (await hasDeadLetteredMaterialization(boss, payload)) return
+          await sendJob(
+            boss,
+            JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE,
+            payload,
+            {
+              singletonKey: materializationSingletonKey(payload),
+              startAfter: recurrenceJobStartAfter(series.nextOccurrenceDate),
+            },
+          )
+        } catch (error) {
+          console.warn(
+            JSON.stringify({
+              timestamp: new Date().toISOString(),
+              level: 'warning',
+              component: 'recurring-reconcile',
+              message: 'skipped due series, materialization enqueue failed',
+              seriesId: series.id,
+              error: error instanceof Error ? error.message : String(error),
+            }),
+          )
+          return
+        }
       }),
     )
   }
   if (due.length === pageSize) {
     const cursor = due[due.length - 1]?.id
     if (cursor) {
-      await sendJob(
-        boss,
-        JOB_NAMES.RECONCILE_RECURRING_EXPENSES,
-        { cursor },
-        { singletonKey: `recurring-expense-reconciliation:${cursor}` },
-      )
+      // A collision here means another reconcile is already handling this cursor page.
+      try {
+        await sendJob(
+          boss,
+          JOB_NAMES.RECONCILE_RECURRING_EXPENSES,
+          { cursor },
+          { singletonKey: `recurring-expense-reconciliation:${cursor}` },
+        )
+      } catch (error) {
+        console.warn(
+          JSON.stringify({
+            timestamp: new Date().toISOString(),
+            level: 'warning',
+            component: 'recurring-reconcile',
+            message: 'skipped reconcile continuation, enqueue failed',
+            cursor,
+            error: error instanceof Error ? error.message : String(error),
+          }),
+        )
+      }
     }
   }
   return due.length
