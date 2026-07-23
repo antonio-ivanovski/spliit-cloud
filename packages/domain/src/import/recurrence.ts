@@ -7,7 +7,7 @@ import type {
 export type LegacyRecurrenceRule = 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
 
 export function legacyRuleToRecurrence(
-  rule: LegacyRecurrenceRule | null | undefined,
+  rule: RecurrenceFrequency | LegacyRecurrenceRule | null | undefined,
 ): RecurrenceConfig | null {
   if (!rule || rule === 'NONE') return null
   return {

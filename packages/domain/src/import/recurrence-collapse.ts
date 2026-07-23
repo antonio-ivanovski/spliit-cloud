@@ -1,6 +1,9 @@
 import { calculateRecurrenceDate } from '../recurring-expenses'
-import { legacyRuleToRecurrence, type LegacyRecurrenceRule } from './recurrence'
-import type { RecurrenceConfig } from './types'
+import {
+  legacyRuleToRecurrence,
+  type LegacyRecurrenceRule,
+} from './recurrence'
+import type { RecurrenceConfig, RecurrenceFrequency } from './types'
 
 /** Minimal expense shape used to collapse legacy recurring rows into series. */
 export type LegacyRecurringCollapseExpense = {
@@ -95,7 +98,7 @@ export function fingerprintLegacyRecurringExpense(
  * Returns both the date and the 1-based anchored ordinal for that date.
  */
 export function firstRecurrenceAfterToday(
-  rule: Exclude<LegacyRecurrenceRule, 'NONE'>,
+  rule: RecurrenceFrequency,
   latestExpenseDate: string | Date,
   today: Date = new Date(),
 ): { date: Date; ordinal: number } {
@@ -129,7 +132,7 @@ export function firstRecurrenceAfterToday(
  * strictly after `today` (UTC calendar day). Skips import catch-up backlogs.
  */
 export function firstRecurrenceDateAfterToday(
-  rule: Exclude<LegacyRecurrenceRule, 'NONE'>,
+  rule: RecurrenceFrequency,
   latestExpenseDate: string | Date,
   today: Date = new Date(),
 ): Date {
