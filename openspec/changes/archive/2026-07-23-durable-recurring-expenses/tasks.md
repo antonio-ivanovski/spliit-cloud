@@ -48,20 +48,20 @@
 
 ## 7. Recurring deletion and catch-up edge cases (follow-up)
 
-- [ ] 7.1 Make series progress monotonic across all materialization, occurrence deletion, this-and-following deletion, and this-and-future editing; ensure reconciliation never recreates deleted sequence gaps and add regression coverage
+- [x] 7.1 Make series progress monotonic across all materialization, occurrence deletion, this-and-following deletion, and this-and-future editing; ensure reconciliation never recreates deleted sequence gaps and add regression coverage
 - [x] 7.2 Add the three recurring delete modes (`OCCURRENCE`, `THIS_AND_FUTURE`, and `THIS_AND_FUTURE` with `stopRecurrence: true`) with transactional, retry-idempotent behavior; keep delete-only series active and cancel only the stop variant
 - [x] 7.3 Add a separate idempotent Stop Recurrence mutation that cancels future jobs while preserving every materialized expense, with authorization and API contract tests
-- [ ] 7.4 Implement persisted catch-up notification batches and recipient-scoped summaries for two or more overdue generated occurrences, including retry, partial failure, cancellation, and reconfiguration tests
+- [x] 7.4 Implement persisted catch-up notification batches and recipient-scoped summaries for two or more overdue generated occurrences, including retry, partial failure, cancellation, and reconfiguration tests
 - [x] 7.5 Update expense view/edit responsive recurring actions so all three delete choices and Stop Recurrence are explicit before confirmation, with mobile drawer/desktop popover, scope-aware labels, permissions, and translation coverage
-- [ ] 7.6 Add API, worker, domain, and web regression tests for count/date termination, sequence gaps, stale queued jobs, navigation skipping deleted rows, and exactly-once catch-up summaries
+- [x] 7.6 Add API, worker, domain, and web regression tests for count/date termination, sequence gaps, stale queued jobs, navigation skipping deleted rows, and exactly-once catch-up summaries
 
 ## 8. Recurring lifecycle notifications and cache convergence (follow-up)
 
-- [ ] 8.1 Move scoped-edit context from the fixed viewport banner to a non-sticky inline alert above the expense form, with responsive and accessibility coverage
-- [ ] 8.2 Extend recurring lifecycle metadata and badges for running, stopped, and completed states; map PAUSED to running and preserve terminal-series edit/delete actions while hiding Stop Recurrence
-- [ ] 8.3 Make initial recurring creation use recurring-specific activity/notification content with human-readable cadence and termination metadata
-- [ ] 8.4 Seed past-dated creation catch-up with occurrence one and emit exactly one combined schedule-created summary for all immediately due occurrences
-- [ ] 8.5 Record one activity per expense affected by this-and-future edit or this-and-following delete, while sending normal delivery for one row and one participant-scoped summary for multiple rows
-- [ ] 8.6 Add recurrence-stopped activity and EXPENSE_CHANGED delivery for standalone stop; fold delete-and-stop into its deletion notification or summary without duplicate delivery
-- [ ] 8.7 Broadly invalidate every group expense-list/series cache after recurring mutations and add bounded polling plus final invalidation for asynchronous creation catch-up
-- [ ] 8.8 Add domain, API, worker, notification renderer, and web tests for combined creation, bulk edit/delete summaries, individual feed activities, stop delivery, terminal actions, lifecycle badges, and stale-cache regressions
+- [x] 8.1 Move scoped-edit context from the fixed viewport banner to a non-sticky inline alert above the expense form, with responsive and accessibility coverage
+- [x] 8.2 Extend recurring lifecycle metadata and badges for running, stopped, and completed states; map PAUSED to running and preserve terminal-series edit/delete actions while hiding Stop Recurrence
+- [x] 8.3 Make initial recurring creation use recurring-specific activity/notification content with human-readable cadence and termination metadata
+- [x] 8.4 Seed past-dated creation catch-up with occurrence one and emit exactly one combined schedule-created summary for all immediately due occurrences
+- [x] 8.5 Record one activity per expense affected by this-and-future edit or this-and-following delete, while sending normal delivery for one row and one participant-scoped summary for multiple rows
+- [x] 8.6 Add recurrence-stopped activity and EXPENSE_CHANGED delivery for standalone stop; fold delete-and-stop into its deletion notification or summary without duplicate delivery
+- [x] 8.7 Broadly invalidate every group expense-list/series cache after recurring mutations and add bounded polling plus final invalidation for asynchronous creation catch-up
+- [x] 8.8 Add domain, API, worker, notification renderer, and web tests for combined creation, bulk edit/delete summaries, individual feed activities, stop delivery, terminal actions, lifecycle badges, and stale-cache regressions

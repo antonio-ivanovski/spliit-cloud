@@ -1,49 +1,46 @@
 ## ADDED Requirements
 
-### Requirement: Membership-authorized exports
-The system SHALL authorize exports by authenticated account access to the requested Ledger.
+### Requirement: Interval recurrence export
+Exports SHALL represent recurrence frequency, interval, and termination for series expenses.
 
-#### Scenario: Member exports group ledger
-- **WHEN** an authenticated group member requests an export for the group Ledger
-- **THEN** the system returns the export
+#### Scenario: Export recurring expense
+- **WHEN** an exported expense belongs to a series
+- **THEN** its export data identifies the series recurrence configuration and occurrence sequence
 
-#### Scenario: Non-member exports group ledger
-- **WHEN** a non-member requests an export for the group Ledger
-- **THEN** the system rejects the request
+### Requirement: Legacy recurrence import compatibility
+Imports SHALL continue accepting legacy DAILY, WEEKLY, and MONTHLY recurrence rules by mapping them to interval one and indefinite termination.
 
-### Requirement: CSV export uses unified share calculation
-The CSV export SHALL compute per-participant shares using `calculateShares` from the `share-calculation` core instead of inline `payerAmount - participantAmountShare` math. Each participant's net amount SHALL be `expense.amount - shares[participantId]` for the payer and `-shares[participantId]` for non-payers.
+#### Scenario: Import legacy monthly rule
+- **WHEN** an import contains recurrenceRule MONTHLY
+- **THEN** the imported recurrence uses monthly frequency, interval one, and indefinite termination
 
-#### Scenario: CSV per-participant share matches calculateShares
-- **WHEN** the CSV export computes per-participant net amounts for an expense
-- **THEN** it calls `calculateShares(expense)` and uses the result to compute each participant's net, rather than inline division math
+### Requirement: Legacy recurring import collapse
+The Spliit JSON importer SHALL collapse matching historical recurring expense rows into one `RecurringExpenseSeries` with ordered `recurrenceSequence` values. Matching uses the same conservative fingerprint as legacy recurrence migration for link-less rows: title, recurrence rule, amount, split mode, reimbursement flag, sorted paid-by and paid-for participant shares, original currency, and conversion rate. The series template and `anchorDate` SHALL come from the latest expense date in each collapsed group.
 
-#### Scenario: CSV net amounts are formatted as strings
-- **WHEN** the CSV export writes per-participant net amounts
-- **THEN** it emits `formatAmountAsDecimal(netAmount, currency)` as a string to preserve trailing zeros
+#### Scenario: Multiple matching monthlies become one series
+- **WHEN** an import batch contains multiple expenses with the same fingerprint and non-NONE recurrence rule
+- **THEN** the importer creates one series, assigns sequences `1..N` in expense-date order, sets `occurrencesCreated` to `N`, and links every matching expense to that series
 
-### Requirement: CSV export currency semantics
-The CSV export per-participant net columns SHALL be in the **ledger currency** (computed from `calculateShares(expense)` which uses `expense.amount`). The `Original cost`, `Original currency`, and `Conversion rate` columns SHALL be retained as informational columns in the original currency — they SHALL NOT be summed against the ledger-currency net columns. The `Cost` column SHALL show the ledger-currency `expense.amount`.
+#### Scenario: Different amount stays separate
+- **WHEN** two imported recurring rows share a title and rule but differ in amount or participant split fingerprint
+- **THEN** they become separate series
 
-#### Scenario: Cross-currency CSV net columns are in ledger currency
-- **WHEN** the CSV export processes a cross-currency expense (e.g., paid in USD, ledger in EUR)
-- **THEN** the per-participant net columns are in ledger currency (EUR) and sum to the `Cost` column value
+#### Scenario: Import does not schedule historical catch-up
+- **WHEN** imported historical occurrences are entirely before the current UTC calendar day
+- **THEN** the created series sets `nextOccurrenceDate` to the first schedule date strictly after today using anchored occurrence math and does not enqueue a backlog of missed pre-import occurrences
 
-#### Scenario: Cross-currency CSV original columns are informational
-- **WHEN** the CSV export processes a cross-currency expense
-- **THEN** the `Original cost`, `Original currency`, and `Conversion rate` columns carry the original-currency values and are not used in per-participant net computation
+#### Scenario: Import cursor ordinal matches advanced next date
+- **WHEN** the importer advances `nextOccurrenceDate` past overdue historical anchors
+- **THEN** it sets `nextOccurrenceOrdinal` to the 1-based anchored ordinal for that date so materialization validation succeeds
 
-#### Scenario: CSV per-participant nets sum to Cost
-- **WHEN** the CSV export writes per-participant net columns for any expense
-- **THEN** the sum of all participant net columns equals zero (since payer net = amount - share and non-payer net = -share, and shares sum to amount)
+#### Scenario: Import month-end overdue skip stays on day 31
+- **WHEN** imported MONTHLY rows are anchored on the 31st and overdue skip advances past February
+- **THEN** the next cursor uses the anchored 31st (or that month's last day only when short), not iterative clamp drift
 
-### Requirement: JSON export currency denomination
-The JSON export SHALL emit raw stored values with explicit currency denomination: `amount` and `paidFor.shares` (for BY_AMOUNT) SHALL be in ledger-currency minor units; `originalAmount` SHALL be in original-currency minor units; `paidByList.shares` SHALL be in original-currency minor units for cross-currency expenses and ledger-currency minor units otherwise. The JSON export SHALL include the ledger `currencyCode` at the group level.
+#### Scenario: Import leap-day overdue skip recovers Feb 29
+- **WHEN** imported YEARLY rows are anchored on February 29 and overdue skip advances past non-leap years
+- **THEN** the next cursor follows anchored leap-day rules so materialization validation succeeds
 
-#### Scenario: JSON export cross-currency fields
-- **WHEN** the JSON export processes a cross-currency expense
-- **THEN** `amount` is in ledger currency, `originalAmount` is in original currency, and `paidByList.shares` are in original currency
-
-#### Scenario: JSON export same-currency fields
-- **WHEN** the JSON export processes a same-currency expense
-- **THEN** `amount` and all `shares` are in ledger currency and `originalAmount` / `originalCurrency` / `conversionRate` are null
+#### Scenario: Legacy CSV rows are never recurring
+- **WHEN** the user imports a legacy Spliit CSV file
+- **THEN** every expense is committed without a series and recurrence is not inferred from the file

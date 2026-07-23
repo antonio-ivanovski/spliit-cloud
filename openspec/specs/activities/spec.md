@@ -1,151 +1,47 @@
 ## MODIFIED Requirements
 
-### Requirement: Ledger activity actors
-The system SHALL record activity against the Ledger and SHALL represent activity actors through generic typed actor fields rather than event-specific foreign-key columns.
+### Requirement: Generic actor types including SYSTEM
+The system SHALL support ACCOUNT, LEDGER_PARTICIPANT, and SYSTEM actor types for activity events and SHALL attribute generated recurring expenses to their original creator when recoverable.
 
-#### Scenario: Expense created
-- **WHEN** an authenticated member creates an expense
-- **THEN** the system records Ledger activity with actor type ACCOUNT and the actor account identifier
+#### Scenario: Original creator actor for recurring expense
+- **WHEN** a recurring expense is auto-created and the series has a valid creator account
+- **THEN** the activity actor type is ACCOUNT with the original creator account identifier
 
-#### Scenario: Direct ledger future compatibility
-- **WHEN** a non-group Ledger records an activity
-- **THEN** the activity model does not require a group ID
-
-#### Scenario: Actor display survives missing ledger participant
-- **WHEN** a recorded activity has an authenticated account actor but no resolvable ledger participant actor
-- **THEN** the system preserves the account actor identity in generic actor fields and renders a safe fallback actor label
+#### Scenario: SYSTEM fallback for migrated recurring expense
+- **WHEN** a migrated series has no recoverable creator account
+- **THEN** generated activity uses the SYSTEM actor
 
 ## ADDED Requirements
 
-### Requirement: Typed activity payloads
-The system SHALL store activity detail payloads as nullable typed JSON validated by a shared Zod discriminated union.
+### Requirement: Recurring expense activity taxonomy
+The system SHALL record every created recurring occurrence as a RECURRING_EXPENSE_CREATED activity with recurring-specific display content, including the manually entered first occurrence that creates the schedule.
 
-#### Scenario: Persist typed expense activity payload
-- **WHEN** an expense activity is recorded
-- **THEN** the activity JSON payload conforms to the shared expense activity schema, which MAY include a `changes` array with per-field `before`/`after` display strings
+#### Scenario: Generated activity
+- **WHEN** the worker creates an occurrence
+- **THEN** it atomically records RECURRING_EXPENSE_CREATED for that expense
 
-#### Scenario: Persist typed group activity payload
-- **WHEN** a group settings or archive activity is recorded
-- **THEN** the activity JSON payload conforms to the shared group activity schema, which MAY include a `changes` array with per-field `before`/`after` display strings
+#### Scenario: Initial recurring activity
+- **WHEN** a user creates occurrence one with recurrence enabled
+- **THEN** the system records RECURRING_EXPENSE_CREATED for that expense with the recurrence rule and termination metadata
 
-#### Scenario: Persist typed member activity payload
-- **WHEN** a member lifecycle or role activity is recorded
-- **THEN** the activity JSON payload conforms to the shared member activity schema
+### Requirement: Individual recurring bulk-mutation activities
+The system SHALL retain one activity per materialized expense changed or removed by a recurring scoped mutation, even when notification delivery is summarized.
 
-#### Scenario: Persist typed invitation activity payload
-- **WHEN** an invitation lifecycle activity is recorded
-- **THEN** the activity JSON payload conforms to the shared invitation activity schema
+#### Scenario: Multiple occurrences edited
+- **WHEN** this-and-future editing changes multiple materialized expenses
+- **THEN** each changed expense receives its own EXPENSE_UPDATED activity containing that row's change details
 
-#### Scenario: Persist typed import summary activity payload
-- **WHEN** a bulk import of expenses is recorded
-- **THEN** the activity JSON payload conforms to the shared import summary activity schema, containing at minimum the count of imported expenses and optionally total amount, currency code, source provider, and affected participant IDs
+#### Scenario: Multiple occurrences deleted
+- **WHEN** this-and-following deletion removes multiple materialized expenses
+- **THEN** each removed expense receives its own EXPENSE_DELETED activity containing a pre-deletion snapshot sufficient for feed rendering
 
-#### Scenario: Legacy nullable payload
-- **WHEN** an existing activity row has no JSON payload
-- **THEN** the system still returns and renders the activity using a safe fallback
+### Requirement: Recurrence stop activity
+The system SHALL record a recurrence-stopped activity when a schedule is stopped either independently or as part of delete-and-stop.
 
-### Requirement: Expanded activity event taxonomy
-The system SHALL use code-defined, Zod-validated string activity types for expense, group, invitation, member lifecycle, and import summary events, SHALL type the Prisma string field from an externally provided type inferred from the same Zod schema, and SHALL NOT require a Prisma or database enum for activity type values.
+#### Scenario: Standalone stop activity
+- **WHEN** an active or paused recurring schedule is stopped without deleting expenses
+- **THEN** one recurrence-stopped activity identifies the series, triggering expense, recurrence rule, and affected participants
 
-#### Scenario: Prisma string field is typed
-- **WHEN** Prisma Client reads or writes Activity rows
-- **THEN** the `type` field is typed as the shared activity type union inferred from the domain Zod schema rather than as an unrestricted string
-
-### Requirement: Generic activity subject fields
-The system SHALL represent event subjects through generic typed subject fields rather than event-specific foreign-key columns.
-
-#### Scenario: Expense subject
-- **WHEN** expense create, update, or delete activity is recorded
-- **THEN** the activity subject type is EXPENSE and the subject identifier is the expense identifier when available
-
-#### Scenario: Invitation subject
-- **WHEN** invitation lifecycle activity is recorded
-- **THEN** the activity subject type is INVITATION and the subject identifier is the invitation identifier when available
-
-#### Scenario: Member subject
-- **WHEN** member lifecycle or role activity is recorded
-- **THEN** the activity subject type is MEMBER and the subject identifier is the group member identifier when available
-
-#### Scenario: Group subject
-- **WHEN** group settings or archive activity is recorded
-- **THEN** the activity subject type is GROUP and the subject identifier is the group identifier when available
-
-### Requirement: Generic activity schema migration
-The system SHALL migrate Activity rows to a generic event-log schema and SHALL remove specialized activity columns for account, ledger participant, and expense references.
-
-#### Scenario: Existing actor columns migrated
-- **WHEN** an existing activity row has account or ledger participant actor columns
-- **THEN** the migration preserves the best available actor identity in generic actor fields or typed payload metadata
-
-#### Scenario: Existing expense column migrated
-- **WHEN** an existing activity row has an expense identifier
-- **THEN** the migration preserves that identifier as generic EXPENSE subject data
-
-#### Scenario: Specialized columns removed
-- **WHEN** the activity migration is complete
-- **THEN** the Activity table no longer contains event-specific `accountId`, `ledgerParticipantId`, or `expenseId` columns
-
-#### Scenario: Expense event names
-- **WHEN** expense create, update, or delete activity is recorded
-- **THEN** the activity type is EXPENSE_CREATED, EXPENSE_UPDATED, or EXPENSE_DELETED respectively
-
-#### Scenario: Group event names
-- **WHEN** group settings are updated or group archive state changes
-- **THEN** the activity type is GROUP_UPDATED, GROUP_ARCHIVED, or GROUP_UNARCHIVED respectively
-
-#### Scenario: Invitation event names
-- **WHEN** an invitation is created, revoked, accepted, or declined
-- **THEN** the activity type is INVITATION_CREATED, INVITATION_REVOKED, INVITATION_ACCEPTED, or INVITATION_DECLINED respectively
-
-#### Scenario: Member event names
-- **WHEN** a member leaves, is removed, or has their role changed
-- **THEN** the activity type is MEMBER_LEFT, MEMBER_REMOVED, or MEMBER_ROLE_CHANGED respectively
-
-#### Scenario: Import summary event names
-- **WHEN** expenses are imported in bulk from an external source
-- **THEN** the activity type is EXPENSES_IMPORTED
-
-### Requirement: Activity payload rendering with per-field detail
-The system SHALL render activity as a friendly user-facing timeline using event type and typed payload data. Expense and group update events MAY render per-field before/after detail rows when the payload contains a `changes` array.
-
-#### Scenario: Render changed expense fields with before/after detail
-- **WHEN** an expense update activity has a `changes` array in its payload
-- **THEN** the activity feed renders per-field before/after display strings alongside the message
-
-#### Scenario: Render changed expense fields (legacy backward compat)
-- **WHEN** an expense update activity has only `changedFields` (field name list) without a `changes` array
-- **THEN** the activity feed renders the message without per-field before/after detail rows
-
-#### Scenario: Render group changes with before/after detail
-- **WHEN** a group update activity has a `changes` array in its payload
-- **THEN** the activity feed renders per-field before/after display strings for changed group fields
-
-#### Scenario: Render import summary
-- **WHEN** a bulk import activity (EXPENSES_IMPORTED) contains import count metadata
-- **THEN** the activity feed renders a message indicating the actor, count, and optionally the source provider
-
-#### Scenario: Render invitation display label
-- **WHEN** an invitation activity has a temporary name or display label
-- **THEN** the activity feed uses that label instead of raw internal identifiers
-
-#### Scenario: Fallback on invalid payload
-- **WHEN** an activity payload is missing or fails schema validation
-- **THEN** the activity feed renders a generic safe message rather than failing the page
-
-### Requirement: Generic actor types including SYSTEM
-The system SHALL support ACCOUNT, LEDGER_PARTICIPANT, and SYSTEM actor types for activity events.
-
-#### Scenario: SYSTEM actor for recurring expense
-- **WHEN** a recurring expense is auto-created by the system
-- **THEN** the activity actor type is SYSTEM
-
-### Requirement: Activity data migration
-The system SHALL migrate existing activity rows to the new string activity type names and JSON payload shape pragmatically.
-
-#### Scenario: Existing expense activity migrated
-- **WHEN** an existing CREATE_EXPENSE, UPDATE_EXPENSE, or DELETE_EXPENSE row is migrated
-- **THEN** the activity type string is renamed to the corresponding EXPENSE_CREATED, EXPENSE_UPDATED, or EXPENSE_DELETED value and any existing string data is preserved as lightweight expense title or summary metadata where practical
-
-#### Scenario: Existing group activity migrated
-- **WHEN** an existing UPDATE_GROUP row is migrated
-- **THEN** the activity type string is renamed to GROUP_UPDATED and existing string data is either represented in JSON summary metadata or left null when no useful safe mapping exists
+#### Scenario: Delete and stop audit trail
+- **WHEN** this-and-following deletion also stops the schedule
+- **THEN** the individual deletion activities and the stopped state are auditable without creating duplicate notification delivery
