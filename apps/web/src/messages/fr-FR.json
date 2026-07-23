@@ -1722,7 +1722,8 @@
         "conversionSource": "Source de conversion",
         "conversionRate": "Taux de conversion"
       },
-      "recurringCreated": "{participant} a créé la dépense récurrente « {title} »"
+      "recurringCreated": "{participant} a créé la dépense récurrente « {title} »",
+      "stopped": "{participant} a arrêté la dépense récurrente {title}"
     },
     "group": {
       "updated": "{participant} a modifié les paramètres du groupe",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "Seule cette occurrence sera supprimée.",
       "THIS_AND_FUTURE": "Cette occurrence et les suivantes seront supprimées. La récurrence continuera avec la prochaine occurrence programmée.",
       "THIS_AND_FUTURE_STOP": "Cette occurrence et les suivantes seront supprimées et la récurrence sera arrêtée."
-    }
+    },
+    "badgeRunning": "Récurrente · En cours",
+    "badgeStopped": "Récurrente · Arrêtée",
+    "badgeCompleted": "Récurrente · Terminée"
   }
 }

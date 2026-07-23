@@ -1730,7 +1730,8 @@
         "conversionSource": "Zdroj konverze",
         "conversionRate": "Směnný kurz"
       },
-      "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“"
+      "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“",
+      "stopped": "{participant} zastavil(a) opakovaný výdaj „{title}“"
     },
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",
@@ -2053,6 +2054,9 @@
       "OCCURRENCE": "Bude smazán pouze tento výskyt.",
       "THIS_AND_FUTURE": "Tento a následující výskyty budou smazány. Opakování bude pokračovat dalším naplánovaným výskytem.",
       "THIS_AND_FUTURE_STOP": "Tento a následující výskyty budou smazány a opakování bude zastaveno."
-    }
+    },
+    "badgeRunning": "Opakovaný · Probíhá",
+    "badgeStopped": "Opakovaný · Zastavený",
+    "badgeCompleted": "Opakovaný · Dokončený"
   }
 }

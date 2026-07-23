@@ -1714,7 +1714,8 @@
         "conversionSource": "Muunnoslähde",
         "conversionRate": "Muunnoskurssi"
       },
-      "recurringCreated": "{participant} loi toistuvan kulun ”{title}”"
+      "recurringCreated": "{participant} loi toistuvan kulun ”{title}”",
+      "stopped": "{participant} pysäytti toistuvan kulun {title}"
     },
     "group": {
       "updated": "{participant} päivitti ryhmän asetuksia",
@@ -2019,6 +2020,9 @@
       "OCCURRENCE": "Vain tämä esiintymä poistetaan.",
       "THIS_AND_FUTURE": "Tämä ja seuraavat esiintymät poistetaan. Toisto jatkuu seuraavasta ajoitetusta esiintymästä.",
       "THIS_AND_FUTURE_STOP": "Tämä ja seuraavat esiintymät poistetaan ja toisto pysäytetään."
-    }
+    },
+    "badgeRunning": "Toistuva · Käynnissä",
+    "badgeStopped": "Toistuva · Pysäytetty",
+    "badgeCompleted": "Toistuva · Valmis"
   }
 }

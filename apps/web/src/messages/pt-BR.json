@@ -1722,7 +1722,8 @@
         "conversionSource": "Fonte de conversão",
         "conversionRate": "Taxa de conversão"
       },
-      "recurringCreated": "{participant} criou a despesa recorrente “{title}”"
+      "recurringCreated": "{participant} criou a despesa recorrente “{title}”",
+      "stopped": "{participant} parou a despesa recorrente {title}"
     },
     "group": {
       "updated": "{participant} atualizou as configurações do grupo",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "Apenas esta ocorrência será excluída.",
       "THIS_AND_FUTURE": "Esta e as ocorrências futuras serão excluídas. A recorrência continuará com a próxima ocorrência agendada.",
       "THIS_AND_FUTURE_STOP": "Esta e as ocorrências futuras serão excluídas e a recorrência será interrompida."
-    }
+    },
+    "badgeRunning": "Recorrente · Em andamento",
+    "badgeStopped": "Recorrente · Parada",
+    "badgeCompleted": "Recorrente · Concluída"
   }
 }

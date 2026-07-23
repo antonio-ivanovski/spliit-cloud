@@ -1722,7 +1722,8 @@
         "conversionSource": "Fonte di conversione",
         "conversionRate": "Tasso di conversione"
       },
-      "recurringCreated": "{participant} ha creato la spesa ricorrente «{title}»"
+      "recurringCreated": "{participant} ha creato la spesa ricorrente «{title}»",
+      "stopped": "{participant} ha interrotto la spesa ricorrente {title}"
     },
     "group": {
       "updated": "{participant} ha aggiornato le impostazioni del gruppo",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "Verrà eliminata solo questa occorrenza.",
       "THIS_AND_FUTURE": "Questa e le occorrenze successive verranno eliminate. La ricorrenza continuerà con la prossima occorrenza programmata.",
       "THIS_AND_FUTURE_STOP": "Questa e le occorrenze successive verranno eliminate e la ricorrenza verrà interrotta."
-    }
+    },
+    "badgeRunning": "Ricorrente · In corso",
+    "badgeStopped": "Ricorrente · Interrotta",
+    "badgeCompleted": "Ricorrente · Completata"
   }
 }

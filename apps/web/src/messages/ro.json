@@ -1722,7 +1722,8 @@
         "conversionSource": "Sursa conversiei",
         "conversionRate": "Curs de conversie"
       },
-      "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”"
+      "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”",
+      "stopped": "{participant} a oprit cheltuiala recurentă {title}"
     },
     "group": {
       "updated": "{participant} a actualizat setările grupului",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "Doar această apariție va fi ștearsă.",
       "THIS_AND_FUTURE": "Această apariție și cele viitoare vor fi șterse. Recurența va continua cu următoarea apariție programată.",
       "THIS_AND_FUTURE_STOP": "Această apariție și cele viitoare vor fi șterse, iar recurența va fi oprită."
-    }
+    },
+    "badgeRunning": "Recurentă · În desfășurare",
+    "badgeStopped": "Recurentă · Oprită",
+    "badgeCompleted": "Recurentă · Finalizată"
   }
 }

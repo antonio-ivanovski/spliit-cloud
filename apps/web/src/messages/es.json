@@ -1722,7 +1722,8 @@
         "conversionSource": "Fuente de conversión",
         "conversionRate": "Tasa de conversión"
       },
-      "recurringCreated": "{participant} creó el gasto recurrent «{title}»"
+      "recurringCreated": "{participant} creó el gasto recurrent «{title}»",
+      "stopped": "{participant} detuvo el gasto recurrente {title}"
     },
     "group": {
       "updated": "{participant} actualizó la configuración del grupo",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "Solo se eliminará esta ocurrencia.",
       "THIS_AND_FUTURE": "Se eliminarán esta y las siguientes ocurrencias. La recurrencia continuará con la próxima ocurrencia programada.",
       "THIS_AND_FUTURE_STOP": "Se eliminarán esta y las siguientes ocurrencias y se detendrá la recurrencia."
-    }
+    },
+    "badgeRunning": "Recurrente · En curso",
+    "badgeStopped": "Recurrente · Detenida",
+    "badgeCompleted": "Recurrente · Completada"
   }
 }

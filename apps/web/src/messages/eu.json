@@ -1722,7 +1722,8 @@
         "conversionSource": "Bihurketa-iturria",
         "conversionRate": "Bihurketa-tasa"
       },
-      "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du"
+      "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du",
+      "stopped": "{participant}(e)k {title} gastu errepikaria gelditu du"
     },
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "Agerraldi hau bakarrik ezabatuko da.",
       "THIS_AND_FUTURE": "Agerraldi hau eta hurrengoak ezabatuko dira. Errepikapenak programatutako hurrengo agerraldiarekin jarraituko du.",
       "THIS_AND_FUTURE_STOP": "Agerraldi hau eta hurrengoak ezabatuko dira eta errepikapena geldituko da."
-    }
+    },
+    "badgeRunning": "Errepikaria · Martxan",
+    "badgeStopped": "Errepikaria · Geldituta",
+    "badgeCompleted": "Errepikaria · Osatuta"
   }
 }

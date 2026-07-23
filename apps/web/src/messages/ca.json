@@ -1722,7 +1722,8 @@
         "conversionSource": "Font de conversió",
         "conversionRate": "Tasa de conversió"
       },
-      "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»"
+      "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»",
+      "stopped": "{participant} ha aturat la despesa recurrent {title}"
     },
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "Només s'eliminarà aquesta ocurrència.",
       "THIS_AND_FUTURE": "S'eliminaran aquesta ocurrència i les següents. La recurrència continuarà amb la propera ocurrència programada.",
       "THIS_AND_FUTURE_STOP": "S'eliminaran aquesta ocurrència i les següents i s'aturarà la recurrència."
-    }
+    },
+    "badgeRunning": "Recurrent · En curs",
+    "badgeStopped": "Recurrent · Aturada",
+    "badgeCompleted": "Recurrent · Completada"
   }
 }

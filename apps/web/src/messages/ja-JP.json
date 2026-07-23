@@ -1707,7 +1707,8 @@
         "conversionSource": "換算元",
         "conversionRate": "換算レート"
       },
-      "recurringCreated": "{participant}さんが定期支出「{title}」を作成しました"
+      "recurringCreated": "{participant}さんが定期支出「{title}」を作成しました",
+      "stopped": "{participant}さんが定期支出「{title}」を停止しました"
     },
     "group": {
       "updated": "{participant}がグループ設定を更新しました",
@@ -2003,6 +2004,9 @@
       "OCCURRENCE": "この発生分のみ削除されます。",
       "THIS_AND_FUTURE": "この発生分と今後の発生分が削除されます。繰り返しは次に予定された発生分から続行されます。",
       "THIS_AND_FUTURE_STOP": "この発生分と今後の発生分が削除され、繰り返しが停止します。"
-    }
+    },
+    "badgeRunning": "定期 · 実行中",
+    "badgeStopped": "定期 · 停止中",
+    "badgeCompleted": "定期 · 完了"
   }
 }

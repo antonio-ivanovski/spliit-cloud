@@ -1707,7 +1707,8 @@
         "conversionSource": "轉換來源",
         "conversionRate": "轉換匯率"
       },
-      "recurringCreated": "{participant}建立了定期支出「{title}」"
+      "recurringCreated": "{participant}建立了定期支出「{title}」",
+      "stopped": "{participant}停止了定期支出「{title}」"
     },
     "group": {
       "updated": "{participant} 更新了群組設定",
@@ -2003,6 +2004,9 @@
       "OCCURRENCE": "僅刪除此重複項目。",
       "THIS_AND_FUTURE": "刪除此及未來的重複項目。重複將從下一個排定的項目繼續。",
       "THIS_AND_FUTURE_STOP": "刪除此及未來的重複項目並停止重複。"
-    }
+    },
+    "badgeRunning": "定期 · 執行中",
+    "badgeStopped": "定期 · 已停止",
+    "badgeCompleted": "定期 · 已完成"
   }
 }

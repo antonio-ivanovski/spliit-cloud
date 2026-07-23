@@ -1746,7 +1746,8 @@
         "conversionSource": "Umrechnungsquelle",
         "conversionRate": "Umrechnungskurs"
       },
-      "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt"
+      "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt",
+      "stopped": "{participant} hat die wiederkehrende Ausgabe {title} gestoppt"
     },
     "group": {
       "updated": "{participant} aktualisierte die Gruppeneinstellungen",
@@ -2087,6 +2088,9 @@
       "OCCURRENCE": "Nur dieses Vorkommen wird gelöscht.",
       "THIS_AND_FUTURE": "Dieses und alle folgenden Vorkommen werden gelöscht. Die Wiederholung wird mit dem nächsten geplanten Vorkommen fortgesetzt.",
       "THIS_AND_FUTURE_STOP": "Dieses und alle folgenden Vorkommen werden gelöscht und die Wiederholung wird gestoppt."
-    }
+    },
+    "badgeRunning": "Wiederkehrend · Laufend",
+    "badgeStopped": "Wiederkehrend · Gestoppt",
+    "badgeCompleted": "Wiederkehrend · Abgeschlossen"
   }
 }

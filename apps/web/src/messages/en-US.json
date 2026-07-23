@@ -215,7 +215,10 @@
     "cancel": "Cancel",
     "occurrences": "{count} occurrences in this series",
     "loading": "Loading…",
-    "loadMore": "Load more occurrences"
+    "loadMore": "Load more occurrences",
+    "badgeRunning": "Recurring · Running",
+    "badgeStopped": "Recurring · Stopped",
+    "badgeCompleted": "Recurring · Completed"
   },
   "Groups": {
     "myGroups": "My groups",
@@ -1807,7 +1810,8 @@
         "conversionRate": "Conversion rate"
       },
       "changeEmptyValue": "Not set",
-      "recurringCreated": "{participant} created recurring expense “{title}”"
+      "recurringCreated": "{participant} created recurring expense “{title}”",
+      "stopped": "{participant} stopped the recurring expense {title}"
     },
     "group": {
       "updated": "{participant} updated group settings",

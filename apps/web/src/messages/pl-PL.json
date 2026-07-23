@@ -1730,7 +1730,8 @@
         "conversionSource": "Źródło konwersji",
         "conversionRate": "Kurs wymiany"
       },
-      "recurringCreated": "{participant} utworzył(a) cykliczny wydatek „{title}”"
+      "recurringCreated": "{participant} utworzył(a) cykliczny wydatek „{title}”",
+      "stopped": "{participant} zatrzymał(a) cykliczny wydatek „{title}”"
     },
     "group": {
       "updated": "{participant} zaktualizował ustawienia grupy",
@@ -2053,6 +2054,9 @@
       "OCCURRENCE": "Usunięte zostanie tylko to wystąpienie.",
       "THIS_AND_FUTURE": "To i przyszłe wystąpienia zostaną usunięte. Cykl będzie kontynuowany od następnego zaplanowanego wystąpienia.",
       "THIS_AND_FUTURE_STOP": "To i przyszłe wystąpienia zostaną usunięte, a cykl zostanie zatrzymany."
-    }
+    },
+    "badgeRunning": "Cykliczny · W toku",
+    "badgeStopped": "Cykliczny · Zatrzymany",
+    "badgeCompleted": "Cykliczny · Ukończony"
   }
 }

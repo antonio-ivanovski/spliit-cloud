@@ -1714,7 +1714,8 @@
         "conversionSource": "Dönüşüm kaynağı",
         "conversionRate": "Döviz kuru"
       },
-      "recurringCreated": "{participant}, “{title}” yinelenen giderini oluşturdu"
+      "recurringCreated": "{participant}, “{title}” yinelenen giderini oluşturdu",
+      "stopped": "{participant}, “{title}” yinelenen giderini durdurdu"
     },
     "group": {
       "updated": "{participant} grup ayarlarını güncelledi",
@@ -2019,6 +2020,9 @@
       "OCCURRENCE": "Yalnızca bu yineleme silinecek.",
       "THIS_AND_FUTURE": "Bu ve gelecekteki yinelemeler silinecek. Yineleme bir sonraki planlanan yinelemeyle devam edecek.",
       "THIS_AND_FUTURE_STOP": "Bu ve gelecekteki yinelemeler silinecek ve yineleme durdurulacak."
-    }
+    },
+    "badgeRunning": "Yinelenen · Devam Ediyor",
+    "badgeStopped": "Yinelenen · Durduruldu",
+    "badgeCompleted": "Yinelenen · Tamamlandı"
   }
 }

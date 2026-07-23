@@ -1714,7 +1714,8 @@
         "conversionSource": "Conversiebron",
         "conversionRate": "Conversiekoers"
       },
-      "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt"
+      "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt",
+      "stopped": "{participant} is de terugkerende uitgave {title} gestopt"
     },
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",
@@ -2019,6 +2020,9 @@
       "OCCURRENCE": "Alleen dit voorkomen wordt verwijderd.",
       "THIS_AND_FUTURE": "Dit en toekomstige voorkomens worden verwijderd. De reeks gaat door met het volgende geplande voorkomen.",
       "THIS_AND_FUTURE_STOP": "Dit en toekomstige voorkomens worden verwijderd en de reeks wordt gestopt."
-    }
+    },
+    "badgeRunning": "Terugkerend · Lopend",
+    "badgeStopped": "Terugkerend · Gestopt",
+    "badgeCompleted": "Terugkerend · Voltooid"
   }
 }

@@ -1707,7 +1707,8 @@
         "conversionSource": "转换来源",
         "conversionRate": "转换汇率"
       },
-      "recurringCreated": "{participant}创建了定期支出“{title}”"
+      "recurringCreated": "{participant}创建了定期支出“{title}”",
+      "stopped": "{participant}停止了定期支出“{title}”"
     },
     "group": {
       "updated": "{participant} 更新了群组设置",
@@ -2003,6 +2004,9 @@
       "OCCURRENCE": "仅删除本次重复项。",
       "THIS_AND_FUTURE": "删除本次及后续重复项。重复将从下一个计划的重复项继续。",
       "THIS_AND_FUTURE_STOP": "删除本次及后续重复项并停止重复。"
-    }
+    },
+    "badgeRunning": "定期 · 运行中",
+    "badgeStopped": "定期 · 已停止",
+    "badgeCompleted": "定期 · 已完成"
   }
 }

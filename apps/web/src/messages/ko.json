@@ -1707,7 +1707,8 @@
         "conversionSource": "변환 출처",
         "conversionRate": "변환 환율"
       },
-      "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다"
+      "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다",
+      "stopped": "{participant}님이 반복 지출 ‘{title}’을 중지했습니다"
     },
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
@@ -2003,6 +2004,9 @@
       "OCCURRENCE": "이 항목만 삭제됩니다.",
       "THIS_AND_FUTURE": "이 항목과 이후 항목이 삭제됩니다. 반복은 다음 예정 항목부터 계속됩니다.",
       "THIS_AND_FUTURE_STOP": "이 항목과 이후 항목이 삭제되고 반복이 중지됩니다."
-    }
+    },
+    "badgeRunning": "반복 · 실행 중",
+    "badgeStopped": "반복 · 중지됨",
+    "badgeCompleted": "반복 · 완료됨"
   }
 }

@@ -1707,7 +1707,8 @@
         "conversionSource": "Sumber konversi",
         "conversionRate": "Kurs"
       },
-      "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”"
+      "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”",
+      "stopped": "{participant} menghentikan pengeluaran berulang “{title}”"
     },
     "group": {
       "updated": "{participant} memperbarui pengaturan grup",
@@ -2003,6 +2004,9 @@
       "OCCURRENCE": "Hanya kejadian ini yang akan dihapus.",
       "THIS_AND_FUTURE": "Kejadian ini dan berikutnya akan dihapus. Pengulangan akan berlanjut pada kejadian terjadwal berikutnya.",
       "THIS_AND_FUTURE_STOP": "Kejadian ini dan berikutnya akan dihapus dan pengulangan akan dihentikan."
-    }
+    },
+    "badgeRunning": "Berulang · Berjalan",
+    "badgeStopped": "Berulang · Berhenti",
+    "badgeCompleted": "Berulang · Selesai"
   }
 }

@@ -1722,7 +1722,8 @@
         "conversionSource": "מקור ההמרה",
         "conversionRate": "שער המרה"
       },
-      "recurringCreated": "{participant} יצר/ה את ההוצאה החוזרת „{title}”"
+      "recurringCreated": "{participant} יצר/ה את ההוצאה החוזרת „{title}”",
+      "stopped": "{participant} עצר/ה את ההוצאה החוזרת „{title}”"
     },
     "group": {
       "updated": "{participant} עדכן את הגדרות הקבוצה",
@@ -2036,6 +2037,9 @@
       "OCCURRENCE": "רק מופע זה יימחק.",
       "THIS_AND_FUTURE": "מופע זה והמופעים הבאים יימחקו. ההחזרה תמשיך במופע המתוזמן הבא.",
       "THIS_AND_FUTURE_STOP": "מופע זה והמופעים הבאים יימחקו וההחזרה תיעצר."
-    }
+    },
+    "badgeRunning": "חוזרת · פועלת",
+    "badgeStopped": "חוזרת · נעצרה",
+    "badgeCompleted": "חוזרת · הושלמה"
   }
 }
