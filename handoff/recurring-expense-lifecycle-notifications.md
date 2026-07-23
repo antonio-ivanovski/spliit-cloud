@@ -2,7 +2,7 @@
 
 Status: planned follow-up to `openspec/changes/durable-recurring-expenses`.
 
-This handoff is self-contained. Implement it against the existing uncommitted recurring-expense work without reverting or overwriting unrelated changes. The OpenSpec artifacts are authoritative if implementation details drift.
+This handoff is self-contained. Implement it against the existing recurring-expense work. The OpenSpec artifacts are authoritative if implementation details drift.
 
 ## Outcomes
 
