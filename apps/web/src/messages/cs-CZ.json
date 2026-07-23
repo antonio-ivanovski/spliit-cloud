@@ -278,7 +278,14 @@
         "conversionFixed": "Pevný kurz",
         "importErrorTitle": "Import se nezdařil",
         "importErrorFallback": "Při importu skupiny došlo k neočekávané chybě. Zkuste to prosím znovu.",
-        "executeImport": "Importovat skupinu"
+        "executeImport": "Importovat skupinu",
+        "recurringSchedulesLabel": "Opakující se rozvrhy k importu",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Denně",
+          "weekly": "Týdně",
+          "monthly": "Měsíčně"
+        }
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",
@@ -388,7 +395,8 @@
         "splitwiseAnonymizeDescription": "Pokud importér odmítne vaše CSV, můžete lokálně odebrat jména účastníků a popisy výdajů a výsledek přiložit k GitHub issue. Soubor zůstává ve vašem zařízení — nikam ho nenahráváme.",
         "splitwiseAnonymizeButton": "Anonymizovat CSV",
         "splitwiseAnonymizeIssuesLink": "Otevřít issue s importem",
-        "splitwiseAnonymizeError": "Tento soubor se nepodařilo anonymizovat. Ujistěte se, že jde o CSV export ze Splitwise."
+        "splitwiseAnonymizeError": "Tento soubor se nepodařilo anonymizovat. Ujistěte se, že jde o CSV export ze Splitwise.",
+        "csvRecurrenceLimitation": "Exporty CSV neobsahují opakování. Pro import opakujících se výdajů použijte JSON export ze spliit.app."
       },
       "StepHeader": {
         "title": "Importovat skupinu",

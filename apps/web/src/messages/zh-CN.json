@@ -266,7 +266,14 @@
         "conversionFixed": "固定汇率",
         "importErrorTitle": "导入失败",
         "importErrorFallback": "导入群组时发生意外错误，请重试。",
-        "executeImport": "导入群组"
+        "executeImport": "导入群组",
+        "recurringSchedulesLabel": "要导入的周期性计划",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "每天",
+          "weekly": "每周",
+          "monthly": "每月"
+        }
       },
       "Destination": {
         "heading": "您想将 <strong>{name}</strong> 导入到哪里？（{participantCount} 名参与者 · {expenseCount} 笔支出）",
@@ -373,7 +380,8 @@
         "splitwiseAnonymizeDescription": "如果导入器拒绝您的 CSV，您可以在本地去除参与者姓名和支出说明，并将结果附到 GitHub issue 中。文件始终保留在您的设备上,我们不会上传。",
         "splitwiseAnonymizeButton": "对 CSV 进行匿名处理",
         "splitwiseAnonymizeIssuesLink": "提交导入问题",
-        "splitwiseAnonymizeError": "无法对该文件进行匿名处理。请确认它是一个 Splitwise CSV 导出文件。"
+        "splitwiseAnonymizeError": "无法对该文件进行匿名处理。请确认它是一个 Splitwise CSV 导出文件。",
+        "csvRecurrenceLimitation": "CSV 导出不包含周期性信息。请使用 spliit.app 的 JSON 导出来导入周期性支出。"
       },
       "StepHeader": {
         "title": "导入群组",

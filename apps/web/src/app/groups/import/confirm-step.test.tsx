@@ -109,12 +109,65 @@ describe('ConfirmStep', () => {
     expect(onBack).toHaveBeenCalledOnce()
   })
 
+  it('lists unique recurring schedules, not every occurrence', () => {
+    const monthly = {
+      title: 'Spotify Monthly',
+      expenseDate: '2025-05-19',
+      category: 'general',
+      amountCurrency: 'EUR',
+      amount: 1000,
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+      paidBySourceId: 'a',
+      paidBy: [{ sourceId: 'a', shares: 1000 }],
+      paidFor: [{ sourceId: 'a', shares: 1 }],
+      splitMode: 'EVENLY' as const,
+      recurrenceRule: 'MONTHLY' as const,
+      recurrence: {
+        frequency: 'MONTHLY' as const,
+        interval: 1,
+        end: { type: 'INDEFINITE' as const },
+      },
+      isReimbursement: false,
+      notes: null,
+    }
+    render(
+      <ConfirmStep
+        {...REQUIRED_PROPS}
+        isSubmitting={false}
+        resolvedExpenses={[
+          monthly,
+          { ...monthly, expenseDate: '2025-06-19' },
+          { ...monthly, expenseDate: '2025-07-19' },
+          {
+            ...monthly,
+            title: 'Gym',
+            recurrenceRule: 'WEEKLY',
+            recurrence: {
+              frequency: 'WEEKLY',
+              interval: 1,
+              end: { type: 'INDEFINITE' },
+            },
+            expenseDate: '2026-07-01',
+          },
+        ]}
+      />,
+    )
+    expect(screen.getByText(/recurring schedules to import/i)).toBeInTheDocument()
+    expect(screen.getByText(/Spotify Monthly · Monthly/i)).toBeInTheDocument()
+    expect(screen.getByText(/Gym · Weekly/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/Spotify Monthly · Monthly/i)).toHaveLength(1)
+  })
+
+  it('hides the recurring schedules block when none are present', () => {
+    render(<ConfirmStep {...REQUIRED_PROPS} isSubmitting={false} />)
+    expect(
+      screen.queryByText(/recurring schedules to import/i),
+    ).not.toBeInTheDocument()
+  })
+
   it('does not crash when re-rendered with new props (no infinite loop)', () => {
-    // Specifically: ConfirmStep used to call `registerStepNav` in an
-    // effect whose deps included the (fresh each render) `onSubmit`
-    // prop; that combinator cascaded into the parent's nav state,
-    // which re-rendered the parent and a new `onSubmit` was pushed
-    // back into ConfirmStep — hence the regression test below.
     const onSubmit = vi.fn()
     const onBack = vi.fn()
     const { rerender } = render(
@@ -125,8 +178,6 @@ describe('ConfirmStep', () => {
         onBack={onBack}
       />,
     )
-    // Multiple rerenders with stable props must not throw or call
-    // onSubmit (no click involved).
     rerender(
       <ConfirmStep
         {...REQUIRED_PROPS}

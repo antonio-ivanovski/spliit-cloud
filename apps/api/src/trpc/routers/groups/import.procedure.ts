@@ -51,7 +51,7 @@ const importSourceMetaSchema = z.object({
 /**
  * Spliit imports intentionally remain the immutable legacy spliit.app
  * transport. Internal Cloud series metadata is never accepted here; legacy
- * recurrenceRule values are mapped to independent destination series.
+ * recurrenceRule values are mapped to collapsed destination series.
  */
 export const importExpenseSchema = z.preprocess((value) => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return value

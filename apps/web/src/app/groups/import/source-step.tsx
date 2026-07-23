@@ -305,6 +305,12 @@ export function SourceStep({
           }}
         />
       )}
+
+      {provider === 'spliit' && showFileImport && (
+        <p className="text-xs text-muted-foreground">
+          {t('Groups.Import.Source.csvRecurrenceLimitation')}
+        </p>
+      )}
     </div>
   )
 }

@@ -82,4 +82,11 @@ describe('SourceStep — initialError (prefill) handling', () => {
       screen.queryByText(/did not find this group/i),
     ).not.toBeInTheDocument()
   })
+
+  it('notes that CSV cannot import recurrence', () => {
+    renderSourceStep()
+    expect(
+      screen.getByText(/CSV exports do not include recurrence/i),
+    ).toBeInTheDocument()
+  })
 })

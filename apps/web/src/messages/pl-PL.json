@@ -278,7 +278,14 @@
         "conversionFixed": "Stały kurs",
         "importErrorTitle": "Import nie powiódł się",
         "importErrorFallback": "Wystąpił nieoczekiwany błąd podczas importowania grupy. Spróbuj ponownie.",
-        "executeImport": "Importuj grupę"
+        "executeImport": "Importuj grupę",
+        "recurringSchedulesLabel": "Cykliczne harmonogramy do zaimportowania",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Codziennie",
+          "weekly": "Co tydzień",
+          "monthly": "Co miesiąc"
+        }
       },
       "Destination": {
         "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
@@ -388,7 +395,8 @@
         "splitwiseAnonymizeDescription": "Jeśli importer odrzuci Twój CSV, możesz lokalnie usunąć imiona uczestników i opisy wydatków, a wynik dołączyć do zgłoszenia na GitHubie. Plik pozostaje na Twoim urządzeniu — nigdy go nie wysyłamy.",
         "splitwiseAnonymizeButton": "Zanonimizuj CSV",
         "splitwiseAnonymizeIssuesLink": "Otwórz zgłoszenie importu",
-        "splitwiseAnonymizeError": "Nie udało się zanonimizować tego pliku. Upewnij się, że to eksport CSV ze Splitwise."
+        "splitwiseAnonymizeError": "Nie udało się zanonimizować tego pliku. Upewnij się, że to eksport CSV ze Splitwise.",
+        "csvRecurrenceLimitation": "Eksporty CSV nie zawierają cykliczności. Użyj eksportu JSON ze spliit.app, aby zaimportować cykliczne wydatki."
       },
       "StepHeader": {
         "title": "Importuj grupę",

@@ -270,7 +270,14 @@
         "conversionFixed": "Vaste koers",
         "importErrorTitle": "Importeren mislukt",
         "importErrorFallback": "Er is een onverwachte fout opgetreden bij het importeren van de groep. Probeer het opnieuw.",
-        "executeImport": "Importeer groep"
+        "executeImport": "Importeer groep",
+        "recurringSchedulesLabel": "Terugkerende schema’s om te importeren",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Dagelijks",
+          "weekly": "Wekelijks",
+          "monthly": "Maandelijks"
+        }
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
@@ -378,7 +385,8 @@
         "splitwiseAnonymizeDescription": "Als de import je CSV weigert, kun je deelnemersnamen en uitgavebeschrijvingen lokaal verwijderen en het resultaat bij een GitHub-issue voegen. Je bestand blijft op je apparaat — we uploaden het nooit.",
         "splitwiseAnonymizeButton": "CSV anonimiseren",
         "splitwiseAnonymizeIssuesLink": "Importprobleem melden",
-        "splitwiseAnonymizeError": "Dit bestand kon niet worden geanonimiseerd. Zorg dat het een Splitwise-CSV-export is."
+        "splitwiseAnonymizeError": "Dit bestand kon niet worden geanonimiseerd. Zorg dat het een Splitwise-CSV-export is.",
+        "csvRecurrenceLimitation": "CSV-exports bevatten geen herhaling. Gebruik een JSON-export van spliit.app om terugkerende uitgaven te importeren."
       },
       "StepHeader": {
         "title": "Importeer een groep",

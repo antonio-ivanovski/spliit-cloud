@@ -266,7 +266,14 @@
         "conversionFixed": "固定匯率",
         "importErrorTitle": "匯入失敗",
         "importErrorFallback": "匯入群組時發生未預期的錯誤，請再試一次。",
-        "executeImport": "匯入群組"
+        "executeImport": "匯入群組",
+        "recurringSchedulesLabel": "要匯入的週期性排程",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "每天",
+          "weekly": "每週",
+          "monthly": "每月"
+        }
       },
       "Destination": {
         "heading": "您想要將 <strong>{name}</strong> 匯入到哪裡？（{participantCount} 位參與者 · {expenseCount} 筆支出）",
@@ -373,7 +380,8 @@
         "splitwiseAnonymizeDescription": "如果匯入器拒絕您的 CSV，您可以在本機去除參與者姓名與支出說明，並將結果附加至 GitHub issue。檔案會保留在您的裝置上,我們不會上傳。",
         "splitwiseAnonymizeButton": "對 CSV 進行匿名處理",
         "splitwiseAnonymizeIssuesLink": "提交匯入問題",
-        "splitwiseAnonymizeError": "無法對此檔案進行匿名處理。請確認它是 Splitwise CSV 匯出檔案。"
+        "splitwiseAnonymizeError": "無法對此檔案進行匿名處理。請確認它是 Splitwise CSV 匯出檔案。",
+        "csvRecurrenceLimitation": "CSV 匯出不包含週期性資訊。請使用 spliit.app 的 JSON 匯出來匯入週期性支出。"
       },
       "StepHeader": {
         "title": "匯入群組",

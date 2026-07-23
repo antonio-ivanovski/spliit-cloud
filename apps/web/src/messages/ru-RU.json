@@ -278,7 +278,14 @@
         "conversionFixed": "Фиксированный курс",
         "importErrorTitle": "Не удалось импортировать",
         "importErrorFallback": "При импорте группы произошла непредвиденная ошибка. Повторите попытку.",
-        "executeImport": "Импортировать группу"
+        "executeImport": "Импортировать группу",
+        "recurringSchedulesLabel": "Повторяющиеся расписания для импорта",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Ежедневно",
+          "weekly": "Еженедельно",
+          "monthly": "Ежемесячно"
+        }
       },
       "Destination": {
         "heading": "Куда вы хотите импортировать <strong>{name}</strong>? ({participantCount} участников · {expenseCount} трат)",
@@ -388,7 +395,8 @@
         "splitwiseAnonymizeDescription": "Если импортёр отклоняет ваш CSV, вы можете локально удалить имена участников и описания расходов и приложить результат к issue на GitHub. Файл остаётся на вашем устройстве — мы его никуда не загружаем.",
         "splitwiseAnonymizeButton": "Анонимизировать CSV",
         "splitwiseAnonymizeIssuesLink": "Создать issue об импорте",
-        "splitwiseAnonymizeError": "Не удалось анонимизировать этот файл. Убедитесь, что это CSV-экспорт из Splitwise."
+        "splitwiseAnonymizeError": "Не удалось анонимизировать этот файл. Убедитесь, что это CSV-экспорт из Splitwise.",
+        "csvRecurrenceLimitation": "CSV-экспорт не включает повторение. Используйте JSON-экспорт из spliit.app, чтобы импортировать повторяющиеся расходы."
       },
       "StepHeader": {
         "title": "Импортировать группу",

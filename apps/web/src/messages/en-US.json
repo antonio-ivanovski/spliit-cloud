@@ -401,7 +401,8 @@
         "splitwiseAnonymizeDescription": "If the importer rejects your CSV, you can strip participant names and expense descriptions locally and attach the result to a GitHub issue. Your file stays on your device — we never upload it.",
         "splitwiseAnonymizeButton": "Anonymize a CSV",
         "splitwiseAnonymizeIssuesLink": "Open an import issue",
-        "splitwiseAnonymizeError": "Could not anonymize this file. Make sure it's a Splitwise CSV export."
+        "splitwiseAnonymizeError": "Could not anonymize this file. Make sure it's a Splitwise CSV export.",
+        "csvRecurrenceLimitation": "CSV exports do not include recurrence. Use a JSON export from spliit.app to import recurring expenses."
       },
       "Destination": {
         "heading": "Where would you like to import <strong>{name}</strong>? ({participantCount} participants · {expenseCount} expenses)",
@@ -495,7 +496,14 @@
         "conversionFixed": "Fixed rate",
         "importErrorTitle": "Import failed",
         "importErrorFallback": "An unexpected error occurred while importing the group. Please try again.",
-        "executeImport": "Import group"
+        "executeImport": "Import group",
+        "recurringSchedulesLabel": "Recurring schedules to import",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Daily",
+          "weekly": "Weekly",
+          "monthly": "Monthly"
+        }
       },
       "Done": {
         "importComplete": "Import complete",

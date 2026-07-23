@@ -274,7 +274,14 @@
         "conversionFixed": "שער קבוע",
         "importErrorTitle": "הייבוא נכשל",
         "importErrorFallback": "אירעה שגיאה בלתי צפויה בעת ייבוא הקבוצה. אנא נסה שוב.",
-        "executeImport": "ייבא קבוצה"
+        "executeImport": "ייבא קבוצה",
+        "recurringSchedulesLabel": "לוחות זמנים חוזרים לייבוא",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "יומי",
+          "weekly": "שבועי",
+          "monthly": "חודשי"
+        }
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "אם הייבוא דוחה את קובץ ה-CSV שלך, תוכל להסיר את שמות המשתתפים ואת תיאורי ההוצאות באופן מקומי ולצרף את התוצאה ל-GitHub issue. הקובץ נשאר במכשיר שלך — אנו לעולם לא מעלים אותו.",
         "splitwiseAnonymizeButton": "בצע אנונימיזציה ל-CSV",
         "splitwiseAnonymizeIssuesLink": "פתח issue לייבוא",
-        "splitwiseAnonymizeError": "לא ניתן היה לבצע אנונימיזציה לקובץ זה. ודא שמדובר בייצוא CSV של Splitwise."
+        "splitwiseAnonymizeError": "לא ניתן היה לבצע אנונימיזציה לקובץ זה. ודא שמדובר בייצוא CSV של Splitwise.",
+        "csvRecurrenceLimitation": "ייצואי CSV אינם כוללים חזרתיות. השתמשו בייצוא JSON מ-spliit.app כדי לייבא הוצאות חוזרות."
       },
       "StepHeader": {
         "title": "ייבא קבוצה",

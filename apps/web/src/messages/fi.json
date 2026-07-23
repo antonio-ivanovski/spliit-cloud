@@ -270,7 +270,14 @@
         "conversionFixed": "Kiinteä kurssi",
         "importErrorTitle": "Tuonti epäonnistui",
         "importErrorFallback": "Ryhmän tuonnissa tapahtui odottamaton virhe. Yritä uudelleen.",
-        "executeImport": "Tuo ryhmä"
+        "executeImport": "Tuo ryhmä",
+        "recurringSchedulesLabel": "Tuotavat toistuvat aikataulut",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "PPäivittäin",
+          "weekly": "Viikoittain",
+          "monthly": "Kuukausittain"
+        }
       },
       "Destination": {
         "heading": "Mihin haluat tuoda <strong>{name}</strong>? ({participantCount} osallistujaa · {expenseCount} kulua)",
@@ -378,7 +385,8 @@
         "splitwiseAnonymizeDescription": "Jos tuonti hylkää CSV-tiedostosi, voit poistaa osallistujien nimet ja kulujen kuvaukset paikallisesti ja liittää tuloksen GitHub-issueen. Tiedostosi pysyy laitteellasi — emme koskaan lataa sitä.",
         "splitwiseAnonymizeButton": "Anonymisoi CSV",
         "splitwiseAnonymizeIssuesLink": "Ilmoita tuontiongelmasta",
-        "splitwiseAnonymizeError": "Tätä tiedostoa ei voitu anonymisoida. Varmista, että se on Splitwise-CSV-vienti."
+        "splitwiseAnonymizeError": "Tätä tiedostoa ei voitu anonymisoida. Varmista, että se on Splitwise-CSV-vienti.",
+        "csvRecurrenceLimitation": "CSV-viennit eivät sisällä toistoa. Käytä JSON-vientiä spliit.appista toistuvien kulujen tuomiseen."
       },
       "StepHeader": {
         "title": "Tuo ryhmä",

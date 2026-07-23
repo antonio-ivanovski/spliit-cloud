@@ -285,7 +285,14 @@
         "conversionFixed": "Fester Wechselkurs",
         "importErrorTitle": "Import fehlgeschlagen",
         "importErrorFallback": "Beim Importieren der Gruppe ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut.",
-        "executeImport": "Gruppe importieren"
+        "executeImport": "Gruppe importieren",
+        "recurringSchedulesLabel": "Wiederkehrende Pläne zum Importieren",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "TTäglich",
+          "weekly": "WWöchentlich",
+          "monthly": "Monatlich"
+        }
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",
@@ -397,7 +404,8 @@
         "splitwiseAnonymizeDescription": "Wenn der Import deine CSV ablehnt, kannst du Teilnehmernamen und Ausgabenbeschreibungen lokal entfernen und das Ergebnis an ein GitHub-Issue anhängen. Deine Datei bleibt auf deinem Gerät — wir laden sie nie hoch.",
         "splitwiseAnonymizeButton": "CSV anonymisieren",
         "splitwiseAnonymizeIssuesLink": "Import-Issue öffnen",
-        "splitwiseAnonymizeError": "Diese Datei konnte nicht anonymisiert werden. Stelle sicher, dass es ein Splitwise-CSV-Export ist."
+        "splitwiseAnonymizeError": "Diese Datei konnte nicht anonymisiert werden. Stelle sicher, dass es ein Splitwise-CSV-Export ist.",
+        "csvRecurrenceLimitation": "CSV-Exporte enthalten keine Wiederholung. Verwenden Sie einen JSON-Export von spliit.app, um wiederkehrende Ausgaben zu importieren."
       },
       "StepHeader": {
         "title": "Gruppe importieren",

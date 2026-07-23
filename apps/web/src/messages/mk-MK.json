@@ -302,7 +302,8 @@
         "splitwiseAnonymizeDescription": "Ако вчитувачот го одбие вашиот CSV, можете локално да ги отстраните имињата на учесниците и описите на трошоците и резултатот да го прикачите на GitHub issue. Вашата датотека останува на вашиот уред — никогаш не ја прикачуваме.",
         "splitwiseAnonymizeButton": "Анонимизирај CSV",
         "splitwiseAnonymizeIssuesLink": "Отвори issue за увоз",
-        "splitwiseAnonymizeError": "Оваа датотека не може да се анонимизира. Проверете дали е CSV извоз од Splitwise."
+        "splitwiseAnonymizeError": "Оваа датотека не може да се анонимизира. Проверете дали е CSV извоз од Splitwise.",
+        "csvRecurrenceLimitation": "CSV извозите не вклучуваат повторливост. Користете JSON извоз од spliit.app за да увезете повторувачки трошоци."
       },
       "Destination": {
         "heading": "Каде сакате да го увезете <strong>{name}</strong>? ({participantCount} учесници · {expenseCount} трошоци)",
@@ -384,7 +385,14 @@
         "conversionFixed": "Фиксен курс",
         "importErrorTitle": "Увозот не успеа",
         "importErrorFallback": "Се појави неочекувана грешка при увезување на групата. Обидете се повторно.",
-        "executeImport": "Увези група"
+        "executeImport": "Увези група",
+        "recurringSchedulesLabel": "Повторувачки распореди за увоз",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Дневно",
+          "weekly": "Неделно",
+          "monthly": "Месечно"
+        }
       },
       "Done": {
         "importComplete": "Увозот е завршен",

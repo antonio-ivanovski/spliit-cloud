@@ -274,7 +274,14 @@
         "conversionFixed": "Tasso fisso",
         "importErrorTitle": "Importazione non riuscita",
         "importErrorFallback": "Si è verificato un errore imprevisto durante l'importazione del gruppo. Riprova.",
-        "executeImport": "Importa gruppo"
+        "executeImport": "Importa gruppo",
+        "recurringSchedulesLabel": "Pianificazioni ricorrenti da importare",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Giornaliera",
+          "weekly": "Settimanale",
+          "monthly": "Mensile"
+        }
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Se l'importatore rifiuta il tuo CSV, puoi rimuovere localmente i nomi dei partecipanti e le descrizioni delle spese e allegare il risultato a una issue di GitHub. Il tuo file resta sul tuo dispositivo — non lo carichiamo mai.",
         "splitwiseAnonymizeButton": "Anonimizza un CSV",
         "splitwiseAnonymizeIssuesLink": "Apri una issue di importazione",
-        "splitwiseAnonymizeError": "Impossibile anonimizzare questo file. Assicurati che sia un'esportazione CSV di Splitwise."
+        "splitwiseAnonymizeError": "Impossibile anonimizzare questo file. Assicurati che sia un'esportazione CSV di Splitwise.",
+        "csvRecurrenceLimitation": "Le esportazioni CSV non includono la ricorrenza. Usa un’esportazione JSON da spliit.app per importare le spese ricorrenti."
       },
       "StepHeader": {
         "title": "Importa un gruppo",

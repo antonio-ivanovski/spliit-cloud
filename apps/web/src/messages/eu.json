@@ -274,7 +274,14 @@
         "conversionFixed": "Tasa finkoa",
         "importErrorTitle": "Inportazioak huts egin du",
         "importErrorFallback": "Ust ezusteko bat gertatu da taldea inportatzean. Saiatu berriro.",
-        "executeImport": "Inportatu taldea"
+        "executeImport": "Inportatu taldea",
+        "recurringSchedulesLabel": "Inportatzeko gastu errepikariak",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Egunero",
+          "weekly": "Astero",
+          "monthly": "Hilero"
+        }
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
@@ -383,7 +390,8 @@
         "splitwiseAnonymizeDescription": "Inportatzaileak zure CSV-a baztertzen badu, parte-hartzaileen izenak eta gastuen deskribapenak lokalki ken ditzakezu eta emaitza GitHub-ko issue batean erantsi. Zure fitxategia zure gailuan gelditzen da — ez dugu inoiz igoko.",
         "splitwiseAnonymizeButton": "Anonimatu CSV bat",
         "splitwiseAnonymizeIssuesLink": "Ireki inportazio-issue bat",
-        "splitwiseAnonymizeError": "Ezin izan da fitxategi hau anonimatu. Ziurtatu Splitwise-ren CSV-esportazio bat dela."
+        "splitwiseAnonymizeError": "Ezin izan da fitxategi hau anonimatu. Ziurtatu Splitwise-ren CSV-esportazio bat dela.",
+        "csvRecurrenceLimitation": "CSV esportazioek ez dute errepikapena. Erabili spliit.app-eko JSON esportazioa gastu errepikariak inportatzeko."
       },
       "StepHeader": {
         "title": "Talde bat inportatu",

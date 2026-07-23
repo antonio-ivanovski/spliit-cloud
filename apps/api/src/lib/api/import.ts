@@ -6,6 +6,10 @@ import {
   prisma,
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
+import {
+  collapseExpenseFromApi,
+  planLegacyRecurringImport,
+} from '@spliit/domain/import'
 import { env as jobsEnv } from '@spliit/jobs'
 import { resolveConversion } from '../expense-conversion'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
@@ -18,7 +22,6 @@ import {
   buildRecurringTemplate,
   createSeriesForExpense,
   getApiBoss,
-  getExpenseRecurrence,
 } from './recurrence-series'
 import { randomId } from './shared'
 
@@ -91,14 +94,14 @@ export async function importGroup(
   input: ImportInput,
   actor: { accountId: string },
 ): Promise<ImportResult> {
-  // The legacy importer accepts the immutable spliit.app export format. Each
-  // legacy recurring row starts a new internal series; exported Cloud series
-  // metadata is intentionally not part of this transport contract.
+  // Legacy spliit.app export only carries recurrenceRule. Matching historical
+  // rows collapse into one destination series; Cloud series metadata is never
+  // accepted on this transport.
+  const recurringPlan = planLegacyRecurringImport(
+    input.expenses.map((expense) => collapseExpenseFromApi(expense)),
+  )
   const queueBoss =
-    jobsEnv.JOBS_ENABLED &&
-    input.expenses.some(
-      (expense) => expense.recurrenceRule && expense.recurrenceRule !== 'NONE',
-    )
+    jobsEnv.JOBS_ENABLED && recurringPlan.series.length > 0
       ? await getApiBoss()
       : undefined
   const baseResult = await prisma.$transaction(async (tx) => {
@@ -305,6 +308,140 @@ export async function importGroup(
       )
     }
 
+    const seriesIdByKey = new Map(
+      recurringPlan.series.map((plan) => [plan.seriesKey, randomId()] as const),
+    )
+    const membershipByExpenseIndex = new Map(
+      recurringPlan.membership.map((row) => [row.expenseIndex, row] as const),
+    )
+
+    const resolvePaidParticipants = (expense: Expense) => {
+      const resolvedPaidByList = expense.paidByList
+        .map((paidBy) => {
+          const resolved = destIdByClientKey.get(paidBy.participant)
+          if (!resolved) return null
+          return {
+            ledgerParticipantId: resolved,
+            shares: paidBy.shares,
+          }
+        })
+        .filter(
+          (row): row is { ledgerParticipantId: string; shares: number } =>
+            row !== null,
+        )
+      if (resolvedPaidByList.length === 0) {
+        throw new Error(
+          `Expense "${expense.title}" has no remaining paidBy participants after import resolution`,
+        )
+      }
+      const seenPaidByIds = new Set<string>()
+      for (const row of resolvedPaidByList) {
+        if (seenPaidByIds.has(row.ledgerParticipantId)) {
+          throw new Error(
+            `Expense "${expense.title}" has two paidBy entries for the same LedgerParticipant (${row.ledgerParticipantId}). Each source participant must map to a unique destination.`,
+          )
+        }
+        seenPaidByIds.add(row.ledgerParticipantId)
+      }
+      const resolvedPaidFor: Array<{
+        ledgerParticipantId: string
+        shares: number
+      }> = []
+      const seenPaidForIds = new Set<string>()
+      for (const paidFor of expense.paidFor) {
+        const resolved = destIdByClientKey.get(paidFor.participant)
+        if (!resolved) continue
+        if (seenPaidForIds.has(resolved)) {
+          throw new Error(
+            `Expense "${expense.title}" has two paidFor entries for the same LedgerParticipant (${resolved}). Each source participant must map to a unique destination.`,
+          )
+        }
+        seenPaidForIds.add(resolved)
+        resolvedPaidFor.push({
+          ledgerParticipantId: resolved,
+          shares: paidFor.shares,
+        })
+      }
+      if (resolvedPaidFor.length === 0) {
+        throw new Error(
+          `Expense "${expense.title}" has no remaining paidFor participants after import resolution`,
+        )
+      }
+      return { resolvedPaidByList, resolvedPaidFor }
+    }
+
+    for (const plan of recurringPlan.series) {
+      const seriesId = seriesIdByKey.get(plan.seriesKey)
+      if (!seriesId) continue
+      const anchorExpense = input.expenses[plan.anchorIndex]!
+      const conversion = resolvedConversions[plan.anchorIndex]!
+      const { resolvedPaidByList, resolvedPaidFor } =
+        resolvePaidParticipants(anchorExpense)
+      for (const row of resolvedPaidByList) {
+        affectedParticipantIds.add(row.ledgerParticipantId)
+      }
+      for (const row of resolvedPaidFor) {
+        affectedParticipantIds.add(row.ledgerParticipantId)
+      }
+      const template = buildRecurringTemplate({
+        expense: {
+          ...anchorExpense,
+          paidByList: resolvedPaidByList.map((row) => ({
+            participant: row.ledgerParticipantId,
+            shares: row.shares,
+          })),
+          paidFor: resolvedPaidFor.map((row) => ({
+            participant: row.ledgerParticipantId,
+            shares: row.shares,
+          })),
+          items: (anchorExpense.items ?? []).map((item) => ({
+            ...item,
+            paidFor: item.paidFor
+              .map((row) => {
+                const resolved = destIdByClientKey.get(row.participant)
+                return resolved
+                  ? { participant: resolved, shares: row.shares }
+                  : null
+              })
+              .filter(
+                (row): row is { participant: string; shares: number } =>
+                  row !== null,
+              ),
+          })),
+          itemizedRemainder: anchorExpense.itemizedRemainder
+            ? {
+                ...anchorExpense.itemizedRemainder,
+                paidFor: anchorExpense.itemizedRemainder.paidFor
+                  .map((row) => {
+                    const resolved = destIdByClientKey.get(row.participant)
+                    return resolved
+                      ? { participant: resolved, shares: row.shares }
+                      : null
+                  })
+                  .filter(
+                    (row): row is { participant: string; shares: number } =>
+                      row !== null,
+                  ),
+              }
+            : undefined,
+        },
+        conversion,
+      })
+      await createSeriesForExpense({
+        tx,
+        seriesId,
+        ledgerId,
+        creatorAccountId: actor.accountId,
+        anchorDate: anchorExpense.expenseDate,
+        config: plan.config,
+        template,
+        boss: queueBoss,
+        occurrencesCreated: plan.occurrenceCount,
+        nextOccurrenceDate: plan.nextOccurrenceDate,
+        nextOccurrenceOrdinal: 2,
+      })
+    }
+
     for (
       let expenseIndex = 0;
       expenseIndex < input.expenses.length;
@@ -340,117 +477,18 @@ export async function importGroup(
       if (!expense.isReimbursement) {
         totalAmount += ledgerAmount
       }
-      const resolvedPaidByList = expense.paidByList
-        .map((paidBy) => {
-          const resolved = destIdByClientKey.get(paidBy.participant)
-          if (!resolved) return null
-          return {
-            ledgerParticipantId: resolved,
-            shares: paidBy.shares,
-          }
-        })
-        .filter(
-          (row): row is { ledgerParticipantId: string; shares: number } =>
-            row !== null,
-        )
-      if (resolvedPaidByList.length === 0) {
-        throw new Error(
-          `Expense "${expense.title}" has no remaining paidBy participants after import resolution`,
-        )
-      }
-      const seenPaidByIds = new Set<string>()
+      const { resolvedPaidByList, resolvedPaidFor } =
+        resolvePaidParticipants(expense)
       for (const row of resolvedPaidByList) {
-        if (seenPaidByIds.has(row.ledgerParticipantId)) {
-          throw new Error(
-            `Expense "${expense.title}" has two paidBy entries for the same LedgerParticipant (${row.ledgerParticipantId}). Each source participant must map to a unique destination.`,
-          )
-        }
-        seenPaidByIds.add(row.ledgerParticipantId)
         affectedParticipantIds.add(row.ledgerParticipantId)
       }
-      const resolvedPaidFor: Array<{
-        ledgerParticipantId: string
-        shares: number
-      }> = []
-      const seenPaidForIds = new Set<string>()
-      for (const paidFor of expense.paidFor) {
-        const resolved = destIdByClientKey.get(paidFor.participant)
-        if (!resolved) continue
-        if (seenPaidForIds.has(resolved)) {
-          throw new Error(
-            `Expense "${expense.title}" has two paidFor entries for the same LedgerParticipant (${resolved}). Each source participant must map to a unique destination.`,
-          )
-        }
-        seenPaidForIds.add(resolved)
-        resolvedPaidFor.push({
-          ledgerParticipantId: resolved,
-          shares: paidFor.shares,
-        })
-        affectedParticipantIds.add(resolved)
+      for (const row of resolvedPaidFor) {
+        affectedParticipantIds.add(row.ledgerParticipantId)
       }
-      if (resolvedPaidFor.length === 0) {
-        throw new Error(
-          `Expense "${expense.title}" has no remaining paidFor participants after import resolution`,
-        )
-      }
-      const recurrence = getExpenseRecurrence(expense, expense.expenseDate)
-      const destinationSeriesId = recurrence ? randomId() : undefined
-      if (recurrence && destinationSeriesId) {
-        const template = buildRecurringTemplate({
-          expense: {
-            ...expense,
-            paidByList: resolvedPaidByList.map((row) => ({
-              participant: row.ledgerParticipantId,
-              shares: row.shares,
-            })),
-            paidFor: resolvedPaidFor.map((row) => ({
-              participant: row.ledgerParticipantId,
-              shares: row.shares,
-            })),
-            items: (expense.items ?? []).map((item) => ({
-              ...item,
-              paidFor: item.paidFor
-                .map((row) => {
-                  const resolved = destIdByClientKey.get(row.participant)
-                  return resolved
-                    ? { participant: resolved, shares: row.shares }
-                    : null
-                })
-                .filter(
-                  (row): row is { participant: string; shares: number } =>
-                    row !== null,
-                ),
-            })),
-            itemizedRemainder: expense.itemizedRemainder
-              ? {
-                  ...expense.itemizedRemainder,
-                  paidFor: expense.itemizedRemainder.paidFor
-                    .map((row) => {
-                      const resolved = destIdByClientKey.get(row.participant)
-                      return resolved
-                        ? { participant: resolved, shares: row.shares }
-                        : null
-                    })
-                    .filter(
-                      (row): row is { participant: string; shares: number } =>
-                        row !== null,
-                    ),
-                }
-              : undefined,
-          },
-          conversion,
-        })
-        await createSeriesForExpense({
-          tx,
-          seriesId: destinationSeriesId,
-          ledgerId,
-          creatorAccountId: actor.accountId,
-          anchorDate: expense.expenseDate,
-          config: recurrence,
-          template,
-          boss: queueBoss,
-        })
-      }
+      const membership = membershipByExpenseIndex.get(expenseIndex)
+      const destinationSeriesId = membership
+        ? seriesIdByKey.get(membership.seriesKey)
+        : undefined
       await tx.expense.create({
         data: {
           id: expenseId,
@@ -470,8 +508,11 @@ export async function importGroup(
             },
           },
           splitMode: expense.splitMode,
-          ...(destinationSeriesId
-            ? { recurringSeriesId: destinationSeriesId, recurrenceSequence: 1 }
+          ...(destinationSeriesId && membership
+            ? {
+                recurringSeriesId: destinationSeriesId,
+                recurrenceSequence: membership.sequence,
+              }
             : {}),
           isReimbursement: expense.isReimbursement,
           notes: expense.notes,

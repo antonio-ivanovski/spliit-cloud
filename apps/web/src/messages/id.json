@@ -266,7 +266,14 @@
         "conversionFixed": "Kurs tetap",
         "importErrorTitle": "Impor gagal",
         "importErrorFallback": "Terjadi kesalahan tak terduga saat mengimpor grup. Silakan coba lagi.",
-        "executeImport": "Impor grup"
+        "executeImport": "Impor grup",
+        "recurringSchedulesLabel": "Jadwal berulang yang akan diimpor",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Harian",
+          "weekly": "Mingguan",
+          "monthly": "Bulanan"
+        }
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -373,7 +380,8 @@
         "splitwiseAnonymizeDescription": "Jika impor menolak CSV Anda, Anda dapat menghapus nama peserta dan deskripsi pengeluaran secara lokal dan melampirkan hasilnya ke issue GitHub. File Anda tetap di perangkat Anda — kami tidak pernah mengunggahnya.",
         "splitwiseAnonymizeButton": "Anonimkan CSV",
         "splitwiseAnonymizeIssuesLink": "Buka issue impor",
-        "splitwiseAnonymizeError": "Tidak dapat menganonimkan file ini. Pastikan itu adalah ekspor CSV Splitwise."
+        "splitwiseAnonymizeError": "Tidak dapat menganonimkan file ini. Pastikan itu adalah ekspor CSV Splitwise.",
+        "csvRecurrenceLimitation": "Ekspor CSV tidak menyertakan pengulangan. Gunakan ekspor JSON dari spliit.app untuk mengimpor pengeluaran berulang."
       },
       "StepHeader": {
         "title": "Impor grup",

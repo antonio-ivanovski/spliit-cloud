@@ -64,13 +64,22 @@ export async function createSeriesForExpense(args: {
     mode: 'INITIAL_CREATION'
     dueThrough?: string
   }
+  /** Import / backfill: how many historical occurrences already exist. */
+  occurrencesCreated?: number
+  /** Import / backfill: explicit next cursor (e.g. first date after today). */
+  nextOccurrenceDate?: Date
+  nextOccurrenceOrdinal?: number
 }) {
-  const nextDate = calculateRecurrenceDate(
-    args.anchorDate,
-    args.config.frequency,
-    args.config.interval,
-    2,
-  )
+  const nextOrdinal = args.nextOccurrenceOrdinal ?? 2
+  const nextDate =
+    args.nextOccurrenceDate ??
+    calculateRecurrenceDate(
+      args.anchorDate,
+      args.config.frequency,
+      args.config.interval,
+      nextOrdinal,
+    )
+  const occurrencesCreated = args.occurrencesCreated ?? 1
   const fields = toSeriesFields(args.config)
   const completed = initialSeriesCompleted(fields, args.anchorDate, nextDate)
   const series = await args.tx.recurringExpenseSeries.create({
@@ -82,11 +91,11 @@ export async function createSeriesForExpense(args: {
       interval: fields.interval,
       anchorDate: args.anchorDate,
       nextOccurrenceDate: nextDate,
-      nextOccurrenceOrdinal: 2,
+      nextOccurrenceOrdinal: nextOrdinal,
       endType: fields.endType,
       occurrenceLimit: fields.occurrenceLimit,
       endDate: fields.endDate,
-      occurrencesCreated: 1,
+      occurrencesCreated,
       status: completed
         ? RecurringExpenseSeriesStatus.COMPLETED
         : RecurringExpenseSeriesStatus.ACTIVE,
@@ -103,7 +112,7 @@ export async function createSeriesForExpense(args: {
       args.tx,
       {
         seriesId: series.id,
-        sequence: 2,
+        sequence: occurrencesCreated + 1,
         occurrenceDate: nextDate,
       },
       args.boss,

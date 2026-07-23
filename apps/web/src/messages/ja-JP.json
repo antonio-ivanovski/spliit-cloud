@@ -266,7 +266,14 @@
         "conversionFixed": "固定レート",
         "importErrorTitle": "インポートに失敗しました",
         "importErrorFallback": "グループのインポート中に予期しないエラーが発生しました。もう一度お試しください。",
-        "executeImport": "グループをインポート"
+        "executeImport": "グループをインポート",
+        "recurringSchedulesLabel": "インポートする定期スケジュール",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "毎日",
+          "weekly": "毎週",
+          "monthly": "毎月"
+        }
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",
@@ -373,7 +380,8 @@
         "splitwiseAnonymizeDescription": "インポーターが CSV を拒否した場合は、参加者の名前と支出の説明をローカルで削除し、結果を GitHub issue に添付できます。ファイルはお使いのデバイスから外部に送信されず、当社がアップロードすることもありません。",
         "splitwiseAnonymizeButton": "CSV を匿名化する",
         "splitwiseAnonymizeIssuesLink": "インポートに関する issue を作成する",
-        "splitwiseAnonymizeError": "このファイルを匿名化できませんでした。Splitwise の CSV エクスポートであることを確認してください。"
+        "splitwiseAnonymizeError": "このファイルを匿名化できませんでした。Splitwise の CSV エクスポートであることを確認してください。",
+        "csvRecurrenceLimitation": "CSVエクスポートには繰り返し情報が含まれません。定期的な支出をインポートするには、spliit.appのJSONエクスポートを使用してください。"
       },
       "StepHeader": {
         "title": "グループをインポート",

@@ -270,7 +270,14 @@
         "conversionFixed": "Sabit kur",
         "importErrorTitle": "İçe aktarma başarısız",
         "importErrorFallback": "Grubu içe aktarırken beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
-        "executeImport": "Grubu içe aktar"
+        "executeImport": "Grubu içe aktar",
+        "recurringSchedulesLabel": "İçe aktarılacak yinelenen planlar",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "GGünlük",
+          "weekly": "Haftalık",
+          "monthly": "Aylık"
+        }
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
@@ -378,7 +385,8 @@
         "splitwiseAnonymizeDescription": "İçe aktarma CSV'nizi reddederse, katılımcı adlarını ve harcama açıklamalarını yerel olarak kaldırabilir ve sonucu bir GitHub issue'suna ekleyebilirsiniz. Dosyanız cihazınızda kalır — biz onu asla yüklemeyiz.",
         "splitwiseAnonymizeButton": "CSV'yi anonimleştir",
         "splitwiseAnonymizeIssuesLink": "İçe aktarma için issue aç",
-        "splitwiseAnonymizeError": "Bu dosya anonimleştirilemedi. Bunun bir Splitwise CSV dışa aktarımı olduğundan emin olun."
+        "splitwiseAnonymizeError": "Bu dosya anonimleştirilemedi. Bunun bir Splitwise CSV dışa aktarımı olduğundan emin olun.",
+        "csvRecurrenceLimitation": "CSV dışa aktarımları yinelenmeyi içermez. Yinelenen giderleri içe aktarmak için spliit.app’ten bir JSON dışa aktarımı kullanın."
       },
       "StepHeader": {
         "title": "Bir grubu içe aktar",
