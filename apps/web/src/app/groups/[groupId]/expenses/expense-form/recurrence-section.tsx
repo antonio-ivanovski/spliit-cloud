@@ -20,14 +20,8 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
-import { cn, formatDateOnly } from '@/lib/utils'
-import {
-  AlertTriangle,
-  CalendarClock,
-  Ellipsis,
-  Minus,
-  Plus,
-} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { AlertTriangle, CalendarClock, Minus, Plus } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   useWatch,
@@ -37,14 +31,14 @@ import {
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
-  OccurrenceStatusLabel,
-  OccurrenceTimelineNode,
+  OccurrenceTimeline,
+  OccurrenceTimelineItem,
+  OccurrenceTimelineMoreItem,
 } from './occurrence-timeline'
 import { ProjectedScheduleList } from './projected-schedule-list'
 import {
   countDueBackfillOccurrences,
   formatDateInputValue,
-  getOccurrenceScheduleStatus,
   getRecurrenceSchedule,
   getRecurrenceScheduleMetadata,
   isScheduleConfigEqual,
@@ -52,7 +46,6 @@ import {
   type RecurrenceConfig,
   type RecurrenceEnd,
   type RecurrenceFrequency,
-  type RecurrenceScheduleEntry,
 } from './recurrence-schedule'
 
 type RecurrenceFormValues = FieldValues & {
@@ -239,50 +232,6 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
       setCountDraft(null)
       setEndDateDraft(null)
     }
-  }
-
-  const renderTimelineEntry = (
-    entry: RecurrenceScheduleEntry,
-    index: number,
-  ) => {
-    const status = getOccurrenceScheduleStatus(entry, currentSequence)
-    const continues = index < previewEntries.length - 1 || hasViewAll
-    return (
-      <li
-        key={`${entry.sequence}-${entry.date.toISOString()}`}
-        className="relative grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] grid-rows-[1.25rem_auto] pb-4 sm:flex sm:flex-1 sm:flex-col sm:items-stretch sm:pb-0"
-        aria-current={status === 'current' ? 'date' : undefined}
-      >
-        {index > 0 && (
-          <span
-            aria-hidden="true"
-            className="absolute left-4 top-0 h-7 w-px bg-border sm:hidden"
-          />
-        )}
-        {continues && (
-          <span
-            aria-hidden="true"
-            className="absolute bottom-0 left-4 top-7 w-px bg-border sm:bottom-auto sm:left-1/2 sm:top-7 sm:h-px sm:w-[calc(100%+0.5rem)]"
-          />
-        )}
-        <span className="col-start-1 row-start-1 block text-center text-xs tabular-nums text-muted-foreground sm:h-5">
-          {entry.sequence}
-        </span>
-        <span className="relative z-10 col-start-1 row-start-2 mx-auto sm:mt-0">
-          <OccurrenceTimelineNode status={status} />
-        </span>
-        <span className="col-start-2 row-start-2 min-w-0 self-start pl-2 text-sm sm:mt-2 sm:px-1 sm:text-center">
-          <span className="block truncate font-medium tabular-nums">
-            {formatDateOnly(entry.date, locale, { dateStyle: 'medium' })}
-          </span>
-          <OccurrenceStatusLabel
-            status={status}
-            currentLabel={t('recurrence.currentOccurrence')}
-            completedLabel={t('recurrence.completedOccurrence')}
-          />
-        </span>
-      </li>
-    )
   }
 
   return (
@@ -635,37 +584,37 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                         </span>
                       </div>
                       {previewEntries.length > 0 ? (
-                        <ol className="flex flex-col gap-0 sm:flex-row sm:gap-2">
-                          {previewEntries.map(renderTimelineEntry)}
+                        <OccurrenceTimeline
+                          aria-label={t('recurrence.previewLabel')}
+                        >
+                          {previewEntries.map((entry, index) => (
+                            <OccurrenceTimelineItem
+                              key={`${entry.sequence}-${entry.date.toISOString()}`}
+                              entry={entry}
+                              currentSequence={currentSequence}
+                              locale={locale}
+                              currentLabel={t('recurrence.currentOccurrence')}
+                              completedLabel={t(
+                                'recurrence.completedOccurrence',
+                              )}
+                              upcomingLabel={t(
+                                'recurrence.upcomingOccurrence',
+                              )}
+                              showTopConnector={index > 0}
+                              showBottomConnector={
+                                index < previewEntries.length - 1 || hasViewAll
+                              }
+                              className="min-h-16 sm:min-h-0"
+                            />
+                          ))}
                           {hasViewAll && (
-                            <li className="relative grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] grid-rows-[1.25rem_auto] pb-1 sm:flex sm:flex-1 sm:flex-col sm:items-stretch sm:pb-0">
-                              <span
-                                aria-hidden="true"
-                                className="absolute left-4 top-0 h-7 w-px bg-border sm:hidden"
-                              />
-                              <span
-                                aria-hidden="true"
-                                className="col-start-1 row-start-1 block text-center text-xs text-muted-foreground sm:h-5"
-                              >
-                                …
-                              </span>
-                              <span className="relative z-10 col-start-1 row-start-2 mx-auto flex size-4 items-center justify-center rounded-full border-2 border-dashed border-primary/60 bg-background text-primary">
-                                <Ellipsis
-                                  className="size-3"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="col-start-2 row-start-2 h-auto min-w-0 justify-start self-start px-2 py-0 text-sm sm:mt-2 sm:justify-center sm:px-0"
-                                onClick={() => setScheduleOpen(true)}
-                              >
-                                {t('recurrence.viewAll')}
-                              </Button>
-                            </li>
+                            <OccurrenceTimelineMoreItem
+                              label={t('recurrence.viewAll')}
+                              onClick={() => setScheduleOpen(true)}
+                              className="min-h-16 sm:min-h-0"
+                            />
                           )}
-                        </ol>
+                        </OccurrenceTimeline>
                       ) : (
                         <p className="text-sm text-muted-foreground">
                           {t('recurrence.noFurtherOccurrences')}
@@ -705,6 +654,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
               locale={locale}
               currentLabel={t('recurrence.currentOccurrence')}
               completedLabel={t('recurrence.completedOccurrence')}
+              upcomingLabel={t('recurrence.upcomingOccurrence')}
               noEndLabel={t('recurrence.unlimitedSchedule')}
               emptyLabel={t('recurrence.noFurtherOccurrences')}
               ariaLabel={t('recurrence.scheduleTitle')}

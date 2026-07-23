@@ -3,25 +3,23 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
 
-import { formatDateOnly } from '@/lib/utils'
 import {
-  OccurrenceStatusLabel,
-  OccurrenceTimelineNode,
+  OCCURRENCE_TIMELINE_ROW_HEIGHT,
+  OccurrenceTimelineItem,
 } from './occurrence-timeline'
 import {
-  getOccurrenceScheduleStatus,
   type RecurrenceSchedule,
   type RecurrenceScheduleEntry,
 } from './recurrence-schedule'
 
 const DEFAULT_PAGE_SIZE = 100
-const ROW_HEIGHT = 72
 
 export type ProjectedScheduleListProps = {
   schedule: RecurrenceSchedule
   locale?: string
   currentLabel?: ReactNode
   completedLabel?: ReactNode
+  upcomingLabel?: ReactNode
   noEndLabel?: ReactNode
   emptyLabel?: ReactNode
   ariaLabel?: string
@@ -39,6 +37,7 @@ export function ProjectedScheduleList({
   locale = 'en-US',
   currentLabel = 'Current occurrence',
   completedLabel = 'Created',
+  upcomingLabel = 'Upcoming',
   noEndLabel = 'No end date',
   emptyLabel = 'No occurrences',
   ariaLabel = 'Projected recurrence schedule',
@@ -72,7 +71,7 @@ export function ProjectedScheduleList({
   const virtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => ROW_HEIGHT,
+    estimateSize: () => OCCURRENCE_TIMELINE_ROW_HEIGHT,
     overscan: 8,
   })
   const virtualItems = virtualizer.getVirtualItems()
@@ -82,11 +81,14 @@ export function ProjectedScheduleList({
   const visibleItems =
     virtualItems.length > 0
       ? virtualItems
-      : Array.from({ length: Math.min(rowCount, 8) }, (_, index) => ({
-          index,
-          start: index * ROW_HEIGHT,
-          size: ROW_HEIGHT,
-        }))
+      : Array.from(
+          { length: Math.min(rowCount, 8) },
+          (_, index) => ({
+            index,
+            start: index * OCCURRENCE_TIMELINE_ROW_HEIGHT,
+            size: OCCURRENCE_TIMELINE_ROW_HEIGHT,
+          }),
+        )
 
   useEffect(() => {
     const last = virtualItems.at(-1)?.index
@@ -121,7 +123,7 @@ export function ProjectedScheduleList({
       <ol
         ref={scrollRef}
         className={cn(
-          'relative max-h-[min(65vh,32rem)] list-none overflow-y-auto',
+          'relative max-h-[min(65vh,32rem)] list-none overflow-y-auto px-1',
           className,
         )}
         aria-label={ariaLabel}
@@ -135,55 +137,28 @@ export function ProjectedScheduleList({
         {visibleItems.map((item) => {
           const entry = entries.get(item.index)
           if (!entry) return null
-          const status = getOccurrenceScheduleStatus(
-            entry,
-            schedule.currentSequence,
-          )
           const continues =
             item.index < rowCount - 1 || schedule.totalCount === null
           return (
-            <li
+            <OccurrenceTimelineItem
               key={`${entry.sequence}-${entry.date.toISOString()}`}
-              className="absolute inset-x-0 top-0 grid grid-cols-[2rem_minmax(0,1fr)] grid-rows-[1.25rem_auto] px-1"
+              orientation="vertical"
+              entry={entry}
+              currentSequence={schedule.currentSequence}
+              locale={locale}
+              currentLabel={currentLabel}
+              completedLabel={completedLabel}
+              upcomingLabel={upcomingLabel}
+              showTopConnector={item.index > 0}
+              showBottomConnector={continues}
+              className="absolute inset-x-0 top-0"
               style={{
                 height: item.size,
                 transform: `translateY(${item.start}px)`,
               }}
-              aria-current={status === 'current' ? 'date' : undefined}
               aria-posinset={item.index + 1}
               aria-setsize={schedule.totalCount ?? undefined}
-            >
-              {item.index > 0 && (
-                <span
-                  aria-hidden="true"
-                  className="absolute left-4 top-0 h-7 w-px bg-border"
-                />
-              )}
-              {continues && (
-                <span
-                  aria-hidden="true"
-                  className="absolute bottom-0 left-4 top-7 w-px bg-border"
-                />
-              )}
-              <span className="col-start-1 row-start-1 block text-center text-xs tabular-nums text-muted-foreground">
-                {entry.sequence}
-              </span>
-              <span className="col-start-1 row-start-2 mx-auto">
-                <OccurrenceTimelineNode status={status} />
-              </span>
-              <span className="col-start-2 row-start-2 min-w-0 self-start pl-2 text-sm">
-                <span className="block truncate font-medium tabular-nums">
-                  {formatDateOnly(entry.date, locale, {
-                    dateStyle: 'medium',
-                  })}
-                </span>
-                <OccurrenceStatusLabel
-                  status={status}
-                  currentLabel={currentLabel}
-                  completedLabel={completedLabel}
-                />
-              </span>
-            </li>
+            />
           )
         })}
       </ol>
