@@ -76,37 +76,38 @@ Spliit Cloud may be useful if you want:
 
 ## Features
 
-| Feature                    | Why it matters                                                                                    | Spliit Cloud | Original Spliit |
-| -------------------------- | ------------------------------------------------------------------------------------------------- | ------------ | --------------- |
-| Accounts                   | Your groups follow you across devices instead of living only behind shared links.                 | ✅           | ❌              |
-| Synced groups              | Shared groups stay available from your account, making collaboration more reliable.               | ✅           | ❌              |
-| Splitwise import           | Move existing Splitwise groups into Spliit Cloud without starting from scratch.                   | ✅           | ❌              |
-| Reliable currency handling | Better support for real-world trips and groups that use more than one currency.                   | ✅           | ❓              |
-| Multiple payers            | One expense can be paid by several people, with each payer's contribution tracked correctly.      | ✅           | ❌              |
-| Granular expense items     | Track item-level details inside an expense for more precise splitting.                            | ✅           | ❌              |
-| Detailed activity audit    | Granular per-expense change history so members can see who changed what, and when.                | ✅           | ❓              |
-| Email notifications        | Group changes push to members' inboxes so they stay in sync without opening the app.              | ✅           | ❌              |
-| Group stats with charts    | Simple charts and per-group stats so members can see spending trends at a glance.                 | ✅           | ❌              |
-| Balance currency view      | View group balances in each expense's original currency or converted to the group's currency.     | ✅           | ❌              |
-| Group archive & delete     | Archive groups to make them view-only, or permanently delete them when no longer needed.          | ✅           | ❌              |
-| Advanced AI categorization | AI suggests expense categories and learns from your past categorization patterns over time.       | ✅           | ❓              |
-| Expense amount calculator  | A calculator widget in the expense amount field for quick arithmetic while entering expenses.     | ✅           | ❌              |
-| Improved everyday UI       | Focused papercut fixes make common flows smoother without changing the simple Spliit feel.        | ✅           | ❓              |
-| Active maintenance         | New features, fixes, and self-hosting improvements continue to move forward.                      | ✅           | ❓              |
-| Core Spliit features       | Groups, categories, receipts, balances, reimbursements, advanced splits, PWA support, and no ads. | ✅           | ✅              |
+| Feature                                 | Why it matters                                                                                                                                                                                    | Spliit Cloud | Original Spliit                                                                |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------ |
+| Core Spliit features                    | Groups, categories, receipts, balances, reimbursements, advanced splits, PWA support, and no ads.                                                                                                 | ✅           | ✅                                                                             |
+| Accounts                                | Your groups follow you across devices instead of living only behind shared links.                                                                                                                 | ✅           | ❌                                                                             |
+| Synced groups                           | Shared groups stay available from your account, making collaboration more reliable.                                                                                                               | ✅           | ❌                                                                             |
+| Splitwise import                        | Move existing Splitwise groups into Spliit Cloud without starting from scratch.                                                                                                                   | ✅           | ❌                                                                             |
+| Reliable currency handling              | Better support for real-world trips and groups that use more than one currency.                                                                                                                   | ✅           | ❓ (bad implementation with broken API)                                        |
+| Multiple payers and itemized expenses   | Track several payers, line items, tax, tip, and precise per-person shares in one expense.                                                                                                         | ✅           | ❌                                                                             |
+| Durable recurring expenses              | Create real recurrence series with intervals, date/count/indefinite endings, catch-up, retries, history, previews, navigation, and explicit stop/edit/delete controls—not read-time side effects. | ✅           | ❓ (bare minimum support with recurrence being an afterthought)                |
+| Detailed activity audit                 | Granular per-expense change history so members can see who changed what, and when.                                                                                                                | ✅           | ❓                                                                             |
+| Email and push notifications            | Deliver group and expense updates through email or push, with per-user preferences for which categories and channels are enabled.                                                                 | ✅           | ❌                                                                             |
+| Group stats with charts                 | Simple charts and per-group stats so members can see spending trends at a glance.                                                                                                                 | ✅           | ❌                                                                             |
+| Balance views and settlement tools      | Switch between balance views, preview payment direction, settle faster, or combine multiple compatible settlements into one expense.                                                              | ✅           | ❌                                                                             |
+| Expense preview, filtering, and sorting | View expenses in a dedicated polished preview and find them with flexible filters and sorting instead of using the edit form.                                                                     | ✅           | ❌                                                                             |
+| Profile avatars                         | Personalize accounts with profile avatars shown across group and expense contexts.                                                                                                                | ✅           | ❌                                                                             |
+| Full localization                       | Supported languages have complete and a maintained i18n validation workflow.                                                                                                                      | ✅           | ❌                                                                             |
+| OpenAPI and Scalar instance             | Explore the published API interactively or consume the generated OpenAPI specification.                                                                                                           | ✅           | ❌                                                                             |
+| Group archive & delete                  | Archive groups to make them view-only, or permanently delete them when no longer needed.                                                                                                          | ✅           | ❌                                                                             |
+| Advanced AI categorization              | AI suggests expense categories and learns from your past categorization patterns over time.                                                                                                       | ✅           | ❓ (naive usage of AI without "learning" from past expenses and group context) |
+| Expense amount calculator               | A calculator widget in the expense amount field for quick arithmetic while entering expenses.                                                                                                     | ✅           | ❌                                                                             |
+| Responsive mobile experience            | Mobile-specific layouts and interaction patterns improve the experience beyond simply narrowing the desktop UI.                                                                                   | ✅           | ❓ (just a narrow desktop app)                                                 |
+| Active maintenance                      | New features, fixes, and self-hosting improvements continue to move forward.                                                                                                                      | ✅           | ❓                                                                             |
 
 ## Roadmap
 
-The [detailed roadmap](./ROADMAP.md) is the source of truth. Current work focuses on expense workflow improvements (multi-payer, itemized, recurring expenses, account overview), account customization (profile photos, app theme, favourite currencies, per-user BYOK), and privacy/trust features (end-to-end encryption, public API, offline support).
+The [detailed roadmap](./ROADMAP.md) is the source of truth. Current work focuses on account overview, privacy/trust features (end-to-end encryption and offline support), expanded integrations, and self-hosting polish.
 
 ## Known limitations
 
 Spliit Cloud is still evolving. Current limitations may include:
 
-- account and sync flows are still being refined
 - offline-first usage is not complete yet
-- notification settings are not implemented yet
-- Weblate translation workflow is not set up for this fork yet
 - end-to-end encryption is planned but not available yet
 
 Please open an issue if you hit a bug or if a missing feature blocks your usage.
