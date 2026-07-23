@@ -2,8 +2,9 @@
 
 - [x] 1.1 Add interval/year recurrence schemas, anchored date calculation, termination validation, and unit tests
 - [x] 1.2 Replace the Prisma recurrence link schema with authoritative series and expense occurrence relations
-- [x] 1.3 Add a transactional production migration that backfills, validates, and drops the legacy recurrence schema
+- [x] 1.3 Add a transactional production migration that backfills link chains, collapses link-less recurring expenses by import fingerprint, validates, and drops the legacy recurrence schema (including `catchUpBatch` in the same migration)
 - [x] 1.4 Preserve the legacy spliit.app import/export schema and map its recurrence fields into the new model
+- [x] 1.5 Collapse matching legacy JSON recurring rows into one series on import (shared fingerprint with migration), schedule next occurrence after today without historical catch-up, and show collapsed schedules on the import confirm step
 
 ## 2. Worker infrastructure
 

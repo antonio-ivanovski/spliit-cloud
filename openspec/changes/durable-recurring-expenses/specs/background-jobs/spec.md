@@ -11,6 +11,10 @@ The worker SHALL execute recurring materialization through pg-boss with retries,
 - **WHEN** materialization exhausts its configured attempts
 - **THEN** the job remains inspectable and redrivable by operators
 
+#### Scenario: Anchored date gate
+- **WHEN** the series row's `nextOccurrenceDate` and `nextOccurrenceOrdinal` do not describe the same anchored occurrence from `anchorDate`
+- **THEN** materialization returns without creating an expense, leaving reconciliation to retry until the cursor is corrected
+
 ### Requirement: Transactional schedule advancement
 The worker SHALL create one occurrence, advance its series, and enqueue the next occurrence atomically.
 

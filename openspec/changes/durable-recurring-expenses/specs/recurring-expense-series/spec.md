@@ -11,7 +11,17 @@ The system SHALL support recurrence every 1 through 99 days, weeks, months, or y
 - **WHEN** a yearly series starts on February 29
 - **THEN** non-leap occurrences use February 28 and later leap occurrences return to February 29
 
-### Requirement: Past and future start semantics
+### Requirement: Anchored next-cursor consistency
+Migration overdue skip, JSON import overdue skip, and recurring materialization SHALL compute occurrence dates from the series `anchorDate` and a 1-based occurrence ordinal using the same anchored calendar rules as `calculateRecurrenceDate`. They SHALL NOT advance schedules by repeatedly adding one interval to the previous occurrence date (legacy iterative stepping), which drifts month-end and leap-day anchors and causes materialization to reject stored cursors.
+
+#### Scenario: Materialization rejects mismatched cursor
+- **WHEN** a materialization job's `occurrenceDate` does not equal the anchored date for the series anchor, frequency, interval, and `nextOccurrenceOrdinal`
+- **THEN** the worker does not create an expense and does not advance the series
+
+#### Scenario: Migration and import share overdue-skip math
+- **WHEN** legacy migration or JSON import advances `nextOccurrenceDate` past overdue historical anchors
+- **THEN** it sets `nextOccurrenceOrdinal` to the anchored ordinal for that date using the same rules as materialization validation
+
 Occurrence one SHALL be created immediately and later occurrences SHALL be scheduled strictly from its expense date.
 
 #### Scenario: Past start catches up
@@ -139,8 +149,48 @@ The web client SHALL converge every expense-list and series-history cache after 
 - **THEN** the list does not restore stale cached occurrences that were added or removed by the operation
 
 ### Requirement: Legacy recurrence migration
-The system SHALL transactionally migrate every open legacy schedule to the new series model and SHALL remove the legacy table only after validation.
+The system SHALL transactionally migrate legacy recurrence data to `RecurringExpenseSeries` in a single Prisma SQL migration that also creates `catchUpBatch` on the series table. The migration SHALL backfill link chains, collapse link-less recurring expenses, validate invariants, and only then drop `RecurringExpenseLink` and `Expense.recurrenceRule`. Any validation failure SHALL abort the transaction and preserve the legacy schema.
 
 #### Scenario: Validation failure rolls back
 - **WHEN** an open legacy link cannot be mapped to exactly one preserved schedule
 - **THEN** the migration aborts without dropping legacy recurrence data
+
+#### Scenario: Link chains become one series
+- **WHEN** legacy `RecurringExpenseLink` rows form a chain for one schedule
+- **THEN** the migration creates one series per chain root, assigns each materialized frame a monotonic `recurrenceSequence`, preserves the open leaf's stored `nextExpenseDate` as `nextOccurrenceDate`, and does not recreate already-materialized occurrences
+
+#### Scenario: Ambiguous next-frame edges abort
+- **WHEN** legacy catch-up wrote multiple candidate next expenses for the same closed link and edge reconstruction cannot pick exactly one next frame (preferring `expenseDate = nextExpenseDate`, then a unique `createdAt` match)
+- **THEN** the migration aborts rather than attaching frames to the wrong series
+
+#### Scenario: Closed leaf without terminal expense stays schedulable
+- **WHEN** the latest link is closed but the terminal expense row was deleted
+- **THEN** the series remains schedulable (not falsely marked `COMPLETED`), advances from the slot after the stored `nextExpenseDate`, and does not truncate recoverable history when a date-aligned terminal expense still exists
+
+#### Scenario: Link-less recurring expenses collapse by fingerprint
+- **WHEN** a recurring expense has no legacy link and is not the next frame of a chain edge
+- **THEN** it is grouped with other link-less rows on the same ledger that share the legacy import fingerprint (title, recurrence rule, amount, split mode, reimbursement flag, sorted paid-by and paid-for participant shares, original currency, conversion rate), sorted by expense date, and migrated as one series with sequences `1..N` anchored on the latest row
+
+#### Scenario: Fingerprint mismatch stays separate
+- **WHEN** two link-less recurring rows share a title but differ in amount, participants, or other fingerprint fields
+- **THEN** they become separate series rather than being merged heuristically by title alone
+
+#### Scenario: Collapsed orphans do not catch up history
+- **WHEN** collapsed orphan series are created on non-archived groups
+- **THEN** `nextOccurrenceDate` is advanced with anchored occurrence math to the first schedule date strictly after the migration day's UTC calendar date and reconcile does not enqueue a historical backlog for pre-migration rows
+
+#### Scenario: Month-end orphan cursor stays materializable
+- **WHEN** a collapsed MONTHLY orphan series is anchored on day 31 and overdue skip advances `nextOccurrenceOrdinal` beyond 2
+- **THEN** `nextOccurrenceDate` remains the anchored day-31 (or that month's last day only when short), matching worker `calculateRecurrenceDate`, not iterative clamp drift from February
+
+#### Scenario: Leap-day orphan cursor recovers Feb 29
+- **WHEN** a collapsed YEARLY orphan series is anchored on February 29 and overdue skip advances past non-leap years
+- **THEN** `nextOccurrenceDate` uses the anchored leap-day rules (Feb 28 in non-leap years, Feb 29 on leap years) so materialization can succeed
+
+#### Scenario: ACTIVE cursor is materializable
+- **WHEN** a migrated series is `ACTIVE`
+- **THEN** `nextOccurrenceDate` equals the anchored occurrence date for `nextOccurrenceOrdinal` computed from the series anchor, matching worker validation
+
+#### Scenario: Scoped stop and delete use collapsed membership
+- **WHEN** a user stops recurrence or deletes this-and-following on any expense in a collapsed series
+- **THEN** the operation applies to the shared `recurringSeriesId` and all materialized rows at or after the selected `recurrenceSequence` in that series

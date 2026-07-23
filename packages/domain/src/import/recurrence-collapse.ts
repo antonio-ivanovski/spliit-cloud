@@ -1,4 +1,4 @@
-import { calculateNextDate } from '../recurring-expenses'
+import { calculateRecurrenceDate } from '../recurring-expenses'
 import type { RecurrenceConfig } from './types'
 import {
   legacyRuleToRecurrence,
@@ -35,6 +35,8 @@ export type LegacyRecurringSeriesPlan = {
   anchorIndex: number
   occurrenceCount: number
   nextOccurrenceDate: Date
+  /** 1-based anchored ordinal for `nextOccurrenceDate` (may be > 2 after skipping overdue). */
+  nextOccurrenceOrdinal: number
 }
 
 export type LegacyRecurringImportPlan = {
@@ -95,6 +97,42 @@ export function fingerprintLegacyRecurringExpense(
 
 /**
  * Advance from the day after the latest occurrence until the first date
+ * strictly after `today` (UTC calendar day). Uses anchored occurrence math
+ * (same as materialization), not iterative next-from-previous stepping.
+ * Returns both the date and the 1-based anchored ordinal for that date.
+ */
+export function firstRecurrenceAfterToday(
+  rule: Exclude<LegacyRecurrenceRule, 'NONE'>,
+  latestExpenseDate: string | Date,
+  today: Date = new Date(),
+): { date: Date; ordinal: number } {
+  const todayDay = toUtcDay(today)
+  const anchor = toUtcDay(latestExpenseDate)
+  const config = legacyRuleToRecurrence(rule)
+  if (!config) {
+    throw new RangeError('recurrence rule must not be NONE')
+  }
+  let ordinal = 2
+  let next = calculateRecurrenceDate(
+    anchor,
+    config.frequency,
+    config.interval,
+    ordinal,
+  )
+  while (next.getTime() <= todayDay.getTime()) {
+    ordinal += 1
+    next = calculateRecurrenceDate(
+      anchor,
+      config.frequency,
+      config.interval,
+      ordinal,
+    )
+  }
+  return { date: next, ordinal }
+}
+
+/**
+ * Advance from the day after the latest occurrence until the first date
  * strictly after `today` (UTC calendar day). Skips import catch-up backlogs.
  */
 export function firstRecurrenceDateAfterToday(
@@ -102,12 +140,7 @@ export function firstRecurrenceDateAfterToday(
   latestExpenseDate: string | Date,
   today: Date = new Date(),
 ): Date {
-  const todayDay = toUtcDay(today)
-  let next = calculateNextDate(rule, toUtcDay(latestExpenseDate))
-  while (next.getTime() <= todayDay.getTime()) {
-    next = calculateNextDate(rule, next)
-  }
-  return next
+  return firstRecurrenceAfterToday(rule, latestExpenseDate, today).date
 }
 
 /**
@@ -153,6 +186,11 @@ export function planLegacyRecurringImport(
       })
     })
 
+    const next = firstRecurrenceAfterToday(
+      recurrenceRule,
+      anchor.expenseDate,
+      today,
+    )
     series.push({
       seriesKey,
       title: anchor.title,
@@ -160,11 +198,8 @@ export function planLegacyRecurringImport(
       config,
       anchorIndex,
       occurrenceCount: ordered.length,
-      nextOccurrenceDate: firstRecurrenceDateAfterToday(
-        recurrenceRule,
-        anchor.expenseDate,
-        today,
-      ),
+      nextOccurrenceDate: next.date,
+      nextOccurrenceOrdinal: next.ordinal,
     })
   }
 

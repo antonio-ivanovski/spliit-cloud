@@ -129,12 +129,12 @@ describe('importGroup recurring collapse', () => {
     expect(result.importedExpenses).toBe(3)
     expect(seriesCreates).toHaveLength(1)
     expect(seriesCreates[0]!.data.occurrencesCreated).toBe(3)
-    expect(seriesCreates[0]!.data.nextOccurrenceOrdinal).toBe(2)
+    expect(seriesCreates[0]!.data.nextOccurrenceOrdinal).toBe(14)
     expect(
       (seriesCreates[0]!.data.nextOccurrenceDate as Date)
         .toISOString()
-        .slice(0, 10) > '2025-07-19',
-    ).toBe(true)
+        .slice(0, 10),
+    ).toBe('2026-08-19')
 
     const sequences = expenseCreates.map(
       (row) => row.data.recurrenceSequence as number,

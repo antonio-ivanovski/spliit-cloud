@@ -97,6 +97,11 @@ The system SHALL let the user review the parsed group, participants, and expense
 - **WHEN** the source is parsed
 - **THEN** the web app shows the group name and currency, the list of source participants, and the list of source expenses
 
+#### Scenario: Confirm step lists recurring schedules
+
+- **WHEN** the user reaches the confirm step and the parsed JSON batch contains recurring expenses that collapse into one or more series
+- **THEN** the summary includes a recurring-schedules section with one title and cadence line per series
+
 #### Scenario: Validation issues shown in preview
 
 - **WHEN** the parsed payload has shape or split-math issues
@@ -294,6 +299,57 @@ The system SHALL preserve the source group URL in the `NormalizedSource.sourceUr
 
 - **WHEN** the source is parsed from a CSV file
 - **THEN** `sourceUrl` is `null` and no attribution note is generated
+
+### Requirement: Legacy JSON recurring import collapse
+
+The Spliit JSON import commit path SHALL collapse matching historical `recurrenceRule` rows into one `RecurringExpenseSeries` before creating expenses, using the same conservative fingerprint as legacy recurrence migration for link-less rows (title, recurrence rule, amount, split mode, reimbursement flag, sorted paid-by and paid-for participant shares, original currency, conversion rate). The series template and `anchorDate` SHALL come from the latest expense in each collapsed group. Historical occurrences SHALL be linked with sequences `1..N`. Overdue skip SHALL set `nextOccurrenceDate` to the first schedule date strictly after the current UTC calendar day using anchored occurrence math (the same rules as `calculateRecurrenceDate` and materialization validation), with matching `nextOccurrenceOrdinal`, without enqueueing a backlog of missed pre-import occurrences and without iterative next-from-previous stepping.
+
+#### Scenario: Multiple matching monthlies become one series
+
+- **WHEN** an import batch contains multiple JSON expenses with the same fingerprint and non-NONE recurrence rule
+- **THEN** the server creates one series, assigns sequences `1..N` in expense-date order, sets `occurrencesCreated` to `N`, and links every matching expense to that series
+
+#### Scenario: Different amount stays separate
+
+- **WHEN** two imported recurring rows share a title and rule but differ in amount or participant split fingerprint
+- **THEN** they become separate series
+
+#### Scenario: Import month-end overdue skip stays materializable
+
+- **WHEN** imported MONTHLY rows are anchored on the 31st and overdue skip advances past February
+- **THEN** the next cursor uses anchored day-31 rules, not iterative clamp drift
+
+#### Scenario: Import leap-day overdue skip recovers Feb 29
+
+- **WHEN** imported YEARLY rows are anchored on February 29 and overdue skip advances past non-leap years
+- **THEN** the next cursor follows anchored leap-day rules so materialization validation succeeds
+
+### Requirement: Import confirm recurring schedule summary
+
+The import confirm step SHALL list each collapsed recurring schedule once with expense title and human-readable cadence (Daily, Weekly, or Monthly). The list SHALL use the same collapse planner as the server commit and SHALL be hidden when no recurring schedules are present.
+
+#### Scenario: Confirm summary matches collapsed series
+
+- **WHEN** the user reaches the import confirm step and the parsed batch contains multiple historical rows for the same recurring schedule
+- **THEN** the summary shows one line for that schedule, not one line per occurrence
+
+### Requirement: Spliit CSV recurrence limitation
+
+The legacy Spliit CSV wire format SHALL NOT carry recurrence. The CSV parser SHALL set every row to non-recurring and SHALL reject headers that match Cloud recurrence columns. The Spliit source step SHALL state that CSV exports do not include recurrence and that JSON export from spliit.app is required to import recurring expenses.
+
+#### Scenario: CSV import has no recurring schedules
+
+- **WHEN** the user imports a legacy Spliit CSV file
+- **THEN** no recurring series are created and the confirm summary omits the recurring-schedules list
+
+### Requirement: Legacy import API transport boundary
+
+The `groups.import` mutation SHALL accept only the immutable legacy spliit.app expense shape. Internal Cloud `recurrence` objects, series identifiers, and sequence numbers SHALL be stripped at the API boundary and SHALL NOT influence series creation.
+
+#### Scenario: Cloud recurrence fields stripped on import
+
+- **WHEN** an import payload includes Cloud recurrence metadata alongside legacy fields
+- **THEN** the server ignores the Cloud recurrence object and maps recurrence only from `recurrenceRule` when it is not `NONE`
 
 ## ADDED Requirements
 

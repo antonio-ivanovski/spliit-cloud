@@ -438,7 +438,7 @@ export async function importGroup(
         boss: queueBoss,
         occurrencesCreated: plan.occurrenceCount,
         nextOccurrenceDate: plan.nextOccurrenceDate,
-        nextOccurrenceOrdinal: 2,
+        nextOccurrenceOrdinal: plan.nextOccurrenceOrdinal,
       })
     }
 

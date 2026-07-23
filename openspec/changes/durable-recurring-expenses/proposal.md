@@ -29,7 +29,8 @@ Recurring expenses are currently materialized as a side effect of reading group 
 - `expenses`: Recurring expense inputs, copy behavior, conversion handling, and scoped series mutations.
 - `activities`: Original-creator attribution and a recurring-expense-created activity event.
 - `activity-notifications`: Recurring-specific notification content and creator-inclusive recipient behavior without migrating delivery to the worker.
-- `exports`: Interval-aware recurrence export and legacy-compatible import representation.
+- `exports`: Interval-aware recurrence export and legacy-compatible import representation (including JSON collapse into series).
+- `spliit-import`: Import confirm recurring-schedule summary, CSV recurrence limitation copy, and legacy transport boundary for recurrence.
 
 ## Impact
 
@@ -37,4 +38,4 @@ Recurring expenses are currently materialized as a side effect of reading group 
 - Changes Prisma schema, migrations, expense API inputs/outputs, shared domain schemas, import/export formats, and recurrence UI.
 - Adds explicit recurring delete modes, Stop Recurrence mutation behavior, terminal-series editing rules, lifecycle-aware badges, and responsive action affordances to expense view and edit surfaces.
 - Removes request-time recurrence writes and the legacy `RecurringExpenseLink` storage model.
-- Requires a write-maintenance production migration with validation before API and worker startup.
+- Requires a write-maintenance production migration with validation before API and worker startup. One SQL migration replaces legacy recurrence storage, collapses link-less historical rows by import fingerprint, and includes `catchUpBatch` on the series table.

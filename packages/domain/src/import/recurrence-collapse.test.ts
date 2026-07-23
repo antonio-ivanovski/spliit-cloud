@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   collapseExpenseFromNormalized,
   fingerprintLegacyRecurringExpense,
+  firstRecurrenceAfterToday,
   firstRecurrenceDateAfterToday,
   planLegacyRecurringImport,
   summarizeLegacyRecurringImport,
@@ -82,6 +83,10 @@ describe('planLegacyRecurringImport', () => {
     expect(plan.series).toHaveLength(1)
     expect(plan.series[0]!.occurrenceCount).toBe(3)
     expect(plan.series[0]!.anchorIndex).toBe(2)
+    expect(plan.series[0]!.nextOccurrenceDate.toISOString().slice(0, 10)).toBe(
+      '2026-08-19',
+    )
+    expect(plan.series[0]!.nextOccurrenceOrdinal).toBe(14)
     expect(
       plan.membership.map((row) => ({
         expenseIndex: row.expenseIndex,
@@ -96,6 +101,34 @@ describe('planLegacyRecurringImport', () => {
     expect(summarizeLegacyRecurringImport(expenses)).toEqual([
       { title: 'Spotify Monthly', recurrenceRule: 'MONTHLY' },
     ])
+  })
+
+  it('collapses a long Spotify-style monthly history into one series', () => {
+    const expenses = Array.from({ length: 14 }, (_, i) => {
+      const monthIndex = 4 + i // May 2025 .. June 2026
+      const year = 2025 + Math.floor(monthIndex / 12)
+      const month = (monthIndex % 12) + 1
+      const mm = String(month).padStart(2, '0')
+      return expense({
+        title: 'Preeti Monthly',
+        expenseDate: `${year}-${mm}-19`,
+      })
+    })
+    const plan = planLegacyRecurringImport(expenses, today)
+    expect(plan.series).toHaveLength(1)
+    expect(plan.series[0]!.occurrenceCount).toBe(14)
+    expect(plan.membership).toHaveLength(14)
+    expect(plan.membership.map((m) => m.sequence)).toEqual(
+      Array.from({ length: 14 }, (_, i) => i + 1),
+    )
+    expect(plan.membership.filter((m) => m.isSeriesAnchor)).toHaveLength(1)
+    expect(expenses[plan.series[0]!.anchorIndex]!.expenseDate).toBe(
+      '2026-06-19',
+    )
+    expect(plan.series[0]!.nextOccurrenceDate.toISOString().slice(0, 10)).toBe(
+      '2026-08-19',
+    )
+    expect(plan.series[0]!.nextOccurrenceOrdinal).toBe(3)
   })
 
   it('keeps different amounts as separate series', () => {
@@ -131,6 +164,58 @@ describe('firstRecurrenceDateAfterToday', () => {
       new Date('2026-07-23T00:00:00.000Z'),
     )
     expect(next.toISOString().slice(0, 10)).toBe('2026-08-01')
+  })
+})
+
+describe('firstRecurrenceAfterToday', () => {
+  it('returns matching ordinal for the advanced date', () => {
+    const next = firstRecurrenceAfterToday(
+      'MONTHLY',
+      '2026-06-01',
+      new Date('2026-07-23T00:00:00.000Z'),
+    )
+    expect(next.date.toISOString().slice(0, 10)).toBe('2026-08-01')
+    expect(next.ordinal).toBe(3)
+  })
+
+  it('keeps month-end anchors on the 31st after overdue skip (not iterative clamp drift)', () => {
+    // Iterative Jan31→Feb28→Mar28… would land on Jul 28; anchored math stays Jul 31.
+    const next = firstRecurrenceAfterToday(
+      'MONTHLY',
+      '2025-01-31',
+      new Date('2026-07-23T00:00:00.000Z'),
+    )
+    expect(next.date.toISOString().slice(0, 10)).toBe('2026-07-31')
+    expect(next.ordinal).toBe(19)
+  })
+
+  it('recovers leap-day yearly anchors to Feb 29 (not stuck on iterative Feb 28)', () => {
+    // After 2024-02-29, non-leap years clamp to Feb 28; ordinal 5 returns to Feb 29.
+    // Iterative stepping from Feb 28 would stay on the 28th forever.
+    const next = firstRecurrenceAfterToday(
+      'YEARLY',
+      '2024-02-29',
+      new Date('2027-03-01T00:00:00.000Z'),
+    )
+    expect(next.date.toISOString().slice(0, 10)).toBe('2028-02-29')
+    expect(next.ordinal).toBe(5)
+  })
+})
+
+describe('planLegacyRecurringImport month-end', () => {
+  it('plans next cursor with anchored math for a 31st-day monthly history', () => {
+    const today = new Date('2026-07-23T12:00:00.000Z')
+    const expenses = [
+      expense({ title: 'Rent', expenseDate: '2026-01-31' }),
+      expense({ title: 'Rent', expenseDate: '2026-03-31' }),
+      expense({ title: 'Rent', expenseDate: '2026-05-31' }),
+    ]
+    const plan = planLegacyRecurringImport(expenses, today)
+    expect(plan.series).toHaveLength(1)
+    expect(plan.series[0]!.nextOccurrenceDate.toISOString().slice(0, 10)).toBe(
+      '2026-07-31',
+    )
+    expect(plan.series[0]!.nextOccurrenceOrdinal).toBe(3)
   })
 })
 

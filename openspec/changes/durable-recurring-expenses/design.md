@@ -41,7 +41,7 @@ Cancelled and completed series remain historical collections whose existing mate
 
 ### Anchored interval calculation
 
-New and reconfigured schedules calculate occurrence dates from the anchor and ordinal, not from the prior clamped date. Missing month/year days clamp only that occurrence. Legacy schedules preserve their existing open expense as anchor and exact stored next date so migration does not silently move production schedules.
+New and reconfigured schedules calculate occurrence dates from the anchor and ordinal, not from the prior clamped date. Missing month/year days clamp only that occurrence. Legacy schedules preserve their existing open expense as anchor and exact stored next date so migration does not silently move production schedules. Legacy migration orphan overdue skip and JSON import overdue skip use the same anchored ordinal math as materialization; they do not chain one-interval steps from the previous occurrence date.
 
 ### Typed template in entered-currency units
 
@@ -67,7 +67,7 @@ Expense mutations invalidate every cached expense-list variant for the group, no
 
 ### Legacy Spliit import stays immutable
 
-The Spliit importer remains a compatibility boundary for exports from the original `spliit.app`. Its JSON and CSV wire schemas are unchanged. Legacy recurrence fields are mapped into new internal series during import; current Cloud series identifiers, sequence numbers, templates, and status are never added to the transport.
+The Spliit importer remains a compatibility boundary for exports from the original `spliit.app`. Its JSON and CSV wire schemas are unchanged. Legacy `recurrenceRule` fields on JSON rows map into internal series during import; matching historical recurring rows collapse into one series with ordered sequences using the same fingerprint as migration orphan collapse. The import confirm step lists each collapsed schedule once (title and cadence). CSV imports remain non-recurring and the source step directs users to JSON for recurrence. Current Cloud series identifiers, sequence numbers, templates, and status are never added to the transport.
 
 ### Official private operations dashboard
 
@@ -75,21 +75,31 @@ The worker exposes only liveness and readiness endpoints. The production compose
 
 ### Maintenance-window replacement migration
 
-The migration creates and backfills the new schema, validates every open link and sequence, and only then drops `RecurringExpenseLink` and `Expense.recurrenceRule`. Any invariant failure aborts the transaction. No dual-read or dead compatibility model remains.
+A single Prisma migration (`20260722120000_durable_recurring_expenses`) creates `RecurringExpenseSeries` (including `catchUpBatch`), backfills legacy link chains, collapses link-less recurring expenses by import fingerprint, validates invariants, and only then drops `RecurringExpenseLink` and `Expense.recurrenceRule`. Any invariant failure aborts the transaction. No dual-read or dead compatibility model remains. There is no separate post-migration repair step for orphan collapse.
+
+Link reconstruction prefers the next expense whose `expenseDate` equals the prior link's `nextExpenseDate`, falling back to a unique `createdAt` match when legacy catch-up created several frames in one millisecond. Unresolved ambiguity aborts the migration.
+
+Collapsed orphans advance `nextOccurrenceDate` past today using **anchored**
+occurrence math (the same `anchor + (ordinal - 1) intervals` model as
+materialization), not iterative next-from-previous stepping. That keeps
+month-end and leap-day anchors materializable after overdue skip. Chain series
+preserve open-leaf schedules; closed leaves without a terminal expense remain
+schedulable instead of being marked `COMPLETED` when the latest row was deleted.
 
 ## Risks / Trade-offs
 
 - [pg-boss Bun compatibility] → Add a runtime smoke/integration test; use a Node 22 worker image if the pinned Bun runtime is incompatible.
 - [External FX outage blocks an occurrence] → Propagate the failure to retry/DLQ without partial expense creation.
 - [Large historical catch-up] → Process one occurrence per job/transaction and let worker concurrency/backpressure control load.
-- [Ambiguous legacy timestamp chains] → Preserve each open leaf as an active standalone series, emit migration diagnostics, and never drop an open schedule.
+- [Ambiguous legacy timestamp chains] → Abort the migration transaction after preflight surfaces unresolved edges; do not merge chains heuristically or drop open schedules.
+- [Fragmented link-less recurring history] → Collapse orphans by the same fingerprint used at JSON import so stop recurrence and this-and-following delete operate on one `recurringSeriesId`.
 - [Creator unavailable in legacy activity] → Store a nullable creator and use SYSTEM attribution without guessing another user.
 - [Fire-and-forget notification loss] → Accepted for this change; durable notification work remains separate.
 
 ## Migration Plan
 
 1. Stop application writes and take a verified database backup.
-2. Apply the transactional Prisma migration that creates, backfills, validates, and removes the legacy schema.
+2. Apply the single transactional Prisma migration that creates, backfills link chains, collapses orphans, validates, and removes the legacy schema.
 3. Regenerate Prisma, deploy API and worker together, and let reconciliation enqueue each active series's next job.
 4. Run validation/reconciliation and inspect migration diagnostics before restoring writes.
 5. Roll back by restoring the backup if the migration transaction or post-migration validation fails; do not attempt a lossy reverse migration.

@@ -24,6 +24,7 @@ CREATE TABLE "RecurringExpenseSeries" (
     "occurrencesCreated" INTEGER NOT NULL DEFAULT 1,
     "status" "RecurringExpenseSeriesStatus" NOT NULL DEFAULT 'ACTIVE',
     "template" JSONB NOT NULL,
+    "catchUpBatch" JSONB,
     "version" INTEGER NOT NULL DEFAULT 1,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -191,40 +192,44 @@ AS $$
   END;
 $$;
 
--- Occurrence 1 is the anchor; occurrence N advances (N - 1) intervals.
+-- Occurrence 1 is the anchor; occurrence N is a single offset from that anchor
+-- (not iterative chaining). Matches domain calculateRecurrenceDate so month-end
+-- anchors (31st) stay on the 31st after February clamps.
 CREATE FUNCTION pg_temp._legacy_occurrence_date(rule TEXT, anchor DATE, occurrence INTEGER)
 RETURNS DATE
 LANGUAGE plpgsql
 IMMUTABLE
 AS $$
 DECLARE
-  d DATE := anchor;
-  i INTEGER;
+  step INTEGER := occurrence - 1;
 BEGIN
   IF occurrence < 1 THEN
     RAISE EXCEPTION 'occurrence must be >= 1';
   END IF;
-  FOR i IN 2..occurrence LOOP
-    d := pg_temp._legacy_add_interval(rule, d);
-  END LOOP;
-  RETURN d;
+  RETURN CASE rule
+    WHEN 'DAILY' THEN (anchor + (step || ' days')::INTERVAL)::DATE
+    WHEN 'WEEKLY' THEN (anchor + ((step * 7) || ' days')::INTERVAL)::DATE
+    WHEN 'MONTHLY' THEN (anchor + (step || ' months')::INTERVAL)::DATE
+    ELSE (anchor + (step || ' years')::INTERVAL)::DATE
+  END;
 END;
 $$;
 
 -- Standalone orphans never had a working link writer; do not catch up their
--- historical backlog. Advance to the first date strictly after today.
+-- historical backlog. Advance to the first anchored date strictly after today.
 CREATE FUNCTION pg_temp._legacy_next_after_today(rule TEXT, anchor DATE)
 RETURNS TABLE(next_date DATE, next_ordinal INTEGER)
 LANGUAGE plpgsql
 STABLE
 AS $$
 DECLARE
-  d DATE := pg_temp._legacy_add_interval(rule, anchor);
   ordinal INTEGER := 2;
+  d DATE;
 BEGIN
-  WHILE d <= CURRENT_DATE LOOP
+  LOOP
+    d := pg_temp._legacy_occurrence_date(rule, anchor, ordinal);
+    EXIT WHEN d > CURRENT_DATE;
     ordinal := ordinal + 1;
-    d := pg_temp._legacy_add_interval(rule, d);
   END LOOP;
   next_date := d;
   next_ordinal := ordinal;
@@ -384,80 +389,6 @@ LEFT JOIN LATERAL (
 ) creator ON TRUE
 WHERE leaf_edge."linkId" IS NULL;
 
--- Imported/raw recurring expenses may predate the link writer. Preserve each
--- such expense as a standalone series instead of silently dropping its rule.
--- Advance overdue standalones past today so reconcile does not flood catch-up.
-INSERT INTO "RecurringExpenseSeries" (
-  "id", "ledgerId", "creatorAccountId", "frequency", "interval",
-  "anchorDate", "anchorSequence", "nextOccurrenceDate", "nextOccurrenceOrdinal", "endType", "occurrenceLimit",
-  "endDate", "occurrencesCreated", "status", "template", "version", "createdAt", "updatedAt"
-)
-SELECT
-  md5('recurring-standalone:' || e."id"),
-  e."ledgerId",
-  creator."accountId",
-  CASE e."recurrenceRule"::TEXT
-    WHEN 'DAILY' THEN 'DAILY'::"RecurrenceFrequency"
-    WHEN 'WEEKLY' THEN 'WEEKLY'::"RecurrenceFrequency"
-    WHEN 'MONTHLY' THEN 'MONTHLY'::"RecurrenceFrequency"
-    ELSE 'YEARLY'::"RecurrenceFrequency"
-  END,
-  1,
-  e."expenseDate",
-  1,
-  schedule.next_date,
-  schedule.next_ordinal,
-  'INDEFINITE'::"RecurrenceEndType",
-  NULL,
-  NULL,
-  1,
-  CASE
-    WHEN g."id" IS NULL OR g."archived" THEN 'PAUSED'
-    ELSE 'ACTIVE'
-  END::"RecurringExpenseSeriesStatus",
-  pg_temp._legacy_recurrence_template(e."id"),
-  1,
-  e."createdAt",
-  CURRENT_TIMESTAMP
-FROM "Expense" e
-JOIN "Ledger" l ON l."id" = e."ledgerId"
-LEFT JOIN "Group" g ON g."ledgerId" = l."id"
-JOIN LATERAL pg_temp._legacy_next_after_today(
-  e."recurrenceRule"::TEXT,
-  e."expenseDate"
-) schedule ON TRUE
-LEFT JOIN LATERAL (
-  SELECT CASE
-    WHEN a."actorType" = 'ACCOUNT' AND account_actor."id" IS NOT NULL
-      THEN account_actor."id"
-    WHEN a."actorType" = 'LEDGER_PARTICIPANT'
-      THEN participant_account."id"
-    ELSE NULL
-  END AS "accountId"
-  FROM "Activity" a
-  LEFT JOIN "Account" account_actor ON account_actor."id" = a."actorId"
-  LEFT JOIN "LedgerParticipant" participant_actor ON participant_actor."id" = a."actorId"
-  LEFT JOIN "GroupMember" participant_member ON participant_member."id" = participant_actor."groupMemberId"
-  LEFT JOIN "Account" participant_account ON participant_account."id" = participant_member."accountId"
-  WHERE a."subjectType" = 'EXPENSE'
-    AND a."subjectId" = e."id"
-    AND a."type" IN ('EXPENSE_CREATED', 'CREATE_EXPENSE')
-  ORDER BY a."time", a."id"
-  LIMIT 1
-) creator ON TRUE
-WHERE e."recurrenceRule" <> 'NONE'
-  AND e."recurringSeriesId" IS NULL
-  AND NOT EXISTS (
-    SELECT 1
-    FROM "RecurringExpenseLink" existing_link
-    WHERE existing_link."currentFrameExpenseId" = e."id"
-  )
-  AND NOT EXISTS (
-    SELECT 1
-    FROM "_legacy_recurrence_edges" edge
-    WHERE edge."nextExpenseId" = e."id"
-  );
-
 UPDATE "Expense" e
 SET
   "recurringSeriesId" = md5('recurring-series:' || c."rootLinkId"),
@@ -490,17 +421,151 @@ WHERE leaf_link."nextExpenseCreatedAt" IS NOT NULL
   AND terminal."expenseDate" = leaf_link."nextExpenseDate"::DATE
   AND terminal."recurringSeriesId" IS NULL;
 
-UPDATE "Expense" e
-SET
-  "recurringSeriesId" = md5('recurring-standalone:' || e."id"),
-  "recurrenceSequence" = 1
+-- Link-less recurring expenses (imports / pre-link writer) collapse into one
+-- series per fingerprint, matching packages/domain planLegacyRecurringImport:
+-- title, rule, amount, split, reimbursement, sorted paidBy/paidFor, FX fields.
+-- Advance next past today so reconcile does not flood historical catch-up.
+CREATE TEMP TABLE "_legacy_orphan_expenses" ON COMMIT DROP AS
+SELECT
+  e."id",
+  e."ledgerId",
+  e."title",
+  e."recurrenceRule"::TEXT AS "recurrenceRule",
+  e."expenseDate",
+  e."amount",
+  e."createdAt",
+  e."splitMode"::TEXT AS "splitMode",
+  e."isReimbursement",
+  e."originalCurrency",
+  e."conversionRate",
+  (
+    e."title"
+    || E'\x1f' || e."recurrenceRule"::TEXT
+    || E'\x1f' || e."amount"::TEXT
+    || E'\x1f' || e."splitMode"::TEXT
+    || E'\x1f' || CASE WHEN e."isReimbursement" THEN '1' ELSE '0' END
+    || E'\x1f' || COALESCE((
+      SELECT string_agg(
+        p."ledgerParticipantId" || ':' || p."shares"::TEXT,
+        ','
+        ORDER BY p."ledgerParticipantId" || ':' || p."shares"::TEXT
+      )
+      FROM "ExpensePaidBy" p WHERE p."expenseId" = e."id"
+    ), '')
+    || E'\x1f' || COALESCE((
+      SELECT string_agg(
+        p."ledgerParticipantId" || ':' || p."shares"::TEXT,
+        ','
+        ORDER BY p."ledgerParticipantId" || ':' || p."shares"::TEXT
+      )
+      FROM "ExpensePaidFor" p WHERE p."expenseId" = e."id"
+    ), '')
+    || E'\x1f' || COALESCE(e."originalCurrency", '')
+    || E'\x1f' || COALESCE(e."conversionRate"::TEXT, '')
+  ) AS "fingerprint"
+FROM "Expense" e
 WHERE e."recurrenceRule" <> 'NONE'
   AND e."recurringSeriesId" IS NULL
+  AND NOT EXISTS (
+    SELECT 1
+    FROM "RecurringExpenseLink" existing_link
+    WHERE existing_link."currentFrameExpenseId" = e."id"
+  )
   AND NOT EXISTS (
     SELECT 1
     FROM "_legacy_recurrence_edges" edge
     WHERE edge."nextExpenseId" = e."id"
   );
+
+CREATE TEMP TABLE "_legacy_orphan_membership" ON COMMIT DROP AS
+SELECT
+  o.*,
+  md5(
+    'recurring-collapsed:'
+    || o."ledgerId"
+    || E'\x1f'
+    || o."fingerprint"
+  ) AS "seriesId",
+  ROW_NUMBER() OVER (
+    PARTITION BY o."ledgerId", o."fingerprint"
+    ORDER BY o."expenseDate", o."id"
+  )::INTEGER AS "sequence",
+  COUNT(*) OVER (
+    PARTITION BY o."ledgerId", o."fingerprint"
+  )::INTEGER AS "occurrenceCount"
+FROM "_legacy_orphan_expenses" o;
+
+INSERT INTO "RecurringExpenseSeries" (
+  "id", "ledgerId", "creatorAccountId", "frequency", "interval",
+  "anchorDate", "anchorSequence", "nextOccurrenceDate", "nextOccurrenceOrdinal", "endType", "occurrenceLimit",
+  "endDate", "occurrencesCreated", "status", "template", "catchUpBatch", "version", "createdAt", "updatedAt"
+)
+SELECT
+  anchor."seriesId",
+  anchor."ledgerId",
+  creator."accountId",
+  CASE anchor."recurrenceRule"
+    WHEN 'DAILY' THEN 'DAILY'::"RecurrenceFrequency"
+    WHEN 'WEEKLY' THEN 'WEEKLY'::"RecurrenceFrequency"
+    WHEN 'MONTHLY' THEN 'MONTHLY'::"RecurrenceFrequency"
+    ELSE 'YEARLY'::"RecurrenceFrequency"
+  END,
+  1,
+  anchor."expenseDate",
+  anchor."sequence",
+  schedule.next_date,
+  schedule.next_ordinal,
+  'INDEFINITE'::"RecurrenceEndType",
+  NULL,
+  NULL,
+  anchor."occurrenceCount",
+  CASE
+    WHEN g."id" IS NULL OR g."archived" THEN 'PAUSED'
+    ELSE 'ACTIVE'
+  END::"RecurringExpenseSeriesStatus",
+  pg_temp._legacy_recurrence_template(anchor."id"),
+  NULL,
+  1,
+  anchor."createdAt",
+  CURRENT_TIMESTAMP
+FROM "_legacy_orphan_membership" anchor
+JOIN "Ledger" l ON l."id" = anchor."ledgerId"
+LEFT JOIN "Group" g ON g."ledgerId" = l."id"
+JOIN LATERAL pg_temp._legacy_next_after_today(
+  anchor."recurrenceRule",
+  anchor."expenseDate"
+) schedule ON TRUE
+LEFT JOIN LATERAL (
+  SELECT CASE
+    WHEN a."actorType" = 'ACCOUNT' AND account_actor."id" IS NOT NULL
+      THEN account_actor."id"
+    WHEN a."actorType" = 'LEDGER_PARTICIPANT'
+      THEN participant_account."id"
+    ELSE NULL
+  END AS "accountId"
+  FROM "Activity" a
+  LEFT JOIN "Account" account_actor ON account_actor."id" = a."actorId"
+  LEFT JOIN "LedgerParticipant" participant_actor ON participant_actor."id" = a."actorId"
+  LEFT JOIN "GroupMember" participant_member ON participant_member."id" = participant_actor."groupMemberId"
+  LEFT JOIN "Account" participant_account ON participant_account."id" = participant_member."accountId"
+  WHERE a."subjectType" = 'EXPENSE'
+    AND a."subjectId" = anchor."id"
+    AND a."type" IN ('EXPENSE_CREATED', 'CREATE_EXPENSE')
+  ORDER BY a."time", a."id"
+  LIMIT 1
+) creator ON TRUE
+WHERE anchor."sequence" = anchor."occurrenceCount";
+
+-- Chain frames already have series ids from the INSERT above; only orphans
+-- remain unassigned here.
+UPDATE "Expense" e
+SET
+  "recurringSeriesId" = m."seriesId",
+  "recurrenceSequence" = m."sequence"
+FROM "_legacy_orphan_membership" m
+WHERE e."id" = m."id"
+  AND e."recurringSeriesId" IS NULL;
+
 
 DO $$
 BEGIN
@@ -581,6 +646,10 @@ CREATE UNIQUE INDEX "Expense_recurringSeriesId_recurrenceSequence_key"
 ALTER TABLE "RecurringExpenseLink" DROP CONSTRAINT IF EXISTS "RecurringExpenseLink_currentFrameExpenseId_fkey";
 ALTER TABLE "RecurringExpenseLink" DROP CONSTRAINT IF EXISTS "RecurringExpenseLink_ledgerId_fkey";
 DROP TABLE "RecurringExpenseLink";
+-- Drop orphan temp tables before DROP TYPE: they retain TEXT casts of the
+-- legacy enum but ON COMMIT DROP alone is too late inside this transaction.
+DROP TABLE IF EXISTS "_legacy_orphan_membership";
+DROP TABLE IF EXISTS "_legacy_orphan_expenses";
 ALTER TABLE "Expense" DROP COLUMN "recurrenceRule";
 DROP TYPE "RecurrenceRule";
 
