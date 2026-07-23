@@ -114,7 +114,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
         ? event.subject?.id
           ? await resolveCreatedExpenseRecipientIds(event.subject.id)
           : []
-        : affectedParticipants ?? []
+        : (affectedParticipants ?? [])
 
     if (participantIds.length === 0 && !event.includeActorAsRecipient) return
 
@@ -274,16 +274,20 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     const participantIds = parsed.affectedParticipants ?? []
     if (participantIds.length === 0) return
 
-    const { participants, group, actorName } = await loadActivityChannelContext({
-      groupId: event.groupId,
-      participantIds,
-      actor: event.actor,
-    })
+    const { participants, group, actorName } = await loadActivityChannelContext(
+      {
+        groupId: event.groupId,
+        participantIds,
+        actor: event.actor,
+      },
+    )
 
     if (!group) return
 
     const totalStr =
-      totalAmount != null ? formatExpenseAmount(totalAmount, currencyCode) : null
+      totalAmount != null
+        ? formatExpenseAmount(totalAmount, currencyCode)
+        : null
 
     const groupUrl = `${getWebBaseUrl()}/groups/${event.groupId}`
     const brandBaseUrl = getWebBaseUrl()

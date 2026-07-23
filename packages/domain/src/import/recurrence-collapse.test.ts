@@ -147,7 +147,11 @@ describe('planLegacyRecurringImport', () => {
   it('ignores NONE rows', () => {
     const expenses = [
       expense({ recurrenceRule: 'NONE' }),
-      expense({ title: 'Gym', recurrenceRule: 'WEEKLY', expenseDate: '2026-07-01' }),
+      expense({
+        title: 'Gym',
+        recurrenceRule: 'WEEKLY',
+        expenseDate: '2026-07-01',
+      }),
     ]
     const plan = planLegacyRecurringImport(expenses, today)
     expect(plan.series).toHaveLength(1)

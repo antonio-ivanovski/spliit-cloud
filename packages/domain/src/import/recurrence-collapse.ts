@@ -1,9 +1,6 @@
 import { calculateRecurrenceDate } from '../recurring-expenses'
+import { legacyRuleToRecurrence, type LegacyRecurrenceRule } from './recurrence'
 import type { RecurrenceConfig } from './types'
-import {
-  legacyRuleToRecurrence,
-  type LegacyRecurrenceRule,
-} from './recurrence'
 
 /** Minimal expense shape used to collapse legacy recurring rows into series. */
 export type LegacyRecurringCollapseExpense = {
@@ -52,11 +49,7 @@ export type LegacyRecurringSummaryItem = {
 function toUtcDay(value: string | Date): Date {
   if (value instanceof Date) {
     return new Date(
-      Date.UTC(
-        value.getUTCFullYear(),
-        value.getUTCMonth(),
-        value.getUTCDate(),
-      ),
+      Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate()),
     )
   }
   const iso = value.slice(0, 10)

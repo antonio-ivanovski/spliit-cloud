@@ -92,7 +92,7 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
         ? event.subject?.id
           ? await resolveCreatedExpenseRecipientIds(event.subject.id)
           : []
-        : parsed.affectedParticipants ?? []
+        : (parsed.affectedParticipants ?? [])
     if (participantIds.length === 0 && !event.includeActorAsRecipient) return
 
     const {

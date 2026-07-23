@@ -29,15 +29,13 @@ describe('formatExpenseAmount', () => {
 
 describe('formatExpenseDualAmount', () => {
   it('renders both currencies when they differ', () => {
-    expect(
-      formatExpenseDualAmount(670, 'JPY', 500000, 'EUR'),
-    ).toBe('JPY 5000 (EUR 6.70)')
+    expect(formatExpenseDualAmount(670, 'JPY', 500000, 'EUR')).toBe(
+      'JPY 5000 (EUR 6.70)',
+    )
   })
 
   it('renders a single amount when currencies are identical', () => {
-    expect(formatExpenseDualAmount(4500, 'EUR', 4500, 'EUR')).toBe(
-      'EUR 45.00',
-    )
+    expect(formatExpenseDualAmount(4500, 'EUR', 4500, 'EUR')).toBe('EUR 45.00')
   })
 
   it('falls back to ledgerCurrencyCode when currencyCode is null', () => {
@@ -47,9 +45,7 @@ describe('formatExpenseDualAmount', () => {
   })
 
   it('does not show dual-currency when currencyCode is null even if originalAmount differs', () => {
-    expect(
-      formatExpenseDualAmount(670, null, 500000, 'EUR'),
-    ).toBe('EUR 6.70')
+    expect(formatExpenseDualAmount(670, null, 500000, 'EUR')).toBe('EUR 6.70')
   })
 })
 
@@ -61,7 +57,13 @@ describe('resolveGroupDisplayName', () => {
 
   it('returns the group name unchanged for non-FRIEND groups', () => {
     expect(
-      resolveGroupDisplayName('GROUP', 'Trip', members, 'acct-alice', undefined),
+      resolveGroupDisplayName(
+        'GROUP',
+        'Trip',
+        members,
+        'acct-alice',
+        undefined,
+      ),
     ).toBe('Trip')
   })
 
@@ -262,7 +264,9 @@ describe('EXPENSE_GROUP_SELECT', () => {
   it('uses ACTIVE-only membership with a 2-row cap and one pending invitation', () => {
     expect(EXPENSE_GROUP_SELECT.members.where).toEqual({ status: 'ACTIVE' })
     expect(EXPENSE_GROUP_SELECT.members.take).toBe(2)
-    expect(EXPENSE_GROUP_SELECT.invitations.where).toEqual({ status: 'PENDING' })
+    expect(EXPENSE_GROUP_SELECT.invitations.where).toEqual({
+      status: 'PENDING',
+    })
     expect(EXPENSE_GROUP_SELECT.invitations.take).toBe(1)
   })
 })

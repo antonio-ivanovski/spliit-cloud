@@ -280,8 +280,7 @@ export async function loadActivityChannelContext(args: {
       : Promise.resolve(null),
   ])
   return {
-    participants:
-      participants as unknown as ExpenseNotificationParticipant[],
+    participants: participants as unknown as ExpenseNotificationParticipant[],
     group: group as ExpenseNotificationGroup | null,
     actorName: actorAccount?.name ?? 'Someone',
   }

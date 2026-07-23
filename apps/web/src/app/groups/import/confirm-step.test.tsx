@@ -154,7 +154,9 @@ describe('ConfirmStep', () => {
         ]}
       />,
     )
-    expect(screen.getByText(/recurring schedules to import/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/recurring schedules to import/i),
+    ).toBeInTheDocument()
     expect(screen.getByText(/Spotify Monthly · Monthly/i)).toBeInTheDocument()
     expect(screen.getByText(/Gym · Weekly/i)).toBeInTheDocument()
     expect(screen.getAllByText(/Spotify Monthly · Monthly/i)).toHaveLength(1)
