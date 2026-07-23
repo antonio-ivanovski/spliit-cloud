@@ -34,15 +34,18 @@ ALTER TABLE "Expense"
   ADD COLUMN "recurringSeriesId" TEXT,
   ADD COLUMN "recurrenceSequence" INTEGER;
 
--- Each legacy link points at the expense represented by that frame. Once a
--- frame was materialized, nextExpenseCreatedAt contains the createdAt of the
--- following frame. Resolve that edge before dropping the legacy timestamps.
-CREATE TEMP TABLE "_legacy_recurrence_edges" ON COMMIT DROP AS
+-- Legacy catch-up often wrote several frames in one millisecond, so
+-- nextExpenseCreatedAt alone is not unique. Prefer the candidate whose
+-- expenseDate matches the prior link's nextExpenseDate; fall back to a
+-- unique createdAt match only when no date-aligned candidate exists.
+CREATE TEMP TABLE "_legacy_recurrence_edge_candidates" ON COMMIT DROP AS
 SELECT
   l."id" AS "linkId",
-  n."id" AS "nextLinkId"
+  next_expense."id" AS "nextExpenseId",
+  n."id" AS "nextLinkId",
+  (next_expense."expenseDate" = l."nextExpenseDate"::DATE) AS "dateMatch"
 FROM "RecurringExpenseLink" l
-LEFT JOIN "Expense" next_expense
+JOIN "Expense" next_expense
   ON next_expense."ledgerId" = l."ledgerId"
  AND next_expense."createdAt" = l."nextExpenseCreatedAt"
 LEFT JOIN "RecurringExpenseLink" n
@@ -50,18 +53,58 @@ LEFT JOIN "RecurringExpenseLink" n
  AND n."currentFrameExpenseId" = next_expense."id"
 WHERE l."nextExpenseCreatedAt" IS NOT NULL;
 
+CREATE TEMP TABLE "_legacy_recurrence_edges" ON COMMIT DROP AS
+WITH date_matched AS (
+  SELECT c."linkId", c."nextExpenseId", c."nextLinkId"
+  FROM "_legacy_recurrence_edge_candidates" c
+  WHERE c."dateMatch"
+),
+date_matched_links AS (
+  SELECT "linkId"
+  FROM date_matched
+  GROUP BY "linkId"
+  HAVING COUNT(*) = 1
+),
+timestamp_fallback AS (
+  SELECT c."linkId", c."nextExpenseId", c."nextLinkId"
+  FROM "_legacy_recurrence_edge_candidates" c
+  WHERE NOT EXISTS (
+    SELECT 1 FROM date_matched_links d WHERE d."linkId" = c."linkId"
+  )
+),
+timestamp_fallback_links AS (
+  SELECT "linkId"
+  FROM timestamp_fallback
+  GROUP BY "linkId"
+  HAVING COUNT(*) = 1
+)
+SELECT d."linkId", d."nextExpenseId", d."nextLinkId"
+FROM date_matched d
+JOIN date_matched_links ok ON ok."linkId" = d."linkId"
+UNION ALL
+SELECT t."linkId", t."nextExpenseId", t."nextLinkId"
+FROM timestamp_fallback t
+JOIN timestamp_fallback_links ok ON ok."linkId" = t."linkId";
+
 DO $$
 BEGIN
-  -- A timestamp collision would make chain reconstruction ambiguous. Abort
-  -- before any legacy data is removed rather than assigning an occurrence to
-  -- the wrong series.
+  -- Still-ambiguous collisions must abort rather than attach an occurrence
+  -- to the wrong series.
   IF EXISTS (
-    SELECT l."id"
-    FROM "RecurringExpenseLink" l
-    LEFT JOIN "_legacy_recurrence_edges" e ON e."linkId" = l."id"
-    WHERE l."nextExpenseCreatedAt" IS NOT NULL
-    GROUP BY l."id"
-    HAVING COUNT(e."nextLinkId") > 1
+    SELECT c."linkId"
+    FROM "_legacy_recurrence_edge_candidates" c
+    LEFT JOIN "_legacy_recurrence_edges" e ON e."linkId" = c."linkId"
+    WHERE e."linkId" IS NULL
+    GROUP BY c."linkId"
+  ) THEN
+    RAISE EXCEPTION 'unable to map every legacy recurring link to one next occurrence';
+  END IF;
+
+  IF EXISTS (
+    SELECT e."linkId"
+    FROM "_legacy_recurrence_edges" e
+    GROUP BY e."linkId"
+    HAVING COUNT(*) > 1
   ) THEN
     RAISE EXCEPTION 'unable to map every legacy recurring link to one next occurrence';
   END IF;
@@ -85,7 +128,8 @@ WITH RECURSIVE chain("linkId", "rootLinkId", "sequence", "path") AS (
     c."path" || e."nextLinkId"
   FROM chain c
   JOIN "_legacy_recurrence_edges" e ON e."linkId" = c."linkId"
-  WHERE NOT e."nextLinkId" = ANY(c."path")
+  WHERE e."nextLinkId" IS NOT NULL
+    AND NOT e."nextLinkId" = ANY(c."path")
 )
 SELECT "linkId", "rootLinkId", "sequence"
 FROM chain;
@@ -112,10 +156,10 @@ BEGIN
     FROM "RecurringExpenseLink" l
     LEFT JOIN "_legacy_recurrence_edges" edge
       ON edge."linkId" = l."id" AND edge."nextLinkId" IS NOT NULL
-    JOIN "Expense" leaf_expense ON leaf_expense."id" = l."currentFrameExpenseId"
     JOIN "Expense" terminal_expense
       ON terminal_expense."ledgerId" = l."ledgerId"
      AND terminal_expense."createdAt" = l."nextExpenseCreatedAt"
+     AND terminal_expense."expenseDate" = l."nextExpenseDate"::DATE
     WHERE l."nextExpenseCreatedAt" IS NOT NULL
       AND edge."linkId" IS NULL
     GROUP BY l."id"
@@ -133,6 +177,60 @@ BEGIN
     RAISE EXCEPTION 'legacy recurrence chain validation failed: link points to a non-recurring expense';
   END IF;
 END $$;
+
+CREATE FUNCTION pg_temp._legacy_add_interval(rule TEXT, anchor DATE)
+RETURNS DATE
+LANGUAGE SQL
+IMMUTABLE
+AS $$
+  SELECT CASE rule
+    WHEN 'DAILY' THEN (anchor + INTERVAL '1 day')::DATE
+    WHEN 'WEEKLY' THEN (anchor + INTERVAL '7 days')::DATE
+    WHEN 'MONTHLY' THEN (anchor + INTERVAL '1 month')::DATE
+    ELSE (anchor + INTERVAL '1 year')::DATE
+  END;
+$$;
+
+-- Occurrence 1 is the anchor; occurrence N advances (N - 1) intervals.
+CREATE FUNCTION pg_temp._legacy_occurrence_date(rule TEXT, anchor DATE, occurrence INTEGER)
+RETURNS DATE
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+DECLARE
+  d DATE := anchor;
+  i INTEGER;
+BEGIN
+  IF occurrence < 1 THEN
+    RAISE EXCEPTION 'occurrence must be >= 1';
+  END IF;
+  FOR i IN 2..occurrence LOOP
+    d := pg_temp._legacy_add_interval(rule, d);
+  END LOOP;
+  RETURN d;
+END;
+$$;
+
+-- Standalone orphans never had a working link writer; do not catch up their
+-- historical backlog. Advance to the first date strictly after today.
+CREATE FUNCTION pg_temp._legacy_next_after_today(rule TEXT, anchor DATE)
+RETURNS TABLE(next_date DATE, next_ordinal INTEGER)
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  d DATE := pg_temp._legacy_add_interval(rule, anchor);
+  ordinal INTEGER := 2;
+BEGIN
+  WHILE d <= CURRENT_DATE LOOP
+    ordinal := ordinal + 1;
+    d := pg_temp._legacy_add_interval(rule, d);
+  END LOOP;
+  next_date := d;
+  next_ordinal := ordinal;
+  RETURN NEXT;
+END;
+$$;
 
 CREATE FUNCTION pg_temp._legacy_recurrence_template(expense_id TEXT)
 RETURNS JSONB
@@ -187,6 +285,8 @@ $$;
 
 -- The open frame is the migration anchor. This preserves the exact next date
 -- users already had scheduled even where a prior month was calendar-clamped.
+-- CLOSED-without-terminal (deleted latest occurrence) stays schedulable:
+-- skip the deleted slot and continue from the following date.
 INSERT INTO "RecurringExpenseSeries" (
   "id", "ledgerId", "creatorAccountId", "frequency", "interval",
   "anchorDate", "anchorSequence", "nextOccurrenceDate", "nextOccurrenceOrdinal", "endType", "occurrenceLimit",
@@ -205,16 +305,28 @@ SELECT
   1,
   leaf_expense."expenseDate",
   leaf_chain."sequence",
-  leaf_link."nextExpenseDate"::DATE,
-  2,
+  CASE
+    WHEN leaf_link."nextExpenseCreatedAt" IS NOT NULL AND terminal_expense."id" IS NULL
+      THEN pg_temp._legacy_add_interval(
+        leaf_expense."recurrenceRule"::TEXT,
+        leaf_link."nextExpenseDate"::DATE
+      )
+    ELSE leaf_link."nextExpenseDate"::DATE
+  END,
+  CASE
+    WHEN leaf_link."nextExpenseCreatedAt" IS NOT NULL AND terminal_expense."id" IS NULL
+      THEN 3
+    ELSE 2
+  END,
   'INDEFINITE'::"RecurrenceEndType",
   NULL,
   NULL,
   chain_count."occurrenceCount"
-    + CASE WHEN leaf_link."nextExpenseCreatedAt" IS NOT NULL AND terminal_expense."id" IS NOT NULL THEN 1 ELSE 0 END,
+    + CASE WHEN terminal_expense."id" IS NOT NULL THEN 1 ELSE 0 END,
   CASE
-    WHEN leaf_link."nextExpenseCreatedAt" IS NOT NULL THEN 'COMPLETED'
-    WHEN g."archived" THEN 'PAUSED'
+    WHEN leaf_link."nextExpenseCreatedAt" IS NOT NULL AND terminal_expense."id" IS NOT NULL
+      THEN 'COMPLETED'
+    WHEN g."id" IS NULL OR g."archived" THEN 'PAUSED'
     ELSE 'ACTIVE'
   END::"RecurringExpenseSeriesStatus",
   pg_temp._legacy_recurrence_template(leaf_expense."id"),
@@ -230,20 +342,24 @@ JOIN "_legacy_recurrence_chain" leaf_chain
 JOIN "RecurringExpenseLink" leaf_link ON leaf_link."id" = leaf_chain."linkId"
 JOIN "Expense" leaf_expense ON leaf_expense."id" = leaf_link."currentFrameExpenseId"
 JOIN "Ledger" l ON l."id" = leaf_expense."ledgerId"
-JOIN "Group" g ON g."ledgerId" = l."id"
+LEFT JOIN "Group" g ON g."ledgerId" = l."id"
 JOIN (
   SELECT "rootLinkId", COUNT(*)::INTEGER AS "occurrenceCount"
   FROM "_legacy_recurrence_chain"
   GROUP BY "rootLinkId"
 ) chain_count ON chain_count."rootLinkId" = roots."rootLinkId"
+LEFT JOIN "_legacy_recurrence_edges" leaf_edge
+  ON leaf_edge."linkId" = leaf_link."id"
+ AND leaf_edge."nextLinkId" IS NOT NULL
 LEFT JOIN LATERAL (
   SELECT terminal."id"
   FROM "Expense" terminal
   WHERE terminal."ledgerId" = leaf_link."ledgerId"
     AND terminal."createdAt" = leaf_link."nextExpenseCreatedAt"
+    AND terminal."expenseDate" = leaf_link."nextExpenseDate"::DATE
   ORDER BY terminal."id"
   LIMIT 1
-) terminal_expense ON TRUE
+) terminal_expense ON leaf_link."nextExpenseCreatedAt" IS NOT NULL AND leaf_edge."linkId" IS NULL
 LEFT JOIN LATERAL (
   SELECT CASE
     WHEN a."actorType" = 'ACCOUNT' AND account_actor."id" IS NOT NULL
@@ -266,15 +382,11 @@ LEFT JOIN LATERAL (
   ORDER BY a."time", a."id"
   LIMIT 1
 ) creator ON TRUE
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM "_legacy_recurrence_edges" terminal_edge
-  WHERE terminal_edge."linkId" = leaf_link."id"
-  AND terminal_edge."nextLinkId" IS NOT NULL
-);
+WHERE leaf_edge."linkId" IS NULL;
 
 -- Imported/raw recurring expenses may predate the link writer. Preserve each
 -- such expense as a standalone series instead of silently dropping its rule.
+-- Advance overdue standalones past today so reconcile does not flood catch-up.
 INSERT INTO "RecurringExpenseSeries" (
   "id", "ledgerId", "creatorAccountId", "frequency", "interval",
   "anchorDate", "anchorSequence", "nextOccurrenceDate", "nextOccurrenceOrdinal", "endType", "occurrenceLimit",
@@ -293,25 +405,27 @@ SELECT
   1,
   e."expenseDate",
   1,
-  CASE e."recurrenceRule"::TEXT
-    WHEN 'DAILY' THEN (e."expenseDate" + INTERVAL '1 day')::DATE
-    WHEN 'WEEKLY' THEN (e."expenseDate" + INTERVAL '7 days')::DATE
-    WHEN 'MONTHLY' THEN (e."expenseDate" + INTERVAL '1 month')::DATE
-    ELSE (e."expenseDate" + INTERVAL '1 year')::DATE
-  END,
-  2,
+  schedule.next_date,
+  schedule.next_ordinal,
   'INDEFINITE'::"RecurrenceEndType",
   NULL,
   NULL,
   1,
-  CASE WHEN g."archived" THEN 'PAUSED' ELSE 'ACTIVE' END::"RecurringExpenseSeriesStatus",
+  CASE
+    WHEN g."id" IS NULL OR g."archived" THEN 'PAUSED'
+    ELSE 'ACTIVE'
+  END::"RecurringExpenseSeriesStatus",
   pg_temp._legacy_recurrence_template(e."id"),
   1,
   e."createdAt",
   CURRENT_TIMESTAMP
 FROM "Expense" e
 JOIN "Ledger" l ON l."id" = e."ledgerId"
-JOIN "Group" g ON g."ledgerId" = l."id"
+LEFT JOIN "Group" g ON g."ledgerId" = l."id"
+JOIN LATERAL pg_temp._legacy_next_after_today(
+  e."recurrenceRule"::TEXT,
+  e."expenseDate"
+) schedule ON TRUE
 LEFT JOIN LATERAL (
   SELECT CASE
     WHEN a."actorType" = 'ACCOUNT' AND account_actor."id" IS NOT NULL
@@ -340,9 +454,8 @@ WHERE e."recurrenceRule" <> 'NONE'
   )
   AND NOT EXISTS (
     SELECT 1
-    FROM "RecurringExpenseLink" closed_link
-    WHERE closed_link."ledgerId" = e."ledgerId"
-      AND closed_link."nextExpenseCreatedAt" = e."createdAt"
+    FROM "_legacy_recurrence_edges" edge
+    WHERE edge."nextExpenseId" = e."id"
   );
 
 UPDATE "Expense" e
@@ -358,8 +471,7 @@ WHERE e."id" = (
 
 -- A link can be closed even after the following expense's link was removed.
 -- Recover that final expense as the next sequence so history/navigation is not
--- truncated. The validation above rejects timestamp collisions before this
--- update runs.
+-- truncated. Prefer expenseDate alignment when createdAt collided.
 UPDATE "Expense" terminal
 SET
   "recurringSeriesId" = md5('recurring-series:' || c."rootLinkId"),
@@ -374,7 +486,9 @@ WHERE leaf_link."nextExpenseCreatedAt" IS NOT NULL
       AND edge."nextLinkId" IS NOT NULL
   )
   AND terminal."ledgerId" = leaf_link."ledgerId"
-  AND terminal."createdAt" = leaf_link."nextExpenseCreatedAt";
+  AND terminal."createdAt" = leaf_link."nextExpenseCreatedAt"
+  AND terminal."expenseDate" = leaf_link."nextExpenseDate"::DATE
+  AND terminal."recurringSeriesId" IS NULL;
 
 UPDATE "Expense" e
 SET
@@ -384,9 +498,8 @@ WHERE e."recurrenceRule" <> 'NONE'
   AND e."recurringSeriesId" IS NULL
   AND NOT EXISTS (
     SELECT 1
-    FROM "RecurringExpenseLink" closed_link
-    WHERE closed_link."ledgerId" = e."ledgerId"
-      AND closed_link."nextExpenseCreatedAt" = e."createdAt"
+    FROM "_legacy_recurrence_edges" edge
+    WHERE edge."nextExpenseId" = e."id"
   );
 
 DO $$
@@ -404,6 +517,24 @@ BEGIN
     WHERE "recurrenceRule" <> 'NONE' AND "recurringSeriesId" IS NULL
   ) THEN
     RAISE EXCEPTION 'legacy recurrence migration left a recurring expense unassigned';
+  END IF;
+
+  -- ACTIVE schedules must be materializable: stored next date must equal the
+  -- anchored ordinal math the worker will validate.
+  IF EXISTS (
+    SELECT 1
+    FROM "RecurringExpenseSeries" s
+    JOIN "Expense" leaf
+      ON leaf."recurringSeriesId" = s."id"
+     AND leaf."recurrenceSequence" = s."anchorSequence"
+    WHERE s."status" = 'ACTIVE'
+      AND s."nextOccurrenceDate" IS DISTINCT FROM pg_temp._legacy_occurrence_date(
+        s."frequency"::TEXT,
+        s."anchorDate",
+        s."nextOccurrenceOrdinal"
+      )
+  ) THEN
+    RAISE EXCEPTION 'legacy recurrence migration left an ACTIVE series with inconsistent nextOccurrenceDate';
   END IF;
 END $$;
 

@@ -2,7 +2,7 @@ services:
   # Start with `bun dev:up`, stop with `bun dev:down`, reset data with `rm -rf storage/`.
 
   postgres:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     container_name: spliit-postgres
     restart: unless-stopped
     environment:
