@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { isPlaceholderEmail } from '@/lib/account'
 import type { AuthAccount } from '@/lib/auth'
 import type { ParticipantMappingState } from '@spliit/domain/import'
 import { useTranslation } from 'react-i18next'
@@ -64,7 +65,11 @@ export function FriendFollowUp({
             >
               <span className="flex items-center gap-2">
                 <span>{f.name}</span>
-                <span className="text-xs text-muted-foreground">{f.email}</span>
+                {!isPlaceholderEmail(f.email) && (
+                  <span className="text-xs text-muted-foreground">
+                    {f.email}
+                  </span>
+                )}
                 {f.isMember && (
                   <span className="text-xs text-muted-foreground">
                     ({t('Groups.Import.Mapping.Row.friendAlreadyMember')})

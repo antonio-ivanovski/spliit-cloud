@@ -183,7 +183,7 @@ export async function revokeInvitation(opts: {
     hasUnsettledBalance =
       (balances[invitation.ledgerParticipantId]?.total ?? 0) !== 0
   }
-  if (hasUnsettledBalance && opts.settleBalances !== true) {
+  if (hasUnsettledBalance && opts.settleBalances === undefined) {
     throw new RevokeInvitationPreconditionError(
       'unsettledBalance',
       'Invitation has unsettled balances. Settle them before revoking.',
@@ -236,16 +236,10 @@ export async function revokeInvitation(opts: {
       invitation.ledgerParticipantId &&
       invitation.status === GroupInvitationStatus.PENDING
     ) {
-      const inUse = await tx.expensePaidFor.count({
-        where: {
-          ledgerParticipantId: invitation.ledgerParticipantId,
-        },
+      await tx.ledgerParticipant.update({
+        where: { id: invitation.ledgerParticipantId },
+        data: { removedAt: new Date() },
       })
-      if (inUse === 0) {
-        await tx.ledgerParticipant
-          .delete({ where: { id: invitation.ledgerParticipantId } })
-          .catch(() => undefined)
-      }
     }
 
     return { updated, settlementActivities, activity }

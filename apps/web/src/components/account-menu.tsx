@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { isPlaceholderEmail } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
@@ -46,9 +47,11 @@ export function AccountMenu() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col gap-0.5">
           <span className="font-medium">{account.name}</span>
-          <span className="text-xs font-normal text-muted-foreground">
-            {account.email}
-          </span>
+          {!isPlaceholderEmail(account.email) && (
+            <span className="text-xs font-normal text-muted-foreground">
+              {account.email}
+            </span>
+          )}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

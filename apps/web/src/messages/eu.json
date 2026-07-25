@@ -890,6 +890,7 @@
   "Balances": {
     "title": "Saldoak",
     "description": "Ikusi parte-hartzaile bakoitzaren saldo garbia.",
+    "removedBadge": "Kenduta",
     "Reimbursements": {
       "title": "Iradokitako zor-kitapenaren ordainketak",
       "description": "Erabili ordainketa hauek saldoak ahalik eta transferentzia gutxienekin kitatzeko.",
@@ -904,7 +905,8 @@
       "original": "Jatorrizkoa",
       "title": "Aukeratu nola ikusi saldoak",
       "groupDescription": "Bihurtu gastu guztiak {currency} monetan ikuspegi bakarra lortzeko.",
-      "originalDescription": "Mantendu gastu bakoitza sartu zen monetan."
+      "originalDescription": "Mantendu gastu bakoitza sartu zen monetan.",
+      "originalNote": "Ordainketa konpentsazioak normalean taldeko monetan erregistratzen dira. Jatorrizko monetako ikuspegi hau monetako liburu kontu bereizia da, beraz saldoak konpentsatugabeak dirudite hemen taldeko monetako plana konpentsatuta egon arren. Konpentsatzeko, hobe da taldeko monetako ikuspegia."
     },
     "direction": {
       "toReceive": "Jasotzeko",
@@ -1471,25 +1473,12 @@
       "revokeButton": "Ezeztatu gonbidapena",
       "revoked": "Gonbidapena ezeztatu da.",
       "created": "Gonbidapena bidali zaio {email}-i.",
-      "revokeDialog": {
-        "title": "Gonbidapena ezeztatu?",
-        "description": "{email}(e)ri bidalitako gonbidapena ezeztatu? Oraindik ez dute onartu.",
-        "cancel": "Utzi",
-        "confirm": "Ezeztatu",
-        "unsettled": {
-          "toast": "Gonbidapena ezeztatuta, saldoak kitatuta.",
-          "title": "Kitatu saldoak ezeztatu aurretik",
-          "description": "{email}(e)ri bidalitako gonbidapena ezeztatu? Lehenik saldoak kitatu behar dira.",
-          "warning": {
-            "title": "Gonbidapen honek kitatu gabeko saldoak ditu",
-            "description": "Hautatu beheko aukera gonbidatu honen saldo bakoitzerako zor-kitapenaren ordainketa bat sortzeko. Gonbidapena saldo horiek kitatu ondoren soilik ezezta daiteke."
-          },
-          "checkbox": "Kitatu gonbidatuaren saldoak ezeztatu aurretik"
-        }
-      },
       "link": {
         "type": "Behin erabil daitekeen esteka",
         "fallbackLabel": "Gonbidapen-esteka"
+      },
+      "email": {
+        "type": "Posta bidezko gonbidapena"
       }
     },
     "changeRoleAria": "Aldatu rola",
@@ -1509,7 +1498,13 @@
           "title": "Kide honek kitatu gabeko saldoak ditu",
           "description": "Kidea saldoak kitatu gabe kentzen baduzu, saldo horiek taldean geratuko dira behin betiko. Hautatu beheko aukera kide honen saldo bakoitzerako zor-kitapenaren ordainketa bat sortzeko, edo kendu kidea eta kitatu saldoak eskuz."
         },
-        "checkbox": "Kitatu kide honen saldoak kidea kendu aurretik"
+        "checkbox": "Kitatu kide honen saldoak kidea kendu aurretik",
+        "previewWillCreate_one": "{count} ordainketa konpentsazio sortuko da",
+        "previewPays": "{name} ordainduko du",
+        "previewReceives": "{name} jasoko du",
+        "previewTo": "{name}(r)i",
+        "previewFrom": "{name}(t)ik",
+        "previewWillCreate_other": "{count} ordainketa konpentsazio sortuko dira"
       }
     },
     "leave": {
@@ -1563,6 +1558,11 @@
         "pendingGroup": "Gonbidapen zainak",
         "pendingSuffix": "(zain)"
       }
+    },
+    "dropdown": {
+      "remove": "Kendu",
+      "changeRole": "Aldatu rola",
+      "revoke": "Baliogabetu gonbidapena"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1768,9 @@
       "imported_one": "{participant} parte-hartzaileak {count} gastu inportatu du",
       "imported_many": "{participant}(e)k {count} gastu inportatu ditu",
       "imported_other": "{participant}(e)k {count} gastu inportatu ditu"
+    },
+    "participant": {
+      "removed": "{participant}(e)k {target} taldetik kendu du"
     }
   },
   "OfflineBanner": {

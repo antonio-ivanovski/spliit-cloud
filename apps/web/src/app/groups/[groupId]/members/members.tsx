@@ -15,8 +15,7 @@ import { LeaveGroupDialog } from './leave-group-dialog'
 import { MemberListCard } from './member-list-card'
 import { useMembersDialogs } from './members-hooks'
 import { PendingInvitationsCard } from './pending-invitations-card'
-import { RemoveMemberDialog } from './remove-member-dialog'
-import { RevokeInvitationDialog } from './revoke-invitation-dialog'
+import { RemoveParticipantDialog } from './remove-participant-dialog'
 import { UnlinkedParticipantsSection } from './unlinked-participants-section'
 
 export default function GroupMembers() {
@@ -46,21 +45,14 @@ function GroupMembersBody() {
     invitationsQuery,
     createMutation,
     createLinkMutation,
-    revokeMutation,
     updateRoleMutation,
-    removeMemberMutation,
-    memberPendingRemove,
-    setMemberPendingRemove,
-    removePreviewQuery,
-    removeSettleChecked,
-    setRemoveSettleChecked,
-    confirmRemove,
-    invitationPendingRevoke,
-    setInvitationPendingRevoke,
-    revokePreviewQuery,
-    revokeSettleChecked,
-    setRevokeSettleChecked,
-    confirmRevoke,
+    removeParticipantMutation,
+    participantPendingRemove,
+    setParticipantPendingRemove,
+    participantRemovePreviewQuery,
+    participantRemoveSettleChecked,
+    setParticipantRemoveSettleChecked,
+    confirmParticipantRemove,
     leaveDialogOpen,
     setLeaveDialogOpen,
     promoteMemberId,
@@ -83,11 +75,6 @@ function GroupMembersBody() {
     MEMBER: t('role.member'),
   } as const
 
-  // When the caller is the only active member of the group, the
-  // dedicated delete flow on the settings page is the single entry
-  // point for getting out of the group. The "Leave group" card is
-  // still rendered so the section structure stays consistent, but
-  // the action is disabled with a note explaining the alternative.
   const isOnlyActiveMember = !isArchived && listMembers.length <= 1
 
   return (
@@ -99,7 +86,7 @@ function GroupMembersBody() {
         currentMemberId={currentMember?.id ?? null}
         canManage={canManage}
         updateRoleMutation={updateRoleMutation}
-        onRemove={(member) => setMemberPendingRemove(member)}
+        onRemove={(participant) => setParticipantPendingRemove(participant)}
         onUpdateRole={(memberId, role) =>
           updateRoleMutation.mutate({ groupId, memberId, role })
         }
@@ -107,7 +94,11 @@ function GroupMembersBody() {
         locale={locale}
       />
 
-      <UnlinkedParticipantsSection groupId={groupId} canManage={canManage} />
+      <UnlinkedParticipantsSection
+        groupId={groupId}
+        canManage={canManage}
+        onRemove={(participant) => setParticipantPendingRemove(participant)}
+      />
 
       {!canManage && (
         <p className="text-sm text-muted-foreground">
@@ -133,51 +124,38 @@ function GroupMembersBody() {
               })
             }}
             onGenerateLink={async (values) => {
-              const data = await createLinkMutation.mutateAsync({
+              return createLinkMutation.mutateAsync({
                 groupId,
                 role: values.role,
                 temporaryName: values.temporaryName,
               })
-              return data
             }}
           />
 
           <PendingInvitationsCard
             invitations={invitations}
             isLoading={invitationsQuery.isLoading}
-            revokeMutation={revokeMutation}
-            onRevoke={(inv) => setInvitationPendingRevoke(inv)}
-            roleLabels={roleLabels}
+            onRevoke={(inv) =>
+              setParticipantPendingRemove({
+                ledgerParticipantId: inv.ledgerParticipantId,
+                name: inv.label,
+              })
+            }
             locale={locale}
           />
         </>
       )}
 
-      <RemoveMemberDialog
-        memberPendingRemove={memberPendingRemove}
-        removePreviewQuery={removePreviewQuery}
-        removeSettleChecked={removeSettleChecked}
-        removeMemberMutation={removeMemberMutation}
+      <RemoveParticipantDialog
+        participantPendingRemove={participantPendingRemove}
+        removePreviewQuery={participantRemovePreviewQuery}
+        participantRemoveSettleChecked={participantRemoveSettleChecked}
+        removeParticipantMutation={removeParticipantMutation}
         onOpenChange={(open) => {
-          if (!open) setMemberPendingRemove(null)
+          if (!open) setParticipantPendingRemove(null)
         }}
-        onConfirmRemove={confirmRemove}
-        onSettleCheckedChange={setRemoveSettleChecked}
-      />
-
-      <RevokeInvitationDialog
-        invitationPendingRevoke={invitationPendingRevoke}
-        revokePreviewQuery={revokePreviewQuery}
-        revokeSettleChecked={revokeSettleChecked}
-        revokeMutation={revokeMutation}
-        onOpenChange={(open) => {
-          if (!open) {
-            setInvitationPendingRevoke(null)
-            setRevokeSettleChecked(false)
-          }
-        }}
-        onConfirmRevoke={confirmRevoke}
-        onSettleCheckedChange={setRevokeSettleChecked}
+        onConfirmRemove={confirmParticipantRemove}
+        onSettleCheckedChange={setParticipantRemoveSettleChecked}
       />
 
       {!isArchived && currentMember && (

@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { isPlaceholderEmail } from '@/lib/account'
+import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { badgeVariantForRole, formatDate, roleLabel } from './members-hooks'
 
@@ -28,6 +30,7 @@ type Member = {
     image?: string | null
   } | null
   role: 'ADMIN' | 'MEMBER'
+  ledgerParticipantId: string
   joinedAt?: Date | string | null
 }
 
@@ -49,7 +52,7 @@ export function MemberListCard({
   currentMemberId: string | null
   canManage: boolean
   updateRoleMutation: { isPending: boolean }
-  onRemove: (member: { id: string; name: string }) => void
+  onRemove: (participant: { ledgerParticipantId: string; name: string }) => void
   onUpdateRole: (memberId: string, role: 'ADMIN' | 'MEMBER') => void
   roleLabels: { ADMIN: string; MEMBER: string }
   locale: string
@@ -75,13 +78,12 @@ export function MemberListCard({
             {members.map((member) => {
               const isMe = !!accountId && member.account?.id === accountId
               const displayName = member.account?.name || t('unknownMember')
-              const isSelfRow =
-                member.id !== undefined && member.id === currentMemberId
+              const isSelfRow = member.id === currentMemberId
               const showAdminControls = canManage && !isSelfRow
               return (
                 <li
                   key={member.id}
-                  className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                  className="flex flex-col gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between"
                 >
                   {member.account && (
                     <AccountAvatar
@@ -107,11 +109,12 @@ export function MemberListCard({
                         {roleLabel(member.role, roleLabels)}
                       </Badge>
                     </div>
-                    {member.account?.email && (
-                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                        {member.account.email}
-                      </p>
-                    )}
+                    {member.account?.email &&
+                      !isPlaceholderEmail(member.account.email) && (
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                          {member.account.email}
+                        </p>
+                      )}
                     {member.joinedAt && (
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {t('joinedOn', {
@@ -120,17 +123,17 @@ export function MemberListCard({
                       </p>
                     )}
                   </div>
-                  {showAdminControls && member.id && (
-                    <div className="flex shrink-0 items-center gap-2">
+                  {showAdminControls && (
+                    <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
                       <Select
                         value={member.role}
                         disabled={updateRoleMutation.isPending}
                         onValueChange={(value) =>
-                          onUpdateRole(member.id!, value as 'ADMIN' | 'MEMBER')
+                          onUpdateRole(member.id, value as 'ADMIN' | 'MEMBER')
                         }
                       >
                         <SelectTrigger
-                          className="w-32"
+                          className="w-32 shrink-0"
                           aria-label={t('changeRoleAria')}
                         >
                           <SelectValue />
@@ -145,14 +148,17 @@ export function MemberListCard({
                         </SelectContent>
                       </Select>
                       <Button
-                        variant="ghost"
+                        variant="destructive"
                         size="sm"
-                        className="text-destructive"
-                        disabled={false}
+                        className="h-9 shrink-0 gap-1.5 px-3"
                         onClick={() =>
-                          onRemove({ id: member.id!, name: displayName })
+                          onRemove({
+                            ledgerParticipantId: member.ledgerParticipantId,
+                            name: displayName,
+                          })
                         }
                       >
+                        <Trash2 className="size-4" aria-hidden="true" />
                         {t('remove')}
                       </Button>
                     </div>

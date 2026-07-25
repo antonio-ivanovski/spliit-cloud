@@ -8,8 +8,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { isPlaceholderEmail } from '@/lib/account'
+import { Ban } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { formatDate, roleLabel } from './members-hooks'
+import { formatDate } from './members-hooks'
 
 type Invitation = {
   id: string
@@ -19,21 +21,18 @@ type Invitation = {
   temporaryName: string | null
   status: string
   createdAt: Date | string | null
+  ledgerParticipantId: string | null
 }
 
 export function PendingInvitationsCard({
   invitations,
   isLoading,
-  revokeMutation,
   onRevoke,
-  roleLabels,
   locale,
 }: {
   invitations: Invitation[]
   isLoading: boolean
-  revokeMutation: { isPending: boolean }
-  onRevoke: (invitation: { id: string; email: string; label: string }) => void
-  roleLabels: { ADMIN: string; MEMBER: string }
+  onRevoke: (invitation: { ledgerParticipantId: string; label: string }) => void
   locale: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
@@ -61,27 +60,25 @@ export function PendingInvitationsCard({
               const label = isLink
                 ? (invitation.temporaryName ??
                   t('invitations.link.fallbackLabel'))
-                : (invitation.temporaryName ?? invitation.email)
+                : (invitation.temporaryName ??
+                  (isPlaceholderEmail(invitation.email)
+                    ? t('invitations.link.fallbackLabel')
+                    : invitation.email))
+              const ledgerParticipantId = invitation.ledgerParticipantId
               return (
                 <li
                   key={invitation.id}
-                  className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                  className="flex flex-col gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-medium text-foreground truncate">
                         {label}
                       </span>
-                      <Badge variant="secondary" className="shrink-0">
-                        {roleLabel(invitation.role, roleLabels)}
-                      </Badge>
-                      {isLink && (
-                        <Badge variant="outline" className="shrink-0">
-                          {t('invitations.link.type')}
-                        </Badge>
-                      )}
                       <Badge variant="outline" className="shrink-0">
-                        {invitation.status}
+                        {isLink
+                          ? t('invitations.link.type')
+                          : t('invitations.email.type')}
                       </Badge>
                     </div>
                     {invitation.createdAt && (
@@ -92,22 +89,18 @@ export function PendingInvitationsCard({
                       </p>
                     )}
                   </div>
-                  {invitation.status === 'PENDING' && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-destructive shrink-0"
-                      disabled={revokeMutation.isPending}
-                      onClick={() =>
-                        onRevoke({
-                          id: invitation.id,
-                          email: invitation.email,
-                          label,
-                        })
-                      }
-                    >
-                      {t('invitations.revokeButton')}
-                    </Button>
+                  {invitation.status === 'PENDING' && ledgerParticipantId && (
+                    <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="h-9 shrink-0 gap-1.5 px-3"
+                        onClick={() => onRevoke({ ledgerParticipantId, label })}
+                      >
+                        <Ban className="size-4" aria-hidden="true" />
+                        {t('invitations.revokeButton')}
+                      </Button>
+                    </div>
                   )}
                 </li>
               )

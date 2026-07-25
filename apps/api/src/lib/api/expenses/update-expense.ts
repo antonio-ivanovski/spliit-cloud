@@ -74,6 +74,7 @@ export async function updateExpense(
   const participants = await prisma.ledgerParticipant.findMany({
     where: {
       ledgerId: group.ledgerId,
+      removedAt: null,
       OR: [
         { groupMemberId: { not: null } },
         { invitations: { some: { status: 'PENDING' } } },

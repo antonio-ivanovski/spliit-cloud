@@ -890,6 +890,7 @@
   "Balances": {
     "title": "Balanç",
     "description": "Consulta el saldo net de cada participant.",
+    "removedBadge": "Eliminat",
     "Reimbursements": {
       "title": "Pagaments de liquidació suggerits",
       "description": "Fes servir aquests pagaments per liquidar els saldos amb el mínim de transferències.",
@@ -904,7 +905,8 @@
       "original": "Original",
       "title": "Tria com veure els saldos",
       "groupDescription": "Converteix totes les despeses a {currency} per a una vista combinada.",
-      "originalDescription": "Mantén cada despesa en la moneda en què es va introduir."
+      "originalDescription": "Mantén cada despesa en la moneda en què es va introduir.",
+      "originalNote": "Els pagaments de liquidació normalment es registren en la moneda del grup. Aquesta vista en moneda original és un llibre major per moneda independent, de manera que els saldos poden semblar pendents aquí fins i tot quan el pla en moneda del grup està liquidat. Preferiu la vista en moneda del grup per liquidar."
     },
     "direction": {
       "toReceive": "Per rebre",
@@ -1471,25 +1473,12 @@
       "revokeButton": "Revocar invitació",
       "revoked": "Invitació revocada.",
       "created": "Invitació enviada a {email}.",
-      "revokeDialog": {
-        "title": "Revocar invitació?",
-        "description": "Revocar la invitació a {email}? Encara no l'han acceptat.",
-        "cancel": "Cancel·lar",
-        "confirm": "Revocar",
-        "unsettled": {
-          "toast": "Invitació revocada, saldos liquidats.",
-          "title": "Liquidar saldos abans de revocar",
-          "description": "Revocar la invitació a {email}? Cal liquidar primer els saldos.",
-          "warning": {
-            "title": "Aquesta invitació té saldos pendents",
-            "description": "Selecciona l’opció següent per crear un pagament de liquidació per cada saldo relacionat amb aquesta persona convidada. Només podràs revocar la invitació quan s’hagin liquidat aquests saldos."
-          },
-          "checkbox": "Liquidar els saldos del convidat abans de revocar"
-        }
-      },
       "link": {
         "type": "Enllaç d'un sol ús",
         "fallbackLabel": "Enllaç d'invitació"
+      },
+      "email": {
+        "type": "Invitació per correu"
       }
     },
     "changeRoleAria": "Canvia el rol",
@@ -1509,7 +1498,14 @@
           "title": "Aquest membre té saldos pendents",
           "description": "Si el suprimeixes sense liquidar, aquests saldos quedaran al grup indefinidament. Selecciona l’opció següent per crear un pagament de liquidació per cada saldo relacionat amb aquest membre, o suprimeix-lo i liquida els saldos manualment."
         },
-        "checkbox": "Liquida els saldos d’aquest membre abans de suprimir-lo"
+        "checkbox": "Liquida els saldos d’aquest membre abans de suprimir-lo",
+        "previewWillCreate_one": "Es crearà {count} pagament de liquidació",
+        "previewPays": "{name} pagarà",
+        "previewReceives": "{name} rebrà",
+        "previewTo": "a {name}",
+        "previewFrom": "de {name}",
+        "previewWillCreate_other": "Es crearan {count} pagaments de liquidació",
+        "previewWillCreate_many": "Es crearan {count} pagaments de liquidació"
       }
     },
     "leave": {
@@ -1563,6 +1559,11 @@
         "pendingGroup": "Invitacions pendents",
         "pendingSuffix": "(pendent)"
       }
+    },
+    "dropdown": {
+      "remove": "Eliminar",
+      "changeRole": "Canvia el rol",
+      "revoke": "Revoca la invitació"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1769,9 @@
       "imported_one": "{participant} ha importat {count} despesa",
       "imported_many": "{participant} ha importat {count} despeses",
       "imported_other": "{participant} ha importat {count} despeses"
+    },
+    "participant": {
+      "removed": "{participant} ha eliminat {target} del grup"
     }
   },
   "OfflineBanner": {

@@ -890,6 +890,7 @@
   "Balances": {
     "title": "Saldos",
     "description": "Veja o saldo líquido de cada participante.",
+    "removedBadge": "Removido",
     "Reimbursements": {
       "title": "Pagamentos de acerto sugeridos",
       "description": "Use estes pagamentos para acertar os saldos com o menor número possível de transferências.",
@@ -904,7 +905,8 @@
       "original": "Original",
       "title": "Escolha como ver os saldos",
       "groupDescription": "Converta todas as despesas para {currency} para uma visão combinada.",
-      "originalDescription": "Mantenha cada despesa na moeda em que foi inserida."
+      "originalDescription": "Mantenha cada despesa na moeda em que foi inserida.",
+      "originalNote": "Os pagamentos de acerto geralmente são registrados na moeda do grupo. Esta visualização em moeda original é um razão separado por moeda, então os saldos podem parecer pendentes aqui mesmo quando o plano na moeda do grupo está quitado. Prefira a visualização em moeda do grupo para acertar."
     },
     "direction": {
       "toReceive": "A receber",
@@ -1471,25 +1473,12 @@
       "revokeButton": "Revogar convite",
       "revoked": "Convite revogado.",
       "created": "Convite enviado para {email}.",
-      "revokeDialog": {
-        "title": "Revogar convite?",
-        "description": "Revogar o convite para {email}? Ele ainda não foi aceito.",
-        "cancel": "Cancelar",
-        "confirm": "Revogar",
-        "unsettled": {
-          "toast": "Convite revogado, saldos acertados.",
-          "title": "Liquidar saldos antes de revogar",
-          "description": "Revogar o convite para {email}? Os saldos dele devem ser liquidados primeiro.",
-          "warning": {
-            "title": "Este convite tem saldos pendentes",
-            "description": "Selecione a opção abaixo para criar um pagamento de acerto para cada saldo deste convidado. O convite só poderá ser revogado depois que esses saldos forem acertados."
-          },
-          "checkbox": "Liquidar os saldos do convidado antes de revogar"
-        }
-      },
       "link": {
         "type": "Link de uso único",
         "fallbackLabel": "Link de convite"
+      },
+      "email": {
+        "type": "Convite por e-mail"
       }
     },
     "changeRoleAria": "Alterar função",
@@ -1509,7 +1498,14 @@
           "title": "Este membro tem saldos pendentes",
           "description": "Se você remover este membro sem acertar os saldos, eles permanecerão no grupo por tempo indeterminado. Selecione a opção abaixo para criar um pagamento de acerto para cada saldo deste membro ou remova-o e acerte os saldos manualmente."
         },
-        "checkbox": "Acertar os saldos deste membro antes de removê-lo"
+        "checkbox": "Acertar os saldos deste membro antes de removê-lo",
+        "previewWillCreate_one": "Será criado {count} pagamento de acerto",
+        "previewPays": "{name} pagará",
+        "previewReceives": "{name} receberá",
+        "previewTo": "para {name}",
+        "previewFrom": "de {name}",
+        "previewWillCreate_other": "Serão criados {count} pagamentos de acerto",
+        "previewWillCreate_many": "Serão criados {count} pagamentos de acerto"
       }
     },
     "leave": {
@@ -1563,6 +1559,11 @@
         "pendingGroup": "Convites pendentes",
         "pendingSuffix": "(pendente)"
       }
+    },
+    "dropdown": {
+      "remove": "Remover",
+      "changeRole": "Alterar função",
+      "revoke": "Revogar convite"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1769,9 @@
       "imported_one": "{participant} importou {count} despesa",
       "imported_many": "{participant} importou {count} despesas",
       "imported_other": "{participant} importou {count} despesas"
+    },
+    "participant": {
+      "removed": "{participant} removeu {target} do grupo"
     }
   },
   "OfflineBanner": {

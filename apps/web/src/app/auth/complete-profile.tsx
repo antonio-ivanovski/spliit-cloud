@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { needsDisplayName } from '@/lib/account'
+import { isPlaceholderEmail, needsDisplayName } from '@/lib/account'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { getRouteApi, Navigate, useNavigate } from '@tanstack/react-router'
@@ -93,9 +93,13 @@ export function CompleteProfilePage() {
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          {account.email && (
+          {(account.name || !isPlaceholderEmail(account.email)) && (
             <p className="text-xs text-muted-foreground text-center mb-4">
-              {t('signedInAs', { email: account.email })}
+              {t('signedInAs', {
+                email: !isPlaceholderEmail(account.email)
+                  ? account.email
+                  : account.name,
+              })}
             </p>
           )}
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>

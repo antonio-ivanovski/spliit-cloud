@@ -18,6 +18,7 @@ export const activityTypeSchema = z.enum([
   'MEMBER_LEFT',
   'MEMBER_REMOVED',
   'MEMBER_ROLE_CHANGED',
+  'PARTICIPANT_REMOVED',
 ])
 
 export type ActivityType = z.infer<typeof activityTypeSchema>

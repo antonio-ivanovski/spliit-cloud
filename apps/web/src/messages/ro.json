@@ -890,6 +890,7 @@
   "Balances": {
     "title": "Solduri",
     "description": "Vezi soldul net al fiecărui participant.",
+    "removedBadge": "Eliminat",
     "Reimbursements": {
       "title": "Plăți de decontare sugerate",
       "description": "Folosește aceste plăți pentru a deconta soldurile cu cât mai puține transferuri.",
@@ -904,7 +905,8 @@
       "original": "Original",
       "title": "Alege cum să vizualizezi soldurile",
       "groupDescription": "Convertește toate cheltuielile în {currency} pentru o singură vizualizare.",
-      "originalDescription": "Păstrează fiecare cheltuială în moneda în care a fost introdusă."
+      "originalDescription": "Păstrează fiecare cheltuială în moneda în care a fost introdusă.",
+      "originalNote": "Plățile de decontare sunt de obicei înregistrate în moneda grupului. Această vizualizare în moneda originală este un registru separat pe monedă, astfel că soldurile pot părea neachitate aici chiar și când planul în moneda grupului este decontat. Preferați vizualizarea în moneda grupului pentru decontare."
     },
     "direction": {
       "toReceive": "De primit",
@@ -1471,25 +1473,12 @@
       "revokeButton": "Revocă invitația",
       "revoked": "Invitație revocată.",
       "created": "Invitație trimisă către {email}.",
-      "revokeDialog": {
-        "title": "Revoci invitația?",
-        "description": "Revoci invitația pentru {email}? Nu a acceptat încă.",
-        "cancel": "Anulează",
-        "confirm": "Revocă",
-        "unsettled": {
-          "toast": "Invitație revocată, solduri decontate.",
-          "title": "Decontează soldurile înainte de revocare",
-          "description": "Revoci invitația pentru {email}? Soldurile trebuie decontate mai întâi.",
-          "warning": {
-            "title": "Această invitație are solduri nedecontate",
-            "description": "Selectează opțiunea de mai jos pentru a crea o plată de decontare pentru fiecare sold al acestui invitat. Invitația poate fi revocată numai după decontarea acestor solduri."
-          },
-          "checkbox": "Decontează soldurile invitatului înainte de revocare"
-        }
-      },
       "link": {
         "type": "Link de unică folosință",
         "fallbackLabel": "Link de invitație"
+      },
+      "email": {
+        "type": "Invitație prin e-mail"
       }
     },
     "changeRoleAria": "Schimbă rolul",
@@ -1509,7 +1498,14 @@
           "title": "Acest membru are solduri nedecontate",
           "description": "Dacă elimini acest membru fără decontare, soldurile vor rămâne în grup pe termen nelimitat. Selectează opțiunea de mai jos pentru a crea o plată de decontare pentru fiecare sold al acestui membru sau elimină-l și decontează soldurile manual."
         },
-        "checkbox": "Decontează soldurile acestui membru înainte de eliminare"
+        "checkbox": "Decontează soldurile acestui membru înainte de eliminare",
+        "previewWillCreate_one": "Se va crea {count} plată de decontare",
+        "previewPays": "{name} va plăti",
+        "previewReceives": "{name} va primi",
+        "previewTo": "către {name}",
+        "previewFrom": "de la {name}",
+        "previewWillCreate_other": "Se vor crea {count} plăți de decontare",
+        "previewWillCreate_few": "Se vor crea {count} plăți de decontare"
       }
     },
     "leave": {
@@ -1563,6 +1559,11 @@
         "pendingGroup": "Invitații în așteptare",
         "pendingSuffix": "(în așteptare)"
       }
+    },
+    "dropdown": {
+      "remove": "Elimină",
+      "changeRole": "Schimbă rolul",
+      "revoke": "Revocă invitația"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1769,9 @@
       "imported_one": "{participant} a importat {count} cheltuială",
       "imported_few": "{participant} a importat {count} cheltuieli",
       "imported_other": "{participant} a importat {count} cheltuieli"
+    },
+    "participant": {
+      "removed": "{participant} a eliminat pe {target} din grup"
     }
   },
   "OfflineBanner": {

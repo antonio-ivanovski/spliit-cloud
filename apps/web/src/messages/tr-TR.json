@@ -883,6 +883,7 @@
   "Balances": {
     "title": "Bakiyeler",
     "description": "Her katılımcının net bakiyesini görün.",
+    "removedBadge": "Kaldırıldı",
     "Reimbursements": {
       "title": "Önerilen borç kapatma ödemeleri",
       "description": "Bakiyeleri mümkün olan en az transferle kapatmak için bu ödemeleri kullanın.",
@@ -897,7 +898,8 @@
       "original": "Orijinal",
       "title": "Bakiye görüntüleme şeklini seçin",
       "groupDescription": "Tek bir birleşik görünüm için tüm harcamaları {currency} para birimine çevirin.",
-      "originalDescription": "Her harcamayı girildiği para biriminde tutun."
+      "originalDescription": "Her harcamayı girildiği para biriminde tutun.",
+      "originalNote": "Mahsuplaşma ödemeleri genellikle grup para biriminde kaydedilir. Bu orijinal para birimi görünümü, para birimi başına ayrı bir defterdir; grup para birimindeki plan mahsuplaşmış olsa bile burada bakiyeler mahsuplaşmamış görünebilir. Mahsuplaşma için grup para birimi görünümünü tercih edin."
     },
     "direction": {
       "toReceive": "Alınacak",
@@ -1463,25 +1465,12 @@
       "revokeButton": "Daveti iptal et",
       "revoked": "Davet iptal edildi.",
       "created": "{email} adresine davet gönderildi.",
-      "revokeDialog": {
-        "title": "Davet iptal edilsin mi?",
-        "description": "{email} adresine gönderilen davet iptal edilsin mi? Henüz kabul etmediler.",
-        "cancel": "İptal",
-        "confirm": "İptal et",
-        "unsettled": {
-          "toast": "Davet iptal edildi, bakiyeler kapatıldı.",
-          "title": "İptalden önce bakiyeleri kapat",
-          "description": "{email} adresine gönderilen davet iptal edilsin mi? Bakiyelerin önce kapatılması gerekir.",
-          "warning": {
-            "title": "Bu davetin kapatılmamış bakiyeleri var",
-            "description": "Bu davetliyle ilgili her bakiye için bir borç kapatma ödemesi oluşturmak üzere aşağıdaki seçeneği işaretleyin. Davet ancak bu bakiyeler kapatıldıktan sonra iptal edilebilir."
-          },
-          "checkbox": "İptalden önce davetlinin bakiyelerini kapat"
-        }
-      },
       "link": {
         "type": "Tek kullanımlık bağlantı",
         "fallbackLabel": "Davet bağlantısı"
+      },
+      "email": {
+        "type": "E-posta daveti"
       }
     },
     "changeRoleAria": "Rolü değiştir",
@@ -1501,7 +1490,13 @@
           "title": "Bu üyenin kapatılmamış bakiyeleri var",
           "description": "Bakiyeleri kapatmadan kaldırmak, bu bakiyelerin grupta süresiz kalmasına neden olur. Bu üyeyle ilgili her bakiye için bir borç kapatma ödemesi oluşturmak üzere aşağıdaki seçeneği işaretleyin veya üyeyi kaldırıp bakiyeleri elle kapatın."
         },
-        "checkbox": "Kaldırmadan önce bu üyenin bakiyelerini kapat"
+        "checkbox": "Kaldırmadan önce bu üyenin bakiyelerini kapat",
+        "previewWillCreate_one": "{count} mahsuplaşma ödemesi oluşturulacak",
+        "previewPays": "{name} ödeyecek",
+        "previewReceives": "{name} alacak",
+        "previewTo": "{name} kullanıcısına",
+        "previewFrom": "{name} kullanıcısından",
+        "previewWillCreate_other": "{count} mahsuplaşma ödemesi oluşturulacak"
       }
     },
     "leave": {
@@ -1555,6 +1550,11 @@
         "pendingSuffix": "(bekliyor)"
       },
       "linkButton": "Bağla"
+    },
+    "dropdown": {
+      "remove": "Kaldır",
+      "changeRole": "Rolü değiştir",
+      "revoke": "Daveti iptal et"
     }
   },
   "AccountSettings": {
@@ -1759,6 +1759,9 @@
     "import": {
       "imported_one": "{participant}, {count} masraf aktardı",
       "imported_other": "{participant}, {count} masraf aktardı"
+    },
+    "participant": {
+      "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı"
     }
   },
   "OfflineBanner": {

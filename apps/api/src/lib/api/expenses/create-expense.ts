@@ -38,9 +38,10 @@ export async function createExpense(
 
   const expenseAmount = conversion.ledgerAmountMinor
 
-  const participants = await prisma.ledgerParticipant.findMany({
+  const activeParticipants = await prisma.ledgerParticipant.findMany({
     where: {
       ledgerId,
+      removedAt: null,
       OR: [
         { groupMemberId: { not: null } },
         { invitations: { some: { status: 'PENDING' } } },
@@ -49,7 +50,18 @@ export async function createExpense(
     },
     select: { id: true },
   })
-  const participantIds = new Set(participants.map((p) => p.id))
+  // Settlements may involve soft-removed participants who still appear in
+  // balances. Keep them off new ordinary expenses, but allow reimbursements.
+  const removedParticipants = expense.isReimbursement
+    ? await prisma.ledgerParticipant.findMany({
+        where: { ledgerId, removedAt: { not: null } },
+        select: { id: true },
+      })
+    : []
+  const participantIds = new Set([
+    ...activeParticipants.map((p) => p.id),
+    ...removedParticipants.map((p) => p.id),
+  ])
 
   for (const participantId of [
     ...expense.paidByList.map((p) => p.participant),

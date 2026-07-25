@@ -8,11 +8,13 @@ import { formatCurrency } from '@/lib/utils'
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { CreateReimbursementModal } from './balances/create-reimbursement-modal'
+import { RemovedParticipantBadge } from './balances/removed-participant-badge'
 
 type Participant = {
   id: string
   name: string
   account?: AccountIdentity | null
+  removed?: boolean
 }
 
 type Props = {
@@ -62,11 +64,14 @@ export function ReimbursementList({
             <div className="flex min-w-0 flex-1 flex-col gap-1 items-start sm:flex-row sm:items-center sm:gap-4">
               <div className="flex items-center gap-2 min-w-0">
                 {from && (
-                  <ParticipantAvatar
-                    participant={from}
-                    size="sm"
-                    className="shrink-0"
-                  />
+                  <span className="inline-flex shrink-0 items-center gap-1">
+                    <ParticipantAvatar
+                      participant={from}
+                      size="sm"
+                      className="shrink-0"
+                    />
+                    {from.removed ? <RemovedParticipantBadge /> : null}
+                  </span>
                 )}
                 <span className="min-w-0">
                   <Trans
@@ -78,11 +83,14 @@ export function ReimbursementList({
                   />
                 </span>
                 {to && (
-                  <ParticipantAvatar
-                    participant={to}
-                    size="sm"
-                    className="shrink-0"
-                  />
+                  <span className="inline-flex shrink-0 items-center gap-1">
+                    <ParticipantAvatar
+                      participant={to}
+                      size="sm"
+                      className="shrink-0"
+                    />
+                    {to.removed ? <RemovedParticipantBadge /> : null}
+                  </span>
                 )}
               </div>
               <Button
@@ -115,6 +123,7 @@ export function ReimbursementList({
         reimbursement={selectedReimbursement}
         currency={currency}
         originalCurrencyCode={reimbursementCurrencyCode}
+        participants={participants}
         open={selectedReimbursement !== null}
         onOpenChange={(open) => {
           if (!open) setSelectedReimbursement(null)

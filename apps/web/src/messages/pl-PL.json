@@ -897,6 +897,7 @@
   "Balances": {
     "title": "Salda",
     "description": "Jest to kwota, którą każdy członek zapłacił lub otrzymał.",
+    "removedBadge": "Usunięty",
     "Reimbursements": {
       "title": "Sugerowane płatności rozliczeniowe",
       "description": "Użyj tych płatności, aby rozliczyć salda przy jak najmniejszej liczbie przelewów.",
@@ -911,7 +912,8 @@
       "original": "Oryginalna",
       "title": "Wybierz sposób wyświetlania sald",
       "groupDescription": "Przelicz wszystkie wydatki na {currency}, aby uzyskać jeden zbiorczy widok.",
-      "originalDescription": "Zachowaj oryginalną walutę każdego wydatku."
+      "originalDescription": "Zachowaj oryginalną walutę każdego wydatku.",
+      "originalNote": "Płatności rozliczeniowe są zwykle rejestrowane w walucie grupy. Ten widok w walucie oryginalnej to oddzielna księga dla każdej waluty, więc salda mogą tu wyglądać na nierozliczone, nawet gdy plan w walucie grupy jest rozliczony. Do rozliczania używaj widoku w walucie grupy."
     },
     "direction": {
       "toReceive": "Do otrzymania",
@@ -1479,25 +1481,12 @@
       "revokeButton": "Cofnij zaproszenie",
       "revoked": "Zaproszenie cofnięte.",
       "created": "Zaproszenie wysłane na {email}.",
-      "revokeDialog": {
-        "title": "Odwołać zaproszenie?",
-        "description": "Odwołać zaproszenie dla {email}? Jeszcze nie zostało zaakceptowane.",
-        "cancel": "Anuluj",
-        "confirm": "Odwołaj",
-        "unsettled": {
-          "toast": "Zaproszenie odwołane, salda rozliczone.",
-          "title": "Rozlicz salda przed odwołaniem",
-          "description": "Odwołać zaproszenie dla {email}? Salda muszą najpierw zostać rozliczone.",
-          "warning": {
-            "title": "To zaproszenie ma nierozliczone salda",
-            "description": "Zaznacz opcję poniżej, aby utworzyć po jednej płatności rozliczeniowej dla każdego salda z udziałem zaproszonej osoby. Zaproszenie można odwołać dopiero po rozliczeniu tych sald."
-          },
-          "checkbox": "Rozlicz salda zaproszonego przed odwołaniem"
-        }
-      },
       "link": {
         "type": "Jednorazowy link",
         "fallbackLabel": "Link zaproszenia"
+      },
+      "email": {
+        "type": "Zaproszenie e-mail"
       }
     },
     "changeRoleAria": "Zmień rolę",
@@ -1517,7 +1506,15 @@
           "title": "Ten członek ma nierozliczone salda",
           "description": "Usunięcie bez rozliczenia sprawi, że te salda pozostaną w grupie bezterminowo. Zaznacz opcję poniżej, aby utworzyć po jednej płatności rozliczeniowej dla każdego salda z udziałem tego członka, albo usuń go i rozlicz salda ręcznie."
         },
-        "checkbox": "Rozlicz salda tego członka przed usunięciem"
+        "checkbox": "Rozlicz salda tego członka przed usunięciem",
+        "previewWillCreate_one": "Utworzy {count} płatność rozliczeniową",
+        "previewPays": "{name} zapłaci",
+        "previewReceives": "{name} otrzyma",
+        "previewTo": "dla {name}",
+        "previewFrom": "od {name}",
+        "previewWillCreate_other": "Utworzy {count} płatności rozliczeniowych",
+        "previewWillCreate_few": "Utworzy {count} płatności rozliczeniowe",
+        "previewWillCreate_many": "Utworzy {count} płatności rozliczeniowych"
       }
     },
     "leave": {
@@ -1571,6 +1568,11 @@
         "pendingGroup": "Oczekujące zaproszenia",
         "pendingSuffix": "(oczekujące)"
       }
+    },
+    "dropdown": {
+      "remove": "Usuń",
+      "changeRole": "Zmień rolę",
+      "revoke": "Cofnij zaproszenie"
     }
   },
   "AccountSettings": {
@@ -1777,6 +1779,9 @@
       "imported_few": "Użytkownik {participant} zaimportował {count} wydatki",
       "imported_many": "Użytkownik {participant} zaimportował {count} wydatków",
       "imported_other": "Użytkownik {participant} zaimportował {count} wydatków"
+    },
+    "participant": {
+      "removed": "{participant} usunął {target} z grupy"
     }
   },
   "OfflineBanner": {

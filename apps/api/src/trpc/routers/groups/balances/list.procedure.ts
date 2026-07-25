@@ -57,5 +57,37 @@ export const listGroupBalancesProcedure = protectedProcedure
       group?.ledger.currencyCode,
     )
 
-    return { balances: publicBalances, reimbursements, currencyBalances }
+    // Soft-removed participants stay in expense history (and thus in balance
+    // math) but are excluded from groups.get.participants. Surface them here
+    // so the balances UI can label settlement counterparties correctly.
+    const participantsById = new Map<
+      string,
+      { id: string; name: string; removed: boolean }
+    >()
+    for (const expense of expenses) {
+      for (const share of [...expense.paidByList, ...expense.paidFor]) {
+        const participant = share.participant as {
+          id: string
+          name?: string
+          removed?: boolean
+        }
+        const existing = participantsById.get(participant.id)
+        if (!existing) {
+          participantsById.set(participant.id, {
+            id: participant.id,
+            name: participant.name ?? '',
+            removed: Boolean(participant.removed),
+          })
+        } else if (participant.removed) {
+          existing.removed = true
+        }
+      }
+    }
+
+    return {
+      balances: publicBalances,
+      reimbursements,
+      currencyBalances,
+      participants: Array.from(participantsById.values()),
+    }
   })

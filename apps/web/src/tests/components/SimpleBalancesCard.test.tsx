@@ -148,4 +148,25 @@ describe('SimpleBalancesCard', () => {
       }),
     ).toBeInTheDocument()
   })
+
+  it('renders loading skeletons without crashing when participantCount is 0', () => {
+    expect(() =>
+      render(
+        <SimpleBalancesCard
+          isLoading={true}
+          participantCount={0}
+          currencyDisplay="group"
+          balances={undefined}
+          reimbursements={undefined}
+          currencyBalances={[]}
+          participants={[]}
+          groupCurrency={undefined}
+          groupId="group-1"
+        />,
+      ),
+    ).not.toThrow()
+
+    const skeletons = document.querySelectorAll('.animate-pulse')
+    expect(skeletons.length).toBeGreaterThan(0)
+  })
 })

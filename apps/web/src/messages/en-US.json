@@ -1226,6 +1226,7 @@
   "Balances": {
     "title": "Balances",
     "description": "See each participant’s net balance.",
+    "removedBadge": "Removed",
     "Reimbursements": {
       "title": "Suggested settlement payments",
       "description": "Use these payments to settle balances with as few transfers as possible.",
@@ -1240,7 +1241,8 @@
       "original": "Original",
       "title": "Choose how to view balances",
       "groupDescription": "Convert all expenses to {currency} for one combined view.",
-      "originalDescription": "Keep each expense in the currency it was entered in."
+      "originalDescription": "Keep each expense in the currency it was entered in.",
+      "originalNote": "Settlement payments are usually recorded in the group currency. This original-currency view is a separate per-currency ledger, so balances can look unsettled here even when the group-currency plan is settled. Prefer the group currency view when settling."
     },
     "view": {
       "label": "View",
@@ -1663,22 +1665,32 @@
     "joinedOn": "Joined {date}",
     "changeRoleAria": "Change role",
     "remove": "Remove",
-    "removed": "Member removed.",
+    "removed": "Participant removed.",
     "roleUpdated": "Role updated to {role}.",
     "removeDialog": {
-      "title": "Remove member?",
-      "description": "Remove {name} from this group? Their past expenses stay in the ledger but they will no longer have access.",
+      "title": "Remove participant?",
+      "description": "Remove {name} from this group? Their past expenses stay in the ledger but they will no longer appear in the members list or new expenses.",
       "cancel": "Cancel",
       "confirm": "Remove",
       "unsettled": {
-        "title": "Remove member with unsettled balance?",
+        "title": "Remove participant with unsettled balance?",
         "description": "Remove {name} from this group? They have unsettled balances — tick the box below to settle them automatically before removing.",
         "warning": {
-          "title": "This member has unsettled balances",
-          "description": "Removing without settling will leave these balances in the group indefinitely. Select the option below to create one settlement payment for each balance involving this member, or remove them and settle the balances manually."
+          "title": "This participant has unsettled balances",
+          "description": "Removing without settling will leave these balances in the group indefinitely. Select the option below to create one settlement payment for each balance involving this participant, or remove them and settle the balances manually."
         },
-        "toast": "Member removed, balances settled.",
-        "checkbox": "Settle this member’s balances before removing"
+        "toast": "Participant removed, balances settled.",
+        "checkbox": "Settle this participant’s balances before removing",
+        "previewWillCreate_one": "Will create {count} settlement payment",
+        "previewPays": "{name} will pay",
+        "previewReceives": "{name} will receive",
+        "previewTo": "to {name}",
+        "previewFrom": "from {name}",
+        "previewWillCreate_other": "Will create {count} settlement payments",
+        "previewWillCreate_zero": "Will create {count} settlement payments",
+        "previewWillCreate_two": "Will create {count} settlement payments",
+        "previewWillCreate_few": "Will create {count} settlement payments",
+        "previewWillCreate_many": "Will create {count} settlement payments"
       }
     },
     "noManagePermission": "Only admins can invite, revoke, or manage group members.",
@@ -1728,25 +1740,12 @@
       "revokeButton": "Revoke invitation",
       "revoked": "Invitation revoked.",
       "created": "Invitation sent to {email}.",
-      "revokeDialog": {
-        "title": "Revoke invitation?",
-        "description": "Revoke the invitation to {email}? They have not accepted yet.",
-        "cancel": "Cancel",
-        "confirm": "Revoke",
-        "unsettled": {
-          "title": "Settle balances before revoking",
-          "description": "Revoke the invitation to {email}? Their balances must be settled first.",
-          "warning": {
-            "title": "This invitation has unsettled balances",
-            "description": "Select the option below to create one settlement payment for each balance involving this invitee. The invitation can only be revoked after these balances are settled."
-          },
-          "toast": "Invitation revoked, balances settled.",
-          "checkbox": "Settle the invitee's balances before revoking"
-        }
-      },
       "link": {
         "type": "Single-use link",
         "fallbackLabel": "Invite link"
+      },
+      "email": {
+        "type": "Email invite"
       }
     },
     "leave": {
@@ -1800,6 +1799,11 @@
         "pendingSuffix": "(pending)"
       },
       "linkButton": "Link"
+    },
+    "dropdown": {
+      "remove": "Remove",
+      "changeRole": "Change role",
+      "revoke": "Revoke invitation"
     }
   },
   "Activities": {
@@ -1848,6 +1852,9 @@
       "revoked": "{participant} revoked invitation to {target}",
       "accepted": "{target} accepted the invitation",
       "declined": "{target} declined the invitation"
+    },
+    "participant": {
+      "removed": "{participant} removed {target} from the group"
     },
     "import": {
       "imported_zero": "{participant} imported {count} expenses",

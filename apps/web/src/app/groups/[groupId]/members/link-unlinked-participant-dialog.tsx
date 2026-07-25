@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
+import { isPlaceholderEmail } from '@/lib/account'
 import { trpc } from '@/trpc/client'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -138,9 +139,11 @@ export function LinkUnlinkedParticipantDialog({
                             <span className="block text-sm font-medium truncate">
                               {candidate.name}
                             </span>
-                            <span className="block text-xs text-muted-foreground truncate">
-                              {candidate.email}
-                            </span>
+                            {!isPlaceholderEmail(candidate.email) && (
+                              <span className="block text-xs text-muted-foreground truncate">
+                                {candidate.email}
+                              </span>
+                            )}
                           </span>
                         </label>
                       )
@@ -179,9 +182,11 @@ export function LinkUnlinkedParticipantDialog({
                                 {t('unlinked.linkDialog.pendingSuffix')}
                               </span>
                             </span>
-                            <span className="block text-xs text-muted-foreground truncate">
-                              {candidate.email}
-                            </span>
+                            {!isPlaceholderEmail(candidate.email) && (
+                              <span className="block text-xs text-muted-foreground truncate">
+                                {candidate.email}
+                              </span>
+                            )}
                           </span>
                         </label>
                       )

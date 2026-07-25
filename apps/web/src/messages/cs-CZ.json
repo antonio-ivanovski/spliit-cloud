@@ -897,6 +897,7 @@
   "Balances": {
     "title": "Zůstatky",
     "description": "Zobrazte čistý zůstatek každého účastníka.",
+    "removedBadge": "Odebrán",
     "Reimbursements": {
       "title": "Navrhované vyrovnávací platby",
       "description": "Těmito platbami vyrovnáte zůstatky s co nejmenším počtem převodů.",
@@ -911,7 +912,8 @@
       "original": "Původní",
       "title": "Zvolte, jak zobrazit zůstatky",
       "groupDescription": "Převeďte všechny výdaje na {currency} pro jednotný pohled.",
-      "originalDescription": "Ponechte každý výdaj v měně, ve které byl zadán."
+      "originalDescription": "Ponechte každý výdaj v měně, ve které byl zadán.",
+      "originalNote": "Vyrovnávací platby se obvykle zaznamenávají ve skupinové měně. Toto zobrazení v původní měně je samostatná účetní kniha pro každou měnu, takže zde mohou zůstat nesplacené zůstatky i tehdy, když je plán ve skupinové měně vyrovnán. Pro vypořádání použijte zobrazení ve skupinové měně."
     },
     "direction": {
       "toReceive": "K obdržení",
@@ -1479,25 +1481,12 @@
       "revokeButton": "Odvolat pozvánku",
       "revoked": "Pozvánka odvolána.",
       "created": "Pozvánka odeslána na {email}.",
-      "revokeDialog": {
-        "title": "Zrušit pozvánku?",
-        "description": "Zrušit pozvánku pro {email}? Ještě nebyla přijata.",
-        "cancel": "Zrušit",
-        "confirm": "Zrušit",
-        "unsettled": {
-          "toast": "Pozvánka zrušena, zůstatky vyrovnány.",
-          "title": "Vyrovnat zůstatky před zrušením",
-          "description": "Zrušit pozvánku pro {email}? Zůstatky je třeba nejprve vyrovnat.",
-          "warning": {
-            "title": "Tato pozvánka má nevyrovnané zůstatky",
-            "description": "Vyberte možnost níže a pro každý zůstatek tohoto pozvaného vytvořte vyrovnávací platbu. Pozvánku lze odvolat až po vyrovnání zůstatků."
-          },
-          "checkbox": "Vyrovnat zůstatky pozvaného před zrušením"
-        }
-      },
       "link": {
         "type": "Jednorázový odkaz",
         "fallbackLabel": "Odkaz pozvánky"
+      },
+      "email": {
+        "type": "E-mailová pozvánka"
       }
     },
     "changeRoleAria": "Změnit roli",
@@ -1517,7 +1506,15 @@
           "title": "Tento člen má nevyrovnané zůstatky",
           "description": "Odebráním bez vyrovnání zůstanou tyto zůstatky ve skupině trvale. Vytvořte vyrovnávací platbu pro každý zůstatek člena, nebo jej odeberte a zůstatky vyrovnejte ručně."
         },
-        "checkbox": "Vyrovnat zůstatky člena před odebráním"
+        "checkbox": "Vyrovnat zůstatky člena před odebráním",
+        "previewWillCreate_one": "Vytvoří se {count} vyrovnávací platba",
+        "previewPays": "{name} zaplatí",
+        "previewReceives": "{name} obdrží",
+        "previewTo": "uživateli {name}",
+        "previewFrom": "od {name}",
+        "previewWillCreate_other": "Vytvoří se {count} vyrovnávacích plateb",
+        "previewWillCreate_few": "Vytvoří se {count} vyrovnávací platby",
+        "previewWillCreate_many": "Vytvoří se {count} vyrovnávacích plateb"
       }
     },
     "leave": {
@@ -1571,6 +1568,11 @@
         "pendingSuffix": "(čeká)"
       },
       "linkButton": "Propojit"
+    },
+    "dropdown": {
+      "remove": "Odebrat",
+      "changeRole": "Změnit roli",
+      "revoke": "Odvolat pozvánku"
     }
   },
   "AccountSettings": {
@@ -1777,6 +1779,9 @@
       "imported_few": "{participant} importoval(a) {count} výdaje",
       "imported_many": "{participant} importoval(a) {count} výdajů",
       "imported_other": "{participant} importoval(a) {count} výdajů"
+    },
+    "participant": {
+      "removed": "{participant} odstranil {target} ze skupiny"
     }
   },
   "OfflineBanner": {

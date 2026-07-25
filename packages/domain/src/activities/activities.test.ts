@@ -33,6 +33,7 @@ describe('activityTypeSchema', () => {
       'MEMBER_LEFT',
       'MEMBER_REMOVED',
       'MEMBER_ROLE_CHANGED',
+      'PARTICIPANT_REMOVED',
     ]
     for (const value of values) {
       expect(activityTypeSchema.safeParse(value).success).toBe(true)

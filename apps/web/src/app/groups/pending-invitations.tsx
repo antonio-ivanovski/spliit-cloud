@@ -11,6 +11,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
+import { isPlaceholderEmail } from '@/lib/account'
 import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Check, X } from 'lucide-react'
@@ -80,7 +81,8 @@ export function PendingInvitations() {
           {invitations.map((invitation) => {
             const inviterName =
               invitation.invitedBy?.name ||
-              invitation.invitedBy?.email ||
+              (!isPlaceholderEmail(invitation.invitedBy?.email) &&
+                invitation.invitedBy?.email) ||
               t('invitations.unknownInviter')
             const groupId = invitation.group?.id
             return (

@@ -876,6 +876,7 @@
   "Balances": {
     "title": "余额",
     "description": "查看每位参与者的净余额。",
+    "removedBadge": "已移除",
     "Reimbursements": {
       "title": "建议的结算付款",
       "description": "使用这些付款，以尽可能少的转账次数结清余额。",
@@ -890,7 +891,8 @@
       "original": "原始",
       "title": "选择余额显示方式",
       "groupDescription": "将所有支出转换为{currency}，以单一合并视图查看。",
-      "originalDescription": "保留每笔支出原本输入的货币。"
+      "originalDescription": "保留每笔支出原本输入的货币。",
+      "originalNote": "结算付款通常以群组货币记录。此原始货币视图是按货币分开的账本，因此即使群组货币的结算方案已完成，这里也可能显示为未结清。结算时建议使用群组货币视图。"
     },
     "direction": {
       "toReceive": "待收款",
@@ -1456,25 +1458,12 @@
       "revokeButton": "撤销邀请",
       "revoked": "邀请已撤销。",
       "created": "邀请已发送至 {email}。",
-      "revokeDialog": {
-        "title": "撤销邀请？",
-        "description": "撤销对{email}的邀请？他们尚未接受。",
-        "cancel": "取消",
-        "confirm": "撤销",
-        "unsettled": {
-          "toast": "邀请已撤销，余额已结算。",
-          "title": "撤销前先结算余额",
-          "description": "撤销对 {email} 的邀请？必须先结算其余额。",
-          "warning": {
-            "title": "此邀请有未结算的余额",
-            "description": "选择下方选项，为与此受邀者相关的每笔余额创建一笔结算付款。只有结清这些余额后才能撤销邀请。"
-          },
-          "checkbox": "撤销前先结算该受邀者的余额"
-        }
-      },
       "link": {
         "type": "一次性链接",
         "fallbackLabel": "邀请链接"
+      },
+      "email": {
+        "type": "邮件邀请"
       }
     },
     "changeRoleAria": "更改角色",
@@ -1494,7 +1483,13 @@
           "title": "此成员有未结算的余额",
           "description": "若不结算便移除，这些余额将一直保留在群组中。请选择下方选项，为与此成员相关的每笔余额创建一笔结算付款；也可以先移除成员，再手动结算余额。"
         },
-        "checkbox": "移除前结清此成员的余额"
+        "checkbox": "移除前结清此成员的余额",
+        "previewWillCreate_one": "将创建 {count} 笔结算付款",
+        "previewPays": "{name} 将支付",
+        "previewReceives": "{name} 将收到",
+        "previewTo": "给 {name}",
+        "previewFrom": "来自 {name}",
+        "previewWillCreate_other": "将创建 {count} 笔结算付款"
       }
     },
     "leave": {
@@ -1548,6 +1543,11 @@
         "pendingSuffix": "(待处理)"
       },
       "linkButton": "关联"
+    },
+    "dropdown": {
+      "remove": "移除",
+      "changeRole": "更改角色",
+      "revoke": "撤销邀请"
     }
   },
   "AccountSettings": {
@@ -1751,6 +1751,9 @@
     "openExpense": "打开支出",
     "import": {
       "imported_other": "{participant} 导入了 {count} 笔支出"
+    },
+    "participant": {
+      "removed": "{participant} 将 {target} 移出了群组"
     }
   },
   "OfflineBanner": {

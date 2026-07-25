@@ -890,6 +890,7 @@
   "Balances": {
     "title": "Équilibres",
     "description": "Consultez le solde net de chaque participant.",
+    "removedBadge": "Supprimé",
     "Reimbursements": {
       "title": "Paiements de règlement suggérés",
       "description": "Utilisez ces paiements pour régler les soldes avec le moins de virements possible.",
@@ -904,7 +905,8 @@
       "original": "Original",
       "title": "Choisissez comment afficher les soldes",
       "groupDescription": "Convertissez toutes les dépenses en {currency} pour une vue combinée.",
-      "originalDescription": "Conservez chaque dépense dans la devise dans laquelle elle a été saisie."
+      "originalDescription": "Conservez chaque dépense dans la devise dans laquelle elle a été saisie.",
+      "originalNote": "Les paiements de règlement sont généralement enregistrés dans la devise du groupe. Cette vue en devise originale est un grand livre distinct par devise : les soldes peuvent sembler impayés ici même lorsque le plan en devise du groupe est réglé. Privilégiez la vue en devise du groupe pour régler."
     },
     "direction": {
       "toReceive": "À recevoir",
@@ -1471,25 +1473,12 @@
       "revokeButton": "Révoquer l'invitation",
       "revoked": "Invitation révoquée.",
       "created": "Invitation envoyée à {email}.",
-      "revokeDialog": {
-        "title": "Révoquer l'invitation ?",
-        "description": "Révoquer l'invitation de {email} ? Il ne l'a pas encore acceptée.",
-        "cancel": "Annuler",
-        "confirm": "Révoquer",
-        "unsettled": {
-          "toast": "Invitation révoquée, soldes réglés.",
-          "title": "Régler les soldes avant de révoquer",
-          "description": "Révoquer l'invitation de {email} ? Ses soldes doivent d'abord être réglés.",
-          "warning": {
-            "title": "Cette invitation a des soldes impayés",
-            "description": "Sélectionnez l'option ci-dessous pour créer un paiement de règlement pour chaque solde concernant cette personne invitée. L'invitation ne peut être révoquée qu'une fois ces soldes réglés."
-          },
-          "checkbox": "Régler les soldes de l'invité avant de révoquer"
-        }
-      },
       "link": {
         "type": "Lien à usage unique",
         "fallbackLabel": "Lien d'invitation"
+      },
+      "email": {
+        "type": "Invitation par e-mail"
       }
     },
     "changeRoleAria": "Changer le rôle",
@@ -1509,7 +1498,14 @@
           "title": "Ce membre a des soldes impayés",
           "description": "Si vous supprimez ce membre sans régler ses soldes, ceux-ci resteront indéfiniment dans le groupe. Sélectionnez l'option ci-dessous pour créer un paiement de règlement pour chaque solde concernant ce membre, ou supprimez-le et réglez les soldes manuellement."
         },
-        "checkbox": "Régler les soldes de ce membre avant de le supprimer"
+        "checkbox": "Régler les soldes de ce membre avant de le supprimer",
+        "previewWillCreate_one": "Créera {count} paiement de règlement",
+        "previewPays": "{name} paiera",
+        "previewReceives": "{name} recevra",
+        "previewTo": "à {name}",
+        "previewFrom": "de {name}",
+        "previewWillCreate_other": "Créera {count} paiements de règlement",
+        "previewWillCreate_many": "Créera {count} paiements de règlement"
       }
     },
     "leave": {
@@ -1563,6 +1559,11 @@
         "pendingGroup": "Invitations en attente",
         "pendingSuffix": "(en attente)"
       }
+    },
+    "dropdown": {
+      "remove": "Supprimer",
+      "changeRole": "Changer le rôle",
+      "revoke": "Révoquer l'invitation"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1769,9 @@
       "imported_one": "{participant} a importé {count} dépense",
       "imported_many": "{participant} a importé {count} dépenses",
       "imported_other": "{participant} a importé {count} dépenses"
+    },
+    "participant": {
+      "removed": "{participant} a supprimé {target} du groupe"
     }
   },
   "OfflineBanner": {

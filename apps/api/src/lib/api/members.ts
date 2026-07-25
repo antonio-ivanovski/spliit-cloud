@@ -212,6 +212,12 @@ export async function removeMember(opts: {
         tx,
       ),
     ])
+    if (target.ledgerParticipant?.id) {
+      await tx.ledgerParticipant.update({
+        where: { id: target.ledgerParticipant.id },
+        data: { removedAt: new Date() },
+      })
+    }
     return { updated, settlementActivities, activity }
   })
   scheduleActivityNotification(result.activity, groupId, {

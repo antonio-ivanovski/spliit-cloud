@@ -911,6 +911,7 @@
   "Balances": {
     "title": "Salden",
     "description": "Zeigt den Nettosaldo jeder teilnehmenden Person.",
+    "removedBadge": "Entfernt",
     "Reimbursements": {
       "title": "Vorgeschlagene Ausgleichszahlungen",
       "description": "Mit diesen Zahlungen gleichst du die Salden mit möglichst wenigen Überweisungen aus.",
@@ -925,7 +926,8 @@
       "original": "Original",
       "title": "Wähle, wie Salden angezeigt werden",
       "groupDescription": "Wandle alle Ausgaben in {currency} um, um eine kombinierte Ansicht zu erhalten.",
-      "originalDescription": "Behalte jede Ausgabe in der Währung, in der sie erfasst wurde."
+      "originalDescription": "Behalte jede Ausgabe in der Währung, in der sie erfasst wurde.",
+      "originalNote": "Ausgleichszahlungen werden in der Regel in der Gruppenwährung erfasst. Diese Ansicht in Originalwährung ist ein separates Hauptbuch pro Währung, sodass Salden hier unausgeglichen wirken können, selbst wenn der Plan in der Gruppenwährung ausgeglichen ist. Beim Ausgleichen ist die Gruppenwährungsansicht zu bevorzugen."
     },
     "direction": {
       "toReceive": "Zu erhalten",
@@ -1495,25 +1497,12 @@
       "revokeButton": "Einladung widerrufen",
       "revoked": "Einladung widerrufen.",
       "created": "Einladung an {email} gesendet.",
-      "revokeDialog": {
-        "title": "Einladung widerrufen?",
-        "description": "Einladung an {email} widerrufen? Die Einladung wurde noch nicht angenommen.",
-        "cancel": "Abbrechen",
-        "confirm": "Widerrufen",
-        "unsettled": {
-          "toast": "Einladung widerrufen, Salden ausgeglichen.",
-          "title": "Salden vor dem Widerruf ausgleichen",
-          "description": "Einladung an {email} widerrufen? Die Salden müssen zuerst ausgeglichen werden.",
-          "warning": {
-            "title": "Diese Einladung hat nicht ausgeglichene Salden",
-            "description": "Wähle die Option unten, um für jeden Saldo dieser eingeladenen Person eine Ausgleichszahlung zu erstellen. Die Einladung kann erst widerrufen werden, nachdem diese Salden ausgeglichen wurden."
-          },
-          "checkbox": "Salden des Eingeladenen vor dem Widerruf ausgleichen"
-        }
-      },
       "link": {
         "type": "Einmal-Link",
         "fallbackLabel": "Einladungslink"
+      },
+      "email": {
+        "type": "E-Mail-Einladung"
       }
     },
     "removeDialog": {
@@ -1525,7 +1514,13 @@
           "title": "Dieses Mitglied hat nicht ausgeglichene Salden",
           "description": "Beim Entfernen ohne Ausgleich bleiben diese Salden dauerhaft in der Gruppe. Wähle die Option unten, um für jeden Saldo dieses Mitglieds eine Ausgleichszahlung zu erstellen, oder entferne das Mitglied und gleiche die Salden manuell aus."
         },
-        "checkbox": "Salden dieses Mitglieds vor dem Entfernen ausgleichen"
+        "checkbox": "Salden dieses Mitglieds vor dem Entfernen ausgleichen",
+        "previewWillCreate_one": "Es wird {count} Ausgleichszahlung erstellt",
+        "previewPays": "{name} wird zahlen",
+        "previewReceives": "{name} erhält",
+        "previewTo": "an {name}",
+        "previewFrom": "von {name}",
+        "previewWillCreate_other": "Es werden {count} Ausgleichszahlungen erstellt"
       },
       "title": "Mitglied entfernen?",
       "description": "{name} aus dieser Gruppe entfernen? Die bisherigen Ausgaben bleiben im Hauptbuch erhalten, aber {name} hat dann keinen Zugriff mehr.",
@@ -1587,6 +1582,11 @@
         "pendingSuffix": "(ausstehend)",
         "pendingHint": "Die Verknüpfung mit einer ausstehenden Einladung führt dazu, dass dieser namensbasierte Eintrag mit dem Eingeladenen zusammengeführt wird. Der Eingeladene behält seine eigene Zeile; die zusammengeführten Verweise werden nach der Annahme über ihn aufgelöst."
       }
+    },
+    "dropdown": {
+      "remove": "Entfernen",
+      "changeRole": "Rolle ändern",
+      "revoke": "Einladung widerrufen"
     }
   },
   "AccountSettings": {
@@ -1795,6 +1795,9 @@
       "imported_few": "{participant} hat {count} Ausgaben importiert",
       "imported_many": "{participant} hat {count} Ausgaben importiert",
       "imported_other": "{participant} hat {count} Ausgaben importiert"
+    },
+    "participant": {
+      "removed": "{participant} entfernte {target} aus der Gruppe"
     }
   },
   "OfflineBanner": {

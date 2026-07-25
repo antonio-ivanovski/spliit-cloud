@@ -44,9 +44,7 @@ vi.mock('@/components/link', () => ({
 // Mock tRPC - the members page uses many mutations and queries
 const mockCreateMutation = vi.fn()
 const mockCreateLinkMutation = vi.fn()
-const mockRevokeMutation = vi.fn()
 const mockUpdateRoleMutation = vi.fn()
-const mockRemoveMemberMutation = vi.fn()
 const mockLeaveMutation = vi.fn()
 
 // Shared mutable state so tests can override query results
@@ -73,6 +71,7 @@ vi.mock('@/trpc/client', () => {
             listUnlinked: { invalidate: vi.fn().mockResolvedValue(undefined) },
           },
           leavePreview: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          balances: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
         account: {
           members: { invalidate: vi.fn().mockResolvedValue(undefined) },
@@ -93,17 +92,8 @@ vi.mock('@/trpc/client', () => {
             return { mutateAsync: mockCreateLinkMutation, isPending: false }
           },
         },
-        revoke: {
-          useMutation: () => ({
-            mutateAsync: mockRevokeMutation,
-            isPending: false,
-          }),
-        },
         list: {
           useQuery: () => ({ data: mockInvitationsData, isLoading: false }),
-        },
-        revokePreview: {
-          useQuery: () => ({ data: undefined, isLoading: false }),
         },
       },
       account: {
@@ -115,6 +105,9 @@ vi.mock('@/trpc/client', () => {
         },
       },
       groups: {
+        get: {
+          useQuery: () => ({ data: { group: mockGroup }, isLoading: false }),
+        },
         members: {
           updateRole: {
             useMutation: () => ({
@@ -122,19 +115,21 @@ vi.mock('@/trpc/client', () => {
               isPending: false,
             }),
           },
-          remove: {
-            useMutation: () => ({
-              mutateAsync: mockRemoveMemberMutation,
-              isPending: false,
-            }),
-          },
-          removePreview: {
-            useQuery: () => ({ data: undefined, isLoading: false }),
-          },
         },
         importLinks: {
           listUnlinked: {
             useQuery: () => ({ data: undefined, isLoading: false }),
+          },
+        },
+        participants: {
+          removePreview: {
+            useQuery: () => ({ data: undefined, isLoading: false }),
+          },
+          remove: {
+            useMutation: () => ({
+              mutateAsync: vi.fn(),
+              isPending: false,
+            }),
           },
         },
         leave: {

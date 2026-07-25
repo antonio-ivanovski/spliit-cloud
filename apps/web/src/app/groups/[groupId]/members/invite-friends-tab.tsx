@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { isPlaceholderEmail } from '@/lib/account'
 import { Loader2, UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { InvitableRole } from './members-hooks'
@@ -83,9 +84,11 @@ export function InviteFriendsTab({
                         size="sm"
                       />
                       <span>{f.name}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {f.email}
-                      </span>
+                      {!isPlaceholderEmail(f.email) && (
+                        <span className="text-xs text-muted-foreground">
+                          {f.email}
+                        </span>
+                      )}
                       {f.isMember && (
                         <span className="text-xs text-muted-foreground">
                           ({t('invite.friendAlreadyMember')})

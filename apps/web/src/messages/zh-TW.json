@@ -876,6 +876,7 @@
   "Balances": {
     "title": "總覽",
     "description": "查看每位參與者的淨餘額。",
+    "removedBadge": "已移除",
     "Reimbursements": {
       "title": "建議的結算付款",
       "description": "使用這些付款，以盡可能少的轉賬次數結清餘額。",
@@ -890,7 +891,8 @@
       "original": "原始",
       "title": "選擇餘額顯示方式",
       "groupDescription": "將所有支出轉換為{currency}，以單一合併檢視查看。",
-      "originalDescription": "保留每筆支出原本輸入的貨幣。"
+      "originalDescription": "保留每筆支出原本輸入的貨幣。",
+      "originalNote": "結算付款通常以群組貨幣記錄。此原始貨幣檢視是按貨幣分開的帳本，因此即使群組貨幣的結算方案已完成，這裡也可能顯示為未結清。結算時建議使用群組貨幣檢視。"
     },
     "direction": {
       "toReceive": "待收款",
@@ -1456,25 +1458,12 @@
       "revokeButton": "撤銷邀請",
       "revoked": "邀請已撤銷。",
       "created": "邀請已傳送至 {email}。",
-      "revokeDialog": {
-        "title": "撤銷邀請？",
-        "description": "撤銷對{email}的邀請？他們尚未接受。",
-        "cancel": "取消",
-        "confirm": "撤銷",
-        "unsettled": {
-          "toast": "邀請已撤銷，餘額已結算。",
-          "title": "撤銷前先結算餘額",
-          "description": "撤銷對 {email} 的邀請？必須先結算其餘額。",
-          "warning": {
-            "title": "此邀請有未結算的餘額",
-            "description": "選擇下方選項，為與此受邀者相關的每筆餘額創建一筆結算付款。只有結清這些餘額後才能撤銷邀請。"
-          },
-          "checkbox": "撤銷前先結算該受邀者的餘額"
-        }
-      },
       "link": {
         "type": "一次性連結",
         "fallbackLabel": "邀請連結"
+      },
+      "email": {
+        "type": "電子郵件邀請"
       }
     },
     "remove": "移除",
@@ -1488,7 +1477,13 @@
           "title": "此成員有未結算的餘額",
           "description": "若不結算便移除，這些餘額將一直保留在群組中。請選擇下方選項，為與此成員相關的每筆餘額創建一筆結算付款；也可以先移除成員，再手動結算餘額。"
         },
-        "checkbox": "移除前結清此成員的餘額"
+        "checkbox": "移除前結清此成員的餘額",
+        "previewWillCreate_one": "將建立 {count} 筆結算付款",
+        "previewPays": "{name} 將支付",
+        "previewReceives": "{name} 將收到",
+        "previewTo": "給 {name}",
+        "previewFrom": "來自 {name}",
+        "previewWillCreate_other": "將建立 {count} 筆結算付款"
       },
       "title": "移除成員？",
       "cancel": "取消",
@@ -1548,7 +1543,12 @@
     },
     "changeRoleAria": "變更角色",
     "removed": "成員已移除。",
-    "roleUpdated": "角色已更新為 {role}。"
+    "roleUpdated": "角色已更新為 {role}。",
+    "dropdown": {
+      "remove": "移除",
+      "changeRole": "變更角色",
+      "revoke": "撤銷邀請"
+    }
   },
   "AccountSettings": {
     "title": "帳戶設定",
@@ -1751,6 +1751,9 @@
     "openExpense": "開啟支出",
     "import": {
       "imported_other": "{participant} 導入了 {count} 筆支出"
+    },
+    "participant": {
+      "removed": "{participant} 將 {target} 移出了群組"
     }
   },
   "OfflineBanner": {

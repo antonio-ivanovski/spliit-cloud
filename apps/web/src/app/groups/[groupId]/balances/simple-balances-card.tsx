@@ -15,6 +15,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { BalancesLoading, ReimbursementsLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
+import { RemovedParticipantBadge } from './removed-participant-badge'
 import {
   SettlementGroupActions,
   SettlementGroupButton,
@@ -30,6 +31,7 @@ type Participant = {
   id: string
   name: string
   account?: { id: string; name?: string | null; image?: string | null } | null
+  removed?: boolean
 }
 
 export function SimpleBalancesCard({
@@ -160,6 +162,7 @@ function SimpleCurrencyContent({
                     <span className="min-w-0 truncate text-sm font-medium">
                       {participant.name}
                     </span>
+                    {participant.removed ? <RemovedParticipantBadge /> : null}
                   </div>
                   <span
                     className={`shrink-0 text-sm tabular-nums ${total > 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}
@@ -260,6 +263,7 @@ function SimpleSettlementDirections({
                     currency={currency}
                     originalCurrencyCode={reimbursementCurrencyCode}
                     groupId={groupId}
+                    participants={participants}
                   >
                     {(openFor) => (
                       <div className="rounded-lg border border-border/70">
@@ -280,6 +284,9 @@ function SimpleSettlementDirections({
                                 values={{ name: participant.name }}
                               />
                             </span>
+                            {participant.removed ? (
+                              <RemovedParticipantBadge />
+                            ) : null}
                           </div>
                           <div className="flex items-center gap-1">
                             <span className="shrink-0 tabular-nums text-sm font-medium">
@@ -323,6 +330,9 @@ function SimpleSettlementDirections({
                                     values={{ name: counterpartyName }}
                                   />
                                 </span>
+                                {counterparty?.removed ? (
+                                  <RemovedParticipantBadge />
+                                ) : null}
                                 <span className="shrink-0 tabular-nums text-muted-foreground">
                                   {formatCurrency(currency, leg.amount, locale)}
                                 </span>

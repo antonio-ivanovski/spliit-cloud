@@ -890,6 +890,7 @@
   "Balances": {
     "title": "יתרות",
     "description": "הצגת היתרה נטו של כל משתתף ומשתתפת.",
+    "removedBadge": "הוסר",
     "Reimbursements": {
       "title": "תשלומים מוצעים להסדרת היתרה",
       "description": "התשלומים האלה מאפשרים להסדיר את היתרות במספר ההעברות הקטן ביותר.",
@@ -904,7 +905,8 @@
       "original": "מקורי",
       "title": "בחר כיצד להציג את המאזנים",
       "groupDescription": "המר את כל ההוצאות ל-{currency} לתצוגה מאוחדת אחת.",
-      "originalDescription": "השאר כל הוצאה במטבע שבו הוזנה."
+      "originalDescription": "השאר כל הוצאה במטבע שבו הוזנה.",
+      "originalNote": "תשלומי הסדר בדרך כלל נרשמים במטבע הקבוצה. תצוגת המטבע המקורי היא ספר חשבונות נפרד לכל מטבע, ולכן יתרות עשויות להיראות לא מסולקות כאן גם כשהתוכנית במטבע הקבוצה מסולקת. מומלץ להשתמש בתצוגת מטבע הקבוצה לסילוק יתרות."
     },
     "direction": {
       "toReceive": "לקבל",
@@ -1471,25 +1473,12 @@
       "revokeButton": "בטל הזמנה",
       "revoked": "ההזמנה בוטלה.",
       "created": "ההזמנה נשלחה ל-{email}.",
-      "revokeDialog": {
-        "title": "לבטל הזמנה?",
-        "description": "לבטל את ההזמנה ל-{email}? הם עדיין לא אישרו.",
-        "cancel": "ביטול",
-        "confirm": "בטל",
-        "unsettled": {
-          "toast": "ההזמנה בוטלה, היתרות הוסדרו.",
-          "title": "הסדר יתרות לפני ביטול",
-          "description": "לבטל את ההזמנה ל-{email}? יש להסדיר קודם את היתרות.",
-          "warning": {
-            "title": "להזמנה זו יש יתרות לא מסודרות",
-            "description": "בחירת האפשרות למטה תיצור תשלום אחד להסדרת כל יתרה שקשורה למוזמנים. אפשר לבטל את ההזמנה רק לאחר הסדרת היתרות האלה."
-          },
-          "checkbox": "הסדר את יתרות המוזמן לפני הביטול"
-        }
-      },
       "link": {
         "type": "קישור חד-פעמי",
         "fallbackLabel": "קישור הזמנה"
+      },
+      "email": {
+        "type": "הזמנה בדוא״ל"
       }
     },
     "changeRoleAria": "שנה תפקיד",
@@ -1509,7 +1498,14 @@
           "title": "לחבר זה יש יתרות לא מסודרות",
           "description": "הסרה בלי הסדרה תשאיר את היתרות האלה בקבוצה ללא הגבלת זמן. אפשר לבחור באפשרות למטה כדי ליצור תשלום לכל יתרה שקשורה לחבר/ת הקבוצה, או להסיר ולהסדיר את היתרות ידנית."
         },
-        "checkbox": "הסדרת היתרות של חבר/ת הקבוצה לפני ההסרה"
+        "checkbox": "הסדרת היתרות של חבר/ת הקבוצה לפני ההסרה",
+        "previewWillCreate_one": "יווצר {count} תשלום הסדר",
+        "previewPays": "{name} ישלם",
+        "previewReceives": "{name} יקבל",
+        "previewTo": "ל{name}",
+        "previewFrom": "מ{name}",
+        "previewWillCreate_other": "יווצרו {count} תשלומי הסדר",
+        "previewWillCreate_two": "יווצרו {count} תשלומי הסדר"
       }
     },
     "leave": {
@@ -1563,6 +1559,11 @@
         "pendingGroup": "הזמנות ממתינות",
         "pendingSuffix": "(ממתין)"
       }
+    },
+    "dropdown": {
+      "remove": "הסר",
+      "changeRole": "שנה תפקיד",
+      "revoke": "בטל הזמנה"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1769,9 @@
       "imported_one": "{participant} ייבא {count} הוצאה",
       "imported_two": "{participant} ייבא {count} הוצאות",
       "imported_other": "{participant} ייבא {count} הוצאות"
+    },
+    "participant": {
+      "removed": "{participant} הסיר את {target} מהקבוצה"
     }
   },
   "OfflineBanner": {

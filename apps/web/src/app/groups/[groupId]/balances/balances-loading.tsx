@@ -5,9 +5,10 @@ export function ReimbursementsLoading({
 }: {
   participantCount?: number
 }) {
+  const rows = Math.max(0, participantCount - 1)
   return (
     <div className="flex flex-col">
-      {Array(participantCount - 1)
+      {Array(rows)
         .fill(undefined)
         .map((_, index) => (
           <div key={index} className="flex justify-between py-5">

@@ -217,7 +217,11 @@ export async function getGroup(groupId: string) {
 
   const allUnlinkedParticipants = group.ledgerId
     ? await prisma.ledgerParticipant.findMany({
-        where: { ledgerId: group.ledgerId, kind: 'UNLINKED_PARTICIPANT' },
+        where: {
+          ledgerId: group.ledgerId,
+          kind: 'UNLINKED_PARTICIPANT',
+          removedAt: null,
+        },
         orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
         select: { id: true, displayName: true },
       })

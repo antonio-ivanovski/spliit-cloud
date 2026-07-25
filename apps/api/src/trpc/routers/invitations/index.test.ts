@@ -990,11 +990,7 @@ describe('invitationsRouter.revoke — unsettled balances', () => {
     )
   })
 
-  it('rejects settleBalances=false when the invitee has unsettled balances', async () => {
-    // Leaving the balances in place after a revoke would leave the
-    // invitee's participant orphaned in the ledger (no groupMember, no
-    // PENDING invitation) and break the balances view. The admin must
-    // settle first, mirroring the archive flow.
+  it('revokes without settling when settleBalances=false and soft-hides the participant', async () => {
     await authAs('acct-admin')
     seedRevokeContext({ participantId: 'lp-invitee' })
     prismaMock.expense.findMany.mockResolvedValue([
@@ -1008,13 +1004,28 @@ describe('invitationsRouter.revoke — unsettled balances', () => {
         ],
       }),
     ] as never)
+    prismaMock.ledgerParticipant.update.mockResolvedValue({} as never)
+    prismaMock.activity.create.mockResolvedValue({
+      id: 'act-1',
+      time: new Date(),
+    } as never)
 
     const caller = makeCaller('acct-admin')
-    await expect(
-      caller.revoke({ invitationId: 'inv-1', settleBalances: false }),
-    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' })
+    await caller.revoke({ invitationId: 'inv-1', settleBalances: false })
+
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
-    expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
+    expect(prismaMock.groupInvitation.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'inv-1' },
+        data: expect.objectContaining({ status: 'REVOKED' }),
+      }),
+    )
+    expect(prismaMock.ledgerParticipant.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'lp-invitee' },
+        data: expect.objectContaining({ removedAt: expect.any(Date) }),
+      }),
+    )
   })
 })
 

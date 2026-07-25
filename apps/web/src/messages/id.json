@@ -1059,6 +1059,7 @@
   "Balances": {
     "title": "Saldo",
     "description": "Lihat saldo bersih setiap peserta.",
+    "removedBadge": "Dihapus",
     "Reimbursements": {
       "title": "Saran pembayaran pelunasan",
       "description": "Gunakan pembayaran ini untuk melunasi saldo dengan transfer sesedikit mungkin.",
@@ -1073,7 +1074,8 @@
       "original": "Asli",
       "title": "Pilih cara melihat saldo",
       "groupDescription": "Konversi semua pengeluaran ke {currency} untuk satu tampilan gabungan.",
-      "originalDescription": "Biarkan setiap pengeluaran dalam mata uang saat dimasukkan."
+      "originalDescription": "Biarkan setiap pengeluaran dalam mata uang saat dimasukkan.",
+      "originalNote": "Pembayaran penyelesaian biasanya dicatat dalam mata uang grup. Tampilan mata uang asli ini adalah buku besar terpisah per mata uang, sehingga saldo dapat terlihat belum diselesaikan di sini meskipun rencana dalam mata uang grup sudah diselesaikan. Gunakan tampilan mata uang grup untuk menyelesaikan saldo."
     },
     "direction": {
       "toReceive": "Akan menerima",
@@ -1456,25 +1458,12 @@
       "revokeButton": "Cabut undangan",
       "revoked": "Undangan dicabut.",
       "created": "Undangan terkirim ke {email}.",
-      "revokeDialog": {
-        "title": "Cabut undangan?",
-        "description": "Cabut undangan ke {email}? Mereka belum menerima.",
-        "cancel": "Batal",
-        "confirm": "Cabut",
-        "unsettled": {
-          "toast": "Undangan dicabut, saldo diselesaikan.",
-          "title": "Selesaikan saldo sebelum mencabut",
-          "description": "Cabut undangan ke {email}? Saldo mereka harus diselesaikan terlebih dahulu.",
-          "warning": {
-            "title": "Undangan ini memiliki saldo yang belum diselesaikan",
-            "description": "Pilih opsi di bawah untuk membuat satu pembayaran pelunasan bagi setiap saldo yang melibatkan penerima undangan ini. Undangan hanya dapat dicabut setelah saldo tersebut dilunasi."
-          },
-          "checkbox": "Selesaikan saldo yang diundang sebelum mencabut"
-        }
-      },
       "link": {
         "type": "Tautan sekali pakai",
         "fallbackLabel": "Tautan undangan"
+      },
+      "email": {
+        "type": "Undangan email"
       }
     },
     "changeRoleAria": "Ubah peran",
@@ -1494,7 +1483,13 @@
           "title": "Anggota ini memiliki saldo yang belum diselesaikan",
           "description": "Menghapus tanpa melunasi akan membuat saldo ini tetap berada di grup. Pilih opsi di bawah untuk membuat satu pembayaran pelunasan bagi setiap saldo yang melibatkan anggota ini, atau hapus anggota lalu lunasi saldo secara manual."
         },
-        "checkbox": "Lunasi saldo anggota ini sebelum menghapusnya"
+        "checkbox": "Lunasi saldo anggota ini sebelum menghapusnya",
+        "previewWillCreate_one": "Akan membuat {count} pembayaran penyelesaian",
+        "previewPays": "{name} akan membayar",
+        "previewReceives": "{name} akan menerima",
+        "previewTo": "ke {name}",
+        "previewFrom": "dari {name}",
+        "previewWillCreate_other": "Akan membuat {count} pembayaran penyelesaian"
       }
     },
     "leave": {
@@ -1548,6 +1543,11 @@
         "pendingGroup": "Undangan tertunda",
         "pendingSuffix": "(tertunda)"
       }
+    },
+    "dropdown": {
+      "remove": "Hapus",
+      "changeRole": "Ubah peran",
+      "revoke": "Cabut undangan"
     }
   },
   "AccountSettings": {
@@ -1751,6 +1751,9 @@
     "openExpense": " Buka pengeluaran",
     "import": {
       "imported_other": "{participant} mengimpor {count} pengeluaran"
+    },
+    "participant": {
+      "removed": "{participant} menghapus {target} dari grup"
     }
   },
   "OfflineBanner": {

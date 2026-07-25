@@ -86,7 +86,18 @@ export function useMembersDialogs() {
 
   const utils = trpc.useUtils()
 
-  // -- Invite mutations --
+  const invalidateAll = async () => {
+    await Promise.all([
+      utils.account.members.invalidate({ groupId }),
+      utils.groups.get.invalidate({ groupId }),
+      utils.groups.getDetails.invalidate({ groupId }),
+      utils.groups.leavePreview.invalidate({ groupId }),
+      utils.invitations.list.invalidate({ groupId }),
+      utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
+      utils.groups.balances.list.invalidate({ groupId }),
+    ])
+  }
+
   const createMutation = trpc.invitations.create.useMutation({
     onSuccess: async (_data, vars) => {
       toast({ description: t('invitations.created', { email: vars.email }) })
@@ -105,7 +116,7 @@ export function useMembersDialogs() {
   })
 
   const createLinkMutation = trpc.invitations.createLink.useMutation({
-    onSuccess: async (_data) => {
+    onSuccess: async () => {
       toast({ description: t('invite.link.created') })
       await Promise.all([
         utils.invitations.list.invalidate({ groupId }),
@@ -121,27 +132,6 @@ export function useMembersDialogs() {
     },
   })
 
-  const revokeMutation = trpc.invitations.revoke.useMutation({
-    onSuccess: async (_data, vars) => {
-      toast({
-        description: vars.settleBalances
-          ? t('invitations.revokeDialog.unsettled.toast')
-          : t('invitations.revoked'),
-      })
-      await Promise.all([
-        utils.invitations.list.invalidate({ groupId }),
-        utils.account.members.invalidate({ groupId }),
-        utils.groups.get.invalidate({ groupId }),
-        utils.groups.getDetails.invalidate({ groupId }),
-        utils.account.friends.invalidate(),
-      ])
-    },
-    onError: (error) => {
-      toast({ description: error.message, variant: 'destructive' })
-    },
-  })
-
-  // -- Member management mutations --
   const updateRoleMutation = trpc.groups.members.updateRole.useMutation({
     onSuccess: async (_data, vars) => {
       toast({
@@ -159,81 +149,54 @@ export function useMembersDialogs() {
     },
   })
 
-  const removeMemberMutation = trpc.groups.members.remove.useMutation({
-    onSuccess: async (_data, vars) => {
-      toast({
-        description: vars.settleBalances
-          ? t('removeDialog.unsettled.toast')
-          : t('removed'),
-      })
-      await Promise.all([
-        utils.account.members.invalidate({ groupId }),
-        utils.groups.get.invalidate({ groupId }),
-        utils.groups.getDetails.invalidate({ groupId }),
-        utils.groups.leavePreview.invalidate({ groupId }),
-      ])
+  const removeParticipantMutation = trpc.groups.participants.remove.useMutation(
+    {
+      onSuccess: async (_data, vars) => {
+        toast({
+          description: vars.settleBalances
+            ? t('removeDialog.unsettled.toast')
+            : t('removed'),
+        })
+        await invalidateAll()
+      },
+      onError: (error) => {
+        toast({ description: error.message, variant: 'destructive' })
+      },
     },
-    onError: (error) => {
-      toast({ description: error.message, variant: 'destructive' })
-    },
-  })
+  )
 
-  // -- Remove dialog state --
-  const [memberPendingRemove, setMemberPendingRemove] = useState<{
-    id: string
+  const [participantPendingRemove, setParticipantPendingRemove] = useState<{
+    ledgerParticipantId: string
     name: string
   } | null>(null)
 
-  const removePreviewQuery = trpc.groups.members.removePreview.useQuery(
-    { groupId, memberId: memberPendingRemove?.id ?? '' },
-    { enabled: !!memberPendingRemove },
-  )
+  const participantRemovePreviewQuery =
+    trpc.groups.participants.removePreview.useQuery(
+      {
+        groupId,
+        ledgerParticipantId:
+          participantPendingRemove?.ledgerParticipantId ?? '',
+      },
+      { enabled: !!participantPendingRemove },
+    )
 
-  const [removeSettleChecked, setRemoveSettleChecked] = useState(false)
+  const [participantRemoveSettleChecked, setParticipantRemoveSettleChecked] =
+    useState(false)
 
-  // Reset checkbox when dialog closes (inline during render to avoid
-  // set-state-in-effect from the old useEffect pattern).
-  if (!memberPendingRemove && removeSettleChecked) {
-    setRemoveSettleChecked(false)
+  if (!participantPendingRemove && participantRemoveSettleChecked) {
+    setParticipantRemoveSettleChecked(false)
   }
 
-  async function confirmRemove(settleBalances?: boolean) {
-    if (!memberPendingRemove) return
-    await removeMemberMutation.mutateAsync({
+  async function confirmParticipantRemove(settleBalances?: boolean) {
+    if (!participantPendingRemove) return
+    await removeParticipantMutation.mutateAsync({
       groupId,
-      memberId: memberPendingRemove.id,
+      ledgerParticipantId: participantPendingRemove.ledgerParticipantId,
       settleBalances,
     })
-    setMemberPendingRemove(null)
+    setParticipantPendingRemove(null)
   }
 
-  // -- Revoke dialog state --
-  const [invitationPendingRevoke, setInvitationPendingRevoke] = useState<{
-    id: string
-    email: string
-    label: string
-  } | null>(null)
-
-  const revokePreviewQuery = trpc.invitations.revokePreview.useQuery(
-    { groupId, invitationId: invitationPendingRevoke?.id ?? '' },
-    { enabled: !!invitationPendingRevoke },
-  )
-
-  const [revokeSettleChecked, setRevokeSettleChecked] = useState(false)
-
-  async function confirmRevoke() {
-    if (!invitationPendingRevoke) return
-    const settleBalances = revokePreviewQuery.data?.hasUnsettledBalance
-      ? true
-      : undefined
-    await revokeMutation.mutateAsync({
-      invitationId: invitationPendingRevoke.id,
-      settleBalances,
-    })
-    setInvitationPendingRevoke(null)
-  }
-
-  // -- Leave dialog state --
   const [leaveDialogOpen, setLeaveDialogOpen] = useState(false)
   const [promoteMemberId, setPromoteMemberId] = useState<string | null>(null)
 
@@ -263,11 +226,6 @@ export function useMembersDialogs() {
   const promotableMembers = preview?.promotableMembers ?? []
   const needsPromotion = isLastAdmin && !isLastActiveMember
 
-  // Derive the effective promote-member id: use the user-selected one when
-  // it points to a valid promotable member, otherwise fall back to the first
-  // promotable member (only when preview is loaded). This avoids a
-  // cascading-render effect by keeping the state for user interactions while
-  // computing the default fallback from derived data.
   const effectivePromoteMemberId =
     promoteMemberId !== null &&
     promotableMembers.some((m) => m.id === promoteMemberId)
@@ -295,7 +253,13 @@ export function useMembersDialogs() {
   }
 
   const listMembers = useMemo(
-    () => membersQuery.data?.members ?? [],
+    () =>
+      (membersQuery.data?.members ?? [])
+        .filter((member) => member.ledgerParticipant?.id)
+        .map((member) => ({
+          ...member,
+          ledgerParticipantId: member.ledgerParticipant!.id,
+        })),
     [membersQuery.data],
   )
   const invitations = useMemo(
@@ -304,7 +268,6 @@ export function useMembersDialogs() {
   )
 
   return {
-    // State
     groupId,
     group,
     account,
@@ -313,33 +276,20 @@ export function useMembersDialogs() {
     isAdmin,
     canManage,
     currentMemberId,
-    // Queries
     membersQuery,
     invitationsQuery,
     listMembers,
     invitations,
-    // Invite mutations
     createMutation,
     createLinkMutation,
-    revokeMutation,
-    // Member management
     updateRoleMutation,
-    removeMemberMutation,
-    // Remove dialog
-    memberPendingRemove,
-    setMemberPendingRemove,
-    removePreviewQuery,
-    removeSettleChecked,
-    setRemoveSettleChecked,
-    confirmRemove,
-    // Revoke dialog
-    invitationPendingRevoke,
-    setInvitationPendingRevoke,
-    revokePreviewQuery,
-    revokeSettleChecked,
-    setRevokeSettleChecked,
-    confirmRevoke,
-    // Leave dialog
+    removeParticipantMutation,
+    participantPendingRemove,
+    setParticipantPendingRemove,
+    participantRemovePreviewQuery,
+    participantRemoveSettleChecked,
+    setParticipantRemoveSettleChecked,
+    confirmParticipantRemove,
     leaveDialogOpen,
     setLeaveDialogOpen,
     promoteMemberId,

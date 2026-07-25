@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { trpc } from '@/trpc/client'
+import { Link2, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LinkUnlinkedParticipantDialog } from './link-unlinked-participant-dialog'
@@ -15,9 +16,11 @@ import { LinkUnlinkedParticipantDialog } from './link-unlinked-participant-dialo
 export function UnlinkedParticipantsSection({
   groupId,
   canManage,
+  onRemove,
 }: {
   groupId: string
   canManage: boolean
+  onRemove: (participant: { ledgerParticipantId: string; name: string }) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const { data, isLoading } = trpc.groups.importLinks.listUnlinked.useQuery({
@@ -60,18 +63,36 @@ export function UnlinkedParticipantsSection({
                     {t('unlinked.idHint', { id: p.id })}
                   </p>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setLinkTarget({
-                      id: p.id,
-                      displayName: p.displayName || t('unknownMember'),
-                    })
-                  }
-                >
-                  {t('unlinked.linkButton')}
-                </Button>
+                <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 shrink-0 gap-1.5 px-3"
+                    onClick={() =>
+                      setLinkTarget({
+                        id: p.id,
+                        displayName: p.displayName || t('unknownMember'),
+                      })
+                    }
+                  >
+                    <Link2 className="size-4" aria-hidden="true" />
+                    {t('unlinked.linkButton')}
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="h-9 shrink-0 gap-1.5 px-3"
+                    onClick={() =>
+                      onRemove({
+                        ledgerParticipantId: p.id,
+                        name: p.displayName || t('unknownMember'),
+                      })
+                    }
+                  >
+                    <Trash2 className="size-4" aria-hidden="true" />
+                    {t('remove')}
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>

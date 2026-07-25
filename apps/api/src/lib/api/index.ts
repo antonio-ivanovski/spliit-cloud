@@ -65,3 +65,9 @@ export {
   type RecurringSeriesProgress,
 } from './series-progress'
 export { randomId, type GroupWithLedger } from './shared'
+export {
+  SoftRemoveParticipantPreconditionError,
+  getSoftRemoveParticipantPreview,
+  softRemoveParticipant,
+  type SoftRemoveParticipantKind,
+} from './soft-remove-participant'

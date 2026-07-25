@@ -876,6 +876,7 @@
   "Balances": {
     "title": "残高",
     "description": "各参加者の差引残高を確認できます。",
+    "removedBadge": "削除済み",
     "Reimbursements": {
       "title": "精算金の提案",
       "description": "送金回数をできるだけ少なくして残高を精算するための支払いです。",
@@ -890,7 +891,8 @@
       "original": "元の通貨",
       "title": "残高の表示方式を選択",
       "groupDescription": "すべての支出を{currency}に変換して1つの統合ビューで表示します。",
-      "originalDescription": "各支出は入力された通貨のまま表示します。"
+      "originalDescription": "各支出は入力された通貨のまま表示します。",
+      "originalNote": "精算の支払いは通常、グループ通貨で記録されます。この元通貨表示は通貨ごとの別台帳のため、グループ通貨の精算が完了していても、ここでは未精算に見えることがあります。精算にはグループ通貨表示の利用をおすすめします。"
     },
     "direction": {
       "toReceive": "受け取り",
@@ -1456,25 +1458,12 @@
       "revokeButton": "招待を取り消す",
       "revoked": "招待を取り消しました。",
       "created": "{email}に招待を送信しました。",
-      "revokeDialog": {
-        "title": "招待を取り消しますか？",
-        "description": "{email}への招待を取り消しますか？まだ承認されていません。",
-        "cancel": "キャンセル",
-        "confirm": "取り消す",
-        "unsettled": {
-          "toast": "招待が取り消され、残高が決済されました。",
-          "title": "取り消す前に残高を精算",
-          "description": "{email}への招待を取り消しますか？先に残高を精算する必要があります。",
-          "warning": {
-            "title": "この招待には未決済の残高があります",
-            "description": "下のオプションを選ぶと、この招待者に関係する残高ごとに精算金が1件作成されます。残高を精算するまで招待は取り消せません。"
-          },
-          "checkbox": "取り消す前にこの招待者の残高を精算"
-        }
-      },
       "link": {
         "type": "一回限りリンク",
         "fallbackLabel": "招待リンク"
+      },
+      "email": {
+        "type": "メール招待"
       }
     },
     "changeRoleAria": "役割を変更",
@@ -1494,7 +1483,13 @@
           "title": "このメンバーには未決済の残高があります",
           "description": "精算せずに削除すると、この残高はグループに残り続けます。下のオプションを選んで、このメンバーに関係する残高ごとに精算金を作成するか、削除後に手動で精算してください。"
         },
-        "checkbox": "削除前にこのメンバーの残高を精算する"
+        "checkbox": "削除前にこのメンバーの残高を精算する",
+        "previewWillCreate_one": "精算支払いを{count}件作成します",
+        "previewPays": "{name}が支払います",
+        "previewReceives": "{name}が受け取ります",
+        "previewTo": "{name}へ",
+        "previewFrom": "{name}から",
+        "previewWillCreate_other": "精算支払いを{count}件作成します"
       }
     },
     "leave": {
@@ -1548,6 +1543,11 @@
         "pendingGroup": "保留中の招待",
         "pendingSuffix": "（保留中）"
       }
+    },
+    "dropdown": {
+      "remove": "削除",
+      "changeRole": "役割を変更",
+      "revoke": "招待を取り消す"
     }
   },
   "AccountSettings": {
@@ -1751,6 +1751,9 @@
     "openExpense": "経費を開く",
     "import": {
       "imported_other": "{participant}が支出を{count}件インポートしました"
+    },
+    "participant": {
+      "removed": "{participant}が{target}をグループから削除しました"
     }
   },
   "OfflineBanner": {

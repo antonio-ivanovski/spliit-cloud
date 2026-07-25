@@ -16,12 +16,18 @@ export function SettlementGroupActions({
   currency,
   originalCurrencyCode,
   groupId,
+  participants,
   children,
 }: {
   group: SettlementGroup
   currency: Currency
   originalCurrencyCode?: string
   groupId: string
+  participants?: Array<{
+    id: string
+    name: string
+    account?: { id: string; name?: string | null; image?: string | null } | null
+  }>
   children: (openFor: (legKeys?: string[]) => void) => ReactNode
 }) {
   const [open, setOpen] = useState(false)
@@ -41,6 +47,7 @@ export function SettlementGroupActions({
         initialSelectedKeys={initialSelectedKeys}
         currency={currency}
         originalCurrencyCode={originalCurrencyCode}
+        participants={participants}
         open={open}
         onOpenChange={setOpen}
       />

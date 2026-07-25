@@ -159,6 +159,8 @@ export async function getGroupExpenses(
           ledgerParticipant: {
             select: {
               id: true,
+              displayName: true,
+              removedAt: true,
               groupMember: {
                 select: {
                   account: { select: { id: true, name: true, image: true } },
@@ -179,6 +181,8 @@ export async function getGroupExpenses(
           ledgerParticipant: {
             select: {
               id: true,
+              displayName: true,
+              removedAt: true,
               groupMember: {
                 select: {
                   account: { select: { id: true, name: true, image: true } },
@@ -251,6 +255,7 @@ export async function getGroupExpenses(
         id: pb.ledgerParticipant.id,
         name: resolveParticipantDisplayName(pb.ledgerParticipant),
         account: pb.ledgerParticipant.groupMember?.account ?? null,
+        removed: pb.ledgerParticipant.removedAt != null,
       },
       shares: pb.shares,
     })),
@@ -259,6 +264,7 @@ export async function getGroupExpenses(
         id: pf.ledgerParticipant.id,
         name: resolveParticipantDisplayName(pf.ledgerParticipant),
         account: pf.ledgerParticipant.groupMember?.account ?? null,
+        removed: pf.ledgerParticipant.removedAt != null,
       },
       shares: pf.shares,
     })),

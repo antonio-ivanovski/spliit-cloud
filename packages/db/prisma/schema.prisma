@@ -193,6 +193,9 @@ model LedgerParticipant {
   // Display label for UNLINKED_PARTICIPANT rows. Null for account-backed
   // rows (the display name is resolved through `groupMember.account.name`).
   displayName   String?
+  // Soft-hide timestamp. When set, the participant is excluded from Members
+  // lists and expense pickers but expense history is preserved.
+  removedAt     DateTime?
 
   expensesPaidByList              ExpensePaidBy[]
   expensesPaidFor                 ExpensePaidFor[]

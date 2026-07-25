@@ -87,6 +87,14 @@ function useMessage(activity: Activity) {
             message: t('group.unarchived', { participant: actor }),
             changes: null,
           }
+        case 'PARTICIPANT_REMOVED':
+          return {
+            message: t('participant.removed', {
+              participant: actor,
+              target: data.summary ?? '',
+            }),
+            changes: null,
+          }
         default:
           return { message: t('fallback'), changes: null }
       }

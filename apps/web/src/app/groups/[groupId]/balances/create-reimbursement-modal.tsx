@@ -30,6 +30,7 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
+import { RemovedParticipantBadge } from './removed-participant-badge'
 import {
   settlementLegKey,
   sumSettlementLegs,
@@ -45,6 +46,16 @@ type CreateReimbursementModalProps = {
   initialSelectedKeys?: string[]
   currency: Currency
   originalCurrencyCode?: string
+  /**
+   * Prefer passing the balances-page merged list (includes soft-removed
+   * participants). Falls back to group.participants when omitted.
+   */
+  participants?: Array<{
+    id: string
+    name: string
+    account?: { id: string; name?: string | null; image?: string | null } | null
+    removed?: boolean
+  }>
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -56,6 +67,7 @@ export function CreateReimbursementModal({
   initialSelectedKeys,
   currency,
   originalCurrencyCode,
+  participants: participantsProp,
   open,
   onOpenChange,
 }: CreateReimbursementModalProps) {
@@ -73,7 +85,14 @@ export function CreateReimbursementModal({
   })
 
   const groupCurrency = group ? getCurrencyFromGroup(group) : undefined
-  const participants = group?.participants ?? []
+  const participants = (participantsProp ?? group?.participants ?? []).map(
+    (participant) => ({
+      id: participant.id,
+      name: participant.name,
+      account: participant.account,
+      removed: 'removed' in participant ? Boolean(participant.removed) : false,
+    }),
+  )
   const legs = settlementGroup?.legs ?? (reimbursement ? [reimbursement] : [])
   const direction: SettlementDirection = settlementGroup?.direction ?? 'pay'
   const centralParticipantId =
@@ -287,6 +306,9 @@ export function CreateReimbursementModal({
                   <span className="text-sm font-medium">
                     {centralParticipant.name}
                   </span>
+                  {centralParticipant.removed ? (
+                    <RemovedParticipantBadge />
+                  ) : null}
                 </div>
               )}
               {selectedLegs.length === 1 && (
@@ -294,15 +316,21 @@ export function CreateReimbursementModal({
                   <span aria-hidden="true" className="text-muted-foreground">
                     {direction === 'pay' ? '→' : '←'}
                   </span>
-                  <span className="text-sm font-medium">
-                    {participants.find(
+                  {(() => {
+                    const other = participants.find(
                       (participant) =>
                         participant.id ===
                         (direction === 'pay'
                           ? selectedLegs[0].to
                           : selectedLegs[0].from),
-                    )?.name ?? ''}
-                  </span>
+                    )
+                    return (
+                      <span className="inline-flex items-center gap-1.5 text-sm font-medium">
+                        {other?.name ?? ''}
+                        {other?.removed ? <RemovedParticipantBadge /> : null}
+                      </span>
+                    )
+                  })()}
                 </>
               )}
             </div>
@@ -377,8 +405,8 @@ function ReimbursementSelectionList({
 }: {
   legs: Reimbursement[]
   direction: SettlementDirection
-  participants: Array<{ id: string; name: string }>
-  centralParticipant?: { id: string; name: string }
+  participants: Array<{ id: string; name: string; removed?: boolean }>
+  centralParticipant?: { id: string; name: string; removed?: boolean }
   currency: Currency
   locale: string
   selectedKeySet: Set<string>
@@ -438,6 +466,7 @@ function ReimbursementSelectionList({
                     name: counterparty?.name ?? '',
                   })}
             </span>
+            {counterparty?.removed ? <RemovedParticipantBadge /> : null}
             <span className="shrink-0 tabular-nums text-sm">
               {formatCurrency(currency, leg.amount, locale)}
             </span>

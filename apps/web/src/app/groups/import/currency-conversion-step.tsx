@@ -307,7 +307,7 @@ function PairConversionCard({
                 checked={useCustomRate}
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    const seed = fixedRate ?? apiRate ?? undefined
+                    const seed = fixedRate ?? apiRate ?? -1
                     onOverrideChange(seed)
                   } else {
                     onOverrideChange(undefined)
@@ -390,7 +390,12 @@ function PairConversionCard({
                   id={`custom-rate-input-${pairKey}`}
                   type="number"
                   step="any"
-                  value={override ?? ''}
+                  value={
+                    override !== undefined && override !== -1 ? override : ''
+                  }
+                  onFocus={(e) => {
+                    e.target.select()
+                  }}
                   onChange={(e) => {
                     const v = parseFloat(e.target.value)
                     onOverrideChange(isNaN(v) ? undefined : v)
@@ -552,7 +557,7 @@ export function CurrencyConversionStep({
       const pairMode = modes[pairKey] ?? 'perDate'
       if (pairMode !== 'fixed') continue
       const value = overrides[pairKey] ?? fixedRates[pairKey]
-      if (value === undefined) {
+      if (value === undefined || value === -1) {
         ready = false
         break
       }
@@ -588,7 +593,7 @@ export function CurrencyConversionStep({
         }
       } else if (pairMode === 'fixed') {
         const rate = overrides[pairKey] ?? fixedRates[pairKey]
-        if (rate !== undefined) {
+        if (rate !== undefined && rate !== -1) {
           for (const item of rateKeyItems) {
             if (item.base === pair.base && item.target === pair.target) {
               rates[`${item.date}|${item.base}|${item.target}`] = rate

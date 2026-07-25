@@ -22,6 +22,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useToast } from '@/components/ui/use-toast'
+import { isPlaceholderEmail } from '@/lib/account'
 import { useMediaQuery } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { usePushNotifications } from '@/lib/use-push-notifications'
@@ -215,8 +216,7 @@ export function NotificationsPreferences() {
   const [draft, setDraft] = useState<Record<Category, Channel[]> | null>(null)
   const [pendingCategory, setPendingCategory] = useState<Category | null>(null)
   const initializedData = useRef<PreferenceData | undefined>(undefined)
-  const emailDisabled =
-    !account?.email || account.email.toLowerCase().includes('placeholder.local')
+  const emailDisabled = !account?.email || isPlaceholderEmail(account.email)
 
   useEffect(() => {
     if (!preferences.data || initializedData.current === preferences.data)

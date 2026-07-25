@@ -890,6 +890,7 @@
   "Balances": {
     "title": "Bilanci",
     "description": "Vedi il saldo netto di ogni partecipante.",
+    "removedBadge": "Rimosso",
     "Reimbursements": {
       "title": "Pagamenti di saldo suggeriti",
       "description": "Usa questi pagamenti per saldare i debiti con il minor numero possibile di trasferimenti.",
@@ -904,7 +905,8 @@
       "original": "Originale",
       "title": "Scegli come visualizzare i saldi",
       "groupDescription": "Converti tutte le spese in {currency} per una vista combinata.",
-      "originalDescription": "Mantieni ogni spesa nella valuta in cui è stata inserita."
+      "originalDescription": "Mantieni ogni spesa nella valuta in cui è stata inserita.",
+      "originalNote": "I pagamenti di saldo vengono di solito registrati nella valuta del gruppo. Questa vista in valuta originale è un libro mastro separato per valuta, quindi i saldi possono sembrare non saldati qui anche quando il piano in valuta del gruppo è saldato. Preferisci la vista in valuta del gruppo per saldare."
     },
     "direction": {
       "toReceive": "Da ricevere",
@@ -1471,25 +1473,12 @@
       "revokeButton": "Revoca invito",
       "revoked": "Invito revocato.",
       "created": "Invito inviato a {email}.",
-      "revokeDialog": {
-        "title": "Revocare l'invito?",
-        "description": "Revocare l'invito a {email}? Non l'ha ancora accettato.",
-        "cancel": "Annulla",
-        "confirm": "Revoca",
-        "unsettled": {
-          "toast": "Invito revocato, saldi saldati.",
-          "title": "Salda i saldi prima di revocare",
-          "description": "Revocare l'invito a {email}? I suoi saldi devono essere saldati prima.",
-          "warning": {
-            "title": "Questo invito ha saldi in sospeso",
-            "description": "Seleziona l'opzione qui sotto per creare un pagamento di saldo per ogni debito relativo a questo invitato. L'invito può essere revocato solo dopo aver saldato questi debiti."
-          },
-          "checkbox": "Salda i saldi dell'invitato prima di revocare"
-        }
-      },
       "link": {
         "type": "Link monouso",
         "fallbackLabel": "Link di invito"
+      },
+      "email": {
+        "type": "Invito via email"
       }
     },
     "changeRoleAria": "Cambia ruolo",
@@ -1509,7 +1498,14 @@
           "title": "Questo membro ha saldi in sospeso",
           "description": "Se rimuovi questo membro senza saldare i debiti, questi rimarranno nel gruppo a tempo indeterminato. Seleziona l'opzione qui sotto per creare un pagamento di saldo per ogni debito relativo a questo membro, oppure rimuovilo e salda i debiti manualmente."
         },
-        "checkbox": "Salda i debiti di questo membro prima di rimuoverlo"
+        "checkbox": "Salda i debiti di questo membro prima di rimuoverlo",
+        "previewWillCreate_one": "Verrà creato {count} pagamento di saldo",
+        "previewPays": "{name} pagherà",
+        "previewReceives": "{name} riceverà",
+        "previewTo": "a {name}",
+        "previewFrom": "da {name}",
+        "previewWillCreate_other": "Verranno creati {count} pagamenti di saldo",
+        "previewWillCreate_many": "Verranno creati {count} pagamenti di saldo"
       }
     },
     "leave": {
@@ -1563,6 +1559,11 @@
         "pendingGroup": "Inviti in sospeso",
         "pendingSuffix": "(in sospeso)"
       }
+    },
+    "dropdown": {
+      "remove": "Rimuovi",
+      "changeRole": "Cambia ruolo",
+      "revoke": "Revoca invito"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1769,9 @@
       "imported_one": "{participant} ha importato {count} spesa",
       "imported_many": "{participant} ha importato {count} spese",
       "imported_other": "{participant} ha importato {count} spese"
+    },
+    "participant": {
+      "removed": "{participant} ha rimosso {target} dal gruppo"
     }
   },
   "OfflineBanner": {

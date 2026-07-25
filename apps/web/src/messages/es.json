@@ -890,6 +890,7 @@
   "Balances": {
     "title": "Balances",
     "description": "Consulta el saldo neto de cada participante.",
+    "removedBadge": "Eliminado",
     "Reimbursements": {
       "title": "Pagos de liquidación sugeridos",
       "description": "Usa estos pagos para liquidar los saldos con el menor número posible de transferencias.",
@@ -904,7 +905,8 @@
       "original": "Original",
       "title": "Elige cómo ver los saldos",
       "groupDescription": "Convierte todos los gastos a {currency} para una vista combinada.",
-      "originalDescription": "Mantén cada gasto en la moneda en la que se introdujo."
+      "originalDescription": "Mantén cada gasto en la moneda en la que se introdujo.",
+      "originalNote": "Los pagos de liquidación suelen registrarse en la moneda del grupo. Esta vista en moneda original es un libro contable independiente por moneda, por lo que los saldos pueden parecer pendientes aquí incluso cuando el plan en moneda del grupo esté liquidado. Prefiera la vista en moneda del grupo para liquidar."
     },
     "direction": {
       "toReceive": "Por recibir",
@@ -1471,25 +1473,12 @@
       "revokeButton": "Revocar invitación",
       "revoked": "Invitación revocada.",
       "created": "Invitación enviada a {email}.",
-      "revokeDialog": {
-        "title": "¿Revocar invitación?",
-        "description": "¿Revocar la invitación a {email}? Aún no la han aceptado.",
-        "cancel": "Cancelar",
-        "confirm": "Revocar",
-        "unsettled": {
-          "toast": "Invitación revocada, saldos liquidados.",
-          "title": "Liquidar saldos antes de revocar",
-          "description": "¿Revocar la invitación a {email}? Sus saldos deben liquidarse primero.",
-          "warning": {
-            "title": "Esta invitación tiene saldos pendientes",
-            "description": "Selecciona la opción siguiente para crear un pago de liquidación por cada saldo relacionado con esta persona invitada. La invitación solo se puede revocar después de liquidar estos saldos."
-          },
-          "checkbox": "Liquidar los saldos del invitado antes de revocar"
-        }
-      },
       "link": {
         "type": "Enlace de un solo uso",
         "fallbackLabel": "Enlace de invitación"
+      },
+      "email": {
+        "type": "Invitación por correo"
       }
     },
     "changeRoleAria": "Cambiar rol",
@@ -1509,7 +1498,14 @@
           "title": "Este miembro tiene saldos pendientes",
           "description": "Si lo eliminas sin liquidar, estos saldos permanecerán en el grupo indefinidamente. Selecciona la opción siguiente para crear un pago de liquidación por cada saldo relacionado con este miembro, o elimínalo y liquida los saldos manualmente."
         },
-        "checkbox": "Liquidar los saldos de este miembro antes de eliminarlo"
+        "checkbox": "Liquidar los saldos de este miembro antes de eliminarlo",
+        "previewWillCreate_one": "Se creará {count} pago de liquidación",
+        "previewPays": "{name} pagará",
+        "previewReceives": "{name} recibirá",
+        "previewTo": "a {name}",
+        "previewFrom": "de {name}",
+        "previewWillCreate_other": "Se crearán {count} pagos de liquidación",
+        "previewWillCreate_many": "Se crearán {count} pagos de liquidación"
       }
     },
     "leave": {
@@ -1563,6 +1559,11 @@
         "pendingGroup": "Invitaciones pendientes",
         "pendingSuffix": "(pendiente)"
       }
+    },
+    "dropdown": {
+      "remove": "Eliminar",
+      "changeRole": "Cambiar rol",
+      "revoke": "Revocar invitación"
     }
   },
   "AccountSettings": {
@@ -1768,6 +1769,9 @@
       "imported_one": "{participant} importó {count} gasto",
       "imported_many": "{participant} importó {count} gastos",
       "imported_other": "{participant} importó {count} gastos"
+    },
+    "participant": {
+      "removed": "{participant} eliminó a {target} del grupo"
     }
   },
   "OfflineBanner": {

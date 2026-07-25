@@ -51,6 +51,9 @@ export async function linkUnlinkedParticipantToAccount(opts: {
     if (participant.kind !== LedgerParticipantKind.UNLINKED_PARTICIPANT) {
       throw new Error('Ledger participant is not unlinked')
     }
+    if (participant.removedAt) {
+      throw new Error('Ledger participant has been removed')
+    }
     if (participant.groupMemberId) {
       throw new Error('Ledger participant is already linked to a member')
     }
@@ -375,6 +378,9 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
     if (participant.kind !== LedgerParticipantKind.UNLINKED_PARTICIPANT) {
       throw new Error('Ledger participant is not unlinked')
     }
+    if (participant.removedAt) {
+      throw new Error('Ledger participant has been removed')
+    }
     if (participant.groupMemberId) {
       throw new Error('Ledger participant is already linked to a member')
     }
@@ -470,7 +476,12 @@ export async function listUnlinkedParticipants(groupId: string): Promise<
   })
   if (!group?.ledgerId) return []
   return prisma.ledgerParticipant.findMany({
-    where: { ledgerId: group.ledgerId, kind: 'UNLINKED_PARTICIPANT' },
+    where: {
+      ledgerId: group.ledgerId,
+      kind: 'UNLINKED_PARTICIPANT',
+      removedAt: null,
+      invitations: { none: { status: 'PENDING' } },
+    },
     orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
     select: { id: true, displayName: true },
   })

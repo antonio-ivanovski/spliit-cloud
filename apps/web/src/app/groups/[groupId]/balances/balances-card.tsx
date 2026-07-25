@@ -17,6 +17,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { BalancesLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
+import { RemovedParticipantBadge } from './removed-participant-badge'
 import {
   SettlementGroupActions,
   SettlementGroupButton,
@@ -27,6 +28,7 @@ type Participant = {
   id: string
   name: string
   account?: { id: string; name?: string | null; image?: string | null } | null
+  removed?: boolean
 }
 
 export function BalancesCard({
@@ -124,7 +126,7 @@ function SettlementSection({
   const participantIndex = new Map(participants.map((p, i) => [p.id, i]))
 
   const getParticipant = (id: string): Participant =>
-    participantById.get(id) ?? { id, name: id }
+    participantById.get(id) ?? { id, name: id, removed: false }
 
   const receiving = participants.filter(
     (participant) => (balances[participant.id]?.total ?? 0) > 0,
@@ -179,6 +181,7 @@ function SettlementSection({
               >
                 <ParticipantAvatar participant={participant} size="xs" />
                 <span className="max-w-32 truncate">{participant.name}</span>
+                {participant.removed ? <RemovedParticipantBadge /> : null}
               </div>
             ))}
           </div>
@@ -264,6 +267,7 @@ function SettlementDirection({
                 group={group}
                 currency={currency}
                 groupId={groupId}
+                participants={participants}
                 originalCurrencyCode={
                   includeOriginalCurrency ? currency.code : undefined
                 }
@@ -287,6 +291,9 @@ function SettlementDirection({
                             values={{ name: participant.name }}
                           />
                         </span>
+                        {participant.removed ? (
+                          <RemovedParticipantBadge />
+                        ) : null}
                       </div>
                       <div className="flex items-center gap-1">
                         <span className="shrink-0 tabular-nums text-sm font-medium">
@@ -339,6 +346,9 @@ function SettlementDirection({
                                   values={{ name: counterparty.name }}
                                 />
                               </span>
+                              {counterparty.removed ? (
+                                <RemovedParticipantBadge />
+                              ) : null}
                               <span className="shrink-0 tabular-nums text-muted-foreground">
                                 {formatCurrency(currency, leg.amount, locale)}
                               </span>

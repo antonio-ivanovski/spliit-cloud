@@ -883,6 +883,7 @@
   "Balances": {
     "title": "Balans",
     "description": "Bekijk het nettosaldo van elke deelnemer.",
+    "removedBadge": "Verwijderd",
     "Reimbursements": {
       "title": "Voorgestelde vereffeningsbetalingen",
       "description": "Gebruik deze betalingen om saldi met zo min mogelijk overschrijvingen te vereffenen.",
@@ -897,7 +898,8 @@
       "original": "Origineel",
       "title": "Kies hoe saldi worden weergegeven",
       "groupDescription": "Converteer alle uitgaven naar {currency} voor één gecombineerd overzicht.",
-      "originalDescription": "Houd elke uitgave in de valuta waarin deze is ingevoerd."
+      "originalDescription": "Houd elke uitgave in de valuta waarin deze is ingevoerd.",
+      "originalNote": "Verrekeningsbetalingen worden meestal in de groepsvaluta geregistreerd. Deze weergave in originele valuta is een apart grootboek per valuta, waardoor saldi hier onverrekend kunnen lijken, zelfs als het plan in groepsvaluta is verrekend. Gebruik bij verrekenen de weergave in groepsvaluta."
     },
     "direction": {
       "toReceive": "Te ontvangen",
@@ -1463,25 +1465,12 @@
       "revokeButton": "Uitnodiging intrekken",
       "revoked": "Uitnodiging ingetrokken.",
       "created": "Uitnodiging verzonden naar {email}.",
-      "revokeDialog": {
-        "title": "Uitnodiging intrekken?",
-        "description": "Uitnodiging aan {email} intrekken? Deze is nog niet geaccepteerd.",
-        "cancel": "Annuleren",
-        "confirm": "Intrekken",
-        "unsettled": {
-          "toast": "Uitnodiging ingetrokken, saldi vereffend.",
-          "title": "Vereffen saldi vóór intrekken",
-          "description": "Uitnodiging aan {email} intrekken? De saldi moeten eerst vereffend worden.",
-          "warning": {
-            "title": "Deze uitnodiging heeft niet-vereffende saldi",
-            "description": "Selecteer de optie hieronder om voor elk saldo van deze genodigde een vereffeningsbetaling aan te maken. De uitnodiging kan pas worden ingetrokken nadat deze saldi zijn vereffend."
-          },
-          "checkbox": "Vereffen de saldi van de genodigde vóór het intrekken"
-        }
-      },
       "link": {
         "type": "Eenmalige link",
         "fallbackLabel": "Uitnodigingslink"
+      },
+      "email": {
+        "type": "E-mailuitnodiging"
       }
     },
     "changeRoleAria": "Rol wijzigen",
@@ -1501,7 +1490,13 @@
           "title": "Dit lid heeft niet-vereffende saldi",
           "description": "Als je dit lid zonder vereffening verwijdert, blijven deze saldi onbeperkt in de groep staan. Selecteer de optie hieronder om voor elk saldo van dit lid een vereffeningsbetaling aan te maken, of verwijder het lid en vereffen de saldi handmatig."
         },
-        "checkbox": "Saldi van dit lid vereffenen vóór verwijdering"
+        "checkbox": "Saldi van dit lid vereffenen vóór verwijdering",
+        "previewWillCreate_one": "Maakt {count} verrekeningsbetaling aan",
+        "previewPays": "{name} betaalt",
+        "previewReceives": "{name} ontvangt",
+        "previewTo": "aan {name}",
+        "previewFrom": "van {name}",
+        "previewWillCreate_other": "Maakt {count} verrekeningsbetalingen aan"
       }
     },
     "leave": {
@@ -1555,6 +1550,11 @@
         "pendingGroup": "Openstaande uitnodigingen",
         "pendingSuffix": "(openstaand)"
       }
+    },
+    "dropdown": {
+      "remove": "Verwijderen",
+      "changeRole": "Rol wijzigen",
+      "revoke": "Uitnodiging intrekken"
     }
   },
   "AccountSettings": {
@@ -1759,6 +1759,9 @@
     "import": {
       "imported_one": "{participant} importeerde {count} uitgave",
       "imported_other": "{participant} importeerde {count} uitgaven"
+    },
+    "participant": {
+      "removed": "{participant} verwijderde {target} uit de groep"
     }
   },
   "OfflineBanner": {

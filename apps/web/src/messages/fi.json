@@ -883,6 +883,7 @@
   "Balances": {
     "title": "Saldo",
     "description": "Näe kunkin osallistujan nettosaldo.",
+    "removedBadge": "Poistettu",
     "Reimbursements": {
       "title": "Ehdotetut tasausmaksut",
       "description": "Näillä maksuilla voit tasata saldot mahdollisimman vähillä tilisiirroilla.",
@@ -897,7 +898,8 @@
       "original": "Alkuperäinen",
       "title": "Valitse, miten saldot näytetään",
       "groupDescription": "Muunna kaikki kulut valuutaksi {currency} yhtenäistä näkymää varten.",
-      "originalDescription": "Pidä jokainen kulu siinä valuutassa, johon se on syötetty."
+      "originalDescription": "Pidä jokainen kulu siinä valuutassa, johon se on syötetty.",
+      "originalNote": "Tilitysmaksut kirjataan yleensä ryhmän valuutassa. Tämä alkuperäisen valuutan näkymä on erillinen valuuttakohtainen kirjanpito, joten saldot voivat näyttää maksamattomilta vaikka ryhmän valuutan suunnitelma olisi tasoitettu. Käytä tilityksiin ryhmän valuutan näkymää."
     },
     "direction": {
       "toReceive": "Saatavaa",
@@ -1463,25 +1465,12 @@
       "revokeButton": "Peruuta kutsu",
       "revoked": "Kutsu peruutettu.",
       "created": "Kutsu lähetetty osoitteeseen {email}.",
-      "revokeDialog": {
-        "title": "Peruutetaanko kutsu?",
-        "description": "Peruutetaanko kutsukäyttäjälle {email}? Hän ei ole vielä hyväksynyt.",
-        "cancel": "Peruuta",
-        "confirm": "Peruuta",
-        "unsettled": {
-          "toast": "Kutsu peruutettu, saatavat tasattu.",
-          "title": "Tasaa saatavat ennen peruutusta",
-          "description": "Peruutetaanko kutsu käyttäjälle {email}? Hänen saatavansa on tasattava ensin.",
-          "warning": {
-            "title": "Tällä kutsulla on tasaussaatavia",
-            "description": "Valitse alla oleva vaihtoehto, niin jokaisesta tähän kutsuttuun liittyvästä saldosta luodaan tasausmaksu. Kutsun voi perua vasta, kun saldot on tasattu."
-          },
-          "checkbox": "Tasaa kutsutun saatavat ennen peruutusta"
-        }
-      },
       "link": {
         "type": "Kertakäyttöinen linkki",
         "fallbackLabel": "Kutsulinkki"
+      },
+      "email": {
+        "type": "Sähköpostikutsu"
       }
     },
     "changeRoleAria": "Vaihda roolia",
@@ -1497,7 +1486,13 @@
           "title": "Tällä jäsenellä on tasaussaatavia",
           "description": "Jos jäsen poistetaan tasaamatta, nämä saldot jäävät ryhmään pysyvästi. Valitse alla oleva vaihtoehto, niin jokaisesta tähän jäseneen liittyvästä saldosta luodaan tasausmaksu, tai poista jäsen ja tasaa saldot käsin."
         },
-        "checkbox": "Tasaa tämän jäsenen saldot ennen poistamista"
+        "checkbox": "Tasaa tämän jäsenen saldot ennen poistamista",
+        "previewWillCreate_one": "Luodaan {count} tilitysmaksu",
+        "previewPays": "{name} maksaa",
+        "previewReceives": "{name} saa",
+        "previewTo": "käyttäjälle {name}",
+        "previewFrom": "käyttäjältä {name}",
+        "previewWillCreate_other": "Luodaan {count} tilitysmaksua"
       },
       "title": "Poistetaanko jäsen?",
       "cancel": "Peruuta"
@@ -1555,7 +1550,12 @@
       "link": "Linkitä tiliin"
     },
     "remove": "Poista",
-    "roleUpdated": "Rooli päivitetty rooliin {role}."
+    "roleUpdated": "Rooli päivitetty rooliin {role}.",
+    "dropdown": {
+      "remove": "Poista",
+      "changeRole": "Vaihda roolia",
+      "revoke": "Peru kutsu"
+    }
   },
   "AccountSettings": {
     "title": "Tilin asetukset",
@@ -1759,6 +1759,9 @@
     "import": {
       "imported_one": "{participant} toi {count} kulun",
       "imported_other": "{participant} toi {count} kulua"
+    },
+    "participant": {
+      "removed": "{participant} poisti {target} ryhmästä"
     }
   },
   "OfflineBanner": {

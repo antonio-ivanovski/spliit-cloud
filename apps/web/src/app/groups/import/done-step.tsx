@@ -2,6 +2,7 @@ import { CopyButton } from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { isPlaceholderEmail } from '@/lib/account'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { CheckCircle2, Share2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -137,7 +138,11 @@ export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
                   className="flex items-center justify-between gap-3 py-1"
                 >
                   <span className="font-medium">{invite.sourceName}</span>
-                  <span className="text-muted-foreground">{invite.email}</span>
+                  {!isPlaceholderEmail(invite.email) && (
+                    <span className="text-muted-foreground">
+                      {invite.email}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>

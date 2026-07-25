@@ -758,6 +758,7 @@
   "Balances": {
     "title": "잔액",
     "description": "참여자별 순잔액을 확인하세요.",
+    "removedBadge": "제거됨",
     "Reimbursements": {
       "title": "추천 정산금",
       "description": "가능한 한 적은 송금으로 잔액을 정산할 수 있어요.",
@@ -772,7 +773,8 @@
       "original": "원본",
       "title": "잔액 보기 방식 선택",
       "groupDescription": "모든 지출을 {currency}로 변환하여 하나의 통합 보기로 표시합니다.",
-      "originalDescription": "각 지출을 입력된 통화 그대로 유지합니다."
+      "originalDescription": "각 지출을 입력된 통화 그대로 유지합니다.",
+      "originalNote": "정산 결제는 보통 그룹 통화로 기록됩니다. 이 원래 통화 보기는 통화별로 별도의 장부이므로, 그룹 통화 정산이 완료되어도 여기서는 미정산으로 보일 수 있습니다. 정산할 때는 그룹 통화 보기를 사용하는 것이 좋습니다."
     },
     "direction": {
       "toReceive": "받을 금액",
@@ -1456,25 +1458,12 @@
       "revokeButton": "초대 취소",
       "revoked": "초대가 취소되었습니다.",
       "created": "{email}에 초대를 보냈습니다.",
-      "revokeDialog": {
-        "title": "초대를 취소하시겠습니까?",
-        "description": "{email}에 대한 초대를 취소하시겠습니까? 아직 수락하지 않았습니다.",
-        "cancel": "취소",
-        "confirm": "취소",
-        "unsettled": {
-          "toast": "초대가 취소되고 잔액이 정산되었습니다.",
-          "title": "취소 전에 잔액 정산",
-          "description": "{email}에 대한 초대를 취소하시겠습니까? 먼저 잔액을 정산해야 합니다.",
-          "warning": {
-            "title": "이 초대에는 미정산 잔액이 있습니다",
-            "description": "아래 옵션을 선택하면 초대받은 사람과 관련된 잔액마다 정산금이 하나씩 생성돼요. 잔액이 정산된 후에만 초대를 취소할 수 있어요."
-          },
-          "checkbox": "취소 전에 초대받은 사람의 잔액 정산"
-        }
-      },
       "link": {
         "type": "1회용 링크",
         "fallbackLabel": "초대 링크"
+      },
+      "email": {
+        "type": "이메일 초대"
       }
     },
     "changeRoleAria": "역할 변경",
@@ -1494,7 +1483,13 @@
           "title": "이 멤버에게는 미정산 잔액이 있습니다",
           "description": "정산하지 않고 삭제하면 이 잔액은 그룹에 계속 남아요. 아래 옵션을 선택해 이 멤버와 관련된 잔액마다 정산금을 만들거나, 삭제한 뒤 직접 정산하세요."
         },
-        "checkbox": "삭제 전에 이 멤버의 잔액 정산"
+        "checkbox": "삭제 전에 이 멤버의 잔액 정산",
+        "previewWillCreate_one": "정산 결제 {count}건이 생성됩니다",
+        "previewPays": "{name}이(가) 지불합니다",
+        "previewReceives": "{name}이(가) 받습니다",
+        "previewTo": "{name}에게",
+        "previewFrom": "{name}에게서",
+        "previewWillCreate_other": "정산 결제 {count}건이 생성됩니다"
       }
     },
     "leave": {
@@ -1548,6 +1543,11 @@
         "pendingSuffix": "(대기 중)"
       },
       "linkButton": "연결"
+    },
+    "dropdown": {
+      "remove": "제거",
+      "changeRole": "역할 변경",
+      "revoke": "초대 취소"
     }
   },
   "AccountSettings": {
@@ -1751,6 +1751,9 @@
     "openExpense": "지출 열기",
     "import": {
       "imported_other": "{participant}님이 지출 {count}건을 가져왔어요"
+    },
+    "participant": {
+      "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다"
     }
   },
   "OfflineBanner": {
