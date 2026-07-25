@@ -98,7 +98,7 @@ More focused notes: [.agent/architecture.md](.agent/architecture.md), [.agent/da
 - Translation texts use single `{` and `}` for interpolation, not double `{{` and `}}`.
 - **Never paste English into another locale** as a placeholder — `bun i18n set` rejects identical-to-en values (unless auto-allowed or `--allow-english`).
 - **After editing en-US**: run `bun i18n plan --json` and follow its `mode` (`oneshot` / one subagent / family-parallel). Do not always spawn many translators for 1–2 keys.
-- **Translator workflow**: `bun i18n pack --locales … --keys … --usages --json` → translate → `set --stdin` → `check --locale`. For ambiguous strings, use `bun i18n usages <key>`.
-- **New language**: `bun i18n init-locale <code> --label "…" --flag "…"` then pack/set/check until full parity.
+- **New / backfill locale**: `bun i18n init-locale … --family …` then loop `bun i18n next --locale L --json` → `set --stdin` until `done`, then `check --locale`. Do not explore the repo or web-search for i18n conventions — use the skill.
+- **Translator workflow**: `next`/`pack` → translate → `set --stdin` → `check`. Ambiguous strings: `bun i18n usages <key>`.
 - **Audit (canonical CI gate)**: `bun i18n check` exits 1 on missing keys, orphan keys, or untranslated English on keys introduced vs `HEAD`. Use `--changes-only` for PR-scoped missing-key audits.
-- **Skill**: `.agents/skills/translate-strings/SKILL.md` (main-agent dispatch + translator roles).
+- **Skill**: `.agents/skills/translate-strings/SKILL.md`.

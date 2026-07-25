@@ -1,17 +1,21 @@
 import { access, copyFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { locales, type Locale } from '../../../packages/domain/src/i18n.ts'
+import { LANGUAGE_FAMILIES } from './families'
 import { localeFileName } from './fs-helpers'
 
 const DOMAIN_I18N = 'packages/domain/src/i18n.ts'
 const LOCALE_SWITCHER = 'apps/web/src/components/locale-switcher.tsx'
 const I18N_REACT = 'apps/web/src/i18n/react.tsx'
+const FAMILIES_FILE = 'scripts/i18n/src/families.ts'
 const MESSAGES_DIR = 'apps/web/src/messages'
 
 export type InitLocaleOptions = {
   code: string
   label: string
   flag: string
+  /** Language family id from LANGUAGE_FAMILIES (required for plan dispatch). */
+  family: string
   rtl?: boolean
   from?: Locale
   /** Project root (defaults to cwd). */
@@ -20,6 +24,7 @@ export type InitLocaleOptions = {
 
 export type InitLocaleResult = {
   code: string
+  family: string
   filesTouched: string[]
   nextSteps: string[]
 }
@@ -157,12 +162,50 @@ export function addRtlLocale(source: string, code: string): string {
   throw new Error('could not update RTL locale handling in react.tsx')
 }
 
+/** Insert a locale code into a family's locales: [...] array in families.ts. */
+export function addLocaleToFamilySource(
+  source: string,
+  familyId: string,
+  code: string,
+): string {
+  const familyStart = source.indexOf(`id: '${familyId}'`)
+  if (familyStart < 0) {
+    throw new Error(`unknown language family: ${familyId}`)
+  }
+  const localesKey = source.indexOf('locales:', familyStart)
+  if (localesKey < 0) throw new Error(`locales array not found for ${familyId}`)
+  const bracket = source.indexOf('[', localesKey)
+  const endBracket = source.indexOf(']', bracket)
+  if (bracket < 0 || endBracket < 0) {
+    throw new Error(`locales array brackets not found for ${familyId}`)
+  }
+  const body = source.slice(bracket + 1, endBracket)
+  if (body.includes(`'${code}'`) || body.includes(`"${code}"`)) {
+    return source
+  }
+  const entries = body
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => s.replace(/^['"]|['"]$/g, ''))
+  entries.push(code)
+  entries.sort((a, b) => a.localeCompare(b))
+  const rendered = entries.map((e) => `'${e}'`).join(', ')
+  return source.slice(0, bracket + 1) + rendered + source.slice(endBracket)
+}
+
 export async function initLocale(
   opts: InitLocaleOptions,
 ): Promise<InitLocaleResult> {
   assertValidLocaleCode(opts.code)
   if (opts.from && !(locales as readonly string[]).includes(opts.from)) {
     throw new Error(`unknown --from locale: ${opts.from}`)
+  }
+  const familyIds = LANGUAGE_FAMILIES.map((f) => f.id)
+  if (!familyIds.includes(opts.family)) {
+    throw new Error(
+      `unknown --family ${opts.family} — expected one of: ${familyIds.join(', ')}`,
+    )
   }
 
   const root = opts.root ?? process.cwd()
@@ -208,7 +251,18 @@ export async function initLocale(
   await Bun.write(switcherPath, switcherNext)
   filesTouched.push(LOCALE_SWITCHER)
 
-  // 4. optional RTL
+  // 4. language family (for plan dispatch + default refs)
+  const familiesPath = join(root, FAMILIES_FILE)
+  const familiesSrc = await Bun.file(familiesPath).text()
+  const familiesNext = addLocaleToFamilySource(
+    familiesSrc,
+    opts.family,
+    opts.code,
+  )
+  await Bun.write(familiesPath, familiesNext)
+  filesTouched.push(FAMILIES_FILE)
+
+  // 5. optional RTL
   if (opts.rtl) {
     const reactPath = join(root, I18N_REACT)
     const reactSrc = await Bun.file(reactPath).text()
@@ -218,10 +272,16 @@ export async function initLocale(
   }
 
   const nextSteps = [
-    `bun i18n pack --locale ${opts.code} --refs <related-locales> --usages --json --limit 40`,
-    `bun i18n set ${opts.code} --stdin   # paste {"key":"translation",...}`,
+    `bun i18n next --locale ${opts.code} --size 40 --usages --json`,
+    `bun i18n set ${opts.code} --stdin   # fill applyTemplate / translate keys`,
+    `# repeat next → set until next.done === true`,
     `bun i18n check --locale ${opts.code}`,
   ]
 
-  return { code: opts.code, filesTouched, nextSteps }
+  return {
+    code: opts.code,
+    family: opts.family,
+    filesTouched,
+    nextSteps,
+  }
 }

@@ -5,6 +5,7 @@ import {
   diffMessages,
   findUsages,
   flattenKeys,
+  formatNextHuman,
   formatPlanHuman,
   getAt,
   getKeysAcrossLocales,
@@ -12,6 +13,7 @@ import {
   initLocale,
   missingKeys,
   missingKeysByLocale,
+  nextTranslationBatch,
   packMessages,
   planTranslations,
   readMessagesFile,
@@ -237,9 +239,11 @@ function help() {
     '                                  Export a work pack for agents (single or family).',
     '  plan [--ref HEAD] [--mode oneshot|single|parallel] [--json] [--prompts]',
     '                                  Main-agent dispatch brief after editing en-US.',
+    '  next --locale <l> [--size 40] [--refs a,b] [--usages] [--json]',
+    '                                  Next unfinished batch for a locale (auto-advances after set).',
     '  usages <key...> [--json]        Best-effort code locations for message keys.',
-    '  init-locale <code> --label "…" --flag "…" [--rtl] [--from <locale>]',
-    '                                  Scaffold a new language (domain, JSON, flags, optional RTL).',
+    '  init-locale <code> --label "…" --flag "…" --family <id> [--rtl] [--from <locale>]',
+    '                                  Scaffold a new language (domain, JSON, flags, family, optional RTL).',
     '  missing [--locale <l>] [--all] [--json]',
     '                                  List keys missing in a locale (vs en-US).',
     '  identical [--locale <l>] [--json]',
@@ -261,8 +265,9 @@ function help() {
     '  - `add` only touches en-US.json; `remove` cleans the key from every locale.',
     '  - Never paste English into another locale as a placeholder — `set` rejects it.',
     '  - After editing en-US: `bun i18n plan` → oneshot / one subagent / family parallel.',
-    '  - Translators: `pack` → translate → `set --stdin` → `check`.',
-    '  - Use `init-locale` to register a brand-new language, then pack/set/check.',
+    '  - New/backfill locale: loop `bun i18n next --locale L` → set --stdin until done.',
+    '  - Translators: `pack`/`next` → translate → `set --stdin` → `check`.',
+    '  - Use `init-locale --family …` to register a brand-new language.',
   ].join('\n')
 }
 
@@ -549,6 +554,37 @@ async function main() {
       return
     }
 
+    case 'next': {
+      const locale = kvFlags.locale as Locale | undefined
+      if (!locale) die('usage: bun i18n next --locale <l> [--size 40] [...]', 2)
+      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (locale === 'en-US') {
+        die('next is not meaningful for en-US', 2)
+      }
+      const size = kvFlags.size ? Number(kvFlags.size) : undefined
+      if (size !== undefined && (!Number.isFinite(size) || size < 1)) {
+        die('--size must be a positive integer', 2)
+      }
+      const refs = parseLocaleList(kvFlags.refs)
+      try {
+        const result = await nextTranslationBatch({
+          locale,
+          size,
+          refs: refs.length > 0 ? refs : undefined,
+          usages: !flags.has('no-usages'),
+        })
+        if (flags.has('json')) {
+          console.log(JSON.stringify(result, null, 2))
+        } else {
+          console.log(formatNextHuman(result))
+        }
+        if (result.done) process.exit(0)
+      } catch (e) {
+        die((e as Error).message, 2)
+      }
+      return
+    }
+
     case 'usages': {
       const keys = positional.slice(1)
       if (keys.length === 0) die('usage: bun i18n usages <key...> [--json]', 2)
@@ -573,9 +609,10 @@ async function main() {
       const code = positional[1]
       const label = kvFlags.label
       const flag = kvFlags.flag
-      if (!code || !label || !flag) {
+      const family = kvFlags.family
+      if (!code || !label || !flag || !family) {
         die(
-          'usage: bun i18n init-locale <code> --label "<Native>" --flag "<emoji>" [--rtl] [--from <locale>]',
+          'usage: bun i18n init-locale <code> --label "<Native>" --flag "<emoji>" --family <id> [--rtl] [--from <locale>]',
           2,
         )
       }
@@ -586,10 +623,11 @@ async function main() {
           code,
           label,
           flag,
+          family,
           rtl: flags.has('rtl'),
           from,
         })
-        console.log(`Initialized locale ${result.code}.`)
+        console.log(`Initialized locale ${result.code} (family ${result.family}).`)
         console.log('Touched:')
         for (const f of result.filesTouched) console.log(`  ${f}`)
         console.log('Next:')
