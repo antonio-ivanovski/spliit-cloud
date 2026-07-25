@@ -108,19 +108,26 @@ export function convertParticipantShares(args: {
   currency?: CurrencyLike
 }): ParticipantRow[] {
   const { rows, fromMode, toMode, targetAmount } = args
+  // BY_AMOUNT inputs may store raw sanitized strings ("10.") mid-edit;
+  // coerce to number here so the arithmetic below doesn't do string
+  // concatenation when the user switches modes while typing.
+  const normalizedRows: ParticipantRow[] = rows.map((r) => ({
+    ...r,
+    shares: Number(r.shares) || 0,
+  }))
   const precision = args.currency?.decimal_digits ?? 2
 
   // Same mode: shallow clone
   if (fromMode === toMode) {
-    return rows.map((r) => ({ ...r }))
+    return normalizedRows.map((r) => ({ ...r }))
   }
 
-  const selected = rows.filter(isSelected)
+  const selected = normalizedRows.filter(isSelected)
   const selectedCount = selected.length
 
   // No rows selected: return zeros
   if (selectedCount === 0) {
-    return rows.map((r) => ({
+    return normalizedRows.map((r) => ({
       participant: r.participant,
       shares: 0,
     }))
@@ -135,7 +142,7 @@ export function convertParticipantShares(args: {
     mode: SplitMode,
   ): ParticipantRow[] {
     let selIdx = 0
-    return rows.map((r) => {
+    return normalizedRows.map((r) => {
       if (!isSelected(r)) {
         return { participant: r.participant, shares: 0 }
       }
@@ -185,7 +192,7 @@ export function convertParticipantShares(args: {
 
   if (fromMode === 'BY_SHARES' && toMode === 'BY_PERCENTAGE') {
     const total = selected.reduce((s, r) => s + r.shares, 0)
-    if (total === 0) return rows.map((r) => ({ ...r }))
+    if (total === 0) return normalizedRows.map((r) => ({ ...r }))
     const values = selected.map((r) => roundTo((r.shares / total) * 100, 2))
     const sum = values.reduce((a, b) => a + b, 0)
     const diff = roundTo(100 - sum, 2)
@@ -196,7 +203,7 @@ export function convertParticipantShares(args: {
 
   if (fromMode === 'BY_SHARES' && toMode === 'BY_AMOUNT') {
     const total = selected.reduce((s, r) => s + r.shares, 0)
-    if (total === 0) return rows.map((r) => ({ ...r }))
+    if (total === 0) return normalizedRows.map((r) => ({ ...r }))
     const values = selected.map((r) =>
       roundTo((targetAmount * r.shares) / total, precision),
     )
@@ -237,7 +244,7 @@ export function convertParticipantShares(args: {
 
   if (fromMode === 'BY_AMOUNT' && toMode === 'BY_PERCENTAGE') {
     const total = selected.reduce((s, r) => s + r.shares, 0)
-    if (total === 0) return rows.map((r) => ({ ...r }))
+    if (total === 0) return normalizedRows.map((r) => ({ ...r }))
     const values = selected.map((r) => roundTo((r.shares / total) * 100, 2))
     const sum = values.reduce((a, b) => a + b, 0)
     const diff = roundTo(100 - sum, 2)
@@ -254,5 +261,5 @@ export function convertParticipantShares(args: {
   }
 
   // Fallback safety: shallow clone
-  return rows.map((r) => ({ ...r }))
+  return normalizedRows.map((r) => ({ ...r }))
 }

@@ -135,14 +135,18 @@ const documentsSchema = z
 
 // Row shape used by the form schema. `shares` is a number in user-facing
 // units of the selected expense currency (the same currency as `amount`).
+// Shares are stored as raw user input (string) and coerced to number
+// at validation time, matching the main `amount` field. This lets
+// BY_AMOUNT inputs preserve intermediate decimal states like "10."
+// while typing.
 const formPaidForRowSchema = z.object({
   participant: z.string(),
-  shares: z.number(),
+  shares: z.coerce.number(),
 })
 
 const formPaidByRowSchema = z.object({
   participant: z.string(),
-  shares: z.number(),
+  shares: z.coerce.number(),
 })
 
 // Row shape used by the API/domain schema. Shares are integers: basis

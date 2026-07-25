@@ -180,20 +180,27 @@ export function PaidByRow({
                                 })}
                                 value={String(row?.shares ?? '')}
                                 onChange={(event) => {
-                                  const shares = Number(
-                                    enforceCurrencyPattern(event.target.value),
+                                  const sanitized = enforceCurrencyPattern(
+                                    event.target.value,
                                   )
                                   const next = field.value.filter(
                                     (p) => p.participant !== id,
                                   )
-                                  if (shares !== 0)
-                                    next.push({ participant: id, shares })
+                                  // Keep in-progress decimals like "0." or
+                                  // "10." in the list so the user can finish
+                                  // typing; remove on explicit "" or "0".
+                                  if (sanitized !== '' && sanitized !== '0') {
+                                    next.push({
+                                      participant: id,
+                                      shares: sanitized as unknown as number,
+                                    })
+                                  }
                                   form.setValue('paidByList', next, {
                                     shouldDirty: true,
                                     shouldTouch: true,
                                     shouldValidate: true,
                                   })
-                                  if (shares !== 0)
+                                  if (sanitized !== '' && sanitized !== '0')
                                     setManuallyEditedPayers((prev) =>
                                       new Set(prev).add(id),
                                     )

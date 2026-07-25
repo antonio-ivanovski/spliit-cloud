@@ -188,12 +188,14 @@ describe('expenseFormInputSchema', () => {
     expect(result.success).toBe(true)
   })
 
-  it("rejects string shares outright (form-coercion is the form schema's job, not this one)", () => {
+  it('coerces string shares to numbers (lets BY_AMOUNT inputs keep in-progress decimals like "10.")', () => {
     const result = expenseFormInputSchema.safeParse({
       ...baseInput,
-      paidFor: [{ participant: 'p0', shares: '1' as unknown as number }],
+      paidFor: [{ participant: 'p0', shares: '1.5' as unknown as number }],
     })
-    expect(result.success).toBe(false)
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    expect(result.data.paidFor[0]?.shares).toBe(1.5)
   })
 
   it('preserves display percentages verbatim — no x100 transform', () => {

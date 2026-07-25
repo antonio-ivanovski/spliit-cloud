@@ -185,21 +185,32 @@ export function ItemParticipantsModal(props: {
   }
 
   const handleShareChange = (participantId: string, rawValue: string) => {
-    const sanitizer = match(draft.splitMode)
+    const mode = draft.splitMode
+    const sanitizer = match(mode)
       .with('BY_AMOUNT', () => enforceCurrencyPattern)
       .with('BY_PERCENTAGE', () => enforcePercentagePattern)
       .with('BY_SHARES', () => enforceIntegerPattern)
       .otherwise(() => enforceCurrencyPattern)
     const sanitized = sanitizer(rawValue)
+    // BY_AMOUNT keeps the raw sanitized string so in-progress decimals
+    // like "10." or "0," survive the controlled-input round-trip.
+    // Other modes coerce to number as before.
+    const shares =
+      mode === 'BY_AMOUNT'
+        ? (sanitized as unknown as number)
+        : Number(sanitized)
+    const keepInList =
+      mode === 'BY_AMOUNT'
+        ? sanitized !== '' && sanitized !== '0'
+        : Number(sanitized) > 0
     setDraft((prev) => ({
       ...prev,
-      paidFor:
-        Number(sanitized) > 0
-          ? [
-              ...prev.paidFor.filter((p) => p.participant !== participantId),
-              { participant: participantId, shares: Number(sanitized) },
-            ]
-          : prev.paidFor.filter((p) => p.participant !== participantId),
+      paidFor: keepInList
+        ? [
+            ...prev.paidFor.filter((p) => p.participant !== participantId),
+            { participant: participantId, shares },
+          ]
+        : prev.paidFor.filter((p) => p.participant !== participantId),
     }))
   }
 
