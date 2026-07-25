@@ -1,63 +1,42 @@
-# Fly.io config for the Spliit Cloud API.
+# fly.toml app configuration file generated for spliit-cloud on 2026-07-25T18:01:59Z
 #
-# Deploy:  fly deploy -c fly.api.toml
-# Guide:   docs/deploy-fly.md
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
-# This runs the background job worker inside the API process (JOBS_INLINE), so a
-# small instance needs one always-on service instead of two. To split them out
-# again, set JOBS_INLINE = "false" below and add a second config that is
-# identical except for `build-target = "worker"`, APP_SCOPE = "@spliit/worker",
-# and no [http_service].
 
-app = "spliit-api"
-primary_region = "fra"
-
-# The API traps SIGTERM and drains pg-boss on the way out (stopBoss allows the
-# in-flight job 30s). Fly's default kill_timeout of 5s would cut that short and
-# leave a job to be retried, so allow the full drain plus headroom.
-kill_signal = "SIGTERM"
-kill_timeout = 40
+app = 'spliit-cloud'
+primary_region = 'fra'
+kill_signal = 'SIGTERM'
+kill_timeout = '40s'
 
 [build]
-dockerfile = "Dockerfile"
-build-target = "api"
+  dockerfile = 'Dockerfile'
+  build-target = 'api'
 
-# The Dockerfile's pruner stage hard-fails without this: it drives
-# `turbo prune "$APP_SCOPE"`, which decides what ends up in the image.
-[build.args]
-APP_SCOPE = "@spliit/api"
+  [build.args]
+    APP_SCOPE = '@spliit/api'
 
 [deploy]
-# Runs in a temporary machine on the same image, before any machine is updated.
-release_command = "bun run --filter @spliit/db prisma-migrate"
+  release_command = 'bun run --filter @spliit/db prisma-migrate'
 
 [env]
-PORT = "3001"
-# Run the job worker in this process. Do not also deploy the worker container.
-JOBS_INLINE = "true"
-# Occurrences are scheduled for 00:05 UTC on their date, so this cron is a
-# safety net, not the mechanism. Hourly keeps the database mostly idle, which
-# matters on usage-metered Postgres plans.
-JOBS_RECONCILIATION_CRON = "0 * * * *"
+  JOBS_INLINE = 'true'
+  JOBS_RECONCILIATION_CRON = '0 * * * *'
+  PORT = '3001'
 
 [http_service]
-internal_port = 3001
-force_https = true
-# Jobs materialize expenses on a schedule, so this process has to stay up: a
-# suspended machine creates nothing. Set auto_stop_machines = "suspend" and
-# min_machines_running = 0 only if you also set JOBS_INLINE = "false".
-auto_stop_machines = "off"
-auto_start_machines = true
-min_machines_running = 1
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'off'
+  auto_start_machines = true
+  min_machines_running = 1
 
-[[http_service.checks]]
-# /health/readiness also verifies the database connection.
-interval = "30s"
-timeout = "5s"
-grace_period = "20s"
-method = "GET"
-path = "/health/readiness"
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '20s'
+    method = 'GET'
+    path = '/health/readiness'
 
 [[vm]]
-size = "shared-cpu-1x"
-memory = "512mb"
+  size = 'shared-cpu-1x'
+  memory = '512mb'
