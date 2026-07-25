@@ -6,32 +6,28 @@ const COOKIE_NAME = 'NEXT_LOCALE'
 
 export const defaultNS = 'translation'
 
-export const localeLoaders = {
-  'en-US': () => import('@/messages/en-US.json'),
-  ca: () => import('@/messages/ca.json'),
-  'cs-CZ': () => import('@/messages/cs-CZ.json'),
-  'de-DE': () => import('@/messages/de-DE.json'),
-  es: () => import('@/messages/es.json'),
-  eu: () => import('@/messages/eu.json'),
-  fi: () => import('@/messages/fi.json'),
-  'fr-FR': () => import('@/messages/fr-FR.json'),
-  he: () => import('@/messages/he.json'),
-  id: () => import('@/messages/id.json'),
-  'it-IT': () => import('@/messages/it-IT.json'),
-  'ja-JP': () => import('@/messages/ja-JP.json'),
-  ko: () => import('@/messages/ko.json'),
-  'mk-MK': () => import('@/messages/mk-MK.json'),
-  'nl-NL': () => import('@/messages/nl-NL.json'),
-  'pl-PL': () => import('@/messages/pl-PL.json'),
-  pt: () => import('@/messages/pt.json'),
-  'pt-BR': () => import('@/messages/pt-BR.json'),
-  ro: () => import('@/messages/ro.json'),
-  'ru-RU': () => import('@/messages/ru-RU.json'),
-  'tr-TR': () => import('@/messages/tr-TR.json'),
-  'uk-UA': () => import('@/messages/uk-UA.json'),
-  'zh-CN': () => import('@/messages/zh-CN.json'),
-  'zh-TW': () => import('@/messages/zh-TW.json'),
-} satisfies Record<Locale, () => Promise<{ default: unknown }>>
+const messageModules = import.meta.glob<{ default: unknown }>(
+  '@/messages/*.json',
+)
+
+function loaderFor(
+  locale: Locale,
+): (() => Promise<{ default: unknown }>) | undefined {
+  const suffix = `/${locale}.json`
+  for (const [path, loader] of Object.entries(messageModules)) {
+    if (path === suffix || path.endsWith(suffix)) return loader
+  }
+  return undefined
+}
+
+export async function loadLocaleMessages(locale: Locale): Promise<unknown> {
+  const loader = loaderFor(locale)
+  if (!loader) {
+    throw new Error(`No message bundle registered for locale "${locale}"`)
+  }
+  const mod = await loader()
+  return mod.default
+}
 
 export const i18n = i18next.createInstance()
 
@@ -39,8 +35,8 @@ const loadedLocales = new Set<Locale>()
 
 export async function loadLocale(locale: Locale) {
   if (loadedLocales.has(locale)) return
-  const messages = await localeLoaders[locale]()
-  i18n.addResourceBundle(locale, defaultNS, messages.default, true, true)
+  const messages = await loadLocaleMessages(locale)
+  i18n.addResourceBundle(locale, defaultNS, messages, true, true)
   loadedLocales.add(locale)
 }
 

@@ -26,6 +26,9 @@ export type LocaleAudit = {
   present: number
   missing: number
   missingKeys: string[]
+  /** Introduced keys whose locale value equals en-US and is not auto-allowed. */
+  untranslatedEnglishKeys: string[]
+  untranslatedEnglish: number
   coverage: number
 }
 
@@ -34,6 +37,8 @@ export type AuditSummary = {
   localesComplete: number
   localesWithMissing: number
   totalMissing: number
+  totalUntranslatedEnglish: number
+  localesWithUntranslatedEnglish: number
 }
 
 export type AuditResult = {
@@ -58,6 +63,7 @@ export type AuditOptions = {
 export {
   getMessagesDir,
   LOCALE_TO_FILE,
+  localeFileName,
   readMessagesFile,
   setMessagesDir,
 } from './fs-helpers'
@@ -72,13 +78,63 @@ export {
   setAtOrdered,
 } from './object-path'
 
-export { addString, missingKeys, removeString, setString } from './translate'
+export {
+  addString,
+  missingKeys,
+  removeString,
+  setString,
+  setStrings,
+} from './translate'
+
+export { packMessages } from './pack'
+export type {
+  LocaleKeyStatus,
+  PackKey,
+  PackLocaleEntry,
+  PackOptions,
+  PackResult,
+} from './pack'
+
+export { formatPlanHuman, planTranslations, selectPlanMode } from './plan'
+export type {
+  PlanBatch,
+  PlanFamily,
+  PlanKey,
+  PlanMode,
+  PlanOptions,
+  PlanResult,
+} from './plan'
+
+export { formatNextHuman, nextTranslationBatch } from './next-batch'
+export type { NextBatchOptions, NextBatchResult } from './next-batch'
+
+export {
+  assertFamiliesCoverAllLocales,
+  LANGUAGE_FAMILIES,
+  nonEnLocales,
+} from './families'
+
+export { findUsages, findUsagesForKeys, usageSearchKey } from './usages'
+export type { UsageHit } from './usages'
+
+export {
+  addLocaleToFamilySource,
+  addRtlLocale,
+  initLocale,
+  insertObjectEntry,
+} from './init-locale'
+export type { InitLocaleOptions, InitLocaleResult } from './init-locale'
+
+export {
+  classifyEnglishIdentity,
+  isAutoAllowedEnglishIdentity,
+} from './english-identity'
 
 // ---------------------------------------------------------------------------
-// Audit / diff logic — kept in lib.ts as it orchestrates the other modules
-// and is the primary public API surface.
+// Audit / diff logic
 // ---------------------------------------------------------------------------
 
+import { classifyEnglishIdentity } from './english-identity'
 import {
   LOCALE_TO_FILE,
   readGitBlob,
@@ -223,6 +279,22 @@ export async function validateAllMessages(
   return { valid: errors.length === 0, errors }
 }
 
+function untranslatedEnglishKeysForLocale(
+  enData: Record<string, unknown>,
+  localeData: Record<string, unknown>,
+  candidateKeys: readonly string[],
+): string[] {
+  const bad: string[] = []
+  for (const key of candidateKeys) {
+    const enValue = getAt(enData, key)
+    const locValue = getAt(localeData, key)
+    if (typeof enValue !== 'string' || typeof locValue !== 'string') continue
+    const identity = classifyEnglishIdentity(enValue, locValue)
+    if (identity.identical && !identity.allowed) bad.push(key)
+  }
+  return bad.sort()
+}
+
 export async function auditMessages(
   opts: AuditOptions = {},
 ): Promise<AuditResult> {
@@ -235,11 +307,10 @@ export async function auditMessages(
   const totalKeys = enKeys.length
 
   const ref = opts.ref ?? 'HEAD'
-  let introducedKeys: string[] = []
-  if (opts.changesOnly) {
-    const diff = await diffMessages({ ref, readOldEn: opts.readOldEn })
-    introducedKeys = [...diff.thisChange.added, ...diff.thisChange.modified]
-  }
+  // Always compute introduced keys vs ref so English-copy gate can apply
+  // even on a full check (legacy identical strings are not gated).
+  const diff = await diffMessages({ ref, readOldEn: opts.readOldEn })
+  const introducedKeys = [...diff.thisChange.added, ...diff.thisChange.modified]
   const introducedSet = new Set(introducedKeys)
 
   const targetLocales = opts.locale
@@ -252,18 +323,30 @@ export async function auditMessages(
       const data = await readMessagesFile(locale)
       const presentSet = new Set(flattenKeys(data))
       const expectedKeys = expectedKeysForLocale(enKeys, locale)
-      let missingKeys = expectedKeys.filter((k) => !presentSet.has(k))
+      let missingKeysList = expectedKeys.filter((k) => !presentSet.has(k))
       if (opts.changesOnly) {
-        missingKeys = missingKeys.filter((k) => introducedSet.has(k))
+        missingKeysList = missingKeysList.filter((k) => introducedSet.has(k))
       }
+
+      const introducedPresent = expectedKeys.filter(
+        (k) => introducedSet.has(k) && presentSet.has(k),
+      )
+      const untranslated = untranslatedEnglishKeysForLocale(
+        enData,
+        data,
+        introducedPresent,
+      )
+
       const localeTotal = expectedKeys.length
-      const presentCount = localeTotal - missingKeys.length
+      const presentCount = localeTotal - missingKeysList.length
       localesAudit[locale] = {
         locale,
         total: localeTotal,
         present: presentCount,
-        missing: missingKeys.length,
-        missingKeys,
+        missing: missingKeysList.length,
+        missingKeys: missingKeysList,
+        untranslatedEnglishKeys: untranslated,
+        untranslatedEnglish: untranslated.length,
         coverage: localeTotal === 0 ? 1 : presentCount / localeTotal,
       }
     }),
@@ -271,8 +354,12 @@ export async function auditMessages(
 
   let totalMissing = 0
   let localesComplete = 0
+  let totalUntranslatedEnglish = 0
+  let localesWithUntranslatedEnglish = 0
   for (const audit of Object.values(localesAudit)) {
     totalMissing += audit.missing
+    totalUntranslatedEnglish += audit.untranslatedEnglish
+    if (audit.untranslatedEnglish > 0) localesWithUntranslatedEnglish++
     if (audit.missing === 0) localesComplete++
   }
 
@@ -289,8 +376,31 @@ export async function auditMessages(
       localesComplete,
       localesWithMissing: targetLocales.length - localesComplete,
       totalMissing,
+      totalUntranslatedEnglish,
+      localesWithUntranslatedEnglish,
     },
   }
+}
+
+/** Advisory: all non-allowlisted identical-to-en keys (legacy + current). */
+export async function identicalKeysByLocale(
+  targetLocale?: Locale,
+): Promise<Record<string, string[]>> {
+  const enData = await readMessagesFile('en-US')
+  const enKeys = flattenKeys(enData)
+  const targetLocales = targetLocale
+    ? locales.filter((l) => l === targetLocale)
+    : locales.filter((l) => l !== 'en-US')
+
+  const result: Record<string, string[]> = {}
+  await Promise.all(
+    targetLocales.map(async (locale) => {
+      const data = await readMessagesFile(locale)
+      const expected = expectedKeysForLocale(enKeys, locale)
+      result[locale] = untranslatedEnglishKeysForLocale(enData, data, expected)
+    }),
+  )
+  return result
 }
 
 export async function missingKeysByLocale(): Promise<Record<Locale, string[]>> {
@@ -308,5 +418,29 @@ export async function missingKeysByLocale(): Promise<Record<Locale, string[]>> {
         )
       }),
   )
+  return result
+}
+
+export async function getKeysAcrossLocales(
+  keys: string[],
+  targetLocales: Locale[],
+): Promise<Record<string, Record<string, string | null>>> {
+  const uniqueLocales = [...new Set(targetLocales)]
+  const dataByLocale = new Map<Locale, Record<string, unknown>>()
+  await Promise.all(
+    uniqueLocales.map(async (locale) => {
+      dataByLocale.set(locale, await readMessagesFile(locale))
+    }),
+  )
+
+  const result: Record<string, Record<string, string | null>> = {}
+  for (const key of keys) {
+    const perLocale: Record<string, string | null> = {}
+    for (const locale of uniqueLocales) {
+      const value = getAt(dataByLocale.get(locale)!, key)
+      perLocale[locale] = typeof value === 'string' ? value : null
+    }
+    result[key] = perLocale
+  }
   return result
 }

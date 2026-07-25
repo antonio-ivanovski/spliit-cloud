@@ -14,6 +14,7 @@ export const localeLabels = {
   'pt-BR': 'Português Brasileiro',
   ro: 'Română',
   fi: 'Suomi',
+  'sv-SE': 'Svenska',
   'tr-TR': 'Türkçe',
   'ru-RU': 'Русский',
   'uk-UA': 'Українська',

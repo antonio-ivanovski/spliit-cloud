@@ -1,34 +1,17 @@
 import { execSync } from 'node:child_process'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { type Locale } from '../../../packages/domain/src/i18n.ts'
+import { locales, type Locale } from '../../../packages/domain/src/i18n.ts'
 
-export const LOCALE_TO_FILE: Record<Locale, string> = {
-  'en-US': 'en-US.json',
-  ca: 'ca.json',
-  'cs-CZ': 'cs-CZ.json',
-  'de-DE': 'de-DE.json',
-  es: 'es.json',
-  eu: 'eu.json',
-  fi: 'fi.json',
-  'fr-FR': 'fr-FR.json',
-  he: 'he.json',
-  id: 'id.json',
-  'it-IT': 'it-IT.json',
-  'ja-JP': 'ja-JP.json',
-  ko: 'ko.json',
-  'mk-MK': 'mk-MK.json',
-  'nl-NL': 'nl-NL.json',
-  'pl-PL': 'pl-PL.json',
-  pt: 'pt.json',
-  'pt-BR': 'pt-BR.json',
-  ro: 'ro.json',
-  'ru-RU': 'ru-RU.json',
-  'tr-TR': 'tr-TR.json',
-  'uk-UA': 'uk-UA.json',
-  'zh-CN': 'zh-CN.json',
-  'zh-TW': 'zh-TW.json',
+/** Filename for a locale message file — always `<locale>.json`. */
+export function localeFileName(locale: Locale): string {
+  return `${locale}.json`
 }
+
+/** @deprecated Prefer localeFileName — kept as a Record for existing call sites. */
+export const LOCALE_TO_FILE: Record<Locale, string> = Object.fromEntries(
+  locales.map((locale) => [locale, localeFileName(locale)]),
+) as Record<Locale, string>
 
 let messagesDir: string = join(process.cwd(), 'apps/web/src/messages')
 
@@ -41,11 +24,11 @@ export function setMessagesDir(dir: string): void {
 }
 
 function fileFor(locale: Locale): string {
-  return join(messagesDir, LOCALE_TO_FILE[locale])
+  return join(messagesDir, localeFileName(locale))
 }
 
 function gitPathFor(locale: Locale): string {
-  return `apps/web/src/messages/${LOCALE_TO_FILE[locale]}`
+  return `apps/web/src/messages/${localeFileName(locale)}`
 }
 
 export async function readMessagesFile(

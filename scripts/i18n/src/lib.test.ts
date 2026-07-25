@@ -548,13 +548,19 @@ describe('auditMessages', () => {
     await seedNonEnLocales({ a: 'A', b: 'B', c: 'C' })
     await seedFile('fr-FR', { a: 'A', b: 'B' })
     await seedFile('de-DE', { a: 'A', b: 'B', c: 'C' })
-    const result = await auditMessages()
+    const result = await auditMessages({
+      // Snapshot current en-US so introducedKeys is empty (unit-test isolation
+      // from the real git ref). Production check uses git HEAD.
+      readOldEn: async () => ({ a: 'a', b: 'b', c: 'c' }),
+    })
+    const nonEnCount = locales.filter((l) => l !== 'en-US').length
     expect(result.totalKeys).toBe(3)
     expect(result.valid).toBe(true)
-    expect(result.summary.localesAudited).toBe(23)
-    expect(result.summary.localesComplete).toBe(22)
+    expect(result.summary.localesAudited).toBe(nonEnCount)
+    expect(result.summary.localesComplete).toBe(nonEnCount - 1)
     expect(result.summary.localesWithMissing).toBe(1)
     expect(result.summary.totalMissing).toBe(1)
+    expect(result.summary.totalUntranslatedEnglish).toBe(0)
     expect(result.locales['fr-FR']).toMatchObject({
       total: 3,
       present: 2,
@@ -574,7 +580,9 @@ describe('auditMessages', () => {
   it('excludes en-US from the audit', async () => {
     await seedFile('en-US', { a: 'a' })
     await seedNonEnLocales({ a: 'A' })
-    const result = await auditMessages()
+    const result = await auditMessages({
+      readOldEn: async () => ({ a: 'a' }),
+    })
     expect(result.locales['en-US']).toBeUndefined()
   })
 
@@ -583,7 +591,10 @@ describe('auditMessages', () => {
     await seedNonEnLocales({ a: 'A' })
     await seedFile('fr-FR', { a: 'A' })
     await seedFile('de-DE', { a: 'A' })
-    const result = await auditMessages({ locale: 'fr-FR' })
+    const result = await auditMessages({
+      locale: 'fr-FR',
+      readOldEn: async () => ({ a: 'a', b: 'b' }),
+    })
     expect(result.summary.localesAudited).toBe(1)
     expect(Object.keys(result.locales)).toEqual(['fr-FR'])
     expect(result.locales['fr-FR'].missing).toBe(1)
@@ -593,7 +604,10 @@ describe('auditMessages', () => {
     await seedFile('en-US', { a: 'a' })
     await seedFile('fr-FR', { a: 'A' })
     await seedFile('de-DE', { orphan: 'O' })
-    const result = await auditMessages({ locale: 'fr-FR' })
+    const result = await auditMessages({
+      locale: 'fr-FR',
+      readOldEn: async () => ({ a: 'a' }),
+    })
     expect(result.valid).toBe(true)
   })
 
@@ -601,10 +615,47 @@ describe('auditMessages', () => {
     await seedFile('en-US', { a: 'a' })
     await seedNonEnLocales({ a: 'A' })
     await seedFile('fr-FR', { a: 'A', orphan: 'O' })
-    const result = await auditMessages()
+    const result = await auditMessages({
+      readOldEn: async () => ({ a: 'a' }),
+    })
     expect(result.valid).toBe(false)
     expect(result.errors).toHaveLength(1)
     expect(result.errors[0]).toContain('orphan')
+  })
+
+  it('fails introduced keys that are identical to en-US', async () => {
+    await seedFile('en-US', { kept: 'k', brandNew: 'Remove participant?' })
+    await seedNonEnLocales({ kept: 'K', brandNew: 'Remove participant?' })
+    const result = await auditMessages({
+      readOldEn: async () => ({ kept: 'k' }),
+    })
+    expect(result.introducedKeys).toEqual(['brandNew'])
+    expect(result.summary.totalUntranslatedEnglish).toBe(
+      locales.filter((l) => l !== 'en-US').length,
+    )
+    expect(result.locales['fr-FR'].untranslatedEnglishKeys).toEqual([
+      'brandNew',
+    ])
+  })
+
+  it('does not fail legacy identical-to-en keys', async () => {
+    await seedFile('en-US', { legacy: 'Remove', brandNew: 'New string' })
+    await seedNonEnLocales({ legacy: 'Remove', brandNew: 'Nouvelle chaîne' })
+    const result = await auditMessages({
+      readOldEn: async () => ({ legacy: 'Remove' }),
+    })
+    expect(result.introducedKeys).toEqual(['brandNew'])
+    expect(result.summary.totalUntranslatedEnglish).toBe(0)
+    expect(result.locales['fr-FR'].untranslatedEnglishKeys).toEqual([])
+  })
+
+  it('auto-allows brand identical values on introduced keys', async () => {
+    await seedFile('en-US', { brand: 'GitHub' })
+    await seedNonEnLocales({ brand: 'GitHub' })
+    const result = await auditMessages({
+      readOldEn: async () => ({}),
+    })
+    expect(result.summary.totalUntranslatedEnglish).toBe(0)
   })
 
   it('changesOnly mode: only flags keys the diff introduced', async () => {
@@ -642,7 +693,9 @@ describe('auditMessages', () => {
 
   it('handles empty en-US as fully covered', async () => {
     await seedFile('en-US', {})
-    const result = await auditMessages()
+    const result = await auditMessages({
+      readOldEn: async () => ({}),
+    })
     expect(result.totalKeys).toBe(0)
     expect(result.summary.totalMissing).toBe(0)
     for (const audit of Object.values(result.locales)) {
@@ -659,7 +712,10 @@ describe('auditMessages', () => {
     )
     await seedFile('en-US', source)
     await seedFile('ja-JP', { count_other: '{count}' })
-    const result = await auditMessages({ locale: 'ja-JP' })
+    const result = await auditMessages({
+      locale: 'ja-JP',
+      readOldEn: async () => source,
+    })
     expect(result.totalKeys).toBe(6)
     expect(result.locales['ja-JP'].total).toBe(1)
     expect(result.locales['ja-JP'].present).toBe(1)

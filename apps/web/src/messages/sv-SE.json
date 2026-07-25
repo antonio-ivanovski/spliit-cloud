@@ -1,0 +1,2040 @@
+{
+  "AccountSettings": {
+    "nameLabel": "Visningsnamn",
+    "emailLabel": "E-post",
+    "emailHelp": "Din e-postadress är kopplad till ditt konto och kan inte ändras här.",
+    "submit": "Spara ändringar",
+    "saving": "Sparar…",
+    "success": "Profil uppdaterad.",
+    "errors": {
+      "nameRequired": "Ange ett visningsnamn.",
+      "nameTooShort": "Namnet måste vara minst 2 tecken.",
+      "nameTooLong": "Namnet får vara högst 50 tecken.",
+      "generic": "Något gick fel. Försök igen.",
+      "imageUpload": "Det gick inte att uppdatera din profilbild. Försök igen."
+    },
+    "image": {
+      "label": "Profilbild",
+      "help": "Välj en bild för att uppdatera den direkt. Om du inte har någon visas dina initialer.",
+      "choose": "Välj bild",
+      "uploading": "Laddar upp…",
+      "updated": "Profilbilden har uppdaterats.",
+      "remove": "Ta bort bild",
+      "removed": "Profilbilden har tagits bort."
+    },
+    "notifications": {
+      "title": "Aviseringar",
+      "description": "Välj var Spliit ska skicka aktivitetsaviseringar.",
+      "enable": "Aktivera push-aviseringar",
+      "disable": "Inaktivera push-aviseringar",
+      "enabled": "Push-aviseringar är aktiverade på den här enheten.",
+      "disabled": "Push-aviseringar är för närvarande inaktiverade på den här enheten.",
+      "unsupported": "Push-notiser stöds inte av den här webbläsaren eller kontexten.",
+      "notConfigured": "Inte konfigurerat",
+      "permissionDenied": "Notisbehörighet nekad. Tillåt dem i webbläsarens inställningar.",
+      "iosInstall": "Installera Spliit som app för att aktivera push-notiser.",
+      "error": "Kunde inte uppdatera push-notisinställningarna. Försök igen.",
+      "preferencesTitle": "Aviseringsinställningar",
+      "preferencesDescription": "Välj hur du vill bli notifierad för varje händelse. Rekommenderade val kan åsidosättas per grupp.",
+      "globalLabel": "Globalt val",
+      "globalDescription": "Rekommenderat varierar beroende på aktivitet och anpassas när push inte är tillgängligt: snabba uppdateringar skickas via push, medan aktivitet med högre volym skickas via e-post. Välj e-post eller push för att använda samma kanal för allt.",
+      "recommended": "Rekommenderat",
+      "recommendedDescription": "Rekommenderad leverans: {channels}. Push-notiser levereras endast till enheter du aktiverar.",
+      "mixedByActivity": "Blandat efter aktivitet",
+      "recommendedCategoryDescription": "Använd rekommenderad {channels}-leverans för denna händelsetyp.",
+      "useRecommended": "Använd rekommenderad",
+      "custom": "Anpassad",
+      "useGlobal": "Använd inställning för all aktivitet",
+      "inheritedDescription": "Använder gruppens standardinställning.",
+      "customDescription": "Anpassad leverans för den här kategorin. Välj en eller båda kanalerna.",
+      "channelsLabel": "Aviseringskanaler",
+      "email": "E-post",
+      "emailDescription": "Ta emot ett meddelande i din inkorg.",
+      "pushDescription": "Snabba uppdateringar direkt på din enhet.",
+      "off": "Av",
+      "pushSelectionError": "Kunde inte spara push-valet. Försök igen.",
+      "pushMissingTarget": "Inga push-prenumeranter registrerade.",
+      "rowSaved": "Notifieringsinställningar uppdaterade.",
+      "comingSoon": "Kommer snart",
+      "emailComingSoon": "Inställningar för e-post kommer snart.",
+      "inherited": "Ärvd",
+      "currently": "Just nu: {channels}",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Nya utgifter",
+          "description": "När någon lägger till en utgift i en grupp."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Utgiftsimporter och massändringar",
+          "description": "När utgifter importeras eller uppdateras i grupp."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Ändringar av utgifter",
+          "description": "När en utgift uppdateras eller tas bort."
+        },
+        "GROUP_CHANGES": {
+          "title": "Gruppändringar",
+          "description": "När gruppuppgifter eller arkiveringsstatus ändras."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Inbjudningar",
+          "description": "När inbjudningar skickas, godkänns, avböjs eller återkallas."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Medlemskap",
+          "description": "När medlemmar lämnar gruppen, tas bort eller byter roll."
+        }
+      },
+      "expenseActivity": "Utgiftsaktivitet",
+      "groupActivity": "Gruppoch vänaktivitet",
+      "save": "Spara ändringar",
+      "saving": "Sparar…",
+      "reset": "Återställ",
+      "saved": "Aviseringsinställningar sparade.",
+      "saveError": "Kunde inte spara aviseringsinställningarna. Försök igen.",
+      "loading": "Laddar…",
+      "loadError": "Kunde inte ladda notisinställningar. Försök igen.",
+      "push": {
+        "deviceTitle": "Enheter",
+        "deviceDescription": "Hantera enheter som tar emot push-notiser.",
+        "deviceDisabled": "Inaktiverad",
+        "noDevices": "Inga registrerade enheter ännu."
+      },
+      "retry": "Försök igen",
+      "pushChannel": "Push",
+      "rows": {
+        "addedAsFriend": {
+          "title": "Tillagd som vän",
+          "description": "När någon lägger till dig som vän."
+        },
+        "addedToGroup": {
+          "title": "Tillagd i en grupp",
+          "description": "När någon lägger till dig i en grupp."
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud-nyheter och uppdateringar",
+          "description": "Produktnyheter, tips och uppdateringar om tjänsten."
+        },
+        "expenseChanged": {
+          "title": "Utgift ändrad eller borttagen",
+          "description": "När en utgift uppdateras eller tas bort."
+        },
+        "newComment": {
+          "title": "Ny kommentar",
+          "description": "När någon kommenterar en utgift."
+        },
+        "newExpense": {
+          "title": "Ny utgift",
+          "description": "När någon lägger till en utgift i en grupp."
+        },
+        "recurringExpense": {
+          "title": "Återkommande utgift",
+          "description": "När en schemalagd återkommande utgift skapas i en grupp."
+        },
+        "weeklySummary": {
+          "title": "Veckoaktivitetssammanfattning",
+          "description": "En veckosammanfattning av aktiviteten i dina grupper."
+        }
+      },
+      "sections": {
+        "groups": "Grupper och vänner",
+        "expenses": "Utgifter",
+        "summaries": "Sammanfattningar"
+      }
+    },
+    "title": "Kontoinställningar",
+    "profile": {
+      "title": "Profil",
+      "description": "Uppdatera hur du visas för dina grupper."
+    }
+  },
+  "Activities": {
+    "expense": {
+      "changeEmptyValue": "Ej angivet",
+      "created": "{participant} skapade utgiften {title}",
+      "updated": "{participant} uppdaterade utgiften {title}",
+      "deleted": "{participant} tog bort utgiften {title}",
+      "changedFields": {
+        "title": "Titel",
+        "amount": "Belopp",
+        "date": "Datum",
+        "category": "Kategori",
+        "notes": "Anteckningar",
+        "payers": "Betald av",
+        "split": "Fördelning",
+        "items": "Rader",
+        "documents": "Bilagor",
+        "recurrence": "Upprepning",
+        "reimbursement": "Regleringsbetalning",
+        "conversionSource": "Valutakälla",
+        "conversionRate": "Växelkurs"
+      },
+      "recurringCreated": "{participant} skapade den återkommande utgiften ”{title}”",
+      "stopped": "{participant} stoppade den återkommande utgiften {title}"
+    },
+    "fallback": "En aktivitet registrerades",
+    "group": {
+      "updated": "{participant} uppdaterade gruppinställningarna",
+      "archived": "{participant} arkiverade gruppen",
+      "unarchived": "{participant} återställde gruppen från arkivet",
+      "changedFields": {
+        "name": "Namn",
+        "information": "Beskrivning",
+        "currency": "Valuta",
+        "currencyCode": "Valutakod",
+        "linkedParticipant": "Länkad deltagare"
+      }
+    },
+    "import": {
+      "imported_one": "{participant} importerade {count} utgift",
+      "imported_other": "{participant} importerade {count} utgifter"
+    },
+    "invitation": {
+      "created": "{participant} bjöd in {target}",
+      "revoked": "{participant} återkallade inbjudan till {target}",
+      "accepted": "{target} accepterade inbjudan",
+      "declined": "{target} tackade nej till inbjudan"
+    },
+    "member": {
+      "left": "{participant} lämnade gruppen",
+      "removed": "{participant} tog bort {target} från gruppen",
+      "roleChanged": "{participant} ändrade {target}s roll från {previousRole} till {nextRole}"
+    },
+    "unknownActor": "Någon",
+    "openExpense": "Öppna utgift",
+    "participant": {
+      "removed": "{participant} tog bort {target} från gruppen"
+    }
+  },
+  "Activity": {
+    "title": "Aktivitet",
+    "description": "Översikt över all aktivitet i gruppen.",
+    "noActivity": "Det finns ännu ingen aktivitet i din grupp.",
+    "someone": "Någon",
+    "settingsModified": "Gruppinställningarna ändrades av <strong>{participant}</strong>.",
+    "expenseCreated": "Utgiften <em>{expense}</em> skapades av <strong>{participant}</strong>.",
+    "expenseUpdated": "Utgiften <em>{expense}</em> uppdaterades av <strong>{participant}</strong>.",
+    "expenseDeleted": "Utgiften <em>{expense}</em> togs bort av <strong>{participant}</strong>.",
+    "Groups": {
+      "today": "Idag",
+      "yesterday": "Igår",
+      "earlierThisWeek": "Tidigare i veckan",
+      "lastWeek": "Förra veckan",
+      "earlierThisMonth": "Tidigare denna månad",
+      "lastMonth": "Förra månaden",
+      "earlierThisYear": "Tidigare i år",
+      "lastYear": "Förra året",
+      "older": "Äldre aktivitet"
+    }
+  },
+  "Auth": {
+    "title": "Logga in på Spliit Cloud",
+    "signUpTitle": "Skapa ditt Spliit Cloud-konto",
+    "subtitle": "Använd ditt konto för att komma åt dina grupper på flera enheter.",
+    "signUpSubtitle": "Skapa ett konto för att spara och synkronisera dina grupper mellan enheter.",
+    "email": "E-post",
+    "password": "Lösenord",
+    "signInWithPassword": "Logga in med lösenord",
+    "signUpWithPassword": "Registrera dig med lösenord",
+    "signInWithGoogle": "Fortsätt med Google",
+    "orContinueWithEmail": "eller fortsätt med e-post",
+    "magicLinkTab": "Magisk länk",
+    "passwordTab": "Lösenord",
+    "sendMagicLink": "Skicka inloggningslänk",
+    "magicLinkEmail": "E-post",
+    "usePasswordInstead": "Använd e-post och lösenord istället",
+    "hidePasswordForm": "Dölj lösenordsformuläret",
+    "passwordFormDescription": "Om du föredrar att använda ett lösenord, ange din e-post och ditt lösenord nedan.",
+    "passwordFormDescriptionSignUp": "Skapa ett konto med din e-post och ett lösenord.",
+    "useDifferentEmail": "Använd en annan e-post",
+    "magicLinkSent": "Kontrollera din inkorg efter en inloggningslänk.",
+    "verificationEmailSent": "Kontrollera din inkorg för att verifiera ditt konto.",
+    "noAccount": "Har du inget konto ännu?",
+    "haveAccount": "Har du redan ett konto?",
+    "createAccount": "Skapa ett konto",
+    "signIn": "Logga in",
+    "signOut": "Logga ut",
+    "confirmPassword": "Bekräfta lösenord",
+    "loading": "Laddar…",
+    "signedInAs": "Inloggad som {name}",
+    "required": "Du måste logga in för att komma åt dina grupper.",
+    "back": "Tillbaka till startsidan",
+    "passwordMismatch": "Lösenorden matchar inte.",
+    "forgotPasswordLink": "Glömt lösenordet?",
+    "errors": {
+      "invalidCredentials": "E-post eller lösenord är felaktigt.",
+      "emailRequired": "Ange din e-postadress.",
+      "passwordRequired": "Ange ditt lösenord.",
+      "nameRequired": "Ange ett visningsnamn.",
+      "generic": "Något gick fel. Försök igen.",
+      "magicLinkFailed": "Kunde inte skicka inloggningslänken.",
+      "passwordPolicy": "Använd minst 8 tecken med versal, gemen, en siffra och en symbol."
+    },
+    "signInWithGithub": "Fortsätt med GitHub",
+    "legalNotice": "Genom att fortsätta godkänner du <terms>användarvillkoren</terms> och bekräftar <privacy>integritetspolicyn</privacy>.",
+    "passwordTooShort": "Lösenordet måste vara minst 8 tecken.",
+    "passwordRequirements": {
+      "minLength": "8 tecken",
+      "uppercase": "Versal",
+      "lowercase": "Gemen",
+      "number": "Siffra",
+      "symbol": "Symbol"
+    }
+  },
+  "Balances": {
+    "title": "Balanser",
+    "description": "Se varje deltagares nettobalans.",
+    "removedBadge": "Borttagen",
+    "Reimbursements": {
+      "title": "Föreslagna regleringsbetalningar",
+      "description": "Använd dessa betalningar för att reglera balanserna med så få överföringar som möjligt.",
+      "noImbursements": "Alla i din grupp är kvitt 😁",
+      "owes": "<strong>{from}</strong> är skyldig <strong>{to}</strong>",
+      "markAsPaid": "Markera som betald",
+      "markAsPaidAria": "Markera {amount} från {from} till {to} som betald"
+    },
+    "currencyDisplay": {
+      "label": "Valuta",
+      "group": "Gruppvaluta ({currency})",
+      "original": "Original",
+      "title": "Välj hur balanser ska visas",
+      "groupDescription": "Konvertera alla utgifter till {currency} för en samlad vy.",
+      "originalDescription": "Behåll varje utgift i den valuta den registrerades i.",
+      "originalNote": "Regleringsbetalningar registreras vanligtvis i gruppens valuta. Den här originalvalutavyn är ett separat reskontra per valuta, så balanserna kan se oreglerade ut här även när planen i gruppvaluta är reglerad. Använd gruppvalutavyn vid reglering."
+    },
+    "direction": {
+      "toReceive": "Att få",
+      "toPay": "Att betala",
+      "settledUp": "Kvitt",
+      "toReceiveDescription": "Varje segment visar vem som betalar denna deltagare.",
+      "toPayDescription": "Varje segment visar vem denna deltagare betalar.",
+      "participantReceives": "<strong>{name}</strong> får",
+      "participantPays": "<strong>{name}</strong> betalar",
+      "fromParticipant": "från <strong>{name}</strong>",
+      "toParticipant": "till <strong>{name}</strong>",
+      "settle": "Reglera",
+      "settlePaymentsBy": "Reglera {count} betalningar från {name}, {amount}",
+      "settlePaymentsTo": "Reglera {count} betalningar till {name}, {amount}"
+    },
+    "simple": {
+      "title": "Reglera balanser",
+      "description": "Se vem som är skyldig vad och markera betalningar som reglerade.",
+      "netBalances": "Nettobalanser",
+      "isOwed": "ska få {amount}",
+      "owes": "är skyldig {amount}",
+      "suggestedPayments": "Föreslagna betalningar",
+      "empty": "Alla är kvitt."
+    },
+    "view": {
+      "label": "Vy",
+      "title": "Välj hur balanser ska visas",
+      "simple": "Enkel",
+      "simpleDescription": "Se vem som är skyldig vem och registrera regleringsbetalningar.",
+      "visual": "Visuell",
+      "visualDescription": "Balansuppdelning och diagram."
+    }
+  },
+  "BulkCategorize": {
+    "title": "Bulkkategorisera",
+    "calibrationTitle": "Steg 1 — Kalibrering",
+    "calibrationDescription": "Varje exempel du bekräftar hjälper AI:n att förbättra sina nästa förslag. Den kan vara redo efter en omgång eller be om fler exempel.",
+    "aiWantsMore": "AI:n vill gärna ha några fler exempel. Bekräfta eller korrigera förslagen nedan och kör en ny omgång.",
+    "aiSaidReady": "AI:n är redo. Gå till förhandsgranskningen för att bekräfta.",
+    "feedbackTableTitle": "Valda utgifter",
+    "emptySelection": "Inga utgifter behöver granskas just nu. Generera förhandsgranskningen för att tillämpa kategorier på alla kandidater.",
+    "runCalibration": "Kör kalibreringsomgång",
+    "runAnotherRound": "Kör ytterligare en kalibreringsomgång",
+    "calibrationError": "Kunde inte köra kalibrering: {message}",
+    "generatePreview": "Generera förhandsgranskning",
+    "previewTitle": "Steg 2 — Granska och spara",
+    "previewDescription": "Redigera valfri rad och spara sedan. Säkerhetsmarkeringar visar rader som modellen är minst säker på.",
+    "previewHint": "Visar {shown} av {total} kandidater.",
+    "removeAction": "Hoppa över",
+    "targetExceedsCap_one": "Kan inte bearbeta {count} utgift i denna omgång. Begränsa datumintervallet och försök igen.",
+    "targetExceedsCap_other": "Det finns för många utgifter att bearbeta ({count}). Begränsa datumintervallet eller bearbeta dem i omgångar.",
+    "saveAll_one": "Spara {count} ändring",
+    "saveAll_other": "Spara {count} ändringar",
+    "saving": "Sparar…",
+    "saved_one": "{count} utgift omkategoriserades.",
+    "saved_other": "{count} utgifter omkategoriserades.",
+    "applyError": "Kunde inte spara bulkuppdateringen av kategorier: {message}",
+    "noCandidates": "Inga utgifter behöver kategoriseras.",
+    "adminsOnly": "Endast gruppadministratörer kan köra bulkkategoriseraren.",
+    "description": "Använd AI:n för att föreslå kategorier för alla okategoriserade utgifter på en gång.",
+    "backToSettings": "Tillbaka till inställningarna",
+    "archived": "Den här gruppen är arkiverad. Bulkkategoriseraren är inte tillgänglig.",
+    "requiresFeatureFlag": "Denna funktion kräver att PUBLIC_ENABLE_CATEGORY_EXTRACT är aktiverad.",
+    "previewError": "Kunde inte generera förhandsgranskning: {message}",
+    "introTitle": "Så fungerar det",
+    "loadingCandidates": "Kontrollerar okategoriserade utgifter…",
+    "introDescription_one": "Det finns {count} okategoriserad utgift redo för granskning.",
+    "introDescription_other": "Det finns {count} okategoriserade utgifter redo för granskning.",
+    "introStepLook_one": "AI:n granskar upp till {count} utgift för att hitta det mest användbara exemplet.",
+    "introStepLook_other": "AI:n granskar upp till {count} utgifter för att hitta de mest användbara exemplen.",
+    "introStepReview_one": "Du granskar och korrigerar upp till {count} valt exempel så att AI:n lär sig gruppens kategorier.",
+    "introStepReview_other": "Du granskar och korrigerar upp till {count} valda exempel så att AI:n lär sig gruppens kategorier.",
+    "introStepPreview": "När AI:n har tillräckligt med exempel förbereder den en fullständig granskning och lämnar osäkra utgifter okategoriserade.",
+    "startCalibration": "Starta kalibrering",
+    "calibrationStartHint": "AI:n väljer användbara exempel för dig att granska.",
+    "calibrationReady": "AI:n har tillräckligt med feedback för att förbereda den fullständiga granskningen.",
+    "reviewSample": "Granska dessa exempel",
+    "calibrationNoSample": "AI:n behövde inget mer exempel.",
+    "categorizeSample": "Kategorisera ett exempel",
+    "submitReviewedExamples": "Skicka granskade exempel",
+    "continueToPreview": "Fortsätt till förhandsgranskning",
+    "back": "Tillbaka",
+    "backToCalibration": "Tillbaka till kalibrering",
+    "generatingPreview": "Förbereder förslag…",
+    "noSuggestions": "AI:n lämnade alla utgifter okategoriserade. Du kan försöka igen efter mer kalibrering.",
+    "previewSummary": "AI:n föreslog kategorier för {suggested} av {total} utgifter.",
+    "leftUncategorized_one": "{count} utgift lämnades okategoriserad eftersom AI:n inte var tillräckligt säker.",
+    "leftUncategorized_other": "{count} utgifter lämnades okategoriserade eftersom AI:n inte var tillräckligt säker.",
+    "retryPreview": "Försök med förhandsgranskning igen",
+    "doneTitle": "Kategorier sparade",
+    "expenseColumn": "Utgift",
+    "categoryColumn": "Kategori",
+    "roundCount": "Omgång {round} av {max}",
+    "confidence": {
+      "high": "Hög",
+      "medium": "Medium",
+      "low": "Låg"
+    },
+    "confidenceColumn": "Säkerhet"
+  },
+  "Categories": {
+    "Entertainment": {
+      "heading": "Underhållning",
+      "Entertainment": "Underhållning",
+      "Games": "Spel",
+      "Movies": "Filmer",
+      "Music": "Musik",
+      "Sports": "Sport"
+    },
+    "Food and Drink": {
+      "heading": "Mat och dryck",
+      "Food and Drink": "Mat och dryck",
+      "Dining Out": "Äta ute",
+      "Groceries": "Livsmedel",
+      "Liquor": "Alkohol"
+    },
+    "Home": {
+      "heading": "Hem",
+      "Home": "Hem",
+      "Electronics": "Elektronik",
+      "Furniture": "Möbler",
+      "Household Supplies": "Hushållsartiklar",
+      "Maintenance": "Underhåll",
+      "Mortgage": "Bolån",
+      "Pets": "Husdjur",
+      "Rent": "Hyra",
+      "Services": "Tjänster"
+    },
+    "Life": {
+      "heading": "Liv",
+      "Childcare": "Barnomsorg",
+      "Clothing": "Kläder",
+      "Donation": "Donation",
+      "Education": "Utbildning",
+      "Gifts": "Presenter",
+      "Insurance": "Försäkring",
+      "Medical Expenses": "Sjukvårdskostnader",
+      "Taxes": "Skatter"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Personlig vård och välbefinnande",
+      "Personal Care and Wellness": "Personlig vård och välbefinnande"
+    },
+    "Social and Activities": {
+      "heading": "Socialt och aktiviteter",
+      "Events and Activities": "Evenemang och aktiviteter"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Prenumerationer och medlemskap",
+      "Digital Subscriptions": "Digitala prenumerationer",
+      "Memberships": "Medlemskap"
+    },
+    "Transportation": {
+      "heading": "Transport",
+      "Transportation": "Transport",
+      "Bicycle": "Cykel",
+      "Bus/Train": "Buss/Tåg",
+      "Car": "Bil",
+      "Gas/Fuel": "Bränsle",
+      "Hotel": "Hotell",
+      "Parking": "Parkering",
+      "Plane": "Flyg",
+      "Taxi": "Taxi"
+    },
+    "search": "Sök kategori...",
+    "noCategory": "Inga kategorier hittades.",
+    "Uncategorized": {
+      "heading": "Okategoriserade",
+      "General": "Allmänt",
+      "Payment": "Betalning"
+    },
+    "Utilities": {
+      "heading": "Hushållsavgifter",
+      "Utilities": "Hushållsavgifter",
+      "Cleaning": "Städning",
+      "Electricity": "El",
+      "Heat/Gas": "Värme/Gas",
+      "Trash": "Sophämtning",
+      "TV/Phone/Internet": "TV/Telefon/Internet",
+      "Water": "Vatten"
+    }
+  },
+  "Common": {
+    "close": "Stäng",
+    "previousSlide": "Föregående bild",
+    "nextSlide": "Nästa bild"
+  },
+  "CompleteProfile": {
+    "title": "Slutför din profil",
+    "description": "Ange det namn du vill att dina grupper ska se. Du kan ändra det senare.",
+    "nameLabel": "Visningsnamn",
+    "namePlaceholder": "Ditt namn",
+    "submit": "Spara och fortsätt",
+    "saving": "Sparar…",
+    "signedInAs": "Inloggad som {email}",
+    "errors": {
+      "nameRequired": "Ange ett visningsnamn.",
+      "nameTooShort": "Namnet måste vara minst 2 tecken.",
+      "generic": "Något gick fel. Försök igen."
+    }
+  },
+  "CreateFromReceipt": {
+    "Dialog": {
+      "triggerTitle": "AI-kvittoskanning",
+      "title": "Skapa från kvitto",
+      "description": "Hämta utgiftsinformation från ett kvittofoto.",
+      "body": "Ladda upp ett foto på ett kvitto så försöker vi skanna det för att hämta utgiftsinformationen.",
+      "selectImage": "Välj bild…",
+      "titleLabel": "Titel:",
+      "categoryLabel": "Kategori:",
+      "amountLabel": "Belopp:",
+      "dateLabel": "Datum:",
+      "editNext": "Du kan redigera utgiftsinformationen härnäst.",
+      "continue": "Fortsätt",
+      "existingDocuments": "Välj ett bifogat kvitto",
+      "existingDocumentAlt": "Bifogat kvitto",
+      "uploadAndScan": "Ladda upp och skanna kvitto",
+      "scannedReceiptAlt": "Skannat kvitto",
+      "fillTitle": "Fyll i utgift från kvitto",
+      "fillNext": "Granska de föreslagna detaljerna och tillämpa dem på utgiften.",
+      "scanningHint": "Skanningen kan ta en stund — ha tålamod.",
+      "fillBody": "Välj ett bifogat kvitto eller ladda upp ett nytt — vi skannar det och föreslår detaljer för utgiften."
+    },
+    "ErrorToast": {
+      "title": "Fel vid uppladdning av dokument",
+      "description": "Något gick fel när dokumentet laddades upp. Försök igen senare eller välj en annan fil.",
+      "retry": "Försök igen"
+    },
+    "unknown": "Okänd",
+    "TooBigToast": {
+      "title": "Filen är för stor",
+      "description": "Den maximala filstorleken är {maxSize}. Din fil är {size}."
+    }
+  },
+  "CreateReimbursement": {
+    "description": "Granska betalningen innan du registrerar den.",
+    "pays": "{from} betalar {to}",
+    "amount": "Belopp",
+    "date": "Datum",
+    "category": "Kategori",
+    "create": "Skapa",
+    "edit": "Redigera detaljer",
+    "creating": "Skapar…",
+    "successToast": "Regleringsbetalning registrerad",
+    "successToastMultiple": "Registrerade {count} regleringsbetalningar som en post",
+    "paysMany": "{from} betalar {count} personer",
+    "receivesMany": "{to} får {count} betalningar",
+    "paymentsToInclude": "Betalningar att inkludera",
+    "selectionSummary": "{count} betalningar valda, totalt {total}",
+    "legToAria": "{from} betalar {to}, {amount}",
+    "legFromAria": "{from} betalar {to}, {amount}",
+    "toParticipant": "till {name}",
+    "fromParticipant": "från {name}",
+    "createSingle": "Registrera betalning",
+    "createMultiple": "Registrera {count} betalningar"
+  },
+  "Currencies": {
+    "search": "Sök valuta...",
+    "noCurrency": "Inga valutor hittades.",
+    "byCode": {
+      "AED": {
+        "name": "Förenade Arabemiratens dirham"
+      },
+      "ARS": {
+        "name": "Argentinsk peso"
+      },
+      "AUD": {
+        "name": "Australisk dollar"
+      },
+      "BDT": {
+        "name": "Bangladeshisk taka"
+      },
+      "BGN": {
+        "name": "Bulgarisk lev"
+      },
+      "BRL": {
+        "name": "Brasiliansk real"
+      },
+      "CAD": {
+        "name": "Kanadensisk dollar"
+      },
+      "CHF": {
+        "name": "Schweizisk franc"
+      },
+      "CLP": {
+        "name": "Chilensk peso"
+      },
+      "CNY": {
+        "name": "Kinesisk yuan"
+      },
+      "COP": {
+        "name": "Colombiansk peso"
+      },
+      "CZK": {
+        "name": "Tjeckisk krona"
+      },
+      "DKK": {
+        "name": "Dansk krona"
+      },
+      "EGP": {
+        "name": "Egyptiskt pund"
+      },
+      "EUR": {
+        "name": "Euro"
+      },
+      "GBP": {
+        "name": "Brittisk pund"
+      },
+      "GEL": {
+        "name": "Georgisk lari"
+      },
+      "GHS": {
+        "name": "Ghanesisk cedi"
+      },
+      "HKD": {
+        "name": "Hongkong-dollar"
+      },
+      "HNL": {
+        "name": "Honduransk lempira"
+      },
+      "HRK": {
+        "name": "Kroatisk kuna"
+      },
+      "HUF": {
+        "name": "Ungersk forint"
+      },
+      "IDR": {
+        "name": "Indonesisk rupiah"
+      },
+      "ILS": {
+        "name": "Israelisk ny shekel"
+      },
+      "INR": {
+        "name": "Indisk rupie"
+      },
+      "ISK": {
+        "name": "Isländsk krona"
+      },
+      "JPY": {
+        "name": "Japansk yen"
+      },
+      "KES": {
+        "name": "Kenyansk shilling"
+      },
+      "KHR": {
+        "name": "Kambodjansk riel"
+      },
+      "KRW": {
+        "name": "Sydkoreansk won"
+      },
+      "KWD": {
+        "name": "Kuwaitisk dinar"
+      },
+      "KZT": {
+        "name": "Kazakisk tenge"
+      },
+      "LKR": {
+        "name": "Sri Lankisk rupie"
+      },
+      "MAD": {
+        "name": "Marockansk dirham"
+      },
+      "MDL": {
+        "name": "Moldavisk leu"
+      },
+      "MKD": {
+        "name": "Makedonisk denar"
+      },
+      "MXN": {
+        "name": "Mexikansk peso"
+      },
+      "MYR": {
+        "name": "Malaysisk ringgit"
+      },
+      "NGN": {
+        "name": "Nigeriansk naira"
+      },
+      "NOK": {
+        "name": "Norsk krona"
+      },
+      "NZD": {
+        "name": "Nyzeeländsk dollar"
+      },
+      "PEN": {
+        "name": "Peruansk sol"
+      },
+      "PHP": {
+        "name": "Filippinsk peso"
+      },
+      "PKR": {
+        "name": "Pakistansk rupie"
+      },
+      "PLN": {
+        "name": "Polsk zloty"
+      },
+      "QAR": {
+        "name": "Qatarisk rial"
+      },
+      "RON": {
+        "name": "Rumänsk leu"
+      },
+      "RUB": {
+        "name": "Rysk rubel"
+      },
+      "SAR": {
+        "name": "Saudisk riyal"
+      },
+      "SEK": {
+        "name": "Svensk krona"
+      },
+      "SGD": {
+        "name": "Singaporiansk dollar"
+      },
+      "THB": {
+        "name": "Thailändsk baht"
+      },
+      "TRY": {
+        "name": "Turkisk lira"
+      },
+      "TWD": {
+        "name": "Ny taiwanesisk dollar"
+      },
+      "UAH": {
+        "name": "Ukrainsk hryvnia"
+      },
+      "USD": {
+        "name": "Amerikansk dollar"
+      },
+      "UYU": {
+        "name": "Uruguayansk peso"
+      },
+      "VND": {
+        "name": "Vietnamesisk dong"
+      },
+      "ZAR": {
+        "name": "Sydafrikansk rand"
+      }
+    }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "Skapa en grupp",
+      "createFriendLedger": "Håll koll på utgifter med en vän",
+      "showHidden": "Visa dolda grupper"
+    },
+    "description": {
+      "empty": "Skapa din första {itemLabel} för att komma igång."
+    },
+    "labels": {
+      "group": "grupp",
+      "groupPlural": "grupper",
+      "friendLedger": "vän",
+      "friendLedgerPlural": "vänner"
+    },
+    "title": {
+      "empty": "Inga {itemLabelPlural} ännu",
+      "filtered": "Alla dina {itemLabelPlural} är dolda"
+    }
+  },
+  "ExpenseCard": {
+    "paidBy": "Betald av <strong>{paidBy}</strong> · fördelat mellan <paidFor></paidFor>",
+    "paidByMultiple": "Betald av <paidByNames></paidByNames> · fördelat mellan <paidFor></paidFor>",
+    "everyone": "alla",
+    "copyToast": "Kopiering av utgift startad. Befintliga utgiftsdetaljer används för att skapa en ny.",
+    "receivedBy": "Mottagen av <strong>{paidBy}</strong> · tilldelad <paidFor></paidFor>",
+    "receivedByMultiple": "Mottagen av <paidByNames></paidByNames> · tilldelad <paidFor></paidFor>",
+    "yourBalance": "Din balans:",
+    "notInvolved": "Du är inte inblandad",
+    "settlementBadge": "Reglering",
+    "items": {
+      "more_one": "+{count} till",
+      "more_other": "+{count} till",
+      "title": "Rader",
+      "participants": "{names}"
+    }
+  },
+  "ExpenseDocumentsInput": {
+    "ErrorToast": {
+      "title": "Fel vid uppladdning av dokument",
+      "description": "Något gick fel när dokumentet laddades upp. Försök igen senare eller välj en annan fil.",
+      "retry": "Försök igen"
+    },
+    "deleteDocument": "Ta bort dokument",
+    "document": "Dokument",
+    "close": "Stäng",
+    "TooBigToast": {
+      "title": "Filen är för stor",
+      "description": "Den maximala filstorleken är {maxSize}. Din fil är {size}."
+    }
+  },
+  "ExpenseForm": {
+    "paidForItemizedEntryHint": "För att fördela per rad, redigera deltagare från en rad.",
+    "paidForItemizedActiveHint": "Artikelfördelning är aktiv. Redigera raddeltagare från kortet Rader för att ändra denna fördelning.",
+    "DefaultSplit": {
+      "savedAsDefault": "Sparad som standard",
+      "heading": "Standardfördelning",
+      "load": "Ladda",
+      "save": "Spara"
+    },
+    "DeletePopup": {
+      "label": "Ta bort",
+      "title": "Ta bort utgiften?",
+      "description": "Vill du verkligen ta bort denna utgift? Åtgärden går inte att ångra.",
+      "yes": "Ja",
+      "deleting": "Tar bort…",
+      "cancel": "Avbryt"
+    },
+    "Expense": {
+      "DateField": {
+        "label": "Utgiftsdatum",
+        "description": "Ange datumet då utgiften betalades."
+      },
+      "create": "Skapa utgift",
+      "edit": "Redigera utgift",
+      "TitleField": {
+        "label": "Utgiftstitel",
+        "placeholder": "Måndagskvällens restaurang",
+        "description": "Ange en beskrivning av utgiften."
+      },
+      "categoryFieldDescription": "Välj utgiftskategori.",
+      "splitModeDescription": "Välj hur utgiften ska fördelas.",
+      "attachDescription": "Se och bifoga kvitton till utgiften.",
+      "createCopy": "Skapa kopia: {title}",
+      "currencyField": {
+        "label": "Utgiftsvaluta",
+        "description": "Valutan som utgiften betalades i."
+      },
+      "editTitle": "Redigera: {title}",
+      "paidByField": {
+        "label": "Betald av",
+        "placeholder": "Välj en deltagare",
+        "description": "Välj vem som lade ut pengarna och hur mycket varje betalare bidrog med."
+      },
+      "paidFor": {
+        "title": "Fördelat mellan",
+        "description": "Välj vilka deltagare som delar på utgiften."
+      },
+      "recurrence": {
+        "label": "Utgiftens upprepning",
+        "description": "Välj när utgiften ska skapas igen.",
+        "checkboxLabel": "Återkommande",
+        "checkboxDescription": "Skapa utgiften enligt ett schema",
+        "enable": "Lägg till upprepning",
+        "previewLabel": "Kommande förekomster",
+        "currentOccurrence": "Aktuell",
+        "viewAll": "Visa alla",
+        "scheduleTitle": "Upprepningsschema",
+        "remainingCount": "Det finns {count} återstående förekomster.",
+        "unlimitedSchedule": "Denna upprepning har inget slutdatum.",
+        "noFurtherOccurrences": "Inga fler förekomster med dessa inställningar.",
+        "scheduleCount": "Visar {count} förekomster av denna utgift.",
+        "decreaseOccurrences": "Minska antal förekomster",
+        "increaseOccurrences": "Öka antal förekomster",
+        "ruleSummary": "Varje {interval} {frequency} · {count} förekomster",
+        "ruleSummaryIndefinite": "Varje {interval} {frequency} · Inget slutdatum",
+        "scheduleChangeWarningTitle": "Upprepningsschemat ändras",
+        "scheduleChangeWarning": "Vid sparning schemaläggs denna och framtida förekomster om. Befintliga framtida utgifter kan flyttas till nya datum eller tas bort, och saknade förfallodatum kan skapas automatiskt.",
+        "pastDateBackfillNote": "Eftersom utgiften startar i det förflutna kommer förekomster fram till idag att skapas automatiskt efter att du sparat.",
+        "completedOccurrence": "Skapad",
+        "remove": "Ta bort upprepning",
+        "repeatEvery": "Upprepa varje",
+        "interval": "Upprepningsintervall",
+        "frequency": "Upprepningsfrekvens",
+        "ends": {
+          "label": "Slutar",
+          "never": "Aldrig",
+          "count": "Efter ett antal förekomster",
+          "date": "På ett datum",
+          "countInput": "Totalt antal förekomster (inklusive denna utgift)",
+          "dateInput": "Slutdatum"
+        },
+        "frequencyOptions": {
+          "daily": "dag(ar)",
+          "weekly": "vecka/veckor",
+          "monthly": "månad(er)",
+          "yearly": "år"
+        },
+        "upcomingOccurrence": "Kommande"
+      },
+      "recurrenceRule": {
+        "label": "Utgiftens upprepning",
+        "description": "Välj hur ofta utgiften ska upprepas.",
+        "none": "Ingen upprepning",
+        "daily": "Dagligen",
+        "weekly": "Veckovis",
+        "monthly": "Månadsvis"
+      },
+      "recurringEditScopeOccurrence": "Redigerar endast denna förekomst",
+      "recurringEditScopeFuture": "Redigerar detta och framtida förekomster"
+    },
+    "Income": {
+      "DateField": {
+        "label": "Inkomstdatum",
+        "description": "Ange datumet då inkomsten togs emot."
+      },
+      "create": "Skapa inkomst",
+      "edit": "Redigera inkomst",
+      "TitleField": {
+        "label": "Inkomsttitel",
+        "placeholder": "Lön eller återbetalning",
+        "description": "Beskriv var inkomsten kom ifrån."
+      },
+      "categoryFieldDescription": "Välj inkomstkategori.",
+      "splitModeDescription": "Välj hur inkomsten ska fördelas.",
+      "attachDescription": "Se och bifoga kvitton till inkomsten.",
+      "currencyField": {
+        "label": "Inkomstvaluta",
+        "description": "Valutan som inkomsten togs emot i."
+      },
+      "paidByField": {
+        "label": "Mottagen av",
+        "description": "Välj vem som tog emot pengarna och hur mycket varje person fick."
+      },
+      "paidFor": {
+        "title": "Tilldelad till",
+        "description": "Välj vilka deltagare som delar på denna inkomst."
+      }
+    },
+    "PaidBySplitModeField": {
+      "label": "Betalarens fördelningssätt"
+    },
+    "attachDocuments": "Bifoga dokument",
+    "create": "Skapa",
+    "creating": "Skapar…",
+    "save": "Spara",
+    "saving": "Sparar…",
+    "cancel": "Avbryt",
+    "reimbursement": "Regleringsbetalning",
+    "readOnlyNotice": "Denna grupp är arkiverad. Utgiften visas i skrivskyddat läge.",
+    "ParticipantDistribution": {
+      "missing": "Saknar {missing} av {total}",
+      "surplus": "Överskott: {extra} av {total}",
+      "matches": "✓ Stämmer med {total}",
+      "evenlySplit": "Jämnt fördelad: {amount} × {count}",
+      "sharesTotal": "Total vikt: {sum} andelar",
+      "percentageMatches": "✓ Stämmer med 100%",
+      "percentageMissing": "Saknar {pct}%",
+      "percentageSurplus": "Överskott: {pct}%"
+    },
+    "SplitModeField": {
+      "label": "Fördelningssätt",
+      "evenly": "Jämnt",
+      "byShares": "Ojämnt – Efter andelar",
+      "byPercentage": "Ojämnt – Efter procent",
+      "byAmount": "Ojämnt – Efter belopp"
+    },
+    "amountField": {
+      "label": "Belopp",
+      "calculator": {
+        "buttonLabel": "Öppna kalkylator",
+        "title": "Kalkylator",
+        "description": "Beräkna ett belopp eller skapa utgiftsrader.",
+        "clear": "Rensa",
+        "backspace": "Backsteg",
+        "equals": "Lika med",
+        "plus": "Plus",
+        "minus": "Minus",
+        "multiply": "Multiplicera",
+        "divide": "Dividera",
+        "openBracket": "Öppna parentes",
+        "closeBracket": "Stäng parentes",
+        "decimal": "Decimalpunkt",
+        "invalid": "Ogiltigt uttryck",
+        "replaceItemsTitle": "Ersätta utgiftsrader?",
+        "replaceItemsDescription": "Detta ersätter dina befintliga utgiftsrader med de beräknade raderna.",
+        "replaceItemsConfirm": "Ersätt rader",
+        "splitIntoItems_one": "Skapa {count} utgiftsrad",
+        "splitIntoItems_other": "Skapa {count} utgiftsrader",
+        "replaceItems": "Ersätt utgiftsrader",
+        "createItems": "Skapa utgiftsrader",
+        "itemTransferInvalid": "Avsluta beräkningen",
+        "itemTransferUnsupported": "Använd endast +, × och parenteser",
+        "itemTransferEmpty": "Ange en beräkning",
+        "createItemsHint": "Lägg till beräknade rader",
+        "replaceItemsHint": "Ersätt aktuella rader"
+      }
+    },
+    "categoryField": {
+      "label": "Kategori"
+    },
+    "conversionUnavailable": "För att ange en annan valuta per utgift och konvertera belopp, välj en icke-anpassad valuta för gruppen.",
+    "conversionRateField": {
+      "useApi": "Använd växelkurs",
+      "useCustom": "Använd anpassad kurs",
+      "label": "Växelkurs",
+      "providerNote": "Kurser tillhandahålls av https://frankfurter.dev/ och deras API.",
+      "futureDateUsesToday": "Denna utgift ligger i framtiden och dagens växelkurs används."
+    },
+    "conversionRateState": {
+      "loading": "Hämtar växelkurser…",
+      "success": "Hämtade kurser:",
+      "error": "Hoppsan, vi kunde inte hämta de senaste kurserna.",
+      "staleRate": "Använder kurs:",
+      "noRate": "Ange en anpassad kurs nedan.",
+      "currencyNotFound": "Hoppsan, Frankfurter har inte kursen för denna valuta detta datum.",
+      "noDate": "Ange utgiftsdatum för att få en växelkurs.",
+      "dateMismatch": "Kurser från datum: {date}",
+      "refresh": "Uppdatera",
+      "customRate": "Använder anpassad kurs"
+    },
+    "splittingOptions": "Fördelningsalternativ",
+    "multiplePayers": "Flera betalare",
+    "paidByOptionSinglePayer": "En ensam betalare",
+    "paidByOptionEvenly": "Jämnt",
+    "paidByOptionByShares": "Efter andelar",
+    "paidByOptionByPercentage": "Efter procent",
+    "paidByOptionByAmount": "Efter belopp",
+    "paidForOptionEvenly": "Jämnt",
+    "paidForOptionByShares": "Efter andelar",
+    "paidForOptionByPercentage": "Efter procent",
+    "paidForOptionByAmount": "Efter belopp",
+    "paidBySectionSingle": "En ensam",
+    "paidBySectionMultiple": "Flera betalare",
+    "paidForSection": "Fördela mellan deltagare",
+    "splitOptionAria": "Fördelning: {title}",
+    "paidByOptionSinglePayerHelper": "En person betalar hela utgiften",
+    "paidByOptionEvenlyHelper": "Varje betalar lika stor andel",
+    "paidByOptionBySharesHelper": "Varje betalar en viktad andel",
+    "paidByOptionByPercentageHelper": "Varje betalar en procentsats",
+    "paidByOptionByAmountHelper": "Varje betalar ett fast belopp",
+    "paidForOptionEvenlyHelper": "Fördela jämnt mellan alla",
+    "paidForOptionBySharesHelper": "Tilldela en andel till varje person",
+    "paidForOptionByPercentageHelper": "Tilldela en procentsats till varje person",
+    "paidForOptionByAmountHelper": "Tilldela ett exakt belopp till varje person",
+    "convertedAmountField": {
+      "label": "Konverterat belopp"
+    },
+    "scanReceipt": "Skanna kvitto med AI",
+    "participantAmountLabel": "Belopp för {name}",
+    "participantPercentageLabel": "Procent för {name}",
+    "participantSharesLabel": "Andelar för {name}",
+    "decreaseShares": "Minska andelar för {name}",
+    "increaseShares": "Öka andelar för {name}",
+    "isReimbursementField": {
+      "label": "Detta är en regleringsbetalning"
+    },
+    "paidForOptionItemized": "Artikelfördelning",
+    "paidForOptionItemizedHelper": "Beräkna varje deltagares andel från enskilda rader i utgiften.",
+    "items": {
+      "title": "Rader",
+      "description": "Lägg till rader för att fördela utgiften exakt, eller behåll dem som dokumentation oavsett fördelningssätt.",
+      "addItem": "Lägg till rad",
+      "empty": "Inga rader ännu. Klicka på ”Lägg till rad” för att börja.",
+      "allMembers": "Alla deltagare",
+      "noMembers": "Inga deltagare",
+      "other": "Övrigt (otilldelat)",
+      "derivedBadge": "Härledd",
+      "errorExceedsAmount": "Radernas total överstiger utgiftsbeloppet.",
+      "actionEdit": "Redigera",
+      "actionDelete": "Ta bort",
+      "total": "Radernas total",
+      "requiredForItemized": "Lägg till minst en rad för att använda Artikelfördelning.",
+      "participantsSummary_one": "{count} deltagare",
+      "participantsSummary_other": "{count} deltagare",
+      "modalTitle": "Raddeltagare",
+      "columnItem": "Rad",
+      "columnCost": "Kostnad",
+      "columnQuantity": "Antal",
+      "columnParticipants": "Deltagare",
+      "columnTotal": "Totalt",
+      "setExpenseAmount": "Ange utgiftsbelopp",
+      "splitEvenlyLabel": "Fördela jämnt",
+      "splitBySharesLabel": "Fördela efter andelar",
+      "splitByPercentageLabel": "Fördela efter procent",
+      "splitByAmountLabel": "Fördela efter belopp",
+      "switchToItemizedTitle": "Byta till artikelfördelning?",
+      "switchToItemizedDescription": "Att redigera raddeltagare ändrar Fördelat mellan till Artikelfördelning och ersätter den deltagarfördelning du har konfigurerat.",
+      "switchToItemizedConfirm": "Byt till artikelfördelning",
+      "showItems": "Visa rader",
+      "hideItems": "Dölj rader",
+      "participantValueLabel": "Fördelningsvärde för {name}",
+      "defaultSplitLabel": "Standardfördelning av rader",
+      "defaultSplitMixed": "Blandad",
+      "defaultSplitEdit": "Redigera standardfördelning av rader",
+      "defaultSplitModalTitle": "Standardfördelning av rader"
+    },
+    "leaveItemized": {
+      "title": "Byta fördelningssätt?",
+      "description": "Att byta till {mode} behåller dina rader endast som dokumentation. Alla raddeltagartilldelningar tas bort.",
+      "cancel": "Avbryt",
+      "confirm": "Byt"
+    },
+    "notesField": {
+      "label": "Anteckningar"
+    },
+    "selectNone": "Avmarkera alla",
+    "selectAll": "Markera alla",
+    "shares": "andel(ar)",
+    "participant": {
+      "pending": "(inbjuden)"
+    }
+  },
+  "ExpensePreview": {
+    "title": "Utgiftsförhandsvisning",
+    "category": "Kategori",
+    "date": "Datum",
+    "paidBy": "Betald av",
+    "paidFor": "Fördelat mellan",
+    "yourBalance": "Din balans",
+    "notes": "Anteckningar",
+    "attachments_one": "Bilaga ({count})",
+    "attachments_other": "Bilagor ({count})",
+    "edit": "Redigera utgift",
+    "makeCopy": "Gör en kopia"
+  },
+  "ExpenseSeries": {
+    "badge": "Återkommande",
+    "occurrence": "Förekomst {sequence}",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "viewSeries": "Visa serie",
+    "title": "Utgiftsserie",
+    "empty": "Inga andra förekomster ännu.",
+    "scopeTitle": "Uppdatera återkommande utgift",
+    "scopeDescription": "Välj vilka förekomster som ska påverkas.",
+    "occurrenceOnly": "Endast denna förekomst",
+    "thisAndFuture": "Denna och framtida förekomster",
+    "deleteScopeTitle": "Ta bort återkommande utgift",
+    "deleteScopeDescription": "Välj om en förekomst ska tas bort, denna och följande förekomster, eller om upprepningen också ska stoppas.",
+    "deleteOccurrence": "Ta bort endast denna förekomst",
+    "deleteThisAndFuture": "Ta bort denna och följande förekomster",
+    "deleteThisAndFutureStop": "Ta bort denna och följande förekomster och stoppa upprepningen",
+    "deleteThisAndFutureDescription": "Ta bort denna och följande utgifter; schemat förblir aktivt.",
+    "deleteThisAndFutureStopDescription": "Ta bort denna och följande utgifter och stoppa schemat permanent.",
+    "deleteOccurrenceDescription": "Ta bort endast denna utgift. Andra schemalagda förekomster förblir oförändrade.",
+    "actions": "Återkommande åtgärder",
+    "actionsTitle": "Åtgärder för återkommande utgift",
+    "actionsDescription": "Välj exakt vilken förekomst som ska redigeras eller tas bort.",
+    "editActions": "Redigera",
+    "deleteActions": "Ta bort",
+    "confirmDelete": "Ta bort",
+    "confirmStop": "Stoppa upprepning",
+    "working": "Arbetar…",
+    "back": "Tillbaka",
+    "confirm": "Fortsätt",
+    "cancel": "Avbryt",
+    "occurrences": "{count} förekomster i denna serie",
+    "loading": "Laddar…",
+    "loadMore": "Ladda fler förekomster",
+    "badgeRunning": "Återkommande · Pågående",
+    "badgeStopped": "Återkommande · Stoppad",
+    "badgeCompleted": "Återkommande · Avslutad",
+    "editOccurrence": "Redigera denna förekomst",
+    "editOccurrenceDescription": "Ändra endast denna utgift.",
+    "editThisAndFuture": "Redigera denna och framtida förekomster",
+    "editThisAndFutureDescription": "Ändra denna utgift och alla framtida schemalagda utgifter.",
+    "stopRecurrence": "Stoppa upprepning",
+    "stopConfirmTitle": "Stoppa denna upprepning?",
+    "stopConfirmDescription": "Befintliga utgifter finns kvar. Inga nya förekomster skapas.",
+    "stopConfirmHint": "Att stoppa är permanent. Skapa en ny återkommande utgift för att börja om.",
+    "deleteConfirmTitle": "Bekräfta borttagning",
+    "deleteConfirmHint": "Denna åtgärd går inte att ångra för de valda förekomsterna.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Endast denna förekomst tas bort.",
+      "THIS_AND_FUTURE": "Denna och följande förekomster tas bort. Upprepningen fortsätter med nästa schemalagda förekomst.",
+      "THIS_AND_FUTURE_STOP": "Denna och följande förekomster tas bort och upprepningen stoppas."
+    }
+  },
+  "Expenses": {
+    "title": "Utgifter",
+    "description": "Här är utgifterna som du har skapat för din grupp.",
+    "create": "Skapa utgift",
+    "createFirst": "Skapa den första",
+    "noExpenses": "Din grupp har inga utgifter ännu.",
+    "export": "Exportera",
+    "exportJson": "Exportera till JSON",
+    "exportCsv": "Exportera till CSV",
+    "searchPlaceholder": "Sök efter en utgift…",
+    "ActiveUserModal": {
+      "title": "Vem är du?",
+      "description": "Berätta vilken deltagare du är så att vi kan anpassa hur informationen visas.",
+      "nobody": "Jag vill inte välja någon",
+      "save": "Spara ändringar",
+      "footer": "Denna inställning kan ändras senare i gruppinställningarna."
+    },
+    "Groups": {
+      "upcoming": "Kommande",
+      "thisWeek": "Denna vecka",
+      "earlierThisMonth": "Tidigare denna månad",
+      "lastMonth": "Förra månaden",
+      "earlierThisYear": "Tidigare i år",
+      "lastYear": "Förra året",
+      "older": "Äldre utgifter"
+    },
+    "filters": {
+      "mobileTitle": "Filtrera utgifter",
+      "cancel": "Avbryt",
+      "apply": "Tillämpa",
+      "clearAll": "Rensa alla",
+      "clearFilterAria": "Rensa {label}-filter",
+      "noMatchTitle": "Inga utgifter matchar dina filter",
+      "noMatchBody": "Prova att ta bort eller ändra några filter för att se fler resultat.",
+      "noMatchClear": "Rensa filter",
+      "category": "Kategori",
+      "paidBy": "Betald av",
+      "paidFor": "Fördelat mellan",
+      "dateRange": "Datumintervall",
+      "dateFrom": "Från",
+      "dateTo": "Till",
+      "amountRange": "Belopp",
+      "minAmount": "Min",
+      "maxAmount": "Max",
+      "currency": "Valuta",
+      "matchModeAny": "Matcha någon",
+      "matchModeAll": "Matcha alla",
+      "button": "Filter",
+      "matchModeExact": "Exakt matchning",
+      "allCategories": "Alla kategorier",
+      "allParticipants": "Alla deltagare",
+      "allCurrencies": "Alla valutor",
+      "nSelected_one": "{count} vald",
+      "nSelected_other": "{count} valda",
+      "removeFilter": "Ta bort filter",
+      "settlementsHidden": "Regleringar dolda",
+      "sort": {
+        "options": {
+          "amount": {
+            "desc": "Belopp (högsta först)",
+            "asc": "Belopp (lägsta först)"
+          },
+          "createdAt": {
+            "desc": "Skapad (nyaste först)",
+            "asc": "Skapad (äldsta först)"
+          },
+          "expenseDate": {
+            "desc": "Datum (nyaste först)",
+            "asc": "Datum (äldsta först)"
+          }
+        },
+        "title": "Sortera utgifter"
+      },
+      "title": "Filter"
+    },
+    "showSettlements": "Visa regleringar"
+  },
+  "Footer": {
+    "madeIn": "Gjord med kärlek av open source-communityn ❤️",
+    "builtBy": "Se <source>källkod och bidragsgivare</source>",
+    "legalNavigation": "Juridiska länkar",
+    "privacy": "Integritet",
+    "terms": "Villkor",
+    "imprint": "Projektinformation"
+  },
+  "ForgotPassword": {
+    "title": "Återställ ditt lösenord",
+    "subtitle": "Ange din kontos e-post så skickar vi en länk för att välja ett nytt lösenord.",
+    "emailLabel": "E-post",
+    "submit": "Skicka återställningslänk",
+    "emailSent": "Om ett konto finns för den e-posten får du en återställningslänk inom kort.",
+    "tryAgain": "Använd en annan e-post",
+    "backToSignIn": "Tillbaka till inloggning",
+    "errors": {
+      "sendFailed": "Kunde inte skicka återställningslänken. Försök igen."
+    }
+  },
+  "Friends": {
+    "title": "Håll koll på utgifter med en vän",
+    "peerFriendsTab": "Vänlista",
+    "peerEmailTab": "E-post",
+    "peerLinkTab": "Delningsbar länk",
+    "friendsSection": "Vänner",
+    "pendingInvitationsSection": "Väntande inbjudningar",
+    "activeFriendExpensesSection": "Aktiva vänutgifter",
+    "alreadyInvited": "(redan inbjuden)",
+    "alreadyHasLedger": "(delar redan utgifter med dig)",
+    "inviteSent": "Inbjudan skickad. Din vän läggs till när hen går med i Spliit Cloud.",
+    "inviteLinkTitle": "Dela denna länk",
+    "inviteLinkDescription": "Dela denna länk så att din vän kan gå med i era gemensamma utgifter.",
+    "copy": "Kopiera",
+    "share": "Dela",
+    "linkHelp": "Skapa en delningsbar länk som din vän kan använda för att gå med.",
+    "emailLabel": "Vännens e-post",
+    "temporaryNameLabel": "Visningsnamn",
+    "temporaryNameHelp": "Ange ett namn för personen du bjuder in.",
+    "friendsEmpty": "Lägg till en vän genom att ange hens e-post eller dela en länk för att bjuda in hen.",
+    "infoLabel": "Information (valfri)",
+    "infoPlaceholder": "Lägg till kontext, t.ex. ”Hyresgästutgifter”",
+    "createError": "Kunde inte skapa vänutgifter"
+  },
+  "GroupForm": {
+    "CurrencyCodeField": {
+      "label": "Huvudvaluta",
+      "createDescription": "Alla belopp och balanser kommer vara i denna valuta.",
+      "editDescription": "Alla belopp och balanser kommer att vara i denna valuta. Att ändra detta kommer INTE att konvertera redan angivna utgifter, förutom när valutan har andra ”minsta enheter” än den nuvarande (t.ex. byte från US-dollar till japanska yen)",
+      "customOption": "Anpassad",
+      "lockedAfterExpenses": "Valutan är låst eftersom gruppen redan har utgifter."
+    },
+    "CurrencyField": {
+      "label": "Valutasymbol",
+      "placeholder": "$, €, £…",
+      "description": "Vi använder den för att visa belopp."
+    },
+    "InformationField": {
+      "label": "Gruppinformation",
+      "placeholder": "Vilken information är relevant för gruppens deltagare?"
+    },
+    "title": "Gruppinformation",
+    "readOnlyNote": "Endast ägare och administratörer kan ändra gruppinställningar.",
+    "readOnlyTitle": "Gruppinställningar",
+    "readOnlyBack": "Tillbaka till gruppen",
+    "archivedNotice": "Denna grupp är arkiverad. Dess inställningar är frysta och kan inte längre ändras.",
+    "NameField": {
+      "label": "Gruppnamn",
+      "placeholder": "Semesterresan",
+      "description": "Ange ett namn för din grupp."
+    },
+    "Participants": {
+      "title": "Deltagare",
+      "description": "Ange namn för varje deltagare.",
+      "protectedParticipant": "Denna deltagare ingår i en utgift och kan inte tas bort.",
+      "new": "Ny",
+      "add": "Lägg till deltagare",
+      "John": "Johan",
+      "Jane": "Anna",
+      "Jack": "Erik"
+    },
+    "Settings": {
+      "title": "Lokala inställningar",
+      "description": "Dessa inställningar sätts per enhet och används för att anpassa din upplevelse.",
+      "ActiveUserField": {
+        "label": "Aktiv användare",
+        "placeholder": "Välj en deltagare",
+        "none": "Ingen",
+        "description": "Användare som används som standard för att betala utgifter."
+      },
+      "save": "Spara",
+      "saving": "Sparar…",
+      "create": "Skapa",
+      "creating": "Skapar…",
+      "cancel": "Avbryt",
+      "inviteAfterCreate": "När gruppen har skapats öppnar du fliken Medlemmar för att bjuda in personer via e-post eller delbar länk."
+    },
+    "bulkCategorizeSectionTitle": "AI-verktyg för bulk",
+    "bulkCategorizeSectionDescription": "Kör AI-kategoriseraren för många utgifter på en gång. Användbart efter import av utgifter eller när många titlar fortfarande är okategoriserade.",
+    "bulkCategorizeButton": "Öppna bulkkategoriserare"
+  },
+  "Groups": {
+    "linkInvitationBannerDescription": "{inviter} bjöd in dig att gå med i {groupName} på Spliit Cloud.",
+    "linkInvitationSingleUse": "Denna länk kan endast användas en gång. När du accepterar slutar den att fungera.",
+    "linkInvitationTemporaryName": "Du går med som {name}.",
+    "linkInvitationAlreadyMemberTitle": "Du är redan i {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Du har redan ett konto i denna grupp. Inbjudningslänken behövs inte.",
+    "linkInvitationDismiss": "Stäng",
+    "linkInvitationExpiredTitle": "Denna inbjudningslänk är inte längre giltig",
+    "linkInvitationExpiredDescription": "Länken har antingen återkallats, avböjts eller gått ut. Be inbjudaren att skicka en ny.",
+    "backToHome": "Tillbaka till startsidan",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "Destination",
+        "newGroupFormat": "Ny grupp · {currency}",
+        "existingGroupFormat": "Befintlig grupp · sammanslagen",
+        "summaryLabel": "Sammanfattning",
+        "sourceParticipants_one": "{count} källdeltagare",
+        "sourceParticipants_other": "{count} källdeltagare",
+        "participantBreakdown": "{linked} länkade · {email} e-postinbjudningar · {link} länkinbjudningar · {unlinked} olänkade",
+        "expenseCount_one": "{count} utgift skapas",
+        "expenseCount_other": "{count} utgifter skapas",
+        "sourceName": "Källa: {name}",
+        "footer": "Varje källdeltagare och utgift importeras. Inbjudningar skickas/skapas efter att gruppen har skapats.",
+        "importingButton": "Importerar…",
+        "importButton": "Importera grupp",
+        "ratesLoading": "Hämtar växelkurser för valutakorsande utgifter…",
+        "rateFetchError": "Kunde inte hämta växelkurser. Importen är blockerad tills kurstjänsten är tillgänglig igen.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Begärd {requested} · leverantör använde {asOf}",
+        "currencyConversionTitle": "Valutakonvertering",
+        "currencyConversionDescription": "Utgifter konverteras från källvalutan till reskontrans valuta med hjälp av kurserna nedan.",
+        "currencyRateForDateFormat": "Tillämpad för utgifter daterade {date}",
+        "appliedExchangeRatesLabel": "Tillämpade växelkurser",
+        "conversionPerDate": "Per datum",
+        "conversionFixed": "Fast kurs",
+        "importErrorTitle": "Import misslyckades",
+        "importErrorFallback": "Ett oväntat fel uppstod vid import av gruppen. Försök igen.",
+        "executeImport": "Importera grupp",
+        "recurringSchedulesLabel": "Återkommande scheman att importera",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "Dagligen",
+          "weekly": "Veckovis",
+          "monthly": "Månadsvis"
+        }
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Anpassad kurs",
+        "fetchingRates": "Hämtar växelkurser…",
+        "fixedDescription": "Använd en växelkurs för alla utgifter i detta valutapar. Som standard hämtas kursen från Frankfurter för det valda datumet; du kan också ange en anpassad kurs.",
+        "fixedTitle": "Fast kurs",
+        "noConversionNeeded": "Alla utgifter är i gruppens standardvaluta. Ingen valutakonvertering behövs.",
+        "perDateDescription": "Mer exakt — använder växelkursen från varje utgifts faktiska datum.",
+        "perDateSelectedHint": "Använder den historiska växelkursen för varje utgifts datum (Frankfurter API).",
+        "perDateTitle": "Konvertering per datum",
+        "rateDateLabel": "Frankfurter-kursdatum",
+        "ratesError": "Kunde inte hämta växelkurser. Kontrollera din anslutning och försök igen.",
+        "refresh": "Uppdatera",
+        "viaFrankfurter": "Kurs hämtad från Frankfurter för valt datum."
+      },
+      "Destination": {
+        "heading": "Vart vill du importera <strong>{name}</strong>? ({participantCount} deltagare · {expenseCount} utgifter)",
+        "newGroup": "Ny grupp",
+        "existingGroup": "Befintlig grupp",
+        "loading": "Laddar…",
+        "noAdminGroups": "Du Administrerar ännu ingen grupp.",
+        "memberCount_one": "{count} medlem",
+        "memberCount_other": "{count} medlemmar"
+      },
+      "Done": {
+        "importComplete": "Import klar",
+        "description": "Din importerade grupp är klar. Jämför de importerade utgifterna och balanserna med originalexporten. Om något ser fel ut, öppna ett importärende på GitHub; importproblem har högsta prioritet och ses över så snart som möjligt.",
+        "openGroup": "Öppna grupp",
+        "shareableLinksTitle": "Delbara inbjudningslänkar",
+        "shareableLinksDescription": "Kopiera varje länk och skicka den till motsvarande person. Länken är engångs; de går med i gruppen så snart de öppnar den.",
+        "shareAriaLabel": "Dela inbjudningslänk",
+        "emailInvitesTitle": "E-postinbjudningar skickade",
+        "emailInvitesDescription": "Servern e-postade följande personer. De ser en Acceptera/Avböj-banner på gruppsidan när de loggar in.",
+        "shareTitle": "Gå med i min grupp på Spliit Cloud",
+        "shareText": "Gå med i vår utgiftsgrupp på Spliit Cloud — {name}. Öppna denna länk för att acceptera: {url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "Två källrader är kopplade till samma befintliga medlem.",
+          "inviteConflictsPending": "Du bjuder in {email} men hen har redan en väntande inbjudan; länka istället.",
+          "inviteConflictsMember": "Du bjuder in {email} men hen är redan medlem i denna grupp; länka istället.",
+          "duplicateMemberName": "Två befintliga medlemmar ser ut som samma person — välj en.",
+          "onlyOneLinkedAccount": "Endast en källrad kan länkas till ditt konto.",
+          "missingExistingMember": "Välj en befintlig medlem att länka till.",
+          "missingEmail": "Lägg till en e-postadress för att bjuda in via e-post.",
+          "selfEmailAddress": "Detta är din e-post — välj ”Länka till mig” istället.",
+          "duplicateEmail": "Denna e-post är redan inbjuden från en annan rad."
+        },
+        "headsUp": "OBS",
+        "noLinkAccount": "Ingen deltagare är länkad till ditt konto. Importören (du) skapas som en ny ägardeltagare i den importerade gruppen — hens andel av de importerade utgifterna är noll tills du länkar en källrad till ditt konto eller bjuder in dig själv.",
+        "continue": "Fortsätt till bekräftelse",
+        "Row": {
+          "linkToMe": "Länka till mig",
+          "linkToMeDescription": "Kopplar denna person till ditt konto.",
+          "linkToMeFollowUp": "{name} kommer att länkas till ditt konto i denna grupp. Deras tidigare och framtida utgifter visas under ditt namn.",
+          "inviteByEmail": "Bjud in via e-post",
+          "inviteByEmailDescription": "Skickar en inbjudan efter att importen har slutförts.",
+          "inviteeEmailLabel": "Inbjudens e-post",
+          "inviteeEmailPlaceholder": "inbjuden@exempel.se",
+          "selfEmailDetected": "Det är din e-post — bytt till ”Länka till mig”.",
+          "inviteByLink": "Bjud in via länk",
+          "inviteByLinkDescription": "Genererar en delbar URL i steget Klart.",
+          "inviteByLinkFollowUp": "Vi genererar en engångs-URL efter att importen har slutförts. Du hittar den i steget Klart — kopiera och skicka den till {name} själv.",
+          "linkToExisting": "Länka till befintlig medlem",
+          "linkToExistingDescription": "Kopplar denna person till en befintlig aktiv medlem eller väntande inbjudan i destinationsgruppen. Ingen ny deltagare skapas.",
+          "selectExistingMember": "Välj befintlig medlem",
+          "selectExistingPlaceholder": "Välj en befintlig medlem…",
+          "membersLabel": "Medlemmar",
+          "pendingInvitesLabel": "Väntande inbjudningar",
+          "pendingSuffix": "(väntande)",
+          "leaveUnlinked": "Lämna olänkad",
+          "leaveUnlinkedDescription": "Behåller bara namnet — länka senare från Medlemmar.",
+          "leaveUnlinkedFollowUp": "{name} visas som en namnlös post utan appåtkomst. Du kan länka hen till ett konto senare från fliken Medlemmar.",
+          "inviteFriend": "Från dina vänner",
+          "inviteFriendDescription": "Bjud in en vän från grupper du tidigare delat.",
+          "selectFriendLabel": "Vän",
+          "selectFriendPlaceholder": "Välj en vän…",
+          "friendAlreadyMember": "Redan medlem",
+          "friendPendingInvite": "Redan inbjuden"
+        }
+      },
+      "fetchingGroup": "Hämtar gruppen från spliit.app…",
+      "fetchSourceError": "Kunde inte hämta källan",
+      "Source": {
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
+        "tricount": "Tricount (kommer snart)",
+        "settleUp": "Settle Up (kommer snart)",
+        "spliitDescription": "Ta in en befintlig spliit.app-grupp till Spliit Cloud. Vi läser gruppnamn, deltagare och varje utgift.",
+        "splitwiseComingTitle": "Splitwise-import är på väg",
+        "splitwiseComingDescription": "Vi arbetar med att föra in Splitwise CSV-export till Spliit Cloud. Flödet kommer att vara tillgängligt här när det är klart — du behöver inte importera något igen under tiden.",
+        "tricountComingTitle": "Tricount-import är på väg",
+        "tricountComingDescription": "Stöd för Tricount CSV-export finns på färdplanen.",
+        "settleUpComingTitle": "Settle Up-import är på väg",
+        "settleUpComingDescription": "Stöd för Settle Up CSV-export finns på färdplanen.",
+        "dropFile": "Släpp en JSON- eller CSV-fil, eller klicka för att välja",
+        "dropFileDescription": "JSON bevarar varje belopp och betalare exakt. CSV är en reserv — Spliit Cloud avrundar varje deltagarbelopp till 2 decimaler.",
+        "or": "eller",
+        "pasteUrl": "Klistra in en spliit.app-URL",
+        "urlDescription": "Vår server hämtar gruppen via spliit.app publika export-endpoint åt dig.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "Importerar…",
+        "fetchGroupButton": "Importera grupp",
+        "receiptWarningTitle": "Kvittobilder importeras inte.",
+        "receiptWarningDescription": "spliit.app-exporten innehåller inte kvittobilder. Ladda upp dem igen i destinationsgruppen om du behöver dem.",
+        "invalidUrl": "Klistra in en giltig spliit.app-grupps-URL",
+        "notFoundUrl": "Spliit Cloud hittade inte denna grupp",
+        "fetchUrlError": "Kunde inte hämta källan",
+        "fileReadError": "Kunde inte läsa filen",
+        "appToCloudDescription": "Byt .app till .cloud i valfri spliit.app-grupps-URL för att importera den till Spliit Cloud.",
+        "appToCloudTitle": "Byt ut .app mot .cloud",
+        "splitwiseDescription": "Släpp en Splitwise CSV-export för att importera dess utgifter till Spliit Cloud. Filen måste komma från Splitwise groupexport — CSV:n per grupp som är tillgänglig från gruppens inställningar.",
+        "receiptWarningTitleSplitwise": "Kvittobilder importeras inte.",
+        "receiptWarningDescriptionSplitwise": "Splitwise-exporten innehåller inte kvittobilder. Ladda upp dem igen i destinationsgruppen om du behöver dem.",
+        "unsupportedFileType": "Filtypen stöds inte. Släpp en JSON- eller CSV-fil.",
+        "dropFileSplitwise": "Släpp en Splitwise CSV-fil, eller klicka för att välja",
+        "dropFileDescriptionSplitwise": "CSV är det enda formatet Splitwise exporterar. Vi tolkar delta-deltagarvärdena för att återskapa fördelningen.",
+        "splitwiseAnonymizeTitle": "Problem med att importera din Splitwise CSV? Anonymisera den innan du delar.",
+        "splitwiseAnonymizeDescription": "Om importören avvisar din CSV kan du ta bort deltagarnamn och utgiftsbeskrivningar lokalt och bifoga resultatet till ett GitHub-ärende. Din fil stannar på din enhet — vi laddar aldrig upp den.",
+        "splitwiseAnonymizeButton": "Anonymisera en CSV",
+        "splitwiseAnonymizeIssuesLink": "Öppna ett importärende",
+        "splitwiseAnonymizeError": "Kunde inte anonymisera denna fil. Se till att det är en Splitwise CSV-export.",
+        "csvRecurrenceLimitation": "CSV-exporter innehåller inte upprepning. Använd en JSON-export från spliit.app för att importera återkommande utgifter."
+      },
+      "StepHeader": {
+        "title": "Importera en grupp",
+        "source": "Källa",
+        "destination": "Destination",
+        "mapping": "Koppling",
+        "confirm": "Bekräfta",
+        "done": "Klart",
+        "backAriaLabel": "Tillbaka",
+        "currencyConversion": "Valutakonvertering",
+        "backTo": "Tillbaka till {step}",
+        "continueTo": "Fortsätt till {step}"
+      }
+    },
+    "Importable": {
+      "title": "Hittade denna grupp på spliit.app",
+      "description": "”{name}” är åtkomlig på spliit.app. Vill du importera den till Spliit Cloud?",
+      "cta": "Importera denna grupp",
+      "backToHome": "Gå till startsidan"
+    },
+    "NotFound": {
+      "text": "Denna grupp finns inte.",
+      "link": "Gå till startsidan",
+      "lookingUp": "Letar efter denna grupp…"
+    },
+    "myGroups": "Mina grupper",
+    "create": "Skapa",
+    "createdInviteHint": "Grupp skapad. Bjud in medlemmar för att komma igång.",
+    "loadingRecent": "Laddar senaste grupper…",
+    "starred": "Stjärnmarkerade",
+    "archived": "Arkiverade grupper",
+    "hidden": "Dolda",
+    "showHidden": "Visa dolda grupper",
+    "showArchived": "Visa arkiverade grupper",
+    "hide": "Dölj grupp",
+    "unhide": "Visa grupp",
+    "hideFriend": "Dölj vänutgifter",
+    "unhideFriend": "Visa vänutgifter",
+    "starGroup": "Stjärnmarkera grupp",
+    "unstarGroup": "Ta bort stjärnmarkering",
+    "starFriend": "Stjärnmarkera vänutgifter",
+    "unstarFriend": "Ta bort stjärnmarkering för vänutgifter",
+    "groupActions": "Grupphandlingar",
+    "friendActions": "Åtgärder för vänutgifter",
+    "archiveGroup": "Arkivera grupp",
+    "unarchiveGroup": "Återställ grupp från arkiv",
+    "archiveSuccess": "Grupp arkiverad.",
+    "unarchiveSuccess": "Grupp återställd från arkiv.",
+    "archiveWithBalancesTitle": "Oreglerade balanser",
+    "archiveWithBalancesDescription": "Denna grupp har oreglerade balanser. Arkivering skapar regleringsutgifter för att nollställa dem. Fortsätta?",
+    "archiveWithBalancesForce": "Tvinga arkivering",
+    "archiveWithBalancesCancel": "Avbryt",
+    "archiveWithBalancesSuccess": "Regleringsutgifter skapade och gruppen arkiverad.",
+    "archiveWithBalancesView": "Visa balanser",
+    "archiveSectionTitle": "Arkivera grupp",
+    "archiveSectionDescription": "Arkivering fryser gruppen. Inga nya utgifter kan läggas till eller ändras, men befintliga data förblir synliga. Du kan när som helst återställa gruppen.",
+    "archivedBadge": "Arkiverad",
+    "bannerArchivedTitle": "Denna grupp är arkiverad",
+    "bannerArchivedDescription": "Inga nya utgifter eller inbjudningar kan läggas till medan gruppen är arkiverad. Befintliga data förblir synliga.",
+    "bannerArchived": "Denna grupp är arkiverad. Inga nya utgifter kan läggas till.",
+    "bannerUnarchive": "Återställ från arkiv",
+    "bannerUnarchiveSuccess": "Grupp återställd från arkiv.",
+    "invitationBannerTitle": "Du har blivit inbjuden till denna grupp",
+    "invitationBannerDescription": "Acceptera för att gå med som medlem, eller avböj för att kassera inbjudan.",
+    "invitationAccept": "Acceptera",
+    "invitationDecline": "Avböj",
+    "invitationAccepted": "Inbjudan accepterad.",
+    "invitationDeclined": "Inbjudan avböjd.",
+    "pendingInviteeReadOnlyTitle": "Du har blivit inbjuden",
+    "pendingInviteeReadOnlyDescription": "Acceptera inbjudan ovan för att börja lägga till utgifter och ändra gruppinställningar. Tills dess är gruppen skrivskyddad.",
+    "pendingInviteeSettingsTitle": "Gruppinställningar är låsta",
+    "pendingInviteeSettingsDescription": "Du måste acceptera inbjudan innan du kan ändra gruppinställningar eller bjuda in medlemmar.",
+    "pendingInviteeExpenseTitle": "Utgifter är skrivskyddade",
+    "pendingInviteeExpenseDescription": "Acceptera inbjudan ovan för att börja lägga till eller redigera utgifter. Tills dess är gruppens befintliga data synlig men kan inte ändras.",
+    "archivedReadOnly": "Denna grupp är arkiverad. Utgifter kan inte längre läggas till eller ändras.",
+    "backToExpenses": "Tillbaka till utgifter",
+    "backToGroups": "Tillbaka till grupper",
+    "removeRecent": "Ta bort från senaste grupper",
+    "RecentRemovedToast": {
+      "title": "Gruppen har tagits bort",
+      "description": "Gruppen togs bort från din lista över senaste grupper.",
+      "undoAlt": "Ångra borttagning av grupp",
+      "undo": "Ångra"
+    },
+    "Unauthorized": {
+      "title": "Du har inte tillgång till denna grupp",
+      "description": "Om du tror att detta är ett misstag, be en gruppägare eller administratör att bjuda in dig.",
+      "link": "Tillbaka till startsidan"
+    },
+    "groups": "Grupper",
+    "friends": "Vänner",
+    "createExpense": "Skapa utgift",
+    "pending": "Väntande",
+    "scopePickerGroups": "Välj en grupp",
+    "scopePickerFriends": "Välj en vän",
+    "scopePickerEmpty": "Inga grupper ännu",
+    "scopePickerMembers_one": "{count} medlem",
+    "scopePickerMembers_other": "{count} medlemmar",
+    "createFriendLedgerCard": {
+      "description": "Reglera en-mot-en med en specifik person.",
+      "title": "Håll koll på utgifter med en vän"
+    },
+    "createGroupCard": {
+      "title": "Skapa en grupp",
+      "description": "Håll koll på delade utgifter med vänner, familj eller rumskamrater."
+    },
+    "delete": {
+      "sectionTitle": "Ta bort grupp",
+      "sectionDescription": "Ta bort denna grupp, alla utgifter och hela historiken permanent. Detta går inte att ångra — gör detta bara om du är säker på att ingen behöver dessa data längre.",
+      "button": "Ta bort grupp",
+      "dialog": {
+        "title": "Ta bort denna grupp?",
+        "description": "Du är på väg att permanent ta bort ”{name}”. Varje utgift, kvitto, inbjudan och aktivitetspost tas bort och kan inte återställas.",
+        "warningTitle": "Denna åtgärd går inte att ångra",
+        "warningDescription": "Följande data tas bort omedelbart:",
+        "checkbox": "Jag förstår att detta permanent tar bort gruppen och all dess data.",
+        "cancel": "Avbryt",
+        "confirm": "Ta bort grupp",
+        "deleting": "Tar bort…",
+        "warningList": {
+          "expenses": "Alla utgifter och balanser",
+          "activity": "Hela aktivitetshistoriken",
+          "invitations": "Väntande inbjudningar",
+          "receipts": "Uppladdade kvittofiler"
+        }
+      },
+      "error": {
+        "generic": "Kunde inte ta bort gruppen. Försök igen."
+      },
+      "toast": {
+        "deleted": "Grupp borttagen."
+      }
+    },
+    "importGroup": "Importera grupp",
+    "exportDescription": "Ladda ner gruppens utgifter som JSON eller CSV.",
+    "invitations": {
+      "title": "Väntande inbjudningar",
+      "description": "Du har blivit inbjuden att gå med i följande grupper.",
+      "accept": "Acceptera",
+      "decline": "Avböj",
+      "accepted": "Inbjudan accepterad.",
+      "declined": "Inbjudan avböjd.",
+      "invitedBy": "Inbjuden av {name}",
+      "unknownInviter": "någon",
+      "unknownGroup": "Okänd grupp",
+      "sentOn": "Skickad {date}"
+    },
+    "linkInvitationInvalid": {
+      "title": "Denna inbjudningslänk är ogiltig",
+      "description": "Länken är felaktig eller matchar ingen inbjudan till denna grupp."
+    }
+  },
+  "Header": {
+    "signIn": "Logga in",
+    "signOut": "Logga ut",
+    "account": "Konto",
+    "accountSettings": "Kontoinställningar",
+    "back": "Tillbaka",
+    "menu": "Meny"
+  },
+  "Homepage": {
+    "title": "Dela <strong>utgifter</strong> med <strong>vänner & familj</strong>",
+    "description": "Håll koll på delade utgifter och reglera. Gratis och öppen källkod, <strong>synkroniserat och säkrat med ditt konto</strong>.",
+    "button": {
+      "github": "GitHub",
+      "signIn": "Logga in på Spliit Cloud",
+      "createAccount": "Skapa ett konto",
+      "createGroup": "Skapa en grupp",
+      "importGroup": "Importera grupp från en annan tjänst",
+      "createFriendLedger": "Håll koll på utgifter med en vän"
+    },
+    "features": {
+      "accounts": {
+        "title": "Konton",
+        "description": "Logga in en gång för att skydda dina data och hålla din utgiftshistorik tillgänglig."
+      },
+      "expenses": {
+        "title": "Utgifter och kvitton",
+        "description": "Lägg till utgifter, bifoga kvittobilder och skapa dagliga, veckovisa eller månatliga återkommande kostnader."
+      },
+      "groupsSync": {
+        "title": "Grupper och synkning",
+        "description": "Skapa grupper för resor, evenemang och presenter och håll dem synkroniserade mellan enheter."
+      },
+      "organization": {
+        "title": "Kategorier",
+        "description": "Tilldela kategorier så att delade utgifter förblir lätta att överblicka."
+      },
+      "settlement": {
+        "title": "Balanser",
+        "description": "Se vem som betalade vad och optimera överföringar mellan deltagare."
+      },
+      "splitting": {
+        "title": "Avancerad fördelning",
+        "description": "Fördela efter procent, andelar, exakt belopp eller en enkel lika andel."
+      }
+    },
+    "welcomeBack": "Välkommen tillbaka, {name}."
+  },
+  "Information": {
+    "title": "Information",
+    "description": "Lägg till information som kan vara användbar för gruppens deltagare.",
+    "empty": "Ingen grupinformation ännu."
+  },
+  "InstallPromotion": {
+    "title": "Installera Spliit Cloud",
+    "description": "Lägg till Spliit Cloud på din startskärm — startar som en native app för att snabbare lägga till utgifter och enklare åtkomst.",
+    "install": "Installera",
+    "remindLater": "Påminn mig senare",
+    "dismiss": "Visa inte igen",
+    "chrome": {
+      "title": "Installera Spliit Cloud",
+      "description": "Lägg till Spliit Cloud på din startskärm — startar som en native app för att snabbare lägga till utgifter och enklare åtkomst."
+    },
+    "firefox": {
+      "title": "Installera Spliit Cloud",
+      "description": "Lägg till Spliit Cloud på din startskärm från webbläsarens meny.",
+      "step1": "Tryck på menyknappen (⋮) uppe till höger",
+      "step2": "Tryck på Installera"
+    },
+    "ios": {
+      "title": "Installera Spliit Cloud",
+      "description": "Lägg till Spliit Cloud på din startskärm för åtkomst med ett tryck.",
+      "step1": "Tryck på Dela-knappen",
+      "step2": "Scrolla ner och tryck på Lägg till på startskärmen",
+      "step3": "Tryck på Lägg till i det övre högra hörnet"
+    }
+  },
+  "Members": {
+    "title": "Medlemmar",
+    "description": "Personer som kan se och bidra till denna grupp.",
+    "empty": "Inga aktiva medlemmar ännu.",
+    "joinedOn": "Gick med {date}",
+    "changeRoleAria": "Ändra roll",
+    "remove": "Ta bort",
+    "noManagePermission": "Endast administratörer kan bjuda in, återkalla eller hantera gruppmedlemmar.",
+    "archivedNotice": "Inbjudningar och medlemshantering är inaktiverade medan gruppen är arkiverad. Återställ gruppen för att bjuda in nya medlemmar.",
+    "dropdown": {
+      "remove": "Ta bort",
+      "changeRole": "Ändra roll",
+      "revoke": "Återkalla inbjudan"
+    },
+    "invitations": {
+      "title": "Väntande inbjudningar",
+      "description": "Inbjudningar som väntar på att accepteras.",
+      "empty": "Inga väntande inbjudningar.",
+      "sentOn": "Skickad {date}",
+      "revoke": "Återkalla",
+      "revokeButton": "Återkalla inbjudan",
+      "revoked": "Inbjudan återkallad.",
+      "created": "Inbjudan skickad till {email}.",
+      "email": {
+        "type": "E-postinbjudan"
+      },
+      "link": {
+        "type": "Engångslänk",
+        "fallbackLabel": "Inbjudningslänk"
+      }
+    },
+    "invite": {
+      "title": "Bjud in medlem",
+      "email": "E-post",
+      "emailPlaceholder": "van@example.com",
+      "role": "Roll",
+      "send": "Skicka inbjudan",
+      "invalidEmail": "Ange en giltig e-postadress.",
+      "emailDescription": "Skicka en inbjudan via e-post. Den inbjudne går med när hen accepterar från ett matchande konto.",
+      "linkDescription": "Generera en engångslänk som alla kan använda för att gå med. Länken slutar fungera efter den första acceptansen.",
+      "temporaryName": "Tillfälligt namn (valfritt)",
+      "temporaryNamePlaceholder": "t.ex. Alex rumskompis",
+      "friendsDescription": "Bjud in någon från grupper du har delat.",
+      "selectFriendPlaceholder": "Välj en vän…",
+      "friendAlreadyMember": "Redan medlem",
+      "noFriends": "Inga vänner ännu. Bjud in från fliken E-post.",
+      "friendAlreadyInvited": "Redan inbjuden",
+      "link": {
+        "generate": "Generera inbjudningslänk",
+        "generating": "Genererar…",
+        "singleUse": "Denna inbjudningslänk kan användas en gång. När någon accepterar den slutar den att fungera.",
+        "copy": "Kopiera inbjudningslänk",
+        "copied": "Kopierad!",
+        "expiresOn": "Förfaller {date}",
+        "created": "Inbjudningslänk klar. Kopiera och dela den innan gruppen lämnar denna sida.",
+        "intro": "Här är din engångs-inbjudningslänk för {groupName}. Skicka den till personen du vill ska gå med — den första som använder den blir medlem, sedan slutar länken att fungera.",
+        "share": "Dela inbjudningslänk",
+        "shareTitle": "Gå med i {groupName} på Spliit Cloud",
+        "shareText": "Jag skapade just {groupName} för våra delade utgifter på Spliit Cloud. Här är en engångs-inbjudningslänk — öppna den för att gå med:\n{inviteUrl}",
+        "generateNew": "Generera ny länk"
+      },
+      "tab": {
+        "email": "E-post",
+        "link": "Inbjudningslänk",
+        "friends": "Vänner"
+      }
+    },
+    "leave": {
+      "button": "Lämna grupp",
+      "title": "Lämna grupp?",
+      "description": "Du förlorar åtkomst till denna grupps utgifter, balanser och aktivitet. Tidigare data finns kvar i reskontran så andra medlemmar fortfarande kan se den.",
+      "descriptionOnlyMember": "Du är den enda aktiva medlemmen i denna grupp, så du kan inte lämna gruppen på detta sätt. För att bli av med gruppen helt, ta bort den från inställningssidan.",
+      "onlyMemberHint": "Du är den enda aktiva medlemmen. Använd alternativet ”Ta bort grupp” i Inställningar för att ta bort gruppen.",
+      "lastMemberRedirect": "Du kan inte lämna en grupp där du är den enda aktiva medlemmen. Ta bort gruppen från inställningssidan istället.",
+      "body": {
+        "otherAdmins": "Dessa administratörer behåller kontrollen efter att du lämnar: {names}.",
+        "lastAdmin": {
+          "title": "Välj en ny administratör",
+          "description": "Du är den sista administratören i denna grupp. Välj en aktiv medlem som tar över innan du lämnar, annars kan ingen hantera gruppen.",
+          "placeholder": "Välj en medlem"
+        },
+        "unsettled": {
+          "title": "Du har oreglerade balanser",
+          "description": "Spliit skapar regleringsbetalningar för balanser som involverar dig innan du lämnar. Andra deltagares balanser ändras inte."
+        }
+      },
+      "cancel": "Avbryt",
+      "confirm": "Lämna grupp",
+      "confirmWithForce": "Reglera och lämna",
+      "error": {
+        "lastAdmin": "Välj en medlem att befordra till administratör innan du lämnar.",
+        "unsettled": "Reglera din balans eller bekräfta tvångsreglering för att lämna."
+      },
+      "toast": {
+        "left": "Du lämnade gruppen."
+      }
+    },
+    "removed": "Deltagare borttagen.",
+    "roleUpdated": "Roll uppdaterad till {role}.",
+    "removeDialog": {
+      "title": "Ta bort deltagare?",
+      "description": "Ta bort {name} från denna grupp? Tidigare utgifter finns kvar i reskontran men hen kommer inte längre att visas i medlemslistan eller i nya utgifter.",
+      "cancel": "Avbryt",
+      "confirm": "Ta bort",
+      "unsettled": {
+        "title": "Ta bort deltagare med oreglerad balans?",
+        "description": "Ta bort {name} från denna grupp? Hen har oreglerade balanser — kryssa i rutan nedan för att reglera dem automatiskt innan borttagning.",
+        "toast": "Deltagare borttagen, balanser reglerade.",
+        "checkbox": "Reglera denna deltagares balanser innan borttagning",
+        "previewWillCreate_one": "Skapar {count} regleringsbetalning",
+        "previewPays": "{name} betalar",
+        "previewReceives": "{name} får",
+        "previewTo": "till {name}",
+        "previewFrom": "från {name}",
+        "previewWillCreate_other": "Skapar {count} regleringsbetalningar",
+        "warning": {
+          "title": "Denna deltagare har oreglerade balanser",
+          "description": "Att ta bort utan att reglera lämnar dessa balanser i gruppen på obestämd tid. Välj alternativet nedan för att skapa en regleringsbetalning för varje balans som involverar denna deltagare, eller ta bort hen och reglera balanserna manuellt."
+        }
+      }
+    },
+    "unknownMember": "Okänd medlem",
+    "youBadge": "Du",
+    "role": {
+      "admin": "Administratör",
+      "member": "Medlem"
+    },
+    "unlinked": {
+      "title": "Olänkade deltagare",
+      "description": "Dessa personer har ett namn i gruppen men inget app-konto ännu. Länka varje till ett befintligt konto för att koppla deras utgifter till den användaren.",
+      "emailPlaceholder": "konto@example.com",
+      "link": "Länka till konto",
+      "linkSuccess": "Deltagare länkad till konto",
+      "idHint": "Reskontrandeltagar-id: {id}",
+      "linkButton": "Länka",
+      "linkDialog": {
+        "title": "Länka olänkad deltagare",
+        "description": "Välj den befintliga medlemmen som {displayName} ska länkas till. Den medlemmen får inte redan ha en utgiftsbalans med denna deltagare.",
+        "membersGroup": "Medlemmar",
+        "cancel": "Avbryt",
+        "confirm": "Länka",
+        "noCandidates": "Inga kompatibla medlemmar hittades. Detta betyder vanligtvis att denna olänkade deltagare har motstridiga utgiftsbalanser med alla andra medlemmar. Importera gruppen igen eller justera utgifterna först.",
+        "pendingLabel": "väntande",
+        "pendingHint": "Att länka till en väntande inbjudan slår samman denna namnlösa post med den inbjudne. Den inbjudne behåller sin egen rad; de sammanslagna referenserna löses genom hen när de accepterar.",
+        "membersGroupWithPending": "Medlemmar och väntande inbjudningar",
+        "pendingGroup": "Väntande inbjudningar",
+        "pendingSuffix": "(väntande)"
+      }
+    }
+  },
+  "OfflineBanner": {
+    "message": "Du är offline. Ändringar du gör nu sparas inte förrän du återansluter."
+  },
+  "Participants": {
+    "search": "Sök deltagare...",
+    "noParticipant": "Inga deltagare hittades"
+  },
+  "PushOnboarding": {
+    "title": "Välj hur du vill hålla dig uppdaterad",
+    "description": "Spliit kan avisera dig om grupp- och utgiftsaktivitet när det händer.",
+    "pushBenefit": "Push-notiser levereras till denna enhet även när Spliit inte är öppet.",
+    "emailFallback": "E-post är tillgängligt för notiser du vill få dit; val med endast push omdirigeras inte.",
+    "settingsHint": "Du kan ändra dessa val när som helst i Inställningar. Push-notiser aktiveras separat för varje enhet.",
+    "enable": "Aktivera push-notiser",
+    "enabling": "Aktiverar…",
+    "useEmail": "Använd e-post",
+    "deniedTitle": "Push-notiser är blockerade",
+    "deniedDescription": "Din webbläsare blockerade notisbehörighet. Notiser konfigurerade för e-post fortsätter dit; val med endast push omdirigeras inte.",
+    "failedTitle": "Push kunde inte aktiveras",
+    "failedDescription": "Vi kunde inte registrera denna enhet. Notiser konfigurerade för e-post fortsätter dit; val med endast push omdirigeras inte.",
+    "emailUsage": "Endast notiser konfigurerade för e-post kommer fram tills du aktiverar en enhet. Du kan tillåta notiser i webbläsarens inställningar och försöka igen från Inställningar.",
+    "done": "Klar"
+  },
+  "ResetPassword": {
+    "title": "Välj ett nytt lösenord",
+    "subtitle": "Ange det nya lösenordet för ditt Spliit Cloud-konto.",
+    "newPassword": "Nytt lösenord",
+    "confirmPassword": "Bekräfta nytt lösenord",
+    "passwordMismatch": "Lösenorden matchar inte.",
+    "submit": "Spara nytt lösenord",
+    "submitting": "Sparar…",
+    "success": "Lösenord uppdaterat",
+    "successDescription": "Ditt lösenord har ändrats. Logga in med ditt nya lösenord för att fortsätta.",
+    "goToSignIn": "Gå till inloggning",
+    "invalidTokenTitle": "Denna återställningslänk kan inte användas",
+    "invalidTokenDescription": "Länken kan ha gått ut eller redan använts. Begär en ny för att försöka igen.",
+    "requestNewLink": "Begär en ny länk",
+    "backToSignIn": "Tillbaka till inloggning",
+    "errors": {
+      "generic": "Något gick fel. Försök igen.",
+      "invalidToken": "Den här återställningslänken har gått ut eller redan använts.",
+      "passwordTooShort": "Lösenordet måste vara minst 8 tecken.",
+      "passwordPolicy": "Använd minst 8 tecken med versal, gemen, en siffra och en symbol."
+    }
+  },
+  "SchemaErrors": {
+    "min1": "Ange minst ett tecken.",
+    "min2": "Ange minst två tecken.",
+    "max5": "Ange högst fem tecken.",
+    "max50": "Ange högst 50 tecken.",
+    "duplicateParticipantName": "En annan deltagare har redan detta namn.",
+    "titleRequired": "Ange en titel.",
+    "invalidNumber": "Ogiltigt nummer.",
+    "amountRequired": "Du måste ange ett belopp.",
+    "amountNotZero": "Beloppet får inte vara noll.",
+    "amountTenMillion": "Beloppet måste vara lägre än 10 000 000.",
+    "ratePositive": "Kursen måste vara strikt större än noll.",
+    "paidByRequired": "Du måste välja en deltagare.",
+    "paidForMin1": "Utgiften måste fördelas mellan minst en deltagare.",
+    "noZeroShares": "Alla andelar måste vara större än 0.",
+    "amountSum": "Summan av beloppen måste vara lika med utgiftsbeloppet.",
+    "percentageSum": "Summan av procentandelar måste vara 100.",
+    "paidByMin1": "Minst en betalare måste väljas.",
+    "paidByAmountSum": "Summan av betalarnas belopp måste vara lika med utgiftsbeloppet.",
+    "paidByPercentageSum": "Summan av betalarnas procentandelar måste vara 100.",
+    "duplicateParticipant": "En annan betalare är redan vald."
+  },
+  "Settings": {
+    "title": "Inställningar"
+  },
+  "Share": {
+    "title": "Dela",
+    "description": "För att andra deltagare ska kunna se gruppen och lägga till utgifter, dela dess URL med dem.",
+    "warning": "Varning!",
+    "warningHelp": "Varje person med gruppens URL kan se och redigera utgifter. Dela med försiktighet!"
+  },
+  "Stats": {
+    "Dashboard": {
+      "description": "En översikt av hur denna grupp spenderar tillsammans.",
+      "lifetime": "Livstidsutgifter",
+      "selectedPeriod": "Vald period",
+      "lifetimeDescription": "Över gruppens hela historik",
+      "expenseCount_one": "{count} utgift",
+      "expenseCount_other": "{count} utgifter",
+      "spendingOverTime": "Utgifter över tid",
+      "bucketedBy": "Grupperat efter {granularity}",
+      "other": "Övrigt",
+      "inactiveGap": "Inaktiv period",
+      "categories": "Kategorier",
+      "categoriesDescription": "Vart de valda utgifterna gick",
+      "participants": "Deltagarandelar",
+      "participantsDescription": "Hur utgifterna delades",
+      "emptyTitle": "Inga utgifter att visa ännu",
+      "emptyDescription": "Lägg till en utgift för att börja bygga denna grupps utgiftsberättelse.",
+      "error": "Vi kunde inte ladda gruppstatistiken.",
+      "retry": "Försök igen",
+      "customRange": {
+        "from": "Från",
+        "to": "Till"
+      },
+      "granularity": {
+        "DAY": "dag",
+        "WEEK": "vecka",
+        "MONTH": "månad"
+      },
+      "title": "Utgiftsaktivitet",
+      "periods": {
+        "LATEST_ACTIVITY": "Senaste aktiviteten",
+        "WEEK": "1V",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1Å",
+        "CUSTOM": "Anpassad"
+      }
+    },
+    "title": "Statistik",
+    "Totals": {
+      "title": "Totalsummor",
+      "description": "Sammanfattning av hela gruppens utgifter.",
+      "groupSpendings": "Gruppens totala utgifter",
+      "groupEarnings": "Gruppens totala inkomster",
+      "yourSpendings": "Dina totala utgifter",
+      "yourEarnings": "Dina totala inkomster",
+      "yourShare": "Din totala andel"
+    }
+  },
+  "Theme": {
+    "toggle": "Byt tema",
+    "light": "Ljust",
+    "dark": "Mörkt",
+    "system": "Systemstandard"
+  },
+  "Unsubscribe": {
+    "title": "Stäng av dessa e-postmeddelanden?",
+    "description": "Du väljer om du vill behålla en typ av e-postnotis.",
+    "confirm": "Stäng av dessa e-postmeddelanden",
+    "submitting": "Avprenumererar…",
+    "cancel": "Behåll dessa e-postmeddelanden",
+    "error": "Vi kunde inte uppdatera dina e-postinställningar. Försök igen.",
+    "loading": "Kontrollerar avprenumerationslänk…",
+    "backHome": "Tillbaka till startsidan",
+    "manageSettings": "Granska alla notisinställningar",
+    "invalid": {
+      "title": "Denna länk fungerar inte längre",
+      "description": "Den kan ha gått ut. Logga in för att granska dina e-post- och push-notisinställningar."
+    },
+    "scope": "Endast denna e-postnotis stängs av. Dina andra e-postmeddelanden och push-notiser förblir oförändrade.",
+    "success": {
+      "title": "Dessa e-postmeddelanden är avstängda",
+      "description": "Du får inte längre e-post för {category}. Dina andra notisinställningar har inte ändrats."
+    }
+  }
+}
