@@ -19,7 +19,7 @@ export const LANGUAGE_FAMILIES: LanguageFamily[] = [
   {
     id: 'germanic',
     label: 'Germanic + Nordic',
-    locales: ['de-DE', 'nl-NL', 'fi'],
+    locales: ['de-DE', 'fi', 'nl-NL', 'sv-SE'],
     refsHint: 'de-DE,nl-NL',
   },
   {

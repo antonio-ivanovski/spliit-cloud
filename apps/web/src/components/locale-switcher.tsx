@@ -37,6 +37,7 @@ export const localeFlags = {
   'pt-BR': '🇧🇷',
   ro: '🇷🇴',
   fi: '🇫🇮',
+  'sv-SE': '🇸🇪',
   'tr-TR': '🇹🇷',
   'ru-RU': '🇷🇺',
   'uk-UA': '🇺🇦',
