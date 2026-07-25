@@ -1,0 +1,227 @@
+import { access, copyFile, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import { locales, type Locale } from '../../../packages/domain/src/i18n.ts'
+import { localeFileName } from './fs-helpers'
+
+const DOMAIN_I18N = 'packages/domain/src/i18n.ts'
+const LOCALE_SWITCHER = 'apps/web/src/components/locale-switcher.tsx'
+const I18N_REACT = 'apps/web/src/i18n/react.tsx'
+const MESSAGES_DIR = 'apps/web/src/messages'
+
+export type InitLocaleOptions = {
+  code: string
+  label: string
+  flag: string
+  rtl?: boolean
+  from?: Locale
+  /** Project root (defaults to cwd). */
+  root?: string
+}
+
+export type InitLocaleResult = {
+  code: string
+  filesTouched: string[]
+  nextSteps: string[]
+}
+
+function assertValidLocaleCode(code: string): void {
+  if (code === 'en-US') {
+    throw new Error('cannot init en-US (it is the source of truth)')
+  }
+  if (!/^[a-z]{2}(-[A-Z]{2})?$/.test(code)) {
+    throw new Error(
+      `invalid locale code "${code}" — expected like "sv" or "sv-SE"`,
+    )
+  }
+  if ((locales as readonly string[]).includes(code)) {
+    throw new Error(`locale "${code}" already exists`)
+  }
+}
+
+async function pathExists(path: string): Promise<boolean> {
+  try {
+    await access(path)
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Insert a `key: value` entry into an object literal that uses `as const` /
+ * `satisfies`, keeping approximate alphabetical order by key string.
+ */
+export function insertObjectEntry(
+  source: string,
+  objectStartMarker: string,
+  key: string,
+  valueLiteral: string,
+): string {
+  const start = source.indexOf(objectStartMarker)
+  if (start < 0) {
+    throw new Error(`could not find object marker: ${objectStartMarker}`)
+  }
+
+  // Find the opening `{` after the marker
+  const brace = source.indexOf('{', start)
+  if (brace < 0) throw new Error('object brace not found')
+
+  let depth = 0
+  let end = -1
+  for (let i = brace; i < source.length; i++) {
+    const ch = source[i]
+    if (ch === '{') depth++
+    else if (ch === '}') {
+      depth--
+      if (depth === 0) {
+        end = i
+        break
+      }
+    }
+  }
+  if (end < 0) throw new Error('unclosed object literal')
+
+  const body = source.slice(brace + 1, end)
+  const lines = body.split('\n')
+  const entryLines = lines
+    .map((line, index) => ({ line, index }))
+    .filter(({ line }) => /^\s*['"]?[A-Za-z]/.test(line))
+
+  const newKeyQuoted = key.includes('-') ? `'${key}'` : key
+  const newLine = `  ${newKeyQuoted}: ${valueLiteral},`
+
+  // Insert before the first existing key that sorts after `key`
+  let insertAt = lines.length
+  for (const { line, index } of entryLines) {
+    const match = /^\s*(['"]?)([^'":]+)\1\s*:/.exec(line)
+    if (!match) continue
+    const existing = match[2]
+    if (existing.localeCompare(key) > 0) {
+      insertAt = index
+      break
+    }
+  }
+
+  // If inserting at end of body, ensure previous last entry has a comma
+  const nextLines = [...lines]
+  if (insertAt === lines.length) {
+    // find last non-empty line in body and ensure trailing comma
+    for (let i = nextLines.length - 1; i >= 0; i--) {
+      if (nextLines[i].trim().length === 0) continue
+      if (/,\s*$/.test(nextLines[i])) break
+      if (/^\s*\}/.test(nextLines[i])) continue
+      nextLines[i] = nextLines[i].replace(/\s*$/, ',')
+      break
+    }
+    nextLines.push(newLine)
+  } else {
+    nextLines.splice(insertAt, 0, newLine)
+  }
+
+  return source.slice(0, brace + 1) + nextLines.join('\n') + source.slice(end)
+}
+
+export function addRtlLocale(source: string, code: string): string {
+  // Prefer a Set/array named RTL_LOCALES; fall back to legacy `locale === 'he'`.
+  if (/RTL_LOCALES/.test(source)) {
+    if (source.includes(`'${code}'`) || source.includes(`"${code}"`)) {
+      return source
+    }
+    return source.replace(
+      /(RTL_LOCALES\s*=\s*(?:new Set\()?\[)([^\]]*)(\])/,
+      (_m, open: string, body: string, close: string) => {
+        const trimmed = body.trim()
+        const addition =
+          trimmed.length === 0
+            ? `'${code}'`
+            : `${trimmed.replace(/,\s*$/, '')}, '${code}'`
+        return `${open}${addition}${close}`
+      },
+    )
+  }
+
+  // Migrate hardcoded he check to a set including the new code.
+  if (/locale === 'he'/.test(source) || /locale === "he"/.test(source)) {
+    const members = code === 'he' ? `'he'` : `'he', '${code}'`
+    return source
+      .replace(
+        /document\.documentElement\.dir = locale === ['"]he['"] \? 'rtl' : 'ltr'/,
+        `document.documentElement.dir = RTL_LOCALES.has(locale) ? 'rtl' : 'ltr'`,
+      )
+      .replace(
+        /(export function I18nProvider)/,
+        `const RTL_LOCALES = new Set([${members}])\n\n$1`,
+      )
+  }
+
+  throw new Error('could not update RTL locale handling in react.tsx')
+}
+
+export async function initLocale(
+  opts: InitLocaleOptions,
+): Promise<InitLocaleResult> {
+  assertValidLocaleCode(opts.code)
+  if (opts.from && !(locales as readonly string[]).includes(opts.from)) {
+    throw new Error(`unknown --from locale: ${opts.from}`)
+  }
+
+  const root = opts.root ?? process.cwd()
+  const filesTouched: string[] = []
+
+  // 1. domain localeLabels
+  const domainPath = join(root, DOMAIN_I18N)
+  const domainSrc = await Bun.file(domainPath).text()
+  const domainNext = insertObjectEntry(
+    domainSrc,
+    'export const localeLabels',
+    opts.code,
+    `'${opts.label.replace(/'/g, "\\'")}'`,
+  )
+  await Bun.write(domainPath, domainNext)
+  filesTouched.push(DOMAIN_I18N)
+
+  // 2. message file
+  const messageRel = `${MESSAGES_DIR}/${opts.code}.json`
+  const messagePath = join(root, messageRel)
+  if (await pathExists(messagePath)) {
+    throw new Error(`message file already exists: ${messageRel}`)
+  }
+  if (opts.from) {
+    await copyFile(
+      join(root, MESSAGES_DIR, localeFileName(opts.from)),
+      messagePath,
+    )
+  } else {
+    await writeFile(messagePath, '{}\n', 'utf8')
+  }
+  filesTouched.push(messageRel)
+
+  // 3. localeFlags
+  const switcherPath = join(root, LOCALE_SWITCHER)
+  const switcherSrc = await Bun.file(switcherPath).text()
+  const switcherNext = insertObjectEntry(
+    switcherSrc,
+    'export const localeFlags',
+    opts.code,
+    `'${opts.flag.replace(/'/g, "\\'")}'`,
+  )
+  await Bun.write(switcherPath, switcherNext)
+  filesTouched.push(LOCALE_SWITCHER)
+
+  // 4. optional RTL
+  if (opts.rtl) {
+    const reactPath = join(root, I18N_REACT)
+    const reactSrc = await Bun.file(reactPath).text()
+    const reactNext = addRtlLocale(reactSrc, opts.code)
+    await Bun.write(reactPath, reactNext)
+    filesTouched.push(I18N_REACT)
+  }
+
+  const nextSteps = [
+    `bun i18n pack --locale ${opts.code} --refs <related-locales> --usages --json --limit 40`,
+    `bun i18n set ${opts.code} --stdin   # paste {"key":"translation",...}`,
+    `bun i18n check --locale ${opts.code}`,
+  ]
+
+  return { code: opts.code, filesTouched, nextSteps }
+}

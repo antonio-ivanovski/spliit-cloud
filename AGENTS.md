@@ -96,5 +96,9 @@ More focused notes: [.agent/architecture.md](.agent/architecture.md), [.agent/da
 
 - ALWAYS use the `react-i18next` functions directly, NEVER create hacky custom wrapper to get around the type system.
 - Translation texts use single `{` and `}` for interpolation, not double `{{` and `}}`.
-- **Audit (canonical CI gate)**: `bun i18n check` exits 1 if any non-English locale is missing any key present in en-US, or if there are orphan keys. Use `bun i18n check --changes-only` for PR-scoped audits (only flag keys introduced by the current diff vs `HEAD`).
-- **Translate**: load the `translate-strings` skill at `.agents/skills/translate-strings/SKILL.md`. When many locales are behind, dispatch **parallel subagents grouped by language family** (Romance, Germanic+Nordic, Slavic, East Asian, Other) — each subagent owns one language family, runs the skill, and finishes by confirming `bun i18n check --locale <own-locale>` exits 0.
+- **Never paste English into another locale** as a placeholder — `bun i18n set` rejects identical-to-en values (unless auto-allowed or `--allow-english`).
+- **After editing en-US**: run `bun i18n plan --json` and follow its `mode` (`oneshot` / one subagent / family-parallel). Do not always spawn many translators for 1–2 keys.
+- **Translator workflow**: `bun i18n pack --locales … --keys … --usages --json` → translate → `set --stdin` → `check --locale`. For ambiguous strings, use `bun i18n usages <key>`.
+- **New language**: `bun i18n init-locale <code> --label "…" --flag "…"` then pack/set/check until full parity.
+- **Audit (canonical CI gate)**: `bun i18n check` exits 1 on missing keys, orphan keys, or untranslated English on keys introduced vs `HEAD`. Use `--changes-only` for PR-scoped missing-key audits.
+- **Skill**: `.agents/skills/translate-strings/SKILL.md` (main-agent dispatch + translator roles).

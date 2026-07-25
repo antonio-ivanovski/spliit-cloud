@@ -3,6 +3,8 @@ import { type ReactNode, useLayoutEffect } from 'react'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { i18n } from './setup'
 
+const RTL_LOCALES = new Set(['he'])
+
 // react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
 export function useLocale() {
   const { i18n: instance } = useTranslation()
@@ -13,7 +15,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     function updateDocumentLocale(locale: string) {
       document.documentElement.lang = locale
-      document.documentElement.dir = locale === 'he' ? 'rtl' : 'ltr'
+      document.documentElement.dir = RTL_LOCALES.has(locale) ? 'rtl' : 'ltr'
     }
 
     updateDocumentLocale(i18n.language || defaultLocale)

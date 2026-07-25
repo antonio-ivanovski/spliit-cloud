@@ -3,16 +3,24 @@ import {
   addString,
   auditMessages,
   diffMessages,
+  findUsages,
   flattenKeys,
+  formatPlanHuman,
   getAt,
+  getKeysAcrossLocales,
+  identicalKeysByLocale,
+  initLocale,
   missingKeys,
   missingKeysByLocale,
+  packMessages,
+  planTranslations,
   readMessagesFile,
   removeString,
   setString,
+  setStrings,
   validateAllMessages,
 } from './lib'
-import type { AuditResult } from './lib.ts'
+import type { AuditResult, PlanMode } from './lib.ts'
 import { locales, type Locale } from './lib.ts'
 
 type ParsedArgs = {
@@ -50,6 +58,18 @@ function die(msg: string, code = 1): never {
 
 function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value)
+}
+
+function parseLocaleList(raw: string | undefined): Locale[] {
+  if (!raw) return []
+  return raw
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((value) => {
+      if (!isLocale(value)) die(`unknown locale: ${value}`, 2)
+      return value
+    })
 }
 
 function formatDiffHuman(result: Awaited<ReturnType<typeof diffMessages>>) {
@@ -127,12 +147,17 @@ function printCheckHuman(result: AuditResult) {
     `  locales: ${summary.localesAudited} audited, ${summary.localesComplete} complete, ${summary.localesWithMissing} with gaps`,
   )
   console.log(`  total missing keys: ${summary.totalMissing}`)
+  console.log(
+    `  untranslated English (introduced keys): ${summary.totalUntranslatedEnglish}`,
+  )
   if (errors.length > 0) {
     console.log(`  structural errors: ${errors.length}`)
   }
 
   const audited = Object.values(locales).sort((a, b) => {
-    if (a.missing !== b.missing) return b.missing - a.missing
+    const aScore = a.missing + a.untranslatedEnglish
+    const bScore = b.missing + b.untranslatedEnglish
+    if (aScore !== bScore) return bScore - aScore
     return a.locale.localeCompare(b.locale)
   })
 
@@ -144,11 +169,11 @@ function printCheckHuman(result: AuditResult) {
   if (audited.length > 0) {
     console.log('')
     console.log(
-      `  ${'locale'.padEnd(localeCol)}  ${'present'.padStart(7)}  ${'missing'.padStart(7)}  ${'coverage'.padStart(9)}`,
+      `  ${'locale'.padEnd(localeCol)}  ${'present'.padStart(7)}  ${'missing'.padStart(7)}  ${'en-copy'.padStart(7)}  ${'coverage'.padStart(9)}`,
     )
     for (const a of audited) {
       console.log(
-        `  ${a.locale.padEnd(localeCol)}  ${String(a.present).padStart(7)}  ${String(a.missing).padStart(7)}  ${formatPercent(a.coverage).padStart(9)}`,
+        `  ${a.locale.padEnd(localeCol)}  ${String(a.present).padStart(7)}  ${String(a.missing).padStart(7)}  ${String(a.untranslatedEnglish).padStart(7)}  ${formatPercent(a.coverage).padStart(9)}`,
       )
     }
   }
@@ -162,13 +187,27 @@ function printCheckHuman(result: AuditResult) {
     }
   }
 
+  const englishCopies = audited.filter((a) => a.untranslatedEnglish > 0)
+  if (englishCopies.length > 0) {
+    console.log('')
+    console.log('  Untranslated English on introduced keys:')
+    for (const a of englishCopies) {
+      console.log(`  ${a.locale} (${a.untranslatedEnglish}):`)
+      for (const k of a.untranslatedEnglishKeys) console.log(`    - ${k}`)
+    }
+  }
+
   if (errors.length > 0) {
     console.log('')
     console.log('  structural errors:')
     for (const e of errors) console.log(`    ${e}`)
   }
 
-  if (valid && summary.totalMissing === 0) {
+  if (
+    valid &&
+    summary.totalMissing === 0 &&
+    summary.totalUntranslatedEnglish === 0
+  ) {
     console.log('')
     console.log('  OK — all locales in sync with en-US.')
   } else {
@@ -185,18 +224,32 @@ function help() {
     '  add <path> "<value>"            Add a key to en-US (creates intermediate objects).',
     '  add --stdin                     Read {"path": "value", ...} from stdin and add to en-US.',
     '  set <locale> <path> "<value>"   Set a translation in any single locale.',
+    '  set <locale> --stdin            Batch-set from stdin JSON map {"path":"value",...}.',
+    '                                  Rejects English copies unless auto-allowed or --allow-english.',
+    '                                  --dry-run validates without writing.',
     '  remove <path>                   Remove a key from every locale where it exists (cleanup).',
     '  get <locale> <path>             Print the current value at a path.',
+    '  get <key...> --locales a,b      Multi-key multi-locale read (--json recommended).',
+    '  get --stdin --locales a,b       Read keys from stdin (JSON array or newline list).',
     '  list [locale]                   Print flat dotted keys (defaults to en-US).',
+    '  pack --locale <l> | --locales a,b [--keys k1,k2] [--refs a,b] [--usages]',
+    '       [--changes-only] [--limit N] [--offset N] [--json]',
+    '                                  Export a work pack for agents (single or family).',
+    '  plan [--ref HEAD] [--mode oneshot|single|parallel] [--json] [--prompts]',
+    '                                  Main-agent dispatch brief after editing en-US.',
+    '  usages <key...> [--json]        Best-effort code locations for message keys.',
+    '  init-locale <code> --label "…" --flag "…" [--rtl] [--from <locale>]',
+    '                                  Scaffold a new language (domain, JSON, flags, optional RTL).',
     '  missing [--locale <l>] [--all] [--json]',
     '                                  List keys missing in a locale (vs en-US).',
-    '                                  With --all, list missing keys for every non-en-US locale.',
+    '  identical [--locale <l>] [--json]',
+    '                                  Advisory: non-allowlisted values identical to en-US.',
     '  diff [--staged] [--ref <r>] [--locale <l>] [--json]',
     '                                  Show changes vs git, partitioned by translation work.',
     '  check [--changes-only] [--locale <l>] [--ref <r>] [--json]',
-    '                                  Audit all locales. Exits 1 on orphan keys or missing keys.',
-    '                                  --changes-only: only flag missing keys introduced by the diff vs ref.',
-    '  validate                        Validate values, placeholders, rich-text tags, plurals, and orphan keys.',
+    '                                  Audit locales. Exits 1 on orphans, missing keys, or',
+    '                                  untranslated English on keys introduced vs --ref.',
+    '  validate                        Validate values, placeholders, rich-text tags, plurals, orphans.',
     '  help                            Show this help.',
     '',
     'Exit codes:',
@@ -206,11 +259,40 @@ function help() {
     '',
     'Notes:',
     '  - `add` only touches en-US.json; `remove` cleans the key from every locale.',
-    '  - Use `set` to fill in a translation in another locale.',
-    '  - Use `diff` to see what new translations a change introduces.',
-    '  - Use `check` as the canonical CI gate: `bun i18n check` exits 1 if any',
-    '    non-en-US locale is missing any key present in en-US.',
+    '  - Never paste English into another locale as a placeholder — `set` rejects it.',
+    '  - After editing en-US: `bun i18n plan` → oneshot / one subagent / family parallel.',
+    '  - Translators: `pack` → translate → `set --stdin` → `check`.',
+    '  - Use `init-locale` to register a brand-new language, then pack/set/check.',
   ].join('\n')
+}
+
+function parseStdinKeys(): string[] {
+  const raw = readFileSync(0, 'utf8').trim()
+  if (!raw) return []
+  if (raw.startsWith('[')) {
+    const arr = JSON.parse(raw) as unknown
+    if (!Array.isArray(arr) || arr.some((k) => typeof k !== 'string')) {
+      die('stdin JSON must be an array of key strings', 2)
+    }
+    return arr as string[]
+  }
+  return raw
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean)
+}
+
+function printSetResult(
+  locale: string,
+  result: { count: number; allowEnglishKeys: string[]; dryRun: boolean },
+) {
+  const verb = result.dryRun ? 'Validated' : 'Set'
+  console.log(`${verb} ${result.count} key(s) in ${locale}.`)
+  if (result.allowEnglishKeys.length > 0) {
+    console.log(
+      `Allowed English (via --allow-english): ${result.allowEnglishKeys.join(', ')}`,
+    )
+  }
 }
 
 async function main() {
@@ -250,16 +332,48 @@ async function main() {
 
     case 'set': {
       const locale = positional[1]
+      if (!locale)
+        die('usage: bun i18n set <locale> <path> "<value>" | --stdin')
+      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      const allowEnglish = flags.has('allow-english')
+      const dryRun = flags.has('dry-run')
+
+      if (flags.has('stdin')) {
+        const raw = readFileSync(0, 'utf8')
+        const obj = JSON.parse(raw) as Record<string, unknown>
+        const entries: Record<string, string> = {}
+        for (const [path, value] of Object.entries(obj)) {
+          if (typeof value !== 'string') {
+            die(`value for "${path}" must be a string`, 2)
+          }
+          entries[path] = value
+        }
+        try {
+          const result = await setStrings(locale, entries, {
+            allowEnglish,
+            dryRun,
+          })
+          printSetResult(locale, result)
+        } catch (e) {
+          die((e as Error).message, 2)
+        }
+        return
+      }
+
       const path = positional[2]
       const value = positional[3]
-      if (!locale || !path || value === undefined) {
+      if (!path || value === undefined) {
         die('usage: bun i18n set <locale> <path> "<value>"')
       }
-      if (!isLocale(locale)) {
-        die(`unknown locale: ${locale}`)
+      try {
+        const result = await setString(locale, path, value, {
+          allowEnglish,
+          dryRun,
+        })
+        printSetResult(locale, result)
+      } catch (e) {
+        die((e as Error).message, 2)
       }
-      await setString(locale, path, value)
-      console.log(`Set ${path} in ${locale}.`)
       return
     }
 
@@ -276,10 +390,52 @@ async function main() {
     }
 
     case 'get': {
+      const json = flags.has('json')
+      const localeList = parseLocaleList(kvFlags.locales)
+
+      if (
+        flags.has('stdin') ||
+        localeList.length > 0 ||
+        positional.length > 3
+      ) {
+        const keys = flags.has('stdin')
+          ? parseStdinKeys()
+          : localeList.length > 0
+            ? positional.slice(1)
+            : positional.slice(2)
+
+        if (localeList.length === 0) {
+          // Legacy multi-key without --locales is ambiguous; require locales.
+          // But legacy `get <locale> <path>` is handled below.
+          if (positional.length === 3 && isLocale(positional[1])) {
+            // fall through to legacy
+          } else {
+            die('usage: bun i18n get <key...> --locales a,b[,c] [--json]', 2)
+          }
+        }
+
+        if (localeList.length > 0) {
+          if (keys.length === 0) die('no keys provided', 2)
+          const result = await getKeysAcrossLocales(keys, localeList)
+          if (json) {
+            console.log(JSON.stringify(result, null, 2))
+          } else {
+            for (const [key, perLocale] of Object.entries(result)) {
+              console.log(key)
+              for (const [loc, value] of Object.entries(perLocale)) {
+                console.log(`  ${loc}: ${value === null ? '(missing)' : value}`)
+              }
+            }
+          }
+          return
+        }
+      }
+
+      // Legacy: get <locale> <path>
       const locale = positional[1]
       const path = positional[2]
-      if (!locale || !path) die('usage: bun i18n get <locale> <path>')
-      if (!isLocale(locale)) die(`unknown locale: ${locale}`)
+      if (!locale || !path) die('usage: bun i18n get <locale> <path>', 2)
+      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
       const data = await readMessagesFile(locale)
       const value = getAt(data, path)
       if (value === undefined) {
@@ -292,10 +448,155 @@ async function main() {
 
     case 'list': {
       const locale = (positional[1] ?? 'en-US') as Locale
-      if (!isLocale(locale)) die(`unknown locale: ${locale}`)
+      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
       const data = await readMessagesFile(locale)
       const keys = flattenKeys(data)
       for (const k of keys) console.log(k)
+      return
+    }
+
+    case 'pack': {
+      const locale = kvFlags.locale as Locale | undefined
+      const localesList = parseLocaleList(kvFlags.locales)
+      if (!locale && localesList.length === 0) {
+        die('usage: bun i18n pack --locale <l> | --locales a,b [...]', 2)
+      }
+      if (locale && localesList.length > 0) {
+        die('--locale and --locales are mutually exclusive', 2)
+      }
+      if (locale) {
+        if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+        if (locale === 'en-US') {
+          die('pack is not meaningful for en-US (it is the source of truth)', 2)
+        }
+      }
+      const refs = parseLocaleList(kvFlags.refs)
+      const keys = kvFlags.keys
+        ? kvFlags.keys.split(',').map((s) => s.trim()).filter(Boolean)
+        : undefined
+      const limit = kvFlags.limit ? Number(kvFlags.limit) : undefined
+      const offset = kvFlags.offset ? Number(kvFlags.offset) : undefined
+      if (limit !== undefined && (!Number.isFinite(limit) || limit < 0)) {
+        die('--limit must be a non-negative number', 2)
+      }
+      if (offset !== undefined && (!Number.isFinite(offset) || offset < 0)) {
+        die('--offset must be a non-negative number', 2)
+      }
+
+      const result = await packMessages({
+        locale,
+        locales: localesList.length > 0 ? localesList : undefined,
+        keys,
+        refs,
+        usages: flags.has('usages'),
+        changesOnly: flags.has('changes-only'),
+        ref: kvFlags.ref,
+        limit,
+        offset,
+      })
+
+      if (flags.has('json')) {
+        console.log(JSON.stringify(result, null, 2))
+      } else {
+        const label =
+          result.locales.length === 1
+            ? result.locales[0]
+            : result.locales.join(',')
+        console.log(
+          `pack ${label}: ${result.keys.length}/${result.total} keys` +
+            (result.limit != null ? ` (limit ${result.limit})` : ''),
+        )
+        for (const entry of result.keys) {
+          console.log(`  ${entry.key}`)
+          console.log(`    en: ${entry.en}`)
+          if (entry.byLocale) {
+            for (const [loc, info] of Object.entries(entry.byLocale)) {
+              console.log(`    ${loc} [${info.status}]: ${info.current ?? '(missing)'}`)
+            }
+          }
+        }
+      }
+      return
+    }
+
+    case 'plan': {
+      const modeRaw = kvFlags.mode as PlanMode | undefined
+      if (
+        modeRaw &&
+        modeRaw !== 'oneshot' &&
+        modeRaw !== 'single' &&
+        modeRaw !== 'parallel'
+      ) {
+        die('--mode must be oneshot, single, or parallel', 2)
+      }
+      const result = await planTranslations({
+        ref: kvFlags.ref,
+        mode: modeRaw,
+        includePrompts: true,
+      })
+      if (flags.has('json')) {
+        console.log(JSON.stringify(result, null, 2))
+      } else {
+        console.log(formatPlanHuman(result))
+        if (flags.has('prompts')) {
+          for (const batch of result.batches) {
+            console.log('')
+            console.log(`----- prompt:${batch.id} -----`)
+            console.log(batch.prompt)
+          }
+        }
+      }
+      return
+    }
+
+    case 'usages': {
+      const keys = positional.slice(1)
+      if (keys.length === 0) die('usage: bun i18n usages <key...> [--json]', 2)
+      const result: Record<string, Awaited<ReturnType<typeof findUsages>>> = {}
+      for (const key of keys) {
+        result[key] = await findUsages(key)
+      }
+      if (flags.has('json')) {
+        console.log(JSON.stringify(result, null, 2))
+      } else {
+        for (const [key, hits] of Object.entries(result)) {
+          console.log(`${key}: ${hits.length} hit(s)`)
+          for (const hit of hits) {
+            console.log(`  ${hit.file}:${hit.line}  ${hit.snippet}`)
+          }
+        }
+      }
+      return
+    }
+
+    case 'init-locale': {
+      const code = positional[1]
+      const label = kvFlags.label
+      const flag = kvFlags.flag
+      if (!code || !label || !flag) {
+        die(
+          'usage: bun i18n init-locale <code> --label "<Native>" --flag "<emoji>" [--rtl] [--from <locale>]',
+          2,
+        )
+      }
+      const from = kvFlags.from as Locale | undefined
+      if (from && !isLocale(from)) die(`unknown --from locale: ${from}`, 2)
+      try {
+        const result = await initLocale({
+          code,
+          label,
+          flag,
+          rtl: flags.has('rtl'),
+          from,
+        })
+        console.log(`Initialized locale ${result.code}.`)
+        console.log('Touched:')
+        for (const f of result.filesTouched) console.log(`  ${f}`)
+        console.log('Next:')
+        for (const step of result.nextSteps) console.log(`  ${step}`)
+      } catch (e) {
+        die((e as Error).message, 2)
+      }
       return
     }
 
@@ -303,7 +604,7 @@ async function main() {
       const json = flags.has('json')
       if (flags.has('all')) {
         if (kvFlags.locale) {
-          die('--all and --locale are mutually exclusive')
+          die('--all and --locale are mutually exclusive', 2)
         }
         const allMissing = await missingKeysByLocale()
         if (json) {
@@ -321,9 +622,12 @@ async function main() {
       }
       const locale = kvFlags.locale as Locale | undefined
       const target = locale ?? 'en-US'
-      if (!isLocale(target)) die(`unknown locale: ${target}`)
+      if (!isLocale(target)) die(`unknown locale: ${target}`, 2)
       if (target === 'en-US') {
-        die('missing is not meaningful for en-US (it is the source of truth)')
+        die(
+          'missing is not meaningful for en-US (it is the source of truth)',
+          2,
+        )
       }
       const missing = await missingKeys(target)
       if (json) {
@@ -335,12 +639,33 @@ async function main() {
       return
     }
 
+    case 'identical': {
+      const locale = kvFlags.locale as Locale | undefined
+      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (locale === 'en-US') {
+        die('identical is not meaningful for en-US', 2)
+      }
+      const result = await identicalKeysByLocale(locale)
+      if (flags.has('json')) {
+        console.log(JSON.stringify(result, null, 2))
+      } else {
+        let total = 0
+        for (const [loc, keys] of Object.entries(result)) {
+          total += keys.length
+          console.log(`${loc}: ${keys.length} identical to en-US`)
+          for (const k of keys) console.log(`  ${k}`)
+        }
+        console.log(`Total: ${total}`)
+      }
+      return
+    }
+
     case 'diff': {
       const staged = flags.has('staged')
       const ref = kvFlags.ref
       const locale = kvFlags.locale as Locale | undefined
       const json = flags.has('json')
-      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`)
+      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`, 2)
       const result = await diffMessages({ staged, ref, locale })
       if (json) {
         console.log(JSON.stringify(result, null, 2))
@@ -366,9 +691,9 @@ async function main() {
       const changesOnly = flags.has('changes-only')
       const locale = kvFlags.locale as Locale | undefined
       const ref = kvFlags.ref
-      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`)
+      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`, 2)
       if (locale === 'en-US') {
-        die('check is not meaningful for en-US (it is the source of truth)')
+        die('check is not meaningful for en-US (it is the source of truth)', 2)
       }
 
       const result = await auditMessages({ changesOnly, locale, ref })
@@ -379,14 +704,18 @@ async function main() {
         printCheckHuman(result)
       }
 
-      if (!result.valid || result.summary.totalMissing > 0) {
+      if (
+        !result.valid ||
+        result.summary.totalMissing > 0 ||
+        result.summary.totalUntranslatedEnglish > 0
+      ) {
         process.exit(1)
       }
       return
     }
 
     default:
-      die(`unknown command: ${cmd}\n\n${help()}`)
+      die(`unknown command: ${cmd}\n\n${help()}`, 2)
   }
 }
 
