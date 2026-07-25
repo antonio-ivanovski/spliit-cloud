@@ -7,6 +7,12 @@ const envSchema = z.object({
     .url()
     .default('postgresql://postgres:1234@localhost'),
   JOBS_ENABLED: z.stringbool().optional().default(true),
+  /**
+   * Run the job worker inside the API process instead of as a separate
+   * deployable. Lets a small instance pay for one always-on service instead of
+   * two. Ignored when JOBS_ENABLED is false.
+   */
+  JOBS_INLINE: z.stringbool().optional().default(false),
   PGBOSS_SCHEMA: z.string().min(1).default('pgboss'),
   JOBS_RECONCILIATION_CRON: z.string().min(1).default('* * * * *'),
   JOBS_MAX_CONCURRENCY: z.coerce.number().int().positive().default(5),

@@ -9,6 +9,7 @@
     "./server": "./src/server.ts",
     "./lib/api/activities": "./src/lib/api/activities.ts",
     "./lib/api/recurrence-series": "./src/lib/api/recurrence-series.ts",
+    "./lib/jobs/handlers": "./src/lib/jobs/handlers.ts",
     "./lib/notifications/dispatcher": "./src/lib/notifications/dispatcher.ts"
   },
   "scripts": {

@@ -1,0 +1,43 @@
+name: Deploy API to Fly.io
+run-name: ${{ github.event.workflow_run.display_title || github.event_name }} - ${{ github.event.workflow_run.head_sha || github.sha }}
+
+# Mirrors deploy.yml: runs only after CI succeeds on main. Also available
+# manually so a deploy can be retried without pushing a commit.
+#
+# Requires one repository secret: FLY_API_TOKEN (see docs/deploy-fly.md).
+on:
+  workflow_run:
+    workflows:
+      - CI
+    branches:
+      - main
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy API
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    concurrency:
+      # Never let two deploys race; a queued one supersedes an unstarted one.
+      group: fly-deploy-api
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # workflow_run defaults to the workflow file's SHA on the default
+          # branch; we want the exact commit CI tested.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Set up flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      # Builds on Fly's remote builder, so no local Docker and no architecture
+      # mismatch. Runs prisma migrate deploy first via [deploy] release_command.
+      - name: Deploy
+        run: flyctl deploy -c fly.api.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
