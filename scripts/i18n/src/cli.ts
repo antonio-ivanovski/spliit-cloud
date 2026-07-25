@@ -477,7 +477,10 @@ async function main() {
       }
       const refs = parseLocaleList(kvFlags.refs)
       const keys = kvFlags.keys
-        ? kvFlags.keys.split(',').map((s) => s.trim()).filter(Boolean)
+        ? kvFlags.keys
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
         : undefined
       const limit = kvFlags.limit ? Number(kvFlags.limit) : undefined
       const offset = kvFlags.offset ? Number(kvFlags.offset) : undefined
@@ -516,7 +519,9 @@ async function main() {
           console.log(`    en: ${entry.en}`)
           if (entry.byLocale) {
             for (const [loc, info] of Object.entries(entry.byLocale)) {
-              console.log(`    ${loc} [${info.status}]: ${info.current ?? '(missing)'}`)
+              console.log(
+                `    ${loc} [${info.status}]: ${info.current ?? '(missing)'}`,
+              )
             }
           }
         }
@@ -627,7 +632,9 @@ async function main() {
           rtl: flags.has('rtl'),
           from,
         })
-        console.log(`Initialized locale ${result.code} (family ${result.family}).`)
+        console.log(
+          `Initialized locale ${result.code} (family ${result.family}).`,
+        )
         console.log('Touched:')
         for (const f of result.filesTouched) console.log(`  ${f}`)
         console.log('Next:')

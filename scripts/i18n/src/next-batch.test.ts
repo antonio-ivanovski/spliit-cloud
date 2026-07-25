@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -45,11 +45,7 @@ describe('nextTranslationBatch', () => {
     }
     await writeFile(
       join(dir, 'en-US.json'),
-      JSON.stringify(
-        { a: 'A', b: 'B', c: 'C', d: 'D' },
-        null,
-        2,
-      ) + '\n',
+      JSON.stringify({ a: 'A', b: 'B', c: 'C', d: 'D' }, null, 2) + '\n',
     )
     await writeFile(join(dir, 'fr-FR.json'), '{}\n')
   })

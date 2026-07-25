@@ -105,22 +105,24 @@ export type {
   PlanResult,
 } from './plan'
 
-export {
-  formatNextHuman,
-  nextTranslationBatch,
-} from './next-batch'
+export { formatNextHuman, nextTranslationBatch } from './next-batch'
 export type { NextBatchOptions, NextBatchResult } from './next-batch'
 
 export {
-  LANGUAGE_FAMILIES,
   assertFamiliesCoverAllLocales,
+  LANGUAGE_FAMILIES,
   nonEnLocales,
 } from './families'
 
 export { findUsages, findUsagesForKeys, usageSearchKey } from './usages'
 export type { UsageHit } from './usages'
 
-export { addLocaleToFamilySource, addRtlLocale, initLocale, insertObjectEntry } from './init-locale'
+export {
+  addLocaleToFamilySource,
+  addRtlLocale,
+  initLocale,
+  insertObjectEntry,
+} from './init-locale'
 export type { InitLocaleOptions, InitLocaleResult } from './init-locale'
 
 export {

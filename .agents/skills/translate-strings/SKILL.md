@@ -22,14 +22,14 @@ license: MIT
 
 ## Locale wiring (do not re-discover)
 
-| Concern | Where | Updated by |
-|---------|--------|------------|
-| id + label | `packages/domain/src/i18n.ts` | `init-locale` |
-| messages | `apps/web/src/messages/<locale>.json` | `init-locale` + `set` |
-| i18next load | glob in `setup.ts` | automatic |
-| flag | `locale-switcher.tsx` | `init-locale --flag` |
-| family (plan/refs) | `scripts/i18n/src/families.ts` | `init-locale --family` |
-| RTL | `react.tsx` `RTL_LOCALES` | `init-locale --rtl` |
+| Concern            | Where                                 | Updated by             |
+| ------------------ | ------------------------------------- | ---------------------- |
+| id + label         | `packages/domain/src/i18n.ts`         | `init-locale`          |
+| messages           | `apps/web/src/messages/<locale>.json` | `init-locale` + `set`  |
+| i18next load       | glob in `setup.ts`                    | automatic              |
+| flag               | `locale-switcher.tsx`                 | `init-locale --flag`   |
+| family (plan/refs) | `scripts/i18n/src/families.ts`        | `init-locale --family` |
+| RTL                | `react.tsx` `RTL_LOCALES`             | `init-locale --rtl`    |
 
 Families: `romance` | `germanic` | `slavic` | `east-asian` | `other`.
 

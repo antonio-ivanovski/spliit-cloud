@@ -96,8 +96,7 @@ export async function nextTranslationBatch(
 
   const remaining = progress.missingCount
   const completed = progress.completedCount
-  const batch =
-    remaining === 0 ? 0 : Math.floor(completed / size) + 1
+  const batch = remaining === 0 ? 0 : Math.floor(completed / size) + 1
 
   const refsArg = refs.length > 0 ? ` --refs ${refs.join(',')}` : ''
   const nextCommand = `bun i18n next --locale ${locale} --size ${size}${refsArg} --usages --json`
