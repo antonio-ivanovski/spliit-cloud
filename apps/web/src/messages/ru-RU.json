@@ -1756,7 +1756,8 @@
         "conversionRate": "Обменный курс"
       },
       "recurringCreated": "{participant} создал(а) регулярный расход «{title}»",
-      "stopped": "{participant} остановил(а) регулярный расход «{title}»"
+      "stopped": "{participant} остановил(а) регулярный расход «{title}»",
+      "commented": "{participant} прокомментировал(а) {title}: «{excerpt}»"
     },
     "group": {
       "updated": "{participant} обновил(а) настройки группы",
@@ -1959,7 +1960,19 @@
     "attachments_many": "Вложений ({count})",
     "attachments_other": "Вложений ({count})",
     "edit": "Изменить расход",
-    "makeCopy": "Создать копию"
+    "makeCopy": "Создать копию",
+    "commentsTitle": "Комментарии",
+    "commentsLoading": "Загрузка комментариев…",
+    "commentsError": "Не удалось загрузить комментарии.",
+    "commentsRetry": "Попробовать снова",
+    "commentsEmpty": "Комментариев пока нет.",
+    "commentInputLabel": "Добавить комментарий",
+    "commentPlaceholder": "Поделитесь заметкой с группой…",
+    "commentRequired": "Сначала напишите комментарий.",
+    "commentTooLong": "Комментарии могут содержать не более 500 символов.",
+    "commentSubmitting": "Публикация…",
+    "commentDelete": "Удалить комментарий",
+    "commentSend": "Отправить комментарий"
   },
   "CreateReimbursement": {
     "description": "Проверьте платёж перед его записью.",

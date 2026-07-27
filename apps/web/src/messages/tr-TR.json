@@ -1738,7 +1738,8 @@
         "conversionRate": "Döviz kuru"
       },
       "recurringCreated": "{participant}, “{title}” yinelenen giderini oluşturdu",
-      "stopped": "{participant}, “{title}” yinelenen giderini durdurdu"
+      "stopped": "{participant}, “{title}” yinelenen giderini durdurdu",
+      "commented": "{participant} {title} giderine yorum yaptı: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} grup ayarlarını güncelledi",
@@ -1923,7 +1924,19 @@
     "attachments_one": "Ek ({count})",
     "attachments_other": "Ekler ({count})",
     "edit": "Masrafı düzenle",
-    "makeCopy": "Kopya oluştur"
+    "makeCopy": "Kopya oluştur",
+    "commentsTitle": "Yorumlar",
+    "commentsLoading": "Yorumlar yükleniyor…",
+    "commentsError": "Yorumlar yüklenemedi.",
+    "commentsRetry": "Tekrar deneyin",
+    "commentsEmpty": "Henüz yorum yok.",
+    "commentInputLabel": "Yorum ekle",
+    "commentPlaceholder": "Grupla bir not paylaşın…",
+    "commentRequired": "Önce bir yorum yazın.",
+    "commentTooLong": "Yorumlar 500 karakter veya daha kısa olmalıdır.",
+    "commentSubmitting": "Gönderiliyor…",
+    "commentDelete": "Yorumu sil",
+    "commentSend": "Yorum gönder"
   },
   "CreateReimbursement": {
     "description": "Ödemeyi kaydetmeden önce gözden geçirin.",

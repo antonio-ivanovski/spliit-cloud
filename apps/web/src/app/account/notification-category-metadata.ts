@@ -66,7 +66,6 @@ export const NOTIFICATION_ROWS = {
       category: NotificationCategory.EXPENSE_COMMENT,
       titleKey: 'rows.newComment.title',
       descriptionKey: 'rows.newComment.description',
-      comingSoon: true,
     },
   ],
   summaries: [

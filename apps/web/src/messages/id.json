@@ -1731,7 +1731,8 @@
         "conversionRate": "Kurs"
       },
       "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”",
-      "stopped": "{participant} menghentikan pengeluaran berulang “{title}”"
+      "stopped": "{participant} menghentikan pengeluaran berulang “{title}”",
+      "commented": "{participant} mengomentari {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} memperbarui pengaturan grup",
@@ -1907,7 +1908,19 @@
     "notes": "Catatan",
     "attachments_other": "Lampiran ({count})",
     "edit": "Ubah pengeluaran",
-    "makeCopy": "Buat salinan"
+    "makeCopy": "Buat salinan",
+    "commentsTitle": "Komentar",
+    "commentsLoading": "Memuat komentar…",
+    "commentsError": "Komentar tidak dapat dimuat.",
+    "commentsRetry": "Coba lagi",
+    "commentsEmpty": "Belum ada komentar.",
+    "commentInputLabel": "Tambahkan komentar",
+    "commentPlaceholder": "Bagikan catatan dengan grup…",
+    "commentRequired": "Tulis komentar terlebih dahulu.",
+    "commentTooLong": "Komentar harus terdiri dari 500 karakter atau kurang.",
+    "commentSubmitting": "Memposting…",
+    "commentDelete": "Hapus komentar",
+    "commentSend": "Kirim komentar"
   },
   "CreateReimbursement": {
     "description": "Tinjau pembayaran sebelum mencatatnya.",

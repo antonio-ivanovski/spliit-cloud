@@ -1747,7 +1747,8 @@
         "conversionRate": "שער המרה"
       },
       "recurringCreated": "{participant} יצר/ה את ההוצאה החוזרת „{title}”",
-      "stopped": "{participant} עצר/ה את ההוצאה החוזרת „{title}”"
+      "stopped": "{participant} עצר/ה את ההוצאה החוזרת „{title}”",
+      "commented": "{participant} הגיב/ה על {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} עדכן את הגדרות הקבוצה",
@@ -1941,7 +1942,19 @@
     "attachments_two": "{count} קבצים מצורפים",
     "attachments_other": "{count} קבצים מצורפים",
     "edit": "ערוך הוצאה",
-    "makeCopy": "צור עותק"
+    "makeCopy": "צור עותק",
+    "commentsTitle": "תגובות",
+    "commentsLoading": "טוען תגובות…",
+    "commentsError": "לא ניתן לטעון את התגובות.",
+    "commentsRetry": "נסו שוב",
+    "commentsEmpty": "אין תגובות עדיין.",
+    "commentInputLabel": "הוספת תגובה",
+    "commentPlaceholder": "שתפו הערה עם הקבוצה…",
+    "commentRequired": "כתבו תגובה תחילה.",
+    "commentTooLong": "תגובות חייבות להכיל 500 תווים או פחות.",
+    "commentSubmitting": "מפרסם…",
+    "commentDelete": "מחיקת תגובה",
+    "commentSend": "שליחת תגובה"
   },
   "CreateReimbursement": {
     "description": "סקור את התשלום לפני רישומו.",

@@ -54,6 +54,9 @@ describe('notification preference domain values', () => {
     expect(notificationCategoryForActivityType.EXPENSES_IMPORTED).toBe(
       NotificationCategory.EXPENSE_CREATED,
     )
+    expect(notificationCategoryForActivityType.EXPENSE_COMMENTED).toBe(
+      NotificationCategory.EXPENSE_COMMENT,
+    )
     expect(notificationCategoryForActivityType.GROUP_UPDATED).toBeUndefined()
   })
 
@@ -95,5 +98,14 @@ describe('notification preference domain values', () => {
         NotificationCategory.GROUP_INVITE_RECEIVED,
       ),
     ).toEqual([NotificationChannel.EMAIL])
+    expect(
+      getDefaultNotificationChannels(NotificationCategory.EXPENSE_COMMENT),
+    ).toEqual([NotificationChannel.EMAIL])
+    expect(
+      getDefaultNotificationChannels(
+        NotificationCategory.EXPENSE_COMMENT,
+        true,
+      ),
+    ).toEqual([NotificationChannel.PUSH])
   })
 })

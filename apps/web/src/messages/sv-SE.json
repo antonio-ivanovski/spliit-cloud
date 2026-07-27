@@ -170,7 +170,8 @@
         "conversionRate": "Växelkurs"
       },
       "recurringCreated": "{participant} skapade den återkommande utgiften ”{title}”",
-      "stopped": "{participant} stoppade den återkommande utgiften {title}"
+      "stopped": "{participant} stoppade den återkommande utgiften {title}",
+      "commented": "{participant} kommenterade utgiften {title}: “{excerpt}”"
     },
     "fallback": "En aktivitet registrerades",
     "group": {
@@ -1106,7 +1107,19 @@
     "attachments_one": "Bilaga ({count})",
     "attachments_other": "Bilagor ({count})",
     "edit": "Redigera utgift",
-    "makeCopy": "Gör en kopia"
+    "makeCopy": "Gör en kopia",
+    "commentsTitle": "Kommentarer",
+    "commentsLoading": "Läser in kommentarer…",
+    "commentsError": "Det gick inte att läsa in kommentarer.",
+    "commentsRetry": "Försök igen",
+    "commentsEmpty": "Inga kommentarer än.",
+    "commentInputLabel": "Lägg till en kommentar",
+    "commentPlaceholder": "Dela en anteckning med gruppen…",
+    "commentRequired": "Skriv en kommentar först.",
+    "commentTooLong": "Kommentarer får innehålla högst 500 tecken.",
+    "commentSubmitting": "Publicerar…",
+    "commentDelete": "Ta bort kommentar",
+    "commentSend": "Skicka kommentar"
   },
   "ExpenseSeries": {
     "badge": "Återkommande",

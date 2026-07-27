@@ -1,5 +1,6 @@
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expense-attachments-preview'
+import { ExpenseComments } from '@/app/groups/[groupId]/expenses/expense-comments'
 import { ExpenseItemsSummary } from '@/app/groups/[groupId]/expenses/expense-items-summary'
 import {
   useDeleteExpenseMutation,
@@ -490,6 +491,9 @@ export function ExpensePreviewModal({
                 />
               )}
             </div>
+          )}
+          {expense && (
+            <ExpenseComments groupId={groupId} expenseId={expenseId} />
           )}
         </ResponsiveDialogBody>
 

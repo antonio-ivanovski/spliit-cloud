@@ -1731,7 +1731,8 @@
         "conversionRate": "변환 환율"
       },
       "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다",
-      "stopped": "{participant}님이 반복 지출 ‘{title}’을 중지했습니다"
+      "stopped": "{participant}님이 반복 지출 ‘{title}’을 중지했습니다",
+      "commented": "{participant}님이 {title} 지출에 댓글을 남겼습니다: “{excerpt}”"
     },
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
@@ -1907,7 +1908,19 @@
     "notes": "메모",
     "attachments_other": "첨부 파일 {count}개",
     "edit": "지출 수정하기",
-    "makeCopy": "복사본 만들기"
+    "makeCopy": "복사본 만들기",
+    "commentsTitle": "댓글",
+    "commentsLoading": "댓글 불러오는 중…",
+    "commentsError": "댓글을 불러올 수 없습니다.",
+    "commentsRetry": "다시 시도",
+    "commentsEmpty": "아직 댓글이 없습니다.",
+    "commentInputLabel": "댓글 추가",
+    "commentPlaceholder": "그룹에 메모를 공유하세요…",
+    "commentRequired": "먼저 댓글을 작성해 주세요.",
+    "commentTooLong": "댓글은 500자 이하로 입력해야 합니다.",
+    "commentSubmitting": "게시 중…",
+    "commentDelete": "댓글 삭제",
+    "commentSend": "댓글 보내기"
   },
   "CreateReimbursement": {
     "description": "지불을 기록하기 전에 확인하세요.",

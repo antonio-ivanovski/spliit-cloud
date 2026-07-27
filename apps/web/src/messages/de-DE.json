@@ -1770,7 +1770,8 @@
         "conversionRate": "Umrechnungskurs"
       },
       "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt",
-      "stopped": "{participant} hat die wiederkehrende Ausgabe {title} gestoppt"
+      "stopped": "{participant} hat die wiederkehrende Ausgabe {title} gestoppt",
+      "commented": "{participant} kommentierte {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} aktualisierte die Gruppeneinstellungen",
@@ -1991,7 +1992,19 @@
     "attachments_many": "Anhänge ({count})",
     "attachments_other": "Anhänge ({count})",
     "edit": "Ausgabe bearbeiten",
-    "makeCopy": "Kopie erstellen"
+    "makeCopy": "Kopie erstellen",
+    "commentsTitle": "Kommentare",
+    "commentsLoading": "Kommentare werden geladen …",
+    "commentsError": "Kommentare konnten nicht geladen werden.",
+    "commentsRetry": "Erneut versuchen",
+    "commentsEmpty": "Noch keine Kommentare.",
+    "commentInputLabel": "Kommentar hinzufügen",
+    "commentPlaceholder": "Eine Notiz mit der Gruppe teilen …",
+    "commentRequired": "Schreibe zuerst einen Kommentar.",
+    "commentTooLong": "Kommentare dürfen höchstens 500 Zeichen lang sein.",
+    "commentSubmitting": "Wird veröffentlicht …",
+    "commentDelete": "Kommentar löschen",
+    "commentSend": "Kommentar senden"
   },
   "CreateReimbursement": {
     "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",

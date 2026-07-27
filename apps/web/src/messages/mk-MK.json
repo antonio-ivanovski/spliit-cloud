@@ -1738,7 +1738,8 @@
         "conversionRate": "Девизен курс"
       },
       "recurringCreated": "{participant} го создаде повторливиот трошок „{title}“",
-      "stopped": "{participant} го запре повторливиот трошок „{title}“"
+      "stopped": "{participant} го запре повторливиот трошок „{title}“",
+      "commented": "{participant} остави коментар на {title}: „{excerpt}“"
     },
     "group": {
       "updated": "{participant} ажурираше поставки на групата",
@@ -1923,7 +1924,19 @@
     "attachments_one": "Прилог ({count})",
     "attachments_other": "Прилози ({count})",
     "edit": "Уреди трошок",
-    "makeCopy": "Направи копија"
+    "makeCopy": "Направи копија",
+    "commentsTitle": "Коментари",
+    "commentsLoading": "Се вчитуваат коментарите…",
+    "commentsError": "Коментарите не можеа да се вчитаат.",
+    "commentsRetry": "Обиди се повторно",
+    "commentsEmpty": "Сè уште нема коментари.",
+    "commentInputLabel": "Додај коментар",
+    "commentPlaceholder": "Споделете белешка со групата…",
+    "commentRequired": "Прво напишете коментар.",
+    "commentTooLong": "Коментарите може да имаат најмногу 500 знаци.",
+    "commentSubmitting": "Објавување…",
+    "commentDelete": "Избриши коментар",
+    "commentSend": "Испрати коментар"
   },
   "CreateReimbursement": {
     "description": "Прегледајте го плаќањето пред да го снимите.",

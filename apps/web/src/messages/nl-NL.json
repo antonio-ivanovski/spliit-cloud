@@ -1738,7 +1738,8 @@
         "conversionRate": "Conversiekoers"
       },
       "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt",
-      "stopped": "{participant} is de terugkerende uitgave {title} gestopt"
+      "stopped": "{participant} is de terugkerende uitgave {title} gestopt",
+      "commented": "{participant} plaatste een opmerking bij uitgave {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",
@@ -1923,7 +1924,19 @@
     "attachments_one": "Bijlage ({count})",
     "attachments_other": "Bijlagen ({count})",
     "edit": "Bewerk uitgave",
-    "makeCopy": "Kopie maken"
+    "makeCopy": "Kopie maken",
+    "commentsTitle": "Opmerkingen",
+    "commentsLoading": "Opmerkingen laden…",
+    "commentsError": "Opmerkingen konden niet worden geladen.",
+    "commentsRetry": "Opnieuw proberen",
+    "commentsEmpty": "Nog geen opmerkingen.",
+    "commentInputLabel": "Een opmerking toevoegen",
+    "commentPlaceholder": "Deel een notitie met de groep…",
+    "commentRequired": "Schrijf eerst een opmerking.",
+    "commentTooLong": "Opmerkingen mogen maximaal 500 tekens bevatten.",
+    "commentSubmitting": "Plaatsen…",
+    "commentDelete": "Opmerking verwijderen",
+    "commentSend": "Opmerking verzenden"
   },
   "CreateReimbursement": {
     "description": "Controleer de betaling voordat je deze vastlegt.",

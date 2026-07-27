@@ -1756,7 +1756,8 @@
         "conversionRate": "Обмінний курс"
       },
       "recurringCreated": "{participant} створив(-ла) регулярну витрату «{title}»",
-      "stopped": "{participant} зупинив(-ла) регулярну витрату «{title}»"
+      "stopped": "{participant} зупинив(-ла) регулярну витрату «{title}»",
+      "commented": "{participant} прокоментував(ла) {title}: «{excerpt}»"
     },
     "group": {
       "updated": "{participant} оновив налаштування групи",
@@ -1959,7 +1960,19 @@
     "attachments_many": "Вкладень ({count})",
     "attachments_other": "Вкладень ({count})",
     "edit": "Редагувати витрату",
-    "makeCopy": "Створити копію"
+    "makeCopy": "Створити копію",
+    "commentsTitle": "Коментарі",
+    "commentsLoading": "Завантаження коментарів…",
+    "commentsError": "Не вдалося завантажити коментарі.",
+    "commentsRetry": "Спробувати ще раз",
+    "commentsEmpty": "Ще немає коментарів.",
+    "commentInputLabel": "Додати коментар",
+    "commentPlaceholder": "Поділіться нотаткою з групою…",
+    "commentRequired": "Спочатку напишіть коментар.",
+    "commentTooLong": "Коментарі можуть містити не більше 500 символів.",
+    "commentSubmitting": "Публікація…",
+    "commentDelete": "Видалити коментар",
+    "commentSend": "Надіслати коментар"
   },
   "CreateReimbursement": {
     "description": "Перевірте платіж перед його записом.",

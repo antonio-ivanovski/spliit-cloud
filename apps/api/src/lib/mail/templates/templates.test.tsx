@@ -199,6 +199,24 @@ describe('email templates', () => {
   })
 
   describe('renderExpenseActivityEmail', () => {
+    it('renders an expense comment with excerpt and direct link', async () => {
+      const r = await renderExpenseActivityEmail({
+        kind: 'expense_comment',
+        subject: '[Spliit Cloud] Alice commented on "Dinner" in Test Group',
+        text: 'Alice commented on "Dinner" in Test Group.\n\n"Looks good"',
+        brandBaseUrl: 'https://spliit.app',
+        groupDisplayName: 'Test Group',
+        actorName: 'Alice',
+        title: 'Dinner',
+        excerpt: 'Looks good',
+        expenseUrl: 'https://spliit.app/groups/grp-1/expenses/exp-1',
+      })
+      expect(r.subject).toContain('commented on')
+      expect(r.text).toContain('Looks good')
+      expect(r.html).toContain('View expense')
+      expect(r.html).toContain('/groups/grp-1/expenses/exp-1')
+    })
+
     it('produces expense-created email with subject and styled html', async () => {
       const r = await renderExpenseActivityEmail({
         kind: 'expense',

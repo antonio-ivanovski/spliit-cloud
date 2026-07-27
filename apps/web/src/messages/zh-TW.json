@@ -1731,7 +1731,8 @@
         "conversionRate": "轉換匯率"
       },
       "recurringCreated": "{participant}建立了定期支出「{title}」",
-      "stopped": "{participant}停止了定期支出「{title}」"
+      "stopped": "{participant}停止了定期支出「{title}」",
+      "commented": "{participant} 在支出 {title} 留下了評論：「{excerpt}」"
     },
     "group": {
       "updated": "{participant} 更新了群組設定",
@@ -1907,7 +1908,19 @@
     "notes": "備註",
     "attachments_other": "附件（{count}）",
     "edit": "編輯消費紀錄",
-    "makeCopy": "複製消費紀錄"
+    "makeCopy": "複製消費紀錄",
+    "commentsTitle": "留言",
+    "commentsLoading": "正在載入留言…",
+    "commentsError": "無法載入留言。",
+    "commentsRetry": "再試一次",
+    "commentsEmpty": "尚無留言。",
+    "commentInputLabel": "新增留言",
+    "commentPlaceholder": "與群組分享備註…",
+    "commentRequired": "請先輸入留言。",
+    "commentTooLong": "留言不得超過 500 個字。",
+    "commentSubmitting": "發佈中…",
+    "commentDelete": "刪除留言",
+    "commentSend": "傳送留言"
   },
   "CreateReimbursement": {
     "description": "請確認付款資訊後再記錄。",

@@ -1747,7 +1747,8 @@
         "conversionRate": "Taxa de conversão"
       },
       "recurringCreated": "{participant} criou a despesa recorrente “{title}”",
-      "stopped": "{participant} parou a despesa recorrente {title}"
+      "stopped": "{participant} parou a despesa recorrente {title}",
+      "commented": "{participant} comentou sobre {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} atualizou as configurações do grupo",
@@ -1941,7 +1942,19 @@
     "attachments_many": "Anexos ({count})",
     "attachments_other": "Anexos ({count})",
     "edit": "Editar despesa",
-    "makeCopy": "Fazer uma cópia"
+    "makeCopy": "Fazer uma cópia",
+    "commentsTitle": "Comentários",
+    "commentsLoading": "Carregando comentários…",
+    "commentsError": "Não foi possível carregar os comentários.",
+    "commentsRetry": "Tentar novamente",
+    "commentsEmpty": "Ainda não há comentários.",
+    "commentInputLabel": "Adicionar um comentário",
+    "commentPlaceholder": "Compartilhe uma nota com o grupo…",
+    "commentRequired": "Escreva um comentário primeiro.",
+    "commentTooLong": "Os comentários devem ter no máximo 500 caracteres.",
+    "commentSubmitting": "Publicando…",
+    "commentDelete": "Excluir comentário",
+    "commentSend": "Enviar comentário"
   },
   "CreateReimbursement": {
     "description": "Revise o pagamento antes de registrá-lo.",

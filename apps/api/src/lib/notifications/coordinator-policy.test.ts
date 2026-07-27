@@ -7,6 +7,7 @@ import '../../test/mocks'
 import { prismaMock } from '../../test/state'
 import { resolveNotificationChannelsForIntents } from './coordinator-policy'
 import type { ActivityNotificationIntent } from './types'
+vi.mock('./push', () => ({ isPushConfigured: true }))
 
 function intent(
   overrides: Partial<Omit<ActivityNotificationIntent, 'channels'>> = {},
@@ -75,5 +76,29 @@ describe('resolveNotificationChannelsForIntents', () => {
       [NotificationChannel.EMAIL],
       [NotificationChannel.EMAIL],
     ])
+  })
+
+  it('prefers push for implicit comment notifications when a target exists', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
+    prismaMock.pushSubscription.findMany.mockResolvedValue([
+      { accountId: 'account-1' },
+    ] as never)
+
+    await expect(
+      resolveNotificationChannelsForIntents([
+        intent({ category: NotificationCategory.EXPENSE_COMMENT }),
+      ]),
+    ).resolves.toEqual([[NotificationChannel.PUSH]])
+  })
+
+  it('falls implicit comment notifications back to email without a push target', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
+    prismaMock.pushSubscription.findMany.mockResolvedValue([])
+
+    await expect(
+      resolveNotificationChannelsForIntents([
+        intent({ category: NotificationCategory.EXPENSE_COMMENT }),
+      ]),
+    ).resolves.toEqual([[NotificationChannel.EMAIL]])
   })
 })

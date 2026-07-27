@@ -55,7 +55,7 @@ model Account {
   pushSubscriptions   PushSubscription[]
   notificationPreferences AccountNotificationPreference[]
   recurringExpenseSeriesCreated RecurringExpenseSeries[] @relation("RecurringExpenseSeriesCreator")
-
+  expenseComments ExpenseComment[]
 }
 
 model PushSubscription {
@@ -469,6 +469,7 @@ model Expense {
   recurringSeries      RecurringExpenseSeries? @relation(fields: [recurringSeriesId], references: [id], onDelete: SetNull)
   items                ExpenseItem[]
   itemizedRemainder    ExpenseItemizedRemainder?
+  comments           ExpenseComment[]
 
   // ledgerId prefix covers group-scoped scans; expenseDate supports
   // recency-bounded currency recommendation queries.
@@ -632,7 +633,31 @@ model Activity {
   /// [ActivityData]
   data Json?
 
+  // Comment activities are linked to their comment so deleting an expense
+  // (and its comments) also removes the corresponding activity rows.
+  expenseCommentId String?         @unique
+  expenseComment   ExpenseComment? @relation("ExpenseCommentActivity", fields: [expenseCommentId], references: [id], onDelete: Cascade)
+
   @@index([ledgerId, time])
   @@index([ledgerId, type, time])
   @@index([subjectType, subjectId])
+}
+
+model ExpenseComment {
+  id        String  @id
+  expense   Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expenseId String
+
+  // Nullable by design: account deletion preserves the comment and its
+  // authorName snapshot while clearing this relation.
+  authorAccount   Account? @relation(fields: [authorAccountId], references: [id], onDelete: SetNull)
+  authorAccountId String?
+  authorName      String
+  text            String   @db.Text
+  createdAt       DateTime @default(now())
+
+  activity Activity? @relation("ExpenseCommentActivity")
+
+  @@index([expenseId, createdAt])
+  @@index([authorAccountId])
 }

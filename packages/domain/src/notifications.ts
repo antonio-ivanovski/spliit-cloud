@@ -23,7 +23,6 @@ export const NotificationCategory = {
   EXPENSE_CREATED: 'EXPENSE_CREATED',
   RECURRING_EXPENSE_CREATED: 'RECURRING_EXPENSE_CREATED',
   EXPENSE_CHANGED: 'EXPENSE_CHANGED',
-  // Reserved rows; no producers are currently registered for these types.
   EXPENSE_COMMENT: 'EXPENSE_COMMENT',
   WEEKLY_SUMMARY: 'WEEKLY_SUMMARY',
   PRODUCT_UPDATES: 'PRODUCT_UPDATES',
@@ -51,9 +50,10 @@ export const ACTIVE_NOTIFICATION_CATEGORIES = [
   NotificationCategory.EXPENSE_CREATED,
   NotificationCategory.RECURRING_EXPENSE_CREATED,
   NotificationCategory.EXPENSE_CHANGED,
+  NotificationCategory.EXPENSE_COMMENT,
 ] as const
 
-/** Account defaults stay durable until the user explicitly opts into Push. */
+/** Account defaults. Comment delivery prefers Push when the account can receive it. */
 export const DEFAULT_NOTIFICATION_CHANNELS: Readonly<
   Record<NotificationCategory, readonly NotificationChannel[]>
 > = {
@@ -62,7 +62,7 @@ export const DEFAULT_NOTIFICATION_CHANNELS: Readonly<
   [NotificationCategory.EXPENSE_CREATED]: [NotificationChannel.EMAIL],
   [NotificationCategory.RECURRING_EXPENSE_CREATED]: [NotificationChannel.EMAIL],
   [NotificationCategory.EXPENSE_CHANGED]: [NotificationChannel.EMAIL],
-  [NotificationCategory.EXPENSE_COMMENT]: [NotificationChannel.EMAIL],
+  [NotificationCategory.EXPENSE_COMMENT]: [NotificationChannel.PUSH],
   [NotificationCategory.WEEKLY_SUMMARY]: [NotificationChannel.EMAIL],
   [NotificationCategory.PRODUCT_UPDATES]: [NotificationChannel.EMAIL],
 }
@@ -100,7 +100,11 @@ export function getRecommendedNotificationChannels(
 
 export function getDefaultNotificationChannels(
   category: NotificationCategory,
+  hasPushTarget = false,
 ): NotificationChannel[] {
+  if (category === NotificationCategory.EXPENSE_COMMENT && !hasPushTarget) {
+    return [NotificationChannel.EMAIL]
+  }
   return [...DEFAULT_NOTIFICATION_CHANNELS[category]]
 }
 
@@ -138,6 +142,10 @@ export const notificationCategoryForActivityType: Readonly<
   RECURRING_EXPENSE_STOPPED: NotificationCategory.EXPENSE_CHANGED,
   EXPENSES_IMPORTED: NotificationCategory.EXPENSE_CREATED,
   EXPENSE_CATEGORIES_BULK_UPDATED: NotificationCategory.EXPENSE_CHANGED,
+  // Comment activities use the existing expense family/category so account
+  // preferences, unsubscribe metadata, and channel policy stay aligned with
+  // other expense notifications.
+  EXPENSE_COMMENTED: NotificationCategory.EXPENSE_COMMENT,
   INVITATION_CREATED: NotificationCategory.GROUP_INVITE_RECEIVED,
 }
 

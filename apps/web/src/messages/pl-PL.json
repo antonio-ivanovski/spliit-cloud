@@ -1756,7 +1756,8 @@
         "conversionRate": "Kurs wymiany"
       },
       "recurringCreated": "{participant} utworzył(a) cykliczny wydatek „{title}”",
-      "stopped": "{participant} zatrzymał(a) cykliczny wydatek „{title}”"
+      "stopped": "{participant} zatrzymał(a) cykliczny wydatek „{title}”",
+      "commented": "{participant} skomentował(a) {title}: „{excerpt}“"
     },
     "group": {
       "updated": "{participant} zaktualizował ustawienia grupy",
@@ -1959,7 +1960,19 @@
     "attachments_many": "Załączników ({count})",
     "attachments_other": "Załączników ({count})",
     "edit": "Edytuj wydatek",
-    "makeCopy": "Utwórz kopię"
+    "makeCopy": "Utwórz kopię",
+    "commentsTitle": "Komentarze",
+    "commentsLoading": "Ładowanie komentarzy…",
+    "commentsError": "Nie udało się załadować komentarzy.",
+    "commentsRetry": "Spróbuj ponownie",
+    "commentsEmpty": "Brak komentarzy.",
+    "commentInputLabel": "Dodaj komentarz",
+    "commentPlaceholder": "Podziel się notatką z grupą…",
+    "commentRequired": "Najpierw napisz komentarz.",
+    "commentTooLong": "Komentarze mogą mieć najwyżej 500 znaków.",
+    "commentSubmitting": "Publikowanie…",
+    "commentDelete": "Usuń komentarz",
+    "commentSend": "Wyślij komentarz"
   },
   "CreateReimbursement": {
     "description": "Sprawdź płatność przed jej zapisaniem.",

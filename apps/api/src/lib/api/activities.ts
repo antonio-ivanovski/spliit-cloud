@@ -13,6 +13,7 @@ import { participantDisplayNameSelect } from './selects/participant-display-name
 import { randomId } from './shared'
 export {
   buildExpenseActivityData,
+  buildExpenseCommentActivityData,
   buildGroupActivityData,
   buildImportSummaryActivityData,
   buildInvitationActivityData,
@@ -26,6 +27,7 @@ export type LogActivityArgs = {
   actor?: { type: ActivityActorType; id: string }
   subject?: { type: ActivitySubjectType; id: string }
   data: ActivityData
+  expenseCommentId?: string
   /** Opt in to notifying the actor for recurring expense creation only. */
   includeActorAsRecipient?: boolean
 }
@@ -76,6 +78,7 @@ export async function logActivity(
       subjectType: args.subject?.type ?? null,
       subjectId: args.subject?.id ?? null,
       data: args.data,
+      expenseCommentId: args.expenseCommentId ?? null,
     },
   })
 }
@@ -232,6 +235,9 @@ function resolveActorName(args: {
     }
     if (data.kind === 'invitation') {
       return data.displayLabel ?? null
+    }
+    if (data.kind === 'expense_comment') {
+      return data.authorName
     }
   }
   return null

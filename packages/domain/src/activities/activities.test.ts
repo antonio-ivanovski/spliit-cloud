@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   activityDataSchema,
   expenseActivityDataSchema,
+  expenseCommentActivityDataSchema,
   groupActivityDataSchema,
   importSummaryActivityDataSchema,
   invitationActivityDataSchema,
@@ -22,6 +23,7 @@ describe('activityTypeSchema', () => {
       'RECURRING_EXPENSE_CREATED',
       'EXPENSE_UPDATED',
       'EXPENSE_DELETED',
+      'EXPENSE_COMMENTED',
       'EXPENSES_IMPORTED',
       'GROUP_UPDATED',
       'GROUP_ARCHIVED',
@@ -109,6 +111,30 @@ describe('expenseActivityDataSchema', () => {
     const result = expenseActivityDataSchema.safeParse({
       kind: 'expense',
       changedFields: ['nope'],
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('expenseCommentActivityDataSchema', () => {
+  it('accepts the bounded comment snapshot', () => {
+    const result = expenseCommentActivityDataSchema.safeParse({
+      kind: 'expense_comment',
+      commentId: 'comment-1',
+      expenseTitle: 'Dinner',
+      authorName: 'Alice',
+      excerpt: 'Looks good',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects excerpts longer than 160 characters', () => {
+    const result = expenseCommentActivityDataSchema.safeParse({
+      kind: 'expense_comment',
+      commentId: 'comment-1',
+      expenseTitle: 'Dinner',
+      authorName: 'Alice',
+      excerpt: 'x'.repeat(161),
     })
     expect(result.success).toBe(false)
   })

@@ -187,6 +187,47 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         }),
       )
     })
+
+    it('sends a comment email with a direct expense link and excerpt', async () => {
+      prismaMock.groupMember.findFirst.mockResolvedValue({
+        status: 'ACTIVE',
+        account: {
+          id: 'acct-bob',
+          email: 'bob@test.com',
+          name: 'Bob',
+        },
+      } as never)
+      prismaMock.account.findUnique.mockResolvedValue({
+        name: 'Alice',
+      } as never)
+
+      await dispatcher.dispatch({
+        activity: buildEvent({
+          type: 'EXPENSE_COMMENTED',
+          data: {
+            kind: 'expense_comment',
+            commentId: 'comment-1',
+            expenseTitle: 'Dinner',
+            authorName: 'Alice',
+            excerpt: 'Looks good',
+          },
+        }),
+        category: NotificationCategory.EXPENSE_COMMENT,
+        recipientAccountId: 'acct-bob',
+        channels: [NotificationChannel.EMAIL],
+      })
+
+      expect(sendEmailMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: 'bob@test.com',
+          subject: expect.stringContaining('commented on "Dinner"'),
+          text: expect.stringContaining('Looks good'),
+        }),
+      )
+      expect(sendEmailMock.mock.calls[0]?.[0].text).toContain(
+        '/groups/grp-1/expenses/exp-1',
+      )
+    })
   })
 
   describe('successful update email', () => {

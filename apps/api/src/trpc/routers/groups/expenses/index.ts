@@ -1,5 +1,6 @@
 import { createTRPCRouter } from '../../../init'
 import { bulkUpdateExpenseCategoriesProcedure } from './bulkUpdateCategories.procedure'
+import { expenseCommentsRouter } from './comments'
 import { commonCurrenciesProcedure } from './common-currencies.procedure'
 import { createGroupExpenseProcedure } from './create.procedure'
 import { deleteGroupExpenseProcedure } from './delete.procedure'
@@ -11,6 +12,7 @@ import { stopRecurrenceProcedure } from './stopRecurrence.procedure'
 import { updateGroupExpenseProcedure } from './update.procedure'
 
 export const groupExpensesRouter = createTRPCRouter({
+  comments: expenseCommentsRouter,
   list: listGroupExpensesProcedure,
   series: listRecurringExpenseSeriesProcedure,
   /** Per-series progress used by the web client to poll after creating

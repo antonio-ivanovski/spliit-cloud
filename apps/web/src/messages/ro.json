@@ -1747,7 +1747,8 @@
         "conversionRate": "Curs de conversie"
       },
       "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”",
-      "stopped": "{participant} a oprit cheltuiala recurentă {title}"
+      "stopped": "{participant} a oprit cheltuiala recurentă {title}",
+      "commented": "{participant} a comentat despre {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} a actualizat setările grupului",
@@ -1941,7 +1942,19 @@
     "attachments_few": "Atașamente ({count})",
     "attachments_other": "Atașamente ({count})",
     "edit": "Modifică cheltuiala",
-    "makeCopy": "Fă o copie"
+    "makeCopy": "Fă o copie",
+    "commentsTitle": "Comentarii",
+    "commentsLoading": "Se încarcă comentariile…",
+    "commentsError": "Comentariile nu au putut fi încărcate.",
+    "commentsRetry": "Încearcă din nou",
+    "commentsEmpty": "Nu există încă comentarii.",
+    "commentInputLabel": "Adaugă un comentariu",
+    "commentPlaceholder": "Distribuie o notă grupului…",
+    "commentRequired": "Scrie mai întâi un comentariu.",
+    "commentTooLong": "Comentariile trebuie să aibă cel mult 500 de caractere.",
+    "commentSubmitting": "Se postează…",
+    "commentDelete": "Șterge comentariul",
+    "commentSend": "Trimite comentariul"
   },
   "CreateReimbursement": {
     "description": "Revizuiește plata înainte de a o înregistra.",

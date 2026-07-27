@@ -9,10 +9,12 @@ export {
 } from './auth'
 export {
   ExpenseActivityEmail,
+  ExpenseCommentEmail,
   ExpenseImportSummaryEmail,
   renderExpenseActivityEmail,
   type ExpenseActivityInput,
   type ExpenseActivityInputAny,
+  type ExpenseCommentInput,
   type ExpenseImportSummaryInput,
 } from './expense-activity'
 export { FriendLedgerEmail, renderFriendLedgerEmail } from './friend-ledger'

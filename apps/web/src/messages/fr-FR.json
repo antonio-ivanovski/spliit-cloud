@@ -1747,7 +1747,8 @@
         "conversionRate": "Taux de conversion"
       },
       "recurringCreated": "{participant} a créé la dépense récurrente « {title} »",
-      "stopped": "{participant} a arrêté la dépense récurrente {title}"
+      "stopped": "{participant} a arrêté la dépense récurrente {title}",
+      "commented": "{participant} a commenté {title} : “{excerpt}”"
     },
     "group": {
       "updated": "{participant} a modifié les paramètres du groupe",
@@ -1941,7 +1942,19 @@
     "attachments_many": "Pièces jointes ({count})",
     "attachments_other": "Pièces jointes ({count})",
     "edit": "Modifier la dépense",
-    "makeCopy": "Faire une copie"
+    "makeCopy": "Faire une copie",
+    "commentsTitle": "Commentaires",
+    "commentsLoading": "Chargement des commentaires…",
+    "commentsError": "Impossible de charger les commentaires.",
+    "commentsRetry": "Réessayer",
+    "commentsEmpty": "Aucun commentaire pour le moment.",
+    "commentInputLabel": "Ajouter un commentaire",
+    "commentPlaceholder": "Partager une note avec le groupe…",
+    "commentRequired": "Écrivez d’abord un commentaire.",
+    "commentTooLong": "Les commentaires doivent comporter au maximum 500 caractères.",
+    "commentSubmitting": "Publication…",
+    "commentDelete": "Supprimer le commentaire",
+    "commentSend": "Envoyer le commentaire"
   },
   "CreateReimbursement": {
     "description": "Vérifiez le paiement avant de l'enregistrer.",

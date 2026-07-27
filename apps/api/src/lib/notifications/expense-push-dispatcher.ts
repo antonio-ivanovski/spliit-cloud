@@ -15,6 +15,7 @@ import {
   formatExpenseDualAmount,
   loadActivityChannelContext,
   loadActivityGroupAndActor,
+  loadActivityRecipientMember,
   resolveCreatedExpenseRecipientIds,
   resolveGroupDisplayName,
   type ExpenseNotificationParticipant,
@@ -37,7 +38,6 @@ const EXPENSE_EVENT_TYPES = new Set([
   'EXPENSE_DELETED',
   'RECURRING_EXPENSE_STOPPED',
 ])
-
 export class ExpensePushActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   async dispatch(
     input: ActivityNotificationEvent | ActivityNotificationIntent,
@@ -70,6 +70,12 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
     ) {
       if (recipientAccountId) {
         await this.dispatchSummary(event, recipientAccountId, parsed)
+      }
+      return
+    }
+    if (event.type === 'EXPENSE_COMMENTED') {
+      if (recipientAccountId) {
+        await this.dispatchComment(event, recipientAccountId)
       }
       return
     }
@@ -332,6 +338,47 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
       title: 'Recurring expense stopped',
       body: `${actorName} stopped the recurring expense${title}${recurrenceDesc} in ${displayName}.`,
       url: `${getWebBaseUrl()}/groups/${event.groupId}`,
+      tag: `activity:${event.activityId}`,
+    })
+  }
+
+  private async dispatchComment(
+    event: ActivityNotificationEvent,
+    recipientAccountId: string,
+  ): Promise<void> {
+    if (!event.subject?.id) return
+    const payload = parseActivityData(event.data)
+    if (!payload || payload.kind !== 'expense_comment') return
+    const title = payload.expenseTitle
+    const [{ group, actorName: resolvedActorName }, member] = await Promise.all(
+      [
+        loadActivityGroupAndActor({
+          groupId: event.groupId,
+          actor: event.actor,
+        }),
+        loadActivityRecipientMember({
+          groupId: event.groupId,
+          recipientAccountId,
+        }),
+      ],
+    )
+    if (!group || !member) return
+    const actorName = payload.authorName ?? resolvedActorName
+    const displayName = resolveGroupDisplayName(
+      group.groupType,
+      group.name,
+      group.members,
+      recipientAccountId,
+      group.invitations[0]?.temporaryName ?? undefined,
+    )
+    const excerpt = payload.excerpt?.trim() ?? ''
+    await this.sendToAccount(recipientAccountId, {
+      version: 1,
+      kind: 'activity',
+      activityId: event.activityId,
+      title: 'New expense comment',
+      body: `${actorName} commented on "${title}" in ${displayName}${excerpt ? `: "${excerpt}"` : '.'}`,
+      url: `${getWebBaseUrl()}/groups/${event.groupId}/expenses/${event.subject.id}`,
       tag: `activity:${event.activityId}`,
     })
   }

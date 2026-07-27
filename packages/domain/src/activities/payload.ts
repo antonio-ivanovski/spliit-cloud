@@ -72,6 +72,19 @@ export const expenseActivityDataSchema = z.object({
 
 export type ExpenseActivityData = z.infer<typeof expenseActivityDataSchema>
 
+/** Payload for an expense comment activity. */
+export const expenseCommentActivityDataSchema = z.object({
+  kind: z.literal('expense_comment'),
+  commentId: z.string().min(1),
+  expenseTitle: z.string(),
+  authorName: z.string(),
+  excerpt: z.string().max(160),
+})
+
+export type ExpenseCommentActivityData = z.infer<
+  typeof expenseCommentActivityDataSchema
+>
+
 export const groupChangedFields = [
   'name',
   'information',
@@ -240,6 +253,7 @@ export type RecurringExpenseStoppedActivityData = z.infer<
 
 export const activityDataSchema = z.discriminatedUnion('kind', [
   expenseActivityDataSchema,
+  expenseCommentActivityDataSchema,
   groupActivityDataSchema,
   memberActivityDataSchema,
   invitationActivityDataSchema,

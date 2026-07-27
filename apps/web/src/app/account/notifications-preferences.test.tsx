@@ -99,7 +99,7 @@ function makeData(
         category: 'EXPENSE_COMMENT',
         channels: null,
         recommendedChannels: ['PUSH'],
-        effectiveChannels: ['EMAIL'],
+        effectiveChannels: ['PUSH'],
       },
       {
         category: 'WEEKLY_SUMMARY',
@@ -163,7 +163,7 @@ describe('NotificationsPreferences', () => {
     expect(screen.getByText('Added to a group')).toBeInTheDocument()
     expect(screen.getByText('Friend ledger')).toBeInTheDocument()
     expect(screen.getByText('New comment')).toBeInTheDocument()
-    expect(screen.getAllByRole('combobox')).toHaveLength(5)
+    expect(screen.getAllByRole('combobox')).toHaveLength(6)
     expect(screen.getAllByText('Coming soon').length).toBeGreaterThan(0)
   })
 

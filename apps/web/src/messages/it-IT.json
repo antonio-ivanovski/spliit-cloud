@@ -1747,7 +1747,8 @@
         "conversionRate": "Tasso di conversione"
       },
       "recurringCreated": "{participant} ha creato la spesa ricorrente «{title}»",
-      "stopped": "{participant} ha interrotto la spesa ricorrente {title}"
+      "stopped": "{participant} ha interrotto la spesa ricorrente {title}",
+      "commented": "{participant} ha commentato {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} ha aggiornato le impostazioni del gruppo",
@@ -1941,7 +1942,19 @@
     "attachments_many": "Documenti allegati ({count})",
     "attachments_other": "Documenti allegati ({count})",
     "edit": "Modifica spesa",
-    "makeCopy": "Crea una copia"
+    "makeCopy": "Crea una copia",
+    "commentsTitle": "Commenti",
+    "commentsLoading": "Caricamento dei commenti…",
+    "commentsError": "Impossibile caricare i commenti.",
+    "commentsRetry": "Riprova",
+    "commentsEmpty": "Ancora nessun commento.",
+    "commentInputLabel": "Aggiungi un commento",
+    "commentPlaceholder": "Condividi una nota con il gruppo…",
+    "commentRequired": "Scrivi prima un commento.",
+    "commentTooLong": "I commenti devono contenere al massimo 500 caratteri.",
+    "commentSubmitting": "Pubblicazione…",
+    "commentDelete": "Elimina commento",
+    "commentSend": "Invia il commento"
   },
   "CreateReimbursement": {
     "description": "Rivedi il pagamento prima di registrarlo.",

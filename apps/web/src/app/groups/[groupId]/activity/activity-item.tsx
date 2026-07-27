@@ -20,8 +20,10 @@ type Props = {
 
 function useMessage(activity: Activity) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
-  const actor = activity.actorName ?? t('unknownActor')
   const data = parseActivityData(activity.data)
+  const actor =
+    activity.actorName ??
+    (data?.kind === 'expense_comment' ? data.authorName : t('unknownActor'))
 
   if (!data) {
     return { message: t('fallback'), changes: null }
@@ -64,6 +66,15 @@ function useMessage(activity: Activity) {
           return { message: t('fallback'), changes: null }
       }
     }
+    case 'expense_comment':
+      return {
+        message: t('expense.commented', {
+          participant: actor,
+          title: data.expenseTitle,
+          excerpt: data.excerpt,
+        }),
+        changes: null,
+      }
     case 'group':
       switch (activity.type) {
         case 'GROUP_UPDATED':

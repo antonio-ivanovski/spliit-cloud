@@ -1738,7 +1738,8 @@
         "conversionRate": "Muunnoskurssi"
       },
       "recurringCreated": "{participant} loi toistuvan kulun ”{title}”",
-      "stopped": "{participant} pysäytti toistuvan kulun {title}"
+      "stopped": "{participant} pysäytti toistuvan kulun {title}",
+      "commented": "{participant} kommentoi kulua {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} päivitti ryhmän asetuksia",
@@ -1923,7 +1924,19 @@
     "attachments_one": "Liite ({count})",
     "attachments_other": "Liitteet ({count})",
     "edit": "Muokkaa kulua",
-    "makeCopy": "Tee kopio"
+    "makeCopy": "Tee kopio",
+    "commentsTitle": "Kommentit",
+    "commentsLoading": "Ladataan kommentteja…",
+    "commentsError": "Kommentteja ei voitu ladata.",
+    "commentsRetry": "Yritä uudelleen",
+    "commentsEmpty": "Ei vielä kommentteja.",
+    "commentInputLabel": "Lisää kommentti",
+    "commentPlaceholder": "Jaa muistiinpano ryhmän kanssa…",
+    "commentRequired": "Kirjoita ensin kommentti.",
+    "commentTooLong": "Kommentit voivat sisältää enintään 500 merkkiä.",
+    "commentSubmitting": "Julkaistaan…",
+    "commentDelete": "Poista kommentti",
+    "commentSend": "Lähetä kommentti"
   },
   "CreateReimbursement": {
     "description": "Tarkista maksu ennen sen tallentamista.",

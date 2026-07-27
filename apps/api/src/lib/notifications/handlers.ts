@@ -14,6 +14,10 @@ import type {
 
 type Recipient = { id: string }
 
+function isExpenseCommentEvent(event: ActivityNotificationEvent): boolean {
+  return event.type === 'EXPENSE_COMMENTED'
+}
+
 export interface ActivityHandler {
   supports(type: ActivityNotificationEvent['type']): boolean
   buildIntents(
@@ -92,6 +96,112 @@ async function invitationRecipient(
 async function expenseParticipantAccounts(
   event: ActivityNotificationEvent,
 ): Promise<Recipient[]> {
+  if (isExpenseCommentEvent(event)) {
+    const expenseId = event.subject?.id
+    if (!expenseId) return []
+
+    // A comment should reach the active accounts represented on the expense,
+    // plus active accounts that have commented previously. Resolve both
+    // scopes independently, then let the common deduper suppress duplicates
+    // and the actor policy remove the author of the current comment.
+    const [raw, previousComments] = await Promise.all([
+      prisma.expense.findUnique({
+        where: { id: expenseId },
+        select: {
+          paidByList: { select: { ledgerParticipantId: true, shares: true } },
+          paidFor: { select: { ledgerParticipantId: true, shares: true } },
+          items: {
+            select: {
+              id: true,
+              paidFor: {
+                select: { ledgerParticipantId: true, shares: true },
+              },
+            },
+          },
+          itemizedRemainder: {
+            select: {
+              splitMode: true,
+              paidFor: {
+                select: { ledgerParticipantId: true, shares: true },
+              },
+            },
+          },
+        },
+      }),
+      prisma.expenseComment.findMany({
+        where: { expenseId, authorAccountId: { not: null } },
+        select: { authorAccountId: true },
+      }),
+    ])
+
+    const participantIds: string[] = raw
+      ? [
+          ...getAffectedParticipantIds({
+            newExpense: {
+              paidByList: raw.paidByList.map((row) => ({
+                participant: row.ledgerParticipantId,
+                shares: row.shares,
+              })),
+              paidFor: raw.paidFor.map((row) => ({
+                participant: row.ledgerParticipantId,
+                shares: row.shares,
+              })),
+              items: raw.items.map((item) => ({
+                id: item.id,
+                paidFor: item.paidFor.map((row) => ({
+                  participant: row.ledgerParticipantId,
+                  shares: row.shares,
+                })),
+              })),
+              itemizedRemainder: raw.itemizedRemainder
+                ? {
+                    splitMode: raw.itemizedRemainder.splitMode,
+                    paidFor: raw.itemizedRemainder.paidFor.map((row) => ({
+                      participant: row.ledgerParticipantId,
+                      shares: row.shares,
+                    })),
+                  }
+                : undefined,
+            } as never,
+          }),
+        ]
+      : []
+    const participantRecipients =
+      participantIds.length > 0
+        ? await prisma.ledgerParticipant.findMany({
+            where: { id: { in: [...new Set(participantIds)] } },
+            select: {
+              groupMember: { select: { accountId: true, status: true } },
+            },
+          })
+        : []
+    const activeParticipants = participantRecipients.flatMap((participant) =>
+      participant.groupMember?.status === 'ACTIVE'
+        ? [{ id: participant.groupMember.accountId }]
+        : [],
+    )
+
+    const authorIds = [
+      ...new Set(
+        previousComments
+          .map((comment) => comment.authorAccountId)
+          .filter((id): id is string => !!id),
+      ),
+    ]
+    if (authorIds.length === 0) return activeParticipants
+    const activeAuthors = await prisma.groupMember.findMany({
+      where: {
+        groupId: event.groupId,
+        status: 'ACTIVE',
+        accountId: { in: authorIds },
+      },
+      select: { accountId: true },
+    })
+    return [
+      ...activeParticipants,
+      ...activeAuthors.map((member) => ({ id: member.accountId })),
+    ]
+  }
   const parsed = parseActivityData(event.data)
   if (!parsed) return []
   let participantIds: string[] = []

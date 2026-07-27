@@ -1756,7 +1756,8 @@
         "conversionRate": "Směnný kurz"
       },
       "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“",
-      "stopped": "{participant} zastavil(a) opakovaný výdaj „{title}“"
+      "stopped": "{participant} zastavil(a) opakovaný výdaj „{title}“",
+      "commented": "{participant} okomentoval(a) {title}: „{excerpt}“"
     },
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",
@@ -1959,7 +1960,19 @@
     "attachments_many": "Příloh ({count})",
     "attachments_other": "Přílohy ({count})",
     "edit": "Upravit výdaj",
-    "makeCopy": "Vytvořit kopii"
+    "makeCopy": "Vytvořit kopii",
+    "commentsTitle": "Komentáře",
+    "commentsLoading": "Načítání komentářů…",
+    "commentsError": "Komentáře se nepodařilo načíst.",
+    "commentsRetry": "Zkusit znovu",
+    "commentsEmpty": "Zatím žádné komentáře.",
+    "commentInputLabel": "Přidat komentář",
+    "commentPlaceholder": "Sdílejte poznámku se skupinou…",
+    "commentRequired": "Nejprve napište komentář.",
+    "commentTooLong": "Komentáře mohou mít nejvýše 500 znaků.",
+    "commentSubmitting": "Odesílání…",
+    "commentDelete": "Smazat komentář",
+    "commentSend": "Odeslat komentář"
   },
   "CreateReimbursement": {
     "description": "Zkontrolujte platbu před jejím zaznamenáním.",

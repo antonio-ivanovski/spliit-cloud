@@ -64,7 +64,10 @@ export async function getNotificationPreferences(accountId: string) {
     isPushConfigured,
     categories: preferenceCategories.map((category) => {
       const channels = byCategory.get(category) ?? null
-      const inheritedChannels = getDefaultNotificationChannels(category)
+      const inheritedChannels = getDefaultNotificationChannels(
+        category,
+        isPushConfigured && pushCount > 0,
+      )
       const recommendedChannels = getRecommendedNotificationChannels(category)
       return {
         category,
@@ -114,11 +117,21 @@ export async function removeEmailPreference(
   accountId: string,
   category: NotificationCategory,
 ) {
-  const row = await prisma.accountNotificationPreference.findUnique({
-    where: { accountId_category: { accountId, category } },
-    select: { channels: true },
-  })
-  const current = row?.channels ?? getDefaultNotificationChannels(category)
+  const [row, pushCount] = await Promise.all([
+    prisma.accountNotificationPreference.findUnique({
+      where: { accountId_category: { accountId, category } },
+      select: { channels: true },
+    }),
+    isPushConfigured
+      ? prisma.pushSubscription.count({ where: { accountId } })
+      : Promise.resolve(0),
+  ])
+  const current =
+    row?.channels ??
+    getDefaultNotificationChannels(category, isPushConfigured && pushCount > 0)
+  if (!current.includes(NotificationChannel.EMAIL)) {
+    return getNotificationPreferences(accountId)
+  }
   const channels = current.filter(
     (channel): channel is NotificationChannel =>
       channel !== NotificationChannel.EMAIL,

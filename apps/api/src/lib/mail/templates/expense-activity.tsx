@@ -31,6 +31,19 @@ export type ExpenseActivityInput = {
   stopped?: boolean
 }
 
+export type ExpenseCommentInput = {
+  kind: 'expense_comment'
+  subject: string
+  text: string
+  brandBaseUrl: string
+  groupDisplayName: string
+  actorName: string
+  title: string
+  excerpt: string
+  expenseUrl: string
+  unsubscribeUrl?: string
+}
+
 export type ExpenseImportSummaryInput = {
   kind: 'import_summary'
   subject: string
@@ -78,6 +91,7 @@ export type RecurringExpenseSummaryInput = {
 
 export type ExpenseActivityInputAny =
   | ExpenseActivityInput
+  | ExpenseCommentInput
   | ExpenseImportSummaryInput
   | ExpenseCategoryBulkSummaryInput
   | RecurringExpenseSummaryInput
@@ -150,6 +164,47 @@ export function ExpenseActivityEmail(
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
+      </Text>
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+        <Link href={props.expenseUrl} className="text-[#64748b] underline">
+          {props.expenseUrl}
+        </Link>
+      </Text>
+    </EmailLayout>
+  )
+}
+
+export function ExpenseCommentEmail(
+  props: Omit<ExpenseCommentInput, 'kind' | 'subject' | 'text'>,
+): ReactElement {
+  return (
+    <EmailLayout
+      preview={`${props.actorName} commented on "${props.title}"`}
+      brandBaseUrl={props.brandBaseUrl}
+      unsubscribeUrl={props.unsubscribeUrl}
+    >
+      <Heading
+        as="h1"
+        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+      >
+        {props.actorName} commented on &quot;{props.title}&quot;
+      </Heading>
+      <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
+        in <strong>{props.groupDisplayName}</strong>.
+      </Text>
+      {props.excerpt ? (
+        <Section className="bg-[#f8fafc] border border-solid border-[#e5e7eb] rounded-md px-5 py-4 my-4">
+          <Text className="m-0 text-[14px] leading-[22px] text-[#0f172a]">
+            &quot;{props.excerpt}&quot;
+          </Text>
+        </Section>
+      ) : null}
+      <Section className="text-center my-6">
+        <EmailButton href={props.expenseUrl} label="View expense" />
+      </Section>
+      <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
+        If the button doesn&apos;t work, copy and paste this URL into your
+        browser:
       </Text>
       <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
         <Link href={props.expenseUrl} className="text-[#64748b] underline">
@@ -313,6 +368,13 @@ export async function renderExpenseActivityEmail(
   if (input.kind === 'expense') {
     const { kind: _kind, subject, text, ...componentProps } = input
     return renderTemplate(<ExpenseActivityEmail {...componentProps} />, {
+      subject,
+      text,
+    })
+  }
+  if (input.kind === 'expense_comment') {
+    const { kind: _kind, subject, text, ...componentProps } = input
+    return renderTemplate(<ExpenseCommentEmail {...componentProps} />, {
       subject,
       text,
     })

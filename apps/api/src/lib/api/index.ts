@@ -1,6 +1,7 @@
 export type { Ledger, LedgerParticipant } from '@spliit/db'
 export {
   buildExpenseActivityData,
+  buildExpenseCommentActivityData,
   buildGroupActivityData,
   buildInvitationActivityData,
   buildMemberActivityData,
@@ -15,6 +16,12 @@ export {
   getSettlementLegsForParticipant,
   hasUnsettledBalances,
 } from './balances'
+export {
+  createExpenseComment,
+  deleteExpenseComment,
+  findExpenseComment,
+  getExpenseComments,
+} from './expense-comments'
 export {
   createExpense,
   deleteExpense,

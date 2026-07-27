@@ -46,7 +46,6 @@ const EXPENSE_EVENT_TYPES = new Set([
 ])
 const IMPORT_EVENT_TYPES = new Set(['EXPENSES_IMPORTED'])
 const CATEGORY_BULK_EVENT_TYPES = new Set(['EXPENSE_CATEGORIES_BULK_UPDATED'])
-
 export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   async dispatch(
     input: ActivityNotificationEvent | ActivityNotificationIntent,
@@ -71,6 +70,10 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     }
     if (CATEGORY_BULK_EVENT_TYPES.has(event.type)) {
       await this.dispatchCategoryBulkSummary(event, recipientAccountId)
+      return
+    }
+    if (event.type === 'EXPENSE_COMMENTED') {
+      await this.dispatchComment(event, recipientAccountId, category)
       return
     }
     if (!EXPENSE_EVENT_TYPES.has(event.type)) return
@@ -543,6 +546,73 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       }),
       recipientAccountId,
       category: NotificationCategory.EXPENSE_CHANGED,
+    })
+  }
+
+  private async dispatchComment(
+    event: ActivityNotificationEvent,
+    recipientAccountId: string | undefined,
+    category: NotificationCategory,
+  ): Promise<void> {
+    if (!recipientAccountId || !event.subject?.id) return
+    const payload = parseActivityData(event.data)
+    if (!payload || payload.kind !== 'expense_comment') return
+    const title = payload.expenseTitle
+
+    const [{ group, actorName: resolvedActorName }, member] = await Promise.all(
+      [
+        loadActivityGroupAndActor({
+          groupId: event.groupId,
+          actor: event.actor,
+        }),
+        loadActivityRecipientMember({
+          groupId: event.groupId,
+          recipientAccountId,
+        }),
+      ],
+    )
+    if (!group || !member) return
+    const actorName = payload.authorName ?? resolvedActorName
+    const displayName = resolveGroupDisplayName(
+      group.groupType,
+      group.name,
+      group.members,
+      recipientAccountId,
+      group.invitations[0]?.temporaryName ?? undefined,
+    )
+    const expenseUrl = `${getWebBaseUrl()}/groups/${event.groupId}/expenses/${event.subject.id}`
+    const excerpt = payload.excerpt?.trim() ?? ''
+    const subject = `[Spliit Cloud] ${actorName} commented on "${title}" in ${displayName}`
+    const text = [
+      `${actorName} commented on "${title}" in ${displayName}.`,
+      excerpt ? `\n"${excerpt}"` : '',
+      '',
+      'View it here:',
+      expenseUrl,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    await this.sendToActiveMembers({
+      participants: [{ groupMember: member }],
+      actor: event.actor,
+      activityId: event.activityId,
+      group,
+      buildSubject: () => subject,
+      buildText: () => text,
+      templateFor: (): ExpenseActivityInputAny => ({
+        kind: 'expense_comment',
+        subject,
+        text,
+        brandBaseUrl: getWebBaseUrl(),
+        groupDisplayName: displayName,
+        actorName,
+        title,
+        excerpt,
+        expenseUrl,
+      }),
+      recipientAccountId,
+      category,
     })
   }
 

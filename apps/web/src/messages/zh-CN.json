@@ -1731,7 +1731,8 @@
         "conversionRate": "转换汇率"
       },
       "recurringCreated": "{participant}创建了定期支出“{title}”",
-      "stopped": "{participant}停止了定期支出“{title}”"
+      "stopped": "{participant}停止了定期支出“{title}”",
+      "commented": "{participant} 评论了支出 {title}：“{excerpt}”"
     },
     "group": {
       "updated": "{participant} 更新了群组设置",
@@ -1907,7 +1908,19 @@
     "notes": "附注",
     "attachments_other": "附件（{count}）",
     "edit": "编辑消费",
-    "makeCopy": "复制消费"
+    "makeCopy": "复制消费",
+    "commentsTitle": "评论",
+    "commentsLoading": "正在加载评论…",
+    "commentsError": "无法加载评论。",
+    "commentsRetry": "重试",
+    "commentsEmpty": "暂无评论。",
+    "commentInputLabel": "添加评论",
+    "commentPlaceholder": "与群组分享备注…",
+    "commentRequired": "请先写下评论。",
+    "commentTooLong": "评论不能超过500个字符。",
+    "commentSubmitting": "发布中…",
+    "commentDelete": "删除评论",
+    "commentSend": "发送评论"
   },
   "CreateReimbursement": {
     "description": "请核对付款信息后再记录。",

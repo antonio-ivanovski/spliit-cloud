@@ -1746,7 +1746,8 @@
         "conversionRate": "Bihurketa-tasa"
       },
       "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du",
-      "stopped": "{participant}(e)k {title} gastu errepikaria gelditu du"
+      "stopped": "{participant}(e)k {title} gastu errepikaria gelditu du",
+      "commented": "{participant}(e)k {title}ri buruzko iruzkina egin du: “{excerpt}”"
     },
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
@@ -1940,7 +1941,19 @@
     "attachments_many": "Eranskinak ({count})",
     "attachments_other": "Eranskinak ({count})",
     "edit": "Editatu gastua",
-    "makeCopy": "Kopia bat egin"
+    "makeCopy": "Kopia bat egin",
+    "commentsTitle": "Iruzkinak",
+    "commentsLoading": "Iruzkinak kargatzen…",
+    "commentsError": "Ezin izan dira iruzkinak kargatu.",
+    "commentsRetry": "Saiatu berriro",
+    "commentsEmpty": "Oraindik ez dago iruzkinik.",
+    "commentInputLabel": "Gehitu iruzkin bat",
+    "commentPlaceholder": "Partekatu ohar bat taldearekin…",
+    "commentRequired": "Idatzi iruzkin bat lehenik.",
+    "commentTooLong": "Iruzkinak 500 karaktere edo gutxiago izan behar dituzte.",
+    "commentSubmitting": "Argitaratzen…",
+    "commentDelete": "Ezabatu iruzkina",
+    "commentSend": "Iruzkina bidali"
   },
   "CreateReimbursement": {
     "description": "Berrikusi ordainketa erregistratu aurretik.",

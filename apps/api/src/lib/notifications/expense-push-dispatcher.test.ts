@@ -290,4 +290,41 @@ describe('ExpensePushActivityNotificationDispatcher recurring paths', () => {
       }),
     )
   })
+
+  it('delivers a comment push to the direct expense URL', async () => {
+    prismaMock.groupMember.findFirst.mockResolvedValue({
+      status: 'ACTIVE',
+      account: { id: 'acct-bob', email: 'bob@test.com', name: 'Bob' },
+    } as never)
+
+    await new ExpensePushActivityNotificationDispatcher().dispatch({
+      activity: {
+        activityId: 'act-comment',
+        type: 'EXPENSE_COMMENTED',
+        groupId: 'grp-1',
+        actor: { type: 'ACCOUNT', id: 'acct-alice' },
+        subject: { type: 'EXPENSE', id: 'exp-1' },
+        data: {
+          kind: 'expense_comment',
+          commentId: 'comment-1',
+          expenseTitle: 'Dinner',
+          authorName: 'Alice',
+          excerpt: 'Looks good',
+        },
+        occurredAt: new Date('2026-07-21T12:00:00Z'),
+      },
+      category: NotificationCategory.EXPENSE_COMMENT,
+      recipientAccountId: 'acct-bob',
+      channels: [NotificationChannel.PUSH],
+    })
+
+    expect(sendPushMock).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        title: 'New expense comment',
+        body: expect.stringContaining('Looks good'),
+        url: expect.stringContaining('/groups/grp-1/expenses/exp-1'),
+      }),
+    )
+  })
 })

@@ -54,6 +54,9 @@ export async function resolveNotificationChannelsForIntents(
       // silently turn an explicit PUSH choice into email delivery.
       return channels
     }
-    return getDefaultNotificationChannels(intent.category)
+    return getDefaultNotificationChannels(
+      intent.category,
+      pushTargets.has(intent.recipientAccountId),
+    )
   })
 }

@@ -156,6 +156,29 @@ describe('ActivityItem', () => {
     ).toBeInTheDocument()
   })
 
+  it('renders an expense comment with its author snapshot and excerpt', () => {
+    renderItem(
+      makeActivity({
+        type: 'EXPENSE_COMMENTED',
+        actorName: null,
+        subjectType: 'EXPENSE',
+        subjectId: 'expense-1',
+        data: {
+          kind: 'expense_comment',
+          commentId: 'comment-1',
+          expenseTitle: 'Dinner',
+          authorName: 'Former account',
+          excerpt: 'Bring the receipt.',
+        },
+      }),
+    )
+    expect(
+      screen.getByText(
+        /Former account commented on Dinner: “Bring the receipt.”/,
+      ),
+    ).toBeInTheDocument()
+  })
+
   it('renders group updated', () => {
     renderItem(
       makeActivity({

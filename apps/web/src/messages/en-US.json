@@ -1838,7 +1838,8 @@
       },
       "changeEmptyValue": "Not set",
       "recurringCreated": "{participant} created recurring expense “{title}”",
-      "stopped": "{participant} stopped the recurring expense {title}"
+      "stopped": "{participant} stopped the recurring expense {title}",
+      "commented": "{participant} commented on {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} updated group settings",
@@ -2075,7 +2076,19 @@
     "attachments_many": "Attachments ({count})",
     "attachments_other": "Attachments ({count})",
     "edit": "Edit expense",
-    "makeCopy": "Make a copy"
+    "makeCopy": "Make a copy",
+    "commentsTitle": "Comments",
+    "commentsLoading": "Loading comments…",
+    "commentsError": "Comments could not be loaded.",
+    "commentsRetry": "Try again",
+    "commentsEmpty": "No comments yet.",
+    "commentInputLabel": "Add a comment",
+    "commentPlaceholder": "Share a note with the group…",
+    "commentRequired": "Write a comment first.",
+    "commentTooLong": "Comments must be 500 characters or fewer.",
+    "commentSubmitting": "Posting…",
+    "commentDelete": "Delete comment",
+    "commentSend": "Send comment"
   },
   "CreateReimbursement": {
     "description": "Review the payment before recording it.",

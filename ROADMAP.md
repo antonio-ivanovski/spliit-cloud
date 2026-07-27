@@ -30,7 +30,7 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 
 ### Quality-of-life additions (small, high-trust, ship in batches)
 
-- [ ] **Expense comments / notes on an expense** — upstream [#165](https://github.com/spliit-app/spliit/pull/165)
+- [x] **Expense comments / notes on an expense** — upstream [#165](https://github.com/spliit-app/spliit/pull/165)
 - [x] **Copy an expense** — open the last one, click copy, save with today's date — upstream [#527](https://github.com/spliit-app/spliit/issues/527) (PRs [#394](https://github.com/spliit-app/spliit/pull/394), [#201](https://github.com/spliit-app/spliit/pull/201))
 - [x] **Math expressions in the amount field** (e.g. `12+4.50`) — upstream [#184](https://github.com/spliit-app/spliit/pull/184)
 - [x] **Default split mode persisted on group** — upstream [#366](https://github.com/spliit-app/spliit/pull/366)

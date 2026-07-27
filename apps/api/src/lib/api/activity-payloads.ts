@@ -2,6 +2,7 @@ import type {
   ExpenseActivityChange,
   ExpenseActivityData,
   ExpenseChangedField,
+  ExpenseCommentActivityData,
   GroupActivityChange,
   GroupActivityData,
   GroupChangedField,
@@ -63,6 +64,21 @@ export function buildExpenseActivityData(
       : {}),
     ...(input.recurrence !== undefined ? { recurrence: input.recurrence } : {}),
     ...(input.stopped !== undefined ? { stopped: input.stopped } : {}),
+  }
+}
+
+export function buildExpenseCommentActivityData(input: {
+  commentId: string
+  expenseTitle: string
+  authorName: string
+  excerpt: string
+}): ExpenseCommentActivityData {
+  return {
+    kind: 'expense_comment',
+    commentId: input.commentId,
+    expenseTitle: input.expenseTitle,
+    authorName: input.authorName,
+    excerpt: input.excerpt.slice(0, 160),
   }
 }
 

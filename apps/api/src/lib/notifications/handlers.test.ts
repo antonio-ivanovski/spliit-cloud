@@ -79,4 +79,35 @@ describe('ExpenseActivityHandler recurring recipients', () => {
       'account-bob',
     ])
   })
+
+  it('unions active expense participants and previous comment authors', async () => {
+    prismaMock.expenseComment.findMany.mockResolvedValue([
+      { authorAccountId: 'account-carol' },
+      { authorAccountId: 'account-bob' },
+      { authorAccountId: null },
+    ] as never)
+    prismaMock.groupMember.findMany.mockResolvedValue([
+      { accountId: 'account-carol' },
+      { accountId: 'account-bob' },
+    ] as never)
+
+    const intents = await new ExpenseActivityHandler().buildIntents(
+      event({
+        type: 'EXPENSE_COMMENTED',
+        data: {
+          kind: 'expense_comment',
+          commentId: 'comment-1',
+          expenseTitle: 'Dinner',
+          authorName: 'Alice',
+          excerpt: 'Looks good',
+        },
+      }),
+    )
+
+    expect(intents.map((intent) => intent.recipientAccountId)).toEqual([
+      'account-bob',
+      'account-carol',
+    ])
+    expect(intents[0]?.category).toBe(NotificationCategory.EXPENSE_COMMENT)
+  })
 })

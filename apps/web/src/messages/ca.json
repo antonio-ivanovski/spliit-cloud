@@ -1747,7 +1747,8 @@
         "conversionRate": "Tasa de conversió"
       },
       "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»",
-      "stopped": "{participant} ha aturat la despesa recurrent {title}"
+      "stopped": "{participant} ha aturat la despesa recurrent {title}",
+      "commented": "{participant} ha comentat {title}: “{excerpt}”"
     },
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",
@@ -1941,7 +1942,19 @@
     "attachments_many": "Fitxers adjunts ({count})",
     "attachments_other": "Fitxers adjunts ({count})",
     "edit": "Editar despesa",
-    "makeCopy": "Fer una còpia"
+    "makeCopy": "Fer una còpia",
+    "commentsTitle": "Comentaris",
+    "commentsLoading": "Carregant els comentaris…",
+    "commentsError": "No s'han pogut carregar els comentaris.",
+    "commentsRetry": "Torna-ho a provar",
+    "commentsEmpty": "Encara no hi ha comentaris.",
+    "commentInputLabel": "Afegeix un comentari",
+    "commentPlaceholder": "Comparteix una nota amb el grup…",
+    "commentRequired": "Escriu primer un comentari.",
+    "commentTooLong": "Els comentaris han de tenir 500 caràcters o menys.",
+    "commentSubmitting": "Publicant…",
+    "commentDelete": "Suprimeix el comentari",
+    "commentSend": "Envia el comentari"
   },
   "CreateReimbursement": {
     "description": "Revisa el pagament abans de registrar-lo.",

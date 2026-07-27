@@ -1731,7 +1731,8 @@
         "conversionRate": "換算レート"
       },
       "recurringCreated": "{participant}さんが定期支出「{title}」を作成しました",
-      "stopped": "{participant}さんが定期支出「{title}」を停止しました"
+      "stopped": "{participant}さんが定期支出「{title}」を停止しました",
+      "commented": "{participant}が支出{title}にコメントしました：「{excerpt}」"
     },
     "group": {
       "updated": "{participant}がグループ設定を更新しました",
@@ -1907,7 +1908,19 @@
     "notes": "メモ",
     "attachments_other": "添付ファイル（{count}件）",
     "edit": "支出を編集",
-    "makeCopy": "コピーを作成"
+    "makeCopy": "コピーを作成",
+    "commentsTitle": "コメント",
+    "commentsLoading": "コメントを読み込み中…",
+    "commentsError": "コメントを読み込めませんでした。",
+    "commentsRetry": "もう一度試す",
+    "commentsEmpty": "まだコメントはありません。",
+    "commentInputLabel": "コメントを追加",
+    "commentPlaceholder": "グループにメモを共有…",
+    "commentRequired": "まずコメントを書いてください。",
+    "commentTooLong": "コメントは500文字以内で入力してください。",
+    "commentSubmitting": "投稿中…",
+    "commentDelete": "コメントを削除",
+    "commentSend": "コメントを送信"
   },
   "CreateReimbursement": {
     "description": "支払いを記録する前に確認してください。",
