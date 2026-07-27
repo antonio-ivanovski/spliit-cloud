@@ -1,0 +1,2139 @@
+{
+  "Common": {
+    "close": "إغلاق",
+    "nextSlide": "الشريحة التالية",
+    "previousSlide": "الشريحة السابقة"
+  },
+  "OfflineBanner": {
+    "message": "أنت غير متصل. التغييرات التي تجريها الآن لن تُحفظ حتى تعود متصلاً."
+  },
+  "EmptyState": {
+    "description": {
+      "empty": "أنشئ أول {itemLabel} للبدء."
+    },
+    "title": {
+      "empty": "لا {itemLabelPlural} بعد",
+      "filtered": "جميع {itemLabelPlural} الخاصة بك مخفية"
+    },
+    "labels": {
+      "groupPlural": "مجموعة",
+      "friendLedger": "صديق",
+      "friendLedgerPlural": "أصدقاء",
+      "group": "مجموعة"
+    },
+    "actions": {
+      "createGroup": "إنشاء مجموعة",
+      "createFriendLedger": "تسجيل مصروفات صديق مشتركة",
+      "showHidden": "إظهار مجموعة مخفي"
+    }
+  },
+  "PushOnboarding": {
+    "emailFallback": "البريد الإلكتروني متاح للإشعارات التي تختار استلامها عبر البريد الإلكتروني؛ ولا يُعاد توجيه خيار الإشعارات الفورية وحده.",
+    "settingsHint": "يمكنك تغيير هذا الاختيار في أي وقت من الإعدادات. تُفعّل الإشعارات الفورية بشكل منفصل لكل جهاز.",
+    "emailUsage": "لن يتم استلام سوى الإشعارات المهيأة للبريد الإلكتروني حتى تقوم بتفعيل هذا الجهاز. اسمح بالإشعارات في إعدادات المتصفح، ثم حاول مجدداً من الإعدادات.",
+    "title": "تفعيل الإشعارات",
+    "pushBenefit": "تُستلم الإشعارات الفورية على هذا الجهاز حتى عندما لا يكون Spliit مفتوحاً.",
+    "enable": "تفعيل الإشعارات",
+    "failedTitle": "تعذر تفعيل الإشعارات الفورية",
+    "description": "احصل على إشعارات فورية عند إضافة نفقات جديدة.",
+    "failedDescription": "لم نتمكن من تسجيل هذا الجهاز. الإشعارات المهيأة للبريد الإلكتروني ستظل تُرسل عبر البريد الإلكتروني.",
+    "enabling": "جارٍ التفعيل…",
+    "useEmail": "استخدم البريد الإلكتروني",
+    "done": "تم",
+    "deniedTitle": "الإشعارات الفورية محظورة",
+    "deniedDescription": "متصفحك يمنع إذن الإشعارات. ستظل الإشعارات المهيأة للبريد الإلكتروني تُرسل عبر البريد الإلكتروني؛ ولا يُعاد توجيه خيار الإشعارات الفورية وحده."
+  },
+  "Expenses": {
+    "showSettlements": "إظهار التسويات",
+    "exportCsv": "تصدير بصيغة CSV",
+    "title": "المصروفات",
+    "exportJson": "تصدير بصيغة JSON",
+    "ActiveUserModal": {
+      "nobody": "لا أريد اختيار أي شخص",
+      "title": "من أنت؟",
+      "footer": "يمكن تغيير هذا الإعداد لاحقاً في إعدادات المجموعة.",
+      "description": "أخبرنا أي مشارك أنت لتخصيص طريقة عرض المعلومات.",
+      "save": "حفظ التغييرات"
+    },
+    "createFirst": "أنشئ أول مصروف",
+    "description": "إليك النفقات التي أنشأتها لمجموعتك.",
+    "filters": {
+      "paidFor": "مقسم بين",
+      "settlementsHidden": "التسويات مخفية",
+      "matchModeAny": "طابق أي",
+      "nSelected_one": "تم اختيار {count}",
+      "nSelected_other": "تم اختيار {count}",
+      "category": "الفئة",
+      "noMatchClear": "مسح الفلاتر",
+      "maxAmount": "الحد الأقصى",
+      "allCategories": "جميع الفئات",
+      "matchModeAll": "طابق الكل",
+      "noMatchTitle": "لا توجد نفقات تطابق فلاترك",
+      "clearFilterAria": "مسح فلتر {label}",
+      "sort": {
+        "title": "ترتيب النفقات",
+        "options": {
+          "expenseDate": {
+            "desc": "التاريخ (الأحدث أولاً)",
+            "asc": "التاريخ (الأقدم أولاً)"
+          },
+          "amount": {
+            "desc": "المبلغ (الأعلى أولاً)",
+            "asc": "المبلغ (الأدنى أولاً)"
+          },
+          "createdAt": {
+            "desc": "تاريخ الإنشاء (الأحدث أولاً)",
+            "asc": "تاريخ الإنشاء (الأقدم أولاً)"
+          }
+        }
+      },
+      "minAmount": "الحد الأدنى",
+      "mobileTitle": "تصفية النفقات",
+      "nSelected_few": "تم اختيار {count}",
+      "apply": "تطبيق",
+      "nSelected_two": "تم اختيار {count}",
+      "currency": "العملة",
+      "clearAll": "مسح الكل",
+      "paidBy": "دفع بواسطة",
+      "amountRange": "المبلغ",
+      "removeFilter": "إزالة الفلتر",
+      "cancel": "إلغاء",
+      "nSelected_zero": "تم اختيار {count}",
+      "allParticipants": "جميع المشاركين",
+      "allCurrencies": "جميع العملات",
+      "matchModeExact": "طابق تماماً",
+      "dateTo": "إلى",
+      "button": "فلاتر",
+      "title": "الفلاتر",
+      "noMatchBody": "حاول إزالة أو تغيير بعض الفلاتر لرؤية المزيد من النتائج.",
+      "dateFrom": "من",
+      "nSelected_many": "تم اختيار {count}",
+      "dateRange": "نطاق التاريخ"
+    },
+    "export": "تصدير",
+    "noExpenses": "مجموعتك لا تحتوي على أي مصروف بعد.",
+    "create": "إنشاء مصروف",
+    "searchPlaceholder": "ابحث عن مصروف…",
+    "Groups": {
+      "earlierThisMonth": "في وقت سابق من هذا الشهر",
+      "lastYear": "العام الماضي",
+      "older": "نفقات أقدم",
+      "thisWeek": "هذا الأسبوع",
+      "lastMonth": "الشهر الماضي",
+      "earlierThisYear": "في وقت سابق من هذا العام",
+      "upcoming": "القادمة"
+    }
+  },
+  "GroupForm": {
+    "CurrencyField": {
+      "description": "سنستخدمها لعرض المبالغ.",
+      "label": "رمز العملة",
+      "placeholder": "$, €, £…"
+    },
+    "readOnlyNote": "يمكن للمالكين والمسؤولين فقط تغيير إعدادات المجموعة.",
+    "readOnlyBack": "العودة إلى المجموعة",
+    "NameField": {
+      "description": "أدخل اسماً لمجموعتك.",
+      "label": "اسم المجموعة",
+      "placeholder": "العطلات الصيفية"
+    },
+    "title": "معلومات المجموعة",
+    "readOnlyTitle": "إعدادات المجموعة",
+    "InformationField": {
+      "label": "معلومات المجموعة",
+      "placeholder": "ما المعلومات ذات الصلة بالمشاركين في المجموعة؟"
+    },
+    "Settings": {
+      "creating": "جارٍ الإنشاء…",
+      "title": "الإعدادات المحلية",
+      "saving": "جارٍ الحفظ…",
+      "description": "هذه الإعدادات مضبوطة لكل جهاز، وتُستخدم لتخصيص تجربتك.",
+      "cancel": "إلغاء",
+      "create": "إنشاء",
+      "inviteAfterCreate": "بعد إنشاء المجموعة، افتح تبويب الأعضاء لدعوة الأشخاص عبر البريد الإلكتروني أو رابط قابل للمشاركة.",
+      "save": "حفظ",
+      "ActiveUserField": {
+        "description": "يُستخدم المستخدم افتراضياً لدفع المصروفات.",
+        "label": "المستخدم النشط",
+        "placeholder": "اختيار مشارك",
+        "none": "لا أحد"
+      }
+    },
+    "bulkCategorizeSectionTitle": "أدوات الذكاء الاصطناعي الجماعية",
+    "bulkCategorizeButton": "فتح التصنيف الجماعي",
+    "archivedNotice": "هذه المجموعة مؤرشفة. إعداداتها مجمدة ولا يمكن تغييرها.",
+    "Participants": {
+      "protectedParticipant": "هذا المشارك جزء من مصروف ولا يمكن إزالته.",
+      "title": "مشارك",
+      "Jane": "جين",
+      "description": "أدخل الاسم لكل مشارك.",
+      "add": "إضافة مشارك",
+      "John": "يونس",
+      "new": "جديد",
+      "Jack": "جاك"
+    },
+    "CurrencyCodeField": {
+      "lockedAfterExpenses": "العملة مقفلة لأن هذه المجموعة لديها مصروفات بالفعل.",
+      "editDescription": "ستكون جميع المبالغ والأرصدة بهذه العملة. تغييرها لن يحوّل المصروفات المدخلة مسبقاً، إلا إذا كانت العملة تختلف في وحداتها الفرعية عن العملة الحالية (مثل التحويل من الدولار الأمريكي إلى الين الياباني).",
+      "createDescription": "ستكون جميع المبالغ والأرصدة بهذه العملة.",
+      "label": "العملة الرئيسية",
+      "customOption": "مخصص"
+    },
+    "bulkCategorizeSectionDescription": "شغّل مصنف الذكاء الاصطناعي على العديد من المصروفات دفعة واحدة. مفيد بعد استيراد المصروفات أو عندما تظل عناوين كثيرة غير مصنفة."
+  },
+  "Balances": {
+    "removedBadge": "مُزال",
+    "title": "الأرصدة",
+    "simple": {
+      "isOwed": "مستحق له {amount}",
+      "owes": "مدين بـ {amount}",
+      "title": "بسيط",
+      "netBalances": "الأرصدة الصافية",
+      "description": "عرض الرصيد الإجمالي لكل عضو.",
+      "empty": "رصيد صافي صفر — الجميع سوّى الحسابات.",
+      "suggestedPayments": "المدفوعات المقترحة"
+    },
+    "description": "تعرف على من يدين لمن.",
+    "direction": {
+      "toPayDescription": "المبلغ الذي يجب دفعه.",
+      "settlePaymentsBy": "تسوية {count} دفعة بواسطة {name}، {amount}",
+      "participantReceives": "<strong>{name}</strong> يستلم",
+      "toParticipant": "إلى <strong>{name}</strong>",
+      "toReceive": "للاستلام",
+      "toPay": "للدفع",
+      "settlePaymentsTo": "تسوية {count} دفعة إلى {name}، {amount}",
+      "settledUp": "تمت التسوية",
+      "settle": "التسوية المباشرة",
+      "fromParticipant": "من <strong>{name}</strong>",
+      "toReceiveDescription": "المبلغ المستحق استلامه.",
+      "participantPays": "<strong>{name}</strong> يدفع"
+    },
+    "view": {
+      "title": "طريقة العرض",
+      "visualDescription": "عرض رسومي للأرصدة.",
+      "simple": "بسيط",
+      "simpleDescription": "رصيد صافي لكل عضو.",
+      "label": "عرض",
+      "visual": "مرئي"
+    },
+    "currencyDisplay": {
+      "title": "عرض العملة",
+      "original": "العملة الأصلية",
+      "originalNote": "قد تختلف الأرصدة بسبب تقلبات أسعار الصرف.",
+      "groupDescription": "تحويل جميع النفقات إلى {currency} لعرض موحد.",
+      "group": "المجموعة ({currency})",
+      "label": "عرض العملة",
+      "originalDescription": "عرض الأرصدة بكل عملة أصلية."
+    },
+    "Reimbursements": {
+      "owes": "<strong>{from}</strong> مدين لـ <strong>{to}</strong>",
+      "markAsPaid": "وضع علامة كمدفوع",
+      "noImbursements": "لا توجد تسويات بعد.",
+      "title": "التسويات",
+      "description": "سجل دفعات التسوية.",
+      "markAsPaidAria": "وضع علامة على {amount} من {from} إلى {to} كمدفوع"
+    }
+  },
+  "BulkCategorize": {
+    "continueToPreview": "متابعة إلى المعاينة",
+    "targetExceedsCap_zero": "هناك عدد كبير جداً من النفقات للمعالجة ({count}). ضيق نطاق التاريخ أو عالج دفعات أصغر.",
+    "introStepReview_two": "تراجع وتصحح حتى {count} مثالين مختارين ليتعلم الذكاء الاصطناعي فئات هذه المجموعة.",
+    "introStepReview_many": "تراجع وتصحح حتى {count} مثالاً مختاراً ليتعلم الذكاء الاصطناعي فئات هذه المجموعة.",
+    "saved_other": "تم إعادة تصنيف {count} مصروفاً.",
+    "roundCount": "الجولة {round} من {max}",
+    "introStepLook_two": "يراجع الذكاء الاصطناعي حتى {count} نفقتين للعثور على الأمثلة الأكثر فائدة.",
+    "targetExceedsCap_two": "هناك عدد كبير جداً من النفقات للمعالجة ({count}). ضيق نطاق التاريخ أو عالج دفعات أصغر.",
+    "applyError": "تعذر حفظ التحديث الجماعي للفئات: {message}",
+    "introStepReview_zero": "تراجع وتصحح حتى {count} مثال مختار ليتعلم الذكاء الاصطناعي فئات هذه المجموعة.",
+    "leftUncategorized_other": "تركت {count} مصروفاً بدون فئة لأن الذكاء الاصطناعي لم يكن واثقاً بما فيه الكفاية.",
+    "leftUncategorized_many": "تركت {count} نفقة غير مصنفة لعدم كفاية ثقة الذكاء الاصطناعي.",
+    "saveAll_one": "حفظ {count} تغيير",
+    "requiresFeatureFlag": "تتطلب هذه الميزة تفعيل PUBLIC_ENABLE_CATEGORY_EXTRACT.",
+    "introDescription_other": "هناك {count} مصروفاً بدون فئة جاهزة للمراجعة.",
+    "previewError": "لا يمكن إنشاء المعاينة: {message}",
+    "introDescription_zero": "هناك {count} نفقة غير مصنفة جاهزة للمراجعة.",
+    "calibrationError": "تعذر تشغيل المعايرة: {message}",
+    "removeAction": "تخطي",
+    "previewTitle": "معاينة التصنيف",
+    "noCandidates": "لا توجد مصروفات بحاجة للتصنيف.",
+    "saved_one": "تم إعادة تصنيف {count} نفقة.",
+    "reviewSample": "راجع هذه الأمثلة",
+    "leftUncategorized_zero": "تركت {count} نفقة غير مصنفة لعدم كفاية ثقة الذكاء الاصطناعي.",
+    "previewHint": "عرض {shown} من أصل {total} مرشحاً.",
+    "calibrationTitle": "معايرة الذكاء الاصطناعي",
+    "saveAll_few": "حفظ {count} تغييرات",
+    "introStepReview_other": "تقوم بمراجعة وتصحيح ما يصل إلى {count} عينة مختارة ليتعلم الذكاء الاصطناعي فئة هذه المجموعة.",
+    "introStepPreview": "بمجرد توفر أمثلة كافية، يعد الذكاء الاصطناعي مراجعة كاملة ويترك المصروفات المشكوك فيها بدون فئة.",
+    "backToCalibration": "العودة إلى المعايرة",
+    "expenseColumn": "المصروف",
+    "categoryColumn": "الفئة",
+    "introTitle": "كيف يعمل",
+    "backToSettings": "العودة إلى الإعدادات",
+    "adminsOnly": "المسؤولون فقط",
+    "categorizeSample": "صنف العينة",
+    "saveAll_two": "حفظ {count} تغييرين",
+    "runAnotherRound": "تشغيل جولة معايرة أخرى",
+    "introStepReview_one": "تراجع {count} مثالاً مختاراً ليتعلم الذكاء الاصطناعي فئات هذه المجموعة.",
+    "calibrationStartHint": "ابدأ بتصنيف بعض النفقات.",
+    "leftUncategorized_few": "تركت {count} نفقات غير مصنفة لعدم كفاية ثقة الذكاء الاصطناعي.",
+    "emptySelection": "اختيار فارغ",
+    "calibrationNoSample": "لا توجد عينة.",
+    "previewSummary": "اقترح الذكاء الاصطناعي فئات لـ {suggested} من أصل {total} مصروف.",
+    "aiWantsMore": "الذكاء الاصطناعي يريد المزيد من الأمثلة.",
+    "retryPreview": "حاول معاينة مرة أخرى",
+    "noSuggestions": "ترك الذكاء الاصطناعي جميع المصروفات بدون تصنيف. يمكنك المحاولة مرة أخرى بعد معايرة إضافية.",
+    "saveAll_other": "حفظ {count} تعديل",
+    "loadingCandidates": "فحص المصروفات غير المصنفة…",
+    "saveAll_many": "حفظ {count} تغييراً",
+    "introStepLook_few": "يراجع الذكاء الاصطناعي حتى {count} نفقات للعثور على الأمثلة الأكثر فائدة.",
+    "startCalibration": "بدء المعايرة",
+    "runCalibration": "تشغيل جولة المعايرة",
+    "saved_two": "تم إعادة تصنيف {count} نفقتين.",
+    "generatingPreview": "جارٍ تحضير الاقتراحات…",
+    "submitReviewedExamples": "إرسال الأمثلة التي تمت مراجعتها",
+    "introStepLook_one": "يراجع الذكاء الاصطناعي حتى {count} نفقة للعثور على الأمثلة الأكثر فائدة.",
+    "introDescription_one": "هناك {count} نفقة غير مصنفة جاهزة للمراجعة.",
+    "introDescription_many": "هناك {count} نفقة غير مصنفة جاهزة للمراجعة.",
+    "doneTitle": "اكتمل!",
+    "generatePreview": "إنشاء معاينة",
+    "calibrationDescription": "درب الذكاء الاصطناعي بتصنيف بعض النفقات.",
+    "previewDescription": "عدل أي صف، ثم احفظ. علامات الثقة تشير إلى الصفوف التي يكون النموذج أقل ثقة بشأنها.",
+    "introStepLook_zero": "يراجع الذكاء الاصطناعي حتى {count} نفقة للعثور على الأمثلة الأكثر فائدة.",
+    "introStepLook_many": "يراجع الذكاء الاصطناعي حتى {count} نفقة للعثور على الأمثلة الأكثر فائدة.",
+    "targetExceedsCap_few": "هناك عدد كبير جداً من النفقات للمعالجة ({count}). ضيق نطاق التاريخ أو عالج دفعات أصغر.",
+    "leftUncategorized_two": "تركت {count} نفقتين غير مصنفتين لعدم كفاية ثقة الذكاء الاصطناعي.",
+    "introDescription_two": "هناك {count} نفقتين غير مصنفتين جاهزتين للمراجعة.",
+    "leftUncategorized_one": "تركت {count} نفقة غير مصنفة لعدم كفاية الثقة.",
+    "title": "تصنيف جماعي",
+    "saved_many": "تم إعادة تصنيف {count} نفقة.",
+    "back": "رجوع",
+    "saved_few": "تم إعادة تصنيف {count} نفقات.",
+    "introStepReview_few": "تراجع وتصحح حتى {count} أمثلة مختارة ليتعلم الذكاء الاصطناعي فئات هذه المجموعة.",
+    "confidence": {
+      "medium": "متوسطة",
+      "low": "منخفضة",
+      "high": "عالية"
+    },
+    "targetExceedsCap_other": "مصروفات كثيرة جداً للمعالجة ({count}). ضيق نطاق التاريخ أو عالجها تدريجياً.",
+    "targetExceedsCap_one": "هناك عدد كبير جداً من النفقات للمعالجة ({count}). ضيق نطاق التاريخ.",
+    "aiSaidReady": "الذكاء الاصطناعي يقول إنه جاهز.",
+    "saving": "جارٍ الحفظ…",
+    "feedbackTableTitle": "جدول الملاحظات",
+    "introStepLook_other": "الذكاء الاصطناعي يراجع حتى {count} مصروفاً لإيجاد أفضل الأمثلة.",
+    "introDescription_few": "هناك {count} نفقات غير مصنفة جاهزة للمراجعة.",
+    "archived": "مؤرشف",
+    "confidenceColumn": "الثقة",
+    "targetExceedsCap_many": "هناك عدد كبير جداً من النفقات للمعالجة ({count}). ضيق نطاق التاريخ أو عالج دفعات أصغر.",
+    "saved_zero": "تم إعادة تصنيف {count} نفقة.",
+    "saveAll_zero": "حفظ {count} تغيير",
+    "description": "صنف نفقاتك تلقائياً باستخدام الذكاء الاصطناعي.",
+    "calibrationReady": "المعايرة جاهزة."
+  },
+  "ExpenseDocumentsInput": {
+    "ErrorToast": {
+      "description": "حدث خطأ ما أثناء رفع المستند. يرجى إعادة المحاولة لاحقاً أو اختيار ملف آخر.",
+      "title": "خطأ أثناء رفع المستند",
+      "retry": "إعادة محاولة"
+    },
+    "deleteDocument": "حذف مستند",
+    "close": "إغلاق",
+    "document": "مستند",
+    "TooBigToast": {
+      "description": "أقصى حجم ملف يمكنك رفعه هو {maxSize}. ملفك حجمه {size}.",
+      "title": "الملف كبير جداً"
+    }
+  },
+  "CompleteProfile": {
+    "errors": {
+      "nameRequired": "أدخل اسماً ظاهراً.",
+      "nameTooShort": "يجب ألا يقل الاسم عن حرفين.",
+      "generic": "حدث خطأ ما. حاول مرة أخرى."
+    },
+    "submit": "حفظ",
+    "namePlaceholder": "اسمك",
+    "title": "أكمل ملفك الشخصي",
+    "saving": "جارٍ الحفظ…",
+    "signedInAs": "مسجل الدخول باسم {email}",
+    "description": "أخبرنا باسمك.",
+    "nameLabel": "الاسم الظاهر"
+  },
+  "Friends": {
+    "infoPlaceholder": "أضف سياقاً مثل 'مصروفات رفيق السكن'",
+    "inviteSent": "تم إرسال الدعوة. سيُضاف صديقك عند انضمامه إلى Spliit Cloud.",
+    "friendsEmpty": "أضف صديقاً بإدخال بريده الإلكتروني أو شارك رابطاً لدعوتهم.",
+    "temporaryNameLabel": "اسم العرض",
+    "temporaryNameHelp": "أدخل اسماً للشخص الذي تدعوه.",
+    "inviteLinkDescription": "شارك هذا الرابط لينضم صديقك إلى المصروفات المشتركة.",
+    "copy": "نسخ",
+    "share": "مشاركة",
+    "peerLinkTab": "رابط التي يمكن مشارك",
+    "peerFriendsTab": "التسجيل صديق",
+    "activeFriendExpensesSection": "المصروفات المشتركة النشطة مع الأصدقاء",
+    "friendsSection": "السمةn",
+    "linkHelp": "أنشئ رابطاً قابلاً للمشاركة لينضم صديقك.",
+    "infoLabel": "معلومات (اختياري)",
+    "pendingInvitationsSection": "دعوات معلقة",
+    "inviteLinkTitle": "مشاركة رابط هذا",
+    "peerEmailTab": "البريد الإلكتروني",
+    "title": "الأصدقاء",
+    "alreadyInvited": "(مدعو بالفعل)",
+    "alreadyHasLedger": "(تشارك المصروفات معك بالفعل)",
+    "createError": "لا يمكن إنشاء مصروفات صديق مشتركة",
+    "emailLabel": "البريد الإلكتروني صديق"
+  },
+  "InstallPromotion": {
+    "dismiss": "تجاهل",
+    "title": "تثبيت التطبيق",
+    "ios": {
+      "step3": "انقر على \"إضافة\" في الزاوية العلوية اليمنى",
+      "title": "تثبيت Spliit Cloud",
+      "description": "أضف Spliit Cloud إلى الشاشة الرئيسية للوصول بنقرة واحدة.",
+      "step1": "انقر على زر المشاركة",
+      "step2": "مرر للأسفل وانقر على إضافة إلى الشاشة الرئيسية"
+    },
+    "remindLater": "ذكرني لاحقاً",
+    "chrome": {
+      "description": "أضف Spliit Cloud إلى الشاشة الرئيسية — يفتح كتطبيق أصلي لإضافة مصروفات أسرع.",
+      "title": "تثبيت Spliit Cloud"
+    },
+    "description": "قم بتثبيت Spliit على جهازك لتجربة أفضل.",
+    "install": "تثبيت",
+    "firefox": {
+      "description": "أضف Spliit Cloud إلى الشاشة الرئيسية من قائمة المتصفح.",
+      "title": "تثبيت Spliit Cloud",
+      "step1": "اضغط على زر القائمة (⋮) في الأعلى يميناً",
+      "step2": "اضغط على تثبيت"
+    }
+  },
+  "ExpenseCard": {
+    "items": {
+      "more_other": "+{count} أكثر",
+      "more_many": "+{count} أكثر",
+      "more_few": "+{count} أكثر",
+      "more_zero": "+{count} أكثر",
+      "title": "البنود",
+      "participants": "{names}",
+      "more_two": "+{count} أكثر",
+      "more_one": "+{count} أكثر"
+    },
+    "receivedByMultiple": "استلم بواسطة <paidByNames></paidByNames> · مخصص لـ <paidFor></paidFor>",
+    "paidByMultiple": "دفع بواسطة <paidByNames></paidByNames> · مقسم بين <paidFor></paidFor>",
+    "everyone": "الجميع",
+    "settlementBadge": "تسوية",
+    "paidBy": "دفع بواسطة <strong>{paidBy}</strong> · مقسم بين <paidFor></paidFor>",
+    "copyToast": "نسخ المصروفات بدأ. تفاصيل المصروفات الموجودة ستُستخدم لإنشاء مصروف جديد.",
+    "yourBalance": "رصيدك:",
+    "notInvolved": "أنت غير مشترك",
+    "receivedBy": "استلم بواسطة <strong>{paidBy}</strong> · مخصص لـ <paidFor></paidFor>"
+  },
+  "Homepage": {
+    "features": {
+      "splitting": {
+        "description": "قسم بالنسبة المئوية أو الحصص أو المبلغ المحدد أو بالتساوي.",
+        "title": "تقسيم متقدم"
+      },
+      "accounts": {
+        "description": "سجل الدخول مرة واحدة لحماية بياناتك والاحتفاظ بسجل نفقاتك.",
+        "title": "حسابات"
+      },
+      "organization": {
+        "description": "خصص فئات لتسهيل تصفح النفقات المشتركة.",
+        "title": "فئات"
+      },
+      "expenses": {
+        "description": "أضف نفقات وأرفق صور الإيصالات، وأنشئ تكاليف متكررة يومياً أو أسبوعياً أو شهرياً.",
+        "title": "نفقات + إيصالات"
+      },
+      "settlement": {
+        "description": "اعرف من دفع ماذا وقلل التحويلات المالية بين المشاركين.",
+        "title": "الأرصدة"
+      },
+      "groupsSync": {
+        "description": "أنشئ مجموعات للرحلات والمناسبات والهدايا، وحافظ على مزامنتها عبر الأجهزة.",
+        "title": "مجموعات + مزامنة"
+      }
+    },
+    "button": {
+      "createFriendLedger": "تتبع النفقات مع صديق",
+      "createAccount": "إنشاء حساب",
+      "github": "GitHub",
+      "signIn": "تسجيل الدخول إلى Spliit Cloud",
+      "createGroup": "إنشاء مجموعة",
+      "importGroup": "استيراد مجموعة من خدمة أخرى"
+    },
+    "title": "شارك <strong>المصروفات</strong> مع <strong>الأصدقاء والعائلة</strong>",
+    "description": "تتبع النفقات المشتركة وسوّي الحسابات. مجاني ومفتوح المصدر، <strong>متزامن وآمن عبر حسابك</strong>.",
+    "welcomeBack": "مرحباً بعودتك، {name}.",
+    "overview": {
+      "youAreOwed": "المستحق لك",
+      "youOwe": "عليك دين",
+      "acrossGroups": "عبر مجموعاتك",
+      "noOneOwesYou": "لا أحد مدين لك",
+      "viewGroups": "عرض المجموعات",
+      "youOweNoOne": "أنت لا تدين لأحد"
+    }
+  },
+  "ExpensePreview": {
+    "paidFor": "مقسم بين",
+    "makeCopy": "إنشاء نسخة",
+    "commentRequired": "اكتب تعليقاً أولاً.",
+    "commentInputLabel": "إضافة تعليق",
+    "attachments_one": "المرفق ({count})",
+    "category": "الفئة",
+    "commentTooLong": "يجب أن لا تتجاوز التعليقات 500 حرف.",
+    "date": "التاريخ",
+    "commentsError": "تعذر تحميل التعليقات.",
+    "attachments_two": "المرفقات ({count})",
+    "attachments_other": "مرفق ({count})",
+    "commentSend": "إرسال التعليق",
+    "commentsEmpty": "لا توجد تعليقات بعد.",
+    "commentSubmitting": "جارٍ النشر…",
+    "attachments_few": "المرفقات ({count})",
+    "attachments_many": "المرفقات ({count})",
+    "paidBy": "مدفوع بواسطة",
+    "commentsRetry": "حاول مرة أخرى",
+    "commentsLoading": "جارٍ تحميل التعليقات…",
+    "yourBalance": "رصيدك",
+    "edit": "تعديل",
+    "notes": "ملاحظات",
+    "attachments_zero": "المرفقات ({count})",
+    "commentDelete": "حذف التعليق",
+    "title": "معاينة المصروف",
+    "commentPlaceholder": "مشاركة ملاحظة مع مجموعة…",
+    "commentsTitle": "تعليقات"
+  },
+  "Information": {
+    "description": "معلومات عن هذه الصفحة.",
+    "title": "المعلومات",
+    "empty": "لا توجد معلومات للمجموعة بعد."
+  },
+  "SchemaErrors": {
+    "paidByMin1": "يجب اختيار دافع واحد على الأقل.",
+    "paidForMin1": "يجب تقسيم المصروف بين مشارك واحد على الأقل.",
+    "titleRequired": "يرجى إدخال عنوان.",
+    "max5": "أدخل 5 أحرف كحد أقصى.",
+    "amountRequired": "يجب أن تُدخل مبلغاً.",
+    "duplicateParticipant": "دافع آخر محدد بالفعل.",
+    "ratePositive": "يجب أن يكون السعر أكبر من صفر تماماً.",
+    "invalidNumber": "رقم غير صالح.",
+    "min2": "أدخل حرفين على الأقل.",
+    "min1": "أدخل حرفاً واحداً على الأقل.",
+    "max50": "أدخل 50 حرفاً كحد أقصى.",
+    "amountNotZero": "يجب ألا يكون المبلغ صفراً.",
+    "paidByRequired": "يجب أن تختار مشاركاً.",
+    "noZeroShares": "يجب أن تكون كل الحصص أكبر من 0.",
+    "paidByPercentageSum": "يجب أن يكون مجموع النسب المئوية للدفع 100.",
+    "percentageSum": "مجموع النسب المئوية يجب أن يساوي 100.",
+    "duplicateParticipantName": "مشارك آخر يستخدم هذا الاسم بالفعل.",
+    "amountTenMillion": "يجب أن يكون المبلغ أقل من 10.000.000.",
+    "amountSum": "يجب أن يساوي المجموع مبلغ المصروف.",
+    "paidByAmountSum": "يجب أن يساوي مجموع مبلغ الدفع مبلغ المصروف."
+  },
+  "Stats": {
+    "title": "الإحصائيات",
+    "Dashboard": {
+      "expenseCount_zero": "{count} نفقة",
+      "categoriesDescription": "أين تُستخدم المصروفات المختارة",
+      "expenseCount_few": "{count} نفقات",
+      "other": "أخرى",
+      "expenseCount_two": "{count} نفقتين",
+      "error": "لم نتمكن من تحميل إحصائيات المجموعة.",
+      "granularity": {
+        "DAY": "يوم",
+        "WEEK": "أسبوع",
+        "MONTH": "شهر"
+      },
+      "bucketedBy": "مجمعة حسب {granularity}",
+      "participants": "حسب المشارك",
+      "periods": {
+        "CUSTOM": "مخصص",
+        "WEEK": "1أ",
+        "YEAR": "1س",
+        "LATEST_ACTIVITY": "آخر نشاط",
+        "QUARTER": "3ش",
+        "MONTH": "1ش"
+      },
+      "expenseCount_many": "{count} نفقة",
+      "lifetimeDescription": "عبر كامل سجل المجموعة",
+      "participantsDescription": "كيفية تقسيم المصروفات",
+      "expenseCount_one": "{count} مصروفات",
+      "expenseCount_other": "{count} مصروفات",
+      "retry": "حاول مرة أخرى",
+      "lifetime": "الإجمالي مصروفات",
+      "emptyDescription": "أضف مصروفات للبدء في بناء سجل مصروفات هذه المجموعة.",
+      "inactiveGap": "فترة غير نشطة",
+      "emptyTitle": "لا توجد مصروفات للعرض بعد",
+      "spendingOverTime": "المصروفات عبر الزمن",
+      "title": "النشاط مصروفات",
+      "categories": "الفئة",
+      "selectedPeriod": "الفترة المحددة",
+      "description": "نظرة عامة سريعة على كيفية تقاسم هذه المجموعة للمصروفات.",
+      "customRange": {
+        "from": "من",
+        "to": "إلى"
+      }
+    },
+    "Totals": {
+      "yourEarnings": "إجمالي دخلك",
+      "groupEarnings": "الإجمالي دخل مجموعة",
+      "groupSpendings": "الإجمالي مصروفات مجموعة",
+      "title": "الإجماليات",
+      "description": "ملخص مصروفات جميع المجموعات.",
+      "yourShare": "حصتك الإجمالية",
+      "yourSpendings": "إجمالي مصروفاتك"
+    }
+  },
+  "Participants": {
+    "noParticipant": "مشارك غير موجود",
+    "search": "بحث مشارك..."
+  },
+  "Theme": {
+    "dark": "داكن",
+    "light": "فاتح",
+    "system": "إفتراضي النظام",
+    "toggle": "تغيير السمة"
+  },
+  "Groups": {
+    "linkInvitationSingleUse": "هذا الرابط يمكن استخدامه مرة واحدة فقط. بمجرد قبوله، لن يعمل الرابط مجدداً.",
+    "linkInvitationTemporaryName": "ستنضم باسم {name}.",
+    "linkInvitationInvalid": {
+      "description": "هذا الرابط غير صالح أو لا يتطابق مع أي دعوة في هذه المجموعة.",
+      "title": "رابط الدعوة هذا غير صالح"
+    },
+    "starred": "مثبتة",
+    "showArchived": "إظهار المجموعات المؤرشفة",
+    "Importable": {
+      "description": "\"{name}\" يمكن الوصول إليه على spliit.app. هل ترغب في استيراده إلى Spliit Cloud؟",
+      "title": "المجموعة هذا diجد في spliit.app",
+      "backToHome": "اذهب إلى الرئيسية",
+      "cta": "استيراد مجموعة هذا"
+    },
+    "groupActions": "إجراءات المجموعة",
+    "hidden": "مخفية",
+    "delete": {
+      "button": "حذف مجموعة",
+      "error": {
+        "generic": "لا يمكن حذف المجموعة. يُرجى المحاولة مرة أخرى."
+      },
+      "dialog": {
+        "title": "حذف مجموعة هذا?",
+        "warningList": {
+          "invitations": "الدعوات التي لم يُرد عليها",
+          "receipts": "ملفات الإيصالات المرفوعة",
+          "activity": "سجل النشاط بأكمله",
+          "expenses": "جميع المصروفات والأرصدة"
+        },
+        "warningTitle": "لا يمكن التراجع عن هذا الإجراء",
+        "confirm": "حذف مجموعة",
+        "description": "أنت على وشك حذف \"{name}\" بشكل دائم. سيتم حذف جميع المصروفات والإيصالات والدعوات وملاحظات النشاط.",
+        "cancel": "إلغاء",
+        "deleting": "جارٍ الحذف…",
+        "checkbox": "أفهم أن هذا الإجراء سيحذف المجموعة بشكل دائم مع جميع بياناتها.",
+        "warningDescription": "سيتم حذف البيانات التالية فوراً:"
+      },
+      "sectionDescription": "حذف هذه المجموعة وجميع مصروفاتها وسجلها بشكل دائم. لا يمكن التراجع عن هذا الإجراء — استخدمه فقط إذا كنت متأكداً من عدم الحاجة مجدداً.",
+      "sectionTitle": "حذف مجموعة",
+      "toast": {
+        "deleted": "المجموعة محذوف."
+      }
+    },
+    "pendingInviteeReadOnlyDescription": "اقبل الدعوة أعلاه لبدء إضافة المصروفات وتعديل إعدادات المجموعة. حتى ذلك الحين هذه المجموعة للقراءة فقط.",
+    "invitationAccept": "قبول",
+    "archiveSuccess": "تمت أرشفة المجموعة.",
+    "scopePickerMembers_one": "{count} عضو",
+    "backToHome": "العودة إلى الصفحة الرئيسية",
+    "archiveWithBalancesForce": "أرشفة إجبارية",
+    "scopePickerFriends": "اختيار صديق",
+    "invitationBannerTitle": "لقد دُعيت إلى هذه المجموعة",
+    "archiveGroup": "أرشفة المجموعة",
+    "invitationAccepted": "تم قبول الدعوة.",
+    "invitationDeclined": "تم رفض الدعوة.",
+    "unhideFriend": "إظهار مصروفات صديق مشتركة",
+    "create": "إنشاء مجموعة",
+    "bannerUnarchiveSuccess": "تم إلغاء أرشفة المجموعة.",
+    "bannerArchivedDescription": "لا يمكن إضافة مصروفات أو دعوات جديدة عند أرشفة المجموعة. البيانات الموجودة تبقى مرئية.",
+    "backToExpenses": "رجوع إلى مصروفات",
+    "unarchiveSuccess": "تم إلغاء أرشفة المجموعة.",
+    "starGroup": "تثبيت مجموعة",
+    "invitationDecline": "رفض",
+    "friendActions": "إجراءات مصروفات الصديق المشتركة",
+    "scopePickerMembers_two": "{count} عضوين",
+    "scopePickerEmpty": "لا توجد مجموعات بعد",
+    "bannerUnarchive": "إلغاء الأرشفة",
+    "bannerArchivedTitle": "هذه المجموعة مؤرشفة",
+    "pendingInviteeExpenseDescription": "اقبل الدعوة أعلاه لبدء إضافة أو تعديل المصروفات. حتى ذلك الحين بيانات المجموعة الموجودة تبقى مرئية.",
+    "archiveWithBalancesSuccess": "تم إنشاء مصروف التسوية وأرشفة المجموعة.",
+    "createGroupCard": {
+      "description": "تتبع المصروفات المشتركة مع صديق أو رفيق سفر أو رفيق سكن.",
+      "title": "إنشاء مجموعة"
+    },
+    "scopePickerMembers_zero": "{count} أعضاء",
+    "archiveWithBalancesDescription": "تحتوي هذه المجموعة على أرصدة لم تُسوَّ بعد. ستنشئ الأرشفة مصروفات تسوية لتسويتها.",
+    "createFriendLedgerCard": {
+      "description": "واحد لواحد مع شخص محدد.",
+      "title": "تسجيل مصروفات صديق مشتركة"
+    },
+    "showHidden": "إظهار المجموعات المخفية",
+    "archiveSectionDescription": "الأرشفة تجمد المجموعة. لا يمكن إضافة أو تعديل مصروفات جديدة، لكن البيانات الموجودة تبقى مرئية. يمكن إلغاء الأرشفة في أي وقت.",
+    "unstarGroup": "إلغاء تثبيت مجموعة",
+    "Unauthorized": {
+      "description": "إذا كنت تعتقد أن هذا خطأ، فاطلب من مالك المجموعة أو مديرها دعوتك.",
+      "title": "ليس لديك صلاحية الوصول إلى هذه المجموعة",
+      "link": "العودة إلى الصفحة الرئيسية"
+    },
+    "loadingRecent": "جارٍ تحميل المجموعات الحديثة…",
+    "groups": "المجموعات",
+    "scopePickerMembers_other": "{count} عضو",
+    "archiveWithBalancesTitle": "أرصدة لم تُسوَّ بعد",
+    "scopePickerMembers_many": "{count} عضواً",
+    "unarchiveGroup": "إلغاء أرشفة المجموعة",
+    "unstarFriend": "إلغاء تثبيت مصروفات صديق مشتركة",
+    "linkInvitationAlreadyMemberDescription": "لديك حساب بالفعل لهذه المجموعة. يمكنك فتحها من الزر أدناه.",
+    "scopePickerMembers_few": "{count} أعضاء",
+    "hide": "إخفاء مجموعة",
+    "backToGroups": "رجوع إلى مجموعة",
+    "RecentRemovedToast": {
+      "undoAlt": "تراجع عن إزالة المجموعة",
+      "description": "تمت إزالة هذه المجموعة من سجل المجموعات الحديثة لديك.",
+      "title": "تمت إزالة المجموعة",
+      "undo": "تراجع"
+    },
+    "pendingInviteeSettingsDescription": "تحتاج إلى قبول الدعوة قبل أن تتمكن من تعديل إعدادات المجموعة أو دعوة أعضاء.",
+    "linkInvitationAlreadyMemberTitle": "أنت بالفعل عضو في {groupName}",
+    "removeRecent": "إزالة من المجموعات الحديثة",
+    "Import": {
+      "CurrencyConversion": {
+        "perDateSelectedHint": "استخدام سعر الصرف التاريخي لتاريخ كل مصروف (Frankfurter API).",
+        "perDateDescription": "أكثر دقة — يستخدم سعر الصرف من التاريخ الفعلي لكل مصروف.",
+        "fixedTitle": "سعر ثابت",
+        "customRateLabel": "سعر مخصص",
+        "refresh": "تحديث",
+        "fetchingRates": "جارٍ جلب أسعار الصرف…",
+        "pairSection": "{source} → {target}",
+        "perDateTitle": "تحويل حسب التاريخ",
+        "rateDateLabel": "التاريخ سعر صرف",
+        "noConversionNeeded": "جميع المصروفات بعملة المجموعة الافتراضية. لا حاجة لتحويل العملات.",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "ratesError": "لا يمكن جلب أسعار الصرف. تحقق من اتصالك وحاول مرة أخرى.",
+        "viaFrankfurter": "السعر مجلوب من Frankfurter للتاريخ المحدد.",
+        "fixedDescription": "أقل دقة، لكنه يضمن استخدام جميع المبالغ نفس سعر التحويل، وبالتالي يكون رصيد المجموعة صافي صفر بعد الاستيراد."
+      },
+      "Done": {
+        "shareTitle": "انضم إلى مجموعة Spliit الخاصة بي",
+        "shareText": "انضم إلى مجموعة مصروفاتنا في Spliit Cloud — {name}. افتح هذا الرابط للقبول: {url}",
+        "emailInvitesDescription": "أرسل الخادم بريداً إلكترونياً إلى الأشخاص التالين. سيرون لافتة قبول/رفض في صفحة المجموعة.",
+        "importComplete": "اكتمل الاستيراد",
+        "description": "المجموعة التي استوردتها جاهزة. يمكنك تعديل المشاركين وربط الإدخالات غير المرتبطة بحسابات.",
+        "shareableLinksDescription": "انسخ كل رابط وأرسله إلى الشخص المناسب. الرابط يُستخدم مرة واحدة؛ بمجرد انضمامهم إلى المجموعة، يمكنهم فتحها.",
+        "openGroup": "فتح مجموعة",
+        "emailInvitesTitle": "تم إرسال دعوات البريد الإلكتروني",
+        "shareAriaLabel": "مشاركة رابط دعوة",
+        "shareableLinksTitle": "رابط دعوة التي يمكن مشارك"
+      },
+      "Source": {
+        "appToCloudDescription": "استبدل .app بـ .cloud في أي رابط مجموعة spliit.app لاستيرادها إلى Spliit Cloud.",
+        "splitwiseAnonymizeDescription": "إذا رُفض استيراد CSV الخاص بك، يمكنك إزالة أسماء المشاركين وأوصاف المصروفات محلياً وإرفاق النتيجة.",
+        "invalidUrl": "يُرجى لصق رابط مجموعة spliit.app صالح",
+        "csvRecurrenceLimitation": "لا يتضمن تصدير CSV التكرارات. استخدم تصدير JSON من spliit.app لاستيراد المصروفات المتكررة.",
+        "fileReadError": "فشل في قراءة الملف",
+        "receiptWarningDescription": "لا يتضمن تصدير spliit.app صور الإيصالات. أعد رفعها في المجموعة الهدف إذا احتجتها.",
+        "unsupportedFileType": "نوع ملف غير مدعوم. يرجى إسقاط ملف JSON أو CSV.",
+        "receiptWarningDescriptionSplitwise": "لا يتضمن تصدير Splitwise صور الإيصالات. أعد رفعها في المجموعة الهدف إذا احتجتها.",
+        "fromSpliit": "سبيليت",
+        "fetchGroupButton": "استيراد مجموعة",
+        "urlDescription": "يجلب خادمنا المجموعة عبر نقطة نهاية التصدير العامة لـ spliit.app نيابة عنك.",
+        "settleUpComingTitle": "استيراد Settle Up قادم قريباً",
+        "tricount": "Tricount (قريباً)",
+        "receiptWarningTitleSplitwise": "لا يتم استيراد صور الإيصالات.",
+        "fetchingButton": "جارٍ الاستيراد…",
+        "dropFile": "أسقط ملف JSON أو CSV، أو انقر للاختيار",
+        "splitwiseComingTitle": "استيراد Splitwise قادم قريباً",
+        "fetchUrlError": "فشل في جلب المصدر",
+        "receiptWarningTitle": "لا يتم استيراد صور الإيصالات.",
+        "splitwiseAnonymizeTitle": "تواجه مشكلة في استيراد CSV من Splitwise؟ قم بإخفاء البيانات قبل المشاركة.",
+        "settleUp": "Settle Up (قريباً)",
+        "dropFileDescription": "يحتفظ JSON بكل مبلغ ودافع بدقة. CSV بديل احتياطي — يقوم Spliit بتقريب كل مبلغ لكل مشارك.",
+        "tricountComingTitle": "استيراد Tricount قادم قريباً",
+        "tricountComingDescription": "دعم تصدير CSV من Tricount قيد التخطيط.",
+        "spliitDescription": "انقل مجموعة spliit.app موجودة إلى Spliit Cloud. نقرأ اسم المجموعة والمشاركين وجميع المصروفات.",
+        "pasteUrl": "الصق رابط spliit.app",
+        "dropFileSplitwise": "أسقط ملف CSV من Splitwise، أو انقر للاختيار",
+        "dropFileDescriptionSplitwise": "CSV هو التنسيق الوحيد الذي يصدره Splitwise. نقوم بتحليل القيم لكل مشارك لإعادة بناء المصروفات.",
+        "or": "أو",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "notFoundUrl": "لم يعثر Spliit على هذه المجموعة",
+        "splitwiseDescription": "أسقط تصدير CSV من Splitwise لاستيراد مصروفاته إلى Spliit Cloud. يجب أن يأتي الملف من تصدير مجموعة Splitwise — لن يتم التعرف على ملف CSV مخصص.",
+        "splitwiseComingDescription": "نعمل على جلب تصديرات Splitwise CSV إلى Spliit Cloud.",
+        "splitwise": "سبليت وايز",
+        "splitwiseAnonymizeError": "لا يمكن إخفاء هوية هذا الملف. تأكد من أنه تصدير CSV من Splitwise.",
+        "appToCloudTitle": "تغيير .app مع .cloud",
+        "splitwiseAnonymizeIssuesLink": "فتح قضية الاستيراد",
+        "splitwiseAnonymizeButton": "إخفاء بيانات CSV",
+        "settleUpComingDescription": "دعم تصدير CSV من Settle Up قيد التخطيط."
+      },
+      "Destination": {
+        "noAdminGroups": "أنت لا تدير أي مجموعة.",
+        "memberCount_other": "{count} عضو",
+        "loading": "جارٍ التحميل…",
+        "existingGroup": "مجموعة موجودة",
+        "memberCount_two": "{count} عضوين",
+        "newGroup": "مجموعة جديدة",
+        "memberCount_many": "{count} عضواً",
+        "memberCount_few": "{count} أعضاء",
+        "heading": "أين تريد استيراد <strong>{name}</strong>؟ ({participantCount} مشارك · {expenseCount} مصروفات)",
+        "memberCount_zero": "{count} أعضاء",
+        "memberCount_one": "{count} عضو"
+      },
+      "StepHeader": {
+        "backTo": "رجوع إلى {step}",
+        "backAriaLabel": "رجوع",
+        "currencyConversion": "تحويل العملة",
+        "source": "مصدر",
+        "destination": "الوجهة",
+        "title": "استيراد مجموعة",
+        "continueTo": "متابعة إلى {step}",
+        "confirm": "تأكيد",
+        "mapping": "الربط",
+        "done": "تم"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateEmail": "هذا البريد الإلكتروني مدعو بالفعل من صف آخر.",
+          "onlyOneLinkedAccount": "يمكن ربط صف مصدر واحد فقط بحسابك.",
+          "duplicateExistingMember": "تم تعيين صفين مصدريين لنفس العضو.",
+          "duplicateMemberName": "يبدو أن عضوين موجودين هما نفس الشخص — اختر واحداً.",
+          "inviteConflictsMember": "أنت تدعو {email} لكنهم بالفعل عضو في هذه المجموعة؛ قم بربطهم بدلاً من ذلك.",
+          "inviteConflictsPending": "أنت تدعو {email} لكنهم بالفعل لديهم دعوة معلقة؛ قم بربطهم بدلاً من ذلك.",
+          "missingExistingMember": "اختيار عضو موجود للربط به.",
+          "selfEmailAddress": "هذا هو بريدك الإلكتروني — اختر \"اربط بي\" بدلاً من ذلك.",
+          "missingEmail": "أضف عنوان بريد إلكتروني للدعوة عبر البريد الإلكتروني."
+        },
+        "headsUp": "تنبيه",
+        "continue": "متابعة للتأكيد",
+        "noLinkAccount": "لا يوجد مشارك مرتبط بحسابك. سيتم إنشاء المستورد (أنت) كمشارك مالك جديد في هذه المجموعة.",
+        "Row": {
+          "friendPendingInvite": "تمت دعوته بالفعل",
+          "linkToMe": "ربط معي",
+          "linkToExisting": "ربط بعضو موجود",
+          "linkToMeFollowUp": "سيتم ربط {name} بحسابك في هذه المجموعة. ستظهر مصروفاته السابقة والمستقبلية باسمك.",
+          "friendAlreadyMember": "عضو بالفعل",
+          "selectExistingMember": "اختيار عضو موجود",
+          "linkToMeDescription": "يربط هذا الشخص بحسابك.",
+          "inviteByEmail": "دعوة عبر البريد الإلكتروني",
+          "membersLabel": "عضو",
+          "leaveUnlinked": "اترك بدون ربط",
+          "leaveUnlinkedFollowUp": "سيظهر {name} كإدخال اسم فقط بدون وصول للتطبيق. يمكنك ربطه بحساب لاحقاً من علامة تبويب الأعضاء.",
+          "inviteByLink": "دعوة عبر الرابط",
+          "selectFriendPlaceholder": "اختيار صديق…",
+          "inviteeEmailLabel": "البريد الإلكتروني المدعو",
+          "leaveUnlinkedDescription": "حفظ الاسم فقط — اربط لاحقاً من علامة تبويب الأعضاء.",
+          "inviteFriend": "من أصدقائك",
+          "pendingSuffix": "(معلق)",
+          "inviteByLinkFollowUp": "سننشئ رابطاً قابلاً للمشاركة لمرة واحدة بعد تأكيد الاستيراد. ستجده في خطوة \"تم\" — انسخه وأرسله إلى {name} بنفسك.",
+          "inviteeEmailPlaceholder": "دعوة@مثال.com",
+          "selectExistingPlaceholder": "اختيار عضو موجود…",
+          "inviteByLinkDescription": "إنشاء رابط قابل للمشاركة في خطوة \"تم\".",
+          "selfEmailDetected": "هذا بريدك الإلكتروني — انتقل إلى \"اربط بي\".",
+          "inviteByEmailDescription": "إرسال دعوة بريد إلكتروني بعد تأكيد الاستيراد.",
+          "pendingInvitesLabel": "دعوات معلقة",
+          "linkToExistingDescription": "يربط هذا الشخص بعضو نشط موجود أو دعوة معلقة في المجموعة الهدف. لا يُنشأ مشارك جديد.",
+          "inviteFriendDescription": "ادعُ صديقاً من مجموعة سبق لك استخدامها معاً.",
+          "selectFriendLabel": "السمةn"
+        }
+      },
+      "fetchingGroup": "جلب المجموعة من spliit.app…",
+      "fetchSourceError": "فشل في جلب المصدر",
+      "Confirm": {
+        "sourceParticipants_one": "{count} مشارك مصدر",
+        "newGroupFormat": "المجموعة جديد · {currency}",
+        "expenseCount_zero": "سيتم إنشاء {count} نفقة",
+        "recurrenceRule": {
+          "weekly": "أسبوعي",
+          "daily": "يومي",
+          "monthly": "شهري"
+        },
+        "footer": "سيتم استيراد كل مشارك مصدري ومصروفاته. ادعُ المرسل/المنشئ بعد إنشاء المجموعة.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "sourceName": "مصدر: {name}",
+        "expenseCount_few": "سيتم إنشاء {count} نفقات",
+        "currencyConversionDescription": "سيتم تحويل المصروفات من عملة المصدر إلى عملة دفتر المجموعة الهدف باستخدام سعر الصرف أدناه.",
+        "importErrorTitle": "استيراد فشل",
+        "participantBreakdown": "{linked} مرتبط · {email} دعوة بريد إلكتروني · {link} دعوة رابط · {unlinked} غير مرتبط",
+        "expenseCount_two": "سيتم إنشاء {count} نفقتين",
+        "appliedExchangeRatesLabel": "أسعار الصرف المطبقة",
+        "destinationLabel": "الوجهة",
+        "currencyRateAsOfFormat": "طلب {requested} · استخدم المزود {asOf}",
+        "sourceParticipants_few": "{count} مشاركين مصدر",
+        "ratesLoading": "جلب أسعار الصرف للمصروفات متعددة العملات…",
+        "importingButton": "جارٍ الاستيراد…",
+        "currencyRateForDateFormat": "مطبق على مصروفات بتاريخ {date}",
+        "conversionFixed": "سعر ثابت",
+        "expenseCount_many": "سيتم إنشاء {count} نفقة",
+        "importErrorFallback": "حدث خطأ غير متوقع عند استيراد المجموعة. يُرجى المحاولة مرة أخرى.",
+        "summaryLabel": "الملخص",
+        "conversionPerDate": "حسب التاريخ",
+        "expenseCount_one": "سيتم إنشاء {count} نفقة",
+        "expenseCount_other": "{count} مصروفات سوف منشأ",
+        "sourceParticipants_many": "{count} مشاركاً مصدراً",
+        "sourceParticipants_zero": "{count} مشارك مصدر",
+        "sourceParticipants_other": "{count} مشارك مصدر",
+        "recurringSchedulesLabel": "الجداول المتكررة للاستيراد",
+        "recurringScheduleItem": "{title} · {rule}",
+        "rateFetchError": "فشل جلب سعر الصرف. تم حظر الاستيراد حتى يصبح مزود سعر الصرف متاحاً مجدداً.",
+        "sourceParticipants_two": "{count} مشاركي المصدر",
+        "executeImport": "استيراد مجموعة",
+        "importButton": "استيراد مجموعة",
+        "existingGroupFormat": "مجموعة موجودة · مدمجة",
+        "currencyConversionTitle": "تحويل العملة"
+      }
+    },
+    "pendingInviteeSettingsTitle": "الإعدادات مجموعة مقفل",
+    "linkInvitationBannerDescription": "دعاك {inviter} للانضمام إلى {groupName} على Spliit Cloud.",
+    "exportDescription": "تنزيل مصروفات المجموعة بصيغة JSON أو CSV.",
+    "myGroups": "مجموعاتي",
+    "friends": "الأصدقاء",
+    "bannerArchived": "هذه المجموعة مؤرشفة. لا يمكن إضافة مصروفات جديدة.",
+    "archiveWithBalancesCancel": "إلغاء",
+    "hideFriend": "إخفاء مصروفات صديق مشتركة",
+    "linkInvitationExpiredTitle": "رابط الدعوة هذا لم يعد صالحاً",
+    "pendingInviteeExpenseTitle": "المصروفات للقراءة فقط",
+    "archiveSectionTitle": "أرشفة مجموعة",
+    "pending": "معلق",
+    "invitationBannerDescription": "اقبل للانضمام كعضو، أو ارفض لتجاهل الدعوة.",
+    "scopePickerGroups": "اختيار مجموعة",
+    "createdInviteHint": "تم إنشاء المجموعة. ادعُ أعضاء للبدء.",
+    "starFriend": "تثبيت مصروفات صديق مشتركة",
+    "createExpense": "إنشاء مصروفات",
+    "archivedBadge": "مؤرشف",
+    "archivedReadOnly": "هذه المجموعة مؤرشفة. لا يمكن إضافة أو تعديل المصروفات مجدداً.",
+    "archived": "مؤرشف",
+    "archiveWithBalancesView": "عرض رصيد",
+    "NotFound": {
+      "link": "الانتقال إلى الصفحة الرئيسية",
+      "text": "تعذر العثور على هذه المجموعة",
+      "lookingUp": "البحث عن هذه المجموعة…"
+    },
+    "importGroup": "استيراد مجموعة",
+    "linkInvitationExpiredDescription": "تم إلغاء هذا الرابط أو رفضه أو انتهت صلاحيته. اطلب من المرسل إرسال رابط جديد.",
+    "pendingInviteeReadOnlyTitle": "تمت دعوتك",
+    "unhide": "إظهار مجموعة",
+    "invitations": {
+      "unknownInviter": "شخص ما",
+      "decline": "رفض",
+      "invitedBy": "دعاك {name}",
+      "accepted": "تم قبول الدعوة.",
+      "title": "دعوات معلقة",
+      "unknownGroup": "مجموعة غير معروفة",
+      "description": "لقد دُعيت للانضمام إلى المجموعات التالية.",
+      "sentOn": "أُرسلت في {date}",
+      "accept": "قبول",
+      "declined": "تم رفض الدعوة."
+    },
+    "linkInvitationDismiss": "إغلاق"
+  },
+  "Unsubscribe": {
+    "submitting": "جارٍ إلغاء الاشتراك…",
+    "scope": "سيتم تعطيل إشعارات البريد الإلكتروني هذه فقط. رسائل البريد الإلكتروني وإشعارات الدفع الأخرى تبقى كما هي.",
+    "invalid": {
+      "description": "قد يكون هذا الرابط منتهي الصلاحية. سجل الدخول لمراجعة إعدادات البريد الإلكتروني وإشعارات الدفع لديك.",
+      "title": "رابط هذا لم مرة أخرى يعمل"
+    },
+    "loading": "فحص رابط إيقاف اشتراك…",
+    "error": "حدث خطأ. حاول مرة أخرى.",
+    "title": "إلغاء الاشتراك",
+    "confirm": "تعطيل بريد إلكتروني-بريد إلكتروني هذا",
+    "backHome": "العودة إلى الصفحة الرئيسية",
+    "description": "اختر تفضيلات الإشعارات الخاصة بك.",
+    "success": {
+      "description": "لن تستلم رسائل بريد إلكتروني لـ {category}. إعدادات الإشعارات الأخرى لم تتغير.",
+      "title": "البريد الإلكتروني-بريد إلكتروني هذا معطل"
+    },
+    "cancel": "الاستمرار في استلام هذه الرسائل الإلكترونية",
+    "manageSettings": "مراجعة جميع إعدادات الإشعارات"
+  },
+  "CreateReimbursement": {
+    "creating": "جارٍ الإنشاء…",
+    "receivesMany": "يستلم {to} {count} دفعة",
+    "category": "الفئة",
+    "date": "التاريخ",
+    "legToAria": "{from} يدفع لـ {to}، {amount}",
+    "paysMany": "{from} يدفع لـ {count} أشخاص",
+    "createMultiple": "تسجيل {count} دفعة",
+    "successToastMultiple": "تم تسجيل {count} دفعة تسوية كإدخال واحد",
+    "selectionSummary": "تم اختيار {count} دفعة، بإجمالي {total}",
+    "edit": "تعديل التفاصيل",
+    "create": "إنشاء",
+    "amount": "المبلغ",
+    "toParticipant": "إلى {name}",
+    "legFromAria": "{from} يدفع لـ {to}، {amount}",
+    "description": "سوِّ الحسابات مع عضو في المجموعة.",
+    "paymentsToInclude": "المدفوعات المضمنة",
+    "fromParticipant": "من {name}",
+    "successToast": "تم تسجيل دفعة التسوية",
+    "pays": "{from} يدفع لـ {to}",
+    "createSingle": "تسجيل دفعة"
+  },
+  "ExpenseForm": {
+    "PaidBySplitModeField": {
+      "label": "نمط تقسيم الدفع"
+    },
+    "creating": "جارٍ الإنشاء…",
+    "participantSharesLabel": "الحصص لـ {name}",
+    "paidBySectionMultiple": "دافعون متعددون",
+    "paidBySectionSingle": "واحد",
+    "notesField": {
+      "label": "ملاحظات"
+    },
+    "convertedAmountField": {
+      "label": "المبلغ المحول"
+    },
+    "paidByOptionByAmount": "حسب المبلغ",
+    "paidByOptionSinglePayerHelper": "شخص واحد يتحمل كامل المصروفات",
+    "selectAll": "اختيار الكل",
+    "paidForOptionEvenly": "بالتساوي",
+    "conversionRateField": {
+      "futureDateUsesToday": "هذا المصروف في المستقبل وسيُستخدم سعر صرف اليوم.",
+      "useApi": "استخدم سعر الصرف",
+      "label": "سعر الصرف",
+      "providerNote": "الأسعار مقدمة من https://frankfurter.dev/ و API الخاصة بهم.",
+      "useCustom": "استخدم سعر مخصص"
+    },
+    "paidForOptionItemizedHelper": "احسب لكل مشارك من كل بند في المصروف.",
+    "shares": "حصة",
+    "selectNone": "اختيار لا يوجد",
+    "conversionRateState": {
+      "currencyNotFound": "عذراً، ليس لدى Frankfurter سعر صرف لهذه العملة اليوم.",
+      "noDate": "أدخل تاريخ المصروفات للحصول على سعر الصرف.",
+      "staleRate": "استخدام السعر:",
+      "loading": "جارٍ الحصول على أسعار الصرف…",
+      "error": "عذراً، لم نتمكن من الحصول على أحدث الأسعار.",
+      "refresh": "إعادة تحميل",
+      "noRate": "أدخل سعر صرف مخصص أدناه.",
+      "success": "تم الحصول على الأسعار:",
+      "dateMismatch": "سعر الصرف بتاريخ: {date}",
+      "customRate": "استخدام سعر مخصص"
+    },
+    "paidByOptionEvenly": "بالتساوي",
+    "decreaseShares": "تقليل الحصص لـ {name}",
+    "reimbursement": "دفعة التسوية",
+    "paidForOptionBySharesHelper": "خصص حصة لكل شخص",
+    "splittingOptions": "خيارات التقسيم",
+    "scanReceipt": "مسح الإيصال بالذكاء الاصطناعي",
+    "saving": "جارٍ الحفظ…",
+    "attachDocuments": "إرفاق مستند",
+    "paidByOptionByPercentageHelper": "كل يدفف نسبة مئوية",
+    "paidForOptionByShares": "بالحصص",
+    "paidForOptionByAmount": "حسب المبلغ",
+    "participant": {
+      "pending": "(مدعو)"
+    },
+    "participantAmountLabel": "المبلغ لـ {name}",
+    "paidByOptionSinglePayer": "دافع واحد",
+    "items": {
+      "total": "إجمالي البنود",
+      "participantsSummary_two": "{count} مشاركين",
+      "columnCost": "التكلفة",
+      "participantsSummary_many": "{count} مشاركاً",
+      "calculationError": "لا يمكن حساب التقسيم لكل بند. تحقق من قيم البنود وتقسيم المشاركين.",
+      "columnQuantity": "الكمية",
+      "modalTitle": "مشارك بند",
+      "errorExceedsAmount": "مجموع البنود يتجاوز مبلغ المصروفات.",
+      "derivedBadge": "مشتق",
+      "participantsSummary_few": "{count} مشاركين",
+      "other": "أخرى (غير محسوبة)",
+      "switchToItemizedConfirm": "تبديل إلى المفصل",
+      "defaultSplitModalTitle": "تقسيم البنود الافتراضي",
+      "participantsSummary_zero": "{count} مشارك",
+      "switchToItemizedDescription": "تعديل مشاركي البنود سيحول المقسم بين إلى حسب البند ويستبدل تقسيم المشاركين الذي قد تكون قمت بتعيينه.",
+      "columnTotal": "المبلغ",
+      "participantsSummary_one": "{count} مشارك",
+      "columnItem": "التفاصيل",
+      "empty": "لا توجد بنود بعد. انقر \"إضافة بند\" للبدء.",
+      "hideItems": "إخفاء بند",
+      "addItem": "إضافة بند",
+      "defaultSplitMixed": "مختلط",
+      "switchToItemizedTitle": "التبديل إلى التقسيم المفصل؟",
+      "setExpenseAmount": "تعيين مبلغ مصروفات",
+      "splitEvenlyLabel": "قسم بالتساوي",
+      "showItems": "إظهار بند",
+      "splitBySharesLabel": "قسم بالحصص",
+      "noMembers": "لا موجود مشارك",
+      "splitByPercentageLabel": "قسم بالنسبة المئوية",
+      "requiredForItemized": "أضف بنداً واحداً على الأقل لاستخدام التقسيم حسب البند.",
+      "actionEdit": "تغيير",
+      "title": "البنود",
+      "allMembers": "الكل مشارك",
+      "splitByAmountLabel": "قسم حسب المبلغ",
+      "participantsSummary_other": "{count} مشارك",
+      "description": "أضف بنوداً لتقسيم المصروفات بدقة أو توثيقها في أي طريقة تقسيم.",
+      "defaultSplitEdit": "تعديل تقسيم البنود الافتراضي",
+      "participantValueLabel": "قيمة التقسيم لـ {name}",
+      "actionDelete": "حذف",
+      "defaultSplitLabel": "تقسيم البنود الافتراضي",
+      "columnParticipants": "مشارك"
+    },
+    "Expense": {
+      "paidFor": {
+        "description": "اختيار المشاركين الذين يتقاسمون هذا المصروف.",
+        "title": "مقسم بين"
+      },
+      "editTitle": "تغيير: {title}",
+      "recurrence": {
+        "noFurtherOccurrences": "لا موجود حدث التالي مع إعدادات هذا.",
+        "scheduleCount": "عرض {count} حدث من مصروفات هذا.",
+        "repeatEvery": "كرر كل",
+        "label": "تكرار المصروف",
+        "frequencyOptions": {
+          "yearly": "سنة",
+          "weekly": "أسبوع",
+          "daily": "يوم(أيام)",
+          "monthly": "شهر"
+        },
+        "frequency": "وتيرة التكرار",
+        "enable": "إضافة تكرار",
+        "currentOccurrence": "حالي",
+        "scheduleTitle": "جدول التكرار",
+        "ruleSummaryIndefinite": "كل {interval} {frequency} · بدون تاريخ انتهاء",
+        "interval": "فاصل التكرار",
+        "viewAll": "عرض الكل",
+        "scheduleChangeWarningTitle": "سيتغير جدول التكرار",
+        "checkboxLabel": "متكرر",
+        "upcomingOccurrence": "القادمة",
+        "remove": "حذف التكرار",
+        "previewLabel": "الحدث التالي",
+        "decreaseOccurrences": "تقليل عدد الأحداث",
+        "checkboxDescription": "إنشاء هذا المصروف حسب جدول",
+        "ruleSummary": "كل {interval} {frequency} · {count} تكرارات",
+        "remainingCount": "متبقي {count} حدث.",
+        "scheduleChangeWarning": "سيؤدي الحفظ إلى إعادة جدولة هذا الحدث والأحداث التالية. قد تُنقل المصروفات المستقبلية الموجودة إلى تاريخ جديد أو تُحذف، وقد تتغير تواريخ الاستحقاق.",
+        "completedOccurrence": "تم الإنشاء",
+        "ends": {
+          "never": "أبداً",
+          "countInput": "عدد الأحداث (بما فيها هذا المصروف)",
+          "label": "ينتهي",
+          "date": "تاريخ محدد",
+          "count": "Seقد seمبلغ حدث",
+          "dateInput": "تاريخ الانتهاء"
+        },
+        "description": "اختيار متى مصروفات هذا يجب منشأ مرة أخرى.",
+        "pastDateBackfillNote": "لأن هذا المصروف يبدأ في الماضي، سيتم تلقائياً إنشاء الأحداث حتى اليوم بعد الحفظ.",
+        "unlimitedSchedule": "هذا التكرار ليس له تاريخ انتهاء.",
+        "increaseOccurrences": "إضافة مبلغ حدث"
+      },
+      "currencyField": {
+        "description": "العملة المستخدمة لدفع هذا المصروف.",
+        "label": "العملة مصروفات"
+      },
+      "paidByField": {
+        "description": "اختيار من يدفع والمبلغ الذي يدفعه كل شخص.",
+        "label": "مدفوع بواسطة",
+        "placeholder": "اختيار مشارك"
+      },
+      "recurrenceRule": {
+        "daily": "يومي",
+        "description": "اختيار عدد مرات تكرار المصروف.",
+        "label": "المصروف متكرر",
+        "monthly": "شهري",
+        "weekly": "أسبوعي",
+        "none": "بدون"
+      },
+      "DateField": {
+        "description": "تسجيل الدخول تاريخ دفع مصروفات.",
+        "label": "التاريخ مصروفات"
+      },
+      "categoryFieldDescription": "اختيار فئة مصروفات.",
+      "recurringEditScopeFuture": "تعديل هذا والأحداث المستقبلية",
+      "splitModeDescription": "اختيار طريقة تقسيم المصروفات.",
+      "recurringEditScopeOccurrence": "تعديل هذا الحدث فقط",
+      "attachDescription": "عرض وإرفاق الإيصالات للمصروفات.",
+      "edit": "تغيير مصروفات",
+      "create": "إنشاء مصروفات",
+      "createCopy": "إنشاء نسخة: {title}",
+      "TitleField": {
+        "description": "تسجيل الدخول وصف لـ مصروفات.",
+        "label": "عنوان المصروف",
+        "placeholder": "مطعم مساء الإثنين"
+      }
+    },
+    "paidForItemizedActiveHint": "المقسم حسب البند نشط. عدل مشاركي البنود من بطاقة البند لتغيير هذا التقسيم.",
+    "participantPercentageLabel": "النسبة المئوية لـ {name}",
+    "paidByOptionEvenlyHelper": "كل يدفع حصة متساوية",
+    "validationSummary": "يرجى تصحيح الحقول المميزة قبل الحفظ.",
+    "Income": {
+      "paidFor": {
+        "description": "اختيار المشاركين الذين يتقاسمون هذا الدخل.",
+        "title": "مخصص لـ"
+      },
+      "currencyField": {
+        "description": "العملة التي استُلم بها الدخل.",
+        "label": "العملة دخل"
+      },
+      "paidByField": {
+        "description": "اختيار من يستلم المبلغ والمبلغ الذي يحصل عليه كل شخص.",
+        "label": "استلم بواسطة"
+      },
+      "DateField": {
+        "description": "أدخل تاريخ استلام الدخل.",
+        "label": "التاريخ دخل"
+      },
+      "categoryFieldDescription": "اختيار فئة دخل.",
+      "splitModeDescription": "اختيار طريقة تقسيم الدخل.",
+      "attachDescription": "عرض وإرفاق الإيصالات للدخل.",
+      "edit": "تغيير دخل",
+      "create": "إنشاء دخل",
+      "TitleField": {
+        "description": "صف من أين جاء الدخل.",
+        "label": "عنوان الدخل",
+        "placeholder": "راتب أو استرداد"
+      }
+    },
+    "paidForItemizedEntryHint": "للتقسيم حسب البند، عدل المشاركين في صف البند.",
+    "readOnlyNotice": "هذه المجموعة مؤرشفة. المصروفات معروضة للقراءة فقط.",
+    "paidForOptionItemized": "مفصل",
+    "increaseShares": "زيادة الحصص لـ {name}",
+    "conversionUnavailable": "لتعيين عملة مختلفة لكل مصروف وتحويل مبالغها، اختر عملة غير مخصصة للمجموعة أولاً.",
+    "SplitModeField": {
+      "byAmount": "غير متساوٍ – حسب المبلغ",
+      "byShares": "غير متساوٍ – حسب الحصص",
+      "evenly": "بالتساوي",
+      "label": "وضع التقسيم",
+      "byPercentage": "غير متساوٍ – حسب النسبة المئوية"
+    },
+    "cancel": "إلغاء",
+    "ParticipantDistribution": {
+      "sharesTotal": "الوزن الإجمالي: {sum} حصص",
+      "percentageMatches": "✓ مطابق 100%",
+      "missing": "مفقود {missing} من {total}",
+      "matches": "✓ مطابق {total}",
+      "percentageSurplus": "فائض {pct}%",
+      "surplus": "فائض {extra} من {total}",
+      "evenlySplit": "مقسم بالتساوي: {amount} × {count}",
+      "percentageMissing": "مفقود {pct}%"
+    },
+    "paidForOptionEvenlyHelper": "مقسم بالتساوي بين جميع المشاركين",
+    "paidForOptionByAmountHelper": "عيّن مبلغ التي دقيق لـ كل شخص",
+    "paidByOptionByAmountHelper": "كل شخص يدفع مبلغاً ثابتاً",
+    "create": "إنشاء",
+    "paidByOptionByShares": "بالحصص",
+    "categoryField": {
+      "label": "الفئة"
+    },
+    "paidByOptionBySharesHelper": "كل يدفع حصة مرجحة",
+    "paidByOptionByPercentage": "بالنسبة المئوية",
+    "splitOptionAria": "تقسيم: {title}",
+    "paidForSection": "مقسم بين المشاركين",
+    "amountField": {
+      "label": "المبلغ",
+      "calculator": {
+        "minus": "طرح",
+        "splitIntoItems_many": "إنشاء {count} بند مصروفات",
+        "replaceItemsHint": "استبدال الصفوف الموجودة",
+        "clear": "مسح",
+        "itemTransferInvalid": "تم حساب",
+        "splitIntoItems_one": "إنشاء {count} بند مصروفات",
+        "createItems": "إنشاء بند مصروفات",
+        "closeBracket": "إغلاق القوس",
+        "splitIntoItems_few": "إنشاء {count} بند مصروفات",
+        "replaceItemsDescription": "سيؤدي هذا إلى استبدال بنود المصروفات الموجودة بالبنود المحسوبة.",
+        "itemTransferEmpty": "تسجيل الدخول حساب",
+        "divide": "قسمة",
+        "replaceItems": "تغيير بند مصروفات",
+        "replaceItemsConfirm": "تغيير بند",
+        "invalid": "تعبير غير صالح",
+        "openBracket": "فتح القوس",
+        "splitIntoItems_zero": "إنشاء {count} بند مصروفات",
+        "createItemsHint": "إضافة صفوف نتيجة الحساب",
+        "backspace": "حذف للخلف",
+        "plus": "إضافة",
+        "multiply": "ضرب",
+        "decimal": "فاصلة عشرية",
+        "splitIntoItems_other": "إنشاء {count} بند مصروفات",
+        "equals": "يساوي",
+        "title": "آلة حاسبة",
+        "replaceItemsTitle": "تغيير بند مصروفات?",
+        "splitIntoItems_two": "إنشاء {count} بند مصروفات",
+        "description": "احسب مبلغ أو إنشاء بند مصروفات.",
+        "buttonLabel": "فتح آلة حاسبة",
+        "itemTransferUnsupported": "استخدم + و × و () فقط"
+      }
+    },
+    "DeletePopup": {
+      "title": "حذف مصروفات?",
+      "yes": "نعم",
+      "description": "هل أنت متأكد أنك تريد حذف هذا المصروف؟ لا يمكن التراجع عن هذا الإجراء.",
+      "label": "حذف",
+      "cancel": "إلغاء",
+      "deleting": "جارٍ الحذف…"
+    },
+    "leaveItemized": {
+      "description": "سيؤدي التبديل إلى {mode} إلى حفظ البنود كتوثيق فقط. سيتم حذف جميع تعيينات المشاركين لكل بند.",
+      "title": "تغيير طريقة التقسيم؟",
+      "confirm": "تغيير",
+      "cancel": "إلغاء"
+    },
+    "paidForOptionByPercentage": "بالنسبة المئوية",
+    "isReimbursementField": {
+      "label": "هذه دفعة تسوية"
+    },
+    "paidForOptionByPercentageHelper": "خصص نسبة مئوية لكل شخص",
+    "save": "حفظ",
+    "multiplePayers": "دافعون متعددون",
+    "DefaultSplit": {
+      "load": "تحميل",
+      "save": "حفظ",
+      "heading": "التقسيم الافتراضي",
+      "savedAsDefault": "حفظ كافتراضي"
+    }
+  },
+  "Categories": {
+    "noCategory": "لا توجد فئة مطابقة.",
+    "search": "بحث فئة...",
+    "Home": {
+      "Mortgage": "رهن عقاري",
+      "Electronics": "إلكترونيات",
+      "Pets": "حيوانات أليفة",
+      "Household Supplies": "لوازم منزلية",
+      "Home": "منزل",
+      "Furniture": "أثاث",
+      "Maintenance": "صيانة",
+      "Services": "خدمات",
+      "Rent": "إيجار",
+      "heading": "منزل"
+    },
+    "Personal Care and Wellness": {
+      "Personal Care and Wellness": "عناية شخصية وصحة",
+      "heading": "عناية شخصية وصحة"
+    },
+    "Subscriptions and Memberships": {
+      "Digital Subscriptions": "اشتراكات رقمية",
+      "heading": "الاشتراكات والعضويات",
+      "Memberships": "عضويات"
+    },
+    "Social and Activities": {
+      "heading": "مناسبات ونشاطات",
+      "Events and Activities": "فعاليات ونشاطات"
+    },
+    "Transportation": {
+      "Parking": "موقف سيارات",
+      "Bus/Train": "حافلة/قطار",
+      "Taxi": "تاكسي",
+      "Hotel": "فندق",
+      "Plane": "طائرة",
+      "Gas/Fuel": "وقود",
+      "Transportation": "مواصلات",
+      "Bicycle": "دراجة",
+      "heading": "مواصلات",
+      "Car": "سيارة"
+    },
+    "Life": {
+      "Taxes": "ضريبة",
+      "Education": "تعليم",
+      "Insurance": "تأمين",
+      "Gifts": "هدايا",
+      "Donation": "تبرع",
+      "Medical Expenses": "نفقات طبية",
+      "Childcare": "رعاية أطفال",
+      "heading": "حياة",
+      "Clothing": "ملابس"
+    },
+    "Entertainment": {
+      "Sports": "رياضة",
+      "Movies": "أفلام",
+      "Music": "موسيقى",
+      "Entertainment": "ترفيه",
+      "Games": "ألعاب",
+      "heading": "ترفيه"
+    },
+    "Uncategorized": {
+      "Payment": "الدفع",
+      "heading": "غير مصنف",
+      "General": "عام"
+    },
+    "Food and Drink": {
+      "Liquor": "مشروبات",
+      "Groceries": "بقالة",
+      "heading": "طعام وشراب",
+      "Dining Out": "تناول الطعام خارجاً",
+      "Food and Drink": "طعام وشراب"
+    },
+    "Utilities": {
+      "Trash": "نفايات",
+      "Heat/Gas": "تدفئة/غاز",
+      "heading": "مرافق",
+      "TV/Phone/Internet": "تلفاز/هاتف/إنترنت",
+      "Water": "ماء",
+      "Electricity": "كهرباء",
+      "Cleaning": "تنظيف",
+      "Utilities": "مرافق"
+    }
+  },
+  "AccountSettings": {
+    "emailHelp": "بريدك الإلكتروني مرتبط بحسابك ولا يمكن تغييره هنا.",
+    "profile": {
+      "description": "إدارة معلومات ملفك الشخصي.",
+      "title": "الملف الشخصي"
+    },
+    "errors": {
+      "nameRequired": "أدخل اسماً ظاهراً.",
+      "nameTooShort": "يجب أن يتكون الاسم من حرفين على الأقل.",
+      "nameTooLong": "يجب ألا يتجاوز الاسم 50 حرفاً.",
+      "generic": "حدث خطأ ما. حاول مرة أخرى.",
+      "imageUpload": "تعذر تحديث صورة ملفك الشخصي. حاول مرة أخرى."
+    },
+    "nameLabel": "الاسم الظاهر",
+    "submit": "حفظ التغييرات",
+    "title": "إعدادات الحساب",
+    "saving": "جارٍ الحفظ…",
+    "success": "تم تحديث الإعدادات.",
+    "image": {
+      "updated": "تم تحديث صورة الملف الشخصي.",
+      "removed": "تمت إزالة صورة الملف الشخصي.",
+      "remove": "إزالة الصورة",
+      "label": "صورة الملف الشخصي",
+      "help": "اختر صورة لتحديثها فوراً. بدونها، ستظهر الأحرف الأولى من اسمك.",
+      "uploading": "جاري الرفع…",
+      "choose": "اختر صورة"
+    },
+    "notifications": {
+      "inheritedDescription": "يتبع إعداد كل النشاط. اختر قناة لتخصيص هذه الفئة.",
+      "expenseActivity": "نشاط المصروفات",
+      "sections": {
+        "groups": "المجموعات",
+        "expenses": "النفقات",
+        "summaries": "الملخصات"
+      },
+      "reset": "إعادة تعيين",
+      "inherited": "موروث",
+      "enabled": "الإشعارات الفورية مفعلة على هذا الجهاز.",
+      "recommendedCategoryDescription": "باستخدام التوصيل الموصى به {channels} لهذا النشاط.",
+      "saved": "تم الحفظ.",
+      "comingSoon": "قريباً",
+      "off": "إيقاف",
+      "globalLabel": "كل النشاط",
+      "useGlobal": "استخدام الإعداد العام",
+      "loading": "جاري تحميل تفضيلات الإشعارات…",
+      "permissionDenied": "الإشعارات محظورة. اسمح بها في إعدادات المتصفح أو الجهاز، ثم حاول مرة أخرى.",
+      "error": "خطأ",
+      "enable": "تفعيل الإشعارات الفورية",
+      "mixedByActivity": "مختلط حسب النشاط",
+      "rows": {
+        "newExpense": {
+          "description": "عندما يضيف شخص ما مصروفاً إلى مجموعة.",
+          "title": "مصروف جديد"
+        },
+        "recurringExpense": {
+          "description": "عند إنشاء مصروف متكرر.",
+          "title": "مصروف متكرر"
+        },
+        "addedToGroup": {
+          "description": "عندما يضيفك شخص ما إلى مجموعة.",
+          "title": "تمت الإضافة إلى مجموعة"
+        },
+        "expenseChanged": {
+          "description": "عند تحديث أو حذف مصروف.",
+          "title": "تم تعديل أو حذف مصروف"
+        },
+        "cloudNews": {
+          "description": "أخبار المنتج، نصائح، وتحديثات الخدمة.",
+          "title": "أخبار وتحديثات Spliit Cloud"
+        },
+        "newComment": {
+          "description": "عندما يعلق شخص ما على مصروف.",
+          "title": "تعليق جديد"
+        },
+        "addedAsFriend": {
+          "description": "عندما يبدأ شخص ما دفتر حسابات مشتركاً معك.",
+          "title": "دفتر حسابات الصديق"
+        },
+        "weeklySummary": {
+          "description": "ملخص أسبوعي لنشاط مجموعتك.",
+          "title": "ملخص أسبوعي"
+        }
+      },
+      "rowSaved": "تم حفظ تفضيل الإشعارات.",
+      "saving": "جارٍ الحفظ…",
+      "iosInstall": "على iPhone أو iPad، أضف Spliit إلى الشاشة الرئيسية قبل تفعيل الإشعارات الفورية.",
+      "pushChannel": "إشعار فوري",
+      "emailDescription": "استقبل رسالة في صندوق الوارد الخاص بك.",
+      "globalDescription": "عند حدوث أي نشاط في مجموعاتك أو مع أصدقائك.",
+      "pushSelectionError": "تعذر تفعيل الإشعارات الفورية على هذا الجهاز. تم إبقاء البريد الإلكتروني نشطاً لهذه الفئة.",
+      "retry": "حاول مرة أخرى",
+      "channelsLabel": "قنوات الإشعارات",
+      "pushMissingTarget": "تم اختيار الإشعارات الفورية، ولكن لن يتم تسليم هذه الإشعارات حتى تقوم بتفعيل جهاز. يمكنك تفعيل جهاز أدناه أو في الإعدادات.",
+      "preferencesTitle": "تفضيلات الإشعارات",
+      "groupActivity": "نشاط المجموعة",
+      "currently": "حالياً: {channels}",
+      "unsupported": "غير مدعوم",
+      "useRecommended": "استخدام الإعداد الموصى به",
+      "push": {
+        "noDevices": "تم اختيار الإشعارات الفورية، ولكن لم يتم تفعيل أي جهاز بعد.",
+        "deviceDescription": "فعّل التنبيهات الفورية على هذا الجهاز. هذا لا يغير أجهزتك الأخرى.",
+        "deviceDisabled": "تم اختيار الإشعارات الفورية، ولكنها غير مفعلة على هذا الجهاز.",
+        "deviceTitle": "هذا الجهاز"
+      },
+      "loadError": "تعذر تحميل تفضيلات الإشعارات.",
+      "emailComingSoon": "تكوين البريد الإلكتروني قريباً.",
+      "recommended": "موصى به",
+      "email": "البريد الإلكتروني",
+      "notConfigured": "الإشعارات الفورية غير متوفرة في هذا الإعداد.",
+      "recommendedDescription": "التوصيل الموصى به: {channels}. يتم إرسال الإشعارات الفورية فقط إلى الأجهزة التي تفعّلها.",
+      "customDescription": "توصيل مخصص لهذه الفئة. اختر قناة أو كلتيهما.",
+      "saveError": "خطأ في حفظ التفضيلات.",
+      "custom": "مخصص",
+      "title": "الإشعارات",
+      "categories": {
+        "GROUP_INVITATIONS": {
+          "description": "عند إرسال الدعوات أو قبولها أو رفضها أو إلغائها.",
+          "title": "الدعوات"
+        },
+        "GROUP_CHANGES": {
+          "description": "عند تغيير تفاصيل المجموعة أو حالة الأرشفة.",
+          "title": "تغييرات المجموعة"
+        },
+        "GROUP_MEMBERSHIP": {
+          "description": "عند مغادرة الأعضاء أو إزالتهم أو تغيير أدوارهم.",
+          "title": "العضوية"
+        },
+        "EXPENSE_ADDED": {
+          "description": "عندما يضيف شخص ما مصروفاً إلى مجموعة.",
+          "title": "مصروفات جديدة"
+        },
+        "EXPENSE_CHANGES": {
+          "description": "عند تحديث أو حذف مصروف.",
+          "title": "تغييرات المصروفات"
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "description": "عند استيراد أو تحديث المصروفات بشكل جماعي.",
+          "title": "استيراد المصروفات والتغييرات الجماعية"
+        }
+      },
+      "description": "اختر أين يرسل Spliit إشعارات النشاط.",
+      "disable": "تعطيل الإشعارات الفورية",
+      "save": "حفظ",
+      "pushDescription": "استقبل تنبيهاً على جهاز مفعل.",
+      "preferencesDescription": "تنطبق هذه الخيارات على نشاط المجموعات والمصروفات المستقبلية.",
+      "disabled": "الإشعارات الفورية معطلة حالياً على هذا الجهاز."
+    },
+    "emailLabel": "البريد الإلكتروني"
+  },
+  "Header": {
+    "account": "الحساب",
+    "accountSettings": "إعدادات الحساب",
+    "back": "رجوع",
+    "menu": "القائمة",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج"
+  },
+  "ForgotPassword": {
+    "errors": {
+      "sendFailed": "تعذر إرسال رابط إعادة التعيين. يرجى المحاولة مجدداً."
+    },
+    "submit": "إرسال رابط إعادة التعيين",
+    "emailSent": "إذا كان هناك حساب بهذا البريد الإلكتروني، فستتلقى رابط إعادة تعيين قريباً.",
+    "title": "نسيت كلمة المرور",
+    "subtitle": "أدخل بريد حسابك وسنرسل لك رابطاً لاختيار كلمة مرور جديدة.",
+    "backToSignIn": "رجوع إلى دخول",
+    "tryAgain": "استخدم بريداً إلكترونياً مختلفاً",
+    "emailLabel": "البريد الإلكتروني"
+  },
+  "Currencies": {
+    "byCode": {
+      "CNY": {
+        "name": "Chinese Yuan"
+      },
+      "DKK": {
+        "name": "Danish Krone"
+      },
+      "CLP": {
+        "name": "Chilean Peso"
+      },
+      "PEN": {
+        "name": "Peruvian Sol"
+      },
+      "NOK": {
+        "name": "Norwegian Krone"
+      },
+      "TWD": {
+        "name": "New Taiwan Dollar"
+      },
+      "CHF": {
+        "name": "Swiss Franc"
+      },
+      "ILS": {
+        "name": "Israeli New Shekel"
+      },
+      "NGN": {
+        "name": "Nigerian Naira"
+      },
+      "CAD": {
+        "name": "Canadian Dollar"
+      },
+      "ZAR": {
+        "name": "South African Rand"
+      },
+      "EGP": {
+        "name": "Egyptian Pound"
+      },
+      "BDT": {
+        "name": "Bangladeshi Taka"
+      },
+      "MAD": {
+        "name": "Moroccan Dirham"
+      },
+      "HNL": {
+        "name": "Honduran Lempira"
+      },
+      "QAR": {
+        "name": "Qatari Rial"
+      },
+      "EUR": {
+        "name": "يورو"
+      },
+      "IDR": {
+        "name": "Indonesian Rupiah"
+      },
+      "PKR": {
+        "name": "Pakistani Rupee"
+      },
+      "KWD": {
+        "name": "Kuwaiti Dinar"
+      },
+      "NZD": {
+        "name": "New Zealand Dollar"
+      },
+      "MKD": {
+        "name": "Macedonian Denar"
+      },
+      "GBP": {
+        "name": "British Pound"
+      },
+      "AED": {
+        "name": "United Arab Emirates Dirham"
+      },
+      "MYR": {
+        "name": "Malaysian Ringgit"
+      },
+      "SAR": {
+        "name": "Saudi Riyal"
+      },
+      "PHP": {
+        "name": "Philippine Peso"
+      },
+      "COP": {
+        "name": "Colombian Peso"
+      },
+      "INR": {
+        "name": "Indian Rupee"
+      },
+      "KES": {
+        "name": "Kenyan Shilling"
+      },
+      "MDL": {
+        "name": "Moldovan Leu"
+      },
+      "HKD": {
+        "name": "Hong Kong Dollar"
+      },
+      "KZT": {
+        "name": "Kazakhstani Tenge"
+      },
+      "RUB": {
+        "name": "Russian Ruble"
+      },
+      "KHR": {
+        "name": "Cambodian Riel"
+      },
+      "GHS": {
+        "name": "Ghanaian Cedi"
+      },
+      "USD": {
+        "name": "US Dollar"
+      },
+      "TRY": {
+        "name": "Turkish Lira"
+      },
+      "HUF": {
+        "name": "Hungarian Forint"
+      },
+      "UYU": {
+        "name": "Uruguayan Peso"
+      },
+      "LKR": {
+        "name": "Sri Lankan Rupee"
+      },
+      "BGN": {
+        "name": "Bulgarian Lev"
+      },
+      "THB": {
+        "name": "Thai Baht"
+      },
+      "HRK": {
+        "name": "Croatian Kuna"
+      },
+      "MXN": {
+        "name": "Mexican Peso"
+      },
+      "ARS": {
+        "name": "Argentine Peso"
+      },
+      "CZK": {
+        "name": "Czech Koruna"
+      },
+      "RON": {
+        "name": "Romanian Leu"
+      },
+      "VND": {
+        "name": "Vietnamese Dong"
+      },
+      "SEK": {
+        "name": "Swedish Krona"
+      },
+      "AUD": {
+        "name": "Australian Dollar"
+      },
+      "KRW": {
+        "name": "South Korean Won"
+      },
+      "BRL": {
+        "name": "Brazilian Real"
+      },
+      "PLN": {
+        "name": "Polish Zloty"
+      },
+      "ISK": {
+        "name": "Icelandic Króna"
+      },
+      "JPY": {
+        "name": "Japanese Yen"
+      },
+      "GEL": {
+        "name": "Georgian Lari"
+      },
+      "UAH": {
+        "name": "Ukrainian Hryvnia"
+      },
+      "SGD": {
+        "name": "Singapore Dollar"
+      }
+    },
+    "search": "ابحث عن عملة…",
+    "noCurrency": "لا توجد عملة معروفة."
+  },
+  "Activity": {
+    "expenseUpdated": "المصروف <em>{expense}</em> تم تحديثه بواسطة <strong>{participant}</strong>.",
+    "expenseCreated": "المصروف <em>{expense}</em> تم إنشاؤه بواسطة <strong>{participant}</strong>.",
+    "noActivity": "لا يوجد نشاط حديث.",
+    "title": "النشاط",
+    "settingsModified": "تم تعديل إعدادات المجموعة بواسطة <strong>{participant}</strong>.",
+    "expenseDeleted": "المصروف <em>{expense}</em> تم حذفه بواسطة <strong>{participant}</strong>.",
+    "description": "نشاطك الأخير.",
+    "someone": "شخص ما",
+    "Groups": {
+      "earlierThisMonth": "في وقت سابق من هذا الشهر",
+      "lastYear": "العام الماضي",
+      "older": "أقدم",
+      "today": "اليوم",
+      "lastWeek": "الأسبوع الماضي",
+      "yesterday": "أمس",
+      "earlierThisYear": "في وقت سابق من هذا العام",
+      "lastMonth": "الشهر الماضي",
+      "earlierThisWeek": "في وقت سابق من هذا الأسبوع"
+    }
+  },
+  "Members": {
+    "dropdown": {
+      "changeRole": "تغيير دور",
+      "remove": "حذف",
+      "revoke": "إلغاء الدعوة"
+    },
+    "joinedOn": "انضم في {date}",
+    "removed": "عضو محذوف.",
+    "roleUpdated": "تم تحديث الدور إلى {role}.",
+    "youBadge": "أنت",
+    "role": {
+      "member": "عضو",
+      "admin": "مسؤول"
+    },
+    "empty": "لا يوجد أعضاء نشطون بعد.",
+    "unlinked": {
+      "idHint": "معرف عضو الدفتر: {id}",
+      "linkDialog": {
+        "noCandidates": "لا يوجد أعضاء مطابقون. عادةً المشارك غير المرتبط لديه رصيد مصروفات يتحول مع كل إعادة استيراد.",
+        "pendingSuffix": "(معلق)",
+        "title": "ربط مشارك غير مرتبط",
+        "pendingGroup": "دعوات معلقة",
+        "confirm": "ربط",
+        "description": "اختيار العضو الذي سيتم ربطه مع {displayName}. لا يجوز أن يكون للعضو رصيد مصروفات مسبق مع هذا المشارك.",
+        "pendingHint": "سيؤدي الربط بدعوة معلقة إلى دمج هذا الإدخال (الاسم فقط) في الحساب المدعو.",
+        "membersGroupWithPending": "أعضاء ودعوات معلقة",
+        "pendingLabel": "معلق",
+        "cancel": "إلغاء",
+        "membersGroup": "عضو"
+      },
+      "title": "مشاركون غير مرتبطين",
+      "linkButton": "ربط",
+      "emailPlaceholder": "account@example.com",
+      "link": "ربط بالحساب",
+      "description": "هؤلاء الأشخاص لديهم أسماء في المجموعة لكن ليس لديهم حساب في التطبيق. اربط كل منهم بحساب موجود.",
+      "linkSuccess": "تم ربط المشارك بالحساب"
+    },
+    "unknownMember": "عضو غير معروف",
+    "changeRoleAria": "تغيير دور",
+    "remove": "حذف",
+    "leave": {
+      "confirmWithForce": "تمت المغادرة",
+      "button": "مغادرة المجموعة",
+      "error": {
+        "unsettled": "تسوية رصيدك أو تأكيد التسوية الإجبارية للمغادرة.",
+        "lastAdmin": "اختر عضواً ليكون مديراً قبل المغادرة."
+      },
+      "title": "مغادرة المجموعة؟",
+      "descriptionOnlyMember": "أنت العضو النشط الوحيد في هذه المجموعة، لذا لا يمكن المغادرة بهذه الطريقة. احذف المجموعة بدلاً من ذلك.",
+      "body": {
+        "otherAdmins": "سيحتفظ هؤلاء المسؤولون بالسيطرة بعد مغادرتك: {names}.",
+        "unsettled": {
+          "description": "سينشئ Spliit دفعة تسوية للأرصدة التي تشملك قبل مغادرتك. أرصدة المشاركين الآخرين لن تتغير.",
+          "title": "لديك أرصدة غير مسواة"
+        },
+        "lastAdmin": {
+          "description": "أنت المدير الأخير لهذه المجموعة. اختر عضواً نشطاً لتولي المسؤولية قبل مغادرتك، وإلا لن يكون هناك مدير.",
+          "title": "اختيار مدير جديد",
+          "placeholder": "اختيار عضو"
+        }
+      },
+      "lastMemberRedirect": "لا يمكنك مغادرة المجموعة إذا كنت العضو النشط الوحيد. احذف المجموعة من صفحة الإعدادات بدلاً من ذلك.",
+      "confirm": "مغادرة المجموعة",
+      "description": "ستفقد الوصول إلى مصروفات وأرصدة ونشاط هذه المجموعة. البيانات السابقة محفوظة في سجل حساباتك.",
+      "onlyMemberHint": "أنت العضو النشط الوحيد. استخدم خيار \"حذف المجموعة\" في الإعدادات لحذف المجموعة.",
+      "cancel": "إلغاء",
+      "toast": {
+        "left": "لقد غادرت المجموعة."
+      }
+    },
+    "noManagePermission": "يمكن للمالك والمديرين فقط دعوة أو إزالة أعضاء المجموعة.",
+    "archivedNotice": "الدعوات معطلة عند أرشفة المجموعة. ألغِ أرشفة المجموعة لدعوة أعضاء جدد.",
+    "invite": {
+      "selectFriendPlaceholder": "اختيار صديق…",
+      "friendAlreadyMember": "عضو بالفعل",
+      "title": "دعوة عضو",
+      "friendsDescription": "ادعُ شخصاً من مجموعة سبق لك استخدامها معاً.",
+      "invalidEmail": "أدخل عنوان بريد إلكتروني صالح.",
+      "noFriends": "لا يوجد أصدقاء بعد. ادعُ من علامة تبويب البريد الإلكتروني.",
+      "emailPlaceholder": "friend@example.com",
+      "role": "الدور",
+      "temporaryName": "اسم مؤقت (اختياري)",
+      "temporaryNamePlaceholder": "مثال: زميل أحمد",
+      "link": {
+        "share": "مشاركة رابط دعوة",
+        "shareTitle": "انضم إلى {groupName} على Spliit Cloud",
+        "generating": "جارٍ الإنشاء…",
+        "created": "رابط الدعوة جاهز. انسخه وشاركه قبل إغلاق صفحة المجموعة.",
+        "shareText": "أنشأت للتو {groupName} لمصروفاتنا المشتركة في Spliit Cloud. هذا رابط دعوة لمرة واحدة — افتحه للانضمام:\n{inviteUrl}",
+        "copied": "تم النسخ!",
+        "generate": "إنشاء رابط دعوة",
+        "singleUse": "رابط الدعوة هذا يمكن استخدامه مرة واحدة فقط. بمجرد قبوله، سيتوقف الرابط عن العمل.",
+        "generateNew": "إنشاء رابط جديد",
+        "copy": "نسخ رابط دعوة",
+        "expiresOn": "ينتهي في {date}",
+        "intro": "هذا رابط دعوة لمرة واحدة لـ {groupName}. أرسله إلى الشخص الذي تريد دعوته — سيحصل على وصول كامل بمجرد قبوله."
+      },
+      "tab": {
+        "link": "رابط دعوة",
+        "friends": "السمةn",
+        "email": "البريد الإلكتروني"
+      },
+      "friendAlreadyInvited": "تمت دعوته بالفعل",
+      "email": "البريد الإلكتروني",
+      "emailDescription": "أرسل دعوة عبر البريد الإلكتروني. سينضم المدعو بعد قبولها من الحساب المطابق.",
+      "send": "إرسال دعوة",
+      "linkDescription": "أنشئ رابطاً لمرة واحدة يمكن استخدامه مرة واحدة فقط للانضمام. سيتوقف الرابط عن العمل بعد أول قبول."
+    },
+    "title": "الأعضاء",
+    "removeDialog": {
+      "title": "حذف عضو?",
+      "confirm": "حذف",
+      "description": "حذف {name} من هذه المجموعة؟ مصروفاته السابقة تبقى في الدفتر لكنه لن يتمكن من الوصول مجدداً.",
+      "cancel": "إلغاء",
+      "unsettled": {
+        "previewFrom": "من {name}",
+        "previewPays": "{name} سيدفع",
+        "previewWillCreate_few": "سيتم إنشاء {count} دفعات تسوية",
+        "title": "حذف عضو برصيد لم يُسوَ؟",
+        "description": "حذف {name} من هذه المجموعة؟ لديه رصيد لم يُسوَ — حدد المربع أدناه لتسوية رصيده.",
+        "previewWillCreate_other": "سينشئ {count} دفعات تسوية",
+        "previewReceives": "{name} سيستلم",
+        "previewWillCreate_zero": "سيتم إنشاء {count} دفعة تسوية",
+        "previewWillCreate_many": "سيتم إنشاء {count} دفعة تسوية",
+        "previewWillCreate_one": "سينشئ {count} دفعة تسوية",
+        "previewTo": "إلى {name}",
+        "warning": {
+          "description": "سيؤدي الحذف بدون تسوية إلى بقاء هذا الرصيد في المجموعة. اختر الخيار أدناه لإنشاء وإضافة دفعة تسوية.",
+          "title": "هذا العضو لديه رصيد لم يُسوَ"
+        },
+        "checkbox": "تسوية رصيد هذا العضو قبل حذفه",
+        "previewWillCreate_two": "سيتم إنشاء {count} دفعتين تسوية",
+        "toast": "تم حذف العضو وتسوية الرصيد."
+      }
+    },
+    "description": "الأشخاص الذين يمكنهم عرض والمساهمة في هذه المجموعة.",
+    "invitations": {
+      "created": "تم إرسال الدعوة إلى {email}.",
+      "title": "دعوات معلقة",
+      "revoked": "تم إلغاء الدعوة.",
+      "link": {
+        "type": "رابط لمرة واحدة",
+        "fallbackLabel": "رابط دعوة"
+      },
+      "description": "دعوات بانتظار القبول.",
+      "empty": "لا توجد دعوات معلقة.",
+      "sentOn": "أُرسلت في {date}",
+      "revoke": "إلغاء",
+      "email": {
+        "type": "دعوة بريد إلكتروني"
+      },
+      "revokeButton": "إلغاء الدعوة"
+    }
+  },
+  "ExpenseSeries": {
+    "deleteOccurrenceDescription": "حذف هذا المصروف فقط. الأحداث المجدولة الأخرى تبقى دون تغيير.",
+    "actions": "إجراءات التكرار",
+    "deleteThisAndFutureStop": "حذف هذا الحدث والأحداث التالية ثم إيقاف التكرار",
+    "stopConfirmHint": "الإيقاف دائم. للبدء مرة أخرى، أنشئ مصروفاً متكرراً جديداً.",
+    "loadMore": "تحميل المزيد من الأحداث",
+    "badge": "متكرر",
+    "stopConfirmDescription": "المصروف التي موجود سوف ثابت. لا موجود حدث جديد التي منشأ.",
+    "next": "التالي",
+    "editOccurrence": "تعديل هذا الحدث",
+    "deleteScopeTitle": "حذف مصروفات متكرر",
+    "deleteScopeDescription": "اختر ما إذا كنت ستحذف حدثاً واحداً أو تنهي السلسلة.",
+    "deleteActions": "حذف",
+    "deleteOccurrence": "حذف فقط حدث هذا",
+    "deleteThisAndFutureStopDescription": "حذف هذا المصروف والمصروفات التالية وإيقاف الجدول بشكل دائم.",
+    "working": "جارٍ المعالجة…",
+    "occurrence": "الحدث {sequence}",
+    "thisAndFuture": "هذا الحدث والأحداث التالية",
+    "loading": "جارٍ التحميل…",
+    "editOccurrenceDescription": "تغيير فقط مصروفات هذا.",
+    "editThisAndFuture": "تعديل هذا والأحداث المستقبلية",
+    "empty": "لا توجد حالات أخرى بعد.",
+    "badgeRunning": "متكرر · نشط",
+    "confirmStop": "إيقاف التكرار",
+    "viewSeries": "عرض السلسلة",
+    "actionsTitle": "إجراءات المصروفات المتكررة",
+    "scopeTitle": "تعديل المصروفات المتكررة",
+    "deleteConfirmTitle": "تأكيد الحذف",
+    "stopRecurrence": "إيقاف التكرار",
+    "occurrences": "{count} تكرار في هذه السلسلة",
+    "actionsDescription": "اختيار الحدث الدقيق الذي تريد تعديله أو حذفه.",
+    "scopeDescription": "اختيار الأحداث التي ستتأثر.",
+    "cancel": "إلغاء",
+    "badgeCompleted": "متكرر · تم",
+    "deleteConfirm": {
+      "THIS_AND_FUTURE_STOP": "سيتم حذف هذا الحدث والأحداث التالية وسيتم إيقاف التكرار.",
+      "THIS_AND_FUTURE": "سيتم حذف هذا الحدث والأحداث التالية. سيتوقف التكرار عند الحدث المجدول التالي.",
+      "OCCURRENCE": "سيتم حذف هذا الحدث فقط."
+    },
+    "editThisAndFutureDescription": "تعديل هذا المصروف وجميع المصروفات المجدولة التالية.",
+    "deleteConfirmHint": "لا يمكن التراجع عن هذا الإجراء لـ حدث التي مختار.",
+    "confirmDelete": "هل أنت متأكد من حذف هذه السلسلة المتكررة؟",
+    "title": "النفقات المتكررة",
+    "deleteThisAndFutureDescription": "حذف هذا المصروف والمصروفات التالية؛ يبقى الجدول نشطاً.",
+    "confirm": "متابعة",
+    "back": "رجوع",
+    "editActions": "تعديل",
+    "deleteThisAndFuture": "حذف هذا الحدث والأحداث التالية",
+    "occurrenceOnly": "هذا الحدث فقط",
+    "previous": "السابق",
+    "badgeStopped": "متكرر · متوقف",
+    "stopConfirmTitle": "إيقاف هذا التكرار؟"
+  },
+  "Auth": {
+    "forgotPasswordLink": "نسيت كلمة المرور؟",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "hidePasswordForm": "إخفاء نموذج كلمة المرور",
+    "subtitle": "سجل الدخول لتتبع نفقاتك.",
+    "noAccount": "ليس لديك حساب؟",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "errors": {
+      "magicLinkFailed": "فشل رابط الدخول السحري. حاول مرة أخرى.",
+      "nameRequired": "الاسم مطلوب.",
+      "invalidCredentials": "بيانات الدخول غير صحيحة.",
+      "generic": "حدث خطأ ما. حاول مرة أخرى.",
+      "passwordRequired": "كلمة المرور مطلوبة.",
+      "emailRequired": "البريد الإلكتروني مطلوب.",
+      "passwordPolicy": "كلمة المرور لا تتوافق مع المتطلبات."
+    },
+    "loading": "جارٍ التحميل…",
+    "passwordTab": "كلمة المرور",
+    "verificationEmailSent": "تم إرسال بريد التحقق.",
+    "magicLinkTab": "رابط سحري",
+    "createAccount": "إنشاء حساب",
+    "signedInAs": "مسجل الدخول باسم {name}",
+    "usePasswordInstead": "استخدم كلمة المرور بدلاً من ذلك",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين.",
+    "signInWithGoogle": "تسجيل الدخول عبر Google",
+    "magicLinkEmail": "أرسل رابطاً سحرياً",
+    "passwordFormDescription": "أدخل كلمة المرور الخاصة بك.",
+    "sendMagicLink": "إرسال الرابط السحري",
+    "legalNotice": "بالمتابعة، توافق على <terms>شروط الاستخدام</terms> وتقر بـ <privacy>سياسة الخصوصية</privacy>.",
+    "email": "البريد الإلكتروني",
+    "signInWithGithub": "تسجيل الدخول عبر GitHub",
+    "signUpSubtitle": "أنشئ حساباً لتتبع نفقاتك.",
+    "signUpWithPassword": "التسجيل بكلمة المرور",
+    "passwordFormDescriptionSignUp": "أنشئ كلمة مرور قوية.",
+    "signInWithPassword": "تسجيل الدخول بكلمة المرور",
+    "signUpTitle": "إنشاء حساب",
+    "required": "مطلوب",
+    "title": "مرحباً بعودتك",
+    "magicLinkSent": "تم إرسال رابط الدخول السحري. تحقق من بريدك الإلكتروني.",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "back": "رجوع",
+    "orContinueWithEmail": "أو تابع بالبريد الإلكتروني",
+    "useDifferentEmail": "استخدم بريداً إلكترونياً مختلفاً",
+    "passwordTooShort": "كلمة المرور قصيرة جداً.",
+    "password": "كلمة المرور",
+    "passwordRequirements": {
+      "minLength": "8 أحرف على الأقل",
+      "symbol": "رمز واحد على الأقل",
+      "lowercase": "حرف صغير واحد على الأقل",
+      "number": "رقم واحد على الأقل",
+      "uppercase": "حرف كبير واحد على الأقل"
+    }
+  },
+  "Footer": {
+    "builtBy": "انظر <source>المصدر والمساهمين</source>",
+    "privacy": "الخصوصية",
+    "legalNavigation": "روابط قانونية",
+    "madeIn": "صنع من قبل مجتمع المصادر المفتوحة بحب ❤️",
+    "terms": "الشروط",
+    "imprint": "إشعار المشروع"
+  },
+  "CreateFromReceipt": {
+    "Dialog": {
+      "dateLabel": "التاريخ:",
+      "body": "ارفع صورة الإيصال، وسنقوم بمسحها ضوئياً لاستخراج معلومات المصروفات إن أمكن.",
+      "fillNext": "راجع التفاصيل المقترحة، ثم طبقها على هذا المصروف.",
+      "triggerTitle": "مسح الإيصال بالذكاء الاصطناعي",
+      "amountLabel": "المبلغ:",
+      "categoryLabel": "الفئة:",
+      "existingDocumentAlt": "الإيصال المرفق",
+      "titleLabel": "العنوان:",
+      "uploadAndScan": "رفع ومسح الإيصال",
+      "scanningHint": "قد يستغرق المسح بعض الوقت — يرجى التحلي بالصبر.",
+      "fillBody": "اختر إيصالاً مرفقاً أو ارفع واحداً جديداً — سنقوم بمسحه ضوئياً لاقتراح تفاصيل هذا المصروف.",
+      "selectImage": "اختيار صورة…",
+      "fillTitle": "تعبئة المصروفات من الإيصال",
+      "scannedReceiptAlt": "الإيصال الممسوح",
+      "editNext": "يمكنك تعديل معلومات المصروفات لاحقاً.",
+      "title": "إنشاء من إيصال",
+      "continue": "متابعة",
+      "description": "استخراج معلومات المصروفات من صورة إيصال.",
+      "existingDocuments": "اختيار إيصال مرفق"
+    },
+    "ErrorToast": {
+      "description": "حدث خطأ ما أثناء رفع المستند. يرجى إعادة المحاولة لاحقاً أو اختيار ملف آخر.",
+      "title": "خطأ أثناء رفع المستند",
+      "retry": "إعادة محاولة"
+    },
+    "unknown": "غير معروف",
+    "TooBigToast": {
+      "description": "أقصى حجم ملف يمكنك رفعه هو {maxSize}. ملفك حجمه {size}.",
+      "title": "الملف كبير جداً"
+    }
+  },
+  "Settings": {
+    "title": "الإعدادات"
+  },
+  "ResetPassword": {
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "submitting": "جارٍ الحفظ…",
+    "invalidTokenDescription": "ربما انتهت صلاحية الرابط أو تم استخدامه بالفعل. اطلب رابطاً جديداً للمحاولة مجدداً.",
+    "submit": "إرسال رابط إعادة التعيين",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين.",
+    "title": "إعادة تعيين كلمة المرور",
+    "errors": {
+      "passwordPolicy": "استخدم 8 أحرف على الأقل مع حرف كبير وصغير ورقم ورمز.",
+      "invalidToken": "انتهت صلاحية رابط إعادة التعيين هذا أو تم استخدامه بالفعل.",
+      "passwordTooShort": "يجب ألا تقل كلمة المرور عن 8 أحرف.",
+      "generic": "حدث خطأ ما. حاول مرة أخرى."
+    },
+    "subtitle": "أدخل كلمة المرور الجديدة لحسابك على Spliit Cloud.",
+    "invalidTokenTitle": "لا يمكن استخدام رابط إعادة التعيين هذا",
+    "success": "تم إرسال رابط إعادة تعيين كلمة المرور.",
+    "newPassword": "كلمة المرور الجديدة",
+    "successDescription": "تم تغيير كلمة المرور الخاصة بك. سجّل الدخول بكلمة المرور الجديدة للمتابعة.",
+    "backToSignIn": "العودة إلى تسجيل الدخول",
+    "goToSignIn": "انتقل إلى تسجيل الدخول",
+    "requestNewLink": "اطلب رابطاً جديداً"
+  },
+  "Activities": {
+    "unknownActor": "شخص ما",
+    "expense": {
+      "updated": "{participant} حدث مصروف {title}",
+      "created": "{participant} أنشأ مصروف {title}",
+      "deleted": "{participant} حذف مصروف {title}",
+      "stopped": "{participant} أوقف المصروف المتكرر {title}",
+      "changeEmptyValue": "فارغ",
+      "recurringCreated": "{participant} أنشأ مصروفاً متكرراً \"{title}\"",
+      "commented": "{participant} علق على {title}: \"{excerpt}\"",
+      "changedFields": {
+        "items": "البنود",
+        "amount": "المبلغ",
+        "recurrence": "التكرار",
+        "reimbursement": "التعويض",
+        "date": "التاريخ",
+        "title": "العنوان",
+        "split": "التقسيم",
+        "payers": "الدافعون",
+        "notes": "الملاحظات",
+        "category": "الفئة",
+        "conversionSource": "مصدر سعر الصرف",
+        "conversionRate": "سعر الصرف",
+        "documents": "المستندات"
+      }
+    },
+    "member": {
+      "left": "غادر {participant} المجموعة",
+      "removed": "أزال {participant} {target} من المجموعة",
+      "roleChanged": "غير {participant} دور {target} من {previousRole} إلى {nextRole}"
+    },
+    "invitation": {
+      "accepted": "قبل {target} الدعوة",
+      "declined": "رفض {target} الدعوة",
+      "created": "دعا {participant} {target}",
+      "revoked": "ألغى {participant} دعوة {target}"
+    },
+    "group": {
+      "updated": "{participant} حدث إعدادات المجموعة",
+      "unarchived": "{participant} ألغى أرشفة المجموعة",
+      "archived": "{participant} أرشف المجموعة",
+      "changedFields": {
+        "information": "المعلومات",
+        "linkedParticipant": "المشارك المرتبط",
+        "currency": "العملة",
+        "name": "الاسم",
+        "currencyCode": "رمز العملة"
+      }
+    },
+    "openExpense": "فتح المصروف",
+    "participant": {
+      "removed": "أزال {participant} {target} من المجموعة"
+    },
+    "import": {
+      "imported_two": "{participant} استورد {count} نفقتين",
+      "imported_few": "{participant} استورد {count} نفقات",
+      "imported_many": "{participant} استورد {count} نفقة",
+      "imported_other": "{participant} استورد {count} نفقة",
+      "imported_one": "{participant} استورد {count} نفقة",
+      "imported_zero": "لم يستورد {participant} أياً من {count} نفقات"
+    },
+    "fallback": "نشاط غير معروف."
+  },
+  "Share": {
+    "description": "شارك هذه الصفحة مع الآخرين.",
+    "title": "مشاركة",
+    "warningHelp": "أي شخص لديه رابط المجموعة يمكنه عرض وتعديل المصروفات. شارك بحذر!",
+    "warning": "تحذير!"
+  }
+}

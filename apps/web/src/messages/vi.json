@@ -1,0 +1,2139 @@
+{
+  "Homepage": {
+    "title": "Chia sẻ <strong>Chi phí</strong> với <strong>Bạn bè & Gia đình</strong>",
+    "description": "Theo dõi chi phí chung và thanh toán. Miễn phí và mã nguồn mở, <strong>đồng bộ và bảo mật qua tài khoản của bạn</strong>.",
+    "features": {
+      "groupsSync": {
+        "title": "Đồng bộ",
+        "description": "Đồng bộ trên tất cả thiết bị."
+      },
+      "expenses": {
+        "title": "Chi phí",
+        "description": "Thêm, sửa, xóa chi phí."
+      },
+      "splitting": {
+        "title": "Chia chi phí",
+        "description": "Chia chi phí linh hoạt."
+      },
+      "settlement": {
+        "title": "Số dư",
+        "description": "Theo dõi ai nợ ai."
+      },
+      "organization": {
+        "title": "Tổ chức",
+        "description": "Sắp xếp chi phí theo danh mục."
+      },
+      "accounts": {
+        "title": "Tài khoản",
+        "description": "Tạo tài khoản để đồng bộ."
+      }
+    },
+    "button": {
+      "github": "GitHub",
+      "signIn": "Đăng nhập",
+      "createAccount": "Tạo tài khoản",
+      "createGroup": "Tạo nhóm",
+      "importGroup": "Nhập nhóm từ dịch vụ khác",
+      "createFriendLedger": "Theo dõi chi phí với bạn bè"
+    },
+    "welcomeBack": "Chào mừng trở lại! {name}",
+    "overview": {
+      "youAreOwed": "Bạn được nợ",
+      "youOwe": "Bạn nợ",
+      "acrossGroups": "Tổng quan các nhóm",
+      "viewGroups": "Xem nhóm",
+      "noOneOwesYou": "Không ai nợ bạn.",
+      "youOweNoOne": "Bạn không nợ ai."
+    }
+  },
+  "Header": {
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất",
+    "account": "Tài khoản",
+    "accountSettings": "Cài đặt",
+    "back": "Quay lại",
+    "menu": "Menu"
+  },
+  "Common": {
+    "close": "Đóng",
+    "previousSlide": "Trước",
+    "nextSlide": "Tiếp theo"
+  },
+  "Theme": {
+    "toggle": "Đổi giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Hệ thống"
+  },
+  "Footer": {
+    "madeIn": "Được tạo bởi cộng đồng mã nguồn mở với tình yêu ❤️",
+    "builtBy": "Xem <source>mã nguồn và người đóng góp</source>",
+    "legalNavigation": "Pháp lý",
+    "privacy": "Quyền riêng tư",
+    "terms": "Điều khoản",
+    "imprint": "Thông tin pháp lý"
+  },
+  "Expenses": {
+    "title": "Chi phí",
+    "description": "Tất cả chi phí trong nhóm này.",
+    "create": "Tạo chi phí",
+    "createFirst": "Tạo chi phí đầu tiên",
+    "noExpenses": "Chưa có chi phí nào.",
+    "export": "Xuất",
+    "exportJson": "Xuất JSON",
+    "exportCsv": "Xuất CSV",
+    "searchPlaceholder": "Tìm kiếm…",
+    "ActiveUserModal": {
+      "title": "Bạn là ai?",
+      "description": "Chọn người dùng hoạt động trong nhóm này.",
+      "nobody": "Không ai",
+      "save": "Lưu",
+      "footer": "Giúp Spliit biết bạn là ai."
+    },
+    "Groups": {
+      "upcoming": "Sắp tới",
+      "thisWeek": "Tuần này",
+      "earlierThisMonth": "Đầu tháng này",
+      "lastMonth": "Tháng trước",
+      "earlierThisYear": "Đầu năm nay",
+      "lastYear": "Năm ngoái",
+      "older": "Cũ hơn"
+    },
+    "filters": {
+      "mobileTitle": "Bộ lọc",
+      "sort": {
+        "options": {
+          "expenseDate": {
+            "desc": "Ngày giảm dần",
+            "asc": "Ngày tăng dần"
+          },
+          "amount": {
+            "desc": "Tiền giảm dần",
+            "asc": "Tiền tăng dần"
+          },
+          "createdAt": {
+            "desc": "Mới nhất",
+            "asc": "Cũ nhất"
+          }
+        },
+        "title": "Sắp xếp"
+      },
+      "cancel": "Hủy",
+      "apply": "Áp dụng",
+      "clearAll": "Xóa tất cả",
+      "clearFilterAria": "Xóa bộ lọc {label}",
+      "noMatchTitle": "Không có kết quả",
+      "noMatchBody": "Không tìm thấy chi phí nào.",
+      "noMatchClear": "Xóa bộ lọc",
+      "category": "Danh mục",
+      "paidBy": "Người trả",
+      "paidFor": "Chia cho",
+      "dateRange": "Khoảng ngày",
+      "dateFrom": "Từ ngày",
+      "dateTo": "Đến ngày",
+      "amountRange": "Khoảng tiền",
+      "minAmount": "Tối thiểu",
+      "maxAmount": "Tối đa",
+      "currency": "Loại tiền",
+      "matchModeAny": "Bất kỳ",
+      "matchModeAll": "Tất cả",
+      "button": "Bộ lọc",
+      "matchModeExact": "Chính xác",
+      "allCategories": "Tất cả danh mục",
+      "allParticipants": "Tất cả thành viên",
+      "allCurrencies": "Tất cả loại tiền",
+      "nSelected_zero": "Đã chọn {count}",
+      "nSelected_one": "Đã chọn {count}",
+      "nSelected_two": "Đã chọn {count}",
+      "nSelected_few": "Đã chọn {count}",
+      "nSelected_many": "Đã chọn {count}",
+      "nSelected_other": "Đã chọn {count}",
+      "removeFilter": "Xóa bộ lọc",
+      "settlementsHidden": "Đã ẩn thanh toán",
+      "title": "Bộ lọc"
+    },
+    "showSettlements": "Hiện thanh toán"
+  },
+  "ExpenseCard": {
+    "paidBy": "Được trả bởi <strong>{paidBy}</strong> · chia cho <paidFor></paidFor>",
+    "paidByMultiple": "Được trả bởi <paidByNames></paidByNames> · chia cho <paidFor></paidFor>",
+    "everyone": "Mọi người",
+    "receivedBy": "Được nhận bởi <strong>{paidBy}</strong> · phân bổ cho <paidFor></paidFor>",
+    "receivedByMultiple": "Được nhận bởi <paidByNames></paidByNames> · phân bổ cho <paidFor></paidFor>",
+    "yourBalance": "Số dư của bạn",
+    "notInvolved": "Bạn không liên quan",
+    "settlementBadge": "Thanh toán",
+    "items": {
+      "more_zero": "+{count} nữa",
+      "more_one": "+{count} nữa",
+      "more_two": "+{count} nữa",
+      "more_few": "+{count} nữa",
+      "more_many": "+{count} nữa",
+      "more_other": "+{count} nữa",
+      "title": "Mục",
+      "participants": "{names}"
+    },
+    "copyToast": "Đã bắt đầu sao chép chi phí. Chi tiết chi phí hiện tại sẽ được dùng để tạo chi phí mới."
+  },
+  "ExpenseSeries": {
+    "badge": "Định kỳ",
+    "occurrence": "Lần {sequence}",
+    "previous": "Trước",
+    "next": "Tiếp",
+    "viewSeries": "Xem chuỗi",
+    "title": "Chuỗi chi phí",
+    "empty": "Chưa có chi phí định kỳ nào.",
+    "scopeTitle": "Cập nhật chi phí định kỳ",
+    "scopeDescription": "Chọn phạm vi chỉnh sửa.",
+    "occurrenceOnly": "Chỉ lần này",
+    "thisAndFuture": "Lần này và các lần sau",
+    "deleteScopeTitle": "Xóa chi phí định kỳ",
+    "deleteScopeDescription": "Chọn phạm vi xóa.",
+    "deleteOccurrence": "Xóa lần này",
+    "deleteThisAndFuture": "Xóa lần này và các lần sau",
+    "deleteThisAndFutureStop": "Dừng lần này và các lần sau",
+    "deleteThisAndFutureDescription": "Xóa lần này và tất cả lần sau.",
+    "deleteThisAndFutureStopDescription": "Xóa chi phí này và các chi phí sau, đồng thời dừng lịch vĩnh viễn.",
+    "deleteOccurrenceDescription": "Chỉ xóa chi phí này. Các lần định kỳ khác giữ nguyên.",
+    "actions": "Thao tác",
+    "actionsTitle": "Thao tác chi phí định kỳ",
+    "actionsDescription": "Quản lý chuỗi chi phí.",
+    "editActions": "Sửa",
+    "deleteActions": "Xóa",
+    "editOccurrence": "Sửa lần này",
+    "editOccurrenceDescription": "Chỉ sửa lần xuất hiện này.",
+    "editThisAndFuture": "Sửa lần này và các lần sau",
+    "editThisAndFutureDescription": "Sửa lần này và tất cả lần sau.",
+    "stopRecurrence": "Dừng lặp lại",
+    "stopConfirmTitle": "Dừng chuỗi?",
+    "stopConfirmDescription": "Các chi phí hiện có vẫn giữ. Không tạo lần mới.",
+    "stopConfirmHint": "Việc dừng là vĩnh viễn. Để bắt đầu lại, hãy tạo một chi phí định kỳ mới.",
+    "deleteConfirmTitle": "Xác nhận",
+    "deleteConfirmHint": "Không thể hoàn tác.",
+    "deleteConfirm": {
+      "OCCURRENCE": "Chỉ lần xuất hiện này sẽ bị xóa.",
+      "THIS_AND_FUTURE": "Lần này và các lần sau sẽ bị xóa. Chuỗi định kỳ sẽ tiếp tục với lần được lên lịch tiếp theo.",
+      "THIS_AND_FUTURE_STOP": "Lần này và các lần sau sẽ bị xóa và chuỗi định kỳ sẽ dừng."
+    },
+    "confirmDelete": "Xác nhận xóa",
+    "confirmStop": "Xác nhận dừng",
+    "working": "Đang xử lý…",
+    "back": "Quay lại",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "occurrences": "Các lần {count}",
+    "loading": "Đang tải…",
+    "loadMore": "Tải thêm",
+    "badgeRunning": "Đang chạy",
+    "badgeStopped": "Đã dừng",
+    "badgeCompleted": "Đã hoàn thành"
+  },
+  "Groups": {
+    "myGroups": "Nhóm của tôi",
+    "create": "Tạo",
+    "createdInviteHint": "Mời thành viên để bắt đầu.",
+    "loadingRecent": "Đang tải…",
+    "starred": "Đã gắn sao",
+    "archived": "Đã lưu trữ",
+    "hidden": "Đã ẩn",
+    "showHidden": "Hiện đã ẩn",
+    "showArchived": "Hiện đã lưu trữ",
+    "hide": "Ẩn",
+    "unhide": "Bỏ ẩn",
+    "hideFriend": "Ẩn bạn bè",
+    "unhideFriend": "Bỏ ẩn bạn bè",
+    "starGroup": "Gắn sao",
+    "unstarGroup": "Bỏ sao",
+    "starFriend": "Gắn sao",
+    "unstarFriend": "Bỏ sao",
+    "groupActions": "Thao tác nhóm",
+    "friendActions": "Thao tác bạn bè",
+    "archiveGroup": "Lưu trữ nhóm",
+    "unarchiveGroup": "Bỏ lưu trữ",
+    "archiveSuccess": "Đã lưu trữ nhóm.",
+    "unarchiveSuccess": "Đã bỏ lưu trữ.",
+    "archiveWithBalancesTitle": "Số dư chưa thanh toán",
+    "archiveWithBalancesDescription": "Nhóm còn số dư. Vẫn lưu trữ?",
+    "archiveWithBalancesForce": "Buộc lưu trữ",
+    "archiveWithBalancesCancel": "Hủy",
+    "archiveWithBalancesSuccess": "Đã tạo khoản thanh toán và lưu trữ nhóm.",
+    "archiveWithBalancesView": "Xem số dư",
+    "archiveSectionTitle": "Lưu trữ",
+    "archiveSectionDescription": "Lưu trữ nhóm này.",
+    "delete": {
+      "sectionTitle": "Xóa nhóm",
+      "sectionDescription": "Xóa vĩnh viễn nhóm này, mọi chi phí và toàn bộ lịch sử. Hành động này không thể hoàn tác — chỉ thực hiện nếu bạn chắc chắn không ai cần dữ liệu này nữa.",
+      "button": "Xóa nhóm",
+      "toast": {
+        "deleted": "Đã xóa nhóm."
+      },
+      "error": {
+        "generic": "Lỗi xóa nhóm."
+      },
+      "dialog": {
+        "title": "Xóa nhóm này?",
+        "description": "Bạn sắp xóa vĩnh viễn \"{name}\". Mọi chi phí, biên lai, lời mời và mục hoạt động sẽ bị xóa và không thể khôi phục.",
+        "warningTitle": "Hành động này không thể hoàn tác",
+        "warningDescription": "Hành động này sẽ xóa vĩnh viễn:",
+        "warningList": {
+          "expenses": "Mọi chi phí và số dư",
+          "activity": "Tất cả hoạt động",
+          "invitations": "Tất cả lời mời",
+          "receipts": "Tất cả biên lai"
+        },
+        "checkbox": "Tôi hiểu hành động này sẽ xóa vĩnh viễn nhóm và toàn bộ dữ liệu của nó.",
+        "cancel": "Hủy",
+        "confirm": "Xóa",
+        "deleting": "Đang xóa…"
+      }
+    },
+    "archivedBadge": "Đã lưu trữ",
+    "bannerArchivedTitle": "Đã lưu trữ",
+    "bannerArchivedDescription": "Nhóm này đã được lưu trữ.",
+    "bannerArchived": "Nhóm đã lưu trữ",
+    "bannerUnarchive": "Bỏ lưu trữ",
+    "bannerUnarchiveSuccess": "Đã bỏ lưu trữ.",
+    "invitationBannerTitle": "Lời mời",
+    "invitationBannerDescription": "Bạn đã được mời tham gia nhóm.",
+    "invitationAccept": "Chấp nhận",
+    "invitationDecline": "Từ chối",
+    "invitationAccepted": "Đã chấp nhận lời mời.",
+    "invitationDeclined": "Đã từ chối lời mời.",
+    "pendingInviteeReadOnlyTitle": "Bạn đã được mời",
+    "pendingInviteeReadOnlyDescription": "Bạn có thể xem thông tin nhóm.",
+    "pendingInviteeSettingsTitle": "Cài đặt nhóm bị khóa",
+    "pendingInviteeSettingsDescription": "Chấp nhận lời mời để chỉnh sửa.",
+    "pendingInviteeExpenseTitle": "Chi phí chỉ đọc",
+    "pendingInviteeExpenseDescription": "Bạn chưa thể thêm chi phí.",
+    "archivedReadOnly": "Nhóm đã lưu trữ — chỉ đọc.",
+    "backToExpenses": "Về chi phí",
+    "backToGroups": "Về danh sách nhóm",
+    "removeRecent": "Xóa",
+    "RecentRemovedToast": {
+      "title": "Đã xóa",
+      "description": "Đã xóa khỏi danh sách gần đây.",
+      "undoAlt": "Hoàn tác",
+      "undo": "Hoàn tác"
+    },
+    "NotFound": {
+      "text": "Nhóm không tồn tại.",
+      "link": "Về trang chủ",
+      "lookingUp": "Đang tìm…"
+    },
+    "Importable": {
+      "title": "Tìm thấy nhóm này trên spliit.app",
+      "description": "\"{name}\" có thể truy cập trên spliit.app. Bạn có muốn nhập nó vào Spliit Cloud không?",
+      "cta": "Nhập dữ liệu",
+      "backToHome": "Về trang chủ"
+    },
+    "Unauthorized": {
+      "title": "Truy cập bị từ chối",
+      "description": "Bạn không có quyền truy cập nhóm này.",
+      "link": "Về trang chủ"
+    },
+    "invitations": {
+      "title": "Lời mời",
+      "description": "Lời mời tham gia nhóm.",
+      "accept": "Chấp nhận",
+      "decline": "Từ chối",
+      "accepted": "Đã chấp nhận",
+      "declined": "Đã từ chối",
+      "invitedBy": "Được mời bởi {name}",
+      "unknownInviter": "Người mời không xác định",
+      "unknownGroup": "Nhóm không xác định",
+      "sentOn": "Gửi vào {date}"
+    },
+    "linkInvitationBannerDescription": "Bạn đã được mời qua liên kết. {inviter} {groupName}",
+    "linkInvitationSingleUse": "Dùng một lần",
+    "linkInvitationTemporaryName": "Nhập tên để tham gia. {name}",
+    "linkInvitationAlreadyMemberTitle": "Đã là thành viên {groupName}",
+    "linkInvitationAlreadyMemberDescription": "Bạn đã là thành viên.",
+    "linkInvitationDismiss": "Bỏ qua",
+    "linkInvitationExpiredTitle": "Liên kết hết hạn",
+    "linkInvitationExpiredDescription": "Liên kết mời đã hết hạn.",
+    "linkInvitationInvalid": {
+      "title": "Liên kết không hợp lệ",
+      "description": "Liên kết mời không hợp lệ."
+    },
+    "backToHome": "Về trang chủ",
+    "Import": {
+      "StepHeader": {
+        "title": "Nhập dữ liệu",
+        "source": "Nguồn",
+        "destination": "Đích đến",
+        "mapping": "Gán thành viên",
+        "confirm": "Xác nhận",
+        "done": "Hoàn tất",
+        "backAriaLabel": "Quay lại",
+        "currencyConversion": "Chuyển đổi",
+        "backTo": "Quay lại {step}",
+        "continueTo": "Tiếp đến {step}"
+      },
+      "fetchingGroup": "Đang tải…",
+      "fetchSourceError": "Lỗi tải nguồn.",
+      "Source": {
+        "fromSpliit": "Từ Spliit",
+        "splitwise": "Splitwise",
+        "tricount": "Tricount",
+        "settleUp": "Settle Up",
+        "spliitDescription": "Nhập từ URL Spliit.",
+        "splitwiseComingTitle": "Splitwise sắp ra mắt",
+        "splitwiseComingDescription": "Nhập từ Splitwise sắp ra mắt.",
+        "tricountComingTitle": "Tricount sắp ra mắt",
+        "tricountComingDescription": "Nhập từ Tricount sắp ra mắt.",
+        "settleUpComingTitle": "Settle Up sắp ra mắt",
+        "settleUpComingDescription": "Nhập từ Settle Up sắp ra mắt.",
+        "dropFile": "Thả tệp vào đây",
+        "dropFileDescription": "JSON giữ nguyên mọi số tiền và người trả. CSV là phương án dự phòng — Spliit Cloud làm tròn mỗi phần xuống 2 chữ số thập phân.",
+        "or": "hoặc",
+        "pasteUrl": "Dán URL",
+        "urlDescription": "Nhập từ URL.",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "Đang tải…",
+        "fetchGroupButton": "Tải nhóm",
+        "receiptWarningTitle": "Lưu ý biên lai",
+        "receiptWarningDescription": "Biên lai sẽ không được nhập.",
+        "invalidUrl": "URL không hợp lệ.",
+        "notFoundUrl": "Không tìm thấy.",
+        "fetchUrlError": "Lỗi tải URL.",
+        "fileReadError": "Lỗi đọc tệp.",
+        "appToCloudDescription": "Nhập từ URL Spliit.",
+        "appToCloudTitle": "Đổi .app thành .cloud",
+        "splitwiseDescription": "Nhập từ CSV Splitwise.",
+        "receiptWarningTitleSplitwise": "Lưu ý biên lai",
+        "receiptWarningDescriptionSplitwise": "Biên lai sẽ không được nhập.",
+        "unsupportedFileType": "Loại tệp không hỗ trợ.",
+        "dropFileSplitwise": "Thả tệp Splitwise",
+        "dropFileDescriptionSplitwise": "Kéo và thả CSV Splitwise.",
+        "splitwiseAnonymizeTitle": "Ẩn danh",
+        "splitwiseAnonymizeDescription": "Ẩn tên người tham gia.",
+        "splitwiseAnonymizeButton": "Ẩn danh",
+        "splitwiseAnonymizeIssuesLink": "Báo cáo vấn đề",
+        "splitwiseAnonymizeError": "Lỗi ẩn danh.",
+        "csvRecurrenceLimitation": "CSV không hỗ trợ định kỳ."
+      },
+      "Destination": {
+        "heading": "Bạn muốn nhập <strong>{name}</strong> vào đâu? ({participantCount} người tham gia · {expenseCount} chi phí)",
+        "newGroup": "Nhóm mới",
+        "existingGroup": "Nhóm hiện tại",
+        "loading": "Đang tải…",
+        "noAdminGroups": "Bạn không phải admin nhóm nào.",
+        "memberCount_zero": "{count} thành viên",
+        "memberCount_one": "{count} thành viên",
+        "memberCount_two": "{count} thành viên",
+        "memberCount_few": "{count} thành viên",
+        "memberCount_many": "{count} thành viên",
+        "memberCount_other": "{count} thành viên"
+      },
+      "Mapping": {
+        "headsUp": "Lưu ý",
+        "noLinkAccount": "Chưa có người tham gia nào được liên kết với tài khoản của bạn. Trình nhập (bạn) sẽ được tạo làm chủ sở hữu mới trên nhóm đã nhập — phần chi phí của họ sẽ bằng 0 cho đến khi bạn liên kết một hàng nguồn với tài khoản hoặc tự mời mình.",
+        "continue": "Tiếp tục",
+        "Row": {
+          "linkToMe": "Liên kết với tôi",
+          "linkToMeDescription": "Kết nối người này với tài khoản của bạn.",
+          "linkToMeFollowUp": "{name} sẽ được liên kết với tài khoản của bạn trong nhóm này. Chi phí quá khứ và tương lai sẽ hiển thị dưới tên bạn.",
+          "inviteByEmail": "Mời qua email",
+          "inviteByEmailDescription": "Gửi lời mời email.",
+          "inviteeEmailLabel": "Email",
+          "inviteeEmailPlaceholder": "email@example.com",
+          "selfEmailDetected": "Email của bạn.",
+          "inviteByLink": "Mời qua liên kết",
+          "inviteByLinkDescription": "Gửi liên kết mời.",
+          "inviteByLinkFollowUp": "Chúng tôi sẽ tạo một URL dùng một lần sau khi nhập xong. Bạn sẽ thấy nó ở bước Hoàn tất — hãy sao chép và gửi cho {name}.",
+          "linkToExisting": "Liên kết với thành viên",
+          "linkToExistingDescription": "Liên kết với thành viên hiện tại.",
+          "selectExistingMember": "Chọn thành viên",
+          "selectExistingPlaceholder": "Tìm…",
+          "membersLabel": "Thành viên",
+          "pendingInvitesLabel": "Đang chờ",
+          "pendingSuffix": "(đang chờ)",
+          "leaveUnlinked": "Không liên kết",
+          "leaveUnlinkedDescription": "Chỉ giữ tên — liên kết sau từ Thành viên.",
+          "leaveUnlinkedFollowUp": "Họ có thể liên kết sau. {name}",
+          "inviteFriend": "Mời bạn",
+          "inviteFriendDescription": "Chọn bạn từ danh sách.",
+          "selectFriendLabel": "Chọn bạn",
+          "selectFriendPlaceholder": "Tìm bạn…",
+          "friendAlreadyMember": "Đã là thành viên.",
+          "friendPendingInvite": "Đã mời."
+        },
+        "Errors": {
+          "duplicateExistingMember": "Đã tồn tại.",
+          "inviteConflictsPending": "Xung đột lời mời. {email}",
+          "inviteConflictsMember": "Xung đột thành viên. {email}",
+          "duplicateMemberName": "Tên trùng.",
+          "onlyOneLinkedAccount": "Chỉ một tài khoản.",
+          "missingExistingMember": "Không tìm thấy.",
+          "missingEmail": "Thiếu email.",
+          "selfEmailAddress": "Không thể dùng email của bạn.",
+          "duplicateEmail": "Email trùng."
+        }
+      },
+      "Confirm": {
+        "destinationLabel": "Đích đến",
+        "newGroupFormat": "Nhóm mới · {currency}",
+        "existingGroupFormat": "Nhóm hiện tại · đã hợp nhất",
+        "summaryLabel": "Tóm tắt",
+        "sourceParticipants_zero": "{count} người tham gia nguồn",
+        "sourceParticipants_one": "{count} người tham gia nguồn",
+        "sourceParticipants_two": "{count} người tham gia nguồn",
+        "sourceParticipants_few": "{count} người tham gia nguồn",
+        "sourceParticipants_many": "{count} người tham gia nguồn",
+        "sourceParticipants_other": "{count} người tham gia nguồn",
+        "participantBreakdown": "Thành viên {linked} {email} {link} {unlinked}",
+        "expenseCount_zero": "Sẽ tạo {count} chi phí",
+        "expenseCount_one": "Sẽ tạo {count} chi phí",
+        "expenseCount_two": "Sẽ tạo {count} chi phí",
+        "expenseCount_few": "Sẽ tạo {count} chi phí",
+        "expenseCount_many": "Sẽ tạo {count} chi phí",
+        "expenseCount_other": "Sẽ tạo {count} chi phí",
+        "sourceName": "Nguồn {name}",
+        "footer": "Xem lại và xác nhận.",
+        "importingButton": "Đang nhập…",
+        "importButton": "Nhập",
+        "ratesLoading": "Đang tải…",
+        "rateFetchError": "Lỗi tỷ giá.",
+        "currencyRateFormat": "1 {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "Yêu cầu {requested} · nhà cung cấp dùng {asOf}",
+        "currencyConversionTitle": "Chuyển đổi tiền tệ",
+        "currencyConversionDescription": "Chọn cách chuyển đổi.",
+        "currencyRateForDateFormat": "Tỷ giá cho {date}",
+        "appliedExchangeRatesLabel": "Tỷ giá đã áp dụng",
+        "conversionPerDate": "Theo ngày",
+        "conversionFixed": "Cố định",
+        "importErrorTitle": "Lỗi nhập",
+        "importErrorFallback": "Lỗi nhập.",
+        "executeImport": "Thực hiện nhập",
+        "recurringSchedulesLabel": "Định kỳ",
+        "recurringScheduleItem": "Định kỳ: {rule} {title}",
+        "recurrenceRule": {
+          "daily": "Hàng ngày",
+          "weekly": "Hàng tuần",
+          "monthly": "Hàng tháng"
+        }
+      },
+      "Done": {
+        "importComplete": "Nhập hoàn tất!",
+        "description": "Nhóm đã nhập sẵn sàng. Hãy so sánh chi phí và số dư đã nhập với bản xuất gốc. Nếu có sai sót, hãy mở một issue nhập trên GitHub; lỗi nhập được ưu tiên cao nhất.",
+        "openGroup": "Mở nhóm",
+        "shareableLinksTitle": "Liên kết mời",
+        "shareableLinksDescription": "Chia sẻ liên kết.",
+        "shareAriaLabel": "Chia sẻ",
+        "emailInvitesTitle": "Mời qua email",
+        "emailInvitesDescription": "Mời thành viên qua email.",
+        "shareTitle": "Chia sẻ",
+        "shareText": "Tham gia nhóm của tôi trên Spliit! {name} {url}"
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "1 {source} = {rate} {target}",
+        "customRateLabel": "Tỷ giá tùy chỉnh",
+        "fetchingRates": "Đang tải…",
+        "fixedDescription": "Dùng một tỷ giá.",
+        "fixedTitle": "Cố định",
+        "noConversionNeeded": "Không cần chuyển đổi.",
+        "perDateDescription": "Tỷ giá theo từng ngày.",
+        "perDateSelectedHint": "Áp dụng theo ngày chi phí.",
+        "perDateTitle": "Theo ngày",
+        "rateDateLabel": "Ngày",
+        "ratesError": "Lỗi tỷ giá.",
+        "refresh": "Làm mới",
+        "viaFrankfurter": "Qua Frankfurter"
+      }
+    },
+    "groups": "Nhóm",
+    "friends": "Bạn bè",
+    "createExpense": "Tạo chi phí",
+    "pending": "Đang chờ",
+    "scopePickerGroups": "Nhóm",
+    "scopePickerFriends": "Bạn bè",
+    "scopePickerEmpty": "Chưa có gì.",
+    "scopePickerMembers_zero": "{count} thành viên",
+    "scopePickerMembers_one": "{count} thành viên",
+    "scopePickerMembers_two": "{count} thành viên",
+    "scopePickerMembers_few": "{count} thành viên",
+    "scopePickerMembers_many": "{count} thành viên",
+    "scopePickerMembers_other": "{count} thành viên",
+    "createFriendLedgerCard": {
+      "description": "Theo dõi chi phí với bạn bè.",
+      "title": "Theo dõi chi phí với bạn bè"
+    },
+    "createGroupCard": {
+      "title": "Nhóm",
+      "description": "Chia chi phí nhóm."
+    },
+    "importGroup": "Nhập dữ liệu",
+    "exportDescription": "Xuất chi phí ra tệp."
+  },
+  "Auth": {
+    "title": "Đăng nhập",
+    "signUpTitle": "Đăng ký",
+    "subtitle": "Đăng nhập để tiếp tục.",
+    "signUpSubtitle": "Tạo tài khoản để bắt đầu.",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "signInWithPassword": "Đăng nhập bằng mật khẩu",
+    "signUpWithPassword": "Đăng ký bằng mật khẩu",
+    "signInWithGoogle": "Đăng nhập bằng Google",
+    "orContinueWithEmail": "hoặc tiếp tục với email",
+    "magicLinkTab": "Liên kết đăng nhập",
+    "passwordTab": "Mật khẩu",
+    "sendMagicLink": "Gửi liên kết đăng nhập",
+    "magicLinkEmail": "Email",
+    "usePasswordInstead": "Dùng mật khẩu",
+    "hidePasswordForm": "Ẩn form mật khẩu",
+    "passwordFormDescription": "Nếu muốn dùng mật khẩu, hãy nhập email và mật khẩu.",
+    "passwordFormDescriptionSignUp": "Tạo tài khoản với email và mật khẩu.",
+    "useDifferentEmail": "Dùng email khác",
+    "magicLinkSent": "Đã gửi! Kiểm tra hộp thư đến.",
+    "verificationEmailSent": "Email xác minh đã được gửi.",
+    "noAccount": "Chưa có tài khoản?",
+    "haveAccount": "Đã có tài khoản?",
+    "createAccount": "Tạo tài khoản",
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "passwordMismatch": "Mật khẩu không khớp.",
+    "passwordTooShort": "Mật khẩu phải có ít nhất 8 ký tự.",
+    "passwordRequirements": {
+      "minLength": "8 ký tự",
+      "uppercase": "Một chữ cái in hoa",
+      "lowercase": "Một chữ cái thường",
+      "number": "Một số",
+      "symbol": "Một ký tự đặc biệt"
+    },
+    "forgotPasswordLink": "Quên mật khẩu?",
+    "errors": {
+      "invalidCredentials": "Email hoặc mật khẩu không hợp lệ.",
+      "emailRequired": "Nhập địa chỉ email.",
+      "passwordRequired": "Vui lòng nhập mật khẩu.",
+      "nameRequired": "Nhập tên hiển thị.",
+      "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "magicLinkFailed": "Không thể gửi liên kết.",
+      "passwordPolicy": "Sử dụng ít nhất 8 ký tự bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt."
+    },
+    "loading": "Đang tải…",
+    "signedInAs": "Đã đăng nhập với tư cách {name}",
+    "required": "Bạn cần đăng nhập để truy cập các nhóm của mình.",
+    "back": "Về trang chủ",
+    "signInWithGithub": "Đăng nhập bằng GitHub",
+    "legalNotice": "Bằng cách tiếp tục, bạn đồng ý với <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách quyền riêng tư</privacy>."
+  },
+  "AccountSettings": {
+    "title": "Cài đặt tài khoản",
+    "profile": {
+      "title": "Hồ sơ",
+      "description": "Cập nhật thông tin hiển thị với các nhóm."
+    },
+    "nameLabel": "Tên hiển thị",
+    "emailLabel": "Email",
+    "emailHelp": "Email của bạn được gắn với tài khoản và không thể thay đổi ở đây.",
+    "submit": "Lưu thay đổi",
+    "saving": "Đang lưu…",
+    "success": "Đã cập nhật hồ sơ.",
+    "errors": {
+      "nameRequired": "Nhập tên hiển thị.",
+      "nameTooShort": "Tên phải có ít nhất 2 ký tự.",
+      "nameTooLong": "Tên phải có tối đa 50 ký tự.",
+      "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "imageUpload": "Không thể cập nhật ảnh đại diện."
+    },
+    "image": {
+      "label": "Ảnh đại diện",
+      "help": "Chọn ảnh để cập nhật. Nếu không có ảnh, chữ cái đầu của bạn sẽ được hiển thị.",
+      "choose": "Chọn ảnh",
+      "uploading": "Đang tải lên…",
+      "updated": "Đã cập nhật ảnh đại diện.",
+      "remove": "Xóa ảnh",
+      "removed": "Đã xóa ảnh đại diện."
+    },
+    "notifications": {
+      "title": "Thông báo",
+      "description": "Chọn nơi Spliit gửi thông báo hoạt động.",
+      "enable": "Bật thông báo đẩy",
+      "disable": "Tắt thông báo đẩy",
+      "enabled": "Thông báo đẩy đang bật.",
+      "disabled": "Thông báo đẩy đang tắt.",
+      "unsupported": "Trình duyệt này không hỗ trợ thông báo đẩy.",
+      "notConfigured": "Thông báo đẩy không khả dụng.",
+      "permissionDenied": "Thông báo bị chặn. Cho phép trong cài đặt trình duyệt.",
+      "iosInstall": "Trên iPhone/iPad, thêm Spliit vào Màn hình chính trước.",
+      "error": "Không thể cập nhật cài đặt thông báo đẩy.",
+      "preferencesTitle": "Tùy chọn thông báo",
+      "preferencesDescription": "Các lựa chọn này áp dụng cho hoạt động tương lai.",
+      "globalLabel": "Tất cả hoạt động",
+      "globalDescription": "Khuyến nghị thay đổi theo hoạt động.",
+      "recommended": "Khuyến nghị",
+      "recommendedDescription": "Phân phối khuyến nghị: {channels}.",
+      "mixedByActivity": "Theo hoạt động",
+      "recommendedCategoryDescription": "Đang dùng {channels} cho hoạt động này.",
+      "useRecommended": "Dùng khuyến nghị",
+      "custom": "Tùy chỉnh",
+      "useGlobal": "Dùng cài đặt chung",
+      "inheritedDescription": "Theo cài đặt chung.",
+      "customDescription": "Phân phối tùy chỉnh. Chọn một hoặc cả hai kênh.",
+      "channelsLabel": "Kênh thông báo",
+      "email": "Email",
+      "emailDescription": "Nhận tin nhắn trong hộp thư đến.",
+      "push": {
+        "deviceTitle": "Thiết bị này",
+        "deviceDescription": "Bật thông báo đẩy trên thiết bị này.",
+        "deviceDisabled": "Đã chọn push nhưng chưa bật.",
+        "noDevices": "Đã chọn push nhưng chưa có thiết bị."
+      },
+      "pushDescription": "Nhận thông báo trên thiết bị đã bật.",
+      "off": "Tắt",
+      "pushSelectionError": "Không thể bật push.",
+      "pushMissingTarget": "Đã chọn push nhưng chưa có thiết bị.",
+      "rowSaved": "Đã lưu tùy chọn thông báo.",
+      "comingSoon": "Sắp ra mắt",
+      "emailComingSoon": "Cấu hình email sắp ra mắt.",
+      "sections": {
+        "groups": "Nhóm và bạn bè",
+        "expenses": "Chi phí",
+        "summaries": "Tổng kết"
+      },
+      "rows": {
+        "addedToGroup": {
+          "title": "Được thêm vào nhóm",
+          "description": "Khi ai đó thêm bạn vào nhóm."
+        },
+        "addedAsFriend": {
+          "title": "Sổ bạn bè",
+          "description": "Khi ai đó tạo sổ bạn bè với bạn."
+        },
+        "newExpense": {
+          "title": "Chi phí mới",
+          "description": "Khi ai đó thêm chi phí vào nhóm."
+        },
+        "recurringExpense": {
+          "title": "Chi phí định kỳ",
+          "description": "Khi chi phí định kỳ được tạo."
+        },
+        "expenseChanged": {
+          "title": "Chi phí đã sửa hoặc xóa",
+          "description": "Khi chi phí được cập nhật hoặc xóa."
+        },
+        "newComment": {
+          "title": "Bình luận mới",
+          "description": "Khi ai đó bình luận về chi phí."
+        },
+        "weeklySummary": {
+          "title": "Tổng kết hoạt động tuần",
+          "description": "Tổng kết hoạt động hàng tuần."
+        },
+        "cloudNews": {
+          "title": "Tin tức Spliit",
+          "description": "Tin tức sản phẩm và cập nhật."
+        }
+      },
+      "inherited": "Kế thừa",
+      "currently": "Hiện tại: {channels}",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "Chi phí mới",
+          "description": "Khi ai đó thêm chi phí vào nhóm."
+        },
+        "EXPENSE_CHANGES": {
+          "title": "Thay đổi chi phí",
+          "description": "Khi chi phí được cập nhật hoặc xóa."
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "Nhập & thay đổi hàng loạt",
+          "description": "Khi chi phí được nhập hoặc cập nhật hàng loạt."
+        },
+        "GROUP_CHANGES": {
+          "title": "Thay đổi nhóm",
+          "description": "Khi thông tin nhóm thay đổi."
+        },
+        "GROUP_INVITATIONS": {
+          "title": "Lời mời",
+          "description": "Khi lời mời được gửi, chấp nhận hoặc từ chối."
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "Tư cách thành viên",
+          "description": "Khi thành viên rời đi hoặc thay đổi vai trò."
+        }
+      },
+      "expenseActivity": "Hoạt động chi phí",
+      "groupActivity": "Hoạt động nhóm",
+      "save": "Lưu thay đổi",
+      "saving": "Đang lưu…",
+      "reset": "Đặt lại",
+      "saved": "Đã lưu tùy chọn thông báo.",
+      "saveError": "Không thể lưu. Vui lòng thử lại.",
+      "loading": "Đang tải…",
+      "loadError": "Không thể tải tùy chọn.",
+      "retry": "Thử lại",
+      "pushChannel": "Push"
+    }
+  },
+  "CompleteProfile": {
+    "title": "Thiết lập hồ sơ",
+    "description": "Hoàn tất thiết lập hồ sơ.",
+    "nameLabel": "Tên hiển thị",
+    "namePlaceholder": "Tên của bạn",
+    "submit": "Hoàn tất",
+    "saving": "Đang lưu…",
+    "signedInAs": "Đã đăng nhập với tư cách {email}",
+    "errors": {
+      "nameRequired": "Vui lòng nhập tên.",
+      "nameTooShort": "Tên phải có ít nhất 2 ký tự.",
+      "generic": "Đã xảy ra lỗi."
+    }
+  },
+  "ForgotPassword": {
+    "title": "Quên mật khẩu",
+    "subtitle": "Nhập email để nhận liên kết đặt lại mật khẩu.",
+    "emailLabel": "Email",
+    "submit": "Gửi",
+    "emailSent": "Đã gửi! Kiểm tra hộp thư đến.",
+    "tryAgain": "Thử lại",
+    "backToSignIn": "Quay lại đăng nhập",
+    "errors": {
+      "sendFailed": "Không thể gửi email."
+    }
+  },
+  "ResetPassword": {
+    "title": "Đặt lại mật khẩu",
+    "subtitle": "Nhập mật khẩu mới.",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "passwordMismatch": "Mật khẩu không khớp.",
+    "submit": "Đặt lại",
+    "submitting": "Đang xử lý…",
+    "success": "Đã đặt lại mật khẩu!",
+    "successDescription": "Mật khẩu của bạn đã được cập nhật.",
+    "goToSignIn": "Đi đến đăng nhập",
+    "invalidTokenTitle": "Liên kết không hợp lệ",
+    "invalidTokenDescription": "Liên kết đặt lại mật khẩu không hợp lệ.",
+    "requestNewLink": "Yêu cầu liên kết mới",
+    "backToSignIn": "Quay lại đăng nhập",
+    "errors": {
+      "generic": "Đã xảy ra lỗi.",
+      "invalidToken": "Liên kết không hợp lệ hoặc đã hết hạn.",
+      "passwordTooShort": "Mật khẩu quá ngắn.",
+      "passwordPolicy": "Mật khẩu không đáp ứng yêu cầu."
+    }
+  },
+  "GroupForm": {
+    "title": "Nhóm",
+    "readOnlyNote": "Chỉ chủ sở hữu và quản trị viên mới có thể thay đổi cài đặt nhóm.",
+    "readOnlyTitle": "Thông tin nhóm",
+    "readOnlyBack": "Quay lại",
+    "archivedNotice": "Nhóm đã lưu trữ.",
+    "NameField": {
+      "label": "Tên nhóm",
+      "placeholder": "Nhập tên nhóm…",
+      "description": "Tên của nhóm."
+    },
+    "InformationField": {
+      "label": "Thông tin",
+      "placeholder": "Mô tả về nhóm…"
+    },
+    "CurrencyField": {
+      "label": "Loại tiền",
+      "placeholder": "$, €, £…",
+      "description": "Chúng tôi sẽ dùng nó để hiển thị số tiền."
+    },
+    "CurrencyCodeField": {
+      "label": "Loại tiền",
+      "createDescription": "Chọn loại tiền mặc định.",
+      "editDescription": "Mọi số tiền và số dư sẽ tính bằng loại tiền này. Việc đổi loại tiền KHÔNG chuyển đổi các chi phí đã nhập, trừ khi loại tiền mới có 'đơn vị nhỏ' khác loại tiền hiện tại (ví dụ đổi từ Đô la Mỹ sang Yên Nhật).",
+      "customOption": "Tùy chỉnh",
+      "lockedAfterExpenses": "Không thể thay đổi sau khi có chi phí."
+    },
+    "Participants": {
+      "title": "Thành viên",
+      "description": "Thêm người vào nhóm.",
+      "protectedParticipant": "Người tham gia này nằm trong một chi phí và không thể bị xóa.",
+      "new": "Mới",
+      "add": "Thêm",
+      "John": "Nam",
+      "Jane": "Hoa",
+      "Jack": "Tuấn"
+    },
+    "Settings": {
+      "title": "Cài đặt",
+      "description": "Các cài đặt này được đặt theo từng thiết bị và dùng để tùy chỉnh trải nghiệm của bạn.",
+      "ActiveUserField": {
+        "label": "Người dùng hoạt động",
+        "placeholder": "Chọn…",
+        "none": "Không ai",
+        "description": "Chọn tài khoản hoạt động."
+      },
+      "save": "Lưu",
+      "saving": "Đang lưu…",
+      "create": "Tạo nhóm",
+      "creating": "Đang tạo…",
+      "cancel": "Hủy",
+      "inviteAfterCreate": "Mời sau khi tạo"
+    },
+    "bulkCategorizeSectionTitle": "Phân loại hàng loạt",
+    "bulkCategorizeSectionDescription": "Phân loại nhiều chi phí cùng lúc.",
+    "bulkCategorizeButton": "Phân loại hàng loạt"
+  },
+  "ExpenseForm": {
+    "Income": {
+      "create": "Tạo khoản thu",
+      "edit": "Cập nhật khoản thu",
+      "TitleField": {
+        "label": "Tiêu đề",
+        "placeholder": "Nhập tiêu đề…",
+        "description": "Mô tả ngắn về khoản thu."
+      },
+      "DateField": {
+        "label": "Ngày",
+        "description": "Ngày khoản thu."
+      },
+      "currencyField": {
+        "label": "Loại tiền",
+        "description": "Loại tiền của khoản thu."
+      },
+      "categoryFieldDescription": "Chọn danh mục.",
+      "paidByField": {
+        "label": "Người nhận",
+        "description": "Người nhận khoản thu."
+      },
+      "paidFor": {
+        "title": "Chia cho",
+        "description": "Cách chia khoản thu."
+      },
+      "splitModeDescription": "Cách chia khoản thu.",
+      "attachDescription": "Đính kèm tài liệu."
+    },
+    "Expense": {
+      "create": "Tạo chi phí",
+      "edit": "Cập nhật chi phí",
+      "TitleField": {
+        "label": "Tiêu đề",
+        "placeholder": "Nhập tiêu đề…",
+        "description": "Mô tả ngắn về chi phí."
+      },
+      "DateField": {
+        "label": "Ngày",
+        "description": "Ngày chi phí."
+      },
+      "currencyField": {
+        "label": "Loại tiền",
+        "description": "Loại tiền của chi phí."
+      },
+      "categoryFieldDescription": "Chọn danh mục.",
+      "paidByField": {
+        "label": "Người trả",
+        "placeholder": "Chọn người trả…",
+        "description": "Người đã trả tiền."
+      },
+      "recurrenceRule": {
+        "label": "Lặp lại",
+        "description": "Tần suất lặp lại.",
+        "none": "Không lặp lại",
+        "daily": "Hàng ngày",
+        "weekly": "Hàng tuần",
+        "monthly": "Hàng tháng"
+      },
+      "recurrence": {
+        "label": "Định kỳ",
+        "description": "Chi phí lặp lại theo lịch.",
+        "checkboxLabel": "Chi phí định kỳ",
+        "checkboxDescription": "Chi phí này lặp lại.",
+        "enable": "Bật lặp lại",
+        "remove": "Xóa lịch",
+        "repeatEvery": "Lặp lại mỗi",
+        "interval": "Mỗi",
+        "frequency": "Tần suất",
+        "frequencyOptions": {
+          "daily": "Hàng ngày",
+          "weekly": "Hàng tuần",
+          "monthly": "Hàng tháng",
+          "yearly": "Hàng năm"
+        },
+        "ends": {
+          "label": "Kết thúc",
+          "never": "Không bao giờ",
+          "count": "Sau số lần",
+          "date": "Vào ngày",
+          "countInput": "số lần",
+          "dateInput": "chọn ngày"
+        },
+        "previewLabel": "Xem trước",
+        "currentOccurrence": "Hiện tại",
+        "viewAll": "Xem tất cả",
+        "scheduleTitle": "Lịch",
+        "remainingCount": "{count} lần còn lại",
+        "unlimitedSchedule": "Vô thời hạn",
+        "noFurtherOccurrences": "Không còn lần nào.",
+        "scheduleCount": "{count} lần",
+        "decreaseOccurrences": "Giảm số lần",
+        "increaseOccurrences": "Tăng số lần",
+        "ruleSummary": "Mỗi {interval} {frequency} · {count} lần",
+        "ruleSummaryIndefinite": "Mỗi {interval} {frequency} · Không có ngày kết thúc",
+        "scheduleChangeWarningTitle": "Thay đổi lịch",
+        "scheduleChangeWarning": "Lưu sẽ lên lịch lại lần này và các lần sau. Các chi phí tương lai hiện có có thể chuyển sang ngày mới hoặc bị xóa, và các ngày đến hạn thiếu có thể được tạo tự động.",
+        "pastDateBackfillNote": "Ngày quá khứ — tạo cho các lần trước.",
+        "completedOccurrence": "Đã hoàn thành",
+        "upcomingOccurrence": "Sắp tới"
+      },
+      "paidFor": {
+        "title": "Chia cho",
+        "description": "Cách chia chi phí."
+      },
+      "splitModeDescription": "Cách chia chi phí.",
+      "attachDescription": "Đính kèm tài liệu.",
+      "createCopy": "Tạo bản sao {title}",
+      "editTitle": "Chỉnh sửa chi phí {title}",
+      "recurringEditScopeOccurrence": "Chỉ lần này",
+      "recurringEditScopeFuture": "Lần này và các lần sau"
+    },
+    "amountField": {
+      "label": "Số tiền",
+      "calculator": {
+        "buttonLabel": "Mở máy tính",
+        "title": "Máy tính",
+        "description": "Tính toán nhanh.",
+        "clear": "Xóa tất cả",
+        "backspace": "Xóa",
+        "equals": "=",
+        "plus": "+",
+        "minus": "−",
+        "multiply": "×",
+        "divide": "÷",
+        "openBracket": "(",
+        "closeBracket": ")",
+        "decimal": ",",
+        "invalid": "Biểu thức không hợp lệ",
+        "replaceItemsTitle": "Thay thế mục?",
+        "replaceItemsDescription": "Thay thế các mục hiện có.",
+        "replaceItemsConfirm": "Xác nhận",
+        "splitIntoItems_zero": "Tạo {count} mục",
+        "splitIntoItems_one": "Tạo {count} mục",
+        "splitIntoItems_two": "Tạo {count} mục",
+        "splitIntoItems_few": "Tạo {count} mục",
+        "splitIntoItems_many": "Tạo {count} mục",
+        "splitIntoItems_other": "Tạo {count} mục",
+        "replaceItems": "Thay thế",
+        "createItems": "Tạo mục",
+        "itemTransferInvalid": "Hoàn tất phép tính.",
+        "itemTransferUnsupported": "Chỉ dùng +, × và dấu ngoặc.",
+        "itemTransferEmpty": "Nhập một phép tính.",
+        "createItemsHint": "Tạo mục từ kết quả.",
+        "replaceItemsHint": "Thay thế danh sách mục."
+      }
+    },
+    "conversionUnavailable": "Để đặt một loại tiền khác cho từng chi phí và chuyển đổi số tiền, hãy chọn một loại tiền không phải tùy chỉnh cho nhóm.",
+    "conversionRateField": {
+      "useApi": "Tự động",
+      "useCustom": "Tùy chỉnh",
+      "label": "Tỷ giá",
+      "providerNote": "Tỷ giá từ Frankfurter.",
+      "futureDateUsesToday": "Ngày tương lai — dùng tỷ giá hôm nay."
+    },
+    "conversionRateState": {
+      "loading": "Đang tải…",
+      "success": "Tỷ giá sẵn sàng.",
+      "error": "Lỗi tỷ giá.",
+      "staleRate": "Tỷ giá cũ.",
+      "noRate": "Không có tỷ giá.",
+      "currencyNotFound": "Không tìm thấy.",
+      "noDate": "Chọn ngày.",
+      "dateMismatch": "Ngày không khớp. {date}",
+      "refresh": "Làm mới",
+      "customRate": "Tỷ giá tùy chỉnh"
+    },
+    "isReimbursementField": {
+      "label": "Đây là thanh toán hoàn trả"
+    },
+    "categoryField": {
+      "label": "Danh mục"
+    },
+    "notesField": {
+      "label": "Ghi chú"
+    },
+    "selectNone": "Bỏ chọn",
+    "selectAll": "Chọn tất cả",
+    "shares": "Phần",
+    "participant": {
+      "pending": "Đang chờ"
+    },
+    "SplitModeField": {
+      "label": "Cách chia",
+      "evenly": "Chia đều",
+      "byShares": "Theo phần",
+      "byPercentage": "Theo %",
+      "byAmount": "Theo số tiền"
+    },
+    "PaidBySplitModeField": {
+      "label": "Cách trả"
+    },
+    "DeletePopup": {
+      "label": "Xóa chi phí",
+      "title": "Xóa chi phí",
+      "description": "Bạn có chắc muốn xóa chi phí này? Hành động này không thể hoàn tác.",
+      "yes": "Xóa",
+      "deleting": "Đang xóa…",
+      "cancel": "Hủy"
+    },
+    "attachDocuments": "Đính kèm",
+    "create": "Tạo",
+    "creating": "Đang tạo…",
+    "save": "Lưu",
+    "saving": "Đang lưu…",
+    "cancel": "Hủy",
+    "reimbursement": "Thanh toán hoàn trả",
+    "readOnlyNotice": "Chế độ chỉ đọc.",
+    "ParticipantDistribution": {
+      "missing": "Thiếu {missing} {total}",
+      "surplus": "Dư {extra} {total}",
+      "matches": "Khớp {total}",
+      "evenlySplit": "Chia đều {amount} {count}",
+      "sharesTotal": "Tổng số phần {sum}",
+      "percentageMatches": "Tổng % khớp",
+      "percentageMissing": "Thiếu {pct}%",
+      "percentageSurplus": "Dư {pct}%"
+    },
+    "splittingOptions": "Tùy chọn chia",
+    "multiplePayers": "Nhiều người trả",
+    "paidByOptionSinglePayer": "Một người trả",
+    "paidByOptionEvenly": "Trả đều",
+    "paidByOptionByShares": "Trả theo phần",
+    "paidByOptionByPercentage": "Trả theo %",
+    "paidByOptionByAmount": "Trả theo số tiền",
+    "paidForOptionEvenly": "Chia đều",
+    "paidForOptionByShares": "Theo phần",
+    "paidForOptionByPercentage": "Theo %",
+    "paidForOptionByAmount": "Theo số tiền",
+    "paidBySectionSingle": "Người trả",
+    "paidBySectionMultiple": "Người trả",
+    "paidForSection": "Chia cho người tham gia",
+    "splitOptionAria": "Tùy chọn {title}",
+    "paidByOptionSinglePayerHelper": "Một người trả toàn bộ.",
+    "paidByOptionEvenlyHelper": "Mỗi người trả bằng nhau.",
+    "paidByOptionBySharesHelper": "Theo số phần.",
+    "paidByOptionByPercentageHelper": "Theo phần trăm.",
+    "paidByOptionByAmountHelper": "Theo số tiền cụ thể.",
+    "paidForOptionEvenlyHelper": "Mỗi người bằng nhau.",
+    "paidForOptionBySharesHelper": "Theo số phần.",
+    "paidForOptionByPercentageHelper": "Theo phần trăm.",
+    "paidForOptionByAmountHelper": "Theo số tiền cụ thể.",
+    "convertedAmountField": {
+      "label": "Đã quy đổi"
+    },
+    "paidForOptionItemized": "Theo mục",
+    "paidForOptionItemizedHelper": "Phân bổ theo mục.",
+    "items": {
+      "title": "Mục",
+      "description": "Chia thành nhiều mục.",
+      "addItem": "Thêm mục",
+      "empty": "Chưa có mục.",
+      "allMembers": "Tất cả thành viên",
+      "noMembers": "Không có thành viên.",
+      "other": "Khác",
+      "derivedBadge": "Từ mục",
+      "errorExceedsAmount": "Tổng vượt quá số tiền.",
+      "actionEdit": "Sửa",
+      "actionDelete": "Xóa",
+      "total": "Tổng",
+      "requiredForItemized": "Thêm ít nhất một mục để dùng chia theo mục.",
+      "participantsSummary_zero": "{count} người tham gia",
+      "participantsSummary_one": "{count} người tham gia",
+      "participantsSummary_two": "{count} người tham gia",
+      "participantsSummary_few": "{count} người tham gia",
+      "participantsSummary_many": "{count} người tham gia",
+      "participantsSummary_other": "{count} người tham gia",
+      "modalTitle": "Mục",
+      "columnItem": "Mục",
+      "columnCost": "Chi phí",
+      "columnQuantity": "Số lượng",
+      "columnParticipants": "Người tham gia",
+      "columnTotal": "Tổng",
+      "setExpenseAmount": "Đặt số tiền",
+      "splitEvenlyLabel": "Chia đều",
+      "splitBySharesLabel": "Theo phần",
+      "splitByPercentageLabel": "Theo %",
+      "splitByAmountLabel": "Theo số tiền",
+      "switchToItemizedTitle": "Chia theo mục?",
+      "switchToItemizedDescription": "Thay thế cách chia hiện tại.",
+      "switchToItemizedConfirm": "Xác nhận",
+      "showItems": "Hiện mục",
+      "hideItems": "Ẩn mục",
+      "participantValueLabel": "Giá trị {name}",
+      "defaultSplitLabel": "Mặc định",
+      "defaultSplitMixed": "Không khớp mặc định",
+      "defaultSplitEdit": "Sửa mặc định",
+      "defaultSplitModalTitle": "Cách chia mặc định",
+      "calculationError": "Không thể tính chia theo mục. Kiểm tra giá trị mục và phần người tham gia."
+    },
+    "leaveItemized": {
+      "title": "Rời chế độ mục?",
+      "description": "Các mục sẽ được gộp lại. {mode}",
+      "cancel": "Hủy",
+      "confirm": "Rời"
+    },
+    "paidForItemizedEntryHint": "Chia mục cho từng người.",
+    "paidForItemizedActiveHint": "Chia theo mục.",
+    "DefaultSplit": {
+      "savedAsDefault": "Đã lưu làm mặc định",
+      "heading": "Chia mặc định",
+      "load": "Tải mặc định",
+      "save": "Lưu mặc định"
+    },
+    "scanReceipt": "Quét biên lai",
+    "participantAmountLabel": "Số tiền của {name}",
+    "participantPercentageLabel": "% của {name}",
+    "participantSharesLabel": "Phần của {name}",
+    "decreaseShares": "Giảm phần {name}",
+    "increaseShares": "Tăng phần {name}",
+    "validationSummary": "Vui lòng sửa các lỗi."
+  },
+  "ExpenseDocumentsInput": {
+    "deleteDocument": "Xóa tài liệu",
+    "document": "Tài liệu",
+    "close": "Đóng",
+    "TooBigToast": {
+      "title": "Quá lớn",
+      "description": "Tài liệu quá lớn (tối đa 10MB). {maxSize} {size}"
+    },
+    "ErrorToast": {
+      "title": "Lỗi tải lên",
+      "description": "Không thể tải lên.",
+      "retry": "Thử lại"
+    }
+  },
+  "CreateFromReceipt": {
+    "Dialog": {
+      "triggerTitle": "Quét biên lai",
+      "title": "Tạo từ biên lai",
+      "description": "Trích xuất thông tin chi phí từ ảnh biên lai.",
+      "body": "Quét biên lai để tạo chi phí.",
+      "selectImage": "Chọn ảnh",
+      "titleLabel": "Tiêu đề",
+      "categoryLabel": "Danh mục",
+      "amountLabel": "Số tiền",
+      "dateLabel": "Ngày",
+      "editNext": "Sửa tiếp theo",
+      "continue": "Tiếp tục",
+      "existingDocuments": "Tài liệu hiện có",
+      "existingDocumentAlt": "Tài liệu",
+      "uploadAndScan": "Tải lên",
+      "scannedReceiptAlt": "Biên lai",
+      "fillTitle": "Chi phí từ biên lai",
+      "fillNext": "Điền tiếp",
+      "scanningHint": "Đang quét…",
+      "fillBody": "Chọn một biên lai đính kèm hoặc tải lên ảnh mới — chúng tôi sẽ quét để gợi ý thông tin cho chi phí này."
+    },
+    "unknown": "Không xác định",
+    "TooBigToast": {
+      "title": "Quá lớn",
+      "description": "Ảnh quá lớn (tối đa 10MB). {maxSize} {size}"
+    },
+    "ErrorToast": {
+      "title": "Lỗi quét",
+      "description": "Không thể quét.",
+      "retry": "Thử lại"
+    }
+  },
+  "Balances": {
+    "title": "Số dư",
+    "description": "Xem ai nợ ai.",
+    "removedBadge": "Đã xóa",
+    "Reimbursements": {
+      "title": "Các khoản thanh toán hoàn trả gợi ý",
+      "description": "Theo dõi các khoản thanh toán.",
+      "noImbursements": "Không có hoàn trả.",
+      "owes": "<strong>{from}</strong> nợ <strong>{to}</strong>",
+      "markAsPaid": "Đã thanh toán",
+      "markAsPaidAria": "Đánh dấu đã thanh toán {amount} {from} {to}"
+    },
+    "currencyDisplay": {
+      "label": "Hiển thị",
+      "group": "Theo nhóm {currency}",
+      "original": "Theo loại gốc",
+      "title": "Tùy chọn",
+      "groupDescription": "Hiển thị bằng loại tiền nhóm. {currency}",
+      "originalDescription": "Hiển thị bằng loại tiền gốc.",
+      "originalNote": "Các khoản thanh toán hoàn trả thường được ghi bằng loại tiền nhóm. Chế độ xem theo loại tiền gốc là một sổ riêng cho từng loại tiền, nên số dư có thể trông chưa thanh toán ngay cả khi kế hoạch theo loại tiền nhóm đã xong. Nên dùng chế độ xem theo loại tiền nhóm khi thanh toán."
+    },
+    "view": {
+      "label": "Giao diện",
+      "title": "Giao diện",
+      "simple": "Đơn giản",
+      "simpleDescription": "Số dư mỗi thành viên.",
+      "visual": "Trực quan",
+      "visualDescription": "Sơ đồ trực quan."
+    },
+    "simple": {
+      "title": "Đơn giản",
+      "description": "Số dư ròng.",
+      "netBalances": "Số dư ròng",
+      "isOwed": "được nợ {amount}",
+      "owes": "nợ {amount}",
+      "suggestedPayments": "Đề xuất",
+      "empty": "Mọi người đã thanh toán xong."
+    },
+    "direction": {
+      "toReceive": "Được nhận",
+      "toPay": "Phải trả",
+      "settledUp": "Đã thanh toán",
+      "toReceiveDescription": "Số tiền bạn sẽ nhận.",
+      "toPayDescription": "Số tiền bạn phải trả.",
+      "participantReceives": "<strong>{name}</strong> nhận",
+      "participantPays": "<strong>{name}</strong> trả",
+      "fromParticipant": "từ <strong>{name}</strong>",
+      "toParticipant": "cho <strong>{name}</strong>",
+      "settle": "Thanh toán",
+      "settlePaymentsBy": "Thanh toán {count} khoản qua {name}, {amount}",
+      "settlePaymentsTo": "Thanh toán {count} khoản cho {name}, {amount}"
+    }
+  },
+  "Stats": {
+    "title": "Thống kê",
+    "Totals": {
+      "title": "Tổng cộng",
+      "description": "Tổng quan chi tiêu.",
+      "groupSpendings": "Chi tiêu nhóm",
+      "groupEarnings": "Thu nhập nhóm",
+      "yourSpendings": "Chi tiêu của bạn",
+      "yourEarnings": "Thu nhập của bạn",
+      "yourShare": "Phần của bạn"
+    },
+    "Dashboard": {
+      "description": "Thống kê chi phí.",
+      "title": "Thống kê",
+      "periods": {
+        "LATEST_ACTIVITY": "Gần đây",
+        "WEEK": "Tuần này",
+        "MONTH": "Tháng này",
+        "QUARTER": "Quý này",
+        "YEAR": "Năm nay",
+        "CUSTOM": "Tùy chỉnh"
+      },
+      "lifetime": "Từ đầu",
+      "selectedPeriod": "Kỳ đã chọn",
+      "lifetimeDescription": "Thống kê từ đầu đến nay.",
+      "expenseCount_zero": "{count} chi phí",
+      "expenseCount_one": "{count} chi phí",
+      "expenseCount_two": "{count} chi phí",
+      "expenseCount_few": "{count} chi phí",
+      "expenseCount_many": "{count} chi phí",
+      "expenseCount_other": "{count} chi phí",
+      "spendingOverTime": "Chi tiêu theo thời gian",
+      "bucketedBy": "Phân nhóm theo {granularity}",
+      "granularity": {
+        "DAY": "Ngày",
+        "WEEK": "Tuần",
+        "MONTH": "Tháng"
+      },
+      "other": "Khác",
+      "inactiveGap": "Khoảng lặng",
+      "categories": "Danh mục",
+      "categoriesDescription": "Phân bổ theo danh mục.",
+      "participants": "Thành viên",
+      "participantsDescription": "Chi phí theo thành viên.",
+      "emptyTitle": "Chưa có dữ liệu",
+      "emptyDescription": "Chưa đủ dữ liệu.",
+      "error": "Lỗi tải thống kê.",
+      "retry": "Thử lại",
+      "customRange": {
+        "from": "Từ",
+        "to": "Đến"
+      }
+    }
+  },
+  "Activity": {
+    "title": "Hoạt động",
+    "description": "Tổng quan hoạt động.",
+    "noActivity": "Chưa có hoạt động.",
+    "someone": "Ai đó",
+    "settingsModified": "Cài đặt nhóm đã được sửa bởi <strong>{participant}</strong>.",
+    "expenseCreated": "Chi phí <em>{expense}</em> được tạo bởi <strong>{participant}</strong>.",
+    "expenseUpdated": "Chi phí <em>{expense}</em> được cập nhật bởi <strong>{participant}</strong>.",
+    "expenseDeleted": "Chi phí <em>{expense}</em> đã xóa bởi <strong>{participant}</strong>.",
+    "Groups": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "earlierThisWeek": "Đầu tuần",
+      "lastWeek": "Tuần trước",
+      "earlierThisMonth": "Đầu tháng",
+      "lastMonth": "Tháng trước",
+      "earlierThisYear": "Đầu năm",
+      "lastYear": "Năm ngoái",
+      "older": "Cũ hơn"
+    }
+  },
+  "Information": {
+    "title": "Thông tin",
+    "description": "Thông tin nhóm.",
+    "empty": "Chưa có thông tin."
+  },
+  "Settings": {
+    "title": "Cài đặt"
+  },
+  "Share": {
+    "title": "Chia sẻ",
+    "description": "Chia sẻ nhóm với người khác.",
+    "warning": "Cảnh báo!",
+    "warningHelp": "Chỉ chia sẻ với người bạn tin tưởng."
+  },
+  "SchemaErrors": {
+    "min1": "Ít nhất 1.",
+    "min2": "Ít nhất 2.",
+    "max5": "Tối đa 5.",
+    "max50": "Tối đa 50.",
+    "duplicateParticipantName": "Tên trùng lặp.",
+    "titleRequired": "Vui lòng nhập tiêu đề.",
+    "invalidNumber": "Số không hợp lệ.",
+    "amountRequired": "Vui lòng nhập số tiền.",
+    "amountNotZero": "Số tiền phải khác 0.",
+    "amountTenMillion": "Số tiền tối đa là 10.000.000.",
+    "ratePositive": "Tỷ giá phải là số dương.",
+    "paidByRequired": "Vui lòng chọn người trả.",
+    "paidForMin1": "Cần ít nhất một người thụ hưởng.",
+    "noZeroShares": "Phần không thể bằng 0.",
+    "amountSum": "Tổng số tiền phải bằng nhau.",
+    "percentageSum": "Tổng phần trăm phải là 100%.",
+    "paidByMin1": "Cần ít nhất một người trả.",
+    "paidByAmountSum": "Tổng tiền người trả phải khớp.",
+    "paidByPercentageSum": "Tổng % người trả phải là 100%.",
+    "duplicateParticipant": "Người tham gia trùng lặp."
+  },
+  "Categories": {
+    "search": "Tìm danh mục…",
+    "noCategory": "Không có danh mục",
+    "Uncategorized": {
+      "heading": "Chưa phân loại",
+      "General": "Chung",
+      "Payment": "Thanh toán"
+    },
+    "Entertainment": {
+      "heading": "Giải trí",
+      "Entertainment": "Giải trí",
+      "Games": "Trò chơi",
+      "Movies": "Phim ảnh",
+      "Music": "Âm nhạc",
+      "Sports": "Thể thao"
+    },
+    "Food and Drink": {
+      "heading": "Đồ ăn & Thức uống",
+      "Food and Drink": "Đồ ăn & Thức uống",
+      "Dining Out": "Ăn ngoài",
+      "Groceries": "Tạp hóa",
+      "Liquor": "Rượu bia"
+    },
+    "Home": {
+      "heading": "Gia đình",
+      "Home": "Gia đình",
+      "Electronics": "Điện tử",
+      "Furniture": "Nội thất",
+      "Household Supplies": "Vật dụng gia đình",
+      "Maintenance": "Bảo trì",
+      "Mortgage": "Thế chấp",
+      "Pets": "Thú cưng",
+      "Rent": "Tiền thuê nhà",
+      "Services": "Dịch vụ"
+    },
+    "Life": {
+      "heading": "Đời sống",
+      "Childcare": "Trông trẻ",
+      "Clothing": "Quần áo",
+      "Donation": "Từ thiện",
+      "Education": "Giáo dục",
+      "Gifts": "Quà tặng",
+      "Insurance": "Bảo hiểm",
+      "Medical Expenses": "Chi phí y tế",
+      "Taxes": "Thuế"
+    },
+    "Transportation": {
+      "heading": "Di chuyển",
+      "Transportation": "Di chuyển",
+      "Bicycle": "Xe đạp",
+      "Bus/Train": "Xe buýt/Xe lửa",
+      "Car": "Xe hơi",
+      "Gas/Fuel": "Xăng dầu",
+      "Hotel": "Khách sạn",
+      "Parking": "Đỗ xe",
+      "Plane": "Máy bay",
+      "Taxi": "Taxi"
+    },
+    "Utilities": {
+      "heading": "Tiện ích",
+      "Utilities": "Tiện ích",
+      "Cleaning": "Vệ sinh",
+      "Electricity": "Điện",
+      "Heat/Gas": "Sưởi/Gas",
+      "Trash": "Rác",
+      "TV/Phone/Internet": "TV/Điện thoại/Internet",
+      "Water": "Nước"
+    },
+    "Social and Activities": {
+      "heading": "Xã hội & Hoạt động",
+      "Events and Activities": "Sự kiện & Hoạt động"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "Đăng ký & Hội viên",
+      "Digital Subscriptions": "Đăng ký kỹ thuật số",
+      "Memberships": "Hội viên"
+    },
+    "Personal Care and Wellness": {
+      "heading": "Chăm sóc cá nhân",
+      "Personal Care and Wellness": "Chăm sóc cá nhân"
+    }
+  },
+  "Currencies": {
+    "search": "Tìm loại tiền…",
+    "noCurrency": "Không có tiền tệ",
+    "byCode": {
+      "AED": {
+        "name": "AED - Dirham UAE"
+      },
+      "ARS": {
+        "name": "ARS - Peso Argentina"
+      },
+      "AUD": {
+        "name": "AUD - Đô la Úc"
+      },
+      "BDT": {
+        "name": "BDT - Taka Bangladesh"
+      },
+      "BGN": {
+        "name": "BGN - Lev Bulgaria"
+      },
+      "BRL": {
+        "name": "BRL - Real Brazil"
+      },
+      "CAD": {
+        "name": "CAD - Đô la Canada"
+      },
+      "CHF": {
+        "name": "CHF - Franc Thụy Sĩ"
+      },
+      "CLP": {
+        "name": "CLP - Peso Chile"
+      },
+      "CNY": {
+        "name": "CNY - Nhân dân tệ"
+      },
+      "COP": {
+        "name": "COP - Peso Colombia"
+      },
+      "CZK": {
+        "name": "CZK - Koruna Séc"
+      },
+      "DKK": {
+        "name": "DKK - Krone Đan Mạch"
+      },
+      "EGP": {
+        "name": "EGP - Bảng Ai Cập"
+      },
+      "EUR": {
+        "name": "EUR - Euro"
+      },
+      "GBP": {
+        "name": "GBP - Bảng Anh"
+      },
+      "GEL": {
+        "name": "GEL - Lari Gruzia"
+      },
+      "GHS": {
+        "name": "GHS - Cedi Ghana"
+      },
+      "HKD": {
+        "name": "HKD - Đô la Hồng Kông"
+      },
+      "HNL": {
+        "name": "HNL - Lempira Honduras"
+      },
+      "HRK": {
+        "name": "HRK - Kuna Croatia"
+      },
+      "HUF": {
+        "name": "HUF - Forint Hungary"
+      },
+      "IDR": {
+        "name": "IDR - Rupiah Indonesia"
+      },
+      "ILS": {
+        "name": "ILS - Shekel Israel"
+      },
+      "INR": {
+        "name": "INR - Rupee Ấn Độ"
+      },
+      "ISK": {
+        "name": "ISK - Króna Iceland"
+      },
+      "JPY": {
+        "name": "JPY - Yên Nhật"
+      },
+      "KES": {
+        "name": "KES - Shilling Kenya"
+      },
+      "KHR": {
+        "name": "KHR - Riel Campuchia"
+      },
+      "KRW": {
+        "name": "KRW - Won Hàn Quốc"
+      },
+      "KWD": {
+        "name": "KWD - Dinar Kuwait"
+      },
+      "KZT": {
+        "name": "KZT - Tenge Kazakhstan"
+      },
+      "LKR": {
+        "name": "LKR - Rupee Sri Lanka"
+      },
+      "MAD": {
+        "name": "MAD - Dirham Ma Rốc"
+      },
+      "MDL": {
+        "name": "MDL - Leu Moldova"
+      },
+      "MKD": {
+        "name": "MKD - Denar Macedonia"
+      },
+      "MXN": {
+        "name": "MXN - Peso Mexico"
+      },
+      "MYR": {
+        "name": "MYR - Ringgit Malaysia"
+      },
+      "NGN": {
+        "name": "NGN - Naira Nigeria"
+      },
+      "NOK": {
+        "name": "NOK - Krone Na Uy"
+      },
+      "NZD": {
+        "name": "NZD - Đô la New Zealand"
+      },
+      "PEN": {
+        "name": "PEN - Sol Peru"
+      },
+      "PHP": {
+        "name": "PHP - Peso Philippines"
+      },
+      "PKR": {
+        "name": "PKR - Rupee Pakistan"
+      },
+      "PLN": {
+        "name": "PLN - Złoty Ba Lan"
+      },
+      "QAR": {
+        "name": "QAR - Riyal Qatar"
+      },
+      "RON": {
+        "name": "RON - Leu Romania"
+      },
+      "RUB": {
+        "name": "RUB - Ruble Nga"
+      },
+      "SAR": {
+        "name": "SAR - Riyal Ả Rập"
+      },
+      "SEK": {
+        "name": "SEK - Krona Thụy Điển"
+      },
+      "SGD": {
+        "name": "SGD - Đô la Singapore"
+      },
+      "THB": {
+        "name": "THB - Baht Thái Lan"
+      },
+      "TRY": {
+        "name": "TRY - Lira Thổ Nhĩ Kỳ"
+      },
+      "TWD": {
+        "name": "TWD - Đô la Đài Loan"
+      },
+      "UAH": {
+        "name": "UAH - Hryvnia Ukraina"
+      },
+      "USD": {
+        "name": "USD - Đô la Mỹ"
+      },
+      "UYU": {
+        "name": "UYU - Peso Uruguay"
+      },
+      "VND": {
+        "name": "VND - Đồng Việt Nam"
+      },
+      "ZAR": {
+        "name": "ZAR - Rand Nam Phi"
+      }
+    }
+  },
+  "Members": {
+    "title": "Thành viên",
+    "description": "Những người có thể xem và thêm chi phí vào nhóm này.",
+    "empty": "Chưa có thành viên.",
+    "unknownMember": "Không xác định",
+    "youBadge": "Bạn",
+    "role": {
+      "admin": "Quản trị viên",
+      "member": "Thành viên"
+    },
+    "joinedOn": "Tham gia {date}",
+    "changeRoleAria": "Đổi vai trò",
+    "remove": "Xóa",
+    "removed": "Đã xóa.",
+    "roleUpdated": "Đã cập nhật vai trò. {role}",
+    "removeDialog": {
+      "title": "Xóa thành viên",
+      "description": "Xóa thành viên khỏi nhóm. {name}",
+      "cancel": "Hủy",
+      "confirm": "Xóa",
+      "unsettled": {
+        "title": "Số dư chưa thanh toán",
+        "description": "Thành viên có số dư. {name}",
+        "warning": {
+          "title": "Thành viên này có số dư chưa thanh toán",
+          "description": "Xóa mà không thanh toán sẽ để lại các số dư này trong nhóm vô thời hạn. Chọn tùy chọn bên dưới để tạo một khoản thanh toán cho mỗi số dư của thành viên này, hoặc xóa và tự thanh toán thủ công."
+        },
+        "toast": "Đã xóa và tạo hoàn trả.",
+        "checkbox": "Tạo hoàn trả",
+        "previewWillCreate_one": "Sẽ tạo {count} khoản thanh toán",
+        "previewPays": "trả {name}",
+        "previewReceives": "nhận {name}",
+        "previewTo": "Đến {name}",
+        "previewFrom": "Từ {name}",
+        "previewWillCreate_other": "Sẽ tạo {count} khoản thanh toán",
+        "previewWillCreate_zero": "Sẽ tạo {count} khoản thanh toán",
+        "previewWillCreate_two": "Sẽ tạo {count} khoản thanh toán",
+        "previewWillCreate_few": "Sẽ tạo {count} khoản thanh toán",
+        "previewWillCreate_many": "Sẽ tạo {count} khoản thanh toán"
+      }
+    },
+    "noManagePermission": "Bạn không có quyền.",
+    "archivedNotice": "Nhóm đã lưu trữ.",
+    "invite": {
+      "title": "Mời thành viên",
+      "email": "Mời qua email",
+      "emailPlaceholder": "friend@example.com",
+      "role": "Vai trò",
+      "send": "Gửi",
+      "invalidEmail": "Email không hợp lệ.",
+      "tab": {
+        "email": "Email",
+        "link": "Liên kết",
+        "friends": "Bạn bè"
+      },
+      "link": {
+        "generate": "Tạo liên kết",
+        "generating": "Đang tạo…",
+        "singleUse": "Dùng một lần",
+        "copy": "Sao chép",
+        "copied": "Đã sao chép!",
+        "expiresOn": "Hết hạn: {date}",
+        "created": "Liên kết sẵn sàng. Hãy sao chép và chia sẻ trước khi rời trang.",
+        "intro": "Chia sẻ liên kết để mời. {groupName}",
+        "share": "Chia sẻ",
+        "shareTitle": "Chia sẻ liên kết {groupName}",
+        "shareText": "Tham gia nhóm của tôi trên Spliit! {groupName} {inviteUrl}",
+        "generateNew": "Tạo mới"
+      },
+      "emailDescription": "Gửi lời mời qua email.",
+      "linkDescription": "Mời qua liên kết.",
+      "temporaryName": "Tên tạm thời",
+      "temporaryNamePlaceholder": "Tên của họ…",
+      "friendsDescription": "Mời từ danh sách bạn bè.",
+      "selectFriendPlaceholder": "Chọn bạn…",
+      "friendAlreadyMember": "Đã là thành viên.",
+      "noFriends": "Không có bạn bè.",
+      "friendAlreadyInvited": "Đã mời."
+    },
+    "invitations": {
+      "title": "Lời mời",
+      "description": "Lời mời đang chờ.",
+      "empty": "Chưa có lời mời.",
+      "sentOn": "Gửi {date}",
+      "revoke": "Thu hồi",
+      "revokeButton": "Thu hồi",
+      "revoked": "Đã thu hồi.",
+      "created": "Đã tạo {email}",
+      "link": {
+        "type": "Liên kết",
+        "fallbackLabel": "Liên kết"
+      },
+      "email": {
+        "type": "Email"
+      }
+    },
+    "leave": {
+      "button": "Rời nhóm",
+      "title": "Rời nhóm",
+      "description": "Rời khỏi nhóm này.",
+      "descriptionOnlyMember": "Bạn là thành viên duy nhất.",
+      "onlyMemberHint": "Bạn là thành viên duy nhất.",
+      "lastMemberRedirect": "Bạn không thể rời nhóm khi là thành viên duy nhất đang hoạt động. Hãy xóa nhóm từ trang cài đặt.",
+      "body": {
+        "otherAdmins": "Có quản trị viên khác. {names}",
+        "lastAdmin": {
+          "title": "Chỉ định quản trị viên",
+          "description": "Bạn là quản trị viên duy nhất.",
+          "placeholder": "Chọn quản trị viên mới…"
+        },
+        "unsettled": {
+          "title": "Số dư chưa thanh toán",
+          "description": "Bạn còn số dư."
+        }
+      },
+      "cancel": "Hủy",
+      "confirm": "Xác nhận",
+      "confirmWithForce": "Vẫn rời",
+      "toast": {
+        "left": "Đã rời nhóm."
+      },
+      "error": {
+        "lastAdmin": "Chỉ định quản trị viên khác.",
+        "unsettled": "Giải quyết số dư trước."
+      }
+    },
+    "unlinked": {
+      "title": "Chưa liên kết",
+      "description": "Chưa liên kết tài khoản.",
+      "emailPlaceholder": "account@example.com",
+      "link": "Liên kết",
+      "linkSuccess": "Đã liên kết.",
+      "idHint": "ID: {id}",
+      "linkDialog": {
+        "title": "Liên kết tài khoản",
+        "description": "Liên kết với tài khoản. {displayName}",
+        "membersGroup": "Thành viên",
+        "cancel": "Hủy",
+        "confirm": "Liên kết",
+        "noCandidates": "Không có.",
+        "pendingLabel": "Đang chờ",
+        "pendingHint": "Người dùng có lời mời.",
+        "membersGroupWithPending": "Thành viên & đang chờ",
+        "pendingGroup": "Đang chờ",
+        "pendingSuffix": "(đang chờ)"
+      },
+      "linkButton": "Liên kết"
+    },
+    "dropdown": {
+      "remove": "Xóa",
+      "changeRole": "Đổi vai trò",
+      "revoke": "Thu hồi"
+    }
+  },
+  "Activities": {
+    "expense": {
+      "created": "{participant} đã tạo chi phí {title}",
+      "updated": "{participant} đã cập nhật chi phí {title}",
+      "deleted": "{participant} đã xóa chi phí {title}",
+      "changedFields": {
+        "title": "Tiêu đề",
+        "amount": "Số tiền",
+        "date": "Ngày",
+        "category": "Danh mục",
+        "notes": "Ghi chú",
+        "payers": "Người trả",
+        "split": "Chia",
+        "items": "Mục",
+        "documents": "Tài liệu",
+        "recurrence": "Định kỳ",
+        "reimbursement": "Hoàn trả",
+        "conversionSource": "Nguồn chuyển đổi",
+        "conversionRate": "Tỷ giá"
+      },
+      "changeEmptyValue": "Chưa đặt",
+      "recurringCreated": "{participant} đã tạo chi phí định kỳ \"{title}\"",
+      "stopped": "{participant} đã dừng chi phí định kỳ {title}",
+      "commented": "{participant} đã bình luận về {title}: \"{excerpt}\""
+    },
+    "group": {
+      "updated": "{participant} đã cập nhật cài đặt nhóm",
+      "archived": "{participant} đã lưu trữ nhóm",
+      "unarchived": "{participant} đã bỏ lưu trữ nhóm",
+      "changedFields": {
+        "name": "Tên",
+        "information": "Mô tả",
+        "currency": "Loại tiền",
+        "currencyCode": "Mã loại tiền",
+        "linkedParticipant": "Người tham gia"
+      }
+    },
+    "member": {
+      "left": "{participant} đã rời nhóm",
+      "removed": "{participant} đã xóa {target} khỏi nhóm",
+      "roleChanged": "{participant} đã đổi vai trò của {target} từ {previousRole} thành {nextRole}"
+    },
+    "invitation": {
+      "created": "{participant} đã mời {target}",
+      "revoked": "{participant} đã thu hồi lời mời của {target}",
+      "accepted": "{target} đã chấp nhận lời mời",
+      "declined": "{target} đã từ chối lời mời"
+    },
+    "participant": {
+      "removed": "{participant} đã xóa {target} khỏi nhóm"
+    },
+    "import": {
+      "imported_zero": "{participant} đã nhập {count} chi phí",
+      "imported_one": "{participant} đã nhập {count} chi phí",
+      "imported_two": "{participant} đã nhập {count} chi phí",
+      "imported_few": "{participant} đã nhập {count} chi phí",
+      "imported_many": "{participant} đã nhập {count} chi phí",
+      "imported_other": "{participant} đã nhập {count} chi phí"
+    },
+    "fallback": "Một hoạt động đã được ghi lại",
+    "unknownActor": "Ai đó",
+    "openExpense": "Mở chi phí"
+  },
+  "OfflineBanner": {
+    "message": "Bạn đang ngoại tuyến. Các thay đổi hiện tại sẽ không được lưu cho đến khi bạn kết nối lại."
+  },
+  "InstallPromotion": {
+    "title": "Cài đặt ứng dụng",
+    "description": "Cài Spliit để truy cập nhanh.",
+    "install": "Cài đặt",
+    "remindLater": "Nhắc sau",
+    "dismiss": "Bỏ qua",
+    "chrome": {
+      "title": "Cài trên Chrome",
+      "description": "Cài như ứng dụng."
+    },
+    "ios": {
+      "title": "Cài trên iOS",
+      "description": "Thêm vào màn hình chính.",
+      "step1": "Nhấn Chia sẻ",
+      "step2": "Chọn 'Thêm vào màn hình chính'",
+      "step3": "Nhấn 'Thêm'"
+    },
+    "firefox": {
+      "title": "Cài trên Firefox",
+      "description": "Cài như ứng dụng.",
+      "step1": "Nhấn menu",
+      "step2": "Chọn 'Cài đặt ứng dụng'"
+    }
+  },
+  "PushOnboarding": {
+    "title": "Thông báo đẩy",
+    "description": "Nhận thông báo khi có hoạt động.",
+    "pushBenefit": "Nhận thông báo ngay.",
+    "emailFallback": "Hoặc dùng email.",
+    "settingsHint": "Thay đổi trong cài đặt.",
+    "enable": "Bật thông báo",
+    "enabling": "Đang bật…",
+    "useEmail": "Dùng email",
+    "deniedTitle": "Đã từ chối",
+    "deniedDescription": "Bật lại trong cài đặt trình duyệt.",
+    "failedTitle": "Thất bại",
+    "failedDescription": "Không thể bật thông báo.",
+    "emailUsage": "Chỉ gửi thông báo liên quan.",
+    "done": "Xong"
+  },
+  "Friends": {
+    "title": "Theo dõi chi phí với bạn bè",
+    "peerFriendsTab": "Bạn bè",
+    "peerEmailTab": "Email",
+    "peerLinkTab": "Liên kết",
+    "friendsSection": "Bạn bè",
+    "pendingInvitationsSection": "Đang chờ",
+    "activeFriendExpensesSection": "Chi phí bạn bè đang hoạt động",
+    "alreadyInvited": "Đã mời.",
+    "alreadyHasLedger": "Đã có sổ.",
+    "inviteSent": "Đã gửi lời mời.",
+    "inviteLinkTitle": "Liên kết mời",
+    "inviteLinkDescription": "Chia sẻ liên kết với bạn bè.",
+    "copy": "Sao chép",
+    "share": "Chia sẻ",
+    "linkHelp": "Chia sẻ liên kết.",
+    "emailLabel": "Email",
+    "temporaryNameLabel": "Tên tạm thời",
+    "temporaryNameHelp": "Tên tạm thời cho đến khi họ tham gia.",
+    "friendsEmpty": "Chưa có bạn bè.",
+    "infoLabel": "Thông tin",
+    "infoPlaceholder": "Thêm ghi chú…",
+    "createError": "Lỗi tạo sổ."
+  },
+  "EmptyState": {
+    "title": {
+      "empty": "Trống {itemLabelPlural}",
+      "filtered": "Không có kết quả {itemLabelPlural}"
+    },
+    "description": {
+      "empty": "Chưa có gì. {itemLabel}"
+    },
+    "labels": {
+      "group": "Nhóm",
+      "groupPlural": "Nhóm",
+      "friendLedger": "Sổ bạn bè",
+      "friendLedgerPlural": "Sổ bạn bè"
+    },
+    "actions": {
+      "createGroup": "Tạo nhóm",
+      "createFriendLedger": "Tạo sổ bạn bè",
+      "showHidden": "Hiện ẩn"
+    }
+  },
+  "BulkCategorize": {
+    "title": "Phân loại hàng loạt",
+    "calibrationTitle": "Hiệu chỉnh AI",
+    "calibrationDescription": "Cung cấp ví dụ để AI học.",
+    "roundCount": "Vòng {round} trên {max}",
+    "confidence": {
+      "high": "Cao",
+      "medium": "Trung bình",
+      "low": "Thấp"
+    },
+    "aiWantsMore": "AI cần thêm ví dụ.",
+    "aiSaidReady": "AI đã sẵn sàng.",
+    "feedbackTableTitle": "Kết quả",
+    "emptySelection": "Chưa chọn.",
+    "runCalibration": "Chạy hiệu chỉnh",
+    "runAnotherRound": "Chạy thêm",
+    "calibrationError": "Lỗi hiệu chỉnh. {message}",
+    "generatePreview": "Tạo xem trước",
+    "previewTitle": "Xem trước",
+    "previewDescription": "Xem lại đề xuất.",
+    "previewHint": "Kiểm tra trước khi áp dụng. {shown} {total}",
+    "removeAction": "Xóa",
+    "targetExceedsCap_zero": "Quá nhiều chi phí ({count}).",
+    "targetExceedsCap_one": "Quá nhiều chi phí ({count}).",
+    "targetExceedsCap_two": "Quá nhiều chi phí ({count}).",
+    "targetExceedsCap_few": "Quá nhiều chi phí ({count}).",
+    "targetExceedsCap_many": "Quá nhiều chi phí ({count}).",
+    "targetExceedsCap_other": "Quá nhiều chi phí ({count}).",
+    "saveAll_zero": "Lưu {count} thay đổi",
+    "saveAll_one": "Lưu {count} thay đổi",
+    "saveAll_two": "Lưu {count} thay đổi",
+    "saveAll_few": "Lưu {count} thay đổi",
+    "saveAll_many": "Lưu {count} thay đổi",
+    "saveAll_other": "Lưu {count} thay đổi",
+    "saving": "Đang lưu…",
+    "saved_zero": "Đã phân loại lại {count} chi phí",
+    "saved_one": "Đã phân loại lại {count} chi phí",
+    "saved_two": "Đã phân loại lại {count} chi phí",
+    "saved_few": "Đã phân loại lại {count} chi phí",
+    "saved_many": "Đã phân loại lại {count} chi phí",
+    "saved_other": "Đã phân loại lại {count} chi phí",
+    "applyError": "Lỗi áp dụng. {message}",
+    "noCandidates": "Không có chi phí.",
+    "adminsOnly": "Chỉ quản trị viên.",
+    "description": "Phân loại hàng loạt bằng AI.",
+    "backToSettings": "Về cài đặt",
+    "archived": "Đã lưu trữ",
+    "requiresFeatureFlag": "Yêu cầu bật tính năng.",
+    "previewError": "Lỗi xem trước. {message}",
+    "introTitle": "Phân loại hàng loạt",
+    "loadingCandidates": "Đang tải…",
+    "introDescription_zero": "Có {count} chi phí chưa phân loại.",
+    "introDescription_one": "Có {count} chi phí chưa phân loại.",
+    "introDescription_two": "Có {count} chi phí chưa phân loại.",
+    "introDescription_few": "Có {count} chi phí chưa phân loại.",
+    "introDescription_many": "Có {count} chi phí chưa phân loại.",
+    "introDescription_other": "Có {count} chi phí chưa phân loại.",
+    "introStepLook_zero": "AI xem xét tối đa {count} chi phí.",
+    "introStepLook_one": "AI xem xét tối đa {count} chi phí.",
+    "introStepLook_two": "AI xem xét tối đa {count} chi phí.",
+    "introStepLook_few": "AI xem xét tối đa {count} chi phí.",
+    "introStepLook_many": "AI xem xét tối đa {count} chi phí.",
+    "introStepLook_other": "AI xem xét tối đa {count} chi phí.",
+    "introStepReview_zero": "Xem và sửa tối đa {count} ví dụ.",
+    "introStepReview_one": "Xem và sửa tối đa {count} ví dụ.",
+    "introStepReview_two": "Xem và sửa tối đa {count} ví dụ.",
+    "introStepReview_few": "Xem và sửa tối đa {count} ví dụ.",
+    "introStepReview_many": "Xem và sửa tối đa {count} ví dụ.",
+    "introStepReview_other": "Xem và sửa tối đa {count} ví dụ.",
+    "introStepPreview": "Xem trước kết quả.",
+    "startCalibration": "Bắt đầu",
+    "calibrationStartHint": "Phân loại một vài chi phí.",
+    "calibrationReady": "Sẵn sàng.",
+    "reviewSample": "Xem lại mẫu",
+    "calibrationNoSample": "Cần ít nhất một chi phí.",
+    "categorizeSample": "Phân loại mẫu",
+    "submitReviewedExamples": "Gửi",
+    "continueToPreview": "Xem trước",
+    "back": "Quay lại",
+    "backToCalibration": "Về hiệu chỉnh",
+    "generatingPreview": "Đang tạo…",
+    "noSuggestions": "Không có đề xuất.",
+    "previewSummary": "Đã phân loại {suggested} {total}",
+    "leftUncategorized_zero": "{count} chi phí chưa phân loại.",
+    "leftUncategorized_one": "{count} chi phí chưa phân loại.",
+    "leftUncategorized_two": "{count} chi phí chưa phân loại.",
+    "leftUncategorized_few": "{count} chi phí chưa phân loại.",
+    "leftUncategorized_many": "{count} chi phí chưa phân loại.",
+    "leftUncategorized_other": "{count} chi phí chưa phân loại.",
+    "retryPreview": "Thử lại",
+    "doneTitle": "Hoàn tất!",
+    "expenseColumn": "Chi phí",
+    "categoryColumn": "Danh mục",
+    "confidenceColumn": "Độ tin cậy"
+  },
+  "ExpensePreview": {
+    "title": "Chi phí",
+    "category": "Danh mục",
+    "date": "Ngày",
+    "paidBy": "Người trả",
+    "paidFor": "Người thụ hưởng",
+    "yourBalance": "Số dư",
+    "notes": "Ghi chú",
+    "attachments_zero": "Đính kèm ({count})",
+    "attachments_one": "Đính kèm ({count})",
+    "attachments_two": "Đính kèm ({count})",
+    "attachments_few": "Đính kèm ({count})",
+    "attachments_many": "Đính kèm ({count})",
+    "attachments_other": "Đính kèm ({count})",
+    "edit": "Sửa",
+    "makeCopy": "Sao chép",
+    "commentsTitle": "Bình luận",
+    "commentsLoading": "Đang tải…",
+    "commentsError": "Lỗi tải.",
+    "commentsRetry": "Thử lại",
+    "commentsEmpty": "Chưa có bình luận.",
+    "commentInputLabel": "Bình luận",
+    "commentPlaceholder": "Viết bình luận…",
+    "commentRequired": "Nhập nội dung.",
+    "commentTooLong": "Bình luận tối đa 500 ký tự.",
+    "commentSubmitting": "Đang gửi…",
+    "commentDelete": "Xóa",
+    "commentSend": "Gửi"
+  },
+  "CreateReimbursement": {
+    "description": "Xem lại khoản thanh toán trước khi ghi nhận.",
+    "pays": "{from} trả {to}",
+    "amount": "Số tiền",
+    "date": "Ngày",
+    "category": "Danh mục",
+    "create": "Tạo",
+    "edit": "Sửa",
+    "creating": "Đang tạo…",
+    "successToast": "Đã ghi nhận khoản thanh toán.",
+    "successToastMultiple": "Đã ghi nhận {count} khoản thanh toán thành một mục.",
+    "paysMany": "trả {from} {count}",
+    "receivesMany": "nhận {to} {count}",
+    "paymentsToInclude": "Bao gồm",
+    "selectionSummary": "Đã chọn {count} {total}",
+    "legToAria": "{from} trả {to}, {amount}",
+    "legFromAria": "Từ {from} {to} {amount}",
+    "toParticipant": "cho {name}",
+    "fromParticipant": "từ {name}",
+    "createSingle": "Tạo hoàn trả",
+    "createMultiple": "Tạo hoàn trả {count}"
+  },
+  "Participants": {
+    "search": "Tìm…",
+    "noParticipant": "Không có"
+  },
+  "Unsubscribe": {
+    "title": "Hủy đăng ký",
+    "description": "Bạn đang chọn có giữ lại một loại thông báo email này hay không.",
+    "confirm": "Xác nhận",
+    "submitting": "Đang xử lý…",
+    "cancel": "Hủy",
+    "error": "Lỗi.",
+    "loading": "Đang xử lý…",
+    "backHome": "Về trang chủ",
+    "manageSettings": "Cài đặt",
+    "invalid": {
+      "title": "Không hợp lệ",
+      "description": "Liên kết không hợp lệ."
+    },
+    "success": {
+      "title": "Đã hủy",
+      "description": "Đã hủy đăng ký. {category}"
+    },
+    "scope": "Chỉ email này sẽ bị tắt. Các email và thông báo đẩy khác vẫn hoạt động."
+  }
+}

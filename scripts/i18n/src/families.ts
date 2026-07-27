@@ -35,10 +35,28 @@ export const LANGUAGE_FAMILIES: LanguageFamily[] = [
     refsHint: 'zh-CN,ja-JP',
   },
   {
-    id: 'other',
-    label: 'Other',
-    locales: ['he', 'id', 'tr-TR'],
-    refsHint: 'id,tr-TR',
+    id: 'indic',
+    label: 'Indic',
+    locales: ['bn-BD', 'hi-IN', 'ur-PK'],
+    refsHint: 'hi-IN,ur-PK',
+  },
+  {
+    id: 'semitic',
+    label: 'Semitic',
+    locales: ['ar-SA', 'he'],
+    refsHint: 'ar-SA',
+  },
+  {
+    id: 'southeast-asian',
+    label: 'Southeast Asian',
+    locales: ['id', 'vi'],
+    refsHint: 'id',
+  },
+  {
+    id: 'turkic',
+    label: 'Turkic',
+    locales: ['tr-TR'],
+    refsHint: '',
   },
 ]
 

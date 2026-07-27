@@ -22,6 +22,9 @@ import { Check } from 'lucide-react'
 import { forwardRef, useState } from 'react'
 
 export const localeFlags = {
+  'ar-SA': '🇸🇦',
+  'bn-BD': '🇧🇩',
+  'hi-IN': '🇮🇳',
   id: '🇮🇩',
   ca: '🇦🇩',
   'cs-CZ': '🇨🇿',
@@ -45,6 +48,8 @@ export const localeFlags = {
   ko: '🇰🇷',
   'mk-MK': '🇲🇰',
   'ja-JP': '🇯🇵',
+  'ur-PK': '🇵🇰',
+  vi: '🇻🇳',
   'zh-CN': '🇨🇳',
   'zh-TW': '🇹🇼',
 } satisfies Record<Locale, string>

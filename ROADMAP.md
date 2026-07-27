@@ -25,7 +25,7 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 - [x] **Itemized expenses** — split an expense by line items, with tax and tip, and per-person sub-totals. The most-asked "real Splitwise" feature after recurring. — upstream [#395](https://github.com/spliit-app/spliit/issues/395)
 - [x] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
 - [x] **Durable recurring expenses** — explicit recurrence series with configurable intervals, indefinite/count/date termination, durable worker processing, catch-up, retries, lifecycle status, navigation, previews, and scoped stop/edit/delete controls. ([design](./openspec/changes/durable-recurring-expenses))
-- [ ] Account overview homepage ([design](./openspec/changes/add-overview-homepage)) — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)
+- [x] Account overview homepage ([design](./openspec/changes/add-overview-homepage)) — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)
 - [x] **Notifications and delivery preferences** — email and push channels with per-user category and delivery preferences
 
 ### Quality-of-life additions (small, high-trust, ship in batches)

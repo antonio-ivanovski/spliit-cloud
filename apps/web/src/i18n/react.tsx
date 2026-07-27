@@ -3,7 +3,7 @@ import { type ReactNode, useLayoutEffect } from 'react'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { i18n } from './setup'
 
-const RTL_LOCALES = new Set(['he'])
+const RTL_LOCALES = new Set(['he', 'ar-SA', 'ur-PK'])
 
 // react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
 export function useLocale() {

@@ -1,0 +1,2063 @@
+{
+  "AccountSettings": {
+    "nameLabel": "প্রদর্শনের নাম",
+    "emailLabel": "ইমেল",
+    "emailHelp": "আপনার ইমেল আপনার অ্যাকাউন্টের সাথে সংযুক্ত এবং এটি এখানে পরিবর্তন করা যাবে না।",
+    "submit": "পরিবর্তন সংরক্ষণ করুন",
+    "saving": "সংরক্ষণ করা হচ্ছে…",
+    "success": "প্রোফাইল আপডেট করা হয়েছে।",
+    "errors": {
+      "nameRequired": "একটি প্রদর্শনের নাম লিখুন।",
+      "nameTooShort": "নাম কমপক্ষে ২ অক্ষর হতে হবে।",
+      "nameTooLong": "নাম সর্বাধিক ৫০ অক্ষর হতে হবে।",
+      "generic": "কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+      "imageUpload": "আপনার প্রোফাইল ছবি আপডেট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
+    },
+    "image": {
+      "label": "প্রোফাইল ছবি",
+      "help": "অবিলম্বে আপডেট করতে একটি ছবি বেছে নিন। ছাড়া হলে, আপনার আদ্যক্ষর দেখানো হবে।",
+      "choose": "ছবি বেছে নিন",
+      "uploading": "আপলোড হচ্ছে…",
+      "updated": "প্রোফাইল ছবি আপডেট করা হয়েছে।",
+      "remove": "ছবি সরান",
+      "removed": "প্রোফাইল ছবি সরানো হয়েছে।"
+    },
+    "notifications": {
+      "title": "বিজ্ঞপ্তি",
+      "description": "Spliit কোথায় কার্যকলাপ বিজ্ঞপ্তি পাঠাবে তা বেছে নিন।",
+      "enable": "পুশ বিজ্ঞপ্তি সক্রিয় করুন",
+      "disable": "পুশ বিজ্ঞপ্তি নিষ্ক্রিয় করুন",
+      "enabled": "এই ডিভাইসে পুশ বিজ্ঞপ্তি সক্রিয় রয়েছে।",
+      "disabled": "এই ডিভাইসে পুশ বিজ্ঞপ্তি বর্তমানে নিষ্ক্রিয় রয়েছে।",
+      "unsupported": "পুশ বিজ্ঞপ্তি এই ব্রাউজার বা প্রসঙ্গে সমর্থিত নয়।",
+      "notConfigured": "এই ডিপ্লয়মেন্টে পুশ বিজ্ঞপ্তি উপলব্ধ নয়।",
+      "permissionDenied": "বিজ্ঞপ্তি ব্লক করা আছে। আপনার ব্রাউজার বা ডিভাইস সেটিংসে অনুমতি দিন, তারপর আবার চেষ্টা করুন।",
+      "iosInstall": "iPhone বা iPad-এ, পুশ বিজ্ঞপ্তি সক্রিয় করার আগে আপনার হোম স্ক্রিনে Spliit যোগ করুন।",
+      "error": "পুশ বিজ্ঞপ্তির সেটিংস আপডেট করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+      "preferencesTitle": "বিজ্ঞপ্তির পছন্দসমূহ",
+      "preferencesDescription": "এই পছন্দগুলি ভবিষ্যতের গ্রুপ এবং খরচ কার্যকলাপের জন্য প্রযোজ্য।",
+      "globalLabel": "সব কার্যকলাপ",
+      "globalDescription": "প্রস্তাবিত বিভিন্ন কার্যকলাপ অনুযায়ী পরিবর্তিত হয় এবং পুশ অনুপলব্ধ থাকলে মানিয়ে নেয়: দ্রুত আপডেট পুশ ব্যবহার করে, যখন উচ্চ-ভলিউমের কার্যকলাপ ইমেলে থাকে। একটি বিশ্বব্যাপী চ্যানেল ব্যবহার করতে ইমেল বা পুশ বেছে নিন।",
+      "recommended": "প্রস্তাবিত",
+      "recommendedDescription": "প্রস্তাবিত বিতরণ: {channels}। পুশ বিজ্ঞপ্তি শুধুমাত্র আপনি সক্রিয় করা ডিভাইসগুলিতে পাঠানো হয়।",
+      "mixedByActivity": "কার্যকলাপ অনুযায়ী মিশ্র",
+      "recommendedCategoryDescription": "এই কার্যকলাপের জন্য প্রস্তাবিত {channels} বিতরণ ব্যবহার করা হচ্ছে।",
+      "useRecommended": "প্রস্তাবিত ব্যবহার করুন",
+      "custom": "কাস্টম",
+      "useGlobal": "সব কার্যকলাপ সেটিং ব্যবহার করুন",
+      "inheritedDescription": "আপনার সব কার্যকলাপ সেটিং অনুসরণ করে। এই ক্যাটাগরি কাস্টমাইজ করতে একটি চ্যানেল বেছে নিন।",
+      "customDescription": "এই ক্যাটাগরির জন্য কাস্টম ডেলিভারি। এক বা উভয় চ্যানেল বেছে নিন।",
+      "channelsLabel": "বিজ্ঞপ্তির চ্যানেল",
+      "email": "ইমেল",
+      "emailDescription": "আপনার ইনবক্সে একটি বার্তা গ্রহণ করুন।",
+      "pushDescription": "একটি সক্রিয় ডিভাইসে সতর্কতা গ্রহণ করুন।",
+      "off": "বন্ধ",
+      "pushSelectionError": "এই ডিভাইসে পুশ সক্রিয় করা যায়নি। পুশ নির্বাচিত হয়নি।",
+      "pushMissingTarget": "পুশ নির্বাচিত, কিন্তু আপনি একটি ডিভাইস সক্রিয় না করা পর্যন্ত এই বিজ্ঞপ্তিগুলি সরবরাহ করা হবে না। আপনি নীচে বা সেটিংসে একটি সক্রিয় করতে পারেন।",
+      "rowSaved": "বিজ্ঞপ্তির পছন্দ সংরক্ষিত হয়েছে।",
+      "comingSoon": "শীঘ্রই আসছে",
+      "emailComingSoon": "ইমেল কনফিগারেশন শীঘ্রই আসছে।",
+      "inherited": "উত্তরাধিকারসূত্রে প্রাপ্ত",
+      "currently": "বর্তমানে: {channels}",
+      "categories": {
+        "EXPENSE_ADDED": {
+          "title": "নতুন খরচ",
+          "description": "যখন কেউ একটি গ্রুপে খরচ যোগ করে।"
+        },
+        "EXPENSE_BULK_ACTIVITY": {
+          "title": "খরচ আমদানি ও বাল্ক পরিবর্তন",
+          "description": "যখন খরচ বাল্কে আমদানি বা আপডেট করা হয়।"
+        },
+        "EXPENSE_CHANGES": {
+          "title": "খরচের পরিবর্তন",
+          "description": "যখন একটি খরচ আপডেট বা মুছে ফেলা হয়।"
+        },
+        "GROUP_CHANGES": {
+          "title": "গ্রুপ পরিবর্তন",
+          "description": "যখন গ্রুপের বিবরণ বা আর্কাইভ অবস্থা পরিবর্তন হয়।"
+        },
+        "GROUP_INVITATIONS": {
+          "title": "আমন্ত্রণ",
+          "description": "যখন আমন্ত্রণ পাঠানো, গ্রহণ, প্রত্যাখ্যান বা বাতিল করা হয়।"
+        },
+        "GROUP_MEMBERSHIP": {
+          "title": "সদস্যপদ",
+          "description": "যখন সদস্যরা ছেড়ে দেয়, সরানো হয় বা ভূমিকা পরিবর্তন করে।"
+        }
+      },
+      "expenseActivity": "খরচ কার্যকলাপ",
+      "groupActivity": "গ্রুপ কার্যকলাপ",
+      "save": "পরিবর্তন সংরক্ষণ করুন",
+      "saving": "সংরক্ষণ করা হচ্ছে…",
+      "reset": "রিসেট",
+      "saved": "বিজ্ঞপ্তির পছন্দসমূহ সংরক্ষিত হয়েছে।",
+      "saveError": "বিজ্ঞপ্তির পছন্দসমূহ সংরক্ষণ করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+      "loading": "বিজ্ঞপ্তির পছন্দসমূহ লোড হচ্ছে…",
+      "loadError": "বিজ্ঞপ্তির পছন্দসমূহ লোড করা যায়নি।",
+      "push": {
+        "deviceTitle": "এই ডিভাইস",
+        "deviceDescription": "এই ডিভাইসে পুশ সতর্কতা সক্রিয় করুন। এটি আপনার অন্যান্য ডিভাইস পরিবর্তন করে না।",
+        "deviceDisabled": "পুশ নির্বাচিত, কিন্তু এই ডিভাইসে পুশ সক্রিয় নয়।",
+        "noDevices": "পুশ নির্বাচিত, কিন্তু এখনও কোনো ডিভাইস সক্রিয় করা হয়নি।"
+      },
+      "retry": "আবার চেষ্টা করুন",
+      "pushChannel": "পুশ",
+      "rows": {
+        "addedAsFriend": {
+          "title": "বন্ধু লেজার",
+          "description": "যখন কেউ আপনার সাথে একটি বন্ধু লেজার শুরু করে।"
+        },
+        "addedToGroup": {
+          "title": "একটি গ্রুপে যুক্ত হয়েছেন",
+          "description": "যখন কেউ আপনাকে একটি গ্রুপে যুক্ত করে।"
+        },
+        "cloudNews": {
+          "title": "Spliit Cloud খবর ও আপডেট",
+          "description": "পণ্যের খবর, টিপস এবং পরিষেবা আপডেট।"
+        },
+        "expenseChanged": {
+          "title": "খরচ সম্পাদিত বা মুছে ফেলা হয়েছে",
+          "description": "যখন একটি খরচ আপডেট বা মুছে ফেলা হয়।"
+        },
+        "newComment": {
+          "title": "নতুন মন্তব্য",
+          "description": "যখন কেউ একটি খরচে মন্তব্য করে।"
+        },
+        "newExpense": {
+          "title": "নতুন খরচ",
+          "description": "যখন কেউ একটি গ্রুপে খরচ যোগ করে।"
+        },
+        "recurringExpense": {
+          "title": "পুনরাবৃত্তিমূলক খরচ",
+          "description": "যখন একটি গ্রুপে নির্ধারিত পুনরাবৃত্তিমূলক খরচ তৈরি করা হয়।"
+        },
+        "weeklySummary": {
+          "title": "সাপ্তাহিক কার্যকলাপ সারসংক্ষেপ",
+          "description": "আপনার গ্রুপ জুড়ে কার্যকলাপের একটি সাপ্তাহিক সারসংক্ষেপ।"
+        }
+      },
+      "sections": {
+        "groups": "গ্রুপ ও বন্ধু",
+        "expenses": "খরচ",
+        "summaries": "সারসংক্ষেপ"
+      }
+    },
+    "title": "অ্যাকাউন্ট সেটিংস",
+    "profile": {
+      "title": "প্রোফাইল",
+      "description": "গ্রুপগুলিতে আপনার উপস্থিতি কীভাবে দেখায় তা আপডেট করুন।"
+    }
+  },
+  "Activities": {
+    "expense": {
+      "changeEmptyValue": "সেট করা হয়নি",
+      "created": "{participant} {title} খরচ তৈরি করেছেন",
+      "updated": "{participant} {title} খরচ আপডেট করেছেন",
+      "deleted": "{participant} {title} খরচ মুছে ফেলেছেন",
+      "changedFields": {
+        "title": "শিরোনাম",
+        "amount": "পরিমাণ",
+        "date": "তারিখ",
+        "category": "বিভাগ",
+        "notes": "নোট",
+        "payers": "দ্বারা পরিশোধিত",
+        "split": "বিভাজন",
+        "items": "লাইন আইটেম",
+        "documents": "সংযুক্তি",
+        "recurrence": "পুনরাবৃত্তি",
+        "reimbursement": "নিষ্পত্তি প্রদান",
+        "conversionSource": "রূপান্তর উৎস",
+        "conversionRate": "বিনিময় হার"
+      },
+      "recurringCreated": "{participant} “{title}” পুনরাবৃত্তিমূলক খরচ তৈরি করেছেন",
+      "stopped": "{participant} {title} পুনরাবৃত্তিমূলক খরচ বন্ধ করেছেন",
+      "commented": "{participant} {title}-এ মন্তব্য করেছেন: “{excerpt}”"
+    },
+    "fallback": "একটি কার্যকলাপ রেকর্ড করা হয়েছে",
+    "group": {
+      "updated": "{participant} গ্রুপ সেটিংস আপডেট করেছেন",
+      "archived": "{participant} গ্রুপটি আর্কাইভ করেছেন",
+      "unarchived": "{participant} গ্রুপটি আনআর্কাইভ করেছেন",
+      "changedFields": {
+        "name": "নাম",
+        "information": "বর্ণনা",
+        "currency": "মুদ্রা",
+        "currencyCode": "মুদ্রা কোড",
+        "linkedParticipant": "সংযুক্ত অংশগ্রহণকারী"
+      }
+    },
+    "import": {
+      "imported_one": "{participant} {count}টি খরচ আমদানি করেছেন",
+      "imported_other": "{participant} {count}টি খরচ আমদানি করেছেন"
+    },
+    "invitation": {
+      "created": "{participant} {target}-কে আমন্ত্রণ জানিয়েছেন",
+      "revoked": "{participant} {target}-এর জন্য আমন্ত্রণ বাতিল করেছেন",
+      "accepted": "{target} আমন্ত্রণ গ্রহণ করেছেন",
+      "declined": "{target} আমন্ত্রণ প্রত্যাখ্যান করেছেন"
+    },
+    "member": {
+      "left": "{participant} গ্রুপ ছেড়েছেন",
+      "removed": "{participant} {target}-কে গ্রুপ থেকে সরিয়েছেন",
+      "roleChanged": "{participant} {target}-এর ভূমিকা {previousRole} থেকে {nextRole} এ পরিবর্তন করেছেন"
+    },
+    "unknownActor": "কেউ",
+    "openExpense": "খরচ খুলুন",
+    "participant": {
+      "removed": "{participant} {target}-কে গ্রুপ থেকে সরিয়েছেন"
+    }
+  },
+  "Activity": {
+    "title": "কার্যকলাপ",
+    "description": "এই গ্রুপের সব কার্যকলাপের ওভারভিউ।",
+    "noActivity": "আপনার গ্রুপে এখনও কোনো কার্যকলাপ নেই।",
+    "someone": "কেউ",
+    "settingsModified": "গ্রুপ সেটিংস <strong>{participant}</strong> দ্বারা পরিবর্তন করা হয়েছে।",
+    "expenseCreated": "খরচ <em>{expense}</em> <strong>{participant}</strong> দ্বারা তৈরি করা হয়েছে।",
+    "expenseUpdated": "খরচ <em>{expense}</em> <strong>{participant}</strong> দ্বারা আপডেট করা হয়েছে।",
+    "expenseDeleted": "খরচ <em>{expense}</em> <strong>{participant}</strong> দ্বারা মুছে ফেলা হয়েছে।",
+    "Groups": {
+      "today": "আজ",
+      "yesterday": "গতকাল",
+      "earlierThisWeek": "এই সপ্তাহের শুরুতে",
+      "lastWeek": "গত সপ্তাহে",
+      "earlierThisMonth": "এই মাসের শুরুতে",
+      "lastMonth": "গত মাসে",
+      "earlierThisYear": "এই বছরের শুরুতে",
+      "lastYear": "গত বছরে",
+      "older": "পুরনো কার্যকলাপ"
+    }
+  },
+  "Auth": {
+    "title": "Spliit Cloud-এ সাইন ইন করুন",
+    "signUpTitle": "আপনার Spliit Cloud অ্যাকাউন্ট তৈরি করুন",
+    "subtitle": "আপনার অ্যাকাউন্ট ব্যবহার করে ডিভাইস জুড়ে আপনার গ্রুপ অ্যাক্সেস করুন।",
+    "signUpSubtitle": "আপনার গ্রুপগুলি ডিভাইস জুড়ে সংরক্ষণ এবং সিঙ্ক করতে একটি অ্যাকাউন্ট তৈরি করুন।",
+    "email": "ইমেল",
+    "password": "পাসওয়ার্ড",
+    "signInWithPassword": "পাসওয়ার্ড দিয়ে সাইন ইন করুন",
+    "signUpWithPassword": "পাসওয়ার্ড দিয়ে সাইন আপ করুন",
+    "signInWithGoogle": "Google দিয়ে চালিয়ে যান",
+    "orContinueWithEmail": "অথবা ইমেল দিয়ে চালিয়ে যান",
+    "magicLinkTab": "ম্যাজিক লিংক",
+    "passwordTab": "পাসওয়ার্ড",
+    "sendMagicLink": "সাইন-ইন লিংক পাঠান",
+    "magicLinkEmail": "ইমেল",
+    "usePasswordInstead": "পরিবর্তে ইমেল এবং পাসওয়ার্ড ব্যবহার করুন",
+    "hidePasswordForm": "পাসওয়ার্ড ফর্ম লুকান",
+    "passwordFormDescription": "আপনি যদি পাসওয়ার্ড ব্যবহার করতে চান, তাহলে নীচে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।",
+    "passwordFormDescriptionSignUp": "আপনার ইমেল এবং একটি পাসওয়ার্ড দিয়ে একটি অ্যাকাউন্ট তৈরি করুন।",
+    "useDifferentEmail": "একটি ভিন্ন ইমেল ব্যবহার করুন",
+    "magicLinkSent": "সাইন-ইন লিংকের জন্য আপনার ইনবক্স চেক করুন।",
+    "verificationEmailSent": "আপনার অ্যাকাউন্ট যাচাই করতে আপনার ইনবক্স চেক করুন।",
+    "noAccount": "এখনও অ্যাকাউন্ট নেই?",
+    "haveAccount": "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?",
+    "createAccount": "একটি অ্যাকাউন্ট তৈরি করুন",
+    "signIn": "সাইন ইন",
+    "signOut": "সাইন আউট",
+    "confirmPassword": "পাসওয়ার্ড নিশ্চিত করুন",
+    "loading": "লোড হচ্ছে…",
+    "signedInAs": "{name} হিসাবে সাইন ইন করা হয়েছে",
+    "required": "আপনার গ্রুপ অ্যাক্সেস করতে সাইন ইন করতে হবে।",
+    "back": "হোমপেজে ফিরে যান",
+    "passwordMismatch": "পাসওয়ার্ড মিলছে না।",
+    "forgotPasswordLink": "পাসওয়ার্ড ভুলে গেছেন?",
+    "errors": {
+      "invalidCredentials": "ইমেল বা পাসওয়ার্ড ভুল।",
+      "emailRequired": "আপনার ইমেল ঠিকানা লিখুন।",
+      "passwordRequired": "আপনার পাসওয়ার্ড লিখুন।",
+      "nameRequired": "একটি প্রদর্শনের নাম লিখুন।",
+      "generic": "কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+      "magicLinkFailed": "সাইন-ইন লিংক পাঠানো যায়নি।",
+      "passwordPolicy": "কমপক্ষে ৮ অক্ষর ব্যবহার করুন যাতে বড় হাতের, ছোট হাতের অক্ষর, একটি সংখ্যা এবং একটি চিহ্ন থাকে।"
+    },
+    "signInWithGithub": "GitHub দিয়ে চালিয়ে যান",
+    "legalNotice": "চালিয়ে যাওয়ার মাধ্যমে, আপনি <terms>ব্যবহারের শর্তাবলী</terms> মেনে নিচ্ছেন এবং <privacy>গোপনীয়তা বিজ্ঞপ্তি</privacy> স্বীকার করছেন।",
+    "passwordTooShort": "পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে।",
+    "passwordRequirements": {
+      "minLength": "৮ অক্ষর",
+      "uppercase": "বড় হাতের অক্ষর",
+      "lowercase": "ছোট হাতের অক্ষর",
+      "number": "সংখ্যা",
+      "symbol": "চিহ্ন"
+    }
+  },
+  "Balances": {
+    "title": "ব্যালেন্স",
+    "description": "প্রত্যেক অংশগ্রহণকারীর নেট ব্যালেন্স দেখুন।",
+    "removedBadge": "সরানো হয়েছে",
+    "Reimbursements": {
+      "title": "প্রস্তাবিত নিষ্পত্তি পেমেন্ট",
+      "description": "সর্বনিম্ন স্থানান্তর দিয়ে ব্যালেন্স নিষ্পত্তি করতে এই পেমেন্টগুলি ব্যবহার করুন।",
+      "noImbursements": "আপনার গ্রুপের সবাই নিষ্পত্তি হয়েছে 😁",
+      "owes": "<strong>{from}</strong> <strong>{to}</strong>-কে ঋণী",
+      "markAsPaid": "পরিশোধিত হিসাবে চিহ্নিত করুন",
+      "markAsPaidAria": "{amount} {from} থেকে {to}-কে পরিশোধিত হিসাবে চিহ্নিত করুন"
+    },
+    "currencyDisplay": {
+      "label": "মুদ্রা",
+      "group": "গ্রুপ মুদ্রা ({currency})",
+      "original": "মূল",
+      "title": "ব্যালেন্স দেখার উপায় বেছে নিন",
+      "groupDescription": "একটি সম্মিলিত ভিউয়ের জন্য সব খরচ {currency}-তে রূপান্তর করুন।",
+      "originalDescription": "প্রত্যেক খরচ যে মুদ্রায় প্রবেশ করানো হয়েছে সেভাবে রাখুন।",
+      "originalNote": "নিষ্পত্তি পেমেন্ট সাধারণত গ্রুপ মুদ্রায় রেকর্ড করা হয়। এই মূল-মুদ্রা ভিউটি একটি পৃথক প্রতি-মুদ্রা লেজার, তাই গ্রুপ মুদ্রার পরিকল্পনা নিষ্পত্তি হলেও এখানে ব্যালেন্স অমীমাংসিত দেখাতে পারে। নিষ্পত্তির সময় গ্রুপ মুদ্রা ভিউ ব্যবহার করুন।"
+    },
+    "direction": {
+      "toReceive": "গ্রহণ করতে",
+      "toPay": "পরিশোধ করতে",
+      "settledUp": "নিষ্পত্তি হয়েছে",
+      "toReceiveDescription": "প্রত্যেক সেগমেন্ট দেখায় কে এই অংশগ্রহণকারীকে পরিশোধ করে।",
+      "toPayDescription": "প্রত্যেক সেগমেন্ট দেখায় এই অংশগ্রহণকারী কাকে পরিশোধ করে।",
+      "participantReceives": "<strong>{name}</strong> গ্রহণ করে",
+      "participantPays": "<strong>{name}</strong> প্রদান করে",
+      "fromParticipant": "<strong>{name}</strong> এর কাছ থেকে",
+      "toParticipant": "<strong>{name}</strong>-কে",
+      "settle": "নিষ্পত্তি",
+      "settlePaymentsBy": "{name} এর {count} পেমেন্ট নিষ্পত্তি করুন, {amount}",
+      "settlePaymentsTo": "{name}-কে {count} পেমেন্ট নিষ্পত্তি করুন, {amount}"
+    },
+    "simple": {
+      "title": "ব্যালেন্স নিষ্পত্তি করুন",
+      "description": "কে কী ঋণী তা দেখুন এবং পেমেন্ট নিষ্পত্তি হিসাবে চিহ্নিত করুন।",
+      "netBalances": "নেট ব্যালেন্স",
+      "isOwed": "{amount} প্রাপ্য",
+      "owes": "{amount} ঋণী",
+      "suggestedPayments": "প্রস্তাবিত পেমেন্ট",
+      "empty": "সবার ব্যালেন্স নিষ্পত্তি হয়েছে।"
+    },
+    "view": {
+      "label": "দৃশ্য",
+      "title": "ব্যালেন্স দেখার উপায় বেছে নিন",
+      "simple": "সরল",
+      "simpleDescription": "কে কাকে ঋণী তা দেখুন এবং নিষ্পত্তি পেমেন্ট রেকর্ড করুন।",
+      "visual": "ভিজ্যুয়াল",
+      "visualDescription": "ব্যালেন্স বিশ্লেষণ এবং চার্ট।"
+    }
+  },
+  "BulkCategorize": {
+    "title": "বাল্ক ক্যাটেগোরাইজ",
+    "calibrationTitle": "ধাপ ১ — ক্যালিব্রেশন",
+    "calibrationDescription": "আপনি প্রতিটি উদাহরণ নিশ্চিত করলে AI তার পরবর্তী পরামর্শ উন্নত করে। এটি এক রাউন্ডের পরে প্রস্তুত হতে পারে বা আরও উদাহরণ চাইতে পারে।",
+    "aiWantsMore": "AI আরও কয়েকটি উদাহরণ চায়। নীচের পরামর্শগুলি নিশ্চিত বা সংশোধন করুন এবং আরেকটি রাউন্ড চালান।",
+    "aiSaidReady": "AI প্রস্তুত বোধ করছে। কমিট করতে প্রিভিউতে যান।",
+    "feedbackTableTitle": "নির্বাচিত খরচ",
+    "emptySelection": "এই মুহূর্তে কোনো খরচ পর্যালোচনার প্রয়োজন নেই। সব প্রার্থীর উপর বিভাগ প্রয়োগ করতে প্রিভিউ তৈরি করুন।",
+    "runCalibration": "ক্যালিব্রেশন রাউন্ড চালান",
+    "runAnotherRound": "আরেকটি ক্যালিব্রেশন রাউন্ড চালান",
+    "calibrationError": "ক্যালিব্রেশন চালানো যায়নি: {message}",
+    "generatePreview": "প্রিভিউ তৈরি করুন",
+    "previewTitle": "ধাপ ২ — পর্যালোচনা ও সংরক্ষণ",
+    "previewDescription": "যেকোনো সারি সম্পাদনা করুন, তারপর সংরক্ষণ করুন। আস্থা মডেলটি নিশ্চিত নয় এমন সারিগুলি চিহ্নিত করে।",
+    "previewHint": "{total}টি প্রার্থীর মধ্যে {shown}টি দেখানো হচ্ছে।",
+    "removeAction": "এড়িয়ে যান",
+    "targetExceedsCap_one": "এই ব্যাচে {count}টি খরচ প্রক্রিয়া করা যাবে না। তারিখ পরিসীমা সংকুচিত করে আবার চেষ্টা করুন।",
+    "targetExceedsCap_other": "প্রক্রিয়া করার জন্য অত্যধিক খরচ আছে ({count})। তারিখ পরিসীমা সংকুচিত করুন বা ব্যাচে প্রক্রিয়া করুন।",
+    "saveAll_one": "{count}টি পরিবর্তন সংরক্ষণ করুন",
+    "saveAll_other": "{count}টি পরিবর্তন সংরক্ষণ করুন",
+    "saving": "সংরক্ষণ করা হচ্ছে…",
+    "saved_one": "{count}টি খরচ পুনরায় ক্যাটেগোরাইজ করা হয়েছে।",
+    "saved_other": "{count}টি খরচ পুনরায় ক্যাটেগোরাইজ করা হয়েছে।",
+    "applyError": "বাল্ক ক্যাটাগরি আপডেট সংরক্ষণ করা যায়নি: {message}",
+    "noCandidates": "কোনো খরচ ক্যাটেগোরাইজ করার প্রয়োজন নেই।",
+    "adminsOnly": "শুধুমাত্র গ্রুপ অ্যাডমিনরা বাল্ক ক্যাটেগোরাইজার চালাতে পারেন।",
+    "description": "সব অক্যাটেগোরাইজড খরচের জন্য একসাথে বিভাগ প্রস্তাব করতে AI ব্যবহার করুন।",
+    "backToSettings": "সেটিংসে ফিরে যান",
+    "archived": "এই গ্রুপটি আর্কাইভ করা হয়েছে। বাল্ক ক্যাটেগোরাইজার উপলব্ধ নয়।",
+    "requiresFeatureFlag": "এই বৈশিষ্ট্যটির জন্য PUBLIC_ENABLE_CATEGORY_EXTRACT সক্রিয় থাকা প্রয়োজন।",
+    "previewError": "প্রিভিউ তৈরি করা যায়নি: {message}",
+    "introTitle": "এটি কীভাবে কাজ করে",
+    "loadingCandidates": "অক্যাটেগোরাইজড খরচ চেক করা হচ্ছে…",
+    "introDescription_one": "{count}টি অক্যাটেগোরাইজড খরচ পর্যালোচনার জন্য প্রস্তুত।",
+    "introDescription_other": "{count}টি অক্যাটেগোরাইজড খরচ পর্যালোচনার জন্য প্রস্তুত।",
+    "introStepLook_one": "AI সবচেয়ে দরকারী উদাহরণ খুঁজতে {count}টি খরচ পর্যালোচনা করে।",
+    "introStepLook_other": "AI সবচেয়ে দরকারী উদাহরণ খুঁজতে {count}টি খরচ পর্যালোচনা করে।",
+    "introStepReview_one": "AI এই গ্রুপের বিভাগগুলি শিখতে আপনি নির্বাচিত {count}টি উদাহরণ পর্যালোচনা ও সংশোধন করেন।",
+    "introStepReview_other": "AI এই গ্রুপের বিভাগগুলি শিখতে আপনি নির্বাচিত {count}টি উদাহরণ পর্যালোচনা ও সংশোধন করেন।",
+    "introStepPreview": "AI-র যথেষ্ট উদাহরণ থাকলে, এটি একটি সম্পূর্ণ পর্যালোচনা প্রস্তুত করে এবং অনিশ্চিত খরচগুলি অক্যাটেগোরাইজড রাখে।",
+    "startCalibration": "ক্যালিব্রেশন শুরু করুন",
+    "calibrationStartHint": "AI আপনার পর্যালোচনার জন্য দরকারী উদাহরণ বেছে নিচ্ছে।",
+    "calibrationReady": "সম্পূর্ণ পর্যালোচনা প্রস্তুত করতে AI-র যথেষ্ট প্রতিক্রিয়া আছে।",
+    "reviewSample": "এই উদাহরণগুলি পর্যালোচনা করুন",
+    "calibrationNoSample": "AI আরেকটি নমুনার প্রয়োজন অনুভব করেনি।",
+    "categorizeSample": "একটি নমুনা ক্যাটেগোরাইজ করুন",
+    "submitReviewedExamples": "পর্যালোচিত উদাহরণ জমা দিন",
+    "continueToPreview": "প্রিভিউতে চালিয়ে যান",
+    "back": "পিছনে",
+    "backToCalibration": "ক্যালিব্রেশনে ফিরে যান",
+    "generatingPreview": "পরামর্শ প্রস্তুত করা হচ্ছে…",
+    "noSuggestions": "AI সব খরচ অক্যাটেগোরাইজড রেখেছে। আরও ক্যালিব্রেশনের পরে আবার চেষ্টা করতে পারেন।",
+    "previewSummary": "AI {total}টি খরচের মধ্যে {suggested}টির জন্য বিভাগ প্রস্তাব করেছে।",
+    "leftUncategorized_one": "AI যথেষ্ট আত্মবিশ্বাসী না হওয়ায় {count}টি খরচ অক্যাটেগোরাইজড রাখা হয়েছে।",
+    "leftUncategorized_other": "AI যথেষ্ট আত্মবিশ্বাসী না হওয়ায় {count}টি খরচ অক্যাটেগোরাইজড রাখা হয়েছে।",
+    "retryPreview": "আবার প্রিভিউ চেষ্টা করুন",
+    "doneTitle": "বিভাগ সংরক্ষিত হয়েছে",
+    "expenseColumn": "খরচ",
+    "categoryColumn": "বিভাগ",
+    "roundCount": "রাউন্ড {round} / {max}",
+    "confidence": {
+      "high": "উচ্চ",
+      "medium": "মধ্যম",
+      "low": "নিম্ন"
+    },
+    "confidenceColumn": "আস্থা"
+  },
+  "Categories": {
+    "Entertainment": {
+      "heading": "বিনোদন",
+      "Entertainment": "বিনোদন",
+      "Games": "গেম",
+      "Movies": "সিনেমা",
+      "Music": "সঙ্গীত",
+      "Sports": "খেলাধুলা"
+    },
+    "Food and Drink": {
+      "heading": "খাদ্য ও পানীয়",
+      "Food and Drink": "খাদ্য ও পানীয়",
+      "Dining Out": "বাইরে খাওয়া",
+      "Groceries": "মুদিখানা",
+      "Liquor": "মদ"
+    },
+    "Home": {
+      "heading": "বাসা",
+      "Home": "বাসা",
+      "Electronics": "ইলেকট্রনিক্স",
+      "Furniture": "আসবাবপত্র",
+      "Household Supplies": "গৃহস্থালী জিনিসপত্র",
+      "Maintenance": "রক্ষণাবেক্ষণ",
+      "Mortgage": "বন্ধক",
+      "Pets": "পোষা প্রাণী",
+      "Rent": "ভাড়া",
+      "Services": "সেবা"
+    },
+    "Life": {
+      "heading": "জীবন",
+      "Childcare": "শিশু যত্ন",
+      "Clothing": "পোশাক",
+      "Donation": "দান",
+      "Education": "শিক্ষা",
+      "Gifts": "উপহার",
+      "Insurance": "বীমা",
+      "Medical Expenses": "চিকিৎসা ব্যয়",
+      "Taxes": "কর"
+    },
+    "Personal Care and Wellness": {
+      "heading": "ব্যক্তিগত যত্ন ও সুস্থতা",
+      "Personal Care and Wellness": "ব্যক্তিগত যত্ন ও সুস্থতা"
+    },
+    "Social and Activities": {
+      "heading": "সামাজিক ও কার্যক্রম",
+      "Events and Activities": "অনুষ্ঠান ও কার্যক্রম"
+    },
+    "Subscriptions and Memberships": {
+      "heading": "সাবস্ক্রিপশন ও সদস্যপদ",
+      "Digital Subscriptions": "ডিজিটাল সাবস্ক্রিপশন",
+      "Memberships": "সদস্যপদ"
+    },
+    "Transportation": {
+      "heading": "পরিবহন",
+      "Transportation": "পরিবহন",
+      "Bicycle": "সাইকেল",
+      "Bus/Train": "বাস/ট্রেন",
+      "Car": "গাড়ি",
+      "Gas/Fuel": "পেট্রোল/জ্বালানি",
+      "Hotel": "হোটেল",
+      "Parking": "পার্কিং",
+      "Plane": "বিমান",
+      "Taxi": "ট্যাক্সি"
+    },
+    "search": "বিভাগ খুঁজুন...",
+    "noCategory": "কোনো বিভাগ পাওয়া যায়নি।",
+    "Uncategorized": {
+      "heading": "অক্যাটেগোরাইজড",
+      "General": "সাধারণ",
+      "Payment": "পেমেন্ট"
+    },
+    "Utilities": {
+      "heading": "ইউটিলিটি",
+      "Utilities": "ইউটিলিটি",
+      "Cleaning": "পরিষ্কার",
+      "Electricity": "বিদ্যুৎ",
+      "Heat/Gas": "তাপ/গ্যাস",
+      "Trash": "আবর্জনা",
+      "TV/Phone/Internet": "টিভি/ফোন/ইন্টারনেট",
+      "Water": "পানি"
+    }
+  },
+  "Common": {
+    "close": "বন্ধ করুন",
+    "previousSlide": "পূর্ববর্তী স্লাইড",
+    "nextSlide": "পরবর্তী স্লাইড"
+  },
+  "CompleteProfile": {
+    "title": "আপনার প্রোফাইল সম্পূর্ণ করুন",
+    "description": "আপনার গ্রুপগুলি আপনার কী নাম দেখবে তা জানান। আপনি পরে এটি পরিবর্তন করতে পারেন।",
+    "nameLabel": "প্রদর্শনের নাম",
+    "namePlaceholder": "আপনার নাম",
+    "submit": "সংরক্ষণ করুন এবং চালিয়ে যান",
+    "saving": "সংরক্ষণ করা হচ্ছে…",
+    "signedInAs": "{email} হিসাবে সাইন ইন করা হয়েছে",
+    "errors": {
+      "nameRequired": "একটি প্রদর্শনের নাম লিখুন।",
+      "nameTooShort": "নাম কমপক্ষে ২ অক্ষর হতে হবে।",
+      "generic": "কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।"
+    }
+  },
+  "CreateFromReceipt": {
+    "Dialog": {
+      "triggerTitle": "AI রসিদ স্ক্যান",
+      "title": "রসিদ থেকে তৈরি করুন",
+      "description": "একটি রসিদের ছবি থেকে খরচের তথ্য বের করুন।",
+      "body": "একটি রসিদের ছবি আপলোড করুন, এবং আমরা সম্ভব হলে খরচের তথ্য বের করতে স্ক্যান করব।",
+      "selectImage": "ছবি নির্বাচন…",
+      "titleLabel": "শিরোনাম:",
+      "categoryLabel": "বিভাগ:",
+      "amountLabel": "পরিমাণ:",
+      "dateLabel": "তারিখ:",
+      "editNext": "এরপর আপনি খরচের তথ্য সম্পাদনা করতে পারবেন।",
+      "continue": "চালিয়ে যান",
+      "existingDocuments": "একটি সংযুক্ত রসিদ বেছে নিন",
+      "existingDocumentAlt": "সংযুক্ত রসিদ",
+      "uploadAndScan": "রসিদ আপলোড ও স্ক্যান করুন",
+      "scannedReceiptAlt": "স্ক্যান করা রসিদ",
+      "fillTitle": "রসিদ থেকে খরচ পূরণ করুন",
+      "fillNext": "প্রস্তাবিত বিবরণ পর্যালোচনা করুন, তারপর এই খরচে প্রয়োগ করুন।",
+      "scanningHint": "স্ক্যান করতে কিছু সময় লাগতে পারে — অনুগ্রহ করে ধৈর্য ধরুন।",
+      "fillBody": "একটি সংযুক্ত রসিদ বেছে নিন বা একটি নতুন আপলোড করুন — আমরা এই খরচের বিবরণ প্রস্তাব করতে এটি স্ক্যান করব।"
+    },
+    "ErrorToast": {
+      "title": "ডকুমেন্ট আপলোড করার সময় ত্রুটি",
+      "description": "ডকুমেন্ট আপলোড করার সময় কিছু সমস্যা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন বা ভিন্ন ফাইল নির্বাচন করুন।",
+      "retry": "পুনরায় চেষ্টা করুন"
+    },
+    "unknown": "অজানা",
+    "TooBigToast": {
+      "title": "ফাইলটি খুব বড়",
+      "description": "আপনি সর্বাধিক {maxSize} আপলোড করতে পারেন। আপনার ফাইলের আকার {size}।"
+    }
+  },
+  "CreateReimbursement": {
+    "description": "রেকর্ড করার আগে পেমেন্ট পর্যালোচনা করুন।",
+    "pays": "{from} {to}-কে প্রদান করে",
+    "amount": "পরিমাণ",
+    "date": "তারিখ",
+    "category": "বিভাগ",
+    "create": "তৈরি করুন",
+    "edit": "বিবরণ সম্পাদনা করুন",
+    "creating": "তৈরি করা হচ্ছে…",
+    "successToast": "নিষ্পত্তি পেমেন্ট রেকর্ড করা হয়েছে",
+    "successToastMultiple": "{count}টি নিষ্পত্তি পেমেন্ট একটি এন্ট্রি হিসাবে রেকর্ড করা হয়েছে",
+    "paysMany": "{from} {count} জনকে প্রদান করে",
+    "receivesMany": "{to} {count}টি পেমেন্ট গ্রহণ করে",
+    "paymentsToInclude": "অন্তর্ভুক্ত করার পেমেন্ট",
+    "selectionSummary": "{count}টি পেমেন্ট নির্বাচিত, মোট {total}",
+    "legToAria": "{from} {to}-কে {amount} প্রদান করে",
+    "legFromAria": "{from} {to}-কে {amount} প্রদান করে",
+    "toParticipant": "{name}-কে",
+    "fromParticipant": "{name} এর কাছ থেকে",
+    "createSingle": "পেমেন্ট রেকর্ড করুন",
+    "createMultiple": "{count}টি পেমেন্ট রেকর্ড করুন"
+  },
+  "Currencies": {
+    "search": "মুদ্রা খুঁজুন...",
+    "noCurrency": "কোনো মুদ্রা পাওয়া যায়নি।",
+    "byCode": {
+      "AED": {
+        "name": "সংযুক্ত আরব আমিরাত দিরহাম"
+      },
+      "ARS": {
+        "name": "আর্জেন্টাইন পেসো"
+      },
+      "AUD": {
+        "name": "অস্ট্রেলিয়ান ডলার"
+      },
+      "BDT": {
+        "name": "বাংলাদেশি টাকা"
+      },
+      "BGN": {
+        "name": "বুলগেরিয়ান লেভ"
+      },
+      "BRL": {
+        "name": "ব্রাজিলিয়ান রিয়েল"
+      },
+      "CAD": {
+        "name": "ক্যানেডিয়ান ডলার"
+      },
+      "CHF": {
+        "name": "সুইস ফ্রাঙ্ক"
+      },
+      "CLP": {
+        "name": "চিলিয়ান পেসো"
+      },
+      "CNY": {
+        "name": "চীনা ইউয়ান"
+      },
+      "COP": {
+        "name": "কলম্বিয়ান পেসো"
+      },
+      "CZK": {
+        "name": "চেক কোরুনা"
+      },
+      "DKK": {
+        "name": "ড্যানিশ ক্রোন"
+      },
+      "EGP": {
+        "name": "মিশরীয় পাউন্ড"
+      },
+      "EUR": {
+        "name": "ইউরো"
+      },
+      "GBP": {
+        "name": "ব্রিটিশ পাউন্ড"
+      },
+      "GEL": {
+        "name": "জর্জিয়ান লারি"
+      },
+      "GHS": {
+        "name": "ঘানার সেডি"
+      },
+      "HKD": {
+        "name": "হংকং ডলার"
+      },
+      "HNL": {
+        "name": "হন্ডুরান লেম্পিরা"
+      },
+      "HRK": {
+        "name": "ক্রোয়েশিয়ান কুনা"
+      },
+      "HUF": {
+        "name": "হাঙ্গেরিয়ান ফরিন্ট"
+      },
+      "IDR": {
+        "name": "ইন্দোনেশিয়ান রুপিয়াহ"
+      },
+      "ILS": {
+        "name": "ইসরায়েলি নিউ শেকেল"
+      },
+      "INR": {
+        "name": "ভারতীয় রুপি"
+      },
+      "ISK": {
+        "name": "আইসল্যান্ডিক ক্রোনা"
+      },
+      "JPY": {
+        "name": "জাপানি ইয়েন"
+      },
+      "KES": {
+        "name": "কেনিয়ান শিলিং"
+      },
+      "KHR": {
+        "name": "কম্বোডিয়ান রিয়েল"
+      },
+      "KRW": {
+        "name": "দক্ষিণ কোরিয়ান ওন"
+      },
+      "KWD": {
+        "name": "কুয়েতি দিনার"
+      },
+      "KZT": {
+        "name": "কাজাখস্তানি টেঙ্গে"
+      },
+      "LKR": {
+        "name": "শ্রীলঙ্কান রুপি"
+      },
+      "MAD": {
+        "name": "মরক্কান দিরহাম"
+      },
+      "MDL": {
+        "name": "মোলডোভান লেউ"
+      },
+      "MKD": {
+        "name": "ম্যাসেডোনিয়ান ডেনার"
+      },
+      "MXN": {
+        "name": "মেক্সিকান পেসো"
+      },
+      "MYR": {
+        "name": "মালয়েশিয়ান রিংগিট"
+      },
+      "NGN": {
+        "name": "নাইজেরিয়ান নাইরা"
+      },
+      "NOK": {
+        "name": "নরওয়েজিয়ান ক্রোন"
+      },
+      "NZD": {
+        "name": "নিউজিল্যান্ড ডলার"
+      },
+      "PEN": {
+        "name": "পেরুভিয়ান সোল"
+      },
+      "PHP": {
+        "name": "ফিলিপাইন পেসো"
+      },
+      "PKR": {
+        "name": "পাকিস্তানি রুপি"
+      },
+      "PLN": {
+        "name": "পোলিশ জ্লটি"
+      },
+      "QAR": {
+        "name": "কাতারি রিয়াল"
+      },
+      "RON": {
+        "name": "রোমানিয়ান লেউ"
+      },
+      "RUB": {
+        "name": "রাশিয়ান রুবল"
+      },
+      "SAR": {
+        "name": "সৌদি রিয়াল"
+      },
+      "SEK": {
+        "name": "সুইডিশ ক্রোনা"
+      },
+      "SGD": {
+        "name": "সিঙ্গাপুর ডলার"
+      },
+      "THB": {
+        "name": "থাই বাট"
+      },
+      "TRY": {
+        "name": "তুর্কি লিরা"
+      },
+      "TWD": {
+        "name": "নিউ তাইওয়ান ডলার"
+      },
+      "UAH": {
+        "name": "ইউক্রেনীয় রিভনিয়া"
+      },
+      "USD": {
+        "name": "মার্কিন ডলার"
+      },
+      "UYU": {
+        "name": "উরুগুয়ান পেসো"
+      },
+      "VND": {
+        "name": "ভিয়েতনামিজ ডং"
+      },
+      "ZAR": {
+        "name": "দক্ষিণ আফ্রিকান র্যান্ড"
+      }
+    }
+  },
+  "EmptyState": {
+    "actions": {
+      "createGroup": "একটি গ্রুপ তৈরি করুন",
+      "createFriendLedger": "বন্ধুর সাথে খরচ ট্র্যাক করুন",
+      "showHidden": "লুকানো গ্রুপ দেখান"
+    },
+    "description": {
+      "empty": "শুরু করতে আপনার প্রথম {itemLabel} তৈরি করুন।"
+    },
+    "labels": {
+      "group": "গ্রুপ",
+      "groupPlural": "গ্রুপ",
+      "friendLedger": "বন্ধু",
+      "friendLedgerPlural": "বন্ধু"
+    },
+    "title": {
+      "empty": "এখনও কোনো {itemLabelPlural} নেই",
+      "filtered": "আপনার সব {itemLabelPlural} লুকানো আছে"
+    }
+  },
+  "ExpenseCard": {
+    "paidBy": "<strong>{paidBy}</strong> প্রদান করেছেন · <paidFor></paidFor> এর মধ্যে ভাগ",
+    "paidByMultiple": "<paidByNames></paidByNames> প্রদান করেছেন · <paidFor></paidFor> এর মধ্যে ভাগ",
+    "everyone": "সবাই",
+    "copyToast": "খরচ কপি শুরু হয়েছে। বিদ্যমান খরচের বিবরণ একটি নতুন তৈরি করতে ব্যবহার করা হবে।",
+    "receivedBy": "<strong>{paidBy}</strong> গ্রহণ করেছেন · <paidFor></paidFor>-এর জন্য বরাদ্দ",
+    "receivedByMultiple": "<paidByNames></paidByNames> গ্রহণ করেছেন · <paidFor></paidFor>-এর জন্য বরাদ্দ",
+    "yourBalance": "আপনার ব্যালেন্স:",
+    "notInvolved": "আপনি জড়িত নন",
+    "settlementBadge": "নিষ্পত্তি",
+    "items": {
+      "more_one": "+{count} আরও",
+      "more_other": "+{count} আরও",
+      "title": "আইটেম",
+      "participants": "{names}"
+    }
+  },
+  "ExpenseDocumentsInput": {
+    "ErrorToast": {
+      "title": "ডকুমেন্ট আপলোড করার সময় ত্রুটি",
+      "description": "ডকুমেন্ট আপলোড করার সময় কিছু সমস্যা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন বা ভিন্ন ফাইল নির্বাচন করুন।",
+      "retry": "পুনরায় চেষ্টা করুন"
+    },
+    "deleteDocument": "ডকুমেন্ট মুছুন",
+    "document": "ডকুমেন্ট",
+    "close": "বন্ধ করুন",
+    "TooBigToast": {
+      "title": "ফাইলটি খুব বড়",
+      "description": "আপনি সর্বাধিক {maxSize} আপলোড করতে পারেন। আপনার ফাইলের আকার {size}।"
+    }
+  },
+  "ExpenseForm": {
+    "paidForItemizedEntryHint": "আইটেম অনুযায়ী ভাগ করতে, একটি আইটেম সারি থেকে অংশগ্রহণকারী সম্পাদনা করুন।",
+    "paidForItemizedActiveHint": "আইটেমাইজড ভাগ সক্রিয়। এই ভাগ পরিবর্তন করতে আইটেম কার্ড থেকে আইটেম অংশগ্রহণকারী সম্পাদনা করুন।",
+    "DefaultSplit": {
+      "savedAsDefault": "ডিফল্ট হিসাবে সংরক্ষিত",
+      "heading": "ডিফল্ট ভাগ",
+      "load": "লোড করুন",
+      "save": "সংরক্ষণ করুন"
+    },
+    "DeletePopup": {
+      "label": "মুছুন",
+      "title": "এই খরচ মুছে ফেলবেন?",
+      "description": "আপনি কি সত্যিই এই খরচ মুছে ফেলতে চান? এই ক্রিয়া অপরিবর্তনীয়।",
+      "yes": "হ্যাঁ",
+      "deleting": "মুছে ফেলা হচ্ছে…",
+      "cancel": "বাতিল করুন"
+    },
+    "Expense": {
+      "DateField": {
+        "label": "খরচের তারিখ",
+        "description": "খরচ পরিশোধের তারিখ লিখুন।"
+      },
+      "create": "খরচ তৈরি করুন",
+      "edit": "খরচ সম্পাদনা করুন",
+      "TitleField": {
+        "label": "খরচের শিরোনাম",
+        "placeholder": "সোমবার সন্ধ্যার রেস্তোরাঁ",
+        "description": "খরচের জন্য একটি বিবরণ লিখুন।"
+      },
+      "categoryFieldDescription": "খরচের বিভাগ নির্বাচন করুন।",
+      "splitModeDescription": "কীভাবে খরচ ভাগ করবেন তা নির্বাচন করুন।",
+      "attachDescription": "খরচের সাথে রসিদ দেখুন এবং সংযুক্ত করুন।",
+      "createCopy": "কপি তৈরি করুন: {title}",
+      "currencyField": {
+        "label": "খরচের মুদ্রা",
+        "description": "যে মুদ্রায় খরচ পরিশোধ করা হয়েছে।"
+      },
+      "editTitle": "সম্পাদনা: {title}",
+      "paidByField": {
+        "label": "দ্বারা প্রদত্ত",
+        "placeholder": "একজন অংশগ্রহণকারী নির্বাচন করুন",
+        "description": "কে টাকা দিয়েছে এবং প্রতিটি প্রদানকারী কত অবদান রেখেছে তা নির্বাচন করুন।"
+      },
+      "paidFor": {
+        "title": "এর মধ্যে ভাগ",
+        "description": "এই খরচ ভাগ করে নেয় এমন অংশগ্রহণকারীদের নির্বাচন করুন।"
+      },
+      "recurrence": {
+        "label": "খরচের পুনরাবৃত্তি",
+        "description": "এই খরচ কখন আবার তৈরি হবে তা বেছে নিন।",
+        "checkboxLabel": "পুনরাবৃত্তিমূলক",
+        "checkboxDescription": "একটি সময়সূচীতে এই খরচ তৈরি করুন",
+        "enable": "পুনরাবৃত্তি যোগ করুন",
+        "previewLabel": "পরবর্তী ঘটনা",
+        "currentOccurrence": "বর্তমান",
+        "viewAll": "সব দেখুন",
+        "scheduleTitle": "পুনরাবৃত্তির সময়সূচী",
+        "remainingCount": "{count}টি ঘটনা বাকি আছে।",
+        "unlimitedSchedule": "এই পুনরাবৃত্তির শেষ তারিখ নেই।",
+        "noFurtherOccurrences": "এই সেটিংস সহ আর কোনো ঘটনা নেই।",
+        "scheduleCount": "এই খরচ থেকে {count}টি ঘটনা দেখানো হচ্ছে।",
+        "decreaseOccurrences": "ঘটনা সংখ্যা হ্রাস করুন",
+        "increaseOccurrences": "ঘটনা সংখ্যা বৃদ্ধি করুন",
+        "ruleSummary": "প্রতি {interval} {frequency} · {count}টি ঘটনা",
+        "ruleSummaryIndefinite": "প্রতি {interval} {frequency} · শেষ তারিখ নেই",
+        "scheduleChangeWarningTitle": "পুনরাবৃত্তির সময়সূচী পরিবর্তন হবে",
+        "scheduleChangeWarning": "সংরক্ষণ করলে এই এবং ভবিষ্যতের ঘটনা পুনঃনির্ধারিত হবে। বিদ্যমান ভবিষ্যতের খরচ নতুন তারিখে স্থানান্তরিত বা সরানো হতে পারে, এবং অনুপস্থিত নির্ধারিত তারিখগুলি স্বয়ংক্রিয়ভাবে তৈরি হতে পারে।",
+        "pastDateBackfillNote": "যেহেতু এই খরচ অতীতে শুরু হয়েছে, আজ পর্যন্ত ঘটনাগুলি আপনি সংরক্ষণ করার পরে স্বয়ংক্রিয়ভাবে তৈরি হবে।",
+        "completedOccurrence": "তৈরি হয়েছে",
+        "remove": "পুনরাবৃত্তি সরান",
+        "repeatEvery": "প্রতি পুনরাবৃত্তি করুন",
+        "interval": "পুনরাবৃত্তি ব্যবধান",
+        "frequency": "পুনরাবৃত্তির ফ্রিকোয়েন্সি",
+        "ends": {
+          "label": "শেষ",
+          "never": "কখনো না",
+          "count": "নির্দিষ্ট সংখ্যক ঘটনার পরে",
+          "date": "একটি নির্দিষ্ট তারিখে",
+          "countInput": "মোট ঘটনা (এই খরচ সহ)",
+          "dateInput": "শেষ তারিখ"
+        },
+        "frequencyOptions": {
+          "daily": "দিন",
+          "weekly": "সপ্তাহ",
+          "monthly": "মাস",
+          "yearly": "বছর"
+        },
+        "upcomingOccurrence": "আসন্ন"
+      },
+      "recurrenceRule": {
+        "label": "খরচের পুনরাবৃত্তি",
+        "description": "খরচ কত ঘন ঘন পুনরাবৃত্তি হবে তা নির্বাচন করুন।",
+        "none": "কিছু না",
+        "daily": "দৈনিক",
+        "weekly": "সাপ্তাহিক",
+        "monthly": "মাসিক"
+      },
+      "recurringEditScopeOccurrence": "শুধুমাত্র এই ঘটনা সম্পাদনা করা হচ্ছে",
+      "recurringEditScopeFuture": "এই এবং ভবিষ্যতের ঘটনা সম্পাদনা করা হচ্ছে"
+    },
+    "Income": {
+      "DateField": {
+        "label": "আয়ের তারিখ",
+        "description": "আয় পাওয়ার তারিখ লিখুন।"
+      },
+      "create": "আয় তৈরি করুন",
+      "edit": "আয় সম্পাদনা করুন",
+      "TitleField": {
+        "label": "আয়ের শিরোনাম",
+        "placeholder": "বেতন বা ফেরত",
+        "description": "আয় কোথা থেকে এসেছে তা বর্ণনা করুন।"
+      },
+      "categoryFieldDescription": "আয়ের বিভাগ নির্বাচন করুন।",
+      "splitModeDescription": "কীভাবে আয় ভাগ করবেন তা নির্বাচন করুন।",
+      "attachDescription": "আয়ের সাথে রসিদ দেখুন এবং সংযুক্ত করুন।",
+      "currencyField": {
+        "label": "আয়ের মুদ্রা",
+        "description": "যে মুদ্রায় আয় গৃহীত হয়েছে।"
+      },
+      "paidByField": {
+        "label": "দ্বারা গৃহীত",
+        "description": "কে টাকা পেয়েছে এবং প্রতিটি ব্যক্তি কত পেয়েছে তা নির্বাচন করুন।"
+      },
+      "paidFor": {
+        "title": "বরাদ্দকৃত",
+        "description": "এই আয় ভাগ করে নেয় এমন অংশগ্রহণকারীদের নির্বাচন করুন।"
+      }
+    },
+    "PaidBySplitModeField": {
+      "label": "প্রদানকারীর ভাগ মোড"
+    },
+    "attachDocuments": "ডকুমেন্ট সংযুক্ত করুন",
+    "create": "তৈরি করুন",
+    "creating": "তৈরি করা হচ্ছে…",
+    "save": "সংরক্ষণ করুন",
+    "saving": "সংরক্ষণ করা হচ্ছে…",
+    "cancel": "বাতিল করুন",
+    "reimbursement": "নিষ্পত্তি পেমেন্ট",
+    "readOnlyNotice": "এই গ্রুপটি আর্কাইভ করা হয়েছে। খরচ শুধুমাত্র-পঠনযোগ্য হিসাবে দেখানো হচ্ছে।",
+    "ParticipantDistribution": {
+      "missing": "{total} এর {missing} অনুপস্থিত",
+      "surplus": "{total} এর {extra} উদ্বৃত্ত",
+      "matches": "✓ {total} এর সাথে মিলেছে",
+      "evenlySplit": "সমানভাবে ভাগ: {amount} × {count}",
+      "sharesTotal": "মোট ওজন: {sum} ভাগ",
+      "percentageMatches": "✓ ১০০% মিলেছে",
+      "percentageMissing": "{pct}% অনুপস্থিত",
+      "percentageSurplus": "{pct}% উদ্বৃত্ত"
+    },
+    "SplitModeField": {
+      "label": "ভাগ মোড",
+      "evenly": "সমানভাবে",
+      "byShares": "অসম – ভাগ অনুযায়ী",
+      "byPercentage": "অসম – শতাংশ অনুযায়ী",
+      "byAmount": "অসম – পরিমাণ অনুযায়ী"
+    },
+    "amountField": {
+      "label": "পরিমাণ",
+      "calculator": {
+        "buttonLabel": "ক্যালকুলেটর খুলুন",
+        "title": "ক্যালকুলেটর",
+        "description": "একটি পরিমাণ গণনা করুন বা খরচ আইটেম তৈরি করুন।",
+        "clear": "পরিষ্কার",
+        "backspace": "ব্যাকস্পেস",
+        "equals": "সমান",
+        "plus": "যোগ",
+        "minus": "বিয়োগ",
+        "multiply": "গুণ",
+        "divide": "ভাগ",
+        "openBracket": "খোলা বন্ধনী",
+        "closeBracket": "বন্ধ বন্ধনী",
+        "decimal": "দশমিক বিন্দু",
+        "invalid": "অবৈধ অভিব্যক্তি",
+        "replaceItemsTitle": "খরচ আইটেম প্রতিস্থাপন করবেন?",
+        "replaceItemsDescription": "এটি আপনার বিদ্যমান খরচ আইটেমগুলি গণনাকৃত আইটেম দিয়ে প্রতিস্থাপন করবে।",
+        "replaceItemsConfirm": "আইটেম প্রতিস্থাপন করুন",
+        "splitIntoItems_one": "{count}টি খরচ আইটেম তৈরি করুন",
+        "splitIntoItems_other": "{count}টি খরচ আইটেম তৈরি করুন",
+        "replaceItems": "খরচ আইটেম প্রতিস্থাপন করুন",
+        "createItems": "খরচ আইটেম তৈরি করুন",
+        "itemTransferInvalid": "গণনা শেষ করুন",
+        "itemTransferUnsupported": "শুধুমাত্র +, × এবং বন্ধনী ব্যবহার করুন",
+        "itemTransferEmpty": "একটি গণনা লিখুন",
+        "createItemsHint": "গণনাকৃত সারি যোগ করুন",
+        "replaceItemsHint": "বর্তমান সারি প্রতিস্থাপন করুন"
+      }
+    },
+    "categoryField": {
+      "label": "বিভাগ"
+    },
+    "conversionUnavailable": "প্রতি খরচে ভিন্ন মুদ্রা সেট করতে এবং পরিমাণ রূপান্তর করতে, গ্রুপের জন্য একটি নন-কাস্টম মুদ্রা নির্বাচন করুন।",
+    "conversionRateField": {
+      "useApi": "বিনিময় হার ব্যবহার করুন",
+      "useCustom": "কাস্টম হার ব্যবহার করুন",
+      "label": "বিনিময় হার",
+      "providerNote": "হার https://frankfurter.dev/ এবং তাদের API দ্বারা সরবরাহ করা হয়।",
+      "futureDateUsesToday": "এই খরচ ভবিষ্যতে এবং আজকের বিনিময় হার ব্যবহার করা হবে।"
+    },
+    "conversionRateState": {
+      "loading": "বিনিময় হার পাওয়া যাচ্ছে…",
+      "success": "প্রাপ্ত হার:",
+      "error": "দুঃখিত, আমরা সাম্প্রতিক হার পেতে পারিনি।",
+      "staleRate": "ব্যবহার করা হার:",
+      "noRate": "নীচে একটি কাস্টম হার লিখুন।",
+      "currencyNotFound": "দুঃখিত, Frankfurter-এর এই দিনে এই মুদ্রার হার নেই।",
+      "noDate": "বিনিময় হার পেতে খরচের তারিখ লিখুন।",
+      "dateMismatch": "{date} তারিখের হার",
+      "refresh": "রিফ্রেশ",
+      "customRate": "কাস্টম হার ব্যবহার করা হচ্ছে"
+    },
+    "splittingOptions": "ভাগ করার বিকল্প",
+    "multiplePayers": "একাধিক প্রদানকারী",
+    "paidByOptionSinglePayer": "একক প্রদানকারী",
+    "paidByOptionEvenly": "সমানভাবে",
+    "paidByOptionByShares": "ভাগ অনুযায়ী",
+    "paidByOptionByPercentage": "শতাংশ অনুযায়ী",
+    "paidByOptionByAmount": "পরিমাণ অনুযায়ী",
+    "paidForOptionEvenly": "সমানভাবে",
+    "paidForOptionByShares": "ভাগ অনুযায়ী",
+    "paidForOptionByPercentage": "শতাংশ অনুযায়ী",
+    "paidForOptionByAmount": "পরিমাণ অনুযায়ী",
+    "paidBySectionSingle": "একক",
+    "paidBySectionMultiple": "একাধিক প্রদানকারী",
+    "paidForSection": "অংশগ্রহণকারীদের মধ্যে ভাগ",
+    "splitOptionAria": "ভাগ: {title}",
+    "paidByOptionSinglePayerHelper": "এক ব্যক্তি সম্পূর্ণ খরচ বহন করে",
+    "paidByOptionEvenlyHelper": "প্রত্যেকে সমান ভাগ প্রদান করে",
+    "paidByOptionBySharesHelper": "প্রত্যেকে ওজনযুক্ত ভাগ প্রদান করে",
+    "paidByOptionByPercentageHelper": "প্রত্যেকে শতাংশ প্রদান করে",
+    "paidByOptionByAmountHelper": "প্রত্যেকে নির্দিষ্ট পরিমাণ প্রদান করে",
+    "paidForOptionEvenlyHelper": "সবার মধ্যে সমানভাবে ভাগ করুন",
+    "paidForOptionBySharesHelper": "প্রত্যেক ব্যক্তির জন্য ভাগ নির্ধারণ করুন",
+    "paidForOptionByPercentageHelper": "প্রত্যেক ব্যক্তির জন্য শতাংশ নির্ধারণ করুন",
+    "paidForOptionByAmountHelper": "প্রত্যেক ব্যক্তির জন্য সঠিক পরিমাণ নির্ধারণ করুন",
+    "convertedAmountField": {
+      "label": "রূপান্তরিত পরিমাণ"
+    },
+    "scanReceipt": "AI দিয়ে রসিদ স্ক্যান করুন",
+    "participantAmountLabel": "{name} এর জন্য পরিমাণ",
+    "participantPercentageLabel": "{name} এর জন্য শতাংশ",
+    "participantSharesLabel": "{name} এর জন্য ভাগ",
+    "decreaseShares": "{name} এর জন্য ভাগ হ্রাস করুন",
+    "increaseShares": "{name} এর জন্য ভাগ বৃদ্ধি করুন",
+    "isReimbursementField": {
+      "label": "এটি একটি নিষ্পত্তি পেমেন্ট"
+    },
+    "paidForOptionItemized": "আইটেমাইজড",
+    "paidForOptionItemizedHelper": "খরচের পৃথক আইটেম থেকে প্রতিটি অংশগ্রহণকারীর ভাগ গণনা করুন।",
+    "items": {
+      "title": "আইটেম",
+      "description": "খরচ সঠিকভাবে ভাগ করতে বা যেকোনো ভাগ মোডের সাথে ডকুমেন্টেশন হিসাবে রাখতে আইটেম যোগ করুন।",
+      "addItem": "আইটেম যোগ করুন",
+      "empty": "এখনও কোন আইটেম নেই। শুরু করতে \"আইটেম যোগ করুন\" এ ক্লিক করুন।",
+      "allMembers": "সব অংশগ্রহণকারী",
+      "noMembers": "কোনো অংশগ্রহণকারী নেই",
+      "other": "অন্যান্য (হিসাববহির্ভূত)",
+      "derivedBadge": "উৎপন্ন",
+      "errorExceedsAmount": "আইটেমের মোট খরচের পরিমাণ ছাড়িয়ে গেছে।",
+      "actionEdit": "সম্পাদনা",
+      "actionDelete": "মুছুন",
+      "total": "আইটেম মোট",
+      "requiredForItemized": "আইটেমাইজড ভাগ ব্যবহার করতে কমপক্ষে একটি আইটেম যোগ করুন।",
+      "participantsSummary_one": "{count} জন অংশগ্রহণকারী",
+      "participantsSummary_other": "{count} জন অংশগ্রহণকারী",
+      "modalTitle": "আইটেম অংশগ্রহণকারী",
+      "columnItem": "আইটেম",
+      "columnCost": "খরচ",
+      "columnQuantity": "পরিমাণ",
+      "columnParticipants": "অংশগ্রহণকারী",
+      "columnTotal": "মোট",
+      "setExpenseAmount": "খরচের পরিমাণ নির্ধারণ করুন",
+      "splitEvenlyLabel": "সমানভাবে ভাগ",
+      "splitBySharesLabel": "ভাগ অনুযায়ী ভাগ",
+      "splitByPercentageLabel": "শতাংশ অনুযায়ী ভাগ",
+      "splitByAmountLabel": "পরিমাণ অনুযায়ী ভাগ",
+      "switchToItemizedTitle": "আইটেমাইজড ভাগে স্যুইচ করবেন?",
+      "switchToItemizedDescription": "আইটেম অংশগ্রহণকারী সম্পাদনা করলে ভাগ আইটেমাইজডে পরিবর্তিত হবে এবং আপনার কনফিগার করা অংশগ্রহণকারী ভাগ প্রতিস্থাপন করবে।",
+      "switchToItemizedConfirm": "আইটেমাইজডে স্যুইচ করুন",
+      "showItems": "আইটেম দেখান",
+      "hideItems": "আইটেম লুকান",
+      "participantValueLabel": "{name} এর জন্য ভাগ মান",
+      "defaultSplitLabel": "ডিফল্ট আইটেম ভাগ",
+      "defaultSplitMixed": "মিশ্র",
+      "defaultSplitEdit": "ডিফল্ট আইটেম ভাগ সম্পাদনা করুন",
+      "defaultSplitModalTitle": "ডিফল্ট আইটেম ভাগ",
+      "calculationError": "আইটেমাইজড ভাগ গণনা করা যায়নি। আইটেম মান এবং অংশগ্রহণকারী ভাগ চেক করুন।"
+    },
+    "leaveItemized": {
+      "title": "ভাগ মোড পরিবর্তন করবেন?",
+      "description": "{mode}-তে স্যুইচ করলে আপনার আইটেমগুলি শুধুমাত্র ডকুমেন্টেশন হিসাবে থাকবে। সমস্ত প্রতি-আইটেম অংশগ্রহণকারী নিয়োগ সরানো হবে।",
+      "cancel": "বাতিল করুন",
+      "confirm": "স্যুইচ"
+    },
+    "notesField": {
+      "label": "নোট"
+    },
+    "selectNone": "কিছুই নির্বাচন করবেন না",
+    "selectAll": "সব নির্বাচন করুন",
+    "shares": "ভাগ",
+    "participant": {
+      "pending": "(আমন্ত্রিত)"
+    },
+    "validationSummary": "সংরক্ষণ করার আগে হাইলাইট করা ক্ষেত্রগুলি সংশোধন করুন।"
+  },
+  "ExpensePreview": {
+    "title": "খরচ প্রিভিউ",
+    "category": "বিভাগ",
+    "date": "তারিখ",
+    "paidBy": "দ্বারা প্রদত্ত",
+    "paidFor": "এর মধ্যে ভাগ",
+    "yourBalance": "আপনার ব্যালেন্স",
+    "notes": "নোট",
+    "attachments_one": "সংযুক্তি ({count})",
+    "attachments_other": "সংযুক্তি ({count})",
+    "edit": "খরচ সম্পাদনা করুন",
+    "makeCopy": "একটি কপি তৈরি করুন",
+    "commentsTitle": "মন্তব্য",
+    "commentsLoading": "মন্তব্য লোড হচ্ছে…",
+    "commentsError": "মন্তব্য লোড করা যায়নি।",
+    "commentsRetry": "আবার চেষ্টা করুন",
+    "commentsEmpty": "এখনও কোনো মন্তব্য নেই।",
+    "commentInputLabel": "একটি মন্তব্য যোগ করুন",
+    "commentPlaceholder": "গ্রুপের সাথে একটি নোট শেয়ার করুন…",
+    "commentRequired": "প্রথমে একটি মন্তব্য লিখুন।",
+    "commentTooLong": "মন্তব্য ৫০০ অক্ষর বা তার কম হতে হবে।",
+    "commentSubmitting": "পোস্ট করা হচ্ছে…",
+    "commentDelete": "মন্তব্য মুছুন",
+    "commentSend": "মন্তব্য পাঠান"
+  },
+  "ExpenseSeries": {
+    "badge": "পুনরাবৃত্তিমূলক",
+    "occurrence": "ঘটনা {sequence}",
+    "previous": "পূর্ববর্তী",
+    "next": "পরবর্তী",
+    "viewSeries": "সিরিজ দেখুন",
+    "title": "খরচ সিরিজ",
+    "empty": "এখনও অন্য কোনো ঘটনা নেই।",
+    "scopeTitle": "পুনরাবৃত্তিমূলক খরচ আপডেট করুন",
+    "scopeDescription": "কোন ঘটনাগুলি প্রভাবিত হবে তা বেছে নিন।",
+    "occurrenceOnly": "শুধুমাত্র এই ঘটনা",
+    "thisAndFuture": "এই এবং ভবিষ্যতের ঘটনা",
+    "deleteScopeTitle": "পুনরাবৃত্তিমূলক খরচ মুছুন",
+    "deleteScopeDescription": "একটি ঘটনা বা পুরো সিরিজ শেষ করতে হবে কিনা তা বেছে নিন।",
+    "deleteOccurrence": "শুধুমাত্র এই ঘটনাটি মুছুন",
+    "deleteThisAndFuture": "এই এবং পরবর্তী ঘটনাগুলি মুছুন",
+    "deleteThisAndFutureStop": "এই এবং পরবর্তী ঘটনাগুলি মুছুন এবং পুনরাবৃত্তি বন্ধ করুন",
+    "deleteThisAndFutureDescription": "এই এবং পরবর্তী খরচগুলি সরান; সময়সূচী সক্রিয় থাকে।",
+    "deleteThisAndFutureStopDescription": "এই এবং পরবর্তী খরচগুলি সরান এবং স্থায়ীভাবে সময়সূচী বন্ধ করুন।",
+    "deleteOccurrenceDescription": "শুধুমাত্র এই খরচটি সরান। অন্যান্য নির্ধারিত ঘটনা অপরিবর্তিত থাকবে।",
+    "actions": "পুনরাবৃত্তিমূলক ক্রিয়া",
+    "actionsTitle": "পুনরাবৃত্তিমূলক খরচ ক্রিয়া",
+    "actionsDescription": "কোন ঘটনা সম্পাদনা বা মুছতে চান তা সঠিকভাবে নির্বাচন করুন।",
+    "editActions": "সম্পাদনা",
+    "deleteActions": "মুছুন",
+    "confirmDelete": "মুছুন",
+    "confirmStop": "পুনরাবৃত্তি বন্ধ করুন",
+    "working": "প্রক্রিয়া করা হচ্ছে…",
+    "back": "পিছনে",
+    "confirm": "চালিয়ে যান",
+    "cancel": "বাতিল করুন",
+    "occurrences": "এই সিরিজে {count}টি ঘটনা",
+    "loading": "লোড হচ্ছে…",
+    "loadMore": "আরও ঘটনা লোড করুন",
+    "badgeRunning": "পুনরাবৃত্তিমূলক · চলমান",
+    "badgeStopped": "পুনরাবৃত্তিমূলক · বন্ধ",
+    "badgeCompleted": "পুনরাবৃত্তিমূলক · সম্পন্ন",
+    "editOccurrence": "এই ঘটনাটি সম্পাদনা করুন",
+    "editOccurrenceDescription": "শুধুমাত্র এই খরচটি পরিবর্তন করুন।",
+    "editThisAndFuture": "এই এবং ভবিষ্যতের ঘটনাগুলি সম্পাদনা করুন",
+    "editThisAndFutureDescription": "এই খরচ এবং সমস্ত ভবিষ্যতের নির্ধারিত খরচ পরিবর্তন করুন।",
+    "stopRecurrence": "পুনরাবৃত্তি বন্ধ করুন",
+    "stopConfirmTitle": "এই পুনরাবৃত্তি বন্ধ করবেন?",
+    "stopConfirmDescription": "বিদ্যমান খরচ থাকবে। কোনো নতুন ঘটনা তৈরি হবে না।",
+    "stopConfirmHint": "বন্ধ করা স্থায়ী। আবার শুরু করতে, একটি নতুন পুনরাবৃত্তিমূলক খরচ তৈরি করুন।",
+    "deleteConfirmTitle": "মুছে ফেলা নিশ্চিত করুন",
+    "deleteConfirmHint": "নির্বাচিত ঘটনাগুলির জন্য এই ক্রিয়াটি অপরিবর্তনীয়।",
+    "deleteConfirm": {
+      "OCCURRENCE": "শুধুমাত্র এই ঘটনাটি মুছে ফেলা হবে।",
+      "THIS_AND_FUTURE": "এই এবং পরবর্তী ঘটনাগুলি মুছে ফেলা হবে। পুনরাবৃত্তি পরবর্তী নির্ধারিত ঘটনা দিয়ে চলবে।",
+      "THIS_AND_FUTURE_STOP": "এই এবং পরবর্তী ঘটনাগুলি মুছে ফেলা হবে এবং পুনরাবৃত্তি বন্ধ হবে।"
+    }
+  },
+  "Expenses": {
+    "title": "খরচ",
+    "description": "আপনার গ্রুপের জন্য আপনি যে খরচ তৈরি করেছেন তা এখানে।",
+    "create": "খরচ তৈরি করুন",
+    "createFirst": "প্রথমটি তৈরি করুন",
+    "noExpenses": "আপনার গ্রুপে এখনও কোনো খরচ নেই।",
+    "export": "এক্সপোর্ট",
+    "exportJson": "JSON এ এক্সপোর্ট",
+    "exportCsv": "CSV তে এক্সপোর্ট",
+    "searchPlaceholder": "একটি খরচ খুঁজুন…",
+    "ActiveUserModal": {
+      "title": "আপনি কে?",
+      "description": "আপনি কোন অংশগ্রহণকারী তা জানান যাতে আমরা তথ্য প্রদর্শন কাস্টমাইজ করতে পারি।",
+      "nobody": "আমি কাউকে নির্বাচন করতে চাই না",
+      "save": "পরিবর্তন সংরক্ষণ করুন",
+      "footer": "এই সেটিংটি পরে গ্রুপ সেটিংসে পরিবর্তন করা যেতে পারে।"
+    },
+    "Groups": {
+      "upcoming": "আসন্ন",
+      "thisWeek": "এই সপ্তাহে",
+      "earlierThisMonth": "এই মাসের শুরুতে",
+      "lastMonth": "গত মাসে",
+      "earlierThisYear": "এই বছরের শুরুতে",
+      "lastYear": "গত বছরে",
+      "older": "পুরনো খরচ"
+    },
+    "filters": {
+      "mobileTitle": "খরচ ফিল্টার",
+      "cancel": "বাতিল করুন",
+      "apply": "প্রয়োগ করুন",
+      "clearAll": "সব পরিষ্কার করুন",
+      "clearFilterAria": "{label} ফিল্টার পরিষ্কার করুন",
+      "noMatchTitle": "কোনো খরচ আপনার ফিল্টারের সাথে মেলেনি",
+      "noMatchBody": "আরও ফলাফল দেখতে কিছু ফিল্টার সরান বা পরিবর্তন করার চেষ্টা করুন।",
+      "noMatchClear": "ফিল্টার পরিষ্কার করুন",
+      "category": "বিভাগ",
+      "paidBy": "দ্বারা প্রদত্ত",
+      "paidFor": "এর মধ্যে ভাগ",
+      "dateRange": "তারিখ পরিসীমা",
+      "dateFrom": "থেকে",
+      "dateTo": "পর্যন্ত",
+      "amountRange": "পরিমাণ",
+      "minAmount": "সর্বনিম্ন",
+      "maxAmount": "সর্বোচ্চ",
+      "currency": "মুদ্রা",
+      "matchModeAny": "যেকোনো মিলান",
+      "matchModeAll": "সব মিলান",
+      "button": "ফিল্টার",
+      "matchModeExact": "ঠিক মিলান",
+      "allCategories": "সব বিভাগ",
+      "allParticipants": "সব অংশগ্রহণকারী",
+      "allCurrencies": "সব মুদ্রা",
+      "nSelected_one": "{count}টি নির্বাচিত",
+      "nSelected_other": "{count}টি নির্বাচিত",
+      "removeFilter": "ফিল্টার সরান",
+      "settlementsHidden": "নিষ্পত্তি লুকানো",
+      "sort": {
+        "options": {
+          "amount": {
+            "desc": "পরিমাণ (সর্বোচ্চ প্রথম)",
+            "asc": "পরিমাণ (সর্বনিম্ন প্রথম)"
+          },
+          "createdAt": {
+            "desc": "তৈরি (সবচেয়ে নতুন প্রথম)",
+            "asc": "তৈরি (সবচেয়ে পুরনো প্রথম)"
+          },
+          "expenseDate": {
+            "desc": "তারিখ (সবচেয়ে নতুন প্রথম)",
+            "asc": "তারিখ (সবচেয়ে পুরনো প্রথম)"
+          }
+        },
+        "title": "খরচ সাজান"
+      },
+      "title": "ফিল্টার"
+    },
+    "showSettlements": "নিষ্পত্তি দেখান"
+  },
+  "Footer": {
+    "madeIn": "ওপেন-সোর্স সম্প্রদায় দ্বারা ভালোবাসা দিয়ে তৈরি ❤️",
+    "builtBy": "<source>উৎস এবং অবদানকারী</source> দেখুন",
+    "legalNavigation": "আইনি লিংক",
+    "privacy": "গোপনীয়তা",
+    "terms": "শর্তাবলী",
+    "imprint": "প্রকল্প বিজ্ঞপ্তি"
+  },
+  "ForgotPassword": {
+    "title": "আপনার পাসওয়ার্ড রিসেট করুন",
+    "subtitle": "আপনার অ্যাকাউন্টের ইমেল লিখুন এবং আমরা আপনাকে একটি নতুন পাসওয়ার্ড বেছে নেওয়ার লিংক পাঠাব।",
+    "emailLabel": "ইমেল",
+    "submit": "রিসেট লিংক পাঠান",
+    "emailSent": "সেই ইমেলের জন্য একটি অ্যাকাউন্ট থাকলে, আপনি শীঘ্রই একটি রিসেট লিংক পাবেন।",
+    "tryAgain": "একটি ভিন্ন ইমেল ব্যবহার করুন",
+    "backToSignIn": "সাইন ইন ফিরে যান",
+    "errors": {
+      "sendFailed": "রিসেট লিংক পাঠানো যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
+    }
+  },
+  "Friends": {
+    "title": "বন্ধুর সাথে খরচ ট্র্যাক করুন",
+    "peerFriendsTab": "বন্ধু তালিকা",
+    "peerEmailTab": "ইমেল",
+    "peerLinkTab": "শেয়ারযোগ্য লিংক",
+    "friendsSection": "বন্ধু",
+    "pendingInvitationsSection": "মুলতুবি আমন্ত্রণ",
+    "activeFriendExpensesSection": "সক্রিয় বন্ধু খরচ",
+    "alreadyInvited": "(ইতিমধ্যে আমন্ত্রিত)",
+    "alreadyHasLedger": "(ইতিমধ্যে আপনার সাথে খরচ ভাগ করে)",
+    "inviteSent": "আমন্ত্রণ পাঠানো হয়েছে। আপনার বন্ধু Spliit Cloud-এ যোগ দিলে যুক্ত হবে।",
+    "inviteLinkTitle": "এই লিংক শেয়ার করুন",
+    "inviteLinkDescription": "এই লিংকটি শেয়ার করুন যাতে আপনার বন্ধু আপনার যৌথ খরচে যোগ দিতে পারে।",
+    "copy": "কপি",
+    "share": "শেয়ার",
+    "linkHelp": "আপনার বন্ধু যোগ দিতে ব্যবহার করতে পারে এমন একটি শেয়ারযোগ্য লিংক তৈরি করুন।",
+    "emailLabel": "বন্ধুর ইমেল",
+    "temporaryNameLabel": "প্রদর্শনের নাম",
+    "temporaryNameHelp": "আপনি যাকে আমন্ত্রণ জানাচ্ছেন তার জন্য একটি নাম লিখুন।",
+    "friendsEmpty": "তাদের ইমেল লিখে একটি বন্ধু যোগ করুন বা তাদের আমন্ত্রণ জানাতে একটি লিংক শেয়ার করুন।",
+    "infoLabel": "তথ্য (ঐচ্ছিক)",
+    "infoPlaceholder": "'রুমমেট খরচ' মত প্রসঙ্গ যোগ করুন",
+    "createError": "বন্ধু খরচ তৈরি করা যায়নি"
+  },
+  "GroupForm": {
+    "CurrencyCodeField": {
+      "label": "প্রধান মুদ্রা",
+      "createDescription": "সমস্ত পরিমাণ এবং ব্যালেন্স এই মুদ্রায় হবে।",
+      "editDescription": "সমস্ত পরিমাণ এবং ব্যালেন্স এই মুদ্রায় হবে। এটি পরিবর্তন করলে ইতিমধ্যে প্রবেশ করানো খরচ রূপান্তরিত হবে না, তবে মুদ্রার বর্তমান থেকে ভিন্ন \"ক্ষুদ্র একক\" থাকলে রূপান্তরিত হবে (যেমন মার্কিন ডলার থেকে জাপানি ইয়েনে পরিবর্তন)।",
+      "customOption": "কাস্টম",
+      "lockedAfterExpenses": "মুদ্রা লক করা আছে কারণ এই গ্রুপে ইতিমধ্যে খরচ আছে।"
+    },
+    "CurrencyField": {
+      "label": "মুদ্রা প্রতীক",
+      "placeholder": "$ € £…",
+      "description": "আমরা পরিমাণ প্রদর্শন করতে এটি ব্যবহার করব।"
+    },
+    "InformationField": {
+      "label": "গ্রুপ তথ্য",
+      "placeholder": "গ্রুপ অংশগ্রহণকারীদের জন্য কোন তথ্য গুরুত্বপূর্ণ?"
+    },
+    "title": "গ্রুপ তথ্য",
+    "readOnlyNote": "শুধুমাত্র মালিক এবং অ্যাডমিনরা গ্রুপ সেটিংস পরিবর্তন করতে পারেন।",
+    "readOnlyTitle": "গ্রুপ সেটিংস",
+    "readOnlyBack": "গ্রুপে ফিরে যান",
+    "archivedNotice": "এই গ্রুপটি আর্কাইভ করা হয়েছে। এর সেটিংস হিমায়িত এবং আর পরিবর্তন করা যাবে না।",
+    "NameField": {
+      "label": "গ্রুপের নাম",
+      "placeholder": "গ্রীষ্মের ছুটি",
+      "description": "আপনার গ্রুপের জন্য একটি নাম লিখুন।"
+    },
+    "Participants": {
+      "title": "অংশগ্রহণকারী",
+      "description": "প্রত্যেক অংশগ্রহণকারীর জন্য নাম লিখুন।",
+      "protectedParticipant": "এই অংশগ্রহণকারী একটি খরচের অংশ তাই সরানো যাবে না।",
+      "new": "নতুন",
+      "add": "অংশগ্রহণকারী যোগ করুন",
+      "John": "জন",
+      "Jane": "জেন",
+      "Jack": "জ্যাক"
+    },
+    "Settings": {
+      "title": "স্থানীয় সেটিংস",
+      "description": "এই সেটিংস প্রতি-ডিভাইস সেট করা হয় এবং আপনার অভিজ্ঞতা কাস্টমাইজ করতে ব্যবহৃত হয়।",
+      "ActiveUserField": {
+        "label": "সক্রিয় ব্যবহারকারী",
+        "placeholder": "একজন অংশগ্রহণকারী নির্বাচন করুন",
+        "none": "কিছু না",
+        "description": "খরচ প্রদানের জন্য ডিফল্ট হিসাবে ব্যবহৃত ব্যবহারকারী।"
+      },
+      "save": "সংরক্ষণ করুন",
+      "saving": "সংরক্ষণ করা হচ্ছে…",
+      "create": "তৈরি করুন",
+      "creating": "তৈরি করা হচ্ছে…",
+      "cancel": "বাতিল করুন",
+      "inviteAfterCreate": "গ্রুপ তৈরি করার পর, ইমেল বা শেয়ারযোগ্য লিংক দ্বারা লোকেদের আমন্ত্রণ জানাতে সদস্য ট্যাব খুলুন।"
+    },
+    "bulkCategorizeSectionTitle": "বাল্ক AI টুলস",
+    "bulkCategorizeSectionDescription": "একসাথে অনেক খরচে AI ক্যাটেগোরাইজার চালান। খরচ আমদানি করার পর বা অনেক শিরোনাম অক্যাটেগোরাইজড থাকলে দরকারী।",
+    "bulkCategorizeButton": "বাল্ক ক্যাটেগোরাইজার খুলুন"
+  },
+  "Groups": {
+    "linkInvitationBannerDescription": "{inviter} আপনাকে Spliit Cloud-এ {groupName}-এ যোগ দেওয়ার জন্য আমন্ত্রণ জানিয়েছেন।",
+    "linkInvitationSingleUse": "এই লিংক শুধুমাত্র একবার ব্যবহার করা যাবে। আপনি গ্রহণ করার পর এটি কাজ করা বন্ধ করবে।",
+    "linkInvitationTemporaryName": "আপনি {name} হিসাবে যোগ দেবেন।",
+    "linkInvitationAlreadyMemberTitle": "আপনি ইতিমধ্যে {groupName} এ আছেন",
+    "linkInvitationAlreadyMemberDescription": "এই গ্রুপে আপনার ইতিমধ্যে একটি অ্যাকাউন্ট আছে। আমন্ত্রণ লিংকের প্রয়োজন নেই।",
+    "linkInvitationDismiss": "খারিজ করুন",
+    "linkInvitationExpiredTitle": "এই আমন্ত্রণ লিংক আর বৈধ নয়",
+    "linkInvitationExpiredDescription": "লিংকটি হয় প্রত্যাহার, প্রত্যাখ্যান বা মেয়াদোত্তীর্ণ হয়েছে। আমন্ত্রণকারীকে একটি নতুন পাঠাতে বলুন।",
+    "backToHome": "হোমে ফিরে যান",
+    "Import": {
+      "Confirm": {
+        "destinationLabel": "গন্তব্য",
+        "newGroupFormat": "নতুন গ্রুপ · {currency}",
+        "existingGroupFormat": "বিদ্যমান গ্রুপ · একীভূত",
+        "summaryLabel": "সারসংক্ষেপ",
+        "sourceParticipants_one": "{count} জন উৎস অংশগ্রহণকারী",
+        "sourceParticipants_other": "{count} জন উৎস অংশগ্রহণকারী",
+        "participantBreakdown": "{linked} লিংক করা · {email} ইমেল আমন্ত্রণ · {link} লিংক আমন্ত্রণ · {unlinked} লিংক না করা",
+        "expenseCount_one": "{count}টি খরচ তৈরি হবে",
+        "expenseCount_other": "{count}টি খরচ তৈরি হবে",
+        "sourceName": "উৎস: {name}",
+        "footer": "প্রত্যেক উৎস অংশগ্রহণকারী এবং খরচ আমদানি করা হবে। গ্রুপ তৈরি হওয়ার পরে আমন্ত্রণ পাঠানো/তৈরি করা হয়।",
+        "importingButton": "আমদানি করা হচ্ছে…",
+        "importButton": "গ্রুপ আমদানি করুন",
+        "ratesLoading": "ক্রস-কারেন্সি খরচের জন্য বিনিময় হার আনা হচ্ছে…",
+        "rateFetchError": "বিনিময় হার আনা যায়নি। হার প্রদানকারী পুনরায় অ্যাক্সেসযোগ্য না হওয়া পর্যন্ত আমদানি বন্ধ রয়েছে।",
+        "currencyRateFormat": "১ {source} = {rate} {target}",
+        "currencyRateAsOfFormat": "অনুরোধ {requested} · প্রদানকারী ব্যবহার করেছে {asOf}",
+        "currencyConversionTitle": "মুদ্রা রূপান্তর",
+        "currencyConversionDescription": "নীচের হার ব্যবহার করে খরচ উৎস মুদ্রা থেকে গন্তব্য লেজার মুদ্রায় রূপান্তরিত হবে।",
+        "currencyRateForDateFormat": "{date} তারিখের খরচের জন্য প্রয়োগ করা হয়েছে",
+        "appliedExchangeRatesLabel": "প্রযোজ্য বিনিময় হার",
+        "conversionPerDate": "প্রতি তারিখে",
+        "conversionFixed": "স্থির হার",
+        "importErrorTitle": "আমদানি ব্যর্থ হয়েছে",
+        "importErrorFallback": "গ্রুপ আমদানি করার সময় একটি অপ্রত্যাশিত ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "executeImport": "গ্রুপ আমদানি করুন",
+        "recurringSchedulesLabel": "আমদানি করার পুনরাবৃত্তিমূলক সময়সূচী",
+        "recurringScheduleItem": "{title} · {rule}",
+        "recurrenceRule": {
+          "daily": "দৈনিক",
+          "weekly": "সাপ্তাহিক",
+          "monthly": "মাসিক"
+        }
+      },
+      "CurrencyConversion": {
+        "pairSection": "{source} → {target}",
+        "fixedRateRow": "১ {source} = {rate} {target}",
+        "customRateLabel": "কাস্টম হার",
+        "fetchingRates": "বিনিময় হার আনা হচ্ছে…",
+        "fixedDescription": "এই মুদ্রা জোড়ার সব খরচের জন্য একটি বিনিময় হার ব্যবহার করুন। ডিফল্টরূপে, নির্বাচিত তারিখের জন্য Frankfurter থেকে হার আনা হয়; আপনি একটি কাস্টম হারও লিখতে পারেন।",
+        "fixedTitle": "স্থির হার",
+        "noConversionNeeded": "সব খরচ গ্রুপের ডিফল্ট মুদ্রায়। কোনো মুদ্রা রূপান্তর প্রয়োজন নেই।",
+        "perDateDescription": "আরও নির্ভুল — প্রতিটি খরচের প্রকৃত তারিখ থেকে বিনিময় হার ব্যবহার করে।",
+        "perDateSelectedHint": "প্রতিটি খরচের তারিখের জন্য ঐতিহাসিক বিনিময় হার ব্যবহার করে (Frankfurter API)।",
+        "perDateTitle": "প্রতি তারিখে রূপান্তর",
+        "rateDateLabel": "Frankfurter হার তারিখ",
+        "ratesError": "বিনিময় হার আনা সম্ভব হচ্ছে না। আপনার সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।",
+        "refresh": "রিফ্রেশ",
+        "viaFrankfurter": "নির্বাচিত তারিখের জন্য Frankfurter থেকে হার আনা হয়েছে।"
+      },
+      "Destination": {
+        "heading": "আপনি কোথায় <strong>{name}</strong> আমদানি করতে চান? ({participantCount} জন অংশগ্রহণকারী · {expenseCount}টি খরচ)",
+        "newGroup": "নতুন গ্রুপ",
+        "existingGroup": "বিদ্যমান গ্রুপ",
+        "loading": "লোড হচ্ছে…",
+        "noAdminGroups": "আপনি এখনও কোনো গ্রুপ পরিচালনা করছেন না।",
+        "memberCount_one": "{count} জন সদস্য",
+        "memberCount_other": "{count} জন সদস্য"
+      },
+      "Done": {
+        "importComplete": "আমদানি সম্পন্ন",
+        "description": "আপনার আমদানি করা গ্রুপ প্রস্তুত। আমদানি করা খরচ এবং ব্যালেন্স মূল এক্সপোর্টের সাথে তুলনা করুন। কিছু ভুল মনে হলে GitHub-এ একটি ইম্পোর্ট ইস্যু খুলুন; ইম্পোর্ট সমস্যাগুলি সর্বোচ্চ অগ্রাধিকার।",
+        "openGroup": "গ্রুপ খুলুন",
+        "shareableLinksTitle": "শেয়ারযোগ্য আমন্ত্রণ লিংক",
+        "shareableLinksDescription": "প্রতিটি লিংক কপি করে সংশ্লিষ্ট ব্যক্তিকে পাঠান। লিংকটি একক-ব্যবহারের; তারা এটি খুললেই গ্রুপে যোগ দেয়।",
+        "shareAriaLabel": "আমন্ত্রণ লিংক শেয়ার করুন",
+        "emailInvitesTitle": "ইমেল আমন্ত্রণ পাঠানো হয়েছে",
+        "emailInvitesDescription": "সার্ভার নিম্নলিখিত ব্যক্তিদের ইমেল করেছে। তারা সাইন ইন করলে গ্রুপ পৃষ্ঠায় একটি গ্রহণ/প্রত্যাখ্যান ব্যানার দেখতে পাবে।",
+        "shareTitle": "Spliit Cloud-এ আমার গ্রুপে যোগ দিন",
+        "shareText": "Spliit Cloud-এ আমাদের খরচ গ্রুপে যোগ দিন — {name}। গ্রহণ করতে এই লিংক খুলুন: {url}"
+      },
+      "Mapping": {
+        "Errors": {
+          "duplicateExistingMember": "দুটি উৎস সারি একই বিদ্যমান সদস্যের সাথে ম্যাপ করা হয়েছে।",
+          "inviteConflictsPending": "আপনি {email}-কে আমন্ত্রণ জানাচ্ছেন কিন্তু তাদের ইতিমধ্যে একটি মুলতুবি আমন্ত্রণ আছে; পরিবর্তে তাদের লিংক করুন।",
+          "inviteConflictsMember": "আপনি {email}-কে আমন্ত্রণ জানাচ্ছেন কিন্তু তারা ইতিমধ্যে এই গ্রুপের সদস্য; পরিবর্তে তাদের লিংক করুন।",
+          "duplicateMemberName": "দুটি বিদ্যমান সদস্য একই ব্যক্তি মনে হচ্ছে — একটি বেছে নিন।",
+          "onlyOneLinkedAccount": "শুধুমাত্র একটি উৎস সারি আপনার অ্যাকাউন্টে লিংক করা যেতে পারে।",
+          "missingExistingMember": "লিংক করার জন্য একটি বিদ্যমান সদস্য বেছে নিন।",
+          "missingEmail": "ইমেল দ্বারা আমন্ত্রণ জানাতে একটি ইমেল ঠিকানা যোগ করুন।",
+          "selfEmailAddress": "এটি আপনার ইমেল — পরিবর্তে \"আমাকে লিংক করুন\" বেছে নিন।",
+          "duplicateEmail": "এই ইমেলটি ইতিমধ্যে অন্য সারি থেকে আমন্ত্রিত।"
+        },
+        "headsUp": "সতর্কবার্তা",
+        "noLinkAccount": "কোনো অংশগ্রহণকারী আপনার অ্যাকাউন্টে লিংক করা নেই। আমদানিকারক (আপনি) আমদানি করা গ্রুপে একটি নতুন মালিক অংশগ্রহণকারী হিসাবে তৈরি হবেন — আপনি একটি উৎস সারি আপনার অ্যাকাউন্টে লিংক না করা বা নিজেকে আমন্ত্রণ না করা পর্যন্ত আমদানি করা খরচে তাদের ভাগ শূন্য হবে।",
+        "continue": "নিশ্চিত করতে চালিয়ে যান",
+        "Row": {
+          "linkToMe": "আমাকে লিংক করুন",
+          "linkToMeDescription": "এই ব্যক্তিকে আপনার অ্যাকাউন্টে সংযুক্ত করে।",
+          "linkToMeFollowUp": "{name} এই গ্রুপে আপনার অ্যাকাউন্টে লিংক করা হবে। তাদের অতীত এবং ভবিষ্যতের খরচ আপনার নামে প্রদর্শিত হবে।",
+          "inviteByEmail": "ইমেল দ্বারা আমন্ত্রণ",
+          "inviteByEmailDescription": "আমদানি সম্পন্ন হওয়ার পর একটি আমন্ত্রণ ইমেল পাঠায়।",
+          "inviteeEmailLabel": "আমন্ত্রিতের ইমেল",
+          "inviteeEmailPlaceholder": "amantrito@example.com",
+          "selfEmailDetected": "এটি আপনার ইমেল — \"আমাকে লিংক করুন\" এ স্যুইচ করা হয়েছে।",
+          "inviteByLink": "লিংক দ্বারা আমন্ত্রণ",
+          "inviteByLinkDescription": "সম্পন্ন ধাপে একটি শেয়ারযোগ্য URL তৈরি করে।",
+          "inviteByLinkFollowUp": "আমদানি সম্পন্ন হওয়ার পর আমরা একটি একক-ব্যবহারের শেয়ারযোগ্য URL তৈরি করব। আপনি এটি সম্পন্ন ধাপে পাবেন — নিজে কপি করে {name}-কে পাঠান।",
+          "linkToExisting": "বিদ্যমান সদস্যের সাথে লিংক করুন",
+          "linkToExistingDescription": "এই ব্যক্তিকে গন্তব্য গ্রুপের একটি বিদ্যমান সক্রিয় সদস্য বা মুলতুবি আমন্ত্রণে ম্যাপ করে। কোনো নতুন অংশগ্রহণকারী তৈরি হয় না।",
+          "selectExistingMember": "বিদ্যমান সদস্য নির্বাচন করুন",
+          "selectExistingPlaceholder": "একটি বিদ্যমান সদস্য বেছে নিন…",
+          "membersLabel": "সদস্য",
+          "pendingInvitesLabel": "মুলতুবি আমন্ত্রণ",
+          "pendingSuffix": "(মুলতুবি)",
+          "leaveUnlinked": "আলিঙ্কিত রাখুন",
+          "leaveUnlinkedDescription": "শুধু নাম রাখে — পরে সদস্যদের থেকে লিংক করুন।",
+          "leaveUnlinkedFollowUp": "{name} শুধুমাত্র-নাম এন্ট্রি হিসেবে অ্যাপ অ্যাক্সেস ছাড়া প্রদর্শিত হবে। আপনি পরে সদস্য ট্যাব থেকে তাদের একটি অ্যাকাউন্টে লিংক করতে পারেন।",
+          "inviteFriend": "আপনার বন্ধুদের থেকে",
+          "inviteFriendDescription": "আপনি আগে শেয়ার করেছেন এমন গ্রুপ থেকে একজন বন্ধুকে আমন্ত্রণ জানান।",
+          "selectFriendLabel": "বন্ধু",
+          "selectFriendPlaceholder": "একটি বন্ধু বেছে নিন…",
+          "friendAlreadyMember": "ইতিমধ্যে সদস্য",
+          "friendPendingInvite": "ইতিমধ্যে আমন্ত্রিত"
+        }
+      },
+      "fetchingGroup": "spliit.app থেকে গ্রুপ আনা হচ্ছে…",
+      "fetchSourceError": "উৎস থেকে আনা ব্যর্থ হয়েছে",
+      "Source": {
+        "fromSpliit": "Spliit",
+        "splitwise": "Splitwise",
+        "tricount": "Tricount (শীঘ্রই আসছে)",
+        "settleUp": "Settle Up (শীঘ্রই আসছে)",
+        "spliitDescription": "একটি বিদ্যমান spliit.app গ্রুপকে Spliit Cloud-এ আনুন। আমরা গ্রুপের নাম, অংশগ্রহণকারী এবং প্রতিটি খরচ পড়ি।",
+        "splitwiseComingTitle": "Splitwise আমদানি আসছে",
+        "splitwiseComingDescription": "আমরা Splitwise CSV এক্সপোর্ট Spliit Cloud-এ আনার জন্য কাজ করছি। ফ্লোটি চালু হলে এখানে উপলব্ধ হবে — এর মধ্যে কিছু পুনরায় আমদানি করার প্রয়োজন নেই।",
+        "tricountComingTitle": "Tricount আমদানি আসছে",
+        "tricountComingDescription": "Tricount CSV এক্সপোর্ট সমর্থন রোডম্যাপে রয়েছে।",
+        "settleUpComingTitle": "Settle Up আমদানি আসছে",
+        "settleUpComingDescription": "Settle Up CSV এক্সপোর্ট সমর্থন আমাদের রোডম্যাপে রয়েছে।",
+        "dropFile": "একটি JSON বা CSV ফাইল ড্রপ করুন, অথবা নির্বাচন করতে ক্লিক করুন",
+        "dropFileDescription": "JSON প্রতিটি পরিমাণ এবং প্রদানকারী সঠিকভাবে সংরক্ষণ করে। CSV একটি ফলব্যাক — Spliit Cloud প্রতিটি প্রতি-অংশগ্রহণকারী পরিমাণ ২ দশমিকে রাউন্ড করে।",
+        "or": "অথবা",
+        "pasteUrl": "একটি spliit.app URL পেস্ট করুন",
+        "urlDescription": "আমাদের সার্ভার আপনার পক্ষে spliit.app পাবলিক এক্সপোর্ট এন্ডপয়েন্টের মাধ্যমে গ্রুপটি আনে।",
+        "urlPlaceholder": "https://spliit.app/groups/…",
+        "fetchingButton": "আমদানি করা হচ্ছে…",
+        "fetchGroupButton": "গ্রুপ আমদানি করুন",
+        "receiptWarningTitle": "রসিদের ছবি আমদানি করা হয় না।",
+        "receiptWarningDescription": "spliit.app এক্সপোর্টে রসিদের ছবি অন্তর্ভুক্ত নয়। প্রয়োজন হলে গন্তব্য গ্রুপে পুনরায় আপলোড করুন।",
+        "invalidUrl": "অনুগ্রহ করে একটি বৈধ spliit.app গ্রুপ URL পেস্ট করুন",
+        "notFoundUrl": "Spliit এই গ্রুপ খুঁজে পায়নি",
+        "fetchUrlError": "উৎস থেকে আনা ব্যর্থ হয়েছে",
+        "fileReadError": "ফাইল পড়া ব্যর্থ হয়েছে",
+        "appToCloudDescription": "যেকোনো spliit.app গ্রুপ URL-এ .app কে .cloud তে পরিবর্তন করে Spliit Cloud-এ আমদানি করুন।",
+        "appToCloudTitle": ".app কে .cloud দিয়ে পরিবর্তন করুন",
+        "splitwiseDescription": "একটি Splitwise CSV এক্সপোর্ট ড্রপ করে এর খরচ Spliit Cloud-এ আমদানি করুন। ফাইলটি Splitwise-এর গ্রুপ এক্সপোর্ট থেকে হতে হবে — গ্রুপের সেটিংস থেকে উপলব্ধ প্রতি-গ্রুপ CSV।",
+        "receiptWarningTitleSplitwise": "রসিদের ছবি আমদানি করা হয় না।",
+        "receiptWarningDescriptionSplitwise": "Splitwise এক্সপোর্টে রসিদের ছবি অন্তর্ভুক্ত নয়। প্রয়োজন হলে গন্তব্য গ্রুপে পুনরায় আপলোড করুন।",
+        "unsupportedFileType": "অসমর্থিত ফাইল টাইপ। অনুগ্রহ করে একটি JSON বা CSV ফাইল ড্রপ করুন।",
+        "dropFileSplitwise": "একটি Splitwise CSV ফাইল ড্রপ করুন, অথবা নির্বাচন করতে ক্লিক করুন",
+        "dropFileDescriptionSplitwise": "CSV হল Splitwise এক্সপোর্টের একমাত্র ফরম্যাট। আমরা বিভাজন পুনর্গঠন করতে প্রতি-অংশগ্রহণকারী মান পার্স করি।",
+        "splitwiseAnonymizeTitle": "আপনার Splitwise CSV আমদানি করতে সমস্যা হচ্ছে? শেয়ার করার আগে বেনামী করুন।",
+        "splitwiseAnonymizeDescription": "আমদানিকারক আপনার CSV প্রত্যাখ্যান করলে, আপনি অংশগ্রহণকারীর নাম এবং খরচের বিবরণ স্থানীয়ভাবে সরিয়ে ফলাফল একটি GitHub ইস্যুতে সংযুক্ত করতে পারেন। আপনার ফাইল আপনার ডিভাইসে থাকে — আমরা এটি কখনও আপলোড করি না।",
+        "splitwiseAnonymizeButton": "CSV বেনামী করুন",
+        "splitwiseAnonymizeIssuesLink": "একটি ইম্পোর্ট ইস্যু খুলুন",
+        "splitwiseAnonymizeError": "এই ফাইলটি বেনামী করা যায়নি। নিশ্চিত করুন এটি একটি Splitwise CSV এক্সপোর্ট।",
+        "csvRecurrenceLimitation": "CSV এক্সপোর্টে পুনরাবৃত্তি অন্তর্ভুক্ত নয়। পুনরাবৃত্তিমূলক খরচ আমদানি করতে spliit.app থেকে JSON এক্সপোর্ট ব্যবহার করুন।"
+      },
+      "StepHeader": {
+        "title": "একটি গ্রুপ আমদানি করুন",
+        "source": "উৎস",
+        "destination": "গন্তব্য",
+        "mapping": "ম্যাপিং",
+        "confirm": "নিশ্চিত করুন",
+        "done": "সম্পন্ন",
+        "backAriaLabel": "পিছনে",
+        "currencyConversion": "মুদ্রা রূপান্তর",
+        "backTo": "{step} এ ফিরে যান",
+        "continueTo": "{step} এ চালিয়ে যান"
+      }
+    },
+    "Importable": {
+      "title": "এই গ্রুপ spliit.app-এ পাওয়া গেছে",
+      "description": "\"{name}\" spliit.app-এ অ্যাক্সেসযোগ্য। আপনি কি এটি Spliit Cloud-এ আমদানি করতে চান?",
+      "cta": "এই গ্রুপ আমদানি করুন",
+      "backToHome": "হোমে যান"
+    },
+    "NotFound": {
+      "text": "এই গ্রুপটি বিদ্যমান নেই।",
+      "link": "হোমে যান",
+      "lookingUp": "এই গ্রুপ খুঁজছে…"
+    },
+    "myGroups": "আমার গ্রুপ",
+    "create": "তৈরি করুন",
+    "createdInviteHint": "গ্রুপ তৈরি করা হয়েছে। শুরু করতে সদস্যদের আমন্ত্রণ জানান।",
+    "loadingRecent": "সাম্প্রতিক গ্রুপ লোড হচ্ছে…",
+    "starred": "তারকা চিহ্নিত",
+    "archived": "আর্কাইভ করা গ্রুপ",
+    "hidden": "লুকানো",
+    "showHidden": "লুকানো গ্রুপ দেখান",
+    "showArchived": "আর্কাইভ করা গ্রুপ দেখান",
+    "hide": "গ্রুপ লুকান",
+    "unhide": "গ্রুপ আনহাইড করুন",
+    "hideFriend": "বন্ধু খরচ লুকান",
+    "unhideFriend": "বন্ধু খরচ দেখান",
+    "starGroup": "গ্রুপ তারকা চিহ্নিত করুন",
+    "unstarGroup": "গ্রুপ থেকে তারকা সরান",
+    "starFriend": "বন্ধু খরচ তারকা চিহ্নিত করুন",
+    "unstarFriend": "বন্ধু খরচ থেকে তারকা সরান",
+    "groupActions": "গ্রুপ ক্রিয়া",
+    "friendActions": "বন্ধু খরচ ক্রিয়া",
+    "archiveGroup": "গ্রুপ আর্কাইভ করুন",
+    "unarchiveGroup": "গ্রুপ আনআর্কাইভ করুন",
+    "archiveSuccess": "গ্রুপ আর্কাইভ করা হয়েছে।",
+    "unarchiveSuccess": "গ্রুপ আনআর্কাইভ করা হয়েছে।",
+    "archiveWithBalancesTitle": "অমীমাংসিত ব্যালেন্স",
+    "archiveWithBalancesDescription": "এই গ্রুপে অমীমাংসিত ব্যালেন্স আছে। আর্কাইভ করলে সেগুলি শূন্য করতে নিষ্পত্তি খরচ তৈরি হবে। চালিয়ে যাবেন?",
+    "archiveWithBalancesForce": "জোর করে আর্কাইভ",
+    "archiveWithBalancesCancel": "বাতিল করুন",
+    "archiveWithBalancesSuccess": "নিষ্পত্তি খরচ তৈরি এবং গ্রুপ আর্কাইভ করা হয়েছে।",
+    "archiveWithBalancesView": "ব্যালেন্স দেখুন",
+    "archiveSectionTitle": "গ্রুপ আর্কাইভ করুন",
+    "archiveSectionDescription": "আর্কাইভ করা গ্রুপটি হিমায়িত করে। নতুন খরচ যোগ বা পরিবর্তন করা যাবে না, কিন্তু বিদ্যমান ডেটা দৃশ্যমান থাকে। আপনি যেকোনো সময় গ্রুপটি আনআর্কাইভ করতে পারেন।",
+    "archivedBadge": "আর্কাইভ করা",
+    "bannerArchivedTitle": "এই গ্রুপটি আর্কাইভ করা হয়েছে",
+    "bannerArchivedDescription": "গ্রুপ আর্কাইভ থাকাকালীন নতুন খরচ বা আমন্ত্রণ যোগ করা যাবে না। বিদ্যমান ডেটা দৃশ্যমান থাকে।",
+    "bannerArchived": "এই গ্রুপটি আর্কাইভ করা হয়েছে। কোন নতুন খরচ যোগ করা যাবে না।",
+    "bannerUnarchive": "আনআর্কাইভ",
+    "bannerUnarchiveSuccess": "গ্রুপ আনআর্কাইভ করা হয়েছে।",
+    "invitationBannerTitle": "আপনাকে এই গ্রুপে আমন্ত্রণ জানানো হয়েছে",
+    "invitationBannerDescription": "সদস্য হিসাবে যোগ দিতে গ্রহণ করুন, অথবা আমন্ত্রণ বাতিল করতে প্রত্যাখ্যান করুন।",
+    "invitationAccept": "গ্রহণ করুন",
+    "invitationDecline": "প্রত্যাখ্যান",
+    "invitationAccepted": "আমন্ত্রণ গ্রহণ করা হয়েছে।",
+    "invitationDeclined": "আমন্ত্রণ প্রত্যাখ্যান করা হয়েছে।",
+    "pendingInviteeReadOnlyTitle": "আপনাকে আমন্ত্রণ জানানো হয়েছে",
+    "pendingInviteeReadOnlyDescription": "খরচ যোগ করা এবং গ্রুপ সেটিংস পরিবর্তন শুরু করতে উপরের আমন্ত্রণটি গ্রহণ করুন। ততক্ষণ পর্যন্ত, এই গ্রুপটি শুধুমাত্র-পঠনযোগ্য।",
+    "pendingInviteeSettingsTitle": "গ্রুপ সেটিংস লক করা আছে",
+    "pendingInviteeSettingsDescription": "গ্রুপ সেটিংস পরিবর্তন বা সদস্যদের আমন্ত্রণ জানানোর আগে আপনাকে আমন্ত্রণ গ্রহণ করতে হবে।",
+    "pendingInviteeExpenseTitle": "খরচ শুধুমাত্র-পঠনযোগ্য",
+    "pendingInviteeExpenseDescription": "খরচ যোগ বা সম্পাদনা শুরু করতে উপরের আমন্ত্রণটি গ্রহণ করুন। ততক্ষণ পর্যন্ত, গ্রুপের বিদ্যমান ডেটা দৃশ্যমান কিন্তু পরিবর্তন করা যাবে না।",
+    "archivedReadOnly": "এই গ্রুপটি আর্কাইভ করা হয়েছে। খরচ আর যোগ বা পরিবর্তন করা যাবে না।",
+    "backToExpenses": "খরচে ফিরে যান",
+    "backToGroups": "গ্রুপে ফিরে যান",
+    "removeRecent": "সাম্প্রতিক গ্রুপ থেকে সরান",
+    "RecentRemovedToast": {
+      "title": "গ্রুপ সরানো হয়েছে",
+      "description": "গ্রুপটি আপনার সাম্প্রতিক গ্রুপ তালিকা থেকে সরানো হয়েছে।",
+      "undoAlt": "গ্রুপ সরানো পূর্বাবস্থায় ফেরান",
+      "undo": "পূর্বাবস্থায় ফেরান"
+    },
+    "Unauthorized": {
+      "title": "আপনার এই গ্রুপে অ্যাক্সেস নেই",
+      "description": "আপনি যদি মনে করেন এটি একটি ভুল, একজন গ্রুপ মালিক বা অ্যাডমিনকে আপনাকে আমন্ত্রণ জানাতে বলুন।",
+      "link": "হোমে ফিরে যান"
+    },
+    "groups": "গ্রুপ",
+    "friends": "বন্ধু",
+    "createExpense": "খরচ তৈরি করুন",
+    "pending": "মুলতুবি",
+    "scopePickerGroups": "একটি গ্রুপ বেছে নিন",
+    "scopePickerFriends": "একটি বন্ধু বেছে নিন",
+    "scopePickerEmpty": "এখনও কোনো গ্রুপ নেই",
+    "scopePickerMembers_one": "{count} জন সদস্য",
+    "scopePickerMembers_other": "{count} জন সদস্য",
+    "createFriendLedgerCard": {
+      "description": "একটি নির্দিষ্ট ব্যক্তির সাথে একের-পর-এক নিষ্পত্তি করুন।",
+      "title": "বন্ধুর সাথে খরচ ট্র্যাক করুন"
+    },
+    "createGroupCard": {
+      "title": "একটি গ্রুপ তৈরি করুন",
+      "description": "বন্ধু, পরিবার বা রুমমেটদের সাথে যৌথ খরচ ট্র্যাক করুন।"
+    },
+    "delete": {
+      "sectionTitle": "গ্রুপ মুছুন",
+      "sectionDescription": "এই গ্রুপ, প্রতিটি খরচ এবং সমস্ত ইতিহাস স্থায়ীভাবে মুছে ফেলুন। এটি পূর্বাবস্থায় ফেরানো যাবে না — শুধুমাত্র যদি আপনি নিশ্চিত হন যে আর কারও এই ডেটার প্রয়োজন নেই তবেই করুন।",
+      "button": "গ্রুপ মুছুন",
+      "dialog": {
+        "title": "এই গ্রুপটি মুছবেন?",
+        "description": "আপনি স্থায়ীভাবে \"{name}\" মুছতে যাচ্ছেন। প্রতিটি খরচ, রসিদ, আমন্ত্রণ এবং কার্যকলাপ এন্ট্রি সরানো হবে এবং পুনরুদ্ধার করা যাবে না।",
+        "warningTitle": "এই ক্রিয়াটি অপরিবর্তনীয়",
+        "warningDescription": "নিম্নলিখিত ডেটা অবিলম্বে মুছে ফেলা হবে:",
+        "checkbox": "আমি বুঝতে পারছি এটি গ্রুপ এবং এর সমস্ত ডেটা স্থায়ীভাবে মুছে ফেলবে।",
+        "cancel": "বাতিল করুন",
+        "confirm": "গ্রুপ মুছুন",
+        "deleting": "মুছে ফেলা হচ্ছে…",
+        "warningList": {
+          "expenses": "প্রতিটি খরচ এবং ব্যালেন্স",
+          "activity": "সম্পূর্ণ কার্যকলাপ ইতিহাস",
+          "invitations": "মুলতুবি আমন্ত্রণ",
+          "receipts": "আপলোড করা রসিদ ফাইল"
+        }
+      },
+      "error": {
+        "generic": "গ্রুপ মুছে ফেলা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
+      },
+      "toast": {
+        "deleted": "গ্রুপ মুছে ফেলা হয়েছে।"
+      }
+    },
+    "importGroup": "গ্রুপ আমদানি করুন",
+    "exportDescription": "গ্রুপের খরচ JSON বা CSV হিসাবে ডাউনলোড করুন।",
+    "invitations": {
+      "title": "মুলতুবি আমন্ত্রণ",
+      "description": "আপনাকে নিম্নলিখিত গ্রুপগুলিতে যোগ দিতে আমন্ত্রণ জানানো হয়েছে।",
+      "accept": "গ্রহণ করুন",
+      "decline": "প্রত্যাখ্যান",
+      "accepted": "আমন্ত্রণ গ্রহণ করা হয়েছে।",
+      "declined": "আমন্ত্রণ প্রত্যাখ্যান করা হয়েছে।",
+      "invitedBy": "{name} দ্বারা আমন্ত্রিত",
+      "unknownInviter": "কেউ",
+      "unknownGroup": "অজানা গ্রুপ",
+      "sentOn": "{date} পাঠানো হয়েছে"
+    },
+    "linkInvitationInvalid": {
+      "title": "এই আমন্ত্রণ লিংক অবৈধ",
+      "description": "লিংকটি বিকৃত বা এই গ্রুপে কোনো আমন্ত্রণের সাথে মেলে না।"
+    }
+  },
+  "Header": {
+    "signIn": "সাইন ইন",
+    "signOut": "সাইন আউট",
+    "account": "অ্যাকাউন্ট",
+    "accountSettings": "অ্যাকাউন্ট সেটিংস",
+    "back": "পিছনে",
+    "menu": "মেনু"
+  },
+  "Homepage": {
+    "title": "<strong>খরচ</strong> <strong>বন্ধু ও পরিবারের</strong> সাথে শেয়ার করুন",
+    "description": "যৌথ খরচ ট্র্যাক করুন এবং নিষ্পত্তি করুন। বিনামূল্যে এবং ওপেন সোর্স, <strong>আপনার অ্যাকাউন্ট দ্বারা সিঙ্ক ও সুরক্ষিত</strong>।",
+    "button": {
+      "github": "GitHub",
+      "signIn": "Spliit Cloud-এ সাইন ইন করুন",
+      "createAccount": "একটি অ্যাকাউন্ট তৈরি করুন",
+      "createGroup": "একটি গ্রুপ তৈরি করুন",
+      "importGroup": "অন্য সার্ভিস থেকে গ্রুপ আমদানি করুন",
+      "createFriendLedger": "বন্ধুর সাথে খরচ ট্র্যাক করুন"
+    },
+    "features": {
+      "accounts": {
+        "title": "অ্যাকাউন্ট",
+        "description": "একবার সাইন ইন করে আপনার ডেটা সুরক্ষিত করুন এবং খরচের ইতিহাস উপলব্ধ রাখুন।"
+      },
+      "expenses": {
+        "title": "খরচ + রসিদ",
+        "description": "খরচ যোগ করুন, রসিদের ছবি সংযুক্ত করুন এবং দৈনিক, সাপ্তাহিক বা মাসিক পুনরাবৃত্তিমূলক খরচ তৈরি করুন।"
+      },
+      "groupsSync": {
+        "title": "গ্রুপ + সিঙ্ক",
+        "description": "ভ্রমণ, অনুষ্ঠান, উপহারের জন্য গ্রুপ তৈরি করুন এবং ডিভাইস জুড়ে সিঙ্ক রাখুন।"
+      },
+      "organization": {
+        "title": "বিভাগ",
+        "description": "বিভাগ নির্ধারণ করুন যাতে যৌথ খরচ স্ক্যান করা সহজ থাকে।"
+      },
+      "settlement": {
+        "title": "ব্যালেন্স",
+        "description": "কে কী পরিশোধ করেছে দেখুন এবং অংশগ্রহণকারীদের মধ্যে অর্থ স্থানান্তর অপ্টিমাইজ করুন।"
+      },
+      "splitting": {
+        "title": "উন্নত ভাগ",
+        "description": "শতাংশ, ভাগ, সঠিক পরিমাণ বা সাধারণ সমান ভাগ অনুযায়ী ভাগ করুন।"
+      }
+    },
+    "welcomeBack": "আবার স্বাগতম, {name}।",
+    "overview": {
+      "youAreOwed": "আপনি প্রাপ্য",
+      "youOwe": "আপনি ঋণী",
+      "acrossGroups": "আপনার গ্রুপ জুড়ে",
+      "viewGroups": "গ্রুপ দেখুন",
+      "noOneOwesYou": "কেউ আপনাকে ঋণী নয়",
+      "youOweNoOne": "আপনি কাউকে ঋণী নন"
+    }
+  },
+  "Information": {
+    "title": "তথ্য",
+    "description": "গ্রুপের অংশগ্রহণকারীদের জন্য উপযোগী হতে পারে এমন তথ্য যোগ করুন।",
+    "empty": "এখনও কোনো গ্রুপ তথ্য নেই।"
+  },
+  "InstallPromotion": {
+    "title": "Spliit Cloud ইনস্টল করুন",
+    "description": "Spliit Cloud আপনার হোম স্ক্রিনে যোগ করুন — নেটিভ অ্যাপের মতো খোলে দ্রুত খরচ যোগ এবং সহজ অ্যাক্সেসের জন্য।",
+    "install": "ইনস্টল",
+    "remindLater": "পরে মনে করিয়ে দিন",
+    "dismiss": "আর দেখাবেন না",
+    "chrome": {
+      "title": "Spliit Cloud ইনস্টল করুন",
+      "description": "Spliit Cloud আপনার হোম স্ক্রিনে যোগ করুন — নেটিভ অ্যাপের মতো খোলে দ্রুত খরচ যোগ এবং সহজ অ্যাক্সেসের জন্য।"
+    },
+    "firefox": {
+      "title": "Spliit Cloud ইনস্টল করুন",
+      "description": "ব্রাউজার মেনু থেকে আপনার হোম স্ক্রিনে Spliit Cloud যোগ করুন।",
+      "step1": "উপরের ডানদিকে মেনু বোতাম (⋮) ট্যাপ করুন",
+      "step2": "ইনস্টল ট্যাপ করুন"
+    },
+    "ios": {
+      "title": "Spliit Cloud ইনস্টল করুন",
+      "description": "এক ট্যাপ অ্যাক্সেসের জন্য Spliit Cloud আপনার হোম স্ক্রিনে যোগ করুন।",
+      "step1": "শেয়ার বোতাম ট্যাপ করুন",
+      "step2": "নিচে স্ক্রোল করুন এবং হোম স্ক্রিনে যোগ করুন ট্যাপ করুন",
+      "step3": "উপরের ডান কোণায় যোগ করুন ট্যাপ করুন"
+    }
+  },
+  "Members": {
+    "title": "সদস্য",
+    "description": "যারা এই গ্রুপ দেখতে এবং অবদান রাখতে পারেন।",
+    "empty": "এখনও কোনো সক্রিয় সদস্য নেই।",
+    "joinedOn": "{date} যোগ দিয়েছেন",
+    "changeRoleAria": "ভূমিকা পরিবর্তন",
+    "remove": "সরান",
+    "noManagePermission": "শুধুমাত্র অ্যাডমিনরা সদস্যদের আমন্ত্রণ, বাতিল বা পরিচালনা করতে পারেন।",
+    "archivedNotice": "গ্রুপ আর্কাইভ থাকাকালীন আমন্ত্রণ এবং সদস্য ব্যবস্থাপনা নিষ্ক্রিয়। নতুন সদস্যদের আমন্ত্রণ জানাতে গ্রুপটি আনআর্কাইভ করুন।",
+    "dropdown": {
+      "remove": "সরান",
+      "changeRole": "ভূমিকা পরিবর্তন",
+      "revoke": "আমন্ত্রণ বাতিল করুন"
+    },
+    "invitations": {
+      "title": "মুলতুবি আমন্ত্রণ",
+      "description": "গ্রহণের অপেক্ষায় থাকা আমন্ত্রণ।",
+      "empty": "কোনো মুলতুবি আমন্ত্রণ নেই।",
+      "sentOn": "{date} পাঠানো হয়েছে",
+      "revoke": "বাতিল করুন",
+      "revokeButton": "আমন্ত্রণ বাতিল করুন",
+      "revoked": "আমন্ত্রণ বাতিল করা হয়েছে।",
+      "created": "{email}-এ আমন্ত্রণ পাঠানো হয়েছে।",
+      "email": {
+        "type": "ইমেল আমন্ত্রণ"
+      },
+      "link": {
+        "type": "একক-ব্যবহারের লিংক",
+        "fallbackLabel": "আমন্ত্রণ লিংক"
+      }
+    },
+    "invite": {
+      "title": "সদস্য আমন্ত্রণ",
+      "email": "ইমেল",
+      "emailPlaceholder": "bondhu@example.com",
+      "role": "ভূমিকা",
+      "send": "আমন্ত্রণ পাঠান",
+      "invalidEmail": "একটি বৈধ ইমেল ঠিকানা লিখুন।",
+      "emailDescription": "ইমেলের মাধ্যমে একটি আমন্ত্রণ পাঠান। আমন্ত্রিত ব্যক্তি একটি ম্যাচিং অ্যাকাউন্ট থেকে গ্রহণ করলে যোগ দেয়।",
+      "linkDescription": "একটি একক-ব্যবহারের লিংক তৈরি করুন যা যে কেউ যোগ দিতে ব্যবহার করতে পারে। প্রথম গ্রহণের পর লিংক কাজ করা বন্ধ করে।",
+      "temporaryName": "অস্থায়ী নাম (ঐচ্ছিক)",
+      "temporaryNamePlaceholder": "যেমন, আলেক্সের রুমমেট",
+      "friendsDescription": "আপনি শেয়ার করেছেন এমন গ্রুপ থেকে কাউকে আমন্ত্রণ জানান।",
+      "selectFriendPlaceholder": "একটি বন্ধু বেছে নিন…",
+      "friendAlreadyMember": "ইতিমধ্যে সদস্য",
+      "noFriends": "এখনও কোনো বন্ধু নেই। ইমেল ট্যাব থেকে আমন্ত্রণ জানান।",
+      "friendAlreadyInvited": "ইতিমধ্যে আমন্ত্রিত",
+      "link": {
+        "generate": "আমন্ত্রণ লিংক তৈরি করুন",
+        "generating": "তৈরি করা হচ্ছে…",
+        "singleUse": "এই আমন্ত্রণ লিংক একবার ব্যবহার করা যাবে। কেউ গ্রহণ করার পর লিংক কাজ করা বন্ধ করবে।",
+        "copy": "আমন্ত্রণ লিংক কপি করুন",
+        "copied": "কপি হয়েছে!",
+        "expiresOn": "{date} তারিখে মেয়াদোত্তীর্ণ হবে",
+        "created": "আমন্ত্রণ লিংক প্রস্তুত। গ্রুপ এই পৃষ্ঠা ছাড়ার আগে কপি এবং শেয়ার করুন।",
+        "intro": "এটি {groupName}-এর জন্য আপনার একক-ব্যবহারের আমন্ত্রণ লিংক। আপনি যাকে যোগ দিতে চান তাকে পাঠান — প্রথম ব্যক্তি যে এটি ব্যবহার করবে সদস্য হবে, তারপর লিংক কাজ করা বন্ধ করবে।",
+        "share": "আমন্ত্রণ লিংক শেয়ার করুন",
+        "shareTitle": "Spliit Cloud-এ {groupName} এ যোগ দিন",
+        "shareText": "আমি Spliit Cloud-এ আমাদের যৌথ খরচের জন্য {groupName} তৈরি করেছি। এটি একটি এককালীন আমন্ত্রণ লিংক — যোগ দিতে খুলুন:\n{inviteUrl}",
+        "generateNew": "নতুন লিংক তৈরি করুন"
+      },
+      "tab": {
+        "email": "ইমেল",
+        "link": "আমন্ত্রণ লিংক",
+        "friends": "বন্ধু"
+      }
+    },
+    "leave": {
+      "button": "গ্রুপ ছেড়ে যান",
+      "title": "গ্রুপ ছেড়ে যাবেন?",
+      "description": "আপনি এই গ্রুপের খরচ, ব্যালেন্স এবং কার্যকলাপে অ্যাক্সেস হারাবেন। অতীত ডেটা লেজারে রাখা হয় যাতে অন্যান্য সদস্যরা এটি দেখতে পারে।",
+      "descriptionOnlyMember": "আপনি এই গ্রুপের একমাত্র সক্রিয় সদস্য, তাই এইভাবে গ্রুপ ছেড়ে যাওয়া সম্ভব নয়। গ্রুপটি সম্পূর্ণরূপে মুছে ফেলতে সেটিংস পৃষ্ঠা থেকে মুছুন।",
+      "onlyMemberHint": "আপনি একমাত্র সক্রিয় সদস্য। গ্রুপ সরাতে সেটিংসে \"গ্রুপ মুছুন\" বিকল্প ব্যবহার করুন।",
+      "lastMemberRedirect": "আপনি এমন একটি গ্রুপ ছেড়ে যেতে পারবেন না যেখানে আপনি একমাত্র সক্রিয় সদস্য। পরিবর্তে সেটিংস পৃষ্ঠা থেকে গ্রুপটি মুছুন।",
+      "body": {
+        "otherAdmins": "আপনি চলে যাওয়ার পর এই অ্যাডমিনরা নিয়ন্ত্রণ রাখবে: {names}।",
+        "lastAdmin": {
+          "title": "একটি নতুন অ্যাডমিন বেছে নিন",
+          "description": "আপনি এই গ্রুপের শেষ অ্যাডমিন। আপনি যাওয়ার আগে একজন সক্রিয় সদস্যকে দায়িত্ব নিতে বেছে নিন, অন্যথায় কেউ গ্রুপ পরিচালনা করতে পারবে না।",
+          "placeholder": "একজন সদস্য নির্বাচন করুন"
+        },
+        "unsettled": {
+          "title": "আপনার অমীমাংসিত ব্যালেন্স আছে",
+          "description": "আপনি যাওয়ার আগে Spliit আপনার ব্যালেন্স জড়িত নিষ্পত্তি পেমেন্ট তৈরি করবে। অন্যান্য অংশগ্রহণকারীদের ব্যালেন্স পরিবর্তন হবে না।"
+        }
+      },
+      "cancel": "বাতিল করুন",
+      "confirm": "গ্রুপ ছেড়ে যান",
+      "confirmWithForce": "নিষ্পত্তি করুন এবং ছেড়ে যান",
+      "error": {
+        "lastAdmin": "যাওয়ার আগে অ্যাডমিন করার জন্য একজন সদস্য বেছে নিন।",
+        "unsettled": "যেতে আপনার ব্যালেন্স নিষ্পত্তি করুন বা জোরপূর্বক নিষ্পত্তি নিশ্চিত করুন।"
+      },
+      "toast": {
+        "left": "আপনি গ্রুপ ছেড়েছেন।"
+      }
+    },
+    "removed": "অংশগ্রহণকারী সরানো হয়েছে।",
+    "roleUpdated": "ভূমিকা {role} এ আপডেট করা হয়েছে।",
+    "removeDialog": {
+      "title": "অংশগ্রহণকারী সরাবেন?",
+      "description": "{name} কে এই গ্রুপ থেকে সরাবেন? তাদের অতীত খরচ লেজারে থাকে তবে তারা আর সদস্য তালিকা বা নতুন খরচে প্রদর্শিত হবে না।",
+      "cancel": "বাতিল করুন",
+      "confirm": "সরান",
+      "unsettled": {
+        "title": "অমীমাংসিত ব্যালেন্স সহ অংশগ্রহণকারী সরাবেন?",
+        "description": "{name} কে এই গ্রুপ থেকে সরাবেন? তাদের অমীমাংসিত ব্যালেন্স আছে — সরানোর আগে স্বয়ংক্রিয়ভাবে নিষ্পত্তি করতে নীচের বক্সটি টিক দিন।",
+        "toast": "অংশগ্রহণকারী সরানো হয়েছে, ব্যালেন্স নিষ্পত্তি হয়েছে।",
+        "checkbox": "সরানোর আগে এই অংশগ্রহণকারীর ব্যালেন্স নিষ্পত্তি করুন",
+        "previewWillCreate_one": "{count}টি নিষ্পত্তি পেমেন্ট তৈরি হবে",
+        "previewPays": "{name} প্রদান করবেন",
+        "previewReceives": "{name} গ্রহণ করবেন",
+        "previewTo": "{name}-কে",
+        "previewFrom": "{name} এর কাছ থেকে",
+        "previewWillCreate_other": "{count}টি নিষ্পত্তি পেমেন্ট তৈরি হবে",
+        "warning": {
+          "title": "এই অংশগ্রহণকারীর অমীমাংসিত ব্যালেন্স আছে",
+          "description": "নিষ্পত্তি না করে সরালে এই ব্যালেন্সগুলি গ্রুপে অনির্দিষ্টকালের জন্য থাকবে। নীচের বিকল্পটি নির্বাচন করে এই অংশগ্রহণকারী জড়িত প্রতিটি ব্যালেন্সের জন্য একটি নিষ্পত্তি পেমেন্ট তৈরি করুন, অথবা তাদের সরান এবং ম্যানুয়ালি ব্যালেন্স নিষ্পত্তি করুন।"
+        }
+      }
+    },
+    "unknownMember": "অজানা সদস্য",
+    "youBadge": "আপনি",
+    "role": {
+      "admin": "অ্যাডমিন",
+      "member": "সদস্য"
+    },
+    "unlinked": {
+      "title": "আনলিংকড অংশগ্রহণকারী",
+      "description": "এই ব্যক্তিদের গ্রুপে একটি নাম আছে কিন্তু এখনও কোনো অ্যাপ অ্যাকাউন্ট নেই। তাদের খরচ সেই ব্যবহারকারীর সাথে যুক্ত করতে প্রত্যেককে একটি বিদ্যমান অ্যাকাউন্টে লিংক করুন।",
+      "emailPlaceholder": "acc@example.com",
+      "link": "অ্যাকাউন্টে লিংক করুন",
+      "linkSuccess": "অংশগ্রহণকারী অ্যাকাউন্টে লিংক করা হয়েছে",
+      "idHint": "লেজার অংশগ্রহণকারী আইডি: {id}",
+      "linkButton": "লিংক",
+      "linkDialog": {
+        "title": "আনলিংকড অংশগ্রহণকারী লিংক করুন",
+        "description": "{displayName} যে বিদ্যমান সদস্যের সাথে লিংক করা উচিত তা বেছে নিন। সেই সদস্যের ইতিমধ্যে এই অংশগ্রহণকারীর সাথে খরচের ব্যালেন্স থাকা উচিত নয়।",
+        "membersGroup": "সদস্য",
+        "cancel": "বাতিল করুন",
+        "confirm": "লিংক",
+        "noCandidates": "কোনো সামঞ্জস্যপূর্ণ সদস্য পাওয়া যায়নি। এর মানে সাধারণত এই আনলিংকড অংশগ্রহণকারীর অন্য প্রতিটি সদস্যের সাথে বিরোধপূর্ণ খরচ ব্যালেন্স রয়েছে। আবার গ্রুপ আমদানি করুন বা আগে খরচগুলি সামঞ্জস্য করুন।",
+        "pendingLabel": "মুলতুবি",
+        "pendingHint": "একটি মুলতুবি আমন্ত্রণে লিংক করলে এই শুধুমাত্র-নাম এন্ট্রিটি আমন্ত্রিত ব্যক্তির সাথে একীভূত হয়। আমন্ত্রিত ব্যক্তি নিজের সারি ধরে রাখে; একীভূত রেফারেন্সগুলি এখন তাদের মাধ্যমে সমাধান হয় যখন তারা গ্রহণ করে।",
+        "membersGroupWithPending": "সদস্য এবং মুলতুবি আমন্ত্রণ",
+        "pendingGroup": "মুলতুবি আমন্ত্রণ",
+        "pendingSuffix": "(মুলতুবি)"
+      }
+    }
+  },
+  "OfflineBanner": {
+    "message": "আপনি অফলাইনে আছেন। আপনি এখন যে পরিবর্তন করবেন তা পুনরায় সংযুক্ত না হওয়া পর্যন্ত সংরক্ষিত হবে না।"
+  },
+  "Participants": {
+    "search": "অংশগ্রহণকারী খুঁজুন...",
+    "noParticipant": "কোনো অংশগ্রহণকারী পাওয়া যায়নি"
+  },
+  "PushOnboarding": {
+    "title": "কীভাবে আপডেট থাকবেন তা বেছে নিন",
+    "description": "Spliit আপনাকে গ্রুপ এবং খরচ কার্যকলাপ সম্পর্কে ঘটার সাথে সাথে সতর্ক করতে পারে।",
+    "pushBenefit": "Spliit খোলা না থাকলেও পুশ বিজ্ঞপ্তি এই ডিভাইসে পৌঁছায়।",
+    "emailFallback": "ইমেল বিজ্ঞপ্তির জন্য উপলব্ধ যা আপনি সেখানে গ্রহণ করতে চান; শুধুমাত্র পুশ পছন্দগুলি পুনরায় রুট করা হয় না।",
+    "settingsHint": "আপনি যেকোনো সময় সেটিংসে এই পছন্দগুলি পরিবর্তন করতে পারেন। পুশ বিজ্ঞপ্তি প্রতিটি ডিভাইসের জন্য আলাদাভাবে সক্রিয় করা হয়।",
+    "enable": "পুশ বিজ্ঞপ্তি সক্রিয় করুন",
+    "enabling": "সক্রিয় করা হচ্ছে…",
+    "useEmail": "ইমেল ব্যবহার করুন",
+    "deniedTitle": "পুশ বিজ্ঞপ্তি ব্লক করা হয়েছে",
+    "deniedDescription": "আপনার ব্রাউজার বিজ্ঞপ্তির অনুমতি ব্লক করেছে। ইমেলের জন্য কনফিগার করা বিজ্ঞপ্তিগুলি সেখানে চলতে থাকবে; শুধুমাত্র পুশ পছন্দগুলি পুনরায় রুট করা হয় না।",
+    "failedTitle": "পুশ সক্রিয় করা যায়নি",
+    "failedDescription": "আমরা এই ডিভাইসটি নিবন্ধন করতে পারিনি। ইমেলের জন্য কনফিগার করা বিজ্ঞপ্তিগুলি সেখানে চলতে থাকবে; শুধুমাত্র পুশ পছন্দগুলি পুনরায় রুট করা হয় না।",
+    "emailUsage": "আপনি একটি ডিভাইস সক্রিয় না করা পর্যন্ত শুধুমাত্র ইমেলের জন্য কনফিগার করা বিজ্ঞপ্তি আসবে। আপনি আপনার ব্রাউজার সেটিংসে বিজ্ঞপ্তি অনুমতি দিতে পারেন এবং সেটিংস থেকে আবার চেষ্টা করতে পারেন।",
+    "done": "সম্পন্ন"
+  },
+  "ResetPassword": {
+    "title": "একটি নতুন পাসওয়ার্ড বেছে নিন",
+    "subtitle": "আপনার Spliit Cloud অ্যাকাউন্টের জন্য নতুন পাসওয়ার্ড লিখুন।",
+    "newPassword": "নতুন পাসওয়ার্ড",
+    "confirmPassword": "নতুন পাসওয়ার্ড নিশ্চিত করুন",
+    "passwordMismatch": "পাসওয়ার্ড মিলছে না।",
+    "submit": "নতুন পাসওয়ার্ড সংরক্ষণ করুন",
+    "submitting": "সংরক্ষণ করা হচ্ছে…",
+    "success": "পাসওয়ার্ড আপডেট করা হয়েছে",
+    "successDescription": "আপনার পাসওয়ার্ড পরিবর্তন করা হয়েছে। চালিয়ে যেতে আপনার নতুন পাসওয়ার্ড দিয়ে সাইন ইন করুন।",
+    "goToSignIn": "সাইন ইন এ যান",
+    "invalidTokenTitle": "এই রিসেট লিংক ব্যবহার করা যাবে না",
+    "invalidTokenDescription": "লিংকের মেয়াদ শেষ বা ইতিমধ্যে ব্যবহার করা হয়ে থাকতে পারে। আবার চেষ্টা করতে একটি নতুন অনুরোধ করুন।",
+    "requestNewLink": "একটি নতুন লিংক অনুরোধ করুন",
+    "backToSignIn": "সাইন ইন ফিরে যান",
+    "errors": {
+      "generic": "কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+      "invalidToken": "এই রিসেট লিংকের মেয়াদ শেষ হয়েছে বা ইতিমধ্যে ব্যবহার করা হয়েছে।",
+      "passwordTooShort": "পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে।",
+      "passwordPolicy": "কমপক্ষে ৮ অক্ষর ব্যবহার করুন যাতে বড় হাতের, ছোট হাতের অক্ষর, একটি সংখ্যা এবং একটি চিহ্ন থাকে।"
+    }
+  },
+  "SchemaErrors": {
+    "min1": "কমপক্ষে একটি অক্ষর লিখুন।",
+    "min2": "কমপক্ষে দুটি অক্ষর লিখুন।",
+    "max5": "সর্বাধিক পাঁচটি অক্ষর লিখুন।",
+    "max50": "সর্বাধিক ৫০টি অক্ষর লিখুন।",
+    "duplicateParticipantName": "অন্য একজন অংশগ্রহণকারীর ইতিমধ্যে এই নাম আছে।",
+    "titleRequired": "অনুগ্রহ করে একটি শিরোনাম লিখুন।",
+    "invalidNumber": "অবৈধ সংখ্যা।",
+    "amountRequired": "আপনাকে একটি পরিমাণ লিখতে হবে।",
+    "amountNotZero": "পরিমাণ শূন্য হতে পারে না।",
+    "amountTenMillion": "পরিমাণ ১০,০০০,০০০ এর কম হতে হবে।",
+    "ratePositive": "হার অবশ্যই শূন্যের চেয়ে বড় হতে হবে।",
+    "paidByRequired": "আপনাকে একজন অংশগ্রহণকারী নির্বাচন করতে হবে।",
+    "paidForMin1": "খরচ কমপক্ষে একজন অংশগ্রহণকারীর মধ্যে ভাগ করতে হবে।",
+    "noZeroShares": "সব ভাগ ০ এর বেশি হতে হবে।",
+    "amountSum": "পরিমাণের যোগফল খরচের পরিমাণের সমান হতে হবে।",
+    "percentageSum": "শতাংশের যোগফল ১০০ হতে হবে।",
+    "paidByMin1": "কমপক্ষে একজন প্রদানকারী নির্বাচন করতে হবে।",
+    "paidByAmountSum": "প্রদানকারীর পরিমাণের যোগফল খরচের পরিমাণের সমান হতে হবে।",
+    "paidByPercentageSum": "প্রদানকারীর শতাংশের যোগফল ১০০ হতে হবে।",
+    "duplicateParticipant": "অন্য একজন প্রদানকারী ইতিমধ্যে নির্বাচিত আছে।"
+  },
+  "Settings": {
+    "title": "সেটিংস"
+  },
+  "Share": {
+    "title": "শেয়ার",
+    "description": "অন্যান্য অংশগ্রহণকারীরা গ্রুপ দেখতে এবং খরচ যোগ করতে, তাদের সাথে এর URL শেয়ার করুন।",
+    "warning": "সতর্কতা!",
+    "warningHelp": "গ্রুপ URL সহ প্রতিটি ব্যক্তি খরচ দেখতে এবং সম্পাদনা করতে সক্ষম হবে। সাবধানে শেয়ার করুন!"
+  },
+  "Stats": {
+    "Dashboard": {
+      "description": "এই গ্রুপ কীভাবে একসাথে খরচ করে তার একটি স্ন্যাপশট।",
+      "lifetime": "সর্বকালের খরচ",
+      "selectedPeriod": "নির্বাচিত সময়কাল",
+      "lifetimeDescription": "গ্রুপের সম্পূর্ণ ইতিহাস জুড়ে",
+      "expenseCount_one": "{count}টি খরচ",
+      "expenseCount_other": "{count}টি খরচ",
+      "spendingOverTime": "সময়ের সাথে খরচ",
+      "bucketedBy": "{granularity} অনুযায়ী গ্রুপ করা হয়েছে",
+      "other": "অন্যান্য",
+      "inactiveGap": "নিষ্ক্রিয় সময়কাল",
+      "categories": "বিভাগ",
+      "categoriesDescription": "নির্বাচিত খরচ কোথায় গেছে",
+      "participants": "অংশগ্রহণকারীর ভাগ",
+      "participantsDescription": "কীভাবে খরচ ভাগ করা হয়েছিল",
+      "emptyTitle": "এখনও দেখানোর মতো কোনো খরচ নেই",
+      "emptyDescription": "এই গ্রুপের খরচের গল্প তৈরি শুরু করতে একটি খরচ যোগ করুন।",
+      "error": "আমরা গ্রুপ পরিসংখ্যান লোড করতে পারিনি।",
+      "retry": "আবার চেষ্টা করুন",
+      "customRange": {
+        "from": "থেকে",
+        "to": "পর্যন্ত"
+      },
+      "granularity": {
+        "DAY": "দিন",
+        "WEEK": "সপ্তাহ",
+        "MONTH": "মাস"
+      },
+      "title": "খরচ কার্যকলাপ",
+      "periods": {
+        "LATEST_ACTIVITY": "সর্বশেষ কার্যকলাপ",
+        "WEEK": "১স",
+        "MONTH": "১ম",
+        "QUARTER": "৩ম",
+        "YEAR": "১ব",
+        "CUSTOM": "কাস্টম"
+      }
+    },
+    "title": "পরিসংখ্যান",
+    "Totals": {
+      "title": "মোট",
+      "description": "সম্পূর্ণ গ্রুপের খরচের সারসংক্ষেপ।",
+      "groupSpendings": "গ্রুপের মোট খরচ",
+      "groupEarnings": "গ্রুপের মোট আয়",
+      "yourSpendings": "আপনার মোট খরচ",
+      "yourEarnings": "আপনার মোট আয়",
+      "yourShare": "আপনার মোট ভাগ"
+    }
+  },
+  "Theme": {
+    "toggle": "থিম পরিবর্তন করুন",
+    "light": "হালকা",
+    "dark": "গাঢ়",
+    "system": "সিস্টেম ডিফল্ট"
+  },
+  "Unsubscribe": {
+    "title": "এই ইমেলগুলি বন্ধ করবেন?",
+    "description": "আপনি এক ধরনের ইমেল বিজ্ঞপ্তি রাখবেন কিনা তা বেছে নিচ্ছেন।",
+    "confirm": "এই ইমেলগুলি বন্ধ করুন",
+    "submitting": "আনসাবস্ক্রাইব করা হচ্ছে…",
+    "cancel": "এই ইমেলগুলি রাখুন",
+    "error": "আমরা আপনার ইমেল পছন্দগুলি আপডেট করতে পারিনি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "loading": "আনসাবস্ক্রাইব লিংক পরীক্ষা করা হচ্ছে…",
+    "backHome": "হোমে ফিরে যান",
+    "manageSettings": "সব বিজ্ঞপ্তি সেটিংস পর্যালোচনা করুন",
+    "invalid": {
+      "title": "এই লিংক আর কাজ করে না",
+      "description": "এর মেয়াদ শেষ হয়ে থাকতে পারে। আপনার ইমেল এবং পুশ বিজ্ঞপ্তি সেটিংস পর্যালোচনা করতে সাইন ইন করুন।"
+    },
+    "scope": "শুধুমাত্র এই ইমেল বিজ্ঞপ্তি বন্ধ করা হবে। আপনার অন্যান্য ইমেল এবং পুশ বিজ্ঞপ্তি একই থাকবে।",
+    "success": {
+      "title": "এই ইমেলগুলি বন্ধ করা হয়েছে",
+      "description": "আপনি {category} এর জন্য ইমেল পাবেন না। আপনার অন্যান্য বিজ্ঞপ্তি সেটিংস পরিবর্তন হয়নি।"
+    }
+  }
+}

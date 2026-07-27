@@ -1,4 +1,7 @@
 export const localeLabels = {
+  'ar-SA': 'العربية',
+  'bn-BD': 'বাংলা',
+  'hi-IN': 'हिन्दी',
   id: 'Bahasa Indonesia',
   ca: 'Català',
   'cs-CZ': 'Česky',
@@ -22,6 +25,8 @@ export const localeLabels = {
   ko: '한국어',
   'mk-MK': 'Македонски',
   'ja-JP': '日本語',
+  'ur-PK': 'اردو',
+  vi: 'Tiếng Việt',
   'zh-CN': '简体中文',
   'zh-TW': '正體中文',
 } as const
